@@ -1,4 +1,4 @@
-
+apply plugin: 'idea'
 apply plugin: 'war'
 
 import org.apache.tools.ant.filters.*
@@ -24,7 +24,6 @@ war() {
     from zipTree(project(':modules:admin-web').war.archivePath)
     from zipTree(project(':modules:openlmis-web').war.archivePath)
     from 'src/main/webapp/WEB-INF/web.xml'
-
 }
 
 
