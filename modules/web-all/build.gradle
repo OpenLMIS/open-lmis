@@ -1,0 +1,9 @@
+dependencies  {
+    compile project(':modules:admin-web')
+    compile project(':modules:openlmis-web')
+}
+
+war {
+    from zipTree(project(':modules:admin-web').war.archivePath)
+    from zipTree(project(':modules:openlmis-web').war.archivePath)
+}
