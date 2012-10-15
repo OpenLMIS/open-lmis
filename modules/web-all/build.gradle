@@ -1,9 +1,36 @@
-dependencies  {
-    compile project(':modules:admin-web')
-    compile project(':modules:openlmis-web')
+
+apply plugin: 'war'
+
+import org.apache.tools.ant.filters.*
+
+task buildAdmin(type: GradleBuild){
+
+    buildFile= '../admin-web/build.gradle'
+    tasks = ['build']
 }
 
-war {
+task buildOpenLmis(type: GradleBuild){
+
+    buildFile= '../openlmis-web/build.gradle'
+    tasks = ['build']
+}
+
+war.doFirst{
+    tasks.buildAdmin.execute()
+    tasks.buildOpenLmis.execute()
+}
+
+war() {
     from zipTree(project(':modules:admin-web').war.archivePath)
     from zipTree(project(':modules:openlmis-web').war.archivePath)
+    from 'src/main/webapp/WEB-INF/web.xml'
+
 }
+
+
+
+task explodedWar(type: Copy) {
+    into "$buildDir/exploded"
+    with war
+}
+
