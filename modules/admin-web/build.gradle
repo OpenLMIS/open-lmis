@@ -1,6 +1,7 @@
 apply plugin: 'idea'
 apply plugin: 'java'
 apply plugin: 'war'
+apply plugin: 'jetty'
 
 
 

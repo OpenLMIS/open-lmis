@@ -1,5 +1,6 @@
 apply plugin: 'idea'
 apply plugin: 'war'
+apply plugin: 'jetty'
 
 import org.apache.tools.ant.filters.*
 
@@ -21,12 +22,13 @@ war.doFirst{
 }
 
 war() {
-    from zipTree(project(':modules:admin-web').war.archivePath)
-    from zipTree(project(':modules:openlmis-web').war.archivePath)
-    from 'src/main/webapp/WEB-INF/web.xml'
+    from zipTree(project(':modules:admin-web').war.archivePath)  //exclude { details -> details.file.name.endsWith('.xml') && details.file.text.contains('web') }
+    from zipTree(project(':modules:openlmis-web').war.archivePath) //exclude { details -> details.file.name.endsWith('.xml') && details.file.text.contains('web') }
+    into('WEB-INF'){
+        from 'src/main/webapp/WEB-INF/web.xml'
+    }
+
 }
-
-
 
 task explodedWar(type: Copy) {
     into "$buildDir/exploded"
