@@ -1,0 +1,6 @@
+{"foo":"bar",
+ "coolness":2.0,
+ "altitude":39000,
+ "pilot":{"firstName":"Manjyot","lastName":"Singh"},
+ "mission":"apollo 11",
+ "Dummy":{"DAR":"Lock","SCC":"Locked","New Req":["Accept","Reject"]}}
