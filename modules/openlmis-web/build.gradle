@@ -12,7 +12,7 @@ dependencies{
 
     compile 'org.springframework:spring-core:3.1.1.RELEASE',
         'org.springframework:spring-webmvc:3.1.1.RELEASE',
-        'org.springframework:spring-web:3.1.1.RELEASE',
+        'org.springframework:spring-web:3.1.1.RELEASE'
 
 }
 
