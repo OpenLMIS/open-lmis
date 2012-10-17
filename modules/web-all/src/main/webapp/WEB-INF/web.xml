@@ -33,8 +33,6 @@
 
     <servlet-mapping>
         <servlet-name>dispatcher-core</servlet-name>
-        <url-pattern>/core/*</url-pattern>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
-
-
 </web-app>
