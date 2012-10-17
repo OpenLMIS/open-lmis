@@ -1,2 +1,2 @@
-include "modules:openlmis-web","modules:admin-web","modules:web-all"
+include "modules:openlmis-web","modules:admin-web","modules:web-all", "modules:functional-tests"
 

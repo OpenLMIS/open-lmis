@@ -1,0 +1,28 @@
+apply plugin: 'idea'
+apply plugin: 'java'
+
+task "create-dirs" << {
+   sourceSets*.java.srcDirs*.each { it.mkdirs() }
+   sourceSets*.resources.srcDirs*.each { it.mkdirs() }
+}
+
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+
+    compile 'org.testng:testng:6.1.1',
+            'org.seleniumhq.selenium:selenium-java:2.23.0',
+            'org.seleniumhq.selenium:selenium-firefox-driver:2.23.0'
+
+    testCompile 'junit:junit:4.8.2',
+            'org.springframework:spring-test:3.1.1.RELEASE',
+            'org.mockito:mockito-all:1.9.0',
+            'org.testng:testng:6.1.1',
+            'org.seleniumhq.selenium:selenium-java:2.23.0',
+            'org.seleniumhq.selenium:selenium-firefox-driver:2.23.0'
+}
+
