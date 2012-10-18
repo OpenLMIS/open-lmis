@@ -20,6 +20,8 @@ public class GmailLoginPageTest {
 
     @Test
     public void testLogin() {
+        driver.get("http:localhost:8080/openlmis");
+
         GmailLoginPage page = new GmailLoginPage(driver);
         page.login("user@gmail.com", "password");
     }

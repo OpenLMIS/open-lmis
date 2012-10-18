@@ -41,7 +41,6 @@ task functionalTest(type:Test){
 }
 
 functionalTest.doFirst(){
-    buildOpenLmis.execute()
     jettyRunWar.execute()
 }
 
@@ -54,6 +53,9 @@ functionalTest.doLast()
 [jettyRunWar,jettyStop]*.stopPort = 8080
 [jettyRunWar,jettyStop]*.stopKey = 'stopKey'
 
+jettyRunWar.doFirst(){
+    buildOpenLmis.execute()
+}
 jettyRunWar{
     daemon = true
     webApp =new File("../modules/openlmis-web/build/libs/openlmis-web.war")
