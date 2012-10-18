@@ -1,9 +1,6 @@
 package org.openlmis.servicelayerutils;
 
 import org.apache.commons.io.IOUtils;
-import org.json.JSONException;
-
-
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -155,10 +152,9 @@ public class ServiceLayerUtils {
     * Dummy java function to read Json String
     */
 
-    public static void readJson(String filePath) {
+    public static void readJson(String jsonString) {
         try {
-            String jsonString = readFile(filePath);
-            System.out.println(jsonString);
+            //String jsonString = readFile(filePath);
             InputStream isObj = new ByteArrayInputStream(jsonString.getBytes("UTF-8"));
 
             String jsonTxt = IOUtils.toString(isObj);
@@ -199,9 +195,13 @@ public class ServiceLayerUtils {
     }
 
     public static void main(String args[]) {
-        /*
-       readJson(System.getProperty("user.dir")+"/modules/functional-tests/src/main/java/com/openlmis/servicelayerutils/sample-json.txt");
-        */
+       readJson("{\"foo\":\"bar\",\n" +
+               " \"coolness\":2.0,\n" +
+               " \"altitude\":39000,\n" +
+               " \"pilot\":{\"firstName\":\"Manjyot\",\"lastName\":\"Singh\"},\n" +
+               " \"mission\":\"apollo 11\",\n" +
+               " \"Dummy\":{\"DAR\":\"Lock\",\"SCC\":\"Locked\",\"New Req\":[\"Accept\",\"Reject\"]}}");
+
 
         /*
         String responseJson=
@@ -215,7 +215,7 @@ public class ServiceLayerUtils {
         System.out.println(responseJson);
          */
 
-        /*
+       /*
       createJson();
         */
 
