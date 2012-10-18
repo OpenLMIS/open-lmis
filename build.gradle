@@ -37,18 +37,17 @@ task dropDB() << {
     executeSql('drop database ' + dbName)
 }
 
-def executeSql(def statement) {
+def executeSql(String statement) {
     configurations.classpath.each { file ->
         gradle.class.classLoader.addURL(file.toURI().toURL())
     }
     driverName = 'org.postgresql.Driver'
     Class.forName(driverName)
-    Sql sql = Sql.newInstance(
+    Sql sql = (Sql) Sql.newInstance(
             'jdbc:postgresql://localhost:5432',
             dbUser,
             dbPassword,
             driverName
     )
-
-    sql.execute statement
+    sql.execute(statement)
 }
