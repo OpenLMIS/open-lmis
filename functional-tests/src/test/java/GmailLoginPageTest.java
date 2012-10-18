@@ -1,4 +1,4 @@
-import com.openlmis.pageobjects.GmailLoginPage;
+import org.openlmis.pageobjects.GmailLoginPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterClass;

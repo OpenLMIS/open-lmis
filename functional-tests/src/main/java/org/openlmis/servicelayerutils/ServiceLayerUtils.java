@@ -1,4 +1,4 @@
-package com.openlmis.servicelayerutils;
+package org.openlmis.servicelayerutils;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
@@ -12,14 +12,6 @@ import java.util.*;
 
 import net.sf.json.*;
 
-
-/**
- * Created with IntelliJ IDEA.
- * User: Manjyot
- * Date: 10/17/12
- * Time: 2:12 PM
- * To change this template use File | Settings | File Templates.
- */
 public class ServiceLayerUtils {
     /*
       * Java function to post JSON

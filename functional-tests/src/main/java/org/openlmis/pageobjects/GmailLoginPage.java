@@ -1,15 +1,17 @@
-package com.openlmis.pageobjects;
+package org.openlmis.pageobjects;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
+
 public class GmailLoginPage {
+
     @FindBy(how = How.ID, using = "Email")
     private WebElement userNameField;
 
-    @FindBy (how = How.ID, using = "Passwd")
+    @FindBy(how = How.ID, using = "Passwd")
     private WebElement passwordField;
 
 
@@ -30,4 +32,5 @@ public class GmailLoginPage {
         // Submit user name and password
         userNameField.submit();
     }
+
 }
