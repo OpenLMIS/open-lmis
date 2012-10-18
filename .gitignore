@@ -3,6 +3,7 @@
 *.ipr
 *.iws
 build/
+out/
 classes
 .gradle
 *.DS_Store
