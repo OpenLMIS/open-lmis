@@ -1,5 +1,7 @@
 apply plugin: 'idea'
 apply plugin: 'java'
+apply plugin: 'jetty'
+apply plugin: 'war'
 
 task "create-dirs" << {
    sourceSets*.java.srcDirs*.each { it.mkdirs() }
@@ -28,6 +30,37 @@ dependencies {
             'net.sf.json-lib:json-lib:0.9'
 
 }
+
+task buildOpenLmis(type: GradleBuild){
+    buildFile= '../modules/openlmis-web/build.gradle'
+    tasks = ['build']
+}
+
+task functionalTest(type:Test){
+  useTestNG()
+}
+
+functionalTest.doFirst(){
+    buildOpenLmis.execute()
+    jettyRunWar.execute()
+}
+
+
+functionalTest.doLast()
+{
+    jettyStop.execute()
+}
+
+[jettyRunWar,jettyStop]*.stopPort = 8080
+[jettyRunWar,jettyStop]*.stopKey = 'stopKey'
+
+jettyRunWar{
+    daemon = true
+    webApp =new File("../modules/openlmis-web/build/libs/openlmis-web.war")
+    contextPath = 'openlmis'
+    httpPort=8080
+}
+
 
 
 
