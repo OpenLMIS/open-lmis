@@ -2,19 +2,17 @@ apply plugin: 'idea'
 apply plugin: 'war'
 apply plugin: 'jetty'
 
-task buildAdmin(type: GradleBuild){
-
-    buildFile= '../admin-web/build.gradle'
+task buildAdmin(type: GradleBuild) {
+    buildFile = '../admin-web/build.gradle'
     tasks = ['build']
 }
 
-task buildOpenLmis(type: GradleBuild){
-
-    buildFile= '../core-web/build.gradle'
+task buildOpenLmis(type: GradleBuild) {
+    buildFile = '../core-web/build.gradle'
     tasks = ['build']
 }
 
-war.doFirst{
+war.doFirst {
     tasks.buildAdmin.execute()
     tasks.buildOpenLmis.execute()
 }
@@ -22,7 +20,7 @@ war.doFirst{
 war() {
     from zipTree(project(':modules:admin-web').war.archivePath)  //exclude { details -> details.file.name.endsWith('.xml') && details.file.text.contains('web') }
     from zipTree(project(':modules:core-web').war.archivePath) //exclude { details -> details.file.name.endsWith('.xml') && details.file.text.contains('web') }
-    into('WEB-INF'){
+    into('WEB-INF') {
         from 'src/main/webapp/WEB-INF/web.xml'
     }
 

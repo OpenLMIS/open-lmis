@@ -1,1 +1,54 @@
 apply plugin: 'idea'
+apply plugin: 'java'
+
+import groovy.sql.Sql;
+
+configurations {
+    flyway
+    classpath
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "com.googlecode.flyway:flyway-core:1.7"
+    compile "com.googlecode.flyway:flyway-ant:1.7"
+    flyway "com.googlecode.flyway:flyway-ant:1.7"
+    flyway "postgresql:postgresql:9.1-901.jdbc4"
+    classpath 'postgresql:postgresql:9.1-901.jdbc4'
+}
+
+task setupDB(dependsOn: "createDB") << {
+    ext.flyway_classpath = files(sourceSets.main.output.resourcesDir) + files(configurations.flyway)
+    ant.taskdef(name: 'flywayInit', classname: 'com.googlecode.flyway.ant.InitTask', classpath: ext.flyway_classpath.asPath)
+    ant.flywayInit(driver: 'org.postgresql.Driver', url: 'jdbc:postgresql:' + dbName, user: dbUser, password: dbPassword)
+}
+
+task createDB(dependsOn: "dropDB") << {
+    println("Creating Database..")
+    executeSql('create database ' + dbName)
+
+}
+
+task dropDB() << {
+    println("Dropping Datbase..")
+    executeSql('drop database ' + dbName)
+}
+
+def executeSql(def statement) {
+    configurations.classpath.each { file ->
+        gradle.class.classLoader.addURL(file.toURI().toURL())
+    }
+    driverName = 'org.postgresql.Driver'
+    Class.forName(driverName)
+    Sql sql = Sql.newInstance(
+            'jdbc:postgresql://localhost:5432',
+            dbUser,
+            dbPassword,
+            driverName
+    )
+
+    sql.execute statement
+}

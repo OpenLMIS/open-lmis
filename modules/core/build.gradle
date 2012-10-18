@@ -1,0 +1,24 @@
+apply plugin: 'idea'
+apply plugin: 'java'
+
+configurations {
+    flyway
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "com.googlecode.flyway:flyway-core:1.7"
+    compile "postgresql:postgresql:9.1-901.jdbc4"
+    compile "com.googlecode.flyway:flyway-ant:1.7"
+    flyway "com.googlecode.flyway:flyway-ant:1.7"
+    flyway "postgresql:postgresql:9.1-901.jdbc4"
+}
+
+task migrateDB(dependsOn: "build") << {
+    ext.flyway_classpath = files(sourceSets.main.output.resourcesDir) + files(configurations.flyway)
+    ant.taskdef(name: 'flywayMigrate', classname: 'com.googlecode.flyway.ant.MigrateTask', classpath: ext.flyway_classpath.asPath)
+    ant.flywayMigrate(driver: 'org.postgresql.Driver', url: 'jdbc:postgresql:' + dbName, user: dbUser, password: dbPassword)
+}
