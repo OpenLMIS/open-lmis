@@ -2,8 +2,6 @@ apply plugin: 'idea'
 apply plugin: 'war'
 apply plugin: 'jetty'
 
-import org.apache.tools.ant.filters.*
-
 task buildAdmin(type: GradleBuild){
 
     buildFile= '../admin-web/build.gradle'
