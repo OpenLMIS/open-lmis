@@ -5,7 +5,7 @@
     <display-name>Archetype Created Web Application-openLmis</display-name>
 
     <servlet>
-        <servlet-name>dispatcher-core</servlet-name>
+        <servlet-name>dispatcher-core-web</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
@@ -16,7 +16,7 @@
     </context-param>
 
     <servlet-mapping>
-        <servlet-name>dispatcher-core</servlet-name>
+        <servlet-name>dispatcher-core-web</servlet-name>
         <url-pattern>/core/*</url-pattern>
     </servlet-mapping>
 
@@ -26,7 +26,7 @@
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>classpath:/applicationContext-core.xml</param-value>
+        <param-value>classpath:/applicationContext-core-web.xml</param-value>
     </context-param>
 
 </web-app>

@@ -10,11 +10,23 @@ repositories {
 }
 
 dependencies {
-    compile "com.googlecode.flyway:flyway-core:1.7"
-    compile "postgresql:postgresql:9.1-901.jdbc4"
-    compile "com.googlecode.flyway:flyway-ant:1.7"
-    flyway "com.googlecode.flyway:flyway-ant:1.7"
-    flyway "postgresql:postgresql:9.1-901.jdbc4"
+
+    compile "postgresql:postgresql:9.1-901.jdbc4",
+            "org.mybatis:mybatis-spring:1.0.1",
+            'c3p0:c3p0:0.9.1.2',
+            'org.springframework:spring-core:3.1.1.RELEASE',
+            'org.springframework:spring-webmvc:3.1.1.RELEASE',
+            'org.springframework:spring-web:3.1.1.RELEASE',
+            'org.springframework:spring-aspects:3.1.1.RELEASE',
+            'org.aspectj:aspectjrt:1.7.0'
+
+    flyway "com.googlecode.flyway:flyway-ant:1.7",
+            "postgresql:postgresql:9.1-901.jdbc4"
+
+    testCompile 'junit:junit:4.8.2',
+            'org.mockito:mockito-all:1.8.4',
+            'org.springframework:spring-test:3.1.1.RELEASE'
+
 }
 
 task migrateDB(dependsOn: "build") << {

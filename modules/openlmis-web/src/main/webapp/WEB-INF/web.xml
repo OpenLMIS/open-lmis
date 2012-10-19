@@ -5,7 +5,7 @@
 <display-name>Archetype Created Web Application-blah blah</display-name>
 
     <servlet>
-        <servlet-name>dispatcher-core</servlet-name>
+        <servlet-name>dispatcher-core-web</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
@@ -32,7 +32,7 @@
     </servlet-mapping>
 
     <servlet-mapping>
-        <servlet-name>dispatcher-core</servlet-name>
+        <servlet-name>dispatcher-core-web</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 </web-app>
