@@ -1,6 +1,29 @@
 apply plugin: 'idea'
-apply plugin: 'war'
+apply plugin: 'cargo'
 apply plugin: 'jetty'
+
+
+repositories{
+    mavenCentral()
+}
+
+buildscript {
+    repositories {
+        add(new org.apache.ivy.plugins.resolver.URLResolver()) {
+            name = 'GitHub'
+            addArtifactPattern 'http://cloud.github.com/downloads/[organisation]/[module]/[module]-[revision].[ext]'
+        }
+    }
+
+    dependencies {
+        classpath 'bmuschko:gradle-cargo-plugin:0.5.6'
+    }
+}
+
+dependencies {
+    cargo "org.codehaus.cargo:cargo-core-uberjar:$cargoVersion",
+            "org.codehaus.cargo:cargo-ant:$cargoVersion"
+}
 
 task buildAdmin(type: GradleBuild) {
     buildFile = '../admin-web/build.gradle'
@@ -23,12 +46,21 @@ war.doFirst {
 }
 
 task jettyRunWarDaemon(dependsOn:jettyRunWar){
-    jettyRunWar.daemon=true
+//    jettyRunWar.daemon=true
     jettyRunWar.httpPort=9090
     jettyRunWar.contextPath='openlmis'
 
 }
 
+cargo {
+    containerId = serverName
+    port = Integer.valueOf(serverPort)
+    remote {
+        hostname = serverHostName
+        username = serverUserName
+        password = serverPassword
+    }
+}
 
 
 task explodedWar(type: Copy) {

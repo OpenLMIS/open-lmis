@@ -1,22 +1,21 @@
 apply plugin: 'idea'
 apply plugin: 'java'
-apply plugin: 'war'
 apply plugin: 'jetty'
-
+apply plugin:  'war'
 
 repositories{
     mavenCentral()
 }
 
 dependencies{
-
     compile 'org.springframework:spring-core:3.1.1.RELEASE',
         'org.springframework:spring-webmvc:3.1.1.RELEASE',
         'org.springframework:spring-web:3.1.1.RELEASE'
-
 }
 
 task explodedWar(type: Copy) {
     into "$buildDir/exploded"
     with war
 }
+
+
