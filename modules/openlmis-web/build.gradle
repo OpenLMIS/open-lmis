@@ -15,15 +15,18 @@ task buildOpenLmis(type: GradleBuild) {
 war.doFirst {
     tasks.buildAdmin.execute()
     tasks.buildOpenLmis.execute()
-}
-
-war() {
     from zipTree(project(':modules:admin-web').war.archivePath)  //exclude { details -> details.file.name.endsWith('.xml') && details.file.text.contains('web') }
     from zipTree(project(':modules:core-web').war.archivePath) //exclude { details -> details.file.name.endsWith('.xml') && details.file.text.contains('web') }
     into('WEB-INF') {
         from 'src/main/webapp/WEB-INF/web.xml'
     }
+}
 
+task jettyRunWarDaemon(){
+    jettyRunWar.contextPath = 'openlmis'
+    jettyRunWar.httpPort=8080
+    jettyRunWar.daemon=true
+    jettyRunWar.execute()
 }
 
 task explodedWar(type: Copy) {

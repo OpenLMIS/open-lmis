@@ -2,19 +2,11 @@ apply plugin: 'idea'
 apply plugin: 'java'
 apply plugin: 'jetty'
 
-//task "create-dirs" << {
-//    sourceSets*.java.srcDirs*.each { it.mkdirs() }
-//    sourceSets*.resources.srcDirs*.each { it.mkdirs() }
-//}
-
-
 repositories {
     mavenCentral()
 }
 
 dependencies {
-
-
     compile 'org.testng:testng:6.1.1',
             'org.seleniumhq.selenium:selenium-java:2.23.0',
             'org.seleniumhq.selenium:selenium-firefox-driver:2.23.0',
@@ -27,7 +19,6 @@ dependencies {
             'org.seleniumhq.selenium:selenium-java:2.23.0',
             'org.seleniumhq.selenium:selenium-firefox-driver:2.23.0',
             'net.sf.json-lib:json-lib:0.9'
-
 }
 
 test{
@@ -36,7 +27,7 @@ test{
 
 task buildOpenLmis(type: GradleBuild){
     buildFile= '../modules/openlmis-web/build.gradle'
-    tasks = ['build']
+    tasks = ['build', 'jettyRunWar']
 }
 
 task functionalTest(type:Test,dependsOn:test){
@@ -46,19 +37,5 @@ task functionalTest(type:Test,dependsOn:test){
 
 functionalTest.doFirst(){
     buildOpenLmis.execute()
-    jettyRunWar.daemon = true
-    jettyRunWar.webApp =new File("../modules/openlmis-web/build/libs/openlmis-web.war")
-    jettyRunWar.execute()
 }
 
-functionalTest.doLast(){
-    jettyStop.execute()
-}
-
-[jettyRunWar,jettyStop]*.stopPort = 8080
-[jettyRunWar,jettyStop]*.stopKey = 'stopKey'
-
-jettyRunWar{
-    contextPath = 'openlmis'
-    httpPort=8080
-}
