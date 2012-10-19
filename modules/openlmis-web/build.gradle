@@ -45,11 +45,13 @@ war.doFirst {
     }
 }
 
-task jettyRunWarDaemon(dependsOn:jettyRunWar){
-//    jettyRunWar.daemon=true
+task jettyRunWarDaemon(dependsOn:war)
+
+jettyRunWarDaemon.doFirst{
+    jettyRunWar.daemon=true
     jettyRunWar.httpPort=9090
     jettyRunWar.contextPath='openlmis'
-
+    jettyRunWar.execute()
 }
 
 cargo {
@@ -61,7 +63,13 @@ cargo {
         password = serverPassword
     }
 }
+task jettyRunWarLocal(dependsOn:war)
 
+jettyRunWarLocal.doFirst{
+    jettyRunWar.daemon = false
+    jettyRunWar.httpPort=9091
+    jettyRunWar.execute()
+}
 
 task explodedWar(type: Copy) {
     into "$buildDir/exploded"
