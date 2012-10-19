@@ -1,12 +1,11 @@
 apply plugin: 'idea'
 apply plugin: 'java'
 apply plugin: 'jetty'
-apply plugin: 'war'
 
-task "create-dirs" << {
-   sourceSets*.java.srcDirs*.each { it.mkdirs() }
-   sourceSets*.resources.srcDirs*.each { it.mkdirs() }
-}
+//task "create-dirs" << {
+//    sourceSets*.java.srcDirs*.each { it.mkdirs() }
+//    sourceSets*.resources.srcDirs*.each { it.mkdirs() }
+//}
 
 
 repositories {
@@ -31,13 +30,18 @@ dependencies {
 
 }
 
+test{
+    exclude '**/org/openlmis/functional/*.*'
+}
+
 task buildOpenLmis(type: GradleBuild){
     buildFile= '../modules/openlmis-web/build.gradle'
     tasks = ['build']
 }
 
-task functionalTest(type:Test){
-  useTestNG()
+task functionalTest(type:Test,dependsOn:test){
+    include '**/org/openlmis/functional/*.*'
+    useTestNG()
 }
 
 functionalTest.doFirst(){
@@ -46,9 +50,9 @@ functionalTest.doFirst(){
 
 
 functionalTest.doLast()
-{
-    jettyStop.execute()
-}
+        {
+            jettyStop.execute()
+        }
 
 [jettyRunWar,jettyStop]*.stopPort = 8080
 [jettyRunWar,jettyStop]*.stopKey = 'stopKey'
@@ -62,9 +66,3 @@ jettyRunWar{
     contextPath = 'openlmis'
     httpPort=8080
 }
-
-
-
-
-
-
