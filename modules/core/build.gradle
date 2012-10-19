@@ -29,7 +29,7 @@ dependencies {
 
 }
 
-task migrateDB(dependsOn: "build") << {
+task migrateDB << {
     ext.flyway_classpath = files(sourceSets.main.output.resourcesDir) + files(configurations.flyway)
     ant.taskdef(name: 'flywayMigrate', classname: 'com.googlecode.flyway.ant.MigrateTask', classpath: ext.flyway_classpath.asPath)
     ant.flywayMigrate(driver: 'org.postgresql.Driver', url: 'jdbc:postgresql:' + dbName, user: dbUser, password: dbPassword)
