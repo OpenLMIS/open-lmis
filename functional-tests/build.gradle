@@ -8,16 +8,16 @@ repositories {
 
 dependencies {
     compile 'org.testng:testng:6.1.1',
-            'org.seleniumhq.selenium:selenium-java:2.23.0',
-            'org.seleniumhq.selenium:selenium-firefox-driver:2.23.0',
+            'org.seleniumhq.selenium:selenium-java:2.25.0',
+            'org.seleniumhq.selenium:selenium-firefox-driver:2.25.0',
             'net.sf.json-lib:json-lib:0.9'
 
     testCompile 'junit:junit:4.8.2',
             'org.springframework:spring-test:3.1.1.RELEASE',
             'org.mockito:mockito-all:1.9.0',
             'org.testng:testng:6.1.1',
-            'org.seleniumhq.selenium:selenium-java:2.23.0',
-            'org.seleniumhq.selenium:selenium-firefox-driver:2.23.0',
+            'org.seleniumhq.selenium:selenium-java:2.25.0',
+            'org.seleniumhq.selenium:selenium-firefox-driver:2.25.0 ',
             'net.sf.json-lib:json-lib:0.9'
 }
 
