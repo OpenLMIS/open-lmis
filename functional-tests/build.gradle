@@ -49,10 +49,9 @@ functionalTest.doFirst(){
 }
 
 
-functionalTest.doLast()
-        {
-            jettyStop.execute()
-        }
+functionalTest.doLast(){
+    jettyStop.execute()
+}
 
 [jettyRunWar,jettyStop]*.stopPort = 8080
 [jettyRunWar,jettyStop]*.stopKey = 'stopKey'
@@ -62,7 +61,7 @@ jettyRunWar.doFirst(){
 }
 jettyRunWar{
     daemon = true
-    webApp =new File("../modules/openlmis-web/build/libs/openlmis-web.war")
+    webApp =new File('../modules/openlmis-web/build/libs/openlmis-web.war')
     contextPath = 'openlmis'
     httpPort=8080
 }
