@@ -24,6 +24,7 @@ war.doFirst {
 
 task jettyRunWarDaemon(dependsOn:jettyRunWar){
     jettyRunWar.daemon=true
+    jettyRunWar.httpPort=9090
     jettyRunWar.contextPath='openlmis'
 
 }
