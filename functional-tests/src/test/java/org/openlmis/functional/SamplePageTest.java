@@ -1,13 +1,14 @@
 package org.openlmis.functional;
 
-import org.openlmis.pageobjects.GmailLoginPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class GmailLoginPageTest {
+import static org.testng.Assert.assertTrue;
+
+public class SamplePageTest {
     private WebDriver driver;
 
     @BeforeClass
@@ -23,9 +24,6 @@ public class GmailLoginPageTest {
     @Test
     public void testLogin() {
         driver.get("http:localhost:9090/openlmis");
-
-        GmailLoginPage page = new GmailLoginPage(driver);
-        page.login("user@gmail.com", "password");
+        assertTrue(driver.getPageSource().contains("Hello World"));
     }
-
 }
