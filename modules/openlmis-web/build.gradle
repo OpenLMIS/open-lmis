@@ -22,12 +22,13 @@ war.doFirst {
     }
 }
 
-task jettyRunWarDaemon(){
-    jettyRunWar.contextPath = 'openlmis'
-    jettyRunWar.httpPort=8080
+task jettyRunWarDaemon(dependsOn:jettyRunWar){
     jettyRunWar.daemon=true
-    jettyRunWar.execute()
+    jettyRunWar.contextPath='openlmis'
+
 }
+
+
 
 task explodedWar(type: Copy) {
     into "$buildDir/exploded"
