@@ -34,7 +34,7 @@ task createDB(dependsOn: "dropDB") << {
 
 task dropDB() << {
     println("Dropping Datbase..")
-    executeSql('drop database ' + dbName)
+    executeSql('drop database if exists ' + dbName)
 }
 
 def executeSql(String statement) {
