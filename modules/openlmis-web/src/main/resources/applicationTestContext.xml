@@ -10,7 +10,4 @@
 
     <context:component-scan base-package="org.openlmis.web"/>
 
-    <import resource="classpath:/applicationContext-core-web.xml"/>
-    <import resource="classpath:/applicationContext-admin.xml"/>
-
 </beans>

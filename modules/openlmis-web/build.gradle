@@ -3,10 +3,6 @@ apply plugin: 'cargo'
 apply plugin: 'jetty'
 
 
-repositories{
-    mavenCentral()
-}
-
 buildscript {
     repositories {
         add(new org.apache.ivy.plugins.resolver.URLResolver()) {
@@ -20,9 +16,29 @@ buildscript {
     }
 }
 
+repositories {
+    mavenCentral()
+    maven {
+        url "http://repo.springsource.org/plugins-release/"
+    }
+
+}
+
 dependencies {
     cargo "org.codehaus.cargo:cargo-core-uberjar:$cargoVersion",
             "org.codehaus.cargo:cargo-ant:$cargoVersion"
+
+    compile 'org.freemarker:freemarker:2.3.19',
+            'org.springframework:spring-webmvc:3.1.1.RELEASE',
+            'org.springframework:spring-web:3.1.1.RELEASE'
+
+    testCompile 'org.kubek2k:springockito:1.0.4',
+            'org.kubek2k:springockito-annotations:1.0.2',
+            'junit:junit:4.8.2',
+            'org.mockito:mockito-all:1.8.4',
+            'org.springframework:spring-test:3.1.1.RELEASE',
+            'org.springframework:spring-test-mvc:1.0.0.M1',
+            'javax.servlet:servlet-api:2.5'
 }
 
 task buildAdmin(type: GradleBuild) {
