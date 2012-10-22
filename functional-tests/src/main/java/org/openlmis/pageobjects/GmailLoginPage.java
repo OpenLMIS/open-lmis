@@ -31,6 +31,7 @@ public class GmailLoginPage {
 
         // Submit user name and password
         userNameField.submit();
+
     }
 
 }

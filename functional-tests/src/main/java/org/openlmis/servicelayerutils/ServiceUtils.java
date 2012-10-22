@@ -9,7 +9,7 @@ import java.util.*;
 
 import net.sf.json.*;
 
-public class ServiceLayerUtils {
+public class ServiceUtils {
     /*
       * Java function to post JSON
       */
@@ -21,14 +21,9 @@ public class ServiceLayerUtils {
    When the request is rejected, the HTTP response contains a non-200 status code (such as 400, 401, or 503).
     */
 
-    /* For example :
-    String responseJson=
-        postJSON("{\"account\":\"dummy\",\"password\":\"pass\"}","http://www.f-list.net/json/getApiTicket.php");
-        System.out.println(responseJson);
-     */
 
     @SuppressWarnings("finally")
-    public static String postJSON(String json, String endPoint) {
+    public String postJSON(String json, String endPoint) {
         String output, outputFinal = "";
         try {
             URL url = new URL(endPoint);
@@ -72,7 +67,7 @@ public class ServiceLayerUtils {
 
 
     @SuppressWarnings("finally")
-    public static String getJSON(String endPoint) {
+    public String getJSON(String endPoint) {
         String output, outputFinal = "";
         try {
 
@@ -109,7 +104,7 @@ public class ServiceLayerUtils {
     * Dummy java function to create a Json
     */
 
-    public static void createJson() {
+    public void createJson() {
         JSONObject obj = new JSONObject();
         LinkedHashMap lhmObj = new LinkedHashMap();
         LinkedList llObj = new LinkedList();
@@ -123,38 +118,13 @@ public class ServiceLayerUtils {
         System.out.println(obj);
     }
 
-    /*
-      * Java function to read file content
-      */
-    @SuppressWarnings("finally")
-    public static String readFile(String filePath) {
-        String strLine, strLineFinal = "";
-        try {
-            FileInputStream fstream = new FileInputStream(filePath);
-            // Get the object of DataInputStream
-            DataInputStream in = new DataInputStream(fstream);
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
-
-            // Read File Line By Line
-            while ((strLine = br.readLine()) != null) {
-                strLineFinal = strLineFinal + strLine;
-            }
-            // Close the input stream
-            in.close();
-        } catch (Exception e) {// Catch exception if any
-            System.err.println("Error: " + e.getMessage());
-        } finally {
-            return strLineFinal;
-        }
-    }
 
     /*
     * Dummy java function to read Json String
     */
 
-    public static void readJson(String jsonString) {
+    public void readJson(String jsonString) {
         try {
-            //String jsonString = readFile(filePath);
             InputStream isObj = new ByteArrayInputStream(jsonString.getBytes("UTF-8"));
 
             String jsonTxt = IOUtils.toString(isObj);
@@ -195,29 +165,29 @@ public class ServiceLayerUtils {
     }
 
     public static void main(String args[]) {
-       readJson("{\"foo\":\"bar\",\n" +
-               " \"coolness\":2.0,\n" +
-               " \"altitude\":39000,\n" +
-               " \"pilot\":{\"firstName\":\"Manjyot\",\"lastName\":\"Singh\"},\n" +
-               " \"mission\":\"apollo 11\",\n" +
-               " \"Dummy\":{\"DAR\":\"Lock\",\"SCC\":\"Locked\",\"New Req\":[\"Accept\",\"Reject\"]}}");
+//       new ServiceUtils().readJson("{\"foo\":\"bar\",\n" +
+//               " \"coolness\":2.0,\n" +
+//               " \"altitude\":39000,\n" +
+//               " \"pilot\":{\"firstName\":\"Manjyot\",\"lastName\":\"Singh\"},\n" +
+//               " \"mission\":\"apollo 11\",\n" +
+//               " \"Dummy\":{\"DAR\":\"Lock\",\"SCC\":\"Locked\",\"New Req\":[\"Accept\",\"Reject\"]}}");
 
 
-        /*
-        String responseJson=
-        postJSON("{\"account\":\"dummy\",\"password\":\"pass\"}","http://www.f-list.net/json/getApiTicket.php");
-        System.out.println(responseJson);
-         */
 
-        /*
-         String responseJson=
-           getJSON("http://www.f-list.net/json/getApiTicket.php");
-        System.out.println(responseJson);
-         */
+//        String responseJson=
+//                new ServiceUtils().postJSON("{\"account\":\"dummy\",\"password\":\"pass\"}","http://www.f-list.net/json/getApiTicket.php");
+//        System.out.println(responseJson);
 
-       /*
-      createJson();
-        */
+
+
+//         String responseJson=
+//                 new ServiceUtils().getJSON("http://www.f-list.net/json/getApiTicket.php");
+//        System.out.println(responseJson);
+
+
+
+//        new ServiceUtils().createJson();
+
 
     }
 
