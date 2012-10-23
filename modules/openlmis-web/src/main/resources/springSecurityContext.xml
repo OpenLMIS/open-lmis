@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd ">
+
+
+    <http auto-config='true'>
+        <intercept-url pattern="/login" access="IS_AUTHENTICATED_ANONYMOUSLY" requires-channel="https"/>
+        <intercept-url pattern="/static/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+        <intercept-url pattern="/core/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+        <intercept-url pattern="/logout" access="IS_AUTHENTICATED_ANONYMOUSLY" requires-channel="https"/>
+        <intercept-url pattern="/admin/logout" access="IS_AUTHENTICATED_ANONYMOUSLY" requires-channel="https"/>
+        <intercept-url pattern="/admin/**" access="ADMIN" requires-channel="https"/>
+        <intercept-url pattern="/**" access="USER, ADMIN" requires-channel="https"/>
+        <form-login login-page="/auth/login"
+                    login-processing-url="/j_spring_security_check"
+                    />
+
+        <logout logout-success-url="/zombie/logout"/>
+    </http>
+
+
+    <authentication-manager>
+        <authentication-provider ref="userAuthenticationProvider"/>
+    </authentication-manager>
+
+    <beans:bean id="userAuthenticationProvider" class="org.openlmis.authentication.UserAuthenticationProvider"/>
+
+
+</beans:beans>

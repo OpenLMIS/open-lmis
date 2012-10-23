@@ -32,6 +32,7 @@ dependencies {
             'org.springframework:spring-webmvc:3.1.1.RELEASE',
             'org.springframework:spring-web:3.1.1.RELEASE',
             'javax.servlet:servlet-api:2.5'
+    project(':modules:authentication')
 
     testCompile 'org.kubek2k:springockito:1.0.4',
             'org.kubek2k:springockito-annotations:1.0.2',

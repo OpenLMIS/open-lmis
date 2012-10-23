@@ -10,7 +10,7 @@ import static org.springframework.test.web.server.request.MockMvcRequestBuilders
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.server.setup.MockMvcBuilders.standaloneSetup;
 
-@ContextConfiguration(locations = "classpath*:/applicationTestContext.xml")
+@ContextConfiguration(locations = "classpath*:applicationTestContext.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 public class LoginControllerIT {
 
