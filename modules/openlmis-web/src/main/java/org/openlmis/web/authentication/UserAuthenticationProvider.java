@@ -2,23 +2,25 @@ package org.openlmis.web.authentication;
 
 import org.openlmis.authentication.UserAuthenticationService;
 import org.openlmis.authentication.UserToken;
-import org.openlmis.authentication.domain.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.Collection;
 
 public class UserAuthenticationProvider implements AuthenticationProvider {
 
-    private UserAuthenticationService userService;
+    private UserAuthenticationService userAuthenticationService;
 
-    public UserAuthenticationProvider(UserAuthenticationService userService) {
 
-        this.userService = userService;
+    @Autowired
+    public UserAuthenticationProvider(UserAuthenticationService userAuthenticationService) {
+        this.userAuthenticationService = userAuthenticationService;
     }
 
     @Override
@@ -26,7 +28,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 
         String userName = authentication.getPrincipal().toString();
         String password = authentication.getCredentials().toString();
-        UserToken userToken = userService.authorizeUser(userName, password);
+        UserToken userToken = userAuthenticationService.authorizeUser(userName, password);
 
         if(!userToken.isAuthenticated()){
             return new UsernamePasswordAuthenticationToken(userName, password);
