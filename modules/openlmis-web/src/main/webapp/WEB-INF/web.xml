@@ -3,15 +3,6 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
     <display-name>Archetype Created Web Application-blah blah</display-name>
-    <filter>
-        <filter-name>filterChainProxy</filter-name>
-        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>filterChainProxy</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-
     <servlet>
         <servlet-name>dispatcher-core-web</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
