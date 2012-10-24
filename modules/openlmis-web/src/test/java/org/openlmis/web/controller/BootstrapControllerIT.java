@@ -14,7 +14,7 @@ import static org.springframework.test.web.server.setup.MockMvcBuilders.standalo
 
 @ContextConfiguration(locations = "classpath*:/applicationTestContext.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
-public class ApplicationPropertiesControllerIT {
+public class BootstrapControllerIT {
 
     @Autowired
     BootstrapController bootstrapController;
@@ -22,9 +22,9 @@ public class ApplicationPropertiesControllerIT {
     @Test
     public void shouldReturnContextPathInProperties() throws Exception {
         standaloneSetup(bootstrapController).build()
-                .perform(get("/openlmis/properties.json").contextPath("/openlmis").servletPath("/all.json"))
+                .perform(get("/openlmis/properties.json").contextPath("/openlmis").servletPath("/properties.json"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("{\"contextPath\":\"/openlmis\"}"));
+                .andExpect(content().string("openlmis.initProperties({\"contextPath\":\"/openlmis\"})"));
     }
 
 }
