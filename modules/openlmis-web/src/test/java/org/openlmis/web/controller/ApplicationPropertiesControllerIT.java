@@ -6,25 +6,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static org.springframework.test.web.server.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.server.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.server.setup.MockMvcBuilders.standaloneSetup;
 
+
 @ContextConfiguration(locations = "classpath*:/applicationTestContext.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
-public class AuthenticationControllerIT {
+public class ApplicationPropertiesControllerIT {
 
     @Autowired
-    private AuthenticationController authenticationController;
+    BootstrapController bootstrapController;
 
     @Test
-    public void shouldLoadLoginPage() throws Exception {
-        standaloneSetup(authenticationController).build()
-                .perform(post("/authenticate"))
+    public void shouldReturnContextPathInProperties() throws Exception {
+        standaloneSetup(bootstrapController).build()
+                .perform(get("/openlmis/properties.json").contextPath("/openlmis").servletPath("/all.json"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Authenticated"));
+                .andExpect(content().string("{\"contextPath\":\"/openlmis\"}"));
     }
-
 
 }

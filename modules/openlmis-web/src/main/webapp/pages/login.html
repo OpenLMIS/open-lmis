@@ -1,20 +1,39 @@
 <html>
 <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            contextPath = "/" + window.location.pathname.split("/")[1];
+            loadJS("/js/bootstrap.js");
+            loadJS("/bootstrap/properties.json");
+            $("#loginForm").attr("action", url("/auth/authenticate"));
+        });
+
+        function loadJS(filename) {
+            var scriptNode = document.createElement('script');
+            scriptNode.setAttribute("type", "text/javascript");
+            scriptNode.setAttribute("src", url(filename));
+            document.getElementsByTagName("head")[0].appendChild(scriptNode);
+        }
+
+        function url(path) {
+            return contextPath + path;
+        }
+    </script>
 </head>
 <body>
 <div>
-    <form action="/authenticate" method="POST" class="form">
+    <form method=POST id="loginForm">
         <fieldset>
-            <legend>Users Login</legend>
-
+            <legend>Login</legend>
             <label for="username">Username</label>
-
             <div>
-                <input name="userName" type="text" id="log userName"/>
+                <input name="username" type="text" id="log userName"/>
             </div>
-
             <label for="password">Password</label>
-
             <div>
                 <div>
                     <input name="password" type="password" id="password"/>

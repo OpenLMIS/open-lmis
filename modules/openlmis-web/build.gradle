@@ -33,7 +33,8 @@ dependencies {
             'org.springframework:spring-web:3.1.1.RELEASE',
             'javax.servlet:servlet-api:2.5',
             'commons-collections:commons-collections:20040616',
-    project(':modules:authentication')
+            project(':modules:authentication'),
+            'org.json:json:20090211'
 
     testCompile 'org.kubek2k:springockito:1.0.4',
             'org.kubek2k:springockito-annotations:1.0.2',
@@ -41,7 +42,11 @@ dependencies {
             'org.mockito:mockito-all:1.8.4',
             'org.springframework:spring-test:3.1.1.RELEASE',
             'org.springframework:spring-test-mvc:1.0.0.M1',
-            'javax.servlet:servlet-api:2.5'
+            'org.hamcrest:hamcrest-all:1.3'
+}
+
+[jettyRun]*.configure {
+    contextPath = "openlmis"
 }
 
 task buildAdmin(type: GradleBuild) {
@@ -64,12 +69,12 @@ war.doFirst {
     }
 }
 
-task jettyRunWarDaemon(dependsOn:war)
+task jettyRunWarDaemon(dependsOn: war)
 
-jettyRunWarDaemon.doFirst{
-    jettyRunWar.daemon=true
-    jettyRunWar.httpPort=9090
-    jettyRunWar.contextPath='openlmis'
+jettyRunWarDaemon.doFirst {
+    jettyRunWar.daemon = true
+    jettyRunWar.httpPort = 9090
+    jettyRunWar.contextPath = 'openlmis'
     jettyRunWar.execute()
 }
 
@@ -82,11 +87,11 @@ cargo {
         password = serverPassword
     }
 }
-task jettyRunWarLocal(dependsOn:war)
+task jettyRunWarLocal(dependsOn: war)
 
-jettyRunWarLocal.doFirst{
+jettyRunWarLocal.doFirst {
     jettyRunWar.daemon = false
-    jettyRunWar.httpPort=9091
+    jettyRunWar.httpPort = 9091
     jettyRunWar.execute()
 }
 
