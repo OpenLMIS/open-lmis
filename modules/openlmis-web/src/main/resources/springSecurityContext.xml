@@ -15,14 +15,12 @@
     <context:component-scan base-package="org.openlmis.core.controller"/>
 
     <http use-expressions="true">
-        <intercept-url pattern="/auth/login" access="isAuthenticated()" requires-channel="http"/>
-        <!--<intercept-url pattern="/static/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>-->
-        <intercept-url pattern="/admin/**" access="permitAll" requires-channel="http"/>
-        <!--<intercept-url pattern="/logout" access="IS_AUTHENTICATED_ANONYMOUSLY" requires-channel="http"/>-->
-        <intercept-url pattern="/**" access="isAuthenticated()" requires-channel="http"/>
-        <form-login
-        authentication-success-handler-ref="userAuthenticationSuccessHandler"/>
-
+        <intercept-url pattern="/auth/login" access="permitAll" requires-channel="http"/>
+        <intercept-url pattern="/static/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+        <intercept-url pattern="/admin/**" access="hasRole('ADMIN')" requires-channel="http"/>
+        <intercept-url pattern="/logout" access="IS_AUTHENTICATED_ANONYMOUSLY" requires-channel="http"/>
+        <intercept-url pattern="/**" access="hasRole('USER')" requires-channel="http"/>
+        <form-login authentication-success-handler-ref="userAuthenticationSuccessHandler"/>
         <logout logout-success-url="/auth/login?logout=success"/>
     </http>
 

@@ -25,8 +25,8 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
-        String userName = authentication.getPrincipal().toString();
-        String password = authentication.getCredentials().toString();
+        String userName = (String)authentication.getPrincipal();
+        String password = (String)authentication.getCredentials();
         UserToken userToken = userAuthenticationService.authorizeUser(userName, password);
 
         if(!userToken.isAuthenticated()){
