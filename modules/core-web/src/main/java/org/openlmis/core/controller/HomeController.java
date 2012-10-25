@@ -10,7 +10,6 @@ public class HomeController {
 
     @RequestMapping(value = "home", method = RequestMethod.GET)
     public ModelAndView loadHelloWorld(){
-      //  System.out.println("in controller");
            return new ModelAndView("core/index");
     }
 

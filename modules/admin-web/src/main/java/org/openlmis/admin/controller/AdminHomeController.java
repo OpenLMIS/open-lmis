@@ -11,7 +11,6 @@ public class AdminHomeController {
 
     @RequestMapping(value = "/home", method = RequestMethod.GET)
     public ModelAndView loadHelloWorld() {
-        //  System.out.println("in controller");
         return new ModelAndView("admin/index");
     }
 
