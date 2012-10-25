@@ -20,7 +20,8 @@
         <intercept-url pattern="/admin/**" access="hasRole('ADMIN')" requires-channel="http"/>
         <intercept-url pattern="/logout" access="IS_AUTHENTICATED_ANONYMOUSLY" requires-channel="http"/>
         <intercept-url pattern="/**" access="hasRole('USER')" requires-channel="http"/>
-        <form-login authentication-success-handler-ref="userAuthenticationSuccessHandler"/>
+        <form-login authentication-success-handler-ref="userAuthenticationSuccessHandler"
+                login-processing-url="/j_spring_security_check" login-page="/auth/login"/>
         <logout logout-success-url="/auth/login?logout=success"/>
     </http>
 

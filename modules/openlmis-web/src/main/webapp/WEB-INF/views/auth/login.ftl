@@ -10,19 +10,19 @@
 </head>
 <body>
 <div>
-    <form method=POST action="<@spring.url '/auth/authenticate' />">
+    <form method=POST action="<@spring.url '/j_spring_security_check' />">
         <fieldset>
             <legend>Login</legend>
             <label for="username">Username</label>
 
             <div>
-                <input name="username" type="text" id="log userName"/>
+                <input name="j_username" type="text" id="log userName"/>
             </div>
             <label for="password">Password</label>
 
             <div>
                 <div>
-                    <input name="password" type="password" id="password"/>
+                    <input name="j_password" type="password" id="password"/>
                 </div>
             </div>
             <br/>
