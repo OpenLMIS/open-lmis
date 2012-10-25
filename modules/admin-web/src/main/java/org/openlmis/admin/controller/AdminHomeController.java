@@ -6,17 +6,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-public class HomeController {
+@RequestMapping("/admin")
+public class AdminHomeController {
 
-    @RequestMapping(value = "home", method = RequestMethod.GET)
+    @RequestMapping(value = "/home", method = RequestMethod.GET)
     public ModelAndView loadHelloWorld() {
         //  System.out.println("in controller");
-        return new ModelAndView("index");
-    }
-
-    @RequestMapping(value = "", method = RequestMethod.GET)
-    public ModelAndView loadHomePage() {
-        return new ModelAndView("redirect:home");
+        return new ModelAndView("admin/index");
     }
 
 }

@@ -11,11 +11,8 @@ public class HomeController {
     @RequestMapping(value = "home", method = RequestMethod.GET)
     public ModelAndView loadHelloWorld(){
       //  System.out.println("in controller");
-           return new ModelAndView("index");
+           return new ModelAndView("core/index");
     }
 
-    @RequestMapping(value = "",method = RequestMethod.GET)
-    public ModelAndView loadHomePage(){
-        return new ModelAndView("redirect:home");
-    }
+
 }

@@ -3,24 +3,6 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
     <display-name>Archetype Created Web Application-blah blah</display-name>
-    <!--<servlet>-->
-        <!--<servlet-name>dispatcher-core-web</servlet-name>-->
-        <!--<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>-->
-        <!--<load-on-startup>1</load-on-startup>-->
-    <!--</servlet>-->
-
-    <servlet>
-        <servlet-name>open-lmis</servlet-name>
-        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <load-on-startup>2</load-on-startup>
-    </servlet>
-
-    <!--<servlet>-->
-        <!--<servlet-name>dispatcher-admin</servlet-name>-->
-        <!--<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>-->
-        <!--<load-on-startup>3</load-on-startup>-->
-    <!--</servlet>-->
-
     <context-param>
         <param-name>webAppRootKey</param-name>
         <param-value>/</param-value>
@@ -30,28 +12,39 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>
             classpath:applicationContext.xml
-            classpath:springSecurityContext.xml
         </param-value>
     </context-param>
 
-    <servlet-mapping>
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <servlet>
         <servlet-name>open-lmis</servlet-name>
-        <url-pattern>/admin/*</url-pattern>
-    </servlet-mapping>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
 
     <servlet-mapping>
         <servlet-name>open-lmis</servlet-name>
         <url-pattern>/auth/*</url-pattern>
     </servlet-mapping>
 
+
     <servlet-mapping>
         <servlet-name>open-lmis</servlet-name>
         <url-pattern>/bootstrap/*</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>default</servlet-name>
-        <url-pattern>/pages/*</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

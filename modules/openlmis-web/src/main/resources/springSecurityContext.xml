@@ -10,30 +10,26 @@
     <context:annotation-config/>
     <mvc:annotation-driven/>
 
-    <context:component-scan base-package="org.openlmis"/>
+    <context:component-scan base-package="org.openlmis.web.controller"/>
+    <context:component-scan base-package="org.openlmis.admin.controller"/>
+    <context:component-scan base-package="org.openlmis.core.controller"/>
 
-    <http auto-config='true'>
-        <intercept-url pattern="/login" access="IS_AUTHENTICATED_ANONYMOUSLY" requires-channel="https"/>
-        <intercept-url pattern="/static/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
-        <intercept-url pattern="/core/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
-        <intercept-url pattern="/logout" access="IS_AUTHENTICATED_ANONYMOUSLY" requires-channel="https"/>
-        <intercept-url pattern="/admin/logout" access="IS_AUTHENTICATED_ANONYMOUSLY" requires-channel="https"/>
-        <intercept-url pattern="/admin/**" access="ADMIN" requires-channel="https"/>
-        <intercept-url pattern="/**" access="USER, ADMIN" requires-channel="https"/>
-        <form-login login-page="/auth/login"
-                    login-processing-url="/j_spring_security_check"
-                    authentication-success-handler-ref="userAuthenticationSuccessHandler"/>
+    <http use-expressions="true">
+        <intercept-url pattern="/auth/login" access="isAuthenticated()" requires-channel="http"/>
+        <!--<intercept-url pattern="/static/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>-->
+        <intercept-url pattern="/admin/**" access="permitAll" requires-channel="http"/>
+        <!--<intercept-url pattern="/logout" access="IS_AUTHENTICATED_ANONYMOUSLY" requires-channel="http"/>-->
+        <intercept-url pattern="/**" access="isAuthenticated()" requires-channel="http"/>
+        <form-login
+        authentication-success-handler-ref="userAuthenticationSuccessHandler"/>
 
-        <logout logout-success-url="/zombie/logout"/>
+        <logout logout-success-url="/auth/login?logout=success"/>
     </http>
 
 
     <authentication-manager>
         <authentication-provider ref="userAuthenticationProvider"/>
     </authentication-manager>
-
-    <beans:bean id="userAuthenticationProvider" class="org.openlmis.web.authentication.UserAuthenticationProvider"/>
-    <beans:bean id="userAuthenticationSuccessHandler" class="org.openlmis.web.authentication.UserAuthenticationSuccessHandler"/>
 
 
 </beans:beans>

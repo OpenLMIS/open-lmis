@@ -19,10 +19,10 @@ public class UserAuthenticationSuccessHandler implements AuthenticationSuccessHa
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
         if (ifRolesContains(authentication.getAuthorities(),"ADMIN")) {
-            response.sendRedirect("/admin/home");
+            response.sendRedirect(request.getContextPath()+ "/admin/home");
             return;
         }
-        response.sendRedirect("/home");
+        response.sendRedirect(request.getContextPath()+"/home");
     }
 
     private boolean ifRolesContains(Collection<? extends GrantedAuthority> authorities, final String role) {

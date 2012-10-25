@@ -1,9 +1,8 @@
 package org.openlmis.web.authentication;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.openlmis.authentication.UserAuthenticationService;
+import org.openlmis.authentication.service.UserAuthenticationService;
 import org.openlmis.authentication.UserToken;
 import org.openlmis.authentication.domain.User;
 import org.springframework.security.authentication.TestingAuthenticationToken;
@@ -14,7 +13,6 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

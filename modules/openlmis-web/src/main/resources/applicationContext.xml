@@ -11,6 +11,10 @@
     <context:component-scan base-package="org.openlmis.web"/>
 
     <import resource="classpath:/applicationContext-core-web.xml"/>
-    <import resource="classpath:/applicationContext-admin.xml"/>
+    <import resource="classpath:/applicationContext-admin-web.xml"/>
+    <import resource="classpath:/springSecurityContext.xml"/>
+    <import resource="classpath:/applicationContext-authentication.xml"/>
 
+    <bean id="userAuthenticationProvider" class="org.openlmis.web.authentication.UserAuthenticationProvider"/>
+    <bean id="userAuthenticationSuccessHandler" class="org.openlmis.web.authentication.UserAuthenticationSuccessHandler"/>
 </beans>
