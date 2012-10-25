@@ -16,7 +16,7 @@
             <label for="username">Username</label>
 
             <div>
-                <input name="j_username" type="text" id="log userName"/>
+                <input name="j_username" type="text" id="username"/>
             </div>
             <label for="password">Password</label>
 
