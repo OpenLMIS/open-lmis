@@ -33,7 +33,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
             return new UsernamePasswordAuthenticationToken(userName, password);
         }
 
-        Collection<? extends GrantedAuthority> authorities = Arrays.asList(new GrantedAuthority[]{getGrantedAuthority(userToken.getUser().getRole())});
+        Collection<? extends GrantedAuthority> authorities = Arrays.asList(new GrantedAuthority[]{getGrantedAuthority(userToken.getRole())});
 
         return new UsernamePasswordAuthenticationToken(userName, password, authorities);
     }

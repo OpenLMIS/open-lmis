@@ -33,7 +33,7 @@ public class UserAuthenticationProviderTest {
 
         String validUser = "validUser";
         String password = "password";
-        when(userService.authorizeUser(validUser, password)).thenReturn(new UserToken(new User(validUser, "ADMIN"), true));
+        when(userService.authorizeUser(validUser, password)).thenReturn(new UserToken(validUser, "ADMIN", true));
         Authentication authentication = new TestingAuthenticationToken(validUser, password);
 
         Authentication authenticate = userAuthenticationProvider.authenticate(authentication);
@@ -51,7 +51,7 @@ public class UserAuthenticationProviderTest {
     public void shouldNotAuthenticateInvalidUser() {
         String invalidUser = "invalidUser";
         String password = "password";
-        when(userService.authorizeUser(invalidUser, password)).thenReturn(new UserToken(new User(invalidUser, null), false));
+        when(userService.authorizeUser(invalidUser, password)).thenReturn(new UserToken(invalidUser, null, false));
         Authentication authentication = new TestingAuthenticationToken(invalidUser, password);
 
         Authentication authenticate = userAuthenticationProvider.authenticate(authentication);

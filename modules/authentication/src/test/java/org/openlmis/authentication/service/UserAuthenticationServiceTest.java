@@ -31,7 +31,7 @@ public class UserAuthenticationServiceTest {
         UserToken userToken = userAuthenticationService.authorizeUser(validUser, validPassword);
         verify(mockUserMapper).selectUserByUserNameAndPassword(validUser, validPassword);
         assertThat(userToken.isAuthenticated(), is(true));
-        assertThat(userToken.getUser().getRole(), is(equalTo("ADMIN")));
+        assertThat(userToken.getRole(), is(equalTo("ADMIN")));
     }
 
     @Test
@@ -42,7 +42,7 @@ public class UserAuthenticationServiceTest {
         UserToken userToken = userAuthenticationService.authorizeUser(validUser, invalidPassword);
         verify(mockUserMapper).selectUserByUserNameAndPassword(validUser, invalidPassword);
         assertThat(userToken.isAuthenticated(), is(false));
-        assertThat(userToken.getUser().getRole(), is(equalTo(null)));
+        assertThat(userToken.getRole(), is(equalTo(null)));
     }
 
 }

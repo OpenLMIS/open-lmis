@@ -24,7 +24,7 @@ public class UserAuthenticationServiceIT {
     public void shouldFetchUserFromDbByUserNameAndPassword() {
         UserToken userToken = userAuthenticationService.authorizeUser("User123", "User123");
         assertThat(userToken.isAuthenticated(), is(true));
-        assertThat(userToken.getUser().getUserName(), is(equalTo("User123")));
-        assertThat(userToken.getUser().getRole(), is(equalTo("USER")));
+        assertThat(userToken.getUserName(), is(equalTo("User123")));
+        assertThat(userToken.getRole(), is(equalTo("USER")));
     }
 }

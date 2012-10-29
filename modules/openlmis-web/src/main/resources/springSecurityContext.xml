@@ -16,7 +16,6 @@
 
     <http use-expressions="true">
         <intercept-url pattern="/auth/login" access="permitAll" requires-channel="http"/>
-        <intercept-url pattern="/static/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
         <intercept-url pattern="/admin/**" access="hasRole('ADMIN')" requires-channel="http"/>
         <intercept-url pattern="/logout" access="IS_AUTHENTICATED_ANONYMOUSLY" requires-channel="http"/>
         <intercept-url pattern="/**" access="hasRole('USER')" requires-channel="http"/>
