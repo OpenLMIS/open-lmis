@@ -12,7 +12,7 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class CsvParserServiceTest {
+public class CsvParserServiceTest1 {
 
     @Test
     public void shouldGetListOfListOfObjectsForCsvFile() throws Exception {
