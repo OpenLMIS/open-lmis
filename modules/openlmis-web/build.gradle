@@ -23,19 +23,9 @@ dependencies {
     contextPath = "openlmis"
 }
 
-task buildAdmin(type: GradleBuild) {
-    buildFile = '../admin-web/build.gradle'
-    tasks = ['build']
-}
-
-task buildOpenLmis(type: GradleBuild) {
-    buildFile = '../core-web/build.gradle'
-    tasks = ['build']
-}
+war.dependsOn([':modules:admin-web:war', ':modules:core-web:war'])
 
 war.doFirst {
-    tasks.buildAdmin.execute()
-    tasks.buildOpenLmis.execute()
     from zipTree(project(':modules:admin-web').war.archivePath)  //exclude { details -> details.file.name.endsWith('.xml') && details.file.text.contains('web') }
     from zipTree(project(':modules:core-web').war.archivePath) //exclude { details -> details.file.name.endsWith('.xml') && details.file.text.contains('web') }
     into('WEB-INF') {
