@@ -1,0 +1,18 @@
+apply plugin: 'idea'
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.mybatis:mybatis-spring:1.0.1',
+            'org.springframework:spring-core:3.1.1.RELEASE',
+            'org.springframework:spring-aspects:3.1.1.RELEASE',
+            'org.aspectj:aspectjrt:1.7.0',
+            project(':modules:db')
+
+    testCompile 'junit:junit:4.8.2',
+            'org.mockito:mockito-all:1.8.4'
+}
+
