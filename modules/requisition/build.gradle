@@ -12,9 +12,7 @@ dependencies {
             'org.aspectj:aspectjrt:1.7.0',
             project(':modules:db')
 
-    testCompile 'junit:junit:4.8.2',
-            'org.mockito:mockito-all:1.8.4',
-            'org.springframework:spring-test:3.1.1.RELEASE',
+    testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
             project(':modules:db')
 }
 

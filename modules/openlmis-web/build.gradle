@@ -41,14 +41,9 @@ dependencies {
             project(':modules:authentication'),
             'org.json:json:20090211'
 
-    testCompile 'org.kubek2k:springockito:1.0.4',
-            'org.kubek2k:springockito-annotations:1.0.2',
-            'junit:junit:4.8.2',
-            'org.mockito:mockito-all:1.8.4',
-            'org.springframework:spring-test:3.1.1.RELEASE',
+    testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
             'org.springframework:spring-test-mvc:1.0.0.M1',
-            'javax.servlet:servlet-api:2.5',
-            'org.hamcrest:hamcrest-all:1.3'
+            'javax.servlet:servlet-api:2.5'
 }
 
 [jettyRun]*.configure {

@@ -13,10 +13,7 @@ dependencies {
             'org.springframework:spring-web:3.1.1.RELEASE',
             project(':modules:requisition')
 
-
-    testCompile 'junit:junit:4.8.2',
-            'org.mockito:mockito-all:1.8.4',
-            project (':modules:requisition')
+    testCompile project (':modules:requisition')
 }
 
 task explodedWar(type: Copy) {

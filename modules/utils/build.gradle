@@ -1,4 +1,4 @@
-apply plugin:'idea'
+apply plugin: 'idea'
 apply plugin: 'java'
 
 
@@ -7,12 +7,7 @@ repositories {
 }
 
 
-dependencies{
-    compile    'net.sf.supercsv:super-csv:2.0.0-beta-1'
-
-    testCompile 'junit:junit:4.8.2',
-                project(':modules:core')
-
-
-
+dependencies {
+    compile 'net.sf.supercsv:super-csv:2.0.0-beta-1'
+    testCompile project(':modules:core')
 }
