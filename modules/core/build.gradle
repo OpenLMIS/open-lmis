@@ -1,7 +1,3 @@
-configurations {
-    flyway
-}
-
 dependencies {
 
     compile "postgresql:postgresql:9.1-901.jdbc4",
