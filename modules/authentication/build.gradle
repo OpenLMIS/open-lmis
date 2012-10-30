@@ -15,20 +15,10 @@ dependencies {
             'org.springframework:spring-core:3.1.1.RELEASE',
             'org.springframework:spring-aspects:3.1.1.RELEASE',
             'org.aspectj:aspectjrt:1.7.0',
-             project(':modules:db')
-
-
-    flyway "com.googlecode.flyway:flyway-ant:1.7",
-            "postgresql:postgresql:9.1-901.jdbc4"
-
+            'c3p0:c3p0:0.9.1.2',
+            project(':modules:db')
 
     testCompile 'junit:junit:4.8.2',
             'org.mockito:mockito-all:1.8.4',
             'org.springframework:spring-test:3.1.1.RELEASE'
-}
-
-task migrateDB << {
-    ext.flyway_classpath = files(sourceSets.main.output.resourcesDir) + files(configurations.flyway)
-    ant.taskdef(name: 'flywayMigrate', classname: 'com.googlecode.flyway.ant.MigrateTask', classpath: ext.flyway_classpath.asPath)
-    ant.flywayMigrate(driver: 'org.postgresql.Driver', url: 'jdbc:postgresql:' + dbName, user: dbUser, password: dbPassword)
 }

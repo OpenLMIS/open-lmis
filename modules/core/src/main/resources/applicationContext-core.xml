@@ -10,18 +10,7 @@
 
     <context:component-scan base-package="org.openlmis.core"/>
 
-    <context:property-placeholder location="postgresql.properties"/>
-
-    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
-        <property name="driverClass" value="${jdbc.driverClassName}"/>
-        <property name="jdbcUrl" value="${jdbc.url}"/>
-        <property name="user" value="${jdbc.username}"/>
-        <property name="password" value="${jdbc.password}"/>
-    </bean>
-
-    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref="dataSource"/>
-    </bean>
+    <import resource="classpath*:applicationContext-db.xml"/>
 
     <bean id="programMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
         <property name="mapperInterface" value="org.openlmis.core.dao.ProgramMapper"/>

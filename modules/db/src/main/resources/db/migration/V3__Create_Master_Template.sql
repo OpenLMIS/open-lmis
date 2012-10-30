@@ -10,5 +10,6 @@ CREATE TABLE Master_Program_Template(
     field_indicator char(3) not null,
     isUsed boolean not null,
     isVisible  boolean not null
+
 );
 
