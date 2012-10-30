@@ -1,9 +1,5 @@
 apply plugin: 'jetty'
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     compile 'org.testng:testng:6.1.1',
             'org.seleniumhq.selenium:selenium-java:2.25.0',
