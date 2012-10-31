@@ -67,4 +67,43 @@ public class RnRColumn {
                 .toHashCode();
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public String getDataSource() {
+        return dataSource;
+    }
+
+    public String getFormula() {
+        return formula;
+    }
+
+    public String getIndicator() {
+        return indicator;
+    }
+
+    public boolean isUsed() {
+        return used;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
 }
