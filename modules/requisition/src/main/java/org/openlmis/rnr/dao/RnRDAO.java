@@ -27,7 +27,7 @@ public class RnRDao {
             mapper.insert(programId, rnRColumn);
         }
         session.commit();
-        
+
         session.close();
     }
 
