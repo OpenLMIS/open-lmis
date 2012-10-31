@@ -7,6 +7,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.supercsv.cellprocessor.Optional;
 import org.supercsv.cellprocessor.ParseInt;
+import org.supercsv.cellprocessor.Trim;
 import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 
@@ -68,19 +69,22 @@ public class ImportFieldParserTest {
 
         ParseInt parseIntMock = mock(ParseInt.class);
         NotNull notNullMock = mock(NotNull.class);
+        Trim trimMock = mock(Trim.class);
 
         whenNew(ParseInt.class).withNoArguments().thenReturn(parseIntMock);
         whenNew(NotNull.class).withNoArguments().thenReturn(notNullMock);
         whenNew(NotNull.class).withArguments(parseIntMock).thenReturn(notNullMock);
+        whenNew(Trim.class).withArguments(parseIntMock).thenReturn(trimMock);
 
         parser = new ImportFieldParser();
         List<CellProcessor> cellProcessors = parser.parse(DummyImportable.class, headers);
 
         assertEquals(2, cellProcessors.size());
         verifyNew(NotNull.class).withNoArguments();
-        verifyNew(NotNull.class).withArguments(parseIntMock);
+        verifyNew(NotNull.class).withArguments(trimMock);
     }
 
+    @Test
     public void shouldBeAbleToPickupOptionalFieldTypes() throws Exception {
         Set<String> headers = new LinkedHashSet<String>();
         headers.add("mandatoryStringField");
@@ -90,18 +94,18 @@ public class ImportFieldParserTest {
 
         Optional optionalMock = mock(Optional.class);
         ParseInt parseIntMock = mock(ParseInt.class);
-
+        Trim trimMock = mock(Trim.class);
 
         whenNew(ParseInt.class).withNoArguments().thenReturn(parseIntMock);
         whenNew(Optional.class).withNoArguments().thenReturn(optionalMock);
         whenNew(Optional.class).withArguments(parseIntMock).thenReturn(optionalMock);
-
+        whenNew(Trim.class).withArguments(parseIntMock).thenReturn(trimMock);
         parser = new ImportFieldParser();
         List<CellProcessor> cellProcessors = parser.parse(DummyImportable.class, headers);
 
         assertEquals(4, cellProcessors.size());
         verifyNew(Optional.class).withNoArguments();
-        verifyNew(Optional.class).withArguments(parseIntMock);
+        verifyNew(Optional.class).withArguments(trimMock);
 
     }
 

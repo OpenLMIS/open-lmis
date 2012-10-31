@@ -2,6 +2,7 @@ package org.openlmis.upload.parser;
 
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
+import org.springframework.stereotype.Component;
 import org.supercsv.cellprocessor.*;
 import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.ift.CellProcessor;
@@ -10,19 +11,20 @@ import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import java.lang.reflect.Field;
 import java.util.*;
 
+@Component
 public class ImportFieldParser {
 
     private Map<String, StringCellProcessor> typeMappings = new HashMap<String, StringCellProcessor>();
 
     public ImportFieldParser() {
-        typeMappings.put("int", new ParseInt());
-        typeMappings.put("long", new ParseLong());
-        typeMappings.put("boolean", new ParseBool());
-        typeMappings.put("double", new ParseDouble());
+        typeMappings.put("int", new Trim(new ParseInt()));
+        typeMappings.put("long", new Trim(new ParseLong()));
+        typeMappings.put("boolean", new Trim(new ParseBool()));
+        typeMappings.put("double", new Trim(new ParseDouble()));
     }
 
     public List<CellProcessor> parse(Class<? extends Importable> clazz, Set<String> headers) throws Exception {
-        validateMandatory(clazz, headers);
+        validateHeaders(clazz, headers);
         return getProcessors(clazz, headers);
     }
 
@@ -53,7 +55,7 @@ public class ImportFieldParser {
         return (mappedProcessor == null) ? new NotNull() : new NotNull(mappedProcessor);
     }
 
-    private void validateMandatory(Class<? extends Importable> clazz, Set<String> headers) throws Exception {
+    private void validateHeaders(Class<? extends Importable> clazz, Set<String> headers) throws Exception {
         Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
             if (field.isAnnotationPresent(ImportField.class) && field.getAnnotation(ImportField.class).mandatory()) {
@@ -66,7 +68,7 @@ public class ImportFieldParser {
 
     private Field getDeclaredFieldIgnoreCase(Class<? extends Importable> clazz, String fieldName) throws NoSuchFieldException {
         for (Field field : clazz.getDeclaredFields()) {
-            if (field.getName().equals(fieldName)) {
+            if (field.getName().equalsIgnoreCase(fieldName)) {
                 return field;
             }
         }
