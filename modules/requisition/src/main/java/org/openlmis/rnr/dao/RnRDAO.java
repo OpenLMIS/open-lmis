@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class RnRDao {
+public class RnRDAO {
 
     private SqlSessionFactory sqlSessionFactory;
 
     @Autowired
-    public RnRDao(SqlSessionFactory sqlSessionFactory) {
+    public RnRDAO(SqlSessionFactory sqlSessionFactory) {
         this.sqlSessionFactory = sqlSessionFactory;
     }
 

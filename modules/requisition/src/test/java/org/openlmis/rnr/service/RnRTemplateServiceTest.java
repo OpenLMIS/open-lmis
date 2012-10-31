@@ -3,7 +3,7 @@ package org.openlmis.rnr.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.openlmis.rnr.dao.RnRColumnMapper;
-import org.openlmis.rnr.dao.RnRDao;
+import org.openlmis.rnr.dao.RnRDAO;
 import org.openlmis.rnr.domain.RnRColumn;
 
 import java.util.ArrayList;
@@ -19,11 +19,11 @@ public class RnRTemplateServiceTest {
 
     private RnRColumnMapper mapper;
     private RnRTemplateService service;
-    private RnRDao dao;
+    private RnRDAO dao;
 
     @Before
     public void setUp() throws Exception {
-        dao = mock(RnRDao.class);
+        dao = mock(RnRDAO.class);
         mapper = mock(RnRColumnMapper.class);
         service = new RnRTemplateService(mapper, dao);
     }

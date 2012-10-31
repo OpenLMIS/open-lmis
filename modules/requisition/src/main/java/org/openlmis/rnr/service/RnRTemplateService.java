@@ -1,7 +1,7 @@
 package org.openlmis.rnr.service;
 
 import org.openlmis.rnr.dao.RnRColumnMapper;
-import org.openlmis.rnr.dao.RnRDao;
+import org.openlmis.rnr.dao.RnRDAO;
 import org.openlmis.rnr.domain.RnRColumn;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,10 +12,10 @@ import java.util.List;
 @Service
 public class RnRTemplateService {
     private RnRColumnMapper rnrColumnMapper;
-    private RnRDao rnRDao;
+    private RnRDAO rnRDao;
 
     @Autowired
-    public RnRTemplateService(RnRColumnMapper rnrColumnMapper, RnRDao rnRDao) {
+    public RnRTemplateService(RnRColumnMapper rnrColumnMapper, RnRDAO rnRDao) {
         this.rnrColumnMapper = rnrColumnMapper;
         this.rnRDao = rnRDao;
     }
