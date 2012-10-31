@@ -22,6 +22,7 @@ public class RnRDaoTest {
         final ArrayList<RnRColumn> rnRColumns = new ArrayList<RnRColumn>() {{
             add(column1);
             add(column2);
+
         }};
 
         SqlSession sqlSession = mock(SqlSession.class);
