@@ -1,6 +1,5 @@
 package org.openlmis.rnr.service;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.rnr.dao.RnRColumnMapper;
@@ -22,7 +21,7 @@ public class RnRColumnMapperTest {
     RnRColumnMapper rnrColumnMapper;
 
 
-    @Test @Ignore("waiting for refactoring on db migrations")
+    @Test
     public void shouldRetrieveAllColumnsFromMasterTable() throws Exception {
         RnRColumn rnRColumn = new RnRColumn("Medicine_Name", "First test medicine",1,
                 "Medicine Name", "M", "Derived", "a+b+c",
