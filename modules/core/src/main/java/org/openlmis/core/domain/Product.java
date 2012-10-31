@@ -32,14 +32,14 @@ public class Product {
     private boolean productIsLightSensitive;
     private boolean approvedByWHO;
     private String contraceptiveCYP;
-    private String packLength;
-    private String packWidth;
-    private String packHeight;
-    private String packWeight;
+    private int packLength;
+    private int packWidth;
+    private int packHeight;
+    private int packWeight;
     private int packsPerCarton;
-    private String cartonLength;
-    private String cartonWidth;
-    private String cartonHeight;
+    private int cartonLength;
+    private int cartonWidth;
+    private int cartonHeight;
     private int cartonsPerPallet;
     private int expectedShelfLife;
     private String specialStorageInstructions;
@@ -165,19 +165,19 @@ public class Product {
         this.contraceptiveCYP = contraceptiveCYP;
     }
 
-    public void setPackLength(String packLength) {
+    public void setPackLength(int packLength) {
         this.packLength = packLength;
     }
 
-    public void setPackWidth(String packWidth) {
+    public void setPackWidth(int packWidth) {
         this.packWidth = packWidth;
     }
 
-    public void setPackHeight(String packHeight) {
+    public void setPackHeight(int packHeight) {
         this.packHeight = packHeight;
     }
 
-    public void setPackWeight(String packWeight) {
+    public void setPackWeight(int packWeight) {
         this.packWeight = packWeight;
     }
 
@@ -185,15 +185,15 @@ public class Product {
         this.packsPerCarton = packsPerCarton;
     }
 
-    public void setCartonLength(String cartonLength) {
+    public void setCartonLength(int cartonLength) {
         this.cartonLength = cartonLength;
     }
 
-    public void setCartonWidth(String cartonWidth) {
+    public void setCartonWidth(int cartonWidth) {
         this.cartonWidth = cartonWidth;
     }
 
-    public void setCartonHeight(String cartonHeight) {
+    public void setCartonHeight(int cartonHeight) {
         this.cartonHeight = cartonHeight;
     }
 
