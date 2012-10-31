@@ -22,11 +22,10 @@ import static org.powermock.api.mockito.PowerMockito.verifyNew;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ImportFieldParser.class, Class.class})
+@PrepareForTest({ImportFieldParser.class})
 public class ImportFieldParserTest {
 
-    public ImportFieldParser parser = new ImportFieldParser();
-
+    ImportFieldParser parser = new ImportFieldParser();
 
     @Test
     public void shouldReturnCorrectProcessorForHeaders() throws Exception {
