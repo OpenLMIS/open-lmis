@@ -9,4 +9,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ImportField {
     boolean mandatory() default false;
+    String type() default "String";
 }

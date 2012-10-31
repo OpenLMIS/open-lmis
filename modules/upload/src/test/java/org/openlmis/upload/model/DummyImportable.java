@@ -10,12 +10,22 @@ public class DummyImportable implements Importable {
     @Getter
     @Setter
     @ImportField(mandatory = true)
-    String mandatoryField;
+    String mandatoryStringField;
+
+    @Getter
+    @Setter
+    @ImportField(mandatory = true, type = "int")
+    int mandatoryIntField;
 
     @Getter
     @Setter
     @ImportField
-    String optionalField;
+    String optionalStringField;
+
+    @Getter
+    @Setter
+    @ImportField(type = "int")
+    int optionalIntField;
 
     @Getter
     @Setter

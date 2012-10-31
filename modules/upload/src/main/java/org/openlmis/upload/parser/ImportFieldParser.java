@@ -2,16 +2,24 @@ package org.openlmis.upload.parser;
 
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
-import org.supercsv.cellprocessor.Optional;
+import org.supercsv.cellprocessor.*;
 import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.cellprocessor.ift.StringCellProcessor;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ImportFieldParser {
+
+    private Map<String, StringCellProcessor> typeMappings = new HashMap<String, StringCellProcessor>();
+
+    public ImportFieldParser() {
+        typeMappings.put("int", new ParseInt());
+        typeMappings.put("long", new ParseLong());
+        typeMappings.put("boolean", new ParseBool());
+        typeMappings.put("double", new ParseDouble());
+    }
 
     public List<CellProcessor> parse(Class<? extends Importable> clazz, Set<String> headers) throws Exception {
         validateMandatory(clazz, headers);
@@ -22,19 +30,27 @@ public class ImportFieldParser {
         List<CellProcessor> processors = new ArrayList<CellProcessor>();
         for (String header : headers) {
             Field field = getDeclaredFieldIgnoreCase(clazz, header);
+            CellProcessor processor = null;
             if (field != null && field.isAnnotationPresent(ImportField.class)) {
                 ImportField importField = field.getAnnotation(ImportField.class);
-                if (importField.mandatory()) {
-                    processors.add(new NotNull());
-                } else {
-                    processors.add(new Optional());
-                }
-            } else {
-                processors.add(null);
+                processor = chainTypeProcessor(importField.mandatory(), typeMappings.get(importField.type()));
             }
+            processors.add(processor);
         }
 
         return processors;
+    }
+
+    private CellProcessor chainTypeProcessor(boolean isMandatory, CellProcessor mappedProcessor) {
+        return isMandatory ? createMandatoryProcessor(mappedProcessor) : createOptionalProcessor(mappedProcessor);
+    }
+
+    private CellProcessor createOptionalProcessor(CellProcessor mappedProcessor) {
+        return (mappedProcessor == null) ? new Optional() : new Optional(mappedProcessor);
+    }
+
+    private CellProcessor createMandatoryProcessor(CellProcessor mappedProcessor) {
+        return (mappedProcessor == null) ? new NotNull() : new NotNull(mappedProcessor);
     }
 
     private void validateMandatory(Class<? extends Importable> clazz, Set<String> headers) throws Exception {
