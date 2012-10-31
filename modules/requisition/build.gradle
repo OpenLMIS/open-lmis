@@ -3,6 +3,7 @@ dependencies {
             'org.springframework:spring-core:3.1.1.RELEASE',
             'org.springframework:spring-aspects:3.1.1.RELEASE',
             'org.aspectj:aspectjrt:1.7.0',
+            'commons-lang:commons-lang:2.6',
             project(':modules:db')
 
     testCompile 'org.springframework:spring-test:3.1.1.RELEASE',

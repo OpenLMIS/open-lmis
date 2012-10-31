@@ -1,5 +1,8 @@
 package org.openlmis.rnr.domain;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 public class RnRColumn {
 
     private String name;
@@ -30,56 +33,38 @@ public class RnRColumn {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        RnRColumn rnRColumn = (RnRColumn) o;
-
-        if (position != rnRColumn.position) return false;
-        if (used != rnRColumn.used) return false;
-        if (visible != rnRColumn.visible) return false;
-        if (dataSource != null ? !dataSource.equals(rnRColumn.dataSource) : rnRColumn.dataSource != null) return false;
-        if (defaultValue != null ? !defaultValue.equals(rnRColumn.defaultValue) : rnRColumn.defaultValue != null)
+        if (o == null) { return false; }
+        if (o == this) { return true; }
+        if (o.getClass() != getClass()) {
             return false;
-        if (description != null ? !description.equals(rnRColumn.description) : rnRColumn.description != null)
-            return false;
-        if (formula != null ? !formula.equals(rnRColumn.formula) : rnRColumn.formula != null) return false;
-        if (indicator != null ? !indicator.equals(rnRColumn.indicator) : rnRColumn.indicator != null) return false;
-        if (label != null ? !label.equals(rnRColumn.label) : rnRColumn.label != null) return false;
-        if (name != null ? !name.equals(rnRColumn.name) : rnRColumn.name != null) return false;
-
-        return true;
+        }
+        RnRColumn rhs = (RnRColumn) o;
+        return new EqualsBuilder()
+                .append(position, rhs.position)
+                .append(label, rhs.label)
+                .append(name, rhs.name)
+                .append(visible, rhs.visible)
+                .append(dataSource, rhs.dataSource)
+                .append(defaultValue, rhs.defaultValue)
+                .append(description, rhs.description)
+                .append(formula, rhs.formula)
+                .append(indicator, rhs.indicator)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + position;
-        result = 31 * result + (label != null ? label.hashCode() : 0);
-        result = 31 * result + (defaultValue != null ? defaultValue.hashCode() : 0);
-        result = 31 * result + (dataSource != null ? dataSource.hashCode() : 0);
-        result = 31 * result + (formula != null ? formula.hashCode() : 0);
-        result = 31 * result + (indicator != null ? indicator.hashCode() : 0);
-        result = 31 * result + (used ? 1 : 0);
-        result = 31 * result + (visible ? 1 : 0);
-        return result;
+     return new HashCodeBuilder(13,17)
+                .append(position)
+                .append(label)
+                .append(name)
+                .append(visible)
+                .append(dataSource)
+                .append(defaultValue)
+                .append(description)
+                .append(formula)
+                .append(indicator)
+                .toHashCode();
     }
 
-
-    @Override
-    public String toString() {
-        return "RnRColumn{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", position=" + position +
-                ", label='" + label + '\'' +
-                ", defaultValue='" + defaultValue + '\'' +
-                ", dataSource='" + dataSource + '\'' +
-                ", formula='" + formula + '\'' +
-                ", indicator='" + indicator + '\'' +
-                ", used=" + used +
-                ", visible=" + visible +
-                '}';
-    }
 }
