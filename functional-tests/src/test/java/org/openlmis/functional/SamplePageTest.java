@@ -23,7 +23,7 @@ public class SamplePageTest {
 
     @Test
     public void testLogin() {
-        driver.get("http://localhost:9090/openlmis-web/spring_security_login");
-        assertTrue(driver.getCurrentUrl().contains("spring_security_login"));
+        driver.get("http://localhost:9090/openlmis/spring_security_login");
+        assertTrue(driver.getPageSource().contains("Sign In"));
     }
 }

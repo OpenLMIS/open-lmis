@@ -1,3 +1,5 @@
+apply plugin: 'idea'
+
 subprojects {
     apply plugin: 'idea'
     apply plugin: 'java'
