@@ -1,8 +1,8 @@
-package org.openlmis.rnr.service;
+package org.openlmis.rnr.dao;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openlmis.rnr.dao.RnRColumnMapper;
 import org.openlmis.rnr.domain.RnRColumn;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -17,16 +17,28 @@ import static org.junit.Assert.assertThat;
 @ContextConfiguration(locations = "classpath*:applicationContext-requisition.xml")
 public class RnRColumnMapperTest {
 
+    RnRColumn rnRColumn;
+
+    @Before
+    public void setUp() throws Exception {
+        rnRColumn = new RnRColumn(1, "Medicine_Name", "First test medicine",1,
+                "Medicine Name", "M", "Derived", "a+b+c",
+                "X", true,false);
+    }
+
     @Autowired
     RnRColumnMapper rnrColumnMapper;
 
 
     @Test
     public void shouldRetrieveAllColumnsFromMasterTable() throws Exception {
-        RnRColumn rnRColumn = new RnRColumn("Medicine_Name", "First test medicine",1,
-                "Medicine Name", "M", "Derived", "a+b+c",
-                "X", true,false);
         List<RnRColumn> result = rnrColumnMapper.fetchAllMasterRnRColumns();
         assertThat(result.contains(rnRColumn),is(true));
+    }
+
+    @Test
+    public void shouldInsertRnRColumnForProgram() throws Exception {
+       int success = rnrColumnMapper.insert(1,rnRColumn);
+       assertThat(success,is(1));
     }
 }

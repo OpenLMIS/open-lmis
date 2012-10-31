@@ -3,6 +3,7 @@ package org.openlmis.rnr.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.openlmis.rnr.dao.RnRColumnMapper;
+import org.openlmis.rnr.dao.RnRDao;
 import org.openlmis.rnr.domain.RnRColumn;
 
 import java.util.ArrayList;
@@ -11,17 +12,20 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class RnRTemplateServiceTest {
 
     private RnRColumnMapper mapper;
     private RnRTemplateService service;
+    private RnRDao dao;
 
     @Before
     public void setUp() throws Exception {
+        dao = mock(RnRDao.class);
         mapper = mock(RnRColumnMapper.class);
-        service = new RnRTemplateService(mapper);
+        service = new RnRTemplateService(mapper, dao);
     }
 
     @Test
@@ -38,5 +42,13 @@ public class RnRTemplateServiceTest {
         when(mapper.fetchAllMasterRnRColumns()).thenReturn(nullList);
         List<RnRColumn> returnedList = service.fetchAllMasterColumns();
         assertThat(returnedList,not(nullValue()));
+    }
+
+    @Test
+    public void shouldCreateARnRTemplateForAProgramWithGivenColumns() throws Exception {
+        String programId = "10";
+        List<RnRColumn> rnrColumns = new ArrayList<RnRColumn>();
+        service.createRnRTemplateForProgram(programId, rnrColumns);
+        verify(dao).insertAllRnRColumns(10, rnrColumns);
     }
 }

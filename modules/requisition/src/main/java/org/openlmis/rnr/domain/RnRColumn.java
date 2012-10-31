@@ -5,6 +5,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 public class RnRColumn {
 
+    private Integer id;
     private String name;
     private String description;
     private int position;
@@ -18,7 +19,8 @@ public class RnRColumn {
 
     public RnRColumn(){}
 
-    public RnRColumn(String name, String description, int position, String label, String defaultValue, String dataSource, String formula, String indicator, boolean isUsed, boolean isVisible) {
+    public RnRColumn(Integer id, String name, String description, int position, String label, String defaultValue, String dataSource, String formula, String indicator, boolean isUsed, boolean isVisible) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.position = position;
@@ -105,5 +107,9 @@ public class RnRColumn {
 
     public boolean isVisible() {
         return visible;
+    }
+
+    public Integer getId() {
+        return id;
     }
 }
