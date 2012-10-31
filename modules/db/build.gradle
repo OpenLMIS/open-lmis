@@ -9,6 +9,7 @@ dependencies {
     compile "com.googlecode.flyway:flyway-core:1.7"
     compile "com.googlecode.flyway:flyway-ant:1.7"
     compile "postgresql:postgresql:9.1-901.jdbc4"
+    compile "c3p0:c3p0:0.9.0.4"
     flyway "com.googlecode.flyway:flyway-ant:1.7"
     flyway "postgresql:postgresql:9.1-901.jdbc4"
     classpath 'postgresql:postgresql:9.1-901.jdbc4'
