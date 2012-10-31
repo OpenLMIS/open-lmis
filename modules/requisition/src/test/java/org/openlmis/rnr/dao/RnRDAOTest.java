@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 import static org.mockito.Mockito.*;
 
-public class RnRDaoTest {
+public class RnRDAOTest {
     private SqlSessionFactory sqlSessionFactory;
 
     @Test
@@ -30,7 +30,7 @@ public class RnRDaoTest {
         RnRColumnMapper mapper = mock(RnRColumnMapper.class);
         when(sqlSession.getMapper(RnRColumnMapper.class)).thenReturn(mapper);
 
-        RnRDao rnRDao = new RnRDao(sqlSessionFactory);
+        RnRDAO rnRDao = new RnRDAO(sqlSessionFactory);
         Integer programId = 1;
         rnRDao.insertAllRnRColumns(programId, rnRColumns);
 
