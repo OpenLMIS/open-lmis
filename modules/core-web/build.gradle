@@ -1,10 +1,12 @@
 apply plugin: 'jetty'
-apply plugin:  'war'
+apply plugin: 'war'
 
 dependencies{
     compile 'org.springframework:spring-core:3.1.1.RELEASE',
-        'org.springframework:spring-webmvc:3.1.1.RELEASE',
-        'org.springframework:spring-web:3.1.1.RELEASE'
+            'org.springframework:spring-webmvc:3.1.1.RELEASE',
+            'org.springframework:spring-web:3.1.1.RELEASE',
+            'org.freemarker:freemarker:2.3.14',
+            'org.springframework.security:spring-security-taglibs:3.1.2.RELEASE'
 }
 
 task explodedWar(type: Copy) {

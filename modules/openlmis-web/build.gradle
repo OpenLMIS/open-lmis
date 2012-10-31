@@ -12,8 +12,10 @@ dependencies {
             'org.codehaus.jackson:jackson-mapper-asl:1.9.9',
             project(':modules:authentication'),
             project(':modules:admin-web'),
-            project(':modules:authentication'),
-            'org.json:json:20090211'
+            project(':modules:core-web'),
+            'org.json:json:20090211',
+            'org.freemarker:freemarker:2.3.14',
+            'org.springframework.security:spring-security-taglibs:3.1.2.RELEASE'
 
     testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
             'org.springframework:spring-test-mvc:1.0.0.M1',

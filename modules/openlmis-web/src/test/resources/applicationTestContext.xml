@@ -9,5 +9,4 @@
     <mvc:annotation-driven/>
 
     <context:component-scan base-package="org.openlmis.web"/>
-
 </beans>

@@ -13,6 +13,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -56,11 +57,11 @@ public class UserAuthenticationProviderTest {
 
         Authentication authenticate = userAuthenticationProvider.authenticate(authentication);
 
-        assertThat(authenticate,instanceOf(UsernamePasswordAuthenticationToken.class));
-        assertThat(authenticate.getPrincipal().toString(), is(equalTo(invalidUser)));
-        assertThat(authenticate.getCredentials().toString(), is(equalTo(password)));
-        assertThat(authenticate.isAuthenticated(), is(false));
-        assertThat(authenticate.getAuthorities().size(),  is(equalTo(0)));
+        assertThat(authenticate,is(equalTo(null)));
+//        assertThat(authenticate.getPrincipal().toString(), is(equalTo(invalidUser)));
+//        assertThat(authenticate.getCredentials().toString(), is(equalTo(password)));
+//        assertThat(authenticate.isAuthenticated(), is(false));
+//        assertThat(authenticate.getAuthorities().size(),  is(equalTo(0)));
     }
 
 }
