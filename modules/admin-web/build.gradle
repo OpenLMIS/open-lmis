@@ -11,7 +11,8 @@ dependencies {
             'org.springframework:spring-web:3.1.1.RELEASE',
             project(':modules:requisition'),
             'org.freemarker:freemarker:2.3.14',
-            'org.springframework.security:spring-security-taglibs:3.1.2.RELEASE'
+            'org.springframework.security:spring-security-taglibs:3.1.2.RELEASE',
+            'javax.servlet:servlet-api:2.5'
 
     testCompile project (':modules:requisition')
 }

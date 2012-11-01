@@ -1,4 +1,7 @@
 dependencies {
-    compile 'net.sf.supercsv:super-csv:2.0.0-beta-1'
-    testCompile project(':modules:core')
+    compile 'net.sf.supercsv:super-csv:2.0.0-beta-1',
+            'commons-codec:commons-codec:1.7'
+
+    testCompile project(':modules:core'),
+            'org.springframework:spring-test:3.1.1.RELEASE'
 }

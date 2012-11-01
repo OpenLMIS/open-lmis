@@ -16,5 +16,15 @@
     <import resource="classpath:/applicationContext-authentication.xml"/>
 
     <bean id="userAuthenticationProvider" class="org.openlmis.web.authentication.UserAuthenticationProvider"/>
-    <bean id="userAuthenticationSuccessHandler" class="org.openlmis.web.authentication.UserAuthenticationSuccessHandler"/>
+    <bean id="userAuthenticationSuccessHandler"
+          class="org.openlmis.web.authentication.UserAuthenticationSuccessHandler"/>
+
+    <mvc:interceptors>
+        <bean id="noCacheInterceptor" class="org.springframework.web.servlet.mvc.WebContentInterceptor">
+            <property name="cacheSeconds" value="0"/>
+            <property name="useExpiresHeader" value="true"/>
+            <property name="useCacheControlHeader" value="true"/>
+            <property name="useCacheControlNoStore" value="true"/>
+        </bean>
+    </mvc:interceptors>
 </beans>

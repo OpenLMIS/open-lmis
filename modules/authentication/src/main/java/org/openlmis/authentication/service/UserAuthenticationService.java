@@ -3,11 +3,12 @@ package org.openlmis.authentication.service;
 import org.openlmis.authentication.UserToken;
 import org.openlmis.authentication.dao.UserMapper;
 import org.openlmis.authentication.domain.User;
+import org.openlmis.utils.hash.Encoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserAuthenticationService{
+public class UserAuthenticationService {
 
     private static final boolean AUTHORIZATION_SUCCESSFUL = true;
     private static final boolean AUTHORIZATION_FAILED = false;
@@ -20,14 +21,10 @@ public class UserAuthenticationService{
     }
 
     public UserToken authorizeUser(String userName, String password) {
-
-        User fetchedUser = userMapper.selectUserByUserNameAndPassword(userName, password);
-        if(fetchedUser==null) return new UserToken(userName, null, AUTHORIZATION_FAILED);
+        String passwordHash = Encoder.hash(password);
+        User fetchedUser = userMapper.selectUserByUserNameAndPassword(userName, passwordHash);
+        if (fetchedUser == null) return new UserToken(userName, null, AUTHORIZATION_FAILED);
 
         return new UserToken(fetchedUser.getUserName(), fetchedUser.getRole(), AUTHORIZATION_SUCCESSFUL);
-    }
-
-    private boolean getTokenFlag(User user) {
-        return user!=null;
     }
 }
