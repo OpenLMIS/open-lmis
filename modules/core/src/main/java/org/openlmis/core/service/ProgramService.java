@@ -10,12 +10,9 @@ import java.util.List;
 @Service
 public class ProgramService {
 
-    @Autowired
     public ProgramMapper programMapper;
 
-    public ProgramService() {
-    }
-
+    @Autowired
     public ProgramService(ProgramMapper programMapper) {
         this.programMapper = programMapper;
     }
@@ -23,13 +20,4 @@ public class ProgramService {
     public List<Program> getAll() {
         return programMapper.selectAll();
     }
-
-    public void add(Program program) {
-        programMapper.insert(program);
-    }
-
-    public void removeAll() {
-        programMapper.deleteAll();
-    }
-
 }
