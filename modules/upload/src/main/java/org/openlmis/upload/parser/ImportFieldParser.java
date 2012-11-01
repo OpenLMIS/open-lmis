@@ -24,8 +24,16 @@ public class ImportFieldParser {
     }
 
     public List<CellProcessor> parse(Class<? extends Importable> clazz, Set<String> headers) throws Exception {
-        validateHeaders(clazz, headers);
+        validateHeaders(clazz, lowerCase(headers));
         return getProcessors(clazz, headers);
+    }
+
+    private Set<String> lowerCase(Set<String> headers) {
+        Set<String> lowerCaseHeaders = new HashSet<String>();
+        for(String header: headers) {
+            lowerCaseHeaders.add(header.toLowerCase());
+        }
+        return lowerCaseHeaders;
     }
 
     private List<CellProcessor> getProcessors(Class<? extends Importable> clazz, Set<String> headers) throws NoSuchFieldException {
@@ -59,7 +67,7 @@ public class ImportFieldParser {
         Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
             if (field.isAnnotationPresent(ImportField.class) && field.getAnnotation(ImportField.class).mandatory()) {
-                if (!headers.contains(field.getName())) {
+                if (!headers.contains(field.getName().toLowerCase())) {
                     throw new Exception("Mandatory Field " + field.getName() + " not present");
                 }
             }

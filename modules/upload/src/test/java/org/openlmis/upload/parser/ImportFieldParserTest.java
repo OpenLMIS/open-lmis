@@ -45,6 +45,19 @@ public class ImportFieldParserTest {
     }
 
     @Test
+    public void testReturnProcessorForMismatchCaseAsWell() throws Exception {
+        Set<String> headers = new LinkedHashSet<String>();
+        headers.add("MANDAtoryStringField");
+        headers.add("mandatoryIntFIELD");
+
+        List<CellProcessor> cellProcessors = parser.parse(DummyImportable.class, headers);
+
+        assertEquals(2, cellProcessors.size());
+        assertTrue(cellProcessors.get(0) instanceof NotNull);
+        assertTrue(cellProcessors.get(1) instanceof NotNull);
+    }
+
+    @Test
     public void shouldIgnoreNonAnnotatedHeaders() throws Exception {
         Set<String> headers = new LinkedHashSet<String>();
         headers.add("mandatoryStringField");
