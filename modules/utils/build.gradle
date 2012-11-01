@@ -1,6 +1,0 @@
-dependencies {
-    compile 'net.sf.supercsv:super-csv:2.0.0-beta-1'
-
-    testCompile project(':modules:core'),
-            'org.springframework:spring-test:3.1.1.RELEASE'
-}
