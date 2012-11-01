@@ -1,11 +1,13 @@
-package org.openlmis.upload;
+package org.openlmis.upload.model;
 
 import lombok.Getter;
+import org.openlmis.upload.Importable;
+import org.openlmis.upload.RecordHandler;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DummyRecordHandler implements RecordHandler{
+public class DummyRecordHandler implements RecordHandler {
 
     @Getter
     private List<Importable> importedObjects = new ArrayList<Importable>();

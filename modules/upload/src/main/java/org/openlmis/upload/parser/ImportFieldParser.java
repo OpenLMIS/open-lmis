@@ -21,6 +21,8 @@ public class ImportFieldParser {
         typeMappings.put("long", new Trim(new ParseLong()));
         typeMappings.put("boolean", new Trim(new ParseBool()));
         typeMappings.put("double", new Trim(new ParseDouble()));
+        typeMappings.put("String", new Trim());
+
     }
 
     public List<CellProcessor> parse(Class<? extends Importable> clazz, Set<String> headers) throws Exception {

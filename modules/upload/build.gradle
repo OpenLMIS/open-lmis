@@ -12,7 +12,9 @@ dependencies {
     compile 'net.sf.supercsv:super-csv:2.0.0-beta-1',
             'org.projectlombok:lombok:0.11.0',
             'org.springframework:spring-context:3.1.2.RELEASE',
-            'org.springframework:spring-beans:3.1.2.RELEASE'
+            'org.springframework:spring-aspects:3.1.1.RELEASE',
+            'org.springframework:spring-beans:3.1.2.RELEASE',
+            'org.aspectj:aspectjrt:1.7.0'
 
     testCompile 'junit:junit:4.8.2',
             'org.powermock:powermock-api-mockito:1.4.12',

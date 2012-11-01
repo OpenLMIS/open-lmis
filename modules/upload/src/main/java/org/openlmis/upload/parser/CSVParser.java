@@ -17,41 +17,34 @@ import java.util.Set;
 
 public class CSVParser {
 
-    private CsvBeanReader csvBeanReader;
-    private Class<? extends Importable> model;
-    private RecordHandler recordHandler;
-
-    @Autowired
     private ImportFieldParser importFieldParser;
 
-    public CSVParser(File csvFile, Class<? extends Importable> model, RecordHandler handler) throws FileNotFoundException {
-        this.model = model;
-        recordHandler = handler;
-        this.csvBeanReader = new CsvBeanReader(new FileReader(csvFile), CsvPreference.STANDARD_PREFERENCE);
+    @Autowired
+    public CSVParser(ImportFieldParser importFieldParser) throws FileNotFoundException {
+        this.importFieldParser = importFieldParser;
     }
 
-    public void process() throws Exception {
+    public void process(File csvFile, Class<? extends Importable> modelClass, RecordHandler recordHandler) throws Exception {
+
+        CsvBeanReader csvBeanReader = new CsvBeanReader(new FileReader(csvFile), CsvPreference.STANDARD_PREFERENCE);
 
         String[] headers = csvBeanReader.getHeader(true);
         trimWhiteSpaceFromHeaders(headers);
         Set<String> headersSet = new LinkedHashSet<String>(Arrays.asList(headers));
 
-        List<CellProcessor> cellProcessors = new ImportFieldParser().parse(model, headersSet);
+        List<CellProcessor> cellProcessors = importFieldParser.parse(modelClass, headersSet);
 
         CellProcessor[] processors = cellProcessors.toArray(new CellProcessor[0]);
         Importable importedModel;
 
-        while ((importedModel = csvBeanReader.read(model, headers, processors)) !=null){
-         recordHandler.execute(importedModel);
+        while ((importedModel = csvBeanReader.read(modelClass, headers, processors)) != null) {
+            recordHandler.execute(importedModel);
         }
-
-
     }
 
     private void trimWhiteSpaceFromHeaders(String[] headers) {
-        int i = 0;
-        for (String header : headers) {
-            headers[i++] = header.trim();
+        for (int i =0; i<headers.length ;i++) {
+            headers[i] = headers[i].trim();
         }
     }
 }
