@@ -17,4 +17,9 @@
         <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
     </bean>
 
+    <bean id="productMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="org.openlmis.core.dao.ProductMapper"/>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+
 </beans>

@@ -8,7 +8,9 @@ dependencies {
             'org.springframework:spring-web:3.1.1.RELEASE',
             'org.springframework:spring-aspects:3.1.1.RELEASE',
             'org.aspectj:aspectjrt:1.7.0',
-            project(':modules:db')
+            'org.projectlombok:lombok:0.11.0',
+            project(':modules:db'),
+            project(':modules:upload')
 
     testCompile 'org.springframework:spring-test:3.1.1.RELEASE'
 

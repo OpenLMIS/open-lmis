@@ -1,251 +1,208 @@
 package org.openlmis.core.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.openlmis.upload.Importable;
+
 import java.util.Date;
 
-public class Product {
+public class Product implements Importable {
 
+
+    @Getter
+    @Setter
     private String productCode;
+
+    @Getter
+    @Setter
     private String alternateItemCode;
+
+    @Getter
+    @Setter
     private long productManufacturerId;
+
+    @Getter
+    @Setter
     private String manufacturerProductCode;
+
+    @Getter
+    @Setter
     private String manufacturerBarCode;
+
+    @Getter
+    @Setter
     private String moHBarCode;
+
+    @Getter
+    @Setter
     private String GTIN;
+
+    @Getter
+    @Setter
     private long productType;
+
+    @Getter
+    @Setter
     private String productPrimaryName;
+
+    @Getter
+    @Setter
     private String productFullName;
+
+    @Getter
+    @Setter
     private String genericName;
+
+    @Getter
+    @Setter
     private String alternateName;
+
+    @Getter
+    @Setter
     private String description;
+
+    @Getter
+    @Setter
     private String productStrength;
+
+    @Getter
+    @Setter
     private long productForm;
+
+    @Getter
+    @Setter
     private long dosageUnits;
+
+    @Getter
+    @Setter
     private long dispensingUnits;
+
+    @Getter
+    @Setter
     private int dosesPerDispensingUnit;
+
+    @Getter
+    @Setter
     private int packSize;
+
+    @Getter
+    @Setter
     private int alternatePackSize;
+
+    @Getter
+    @Setter
     private boolean storeRefrigerated;
+
+    @Getter
+    @Setter
     private boolean storeRoomTemperature;
+
+    @Getter
+    @Setter
     private boolean productIsHazardous;
+
+    @Getter
+    @Setter
     private boolean productIsFlammable;
+
+    @Getter
+    @Setter
     private boolean productIsControlledSubstance;
+
+    @Getter
+    @Setter
     private boolean productIsLightSensitive;
+
+    @Getter
+    @Setter
     private boolean approvedByWHO;
+
+    @Getter
+    @Setter
     private String contraceptiveCYP;
+
+    @Getter
+    @Setter
     private int packLength;
+
+    @Getter
+    @Setter
     private int packWidth;
+
+    @Getter
+    @Setter
     private int packHeight;
+
+    @Getter
+    @Setter
     private int packWeight;
+
+    @Getter
+    @Setter
     private int packsPerCarton;
+
+    @Getter
+    @Setter
     private int cartonLength;
+
+    @Getter
+    @Setter
     private int cartonWidth;
+
+    @Getter
+    @Setter
     private int cartonHeight;
+
+    @Getter
+    @Setter
     private int cartonsPerPallet;
+
+    @Getter
+    @Setter
     private int expectedShelfLife;
+
+    @Getter
+    @Setter
     private String specialStorageInstructions;
+
+    @Getter
+    @Setter
     private String specialTransportInstructions;
+
+    @Getter
+    @Setter
     private boolean productIsActive;
+
+    @Getter
+    @Setter
     private boolean productIsFullSupply;
+
+    @Getter
+    @Setter
     private boolean isATracerProduct;
+
+    @Getter
+    @Setter
     private int packRoundingThreshold;
+
+    @Getter
+    @Setter
     private boolean canRoundToZero;
+
+    @Getter
+    @Setter
     private boolean hasBeenArchived;
+
+    @Getter
+    @Setter
     private Date lastModifiedDate;
+
+    @Getter
+    @Setter
     private long lastModifiedBy;
 
-    public void setProductCode(String productCode) {
-        this.productCode = productCode;
-    }
-
-    public void setAlternateItemCode(String alternateItemCode) {
-        this.alternateItemCode = alternateItemCode;
-    }
-
-    public void setProductManufacturerId(long productManufacturerId) {
-        this.productManufacturerId = productManufacturerId;
-    }
-
-    public void setManufacturerProductCode(String manufacturerProductCode) {
-        this.manufacturerProductCode = manufacturerProductCode;
-    }
-
-    public void setManufacturerBarCode(String manufacturerBarCode) {
-        this.manufacturerBarCode = manufacturerBarCode;
-    }
-
-    public void setMoHBarCode(String moHBarCode) {
-        this.moHBarCode = moHBarCode;
-    }
-
-    public void setGTIN(String GTIN) {
-        this.GTIN = GTIN;
-    }
-
-    public void setProductType(long productType) {
-        this.productType = productType;
-    }
-
-    public void setProductPrimaryName(String productPrimaryName) {
-        this.productPrimaryName = productPrimaryName;
-    }
-
-    public void setProductFullName(String productFullName) {
-        this.productFullName = productFullName;
-    }
-
-    public void setGenericName(String genericName) {
-        this.genericName = genericName;
-    }
-
-    public void setAlternateName(String alternateName) {
-        this.alternateName = alternateName;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setProductStrength(String productStrength) {
-        this.productStrength = productStrength;
-    }
-
-    public void setProductForm(long productForm) {
-        this.productForm = productForm;
-    }
-
-    public void setDosageUnits(long dosageUnits) {
-        this.dosageUnits = dosageUnits;
-    }
-
-    public void setDispensingUnits(long dispensingUnits) {
-        this.dispensingUnits = dispensingUnits;
-    }
-
-    public void setDosesPerDispensingUnit(int dosesPerDispensingUnit) {
-        this.dosesPerDispensingUnit = dosesPerDispensingUnit;
-    }
-
-    public void setPackSize(int packSize) {
-        this.packSize = packSize;
-    }
-
-    public void setAlternatePackSize(int alternatePackSize) {
-        this.alternatePackSize = alternatePackSize;
-    }
-
-    public void setStoreRefrigerated(boolean storeRefrigerated) {
-        this.storeRefrigerated = storeRefrigerated;
-    }
-
-    public void setStoreRoomTemperature(boolean storeRoomTemperature) {
-        this.storeRoomTemperature = storeRoomTemperature;
-    }
-
-    public void setProductIsHazardous(boolean productIsHazardous) {
-        this.productIsHazardous = productIsHazardous;
-    }
-
-    public void setProductIsFlammable(boolean productIsFlammable) {
-        this.productIsFlammable = productIsFlammable;
-    }
-
-    public void setProductIsControlledSubstance(boolean productIsControlledSubstance) {
-        this.productIsControlledSubstance = productIsControlledSubstance;
-    }
-
-    public void setProductIsLightSensitive(boolean productIsLightSensitive) {
-        this.productIsLightSensitive = productIsLightSensitive;
-    }
-
-    public void setApprovedByWHO(boolean approvedByWHO) {
-        this.approvedByWHO = approvedByWHO;
-    }
-
-    public void setContraceptiveCYP(String contraceptiveCYP) {
-        this.contraceptiveCYP = contraceptiveCYP;
-    }
-
-    public void setPackLength(int packLength) {
-        this.packLength = packLength;
-    }
-
-    public void setPackWidth(int packWidth) {
-        this.packWidth = packWidth;
-    }
-
-    public void setPackHeight(int packHeight) {
-        this.packHeight = packHeight;
-    }
-
-    public void setPackWeight(int packWeight) {
-        this.packWeight = packWeight;
-    }
-
-    public void setPacksPerCarton(int packsPerCarton) {
-        this.packsPerCarton = packsPerCarton;
-    }
-
-    public void setCartonLength(int cartonLength) {
-        this.cartonLength = cartonLength;
-    }
-
-    public void setCartonWidth(int cartonWidth) {
-        this.cartonWidth = cartonWidth;
-    }
-
-    public void setCartonHeight(int cartonHeight) {
-        this.cartonHeight = cartonHeight;
-    }
-
-    public void setCartonsPerPallet(int cartonsPerPallet) {
-        this.cartonsPerPallet = cartonsPerPallet;
-    }
-
-    public void setExpectedShelfLife(int expectedShelfLife) {
-        this.expectedShelfLife = expectedShelfLife;
-    }
-
-    public void setSpecialStorageInstructions(String specialStorageInstructions) {
-        this.specialStorageInstructions = specialStorageInstructions;
-    }
-
-    public void setSpecialTransportInstructions(String specialTransportInstructions) {
-        this.specialTransportInstructions = specialTransportInstructions;
-    }
-
-    public void setProductIsActive(boolean productIsActive) {
-        this.productIsActive = productIsActive;
-    }
-
-    public void setProductIsFullSupply(boolean productIsFullSupply) {
-        this.productIsFullSupply = productIsFullSupply;
-    }
-
-    public void setIsATracerProduct(boolean ATracerProduct) {
-        isATracerProduct = ATracerProduct;
-    }
-
-    public void setPackRoundingThreshold(int packRoundingThreshold) {
-        this.packRoundingThreshold = packRoundingThreshold;
-    }
-
-    public void setCanRoundToZero(boolean canRoundToZero) {
-        this.canRoundToZero = canRoundToZero;
-    }
-
-    public void setHasBeenArchived(boolean hasBeenArchived) {
-        this.hasBeenArchived = hasBeenArchived;
-    }
-
-    public void setLastModifiedDate(Date lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
-    public void setLastModifiedBy(long lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public String getProductCode() {
-        return productCode;
+    @Override
+    public boolean validate() {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }
