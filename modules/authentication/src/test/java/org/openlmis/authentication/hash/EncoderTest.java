@@ -3,11 +3,10 @@ package org.openlmis.authentication.hash;
 
 import org.junit.Test;
 
-import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.openlmis.utils.hash.Encoder.hash;
+import static org.openlmis.authentication.hash.Encoder.hash;
 
 public class EncoderTest {
 

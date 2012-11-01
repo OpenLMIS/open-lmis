@@ -3,9 +3,10 @@ package org.openlmis.authentication.service;
 import org.openlmis.authentication.UserToken;
 import org.openlmis.authentication.dao.UserMapper;
 import org.openlmis.authentication.domain.User;
-import org.openlmis.utils.hash.Encoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import static org.openlmis.authentication.hash.Encoder.hash;
 
 @Service
 public class UserAuthenticationService {
@@ -21,7 +22,7 @@ public class UserAuthenticationService {
     }
 
     public UserToken authorizeUser(String userName, String password) {
-        String passwordHash = Encoder.hash(password);
+        String passwordHash = hash(password);
         User fetchedUser = userMapper.selectUserByUserNameAndPassword(userName, passwordHash);
         if (fetchedUser == null) return new UserToken(userName, null, AUTHORIZATION_FAILED);
 

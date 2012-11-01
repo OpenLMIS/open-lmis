@@ -5,7 +5,7 @@ dependencies {
             'org.aspectj:aspectjrt:1.7.0',
             'c3p0:c3p0:0.9.1.2',
             project(':modules:db'),
-            project(':modules:utils')
+            'commons-codec:commons-codec:1.7'
 
     testCompile 'org.springframework:spring-test:3.1.1.RELEASE'
 }
