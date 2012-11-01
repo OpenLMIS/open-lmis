@@ -22,7 +22,6 @@ public class ImportFieldParser {
         typeMappings.put("boolean", new Trim(new ParseBool()));
         typeMappings.put("double", new Trim(new ParseDouble()));
         typeMappings.put("String", new Trim());
-
     }
 
     public List<CellProcessor> parse(Class<? extends Importable> clazz, Set<String> headers) throws Exception {
@@ -45,24 +44,15 @@ public class ImportFieldParser {
             CellProcessor processor = null;
             if (field != null && field.isAnnotationPresent(ImportField.class)) {
                 ImportField importField = field.getAnnotation(ImportField.class);
-                processor = chainTypeProcessor(importField.mandatory(), typeMappings.get(importField.type()));
+                processor = chainTypeProcessor(importField, typeMappings.get(importField.type()));
             }
             processors.add(processor);
         }
-
         return processors;
     }
 
-    private CellProcessor chainTypeProcessor(boolean isMandatory, CellProcessor mappedProcessor) {
-        return isMandatory ? createMandatoryProcessor(mappedProcessor) : createOptionalProcessor(mappedProcessor);
-    }
-
-    private CellProcessor createOptionalProcessor(CellProcessor mappedProcessor) {
-        return (mappedProcessor == null) ? new Optional() : new Optional(mappedProcessor);
-    }
-
-    private CellProcessor createMandatoryProcessor(CellProcessor mappedProcessor) {
-        return (mappedProcessor == null) ? new NotNull() : new NotNull(mappedProcessor);
+    private CellProcessor chainTypeProcessor(ImportField importField, CellProcessor mappedProcessor) {
+        return importField.mandatory() ? new NotNull(mappedProcessor) : new Optional(mappedProcessor);
     }
 
     private void validateHeaders(Class<? extends Importable> clazz, Set<String> headers) throws Exception {

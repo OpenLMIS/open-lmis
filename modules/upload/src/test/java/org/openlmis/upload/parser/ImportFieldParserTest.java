@@ -18,6 +18,7 @@ import java.util.Set;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.powermock.api.mockito.PowerMockito.verifyNew;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
@@ -81,20 +82,19 @@ public class ImportFieldParserTest {
         headers.add("mandatoryIntField");
 
         ParseInt parseIntMock = mock(ParseInt.class);
-        NotNull notNullMock = mock(NotNull.class);
-        Trim trimMock = mock(Trim.class);
+        Trim trimMockForMandatoryInt = mock(Trim.class, "trim mock for int");
+        Trim trimMockForMandatoryString = mock(Trim.class, "trim mock for string");
 
         whenNew(ParseInt.class).withNoArguments().thenReturn(parseIntMock);
-        whenNew(NotNull.class).withNoArguments().thenReturn(notNullMock);
-        whenNew(NotNull.class).withArguments(parseIntMock).thenReturn(notNullMock);
-        whenNew(Trim.class).withArguments(parseIntMock).thenReturn(trimMock);
+        whenNew(NotNull.class).withArguments(any()).thenReturn(mock(NotNull.class));
+        whenNew(Trim.class).withArguments(parseIntMock).thenReturn(trimMockForMandatoryInt);
+        whenNew(Trim.class).withNoArguments().thenReturn(trimMockForMandatoryString);
 
-        parser = new ImportFieldParser();
-        List<CellProcessor> cellProcessors = parser.parse(DummyImportable.class, headers);
+        List<CellProcessor> cellProcessors = new ImportFieldParser().parse(DummyImportable.class, headers);
 
         assertEquals(2, cellProcessors.size());
-        verifyNew(NotNull.class).withNoArguments();
-        verifyNew(NotNull.class).withArguments(trimMock);
+        verifyNew(NotNull.class).withArguments(trimMockForMandatoryInt);
+        verifyNew(NotNull.class).withArguments(trimMockForMandatoryString);
     }
 
     @Test
@@ -107,18 +107,20 @@ public class ImportFieldParserTest {
 
         Optional optionalMock = mock(Optional.class);
         ParseInt parseIntMock = mock(ParseInt.class);
-        Trim trimMock = mock(Trim.class);
+        Trim trimMockForOptionalInt = mock(Trim.class);
+        Trim trimMockForOptionalString = mock(Trim.class);
 
         whenNew(ParseInt.class).withNoArguments().thenReturn(parseIntMock);
         whenNew(Optional.class).withNoArguments().thenReturn(optionalMock);
         whenNew(Optional.class).withArguments(parseIntMock).thenReturn(optionalMock);
-        whenNew(Trim.class).withArguments(parseIntMock).thenReturn(trimMock);
+        whenNew(Trim.class).withArguments(parseIntMock).thenReturn(trimMockForOptionalInt);
+        whenNew(Trim.class).withNoArguments().thenReturn(trimMockForOptionalString);
         parser = new ImportFieldParser();
         List<CellProcessor> cellProcessors = parser.parse(DummyImportable.class, headers);
 
         assertEquals(4, cellProcessors.size());
-        verifyNew(Optional.class).withNoArguments();
-        verifyNew(Optional.class).withArguments(trimMock);
+        verifyNew(Optional.class).withArguments(trimMockForOptionalInt);
+        verifyNew(Optional.class).withArguments(trimMockForOptionalString);
 
     }
 
