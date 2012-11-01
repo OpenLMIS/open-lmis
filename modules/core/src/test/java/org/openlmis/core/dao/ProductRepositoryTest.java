@@ -1,44 +1,24 @@
 package org.openlmis.core.dao;
 
-import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.Test;
 import org.openlmis.core.domain.Product;
-
-import java.util.ArrayList;
+import org.springframework.test.context.ContextConfiguration;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
+@ContextConfiguration(locations = "classpath*:/applicationTestContext-core.xml")
 public class ProductRepositoryTest {
-    private SqlSessionFactory sqlSessionFactory;
 
     @Test
-    public void shouldInsertAllRnRColumns() throws Exception {
-        sqlSessionFactory = mock(SqlSessionFactory.class);
+    public void shouldInsertProduct() throws Exception {
+        ProductMapper mockedMapper = mock(ProductMapper.class);
+        ProductRepository repository = new ProductRepository(mockedMapper);
+        Product product = new Product();
 
-        final Product product1 = mock(Product.class);
-        final Product product2 = mock(Product.class);
-        final ArrayList<Product> products = new ArrayList<Product>() {{
-            add(product1);
-            add(product2);
+        repository.insertProducts(product);
 
-        }};
-
-        SqlSession sqlSession = mock(SqlSession.class);
-        when(sqlSessionFactory.openSession(ExecutorType.BATCH)).thenReturn(sqlSession);
-        ProductMapper mapper = mock(ProductMapper.class);
-        when(sqlSession.getMapper(ProductMapper.class)).thenReturn(mapper);
-
-        ProductRepository repository = new ProductRepository(sqlSessionFactory);
-        repository.insertProducts(products);
-
-        verify(sqlSessionFactory).openSession(ExecutorType.BATCH);
-        verify(sqlSession).getMapper(ProductMapper.class);
-        verify(mapper).insert(product1);
-        verify(mapper).insert(product2);
+        verify(mockedMapper).insert(product);
     }
 
 }

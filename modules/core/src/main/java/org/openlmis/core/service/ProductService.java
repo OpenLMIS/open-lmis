@@ -5,8 +5,6 @@ import org.openlmis.core.domain.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 
 @Service
 public class ProductService {
@@ -18,7 +16,7 @@ public class ProductService {
         this.repository = repository;
     }
 
-    public void storeProducts(List<Product> productList) {
-        repository.insertProducts(productList);
+    public void storeProducts(Product product) {
+        repository.insertProducts(product);
     }
 }
