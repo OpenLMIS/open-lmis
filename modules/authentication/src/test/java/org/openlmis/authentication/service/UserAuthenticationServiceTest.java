@@ -5,15 +5,12 @@ import org.junit.Test;
 import org.openlmis.authentication.UserToken;
 import org.openlmis.authentication.dao.UserMapper;
 import org.openlmis.authentication.domain.User;
-import org.openlmis.utils.hash.Encoder;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.openlmis.utils.hash.Encoder.hash;
+import static org.mockito.Mockito.*;
+import static org.openlmis.authentication.hash.Encoder.hash;
 
 public class UserAuthenticationServiceTest {
     private UserAuthenticationService userAuthenticationService;
