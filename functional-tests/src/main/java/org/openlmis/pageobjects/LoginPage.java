@@ -7,6 +7,9 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
+
+import java.util.concurrent.TimeUnit;
+
 public class LoginPage {
 
     @FindBy(how = How.ID, using = "username")
@@ -15,10 +18,15 @@ public class LoginPage {
     @FindBy(how = How.ID, using = "password")
     private WebElement passwordField;
 
+    @FindBy(how = How.LINK_TEXT, using = "logout")
+    private WebElement logoutLink;
+
+
 
     public LoginPage(WebDriver driver) {
         driver.get("http://192.168.34.2:8080/openlmis-web/");
         PageFactory.initElements(new AjaxElementLocatorFactory(driver, 15), this);
+        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
     }
 
     public void login(String username, String password) {
@@ -32,6 +40,11 @@ public class LoginPage {
 
         // Submit user name and password
         userNameField.submit();
+
+    }
+
+    public void logout() {
+        logoutLink.click();
 
     }
 
