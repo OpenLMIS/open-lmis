@@ -15,10 +15,12 @@ dependencies {
             'org.springframework.security:spring-security-taglibs:3.1.2.RELEASE',
             'javax.servlet:servlet-api:2.5'
 
-    testCompile project (':modules:requisition'),
+    testCompile project(':modules:requisition'),
             'org.springframework:spring-test:3.1.1.RELEASE',
             'org.springframework:spring-test-mvc:1.0.0.M1',
             'javax.servlet:servlet-api:2.5',
+            'org.powermock:powermock-api-mockito:1.4.12',
+            'org.powermock:powermock-module-junit4:1.4.12',
             'org.codehaus.jackson:jackson-mapper-asl:1.9.9'
 }
 

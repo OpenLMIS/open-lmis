@@ -7,9 +7,26 @@
 
     <context:annotation-config/>
     <mvc:annotation-driven/>
+
+    <bean id="applicationProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+
+        <property name="locations">
+            <list>
+                <value>classpath:/config.properties</value>
+                <value>classpath:/postgresql.properties</value>
+            </list>
+        </property>
+
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="systemPropertiesModeName">
+            <value>SYSTEM_PROPERTIES_MODE_OVERRIDE</value>
+        </property>
+    </bean>
+
     <context:component-scan base-package="org.openlmis.admin"/>
 
     <import resource="classpath:/applicationContext-requisition.xml"/>
     <import resource="classpath:/applicationContext-core.xml"/>
+    <import resource="classpath:/applicationContext-upload.xml"/>
 
 </beans>

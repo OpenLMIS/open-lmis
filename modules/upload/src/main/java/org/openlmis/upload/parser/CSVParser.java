@@ -3,6 +3,7 @@ package org.openlmis.upload.parser;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.RecordHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.io.CsvBeanReader;
 import org.supercsv.prefs.CsvPreference;
@@ -14,6 +15,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+@Component
 public class CSVParser {
 
     private ImportFieldParser importFieldParser;
