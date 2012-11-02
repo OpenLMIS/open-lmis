@@ -2,78 +2,95 @@ package org.openlmis.web.authentication;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.savedrequest.DefaultSavedRequest;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
+import static org.openlmis.web.authentication.UserAuthenticationSuccessHandler.IS_ADMIN;
+import static org.openlmis.web.authentication.UserAuthenticationSuccessHandler.USER;
 
 public class UserAuthenticationSuccessHandlerTest {
 
-    UserAuthenticationSuccessHandler userAuthenticationSuccessHandler;
+    public static final String CONTEXT_PATH = "contextPath";
+    public static final String USERNAME = "username";
+    public static final String PASSWORD = "password";
+
+    @Mock
     MockHttpServletRequest request;
+
     MockHttpServletResponse response;
+
+    @Mock
+    private HttpSession session;
+
     String SAVED_REQUEST = "SPRING_SECURITY_SAVED_REQUEST";
+
+    UserAuthenticationSuccessHandler userAuthenticationSuccessHandler;
 
     @Before
     public void setup() {
+        initMocks(this);
         userAuthenticationSuccessHandler = new UserAuthenticationSuccessHandler();
+
+        when(request.getSession()).thenReturn(session);
+        when(request.getSession(anyBoolean())).thenReturn(session);
+        when(request.getContextPath()).thenReturn(CONTEXT_PATH);
+
         response = new MockHttpServletResponse();
     }
 
     @Test
-    public void shouldRedirectAdminToHomeWhenNoSavedRequestPresent() throws IOException, ServletException {
-        request = new MockHttpServletRequest();
-        Authentication authentication = getAdminAuthenticationObj();
-        userAuthenticationSuccessHandler.onAuthenticationSuccess(request, response, authentication);
-        assertThat(response.getRedirectedUrl(), is(equalTo("/")));
-    }
+    public void shouldRedirectUserToHomeWhenNoSavedRequestPresent() throws IOException, ServletException {
+        String defaultTargetUrl = "/";
 
-    @Test
-    public void shouldRedirectUserToHomeNoSavedRequestPresent() throws IOException, ServletException {
-        request = new MockHttpServletRequest();
-        Authentication authentication = getUserAuthenticationObj();
+        Authentication authentication = new TestingAuthenticationToken(USERNAME, "password", "USER");
         userAuthenticationSuccessHandler.onAuthenticationSuccess(request, response, authentication);
-        assertThat(response.getRedirectedUrl(), is(equalTo("/")));
+        assertEquals(CONTEXT_PATH + defaultTargetUrl, response.getRedirectedUrl());
     }
 
     @Test
     public void shouldRedirectToRequestedUrl() throws ServletException, IOException {
+        String previousUrl = "/previousUrl";
 
-        String contextPathUrl = "http:localhost:8080";
-        String requestRelativeUrl = "/testUrl";
-        HttpSession session = mock(HttpSession.class);
-        request = new MockHttpServletRequest(RequestMethod.GET.toString(), contextPathUrl + requestRelativeUrl);
-        request.setSession(session);
-        Authentication authentication = getAdminAuthenticationObj();
+        DefaultSavedRequest previousRequest = mock(DefaultSavedRequest.class);
+        when(previousRequest.getRedirectUrl()).thenReturn(previousUrl);
+        when(session.getAttribute(SAVED_REQUEST)).thenReturn(previousRequest);
 
-        DefaultSavedRequest defaultSavedRequest = mock(DefaultSavedRequest.class);
+        userAuthenticationSuccessHandler.onAuthenticationSuccess(request, response, new UsernamePasswordAuthenticationToken(USERNAME, "password"));
+        assertEquals(CONTEXT_PATH + previousUrl, response.getRedirectedUrl());
+    }
 
-        when(defaultSavedRequest.getRedirectUrl()).thenReturn(new String("/testUrl"));
-        when(session.getAttribute(SAVED_REQUEST)).thenReturn(defaultSavedRequest);
 
+    @Test
+    public void shouldSaveUsernameInSession() throws IOException, ServletException {
+        Authentication authentication = new TestingAuthenticationToken(USERNAME, "password", "USER");
         userAuthenticationSuccessHandler.onAuthenticationSuccess(request, response, authentication);
-        assertThat(response.getRedirectedUrl(), is(equalTo(requestRelativeUrl)));
+
+        verify(session).setAttribute(USER, USERNAME);
     }
 
-    private Authentication getAdminAuthenticationObj() {
-        return new TestingAuthenticationToken("user", "null", "ADMIN");
-    }
+    @Test
 
-    private Authentication getUserAuthenticationObj() {
-        return new TestingAuthenticationToken("user", "null", "USER");
-    }
+    public void shouldSaveUserIfAdminInSession() throws IOException, ServletException {
+        Authentication authentication = new TestingAuthenticationToken(USERNAME, PASSWORD, "ADMIN");
+        userAuthenticationSuccessHandler.onAuthenticationSuccess(request, response, authentication);
 
+        verify(session).setAttribute(USER, USERNAME);
+        verify(session).setAttribute(IS_ADMIN, true);
+    }
 
 }
