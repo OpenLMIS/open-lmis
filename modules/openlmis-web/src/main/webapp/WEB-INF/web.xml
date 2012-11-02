@@ -19,6 +19,15 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
+    <context-param>
+        <param-name>log4jConfigLocation</param-name>
+        <param-value>classpath:/config/openlmis_logging.xml</param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+    </listener>
+
     <filter>
         <filter-name>springSecurityFilterChain</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -29,17 +38,11 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-    <!--<filter-mapping>-->
-        <!--<filter-name>springSecurityFilterChain</filter-name>-->
-        <!--<url-pattern>/j_spring_security_logout</url-pattern>-->
-    <!--</filter-mapping>-->
-
     <servlet>
         <servlet-name>open-lmis</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <load-on-startup>2</load-on-startup>
     </servlet>
-
 
     <servlet-mapping>
         <servlet-name>open-lmis</servlet-name>
@@ -55,7 +58,5 @@
         <servlet-name>default</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
-
-
 
 </web-app>

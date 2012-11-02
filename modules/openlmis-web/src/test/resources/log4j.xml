@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+    <appender name="logFileAppender" class="org.apache.log4j.RollingFileAppender">
+        <param name="File" value="/work/logFile.log"/>
+        <param name="MaxFileSize" value="1MB"/>
+        <param name="MaxBackupIndex" value="5"/>
+        <param name="Encoding" value="UTF-8"/>
+        <layout class="org.apache.log4j.EnhancedPatternLayout">
+            <param name="ConversionPattern" value="%d{ISO8601} [%-5p][%-16.16t][%40.40c] - %m%n"/>
+        </layout>
+    </appender>
+
+    <logger name="org.openlmis.web">
+        <level value="ERROR"/>
+        <appender-ref ref="logFileAppender"/>
+    </logger>
+
+    <root>
+        <level value="ERROR"/>
+        <appender-ref ref="logFileAppender"/>
+    </root>
+</log4j:configuration>

@@ -25,13 +25,13 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
-        String userName = (String)authentication.getPrincipal();
-        String password = (String)authentication.getCredentials();
+        String userName = (String) authentication.getPrincipal();
+        String password = (String) authentication.getCredentials();
         UserToken userToken = userAuthenticationService.authorizeUser(userName, password);
 
-        if(!userToken.isAuthenticated()) return null;
+        if (!userToken.isAuthenticated()) return null;
 
-        Collection<? extends GrantedAuthority> authorities = Arrays.asList(new GrantedAuthority[]{getGrantedAuthority(userToken.getRole())});
+        Collection<? extends GrantedAuthority> authorities = Arrays.asList(getGrantedAuthority(userToken.getRole()));
 
         return new UsernamePasswordAuthenticationToken(userName, password, authorities);
     }
