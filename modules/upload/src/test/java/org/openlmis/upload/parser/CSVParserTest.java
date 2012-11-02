@@ -1,43 +1,55 @@
 package org.openlmis.upload.parser;
 
 
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.openlmis.upload.Importable;
 import org.openlmis.upload.model.DummyImportable;
 import org.openlmis.upload.model.DummyRecordHandler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.supercsv.cellprocessor.ParseInt;
+import org.supercsv.cellprocessor.Trim;
+import org.supercsv.cellprocessor.constraint.NotNull;
+import org.supercsv.cellprocessor.ift.CellProcessor;
 
 import java.io.File;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath*:applicationContext-upload.xml")
 public class CSVParserTest {
 
-    @Autowired
-    ImportFieldParser importFieldParser;
+    private CSVParser csvParser;
+    private DummyRecordHandler recordHandler;
+    private ImportFieldParser importFieldParser;
 
 
-    @Test
-    public void shouldCreateAllRecordsInCSVFile() throws Exception {
-        CSVParser csvParser = new CSVParser(importFieldParser);
-        File csvFile = new File(this.getClass().getResource("/upload_dummyImportable.csv").getFile());
+    @Before
+    public void setUp() throws Exception {
 
-        DummyRecordHandler recordHandler = new DummyRecordHandler();
-        csvParser.process(csvFile, DummyImportable.class, recordHandler);
-
-        List<Importable> importedObjects = recordHandler.getImportedObjects();
-
-        assertEquals(2, importedObjects.size());
-        assertEquals(23, ((DummyImportable)importedObjects.get(0)).getMandatoryIntField());
-        assertEquals("Random1", ((DummyImportable)importedObjects.get(0)).getMandatoryStringField());
+        importFieldParser = mock(ImportFieldParser.class);
+        csvParser = new CSVParser(importFieldParser);
+        recordHandler = new DummyRecordHandler();
 
     }
 
+    @Test
+    public void shouldParseFileWithTrimmedHeaders() throws Exception {
+        File csvFile = new File(this.getClass().getResource("/dummyImportableWithSpacesInHeaders.csv").getFile());
 
+        String[] headers = {"mandatoryStringField", "mandatoryIntField"};
+        Set<String> headersSet = new LinkedHashSet<String>(Arrays.asList(headers));
+
+        ArrayList<CellProcessor> processors = new ArrayList<CellProcessor>() {{
+            add(new Trim(new NotNull()));
+            add(new Trim(new ParseInt()));
+        }};
+
+        when(importFieldParser.parse(DummyImportable.class, headersSet)).thenReturn(processors);
+
+        csvParser.process(csvFile, DummyImportable.class, recordHandler);
+
+        verify(importFieldParser).parse(DummyImportable.class, headersSet);
+    }
 }

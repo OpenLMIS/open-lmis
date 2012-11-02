@@ -8,7 +8,6 @@ import org.supercsv.io.CsvBeanReader;
 import org.supercsv.prefs.CsvPreference;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -20,13 +19,14 @@ public class CSVParser {
     private ImportFieldParser importFieldParser;
 
     @Autowired
-    public CSVParser(ImportFieldParser importFieldParser) throws FileNotFoundException {
+    public CSVParser(ImportFieldParser importFieldParser) {
         this.importFieldParser = importFieldParser;
     }
 
     public void process(File csvFile, Class<? extends Importable> modelClass, RecordHandler recordHandler) throws Exception {
 
-        CsvBeanReader csvBeanReader = new CsvBeanReader(new FileReader(csvFile), CsvPreference.STANDARD_PREFERENCE);
+        FileReader fileReader = new FileReader(csvFile);
+        CsvBeanReader csvBeanReader = new CsvBeanReader(fileReader, CsvPreference.STANDARD_PREFERENCE);
 
         String[] headers = csvBeanReader.getHeader(true);
         trimWhiteSpaceFromHeaders(headers);
@@ -43,7 +43,7 @@ public class CSVParser {
     }
 
     private void trimWhiteSpaceFromHeaders(String[] headers) {
-        for (int i =0; i<headers.length ;i++) {
+        for (int i = 0; i < headers.length; i++) {
             headers[i] = headers[i].trim();
         }
     }
