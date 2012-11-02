@@ -1,6 +1,6 @@
 package org.openlmis.upload;
 
-public interface RecordHandler {
+public interface RecordHandler<I extends Importable> {
 
-    public void execute(Importable importable);
+    public void execute(I importable);
 }

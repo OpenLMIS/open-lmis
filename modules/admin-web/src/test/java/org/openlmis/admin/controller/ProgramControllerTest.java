@@ -13,7 +13,9 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.*;
 
 public class ProgramControllerTest {
+
     @Test
+    //TODO: use mockito annotations
     public void shouldGetListOfPrograms() throws Exception {
         ProgramService programService = mock(ProgramService.class);
         ProgramController controller = new ProgramController(programService);
@@ -23,4 +25,5 @@ public class ProgramControllerTest {
         verify(programService).getAll();
         assertThat(result, is(equalTo(expectedPrograms)));
     }
+
 }

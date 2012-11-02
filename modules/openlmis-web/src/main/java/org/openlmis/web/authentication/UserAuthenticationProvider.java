@@ -29,10 +29,9 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
         String password = (String)authentication.getCredentials();
         UserToken userToken = userAuthenticationService.authorizeUser(userName, password);
 
-        if(!userToken.isAuthenticated()) return null;//new UsernamePasswordAuthenticationToken(userName, password);
+        if(!userToken.isAuthenticated()) return null;
 
         Collection<? extends GrantedAuthority> authorities = Arrays.asList(new GrantedAuthority[]{getGrantedAuthority(userToken.getRole())});
-
 
         return new UsernamePasswordAuthenticationToken(userName, password, authorities);
     }

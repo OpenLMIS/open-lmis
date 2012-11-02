@@ -15,7 +15,7 @@ public class ProductServiceTest {
         Product product = new Product();
         ProductRepository productRepository = mock(ProductRepository.class);
 
-        new ProductService(productRepository).storeProducts(product);
+        new ProductService(productRepository).save(product);
 
         verify(productRepository).insertProducts(product);
 
