@@ -9,11 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class HomeController extends BaseController {
 
-    @RequestMapping(value = "home", method = RequestMethod.GET)
-    public String loadHelloWorld() {
-        return "index.html";
-    }
-
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String homeDefault(HttpServletRequest request) {
         return homePageUrl(request);

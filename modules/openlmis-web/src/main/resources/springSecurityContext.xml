@@ -15,20 +15,15 @@
     <context:component-scan base-package="org.openlmis.core.controller"/>
 
     <http use-expressions="true">
-        <intercept-url pattern="/js/*" access="permitAll" requires-channel="http"/>
-        <intercept-url pattern="/bootstrap/*" access="permitAll" requires-channel="http"/>
-        <intercept-url pattern="/auth/login" access="permitAll" requires-channel="http"/>
-        <intercept-url pattern="/admin/**" access="hasRole('ADMIN')" requires-channel="http"/>
-        <intercept-url pattern="/logout" access="permitAll" requires-channel="http"/>
-
+        <intercept-url pattern="/resources/pages/admin/**" access="hasRole('ADMIN')" requires-channel="http"/>
+        <intercept-url pattern="/resources/pages/logistics/**" access="hasRole('USER')" requires-channel="http"/>
+        <intercept-url pattern="/resources/**" access="permitAll" requires-channel="http"/>
         <intercept-url pattern="/" access="isAuthenticated()" requires-channel="http"/>
-        <intercept-url pattern="/**" access="hasRole('USER')" requires-channel="http"/>
         <form-login authentication-success-handler-ref="userAuthenticationSuccessHandler"
-                login-processing-url="/j_spring_security_check" login-page="/auth/login"
-                authentication-failure-url="/auth/login?error=true"/>
-        <logout logout-success-url="/auth/login" invalidate-session="true" delete-cookies="true"/>
+                login-processing-url="/j_spring_security_check" login-page="/resources/pages/login.html"
+                authentication-failure-url="/resources/pages/login.html?error=true"/>
+        <logout logout-success-url="/resources/pages/login.html" invalidate-session="true" delete-cookies="true"/>
     </http>
-
 
     <authentication-manager>
         <authentication-provider ref="userAuthenticationProvider"/>

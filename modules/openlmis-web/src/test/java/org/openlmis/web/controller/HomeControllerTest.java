@@ -32,14 +32,14 @@ public class HomeControllerTest {
     public void shouldReturnAdminHomeUrlOnAdminLogin() {
         when(session.getAttribute(UserAuthenticationSuccessHandler.IS_ADMIN)).thenReturn(true);
         String homePageURl = homeController.homeDefault(request);
-        assertEquals("redirect:/admin/home", homePageURl);
+        assertEquals("redirect:/resources/pages/admin/index.html", homePageURl);
     }
 
     @Test
     public void shouldRedirectToIndexPageForUsersWhoAreNotAdmins() {
         when(session.getAttribute(UserAuthenticationSuccessHandler.IS_ADMIN)).thenReturn(false);
         String homePageURl = homeController.homeDefault(request);
-        assertEquals("redirect:/index.html", homePageURl);
+        assertEquals("redirect:/resources/pages/logistics/index.html", homePageURl);
     }
 
 }

@@ -16,7 +16,6 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 
     private UserAuthenticationService userAuthenticationService;
 
-
     @Autowired
     public UserAuthenticationProvider(UserAuthenticationService userAuthenticationService) {
         this.userAuthenticationService = userAuthenticationService;

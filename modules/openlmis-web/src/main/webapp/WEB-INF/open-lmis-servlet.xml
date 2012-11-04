@@ -4,11 +4,6 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-
-    <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
-        <property name="templateLoaderPath" value="/WEB-INF/views"/>
-    </bean>
-
     <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
         <property name="order" value="1"/>
         <property name="mediaTypes">
@@ -25,16 +20,6 @@
             </list>
         </property>
         <property name="ignoreAcceptHeader" value="true"/>
-    </bean>
-
-    <bean id="openLMISViewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
-        <property name="order" value="2"/>
-        <property name="contentType" value="text/html;charset=UTF-8"/>
-        <property name="cache" value="true"/>
-        <property name="prefix" value=""/>
-        <property name="suffix" value=".ftl"/>
-
-        <property name="exposeSpringMacroHelpers" value="true"/>
     </bean>
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
