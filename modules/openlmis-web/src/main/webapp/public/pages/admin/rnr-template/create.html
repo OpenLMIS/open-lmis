@@ -1,17 +1,23 @@
 <!doctype html>
-<html lang="en" ng-app="openlmis">
+<html lang="en" ng-app="createRnRTemplate">
 <head>
     <meta charset="utf-8">
     <title>Open-LMIS</title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
     <script src="../../../js/lib/angular/angular.js"></script>
+    <script src="../../../js/lib/angular/angular-resource.js"></script>
     <script src="../../../js/header.js"></script>
     <script src="../../../js/app.js"></script>
-    <script src="../../../js/rnr-template.js"></script>
+    <script src="../../../js/module/create-rnr-template.js"></script>
+    <script src="../../../js/controller/create-rnr-template-controller.js"></script>
+    <style type="text/css" ></style>
+    <link type="text/css" rel="stylesheet" charset="UTF-8" href="../../../css/app.css">
 </head>
 <!-- TODO: onunload clears cache for safari. It is a hack. Find better alternative -->
 <body onunload="">
-<ng-include src="'../../header.html'"> </ng-include>
-<div ng-view ng-controller="RnRTemplateCtrl"></div>
+<ng-include src="'../../header.html'"></ng-include>
+<div ng-controller='CreateRnrTemplateController'>
+<div ng-view></div>
+</div>
 </body>
 </html>
