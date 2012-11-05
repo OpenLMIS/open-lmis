@@ -17,8 +17,8 @@ public class LogIn {
     @BeforeClass
     public void setUp() {
         driver = new FirefoxDriver();
-        login = new LoginPage(driver);
-        baseurl = "http://192.168.34.2:8080/openlmis-web";
+        baseurl = "http://192.168.34.2:8080/openlmis-web/";
+        login = new LoginPage(driver, baseurl);
         errorMessage = "The username or password you entered is incorrect . Please try again.";
     }
 
@@ -34,9 +34,9 @@ public class LogIn {
         assertTrue(driver.getPageSource().contains("! Welcome " + credentials[0]));
         String url = driver.getCurrentUrl().toString();
         if (identifier.equalsIgnoreCase("Admin"))
-            assertTrue(url.contains(baseurl + "/admin/home") );
+            assertTrue(url.contains(baseurl + "admin/home") );
         else
-            assertTrue(url.contains(baseurl + "/home") );
+            assertTrue(url.contains(baseurl + "home") );
         login.logout();
     }
 
@@ -49,7 +49,7 @@ public class LogIn {
 
     }
 
-    /* Data provider for supplying data to test method*/
+    /* Data provider for supplying data to test method for positive scenarios*/
     @DataProvider(name = "Data-Provider-Function-Positive")
     public Object[][] parameterIntTestProviderPositive() {
         return new Object[][]{
@@ -61,7 +61,7 @@ public class LogIn {
         };
     }
 
-    /* Data provider for supplying data to test method*/
+    /* Data provider for supplying data to test method for negative scenarios*/
     @DataProvider(name = "Data-Provider-Function-Negative")
     public Object[][] parameterIntTestProviderNegative() {
         return new Object[][]{

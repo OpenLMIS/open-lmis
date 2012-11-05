@@ -10,7 +10,7 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.util.concurrent.TimeUnit;
 
-public class LoginPage {
+public class LoginPage{
 
     @FindBy(how = How.ID, using = "username")
     private WebElement userNameField;
@@ -23,8 +23,8 @@ public class LoginPage {
 
 
 
-    public LoginPage(WebDriver driver) {
-        driver.get("http://192.168.34.2:8080/openlmis-web/");
+    public LoginPage(WebDriver driver, String baseUrl) {
+        driver.get(baseUrl);
         PageFactory.initElements(new AjaxElementLocatorFactory(driver, 15), this);
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
     }
