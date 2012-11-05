@@ -32,11 +32,7 @@ public class LogIn {
     public void testLoginPositive(String identifier, String[] credentials) {
         login.login(credentials[0], credentials[1]);
         assertTrue(driver.getPageSource().contains("! Welcome " + credentials[0]));
-        String url = driver.getCurrentUrl().toString();
-        if (identifier.equalsIgnoreCase("Admin"))
-            assertTrue(url.contains(baseurl + "admin/home") );
-        else
-            assertTrue(url.contains(baseurl + "home") );
+        login.verifyUrl(identifier);
         login.logout();
     }
 

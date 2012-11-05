@@ -10,7 +10,9 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.util.concurrent.TimeUnit;
 
-public class LoginPage{
+import static org.testng.Assert.assertTrue;
+
+public class LoginPage {
 
     @FindBy(how = How.ID, using = "username")
     private WebElement userNameField;
@@ -21,14 +23,21 @@ public class LoginPage{
     @FindBy(how = How.LINK_TEXT, using = "logout")
     private WebElement logoutLink;
 
+    private WebDriver driver;
+    private String baseurl;
 
 
-    public LoginPage(WebDriver driver, String baseUrl) {
-        driver.get(baseUrl);
+    public LoginPage(WebDriver webdriver, String baseUrl) {
+        driver = webdriver;
+        baseurl = baseUrl;
+        driver.get(baseurl);
         PageFactory.initElements(new AjaxElementLocatorFactory(driver, 15), this);
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
     }
 
+    /*
+    Function for entering username, password and submitting data
+     */
     public void login(String username, String password) {
 
         userNameField.clear();
@@ -43,9 +52,23 @@ public class LoginPage{
 
     }
 
+    /*
+    Function for clicking log out link
+     */
     public void logout() {
         logoutLink.click();
 
     }
 
+    /*
+    Function for verification of URL
+     */
+    public void verifyUrl(String identifier) {
+        String url = driver.getCurrentUrl().toString();
+        if (identifier.equalsIgnoreCase("Admin"))
+            assertTrue(url.contains(baseurl + "admin/home"));
+        else
+            assertTrue(url.contains(baseurl + "home"));
+
+    }
 }
