@@ -1,37 +1,31 @@
 package org.openlmis.functional;
 
 import org.openlmis.pageobjects.LoginPage;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.*;
 
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 public class LogIn {
-    private WebDriver driver;
-    private LoginPage login;
-    private String baseurl;
-    private String errorMessage;
 
+    private LoginPage login;
 
     @BeforeClass
     public void setUp() {
-        driver = new FirefoxDriver();
-        baseurl = "http://192.168.34.2:8080/openlmis-web/";
-        login = new LoginPage(driver, baseurl);
-        errorMessage = "The username or password you entered is incorrect . Please try again.";
+        login = new LoginPage();
+
     }
 
     @AfterClass
     public void quitDriver() {
-        driver.quit();
+        login.quitDriver();
     }
 
     /* Test method to test positive scenarios*/
     @Test(dataProvider = "Data-Provider-Function-Positive")
     public void testLoginPositive(String identifier, String[] credentials) {
         login.login(credentials[0], credentials[1]);
-        assertTrue(driver.getPageSource().contains("! Welcome " + credentials[0]));
+        assertEquals(login.verifyWelcomeMessage(credentials[0]),true);
         login.verifyUrl(identifier);
         login.logout();
     }
@@ -41,7 +35,7 @@ public class LogIn {
             dataProvider = "Data-Provider-Function-Negative")
     public void testLoginNegative(String[] credentials) {
         login.login(credentials[0], credentials[1]);
-        assertTrue(driver.getPageSource().contains(errorMessage));
+        assertEquals(login.verifyErrorMessage(), true);
 
     }
 

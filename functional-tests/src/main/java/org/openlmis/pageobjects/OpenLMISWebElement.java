@@ -2,6 +2,7 @@ package org.openlmis.pageobjects;
 
 import org.openqa.selenium.*;
 
+
 public class OpenLMISWebElement {
 
     protected WebElement webElement;
@@ -35,4 +36,7 @@ public class OpenLMISWebElement {
     public void clear() {
         webElement.clear();
     }
+
+
+
 }
