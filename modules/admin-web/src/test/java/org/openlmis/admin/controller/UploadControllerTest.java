@@ -21,9 +21,9 @@ import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(ProductController.class)
+@PrepareForTest(UploadController.class)
 @ContextConfiguration(locations = {"/applicationContext-admin-web.xml"})
-public class ProductControllerTest {
+public class UploadControllerTest {
 
 
     String uploadDir = "~/uploads-openlmis/";
@@ -34,11 +34,11 @@ public class ProductControllerTest {
     @Mock
     ProductImportHandler handler;
 
-    ProductController controller;
+    UploadController controller;
 
     @Before
     public void setUp() throws Exception {
-        controller = new ProductController(uploadDir, csvParser, handler);
+        controller = new UploadController(uploadDir, csvParser, handler);
     }
 
     @Test
@@ -46,7 +46,7 @@ public class ProductControllerTest {
         MultipartFile multipartFile = mock(MultipartFile.class);
         String uploadPath = uploadDir + "productUpload.csv";
 
-        controller.upload(multipartFile);
+        controller.upload(multipartFile,"product");
 
         verify(multipartFile).transferTo(new File(uploadPath));
     }
@@ -57,7 +57,7 @@ public class ProductControllerTest {
         String uploadPath = uploadDir + "productUpload.csv";
         File mockedFile = mock(File.class);
         whenNew(File.class).withArguments(uploadPath).thenReturn(mockedFile);
-        controller.upload(multipartFile);
+        controller.upload(multipartFile,"product");
 
         verify(csvParser).process(mockedFile, Product.class, handler);
 
