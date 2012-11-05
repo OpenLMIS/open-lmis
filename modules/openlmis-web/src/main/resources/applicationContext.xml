@@ -18,7 +18,6 @@
     <aop:aspectj-autoproxy/>
 
 
-    <context:component-scan base-package="org.openlmis.web"/>
 
     <import resource="classpath:/applicationContext-logistics-web.xml"/>
     <import resource="classpath:/applicationContext-admin-web.xml"/>
@@ -26,6 +25,10 @@
     <import resource="classpath:/applicationContext-authentication.xml"/>
 
     <bean id="userAuthenticationProvider" class="org.openlmis.web.authentication.UserAuthenticationProvider"/>
+
+    <bean id="multipartResolver"
+            class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+
     <bean id="userAuthenticationSuccessHandler"
           class="org.openlmis.web.authentication.UserAuthenticationSuccessHandler"/>
 

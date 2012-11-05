@@ -16,7 +16,8 @@ dependencies {
             'org.springframework.security:spring-security-taglibs:3.1.2.RELEASE',
             'log4j:log4j:1.2.15',
             'org.aspectj:aspectjweaver:1.7.0',
-            'cglib:cglib:2.2.2'
+            'cglib:cglib:2.2.2',
+            'commons-fileupload:commons-fileupload:1.2.2'
 
     testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
             'org.springframework:spring-test-mvc:1.0.0.M1',

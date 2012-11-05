@@ -12,7 +12,7 @@
 
     <context:component-scan base-package="org.openlmis.web.controller"/>
     <context:component-scan base-package="org.openlmis.admin.controller"/>
-    <context:component-scan base-package="org.openlmis.core.controller"/>
+    <context:component-scan base-package="org.openlmis.web"/>
 
     <http use-expressions="true">
         <intercept-url pattern="/resources/pages/admin/**" access="hasRole('ADMIN')" requires-channel="http"/>

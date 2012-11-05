@@ -26,7 +26,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 public class ProductControllerTest {
 
 
-    String uploadDir = "./";
+    String uploadDir = "~/uploads-openlmis/";
 
     @Mock
     CSVParser csvParser;
