@@ -28,14 +28,14 @@ public class LoginPage {
     private WebElement logoutLink;
 
     private WebDriver driver;
-    private String baseurl="http://192.168.34.2:8080/openlmis-web/";
-    private String errorMessage = "The username or password you entered is incorrect . Please try again.";
+    private String BASE_URL = "http://192.168.34.2:8080/openlmis-web/";
+    private String ERROR_MESSAGE = "The username or password you entered is incorrect . Please try again.";
     private int DEFAULT_WAIT_TIME = 30;
 
 
     public LoginPage() {
         driver = new FirefoxDriver();
-        get(baseurl);
+        get(BASE_URL);
         PageFactory.initElements(new AjaxElementLocatorFactory(driver, 10), this);
         setImplicitWait(30);
     }
@@ -45,18 +45,22 @@ public class LoginPage {
      */
     public void login(String username, String password) {
 
+        waitForElementToAppear(userNameField);
+        waitForElementToAppear(passwordField);
+
+        new OpenLMISWebElement(userNameField).sendKeys(username);
+        new OpenLMISWebElement(passwordField).sendKeys(password);
+
+        new OpenLMISWebElement(userNameField).submit();
         //userNameField.clear();
         //passwordField.clear();
 
         // Type user name and password
-       // userNameField.sendKeys(username);
-        new OpenLMISWebElement(userNameField).sendKeys(username);
-        new OpenLMISWebElement(passwordField).sendKeys(password);
+        // userNameField.sendKeys(username);
         //passwordField.sendKeys(password);
 
         // Submit user name and password
         //userNameField.submit();
-        new OpenLMISWebElement(userNameField).submit();
 
     }
 
@@ -64,9 +68,9 @@ public class LoginPage {
     Function for clicking log out link
      */
     public void logout() {
-        //logoutLink.click();
-        waitForLinkToAppear(logoutLink);
+        waitForElementToAppear(logoutLink);
         new OpenLMISWebElement(logoutLink).click();
+        //logoutLink.click();
 
     }
 
@@ -76,9 +80,9 @@ public class LoginPage {
     public void verifyUrl(String identifier) {
         String url = getCurrentUrl();
         if (identifier.equalsIgnoreCase("Admin"))
-            assertTrue(url.contains(baseurl + "admin/home"));
+            assertTrue(url.contains(BASE_URL + "admin/home"));
         else
-            assertTrue(url.contains(baseurl + "home"));
+            assertTrue(url.contains(BASE_URL + "home"));
 
     }
 
@@ -86,16 +90,16 @@ public class LoginPage {
       Function for verification of error message
     */
     public boolean verifyErrorMessage() {
-        waitForTextToAppear(errorMessage);
-        return getPageSource().contains(errorMessage);
+        waitForTextToAppear(ERROR_MESSAGE);
+        return getPageSource().contains(ERROR_MESSAGE);
     }
 
     /*
       Function for verification of welcome message
     */
     public boolean verifyWelcomeMessage(String user) {
-        waitForTextToAppear("! Welcome " + user);
-        return getPageSource().contains("! Welcome " + user);
+        waitForTextToAppear("Welcome " + user);
+        return getPageSource().contains("Welcome " + user);
     }
 
 
@@ -103,7 +107,7 @@ public class LoginPage {
    Function to get base url
     */
     public void get(String url) {
-        driver.get(baseurl);
+        driver.get(BASE_URL);
     }
 
     /*
@@ -128,19 +132,19 @@ public class LoginPage {
     }
 
     /*
-      Function for implicit wait
+      Function to quit driver
     */
     public void quitDriver() {
         driver.quit();
     }
 
     /*
-    Function to wait for a link
+    Function to wait for an element
      */
-    public void waitForLinkToAppear(final WebElement link) {
+    public void waitForElementToAppear(final WebElement element) {
         (new WebDriverWait(driver, DEFAULT_WAIT_TIME)).until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver d) {
-                return (link.isDisplayed());
+                return (element.isDisplayed());
             }
         });
     }
@@ -155,4 +159,6 @@ public class LoginPage {
             }
         });
     }
+
+
 }

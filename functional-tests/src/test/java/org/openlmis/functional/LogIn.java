@@ -4,7 +4,6 @@ import org.openlmis.pageobjects.LoginPage;
 import org.testng.annotations.*;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 
 public class LogIn {
 
@@ -13,7 +12,6 @@ public class LogIn {
     @BeforeClass
     public void setUp() {
         login = new LoginPage();
-
     }
 
     @AfterClass
@@ -21,7 +19,7 @@ public class LogIn {
         login.quitDriver();
     }
 
-    /* Test method to test positive scenarios*/
+    /* Test method for positive scenarios*/
     @Test(dataProvider = "Data-Provider-Function-Positive")
     public void testLoginPositive(String identifier, String[] credentials) {
         login.login(credentials[0], credentials[1]);
@@ -30,7 +28,7 @@ public class LogIn {
         login.logout();
     }
 
-    /* Test method to test negative scenarios*/
+    /* Test method for negative scenarios*/
     @Test(dependsOnMethods = {"testLoginPositive"},
             dataProvider = "Data-Provider-Function-Negative")
     public void testLoginNegative(String[] credentials) {
