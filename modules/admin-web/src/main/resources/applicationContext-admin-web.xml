@@ -12,7 +12,6 @@
 
         <property name="locations">
             <list>
-                <value>classpath:/config.properties</value>
                 <value>classpath:/postgresql.properties</value>
             </list>
         </property>

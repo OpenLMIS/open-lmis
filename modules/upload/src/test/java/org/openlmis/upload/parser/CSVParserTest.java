@@ -12,6 +12,7 @@ import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.*;
 
 import static junit.framework.Assert.assertEquals;
@@ -22,7 +23,8 @@ public class CSVParserTest {
     private CSVParser csvParser;
     private DummyRecordHandler recordHandler;
     private ImportFieldParser importFieldParser;
-
+    private File csvFile = new File(this.getClass().getResource("/dummyImportableWithSpacesInHeaders.csv").getFile());
+    private FileInputStream inputStream;
 
     @Before
     public void setUp() throws Exception {
@@ -30,13 +32,11 @@ public class CSVParserTest {
         importFieldParser = mock(ImportFieldParser.class);
         csvParser = new CSVParser(importFieldParser);
         recordHandler = new DummyRecordHandler();
-
+        inputStream = new FileInputStream(csvFile);
     }
 
     @Test
     public void shouldParseFileWithTrimmedHeaders() throws Exception {
-        File csvFile = new File(this.getClass().getResource("/dummyImportableWithSpacesInHeaders.csv").getFile());
-
         String[] headers = {"mandatoryStringField", "mandatoryIntField"};
         Set<String> headersSet = new LinkedHashSet<String>(Arrays.asList(headers));
 
@@ -47,15 +47,13 @@ public class CSVParserTest {
 
         when(importFieldParser.parse(DummyImportable.class, headersSet)).thenReturn(processors);
 
-        csvParser.process(csvFile, DummyImportable.class, recordHandler);
+        csvParser.process(inputStream, DummyImportable.class, recordHandler);
 
         verify(importFieldParser).parse(DummyImportable.class, headersSet);
     }
 
     @Test
     public void shouldInvokeHandlerForEachRecord() throws Exception {
-        File csvFile = new File(this.getClass().getResource("/dummyImportableWithSpacesInHeaders.csv").getFile());
-
         String[] headers = {"mandatoryStringField", "mandatoryIntField"};
         Set<String> headersSet = new LinkedHashSet<String>(Arrays.asList(headers));
 
@@ -66,7 +64,7 @@ public class CSVParserTest {
 
         when(importFieldParser.parse(DummyImportable.class, headersSet)).thenReturn(processors);
 
-        csvParser.process(csvFile, DummyImportable.class, recordHandler);
+        csvParser.process(inputStream, DummyImportable.class, recordHandler);
 
         List<Importable> importedObjects = recordHandler.getImportedObjects();
         assertEquals(2, importedObjects.size());

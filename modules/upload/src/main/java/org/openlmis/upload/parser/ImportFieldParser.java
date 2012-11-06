@@ -20,7 +20,7 @@ public class ImportFieldParser {
         typeMappings.put("int", new Trim(new ParseInt()));
         typeMappings.put("long", new Trim(new ParseLong()));
         typeMappings.put("boolean", new Trim(new ParseBool()));
-        typeMappings.put("double", new Trim(new ParseDouble()));
+        typeMappings.put("Double", new Trim(new ParseDouble()));
         typeMappings.put("String", new Trim());
     }
 
@@ -31,7 +31,7 @@ public class ImportFieldParser {
 
     private Set<String> lowerCase(Set<String> headers) {
         Set<String> lowerCaseHeaders = new HashSet<String>();
-        for(String header: headers) {
+        for (String header : headers) {
             lowerCaseHeaders.add(header.toLowerCase());
         }
         return lowerCaseHeaders;

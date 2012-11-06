@@ -8,8 +8,9 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.io.CsvBeanReader;
 import org.supercsv.prefs.CsvPreference;
 
-import java.io.File;
-import java.io.FileReader;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -25,10 +26,10 @@ public class CSVParser {
         this.importFieldParser = importFieldParser;
     }
 
-    public void process(File csvFile, Class<? extends Importable> modelClass, RecordHandler recordHandler) throws Exception {
+    public void process(InputStream inputStream, Class<? extends Importable> modelClass, RecordHandler recordHandler) throws Exception {
 
-        FileReader fileReader = new FileReader(csvFile);
-        CsvBeanReader csvBeanReader = new CsvBeanReader(fileReader, CsvPreference.STANDARD_PREFERENCE);
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        CsvBeanReader csvBeanReader = new CsvBeanReader(bufferedReader, CsvPreference.STANDARD_PREFERENCE);
 
         String[] headers = csvBeanReader.getHeader(true);
         trimWhiteSpaceFromHeaders(headers);

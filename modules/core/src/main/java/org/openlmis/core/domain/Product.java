@@ -1,18 +1,20 @@
 package org.openlmis.core.domain;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
 import java.util.Date;
 
+@NoArgsConstructor
 public class Product implements Importable {
 
     @Getter
     @Setter
     @ImportField(mandatory = true)
-    private String productCode;
+    private String code;
 
     @Getter
     @Setter
@@ -22,12 +24,12 @@ public class Product implements Importable {
     @Getter
     @Setter
     @ImportField
-    private long productManufacturerId;
+    private long manufacturerId;
 
     @Getter
     @Setter
     @ImportField
-    private String manufacturerProductCode;
+    private String manufacturerCode;
 
     @Getter
     @Setter
@@ -37,7 +39,7 @@ public class Product implements Importable {
     @Getter
     @Setter
     @ImportField
-    private String moHBarCode;
+    private String mohBarCode;
 
     @Getter
     @Setter
@@ -47,17 +49,17 @@ public class Product implements Importable {
     @Getter
     @Setter
     @ImportField(type = "long")
-    private long productType;
+    private long type;
 
     @Getter
     @Setter
     @ImportField(mandatory = true)
-    private String productPrimaryName;
+    private String primaryName;
 
     @Getter
     @Setter
     @ImportField
-    private String productFullName;
+    private String fullName;
 
     @Getter
     @Setter
@@ -77,11 +79,11 @@ public class Product implements Importable {
     @Getter
     @Setter
     @ImportField
-    private String productStrength;
+    private String strength;
 
 //    @Getter
 //    @Setter
-//    private long productForm;
+//    private long form;
 
 //    @Getter
 //    @Setter
@@ -131,7 +133,7 @@ public class Product implements Importable {
     @Getter
     @Setter
     @ImportField(type = "boolean")
-    private boolean sensitive;
+    private boolean lightSensitive;
 
     @Getter
     @Setter
@@ -140,8 +142,8 @@ public class Product implements Importable {
 
     @Getter
     @Setter
-    @ImportField(type = "int")
-    private int contraceptiveCYP;
+    @ImportField(type = "Double")
+    private Double contraceptiveCYP;
 
     @Getter
     @Setter
@@ -155,23 +157,23 @@ public class Product implements Importable {
 
     @Getter
     @Setter
-    @ImportField(type = "int")
-    private int packLength;
+    @ImportField(type = "Double")
+    private Double packLength;
 
     @Getter
     @Setter
-    @ImportField(type = "int")
-    private int packWidth;
+    @ImportField(type = "Double")
+    private Double packWidth;
 
     @Getter
     @Setter
-    @ImportField(type = "int")
-    private int packHeight;
+    @ImportField(type = "Double")
+    private Double packHeight;
 
     @Getter
     @Setter
-    @ImportField(type = "int")
-    private int packWeight;
+    @ImportField(type = "Double")
+    private Double packWeight;
 
     @Getter
     @Setter
@@ -180,18 +182,18 @@ public class Product implements Importable {
 
     @Getter
     @Setter
-    @ImportField(type = "int")
-    private int cartonLength;
+    @ImportField(type = "Double")
+    private Double cartonLength;
 
     @Getter
     @Setter
-    @ImportField(type = "int")
-    private int cartonWidth;
+    @ImportField(type = "Double")
+    private Double cartonWidth;
 
     @Getter
     @Setter
-    @ImportField(type = "int")
-    private int cartonHeight;
+    @ImportField(type = "Double")
+    private Double cartonHeight;
 
     @Getter
     @Setter
@@ -226,7 +228,7 @@ public class Product implements Importable {
     @Getter
     @Setter
     @ImportField(mandatory = true, type = "boolean")
-    private boolean tracerProduct;
+    private boolean tracer;
 
     @Getter
     @Setter

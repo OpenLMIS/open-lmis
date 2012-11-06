@@ -14,19 +14,15 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
+import java.io.InputStream;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.mockito.Mockito.*;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(UploadController.class)
 @ContextConfiguration(locations = {"/applicationContext-admin-web.xml"})
 public class UploadControllerTest {
 
-
-    String uploadDir = "~/uploads-openlmis/";
 
     @Mock
     CSVParser csvParser;
@@ -38,34 +34,22 @@ public class UploadControllerTest {
 
     @Before
     public void setUp() throws Exception {
-        controller = new UploadController(uploadDir, csvParser, handler);
-    }
-
-    @Test
-    public void shouldSaveTheFileOnServer() throws Exception {
-        MultipartFile multipartFile = mock(MultipartFile.class);
-        String uploadPath = uploadDir + "productUpload.csv";
-
-        controller.upload(multipartFile,"product");
-
-        verify(multipartFile).transferTo(new File(uploadPath));
+        controller = new UploadController(csvParser, handler);
     }
 
     @Test
     public void shouldUseCsvParserService() throws Exception {
         MultipartFile multipartFile = mock(MultipartFile.class);
-        String uploadPath = uploadDir + "productUpload.csv";
-        File mockedFile = mock(File.class);
-        whenNew(File.class).withArguments(uploadPath).thenReturn(mockedFile);
-        controller.upload(multipartFile,"product");
 
-        verify(csvParser).process(mockedFile, Product.class, handler);
+        InputStream mockedStream = mock(InputStream.class);
+        when(multipartFile.getInputStream()).thenReturn(mockedStream);
+        controller.upload(multipartFile, "product");
 
-
+        verify(csvParser).process(mockedStream, Product.class, handler);
     }
 
     @Test
-    @Ignore
+    //TODO
     public void shouldGiveErrorIfFileNotOfTypeCsv() throws Exception {
     }
 }
