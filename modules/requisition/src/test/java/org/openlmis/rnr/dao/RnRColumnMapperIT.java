@@ -19,7 +19,7 @@ import static org.junit.Assert.assertThat;
 public class RnRColumnMapperIT {
 
     @Autowired
-    RnRColumnMapper rnrColumnMapper;
+    RnrColumnMapper rnrColumnMapper;
 
     @Autowired
     ProgramRnRColumnMapper programRnRColumnMapper;

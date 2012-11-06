@@ -22,7 +22,7 @@ public class ProgramRnrColumnMapperIT {
 
     public static final int PROGRAM_ID = 999;
     @Autowired
-    RnRColumnMapper rnRColumnMapper;
+    RnrColumnMapper rnrColumnMapper;
     @Autowired
     ProgramRnRColumnMapper programRnRColumnMapper;
     @Autowired
@@ -36,7 +36,7 @@ public class ProgramRnrColumnMapperIT {
         programRnRColumnMapper.deleteAll();
 
         programMapper.insert(new Program(PROGRAM_ID, "program", "description"));
-        rnrColumn = rnRColumnMapper.fetchAllMasterRnRColumns().get(0);
+        rnrColumn = rnrColumnMapper.fetchAllMasterRnRColumns().get(0);
     }
 
     @Test

@@ -4,7 +4,6 @@ function CreateRnrTemplateController($scope, Program, RnRMasterColumnList) {
     }, {});
 
     RnRMasterColumnList.get({}, function (data) {   //success
-        $scope.rnrMasterColumnsList = data.rnRColumnList;
+        $scope.rnrMasterColumnsList = data.rnrColumnList;
     }, {});
-
 }

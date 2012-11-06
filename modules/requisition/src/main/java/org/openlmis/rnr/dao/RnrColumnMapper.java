@@ -5,7 +5,7 @@ import org.openlmis.rnr.domain.RnrColumn;
 
 import java.util.List;
 
-public interface RnRColumnMapper {
+public interface RnrColumnMapper {
 
     @Select(value = "SELECT * FROM Master_RnR_Template")
     @Results(value = {

@@ -2,7 +2,7 @@ package org.openlmis.rnr.service;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.openlmis.rnr.dao.RnRColumnMapper;
+import org.openlmis.rnr.dao.RnrColumnMapper;
 import org.openlmis.rnr.dao.RnrDao;
 import org.openlmis.rnr.domain.RnrColumn;
 
@@ -15,14 +15,14 @@ import static org.mockito.Mockito.*;
 
 public class RnRTemplateServiceTest {
 
-    private RnRColumnMapper mapper;
+    private RnrColumnMapper mapper;
     private RnRTemplateService service;
     private RnrDao dao;
 
     @Before
     public void setUp() throws Exception {
         dao = mock(RnrDao.class);
-        mapper = mock(RnRColumnMapper.class);
+        mapper = mock(RnrColumnMapper.class);
         service = new RnRTemplateService(mapper, dao);
     }
 

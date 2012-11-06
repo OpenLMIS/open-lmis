@@ -33,8 +33,8 @@ public class RnrDaoTest {
         ProgramRnRColumnMapper mapper = mock(ProgramRnRColumnMapper.class);
         when(sqlSession.getMapper(ProgramRnRColumnMapper.class)).thenReturn(mapper);
 
-        RnrDao rnRDao = new RnrDao(sqlSessionFactory);
-        rnRDao.insertAllProgramRnRColumns(PROGRAM_ID, rnrColumns);
+        RnrDao rnrDao = new RnrDao(sqlSessionFactory);
+        rnrDao.insertAllProgramRnRColumns(PROGRAM_ID, rnrColumns);
 
         verify(sqlSessionFactory).openSession(ExecutorType.BATCH);
         verify(sqlSession).getMapper(ProgramRnRColumnMapper.class);
