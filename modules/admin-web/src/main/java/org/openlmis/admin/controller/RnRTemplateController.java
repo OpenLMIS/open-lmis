@@ -6,6 +6,7 @@ import org.openlmis.rnr.service.RnRTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -28,8 +29,8 @@ public class RnRTemplateController {
     }
 
     @RequestMapping(value = "/rnr/{programId}/columns", method = RequestMethod.POST, headers = "Accept=application/json")
-    public void createRnRTemplateForProgram(@PathVariable String programId, ProgramRnRTemplateForm programRnRTemplateForm) {
-        rnrTemplateService.createRnRTemplateForProgram(Integer.parseInt(programId), programRnRTemplateForm.getRnrColumns());
+    public void createRnRTemplateForProgram(@PathVariable String programId, @RequestBody ProgramRnRTemplateForm programRnRTemplateForm) {
+        rnrTemplateService.createRnRTemplateForProgram(Integer.parseInt(programId), programRnRTemplateForm);
     }
 
 }

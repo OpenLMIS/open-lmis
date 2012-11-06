@@ -35,10 +35,8 @@ public class RnRTemplateControllerTest {
 
     @Test
     public void shouldCreateARnRTemplateForAGivenProgramWithSpecifiedColumns() throws Exception {
-        ArrayList<RnrColumn> rnrColumns = new ArrayList<RnrColumn>();
-        ProgramRnRTemplateForm programRnRTemplateForm = mock(ProgramRnRTemplateForm.class);
-        when(programRnRTemplateForm.getRnrColumns()).thenReturn(rnrColumns);
+        ProgramRnRTemplateForm programRnRTemplateForm = new ProgramRnRTemplateForm();
         rnrTemplateController.createRnRTemplateForProgram("1", programRnRTemplateForm);
-        verify(rnrTemplateService).createRnRTemplateForProgram(1, rnrColumns);
+        verify(rnrTemplateService).createRnRTemplateForProgram(1, programRnRTemplateForm);
     }
 }
