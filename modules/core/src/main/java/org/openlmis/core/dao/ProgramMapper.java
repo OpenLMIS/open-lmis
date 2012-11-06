@@ -13,7 +13,7 @@ public interface ProgramMapper {
             @Result(property = "name", column = "NAME"),
             @Result(property = "description", column = "DESCRIPTION")
     })
-    List<Program> selectAll();
+    List<Program> getAll();
 
     @Insert("INSERT INTO PROGRAM(ID, NAME, DESCRIPTION)" +
             " values (#{program.id}, #{program.name}, #{program.description})")

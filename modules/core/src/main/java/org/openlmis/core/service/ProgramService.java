@@ -18,6 +18,6 @@ public class ProgramService {
     }
 
     public List<Program> getAll() {
-        return programMapper.selectAll();
+        return programMapper.getAll();
     }
 }

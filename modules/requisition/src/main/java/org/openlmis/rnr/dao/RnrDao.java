@@ -21,7 +21,7 @@ public class RnrDao {
 
     public void insertAllProgramRnRColumns(int programId, List<RnrColumn> rnrColumns) {
         SqlSession session = sqlSessionFactory.openSession(ExecutorType.BATCH);
-        ProgramRnRColumnMapper mapper = session.getMapper(ProgramRnRColumnMapper.class);
+        ProgramRnrColumnMapper mapper = session.getMapper(ProgramRnrColumnMapper.class);
         for (RnrColumn rnrColumn : rnrColumns) {
             mapper.insert(programId, rnrColumn);
         }

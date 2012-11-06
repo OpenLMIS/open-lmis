@@ -18,7 +18,7 @@
     </bean>
 
     <bean id="programRnrColumnMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="org.openlmis.rnr.dao.ProgramRnRColumnMapper"/>
+        <property name="mapperInterface" value="org.openlmis.rnr.dao.ProgramRnrColumnMapper"/>
         <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
     </bean>
 

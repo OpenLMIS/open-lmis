@@ -20,11 +20,11 @@ import static org.junit.Assert.assertThat;
 @ContextConfiguration(locations = "classpath*:applicationContext-requisition.xml")
 public class ProgramRnrColumnMapperIT {
 
-    public static final int PROGRAM_ID = 999;
+    public static final int PROGRAM_ID = 1;
     @Autowired
     RnrColumnMapper rnrColumnMapper;
     @Autowired
-    ProgramRnRColumnMapper programRnRColumnMapper;
+    ProgramRnrColumnMapper programRnrColumnMapper;
     @Autowired
     ProgramMapper programMapper;
 
@@ -32,20 +32,16 @@ public class ProgramRnrColumnMapperIT {
 
     @Before
     public void setUp() throws Exception {
-        programMapper.deleteAll();
-        programRnRColumnMapper.deleteAll();
-
-        programMapper.insert(new Program(PROGRAM_ID, "program", "description"));
         rnrColumn = rnrColumnMapper.fetchAllMasterRnRColumns().get(0);
     }
 
     @Test
     public void shouldInsertRnRColumnForProgram() throws Exception {
         rnrColumn.setUsed(true);
-        int resultCode = programRnRColumnMapper.insert(PROGRAM_ID, rnrColumn);
+        int resultCode = programRnrColumnMapper.insert(PROGRAM_ID, rnrColumn);
 
         assertEquals(1, resultCode);
-        ProgramRnrColumn savedProgramRnrColumn = programRnRColumnMapper.get(PROGRAM_ID, rnrColumn.getId());
+        ProgramRnrColumn savedProgramRnrColumn = programRnrColumnMapper.get(PROGRAM_ID, rnrColumn.getId());
         assertEquals(PROGRAM_ID, savedProgramRnrColumn.getProgramId().intValue());
         assertEquals(rnrColumn.getId(), savedProgramRnrColumn.getColumnId());
         assertEquals(true, savedProgramRnrColumn.isUsed());

@@ -8,8 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.List;
+
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
@@ -20,17 +23,14 @@ public class ProgramMapperIT {
 
     @Before
     public void setUp() {
-        programMapper.deleteAll();
     }
 
     @Test
-    public void shouldInsertProgram() {
-        int id = programMapper.insert(new Program(999, "program", "description"));
-        assertNotNull(id);
-        Program program = programMapper.selectAll().get(0);
-        assertEquals(999, program.getId().intValue());
-        assertEquals("program", program.getName());
-        assertEquals("description", program.getDescription());
+    public void shouldGetAllProgram() {
+        List<Program> programs = programMapper.getAll();
+        assertEquals(2, programs.size());
+        assertTrue(programs.contains(new Program(1, "ARV", "some ARV program")));
+        assertTrue(programs.contains(new Program(2, "HIV", "some HIV program")));
     }
 
 }

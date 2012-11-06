@@ -4,7 +4,7 @@ import org.apache.ibatis.annotations.*;
 import org.openlmis.rnr.domain.ProgramRnrColumn;
 import org.openlmis.rnr.domain.RnrColumn;
 
-public interface ProgramRnRColumnMapper {
+public interface ProgramRnrColumnMapper {
 
     @Select("SELECT * FROM Program_RnR_Template WHERE program_id=#{programId} AND column_id=#{columnId}")
     @Results(value = {
@@ -18,6 +18,9 @@ public interface ProgramRnRColumnMapper {
     @Insert("INSERT INTO Program_RnR_Template(program_id, column_id, is_used)" +
             " values (#{programId}, #{rnrColumn.id}, #{rnrColumn.used})")
     int insert(@Param("programId") int programId, @Param("rnrColumn") RnrColumn rnrColumn);
+
+//    @Update("UPDATE Program_RnR_Template SET is_used = #{rnrColumn.used}    ")
+//    int up
 
     @Delete("DELETE FROM Program_RnR_Template")
     void deleteAll();

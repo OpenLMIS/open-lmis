@@ -31,15 +31,11 @@ public class RnRTemplateControllerIT {
         ResultActions resultActions = standaloneSetup(controller).setViewResolvers(contentNegotiatingViewResolver()).build()
                 .perform(get("/admin/rnr/master/columns.json"));
 
-        assertEquals("{\"rnrColumnList\":[{\"id\":1,\"name\":\"Medicine_Name\",\"description\":\"First test medicine\"," +
-                                        "\"position\":1,\"label\":\"Medicine Name\",\"defaultValue\":\"M\"," +
-                                        "\"dataSource\":\"Derived\",\"formula\":\"a+b+c\",\"indicator\":\"X\",\"used\":false,\"visible\":false}]}", resultActions.andReturn().getResponse().getContentAsString());
-
-//        resultActions.andExpect(content().type(MediaType.APPLICATION_JSON_VALUE))
-//                .andExpect(content().string("{\"rnrColumnList\":[{\"id\":1,\"name\":\"Medicine_Name\",\"description\":\"First test medicine\"," +
-//                        "\"position\":1,\"label\":\"Medicine Name\",\"defaultValue\":\"M\"," +
-//                        "\"dataSource\":\"Derived\",\"formula\":\"a+b+c\",\"indicator\":\"X\",\"used\":false,\"visible\":false}]}"));
-    } // TODO : IT test should setup its own data
+        assertEquals("{\"rnrColumnList\":[{\"id\":1,\"name\":\"foo\",\"description\":\"foo is a column\",\"position\":1,\"label\":\"Foo\",\"defaultValue\":\"foo\"," +
+                "\"dataSource\":\"Derived\",\"formula\":\"a+b+c\",\"indicator\":\"F\",\"used\":false,\"visible\":false}," +
+                "{\"id\":2,\"name\":\"bar\",\"description\":\"bar is not foo\",\"position\":1,\"label\":\"Bar\",\"defaultValue\":\"bar\",\"dataSource\":\"Derived\"," +
+                "\"formula\":\"a+b+c\",\"indicator\":\"B\",\"used\":true,\"visible\":false}]}", resultActions.andReturn().getResponse().getContentAsString());
+    }
 
     private ContentNegotiatingViewResolver contentNegotiatingViewResolver() {
         ContentNegotiatingViewResolver viewResolver = new ContentNegotiatingViewResolver();

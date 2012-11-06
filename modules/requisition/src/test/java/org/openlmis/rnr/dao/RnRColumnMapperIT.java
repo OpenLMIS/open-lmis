@@ -22,22 +22,22 @@ public class RnRColumnMapperIT {
     RnrColumnMapper rnrColumnMapper;
 
     @Autowired
-    ProgramRnRColumnMapper programRnRColumnMapper;
+    ProgramRnrColumnMapper programRnrColumnMapper;
 
     @Before
     public void setUp() throws Exception {
-        programRnRColumnMapper.deleteAll();
+        programRnrColumnMapper.deleteAll();
     }
 
     @Test
     public void shouldRetrieveAllColumnsFromMasterTable() throws Exception {
         List<RnrColumn> result = rnrColumnMapper.fetchAllMasterRnRColumns();
 
-        assertThat(result.get(0).getName(), is("Medicine_Name"));
-        assertThat(result.get(0).getDescription(), is("First test medicine"));
+        assertThat(result.get(0).getName(), is("foo"));
+        assertThat(result.get(0).getDescription(), is("foo is a column"));
         assertThat(result.get(0).getPosition(), is(1));
-        assertThat(result.get(0).getLabel(), is("Medicine Name"));
-        assertThat(result.get(0).getDefaultValue(), is("M"));
+        assertThat(result.get(0).getLabel(), is("Foo"));
+        assertThat(result.get(0).getDefaultValue(), is("foo"));
         assertThat(result.get(0).getDataSource(), is("Derived"));
         assertThat(result.get(0).getFormula(), is("a+b+c"));
     }
