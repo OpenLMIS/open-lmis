@@ -5,9 +5,18 @@
     <title>Products</title>
 </head>
 <body>
-<form method="POST" action="../product/upload" enctype="multipart/form-data">
-    <input type="file" value="Choose CSV File to upload" name="csvFile"/>
-    <input type="submit"/>
+<form method="POST" action="../upload.json" enctype="multipart/form-data">
+    <div>
+        <fieldset>
+            <label style="padding-top: 10" for="model">Model:</label>
+            <select name="model" id="model">
+                <option value="product">Product</option>
+            </select> <br/>
+            <label style="padding-top: 10" for="csvFile">File: </label>
+            <input name="csvFile" id="csvFile" type="file" value="Choose CSV File to upload"/> </br>
+            <input type="submit" value="Upload">
+        </fieldset>
+    </div>
 </form>
 
 </body>

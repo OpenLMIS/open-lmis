@@ -37,7 +37,7 @@ public class CSVParser {
 
         List<CellProcessor> cellProcessors = importFieldParser.parse(modelClass, headersSet);
 
-        CellProcessor[] processors = cellProcessors.toArray(new CellProcessor[0]);
+        CellProcessor[] processors = cellProcessors.toArray(new CellProcessor[1]);
         Importable importedModel;
 
         while ((importedModel = csvBeanReader.read(modelClass, headers, processors)) != null) {
