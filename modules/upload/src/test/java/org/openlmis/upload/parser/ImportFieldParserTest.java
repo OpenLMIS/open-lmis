@@ -2,7 +2,7 @@ package org.openlmis.upload.parser;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openlmis.upload.MissingFieldException;
+import org.openlmis.upload.MissingHeaderException;
 import org.openlmis.upload.model.DummyImportable;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -31,7 +31,7 @@ public class ImportFieldParserTest {
     ImportFieldParser parser = new ImportFieldParser();
 
     @Test
-    public void shouldReturnCorrectProcessorForHeaders() throws MissingFieldException {
+    public void shouldReturnCorrectProcessorForHeaders() throws MissingHeaderException {
 
         Set<String> headers = new LinkedHashSet<String>();
         headers.add("mandatoryStringField");
@@ -47,7 +47,7 @@ public class ImportFieldParserTest {
     }
 
     @Test
-    public void testReturnProcessorForMismatchCaseAsWell() throws MissingFieldException {
+    public void testReturnProcessorForMismatchCaseAsWell() throws MissingHeaderException {
         Set<String> headers = new LinkedHashSet<String>();
         headers.add("MANDAtoryStringField");
         headers.add("mandatoryIntFIELD");
@@ -60,7 +60,7 @@ public class ImportFieldParserTest {
     }
 
     @Test
-    public void shouldIgnoreNonAnnotatedHeaders() throws MissingFieldException {
+    public void shouldIgnoreNonAnnotatedHeaders() throws MissingHeaderException {
         Set<String> headers = new LinkedHashSet<String>();
         headers.add("mandatoryStringField");
         headers.add("mandatoryIntField");
@@ -125,13 +125,17 @@ public class ImportFieldParserTest {
 
     }
 
-    @Test(expected = MissingFieldException.class)
-    public void shouldThrowExceptionIfAnyMandatoryFieldIsMissing() throws MissingFieldException {
+    @Test
+    public void shouldThrowExceptionForMissingMandatoryHeaders() {
+        Set<String> headers = new LinkedHashSet<String>() {{
+            add("optionalStringField");
+        }};
 
-        Set<String> headers = new LinkedHashSet<String>();
-        headers.add("optionalStringField");
-
-        parser.parse(DummyImportable.class, headers);
+        try {
+            parser.parse(DummyImportable.class, headers);
+        } catch (MissingHeaderException e) {
+            assertEquals("Mandatory Header(s) [mandatoryStringField, mandatoryIntField] not present", e.getMessage());
+        }
     }
 
 }

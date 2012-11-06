@@ -1,7 +1,7 @@
 package org.openlmis.upload.parser;
 
 import org.openlmis.upload.Importable;
-import org.openlmis.upload.MissingFieldException;
+import org.openlmis.upload.MissingHeaderException;
 import org.openlmis.upload.RecordHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,7 +28,7 @@ public class CSVParser {
         this.importFieldParser = importFieldParser;
     }
 
-    public void process(InputStream inputStream, Class<? extends Importable> modelClass, RecordHandler recordHandler) throws IOException, MissingFieldException {
+    public void process(InputStream inputStream, Class<? extends Importable> modelClass, RecordHandler recordHandler) throws IOException, MissingHeaderException {
 
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         CsvBeanReader csvBeanReader = new CsvBeanReader(bufferedReader, CsvPreference.STANDARD_PREFERENCE);
