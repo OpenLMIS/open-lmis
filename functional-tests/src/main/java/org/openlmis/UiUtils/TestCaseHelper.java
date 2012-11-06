@@ -1,20 +1,7 @@
 package org.openlmis.UiUtils;
 
 
-import org.apache.commons.lang.time.DateUtils;
-
-import org.openlmis.UiUtils.DriverFactory;
-import org.openlmis.UiUtils.TestWebDriver;
-import org.openqa.selenium.Cookie;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeClass;
-
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Date;
 
 
 public class TestCaseHelper {
@@ -52,6 +39,5 @@ public class TestCaseHelper {
     protected static void loadDriver() {
         testWebDriver = new TestWebDriver(driverFactory.loadDriver());
     }
-
 
 }

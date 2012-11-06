@@ -20,21 +20,24 @@ public class LoginPage extends Page {
     @FindBy(how = How.LINK_TEXT, using = "logout")
     private static WebElement logoutLink;
 
+    private String BASE_URL = "http://192.168.34.2:8080/openlmis-web/";
+    private String ERROR_MESSAGE_LOGIN = "The username or password you entered is incorrect . Please try again.";
 
 
     public LoginPage(TestWebDriver driver) {
         super(driver);
+        testWebDriver.setBaseURL(BASE_URL);
+        testWebDriver.setErrorMessage(ERROR_MESSAGE_LOGIN);
         PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
+        testWebDriver.setImplicitWait(25);
     }
 
 
     public void login(String username, String password) {
         testWebDriver.waitForElementToAppear(userNameField);
         testWebDriver.waitForElementToAppear(passwordField);
-
         userNameField.sendKeys(username);
         passwordField.sendKeys(password);
-
         userNameField.submit();
 
     }
@@ -49,7 +52,4 @@ public class LoginPage extends Page {
         testWebDriver.waitForTextToAppear("Welcome " + user);
         return testWebDriver.getPageSource().contains("Welcome " + user);
     }
-
-
-
 }
