@@ -1,8 +1,8 @@
 package org.openlmis.rnr.service;
 
-import org.openlmis.rnr.dao.RnRColumnMapper;
-import org.openlmis.rnr.dao.RnRDAO;
-import org.openlmis.rnr.domain.RnRColumn;
+import org.openlmis.rnr.dao.RnrColumnMapper;
+import org.openlmis.rnr.dao.RnrDao;
+import org.openlmis.rnr.domain.RnrColumn;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,21 +11,21 @@ import java.util.List;
 
 @Service
 public class RnRTemplateService {
-    private RnRColumnMapper rnrColumnMapper;
-    private RnRDAO rnRDao;
+    private RnrColumnMapper rnrColumnMapper;
+    private RnrDao rnrDao;
 
     @Autowired
-    public RnRTemplateService(RnRColumnMapper rnrColumnMapper, RnRDAO rnRDao) {
+    public RnRTemplateService(RnrColumnMapper rnrColumnMapper, RnrDao rnrDao) {
         this.rnrColumnMapper = rnrColumnMapper;
-        this.rnRDao = rnRDao;
+        this.rnrDao = rnrDao;
     }
 
-    public List<RnRColumn> fetchAllMasterColumns() {
-        List<RnRColumn> rnRColumns = rnrColumnMapper.fetchAllMasterRnRColumns();
-        return rnRColumns==null ? new ArrayList<RnRColumn>(): rnRColumns;
+    public List<RnrColumn> fetchAllMasterColumns() {
+        List<RnrColumn> rnrColumns = rnrColumnMapper.fetchAllMasterRnRColumns();
+        return rnrColumns==null ? new ArrayList<RnrColumn>(): rnrColumns;
     }
 
-    public void createRnRTemplateForProgram(String programId, List<RnRColumn> rnRColumns) {
-        rnRDao.insertAllRnRColumns(Integer.parseInt(programId),rnRColumns);
+    public void createRnRTemplateForProgram(Integer programId, List<RnrColumn> rnrColumns) {
+        rnrDao.insertAllProgramRnRColumns(programId, rnrColumns);
     }
 }

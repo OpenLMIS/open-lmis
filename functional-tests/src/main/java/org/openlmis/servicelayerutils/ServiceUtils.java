@@ -10,16 +10,6 @@ import java.util.*;
 import net.sf.json.*;
 
 public class ServiceUtils {
-    /*
-      * Java function to post JSON
-      */
-
-    /*
-   When the message is processed successfully,
-   the HTTP response has a 200 status and the body
-   contains more information about the status of the message (including possible errors).
-   When the request is rejected, the HTTP response contains a non-200 status code (such as 400, 401, or 503).
-    */
 
 
     @SuppressWarnings("finally")
@@ -37,7 +27,6 @@ public class ServiceUtils {
             os.flush();
             System.out.println(conn.getResponseMessage());
 
-            //HttpURLConnection.HTTP_CREATED
             if (conn.getResponseCode() != 200) {
                 throw new RuntimeException("Failed : HTTP error code : "
                         + conn.getResponseCode());
@@ -60,10 +49,6 @@ public class ServiceUtils {
             return outputFinal;
         }
     }
-
-    /*
-    * Java function to get JSON
-    */
 
 
     @SuppressWarnings("finally")
@@ -100,10 +85,6 @@ public class ServiceUtils {
         }
     }
 
-    /*
-    * Dummy java function to create a Json
-    */
-
     public void createJson() {
         JSONObject obj = new JSONObject();
         LinkedHashMap lhmObj = new LinkedHashMap();
@@ -119,9 +100,6 @@ public class ServiceUtils {
     }
 
 
-    /*
-    * Dummy java function to read Json String
-    */
 
     public void readJson(String jsonString) {
         try {

@@ -1,39 +1,46 @@
 package org.openlmis.functional;
 
-import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.UiUtils.DriverFactory;
+import org.openlmis.UiUtils.TestCaseHelper;
+import org.openlmis.pageobjects.*;
+import org.openqa.selenium.support.PageFactory;
 import org.testng.annotations.*;
 
 import static org.testng.Assert.assertEquals;
 
-public class LogIn {
+public class LogIn extends TestCaseHelper {
 
-    private LoginPage login;
+//    private DriverFactory driverFactory= new DriverFactory();
 
-    @BeforeClass
-    public void setUp() {
-        login = new LoginPage();
-    }
 
-    @AfterClass
-    public void quitDriver() {
-        login.quitDriver();
-    }
+//    @BeforeClass
+//    public void setUp() {
+//        driverFactory.loadDriver();
+//    }
+//
+//    @AfterClass
+//    public void quitDriver() {
+//        testWebDriver.quitDriver();
+//    }
 
     /* Test method for positive scenarios*/
     @Test(dataProvider = "Data-Provider-Function-Positive")
     public void testLoginPositive(String identifier, String[] credentials) {
-        login.login(credentials[0], credentials[1]);
-        assertEquals(login.verifyWelcomeMessage(credentials[0]),true);
-        login.verifyUrl(identifier);
-        login.logout();
+        testWebDriver.get(new LogIn());
+        LoginPage loginpage=new LoginPage(testWebDriver);
+        loginpage.login(credentials[0], credentials[1]);
+        assertEquals(loginpage.verifyWelcomeMessage(credentials[0]), true);
+        testWebDriver.verifyUrl(identifier);
+        loginpage.logout();
     }
 
     /* Test method for negative scenarios*/
     @Test(dependsOnMethods = {"testLoginPositive"},
             dataProvider = "Data-Provider-Function-Negative")
     public void testLoginNegative(String[] credentials) {
-        login.login(credentials[0], credentials[1]);
-        assertEquals(login.verifyErrorMessage(), true);
+        LoginPage loginpage=new LoginPage(testWebDriver);
+        loginpage.login(credentials[0], credentials[1]);
+        assertEquals(testWebDriver.verifyErrorMessage(), true);
 
     }
 

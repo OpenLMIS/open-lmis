@@ -7,13 +7,19 @@ import java.util.List;
 
 public interface ProgramMapper {
 
-    final String SELECT_ALL = "SELECT * FROM PROGRAM";
-
-    @Select(SELECT_ALL)
+    @Select("SELECT * FROM PROGRAM")
     @Results(value = {
             @Result(property = "id", column = "ID"),
             @Result(property = "name", column = "NAME"),
             @Result(property = "description", column = "DESCRIPTION")
     })
     List<Program> selectAll();
+
+    @Insert("INSERT INTO PROGRAM(ID, NAME, DESCRIPTION)" +
+            " values (#{program.id}, #{program.name}, #{program.description})")
+    int insert(@Param("program") Program program);
+
+    @Delete("DELETE FROM PROGRAM")
+    void deleteAll();
+
 }

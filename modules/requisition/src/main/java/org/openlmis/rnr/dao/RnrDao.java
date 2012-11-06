@@ -3,33 +3,30 @@ package org.openlmis.rnr.dao;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.openlmis.rnr.domain.RnRColumn;
+import org.openlmis.rnr.domain.RnrColumn;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public class RnRDAO {
+public class RnrDao {
 
     private SqlSessionFactory sqlSessionFactory;
 
     @Autowired
-    public RnRDAO(SqlSessionFactory sqlSessionFactory) {
+    public RnrDao(SqlSessionFactory sqlSessionFactory) {
         this.sqlSessionFactory = sqlSessionFactory;
     }
 
-    public void insertAllRnRColumns(Integer programId,List<RnRColumn> rnRColumns){
+    public void insertAllProgramRnRColumns(int programId, List<RnrColumn> rnrColumns) {
         SqlSession session = sqlSessionFactory.openSession(ExecutorType.BATCH);
-        RnRColumnMapper mapper = session.getMapper(RnRColumnMapper.class);
-        for(RnRColumn rnRColumn:rnRColumns)
-        {
-            mapper.insert(programId, rnRColumn);
+        ProgramRnRColumnMapper mapper = session.getMapper(ProgramRnRColumnMapper.class);
+        for (RnrColumn rnrColumn : rnrColumns) {
+            mapper.insert(programId, rnrColumn);
         }
         session.commit();
-
         session.close();
     }
-
 
 }

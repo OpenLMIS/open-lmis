@@ -1,5 +1,9 @@
-function CreateRnrTemplateController($scope, $http, $location) {
-    $http.get('../../../../json/programs.json').success(function (data) {
+function CreateRnrTemplateController($scope, Program, RnRMasterColumnList) {
+    Program.get({}, function (data) {   //success
         $scope.programs = data.programList;
-    });
+    }, {});
+
+    RnRMasterColumnList.get({}, function (data) {   //success
+        $scope.rnrMasterColumnsList = data.rnrColumnList;
+    }, {});
 }

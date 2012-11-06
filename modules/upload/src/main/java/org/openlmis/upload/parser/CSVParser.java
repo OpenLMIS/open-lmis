@@ -1,6 +1,7 @@
 package org.openlmis.upload.parser;
 
 import org.openlmis.upload.Importable;
+import org.openlmis.upload.MissingHeaderException;
 import org.openlmis.upload.RecordHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -9,6 +10,7 @@ import org.supercsv.io.CsvBeanReader;
 import org.supercsv.prefs.CsvPreference;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
@@ -26,7 +28,7 @@ public class CSVParser {
         this.importFieldParser = importFieldParser;
     }
 
-    public void process(InputStream inputStream, Class<? extends Importable> modelClass, RecordHandler recordHandler) throws Exception {
+    public void process(InputStream inputStream, Class<? extends Importable> modelClass, RecordHandler recordHandler) throws IOException, MissingHeaderException {
 
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         CsvBeanReader csvBeanReader = new CsvBeanReader(bufferedReader, CsvPreference.STANDARD_PREFERENCE);
@@ -37,7 +39,7 @@ public class CSVParser {
 
         List<CellProcessor> cellProcessors = importFieldParser.parse(modelClass, headersSet);
 
-        CellProcessor[] processors = cellProcessors.toArray(new CellProcessor[0]);
+        CellProcessor[] processors = cellProcessors.toArray(new CellProcessor[1]);
         Importable importedModel;
 
         while ((importedModel = csvBeanReader.read(modelClass, headers, processors)) != null) {

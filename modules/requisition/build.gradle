@@ -4,7 +4,8 @@ dependencies {
             'org.springframework:spring-aspects:3.1.1.RELEASE',
             'org.aspectj:aspectjrt:1.7.0',
             'commons-lang:commons-lang:2.6',
-            project(':modules:db')
+            project(':modules:db'),
+            project(':modules:core')
 
     testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
             project(':modules:db')
