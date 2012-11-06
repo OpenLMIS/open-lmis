@@ -43,6 +43,11 @@ public class TestWebDriver {
 
     }
 
+    public void verifyUrlInvalid() {
+        String url = getCurrentUrl();
+            assertTrue(url.contains(BASE_URL + "resources/pages/login.html?error=true"));
+    }
+
 
     public void get() {
         driver.get(BASE_URL);

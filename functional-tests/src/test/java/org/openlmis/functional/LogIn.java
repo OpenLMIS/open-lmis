@@ -23,6 +23,7 @@ public class LogIn extends TestCaseHelper {
         LoginPage loginpage=new LoginPage(testWebDriver);
         loginpage.login(credentials[0], credentials[1]);
         //assertEquals(testWebDriver.verifyErrorMessage(), true);
+        testWebDriver.verifyUrlInvalid();
 
     }
 
