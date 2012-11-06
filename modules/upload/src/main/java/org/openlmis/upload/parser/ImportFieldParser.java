@@ -1,6 +1,7 @@
 package org.openlmis.upload.parser;
 
 import org.openlmis.upload.Importable;
+import org.openlmis.upload.MissingFieldException;
 import org.openlmis.upload.annotation.ImportField;
 import org.springframework.stereotype.Component;
 import org.supercsv.cellprocessor.*;
@@ -24,7 +25,7 @@ public class ImportFieldParser {
         typeMappings.put("String", new Trim());
     }
 
-    public List<CellProcessor> parse(Class<? extends Importable> clazz, Set<String> headers) throws Exception {
+    public List<CellProcessor> parse(Class<? extends Importable> clazz, Set<String> headers) throws MissingFieldException {
         validateHeaders(clazz, lowerCase(headers));
         return getProcessors(clazz, headers);
     }
@@ -37,7 +38,7 @@ public class ImportFieldParser {
         return lowerCaseHeaders;
     }
 
-    private List<CellProcessor> getProcessors(Class<? extends Importable> clazz, Set<String> headers) throws NoSuchFieldException {
+    private List<CellProcessor> getProcessors(Class<? extends Importable> clazz, Set<String> headers)  {
         List<CellProcessor> processors = new ArrayList<CellProcessor>();
         for (String header : headers) {
             Field field = getDeclaredFieldIgnoreCase(clazz, header);
@@ -55,18 +56,18 @@ public class ImportFieldParser {
         return importField.mandatory() ? new NotNull(mappedProcessor) : new Optional(mappedProcessor);
     }
 
-    private void validateHeaders(Class<? extends Importable> clazz, Set<String> headers) throws Exception {
+    private void validateHeaders(Class<? extends Importable> clazz, Set<String> headers) throws MissingFieldException {
         Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
             if (field.isAnnotationPresent(ImportField.class) && field.getAnnotation(ImportField.class).mandatory()) {
                 if (!headers.contains(field.getName().toLowerCase())) {
-                    throw new Exception("Mandatory Field " + field.getName() + " not present");
+                    throw new MissingFieldException("Mandatory Field " + field.getName() + " not present");
                 }
             }
         }
     }
 
-    private Field getDeclaredFieldIgnoreCase(Class<? extends Importable> clazz, String fieldName) throws NoSuchFieldException {
+    private Field getDeclaredFieldIgnoreCase(Class<? extends Importable> clazz, String fieldName)  {
         for (Field field : clazz.getDeclaredFields()) {
             if (field.getName().equalsIgnoreCase(fieldName)) {
                 return field;

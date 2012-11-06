@@ -4,6 +4,7 @@ package org.openlmis.upload.parser;
 import org.junit.Before;
 import org.junit.Test;
 import org.openlmis.upload.Importable;
+import org.openlmis.upload.MissingFieldException;
 import org.openlmis.upload.model.DummyImportable;
 import org.openlmis.upload.model.DummyRecordHandler;
 import org.supercsv.cellprocessor.ParseInt;
@@ -13,6 +14,7 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.*;
 
 import static junit.framework.Assert.assertEquals;
@@ -36,7 +38,7 @@ public class CSVParserTest {
     }
 
     @Test
-    public void shouldParseFileWithTrimmedHeaders() throws Exception {
+    public void shouldParseFileWithTrimmedHeaders() throws MissingFieldException, IOException {
         String[] headers = {"mandatoryStringField", "mandatoryIntField"};
         Set<String> headersSet = new LinkedHashSet<String>(Arrays.asList(headers));
 
@@ -53,7 +55,7 @@ public class CSVParserTest {
     }
 
     @Test
-    public void shouldInvokeHandlerForEachRecord() throws Exception {
+    public void shouldInvokeHandlerForEachRecord() throws MissingFieldException, IOException {
         String[] headers = {"mandatoryStringField", "mandatoryIntField"};
         Set<String> headersSet = new LinkedHashSet<String>(Arrays.asList(headers));
 
