@@ -10,6 +10,8 @@ subprojects {
         }
     }
     dependencies {
+        compile 'org.projectlombok:lombok:0.10.8'
+
         testCompile 'junit:junit:4.8.2',
                 'org.mockito:mockito-all:1.8.4',
                 'org.hamcrest:hamcrest-all:1.3'

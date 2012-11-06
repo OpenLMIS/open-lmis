@@ -1,7 +1,34 @@
 <div>
     <h3>RnR Template Configuration</h3>
     <h4>Program:{{ $parent.program }}</h4>
-    <br/>
-    <br/>
-    <a href="#/create-rnr-template" class="button">Save</a>
+
+    <div>
+        <ul>
+            <li>
+                <span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span style="">Name | </span>
+                <span style="">Description | </span>
+                <span style="">Position | </span>
+                <span style="">Label | </span>
+                <span style="">Default Value | </span>
+                <span style="">Data Source | </span>
+                <span style="">Formula </span>
+            </li>
+        </ul>
+    </div>
+    <div>
+        <ul>
+            <li ng-repeat="rnrColumn in rnrMasterColumnsList">
+                <input type="checkbox" ng:model="rnrColumn.used">
+                <span>{{ rnrColumn.name }} | <span/>
+                <span>{{ rnrColumn.description }} | <span/>
+                <span>{{ rnrColumn.position }}| <span/>
+                <span>{{ rnrColumn.label }} | <span/>
+                <span>{{ rnrColumn.defaultValue }} | <span/>
+                <span>{{ rnrColumn.dataSource }} | <span/>
+                <span>{{ rnrColumn.formula }} <span/>
+            </li>
+        </ul>
+    </div>
+    <a class="button">Save</a>
 </div>

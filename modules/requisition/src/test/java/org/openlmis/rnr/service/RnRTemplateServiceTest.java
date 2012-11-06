@@ -3,52 +3,49 @@ package org.openlmis.rnr.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.openlmis.rnr.dao.RnRColumnMapper;
-import org.openlmis.rnr.dao.RnRDAO;
-import org.openlmis.rnr.domain.RnRColumn;
+import org.openlmis.rnr.dao.RnrDao;
+import org.openlmis.rnr.domain.RnrColumn;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class RnRTemplateServiceTest {
 
     private RnRColumnMapper mapper;
     private RnRTemplateService service;
-    private RnRDAO dao;
+    private RnrDao dao;
 
     @Before
     public void setUp() throws Exception {
-        dao = mock(RnRDAO.class);
+        dao = mock(RnrDao.class);
         mapper = mock(RnRColumnMapper.class);
         service = new RnRTemplateService(mapper, dao);
     }
 
     @Test
     public void shouldFetchAllRnRColumns() {
-        List<RnRColumn> allColumns = new ArrayList<RnRColumn>();
+        List<RnrColumn> allColumns = new ArrayList<RnrColumn>();
         when(mapper.fetchAllMasterRnRColumns()).thenReturn(allColumns);
-        List<RnRColumn> rnRColumns = service.fetchAllMasterColumns();
-        assertThat(rnRColumns, is(equalTo(allColumns)));
+        List<RnrColumn> rnrColumns = service.fetchAllMasterColumns();
+        assertThat(rnrColumns, is(equalTo(allColumns)));
     }
 
     @Test
     public void shouldFetchEmptyListIfListReturnedIsNull() throws Exception {
-        List<RnRColumn> nullList=null;
+        List<RnrColumn> nullList=null;
         when(mapper.fetchAllMasterRnRColumns()).thenReturn(nullList);
-        List<RnRColumn> returnedList = service.fetchAllMasterColumns();
+        List<RnrColumn> returnedList = service.fetchAllMasterColumns();
         assertThat(returnedList,not(nullValue()));
     }
 
     @Test
     public void shouldCreateARnRTemplateForAProgramWithGivenColumns() throws Exception {
-        String programId = "10";
-        List<RnRColumn> rnrColumns = new ArrayList<RnRColumn>();
-        service.createRnRTemplateForProgram(programId, rnrColumns);
-        verify(dao).insertAllRnRColumns(10, rnrColumns);
+        List<RnrColumn> rnrColumns = new ArrayList<RnrColumn>();
+        service.createRnRTemplateForProgram(1, rnrColumns);
+        verify(dao).insertAllProgramRnRColumns(1, rnrColumns);
     }
 }

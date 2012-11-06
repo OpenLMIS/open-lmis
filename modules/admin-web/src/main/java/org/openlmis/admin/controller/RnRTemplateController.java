@@ -1,7 +1,7 @@
 package org.openlmis.admin.controller;
 
 import org.openlmis.admin.form.ProgramRnRTemplateForm;
-import org.openlmis.rnr.domain.RnRColumn;
+import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.service.RnRTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,12 +23,13 @@ public class RnRTemplateController {
     }
 
     @RequestMapping(value = "/rnr/master/columns", method = RequestMethod.GET, headers = "Accept=application/json")
-    public List<RnRColumn> fetchMasterColumnList() {
+    public List<RnrColumn> fetchMasterColumnList() {
         return rnrTemplateService.fetchAllMasterColumns();
     }
 
     @RequestMapping(value = "/rnr/{programId}/columns", method = RequestMethod.POST, headers = "Accept=application/json")
     public void createRnRTemplateForProgram(@PathVariable String programId, ProgramRnRTemplateForm programRnRTemplateForm) {
-        rnrTemplateService.createRnRTemplateForProgram(programId, programRnRTemplateForm.getRnRColumns());
+        rnrTemplateService.createRnRTemplateForProgram(Integer.parseInt(programId), programRnRTemplateForm.getRnrColumns());
     }
+
 }

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
 @Controller
-@RequestMapping("/json")
+@RequestMapping("/admin")
 public class ProgramController {
 
     private ProgramService programService;
@@ -18,7 +18,7 @@ public class ProgramController {
         this.programService = programService;
     }
 
-    @RequestMapping(value = "/programs.json", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "programs/programs.json", method = RequestMethod.GET, headers = "Accept=application/json")
     public List<Program> getAllPrograms() {
         return programService.getAll();
     }
