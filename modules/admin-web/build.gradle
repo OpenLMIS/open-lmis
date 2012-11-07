@@ -20,7 +20,8 @@ dependencies {
             'javax.servlet:servlet-api:2.5',
             'org.powermock:powermock-api-mockito:1.4.12',
             'org.powermock:powermock-module-junit4:1.4.12',
-            'org.codehaus.jackson:jackson-mapper-asl:1.9.9'
+            'org.codehaus.jackson:jackson-mapper-asl:1.9.9',
+            'cglib:cglib:2.2.2'
 }
 
 task explodedWar(type: Copy) {
