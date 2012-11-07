@@ -4,30 +4,32 @@ dependencies {
     compile 'org.testng:testng:6.1.1',
             'org.seleniumhq.selenium:selenium-java:2.25.0',
             'org.seleniumhq.selenium:selenium-firefox-driver:2.25.0',
-            'net.sf.json-lib:json-lib:0.9'
+            'net.sf.json-lib:json-lib:0.9',
+            project(':modules:db')
 
     testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
             'org.testng:testng:6.1.1',
             'org.seleniumhq.selenium:selenium-java:2.25.0',
             'org.seleniumhq.selenium:selenium-firefox-driver:2.25.0 ',
             'net.sf.json-lib:json-lib:0.9'
+    project(':modules:db')
 }
 
-test{
+test {
     exclude '**/org/openlmis/functional/*.*'
 }
 
-task buildOpenLmis(type: GradleBuild){
-    buildFile= '../modules/openlmis-web/build.gradle'
+task buildOpenLmis(type: GradleBuild) {
+    buildFile = '../modules/openlmis-web/build.gradle'
     tasks = ['build', 'jettyRunWarDaemon']
 }
 
-task functionalTest(type:Test,dependsOn:test){
+task functionalTest(type: Test, dependsOn: test) {
     include '**/org/openlmis/functional/*.*'
     useTestNG()
 }
 
-functionalTest.doFirst(){
+functionalTest.doFirst() {
     buildOpenLmis.execute()
 }
 
