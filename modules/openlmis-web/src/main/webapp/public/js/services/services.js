@@ -8,3 +8,7 @@ services.factory('RnRMasterColumnList', function ($resource) {
     return $resource('/openlmis/admin/rnr/master/columns.json', {}, {});
 });
 
+services.factory('Facility', function ($resource) {
+    return $resource('/openlmis/facilities/all.json', {}, {});
+});
+
