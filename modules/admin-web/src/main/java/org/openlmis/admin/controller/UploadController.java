@@ -20,13 +20,13 @@ public class UploadController {
 
     private CSVParser csvParser;
     private ProductImportHandler handler;
-    private final Map<String, Class[]> modelMap = new HashMap<String, Class[]>();
+    private final Map<String, Class> modelMap = new HashMap<String, Class>();
 
     @Autowired
     public UploadController(CSVParser csvParser, ProductImportHandler handler) {
         this.csvParser = csvParser;
         this.handler = handler;
-        modelMap.put("product", new Class[]{Product.class, ProductImportHandler.class});
+        modelMap.put("product", Product.class);
     }
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST, headers = "Accept=application/json")
@@ -36,11 +36,11 @@ public class UploadController {
         ModelAndView modelAndView = new ModelAndView();
 
         try {
-            Class[] modelAndHandler = modelMap.get(model);
-            if (modelAndHandler == null) {
+            Class modelClass = modelMap.get(model);
+            if (modelClass == null) {
                 modelAndView.addObject("error", "Incorrect file");
             } else {
-                csvParser.process(multipartFile.getInputStream(), modelAndHandler[0], handler);
+                csvParser.process(multipartFile.getInputStream(), modelClass, handler);
                 modelAndView.addObject("message", "uploaded successfully");
             }
         } catch (Exception e) {
