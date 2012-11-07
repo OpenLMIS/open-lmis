@@ -6,29 +6,21 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openlmis.upload.Importable;
-import org.openlmis.upload.exception.UploadException;
 import org.openlmis.upload.model.DummyImportable;
 import org.openlmis.upload.model.DummyRecordHandler;
-import org.supercsv.cellprocessor.ParseInt;
-import org.supercsv.cellprocessor.Trim;
-import org.supercsv.cellprocessor.constraint.NotNull;
-import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.SuperCsvException;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.*;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
 
 public class CSVParserTest {
 
     private CSVParser csvParser;
     private DummyRecordHandler recordHandler;
     private ImportFieldParser importFieldParser;
-    private File csvFile = new File(this.getClass().getResource("/dummyImportableWithSpacesInHeaders.csv").getFile());
-    private FileInputStream inputStream;
 
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
@@ -36,56 +28,58 @@ public class CSVParserTest {
     @Before
     public void setUp() throws Exception {
 
-        importFieldParser = mock(ImportFieldParser.class);
+        importFieldParser = new ImportFieldParser();
         csvParser = new CSVParser(importFieldParser);
         recordHandler = new DummyRecordHandler();
-        inputStream = new FileInputStream(csvFile);
     }
 
     @Test
-    public void shouldParseFileWithTrimmedHeaders() throws UploadException {
-        String[] headers = {"mandatoryStringField", "mandatoryIntField"};
-        Set<String> headersSet = new LinkedHashSet<String>(Arrays.asList(headers));
+    public void shouldTrimSpacesFromParsedRecords() throws Exception {
+        String csvInput =
+                "mandatoryStringField   , mandatoryIntField\n" +
+                        " Random1               , 23\n" +
+                        " Random2                , 25\n";
 
-        ArrayList<CellProcessor> processors = new ArrayList<CellProcessor>() {{
-            add(new Trim(new NotNull()));
-            add(new Trim(new ParseInt()));
-        }};
-
-        when(importFieldParser.parse(DummyImportable.class, headersSet)).thenReturn(processors);
-
-        csvParser.process(inputStream, DummyImportable.class, recordHandler);
-
-        verify(importFieldParser).parse(DummyImportable.class, headersSet);
-    }
-
-    @Test
-    public void shouldInvokeHandlerForEachRecord() throws UploadException {
-        String[] headers = {"mandatoryStringField", "mandatoryIntField"};
-        Set<String> headersSet = new LinkedHashSet<String>(Arrays.asList(headers));
-
-        ArrayList<CellProcessor> processors = new ArrayList<CellProcessor>() {{
-            add(new NotNull());
-            add(new ParseInt());
-        }};
-
-        when(importFieldParser.parse(DummyImportable.class, headersSet)).thenReturn(processors);
+        InputStream inputStream = new ByteArrayInputStream(csvInput.getBytes("UTF-8"));
 
         csvParser.process(inputStream, DummyImportable.class, recordHandler);
 
         List<Importable> importedObjects = recordHandler.getImportedObjects();
-        assertEquals(2, importedObjects.size());
+        assertEquals(23, ((DummyImportable) importedObjects.get(0)).getMandatoryIntField());
+        assertEquals("Random1", ((DummyImportable) importedObjects.get(0)).getMandatoryStringField());
+        assertEquals(25, ((DummyImportable) importedObjects.get(1)).getMandatoryIntField());
+        assertEquals("Random2", ((DummyImportable) importedObjects.get(1)).getMandatoryStringField());
+    }
+
+
+    @Test
+    public void shouldReportMissingMandatoryHeader() throws Exception {
+        String csvInput =
+                "mandatoryStringField,mandatoryIntField\n" +
+                        "RandomString1,2533\n" +
+                        ",234\n" +
+                        "RandomString3,2566\n";
+
+        InputStream inputStream = new ByteArrayInputStream(csvInput.getBytes("UTF-8"));
+
+        expectedEx.expect(SuperCsvException.class);
+        expectedEx.expectMessage("Missing Mandatory Data: 'mandatoryStringField' of record# 2");
+
+        csvParser.process(inputStream, DummyImportable.class, recordHandler);
     }
 
     @Test
-    public void shouldReportMissingMandatoryHeader() throws UploadException, FileNotFoundException {
-        File csvFile = new File(this.getClass().getResource("/dummyImportableWithMandatoryFieldMissing.csv").getFile());
-        FileInputStream inputStream = new FileInputStream(csvFile);
+    public void shouldReportIncorrectDataType() throws Exception {
+        String csvInput =
+                "mandatoryStringField,mandatoryIntField\n" +
+                        "RandomString1,2533\n" +
+                        "RandomString2,abc123\n";
 
-        expectedEx.expect(UploadException.class);
-        expectedEx.expectMessage("Missing Mandatory Data: 'mandatoryStringField' of record number 3");
+        InputStream inputStream = new ByteArrayInputStream(csvInput.getBytes("UTF-8"));
 
-        CSVParser csvParser = new CSVParser(new ImportFieldParser());
+        expectedEx.expect(SuperCsvException.class);
+        expectedEx.expectMessage("Incorrect Data type: 'mandatoryIntField' of record# 2");
+
         csvParser.process(inputStream, DummyImportable.class, recordHandler);
     }
 }

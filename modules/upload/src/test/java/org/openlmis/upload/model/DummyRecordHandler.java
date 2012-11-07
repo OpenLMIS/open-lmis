@@ -13,7 +13,7 @@ public class DummyRecordHandler implements RecordHandler<DummyImportable> {
     private List<Importable> importedObjects = new ArrayList<Importable>();
 
     @Override
-    public void execute(DummyImportable importable) {
+    public void execute(DummyImportable importable, int rowNumber) {
         this.importedObjects.add(importable);
     }
 }

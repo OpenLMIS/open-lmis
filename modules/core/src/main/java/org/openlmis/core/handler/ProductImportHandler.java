@@ -17,7 +17,7 @@ public class ProductImportHandler implements RecordHandler<Product> {
     }
 
     @Override
-    public void execute(Product product) {
+    public void execute(Product product, int rowNumber) {
         service.save(product);
     }
 }

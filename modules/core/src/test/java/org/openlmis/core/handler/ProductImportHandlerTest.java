@@ -14,7 +14,7 @@ public class ProductImportHandlerTest {
         ProductService productService = mock(ProductService.class);
         Product product = new Product();
 
-        new ProductImportHandler(productService).execute(product);
+        new ProductImportHandler(productService).execute(product, 0);
 
         verify(productService).save(product);
 

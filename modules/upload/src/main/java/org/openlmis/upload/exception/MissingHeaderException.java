@@ -1,6 +1,8 @@
 package org.openlmis.upload.exception;
 
-public class MissingHeaderException extends UploadException {
+import org.supercsv.exception.SuperCsvException;
+
+public class MissingHeaderException extends SuperCsvException {
 
     public MissingHeaderException(String message) {
         super(message);
