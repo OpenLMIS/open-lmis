@@ -28,8 +28,9 @@ public class RnRTemplateControllerIT {
 
     @Test
     public void shouldGetAllMasterRnRColumns() throws Exception {
+        int existingProgramId = 1;
         ResultActions resultActions = standaloneSetup(controller).setViewResolvers(contentNegotiatingViewResolver()).build()
-                .perform(get("/admin/rnr/master/columns.json"));
+                .perform(get("/admin/rnr/"+ existingProgramId +"/columns.json"));
 
         assertEquals("{\"rnrColumnList\":[{\"id\":1,\"name\":\"foo\",\"description\":\"foo is a column\",\"position\":1,\"label\":\"Foo\",\"defaultValue\":\"foo\"," +
                 "\"dataSource\":\"Derived\",\"formula\":\"a+b+c\",\"indicator\":\"F\",\"used\":false,\"visible\":false}," +

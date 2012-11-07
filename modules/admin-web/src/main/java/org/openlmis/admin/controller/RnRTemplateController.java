@@ -23,9 +23,9 @@ public class RnRTemplateController {
         this.rnrTemplateService = rnrTemplateService;
     }
 
-    @RequestMapping(value = "/rnr/master/columns", method = RequestMethod.GET, headers = "Accept=application/json")
-    public List<RnrColumn> fetchMasterColumnList() {
-        return rnrTemplateService.fetchAllMasterColumns();
+    @RequestMapping(value = "/rnr/{programId}/columns", method = RequestMethod.GET, headers = "Accept=application/json")
+    public List<RnrColumn> fetchMasterColumnList(@PathVariable String programId) {
+        return rnrTemplateService.fetchAllRnRColumns(Integer.parseInt(programId));
     }
 
     @RequestMapping(value = "/rnr/{programId}/columns", method = RequestMethod.POST, headers = "Accept=application/json")

@@ -27,9 +27,10 @@ public class RnRTemplateControllerTest {
     @Test
     public void shouldGetMasterColumnListForRnR() {
         List<RnrColumn> allColumns = new ArrayList<RnrColumn>();
-        when(rnrTemplateService.fetchAllMasterColumns()).thenReturn(allColumns);
-        List<RnrColumn> rnrColumns = rnrTemplateController.fetchMasterColumnList();
-        verify(rnrTemplateService).fetchAllMasterColumns();
+        String existingProgramId = "1";
+        when(rnrTemplateService.fetchAllRnRColumns(1)).thenReturn(allColumns);
+        List<RnrColumn> rnrColumns = rnrTemplateController.fetchMasterColumnList(existingProgramId);
+        verify(rnrTemplateService).fetchAllRnRColumns(1);
         assertThat(rnrColumns,is(allColumns));
     }
 
