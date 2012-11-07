@@ -10,15 +10,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/admin")
 public class FacilityController {
 
-    private FacilityService facilityService;
-
     @Autowired
-    public FacilityController(FacilityService facilityService) {
-        this.facilityService = facilityService;
-    }
+    private FacilityService facilityService;
 
     @RequestMapping(value = "facilities/all.json", method = RequestMethod.GET, headers = "Accept=application/json")
     public List<Facility> getAll() {

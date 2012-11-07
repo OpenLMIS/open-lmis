@@ -11,12 +11,8 @@ import java.util.List;
 @Service
 public class FacilityService {
 
-    private FacilityRepository facilityRepository;
-
     @Autowired
-    public FacilityService(FacilityRepository facilityRepository) {
-        this.facilityRepository = facilityRepository;
-    }
+    private FacilityRepository facilityRepository;
 
     public List<Facility> getAll() {
         return facilityRepository.getAll();
