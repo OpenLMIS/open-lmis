@@ -38,10 +38,10 @@ public class DriverFactory {
         } else if (driverType.equalsIgnoreCase("IE")) {
             return new InternetExplorerDriver();
         }
-        else if (driverType.equals("/Users/Manjot/Downloads/chromedriver"))
-        {
-                return new ChromeDriver();
-        }
+//        else if (driverType.equals("<path_to_chromedriver i.e.> /Users/Manjot/Downloads/chromedriver"))
+//        {
+//                return new ChromeDriver();
+//        }
       else if (driverType.equalsIgnoreCase("HTMLUnit")) {
             if (!enableJavascript) {
             }
