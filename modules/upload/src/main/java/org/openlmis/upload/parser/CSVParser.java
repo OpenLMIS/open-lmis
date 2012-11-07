@@ -39,8 +39,10 @@ public class CSVParser {
     public void process(InputStream inputStream, Class<? extends Importable> modelClass, RecordHandler recordHandler)
             throws UploadException {
 
+        CsvPreference csvPreference = new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE)
+                .surroundingSpacesNeedQuotes(true).build();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-        CsvBeanReader csvBeanReader = new CsvBeanReader(bufferedReader, CsvPreference.STANDARD_PREFERENCE);
+        CsvBeanReader csvBeanReader = new CsvBeanReader(bufferedReader, csvPreference);
 
         String[] headers = parseHeaders(csvBeanReader);
         Set<String> headersSet = new LinkedHashSet<String>(Arrays.asList(headers));
@@ -73,9 +75,9 @@ public class CSVParser {
                 recordHandler.execute(importedModel);
             }
         } catch (SuperCsvConstraintViolationException constraintException) {
-            createException(headers, constraintException, "Missing Mandatory Data: ");
+            createException("Missing Mandatory Data:", headers, constraintException);
         } catch (SuperCsvCellProcessorException processorException) {
-            createException(headers, processorException, "Incorrect Data type: ");
+            createException("Incorrect Data type:", headers, processorException);
         } catch (IOException ioException) {
             throw new UploadException(ioException.getMessage());
         } catch (DuplicateKeyException duplicateKeyException) {
@@ -85,7 +87,7 @@ public class CSVParser {
         }
     }
 
-    private void createException(String[] headers, SuperCsvCellProcessorException exception, String error) throws UploadException {
+    private void createException(String error, String[] headers, SuperCsvCellProcessorException exception) throws UploadException {
         CsvContext csvContext = exception.getCsvContext();
         String header = headers[csvContext.getColumnNumber() - 1];
         throw new UploadException(String.format("%s '%s' of record number %d", error, header, csvContext.getRowNumber() - 1));

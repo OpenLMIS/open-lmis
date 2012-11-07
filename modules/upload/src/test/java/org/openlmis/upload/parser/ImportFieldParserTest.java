@@ -83,18 +83,16 @@ public class ImportFieldParserTest {
         headers.add("mandatoryIntField");
 
         ParseInt parseIntMock = mock(ParseInt.class);
-        Trim trimMockForMandatoryInt = mock(Trim.class, "trim mock for int");
         Trim trimMockForMandatoryString = mock(Trim.class, "trim mock for string");
 
         whenNew(ParseInt.class).withNoArguments().thenReturn(parseIntMock);
         whenNew(NotNull.class).withArguments(any()).thenReturn(mock(NotNull.class));
-        whenNew(Trim.class).withArguments(parseIntMock).thenReturn(trimMockForMandatoryInt);
         whenNew(Trim.class).withNoArguments().thenReturn(trimMockForMandatoryString);
 
         List<CellProcessor> cellProcessors = new ImportFieldParser().parse(DummyImportable.class, headers);
 
         assertEquals(2, cellProcessors.size());
-        verifyNew(NotNull.class).withArguments(trimMockForMandatoryInt);
+        verifyNew(NotNull.class).withArguments(parseIntMock);
         verifyNew(NotNull.class).withArguments(trimMockForMandatoryString);
     }
 
@@ -108,19 +106,17 @@ public class ImportFieldParserTest {
 
         Optional optionalMock = mock(Optional.class);
         ParseInt parseIntMock = mock(ParseInt.class);
-        Trim trimMockForOptionalInt = mock(Trim.class);
         Trim trimMockForOptionalString = mock(Trim.class);
 
         whenNew(ParseInt.class).withNoArguments().thenReturn(parseIntMock);
         whenNew(Optional.class).withNoArguments().thenReturn(optionalMock);
         whenNew(Optional.class).withArguments(parseIntMock).thenReturn(optionalMock);
-        whenNew(Trim.class).withArguments(parseIntMock).thenReturn(trimMockForOptionalInt);
         whenNew(Trim.class).withNoArguments().thenReturn(trimMockForOptionalString);
         parser = new ImportFieldParser();
         List<CellProcessor> cellProcessors = parser.parse(DummyImportable.class, headers);
 
         assertEquals(4, cellProcessors.size());
-        verifyNew(Optional.class).withArguments(trimMockForOptionalInt);
+        verifyNew(Optional.class).withArguments(parseIntMock);
         verifyNew(Optional.class).withArguments(trimMockForOptionalString);
 
     }
