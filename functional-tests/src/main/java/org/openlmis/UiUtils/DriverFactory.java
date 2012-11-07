@@ -23,9 +23,14 @@ public class DriverFactory {
     }
 
     private WebDriver loadDriver(boolean enableJavascript) {
+        /*
+        For Firefox
+         */
         driverType = System.getProperty("web.driver", "Firefox");
-        //System.setProperty("webdriver.chrome.driver", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome");
-        //System.setProperty("webdriver.chrome.driver", "/Users/Manjot/Downloads/googlechrome2");
+        /*
+        For Chrome
+         */
+        //driverType=System.setProperty("webdriver.chrome.driver", "<path_to_chromedriver i.e.> /Users/Manjot/Downloads/chromedriver");
         //driverType = System.getProperty("webdriver.chrome.driver");
 
         if (driverType.equalsIgnoreCase("Firefox")) {
@@ -33,7 +38,7 @@ public class DriverFactory {
         } else if (driverType.equalsIgnoreCase("IE")) {
             return new InternetExplorerDriver();
         }
-        else if (driverType.equals("Chrome"))
+        else if (driverType.equals("/Users/Manjot/Downloads/chromedriver"))
         {
                 return new ChromeDriver();
         }
