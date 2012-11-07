@@ -1,7 +1,7 @@
 package org.openlmis.upload.parser;
 
 import org.openlmis.upload.Importable;
-import org.openlmis.upload.MissingHeaderException;
+import org.openlmis.upload.exception.MissingHeaderException;
 import org.openlmis.upload.annotation.ImportField;
 import org.springframework.stereotype.Component;
 import org.supercsv.cellprocessor.*;

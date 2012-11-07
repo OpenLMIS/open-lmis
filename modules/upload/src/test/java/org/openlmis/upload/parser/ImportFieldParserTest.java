@@ -2,7 +2,7 @@ package org.openlmis.upload.parser;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openlmis.upload.MissingHeaderException;
+import org.openlmis.upload.exception.MissingHeaderException;
 import org.openlmis.upload.model.DummyImportable;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;

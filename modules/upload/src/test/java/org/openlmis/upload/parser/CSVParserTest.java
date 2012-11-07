@@ -4,7 +4,8 @@ package org.openlmis.upload.parser;
 import org.junit.Before;
 import org.junit.Test;
 import org.openlmis.upload.Importable;
-import org.openlmis.upload.MissingHeaderException;
+import org.openlmis.upload.exception.MissingHeaderException;
+import org.openlmis.upload.exception.UploadException;
 import org.openlmis.upload.model.DummyImportable;
 import org.openlmis.upload.model.DummyRecordHandler;
 import org.supercsv.cellprocessor.ParseInt;
@@ -38,7 +39,7 @@ public class CSVParserTest {
     }
 
     @Test
-    public void shouldParseFileWithTrimmedHeaders() throws MissingHeaderException, IOException {
+    public void shouldParseFileWithTrimmedHeaders() throws UploadException {
         String[] headers = {"mandatoryStringField", "mandatoryIntField"};
         Set<String> headersSet = new LinkedHashSet<String>(Arrays.asList(headers));
 
@@ -55,7 +56,7 @@ public class CSVParserTest {
     }
 
     @Test
-    public void shouldInvokeHandlerForEachRecord() throws MissingHeaderException, IOException {
+    public void shouldInvokeHandlerForEachRecord() throws UploadException {
         String[] headers = {"mandatoryStringField", "mandatoryIntField"};
         Set<String> headersSet = new LinkedHashSet<String>(Arrays.asList(headers));
 
