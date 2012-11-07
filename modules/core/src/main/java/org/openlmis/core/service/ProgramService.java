@@ -1,7 +1,7 @@
 package org.openlmis.core.service;
 
-import org.openlmis.core.dao.ProgramMapper;
 import org.openlmis.core.domain.Program;
+import org.openlmis.core.repository.ProgramRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,14 +10,14 @@ import java.util.List;
 @Service
 public class ProgramService {
 
-    public ProgramMapper programMapper;
+    public ProgramRepository programRepository;
 
     @Autowired
-    public ProgramService(ProgramMapper programMapper) {
-        this.programMapper = programMapper;
+    public ProgramService(ProgramRepository programRepository) {
+        this.programRepository = programRepository;
     }
 
     public List<Program> getAll() {
-        return programMapper.getAll();
+        return programRepository.getAll();
     }
 }

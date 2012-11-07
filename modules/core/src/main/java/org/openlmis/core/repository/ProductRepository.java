@@ -1,6 +1,7 @@
-package org.openlmis.core.dao;
+package org.openlmis.core.repository;
 
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.repository.mapper.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

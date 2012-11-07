@@ -1,4 +1,4 @@
-package org.openlmis.core.dao;
+package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Facility;

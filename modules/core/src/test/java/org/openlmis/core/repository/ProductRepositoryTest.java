@@ -1,7 +1,8 @@
-package org.openlmis.core.dao;
+package org.openlmis.core.repository;
 
 import org.junit.Test;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.repository.mapper.ProductMapper;
 import org.springframework.test.context.ContextConfiguration;
 
 import static org.mockito.Mockito.mock;

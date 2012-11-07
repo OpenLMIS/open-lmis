@@ -1,7 +1,7 @@
 package org.openlmis.core.service;
 
-import org.openlmis.core.dao.ProductRepository;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

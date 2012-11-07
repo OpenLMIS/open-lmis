@@ -1,8 +1,8 @@
 package org.openlmis.core.service;
 
 import org.junit.Test;
-import org.openlmis.core.dao.ProductRepository;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.repository.ProductRepository;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;

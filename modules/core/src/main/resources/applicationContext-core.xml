@@ -13,17 +13,17 @@
     <import resource="classpath*:applicationContext-db.xml"/>
 
     <bean id="programMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="org.openlmis.core.dao.ProgramMapper"/>
+        <property name="mapperInterface" value="org.openlmis.core.repository.mapper.ProgramMapper"/>
         <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
     </bean>
 
     <bean id="productMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="org.openlmis.core.dao.ProductMapper"/>
+        <property name="mapperInterface" value="org.openlmis.core.repository.mapper.ProductMapper"/>
         <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
     </bean>
 
     <bean id="facilityMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="org.openlmis.core.dao.FacilityMapper"/>
+        <property name="mapperInterface" value="org.openlmis.core.repository.mapper.FacilityMapper"/>
         <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
     </bean>
 

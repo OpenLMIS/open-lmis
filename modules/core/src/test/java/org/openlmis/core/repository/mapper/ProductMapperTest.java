@@ -1,4 +1,4 @@
-package org.openlmis.core.dao;
+package org.openlmis.core.repository.mapper;
 
 
 import org.junit.Ignore;
