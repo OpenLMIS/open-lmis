@@ -4,8 +4,8 @@ services.factory('Program', function ($resource) {
     return $resource('/openlmis/admin/programs/programs.json', {}, {});
 });
 
-services.factory('RnRMasterColumnList', function ($resource) {
-    return $resource('/openlmis/admin/rnr/master/columns.json', {}, {});
+services.factory('RnRColumnList', function ($resource) {
+    return $resource('/openlmis/admin/rnr/:programId/columns.json', {}, {});
 });
 
 services.factory('Facility', function ($resource) {

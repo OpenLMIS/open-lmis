@@ -18,13 +18,13 @@
     </div>
     <div>
         <ul>
-            <li ng-repeat="rnrColumn in rnrMasterColumnsList">
+            <li ng-repeat="rnrColumn in rnrColumnsList">
                 <span ng-switch on="rnrColumn.used">
                         <span ng-switch-when="true">
                             <input type="checkbox" ng:model="rnrColumn.used" checked/>
                         </span>
                 <span ng-switch-default>
-                    <input type="checkbox" ng:model="rnrColumn.used" />
+                    <input type="checkbox" ng:model="rnrColumn.used"/>
                 </span>
                 </span>
                 <input type="hidden" ng:model="rnrColumn.id" value="{{ rnrColumn.id }}"/>
