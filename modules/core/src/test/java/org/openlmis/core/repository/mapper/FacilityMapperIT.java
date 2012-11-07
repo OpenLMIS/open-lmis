@@ -11,6 +11,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
@@ -22,6 +23,7 @@ public class FacilityMapperIT {
 
     @Before
     public void setUp() throws Exception {
+        facilityMapper.deleteProgramMappings();
         facilityMapper.deleteAll();
     }
 
@@ -36,5 +38,15 @@ public class FacilityMapperIT {
         List<Facility> facilities = facilityMapper.getAll();
         assertTrue(facilities.contains(trz001));
         assertTrue(facilities.contains(trz002));
+    }
+
+    @Test
+    public void shouldInsertSupportedProgramsForFacility() {
+        int programId = 1;
+        Facility facility = new FacilityBuilder().withCode("TRZ001").withName("Ngorongoro Hospital").withType(1).withGZone(1).build();
+        facilityMapper.insert(facility);
+
+        int status = facilityMapper.map(facility.getCode(), programId, true);
+        assertEquals(1, status);
     }
 }

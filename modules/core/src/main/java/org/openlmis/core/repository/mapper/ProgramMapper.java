@@ -22,4 +22,12 @@ public interface ProgramMapper {
     @Delete("DELETE FROM PROGRAM")
     void deleteAll();
 
+
+    @Select("select * from program, programs_supported where program.id = programs_supported.program_id and facility_code = #{facilityCode}")
+    @Results(value = {
+            @Result(property = "id", column = "program.id"),
+            @Result(property = "name", column = "program.name"),
+            @Result(property = "description", column = "program.description")
+    })
+    List<Program> getByFacilityCode(String facilityCode);
 }

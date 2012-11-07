@@ -20,4 +20,8 @@ public class ProgramService {
     public List<Program> getAll() {
         return programRepository.getAll();
     }
+
+    public List<Program> getByFacilityCode(String facilityCode) {
+        return programRepository.getByFacilityCode(facilityCode);
+    }
 }

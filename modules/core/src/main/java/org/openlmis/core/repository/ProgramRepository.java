@@ -18,4 +18,7 @@ public class ProgramRepository {
         return programMapper.getAll();
     }
 
+    public List<Program> getByFacilityCode(String facilityCode) {
+        return programMapper.getByFacilityCode(facilityCode);
+    }
 }

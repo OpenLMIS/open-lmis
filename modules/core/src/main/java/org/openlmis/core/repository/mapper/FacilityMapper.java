@@ -22,4 +22,9 @@ public interface FacilityMapper {
     @Delete("DELETE FROM FACILITY")
     void deleteAll();
 
+    @Insert("Insert into programs_supported(facility_code,program_id,active) values(#{facilityCode},#{programId},#{isActive})")
+    int map(@Param("facilityCode") String facilityCode, @Param("programId") int programId, @Param("isActive") boolean isActive);
+
+    @Delete("DELETE From programs_supported")
+    void deleteProgramMappings();
 }
