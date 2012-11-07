@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en" ng-app="rnr">
+<head>
+    <meta charset="utf-8">
+    <title>Open-LMIS</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="../../../js/lib/angular/angular.js"></script>
+    <script src="../../../js/lib/angular/angular-resource.js"></script>
+    <script src="../../../js/header.js"></script>
+    <script src="../../../js/app.js"></script>
+    <script src="../../../js/module/rnr.js"></script>
+    <script src="../../../js/controller/rnr.js"></script>
+    <style type="text/css"></style>
+    <link type="text/css" rel="stylesheet" charset="UTF-8" href="../../../css/app.css">
+</head>
+<!-- TODO: onunload clears cache for safari. It is a hack. Find better alternative -->
+<body onunload="">
+<ng-include src="'../../header.html'"></ng-include>
+<div ng-controller='RnrController'>
+    <div ng-view></div>
+</div>
+</body>
+</html>
