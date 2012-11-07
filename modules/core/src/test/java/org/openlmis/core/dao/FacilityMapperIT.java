@@ -27,8 +27,8 @@ public class FacilityMapperIT {
 
     @Test
     public void shouldFetchAllFacilitiesAvailable() throws Exception {
-        Facility trz001 = new FacilityBuilder().withCode("TRZ001").withName("Ngorongoro Hospital").withType(1).withGZone(3).build();
-        Facility trz002 = new FacilityBuilder().withCode("TRZ002").withName("Rural Clinic").withType(2).withGZone(4).build();
+        Facility trz001 = new FacilityBuilder().withCode("TRZ001").withName("Ngorongoro Hospital").withType(1).withGZone(1).build();
+        Facility trz002 = new FacilityBuilder().withCode("TRZ002").withName("Rural Clinic").withType(2).withGZone(2).build();
 
         facilityMapper.insert(trz001);
         facilityMapper.insert(trz002);
