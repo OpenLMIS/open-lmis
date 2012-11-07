@@ -1,24 +1,17 @@
 package org.openlmis.core.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode
+@AllArgsConstructor
 public class Program {
 
-    // make this primary key
     private Integer id;
     private String name;
     private String description;
+    private boolean active;
 
     public Program() {
     }
-
-    public Program(Integer id, String name, String description) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-    }
-
 }
