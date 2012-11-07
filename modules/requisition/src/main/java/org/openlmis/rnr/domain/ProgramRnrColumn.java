@@ -2,8 +2,10 @@ package org.openlmis.rnr.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @EqualsAndHashCode
 public class ProgramRnrColumn {
 
@@ -12,14 +14,5 @@ public class ProgramRnrColumn {
     // Verify if foreign key is set up correctly
     private Integer columnId;
     private boolean used;
-
-    public ProgramRnrColumn() {
-    }
-
-    public ProgramRnrColumn(Integer programId, Integer columnId, boolean isUsed) {
-        this.programId = programId;
-        this.columnId = columnId;
-        this.used = isUsed;
-    }
 
 }
