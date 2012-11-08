@@ -9,14 +9,14 @@ public interface FacilityMapper {
 
     @Select("SELECT * FROM FACILITY")
     @Results(value = {
-            @Result(property = "code", column = "facility_code"),
-            @Result(property = "name", column = "facility_name"),
-            @Result(property = "type", column = "facility_type"),
+            @Result(property = "code", column = "code"),
+            @Result(property = "name", column = "name"),
+            @Result(property = "type", column = "type"),
             @Result(property = "geographicZone", column = "geographic_zone_id")
     })
     List<Facility> getAll();
 
-    @Insert("Insert into facility(facility_code,facility_name,facility_type,geographic_zone_id) values(#{code},#{name},#{type},#{geographicZone})")
+    @Insert("Insert into facility(code, name, type, geographic_zone_id) values(#{code}, #{name}, #{type}, #{geographicZone})")
     void insert(Facility facility);
 
     @Delete("DELETE FROM FACILITY")

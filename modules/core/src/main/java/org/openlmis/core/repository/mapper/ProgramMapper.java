@@ -23,7 +23,7 @@ public interface ProgramMapper {
     void deleteAll();
 
 
-    @Select("select * from program, programs_supported where program.id = programs_supported.program_id and facility_code = #{facilityCode}")
+    @Select("select * from program P, programs_supported PS where P.id = PS.program_id and PS.facility_code = #{facilityCode}")
     @Results(value = {
             @Result(property = "id", column = "program.id"),
             @Result(property = "name", column = "program.name"),
