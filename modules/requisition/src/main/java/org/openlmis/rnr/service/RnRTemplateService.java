@@ -19,16 +19,21 @@ public class RnRTemplateService {
 
     public List<RnrColumn> fetchAllRnRColumns(int programId) {
         List<RnrColumn> rnrColumns;
-        if (!rnrRepository.isRnRTemPlateDefinedForProgram(programId)) {
-           rnrColumns = rnrRepository.fetchAllMasterRnRColumns();
+        if (rnrRepository.isRnRTemPlateDefinedForProgram(programId)) {
+            rnrColumns= rnrRepository.fetchRnrColumnsDefinedForAProgram(programId);
         }else
         {
-            rnrColumns= rnrRepository.fetchRnrColumnsDefinedForAProgram(programId);
+            rnrColumns = rnrRepository.fetchAllMasterRnRColumns();
         }
         return rnrColumns==null ? new ArrayList<RnrColumn>(): rnrColumns;
     }
 
-    public void createRnRTemplateForProgram(Integer programId, List<RnrColumn> rnrColumns) {
-        rnrRepository.insertAllProgramRnRColumns(programId, rnrColumns);
+
+    public void saveRnRTemplateForProgram(Integer programId, List<RnrColumn> rnrColumns) {
+        if(rnrRepository.isRnRTemPlateDefinedForProgram(programId)){
+            rnrRepository.updateAllProgramRnRColumns(programId, rnrColumns);
+        }else{
+            rnrRepository.insertAllProgramRnRColumns(programId, rnrColumns);
+        }
     }
 }

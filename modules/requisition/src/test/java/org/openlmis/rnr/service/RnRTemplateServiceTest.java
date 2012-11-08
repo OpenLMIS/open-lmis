@@ -23,6 +23,7 @@ public class RnRTemplateServiceTest {
 
     private RnRTemplateService service;
 
+    private int existingProgramId = 1;
     @Before
     public void setUp() throws Exception {
         service = new RnRTemplateService(repository);
@@ -30,7 +31,6 @@ public class RnRTemplateServiceTest {
 
     @Test
     public void shouldFetchAllRnRColumnsFromMasterIfNotAlreadyConfigured() {
-        int existingProgramId = 1;
         List<RnrColumn> allColumns = new ArrayList<RnrColumn>();
         when(repository.fetchAllMasterRnRColumns()).thenReturn(allColumns);
         when(repository.isRnRTemPlateDefinedForProgram(existingProgramId)).thenReturn(false);
@@ -43,7 +43,6 @@ public class RnRTemplateServiceTest {
 
     @Test
     public void shouldFetchRnRColumnsDefinedForAProgramIfAlreadyConfigured() {
-        int existingProgramId = 1;
         List<RnrColumn> rnrTemplateColumns = new ArrayList<RnrColumn>();
         when(repository.fetchRnrColumnsDefinedForAProgram(existingProgramId)).thenReturn(rnrTemplateColumns);
         when(repository.isRnRTemPlateDefinedForProgram(existingProgramId)).thenReturn(true);
@@ -56,7 +55,6 @@ public class RnRTemplateServiceTest {
 
     @Test
     public void shouldFetchEmptyListIfRnRColumnListReturnedIsNull() throws Exception {
-        int existingProgramId = 1;
         when(repository.fetchAllMasterRnRColumns()).thenReturn(null);
         when(repository.isRnRTemPlateDefinedForProgram(existingProgramId)).thenReturn(false);
         List<RnrColumn> rnrColumns = service.fetchAllRnRColumns(existingProgramId);
@@ -64,9 +62,19 @@ public class RnRTemplateServiceTest {
     }
 
     @Test
-    public void shouldCreateARnRTemplateForAProgramWithGivenColumns() throws Exception {
+    public void shouldCreateARnRTemplateForAProgramWithGivenColumnsIfNotAlreadyDefined() throws Exception {
         List<RnrColumn> rnrColumns = new ArrayList<RnrColumn>();
-        service.createRnRTemplateForProgram(1, rnrColumns);
-        verify(repository).insertAllProgramRnRColumns(1, rnrColumns);
+        when(repository.isRnRTemPlateDefinedForProgram(existingProgramId)).thenReturn(false);
+        service.saveRnRTemplateForProgram(existingProgramId, rnrColumns);
+        verify(repository).insertAllProgramRnRColumns(existingProgramId, rnrColumns);
     }
+
+    @Test
+    public void shouldUpdateExistingRnRTemplateForAProgramWithGivenColumnsIfAlreadyDefined() throws Exception {
+        List<RnrColumn> rnrColumns = new ArrayList<RnrColumn>();
+        when(repository.isRnRTemPlateDefinedForProgram(existingProgramId)).thenReturn(true);
+        service.saveRnRTemplateForProgram(existingProgramId, rnrColumns);
+        verify(repository).updateAllProgramRnRColumns(existingProgramId, rnrColumns);
+    }
+
 }

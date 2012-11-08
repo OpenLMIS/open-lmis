@@ -18,6 +18,7 @@ public class RnRTemplateControllerTest {
     private RnRTemplateService rnrTemplateService;
     private RnRTemplateController rnrTemplateController;
 
+    int existingProgramId = 1;
     @Before
     public void setUp() throws Exception {
         rnrTemplateService = mock(RnRTemplateService.class);
@@ -27,17 +28,17 @@ public class RnRTemplateControllerTest {
     @Test
     public void shouldGetMasterColumnListForRnR() {
         List<RnrColumn> allColumns = new ArrayList<RnrColumn>();
-        String existingProgramId = "1";
-        when(rnrTemplateService.fetchAllRnRColumns(1)).thenReturn(allColumns);
+
+        when(rnrTemplateService.fetchAllRnRColumns(existingProgramId)).thenReturn(allColumns);
         List<RnrColumn> rnrColumns = rnrTemplateController.fetchMasterColumnList(existingProgramId);
-        verify(rnrTemplateService).fetchAllRnRColumns(1);
+        verify(rnrTemplateService).fetchAllRnRColumns(existingProgramId);
         assertThat(rnrColumns,is(allColumns));
     }
 
     @Test
     public void shouldCreateARnRTemplateForAGivenProgramWithSpecifiedColumns() throws Exception {
         ProgramRnRTemplateForm programRnRTemplateForm = new ProgramRnRTemplateForm();
-        rnrTemplateController.createRnRTemplateForProgram("1", programRnRTemplateForm);
-        verify(rnrTemplateService).createRnRTemplateForProgram(1, programRnRTemplateForm);
+        rnrTemplateController.createRnRTemplateForProgram(existingProgramId, programRnRTemplateForm);
+        verify(rnrTemplateService).saveRnRTemplateForProgram(existingProgramId, programRnRTemplateForm);
     }
 }

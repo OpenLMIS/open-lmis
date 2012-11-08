@@ -24,13 +24,13 @@ public class RnRTemplateController {
     }
 
     @RequestMapping(value = "/rnr/{programId}/columns", method = RequestMethod.GET, headers = "Accept=application/json")
-    public List<RnrColumn> fetchMasterColumnList(@PathVariable String programId) {
-        return rnrTemplateService.fetchAllRnRColumns(Integer.parseInt(programId));
+    public List<RnrColumn> fetchMasterColumnList(@PathVariable("programId") Integer programId) {
+        return rnrTemplateService.fetchAllRnRColumns(programId);
     }
 
     @RequestMapping(value = "/rnr/{programId}/columns", method = RequestMethod.POST, headers = "Accept=application/json")
-    public void createRnRTemplateForProgram(@PathVariable String programId, @RequestBody ProgramRnRTemplateForm programRnRTemplateForm) {
-        rnrTemplateService.createRnRTemplateForProgram(Integer.parseInt(programId), programRnRTemplateForm);
+    public void createRnRTemplateForProgram(@PathVariable("programId") Integer programId, @RequestBody ProgramRnRTemplateForm programRnRTemplateForm) {
+        rnrTemplateService.saveRnRTemplateForProgram(programId, programRnRTemplateForm);
     }
 
 }

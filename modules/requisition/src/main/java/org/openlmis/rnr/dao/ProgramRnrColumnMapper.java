@@ -21,9 +21,6 @@ public interface ProgramRnrColumnMapper {
             " values (#{programId}, #{rnrColumn.id}, #{rnrColumn.used})")
     int insert(@Param("programId") int programId, @Param("rnrColumn") RnrColumn rnrColumn);
 
-//    @Update("UPDATE Program_RnR_Template SET is_used = #{rnrColumn.used}    ")
-//    int up
-
     @Delete("DELETE FROM Program_RnR_Template")
     void deleteAll();
 
@@ -51,4 +48,8 @@ public interface ProgramRnrColumnMapper {
             " ON p.column_id = m.id" +
             " where p.program_id=#{programId}")
     List<RnrColumn> getAllRnrColumnsForProgram(int programId);
+
+    @Update("UPDATE Program_RnR_Template set is_used = #{rnrColumn.used} " +
+            "where program_id = #{programId} and column_id = #{rnrColumn.id}")
+    void update(@Param("programId") int programId, @Param("rnrColumn") RnrColumn rnrColumn);
 }
