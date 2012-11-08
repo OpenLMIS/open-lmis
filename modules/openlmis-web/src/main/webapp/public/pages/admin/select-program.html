@@ -1,7 +1,8 @@
 <div>
-    <h3>New RnR Template</h3>
-    <h4>Choose a program</h4>
-    <select ng-model="$parent.program" ng-options="i.id as i.name for i in programs">
+    <h3>New R &amp; R Template</h3><hr/>
+    <h4>Choose a program for the R &amp; R template</h4>
+    <select ng-model="$parent.program" ng-options="i as i.name for i in programs">
+        <option value="">--choose program--</option>
     </select>
     <br/>
     <br/>

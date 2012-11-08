@@ -1,6 +1,6 @@
 <div>
     <h3>RnR Template Configuration</h3>
-    <h4>Program:{{ $parent.program }}</h4>
+    <h4>Program: {{ $parent.program.name }}</h4>
 
     <div>
         <ul>
@@ -10,9 +10,9 @@
                 <span style="">Description | </span>
                 <span style="">Position | </span>
                 <span style="">Label | </span>
-                <span style="">Default Value | </span>
-                <span style="">Data Source | </span>
-                <span style="">Formula </span>
+                <span style="">Source | </span>
+                <span style="">Formula | </span>
+                <span style="">Show in form </span>
             </li>
         </ul>
     </div>
@@ -34,9 +34,10 @@
                 <span>{{ rnrColumn.label }} | <span/>
                 <span>{{ rnrColumn.defaultValue }} | <span/>
                 <span>{{ rnrColumn.dataSource }} | <span/>
-                <span>{{ rnrColumn.formula }} <span/>
+                <span>{{ rnrColumn.formula }} | <span/>
+                <span>{{ rnrColumn.visible }} <span/>
             </li>
         </ul>
     </div>
-    <button ng-click="createProgramRnrTemplate()"/>
+    <button ng-click="createProgramRnrTemplate()" >Save</button>
 </div>
