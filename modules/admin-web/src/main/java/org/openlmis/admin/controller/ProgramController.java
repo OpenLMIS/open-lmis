@@ -26,6 +26,7 @@ public class ProgramController {
         return programService.getAll();
     }
 
+    @RequestMapping(value = "programs/programsForFacility.json", method = RequestMethod.GET, headers = "Accept=application/json")
     public List<Program> getProgramsForFacility(@RequestParam(value = "facility") String facilityCode) {
         return programService.getByFacilityCode(facilityCode);
     }

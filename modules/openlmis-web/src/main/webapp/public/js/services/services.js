@@ -12,3 +12,7 @@ services.factory('Facility', function ($resource) {
     return $resource('/facilities/all.json', {}, {});
 });
 
+services.factory('FacilitySupportedPrograms', function ($resource) {
+    return $resource('/admin/programs/programsForFacility.json', {}, {});
+});
+
