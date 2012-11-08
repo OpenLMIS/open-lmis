@@ -1,9 +1,13 @@
 <div>
     <h3>Initiate RnR</h3>
     <h4>Choose a Facility</h4>
-    <select ng-model="$parent.facility" ng-options="i.code as i.code + '-' + i.name for i in facilities">
+    <select ng-model="$parent.facility" ng-options="i.code as i.code + '-' + i.name for i in facilities" ng-change="loadPrograms()">
     </select>
     <br/>
     <br/>
-    <a href="#/select-program" class="button">Next</a>
+    <select ng-model="$parent.program" ng-options="i.id as i.name for i in $parent.programsForFacility">
+    </select>
+    <br>
+    <br>
+    <a href="#/rnr-header" class="button">Next</a>
 </div>
