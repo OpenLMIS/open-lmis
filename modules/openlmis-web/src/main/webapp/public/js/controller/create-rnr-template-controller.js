@@ -10,6 +10,6 @@ function SaveRnrTemplateController($scope, RnRColumnList, $http) {
     }, {});
 
     $scope.createProgramRnrTemplate = function () {
-        $http.post('/openlmis/admin/rnr/' + $scope.program + '/columns.json', $scope.rnrColumnsList)
+        $http.post('/admin/rnr/' + $scope.program + '/columns.json', $scope.rnrColumnsList)
     }
 }

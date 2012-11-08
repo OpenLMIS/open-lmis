@@ -25,7 +25,7 @@ dependencies {
 }
 
 [jettyRun]*.configure {
-    contextPath = "openlmis"
+    contextPath = ''
 }
 
 war.dependsOn([':modules:admin-web:war', ':modules:logistics-web:war'])
@@ -43,7 +43,7 @@ task jettyRunWarDaemon(dependsOn: war)
 jettyRunWarDaemon.doFirst {
     jettyRunWar.daemon = true
     jettyRunWar.httpPort = 9090
-    jettyRunWar.contextPath = 'openlmis'
+    jettyRunWar.contextPath = ''
     jettyRunWar.execute()
 }
 
@@ -53,13 +53,13 @@ jettyRunWarLocal.doFirst {
     jettyRunWar.daemon = false
     jettyRunWar.httpPort = 9091
     jettyRunWar.execute()
-    jettyRunWar.contextPath = 'openlmis'
+    jettyRunWar.contextPath = ''
 }
 
 
 jettyRun{
     jettyRun.httpPort = 9091
-    contextPath = 'openlmis'
+    contextPath = ''
 }
 
 task jettyRunDev(dependsOn: jettyRun)
