@@ -1,14 +1,14 @@
 DROP TABLE IF EXISTS product;
 CREATE TABLE product (
   id SERIAL PRIMARY KEY,
-  code CHAR(20) NOT NULL,
+  code CHAR(20) NOT NULL UNIQUE ,
   alternate_item_code CHAR(20),
-  manufacturer_id INTEGER,
+  manufacturer  VARCHAR(100),
   manufacturer_code CHAR(30),
   manufacturer_barcode CHAR(20),
   moh_barcode CHAR(20),
   gtin CHAR(20),
-  type INTEGER,
+  type VARCHAR(100),
   primary_name VARCHAR(150) NOT NULL,
   full_name VARCHAR(250),
   generic_name VARCHAR(100),

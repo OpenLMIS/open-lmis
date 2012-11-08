@@ -8,14 +8,14 @@ public interface ProductMapper {
     @Insert("INSERT INTO Product (" +
             "code, " +
             "alternate_item_code," +
-            "manufacturer_id," + "manufacturer_code," + "manufacturer_barcode," +
+            "manufacturer," + "manufacturer_code," + "manufacturer_barcode," +
             "moh_barcode," +
             "gtin," +
             "type," +
             "primary_name," + "full_name," + "generic_name," + "alternate_name," + "description," +
             "strength," +
-//            "dosage_units," +
-            "dispensing_unit," + "doses_per_dispensing_unit," + "doses_per_day," +
+            "form," +
+            "dosage_unit, dispensing_unit, doses_per_dispensing_unit, doses_per_day," +
             "pack_size," + "alternate_pack_size," +
             "store_refrigerated," + "store_room_temperature," + "hazardous," + "flammable," + "controlled_substance," + "light_sensitive," + "approved_by_who," +
             "contraceptive_cyp," +
@@ -31,14 +31,14 @@ public interface ProductMapper {
             "VALUES(" +
             "#{code}," +
             "#{alternateItemCode}," +
-            "#{manufacturerId}," + "#{manufacturerCode}," + "#{manufacturerBarCode}," +
+            "#{manufacturer}," + "#{manufacturerCode}," + "#{manufacturerBarCode}," +
             "#{mohBarCode}," +
             "#{gtin}," +
             "#{type}," +
             "#{primaryName}," + "#{fullName}," + "#{genericName}," + "#{alternateName}," + "#{description}," +
             "#{strength}," +
-//            "#{form}" +
-            "#{dispensingUnits}," + "#{dosesPerDispensingUnit}," + "#{dosesPerDay}," +
+            "#{form}, " +
+            "#{dosageUnit}, #{dispensingUnit}, #{dosesPerDispensingUnit}, #{dosesPerDay}," +
             "#{packSize}," + "#{alternatePackSize}," +
             "#{storeRefrigerated}," + "#{storeRoomTemperature}," + "#{hazardous}," + "#{flammable}," + "#{controlledSubstance}," + "#{lightSensitive}," + "#{approvedByWHO}," +
             "#{contraceptiveCYP}," +
