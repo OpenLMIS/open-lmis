@@ -1,8 +1,8 @@
-Drop TABLE IF EXISTS Program_RnR_Template;
-CREATE TABLE Program_RnR_Template(
-    id serial PRIMARY KEY ,
-    column_id integer NOT NULL references Master_RnR_Template(id),
-    program_id integer NOT NULL,
-    is_used boolean not null,
+Drop TABLE IF EXISTS program_rnr_template;
+CREATE TABLE program_rnr_template(
+    id SERIAL PRIMARY KEY ,
+    column_id INTEGER NOT NULL REFERENCES master_rnr_template(id),
+    program_id INTEGER NOT NULL,
+    is_used BOOLEAN NOT NULL,
     UNIQUE (program_id, column_id)
 );

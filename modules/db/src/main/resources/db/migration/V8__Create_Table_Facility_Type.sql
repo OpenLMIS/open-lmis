@@ -1,9 +1,9 @@
- CREATE TABLE facility_type
-(
-    id serial primary key,
-    facility_type_name varchar(30) not null,
-    nominal_max_month integer not null,
-    nominal_eop NUMERIC(4,2) not null);
+CREATE TABLE facility_type (
+  id SERIAL PRIMARY KEY,
+  facility_type_name VARCHAR(30) NOT NULL,
+  nominal_max_month INTEGER NOT NULL,
+  nominal_eop NUMERIC(4,2) NOT NULL
+);
 
 
 

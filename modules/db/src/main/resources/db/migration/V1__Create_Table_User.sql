@@ -1,5 +1,5 @@
-CREATE TABLE Open_LMIS_User (
-    user_name varchar(50) NOT NULL PRIMARY KEY,
-    password varchar(128) NOT NULL,
-    role varchar(50)  NOT NULL
+CREATE TABLE open_lmis_user (
+    user_name VARCHAR(50) NOT NULL PRIMARY KEY,
+    password VARCHAR(128) NOT NULL,
+    role VARCHAR(50)  NOT NULL
 );

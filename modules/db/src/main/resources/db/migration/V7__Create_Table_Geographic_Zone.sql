@@ -1,6 +1,6 @@
-CREATE TABLE geographic_zone
-(
-    id serial primary key,
-    zone_name varchar(30) not null,
-    zone_level integer not null references geopolitical_level(id),
-    parent integer references geographic_zone(id) );
+CREATE TABLE geographic_zone(
+  id SERIAL PRIMARY KEY,
+  zone_name VARCHAR(30) NOT NULL,
+  zone_level INTEGER NOT NULL REFERENCES geopolitical_level(id),
+  parent INTEGER REFERENCES geographic_zone(id)
+);

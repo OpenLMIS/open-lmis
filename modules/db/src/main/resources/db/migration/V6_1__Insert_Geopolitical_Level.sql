@@ -1,3 +1,5 @@
-Insert into geopolitical_level(level_number, level_name) values(1, 'state');
-Insert into geopolitical_level(level_number, level_name) values(2, 'city');
-Insert into geopolitical_level(level_number, level_name) values(3, 'district');
+INSERT INTO geopolitical_level
+(level_number, level_name) VALUES
+(1, 'state'),
+(2, 'city'),
+(3, 'district');
