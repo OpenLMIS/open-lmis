@@ -29,7 +29,7 @@ public class UploadController {
         modelMap.put("product", Product.class);
     }
 
-    @RequestMapping(value = "/upload", method = RequestMethod.POST, headers = "Accept=application/json")
+    @RequestMapping(value = "/{model}/upload", method = RequestMethod.POST, headers = "Accept=application/json")
     public ModelAndView upload(@RequestParam(value = "csvFile", required = true) MultipartFile multipartFile,
                                @RequestParam(value = "model", required = true) String model) {
 

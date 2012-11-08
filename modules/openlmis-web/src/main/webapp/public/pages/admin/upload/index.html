@@ -1,23 +1,42 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-        "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en" ng-app="upload">
 <head>
     <title>Products</title>
+    <meta charset="utf-8">
+    <title>Open-LMIS</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="../../../js/lib/angular/angular.js"></script>
+    <script src="../../../js/lib/angular/angular-resource.js"></script>
+    <script src="../../../js/header.js"></script>
+    <script src="../../../js/services/services.js"></script>
+    <script src="../../../js/app.js"></script>
+    <script src="../../../js/module/upload.js"></script>
+    <script src="../../../js/controller/upload-controller.js"></script>
+    <style type="text/css" ></style>
+    <link type="text/css" rel="stylesheet" charset="UTF-8" href="../../../css/app.css">
+
 </head>
-<body>
-<form method="POST" action="../upload.json" enctype="multipart/form-data">
+<body onunload="">
+<ng-include src="'../../header.html'"></ng-include>
+
+<div ng-controller='UploadController'>
     <div>
-        <fieldset>
-            <label style="padding-top: 10" for="model">Model:</label>
-            <select name="model" id="model">
-                <option value="product">Product</option>
-            </select> <br/>
-            <label style="padding-top: 10" for="csvFile">File: </label>
-            <input name="csvFile" id="csvFile" type="file" value="Choose CSV File to upload"/> </br>
-            <input type="submit" value="Upload">
-        </fieldset>
+        {{ response }}
     </div>
-</form>
+    <form id="uploadForm" method="POST" action="../upload.json" enctype="multipart/form-data">
+        <div>
+            <fieldset>
+                <label style="padding-top: 10" for="model">Model:</label>
+                <select name="model" id="model">
+                    <option value="product">Product</option>
+                </select> <br/>
+                <label style="padding-top: 10" for="csvFile">File: </label>
+                <input name="csvFile" id="csvFile" type="file" ng-model="$scope.file" value="Choose CSV File to upload"/> </br>
+                <input  ng-click="uploadFile()" value="Upload" type="button">
+            </fieldset>
+        </div>
+    </form>
+</div>
 
 </body>
 </html>
