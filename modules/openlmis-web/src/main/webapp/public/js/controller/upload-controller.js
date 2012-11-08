@@ -11,7 +11,8 @@ function UploadController($scope, $http) {
     }
 
     $scope.uploadComplete =   function(evt) {
-        $scope.response=  evt.target.responseText;
+      //  $scope.response=  evt.target.responseText;
+        alert(evt.target.responseText);
     }
 
 
