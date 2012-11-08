@@ -155,9 +155,9 @@ public class Product implements Importable {
     @ImportField(type = "boolean")
     private boolean archived;
 
-    private Date lastModifiedDate;
+    private Date modifiedDate;
 
-    private long lastModifiedBy;
+    private long modifiedBy;
 
     @Override
     public boolean validate() {

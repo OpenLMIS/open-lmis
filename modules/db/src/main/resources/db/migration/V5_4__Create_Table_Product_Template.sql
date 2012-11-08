@@ -48,8 +48,8 @@ CREATE TABLE product (
   round_to_zero BOOLEAN NOT NULL,
   archived BOOLEAN,
   pack_rounding_threshold SMALLINT NOT NULL,
-  last_modified_date TIMESTAMP,
-  last_modified_by INTEGER,
+  modified_date TIMESTAMP DEFAULT  CURRENT_TIMESTAMP,
+  modified_by INTEGER,
   FOREIGN KEY (form) REFERENCES product_form(id),
   FOREIGN KEY (dosage_unit) REFERENCES dosage_unit(id)
    );

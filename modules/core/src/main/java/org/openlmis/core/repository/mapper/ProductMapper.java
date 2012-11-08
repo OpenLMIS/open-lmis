@@ -25,8 +25,7 @@ public interface ProductMapper {
             "special_storage_instructions," + "special_transport_instructions," +
             "active," + "full_supply," + "tracer," + "round_to_zero," + "archived," +
             "pack_rounding_threshold," +
-            "last_modified_date," +
-            "last_modified_by)" +
+            "modified_by)" +
 
             "VALUES(" +
             "#{code}," +
@@ -48,7 +47,6 @@ public interface ProductMapper {
             "#{specialStorageInstructions}," + "#{specialTransportInstructions}," +
             "#{active}," + "#{fullSupply}," + "#{tracer}," + "#{roundToZero}," + "#{archived}," +
             "#{packRoundingThreshold}," +
-            "#{lastModifiedDate}," +
-            "#{lastModifiedBy})")
+            "#{modifiedBy})")
     int insert(Product product);
 }
