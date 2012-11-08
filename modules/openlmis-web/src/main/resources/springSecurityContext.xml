@@ -15,10 +15,12 @@
     <context:component-scan base-package="org.openlmis.web"/>
 
     <http use-expressions="true">
+        <intercept-url pattern="/favicon.*" access="permitAll"/>
         <intercept-url pattern="/resources/pages/admin/**" access="hasRole('ADMIN')" requires-channel="http"/>
         <intercept-url pattern="/resources/pages/logistics/**" access="hasRole('USER')" requires-channel="http"/>
         <intercept-url pattern="/resources/**" access="permitAll" requires-channel="http"/>
         <intercept-url pattern="/**" access="isAuthenticated()" requires-channel="http"/>
+
         <form-login authentication-success-handler-ref="userAuthenticationSuccessHandler"
                 login-processing-url="/j_spring_security_check" login-page="/resources/pages/login.html"
                 authentication-failure-url="/resources/pages/login.html?error=true"/>
