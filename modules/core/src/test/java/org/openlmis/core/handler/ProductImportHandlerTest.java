@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.service.ProductService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 
 import static org.mockito.Mockito.*;
@@ -35,8 +36,17 @@ public class ProductImportHandlerTest {
         doThrow(new DuplicateKeyException("")).when(productService).save(product);
 
         new ProductImportHandler(productService).execute(product, 10);
+    }
 
+    @Test
+    public void shouldRaiseIncorrectReferenceDataError() throws Exception {
+        ProductService productService = mock(ProductService.class);
+        Product product = new Product();
+        expectedEx.expect(RuntimeException.class);
+        expectedEx.expectMessage("Incorrect reference data at record# 9");
+        doThrow(new DataIntegrityViolationException("foreign key")).when(productService).save(product);
 
+        new ProductImportHandler(productService).execute(product, 10);
     }
 }
 
