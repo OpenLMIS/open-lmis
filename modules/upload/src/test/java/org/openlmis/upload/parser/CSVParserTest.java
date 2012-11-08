@@ -45,7 +45,7 @@ public class CSVParserTest {
         csvParser.process(inputStream, DummyImportable.class, recordHandler);
 
         List<Importable> importedObjects = recordHandler.getImportedObjects();
-        assertEquals(45, ((DummyImportable) importedObjects.get(0)).getMandatoryIntField());
+        assertEquals(23, ((DummyImportable) importedObjects.get(0)).getMandatoryIntField());
         assertEquals("Random1", ((DummyImportable) importedObjects.get(0)).getMandatoryStringField());
         assertEquals(25, ((DummyImportable) importedObjects.get(1)).getMandatoryIntField());
         assertEquals("Random2", ((DummyImportable) importedObjects.get(1)).getMandatoryStringField());
