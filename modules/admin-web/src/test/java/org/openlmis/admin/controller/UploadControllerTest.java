@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.handler.UploadHandlerFactory;
 import org.openlmis.upload.RecordHandler;
 import org.openlmis.upload.parser.CSVParser;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -38,11 +39,14 @@ public class UploadControllerTest {
     @Mock
     RecordHandler handler;
 
+    @Mock
+    private UploadHandlerFactory uploadHandlerFactory;
+
     @Before
     public void setUp() throws Exception {
-        Map<String, RecordHandler> handlerMap = new HashMap<String, RecordHandler>(){{put("product", handler);}};
         Map<String, Class> modelMap = new HashMap<String, Class>(){{put("product", Product.class);}};
-        controller = new UploadController(csvParser , handlerMap, modelMap);//, new HashMap<String, RecordHandler>());
+        when(uploadHandlerFactory.getHandler(any(String.class))).thenReturn(handler);
+        controller = new UploadController(csvParser , uploadHandlerFactory, modelMap);//, new HashMap<String, RecordHandler>());
     }
 
     @Test
@@ -123,6 +127,5 @@ public class UploadControllerTest {
         ModelAndView modelAndView = controller.upload(multiPartMock, "product");
         assertEquals("Incorrect file format , Please upload product data as a \".csv\" file", modelAndView.getModelMap().get("error"));
         // verify(csvParser).process(mockedStream, Product.class, handler);
-
     }
 }

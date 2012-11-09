@@ -1,7 +1,7 @@
 package org.openlmis.admin.controller;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.upload.RecordHandler;
+import org.openlmis.core.handler.UploadHandlerFactory;
 import org.openlmis.upload.parser.CSVParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,14 +22,13 @@ public class UploadController {
     @Autowired
     private CSVParser csvParser;
     @Resource
-    private Map<String, RecordHandler> uploadHandlerMap;
-    @Resource
     private Map<String, Class> modelMap;
+    @Autowired
+    private UploadHandlerFactory uploadHandlerFactory;
 
-
-    public UploadController(CSVParser csvParser, Map<String, RecordHandler> uploadHandlerMap, Map<String, Class> modelMap) {
+    public UploadController(CSVParser csvParser, UploadHandlerFactory uploadHandlerFactory, Map<String, Class> modelMap) {
         this.csvParser = csvParser;
-        this.uploadHandlerMap = uploadHandlerMap;
+        this.uploadHandlerFactory = uploadHandlerFactory;
         this.modelMap = modelMap;
     }
 
@@ -38,8 +37,6 @@ public class UploadController {
                                @RequestParam(value = "model", required = true) String model) {
 
         ModelAndView modelAndView = new ModelAndView();
-
-
         try {
             Class modelClass = modelMap.get(model);
             if (modelClass == null) {
@@ -48,7 +45,7 @@ public class UploadController {
             if (!multipartFile.getOriginalFilename().contains(".csv")) {
                 return returnErrorModelAndView(modelAndView, "Incorrect file format , Please upload " + model + " data as a \".csv\" file");
             }
-            int recordsUploaded = csvParser.process(multipartFile.getInputStream(), modelClass, uploadHandlerMap.get(model));
+            int recordsUploaded = csvParser.process(multipartFile.getInputStream(), modelClass, uploadHandlerFactory.getHandler(model));
             modelAndView.addObject("message", "File upload success. Total " + model +" uploaded in the system : " + recordsUploaded);
         } catch (Exception e) {
             modelAndView.addObject("error", e.getMessage());

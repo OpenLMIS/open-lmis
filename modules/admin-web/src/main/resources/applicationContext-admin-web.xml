@@ -28,14 +28,6 @@
     <import resource="classpath:/applicationContext-core.xml"/>
     <import resource="classpath:/applicationContext-upload.xml"/>
 
-    <bean id="uploadHandlerMap" class="java.util.HashMap">
-        <constructor-arg>
-            <map>
-                <entry key="product" value-ref="productImportHandler" />
-            </map>
-        </constructor-arg>
-    </bean>
-
     <bean id="modelMap" class="java.util.HashMap">
         <constructor-arg>
             <map>

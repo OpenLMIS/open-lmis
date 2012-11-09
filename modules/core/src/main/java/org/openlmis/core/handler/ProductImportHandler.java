@@ -2,14 +2,12 @@ package org.openlmis.core.handler;
 
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.service.ProductService;
-import org.openlmis.upload.RecordHandler;
+import org.openlmis.upload.Importable;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
 @Component("productImportHandler")
-public class ProductImportHandler implements RecordHandler<Product> {
+public class ProductImportHandler extends AbstractModelPersistenceHandler {
 
     private ProductService service;
 
@@ -19,15 +17,7 @@ public class ProductImportHandler implements RecordHandler<Product> {
     }
 
     @Override
-    public void execute(Product product, int rowNumber) {
-        try {
-            service.save(product);
-        } catch (DuplicateKeyException duplicateKeyException) {
-            throw new RuntimeException(String.format("Duplicate Product Code found in Record No. %d", rowNumber - 1));
-        } catch (DataIntegrityViolationException foreignKeyException) {
-            if (foreignKeyException.getMessage().toLowerCase().contains("foreign key")) {
-                throw new RuntimeException(String.format("Missing Reference data of Record No. %d", rowNumber - 1));
-            }
-        }
+    protected void save(Importable importable) {
+        service.save((Product)importable);
     }
 }
