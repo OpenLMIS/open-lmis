@@ -38,7 +38,7 @@ public class RnRTemplateControllerTest {
     @Test
     public void shouldCreateARnRTemplateForAGivenProgramWithSpecifiedColumns() throws Exception {
         ProgramRnRTemplateForm programRnRTemplateForm = new ProgramRnRTemplateForm();
-        rnrTemplateController.createRnRTemplateForProgram(existingProgramId, programRnRTemplateForm);
+        rnrTemplateController.saveRnRTemplateForProgram(existingProgramId, programRnRTemplateForm);
         verify(rnrTemplateService).saveRnRTemplateForProgram(existingProgramId, programRnRTemplateForm);
     }
 }

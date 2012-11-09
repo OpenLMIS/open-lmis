@@ -34,10 +34,8 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     @Test
     public void shouldGetAllProgram() {
         List<Program> programs = programMapper.getAll();
-        assertEquals(3, programs.size());
-        assertTrue(programs.contains(new Program(1, "ARV", "some ARV program", true)));
-        assertTrue(programs.contains(new Program(2, "HIV", "some HIV program", true)));
-        assertTrue(programs.contains(new Program(3, "INACTIVE", "some inactive program", false)));
+        assertEquals(6, programs.size());
+        assertTrue("program does not exists",programs.contains(new Program(1, "HIV", "HIV", true)));
     }
 
     @Test

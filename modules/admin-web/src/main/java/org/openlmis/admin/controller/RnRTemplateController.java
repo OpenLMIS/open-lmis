@@ -29,7 +29,7 @@ public class RnRTemplateController {
     }
 
     @RequestMapping(value = "/rnr/{programId}/columns", method = RequestMethod.POST, headers = "Accept=application/json")
-    public void createRnRTemplateForProgram(@PathVariable("programId") Integer programId, @RequestBody ProgramRnRTemplateForm programRnRTemplateForm) {
+    public void saveRnRTemplateForProgram(@PathVariable("programId") Integer programId, @RequestBody ProgramRnRTemplateForm programRnRTemplateForm) {
         rnrTemplateService.saveRnRTemplateForProgram(programId, programRnRTemplateForm);
     }
 

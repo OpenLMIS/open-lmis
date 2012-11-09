@@ -63,13 +63,15 @@ public class RnrRepositoryIT {
         List<RnrColumn> result = rnrRepository.fetchAllMasterRnRColumns();
 
         RnrColumn rnrColumn = result.get(0);
-        Assert.assertThat(rnrColumn.getName(), is("foo"));
-        Assert.assertThat(rnrColumn.getDescription(), is("foo is a column"));
+        Assert.assertThat(rnrColumn.getName(), is("MSD ProductCode"));
+        Assert.assertThat(rnrColumn.getDescription(), is("This is Unique identifier for each commodity"));
         Assert.assertThat(rnrColumn.getPosition(), is(1));
-        Assert.assertThat(rnrColumn.getLabel(), is("Foo"));
-        Assert.assertThat(rnrColumn.getDefaultValue(), is("foo"));
-        Assert.assertThat(rnrColumn.getDataSource(), is("Derived"));
-        Assert.assertThat(rnrColumn.getFormula(), is("a+b+c"));
+        Assert.assertThat(rnrColumn.getLabel(), is("MSD ProductCode"));
+        Assert.assertThat(rnrColumn.getDefaultValue(), is(""));
+        Assert.assertThat(rnrColumn.getDataSource(), is("Reference Value (Product Table)"));
+        Assert.assertThat(rnrColumn.getFormula(), is(""));
+        Assert.assertThat(rnrColumn.getIndicator(), is("O"));
+        Assert.assertThat(rnrColumn.isMandatory(), is(true));
     }
 
     @Test

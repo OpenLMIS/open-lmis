@@ -19,7 +19,8 @@ public interface RnrColumnMapper {
             @Result(property = "formula", column = "formula"),
             @Result(property = "indicator", column = "column_indicator"),
             @Result(property = "used", column = "is_used"),
-            @Result(property = "visible", column = "is_visible")
+            @Result(property = "visible", column = "is_visible"),
+            @Result(property = "mandatory", column = "is_mandatory")
     })
     List<RnrColumn> fetchAllMasterRnRColumns();
 

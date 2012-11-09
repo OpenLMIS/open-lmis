@@ -13,7 +13,8 @@ import org.springframework.web.servlet.view.json.MappingJacksonJsonView;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static junit.framework.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.server.setup.MockMvcBuilders.standaloneSetup;
 
@@ -30,12 +31,10 @@ public class RnRTemplateControllerIT {
     public void shouldGetAllMasterRnRColumns() throws Exception {
         int existingProgramId = 1;
         ResultActions resultActions = standaloneSetup(controller).setViewResolvers(contentNegotiatingViewResolver()).build()
-                .perform(get("/admin/rnr/"+ existingProgramId +"/columns.json"));
-
-        assertEquals("{\"rnrColumnList\":[{\"id\":1,\"name\":\"foo\",\"description\":\"foo is a column\",\"position\":1,\"label\":\"Foo\",\"defaultValue\":\"foo\"," +
-                "\"dataSource\":\"Derived\",\"formula\":\"a+b+c\",\"indicator\":\"F\",\"used\":false,\"visible\":false}," +
-                "{\"id\":2,\"name\":\"bar\",\"description\":\"bar is not foo\",\"position\":1,\"label\":\"Bar\",\"defaultValue\":\"bar\",\"dataSource\":\"Derived\"," +
-                "\"formula\":\"a+b+c\",\"indicator\":\"B\",\"used\":true,\"visible\":false}]}", resultActions.andReturn().getResponse().getContentAsString());
+                .perform(get("/admin/rnr/" + existingProgramId + "/columns.json"));
+        String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
+        String msdProductColumn = "\"name\":\"MSD ProductCode\",\"description\":\"This is Unique identifier for each commodity\",\"position\":1,\"label\":\"MSD ProductCode\",\"defaultValue\":\"\",\"dataSource\":\"Reference Value (Product Table)\",\"formula\":\"\",\"indicator\":\"O\",\"used\":true,\"visible\":true,\"mandatory\":true";
+        assertThat(contentAsString.contains(msdProductColumn), is(true));
     }
 
     private ContentNegotiatingViewResolver contentNegotiatingViewResolver() {

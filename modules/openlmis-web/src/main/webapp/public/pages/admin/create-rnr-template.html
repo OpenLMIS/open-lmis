@@ -1,7 +1,10 @@
 <div>
     <h3>RnR Template Configuration</h3>
     <h4>Program: {{ $parent.program.name }}</h4>
-
+    <div id="saveFailMsgDiv"></div>
+    <div id="saveSuccessMsgDiv" ng-model="message">
+        {{message}}
+    </div>
     <div>
         <ul>
             <li>
@@ -19,13 +22,20 @@
     <div>
         <ul>
             <li ng-repeat="rnrColumn in rnrColumnsList">
-                <span ng-switch on="rnrColumn.used">
+                <span ng-switch on="rnrColumn.mandatory">
                         <span ng-switch-when="true">
-                            <input type="checkbox" ng:model="rnrColumn.used" checked/>
+                            <input type="checkbox" ng:model="rnrColumn.used" checked disabled/>
                         </span>
-                <span ng-switch-default>
-                    <input type="checkbox" ng:model="rnrColumn.used"/>
-                </span>
+                        <span ng-switch-when="false">
+                            <span ng-switch on="rnrColumn.used">
+                                <span ng-switch-when="true">
+                                    <input type="checkbox" ng:model="rnrColumn.used" checked/>
+                                </span>
+                                <span ng-switch-default>
+                                     <input type="checkbox" ng:model="rnrColumn.used"/>
+                                </span>
+                            </span>
+                        </span>
                 </span>
                 <input type="hidden" ng:model="rnrColumn.id" value="{{ rnrColumn.id }}"/>
                 <span>{{ rnrColumn.name }} | <span/>
@@ -39,5 +49,5 @@
             </li>
         </ul>
     </div>
-    <button ng-click="createProgramRnrTemplate()" >Save</button>
+    <button ng-click="createProgramRnrTemplate()">Save</button>
 </div>

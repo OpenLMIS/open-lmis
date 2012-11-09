@@ -38,12 +38,13 @@ public interface ProgramRnrColumnMapper {
             @Result(property = "formula", column = "formula"),
             @Result(property = "indicator", column = "indicator"),
             @Result(property = "used", column = "used"),
-            @Result(property = "visible", column = "visible")
+            @Result(property = "visible", column = "visible"),
+            @Result(property = "mandatory", column = "mandatory")
     })
     @Select("select m.id as id, m.column_name as name, m.description description," +
             " m.column_position as position, m.column_label as label, m.default_value as defaultValue," +
             " m.data_source as source, m.formula as formula, m.column_indicator as indicator," +
-            " p.is_used as used, m.is_visible as visible" +
+            " p.is_used as used, m.is_visible as visible, m.is_mandatory as mandatory" +
             " from program_rnr_template p INNER JOIN master_rnr_template m" +
             " ON p.column_id = m.id" +
             " where p.program_id=#{programId}")

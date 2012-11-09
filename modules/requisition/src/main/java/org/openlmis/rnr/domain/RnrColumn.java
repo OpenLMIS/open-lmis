@@ -18,11 +18,12 @@ public class RnrColumn {
     private String indicator;
     private boolean used;
     private boolean visible;
+    private boolean mandatory;
 
     public RnrColumn() {
     }
 
-    public RnrColumn(String name, String description, int position, String label, String defaultValue, String dataSource, String formula, String indicator, boolean isUsed, boolean isVisible) {
+    public RnrColumn(String name, String description, int position, String label, String defaultValue, String dataSource, String formula, String indicator, boolean isUsed, boolean isVisible, boolean mandatory) {
         this.name = name;
         this.description = description;
         this.position = position;
@@ -33,6 +34,10 @@ public class RnrColumn {
         this.indicator = indicator;
         this.used = isUsed;
         this.visible = isVisible;
+        this.mandatory = mandatory;
     }
 
+    public boolean isMandatory() {
+        return mandatory;
+    }
 }
