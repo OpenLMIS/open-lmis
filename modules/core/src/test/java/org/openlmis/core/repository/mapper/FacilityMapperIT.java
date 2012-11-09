@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.RequisitionHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -48,5 +49,30 @@ public class FacilityMapperIT {
 
         int status = facilityMapper.map(facility.getCode(), programId, true);
         assertEquals(1, status);
+    }
+
+    @Test
+    public void shouldFetchFacilityAndFacilityTypeData() {
+        Facility facility1 = new FacilityBuilder()
+                .withCode("TRZ001")
+                .withName("Ngorongoro Hospital")
+                .withType(2)
+                .withGZone(1)
+                .build();
+
+        Facility facility2 = new FacilityBuilder().withDefaults().build();
+
+        facilityMapper.insert(facility1);
+        facilityMapper.insert(facility2);
+
+        String facilityCode = "TRZ001";
+        RequisitionHeader requisitionHeader = facilityMapper.getRequisitionHeaderData(facilityCode);
+
+        assertEquals("TRZ001", requisitionHeader.getFacilityCode());
+        assertEquals("Ngorongoro Hospital", requisitionHeader.getFacilityName());
+        assertEquals("Clinic", requisitionHeader.getFacilityType());
+        assertEquals(1.0, requisitionHeader.getEmergencyOrderPoint(), 0.0);
+        assertEquals(2, requisitionHeader.getMaximumStockLevel());
+
     }
 }

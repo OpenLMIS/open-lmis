@@ -7,7 +7,7 @@ public class FacilityBuilder {
     Facility facility = new Facility();
 
     public FacilityBuilder withDefaults() {
-        facility.setCode("hivcode");
+        facility.setCode("F10010");
         facility.setName("hiv");
         facility.setType(1);
         facility.setGeographicZone(2);
