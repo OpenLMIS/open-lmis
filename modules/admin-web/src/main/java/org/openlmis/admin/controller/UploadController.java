@@ -1,7 +1,7 @@
 package org.openlmis.admin.controller;
 
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.handler.ProductImportHandler;
+import lombok.NoArgsConstructor;
+import org.openlmis.upload.RecordHandler;
 import org.openlmis.upload.parser.CSVParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,22 +11,26 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.HashMap;
+import javax.annotation.Resource;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/admin")
+@NoArgsConstructor
+@RequestMapping("/resources/pages/admin")
 public class UploadController {
 
-    private CSVParser csvParser;
-    private ProductImportHandler handler;
-    private final Map<String, Class> modelMap = new HashMap<String, Class>();
-
     @Autowired
-    public UploadController(CSVParser csvParser, ProductImportHandler handler) {
+    private CSVParser csvParser;
+    @Resource
+    private Map<String, RecordHandler> uploadHandlerMap;
+    @Resource
+    private Map<String, Class> modelMap;
+
+
+    public UploadController(CSVParser csvParser, Map<String, RecordHandler> uploadHandlerMap, Map<String, Class> modelMap) {
         this.csvParser = csvParser;
-        this.handler = handler;
-        modelMap.put("product", Product.class);
+        this.uploadHandlerMap = uploadHandlerMap;
+        this.modelMap = modelMap;
     }
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST, headers = "Accept=application/json")
@@ -34,6 +38,7 @@ public class UploadController {
                                @RequestParam(value = "model", required = true) String model) {
 
         ModelAndView modelAndView = new ModelAndView();
+
 
         try {
             Class modelClass = modelMap.get(model);
@@ -43,7 +48,7 @@ public class UploadController {
             if (!multipartFile.getOriginalFilename().contains(".csv")) {
                 return returnErrorModelAndView(modelAndView, "Incorrect file format , Please upload " + model + " data as a \".csv\" file");
             }
-            int recordsUploaded = csvParser.process(multipartFile.getInputStream(), modelClass, handler);
+            int recordsUploaded = csvParser.process(multipartFile.getInputStream(), modelClass, uploadHandlerMap.get(model));
             modelAndView.addObject("message", "File upload success. Total " + model +" uploaded in the system : " + recordsUploaded);
         } catch (Exception e) {
             modelAndView.addObject("error", e.getMessage());

@@ -8,7 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component("productImportHandler")
 public class ProductImportHandler implements RecordHandler<Product> {
 
     private ProductService service;

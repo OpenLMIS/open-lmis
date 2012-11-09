@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.openlmis.core.domain.Product;
-import org.openlmis.core.handler.ProductImportHandler;
+import org.openlmis.upload.RecordHandler;
 import org.openlmis.upload.parser.CSVParser;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -18,6 +18,8 @@ import org.springframework.web.servlet.ModelAndView;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -31,14 +33,16 @@ public class UploadControllerTest {
     @Mock
     CSVParser csvParser;
 
-    @Mock
-    ProductImportHandler handler;
-
     UploadController controller;
+
+    @Mock
+    RecordHandler handler;
 
     @Before
     public void setUp() throws Exception {
-        controller = new UploadController(csvParser, handler);
+        Map<String, RecordHandler> handlerMap = new HashMap<String, RecordHandler>(){{put("product", handler);}};
+        Map<String, Class> modelMap = new HashMap<String, Class>(){{put("product", Product.class);}};
+        controller = new UploadController(csvParser , handlerMap, modelMap);//, new HashMap<String, RecordHandler>());
     }
 
     @Test
