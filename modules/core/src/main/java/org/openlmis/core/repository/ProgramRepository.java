@@ -15,10 +15,10 @@ public class ProgramRepository {
     ProgramMapper programMapper;
 
     public List<Program> getAll() {
-        return programMapper.getAll();
+        return programMapper.getAllActive();
     }
 
     public List<Program> getByFacilityCode(String facilityCode) {
-        return programMapper.getByFacilityCode(facilityCode);
+        return programMapper.getActiveByFacilityCode(facilityCode);
     }
 }

@@ -29,16 +29,25 @@ public interface FacilityMapper {
     @Delete("DELETE From programs_supported")
     void deleteProgramMappings();
 
-    @Select("SELECT facility.name, facility.code, facility_type.facility_type_name, facility_type.nominal_max_month, facility_type.nominal_eop " +
-            "FROM facility , facility_type " +
-            "WHERE facility.type = facility_type.id " +
-            "AND facility.code = #{facilityCode}")
+    @Select("SELECT F.name, F.code, FT.facility_type_name, FT.nominal_max_month, " +
+            "FT.nominal_eop, GZ.name as zone, GL.name as label, GZP.name as parent_zone, GLP.name as parent_label " +
+            "FROM facility F, facility_type FT, geographic_zone GZ, geographic_zone GZP, geopolitical_level GL, geopolitical_level GLP " +
+            "WHERE F.code = #{facilityCode} AND " +
+            "F.type = FT.id AND " +
+            "F.geographic_zone_id = GZ.id AND " +
+            "GZ.parent = GZP.id AND " +
+            "GZ.level = GL.id AND " +
+            "GZP.level = GLP.id")
     @Results(value = {
             @Result(property = "facilityName", column = "name"),
             @Result(property = "facilityCode", column = "code"),
             @Result(property = "facilityType", column = "facility_type_name"),
             @Result(property = "maximumStockLevel", column = "nominal_max_month"),
-            @Result(property = "emergencyOrderPoint", column = "nominal_eop")
+            @Result(property = "emergencyOrderPoint", column = "nominal_eop"),
+            @Result(property = "zone.value", column = "zone"),
+            @Result(property = "zone.label", column = "label"),
+            @Result(property = "parentZone.value", column = "parent_zone"),
+            @Result(property = "parentZone.label", column = "parent_label")
     })
     RequisitionHeader getRequisitionHeaderData(String facilityCode);
 }

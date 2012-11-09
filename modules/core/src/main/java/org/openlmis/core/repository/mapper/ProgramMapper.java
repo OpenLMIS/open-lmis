@@ -7,13 +7,13 @@ import java.util.List;
 
 public interface ProgramMapper {
 
-    @Select("SELECT * FROM PROGRAM")
+    @Select("SELECT * FROM program WHERE active=true")
     @Results(value = {
             @Result(property = "id", column = "ID"),
             @Result(property = "name", column = "NAME"),
             @Result(property = "description", column = "DESCRIPTION")
     })
-    List<Program> getAll();
+    List<Program> getAllActive();
 
     @Insert("INSERT INTO PROGRAM(ID, NAME, DESCRIPTION)" +
             " values (#{program.id}, #{program.name}, #{program.description})")
@@ -23,11 +23,11 @@ public interface ProgramMapper {
     void deleteAll();
 
 
-    @Select("select * from program P, programs_supported PS where P.id = PS.program_id and PS.facility_code = #{facilityCode}")
+    @Select("select * from program P, programs_supported PS where P.id = PS.program_id and PS.facility_code = #{facilityCode} and PS.active=true")
     @Results(value = {
             @Result(property = "id", column = "program.id"),
             @Result(property = "name", column = "program.name"),
             @Result(property = "description", column = "program.description")
     })
-    List<Program> getByFacilityCode(String facilityCode);
+    List<Program> getActiveByFacilityCode(String facilityCode);
 }
