@@ -18,7 +18,7 @@ public class FacilityBuilder {
         @Override
         public Facility instantiate(PropertyLookup<Facility> lookup) {
             return new Facility(lookup.valueOf(code, "F10010"),
-                    lookup.valueOf(name, "hiv"),
+                    lookup.valueOf(name, "Apollo Hospital"),
                     lookup.valueOf(type, 1),
                     lookup.valueOf(geographicZone, 2));
         }

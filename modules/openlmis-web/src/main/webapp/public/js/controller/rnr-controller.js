@@ -9,13 +9,6 @@ function RnrController($scope, Facility, FacilitySupportedPrograms) {
             $scope.programsForFacility = data.programList;
         }, {});
     }
-    $scope.saveProgram = function () {
-        $.each($scope.programsForFacility, function (i, program) {
-            if (program.id === $scope.program) {
-                $scope.selectedProgramName = program.name;
-            }
-        });
-    }
 }
 
 function HeaderController($scope, RequisitionHeader) {
