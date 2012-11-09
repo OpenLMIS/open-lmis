@@ -1,40 +1,26 @@
 package org.openlmis.core.builder;
 
+import com.natpryce.makeiteasy.Instantiator;
+import com.natpryce.makeiteasy.Property;
+import com.natpryce.makeiteasy.PropertyLookup;
 import org.openlmis.core.domain.Facility;
+
+import static com.natpryce.makeiteasy.Property.newProperty;
 
 public class FacilityBuilder {
 
-    Facility facility = new Facility();
+    public static final Property<Facility, String> code = newProperty();
+    public static final Property<Facility, String> name = newProperty();
+    public static final Property<Facility, Integer> type = newProperty();
+    public static final Property<Facility, Integer> geographicZone = newProperty();
 
-    public FacilityBuilder withDefaults() {
-        facility.setCode("F10010");
-        facility.setName("hiv");
-        facility.setType(1);
-        facility.setGeographicZone(2);
-        return this;
-    }
-
-    public FacilityBuilder withCode(String code) {
-        facility.setCode(code);
-        return this;
-    }
-
-    public FacilityBuilder withName(String name) {
-        facility.setName(name);
-        return this;
-    }
-
-    public FacilityBuilder withType(int type) {
-        facility.setType(type);
-        return this;
-    }
-
-    public FacilityBuilder withGZone(int gZone) {
-        facility.setGeographicZone(gZone);
-        return this;
-    }
-
-    public Facility build() {
-        return facility;
-    }
+    public static final Instantiator<Facility> defaultFacility = new Instantiator<Facility>() {
+        @Override
+        public Facility instantiate(PropertyLookup<Facility> lookup) {
+            return new Facility(lookup.valueOf(code, "F10010"),
+                    lookup.valueOf(name, "hiv"),
+                    lookup.valueOf(type, 1),
+                    lookup.valueOf(geographicZone, 2));
+        }
+    };
 }

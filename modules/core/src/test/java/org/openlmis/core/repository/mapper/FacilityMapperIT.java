@@ -3,7 +3,6 @@ package org.openlmis.core.repository.mapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.RequisitionHeader;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +11,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
 
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.openlmis.core.builder.FacilityBuilder.*;
 
 @ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -30,8 +31,16 @@ public class FacilityMapperIT {
 
     @Test
     public void shouldFetchAllFacilitiesAvailable() throws Exception {
-        Facility trz001 = new FacilityBuilder().withCode("TRZ001").withName("Ngorongoro Hospital").withType(1).withGZone(1).build();
-        Facility trz002 = new FacilityBuilder().withCode("TRZ002").withName("Rural Clinic").withType(2).withGZone(2).build();
+        Facility trz001 = make(a(defaultFacility,
+                with(code, "TRZ001"),
+                with(name, "Ngorongoro Hospital"),
+                with(type, 1),
+                with(geographicZone, 1)));
+        Facility trz002 = make(a(defaultFacility,
+                with(code, "TRZ002"),
+                with(name, "Rural Clinic"),
+                with(type, 2),
+                with(geographicZone, 2)));
 
         facilityMapper.insert(trz001);
         facilityMapper.insert(trz002);
@@ -44,7 +53,7 @@ public class FacilityMapperIT {
     @Test
     public void shouldInsertSupportedProgramsForFacility() {
         int programId = 1;
-        Facility facility = new FacilityBuilder().withCode("TRZ001").withName("Ngorongoro Hospital").withType(1).withGZone(1).build();
+        Facility facility = make(a(defaultFacility));
         facilityMapper.insert(facility);
 
         int status = facilityMapper.map(facility.getCode(), programId, true);
@@ -53,14 +62,13 @@ public class FacilityMapperIT {
 
     @Test
     public void shouldFetchFacilityAndFacilityTypeData() {
-        Facility facility1 = new FacilityBuilder()
-                .withCode("TRZ001")
-                .withName("Ngorongoro Hospital")
-                .withType(2)
-                .withGZone(1)
-                .build();
+        Facility facility1 = make(a(defaultFacility,
+                with(code, "TRZ001"),
+                with(name, "Ngorongoro Hospital"),
+                with(type, 2),
+                with(geographicZone, 1)));
 
-        Facility facility2 = new FacilityBuilder().withDefaults().build();
+        Facility facility2 = make(a(defaultFacility));
 
         facilityMapper.insert(facility1);
         facilityMapper.insert(facility2);
