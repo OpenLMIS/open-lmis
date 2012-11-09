@@ -5,4 +5,5 @@ insert into program(id, name, description, budgeting_applies, uses_dar, active)
     (3, 'ESSENTIAL MEDICINES','ESSENTIAL MEDICINES',TRUE,FALSE,TRUE),
     (4, 'VACCINES','VACCINES',FALSE,FALSE,TRUE),
     (5, 'TB','TB',FALSE,FALSE,TRUE),
-    (6, 'MALARIA','MALARIA',FALSE,FALSE,TRUE);
+    (6, 'MALARIA','MALARIA',FALSE,FALSE,TRUE),
+    (7, 'SMALL POX','SMALL POX',FALSE,FALSE,FALSE);

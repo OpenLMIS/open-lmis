@@ -1,6 +1,7 @@
 package org.openlmis.core.repository.mapper;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.domain.Facility;
@@ -55,18 +56,18 @@ public class FacilityMapperIT {
         int programId = 1;
         Facility facility = make(a(defaultFacility));
         facilityMapper.insert(facility);
-
-        int status = facilityMapper.map(facility.getCode(), programId, true);
-        assertEquals(1, status);
+        int count = facilityMapper.map(facility.getCode(), programId, true);
+        facilityMapper.map(facility.getCode(), 5, false);
+        assertEquals(1, count);
     }
 
     @Test
+    @Ignore
     public void shouldFetchFacilityAndFacilityTypeData() {
         Facility facility1 = make(a(defaultFacility,
                 with(code, "TRZ001"),
                 with(name, "Ngorongoro Hospital"),
-                with(type, 2),
-                with(geographicZone, 1)));
+                with(type, 2)));
 
         Facility facility2 = make(a(defaultFacility));
 
@@ -82,5 +83,10 @@ public class FacilityMapperIT {
         assertEquals(1.0, requisitionHeader.getEmergencyOrderPoint(), 0.0);
         assertEquals(2, requisitionHeader.getMaximumStockLevel());
 
+        assertEquals("Dodoma", requisitionHeader.getZone().getValue());
+        assertEquals("Arusha", requisitionHeader.getZone().getValue());
+
+        assertEquals("city", requisitionHeader.getParentZone().getLabel());
+        assertEquals("state", requisitionHeader.getParentZone().getLabel());
     }
 }

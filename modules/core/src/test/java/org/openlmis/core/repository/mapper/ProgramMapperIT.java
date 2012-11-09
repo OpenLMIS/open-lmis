@@ -34,19 +34,19 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     }
 
     @Test
-    public void shouldGetAllProgram() {
-        List<Program> programs = programMapper.getAll();
+    public void shouldGetAllActiveProgram() {
+        List<Program> programs = programMapper.getAllActive();
         assertEquals(6, programs.size());
-        assertTrue("program does not exists",programs.contains(new Program(1, "HIV", "HIV", true)));
+        assertTrue("program does not exists", programs.contains(new Program(1, "HIV", "HIV", true)));
     }
 
     @Test
-    public void shouldGetProgramsByFacilityId() {
+    public void shouldGetProgramsWhichAreActiveByFacilityId() {
         Facility facility = make(a(defaultFacility));
         facilityMapper.insert(facility);
         int programId = 1;
         int status = facilityMapper.map(facility.getCode(), programId, true);
-        List<Program> programs = programMapper.getByFacilityCode("F10010");
+        List<Program> programs = programMapper.getActiveByFacilityCode("F10010");
         assertThat(programs.size(), is(1));
         assertThat(programs.get(0).getId(), is(programId));
         assertThat(status, is(1));
