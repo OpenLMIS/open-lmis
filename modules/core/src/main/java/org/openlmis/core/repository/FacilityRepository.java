@@ -1,6 +1,7 @@
 package org.openlmis.core.repository;
 
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.RequisitionHeader;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,10 @@ public class FacilityRepository {
 
     public List<Facility> getAll() {
         return facilityMapper.getAll();
+    }
+
+    public RequisitionHeader getHeader(String facilityCode) {
+        return facilityMapper.getRequisitionHeaderData(facilityCode);
     }
 
 }
