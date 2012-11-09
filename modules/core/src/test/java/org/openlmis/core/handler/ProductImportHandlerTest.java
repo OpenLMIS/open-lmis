@@ -32,7 +32,7 @@ public class ProductImportHandlerTest {
         ProductService productService = mock(ProductService.class);
         Product product = new Product();
         expectedEx.expect(RuntimeException.class);
-        expectedEx.expectMessage("Duplicate Product Code at record# 9");
+        expectedEx.expectMessage("Duplicate Product Code found in Record No. 9");
         doThrow(new DuplicateKeyException("")).when(productService).save(product);
 
         new ProductImportHandler(productService).execute(product, 10);
@@ -43,7 +43,7 @@ public class ProductImportHandlerTest {
         ProductService productService = mock(ProductService.class);
         Product product = new Product();
         expectedEx.expect(RuntimeException.class);
-        expectedEx.expectMessage("Incorrect reference data at record# 9");
+        expectedEx.expectMessage("Missing Reference data of Record No. 9");
         doThrow(new DataIntegrityViolationException("foreign key")).when(productService).save(product);
 
         new ProductImportHandler(productService).execute(product, 10);

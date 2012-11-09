@@ -23,10 +23,10 @@ public class ProductImportHandler implements RecordHandler<Product> {
         try {
             service.save(product);
         } catch (DuplicateKeyException duplicateKeyException) {
-            throw new RuntimeException(String.format("Duplicate Product Code at record# %d", rowNumber - 1));
+            throw new RuntimeException(String.format("Duplicate Product Code found in Record No. %d", rowNumber - 1));
         } catch (DataIntegrityViolationException foreignKeyException) {
             if (foreignKeyException.getMessage().toLowerCase().contains("foreign key")) {
-                throw new RuntimeException(String.format("Incorrect reference data at record# %d", rowNumber - 1));
+                throw new RuntimeException(String.format("Missing Reference data of Record No. %d", rowNumber - 1));
             }
         }
     }

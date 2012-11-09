@@ -35,7 +35,7 @@ public class CSVParser {
     }
 
     @Transactional
-    public void process(InputStream inputStream, Class<? extends Importable> modelClass, RecordHandler recordHandler)
+    public int process(InputStream inputStream, Class<? extends Importable> modelClass, RecordHandler recordHandler)
             throws SuperCsvException, IOException {
 
         CsvPreference csvPreference = new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE)
@@ -51,6 +51,7 @@ public class CSVParser {
         CellProcessor[] processors = cellProcessors.toArray(new CellProcessor[1]);
 
         next(modelClass, recordHandler, csvBeanReader, headers, processors);
+        return csvBeanReader.getRowNumber() - 1 ;
     }
 
     private String[] parseHeaders(CsvBeanReader csvBeanReader) throws IOException {
@@ -70,16 +71,16 @@ public class CSVParser {
                 recordHandler.execute(importedModel, csvBeanReader.getRowNumber());
             }
         } catch (SuperCsvConstraintViolationException constraintException) {
-            createException("Missing Mandatory Data:", headers, constraintException);
+            createException("Missing Mandatory data in field :", headers, constraintException);
         } catch (SuperCsvCellProcessorException processorException) {
-            createException("Incorrect Data type:", headers, processorException);
+            createException("Incorrect Data type in field :", headers, processorException);
         }
     }
 
     private void createException(String error, String[] headers, SuperCsvCellProcessorException exception) throws SuperCsvException {
         CsvContext csvContext = exception.getCsvContext();
         String header = headers[csvContext.getColumnNumber() - 1];
-        throw new SuperCsvException(String.format("%s '%s' of record# %d", error, header, csvContext.getRowNumber() - 1), csvContext);
+        throw new SuperCsvException(String.format("%s '%s' of Record No. %d", error, header, csvContext.getRowNumber() - 1), csvContext);
     }
 
 }

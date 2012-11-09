@@ -38,14 +38,21 @@ public class UploadController {
         try {
             Class modelClass = modelMap.get(model);
             if (modelClass == null) {
-                modelAndView.addObject("error", "Incorrect file");
-            } else {
-                csvParser.process(multipartFile.getInputStream(), modelClass, handler);
-                modelAndView.addObject("message", "uploaded successfully");
+                return returnErrorModelAndView(modelAndView, "Incorrect file");
             }
+            if (!multipartFile.getOriginalFilename().contains(".csv")) {
+                return returnErrorModelAndView(modelAndView, "Incorrect file format , Please upload product data as a \".csv\" file");
+            }
+            int recordsUploaded = csvParser.process(multipartFile.getInputStream(), modelClass, handler);
+            modelAndView.addObject("message", "File upload success. Total " + model +" uploaded in the system : " + recordsUploaded);
         } catch (Exception e) {
             modelAndView.addObject("error", e.getMessage());
         }
+        return modelAndView;
+    }
+
+    private ModelAndView returnErrorModelAndView(ModelAndView modelAndView, String errorMessage) {
+        modelAndView.addObject("error", errorMessage);
         return modelAndView;
     }
 }

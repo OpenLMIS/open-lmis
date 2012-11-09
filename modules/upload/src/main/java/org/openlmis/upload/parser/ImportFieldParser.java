@@ -67,7 +67,7 @@ public class ImportFieldParser {
             }
         }
         if (!missingFields.isEmpty()) {
-            throw new MissingHeaderException("Mandatory Header(s) " + missingFields + " not present");
+            throw new MissingHeaderException("Missing Mandatory columns in product upload file: " + missingFields);
         }
     }
 

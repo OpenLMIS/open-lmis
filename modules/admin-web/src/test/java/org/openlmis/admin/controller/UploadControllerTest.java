@@ -10,10 +10,13 @@ import org.openlmis.core.handler.ProductImportHandler;
 import org.openlmis.upload.parser.CSVParser;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 
 import static junit.framework.Assert.assertEquals;
@@ -47,18 +50,75 @@ public class UploadControllerTest {
     }
 
     @Test
+    public void shouldParseIfFileIsCsv() throws Exception {
+        byte[] content = null;
+        MockMultipartFile multiPartMock = new MockMultipartFile("csvFile", "mock.csv", null, content);
+
+        ModelAndView modelAndView = controller.upload(multiPartMock, "product");
+
+        assertEquals("File upload success. Total product uploaded in the system : 0", modelAndView.getModelMap().get("message"));
+    }
+
+    @Test
     public void shouldUseCsvParserService() throws Exception {
-        MultipartFile multipartFile = mock(MultipartFile.class);
+        byte[] content = null;
+        MultipartFile mockMultiPart = spy(new MultipartFile() {
+            @Override
+            public String getName() {
+                return "csvFile";  //To change body of implemented methods use File | Settings | File Templates.
+            }
 
+            @Override
+            public String getOriginalFilename() {
+                return "mock.csv";  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public String getContentType() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public boolean isEmpty() {
+                return false;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public long getSize() {
+                return 0;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public byte[] getBytes() throws IOException {
+                return new byte[0];  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public InputStream getInputStream() throws IOException {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public void transferTo(File dest) throws IOException, IllegalStateException {
+                //To change body of implemented methods use File | Settings | File Templates.
+            }
+        });
         InputStream mockedStream = mock(InputStream.class);
-        when(multipartFile.getInputStream()).thenReturn(mockedStream);
-        ModelAndView modelAndView = controller.upload(multipartFile, "product");
+        when(mockMultiPart.getInputStream()).thenReturn(mockedStream);
+        ModelAndView modelAndView = controller.upload(mockMultiPart, "product");
 
-        assertEquals("uploaded successfully", modelAndView.getModelMap().get("message"));
+        assertEquals("File upload success. Total product uploaded in the system : 0", modelAndView.getModelMap().get("message"));
         verify(csvParser).process(mockedStream, Product.class, handler);
     }
 
     @Test
     public void shouldGiveErrorIfFileNotOfTypeCsv() throws Exception {
+        byte[] content = null;
+        MockMultipartFile multiPartMock = new MockMultipartFile("mock.doc", content);
+
+        ModelAndView modelAndView = controller.upload(multiPartMock, "product");
+        assertEquals("Incorrect file format , Please upload product data as a \".csv\" file", modelAndView.getModelMap().get("error"));
+        // verify(csvParser).process(mockedStream, Product.class, handler);
+
     }
 }
