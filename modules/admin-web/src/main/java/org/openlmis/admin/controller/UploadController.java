@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/resources/pages/admin")
+@RequestMapping("/admin")
 public class UploadController {
 
     private CSVParser csvParser;

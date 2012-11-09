@@ -6,7 +6,7 @@ function UploadController($scope, $http) {
         var xhr = new XMLHttpRequest();
         var fd = document.getElementById('uploadForm');
         xhr.addEventListener("load", $scope.uploadComplete, false);
-        xhr.open("POST", "/resources/pages/admin/upload.json");
+        xhr.open("POST", "/admin/upload.json");
         xhr.send(new FormData(fd));
     }
 
