@@ -41,7 +41,7 @@ public class UploadController {
                 return returnErrorModelAndView(modelAndView, "Incorrect file");
             }
             if (!multipartFile.getOriginalFilename().contains(".csv")) {
-                return returnErrorModelAndView(modelAndView, "Incorrect file format , Please upload product data as a \".csv\" file");
+                return returnErrorModelAndView(modelAndView, "Incorrect file format , Please upload " + model + " data as a \".csv\" file");
             }
             int recordsUploaded = csvParser.process(multipartFile.getInputStream(), modelClass, handler);
             modelAndView.addObject("message", "File upload success. Total " + model +" uploaded in the system : " + recordsUploaded);
