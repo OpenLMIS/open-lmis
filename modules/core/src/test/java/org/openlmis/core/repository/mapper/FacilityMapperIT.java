@@ -1,5 +1,6 @@
 package org.openlmis.core.repository.mapper;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -62,7 +63,6 @@ public class FacilityMapperIT {
     }
 
     @Test
-    @Ignore
     public void shouldFetchFacilityAndFacilityTypeData() {
         Facility facility1 = make(a(defaultFacility,
                 with(code, "TRZ001"),
@@ -84,9 +84,19 @@ public class FacilityMapperIT {
         assertEquals(2, requisitionHeader.getMaximumStockLevel());
 
         assertEquals("Dodoma", requisitionHeader.getZone().getValue());
-        assertEquals("Arusha", requisitionHeader.getZone().getValue());
+        assertEquals("Arusha", requisitionHeader.getParentZone().getValue());
 
-        assertEquals("city", requisitionHeader.getParentZone().getLabel());
+        assertEquals("city", requisitionHeader.getZone().getLabel());
         assertEquals("state", requisitionHeader.getParentZone().getLabel());
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        Facility facility = make(a(defaultFacility,
+                with(code, "DDM001"),
+                with(name, "Dodoma Hospital"),
+                with(type, 2)));
+        facilityMapper.insert(facility);
+        facilityMapper.map(facility.getCode(),5,true);
     }
 }
