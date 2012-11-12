@@ -20,7 +20,8 @@ public class LoginPage extends Page {
     @FindBy(how = How.LINK_TEXT, using = "logout")
     private static WebElement logoutLink;
 
-    private String BASE_URL = "http://192.168.34.2:8080/openlmis-web/";
+    private String BASE_URL = "http://qa.221.134.198.28.xip.io/";
+
     private String ERROR_MESSAGE_LOGIN = "The username or password you entered is incorrect . Please try again.";
 
 
