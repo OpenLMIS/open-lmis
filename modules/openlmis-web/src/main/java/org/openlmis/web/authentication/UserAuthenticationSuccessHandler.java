@@ -15,11 +15,17 @@ public class UserAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
     public static final String USER = "USER";
     public static final String IS_ADMIN = "IS_ADMIN";
 
+    public static boolean isAjax(HttpServletRequest request) {
+        return "XMLHttpRequest".equalsIgnoreCase(request.getHeader("X-Requested-With"));
+    }
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         request.getSession().setAttribute(USER, authentication.getPrincipal());
         request.getSession().setAttribute(IS_ADMIN, isAdmin(authentication));
+        // if(!isAjax(request)){
         super.onAuthenticationSuccess(request, response, authentication);
+        //}
     }
 
     private boolean isAdmin(Authentication authentication) {

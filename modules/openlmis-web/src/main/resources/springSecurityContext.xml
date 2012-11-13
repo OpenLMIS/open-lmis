@@ -5,7 +5,12 @@
              xmlns:context="http://www.springframework.org/schema/context"
              xmlns:mvc="http://www.springframework.org/schema/mvc"
              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
-                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
+                        http://www.springframework.org/schema/security
+                        http://www.springframework.org/schema/security/spring-security-3.1.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context-3.1.xsd
+                        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+                        ">
 
     <context:annotation-config/>
     <mvc:annotation-driven/>
@@ -14,16 +19,16 @@
     <context:component-scan base-package="org.openlmis.admin.controller"/>
     <context:component-scan base-package="org.openlmis.web"/>
 
-    <http use-expressions="true">
+    <http use-expressions="true" entry-point-ref="restAuthenticationEntryPoint">
         <intercept-url pattern="/favicon.*" access="permitAll"/>
-        <intercept-url pattern="/resources/pages/admin/**" access="hasRole('ADMIN')" requires-channel="http"/>
-        <intercept-url pattern="/resources/pages/logistics/**" access="hasRole('USER')" requires-channel="http"/>
-        <intercept-url pattern="/resources/**" access="permitAll" requires-channel="http"/>
+        <intercept-url pattern="/admin/**" access="hasRole('ADMIN')" requires-channel="http"/>
+        <intercept-url pattern="/logistics/**" access="hasRole('USER')" requires-channel="http"/>
+        <intercept-url pattern="/resources/pages/**" access="permitAll" requires-channel="http"/>
         <intercept-url pattern="/**" access="isAuthenticated()" requires-channel="http"/>
 
         <form-login authentication-success-handler-ref="userAuthenticationSuccessHandler"
-                login-processing-url="/j_spring_security_check" login-page="/resources/pages/login.html"
-                authentication-failure-url="/resources/pages/login.html?error=true"/>
+                    login-processing-url="/j_spring_security_check" login-page="/resources/pages/login.html"
+                    authentication-failure-url="/resources/pages/login.html?error=true"/>
         <logout logout-success-url="/resources/pages/login.html" invalidate-session="true" delete-cookies="true"/>
     </http>
 

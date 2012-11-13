@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Controller
-@RequestMapping("/admin")
 public class ProgramController {
 
     private ProgramService programService;
@@ -21,12 +20,12 @@ public class ProgramController {
         this.programService = programService;
     }
 
-    @RequestMapping(value = "programs/programs.json", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "/admin/programs/all.json", method = RequestMethod.GET, headers = "Accept=application/json")
     public List<Program> getAllPrograms() {
         return programService.getAll();
     }
 
-    @RequestMapping(value = "programs/programsForFacility.json", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "/logistics/programs/programsForFacility.json", method = RequestMethod.GET, headers = "Accept=application/json")
     public List<Program> getProgramsForFacility(@RequestParam(value = "facility") String facilityCode) {
         return programService.getByFacilityCode(facilityCode);
     }

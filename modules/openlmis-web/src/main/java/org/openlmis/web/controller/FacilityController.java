@@ -17,12 +17,12 @@ public class FacilityController {
     @Autowired
     private FacilityService facilityService;
 
-    @RequestMapping(value = "facilities", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "logistics/facilities", method = RequestMethod.GET, headers = "Accept=application/json")
     public List<Facility> getAll() {
         return facilityService.getAll();
     }
 
-    @RequestMapping(value = "/facility/{code}/requisition-header", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "logistics/facility/{code}/requisition-header", method = RequestMethod.GET, headers = "Accept=application/json")
     public RequisitionHeader getRequisitionHeader(@PathVariable(value = "code") String code) {
         return facilityService.getRequisitionHeader(code);
     }
