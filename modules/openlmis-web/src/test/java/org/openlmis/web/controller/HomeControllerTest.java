@@ -39,7 +39,7 @@ public class HomeControllerTest {
     public void shouldRedirectToIndexPageForUsersWhoAreNotAdmins() {
         when(session.getAttribute(UserAuthenticationSuccessHandler.IS_ADMIN)).thenReturn(false);
         String homePageURl = homeController.homeDefault(request);
-        assertEquals("redirect:/resources/pages/logistics/index.html", homePageURl);
+        assertEquals("redirect:/resources/pages/logistics/rnr/create.html", homePageURl);
     }
 
 }

@@ -1,18 +1,20 @@
-var scope;
 function RnrController($scope, Facility, FacilitySupportedPrograms) {
     Facility.get({}, function (data) {
-        $scope.facilities = data.facilityList;
-    }, {});
+            $scope.facilities = data.facilityList;
+        }, {}
+    );
 
-    $scope.loadPrograms = function () {
+    $scope.loadPrograms = function ($scope) {
         FacilitySupportedPrograms.get({facility:$scope.facility}, function (data) {
             $scope.programsForFacility = data.programList;
         }, {});
     }
 }
 
-function HeaderController($scope, RequisitionHeader) {
+function HeaderController($scope, RequisitionHeader, $location) {
     RequisitionHeader.get({code:$scope.facility}, function (data) {
         $scope.header = data.requisitionHeader;
-    }, {});
+    }, function () {
+        $location.path("new-rnr");
+    });
 }
