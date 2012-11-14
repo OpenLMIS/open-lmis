@@ -20,7 +20,7 @@ public class ProgramController {
         this.programService = programService;
     }
 
-    @RequestMapping(value = "/admin/programs/all.json", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "/admin/programs", method = RequestMethod.GET, headers = "Accept=application/json")
     public List<Program> getAllPrograms() {
         return programService.getAll();
     }

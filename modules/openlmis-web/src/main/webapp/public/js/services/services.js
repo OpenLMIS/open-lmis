@@ -1,7 +1,7 @@
 var services = angular.module('openlmis.services', ['ngResource']);
 
 services.factory('Program', function ($resource) {
-    return $resource('/admin/programs/all.json', {}, {});
+    return $resource('/admin/programs.json', {}, {});
 });
 
 services.factory('RnRColumnList', function ($resource) {
