@@ -1,2 +1,6 @@
-function HeaderCtrl($scope, $http) {
+function HeaderController($scope, User) {
+//    User.get({}, function (data) {
+//            $scope.user = data.user;
+//        }, {});
+    $scope.user="somebody";
 }

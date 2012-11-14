@@ -1,7 +1,7 @@
 'use strict';
 // select-program.html, program-controller.js
 //create-rnr-template.html, create-rnr-template-controller.js
-angular.module('createRnRTemplate', ['openlmis', 'openlmis.services']).
+angular.module('createRnRTemplate', ['openlmis']).
     config(['$routeProvider', function ($routeProvider) {
     $routeProvider.
         when('/select-program', {controller:CreateRnrTemplateController, templateUrl:'../select-program.html'}).

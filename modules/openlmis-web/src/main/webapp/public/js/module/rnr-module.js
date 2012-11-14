@@ -1,5 +1,5 @@
 'use strict';
-angular.module('rnr', ['openlmis', 'openlmis.services']).
+angular.module('rnr', ['openlmis']).
     config(['$routeProvider', function ($routeProvider) {
     $routeProvider.
         when('/new-rnr', {controller:RnrController, templateUrl:'select-facility.html'}).

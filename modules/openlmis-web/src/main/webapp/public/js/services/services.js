@@ -1,5 +1,9 @@
 var services = angular.module('openlmis.services', ['ngResource']);
 
+services.factory('User', function ($resource) {
+    return $resource('/error/user.info', {}, {});
+});
+
 services.factory('Program', function ($resource) {
     return $resource('/admin/programs.json', {}, {});
 });

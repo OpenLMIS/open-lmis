@@ -1,7 +1,7 @@
 'use strict';
 
 /* App Module */
-angular.module('openlmis', [], function ($routeProvider, $locationProvider, $httpProvider) {
+angular.module('openlmis', ['openlmis.services'], function ($routeProvider, $locationProvider, $httpProvider) {
 
     var interceptor = ['$rootScope', '$q', function (scope, $q) {
 
@@ -10,18 +10,16 @@ angular.module('openlmis', [], function ($routeProvider, $locationProvider, $htt
         }
 
         function error(response) {
-            var status = response.status;
-
-            if (status == 401) {
-                var deferred = $q.defer();
-                var req = {
-                    config:response.config,
-                    deferred:deferred   };
-                window.location = "../../login.html";
+            switch (response.status) {
+                case 403:
+                    window.location = "/public/pages/access-denied.html";
+                    break;
+                case 302:
+                    break;
+                default:
+                    break;
             }
-            // otherwise
             return $q.reject(response);
-
         }
 
         return function (promise) {
