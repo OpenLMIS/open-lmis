@@ -16,7 +16,7 @@ import java.util.Map;
 
 @Controller
 @NoArgsConstructor
-@RequestMapping("/resources/pages/admin")
+@RequestMapping("/admin")
 public class UploadController {
 
     @Autowired
