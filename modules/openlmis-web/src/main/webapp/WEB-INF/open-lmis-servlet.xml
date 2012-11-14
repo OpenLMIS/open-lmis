@@ -14,9 +14,7 @@
 
         <property name="defaultViews">
             <list>
-                <bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView">
-                    <property name="disableCaching" value="false"/>
-                </bean>
+                <bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" />
             </list>
         </property>
         <property name="ignoreAcceptHeader" value="true"/>
