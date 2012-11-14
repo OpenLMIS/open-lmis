@@ -37,15 +37,15 @@ public class TestWebDriver {
     public void verifyUrl(String identifier) {
         String url = getCurrentUrl();
         if (identifier.equalsIgnoreCase("Admin"))
-            assertTrue(url.contains(BASE_URL + "resources/pages/admin/index.html"));
+            assertTrue(url.contains(BASE_URL + "public/pages/admin/index.html"));
         else
-            assertTrue(url.contains(BASE_URL + "resources/pages/logistics/index.html"));
+            assertTrue(url.contains(BASE_URL + "public/pages/logistics/index.html"));
 
     }
 
     public void verifyUrlInvalid() {
         String url = getCurrentUrl();
-            assertTrue(url.contains(BASE_URL + "resources/pages/login.html?error=true"));
+        assertTrue(url.contains(BASE_URL + "public/pages/login.html?error=true"));
     }
 
 

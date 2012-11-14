@@ -23,13 +23,13 @@
         <intercept-url pattern="/favicon.*" access="permitAll"/>
         <intercept-url pattern="/admin/**" access="hasRole('ADMIN')" requires-channel="http"/>
         <intercept-url pattern="/logistics/**" access="hasRole('USER')" requires-channel="http"/>
-        <intercept-url pattern="/resources/pages/**" access="permitAll" requires-channel="http"/>
+        <intercept-url pattern="/public/pages/**" access="permitAll" requires-channel="http"/>
         <intercept-url pattern="/**" access="isAuthenticated()" requires-channel="http"/>
 
         <form-login authentication-success-handler-ref="userAuthenticationSuccessHandler"
-                    login-processing-url="/j_spring_security_check" login-page="/resources/pages/login.html"
-                    authentication-failure-url="/resources/pages/login.html?error=true"/>
-        <logout logout-success-url="/resources/pages/login.html" invalidate-session="true" delete-cookies="true"/>
+                    login-processing-url="/j_spring_security_check" login-page="/public/pages/login.html"
+                    authentication-failure-url="/public/pages/login.html?error=true"/>
+        <logout logout-success-url="/public/pages/login.html" invalidate-session="true" delete-cookies="true"/>
     </http>
 
     <authentication-manager>

@@ -15,7 +15,7 @@ public class BaseController {
     }
 
     protected String homePageUrl(HttpServletRequest request) {
-        return isAdmin(request) ? "redirect:/resources/pages/admin/index.html" : "redirect:/resources/pages/logistics/rnr/create.html";
+        return isAdmin(request) ? "redirect:/public/pages/admin/index.html" : "redirect:/public/pages/logistics/rnr/create.html";
     }
 
 }

@@ -32,7 +32,7 @@
     <bean id="userAuthenticationSuccessHandler"
           class="org.openlmis.web.authentication.UserAuthenticationSuccessHandler"/>
 
-    <mvc:resources mapping="/resources/**" location="/public/"/>
+    <mvc:resources mapping="/public/**" location="/public/"/>
 
     <mvc:interceptors>
         <bean id="noCacheInterceptor" class="org.springframework.web.servlet.mvc.WebContentInterceptor">
@@ -42,7 +42,7 @@
             <property name="useCacheControlNoStore" value="true"/>
             <property name="cacheMappings">
                 <props>
-                    <prop key="/resources/**">31556926</prop>
+                    <prop key="/public/**">31556926</prop>
                 </props>
             </property>
         </bean>
