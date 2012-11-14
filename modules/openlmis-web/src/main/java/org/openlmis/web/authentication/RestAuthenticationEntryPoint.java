@@ -2,6 +2,7 @@ package org.openlmis.web.authentication;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +15,7 @@ public final class RestAuthenticationEntryPoint extends LoginUrlAuthenticationEn
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException, ServletException {
         if ("XMLHttpRequest".equalsIgnoreCase(request.getHeader("X-Requested-With"))) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "forbidden");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "unauthorized");
         } else {
             super.commence(request, response, authException);
         }

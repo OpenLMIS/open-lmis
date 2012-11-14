@@ -14,9 +14,11 @@ angular.module('openlmis', ['openlmis.services'], function ($routeProvider, $loc
                 case 403:
                     window.location = "/public/pages/access-denied.html";
                     break;
-                case 302:
+                case 401:
+                    alert("login model");
                     break;
                 default:
+                    alert(response.status);
                     break;
             }
             return $q.reject(response);
