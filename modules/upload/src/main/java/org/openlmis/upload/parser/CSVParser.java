@@ -1,8 +1,11 @@
 package org.openlmis.upload.parser;
 
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.RecordHandler;
+import org.openlmis.upload.annotation.ImportField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,10 +21,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.lang.reflect.Field;
+import java.util.*;
 
 @Component
 @NoArgsConstructor
@@ -49,9 +50,39 @@ public class CSVParser {
         List<CellProcessor> cellProcessors = importFieldParser.parse(modelClass, headersSet);
 
         CellProcessor[] processors = cellProcessors.toArray(new CellProcessor[1]);
-
-        next(modelClass, recordHandler, csvBeanReader, headers, processors);
+        String[] nameMappings = getNameMappings(modelClass, headers);
+        next(modelClass, recordHandler, csvBeanReader, nameMappings, processors);
         return csvBeanReader.getRowNumber() - 1 ;
+    }
+
+    private String[] getNameMappings(Class<? extends Importable> clazz, final String[] headers) {
+        List<String> nameMappings = new ArrayList<String>();
+
+        for(String header : headers){
+            Field fieldWithAnnotatedName = findFieldWithAnnotatedName(header, clazz);
+            if(fieldWithAnnotatedName != null){
+                nameMappings.add(fieldWithAnnotatedName.getName());
+            }else {
+                nameMappings.add(header);
+            }
+        }
+        return nameMappings.toArray(new String[1]);
+    }
+
+    private Field findFieldWithAnnotatedName(final String annotatedName, Class<? extends Importable> clazz) {
+        List<Field> fieldsList = Arrays.asList(clazz.getDeclaredFields());
+        Object result = CollectionUtils.find(fieldsList, new Predicate() {
+            @Override
+            public boolean evaluate(Object object) {
+                Field field = (Field) object;
+                if (field.isAnnotationPresent(ImportField.class) &&
+                        annotatedName.equalsIgnoreCase(field.getAnnotation(ImportField.class).name())) {
+                    return true;
+                }
+                return false;
+            }
+        });
+        return (Field)result;
     }
 
     private String[] parseHeaders(CsvBeanReader csvBeanReader) throws IOException {

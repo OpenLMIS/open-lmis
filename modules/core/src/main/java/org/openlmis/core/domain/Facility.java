@@ -49,24 +49,24 @@ public class Facility implements Importable {
     private double coldStorageNetCapacity;
     @ImportField(type = "boolean")
     private boolean suppliesOthers;
-    @ImportField(type = "boolean", mandatory = true)
-    private boolean isSdp;
+    @ImportField(type = "boolean", mandatory = true, name="is_sdp")
+    private boolean sdp;
     @ImportField(type = "boolean")
     private boolean hasElectricity;
     @ImportField(type = "boolean")
-    private boolean isOnline;
+    private boolean online;
     @ImportField(type = "boolean")
     private boolean hasElectronicSCC;
     @ImportField(type = "boolean")
     private boolean hasElectronicDAR;
     @ImportField(type = "boolean", mandatory = true)
-    private boolean isActive;
-    @ImportField(type = "date", mandatory = true)
+    private boolean active;
+    @ImportField(type = "Date", mandatory = true)
     private Date goLiveDate;
-    @ImportField(type = "date")
+    @ImportField(type = "Date")
     private Date goDownDate;
     @ImportField(type = "boolean")
-    private boolean isSatellite;
+    private boolean satelliteFacility;
     @ImportField
     private String satelliteParentCode;
     @ImportField

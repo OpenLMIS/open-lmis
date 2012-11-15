@@ -1,6 +1,6 @@
 CREATE TABLE facility_type (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(30) NOT NULL,
+  name VARCHAR(30) NOT NULL UNIQUE,
   description varchar(250) ,
   level_id INTEGER,
   is_active BOOLEAN,

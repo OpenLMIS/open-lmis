@@ -10,4 +10,6 @@ import java.lang.annotation.Target;
 public @interface ImportField {
     boolean mandatory() default false;
     String type() default "String";
+
+    String name() default "";
 }

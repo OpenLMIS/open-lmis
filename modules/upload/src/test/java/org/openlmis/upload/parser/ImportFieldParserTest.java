@@ -138,7 +138,7 @@ public class ImportFieldParserTest {
         try {
             parser.parse(DummyImportable.class, headers);
         } catch (MissingHeaderException e) {
-            assertEquals("Missing Mandatory columns in product upload file: [mandatoryStringField, mandatoryIntField]", e.getMessage());
+            assertEquals("Missing Mandatory columns in upload file: [mandatoryStringField, mandatoryIntField]", e.getMessage());
         }
     }
 

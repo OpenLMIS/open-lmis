@@ -64,20 +64,30 @@ public class ImportFieldParser {
         List<String> missingFields = new ArrayList<String>();
         for (Field field : fields) {
             if (field.isAnnotationPresent(ImportField.class) && field.getAnnotation(ImportField.class).mandatory()) {
-                if (!headers.contains(field.getName().toLowerCase())) {
-                    missingFields.add(field.getName());
+                String fieldName = field.getAnnotation(ImportField.class).name();
+                if(fieldName.equalsIgnoreCase("")) fieldName = field.getName();
+                if (!headers.contains(fieldName.toLowerCase())) {
+                    missingFields.add(fieldName);
                 }
             }
         }
         if (!missingFields.isEmpty()) {
-            throw new MissingHeaderException("Missing Mandatory columns in product upload file: " + missingFields);
+            throw new MissingHeaderException("Missing Mandatory columns in upload file: " + missingFields);
         }
     }
 
     private Field getDeclaredFieldIgnoreCase(Class<? extends Importable> clazz, String fieldName) {
         for (Field field : clazz.getDeclaredFields()) {
+
             if (field.getName().equalsIgnoreCase(fieldName)) {
                 return field;
+            }
+
+            if (field.isAnnotationPresent(ImportField.class) ) {
+                String annotatedName = field.getAnnotation(ImportField.class).name();
+                if (annotatedName.equalsIgnoreCase(fieldName)) {
+                    return field;
+                }
             }
         }
         return null;
