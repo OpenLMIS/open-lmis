@@ -6,9 +6,7 @@ import org.mockito.Mock;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.TestingAuthenticationToken;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.web.savedrequest.DefaultSavedRequest;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
@@ -16,7 +14,6 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -54,26 +51,13 @@ public class UserAuthenticationSuccessHandlerTest {
     }
 
     @Test
-    public void shouldRedirectUserToHomeWhenNoSavedRequestPresent() throws IOException, ServletException {
+    public void shouldRedirectUserToHome() throws IOException, ServletException {
         String defaultTargetUrl = "/";
 
         Authentication authentication = new TestingAuthenticationToken(USERNAME, "password", "USER");
         userAuthenticationSuccessHandler.onAuthenticationSuccess(request, response, authentication);
         assertEquals(CONTEXT_PATH + defaultTargetUrl, response.getRedirectedUrl());
     }
-
-    @Test
-    public void shouldRedirectToRequestedUrl() throws ServletException, IOException {
-        String previousUrl = "/previousUrl";
-
-        DefaultSavedRequest previousRequest = mock(DefaultSavedRequest.class);
-        when(previousRequest.getRedirectUrl()).thenReturn(previousUrl);
-        when(session.getAttribute(SAVED_REQUEST)).thenReturn(previousRequest);
-
-        userAuthenticationSuccessHandler.onAuthenticationSuccess(request, response, new UsernamePasswordAuthenticationToken(USERNAME, "password"));
-        assertEquals(CONTEXT_PATH + previousUrl, response.getRedirectedUrl());
-    }
-
 
     @Test
     public void shouldSaveUsernameInSession() throws IOException, ServletException {

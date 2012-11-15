@@ -17,8 +17,6 @@
     <mvc:annotation-driven/>
     <aop:aspectj-autoproxy/>
 
-
-
     <import resource="classpath:/applicationContext-logistics-web.xml"/>
     <import resource="classpath:/applicationContext-admin-web.xml"/>
     <import resource="classpath:/springSecurityContext.xml"/>
@@ -28,9 +26,6 @@
 
     <bean id="multipartResolver"
             class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
-
-    <bean id="userAuthenticationSuccessHandler"
-          class="org.openlmis.web.authentication.UserAuthenticationSuccessHandler"/>
 
     <mvc:resources mapping="/public/**" location="/public/"/>
     <mvc:resources mapping="/error/**" location="/public/"/>

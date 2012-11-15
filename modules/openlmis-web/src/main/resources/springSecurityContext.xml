@@ -32,15 +32,21 @@
         <intercept-url pattern="/admin/**" access="hasRole('ADMIN')" requires-channel="http"/>
         <intercept-url pattern="/logistics/**" access="hasRole('USER')" requires-channel="http"/>
         <intercept-url pattern="/public/**" access="permitAll" requires-channel="http"/>
+        <intercept-url pattern="/user*" access="permitAll" requires-channel="http"/>
         <intercept-url pattern="/error/user.info" access="hasRole('GOD')" requires-channel="http"/>
         <intercept-url pattern="/**" access="isAuthenticated()" requires-channel="http"/>
 
-        <form-login authentication-success-handler-ref="userAuthenticationSuccessHandler"
-                    login-processing-url="/j_spring_security_check" login-page="/public/pages/login.html"
-                    authentication-failure-url="/public/pages/login.html?error=true"/>
-        <logout logout-success-url="/public/pages/login.html" invalidate-session="true" delete-cookies="true"/>
+        <form-login authentication-success-handler-ref="authenticationSuccessHandler"
+                    login-processing-url="/j_spring_security_check"
+                    login-page="/public/pages/login.html"
+                    authentication-failure-url="/user.json?error=true"/>
+        <logout logout-success-url="/" invalidate-session="true" delete-cookies="true"/>
         <access-denied-handler ref="openLmisAccessDeniedHandler"/>
     </http>
+
+    <beans:bean id="authenticationSuccessHandler" class="org.openlmis.web.authentication.UserAuthenticationSuccessHandler">
+        <beans:property name="defaultTargetUrl" value="/user.json"/>
+    </beans:bean>
 
     <authentication-manager>
         <authentication-provider ref="userAuthenticationProvider"/>

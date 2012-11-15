@@ -4,43 +4,38 @@
     <meta content="utf-8" http-equiv="encoding">
     <title>OpenLMIS</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-    <script type="text/javascript">
-    </script>
+    <script type="text/javascript" src="/public/js/lib/angular/angular.js"></script>
+    <script type="text/javascript" src="/public/js/lib/angular/angular-resource.js"></script>
+    <script type="text/javascript" src="/public/js/app.js"></script>
+    <script type="text/javascript" src="/public/js/services/services.js"></script>
+    <script type="text/javascript" src="/public/js/controller/login-controller.js"></script>
+
 </head>
-<body style="margin-right: 4; background-color: #f5f5f5;">
-<div id="errorSection">
-    <!--<#if  RequestParameters.error??>-->
-    <!--<#if "${RequestParameters.error}"=="true">-->
-    <!--The username or password you entered is incorrect . Please try again.-->
-    <!--</#if>-->
-    <!--</#if>-->
-</div>
-<div>
-    <form style="margin-top: 10; background-color: #ffffff;" method=POST
-          action="../../j_spring_security_check">
+<body style="margin-right: 4; background-color: #f5f5f5;" ng-app="openlmis">
+<div ng-controller="LoginController">
+    <div style="margin-top: 10; background-color: #ffffff;">
         <label style="margin-bottom: 4; font-weight: bold;">Sign In</label>
         <br/>
         <br/>
+        <div ng-model="error">{{ error }}</div>
         <fieldset>
             <label style="padding-top: 10" for="username">Username</label>
-
             <div>
-                <input name="j_username" type="text" id="username" style="width: 15%"/>
+                <input ng-model="username" type="text" id="username" style="width: 15%"/>
             </div>
             <br/>
             <label for="password" style="margin-right: 5%">Password</label>
 
             <div>
-                <input name="j_password" type="password" id="password" style="width: 15%"/>
+                <input ng-model="password" type="password" id="password" style="width: 15%"/>
             </div>
-            <a href="#">Forgot password?</a>
-            <br/>
 
             <div>
-                <input type="submit" value="Sign in"/>
+                <button ng-click="doLogin('/')">Sign in</button>
             </div>
+            <a href="#">Forgot password?</a>
         </fieldset>
-    </form>
+    </div>
 </div>
 </body>
 </html>
