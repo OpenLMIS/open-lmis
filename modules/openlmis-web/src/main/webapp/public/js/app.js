@@ -15,10 +15,10 @@ angular.module('openlmis', ['openlmis.services'], function ($routeProvider, $loc
                     window.location = "/public/pages/access-denied.html";
                     break;
                 case 401:
-                    alert("login model");
+                    console.log("login model");
                     break;
                 default:
-                    alert(response.status);
+                    console.log(response.status);
                     break;
             }
             return $q.reject(response);
