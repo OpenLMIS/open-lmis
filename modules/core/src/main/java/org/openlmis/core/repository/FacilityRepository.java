@@ -4,6 +4,8 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.RequisitionHeader;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -11,8 +13,12 @@ import java.util.List;
 @Component
 public class FacilityRepository {
 
-    @Autowired
     private FacilityMapper facilityMapper;
+
+    @Autowired
+    public FacilityRepository(FacilityMapper facilityMapper) {
+        this.facilityMapper = facilityMapper;
+    }
 
     public List<Facility> getAll() {
         return facilityMapper.getAll();
@@ -22,4 +28,15 @@ public class FacilityRepository {
         return facilityMapper.getRequisitionHeaderData(facilityCode);
     }
 
+    public void save(Facility facility) {
+        try{
+            facilityMapper.insert(facility);
+        }catch (DuplicateKeyException duplicateKeyException){
+            throw new RuntimeException("Duplicate Facility Code found");
+        }catch (DataIntegrityViolationException integrityViolationException){
+            if (integrityViolationException.getMessage().toLowerCase().contains("foreign key")) {
+                throw new RuntimeException("Missing Reference data");
+            }
+        }
+    }
 }

@@ -12,8 +12,12 @@ import java.util.List;
 @Service
 public class FacilityService {
 
-    @Autowired
     private FacilityRepository facilityRepository;
+
+    @Autowired
+    public FacilityService(FacilityRepository facilityRepository) {
+        this.facilityRepository = facilityRepository;
+    }
 
     public List<Facility> getAll() {
         return facilityRepository.getAll();
@@ -23,4 +27,8 @@ public class FacilityService {
         return facilityRepository.getHeader(code);
     }
 
+
+    public void save(Facility facility) {
+        facilityRepository.save(facility);
+    }
 }

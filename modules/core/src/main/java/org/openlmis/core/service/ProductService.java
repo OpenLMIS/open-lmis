@@ -17,6 +17,6 @@ public class ProductService {
     }
 
     public void save(Product product) {
-        repository.insertProducts(product);
+        repository.insert(product);
     }
 }

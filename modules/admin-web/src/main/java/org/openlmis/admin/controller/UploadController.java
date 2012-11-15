@@ -40,20 +40,20 @@ public class UploadController {
         try {
             Class modelClass = modelMap.get(model);
             if (modelClass == null) {
-                return returnErrorModelAndView(modelAndView, "Incorrect file");
+                return errorModelAndView(modelAndView, "Incorrect file");
             }
             if (!multipartFile.getOriginalFilename().contains(".csv")) {
-                return returnErrorModelAndView(modelAndView, "Incorrect file format , Please upload " + model + " data as a \".csv\" file");
+                return errorModelAndView(modelAndView, "Incorrect file format , Please upload " + model + " data as a \".csv\" file");
             }
             int recordsUploaded = csvParser.process(multipartFile.getInputStream(), modelClass, uploadHandlerFactory.getHandler(model));
             modelAndView.addObject("message", "File upload success. Total " + model +" uploaded in the system : " + recordsUploaded);
         } catch (Exception e) {
-            modelAndView.addObject("error", e.getMessage());
+            return errorModelAndView(modelAndView, e.getMessage());
         }
         return modelAndView;
     }
 
-    private ModelAndView returnErrorModelAndView(ModelAndView modelAndView, String errorMessage) {
+    private ModelAndView errorModelAndView(ModelAndView modelAndView, String errorMessage) {
         modelAndView.addObject("error", errorMessage);
         return modelAndView;
     }

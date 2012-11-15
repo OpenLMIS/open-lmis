@@ -17,7 +17,7 @@ public class ProductServiceTest {
 
         new ProductService(productRepository).save(product);
 
-        verify(productRepository).insertProducts(product);
+        verify(productRepository).insert(product);
 
     }
 }

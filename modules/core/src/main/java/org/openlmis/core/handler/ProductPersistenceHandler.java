@@ -6,13 +6,13 @@ import org.openlmis.upload.Importable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component("productImportHandler")
-public class ProductImportHandler extends AbstractModelPersistenceHandler {
+@Component("productPersistenceHandler")
+public class ProductPersistenceHandler extends AbstractModelPersistenceHandler {
 
     private ProductService service;
 
     @Autowired
-    public ProductImportHandler(ProductService service) {
+    public ProductPersistenceHandler(ProductService service) {
         this.service = service;
     }
 

@@ -2,7 +2,6 @@ package org.openlmis.core.repository.mapper;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.domain.Facility;
@@ -14,7 +13,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.FacilityBuilder.*;
 
@@ -88,6 +89,11 @@ public class FacilityMapperIT {
 
         assertEquals("city", requisitionHeader.getZone().getLabel());
         assertEquals("state", requisitionHeader.getParentZone().getLabel());
+    }
+
+    @Test
+    public void shouldInsertFacility() throws Exception {
+        assertThat(facilityMapper.insert(make(a(defaultFacility))), is(1));
     }
 
     @After

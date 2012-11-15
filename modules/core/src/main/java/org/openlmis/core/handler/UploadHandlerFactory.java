@@ -1,31 +1,24 @@
 package org.openlmis.core.handler;
 
+import lombok.NoArgsConstructor;
 import org.openlmis.upload.RecordHandler;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
+import javax.annotation.Resource;
 import java.util.Map;
 
 @Component
+@NoArgsConstructor
 public class UploadHandlerFactory {
-    private ProductImportHandler productImportHandler;
-    private Map<String, RecordHandler> map;
 
-    private static final String PRODUCT = "product";
+    @Resource
+    private Map<String, RecordHandler> persistenceHandlerMap;
 
-    @Autowired
-    public UploadHandlerFactory(ProductImportHandler productImportHandler){
-        this.productImportHandler = productImportHandler;
-        map = new HashMap();
-        initializeMappers();
-    }
-
-    private void initializeMappers() {
-        map.put(PRODUCT, productImportHandler);
+    public UploadHandlerFactory(Map persistenceHandlerMap){
+        this.persistenceHandlerMap = persistenceHandlerMap;
     }
 
     public RecordHandler getHandler(String model) {
-        return map.get(model);
+        return persistenceHandlerMap.get(model);
     }
 }

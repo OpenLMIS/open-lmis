@@ -3,6 +3,8 @@ package org.openlmis.core.repository;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.repository.mapper.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,7 +17,15 @@ public class ProductRepository {
         this.mapper = mapper;
     }
 
-    public void insertProducts(Product product) {
-        mapper.insert(product);
+    public void insert(Product product) {
+        try {
+            mapper.insert(product);
+        } catch (DuplicateKeyException duplicateKeyException) {
+            throw new RuntimeException("Duplicate Product Code found");
+        } catch (DataIntegrityViolationException foreignKeyException) {
+            if (foreignKeyException.getMessage().toLowerCase().contains("foreign key")) {
+                throw new RuntimeException("Missing Reference data");
+            }
+        }
     }
 }

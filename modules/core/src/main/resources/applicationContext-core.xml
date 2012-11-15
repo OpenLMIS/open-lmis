@@ -27,4 +27,12 @@
         <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
     </bean>
 
+    <bean id="persistenceHandlerMap" class="java.util.HashMap">
+        <constructor-arg>
+            <map>
+                <entry key="product" value-ref="productPersistenceHandler"/>
+                <entry key="facility" value-ref="facilityPersistenceHandler"/>
+            </map>
+        </constructor-arg>
+    </bean>
 </beans>

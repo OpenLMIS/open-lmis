@@ -34,6 +34,10 @@
                 <entry key="product">
                     <value type="java.lang.Class">org.openlmis.core.domain.Product</value>
                 </entry>
+                <entry key="facility">
+                    <value type="java.lang.Class">org.openlmis.core.domain.Facility</value>
+                </entry>
+
             </map>
         </constructor-arg>
     </bean>
