@@ -39,9 +39,11 @@ public class TestWebDriver {
         if (identifier.equalsIgnoreCase("Admin"))
             assertTrue(url.contains(BASE_URL + "public/pages/admin/index.html"));
         else
-            assertTrue(url.contains(BASE_URL + "public/pages/logistics/index.html"));
+            assertTrue(url.contains(BASE_URL + "public/pages/logistics/rnr/create.html#/new-rnr"));
 
     }
+
+
 
     public void verifyUrlInvalid() {
         String url = getCurrentUrl();

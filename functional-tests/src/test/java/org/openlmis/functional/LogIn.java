@@ -27,12 +27,20 @@ public class LogIn extends TestCaseHelper {
 
     }
 
+//    @DataProvider(name = "Data-Provider-Function-Positive")
+//    public Object[][] parameterIntTestProviderPositive() {
+//        return new Object[][]{
+//                {"Admin", new String[]{"Admin123", "Admin123"}},
+//                {"User", new String[]{"User123", "User123"}},
+//                {"User", new String[]{"USER123", "User123"}},
+//                {"Admin", new String[]{"ADMIN123", "Admin123"}}
+//        };
+//    }
+
     @DataProvider(name = "Data-Provider-Function-Positive")
     public Object[][] parameterIntTestProviderPositive() {
         return new Object[][]{
                 {"Admin", new String[]{"Admin123", "Admin123"}},
-                {"User", new String[]{"User123", "User123"}},
-                {"User", new String[]{"USER123", "User123"}},
                 {"Admin", new String[]{"ADMIN123", "Admin123"}}
         };
     }
