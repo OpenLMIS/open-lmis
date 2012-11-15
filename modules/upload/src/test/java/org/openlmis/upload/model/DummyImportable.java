@@ -5,6 +5,8 @@ import lombok.Setter;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
+import java.util.Date;
+
 public class DummyImportable implements Importable {
 
     @Getter
@@ -26,6 +28,11 @@ public class DummyImportable implements Importable {
     @Setter
     @ImportField(type = "int")
     int optionalIntField;
+
+    @Getter
+    @Setter
+    @ImportField(type = "Date")
+    Date optionalDateField;
 
     @Getter
     @Setter

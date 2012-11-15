@@ -2,7 +2,6 @@ package org.openlmis.core.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
@@ -92,7 +91,7 @@ public class Product implements Importable {
     @ImportField(type = "boolean")
     private boolean approvedByWHO;
 
-    @ImportField(type = "Double")
+    @ImportField(type = "double")
     private Double contraceptiveCYP;
 
     @ImportField(mandatory = true, type = "int")
@@ -101,28 +100,28 @@ public class Product implements Importable {
     @ImportField(type = "int")
     private int alternatePackSize;
 
-    @ImportField(type = "Double")
+    @ImportField(type = "double")
     private Double packLength;
 
-    @ImportField(type = "Double")
+    @ImportField(type = "double")
     private Double packWidth;
 
-    @ImportField(type = "Double")
+    @ImportField(type = "double")
     private Double packHeight;
 
-    @ImportField(type = "Double")
+    @ImportField(type = "double")
     private Double packWeight;
 
     @ImportField(type = "int")
     private int packsPerCarton;
 
-    @ImportField(type = "Double")
+    @ImportField(type = "double")
     private Double cartonLength;
 
-    @ImportField(type = "Double")
+    @ImportField(type = "double")
     private Double cartonWidth;
 
-    @ImportField(type = "Double")
+    @ImportField(type = "double")
     private Double cartonHeight;
 
     @ImportField(type = "int")

@@ -80,9 +80,9 @@ public class FacilityMapperIT {
 
         assertEquals("TRZ001", requisitionHeader.getFacilityCode());
         assertEquals("Ngorongoro Hospital", requisitionHeader.getFacilityName());
-        assertEquals("Clinic", requisitionHeader.getFacilityType());
-        assertEquals(1.0, requisitionHeader.getEmergencyOrderPoint(), 0.0);
-        assertEquals(2, requisitionHeader.getMaximumStockLevel());
+        assertEquals("Lvl3 Hospital", requisitionHeader.getFacilityType());
+        assertEquals(.5, requisitionHeader.getEmergencyOrderPoint(), 0.0);
+        assertEquals(5, requisitionHeader.getMaximumStockLevel());
 
         assertEquals("Dodoma", requisitionHeader.getZone().getValue());
         assertEquals("Arusha", requisitionHeader.getParentZone().getValue());

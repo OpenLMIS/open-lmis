@@ -17,11 +17,14 @@ public class ImportFieldParser {
 
     private Map<String, StringCellProcessor> typeMappings = new HashMap<String, StringCellProcessor>();
 
+    private String format = "dd/MM/yyyy";
+
     public ImportFieldParser() {
         typeMappings.put("int", new ParseInt());
         typeMappings.put("long", new ParseLong());
         typeMappings.put("boolean", new ParseBool());
-        typeMappings.put("Double", new ParseDouble());
+        typeMappings.put("double", new ParseDouble());
+        typeMappings.put("Date", new ParseDate(format));
         typeMappings.put("String", new Trim());
     }
 

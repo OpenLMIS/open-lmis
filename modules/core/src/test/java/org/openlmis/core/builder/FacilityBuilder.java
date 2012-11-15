@@ -17,10 +17,12 @@ public class FacilityBuilder {
     public static final Instantiator<Facility> defaultFacility = new Instantiator<Facility>() {
         @Override
         public Facility instantiate(PropertyLookup<Facility> lookup) {
-            return new Facility(lookup.valueOf(code, "F10010"),
-                    lookup.valueOf(name, "Apollo Hospital"),
-                    lookup.valueOf(type, 1),
-                    lookup.valueOf(geographicZone, 2));
+            Facility facility  = new Facility();
+            facility.setCode(lookup.valueOf(code, "F10010"));
+            facility.setType(lookup.valueOf(type, 1));
+            facility.setName(lookup.valueOf(name, "Apollo Hospital"));
+            facility.setGeographicZone(lookup.valueOf(geographicZone, 2));
+            return facility;
         }
     };
 }

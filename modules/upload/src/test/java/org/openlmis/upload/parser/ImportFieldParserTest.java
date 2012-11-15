@@ -7,6 +7,7 @@ import org.openlmis.upload.model.DummyImportable;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.supercsv.cellprocessor.Optional;
+import org.supercsv.cellprocessor.ParseDate;
 import org.supercsv.cellprocessor.ParseInt;
 import org.supercsv.cellprocessor.Trim;
 import org.supercsv.cellprocessor.constraint.NotNull;
@@ -37,13 +38,14 @@ public class ImportFieldParserTest {
         headers.add("mandatoryStringField");
         headers.add("mandatoryIntField");
         headers.add("optionalStringField");
-
+        headers.add("optionalDateField");
         List<CellProcessor> cellProcessors = parser.parse(DummyImportable.class, headers);
 
-        assertEquals(3, cellProcessors.size());
+        assertEquals(4, cellProcessors.size());
         assertTrue(cellProcessors.get(0) instanceof NotNull);
         assertTrue(cellProcessors.get(1) instanceof NotNull);
         assertTrue(cellProcessors.get(2) instanceof Optional);
+        assertTrue(cellProcessors.get(3) instanceof Optional);
     }
 
     @Test
@@ -103,6 +105,10 @@ public class ImportFieldParserTest {
         headers.add("mandatoryIntField");
         headers.add("optionalStringField");
         headers.add("optionalIntField");
+        headers.add("optionalDateField");
+
+        ParseDate dateMock = mock(ParseDate.class);
+        whenNew(ParseDate.class).withArguments("dd/MM/yyyy").thenReturn(dateMock);
 
         Optional optionalMock = mock(Optional.class);
         ParseInt parseIntMock = mock(ParseInt.class);
@@ -111,13 +117,15 @@ public class ImportFieldParserTest {
         whenNew(ParseInt.class).withNoArguments().thenReturn(parseIntMock);
         whenNew(Optional.class).withNoArguments().thenReturn(optionalMock);
         whenNew(Optional.class).withArguments(parseIntMock).thenReturn(optionalMock);
+        whenNew(Optional.class).withArguments(dateMock).thenReturn(optionalMock);
         whenNew(Trim.class).withNoArguments().thenReturn(trimMockForOptionalString);
         parser = new ImportFieldParser();
         List<CellProcessor> cellProcessors = parser.parse(DummyImportable.class, headers);
 
-        assertEquals(4, cellProcessors.size());
+        assertEquals(5, cellProcessors.size());
         verifyNew(Optional.class).withArguments(parseIntMock);
         verifyNew(Optional.class).withArguments(trimMockForOptionalString);
+        verifyNew(Optional.class).withArguments(dateMock);
 
     }
 

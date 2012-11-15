@@ -1,8 +1,12 @@
 CREATE TABLE facility_type (
   id SERIAL PRIMARY KEY,
-  facility_type_name VARCHAR(30) NOT NULL,
+  name VARCHAR(30) NOT NULL,
+  description varchar(250) ,
+  level_id INTEGER,
+  is_active BOOLEAN,
   nominal_max_month INTEGER NOT NULL,
-  nominal_eop NUMERIC(4,2) NOT NULL
+  nominal_eop NUMERIC(4,2) NOT NULL,
+  modified_date TIMESTAMP DEFAULT  CURRENT_TIMESTAMP
 );
 
 

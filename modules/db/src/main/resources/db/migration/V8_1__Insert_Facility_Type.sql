@@ -1,4 +1,12 @@
 INSERT INTO facility_type
-(facility_type_name, nominal_max_month, nominal_eop) VALUES
-('hospital', 5, 0.5),
-('Clinic', 2, 1.0);
+(name,is_active,nominal_max_month, nominal_eop) VALUES
+('Warehouse',TRUE, 5, 0.5),
+('Lvl3 Hospital',TRUE, 5, 0.5),
+('Lvl2 Hospital',TRUE, 5, 0.5),
+('State Office',TRUE, 5, 0.5),
+('District Office',TRUE, 5, 0.5),
+('Health Post',TRUE, 5, 0.5),
+('Health Center',TRUE, 5, 0.5)
+
+
+
