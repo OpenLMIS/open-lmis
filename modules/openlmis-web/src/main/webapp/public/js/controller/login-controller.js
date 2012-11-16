@@ -15,7 +15,7 @@ function LoginController($scope, $http, $rootScope) {
                         location.reload();
                     }
                 } else if(data.error == "true") {
-                    $scope.error = "Invalid credentials!";
+                    $scope.error = "The username or password you entered is incorrect. Please try again.";
                 }
             }).
             error(function (data) {

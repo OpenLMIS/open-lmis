@@ -1,21 +1,18 @@
 <div ng-controller="LoginController">
-    <div style="margin-top: 10; background-color: #ffffff;">
-        <label style="margin-bottom: 4; font-weight: bold;">Sign In</label>
-        <br/>
-        <br/>
+    <div>
+        <h2>Sign In</h2>
+
         <div ng-model="error">{{ error }}</div>
         <fieldset>
-            <label style="padding-top: 10" for="username">Username</label>
+            <label for="username">Username</label>
             <div>
-                <input ng-model="username" type="text" id="username" style="width: 15%"/>
+                <input ng-model="username" type="text" id="username"/>
             </div>
             <br/>
-            <label for="password" style="margin-right: 5%">Password</label>
-
+            <label for="password">Password</label>
             <div>
-                <input ng-model="password" type="password" id="password" style="width: 15%"/>
+                <input ng-model="password" type="password" id="password"/>
             </div>
-
             <div>
                 <button ng-click="doLogin('/')">Sign in</button>
             </div>
