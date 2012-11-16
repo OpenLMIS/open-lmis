@@ -1,3 +1,10 @@
+/**
+ * AngularUI - The companion suite for AngularJS
+ * @version v0.3.0 - 2012-10-30
+ * @link http://angular-ui.github.com
+ * @license MIT License, http://www.opensource.org/licenses/MIT
+ */
+
 // READ: http://docs-next.angularjs.org/guide/ie
 // element tags are statically defined in order to accommodate lazy-loading whereby directives are also unknown
 
