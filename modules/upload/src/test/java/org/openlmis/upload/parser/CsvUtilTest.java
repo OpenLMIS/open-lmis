@@ -10,9 +10,8 @@ import org.supercsv.cellprocessor.Optional;
 import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 
-import java.util.LinkedHashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
@@ -29,7 +28,7 @@ public class CsvUtilTest {
     @Test
     public void shouldReturnCorrectProcessorForHeaders() throws MissingHeaderException {
 
-        Set<String> headers = new LinkedHashSet<String>();
+        ArrayList<String> headers = new ArrayList<String>();
         headers.add("mandatoryStringField");
         headers.add("mandatoryIntField");
         headers.add("optionalStringField");
@@ -45,7 +44,7 @@ public class CsvUtilTest {
 
     @Test
     public void shouldValidateHeadersWithCaseMismatch() throws MissingHeaderException {
-        Set<String> headers = new LinkedHashSet<String>();
+        List<String> headers = new ArrayList<String>();
         headers.add("MANDAtoryStringField");
         headers.add("mandatoryIntFIELD");
 
@@ -54,7 +53,7 @@ public class CsvUtilTest {
 
     @Test
     public void testReturnProcessorForMismatchCase() throws MissingHeaderException {
-        Set<String> headers = new LinkedHashSet<String>();
+        List<String> headers = new ArrayList<String>();
         headers.add("MANDAtoryStringField");
         headers.add("mandatoryIntFIELD");
 
@@ -67,7 +66,7 @@ public class CsvUtilTest {
 
     @Test
     public void shouldIgnoreNonAnnotatedHeaders() throws MissingHeaderException {
-        Set<String> headers = new LinkedHashSet<String>();
+        List<String> headers = new ArrayList<String>();
         headers.add("mandatoryStringField");
         headers.add("mandatoryIntField");
         headers.add("nonAnnotatedField");
@@ -84,7 +83,7 @@ public class CsvUtilTest {
 
     @Test
     public void shouldReturnProcessorsForMandatoryFields() throws Exception {
-        Set<String> headers = new LinkedHashSet<String>();
+        List<String> headers = new ArrayList<String>();
         headers.add("mandatoryStringField");
         headers.add("mandatoryIntField");
 
@@ -102,7 +101,7 @@ public class CsvUtilTest {
 
     @Test
     public void shouldBeAbleToPickupOptionalFieldTypes() throws Exception {
-        Set<String> headers = new LinkedHashSet<String>();
+        List<String> headers = new ArrayList<String>();
         headers.add("optionalStringField");
         headers.add("optionalIntField");
         headers.add("optionalDateField");
@@ -124,7 +123,7 @@ public class CsvUtilTest {
 
     @Test
     public void shouldThrowExceptionIfHeaderDoesNotHaveCorrespondingFieldInModel(){
-        Set<String> headers = new LinkedHashSet<String>() {{
+        List<String> headers = new ArrayList<String>() {{
             add("optionalStringFieldsff");
             add("mandatoryStringField");
             add("mandatoryIntField");
@@ -139,7 +138,7 @@ public class CsvUtilTest {
 
     @Test
     public void shouldThrowExceptionForMissingMandatoryHeaders() {
-        Set<String> headers = new LinkedHashSet<String>() {{
+        List<String> headers = new ArrayList<String>() {{
             add("optionalStringField");
         }};
 

@@ -24,15 +24,7 @@ public class CsvUtil {
         typeMappings.put("String", new Trim());
     }
 
-    private static List<String> lowerCase(List<String> headers) {
-        List<String> lowerCaseHeaders = new ArrayList<String>();
-        for (String header : headers) {
-            lowerCaseHeaders.add(header.toLowerCase());
-        }
-        return lowerCaseHeaders;
-    }
-
-    protected static List<CellProcessor> getProcessors(Class<? extends Importable> clazz, Set<String> headers) {
+    protected static List<CellProcessor> getProcessors(Class<? extends Importable> clazz, List<String> headers) {
         List<CellProcessor> processors = new ArrayList<CellProcessor>();
         for (String header : headers) {
             Field field = getDeclaredFieldIgnoreCase(clazz, header);
@@ -46,15 +38,23 @@ public class CsvUtil {
         return processors;
     }
 
+    protected static void validateHeaders(Class<? extends Importable> clazz, List<String> headers) throws MissingHeaderException {
+        Field[] fields = clazz.getDeclaredFields();
+        List<String> lowerCaseHeaders = lowerCase(headers);
+        validateInvalidHeaders(lowerCaseHeaders, fields);
+        validateMandatoryFields(lowerCaseHeaders, fields);
+    }
+
     private static CellProcessor chainTypeProcessor(ImportField importField, CellProcessor mappedProcessor) {
         return importField.mandatory() ? new NotNull(mappedProcessor) : new Optional(mappedProcessor);
     }
 
-    protected static void validateHeaders(Class<? extends Importable> clazz, Set<String> headers) throws MissingHeaderException {
-        Field[] fields = clazz.getDeclaredFields();
-        //TODO
-        validateInvalidHeaders(new ArrayList<String>(headers), fields);
-        validateMandatoryFields(new ArrayList<String>(headers), fields);
+    private static List<String> lowerCase(List<String> headers) {
+        List<String> lowerCaseHeaders = new ArrayList<String>();
+        for (String header : headers) {
+            lowerCaseHeaders.add(header.toLowerCase());
+        }
+        return lowerCaseHeaders;
     }
 
     private static void validateMandatoryFields(List<String> headers, Field[] fields) {
@@ -67,7 +67,7 @@ public class CsvUtil {
 
     private static void validateInvalidHeaders(List<String> headers, Field[] fields) {
         List<String> fieldNames = getAllFieldNames(fields);
-        List invalidHeaders = ListUtils.subtract(lowerCase(headers), lowerCase(fieldNames));
+        List invalidHeaders = ListUtils.subtract(headers, lowerCase(fieldNames));
         if (!invalidHeaders.isEmpty()) {
             throw new MissingHeaderException("Invalid Headers in upload file: " + invalidHeaders);
         }
@@ -86,7 +86,6 @@ public class CsvUtil {
     }
 
     private static List<String> findMissingFields(List<String> headers, Field[] fields) {
-        headers = lowerCase(headers);
         List<String> missingFields = new ArrayList<String>();
         for (Field field : fields) {
             if (field.isAnnotationPresent(ImportField.class) && field.getAnnotation(ImportField.class).mandatory()) {
