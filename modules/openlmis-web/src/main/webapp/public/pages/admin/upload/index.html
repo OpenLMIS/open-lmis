@@ -4,16 +4,20 @@
     <title>Products</title>
     <meta charset="utf-8">
     <title>Open-LMIS</title>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-    <script src="../../../js/lib/angular/angular.js"></script>
-    <script src="../../../js/lib/angular/angular-resource.js"></script>
-    <script src="../../../js/header.js"></script>
-    <script src="../../../js/services/services.js"></script>
-    <script src="../../../js/app.js"></script>
-    <script src="../../../js/module/upload.js"></script>
-    <script src="../../../js/controller/upload-controller.js"></script>
-    <style type="text/css" ></style>
-    <link type="text/css" rel="stylesheet" charset="UTF-8" href="../../../css/app.css">
+    <script src="/public/js/lib/jquery-1.8.2.min.js"></script>
+    <script src="/public/js/lib/angular/angular.js"></script>
+    <script src="/public/js/lib/angular/angular-resource.js"></script>
+    <script src="/public/js/lib/bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/public/js/lib/bootstrap/css/bootstrap.min.css">
+    <script src="/public/js/lib/angular-ui/build/angular-ui.min.js"></script>
+    <link rel="stylesheet" href="/public/js/lib/angular-ui/build/angular-ui.min.css">
+
+    <script src="/public/js/header.js"></script>
+    <script src="/public/js/services/services.js"></script>
+    <script src="/public/js/app.js"></script>
+    <script src="/public/js/module/upload.js"></script>
+    <script src="/public/js/controller/upload-controller.js"></script>
+    <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/app.css">
 
 </head>
 <body onunload="">
@@ -29,8 +33,9 @@
                     <option value="facility">Facility</option>
                 </select> <br/>
                 <label style="padding-top: 10" for="csvFile">File: </label>
-                <input name="csvFile" id="csvFile" type="file" ng-model="$scope.file" value="Choose CSV File to upload"/> </br>
-                <input  ng-click="uploadFile()" value="Upload" type="button">
+                <input name="csvFile" id="csvFile" type="file" ng-model="$scope.file"
+                       value="Choose CSV File to upload"/> </br>
+                <input ng-click="uploadFile()" value="Upload" type="button">
             </fieldset>
         </div>
     </form>

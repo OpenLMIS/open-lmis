@@ -1,6 +1,5 @@
 function HeaderController($scope, User) {
-//    User.get({}, function (data) {
-//            $scope.user = data.user;
-//        }, {});
-    $scope.user="somebody";
+    User.get({}, function (data) {
+        $scope.user = data.user;
+    }, {});
 }
