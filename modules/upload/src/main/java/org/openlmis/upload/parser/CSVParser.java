@@ -6,7 +6,6 @@ import org.apache.commons.collections.Predicate;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.RecordHandler;
 import org.openlmis.upload.annotation.ImportField;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.supercsv.cellprocessor.ift.CellProcessor;
@@ -28,13 +27,6 @@ import java.util.*;
 @NoArgsConstructor
 public class CSVParser {
 
-    private ImportFieldParser importFieldParser;
-
-    @Autowired
-    public CSVParser(ImportFieldParser importFieldParser) {
-        this.importFieldParser = importFieldParser;
-    }
-
     @Transactional
     public int process(InputStream inputStream, Class<? extends Importable> modelClass, RecordHandler recordHandler)
             throws SuperCsvException, IOException {
@@ -45,14 +37,14 @@ public class CSVParser {
         CsvBeanReader csvBeanReader = new CsvBeanReader(bufferedReader, csvPreference);
 
         String[] headers = parseHeaders(csvBeanReader);
-
         Set<String> headersSet = new LinkedHashSet<String>(Arrays.asList(headers));
 
-        List<CellProcessor> cellProcessors = importFieldParser.parse(modelClass, headersSet);
+        CsvUtil.validateHeaders(modelClass, headersSet);
+        List<CellProcessor> cellProcessors = CsvUtil.getProcessors(modelClass, headersSet);
 
-        CellProcessor[] processors = cellProcessors.toArray(new CellProcessor[1]);
+        CellProcessor[] processors = cellProcessors.toArray(new CellProcessor[cellProcessors.size()]);
         String[] nameMappings = getNameMappings(modelClass, headers);
-        next(modelClass, recordHandler, csvBeanReader, nameMappings, processors);
+        parse(modelClass, recordHandler, csvBeanReader, nameMappings, processors);
         return csvBeanReader.getRowNumber() - 1 ;
     }
 
@@ -67,7 +59,7 @@ public class CSVParser {
                 nameMappings.add(header);
             }
         }
-        return nameMappings.toArray(new String[1]);
+        return nameMappings.toArray(new String[nameMappings.size()]);
     }
 
     private Field findFieldWithAnnotatedName(final String annotatedName, Class<? extends Importable> clazz) {
@@ -88,15 +80,14 @@ public class CSVParser {
 
     private String[] parseHeaders(CsvBeanReader csvBeanReader) throws IOException {
         String[] headers = csvBeanReader.getHeader(true);
-
         for (int i = 0; i < headers.length; i++) {
             headers[i] = headers[i].trim();
         }
         return headers;
     }
 
-    private void next(Class<? extends Importable> modelClass, RecordHandler recordHandler,
-                      CsvBeanReader csvBeanReader, String[] headers, CellProcessor[] processors) throws SuperCsvException, IOException {
+    private void parse(Class<? extends Importable> modelClass, RecordHandler recordHandler,
+                       CsvBeanReader csvBeanReader, String[] headers, CellProcessor[] processors) throws SuperCsvException, IOException {
         Importable importedModel;
         try {
             while ((importedModel = csvBeanReader.read(modelClass, headers, processors)) != null) {

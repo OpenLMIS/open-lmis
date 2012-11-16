@@ -20,7 +20,7 @@ public class CSVParserTest {
 
     private CSVParser csvParser;
     private DummyRecordHandler recordHandler;
-    private ImportFieldParser importFieldParser;
+    private CsvUtil csvUtil;
 
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
@@ -28,8 +28,7 @@ public class CSVParserTest {
     @Before
     public void setUp() throws Exception {
 
-        importFieldParser = new ImportFieldParser();
-        csvParser = new CSVParser(importFieldParser);
+        csvParser = new CSVParser();
         recordHandler = new DummyRecordHandler();
     }
 

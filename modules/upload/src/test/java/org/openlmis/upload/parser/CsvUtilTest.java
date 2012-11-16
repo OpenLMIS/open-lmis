@@ -7,9 +7,6 @@ import org.openlmis.upload.model.DummyImportable;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.supercsv.cellprocessor.Optional;
-import org.supercsv.cellprocessor.ParseDate;
-import org.supercsv.cellprocessor.ParseInt;
-import org.supercsv.cellprocessor.Trim;
 import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 
@@ -19,17 +16,15 @@ import java.util.Set;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
-import static org.powermock.api.mockito.PowerMockito.verifyNew;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ImportFieldParser.class})
-public class ImportFieldParserTest {
-
-    ImportFieldParser parser = new ImportFieldParser();
+@PrepareForTest({CsvUtil.class})
+public class CsvUtilTest {
 
     @Test
     public void shouldReturnCorrectProcessorForHeaders() throws MissingHeaderException {
@@ -39,7 +34,7 @@ public class ImportFieldParserTest {
         headers.add("mandatoryIntField");
         headers.add("optionalStringField");
         headers.add("optionalDateField");
-        List<CellProcessor> cellProcessors = parser.parse(DummyImportable.class, headers);
+        List<CellProcessor> cellProcessors = CsvUtil.getProcessors(DummyImportable.class, headers);
 
         assertEquals(4, cellProcessors.size());
         assertTrue(cellProcessors.get(0) instanceof NotNull);
@@ -49,12 +44,21 @@ public class ImportFieldParserTest {
     }
 
     @Test
-    public void testReturnProcessorForMismatchCaseAsWell() throws MissingHeaderException {
+    public void shouldValidateHeadersWithCaseMismatch() throws MissingHeaderException {
         Set<String> headers = new LinkedHashSet<String>();
         headers.add("MANDAtoryStringField");
         headers.add("mandatoryIntFIELD");
 
-        List<CellProcessor> cellProcessors = parser.parse(DummyImportable.class, headers);
+        CsvUtil.validateHeaders(DummyImportable.class, headers);
+    }
+
+    @Test
+    public void testReturnProcessorForMismatchCase() throws MissingHeaderException {
+        Set<String> headers = new LinkedHashSet<String>();
+        headers.add("MANDAtoryStringField");
+        headers.add("mandatoryIntFIELD");
+
+        List<CellProcessor> cellProcessors = CsvUtil.getProcessors(DummyImportable.class, headers);
 
         assertEquals(2, cellProcessors.size());
         assertTrue(cellProcessors.get(0) instanceof NotNull);
@@ -69,7 +73,7 @@ public class ImportFieldParserTest {
         headers.add("nonAnnotatedField");
         headers.add("random");
 
-        List<CellProcessor> cellProcessors = parser.parse(DummyImportable.class, headers);
+        List<CellProcessor> cellProcessors = CsvUtil.getProcessors(DummyImportable.class, headers);
 
         assertEquals(4, cellProcessors.size());
         assertTrue(cellProcessors.get(0) instanceof NotNull);
@@ -79,54 +83,58 @@ public class ImportFieldParserTest {
     }
 
     @Test
-    public void shouldBeAbleToPickupMandatoryFieldTypes() throws Exception {
+    public void shouldReturnProcessorsForMandatoryFields() throws Exception {
         Set<String> headers = new LinkedHashSet<String>();
         headers.add("mandatoryStringField");
         headers.add("mandatoryIntField");
 
-        ParseInt parseIntMock = mock(ParseInt.class);
-        Trim trimMockForMandatoryString = mock(Trim.class, "trim mock for string");
+        NotNull notNullForString = mock(NotNull.class);
+        NotNull notNullForInt = mock(NotNull.class);
+        whenNew(NotNull.class).withArguments(CsvUtil.typeMappings.get("String")).thenReturn(notNullForString);
+        whenNew(NotNull.class).withArguments(CsvUtil.typeMappings.get("int")).thenReturn(notNullForInt);
 
-        whenNew(ParseInt.class).withNoArguments().thenReturn(parseIntMock);
-        whenNew(NotNull.class).withArguments(any()).thenReturn(mock(NotNull.class));
-        whenNew(Trim.class).withNoArguments().thenReturn(trimMockForMandatoryString);
-
-        List<CellProcessor> cellProcessors = new ImportFieldParser().parse(DummyImportable.class, headers);
+        List<CellProcessor> cellProcessors = CsvUtil.getProcessors(DummyImportable.class, headers);
 
         assertEquals(2, cellProcessors.size());
-        verifyNew(NotNull.class).withArguments(parseIntMock);
-        verifyNew(NotNull.class).withArguments(trimMockForMandatoryString);
+        assertThat((NotNull) cellProcessors.get(0), is(notNullForString));
+        assertThat((NotNull) cellProcessors.get(1), is(notNullForInt));
     }
 
     @Test
     public void shouldBeAbleToPickupOptionalFieldTypes() throws Exception {
         Set<String> headers = new LinkedHashSet<String>();
-        headers.add("mandatoryStringField");
-        headers.add("mandatoryIntField");
         headers.add("optionalStringField");
         headers.add("optionalIntField");
         headers.add("optionalDateField");
 
-        ParseDate dateMock = mock(ParseDate.class);
-        whenNew(ParseDate.class).withArguments("dd/MM/yyyy").thenReturn(dateMock);
+        Optional optionalForString = mock(Optional.class);
+        Optional optionalForInt = mock(Optional.class);
+        Optional optionalForDate = mock(Optional.class);
+        whenNew(Optional.class).withArguments(CsvUtil.typeMappings.get("String")).thenReturn(optionalForString);
+        whenNew(Optional.class).withArguments(CsvUtil.typeMappings.get("int")).thenReturn(optionalForInt);
+        whenNew(Optional.class).withArguments(CsvUtil.typeMappings.get("Date")).thenReturn(optionalForDate);
 
-        Optional optionalMock = mock(Optional.class);
-        ParseInt parseIntMock = mock(ParseInt.class);
-        Trim trimMockForOptionalString = mock(Trim.class);
+        List<CellProcessor> cellProcessors = CsvUtil.getProcessors(DummyImportable.class, headers);
 
-        whenNew(ParseInt.class).withNoArguments().thenReturn(parseIntMock);
-        whenNew(Optional.class).withNoArguments().thenReturn(optionalMock);
-        whenNew(Optional.class).withArguments(parseIntMock).thenReturn(optionalMock);
-        whenNew(Optional.class).withArguments(dateMock).thenReturn(optionalMock);
-        whenNew(Trim.class).withNoArguments().thenReturn(trimMockForOptionalString);
-        parser = new ImportFieldParser();
-        List<CellProcessor> cellProcessors = parser.parse(DummyImportable.class, headers);
+        assertEquals(3, cellProcessors.size());
+        assertThat((Optional) cellProcessors.get(0), is(optionalForString));
+        assertThat((Optional) cellProcessors.get(1), is(optionalForInt));
+        assertThat((Optional) cellProcessors.get(2), is(optionalForDate));
+    }
 
-        assertEquals(5, cellProcessors.size());
-        verifyNew(Optional.class).withArguments(parseIntMock);
-        verifyNew(Optional.class).withArguments(trimMockForOptionalString);
-        verifyNew(Optional.class).withArguments(dateMock);
+    @Test
+    public void shouldThrowExceptionIfHeaderDoesNotHaveCorrespondingFieldInModel(){
+        Set<String> headers = new LinkedHashSet<String>() {{
+            add("optionalStringFieldsff");
+            add("mandatoryStringField");
+            add("mandatoryIntField");
+        }};
 
+        try {
+            CsvUtil.validateHeaders(DummyImportable.class, headers);
+        } catch (MissingHeaderException e) {
+            assertEquals("Invalid Headers in upload file: [optionalstringfieldsff]", e.getMessage());
+        }
     }
 
     @Test
@@ -136,7 +144,7 @@ public class ImportFieldParserTest {
         }};
 
         try {
-            parser.parse(DummyImportable.class, headers);
+            CsvUtil.validateHeaders(DummyImportable.class, headers);
         } catch (MissingHeaderException e) {
             assertEquals("Missing Mandatory columns in upload file: [mandatoryStringField, mandatoryIntField]", e.getMessage());
         }
