@@ -31,14 +31,27 @@ public class UserControllerTest {
     }
 
     @Test
-    public void shouldReturnUserInfoWhenLoggedIn() {
+    public void shouldReturnUserInfoWhenLoggedInAsLogisticsUser() {
         String username = "Foo";
         session.setAttribute(UserAuthenticationSuccessHandler.USER, username);
+        session.setAttribute(UserAuthenticationSuccessHandler.IS_ADMIN, false);
         when(httpServletRequest.getSession()).thenReturn(session);
         HashMap<String, String> params = userController.user(httpServletRequest, null);
-        assertThat(params.size(), is(2));
         assertThat(params.get("name"), is("Foo"));
         assertThat(params.get("authenticated"), is("true"));
+        assertThat(params.get("isAdmin"), is("false"));
+    }
+
+    @Test
+    public void shouldReturnUserInfoWhenLoggedInAsAdmin() {
+        String username = "Foo";
+        session.setAttribute(UserAuthenticationSuccessHandler.USER, username);
+        session.setAttribute(UserAuthenticationSuccessHandler.IS_ADMIN, true);
+        when(httpServletRequest.getSession()).thenReturn(session);
+        HashMap<String, String> params = userController.user(httpServletRequest, null);
+        assertThat(params.get("name"), is("Foo"));
+        assertThat(params.get("authenticated"), is("true"));
+        assertThat(params.get("isAdmin"), is("true"));
     }
 
     @Test
@@ -46,9 +59,9 @@ public class UserControllerTest {
         session.setAttribute(UserAuthenticationSuccessHandler.USER, null);
         when(httpServletRequest.getSession()).thenReturn(session);
         HashMap<String, String> params = userController.user(httpServletRequest, "true");
-        assertThat(params.size(), is(2));
         assertThat(params.get("error"), is("true"));
         assertThat(params.get("authenticated"), is("false"));
+        assertThat(params.get("isAdmin"), is("false"));
     }
 
 }

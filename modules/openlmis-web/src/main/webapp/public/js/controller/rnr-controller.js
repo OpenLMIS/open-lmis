@@ -11,7 +11,7 @@ function RnrController($scope, Facility, FacilitySupportedPrograms) {
     }
 }
 
-function HeaderController($scope, RequisitionHeader, $location) {
+function RnrHeaderController($scope, RequisitionHeader, $location) {
     RequisitionHeader.get({code:$scope.facility}, function (data) {
         $scope.header = data.requisitionHeader;
     }, function () {

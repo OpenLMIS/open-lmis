@@ -3,7 +3,6 @@ angular.module('rnr', ['openlmis']).
     config(['$routeProvider', function ($routeProvider) {
     $routeProvider.
         when('/new-rnr', {controller:RnrController, templateUrl:'select-facility.html'}).
-        when('/rnr-header', {controller:HeaderController, templateUrl:'rnr-header.html'}).
-        when('/access-denied', {templateUrl:'access-denied.html'}).
+        when('/rnr-header', {controller:RnrHeaderController, templateUrl:'rnr-header.html'}).
         otherwise({redirectTo:'/new-rnr'});
 }]);
