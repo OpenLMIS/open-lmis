@@ -1,4 +1,4 @@
-function RnrController($scope, Facility, FacilitySupportedPrograms) {
+function RnrController($scope, Facility, FacilitySupportedPrograms, $location) {
     Facility.get({}, function (data) {
             $scope.facilities = data.facilityList;
         }, {}
@@ -6,8 +6,26 @@ function RnrController($scope, Facility, FacilitySupportedPrograms) {
 
     $scope.loadPrograms = function ($scope) {
         FacilitySupportedPrograms.get({facility:$scope.facility}, function (data) {
+            $scope.program = null;
             $scope.programsForFacility = data.programList;
         }, {});
+    };
+
+    var validate = function ($scope) {
+        if ($scope.program) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    $scope.getRnrHeader = function ($scope) {
+        if (validate($scope)) {
+            $location.path('rnr-header');
+        }
+        else {
+            alert('You need to select Facility and program for facility to proceed');
+        }
     }
 }
 
