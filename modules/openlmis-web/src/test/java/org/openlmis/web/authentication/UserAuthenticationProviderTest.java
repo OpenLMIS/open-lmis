@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openlmis.authentication.service.UserAuthenticationService;
 import org.openlmis.authentication.UserToken;
-import org.openlmis.authentication.domain.User;
+import org.openlmis.authentication.web.UserAuthenticationProvider;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,7 +13,6 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

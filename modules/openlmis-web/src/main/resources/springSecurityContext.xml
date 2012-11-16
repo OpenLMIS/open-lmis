@@ -21,11 +21,11 @@
     <context:component-scan base-package="org.openlmis.web"/>
 
     <beans:bean id="restAuthenticationEntryPoint"
-                class="org.openlmis.web.authentication.RestAuthenticationEntryPoint">
+                class="org.openlmis.authentication.web.RestAuthenticationEntryPoint">
         <beans:property name="loginFormUrl" value="/public/pages/login.html"/>
     </beans:bean>
 
-    <beans:bean id="openLmisAccessDeniedHandler" class="org.openlmis.web.authentication.OpenLmisAccessDeniedHandler"/>
+    <beans:bean id="openLmisAccessDeniedHandler" class="org.openlmis.authentication.web.OpenLmisAccessDeniedHandler"/>
 
     <http use-expressions="true" entry-point-ref="restAuthenticationEntryPoint">
         <intercept-url pattern="/favicon.*" access="permitAll"/>
@@ -43,7 +43,7 @@
         <access-denied-handler ref="openLmisAccessDeniedHandler"/>
     </http>
 
-    <beans:bean id="authenticationSuccessHandler" class="org.openlmis.web.authentication.UserAuthenticationSuccessHandler">
+    <beans:bean id="authenticationSuccessHandler" class="org.openlmis.authentication.web.UserAuthenticationSuccessHandler">
         <beans:property name="defaultTargetUrl" value="/user.json"/>
     </beans:bean>
 

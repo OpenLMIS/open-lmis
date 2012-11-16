@@ -1,4 +1,4 @@
-package org.openlmis.web.authentication;
+package org.openlmis.authentication.web;
 
 import org.openlmis.authentication.service.UserAuthenticationService;
 import org.openlmis.authentication.UserToken;

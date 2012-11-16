@@ -3,6 +3,7 @@ package org.openlmis.web.authentication;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.TestingAuthenticationToken;
@@ -17,8 +18,8 @@ import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.openlmis.web.authentication.UserAuthenticationSuccessHandler.IS_ADMIN;
-import static org.openlmis.web.authentication.UserAuthenticationSuccessHandler.USER;
+import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.IS_ADMIN;
+import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 
 public class UserAuthenticationSuccessHandlerTest {
 

@@ -1,6 +1,6 @@
 package org.openlmis.web.controller;
 
-import org.openlmis.web.authentication.UserAuthenticationSuccessHandler;
+import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 
 import javax.servlet.http.HttpServletRequest;
 

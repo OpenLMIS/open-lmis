@@ -3,7 +3,7 @@ package org.openlmis.web.controller;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.openlmis.web.authentication.UserAuthenticationSuccessHandler;
+import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

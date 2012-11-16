@@ -1,4 +1,4 @@
-package org.openlmis.web.authentication;
+package org.openlmis.authentication.web;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;

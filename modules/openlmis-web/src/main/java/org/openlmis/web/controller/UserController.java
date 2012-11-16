@@ -1,6 +1,6 @@
 package org.openlmis.web.controller;
 
-import org.openlmis.web.authentication.UserAuthenticationSuccessHandler;
+import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

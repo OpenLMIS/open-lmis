@@ -1,4 +1,4 @@
-package org.openlmis.web.authentication;
+package org.openlmis.authentication.web;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;

@@ -1,4 +1,4 @@
-package org.openlmis.web.authentication;
+package org.openlmis.authentication.web;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
