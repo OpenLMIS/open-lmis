@@ -1,6 +1,6 @@
 INSERT INTO facility_operator
-(text, display_order) VALUES
-('MoH',1),
-('NGO',2),
-('FBO',3),
-('Private',4);
+(id, text, display_order) VALUES
+(1,'MoH',1),
+(2,'NGO',2),
+(3,'FBO',3),
+(4,'Private',4);

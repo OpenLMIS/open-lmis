@@ -1,5 +1,5 @@
 CREATE TABLE facility_type (
-  id SERIAL PRIMARY KEY,
+  id INTEGER PRIMARY KEY,
   name VARCHAR(30) NOT NULL UNIQUE,
   description varchar(250) ,
   level_id INTEGER,

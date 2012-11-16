@@ -1,5 +1,5 @@
 INSERT INTO geographic_zone
-(name, level, parent) values
-('Arusha', 1,null),
-('Dodoma', 2, 1),
-('Ngorongoro', 3, 2);
+(id, name, level, parent) values
+(1,'Arusha', 1,null),
+(2,'Dodoma', 2, 1),
+(3,'Ngorongoro', 3, 2);

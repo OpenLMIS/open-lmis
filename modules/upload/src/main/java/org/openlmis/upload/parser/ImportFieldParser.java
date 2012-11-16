@@ -64,10 +64,10 @@ public class ImportFieldParser {
         List<String> missingFields = new ArrayList<String>();
         for (Field field : fields) {
             if (field.isAnnotationPresent(ImportField.class) && field.getAnnotation(ImportField.class).mandatory()) {
-                String fieldName = field.getAnnotation(ImportField.class).name();
-                if(fieldName.equalsIgnoreCase("")) fieldName = field.getName();
-                if (!headers.contains(fieldName.toLowerCase())) {
-                    missingFields.add(fieldName);
+                String annotatedName = field.getAnnotation(ImportField.class).name();
+                if(annotatedName.equalsIgnoreCase("")) annotatedName = field.getName();
+                if (!headers.contains(annotatedName.toLowerCase())) {
+                    missingFields.add(annotatedName);
                 }
             }
         }

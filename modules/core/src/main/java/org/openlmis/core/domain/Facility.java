@@ -13,63 +13,63 @@ import java.util.Date;
 @NoArgsConstructor
 public class Facility implements Importable {
 
-    @ImportField(mandatory = true)
+    @ImportField(mandatory = true, name="FacilityCode")
     private String code;
-    @ImportField(mandatory = true)
+    @ImportField(mandatory = true, name="FacilityName")
     private String name;
-    @ImportField
+    @ImportField(name = "FacilityDescription")
     private String description;
     @ImportField
     private String GLN;
-    @ImportField
+    @ImportField(name = "FacilityMainPhone")
     private String mainPhone;
-    @ImportField
+    @ImportField(name = "FacilityFax")
     private String fax;
-    @ImportField
+    @ImportField(name = "FacilityAddress1")
     private String address1;
-    @ImportField
+    @ImportField(name = "FacilityAddress2")
     private String address2;
-    @ImportField(mandatory = true, type = "long")
+    @ImportField(mandatory = true, type = "long", name="GeographicZoneID")
     private long geographicZone;
-    @ImportField(mandatory = true, type = "long")
+    @ImportField(mandatory = true, type = "long", name = "FacilityTypeID")
     private long type;
-    @ImportField(type = "long")
+    @ImportField(type = "long" )
     private long catchmentPopulation;
-    @ImportField(type = "double")
+    @ImportField(type = "double", name = "FacilityLAT")
     private double latitude;
-    @ImportField(type = "double")
+    @ImportField(type = "double", name = "FacilityLONG")
     private double longitude;
-    @ImportField(type = "double")
+    @ImportField(type = "double", name = "FacilityAltitude")
     private double altitude;
-    @ImportField(type = "long")
-    private long operatedBy;
+    @ImportField(type = "long", name = "FacilityOperatedBy")
+    private Long operatedBy;
     @ImportField (type = "double")
     private double coldStorageGrossCapacity;
     @ImportField (type = "double")
     private double coldStorageNetCapacity;
-    @ImportField(type = "boolean")
+    @ImportField(type = "boolean", name = "FacilitySuppliesOthers")
     private boolean suppliesOthers;
-    @ImportField(type = "boolean", mandatory = true, name="is_sdp")
+    @ImportField(type = "boolean", mandatory = true, name="FacilityIsSDP")
     private boolean sdp;
-    @ImportField(type = "boolean")
-    private boolean hasElectricity;
-    @ImportField(type = "boolean")
+    @ImportField(type = "boolean", name="FacilityIsOnline")
     private boolean online;
-    @ImportField(type = "boolean")
-    private boolean hasElectronicSCC;
-    @ImportField(type = "boolean")
-    private boolean hasElectronicDAR;
-    @ImportField(type = "boolean", mandatory = true)
+    @ImportField(type = "boolean", name="FacilityHasElectricity")
+    private boolean hasElectricity;
+    @ImportField(type = "boolean", name="FacilityHasElectronicSCC")
+    private boolean hasElectronicScc;
+    @ImportField(type = "boolean", name="FacilityHasElectronicDAR")
+    private boolean hasElectronicDar;
+    @ImportField(type = "boolean", mandatory = true, name="IsActive")
     private boolean active;
-    @ImportField(type = "Date", mandatory = true)
+    @ImportField(type = "Date", mandatory = true, name="FacilityGoLiveDate")
     private Date goLiveDate;
-    @ImportField(type = "Date")
+    @ImportField(type = "Date", name = "FacilityGoDownDate")
     private Date goDownDate;
-    @ImportField(type = "boolean")
-    private boolean satelliteFacility;
-    @ImportField
+    @ImportField(type = "boolean", name = "IsSatelliteFacility")
+    private boolean satellite;
+    @ImportField(name = "SatelliteParentCode")
     private String satelliteParentCode;
-    @ImportField
+    @ImportField(name = "FacilityComments")
     private String comment;
     @ImportField(type = "boolean")
     private boolean doNotDisplay;
