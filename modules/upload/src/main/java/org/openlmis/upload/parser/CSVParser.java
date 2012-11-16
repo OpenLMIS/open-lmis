@@ -45,6 +45,7 @@ public class CSVParser {
         CsvBeanReader csvBeanReader = new CsvBeanReader(bufferedReader, csvPreference);
 
         String[] headers = parseHeaders(csvBeanReader);
+
         Set<String> headersSet = new LinkedHashSet<String>(Arrays.asList(headers));
 
         List<CellProcessor> cellProcessors = importFieldParser.parse(modelClass, headersSet);
