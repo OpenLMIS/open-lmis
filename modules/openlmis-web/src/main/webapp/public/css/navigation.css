@@ -1,0 +1,8 @@
+.navigation {
+  background-color: #f4f4f4;
+  border-right: 1px solid #d3d1d1;
+  width: 300px;
+  min-height: 400px;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.4);
+  float: left;
+}

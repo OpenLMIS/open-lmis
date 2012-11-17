@@ -1,0 +1,15 @@
+.header {
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
+  position: relative;
+}
+
+.header-top {
+  height: 96px;
+  background-color: #f4f4f4;
+  border-bottom: 1px solid white;
+}
+.header-bottom-border {
+  height: 3px;
+  background-color: #c3c4c5;
+  border-top: 1px solid #9b9b9c;
+}
