@@ -11,15 +11,18 @@
   <div class="header">
     <div class="header-top">
       <div class="logo">
-        <img src="logo.png"/>
-
-        <h1>Logistics Management and Information Systems</h1>
+        <img src="/public/images/logo.png" />
+        <h1>Logistics Management and<br />Information Systems</h1>
       </div>
       <div class="user-info">
-        <a href="javascript:void(0);" id="username">John Smith</a>
-        <ul class="user-menu">
-          <li><a href="javascript:void(0);">Profile</a></li>
-          <li><a href="javascript:void(0);">Logout</a></li>
+        <ul>
+          <li>
+            <a href="javascript:void(0);" id="username">John Smith</a>
+            <ul class="user-menu">
+              <li><a href="javascript:void(0);">Profile</a></li>
+              <li><a href="javascript:void(0);">Logout</a></li>
+            </ul>
+          </li>
         </ul>
       </div>
     </div>
@@ -27,7 +30,27 @@
   </div>
 
   <div class="navigation">
-
+    <ul>
+      <li class="menu-home"><a href="javascript: void(0)">Home</a></li>
+      <li class="menu-req is-selected"><a href="javascript: void(0)">Requisitions</a>
+        <ul>
+          <li><a href="javascript: void(0);">Submenu item 1</a></li>
+          <li class="is-selected"><a href="javascript: void(0);">Submenu item 2</a></li>
+          <li><a href="javascript: void(0);">Submenu item 3</a></li>
+          <li><a href="javascript: void(0);">Submenu item 4</a></li>
+        </ul>
+      </li>
+      <li class="menu-orders has-children"><a href="javascript: void(0)">Orders</a>
+        <ul>
+          <li><a href="javascript: void(0);">Submenu item 1</a></li>
+          <li><a href="javascript: void(0);">Submenu item 2</a></li>
+          <li><a href="javascript: void(0);">Submenu item 3</a></li>
+          <li><a href="javascript: void(0);">Submenu item 4</a></li>
+        </ul>
+      </li>
+      <li class="menu-facilities"><a href="javascript: void(0)">Facilities</a></li>
+      <li class="menu-ration"><a href="javascript: void(0)">Ration</a></li>
+    </ul>
   </div>
 
   <div class="content">

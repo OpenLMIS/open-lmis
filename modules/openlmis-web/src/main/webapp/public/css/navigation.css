@@ -1,8 +1,100 @@
 .navigation {
   background-color: #f4f4f4;
   border-right: 1px solid #d3d1d1;
-  width: 300px;
+  width: 250px;
   min-height: 400px;
   box-shadow: 2px 0 4px rgba(0, 0, 0, 0.4);
   float: left;
+}
+.navigation ul {
+  list-style: none;
+  margin: 0;
+}
+.navigation ul li {
+  border-bottom: 1px solid #cbcbcb;
+  border-top: 1px solid transparent;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 1);
+  font-size: 1.2em;
+  position: relative;
+}
+.navigation ul li a {
+  display: block;
+  padding: 11px 20px;
+  text-decoration: none;
+  color: #666;
+  text-shadow: 0 1px 0 #FFF;
+}
+.navigation ul > li.is-selected > a,
+.navigation ul > li.is-selected:hover > a {
+  background: #2e8cdb; /* Old browsers */
+  background: -moz-linear-gradient(top, #5ab3ff 0%, #2e8cdb 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5ab3ff), color-stop(100%,#2e8cdb)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #5ab3ff 0%,#2e8cdb 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, #5ab3ff 0%,#2e8cdb 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, #5ab3ff 0%,#2e8cdb 100%); /* IE10+ */
+  background: linear-gradient(to bottom, #5ab3ff 0%,#2e8cdb 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5ab3ff', endColorstr='#2e8cdb',GradientType=0 ); /* IE6-9 */
+  border-bottom-color: #2775b7;
+  border-top-color: #5198D5;
+}
+.navigation ul li.is-selected a {
+  color: #FFF;
+  text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.4);
+}
+.navigation ul li.has-children {
+  background: url(../images/menu-nested.png) no-repeat 95% center;
+}
+.navigation ul li:hover {
+  background-color: #FFF;
+}
+.navigation ul li:hover ul {
+  display: block;
+}
+.navigation ul ul {
+  position: absolute;
+  width: 175px;
+  background: #FFF;
+  padding: 2px 11px;
+  font-size: 0.7em;
+  left: 249px;
+  top: -1px;
+  border: 1px solid #c2c2c2;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.3);
+  display: none;
+}
+.navigation ul ul li {
+  border-top: 1px solid #EEE;
+  border-bottom: 0;
+}
+.navigation ul ul li:first-child {
+  border-top: 0;
+}
+.navigation ul ul li:hover a {
+  background: #e1e1e1;
+}
+.navigation ul ul li a {
+  padding: 6px 12px;
+  margin: 4px 0;
+  text-shadow: none;
+}
+.navigation ul li.is-selected ul {
+  position: static;
+  display: block;
+  width: auto;
+  padding: 0;
+  box-shadow: none;
+}
+.navigation ul li.is-selected ul li a {
+  color: #666;
+  text-shadow: none;
+  padding: 6px 12px 6px 24px;
+  border-radius: 0;
+}
+.navigation ul ul li.is-selected a {
+  background: transparent;
+  font-weight: bold;
+}
+.navigation ul li.is-selected ul li:hover a,
+.navigation ul ul li.is-selected:hover a {
+  background: #EEE;
 }
