@@ -1,6 +1,7 @@
 .content {
   min-height: 200px;
   background: white;
+  padding: 10px 20px 20px;
   margin: 12px 0 0 265px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
 }
