@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ProgramRnrColumnMapper {
 
-    @Select("SELECT * FROM Program_RnR_Template WHERE program_id=#{programId} AND column_id=#{columnId}")
+    @Select("SELECT * FROM program_rnr_template WHERE program_id=#{programId} AND column_id=#{columnId}")
     @Results(value = {
             @Result(property = "id", column = "id"),
             @Result(property = "columnId", column = "column_id"),
@@ -17,11 +17,11 @@ public interface ProgramRnrColumnMapper {
     })
     ProgramRnrColumn get(@Param("programId") Integer programId, @Param("columnId") Integer columnId);
 
-    @Insert("INSERT INTO Program_RnR_Template(program_id, column_id, is_used)" +
-            " values (#{programId}, #{rnrColumn.id}, #{rnrColumn.used})")
+    @Insert("INSERT INTO program_rnr_template(program_id, column_id, is_used, label)" +
+            " values (#{programId}, #{rnrColumn.id}, #{rnrColumn.used}, #{rnrColumn.label})")
     int insert(@Param("programId") int programId, @Param("rnrColumn") RnrColumn rnrColumn);
 
-    @Delete("DELETE FROM Program_RnR_Template")
+    @Delete("DELETE FROM program_rnr_template")
     void deleteAll();
 
     @Select("select 0<(select count(id) as count from program_rnr_template where program_id=#{programId})")
@@ -42,7 +42,7 @@ public interface ProgramRnrColumnMapper {
             @Result(property = "mandatory", column = "mandatory")
     })
     @Select("select m.id as id, m.column_name as name, m.description description," +
-            " m.column_position as position, m.column_label as label, m.default_value as defaultValue," +
+            " m.column_position as position, p.label as label, m.default_value as defaultValue," +
             " m.data_source as source, m.formula as formula, m.column_indicator as indicator," +
             " p.is_used as used, m.is_visible as visible, m.is_mandatory as mandatory" +
             " from program_rnr_template p INNER JOIN master_rnr_template m" +

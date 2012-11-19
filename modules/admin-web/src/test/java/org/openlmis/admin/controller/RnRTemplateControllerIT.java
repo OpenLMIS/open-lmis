@@ -1,7 +1,9 @@
 package org.openlmis.admin.controller;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openlmis.rnr.dao.ProgramRnrColumnMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -26,6 +28,14 @@ public class RnRTemplateControllerIT {
 
     @Autowired
     RnRTemplateController controller;
+
+    @Autowired
+    ProgramRnrColumnMapper programRnrColumnMapper;
+
+    @Before
+    public void setUp() throws Exception {
+        programRnrColumnMapper.deleteAll();
+    }
 
     @Test
     public void shouldGetAllMasterRnRColumns() throws Exception {

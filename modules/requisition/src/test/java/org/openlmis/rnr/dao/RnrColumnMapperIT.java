@@ -12,7 +12,7 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext-requisition.xml")
-public class RnRColumnMapperIT {
+public class RnrColumnMapperIT {
 
     @Autowired
     RnrColumnMapper rnrColumnMapper;
