@@ -10,9 +10,9 @@
             <li>
                 <span style="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                 <span style="">Name | </span>
-                <span style="">Description | </span>
-                <span style="">Position | </span>
-                <span style="">Label | </span>
+              <span style="">Label | </span>
+              <span style="">Description | </span>
+              <span style="">Position | </span>
                 <span style="">Source | </span>
                 <span style="">Formula | </span>
                 <span style="">Show in form </span>
@@ -26,7 +26,7 @@
                         <span ng-switch-when="true">
                             <input type="checkbox" ng:model="rnrColumn.used" checked disabled/>
                         </span>
-                        <span ng-switch-when="false">
+                        <span ng-switch-default>
                             <span ng-switch on="rnrColumn.used">
                                 <span ng-switch-when="true">
                                     <input type="checkbox" ng:model="rnrColumn.used" checked/>
@@ -38,9 +38,9 @@
                         </span>
                 </span>
                 <input type="hidden" ng:model="rnrColumn.id" value="{{ rnrColumn.id }}"/>
-                <span>{{ rnrColumn.name }} | <span/>
-                <span><input type="text" ng:model="rnnColumn.label" value ='{{ rnrColumn.label }}' />|<span/>
-                <span>{{ rnrColumn.position }}| <span/>
+                <span>{{ rnrColumn.name }} | </span>
+                <span><input ng:model="rnrColumn.label" value="{{ rnrColumn.label }}"/>|</span>
+                <span>{{ rnrColumn.position }}| </span>
                 <span>{{ rnrColumn.description }} | <span/>
                 <span>{{ rnrColumn.defaultValue }} | <span/>
                 <span>{{ rnrColumn.dataSource }} | <span/>

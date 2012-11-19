@@ -50,7 +50,7 @@ public interface ProgramRnrColumnMapper {
             " where p.program_id=#{programId}")
     List<RnrColumn> getAllRnrColumnsForProgram(int programId);
 
-    @Update("UPDATE Program_RnR_Template set is_used = #{rnrColumn.used} " +
-            "where program_id = #{programId} and column_id = #{rnrColumn.id}")
+    @Update("UPDATE Program_RnR_Template SET is_used = #{rnrColumn.used}, label = #{rnrColumn.label}" +
+            "WHERE program_id = #{programId} AND column_id = #{rnrColumn.id}")
     void update(@Param("programId") int programId, @Param("rnrColumn") RnrColumn rnrColumn);
 }
