@@ -27,4 +27,9 @@ public class ProgramSupported implements Importable {
         this.isActive = isActive;
     }
 
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
+
 }

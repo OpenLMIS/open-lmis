@@ -86,8 +86,8 @@ public class FacilityRepositoryTest {
     public void shouldRaiseDuplicateProgramSupportedError() throws Exception {
         ProgramSupported programSupported = new ProgramSupported();
         expectedEx.expect(RuntimeException.class);
-        expectedEx.expectMessage("Facility is already supporting the program");
-        doThrow(new DuplicateKeyException("facility to program already mapped")).when(programSupportedMapper).addSupportedProgram(programSupported);
+        expectedEx.expectMessage("Facility has already been mapped to the program");
+        doThrow(new DuplicateKeyException("Facility has already been mapped to the program")).when(programSupportedMapper).addSupportedProgram(programSupported);
         repository.addSupportedProgram(programSupported);
     }
 
