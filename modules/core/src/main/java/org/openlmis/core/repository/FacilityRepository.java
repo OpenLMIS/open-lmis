@@ -47,7 +47,18 @@ public class FacilityRepository {
     }
 
     public void addSupportedProgram(ProgramSupported programSupported) {
-        programSupportedMapper.addSupportedProgram(programSupported);
+        try {
+            programSupported.setModifiedDate(DateTime.now().toDate());
+            programSupportedMapper.addSupportedProgram(programSupported);
+        } catch (DuplicateKeyException duplicateKeyException) {
+            throw new RuntimeException("Facility has already been mapped to the program");
+        } catch (DataIntegrityViolationException integrityViolationException) {
+            if (integrityViolationException.getMessage().toLowerCase().contains("facility_code")) {
+                throw new RuntimeException("Invalid facility code specified");
+            } else {
+                throw new RuntimeException("Invalid program code specified");
+            }
+        }
     }
 
 }

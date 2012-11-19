@@ -37,7 +37,9 @@
                 <entry key="facility">
                     <value type="java.lang.Class">org.openlmis.core.domain.Facility</value>
                 </entry>
-
+                <entry key="programSupported">
+                    <value type="java.lang.Class">org.openlmis.core.domain.ProgramSupported</value>
+                </entry>
             </map>
         </constructor-arg>
     </bean>

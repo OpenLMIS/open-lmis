@@ -8,7 +8,9 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.repository.mapper.FacilityMapper;
+import org.openlmis.core.repository.mapper.ProgramSupportedMapper;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -27,7 +29,10 @@ public class FacilityRepositoryTest {
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
     @Mock
-    private FacilityMapper mockedMapper;
+    private FacilityMapper mockedFacilityMapper;
+
+    @Mock
+    private ProgramSupportedMapper programSupportedMapper;
 
     private FacilityRepository repository;
     private DateTime now;
@@ -38,7 +43,7 @@ public class FacilityRepositoryTest {
         now = new DateTime(2012, 10, 10, 8, 0);
         when(DateTime.now()).thenReturn(now);
 
-        repository = new FacilityRepository(mockedMapper, null);
+        repository = new FacilityRepository(mockedFacilityMapper, programSupportedMapper);
     }
 
     @Test
@@ -47,15 +52,24 @@ public class FacilityRepositoryTest {
 
         repository.save(facility);
         assertThat(facility.getModifiedDate(), is(now.toDate()));
-        verify(mockedMapper).insert(facility);
+        verify(mockedFacilityMapper).insert(facility);
     }
 
     @Test
-    public void shouldRaiseDuplicateProductCodeError() throws Exception {
+    public void shouldAddSupportedProgram() throws Exception {
+        ProgramSupported programSupported = new ProgramSupported();
+
+        repository.addSupportedProgram(programSupported);
+        assertThat(programSupported.getModifiedDate(), is(now.toDate()));
+        verify(programSupportedMapper).addSupportedProgram(programSupported);
+    }
+
+    @Test
+    public void shouldRaiseDuplicateFacilityCodeError() throws Exception {
         Facility facility = new Facility();
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("Duplicate Facility Code found");
-        doThrow(new DuplicateKeyException("")).when(mockedMapper).insert(facility);
+        doThrow(new DuplicateKeyException("")).when(mockedFacilityMapper).insert(facility);
         repository.save(facility);
     }
 
@@ -64,7 +78,18 @@ public class FacilityRepositoryTest {
         Facility facility = new Facility();
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("Missing Reference data");
-        doThrow(new DataIntegrityViolationException("foreign key")).when(mockedMapper).insert(facility);
+        doThrow(new DataIntegrityViolationException("foreign key")).when(mockedFacilityMapper).insert(facility);
         repository.save(facility);
     }
+
+    @Test
+    public void shouldRaiseDuplicateProgramSupportedError() throws Exception {
+        ProgramSupported programSupported = new ProgramSupported();
+        expectedEx.expect(RuntimeException.class);
+        expectedEx.expectMessage("Facility is already supporting the program");
+        doThrow(new DuplicateKeyException("facility to program already mapped")).when(programSupportedMapper).addSupportedProgram(programSupported);
+        repository.addSupportedProgram(programSupported);
+    }
+
+
 }
