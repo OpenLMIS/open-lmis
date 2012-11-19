@@ -5,12 +5,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.handler.UploadHandlerFactory;
 import org.openlmis.upload.RecordHandler;
 import org.openlmis.upload.parser.CSVParser;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +34,7 @@ import static org.mockito.Mockito.*;
 public class UploadControllerTest {
 
 
+    public static final String USER = "user";
     @Mock
     CSVParser csvParser;
 
@@ -42,17 +46,23 @@ public class UploadControllerTest {
     @Mock
     private UploadHandlerFactory uploadHandlerFactory;
 
+    private MockHttpServletRequest request;
+
     @Before
     public void setUp() throws Exception {
         Map<String, Class> modelMap = new HashMap<String, Class>(){{put("product", Product.class);}};
         when(uploadHandlerFactory.getHandler(any(String.class))).thenReturn(handler);
+        request = new MockHttpServletRequest();
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute(UserAuthenticationSuccessHandler.USER, USER);
+        request.setSession(session);
         controller = new UploadController(csvParser , uploadHandlerFactory, modelMap);//, new HashMap<String, RecordHandler>());
     }
 
     @Test
     public void shouldThrowErrorIfUnsupportedModelIsSupplied() throws Exception {
         MultipartFile multipartFile = mock(MultipartFile.class);
-        ModelAndView modelAndView = controller.upload(multipartFile, "Random");
+        ModelAndView modelAndView = controller.upload(multipartFile, "Random", request);
 
         assertEquals("Incorrect file", modelAndView.getModelMap().get("error"));
     }
@@ -62,7 +72,7 @@ public class UploadControllerTest {
         byte[] content = null;
         MockMultipartFile multiPartMock = new MockMultipartFile("csvFile", "mock.csv", null, content);
 
-        ModelAndView modelAndView = controller.upload(multiPartMock, "product");
+        ModelAndView modelAndView = controller.upload(multiPartMock, "product", request);
 
         assertEquals("File upload success. Total product uploaded in the system : 0", modelAndView.getModelMap().get("message"));
     }
@@ -113,10 +123,10 @@ public class UploadControllerTest {
         });
         InputStream mockedStream = mock(InputStream.class);
         when(mockMultiPart.getInputStream()).thenReturn(mockedStream);
-        ModelAndView modelAndView = controller.upload(mockMultiPart, "product");
+        ModelAndView modelAndView = controller.upload(mockMultiPart, "product", request);
 
         assertEquals("File upload success. Total product uploaded in the system : 0", modelAndView.getModelMap().get("message"));
-        verify(csvParser).process(mockedStream, Product.class, handler);
+        verify(csvParser).process(mockedStream, Product.class, handler, USER);
     }
 
     @Test
@@ -124,8 +134,9 @@ public class UploadControllerTest {
         byte[] content = null;
         MockMultipartFile multiPartMock = new MockMultipartFile("mock.doc", content);
 
-        ModelAndView modelAndView = controller.upload(multiPartMock, "product");
+        ModelAndView modelAndView = controller.upload(multiPartMock, "product", request);
         assertEquals("Incorrect file format , Please upload product data as a \".csv\" file", modelAndView.getModelMap().get("error"));
         // verify(csvParser).process(mockedStream, Product.class, handler);
     }
+
 }

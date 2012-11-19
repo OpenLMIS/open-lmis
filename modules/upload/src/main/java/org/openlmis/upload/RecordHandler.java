@@ -2,5 +2,5 @@ package org.openlmis.upload;
 
 public interface RecordHandler<I extends Importable> {
 
-    public void execute(I importable, int rowNumber);
+    public void execute(I importable, int rowNumber, String modifiedBy);
 }

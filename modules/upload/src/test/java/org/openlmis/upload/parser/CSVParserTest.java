@@ -41,7 +41,7 @@ public class CSVParserTest {
 
         InputStream inputStream = new ByteArrayInputStream(csvInput.getBytes("UTF-8"));
 
-        csvParser.process(inputStream, DummyImportable.class, recordHandler);
+        csvParser.process(inputStream, DummyImportable.class, recordHandler, "user");
 
         List<Importable> importedObjects = recordHandler.getImportedObjects();
         assertEquals(23, ((DummyImportable) importedObjects.get(0)).getMandatoryIntField());
@@ -64,7 +64,7 @@ public class CSVParserTest {
         expectedEx.expect(SuperCsvException.class);
         expectedEx.expectMessage("Missing Mandatory data in field : 'mandatoryStringField' of Record No. 2");
 
-        csvParser.process(inputStream, DummyImportable.class, recordHandler);
+        csvParser.process(inputStream, DummyImportable.class, recordHandler, "user");
     }
 
     @Test
@@ -79,6 +79,6 @@ public class CSVParserTest {
         expectedEx.expect(SuperCsvException.class);
         expectedEx.expectMessage("Incorrect Data type in field : 'mandatoryIntField' of Record No. 2");
 
-        csvParser.process(inputStream, DummyImportable.class, recordHandler);
+        csvParser.process(inputStream, DummyImportable.class, recordHandler, "user");
     }
 }

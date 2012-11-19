@@ -8,13 +8,13 @@ import org.springframework.stereotype.Component;
 public abstract class AbstractModelPersistenceHandler implements RecordHandler<Importable> {
 
     @Override
-    public void execute(Importable importable, int rowNumber) {
+    public void execute(Importable importable, int rowNumber, String modifiedBy) {
         try {
-            save(importable);
+            save(importable, modifiedBy);
         }catch (RuntimeException exception){
             throw new RuntimeException(String.format("%s in Record No. %d",exception.getMessage(), rowNumber - 1));
         }
     }
 
-    protected abstract void save(Importable modelClass);
+    protected abstract void save(Importable modelClass, String modifiedBy);
 }

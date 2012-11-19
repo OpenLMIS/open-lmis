@@ -11,12 +11,11 @@ public class AbstractModelPersistenceHandlerTest {
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
 
-
     @Test
     public void shouldAppendRowNumberToExceptionMessage() throws Exception {
         AbstractModelPersistenceHandler handler = new AbstractModelPersistenceHandler() {
             @Override
-            protected void save(Importable modelClass) {
+            protected void save(Importable modelClass, String modifiedBy) {
                 throw new RuntimeException("error");
             }
         };
@@ -25,6 +24,6 @@ public class AbstractModelPersistenceHandlerTest {
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("error in Record No. 1");
 
-        handler.execute(importable, 2);
+        handler.execute(importable, 2, "user");
     }
 }

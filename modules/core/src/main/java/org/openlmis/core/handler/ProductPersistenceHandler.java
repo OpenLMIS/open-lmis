@@ -17,7 +17,7 @@ public class ProductPersistenceHandler extends AbstractModelPersistenceHandler {
     }
 
     @Override
-    protected void save(Importable importable) {
+    protected void save(Importable importable, String modifiedBy) {
         service.save((Product)importable);
     }
 }

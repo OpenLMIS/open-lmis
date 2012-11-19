@@ -28,7 +28,7 @@ import java.util.*;
 public class CSVParser {
 
     @Transactional
-    public int process(InputStream inputStream, Class<? extends Importable> modelClass, RecordHandler recordHandler)
+    public int process(InputStream inputStream, Class<? extends Importable> modelClass, RecordHandler recordHandler, String modifiedBy)
             throws SuperCsvException, IOException {
 
         CsvPreference csvPreference = new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE)
@@ -44,7 +44,7 @@ public class CSVParser {
 
         CellProcessor[] processors = cellProcessors.toArray(new CellProcessor[cellProcessors.size()]);
         String[] nameMappings = getNameMappings(modelClass, headers);
-        parse(modelClass, recordHandler, csvBeanReader, nameMappings, processors);
+        parse(modelClass, recordHandler, csvBeanReader, nameMappings, processors, modifiedBy);
         return csvBeanReader.getRowNumber() - 1 ;
     }
 
@@ -87,11 +87,11 @@ public class CSVParser {
     }
 
     private void parse(Class<? extends Importable> modelClass, RecordHandler recordHandler,
-                       CsvBeanReader csvBeanReader, String[] headers, CellProcessor[] processors) throws SuperCsvException, IOException {
+                       CsvBeanReader csvBeanReader, String[] headers, CellProcessor[] processors, String modifiedBy) throws SuperCsvException, IOException {
         Importable importedModel;
         try {
             while ((importedModel = csvBeanReader.read(modelClass, headers, processors)) != null) {
-                recordHandler.execute(importedModel, csvBeanReader.getRowNumber());
+                recordHandler.execute(importedModel, csvBeanReader.getRowNumber(), modifiedBy);
             }
         } catch (SuperCsvConstraintViolationException constraintException) {
             createException("Missing Mandatory data in field :", headers, constraintException);

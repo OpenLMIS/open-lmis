@@ -20,7 +20,7 @@ public class ProductPersistenceHandlerTest {
         ProductService productService = mock(ProductService.class);
         Product product = new Product();
 
-        new ProductPersistenceHandler(productService).execute(product, 0);
+        new ProductPersistenceHandler(productService).execute(product, 0, "user");
 
         verify(productService).save(product);
     }
