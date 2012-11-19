@@ -24,7 +24,18 @@
 </head>
 <body onunload="">
 <ng-include src="'../../header.html'"></ng-include>
-
+<div class="navigation">
+    <ul>
+        <li><a href="javascript: void(0)">Home</a></li>
+        <li class="has-children"><a href="javascript: void(0)">RnR Template</a>
+            <ul>
+                <li><a href="/public/pages/admin/rnr-template/create.html">Create</a></li>
+            </ul>
+        </li>
+        <li class="is-selected"><a href="/public/pages/admin/upload/index.html">Upload Data</a>
+        </li>
+    </ul>
+</div>
 <div ng-controller='UploadController'>
   <form id="uploadForm" method="POST" action="#" enctype="multipart/form-data">
     <div>

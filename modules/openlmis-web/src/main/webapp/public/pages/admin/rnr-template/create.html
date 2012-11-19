@@ -23,6 +23,18 @@
 <!-- TODO: onunload clears cache for safari. It is a hack. Find better alternative -->
 <body onunload="">
 <ng-include src="'../../header.html'"></ng-include>
+<div class="navigation">
+    <ul>
+        <li><a href="javascript: void(0)">Home</a></li>
+        <li class="has-children is-selected"><a href="javascript: void(0)">RnR Template</a>
+            <ul>
+                <li class="is-selected"><a href="/public/pages/admin/rnr-template/create.html">Create</a></li>
+            </ul>
+        </li>
+        <li><a href="/public/pages/admin/upload/index.html">Upload Data</a>
+        </li>
+    </ul>
+</div>
 <div ng-controller='CreateRnrTemplateController'>
     <div ng-view></div>
 </div>

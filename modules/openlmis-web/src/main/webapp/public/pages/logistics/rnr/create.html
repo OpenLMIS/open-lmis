@@ -23,7 +23,26 @@
 <!-- TODO: onunload clears cache for safari. It is a hack. Find better alternative -->
 <body onunload="">
 <ng-include src="'../../header.html'"></ng-include>
-Logistics Home!
+<div class="navigation">
+    <ul>
+        <li class="menu-home"><a href="javascript: void(0)">Home</a></li>
+        <li class="menu-req has-children is-selected"><a href="javascript: void(0)">Requisitions</a>
+            <ul>
+                <li class="is-selected"><a href="/public/pages/logistics/rnr/create.html">Create</a></li>
+            </ul>
+        </li>
+        <li class="menu-orders has-children"><a href="javascript: void(0)">Orders</a>
+            <ul>
+                <li><a href="javascript: void(0);">Submenu item 1</a></li>
+                <li><a href="javascript: void(0);">Submenu item 2</a></li>
+                <li><a href="javascript: void(0);">Submenu item 3</a></li>
+                <li><a href="javascript: void(0);">Submenu item 4</a></li>
+            </ul>
+        </li>
+        <li class="menu-facilities"><a href="javascript: void(0)">Facilities</a></li>
+        <li class="menu-ration"><a href="javascript: void(0)">Ration</a></li>
+    </ul>
+</div>
 <div>
     <div ng-view></div>
 </div>
