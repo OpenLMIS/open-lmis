@@ -2,6 +2,7 @@ package org.openlmis.core.service;
 
 
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.domain.RequisitionHeader;
 import org.openlmis.core.repository.FacilityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,4 +31,9 @@ public class FacilityService {
     public void save(Facility facility) {
         facilityRepository.save(facility);
     }
+
+    public void addSupportedProgram(ProgramSupported programSupported) {
+        facilityRepository.addSupportedProgram(programSupported);
+    }
+
 }

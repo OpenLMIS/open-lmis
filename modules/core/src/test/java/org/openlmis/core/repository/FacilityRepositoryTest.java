@@ -38,7 +38,7 @@ public class FacilityRepositoryTest {
         now = new DateTime(2012, 10, 10, 8, 0);
         when(DateTime.now()).thenReturn(now);
 
-        repository = new FacilityRepository(mockedMapper);
+        repository = new FacilityRepository(mockedMapper, null);
     }
 
     @Test

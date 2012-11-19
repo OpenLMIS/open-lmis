@@ -157,9 +157,4 @@ public class Product implements Importable {
     private Date modifiedDate;
 
     private long modifiedBy;
-
-    @Override
-    public boolean validate() {
-        return true;
-    }
 }

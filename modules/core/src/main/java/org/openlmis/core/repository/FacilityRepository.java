@@ -2,8 +2,10 @@ package org.openlmis.core.repository;
 
 import org.joda.time.DateTime;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.domain.RequisitionHeader;
 import org.openlmis.core.repository.mapper.FacilityMapper;
+import org.openlmis.core.repository.mapper.ProgramSupportedMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
@@ -15,10 +17,12 @@ import java.util.List;
 public class FacilityRepository {
 
     private FacilityMapper facilityMapper;
+    private ProgramSupportedMapper programSupportedMapper;
 
     @Autowired
-    public FacilityRepository(FacilityMapper facilityMapper) {
+    public FacilityRepository(FacilityMapper facilityMapper, ProgramSupportedMapper programSupportedMapper) {
         this.facilityMapper = facilityMapper;
+        this.programSupportedMapper = programSupportedMapper;
     }
 
     public List<Facility> getAll() {
@@ -41,4 +45,9 @@ public class FacilityRepository {
             }
         }
     }
+
+    public void addSupportedProgram(ProgramSupported programSupported) {
+        programSupportedMapper.addSupportedProgram(programSupported);
+    }
+
 }

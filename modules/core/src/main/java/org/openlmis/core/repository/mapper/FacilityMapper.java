@@ -59,12 +59,6 @@ public interface FacilityMapper {
     @Delete("DELETE FROM FACILITY")
     void deleteAll();
 
-    @Insert("Insert into programs_supported(facility_code,program_code,active) values(#{facilityCode},#{programCode},#{isActive})")
-    int map(@Param("facilityCode") String facilityCode, @Param("programCode") String programCode, @Param("isActive") boolean isActive);
-
-    @Delete("DELETE From programs_supported")
-    void deleteProgramMappings();
-
     @Select("SELECT F.name, F.code, FT.name as facility_type, FT.nominal_max_month, " +
             "FT.nominal_eop, GZ.name as zone, GL.name as label, GZP.name as parent_zone, GLP.name as parent_label " +
             "FROM facility F, facility_type FT, geographic_zone GZ, geographic_zone GZP, geopolitical_level GL, geopolitical_level GLP " +

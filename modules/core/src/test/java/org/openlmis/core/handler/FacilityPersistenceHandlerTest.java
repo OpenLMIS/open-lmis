@@ -1,6 +1,7 @@
 package org.openlmis.core.handler;
 
 import org.junit.Test;
+import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.service.FacilityService;
 
@@ -10,7 +11,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 
 public class FacilityPersistenceHandlerTest {
 
@@ -18,9 +18,10 @@ public class FacilityPersistenceHandlerTest {
     public void shouldSaveFacility(){
         FacilityService facilityService = mock(FacilityService.class);
         FacilityPersistenceHandler facilityPersistenceHandler = new FacilityPersistenceHandler(facilityService);
-        Facility facility = make(a(defaultFacility));
+        Facility facility = make(a(FacilityBuilder.facility));
         facilityPersistenceHandler.save(facility, "user");
         assertThat(facility.getModifiedBy(), is("user"));
         verify(facilityService).save(facility);
     }
+
 }

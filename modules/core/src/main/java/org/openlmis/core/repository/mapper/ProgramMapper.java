@@ -7,6 +7,16 @@ import java.util.List;
 
 public interface ProgramMapper {
 
+    @Insert("INSERT INTO PROGRAM(ID, CODE, NAME, DESCRIPTION)" +
+            " values (#{program.id}, #{program.code}, #{program.name}, #{program.description})")
+    int insert(@Param("program") Program program);
+
+    @Delete("DELETE FROM PROGRAM WHERE CODE = #{programCode}")
+    void delete(String programCode);
+
+    @Delete("DELETE FROM PROGRAM")
+    void deleteAll();
+
     @Select("SELECT * FROM program WHERE active=true")
     @Results(value = {
             @Result(property = "id", column = "ID"),
@@ -15,13 +25,6 @@ public interface ProgramMapper {
             @Result(property = "description", column = "DESCRIPTION")
     })
     List<Program> getAllActive();
-
-    @Insert("INSERT INTO PROGRAM(ID, CODE, NAME, DESCRIPTION)" +
-            " values (#{program.id}, #{program.name}, #{program.description})")
-    int insert(@Param("program") Program program);
-
-    @Delete("DELETE FROM PROGRAM")
-    void deleteAll();
 
     @Select("select * from program P, programs_supported PS where P.code = PS.program_code and PS.facility_code = #{facilityCode} and PS.active=true and P.active=true")
     @Results(value = {

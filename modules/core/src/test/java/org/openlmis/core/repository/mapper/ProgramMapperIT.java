@@ -1,10 +1,13 @@
 package org.openlmis.core.repository.mapper;
 
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.service.SpringIntegrationTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -24,15 +27,19 @@ import static org.openlmis.core.builder.FacilityBuilder.*;
 public class ProgramMapperIT extends SpringIntegrationTest {
 
     public static final String PROGRAM_CODE = "HIV";
+
     @Autowired
-    ProgramMapper programMapper;
+    ProgramSupportedMapper programSupportedMapper;
 
     @Autowired
     FacilityMapper facilityMapper;
 
+    @Autowired
+    ProgramMapper programMapper;
+
     @Before
     public void setUp() {
-        facilityMapper.deleteProgramMappings();
+        programSupportedMapper.deleteProgramMappings();
         facilityMapper.deleteAll();
     }
 
@@ -46,25 +53,25 @@ public class ProgramMapperIT extends SpringIntegrationTest {
 
     @Test
     public void shouldGetProgramsWhichAreActiveByFacilityId() {
-        Facility facility = make(a(defaultFacility));
+        Facility facility = make(a(FacilityBuilder.facility));
         facilityMapper.insert(facility);
-        String programCode = "HIV";
-        int status = facilityMapper.map(facility.getCode(), programCode, true);
+        programSupportedMapper.addSupportedProgram(new ProgramSupported(facility.getCode(), PROGRAM_CODE, true, "test", DateTime.now().toDate()));
+
         List<Program> programs = programMapper.getActiveByFacilityCode("F10010");
+
         assertThat(programs.size(), is(1));
-        assertThat(programs.get(0).getCode(), is(programCode));
-        assertThat(status, is(1));
+        assertThat(programs.get(0).getCode(), is(PROGRAM_CODE));
     }
 
     @After
     public void tearDown() throws Exception {
-        Facility facility = make(a(defaultFacility,
+        Facility facility = make(a(FacilityBuilder.facility,
                 with(code, "DDM001"),
                 with(name, "Dodoma Hospital"),
                 with(type, 2)));
         facilityMapper.insert(facility);
-        facilityMapper.map(facility.getCode(), PROGRAM_CODE, true);
+        programSupportedMapper.addSupportedProgram(new ProgramSupported(facility.getCode(), PROGRAM_CODE, true, "test", DateTime.now().toDate()));
+        //TODO: remove this from tear down. its being used to leave some data for initiate rnr.!!!
     }
-
 
 }

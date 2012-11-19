@@ -38,8 +38,4 @@ public class DummyImportable implements Importable {
     @Setter
     String nonAnnotatedField;
 
-    @Override
-    public boolean validate() {
-        return true;
-    }
 }

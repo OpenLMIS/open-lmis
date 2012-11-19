@@ -75,9 +75,4 @@ public class Facility implements Importable {
     private boolean doNotDisplay;
     private String modifiedBy;
     private Date modifiedDate;
-
-    @Override
-    public boolean validate() {
-        return true;
-    }
 }

@@ -12,13 +12,11 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-
 @ContextConfiguration(locations = "classpath*:applicationContext-authentication.xml")
 public class UserAuthenticationServiceIT {
 
     @Autowired
     UserAuthenticationService userAuthenticationService;
-
 
     @Test
     public void shouldFetchUserFromDbByUserNameAndPassword() {

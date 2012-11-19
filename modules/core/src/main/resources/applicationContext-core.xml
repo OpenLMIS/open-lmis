@@ -27,11 +27,17 @@
         <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
     </bean>
 
+    <bean id="programSupportedMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="org.openlmis.core.repository.mapper.ProgramSupportedMapper"/>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+
     <bean id="persistenceHandlerMap" class="java.util.HashMap">
         <constructor-arg>
             <map>
                 <entry key="product" value-ref="productPersistenceHandler"/>
                 <entry key="facility" value-ref="facilityPersistenceHandler"/>
+                <entry key="programSupported" value-ref="programSupportedPersistenceHandler"/>
             </map>
         </constructor-arg>
     </bean>

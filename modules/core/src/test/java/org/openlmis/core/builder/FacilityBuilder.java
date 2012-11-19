@@ -20,11 +20,13 @@ public class FacilityBuilder {
     public static final Property<Facility, Boolean> active = newProperty();
     public static final Property<Facility, Date> goLiveDate = newProperty();
 
-    public static final Instantiator<Facility> defaultFacility = new Instantiator<Facility>() {
+    public static final String FACILITY_CODE = "F10010";
+
+    public static final Instantiator<Facility> facility = new Instantiator<Facility>() {
         @Override
         public Facility instantiate(PropertyLookup<Facility> lookup) {
             Facility facility = new Facility();
-            facility.setCode(lookup.valueOf(code, "F10010"));
+            facility.setCode(lookup.valueOf(code, FACILITY_CODE));
             facility.setType(lookup.valueOf(type, 1));
             facility.setName(lookup.valueOf(name, "Apollo Hospital"));
             facility.setGeographicZone(lookup.valueOf(geographicZone, 2));
