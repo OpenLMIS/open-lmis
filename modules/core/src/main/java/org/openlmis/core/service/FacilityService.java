@@ -27,7 +27,6 @@ public class FacilityService {
         return facilityRepository.getHeader(code);
     }
 
-
     public void save(Facility facility) {
         facilityRepository.save(facility);
     }

@@ -98,6 +98,9 @@ public class FacilityMapperIT {
 
     @After
     public void tearDown() throws Exception {
+        facilityMapper.deleteProgramMappings();
+        facilityMapper.deleteAll();
+
         Facility facility = make(a(defaultFacility,
                 with(code, "DDM001"),
                 with(name, "Dodoma Hospital"),

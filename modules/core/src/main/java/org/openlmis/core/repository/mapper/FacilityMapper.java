@@ -12,12 +12,12 @@ public interface FacilityMapper {
             "geographic_zone_id,type,catchment_population,latitude,longitude,altitude,operated_by," +
             "cold_storage_gross_capacity,cold_storage_net_capacity,supplies_others,is_sdp,is_online," +
             "is_satellite,satellite_parent_code,has_electricity,has_electronic_scc,has_electronic_dar,is_active," +
-            "go_live_date,go_down_date,comment,do_not_display,modified_by  ) " +
+            "go_live_date,go_down_date,comment,do_not_display,modified_by,modified_date) " +
             "values(#{code}, #{name},#{description},#{GLN},#{mainPhone},#{fax},#{address1}, #{address2}," +
             "#{geographicZone},#{type},#{catchmentPopulation},#{latitude},#{longitude},#{altitude},#{operatedBy}," +
             "#{coldStorageGrossCapacity},#{coldStorageNetCapacity},#{suppliesOthers},#{sdp},#{online}," +
             "#{satellite},#{satelliteParentCode},#{hasElectricity},#{hasElectronicScc},#{hasElectronicDar},#{active}," +
-            "#{goLiveDate},#{goDownDate},#{comment},#{doNotDisplay},#{modifiedBy})")
+            "#{goLiveDate},#{goDownDate},#{comment},#{doNotDisplay},#{modifiedBy},#{modifiedDate})")
     int insert(Facility facility);
 
     @Select("SELECT * FROM FACILITY")
@@ -51,7 +51,8 @@ public interface FacilityMapper {
             @Result(property = "goDownDate", column = "go_down_date"),
             @Result(property = "comment", column = "comment"),
             @Result(property = "doNotDisplay", column = "do_not_display"),
-            @Result(property = "modifiedBy", column = "modified_by")
+            @Result(property = "modifiedBy", column = "modified_by"),
+            @Result(property = "modifiedDate", column = "modified_date")
     })
     List<Facility> getAll();
 

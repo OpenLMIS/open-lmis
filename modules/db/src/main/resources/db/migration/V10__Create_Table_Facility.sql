@@ -30,6 +30,6 @@ CREATE TABLE facility (
     go_down_date DATE,
     comment  TEXT,
     do_not_display BOOLEAN,
-    modified_by INTEGER,
-    modified_date TIMESTAMP DEFAULT  CURRENT_TIMESTAMP
+    modified_by VARCHAR(50),
+    modified_date TIMESTAMP
 );

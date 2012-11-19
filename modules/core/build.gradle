@@ -9,7 +9,8 @@ dependencies {
             'org.springframework:spring-aspects:3.1.1.RELEASE',
             'org.aspectj:aspectjrt:1.7.0',
             'org.projectlombok:lombok:0.11.0',
-            project(':modules:db'),
+            'joda-time:joda-time:2.1',
+    project(':modules:db'),
             project(':modules:upload')
 
     testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
