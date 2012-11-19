@@ -23,6 +23,7 @@ import static org.openlmis.core.builder.FacilityBuilder.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class FacilityMapperIT {
 
+    public static final String PROGRAM_CODE = "TB";
     @Autowired
     FacilityMapper facilityMapper;
 
@@ -55,12 +56,11 @@ public class FacilityMapperIT {
 
     @Test
     public void shouldInsertSupportedProgramsForFacility() {
-        int programId = 1;
         Facility facility = make(a(defaultFacility));
         facilityMapper.insert(facility);
-        int count = facilityMapper.map(facility.getCode(), programId, true);
-        facilityMapper.map(facility.getCode(), 5, false);
-        assertEquals(1, count);
+
+        int status = facilityMapper.map(facility.getCode(), PROGRAM_CODE, true);
+        assertEquals(1, status);
     }
 
     @Test
@@ -106,6 +106,7 @@ public class FacilityMapperIT {
                 with(name, "Dodoma Hospital"),
                 with(type, 2)));
         facilityMapper.insert(facility);
-        facilityMapper.map(facility.getCode(),5,true);
+        facilityMapper.map(facility.getCode(), PROGRAM_CODE, true);
+        //TODO: remove this from tear down. its being used to leave some data for initiate rnr.!!!
     }
 }

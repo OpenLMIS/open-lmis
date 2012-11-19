@@ -23,6 +23,7 @@ import static org.openlmis.core.builder.FacilityBuilder.*;
 @ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
 public class ProgramMapperIT extends SpringIntegrationTest {
 
+    public static final String PROGRAM_CODE = "HIV";
     @Autowired
     ProgramMapper programMapper;
 
@@ -36,21 +37,22 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     }
 
     @Test
+    // TODO : should setup test data and not assume reference data exists
     public void shouldGetAllActiveProgram() {
         List<Program> programs = programMapper.getAllActive();
         assertEquals(6, programs.size());
-        assertTrue("program does not exists", programs.contains(new Program(1, "HIV", "HIV", true)));
+        assertTrue("program does not exists", programs.contains(new Program(1, "HIV", "HIV", "HIV", true)));
     }
 
     @Test
     public void shouldGetProgramsWhichAreActiveByFacilityId() {
         Facility facility = make(a(defaultFacility));
         facilityMapper.insert(facility);
-        int programId = 1;
-        int status = facilityMapper.map(facility.getCode(), programId, true);
+        String programCode = "HIV";
+        int status = facilityMapper.map(facility.getCode(), programCode, true);
         List<Program> programs = programMapper.getActiveByFacilityCode("F10010");
         assertThat(programs.size(), is(1));
-        assertThat(programs.get(0).getId(), is(programId));
+        assertThat(programs.get(0).getCode(), is(programCode));
         assertThat(status, is(1));
     }
 
@@ -61,7 +63,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
                 with(name, "Dodoma Hospital"),
                 with(type, 2)));
         facilityMapper.insert(facility);
-        facilityMapper.map(facility.getCode(),5,true);
+        facilityMapper.map(facility.getCode(), PROGRAM_CODE, true);
     }
 
 

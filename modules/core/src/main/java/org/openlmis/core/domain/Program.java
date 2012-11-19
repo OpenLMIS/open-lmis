@@ -8,6 +8,7 @@ import lombok.Data;
 public class Program {
 
     private Integer id;
+    private String code;
     private String name;
     private String description;
     private boolean active;
