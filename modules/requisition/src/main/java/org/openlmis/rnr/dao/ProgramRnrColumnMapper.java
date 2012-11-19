@@ -8,24 +8,24 @@ import java.util.List;
 
 public interface ProgramRnrColumnMapper {
 
-    @Select("SELECT * FROM program_rnr_template WHERE program_id=#{programId} AND column_id=#{columnId}")
+    @Select("SELECT * FROM program_rnr_template WHERE program_code=#{programCode} AND column_id=#{columnId}")
     @Results(value = {
             @Result(property = "id", column = "id"),
             @Result(property = "columnId", column = "column_id"),
-            @Result(property = "programId", column = "program_id"),
+            @Result(property = "programCode", column = "program_code"),
             @Result(property = "used", column = "is_used")
     })
-    ProgramRnrColumn get(@Param("programId") Integer programId, @Param("columnId") Integer columnId);
+    ProgramRnrColumn get(@Param("programCode") String programCode, @Param("columnId") Integer columnId);
 
-    @Insert("INSERT INTO program_rnr_template(program_id, column_id, is_used, label)" +
-            " values (#{programId}, #{rnrColumn.id}, #{rnrColumn.used}, #{rnrColumn.label})")
-    int insert(@Param("programId") int programId, @Param("rnrColumn") RnrColumn rnrColumn);
+    @Insert("INSERT INTO program_rnr_template(program_code, column_id, is_used, label)" +
+            " values (#{programCode}, #{rnrColumn.id}, #{rnrColumn.used}, #{rnrColumn.label})")
+    int insert(@Param("programCode") String programCode, @Param("rnrColumn") RnrColumn rnrColumn);
 
     @Delete("DELETE FROM program_rnr_template")
     void deleteAll();
 
-    @Select("select 0<(select count(id) as count from program_rnr_template where program_id=#{programId})")
-    boolean isRnrTemplateDefined(@Param("programId") int programId);
+    @Select("select 0<(select count(id) as count from program_rnr_template where program_code=#{programCode})")
+    boolean isRnrTemplateDefined(@Param("programCode") String programCode);
 
     @Results(value = {
             @Result(property = "id", column = "id"),
@@ -47,10 +47,11 @@ public interface ProgramRnrColumnMapper {
             " p.is_used as used, m.is_visible as visible, m.is_mandatory as mandatory" +
             " from program_rnr_template p INNER JOIN master_rnr_template m" +
             " ON p.column_id = m.id" +
-            " where p.program_id=#{programId}")
-    List<RnrColumn> getAllRnrColumnsForProgram(int programId);
+            " where p.program_code=#{programCode}")
+    List<RnrColumn> getAllRnrColumnsForProgram(String programCode);
 
     @Update("UPDATE Program_RnR_Template SET is_used = #{rnrColumn.used}, label = #{rnrColumn.label}" +
-            "WHERE program_id = #{programId} AND column_id = #{rnrColumn.id}")
-    void update(@Param("programId") int programId, @Param("rnrColumn") RnrColumn rnrColumn);
+            "WHERE program_code = #{programCode} AND column_id = #{rnrColumn.id}")
+    void update(@Param("programCode") String programCode, @Param("rnrColumn") RnrColumn rnrColumn);
+
 }

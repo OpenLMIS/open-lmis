@@ -20,14 +20,12 @@ import static org.junit.Assert.assertThat;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.server.setup.MockMvcBuilders.standaloneSetup;
 
-
-@ContextConfiguration(locations = "classpath*:/applicationContext-admin-web.xml")
-
 @RunWith(SpringJUnit4ClassRunner.class)
-public class RnRTemplateControllerIT {
+@ContextConfiguration(locations = "classpath*:/applicationContext-admin-web.xml")
+public class RnrTemplateControllerIT {
 
     @Autowired
-    RnRTemplateController controller;
+    RnrTemplateController controller;
 
     @Autowired
     ProgramRnrColumnMapper programRnrColumnMapper;
@@ -39,9 +37,9 @@ public class RnRTemplateControllerIT {
 
     @Test
     public void shouldGetAllMasterRnRColumns() throws Exception {
-        int existingProgramId = 1;
+        String existingProgramCode = "HIV";
         ResultActions resultActions = standaloneSetup(controller).setViewResolvers(contentNegotiatingViewResolver()).build()
-                .perform(get("/admin/rnr/" + existingProgramId + "/columns.json"));
+                .perform(get("/admin/rnr/" + existingProgramCode + "/columns.json"));
         String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
         String msdProductColumn = "\"name\":\"MSD ProductCode\",\"description\":\"This is Unique identifier for each commodity\",\"position\":1,\"label\":\"MSD ProductCode\",\"defaultValue\":\"\",\"dataSource\":\"Reference Value (Product Table)\",\"formula\":\"\",\"indicator\":\"O\",\"used\":true,\"visible\":true,\"mandatory\":true";
         assertThat(contentAsString.contains(msdProductColumn), is(true));

@@ -1,6 +1,5 @@
 CREATE TABLE program (
-    id integer primary key,
-    code varchar(50) UNIQUE,
+    code varchar(50) primary key,
     name varchar(50),
     description varchar(50),
     budgeting_applies boolean,

@@ -12,35 +12,34 @@ import java.util.List;
 @NoArgsConstructor
 public class RnrRepository {
 
-    @Autowired @SuppressWarnings("unused")
+    @Autowired
     private RnrColumnMapper rnrColumnMapper;
-    @Autowired @SuppressWarnings("unused")
+    @Autowired
     private ProgramRnrColumnMapper programRnrColumnMapper;
 
     @Transactional
-    public void insertAllProgramRnRColumns(int programId, List<RnrColumn> rnrColumns) {
+    public void insertAllProgramRnRColumns(String programCode, List<RnrColumn> rnrColumns) {
         for (RnrColumn rnrColumn : rnrColumns) {
-            programRnrColumnMapper.insert(programId, rnrColumn);
+            programRnrColumnMapper.insert(programCode, rnrColumn);
         }
     }
 
-
-    public boolean isRnRTemPlateDefinedForProgram(int programId) {
-        return programRnrColumnMapper.isRnrTemplateDefined(programId);
+    public boolean isRnRTemPlateDefinedForProgram(String programCode) {
+        return programRnrColumnMapper.isRnrTemplateDefined(programCode);
     }
 
     public List<RnrColumn> fetchAllMasterRnRColumns() {
         return rnrColumnMapper.fetchAllMasterRnRColumns();
     }
 
-    public List<RnrColumn> fetchRnrColumnsDefinedForAProgram(int existingProgramId) {
-        return programRnrColumnMapper.getAllRnrColumnsForProgram(existingProgramId);
+    public List<RnrColumn> fetchRnrColumnsDefinedForAProgram(String existingProgramCode) {
+        return programRnrColumnMapper.getAllRnrColumnsForProgram(existingProgramCode);
     }
 
     @Transactional
-    public void updateAllProgramRnRColumns(int programId, List<RnrColumn> rnrColumns) {
+    public void updateAllProgramRnRColumns(String programCode, List<RnrColumn> rnrColumns) {
         for (RnrColumn rnrColumn : rnrColumns) {
-            programRnrColumnMapper.update(programId, rnrColumn);
+            programRnrColumnMapper.update(programCode, rnrColumn);
         }
     }
 }

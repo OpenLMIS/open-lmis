@@ -15,6 +15,7 @@ import org.springframework.dao.DuplicateKeyException;
 import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class ProductRepositoryTest {
+
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
 

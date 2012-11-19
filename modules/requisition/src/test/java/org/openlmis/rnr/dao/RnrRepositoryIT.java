@@ -19,7 +19,8 @@ import static org.junit.Assert.assertThat;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext-requisition.xml")
 public class RnrRepositoryIT {
-    public static final int EXISTING_PROGRAM_ID = 1;
+
+    public static final String EXISTING_PROGRAM_CODE = "HIV";
 
     @Autowired
     RnrRepository rnrRepository;
@@ -46,16 +47,15 @@ public class RnrRepositoryIT {
 
     @Test
     public void shouldIdentifyWhenARnrTemplateForAProgramExists() throws Exception {
-        int existingProgramId = 1;
-        configureRnRTemplateForTheProgram(existingProgramId);
+        configureRnRTemplateForTheProgram(EXISTING_PROGRAM_CODE);
 
-        assertThat(rnrRepository.isRnRTemPlateDefinedForProgram(existingProgramId), is(true));
+        assertThat(rnrRepository.isRnRTemPlateDefinedForProgram(EXISTING_PROGRAM_CODE), is(true));
     }
 
     @Test
     public void shouldIdentifyWhenARnrTemplateForAProgramDoesNotExist() throws Exception {
-        int nonExistingProgramId = 0;
-        assertThat(rnrRepository.isRnRTemPlateDefinedForProgram(nonExistingProgramId), is(false));
+        String nonExistingProgramCode = "FLU";
+        assertThat(rnrRepository.isRnRTemPlateDefinedForProgram(nonExistingProgramCode), is(false));
     }
 
     @Test
@@ -77,40 +77,40 @@ public class RnrRepositoryIT {
     @Test
     public void shouldInsertRnRColumnsForAProgram() throws Exception {
 
-        rnrRepository.insertAllProgramRnRColumns(EXISTING_PROGRAM_ID, rnrColumns);
+        rnrRepository.insertAllProgramRnRColumns(EXISTING_PROGRAM_CODE, rnrColumns);
 
-        List<RnrColumn> programRnrColumns= programRnrColumnMapper.getAllRnrColumnsForProgram(EXISTING_PROGRAM_ID);
+        List<RnrColumn> programRnrColumns= programRnrColumnMapper.getAllRnrColumnsForProgram(EXISTING_PROGRAM_CODE);
         assertThat(programRnrColumns.size(), is(rnrColumns.size()));
         assertThat(programRnrColumns, hasItem(rnrColumns.get(0)));
     }
 
     @Test
     public void shouldUpdateRnRColumnsForAProgramIfRnrTemplateAlreadyDefined() throws Exception {
-        List<RnrColumn> rnrColumns = configureAndReturnRnRTemplateForTheProgram(EXISTING_PROGRAM_ID);
+        List<RnrColumn> rnrColumns = configureAndReturnRnRTemplateForTheProgram(EXISTING_PROGRAM_CODE);
 
         rnrColumns.get(0).setUsed(true);
-        rnrRepository.updateAllProgramRnRColumns(EXISTING_PROGRAM_ID, rnrColumns);
+        rnrRepository.updateAllProgramRnRColumns(EXISTING_PROGRAM_CODE, rnrColumns);
 
-        rnrColumns = rnrRepository.fetchRnrColumnsDefinedForAProgram(EXISTING_PROGRAM_ID);
+        rnrColumns = rnrRepository.fetchRnrColumnsDefinedForAProgram(EXISTING_PROGRAM_CODE);
 
         assertThat(rnrColumns.size(), is(rnrColumns.size()));
         assertThat(rnrColumns, hasItem(rnrColumns.get(0)));
         assertThat(rnrColumns.get(0).isUsed(), is(true));
     }
 
-    private List<RnrColumn> configureAndReturnRnRTemplateForTheProgram(int existingProgramId) {
-        configureRnRTemplateForTheProgram(existingProgramId);
-        return rnrRepository.fetchRnrColumnsDefinedForAProgram(EXISTING_PROGRAM_ID);
+    private List<RnrColumn> configureAndReturnRnRTemplateForTheProgram(String existingProgramCode) {
+        configureRnRTemplateForTheProgram(existingProgramCode);
+        return rnrRepository.fetchRnrColumnsDefinedForAProgram(EXISTING_PROGRAM_CODE);
     }
 
     @Test
     public void shouldRetrieveAlreadyDefinedRnrColumnsForAProgram() throws Exception {
-        configureRnRTemplateForTheProgram(EXISTING_PROGRAM_ID);
-        List<RnrColumn> rnrColumns = rnrRepository.fetchRnrColumnsDefinedForAProgram(EXISTING_PROGRAM_ID);
+        configureRnRTemplateForTheProgram(EXISTING_PROGRAM_CODE);
+        List<RnrColumn> rnrColumns = rnrRepository.fetchRnrColumnsDefinedForAProgram(EXISTING_PROGRAM_CODE);
         assertThat(rnrColumns.size(), is(1));
     }
 
-    private void configureRnRTemplateForTheProgram(int existingProgramId) {
-        programRnrColumnMapper.insert(existingProgramId, rnrColumns.get(0));
+    private void configureRnRTemplateForTheProgram(String existingProgramCode) {
+        programRnrColumnMapper.insert(existingProgramCode, rnrColumns.get(0));
     }
 }

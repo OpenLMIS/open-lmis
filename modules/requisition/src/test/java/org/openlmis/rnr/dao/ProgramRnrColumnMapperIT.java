@@ -17,6 +17,7 @@ import static org.junit.Assert.assertThat;
 @ContextConfiguration(locations = "classpath*:applicationContext-requisition.xml")
 public class ProgramRnrColumnMapperIT {
 
+    public static final String HIV = "HIV";
     @Autowired
     ProgramRnrColumnMapper programRnrColumnMapper;
 
@@ -32,27 +33,25 @@ public class ProgramRnrColumnMapperIT {
     public void shouldReturnLabelFromProgramTemplate() throws Exception {
         RnrColumn rnrColumn = rnrColumnMapper.fetchAllMasterRnRColumns().get(0);
         rnrColumn.setLabel("Some Random Label");
-        programRnrColumnMapper.insert(1, rnrColumn);
+        programRnrColumnMapper.insert(HIV, rnrColumn);
 
-        List<RnrColumn> fetchedColumns = programRnrColumnMapper.getAllRnrColumnsForProgram(1);
+        List<RnrColumn> fetchedColumns = programRnrColumnMapper.getAllRnrColumnsForProgram(HIV);
         assertThat(fetchedColumns.size(), is(1));
         assertThat(fetchedColumns.get(0).getLabel(), is("Some Random Label"));
     }
 
     @Test
     public void shouldSaveLabelAndUsedFlag() throws Exception {
-        int programId = 1;
         RnrColumn rnrColumn = rnrColumnMapper.fetchAllMasterRnRColumns().get(0);
-        programRnrColumnMapper.insert(programId, rnrColumn);
+        programRnrColumnMapper.insert(HIV, rnrColumn);
 
         RnrColumn newRnrColumn = new RnrColumn();
         newRnrColumn.setId(rnrColumn.getId());
         newRnrColumn.setLabel("Some Random Label");
         newRnrColumn.setUsed(false);
-        programRnrColumnMapper.update(programId, newRnrColumn);
+        programRnrColumnMapper.update(HIV, newRnrColumn);
 
-
-        RnrColumn updatedRnrColumn = programRnrColumnMapper.getAllRnrColumnsForProgram(programId).get(0);
+        RnrColumn updatedRnrColumn = programRnrColumnMapper.getAllRnrColumnsForProgram(HIV).get(0);
         assertThat(updatedRnrColumn.getId(), is(newRnrColumn.getId()));
         assertThat(updatedRnrColumn.isUsed(), is(false));
         assertThat(updatedRnrColumn.getLabel(), is("Some Random Label"));

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class ProgramRnrColumn {
 
     private Integer id;
-    private Integer programId;
+    private String programCode;
     // Verify if foreign key is set up correctly
     private Integer columnId;
     private boolean used;

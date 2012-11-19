@@ -6,6 +6,7 @@ import org.openlmis.core.domain.ProgramSupported;
 import java.util.List;
 
 public interface ProgramSupportedMapper {
+
     @Insert("INSERT INTO PROGRAMS_SUPPORTED(FACILITY_CODE, PROGRAM_CODE, ACTIVE, MODIFIED_BY, MODIFIED_DATE) VALUES(#{facilityCode},#{programCode},#{isActive},#{modifiedBy},#{modifiedDate})")
     void addSupportedProgram(ProgramSupported programSupported);
 
@@ -20,4 +21,5 @@ public interface ProgramSupportedMapper {
             @Result(property = "modifiedBy", column = "MODIFIED_BY"),
             @Result(property = "modifiedDate", column = "MODIFIED_DATE")})
     List<ProgramSupported> getBy(@Param("facilityCode") String facilityCode, @Param("programCode") String programCode);
+
 }

@@ -7,7 +7,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class Program {
 
-    private Integer id;
     private String code;
     private String name;
     private String description;

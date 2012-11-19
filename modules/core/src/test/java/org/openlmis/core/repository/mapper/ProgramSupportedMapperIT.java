@@ -24,6 +24,7 @@ import static org.openlmis.core.builder.ProgramBuilder.*;
 public class ProgramSupportedMapperIT {
 
     public static final String YELLOW_FEVER = "YELL_FVR";
+
     @Autowired
     ProgramMapper programMapper;
 
@@ -39,7 +40,7 @@ public class ProgramSupportedMapperIT {
         facilityMapper.deleteAll();
 
         facilityMapper.insert(make(a(facility)));
-        programMapper.insert(make(a(program, with(code, YELLOW_FEVER), with(id, 555))));
+        programMapper.insert(make(a(program, with(code, YELLOW_FEVER))));
     }
 
     @Test

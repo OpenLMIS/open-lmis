@@ -8,7 +8,6 @@ repositories {
 
 
 dependencies {
-
     compile 'net.sf.supercsv:super-csv:2.0.0-beta-1',
             'org.projectlombok:lombok:0.11.0',
             'org.springframework:spring-context:3.1.2.RELEASE',

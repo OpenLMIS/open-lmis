@@ -16,65 +16,68 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 @RunWith(MockitoJUnitRunner.class)
-public class RnRTemplateServiceTest {
-    @Mock @SuppressWarnings("unused")
+public class RnrTemplateServiceTest {
+
+    @Mock
     private RnrRepository repository;
 
-    private RnRTemplateService service;
+    private RnrTemplateService service;
 
-    private int existingProgramId = 1;
+    private String existingProgramCode = "HIV";
+
     @Before
     public void setUp() throws Exception {
-        service = new RnRTemplateService(repository);
+        service = new RnrTemplateService(repository);
     }
 
     @Test
     public void shouldFetchAllRnRColumnsFromMasterIfNotAlreadyConfigured() {
         List<RnrColumn> allColumns = new ArrayList<RnrColumn>();
         when(repository.fetchAllMasterRnRColumns()).thenReturn(allColumns);
-        when(repository.isRnRTemPlateDefinedForProgram(existingProgramId)).thenReturn(false);
-        List<RnrColumn> rnrColumns = service.fetchAllRnRColumns(existingProgramId);
+        when(repository.isRnRTemPlateDefinedForProgram(existingProgramCode)).thenReturn(false);
+        List<RnrColumn> rnrColumns = service.fetchAllRnRColumns(existingProgramCode);
         assertThat(rnrColumns, is(equalTo(allColumns)));
         verify(repository).fetchAllMasterRnRColumns();
-        verify(repository,never()).fetchRnrColumnsDefinedForAProgram(existingProgramId);
-        verify(repository).isRnRTemPlateDefinedForProgram(existingProgramId);
+        verify(repository, never()).fetchRnrColumnsDefinedForAProgram(existingProgramCode);
+        verify(repository).isRnRTemPlateDefinedForProgram(existingProgramCode);
     }
 
     @Test
     public void shouldFetchRnRColumnsDefinedForAProgramIfAlreadyConfigured() {
         List<RnrColumn> rnrTemplateColumns = new ArrayList<RnrColumn>();
-        when(repository.fetchRnrColumnsDefinedForAProgram(existingProgramId)).thenReturn(rnrTemplateColumns);
-        when(repository.isRnRTemPlateDefinedForProgram(existingProgramId)).thenReturn(true);
-        List<RnrColumn> rnrColumns = service.fetchAllRnRColumns(existingProgramId);
+        when(repository.fetchRnrColumnsDefinedForAProgram(existingProgramCode)).thenReturn(rnrTemplateColumns);
+        when(repository.isRnRTemPlateDefinedForProgram(existingProgramCode)).thenReturn(true);
+        List<RnrColumn> rnrColumns = service.fetchAllRnRColumns(existingProgramCode);
         assertThat(rnrColumns, is(equalTo(rnrTemplateColumns)));
         verify(repository, never()).fetchAllMasterRnRColumns();
-        verify(repository).fetchRnrColumnsDefinedForAProgram(existingProgramId);
-        verify(repository).isRnRTemPlateDefinedForProgram(existingProgramId);
+        verify(repository).fetchRnrColumnsDefinedForAProgram(existingProgramCode);
+        verify(repository).isRnRTemPlateDefinedForProgram(existingProgramCode);
     }
 
     @Test
     public void shouldFetchEmptyListIfRnRColumnListReturnedIsNull() throws Exception {
         when(repository.fetchAllMasterRnRColumns()).thenReturn(null);
-        when(repository.isRnRTemPlateDefinedForProgram(existingProgramId)).thenReturn(false);
-        List<RnrColumn> rnrColumns = service.fetchAllRnRColumns(existingProgramId);
+        when(repository.isRnRTemPlateDefinedForProgram(existingProgramCode)).thenReturn(false);
+        List<RnrColumn> rnrColumns = service.fetchAllRnRColumns(existingProgramCode);
         assertThat(rnrColumns, is(notNullValue()));
     }
 
     @Test
     public void shouldCreateARnRTemplateForAProgramWithGivenColumnsIfNotAlreadyDefined() throws Exception {
         List<RnrColumn> rnrColumns = new ArrayList<RnrColumn>();
-        when(repository.isRnRTemPlateDefinedForProgram(existingProgramId)).thenReturn(false);
-        service.saveRnRTemplateForProgram(existingProgramId, rnrColumns);
-        verify(repository).insertAllProgramRnRColumns(existingProgramId, rnrColumns);
+        when(repository.isRnRTemPlateDefinedForProgram(existingProgramCode)).thenReturn(false);
+        service.saveRnRTemplateForProgram(existingProgramCode, rnrColumns);
+        verify(repository).insertAllProgramRnRColumns(existingProgramCode, rnrColumns);
     }
 
     @Test
     public void shouldUpdateExistingRnRTemplateForAProgramWithGivenColumnsIfAlreadyDefined() throws Exception {
         List<RnrColumn> rnrColumns = new ArrayList<RnrColumn>();
-        when(repository.isRnRTemPlateDefinedForProgram(existingProgramId)).thenReturn(true);
-        service.saveRnRTemplateForProgram(existingProgramId, rnrColumns);
-        verify(repository).updateAllProgramRnRColumns(existingProgramId, rnrColumns);
+        when(repository.isRnRTemPlateDefinedForProgram(existingProgramCode)).thenReturn(true);
+        service.saveRnRTemplateForProgram(existingProgramCode, rnrColumns);
+        verify(repository).updateAllProgramRnRColumns(existingProgramCode, rnrColumns);
     }
 
 }
