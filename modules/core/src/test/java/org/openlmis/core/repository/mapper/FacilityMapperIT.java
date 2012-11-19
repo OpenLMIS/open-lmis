@@ -106,7 +106,7 @@ public class FacilityMapperIT {
                 with(name, "Dodoma Hospital"),
                 with(type, 2)));
         facilityMapper.insert(facility);
-        facilityMapper.map(facility.getCode(), PROGRAM_CODE, true);
+        facilityMapper.map(facility.getCode(), "SMALL_POX", true);
         //TODO: remove this from tear down. its being used to leave some data for initiate rnr.!!!
     }
 }
