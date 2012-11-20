@@ -14,6 +14,6 @@ function SaveRnrTemplateController($scope, RnRColumnList, $http, $location) {
 
     $scope.createProgramRnrTemplate = function () {
         $http.post('/admin/rnr/' + $scope.program.code + '/columns.json', $scope.rnrColumnsList);
-        $scope.message = "saved successfully";
+        $scope.message = "Template saved successfully.";
     }
 }
