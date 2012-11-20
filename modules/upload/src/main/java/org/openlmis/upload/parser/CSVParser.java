@@ -6,6 +6,7 @@ import org.apache.commons.collections.Predicate;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.RecordHandler;
 import org.openlmis.upload.annotation.ImportField;
+import org.openlmis.upload.exception.UploadException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.supercsv.cellprocessor.ift.CellProcessor;
@@ -45,17 +46,17 @@ public class CSVParser {
         CellProcessor[] processors = cellProcessors.toArray(new CellProcessor[cellProcessors.size()]);
         String[] nameMappings = getNameMappings(modelClass, headers);
         parse(modelClass, recordHandler, csvBeanReader, nameMappings, processors, modifiedBy);
-        return csvBeanReader.getRowNumber() - 1 ;
+        return csvBeanReader.getRowNumber() - 1;
     }
 
     private String[] getNameMappings(Class<? extends Importable> clazz, final String[] headers) {
         List<String> nameMappings = new ArrayList<String>();
 
-        for(String header : headers){
+        for (String header : headers) {
             Field fieldWithAnnotatedName = findFieldWithAnnotatedName(header, clazz);
-            if(fieldWithAnnotatedName != null){
+            if (fieldWithAnnotatedName != null) {
                 nameMappings.add(fieldWithAnnotatedName.getName());
-            }else {
+            } else {
                 nameMappings.add(header);
             }
         }
@@ -75,12 +76,15 @@ public class CSVParser {
                 return false;
             }
         });
-        return (Field)result;
+        return (Field) result;
     }
 
     private String[] parseHeaders(CsvBeanReader csvBeanReader) throws IOException {
         String[] headers = csvBeanReader.getHeader(true);
         for (int i = 0; i < headers.length; i++) {
+            if(headers[i] == null) {
+                throw new UploadException("Header for column " + (i+1) + " is missing.");
+            }
             headers[i] = headers[i].trim();
         }
         return headers;
@@ -103,7 +107,7 @@ public class CSVParser {
     private void createException(String error, String[] headers, SuperCsvCellProcessorException exception) throws SuperCsvException {
         CsvContext csvContext = exception.getCsvContext();
         String header = headers[csvContext.getColumnNumber() - 1];
-        throw new SuperCsvException(String.format("%s '%s' of Record No. %d", error, header, csvContext.getRowNumber() - 1), csvContext);
+        throw new UploadException(String.format("%s '%s' of Record No. %d", error, header, csvContext.getRowNumber() - 1));
     }
 
 }

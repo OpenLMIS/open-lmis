@@ -6,11 +6,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openlmis.upload.Importable;
+import org.openlmis.upload.exception.UploadException;
 import org.openlmis.upload.model.DummyImportable;
 import org.openlmis.upload.model.DummyRecordHandler;
-import org.supercsv.exception.SuperCsvException;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -61,7 +62,7 @@ public class CSVParserTest {
 
         InputStream inputStream = new ByteArrayInputStream(csvInput.getBytes("UTF-8"));
 
-        expectedEx.expect(SuperCsvException.class);
+        expectedEx.expect(UploadException.class);
         expectedEx.expectMessage("Missing Mandatory data in field : 'mandatoryStringField' of Record No. 2");
 
         csvParser.process(inputStream, DummyImportable.class, recordHandler, "user");
@@ -76,8 +77,23 @@ public class CSVParserTest {
 
         InputStream inputStream = new ByteArrayInputStream(csvInput.getBytes("UTF-8"));
 
-        expectedEx.expect(SuperCsvException.class);
+        expectedEx.expect(UploadException.class);
         expectedEx.expectMessage("Incorrect Data type in field : 'mandatoryIntField' of Record No. 2");
+
+        csvParser.process(inputStream, DummyImportable.class, recordHandler, "user");
+    }
+
+    @Test
+    public void shouldReportMissingHeaders() throws IOException {
+        String csvInput =
+                "mandatoryStringField,\n" +
+                        "RandomString1,2533\n" +
+                        "RandomString2,abc123\n";
+
+        InputStream inputStream = new ByteArrayInputStream(csvInput.getBytes("UTF-8"));
+
+        expectedEx.expect(UploadException.class);
+        expectedEx.expectMessage("Header for column 2 is missing.");
 
         csvParser.process(inputStream, DummyImportable.class, recordHandler, "user");
     }

@@ -2,6 +2,7 @@ package org.openlmis.admin.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.handler.UploadHandlerFactory;
+import org.openlmis.upload.exception.UploadException;
 import org.openlmis.upload.parser.CSVParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Map;
 
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
@@ -51,7 +53,9 @@ public class UploadController {
             String modifiedBy = (String) request.getSession().getAttribute(USER);
             int recordsUploaded = csvParser.process(multipartFile.getInputStream(), modelClass, uploadHandlerFactory.getHandler(model), modifiedBy);
             modelAndView.addObject("message", "File upload success. Total " + model +" uploaded in the system : " + recordsUploaded);
-        } catch (Exception e) {
+        } catch (UploadException e) {
+            return errorModelAndView(modelAndView, e.getMessage());
+        } catch (IOException e) {
             return errorModelAndView(modelAndView, e.getMessage());
         }
         return modelAndView;

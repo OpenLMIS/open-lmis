@@ -2,7 +2,7 @@ package org.openlmis.upload.parser;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openlmis.upload.exception.MissingHeaderException;
+import org.openlmis.upload.exception.UploadException;
 import org.openlmis.upload.model.DummyImportable;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -26,7 +26,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 public class CsvUtilTest {
 
     @Test
-    public void shouldReturnCorrectProcessorForHeaders() throws MissingHeaderException {
+    public void shouldReturnCorrectProcessorForHeaders() throws UploadException {
 
         ArrayList<String> headers = new ArrayList<String>();
         headers.add("mandatoryStringField");
@@ -43,7 +43,7 @@ public class CsvUtilTest {
     }
 
     @Test
-    public void shouldValidateHeadersWithCaseMismatch() throws MissingHeaderException {
+    public void shouldValidateHeadersWithCaseMismatch() throws UploadException {
         List<String> headers = new ArrayList<String>();
         headers.add("MANDAtoryStringField");
         headers.add("mandatoryIntFIELD");
@@ -52,7 +52,7 @@ public class CsvUtilTest {
     }
 
     @Test
-    public void testReturnProcessorForMismatchCase() throws MissingHeaderException {
+    public void testReturnProcessorForMismatchCase() throws UploadException {
         List<String> headers = new ArrayList<String>();
         headers.add("MANDAtoryStringField");
         headers.add("mandatoryIntFIELD");
@@ -65,7 +65,7 @@ public class CsvUtilTest {
     }
 
     @Test
-    public void shouldIgnoreNonAnnotatedHeaders() throws MissingHeaderException {
+    public void shouldIgnoreNonAnnotatedHeaders() throws UploadException {
         List<String> headers = new ArrayList<String>();
         headers.add("mandatoryStringField");
         headers.add("mandatoryIntField");
@@ -131,7 +131,7 @@ public class CsvUtilTest {
 
         try {
             CsvUtil.validateHeaders(DummyImportable.class, headers);
-        } catch (MissingHeaderException e) {
+        } catch (UploadException e) {
             assertEquals("Invalid Headers in upload file: [optionalstringfieldsff]", e.getMessage());
         }
     }
@@ -144,7 +144,7 @@ public class CsvUtilTest {
 
         try {
             CsvUtil.validateHeaders(DummyImportable.class, headers);
-        } catch (MissingHeaderException e) {
+        } catch (UploadException e) {
             assertEquals("Missing Mandatory columns in upload file: [mandatoryStringField, mandatoryIntField]", e.getMessage());
         }
     }

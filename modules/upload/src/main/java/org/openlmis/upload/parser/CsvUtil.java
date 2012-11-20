@@ -3,7 +3,7 @@ package org.openlmis.upload.parser;
 import org.apache.commons.collections.ListUtils;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
-import org.openlmis.upload.exception.MissingHeaderException;
+import org.openlmis.upload.exception.UploadException;
 import org.supercsv.cellprocessor.*;
 import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.ift.CellProcessor;
@@ -38,7 +38,7 @@ public class CsvUtil {
         return processors;
     }
 
-    protected static void validateHeaders(Class<? extends Importable> clazz, List<String> headers) throws MissingHeaderException {
+    protected static void validateHeaders(Class<? extends Importable> clazz, List<String> headers) throws UploadException {
         Field[] fields = clazz.getDeclaredFields();
         List<String> lowerCaseHeaders = lowerCase(headers);
         validateInvalidHeaders(lowerCaseHeaders, fields);
@@ -61,7 +61,7 @@ public class CsvUtil {
         List<String> missingFields = findMissingFields(headers, fields);
 
         if (!missingFields.isEmpty()) {
-            throw new MissingHeaderException("Missing Mandatory columns in upload file: " + missingFields);
+            throw new UploadException("Missing Mandatory columns in upload file: " + missingFields);
         }
     }
 
@@ -69,7 +69,7 @@ public class CsvUtil {
         List<String> fieldNames = getAllFieldNames(fields);
         List invalidHeaders = ListUtils.subtract(headers, lowerCase(fieldNames));
         if (!invalidHeaders.isEmpty()) {
-            throw new MissingHeaderException("Invalid Headers in upload file: " + invalidHeaders);
+            throw new UploadException("Invalid Headers in upload file: " + invalidHeaders);
         }
     }
 
