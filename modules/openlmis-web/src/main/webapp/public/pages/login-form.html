@@ -1,22 +1,21 @@
-<div ng-controller="LoginController">
+<div class="login-form" ng-controller="LoginController">
   <div>
     <h2>Sign In</h2>
-
-    <div ng-model="error">{{ error }}</div>
     <fieldset>
       <label for="username">Username</label>
 
       <div>
         <input ng-model="username" type="text" id="username"/>
       </div>
-      <br/>
       <label for="password">Password</label>
 
       <div>
         <input ng-model="password" type="password" id="password"/>
       </div>
+      <br />
+      <div class="alert alert-error" ng-model="error" ng-show="error">{{ error }}</div>
       <div>
-        <button id="submit" ng-click="doLogin()">Sign in</button>
+        <button class="btn" id="submit" ng-click="doLogin()">Sign in</button>
       </div>
     </fieldset>
   </div>
