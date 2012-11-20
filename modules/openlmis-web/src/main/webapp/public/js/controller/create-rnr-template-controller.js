@@ -13,7 +13,12 @@ function SaveRnrTemplateController($scope, RnRColumnList, $http, $location) {
   });
 
   $scope.createProgramRnrTemplate = function () {
-    $http.post('/admin/rnr/' + $scope.program.code + '/columns.json', $scope.rnrColumnsList);
-    $scope.message = "Template saved successfully!";
+    $http.post('/admin/rnr/' + $scope.program.code + '/columns.json', $scope.rnrColumnsList).success(function () {
+      $scope.message = "Template saved successfully!";
+      $scope.error = "";
+    }).error(function () {
+        $scope.error = "Save Failed!";
+        $scope.message = "";
+      });
   }
 }
