@@ -43,12 +43,12 @@ public class FacilityMapperIT {
         Facility trz001 = make(a(facility,
                 with(code, "TRZ001"),
                 with(name, "Ngorongoro Hospital"),
-                with(type, 1),
+                with(type, "warehouse"),
                 with(geographicZone, 1)));
         Facility trz002 = make(a(facility,
                 with(code, "TRZ002"),
                 with(name, "Rural Clinic"),
-                with(type, 2),
+                with(type, "lvl3_hospital"),
                 with(geographicZone, 2)));
 
         facilityMapper.insert(trz001);
@@ -64,7 +64,7 @@ public class FacilityMapperIT {
         Facility facility1 = make(a(facility,
                 with(code, "TRZ001"),
                 with(name, "Ngorongoro Hospital"),
-                with(type, 2)));
+                with(type, "lvl3_hospital")));
 
         Facility facility2 = make(a(facility));
 
@@ -100,7 +100,7 @@ public class FacilityMapperIT {
         Facility facility = make(a(FacilityBuilder.facility,
                 with(code, "DDM001"),
                 with(name, "Dodoma Hospital"),
-                with(type, 2)));
+                with(type, "lvl3_hospital")));
         facilityMapper.insert(facility);
         programSupportedMapper.addSupportedProgram(new ProgramSupported(facility.getCode(), PROGRAM_CODE, true, "test", now().toDate()));
         //TODO: remove this from tear down. its being used to leave some data for initiate rnr.!!!

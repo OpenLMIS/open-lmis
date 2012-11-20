@@ -31,5 +31,4 @@ public class ProgramSupported implements Importable {
         this.isActive = isActive;
     }
 
-
 }

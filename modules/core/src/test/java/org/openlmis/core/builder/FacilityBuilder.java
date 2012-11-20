@@ -14,7 +14,7 @@ public class FacilityBuilder {
 
     public static final Property<Facility, String> code = newProperty();
     public static final Property<Facility, String> name = newProperty();
-    public static final Property<Facility, Integer> type = newProperty();
+    public static final Property<Facility, String> type = newProperty();
     public static final Property<Facility, Integer> geographicZone = newProperty();
     public static final Property<Facility, Boolean> sdp = newProperty();
     public static final Property<Facility, Boolean> active = newProperty();
@@ -29,7 +29,7 @@ public class FacilityBuilder {
         public Facility instantiate(PropertyLookup<Facility> lookup) {
             Facility facility = new Facility();
             facility.setCode(lookup.valueOf(code, FACILITY_CODE));
-            facility.setType(lookup.valueOf(type, 1));
+            facility.setFacilityTypeCode(lookup.valueOf(type, "warehouse"));
             facility.setName(lookup.valueOf(name, "Apollo Hospital"));
             facility.setGeographicZone(lookup.valueOf(geographicZone, 2));
             facility.setSdp(lookup.valueOf(sdp, true));

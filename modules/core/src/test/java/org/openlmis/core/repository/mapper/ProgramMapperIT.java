@@ -68,7 +68,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
         Facility facility = make(a(FacilityBuilder.facility,
                 with(code, "DDM001"),
                 with(name, "Dodoma Hospital"),
-                with(type, 2)));
+                with(type, "lvl3_hospital")));
         facilityMapper.insert(facility);
         programSupportedMapper.addSupportedProgram(new ProgramSupported(facility.getCode(), PROGRAM_CODE, true, "test", DateTime.now().toDate()));
         //TODO: remove this from tear down. its being used to leave some data for initiate rnr.!!!

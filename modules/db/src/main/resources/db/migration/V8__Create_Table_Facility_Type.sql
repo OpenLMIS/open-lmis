@@ -1,5 +1,5 @@
 CREATE TABLE facility_type (
-  id INTEGER PRIMARY KEY,
+  code VARCHAR(50) PRIMARY KEY,
   name VARCHAR(30) NOT NULL UNIQUE,
   description varchar(250) ,
   level_id INTEGER,
@@ -9,14 +9,3 @@ CREATE TABLE facility_type (
   is_active BOOLEAN,
   last_modified_date TIMESTAMP DEFAULT  CURRENT_TIMESTAMP
 );
-
-
-
-
-
-
-
-
-
-
-

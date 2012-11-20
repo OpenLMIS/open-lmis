@@ -14,7 +14,7 @@ public interface FacilityMapper {
             "is_satellite,satellite_parent_code,has_electricity,has_electronic_scc,has_electronic_dar,is_active," +
             "go_live_date,go_down_date,comment,do_not_display,modified_by,modified_date) " +
             "values(#{code}, #{name},#{description},#{gln},#{mainPhone},#{fax},#{address1}, #{address2}," +
-            "#{geographicZone},#{type},#{catchmentPopulation},#{latitude},#{longitude},#{altitude},#{operatedBy}," +
+            "#{geographicZone},#{facilityTypeCode},#{catchmentPopulation},#{latitude},#{longitude},#{altitude},#{operatedBy}," +
             "#{coldStorageGrossCapacity},#{coldStorageNetCapacity},#{suppliesOthers},#{sdp},#{online}," +
             "#{satellite},#{satelliteParentCode},#{hasElectricity},#{hasElectronicScc},#{hasElectronicDar},#{active}," +
             "#{goLiveDate},#{goDownDate},#{comment},#{doNotDisplay},#{modifiedBy},#{modifiedDate})")
@@ -31,7 +31,7 @@ public interface FacilityMapper {
             @Result(property = "address1", column = "address1"),
             @Result(property = "address2", column = "address2"),
             @Result(property = "geographicZone", column = "geographic_zone_id"),
-            @Result(property = "type", column = "type"),
+            @Result(property = "facilityTypeCode", column = "type"),
             @Result(property = "catchmentPopulation", column = "catchment_population"),
             @Result(property = "latitude", column = "latitude"),
             @Result(property = "longitude", column = "longitude"),
@@ -63,7 +63,7 @@ public interface FacilityMapper {
             "FT.nominal_eop, GZ.name as zone, GL.name as label, GZP.name as parent_zone, GLP.name as parent_label " +
             "FROM facility F, facility_type FT, geographic_zone GZ, geographic_zone GZP, geopolitical_level GL, geopolitical_level GLP " +
             "WHERE F.code = #{facilityCode} AND " +
-            "F.type = FT.id AND " +
+            "F.type = FT.code AND " +
             "F.geographic_zone_id = GZ.id AND " +
             "GZ.parent = GZP.id AND " +
             "GZ.level = GL.id AND " +

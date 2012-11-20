@@ -1,6 +1,6 @@
 CREATE TABLE facility (
     id SERIAL PRIMARY KEY,
-    code VARCHAR(6) NOT NULL UNIQUE,
+    code VARCHAR(50) NOT NULL UNIQUE,
     name VARCHAR(50) NOT NULL,
     description VARCHAR(250),
     gln VARCHAR(30),
@@ -9,7 +9,7 @@ CREATE TABLE facility (
     address1 VARCHAR(50),
     address2 VARCHAR(50),
     geographic_zone_id INTEGER NOT NULL REFERENCES geographic_zone(id),
-    type INTEGER NOT NULL REFERENCES facility_type(id),
+    type VARCHAR(50) NOT NULL REFERENCES facility_type(code),
     catchment_population INTEGER,
     latitude NUMERIC(8,4),
     longitude NUMERIC(8,4),

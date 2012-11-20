@@ -40,8 +40,8 @@ public class Facility implements Importable {
     @ImportField(mandatory = true, type = "long", name = "Geographic Zone ID")
     private long geographicZone;
 
-    @ImportField(mandatory = true, type = "long", name = "Facility Type ID")
-    private long type;
+    @ImportField(mandatory = true, name = "Facility Type ID")
+    private String facilityTypeCode;
 
     @ImportField(type = "long", name = "Catchment Population")
     private long catchmentPopulation;

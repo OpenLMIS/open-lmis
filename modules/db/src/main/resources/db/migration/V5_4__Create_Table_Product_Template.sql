@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS product;
 CREATE TABLE product (
   id SERIAL PRIMARY KEY,
-  code VARCHAR(20) NOT NULL UNIQUE ,
+  code VARCHAR(50) NOT NULL UNIQUE ,
   alternate_item_code VARCHAR(20),
   manufacturer  VARCHAR(100),
   manufacturer_code VARCHAR(30),
