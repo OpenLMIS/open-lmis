@@ -1,7 +1,6 @@
 package org.openlmis.core.repository.mapper;
 
 
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -35,12 +34,4 @@ public class ProductMapperTest {
         assertEquals(0, count);
     }
 
-    @Test
-    @Ignore
-    public void testShouldSaveProductIfAllMandatoryFieldsArePresent() throws Exception {
-        Product product = new Product();
-        product.setCode("ABCD123");
-        product.setAlternateItemCode("alternate-1231");
-//        product.setm
-    }
 }

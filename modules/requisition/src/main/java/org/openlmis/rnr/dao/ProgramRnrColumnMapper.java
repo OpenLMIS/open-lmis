@@ -47,7 +47,8 @@ public interface ProgramRnrColumnMapper {
             " p.is_used as used, m.is_visible as visible, m.is_mandatory as mandatory" +
             " from program_rnr_template p INNER JOIN master_rnr_template m" +
             " ON p.column_id = m.id" +
-            " where p.program_code=#{programCode}")
+            " where p.program_code=#{programCode}" +
+            "ORDER BY position")
     List<RnrColumn> getAllRnrColumnsForProgram(String programCode);
 
     @Update("UPDATE Program_RnR_Template SET is_used = #{rnrColumn.used}, label = #{rnrColumn.label}, position = #{rnrColumn.position}" +

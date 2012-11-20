@@ -13,7 +13,7 @@ public interface FacilityMapper {
             "cold_storage_gross_capacity,cold_storage_net_capacity,supplies_others,is_sdp,is_online," +
             "is_satellite,satellite_parent_code,has_electricity,has_electronic_scc,has_electronic_dar,is_active," +
             "go_live_date,go_down_date,comment,do_not_display,modified_by,modified_date) " +
-            "values(#{code}, #{name},#{description},#{GLN},#{mainPhone},#{fax},#{address1}, #{address2}," +
+            "values(#{code}, #{name},#{description},#{gln},#{mainPhone},#{fax},#{address1}, #{address2}," +
             "#{geographicZone},#{type},#{catchmentPopulation},#{latitude},#{longitude},#{altitude},#{operatedBy}," +
             "#{coldStorageGrossCapacity},#{coldStorageNetCapacity},#{suppliesOthers},#{sdp},#{online}," +
             "#{satellite},#{satelliteParentCode},#{hasElectricity},#{hasElectronicScc},#{hasElectronicDar},#{active}," +

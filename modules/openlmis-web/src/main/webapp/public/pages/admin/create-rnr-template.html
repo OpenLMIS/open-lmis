@@ -5,6 +5,7 @@
   <div class="rnr-template-head">
     <span class="tpl-used">Used</span>
     <span class="tpl-label">Label</span>
+    <span class="tpl-position">Position</span>
     <span class="tpl-source">Source</span>
     <span class="tpl-shown">Show in form</span>
   </div>
@@ -30,12 +31,16 @@
         <span class="tpl-label">
           <input type="text" ng:model="rnrColumn.label" value="{{ rnrColumn.label }}"/>
           <span class="default-label">
-            Default: {{ rnrColumn.name }} (<a href="javascript: void(0);" rel="tooltip" data-original-title="{{ rnrColumn.description }}">?</a>)
+            Default: {{ rnrColumn.name }} (<a href="javascript: void(0);" rel="tooltip"
+                                              data-original-title="{{ rnrColumn.description }}">?</a>)
           </span>
         </span>
-        <span class="tpl-source" >
+        <span class="tpl-position">
+          <input type="text" ng:model="rnrColumn.position" value="{{ rnrColumn.position }}"/>
+        </span>
+        <span class="tpl-source">
           {{ rnrColumn.dataSource }}
-          <br />
+          <br/>
           {{ rnrColumn.formula }}
         </span>
         <span class="tpl-shown">{{ rnrColumn.visible }} </span>

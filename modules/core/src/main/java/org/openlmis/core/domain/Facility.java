@@ -23,7 +23,7 @@ public class Facility implements Importable {
     private String description;
 
     @ImportField(name = "GLN")
-    private String GLN;
+    private String gln;
 
     @ImportField(name = "Facility Main Phone")
     private String mainPhone;

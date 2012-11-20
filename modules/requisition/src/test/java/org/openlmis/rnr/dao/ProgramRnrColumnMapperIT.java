@@ -62,4 +62,20 @@ public class ProgramRnrColumnMapperIT {
         assertThat(updatedRnrColumn.getPosition(), is(5));
         assertThat(updatedRnrColumn.getLabel(), is("Some Random Label"));
     }
+
+    @Test
+    public void shouldFetchColumnsInOrderOfPositionDefined() throws Exception {
+        RnrColumn rnrColumn1 = rnrColumnMapper.fetchAllMasterRnRColumns().get(0);
+        rnrColumn1.setPosition(2);
+        programRnrColumnMapper.insert(HIV, rnrColumn1);
+
+        RnrColumn rnrColumn2 = rnrColumnMapper.fetchAllMasterRnRColumns().get(1);
+        rnrColumn2.setPosition(1);
+        programRnrColumnMapper.insert(HIV, rnrColumn2);
+
+        List<RnrColumn> allRnrColumnsForProgram = programRnrColumnMapper.getAllRnrColumnsForProgram(HIV);
+        assertThat(allRnrColumnsForProgram.get(0), is(rnrColumn2));
+        assertThat(allRnrColumnsForProgram.get(1), is(rnrColumn1));
+
+    }
 }

@@ -17,43 +17,63 @@
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
 }
+
 span[class^="tpl-"] {
   display: inline-block;
   padding: 15px;
   vertical-align: text-top;
 }
+
 .rnr-template-head span[class^="tpl-"] {
   padding: 10px 15px;
 }
+
 .tpl-used {
   width: 40px;
 }
+
 .tpl-label {
   width: 35%;
 }
+
+.tpl-position {
+  width: 40px;
+}
+
+.tpl-position input {
+  width: 20px;
+}
+
 .tpl-source {
   width: 18%;
 }
+
 .tpl-shown {
   width: 18%;
 }
+
 .rnr-template-columns {
   margin-bottom: 10px;
 }
+
 .rnr-template-columns ul {
   list-style: none;
   margin: 0;
 }
+
 .rnr-template-columns ul > li {
   border: 1px solid #DDD;
   margin: 1px 0;
 }
+
 .rnr-template-columns input[type="text"] {
   margin-bottom: 5px;
 }
+
 .rnr-template-columns .tpl-used {
   text-align: center;
 }
+
 .rnr-template-columns .default-label {
   font-size: 0.9em;
   display: block;
