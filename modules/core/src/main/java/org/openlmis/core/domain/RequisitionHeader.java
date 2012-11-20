@@ -12,6 +12,7 @@ public class RequisitionHeader {
     String facilityName;
     String facilityCode;
     String facilityType;
+    String facilityOperatedBy;
     int maximumStockLevel;
     float emergencyOrderPoint;
     GeographicZone zone;

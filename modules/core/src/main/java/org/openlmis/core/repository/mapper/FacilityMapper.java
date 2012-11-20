@@ -59,7 +59,7 @@ public interface FacilityMapper {
     @Delete("DELETE FROM FACILITY")
     void deleteAll();
 
-    @Select("SELECT F.name, F.code, FT.name as facility_type, FT.nominal_max_month, " +
+    @Select("SELECT F.name, F.code,F.operated_by as operated_by, FT.name as facility_type, FT.nominal_max_month, " +
             "FT.nominal_eop, GZ.name as zone, GL.name as label, GZP.name as parent_zone, GLP.name as parent_label " +
             "FROM facility F, facility_type FT, geographic_zone GZ, geographic_zone GZP, geopolitical_level GL, geopolitical_level GLP " +
             "WHERE F.code = #{facilityCode} AND " +
@@ -71,6 +71,7 @@ public interface FacilityMapper {
     @Results(value = {
             @Result(property = "facilityName", column = "name"),
             @Result(property = "facilityCode", column = "code"),
+            @Result(property = "facilityOperatedBy", column = "operated_by"),
             @Result(property = "facilityType", column = "facility_type"),
             @Result(property = "maximumStockLevel", column = "nominal_max_month"),
             @Result(property = "emergencyOrderPoint", column = "nominal_eop"),

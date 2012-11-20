@@ -41,8 +41,8 @@ public class Facility implements Importable {
     private double longitude;
     @ImportField(type = "double", name = "FacilityAltitude")
     private double altitude;
-    @ImportField(type = "long", name = "FacilityOperatedBy")
-    private Long operatedBy;
+    @ImportField(type = "String", name = "FacilityOperatedBy")
+    private String operatedBy;
     @ImportField (type = "double")
     private double coldStorageGrossCapacity;
     @ImportField (type = "double")

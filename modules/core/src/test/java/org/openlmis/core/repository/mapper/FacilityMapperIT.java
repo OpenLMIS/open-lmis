@@ -60,7 +60,7 @@ public class FacilityMapperIT {
     }
 
     @Test
-    public void shouldFetchFacilityAndFacilityTypeData() {
+    public void shouldFetchFacilityAndFacilityTypeDataforRequisitionHeader() {
         Facility facility1 = make(a(facility,
                 with(code, "TRZ001"),
                 with(name, "Ngorongoro Hospital"),
@@ -79,6 +79,7 @@ public class FacilityMapperIT {
         assertEquals("Lvl3 Hospital", requisitionHeader.getFacilityType());
         assertEquals(.5, requisitionHeader.getEmergencyOrderPoint(), 0.0);
         assertEquals(3, requisitionHeader.getMaximumStockLevel());
+        assertEquals("MoH", requisitionHeader.getFacilityOperatedBy());
 
         assertEquals("Dodoma", requisitionHeader.getZone().getValue());
         assertEquals("Arusha", requisitionHeader.getParentZone().getValue());
