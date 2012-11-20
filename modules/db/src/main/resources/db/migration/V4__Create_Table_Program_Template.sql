@@ -5,5 +5,6 @@ CREATE TABLE program_rnr_template(
     program_code VARCHAR(50) NOT NULL,
     label VARCHAR(200) NOT NULL,
     is_used BOOLEAN NOT NULL,
+    position int NOT NULL,
     UNIQUE (program_code, column_id)
 );

@@ -30,18 +30,22 @@ public class ProgramRnrColumnMapperIT {
     }
 
     @Test
-    public void shouldReturnLabelFromProgramTemplate() throws Exception {
+    public void shouldInsertConfiguredDataForProgramColumn() throws Exception {
         RnrColumn rnrColumn = rnrColumnMapper.fetchAllMasterRnRColumns().get(0);
         rnrColumn.setLabel("Some Random Label");
+        rnrColumn.setPosition(5);
+        rnrColumn.setUsed(false);
         programRnrColumnMapper.insert(HIV, rnrColumn);
 
         List<RnrColumn> fetchedColumns = programRnrColumnMapper.getAllRnrColumnsForProgram(HIV);
         assertThat(fetchedColumns.size(), is(1));
         assertThat(fetchedColumns.get(0).getLabel(), is("Some Random Label"));
+        assertThat(fetchedColumns.get(0).isUsed(), is(false));
+        assertThat(fetchedColumns.get(0).getPosition(), is(5));
     }
 
     @Test
-    public void shouldSaveLabelAndUsedFlag() throws Exception {
+    public void shouldUpdateConfiguredDataForProgramColumn() throws Exception {
         RnrColumn rnrColumn = rnrColumnMapper.fetchAllMasterRnRColumns().get(0);
         programRnrColumnMapper.insert(HIV, rnrColumn);
 
@@ -49,11 +53,13 @@ public class ProgramRnrColumnMapperIT {
         newRnrColumn.setId(rnrColumn.getId());
         newRnrColumn.setLabel("Some Random Label");
         newRnrColumn.setUsed(false);
+        newRnrColumn.setPosition(5);
         programRnrColumnMapper.update(HIV, newRnrColumn);
 
         RnrColumn updatedRnrColumn = programRnrColumnMapper.getAllRnrColumnsForProgram(HIV).get(0);
         assertThat(updatedRnrColumn.getId(), is(newRnrColumn.getId()));
         assertThat(updatedRnrColumn.isUsed(), is(false));
+        assertThat(updatedRnrColumn.getPosition(), is(5));
         assertThat(updatedRnrColumn.getLabel(), is("Some Random Label"));
     }
 }
