@@ -29,7 +29,7 @@ span[class^="tpl-"] {
 }
 
 .tpl-used {
-  width: 40px;
+  width: 18%;
 }
 
 .tpl-label {
@@ -48,8 +48,8 @@ span[class^="tpl-"] {
   width: 18%;
 }
 
-.tpl-shown {
-  width: 18%;
+.tpl-visible {
+  width: 40px;
 }
 
 .rnr-template-columns {
@@ -70,7 +70,7 @@ span[class^="tpl-"] {
   margin-bottom: 5px;
 }
 
-.rnr-template-columns .tpl-used {
+.rnr-template-columns .tpl-visible {
   text-align: center;
 }
 

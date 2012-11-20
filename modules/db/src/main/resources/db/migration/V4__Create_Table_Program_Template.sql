@@ -4,7 +4,7 @@ CREATE TABLE program_rnr_template(
     column_id INTEGER NOT NULL REFERENCES master_rnr_template(id),
     program_code VARCHAR(50) NOT NULL,
     label VARCHAR(200) NOT NULL,
-    is_used BOOLEAN NOT NULL,
+    is_visible BOOLEAN NOT NULL,
     position int NOT NULL,
     UNIQUE (program_code, column_id)
 );

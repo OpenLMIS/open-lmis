@@ -17,8 +17,8 @@ public interface ProgramRnrColumnMapper {
     })
     ProgramRnrColumn get(@Param("programCode") String programCode, @Param("columnId") Integer columnId);
 
-    @Insert("INSERT INTO program_rnr_template(program_code, column_id, is_used, label, position)" +
-            " values (#{programCode}, #{rnrColumn.id}, #{rnrColumn.used}, #{rnrColumn.label}, #{rnrColumn.position})")
+    @Insert("INSERT INTO program_rnr_template(program_code, column_id, is_visible, label, position)" +
+            " values (#{programCode}, #{rnrColumn.id}, #{rnrColumn.visible}, #{rnrColumn.label}, #{rnrColumn.position})")
     int insert(@Param("programCode") String programCode, @Param("rnrColumn") RnrColumn rnrColumn);
 
     @Delete("DELETE FROM program_rnr_template")
@@ -44,14 +44,14 @@ public interface ProgramRnrColumnMapper {
     @Select("select m.id as id, m.column_name as name, m.description description," +
             " p.position as position, p.label as label, m.default_value as defaultValue," +
             " m.data_source as source, m.formula as formula, m.column_indicator as indicator," +
-            " p.is_used as used, m.is_visible as visible, m.is_mandatory as mandatory" +
+            " p.is_visible as visible, m.is_used as used, m.is_mandatory as mandatory" +
             " from program_rnr_template p INNER JOIN master_rnr_template m" +
             " ON p.column_id = m.id" +
             " where p.program_code=#{programCode}" +
             "ORDER BY position")
     List<RnrColumn> getAllRnrColumnsForProgram(String programCode);
 
-    @Update("UPDATE Program_RnR_Template SET is_used = #{rnrColumn.used}, label = #{rnrColumn.label}, position = #{rnrColumn.position}" +
+    @Update("UPDATE Program_RnR_Template SET is_visible = #{rnrColumn.visible}, label = #{rnrColumn.label}, position = #{rnrColumn.position}" +
             "WHERE program_code = #{programCode} AND column_id = #{rnrColumn.id}")
     void update(@Param("programCode") String programCode, @Param("rnrColumn") RnrColumn rnrColumn);
 
