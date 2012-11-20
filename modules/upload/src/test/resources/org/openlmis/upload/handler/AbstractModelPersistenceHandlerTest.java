@@ -1,9 +1,10 @@
-package org.openlmis.core.handler;
+package org.openlmis.upload.handler;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openlmis.upload.Importable;
+import org.openlmis.upload.exception.UploadException;
 
 import static org.mockito.Mockito.mock;
 
@@ -21,9 +22,10 @@ public class AbstractModelPersistenceHandlerTest {
         };
 
         Importable importable = mock(Importable.class);
-        expectedEx.expect(RuntimeException.class);
+        expectedEx.expect(UploadException.class);
         expectedEx.expectMessage("error in Record No. 1");
 
         handler.execute(importable, 2, "user");
     }
+    
 }
