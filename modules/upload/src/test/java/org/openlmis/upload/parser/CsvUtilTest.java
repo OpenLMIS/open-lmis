@@ -29,7 +29,7 @@ public class CsvUtilTest {
     public void shouldReturnCorrectProcessorForHeaders() throws UploadException {
 
         ArrayList<String> headers = new ArrayList<String>();
-        headers.add("mandatoryStringField");
+        headers.add("mandatory string field");
         headers.add("mandatoryIntField");
         headers.add("optionalStringField");
         headers.add("optionalDateField");
@@ -43,9 +43,9 @@ public class CsvUtilTest {
     }
 
     @Test
-    public void shouldValidateHeadersWithCaseMismatch() throws UploadException {
+    public void shouldNotThrowExceptionWhileValidatingHeadersWithMismatchCase() throws UploadException {
         List<String> headers = new ArrayList<String>();
-        headers.add("MANDAtoryStringField");
+        headers.add("MANDAtory String Field");
         headers.add("mandatoryIntFIELD");
 
         CsvUtil.validateHeaders(DummyImportable.class, headers);
@@ -54,7 +54,7 @@ public class CsvUtilTest {
     @Test
     public void testReturnProcessorForMismatchCase() throws UploadException {
         List<String> headers = new ArrayList<String>();
-        headers.add("MANDAtoryStringField");
+        headers.add("MANDAtory String Field");
         headers.add("mandatoryIntFIELD");
 
         List<CellProcessor> cellProcessors = CsvUtil.getProcessors(DummyImportable.class, headers);
@@ -67,7 +67,7 @@ public class CsvUtilTest {
     @Test
     public void shouldIgnoreNonAnnotatedHeaders() throws UploadException {
         List<String> headers = new ArrayList<String>();
-        headers.add("mandatoryStringField");
+        headers.add("mandatory string field");
         headers.add("mandatoryIntField");
         headers.add("nonAnnotatedField");
         headers.add("random");
@@ -84,7 +84,7 @@ public class CsvUtilTest {
     @Test
     public void shouldReturnProcessorsForMandatoryFields() throws Exception {
         List<String> headers = new ArrayList<String>();
-        headers.add("mandatoryStringField");
+        headers.add("mandatory string field");
         headers.add("mandatoryIntField");
 
         NotNull notNullForString = mock(NotNull.class);
@@ -125,7 +125,7 @@ public class CsvUtilTest {
     public void shouldThrowExceptionIfHeaderDoesNotHaveCorrespondingFieldInModel(){
         List<String> headers = new ArrayList<String>() {{
             add("optionalStringFieldsff");
-            add("mandatoryStringField");
+            add("mandatory string field");
             add("mandatoryIntField");
         }};
 
@@ -145,7 +145,7 @@ public class CsvUtilTest {
         try {
             CsvUtil.validateHeaders(DummyImportable.class, headers);
         } catch (UploadException e) {
-            assertEquals("Missing Mandatory columns in upload file: [mandatoryStringField, mandatoryIntField]", e.getMessage());
+            assertEquals("Missing Mandatory columns in upload file: [Mandatory String Field, mandatoryIntField]", e.getMessage());
         }
     }
 

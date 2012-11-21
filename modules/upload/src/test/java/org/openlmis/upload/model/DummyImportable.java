@@ -11,7 +11,7 @@ public class DummyImportable implements Importable {
 
     @Getter
     @Setter
-    @ImportField(mandatory = true)
+    @ImportField(mandatory = true, name = "Mandatory String Field")
     String mandatoryStringField;
 
     @Getter
@@ -26,7 +26,7 @@ public class DummyImportable implements Importable {
 
     @Getter
     @Setter
-    @ImportField(type = "int")
+    @ImportField(type = "int", name = "OPTIONAL INT FIELD")
     int optionalIntField;
 
     @Getter

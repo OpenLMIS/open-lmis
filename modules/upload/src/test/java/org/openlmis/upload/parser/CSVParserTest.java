@@ -36,7 +36,7 @@ public class CSVParserTest {
     @Test
     public void shouldTrimSpacesFromParsedRecords() throws Exception {
         String csvInput =
-                "mandatoryStringField   , mandatoryIntField\n" +
+                "mandatory string field   , mandatoryIntField\n" +
                         " Random1               , 23\n" +
                         " Random2                , 25\n";
 
@@ -53,9 +53,9 @@ public class CSVParserTest {
 
 
     @Test
-    public void shouldReportMissingMandatoryHeader() throws Exception {
+    public void shouldUseHeadersFromCSVToReportMissingMandatoryData() throws Exception {
         String csvInput =
-                "mandatoryStringField,mandatoryIntField\n" +
+                "Mandatory String Field,mandatoryIntField\n" +
                         "RandomString1,2533\n" +
                         ",234\n" +
                         "RandomString3,2566\n";
@@ -63,22 +63,22 @@ public class CSVParserTest {
         InputStream inputStream = new ByteArrayInputStream(csvInput.getBytes("UTF-8"));
 
         expectedEx.expect(UploadException.class);
-        expectedEx.expectMessage("Missing Mandatory data in field : 'mandatoryStringField' of Record No. 2");
+        expectedEx.expectMessage("Missing Mandatory data in field : 'Mandatory String Field' of Record No. 2");
 
         csvParser.process(inputStream, DummyImportable.class, recordHandler, "user");
     }
 
     @Test
-    public void shouldReportIncorrectDataType() throws Exception {
+    public void shouldUserHeadersFromCSVToReportIncorrectDataTypeError() throws Exception {
         String csvInput =
-                "mandatoryStringField,mandatoryIntField\n" +
-                        "RandomString1,2533\n" +
-                        "RandomString2,abc123\n";
+                "mandatory string field, mandatoryIntField, optional int field\n" +
+                        "RandomString1, 2533, \n" +
+                        "RandomString2, 123, random\n";
 
         InputStream inputStream = new ByteArrayInputStream(csvInput.getBytes("UTF-8"));
 
         expectedEx.expect(UploadException.class);
-        expectedEx.expectMessage("Incorrect Data type in field : 'mandatoryIntField' of Record No. 2");
+        expectedEx.expectMessage("Incorrect Data type in field : 'optional int field' of Record No. 2");
 
         csvParser.process(inputStream, DummyImportable.class, recordHandler, "user");
     }
@@ -86,7 +86,7 @@ public class CSVParserTest {
     @Test
     public void shouldReportMissingHeaders() throws IOException {
         String csvInput =
-                "mandatoryStringField,\n" +
+                "mandatory string field,\n" +
                         "RandomString1,2533\n" +
                         "RandomString2,abc123\n";
 

@@ -44,23 +44,8 @@ public class CSVParser {
         List<CellProcessor> cellProcessors = CsvUtil.getProcessors(modelClass, headersSet);
 
         CellProcessor[] processors = cellProcessors.toArray(new CellProcessor[cellProcessors.size()]);
-        String[] nameMappings = getNameMappings(modelClass, headers);
-        parse(modelClass, recordHandler, csvBeanReader, nameMappings, processors, modifiedBy);
+        parse(modelClass, recordHandler, csvBeanReader, headers, processors, modifiedBy);
         return csvBeanReader.getRowNumber() - 1;
-    }
-
-    private String[] getNameMappings(Class<? extends Importable> clazz, final String[] headers) {
-        List<String> nameMappings = new ArrayList<String>();
-
-        for (String header : headers) {
-            Field fieldWithAnnotatedName = findFieldWithAnnotatedName(header, clazz);
-            if (fieldWithAnnotatedName != null) {
-                nameMappings.add(fieldWithAnnotatedName.getName());
-            } else {
-                nameMappings.add(header);
-            }
-        }
-        return nameMappings.toArray(new String[nameMappings.size()]);
     }
 
     private Field findFieldWithAnnotatedName(final String annotatedName, Class<? extends Importable> clazz) {
@@ -91,17 +76,32 @@ public class CSVParser {
     }
 
     private void parse(Class<? extends Importable> modelClass, RecordHandler recordHandler,
-                       CsvBeanReader csvBeanReader, String[] headers, CellProcessor[] processors, String modifiedBy) throws SuperCsvException, IOException {
+                       CsvBeanReader csvBeanReader, String[] userFriendlyHeaders, CellProcessor[] processors, String modifiedBy) throws SuperCsvException, IOException {
+        String[] nameMappings = getNameMappings(modelClass, userFriendlyHeaders);
         Importable importedModel;
         try {
-            while ((importedModel = csvBeanReader.read(modelClass, headers, processors)) != null) {
+            while ((importedModel = csvBeanReader.read(modelClass, nameMappings, processors)) != null) {
                 recordHandler.execute(importedModel, csvBeanReader.getRowNumber(), modifiedBy);
             }
         } catch (SuperCsvConstraintViolationException constraintException) {
-            createException("Missing Mandatory data in field :", headers, constraintException);
+            createException("Missing Mandatory data in field :", userFriendlyHeaders, constraintException);
         } catch (SuperCsvCellProcessorException processorException) {
-            createException("Incorrect Data type in field :", headers, processorException);
+            createException("Incorrect Data type in field :", userFriendlyHeaders, processorException);
         }
+    }
+
+    private String[] getNameMappings(Class<? extends Importable> clazz, final String[] headers) {
+        List<String> nameMappings = new ArrayList<>();
+
+        for (String header : headers) {
+            Field fieldWithAnnotatedName = findFieldWithAnnotatedName(header, clazz);
+            if (fieldWithAnnotatedName != null) {
+                nameMappings.add(fieldWithAnnotatedName.getName());
+            } else {
+                nameMappings.add(header);
+            }
+        }
+        return nameMappings.toArray(new String[nameMappings.size()]);
     }
 
     private void createException(String error, String[] headers, SuperCsvCellProcessorException exception) throws SuperCsvException {
