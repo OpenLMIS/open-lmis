@@ -9,6 +9,7 @@
     <span class="tpl-source">Source</span>
     <!--<span class="tpl-used">Used</span>-->
   </div>
+  <form name="haha">
   <div class="rnr-template-columns">
     <ul id="sortable">
       <li ng-repeat="rnrColumn in rnrColumnsList">
@@ -38,7 +39,8 @@
         </span>
         <input type="hidden" ng:model="rnrColumn.id" value="{{ rnrColumn.id }}"/>
         <span class="tpl-label">
-          <input type="text" ng:model="rnrColumn.label" value="{{ rnrColumn.label }}"/>
+
+            <input name="label" type="text" ng:model="rnrColumn.label" value="{{ rnrColumn.label }}" required />
           <span class="default-label">
             Default: {{ rnrColumn.name }} (<a rel="tooltip" data-placement="right" data-original-title="{{ rnrColumn.description }}" ui-jq="tooltip">?</a>)
           </span>
@@ -61,5 +63,7 @@
   <div class="alert alert-success" id="saveSuccessMsgDiv" ng-model="message" ng-show="message">
     {{message}}
   </div>
-  <button class="btn" ng-click="createProgramRnrTemplate()">Save</button>
+
+  <button class="btn" ng-submit="createProgramRnrTemplate()">Save</button>
+    </form>
 </div>
