@@ -1,21 +1,11 @@
 package org.openlmis.rnr.dao;
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.rnr.domain.ProgramRnrColumn;
 import org.openlmis.rnr.domain.RnrColumn;
 
 import java.util.List;
 
 public interface ProgramRnrColumnMapper {
-
-    @Select("SELECT * FROM program_rnr_template WHERE program_code=#{programCode} AND column_id=#{columnId}")
-    @Results(value = {
-            @Result(property = "id", column = "id"),
-            @Result(property = "columnId", column = "column_id"),
-            @Result(property = "programCode", column = "program_code"),
-            @Result(property = "used", column = "is_used")
-    })
-    ProgramRnrColumn get(@Param("programCode") String programCode, @Param("columnId") Integer columnId);
 
     @Insert("INSERT INTO program_rnr_template(program_code, column_id, is_visible, label, position)" +
             " values (#{programCode}, #{rnrColumn.id}, #{rnrColumn.visible}, #{rnrColumn.label}, #{rnrColumn.position})")

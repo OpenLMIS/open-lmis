@@ -2,7 +2,7 @@
 angular.module('rnr', ['openlmis']).
     config(['$routeProvider', function ($routeProvider) {
     $routeProvider.
-        when('/new-rnr', {controller:RnrController, templateUrl:'select-facility.html'}).
-        when('/rnr-header', {controller:RnrHeaderController, templateUrl:'rnr-header.html'}).
-        otherwise({redirectTo:'/new-rnr'});
+        when('/init-rnr', {controller:InitiateRnrController, templateUrl:'partials/init.html'}).
+        when('/create-rnr', {controller:CreateRnrController, templateUrl:'partials/create.html'}).
+        otherwise({redirectTo:'/init-rnr'});
 }]);

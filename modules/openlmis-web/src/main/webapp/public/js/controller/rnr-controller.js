@@ -1,38 +1,41 @@
-function RnrController($scope, Facility, FacilitySupportedPrograms, $location) {
-  Facility.get({}, function (data) {
-      $scope.facilities = data.facilityList;
-    }, {}
-  );
+function InitiateRnrController($scope, Facility, FacilitySupportedPrograms, $location) {
+    Facility.get({}, function (data) {
+            $scope.facilities = data.facilityList;
+        }, {}
+    );
 
-  $scope.loadPrograms = function ($scope) {
-    FacilitySupportedPrograms.get({facility:$scope.facility}, function (data) {
-      $scope.program = null;
-      $scope.programsForFacility = data.programList;
-    }, {});
-  };
+    $scope.loadPrograms = function ($scope) {
+        FacilitySupportedPrograms.get({facility:$scope.facility}, function (data) {
+            $scope.program = null;
+            $scope.programsForFacility = data.programList;
+        }, {});
+    };
 
-  var validate = function ($scope) {
-    if ($scope.program) {
-      return true;
-    } else {
-      return false;
-    }
-  };
+    var validate = function ($scope) {
+        return $scope.program;
+    };
 
-  $scope.getRnrHeader = function ($scope) {
-    if (validate($scope)) {
-      $location.path('rnr-header');
+    $scope.getRnrHeader = function ($scope) {
+        if (validate($scope)) {
+            $location.path('create-rnr');
+        }
+        else {
+            alert('You need to select Facility and program for facility to proceed');
+        }
     }
-    else {
-      alert('You need to select Facility and program for facility to proceed');
-    }
-  }
 }
 
-function RnrHeaderController($scope, RequisitionHeader, $location) {
-  RequisitionHeader.get({code:$scope.facility}, function (data) {
-    $scope.header = data.requisitionHeader;
-  }, function () {
-    $location.path("new-rnr");
-  });
+function CreateRnrController($scope, RequisitionHeader, RnRColumnList, $location) {
+
+    RequisitionHeader.get({code:$scope.facility}, function (data) {
+        $scope.header = data.requisitionHeader;
+    }, function () {
+        $location.path("init-rnr");
+    });
+
+    RnRColumnList.get({programCode:$scope.program.code}, function (data) {   //success
+        $scope.rnrColumnsList = data.rnrColumnList;
+    }, function () {
+        $location.path('init-rnr');
+    });
 }

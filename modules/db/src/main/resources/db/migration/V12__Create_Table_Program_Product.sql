@@ -5,5 +5,5 @@ CREATE TABLE program_product (
     product_code VARCHAR(50) REFERENCES PRODUCT(code),
     modified_by varchar(50),
     modified_date TIMESTAMP,
-    PRIMARY KEY (product_code, program_code)
+    UNIQUE (product_code, program_code)
 );

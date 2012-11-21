@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import java.util.List;
 
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("")
 public class RnrTemplateController {
 
     private RnrTemplateService rnrTemplateService;
@@ -28,7 +28,7 @@ public class RnrTemplateController {
         return rnrTemplateService.fetchAllRnRColumns(programCode);
     }
 
-    @RequestMapping(value = "/rnr/{programCode}/columns", method = RequestMethod.POST, headers = "Accept=application/json")
+    @RequestMapping(value = "/admin/rnr/{programCode}/columns", method = RequestMethod.POST, headers = "Accept=application/json")
     public void saveRnRTemplateForProgram(@PathVariable("programCode") String programCode, @RequestBody ProgramRnRTemplateForm programRnRTemplateForm) {
         rnrTemplateService.saveRnRTemplateForProgram(programCode, programRnRTemplateForm);
     }

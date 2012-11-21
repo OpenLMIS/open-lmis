@@ -1,6 +1,6 @@
 describe('Requisition header controllers', function () {
 
-  describe('RnrController', function () {
+  describe('InitiateRnrController', function () {
 
     var scope, ctrl;
 
@@ -15,7 +15,7 @@ describe('Requisition header controllers', function () {
         {name:'Nexus S'},
         {name:'Motorola DROID'}
       ]);
-      ctrl = $controller(RnrController, {$scope:scope, Facility:Facility});
+      ctrl = $controller(InitiateRnrController, {$scope:scope, Facility:Facility});
       console.log(scope.facilities);
     }));
 

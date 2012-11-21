@@ -6,11 +6,11 @@ function CreateRnrTemplateController($scope, Program) {
 
 function SaveRnrTemplateController($scope, RnRColumnList, $http, $location) {
   var code = ($scope.program ? $scope.program.code : "");
-  RnRColumnList.get({programCode:code}, function (data) {   //success
-    $scope.rnrColumnsList = data.rnrColumnList;
-  }, function () {
-    $location.path('select-program');
-  });
+    RnRColumnList.get({programCode:code}, function (data) {   //success
+        $scope.rnrColumnsList = data.rnrColumnList;
+    }, function () {
+        $location.path('select-program');
+    });
 
   $scope.createProgramRnrTemplate = function () {
     $http.post('/admin/rnr/' + $scope.program.code + '/columns.json', $scope.rnrColumnsList).success(function () {

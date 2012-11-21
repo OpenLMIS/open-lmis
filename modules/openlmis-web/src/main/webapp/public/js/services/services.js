@@ -9,7 +9,7 @@ services.factory('Program', function ($resource) {
 });
 
 services.factory('RnRColumnList', function ($resource) {
-    return $resource('/admin/rnr/:programCode/columns.json', {}, {});
+    return $resource('/rnr/:programCode/columns.json', {}, {});
 });
 
 services.factory('Facility', function ($resource) {
@@ -23,4 +23,3 @@ services.factory('FacilitySupportedPrograms', function ($resource) {
 services.factory('RequisitionHeader', function ($resource) {
     return $resource('/logistics/facility/:code/requisition-header.json', {}, {});
 });
-
