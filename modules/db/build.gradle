@@ -7,19 +7,19 @@ configurations {
 
 dependencies {
     compile 'com.googlecode.flyway:flyway-core:1.7',
-    'com.googlecode.flyway:flyway-ant:1.7',
-    'postgresql:postgresql:9.1-901.jdbc4',
-    'c3p0:c3p0:0.9.0.4',
-    'org.springframework:spring-tx:3.1.1.RELEASE',
-    'org.springframework:spring-jdbc:3.1.1.RELEASE'
+            'com.googlecode.flyway:flyway-ant:1.7',
+            'postgresql:postgresql:9.1-901.jdbc4',
+            'c3p0:c3p0:0.9.0.4',
+            'org.springframework:spring-tx:3.1.1.RELEASE',
+            'org.springframework:spring-jdbc:3.1.1.RELEASE'
 
     flyway 'com.googlecode.flyway:flyway-ant:1.7',
-    'postgresql:postgresql:9.1-901.jdbc4'
+            'postgresql:postgresql:9.1-901.jdbc4'
 
     classpath 'postgresql:postgresql:9.1-901.jdbc4'
 }
 
-task setupDB(dependsOn: ["createDB",clean]) << {
+task setupDB(dependsOn: ["createDB", clean]) << {
     ext.flyway_classpath = files(configurations.flyway)
     ant.taskdef(name: 'flywayInit', classname: 'com.googlecode.flyway.ant.InitTask', classpath: ext.flyway_classpath.asPath)
     ant.flywayInit(driver: 'org.postgresql.Driver', url: 'jdbc:postgresql:' + dbName, user: dbUser, password: dbPassword)
@@ -36,6 +36,22 @@ task dropDB() << {
     executeSql('drop database if exists ' + dbName)
 }
 
+jar.doFirst {
+    tasks.migrateDB.execute()
+}
+
+task migrateDB() << {
+    println("migrateDB:")
+    ext.flyway_classpath = files(sourceSets.main.resources.srcDirs) + files(configurations.flyway)
+    ant.taskdef(name: 'flywayMigrate', classname: 'com.googlecode.flyway.ant.MigrateTask', classpath: ext.flyway_classpath.asPath)
+    ant.flywayMigrate(driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$dbName", user: dbUser, password: dbPassword)
+}
+
+task seed(type: Exec) {
+    environment("PGPASSWORD","p@ssword")
+    commandLine 'psql', '-U', 'postgres', '-w', 'open_lmis', '-f', '../../test-data/sql/seed.sql'
+}
+
 def executeSql(String statement) {
     configurations.classpath.each { file ->
         gradle.class.classLoader.addURL(file.toURI().toURL())
@@ -43,22 +59,11 @@ def executeSql(String statement) {
     driverName = 'org.postgresql.Driver'
     Class.forName(driverName)
     Sql sql = (Sql) Sql.newInstance(
-            "jdbc:postgresql://$databaseHostName:$databasePort" ,
+            "jdbc:postgresql://$databaseHostName:$databasePort",
             dbUser,
             dbPassword,
             driverName
     )
     sql.execute(statement)
-}
-
-jar.doFirst {
-    tasks.migrateDB.execute()
-}
-
-task migrateDB() << {
-    println("in migrate")
-    ext.flyway_classpath = files(sourceSets.main.resources.srcDirs) + files(configurations.flyway)
-    ant.taskdef(name: 'flywayMigrate', classname: 'com.googlecode.flyway.ant.MigrateTask', classpath: ext.flyway_classpath.asPath)
-    ant.flywayMigrate(driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$dbName" , user: dbUser, password: dbPassword)
 }
 
