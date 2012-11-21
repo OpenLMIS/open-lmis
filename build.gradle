@@ -20,4 +20,10 @@ subprojects {
                 'org.powermock:powermock-api-mockito:1.4.12',
                 'org.powermock:powermock-module-junit4:1.4.12'
     }
+
+    test{
+        jvmArgs '-XX:-UseSplitVerifier'
+    }
+
 }
+

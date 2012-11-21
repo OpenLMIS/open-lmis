@@ -19,7 +19,3 @@ dependencies {
 
     testCompile 'org.springframework:spring-test:3.1.2.RELEASE'
 }
-
-test{
-    jvmArgs '-XX:-UseSplitVerifier'
-}
