@@ -5,7 +5,7 @@
   <div class="rnr-template-head">
     <span class="tpl-visible">Show</span>
     <span class="tpl-label">Label</span>
-    <span class="tpl-position">Position</span>
+    <!--<span class="tpl-position">Position</span>-->
     <span class="tpl-source">Source</span>
     <!--<span class="tpl-used">Used</span>-->
   </div>
@@ -37,9 +37,9 @@
                                               data-original-title="{{ rnrColumn.description }}" ui-jq="tooltip">?</a>)
           </span>
         </span>
-        <span class="tpl-position">
-          <input type="text" ng:model="rnrColumn.position" value="{{ rnrColumn.position }}"/>
-        </span>
+        <!--<span class="tpl-position">-->
+          <input type="hidden" ng:model="rnrColumn.position" value="{{ rnrColumn.position }}"/>
+        <!--</span>-->
         <span class="tpl-source">
           {{ rnrColumn.dataSource }}
           <br/>
