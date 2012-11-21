@@ -10,20 +10,14 @@
     <!--<span class="tpl-used">Used</span>-->
   </div>
   <form name="haha">
-  <div class="rnr-template-columns">
-    <ul id="sortable">
-      <li ng-repeat="rnrColumn in rnrColumnsList">
-        <span ng-switch on="rnrColumn.mandatory">
+    <div class="rnr-template-columns">
+      <ul id="sortable">
+        <li ng-repeat="rnrColumn in rnrColumnsList">
+         <span ng-switch on="rnrColumn.mandatory">
           <span ng-switch-when="true" class="tpl-visible">
             <input type="checkbox" ng:model="rnrColumn.visible" checked disabled/>
           </span>
           <span ng-switch-default>
-
-            <span ng-switch on="rnrColumn.dataSource">
-              <span ng-switch-when="User Input" class="tpl-visible">
-                <input type="checkbox" ng:model="rnrColumn.visible" checked disabled/>
-              </span>
-              <span ng-switch-default>
                 <span ng-switch on="rnrColumn.visible">
                   <span ng-switch-when="true" class="tpl-visible">
                     <input type="checkbox" ng:model="rnrColumn.visible" checked/>
@@ -31,18 +25,16 @@
                   <span ng-switch-default class="tpl-visible">
                     <input type="checkbox" ng:model="rnrColumn.visible"/>
                   </span>
-                </span>
               </span>
-            </span>
-
           </span>
         </span>
-        <input type="hidden" ng:model="rnrColumn.id" value="{{ rnrColumn.id }}"/>
+          <input type="hidden" ng:model="rnrColumn.id" value="{{ rnrColumn.id }}"/>
         <span class="tpl-label">
 
-            <input name="label" type="text" ng:model="rnrColumn.label" value="{{ rnrColumn.label }}" required />
+            <input name="label" type="text" ng:model="rnrColumn.label" value="{{ rnrColumn.label }}" required/>
           <span class="default-label">
-            Default: {{ rnrColumn.name }} (<a rel="tooltip" data-placement="right" data-original-title="{{ rnrColumn.description }}" ui-jq="tooltip">?</a>)
+            Default: {{ rnrColumn.name }} (<a rel="tooltip" data-placement="right"
+                                              data-original-title="{{ rnrColumn.description }}" ui-jq="tooltip">?</a>)
           </span>
         </span>
         <span class="tpl-position">
@@ -53,17 +45,17 @@
           <br/>
           {{ rnrColumn.formula }}
         </span>
-        <!--<span class="tpl-shown">{{ rnrColumn.used }} </span>-->
-      </li>
-    </ul>
-  </div>
-  <div class="alert alert-error" id="saveSuccessMsgDiv" ng-model="error" ng-show="error">
-    {{error}}
-  </div>
-  <div class="alert alert-success" id="saveSuccessMsgDiv" ng-model="message" ng-show="message">
-    {{message}}
-  </div>
+          <!--<span class="tpl-shown">{{ rnrColumn.used }} </span>-->
+        </li>
+      </ul>
+    </div>
+    <div class="alert alert-error" id="saveSuccessMsgDiv" ng-model="error" ng-show="error">
+      {{error}}
+    </div>
+    <div class="alert alert-success" id="saveSuccessMsgDiv" ng-model="message" ng-show="message">
+      {{message}}
+    </div>
 
-  <button class="btn" ng-submit="createProgramRnrTemplate()">Save</button>
-    </form>
+    <button class="btn" ng-submit="createProgramRnrTemplate()">Save</button>
+  </form>
 </div>
