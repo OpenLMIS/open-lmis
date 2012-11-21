@@ -60,7 +60,7 @@ describe('Requisition header controllers', function () {
       scope.program={code:"programCode"};
 
       $httpBackend.expectGET('/logistics/facility/10134/requisition-header.json').respond(requisitionHeader);
-      $httpBackend.expectGET('/logistics/rnr/programCode/columns.json').respond(requisitionHeader);
+      $httpBackend.expectGET('/logistics/rnr/programCode/columns.json').respond({"rnrColumnList":{"testField":"test"}});
       ctrl = $controller(CreateRnrController, {$scope:scope, $location:location});
     }));
 
@@ -69,6 +69,12 @@ describe('Requisition header controllers', function () {
       expect(scope.header).toEqual({"facilityName":"National Warehouse",
         "facilityCode":"10134","facilityType":"Warehouse","facilityOperatedBy":"MoH","maximumStockLevel":3,"emergencyOrderPoint":0.5,
         "zone":{"label":"state","value":"Arusha"},"parentZone":{"label":"state","value":"Arusha"}});
+    });
+
+    it('should get list of Rnr Columns for program', function () {
+      $httpBackend.flush();
+      expect(scope.programRnRColumnList).toEqual({"testField":"test"});
+
     });
 
   });
