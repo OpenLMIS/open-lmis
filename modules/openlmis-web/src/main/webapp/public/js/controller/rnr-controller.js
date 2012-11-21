@@ -17,12 +17,15 @@ function InitiateRnrController($scope, Facility, FacilitySupportedPrograms, $loc
 
     $scope.getRnrHeader = function ($scope) {
         if (validate($scope)) {
+            $scope.error="";
             $location.path('create-rnr');
         }
         else {
-            alert('You need to select Facility and program for facility to proceed');
+          $scope.error = "Please select Facility and program for facility to proceed";
         }
     }
+    
+
 }
 
 function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $location) {

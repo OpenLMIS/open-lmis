@@ -9,5 +9,8 @@
     <select ng-model="$parent.program" ng-options="i as i.name for i in $parent.programsForFacility">
         <option value="">--choose program--</option>
     </select> <br/><br/>
+  <div class="alert alert-error" id="saveSuccessMsgDiv" ng-model="error" ng-show="error">
+    {{error}}
+  </div>
     <input type="button" class="btn" ng-click="getRnrHeader($parent)" value="Next"/>
 </div>
