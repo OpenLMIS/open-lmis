@@ -64,18 +64,32 @@ public class ProgramRnrColumnMapperIT {
     }
 
     @Test
-    public void shouldFetchColumnsInOrderOfPositionDefined() throws Exception {
-        RnrColumn rnrColumn1 = rnrColumnMapper.fetchAllMasterRnRColumns().get(0);
-        rnrColumn1.setPosition(2);
-        programRnrColumnMapper.insert(HIV, rnrColumn1);
+    public void shouldFetchColumnsInOrderOfVisibleAndPositionDefined() throws Exception {
+        RnrColumn visibleColumn1 = rnrColumnMapper.fetchAllMasterRnRColumns().get(0);
+        visibleColumn1.setPosition(4);
+        visibleColumn1.setVisible(true);
+        programRnrColumnMapper.insert(HIV, visibleColumn1);
 
-        RnrColumn rnrColumn2 = rnrColumnMapper.fetchAllMasterRnRColumns().get(1);
-        rnrColumn2.setPosition(1);
-        programRnrColumnMapper.insert(HIV, rnrColumn2);
+        RnrColumn visibleColumn2 = rnrColumnMapper.fetchAllMasterRnRColumns().get(1);
+        visibleColumn2.setPosition(3);
+        visibleColumn2.setVisible(true);
+        programRnrColumnMapper.insert(HIV, visibleColumn2);
+
+        RnrColumn notVisibleColumn1 = rnrColumnMapper.fetchAllMasterRnRColumns().get(2);
+        notVisibleColumn1.setVisible(false);
+        notVisibleColumn1.setPosition(2);
+        programRnrColumnMapper.insert(HIV, notVisibleColumn1);
+
+        RnrColumn notVisibleColumn2 = rnrColumnMapper.fetchAllMasterRnRColumns().get(3);
+        notVisibleColumn2.setPosition(1);
+        notVisibleColumn2.setVisible(false);
+        programRnrColumnMapper.insert(HIV, notVisibleColumn2);
 
         List<RnrColumn> allRnrColumnsForProgram = programRnrColumnMapper.getAllRnrColumnsForProgram(HIV);
-        assertThat(allRnrColumnsForProgram.get(0), is(rnrColumn2));
-        assertThat(allRnrColumnsForProgram.get(1), is(rnrColumn1));
+        assertThat(allRnrColumnsForProgram.get(0), is(visibleColumn2));
+        assertThat(allRnrColumnsForProgram.get(1), is(visibleColumn1));
+        assertThat(allRnrColumnsForProgram.get(2), is(notVisibleColumn2));
+        assertThat(allRnrColumnsForProgram.get(3), is(notVisibleColumn1));
 
     }
 }

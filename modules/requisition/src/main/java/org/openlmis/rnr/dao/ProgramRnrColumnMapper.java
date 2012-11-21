@@ -48,7 +48,7 @@ public interface ProgramRnrColumnMapper {
             " from program_rnr_template p INNER JOIN master_rnr_template m" +
             " ON p.column_id = m.id" +
             " where p.program_code=#{programCode}" +
-            "ORDER BY position")
+            "ORDER BY visible desc,position")
     List<RnrColumn> getAllRnrColumnsForProgram(String programCode);
 
     @Update("UPDATE Program_RnR_Template SET is_visible = #{rnrColumn.visible}, label = #{rnrColumn.label}, position = #{rnrColumn.position}" +
