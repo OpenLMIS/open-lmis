@@ -13,7 +13,7 @@ public interface RnrColumnMapper {
             @Result(property = "name", column = "column_name"),
             @Result(property = "description", column = "description"),
             @Result(property = "position", column = "column_position"),
-            @Result(property = "label", column = "column_name"),
+            @Result(property = "label", column = "column_label"),
             @Result(property = "defaultValue", column = "default_value"),
             @Result(property = "dataSource", column = "data_source"),
             @Result(property = "formula", column = "formula"),

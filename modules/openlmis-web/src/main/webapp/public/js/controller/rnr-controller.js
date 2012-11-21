@@ -1,31 +1,39 @@
-function InitiateRnrController($scope, Facility, FacilitySupportedPrograms, $location) {
+function InitiateRnrController($http, $scope, Facility, FacilitySupportedPrograms, $location) {
     Facility.get({}, function (data) {
             $scope.facilities = data.facilityList;
         }, {}
     );
 
-    $scope.loadPrograms = function ($scope) {
+    $scope.loadPrograms = function () {
         FacilitySupportedPrograms.get({facility:$scope.facility}, function (data) {
             $scope.program = null;
             $scope.programsForFacility = data.programList;
         }, {});
     };
 
-    var validate = function ($scope) {
+    $scope.getRnrHeader = function () {
+        if (validate()) {
+            $scope.error = "";
+            initRnr();
+        }
+        else {
+            $scope.error = "Please select Facility and program for facility to proceed";
+        }
+    };
+
+    var validate = function () {
         return $scope.program;
     };
 
-    $scope.getRnrHeader = function ($scope) {
-        if (validate($scope)) {
-            $scope.error="";
+    var initRnr = function () {
+        $http.post('/logistics/rnr/' + $scope.facility + '/' + $scope.program.code + '/init.json', {}).success(function () {
+            $scope.error = "";
             $location.path('create-rnr');
-        }
-        else {
-          $scope.error = "Please select Facility and program for facility to proceed";
-        }
-    }
-    
-
+        }).error(function () {
+                $scope.error = "Rnr initialization failed!";
+                $scope.message = "";
+            });
+    };
 }
 
 function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $location) {
@@ -36,9 +44,10 @@ function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $l
         $location.path("init-rnr");
     });
 
-    ProgramRnRColumnList.get({programCode:$scope.program.code}, function (data) {   //success
+    ProgramRnRColumnList.get({programCode:$scope.program.code}, function (data) {
         $scope.programRnRColumnList = data.rnrColumnList;
     }, function () {
         $location.path('init-rnr');
     });
+
 }

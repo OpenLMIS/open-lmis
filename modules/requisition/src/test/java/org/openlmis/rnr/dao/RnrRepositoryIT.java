@@ -63,7 +63,7 @@ public class RnrRepositoryIT {
         List<RnrColumn> result = rnrRepository.fetchAllMasterRnRColumns();
 
         RnrColumn rnrColumn = result.get(0);
-        Assert.assertThat(rnrColumn.getName(), is("MSD ProductCode"));
+        Assert.assertThat(rnrColumn.getName(), is("product_code"));
         Assert.assertThat(rnrColumn.getDescription(), is("This is Unique identifier for each commodity"));
         Assert.assertThat(rnrColumn.getPosition(), is(1));
         Assert.assertThat(rnrColumn.getLabel(), is("MSD ProductCode"));
