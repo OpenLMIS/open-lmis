@@ -23,9 +23,14 @@ public class RnrTemplateController {
         this.rnrTemplateService = rnrTemplateService;
     }
 
-    @RequestMapping(value = "/rnr/{programCode}/columns", method = RequestMethod.GET, headers = "Accept=application/json")
-    public List<RnrColumn> fetchMasterColumnList(@PathVariable("programCode") String programCode) {
+    @RequestMapping(value = "/admin/rnr/{programCode}/columns", method = RequestMethod.GET, headers = "Accept=application/json")
+    public List<RnrColumn> fetchAllProgramRnrColumnList(@PathVariable("programCode") String programCode) {
         return rnrTemplateService.fetchAllRnRColumns(programCode);
+    }
+
+    @RequestMapping(value = "/logistics/rnr/{programCode}/columns", method = RequestMethod.GET, headers = "Accept=application/json")
+    public List<RnrColumn> fetchVisibleProgramRnrColumnList(@PathVariable("programCode") String programCode) {
+        return rnrTemplateService.fetchVisibleRnRColumns(programCode);
     }
 
     @RequestMapping(value = "/admin/rnr/{programCode}/columns", method = RequestMethod.POST, headers = "Accept=application/json")

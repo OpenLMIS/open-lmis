@@ -10,6 +10,7 @@ import java.util.List;
 
 @Repository
 @NoArgsConstructor
+// TODO : this should be RnrTemplateRepository
 public class RnrRepository {
 
     @Autowired
@@ -24,6 +25,7 @@ public class RnrRepository {
         }
     }
 
+    // TODO : this is not be a repository method
     public boolean isRnRTemPlateDefinedForProgram(String programCode) {
         return programRnrColumnMapper.isRnrTemplateDefined(programCode);
     }
@@ -32,14 +34,19 @@ public class RnrRepository {
         return rnrColumnMapper.fetchAllMasterRnRColumns();
     }
 
-    public List<RnrColumn> fetchRnrColumnsDefinedForAProgram(String existingProgramCode) {
-        return programRnrColumnMapper.getAllRnrColumnsForProgram(existingProgramCode);
-    }
-
     @Transactional
     public void updateAllProgramRnRColumns(String programCode, List<RnrColumn> rnrColumns) {
         for (RnrColumn rnrColumn : rnrColumns) {
             programRnrColumnMapper.update(programCode, rnrColumn);
         }
     }
+
+    public List<RnrColumn> fetchProgramRnrColumns(String programCode) {
+        return programRnrColumnMapper.getAllRnrColumnsForProgram(programCode);
+    }
+
+    public List<RnrColumn> fetchVisibleProgramRnRColumns(String programCode) {
+        return programRnrColumnMapper.getVisibleProgramRnrColumns(programCode);
+    }
+
 }

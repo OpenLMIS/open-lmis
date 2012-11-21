@@ -79,7 +79,7 @@ public class RnrRepositoryIT {
 
         rnrRepository.insertAllProgramRnRColumns(EXISTING_PROGRAM_CODE, rnrColumns);
 
-        List<RnrColumn> programRnrColumns= programRnrColumnMapper.getAllRnrColumnsForProgram(EXISTING_PROGRAM_CODE);
+        List<RnrColumn> programRnrColumns = programRnrColumnMapper.getAllRnrColumnsForProgram(EXISTING_PROGRAM_CODE);
         assertThat(programRnrColumns.size(), is(rnrColumns.size()));
         assertThat(programRnrColumns, hasItem(rnrColumns.get(0)));
     }
@@ -91,7 +91,7 @@ public class RnrRepositoryIT {
         rnrColumns.get(0).setUsed(true);
         rnrRepository.updateAllProgramRnRColumns(EXISTING_PROGRAM_CODE, rnrColumns);
 
-        rnrColumns = rnrRepository.fetchRnrColumnsDefinedForAProgram(EXISTING_PROGRAM_CODE);
+        rnrColumns = rnrRepository.fetchProgramRnrColumns(EXISTING_PROGRAM_CODE);
 
         assertThat(rnrColumns.size(), is(rnrColumns.size()));
         assertThat(rnrColumns, hasItem(rnrColumns.get(0)));
@@ -100,17 +100,18 @@ public class RnrRepositoryIT {
 
     private List<RnrColumn> configureAndReturnRnRTemplateForTheProgram(String existingProgramCode) {
         configureRnRTemplateForTheProgram(existingProgramCode);
-        return rnrRepository.fetchRnrColumnsDefinedForAProgram(EXISTING_PROGRAM_CODE);
+        return rnrRepository.fetchProgramRnrColumns(EXISTING_PROGRAM_CODE);
     }
 
     @Test
     public void shouldRetrieveAlreadyDefinedRnrColumnsForAProgram() throws Exception {
         configureRnRTemplateForTheProgram(EXISTING_PROGRAM_CODE);
-        List<RnrColumn> rnrColumns = rnrRepository.fetchRnrColumnsDefinedForAProgram(EXISTING_PROGRAM_CODE);
+        List<RnrColumn> rnrColumns = rnrRepository.fetchProgramRnrColumns(EXISTING_PROGRAM_CODE);
         assertThat(rnrColumns.size(), is(1));
     }
 
     private void configureRnRTemplateForTheProgram(String existingProgramCode) {
         programRnrColumnMapper.insert(existingProgramCode, rnrColumns.get(0));
     }
+
 }

@@ -31,7 +31,7 @@ public class RnrTemplateControllerTest {
         List<RnrColumn> allColumns = new ArrayList<RnrColumn>();
 
         when(rnrTemplateService.fetchAllRnRColumns(existingProgramCode)).thenReturn(allColumns);
-        List<RnrColumn> rnrColumns = rnrTemplateController.fetchMasterColumnList(existingProgramCode);
+        List<RnrColumn> rnrColumns = rnrTemplateController.fetchAllProgramRnrColumnList(existingProgramCode);
         verify(rnrTemplateService).fetchAllRnRColumns(existingProgramCode);
         assertThat(rnrColumns,is(allColumns));
     }

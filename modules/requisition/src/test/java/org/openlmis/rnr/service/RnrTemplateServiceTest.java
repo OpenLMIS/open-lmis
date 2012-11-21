@@ -40,19 +40,19 @@ public class RnrTemplateServiceTest {
         List<RnrColumn> rnrColumns = service.fetchAllRnRColumns(existingProgramCode);
         assertThat(rnrColumns, is(equalTo(allColumns)));
         verify(repository).fetchAllMasterRnRColumns();
-        verify(repository, never()).fetchRnrColumnsDefinedForAProgram(existingProgramCode);
+        verify(repository, never()).fetchProgramRnrColumns(existingProgramCode);
         verify(repository).isRnRTemPlateDefinedForProgram(existingProgramCode);
     }
 
     @Test
     public void shouldFetchRnRColumnsDefinedForAProgramIfAlreadyConfigured() {
         List<RnrColumn> rnrTemplateColumns = new ArrayList<RnrColumn>();
-        when(repository.fetchRnrColumnsDefinedForAProgram(existingProgramCode)).thenReturn(rnrTemplateColumns);
+        when(repository.fetchProgramRnrColumns(existingProgramCode)).thenReturn(rnrTemplateColumns);
         when(repository.isRnRTemPlateDefinedForProgram(existingProgramCode)).thenReturn(true);
         List<RnrColumn> rnrColumns = service.fetchAllRnRColumns(existingProgramCode);
         assertThat(rnrColumns, is(equalTo(rnrTemplateColumns)));
         verify(repository, never()).fetchAllMasterRnRColumns();
-        verify(repository).fetchRnrColumnsDefinedForAProgram(existingProgramCode);
+        verify(repository).fetchProgramRnrColumns(existingProgramCode);
         verify(repository).isRnRTemPlateDefinedForProgram(existingProgramCode);
     }
 

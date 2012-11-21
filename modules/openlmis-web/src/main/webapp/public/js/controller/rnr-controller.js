@@ -25,7 +25,7 @@ function InitiateRnrController($scope, Facility, FacilitySupportedPrograms, $loc
     }
 }
 
-function CreateRnrController($scope, RequisitionHeader, RnRColumnList, $location) {
+function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $location) {
 
     RequisitionHeader.get({code:$scope.facility}, function (data) {
         $scope.header = data.requisitionHeader;
@@ -33,8 +33,8 @@ function CreateRnrController($scope, RequisitionHeader, RnRColumnList, $location
         $location.path("init-rnr");
     });
 
-    RnRColumnList.get({programCode:$scope.program.code}, function (data) {   //success
-        $scope.rnrColumnsList = data.rnrColumnList;
+    ProgramRnRColumnList.get({programCode:$scope.program.code}, function (data) {   //success
+        $scope.programRnRColumnList = data.rnrColumnList;
     }, function () {
         $location.path('init-rnr');
     });

@@ -21,7 +21,7 @@ public class RnrTemplateService {
     public List<RnrColumn> fetchAllRnRColumns(String programCode) {
         List<RnrColumn> rnrColumns;
         if (rnrRepository.isRnRTemPlateDefinedForProgram(programCode)) {
-            rnrColumns = rnrRepository.fetchRnrColumnsDefinedForAProgram(programCode);
+            rnrColumns = rnrRepository.fetchProgramRnrColumns(programCode);
         } else {
             rnrColumns = rnrRepository.fetchAllMasterRnRColumns();
         }
@@ -35,6 +35,10 @@ public class RnrTemplateService {
         } else {
             rnrRepository.insertAllProgramRnRColumns(programCode, rnrColumns);
         }
+    }
+
+    public List<RnrColumn> fetchVisibleRnRColumns(String programCode) {
+        return rnrRepository.fetchVisibleProgramRnRColumns(programCode);
     }
 
 }
