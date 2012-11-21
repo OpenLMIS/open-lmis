@@ -9,7 +9,7 @@
     <span class="tpl-source">Source</span>
     <!--<span class="tpl-used">Used</span>-->
   </div>
-  <form name="haha">
+  <form ng-submit="createProgramRnrTemplate()">
     <div class="rnr-template-columns">
       <ul id="sortable">
         <li ng-repeat="rnrColumn in rnrColumnsList">
@@ -56,6 +56,6 @@
       {{message}}
     </div>
 
-    <button class="btn" ng-submit="createProgramRnrTemplate()">Save</button>
+    <input type="submit" class="btn" value="Save" />
   </form>
 </div>
