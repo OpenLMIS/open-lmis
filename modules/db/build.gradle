@@ -33,7 +33,7 @@ task createDB(dependsOn: "dropDB") << {
 
 task dropDB() << {
     println("Dropping Datbase..")
-    executeSql('select pg_terminate_backend(procpid) from pg_stat_activity where datname=\'' + dbName + '\'')
+    executeSql('select pg_terminate_backend(pid) from pg_stat_activity where datname=\'' + dbName + '\'')
     executeSql('drop database if exists ' + dbName)
 }
 
