@@ -5,7 +5,7 @@ function InitiateRnrController($http, $scope, Facility, FacilitySupportedProgram
     );
 
     $scope.loadPrograms = function () {
-        FacilitySupportedPrograms.get({facility:$scope.facility}, function (data) {
+        FacilitySupportedPrograms.get({facilityCode:$scope.facility}, function (data) {
             $scope.program = null;
             $scope.programsForFacility = data.programList;
         }, {});

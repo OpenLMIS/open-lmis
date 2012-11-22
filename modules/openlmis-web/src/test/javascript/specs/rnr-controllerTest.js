@@ -24,7 +24,7 @@ describe('Requisition header controllers', function () {
     it('should load programs for a facility', function() {
       scope.facility="10134";
       var programsForFacility = [{"code":"HIV","name":"HIV","description":"HIV","active":true}];
-      $httpBackend.expectGET('/logistics/programs/programsForFacility.json?facility=10134').respond({"programList":[{"code":"HIV","name":"HIV","description":"HIV","active":true}]});
+      $httpBackend.expectGET('/logistics/facility/10134/programs.json').respond({"programList":[{"code":"HIV","name":"HIV","description":"HIV","active":true}]});
       scope.loadPrograms();
 
       $httpBackend.flush();
