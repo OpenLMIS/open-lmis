@@ -6,11 +6,11 @@ function UploadController($scope, $http) {
     xhr.addEventListener("load", $scope.uploadComplete, false);
     xhr.open("POST", "/admin/upload.json");
     xhr.send(new FormData(fd));
-  }
+  };
 
   $scope.uploadComplete = function (evt) {
     alert(evt.target.responseText.replace(/\\\"/g, '\"'));
-  }
+  };
 
 
 }
