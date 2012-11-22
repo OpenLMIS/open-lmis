@@ -1,11 +1,10 @@
-package org.openlmis.authentication.dao;
+package org.openlmis.authentication.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.authentication.domain.User;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
+@Repository
 public interface UserMapper {
     final String SELECT_USER_BY_USER_NAME_AND_PASSWORD = "SELECT * FROM OPEN_LMIS_USER WHERE LOWER(USER_NAME)=LOWER(#{userName}) AND PASSWORD=#{password}";
 

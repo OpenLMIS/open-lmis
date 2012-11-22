@@ -3,7 +3,9 @@ package org.openlmis.core.repository.mapper;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.openlmis.core.domain.ProgramProduct;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ProgramProductMapper {
 
     @Insert("INSERT INTO PROGRAM_PRODUCT(PROGRAM_CODE, PRODUCT_CODE, MODIFIED_BY, MODIFIED_DATE)" +

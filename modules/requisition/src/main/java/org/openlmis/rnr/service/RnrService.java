@@ -3,7 +3,7 @@ package org.openlmis.rnr.service;
 import org.joda.time.DateTime;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.service.ProductService;
-import org.openlmis.rnr.dao.RnrRepository;
+import org.openlmis.rnr.repository.RnrRepository;
 import org.openlmis.rnr.domain.Requisition;
 import org.openlmis.rnr.domain.RequisitionLineItem;
 import org.openlmis.rnr.domain.RnrStatus;

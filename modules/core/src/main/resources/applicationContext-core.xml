@@ -12,36 +12,6 @@
 
     <import resource="classpath*:applicationContext-db.xml"/>
 
-    <bean id="programMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="org.openlmis.core.repository.mapper.ProgramMapper"/>
-        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
-    </bean>
-
-    <bean id="productMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="org.openlmis.core.repository.mapper.ProductMapper"/>
-        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
-    </bean>
-
-    <bean id="facilityMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="org.openlmis.core.repository.mapper.FacilityMapper"/>
-        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
-    </bean>
-
-    <bean id="programSupportedMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="org.openlmis.core.repository.mapper.ProgramSupportedMapper"/>
-        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
-    </bean>
-
-    <bean id="programProductMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="org.openlmis.core.repository.mapper.ProgramProductMapper"/>
-        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
-    </bean>
-
-    <bean id="facilityApprovedProductMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="org.openlmis.core.repository.mapper.FacilityApprovedProductMapper"/>
-        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
-    </bean>
-
     <bean id="persistenceHandlerMap" class="java.util.HashMap">
         <constructor-arg>
             <map>

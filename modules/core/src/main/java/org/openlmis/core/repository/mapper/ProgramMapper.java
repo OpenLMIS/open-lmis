@@ -2,9 +2,11 @@ package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Program;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface ProgramMapper {
 
     @Insert("INSERT INTO PROGRAM(CODE, NAME, DESCRIPTION)" +

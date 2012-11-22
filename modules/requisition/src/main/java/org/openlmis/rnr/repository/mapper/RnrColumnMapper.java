@@ -1,10 +1,12 @@
-package org.openlmis.rnr.dao;
+package org.openlmis.rnr.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.rnr.domain.RnrColumn;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface RnrColumnMapper {
 
     @Select(value = "SELECT * FROM Master_RnR_Template")

@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.rnr.dao.RnrTemplateRepository;
+import org.openlmis.rnr.repository.RnrTemplateRepository;
 import org.openlmis.rnr.domain.RnrColumn;
 
 import java.util.ArrayList;

@@ -1,9 +1,11 @@
-package org.openlmis.rnr.dao;
+package org.openlmis.rnr.repository;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.rnr.domain.RnrColumn;
+import org.openlmis.rnr.repository.mapper.ProgramRnrColumnMapper;
+import org.openlmis.rnr.repository.mapper.RnrColumnMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;

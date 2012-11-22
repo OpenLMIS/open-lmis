@@ -1,10 +1,12 @@
-package org.openlmis.rnr.dao;
+package org.openlmis.rnr.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.rnr.domain.RnrColumn;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface ProgramRnrColumnMapper {
 
     @Insert("INSERT INTO program_rnr_template(program_code, column_id, is_visible, label, position)" +

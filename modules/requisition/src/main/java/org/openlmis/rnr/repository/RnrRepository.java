@@ -1,6 +1,7 @@
-package org.openlmis.rnr.dao;
+package org.openlmis.rnr.repository;
 
 import org.openlmis.rnr.domain.Requisition;
+import org.openlmis.rnr.repository.mapper.RnrMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

@@ -1,4 +1,4 @@
-package org.openlmis.rnr.dao;
+package org.openlmis.rnr.repository;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -10,6 +10,7 @@ import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProgramSupportedMapper;
 import org.openlmis.rnr.domain.Requisition;
 import org.openlmis.rnr.domain.RnrStatus;
+import org.openlmis.rnr.repository.mapper.RnrMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;

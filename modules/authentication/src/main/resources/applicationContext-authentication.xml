@@ -11,9 +11,4 @@
     <import resource="classpath*:applicationContext-db.xml"/>
     <context:component-scan base-package="org.openlmis.authentication"/>
 
-    <bean id="userMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="org.openlmis.authentication.dao.UserMapper"/>
-        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
-    </bean>
-
 </beans>

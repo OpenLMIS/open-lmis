@@ -3,9 +3,11 @@ package org.openlmis.core.repository.mapper;
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.RequisitionHeader;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface FacilityMapper {
 
     @Insert("Insert into facility(code, name, description,gln,main_phone,fax,address1,address2, " +

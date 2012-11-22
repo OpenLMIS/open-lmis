@@ -12,19 +12,4 @@
     <import resource="classpath*:applicationContext-core.xml"/>
     <context:component-scan base-package="org.openlmis.rnr"/>
 
-    <bean id="rnrColumnMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="org.openlmis.rnr.dao.RnrColumnMapper"/>
-        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
-    </bean>
-
-    <bean id="programRnrColumnMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="org.openlmis.rnr.dao.ProgramRnrColumnMapper"/>
-        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
-    </bean>
-
-    <bean id="rnrMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="org.openlmis.rnr.dao.RnrMapper"/>
-        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
-    </bean>
-
 </beans>
