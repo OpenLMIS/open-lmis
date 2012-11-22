@@ -11,7 +11,7 @@ public interface ProgramSupportedMapper {
     void addSupportedProgram(ProgramSupported programSupported);
 
     @Delete("DELETE FROM PROGRAMS_SUPPORTED")
-    void deleteProgramMappings();
+    void deleteAll();
 
     @Select("SELECT * FROM PROGRAMS_SUPPORTED WHERE FACILITY_CODE=#{facilityCode} AND PROGRAM_CODE=#{programCode}")
     @Results(value = {

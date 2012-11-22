@@ -36,7 +36,7 @@ public class ProgramSupportedMapperIT {
 
     @Before
     public void setUp() throws Exception {
-        programSupportedMapper.deleteProgramMappings();
+        programSupportedMapper.deleteAll();
         facilityMapper.deleteAll();
 
         facilityMapper.insert(make(a(facility)));
@@ -55,7 +55,7 @@ public class ProgramSupportedMapperIT {
 
     @After
     public void tearDown() throws Exception {
-        programSupportedMapper.deleteProgramMappings();
+        programSupportedMapper.deleteAll();
         facilityMapper.deleteAll();
         programMapper.delete(YELLOW_FEVER);
     }

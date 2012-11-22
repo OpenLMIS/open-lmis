@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.repository.mapper.FacilityMapper;
+import org.openlmis.core.repository.mapper.ProgramSupportedMapper;
 import org.openlmis.rnr.domain.Requisition;
 import org.openlmis.rnr.domain.RnrStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,15 +25,16 @@ import static org.openlmis.core.builder.FacilityBuilder.FACILITY_CODE;
 public class RnrMapperIT {
 
     @Autowired
-    FacilityMapper facilityMapper;
+    private FacilityMapper facilityMapper;
+    @Autowired
+    private ProgramSupportedMapper programSupportedMapper;
 
     @Autowired
     private RnrMapper rnrMapper;
 
-    public static final String PROGRAM_CODE = "HIV";
-
     @Before
     public void setUp() {
+        programSupportedMapper.deleteAll();
         rnrMapper.deleteAll();
         facilityMapper.deleteAll();
         Facility facility = make(a(FacilityBuilder.facility));
@@ -40,9 +42,10 @@ public class RnrMapperIT {
     }
 
     @Test
-    public void shouldCreateRequisition() {
-        int status = rnrMapper.insert(new Requisition(FACILITY_CODE, PROGRAM_CODE, RnrStatus.INITIATED, "user", DateTime.now().toDate()));
-        assertThat(status, is(1));
+    public void shouldReturnRequisitionId() {
+        int id1 = rnrMapper.insert(new Requisition(FACILITY_CODE, "HIV", RnrStatus.INITIATED, "user", DateTime.now().toDate()));
+        int id2 = rnrMapper.insert(new Requisition(FACILITY_CODE, "ARV", RnrStatus.INITIATED, "user", DateTime.now().toDate()));
+        assertThat(id1, is(id2 - 1));
     }
 
 }

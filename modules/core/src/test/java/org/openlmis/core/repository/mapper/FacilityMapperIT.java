@@ -34,7 +34,7 @@ public class FacilityMapperIT {
 
     @Before
     public void setUp() throws Exception {
-        programSupportedMapper.deleteProgramMappings();
+        programSupportedMapper.deleteAll();
         facilityMapper.deleteAll();
     }
 

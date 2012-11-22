@@ -39,7 +39,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
 
     @Before
     public void setUp() {
-        programSupportedMapper.deleteProgramMappings();
+        programSupportedMapper.deleteAll();
         facilityMapper.deleteAll();
     }
 
