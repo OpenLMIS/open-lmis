@@ -9,7 +9,7 @@ public class RequisitionLineItem {
 
     private int id;
     private int rnrId;
-    private int productCode;
+    private String productCode;
 
     private int quantityReceived;
     private int quantityDispensed ;
@@ -33,5 +33,10 @@ public class RequisitionLineItem {
     private int packsToShip;
     private float cost;
     private String remarks;
+
+    public RequisitionLineItem(int rnrId, String productCode) {
+        this.rnrId = rnrId;
+        this.productCode = productCode;
+    }
 
 }

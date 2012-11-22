@@ -3,6 +3,7 @@ package org.openlmis.rnr.domain;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -13,9 +14,10 @@ public class Requisition {
     private int id;
     private String facilityCode;
     private String programCode;
-
-    private List<RequisitionLineItem> lineItems;
     private RnrStatus status;
+
+    private List<RequisitionLineItem> lineItems = new ArrayList<>();
+
     private String modifiedBy;
     private Date modifiedDate;
 
@@ -25,6 +27,10 @@ public class Requisition {
         this.status = status;
         this.modifiedBy = modifiedBy;
         this.modifiedDate = modifiedDate;
+    }
+
+    public void add(RequisitionLineItem requisitionLineItem) {
+        lineItems.add(requisitionLineItem);
     }
 
 }

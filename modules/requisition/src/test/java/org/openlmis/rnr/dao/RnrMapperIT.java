@@ -43,7 +43,8 @@ public class RnrMapperIT {
 
     @Test
     public void shouldReturnRequisitionId() {
-        int id1 = rnrMapper.insert(new Requisition(FACILITY_CODE, "HIV", RnrStatus.INITIATED, "user", DateTime.now().toDate()));
+        Requisition requisition = new Requisition(FACILITY_CODE, "HIV", RnrStatus.INITIATED, "user", DateTime.now().toDate());
+        int id1 = rnrMapper.insert(requisition);
         int id2 = rnrMapper.insert(new Requisition(FACILITY_CODE, "ARV", RnrStatus.INITIATED, "user", DateTime.now().toDate()));
         assertThat(id1, is(id2 - 1));
     }
