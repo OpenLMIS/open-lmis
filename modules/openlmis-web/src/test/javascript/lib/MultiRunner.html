@@ -1,0 +1,71 @@
+<html>
+<head>
+  <title>Multi runner</title>
+  <script type="text/javascript" language="javascript" src="jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" language="javascript" src="jasmine-gradle.js" ></script>
+  <script type="text/javascript" language="javascript" src="../specRunners.js" ></script>
+  <script type="text/javascript" language="javascript">
+makeResultsDiv = function() {
+  var text;
+    text = "Overall: " + jasmineGradle.getStatus() + "\n";
+    try {
+      text += jasmineGradle.getResultsAsText(true);
+    }
+    catch( x ) {
+      text += "Results not ready, perhaps:\n" + x;
+    }
+    var taNode = $("<textarea />", { cols:"120", rows:"20", text:text, readonly:"readonly" } );
+    $("#textResultsDiv").empty().append( taNode );
+}
+
+makeJslintDiv = function() {
+  var text = "";//JSLint: ";
+  try {
+    text += jasmineGradle.getJsLintResultsAsText();
+  }
+  catch( x ) {
+    text = "JSLint results not ready, perhaps:\n" + x;
+  }
+  var taNode = $("<textarea />", { cols:"120", rows:"20", text:text } );
+  $("#jslintResultsDiv").empty().append( taNode );
+}
+  </script>   
+  <style type="text/css">
+
+body{
+	font-family:sans-serif;
+}
+
+h1.running {color:yellow;}
+h1.passed {color:green;}
+h1.failed {color:red;}
+h1.failing {color:orange;}
+
+div.runnerDiv { 
+	float:left;
+	margin:10px;
+	padding:10px;
+	font-size:80%;
+}
+
+#foo {
+clear:both;
+}
+
+
+  </style>
+</head>
+<body>
+   <h1 id="headline" class="running">
+      <a onclick="jasmineGradle.runAllSpecs()" title="Reload all">
+      Multi Spec Runner:</a> 
+      <span id="subheadline">Loading...</span>
+   </h1>
+   <div id="runnerContainer">Loading...</div>
+   <div id="foo"> 
+     <button onclick="makeResultsDiv(); makeJslintDiv();">Show plain text results</button>
+     <div id="textResultsDiv"></div>
+     <div id="jslintResultsDiv"></div>
+   </div>
+
+</body>

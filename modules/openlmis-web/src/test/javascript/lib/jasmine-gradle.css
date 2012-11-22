@@ -1,0 +1,36 @@
+.hidden {
+  display: none;
+}
+
+#jslintContainer a, a:visited{
+  color: #303;
+}
+
+#jslintBanner {
+  padding: 5px;
+  margin: 5px;
+  background-color: #fef;
+  color: #303;
+  font-size: 1.1em;  
+  text-decoration: underline;
+}
+
+.jslintpassed {
+  border: 1px solid gray;
+  padding: 5px;
+  margin: 5px;
+  background-color: #bfb;
+  border-color: green;
+}
+.jslintfailed p {
+  margin: 10px 0px 0px 40px;
+  font-size: .8em;
+}
+.jslintfailed {
+  border: 1px solid gray;
+  padding: 5px;
+  margin: 5px;
+  background-color: #fbb;
+  border-color: red;
+}
+
