@@ -51,8 +51,8 @@ describe('Requisition header controllers', function () {
       requisitionHeader = {"requisitionHeader":{"facilityName":"National Warehouse",
         "facilityCode":"10134","facilityType":"Warehouse","facilityOperatedBy":"MoH","maximumStockLevel":3,"emergencyOrderPoint":0.5,
         "zone":{"label":"state","value":"Arusha"},"parentZone":{"label":"state","value":"Arusha"}}};
-      scope.facility = "10134";
-      scope.program={code:"programCode"};
+      scope.$parent.facility = "10134";
+      scope.$parent.program={code:"programCode"};
 
       $httpBackend.expectGET('/logistics/facility/10134/requisition-header.json').respond(requisitionHeader);
       $httpBackend.expectGET('/logistics/rnr/programCode/columns.json').respond({"rnrColumnList":{"testField":"test"}});
