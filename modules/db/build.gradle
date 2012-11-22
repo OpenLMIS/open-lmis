@@ -48,8 +48,8 @@ task migrateDB() << {
 }
 
 task seed(type: Exec) {
-    environment("PGPASSWORD","p@ssword")
-    commandLine 'psql', '-U', 'postgres', '-w', 'open_lmis', '-f', '../../test-data/sql/seed.sql'
+    environment("PGPASSWORD",dbPassword)
+    commandLine 'psql', '-U', dbUser , '-w', dbName , '-f', '../../test-data/sql/seed.sql'
 }
 
 def executeSql(String statement) {
