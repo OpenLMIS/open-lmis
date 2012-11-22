@@ -37,5 +37,4 @@
         <property name="annotationClass" value="org.springframework.stereotype.Repository"/>
     </bean>
 
-
 </beans>

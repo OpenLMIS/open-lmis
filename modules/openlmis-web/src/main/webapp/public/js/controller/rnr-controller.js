@@ -26,8 +26,9 @@ function InitiateRnrController($http, $scope, Facility, FacilitySupportedProgram
     };
 
     var initRnr = function () {
-        $http.post('/logistics/rnr/' + $scope.$parent.facility + '/' + $scope.$parent.program.code + '/init.json', {}).success(function () {
+        $http.post('/logistics/rnr/' + $scope.$parent.facility + '/' + $scope.$parent.program.code + '/init.json', {}).success(function (data) {
             $scope.error = "";
+            $scope.$parent.rnr = data.rnr;
             $location.path('create-rnr');
         }).error(function () {
                 $scope.error = "Rnr initialization failed!";
@@ -49,13 +50,5 @@ function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $l
     }, function () {
         $location.path('init-rnr');
     });
-//
-//<<<<<<< Updated upstream
-//=======
-//    ProductList.get({programCode:$scope.program.code, facilityCode:$scope.facility}, function (data) {   //success
-//        $scope.productList = data.productList;
-//    }, function () {
-//        $location.path('init-rnr');
-//    });
-//>>>>>>> Stashed changes
+
 }

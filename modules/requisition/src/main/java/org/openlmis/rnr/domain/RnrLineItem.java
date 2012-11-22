@@ -3,9 +3,11 @@ package org.openlmis.rnr.domain;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
-public class RequisitionLineItem {
+public class RnrLineItem {
 
     private int id;
     private int rnrId;
@@ -34,9 +36,14 @@ public class RequisitionLineItem {
     private float cost;
     private String remarks;
 
-    public RequisitionLineItem(int rnrId, String productCode) {
+    private String modifiedBy;
+    private Date modifiedDate;
+
+    public RnrLineItem(int rnrId, String productCode, String modifiedBy, Date modifiedDate) {
         this.rnrId = rnrId;
         this.productCode = productCode;
+        this.modifiedBy = modifiedBy;
+        this.modifiedDate = modifiedDate;
     }
 
 }

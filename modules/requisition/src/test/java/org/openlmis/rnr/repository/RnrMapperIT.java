@@ -1,6 +1,7 @@
 package org.openlmis.rnr.repository;
 
 import org.joda.time.DateTime;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,7 +9,7 @@ import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProgramSupportedMapper;
-import org.openlmis.rnr.domain.Requisition;
+import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrStatus;
 import org.openlmis.rnr.repository.mapper.RnrMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,10 +45,17 @@ public class RnrMapperIT {
 
     @Test
     public void shouldReturnRequisitionId() {
-        Requisition requisition = new Requisition(FACILITY_CODE, "HIV", RnrStatus.INITIATED, "user", DateTime.now().toDate());
+        Rnr requisition = new Rnr(FACILITY_CODE, "HIV", RnrStatus.INITIATED, "user", DateTime.now().toDate());
         int id1 = rnrMapper.insert(requisition);
-        int id2 = rnrMapper.insert(new Requisition(FACILITY_CODE, "ARV", RnrStatus.INITIATED, "user", DateTime.now().toDate()));
+        int id2 = rnrMapper.insert(new Rnr(FACILITY_CODE, "ARV", RnrStatus.INITIATED, "user", DateTime.now().toDate()));
         assertThat(id1, is(id2 - 1));
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        programSupportedMapper.deleteAll();
+        rnrMapper.deleteAll();
+        facilityMapper.deleteAll();
     }
 
 }

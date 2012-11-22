@@ -1,6 +1,7 @@
 package org.openlmis.core.repository.mapper;
 
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -46,7 +47,8 @@ public class ProductMapperIT {
     ProductMapper productMapper;
 
     @Before
-    public void setUp() {
+    @After
+    public void clean() {
         facilityApprovedProductMapper.deleteAll();
         programProductMapper.deleteAll();
         productMapper.deleteAll();
@@ -78,6 +80,7 @@ public class ProductMapperIT {
 
         List<Product> products = productMapper.getFullSupplyProductsByFacilityAndProgram(FACILITY_CODE, HIV);
         assertEquals(1, products.size());
+        assertEquals("PRO01", products.get(0).getCode());
     }
 
     private void addToFacilityType(String facilityType, Product product) {

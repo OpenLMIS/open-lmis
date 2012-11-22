@@ -9,19 +9,19 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class Requisition {
+public class Rnr {
 
     private int id;
     private String facilityCode;
     private String programCode;
     private RnrStatus status;
 
-    private List<RequisitionLineItem> lineItems = new ArrayList<>();
+    private List<RnrLineItem> lineItems = new ArrayList<>();
 
     private String modifiedBy;
     private Date modifiedDate;
 
-    public Requisition(String facilityCode, String programCode, RnrStatus status, String modifiedBy, Date modifiedDate) {
+    public Rnr(String facilityCode, String programCode, RnrStatus status, String modifiedBy, Date modifiedDate) {
         this.facilityCode = facilityCode;
         this.programCode = programCode;
         this.status = status;
@@ -29,8 +29,14 @@ public class Requisition {
         this.modifiedDate = modifiedDate;
     }
 
-    public void add(RequisitionLineItem requisitionLineItem) {
-        lineItems.add(requisitionLineItem);
+    public Rnr(String facilityCode, String programCode, RnrStatus status) {
+        this.facilityCode = facilityCode;
+        this.programCode = programCode;
+        this.status = status;
+    }
+
+    public void add(RnrLineItem rnrLineItem) {
+        lineItems.add(rnrLineItem);
     }
 
 }

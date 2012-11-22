@@ -20,6 +20,7 @@ public class ProductBuilder {
             Product product = new Product();
             product.setCode(lookup.valueOf(code, PRODUCT_CODE));
             product.setFullSupply(lookup.valueOf(fullSupply, true));
+            product.setActive(true);
             product.setAlternateItemCode("alternateItemCode");
             product.setManufacturer("Glaxo and Smith");
             product.setManufacturerCode("manufacturerCode");
@@ -36,7 +37,6 @@ public class ProductBuilder {
             product.setDispensingUnit("Strip");
             product.setDispensingUnit("Strip");
             product.setPackSize(10);
-            product.setActive(true);
             product.setTracer(true);
             product.setPackRoundingThreshold(1);
             product.setRoundToZero(true);
