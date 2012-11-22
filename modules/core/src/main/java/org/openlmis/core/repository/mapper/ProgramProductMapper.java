@@ -1,5 +1,6 @@
 package org.openlmis.core.repository.mapper;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.openlmis.core.domain.ProgramProduct;
 
@@ -9,4 +10,6 @@ public interface ProgramProductMapper {
             "VALUES (#{programCode}, #{productCode}, #{modifiedBy}, #{modifiedDate})")
     int insert(ProgramProduct programProduct);
 
+    @Delete ("DELETE FROM PROGRAM_PRODUCT")
+    void deleteAll();
 }

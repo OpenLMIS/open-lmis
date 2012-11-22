@@ -7,7 +7,6 @@ import org.openlmis.upload.annotation.ImportField;
 
 import java.util.Date;
 
-
 @Data
 @NoArgsConstructor
 public class Product implements Importable {

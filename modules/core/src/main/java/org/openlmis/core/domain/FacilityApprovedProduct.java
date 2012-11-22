@@ -19,4 +19,9 @@ public class FacilityApprovedProduct {
 
     private Date modifiedDate;
 
+    public FacilityApprovedProduct(String facilityTypeCode, String productCode) {
+        this.facilityTypeCode = facilityTypeCode;
+        this.productCode = productCode;
+    }
+
 }

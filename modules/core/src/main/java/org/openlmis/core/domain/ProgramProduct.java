@@ -1,6 +1,5 @@
 package org.openlmis.core.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,7 +7,6 @@ import java.util.Date;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class ProgramProduct {
 
     private String id;
@@ -17,8 +15,13 @@ public class ProgramProduct {
 
     private String productCode;
 
+    private String modifiedBy;
+
     private Date modifiedDate;
 
-    private long modifiedBy;
+    public ProgramProduct(String programCode, String productCode) {
+        this.programCode = programCode;
+        this.productCode = productCode;
+    }
 
 }

@@ -22,6 +22,7 @@ public class FacilityBuilder {
     public static final Property<Facility,String> operatedBy = newProperty();
 
     public static final String FACILITY_CODE = "F10010";
+    public static final String FACILITY_TYPE = "warehouse";
 
     public static final Instantiator<Facility> facility = new Instantiator<Facility>() {
 
@@ -29,7 +30,7 @@ public class FacilityBuilder {
         public Facility instantiate(PropertyLookup<Facility> lookup) {
             Facility facility = new Facility();
             facility.setCode(lookup.valueOf(code, FACILITY_CODE));
-            facility.setFacilityTypeCode(lookup.valueOf(type, "warehouse"));
+            facility.setFacilityTypeCode(lookup.valueOf(type, FACILITY_TYPE));
             facility.setName(lookup.valueOf(name, "Apollo Hospital"));
             facility.setGeographicZone(lookup.valueOf(geographicZone, 2));
             facility.setSdp(lookup.valueOf(sdp, true));

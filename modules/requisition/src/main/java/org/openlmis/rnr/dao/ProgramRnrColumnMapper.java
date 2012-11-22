@@ -31,7 +31,6 @@ public interface ProgramRnrColumnMapper {
             @Result(property = "visible", column = "visible"),
             @Result(property = "mandatory", column = "mandatory")
     })
-
     @Select("select m.id as id, m.column_name as name, m.description description," +
             " p.position as position, p.label as label, m.default_value as defaultValue," +
             " m.data_source as source, m.formula as formula, m.column_indicator as indicator," +

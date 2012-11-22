@@ -1,7 +1,6 @@
 package org.openlmis.core.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Product;
 
 import java.util.List;
@@ -53,12 +52,23 @@ public interface ProductMapper {
             "#{modifiedBy})")
     int insert(Product product);
 
-    @Select("select * from product, facility_approved_product, program_product " +
-            "where program_product.program_code = #{programCode}" +
-            "and facility_approved_product.facility_code = #{facilityCode}" +
-            "and facility_approved_product.product_code = product.code" +
-            "and facility_approved_product.product_code = program_product.product_code" +
-            "and program_product.product_code = product.code")
-    List<Product> getByFacilityAndProgram(String facilityCode, String programCode);
+    @Results(value = {
+            @Result(property = "code", column = "code"),
+            @Result(property = "primaryName", column = "primary_name")
+    })
+    @Select("select p.code as code, p.primary_name as primaryName " +
+            "from product p, facility_approved_product fap, program_product pp, facility f " +
+            "where pp.program_code = #{programCode} " +
+            "and f.code = #{facilityCode}" +
+            "and fap.facility_type_code = f.type " +
+            "and fap.product_code = p.code " +
+            "and fap.product_code = pp.product_code " +
+            "and pp.product_code = p.code " +
+            "and p.full_supply = 'TRUE' " +
+            "and p.active = true")
+    List<Product> getFullSupplyProductsByFacilityAndProgram(@Param("facilityCode") String facilityCode, @Param("programCode") String programCode);
+
+    @Delete("delete from product")
+    void deleteAll();
 
 }

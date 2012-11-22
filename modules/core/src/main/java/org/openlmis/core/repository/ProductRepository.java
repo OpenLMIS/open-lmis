@@ -32,7 +32,7 @@ public class ProductRepository {
     }
 
     public List<Product> getByFacilityAndProgram(String facilityCode, String programCode) {
-        return mapper.getByFacilityAndProgram(facilityCode, programCode);
+        return mapper.getFullSupplyProductsByFacilityAndProgram(facilityCode, programCode);
     }
 
 }
