@@ -2,11 +2,11 @@
     <h3>Initiate RnR</h3>
     <label>Facility</label>
     <select ng-model="$parent.facility" ng-options="i.code as i.code + '-' + i.name for i in facilities"
-            ng-change="loadPrograms($parent)">
+            ng-change="loadPrograms()">
         <option value="">--choose facility--</option>
     </select> <br/><br/>
     <label>Program</label>
-    <select ng-model="$parent.program" ng-options="i as i.name for i in $parent.programsForFacility">
+    <select ng-model="$parent.program" ng-options="i as i.name for i in programsForFacility">
         <option value="">--choose program--</option>
     </select> <br/><br/>
   <div class="alert alert-error" id="saveSuccessMsgDiv" ng-model="error" ng-show="error">

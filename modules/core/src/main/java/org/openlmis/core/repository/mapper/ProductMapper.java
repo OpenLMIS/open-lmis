@@ -1,7 +1,10 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Select;
 import org.openlmis.core.domain.Product;
+
+import java.util.List;
 
 public interface ProductMapper {
 
@@ -49,4 +52,13 @@ public interface ProductMapper {
             "#{packRoundingThreshold}," +
             "#{modifiedBy})")
     int insert(Product product);
+
+    @Select("select * from product, facility_approved_product, program_product " +
+            "where program_product.program_code = #{programCode}" +
+            "and facility_approved_product.facility_code = #{facilityCode}" +
+            "and facility_approved_product.product_code = product.code" +
+            "and facility_approved_product.product_code = program_product.product_code" +
+            "and program_product.product_code = product.code")
+    List<Product> getByFacilityAndProgram(String facilityCode, String programCode);
+
 }

@@ -1,6 +1,7 @@
 package org.openlmis.core.repository.mapper;
 
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -23,6 +24,12 @@ public class ProductMapperTest {
 
     @Autowired
     ProductMapper productMapper;
+    
+    @Before
+    public void setUp() {
+//        productMapper.
+
+    }
 
     @Test
     public void shouldNotSaveProductWithoutMandatoryFields() throws Exception {
@@ -30,8 +37,14 @@ public class ProductMapperTest {
         expectedEx.expectMessage("null value in column \"primary_name\" violates not-null constraint");
         Product product = new Product();
         product.setCode("ABCD123");
-        int count = productMapper.insert(product);
-        assertEquals(0, count);
+        int status = productMapper.insert(product);
+        assertEquals(0, status);
+    }
+
+    @Test
+    public void shouldGetProductsByFacilityAndProgram() {
+//        productMapper.insert()
+
     }
 
 }

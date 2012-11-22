@@ -1,6 +1,6 @@
 package org.openlmis.rnr.service;
 
-import org.openlmis.rnr.dao.RnrRepository;
+import org.openlmis.rnr.dao.RnrTemplateRepository;
 import org.openlmis.rnr.domain.RnrColumn;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,10 +11,10 @@ import java.util.List;
 @Service
 public class RnrTemplateService {
 
-    private RnrRepository rnrRepository;
+    private RnrTemplateRepository rnrRepository;
 
     @Autowired
-    public RnrTemplateService(RnrRepository rnrRepository) {
+    public RnrTemplateService(RnrTemplateRepository rnrRepository) {
         this.rnrRepository = rnrRepository;
     }
 

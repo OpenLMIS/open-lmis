@@ -5,6 +5,8 @@ import org.openlmis.core.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 public class ProductService {
@@ -19,4 +21,10 @@ public class ProductService {
     public void save(Product product) {
         repository.insert(product);
     }
+
+
+    public List<Product> getByFacilityAndProgram(String facilityCode, String programCode) {
+        return repository.getByFacilityAndProgram(facilityCode, programCode);
+    }
+
 }

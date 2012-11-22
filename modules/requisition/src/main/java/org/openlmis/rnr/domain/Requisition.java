@@ -19,5 +19,13 @@ public class Requisition {
     private String modifiedBy;
     private Date modifiedDate;
 
+    public Requisition(String facilityCode, String programCode, RnrStatus status, String modifiedBy, Date modifiedDate) {
+        this.facilityCode = facilityCode;
+        this.programCode = programCode;
+        this.status = status;
+        this.modifiedBy = modifiedBy;
+        this.modifiedDate = modifiedDate;
+    }
+
 }
 

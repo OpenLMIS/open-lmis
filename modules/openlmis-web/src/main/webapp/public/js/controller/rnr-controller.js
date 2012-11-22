@@ -22,11 +22,11 @@ function InitiateRnrController($http, $scope, Facility, FacilitySupportedProgram
     };
 
     var validate = function () {
-        return $scope.program;
+        return $scope.$parent.program;
     };
 
     var initRnr = function () {
-        $http.post('/logistics/rnr/' + $scope.facility + '/' + $scope.program.code + '/init.json', {}).success(function () {
+        $http.post('/logistics/rnr/' + $scope.$parent.facility + '/' + $scope.$parent.program.code + '/init.json', {}).success(function () {
             $scope.error = "";
             $location.path('create-rnr');
         }).error(function () {
@@ -38,7 +38,7 @@ function InitiateRnrController($http, $scope, Facility, FacilitySupportedProgram
 
 function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $location) {
 
-    RequisitionHeader.get({code:$scope.facility}, function (data) {
+    RequisitionHeader.get({code:$scope.$parent.facility}, function (data) {
         $scope.header = data.requisitionHeader;
     }, function () {
         $location.path("init-rnr");
@@ -49,5 +49,13 @@ function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $l
     }, function () {
         $location.path('init-rnr');
     });
-
+//
+//<<<<<<< Updated upstream
+//=======
+//    ProductList.get({programCode:$scope.program.code, facilityCode:$scope.facility}, function (data) {   //success
+//        $scope.productList = data.productList;
+//    }, function () {
+//        $location.path('init-rnr');
+//    });
+//>>>>>>> Stashed changes
 }

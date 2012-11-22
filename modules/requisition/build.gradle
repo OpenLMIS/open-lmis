@@ -8,6 +8,7 @@ dependencies {
             project(':modules:core')
 
     testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
-            project(':modules:db')
+            project(':modules:db'),
+            project(path : ':modules:core', configuration: 'testFixtures')
 }
 

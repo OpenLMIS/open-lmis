@@ -7,6 +7,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class ProductRepository {
 
@@ -28,4 +30,9 @@ public class ProductRepository {
             }
         }
     }
+
+    public List<Product> getByFacilityAndProgram(String facilityCode, String programCode) {
+        return mapper.getByFacilityAndProgram(facilityCode, programCode);
+    }
+
 }

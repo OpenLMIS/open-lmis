@@ -22,11 +22,13 @@ public class RnrTemplateController {
         this.rnrTemplateService = rnrTemplateService;
     }
 
+    // TODO : url should havr rnr-template and not rnr
     @RequestMapping(value = "/admin/rnr/{programCode}/columns", method = RequestMethod.GET, headers = "Accept=application/json")
     public List<RnrColumn> fetchAllProgramRnrColumnList(@PathVariable("programCode") String programCode) {
         return rnrTemplateService.fetchAllRnRColumns(programCode);
     }
 
+    // TODO : move this to logstics-web? or have another controller
     @RequestMapping(value = "/logistics/rnr/{programCode}/columns", method = RequestMethod.GET, headers = "Accept=application/json")
     public List<RnrColumn> fetchVisibleProgramRnrColumnList(@PathVariable("programCode") String programCode) {
         return rnrTemplateService.fetchVisibleRnRColumns(programCode);

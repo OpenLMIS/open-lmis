@@ -18,12 +18,12 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext-requisition.xml")
-public class RnrRepositoryIT {
+public class RnrTemplateRepositoryIT {
 
     public static final String EXISTING_PROGRAM_CODE = "HIV";
 
     @Autowired
-    RnrRepository rnrRepository;
+    RnrTemplateRepository rnrRepository;
 
     @Autowired
     ProgramRnrColumnMapper programRnrColumnMapper;
@@ -76,7 +76,6 @@ public class RnrRepositoryIT {
 
     @Test
     public void shouldInsertRnRColumnsForAProgram() throws Exception {
-
         rnrRepository.insertAllProgramRnRColumns(EXISTING_PROGRAM_CODE, rnrColumns);
 
         List<RnrColumn> programRnrColumns = programRnrColumnMapper.getAllRnrColumnsForProgram(EXISTING_PROGRAM_CODE);
