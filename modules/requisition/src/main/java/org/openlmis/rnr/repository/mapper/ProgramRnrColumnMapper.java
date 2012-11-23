@@ -9,8 +9,8 @@ import java.util.List;
 @Repository
 public interface ProgramRnrColumnMapper {
 
-    @Insert("INSERT INTO program_rnr_template(program_code, column_id, is_visible, label, position)" +
-            " values (#{programCode}, #{rnrColumn.id}, #{rnrColumn.visible}, #{rnrColumn.label}, #{rnrColumn.position})")
+    @Insert("INSERT INTO program_rnr_template(program_code, column_id, is_visible, label, position, column_type)" +
+            " values (#{programCode}, #{rnrColumn.id}, #{rnrColumn.visible}, #{rnrColumn.label}, #{rnrColumn.position}, #{rnrColumn.selectedColumnType})")
     int insert(@Param("programCode") String programCode, @Param("rnrColumn") RnrColumn rnrColumn);
 
     @Delete("DELETE FROM program_rnr_template")
@@ -31,19 +31,22 @@ public interface ProgramRnrColumnMapper {
             @Result(property = "indicator", column = "indicator"),
             @Result(property = "used", column = "used"),
             @Result(property = "visible", column = "visible"),
-            @Result(property = "mandatory", column = "mandatory")
+            @Result(property = "mandatory", column = "mandatory"),
+            @Result(property = "availableColumnTypesString", column = "availableColumnTypesString"),
+            @Result(property = "selectedColumnType", column = "selectedColumnType")
     })
     @Select("select m.id as id, m.column_name as name, m.description description," +
             " p.position as position, p.label as label, m.default_value as defaultValue," +
             " m.data_source as source, m.formula as formula, m.column_indicator as indicator," +
-            " p.is_visible as visible, m.is_used as used, m.is_mandatory as mandatory" +
+            " p.is_visible as visible, m.is_used as used, m.is_mandatory as mandatory," +
+            " p.column_type as selectedColumnType, m.available_sources as availableColumnTypesString" +
             " from program_rnr_template p INNER JOIN master_rnr_template m" +
             " ON p.column_id = m.id" +
             " where p.program_code=#{programCode}" +
             "ORDER BY visible desc,position")
     List<RnrColumn> getAllRnrColumnsForProgram(String programCode);
 
-    @Update("UPDATE Program_RnR_Template SET is_visible = #{rnrColumn.visible}, label = #{rnrColumn.label}, position = #{rnrColumn.position}" +
+    @Update("UPDATE Program_RnR_Template SET is_visible = #{rnrColumn.visible}, label = #{rnrColumn.label}, position = #{rnrColumn.position}, column_type = #{rnrColumn.selectedColumnType}" +
             "WHERE program_code = #{programCode} AND column_id = #{rnrColumn.id}")
     void update(@Param("programCode") String programCode, @Param("rnrColumn") RnrColumn rnrColumn);
 

@@ -18,6 +18,7 @@ public interface RnrColumnMapper {
             @Result(property = "label", column = "column_label"),
             @Result(property = "defaultValue", column = "default_value"),
             @Result(property = "dataSource", column = "data_source"),
+            @Result(property = "availableColumnTypesString", column = "available_sources"),
             @Result(property = "formula", column = "formula"),
             @Result(property = "indicator", column = "column_indicator"),
             @Result(property = "used", column = "is_used"),

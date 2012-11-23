@@ -1,11 +1,11 @@
 package org.openlmis.rnr.repository;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.rnr.domain.RnrColumn;
+import org.openlmis.rnr.domain.RnrColumnType;
 import org.openlmis.rnr.repository.mapper.ProgramRnrColumnMapper;
 import org.openlmis.rnr.repository.mapper.RnrColumnMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,15 +65,16 @@ public class RnrTemplateRepositoryIT {
         List<RnrColumn> result = rnrRepository.fetchAllMasterRnRColumns();
 
         RnrColumn rnrColumn = result.get(0);
-        Assert.assertThat(rnrColumn.getName(), is("product_code"));
-        Assert.assertThat(rnrColumn.getDescription(), is("This is Unique identifier for each commodity"));
-        Assert.assertThat(rnrColumn.getPosition(), is(1));
-        Assert.assertThat(rnrColumn.getLabel(), is("MSD ProductCode"));
-        Assert.assertThat(rnrColumn.getDefaultValue(), is(""));
-        Assert.assertThat(rnrColumn.getDataSource(), is("Reference Value (Product Table)"));
-        Assert.assertThat(rnrColumn.getFormula(), is(""));
-        Assert.assertThat(rnrColumn.getIndicator(), is("O"));
-        Assert.assertThat(rnrColumn.isMandatory(), is(true));
+        assertThat(rnrColumn.getName(), is("product_code"));
+        assertThat(rnrColumn.getDescription(), is("Unique identifier for each commodity"));
+        assertThat(rnrColumn.getPosition(), is(1));
+        assertThat(rnrColumn.getLabel(), is("Product Code"));
+        assertThat(rnrColumn.getDefaultValue(), is(""));
+        assertThat(rnrColumn.getDataSource(), is("Reference Value (Product Table)"));
+        assertThat(rnrColumn.getAvailableColumnTypes().get(0), is(RnrColumnType.Derived));
+        assertThat(rnrColumn.getFormula(), is(""));
+        assertThat(rnrColumn.getIndicator(), is("O"));
+        assertThat(rnrColumn.isMandatory(), is(true));
     }
 
     @Test
@@ -82,7 +83,7 @@ public class RnrTemplateRepositoryIT {
 
         List<RnrColumn> programRnrColumns = programRnrColumnMapper.getAllRnrColumnsForProgram(EXISTING_PROGRAM_CODE);
         assertThat(programRnrColumns.size(), is(rnrColumns.size()));
-        assertThat(programRnrColumns, hasItem(rnrColumns.get(0)));
+        assertThat(programRnrColumns.contains(rnrColumns.get(0)), is(true));
     }
 
     @Test

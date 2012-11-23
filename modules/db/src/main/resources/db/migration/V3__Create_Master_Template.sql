@@ -7,6 +7,7 @@ CREATE TABLE Master_RnR_Template (
     column_label varchar(200),
     default_value varchar(50) ,
     data_source varchar(50) not null,
+    available_sources varchar(200) not null,
     formula varchar(200),
     column_indicator varchar(3) not null,
     is_used boolean not null,

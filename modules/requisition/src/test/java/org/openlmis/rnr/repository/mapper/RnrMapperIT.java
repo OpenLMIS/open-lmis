@@ -1,4 +1,4 @@
-package org.openlmis.rnr.repository;
+package org.openlmis.rnr.repository.mapper;
 
 import org.joda.time.DateTime;
 import org.junit.After;

@@ -7,6 +7,7 @@
     <span class="tpl-label">Label</span>
     <!--<span class="tpl-position">Position</span>-->
     <span class="tpl-source">Source</span>
+    <span>Available sources</span>
     <!--<span class="tpl-used">Used</span>-->
   </div>
   <form ng-submit="createProgramRnrTemplate()">
@@ -41,9 +42,18 @@
           <input type="hidden" ng:model="rnrColumn.position" value="{{ rnrColumn.position }}"/>
         <!--</span>-->
         <span class="tpl-source">
-          {{ rnrColumn.dataSource }}
-          <br/>
-          {{ rnrColumn.formula }}
+              <span ng-switch on="rnrColumn.availableColumnTypes.length">
+              <span ng-switch-when="1" class="tpl-visible">
+              </span>
+              <span ng-switch-default class="tpl-visible">
+                 <select ng-model="rnrColumn.selectedColumnType" ng-options="i for i in rnrColumn.availableColumnTypes">
+                     <option value="{{rnrColumn.selectedColumnType}}" >{{rnrColumn.selectedColumnType}}</option>
+                 </select>
+              </span>
+            {{ rnrColumn.dataSource }}
+            <br/>
+            {{ rnrColumn.formula }}
+            </span>
         </span>
           <!--<span class="tpl-shown">{{ rnrColumn.used }} </span>-->
         </li>
