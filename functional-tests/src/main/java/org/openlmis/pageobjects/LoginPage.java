@@ -1,10 +1,10 @@
 package org.openlmis.pageobjects;
 
 
+import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
-import org.openlmis.UiUtils.*;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
@@ -17,12 +17,16 @@ public class LoginPage extends Page {
     @FindBy(how = How.ID, using = "password")
     private static WebElement passwordField;
 
-    @FindBy(how = How.LINK_TEXT, using = "logout")
+
+    @FindBy(how = How.XPATH, using = "//a[@id=\"username\"]")
+    private static WebElement usernameDisplay;
+
+    @FindBy(how = How.LINK_TEXT, using = "Logout")
     private static WebElement logoutLink;
 
     private String BASE_URL = "http://qa.221.134.198.28.xip.io/";
 
-    private String ERROR_MESSAGE_LOGIN = "The username or password you entered is incorrect . Please try again.";
+    private String ERROR_MESSAGE_LOGIN = "The username or password you entered is incorrect. Please try again.";
 
 
     public LoginPage(TestWebDriver driver) {
@@ -44,6 +48,7 @@ public class LoginPage extends Page {
     }
 
     public void logout() {
+        usernameDisplay.click();
         testWebDriver.waitForElementToAppear(logoutLink);
         logoutLink.click();
 
