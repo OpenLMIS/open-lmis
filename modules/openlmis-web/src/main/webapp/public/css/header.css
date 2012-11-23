@@ -45,6 +45,7 @@
   background: url(../images/down-arrow.png) no-repeat 97% 12px;
   padding-right: 17px;
   position: relative;
+  border-top: 3px solid #B82E2E;
 }
 .user-info > ul > li:hover {
   background-color: #FFF;
