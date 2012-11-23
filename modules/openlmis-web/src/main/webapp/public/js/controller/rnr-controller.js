@@ -5,10 +5,13 @@ function InitiateRnrController($http, $scope, Facility, FacilitySupportedProgram
     );
 
     $scope.loadPrograms = function () {
-        FacilitySupportedPrograms.get({facilityCode:$scope.facility}, function (data) {
-            $scope.program = null;
-            $scope.programsForFacility = data.programList;
-        }, {});
+        if ($scope.$parent.facility) {
+            FacilitySupportedPrograms.get({facilityCode:$scope.facility}, function (data) {
+                $scope.$parent.programsForFacility = data.programList;
+            }, {});
+        } else {
+            $scope.$parent.programsForFacility = null;
+        }
     };
 
     $scope.getRnrHeader = function () {
@@ -26,7 +29,7 @@ function InitiateRnrController($http, $scope, Facility, FacilitySupportedProgram
     };
 
     var initRnr = function () {
-        $http.post('/logistics/rnr/' + $scope.$parent.facility + '/' + $scope.$parent.program.code + '/init.json', {}).success(function (data) {
+        $http.post('/logistics/rnr/' + $scope.facility + '/' + $scope.program.code + '/init.json', {}).success(function (data) {
             $scope.error = "";
             $scope.$parent.rnr = data.rnr;
             $location.path('create-rnr');
@@ -38,17 +41,25 @@ function InitiateRnrController($http, $scope, Facility, FacilitySupportedProgram
 }
 
 function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $location) {
-
     RequisitionHeader.get({code:$scope.$parent.facility}, function (data) {
         $scope.header = data.requisitionHeader;
     }, function () {
         $location.path("init-rnr");
     });
 
-    ProgramRnRColumnList.get({programCode:$scope.program.code}, function (data) {
-        $scope.programRnRColumnList = data.rnrColumnList;
+    ProgramRnRColumnList.get({programCode:$scope.$parent.program.code}, function (data) {
+        if (validate(data)) {
+            $scope.programRnRColumnList = data.rnrColumnList;
+        } else {
+            $scope.$parent.error = "Please contact Admin to define R&R template for this program";
+            $location.path('init-rnr');
+        }
     }, function () {
         $location.path('init-rnr');
     });
+
+    var validate = function (data) {
+        return data.rnrColumnList.length > 0 ? true : false;
+    }
 
 }

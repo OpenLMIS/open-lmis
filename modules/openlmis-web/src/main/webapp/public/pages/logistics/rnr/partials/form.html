@@ -5,15 +5,9 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="rnrLineItem in rnr.lineItems">
+    <tr ng-repeat="rnrLineItem in $parent.rnr.lineItems">
         <td>{{rnrLineItem.productCode}}</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td ng-repeat="i in programRnRColumnList | limitTo: programRnRColumnList.length-1"></td>
     </tr>
     </tbody>
 </table>

@@ -22,7 +22,7 @@ describe('Requisition header controllers', function () {
     });
 
     it('should load programs for a facility', function() {
-      scope.facility="10134";
+      scope.$parent.facility="10134";
       var programsForFacility = [{"code":"HIV","name":"HIV","description":"HIV","active":true}];
       $httpBackend.expectGET('/logistics/facility/10134/programs.json').respond({"programList":[{"code":"HIV","name":"HIV","description":"HIV","active":true}]});
       scope.loadPrograms();
@@ -55,7 +55,7 @@ describe('Requisition header controllers', function () {
       scope.$parent.program={code:"programCode"};
 
       $httpBackend.expectGET('/logistics/facility/10134/requisition-header.json').respond(requisitionHeader);
-      $httpBackend.expectGET('/logistics/rnr/programCode/columns.json').respond({"rnrColumnList":{"testField":"test"}});
+      $httpBackend.expectGET('/logistics/rnr/programCode/columns.json').respond({"rnrColumnList":[{"testField":"test"}]});
       ctrl = $controller(CreateRnrController, {$scope:scope, $location:location});
     }));
 
@@ -68,7 +68,7 @@ describe('Requisition header controllers', function () {
 
     it('should get list of Rnr Columns for program', function () {
       $httpBackend.flush();
-      expect(scope.programRnRColumnList).toEqual({"testField":"test"});
+      expect(scope.programRnRColumnList).toEqual([{"testField":"test"}]);
     });
 
   });
