@@ -8,4 +8,8 @@ function HeaderController($scope, User, $rootScope) {
     $scope.user = data.name;
 
   }, {});
+
+  $scope.showUserMenu = function(e) {
+                                  $(e.currentTarget).find("ul").show();
+  };
 }
