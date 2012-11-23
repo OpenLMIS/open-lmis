@@ -19,6 +19,8 @@ public class ProgramProduct {
 
     private Date modifiedDate;
 
+    private boolean active;
+
     public ProgramProduct(String programCode, String productCode) {
         this.programCode = programCode;
         this.productCode = productCode;

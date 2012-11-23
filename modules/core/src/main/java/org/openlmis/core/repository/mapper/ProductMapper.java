@@ -16,6 +16,7 @@ public interface ProductMapper {
             "moh_barcode," +
             "gtin," +
             "type," +
+            "display_order," +
             "primary_name," + "full_name," + "generic_name," + "alternate_name," + "description," +
             "strength," +
             "form," +
@@ -38,6 +39,7 @@ public interface ProductMapper {
             "#{mohBarCode}," +
             "#{gtin}," +
             "#{type}," +
+            "#{displayOrder}," +
             "#{primaryName}," + "#{fullName}," + "#{genericName}," + "#{alternateName}," + "#{description}," +
             "#{strength}," +
             "#{form}, " +
@@ -67,7 +69,9 @@ public interface ProductMapper {
             "and fap.product_code = pp.product_code " +
             "and pp.product_code = p.code " +
             "and p.full_supply = 'TRUE' " +
-            "and p.active = true")
+            "and p.active = true " +
+            "and pp.active = true " +
+            "ORDER BY p.display_order NULLS LAST, p.code")
     List<Product> getFullSupplyProductsByFacilityAndProgram(@Param("facilityCode") String facilityCode, @Param("programCode") String programCode);
 
     @Delete("delete from product")

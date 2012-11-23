@@ -78,7 +78,9 @@ public class RnrServiceIT {
     private Product product(String programCode) {
         Product product = make(a(ProductBuilder.product));
         productMapper.insert(product);
-        programProductMapper.insert(new ProgramProduct(programCode, product.getCode()));
+        ProgramProduct programProduct = new ProgramProduct(programCode, product.getCode());
+        programProduct.setActive(true);
+        programProductMapper.insert(programProduct);
         facilityApprovedProductMapper.insert(new FacilityApprovedProduct(FACILITY_TYPE, product.getCode()));
         return product;
     }

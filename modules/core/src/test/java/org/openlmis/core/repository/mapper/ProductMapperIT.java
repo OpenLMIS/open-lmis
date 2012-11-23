@@ -23,6 +23,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertEquals;
 import static org.openlmis.core.builder.FacilityBuilder.FACILITY_CODE;
 import static org.openlmis.core.builder.ProductBuilder.code;
+import static org.openlmis.core.builder.ProductBuilder.displayOrder;
 import static org.openlmis.core.builder.ProductBuilder.fullSupply;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -69,36 +70,56 @@ public class ProductMapperIT {
     }
 
     @Test
-    public void shouldGetFullSupplyAndActiveProductsByFacilityAndProgram() {
+    public void shouldGetFullSupplyAndActiveProductsByFacilityAndProgramInOrderOfDisplayAndProductCode() {
         facilityMapper.insert(make(a(FacilityBuilder.facility)));
 
-        Product pro01 = product(HIV, "PRO01", true);
-        addToProgram("ARV", pro01);
+        Product pro01 = product(HIV, "PRO01", true,true,6);
+        addToProgram("ARV", pro01,true);
         addToFacilityType("warehouse", pro01);
 
-        product(HIV, "PRO02", true);
+        product(HIV, "PRO02", true, true, 4);
 
-        Product pro03 = product(HIV, "PRO03", false);
+        Product pro03 = product(HIV, "PRO03", false, true,1);
         addToFacilityType("warehouse", pro03);
 
+        Product pro04 = product(HIV, "PRO04", true, false,2);
+        addToFacilityType("warehouse", pro04);
+
+
+        Product pro06 = product(HIV, "PRO06", true, true, 5);
+        addToFacilityType("warehouse", pro06);
+
+        Product pro07 = product(HIV, "PRO07", true, true, null);
+        addToFacilityType("warehouse", pro07);
+
+        Product pro05 = product(HIV, "PRO05", true, true, 5);
+        addToFacilityType("warehouse", pro05);
+
+
         List<Product> products = productMapper.getFullSupplyProductsByFacilityAndProgram(FACILITY_CODE, HIV);
-        assertEquals(1, products.size());
-        assertEquals("PRO01", products.get(0).getCode());
+        assertEquals(4, products.size());
+        assertEquals("PRO05", products.get(0).getCode());
+        assertEquals("PRO06", products.get(1).getCode());
+        assertEquals("PRO01", products.get(2).getCode());
+        assertEquals("PRO07", products.get(3).getCode());
     }
 
     private void addToFacilityType(String facilityType, Product product) {
         facilityApprovedProductMapper.insert(new FacilityApprovedProduct(facilityType, product.getCode()));
     }
 
-    private Product product(String programCode, String productCode, boolean isFullSupply) {
-        Product product = make(a(ProductBuilder.product, with(code, productCode), with(fullSupply, isFullSupply)));
+    private Product product(String programCode, String productCode, boolean isFullSupply, boolean isActive, Integer order) {
+        Product product = make(a(ProductBuilder.product, with(code, productCode), with(fullSupply, isFullSupply),with(displayOrder,order)));
         productMapper.insert(product);
-        addToProgram(programCode, product);
+        addToProgram(programCode, product, isActive);
         return product;
     }
 
-    private void addToProgram(String programCode, Product product) {
-        programProductMapper.insert(new ProgramProduct(programCode, product.getCode()));
+    private void addToProgram(String programCode, Product product, boolean isActive) {
+        ProgramProduct programProduct = new ProgramProduct(programCode, product.getCode());
+        programProduct.setActive(isActive);
+        programProductMapper.insert(programProduct);
+
     }
 
 }

@@ -9,6 +9,7 @@ CREATE TABLE product (
   moh_barcode VARCHAR(20),
   gtin VARCHAR(20),
   type VARCHAR(100),
+  display_order INTEGER,
   primary_name VARCHAR(150) NOT NULL,
   full_name VARCHAR(250),
   generic_name VARCHAR(100),

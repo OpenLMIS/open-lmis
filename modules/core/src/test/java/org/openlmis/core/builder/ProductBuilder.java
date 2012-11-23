@@ -13,6 +13,8 @@ public class ProductBuilder {
 
     public static final Property<Product, String> code = newProperty();
     public static final Property<Product, Boolean> fullSupply = newProperty();
+    public static final Property<Product, Integer> displayOrder=newProperty();
+    private static final Integer nullInteger = null;
 
     public static final Instantiator<Product> product = new Instantiator<Product>() {
         @Override
@@ -30,6 +32,7 @@ public class ProductBuilder {
             product.setType("antibiotic");
             product.setPrimaryName("antibiotic");
             product.setFullName("TDF/FTC/EFV");
+            product.setDisplayOrder(lookup.valueOf(displayOrder,nullInteger));
             product.setGenericName("Generic - TDF/FTC/EFV");
             product.setAlternateName("Alt - TDF/FTC/EFV");
             product.setDescription("is a med");
