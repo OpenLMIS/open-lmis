@@ -44,6 +44,8 @@ public class ProductMapperIT {
     FacilityMapper facilityMapper;
 
     @Autowired
+    ProgramSupportedMapper programSupportedMapper;
+    @Autowired
     ProductMapper productMapper;
 
     @Before
@@ -51,6 +53,7 @@ public class ProductMapperIT {
     public void clean() {
         facilityApprovedProductMapper.deleteAll();
         programProductMapper.deleteAll();
+        programSupportedMapper.deleteAll();
         productMapper.deleteAll();
         facilityMapper.deleteAll();
     }
