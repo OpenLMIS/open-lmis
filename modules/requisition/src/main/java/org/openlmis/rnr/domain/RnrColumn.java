@@ -44,11 +44,16 @@ public class RnrColumn {
     }
 
 
+
     public void setAvailableColumnTypesString(String dataSourcesString) {
         String[] sources = dataSourcesString.split("/");
         for (String source : sources) {
-            availableColumnTypes.add(RnrColumnType.valueOf(source));
+            availableColumnTypes.add(RnrColumnType.getValueOf(source));
         }
+    }
+
+    public void setSelectedColumnTypeString(String selectedColumnType) {
+            this.selectedColumnType =RnrColumnType.getValueOf(selectedColumnType);
     }
 
     public RnrColumnType getSelectedColumnType() {

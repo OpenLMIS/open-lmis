@@ -11,7 +11,7 @@ public class RnrColumnTest {
     @Test
     public void shouldSetAvailableDataSources() {
         RnrColumn rnrColumn = new RnrColumn();
-        rnrColumn.setAvailableColumnTypesString(RnrColumnType.UserInput + "/" + RnrColumnType.Derived);
+        rnrColumn.setAvailableColumnTypesString(RnrColumnType.UserInput + "/" + RnrColumnType.Calculated);
         assertEquals(2, rnrColumn.getAvailableColumnTypes().size());
     }
 
@@ -26,9 +26,9 @@ public class RnrColumnTest {
     @Test
     public void shouldGetSelectedColumnType() {
         RnrColumn rnrColumn = new RnrColumn();
-        rnrColumn.setAvailableColumnTypesString(RnrColumnType.UserInput + "/" + RnrColumnType.Derived);
-        rnrColumn.setSelectedColumnType(RnrColumnType.Derived);
+        rnrColumn.setAvailableColumnTypesString(RnrColumnType.UserInput + "/" + RnrColumnType.Calculated);
+        rnrColumn.setSelectedColumnType(RnrColumnType.Calculated);
         RnrColumnType columnType = rnrColumn.getSelectedColumnType();
-        assertThat(columnType, is(RnrColumnType.Derived));
+        assertThat(columnType, is(RnrColumnType.Calculated));
     }
 }

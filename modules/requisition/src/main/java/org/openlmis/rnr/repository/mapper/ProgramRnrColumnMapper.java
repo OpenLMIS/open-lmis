@@ -33,13 +33,13 @@ public interface ProgramRnrColumnMapper {
             @Result(property = "visible", column = "visible"),
             @Result(property = "mandatory", column = "mandatory"),
             @Result(property = "availableColumnTypesString", column = "availableColumnTypesString"),
-            @Result(property = "selectedColumnType", column = "selectedColumnType")
+            @Result(property = "selectedColumnTypeString", column = "selectedColumnTypeString")
     })
     @Select("select m.id as id, m.column_name as name, m.description description," +
             " p.position as position, p.label as label, m.default_value as defaultValue," +
             " m.data_source as source, m.formula as formula, m.column_indicator as indicator," +
             " p.is_visible as visible, m.is_used as used, m.is_mandatory as mandatory," +
-            " p.column_type as selectedColumnType, m.available_sources as availableColumnTypesString" +
+            " p.column_type as selectedColumnTypeString, m.available_sources as availableColumnTypesString" +
             " from program_rnr_template p INNER JOIN master_rnr_template m" +
             " ON p.column_id = m.id" +
             " where p.program_code=#{programCode}" +

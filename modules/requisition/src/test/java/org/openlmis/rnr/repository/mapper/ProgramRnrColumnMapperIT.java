@@ -49,7 +49,7 @@ public class ProgramRnrColumnMapperIT {
     public void shouldUpdateConfiguredDataForProgramColumn() throws Exception {
         RnrColumn rnrColumn = rnrColumnMapper.fetchAllMasterRnRColumns().get(0);
         addProgramRnrColumn(rnrColumn, 3, true, "Some Random Label", RnrColumnType.UserInput);
-        updateProgramRnrColumn(rnrColumn.getId(), 5, false, "Some Random Label", RnrColumnType.Derived);
+        updateProgramRnrColumn(rnrColumn.getId(), 5, false, "Some Random Label", RnrColumnType.Calculated);
 
         RnrColumn updatedRnrColumn = programRnrColumnMapper.getAllRnrColumnsForProgram(HIV).get(0);
 
@@ -57,7 +57,7 @@ public class ProgramRnrColumnMapperIT {
         assertThat(updatedRnrColumn.isVisible(), is(false));
         assertThat(updatedRnrColumn.getPosition(), is(5));
         assertThat(updatedRnrColumn.getLabel(), is("Some Random Label"));
-        assertThat(updatedRnrColumn.getSelectedColumnType(), is(RnrColumnType.Derived));
+        assertThat(updatedRnrColumn.getSelectedColumnType(), is(RnrColumnType.Calculated));
     }
 
     @Test

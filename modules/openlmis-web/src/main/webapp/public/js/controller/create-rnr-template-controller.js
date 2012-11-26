@@ -5,7 +5,7 @@ function CreateRnrTemplateController($scope, Program) {
 }
 
 function SaveRnrTemplateController($scope, RnRColumnList, $http, $location) {
-    var DERIVED = 'Derived';
+    var CALCULATED = 'Calculated';
     var code = ($scope.program ? $scope.program.code : "");
     RnRColumnList.get({programCode:code}, function (data) {   //success
         $scope.rnrColumnList = data.rnrColumnList;
@@ -36,12 +36,12 @@ function SaveRnrTemplateController($scope, RnRColumnList, $http, $location) {
     var validateCycleDependency = function(rnrColumnList){
         for(var column in rnrColumnList){
             var rnrColumn = rnrColumnList[column];
-            if(rnrColumn.selectedColumnType==DERIVED){
+            if(rnrColumn.selectedColumnType==CALCULATED){
                var dependencies = rnrColumn.cyclicDependencies;
                for(var dependent in dependencies){
                    var dependentColumnName = dependencies[dependent].name
                    var dependentColumn = getRnrColumnByName(rnrColumnList, dependentColumnName);
-                   if(dependentColumn.selectedColumnType==DERIVED){
+                   if(dependentColumn.selectedColumnType==CALCULATED){
                       updateErrorMessage("Interdependent fields( "+rnrColumn.name+", "+dependentColumnName+
                                          ") can not be of type 'calculated' at the same time");
                       return false;

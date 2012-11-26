@@ -71,7 +71,7 @@ public class RnrTemplateRepositoryIT {
         assertThat(rnrColumn.getLabel(), is("Product Code"));
         assertThat(rnrColumn.getDefaultValue(), is(""));
         assertThat(rnrColumn.getDataSource(), is("Reference Value (Product Table)"));
-        assertThat(rnrColumn.getAvailableColumnTypes().get(0), is(RnrColumnType.Derived));
+        assertThat(rnrColumn.getAvailableColumnTypes().get(0), is(RnrColumnType.Calculated));
         assertThat(rnrColumn.getFormula(), is(""));
         assertThat(rnrColumn.getIndicator(), is("O"));
         assertThat(rnrColumn.isMandatory(), is(true));
