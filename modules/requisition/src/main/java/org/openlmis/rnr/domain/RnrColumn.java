@@ -52,7 +52,7 @@ public class RnrColumn {
     }
 
     public RnrColumnType getSelectedColumnType() {
-        return (selectedColumnType == null && availableColumnTypes.size()==1) ? availableColumnTypes.get(0): selectedColumnType;
+        return (selectedColumnType == null && availableColumnTypes.size()!=0) ? availableColumnTypes.get(0): selectedColumnType;
     }
 
     public boolean isMandatory() {
