@@ -13,7 +13,7 @@
   <form ng-submit="createProgramRnrTemplate()">
     <div class="rnr-template-columns">
       <ul id="sortable">
-        <li ng-repeat="rnrColumn in rnrColumnsList">
+        <li ng-repeat="rnrColumn in rnrColumnList">
          <span ng-switch on="rnrColumn.mandatory">
           <span ng-switch-when="true" class="tpl-visible">
             <input type="checkbox" ng:model="rnrColumn.visible" checked disabled/>

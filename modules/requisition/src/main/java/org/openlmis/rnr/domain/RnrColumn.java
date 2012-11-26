@@ -26,6 +26,7 @@ public class RnrColumn {
     private boolean used;
     private boolean visible;
     private boolean mandatory;
+    private List<RnrColumn> cyclicDependencies = new ArrayList<>();
 
     public RnrColumn(String name, String description, int position, String label, String defaultValue, String dataSource, List<RnrColumnType> availableDataSources, String formula, String indicator, boolean isUsed, boolean isVisible, boolean mandatory) {
         this.name = name;
@@ -34,7 +35,7 @@ public class RnrColumn {
         this.label = label;
         this.defaultValue = defaultValue;
         this.dataSource = dataSource;
-        this.availableColumnTypes = (ArrayList)availableDataSources;
+        this.availableColumnTypes = availableDataSources;
         this.formula = formula;
         this.indicator = indicator;
         this.used = isUsed;
@@ -51,7 +52,7 @@ public class RnrColumn {
     }
 
     public RnrColumnType getSelectedColumnType() {
-        return (selectedColumnType == null) ? RnrColumnType.UserInput : selectedColumnType;
+        return (selectedColumnType == null && availableColumnTypes.size()==1) ? availableColumnTypes.get(0): selectedColumnType;
     }
 
     public boolean isMandatory() {

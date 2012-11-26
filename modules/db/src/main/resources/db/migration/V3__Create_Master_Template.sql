@@ -2,7 +2,7 @@ Drop TABLE IF EXISTS Master_Program_Template;
 CREATE TABLE Master_RnR_Template (
     id serial PRIMARY KEY,
     description varchar(250),
-    column_name varchar(200) NOT NULL,
+    column_name varchar(200) NOT NULL UNIQUE,
     column_position integer  NOT NULL,
     column_label varchar(200),
     default_value varchar(50) ,
