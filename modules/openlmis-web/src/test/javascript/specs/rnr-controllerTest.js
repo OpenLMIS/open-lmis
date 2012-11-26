@@ -1,15 +1,14 @@
-describe('Requisition header controllers', function () {
+describe('Requisition controllers', function () {
 
   describe('InitiateRnrController', function () {
 
-    var scope, ctrl, $httpBackend, location,facilities,http;
+    var scope, ctrl, $httpBackend, location,facilities;
 
     beforeEach(module('openlmis.services'));
     beforeEach(inject(function ($rootScope,_$httpBackend_,$controller,$location,$http) {
       scope = $rootScope.$new();
       $httpBackend=_$httpBackend_;
       location=$location;
-      http = $http;
       expect(scope.facilities).toBeUndefined();
       facilities = [{"code":"10134","name":"National Warehouse","description":null}];
       $httpBackend.expectGET('/logistics/facilities.json').respond({"facilityList":[{"code":"10134","name":"National Warehouse","description":null}]});
@@ -35,6 +34,25 @@ describe('Requisition header controllers', function () {
       scope.getRnrHeader();
       expect(scope.error).toEqual("Please select Facility and program for facility to proceed");
     });
+
+    it('should initiate rnr if facility and program chosen are correct',function () {
+      scope.$parent.program = {"code" : "hiv"};
+      $httpBackend.expectPOST('/logistics/rnr/undefined/hiv/init.json').respond({"rnr":{"test":"test"}});
+      scope.getRnrHeader();
+      $httpBackend.flush();
+      expect(scope.$parent.rnr).toEqual({"test":"test"});
+      expect(location.path()).toEqual("/create-rnr");
+      expect(scope.error).toEqual("");
+    });
+
+    it('should set error message if post fails', function () {
+      scope.$parent.program = {"code" : "hiv"};
+      $httpBackend.expectPOST('/logistics/rnr/undefined/hiv/init.json').respond(404);
+      scope.getRnrHeader();
+      $httpBackend.flush();
+      expect(scope.error).toEqual("Rnr initialization failed!");
+    });
+
 
 
   });

@@ -4,9 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.domain.RequisitionHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -16,7 +14,6 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
-import static org.joda.time.DateTime.now;
 import static org.junit.Assert.*;
 import static org.openlmis.core.builder.FacilityBuilder.*;
 
@@ -26,15 +23,13 @@ public class FacilityMapperIT {
 
     public static final String PROGRAM_CODE = "TB";
 
-    @Autowired
-    ProgramSupportedMapper programSupportedMapper;
 
     @Autowired
     FacilityMapper facilityMapper;
 
     @Before
+    @After
     public void setUp() throws Exception {
-        programSupportedMapper.deleteAll();
         facilityMapper.deleteAll();
     }
 
@@ -93,16 +88,5 @@ public class FacilityMapperIT {
         assertThat(facilityMapper.insert(make(a(facility))), is(1));
     }
 
-    @After
-    public void tearDown() throws Exception {
-        facilityMapper.deleteAll();
 
-        Facility facility = make(a(FacilityBuilder.facility,
-                with(code, "DDM001"),
-                with(name, "Dodoma Hospital"),
-                with(type, "lvl3_hospital")));
-        facilityMapper.insert(facility);
-        programSupportedMapper.addSupportedProgram(new ProgramSupported(facility.getCode(), PROGRAM_CODE, true, "test", now().toDate()));
-        //TODO: remove this from tear down. its being used to leave some data for initiate rnr.!!!
-    }
 }

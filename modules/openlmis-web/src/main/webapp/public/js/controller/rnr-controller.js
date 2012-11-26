@@ -49,6 +49,7 @@ function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $l
 
     ProgramRnRColumnList.get({programCode:$scope.$parent.program.code}, function (data) {
         if (validate(data)) {
+            $scope.$parent.error = "";
             $scope.programRnRColumnList = data.rnrColumnList;
         } else {
             $scope.$parent.error = "Please contact Admin to define R&R template for this program";
