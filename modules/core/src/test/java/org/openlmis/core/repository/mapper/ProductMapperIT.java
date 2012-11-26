@@ -22,9 +22,7 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertEquals;
 import static org.openlmis.core.builder.FacilityBuilder.FACILITY_CODE;
-import static org.openlmis.core.builder.ProductBuilder.code;
-import static org.openlmis.core.builder.ProductBuilder.displayOrder;
-import static org.openlmis.core.builder.ProductBuilder.fullSupply;
+import static org.openlmis.core.builder.ProductBuilder.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
@@ -99,8 +97,16 @@ public class ProductMapperIT {
         List<Product> products = productMapper.getFullSupplyProductsByFacilityAndProgram(FACILITY_CODE, HIV);
         assertEquals(4, products.size());
         assertEquals("PRO05", products.get(0).getCode());
+        assertEquals("Primary Name", products.get(0).getPrimaryName());
+        assertEquals("strength", products.get(0).getStrength());
+        assertEquals(1, products.get(0).getForm());
+        assertEquals("Strip", products.get(0).getDispensingUnit());
+        assertEquals(1, products.get(0).getDosageUnit());
+
         assertEquals("PRO06", products.get(1).getCode());
+
         assertEquals("PRO01", products.get(2).getCode());
+
         assertEquals("PRO07", products.get(3).getCode());
     }
 

@@ -5,10 +5,10 @@ insert into product (code,alternate_item_code,manufacturer,manufacturer_code,man
 ('P100','a','Glaxo and Smith','a','a','a','a','antibiotic','antibiotic','TDF/FTC/EFV','TDF/FTC/EFV','TDF/FTC/EFV','TDF/FTC/EFV','300/200/600',2,1,'Strip',3,1,30,3,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,2.2,2,2,2,2,2,2,2,2,2,2,'a','a',TRUE,TRUE,TRUE,1,FALSE,TRUE),
 ('P101','a','Glaxo and Smith','a','a','a','a','antibiotic','antibiotic','TDF/FTC/EFV','TDF/FTC/EFV','TDF/FTC/EFV','TDF/FTC/EFV','300/200/600',2,1,'Strip',3,1,30,3,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,2.2,2,2,2,2,2,2,2,2,2,2,'a','a',TRUE,TRUE,TRUE,1,FALSE,TRUE),
 ('P102','a','Glaxo and Smith','a','a','a','a','antibiotic','antibiotic','TDF/FTC/EFV','TDF/FTC/EFV','TDF/FTC/EFV','TDF/FTC/EFV','300/200/600',2,1,'Strip',3,1,30,3,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,2.2,2,2,2,2,2,2,2,2,2,2,'a','a',TRUE,TRUE,TRUE,1,FALSE,TRUE);
-insert into program_product(program_code, product_code) values
-('HIV', 'P100'),
-('HIV', 'P101'),
-('HIV', 'P102');
+insert into program_product(program_code, product_code, active) values
+('HIV', 'P100', true),
+('HIV', 'P101', true),
+('HIV', 'P102', true);
 insert into facility_approved_product(facility_type_code, product_code) values
 ('warehouse', 'P100'),
 ('warehouse', 'P101'),

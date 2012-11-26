@@ -1,5 +1,6 @@
 package org.openlmis.rnr.repository.mapper;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +27,7 @@ public class ProgramRnrColumnMapperIT {
     RnrColumnMapper rnrColumnMapper;
 
     @Before
+    @After
     public void setUp() throws Exception {
         programRnrColumnMapper.deleteAll();
     }

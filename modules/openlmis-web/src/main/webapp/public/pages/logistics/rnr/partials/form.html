@@ -6,8 +6,10 @@
     </thead>
     <tbody>
     <tr ng-repeat="rnrLineItem in $parent.rnr.lineItems">
-        <td>{{rnrLineItem.productCode}}</td>
-        <td ng-repeat="i in programRnRColumnList | limitTo: programRnRColumnList.length-1"></td>
+        <td>{{rnrLineItem.product.code}}</td>
+        <td>{{rnrLineItem.product.primaryName}}  {{rnrLineItem.product.form}} {{rnrLineItem.product.strength}} {{rnrLineItem.product.dosageUnit}}</td>
+        <td>{{rnrLineItem.product.dispensingUnit}}</td>
+        <td ng-repeat="i in programRnRColumnList | limitTo: programRnRColumnList.length-3"></td>
     </tr>
     </tbody>
 </table>

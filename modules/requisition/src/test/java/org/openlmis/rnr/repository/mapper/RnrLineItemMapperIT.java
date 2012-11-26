@@ -4,6 +4,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openlmis.core.builder.ProductBuilder;
+import org.openlmis.core.domain.Product;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProductMapper;
 import org.openlmis.rnr.domain.Rnr;
@@ -19,8 +21,6 @@ import static junit.framework.Assert.assertEquals;
 import static org.joda.time.DateTime.now;
 import static org.openlmis.core.builder.FacilityBuilder.FACILITY_CODE;
 import static org.openlmis.core.builder.FacilityBuilder.facility;
-import static org.openlmis.core.builder.ProductBuilder.PRODUCT_CODE;
-import static org.openlmis.core.builder.ProductBuilder.product;
 
 @ContextConfiguration(locations = "classpath*:applicationContext-requisition.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -38,6 +38,8 @@ public class RnrLineItemMapperIT {
     @Autowired
     private RnrLineItemMapper rnrLineItemMapper;
 
+    Product product;
+
     @Before
     public void setUp() {
         rnrLineItemMapper.deleteAll();
@@ -45,13 +47,14 @@ public class RnrLineItemMapperIT {
         facilityMapper.deleteAll();
         productMapper.deleteAll();
         facilityMapper.insert(make(a(facility)));
-        productMapper.insert(make(a(product)));
+        product  = make(a(ProductBuilder.product));
+        productMapper.insert(product);
     }
 
     @Test
     public void shouldInsertRequisitionLineItem() {
         int rnrId = rnrMapper.insert(new Rnr(FACILITY_CODE, "HIV", RnrStatus.INITIATED));
-        int status = rnrLineItemMapper.insert(new RnrLineItem(rnrId, PRODUCT_CODE, "user", now().toDate()));
+        int status = rnrLineItemMapper.insert(new RnrLineItem(rnrId, product, "user", now().toDate()));
         assertEquals(1, status);
     }
 

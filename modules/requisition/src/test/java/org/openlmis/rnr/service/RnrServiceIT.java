@@ -19,11 +19,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static com.natpryce.makeiteasy.MakeItEasy.a;
+import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.junit.Assert.assertEquals;
 import static org.openlmis.core.builder.FacilityBuilder.FACILITY_CODE;
 import static org.openlmis.core.builder.FacilityBuilder.FACILITY_TYPE;
-import static org.openlmis.core.builder.ProductBuilder.*;
+import static org.openlmis.core.builder.ProductBuilder.PRODUCT_CODE;
 
 @ContextConfiguration(locations = "classpath*:applicationContext-requisition.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -71,7 +72,7 @@ public class RnrServiceIT {
         assertEquals("user", rnr.getModifiedBy());
         assertEquals(1, rnr.getLineItems().size());
         assertEquals(rnr.getId(), rnr.getLineItems().get(0).getRnrId());
-        assertEquals(PRODUCT_CODE, rnr.getLineItems().get(0).getProductCode());
+        assertEquals(PRODUCT_CODE, rnr.getLineItems().get(0).getProduct().getCode());
         assertEquals("user", rnr.getLineItems().get(0).getModifiedBy());
     }
 

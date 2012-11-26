@@ -59,6 +59,8 @@ public class Product implements Importable {
     @ImportField(type = "long", name = "Product Form")
     private long form;
 
+    private ProductForm productForm;
+
     @ImportField(type = "long", name = "Dosage Units")
     private long dosageUnit;
 

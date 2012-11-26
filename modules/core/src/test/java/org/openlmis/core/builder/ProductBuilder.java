@@ -30,21 +30,20 @@ public class ProductBuilder {
             product.setMohBarCode("mohBarCode");
             product.setGtin("gtin");
             product.setType("antibiotic");
-            product.setPrimaryName("antibiotic");
+            product.setPrimaryName("Primary Name");
             product.setFullName("TDF/FTC/EFV");
             product.setDisplayOrder(lookup.valueOf(displayOrder,nullInteger));
             product.setGenericName("Generic - TDF/FTC/EFV");
             product.setAlternateName("Alt - TDF/FTC/EFV");
             product.setDescription("is a med");
             product.setStrength("strength");
-            product.setDispensingUnit("Strip");
+            product.setDosageUnit(1);
             product.setDispensingUnit("Strip");
             product.setPackSize(10);
             product.setTracer(true);
             product.setPackRoundingThreshold(1);
             product.setRoundToZero(true);
             product.setForm(1);
-            product.setDosageUnit(1);
             return product;
         }
     };

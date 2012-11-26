@@ -2,6 +2,7 @@ package org.openlmis.rnr.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Product;
 
 import java.util.Date;
 
@@ -11,7 +12,7 @@ public class RnrLineItem {
 
     private int id;
     private int rnrId;
-    private String productCode;
+    private Product product;
 
     private int quantityReceived;
     private int quantityDispensed ;
@@ -39,9 +40,9 @@ public class RnrLineItem {
     private String modifiedBy;
     private Date modifiedDate;
 
-    public RnrLineItem(int rnrId, String productCode, String modifiedBy, Date modifiedDate) {
+    public RnrLineItem(int rnrId, Product product, String modifiedBy, Date modifiedDate) {
         this.rnrId = rnrId;
-        this.productCode = productCode;
+        this.product = product;
         this.modifiedBy = modifiedBy;
         this.modifiedDate = modifiedDate;
     }

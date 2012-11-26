@@ -42,7 +42,7 @@ public class RnrService {
 
         List<Product> products = productService.getByFacilityAndProgram(facilityCode, programCode);
         for (Product product : products) {
-            RnrLineItem requisitionLineItem = new RnrLineItem(rnrId, product.getCode(), modifiedBy, now().toDate());
+            RnrLineItem requisitionLineItem = new RnrLineItem(rnrId, product, modifiedBy, now().toDate());
             rnrLineItemRepository.insert(requisitionLineItem);
             requisition.add(requisitionLineItem);
         }

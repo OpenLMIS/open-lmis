@@ -58,9 +58,14 @@ public interface ProductMapper {
 
     @Results(value = {
             @Result(property = "code", column = "code"),
-            @Result(property = "primaryName", column = "primary_name")
+            @Result(property = "primaryName", column = "primary_name"),
+            @Result(property = "dispensingUnit", column = "dispensing_unit"),
+            @Result(property = "form", column = "form"),
+            @Result(property = "strength", column = "strength"),
+            @Result(property = "dosageUnit", column = "dosage_unit")
     })
-    @Select("select p.code as code, p.primary_name as primaryName " +
+    @Select("select p.code as code, p.primary_name as primary_name, " +
+            "p.dispensing_unit as dispensing_unit, p.dosage_unit as dosage_unit, p.form as form, p.strength as strength " +
             "from product p, facility_approved_product fap, program_product pp, facility f " +
             "where pp.program_code = #{programCode} " +
             "and f.code = #{facilityCode}" +
