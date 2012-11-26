@@ -1,14 +1,15 @@
-<table class="table table-striped table-bordered">
+<div class="rnr-table">
+  <table class="table table-striped table-bordered">
     <thead>
     <tr>
-        <th ng-repeat="programRnrColumn in programRnRColumnList">{{programRnrColumn.label}}</th>
+      <th ng-repeat="programRnrColumn in programRnRColumnList">{{programRnrColumn.label}}</th>
     </tr>
     </thead>
     <tbody>
-
-<tr>
+  <tr>
     <tr ng-repeat="rnrLineItem in $parent.rnr.lineItems">
-<!--<td ng-model="i as rnrLineItem.{{fieldMap[programRnrColumn.name]}}">{{i}}</td>-->
+      <!--<td ng-model="i as rnrLineItem.{{fieldMap[programRnrColumn.name]}}">{{i}}</td>-->
     </tr>
     </tbody>
-</table>
+  </table>
+</div>
