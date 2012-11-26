@@ -10,6 +10,10 @@ function HeaderController($scope, User, $rootScope) {
   }, {});
 
   $scope.showUserMenu = function(e) {
-                                  $(e.currentTarget).find("ul").show();
+    $(e.currentTarget).find("ul").show();
   };
+
+  $scope.fixHeight = function() {
+    $(".navigation").height(window.innerHeight - 57);
+  }();
 }

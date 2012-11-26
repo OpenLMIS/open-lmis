@@ -1,10 +1,13 @@
 .header {
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
-  position: relative;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
   z-index: 1;
 }
 .header-top {
-  height: 96px;
+  height: 52px;
   background-color: #f4f4f4;
   border-bottom: 1px solid white;
 }
@@ -15,22 +18,22 @@
 }
 .logo {
   float: left;
-  margin: 11px 14px;
+  margin: 7px 2px;
   width: 50%
 }
 .logo img {
   float: left;
   margin: 5px 11px 5px 10px;
-  border: 5px solid white;
-  border-radius: 7px;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
+  border: 3px solid white;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+  width: 24px;
 }
 .logo h1 {
   float: left;
-  font-size: 1.7em;
+  font-size: 1.4em;
   font-weight: normal;
   line-height: 29px;
-  margin: 7px 4px;
+  margin: 5px 1px;
   color: #555;
   text-shadow: 0 1px 0 #FFF;
 }

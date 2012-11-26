@@ -4,7 +4,9 @@
   width: 250px;
   min-height: 400px;
   box-shadow: 2px 0 4px rgba(0, 0, 0, 0.4);
-  float: left;
+  position: fixed;
+  left: 0;
+  top: 57px;
 }
 .navigation ul {
   list-style: none;

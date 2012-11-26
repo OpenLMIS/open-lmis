@@ -2,7 +2,7 @@
   min-height: 200px;
   background: white;
   padding: 10px 20px 20px;
-  margin: 12px 0 0 265px;
+  margin: 72px 12px 0 265px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
 }
 
@@ -14,18 +14,27 @@
   font-weight: bold;
   color: #555;
   text-shadow: 0 1px 0 #FFF;
+  font-size: 0.9em;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
+  background: #f9f9f9; /* Old browsers */
+  background: -moz-linear-gradient(top, #f9f9f9 0%, #e0e0e0 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f9f9f9), color-stop(100%,#e0e0e0)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #f9f9f9 0%,#e0e0e0 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, #f9f9f9 0%,#e0e0e0 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, #f9f9f9 0%,#e0e0e0 100%); /* IE10+ */
+  background: linear-gradient(to bottom, #f9f9f9 0%,#e0e0e0 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f9f9f9', endColorstr='#e0e0e0',GradientType=0 ); /* IE6-9 */
 }
 
 span[class^="tpl-"] {
   display: inline-block;
-  padding: 15px;
+  padding: 10px;
   vertical-align: text-top;
 }
 
 .rnr-template-head span[class^="tpl-"] {
-  padding: 10px 15px;
+  padding: 8px 10px;
 }
 
 .tpl-used {
@@ -49,7 +58,8 @@ span[class^="tpl-"] {
 }
 
 .tpl-visible {
-  width: 40px;
+  width: 50px;
+  text-align: center;
 }
 
 .rnr-template-columns {
@@ -63,15 +73,31 @@ span[class^="tpl-"] {
 
 .rnr-template-columns ul > li {
   border: 1px solid #DDD;
-  margin: 1px 0;
+  border-color: transparent #BBB #DDD;
+  border-top: 0;
+  background: #FCFCFC;
+  font-size: 0.9em;
+  position: relative;
+}
+.rnr-template-columns ul > li .drag-handle {
+  background: url("../images/sort-icon.png") no-repeat left center;
+  position: absolute;
+  width: 9px;
+  height: 18px;
+  left: 6px;
+  top: 50%;
+  margin-top: -9px;
+  cursor: move;
+  display: none;
+}
+.rnr-template-columns ul > li:hover .drag-handle {
+  display: block;
 }
 
 .rnr-template-columns input[type="text"] {
-  margin-bottom: 5px;
-}
-
-.rnr-template-columns .tpl-visible {
-  text-align: center;
+  margin-bottom: 2px;
+  font-size: 1em;
+  height: 18px;
 }
 
 .rnr-template-columns .default-label {
