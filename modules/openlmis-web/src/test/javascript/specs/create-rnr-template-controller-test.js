@@ -27,7 +27,7 @@ describe('Rnr Template controllers', function () {
                                {"id":2,"name":"product","description":"Primary name of the product","position":2,"label":"Product","defaultValue":"","dataSource":"Reference Value (Product Table)","availableColumnTypes":["Derived"],"selectedColumnType":"Derived","formula":"","indicator":"R","used":true,"visible":true,"mandatory":true,"cyclicDependencies":[{"id":1,"name":"product_code","description":"Unique identifier for each commodity","position":1,"label":"Product Code","defaultValue":"","dataSource":"Reference Value (Product Table)","availableColumnTypes":["Derived"],"selectedColumnType":"Derived","formula":"","indicator":"O","used":true,"visible":true,"mandatory":true,"cyclicDependencies":[]}]}];
         scope.createProgramRnrTemplate();
 
-        expect(scope.error).toEqual("All the inter-dependent fields( product, product_code) can not be of 'calculated' type at the same time");
+        expect(scope.error).toEqual("Interdependent fields( product, product_code) can not be of type 'calculated' at the same time");
     });
 
     it('should validate to success before saving', function() {
