@@ -1,4 +1,4 @@
-INSERT INTO product_form(id, text, display_order) VALUES
+INSERT INTO product_form(id, name, display_order) VALUES
 (1,'Tablet',1),
 (2,'Capsule',2),
 (3,'Bottle',3),

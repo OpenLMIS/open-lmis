@@ -62,17 +62,22 @@ public interface ProductMapper {
             @Result(property = "dispensingUnit", column = "dispensing_unit"),
             @Result(property = "form", column = "form"),
             @Result(property = "strength", column = "strength"),
-            @Result(property = "dosageUnit", column = "dosage_unit")
+            @Result(property = "dosageUnit", column = "dosage_unit"),
+            @Result(property = "productForm.id", column = "form"),
+            @Result(property = "productForm.name", column = "form_name"),
+            @Result(property = "productForm.displayOrder", column = "form_display_order")
     })
     @Select("select p.code as code, p.primary_name as primary_name, " +
-            "p.dispensing_unit as dispensing_unit, p.dosage_unit as dosage_unit, p.form as form, p.strength as strength " +
-            "from product p, facility_approved_product fap, program_product pp, facility f " +
+            "p.dispensing_unit as dispensing_unit, p.dosage_unit as dosage_unit, p.form as form, p.strength as strength, " +
+            "pf.name as form_name , pf.display_order as form_display_order " +
+            "from product p, facility_approved_product fap, program_product pp, facility f , product_form pf " +
             "where pp.program_code = #{programCode} " +
             "and f.code = #{facilityCode}" +
             "and fap.facility_type_code = f.type " +
             "and fap.product_code = p.code " +
             "and fap.product_code = pp.product_code " +
             "and pp.product_code = p.code " +
+            "and pf.id = p.form " +
             "and p.full_supply = 'TRUE' " +
             "and p.active = true " +
             "and pp.active = true " +

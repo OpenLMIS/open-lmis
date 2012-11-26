@@ -21,6 +21,7 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 import static org.openlmis.core.builder.FacilityBuilder.FACILITY_CODE;
 import static org.openlmis.core.builder.ProductBuilder.*;
 
@@ -102,6 +103,8 @@ public class ProductMapperIT {
         assertEquals(1, products.get(0).getForm());
         assertEquals("Strip", products.get(0).getDispensingUnit());
         assertEquals(1, products.get(0).getDosageUnit());
+        assertNotNull(products.get(0).getProductForm());
+        assertEquals("Tablet", products.get(0).getProductForm().getName());
 
         assertEquals("PRO06", products.get(1).getCode());
 

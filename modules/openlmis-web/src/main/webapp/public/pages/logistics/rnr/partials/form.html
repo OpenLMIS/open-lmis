@@ -5,11 +5,10 @@
     </tr>
     </thead>
     <tbody>
+
+<tr>
     <tr ng-repeat="rnrLineItem in $parent.rnr.lineItems">
-        <td>{{rnrLineItem.product.code}}</td>
-        <td>{{rnrLineItem.product.primaryName}}  {{rnrLineItem.product.form}} {{rnrLineItem.product.strength}} {{rnrLineItem.product.dosageUnit}}</td>
-        <td>{{rnrLineItem.product.dispensingUnit}}</td>
-        <td ng-repeat="i in programRnRColumnList | limitTo: programRnRColumnList.length-3"></td>
+<!--<td ng-model="i as rnrLineItem.{{fieldMap[programRnrColumn.name]}}">{{i}}</td>-->
     </tr>
     </tbody>
 </table>

@@ -46,5 +46,4 @@ public class RnrLineItem {
         this.modifiedBy = modifiedBy;
         this.modifiedDate = modifiedDate;
     }
-
 }
