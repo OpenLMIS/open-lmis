@@ -1,7 +1,7 @@
 package org.openlmis.rnr.domain;
 
 public enum RnrColumnType {
-    UserInput("User Input"), Calculated("Calculated");
+    User_Input("User Input"), Calculated("Calculated");
 
     private final String columnType;
 
