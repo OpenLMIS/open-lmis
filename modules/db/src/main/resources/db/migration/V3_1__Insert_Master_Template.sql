@@ -4,7 +4,7 @@ insert into Master_RnR_Template(column_name, column_label, description , column_
     ('product','Product', 'Primary name of the product', 2,  '', 'Calculated', 'Reference Value (Product Table)', '' ,'R', true, true, true),
     ('unit_of_issue', 'Unit/Unit of Issue', 'Dispensing unit for this product',3,'', 'Calculated', 'Reference Value (Product Table)','','U',true,true,true),
     ('beginning_balance', 'Beginning Balance', 'Stock in hand of previous period.This is quantified in dispensing units',4,'0','User Input', 'User Input','','A',true,true,false),
-    ('quantity_received',' Total Received Quantity','Total quantity received in last period.This is quantified in dispensing units',5,'0', 'User Input', 'User Input','','B',TRUE,TRUE,false),
+    ('quantity_received','Total Received Quantity','Total quantity received in last period.This is quantified in dispensing units',5,'0', 'User Input', 'User Input','','B',TRUE,TRUE,false),
     ('quantity_dispensed','Total Consumed Quantity','Quantity dispensed/consumed in last reporting  period. This is quantified in dispensing units',6,'0','User Input/Calculated', 'User Input/Calculated','A + B (+/-) D - E','C',TRUE,TRUE,false),
     ('losses_and_adjustments','Total Losses / Adjustments','All kind of looses/adjustments made at the facility',7,'0','User Input', 'User Input','D1 + D2+D3...DN','D',TRUE,TRUE,false),
     ('reason_for_losses_and_adjustments','Reason for Losses and Adjustments','Type of Losses/adjustments',8,NULL,'Calculated', 'Reference Value ( Table)','','S',TRUE,TRUE,false),
