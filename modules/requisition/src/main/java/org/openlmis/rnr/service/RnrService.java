@@ -3,6 +3,7 @@ package org.openlmis.rnr.service;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.domain.RnrStatus;
 import org.openlmis.rnr.repository.RnrLineItemRepository;
@@ -24,14 +25,17 @@ public class RnrService {
 
     private ProductService productService;
 
+    private RnrTemplateService rnrTemplateService;
+
     public RnrService() {
     }
 
     @Autowired
-    public RnrService(RnrRepository rnrRepository, RnrLineItemRepository rnrLineItemRepository, ProductService productService) {
+    public RnrService(RnrRepository rnrRepository, RnrLineItemRepository rnrLineItemRepository, ProductService productService, RnrTemplateService rnrTemplateService) {
         this.rnrRepository = rnrRepository;
         this.rnrLineItemRepository = rnrLineItemRepository;
         this.productService = productService;
+        this.rnrTemplateService = rnrTemplateService;
     }
 
     @Transactional
@@ -40,9 +44,11 @@ public class RnrService {
         int rnrId = rnrRepository.insert(requisition);
         requisition.setId(rnrId);
 
+        List<RnrColumn> programRnrTemplate = rnrTemplateService.fetchVisibleRnRColumns(programCode);
         List<Product> products = productService.getByFacilityAndProgram(facilityCode, programCode);
         for (Product product : products) {
             RnrLineItem requisitionLineItem = new RnrLineItem(rnrId, product, modifiedBy, now().toDate());
+            requisitionLineItem.createFieldsBy(programRnrTemplate);
             rnrLineItemRepository.insert(requisitionLineItem);
             requisition.add(requisitionLineItem);
         }

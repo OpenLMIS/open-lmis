@@ -65,12 +65,16 @@ public interface ProductMapper {
             @Result(property = "dosageUnit", column = "dosage_unit"),
             @Result(property = "productForm.id", column = "form"),
             @Result(property = "productForm.name", column = "form_name"),
-            @Result(property = "productForm.displayOrder", column = "form_display_order")
+            @Result(property = "productForm.displayOrder", column = "form_display_order"),
+            @Result(property = "productDosageUnit.id", column = "dosage_unit"),
+            @Result(property = "productDosageUnit.name", column = "dosage_unit_name"),
+            @Result(property = "productDosageUnit.displayOrder", column = "dosage_unit_display_order")
     })
     @Select("select p.code as code, p.primary_name as primary_name, " +
             "p.dispensing_unit as dispensing_unit, p.dosage_unit as dosage_unit, p.form as form, p.strength as strength, " +
-            "pf.name as form_name , pf.display_order as form_display_order " +
-            "from product p, facility_approved_product fap, program_product pp, facility f , product_form pf " +
+            "pf.name as form_name , pf.display_order as form_display_order, " +
+            "du.name as dosage_unit_name, du.display_order as dosage_unit_display_order " +
+            "from product p, facility_approved_product fap, program_product pp, facility f , product_form pf , dosage_unit du " +
             "where pp.program_code = #{programCode} " +
             "and f.code = #{facilityCode}" +
             "and fap.facility_type_code = f.type " +
@@ -78,6 +82,7 @@ public interface ProductMapper {
             "and fap.product_code = pp.product_code " +
             "and pp.product_code = p.code " +
             "and pf.id = p.form " +
+            "and du.id = p.dosage_unit " +
             "and p.full_supply = 'TRUE' " +
             "and p.active = true " +
             "and pp.active = true " +

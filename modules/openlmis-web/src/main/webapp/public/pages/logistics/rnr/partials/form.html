@@ -8,7 +8,7 @@
     <tbody>
   <tr>
     <tr ng-repeat="rnrLineItem in $parent.rnr.lineItems">
-      <!--<td ng-model="i as rnrLineItem.{{fieldMap[programRnrColumn.name]}}">{{i}}</td>-->
+        <td ng-repeat="value in rnrLineItem.fieldValuesByProgramTemplate">{{value}}</td>
     </tr>
     </tbody>
   </table>

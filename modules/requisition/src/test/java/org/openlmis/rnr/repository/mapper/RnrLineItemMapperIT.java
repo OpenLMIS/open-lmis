@@ -5,7 +5,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProductBuilder;
+import org.openlmis.core.domain.DosageUnit;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProductForm;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProductMapper;
 import org.openlmis.rnr.domain.Rnr;
@@ -48,6 +50,8 @@ public class RnrLineItemMapperIT {
         productMapper.deleteAll();
         facilityMapper.insert(make(a(facility)));
         product  = make(a(ProductBuilder.product));
+        product.setProductForm(new ProductForm());
+        product.setProductDosageUnit(new DosageUnit());
         productMapper.insert(product);
     }
 

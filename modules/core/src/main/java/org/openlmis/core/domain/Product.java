@@ -64,6 +64,8 @@ public class Product implements Importable {
     @ImportField(type = "long", name = "Dosage Units")
     private long dosageUnit;
 
+    private DosageUnit productDosageUnit;
+
     @ImportField(name = "Dispensing Units")
     private String dispensingUnit;
 

@@ -1,5 +1,5 @@
 INSERT INTO dosage_unit
-(id, text, display_order) VALUES
+(id, name, display_order) VALUES
 (1,'mg',1),
 (2,'ml',2),
 (3,'each',3),

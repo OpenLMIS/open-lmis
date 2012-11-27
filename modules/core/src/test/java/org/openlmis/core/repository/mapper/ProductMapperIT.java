@@ -105,6 +105,8 @@ public class ProductMapperIT {
         assertEquals(1, products.get(0).getDosageUnit());
         assertNotNull(products.get(0).getProductForm());
         assertEquals("Tablet", products.get(0).getProductForm().getName());
+        assertNotNull(products.get(0).getProductDosageUnit());
+        assertEquals("mg", products.get(0).getProductDosageUnit().getName());
 
         assertEquals("PRO06", products.get(1).getCode());
 
