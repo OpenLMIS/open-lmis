@@ -23,5 +23,5 @@ packs_to_ship integer,
 cost numeric(8, 4),
 remarks text,
 modified_by varchar(50),
-modified_date timestamp
+modified_date timestamp  DEFAULT  CURRENT_TIMESTAMP
 );

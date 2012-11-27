@@ -40,14 +40,13 @@ public class RnrService {
 
     @Transactional
     public Rnr initRnr(String facilityCode, String programCode, String modifiedBy) {
-        Rnr requisition = new Rnr(facilityCode, programCode, RnrStatus.INITIATED, modifiedBy, now().toDate());
-        int rnrId = rnrRepository.insert(requisition);
-        requisition.setId(rnrId);
+        Rnr requisition = new Rnr(facilityCode, programCode, RnrStatus.INITIATED, modifiedBy);
+        rnrRepository.insert(requisition);
 
         List<RnrColumn> programRnrTemplate = rnrTemplateService.fetchVisibleRnRColumns(programCode);
         List<Product> products = productService.getByFacilityAndProgram(facilityCode, programCode);
         for (Product product : products) {
-            RnrLineItem requisitionLineItem = new RnrLineItem(rnrId, product, modifiedBy, now().toDate());
+            RnrLineItem requisitionLineItem = new RnrLineItem(requisition.getId(), product, modifiedBy);
             requisitionLineItem.createFieldsBy(programRnrTemplate);
             rnrLineItemRepository.insert(requisitionLineItem);
             requisition.add(requisitionLineItem);

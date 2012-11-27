@@ -11,7 +11,6 @@ import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProgramSupportedMapper;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrStatus;
-import org.openlmis.rnr.repository.mapper.RnrMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -45,9 +44,9 @@ public class RnrMapperIT {
 
     @Test
     public void shouldReturnRequisitionId() {
-        Rnr requisition = new Rnr(FACILITY_CODE, "HIV", RnrStatus.INITIATED, "user", DateTime.now().toDate());
+        Rnr requisition = new Rnr(FACILITY_CODE, "HIV", RnrStatus.INITIATED, "user");
         int id1 = rnrMapper.insert(requisition);
-        int id2 = rnrMapper.insert(new Rnr(FACILITY_CODE, "ARV", RnrStatus.INITIATED, "user", DateTime.now().toDate()));
+        int id2 = rnrMapper.insert(new Rnr(FACILITY_CODE, "ARV", RnrStatus.INITIATED, "user"));
         assertThat(id1, is(id2 - 1));
     }
 

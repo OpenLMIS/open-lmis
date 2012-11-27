@@ -58,7 +58,7 @@ public class RnrLineItemMapperIT {
     @Test
     public void shouldInsertRequisitionLineItem() {
         int rnrId = rnrMapper.insert(new Rnr(FACILITY_CODE, "HIV", RnrStatus.INITIATED));
-        int status = rnrLineItemMapper.insert(new RnrLineItem(rnrId, product, "user", now().toDate()));
+        int status = rnrLineItemMapper.insert(new RnrLineItem(rnrId, product, "user"));
         assertEquals(1, status);
     }
 

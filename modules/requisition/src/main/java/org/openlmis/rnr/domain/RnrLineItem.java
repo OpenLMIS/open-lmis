@@ -43,11 +43,10 @@ public class RnrLineItem {
     private Map<String,Object> fieldMap = new HashMap<>();
 
 
-    public RnrLineItem(Integer rnrId, Product product, String modifiedBy, Date modifiedDate) {
+    public RnrLineItem(Integer rnrId, Product product, String modifiedBy) {
         this.rnrId = rnrId;
         this.product = product;
         this.modifiedBy = modifiedBy;
-        this.modifiedDate = modifiedDate;
         createFieldValuesMap();
     }
 

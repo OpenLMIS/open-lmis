@@ -5,5 +5,5 @@ CREATE TABLE requisition (
   program_code VARCHAR(50) NOT  NULL REFERENCES program(code),
   status VARCHAR(20) NOT NULL,
   modified_by VARCHAR(50),
-  modified_date TIMESTAMP
+  modified_date TIMESTAMP  DEFAULT  CURRENT_TIMESTAMP
 );

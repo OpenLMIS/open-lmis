@@ -21,12 +21,11 @@ public class Rnr {
     private String modifiedBy;
     private Date modifiedDate;
 
-    public Rnr(String facilityCode, String programCode, RnrStatus status, String modifiedBy, Date modifiedDate) {
+    public Rnr(String facilityCode, String programCode, RnrStatus status, String modifiedBy) {
         this.facilityCode = facilityCode;
         this.programCode = programCode;
         this.status = status;
         this.modifiedBy = modifiedBy;
-        this.modifiedDate = modifiedDate;
     }
 
     public Rnr(String facilityCode, String programCode, RnrStatus status) {

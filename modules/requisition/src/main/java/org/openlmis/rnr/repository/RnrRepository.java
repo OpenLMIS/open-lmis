@@ -15,8 +15,9 @@ public class RnrRepository {
         this.rnrMapper = rnrMapper;
     }
 
-    public int insert(Rnr requisition) {
-        return rnrMapper.insert(requisition);
+    public void insert(Rnr requisition) {
+        int rnrId = rnrMapper.insert(requisition);
+        requisition.setId(rnrId);
     }
 
 }
