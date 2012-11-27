@@ -4,8 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.RequisitionHeader;
+import org.openlmis.core.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -14,7 +13,9 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.isNull;
 import static org.openlmis.core.builder.FacilityBuilder.*;
 
 @ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
@@ -55,7 +56,7 @@ public class FacilityMapperIT {
     }
 
     @Test
-    public void shouldFetchFacilityAndFacilityTypeDataforRequisitionHeader() {
+    public void shouldFetchFacilityAndFacilityTypeDataForRequisitionHeader() {
         Facility facility1 = make(a(facility,
                 with(code, "TRZ001"),
                 with(name, "Ngorongoro Hospital"),
@@ -88,5 +89,39 @@ public class FacilityMapperIT {
         assertThat(facilityMapper.insert(make(a(facility))), is(1));
     }
 
+    @Test
+    public void shouldGetAllFacilityTypes() throws Exception {
+        List<FacilityType> facilityTypes = facilityMapper.getAllTypes();
+        assertThat(facilityTypes.size(), is(11));
+        FacilityType facilityType = facilityTypes.get(0);
+        assertThat(facilityType.getCode(), is("warehouse"));
+        assertThat(facilityType.getName(), is("Warehouse"));
+        assertThat(facilityType.getDescription(), is("Central Supply Depot"));
+        assertThat(facilityType.getLevelId(), is(nullValue()) );
+        assertThat(facilityType.getNominalMaxMonth(), is(3));
+        assertThat(facilityType.getNominalEop(), is(0.5));
+        assertThat(facilityType.getDisplayOrder(), is(11));
+        assertThat(facilityType.isActive(), is(true));
+    }
 
+    @Test
+    public void shouldGetAllOperators() throws Exception {
+        List<FacilityOperator> allOperators = facilityMapper.getAllOperators();
+        assertThat(allOperators.size(),is(4));
+        FacilityOperator facilityOperator = allOperators.get(0);
+        assertThat(facilityOperator.getCode(),is("MoH"));
+        assertThat(facilityOperator.getText(),is("MoH"));
+        assertThat(facilityOperator.getDisplayOrder(),is(1));
+    }
+
+    @Test
+    public void shouldGetAllGeographicZones() throws Exception {
+        List<GeographicZone> allGeographicZones = facilityMapper.getAllGeographicZones();
+        assertThat(allGeographicZones.size(),is(3));
+        GeographicZone geographicZone = allGeographicZones.get(0);
+
+        assertThat(geographicZone.getId(),is(1L));
+        assertThat(geographicZone.getValue(),is("Arusha"));
+        assertThat(geographicZone.getLabel(),is("state"));
+    }
 }

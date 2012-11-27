@@ -2,9 +2,7 @@ package org.openlmis.core.service;
 
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.ProgramSupported;
-import org.openlmis.core.domain.RequisitionHeader;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.FacilityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,4 +36,15 @@ public class FacilityService {
         facilityRepository.addSupportedProgram(programSupported);
     }
 
+    public List<FacilityType> getAllTypes() {
+        return facilityRepository.getAllTypes();
+    }
+
+    public List<FacilityOperator> getAllOperators() {
+            return facilityRepository.getAllOperators();
+    }
+
+    public List<GeographicZone> getAllZones() {
+        return facilityRepository.getAllGeographicZones();
+    }
 }

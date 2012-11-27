@@ -2,9 +2,7 @@ package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.ProgramSupported;
-import org.openlmis.core.domain.RequisitionHeader;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProgramSupportedMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,4 +61,15 @@ public class FacilityRepository {
         }
     }
 
+    public List<FacilityType> getAllTypes() {
+        return facilityMapper.getAllTypes();
+    }
+
+    public List<FacilityOperator> getAllOperators() {
+        return facilityMapper.getAllOperators();
+    }
+
+    public List<GeographicZone> getAllGeographicZones() {
+        return facilityMapper.getAllGeographicZones();
+    }
 }
