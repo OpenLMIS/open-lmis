@@ -7,7 +7,6 @@ import org.junit.runner.RunWith;
 import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.domain.RnrColumnType;
 import org.openlmis.rnr.repository.mapper.ProgramRnrColumnMapper;
-import org.openlmis.rnr.repository.mapper.RnrColumnMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -30,15 +29,12 @@ public class RnrTemplateRepositoryIT {
     @Autowired
     ProgramRnrColumnMapper programRnrColumnMapper;
 
-    @Autowired
-    RnrColumnMapper rnrColumnMapper;
-
     private List<RnrColumn> rnrColumns;
 
 
     @Before
     public void setUp() throws Exception {
-        rnrColumns = rnrColumnMapper.fetchAllMasterRnRColumns();
+        rnrColumns = programRnrColumnMapper.fetchAllMasterRnRColumns();
         programRnrColumnMapper.deleteAll();
     }
 

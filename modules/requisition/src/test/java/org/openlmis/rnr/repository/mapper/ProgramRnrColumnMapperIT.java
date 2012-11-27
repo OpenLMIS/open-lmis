@@ -13,6 +13,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -23,9 +25,6 @@ public class ProgramRnrColumnMapperIT {
     @Autowired
     ProgramRnrColumnMapper programRnrColumnMapper;
 
-    @Autowired
-    RnrColumnMapper rnrColumnMapper;
-
     @Before
     @After
     public void setUp() throws Exception {
@@ -34,7 +33,7 @@ public class ProgramRnrColumnMapperIT {
 
     @Test
     public void shouldInsertConfiguredDataForProgramColumn() throws Exception {
-        RnrColumn rnrColumn = rnrColumnMapper.fetchAllMasterRnRColumns().get(0);
+        RnrColumn rnrColumn = programRnrColumnMapper.fetchAllMasterRnRColumns().get(0);
         addProgramRnrColumn(rnrColumn, 5, false, "Some Random Label", RnrColumnType.User_Input);
 
         List<RnrColumn> fetchedColumns = programRnrColumnMapper.getAllRnrColumnsForProgram(HIV);
@@ -47,7 +46,7 @@ public class ProgramRnrColumnMapperIT {
 
     @Test
     public void shouldUpdateConfiguredDataForProgramColumn() throws Exception {
-        RnrColumn rnrColumn = rnrColumnMapper.fetchAllMasterRnRColumns().get(0);
+        RnrColumn rnrColumn = programRnrColumnMapper.fetchAllMasterRnRColumns().get(0);
         addProgramRnrColumn(rnrColumn, 3, true, "Some Random Label", RnrColumnType.User_Input);
         updateProgramRnrColumn(rnrColumn.getId(), 5, false, "Some Random Label", RnrColumnType.Calculated);
 
@@ -61,14 +60,27 @@ public class ProgramRnrColumnMapperIT {
     }
 
     @Test
+    public void shouldFetchCyclicDependencyForConfiguredProgramRnrTemplate() throws Exception {
+
+        RnrColumn columnWithCyclicDependency = programRnrColumnMapper.fetchAllMasterRnRColumns().get(5);
+
+        assertThat(columnWithCyclicDependency.getCyclicDependencies(), is(not(empty())));
+
+        addProgramRnrColumn(columnWithCyclicDependency, 3, true, "Some Random Label", RnrColumnType.User_Input);
+
+        RnrColumn addedColumn = programRnrColumnMapper.getAllRnrColumnsForProgram(HIV).get(0);
+        assertThat(addedColumn.getCyclicDependencies(), is(not(empty())));
+    }
+
+    @Test
     public void shouldFetchColumnsInOrderOfVisibleAndPositionDefined() throws Exception {
-        RnrColumn visibleColumn1 = rnrColumnMapper.fetchAllMasterRnRColumns().get(0);
+        RnrColumn visibleColumn1 = programRnrColumnMapper.fetchAllMasterRnRColumns().get(0);
         addProgramRnrColumn(visibleColumn1, 4, true, "Some Random Label", RnrColumnType.User_Input);
-        RnrColumn visibleColumn2 = rnrColumnMapper.fetchAllMasterRnRColumns().get(1);
+        RnrColumn visibleColumn2 = programRnrColumnMapper.fetchAllMasterRnRColumns().get(1);
         addProgramRnrColumn(visibleColumn2, 3, true, "Some Random Label", RnrColumnType.User_Input);
-        RnrColumn notVisibleColumn1 = rnrColumnMapper.fetchAllMasterRnRColumns().get(2);
+        RnrColumn notVisibleColumn1 = programRnrColumnMapper.fetchAllMasterRnRColumns().get(2);
         addProgramRnrColumn(notVisibleColumn1, 2, false, "Some Random Label", RnrColumnType.User_Input);
-        RnrColumn notVisibleColumn2 = rnrColumnMapper.fetchAllMasterRnRColumns().get(3);
+        RnrColumn notVisibleColumn2 = programRnrColumnMapper.fetchAllMasterRnRColumns().get(3);
         addProgramRnrColumn(notVisibleColumn2, 1, false, "Some Random Label", RnrColumnType.User_Input);
 
         List<RnrColumn> allRnrColumnsForProgram = programRnrColumnMapper.getAllRnrColumnsForProgram(HIV);
@@ -80,8 +92,8 @@ public class ProgramRnrColumnMapperIT {
 
     @Test
     public void shouldRetrieveVisibleProgramRnrColumn() {
-        RnrColumn visibleColumn = rnrColumnMapper.fetchAllMasterRnRColumns().get(0);
-        RnrColumn inVisibleColumn = rnrColumnMapper.fetchAllMasterRnRColumns().get(1);
+        RnrColumn visibleColumn = programRnrColumnMapper.fetchAllMasterRnRColumns().get(0);
+        RnrColumn inVisibleColumn = programRnrColumnMapper.fetchAllMasterRnRColumns().get(1);
         addProgramRnrColumn(visibleColumn, 1, true, "Col1", RnrColumnType.User_Input);
         addProgramRnrColumn(inVisibleColumn, 2, false, "Col2", RnrColumnType.User_Input);
 
@@ -107,6 +119,13 @@ public class ProgramRnrColumnMapperIT {
         rnrColumn.setPosition(position);
         rnrColumn.setSelectedColumnType(columnType);
         programRnrColumnMapper.update(HIV, rnrColumn);
+    }
+
+    @Test
+    public void shouldRetrieveCyclicDependentColumns() throws Exception {
+        List<RnrColumn> result = programRnrColumnMapper.getCyclicDependencyFor("quantity_dispensed");
+        RnrColumn rnrColumn = result.get(0);
+        assertThat(rnrColumn.getName(), is("stock_in_hand"));
     }
 
 }

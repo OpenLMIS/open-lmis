@@ -3,7 +3,6 @@ package org.openlmis.rnr.repository;
 import lombok.NoArgsConstructor;
 import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.repository.mapper.ProgramRnrColumnMapper;
-import org.openlmis.rnr.repository.mapper.RnrColumnMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,8 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 public class RnrTemplateRepository {
 
-    @Autowired
-    private RnrColumnMapper rnrColumnMapper;
     @Autowired
     private ProgramRnrColumnMapper programRnrColumnMapper;
 
@@ -32,7 +29,7 @@ public class RnrTemplateRepository {
     }
 
     public List<RnrColumn> fetchAllMasterRnRColumns() {
-        return rnrColumnMapper.fetchAllMasterRnRColumns();
+        return programRnrColumnMapper.fetchAllMasterRnRColumns();
     }
 
     @Transactional

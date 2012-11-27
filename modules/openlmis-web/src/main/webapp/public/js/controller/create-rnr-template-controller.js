@@ -42,8 +42,8 @@ function SaveRnrTemplateController($scope, RnRColumnList, $http, $location) {
                    var dependentColumnName = dependencies[dependent].name
                    var dependentColumn = getRnrColumnByName(rnrColumnList, dependentColumnName);
                    if(dependentColumn.selectedColumnType==CALCULATED){
-                      updateErrorMessage("Interdependent fields( "+rnrColumn.name+", "+dependentColumnName+
-                                         ") can not be of type 'calculated' at the same time");
+                      updateErrorMessage("Interdependent fields ("+rnrColumn.label+", "+dependentColumn.label+
+                                         ") cannot be of type 'calculated' at the same time");
                       return false;
                    }
                }
