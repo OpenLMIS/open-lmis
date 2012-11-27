@@ -29,12 +29,12 @@ public class RnrLineItem {
 
     private Integer patientCount;
     private Integer stockOutDays;
-    private float normalizedConsumption;
-    private float amc;
+    private Float normalizedConsumption;
+    private Float amc;
     private String maxStockQuantity;
 
     private Integer packsToShip;
-    private float cost;
+    private Float cost;
     private String remarks;
 
     private String modifiedBy;
