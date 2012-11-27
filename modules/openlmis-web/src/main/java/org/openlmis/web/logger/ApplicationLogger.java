@@ -4,6 +4,8 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
+import org.joda.time.DateTime;
+import org.openlmis.LmisThreadLocal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -18,7 +20,8 @@ public class ApplicationLogger {
         Signature signature = joinPoint.getSignature();
         String className = signature.getDeclaringTypeName();
         String methodName = signature.getName();
-        logger.error(String.format("An exception occurred in %s : %s", className, methodName), e);
+        String userName = LmisThreadLocal.get().toString();
+        logger.error(String.format("%s | %s | An exception occurred in %s : %s ", DateTime.now(), userName, className, methodName), e);
     }
 
 

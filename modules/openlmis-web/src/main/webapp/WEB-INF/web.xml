@@ -40,7 +40,7 @@
 
     <servlet>
         <servlet-name>open-lmis</servlet-name>
-        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <servlet-class>org.openlmis.web.DispatcherServlet</servlet-class>
         <load-on-startup>2</load-on-startup>
     </servlet>
 

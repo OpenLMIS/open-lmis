@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.openlmis.LmisThreadLocal;
 
 import java.io.ByteArrayOutputStream;
 
@@ -33,6 +34,7 @@ public class ApplicationLoggerTest {
         outputStream = new ByteArrayOutputStream();
         logger.addAppender(new WriterAppender(new SimpleLayout(), outputStream));
         applicationLogger = new ApplicationLogger();
+        LmisThreadLocal.set("TEST_USER");
     }
 
     @Test
@@ -45,7 +47,7 @@ public class ApplicationLoggerTest {
         applicationLogger.logException(joinPoint, exception);
         String lineSeparator = System.getProperty("line.separator");
         assertThat(outputStream.toString(),
-                containsString("ERROR - An exception occurred in com.x.y.Class : Method Name"+lineSeparator+"java.lang.RuntimeException: An exception was thrown !!"));
+                containsString("TEST_USER | An exception occurred in com.x.y.Class : Method Name "+lineSeparator+"java.lang.RuntimeException: An exception was thrown !!"));
     }
 
 }
