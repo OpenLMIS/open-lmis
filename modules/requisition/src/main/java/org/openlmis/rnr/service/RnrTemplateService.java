@@ -1,7 +1,8 @@
 package org.openlmis.rnr.service;
 
-import org.openlmis.rnr.repository.RnrTemplateRepository;
+import lombok.NoArgsConstructor;
 import org.openlmis.rnr.domain.RnrColumn;
+import org.openlmis.rnr.repository.RnrTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@NoArgsConstructor
 public class RnrTemplateService {
 
     private RnrTemplateRepository rnrRepository;

@@ -1,5 +1,6 @@
 package org.openlmis.core.repository;
 
+import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProgramSupported;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
+@NoArgsConstructor
 public class FacilityRepository {
 
     private FacilityMapper facilityMapper;

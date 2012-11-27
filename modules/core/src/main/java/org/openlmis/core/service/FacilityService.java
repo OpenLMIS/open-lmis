@@ -1,6 +1,7 @@
 package org.openlmis.core.service;
 
 
+import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.domain.RequisitionHeader;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@NoArgsConstructor
 public class FacilityService {
 
     private FacilityRepository facilityRepository;

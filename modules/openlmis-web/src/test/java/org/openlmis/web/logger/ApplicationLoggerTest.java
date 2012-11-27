@@ -47,7 +47,7 @@ public class ApplicationLoggerTest {
         applicationLogger.logException(joinPoint, exception);
         String lineSeparator = System.getProperty("line.separator");
         assertThat(outputStream.toString(),
-                containsString("TEST_USER | An exception occurred in com.x.y.Class : Method Name "+lineSeparator+"java.lang.RuntimeException: An exception was thrown !!"));
+                containsString("TEST_USER | An exception occurred in com.x.y.Class.Method Name"+lineSeparator+"java.lang.RuntimeException: An exception was thrown !!"));
     }
 
 }

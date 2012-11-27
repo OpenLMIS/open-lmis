@@ -1,14 +1,16 @@
 package org.openlmis.authentication.service;
 
+import lombok.NoArgsConstructor;
 import org.openlmis.authentication.UserToken;
-import org.openlmis.authentication.repository.mapper.UserMapper;
 import org.openlmis.authentication.domain.User;
+import org.openlmis.authentication.repository.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static org.openlmis.authentication.hash.Encoder.hash;
 
 @Service
+@NoArgsConstructor
 public class UserAuthenticationService {
 
     private static final boolean AUTHORIZATION_SUCCESSFUL = true;

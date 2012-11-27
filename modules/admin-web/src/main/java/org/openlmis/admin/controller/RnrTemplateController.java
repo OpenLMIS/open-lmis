@@ -1,5 +1,6 @@
 package org.openlmis.admin.controller;
 
+import lombok.NoArgsConstructor;
 import org.openlmis.admin.form.ProgramRnRTemplateForm;
 import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.service.RnrTemplateService;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import java.util.List;
 
 @Controller
+@NoArgsConstructor
 public class RnrTemplateController {
 
     private RnrTemplateService rnrTemplateService;

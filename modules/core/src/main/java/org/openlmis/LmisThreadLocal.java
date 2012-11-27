@@ -2,7 +2,7 @@ package org.openlmis;
 
 public class LmisThreadLocal {
 
-    public static final ThreadLocal lmisThreadLocal = new ThreadLocal();
+    public static final ThreadLocal<String> lmisThreadLocal = new ThreadLocal<>();
 
     public static void set(String userName) {
         lmisThreadLocal.set(userName);
@@ -12,7 +12,7 @@ public class LmisThreadLocal {
         lmisThreadLocal.remove();
     }
 
-    public static Object get() {
+    public static String get() {
         return lmisThreadLocal.get();
     }
 }

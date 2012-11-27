@@ -15,6 +15,6 @@ public class DispatcherServlet extends org.springframework.web.servlet.Dispatche
         if((userName = request.getSession().getAttribute(USER)) != null) {
             LmisThreadLocal.set(userName.toString());
         }
-        super.doService(request, response);    //To change body of overridden methods use File | Settings | File Templates.
+        super.doService(request, response);
     }
 }

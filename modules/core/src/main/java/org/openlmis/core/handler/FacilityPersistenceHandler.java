@@ -1,5 +1,6 @@
 package org.openlmis.core.handler;
 
+import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.upload.Importable;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component("facilityPersistenceHandler")
+@NoArgsConstructor
 public class FacilityPersistenceHandler extends AbstractModelPersistenceHandler {
 
     private FacilityService facilityService;

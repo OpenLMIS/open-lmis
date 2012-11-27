@@ -1,5 +1,6 @@
 package org.openlmis.admin.controller;
 
+import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import java.util.List;
 
 @Controller
+@NoArgsConstructor
 public class ProductController {
 
     private ProductService productService;
