@@ -12,8 +12,9 @@
   </div>
   <form ng-submit="createProgramRnrTemplate()">
     <div class="rnr-template-columns">
-      <ul id="sortable">
+      <ul ui-sortable="{update: update, axis: 'y'}" id="sortable">
         <li ng-repeat="rnrColumn in rnrColumnList">
+         <div class="drag-handle"></div>
          <span ng-switch on="rnrColumn.mandatory">
           <span ng-switch-when="true" class="tpl-visible">
             <input type="checkbox" ng:model="rnrColumn.visible" checked disabled/>
@@ -39,7 +40,7 @@
           </span>
         </span>
         <!--<span class="tpl-position">-->
-          <input type="hidden" ng:model="rnrColumn.position" value="{{ rnrColumn.position }}"/>
+          <input type="hidden" class="rnr-column-position" ng:model="rnrColumn.position" value="{{ rnrColumn.position }}"/>
         <!--</span>-->
         <span class="tpl-source">
               <span ng-switch on="rnrColumn.availableColumnTypes.length">
