@@ -1,0 +1,46 @@
+<div>
+    <form id="create-facility">
+        <span><label for="code">Code :</label><input ng-model="$scope.facility.code" id="code" type="text" ng-model="$scope.facility.code"/></span>
+        <span><label for="name">Name :</label><input ng-model="$scope.facility.name" id="name" type="text" ng-model="$scope.facility.name"/></span>
+        <span><label for="description">Description :</label><input ng-model="$scope.facility.description" id="description" type="text" ng-model="$scope.facility.code"/></span>
+        <span><label for="gln">GLN :</label><input ng-model="$scope.facility.gln" id="gln" type="text"/></span>
+        <span><label for="main-phone">Main Phone :</label><input ng-model="$scope.facility.mainPhone" ng-model="$scope.facility." id="main-phone" type="text"/></span>
+        <span><label for="fax-phone">fax-phone :</label><input ng-model="$scope.facility.fax" id="fax-phone" type="text"/></span>
+        <span><label for="address-1">address-1 :</label><input ng-model="$scope.facility.address1" id="address-1" type="text"/></span>
+        <span><label for="address-2">address-2 :</label><input ng-model="$scope.facility.address2" id="address-2" type="text"/></span>
+        <span><label for="geographic-zone">geographic-zone :</label><select id="geographic-zone" ng-model="$scope.facility.geographicZone" ng-options="i.id as i.value for i in geographicZones">
+          <option value="">--Select Geographic Zone--</option>
+        </select></span>
+        <span><label for="facility-type">facility-type :</label><select id="facility-type" ng-model="$scope.facility.facilityTypeCode" ng-options="i.code as i.name for i in facilityTypes">
+          <option value="">--Select Facility Type--</option>
+        </select></span>
+        <span><label for="catchment-population">catchment-population :</label><input ng-model="$scope.facility.catchmentPopulation" id="catchment-population" type="text"/></span>
+        <span><label for="latitude">latitude :</label><input ng-model="$scope.facility.latitude" id="latitude" type="text"/></span>
+        <span><label for="longitude">longitude :</label><input ng-model="$scope.facility.longitude" id="longitude" type="text"/></span>
+        <span><label for="altitude">altitude :</label><input ng-model="$scope.facility.altitude" id="altitude" type="text"/></span>
+        <span><label for="operated-by">operated-by :</label><select id="operated-by" ng-model="$scope.facility.operatedBy" ng-options="i.code as i.text for i in facilityOperators">
+          <option value="">--Select Facility Operated By--</option>
+        </select></span>
+        <span><label for="cold-storage-gross-capacity">cold-storage-gross-capacity :</label><input ng-model="$scope.facility.coldStorageGrossCapacity" id="cold-storage-gross-capacity" type="text"/></span>
+        <span><label for="cold-storage-net-capacity">cold-storage-net-capacity :</label><input ng-model="$scope.facility.coldStorageNetCapacity" id="cold-storage-net-capacity" type="text"/></span>
+        <span><label>supplies-others :</label><input ng-model="$scope.facility.suppliesOthers" type="radio" name="supplies-others" value="true" />Yes<input  ng-model="$scope.facility.suppliesOthers" type="radio" name="supplies-others" value="false"/>No</span>
+        <span><label>is-sdp :</label><input ng-model="$scope.facility.sdp" type="radio" name="is-sdp" value="true" />Yes<input  ng-model="$scope.facility.sdp" type="radio" name="is-sdp" value="false"/>No</span>
+        <span><label>has-electricity :</label><input ng-model="$scope.facility.hasElectricity" type="radio" name="has-electricity" value="true" />Yes<input  ng-model="$scope.facility.hasElectricity" type="radio" name="has-electricity" value="false"/>No</span>
+        <span><label>is-online :</label><input ng-model="$scope.facility.online" type="radio" name="is-online" value="true" />Yes<input  ng-model="$scope.facility.online" type="radio" name="is-online" value="false"/>No</span>
+        <span><label>has-electronic-scc :</label><input ng-model="$scope.facility.hasElectronicScc" type="radio" name="has-electronic-scc" value="true" />Yes<input  ng-model="$scope.facility.hasElectronicScc" type="radio" name="has-electronic-scc" value="false"/>No</span>
+        <span><label>has-electronic-dar :</label><input ng-model="$scope.facility.hasElectronicDar" type="radio" name="has-electronic-dar" value="true" />Yes<input  ng-model="$scope.facility.hasElectronicDar" type="radio" name="has-electronic-dar" value="false"/>No</span>
+        <span><label>is-active :</label><input ng-model="$scope.facility.active" type="radio" name="is-active" value="true" />Yes<input  ng-model="$scope.facility.active" type="radio" name="is-active" value="false"/>No</span>
+        <span><label for="go-live-date">go-live-date :</label><input ng-model="goLiveDate" id="go-live-date" type="text"/></span>
+        <span><label for="go-down-date">go-down-date :</label><input ng-model="goDownDate" id="go-down-date" type="text"/></span>
+        <span><label>is-satellite :</label><input  ng-model="$scope.facility.satellite" type="radio" name="is-satellite" value="true" />Yes<input ng-model="$scope.facility." ng-model="$scope.facility.satellite" type="radio" name="is-satellite" value="false"/>No</span>
+        <span><label for="parent-id">parent-id :</label><input ng-model="$scope.facility.satelliteParentCode" id="parent-id" type="text"/></span>
+        <span><label for="data-reportable">do-not-display :</label><input ng-model="$scope.facility.doNotDisplay" id="data-reportable" type="text"/></span>
+        <span><label for="comments">comments :</label><input ng-model="$scope.facility.comment" id="comments" type="text"/></span>
+        <span><label for="programs-supported">programs-supported :</label><select id="programs-supported" ng-model="$scope.mappedPrograms" ng-options="i.code as i.name for i in programs">
+          <option value="">--Select Programs Supported--</option>
+        </select></span>
+
+        <span><input type="submit" class="btn" value="Save" /></span>
+     </form>
+
+</div>
