@@ -21,11 +21,14 @@ import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.U
 @Controller
 public class FacilityController {
 
-    @Autowired
     private FacilityService facilityService;
+    private ProgramService programService;
 
     @Autowired
-    private ProgramService programService;
+    public FacilityController(FacilityService facilityService, ProgramService programService){
+        this.facilityService = facilityService;
+        this.programService = programService;
+    }
 
     @RequestMapping(value = "logistics/facilities", method = RequestMethod.GET, headers = "Accept=application/json")
     public List<Facility> getAll() {
