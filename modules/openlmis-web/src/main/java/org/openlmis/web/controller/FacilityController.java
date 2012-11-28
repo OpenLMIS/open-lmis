@@ -1,5 +1,6 @@
 package org.openlmis.web.controller;
 
+import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.RequisitionHeader;
 import org.openlmis.core.service.FacilityService;
@@ -19,6 +20,7 @@ import java.util.Map;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 
 @Controller
+@NoArgsConstructor
 public class FacilityController {
 
     private FacilityService facilityService;
