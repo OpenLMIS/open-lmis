@@ -1,9 +1,9 @@
 package org.openlmis.web.model;
 
-import lombok.Data;
 import org.openlmis.core.domain.FacilityOperator;
 import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.domain.GeographicZone;
+import org.openlmis.core.domain.Program;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -14,6 +14,7 @@ public class ReferenceData {
     public static final String FACILITY_TYPES = "facilityTypes";
     public static final String FACILITY_OPERATORS = "facilityOperators";
     public static final String GEOGRAPHIC_ZONES = "geographicZones";
+    public static final String PROGRAMS = "programs";
     MultiValueMap referenceData = new LinkedMultiValueMap<>();
 
 
@@ -35,5 +36,10 @@ public class ReferenceData {
 
     public MultiValueMap get() {
         return referenceData;
+    }
+
+    public ReferenceData addPrograms(List<Program> programs) {
+        referenceData.put(PROGRAMS, programs);
+        return this;
     }
 }

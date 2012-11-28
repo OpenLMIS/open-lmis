@@ -20,9 +20,9 @@ public class ProgramControllerTest {
         ProgramService programService = mock(ProgramService.class);
         ProgramController controller = new ProgramController(programService);
         List<Program> expectedPrograms = new ArrayList<Program>();
-        when(programService.getAll()).thenReturn(expectedPrograms);
-        List<Program> result = controller.getAllPrograms();
-        verify(programService).getAll();
+        when(programService.getAllActive()).thenReturn(expectedPrograms);
+        List<Program> result = controller.getAllActivePrograms();
+        verify(programService).getAllActive();
         assertThat(result, is(equalTo(expectedPrograms)));
     }
 

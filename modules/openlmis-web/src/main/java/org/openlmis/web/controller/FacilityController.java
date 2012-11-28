@@ -3,6 +3,7 @@ package org.openlmis.web.controller;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.RequisitionHeader;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.ProgramService;
 import org.openlmis.web.model.ReferenceData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,9 @@ public class FacilityController {
     @Autowired
     private FacilityService facilityService;
 
+    @Autowired
+    private ProgramService programService;
+
     @RequestMapping(value = "logistics/facilities", method = RequestMethod.GET, headers = "Accept=application/json")
     public List<Facility> getAll() {
         return facilityService.getAll();
@@ -30,14 +34,13 @@ public class FacilityController {
         return facilityService.getRequisitionHeader(code);
     }
 
-    @RequestMapping(value = "admin/facility/reference",method = RequestMethod.GET , headers = "Accept=application/json")
+    @RequestMapping(value = "admin/facility/reference-data",method = RequestMethod.GET , headers = "Accept=application/json")
     public Map getReferenceData() {
         ReferenceData referenceData = new ReferenceData();
         return referenceData.addFacilityTypes(facilityService.getAllTypes()).
                 addFacilityOperators(facilityService.getAllOperators()).
-                addGeographicZones(facilityService.getAllZones()).get();
-
-
+                addGeographicZones(facilityService.getAllZones()).
+                addPrograms(programService.getAll()).get();
     }
 
     @RequestMapping(value = "admin/facility" , method = RequestMethod.POST , headers = "Accept=application/json")

@@ -21,7 +21,7 @@ public interface ProgramMapper {
 
     @Select("SELECT * FROM program WHERE active=true")
     @Results(value = {
-            @Result(property = "code", column = "CODE"),
+            @Result(property = "code", column = "CODE"  ),
             @Result(property = "name", column = "NAME"),
             @Result(property = "description", column = "DESCRIPTION")
     })
@@ -34,4 +34,7 @@ public interface ProgramMapper {
             @Result(property = "description", column = "program.description")
     })
     List<Program> getActiveByFacilityCode(String facilityCode);
+
+    @Select("SELECT * FROM program")
+    List<Program> getAll();
 }

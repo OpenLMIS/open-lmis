@@ -23,8 +23,8 @@ public class ProgramController {
     }
 
     @RequestMapping(value = "/admin/programs", method = RequestMethod.GET, headers = "Accept=application/json")
-    public List<Program> getAllPrograms() {
-        return programService.getAll();
+    public List<Program> getAllActivePrograms() {
+        return programService.getAllActive();
     }
 
     @RequestMapping(value = "/logistics/facility/{facilityCode}/programs.json", method = RequestMethod.GET, headers = "Accept=application/json")

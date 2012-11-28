@@ -14,11 +14,15 @@ public class ProgramRepository {
     @Autowired
     ProgramMapper programMapper;
 
-    public List<Program> getAll() {
+    public List<Program> getAllActive() {
         return programMapper.getAllActive();
     }
 
     public List<Program> getByFacilityCode(String facilityCode) {
         return programMapper.getActiveByFacilityCode(facilityCode);
+    }
+
+    public List<Program> getAll() {
+        return programMapper.getAll();
     }
 }

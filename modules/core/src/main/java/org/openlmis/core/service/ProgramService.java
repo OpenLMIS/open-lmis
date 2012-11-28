@@ -19,11 +19,16 @@ public class ProgramService {
         this.programRepository = programRepository;
     }
 
-    public List<Program> getAll() {
-        return programRepository.getAll();
+    public List<Program> getAllActive() {
+        return programRepository.getAllActive();
     }
 
     public List<Program> getByFacilityCode(String facilityCode) {
         return programRepository.getByFacilityCode(facilityCode);
     }
+
+    public List<Program> getAll() {
+        return programRepository.getAll();
+    }
+
 }

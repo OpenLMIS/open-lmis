@@ -27,3 +27,7 @@ services.factory('FacilitySupportedPrograms', function ($resource) {
 services.factory('RequisitionHeader', function ($resource) {
     return $resource('/logistics/facility/:code/requisition-header.json', {}, {});
 });
+
+services.factory('FacilityReferenceData', function ($resource) {
+    return $resource('/admin/facility/reference-data.json', {}, {});
+});

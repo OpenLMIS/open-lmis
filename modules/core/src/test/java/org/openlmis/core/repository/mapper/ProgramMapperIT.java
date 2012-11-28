@@ -5,6 +5,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openlmis.core.builder.FacilityBuilder;
+import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
@@ -18,8 +19,9 @@ import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 @ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
 public class ProgramMapperIT extends SpringIntegrationTest {
@@ -40,13 +42,14 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     public void setUp() {
         programSupportedMapper.deleteAll();
         facilityMapper.deleteAll();
+        programMapper.delete("YELL_FVR");
     }
 
     @Test
     public void shouldGetAllActiveProgram() {
         List<Program> programs = programMapper.getAllActive();
         assertEquals(6, programs.size());
-        assertTrue("program does not exists", programs.contains(new Program("HIV", "HIV", "HIV", true)));
+        assertThat(programs, hasItem(new Program("HIV", "HIV", "HIV", true)));
     }
 
     @Test
@@ -59,5 +62,15 @@ public class ProgramMapperIT extends SpringIntegrationTest {
 
         assertThat(programs.size(), is(1));
         assertThat(programs.get(0).getCode(), is(PROGRAM_CODE));
+    }
+
+    @Test
+    public void shouldGetAllPrograms() throws Exception {
+        Program program = make(a(ProgramBuilder.program));
+        program.setActive(false);
+        programMapper.insert(program);
+        List<Program> programs = programMapper.getAll();
+        assertEquals(8, programs.size());
+        assertTrue(programs.contains(program));
     }
 }
