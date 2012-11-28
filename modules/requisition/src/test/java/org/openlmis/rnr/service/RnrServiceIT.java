@@ -72,7 +72,7 @@ public class RnrServiceIT {
         assertEquals("user", rnr.getModifiedBy());
         assertEquals(1, rnr.getLineItems().size());
         assertEquals(rnr.getId(), rnr.getLineItems().get(0).getRnrId().intValue());
-        assertEquals(PRODUCT_CODE, rnr.getLineItems().get(0).getProduct().getCode());
+        assertEquals(PRODUCT_CODE, rnr.getLineItems().get(0).getProductCode());
         assertEquals("user", rnr.getLineItems().get(0).getModifiedBy());
     }
 

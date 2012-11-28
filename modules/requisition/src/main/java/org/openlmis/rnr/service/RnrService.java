@@ -4,7 +4,6 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.domain.RnrStatus;
 import org.openlmis.rnr.repository.RnrLineItemRepository;
@@ -40,11 +39,9 @@ public class RnrService {
         Rnr requisition = new Rnr(facilityCode, programCode, RnrStatus.INITIATED, modifiedBy);
         rnrRepository.insert(requisition);
 
-        List<RnrColumn> programRnrTemplate = rnrTemplateService.fetchVisibleRnRColumns(programCode);
         List<Product> products = productService.getByFacilityAndProgram(facilityCode, programCode);
         for (Product product : products) {
             RnrLineItem requisitionLineItem = new RnrLineItem(requisition.getId(), product, modifiedBy);
-            requisitionLineItem.createFieldsBy(programRnrTemplate);
             rnrLineItemRepository.insert(requisitionLineItem);
             requisition.add(requisitionLineItem);
         }

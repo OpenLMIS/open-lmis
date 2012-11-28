@@ -123,9 +123,9 @@ public class ProgramRnrColumnMapperIT {
 
     @Test
     public void shouldRetrieveCyclicDependentColumns() throws Exception {
-        List<RnrColumn> result = programRnrColumnMapper.getCyclicDependencyFor("quantity_dispensed");
+        List<RnrColumn> result = programRnrColumnMapper.getCyclicDependencyFor("quantityDispensed");
         RnrColumn rnrColumn = result.get(0);
-        assertThat(rnrColumn.getName(), is("stock_in_hand"));
+        assertThat(rnrColumn.getName(), is("stockInHand"));
     }
 
 }
