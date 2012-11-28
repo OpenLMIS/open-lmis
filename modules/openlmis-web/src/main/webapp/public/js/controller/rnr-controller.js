@@ -10,6 +10,7 @@ function InitiateRnrController($http, $scope, FacilityList, FacilitySupportedPro
                 $scope.$parent.programsForFacility = data.programList;
             }, {});
         } else {
+            $scope.$parent.program = null;
             $scope.$parent.programsForFacility = null;
         }
     };

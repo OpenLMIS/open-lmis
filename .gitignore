@@ -1,4 +1,4 @@
-*.log
+*.log*
 .idea/
 *.iml
 *.ipr
@@ -9,3 +9,4 @@ classes
 .gradle
 *.DS_Store
 *.class
+*openlmis-web.log
