@@ -28,5 +28,19 @@ describe("Facility Controller", function () {
     expect(scope.programs).toEqual([{"code":"programCode"}]);
   });
 
+  it('should give success message if save successful', function(){
+    $httpBackend.expectPOST('/admin/facility.json').respond(200);
+    scope.saveFacility();
+    $httpBackend.flush();
+    expect("Saved successfully").toEqual(scope.message);
+  });
+
+  it('should give error if save failed', function(){
+    $httpBackend.expectPOST('/admin/facility.json').respond(404);
+    scope.saveFacility();
+    $httpBackend.flush();
+    expect("Save failed").toEqual(scope.error);
+  });
+
 
 });

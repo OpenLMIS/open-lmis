@@ -1,5 +1,5 @@
 <div>
-    <form id="create-facility">
+    <form ng-submit="saveFacility($scope.facility)" id="create-facility" >
         <span><label for="code">Code :</label><input ng-model="$scope.facility.code" id="code" type="text" ng-model="$scope.facility.code"/></span>
         <span><label for="name">Name :</label><input ng-model="$scope.facility.name" id="name" type="text" ng-model="$scope.facility.name"/></span>
         <span><label for="description">Description :</label><input ng-model="$scope.facility.description" id="description" type="text" ng-model="$scope.facility.code"/></span>
@@ -30,8 +30,8 @@
         <span><label>has-electronic-scc :</label><input ng-model="$scope.facility.hasElectronicScc" type="radio" name="has-electronic-scc" value="true" />Yes<input  ng-model="$scope.facility.hasElectronicScc" type="radio" name="has-electronic-scc" value="false"/>No</span>
         <span><label>has-electronic-dar :</label><input ng-model="$scope.facility.hasElectronicDar" type="radio" name="has-electronic-dar" value="true" />Yes<input  ng-model="$scope.facility.hasElectronicDar" type="radio" name="has-electronic-dar" value="false"/>No</span>
         <span><label>is-active :</label><input ng-model="$scope.facility.active" type="radio" name="is-active" value="true" />Yes<input  ng-model="$scope.facility.active" type="radio" name="is-active" value="false"/>No</span>
-        <span><label for="go-live-date">go-live-date :</label><input ng-model="goLiveDate" id="go-live-date" type="text"/></span>
-        <span><label for="go-down-date">go-down-date :</label><input ng-model="goDownDate" id="go-down-date" type="text"/></span>
+        <span><label for="go-live-date">go-live-date :</label><input ng-model="$scope.facility.goLiveDate" id="go-live-date" type="text"/></span>
+        <span><label for="go-down-date">go-down-date :</label><input ng-model="$scope.facility.goDownDate" id="go-down-date" type="text"/></span>
         <span><label>is-satellite :</label><input  ng-model="$scope.facility.satellite" type="radio" name="is-satellite" value="true" />Yes<input ng-model="$scope.facility." ng-model="$scope.facility.satellite" type="radio" name="is-satellite" value="false"/>No</span>
         <span><label for="parent-id">parent-id :</label><input ng-model="$scope.facility.satelliteParentCode" id="parent-id" type="text"/></span>
         <span><label for="data-reportable">do-not-display :</label><input ng-model="$scope.facility.doNotDisplay" id="data-reportable" type="text"/></span>
@@ -39,7 +39,12 @@
         <span><label for="programs-supported">programs-supported :</label><select id="programs-supported" ng-model="$scope.mappedPrograms" ng-options="i.code as i.name for i in programs">
           <option value="">--Select Programs Supported--</option>
         </select></span>
-
+        <div class="alert alert-error" id="saveSuccessMsgDiv" ng-model="error" ng-show="error">
+          {{error}}
+        </div>
+        <div class="alert alert-success" id="saveSuccessMsgDiv" ng-model="message" ng-show="message">
+          {{message}}
+        </div>
         <span><input type="submit" class="btn" value="Save" /></span>
      </form>
 

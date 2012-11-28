@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
+
+import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 
 @Controller
 public class FacilityController {
@@ -44,7 +47,9 @@ public class FacilityController {
     }
 
     @RequestMapping(value = "admin/facility" , method = RequestMethod.POST , headers = "Accept=application/json")
-    public void addFacility(@RequestBody Facility facility) {
+    public void addFacility(@RequestBody Facility facility, HttpServletRequest request) {
+        String modifiedBy = (String) request.getSession().getAttribute(USER);
+        facility.setModifiedBy(modifiedBy);
         facilityService.save(facility);
     }
 
