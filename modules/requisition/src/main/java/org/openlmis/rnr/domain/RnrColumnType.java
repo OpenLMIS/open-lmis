@@ -1,6 +1,7 @@
 package org.openlmis.rnr.domain;
 
 public enum RnrColumnType {
+    //TODO : Need to correct enum naming convention
     User_Input("User Input"), Calculated("Calculated");
 
     private final String columnType;

@@ -16,7 +16,7 @@ insert into Master_RnR_Template(column_name, column_label, description , column_
     ('maxStockQuantity' ,'Maximum Stock Quantity' ,'Maximum Stock calculated based on consumption and max months of stock.This is quantified in dispensing units',14,'0','Calculated','Calculated','P * MaxMonthsStock','H',TRUE,TRUE,FALSE),
     ('calculatedOrderQuantity','Calculated Order Quantity','Actual Quantity needed after deducting stock in hand. This is quantified in dispensing units',15,'0','Calculated','Calculated','H - E','I',TRUE,TRUE,FALSE),
     ('quantityRequested','Requested Quantity','Requested override of calculated quantity.This is quantified in dispensing units',16,NULL,'User Input','User Input','','J',TRUE,TRUE,FALSE),
-    ('reasonForRequestedQuantity','Requested Quantity Explanation','Explanation of request for a quatity other than calculated order quantity.',17,NULL,'User Input','User Input','','W',TRUE,TRUE,FALSE),
+    ('reasonForRequestedQuantity','Requested Quantity Explanation','Explanation of request for a quantity other than calculated order quantity.',17,NULL,'User Input','User Input','','W',TRUE,TRUE,FALSE),
     ('quantityApproved','Approved Quantity','Final approved quantity. This is quantified in dispensing units',18,'Default = I','User Input','User Input','','K',TRUE,TRUE,FALSE),
     ('packsToShip','Packs to Ship','Total packs to be shipped based on pack size and applying rounding rules ',19,'0','Calculated','Calculated','K / U + Rounding rules','V',TRUE,TRUE,FALSE),
     ('price','Price per pack','Price per Pack. It defaults to zero if not specified.',20,NULL,'Calculated', 'Reference value (CostHistory Table)','','T',TRUE,TRUE,FALSE),

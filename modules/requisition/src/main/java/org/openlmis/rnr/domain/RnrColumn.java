@@ -4,15 +4,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.util.*;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode
 public class RnrColumn {
 
-    private static final Pattern formulaParser = Pattern.compile("\\w+");
     private Integer id;
     private String name;
     private String description;
@@ -23,18 +22,12 @@ public class RnrColumn {
     private List<RnrColumnType> availableColumnTypes = new ArrayList<>();
     private RnrColumnType selectedColumnType;
     private String formula;
-
-    public void setFormula(String formula) {
-        this.formula = formula;
-        parseFormulaForDependencies();
-    }
-
     private String indicator;
     private boolean used;
     private boolean visible;
     private boolean mandatory;
-    private List<RnrColumn> cyclicDependencies = new ArrayList<>();
-    private Set<String> dependencies = new HashSet<>();
+    private List<RnrColumn> dependencies = new ArrayList<>();
+
 
     public RnrColumn(String name, String description, int position, String label, String defaultValue, String dataSource, List<RnrColumnType> availableDataSources, String formula, String indicator, boolean isUsed, boolean isVisible, boolean mandatory) {
         this.name = name;
@@ -49,7 +42,6 @@ public class RnrColumn {
         this.used = isUsed;
         this.visible = isVisible;
         this.mandatory = mandatory;
-        parseFormulaForDependencies();
     }
 
     public void setSelectedColumnTypeString(String selectedColumnType) {
@@ -65,23 +57,6 @@ public class RnrColumn {
 
     public RnrColumnType getSelectedColumnType() {
         return (selectedColumnType == null && availableColumnTypes.size() != 0) ? availableColumnTypes.get(0) : selectedColumnType;
-    }
-
-    public boolean isMandatory() {
-        return mandatory;
-    }
-
-    private void parseFormulaForDependencies() {
-        Scanner formulaScanner = new Scanner(formula);
-        while (formulaScanner.hasNext()) {
-            if (formulaScanner.hasNext(formulaParser)) {
-                dependencies.add(formulaScanner.next());
-            } else {
-               formulaScanner.next();
-            }
-            //dependencies.add(formulaScanner.next(formulaParser));
-        }
-
     }
 
 }

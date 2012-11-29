@@ -9,6 +9,7 @@ import org.openlmis.rnr.repository.RnrTemplateRepository;
 import org.openlmis.rnr.domain.RnrColumn;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -78,6 +79,41 @@ public class RnrTemplateServiceTest {
         when(repository.isRnRTemPlateDefinedForProgram(existingProgramCode)).thenReturn(true);
         service.saveRnRTemplateForProgram(existingProgramCode, rnrColumns);
         verify(repository).updateAllProgramRnRColumns(existingProgramCode, rnrColumns);
+    }
+
+    @Test
+    public void shouldReturnErrorOnSaveWithReferentialDependencyMissing() {
+        List<RnrColumn> rnrColumns = new ArrayList<>();
+        RnrColumn rnrColumn = new RnrColumn();
+        rnrColumn.setName("Rnr");
+        rnrColumn.setVisible(false);
+        RnrColumn dependentRnrColumn = new RnrColumn();
+        dependentRnrColumn.setName("dependentRnr");
+        dependentRnrColumn.setDependencies(Arrays.asList(new RnrColumn[]{rnrColumn}));
+        dependentRnrColumn.setVisible(true);
+        rnrColumns.add(rnrColumn);
+        rnrColumns.add(dependentRnrColumn);
+
+        List errors = service.saveRnRTemplateForProgram(existingProgramCode, rnrColumns);
+        assertThat(errors.size(), is(not(0)));
+    }
+
+    @Test
+    public void shouldReturnNullOnSaveWithSatisfiedReferentialDependency() {
+        List<RnrColumn> rnrColumns = new ArrayList<>();
+        RnrColumn rnrColumn = new RnrColumn();
+        rnrColumn.setName("Rnr");
+        rnrColumn.setVisible(true);
+        RnrColumn dependentRnrColumn = new RnrColumn();
+        dependentRnrColumn.setName("dependentRnr");
+        dependentRnrColumn.setDependencies(Arrays.asList(new RnrColumn[]{rnrColumn}));
+        dependentRnrColumn.setVisible(true);
+        rnrColumns.add(rnrColumn);
+        rnrColumns.add(dependentRnrColumn);
+
+        List errors = service.saveRnRTemplateForProgram(existingProgramCode, rnrColumns);
+        assertThat(errors, is(equalTo(null)));
+
     }
 
 }

@@ -60,16 +60,16 @@ public class ProgramRnrColumnMapperIT {
     }
 
     @Test
-    public void shouldFetchCyclicDependencyForConfiguredProgramRnrTemplate() throws Exception {
+    public void shouldFetchDependenciesForConfiguredProgramRnrTemplate() throws Exception {
 
         RnrColumn columnWithCyclicDependency = programRnrColumnMapper.fetchAllMasterRnRColumns().get(5);
 
-        assertThat(columnWithCyclicDependency.getCyclicDependencies(), is(not(empty())));
+        assertThat(columnWithCyclicDependency.getDependencies(), is(not(empty())));
 
         addProgramRnrColumn(columnWithCyclicDependency, 3, true, "Some Random Label", RnrColumnType.User_Input);
 
         RnrColumn addedColumn = programRnrColumnMapper.getAllRnrColumnsForProgram(HIV).get(0);
-        assertThat(addedColumn.getCyclicDependencies(), is(not(empty())));
+        assertThat(addedColumn.getDependencies().size(), is(0));
     }
 
     @Test
@@ -122,10 +122,10 @@ public class ProgramRnrColumnMapperIT {
     }
 
     @Test
-    public void shouldRetrieveCyclicDependentColumns() throws Exception {
-        List<RnrColumn> result = programRnrColumnMapper.getCyclicDependencyFor("quantityDispensed");
+    public void shouldRetrieveDependencies() throws Exception {
+        List<RnrColumn> result = programRnrColumnMapper.getDependenciesFor("quantityDispensed");
         RnrColumn rnrColumn = result.get(0);
-        assertThat(rnrColumn.getName(), is("stockInHand"));
+        assertThat(rnrColumn.getName(), is("beginningBalance"));
     }
 
 }

@@ -39,6 +39,5 @@ describe('Rnr Template controllers', function () {
         expect(scope.error).toEqual("");
         expect(scope.message).toEqual("Template saved successfully!");
     });
-
   });
 });
