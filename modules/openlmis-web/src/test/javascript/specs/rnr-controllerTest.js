@@ -53,7 +53,13 @@ describe('Requisition controllers', function () {
       expect(scope.error).toEqual("Rnr initialization failed!");
     });
 
-
+//    it('should reset program if facility set to null and attempt to load programs is made', function () {
+//      scope.$parent.facility = {"code" : "hiv"};
+//      $httpBackend.expectPOST('/logistics/rnr/undefined/hiv/init.json').respond(404);
+//      scope.getRnrHeader();
+//      $httpBackend.flush();
+//      expect(scope.error).toEqual("Rnr initialization failed!");
+//    });
 
   });
 
