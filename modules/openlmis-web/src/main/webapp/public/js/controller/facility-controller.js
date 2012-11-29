@@ -21,17 +21,21 @@ function FacilityController($scope, FacilityReferenceData,$http) {
     $scope.facilityOperators = data.facilityOperators;
   }, {});
 
-  $scope.saveFacility = function(){
-
-    $http.post('/admin/facility.json',$scope.facility).success(function() {
+  $scope.saveFacility = function () {
+    if ($scope.facilityForm.$error.pattern) {
+      $scope.error = "Some field holds incorrect value. Check above";
+      $scope.message = "";
+    }
+    else {
+      $http.post('/admin/facility.json', $scope.facility).success(function () {
         $scope.error = "";
         $scope.message = "Saved successfully";
-    }).error(function(){
-        $scope.message = "";
-      $scope.error = "Save failed";
-    });
-
-  }
+      }).error(function () {
+          $scope.message = "";
+          $scope.error = "Save failed";
+        });
+    }
+  };
 
   $scope.setSatelliteFlag = function(isSatellite) {
     if(isSatellite=="true"){

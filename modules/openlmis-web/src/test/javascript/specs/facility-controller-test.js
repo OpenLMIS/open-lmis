@@ -16,8 +16,8 @@ describe("Facility Controller", function () {
     ], "facilityOperators":[
       {"operatorCode":"testCode"}
     ]});
-
     ctrl = $controller(FacilityController, {$scope:scope});
+    scope.facilityForm = {$error : { pattern: "" }};
   }));
 
   it('should make call for facilities', function () {
@@ -33,6 +33,7 @@ describe("Facility Controller", function () {
     scope.saveFacility();
     $httpBackend.flush();
     expect("Saved successfully").toEqual(scope.message);
+    expect("").toEqual(scope.error);
   });
 
   it('should give error if save failed', function(){
@@ -40,6 +41,14 @@ describe("Facility Controller", function () {
     scope.saveFacility();
     $httpBackend.flush();
     expect("Save failed").toEqual(scope.error);
+    expect("").toEqual(scope.message);
+  });
+
+  it('should give field validation error message if form has errors',function() {
+    scope.facilityForm.$error.pattern = "{}";
+    scope.saveFacility();
+    expect("Some field holds incorrect value. Check above").toEqual(scope.error);
+    expect("").toEqual(scope.message);
   });
 
 
