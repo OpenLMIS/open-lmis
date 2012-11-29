@@ -53,7 +53,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     }
 
     @Test
-    public void shouldGetProgramsWhichAreActiveByFacilityId() {
+    public void shouldGetProgramsWhichAreActiveByFacilityCode() {
         Facility facility = make(a(FacilityBuilder.facility));
         facilityMapper.insert(facility);
         programSupportedMapper.addSupportedProgram(new ProgramSupported(facility.getCode(), PROGRAM_CODE, true, "test", DateTime.now().toDate()));

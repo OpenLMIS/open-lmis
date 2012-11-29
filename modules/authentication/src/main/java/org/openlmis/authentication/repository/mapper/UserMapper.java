@@ -1,18 +1,20 @@
 package org.openlmis.authentication.repository.mapper;
 
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
 import org.openlmis.authentication.domain.User;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserMapper {
-    final String SELECT_USER_BY_USER_NAME_AND_PASSWORD = "SELECT * FROM OPEN_LMIS_USER WHERE LOWER(USER_NAME)=LOWER(#{userName}) AND PASSWORD=#{password}";
 
-    @Select(value = SELECT_USER_BY_USER_NAME_AND_PASSWORD)
+    @Select(value = "SELECT * FROM users WHERE LOWER(user_name)=LOWER(#{userName}) AND password=#{password}")
     @Results(value = {
-            @Result(property = "userName", column = "USER_NAME"),
-            @Result(property = "role", column = "ROLE")
+            @Result(property = "userName", column = "user_name"),
+            @Result(property = "role", column = "role")
     })
-    User selectUserByUserNameAndPassword(@Param("userName")String userName, @Param("password")String password);
+    User selectUserByUserNameAndPassword(@Param("userName") String userName, @Param("password") String password);
 
 }

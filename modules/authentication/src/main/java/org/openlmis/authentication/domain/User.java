@@ -2,11 +2,11 @@ package org.openlmis.authentication.domain;
 
 public class User {
 
-
     private String userName;
     private String role;
 
-    public User(){}
+    public User() {
+    }
 
     public User(String userName, String role) {
         this.userName = userName;

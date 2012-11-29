@@ -48,9 +48,9 @@ task migrateDB() << {
     ant.flywayMigrate(driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$dbName", user: dbUser, password: dbPassword)
 }
 
-task seed(type: Exec) {
-    environment("PGPASSWORD",dbPassword)
-    commandLine 'psql', '-U', dbUser , '-w', dbName , '-f', '../../test-data/sql/seed.sql'
+task seed(dependsOn: ["migrateDB"], type: Exec) {
+    environment("PGPASSWORD", dbPassword)
+    commandLine 'psql', '-U', dbUser, '-w', dbName, '-f', '../../test-data/sql/seed.sql'
 }
 
 def executeSql(String statement) {
