@@ -18,20 +18,21 @@ public class ApplicationLogger {
     @AfterThrowing(pointcut = "execution(* org.openlmis..*(..))", throwing = "e")
     public void logException(JoinPoint joinPoint, Throwable e) {
         Signature signature = joinPoint.getSignature();
-        String message = String.format("%s | An exception occurred in %s.%s", LmisThreadLocal.get(), signature.getDeclaringTypeName(), signature.getName());
+        String message = String.format("%s | %s.%s(%s) | Exception", LmisThreadLocal.get(), signature.getDeclaringTypeName(), signature.getName(), joinPoint.getArgs()==null?"": joinPoint.getArgs());
         logException(message, e);
     }
 
     @Before("execution(* org.openlmis..*(..))")
     public void logMethodEntry(JoinPoint joinPoint) {
         Signature signature = joinPoint.getSignature();
-        logMessage(LogLevel.INFO, String.format("%s | Entering the method %s.%s", LmisThreadLocal.get(), signature.getDeclaringTypeName(), signature.getName()));
+
+        logMessage(LogLevel.INFO, String.format("%s | %s.%s(%s) | Enter", LmisThreadLocal.get(), signature.getDeclaringTypeName(), signature.getName(), joinPoint.getArgs()==null?"": joinPoint.getArgs()));
     }
 
     @Before("execution(* org.openlmis..*(..))")
     public void logMethodExit(JoinPoint joinPoint) {
         Signature signature = joinPoint.getSignature();
-        logMessage(LogLevel.INFO, String.format("%s | Exiting the method %s.%s", LmisThreadLocal.get(), signature.getDeclaringTypeName(), signature.getName()));
+        logMessage(LogLevel.INFO, String.format("%s | %s.%s(%s) | Exit", LmisThreadLocal.get(), signature.getDeclaringTypeName(), signature.getName(), joinPoint.getArgs()==null?"": joinPoint.getArgs()));
     }
 
 
