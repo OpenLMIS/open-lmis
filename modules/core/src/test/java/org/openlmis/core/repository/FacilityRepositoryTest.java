@@ -7,7 +7,10 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.openlmis.core.builder.FacilityBuilder;
+import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProgramSupportedMapper;
@@ -16,10 +19,15 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.natpryce.makeiteasy.MakeItEasy.a;
+import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -62,6 +70,15 @@ public class FacilityRepositoryTest {
         repository.addSupportedProgram(programSupported);
         assertThat(programSupported.getModifiedDate(), is(now.toDate()));
         verify(programSupportedMapper).addSupportedProgram(programSupported);
+    }
+
+    @Test
+    public void shouldAddProgramsSupportedByAFacility() throws Exception {
+        Facility facility = make(a(FacilityBuilder.facility));
+        List<Program> programs = new ArrayList<Program>(){{add(make(a(ProgramBuilder.program))); add(make(a(ProgramBuilder.program)));}};
+        facility.setSupportedPrograms(programs);
+        repository.save(facility);
+        verify(programSupportedMapper, times(2)).addSupportedProgram(any(ProgramSupported.class));
     }
 
     @Test

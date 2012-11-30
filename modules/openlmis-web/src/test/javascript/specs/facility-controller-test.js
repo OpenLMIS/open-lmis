@@ -29,7 +29,7 @@ describe("Facility Controller", function () {
   });
 
   it('should give success message if save successful', function(){
-    $httpBackend.expectPOST('/admin/facility.json').respond(200);
+    $httpBackend.expectPOST('/admin/facility.json').respond(200,{"success":"Saved successfully"});
     scope.saveFacility();
     $httpBackend.flush();
     expect("Saved successfully").toEqual(scope.message);
@@ -37,7 +37,7 @@ describe("Facility Controller", function () {
   });
 
   it('should give error if save failed', function(){
-    $httpBackend.expectPOST('/admin/facility.json').respond(404);
+    $httpBackend.expectPOST('/admin/facility.json').respond(404,{"error":"Save failed"});
     scope.saveFacility();
     $httpBackend.flush();
     expect("Save failed").toEqual(scope.error);

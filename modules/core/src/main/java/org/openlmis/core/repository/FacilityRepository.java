@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -33,16 +34,26 @@ public class FacilityRepository {
         return facilityMapper.getRequisitionHeaderData(facilityCode);
     }
 
+    @Transactional
     public void save(Facility facility) {
         try {
             facility.setModifiedDate(DateTime.now().toDate());
             facilityMapper.insert(facility);
+            addListOfSupportedPrograms(facility);
         } catch (DuplicateKeyException duplicateKeyException) {
             throw new RuntimeException("Duplicate Facility Code found");
         } catch (DataIntegrityViolationException integrityViolationException) {
             if (integrityViolationException.getMessage().toLowerCase().contains("foreign key")) {
                 throw new RuntimeException("Missing Reference data");
             }
+        }
+    }
+
+    private void addListOfSupportedPrograms(Facility facility) {
+        List<Program> supportedPrograms = facility.getSupportedPrograms();
+        for (Program supportedProgram : supportedPrograms) {
+            ProgramSupported programSupported = new ProgramSupported(facility.getCode(), supportedProgram.getCode(), true, facility.getModifiedBy(), facility.getModifiedDate());
+            addSupportedProgram(programSupported);
         }
     }
 

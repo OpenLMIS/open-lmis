@@ -7,7 +7,10 @@ import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.web.model.ReferenceData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,10 +55,18 @@ public class FacilityController {
     }
 
     @RequestMapping(value = "admin/facility" , method = RequestMethod.POST , headers = "Accept=application/json")
-    public void addFacility(@RequestBody Facility facility, HttpServletRequest request) {
+    public ResponseEntity<ModelMap> addFacility(@RequestBody Facility facility, HttpServletRequest request) {
+        ModelMap modelMap = new ModelMap();
         String modifiedBy = (String) request.getSession().getAttribute(USER);
         facility.setModifiedBy(modifiedBy);
-        facilityService.save(facility);
+        try{
+            facilityService.save(facility);
+        }catch (RuntimeException exception){
+            modelMap.put("error",exception.getMessage());
+            return new ResponseEntity<>(modelMap,HttpStatus.BAD_REQUEST);
+        }
+        modelMap.put("success", facility.getName()+" created successfully");
+        return new ResponseEntity<>(modelMap,HttpStatus.OK);
     }
 
 

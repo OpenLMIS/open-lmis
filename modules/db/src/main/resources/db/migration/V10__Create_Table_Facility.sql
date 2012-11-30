@@ -29,7 +29,7 @@ CREATE TABLE facility (
     go_live_date DATE NOT NULL,
     go_down_date DATE,
     comment  TEXT,
-    do_not_display BOOLEAN,
+    data_reportable BOOLEAN,
     modified_by VARCHAR(50),
     modified_date TIMESTAMP
 );

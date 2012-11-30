@@ -6,7 +6,9 @@ import lombok.NoArgsConstructor;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -100,8 +102,10 @@ public class Facility implements Importable {
     @ImportField(name = "Facility Comments")
     private String comment;
 
-    @ImportField(type = "boolean", name = "Do Not Display")
-    private boolean doNotDisplay;
+    @ImportField(type = "boolean", name = "Data Reportable")
+    private boolean dataReportable;
+
+    List<Program> supportedPrograms = new ArrayList<>();
 
     private String modifiedBy;
 

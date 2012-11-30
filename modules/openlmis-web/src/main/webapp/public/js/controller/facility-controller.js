@@ -5,7 +5,7 @@ function FacilityController($scope, FacilityReferenceData,$http) {
     $scope.facility.suppliesOthers = "true";
     $scope.facility.active = "true";
     $scope.facility.sdp = "true";
-    $scope.facility.doNotDisplay = "false";
+    $scope.facility.dataReportable = "true";
     $scope.facility.hasElectricity = "true";
     $scope.facility.online = "true";
     $scope.facility.hasElectronicScc = "true";
@@ -27,24 +27,14 @@ function FacilityController($scope, FacilityReferenceData,$http) {
       $scope.message = "";
     }
     else {
-      $http.post('/admin/facility.json', $scope.facility).success(function () {
+      $http.post('/admin/facility.json', $scope.facility).success(function (data) {
         $scope.error = "";
-        $scope.message = "Saved successfully";
-      }).error(function () {
+        $scope.message = data.success;
+      }).error(function (data) {
           $scope.message = "";
-          $scope.error = "Save failed";
+          $scope.error = data.error;
         });
     }
   };
-
-  $scope.setSatelliteFlag = function(isSatellite) {
-    if(isSatellite=="true"){
-      $scope.satelliteFlag = "show";
-    }
-    else
-    {
-      $scope.satelliteFlag = null;
-    }
-  }
 
 }
