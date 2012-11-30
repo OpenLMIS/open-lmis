@@ -24,8 +24,8 @@ rule "quantityDispensed and stockInHand both can not be calculated"
         eval($programRnrTemplate.columnsVisible("quantityDispensed") == true && $programRnrTemplate.columnsVisible("stockInHand") == true )
         eval($programRnrTemplate.columnsCalculated("quantityDispensed") == true && $programRnrTemplate.columnsCalculated("stockInHand") == true )
     then
-        validationErrors.add("quantityDispensed", "Interdependent fields ("+$programRnrTemplate.getRnrColumnLabelFor("quantityDispensed")+","+$programRnrTemplate.getRnrColumnLabelFor("stockInHand")+") cannot be of type ‘calculated’ at the same time");
-        validationErrors.add("stockInHand", "Interdependent fields ("+$programRnrTemplate.getRnrColumnLabelFor("quantityDispensed")+","+$programRnrTemplate.getRnrColumnLabelFor("stockInHand")+") cannot be of type ‘calculated’ at the same time");
+        validationErrors.add("quantityDispensed", "Interdependent fields (\""+$programRnrTemplate.getRnrColumnLabelFor("quantityDispensed")+"\", \""+$programRnrTemplate.getRnrColumnLabelFor("stockInHand")+"\") cannot be of type \"Calculated\" at the same time");
+        validationErrors.add("stockInHand", "Interdependent fields (\""+$programRnrTemplate.getRnrColumnLabelFor("quantityDispensed")+"\", \""+$programRnrTemplate.getRnrColumnLabelFor("stockInHand")+"\") cannot be of type \"Calculated\" at the same time");
 end
 
 rule "stockInHand has all the dependant columns checked"

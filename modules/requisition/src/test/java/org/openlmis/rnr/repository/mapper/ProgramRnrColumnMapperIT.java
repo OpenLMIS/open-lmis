@@ -60,19 +60,6 @@ public class ProgramRnrColumnMapperIT {
     }
 
     @Test
-    public void shouldFetchDependenciesForConfiguredProgramRnrTemplate() throws Exception {
-
-        RnrColumn columnWithCyclicDependency = programRnrColumnMapper.fetchAllMasterRnRColumns().get(5);
-
-        assertThat(columnWithCyclicDependency.getDependencies(), is(not(empty())));
-
-        addProgramRnrColumn(columnWithCyclicDependency, 3, true, "Some Random Label", RnrColumnType.User_Input);
-
-        RnrColumn addedColumn = programRnrColumnMapper.getAllRnrColumnsForProgram(HIV).get(0);
-        assertThat(addedColumn.getDependencies().size(), is(0));
-    }
-
-    @Test
     public void shouldFetchColumnsInOrderOfVisibleAndPositionDefined() throws Exception {
         RnrColumn visibleColumn1 = programRnrColumnMapper.fetchAllMasterRnRColumns().get(0);
         addProgramRnrColumn(visibleColumn1, 4, true, "Some Random Label", RnrColumnType.User_Input);
@@ -120,12 +107,4 @@ public class ProgramRnrColumnMapperIT {
         rnrColumn.setSelectedColumnType(columnType);
         programRnrColumnMapper.update(HIV, rnrColumn);
     }
-
-    @Test
-    public void shouldRetrieveDependencies() throws Exception {
-        List<RnrColumn> result = programRnrColumnMapper.getDependenciesFor("quantityDispensed");
-        RnrColumn rnrColumn = result.get(0);
-        assertThat(rnrColumn.getName(), is("beginningBalance"));
-    }
-
 }

@@ -1,6 +1,6 @@
 function CreateRnrTemplateController($scope, Program) {
   Program.get({}, function (data) {   //success
-    $scope.programs = data.programList;
+        $scope.programs = data.programList;
   }, {});
 };
 
@@ -64,16 +64,14 @@ function SaveRnrTemplateController($scope, RnRColumnList, $http, $location) {
   });
 
   $scope.createProgramRnrTemplate = function () {
-    var isValid= validateCycleDependency($scope.rnrColumnList);
-
-    if(!isValid) {
-      return;
-    }
-
     $http.post('/admin/rnr/' + $scope.program.code + '/columns.json', $scope.rnrColumnList).success(function () {
-      $scope.message = "Template saved successfully!";
-      $scope.error = "";
-    }).error(function () {
+          $scope.message = "Template saved successfully!";
+          $scope.error = "";
+          $scope.errorMap = undefined;
+    }).error(function (data) {
+        if(data.errorMap!=null){
+            $scope.errorMap = data.errorMap;
+        }
         updateErrorMessage("Save Failed!");
       });
   };
@@ -89,33 +87,4 @@ function SaveRnrTemplateController($scope, RnRColumnList, $http, $location) {
     $scope.error = message;
     $scope.message = "";
   };
-
-  var validateCycleDependency = function(rnrColumnList){
-    for(var column in rnrColumnList){
-      var rnrColumn = rnrColumnList[column];
-      if(rnrColumn.selectedColumnType==CALCULATED){
-        var dependencies = rnrColumn.cyclicDependencies;
-        for(var dependent in dependencies){
-          var dependentColumnName = dependencies[dependent].name
-          var dependentColumn = getRnrColumnByName(rnrColumnList, dependentColumnName);
-          if(dependentColumn.selectedColumnType==CALCULATED){
-            updateErrorMessage("Interdependent fields ("+rnrColumn.label+", "+dependentColumn.label+
-              ") cannot be of type 'calculated' at the same time");
-            return false;
-          }
-        }
-
-      }
-    }
-    return true;
-  };
-
-  var getRnrColumnByName = function(rnrColumnList, columnName){
-    for(var column in rnrColumnList){
-      if(rnrColumnList[column].name==columnName){
-        return rnrColumnList[column];
-      }
-    }
-    return;
-  }
 }

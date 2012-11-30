@@ -26,7 +26,6 @@ public class RnrColumn {
     private boolean used;
     private boolean visible;
     private boolean mandatory;
-    private List<RnrColumn> dependencies = new ArrayList<>();
 
 
     public RnrColumn(String name, String description, int position, String label, String defaultValue, String dataSource, List<RnrColumnType> availableDataSources, String formula, String indicator, boolean isUsed, boolean isVisible, boolean mandatory) {

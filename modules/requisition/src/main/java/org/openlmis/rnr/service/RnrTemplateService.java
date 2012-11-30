@@ -38,7 +38,7 @@ public class RnrTemplateService {
 
 
     public Map<String, String> saveRnRTemplateForProgram(String programCode, List<RnrColumn> rnrColumns) {
-        Map<String, String> errors = validateRuleErrorsFor(rnrColumns);
+        Map<String, String> errors = rnrTemplateRuleService.validate(rnrColumns);
         if (!(errors == null || errors.isEmpty())) {
             return errors;
         }
@@ -51,11 +51,6 @@ public class RnrTemplateService {
         return null;
     }
 
-
-    private Map<String, String> validateRuleErrorsFor(List<RnrColumn> rnrColumns) {
-        return rnrTemplateRuleService.validate(rnrColumns);
-
-    }
 
     public List<RnrColumn> fetchVisibleRnRColumns(String programCode) {
         return rnrRepository.fetchVisibleProgramRnRColumns(programCode);

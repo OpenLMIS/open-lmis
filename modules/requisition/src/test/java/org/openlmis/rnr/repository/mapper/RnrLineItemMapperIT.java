@@ -10,6 +10,7 @@ import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProductForm;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProductMapper;
+import org.openlmis.core.repository.mapper.ProgramSupportedMapper;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.domain.RnrStatus;
@@ -40,12 +41,16 @@ public class RnrLineItemMapperIT {
     @Autowired
     private RnrLineItemMapper rnrLineItemMapper;
 
+    @Autowired
+    private ProgramSupportedMapper programSupportedMapper;
+
     Product product;
 
     @Before
     public void setUp() {
         rnrLineItemMapper.deleteAll();
         rnrMapper.deleteAll();
+        programSupportedMapper.deleteAll();
         facilityMapper.deleteAll();
         productMapper.deleteAll();
         facilityMapper.insert(make(a(facility)));
@@ -66,6 +71,7 @@ public class RnrLineItemMapperIT {
     public void tearDown() throws Exception {
         rnrLineItemMapper.deleteAll();
         rnrMapper.deleteAll();
+        programSupportedMapper.deleteAll();
         facilityMapper.deleteAll();
         productMapper.deleteAll();
     }

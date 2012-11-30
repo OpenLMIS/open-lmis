@@ -66,9 +66,9 @@ public class RnrTemplateRuleServiceIT {
                 rnrColumn("quantityRequested", false,  null, "Requested Quantity"),
                 rnrColumn("reasonForRequestedQuantity", false , null, "Requested Quantity Reason") ,
                 rnrColumn("normalizedConsumption", false, RnrColumnType.User_Input, "normalizedConsumption")));
-        assertEquals("Interdependent fields (quantityDispensed,stockInHand) cannot be of type ‘calculated’ at the same time"
+        assertEquals("Interdependent fields (\"quantityDispensed\", \"stockInHand\") cannot be of type \"Calculated\" at the same time"
                 , errors.get("stockInHand"));
-        assertEquals("Interdependent fields (quantityDispensed,stockInHand) cannot be of type ‘calculated’ at the same time"
+        assertEquals("Interdependent fields (\"quantityDispensed\", \"stockInHand\") cannot be of type \"Calculated\" at the same time"
                 , errors.get("quantityDispensed"));
 
     }
