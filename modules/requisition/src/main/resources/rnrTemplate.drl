@@ -1,0 +1,24 @@
+import org.openlmis.rnr.domain.ProgramRnrTemplate;
+import java.util.Arrays;
+import java.util.List;
+
+global org.openlmis.rnr.service.RnrTemplateRuleService.ValidationErrors validationErrors;
+
+rule "quantityDispensed has all the dependant columns checked"
+    when
+        $programRnrTemplate : ProgramRnrTemplate()
+        eval($programRnrTemplate.columnsVisible("quantityDispensed") == true)
+        eval($programRnrTemplate.columnsVisible("beginningBalance", "quantityReceived", "lossesAndAdjustments", "stockInHand") == false)
+    then
+        validationErrors.add("quantityDispensed", "one of {beginningBalance|quantityReceived|lossesAndAdjustments|stockInHand} is not checked");
+end
+
+
+rule "stockInHand has all the dependant columns checked"
+    when
+        $programRnrTemplate : ProgramRnrTemplate()
+        eval($programRnrTemplate.columnsVisible("stockInHand") == true)
+        eval($programRnrTemplate.columnsVisible("beginningBalance", "quantityReceived", "lossesAndAdjustments", "quantityDispensed") == false)
+    then
+        validationErrors.add("stockInHand", "one of {beginningBalance|quantityReceived|lossesAndAdjustments|quantityDispensed} is not checked");
+end

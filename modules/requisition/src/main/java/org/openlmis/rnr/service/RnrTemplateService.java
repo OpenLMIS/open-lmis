@@ -35,7 +35,7 @@ public class RnrTemplateService {
 
     public List<DependencyError> saveRnRTemplateForProgram(String programCode, List<RnrColumn> rnrColumns) {
         List<DependencyError> errors = validateDependencies(rnrColumns);
-        if(!(errors==null || errors.isEmpty())){
+        if (!(errors == null || errors.isEmpty())) {
             return errors;
         }
 
@@ -61,7 +61,7 @@ public class RnrTemplateService {
             List<RnrColumn> referentialDependencies = rnrColumn.getDependencies();
             for (RnrColumn referentialDependency : referentialDependencies) {
                 RnrColumn referredRnrColumn = getRnrColumnByName(referentialDependency.getName(), rnrColumns);
-                if(!(referredRnrColumn.isVisible() || referredRnrColumn.getSelectedColumnType() == RnrColumnType.Calculated)){
+                if (!(referredRnrColumn.isVisible() || referredRnrColumn.getSelectedColumnType() == RnrColumnType.Calculated)) {
                     errors.add(new DependencyError(rnrColumn, "error"));
                 }
             }
@@ -70,8 +70,8 @@ public class RnrTemplateService {
     }
 
     private RnrColumn getRnrColumnByName(String name, List<RnrColumn> rnrColumns) {
-        for(RnrColumn rnrColumn : rnrColumns){
-            if(rnrColumn.getName().equals(name)){
+        for (RnrColumn rnrColumn : rnrColumns) {
+            if (rnrColumn.getName().equals(name)) {
                 return rnrColumn;
             }
         }
