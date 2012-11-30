@@ -12,14 +12,20 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.*;
+import static org.openlmis.core.builder.UserBuilder.defaultUser;
+import static org.openlmis.core.builder.UserBuilder.facilityId;
 
 @ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 public class FacilityMapperIT {
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Autowired
     FacilityMapper facilityMapper;
@@ -27,17 +33,18 @@ public class FacilityMapperIT {
     @Before
     @After
     public void setUp() throws Exception {
+        userMapper.deleteAll();
         facilityMapper.deleteAll();
     }
 
     @Test
     public void shouldFetchAllFacilitiesAvailable() throws Exception {
-        Facility trz001 = make(a(facility,
+        Facility trz001 = make(a(defaultFacility,
                 with(code, "TRZ001"),
                 with(name, "Ngorongoro Hospital"),
                 with(type, "warehouse"),
                 with(geographicZone, 1)));
-        Facility trz002 = make(a(facility,
+        Facility trz002 = make(a(defaultFacility,
                 with(code, "TRZ002"),
                 with(name, "Rural Clinic"),
                 with(type, "lvl3_hospital"),
@@ -47,18 +54,19 @@ public class FacilityMapperIT {
         facilityMapper.insert(trz002);
 
         List<Facility> facilities = facilityMapper.getAll();
-        assertTrue(facilities.contains(trz001));
-        assertTrue(facilities.contains(trz002));
+
+        assertEquals(facilities.get(0).getCode(), trz001.getCode());
+        assertEquals(facilities.get(1).getCode(), trz002.getCode());
     }
 
     @Test
     public void shouldFetchFacilityAndFacilityTypeDataForRequisitionHeader() {
-        Facility facility1 = make(a(facility,
+        Facility facility1 = make(a(defaultFacility,
                 with(code, "TRZ001"),
                 with(name, "Ngorongoro Hospital"),
                 with(type, "lvl3_hospital")));
 
-        Facility facility2 = make(a(facility));
+        Facility facility2 = make(a(defaultFacility));
 
         facilityMapper.insert(facility1);
         facilityMapper.insert(facility2);
@@ -82,7 +90,7 @@ public class FacilityMapperIT {
 
     @Test
     public void shouldInsertFacility() throws Exception {
-        assertThat(facilityMapper.insert(make(a(facility))), is(1));
+        assertThat(facilityMapper.insert(make(a(defaultFacility))), is(1));
     }
 
     @Test
@@ -121,4 +129,21 @@ public class FacilityMapperIT {
         assertThat(geographicZone.getValue(), is("Arusha"));
         assertThat(geographicZone.getLabel(), is("state"));
     }
+
+    @Test
+    public void shouldReturnFacilityForAUser() throws Exception {
+        facilityMapper.insert(make(a(defaultFacility)));
+        Facility facility = facilityMapper.getAll().get(0);
+
+        User user = make(a(defaultUser, with(facilityId, facility.getId())));
+        userMapper.insert(user);
+
+        Facility userFacility = facilityMapper.getHomeFacility(user.getUserName());
+
+        assertEquals(facility.getCode(), userFacility.getCode());
+        assertEquals(facility.getName(), userFacility.getName());
+        assertEquals(facility.getId(), userFacility.getId());
+    }
+
+
 }

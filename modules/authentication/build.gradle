@@ -4,6 +4,7 @@ dependencies {
             'org.aspectj:aspectjrt:1.7.0',
             'c3p0:c3p0:0.9.1.2',
             project(':modules:db'),
+            project(':modules:core'),
             'commons-codec:commons-codec:1.7',
             'org.springframework.security:spring-security-taglibs:3.1.2.RELEASE',
             'org.springframework.security:spring-security-core:3.1.2.RELEASE',

@@ -1,6 +1,5 @@
 package org.openlmis.rnr.repository.mapper;
 
-import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,7 +37,7 @@ public class RnrMapperIT {
         programSupportedMapper.deleteAll();
         rnrMapper.deleteAll();
         facilityMapper.deleteAll();
-        Facility facility = make(a(FacilityBuilder.facility));
+        Facility facility = make(a(FacilityBuilder.defaultFacility));
         facilityMapper.insert(facility);
     }
 

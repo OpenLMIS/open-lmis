@@ -1,10 +1,7 @@
-package org.openlmis.authentication.repository.mapper;
+package org.openlmis.core.repository.mapper;
 
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
-import org.openlmis.authentication.domain.User;
+import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.User;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -17,4 +14,11 @@ public interface UserMapper {
     })
     User selectUserByUserNameAndPassword(@Param("userName") String userName, @Param("password") String password);
 
+    @Insert(value = "INSERT INTO users " +
+            "(user_name, password, facility_id) VALUES " +
+            "(#{userName}, #{password}, #{facilityId}) ")
+    void insert(User user);
+
+    @Delete(value = "DELETE FROM users")
+    void deleteAll();
 }

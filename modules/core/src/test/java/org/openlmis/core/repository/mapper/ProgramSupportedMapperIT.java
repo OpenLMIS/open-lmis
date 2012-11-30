@@ -16,7 +16,7 @@ import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.FACILITY_CODE;
-import static org.openlmis.core.builder.FacilityBuilder.facility;
+import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramBuilder.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -39,7 +39,7 @@ public class ProgramSupportedMapperIT {
         programSupportedMapper.deleteAll();
         facilityMapper.deleteAll();
 
-        facilityMapper.insert(make(a(facility)));
+        facilityMapper.insert(make(a(defaultFacility)));
         programMapper.insert(make(a(program, with(code, YELLOW_FEVER))));
     }
 

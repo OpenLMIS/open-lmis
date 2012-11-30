@@ -12,6 +12,7 @@ import static com.natpryce.makeiteasy.Property.newProperty;
 
 public class FacilityBuilder {
 
+    public static final Property<Facility, Integer> id = newProperty();
     public static final Property<Facility, String> code = newProperty();
     public static final Property<Facility, String> name = newProperty();
     public static final Property<Facility, String> type = newProperty();
@@ -22,13 +23,15 @@ public class FacilityBuilder {
     public static final Property<Facility,String> operatedBy = newProperty();
 
     public static final String FACILITY_CODE = "F10010";
+    public static final int FACILITY_ID = 1;
     public static final String FACILITY_TYPE = "warehouse";
 
-    public static final Instantiator<Facility> facility = new Instantiator<Facility>() {
+    public static final Instantiator<Facility> defaultFacility = new Instantiator<Facility>() {
 
         @Override
         public Facility instantiate(PropertyLookup<Facility> lookup) {
             Facility facility = new Facility();
+            facility.setId(lookup.valueOf(id, FACILITY_ID));
             facility.setCode(lookup.valueOf(code, FACILITY_CODE));
             facility.setFacilityTypeCode(lookup.valueOf(type, FACILITY_TYPE));
             facility.setName(lookup.valueOf(name, "Apollo Hospital"));

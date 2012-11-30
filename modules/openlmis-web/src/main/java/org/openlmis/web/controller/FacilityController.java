@@ -24,13 +24,13 @@ import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.U
 
 @Controller
 @NoArgsConstructor
-public class FacilityController {
+public class FacilityController extends BaseController {
 
     private FacilityService facilityService;
     private ProgramService programService;
 
     @Autowired
-    public FacilityController(FacilityService facilityService, ProgramService programService){
+    public FacilityController(FacilityService facilityService, ProgramService programService) {
         this.facilityService = facilityService;
         this.programService = programService;
     }
@@ -40,12 +40,17 @@ public class FacilityController {
         return facilityService.getAll();
     }
 
+    @RequestMapping(value = "logistics/user/facilities", method = RequestMethod.GET, headers = "Accept=application/json")
+    public List<Facility> getAllByUser(HttpServletRequest httpServletRequest) {
+        return facilityService.getAllForUser(loggedInUser(httpServletRequest));
+    }
+
     @RequestMapping(value = "logistics/facility/{code}/requisition-header", method = RequestMethod.GET, headers = "Accept=application/json")
     public RequisitionHeader getRequisitionHeader(@PathVariable(value = "code") String code) {
         return facilityService.getRequisitionHeader(code);
     }
 
-    @RequestMapping(value = "admin/facility/reference-data",method = RequestMethod.GET , headers = "Accept=application/json")
+    @RequestMapping(value = "admin/facility/reference-data", method = RequestMethod.GET, headers = "Accept=application/json")
     public Map getReferenceData() {
         ReferenceData referenceData = new ReferenceData();
         return referenceData.addFacilityTypes(facilityService.getAllTypes()).
@@ -68,7 +73,6 @@ public class FacilityController {
         modelMap.put("success", facility.getName()+" created successfully");
         return new ResponseEntity<>(modelMap,HttpStatus.OK);
     }
-
 
 
 }

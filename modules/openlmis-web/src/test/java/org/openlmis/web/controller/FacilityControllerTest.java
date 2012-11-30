@@ -19,6 +19,10 @@ import java.util.Map;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 
@@ -29,7 +33,6 @@ public class FacilityControllerTest {
     private FacilityController facilityController;
     private MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
 
-
     @Before
     public void setUp() throws Exception {
         programService = mock(ProgramService.class);
@@ -38,7 +41,6 @@ public class FacilityControllerTest {
         MockHttpSession mockHttpSession = new MockHttpSession();
         httpServletRequest.setSession(mockHttpSession);
         mockHttpSession.setAttribute(USER,USER);
-
     }
 
     @Test
@@ -86,6 +88,27 @@ public class FacilityControllerTest {
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.BAD_REQUEST));
         ModelMap body = (ModelMap) responseEntity.getBody();
         assertThat(body.get("error").toString(), is("error message"));
+        MockHttpServletRequest httpServletRequest = httpRequest();
 
+        facilityController.addFacility(facility, httpServletRequest);
     }
+
+    @Test
+    public void shouldReturnAllFacilitiesForTheUser() {
+        Facility facility = mock(Facility.class);
+        MockHttpServletRequest httpServletRequest = httpRequest();
+        when(facilityService.getAllForUser(USER)).thenReturn(Arrays.asList(facility));
+
+        List<Facility> facilities = facilityController.getAllByUser(httpServletRequest);
+        assertTrue(facilities.contains(facility));
+    }
+
+    private MockHttpServletRequest httpRequest() {
+        MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
+        MockHttpSession mockHttpSession = new MockHttpSession();
+        httpServletRequest.setSession(mockHttpSession);
+        mockHttpSession.setAttribute(USER, USER);
+        return httpServletRequest;
+    }
+
 }

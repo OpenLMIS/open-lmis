@@ -83,4 +83,8 @@ public class FacilityRepository {
     public List<GeographicZone> getAllGeographicZones() {
         return facilityMapper.getAllGeographicZones();
     }
+
+    public Facility getHomeFacility(String user) {
+        return facilityMapper.getHomeFacility(user);
+    }
 }

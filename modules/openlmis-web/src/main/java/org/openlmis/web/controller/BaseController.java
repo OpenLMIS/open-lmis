@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 public class BaseController {
 
-    protected String user(HttpServletRequest request) {
+    protected String loggedInUser(HttpServletRequest request) {
         return (String) request.getSession().getAttribute(UserAuthenticationSuccessHandler.USER);
     }
 

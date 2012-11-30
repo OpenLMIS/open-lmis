@@ -1,24 +1,34 @@
 package org.openlmis.core.service;
 
 
+import org.junit.Before;
 import org.junit.Test;
-import org.openlmis.core.builder.FacilityBuilder;
+import org.mockito.Mock;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.repository.FacilityRepository;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.MockitoAnnotations.initMocks;
+import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 
 public class FacilityServiceTest {
+    @Mock
+    FacilityRepository facilityRepository;
+
+    FacilityService facilityService;
+
+    @Before
+    public void setUp() throws Exception {
+        initMocks(this);
+        facilityService = new FacilityService(facilityRepository);
+    }
 
     @Test
     public void shouldStoreFacility() throws Exception {
-        FacilityRepository facilityRepository = mock(FacilityRepository.class);
-        FacilityService service = new FacilityService(facilityRepository);
-        Facility facility = make(a(FacilityBuilder.facility));
-        service.save(facility);
+        Facility facility = make(a(defaultFacility));
+        facilityService.save(facility);
         verify(facilityRepository).save(facility);
     }
 

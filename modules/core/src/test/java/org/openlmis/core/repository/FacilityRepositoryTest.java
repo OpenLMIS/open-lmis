@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
@@ -28,6 +27,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
+import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -74,7 +74,7 @@ public class FacilityRepositoryTest {
 
     @Test
     public void shouldAddProgramsSupportedByAFacility() throws Exception {
-        Facility facility = make(a(FacilityBuilder.facility));
+        Facility facility = make(a(defaultFacility));
         List<Program> programs = new ArrayList<Program>(){{add(make(a(ProgramBuilder.program))); add(make(a(ProgramBuilder.program)));}};
         facility.setSupportedPrograms(programs);
         repository.save(facility);

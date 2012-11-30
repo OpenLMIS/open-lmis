@@ -7,6 +7,7 @@ import org.openlmis.core.repository.FacilityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -42,10 +43,15 @@ public class FacilityService {
     }
 
     public List<FacilityOperator> getAllOperators() {
-            return facilityRepository.getAllOperators();
+        return facilityRepository.getAllOperators();
     }
 
     public List<GeographicZone> getAllZones() {
         return facilityRepository.getAllGeographicZones();
+    }
+
+    //TODO this will also return facilities based on requisition group
+    public List<Facility> getAllForUser(String user) {
+        return Arrays.asList(facilityRepository.getHomeFacility(user));
     }
 }

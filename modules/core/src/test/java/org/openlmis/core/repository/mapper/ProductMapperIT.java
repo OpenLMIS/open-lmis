@@ -70,7 +70,7 @@ public class ProductMapperIT {
 
     @Test
     public void shouldGetFullSupplyAndActiveProductsByFacilityAndProgramInOrderOfDisplayAndProductCode() {
-        facilityMapper.insert(make(a(FacilityBuilder.facility)));
+        facilityMapper.insert(make(a(FacilityBuilder.defaultFacility)));
 
         Product pro01 = product(HIV, "PRO01", true,true,6);
         addToProgram("ARV", pro01,true);

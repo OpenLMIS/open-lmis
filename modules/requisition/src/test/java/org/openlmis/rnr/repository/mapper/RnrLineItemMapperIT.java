@@ -21,9 +21,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static junit.framework.Assert.assertEquals;
-import static org.joda.time.DateTime.now;
 import static org.openlmis.core.builder.FacilityBuilder.FACILITY_CODE;
-import static org.openlmis.core.builder.FacilityBuilder.facility;
+import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 
 @ContextConfiguration(locations = "classpath*:applicationContext-requisition.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -53,7 +52,7 @@ public class RnrLineItemMapperIT {
         programSupportedMapper.deleteAll();
         facilityMapper.deleteAll();
         productMapper.deleteAll();
-        facilityMapper.insert(make(a(facility)));
+        facilityMapper.insert(make(a(defaultFacility)));
         product  = make(a(ProductBuilder.product));
         product.setProductForm(new ProductForm());
         product.setProductDosageUnit(new DosageUnit());

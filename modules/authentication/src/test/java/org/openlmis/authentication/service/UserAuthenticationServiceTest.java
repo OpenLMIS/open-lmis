@@ -3,8 +3,8 @@ package org.openlmis.authentication.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.openlmis.authentication.UserToken;
-import org.openlmis.authentication.repository.mapper.UserMapper;
-import org.openlmis.authentication.domain.User;
+import org.openlmis.core.repository.mapper.UserMapper;
+import org.openlmis.core.domain.User;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;

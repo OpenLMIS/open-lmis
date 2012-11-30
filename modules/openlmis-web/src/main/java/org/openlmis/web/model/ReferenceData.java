@@ -23,7 +23,6 @@ public class ReferenceData {
         return this;
     }
 
-
     public ReferenceData addFacilityOperators(List<FacilityOperator> allOperators) {
         referenceData.put(FACILITY_OPERATORS, allOperators);
         return this;

@@ -2,8 +2,8 @@ package org.openlmis.authentication.service;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.authentication.UserToken;
-import org.openlmis.authentication.domain.User;
-import org.openlmis.authentication.repository.mapper.UserMapper;
+import org.openlmis.core.domain.User;
+import org.openlmis.core.repository.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

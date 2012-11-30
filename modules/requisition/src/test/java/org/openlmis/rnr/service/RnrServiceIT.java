@@ -58,7 +58,7 @@ public class RnrServiceIT {
         facilityApprovedProductMapper.deleteAll();
         productMapper.deleteAll();
         facilityMapper.deleteAll();
-        Facility facility = make(a(FacilityBuilder.facility));
+        Facility facility = make(a(FacilityBuilder.defaultFacility));
         facilityMapper.insert(facility);
         product(HIV);
     }

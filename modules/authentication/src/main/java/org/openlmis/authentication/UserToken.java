@@ -1,7 +1,5 @@
 package org.openlmis.authentication;
 
-import org.openlmis.authentication.domain.User;
-
 public class UserToken {
 
     private final String userName;

@@ -60,6 +60,15 @@ public interface FacilityMapper {
     @Delete("DELETE FROM FACILITY")
     void deleteAll();
 
+    @Select("SELECT * FROM users U, facility F " +
+                "where U.facility_id = F.id and U.user_name = #{userName}")
+        @Results(value = {
+                @Result(property = "id", column = "facility_id"),
+                @Result(property = "name"),
+                @Result(property = "code")
+        })
+        Facility getHomeFacility(String userName);
+
     @Select("SELECT F.name, F.code,F.operated_by as operated_by, FT.name as facility_type, FT.nominal_max_month, " +
             "FT.nominal_eop, GZ.name as zone, GL.name as label, GZP.name as parent_zone, GLP.name as parent_label " +
             "FROM facility F, facility_type FT, geographic_zone GZ, geographic_zone GZP, geopolitical_level GL, geopolitical_level GLP " +
