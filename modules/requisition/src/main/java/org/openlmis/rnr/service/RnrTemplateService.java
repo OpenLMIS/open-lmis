@@ -3,13 +3,14 @@ package org.openlmis.rnr.service;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.rnr.domain.RnrColumn;
-import org.openlmis.rnr.domain.RnrColumnType;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 
 @Service
 @NoArgsConstructor
@@ -17,9 +18,12 @@ public class RnrTemplateService {
 
     private RnrTemplateRepository rnrRepository;
 
+    private RnrTemplateRuleService rnrTemplateRuleService;
+
     @Autowired
-    public RnrTemplateService(RnrTemplateRepository rnrRepository) {
+    public RnrTemplateService(RnrTemplateRepository rnrRepository, RnrTemplateRuleService rnrTemplateRuleService) {
         this.rnrRepository = rnrRepository;
+        this.rnrTemplateRuleService = rnrTemplateRuleService;
     }
 
     public List<RnrColumn> fetchAllRnRColumns(String programCode) {
@@ -33,8 +37,8 @@ public class RnrTemplateService {
     }
 
 
-    public List<DependencyError> saveRnRTemplateForProgram(String programCode, List<RnrColumn> rnrColumns) {
-        List<DependencyError> errors = validateDependencies(rnrColumns);
+    public Map<String, String> saveRnRTemplateForProgram(String programCode, List<RnrColumn> rnrColumns) {
+        Map<String, String> errors = validateRuleErrorsFor(rnrColumns);
         if (!(errors == null || errors.isEmpty())) {
             return errors;
         }
@@ -47,50 +51,13 @@ public class RnrTemplateService {
         return null;
     }
 
-    private List<DependencyError> validateDependencies(List<RnrColumn> rnrColumns) {
-        return validateReferentialDependencies(rnrColumns);
-    }
 
-    private List<DependencyError> validateReferentialDependencies(List<RnrColumn> rnrColumns) {
-        List<DependencyError> errors = new ArrayList<>();
-        for (RnrColumn rnrColumn : rnrColumns) {
-            if (!rnrColumn.isVisible()) continue;
-            if (((rnrColumn.getName().equals("quantityDispensed")) || (rnrColumn.getName().equals("quantityRequested")))
-                    && rnrColumn.getSelectedColumnType().equals(RnrColumnType.User_Input))
-                continue;
-            List<RnrColumn> referentialDependencies = rnrColumn.getDependencies();
-            for (RnrColumn referentialDependency : referentialDependencies) {
-                RnrColumn referredRnrColumn = getRnrColumnByName(referentialDependency.getName(), rnrColumns);
-                if (!(referredRnrColumn.isVisible() || referredRnrColumn.getSelectedColumnType() == RnrColumnType.Calculated)) {
-                    errors.add(new DependencyError(rnrColumn, "error"));
-                }
-            }
-        }
-        return errors;
-    }
+    private Map<String, String> validateRuleErrorsFor(List<RnrColumn> rnrColumns) {
+        return rnrTemplateRuleService.validate(rnrColumns);
 
-    private RnrColumn getRnrColumnByName(String name, List<RnrColumn> rnrColumns) {
-        for (RnrColumn rnrColumn : rnrColumns) {
-            if (rnrColumn.getName().equals(name)) {
-                return rnrColumn;
-            }
-        }
-        return null;
     }
 
     public List<RnrColumn> fetchVisibleRnRColumns(String programCode) {
         return rnrRepository.fetchVisibleProgramRnRColumns(programCode);
-    }
-
-    @Data
-    private class DependencyError {
-
-        private RnrColumn rnrColumn;
-        private String error;
-
-        public DependencyError(RnrColumn rnrColumn, String error) {
-            this.rnrColumn = rnrColumn;
-            this.error = error;
-        }
     }
 }

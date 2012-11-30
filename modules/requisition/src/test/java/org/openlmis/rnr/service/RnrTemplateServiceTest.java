@@ -5,18 +5,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.rnr.repository.RnrTemplateRepository;
 import org.openlmis.rnr.domain.RnrColumn;
+import org.openlmis.rnr.repository.RnrTemplateRepository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RnrTemplateServiceTest {
@@ -28,9 +27,12 @@ public class RnrTemplateServiceTest {
 
     private String existingProgramCode = "HIV";
 
+    @Mock
+    private RnrTemplateRuleService rnrTemplateRuleService;
+
     @Before
     public void setUp() throws Exception {
-        service = new RnrTemplateService(repository);
+        service = new RnrTemplateService(repository, rnrTemplateRuleService);
     }
 
     @Test
@@ -79,41 +81,6 @@ public class RnrTemplateServiceTest {
         when(repository.isRnRTemPlateDefinedForProgram(existingProgramCode)).thenReturn(true);
         service.saveRnRTemplateForProgram(existingProgramCode, rnrColumns);
         verify(repository).updateAllProgramRnRColumns(existingProgramCode, rnrColumns);
-    }
-
-    @Test
-    public void shouldReturnErrorOnSaveWithReferentialDependencyMissing() {
-        List<RnrColumn> rnrColumns = new ArrayList<>();
-        RnrColumn rnrColumn = new RnrColumn();
-        rnrColumn.setName("Rnr");
-        rnrColumn.setVisible(false);
-        RnrColumn dependentRnrColumn = new RnrColumn();
-        dependentRnrColumn.setName("dependentRnr");
-        dependentRnrColumn.setDependencies(Arrays.asList(new RnrColumn[]{rnrColumn}));
-        dependentRnrColumn.setVisible(true);
-        rnrColumns.add(rnrColumn);
-        rnrColumns.add(dependentRnrColumn);
-
-        List errors = service.saveRnRTemplateForProgram(existingProgramCode, rnrColumns);
-        assertThat(errors.size(), is(not(0)));
-    }
-
-    @Test
-    public void shouldReturnNullOnSaveWithSatisfiedReferentialDependency() {
-        List<RnrColumn> rnrColumns = new ArrayList<>();
-        RnrColumn rnrColumn = new RnrColumn();
-        rnrColumn.setName("Rnr");
-        rnrColumn.setVisible(true);
-        RnrColumn dependentRnrColumn = new RnrColumn();
-        dependentRnrColumn.setName("dependentRnr");
-        dependentRnrColumn.setDependencies(Arrays.asList(new RnrColumn[]{rnrColumn}));
-        dependentRnrColumn.setVisible(true);
-        rnrColumns.add(rnrColumn);
-        rnrColumns.add(dependentRnrColumn);
-
-        List errors = service.saveRnRTemplateForProgram(existingProgramCode, rnrColumns);
-        assertThat(errors, is(equalTo(null)));
-
     }
 
 }

@@ -2,23 +2,72 @@ import org.openlmis.rnr.domain.ProgramRnrTemplate;
 import java.util.Arrays;
 import java.util.List;
 
-global org.openlmis.rnr.service.RnrTemplateRuleService.ValidationErrors validationErrors;
+global org.openlmis.rnr.service.RnrTemplateRuleService.RuleValidationErrors validationErrors;
 
 rule "quantityDispensed has all the dependant columns checked"
     when
         $programRnrTemplate : ProgramRnrTemplate()
-        eval($programRnrTemplate.columnsVisible("quantityDispensed") == true)
+        eval($programRnrTemplate.columnsVisible("quantityDispensed") == true  && $programRnrTemplate.columnsCalculated("quantityDispensed") == true)
         eval($programRnrTemplate.columnsVisible("beginningBalance", "quantityReceived", "lossesAndAdjustments", "stockInHand") == false)
     then
-        validationErrors.add("quantityDispensed", "one of {beginningBalance|quantityReceived|lossesAndAdjustments|stockInHand} is not checked");
+        validationErrors.add("quantityDispensed", "User needs to enter \"" +
+            $programRnrTemplate.getRnrColumnLabelFor("beginningBalance") + "\",\"" +
+            $programRnrTemplate.getRnrColumnLabelFor("quantityReceived") + "\",\"" +
+            $programRnrTemplate.getRnrColumnLabelFor("lossesAndAdjustments") + "\",\"" +
+            $programRnrTemplate.getRnrColumnLabelFor("stockInHand") + "\" to calculate \"" +
+            $programRnrTemplate.getRnrColumnLabelFor("quantityDispensed") + "\"");
 end
 
+rule "quantityDispensed and stockInHand both can not be calculated"
+    when
+        $programRnrTemplate : ProgramRnrTemplate()
+        eval($programRnrTemplate.columnsVisible("quantityDispensed") == true && $programRnrTemplate.columnsVisible("stockInHand") == true )
+        eval($programRnrTemplate.columnsCalculated("quantityDispensed") == true && $programRnrTemplate.columnsCalculated("stockInHand") == true )
+    then
+        validationErrors.add("quantityDispensed", "Interdependent fields ("+$programRnrTemplate.getRnrColumnLabelFor("quantityDispensed")+","+$programRnrTemplate.getRnrColumnLabelFor("stockInHand")+") cannot be of type ‘calculated’ at the same time");
+        validationErrors.add("stockInHand", "Interdependent fields ("+$programRnrTemplate.getRnrColumnLabelFor("quantityDispensed")+","+$programRnrTemplate.getRnrColumnLabelFor("stockInHand")+") cannot be of type ‘calculated’ at the same time");
+end
 
 rule "stockInHand has all the dependant columns checked"
     when
         $programRnrTemplate : ProgramRnrTemplate()
-        eval($programRnrTemplate.columnsVisible("stockInHand") == true)
+        eval($programRnrTemplate.columnsVisible("stockInHand") == true  && $programRnrTemplate.columnsCalculated("stockInHand") == true)
         eval($programRnrTemplate.columnsVisible("beginningBalance", "quantityReceived", "lossesAndAdjustments", "quantityDispensed") == false)
     then
-        validationErrors.add("stockInHand", "one of {beginningBalance|quantityReceived|lossesAndAdjustments|quantityDispensed} is not checked");
+         validationErrors.add("stockInHand", "User needs to enter \"" +
+               $programRnrTemplate.getRnrColumnLabelFor("beginningBalance") + "\",\"" +
+               $programRnrTemplate.getRnrColumnLabelFor("quantityReceived") + "\",\"" +
+               $programRnrTemplate.getRnrColumnLabelFor("lossesAndAdjustments") + "\",\"" +
+               $programRnrTemplate.getRnrColumnLabelFor("quantityDispensed") + "\" to calculate \"" +
+               $programRnrTemplate.getRnrColumnLabelFor("stockInHand") + "\"");
 end
+
+rule "stockOutDays and normalizedConsumption both should be selected together"
+    when
+        $programRnrTemplate : ProgramRnrTemplate()
+        eval(($programRnrTemplate.columnsVisible("stockOutDays")==true  && $programRnrTemplate.columnsVisible("normalizedConsumption") == false) || ($programRnrTemplate.columnsVisible("stockOutDays")==false  && $programRnrTemplate.columnsVisible("normalizedConsumption") == true))
+    then
+      if($programRnrTemplate.columnsVisible("stockOutDays")) {
+           validationErrors.add("stockOutDays","\"" + $programRnrTemplate.getRnrColumnLabelFor("normalizedConsumption")+"\" is needed if you report \""+$programRnrTemplate.getRnrColumnLabelFor("stockOutDays")+"\"");
+
+      } else {
+           validationErrors.add("normalizedConsumption","User needs to enter \""+$programRnrTemplate.getRnrColumnLabelFor("stockOutDays")+"\" to calculate \""+$programRnrTemplate.getRnrColumnLabelFor("normalizedConsumption")+"\"");
+      }
+
+end
+
+rule "quantityRequested and reasonForRequestedQuantity both should be selected together"
+    when
+        $programRnrTemplate : ProgramRnrTemplate()
+        eval(($programRnrTemplate.columnsVisible("quantityRequested")==true  && $programRnrTemplate.columnsVisible("reasonForRequestedQuantity") == false) || ($programRnrTemplate.columnsVisible("quantityRequested")==false  && $programRnrTemplate.columnsVisible("reasonForRequestedQuantity") == true))
+    then
+      if($programRnrTemplate.columnsVisible("quantityRequested")) {
+           validationErrors.add("quantityRequested","\""+$programRnrTemplate.getRnrColumnLabelFor("quantityRequested")+"\" must include an \""+$programRnrTemplate.getRnrColumnLabelFor("reasonForRequestedQuantity")+"\" from the user");
+
+      } else {
+           validationErrors.add("reasonForRequestedQuantity","\""+$programRnrTemplate.getRnrColumnLabelFor("quantityRequested")+"\" must include an \""+$programRnrTemplate.getRnrColumnLabelFor("reasonForRequestedQuantity")+"\" from the user");
+      }
+
+end
+
+

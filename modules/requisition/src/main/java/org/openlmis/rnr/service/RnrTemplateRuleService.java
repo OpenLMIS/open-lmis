@@ -30,13 +30,13 @@ public class RnrTemplateRuleService {
 
     public Map<String, String> validate(List<RnrColumn> rnrColumns) {
         StatelessKnowledgeSession statelessKnowledgeSession = rnrTemplateRulesKnowledgeBase.newStatelessKnowledgeSession();
-        ValidationErrors validationErrors = new ValidationErrors();
+        RuleValidationErrors validationErrors = new RuleValidationErrors();
         statelessKnowledgeSession.setGlobal("validationErrors", validationErrors);
         statelessKnowledgeSession.execute(new ProgramRnrTemplate(rnrColumns));
         return validationErrors.get();
     }
 
-    public static class ValidationErrors {
+    public static class RuleValidationErrors {
 
         Map<String, String> errors = new HashMap<>();
 

@@ -26,5 +26,19 @@ public class ProgramRnrTemplate {
         return visible;
     }
 
+    public boolean columnsCalculated(String... rnrColumnNames) {
+        boolean calculated = false;
+        for (String rnrColumnName : rnrColumnNames) {
+            calculated = calculated || (rnrColumnsMap.get(rnrColumnName).getSelectedColumnType() == RnrColumnType.Calculated);
+        }
+        return calculated;
+    }
+
+    public String getRnrColumnLabelFor(String columnName) {
+
+        return rnrColumnsMap.get(columnName).getLabel();
+
+
+    }
 
 }
