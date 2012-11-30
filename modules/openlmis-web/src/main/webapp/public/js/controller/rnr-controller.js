@@ -1,5 +1,5 @@
-function InitiateRnrController($http, $scope, FacilityList, FacilitySupportedPrograms, $location) {
-    FacilityList.get({}, function (data) {
+function InitiateRnrController($http, $scope, UserFacilityList, FacilitySupportedPrograms, $location) {
+    UserFacilityList.get({}, function (data) {
             $scope.facilities = data.facilityList;
         }, {}
     );

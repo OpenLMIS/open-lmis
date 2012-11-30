@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -52,6 +53,7 @@ public class FacilityService {
 
     //TODO this will also return facilities based on requisition group
     public List<Facility> getAllForUser(String user) {
-        return Arrays.asList(facilityRepository.getHomeFacility(user));
+        Facility homeFacility = facilityRepository.getHomeFacility(user);
+        return homeFacility == null ? Collections.<Facility>emptyList() : Arrays.asList(homeFacility);
     }
 }

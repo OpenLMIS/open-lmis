@@ -11,7 +11,7 @@ describe('Requisition controllers', function () {
       location=$location;
       expect(scope.facilities).toBeUndefined();
       facilities = [{"code":"10134","name":"National Warehouse","description":null}];
-      $httpBackend.expectGET('/logistics/facilities.json').respond({"facilityList":[{"code":"10134","name":"National Warehouse","description":null}]});
+      $httpBackend.expectGET('/logistics/user/facilities.json').respond({"facilityList":[{"code":"10134","name":"National Warehouse","description":null}]});
       ctrl = $controller(InitiateRnrController, {$scope:scope, $location:location});
     }));
 
