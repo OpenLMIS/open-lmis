@@ -84,8 +84,8 @@ public interface FacilityMapper {
     RequisitionHeader getRequisitionHeaderData(String facilityCode);
 
 
-            @Select("SELECT * FROM facility_type")
-            @Results(value = {
+    @Select("SELECT * FROM facility_type ORDER BY display_order")
+    @Results(value = {
             @Result(property = "code",column = "code"),
             @Result(property = "name",column = "name"),
             @Result(property = "description",column = "description"),
@@ -97,7 +97,7 @@ public interface FacilityMapper {
     })
     List<FacilityType> getAllTypes();
 
-    @Select("SELECT * FROM facility_operator")
+    @Select("SELECT * FROM facility_operator ORDER BY display_order")
     @Results(value = {
             @Result(property = "code",column = "code"),
             @Result(property = "text",column = "text"),

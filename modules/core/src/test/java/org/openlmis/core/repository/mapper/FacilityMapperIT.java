@@ -88,15 +88,16 @@ public class FacilityMapperIT {
     @Test
     public void shouldGetAllFacilityTypes() throws Exception {
         List<FacilityType> facilityTypes = facilityMapper.getAllTypes();
+
         assertThat(facilityTypes.size(), is(11));
         FacilityType facilityType = facilityTypes.get(0);
-        assertThat(facilityType.getCode(), is("warehouse"));
-        assertThat(facilityType.getName(), is("Warehouse"));
-        assertThat(facilityType.getDescription(), is("Central Supply Depot"));
+        assertThat(facilityType.getCode(), is("lvl3_hospital"));
+        assertThat(facilityType.getName(), is("Lvl3 Hospital"));
+        assertThat(facilityType.getDescription(), is("State Hospital"));
         assertThat(facilityType.getLevelId(), is(nullValue()));
         assertThat(facilityType.getNominalMaxMonth(), is(3));
         assertThat(facilityType.getNominalEop(), is(0.5));
-        assertThat(facilityType.getDisplayOrder(), is(11));
+        assertThat(facilityType.getDisplayOrder(), is(1));
         assertThat(facilityType.isActive(), is(true));
     }
 
