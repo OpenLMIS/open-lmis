@@ -1,6 +1,6 @@
 CREATE TABLE facility (
     id SERIAL PRIMARY KEY,
-    code VARCHAR(50) NOT NULL UNIQUE,
+    code VARCHAR(50) UNIQUE NOT NULL,
     name VARCHAR(50) NOT NULL,
     description VARCHAR(250),
     gln VARCHAR(30),
@@ -33,3 +33,5 @@ CREATE TABLE facility (
     modified_by VARCHAR(50),
     modified_date TIMESTAMP
 );
+
+CREATE UNIQUE INDEX uc_facility_code ON facility(LOWER(code));
