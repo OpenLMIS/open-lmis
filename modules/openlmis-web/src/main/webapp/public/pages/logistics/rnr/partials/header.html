@@ -1,10 +1,10 @@
 <div id="requisition-header">
-    <h2>Requisition for: {{$parent.program.name}} ({{header.facilityType}}) </h2> </br>
-    <h4>Facility Code: {{header.facilityCode}}, Facility Name: {{header.facilityName}}, Facility Operated By:
-        {{header.facilityOperatedBy}} </h4> </br>
-    <h4>{{header.zone.label}}: {{header.zone.value}}, {{header.parentZone.label}}:
-        {{header.parentZone.value}} </h4></br>
-    <h4>Maximum Stock level: {{header.maximumStockLevel}}, Emergency Order Point :
-        {{header.emergencyOrderPoint}} </h4> </br>
+  <h2>Report and Requisition for {{$parent.program.name}} ({{header.facilityType}}) </h2>
+  <div class="req-info">
+    <p class="facility-info"><strong>Facility:</strong> {{header.facilityCode}} - {{header.facilityName}}, <strong>Operated By:</strong> {{header.facilityOperatedBy}}</p>
+    <p><strong>{{header.zone.label}}:</strong> {{header.zone.value}}, <strong>{{header.parentZone.label}}:</strong> {{header.parentZone.value}} </p>
+    <p><strong>Maximum Stock level:</strong> {{header.maximumStockLevel}}, <strong>Emergency Order Point:</strong>
+      {{header.emergencyOrderPoint}} </p>
+  </div>
 </div>
 
