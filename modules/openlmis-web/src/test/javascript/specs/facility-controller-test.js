@@ -44,11 +44,20 @@ describe("Facility Controller", function () {
     expect("").toEqual(scope.message);
   });
 
-  it('should give field validation error message if form has errors',function() {
+  it('should give field validation error message if form has pattern errors',function() {
     scope.facilityForm.$error.pattern = "{}";
     scope.saveFacility();
     expect("There are some errors in the form. Please fix them").toEqual(scope.error);
     expect("").toEqual(scope.message);
+    expect("true").toEqual(scope.showError);
+  });
+
+  it('should give field validation error message if form has required errors',function() {
+    scope.facilityForm.$error.required = "{}";
+    scope.saveFacility();
+    expect("There are some errors in the form. Please fix them").toEqual(scope.error);
+    expect("").toEqual(scope.message);
+    expect("true").toEqual(scope.showError);
   });
 
 
