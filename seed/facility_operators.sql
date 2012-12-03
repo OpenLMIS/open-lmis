@@ -1,3 +1,4 @@
+delete from facility_operator;
 INSERT INTO facility_operator
 (code, text, display_order) VALUES
 ('MoH','MoH',1),

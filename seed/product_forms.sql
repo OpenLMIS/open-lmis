@@ -1,3 +1,4 @@
+delete from product_form;
 INSERT INTO product_form(id, name, display_order) VALUES
 (1,'Tablet',1),
 (2,'Capsule',2),

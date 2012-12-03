@@ -1,3 +1,4 @@
+delete from program;
 insert into program(code, name, description, budgeting_applies, uses_dar, active)
     values
     ('HIV','HIV','HIV',FALSE,FALSE,TRUE),

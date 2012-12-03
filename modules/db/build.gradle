@@ -29,7 +29,6 @@ task setupDB(dependsOn: ["createDB", clean]) << {
 task createDB(dependsOn: "dropDB") << {
     println("Creating Database..")
     executeSql('create database ' + dbName)
-
 }
 
 task dropDB() << {
@@ -48,9 +47,14 @@ task migrateDB() << {
     ant.flywayMigrate(driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$dbName", user: dbUser, password: dbPassword)
 }
 
-task seed(dependsOn: ["migrateDB"], type: Exec) {
+task testSeed(type: Exec) {
     environment("PGPASSWORD", dbPassword)
     commandLine 'psql', '-U', dbUser, '--file', '../../test-data/sql/seed.sql', '-w', dbName
+}
+
+task seed(dependsOn: ["migrateDB"], type: Exec) {
+    environment("PGPASSWORD", dbPassword)
+    commandLine 'psql', '-U', dbUser, '-w', dbName, '-f', '../../seed/seed.sql'
 }
 
 def executeSql(String statement) {

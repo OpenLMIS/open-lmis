@@ -1,3 +1,4 @@
+delete from dosage_unit;
 INSERT INTO dosage_unit
 (id, name, display_order) VALUES
 (1,'mg',1),

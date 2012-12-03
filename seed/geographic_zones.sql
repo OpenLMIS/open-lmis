@@ -1,3 +1,4 @@
+delete from geographic_zone;
 INSERT INTO geographic_zone
 (id, name, level, parent) values
 (1,'Arusha', 1, 1),
