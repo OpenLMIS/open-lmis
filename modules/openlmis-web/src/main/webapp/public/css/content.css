@@ -126,10 +126,17 @@ span[class^="tpl-"] {
   height: 18px;
   width: 70%;
 }
+.rnr-template-columns select {
+  margin-bottom: 5px;
+}
 
-.rnr-template-columns .default-label {
+.rnr-template-columns .col-desc {
   font-size: 0.9em;
   display: block;
+  width: 74%;
+  line-height: 14px;
+  color: #555;
+  padding: 0 0 0 1px;
 }
 
 .rnr-table {

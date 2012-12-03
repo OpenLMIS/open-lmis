@@ -36,9 +36,8 @@
             </div>
             <input name="label" type="text" ng:model="rnrColumn.label" value="{{ rnrColumn.label }}" required/>
             <div class="indicator">{{ rnrColumn.indicator }}</div>
-          <span class="default-label">
-            Default: {{ rnrColumn.name }} (<a rel="tooltip" data-placement="right"
-                                              data-original-title="{{ rnrColumn.description }}" ui-jq="tooltip">?</a>)
+          <span class="col-desc">
+            {{ rnrColumn.description }}
           </span>
         </span>
         <!--<span class="tpl-position">-->
@@ -54,7 +53,7 @@
               </span>
             </span>
             <br/>
-            {{ rnrColumn.formula }}
+            <a href="javascript:void(0);">{{ rnrColumn.formula }}</a>
         </span>
         </li>
       </ul>
