@@ -16,6 +16,10 @@ services.factory('ProgramRnRColumnList', function ($resource) {
     return $resource('/logistics/rnr/:programCode/columns.json', {}, {});
 });
 
+services.factory('Facility', function ($resource) {
+    return $resource('/admin/facility/:id.json', {}, {});
+});
+
 services.factory('UserFacilityList', function ($resource) {
     return $resource('/logistics/user/facilities.json', {}, {});
 });

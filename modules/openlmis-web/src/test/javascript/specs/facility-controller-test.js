@@ -1,12 +1,14 @@
 describe("Facility Controller", function () {
 
-
-  var scope, $httpBackend, ctrl;
+  var scope, $httpBackend, ctrl, routeParams;
 
   beforeEach(module('openlmis.services'));
-  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location) {
+  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $routeParams) {
     scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
+    routeParams = $routeParams;
+    routeParams.facilityId = "1";
+    $httpBackend.expectGET('/admin/facility/1.json').respond({"facility":"test facility"});
     $httpBackend.expectGET('/admin/facility/reference-data.json').respond({"facilityTypes":[
       {"type":"warehouse"}
     ], "programs":[
@@ -16,7 +18,7 @@ describe("Facility Controller", function () {
     ], "facilityOperators":[
       {"operatorCode":"testCode"}
     ]});
-    ctrl = $controller(FacilityController, {$scope:scope});
+    ctrl = $controller(FacilityController, {$scope:scope,$routeParams:routeParams});
     scope.facilityForm = {$error : { pattern: "" }};
   }));
 
@@ -60,5 +62,9 @@ describe("Facility Controller", function () {
     expect("true").toEqual(scope.showError);
   });
 
+  it('should get facility if defined',function() {
+    $httpBackend.flush();
+    expect("test facility").toEqual(scope.facility);
+  });
 
 });

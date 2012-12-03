@@ -1,16 +1,13 @@
-function FacilityController($scope, FacilityReferenceData,$routeParams ,$http) {
+function FacilityController($scope, FacilityReferenceData,$routeParams,$http, Facility) {
 
-  setUpFacilityDefaults= function(){
+  if($routeParams.facilityId){
+    Facility.get({id:$routeParams.facilityId}, function(data) {
+      $scope.facility = data.facility;
+    }, {});
+  } else {
     $scope.facility = {};
     $scope.facility.dataReportable = "true";
-  }();
-
-//  if($routeParams.facilityId){
-//    Facility.get({id:$routeParams.facilityId}, function(data) {
-//      $scope.facility = data.
-//    }, {});
-//
-//  }
+  }
 
 
   FacilityReferenceData.get({} , function (data) {
