@@ -1,32 +1,34 @@
 <div class="rnr-table">
-
-    <table class="table table-striped table-bordered">
-        <thead>
-        <tr>
-            <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in programRnRColumnList">
-              {{programRnrColumn.label}}
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-          <td class="col-formula" ng-repeat="programRnrColumn in programRnRColumnList">
-            <div class="indicator">{{programRnrColumn.indicator}}</div>
-            <div class="formula">{{programRnrColumn.formula}}</div>
-          </td>
-        </tr>
-        <tr ng-repeat="rnrLineItem in $parent.rnr.lineItems">
-            <td ng-repeat="column in programRnRColumnList">
-            <ng-switch on="column.selectedColumnType">
+    <form ng-submit="saveRnr()" id="create-facility" name="facilityForm" novalidate>
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in programRnRColumnList">
+                    {{programRnrColumn.label}}
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="col-formula" ng-repeat="programRnrColumn in programRnRColumnList">
+                    <div class="indicator">{{programRnrColumn.indicator}}</div>
+                    <div class="formula">{{programRnrColumn.formula}}</div>
+                </td>
+            </tr>
+            <tr ng-repeat="rnrLineItem in $parent.rnr.lineItems">
+                <td class="cell-input" ng-repeat="column in programRnRColumnList">
+                    <ng-switch on="column.selectedColumnType">
                 <span ng-switch-when="User_Input">
                         <input type="text" ng:model="rnrLineItem[column.name]" value="rnrLineItem[column.name]"/>
                 </span>
-                <span ng-switch-default>
+                <span class="cell-text" ng-switch-default>
                     {{rnrLineItem[column.name]}}
                 </span>
-            </ng-switch>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+                    </ng-switch>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <input type="submit" class="btn" value="Save"/>
+    </form>
 </div>

@@ -219,3 +219,18 @@ table td.col-formula {
 .col-formula .formula:hover {
   text-decoration: underline;
 }
+
+table td.cell-input {
+  padding: 0;
+}
+table td.cell-input .cell-text {
+  padding: 8px;
+  display: inline-block;
+}
+.cell-input input[type="text"] {
+  margin: 0;
+  border: 0 none;
+  padding: 0;
+  width: 100%;
+  height: 35px;
+}
