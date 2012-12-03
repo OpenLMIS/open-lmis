@@ -1,18 +1,17 @@
 <div>
-  <h3>RnR Template Configuration</h3>
-  <h4>Program: {{ $parent.program.name }}</h4>
+  <h2>Configure Report and Requisition Template</h2>
+  <div class="info-box">
+    <p><strong>Program:</strong> {{ $parent.program.name }} <a href="/public/pages/admin/rnr-template/create.html">(Change)</a></p>
+  </div>
 
   <div class="rnr-template-head">
     <span class="tpl-visible">Show</span>
     <span class="tpl-label">Label</span>
-    <!--<span class="tpl-position">Position</span>-->
     <span class="tpl-source">Source</span>
-    <span>Available sources</span>
-    <!--<span class="tpl-used">Used</span>-->
   </div>
   <form ng-submit="createProgramRnrTemplate()">
     <div class="rnr-template-columns">
-      <ul ui-sortable="{update: update, axis: 'y'}" ng:model="rnrColumnList" id="sortable">
+      <ul ui-sortable ui-options="{update: update, handle: '.drag-handle', placeholder: 'sortable-placeholder', containment: '.content'}" ng:model="rnrColumnList" id="sortable">
         <li ng-repeat="rnrColumn in rnrColumnList">
          <div class="drag-handle"></div>
          <span ng-switch on="rnrColumn.mandatory">
@@ -36,6 +35,7 @@
                 {{errorMap[rnrColumn.name]}}
             </div>
             <input name="label" type="text" ng:model="rnrColumn.label" value="{{ rnrColumn.label }}" required/>
+            <div class="indicator">{{ rnrColumn.indicator }}</div>
           <span class="default-label">
             Default: {{ rnrColumn.name }} (<a rel="tooltip" data-placement="right"
                                               data-original-title="{{ rnrColumn.description }}" ui-jq="tooltip">?</a>)

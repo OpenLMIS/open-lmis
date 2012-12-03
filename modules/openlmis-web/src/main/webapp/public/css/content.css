@@ -35,6 +35,13 @@
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f9f9f9', endColorstr='#e0e0e0',GradientType=0 ); /* IE6-9 */
 }
 
+.form-row {
+  padding: 10px 0;
+}
+.form-row label {
+  padding-bottom: 2px;
+}
+
 span[class^="tpl-"] {
   display: inline-block;
   padding: 10px;
@@ -102,10 +109,22 @@ span[class^="tpl-"] {
   display: block;
 }
 
+#sortable .ui-sortable-helper {
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+  border: 1px solid rgba(82, 168, 236, 0.8);
+}
+#sortable .sortable-placeholder {
+  border: 2px dashed #5BA5D6;
+  margin: 10px 0;
+  height: 70px;
+  background: #E8F8FF;
+}
+
 .rnr-template-columns input[type="text"] {
   margin-bottom: 2px;
   font-size: 1em;
   height: 18px;
+  width: 70%;
 }
 
 .rnr-template-columns .default-label {
@@ -138,7 +157,8 @@ input[ui-date] {
   background: #FFF;
   cursor: default;
 }
-.req-info {
+
+.info-box {
   border: 1px solid #B9B9B9;
   background: #F2F2F2;
   margin-bottom: 18px;
@@ -160,21 +180,28 @@ input[ui-date] {
 table td.col-formula {
   text-align: center;
 }
-.col-formula .indicator {
+.col-formula .indicator,
+.rnr-template-columns .indicator {
   display: inline-block;
   font-weight: bold;
-  padding: 3px 8px;
+  font-size: 0.8em;
+  padding: 1px 7px;
   color: white;
   background: #CE5959;
   border-radius: 26px;
   border: 3px solid white;
   box-shadow: 0px 0px 4px #999;
 }
+.rnr-template-columns .indicator {
+  font-size: 0.9em;
+  margin-left: 6px;
+}
+
 .col-formula .formula {
   font-style: italic;
   border-top: 1px dashed #AAA;
-  margin-top: 10px;
-  padding-top: 7px;
+  margin-top: 8px;
+  padding-top: 5px;
   color: #249BD3;
   white-space: nowrap;
   cursor: pointer;

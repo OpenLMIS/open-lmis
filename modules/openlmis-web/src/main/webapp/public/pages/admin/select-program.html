@@ -1,10 +1,16 @@
 <div>
-    <h3>New R &amp; R Template</h3><hr/>
-    <h4>Choose a program for the R &amp; R template</h4>
-    <select ng-model="$parent.program" ng-options="i as i.name for i in programs">
-        <option value="">--Choose program--</option>
-    </select>
-    <br/>
-    <br/>
-    <a href="#/create-rnr-template" class="btn">Next</a>
+    <h2>Configure R &amp; R Template</h2>
+    <div class="app-form">
+      <div class="form-row">
+        <label>Choose a program</label>
+        <div class="form-field">
+          <select ng-model="$parent.program" ng-options="i as i.name for i in programs">
+            <option value="">--Choose program--</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row button-row">
+        <a href="#/create-rnr-template" class="btn">Next</a>
+      </div>
+    </div>
 </div>
