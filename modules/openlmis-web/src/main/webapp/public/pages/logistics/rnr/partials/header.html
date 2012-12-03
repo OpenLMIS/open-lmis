@@ -1,10 +1,20 @@
 <div id="requisition-header">
   <h2>Report and Requisition for {{$parent.program.name}} ({{header.facilityType}}) </h2>
   <div class="info-box">
-    <p class="facility-info"><strong>Facility:</strong> {{header.facilityCode}} - {{header.facilityName}}, <strong>Operated By:</strong> {{header.facilityOperatedBy}}</p>
-    <p><strong>{{header.zone.label}}:</strong> {{header.zone.value}}, <strong>{{header.parentZone.label}}:</strong> {{header.parentZone.value}} </p>
-    <p><strong>Maximum Stock level:</strong> {{header.maximumStockLevel}}, <strong>Emergency Order Point:</strong>
-      {{header.emergencyOrderPoint}} </p>
+    <table>
+      <tr>
+        <td><strong>Facility:</strong> {{header.facilityCode}} - {{header.facilityName}}</td>
+        <td><strong>Operated By:</strong> {{header.facilityOperatedBy}}</td>
+      </tr>
+      <tr>
+        <td><strong>{{header.zone.label}}:</strong> {{header.zone.value}}</td>
+        <td><strong>{{header.parentZone.label}}:</strong> {{header.parentZone.value}}</td>
+      </tr>
+      <tr>
+        <td><strong>Maximum Stock level:</strong> {{header.maximumStockLevel}}</td>
+        <td><strong>Emergency Order Point:</strong> {{header.emergencyOrderPoint}}</td>
+      </tr>
+    </table>
   </div>
 </div>
 
