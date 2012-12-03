@@ -35,7 +35,7 @@ public class Product implements Importable {
     @ImportField(name = "Product Type")
     private String type;
 
-    @ImportField(name = "Display Order")
+    @ImportField(name = "Display Order",type = "int")
     private Integer displayOrder;
 
     @ImportField(mandatory = true, name = "Product Primary Name")
