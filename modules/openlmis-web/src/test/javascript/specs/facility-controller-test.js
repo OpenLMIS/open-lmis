@@ -47,7 +47,7 @@ describe("Facility Controller", function () {
   it('should give field validation error message if form has pattern errors',function() {
     scope.facilityForm.$error.pattern = "{}";
     scope.saveFacility();
-    expect("There are some errors in the form. Please fix them").toEqual(scope.error);
+    expect("There are some errors in the form. Please resolve them.").toEqual(scope.error);
     expect("").toEqual(scope.message);
     expect("true").toEqual(scope.showError);
   });
@@ -55,7 +55,7 @@ describe("Facility Controller", function () {
   it('should give field validation error message if form has required errors',function() {
     scope.facilityForm.$error.required = "{}";
     scope.saveFacility();
-    expect("There are some errors in the form. Please fix them").toEqual(scope.error);
+    expect("There are some errors in the form. Please resolve them.").toEqual(scope.error);
     expect("").toEqual(scope.message);
     expect("true").toEqual(scope.showError);
   });

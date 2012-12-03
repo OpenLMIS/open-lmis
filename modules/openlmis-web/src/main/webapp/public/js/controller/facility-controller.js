@@ -16,7 +16,7 @@ function FacilityController($scope, FacilityReferenceData,$http) {
   $scope.saveFacility = function () {
     if ($scope.facilityForm.$error.pattern || $scope.facilityForm.$error.required) {
       $scope.showError = "true";
-      $scope.error = "There are some errors in the form. Please fix them";
+      $scope.error = "There are some errors in the form. Please resolve them.";
       $scope.message = "";
     }
     else {
