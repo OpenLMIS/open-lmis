@@ -6,6 +6,7 @@
 
   <div class="rnr-template-head">
     <span class="tpl-visible">Show</span>
+    <span class="tpl-indicator">&nbsp;</span>
     <span class="tpl-label">Label</span>
     <span class="tpl-source">Source</span>
   </div>
@@ -29,13 +30,15 @@
               </span>
           </span>
         </span>
+        <span class="tpl-indicator">
+          <div class="indicator">{{ rnrColumn.indicator }}</div>
+        </span>
           <input type="hidden" ng:model="rnrColumn.id" value="{{ rnrColumn.id }}"/>
         <span class="tpl-label">
             <div class="alert alert-error"  ng-model="errorMap" ng-show="errorMap[rnrColumn.name]">
                 {{errorMap[rnrColumn.name]}}
             </div>
             <input name="label" type="text" ng:model="rnrColumn.label" value="{{ rnrColumn.label }}" required/>
-            <div class="indicator">{{ rnrColumn.indicator }}</div>
           <span class="col-desc">
             {{ rnrColumn.description }}
           </span>

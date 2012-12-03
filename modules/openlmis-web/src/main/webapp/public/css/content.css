@@ -60,8 +60,8 @@ span[class^="tpl-"] {
   width: 35%;
 }
 
-.tpl-position {
-  width: 40px;
+.tpl-indicator {
+  width: 30px;
 }
 
 .tpl-position input {
@@ -204,7 +204,6 @@ table td.col-formula {
 }
 .rnr-template-columns .indicator {
   font-size: 0.8em;
-  margin-left: 6px;
 }
 
 .col-formula .formula {
