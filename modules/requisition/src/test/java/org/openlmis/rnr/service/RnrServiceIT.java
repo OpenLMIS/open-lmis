@@ -76,6 +76,16 @@ public class RnrServiceIT {
         assertEquals("user", rnr.getLineItems().get(0).getModifiedBy());
     }
 
+    @Test
+    public void shouldSaveRequisition() {
+        Rnr rnr = rnrService.initRnr(FACILITY_CODE, HIV, "user");
+        rnr.setModifiedBy("user1");
+        rnr.setStatus(RnrStatus.CREATED);
+        rnrService.save(rnr);
+    }
+
+
+
     private Product product(String programCode) {
         Product product = make(a(ProductBuilder.product));
         productMapper.insert(product);

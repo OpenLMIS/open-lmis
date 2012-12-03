@@ -12,7 +12,7 @@ public class RnrLineItem {
 
     private Integer id;
     private Integer rnrId;
-
+    //todo hack to display it on UI. This is concatenated string of Product properties like name, strength, form and dosage unit
     private String product;
     private String productCode;
     private String unitOfIssue;
@@ -34,7 +34,7 @@ public class RnrLineItem {
     private Integer stockOutDays;
     private Float normalizedConsumption;
     private Float amc;
-    private String maxStockQuantity;
+    private Integer maxStockQuantity;
 
     private Integer packsToShip;
     private Float cost;
@@ -45,10 +45,15 @@ public class RnrLineItem {
 
     public RnrLineItem(Integer rnrId, Product product, String modifiedBy) {
         this.rnrId = rnrId;
+
         this.productCode = product.getCode();
         this.unitOfIssue = product.getDispensingUnit();
         this.product = productName(product);
         this.modifiedBy = modifiedBy;
+    }
+
+    public void setProduct(Product product){
+        this.product= productName(product);
     }
 
     private String productName(Product product) {

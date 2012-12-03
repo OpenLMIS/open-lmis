@@ -16,6 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.FACILITY_CODE;
@@ -47,6 +48,35 @@ public class RnrMapperIT {
         int id1 = rnrMapper.insert(requisition);
         int id2 = rnrMapper.insert(new Rnr(FACILITY_CODE, "ARV", RnrStatus.INITIATED, "user"));
         assertThat(id1, is(id2 - 1));
+    }
+
+    @Test
+    public void shouldReturnRequisitionById() {
+        Rnr requisition = new Rnr(FACILITY_CODE, "HIV", RnrStatus.INITIATED, "user");
+        int id = rnrMapper.insert(requisition);
+        Rnr requisitionById = rnrMapper.getRequisitionById(id);
+        assertThat(requisitionById.getId(), is(id));
+        assertThat(requisitionById.getProgramCode(), is(equalTo("HIV")));
+        assertThat(requisitionById.getFacilityCode(), is(equalTo(FACILITY_CODE)));
+        assertThat(requisitionById.getModifiedBy(), is(equalTo("user")));
+        assertThat(requisitionById.getStatus(), is(equalTo(RnrStatus.INITIATED)));
+    }
+
+    @Test
+    public void shouldUpdateRequisition() {
+        Rnr requisition = new Rnr(FACILITY_CODE, "HIV", RnrStatus.INITIATED, "user");
+        int id = rnrMapper.insert(requisition);
+        requisition.setId(id);
+        requisition.setModifiedBy("user1");
+        requisition.setStatus(RnrStatus.CREATED);
+
+        rnrMapper.update(requisition);
+
+        Rnr updatedRequisition = rnrMapper.getRequisitionById(id);
+
+        assertThat(updatedRequisition.getId(), is(id));
+        assertThat(updatedRequisition.getModifiedBy(), is(equalTo("user1")));
+        assertThat(updatedRequisition.getStatus(), is(equalTo(RnrStatus.CREATED)));
     }
 
     @After

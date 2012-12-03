@@ -18,9 +18,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.List;
+
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static junit.framework.Assert.assertEquals;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.FACILITY_CODE;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 
@@ -61,9 +64,38 @@ public class RnrLineItemMapperIT {
 
     @Test
     public void shouldInsertRequisitionLineItem() {
-        int rnrId = rnrMapper.insert(new Rnr(FACILITY_CODE, "HIV", RnrStatus.INITIATED));
-        int status = rnrLineItemMapper.insert(new RnrLineItem(rnrId, product, "user"));
-        assertEquals(1, status);
+        int rnrId = rnrMapper.insert(new Rnr(FACILITY_CODE, "HIV", RnrStatus.INITIATED, "user"));
+        int requisitionLineItemId = rnrLineItemMapper.insert(new RnrLineItem(rnrId, product, "user"));
+        int requisitionLineItemId1 = rnrLineItemMapper.insert(new RnrLineItem(rnrId, product, "user"));
+        assertThat(requisitionLineItemId1 - requisitionLineItemId, is(1));
+    }
+
+    @Test
+    public void shouldReturnRnrLineItemsByRnrId() {
+        int rnrId = rnrMapper.insert(new Rnr(FACILITY_CODE, "HIV", RnrStatus.INITIATED, "user"));
+        RnrLineItem lineItem = new RnrLineItem(rnrId, product, "user");
+        rnrLineItemMapper.insert(lineItem);
+
+        List<RnrLineItem> rnrLineItems = rnrLineItemMapper.getRnrLineItemsByRnrId(rnrId);
+        assertThat(rnrLineItems.size(), is(1));
+        assertThat(rnrLineItems.get(0).getRnrId(), is(rnrId));
+    }
+
+
+    @Test
+    public void shouldUpdateRnrLineItem() {
+        int rnrId = rnrMapper.insert(new Rnr(FACILITY_CODE, "HIV", RnrStatus.INITIATED, "user"));
+        RnrLineItem lineItem = new RnrLineItem(rnrId, product, "user");
+        int generatedId = rnrLineItemMapper.insert(lineItem);
+        lineItem.setId(generatedId);
+        lineItem.setModifiedBy("user1");
+        lineItem.setBeginningBalance(43);
+        lineItem.setLossesAndAdjustments(10);
+        rnrLineItemMapper.update(lineItem);
+        List<RnrLineItem> rnrLineItems = rnrLineItemMapper.getRnrLineItemsByRnrId(rnrId);
+
+        assertThat(rnrLineItems.get(0).getBeginningBalance(), is(43));
+        assertThat(rnrLineItems.get(0).getLossesAndAdjustments(), is(10));
     }
 
     @After

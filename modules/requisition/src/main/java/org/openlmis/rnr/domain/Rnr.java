@@ -28,12 +28,6 @@ public class Rnr {
         this.modifiedBy = modifiedBy;
     }
 
-    public Rnr(String facilityCode, String programCode, RnrStatus status) {
-        this.facilityCode = facilityCode;
-        this.programCode = programCode;
-        this.status = status;
-    }
-
     public void add(RnrLineItem rnrLineItem) {
         lineItems.add(rnrLineItem);
     }
