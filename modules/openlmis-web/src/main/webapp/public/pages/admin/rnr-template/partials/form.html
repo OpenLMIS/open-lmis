@@ -21,10 +21,10 @@
           <span ng-switch-default>
                 <span ng-switch on="rnrColumn.visible">
                   <span ng-switch-when="true" class="tpl-visible">
-                    <input type="checkbox" ng:model="rnrColumn.visible" checked/>
+                    <input type="checkbox" ng-click="update()" ng:model="rnrColumn.visible" checked/>
                   </span>
                   <span ng-switch-default class="tpl-visible">
-                    <input type="checkbox" ng:model="rnrColumn.visible"/>
+                    <input type="checkbox" ng-click="update()" ng:model="rnrColumn.visible"/>
                   </span>
               </span>
           </span>
