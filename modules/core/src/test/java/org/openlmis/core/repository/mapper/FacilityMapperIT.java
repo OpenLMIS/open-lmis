@@ -89,11 +89,6 @@ public class FacilityMapperIT {
     }
 
     @Test
-    public void shouldInsertFacility() throws Exception {
-        assertThat(facilityMapper.insert(make(a(defaultFacility))), is(1));
-    }
-
-    @Test
     public void shouldGetAllFacilityTypes() throws Exception {
         List<FacilityType> facilityTypes = facilityMapper.getAllTypes();
 
@@ -145,5 +140,13 @@ public class FacilityMapperIT {
         assertEquals(facility.getId(), userFacility.getId());
     }
 
-
+    @Test
+    public void shouldGetFacilityById() throws Exception {
+        Facility facility = make(a(defaultFacility));
+        facility.setId(facilityMapper.insert(facility));
+        Facility resultFacility = facilityMapper.getFacility(facility.getId());
+        assertThat(resultFacility.getCode(), is("F10010"));
+        assertThat(resultFacility.getId(),is(facility.getId()));
+        assertThat(resultFacility.getName(),is("Apollo Hospital"));
+    }
 }

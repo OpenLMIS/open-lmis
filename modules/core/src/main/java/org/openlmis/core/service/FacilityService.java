@@ -32,7 +32,7 @@ public class FacilityService {
 
 
     public void save(Facility facility) {
-        facilityRepository.save(facility);
+            facilityRepository.save(facility);
     }
 
     public void addSupportedProgram(ProgramSupported programSupported) {
@@ -55,5 +55,9 @@ public class FacilityService {
     public List<Facility> getAllForUser(String user) {
         Facility homeFacility = facilityRepository.getHomeFacility(user);
         return homeFacility == null ? Collections.<Facility>emptyList() : Arrays.asList(homeFacility);
+    }
+
+    public Facility getFacility(int id) {
+        return facilityRepository.getFacility(id);
     }
 }

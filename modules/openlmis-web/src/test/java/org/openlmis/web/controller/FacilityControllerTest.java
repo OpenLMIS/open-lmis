@@ -13,15 +13,13 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.ui.ModelMap;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import java.util.Arrays;
-import java.util.List;
-
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
@@ -72,7 +70,7 @@ public class FacilityControllerTest {
     public void shouldSaveFacility() throws Exception {
         Facility facility = new Facility();
         facility.setName("test facility");
-        ResponseEntity responseEntity = facilityController.addFacility(facility, httpServletRequest);
+        ResponseEntity responseEntity = facilityController.addOrUpdate(facility, httpServletRequest);
         assertThat(responseEntity.getStatusCode(),is(HttpStatus.OK));
         ModelMap modelMap = (ModelMap)responseEntity.getBody();
         assertThat((String)modelMap.get("success"),is("test facility created successfully"));
@@ -84,13 +82,13 @@ public class FacilityControllerTest {
     public void shouldReturnErrorMessageIfSaveFails() throws Exception {
         Facility facility = new Facility();
         doThrow(new RuntimeException("error message")).when(facilityService).save(facility);
-        ResponseEntity responseEntity = facilityController.addFacility(facility, httpServletRequest);
+        ResponseEntity responseEntity = facilityController.addOrUpdate(facility, httpServletRequest);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.BAD_REQUEST));
         ModelMap body = (ModelMap) responseEntity.getBody();
         assertThat(body.get("error").toString(), is("error message"));
         MockHttpServletRequest httpServletRequest = httpRequest();
 
-        facilityController.addFacility(facility, httpServletRequest);
+        facilityController.addOrUpdate(facility, httpServletRequest);
     }
 
     @Test
@@ -103,6 +101,13 @@ public class FacilityControllerTest {
         assertTrue(facilities.contains(facility));
     }
 
+    @Test
+    public void shouldGetFacilityById() throws Exception {
+        int ID = 1;
+        facilityController.getFacility(ID);
+        verify(facilityService).getFacility(ID);
+    }
+
     private MockHttpServletRequest httpRequest() {
         MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
         MockHttpSession mockHttpSession = new MockHttpSession();
@@ -110,5 +115,7 @@ public class FacilityControllerTest {
         mockHttpSession.setAttribute(USER, USER);
         return httpServletRequest;
     }
+
+
 
 }

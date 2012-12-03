@@ -12,6 +12,7 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.repository.mapper.FacilityMapper;
+import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.core.repository.mapper.ProgramSupportedMapper;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -24,7 +25,7 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
@@ -42,6 +43,9 @@ public class FacilityRepositoryTest {
     @Mock
     private ProgramSupportedMapper programSupportedMapper;
 
+    @Mock
+    private ProgramMapper programMapper;
+
     private FacilityRepository repository;
     private DateTime now;
 
@@ -51,7 +55,7 @@ public class FacilityRepositoryTest {
         now = new DateTime(2012, 10, 10, 8, 0);
         when(DateTime.now()).thenReturn(now);
 
-        repository = new FacilityRepository(mockedFacilityMapper, programSupportedMapper);
+        repository = new FacilityRepository(mockedFacilityMapper, programSupportedMapper,programMapper);
     }
 
     @Test
@@ -89,7 +93,6 @@ public class FacilityRepositoryTest {
         doThrow(new DuplicateKeyException("")).when(mockedFacilityMapper).insert(facility);
         repository.save(facility);
     }
-
     @Test
     public void shouldRaiseIncorrectReferenceDataError() throws Exception {
         Facility facility = new Facility();
@@ -108,5 +111,20 @@ public class FacilityRepositoryTest {
         repository.addSupportedProgram(programSupported);
     }
 
+    @Test
+    public void shouldGetFacilityById() throws Exception {
+        Facility facility = new Facility();
+        when(mockedFacilityMapper.getFacility(1)).thenReturn(facility);
+        String code = "testCode";
+        facility.setCode(code);
+        List<Program> programs = new ArrayList<>();
+        when(programMapper.getByFacilityCode(code)).thenReturn(programs);
+        Facility facility1 = repository.getFacility(1);
+
+        assertThat(facility1.getSupportedPrograms(),is(programs));
+        verify(mockedFacilityMapper).getFacility(1);
+        verify(programMapper).getByFacilityCode(code);
+
+    }
 
 }

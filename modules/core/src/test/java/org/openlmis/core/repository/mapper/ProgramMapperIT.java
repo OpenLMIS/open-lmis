@@ -22,6 +22,7 @@ import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 
 @ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
 public class ProgramMapperIT extends SpringIntegrationTest {
@@ -72,5 +73,14 @@ public class ProgramMapperIT extends SpringIntegrationTest {
         List<Program> programs = programMapper.getAll();
         assertEquals(8, programs.size());
         assertTrue(programs.contains(program));
+    }
+
+    @Test
+    public void shouldGetProgramsSupportedByFacility() throws Exception {
+        Facility facility = make(a(defaultFacility));
+        facilityMapper.insert(facility);
+        programSupportedMapper.addSupportedProgram(new ProgramSupported(facility.getCode(),"HIV",true,facility.getModifiedBy(),facility.getModifiedDate()));
+        List<Program> supportedPrograms = programMapper.getByFacilityCode(facility.getCode());
+        assertThat(supportedPrograms.get(0).getCode(), is("HIV"));
     }
 }

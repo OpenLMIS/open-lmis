@@ -10,6 +10,8 @@ import org.openlmis.core.repository.FacilityRepository;
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static junit.framework.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -38,5 +40,13 @@ public class FacilityServiceTest {
         public void shouldReturnEmptyListIfUserIsNotAssignedAFacility() {
         when(facilityRepository.getHomeFacility("abcd")).thenReturn(null);
         assertTrue(facilityService.getAllForUser("abcd").isEmpty());
+    }
+
+    @Test
+    public void shouldGetFacilityById() throws Exception {
+        int ID = 1;
+        when(facilityRepository.getFacility(ID)).thenReturn(new Facility());
+        Facility facility = facilityService.getFacility(ID);
+        assertThat(facility,is(new Facility()));
     }
 }

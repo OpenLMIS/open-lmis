@@ -37,4 +37,12 @@ public interface ProgramMapper {
 
     @Select("SELECT * FROM program")
     List<Program> getAll();
+
+    @Select("select * from program P, programs_supported PS where P.code = PS.program_code and PS.facility_code = #{code}")
+    @Results(value = {
+            @Result(property = "code", column = "program.code"),
+            @Result(property = "name", column = "program.name"),
+            @Result(property = "description", column = "program.description")
+    })
+    List<Program> getByFacilityCode(String code);
 }

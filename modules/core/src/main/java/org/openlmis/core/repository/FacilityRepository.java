@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.mapper.FacilityMapper;
+import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.core.repository.mapper.ProgramSupportedMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -19,11 +20,13 @@ public class FacilityRepository {
 
     private FacilityMapper facilityMapper;
     private ProgramSupportedMapper programSupportedMapper;
+    private ProgramMapper programMapper;
 
     @Autowired
-    public FacilityRepository(FacilityMapper facilityMapper, ProgramSupportedMapper programSupportedMapper) {
+    public FacilityRepository(FacilityMapper facilityMapper, ProgramSupportedMapper programSupportedMapper,ProgramMapper programMapper) {
         this.facilityMapper = facilityMapper;
         this.programSupportedMapper = programSupportedMapper;
+        this.programMapper = programMapper;
     }
 
     public List<Facility> getAll() {
@@ -86,5 +89,11 @@ public class FacilityRepository {
 
     public Facility getHomeFacility(String user) {
         return facilityMapper.getHomeFacility(user);
+    }
+
+    public Facility getFacility(int id) {
+        Facility facility = facilityMapper.getFacility(id);
+        facility.setSupportedPrograms(programMapper.getByFacilityCode(facility.getCode()));
+        return facility;
     }
 }

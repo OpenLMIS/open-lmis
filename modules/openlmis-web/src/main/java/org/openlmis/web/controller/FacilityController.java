@@ -60,7 +60,7 @@ public class FacilityController extends BaseController {
     }
 
     @RequestMapping(value = "admin/facility" , method = RequestMethod.POST , headers = "Accept=application/json")
-    public ResponseEntity<ModelMap> addFacility(@RequestBody Facility facility, HttpServletRequest request) {
+    public ResponseEntity<ModelMap> addOrUpdate(@RequestBody Facility facility, HttpServletRequest request) {
         ModelMap modelMap = new ModelMap();
         String modifiedBy = (String) request.getSession().getAttribute(USER);
         facility.setModifiedBy(modifiedBy);
@@ -74,5 +74,8 @@ public class FacilityController extends BaseController {
         return new ResponseEntity<>(modelMap,HttpStatus.OK);
     }
 
-
+    @RequestMapping(value = "admin/facility/{id}" , method = RequestMethod.GET , headers = "Accept=application/json")
+    public ResponseEntity getFacility(@PathVariable(value = "id") int id) {
+        return new ResponseEntity(facilityService.getFacility(id),HttpStatus.OK);
+    }
 }

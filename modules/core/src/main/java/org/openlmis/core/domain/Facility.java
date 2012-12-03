@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Facility implements Importable {
 
-    private int id;
+    private Integer id;
 
     @ImportField(mandatory = true, name = "Facility Code")
     private String code;
