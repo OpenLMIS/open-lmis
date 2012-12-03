@@ -39,6 +39,12 @@ function InitiateRnrController($http, $scope, UserFacilityList, FacilitySupporte
                 $scope.message = "";
             });
     };
+
+    $scope.saveRnr = function () {
+        $http.post('/logistics/rnr/' + $scope.$parent.rnr.id+ '/save.json', $scope.$parent.rnr ).success(function (data){
+         $scope.message = "Rnr saved successfully!";
+        });
+    }
 }
 
 function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $location) {

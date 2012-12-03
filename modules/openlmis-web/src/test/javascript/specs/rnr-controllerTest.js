@@ -45,12 +45,21 @@ describe('Requisition controllers', function () {
       expect(scope.error).toEqual("");
     });
 
-    it('should set error message if post fails', function () {
+    it('should set error message if post fails for initiate rnr', function () {
       scope.$parent.program = {"code" : "hiv"};
       $httpBackend.expectPOST('/logistics/rnr/undefined/hiv/init.json').respond(404);
       scope.getRnrHeader();
       $httpBackend.flush();
       expect(scope.error).toEqual("Rnr initialization failed!");
+    });
+
+
+    it('should save work in progress for rnr', function(){
+        scope.$parent.rnr = {"id":"rnrId"};
+        $httpBackend.expectPOST('/logistics/rnr/rnrId/save.json').respond(200);
+        scope.saveRnr();
+        $httpBackend.flush();
+        expect(scope.message).toEqual("Rnr saved successfully!");
     });
 
 //    it('should reset program if facility set to null and attempt to load programs is made', function () {
