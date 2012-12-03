@@ -144,7 +144,7 @@ public class FacilityMapperIT {
     public void shouldGetFacilityById() throws Exception {
         Facility facility = make(a(defaultFacility));
         facility.setId(facilityMapper.insert(facility));
-        Facility resultFacility = facilityMapper.getFacility(facility.getId());
+        Facility resultFacility = facilityMapper.get(facility.getId());
         assertThat(resultFacility.getCode(), is("F10010"));
         assertThat(resultFacility.getId(),is(facility.getId()));
         assertThat(resultFacility.getName(),is("Apollo Hospital"));

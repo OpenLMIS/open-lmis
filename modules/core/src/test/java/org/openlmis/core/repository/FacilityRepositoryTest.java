@@ -114,7 +114,7 @@ public class FacilityRepositoryTest {
     @Test
     public void shouldGetFacilityById() throws Exception {
         Facility facility = new Facility();
-        when(mockedFacilityMapper.getFacility(1)).thenReturn(facility);
+        when(mockedFacilityMapper.get(1)).thenReturn(facility);
         String code = "testCode";
         facility.setCode(code);
         List<Program> programs = new ArrayList<>();
@@ -122,7 +122,7 @@ public class FacilityRepositoryTest {
         Facility facility1 = repository.getFacility(1);
 
         assertThat(facility1.getSupportedPrograms(),is(programs));
-        verify(mockedFacilityMapper).getFacility(1);
+        verify(mockedFacilityMapper).get(1);
         verify(programMapper).getByFacilityCode(code);
 
     }

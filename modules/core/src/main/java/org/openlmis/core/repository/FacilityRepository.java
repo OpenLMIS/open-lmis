@@ -92,7 +92,7 @@ public class FacilityRepository {
     }
 
     public Facility getFacility(int id) {
-        Facility facility = facilityMapper.getFacility(id);
+        Facility facility = facilityMapper.get(id);
         facility.setSupportedPrograms(programMapper.getByFacilityCode(facility.getCode()));
         return facility;
     }

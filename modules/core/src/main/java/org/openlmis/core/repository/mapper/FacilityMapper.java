@@ -153,6 +153,6 @@ public interface FacilityMapper {
             @Result(property = "modifiedBy", column = "modified_by"),
             @Result(property = "modifiedDate", column = "modified_date")
     })
-    Facility getFacility(int id);
+    Facility get(int id);
 
 }
