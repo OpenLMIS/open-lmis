@@ -51,10 +51,26 @@ public interface ProgramRnrColumnMapper {
             "WHERE program_code = #{programCode} AND column_id = #{rnrColumn.id}")
     void update(@Param("programCode") String programCode, @Param("rnrColumn") RnrColumn rnrColumn);
 
+    @Results(value = {
+            @Result(property = "id", column = "id"),
+            @Result(property = "name", column = "name"),
+            @Result(property = "description", column = "description"),
+            @Result(property = "position", column = "position"),
+            @Result(property = "label", column = "label"),
+            @Result(property = "defaultValue", column = "defaultValue"),
+            @Result(property = "dataSource", column = "source"),
+            @Result(property = "formula", column = "formula"),
+            @Result(property = "indicator", column = "indicator"),
+            @Result(property = "used", column = "used"),
+            @Result(property = "visible", column = "visible"),
+            @Result(property = "mandatory", column = "mandatory"),
+            @Result(property = "selectedColumnTypeString", column = "selectedColumnTypeString")
+    })
     @Select("select m.id as id, m.column_name as name, m.description description," +
                 " p.position as position, p.label as label, m.default_value as defaultValue," +
                 " m.data_source as source, m.formula as formula, m.column_indicator as indicator," +
-                " p.is_visible as visible, m.is_used as used, m.is_mandatory as mandatory" +
+                " p.is_visible as visible, m.is_used as used, m.is_mandatory as mandatory," +
+                " p.column_type as selectedColumnTypeString" +
                 " from program_rnr_template p INNER JOIN master_rnr_template m" +
                 " ON p.column_id = m.id" +
                 " where p.program_code=#{programCode} and p.is_visible = 'true'" +

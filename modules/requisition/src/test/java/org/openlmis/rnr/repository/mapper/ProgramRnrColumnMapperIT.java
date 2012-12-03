@@ -13,8 +13,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -86,6 +84,7 @@ public class ProgramRnrColumnMapperIT {
 
         List<RnrColumn> rnrColumns = programRnrColumnMapper.getVisibleProgramRnrColumns(HIV);
         assertThat(rnrColumns.size(), is(1));
+        assertThat(rnrColumns.get(0).getSelectedColumnType(), is(RnrColumnType.User_Input));
         assertThat(rnrColumns.get(0).isVisible(), is(true));
     }
 

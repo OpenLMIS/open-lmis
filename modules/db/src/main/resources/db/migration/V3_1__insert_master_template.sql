@@ -7,7 +7,7 @@ insert into Master_RnR_Template(column_name, column_label, description , column_
     ('quantityReceived','Total Received Quantity','Total quantity received in last period.This is quantified in dispensing units',5,'0', 'User Input', 'User Input','','B',TRUE,TRUE,false),
     ('quantityDispensed','Total Consumed Quantity','Quantity dispensed/consumed in last reporting  period. This is quantified in dispensing units',6,'0','User Input/Calculated', 'User Input/Calculated','A + B (+/-) D - E','C',TRUE,TRUE,false),
     ('lossesAndAdjustments','Total Losses / Adjustments','All kind of looses/adjustments made at the facility',7,'0','User Input', 'User Input','D1 + D2+D3...DN','D',TRUE,TRUE,false),
-    ('reasonForLossesAndAdjustments','Reason for Losses and Adjustments','Type of Losses/adjustments',8,NULL,'Calculated', 'Reference Value ( Table)','','S',TRUE,TRUE,false),
+    ('reasonForLossesAndAdjustments','Reason for Losses and Adjustments','Type of Losses/adjustments',8,NULL,'User Input', 'User Input','','S',TRUE,TRUE,false),
     ('stockInHand','Stock on Hand','Current physical count of stock on hand. This is quantified in dispensing units',9,'0','User Input/Calculated', 'User Input/Calculated','A+B(+/-)D-C','E',TRUE,TRUE,false),
     ('newPatientCount','Total number of new patients added to service on the program','Total of new patients introduced',10,'0','User Input', 'User Input','','F',TRUE,TRUE,FALSE),
     ('stockOutDays','Total Stockout days','Total number of days facility was out of stock',11,'0','User Input','User Input','','X',TRUE,TRUE,FALSE),
