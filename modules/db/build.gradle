@@ -50,7 +50,7 @@ task migrateDB() << {
 
 task seed(dependsOn: ["migrateDB"], type: Exec) {
     environment("PGPASSWORD", dbPassword)
-    commandLine 'psql', '-U', dbUser, '-w', dbName, '-f', '../../test-data/sql/seed.sql'
+    commandLine 'psql', '-U', dbUser, '--file', '../../test-data/sql/seed.sql', '-w', dbName
 }
 
 def executeSql(String statement) {
