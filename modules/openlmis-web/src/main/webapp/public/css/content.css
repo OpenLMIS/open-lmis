@@ -134,6 +134,10 @@ span[class^="tpl-"] {
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f9f9f9', endColorstr='#e0e0e0',GradientType=0 ); /* IE6-9 */
 }
 
+input[ui-date] {
+  background: #FFF;
+  cursor: default;
+}
 .req-info {
   border: 1px solid #B9B9B9;
   background: #F2F2F2;

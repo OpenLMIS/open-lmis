@@ -22,8 +22,8 @@ function FacilityController($scope, FacilityReferenceData,$http) {
   }, {});
 
   $scope.saveFacility = function () {
-    if ($scope.facilityForm.$error.pattern) {
-      $scope.error = "Some field holds incorrect value. Check above";
+    if ($scope.facilityForm.$error.pattern || $scope.facilityForm.$error.required) {
+      $scope.error = "There are some errors in the form. Please fix them";
       $scope.message = "";
     }
     else {

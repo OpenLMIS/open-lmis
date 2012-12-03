@@ -47,7 +47,7 @@ describe("Facility Controller", function () {
   it('should give field validation error message if form has errors',function() {
     scope.facilityForm.$error.pattern = "{}";
     scope.saveFacility();
-    expect("Some field holds incorrect value. Check above").toEqual(scope.error);
+    expect("There are some errors in the form. Please fix them").toEqual(scope.error);
     expect("").toEqual(scope.message);
   });
 

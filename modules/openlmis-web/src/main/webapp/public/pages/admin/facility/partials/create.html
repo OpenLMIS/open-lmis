@@ -1,28 +1,32 @@
 <div>
-    <form ng-submit="saveFacility()" id="create-facility" name="facilityForm">
-        <span><label for="code">Facility Code * :</label><input ng-model="facility.code" id="code" type="text" maxlength="50" required/></span>
-        <span><label for="name">Facility Name * :</label><input ng-model="facility.name" id="name" type="text" required/></span>
+    <form ng-submit="saveFacility()" id="create-facility" name="facilityForm" novalidate>
+        <span>
+          <label for="code">Facility Code * :</label>
+          <input ng-model="facility.code" name="code" id="code" type="text" maxlength="50" ng:required="true" />
+          <span class="alert alert-error" ng-show="facilityForm.code.$error.required">Please Fill In this value</span>
+        </span>
+        <span><label for="name">Facility Name * :</label><input ng-model="facility.name" name="name" id="name" type="text" ng:required="true"/><span class="alert alert-error" ng-show="facilityForm.name.$error.required">Please Fill In this value</span></span>
         <span><label for="description">Facility Description :</label><input ng-model="facility.description" id="description" type="text" maxlength="250"  /></span>
         <span><label for="gln">GLN :</label><input ng-model="facility.gln" id="gln" type="text" maxlength="30"/></span>
         <span><label for="main-phone">Phone :</label><input ng-model="facility.mainPhone" id="main-phone" type="text" maxlength="20" /></span>
         <span><label for="fax-phone">Fax :</label><input ng-model="facility.fax" id="fax-phone" type="text" maxlength="20"/></span>
         <span><label for="address-1">Address Line 1 :</label><input ng-model="facility.address1" id="address-1" type="text" maxlength="50"/></span>
         <span><label for="address-2">Address Line 2 :</label><input ng-model="facility.address2" id="address-2" type="text" maxlength="50"/></span>
-        <span><label for="geographic-zone">Geographic Zone * :</label><select id="geographic-zone" ng-model="facility.geographicZone" ng-options="i.id as i.value for i in geographicZones" required>
+        <span><label for="geographic-zone">Geographic Zone * :</label><select id="geographic-zone" name="geographicZone" ng-model="facility.geographicZone" ng-options="i.id as i.value for i in geographicZones" ng:required="true" >
           <option value="">--Select Geographic Zone--</option>
-        </select></span>
-        <span><label for="facility-type">Facility Type * :</label><select id="facility-type" ng-model="facility.facilityTypeCode" ng-options="i.code as i.name for i in facilityTypes" required>
+        </select><span class="alert alert-error" ng-show="facilityForm.geographicZone.$error.required">Please select a value</span></span>
+        <span><label for="facility-type">Facility Type * :</label><select name="facilityType" id="facility-type" ng-model="facility.facilityTypeCode" ng-options="i.code as i.name for i in facilityTypes" ng:required="true" >
           <option value="">--Select Facility Type--</option>
-        </select></span>
-        <span><label for="catchment-population">Catchment Population :</label><input ng-model="facility.catchmentPopulation" id="catchment-population" ng-pattern="/^\d{1,9}$/" name="catchmentPopulation" type="text" maxlength="9"/><span style="color: red;" class="error" ng-show="facilityForm.catchmentPopulation.$error.pattern">Value should be integer</span></span>
-        <span><label for="latitude">Latitude :</label><input ng-model="facility.latitude" ng-pattern="/^\d{1,4}$|^\d{1,4}\.\d{1,4}$/" id="latitude" type="text" name="latitude" maxlength="9" /><span style="color: red;" class="error" ng-show="facilityForm.latitude.$error.pattern">Value should be numeric and less than 9999.9999</span></span>
-        <span><label for="longitude">Longitude :</label><input ng-model="facility.longitude" ng-pattern="/^\d{1,4}$|^\d{1,4}\.\d{1,4}$/" name="longitude" id="longitude" type="text" maxlength="9"/><span style="color: red;" class="error" ng-show="facilityForm.longitude.$error.pattern">Value should be numeric and less than 9999.9999</span></span>
-        <span><label for="altitude">Altitude :</label><input ng-model="facility.altitude" ng-pattern="/^\d{1,4}$|^\d{1,4}\.\d{1,4}$/" name="altitude" id="altitude" type="text" maxlength="9"/><span style="color: red;" class="error" ng-show="facilityForm.altitude.$error.pattern">Value should be numeric and less than 9999.9999</span></span>
+        </select><span class="alert alert-error" ng-show="facilityForm.facilityType.$error.required">Please select a value</span></span>
+        <span><label for="catchment-population">Catchment Population :</label><input ng-model="facility.catchmentPopulation" id="catchment-population" ng-pattern="/^\d{1,9}$/" name="catchmentPopulation" type="text" maxlength="9"/><span class="alert alert-error" ng-show="facilityForm.catchmentPopulation.$error.pattern">Value should be integer</span></span>
+        <span><label for="latitude">Latitude :</label><input ng-model="facility.latitude" ng-pattern="/^\d{1,4}$|^\d{1,4}\.\d{1,4}$/" id="latitude" type="text" name="latitude" maxlength="9" /><span class="alert alert-error" ng-show="facilityForm.latitude.$error.pattern">Value should be numeric and less than 9999.9999</span></span>
+        <span><label for="longitude">Longitude :</label><input ng-model="facility.longitude" ng-pattern="/^\d{1,4}$|^\d{1,4}\.\d{1,4}$/" name="longitude" id="longitude" type="text" maxlength="9"/><span class="alert alert-error" ng-show="facilityForm.longitude.$error.pattern">Value should be numeric and less than 9999.9999</span></span>
+        <span><label for="altitude">Altitude :</label><input ng-model="facility.altitude" ng-pattern="/^\d{1,4}$|^\d{1,4}\.\d{1,4}$/" name="altitude" id="altitude" type="text" maxlength="9"/><span class="alert alert-error" ng-show="facilityForm.altitude.$error.pattern">Value should be numeric and less than 9999.9999</span></span>
         <span><label for="operated-by">Operated By :</label><select id="operated-by" ng-model="facility.operatedBy" ng-options="i.code as i.text for i in facilityOperators">
           <option value="">--Select Facility Operated By--</option>
         </select></span>
-        <span><label for="cold-storage-gross-capacity">Cold Storage Gross Capacity :</label><input ng-model="facility.coldStorageGrossCapacity" ng-pattern="/^\d{1,4}$|^\d{1,4}\.\d{1,4}$/" name="coldStorageGrossCapacity" id="cold-storage-gross-capacity" type="text" maxlength="9"/><span style="color: red;" class="error" ng-show="facilityForm.coldStorageGrossCapacity.$error.pattern">Value should be numeric and less than 9999.9999</span></span>
-        <span><label for="cold-storage-net-capacity">Cold Storage Net Capacity :</label><input ng-model="facility.coldStorageNetCapacity" id="cold-storage-net-capacity" ng-pattern="/^\d{1,4}$|^\d{1,4}\.\d{1,4}$/" name="coldStorageNetCapacity" maxlength="9" type="text"/><span style="color: red;" class="error" ng-show="facilityForm.coldStorageNetCapacity.$error.pattern">Value should be numeric and less than 9999.9999</span></span>
+        <span><label for="cold-storage-gross-capacity">Cold Storage Gross Capacity :</label><input ng-model="facility.coldStorageGrossCapacity" ng-pattern="/^\d{1,4}$|^\d{1,4}\.\d{1,4}$/" name="coldStorageGrossCapacity" id="cold-storage-gross-capacity" type="text" maxlength="9"/><span class="alert alert-error" ng-show="facilityForm.coldStorageGrossCapacity.$error.pattern">Value should be numeric and less than 9999.9999</span></span>
+        <span><label for="cold-storage-net-capacity">Cold Storage Net Capacity :</label><input ng-model="facility.coldStorageNetCapacity" id="cold-storage-net-capacity" ng-pattern="/^\d{1,4}$|^\d{1,4}\.\d{1,4}$/" name="coldStorageNetCapacity" maxlength="9" type="text"/><span class="alert alert-error" ng-show="facilityForm.coldStorageNetCapacity.$error.pattern">Value should be numeric and less than 9999.9999</span></span>
         <span><label>Facility Supplies Others ? :</label><input ng-model="facility.suppliesOthers" type="radio" name="supplies-others" value="true" />Yes<input  ng-model="facility.suppliesOthers" type="radio" name="supplies-others" value="false"/>No</span>
         <span><label>Service Delivery Point ? * :</label><input type="radio" name="is-sdp" value="true" ng-model="facility.sdp" />Yes<input  ng-model="facility.sdp" type="radio" name="is-sdp" value="false"/>No</span>
         <span><label>Electricity Available at Facility ? :</label><input ng-model="facility.hasElectricity" type="radio" name="has-electricity" value="true" />Yes<input ng-model="facility.hasElectricity" type="radio" name="has-electricity" value="false"/>No</span>
@@ -30,8 +34,8 @@
         <span><label>Facility has Electronic SCC ? :</label><input ng-model="facility.hasElectronicScc" type="radio" name="has-electronic-scc" value="true" />Yes<input  ng-model="facility.hasElectronicScc" type="radio" name="has-electronic-scc" value="false"/>No</span>
         <span><label>Facility has Electronic DAR ? :</label><input ng-model="facility.hasElectronicDar" type="radio" name="has-electronic-dar" value="true" />Yes<input  ng-model="facility.hasElectronicDar" type="radio" name="has-electronic-dar" value="false"/>No</span>
         <span><label>Activity Facility ? * :</label><input ng-model="facility.active" type="radio" name="is-active" value="true"/>Yes<input  ng-model="facility.active" type="radio" name="is-active" value="false"/>No</span>
-        <span><label for="go-live-date">Go Live Date * :</label><input ng-model="facility.goLiveDate" id="go-live-date" type="text" ui-date required/></span>
-        <span><label for="go-down-date">Go Down Date :</label><input ng-model="facility.goDownDate" id="go-down-date" type="text" ui-date /></span>
+        <span><label for="go-live-date">Go Live Date * :</label><input ng-model="facility.goLiveDate" name="goLiveDate" id="go-live-date" type="text" ui-date readonly ng:required="true" /></span><span class="alert alert-error" ng-show="facilityForm.goLiveDate.$error.required">Please Fill In this value</span>
+        <span><label for="go-down-date">Go Down Date :</label><input ng-model="facility.goDownDate" id="go-down-date" type="text" ui-date readonly /></span>
         <span><label>Data Reportable for the Facility ? :</label><input ng-model="facility.dataReportable" type="radio" name="data-reportable" value="true" />Yes<input ng-model="facility.dataReportable" type="radio" name="data-reportable" value="false" />No</span>
         <span><label for="comments">Comments :</label><input ng-model="facility.comment" id="comments" type="text" maxlength="500"/></span>
         <span><label for="programs-supported">Programs Supported :</label><select id="programs-supported" ng-model="facility.supportedPrograms" ng-options="i as i.name for i in programs" multiple="multiple">
