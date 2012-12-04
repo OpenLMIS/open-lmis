@@ -1,5 +1,8 @@
 package org.openlmis.authentication;
 
+import lombok.Data;
+
+@Data
 public class UserToken {
 
     private final String userName;
@@ -10,17 +13,5 @@ public class UserToken {
         this.userName = userName;
         this.role = role;
         this.authenticated = authenticated;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public boolean isAuthenticated() {
-        return authenticated;
     }
 }

@@ -7,14 +7,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class User {
 
+    private int id;
     private String userName;
     private String password;
     private String role;
-    private int facilityId;
+    private Integer facilityId;
 
-    public User(String userName, String role) {
+    public User(String userName, String password) {
         this.userName = userName;
-        this.role = role;
+        this.password = password;
     }
 
+    @Deprecated
+    public User(String userName, String password, String role) {
+        this.userName = userName;
+        this.role = role;
+        this.password = password;
+    }
 }

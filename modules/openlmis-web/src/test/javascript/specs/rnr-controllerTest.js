@@ -20,10 +20,10 @@ describe('Requisition controllers', function () {
       expect(scope.facilities).toEqual(facilities);
     });
 
-    it('should load programs for a facility', function() {
+    it('should load user supported programs for selected facility for create R&R', function() {
       scope.$parent.facility="10134";
       var programsForFacility = [{"code":"HIV","name":"HIV","description":"HIV","active":true}];
-      $httpBackend.expectGET('/logistics/facility/10134/programs.json').respond({"programList":[{"code":"HIV","name":"HIV","description":"HIV","active":true}]});
+      $httpBackend.expectGET('/logistics/facility/10134/user/programs.json').respond({"programList":[{"code":"HIV","name":"HIV","description":"HIV","active":true}]});
       scope.loadPrograms();
 
       $httpBackend.flush();

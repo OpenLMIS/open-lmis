@@ -9,8 +9,8 @@ import java.util.List;
 @Repository
 public interface ProgramMapper {
 
-    @Insert("INSERT INTO PROGRAM(CODE, NAME, DESCRIPTION)" +
-            " values (#{program.code}, #{program.name}, #{program.description})")
+    @Insert("INSERT INTO program(code, name, description, active)" +
+            " VALUES (#{program.code}, #{program.name}, #{program.description}, #{program.active})")
     int insert(@Param("program") Program program);
 
     @Delete("DELETE FROM PROGRAM WHERE CODE = #{programCode}")

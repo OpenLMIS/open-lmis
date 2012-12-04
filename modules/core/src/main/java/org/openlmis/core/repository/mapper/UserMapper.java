@@ -16,9 +16,11 @@ public interface UserMapper {
 
     @Insert(value = "INSERT INTO users " +
             "(user_name, password, facility_id) VALUES " +
-            "(#{userName}, #{password}, #{facilityId}) ")
-    void insert(User user);
+            "(#{userName}, #{password}, #{facilityId})")
+    @Options(useGeneratedKeys = true)
+    int insert(User user);
 
     @Delete(value = "DELETE FROM users")
     void deleteAll();
+
 }

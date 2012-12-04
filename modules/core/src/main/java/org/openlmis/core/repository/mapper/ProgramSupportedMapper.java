@@ -9,7 +9,9 @@ import java.util.List;
 @Repository
 public interface ProgramSupportedMapper {
 
-    @Insert("INSERT INTO PROGRAMS_SUPPORTED(FACILITY_CODE, PROGRAM_CODE, ACTIVE, MODIFIED_BY, MODIFIED_DATE) VALUES(#{facilityCode},#{programCode},#{isActive},#{modifiedBy},#{modifiedDate})")
+    @Insert("INSERT INTO PROGRAMS_SUPPORTED" +
+            "(FACILITY_CODE, PROGRAM_CODE, ACTIVE, MODIFIED_BY, MODIFIED_DATE) VALUES" +
+            "(#{facilityCode}, #{programCode}, #{active}, #{modifiedBy}, #{modifiedDate})")
     void addSupportedProgram(ProgramSupported programSupported);
 
     @Delete("DELETE FROM PROGRAMS_SUPPORTED")
@@ -19,7 +21,7 @@ public interface ProgramSupportedMapper {
     @Results(value = {
             @Result(property = "facilityCode", column = "FACILITY_CODE"),
             @Result(property = "programCode", column = "PROGRAM_CODE"),
-            @Result(property = "isActive", column = "is_active"),
+            @Result(property = "active", column = "is_active"),
             @Result(property = "modifiedBy", column = "MODIFIED_BY"),
             @Result(property = "modifiedDate", column = "MODIFIED_DATE")})
     List<ProgramSupported> getBy(@Param("facilityCode") String facilityCode, @Param("programCode") String programCode);

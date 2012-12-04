@@ -28,6 +28,11 @@ services.factory('FacilitySupportedPrograms', function ($resource) {
     return $resource('/logistics/facility/:facilityCode/programs.json', {}, {});
 });
 
+//todo add right/operation code as param
+services.factory('UserSupportedProgramInFacilityForAnOperation', function ($resource) {
+    return $resource('/logistics/facility/:facilityCode/user/programs.json', {}, {});
+});
+
 services.factory('RequisitionHeader', function ($resource) {
     return $resource('/logistics/facility/:code/requisition-header.json', {}, {});
 });
