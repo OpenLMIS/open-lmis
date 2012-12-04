@@ -1,20 +1,40 @@
-function FacilityController($scope, FacilityReferenceData,$routeParams,$http, Facility) {
-
-  if($routeParams.facilityId){
-    Facility.get({id:$routeParams.facilityId}, function(data) {
-      $scope.facility = data.facility;
-    }, {});
-  } else {
-    $scope.facility = {};
-    $scope.facility.dataReportable = "true";
-  }
+function FacilityController($scope, FacilityReferenceData, $routeParams, $http, Facility) {
 
 
-  FacilityReferenceData.get({} , function (data) {
+  FacilityReferenceData.get({}, function (data) {
     $scope.facilityTypes = data.facilityTypes;
-    $scope.programs = data.programs;
     $scope.geographicZones = data.geographicZones;
     $scope.facilityOperators = data.facilityOperators;
+    $scope.programs = data.programs;
+
+//TODO Need a more elegant solution
+    if ($routeParams.facilityId) {
+      Facility.get({id:$routeParams.facilityId}, function (data) {
+        $scope.facility = data.facility;
+        $scope.facility.suppliesOthers = data.facility.suppliesOthers === null ? "" : data.facility.suppliesOthers.toString();
+        $scope.facility.sdp = data.facility.sdp === null ? "" : data.facility.sdp.toString();
+        $scope.facility.hasElectricity = data.facility.hasElectricity === null ? "" : data.facility.hasElectricity.toString();
+        $scope.facility.online = data.facility.online === null ? "" : data.facility.online.toString();
+        $scope.facility.hasElectronicScc = data.facility.hasElectronicScc === null ? "" : data.facility.hasElectronicScc.toString();
+        $scope.facility.hasElectronicDar = data.facility.hasElectronicDar === null ? "" : data.facility.hasElectronicDar.toString();
+        $scope.facility.active = data.facility.active === null ? "" : data.facility.active.toString();
+        $scope.facility.dataReportable = data.facility.dataReportable === null ? "" : data.facility.dataReportable.toString();
+        //TODO Need a more elegant solution
+        var foo = [];
+        $.each($scope.facility.supportedPrograms, function (index, supportedProgram) {
+          $.each($scope.programs, function (index, program) {
+            if (supportedProgram.code == program.code)
+              foo.push(program);
+          })
+        });
+        $scope.facility.supportedPrograms = foo;
+      }, {});
+    }
+    else {
+      $scope.facility = {};
+      $scope.facility.dataReportable = "true";
+    }
+
   }, {});
 
   $scope.saveFacility = function () {

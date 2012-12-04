@@ -69,25 +69,25 @@ public class Facility implements Importable {
     private double coldStorageNetCapacity;
 
     @ImportField(type = "boolean", name = "Facility Supplies Others")
-    private boolean suppliesOthers;
+    private Boolean suppliesOthers;
 
     @ImportField(type = "boolean", mandatory = true, name = "Facility Is SDP")
-    private boolean sdp;
+    private Boolean sdp;
 
     @ImportField(type = "boolean", name = "Facility Has Electricity")
-    private boolean hasElectricity;
+    private Boolean hasElectricity;
 
     @ImportField(type = "boolean", name = "Facility Is Online")
-    private boolean online;
+    private Boolean online;
 
     @ImportField(type = "boolean", name = "Facility Has Electronic SCC")
-    private boolean hasElectronicScc;
+    private Boolean hasElectronicScc;
 
     @ImportField(type = "boolean", name = "Facility Has Electronic DAR")
-    private boolean hasElectronicDar;
+    private Boolean hasElectronicDar;
 
     @ImportField(type = "boolean", mandatory = true, name = "Is Active")
-    private boolean active;
+    private Boolean active;
 
     @ImportField(type = "Date", mandatory = true, name = "Facility Go Live Date")
     private Date goLiveDate;
@@ -96,7 +96,7 @@ public class Facility implements Importable {
     private Date goDownDate;
 
     @ImportField(type = "boolean", name = "Is Satellite Facility")
-    private boolean satellite;
+    private Boolean satellite;
 
     @ImportField(name = "Satellite Parent ID")
     private String satelliteParentCode;
@@ -105,7 +105,7 @@ public class Facility implements Importable {
     private String comment;
 
     @ImportField(type = "boolean", name = "Data Reportable")
-    private boolean dataReportable;
+    private Boolean dataReportable;
 
     List<Program> supportedPrograms = new ArrayList<>();
 

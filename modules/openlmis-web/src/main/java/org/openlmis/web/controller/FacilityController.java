@@ -75,9 +75,9 @@ public class FacilityController extends BaseController {
     }
 
     @RequestMapping(value = "admin/facility/{id}" , method = RequestMethod.GET , headers = "Accept=application/json")
-    public ResponseEntity getFacility(@PathVariable(value = "id") int id) {
+    public ResponseEntity<ModelMap> getFacility(@PathVariable(value = "id") int id) {
         ModelMap modelMap = new ModelMap();
         modelMap.put("facility",facilityService.getFacility(id));
-        return new ResponseEntity(modelMap,HttpStatus.OK);
+        return new ResponseEntity<>(modelMap,HttpStatus.OK);
     }
 }
