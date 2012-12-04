@@ -61,7 +61,7 @@ def executeSql(String statement) {
     configurations.classpath.each { file ->
         gradle.class.classLoader.addURL(file.toURI().toURL())
     }
-    driverName = 'org.postgresql.Driver'
+    ext.driverName = 'org.postgresql.Driver'
     Class.forName(driverName)
     Sql sql = (Sql) Sql.newInstance(
             "jdbc:postgresql://$databaseHostName:$databasePort",
