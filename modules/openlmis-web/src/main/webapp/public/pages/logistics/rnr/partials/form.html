@@ -1,5 +1,5 @@
 <div class="rnr-table">
-    <form ng-submit="saveRnr()" id="create-facility" name="facilityForm" novalidate>
+    <form ng-submit="saveRnr()" id="save-rnr" name="saveRnrForm" novalidate ng-controller="CreateRnrController">
         <table class="table table-striped table-bordered">
             <thead>
             <tr>
@@ -19,7 +19,72 @@
                 <td class="cell-input" ng-repeat="column in programRnRColumnList">
                     <ng-switch on="column.selectedColumnType">
                 <span ng-switch-when="User_Input">
-                        <input type="text" ng:model="rnrLineItem[column.name]" value="rnrLineItem[column.name]"/>
+
+                        <ng-switch on="column.name">
+                            <span ng-switch-when="quantityReceived">
+                                <input type="text" name="quantityReceived"  ng-model="rnrLineItem[column.name]" value="rnrLineItem[column.name]" rnr-validator="positiveInteger" />
+                                <span ng-show="saveRnrForm.$error.quantityReceived">
+                                 This is not a valid Input!</span>
+                            </span>
+                            <span ng-switch-when="beginningBalance">
+                                <input type="text" name="beginningBalance"  ng-model="rnrLineItem[column.name]" value="rnrLineItem[column.name]" rnr-validator="positiveInteger" />
+                                <span ng-show="saveRnrForm.$error.beginningBalance">
+                                 This is not a valid Input!</span>
+                            </span>
+                            <span ng-switch-when="quantityDispensed">
+                                <input type="text" name="quantityDispensed"  ng-model="rnrLineItem[column.name]" value="rnrLineItem[column.name]" rnr-validator="positiveInteger" />
+                                <span ng-show="saveRnrForm.$error.quantityDispensed">
+                                 This is not a valid Input!</span>
+                            </span>
+                            <span ng-switch-when="lossesAndAdjustments">
+                                <input type="text" name="lossesAndAdjustments"  ng-model="rnrLineItem[column.name]" value="rnrLineItem[column.name]" rnr-validator="positiveInteger" />
+                                <span ng-show="saveRnrForm.$error.lossesAndAdjustments">
+                                 This is not a valid Input!</span>
+                            </span>
+                            <span ng-switch-when="reasonForLossesAndAdjustments">
+                                <input type="text" name="reasonForLossesAndAdjustments"  ng-model="rnrLineItem[column.name]" value="rnrLineItem[column.name]"  maxlength="250"/>
+                                <span ng-show="saveRnrForm.$error.reasonForLossesAndAdjustments">
+                                 This is not a valid Input!</span>
+                            </span>
+                            <span ng-switch-when="stockInHand">
+                                <input type="text" name="stockInHand"  ng-model="rnrLineItem[column.name]" value="rnrLineItem[column.name]" rnr-validator="positiveInteger"/>
+                                <span ng-show="saveRnrForm.$error.stockInHand">
+                                 This is not a valid Input!</span>
+                            </span>
+                            <span ng-switch-when="newPatientCount">
+                                <input type="text" name="newPatientCount"  ng-model="rnrLineItem[column.name]" value="rnrLineItem[column.name]" rnr-validator="positiveInteger"/>
+                                <span ng-show="saveRnrForm.$error.newPatientCount">
+                                 This is not a valid Input!</span>
+                            </span>
+                            <span ng-switch-when="stockOutDays">
+                                <input type="text" name="stockOutDays"  ng-model="rnrLineItem[column.name]" value="rnrLineItem[column.name]" rnr-validator="positiveInteger"/>
+                                <span ng-show="saveRnrForm.$error.stockOutDays">
+                                 This is not a valid Input!</span>
+                            </span>
+                            <span ng-switch-when="quantityRequested">
+                                <input type="text" name="quantityRequested"  ng-model="rnrLineItem[column.name]" value="rnrLineItem[column.name]" rnr-validator="positiveInteger"/>
+                                <span ng-show="saveRnrForm.$error.quantityRequested">
+                                 This is not a valid Input!</span>
+                            </span>
+                            <span ng-switch-when="reasonForRequestedQuantity">
+                                <input type="text" name="reasonForRequestedQuantity"  ng-model="rnrLineItem[column.name]" value="rnrLineItem[column.name]"  maxlength="250"/>
+                                <span ng-show="saveRnrForm.$error.reasonForRequestedQuantity">
+                                 This is not a valid Input!</span>
+                            </span>
+                            <span ng-switch-when="quantityApproved">
+                                <input type="text" name="quantityApproved"  ng-model="rnrLineItem[column.name]" value="rnrLineItem[column.name]" rnr-validator="positiveInteger"/>
+                                <span ng-show="saveRnrForm.$error.quantityApproved">
+                                 This is not a valid Input!</span>
+                            </span>
+                            <span ng-switch-when="remarks">
+                                 <input type="text" name="remarks"  ng-model="rnrLineItem[column.name]" value="rnrLineItem[column.name]" maxlength="250"/>
+                                <span ng-show="saveRnrForm.$error.remarks">
+                                 This is not a valid Input!</span>
+                            </span>
+                            <span ng-switch-default>
+                                <input type="text" ng:model="rnrLineItem[column.name]" value="rnrLineItem[column.name]"/>
+                            </span>
+                        </ng-switch>
                 </span>
                 <span class="cell-text" ng-switch-default>
                     {{rnrLineItem[column.name]}}
@@ -29,6 +94,12 @@
             </tr>
             </tbody>
         </table>
+        <div class="alert alert-error" id="saveSuccessMsgDiv" ng-model="error" ng-show="error">
+            {{error}}
+        </div>
+        <div class="alert alert-success" id="saveSuccessMsgDiv" ng-model="message" ng-show="message">
+            {{message}}
+        </div>
         <input type="submit" class="btn" value="Save"/>
     </form>
 </div>

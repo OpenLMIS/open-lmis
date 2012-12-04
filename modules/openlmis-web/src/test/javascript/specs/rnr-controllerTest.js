@@ -53,15 +53,6 @@ describe('Requisition controllers', function () {
       expect(scope.error).toEqual("Rnr initialization failed!");
     });
 
-
-    it('should save work in progress for rnr', function(){
-        scope.$parent.rnr = {"id":"rnrId"};
-        $httpBackend.expectPOST('/logistics/rnr/rnrId/save.json').respond(200);
-        scope.saveRnr();
-        $httpBackend.flush();
-        expect(scope.message).toEqual("Rnr saved successfully!");
-    });
-
 //    it('should reset program if facility set to null and attempt to load programs is made', function () {
 //      scope.$parent.facility = {"code" : "hiv"};
 //      $httpBackend.expectPOST('/logistics/rnr/undefined/hiv/init.json').respond(404);
@@ -77,7 +68,7 @@ describe('Requisition controllers', function () {
     var scope, ctrl, $httpBackend, location,requisitionHeader;
 
     beforeEach(module('openlmis.services'));
-    beforeEach(inject(function ($rootScope,_$httpBackend_,$controller,$location) {
+    beforeEach(inject(function ($rootScope,_$httpBackend_,$controller,$location, $http) {
       scope = $rootScope.$new();
       $httpBackend=_$httpBackend_;
       location=$location;
@@ -90,6 +81,7 @@ describe('Requisition controllers', function () {
       $httpBackend.expectGET('/logistics/facility/10134/requisition-header.json').respond(requisitionHeader);
       $httpBackend.expectGET('/logistics/rnr/programCode/columns.json').respond({"rnrColumnList":[{"testField":"test"}]});
       ctrl = $controller(CreateRnrController, {$scope:scope, $location:location});
+      scope.saveRnrForm = {$error : { rnrError: false }};
     }));
 
     it('should get header data', function () {
@@ -104,6 +96,59 @@ describe('Requisition controllers', function () {
       expect(scope.programRnRColumnList).toEqual([{"testField":"test"}]);
     });
 
+    it('should save work in progress for rnr', function(){
+            scope.$parent.rnr = {"id":"rnrId"};
+            $httpBackend.expectPOST('/logistics/rnr/rnrId/save.json').respond(200);
+            scope.saveRnr();
+            $httpBackend.flush();
+            expect(scope.message).toEqual("Rnr saved successfully!");
+    });
+
+    it('should not save work in progress when for invalid form', function(){
+         scope.saveRnrForm.$error.rnrError = [{}];
+         scope.saveRnr();
+         expect(scope.error).toEqual("Please correct errors before saving.");
+    });
+
+    it('should validate  integer field', function(){
+         var valid=   scope.positiveInteger(100);
+         expect(true).toEqual(valid);
+         var valid=   scope.positiveInteger(0);
+         expect(true).toEqual(valid);
+         valid=   scope.positiveInteger(-1);
+         expect(false).toEqual(valid);
+         valid=   scope.positiveInteger('a');
+         expect(false).toEqual(valid);
+         valid=   scope.positiveInteger(5.5);
+         expect(false).toEqual(valid);
+    });
+
+    it('should validate  float field', function(){
+
+         var valid=   scope.positiveFloat(100);
+         expect(true).toEqual(valid);
+         valid= scope.positiveFloat(1.000);
+         expect(true).toEqual(valid);
+
+         valid=   scope.positiveFloat(0.0);
+         expect(true).toEqual(valid);
+
+         valid=   scope.positiveFloat(0.01);
+         expect(true).toEqual(valid);
+
+         valid= scope.positiveFloat(1.000001);
+         expect(false).toEqual(valid);
+
+         valid=   scope.positiveFloat(100.001);
+         expect(false).toEqual(valid);
+
+         valid=   scope.positiveFloat(-1.0);
+         expect(false).toEqual(valid);
+
+         valid=   scope.positiveFloat('a');
+         expect(false).toEqual(valid);
+
+    });
   });
 
 });

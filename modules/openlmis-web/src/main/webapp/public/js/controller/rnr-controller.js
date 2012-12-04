@@ -39,15 +39,20 @@ function InitiateRnrController($http, $scope, UserFacilityList, UserSupportedPro
                 $scope.message = "";
             });
     };
-
-    $scope.saveRnr = function () {
-        $http.post('/logistics/rnr/' + $scope.$parent.rnr.id+ '/save.json', $scope.$parent.rnr ).success(function (data){
-         $scope.message = "Rnr saved successfully!";
-        });
-    }
 }
 
-function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $location) {
+function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $location, $http) {
+
+    $scope.positiveInteger = function(value){
+       var INTEGER_REGEXP = /^\d*$/;
+       return INTEGER_REGEXP.test(value);
+    }
+
+    $scope.positiveFloat = function(value){
+        var FLOAT_REGEXP = /^\d+(\.\d\d)?$/;
+        return FLOAT_REGEXP.test(value);
+    }
+
     RequisitionHeader.get({code:$scope.$parent.facility}, function (data) {
         $scope.header = data.requisitionHeader;
     }, function () {
@@ -71,4 +76,15 @@ function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $l
         return data.rnrColumnList.length > 0 ? true : false;
     }
 
+    $scope.saveRnr = function () {
+        if ($scope.saveRnrForm.$error.rnrError!=undefined && $scope.saveRnrForm.$error.rnrError!=false && $scope.saveRnrForm.$error.rnrError.length > 0  ) {
+              $scope.error = "Please correct errors before saving.";
+              $scope.message = "";
+              return ;
+        }
+        $http.post('/logistics/rnr/' + $scope.$parent.rnr.id+ '/save.json', $scope.$parent.rnr ).success(function (data){
+         $scope.message = "Rnr saved successfully!";
+         $scope.error="";
+        });
+    }
 }

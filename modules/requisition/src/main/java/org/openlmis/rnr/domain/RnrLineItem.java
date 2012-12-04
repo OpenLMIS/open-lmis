@@ -52,9 +52,6 @@ public class RnrLineItem {
         this.modifiedBy = modifiedBy;
     }
 
-    public void setProduct(Product product){
-        this.product= productName(product);
-    }
 
     private String productName(Product product) {
         return  (product.getPrimaryName() == null ? "" : (product.getPrimaryName() + "  ")) +
