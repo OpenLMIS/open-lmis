@@ -2,6 +2,7 @@ package org.openlmis.UiUtils;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -104,5 +105,27 @@ public class TestWebDriver {
         return getPageSource().contains(ERROR_MESSAGE_LOGIN);
     }
 
+    public void sleep(long timeToSleep) {
+        try{
+            Thread.sleep(timeToSleep);
+        }catch(InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean mouseOver(final WebElement element) {
+        boolean flag= false;
+        waitForElementToAppear(element);
+        sleep(1500);
+        if (element!=null) {
+            Actions builder = new Actions(driver);
+            builder.moveToElement(element).perform();
+            flag = true;
+            return flag;
+        } else
+            flag = false;
+        return flag;
+    }
 
 }

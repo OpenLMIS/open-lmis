@@ -49,6 +49,7 @@ public class LoginPage extends Page {
 
     public void logout() {
         testWebDriver.waitForElementToAppear(usernameDisplay);
+        testWebDriver.mouseOver(usernameDisplay);
         usernameDisplay.click();
         testWebDriver.waitForElementToAppear(logoutLink);
         logoutLink.click();
