@@ -22,8 +22,7 @@ import org.springframework.dao.DuplicateKeyException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
@@ -62,7 +61,7 @@ public class FacilityRepositoryTest {
     public void shouldInsertFacility() throws Exception {
         Facility facility = new Facility();
 
-        repository.save(facility);
+        repository.saveOrUpdate(facility);
         assertThat(facility.getModifiedDate(), is(now.toDate()));
         verify(mockedFacilityMapper).insert(facility);
     }
@@ -79,9 +78,10 @@ public class FacilityRepositoryTest {
     @Test
     public void shouldAddProgramsSupportedByAFacility() throws Exception {
         Facility facility = make(a(defaultFacility));
+        facility.setId(null);
         List<Program> programs = new ArrayList<Program>(){{add(make(a(ProgramBuilder.program))); add(make(a(ProgramBuilder.program)));}};
         facility.setSupportedPrograms(programs);
-        repository.save(facility);
+        repository.saveOrUpdate(facility);
         verify(programSupportedMapper, times(2)).addSupportedProgram(any(ProgramSupported.class));
     }
 
@@ -91,7 +91,7 @@ public class FacilityRepositoryTest {
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("Duplicate Facility Code found");
         doThrow(new DuplicateKeyException("")).when(mockedFacilityMapper).insert(facility);
-        repository.save(facility);
+        repository.saveOrUpdate(facility);
     }
     @Test
     public void shouldRaiseIncorrectReferenceDataError() throws Exception {
@@ -99,7 +99,7 @@ public class FacilityRepositoryTest {
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("Missing Reference data");
         doThrow(new DataIntegrityViolationException("foreign key")).when(mockedFacilityMapper).insert(facility);
-        repository.save(facility);
+        repository.saveOrUpdate(facility);
     }
 
     @Test
@@ -125,6 +125,49 @@ public class FacilityRepositoryTest {
         verify(mockedFacilityMapper).get(1);
         verify(programMapper).getByFacilityCode(code);
 
+    }
+
+    @Test
+    public void shouldUpdateFacilityIfIDIsSet() throws Exception {
+        Facility facility = new Facility();
+        facility.setId(1);
+
+        repository.saveOrUpdate(facility);
+        verify(mockedFacilityMapper).update(facility);
+        verify(mockedFacilityMapper,never()).insert(facility);
+    }
+
+    @Test
+    public void shouldNotUpdateFacilityIfIDIsNotSet() throws Exception {
+        Facility facility = new Facility();
+        repository.saveOrUpdate(facility);
+        verify(mockedFacilityMapper,never()).update(facility);
+    }
+
+    @Test
+    public void shouldUpdateSupportedProgramsForFacilityIfIDIsDefined() throws Exception {
+        Facility facility = make(a(defaultFacility));
+        facility.setId(1);
+        List<Program> programs = new ArrayList<Program>(){{
+            add(make(a(ProgramBuilder.program)));
+            add(make(a(ProgramBuilder.program, with(ProgramBuilder.code, "HIV"))));
+        }};
+
+        facility.setSupportedPrograms(programs);
+
+        List<Program> programsForFacility = new ArrayList<Program>() {{
+            add(make(a(ProgramBuilder.program)));
+            add(make(a(ProgramBuilder.program, with(ProgramBuilder.code, "ARV"))));
+        }};
+
+        when(programMapper.getByFacilityCode(facility.getCode())).thenReturn(programsForFacility);
+
+
+        repository.saveOrUpdate(facility);
+
+        verify(programMapper).getByFacilityCode(facility.getCode());
+        verify(programSupportedMapper).addSupportedProgram(new ProgramSupported(facility.getCode(),"HIV",true, facility.getModifiedBy(), facility.getModifiedDate()));
+        verify(programSupportedMapper).deleteObsoletePrograms(facility.getCode(),"ARV");
     }
 
 }

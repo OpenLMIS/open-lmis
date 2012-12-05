@@ -1,13 +1,13 @@
 package org.openlmis.core.repository.mapper;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,6 +22,8 @@ import static org.openlmis.core.builder.UserBuilder.facilityId;
 
 @ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
+@TransactionConfiguration(defaultRollback=true)
+@Transactional
 public class FacilityMapperIT {
 
     @Autowired
@@ -30,12 +32,12 @@ public class FacilityMapperIT {
     @Autowired
     FacilityMapper facilityMapper;
 
-    @Before
-    @After
-    public void setUp() throws Exception {
-        userMapper.deleteAll();
-        facilityMapper.deleteAll();
-    }
+//    @Before
+//    @After
+//    public void setUp() throws Exception {
+//        userMapper.deleteAll();
+//        facilityMapper.deleteAll();
+//    }
 
     @Test
     public void shouldFetchAllFacilitiesAvailable() throws Exception {
@@ -148,5 +150,17 @@ public class FacilityMapperIT {
         assertThat(resultFacility.getCode(), is("F10010"));
         assertThat(resultFacility.getId(),is(facility.getId()));
         assertThat(resultFacility.getName(),is("Apollo Hospital"));
+    }
+
+    @Test
+    public void shouldUpdateFacility() throws Exception {
+        Facility facility = make(a(defaultFacility));
+        facility.setId(facilityMapper.insert(facility));
+        facility.setCode("NewTestCode");
+
+        facilityMapper.update(facility);
+
+        Facility updatedFacility = facilityMapper.get(facility.getId());
+        assertThat(updatedFacility.getCode(), is(facility.getCode()));
     }
 }

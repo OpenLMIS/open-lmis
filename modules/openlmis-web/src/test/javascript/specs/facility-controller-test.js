@@ -6,7 +6,6 @@ describe("Facility", function () {
 
     var scope, $httpBackend, ctrl, routeParams, facility;
 
-//    beforeEach(module('openlmis.services'));
     beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $routeParams) {
       scope = $rootScope.$new();
       routeParams = $routeParams;
@@ -101,7 +100,7 @@ describe("Facility", function () {
       ctrl = $controller(FacilityController, {$scope:scope, $routeParams:routeParams});
       scope.facilityForm = {$error:{ pattern:"" }};
 
-    }))
+    }));
 
     it('should get facility if defined', function () {
       $httpBackend.flush();

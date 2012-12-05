@@ -74,14 +74,14 @@ public class FacilityControllerTest {
         assertThat(responseEntity.getStatusCode(),is(HttpStatus.OK));
         ModelMap modelMap = (ModelMap)responseEntity.getBody();
         assertThat((String)modelMap.get("success"),is("test facility created successfully"));
-        verify(facilityService).save(facility);
+        verify(facilityService).saveOrUpdate(facility);
         assertThat(facility.getModifiedBy(),is(USER));
     }
 
     @Test
     public void shouldReturnErrorMessageIfSaveFails() throws Exception {
         Facility facility = new Facility();
-        doThrow(new RuntimeException("error message")).when(facilityService).save(facility);
+        doThrow(new RuntimeException("error message")).when(facilityService).saveOrUpdate(facility);
         ResponseEntity responseEntity = facilityController.addOrUpdate(facility, httpServletRequest);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.BAD_REQUEST));
         ModelMap body = (ModelMap) responseEntity.getBody();

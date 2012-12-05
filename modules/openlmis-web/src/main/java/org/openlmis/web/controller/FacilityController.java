@@ -59,25 +59,29 @@ public class FacilityController extends BaseController {
                 addPrograms(programService.getAll()).get();
     }
 
-    @RequestMapping(value = "admin/facility" , method = RequestMethod.POST , headers = "Accept=application/json")
+    @RequestMapping(value = "admin/facility", method = RequestMethod.POST, headers = "Accept=application/json")
     public ResponseEntity<ModelMap> addOrUpdate(@RequestBody Facility facility, HttpServletRequest request) {
         ModelMap modelMap = new ModelMap();
         String modifiedBy = (String) request.getSession().getAttribute(USER);
         facility.setModifiedBy(modifiedBy);
-        try{
-            facilityService.save(facility);
-        }catch (RuntimeException exception){
-            modelMap.put("error",exception.getMessage());
-            return new ResponseEntity<>(modelMap,HttpStatus.BAD_REQUEST);
+        try {
+            facilityService.saveOrUpdate(facility);
+        } catch (RuntimeException exception) {
+            modelMap.put("error", exception.getMessage());
+            return new ResponseEntity<>(modelMap, HttpStatus.BAD_REQUEST);
         }
-        modelMap.put("success", facility.getName()+" created successfully");
-        return new ResponseEntity<>(modelMap,HttpStatus.OK);
+        if (facility.getId() == null) {
+            modelMap.put("success", facility.getName() + " created successfully");
+        } else {
+            modelMap.put("success", facility.getName() + " updated successfully");
+        }
+        return new ResponseEntity<>(modelMap, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "admin/facility/{id}" , method = RequestMethod.GET , headers = "Accept=application/json")
+    @RequestMapping(value = "admin/facility/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
     public ResponseEntity<ModelMap> getFacility(@PathVariable(value = "id") int id) {
         ModelMap modelMap = new ModelMap();
-        modelMap.put("facility",facilityService.getFacility(id));
-        return new ResponseEntity<>(modelMap,HttpStatus.OK);
+        modelMap.put("facility", facilityService.getFacility(id));
+        return new ResponseEntity<>(modelMap, HttpStatus.OK);
     }
 }

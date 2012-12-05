@@ -21,7 +21,7 @@ public class FacilityPersistenceHandlerTest {
         Facility facility = make(a(FacilityBuilder.defaultFacility));
         facilityPersistenceHandler.save(facility, "user");
         assertThat(facility.getModifiedBy(), is("user"));
-        verify(facilityService).save(facility);
+        verify(facilityService).saveOrUpdate(facility);
     }
 
 }

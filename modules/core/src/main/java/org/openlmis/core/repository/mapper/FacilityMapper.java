@@ -145,6 +145,7 @@ public interface FacilityMapper {
             @Result(property = "satelliteParentCode", column = "satellite_parent_code"),
             @Result(property = "hasElectricity", column = "has_electricity"),
             @Result(property = "hasElectronicScc", column = "has_electronic_scc"),
+            @Result(property = "hasElectronicDar", column = "has_electronic_dar"),
             @Result(property = "active", column = "is_active"),
             @Result(property = "goLiveDate", column = "go_live_date"),
             @Result(property = "goDownDate", column = "go_down_date"),
@@ -155,4 +156,14 @@ public interface FacilityMapper {
     })
     Facility get(int id);
 
+
+    @Update("UPDATE facility SET code=#{code},name=#{name},description=#{description},gln=#{gln},main_phone=#{mainPhone},fax=#{fax},address1=#{address1}," +
+            "address2=#{address2},geographic_zone_id=#{geographicZone},type=#{facilityTypeCode},catchment_population=#{catchmentPopulation},latitude=#{latitude}," +
+            "longitude=#{longitude},altitude=#{altitude}," +
+            "operated_by=#{operatedBy},cold_storage_gross_capacity=#{coldStorageGrossCapacity},cold_storage_net_capacity=#{coldStorageNetCapacity}," +
+            "supplies_others=#{suppliesOthers},is_sdp=#{sdp},is_online=#{online},is_satellite=#{satellite},satellite_parent_code=#{satelliteParentCode}," +
+            "has_electricity=#{hasElectricity}," +
+            "has_electronic_scc=#{hasElectronicScc},has_electronic_dar=#{hasElectronicDar},is_active=#{active},go_live_date=#{goLiveDate},go_down_date=#{goDownDate}," +
+            "comment=#{comment},data_reportable=#{dataReportable},modified_by=#{modifiedBy},modified_date=#{modifiedDate} WHERE id=#{id}")
+    void update(Facility facility);
 }

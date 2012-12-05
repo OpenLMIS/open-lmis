@@ -26,4 +26,7 @@ public interface ProgramSupportedMapper {
             @Result(property = "modifiedDate", column = "MODIFIED_DATE")})
     List<ProgramSupported> getBy(@Param("facilityCode") String facilityCode, @Param("programCode") String programCode);
 
+
+    @Delete("DELETE FROM programs_supported WHERE facility_code=#{facilityCode} AND program_code=#{programCode}")
+    void deleteObsoletePrograms(@Param(value = "facilityCode") String facilityCode,@Param(value = "programCode") String programCode);
 }
