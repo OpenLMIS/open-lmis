@@ -24,9 +24,9 @@
 .logo img {
   float: left;
   margin: 5px 11px 5px 10px;
-  border: 3px solid white;
+  border: 1px solid white;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
-  width: 24px;
+  width: 28px;
 }
 .logo h1 {
   float: left;
