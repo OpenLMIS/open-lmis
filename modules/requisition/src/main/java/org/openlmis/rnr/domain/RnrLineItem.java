@@ -30,7 +30,7 @@ public class RnrLineItem {
     private Integer lossesAndAdjustments;
     private String reasonForLossesAndAdjustments;
 
-    private Integer patientCount;
+    private Integer newPatientCount;
     private Integer stockOutDays;
     private Float normalizedConsumption;
     private Float amc;

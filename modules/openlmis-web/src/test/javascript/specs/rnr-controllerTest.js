@@ -101,7 +101,7 @@ describe('Requisition controllers', function () {
             $httpBackend.expectPOST('/logistics/rnr/rnrId/save.json').respond(200);
             scope.saveRnr();
             $httpBackend.flush();
-            expect(scope.message).toEqual("Rnr saved successfully!");
+            expect(scope.message).toEqual("R&R saved successfully!");
     });
 
     it('should not save work in progress when for invalid form', function(){

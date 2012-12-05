@@ -95,7 +95,7 @@ function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $l
               return ;
         }
         $http.post('/logistics/rnr/' + $scope.$parent.rnr.id+ '/save.json', $scope.$parent.rnr ).success(function (data){
-         $scope.message = "Rnr saved successfully!";
+         $scope.message = "R&R saved successfully!";
          $scope.error="";
         });
     }

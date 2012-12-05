@@ -34,7 +34,7 @@ public interface RnrLineItemMapper {
             @Result(property = "quantityApproved", column = "quantity_approved"),
             @Result(property = "lossesAndAdjustments", column = "losses_and_adjustments"),
             @Result(property = "reasonForLossesAndAdjustments", column = "reason_for_losses_and_adjustments"),
-            @Result(property = "patientCount", column = "new_patient_count"),
+            @Result(property = "newPatientCount", column = "new_patient_count"),
             @Result(property = "stockOutDays", column = "stock_out_days"),
             @Result(property = "normalizedConsumption", column = "normalized_consumption"),
             @Result(property = "amc", column = "amc"),
@@ -60,7 +60,7 @@ public interface RnrLineItemMapper {
             " quantity_approved = #{quantityApproved}, "+
             " losses_and_adjustments = #{lossesAndAdjustments}, "+
             " reason_for_losses_and_adjustments = #{reasonForLossesAndAdjustments}, "+
-            " new_patient_count = #{patientCount}, "+
+            " new_patient_count = #{newPatientCount}, "+
             " stock_out_days = #{stockOutDays}, "+
             " normalized_consumption = #{normalizedConsumption}, "+
             " amc = #{amc}, "+
