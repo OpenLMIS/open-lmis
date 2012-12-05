@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Rnr {
 
-    private int id;
+    private Integer id;
     private String facilityCode;
     private String programCode;
     private RnrStatus status;

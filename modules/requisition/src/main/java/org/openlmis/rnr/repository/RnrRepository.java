@@ -42,4 +42,11 @@ public class RnrRepository {
             rnrLineItemMapper.update(lineItem);
         }
     }
+
+    public Rnr getRequisitionByFacilityAndProgram(String facilityCode, String programCode) {
+        Rnr rnr = rnrMapper.getRequisitionByFacilityAndProgram(facilityCode, programCode);
+        if(rnr == null) return new Rnr();
+        rnr.setLineItems(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()));
+        return rnr;
+    }
 }

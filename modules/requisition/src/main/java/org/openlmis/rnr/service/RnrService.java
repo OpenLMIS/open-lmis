@@ -18,27 +18,26 @@ import java.util.List;
 public class RnrService {
 
     private RnrRepository rnrRepository;
-
     private ProductService productService;
 
-    private RnrTemplateService rnrTemplateService;
-
     @Autowired
-    public RnrService(RnrRepository rnrRepository, ProductService productService, RnrTemplateService rnrTemplateService) {
+    public RnrService(RnrRepository rnrRepository, ProductService productService) {
         this.rnrRepository = rnrRepository;
         this.productService = productService;
-        this.rnrTemplateService = rnrTemplateService;
     }
 
     @Transactional
     public Rnr initRnr(String facilityCode, String programCode, String modifiedBy) {
-        Rnr requisition = new Rnr(facilityCode, programCode, RnrStatus.INITIATED, modifiedBy);
-        List<Product> products = productService.getByFacilityAndProgram(facilityCode, programCode);
-        for (Product product : products) {
-            RnrLineItem requisitionLineItem = new RnrLineItem(requisition.getId(), product, modifiedBy);
-            requisition.add(requisitionLineItem);
+        Rnr requisition = rnrRepository.getRequisitionByFacilityAndProgram(facilityCode, programCode);
+        if(requisition.getId()==null){
+            requisition = new Rnr(facilityCode, programCode, RnrStatus.INITIATED, modifiedBy);
+            List<Product> products =  productService.getByFacilityAndProgram(facilityCode, programCode);
+            for (Product product : products) {
+                RnrLineItem requisitionLineItem = new RnrLineItem(requisition.getId(), product, modifiedBy);
+                requisition.add(requisitionLineItem);
+            }
+            rnrRepository.insert(requisition);
         }
-        rnrRepository.insert(requisition);
         return requisition;
     }
 

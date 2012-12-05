@@ -9,7 +9,7 @@ angular.module('rnr', ['openlmis']).config(['$routeProvider', function ($routePr
                        link: function(scope, element, attrs, ctrl) {
                            var validationFunction = scope[attrs.rnrValidator];
                            ctrl.$parsers.unshift(function(viewValue) {
-                               if (validationFunction(viewValue)) {
+                               if (validationFunction(viewValue, element.attr('name'))) {
                                    ctrl.$setValidity(element.attr('name'), true);
                                    ctrl.$setValidity('rnrError', true);
                                    if(viewValue =="") viewValue = undefined;

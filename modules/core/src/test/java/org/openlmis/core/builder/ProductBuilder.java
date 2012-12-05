@@ -3,7 +3,9 @@ package org.openlmis.core.builder;
 import com.natpryce.makeiteasy.Instantiator;
 import com.natpryce.makeiteasy.Property;
 import com.natpryce.makeiteasy.PropertyLookup;
+import org.openlmis.core.domain.DosageUnit;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProductForm;
 
 import static com.natpryce.makeiteasy.Property.newProperty;
 
@@ -44,6 +46,12 @@ public class ProductBuilder {
             product.setPackRoundingThreshold(1);
             product.setRoundToZero(true);
             product.setForm(1);
+            DosageUnit productDosageUnit = new DosageUnit();
+            productDosageUnit.setName("Dosage Unit");
+            product.setProductDosageUnit(productDosageUnit);
+            ProductForm productForm = new ProductForm();
+            productForm.setName("form");
+            product.setProductForm(productForm);
             return product;
         }
     };

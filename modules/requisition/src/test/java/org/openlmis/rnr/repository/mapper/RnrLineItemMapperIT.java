@@ -5,9 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProductBuilder;
-import org.openlmis.core.domain.DosageUnit;
 import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.ProductForm;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProductMapper;
 import org.openlmis.core.repository.mapper.ProgramSupportedMapper;
@@ -57,8 +55,6 @@ public class RnrLineItemMapperIT {
         productMapper.deleteAll();
         facilityMapper.insert(make(a(defaultFacility)));
         product  = make(a(ProductBuilder.product));
-        product.setProductForm(new ProductForm());
-        product.setProductDosageUnit(new DosageUnit());
         productMapper.insert(product);
     }
 
@@ -79,6 +75,7 @@ public class RnrLineItemMapperIT {
         List<RnrLineItem> rnrLineItems = rnrLineItemMapper.getRnrLineItemsByRnrId(rnrId);
         assertThat(rnrLineItems.size(), is(1));
         assertThat(rnrLineItems.get(0).getRnrId(), is(rnrId));
+        assertThat(rnrLineItems.get(0).getProduct(), is("Primary Name form strength Dosage Unit"));
     }
 
 
@@ -96,6 +93,7 @@ public class RnrLineItemMapperIT {
 
         assertThat(rnrLineItems.get(0).getBeginningBalance(), is(43));
         assertThat(rnrLineItems.get(0).getLossesAndAdjustments(), is(10));
+        assertThat(rnrLineItems.get(0).getProduct(), is("Primary Name form strength Dosage Unit"));
     }
 
     @After

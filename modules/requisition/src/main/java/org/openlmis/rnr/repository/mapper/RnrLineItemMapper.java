@@ -9,8 +9,8 @@ import java.util.List;
 @Repository
 public interface RnrLineItemMapper {
 
-    @Select("insert into requisition_line_item(rnr_id, product_code, modified_by, modified_date) " +
-            "values (#{rnrId}, #{productCode}, #{modifiedBy}, #{modifiedDate}) returning id")
+    @Select("insert into requisition_line_item(rnr_id, product_code, product, modified_by, modified_date) " +
+            "values (#{rnrId}, #{productCode}, #{product}, #{modifiedBy}, #{modifiedDate}) returning id")
     @Options(useGeneratedKeys=true)
     public int insert(RnrLineItem rnrLineItem);
 
@@ -21,6 +21,8 @@ public interface RnrLineItemMapper {
     @Results(value = {
             @Result(property = "id", column = "id"),
             @Result(property = "rnrId", column = "rnr_id"),
+            @Result(property = "product", column = "product"),
+            @Result(property = "productCode", column = "product_code"),
             @Result(property = "quantityReceived", column = "quantity_received"),
             @Result(property = "quantityDispensed", column = "quantity_dispensed"),
             @Result(property = "beginningBalance", column = "beginning_balance"),

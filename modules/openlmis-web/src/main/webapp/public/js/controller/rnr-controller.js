@@ -43,10 +43,22 @@ function InitiateRnrController($http, $scope, UserFacilityList, UserSupportedPro
 
 function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $location, $http) {
 
-    $scope.positiveInteger = function(value){
+    $scope.positiveInteger = function(value, errorHolder){
        var INTEGER_REGEXP = /^\d*$/;
-       return INTEGER_REGEXP.test(value);
+       var valid = INTEGER_REGEXP.test(value);
+
+       if(errorHolder!=undefined) toggleErrorMessageDisplay(valid, errorHolder)
+
+       return valid;
     }
+
+   var  toggleErrorMessageDisplay = function(valid, errorHolder){
+        if(valid){
+            document.getElementById(errorHolder).style.display='none';
+        }else {
+            document.getElementById(errorHolder).style.display='block';
+        }
+   }
 
     $scope.positiveFloat = function(value){
         var FLOAT_REGEXP = /^\d+(\.\d\d)?$/;

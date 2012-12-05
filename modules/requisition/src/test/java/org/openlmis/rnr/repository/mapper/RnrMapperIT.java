@@ -1,6 +1,5 @@
 package org.openlmis.rnr.repository.mapper;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +12,8 @@ import org.openlmis.rnr.domain.RnrStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -23,8 +24,11 @@ import static org.openlmis.core.builder.FacilityBuilder.FACILITY_CODE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext-requisition.xml")
+@TransactionConfiguration(defaultRollback=true)
+@Transactional
 public class RnrMapperIT {
 
+    public static final String HIV = "HIV";
     @Autowired
     private FacilityMapper facilityMapper;
     @Autowired
@@ -35,16 +39,13 @@ public class RnrMapperIT {
 
     @Before
     public void setUp() {
-        programSupportedMapper.deleteAll();
-        rnrMapper.deleteAll();
-        facilityMapper.deleteAll();
         Facility facility = make(a(FacilityBuilder.defaultFacility));
         facilityMapper.insert(facility);
     }
 
     @Test
     public void shouldReturnRequisitionId() {
-        Rnr requisition = new Rnr(FACILITY_CODE, "HIV", RnrStatus.INITIATED, "user");
+        Rnr requisition = new Rnr(FACILITY_CODE, HIV, RnrStatus.INITIATED, "user");
         int id1 = rnrMapper.insert(requisition);
         int id2 = rnrMapper.insert(new Rnr(FACILITY_CODE, "ARV", RnrStatus.INITIATED, "user"));
         assertThat(id1, is(id2 - 1));
@@ -52,11 +53,11 @@ public class RnrMapperIT {
 
     @Test
     public void shouldReturnRequisitionById() {
-        Rnr requisition = new Rnr(FACILITY_CODE, "HIV", RnrStatus.INITIATED, "user");
+        Rnr requisition = new Rnr(FACILITY_CODE, HIV, RnrStatus.INITIATED, "user");
         int id = rnrMapper.insert(requisition);
         Rnr requisitionById = rnrMapper.getRequisitionById(id);
         assertThat(requisitionById.getId(), is(id));
-        assertThat(requisitionById.getProgramCode(), is(equalTo("HIV")));
+        assertThat(requisitionById.getProgramCode(), is(equalTo(HIV)));
         assertThat(requisitionById.getFacilityCode(), is(equalTo(FACILITY_CODE)));
         assertThat(requisitionById.getModifiedBy(), is(equalTo("user")));
         assertThat(requisitionById.getStatus(), is(equalTo(RnrStatus.INITIATED)));
@@ -64,7 +65,7 @@ public class RnrMapperIT {
 
     @Test
     public void shouldUpdateRequisition() {
-        Rnr requisition = new Rnr(FACILITY_CODE, "HIV", RnrStatus.INITIATED, "user");
+        Rnr requisition = new Rnr(FACILITY_CODE, HIV, RnrStatus.INITIATED, "user");
         int id = rnrMapper.insert(requisition);
         requisition.setId(id);
         requisition.setModifiedBy("user1");
@@ -79,11 +80,12 @@ public class RnrMapperIT {
         assertThat(updatedRequisition.getStatus(), is(equalTo(RnrStatus.CREATED)));
     }
 
-    @After
-    public void tearDown() throws Exception {
-        programSupportedMapper.deleteAll();
-        rnrMapper.deleteAll();
-        facilityMapper.deleteAll();
+    @Test
+    public void shouldReturnRequisitionByFacilityAndProgramAndIfExists() {
+        Rnr requisition = new Rnr(FACILITY_CODE, HIV, RnrStatus.INITIATED, "user");
+        int rnrId = rnrMapper.insert(requisition);
+        Rnr rnr = rnrMapper.getRequisitionByFacilityAndProgram(FACILITY_CODE, HIV);
+        assertThat(rnr.getId(), is(rnrId));
     }
 
 }

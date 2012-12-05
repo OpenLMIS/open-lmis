@@ -29,4 +29,15 @@ public interface RnrMapper {
     })
     public Rnr getRequisitionById(int rnrId);
 
+    @Select("Select * from requisition where facility_code = #{facilityCode} and program_code= #{programCode}")
+    @Results(value = {
+            @Result(property = "id", column = "id"),
+            @Result(property = "facilityCode", column = "facility_code"),
+            @Result(property = "programCode", column = "program_code"),
+            @Result(property = "status", column = "status"),
+            @Result(property = "modifiedBy", column = "modified_by"),
+            @Result(property = "modifiedDate", column = "modified_date")
+    })
+    public Rnr getRequisitionByFacilityAndProgram(@Param("facilityCode")String facilityCode,
+                                                  @Param("programCode")String programCode);
 }

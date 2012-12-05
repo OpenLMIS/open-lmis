@@ -3,6 +3,7 @@ create table requisition_line_item (
 id serial primary key,
 rnr_id int not null references requisition(id),
 product_code varchar(50) not null references product(code),
+product varchar(250),
 beginning_balance integer,
 quantity_received integer,
 quantity_dispensed integer,
