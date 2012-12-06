@@ -1,11 +1,20 @@
-function CreateRnrTemplateController($scope, Program) {
+function CreateRnrTemplateController($scope, Program, $location) {
     Program.get({}, function (data) {   //success
         $scope.programs = data.programList;
     }, {});
+
+    $scope.createRnrTemplate = function () {
+        if ($scope.$parent.program != undefined) {
+            $scope.error = "";
+            $location.path('create-rnr-template');
+        }
+        else {
+            $scope.error = "Please select a program";
+        }
+    };
 }
 
 function SaveRnrTemplateController($scope, RnRColumnList, $http, $location) {
-
     var code = ($scope.program ? $scope.program.code : "");
     RnRColumnList.get({programCode:code}, function (data) {   //success
         $scope.rnrColumnList = data.rnrColumnList;

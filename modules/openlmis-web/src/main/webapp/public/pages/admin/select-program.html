@@ -2,7 +2,7 @@
     <h2>Configure R &amp; R Template</h2>
     <div class="app-form">
       <div class="form-row">
-        <label>Choose a program</label>
+        <label>Program</label>
         <div class="form-field">
           <select ng-model="$parent.program" ng-options="i as i.name for i in programs">
             <option value="">--Choose program--</option>
@@ -10,7 +10,10 @@
         </div>
       </div>
       <div class="form-row button-row">
-        <a href="#/create-rnr-template" class="btn">Next</a>
+          <div class="alert alert-error"  ng-model="error" ng-show="error">
+              {{error}}
+          </div>
+        <a ng-click="createRnrTemplate()" href="javascript:void(0);" class="btn">Next</a>
       </div>
     </div>
 </div>
