@@ -1,4 +1,4 @@
-function CreateRnrTemplateController($scope, Program, $location) {
+function ConfigureRnRTemplateController($scope, Program, $location) {
     Program.get({}, function (data) {   //success
         $scope.programs = data.programList;
     }, {});
