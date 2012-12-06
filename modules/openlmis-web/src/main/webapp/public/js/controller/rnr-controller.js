@@ -1,6 +1,9 @@
 function InitiateRnrController($http, $scope, UserFacilityList, UserSupportedProgramInFacilityForAnOperation, $location) {
     UserFacilityList.get({}, function (data) {
             $scope.facilities = data.facilityList;
+            if($scope.facilities == null || $scope.facilities.length == 0){
+                $scope.facilityNotPresent = true;
+            }
         }, {}
     );
 
@@ -8,6 +11,9 @@ function InitiateRnrController($http, $scope, UserFacilityList, UserSupportedPro
         if ($scope.$parent.facility) {
             UserSupportedProgramInFacilityForAnOperation.get({facilityCode:$scope.facility}, function (data) {
                 $scope.$parent.programsForFacility = data.programList;
+                if($scope.$parent.programsForFacility == null || $scope.$parent.programsForFacility.length == 0){
+                    $scope.programNotPresent = true;
+                }
             }, {});
         } else {
             $scope.$parent.program = null;

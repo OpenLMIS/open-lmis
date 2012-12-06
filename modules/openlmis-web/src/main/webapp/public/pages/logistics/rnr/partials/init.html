@@ -4,11 +4,19 @@
     <select ng-model="$parent.facility" ng-options="i.code as i.code + '-' + i.name for i in facilities"
             ng-change="loadPrograms()">
         <option value="">--choose facility--</option>
-    </select> <br/><br/>
+    </select> <br/>
+    <div class="alert alert-error" id="noFacilityAssignedErrorMsg" ng-model="$parent.facilityNotPresent" ng-show="facilityNotPresent">
+        None Assigned
+    </div>
+    <br/>
     <label>Program</label>
     <select ng-model="$parent.program" ng-options="i as i.name for i in $parent.programsForFacility">
         <option value="">--choose program--</option>
-    </select> <br/><br/>
+    </select> <br/>
+    <div class="alert alert-error" id="noProgramAssignedErrorMsg" ng-model="$parent.programNotPresent" ng-show="programNotPresent">
+        None Assigned
+    </div>
+    <br/>
   <div class="alert alert-error" id="saveSuccessMsgDiv" ng-model="error" ng-show="error">
     {{error}}
   </div>
