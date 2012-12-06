@@ -1,6 +1,8 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
 import org.springframework.stereotype.Repository;
 
@@ -25,6 +27,21 @@ public interface ProgramSupportedMapper {
             @Result(property = "modifiedBy", column = "MODIFIED_BY"),
             @Result(property = "modifiedDate", column = "MODIFIED_DATE")})
     List<ProgramSupported> getBy(@Param("facilityCode") String facilityCode, @Param("programCode") String programCode);
+
+    @Select("SELECT DISTINCT p.code, p.name, p.description, p.active " +
+            "FROM program p, facility f, programs_supported ps, user u, program  WHERE " +
+            "ps.program_code = ANY(#{programCodes}::VARCHAR[]) AND " +
+            "ps.facility_code = #{facility.code} " +
+            "AND ps.program_code = p.code "+
+            "AND p.active = true " +
+            "AND ps.active = true")
+    @Results(value = {
+            @Result(property = "code", column = "program.code"),
+            @Result(property = "name", column = "program.name"),
+            @Result(property = "description", column = "program.description"),
+            @Result(property = "active", column = "program.active")
+    })
+    List<Program> filterActiveProgramsAndFacility(@Param(value = "programCodes") String programCodesCommaSeparated, @Param(value = "facility") Facility facility);
 
 
     @Delete("DELETE FROM programs_supported WHERE facility_code=#{facilityCode} AND program_code=#{programCode}")

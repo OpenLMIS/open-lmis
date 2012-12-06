@@ -28,6 +28,8 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
+import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
+import static org.openlmis.core.builder.ProgramBuilder.programCode;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -54,7 +56,7 @@ public class FacilityRepositoryTest {
         now = new DateTime(2012, 10, 10, 8, 0);
         when(DateTime.now()).thenReturn(now);
 
-        repository = new FacilityRepository(mockedFacilityMapper, programSupportedMapper,programMapper);
+        repository = new FacilityRepository(mockedFacilityMapper, programSupportedMapper, programMapper);
     }
 
     @Test
@@ -79,7 +81,10 @@ public class FacilityRepositoryTest {
     public void shouldAddProgramsSupportedByAFacility() throws Exception {
         Facility facility = make(a(defaultFacility));
         facility.setId(null);
-        List<Program> programs = new ArrayList<Program>(){{add(make(a(ProgramBuilder.program))); add(make(a(ProgramBuilder.program)));}};
+        List<Program> programs = new ArrayList<Program>() {{
+            add(make(a(defaultProgram)));
+            add(make(a(defaultProgram)));
+        }};
         facility.setSupportedPrograms(programs);
         repository.saveOrUpdate(facility);
         verify(programSupportedMapper, times(2)).addSupportedProgram(any(ProgramSupported.class));
@@ -93,6 +98,7 @@ public class FacilityRepositoryTest {
         doThrow(new DuplicateKeyException("")).when(mockedFacilityMapper).insert(facility);
         repository.saveOrUpdate(facility);
     }
+
     @Test
     public void shouldRaiseIncorrectReferenceDataError() throws Exception {
         Facility facility = new Facility();
@@ -121,7 +127,7 @@ public class FacilityRepositoryTest {
         when(programMapper.getByFacilityCode(code)).thenReturn(programs);
         Facility facility1 = repository.getFacility(1);
 
-        assertThat(facility1.getSupportedPrograms(),is(programs));
+        assertThat(facility1.getSupportedPrograms(), is(programs));
         verify(mockedFacilityMapper).get(1);
         verify(programMapper).getByFacilityCode(code);
 
@@ -134,30 +140,30 @@ public class FacilityRepositoryTest {
 
         repository.saveOrUpdate(facility);
         verify(mockedFacilityMapper).update(facility);
-        verify(mockedFacilityMapper,never()).insert(facility);
+        verify(mockedFacilityMapper, never()).insert(facility);
     }
 
     @Test
     public void shouldNotUpdateFacilityIfIDIsNotSet() throws Exception {
         Facility facility = new Facility();
         repository.saveOrUpdate(facility);
-        verify(mockedFacilityMapper,never()).update(facility);
+        verify(mockedFacilityMapper, never()).update(facility);
     }
 
     @Test
     public void shouldUpdateSupportedProgramsForFacilityIfIDIsDefined() throws Exception {
         Facility facility = make(a(defaultFacility));
         facility.setId(1);
-        List<Program> programs = new ArrayList<Program>(){{
-            add(make(a(ProgramBuilder.program)));
-            add(make(a(ProgramBuilder.program, with(ProgramBuilder.code, "HIV"))));
+        List<Program> programs = new ArrayList<Program>() {{
+            add(make(a(ProgramBuilder.defaultProgram)));
+            add(make(a(ProgramBuilder.defaultProgram, with(programCode, "HIV"))));
         }};
 
         facility.setSupportedPrograms(programs);
 
         List<Program> programsForFacility = new ArrayList<Program>() {{
-            add(make(a(ProgramBuilder.program)));
-            add(make(a(ProgramBuilder.program, with(ProgramBuilder.code, "ARV"))));
+            add(make(a(ProgramBuilder.defaultProgram)));
+            add(make(a(ProgramBuilder.defaultProgram, with(programCode, "ARV"))));
         }};
 
         when(programMapper.getByFacilityCode(facility.getCode())).thenReturn(programsForFacility);
@@ -166,8 +172,8 @@ public class FacilityRepositoryTest {
         repository.saveOrUpdate(facility);
 
         verify(programMapper).getByFacilityCode(facility.getCode());
-        verify(programSupportedMapper).addSupportedProgram(new ProgramSupported(facility.getCode(),"HIV",true, facility.getModifiedBy(), facility.getModifiedDate()));
-        verify(programSupportedMapper).deleteObsoletePrograms(facility.getCode(),"ARV");
+        verify(programSupportedMapper).addSupportedProgram(new ProgramSupported(facility.getCode(), "HIV", true, facility.getModifiedBy(), facility.getModifiedDate()));
+        verify(programSupportedMapper).deleteObsoletePrograms(facility.getCode(), "ARV");
     }
 
 }

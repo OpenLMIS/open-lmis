@@ -2,7 +2,10 @@ package org.openlmis.core.repository.mapper;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.Role;
+import org.openlmis.core.domain.RoleAssignment;
+import org.openlmis.core.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -13,11 +16,13 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertEquals;
-import static org.openlmis.core.builder.FacilityBuilder.*;
+import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
+import static org.openlmis.core.builder.ProgramBuilder.programCode;
+import static org.openlmis.core.domain.Right.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
-@TransactionConfiguration(defaultRollback=true)
+@TransactionConfiguration(defaultRollback = true)
 @Transactional
 public class RoleRightsMapperIT {
 
@@ -31,53 +36,44 @@ public class RoleRightsMapperIT {
     ProgramMapper programMapper;
 
     @Autowired
-    private FacilityMapper facilityMapper;
-
-    @Autowired
     ProgramSupportedMapper programSupportedMapper;
 
     @Test
     public void shouldReturnProgramAvailableForAFacilityForAUserWithGivenRights() throws Exception {
-        Program program = insertProgram();
-        Facility dummyFacility = insertFacility();
+        Program program1 = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
+        Program program2 = insertProgram(make(a(defaultProgram, with(programCode, "p2"))));
+
         User user = insertUser();
-        insertRoleRightsAndAssignments(program, user);
-        insertProgramSupportedForFacility(program, dummyFacility);
 
-        List<Program> programs = roleRightsMapper.getProgramWithGivenRightForAUserAndFacility(Right.CREATE_REQUISITION, user.getUserName(), dummyFacility.getCode());
+        Role r1 = new Role("r1", "random description");
+        roleRightsMapper.insertRole(r1);
 
-        assertEquals(1, programs.size());
-        assertEquals(program.getCode(), programs.get(0).getCode());
+        Role r2 = new Role("r2", "random description");
+        roleRightsMapper.insertRole(r2);
 
+        roleRightsMapper.createRoleRight(r1.getId(), CREATE_REQUISITION);
+        roleRightsMapper.createRoleRight(r1.getId(), VIEW_REQUISITION);
+        roleRightsMapper.createRoleRight(r2.getId(), APPROVE_REQUISITION);
+        roleRightsMapper.createRoleRight(r2.getId(), VIEW_REQUISITION);
+
+        insertRoleAssignments(program1, user, r1);
+        insertRoleAssignments(program1, user, r2);
+        insertRoleAssignments(program2, user, r2);
+
+        List<RoleAssignment> roleAssignments = roleRightsMapper.getProgramWithGivenRightForAUser(CREATE_REQUISITION, user.getUserName());
+
+        assertEquals(1, roleAssignments.size());
+        assertEquals(program1.getCode(), roleAssignments.get(0).getProgramId());
+        assertEquals(r1.getId(), roleAssignments.get(0).getRoleId());
     }
 
-    private void insertProgramSupportedForFacility(Program program, Facility facility) {
-        programSupportedMapper.addSupportedProgram(new ProgramSupported(facility.getCode(), program.getCode(), true));
-    }
-
-    private Program insertProgram() {
-        Program program = new Program("dummyProgramCode", "dummyProgramName", "dummyProgramDescription", true);
+    private Program insertProgram(Program program) {
         programMapper.insert(program);
         return program;
     }
 
-    private Facility insertFacility() {
-        Facility dummyFacility = make(a(defaultFacility,
-                with(code, "FacilityDummy101"),
-                with(name, "Dummy Facility 101"),
-                with(type, "warehouse"),
-                with(geographicZone, 1)));
-        facilityMapper.insert(dummyFacility);
-        return dummyFacility;
-    }
-
-    private Role insertRoleRightsAndAssignments(Program program, User user) {
-        Role role = new Role("SuperRole", "random description");
-        roleRightsMapper.insertRole(role);
-        roleRightsMapper.createRoleRight(role.getId(), Right.CREATE_REQUISITION);
-
+    private Role insertRoleAssignments(Program program, User user, Role role) {
         roleRightsMapper.createRoleAssignment(user, role, program);
-
         return role;
     }
 

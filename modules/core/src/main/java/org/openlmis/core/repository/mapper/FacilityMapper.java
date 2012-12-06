@@ -19,7 +19,7 @@ public interface FacilityMapper {
             "#{coldStorageGrossCapacity},#{coldStorageNetCapacity},#{suppliesOthers},#{sdp},#{online}," +
             "#{satellite},#{satelliteParentCode},#{hasElectricity},#{hasElectronicScc},#{hasElectronicDar},#{active}," +
             "#{goLiveDate},#{goDownDate},#{comment},#{dataReportable},#{modifiedBy},#{modifiedDate}) returning id")
-    @Options(useGeneratedKeys=true)
+    @Options(useGeneratedKeys = true)
     int insert(Facility facility);
 
     @Select("SELECT * FROM FACILITY")
@@ -62,13 +62,13 @@ public interface FacilityMapper {
     void deleteAll();
 
     @Select("SELECT * FROM users U, facility F " +
-                "where U.facility_id = F.id and U.user_name = #{userName}")
-        @Results(value = {
-                @Result(property = "id", column = "facility_id"),
-                @Result(property = "name"),
-                @Result(property = "code")
-        })
-        Facility getHomeFacility(String userName);
+            "where U.facility_id = F.id and U.user_name = #{userName}")
+    @Results(value = {
+            @Result(property = "id", column = "facility_id"),
+            @Result(property = "name"),
+            @Result(property = "code")
+    })
+    Facility getHomeFacility(String userName);
 
     @Select("SELECT F.name, F.code,F.operated_by as operated_by, FT.name as facility_type, FT.nominal_max_month, " +
             "FT.nominal_eop, GZ.name as zone, GL.name as label, GZP.name as parent_zone, GLP.name as parent_label " +
@@ -96,22 +96,22 @@ public interface FacilityMapper {
 
     @Select("SELECT * FROM facility_type ORDER BY display_order")
     @Results(value = {
-            @Result(property = "code",column = "code"),
-            @Result(property = "name",column = "name"),
-            @Result(property = "description",column = "description"),
-            @Result(property = "levelId",column = "level_id"),
-            @Result(property = "nominalMaxMonth",column = "nominal_max_month"),
-            @Result(property = "nominalEop",column = "nominal_eop"),
-            @Result(property = "displayOrder",column = "display_order"),
-            @Result(property = "active",column = "is_active")
+            @Result(property = "code", column = "code"),
+            @Result(property = "name", column = "name"),
+            @Result(property = "description", column = "description"),
+            @Result(property = "levelId", column = "level_id"),
+            @Result(property = "nominalMaxMonth", column = "nominal_max_month"),
+            @Result(property = "nominalEop", column = "nominal_eop"),
+            @Result(property = "displayOrder", column = "display_order"),
+            @Result(property = "active", column = "is_active")
     })
     List<FacilityType> getAllTypes();
 
     @Select("SELECT * FROM facility_operator ORDER BY display_order")
     @Results(value = {
-            @Result(property = "code",column = "code"),
-            @Result(property = "text",column = "text"),
-            @Result(property = "displayOrder",column = "display_order")
+            @Result(property = "code", column = "code"),
+            @Result(property = "text", column = "text"),
+            @Result(property = "displayOrder", column = "display_order")
     })
     List<FacilityOperator> getAllOperators();
 

@@ -94,9 +94,9 @@ public class FacilityRepository {
             throw new RuntimeException("Facility has already been mapped to the program");
         } catch (DataIntegrityViolationException integrityViolationException) {
             if (integrityViolationException.getMessage().toLowerCase().contains("facility_code")) {
-                throw new RuntimeException("Invalid facility code specified");
+                throw new RuntimeException("Invalid facility programCode specified");
             } else {
-                throw new RuntimeException("Invalid program code specified");
+                throw new RuntimeException("Invalid program programCode specified");
             }
         }
     }

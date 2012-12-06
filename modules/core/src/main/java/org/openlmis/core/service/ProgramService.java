@@ -3,6 +3,7 @@ package org.openlmis.core.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.Right;
+import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.repository.ProgramRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,8 +33,7 @@ public class ProgramService {
         return programRepository.getAll();
     }
 
-
-    public List<Program> getUserSupportedPrograms(String facilityCode, String userName, Right createRequisition) {
-        return programRepository.getUserSupportedProgramsByFacilityCode(facilityCode, userName, createRequisition);
+    public List<Program> filterActiveProgramsAndFacility(List<RoleAssignment> roleAssignments, String facilityCode) {
+        return programRepository.filterActiveProgramsAndFacility(roleAssignments, facilityCode);
     }
 }

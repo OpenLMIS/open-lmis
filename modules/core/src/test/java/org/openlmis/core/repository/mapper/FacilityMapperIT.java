@@ -32,13 +32,6 @@ public class FacilityMapperIT {
     @Autowired
     FacilityMapper facilityMapper;
 
-//    @Before
-//    @After
-//    public void setUp() throws Exception {
-//        userMapper.deleteAll();
-//        facilityMapper.deleteAll();
-//    }
-
     @Test
     public void shouldFetchAllFacilitiesAvailable() throws Exception {
         Facility trz001 = make(a(defaultFacility,

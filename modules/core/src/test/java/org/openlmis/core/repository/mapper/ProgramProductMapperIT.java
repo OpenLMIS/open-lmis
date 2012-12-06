@@ -11,6 +11,8 @@ import org.openlmis.core.domain.ProgramProduct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -25,6 +27,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
+@Transactional
+@TransactionConfiguration(defaultRollback = true)
 public class ProgramProductMapperIT {
 
    @Autowired
@@ -36,19 +40,10 @@ public class ProgramProductMapperIT {
     @Autowired
     ProgramMapper programMapper;
 
-    @After
-    @Before
-    public void setUp() throws Exception {
-        programProductMapper.deleteAll();
-        productMapper.deleteAll();
-        programMapper.delete(PROGRAM_CODE);
-
-    }
-
     @Test
     public void shouldInsertProductForAProgram() throws Exception {
         productMapper.insert(make(a(ProductBuilder.product,with(displayOrder,1))));
-        programMapper.insert(make(a(ProgramBuilder.program)));
+        programMapper.insert(make(a(ProgramBuilder.defaultProgram)));
         ProgramProduct programProduct = new ProgramProduct(PROGRAM_CODE, PRODUCT_CODE);
         programProduct.setActive(true);
         int status = programProductMapper.insert(programProduct);

@@ -1,8 +1,6 @@
 package org.openlmis.core.repository.mapper;
 
 import org.joda.time.DateTime;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
@@ -12,6 +10,8 @@ import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.service.SpringIntegrationTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,6 +25,8 @@ import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 
 @ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
+@Transactional
+@TransactionConfiguration(defaultRollback = true)
 public class ProgramMapperIT extends SpringIntegrationTest {
 
     public static final String PROGRAM_CODE = "HIV";
@@ -37,14 +39,6 @@ public class ProgramMapperIT extends SpringIntegrationTest {
 
     @Autowired
     ProgramMapper programMapper;
-
-    @Before
-    @After
-    public void setUp() {
-        programSupportedMapper.deleteAll();
-        facilityMapper.deleteAll();
-        programMapper.delete("YELL_FVR");
-    }
 
     @Test
     public void shouldGetAllActiveProgram() {
@@ -67,7 +61,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
 
     @Test
     public void shouldGetAllPrograms() throws Exception {
-        Program program = make(a(ProgramBuilder.program));
+        Program program = make(a(ProgramBuilder.defaultProgram));
         program.setActive(false);
         programMapper.insert(program);
         List<Program> programs = programMapper.getAll();
@@ -79,7 +73,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     public void shouldGetProgramsSupportedByFacility() throws Exception {
         Facility facility = make(a(defaultFacility));
         facilityMapper.insert(facility);
-        programSupportedMapper.addSupportedProgram(new ProgramSupported(facility.getCode(),"HIV",true,facility.getModifiedBy(),facility.getModifiedDate()));
+        programSupportedMapper.addSupportedProgram(new ProgramSupported(facility.getCode(), "HIV", true, facility.getModifiedBy(), facility.getModifiedDate()));
         List<Program> supportedPrograms = programMapper.getByFacilityCode(facility.getCode());
         assertThat(supportedPrograms.get(0).getCode(), is("HIV"));
     }

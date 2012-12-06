@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,6 +29,8 @@ import static org.openlmis.core.builder.ProductBuilder.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
+@Transactional
+@TransactionConfiguration(defaultRollback = true)
 public class ProductMapperIT {
 
     public static final String HIV = "HIV";
@@ -47,16 +51,6 @@ public class ProductMapperIT {
     ProgramSupportedMapper programSupportedMapper;
     @Autowired
     ProductMapper productMapper;
-
-    @Before
-    @After
-    public void clean() {
-        facilityApprovedProductMapper.deleteAll();
-        programProductMapper.deleteAll();
-        programSupportedMapper.deleteAll();
-        productMapper.deleteAll();
-        facilityMapper.deleteAll();
-    }
 
     @Test
     public void shouldNotSaveProductWithoutMandatoryFields() throws Exception {
