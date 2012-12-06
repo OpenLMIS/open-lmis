@@ -22,12 +22,12 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.openlmis.core.builder.FacilityBuilder.FACILITY_CODE;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RnrServiceTest {
 
     public static final String HIV = "HIV";
+    public int facilityId = 1;
 
     @Autowired
     private RnrService rnrService;
@@ -43,12 +43,12 @@ public class RnrServiceTest {
 
     @Test
     public void shouldInitRequisition() {
-        when(rnrRepository.getRequisitionByFacilityAndProgram(FACILITY_CODE, HIV)).thenReturn(new Rnr());
+        when(rnrRepository.getRequisitionByFacilityAndProgram(facilityId, HIV)).thenReturn(new Rnr());
         List<Product> products = new ArrayList<>();
         products.add(make(a(ProductBuilder.product)));
-        when(productService.getByFacilityAndProgram(FACILITY_CODE, HIV)).thenReturn(products);
-        Rnr rnr = rnrService.initRnr(FACILITY_CODE, HIV, "user");
-        verify(productService).getByFacilityAndProgram(FACILITY_CODE, HIV);
+        when(productService.getByFacilityAndProgram(facilityId, HIV)).thenReturn(products);
+        Rnr rnr = rnrService.initRnr(facilityId, HIV, "user");
+        verify(productService).getByFacilityAndProgram(facilityId, HIV);
         verify(rnrRepository).insert(rnr);
         assertThat(rnr.getLineItems().size(), is(1));
     }
@@ -58,9 +58,9 @@ public class RnrServiceTest {
     public void shouldReturnExistingRnrIfAlreadyInitiated() {
         Rnr initiatedRnr = new Rnr();
         initiatedRnr.setId(1);
-        when(rnrRepository.getRequisitionByFacilityAndProgram(FACILITY_CODE, HIV)).thenReturn(initiatedRnr);
-        Rnr rnr = rnrService.initRnr(FACILITY_CODE, HIV, "user");
-        verify(productService, never()).getByFacilityAndProgram(FACILITY_CODE, HIV);
+        when(rnrRepository.getRequisitionByFacilityAndProgram(facilityId, HIV)).thenReturn(initiatedRnr);
+        Rnr rnr = rnrService.initRnr(facilityId, HIV, "user");
+        verify(productService, never()).getByFacilityAndProgram(facilityId, HIV);
         verify(rnrRepository, never()).insert(rnr);
         assertThat(rnr, is(initiatedRnr));
     }

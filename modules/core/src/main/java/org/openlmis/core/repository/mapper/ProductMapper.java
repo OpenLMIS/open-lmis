@@ -76,7 +76,7 @@ public interface ProductMapper {
             "du.name as dosage_unit_name, du.display_order as dosage_unit_display_order " +
             "from product p, facility_approved_product fap, program_product pp, facility f , product_form pf , dosage_unit du " +
             "where pp.program_code = #{programCode} " +
-            "and f.code = #{facilityCode}" +
+            "and f.id = #{facilityId}" +
             "and fap.facility_type_code = f.type " +
             "and fap.product_code = p.code " +
             "and fap.product_code = pp.product_code " +
@@ -87,7 +87,7 @@ public interface ProductMapper {
             "and p.active = true " +
             "and pp.active = true " +
             "ORDER BY p.display_order NULLS LAST, p.code")
-    List<Product> getFullSupplyProductsByFacilityAndProgram(@Param("facilityCode") String facilityCode, @Param("programCode") String programCode);
+    List<Product> getFullSupplyProductsByFacilityAndProgram(@Param("facilityId") int facilityId, @Param("programCode") String programCode);
 
     @Delete("delete from product")
     void deleteAll();

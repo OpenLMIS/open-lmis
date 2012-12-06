@@ -63,11 +63,10 @@ public class FacilityMapperIT {
 
         Facility facility2 = make(a(defaultFacility));
 
-        facilityMapper.insert(facility1);
+        int facilityId = facilityMapper.insert(facility1);
         facilityMapper.insert(facility2);
 
-        String facilityCode = "TRZ001";
-        RequisitionHeader requisitionHeader = facilityMapper.getRequisitionHeaderData(facilityCode);
+        RequisitionHeader requisitionHeader = facilityMapper.getRequisitionHeaderData(facilityId);
 
         assertEquals("TRZ001", requisitionHeader.getFacilityCode());
         assertEquals("Ngorongoro Hospital", requisitionHeader.getFacilityName());

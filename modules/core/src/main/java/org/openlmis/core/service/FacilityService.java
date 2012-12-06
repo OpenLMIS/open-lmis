@@ -26,8 +26,8 @@ public class FacilityService {
         return facilityRepository.getAll();
     }
 
-    public RequisitionHeader getRequisitionHeader(String code) {
-        return facilityRepository.getHeader(code);
+    public RequisitionHeader getRequisitionHeader(int facilityId) {
+        return facilityRepository.getHeader(facilityId);
     }
 
 

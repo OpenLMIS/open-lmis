@@ -9,7 +9,7 @@ function InitiateRnrController($http, $scope, UserFacilityList, UserSupportedPro
 
     $scope.loadPrograms = function () {
         if ($scope.$parent.facility) {
-            UserSupportedProgramInFacilityForAnOperation.get({facilityCode:$scope.facility}, function (data) {
+            UserSupportedProgramInFacilityForAnOperation.get({facilityId:$scope.facility}, function (data) {
                 $scope.$parent.programsForFacility = data.programList;
                 if($scope.$parent.programsForFacility == null || $scope.$parent.programsForFacility.length == 0){
                     $scope.programNotPresent = true;
@@ -71,7 +71,7 @@ function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $l
         return FLOAT_REGEXP.test(value);
     }
 
-    RequisitionHeader.get({code:$scope.$parent.facility}, function (data) {
+    RequisitionHeader.get({facilityId:$scope.$parent.facility}, function (data) {
         $scope.header = data.requisitionHeader;
     }, function () {
         $location.path("init-rnr");

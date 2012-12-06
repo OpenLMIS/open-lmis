@@ -28,10 +28,10 @@ public class RnrController {
 
 
 
-    @RequestMapping(value = "/logistics/rnr/{facilityCode}/{programCode}/init", method = RequestMethod.POST, headers = "Accept=application/json")
-    public Rnr initRnr(@PathVariable("facilityCode") String facilityCode, @PathVariable("programCode") String programCode, HttpServletRequest request) {
+    @RequestMapping(value = "/logistics/rnr/{facilityId}/{programCode}/init", method = RequestMethod.POST, headers = "Accept=application/json")
+    public Rnr initRnr(@PathVariable("facilityId") int facilityId, @PathVariable("programCode") String programCode, HttpServletRequest request) {
         String modifiedBy = (String) request.getSession().getAttribute(USER);
-        return rnrService.initRnr(facilityCode, programCode, modifiedBy);
+        return rnrService.initRnr(facilityId, programCode, modifiedBy);
     }
 
     @RequestMapping(value = "/logistics/rnr/{rnrId}/save", method = RequestMethod.POST, headers = "Accept=application/json")

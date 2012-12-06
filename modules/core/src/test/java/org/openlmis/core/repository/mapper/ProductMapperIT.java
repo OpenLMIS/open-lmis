@@ -24,7 +24,6 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
-import static org.openlmis.core.builder.FacilityBuilder.FACILITY_CODE;
 import static org.openlmis.core.builder.ProductBuilder.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -64,7 +63,7 @@ public class ProductMapperIT {
 
     @Test
     public void shouldGetFullSupplyAndActiveProductsByFacilityAndProgramInOrderOfDisplayAndProductCode() {
-        facilityMapper.insert(make(a(FacilityBuilder.defaultFacility)));
+        int facilityId = facilityMapper.insert(make(a(FacilityBuilder.defaultFacility)));
 
         Product pro01 = product(HIV, "PRO01", true,true,6);
         addToProgram("ARV", pro01,true);
@@ -89,7 +88,7 @@ public class ProductMapperIT {
         addToFacilityType("warehouse", pro05);
 
 
-        List<Product> products = productMapper.getFullSupplyProductsByFacilityAndProgram(FACILITY_CODE, HIV);
+        List<Product> products = productMapper.getFullSupplyProductsByFacilityAndProgram(facilityId, HIV);
         assertEquals(4, products.size());
         assertEquals("PRO05", products.get(0).getCode());
         assertEquals("Primary Name", products.get(0).getPrimaryName());

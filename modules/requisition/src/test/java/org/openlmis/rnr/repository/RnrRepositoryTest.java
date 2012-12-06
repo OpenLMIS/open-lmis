@@ -17,7 +17,6 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
-import static org.openlmis.core.builder.FacilityBuilder.FACILITY_CODE;
 
 public class RnrRepositoryTest {
 
@@ -25,6 +24,7 @@ public class RnrRepositoryTest {
     private RnrMapper rnrMapper = mock(RnrMapper.class);
     private RnrLineItemMapper rnrLineItemMapper = mock(RnrLineItemMapper.class);
     private RnrRepository rnrRepository = new RnrRepository(rnrMapper, rnrLineItemMapper);
+    public int facilityId = 1;
 
     @Test
     public void shouldInsertRnrAndItsLineItems() throws Exception {
@@ -52,20 +52,20 @@ public class RnrRepositoryTest {
 
     @Test
     public void shouldReturnRnrAndItsLineItemsByFacilityAndProgram(){
-        Rnr initiatedRequisition = new Rnr(FACILITY_CODE, HIV, RnrStatus.INITIATED, "user");
+        Rnr initiatedRequisition = new Rnr(facilityId, HIV, RnrStatus.INITIATED, "user");
         initiatedRequisition.setId(1);
-        when(rnrMapper.getRequisitionByFacilityAndProgram(FACILITY_CODE, HIV)).thenReturn(initiatedRequisition);
+        when(rnrMapper.getRequisitionByFacilityAndProgram(facilityId, HIV)).thenReturn(initiatedRequisition);
         List<RnrLineItem> lineItems = new ArrayList<>();
         when(rnrLineItemMapper.getRnrLineItemsByRnrId(1)).thenReturn(lineItems);
-        Rnr rnr = rnrRepository.getRequisitionByFacilityAndProgram(FACILITY_CODE, HIV);
+        Rnr rnr = rnrRepository.getRequisitionByFacilityAndProgram(facilityId, HIV);
         assertThat(rnr, is(equalTo(initiatedRequisition)));
         assertThat(rnr.getLineItems(), is(equalTo(lineItems)));
     }
 
     @Test
     public void shouldReturnEmptyRnrIfRnrByFacilityAndProgramDoesNotExist(){
-        when(rnrMapper.getRequisitionByFacilityAndProgram(FACILITY_CODE, HIV)).thenReturn(null);
-        Rnr rnr = rnrRepository.getRequisitionByFacilityAndProgram(FACILITY_CODE, HIV);
+        when(rnrMapper.getRequisitionByFacilityAndProgram(facilityId, HIV)).thenReturn(null);
+        Rnr rnr = rnrRepository.getRequisitionByFacilityAndProgram(facilityId, HIV);
         assertThat(rnr, is(notNullValue()));
         assertThat(rnr.getId(), is(nullValue()));
     }

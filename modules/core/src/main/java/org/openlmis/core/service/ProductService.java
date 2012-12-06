@@ -25,8 +25,8 @@ public class ProductService {
     }
 
 
-    public List<Product> getByFacilityAndProgram(String facilityCode, String programCode) {
-        return repository.getByFacilityAndProgram(facilityCode, programCode);
+    public List<Product> getByFacilityAndProgram(int facilityId, String programCode) {
+        return repository.getByFacilityAndProgram(facilityId, programCode);
     }
 
 }

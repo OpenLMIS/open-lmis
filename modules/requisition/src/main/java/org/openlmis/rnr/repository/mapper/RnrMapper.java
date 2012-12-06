@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RnrMapper {
 
-    @Select("insert into requisition(facility_code, program_code, status, modified_by) " +
-            "values (#{facilityCode}, #{programCode}, #{status}, #{modifiedBy}) returning id")
+    @Select("insert into requisition(facility_id, program_code, status, modified_by) " +
+            "values (#{facilityId}, #{programCode}, #{status}, #{modifiedBy}) returning id")
     @Options(useGeneratedKeys=true)
     public int insert(Rnr requisition);
 
@@ -21,7 +21,7 @@ public interface RnrMapper {
     @Select("Select * from requisition where id = #{rnrId}")
     @Results(value = {
             @Result(property = "id", column = "id"),
-            @Result(property = "facilityCode", column = "facility_code"),
+            @Result(property = "facilityId", column = "facility_id"),
             @Result(property = "programCode", column = "program_code"),
             @Result(property = "status", column = "status"),
             @Result(property = "modifiedBy", column = "modified_by"),
@@ -29,15 +29,15 @@ public interface RnrMapper {
     })
     public Rnr getRequisitionById(int rnrId);
 
-    @Select("Select * from requisition where facility_code = #{facilityCode} and program_code= #{programCode}")
+    @Select("Select * from requisition where facility_id = #{facilityId} and program_code= #{programCode}")
     @Results(value = {
             @Result(property = "id", column = "id"),
-            @Result(property = "facilityCode", column = "facility_code"),
+            @Result(property = "facilityId", column = "facility_id"),
             @Result(property = "programCode", column = "program_code"),
             @Result(property = "status", column = "status"),
             @Result(property = "modifiedBy", column = "modified_by"),
             @Result(property = "modifiedDate", column = "modified_date")
     })
-    public Rnr getRequisitionByFacilityAndProgram(@Param("facilityCode")String facilityCode,
+    public Rnr getRequisitionByFacilityAndProgram(@Param("facilityId") int facilityId,
                                                   @Param("programCode")String programCode);
 }

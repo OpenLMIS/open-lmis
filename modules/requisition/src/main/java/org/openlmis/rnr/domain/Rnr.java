@@ -10,7 +10,8 @@ import java.util.List;
 public class Rnr {
 
     private Integer id;
-    private String facilityCode;
+    private int facilityId;
+
     private String programCode;
     private RnrStatus status;
 
@@ -22,8 +23,8 @@ public class Rnr {
     public Rnr(){
         System.out.println("");
     }
-    public Rnr(String facilityCode, String programCode, RnrStatus status, String modifiedBy) {
-        this.facilityCode = facilityCode;
+    public Rnr(int facilityId, String programCode, RnrStatus status, String modifiedBy) {
+        this.facilityId = facilityId;
         this.programCode = programCode;
         this.status = status;
         this.modifiedBy = modifiedBy;

@@ -27,22 +27,23 @@ public interface ProgramMapper {
     })
     List<Program> getAllActive();
 
-    @Select("select * from program P, programs_supported PS where P.code = PS.program_code and PS.facility_code = #{facilityCode} and PS.active=true and P.active=true")
+    @Select("select * from program P, programs_supported PS where P.code = PS.program_code and PS.facility_id = #{facilityId} and PS.active=true and P.active=true")
     @Results(value = {
             @Result(property = "code", column = "program.code"),
             @Result(property = "name", column = "program.name"),
             @Result(property = "description", column = "program.description")
     })
-    List<Program> getActiveByFacilityCode(String facilityCode);
+    List<Program> getActiveByFacility(int facilityId);
 
     @Select("SELECT * FROM program")
     List<Program> getAll();
 
-    @Select("select * from program P, programs_supported PS where P.code = PS.program_code and PS.facility_code = #{code}")
+    @Select("select P.code,P.name,P.description,PS.active from program P, programs_supported PS where P.code = PS.program_code and PS.facility_id = #{facilityId}")
     @Results(value = {
             @Result(property = "code", column = "program.code"),
             @Result(property = "name", column = "program.name"),
-            @Result(property = "description", column = "program.description")
+            @Result(property = "description", column = "program.description"),
+            @Result(property = "active", column = "programs_supported.active")
     })
-    List<Program> getByFacilityCode(String code);
+    List<Program> getByFacilityId(int facilityId);
 }

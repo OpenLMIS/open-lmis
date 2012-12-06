@@ -73,7 +73,7 @@ public interface FacilityMapper {
     @Select("SELECT F.name, F.code,F.operated_by as operated_by, FT.name as facility_type, FT.nominal_max_month, " +
             "FT.nominal_eop, GZ.name as zone, GL.name as label, GZP.name as parent_zone, GLP.name as parent_label " +
             "FROM facility F, facility_type FT, geographic_zone GZ, geographic_zone GZP, geopolitical_level GL, geopolitical_level GLP " +
-            "WHERE F.code = #{facilityCode} AND " +
+            "WHERE F.id = #{facilityId} AND " +
             "F.type = FT.code AND " +
             "F.geographic_zone_id = GZ.id AND " +
             "GZ.parent = GZP.id AND " +
@@ -91,7 +91,7 @@ public interface FacilityMapper {
             @Result(property = "parentZone.value", column = "parent_zone"),
             @Result(property = "parentZone.label", column = "parent_label")
     })
-    RequisitionHeader getRequisitionHeaderData(String facilityCode);
+    RequisitionHeader getRequisitionHeaderData(int facilityId);
 
 
     @Select("SELECT * FROM facility_type ORDER BY display_order")

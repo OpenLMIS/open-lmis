@@ -45,9 +45,9 @@ public class FacilityController extends BaseController {
         return facilityService.getAllForUser(loggedInUser(httpServletRequest));
     }
 
-    @RequestMapping(value = "logistics/facility/{code}/requisition-header", method = RequestMethod.GET, headers = "Accept=application/json")
-    public RequisitionHeader getRequisitionHeader(@PathVariable(value = "code") String code) {
-        return facilityService.getRequisitionHeader(code);
+    @RequestMapping(value = "logistics/facility/{facilityId}/requisition-header", method = RequestMethod.GET, headers = "Accept=application/json")
+    public RequisitionHeader getRequisitionHeader(@PathVariable(value = "facilityId") int facilityId) {
+        return facilityService.getRequisitionHeader(facilityId);
     }
 
     @RequestMapping(value = "admin/facility/reference-data", method = RequestMethod.GET, headers = "Accept=application/json")

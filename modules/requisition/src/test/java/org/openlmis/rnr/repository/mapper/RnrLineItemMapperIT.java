@@ -22,7 +22,6 @@ import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.openlmis.core.builder.FacilityBuilder.FACILITY_CODE;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 
 @ContextConfiguration(locations = "classpath*:applicationContext-requisition.xml")
@@ -45,6 +44,7 @@ public class RnrLineItemMapperIT {
     private ProgramSupportedMapper programSupportedMapper;
 
     Product product;
+    int facilityId;
 
     @Before
     public void setUp() {
@@ -53,14 +53,14 @@ public class RnrLineItemMapperIT {
         programSupportedMapper.deleteAll();
         facilityMapper.deleteAll();
         productMapper.deleteAll();
-        facilityMapper.insert(make(a(defaultFacility)));
+        facilityId = facilityMapper.insert(make(a(defaultFacility)));
         product  = make(a(ProductBuilder.product));
         productMapper.insert(product);
     }
 
     @Test
     public void shouldInsertRequisitionLineItem() {
-        int rnrId = rnrMapper.insert(new Rnr(FACILITY_CODE, "HIV", RnrStatus.INITIATED, "user"));
+        int rnrId = rnrMapper.insert(new Rnr(facilityId, "HIV", RnrStatus.INITIATED, "user"));
         int requisitionLineItemId = rnrLineItemMapper.insert(new RnrLineItem(rnrId, product, "user"));
         int requisitionLineItemId1 = rnrLineItemMapper.insert(new RnrLineItem(rnrId, product, "user"));
         assertThat(requisitionLineItemId1 - requisitionLineItemId, is(1));
@@ -68,7 +68,7 @@ public class RnrLineItemMapperIT {
 
     @Test
     public void shouldReturnRnrLineItemsByRnrId() {
-        int rnrId = rnrMapper.insert(new Rnr(FACILITY_CODE, "HIV", RnrStatus.INITIATED, "user"));
+        int rnrId = rnrMapper.insert(new Rnr(facilityId, "HIV", RnrStatus.INITIATED, "user"));
         RnrLineItem lineItem = new RnrLineItem(rnrId, product, "user");
         rnrLineItemMapper.insert(lineItem);
 
@@ -81,7 +81,7 @@ public class RnrLineItemMapperIT {
 
     @Test
     public void shouldUpdateRnrLineItem() {
-        int rnrId = rnrMapper.insert(new Rnr(FACILITY_CODE, "HIV", RnrStatus.INITIATED, "user"));
+        int rnrId = rnrMapper.insert(new Rnr(facilityId, "HIV", RnrStatus.INITIATED, "user"));
         RnrLineItem lineItem = new RnrLineItem(rnrId, product, "user");
         int generatedId = rnrLineItemMapper.insert(lineItem);
         lineItem.setId(generatedId);

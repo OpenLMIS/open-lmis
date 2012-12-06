@@ -33,8 +33,8 @@ public class ProductRepository {
         }
     }
 
-    public List<Product> getByFacilityAndProgram(String facilityCode, String programCode) {
-        return mapper.getFullSupplyProductsByFacilityAndProgram(facilityCode, programCode);
+    public List<Product> getByFacilityAndProgram(int facilityId, String programCode) {
+        return mapper.getFullSupplyProductsByFacilityAndProgram(facilityId, programCode);
     }
 
 }

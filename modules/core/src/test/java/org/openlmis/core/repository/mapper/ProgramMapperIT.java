@@ -44,16 +44,16 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     public void shouldGetAllActiveProgram() {
         List<Program> programs = programMapper.getAllActive();
         assertEquals(6, programs.size());
-        assertThat(programs, hasItem(new Program("HIV", "HIV", "HIV", true)));
+        assertThat(programs, hasItem(new Program(PROGRAM_CODE, PROGRAM_CODE, PROGRAM_CODE, true)));
     }
 
     @Test
     public void shouldGetProgramsWhichAreActiveByFacilityCode() {
         Facility facility = make(a(FacilityBuilder.defaultFacility));
-        facilityMapper.insert(facility);
+        int facilityId = facilityMapper.insert(facility);
         programSupportedMapper.addSupportedProgram(new ProgramSupported(facility.getCode(), PROGRAM_CODE, true, "test", DateTime.now().toDate()));
 
-        List<Program> programs = programMapper.getActiveByFacilityCode("F10010");
+        List<Program> programs = programMapper.getActiveByFacility(facilityId);
 
         assertThat(programs.size(), is(1));
         assertThat(programs.get(0).getCode(), is(PROGRAM_CODE));
@@ -72,9 +72,9 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     @Test
     public void shouldGetProgramsSupportedByFacility() throws Exception {
         Facility facility = make(a(defaultFacility));
-        facilityMapper.insert(facility);
-        programSupportedMapper.addSupportedProgram(new ProgramSupported(facility.getCode(), "HIV", true, facility.getModifiedBy(), facility.getModifiedDate()));
-        List<Program> supportedPrograms = programMapper.getByFacilityCode(facility.getCode());
-        assertThat(supportedPrograms.get(0).getCode(), is("HIV"));
+        int facilityId = facilityMapper.insert(facility);
+        programSupportedMapper.addSupportedProgram(new ProgramSupported(facility.getCode(),PROGRAM_CODE,true,facility.getModifiedBy(),facility.getModifiedDate()));
+        List<Program> supportedPrograms = programMapper.getByFacilityId(facilityId);
+        assertThat(supportedPrograms.get(0).getCode(), is(PROGRAM_CODE));
     }
 }

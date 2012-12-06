@@ -2,7 +2,6 @@ package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.repository.ProgramRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +24,8 @@ public class ProgramService {
         return programRepository.getAllActive();
     }
 
-    public List<Program> getByFacilityCode(String facilityCode) {
-        return programRepository.getByFacilityCode(facilityCode);
+    public List<Program> getByFacility(int facilityId) {
+        return programRepository.getByFacility(facilityId);
     }
 
     public List<Program> getAll() {

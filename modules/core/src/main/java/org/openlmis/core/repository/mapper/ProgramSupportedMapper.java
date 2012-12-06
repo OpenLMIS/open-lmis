@@ -12,26 +12,26 @@ import java.util.List;
 public interface ProgramSupportedMapper {
 
     @Insert("INSERT INTO PROGRAMS_SUPPORTED" +
-            "(FACILITY_CODE, PROGRAM_CODE, ACTIVE, MODIFIED_BY, MODIFIED_DATE) VALUES" +
-            "(#{facilityCode}, #{programCode}, #{active}, #{modifiedBy}, #{modifiedDate})")
+            "(facility_id, PROGRAM_CODE, ACTIVE, MODIFIED_BY, MODIFIED_DATE) VALUES" +
+            "((SELECT id FROM facility where code = #{facilityCode}), #{programCode}, #{active}, #{modifiedBy}, #{modifiedDate})")
     void addSupportedProgram(ProgramSupported programSupported);
 
     @Delete("DELETE FROM PROGRAMS_SUPPORTED")
     void deleteAll();
 
-    @Select("SELECT * FROM PROGRAMS_SUPPORTED WHERE FACILITY_CODE=#{facilityCode} AND PROGRAM_CODE=#{programCode}")
+    @Select("SELECT * FROM programs_supported PS,facility F WHERE PS.facility_id=F.id AND F.id=#{facilityId} AND PROGRAM_CODE=#{programCode}")
     @Results(value = {
-            @Result(property = "facilityCode", column = "FACILITY_CODE"),
+            @Result(property = "facilityCode", column = "CODE"),
             @Result(property = "programCode", column = "PROGRAM_CODE"),
             @Result(property = "active", column = "is_active"),
             @Result(property = "modifiedBy", column = "MODIFIED_BY"),
             @Result(property = "modifiedDate", column = "MODIFIED_DATE")})
-    List<ProgramSupported> getBy(@Param("facilityCode") String facilityCode, @Param("programCode") String programCode);
+    List<ProgramSupported> getBy(@Param("facilityId") int facilityId, @Param("programCode") String programCode);
 
     @Select("SELECT DISTINCT p.code, p.name, p.description, p.active " +
             "FROM program p, facility f, programs_supported ps, user u, program  WHERE " +
             "ps.program_code = ANY(#{programCodes}::VARCHAR[]) AND " +
-            "ps.facility_code = #{facility.code} " +
+            "ps.facility_id = #{facility.id} " +
             "AND ps.program_code = p.code "+
             "AND p.active = true " +
             "AND ps.active = true")
@@ -44,6 +44,6 @@ public interface ProgramSupportedMapper {
     List<Program> filterActiveProgramsAndFacility(@Param(value = "programCodes") String programCodesCommaSeparated, @Param(value = "facility") Facility facility);
 
 
-    @Delete("DELETE FROM programs_supported WHERE facility_code=#{facilityCode} AND program_code=#{programCode}")
-    void deleteObsoletePrograms(@Param(value = "facilityCode") String facilityCode,@Param(value = "programCode") String programCode);
+    @Delete("DELETE FROM programs_supported WHERE facility_Id=#{facilityId} AND program_code=#{programCode}")
+    void deleteObsoletePrograms(@Param(value = "facilityId") int facilityId ,@Param(value = "programCode") String programCode);
 }

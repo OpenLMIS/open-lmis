@@ -35,9 +35,9 @@ public class ProgramController {
         return programService.getAllActive();
     }
 
-    @RequestMapping(value = "/logistics/facility/{facilityCode}/programs.json", method = RequestMethod.GET, headers = "Accept=application/json")
-    public List<Program> getProgramsForFacility(@PathVariable(value = "facilityCode") String facilityCode) {
-        return programService.getByFacilityCode(facilityCode);
+    @RequestMapping(value = "/logistics/facility/{facilityId}/programs.json", method = RequestMethod.GET, headers = "Accept=application/json")
+    public List<Program> getProgramsForFacility(@PathVariable(value = "facilityId") int facilityId) {
+        return programService.getByFacility(facilityId);
     }
 
     @RequestMapping(value = "/logistics/facility/{facilityCode}/user/programs.json", method = RequestMethod.GET, headers = "Accept=application/json")

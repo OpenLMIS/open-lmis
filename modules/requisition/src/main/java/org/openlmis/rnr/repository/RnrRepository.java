@@ -43,8 +43,8 @@ public class RnrRepository {
         }
     }
 
-    public Rnr getRequisitionByFacilityAndProgram(String facilityCode, String programCode) {
-        Rnr rnr = rnrMapper.getRequisitionByFacilityAndProgram(facilityCode, programCode);
+    public Rnr getRequisitionByFacilityAndProgram(int facilityId, String programCode) {
+        Rnr rnr = rnrMapper.getRequisitionByFacilityAndProgram(facilityId, programCode);
         if(rnr == null) return new Rnr();
         rnr.setLineItems(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()));
         return rnr;

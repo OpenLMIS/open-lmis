@@ -2,7 +2,6 @@ package org.openlmis.core.repository;
 
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.core.repository.mapper.ProgramSupportedMapper;
@@ -30,8 +29,8 @@ public class ProgramRepository {
         return programMapper.getAllActive();
     }
 
-    public List<Program> getByFacilityCode(String facilityCode) {
-        return programMapper.getActiveByFacilityCode(facilityCode);
+    public List<Program> getByFacility(int facilityId) {
+        return programMapper.getActiveByFacility(facilityId);
     }
 
     public List<Program> getAll() {

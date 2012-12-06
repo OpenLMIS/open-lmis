@@ -20,7 +20,6 @@ import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.openlmis.core.builder.FacilityBuilder.FACILITY_CODE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext-requisition.xml")
@@ -29,6 +28,8 @@ import static org.openlmis.core.builder.FacilityBuilder.FACILITY_CODE;
 public class RnrMapperIT {
 
     public static final String HIV = "HIV";
+    int facilityId;
+
     @Autowired
     private FacilityMapper facilityMapper;
     @Autowired
@@ -40,32 +41,32 @@ public class RnrMapperIT {
     @Before
     public void setUp() {
         Facility facility = make(a(FacilityBuilder.defaultFacility));
-        facilityMapper.insert(facility);
+        facilityId = facilityMapper.insert(facility);
     }
 
     @Test
     public void shouldReturnRequisitionId() {
-        Rnr requisition = new Rnr(FACILITY_CODE, HIV, RnrStatus.INITIATED, "user");
+        Rnr requisition = new Rnr(facilityId, "HIV", RnrStatus.INITIATED, "user");
         int id1 = rnrMapper.insert(requisition);
-        int id2 = rnrMapper.insert(new Rnr(FACILITY_CODE, "ARV", RnrStatus.INITIATED, "user"));
+        int id2 = rnrMapper.insert(new Rnr(facilityId, "ARV", RnrStatus.INITIATED, "user"));
         assertThat(id1, is(id2 - 1));
     }
 
     @Test
     public void shouldReturnRequisitionById() {
-        Rnr requisition = new Rnr(FACILITY_CODE, HIV, RnrStatus.INITIATED, "user");
+        Rnr requisition = new Rnr(facilityId, "HIV", RnrStatus.INITIATED, "user");
         int id = rnrMapper.insert(requisition);
         Rnr requisitionById = rnrMapper.getRequisitionById(id);
         assertThat(requisitionById.getId(), is(id));
-        assertThat(requisitionById.getProgramCode(), is(equalTo(HIV)));
-        assertThat(requisitionById.getFacilityCode(), is(equalTo(FACILITY_CODE)));
+        assertThat(requisitionById.getProgramCode(), is(equalTo("HIV")));
+        assertThat(requisitionById.getFacilityId(), is(equalTo(facilityId)));
         assertThat(requisitionById.getModifiedBy(), is(equalTo("user")));
         assertThat(requisitionById.getStatus(), is(equalTo(RnrStatus.INITIATED)));
     }
 
     @Test
     public void shouldUpdateRequisition() {
-        Rnr requisition = new Rnr(FACILITY_CODE, HIV, RnrStatus.INITIATED, "user");
+        Rnr requisition = new Rnr(facilityId, "HIV", RnrStatus.INITIATED, "user");
         int id = rnrMapper.insert(requisition);
         requisition.setId(id);
         requisition.setModifiedBy("user1");
@@ -82,9 +83,9 @@ public class RnrMapperIT {
 
     @Test
     public void shouldReturnRequisitionByFacilityAndProgramAndIfExists() {
-        Rnr requisition = new Rnr(FACILITY_CODE, HIV, RnrStatus.INITIATED, "user");
+        Rnr requisition = new Rnr(facilityId, HIV, RnrStatus.INITIATED, "user");
         int rnrId = rnrMapper.insert(requisition);
-        Rnr rnr = rnrMapper.getRequisitionByFacilityAndProgram(FACILITY_CODE, HIV);
+        Rnr rnr = rnrMapper.getRequisitionByFacilityAndProgram(facilityId, HIV);
         assertThat(rnr.getId(), is(rnrId));
     }
 

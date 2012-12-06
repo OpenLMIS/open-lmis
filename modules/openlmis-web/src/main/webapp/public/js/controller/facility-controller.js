@@ -16,8 +16,10 @@ function FacilityController($scope, FacilityReferenceData, $routeParams, $http, 
         var foo = [];
         $.each($scope.facility.supportedPrograms, function (index, supportedProgram) {
           $.each($scope.programs, function (index, program) {
-            if (supportedProgram.code == program.code)
+            if (supportedProgram.code == program.code){
+              program.active = supportedProgram.active;
               foo.push(program);
+            }
           })
         });
         $scope.facility.supportedPrograms = foo;

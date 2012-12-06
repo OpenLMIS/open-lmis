@@ -33,14 +33,13 @@ public class FacilityRepository {
         return facilityMapper.getAll();
     }
 
-    public RequisitionHeader getHeader(String facilityCode) {
-        return facilityMapper.getRequisitionHeaderData(facilityCode);
+    public RequisitionHeader getHeader(int facilityId) {
+        return facilityMapper.getRequisitionHeaderData(facilityId);
     }
 
     @Transactional
     public void saveOrUpdate(Facility facility) {
         facility.setModifiedDate(DateTime.now().toDate());
-        List<Program> previouslySupportedPrograms = programMapper.getByFacilityCode(facility.getCode());
         if (facility.getId() == null)
             try {
                 facilityMapper.insert(facility);
@@ -53,6 +52,7 @@ public class FacilityRepository {
                 }
             }
         else {
+        List<Program> previouslySupportedPrograms = programMapper.getByFacilityId(facility.getId());
             facilityMapper.update(facility);
             deleteObsoleteProgramMappings(facility, previouslySupportedPrograms);
             addUpdatableProgramMappings(facility,previouslySupportedPrograms);
@@ -64,7 +64,7 @@ public class FacilityRepository {
         List<Program> supportedPrograms = facility.getSupportedPrograms();
         for(Program previouslySupportedProgram : previouslySupportedPrograms){
             if(!(supportedPrograms).contains(previouslySupportedProgram)){
-                programSupportedMapper.deleteObsoletePrograms(facility.getCode(),previouslySupportedProgram.getCode());
+                programSupportedMapper.deleteObsoletePrograms(facility.getId(),previouslySupportedProgram.getCode());
             }
         }
     }
@@ -72,7 +72,7 @@ public class FacilityRepository {
     private void addUpdatableProgramMappings(Facility facility, List<Program> previouslySupportedPrograms) {
         for(Program supportedProgram : facility.getSupportedPrograms()){
             if(!(previouslySupportedPrograms).contains(supportedProgram)){
-                ProgramSupported newProgramsSupported = new ProgramSupported(facility.getCode(), supportedProgram.getCode(), true, facility.getModifiedBy(), facility.getModifiedDate());
+                ProgramSupported newProgramsSupported = new ProgramSupported(facility.getCode(), supportedProgram.getCode(), supportedProgram.getActive(), facility.getModifiedBy(), facility.getModifiedDate());
                 addSupportedProgram(newProgramsSupported);
             }
         }
@@ -81,7 +81,7 @@ public class FacilityRepository {
     private void addListOfSupportedPrograms(Facility facility) {
         List<Program> supportedPrograms = facility.getSupportedPrograms();
         for (Program supportedProgram : supportedPrograms) {
-            ProgramSupported programSupported = new ProgramSupported(facility.getCode(), supportedProgram.getCode(), true, facility.getModifiedBy(), facility.getModifiedDate());
+            ProgramSupported programSupported = new ProgramSupported(facility.getCode(), supportedProgram.getCode(), supportedProgram.getActive(), facility.getModifiedBy(), facility.getModifiedDate());
             addSupportedProgram(programSupported);
         }
     }
@@ -119,7 +119,7 @@ public class FacilityRepository {
 
     public Facility getFacility(int id) {
         Facility facility = facilityMapper.get(id);
-        facility.setSupportedPrograms(programMapper.getByFacilityCode(facility.getCode()));
+        facility.setSupportedPrograms(programMapper.getByFacilityId(facility.getId()));
         return facility;
     }
 }

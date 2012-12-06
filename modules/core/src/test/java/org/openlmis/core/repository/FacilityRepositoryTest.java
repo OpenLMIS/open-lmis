@@ -121,15 +121,15 @@ public class FacilityRepositoryTest {
     public void shouldGetFacilityById() throws Exception {
         Facility facility = new Facility();
         when(mockedFacilityMapper.get(1)).thenReturn(facility);
-        String code = "testCode";
-        facility.setCode(code);
+        int id = 1;
+        facility.setId(id);
         List<Program> programs = new ArrayList<>();
-        when(programMapper.getByFacilityCode(code)).thenReturn(programs);
+        when(programMapper.getByFacilityId(1)).thenReturn(programs);
         Facility facility1 = repository.getFacility(1);
 
         assertThat(facility1.getSupportedPrograms(), is(programs));
         verify(mockedFacilityMapper).get(1);
-        verify(programMapper).getByFacilityCode(code);
+        verify(programMapper).getByFacilityId(1);
 
     }
 
@@ -166,14 +166,14 @@ public class FacilityRepositoryTest {
             add(make(a(ProgramBuilder.defaultProgram, with(programCode, "ARV"))));
         }};
 
-        when(programMapper.getByFacilityCode(facility.getCode())).thenReturn(programsForFacility);
+        when(programMapper.getByFacilityId(facility.getId())).thenReturn(programsForFacility);
 
 
         repository.saveOrUpdate(facility);
 
-        verify(programMapper).getByFacilityCode(facility.getCode());
-        verify(programSupportedMapper).addSupportedProgram(new ProgramSupported(facility.getCode(), "HIV", true, facility.getModifiedBy(), facility.getModifiedDate()));
-        verify(programSupportedMapper).deleteObsoletePrograms(facility.getCode(), "ARV");
+        verify(programMapper).getByFacilityId(facility.getId());
+        verify(programSupportedMapper).addSupportedProgram(new ProgramSupported(facility.getCode(),"HIV",true, facility.getModifiedBy(), facility.getModifiedDate()));
+        verify(programSupportedMapper).deleteObsoletePrograms(facility.getId(),"ARV");
     }
 
 }
