@@ -37,7 +37,7 @@
           <option value="programSupported">Programs supported by facilities</option>
         </select> <br/>
         <label style="padding-top: 10" for="csvFile">File: </label>
-        <input name="csvFile" id="csvFile" type="file"
+        <input name="csvFile" id="csvFile" type="file" accept=".csv"
                value="Choose CSV File to upload" required/> </br>
           <div class="alert alert-error" id="saveErrorMsgDiv" ng-model="error" ng-show="error">
               {{error}}
