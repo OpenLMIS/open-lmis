@@ -1,6 +1,12 @@
 function UploadController($scope, $http) {
 
   $scope.uploadFile = function () {
+    if(document.getElementById('csvFile').value == "" ){
+          $scope.error = "Please select a file to upload.";
+          $scope.message = "";
+          return;
+    }
+    $scope.error = "";
     var xhr = new XMLHttpRequest();
     var fd = document.getElementById('uploadForm');
     xhr.addEventListener("load", $scope.uploadComplete, false);
