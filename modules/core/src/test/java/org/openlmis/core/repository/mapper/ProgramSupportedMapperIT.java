@@ -25,7 +25,7 @@ import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
-@TransactionConfiguration(defaultRollback=true)
+@TransactionConfiguration(defaultRollback = true)
 @Transactional
 public class ProgramSupportedMapperIT {
 
@@ -67,14 +67,14 @@ public class ProgramSupportedMapperIT {
         ProgramSupported programSupported = new ProgramSupported(FACILITY_CODE, YELLOW_FEVER, true, "user", now().toDate());
         programSupportedMapper.addSupportedProgram(programSupported);
 
-        programSupportedMapper.deleteObsoletePrograms(facilityId,YELLOW_FEVER);
+        programSupportedMapper.deleteObsoletePrograms(facilityId, YELLOW_FEVER);
 
         List<ProgramSupported> programsSupported = programSupportedMapper.getBy(facilityId, YELLOW_FEVER);
         assertFalse(programsSupported.contains(programSupported));
     }
-    
+
     @Test
-    public void shouldFetchActiveProgramsForGivenProgramIdsForAUserAndAFacility(){
+    public void shouldFetchActiveProgramsForGivenProgramIdsForAUserAndAFacility() {
         User user = insertUser();
 
         Program activeProgram = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
@@ -97,7 +97,7 @@ public class ProgramSupportedMapperIT {
         programCodes.add(inactiveProgram.getCode());
 
         String programCodesCommaSeparated = programCodes.toString().replace("[", "{").replace("]", "}");
-        List<Program> programs = programSupportedMapper.filterActiveProgramsAndFacility(programCodesCommaSeparated, facility);
+        List<Program> programs = programSupportedMapper.filterActiveProgramsAndFacility(programCodesCommaSeparated, facility.getId());
         assertEquals(1, programs.size());
         assertEquals(activeProgram.getCode(), programs.get(0).getCode());
     }

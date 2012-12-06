@@ -40,10 +40,10 @@ public class ProgramController {
         return programService.getByFacility(facilityId);
     }
 
-    @RequestMapping(value = "/logistics/facility/{facilityCode}/user/programs.json", method = RequestMethod.GET, headers = "Accept=application/json")
-    public List<Program> getUserSupportedProgramsToCreateRequisition(@PathVariable(value = "facilityCode") String facilityCode, HttpServletRequest request) {
+    @RequestMapping(value = "/logistics/facility/{facilityId}/user/programs.json", method = RequestMethod.GET, headers = "Accept=application/json")
+    public List<Program> getUserSupportedProgramsToCreateRequisition(@PathVariable(value = "facilityId") int facilityId, HttpServletRequest request) {
         List<RoleAssignment> userSupportedProgramRoles = roleRightsService.getProgramWithGivenRightForAUser(Right.CREATE_REQUISITION, loggedInUser(request));
-        return programService.filterActiveProgramsAndFacility(userSupportedProgramRoles, facilityCode);
+        return programService.filterActiveProgramsAndFacility(userSupportedProgramRoles, facilityId);
     }
 
     private String loggedInUser(HttpServletRequest request) {

@@ -32,7 +32,7 @@ public class ProgramService {
         return programRepository.getAll();
     }
 
-    public List<Program> filterActiveProgramsAndFacility(List<RoleAssignment> roleAssignments, String facilityCode) {
-        return programRepository.filterActiveProgramsAndFacility(roleAssignments, facilityCode);
+    public List<Program> filterActiveProgramsAndFacility(List<RoleAssignment> roleAssignments, int facilityId) {
+        return programRepository.filterActiveProgramsAndFacility(roleAssignments, facilityId);
     }
 }

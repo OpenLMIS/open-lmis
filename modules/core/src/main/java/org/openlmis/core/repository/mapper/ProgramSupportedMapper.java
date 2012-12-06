@@ -1,7 +1,6 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
 import org.springframework.stereotype.Repository;
@@ -31,8 +30,8 @@ public interface ProgramSupportedMapper {
     @Select("SELECT DISTINCT p.code, p.name, p.description, p.active " +
             "FROM program p, facility f, programs_supported ps, user u, program  WHERE " +
             "ps.program_code = ANY(#{programCodes}::VARCHAR[]) AND " +
-            "ps.facility_id = #{facility.id} " +
-            "AND ps.program_code = p.code "+
+            "ps.facility_id = #{facilityId} " +
+            "AND ps.program_code = p.code " +
             "AND p.active = true " +
             "AND ps.active = true")
     @Results(value = {
@@ -41,9 +40,9 @@ public interface ProgramSupportedMapper {
             @Result(property = "description", column = "program.description"),
             @Result(property = "active", column = "program.active")
     })
-    List<Program> filterActiveProgramsAndFacility(@Param(value = "programCodes") String programCodesCommaSeparated, @Param(value = "facility") Facility facility);
+    List<Program> filterActiveProgramsAndFacility(@Param(value = "programCodes") String programCodesCommaSeparated, @Param(value = "facilityId") int facilityId);
 
 
     @Delete("DELETE FROM programs_supported WHERE facility_Id=#{facilityId} AND program_code=#{programCode}")
-    void deleteObsoletePrograms(@Param(value = "facilityId") int facilityId ,@Param(value = "programCode") String programCode);
+    void deleteObsoletePrograms(@Param(value = "facilityId") int facilityId, @Param(value = "programCode") String programCode);
 }

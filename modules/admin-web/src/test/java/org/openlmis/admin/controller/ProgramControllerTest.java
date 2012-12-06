@@ -1,6 +1,5 @@
 package org.openlmis.admin.controller;
 
-import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -10,8 +9,6 @@ import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.RoleRightsService;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.test.web.client.MockHttpRequest;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
@@ -32,11 +29,11 @@ public class ProgramControllerTest {
     private ProgramService programService;
 
     @Mock
+    @SuppressWarnings("unused")
     private RoleRightsService roleRightsService;
 
-
     @Before
-    public void init(){
+    public void init() {
         initMocks(this);
     }
 
@@ -69,9 +66,10 @@ public class ProgramControllerTest {
         RoleAssignment roleAssignment = new RoleAssignment(1, 2, program.getCode());
         List<RoleAssignment> roleAssignments = new ArrayList<>(Arrays.asList(roleAssignment));
         when(roleRightsService.getProgramWithGivenRightForAUser(Right.CREATE_REQUISITION, "dummyUser")).thenReturn(roleAssignments);
-        when(programService.filterActiveProgramsAndFacility(roleAssignments, "dummyFacilityCode")).thenReturn(programs);
+        int facilityId = 12345;
+        when(programService.filterActiveProgramsAndFacility(roleAssignments, facilityId)).thenReturn(programs);
 
-        assertEquals(programs, controller.getUserSupportedProgramsToCreateRequisition("dummyFacilityCode", request));
+        assertEquals(programs, controller.getUserSupportedProgramsToCreateRequisition(facilityId, request));
 
     }
 
