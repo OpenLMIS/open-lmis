@@ -6,6 +6,7 @@ buildscript {
     }
     dependencies {
         classpath "com.github.dzhaughnroth:jasmine-gradle-plugin:0.4"
+        classpath "org.lesscss:lesscss:1.3.1"
     }
 }
 
@@ -64,14 +65,12 @@ jettyRunWarLocal.doFirst {
     jettyRunWar.contextPath = ''
 }
 
-
-jettyRun{
+jettyRun {
     jettyRun.httpPort = 9091
     contextPath = ''
 }
 
 task jettyRunDev(dependsOn: jettyRun)
-
 
 task explodedWar(type: Copy) {
     into "$buildDir/exploded"
@@ -83,3 +82,16 @@ task deployOpenLmis(type: GradleBuild) {
     tasks = ['cargoRedeployRemote']
 }
 
+task compileLess << {
+    println "Running lessCompile task..."
+    def lessCompiler = new org.lesscss.LessCompiler()
+
+    def files = file('src/main/webapp/public/less').listFiles()
+    files.each { File file ->
+        def outputCss = new File("${projectDir}/src/main/webapp/public/css/" + file.name.replace(".less", ".css"))
+        println "LESS: Compiling ${file} to ${outputCss}..."
+        lessCompiler.compile(file, outputCss)
+    }
+}
+
+compileJava.dependsOn compileLess
