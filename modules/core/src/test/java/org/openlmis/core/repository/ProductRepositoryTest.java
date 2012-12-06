@@ -54,4 +54,13 @@ public class ProductRepositoryTest {
         repository.insert(product);
     }
 
+    @Test
+    public void shouldRaiseIncorrectDataValueError() throws Exception {
+        Product product = new Product();
+        expectedEx.expect(RuntimeException.class);
+        expectedEx.expectMessage("Incorrect data length");
+        doThrow(new DataIntegrityViolationException("value too long")).when(mockedMapper).insert(product);
+        repository.insert(product);
+    }
+
 }

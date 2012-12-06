@@ -57,12 +57,12 @@ public class Product implements Importable {
     private String strength;
 
     @ImportField(type = "long", name = "Product Form")
-    private long form;
+    private Long form;
 
     private ProductForm productForm;
 
     @ImportField(type = "long", name = "Dosage Units")
-    private long dosageUnit;
+    private Long dosageUnit;
 
     private DosageUnit productDosageUnit;
 
@@ -70,40 +70,40 @@ public class Product implements Importable {
     private String dispensingUnit;
 
     @ImportField(type = "int", name = "Doses Per Dispensing Unit")
-    private int dosesPerDispensingUnit;
+    private Integer dosesPerDispensingUnit;
 
     @ImportField(type = "int", name = "Doses Per Day")
-    private int dosesPerDay;
+    private Integer dosesPerDay;
 
     @ImportField(type = "boolean", name = "Store Refrigerated")
-    private boolean storeRefrigerated;
+    private Boolean storeRefrigerated;
 
     @ImportField(type = "boolean", name = "Store Room Temperature")
-    private boolean storeRoomTemperature;
+    private Boolean storeRoomTemperature;
 
     @ImportField(type = "boolean", name = "Product Is Hazardous")
-    private boolean hazardous;
+    private Boolean hazardous;
 
     @ImportField(type = "boolean", name = "Product Is Flammable")
-    private boolean flammable;
+    private Boolean flammable;
 
     @ImportField(type = "boolean", name = "Product Is Controlled Substance")
-    private boolean controlledSubstance;
+    private Boolean controlledSubstance;
 
     @ImportField(type = "boolean", name = "Product Is Light Sensitive")
-    private boolean lightSensitive;
+    private Boolean lightSensitive;
 
     @ImportField(type = "boolean", name = "Approved By WHO")
-    private boolean approvedByWHO;
+    private Boolean approvedByWHO;
 
     @ImportField(type = "double", name = "Contraceptive CYP")
     private Double contraceptiveCYP;
 
     @ImportField(mandatory = true, type = "int", name = "Pack Size")
-    private int packSize;
+    private Integer packSize;
 
     @ImportField(type = "int", name = "Alternate Pack Size")
-    private int alternatePackSize;
+    private Integer alternatePackSize;
 
     @ImportField(type = "double", name = "Pack Length")
     private Double packLength;
@@ -118,7 +118,7 @@ public class Product implements Importable {
     private Double packWeight;
 
     @ImportField(type = "int", name = "Packs Per Carton")
-    private int packsPerCarton;
+    private Integer packsPerCarton;
 
     @ImportField(type = "double", name = "Carton Length")
     private Double cartonLength;
@@ -130,10 +130,10 @@ public class Product implements Importable {
     private Double cartonHeight;
 
     @ImportField(type = "int", name = "Cartons Per Pallet")
-    private int cartonsPerPallet;
+    private Integer cartonsPerPallet;
 
     @ImportField(type = "int", name = "Expected Shelf Life")
-    private int expectedShelfLife;
+    private Integer expectedShelfLife;
 
     @ImportField(name = "Special Storage Instructions")
     private String specialStorageInstructions;
@@ -142,24 +142,24 @@ public class Product implements Importable {
     private String specialTransportInstructions;
 
     @ImportField(mandatory = true, type = "boolean", name = "Product Is Active")
-    private boolean active;
+    private Boolean active;
 
     @ImportField(mandatory = true, type = "boolean", name = "Product Is Full Supply")
-    private boolean fullSupply;
+    private Boolean fullSupply;
 
     @ImportField(mandatory = true, type = "boolean", name = "Is A Tracer Product")
-    private boolean tracer;
+    private Boolean tracer;
 
     @ImportField(mandatory = true, type = "int", name = "Pack Rounding Threshold")
-    private int packRoundingThreshold;
+    private Integer packRoundingThreshold;
 
     @ImportField(mandatory = true, type = "boolean", name = "Can Round To Zero")
-    private boolean roundToZero;
+    private Boolean roundToZero;
 
     @ImportField(type = "boolean", name = "Has Been Archived")
-    private boolean archived;
+    private Boolean archived;
 
     private Date modifiedDate;
 
-    private long modifiedBy;
+    private String modifiedBy;
 }

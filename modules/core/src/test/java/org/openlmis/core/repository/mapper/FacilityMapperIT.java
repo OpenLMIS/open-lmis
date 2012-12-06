@@ -38,12 +38,12 @@ public class FacilityMapperIT {
                 with(code, "TRZ001"),
                 with(name, "Ngorongoro Hospital"),
                 with(type, "warehouse"),
-                with(geographicZone, 1)));
+                with(geographicZone, 1L)));
         Facility trz002 = make(a(defaultFacility,
                 with(code, "TRZ002"),
                 with(name, "Rural Clinic"),
                 with(type, "lvl3_hospital"),
-                with(geographicZone, 2)));
+                with(geographicZone, 2L)));
 
         facilityMapper.insert(trz001);
         facilityMapper.insert(trz002);

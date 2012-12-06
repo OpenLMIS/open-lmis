@@ -118,6 +118,15 @@ public class FacilityRepositoryTest {
     }
 
     @Test
+    public void shouldRaiseIncorrectDataValueError() throws Exception {
+        Facility facility = new Facility();
+        expectedEx.expect(RuntimeException.class);
+        expectedEx.expectMessage("Incorrect data length");
+        doThrow(new DataIntegrityViolationException("value too long")).when(mockedFacilityMapper).insert(facility);
+        repository.saveOrUpdate(facility);
+    }
+
+    @Test
     public void shouldGetFacilityById() throws Exception {
         Facility facility = new Facility();
         when(mockedFacilityMapper.get(1)).thenReturn(facility);

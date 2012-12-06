@@ -50,6 +50,8 @@ public class FacilityRepository {
                 if (integrityViolationException.getMessage().toLowerCase().contains("foreign key")) {
                     throw new RuntimeException("Missing Reference data");
                 }
+                throw new RuntimeException("Incorrect data length");
+
             }
         else {
         List<Program> previouslySupportedPrograms = programMapper.getByFacilityId(facility.getId());

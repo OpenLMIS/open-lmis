@@ -39,13 +39,13 @@ public class ProductBuilder {
             product.setAlternateName("Alt - TDF/FTC/EFV");
             product.setDescription("is a med");
             product.setStrength("strength");
-            product.setDosageUnit(1);
+            product.setDosageUnit(1L);
             product.setDispensingUnit("Strip");
             product.setPackSize(10);
             product.setTracer(true);
             product.setPackRoundingThreshold(1);
             product.setRoundToZero(true);
-            product.setForm(1);
+            product.setForm(1L);
             DosageUnit productDosageUnit = new DosageUnit();
             productDosageUnit.setName("Dosage Unit");
             product.setProductDosageUnit(productDosageUnit);

@@ -1,8 +1,6 @@
 package org.openlmis.core.repository.mapper;
 
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -24,6 +22,8 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.ProductBuilder.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -93,9 +93,9 @@ public class ProductMapperIT {
         assertEquals("PRO05", products.get(0).getCode());
         assertEquals("Primary Name", products.get(0).getPrimaryName());
         assertEquals("strength", products.get(0).getStrength());
-        assertEquals(1, products.get(0).getForm());
+        assertThat(products.get(0).getForm(), is(1L));
         assertEquals("Strip", products.get(0).getDispensingUnit());
-        assertEquals(1, products.get(0).getDosageUnit());
+        assertThat(products.get(0).getDosageUnit(), is(1L));
         assertNotNull(products.get(0).getProductForm());
         assertEquals("Tablet", products.get(0).getProductForm().getName());
         assertNotNull(products.get(0).getProductDosageUnit());

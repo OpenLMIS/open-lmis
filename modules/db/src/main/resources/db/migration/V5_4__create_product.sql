@@ -50,7 +50,7 @@ CREATE TABLE product (
   archived BOOLEAN,
   pack_rounding_threshold SMALLINT NOT NULL,
   modified_date TIMESTAMP DEFAULT  CURRENT_TIMESTAMP,
-  modified_by INTEGER,
+  modified_by VARCHAR(50),
   FOREIGN KEY (form) REFERENCES product_form(id),
   FOREIGN KEY (dosage_unit) REFERENCES dosage_unit(id)
    );

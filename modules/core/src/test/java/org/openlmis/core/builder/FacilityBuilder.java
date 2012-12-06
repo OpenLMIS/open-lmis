@@ -15,7 +15,7 @@ public class FacilityBuilder {
     public static final Property<Facility, String> code = newProperty();
     public static final Property<Facility, String> name = newProperty();
     public static final Property<Facility, String> type = newProperty();
-    public static final Property<Facility, Integer> geographicZone = newProperty();
+    public static final Property<Facility, Long> geographicZone = newProperty();
     public static final Property<Facility, Boolean> sdp = newProperty();
     public static final Property<Facility, Boolean> active = newProperty();
     public static final Property<Facility, Date> goLiveDate = newProperty();
@@ -32,7 +32,7 @@ public class FacilityBuilder {
             facility.setCode(lookup.valueOf(code, FACILITY_CODE));
             facility.setFacilityTypeCode(lookup.valueOf(type, FACILITY_TYPE));
             facility.setName(lookup.valueOf(name, "Apollo Hospital"));
-            facility.setGeographicZone(lookup.valueOf(geographicZone, 2));
+            facility.setGeographicZone(lookup.valueOf(geographicZone, 2L));
             facility.setSdp(lookup.valueOf(sdp, true));
             facility.setActive(lookup.valueOf(active, true));
             facility.setOperatedBy(lookup.valueOf(operatedBy, "MoH"));

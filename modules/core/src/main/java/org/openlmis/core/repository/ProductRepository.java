@@ -29,6 +29,8 @@ public class ProductRepository {
         } catch (DataIntegrityViolationException foreignKeyException) {
             if (foreignKeyException.getMessage().toLowerCase().contains("foreign key")) {
                 throw new RuntimeException("Missing Reference data");
+            }else{
+                throw new RuntimeException("Incorrect data length");
             }
         }
     }

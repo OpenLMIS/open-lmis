@@ -42,31 +42,31 @@ public class Facility implements Importable {
     private String address2;
 
     @ImportField(mandatory = true, type = "long", name = "Geographic Zone ID")
-    private long geographicZone;
+    private Long geographicZone;
 
-    @ImportField(mandatory = true, name = "Facility Type ID")
+    @ImportField(mandatory = true, name = "Facility Type Code")
     private String facilityTypeCode;
 
     @ImportField(type = "long", name = "Catchment Population")
-    private long catchmentPopulation;
+    private Long catchmentPopulation;
 
     @ImportField(type = "double", name = "Facility LAT")
-    private double latitude;
+    private Double latitude;
 
     @ImportField(type = "double", name = "Facility LONG")
-    private double longitude;
+    private Double longitude;
 
     @ImportField(type = "double", name = "Facility Altitude")
-    private double altitude;
+    private Double altitude;
 
     @ImportField(type = "String", name = "Facility Operated By")
     private String operatedBy;
 
     @ImportField(type = "double", name = "Cold Storage Gross Capacity")
-    private double coldStorageGrossCapacity;
+    private Double coldStorageGrossCapacity;
 
     @ImportField(type = "double", name = "Cold Storage Net Capacity")
-    private double coldStorageNetCapacity;
+    private Double coldStorageNetCapacity;
 
     @ImportField(type = "boolean", name = "Facility Supplies Others")
     private Boolean suppliesOthers;
@@ -104,7 +104,7 @@ public class Facility implements Importable {
     @ImportField(name = "Facility Comments")
     private String comment;
 
-    @ImportField(type = "boolean", name = "Data Reportable")
+    @ImportField(type = "boolean", mandatory = true, name = "Data Reportable")
     private Boolean dataReportable;
 
     List<Program> supportedPrograms = new ArrayList<>();
