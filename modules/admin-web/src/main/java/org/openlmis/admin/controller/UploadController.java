@@ -47,6 +47,9 @@ public class UploadController {
             if (modelClass == null) {
                 return errorModelAndView(modelAndView, "Incorrect file");
             }
+            if(multipartFile.isEmpty()){
+                return errorModelAndView(modelAndView, "File is empty");
+            }
             if (!multipartFile.getOriginalFilename().contains(".csv")) {
                 return errorModelAndView(modelAndView, "Incorrect file format , Please upload " + model + " data as a \".csv\" file");
             }

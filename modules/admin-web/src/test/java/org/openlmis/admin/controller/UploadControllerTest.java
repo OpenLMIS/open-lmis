@@ -68,8 +68,17 @@ public class UploadControllerTest {
     }
 
     @Test
+    public void shouldThrowErrorIfFileIsEmpty() throws Exception {
+        byte[] content = new byte[0];
+        MockMultipartFile multiPartMock = new MockMultipartFile("csvFile", "mock.csv", null, content);
+        ModelAndView modelAndView = controller.upload(multiPartMock, "product", request);
+
+        assertEquals("File is empty", modelAndView.getModelMap().get("error"));
+    }
+
+    @Test
     public void shouldParseIfFileIsCsv() throws Exception {
-        byte[] content = null;
+        byte[] content = new byte[1];
         MockMultipartFile multiPartMock = new MockMultipartFile("csvFile", "mock.csv", null, content);
 
         ModelAndView modelAndView = controller.upload(multiPartMock, "product", request);
@@ -131,7 +140,7 @@ public class UploadControllerTest {
 
     @Test
     public void shouldGiveErrorIfFileNotOfTypeCsv() throws Exception {
-        byte[] content = null;
+        byte[] content = new byte[1];
         MockMultipartFile multiPartMock = new MockMultipartFile("mock.doc", content);
 
         ModelAndView modelAndView = controller.upload(multiPartMock, "product", request);
