@@ -30,7 +30,7 @@ function InitiateRnrController($http, $scope, UserFacilityList, UserSupportedPro
     };
 
     var initRnr = function () {
-        $http.post('/logistics/rnr/' + $scope.facility + '/' + $scope.program.code + '/init.json', {}).success(function (data) {
+        $http.post('/logistics/rnr/' + encodeURIComponent($scope.facility) + '/' + encodeURIComponent($scope.program.code) + '/init.json', {}).success(function (data) {
             $scope.error = "";
             $scope.$parent.rnr = data.rnr;
             $location.path('create-rnr');
@@ -82,7 +82,6 @@ function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $l
     }, function () {
         $location.path('init-rnr');
     });
-
 
     var validate = function (data) {
         return data.rnrColumnList.length > 0 ? true : false;
