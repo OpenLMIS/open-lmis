@@ -36,3 +36,7 @@ services.factory('RequisitionHeader', function ($resource) {
 services.factory('FacilityReferenceData', function ($resource) {
     return $resource('/admin/facility/reference-data.json', {}, {});
 });
+
+services.factory('AllFacilities', function ($resource) {
+    return $resource('/admin/facilities.json', {}, {});
+});

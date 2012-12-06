@@ -35,7 +35,7 @@ public class FacilityController extends BaseController {
         this.programService = programService;
     }
 
-    @RequestMapping(value = "logistics/facilities", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "admin/facilities", method = RequestMethod.GET, headers = "Accept=application/json")
     public List<Facility> getAll() {
         return facilityService.getAll();
     }

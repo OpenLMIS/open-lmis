@@ -76,7 +76,7 @@ describe("Facility", function () {
 
   });
 
-  describe("Facility Edt Controller", function () {
+  describe("Facility Edit Controller", function () {
 
     beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $routeParams) {
       scope = $rootScope.$new();
@@ -108,5 +108,4 @@ describe("Facility", function () {
     });
 
   });
-
 });
