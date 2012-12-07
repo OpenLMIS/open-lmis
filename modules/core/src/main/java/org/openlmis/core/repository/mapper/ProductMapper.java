@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface ProductMapper {
 
-    @Insert("INSERT INTO Product (" +
+    @Select("INSERT INTO Product (" +
             "code, " +
             "alternate_item_code," +
             "manufacturer," + "manufacturer_code," + "manufacturer_barcode," +
@@ -53,7 +53,8 @@ public interface ProductMapper {
             "#{specialStorageInstructions}," + "#{specialTransportInstructions}," +
             "#{active}," + "#{fullSupply}," + "#{tracer}," + "#{roundToZero}," + "#{archived}," +
             "#{packRoundingThreshold}," +
-            "#{modifiedBy})")
+            "#{modifiedBy}) returning id")
+    @Options(useGeneratedKeys=true)
     int insert(Product product);
 
     @Results(value = {
@@ -70,7 +71,7 @@ public interface ProductMapper {
             @Result(property = "productDosageUnit.code", column = "dosage_unit_code"),
             @Result(property = "productDosageUnit.displayOrder", column = "dosage_unit_display_order")
     })
-    @Select("select p.code as code, p.primary_name as primary_name, " +
+    @Select("select p.id as id, p.code as code, p.primary_name as primary_name, " +
             "p.dispensing_unit as dispensing_unit, p.dosage_unit as dosage_unit, p.form as form, p.strength as strength, " +
             "pf.code as form_code , pf.display_order as form_display_order, " +
             "du.code as dosage_unit_code, du.display_order as dosage_unit_display_order " +
@@ -78,9 +79,9 @@ public interface ProductMapper {
             "where pp.program_code = #{programCode} " +
             "and f.id = #{facilityId}" +
             "and fap.facility_type_id= f.type " +
-            "and fap.product_code = p.code " +
-            "and fap.product_code = pp.product_code " +
-            "and pp.product_code = p.code " +
+            "and fap.product_id = p.id " +
+            "and fap.product_id = pp.product_id " +
+            "and pp.product_id = p.id " +
             "and pf.id = p.form " +
             "and du.id = p.dosage_unit " +
             "and p.full_supply = 'TRUE' " +

@@ -51,4 +51,5 @@ CREATE TABLE product (
   pack_rounding_threshold SMALLINT NOT NULL,
   modified_date TIMESTAMP DEFAULT  CURRENT_TIMESTAMP,
   modified_by VARCHAR(50)
-   );
+);
+CREATE UNIQUE INDEX uc_product_code ON product(LOWER(code));

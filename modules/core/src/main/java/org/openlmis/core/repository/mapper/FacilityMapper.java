@@ -42,7 +42,6 @@ public interface FacilityMapper {
             @Result(property = "address2", column = "address2"),
             @Result(property = "geographicZone", column = "geographic_zone_id"),
             @Result(property = "facilityTypeCode", column = "type",javaType = java.lang.String.class, one = @One(select = "getFacilityTypeCodeFor") ),
-
             @Result(property = "catchmentPopulation", column = "catchment_population"),
             @Result(property = "latitude", column = "latitude"),
             @Result(property = "longitude", column = "longitude"),

@@ -2,7 +2,6 @@ package org.openlmis.core.repository.mapper;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.domain.FacilityApprovedProduct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +35,6 @@ public class FacilityApprovedProductMapperIT {
     @Test
     public void shouldInsertFacilityApprovedProduct() throws Exception {
         productMapper.insert(make(a(ProductBuilder.product)));
-        facilityMapper.insert(make(a(FacilityBuilder.defaultFacility)));
         FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct();
         facilityApprovedProduct.setFacilityTypeCode(FACILITY_TYPE);
         facilityApprovedProduct.setProductCode(PRODUCT_CODE);
