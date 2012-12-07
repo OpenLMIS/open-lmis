@@ -16,4 +16,10 @@ function HeaderController($scope, User, $rootScope) {
   $scope.fixHeight = function() {
     $(".navigation").height(window.innerHeight - 57);
   }();
+
+  $scope.showSubmenu = function() {
+    $(".navigation > ul > li").on("click", function() {
+      $(this).find("ul").show();
+    });
+  }();
 }
