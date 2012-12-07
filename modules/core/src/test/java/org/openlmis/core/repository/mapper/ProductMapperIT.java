@@ -93,13 +93,13 @@ public class ProductMapperIT {
         assertEquals("PRO05", products.get(0).getCode());
         assertEquals("Primary Name", products.get(0).getPrimaryName());
         assertEquals("strength", products.get(0).getStrength());
-        assertThat(products.get(0).getForm(), is(1L));
+        assertThat(products.get(0).getFormCode(), is("Tablet"));
         assertEquals("Strip", products.get(0).getDispensingUnit());
-        assertThat(products.get(0).getDosageUnit(), is(1L));
+        assertThat(products.get(0).getDosageUnitCode(), is("mg"));
         assertNotNull(products.get(0).getProductForm());
-        assertEquals("Tablet", products.get(0).getProductForm().getName());
+        assertEquals("Tablet", products.get(0).getProductForm().getCode());
         assertNotNull(products.get(0).getProductDosageUnit());
-        assertEquals("mg", products.get(0).getProductDosageUnit().getName());
+        assertEquals("mg", products.get(0).getProductDosageUnit().getCode());
 
         assertEquals("PRO06", products.get(1).getCode());
 

@@ -39,18 +39,18 @@ public class ProductBuilder {
             product.setAlternateName("Alt - TDF/FTC/EFV");
             product.setDescription("is a med");
             product.setStrength("strength");
-            product.setDosageUnit(1L);
+            product.setDosageUnitCode("mg");
             product.setDispensingUnit("Strip");
             product.setPackSize(10);
             product.setTracer(true);
             product.setPackRoundingThreshold(1);
             product.setRoundToZero(true);
-            product.setForm(1L);
+            product.setFormCode("Tablet");
             DosageUnit productDosageUnit = new DosageUnit();
-            productDosageUnit.setName("Dosage Unit");
+            productDosageUnit.setCode("Dosage Unit");
             product.setProductDosageUnit(productDosageUnit);
             ProductForm productForm = new ProductForm();
-            productForm.setName("form");
+            productForm.setCode("form");
             product.setProductForm(productForm);
             return product;
         }

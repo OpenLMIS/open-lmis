@@ -55,9 +55,9 @@ public class RnrLineItem {
 
     private String productName(Product product) {
         return  (product.getPrimaryName() == null ? "" : (product.getPrimaryName() + " ")) +
-                (product.getProductForm().getName() == null ? "" : (product.getProductForm().getName() + " ")) +
+                (product.getProductForm().getCode() == null ? "" : (product.getProductForm().getCode() + " ")) +
                 (product.getStrength() == null ? "" : (product.getStrength() + " ")) +
-                (product.getProductDosageUnit().getName() == null ? "" : product.getProductDosageUnit().getName());
+                (product.getProductDosageUnit().getCode() == null ? "" : product.getProductDosageUnit().getCode());
 
     }
 }

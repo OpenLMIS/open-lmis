@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 public class DosageUnit {
 
     private long id;
-    private String name;
+    private String code;
     private int displayOrder;
 }

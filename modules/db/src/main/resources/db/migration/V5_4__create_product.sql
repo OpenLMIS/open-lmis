@@ -16,8 +16,8 @@ CREATE TABLE product (
   alternate_name VARCHAR(100),
   description VARCHAR(250),
   strength VARCHAR(14),
-  form INTEGER,
-  dosage_unit INTEGER,
+  form INTEGER REFERENCES product_form(id),
+  dosage_unit INTEGER REFERENCES dosage_unit(id),
   dispensing_unit VARCHAR(20),
   doses_per_dispensing_unit SMALLINT,
   doses_per_day SMALLINT,
@@ -50,7 +50,5 @@ CREATE TABLE product (
   archived BOOLEAN,
   pack_rounding_threshold SMALLINT NOT NULL,
   modified_date TIMESTAMP DEFAULT  CURRENT_TIMESTAMP,
-  modified_by VARCHAR(50),
-  FOREIGN KEY (form) REFERENCES product_form(id),
-  FOREIGN KEY (dosage_unit) REFERENCES dosage_unit(id)
+  modified_by VARCHAR(50)
    );

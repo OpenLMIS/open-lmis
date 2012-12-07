@@ -1,6 +1,6 @@
 delete from dosage_unit;
 INSERT INTO dosage_unit
-(id, name, display_order) VALUES
+(id, code, display_order) VALUES
 (1,'mg',1),
 (2,'ml',2),
 (3,'each',3),
