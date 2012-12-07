@@ -19,8 +19,8 @@ public interface ProductMapper {
             "display_order," +
             "primary_name," + "full_name," + "generic_name," + "alternate_name," + "description," +
             "strength," +
-            "form," +
-            "dosage_unit, dispensing_unit, doses_per_dispensing_unit, doses_per_day," +
+            "form_id," +
+            "dosage_unit_id, dispensing_unit, doses_per_dispensing_unit, doses_per_day," +
             "pack_size," + "alternate_pack_size," +
             "store_refrigerated," + "store_room_temperature," + "hazardous," + "flammable," + "controlled_substance," + "light_sensitive," + "approved_by_who," +
             "contraceptive_cyp," +
@@ -61,29 +61,29 @@ public interface ProductMapper {
             @Result(property = "code", column = "code"),
             @Result(property = "primaryName", column = "primary_name"),
             @Result(property = "dispensingUnit", column = "dispensing_unit"),
-            @Result(property = "formCode", column = "form", javaType = java.lang.String.class, one = @One(select = "getProductFormCodeFor")),
+            @Result(property = "formCode", column = "form_id", javaType = java.lang.String.class, one = @One(select = "getProductFormCodeFor")),
             @Result(property = "strength", column = "strength"),
-            @Result(property = "dosageUnitCode", column = "dosage_unit", javaType = java.lang.String.class, one = @One(select = "getDosageUnitCodeFor")),
-            @Result(property = "productForm.id", column = "form"),
+            @Result(property = "dosageUnitCode", column = "dosage_unit_id", javaType = java.lang.String.class, one = @One(select = "getDosageUnitCodeFor")),
+            @Result(property = "productForm.id", column = "form_id"),
             @Result(property = "productForm.code", column = "form_code"),
             @Result(property = "productForm.displayOrder", column = "form_display_order"),
-            @Result(property = "productDosageUnit.id", column = "dosage_unit"),
+            @Result(property = "productDosageUnit.id", column = "dosage_unit_id"),
             @Result(property = "productDosageUnit.code", column = "dosage_unit_code"),
             @Result(property = "productDosageUnit.displayOrder", column = "dosage_unit_display_order")
     })
     @Select("select p.id as id, p.code as code, p.primary_name as primary_name, " +
-            "p.dispensing_unit as dispensing_unit, p.dosage_unit as dosage_unit, p.form as form, p.strength as strength, " +
+            "p.dispensing_unit as dispensing_unit, p.dosage_unit_id as dosage_unit_id, p.form_id as form_id, p.strength as strength, " +
             "pf.code as form_code , pf.display_order as form_display_order, " +
             "du.code as dosage_unit_code, du.display_order as dosage_unit_display_order " +
              "from product p, facility_approved_product fap, program_product pp, facility f , product_form pf , dosage_unit du " +
             "where pp.program_code = #{programCode} " +
             "and f.id = #{facilityId}" +
-            "and fap.facility_type_id= f.type " +
+            "and fap.facility_type_id= f.type_id " +
             "and fap.product_id = p.id " +
             "and fap.product_id = pp.product_id " +
             "and pp.product_id = p.id " +
-            "and pf.id = p.form " +
-            "and du.id = p.dosage_unit " +
+            "and pf.id = p.form_id " +
+            "and du.id = p.dosage_unit_id " +
             "and p.full_supply = 'TRUE' " +
             "and p.active = true " +
             "and pp.active = true " +
