@@ -1,23 +1,29 @@
 function InitiateRnrController($http, $scope, UserFacilityList, UserSupportedProgramInFacilityForAnOperation, $location) {
+
+    $scope.programOptionMsg = "--choose program--";
+
     UserFacilityList.get({}, function (data) {
             $scope.facilities = data.facilityList;
-            if($scope.facilities == null || $scope.facilities.length == 0){
-                $scope.facilityNotPresent = true;
+            $scope.facilityOptionMsg = "--choose facility--";
+            if ($scope.facilities == null || $scope.facilities.length == 0) {
+                $scope.facilityOptionMsg = "--none assigned--";
             }
         }, {}
     );
 
     $scope.loadPrograms = function () {
         if ($scope.$parent.facility) {
-            UserSupportedProgramInFacilityForAnOperation.get({facilityId:$scope.facility}, function (data) {
+            UserSupportedProgramInFacilityForAnOperation.get({facilityId:$scope.$parent.facility}, function (data) {
                 $scope.$parent.programsForFacility = data.programList;
-                if($scope.$parent.programsForFacility == null || $scope.$parent.programsForFacility.length == 0){
-                    $scope.programNotPresent = true;
+                $scope.programOptionMsg = "--choose program--";
+                if ($scope.$parent.programsForFacility == null || $scope.$parent.programsForFacility.length == 0) {
+                    $scope.programOptionMsg = "--none assigned--";
                 }
             }, {});
         } else {
             $scope.$parent.program = null;
             $scope.$parent.programsForFacility = null;
+            $scope.programOptionMsg = "--choose program--";
         }
     };
 
@@ -49,24 +55,24 @@ function InitiateRnrController($http, $scope, UserFacilityList, UserSupportedPro
 
 function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $location, $http) {
 
-    $scope.positiveInteger = function(value, errorHolder){
-       var INTEGER_REGEXP = /^\d*$/;
-       var valid = INTEGER_REGEXP.test(value);
+    $scope.positiveInteger = function (value, errorHolder) {
+        var INTEGER_REGEXP = /^\d*$/;
+        var valid = INTEGER_REGEXP.test(value);
 
-       if(errorHolder!=undefined) toggleErrorMessageDisplay(valid, errorHolder)
+        if (errorHolder != undefined) toggleErrorMessageDisplay(valid, errorHolder)
 
-       return valid;
+        return valid;
     }
 
-   var  toggleErrorMessageDisplay = function(valid, errorHolder){
-        if(valid){
-            document.getElementById(errorHolder).style.display='none';
-        }else {
-            document.getElementById(errorHolder).style.display='block';
+    var toggleErrorMessageDisplay = function (valid, errorHolder) {
+        if (valid) {
+            document.getElementById(errorHolder).style.display = 'none';
+        } else {
+            document.getElementById(errorHolder).style.display = 'block';
         }
-   }
+    }
 
-    $scope.positiveFloat = function(value){
+    $scope.positiveFloat = function (value) {
         var FLOAT_REGEXP = /^\d+(\.\d\d)?$/;
         return FLOAT_REGEXP.test(value);
     }
@@ -94,14 +100,14 @@ function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $l
     }
 
     $scope.saveRnr = function () {
-        if ($scope.saveRnrForm.$error.rnrError!=undefined && $scope.saveRnrForm.$error.rnrError!=false && $scope.saveRnrForm.$error.rnrError.length > 0  ) {
-              $scope.error = "Please correct errors before saving.";
-              $scope.message = "";
-              return ;
+        if ($scope.saveRnrForm.$error.rnrError != undefined && $scope.saveRnrForm.$error.rnrError != false && $scope.saveRnrForm.$error.rnrError.length > 0) {
+            $scope.error = "Please correct errors before saving.";
+            $scope.message = "";
+            return;
         }
-        $http.post('/logistics/rnr/' + $scope.$parent.rnr.id+ '/save.json', $scope.$parent.rnr ).success(function (data){
-         $scope.message = "R&R saved successfully!";
-         $scope.error="";
+        $http.post('/logistics/rnr/' + $scope.$parent.rnr.id + '/save.json', $scope.$parent.rnr).success(function (data) {
+            $scope.message = "R&R saved successfully!";
+            $scope.error = "";
         });
     }
 }
