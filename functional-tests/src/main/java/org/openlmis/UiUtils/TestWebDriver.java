@@ -3,8 +3,11 @@ package org.openlmis.UiUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.internal.Locatable;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.*;
 
 import java.util.concurrent.TimeUnit;
 
@@ -106,6 +109,20 @@ public class TestWebDriver {
         return getPageSource().contains(ERROR_MESSAGE_LOGIN);
     }
 
+    public void selectByVisibleText(WebElement element, String visibleText) {
+        new Select(element).selectByVisibleText(visibleText);
+    }
+
+    public void selectByIndex(WebElement element, int index) {
+        new Select(element).selectByIndex(index);
+    }
+
+
+
+    public String getText(WebElement element) {
+       return element.getText();
+    }
+
     public void sleep(long timeToSleep) {
         try{
             Thread.sleep(timeToSleep);
@@ -113,6 +130,12 @@ public class TestWebDriver {
         {
             e.printStackTrace();
         }
+    }
+
+    public void click(final WebElement element)
+    {
+        Actions action = new Actions(driver);
+        action.click(element).perform();
     }
 
     public boolean mouseOver(final WebElement element) {
@@ -126,7 +149,7 @@ public class TestWebDriver {
             return flag;
         } else
             flag = false;
-        return flag;
+            return flag;
     }
 
 }

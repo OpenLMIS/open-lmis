@@ -17,7 +17,6 @@ public class LoginPage extends Page {
     @FindBy(how = How.ID, using = "password")
     private static WebElement passwordField;
 
-
     @FindBy(how = How.XPATH, using = "//a[@id=\"username\"]")
     private static WebElement usernameDisplay;
 
@@ -44,7 +43,6 @@ public class LoginPage extends Page {
         userNameField.sendKeys(username);
         passwordField.sendKeys(password);
         userNameField.submit();
-
     }
 
     public void logout() {
