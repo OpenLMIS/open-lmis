@@ -9,4 +9,4 @@ classes
 .gradle
 *.DS_Store
 *.class
-*test.css
+css/
