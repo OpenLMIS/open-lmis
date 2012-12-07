@@ -65,7 +65,7 @@ public class FacilityController extends BaseController {
         String modifiedBy = (String) request.getSession().getAttribute(USER);
         facility.setModifiedBy(modifiedBy);
         try {
-            facilityService.saveOrUpdate(facility);
+            facilityService.save(facility);
         } catch (RuntimeException exception) {
             modelMap.put("error", exception.getMessage());
             return new ResponseEntity<>(modelMap, HttpStatus.BAD_REQUEST);

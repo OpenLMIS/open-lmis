@@ -63,7 +63,7 @@ public class FacilityRepositoryTest {
     public void shouldInsertFacility() throws Exception {
         Facility facility = new Facility();
 
-        repository.saveOrUpdate(facility);
+        repository.save(facility);
         assertThat(facility.getModifiedDate(), is(now.toDate()));
         verify(mockedFacilityMapper).insert(facility);
     }
@@ -86,7 +86,7 @@ public class FacilityRepositoryTest {
             add(make(a(defaultProgram)));
         }};
         facility.setSupportedPrograms(programs);
-        repository.saveOrUpdate(facility);
+        repository.save(facility);
         verify(programSupportedMapper, times(2)).addSupportedProgram(any(ProgramSupported.class));
     }
 
@@ -96,7 +96,7 @@ public class FacilityRepositoryTest {
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("Duplicate Facility Code found");
         doThrow(new DuplicateKeyException("")).when(mockedFacilityMapper).insert(facility);
-        repository.saveOrUpdate(facility);
+        repository.save(facility);
     }
 
     @Test
@@ -105,7 +105,7 @@ public class FacilityRepositoryTest {
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("Missing Reference data");
         doThrow(new DataIntegrityViolationException("foreign key")).when(mockedFacilityMapper).insert(facility);
-        repository.saveOrUpdate(facility);
+        repository.save(facility);
     }
 
     @Test
@@ -123,7 +123,7 @@ public class FacilityRepositoryTest {
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("Incorrect data length");
         doThrow(new DataIntegrityViolationException("value too long")).when(mockedFacilityMapper).insert(facility);
-        repository.saveOrUpdate(facility);
+        repository.save(facility);
     }
 
     @Test
@@ -147,7 +147,7 @@ public class FacilityRepositoryTest {
         Facility facility = new Facility();
         facility.setId(1);
 
-        repository.saveOrUpdate(facility);
+        repository.save(facility);
         verify(mockedFacilityMapper).update(facility);
         verify(mockedFacilityMapper, never()).insert(facility);
     }
@@ -155,7 +155,7 @@ public class FacilityRepositoryTest {
     @Test
     public void shouldNotUpdateFacilityIfIDIsNotSet() throws Exception {
         Facility facility = new Facility();
-        repository.saveOrUpdate(facility);
+        repository.save(facility);
         verify(mockedFacilityMapper, never()).update(facility);
     }
 
@@ -178,7 +178,7 @@ public class FacilityRepositoryTest {
         when(programMapper.getByFacilityId(facility.getId())).thenReturn(programsForFacility);
 
 
-        repository.saveOrUpdate(facility);
+        repository.save(facility);
 
         verify(programMapper).getByFacilityId(facility.getId());
         verify(programSupportedMapper).addSupportedProgram(new ProgramSupported(facility.getCode(),"HIV",true, facility.getModifiedBy(), facility.getModifiedDate()));

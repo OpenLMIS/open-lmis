@@ -38,42 +38,44 @@ public class FacilityRepository {
     }
 
     @Transactional
-    public void saveOrUpdate(Facility facility) {
+    public void save(Facility facility) {
         facility.setModifiedDate(DateTime.now().toDate());
-        if (facility.getId() == null)
-            try {
+        try {
+            if (facility.getId() == null) {
                 facilityMapper.insert(facility);
                 addListOfSupportedPrograms(facility);
-            } catch (DuplicateKeyException duplicateKeyException) {
-                throw new RuntimeException("Duplicate Facility Code found");
-            } catch (DataIntegrityViolationException integrityViolationException) {
-                if (integrityViolationException.getMessage().toLowerCase().contains("foreign key")) {
-                    throw new RuntimeException("Missing Reference data");
-                }
-                throw new RuntimeException("Incorrect data length");
-
+            } else {
+                updateFacility(facility);
             }
-        else {
-        List<Program> previouslySupportedPrograms = programMapper.getByFacilityId(facility.getId());
-            facilityMapper.update(facility);
-            deleteObsoleteProgramMappings(facility, previouslySupportedPrograms);
-            addUpdatableProgramMappings(facility,previouslySupportedPrograms);
+        } catch (DuplicateKeyException duplicateKeyException) {
+            throw new RuntimeException("Duplicate Facility Code found");
+        } catch (DataIntegrityViolationException integrityViolationException) {
+            if (integrityViolationException.getMessage().toLowerCase().contains("foreign key")) {
+                throw new RuntimeException("Missing Reference data");
+            }
+            throw new RuntimeException("Incorrect data length");
         }
+    }
 
+    private void updateFacility(Facility facility) {
+        List<Program> previouslySupportedPrograms = programMapper.getByFacilityId(facility.getId());
+        facilityMapper.update(facility);
+        deleteObsoleteProgramMappings(facility, previouslySupportedPrograms);
+        addUpdatableProgramMappings(facility, previouslySupportedPrograms);
     }
 
     private void deleteObsoleteProgramMappings(Facility facility, List<Program> previouslySupportedPrograms) {
         List<Program> supportedPrograms = facility.getSupportedPrograms();
-        for(Program previouslySupportedProgram : previouslySupportedPrograms){
-            if(!(supportedPrograms).contains(previouslySupportedProgram)){
-                programSupportedMapper.deleteObsoletePrograms(facility.getId(),previouslySupportedProgram.getCode());
+        for (Program previouslySupportedProgram : previouslySupportedPrograms) {
+            if (!(supportedPrograms).contains(previouslySupportedProgram)) {
+                programSupportedMapper.deleteObsoletePrograms(facility.getId(), previouslySupportedProgram.getCode());
             }
         }
     }
 
     private void addUpdatableProgramMappings(Facility facility, List<Program> previouslySupportedPrograms) {
-        for(Program supportedProgram : facility.getSupportedPrograms()){
-            if(!(previouslySupportedPrograms).contains(supportedProgram)){
+        for (Program supportedProgram : facility.getSupportedPrograms()) {
+            if (!(previouslySupportedPrograms).contains(supportedProgram)) {
                 ProgramSupported newProgramsSupported = new ProgramSupported(facility.getCode(), supportedProgram.getCode(), supportedProgram.getActive(), facility.getModifiedBy(), facility.getModifiedDate());
                 addSupportedProgram(newProgramsSupported);
             }

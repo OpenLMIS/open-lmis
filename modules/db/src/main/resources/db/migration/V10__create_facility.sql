@@ -9,7 +9,7 @@ CREATE TABLE facility (
     address1 VARCHAR(50),
     address2 VARCHAR(50),
     geographic_zone_id INTEGER NOT NULL REFERENCES geographic_zone(id),
-    type VARCHAR(50) NOT NULL REFERENCES facility_type(code),
+    type INTEGER NOT NULL REFERENCES facility_type(id),
     catchment_population INTEGER,
     latitude NUMERIC(8,4),
     longitude NUMERIC(8,4),

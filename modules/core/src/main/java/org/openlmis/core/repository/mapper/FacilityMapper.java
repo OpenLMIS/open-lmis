@@ -15,15 +15,20 @@ public interface FacilityMapper {
             "is_satellite,satellite_parent_code,has_electricity,has_electronic_scc,has_electronic_dar,is_active," +
             "go_live_date,go_down_date,comment,data_reportable,modified_by,modified_date) " +
             "values(#{code}, #{name},#{description},#{gln},#{mainPhone},#{fax},#{address1}, #{address2}," +
-            "#{geographicZone},#{facilityTypeCode},#{catchmentPopulation},#{latitude},#{longitude},#{altitude},#{operatedBy}," +
+            "#{geographicZone},(select id from facility_type where LOWER(code) = LOWER(#{facilityTypeCode})),#{catchmentPopulation},#{latitude},#{longitude},#{altitude},#{operatedBy}," +
             "#{coldStorageGrossCapacity},#{coldStorageNetCapacity},#{suppliesOthers},#{sdp},#{online}," +
             "#{satellite},#{satelliteParentCode},#{hasElectricity},#{hasElectronicScc},#{hasElectronicDar},#{active}," +
             "#{goLiveDate},#{goDownDate},#{comment},#{dataReportable},#{modifiedBy},#{modifiedDate}) returning id")
     @Options(useGeneratedKeys = true)
     int insert(Facility facility);
 
-    @Select("SELECT * FROM FACILITY")
+    @Select("SELECT id, code, name, description,gln,main_phone,fax,address1,address2," +
+            "geographic_zone_id,type,catchment_population,latitude,longitude,altitude,operated_by," +
+            "cold_storage_gross_capacity,cold_storage_net_capacity,supplies_others,is_sdp,is_online," +
+            "is_satellite,satellite_parent_code,has_electricity,has_electronic_scc,has_electronic_dar,is_active," +
+            "go_live_date,go_down_date,comment,data_reportable,modified_by,modified_date FROM FACILITY")
     @Results(value = {
+            @Result(property = "id", column = "id"),
             @Result(property = "code", column = "code"),
             @Result(property = "name", column = "name"),
             @Result(property = "description", column = "description"),
@@ -33,7 +38,8 @@ public interface FacilityMapper {
             @Result(property = "address1", column = "address1"),
             @Result(property = "address2", column = "address2"),
             @Result(property = "geographicZone", column = "geographic_zone_id"),
-            @Result(property = "facilityTypeCode", column = "type"),
+            @Result(property = "facilityTypeCode", column = "type",javaType = java.lang.String.class, one = @One(select = "getFacilityTypeCodeFor") ),
+
             @Result(property = "catchmentPopulation", column = "catchment_population"),
             @Result(property = "latitude", column = "latitude"),
             @Result(property = "longitude", column = "longitude"),
@@ -74,7 +80,7 @@ public interface FacilityMapper {
             "FT.nominal_eop, GZ.name as zone, GL.name as label, GZP.name as parent_zone, GLP.name as parent_label " +
             "FROM facility F, facility_type FT, geographic_zone GZ, geographic_zone GZP, geopolitical_level GL, geopolitical_level GLP " +
             "WHERE F.id = #{facilityId} AND " +
-            "F.type = FT.code AND " +
+            "F.type = FT.id AND " +
             "F.geographic_zone_id = GZ.id AND " +
             "GZ.parent = GZP.id AND " +
             "GZ.level = GL.id AND " +
@@ -106,6 +112,9 @@ public interface FacilityMapper {
             @Result(property = "active", column = "is_active")
     })
     List<FacilityType> getAllTypes();
+
+    @Select("SELECT code FROM facility_type where id = #{id}")
+    public String getFacilityTypeCodeFor(Integer id);
 
     @Select("SELECT * FROM facility_operator ORDER BY display_order")
     @Results(value = {
@@ -158,7 +167,7 @@ public interface FacilityMapper {
 
 
     @Update("UPDATE facility SET code=#{code},name=#{name},description=#{description},gln=#{gln},main_phone=#{mainPhone},fax=#{fax},address1=#{address1}," +
-            "address2=#{address2},geographic_zone_id=#{geographicZone},type=#{facilityTypeCode},catchment_population=#{catchmentPopulation},latitude=#{latitude}," +
+            "address2=#{address2},geographic_zone_id=#{geographicZone},type=(select id from facility_type where LOWER(code) = LOWER(#{facilityTypeCode})),catchment_population=#{catchmentPopulation},latitude=#{latitude}," +
             "longitude=#{longitude},altitude=#{altitude}," +
             "operated_by=#{operatedBy},cold_storage_gross_capacity=#{coldStorageGrossCapacity},cold_storage_net_capacity=#{coldStorageNetCapacity}," +
             "supplies_others=#{suppliesOthers},is_sdp=#{sdp},is_online=#{online},is_satellite=#{satellite},satellite_parent_code=#{satelliteParentCode}," +

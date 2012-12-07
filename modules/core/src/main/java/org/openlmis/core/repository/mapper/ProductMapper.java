@@ -77,7 +77,7 @@ public interface ProductMapper {
             "from product p, facility_approved_product fap, program_product pp, facility f , product_form pf , dosage_unit du " +
             "where pp.program_code = #{programCode} " +
             "and f.id = #{facilityId}" +
-            "and fap.facility_type_code = f.type " +
+            "and fap.facility_type_id= f.type " +
             "and fap.product_code = p.code " +
             "and fap.product_code = pp.product_code " +
             "and pp.product_code = p.code " +

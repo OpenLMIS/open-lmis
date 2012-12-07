@@ -9,7 +9,7 @@ insert into program_product(program_code, product_code, active) values
 ('HIV', 'P100', true),
 ('HIV', 'P101', true),
 ('HIV', 'P102', true);
-insert into facility_approved_product(facility_type_code, product_code) values
-('warehouse', 'P100'),
-('warehouse', 'P101'),
-('warehouse', 'P102');
+insert into facility_approved_product(facility_type_id, product_code) values
+(1, 'P100'),
+(1, 'P101'),
+(1, 'P102');

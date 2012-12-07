@@ -32,8 +32,8 @@ public class FacilityServiceTest {
     @Test
     public void shouldStoreFacility() throws Exception {
         Facility facility = make(a(defaultFacility));
-        facilityService.saveOrUpdate(facility);
-        verify(facilityRepository).saveOrUpdate(facility);
+        facilityService.save(facility);
+        verify(facilityRepository).save(facility);
     }
 
     @Test

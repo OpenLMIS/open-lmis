@@ -31,8 +31,8 @@ public class FacilityService {
     }
 
 
-    public void saveOrUpdate(Facility facility) {
-            facilityRepository.saveOrUpdate(facility);
+    public void save(Facility facility) {
+        facilityRepository.save(facility);
     }
 
     public void addSupportedProgram(ProgramSupported programSupported) {
