@@ -50,7 +50,7 @@ public class UploadController {
             if(multipartFile.isEmpty()){
                 return errorModelAndView(modelAndView, "File is empty");
             }
-            if (!multipartFile.getOriginalFilename().contains(".csv")) {
+            if (!multipartFile.getOriginalFilename().endsWith(".csv")) {
                 return errorModelAndView(modelAndView, "Incorrect file format , Please upload " + model + " data as a \".csv\" file");
             }
             String modifiedBy = (String) request.getSession().getAttribute(USER);

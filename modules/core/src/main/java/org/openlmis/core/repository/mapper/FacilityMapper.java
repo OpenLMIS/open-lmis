@@ -182,4 +182,6 @@ public interface FacilityMapper {
             "has_electronic_scc=#{hasElectronicScc},has_electronic_dar=#{hasElectronicDar},is_active=#{active},go_live_date=#{goLiveDate},go_down_date=#{goDownDate}," +
             "comment=#{comment},data_reportable=#{dataReportable},modified_by=#{modifiedBy},modified_date=#{modifiedDate} WHERE id=#{id}")
     void update(Facility facility);
+
+    Integer getIdForCode(String code);
 }

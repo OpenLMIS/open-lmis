@@ -40,6 +40,10 @@
                 <entry key="programSupported">
                     <value type="java.lang.Class">org.openlmis.core.domain.ProgramSupported</value>
                 </entry>
+                <entry key="requisitionGroup">
+                    <value type="java.lang.Class">org.openlmis.rnr.domain.RequisitionGroup</value>
+                </entry>
+
             </map>
         </constructor-arg>
     </bean>
