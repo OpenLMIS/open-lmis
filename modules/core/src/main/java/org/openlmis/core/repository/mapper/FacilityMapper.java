@@ -15,7 +15,10 @@ public interface FacilityMapper {
             "is_satellite,satellite_parent_code,has_electricity,has_electronic_scc,has_electronic_dar,is_active," +
             "go_live_date,go_down_date,comment,data_reportable,modified_by,modified_date) " +
             "values(#{code}, #{name},#{description},#{gln},#{mainPhone},#{fax},#{address1}, #{address2}," +
-            "#{geographicZone},(select id from facility_type where LOWER(code) = LOWER(#{facilityTypeCode})),#{catchmentPopulation},#{latitude},#{longitude},#{altitude},#{operatedBy}," +
+            "#{geographicZone}," +
+            "(select id from facility_type where LOWER(code) = LOWER(#{facilityTypeCode}))," +
+            "#{catchmentPopulation},#{latitude},#{longitude},#{altitude}," +
+            "(select id from facility_operator where LOWER(code) = LOWER(#{operatedBy}))," +
             "#{coldStorageGrossCapacity},#{coldStorageNetCapacity},#{suppliesOthers},#{sdp},#{online}," +
             "#{satellite},#{satelliteParentCode},#{hasElectricity},#{hasElectronicScc},#{hasElectronicDar},#{active}," +
             "#{goLiveDate},#{goDownDate},#{comment},#{dataReportable},#{modifiedBy},#{modifiedDate}) returning id")
@@ -44,7 +47,7 @@ public interface FacilityMapper {
             @Result(property = "latitude", column = "latitude"),
             @Result(property = "longitude", column = "longitude"),
             @Result(property = "altitude", column = "altitude"),
-            @Result(property = "operatedBy", column = "operated_by"),
+            @Result(property = "operatedBy", column = "operated_by",javaType = java.lang.String.class, one = @One(select = "getFacilityOperatorCodeFor")),
             @Result(property = "coldStorageGrossCapacity", column = "cold_storage_gross_capacity"),
             @Result(property = "coldStorageNetCapacity", column = "cold_storage_net_capacity"),
             @Result(property = "suppliesOthers", column = "supplies_others"),
@@ -88,7 +91,7 @@ public interface FacilityMapper {
     @Results(value = {
             @Result(property = "facilityName", column = "name"),
             @Result(property = "facilityCode", column = "code"),
-            @Result(property = "facilityOperatedBy", column = "operated_by"),
+            @Result(property = "facilityOperatedBy", column = "operated_by", javaType = java.lang.String.class, one = @One(select = "getFacilityOperatorCodeFor")),
             @Result(property = "facilityType", column = "facility_type"),
             @Result(property = "maximumStockLevel", column = "nominal_max_month"),
             @Result(property = "emergencyOrderPoint", column = "nominal_eop"),
@@ -123,6 +126,9 @@ public interface FacilityMapper {
             @Result(property = "displayOrder", column = "display_order")
     })
     List<FacilityOperator> getAllOperators();
+
+    @Select("SELECT code FROM facility_operator where id = #{id}")
+    public String getFacilityOperatorCodeFor(Integer id);
 
     @Select("SELECT GZ.id as id, GZ.name as value, GL.name as label FROM geographic_zone GZ, geopolitical_level GL where GZ.level = GL.id")
     List<GeographicZone> getAllGeographicZones();
@@ -167,9 +173,11 @@ public interface FacilityMapper {
 
 
     @Update("UPDATE facility SET code=#{code},name=#{name},description=#{description},gln=#{gln},main_phone=#{mainPhone},fax=#{fax},address1=#{address1}," +
-            "address2=#{address2},geographic_zone_id=#{geographicZone},type=(select id from facility_type where LOWER(code) = LOWER(#{facilityTypeCode})),catchment_population=#{catchmentPopulation},latitude=#{latitude}," +
+            "address2=#{address2},geographic_zone_id=#{geographicZone}," +
+            "type=(select id from facility_type where LOWER(code) = LOWER(#{facilityTypeCode})),catchment_population=#{catchmentPopulation},latitude=#{latitude}," +
             "longitude=#{longitude},altitude=#{altitude}," +
-            "operated_by=#{operatedBy},cold_storage_gross_capacity=#{coldStorageGrossCapacity},cold_storage_net_capacity=#{coldStorageNetCapacity}," +
+            "operated_by=(select id from facility_operator where LOWER(code)= LOWER(#{operatedBy}))," +
+            "cold_storage_gross_capacity=#{coldStorageGrossCapacity},cold_storage_net_capacity=#{coldStorageNetCapacity}," +
             "supplies_others=#{suppliesOthers},is_sdp=#{sdp},is_online=#{online},is_satellite=#{satellite},satellite_parent_code=#{satelliteParentCode}," +
             "has_electricity=#{hasElectricity}," +
             "has_electronic_scc=#{hasElectronicScc},has_electronic_dar=#{hasElectronicDar},is_active=#{active},go_live_date=#{goLiveDate},go_down_date=#{goDownDate}," +

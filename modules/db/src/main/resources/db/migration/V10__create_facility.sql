@@ -14,7 +14,7 @@ CREATE TABLE facility (
     latitude NUMERIC(8,4),
     longitude NUMERIC(8,4),
     altitude NUMERIC(8,4),
-    operated_by VARCHAR REFERENCES facility_operator(code),
+    operated_by INTEGER REFERENCES facility_operator(id),
     cold_storage_gross_capacity NUMERIC(8,4),
     cold_storage_net_capacity NUMERIC(8,4),
     supplies_others BOOLEAN,
