@@ -17,13 +17,15 @@ function ConfigureRnRTemplateController($scope, Program, $location) {
 function SaveRnrTemplateController($scope, RnRColumnList, $http, $location) {
     var code = ($scope.program ? $scope.program.code : "");
     RnRColumnList.get({programCode:code}, function (data) {   //success
-        $scope.rnrColumnList = data.rnrColumnList;
+        $scope.rnrColumns = data.rnrTemplateForm.rnrColumns;
+        $scope.sources = data.rnrTemplateForm.sources;
     }, function () {
         $location.path('select-program');
     });
 
     $scope.createProgramRnrTemplate = function () {
-        $http.post('/admin/rnr/' + $scope.program.code + '/columns.json', $scope.rnrColumnList).success(function () {
+
+        $http.post('/admin/rnr/' + $scope.program.code + '/columns.json', $scope.rnrColumns).success(function () {
             $scope.message = "Template saved successfully!";
             $scope.error = "";
             $scope.errorMap = undefined;
@@ -36,7 +38,7 @@ function SaveRnrTemplateController($scope, RnRColumnList, $http, $location) {
     };
 
     $scope.update = function () {
-        $scope.rnrColumnList.forEach(function(rnrColumn, index) {
+        $scope.rnrColumns.forEach(function (rnrColumn, index) {
             rnrColumn.position = index + 1;
         });
     };

@@ -10,22 +10,22 @@
     <span class="tpl-label">Label</span>
     <span class="tpl-source">Source</span>
   </div>
-  <form ng-submit="createProgramRnrTemplate()">
+  <form name="configureRnRTemplateForm" ng-submit="createProgramRnrTemplate()">
     <div class="rnr-template-columns">
-      <ul ui-sortable ui-options="{update: update, handle: '.drag-handle', placeholder: 'sortable-placeholder', containment: '.content'}" ng:model="rnrColumnList" id="sortable">
-        <li ng-repeat="rnrColumn in rnrColumnList">
+      <ul ui-sortable ui-options="{update: update, handle: '.drag-handle', placeholder: 'sortable-placeholder', containment: '.content'}" ng-model="rnrColumns" id="sortable">
+        <li ng-repeat="rnrColumn in rnrColumns">
          <div class="drag-handle"></div>
          <span ng-switch on="rnrColumn.mandatory">
           <span ng-switch-when="true" class="tpl-visible">
-            <input type="checkbox" ng:model="rnrColumn.visible" checked disabled/>
+            <input type="checkbox" ng-model="rnrColumn.visible" checked disabled/>
           </span>
           <span ng-switch-default>
                 <span ng-switch on="rnrColumn.visible">
                   <span ng-switch-when="true" class="tpl-visible">
-                    <input type="checkbox" ng-click="update()" ng:model="rnrColumn.visible" checked/>
+                    <input type="checkbox" ng-click="update()" ng-model="rnrColumn.visible" checked/>
                   </span>
                   <span ng-switch-default class="tpl-visible">
-                    <input type="checkbox" ng-click="update()" ng:model="rnrColumn.visible"/>
+                    <input type="checkbox" ng-click="update()" ng-model="rnrColumn.visible"/>
                   </span>
               </span>
           </span>
@@ -33,27 +33,24 @@
         <span class="tpl-indicator">
           <div class="indicator">{{ rnrColumn.indicator }}</div>
         </span>
-          <input type="hidden" ng:model="rnrColumn.id" value="{{ rnrColumn.id }}"/>
+          <input type="hidden" ng-model="rnrColumn.id" value="{{ rnrColumn.id }}"/>
         <span class="tpl-label">
             <div class="alert alert-error"  ng-model="errorMap" ng-show="errorMap[rnrColumn.name]">
                 {{errorMap[rnrColumn.name]}}
             </div>
-            <input name="label" type="text" ng:model="rnrColumn.label" value="{{ rnrColumn.label }}" required/>
+            <input name="label" type="text" ng-model="rnrColumn.label" value="{{ rnrColumn.label }}" required/>
           <span class="col-desc">
             {{ rnrColumn.description }}
           </span>
         </span>
-        <!--<span class="tpl-position">-->
-          <input type="hidden" class="rnr-column-position" ng:model="rnrColumn.position" value="{{ rnrColumn.position }}"/>
-        <!--</span>-->
+        <input type="hidden" class="rnr-column-position" ng-model="rnrColumn.position" value="{{ rnrColumn.position }}"/>
         <span class="tpl-source">
-            <span ng-switch on="rnrColumn.availableColumnTypes.length">
-              <span ng-switch-when="1">{{ rnrColumn.dataSource }}</span>
-              <span ng-switch-when="2">
-                 <select ng-model="rnrColumn.selectedColumnType" ng-options="i for i in rnrColumn.availableColumnTypes">
-                   <option value="{{rnrColumn.selectedColumnType}}" >{{rnrColumn.selectedColumnType}}</option>
-                 </select>
-              </span>
+            <span ng-show="rnrColumn.sourceConfigurable">
+                <select ng-model="rnrColumn.selectedColumnType.code" ng-options="c.code as c.description for c in sources">
+                </select>
+            </span>
+            <span ng-hide="rnrColumn.sourceConfigurable">
+                {{ rnrColumn.selectedColumnType.description}}
             </span>
             <br/>
             <a href="javascript:void(0);">{{ rnrColumn.formula }}</a>

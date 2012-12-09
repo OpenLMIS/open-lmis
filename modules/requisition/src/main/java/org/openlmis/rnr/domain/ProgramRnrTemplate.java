@@ -29,7 +29,7 @@ public class ProgramRnrTemplate {
     public boolean columnsCalculated(String... rnrColumnNames) {
         boolean calculated = false;
         for (String rnrColumnName : rnrColumnNames) {
-            calculated = calculated || (rnrColumnsMap.get(rnrColumnName).getSelectedColumnType() == RnrColumnType.Calculated);
+            calculated = calculated || (rnrColumnsMap.get(rnrColumnName).getSelectedColumnType() == RnRColumnSource.CALCULATED);
         }
         return calculated;
     }

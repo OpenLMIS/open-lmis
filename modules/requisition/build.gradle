@@ -7,6 +7,7 @@ dependencies {
             'org.drools:drools-compiler:5.4.0.Final',
             'org.drools:drools-core:5.4.0.Final',
             'org.drools:drools-spring:5.4.0.Final',
+            'org.codehaus.jackson:jackson-mapper-asl:1.9.11',
     //            'org.drools:drools-spring:5.4.0.Final',
     //            'org.drools:drools-compiler:5.4.0.Final',
     //            'org.drools:drools-api:5.4.0.Final',

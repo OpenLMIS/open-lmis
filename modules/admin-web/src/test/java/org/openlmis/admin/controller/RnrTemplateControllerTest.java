@@ -2,7 +2,8 @@ package org.openlmis.admin.controller;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.openlmis.admin.form.ProgramRnRTemplateForm;
+import org.openlmis.admin.form.RnrColumnList;
+import org.openlmis.admin.form.RnrTemplateForm;
 import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.service.RnrTemplateService;
 
@@ -31,16 +32,16 @@ public class RnrTemplateControllerTest {
         List<RnrColumn> allColumns = new ArrayList<RnrColumn>();
 
         when(rnrTemplateService.fetchAllRnRColumns(existingProgramCode)).thenReturn(allColumns);
-        List<RnrColumn> rnrColumns = rnrTemplateController.fetchAllProgramRnrColumnList(existingProgramCode);
+        RnrTemplateForm rnrColumns = rnrTemplateController.fetchAllProgramRnrColumnList(existingProgramCode);
         verify(rnrTemplateService).fetchAllRnRColumns(existingProgramCode);
-        assertThat(rnrColumns,is(allColumns));
+        assertThat(rnrColumns.getRnrColumns(),is(allColumns));
     }
 
     @Test
     public void shouldCreateARnRTemplateForAGivenProgramWithSpecifiedColumns() throws Exception {
-        ProgramRnRTemplateForm programRnRTemplateForm = new ProgramRnRTemplateForm();
-        rnrTemplateController.saveRnRTemplateForProgram(existingProgramCode, programRnRTemplateForm);
-        verify(rnrTemplateService).saveRnRTemplateForProgram(existingProgramCode, programRnRTemplateForm);
+        RnrColumnList rnrColumns = new RnrColumnList();
+        rnrTemplateController.saveRnRTemplateForProgram(existingProgramCode, rnrColumns);
+        verify(rnrTemplateService).saveRnRTemplateForProgram(existingProgramCode, rnrColumns);
     }
 
 }

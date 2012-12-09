@@ -3,8 +3,8 @@ package org.openlmis.rnr.service;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openlmis.rnr.domain.RnRColumnSource;
 import org.openlmis.rnr.domain.RnrColumn;
-import org.openlmis.rnr.domain.RnrColumnType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -24,15 +24,15 @@ public class RnrTemplateRuleServiceIT {
     @Test
     public void shouldReturnValidationErrorWhenDependantColumnsForQuantityDispensedIsNotVisible() {
         Map<String, String> errors = rnrTemplateRuleService.validate(asList(
-                rnrColumn("quantityDispensed", true, RnrColumnType.Calculated, "quantityDispensed"),
-                rnrColumn("beginningBalance", true, RnrColumnType.User_Input, "beginningBalance"),
-                rnrColumn("quantityReceived", true, RnrColumnType.User_Input, "quantityReceived"),
-                rnrColumn("lossesAndAdjustments", true, RnrColumnType.User_Input, "lossesAndAdjustments"),
-                rnrColumn("stockInHand", false, RnrColumnType.User_Input, "stockInHand"),
+                rnrColumn("quantityDispensed", true, RnRColumnSource.CALCULATED, "quantityDispensed"),
+                rnrColumn("beginningBalance", true, RnRColumnSource.USER_INPUT, "beginningBalance"),
+                rnrColumn("quantityReceived", true, RnRColumnSource.USER_INPUT, "quantityReceived"),
+                rnrColumn("lossesAndAdjustments", true, RnRColumnSource.USER_INPUT, "lossesAndAdjustments"),
+                rnrColumn("stockInHand", false, RnRColumnSource.USER_INPUT, "stockInHand"),
                 rnrColumn("quantityRequested", false,  null, "Requested Quantity"),
                 rnrColumn("reasonForRequestedQuantity", false , null, "Requested Quantity Reason"),
-                rnrColumn("stockOutDays", false, RnrColumnType.Calculated, "stockOutDays"),
-                rnrColumn("normalizedConsumption", false, RnrColumnType.User_Input, "normalizedConsumption")));
+                rnrColumn("stockOutDays", false, RnRColumnSource.CALCULATED, "stockOutDays"),
+                rnrColumn("normalizedConsumption", false, RnRColumnSource.USER_INPUT, "normalizedConsumption")));
         assertEquals("User needs to enter \"beginningBalance\",\"quantityReceived\",\"lossesAndAdjustments\",\"stockInHand\" to calculate \"quantityDispensed\""
                 , errors.get("quantityDispensed"));
     }
@@ -40,15 +40,15 @@ public class RnrTemplateRuleServiceIT {
     @Test
     public void shouldReturnValidationErrorWhenDependantColumnsForStockInHandIsNotVisible() {
         Map<String, String> errors = rnrTemplateRuleService.validate(asList(
-                rnrColumn("stockInHand", true, RnrColumnType.Calculated, "stockInHand"),
-                rnrColumn("beginningBalance", true, RnrColumnType.User_Input, "beginningBalance"),
-                rnrColumn("quantityReceived", true, RnrColumnType.User_Input, "quantityReceived"),
-                rnrColumn("lossesAndAdjustments", true, RnrColumnType.User_Input, "lossesAndAdjustments"),
-                rnrColumn("quantityDispensed", false, RnrColumnType.User_Input, "quantityDispensed"),
+                rnrColumn("stockInHand", true, RnRColumnSource.CALCULATED, "stockInHand"),
+                rnrColumn("beginningBalance", true, RnRColumnSource.USER_INPUT, "beginningBalance"),
+                rnrColumn("quantityReceived", true, RnRColumnSource.USER_INPUT, "quantityReceived"),
+                rnrColumn("lossesAndAdjustments", true, RnRColumnSource.USER_INPUT, "lossesAndAdjustments"),
+                rnrColumn("quantityDispensed", false, RnRColumnSource.USER_INPUT, "quantityDispensed"),
                 rnrColumn("quantityRequested", false,  null, "Requested Quantity"),
                 rnrColumn("reasonForRequestedQuantity", false , null, "Requested Quantity Reason"),
-                rnrColumn("stockOutDays", false, RnrColumnType.Calculated, "stockOutDays"),
-                rnrColumn("normalizedConsumption", false, RnrColumnType.User_Input, "normalizedConsumption")));
+                rnrColumn("stockOutDays", false, RnRColumnSource.CALCULATED, "stockOutDays"),
+                rnrColumn("normalizedConsumption", false, RnRColumnSource.USER_INPUT, "normalizedConsumption")));
         assertEquals("User needs to enter \"beginningBalance\",\"quantityReceived\",\"lossesAndAdjustments\",\"quantityDispensed\" to calculate \"stockInHand\""
                 , errors.get("stockInHand"));
     }
@@ -57,15 +57,15 @@ public class RnrTemplateRuleServiceIT {
     @Test
     public void shouldReturnValidationErrorWhenStockInHandAndQuantityDispensedBothAreCalculated() {
         Map<String, String> errors = rnrTemplateRuleService.validate(asList(
-                rnrColumn("stockInHand", true, RnrColumnType.Calculated, "stockInHand"),
-                rnrColumn("beginningBalance", true, RnrColumnType.User_Input, "beginningBalance"),
-                rnrColumn("quantityReceived", true, RnrColumnType.User_Input, "quantityReceived"),
-                rnrColumn("lossesAndAdjustments", true, RnrColumnType.User_Input, "lossesAndAdjustments"),
-                rnrColumn("quantityDispensed", true, RnrColumnType.Calculated, "quantityDispensed"),
-                rnrColumn("stockOutDays", false, RnrColumnType.Calculated, "stockOutDays"),
+                rnrColumn("stockInHand", true, RnRColumnSource.CALCULATED, "stockInHand"),
+                rnrColumn("beginningBalance", true, RnRColumnSource.USER_INPUT, "beginningBalance"),
+                rnrColumn("quantityReceived", true, RnRColumnSource.USER_INPUT, "quantityReceived"),
+                rnrColumn("lossesAndAdjustments", true, RnRColumnSource.USER_INPUT, "lossesAndAdjustments"),
+                rnrColumn("quantityDispensed", true, RnRColumnSource.CALCULATED, "quantityDispensed"),
+                rnrColumn("stockOutDays", false, RnRColumnSource.CALCULATED, "stockOutDays"),
                 rnrColumn("quantityRequested", false,  null, "Requested Quantity"),
                 rnrColumn("reasonForRequestedQuantity", false , null, "Requested Quantity Reason") ,
-                rnrColumn("normalizedConsumption", false, RnrColumnType.User_Input, "normalizedConsumption")));
+                rnrColumn("normalizedConsumption", false, RnRColumnSource.USER_INPUT, "normalizedConsumption")));
         assertEquals("Interdependent fields (\"quantityDispensed\", \"stockInHand\") cannot be of type \"Calculated\" at the same time"
                 , errors.get("stockInHand"));
         assertEquals("Interdependent fields (\"quantityDispensed\", \"stockInHand\") cannot be of type \"Calculated\" at the same time"
@@ -76,30 +76,30 @@ public class RnrTemplateRuleServiceIT {
     @Test
     public void shouldReturnValidationErrorWhenOnlyTheNumberOfStockOutDaysIsSelectedButNotNormalizedConsumption() {
         Map<String, String> errors = rnrTemplateRuleService.validate(asList(
-                rnrColumn("stockOutDays", true, RnrColumnType.Calculated, "stockOutDays"),
-                rnrColumn("normalizedConsumption", false, RnrColumnType.User_Input, "normalizedConsumption"),
-                rnrColumn("stockInHand", false, RnrColumnType.Calculated, "stockInHand"),
-                rnrColumn("beginningBalance", true, RnrColumnType.User_Input, "beginningBalance"),
-                rnrColumn("quantityReceived", true, RnrColumnType.User_Input, "quantityReceived"),
-                rnrColumn("lossesAndAdjustments", true, RnrColumnType.User_Input, "lossesAndAdjustments"),
+                rnrColumn("stockOutDays", true, RnRColumnSource.CALCULATED, "stockOutDays"),
+                rnrColumn("normalizedConsumption", false, RnRColumnSource.USER_INPUT, "normalizedConsumption"),
+                rnrColumn("stockInHand", false, RnRColumnSource.CALCULATED, "stockInHand"),
+                rnrColumn("beginningBalance", true, RnRColumnSource.USER_INPUT, "beginningBalance"),
+                rnrColumn("quantityReceived", true, RnRColumnSource.USER_INPUT, "quantityReceived"),
+                rnrColumn("lossesAndAdjustments", true, RnRColumnSource.USER_INPUT, "lossesAndAdjustments"),
                 rnrColumn("quantityRequested", false,  null, "Requested Quantity"),
                 rnrColumn("reasonForRequestedQuantity", false , null, "Requested Quantity Reason"),
-                rnrColumn("quantityDispensed", false, RnrColumnType.Calculated, "quantityDispensed")));
+                rnrColumn("quantityDispensed", false, RnRColumnSource.CALCULATED, "quantityDispensed")));
         assertEquals("\"normalizedConsumption\" is needed if you report \"stockOutDays\"", errors.get("stockOutDays"));
     }
 
     @Test
     public void shouldReturnValidationErrorWhenOnlyNormalizedConsumptionIsSelectedButNotNumberOfStockOutDays() {
         Map<String, String> errors = rnrTemplateRuleService.validate(asList(
-                rnrColumn("stockOutDays", false, RnrColumnType.Calculated, "Number of Stock out days"),
-                rnrColumn("normalizedConsumption", true, RnrColumnType.User_Input, "Normalized Consumption"),
-                rnrColumn("stockInHand", false, RnrColumnType.Calculated, "stockInHand"),
-                rnrColumn("beginningBalance", true, RnrColumnType.User_Input, "beginningBalance"),
-                rnrColumn("quantityReceived", true, RnrColumnType.User_Input, "quantityReceived"),
-                rnrColumn("lossesAndAdjustments", true, RnrColumnType.User_Input, "lossesAndAdjustments"),
+                rnrColumn("stockOutDays", false, RnRColumnSource.CALCULATED, "Number of Stock out days"),
+                rnrColumn("normalizedConsumption", true, RnRColumnSource.USER_INPUT, "Normalized Consumption"),
+                rnrColumn("stockInHand", false, RnRColumnSource.CALCULATED, "stockInHand"),
+                rnrColumn("beginningBalance", true, RnRColumnSource.USER_INPUT, "beginningBalance"),
+                rnrColumn("quantityReceived", true, RnRColumnSource.USER_INPUT, "quantityReceived"),
+                rnrColumn("lossesAndAdjustments", true, RnRColumnSource.USER_INPUT, "lossesAndAdjustments"),
                 rnrColumn("quantityRequested", false,  null, "Requested Quantity"),
                 rnrColumn("reasonForRequestedQuantity", false , null, "Requested Quantity Reason"),
-                rnrColumn("quantityDispensed", false, RnrColumnType.Calculated, "quantityDispensed")));
+                rnrColumn("quantityDispensed", false, RnRColumnSource.CALCULATED, "quantityDispensed")));
         assertEquals("User needs to enter \"Number of Stock out days\" to calculate \"Normalized Consumption\"", errors.get("normalizedConsumption"));
     }
 
@@ -107,13 +107,13 @@ public class RnrTemplateRuleServiceIT {
     public void shouldReturnValidationErrorWhenOnlyRequestedAmountIsSelectedButNotReasonForRequestedAmount() {
 
         Map<String, String> errors = rnrTemplateRuleService.validate(asList(
-                rnrColumn("stockOutDays", false, RnrColumnType.Calculated, "Number of Stock out days"),
-                rnrColumn("normalizedConsumption", true, RnrColumnType.User_Input, "Normalized Consumption"),
-                rnrColumn("stockInHand", false, RnrColumnType.Calculated, "stockInHand"),
-                rnrColumn("beginningBalance", true, RnrColumnType.User_Input, "beginningBalance"),
-                rnrColumn("quantityReceived", true, RnrColumnType.User_Input, "quantityReceived"),
-                rnrColumn("lossesAndAdjustments", true, RnrColumnType.User_Input, "lossesAndAdjustments"),
-                rnrColumn("quantityDispensed", false, RnrColumnType.Calculated, "quantityDispensed"),
+                rnrColumn("stockOutDays", false, RnRColumnSource.CALCULATED, "Number of Stock out days"),
+                rnrColumn("normalizedConsumption", true, RnRColumnSource.USER_INPUT, "Normalized Consumption"),
+                rnrColumn("stockInHand", false, RnRColumnSource.CALCULATED, "stockInHand"),
+                rnrColumn("beginningBalance", true, RnRColumnSource.USER_INPUT, "beginningBalance"),
+                rnrColumn("quantityReceived", true, RnRColumnSource.USER_INPUT, "quantityReceived"),
+                rnrColumn("lossesAndAdjustments", true, RnRColumnSource.USER_INPUT, "lossesAndAdjustments"),
+                rnrColumn("quantityDispensed", false, RnRColumnSource.CALCULATED, "quantityDispensed"),
                 rnrColumn("quantityRequested", true,  null, "Requested Quantity"),
                 rnrColumn("reasonForRequestedQuantity", false , null, "Requested Quantity Reason")));
         assertEquals("\"Requested Quantity\" must include an \"Requested Quantity Reason\" from the user", errors.get("quantityRequested"));
@@ -123,11 +123,11 @@ public class RnrTemplateRuleServiceIT {
 
 
 
-    private RnrColumn rnrColumn(String columnName, boolean visible, RnrColumnType selectedColumnType, String label) {
+    private RnrColumn rnrColumn(String columnName, boolean visible, RnRColumnSource selectedColumnSource, String label) {
         RnrColumn rnrColumn = new RnrColumn();
         rnrColumn.setName(columnName);
         rnrColumn.setVisible(visible);
-        rnrColumn.setSelectedColumnType(selectedColumnType);
+        rnrColumn.setSelectedColumnType(selectedColumnSource);
         rnrColumn.setLabel(label);
         return rnrColumn;
     }

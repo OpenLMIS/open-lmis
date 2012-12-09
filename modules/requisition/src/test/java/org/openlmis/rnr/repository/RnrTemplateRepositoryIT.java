@@ -5,7 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.rnr.domain.RnrColumn;
-import org.openlmis.rnr.domain.RnrColumnType;
 import org.openlmis.rnr.repository.mapper.ProgramRnrColumnMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -65,9 +64,6 @@ public class RnrTemplateRepositoryIT {
         assertThat(rnrColumn.getDescription(), is("Unique identifier for each commodity"));
         assertThat(rnrColumn.getPosition(), is(1));
         assertThat(rnrColumn.getLabel(), is("Product Code"));
-        assertThat(rnrColumn.getDefaultValue(), is(""));
-        assertThat(rnrColumn.getDataSource(), is("Reference Value (Product Table)"));
-        assertThat(rnrColumn.getAvailableColumnTypes().get(0), is(RnrColumnType.Calculated));
         assertThat(rnrColumn.getFormula(), is(""));
         assertThat(rnrColumn.getIndicator(), is("O"));
         assertThat(rnrColumn.isMandatory(), is(true));

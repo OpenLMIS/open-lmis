@@ -1,16 +1,15 @@
-Drop TABLE IF EXISTS Master_Program_Template;
-CREATE TABLE Master_RnR_Template (
+Drop TABLE IF EXISTS master_rnr_template;
+CREATE TABLE master_rnr_template (
     id serial PRIMARY KEY,
-    description varchar(250),
     column_name varchar(200) NOT NULL UNIQUE,
     column_position integer  NOT NULL,
+    source VARCHAR(1) NOT NULL,
+    is_source_configurable boolean NOT NULL,
     column_label varchar(200),
-    default_value varchar(50) ,
-    data_source varchar(50) not null,
-    available_sources varchar(200) not null,
     formula varchar(200),
     column_indicator varchar(3) not null,
-    is_used boolean not null,
-    is_visible boolean not null,
-    is_mandatory boolean not null
+    is_used boolean NOT NULL,
+    is_visible boolean NOT NULL,
+    is_mandatory boolean NOT NULL,
+    description varchar(250)
 );
