@@ -7,9 +7,9 @@ import org.openlmis.rnr.mapper.RequisitionGroupMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
-@Repository
+@Component
 @NoArgsConstructor
 public class RequisitionGroupRepository {
 
