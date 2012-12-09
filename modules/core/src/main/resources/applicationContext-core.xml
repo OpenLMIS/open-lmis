@@ -18,6 +18,7 @@
                 <entry key="product" value-ref="productPersistenceHandler"/>
                 <entry key="facility" value-ref="facilityPersistenceHandler"/>
                 <entry key="programSupported" value-ref="programSupportedPersistenceHandler"/>
+                <entry key="requisitionGroup" value-ref="requisitionGroupPersistenceHandler"/>
             </map>
         </constructor-arg>
     </bean>
