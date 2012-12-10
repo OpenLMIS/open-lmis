@@ -16,8 +16,8 @@ public class LogIn extends TestCaseHelper {
     @BeforeClass
     public void setUp() throws Exception
     {
-        LoginPage loginpage=new LoginPage(testWebDriver);
-        loginpage.insertUser();
+        DBWrapper dbWrapper = new DBWrapper();
+        dbWrapper.insertUser();
     }
 
     @Test(dataProvider = "Data-Provider-Function-Positive")
@@ -42,8 +42,8 @@ public class LogIn extends TestCaseHelper {
     @AfterClass
     public void tearDown() throws Exception
     {
-        LoginPage loginpage=new LoginPage(testWebDriver);
-        loginpage.deleteUser();
+        DBWrapper dbWrapper = new DBWrapper();
+        dbWrapper.deleteUser();
     }
 
     @DataProvider(name = "Data-Provider-Function-Positive")

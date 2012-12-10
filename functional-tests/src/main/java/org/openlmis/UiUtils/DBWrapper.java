@@ -47,4 +47,65 @@ public class DBWrapper {
         }
     }
 
+    public void insertUser() throws SQLException
+    {
+        boolean flag=false;
+        DBWrapper dbwrapper=new DBWrapper();
+        ResultSet rs=dbwrapper.dbConnection("Select user_name from users;","select");
+        if (rs.next()) {
+            if(rs.getString(1).contains("User"))
+            {
+                flag=true;
+            }
+        }
+        if(flag)
+        {
+            dbwrapper.dbConnection("delete from users where user_name like('User%');","alter");
+        }
+        dbwrapper.dbConnection("INSERT INTO users\n" +
+                "  (id, user_name, password, role, facility_id) VALUES\n" +
+                "  (2, 'User123', 'Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==','USER', null);","alter");
+
+        rs.close();
+    }
+
+    public void insertUserAndAllocateFacility()
+    {
+        DBWrapper dbwrapper=new DBWrapper();
+        dbwrapper.dbConnection("INSERT INTO users\n" +
+                "  (id, user_name, password, role, facility_id) VALUES\n" +
+                "  (2, 'User123', 'Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==','USER', (Select id from facility order by modified_date DESC limit 1');","alter");
+
+    }
+
+    public void deleteUser() throws SQLException
+    {
+        DBWrapper dbwrapper=new DBWrapper();
+        dbwrapper.dbConnection("delete from facility;","alter");
+        dbwrapper.dbConnection("delete from users where user_name like('User%');","alter");
+
+    }
+
+
+    public void insertRoles() throws SQLException
+    {
+        DBWrapper dbwrapper=new DBWrapper();
+        dbwrapper.dbConnection("INSERT INTO roles\n" +
+                "(id, name, description) VALUES\n" +
+                "(1, 'store in-charge', ''),\n" +
+                "(2, 'district pharmacist', '');", "alter");
+
+    }
+
+    public void insertRoleRights() throws SQLException
+    {
+        DBWrapper dbwrapper=new DBWrapper();
+        dbwrapper.dbConnection("INSERT INTO role_rights (role_id, right_id) VALUES (1, 1),(1, 2),(2, 1),(2, 2),(2, 3);", "alter");
+    }
+
+    public void insertRoleAssignment() throws SQLException
+    {
+        DBWrapper dbwrapper=new DBWrapper();
+        dbwrapper.dbConnection("INSERT INTO role_assignments (user_id, role_id, program_id) VALUES (2, 2, 'HIV');", "alter");
+    }
 }

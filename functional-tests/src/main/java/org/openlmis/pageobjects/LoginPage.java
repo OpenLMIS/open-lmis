@@ -1,14 +1,12 @@
 package org.openlmis.pageobjects;
 
 
-import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
-import java.sql.*;
 
 
 public class LoginPage extends Page {
@@ -61,33 +59,4 @@ public class LoginPage extends Page {
         return testWebDriver.getPageSource().contains("Welcome " + user);
     }
 
-    public void insertUser() throws SQLException
-    {
-        boolean flag=false;
-        DBWrapper dbwrapper=new DBWrapper();
-        ResultSet rs=dbwrapper.dbConnection("Select user_name from users;","select");
-        if (rs.next()) {
-            if(rs.getString(1).contains("User"))
-            {
-                 flag=true;
-            }
-        }
-        if(flag)
-        {
-            dbwrapper.dbConnection("delete from users where user_name like('User%');","alter");
-        }
-        dbwrapper.dbConnection("INSERT INTO users\n" +
-                "  (id, user_name, password, role, facility_id) VALUES\n" +
-                "  (2, 'User123', 'Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==','USER', null);","alter");
-
-        rs.close();
-    }
-
-
-    public void deleteUser() throws SQLException
-    {
-        DBWrapper dbwrapper=new DBWrapper();
-        dbwrapper.dbConnection("delete from users where user_name like('User%');","alter");
-
-    }
 }
