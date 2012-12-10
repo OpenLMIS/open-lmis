@@ -8,6 +8,7 @@ import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.TemplateConfigPage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
+import org.testng.annotations.*;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -16,6 +17,12 @@ import org.testng.annotations.Test;
 
 public class E2EInitiateRnR extends TestCaseHelper {
 
+    @BeforeClass
+    public void setUp() throws Exception
+    {
+        DBWrapper dbWrapper = new DBWrapper();
+        dbWrapper.deleteUser();
+    }
 
     @Test(dataProvider = "Data-Provider-Function-Positive")
     public void testE2EInitiateRnR(String[] credentials) throws Exception {
@@ -39,6 +46,12 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
         loginpage.logout();
 
+    }
+    @AfterClass
+    public void tearDown() throws Exception
+    {
+        DBWrapper dbWrapper = new DBWrapper();
+        dbWrapper.deleteUser();
     }
 
     @DataProvider(name = "Data-Provider-Function-Positive")
