@@ -92,7 +92,7 @@ describe("Facility", function () {
       ], "facilityOperators":[
         {"operatorCode":"testCode"}
       ]});
-      facility = {"id":1, "code":"F1756", "name":"Village Dispensary", "description":"IT department", "gln":"G7645", "mainPhone":"9876234981", "fax":"fax", "address1":"A", "address2":"B", "geographicZone":1, "facilityTypeCode":"warehouse", "catchmentPopulation":333, "latitude":22.1, "longitude":1.2, "altitude":3.3, "operatedBy":"NGO", "coldStorageGrossCapacity":9.9, "coldStorageNetCapacity":6.6, "suppliesOthers":true, "sdp":true, "hasElectricity":true, "online":true, "hasElectronicScc":true, "hasElectronicDar":null, "active":true, "goLiveDate":1352572200000, "goDownDate":-2592106200000, "satellite":true, "satelliteParentCode":null, "comment":"fc", "dataReportable":true, "supportedPrograms":[
+      facility = {"id":1, "code":"F1756", "name":"Village Dispensary", "description":"IT department", "gln":"G7645", "mainPhone":"9876234981", "fax":"fax", "address1":"A", "address2":"B", "geographicZone":{"id":1}, "facilityType":{"code":"warehouse"}, "catchmentPopulation":333, "latitude":22.1, "longitude":1.2, "altitude":3.3, "operatedBy":{"code":"NGO"}, "coldStorageGrossCapacity":9.9, "coldStorageNetCapacity":6.6, "suppliesOthers":true, "sdp":true, "hasElectricity":true, "online":true, "hasElectronicScc":true, "hasElectronicDar":null, "active":true, "goLiveDate":1352572200000, "goDownDate":-2592106200000, "satellite":true, "satelliteParentCode":null, "comment":"fc", "dataReportable":true, "supportedPrograms":[
         {"code":"ARV", "name":"ARV", "description":"ARV", "active":true},
         {"code":"HIV", "name":"HIV", "description":"HIV", "active":true}
       ], "modifiedBy":null, "modifiedDate":null};

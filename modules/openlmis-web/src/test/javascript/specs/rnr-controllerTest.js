@@ -71,7 +71,7 @@ describe('Requisition controllers', function () {
       $httpBackend=_$httpBackend_;
       location=$location;
       requisitionHeader = {"requisitionHeader":{"facilityName":"National Warehouse",
-        "facilityCode":"10134","facilityType":"Warehouse","facilityOperatedBy":"MoH","maximumStockLevel":3,"emergencyOrderPoint":0.5,
+        "facilityCode":"10134","facilityType":{"code":"Warehouse"},"facilityOperatedBy":"MoH","maximumStockLevel":3,"emergencyOrderPoint":0.5,
         "zone":{"label":"state","value":"Arusha"},"parentZone":{"label":"state","value":"Arusha"}}};
       scope.$parent.facility = "10134";
       scope.$parent.program={code:"programCode"};
@@ -85,7 +85,7 @@ describe('Requisition controllers', function () {
     it('should get header data', function () {
       $httpBackend.flush();
       expect(scope.header).toEqual({"facilityName":"National Warehouse",
-        "facilityCode":"10134","facilityType":"Warehouse","facilityOperatedBy":"MoH","maximumStockLevel":3,"emergencyOrderPoint":0.5,
+        "facilityCode":"10134","facilityType":{"code":"Warehouse"},"facilityOperatedBy":"MoH","maximumStockLevel":3,"emergencyOrderPoint":0.5,
         "zone":{"label":"state","value":"Arusha"},"parentZone":{"label":"state","value":"Arusha"}});
     });
 

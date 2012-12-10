@@ -70,7 +70,7 @@
       <div class="form-row">
         <label for="geographic-zone">Geographic Zone <span class="label-required">*</span></label>
         <div class="form-field">
-          <select id="geographic-zone" name="geographicZone" ng-model="facility.geographicZone" ng-options="i.id as i.value for i in geographicZones" ng:required="true" >
+          <select id="geographic-zone" name="geographicZone" ng-model="facility.geographicZone.id" ng-options="i.id as i.value for i in geographicZones" ng:required="true" >
             <option value="">-- Select Geographic Zone --</option>
           </select>
           <span class="field-error" ng-show="facilityForm.geographicZone.$error.required && showError">
@@ -83,7 +83,7 @@
       <div class="form-row">
         <label for="facility-type">Facility Type <span class="label-required">*</span></label>
         <div class="form-field">
-          <select name="facilityType" id="facility-type" ng-model="facility.facilityTypeCode" ng-options="i.code as i.name for i in facilityTypes" ng:required="true" >
+          <select name="facilityType" id="facility-type" ng-model="facility.facilityType.code" ng-options="i.code as i.name for i in facilityTypes" ng:required="true" >
             <option value="">--Select Facility Type--</option>
           </select>
           <span class="field-error" ng-show="facilityForm.facilityType.$error.required && showError">
@@ -140,7 +140,7 @@
       <div class="form-row">
         <label for="operated-by">Operated By</label>
         <div class="form-field">
-          <select id="operated-by" ng-model="facility.operatedBy" ng-options="i.code as i.text for i in facilityOperators">
+          <select id="operated-by" ng-model="facility.operatedBy.code" ng-options="i.code as i.text for i in facilityOperators">
             <option value="">--Select Facility Operated By--</option>
           </select>
         </div>
