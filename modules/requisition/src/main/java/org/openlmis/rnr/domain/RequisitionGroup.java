@@ -1,6 +1,5 @@
 package org.openlmis.rnr.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;

@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openlmis.rnr.domain.RequisitionGroup;
+import org.openlmis.rnr.repository.RequisitionGroupRepository;
 import org.openlmis.rnr.service.RequisitionGroupService;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -19,12 +20,12 @@ public class RequisitionGroupPersistenceHandlerTest {
     RequisitionGroupPersistenceHandler requisitionGroupPersistenceHandler;
 
     @Mock
-    RequisitionGroupService requisitionGroupService;
+    RequisitionGroupRepository requisitionGroupRepository;
 
     @Before
     public void setUp() throws Exception {
         initMocks(this);
-        requisitionGroupPersistenceHandler = new RequisitionGroupPersistenceHandler(requisitionGroupService);
+        requisitionGroupPersistenceHandler = new RequisitionGroupPersistenceHandler(requisitionGroupRepository);
     }
 
     @Test
@@ -35,6 +36,6 @@ public class RequisitionGroupPersistenceHandlerTest {
         requisitionGroupPersistenceHandler.save(requisitionGroup, "USER");
 
         assertThat(requisitionGroup.getModifiedBy(), is(USER));
-        verify(requisitionGroupService).save(requisitionGroup);
+        verify(requisitionGroupRepository).insert(requisitionGroup);
     }
 }

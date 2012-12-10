@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.openlmis.core.domain.ProgramSupported;
+import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.service.FacilityService;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -14,14 +15,14 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class ProgramSupportedPersistenceHandlerTest {
 
     @Mock
-    FacilityService facilityService;
+    FacilityRepository facilityRepository;
 
     private ProgramSupportedPersistenceHandler programSupportedPersistenceHandler;
 
     @Before
     public void setUp() throws Exception {
         initMocks(this);
-        programSupportedPersistenceHandler = new ProgramSupportedPersistenceHandler(facilityService);
+        programSupportedPersistenceHandler = new ProgramSupportedPersistenceHandler(facilityRepository);
     }
 
 
@@ -29,7 +30,7 @@ public class ProgramSupportedPersistenceHandlerTest {
     public void shouldSaveProgramSupported(){
         ProgramSupported programSupported = new ProgramSupported();
         programSupportedPersistenceHandler.save(programSupported, "user");
-        verify(facilityService).addSupportedProgram(programSupported);
+        verify(facilityRepository).addSupportedProgram(programSupported);
         assertThat(programSupported.getModifiedBy(), is("user"));
     }
 
