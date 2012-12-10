@@ -23,6 +23,7 @@ public class CreateFacilityTest extends TestCaseHelper {
         createfacilitypage.navigateCreateFacility();
         createfacilitypage.enterAndVerifyFacility();
         createfacilitypage.insertUserAndAllocateFacility();
+        loginpage.logout();
 
     }
 
