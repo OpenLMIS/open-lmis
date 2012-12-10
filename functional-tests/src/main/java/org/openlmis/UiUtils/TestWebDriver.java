@@ -113,6 +113,10 @@ public class TestWebDriver {
         new Select(element).selectByVisibleText(visibleText);
     }
 
+    public void selectByValue(WebElement element, String value) {
+        new Select(element).selectByValue(value);
+    }
+
     public void selectByIndex(WebElement element, int index) {
         new Select(element).selectByIndex(index);
     }
