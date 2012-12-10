@@ -36,7 +36,7 @@ public class TemplateConfigPage extends Page {
 
     private String TEMPLATE_SUCCESS_MESSAGE = "Template saved successfully!";
 
-    private String BASE_URL = "http://localhost:9091/";
+    private String BASE_URL = "http://localhost:9090/";
 
     public TemplateConfigPage(TestWebDriver driver) {
         super(driver);

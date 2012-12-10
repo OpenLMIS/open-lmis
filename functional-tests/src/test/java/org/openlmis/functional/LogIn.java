@@ -1,14 +1,27 @@
 package org.openlmis.functional;
 
+import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.LoginPage;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
+import org.testng.annotations.*;
+
+@TransactionConfiguration(defaultRollback=true)
+@Transactional
 public class LogIn extends TestCaseHelper {
 
+
+    @BeforeClass
+    public void setUp() throws Exception
+    {
+        LoginPage loginpage=new LoginPage(testWebDriver);
+        loginpage.insertUser();
+    }
+
     @Test(dataProvider = "Data-Provider-Function-Positive")
-    public void testLoginPositive(String identifier, String[] credentials) {
+    public void testLoginPositive(String identifier, String[] credentials) throws Exception {
         LoginPage loginpage=new LoginPage(testWebDriver);
         loginpage.login(credentials[0], credentials[1]);
         //assertEquals(loginpage.verifyWelcomeMessage(credentials[0]), true);
@@ -24,6 +37,13 @@ public class LogIn extends TestCaseHelper {
         //assertEquals(testWebDriver.verifyErrorMessage(), true);
         testWebDriver.verifyErrorMessage();
 
+    }
+
+    @AfterClass
+    public void tearDown() throws Exception
+    {
+        LoginPage loginpage=new LoginPage(testWebDriver);
+        loginpage.deleteUser();
     }
 
     @DataProvider(name = "Data-Provider-Function-Positive")

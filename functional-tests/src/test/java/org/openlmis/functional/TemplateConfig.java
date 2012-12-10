@@ -14,5 +14,6 @@ public class TemplateConfig extends TestCaseHelper {
         TemplateConfigPage config=new TemplateConfigPage(testWebDriver);
         config.selectProgramToConfigTemplate("HIV");
         config.configureTemplate();
+        loginpage.logout();
     }
 }
