@@ -24,7 +24,7 @@ public class DummyImportable implements Importable {
     @ImportField(type = "Date")
     Date optionalDateField;
 
-    @ImportField(type = "String", name = "OPTIONAL NESTED FIELD", mapped="dummyNestedField.code")
+    @ImportField(type = "String", name = "OPTIONAL NESTED FIELD", nested ="code")
     DummyNestedField dummyNestedField;
 
     String nonAnnotatedField;

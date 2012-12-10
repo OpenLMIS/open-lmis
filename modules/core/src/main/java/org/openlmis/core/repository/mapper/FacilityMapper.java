@@ -183,5 +183,12 @@ public interface FacilityMapper {
             "comment=#{comment},data_reportable=#{dataReportable},modified_by=#{modifiedBy},modified_date=#{modifiedDate} WHERE id=#{id}")
     void update(Facility facility);
 
-    Integer getIdForCode(String code);
+
+  @Select("SELECT id FROM facility_operator where LOWER(code) = LOWER(#{code})")
+  Long getOperatedByIdForCode(String code);
+
+
+  Long getFacilityTypeIdForCode(String facilityTypeCode);
+
+  Integer getIdForCode(String code);
 }

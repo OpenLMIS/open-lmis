@@ -57,11 +57,11 @@ public class Product implements Importable {
     private String strength;
 
 
-    @ImportField(type = "String", name = "Product Form", mapped = "form.code")
+    @ImportField(type = "String", name = "Product Form", nested = "code")
     private ProductForm form;
 
 
-    @ImportField(type = "String", name = "Dosage Units", mapped = "dosageUnit.code")
+    @ImportField(type = "String", name = "Dosage Units", nested = "code")
     private DosageUnit dosageUnit;
 
     @ImportField(name = "Dispensing Units")

@@ -8,9 +8,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.openlmis.core.builder.ProgramBuilder;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramSupported;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.core.repository.mapper.ProgramSupportedMapper;
@@ -36,162 +34,215 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({DateTime.class})
 public class FacilityRepositoryTest {
-    @Rule
-    public ExpectedException expectedEx = ExpectedException.none();
-    @Mock
-    private FacilityMapper mockedFacilityMapper;
+  @Rule
+  public ExpectedException expectedEx = ExpectedException.none();
+  @Mock
+  private FacilityMapper mockedFacilityMapper;
 
-    @Mock
-    private ProgramSupportedMapper programSupportedMapper;
+  @Mock
+  private ProgramSupportedMapper programSupportedMapper;
 
-    @Mock
-    private ProgramMapper programMapper;
+  @Mock
+  private ProgramMapper programMapper;
 
-    private FacilityRepository repository;
-    private DateTime now;
+  private FacilityRepository repository;
+  private DateTime now;
 
-    @Before
-    public void setUp() {
-        mockStatic(DateTime.class);
-        now = new DateTime(2012, 10, 10, 8, 0);
-        when(DateTime.now()).thenReturn(now);
+  @Before
+  public void setUp() {
+    mockStatic(DateTime.class);
+    now = new DateTime(2012, 10, 10, 8, 0);
+    when(DateTime.now()).thenReturn(now);
 
-        repository = new FacilityRepository(mockedFacilityMapper, programSupportedMapper, programMapper);
-    }
+    repository = new FacilityRepository(mockedFacilityMapper, programSupportedMapper, programMapper);
+  }
 
-    @Test
-    public void shouldInsertFacility() throws Exception {
-        Facility facility = new Facility();
+  @Test
+  public void shouldInsertFacility() throws Exception {
+    Facility facility = make(a(defaultFacility));
 
-        repository.save(facility);
-        assertThat(facility.getModifiedDate(), is(now.toDate()));
-        verify(mockedFacilityMapper).insert(facility);
-    }
+    repository.save(facility);
+    assertThat(facility.getModifiedDate(), is(now.toDate()));
+    verify(mockedFacilityMapper).insert(facility);
+  }
 
-    @Test
-    public void shouldAddSupportedProgram() throws Exception {
-        ProgramSupported programSupported = new ProgramSupported();
+  @Test
+  public void shouldAddSupportedProgram() throws Exception {
+    ProgramSupported programSupported = new ProgramSupported();
 
-        repository.addSupportedProgram(programSupported);
-        assertThat(programSupported.getModifiedDate(), is(now.toDate()));
-        verify(programSupportedMapper).addSupportedProgram(programSupported);
-    }
+    repository.addSupportedProgram(programSupported);
+    assertThat(programSupported.getModifiedDate(), is(now.toDate()));
+    verify(programSupportedMapper).addSupportedProgram(programSupported);
+  }
 
-    @Test
-    public void shouldAddProgramsSupportedByAFacility() throws Exception {
-        Facility facility = make(a(defaultFacility));
-        facility.setId(null);
-        List<Program> programs = new ArrayList<Program>() {{
-            add(make(a(defaultProgram)));
-            add(make(a(defaultProgram)));
-        }};
-        facility.setSupportedPrograms(programs);
-        repository.save(facility);
-        verify(programSupportedMapper, times(2)).addSupportedProgram(any(ProgramSupported.class));
-    }
+  @Test
+  public void shouldAddProgramsSupportedByAFacility() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    facility.setId(null);
+    List<Program> programs = new ArrayList<Program>() {{
+      add(make(a(defaultProgram)));
+      add(make(a(defaultProgram)));
+    }};
+    facility.setSupportedPrograms(programs);
+    repository.save(facility);
+    verify(programSupportedMapper, times(2)).addSupportedProgram(any(ProgramSupported.class));
+  }
 
-    @Test
-    public void shouldRaiseDuplicateFacilityCodeError() throws Exception {
-        Facility facility = new Facility();
-        expectedEx.expect(RuntimeException.class);
-        expectedEx.expectMessage("Duplicate Facility Code found");
-        doThrow(new DuplicateKeyException("")).when(mockedFacilityMapper).insert(facility);
-        repository.save(facility);
-    }
+  @Test
+  public void shouldRaiseDuplicateFacilityCodeError() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    expectedEx.expect(RuntimeException.class);
+    expectedEx.expectMessage("Duplicate Facility Code found");
+    doThrow(new DuplicateKeyException("")).when(mockedFacilityMapper).insert(facility);
+    repository.save(facility);
+  }
 
-    @Test
-    public void shouldRaiseIncorrectReferenceDataError() throws Exception {
-        Facility facility = new Facility();
-        expectedEx.expect(RuntimeException.class);
-        expectedEx.expectMessage("Missing/Invalid Reference data");
-        doThrow(new DataIntegrityViolationException("foreign key")).when(mockedFacilityMapper).insert(facility);
-        repository.save(facility);
-    }
+  @Test
+  public void shouldRaiseIncorrectReferenceDataError() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    expectedEx.expect(RuntimeException.class);
+    expectedEx.expectMessage("Missing/Invalid Reference data");
+    doThrow(new DataIntegrityViolationException("foreign key")).when(mockedFacilityMapper).insert(facility);
+    repository.save(facility);
+  }
 
-    @Test
-    public void shouldRaiseMissingReferenceDataError() throws Exception {
-        Facility facility = new Facility();
-        expectedEx.expect(RuntimeException.class);
-        expectedEx.expectMessage("Missing/Invalid Reference data");
-        doThrow(new DataIntegrityViolationException("violates not-null constraint")).when(mockedFacilityMapper).insert(facility);
-        repository.save(facility);
-    }
+  @Test
+  public void shouldRaiseMissingReferenceDataError() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    expectedEx.expect(RuntimeException.class);
+    expectedEx.expectMessage("Missing/Invalid Reference data");
+    doThrow(new DataIntegrityViolationException("violates not-null constraint")).when(mockedFacilityMapper).insert(facility);
+    repository.save(facility);
+  }
 
-    @Test
-    public void shouldRaiseDuplicateProgramSupportedError() throws Exception {
-        ProgramSupported programSupported = new ProgramSupported();
-        expectedEx.expect(RuntimeException.class);
-        expectedEx.expectMessage("Facility has already been mapped to the program");
-        doThrow(new DuplicateKeyException("Facility has already been mapped to the program")).when(programSupportedMapper).addSupportedProgram(programSupported);
-        repository.addSupportedProgram(programSupported);
-    }
+  @Test
+  public void shouldRaiseDuplicateProgramSupportedError() throws Exception {
+    ProgramSupported programSupported = new ProgramSupported();
+    expectedEx.expect(RuntimeException.class);
+    expectedEx.expectMessage("Facility has already been mapped to the program");
+    doThrow(new DuplicateKeyException("Facility has already been mapped to the program")).when(programSupportedMapper).addSupportedProgram(programSupported);
+    repository.addSupportedProgram(programSupported);
+  }
 
-    @Test
-    public void shouldRaiseIncorrectDataValueError() throws Exception {
-        Facility facility = new Facility();
-        expectedEx.expect(RuntimeException.class);
-        expectedEx.expectMessage("Incorrect data length");
-        doThrow(new DataIntegrityViolationException("value too long")).when(mockedFacilityMapper).insert(facility);
-        repository.save(facility);
-    }
+  @Test
+  public void shouldRaiseIncorrectDataValueError() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    expectedEx.expect(RuntimeException.class);
+    expectedEx.expectMessage("Incorrect data length");
+    doThrow(new DataIntegrityViolationException("value too long")).when(mockedFacilityMapper).insert(facility);
+    repository.save(facility);
+  }
 
-    @Test
-    public void shouldGetFacilityById() throws Exception {
-        Facility facility = new Facility();
-        when(mockedFacilityMapper.get(1)).thenReturn(facility);
-        int id = 1;
-        facility.setId(id);
-        List<Program> programs = new ArrayList<>();
-        when(programMapper.getByFacilityId(1)).thenReturn(programs);
-        Facility facility1 = repository.getFacility(1);
+  @Test
+  public void shouldRaiseInvalidReferenceDataOperatedByError() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    facility.getOperatedBy().setCode("invalid code");
+    when(mockedFacilityMapper.getOperatedByIdForCode("invalid code")).thenReturn(null);
 
-        assertThat(facility1.getSupportedPrograms(), is(programs));
-        verify(mockedFacilityMapper).get(1);
-        verify(programMapper).getByFacilityId(1);
+    expectedEx.expect(RuntimeException.class);
+    expectedEx.expectMessage("Invalid reference data 'Operated By'");
+    repository.save(facility);
+  }
 
-    }
+  @Test
+  public void shouldSetFacilityOperatorIdWhenCodeIsValid() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    facility.getOperatedBy().setCode("valid code");
+    when(mockedFacilityMapper.getOperatedByIdForCode("valid code")).thenReturn(1L);
 
-    @Test
-    public void shouldUpdateFacilityIfIDIsSet() throws Exception {
-        Facility facility = new Facility();
-        facility.setId(1);
+    repository.save(facility);
+    assertThat(facility.getOperatedBy().getId(), is(1L));
+  }
 
-        repository.save(facility);
-        verify(mockedFacilityMapper).update(facility);
-        verify(mockedFacilityMapper, never()).insert(facility);
-    }
+  @Test
+  public void shouldRaiseInvalidReferenceDataFacilityTypeError() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    facility.getFacilityType().setCode("invalid code");
+    when(mockedFacilityMapper.getFacilityTypeIdForCode("invalid code")).thenReturn(null);
 
-    @Test
-    public void shouldNotUpdateFacilityIfIDIsNotSet() throws Exception {
-        Facility facility = new Facility();
-        repository.save(facility);
-        verify(mockedFacilityMapper, never()).update(facility);
-    }
+    expectedEx.expect(RuntimeException.class);
+    expectedEx.expectMessage("Invalid reference data 'Facility Type'");
+    repository.save(facility);
+  }
 
-    @Test
-    public void shouldUpdateSupportedProgramsForFacilityIfIDIsDefined() throws Exception {
-        Facility facility = make(a(defaultFacility));
-        facility.setId(1);
-        List<Program> programs = new ArrayList<Program>() {{
-            add(make(a(ProgramBuilder.defaultProgram)));
-            add(make(a(ProgramBuilder.defaultProgram, with(programCode, "HIV"))));
-        }};
+  @Test
+  public void shouldRaiseMissingMandatoryReferenceDataFacilityType() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    facility.getFacilityType().setCode("");
 
-        facility.setSupportedPrograms(programs);
+    expectedEx.expect(RuntimeException.class);
+    expectedEx.expectMessage("Missing mandatory reference data 'Facility Type'");
+    repository.save(facility);
+  }
 
-        List<Program> programsForFacility = new ArrayList<Program>() {{
-            add(make(a(ProgramBuilder.defaultProgram)));
-            add(make(a(ProgramBuilder.defaultProgram, with(programCode, "ARV"))));
-        }};
+  @Test
+  public void shouldSetFacilityTypeIdWhenCodeIsValid() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    facility.getFacilityType().setCode("valid code");
+    when(mockedFacilityMapper.getFacilityTypeIdForCode("valid code")).thenReturn(1L);
 
-        when(programMapper.getByFacilityId(facility.getId())).thenReturn(programsForFacility);
+    repository.save(facility);
+    assertThat(facility.getFacilityType().getId(), is(1L));
+  }
+
+  @Test
+  public void shouldGetFacilityById() throws Exception {
+    Facility facility = new Facility();
+    when(mockedFacilityMapper.get(1)).thenReturn(facility);
+    int id = 1;
+    facility.setId(id);
+    List<Program> programs = new ArrayList<>();
+    when(programMapper.getByFacilityId(1)).thenReturn(programs);
+    Facility facility1 = repository.getFacility(1);
+
+    assertThat(facility1.getSupportedPrograms(), is(programs));
+    verify(mockedFacilityMapper).get(1);
+    verify(programMapper).getByFacilityId(1);
+
+  }
+
+  @Test
+  public void shouldUpdateFacilityIfIDIsSet() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    facility.setId(1);
+
+    repository.save(facility);
+    verify(mockedFacilityMapper).update(facility);
+    verify(mockedFacilityMapper, never()).insert(facility);
+  }
+
+  @Test
+  public void shouldNotUpdateFacilityIfIDIsNotSet() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    facility.setId(null);
+    repository.save(facility);
+    verify(mockedFacilityMapper, never()).update(facility);
+  }
+
+  @Test
+  public void shouldUpdateSupportedProgramsForFacilityIfIDIsDefined() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    facility.setId(1);
+    List<Program> programs = new ArrayList<Program>() {{
+      add(make(a(ProgramBuilder.defaultProgram)));
+      add(make(a(ProgramBuilder.defaultProgram, with(programCode, "HIV"))));
+    }};
+
+    facility.setSupportedPrograms(programs);
+
+    List<Program> programsForFacility = new ArrayList<Program>() {{
+      add(make(a(ProgramBuilder.defaultProgram)));
+      add(make(a(ProgramBuilder.defaultProgram, with(programCode, "ARV"))));
+    }};
+
+    when(programMapper.getByFacilityId(facility.getId())).thenReturn(programsForFacility);
 
 
-        repository.save(facility);
+    repository.save(facility);
 
-        verify(programMapper).getByFacilityId(facility.getId());
-        verify(programSupportedMapper).addSupportedProgram(new ProgramSupported(facility.getCode(),"HIV",true, facility.getModifiedBy(), facility.getModifiedDate()));
-        verify(programSupportedMapper).deleteObsoletePrograms(facility.getId(),"ARV");
-    }
+    verify(programMapper).getByFacilityId(facility.getId());
+    verify(programSupportedMapper).addSupportedProgram(new ProgramSupported(facility.getCode(), "HIV", true, facility.getModifiedBy(), facility.getModifiedDate()));
+    verify(programSupportedMapper).deleteObsoletePrograms(facility.getId(), "ARV");
+  }
 
 }

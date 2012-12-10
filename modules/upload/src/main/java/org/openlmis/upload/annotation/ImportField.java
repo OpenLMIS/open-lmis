@@ -13,5 +13,5 @@ public @interface ImportField {
 
     String name() default "";
 
-    String mapped() default "";
+    String nested() default "";
 }

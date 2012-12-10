@@ -36,11 +36,11 @@ public class ModelClass {
     for (String header : headers) {
       Field importField = findImportFieldWithName(header);
       if (importField != null) {
-        String mapped = importField.getAnnotation(ImportField.class).mapped();
-        if (mapped.isEmpty()) {
+        String nestedProperty = importField.getAnnotation(ImportField.class).nested();
+        if (nestedProperty.isEmpty()) {
           fieldMappings.add(importField.getName());
         } else {
-          fieldMappings.add(mapped);
+          fieldMappings.add(importField.getName()+"."+nestedProperty);
         }
       }
     }

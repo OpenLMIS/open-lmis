@@ -41,8 +41,10 @@ public class FacilityRepository {
     public void save(Facility facility) {
         facility.setModifiedDate(DateTime.now().toDate());
         try {
-            if (facility.getId() == null) {
-                facilityMapper.insert(facility);
+          validateAndSetFacilityOperator(facility);
+          validateAndSetFacilityType(facility);
+          if (facility.getId() == null) {
+              facilityMapper.insert(facility);
                 addListOfSupportedPrograms(facility);
             } else {
                 updateFacility(facility);
@@ -58,7 +60,33 @@ public class FacilityRepository {
         }
     }
 
-    private void updateFacility(Facility facility) {
+  private void validateAndSetFacilityType(Facility facility) {
+    String facilityTypeCode = facility.getFacilityType().getCode();
+    if(facilityTypeCode!=null && !facilityTypeCode.isEmpty()) {
+      Long facilityTypeId = facilityMapper.getFacilityTypeIdForCode(facilityTypeCode);
+      if(facilityTypeId == null){
+        throw new RuntimeException("Invalid reference data 'Facility Type'");
+      }else {
+        facility.getFacilityType().setId(facilityTypeId);
+      }
+    }else {
+      throw new RuntimeException("Missing mandatory reference data 'Facility Type'");
+    }
+  }
+
+  private void validateAndSetFacilityOperator(Facility facility) {
+    String operatedByCode = facility.getOperatedBy().getCode();
+    if(operatedByCode!=null && !operatedByCode.isEmpty()){
+      Long operatedById= facilityMapper.getOperatedByIdForCode(operatedByCode);
+      if(operatedById ==null){
+        throw new RuntimeException("Invalid reference data 'Operated By'");
+      }else{
+        facility.getOperatedBy().setId(operatedById);
+      }
+    }
+  }
+
+  private void updateFacility(Facility facility) {
         List<Program> previouslySupportedPrograms = programMapper.getByFacilityId(facility.getId());
         facilityMapper.update(facility);
         deleteObsoleteProgramMappings(facility, previouslySupportedPrograms);

@@ -23,9 +23,9 @@ public class RequisitionGroup implements Importable {
     @ImportField(mandatory = true, type = "String", name = "Level")
     String levelId;
 
-    @ImportField(mandatory = true, type = "String", name = "Head Facility", mapped = "headFacility.code")
+    @ImportField(mandatory = true, type = "String", name = "Head Facility", nested = "code")
     Facility headFacility;
-    @ImportField(mandatory = true, type = "String", name = "Parent RG", mapped = "parent.code")
+    @ImportField(mandatory = true, type = "String", name = "Parent RG", nested = "code")
     RequisitionGroup parent;
     @ImportField(mandatory = true, type = "boolean", name = "Is Active")
     Boolean active;
