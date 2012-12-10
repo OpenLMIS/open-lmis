@@ -22,11 +22,12 @@ describe('Rnr Template controllers', function () {
       ];
 
 
-      ctrl = $controller(SaveRnrTemplateController, {$scope:scope,rnrColumns: rnrColumnList});
+      ctrl = $controller(SaveRnrTemplateController, {$scope:scope,rnrColumns: rnrColumnList, sources: sources});
     }));
 
     it('should get list of rnr columns for configuring', function () {
       expect(scope.rnrColumns).toEqual(rnrColumnList);
+      expect(scope.sources).toEqual(sources);
     });
 
   });
