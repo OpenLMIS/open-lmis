@@ -27,7 +27,7 @@ public class RequisitionGroupRepository {
       if (facilityMapper.getIdForCode(requisitionGroup.getHeadFacilityCode()) == null) {
         throw new RuntimeException("Head Facility Not Found");
       }
-      requisitionGroupMapper.save(requisitionGroup);
+      requisitionGroupMapper.insert(requisitionGroup);
     } catch (DuplicateKeyException e) {
       throw new RuntimeException("Duplicate Requisition Group Code found");
     } catch (DataIntegrityViolationException e) {

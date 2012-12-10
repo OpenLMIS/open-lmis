@@ -5,7 +5,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
-import org.openlmis.core.domain.Facility;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.rnr.domain.RequisitionGroup;
 import org.openlmis.rnr.mapper.RequisitionGroupMapper;
@@ -46,7 +45,7 @@ public class RequisitionGroupRepositoryTest {
         when(facilityMapper.getIdForCode(headFacilityCode)).thenReturn(new Integer(1));
         requisitionGroupRepository.save(requisitionGroup);
 
-        verify(requisitionGroupMapper).save(requisitionGroup);
+        verify(requisitionGroupMapper).insert(requisitionGroup);
     }
 
     @Test
@@ -54,11 +53,11 @@ public class RequisitionGroupRepositoryTest {
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("Duplicate Requisition Group Code found");
         when(facilityMapper.getIdForCode(headFacilityCode)).thenReturn(new Integer(1));
-        doThrow(new DuplicateKeyException("")).when(requisitionGroupMapper).save(requisitionGroup);
+        doThrow(new DuplicateKeyException("")).when(requisitionGroupMapper).insert(requisitionGroup);
 
         requisitionGroupRepository.save(requisitionGroup);
 
-        verify(requisitionGroupMapper).save(requisitionGroup);
+        verify(requisitionGroupMapper).insert(requisitionGroup);
     }
 
     @Test
@@ -77,10 +76,10 @@ public class RequisitionGroupRepositoryTest {
     public void shouldGiveParentRequisitionGroupNotFoundErrorWhenParentGroupDoesNotExist() throws Exception {
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("Parent RG code not found");
-        doThrow(new DataIntegrityViolationException("")).when(requisitionGroupMapper).save(requisitionGroup);
+        doThrow(new DataIntegrityViolationException("")).when(requisitionGroupMapper).insert(requisitionGroup);
         when(facilityMapper.getIdForCode(headFacilityCode)).thenReturn(new Integer(1));
         requisitionGroupRepository.save(requisitionGroup);
 
-        verify(requisitionGroupMapper).save(requisitionGroup);
+        verify(requisitionGroupMapper).insert(requisitionGroup);
     }
 }

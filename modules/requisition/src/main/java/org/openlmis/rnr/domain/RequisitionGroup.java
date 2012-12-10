@@ -1,7 +1,9 @@
 package org.openlmis.rnr.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
@@ -19,7 +21,7 @@ public class RequisitionGroup implements Importable {
     String name;
     @ImportField(mandatory = true, type = "String", name = "Description")
     String description;
-    @ImportField(mandatory = true, type = "String", name = "RG Code")
+    @ImportField(mandatory = true, type = "String", name = "Level")
     String levelId;
 
     @ImportField(mandatory = true, type = "String", name = "Head Facility")
@@ -29,6 +31,10 @@ public class RequisitionGroup implements Importable {
     @ImportField(mandatory = true, type = "boolean", name = "Is Active")
     Boolean active;
 
+    Facility headFacility;
+    RequisitionGroup parent;
+
     String modifiedBy;
     Date modifiedDate ;
+
 }
