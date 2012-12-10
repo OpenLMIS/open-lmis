@@ -17,6 +17,7 @@ public class CreateFacilityTest extends TestCaseHelper {
         loginpage.login(credentials[0], credentials[1]);
         createfacilitypage.navigateCreateFacility();
         createfacilitypage.enterAndVerifyFacility();
+
     }
 
     @DataProvider(name = "Data-Provider-Function-Positive")
