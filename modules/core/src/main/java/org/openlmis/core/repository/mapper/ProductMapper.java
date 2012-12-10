@@ -41,8 +41,8 @@ public interface ProductMapper {
             "#{displayOrder}," +
             "#{primaryName}," + "#{fullName}," + "#{genericName}," + "#{alternateName}," + "#{description}," +
             "#{strength}," +
-            "(select id from product_form where LOWER(code) =LOWER(#{formCode})), " +
-            "(select id from dosage_unit where LOWER(code) =LOWER(#{dosageUnitCode}))," +
+            "(select id from product_form where LOWER(code) =LOWER(#{form.code})), " +
+            "(select id from dosage_unit where LOWER(code) =LOWER(#{dosageUnit.code}))," +
             " #{dispensingUnit}, #{dosesPerDispensingUnit}, #{dosesPerDay}," +
             "#{packSize}," + "#{alternatePackSize}," +
             "#{storeRefrigerated}," + "#{storeRoomTemperature}," + "#{hazardous}," + "#{flammable}," + "#{controlledSubstance}," + "#{lightSensitive}," + "#{approvedByWHO}," +
@@ -61,15 +61,13 @@ public interface ProductMapper {
             @Result(property = "code", column = "code"),
             @Result(property = "primaryName", column = "primary_name"),
             @Result(property = "dispensingUnit", column = "dispensing_unit"),
-            @Result(property = "formCode", column = "form_id", javaType = java.lang.String.class, one = @One(select = "getProductFormCodeFor")),
             @Result(property = "strength", column = "strength"),
-            @Result(property = "dosageUnitCode", column = "dosage_unit_id", javaType = java.lang.String.class, one = @One(select = "getDosageUnitCodeFor")),
-            @Result(property = "productForm.id", column = "form_id"),
-            @Result(property = "productForm.code", column = "form_code"),
-            @Result(property = "productForm.displayOrder", column = "form_display_order"),
-            @Result(property = "productDosageUnit.id", column = "dosage_unit_id"),
-            @Result(property = "productDosageUnit.code", column = "dosage_unit_code"),
-            @Result(property = "productDosageUnit.displayOrder", column = "dosage_unit_display_order")
+            @Result(property = "form.id", column = "form_id"),
+            @Result(property = "form.code", column = "form_code"),
+            @Result(property = "form.displayOrder", column = "form_display_order"),
+            @Result(property = "dosageUnit.id", column = "dosage_unit_id"),
+            @Result(property = "dosageUnit.code", column = "dosage_unit_code"),
+            @Result(property = "dosageUnit.displayOrder", column = "dosage_unit_display_order")
     })
     @Select("select p.id as id, p.code as code, p.primary_name as primary_name, " +
             "p.dispensing_unit as dispensing_unit, p.dosage_unit_id as dosage_unit_id, p.form_id as form_id, p.strength as strength, " +
@@ -89,12 +87,6 @@ public interface ProductMapper {
             "and pp.active = true " +
             "ORDER BY p.display_order NULLS LAST, p.code")
     List<Product> getFullSupplyProductsByFacilityAndProgram(@Param("facilityId") int facilityId, @Param("programCode") String programCode);
-
-    @Select("SELECT code FROM product_form where id = #{id}")
-    public String getProductFormCodeFor(Integer id);
-
-    @Select("SELECT code FROM dosage_unit where id = #{id}")
-    public String getDosageUnitCodeFor(Integer id);
 
     @Delete("delete from product")
     void deleteAll();

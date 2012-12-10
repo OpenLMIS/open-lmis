@@ -56,15 +56,13 @@ public class Product implements Importable {
     @ImportField(name = "Product Strength")
     private String strength;
 
-    @ImportField(type = "String", name = "Product Form")
-    private String formCode;
 
-    private ProductForm productForm;
+    @ImportField(type = "String", name = "Product Form", mapped = "form.code")
+    private ProductForm form;
 
-    @ImportField(type = "String", name = "Dosage Units")
-    private String dosageUnitCode;
 
-    private DosageUnit productDosageUnit;
+    @ImportField(type = "String", name = "Dosage Units", mapped = "dosageUnit.code")
+    private DosageUnit dosageUnit;
 
     @ImportField(name = "Dispensing Units")
     private String dispensingUnit;

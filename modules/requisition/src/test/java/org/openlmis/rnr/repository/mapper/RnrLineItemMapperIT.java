@@ -75,7 +75,7 @@ public class RnrLineItemMapperIT {
         List<RnrLineItem> rnrLineItems = rnrLineItemMapper.getRnrLineItemsByRnrId(rnrId);
         assertThat(rnrLineItems.size(), is(1));
         assertThat(rnrLineItems.get(0).getRnrId(), is(rnrId));
-        assertThat(rnrLineItems.get(0).getProduct(), is("Primary Name form strength Dosage Unit"));
+        assertThat(rnrLineItems.get(0).getProduct(), is("Primary Name Tablet strength mg"));
     }
 
 
@@ -93,7 +93,7 @@ public class RnrLineItemMapperIT {
 
         assertThat(rnrLineItems.get(0).getBeginningBalance(), is(43));
         assertThat(rnrLineItems.get(0).getLossesAndAdjustments(), is(10));
-        assertThat(rnrLineItems.get(0).getProduct(), is("Primary Name form strength Dosage Unit"));
+        assertThat(rnrLineItems.get(0).getProduct(), is("Primary Name Tablet strength mg"));
     }
 
     @After

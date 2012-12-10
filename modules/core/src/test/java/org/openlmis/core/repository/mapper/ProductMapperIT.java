@@ -87,19 +87,18 @@ public class ProductMapperIT {
         Product pro05 = product(HIV, "PRO05", true, true, 5);
         addToFacilityType("warehouse", pro05);
 
-
         List<Product> products = productMapper.getFullSupplyProductsByFacilityAndProgram(facilityId, HIV);
         assertEquals(4, products.size());
         assertEquals("PRO05", products.get(0).getCode());
         assertEquals("Primary Name", products.get(0).getPrimaryName());
         assertEquals("strength", products.get(0).getStrength());
-        assertThat(products.get(0).getFormCode(), is("Tablet"));
+        assertThat(products.get(0).getForm().getCode(), is("Tablet"));
         assertEquals("Strip", products.get(0).getDispensingUnit());
-        assertThat(products.get(0).getDosageUnitCode(), is("mg"));
-        assertNotNull(products.get(0).getProductForm());
-        assertEquals("Tablet", products.get(0).getProductForm().getCode());
-        assertNotNull(products.get(0).getProductDosageUnit());
-        assertEquals("mg", products.get(0).getProductDosageUnit().getCode());
+        assertThat(products.get(0).getDosageUnit().getCode(), is("mg"));
+        assertNotNull(products.get(0).getForm());
+        assertEquals("Tablet", products.get(0).getForm().getCode());
+        assertNotNull(products.get(0).getDosageUnit());
+        assertEquals("mg", products.get(0).getDosageUnit().getCode());
 
         assertEquals("PRO06", products.get(1).getCode());
 
