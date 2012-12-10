@@ -11,12 +11,10 @@ describe('Requisition controllers', function () {
       location=$location;
       expect(scope.facilities).toBeUndefined();
       facilities = [{"code":"10134","name":"National Warehouse","description":null}];
-      $httpBackend.expectGET('/logistics/user/facilities.json').respond({"facilityList":[{"code":"10134","name":"National Warehouse","description":null}]});
-      ctrl = $controller(InitiateRnrController, {$scope:scope, $location:location});
+      ctrl = $controller(InitiateRnrController, {$scope:scope, facilities: facilities});
     }));
 
-    it('should make call for facilities', function() {
-      $httpBackend.flush();
+    it('should setf acilities in scope', function() {
       expect(scope.facilities).toEqual(facilities);
     });
 

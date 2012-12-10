@@ -48,7 +48,6 @@ SaveRnrTemplateController.resolve = {
     rnrColumns: function (RnRColumnList, $location, $route, $q, $timeout) {
         var deferred = $q.defer();
         var code = $route.current.params.programCode;
-        //var rnrColumns;
 
         $timeout(function () {
             RnRColumnList.get({programCode: code}, function (data) {   //success

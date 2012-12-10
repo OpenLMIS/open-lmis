@@ -4,6 +4,6 @@ angular.module('createRnRTemplate', ['openlmis']).
     $routeProvider.
         when('/select-program', {controller:ConfigureRnRTemplateController, templateUrl:'../select-program.html'}).
         when('/create-rnr-template/:programCode', {controller:SaveRnrTemplateController, templateUrl:'partials/form.html', resolve:
-            SaveRnrTemplateController.resolve }).
+             SaveRnrTemplateController.resolve }).
         otherwise({redirectTo:'/select-program'});
 }]);

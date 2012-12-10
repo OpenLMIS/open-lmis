@@ -1,15 +1,11 @@
-function InitiateRnrController($http, $scope, UserFacilityList, UserSupportedProgramInFacilityForAnOperation, $location) {
+function InitiateRnrController($http, $scope, facilities, UserSupportedProgramInFacilityForAnOperation, $location) {
 
     $scope.programOptionMsg = "--choose program--";
-
-    UserFacilityList.get({}, function (data) {
-            $scope.facilities = data.facilityList;
-            $scope.facilityOptionMsg = "--choose facility--";
-            if ($scope.facilities == null || $scope.facilities.length == 0) {
-                $scope.facilityOptionMsg = "--none assigned--";
-            }
-        }, {}
-    );
+    $scope.facilities = facilities;
+    $scope.facilityOptionMsg = "--choose facility--";
+    if ($scope.facilities == null || $scope.facilities.length == 0) {
+        $scope.facilityOptionMsg = "--none assigned--";
+    }
 
     $scope.loadPrograms = function () {
         if ($scope.$parent.facility) {
@@ -109,5 +105,19 @@ function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $l
             $scope.message = "R&R saved successfully!";
             $scope.error = "";
         });
+    }
+}
+
+InitiateRnrController.resolve = {
+    facilities:function ($q, $timeout, UserFacilityList) {
+        var deferred = $q.defer();
+        $timeout(function () {
+            UserFacilityList.get({}, function (data) {
+                    deferred.resolve(data.facilityList);
+                }, {}
+            );
+        }, 100);
+
+        return deferred.promise;
     }
 }
