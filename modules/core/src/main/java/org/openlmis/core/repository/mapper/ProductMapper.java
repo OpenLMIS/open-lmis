@@ -91,4 +91,9 @@ public interface ProductMapper {
     @Delete("delete from product")
     void deleteAll();
 
+    @Select("SELECT id FROM dosage_Unit where LOWER(code) = LOWER(#{code})")
+    Long getDosageUnitIdForCode(String code);
+
+    @Select("SELECT id FROM product_form where LOWER(code) = LOWER(#{code})")
+    Long getProductFormIdForCode(String code);
 }

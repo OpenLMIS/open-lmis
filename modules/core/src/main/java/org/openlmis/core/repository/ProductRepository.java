@@ -23,6 +23,8 @@ public class ProductRepository {
 
     public void insert(Product product) {
         try {
+            validateAndSetDosageUnit(product);
+            validateAndSetProductForm(product);
             mapper.insert(product);
         } catch (DuplicateKeyException duplicateKeyException) {
             throw new RuntimeException("Duplicate Product Code found");
@@ -36,7 +38,31 @@ public class ProductRepository {
         }
     }
 
-    public List<Product> getByFacilityAndProgram(int facilityId, String programCode) {
+  private void validateAndSetProductForm(Product product) {
+    String productFormCode = product.getForm().getCode();
+    if(productFormCode!=null && !productFormCode.isEmpty()){
+      Long productFormId= mapper.getProductFormIdForCode(productFormCode);
+      if(productFormId==null){
+        throw new RuntimeException("Invalid reference data 'Product Form'");
+      }else{
+        product.getForm().setId(productFormId);
+      }
+    }
+  }
+
+  private void validateAndSetDosageUnit(Product product) {
+    String dosageUnitCode = product.getDosageUnit().getCode();
+    if(dosageUnitCode!=null && !dosageUnitCode.isEmpty()){
+      Long dosageUnitId= mapper.getDosageUnitIdForCode(dosageUnitCode);
+      if(dosageUnitId==null){
+        throw new RuntimeException("Invalid reference data 'Dosage Unit'");
+      }else{
+        product.getDosageUnit().setId(dosageUnitId);
+      }
+    }
+  }
+
+  public List<Product> getByFacilityAndProgram(int facilityId, String programCode) {
         return mapper.getFullSupplyProductsByFacilityAndProgram(facilityId, programCode);
     }
 

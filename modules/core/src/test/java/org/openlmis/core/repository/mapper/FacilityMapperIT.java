@@ -26,6 +26,7 @@ import static org.openlmis.core.builder.UserBuilder.facilityId;
 @Transactional
 public class FacilityMapperIT {
 
+  public static final String OPERATED_BY_MOH = "MoH";
   @Autowired
   private UserMapper userMapper;
 
@@ -158,10 +159,19 @@ public class FacilityMapperIT {
 
   @Test
   public void shouldReturnFacilityOperatorIdForCode() {
-    Long id = facilityMapper.getOperatedByIdForCode("MoH");
+    Long id = facilityMapper.getOperatedByIdForCode(OPERATED_BY_MOH);
     assertThat(id, is(1L));
 
     id = facilityMapper.getOperatedByIdForCode("InValid");
+    assertThat(id, is(nullValue()));
+  }
+
+  @Test
+  public void shouldReturnFacilityTypeIdForCode() {
+    Long id = facilityMapper.getFacilityTypeIdForCode(FACILITY_TYPE_CODE);
+    assertThat(id, is(1L));
+
+    id = facilityMapper.getFacilityTypeIdForCode("InValid");
     assertThat(id, is(nullValue()));
   }
 }

@@ -187,7 +187,7 @@ public interface FacilityMapper {
   @Select("SELECT id FROM facility_operator where LOWER(code) = LOWER(#{code})")
   Long getOperatedByIdForCode(String code);
 
-
+  @Select("SELECT id FROM facility_type where LOWER(code) = LOWER(#{code})")
   Long getFacilityTypeIdForCode(String facilityTypeCode);
 
   Integer getIdForCode(String code);

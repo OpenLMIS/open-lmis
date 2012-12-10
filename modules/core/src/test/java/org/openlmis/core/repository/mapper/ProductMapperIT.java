@@ -1,6 +1,7 @@
 package org.openlmis.core.repository.mapper;
 
 
+import org.hamcrest.CoreMatchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -22,6 +23,7 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.ProductBuilder.*;
@@ -33,8 +35,9 @@ import static org.openlmis.core.builder.ProductBuilder.*;
 public class ProductMapperIT {
 
     public static final String HIV = "HIV";
+  public static final String PRODUCT_DOSAGE_UNIT_MG = "mg";
 
-    @Rule
+  @Rule
     public ExpectedException expectedEx = ExpectedException.none();
 
     @Autowired
@@ -50,8 +53,9 @@ public class ProductMapperIT {
     ProgramSupportedMapper programSupportedMapper;
     @Autowired
     ProductMapper productMapper;
+  private static final String PRODUCT_FORM_TABLET = "Tablet";
 
-    @Test
+  @Test
     public void shouldNotSaveProductWithoutMandatoryFields() throws Exception {
         expectedEx.expect(DataIntegrityViolationException.class);
         expectedEx.expectMessage("null value in column \"primary_name\" violates not-null constraint");
@@ -106,6 +110,24 @@ public class ProductMapperIT {
 
         assertEquals("PRO07", products.get(3).getCode());
     }
+
+  @Test
+  public void shouldReturnDosageUnitIdForCode() {
+    Long id = productMapper.getDosageUnitIdForCode(PRODUCT_DOSAGE_UNIT_MG);
+    assertThat(id, CoreMatchers.is(1L));
+
+    id = productMapper.getDosageUnitIdForCode("invalid dosage unit");
+    assertThat(id, CoreMatchers.is(nullValue()));
+  }
+
+  @Test
+  public void shouldReturnProductFormIdForCode() {
+    Long id = productMapper.getProductFormIdForCode(PRODUCT_FORM_TABLET);
+    assertThat(id, CoreMatchers.is(1L));
+
+    id = productMapper.getProductFormIdForCode("invalid product form");
+    assertThat(id, CoreMatchers.is(nullValue()));
+  }
 
     private void addToFacilityType(String facilityType, Product product) {
         facilityApprovedProductMapper.insert(new FacilityApprovedProduct(facilityType, product.getCode()));
