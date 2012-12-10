@@ -4,23 +4,21 @@ package org.openlmis.admin.controller;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.handler.UploadHandlerFactory;
 import org.openlmis.upload.RecordHandler;
+import org.openlmis.upload.model.ModelClass;
 import org.openlmis.upload.parser.CSVParser;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,9 +26,7 @@ import java.util.Map;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(UploadController.class)
-@ContextConfiguration(locations = {"/applicationContext-admin-web.xml"})
+@RunWith(MockitoJUnitRunner.class)
 public class UploadControllerTest {
 
 
@@ -88,54 +84,27 @@ public class UploadControllerTest {
 
     @Test
     public void shouldUseCsvParserService() throws Exception {
-        byte[] content = null;
-        MultipartFile mockMultiPart = spy(new MultipartFile() {
-            @Override
-            public String getName() {
-                return "csvFile";  //To change body of implemented methods use File | Settings | File Templates.
-            }
+        byte[] content = new byte[1];
+        MultipartFile mockMultiPart = spy(new MockMultipartFile("csvFile", "mock.csv", null, content));
 
-            @Override
-            public String getOriginalFilename() {
-                return "mock.csv";  //To change body of implemented methods use File | Settings | File Templates.
-            }
+        InputStream mockInputStream = mock(InputStream.class);
+        when(mockMultiPart.getInputStream()).thenReturn(mockInputStream);
 
-            @Override
-            public String getContentType() {
-                return null;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public boolean isEmpty() {
-                return false;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public long getSize() {
-                return 0;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public byte[] getBytes() throws IOException {
-                return new byte[0];  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public InputStream getInputStream() throws IOException {
-                return null;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public void transferTo(File dest) throws IOException, IllegalStateException {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-        });
-        InputStream mockedStream = mock(InputStream.class);
-        when(mockMultiPart.getInputStream()).thenReturn(mockedStream);
         ModelAndView modelAndView = controller.upload(mockMultiPart, "product", request);
 
         assertEquals("File upload success. Total product uploaded in the system : 0", modelAndView.getModelMap().get("message"));
-        verify(csvParser).process(mockedStream, Product.class, handler, USER);
+
+        verify(csvParser).process(eq(mockMultiPart.getInputStream()), argThat(modelMatcher(Product.class)), eq(handler), eq(USER));
+    }
+
+    private ArgumentMatcher<ModelClass> modelMatcher(final Class clazz) {
+        return new ArgumentMatcher<ModelClass>(){
+            @Override
+            public boolean matches(Object item) {
+                ModelClass modelClass = (ModelClass)item;
+                return  modelClass.getClazz().equals(clazz);
+            }
+        };
     }
 
     @Test

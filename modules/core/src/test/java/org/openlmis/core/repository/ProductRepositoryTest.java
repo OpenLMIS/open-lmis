@@ -49,11 +49,19 @@ public class ProductRepositoryTest {
     public void shouldRaiseIncorrectReferenceDataError() throws Exception {
         Product product = new Product();
         expectedEx.expect(RuntimeException.class);
-        expectedEx.expectMessage("Missing Reference data");
+        expectedEx.expectMessage("Missing/Invalid Reference data");
         doThrow(new DataIntegrityViolationException("foreign key")).when(mockedMapper).insert(product);
         repository.insert(product);
     }
 
+    @Test
+    public void shouldRaiseMissingReferenceDataError() throws Exception {
+        Product product = new Product();
+        expectedEx.expect(RuntimeException.class);
+        expectedEx.expectMessage("Missing/Invalid Reference data");
+        doThrow(new DataIntegrityViolationException("violates not-null constraint")).when(mockedMapper).insert(product);
+        repository.insert(product);
+    }
     @Test
     public void shouldRaiseIncorrectDataValueError() throws Exception {
         Product product = new Product();

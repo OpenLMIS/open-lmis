@@ -1,9 +1,11 @@
 package org.openlmis.upload.parser;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.upload.exception.UploadException;
 import org.openlmis.upload.model.DummyImportable;
+import org.openlmis.upload.model.ModelClass;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.supercsv.cellprocessor.Optional;
@@ -22,8 +24,16 @@ import static org.mockito.Mockito.mock;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({CsvUtil.class})
-public class CsvUtilTest {
+@PrepareForTest({CsvCellProcessors.class})
+public class CsvCellProcessorsTest {
+
+
+    private ModelClass dummyImportableClass;
+
+    @Before
+    public void setUp() throws Exception {
+        dummyImportableClass = new ModelClass(DummyImportable.class);
+    }
 
     @Test
     public void shouldReturnCorrectProcessorForHeaders() throws UploadException {
@@ -33,7 +43,7 @@ public class CsvUtilTest {
         headers.add("mandatoryIntField");
         headers.add("optionalStringField");
         headers.add("optionalDateField");
-        List<CellProcessor> cellProcessors = CsvUtil.getProcessors(DummyImportable.class, headers);
+        List<CellProcessor> cellProcessors = CsvCellProcessors.getProcessors(dummyImportableClass, headers);
 
         assertEquals(4, cellProcessors.size());
         assertTrue(cellProcessors.get(0) instanceof NotNull);
@@ -42,14 +52,7 @@ public class CsvUtilTest {
         assertTrue(cellProcessors.get(3) instanceof Optional);
     }
 
-    @Test
-    public void shouldNotThrowExceptionWhileValidatingHeadersWithMismatchCase() throws UploadException {
-        List<String> headers = new ArrayList<String>();
-        headers.add("MANDAtory String Field");
-        headers.add("mandatoryIntFIELD");
 
-        CsvUtil.validateHeaders(DummyImportable.class, headers);
-    }
 
     @Test
     public void testReturnProcessorForMismatchCase() throws UploadException {
@@ -57,7 +60,7 @@ public class CsvUtilTest {
         headers.add("MANDAtory String Field");
         headers.add("mandatoryIntFIELD");
 
-        List<CellProcessor> cellProcessors = CsvUtil.getProcessors(DummyImportable.class, headers);
+        List<CellProcessor> cellProcessors = CsvCellProcessors.getProcessors(dummyImportableClass, headers);
 
         assertEquals(2, cellProcessors.size());
         assertTrue(cellProcessors.get(0) instanceof NotNull);
@@ -72,7 +75,7 @@ public class CsvUtilTest {
         headers.add("nonAnnotatedField");
         headers.add("random");
 
-        List<CellProcessor> cellProcessors = CsvUtil.getProcessors(DummyImportable.class, headers);
+        List<CellProcessor> cellProcessors = CsvCellProcessors.getProcessors(dummyImportableClass, headers);
 
         assertEquals(4, cellProcessors.size());
         assertTrue(cellProcessors.get(0) instanceof NotNull);
@@ -89,10 +92,10 @@ public class CsvUtilTest {
 
         NotNull notNullForString = mock(NotNull.class);
         NotNull notNullForInt = mock(NotNull.class);
-        whenNew(NotNull.class).withArguments(CsvUtil.typeMappings.get("String")).thenReturn(notNullForString);
-        whenNew(NotNull.class).withArguments(CsvUtil.typeMappings.get("int")).thenReturn(notNullForInt);
+        whenNew(NotNull.class).withArguments(CsvCellProcessors.typeMappings.get("String")).thenReturn(notNullForString);
+        whenNew(NotNull.class).withArguments(CsvCellProcessors.typeMappings.get("int")).thenReturn(notNullForInt);
 
-        List<CellProcessor> cellProcessors = CsvUtil.getProcessors(DummyImportable.class, headers);
+        List<CellProcessor> cellProcessors = CsvCellProcessors.getProcessors(dummyImportableClass, headers);
 
         assertEquals(2, cellProcessors.size());
         assertThat((NotNull) cellProcessors.get(0), is(notNullForString));
@@ -109,44 +112,16 @@ public class CsvUtilTest {
         Optional optionalForString = mock(Optional.class);
         Optional optionalForInt = mock(Optional.class);
         Optional optionalForDate = mock(Optional.class);
-        whenNew(Optional.class).withArguments(CsvUtil.typeMappings.get("String")).thenReturn(optionalForString);
-        whenNew(Optional.class).withArguments(CsvUtil.typeMappings.get("int")).thenReturn(optionalForInt);
-        whenNew(Optional.class).withArguments(CsvUtil.typeMappings.get("Date")).thenReturn(optionalForDate);
+        whenNew(Optional.class).withArguments(CsvCellProcessors.typeMappings.get("String")).thenReturn(optionalForString);
+        whenNew(Optional.class).withArguments(CsvCellProcessors.typeMappings.get("int")).thenReturn(optionalForInt);
+        whenNew(Optional.class).withArguments(CsvCellProcessors.typeMappings.get("Date")).thenReturn(optionalForDate);
 
-        List<CellProcessor> cellProcessors = CsvUtil.getProcessors(DummyImportable.class, headers);
+        List<CellProcessor> cellProcessors = CsvCellProcessors.getProcessors(dummyImportableClass, headers);
 
         assertEquals(3, cellProcessors.size());
         assertThat((Optional) cellProcessors.get(0), is(optionalForString));
         assertThat((Optional) cellProcessors.get(1), is(optionalForInt));
         assertThat((Optional) cellProcessors.get(2), is(optionalForDate));
-    }
-
-    @Test
-    public void shouldThrowExceptionIfHeaderDoesNotHaveCorrespondingFieldInModel(){
-        List<String> headers = new ArrayList<String>() {{
-            add("optionalStringFieldsff");
-            add("mandatory string field");
-            add("mandatoryIntField");
-        }};
-
-        try {
-            CsvUtil.validateHeaders(DummyImportable.class, headers);
-        } catch (UploadException e) {
-            assertEquals("Invalid Headers in upload file: [optionalstringfieldsff]", e.getMessage());
-        }
-    }
-
-    @Test
-    public void shouldThrowExceptionForMissingMandatoryHeaders() {
-        List<String> headers = new ArrayList<String>() {{
-            add("optionalStringField");
-        }};
-
-        try {
-            CsvUtil.validateHeaders(DummyImportable.class, headers);
-        } catch (UploadException e) {
-            assertEquals("Missing Mandatory columns in upload file: [Mandatory String Field, mandatoryIntField]", e.getMessage());
-        }
     }
 
 }

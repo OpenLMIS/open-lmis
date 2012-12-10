@@ -1,41 +1,33 @@
 package org.openlmis.upload.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
 import java.util.Date;
 
+@Data
 public class DummyImportable implements Importable {
 
-    @Getter
-    @Setter
     @ImportField(mandatory = true, name = "Mandatory String Field")
     String mandatoryStringField;
 
-    @Getter
-    @Setter
     @ImportField(mandatory = true, type = "int")
     int mandatoryIntField;
 
-    @Getter
-    @Setter
     @ImportField
     String optionalStringField;
 
-    @Getter
-    @Setter
     @ImportField(type = "int", name = "OPTIONAL INT FIELD")
     int optionalIntField;
 
-    @Getter
-    @Setter
     @ImportField(type = "Date")
     Date optionalDateField;
 
-    @Getter
-    @Setter
+    @ImportField(type = "String", name = "OPTIONAL NESTED FIELD", mapped="dummyNestedField.code")
+    DummyNestedField dummyNestedField;
+
     String nonAnnotatedField;
 
 }
+

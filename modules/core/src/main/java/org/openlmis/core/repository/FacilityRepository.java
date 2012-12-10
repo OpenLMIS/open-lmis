@@ -50,8 +50,9 @@ public class FacilityRepository {
         } catch (DuplicateKeyException duplicateKeyException) {
             throw new RuntimeException("Duplicate Facility Code found");
         } catch (DataIntegrityViolationException integrityViolationException) {
-            if (integrityViolationException.getMessage().toLowerCase().contains("foreign key")) {
-                throw new RuntimeException("Missing Reference data");
+            String errorMessage = integrityViolationException.getMessage().toLowerCase();
+            if (errorMessage.contains("foreign key")||errorMessage.contains("not-null constraint")) {
+                throw new RuntimeException("Missing/Invalid Reference data");
             }
             throw new RuntimeException("Incorrect data length");
         }

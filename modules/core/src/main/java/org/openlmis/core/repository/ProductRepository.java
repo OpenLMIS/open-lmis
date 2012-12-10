@@ -26,9 +26,10 @@ public class ProductRepository {
             mapper.insert(product);
         } catch (DuplicateKeyException duplicateKeyException) {
             throw new RuntimeException("Duplicate Product Code found");
-        } catch (DataIntegrityViolationException foreignKeyException) {
-            if (foreignKeyException.getMessage().toLowerCase().contains("foreign key")) {
-                throw new RuntimeException("Missing Reference data");
+        } catch (DataIntegrityViolationException dataIntegrityViolationException) {
+            String errorMessage = dataIntegrityViolationException.getMessage().toLowerCase();
+            if (errorMessage.contains("foreign key") || errorMessage.contains("violates not-null constraint")) {
+                throw new RuntimeException("Missing/Invalid Reference data");
             }else{
                 throw new RuntimeException("Incorrect data length");
             }

@@ -3,6 +3,7 @@ package org.openlmis.admin.controller;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.handler.UploadHandlerFactory;
 import org.openlmis.upload.exception.UploadException;
+import org.openlmis.upload.model.ModelClass;
 import org.openlmis.upload.parser.CSVParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -54,7 +55,7 @@ public class UploadController {
                 return errorModelAndView(modelAndView, "Incorrect file format , Please upload " + model + " data as a \".csv\" file");
             }
             String modifiedBy = (String) request.getSession().getAttribute(USER);
-            int recordsUploaded = csvParser.process(multipartFile.getInputStream(), modelClass, uploadHandlerFactory.getHandler(model), modifiedBy);
+            int recordsUploaded = csvParser.process(multipartFile.getInputStream(), new ModelClass(modelClass), uploadHandlerFactory.getHandler(model), modifiedBy);
             modelAndView.addObject("message", "File upload success. Total " + model +" uploaded in the system : " + recordsUploaded);
         } catch (UploadException | IOException e) {
             return errorModelAndView(modelAndView, e.getMessage());

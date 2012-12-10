@@ -12,4 +12,6 @@ public @interface ImportField {
     String type() default "String";
 
     String name() default "";
+
+    String mapped() default "";
 }

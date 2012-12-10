@@ -103,8 +103,17 @@ public class FacilityRepositoryTest {
     public void shouldRaiseIncorrectReferenceDataError() throws Exception {
         Facility facility = new Facility();
         expectedEx.expect(RuntimeException.class);
-        expectedEx.expectMessage("Missing Reference data");
+        expectedEx.expectMessage("Missing/Invalid Reference data");
         doThrow(new DataIntegrityViolationException("foreign key")).when(mockedFacilityMapper).insert(facility);
+        repository.save(facility);
+    }
+
+    @Test
+    public void shouldRaiseMissingReferenceDataError() throws Exception {
+        Facility facility = new Facility();
+        expectedEx.expect(RuntimeException.class);
+        expectedEx.expectMessage("Missing/Invalid Reference data");
+        doThrow(new DataIntegrityViolationException("violates not-null constraint")).when(mockedFacilityMapper).insert(facility);
         repository.save(facility);
     }
 
