@@ -41,11 +41,11 @@ public class Facility implements Importable {
     @ImportField(name = "Facility Address2")
     private String address2;
 
-    @ImportField(mandatory = true, type = "long", name = "Geographic Zone ID")
-    private Long geographicZone;
+    @ImportField(mandatory = true, type = "long", name = "Geographic Zone ID", mapped = "geographicZone.id")
+    private GeographicZone geographicZone;
 
-    @ImportField(mandatory = true, name = "Facility Type Code")
-    private String facilityTypeCode;
+    @ImportField(mandatory = true, name = "Facility Type Code", mapped = "facilityType.code")
+    private FacilityType facilityType;
 
     @ImportField(type = "long", name = "Catchment Population")
     private Long catchmentPopulation;
@@ -59,8 +59,8 @@ public class Facility implements Importable {
     @ImportField(type = "double", name = "Facility Altitude")
     private Double altitude;
 
-    @ImportField(type = "String", name = "Facility Operated By")
-    private String operatedBy;
+    @ImportField(type = "String", name = "Facility Operated By", mapped = "operatedBy.code")
+    private FacilityOperator operatedBy;
 
     @ImportField(type = "double", name = "Cold Storage Gross Capacity")
     private Double coldStorageGrossCapacity;

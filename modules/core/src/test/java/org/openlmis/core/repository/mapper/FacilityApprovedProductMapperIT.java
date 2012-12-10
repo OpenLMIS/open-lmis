@@ -14,7 +14,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.openlmis.core.builder.FacilityBuilder.FACILITY_TYPE;
+import static org.openlmis.core.builder.FacilityBuilder.FACILITY_TYPE_CODE;
 import static org.openlmis.core.builder.ProductBuilder.PRODUCT_CODE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -36,7 +36,7 @@ public class FacilityApprovedProductMapperIT {
     public void shouldInsertFacilityApprovedProduct() throws Exception {
         productMapper.insert(make(a(ProductBuilder.product)));
         FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct();
-        facilityApprovedProduct.setFacilityTypeCode(FACILITY_TYPE);
+        facilityApprovedProduct.setFacilityTypeCode(FACILITY_TYPE_CODE);
         facilityApprovedProduct.setProductCode(PRODUCT_CODE);
         int status = facilityApprovedProductMapper.insert(facilityApprovedProduct);
 
