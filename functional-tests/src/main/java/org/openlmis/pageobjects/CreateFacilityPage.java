@@ -1,12 +1,15 @@
 package org.openlmis.pageobjects;
 
 
+import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class CreateFacilityPage extends Page {
@@ -122,7 +125,7 @@ public class CreateFacilityPage extends Page {
 
 
     //private String BASE_URL = "http://qa.221.134.198.28.xip.io/";
-    private String BASE_URL = "http://localhost:9090/";
+    private String BASE_URL = "http://localhost:9091/";
 
 
 
@@ -136,19 +139,23 @@ public class CreateFacilityPage extends Page {
 
     public void navigateCreateFacility() {
         testWebDriver.waitForElementToAppear(manageFacilityMenuItem);
-        testWebDriver.mouseOver(manageFacilityMenuItem);
         testWebDriver.click(manageFacilityMenuItem);
         manageFacilityMenuItem.click();
-
         testWebDriver.waitForElementToAppear(createFacility);
         createFacility.click();
-        //testWebDriver.click(createFacility);
-
         testWebDriver.waitForTextToAppear("Add new facility");
 
     }
 
-    public String enterAndVerifyFacility(String facilityCodeText, String facilityNameText) {
+    public void enterAndVerifyFacility() {
+        Date dObj=new Date();
+        SimpleDateFormat formatter_date_time = new SimpleDateFormat(
+                "yyyyMMdd-hhmmss");
+        String date_time = formatter_date_time.format(dObj);
+
+        String facilityCodeText="FCcode"+date_time;
+        String facilityNameText="FCname"+date_time;
+
         testWebDriver.waitForTextToAppear("Add new facility");
         facilityCode.clear();
         facilityCode.sendKeys(facilityCodeText);
@@ -180,13 +187,12 @@ public class CreateFacilityPage extends Page {
         hasElectronicDar.click();
         isActive.click();
 
-        testWebDriver.sleep(1000);
         goLiveDate.click();
-        testWebDriver.sleep(1000);
+        testWebDriver.sleep(500);
         goLiveDateCalender.click();
-        testWebDriver.sleep(1000);
+        testWebDriver.sleep(500);
         goDownDate.click();
-        testWebDriver.sleep(1000);
+        testWebDriver.sleep(500);
         goDownDateCalender.click();
 
         dataReportable.click();
@@ -198,24 +204,8 @@ public class CreateFacilityPage extends Page {
 
         SaveButton.click();
 
-//        if(saveSuccessMsgDiv.isEnabled())
-//        {
-//            testWebDriver.waitForTextToAppear(facilityCode+" created successfully");
-//            String successMessage= testWebDriver.getText(saveSuccessMsgDiv);
-//        }
-//        else if(saveErrorMsgDiv.isEnabled())
-//        {
-//            testWebDriver.waitForTextToAppear("Duplicate Facility Code found");
-//            String errorMessage= testWebDriver.getText(saveErrorMsgDiv);
-//        }
-
-        testWebDriver.sleep(2000);
+        testWebDriver.waitForTextToAppear("created successfully");
         String successMessage= testWebDriver.getText(saveSuccessMsgDiv);
-        return successMessage;
-
-
+        SeleneseTestNgHelper.assertEquals(successMessage,facilityNameText + " created successfully");
     }
-
-
-
 }
