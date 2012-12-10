@@ -29,7 +29,7 @@ public class RequisitionGroupServiceTest {
 
         requisitionGroupService.save(requisitionGroup);
 
-        verify(requisitionGroupRepository).save(requisitionGroup);
+        verify(requisitionGroupRepository).insert(requisitionGroup);
 
     }
 }

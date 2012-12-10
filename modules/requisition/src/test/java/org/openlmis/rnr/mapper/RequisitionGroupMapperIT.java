@@ -31,7 +31,7 @@ public class RequisitionGroupMapperIT {
     FacilityMapper facilityMapper;
 
     @Test
-    public void shouldSaveRequisitionGroupWithoutParent() throws Exception {
+    public void shouldInsertRequisitionGroup() throws Exception {
         Facility facility = make(a(defaultFacility));
         facility.setId(facilityMapper.insert(facility));
 
@@ -39,10 +39,10 @@ public class RequisitionGroupMapperIT {
         RequisitionGroup requisitionGroup = make(a(RequisitionGroupBuilder.defaultRequisitionGroup, with(parent, nullString)));
         requisitionGroup.setHeadFacility(facility);
 
-        requisitionGroup.setId(requisitionGroupMapper.insert(requisitionGroup));
-        RequisitionGroup fetchedRequisitionGroup = requisitionGroupMapper.getRequisitionGroupById(requisitionGroup.getId());
+        Integer requisitionGroupId = requisitionGroupMapper.insert(requisitionGroup);
+        RequisitionGroup fetchedRequisitionGroup = requisitionGroupMapper.getRequisitionGroupById(requisitionGroupId);
 
-        assertThat(fetchedRequisitionGroup.getId(), is(requisitionGroup.getId()));
+        assertThat(fetchedRequisitionGroup.getId(), is(requisitionGroupId));
         assertThat(fetchedRequisitionGroup.getCode(), is(requisitionGroup.getCode()));
         assertThat(fetchedRequisitionGroup.getName(), is(requisitionGroup.getName()));
         assertThat(fetchedRequisitionGroup.getDescription(), is(requisitionGroup.getDescription()));

@@ -19,6 +19,6 @@ public class RequisitionGroupService {
   }
 
   public void save(RequisitionGroup requisitionGroup) {
-    requisitionGroupRepository.save(requisitionGroup);
+    requisitionGroupRepository.insert(requisitionGroup);
   }
 }
