@@ -2,6 +2,7 @@ package org.openlmis.core.handler;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.handler.AbstractModelPersistenceHandler;
@@ -12,17 +13,17 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 public class FacilityPersistenceHandler extends AbstractModelPersistenceHandler {
 
-    private FacilityService facilityService;
+    private FacilityRepository facilityRepository;
 
     @Autowired
-    public FacilityPersistenceHandler(FacilityService facilityService) {
-        this.facilityService = facilityService;
+    public FacilityPersistenceHandler(FacilityRepository facilityRepository) {
+        this.facilityRepository = facilityRepository;
     }
 
     @Override
     protected void save(Importable importable, String modifiedBy) {
         Facility facility = (Facility) importable;
         facility.setModifiedBy(modifiedBy);
-        facilityService.save(facility);
+        facilityRepository.save(facility);
     }
 }

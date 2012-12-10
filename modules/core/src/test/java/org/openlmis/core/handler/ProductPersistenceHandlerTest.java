@@ -4,6 +4,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.repository.ProductRepository;
 import org.openlmis.core.service.ProductService;
 
 import static org.mockito.Mockito.mock;
@@ -17,12 +18,12 @@ public class ProductPersistenceHandlerTest {
 
     @Test
     public void shouldSaveImportedProduct() throws Exception {
-        ProductService productService = mock(ProductService.class);
+        ProductRepository productRepository = mock(ProductRepository.class);
         Product product = new Product();
 
-        new ProductPersistenceHandler(productService).execute(product, 0, "user");
+        new ProductPersistenceHandler(productRepository).execute(product, 0, "user");
 
-        verify(productService).save(product);
+        verify(productRepository).insert(product);
     }
  }
 
