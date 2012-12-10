@@ -126,7 +126,7 @@ public class CreateFacilityPage extends Page {
 
 
     //private String BASE_URL = "http://qa.221.134.198.28.xip.io/";
-    private String BASE_URL = "http://localhost:9091/";
+    private String BASE_URL = "http://localhost:9090/";
 
 
 
