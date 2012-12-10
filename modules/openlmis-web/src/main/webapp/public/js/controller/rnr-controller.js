@@ -118,8 +118,35 @@ function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $l
     });
   };
 
-  $scope.calculateConsumption = function () {
-    console.log("changed " + this);
+  $scope.calculateConsumption = function (index) {
+    var lineItem = $scope.$parent.rnr.lineItems[index];
+    var a = parseInt(lineItem.beginningBalance);
+    var b = parseInt(lineItem.quantityReceived);
+    var c = parseInt(lineItem.quantityDispensed);
+    var d = parseInt(lineItem.lossesAndAdjustments);
+    var e = parseInt(lineItem.stockInHand);
+
+    var cSource = getSource('C');
+    var eSource = getSource('E');
+
+    if (cSource == 'C') {
+      lineItem.quantityDispensed = (a && b && d && e) ? a + b - d - e : null;
+    }
+    if (eSource == 'C') {
+      lineItem.stockInHand = (a && b && c && d && eSource == 'C') ? a + b - d - c : null;
+    }
+
+  };
+
+  var getSource = function (indicator) {
+    var code;
+    $($scope.programRnRColumnList).each(function (i, column) {
+      if (column.indicator == indicator) {
+        code = column.source.code;
+        return false;
+      }
+    });
+    return code;
   };
 
   $scope.getId = function (prefix, parent) {
@@ -136,6 +163,10 @@ function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $l
       $scope.message = "R&R saved successfully!";
       $scope.error = "";
     });
+  };
+
+  $scope.getIndex = function (parent) {
+    return parent.$parent.$parent.$index;
   }
 }
 
