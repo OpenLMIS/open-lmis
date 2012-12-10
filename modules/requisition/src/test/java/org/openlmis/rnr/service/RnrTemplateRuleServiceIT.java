@@ -127,7 +127,7 @@ public class RnrTemplateRuleServiceIT {
         RnrColumn rnrColumn = new RnrColumn();
         rnrColumn.setName(columnName);
         rnrColumn.setVisible(visible);
-        rnrColumn.setSelectedColumnType(selectedColumnSource);
+        rnrColumn.setSource(selectedColumnSource);
         rnrColumn.setLabel(label);
         return rnrColumn;
     }

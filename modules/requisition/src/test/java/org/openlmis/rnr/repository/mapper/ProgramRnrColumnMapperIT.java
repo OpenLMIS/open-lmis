@@ -39,7 +39,7 @@ public class ProgramRnrColumnMapperIT {
         assertThat(fetchedColumns.get(0).getLabel(), is("Some Random Label"));
         assertThat(fetchedColumns.get(0).isVisible(), is(false));
         assertThat(fetchedColumns.get(0).getPosition(), is(5));
-        assertThat(fetchedColumns.get(0).getSelectedColumnType(), is(RnRColumnSource.USER_INPUT));
+        assertThat(fetchedColumns.get(0).getSource(), is(RnRColumnSource.USER_INPUT));
     }
 
     @Test
@@ -54,7 +54,7 @@ public class ProgramRnrColumnMapperIT {
         assertThat(updatedRnrColumn.isVisible(), is(false));
         assertThat(updatedRnrColumn.getPosition(), is(5));
         assertThat(updatedRnrColumn.getLabel(), is("Some Random Label"));
-        assertThat(updatedRnrColumn.getSelectedColumnType(), is(RnRColumnSource.CALCULATED));
+        assertThat(updatedRnrColumn.getSource(), is(RnRColumnSource.CALCULATED));
     }
 
     @Test
@@ -84,7 +84,7 @@ public class ProgramRnrColumnMapperIT {
 
         List<RnrColumn> rnrColumns = programRnrColumnMapper.getVisibleProgramRnrColumns(HIV);
         assertThat(rnrColumns.size(), is(1));
-        assertThat(rnrColumns.get(0).getSelectedColumnType(), is(RnRColumnSource.USER_INPUT));
+        assertThat(rnrColumns.get(0).getSource(), is(RnRColumnSource.USER_INPUT));
         assertThat(rnrColumns.get(0).isVisible(), is(true));
     }
 
@@ -93,7 +93,7 @@ public class ProgramRnrColumnMapperIT {
         rnrColumn.setLabel(label);
         rnrColumn.setVisible(visible);
         rnrColumn.setPosition(position);
-        rnrColumn.setSelectedColumnType(columnSource);
+        rnrColumn.setSource(columnSource);
         return programRnrColumnMapper.insert(HIV, rnrColumn);
     }
 
@@ -103,7 +103,7 @@ public class ProgramRnrColumnMapperIT {
         rnrColumn.setLabel(label);
         rnrColumn.setVisible(visible);
         rnrColumn.setPosition(position);
-        rnrColumn.setSelectedColumnType(columnSource);
+        rnrColumn.setSource(columnSource);
         programRnrColumnMapper.update(HIV, rnrColumn);
     }
 }

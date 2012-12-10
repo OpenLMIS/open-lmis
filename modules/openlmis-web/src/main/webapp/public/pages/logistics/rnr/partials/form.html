@@ -17,7 +17,7 @@
             </tr>
             <tr ng-repeat="rnrLineItem in $parent.rnr.lineItems">
                 <td class="cell-input" ng-repeat="column in programRnRColumnList">
-                <ng-switch on="column.selectedColumnType.code">
+                <ng-switch on="column.source.code">
                 <span ng-switch-when="U">
 
                         <ng-switch on="column.name">

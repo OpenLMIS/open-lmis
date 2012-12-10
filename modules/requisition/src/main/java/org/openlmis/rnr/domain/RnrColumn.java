@@ -12,8 +12,7 @@ public class RnrColumn {
     private String description;
     private int position;
     private String label;
-    private String defaultValue;
-    private RnRColumnSource selectedColumnType;
+    private RnRColumnSource source;
     private Boolean sourceConfigurable;
     private String formula;
     private String indicator;
@@ -22,8 +21,8 @@ public class RnrColumn {
     private boolean mandatory;
 
     @SuppressWarnings(value = "unused")
-    public void setSelectedColumnTypeString(String selectedColumnType) {
-        this.selectedColumnType = RnRColumnSource.getValueOf(selectedColumnType);
+    public void setSourceString(String sourceString) {
+        this.source = RnRColumnSource.getValueOf(sourceString);
     }
 
 }

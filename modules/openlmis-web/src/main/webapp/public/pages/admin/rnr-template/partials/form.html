@@ -46,11 +46,11 @@
         <input type="hidden" class="rnr-column-position" ng-model="rnrColumn.position" value="{{ rnrColumn.position }}"/>
         <span class="tpl-source">
             <span ng-show="rnrColumn.sourceConfigurable">
-                <select ng-model="rnrColumn.selectedColumnType.code" ng-options="c.code as c.description for c in sources">
+                <select ng-model="rnrColumn.source.code" ng-options="c.code as c.description for c in sources">
                 </select>
             </span>
             <span ng-hide="rnrColumn.sourceConfigurable">
-                {{ rnrColumn.selectedColumnType.description}}
+                {{ rnrColumn.source.description}}
             </span>
             <br/>
             <a href="javascript:void(0);">{{ rnrColumn.formula }}</a>
