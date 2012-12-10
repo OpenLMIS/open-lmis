@@ -6,7 +6,7 @@ function ConfigureRnRTemplateController($scope, Program, $location) {
     $scope.createRnrTemplate = function () {
         if ($scope.$parent.program != undefined) {
             $scope.error = "";
-            $location.path('create-rnr-template');
+            $location.path('/create-rnr-template/'+$scope.$parent.program.code);
         }
         else {
             $scope.error = "Please select a program";
@@ -14,14 +14,8 @@ function ConfigureRnRTemplateController($scope, Program, $location) {
     };
 }
 
-function SaveRnrTemplateController($scope, RnRColumnList, $http, $location) {
-    var code = ($scope.program ? $scope.program.code : "");
-    RnRColumnList.get({programCode:code}, function (data) {   //success
-        $scope.rnrColumns = data.rnrTemplateForm.rnrColumns;
-        $scope.sources = data.rnrTemplateForm.sources;
-    }, function () {
-        $location.path('select-program');
-    });
+function SaveRnrTemplateController($scope, rnrColumns, $http) {
+    $scope.rnrColumns = rnrColumns;
 
     $scope.createProgramRnrTemplate = function () {
 
@@ -34,7 +28,7 @@ function SaveRnrTemplateController($scope, RnRColumnList, $http, $location) {
                     $scope.errorMap = data.errorMap;
                 }
                 updateErrorMessage("Save Failed!");
-            });
+        });
     };
 
     $scope.update = function () {
@@ -49,3 +43,23 @@ function SaveRnrTemplateController($scope, RnRColumnList, $http, $location) {
     }
 
 }
+
+SaveRnrTemplateController.resolve = {
+    rnrColumns: function (RnRColumnList, $location, $route, $q, $timeout) {
+        var deferred = $q.defer();
+        var code = $route.current.params.programCode;
+        //var rnrColumns;
+
+        $timeout(function () {
+            RnRColumnList.get({programCode: code}, function (data) {   //success
+               // rnrColumns = data.rnrTemplateForm.rnrColumns;
+                deferred.resolve(data.rnrTemplateForm.rnrColumns);
+            }, function () {
+                $location.path('select-program');
+            });
+        }, 100);
+
+        return deferred.promise;
+    }
+}
+
