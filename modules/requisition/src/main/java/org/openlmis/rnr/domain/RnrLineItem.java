@@ -18,6 +18,8 @@ public class RnrLineItem {
     private String unitOfIssue;
 
     private Integer quantityReceived;
+
+  //TODO  rename to quantityConsumed
     private Integer quantityDispensed;
     private Integer beginningBalance;
     private Integer estimatedConsumption;

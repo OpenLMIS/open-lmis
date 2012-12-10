@@ -122,9 +122,9 @@ describe('Requisition controllers', function () {
     });
 
     it('should validate  float field', function(){
-
          var valid=   scope.positiveFloat(100);
          expect(true).toEqual(valid);
+
          valid= scope.positiveFloat(1.000);
          expect(true).toEqual(valid);
 
@@ -145,6 +145,10 @@ describe('Requisition controllers', function () {
 
          valid=   scope.positiveFloat('a');
          expect(false).toEqual(valid);
+
+    });
+
+    it('should calculate consumption', function() {
 
     });
   });
