@@ -1,13 +1,13 @@
 package org.openlmis.pageobjects;
 
 
+import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
-import org.openqa.selenium.support.ui.Select;
 
 
 public class TemplateConfigPage extends Page {
@@ -21,11 +21,22 @@ public class TemplateConfigPage extends Page {
     @FindBy(how = How.LINK_TEXT, using = "Logout")
     private static WebElement logoutLink;
 
-    @FindBy(how = How.XPATH, using = "//select[@class=\"ng-pristine ng-valid\"]")
+    @FindBy(how = How.ID, using = "selectProgram")
     private static WebElement ProgramDropDown;
-    Select ProgramDropDownSelect;
 
-    private String BASE_URL = "http://localhost:9090/";
+    @FindBy(how = How.XPATH, using = "//a[contains(text(),'Next')]")
+    private static WebElement NextButton;
+
+    @FindBy(how = How.XPATH, using = "//input[@value='Save']")
+    private static WebElement SaveButton;
+
+    @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv' and @ng-show='message']")
+    private static WebElement saveSuccessMsg;
+
+
+    private String TEMPLATE_SUCCESS_MESSAGE = "Template saved successfully!";
+
+    private String BASE_URL = "http://localhost:9091/";
 
     public TemplateConfigPage(TestWebDriver driver) {
         super(driver);
@@ -40,6 +51,25 @@ public class TemplateConfigPage extends Page {
         TemplateConfigTab.click();
         testWebDriver.waitForElementToAppear(ConfigureTemplateSelectProgramPage);
         ConfigureTemplateSelectProgramPage.click();
-        ProgramDropDownSelect.selectByValue(programme);
-      }
+        testWebDriver.selectByVisibleText(ProgramDropDown, programme);
+        NextButton.click();
+    }
+
+    public void editProductCode(String productCode){
+
+    }
+
+    public void excludeRemarks(){
+
+    }
+
+    public void configureTemplate(){
+    testWebDriver.waitForElementToAppear(SaveButton);
+    SaveButton.click();
+
+    testWebDriver.waitForTextToAppear(TEMPLATE_SUCCESS_MESSAGE);
+    String successMessage= testWebDriver.getText(saveSuccessMsg);
+    SeleneseTestNgHelper.assertEquals(successMessage, TEMPLATE_SUCCESS_MESSAGE);
+
+    }
 }

@@ -3,11 +3,9 @@ package org.openlmis.UiUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.internal.Locatable;
 import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.concurrent.TimeUnit;
 
@@ -125,6 +123,10 @@ public class TestWebDriver {
 
     public String getText(WebElement element) {
        return element.getText();
+    }
+
+    public String getValue(WebElement element, String value) {
+        return element.getAttribute(value);
     }
 
     public void sleep(long timeToSleep) {
