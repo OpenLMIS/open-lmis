@@ -81,4 +81,13 @@ var populateFlags = function ($scope) {
         var value = $scope.facility[field];
         $scope.facility[field] = (value == null) ? "" : value.toString();
     });
+    changeFormEditable($scope.facility.dataReportable);
 };
+
+var changeFormEditable = function(editable) {
+    if(editable == 'false') {
+        $('#create-facility :input').attr('disabled', true);
+    } else {
+        $('#create-facility :input').attr('disabled', false);
+    }
+}
