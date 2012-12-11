@@ -13,10 +13,10 @@ public class RnrColumnSourceSerializer extends JsonSerializer<RnRColumnSource> {
                           SerializerProvider provider) throws IOException {
 
         generator.writeStartObject();
-        generator.writeFieldName("code");
-        generator.writeString(value.getCode());
         generator.writeFieldName("description");
         generator.writeString(value.getDescription());
+        generator.writeFieldName("name");
+        generator.writeString(value.name());
         generator.writeEndObject();
     }
 }

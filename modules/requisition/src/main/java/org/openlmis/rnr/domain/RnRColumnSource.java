@@ -3,6 +3,7 @@ package org.openlmis.rnr.domain;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
+// TODO use annotations for json serialization
 @JsonSerialize(using = RnrColumnSourceSerializer.class)
 @JsonDeserialize(using = RnrColumnSourceDeSerializer.class)
 public enum RnRColumnSource {
@@ -12,6 +13,7 @@ public enum RnRColumnSource {
     CALCULATED("C", "Calculated");
 
     private final String code;
+
     private final String description;
 
     RnRColumnSource(String code, String description) {
@@ -25,10 +27,6 @@ public enum RnRColumnSource {
             if (columnType.code.equalsIgnoreCase(value)) return columnType;
         }
         return null;
-    }
-
-    public String getCode() {
-        return code;
     }
 
     public String getDescription() {

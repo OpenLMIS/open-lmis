@@ -50,13 +50,13 @@ function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $l
             $scope.message = "";
             return;
         }
-        $http.post('/logistics/rnr/' + $scope.rnr.id + '/save.json', $scope.$parent.rnr).success(function (data) {
+        $http.post('/logistics/rnr/' + $scope.$parent.rnr.id + '/save.json', $scope.$parent.rnr).success(function (data) {
             $scope.message = "R&R saved successfully!";
             $scope.error = "";
         });
     };
 
-    $scope.calculateConsumption = function (index) {
+    $scope.fillCalculatedRnrColumns = function (index) {
         var lineItem = $scope.$parent.rnr.lineItems[index];
         var a = parseInt(lineItem.beginningBalance);
         var b = parseInt(lineItem.quantityReceived);
@@ -67,20 +67,27 @@ function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $l
         var cSource = getSource('C');
         var eSource = getSource('E');
 
-        if (cSource == 'C') {
-            lineItem.quantityDispensed = (a && b && d && e) ? a + b - d - e : null;
-        }
-        if (eSource == 'C') {
-            lineItem.stockInHand = (a && b && c && d && eSource == 'C') ? a + b - d - c : null;
+        fillConsumption();
+        fillStockInHand();
+
+        function fillConsumption() {
+            if (cSource == 'CALCULATED') {
+                lineItem.quantityDispensed = (a && b && d && e) ? a + b - d - e : null;
+            }
         }
 
+        function fillStockInHand() {
+            if (eSource == 'CALCULATED') {
+                lineItem.stockInHand = (a && b && c && d) ? a + b - d - c : null;
+            }
+        }
     };
 
     var getSource = function (indicator) {
         var code;
         $($scope.programRnRColumnList).each(function (i, column) {
             if (column.indicator == indicator) {
-                code = column.source.code;
+                code = column.source.name;
                 return false;
             }
         });
@@ -89,18 +96,6 @@ function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $l
 
     $scope.getId = function (prefix, parent) {
         return prefix + "_" + parent.$parent.$parent.$index;
-    };
-
-    $scope.saveRnr = function () {
-        if ($scope.saveRnrForm.$error.rnrError != undefined && $scope.saveRnrForm.$error.rnrError != false && $scope.saveRnrForm.$error.rnrError.length > 0) {
-            $scope.error = "Please correct errors before saving.";
-            $scope.message = "";
-            return;
-        }
-        $http.post('/logistics/rnr/' + $scope.$parent.rnr.id + '/save.json', $scope.$parent.rnr).success(function (data) {
-            $scope.message = "R&R saved successfully!";
-            $scope.error = "";
-        });
     };
 
     $scope.getIndex = function (parent) {
