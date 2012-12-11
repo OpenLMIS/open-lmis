@@ -149,7 +149,7 @@ public class CreateFacilityPage extends Page {
 
     }
 
-    public void enterAndVerifyFacility() {
+    public String enterAndVerifyFacility() {
         Date dObj=new Date();
         SimpleDateFormat formatter_date_time = new SimpleDateFormat(
                 "yyyyMMdd-hhmmss");
@@ -210,6 +210,8 @@ public class CreateFacilityPage extends Page {
         String successMessage= testWebDriver.getText(saveSuccessMsgDiv);
         SeleneseTestNgHelper.assertEquals(successMessage,facilityNameText + " created successfully");
         testWebDriver.sleep(2000);
+
+        return date_time;
     }
 
 

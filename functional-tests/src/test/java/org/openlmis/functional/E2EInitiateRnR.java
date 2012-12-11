@@ -4,6 +4,7 @@ package org.openlmis.functional;
 import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.CreateFacilityPage;
+import org.openlmis.pageobjects.InitiateRnRPage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.TemplateConfigPage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -25,25 +26,32 @@ public class E2EInitiateRnR extends TestCaseHelper {
     }
 
     @Test(dataProvider = "Data-Provider-Function-Positive")
-    public void testE2EInitiateRnR(String[] credentials) throws Exception {
+    public void testE2EInitiateRnR(String program,String user, String password,String[] credentials) throws Exception {
 
         DBWrapper dbWrapper = new DBWrapper();
         LoginPage loginpage=new LoginPage(testWebDriver);
         CreateFacilityPage createfacilitypage=new CreateFacilityPage(testWebDriver);
+        InitiateRnRPage initiateRnR=new InitiateRnRPage(testWebDriver);
+
         loginpage.login(credentials[0], credentials[1]);
         createfacilitypage.navigateCreateFacility();
-        createfacilitypage.enterAndVerifyFacility();
+        String date_time=createfacilitypage.enterAndVerifyFacility();
 
         dbWrapper.insertUserAndAllocateFacility();
 
         TemplateConfigPage config=new TemplateConfigPage(testWebDriver);
-        config.selectProgramToConfigTemplate("HIV");
+        config.selectProgramToConfigTemplate(program);
         config.configureTemplate();
 
         dbWrapper.insertRoles();
         dbWrapper.insertRoleRights();
         dbWrapper.insertRoleAssignment();
 
+        loginpage.logout();
+
+        loginpage.login(user, password);
+        initiateRnR.navigateAndInitiateRnr(date_time, program);
+        initiateRnR.verifyRnRHeader(date_time,program);
         loginpage.logout();
 
     }
@@ -57,7 +65,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     @DataProvider(name = "Data-Provider-Function-Positive")
     public Object[][] parameterIntTestProviderPositive() {
         return new Object[][]{
-                {new String[]{"Admin123", "Admin123"}}
+                {"HIV","User123", "User123",new String[]{"Admin123", "Admin123"}}
         };
     }
 }
