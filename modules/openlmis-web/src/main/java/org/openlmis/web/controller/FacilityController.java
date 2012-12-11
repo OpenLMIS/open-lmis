@@ -85,18 +85,28 @@ public class FacilityController extends BaseController {
         return new ResponseEntity<>(modelMap, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "admin/facility/delete", method = RequestMethod.POST, headers = "Accept=application/json")
-    public ResponseEntity<ModelMap> delete(@RequestBody Facility facility, HttpServletRequest request) {
+    @RequestMapping(value = "admin/facility/update/{operation}",  method = RequestMethod.POST,headers = "Accept=application/json")
+    public ResponseEntity<ModelMap> updateDataReportableAndActive(@RequestBody Facility facility, @PathVariable(value = "operation") String operation,
+                                                                  HttpServletRequest request) {
         ModelMap modelMap = new ModelMap();
         String modifiedBy = (String) request.getSession().getAttribute(USER);
         facility.setModifiedBy(modifiedBy);
+        String message;
+        if("delete".equalsIgnoreCase(operation)){
+            facility.setDataReportable(false);
+            facility.setActive(false);
+            message = "deleted";
+        } else {
+            facility.setDataReportable(true);
+            message = "restored";
+        }
         try {
             facilityService.updateDataReportableAndActiveFor(facility);
         } catch (RuntimeException exception) {
             modelMap.put("error", exception.getMessage());
             return new ResponseEntity<ModelMap>(modelMap, HttpStatus.BAD_REQUEST);
         }
-        modelMap.put("success", facility.getName() + " deleted successfully");
+        modelMap.put("success", facility.getName() + " " + message + " successfully");
         return new ResponseEntity<ModelMap>(modelMap, HttpStatus.OK);
     }
 

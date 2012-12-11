@@ -109,16 +109,35 @@ public class FacilityControllerTest {
     }
 
     @Test
-    public void shouldDeleteFacility() throws Exception {
+    public void shouldUpdateDataReportableAndActiveForFacilityDelete() throws Exception {
         MockHttpServletRequest httpServletRequest = httpRequest();
         Facility facility = new Facility();
         facility.setName("Test Facility");
-        ResponseEntity responseEntity = facilityController.delete(facility, httpServletRequest);
-        assertThat(responseEntity.getStatusCode(),is(HttpStatus.OK));
+
+        ResponseEntity responseEntity = facilityController.updateDataReportableAndActive(facility, "delete", httpServletRequest);
         ModelMap modelMap = (ModelMap)responseEntity.getBody();
+
+        assertThat(responseEntity.getStatusCode(),is(HttpStatus.OK));
         assertThat((String)modelMap.get("success"),is("Test Facility deleted successfully"));
         verify(facilityService).updateDataReportableAndActiveFor(facility);
         assertThat(facility.getModifiedBy(),is(USER));
+        assertThat(facility.getDataReportable(),is(false));
+        assertThat(facility.getActive(),is(false));
+    }
+
+    @Test
+    public void shouldUpdateDataReportableAndActiveForFacilityRestore() throws Exception {
+        MockHttpServletRequest httpServletRequest = httpRequest();
+        Facility facility = new Facility();
+        facility.setName("Test Facility");
+
+        ResponseEntity responseEntity = facilityController.updateDataReportableAndActive(facility, "restore", httpServletRequest);
+        ModelMap modelMap = (ModelMap) responseEntity.getBody();
+
+        assertThat(responseEntity.getStatusCode(),is(HttpStatus.OK));
+        assertThat((String)modelMap.get("success"),is("Test Facility restored successfully"));
+        verify(facilityService).updateDataReportableAndActiveFor(facility);
+        assertThat(facility.getDataReportable(),is(true));
     }
 
     private MockHttpServletRequest httpRequest() {
