@@ -69,8 +69,13 @@ public class FacilityRepositoryTest {
   @Test
   public void shouldAddSupportedProgram() throws Exception {
     ProgramSupported programSupported = new ProgramSupported();
+    programSupported.setFacilityCode("facility code");
+    programSupported.setProgramCode("program code");
+
+    when(mockedFacilityMapper.getFacilityTypeIdForCode("facility code")).thenReturn(1L);
 
     repository.addSupportedProgram(programSupported);
+
     assertThat(programSupported.getModifiedDate(), is(now.toDate()));
     verify(programSupportedMapper).addSupportedProgram(programSupported);
   }
@@ -118,6 +123,11 @@ public class FacilityRepositoryTest {
   @Test
   public void shouldRaiseDuplicateProgramSupportedError() throws Exception {
     ProgramSupported programSupported = new ProgramSupported();
+    programSupported.setFacilityCode("facility code");
+    programSupported.setProgramCode("program code");
+
+    when(mockedFacilityMapper.getFacilityTypeIdForCode("facility code")).thenReturn(1L);
+
     expectedEx.expect(RuntimeException.class);
     expectedEx.expectMessage("Facility has already been mapped to the program");
     doThrow(new DuplicateKeyException("Facility has already been mapped to the program")).when(programSupportedMapper).addSupportedProgram(programSupported);
@@ -183,6 +193,28 @@ public class FacilityRepositoryTest {
 
     repository.save(facility);
     assertThat(facility.getFacilityType().getId(), is(1L));
+  }
+
+  @Test
+  public void shouldRaiseErrorWhenFacilityWithGivenCodeDoesNotExistWhileSavingProgramSupported() throws Exception {
+    ProgramSupported programSupported = new ProgramSupported();
+    programSupported.setFacilityCode("invalid Code");
+    programSupported.setProgramCode("valid Code");
+
+    when(mockedFacilityMapper.getFacilityTypeIdForCode("invalid Code")).thenReturn(null);
+    expectedEx.expect(RuntimeException.class);
+    expectedEx.expectMessage("Invalid reference data 'Facility Code'");
+    repository.addSupportedProgram(programSupported);
+  }
+
+  @Test
+  public void shouldRaiseErrorWhenProgramSupportedIsSpecifiedWithoutFacilityCode() throws Exception {
+    ProgramSupported programSupported = new ProgramSupported();
+    programSupported.setFacilityCode("");
+    programSupported.setProgramCode("valid Code");
+    expectedEx.expect(RuntimeException.class);
+    expectedEx.expectMessage("Missing reference data 'Facility Code'");
+    repository.addSupportedProgram(programSupported);
   }
 
   @Test

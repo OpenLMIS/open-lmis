@@ -1,8 +1,6 @@
 package org.openlmis.core.repository.mapper;
 
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProductBuilder;
@@ -14,16 +12,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.openlmis.core.builder.ProductBuilder.PRODUCT_CODE;
-import static org.openlmis.core.builder.ProgramBuilder.PROGRAM_CODE;
-import static org.openlmis.core.builder.ProductBuilder.displayOrder;
-
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.openlmis.core.builder.ProductBuilder.PRODUCT_CODE;
+import static org.openlmis.core.builder.ProductBuilder.displayOrder;
+import static org.openlmis.core.builder.ProgramBuilder.PROGRAM_CODE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
