@@ -2,6 +2,7 @@ package org.openlmis.web.logger;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
+import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -29,7 +30,7 @@ public class ApplicationLogger {
         logMessage(LogLevel.INFO, String.format("%s | %s.%s(%s) | Enter", LmisThreadLocal.get(), signature.getDeclaringTypeName(), signature.getName(), joinPoint.getArgs()==null?"": joinPoint.getArgs()));
     }
 
-    @Before("execution(* org.openlmis..*(..))")
+    @After("execution(* org.openlmis..*(..))")
     public void logMethodExit(JoinPoint joinPoint) {
         Signature signature = joinPoint.getSignature();
         logMessage(LogLevel.INFO, String.format("%s | %s.%s(%s) | Exit", LmisThreadLocal.get(), signature.getDeclaringTypeName(), signature.getName(), joinPoint.getArgs()==null?"": joinPoint.getArgs()));

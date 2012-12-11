@@ -13,7 +13,7 @@ describe("Facility", function () {
       $httpBackend.expectGET('/admin/facility/reference-data.json').respond({"facilityTypes":[
         {"type":"warehouse"}
       ], "programs":[
-        {"code":"programCode"}
+        {"code":"programCode", "id":"programId"}
       ], "geographicZones":[
         {"zoneId":"testId"}
       ], "facilityOperators":[
@@ -36,7 +36,7 @@ describe("Facility", function () {
         {"zoneId":"testId"}
       ]);
       expect(scope.programs).toEqual([
-        {"code":"programCode"}
+        {"code":"programCode", "id":"programId"}
       ]);
     });
 
@@ -86,7 +86,7 @@ describe("Facility", function () {
       $httpBackend.expectGET('/admin/facility/reference-data.json').respond({"facilityTypes":[
         {"type":"warehouse"}
       ], "programs":[
-        {"code":"programCode"}
+        {"code":"programCode", "id":"programId"}
       ], "geographicZones":[
         {"zoneId":"testId"}
       ], "facilityOperators":[

@@ -44,7 +44,7 @@ public class FacilityRepository {
       validateAndSetFacilityOperator(facility);
       validateAndSetFacilityType(facility);
       if (facility.getId() == null) {
-        facilityMapper.insert(facility);
+        facility.setId(facilityMapper.insert(facility));
         addListOfSupportedPrograms(facility);
       } else {
         updateFacility(facility);
@@ -61,20 +61,23 @@ public class FacilityRepository {
   }
 
   private void validateAndSetFacilityType(Facility facility) {
-    String facilityTypeCode = facility.getFacilityType().getCode();
-    if (facilityTypeCode == null || facilityTypeCode.isEmpty())
+    FacilityType facilityType = facility.getFacilityType();
+    if (facilityType == null || facilityType.getCode() == null || facilityType.getCode().isEmpty())
       throw new RuntimeException("Missing mandatory reference data 'Facility Type'");
 
+    String facilityTypeCode=facilityType.getCode();
     Long facilityTypeId = facilityMapper.getFacilityTypeIdForCode(facilityTypeCode);
 
     if (facilityTypeId == null)
       throw new RuntimeException("Invalid reference data 'Facility Type'");
 
-    facility.getFacilityType().setId(facilityTypeId);
+    facilityType.setId(facilityTypeId);
 
   }
 
   private void validateAndSetFacilityOperator(Facility facility) {
+    if(facility.getOperatedBy() == null) return;
+
     String operatedByCode = facility.getOperatedBy().getCode();
     if (operatedByCode == null || operatedByCode.isEmpty()) return;
 

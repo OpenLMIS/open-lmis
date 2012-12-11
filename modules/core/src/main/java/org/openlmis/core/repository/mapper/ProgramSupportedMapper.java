@@ -20,7 +20,7 @@ public interface ProgramSupportedMapper {
     @Delete("DELETE FROM PROGRAMS_SUPPORTED")
     void deleteAll();
 
-    @Select("SELECT DISTINCT p.code, p.name, p.description, p.active " +
+    @Select("SELECT DISTINCT p.id, p.code, p.name, p.description, p.active " +
             "FROM program p, facility f, programs_supported ps, user u, program  WHERE " +
             "ps.program_id = ANY(#{programIds}::INTEGER[]) AND " +
             "ps.facility_id = #{facilityId} " +
@@ -28,6 +28,7 @@ public interface ProgramSupportedMapper {
             "AND p.active = true " +
             "AND ps.active = true")
     @Results(value = {
+            @Result(property = "id", column = "program.id"),
             @Result(property = "code", column = "program.code"),
             @Result(property = "name", column = "program.name"),
             @Result(property = "description", column = "program.description"),

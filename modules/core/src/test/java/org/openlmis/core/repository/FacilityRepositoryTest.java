@@ -62,9 +62,11 @@ public class FacilityRepositoryTest {
   public void shouldInsertFacility() throws Exception {
     Facility facility = make(a(defaultFacility));
 
+    when(mockedFacilityMapper.insert(facility)).thenReturn(1L);
     repository.save(facility);
     assertThat(facility.getModifiedDate(), is(now.toDate()));
     verify(mockedFacilityMapper).insert(facility);
+    assertThat(facility.getId(), is(1L));
   }
 
   @Test

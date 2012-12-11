@@ -16,5 +16,5 @@ INSERT INTO users
 
 INSERT INTO role_assignments
   (user_id, role_id, program_id) VALUES
-  (100, 2, 'HIV'),
-  (200, 1, 'HIV');
+  (100, 2, 1),
+  (200, 1, 1);

@@ -23,22 +23,6 @@ function InitiateRnrController($http, $scope, facilities, UserSupportedProgramIn
         }
     };
 
-    $scope.loadPrograms = function () {
-        if ($scope.$parent.facility) {
-            UserSupportedProgramInFacilityForAnOperation.get({facilityId:$scope.$parent.facility}, function (data) {
-                $scope.$parent.programsForFacility = data.programList;
-                $scope.programOptionMsg = "--choose program--";
-                if ($scope.$parent.programsForFacility == null || $scope.$parent.programsForFacility.length == 0) {
-                    $scope.programOptionMsg = "--none assigned--";
-                }
-            }, {});
-        } else {
-            $scope.$parent.program = null;
-            $scope.$parent.programsForFacility = null;
-            $scope.programOptionMsg = "--choose program--";
-        }
-    };
-
     $scope.getRnrHeader = function () {
         if (validate()) {
             $http.post('/logistics/rnr/' + encodeURIComponent($scope.facility) + '/' + encodeURIComponent($scope.program.code) + '/init.json', {}

@@ -64,13 +64,14 @@ public class FacilityController extends BaseController {
         ModelMap modelMap = new ModelMap();
         String modifiedBy = (String) request.getSession().getAttribute(USER);
         facility.setModifiedBy(modifiedBy);
+        boolean createFlag = facility.getId()==null?true:false;
         try {
             facilityService.save(facility);
         } catch (RuntimeException exception) {
             modelMap.put("error", exception.getMessage());
             return new ResponseEntity<>(modelMap, HttpStatus.BAD_REQUEST);
         }
-        if (facility.getId() == null) {
+        if (createFlag) {
             modelMap.put("success", facility.getName() + " created successfully");
         } else {
             modelMap.put("success", facility.getName() + " updated successfully");
