@@ -32,6 +32,7 @@ function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $l
         if (validate(data)) {
             $scope.$parent.error = "";
             $scope.programRnRColumnList = data.rnrColumnList;
+            addBindings();
         } else {
             $scope.$parent.error = "Please contact Admin to define R&R template for this program";
             $location.path('init-rnr');
@@ -39,6 +40,15 @@ function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $l
     }, function () {
         $location.path('init-rnr');
     });
+
+    var addBindings = function() {
+      var inputFields = angular.element("[ol-bind-form]").find("input[type='text']");
+      inputFields.on("focus", function() {
+        $(this).parents("tr").addClass("highlight");
+      }).on("blur", function() {
+        $(this).parents("tr").removeClass("highlight");
+      });
+    };
 
     var validate = function (data) {
         return (data.rnrColumnList.length > 0);

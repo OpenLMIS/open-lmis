@@ -14,10 +14,8 @@ angular.module('openlmis', ['openlmis.services', 'ui.directives'], function ($ro
           break;
         case 401:
           scope.modalShown = true;
-          console.log(scope);
           break;
         default:
-          console.log(response.status);
           break;
       }
       return $q.reject(response);
