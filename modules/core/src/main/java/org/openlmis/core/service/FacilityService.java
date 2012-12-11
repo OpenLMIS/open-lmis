@@ -60,4 +60,8 @@ public class FacilityService {
     public Facility getFacility(int id) {
         return facilityRepository.getFacility(id);
     }
+
+    public void updateDataReportableAndActiveFor(Facility facility) {
+        facilityRepository.updateDataReportableAndActiveFor(facility);
+    }
 }

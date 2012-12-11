@@ -41,12 +41,12 @@ public interface FacilityMapper {
             @Result(property = "address1", column = "address1"),
             @Result(property = "address2", column = "address2"),
             @Result(property = "geographicZone.id", column = "geographic_zone_id"),
-            @Result(property = "facilityType.code", column = "type_id",javaType = java.lang.String.class, one = @One(select = "getFacilityTypeCodeFor") ),
+            @Result(property = "facilityType.code", column = "type_id", javaType = java.lang.String.class, one = @One(select = "getFacilityTypeCodeFor")),
             @Result(property = "catchmentPopulation", column = "catchment_population"),
             @Result(property = "latitude", column = "latitude"),
             @Result(property = "longitude", column = "longitude"),
             @Result(property = "altitude", column = "altitude"),
-            @Result(property = "operatedBy.code", column = "operated_by_id",javaType = java.lang.String.class, one = @One(select = "getFacilityOperatorCodeFor")),
+            @Result(property = "operatedBy.code", column = "operated_by_id", javaType = java.lang.String.class, one = @One(select = "getFacilityOperatorCodeFor")),
             @Result(property = "coldStorageGrossCapacity", column = "cold_storage_gross_capacity"),
             @Result(property = "coldStorageNetCapacity", column = "cold_storage_net_capacity"),
             @Result(property = "suppliesOthers", column = "supplies_others"),
@@ -184,11 +184,16 @@ public interface FacilityMapper {
     void update(Facility facility);
 
 
-  @Select("SELECT id FROM facility_operator where LOWER(code) = LOWER(#{code})")
-  Long getOperatedByIdForCode(String code);
+    @Select("SELECT id FROM facility_operator where LOWER(code) = LOWER(#{code})")
+    Long getOperatedByIdForCode(String code);
 
-  @Select("SELECT id FROM facility_type where LOWER(code) = LOWER(#{code})")
-  Long getFacilityTypeIdForCode(String facilityTypeCode);
+    @Select("SELECT id FROM facility_type where LOWER(code) = LOWER(#{code})")
+    Long getFacilityTypeIdForCode(String facilityTypeCode);
 
-  Integer getIdForCode(String code);
+    Integer getIdForCode(String code);
+
+
+    @Update("UPDATE facility SET data_reportable=#{dataReportable}, is_active=#{active}, modified_by=#{modifiedBy}, modified_date=#{modifiedDate}" +
+            "WHERE id =#{id}")
+    void updateDataReportableAndActiveFor(Facility facility);
 }

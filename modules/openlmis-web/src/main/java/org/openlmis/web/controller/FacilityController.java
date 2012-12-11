@@ -84,4 +84,20 @@ public class FacilityController extends BaseController {
         modelMap.put("facility", facilityService.getFacility(id));
         return new ResponseEntity<>(modelMap, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "admin/facility/delete", method = RequestMethod.POST, headers = "Accept=application/json")
+    public ResponseEntity<ModelMap> delete(@RequestBody Facility facility, HttpServletRequest request) {
+        ModelMap modelMap = new ModelMap();
+        String modifiedBy = (String) request.getSession().getAttribute(USER);
+        facility.setModifiedBy(modifiedBy);
+        try {
+            facilityService.updateDataReportableAndActiveFor(facility);
+        } catch (RuntimeException exception) {
+            modelMap.put("error", exception.getMessage());
+            return new ResponseEntity<ModelMap>(modelMap, HttpStatus.BAD_REQUEST);
+        }
+        modelMap.put("success", facility.getName() + " deleted successfully");
+        return new ResponseEntity<ModelMap>(modelMap, HttpStatus.OK);
+    }
+
 }

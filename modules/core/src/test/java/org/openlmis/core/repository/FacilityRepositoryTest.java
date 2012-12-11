@@ -245,4 +245,13 @@ public class FacilityRepositoryTest {
     verify(programSupportedMapper).deleteObsoletePrograms(facility.getId(), "ARV");
   }
 
+    @Test
+    public void shouldUpdateDataReportableActiveFlag(){
+
+        Facility facility = make(a(defaultFacility));
+        repository.updateDataReportableAndActiveFor(facility);
+        verify(mockedFacilityMapper).updateDataReportableAndActiveFor(facility);
+
+    }
+
 }

@@ -41,10 +41,10 @@ public class FacilityRepository {
     public void save(Facility facility) {
         facility.setModifiedDate(DateTime.now().toDate());
         try {
-          validateAndSetFacilityOperator(facility);
-          validateAndSetFacilityType(facility);
-          if (facility.getId() == null) {
-              facilityMapper.insert(facility);
+            validateAndSetFacilityOperator(facility);
+            validateAndSetFacilityType(facility);
+            if (facility.getId() == null) {
+                facilityMapper.insert(facility);
                 addListOfSupportedPrograms(facility);
             } else {
                 updateFacility(facility);
@@ -53,40 +53,40 @@ public class FacilityRepository {
             throw new RuntimeException("Duplicate Facility Code found");
         } catch (DataIntegrityViolationException integrityViolationException) {
             String errorMessage = integrityViolationException.getMessage().toLowerCase();
-            if (errorMessage.contains("foreign key")||errorMessage.contains("not-null constraint")) {
+            if (errorMessage.contains("foreign key") || errorMessage.contains("not-null constraint")) {
                 throw new RuntimeException("Missing/Invalid Reference data");
             }
             throw new RuntimeException("Incorrect data length");
         }
     }
 
-  private void validateAndSetFacilityType(Facility facility) {
-    String facilityTypeCode = facility.getFacilityType().getCode();
-    if(facilityTypeCode!=null && !facilityTypeCode.isEmpty()) {
-      Long facilityTypeId = facilityMapper.getFacilityTypeIdForCode(facilityTypeCode);
-      if(facilityTypeId == null){
-        throw new RuntimeException("Invalid reference data 'Facility Type'");
-      }else {
-        facility.getFacilityType().setId(facilityTypeId);
-      }
-    }else {
-      throw new RuntimeException("Missing mandatory reference data 'Facility Type'");
+    private void validateAndSetFacilityType(Facility facility) {
+        String facilityTypeCode = facility.getFacilityType().getCode();
+        if (facilityTypeCode != null && !facilityTypeCode.isEmpty()) {
+            Long facilityTypeId = facilityMapper.getFacilityTypeIdForCode(facilityTypeCode);
+            if (facilityTypeId == null) {
+                throw new RuntimeException("Invalid reference data 'Facility Type'");
+            } else {
+                facility.getFacilityType().setId(facilityTypeId);
+            }
+        } else {
+            throw new RuntimeException("Missing mandatory reference data 'Facility Type'");
+        }
     }
-  }
 
-  private void validateAndSetFacilityOperator(Facility facility) {
-    String operatedByCode = facility.getOperatedBy().getCode();
-    if(operatedByCode!=null && !operatedByCode.isEmpty()){
-      Long operatedById= facilityMapper.getOperatedByIdForCode(operatedByCode);
-      if(operatedById ==null){
-        throw new RuntimeException("Invalid reference data 'Operated By'");
-      }else{
-        facility.getOperatedBy().setId(operatedById);
-      }
+    private void validateAndSetFacilityOperator(Facility facility) {
+        String operatedByCode = facility.getOperatedBy().getCode();
+        if (operatedByCode != null && !operatedByCode.isEmpty()) {
+            Long operatedById = facilityMapper.getOperatedByIdForCode(operatedByCode);
+            if (operatedById == null) {
+                throw new RuntimeException("Invalid reference data 'Operated By'");
+            } else {
+                facility.getOperatedBy().setId(operatedById);
+            }
+        }
     }
-  }
 
-  private void updateFacility(Facility facility) {
+    private void updateFacility(Facility facility) {
         List<Program> previouslySupportedPrograms = programMapper.getByFacilityId(facility.getId());
         facilityMapper.update(facility);
         deleteObsoleteProgramMappings(facility, previouslySupportedPrograms);
@@ -154,5 +154,10 @@ public class FacilityRepository {
         Facility facility = facilityMapper.get(id);
         facility.setSupportedPrograms(programMapper.getByFacilityId(facility.getId()));
         return facility;
+    }
+
+    public void updateDataReportableAndActiveFor(Facility facility) {
+        facilityMapper.updateDataReportableAndActiveFor(facility);
+
     }
 }

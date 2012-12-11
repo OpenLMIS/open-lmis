@@ -47,6 +47,15 @@ public class FacilityServiceTest {
         int ID = 1;
         when(facilityRepository.getFacility(ID)).thenReturn(new Facility());
         Facility facility = facilityService.getFacility(ID);
-        assertThat(facility,is(new Facility()));
+        assertThat(facility, is(new Facility()));
+    }
+
+    @Test
+    public void shouldUpdateDataReportableAndActiveFor(){
+        Facility facility = make(a(defaultFacility));
+        facilityService.updateDataReportableAndActiveFor(facility);
+        verify(facilityRepository).updateDataReportableAndActiveFor(facility);
+
+
     }
 }

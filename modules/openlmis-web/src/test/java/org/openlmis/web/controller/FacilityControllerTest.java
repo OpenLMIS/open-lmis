@@ -108,6 +108,19 @@ public class FacilityControllerTest {
         verify(facilityService).getFacility(ID);
     }
 
+    @Test
+    public void shouldDeleteFacility() throws Exception {
+        MockHttpServletRequest httpServletRequest = httpRequest();
+        Facility facility = new Facility();
+        facility.setName("Test Facility");
+        ResponseEntity responseEntity = facilityController.delete(facility, httpServletRequest);
+        assertThat(responseEntity.getStatusCode(),is(HttpStatus.OK));
+        ModelMap modelMap = (ModelMap)responseEntity.getBody();
+        assertThat((String)modelMap.get("success"),is("Test Facility deleted successfully"));
+        verify(facilityService).updateDataReportableAndActiveFor(facility);
+        assertThat(facility.getModifiedBy(),is(USER));
+    }
+
     private MockHttpServletRequest httpRequest() {
         MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
         MockHttpSession mockHttpSession = new MockHttpSession();

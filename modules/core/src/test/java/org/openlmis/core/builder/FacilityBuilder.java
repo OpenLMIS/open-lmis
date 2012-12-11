@@ -24,6 +24,7 @@ public class FacilityBuilder {
     public static final Property<Facility, Date> goLiveDate = newProperty();
     public static final Property<Facility,String> operatedByCode = newProperty();
     public static final Property<Facility,GeographicZone> geographicZone= newProperty();
+    public static final Property<Facility,Boolean> dataReportable= newProperty();
 
     public static final String FACILITY_CODE = "F10010";
     public static final String FACILITY_TYPE_CODE = "warehouse";
@@ -43,6 +44,7 @@ public class FacilityBuilder {
             facility.setGeographicZone(lookup.valueOf(geographicZone, geographicZoneValue));
             facility.setSdp(lookup.valueOf(sdp, true));
             facility.setActive(lookup.valueOf(active, true));
+            facility.setDataReportable(lookup.valueOf(dataReportable, true));
             FacilityOperator operatedBy = new FacilityOperator();
             operatedBy.setCode(lookup.valueOf(operatedByCode, "MoH"));
             facility.setOperatedBy(operatedBy);

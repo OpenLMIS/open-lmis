@@ -1,5 +1,6 @@
 package org.openlmis.core.repository.mapper;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.domain.*;
@@ -9,6 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -174,4 +176,22 @@ public class FacilityMapperIT {
     id = facilityMapper.getFacilityTypeIdForCode("InValid");
     assertThat(id, is(nullValue()));
   }
+    @Test
+    public void shouldUpdateDataReportableAndActiveForAFacility() throws Exception {
+        Facility facility = make(a(defaultFacility));
+        facility.setId(facilityMapper.insert(facility));
+        facility.setDataReportable(false);
+        facility.setActive(false);
+        Date modifiedDate = DateTime.now().toDate();
+        facility.setModifiedDate(modifiedDate);
+        facility.setModifiedBy("user1");
+        facilityMapper.updateDataReportableAndActiveFor(facility);
+
+        Facility updatedFacility = facilityMapper.get(facility.getId());
+
+        assertThat(updatedFacility.getDataReportable(), is(false));
+        assertThat(updatedFacility.getActive(), is(false));
+        assertThat(updatedFacility.getModifiedBy(), is("user1"));
+        assertThat(updatedFacility.getModifiedDate(), is(modifiedDate));
+    }
 }
