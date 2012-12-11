@@ -217,10 +217,10 @@ public interface FacilityMapper {
   @Select("SELECT code FROM facility_type where id = #{id}")
   public String getFacilityTypeCodeFor(Long id);
 
-    Integer getIdForCode(String code);
-
-
     @Update("UPDATE facility SET data_reportable=#{dataReportable}, is_active=#{active}, modified_by=#{modifiedBy}, modified_date=#{modifiedDate}" +
             "WHERE id =#{id}")
     void updateDataReportableAndActiveFor(Facility facility);
+
+    @Select("SELECT id FROM facility WHERE LOWER(code) = LOWER(#{code})")
+    Integer getIdForCode(String code);
 }

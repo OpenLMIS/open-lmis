@@ -77,6 +77,20 @@
                 <entry key="requisitionGroup">
                     <value type="java.lang.Class">org.openlmis.rnr.domain.RequisitionGroup</value>
                 </entry>
+                <entry key="supervisoryNode">
+                    <value type="java.lang.Class">org.openlmis.rnr.domain.SupervisoryNode</value>
+                </entry>
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <bean id="persistenceHandlerMap" class="java.util.HashMap">
+        <constructor-arg>
+            <map>
+                <entry key="product" value-ref="productPersistenceHandler"/>
+                <entry key="facility" value-ref="facilityPersistenceHandler"/>
+                <entry key="programSupported" value-ref="programSupportedPersistenceHandler"/>
+                <entry key="supervisoryNode" value-ref="supervisoryNodeHandler"/>
             </map>
         </constructor-arg>
     </bean>

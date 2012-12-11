@@ -210,4 +210,11 @@ public class FacilityMapperIT {
     assertThat(updatedFacility.getModifiedBy(), is("user1"));
     assertThat(updatedFacility.getModifiedDate(), is(modifiedDate));
   }
+
+    @Test
+    public void shouldGetIdByCode() throws Exception {
+        Facility facility = make(a(defaultFacility));
+        facility.setId(facilityMapper.insert(facility));
+        assertThat(facilityMapper.getIdForCode(facility.getCode()), is(facility.getId()));
+    }
 }

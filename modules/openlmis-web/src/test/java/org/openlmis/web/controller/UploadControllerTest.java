@@ -9,7 +9,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Product;
-import org.openlmis.core.handler.UploadHandlerFactory;
+import org.openlmis.web.handler.UploadHandlerFactory;
 import org.openlmis.upload.RecordHandler;
 import org.openlmis.upload.model.ModelClass;
 import org.openlmis.upload.parser.CSVParser;

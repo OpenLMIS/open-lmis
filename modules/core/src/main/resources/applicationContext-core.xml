@@ -12,13 +12,5 @@
 
     <import resource="classpath*:applicationContext-db.xml"/>
 
-    <bean id="persistenceHandlerMap" class="java.util.HashMap">
-        <constructor-arg>
-            <map>
-                <entry key="product" value-ref="productPersistenceHandler"/>
-                <entry key="facility" value-ref="facilityPersistenceHandler"/>
-                <entry key="programSupported" value-ref="programSupportedPersistenceHandler"/>
-            </map>
-        </constructor-arg>
-    </bean>
+
 </beans>

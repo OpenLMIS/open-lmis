@@ -1,7 +1,7 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.handler.UploadHandlerFactory;
+import org.openlmis.web.handler.UploadHandlerFactory;
 import org.openlmis.upload.exception.UploadException;
 import org.openlmis.upload.model.ModelClass;
 import org.openlmis.upload.parser.CSVParser;

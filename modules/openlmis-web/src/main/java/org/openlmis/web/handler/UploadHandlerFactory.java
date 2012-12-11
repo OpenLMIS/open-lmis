@@ -1,4 +1,4 @@
-package org.openlmis.core.handler;
+package org.openlmis.web.handler;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.upload.RecordHandler;
