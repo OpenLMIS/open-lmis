@@ -34,10 +34,10 @@ public class LoginPage extends Page {
 
     private String baseUrl;
 
-    public LoginPage(TestWebDriver driver) throws FileNotFoundException, IOException{
+    public LoginPage(TestWebDriver driver) throws  IOException{
         super(driver);
         Properties props = new Properties();
-        props.load(new FileInputStream("functional-tests/config.properties"));
+        props.load(new FileInputStream(System.getProperty("user.dir")+"/src/main/resources/config.properties"));
         baseUrl = props.getProperty("baseUrl");
         BASE_URL=baseUrl;
         testWebDriver.setBaseURL(BASE_URL);

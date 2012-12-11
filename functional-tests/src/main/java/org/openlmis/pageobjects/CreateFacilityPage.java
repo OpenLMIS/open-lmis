@@ -134,10 +134,10 @@ public class CreateFacilityPage extends Page {
 
 
 
-    public CreateFacilityPage(TestWebDriver driver) throws FileNotFoundException, IOException {
+    public CreateFacilityPage(TestWebDriver driver) throws  IOException {
         super(driver);
         Properties props = new Properties();
-        props.load(new FileInputStream("functional-tests/config.properties"));
+        props.load(new FileInputStream(System.getProperty("user.dir")+"/src/main/resources/config.properties"));
         baseUrl = props.getProperty("baseUrl");
         BASE_URL=baseUrl;
         testWebDriver.setBaseURL(BASE_URL);
