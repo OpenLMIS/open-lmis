@@ -8,6 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import org.testng.annotations.*;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 @TransactionConfiguration(defaultRollback=true)
 @Transactional
 public class LogIn extends TestCaseHelper {
@@ -31,7 +34,7 @@ public class LogIn extends TestCaseHelper {
 
     @Test(dependsOnMethods = {"testLoginPositive"},
             dataProvider = "Data-Provider-Function-Negative")
-    public void testLoginNegative(String[] credentials) {
+    public void testLoginNegative(String[] credentials) throws FileNotFoundException, IOException {
         LoginPage loginpage=new LoginPage(testWebDriver);
         loginpage.login(credentials[0], credentials[1]);
         //assertEquals(testWebDriver.verifyErrorMessage(), true);

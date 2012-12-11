@@ -1,8 +1,23 @@
 package org.openlmis.UiUtils;
 
 import java.sql.*;
+import java.util.Properties;
+import java.io.*;
 
 public class DBWrapper {
+
+    String baseUrl,dbUrl,dbUser,dbPassword;
+
+
+    public DBWrapper() throws FileNotFoundException, IOException
+    {
+        Properties props = new Properties();
+        props.load(new FileInputStream("functional-tests/config.properties"));
+         baseUrl = props.getProperty("baseUrl");
+         dbUrl = props.getProperty("dbUrl");
+         dbUser = props.getProperty("dbUser");
+         dbPassword = props.getProperty("dbPassword");
+    }
 
     public ResultSet dbConnection(String Query, String indicator)
     {
@@ -18,9 +33,9 @@ public class DBWrapper {
             System.exit(1);
         }
 
-        String url = "jdbc:postgresql://localhost:5432/open_lmis";
-        String user = "postgres";
-        String password = "p@ssw0rd";
+        String url = dbUrl;
+        String user = dbUser;
+        String password = dbPassword;
 
         try {
             con = DriverManager.getConnection(url, user, password);
@@ -47,7 +62,7 @@ public class DBWrapper {
         }
     }
 
-    public void insertUser() throws SQLException
+    public void insertUser() throws SQLException , FileNotFoundException, IOException
     {
         boolean flag=false;
         DBWrapper dbwrapper=new DBWrapper();
@@ -69,7 +84,7 @@ public class DBWrapper {
         rs.close();
     }
 
-    public void insertUserAndAllocateFacility()
+    public void insertUserAndAllocateFacility() throws FileNotFoundException, IOException
     {
         DBWrapper dbwrapper=new DBWrapper();
         dbwrapper.dbConnection("INSERT INTO users\n" +
@@ -78,7 +93,7 @@ public class DBWrapper {
 
     }
 
-    public void deleteUser() throws SQLException
+    public void deleteUser() throws SQLException, FileNotFoundException, IOException
     {
         DBWrapper dbwrapper=new DBWrapper();
         dbwrapper.dbConnection("delete from programs_supported;","alter");
@@ -89,19 +104,16 @@ public class DBWrapper {
     }
 
 
-    public void insertRoles() throws SQLException
+    public void insertRoles() throws SQLException , FileNotFoundException, IOException
     {
         boolean flag=false;
         DBWrapper dbwrapper=new DBWrapper();
         ResultSet rs=dbwrapper.dbConnection("Select id from roles;","select");
 
         if (rs.next()) {
-           // if(rs.getString(1)!=null)
-           // {
                 dbwrapper.dbConnection("delete from role_rights;","alter");
                 dbwrapper.dbConnection("delete from role_assignments;","alter");
                 dbwrapper.dbConnection("delete from roles;","alter");
-           // }
         }
                 dbwrapper.dbConnection("INSERT INTO roles\n" +
                 "(id, name, description) VALUES\n" +
@@ -110,7 +122,7 @@ public class DBWrapper {
 
     }
 
-    public void insertRoleRights() throws SQLException
+    public void insertRoleRights() throws SQLException, FileNotFoundException, IOException
     {
         DBWrapper dbwrapper=new DBWrapper();
         ResultSet rs=dbwrapper.dbConnection("Select role_id from role_rights;","select");
@@ -126,7 +138,7 @@ public class DBWrapper {
         dbwrapper.dbConnection("INSERT INTO role_rights (role_id, right_id) VALUES (1, 1),(1, 2),(2, 1),(2, 2),(2, 3);", "alter");
     }
 
-    public void insertRoleAssignment() throws SQLException
+    public void insertRoleAssignment() throws SQLException, FileNotFoundException, IOException
     {
         DBWrapper dbwrapper=new DBWrapper();
         ResultSet rs=dbwrapper.dbConnection("Select user_id from role_assignments;","select");

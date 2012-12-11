@@ -9,6 +9,11 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
+
 
 public class InitiateRnRPage extends Page {
 
@@ -41,11 +46,15 @@ public class InitiateRnRPage extends Page {
     private static WebElement successMessage;
 
 
-    private String BASE_URL = "http://localhost:9090/";
+    private String BASE_URL, baseUrl;
 
 
-    public InitiateRnRPage(TestWebDriver driver) {
+    public InitiateRnRPage(TestWebDriver driver) throws FileNotFoundException, IOException {
         super(driver);
+        Properties props = new Properties();
+        props.load(new FileInputStream("functional-tests/config.properties"));
+        baseUrl = props.getProperty("baseUrl");
+        BASE_URL=baseUrl;
         testWebDriver.setBaseURL(BASE_URL);
         PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
         testWebDriver.setImplicitWait(25);
@@ -73,7 +82,7 @@ public class InitiateRnRPage extends Page {
         SeleneseTestNgHelper.assertTrue(facilityText.contains("FCcode" + FCstring + " - FCname" + FCstring));
         saveButton.click();
         String successMessageText=testWebDriver.getText(successMessage);
-        testWebDriver.sleep(1000);
+        testWebDriver.sleep(1500);
         SeleneseTestNgHelper.assertEquals(successMessageText.trim(),successText);
     }
 

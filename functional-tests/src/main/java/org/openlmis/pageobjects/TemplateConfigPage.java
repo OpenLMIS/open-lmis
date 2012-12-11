@@ -9,6 +9,11 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
+
 
 public class TemplateConfigPage extends Page {
 
@@ -36,7 +41,8 @@ public class TemplateConfigPage extends Page {
 
     private String TEMPLATE_SUCCESS_MESSAGE = "Template saved successfully!";
 
-    private String BASE_URL = "http://localhost:9090/";
+    private String BASE_URL;
+
 
     public TemplateConfigPage(TestWebDriver driver) {
         super(driver);

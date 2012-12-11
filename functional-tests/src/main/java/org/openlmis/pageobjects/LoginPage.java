@@ -8,6 +8,11 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
+
 
 public class LoginPage extends Page {
 
@@ -23,17 +28,23 @@ public class LoginPage extends Page {
     @FindBy(how = How.LINK_TEXT, using = "Logout")
     private static WebElement logoutLink;
 
-    private String BASE_URL = "http://localhost:9090/";
+    private String BASE_URL;
 
     private String ERROR_MESSAGE_LOGIN = "The username or password you entered is incorrect. Please try again.";
 
+    private String baseUrl;
 
-    public LoginPage(TestWebDriver driver) {
+    public LoginPage(TestWebDriver driver) throws FileNotFoundException, IOException{
         super(driver);
+        Properties props = new Properties();
+        props.load(new FileInputStream("functional-tests/config.properties"));
+        baseUrl = props.getProperty("baseUrl");
+        BASE_URL=baseUrl;
         testWebDriver.setBaseURL(BASE_URL);
         testWebDriver.setErrorMessage(ERROR_MESSAGE_LOGIN);
         PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
         testWebDriver.setImplicitWait(25);
+
     }
 
 

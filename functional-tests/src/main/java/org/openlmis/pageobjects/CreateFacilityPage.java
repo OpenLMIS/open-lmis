@@ -9,8 +9,12 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Properties;
 
 
 public class CreateFacilityPage extends Page {
@@ -126,20 +130,24 @@ public class CreateFacilityPage extends Page {
 
 
     //private String BASE_URL = "http://qa.221.134.198.28.xip.io/";
-    private String BASE_URL = "http://localhost:9090/";
+    private String BASE_URL, baseUrl;
 
 
 
-    public CreateFacilityPage(TestWebDriver driver) {
+    public CreateFacilityPage(TestWebDriver driver) throws FileNotFoundException, IOException {
         super(driver);
+        Properties props = new Properties();
+        props.load(new FileInputStream("functional-tests/config.properties"));
+        baseUrl = props.getProperty("baseUrl");
+        BASE_URL=baseUrl;
         testWebDriver.setBaseURL(BASE_URL);
         PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
         testWebDriver.setImplicitWait(25);
+
     }
 
 
     public void navigateCreateFacility() {
-        //dropAllFacilities();
         testWebDriver.waitForElementToAppear(manageFacilityMenuItem);
         testWebDriver.click(manageFacilityMenuItem);
         manageFacilityMenuItem.click();
