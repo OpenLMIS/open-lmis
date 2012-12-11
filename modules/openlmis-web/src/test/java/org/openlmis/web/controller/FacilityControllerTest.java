@@ -103,9 +103,9 @@ public class FacilityControllerTest {
 
     @Test
     public void shouldGetFacilityById() throws Exception {
-        int ID = 1;
-        facilityController.getFacility(ID);
-        verify(facilityService).getFacility(ID);
+        long Id = 1;
+        facilityController.getFacility(Id);
+        verify(facilityService).getFacility(Id);
     }
 
     @Test

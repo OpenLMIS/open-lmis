@@ -21,6 +21,6 @@ public class RoleRightsRepository {
     }
 
     public List<RoleAssignment> getProgramWithGivenRightForAUser(Right right, String userName){
-        return roleRightsMapper.getProgramWithGivenRightForAUser(right, userName);
+        return roleRightsMapper.getRoleAssignmentsWithGivenRightForAUser(right, userName);
     }
 }

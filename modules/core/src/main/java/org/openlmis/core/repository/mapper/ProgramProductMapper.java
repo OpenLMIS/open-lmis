@@ -8,10 +8,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProgramProductMapper {
 
-    @Insert("INSERT INTO PROGRAM_PRODUCT(PROGRAM_CODE, PRODUCT_ID,ACTIVE, MODIFIED_BY, MODIFIED_DATE)" +
-            "VALUES (#{programCode},(select id from product where LOWER(code)=  LOWER(#{productCode})), #{active}, #{modifiedBy}, #{modifiedDate})")
-    int insert(ProgramProduct programProduct);
+  @Insert("INSERT INTO program_product(program_id, product_id,active, modified_by, modified_date)" +
+      "VALUES ((select id from program where LOWER(code)=  LOWER(#{programCode}))," +
+      "(select id from product where LOWER(code)=  LOWER(#{productCode})), " +
+      "#{active}, #{modifiedBy}, #{modifiedDate})")
+  int insert(ProgramProduct programProduct);
 
-    @Delete ("DELETE FROM PROGRAM_PRODUCT")
-    void deleteAll();
+  @Delete("DELETE FROM PROGRAM_PRODUCT")
+  void deleteAll();
 }

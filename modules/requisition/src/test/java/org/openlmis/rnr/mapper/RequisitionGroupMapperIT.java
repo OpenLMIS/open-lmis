@@ -39,7 +39,7 @@ public class RequisitionGroupMapperIT {
         RequisitionGroup requisitionGroup = make(a(RequisitionGroupBuilder.defaultRequisitionGroup, with(parent, nullString)));
         requisitionGroup.setHeadFacility(facility);
 
-        Integer requisitionGroupId = requisitionGroupMapper.insert(requisitionGroup);
+        Long requisitionGroupId = requisitionGroupMapper.insert(requisitionGroup);
         RequisitionGroup fetchedRequisitionGroup = requisitionGroupMapper.getRequisitionGroupById(requisitionGroupId);
 
         assertThat(fetchedRequisitionGroup.getId(), is(requisitionGroupId));

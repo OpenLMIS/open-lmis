@@ -13,7 +13,7 @@ import java.util.Date;
 public class RequisitionGroup implements Importable {
 
 
-    Integer id;
+    Long id;
     @ImportField(mandatory = true, type = "String", name = "RG Code")
     String code;
     @ImportField(mandatory = true, type = "String", name = "Name of RG")

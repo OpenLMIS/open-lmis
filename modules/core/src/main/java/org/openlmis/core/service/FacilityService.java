@@ -26,7 +26,7 @@ public class FacilityService {
         return facilityRepository.getAll();
     }
 
-    public RequisitionHeader getRequisitionHeader(int facilityId) {
+    public RequisitionHeader getRequisitionHeader(Long facilityId) {
         return facilityRepository.getHeader(facilityId);
     }
 
@@ -57,7 +57,7 @@ public class FacilityService {
         return homeFacility == null ? Collections.<Facility>emptyList() : Arrays.asList(homeFacility);
     }
 
-    public Facility getFacility(int id) {
+    public Facility getFacility(Long id) {
         return facilityRepository.getFacility(id);
     }
 

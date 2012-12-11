@@ -9,41 +9,43 @@ import java.util.List;
 @Repository
 public interface ProgramMapper {
 
-    @Insert("INSERT INTO program(code, name, description, active)" +
-            " VALUES (#{program.code}, #{program.name}, #{program.description}, #{program.active})")
-    int insert(@Param("program") Program program);
+    @Select("INSERT INTO program(code, name, description, active)" +
+            " VALUES (#{program.code}, #{program.name}, #{program.description}, #{program.active}) returning id")
+    @Options(useGeneratedKeys = true)
+    Long insert(@Param("program") Program program);
 
-    @Delete("DELETE FROM PROGRAM WHERE CODE = #{programCode}")
-    void delete(String programCode);
-
-    @Delete("DELETE FROM PROGRAM")
-    void deleteAll();
 
     @Select("SELECT * FROM program WHERE active=true")
     @Results(value = {
+            @Result(property = "id", column = "ID"),
             @Result(property = "code", column = "CODE"),
             @Result(property = "name", column = "NAME"),
             @Result(property = "description", column = "DESCRIPTION")
     })
     List<Program> getAllActive();
 
-    @Select("select * from program P, programs_supported PS where P.code = PS.program_code and PS.facility_id = #{facilityId} and PS.active=true and P.active=true")
+    @Select("select p.id, p.code, p.name, p.description from program P, programs_supported PS where P.id = PS.program_id and PS.facility_id = #{facilityId} and PS.active=true and P.active=true")
     @Results(value = {
-            @Result(property = "code", column = "program.code"),
-            @Result(property = "name", column = "program.name"),
-            @Result(property = "description", column = "program.description")
+            @Result(property = "id", column = "id"),
+            @Result(property = "code", column = "code"),
+            @Result(property = "name", column = "name"),
+            @Result(property = "description", column = "description")
     })
-    List<Program> getActiveByFacility(int facilityId);
+    List<Program> getActiveByFacility(Long facilityId);
 
     @Select("SELECT * FROM program")
     List<Program> getAll();
 
-    @Select("select P.code,P.name,P.description,PS.active from program P, programs_supported PS where P.code = PS.program_code and PS.facility_id = #{facilityId}")
+    @Select("select P.id as id,P.code as code,P.name as name,P.description as desc,PS.active as active " +
+        "from program P, programs_supported PS where " +
+        "P.id = PS.program_id " +
+        "and PS.facility_id = #{facilityId}")
     @Results(value = {
-            @Result(property = "code", column = "program.code"),
-            @Result(property = "name", column = "program.name"),
-            @Result(property = "description", column = "program.description"),
-            @Result(property = "active", column = "programs_supported.active")
+            @Result(property = "id", column = "id"),
+            @Result(property = "code", column = "code"),
+            @Result(property = "name", column = "name"),
+            @Result(property = "description", column = "desc"),
+            @Result(property = "active", column = "active")
     })
-    List<Program> getByFacilityId(int facilityId);
+    List<Program> getByFacilityId(Long facilityId);
 }

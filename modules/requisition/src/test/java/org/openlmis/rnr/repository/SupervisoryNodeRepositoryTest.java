@@ -44,7 +44,7 @@ public class SupervisoryNodeRepositoryTest {
     @Test
     public void shouldGiveErrorIfDuplicateCodeFound() throws Exception {
         doThrow(new DataIntegrityViolationException("")).when(supervisoryNodeMapper).insert(supervisoryNode);
-        when(supervisoryNodeMapper.getIdForCode(supervisoryNode.getParent().getCode())).thenReturn(1);
+        when(supervisoryNodeMapper.getIdForCode(supervisoryNode.getParent().getCode())).thenReturn(1L);
 
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("Duplicate Supervisory Node Code");
@@ -69,7 +69,7 @@ public class SupervisoryNodeRepositoryTest {
 
     @Test
     public void shouldGiveErrorIfFacilityCodeDoesNotExist() throws Exception {
-        when(supervisoryNodeMapper.getIdForCode(supervisoryNode.getParent().getCode())).thenReturn(1);
+        when(supervisoryNodeMapper.getIdForCode(supervisoryNode.getParent().getCode())).thenReturn(1L);
         when(facilityMapper.getIdForCode(supervisoryNode.getFacility().getCode())).thenReturn(null);
 
         expectedEx.expect(RuntimeException.class);
@@ -83,15 +83,15 @@ public class SupervisoryNodeRepositoryTest {
 
     @Test
     public void shouldSaveSupervisoryNode() throws Exception {
-        when(supervisoryNodeMapper.getIdForCode(supervisoryNode.getParent().getCode())).thenReturn(1);
-        when(facilityMapper.getIdForCode(supervisoryNode.getFacility().getCode())).thenReturn(1);
+        when(supervisoryNodeMapper.getIdForCode(supervisoryNode.getParent().getCode())).thenReturn(1L);
+        when(facilityMapper.getIdForCode(supervisoryNode.getFacility().getCode())).thenReturn(1L);
 
         new SupervisoryNodeRepository(supervisoryNodeMapper,facilityMapper).save(supervisoryNode);
 
         verify(facilityMapper).getIdForCode(supervisoryNode.getFacility().getCode());
         verify(supervisoryNodeMapper).getIdForCode(supervisoryNode.getParent().getCode());
-        assertThat(supervisoryNode.getParent().getId(), is(1));
-        assertThat(supervisoryNode.getFacility().getId(), is(1));
+        assertThat(supervisoryNode.getParent().getId(), is(1L));
+        assertThat(supervisoryNode.getFacility().getId(), is(1L));
         verify(supervisoryNodeMapper).insert(supervisoryNode);
     }
 

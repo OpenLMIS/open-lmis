@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 public class RnrServiceTest {
 
     public static final String HIV = "HIV";
-    public int facilityId = 1;
+    public Long facilityId = 1L;
 
     @Autowired
     private RnrService rnrService;
@@ -57,7 +57,7 @@ public class RnrServiceTest {
     @Test
     public void shouldReturnExistingRnrIfAlreadyInitiated() {
         Rnr initiatedRnr = new Rnr();
-        initiatedRnr.setId(1);
+        initiatedRnr.setId(1L);
         when(rnrRepository.getRequisitionByFacilityAndProgram(facilityId, HIV)).thenReturn(initiatedRnr);
         Rnr rnr = rnrService.initRnr(facilityId, HIV, "user");
         verify(productService, never()).getByFacilityAndProgram(facilityId, HIV);

@@ -23,7 +23,7 @@ public interface FacilityMapper {
       "#{satellite},#{satelliteParentCode},#{hasElectricity},#{hasElectronicScc},#{hasElectronicDar},#{active}," +
       "#{goLiveDate},#{goDownDate},#{comment},#{dataReportable},#{modifiedBy},#{modifiedDate}) returning id")
   @Options(useGeneratedKeys = true)
-  int insert(Facility facility);
+  Long insert(Facility facility);
 
   @Select("SELECT id, code, name, description,gln,main_phone,fax,address1,address2," +
       "geographic_zone_id,type_id,catchment_population,latitude,longitude,altitude,operated_by_id," +
@@ -102,7 +102,7 @@ public interface FacilityMapper {
       @Result(property = "parentZone.value", column = "parent_zone"),
       @Result(property = "parentZone.label", column = "parent_label")
   })
-  RequisitionHeader getRequisitionHeaderData(int facilityId);
+  RequisitionHeader getRequisitionHeaderData(Long facilityId);
 
 
   @Select("SELECT * FROM facility_type ORDER BY display_order")
@@ -190,7 +190,7 @@ public interface FacilityMapper {
       @Result(property = "modifiedBy", column = "modified_by"),
       @Result(property = "modifiedDate", column = "modified_date")
   })
-  Facility get(int id);
+  Facility get(Long id);
 
 
   @Update("UPDATE facility SET code=#{code},name=#{name},description=#{description},gln=#{gln},main_phone=#{mainPhone},fax=#{fax},address1=#{address1}," +
@@ -222,5 +222,5 @@ public interface FacilityMapper {
     void updateDataReportableAndActiveFor(Facility facility);
 
     @Select("SELECT id FROM facility WHERE LOWER(code) = LOWER(#{code})")
-    Integer getIdForCode(String code);
+    Long getIdForCode(String code);
 }

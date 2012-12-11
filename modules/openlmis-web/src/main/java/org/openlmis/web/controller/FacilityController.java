@@ -46,7 +46,7 @@ public class FacilityController extends BaseController {
     }
 
     @RequestMapping(value = "logistics/facility/{facilityId}/requisition-header", method = RequestMethod.GET, headers = "Accept=application/json")
-    public RequisitionHeader getRequisitionHeader(@PathVariable(value = "facilityId") int facilityId) {
+    public RequisitionHeader getRequisitionHeader(@PathVariable(value = "facilityId") Long facilityId) {
         return facilityService.getRequisitionHeader(facilityId);
     }
 
@@ -79,7 +79,7 @@ public class FacilityController extends BaseController {
     }
 
     @RequestMapping(value = "admin/facility/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-    public ResponseEntity<ModelMap> getFacility(@PathVariable(value = "id") int id) {
+    public ResponseEntity<ModelMap> getFacility(@PathVariable(value = "id") Long id) {
         ModelMap modelMap = new ModelMap();
         modelMap.put("facility", facilityService.getFacility(id));
         return new ResponseEntity<>(modelMap, HttpStatus.OK);

@@ -16,6 +16,8 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
 import static org.openlmis.core.domain.Right.*;
@@ -60,15 +62,16 @@ public class RoleRightsMapperIT {
         insertRoleAssignments(program1, user, r2);
         insertRoleAssignments(program2, user, r2);
 
-        List<RoleAssignment> roleAssignments = roleRightsMapper.getProgramWithGivenRightForAUser(CREATE_REQUISITION, user.getUserName());
+        List<RoleAssignment> roleAssignments =
+            roleRightsMapper.getRoleAssignmentsWithGivenRightForAUser(CREATE_REQUISITION, user.getUserName());
 
         assertEquals(1, roleAssignments.size());
-        assertEquals(program1.getCode(), roleAssignments.get(0).getProgramId());
-        assertEquals(r1.getId(), roleAssignments.get(0).getRoleId());
+        assertEquals(program1.getId(), roleAssignments.get(0).getProgramId());
+        assertThat(roleAssignments.get(0).getRoleId(), is(r1.getId()));
     }
 
     private Program insertProgram(Program program) {
-        programMapper.insert(program);
+        program.setId(programMapper.insert(program));
         return program;
     }
 
@@ -79,7 +82,7 @@ public class RoleRightsMapperIT {
 
     private User insertUser() {
         User user = new User("random123123", "pwd");
-        userMapper.insert(user);
+        user.setId(userMapper.insert(user));
         return user;
     }
 }

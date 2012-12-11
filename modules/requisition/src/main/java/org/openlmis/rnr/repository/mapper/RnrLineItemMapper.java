@@ -12,7 +12,7 @@ public interface RnrLineItemMapper {
     @Select("insert into requisition_line_item(rnr_id, product_code, product, modified_by, modified_date) " +
             "values (#{rnrId}, #{productCode}, #{product}, #{modifiedBy}, #{modifiedDate}) returning id")
     @Options(useGeneratedKeys=true)
-    public int insert(RnrLineItem rnrLineItem);
+    public Long insert(RnrLineItem rnrLineItem);
 
     @Delete("delete from requisition_line_item")
     public void deleteAll();
@@ -45,7 +45,7 @@ public interface RnrLineItemMapper {
             @Result(property = "modifiedBy", column = "modified_by"),
             @Result(property = "modifiedDate", column = "modified_date")
     })
-    public List<RnrLineItem> getRnrLineItemsByRnrId(int rnrId);
+    public List<RnrLineItem> getRnrLineItemsByRnrId(Long rnrId);
 
     
     @Update("update requisition_line_item " +

@@ -28,6 +28,7 @@ import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
+import static org.openlmis.core.builder.ProgramBuilder.programId;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -220,23 +221,23 @@ public class FacilityRepositoryTest {
   @Test
   public void shouldGetFacilityById() throws Exception {
     Facility facility = new Facility();
-    when(mockedFacilityMapper.get(1)).thenReturn(facility);
-    int id = 1;
+    when(mockedFacilityMapper.get(1L)).thenReturn(facility);
+    Long id = 1L;
     facility.setId(id);
     List<Program> programs = new ArrayList<>();
-    when(programMapper.getByFacilityId(1)).thenReturn(programs);
-    Facility facility1 = repository.getFacility(1);
+    when(programMapper.getByFacilityId(1L)).thenReturn(programs);
+    Facility facility1 = repository.getFacility(1L);
 
     assertThat(facility1.getSupportedPrograms(), is(programs));
-    verify(mockedFacilityMapper).get(1);
-    verify(programMapper).getByFacilityId(1);
+    verify(mockedFacilityMapper).get(1L);
+    verify(programMapper).getByFacilityId(1L);
 
   }
 
   @Test
   public void shouldUpdateFacilityIfIDIsSet() throws Exception {
     Facility facility = make(a(defaultFacility));
-    facility.setId(1);
+    facility.setId(1L);
 
     repository.save(facility);
     verify(mockedFacilityMapper).update(facility);
@@ -252,29 +253,29 @@ public class FacilityRepositoryTest {
   }
 
   @Test
-  public void shouldUpdateSupportedProgramsForFacilityIfIDIsDefined() throws Exception {
+  public void shouldUpdateSupportedProgramsForFacilityIfIdIsDefined() throws Exception {
     Facility facility = make(a(defaultFacility));
-    facility.setId(1);
+    facility.setId(1L);
+
     List<Program> programs = new ArrayList<Program>() {{
       add(make(a(ProgramBuilder.defaultProgram)));
-      add(make(a(ProgramBuilder.defaultProgram, with(programCode, "HIV"))));
+      add(make(a(ProgramBuilder.defaultProgram, with(programCode, "HIV"),with(programId, 1L))));
     }};
 
     facility.setSupportedPrograms(programs);
 
     List<Program> programsForFacility = new ArrayList<Program>() {{
       add(make(a(ProgramBuilder.defaultProgram)));
-      add(make(a(ProgramBuilder.defaultProgram, with(programCode, "ARV"))));
+      add(make(a(ProgramBuilder.defaultProgram, with(programCode, "ARV"), with(programId, 2L))));
     }};
 
     when(programMapper.getByFacilityId(facility.getId())).thenReturn(programsForFacility);
 
-
     repository.save(facility);
 
     verify(programMapper).getByFacilityId(facility.getId());
-    verify(programSupportedMapper).addSupportedProgram(new ProgramSupported(facility.getCode(), "HIV", true, facility.getModifiedBy(), facility.getModifiedDate()));
-    verify(programSupportedMapper).deleteObsoletePrograms(facility.getId(), "ARV");
+    verify(programSupportedMapper).addSupportedProgram(new ProgramSupported(facility.getId(), 1L, true, facility.getModifiedBy(), facility.getModifiedDate()));
+    verify(programSupportedMapper).deleteObsoletePrograms(facility.getId(), 2L);
   }
 
     @Test

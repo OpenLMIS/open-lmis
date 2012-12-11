@@ -13,22 +13,32 @@ import java.util.Date;
 @NoArgsConstructor
 public class ProgramSupported implements Importable {
 
-    @ImportField(mandatory = true, name = "FacilityCode")
-    private String facilityCode;
+  private Long facilityId;
+  private Long programId;
 
-    @ImportField(mandatory = true, name = "ProgramCode")
-    private String programCode;
+  @ImportField(mandatory = true, name = "FacilityCode")
+  private String facilityCode;
 
-    @ImportField(mandatory = true, name = "ProgramIsActive", type = "boolean")
-    private Boolean active;
+  @ImportField(mandatory = true, name = "ProgramCode")
+  private String programCode;
 
-    private String modifiedBy;
-    private Date modifiedDate;
+  @ImportField(mandatory = true, name = "ProgramIsActive", type = "boolean")
+  private Boolean active;
 
-    public ProgramSupported(String facilityCode, String programCode, boolean active) {
-        this.facilityCode = facilityCode;
-        this.programCode = programCode;
-        this.active = active;
-    }
+  private String modifiedBy;
+  private Date modifiedDate;
 
+  public ProgramSupported(String facilityCode, String programCode, boolean active) {
+    this.facilityCode = facilityCode;
+    this.programCode = programCode;
+    this.active = active;
+  }
+
+  public ProgramSupported(Long facilityId, Long programId, Boolean active, String modifiedBy, Date modifiedDate) {
+    this.facilityId = facilityId;
+    this.programId = programId;
+    this.active = active;
+    this.modifiedBy = modifiedBy;
+    this.modifiedDate = modifiedDate;
+  }
 }

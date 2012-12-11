@@ -10,7 +10,7 @@ public interface RnrMapper {
     @Select("insert into requisition(facility_id, program_code, status, modified_by) " +
             "values (#{facilityId}, #{programCode}, #{status}, #{modifiedBy}) returning id")
     @Options(useGeneratedKeys=true)
-    public int insert(Rnr requisition);
+    public Long insert(Rnr requisition);
 
     @Delete("delete from requisition")
     public void deleteAll();
@@ -27,7 +27,7 @@ public interface RnrMapper {
             @Result(property = "modifiedBy", column = "modified_by"),
             @Result(property = "modifiedDate", column = "modified_date")
     })
-    public Rnr getRequisitionById(int rnrId);
+    public Rnr getRequisitionById(Long rnrId);
 
     @Select("Select * from requisition where facility_id = #{facilityId} and program_code= #{programCode}")
     @Results(value = {
@@ -38,6 +38,6 @@ public interface RnrMapper {
             @Result(property = "modifiedBy", column = "modified_by"),
             @Result(property = "modifiedDate", column = "modified_date")
     })
-    public Rnr getRequisitionByFacilityAndProgram(@Param("facilityId") int facilityId,
+    public Rnr getRequisitionByFacilityAndProgram(@Param("facilityId") Long facilityId,
                                                   @Param("programCode")String programCode);
 }

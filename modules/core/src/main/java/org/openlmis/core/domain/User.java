@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class User {
 
-    private int id;
+    private Long id;
     private String userName;
     private String password;
     private String role;
-    private Integer facilityId;
+    private Long facilityId;
 
     public User(String userName, String password) {
         this.userName = userName;

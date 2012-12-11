@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Program {
 
+    private Long id;
     private String code;
     private String name;
     private String description;

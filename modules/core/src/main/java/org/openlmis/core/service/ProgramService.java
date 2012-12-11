@@ -24,7 +24,7 @@ public class ProgramService {
         return programRepository.getAllActive();
     }
 
-    public List<Program> getByFacility(int facilityId) {
+    public List<Program> getByFacility(Long facilityId) {
         return programRepository.getByFacility(facilityId);
     }
 
@@ -32,7 +32,7 @@ public class ProgramService {
         return programRepository.getAll();
     }
 
-    public List<Program> filterActiveProgramsAndFacility(List<RoleAssignment> roleAssignments, int facilityId) {
+    public List<Program> filterActiveProgramsAndFacility(List<RoleAssignment> roleAssignments, Long facilityId) {
         return programRepository.filterActiveProgramsAndFacility(roleAssignments, facilityId);
     }
 }

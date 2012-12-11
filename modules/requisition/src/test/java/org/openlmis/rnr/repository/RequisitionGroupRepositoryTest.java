@@ -16,12 +16,9 @@ import org.springframework.dao.DuplicateKeyException;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -54,10 +51,10 @@ public class RequisitionGroupRepositoryTest {
 
     @Test
     public void shouldSaveRequisitionGroup() {
-        when(facilityMapper.getIdForCode(headFacilityCode)).thenReturn(new Integer(1));
+        when(facilityMapper.getIdForCode(headFacilityCode)).thenReturn(1L);
         requisitionGroupRepository.insert(requisitionGroup);
         assertThat(requisitionGroup.getHeadFacility(),is(notNullValue()));
-        assertThat(requisitionGroup.getHeadFacility().getId(), is(1));
+        assertThat(requisitionGroup.getHeadFacility().getId(), is(1L));
         assertThat(requisitionGroup.getHeadFacility().getCode(),is(headFacilityCode));
 
         verify(requisitionGroupMapper).insert(requisitionGroup);
@@ -65,8 +62,8 @@ public class RequisitionGroupRepositoryTest {
 
     @Test
     public void shouldInsertHeadFacilityIntoRequisitionGroupMemberIfDoesNotAlreadyExist() throws Exception {
-        int headFacilityId = 1;
-        int requisitionGroupId = 5;
+        Long headFacilityId = 1L;
+        Long requisitionGroupId = 5L;
         when(facilityMapper.getIdForCode(headFacilityCode)).thenReturn(headFacilityId);
         when(requisitionGroupMapper.insert(requisitionGroup)).thenReturn(requisitionGroupId);
 
@@ -85,7 +82,7 @@ public class RequisitionGroupRepositoryTest {
     public void shouldGiveDuplicateCodeError() throws Exception {
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("Duplicate Requisition Group Code found");
-        when(facilityMapper.getIdForCode(headFacilityCode)).thenReturn(new Integer(1));
+        when(facilityMapper.getIdForCode(headFacilityCode)).thenReturn(1L);
         doThrow(new DuplicateKeyException("")).when(requisitionGroupMapper).insert(requisitionGroup);
 
         requisitionGroupRepository.insert(requisitionGroup);
@@ -109,7 +106,7 @@ public class RequisitionGroupRepositoryTest {
     @Test
     public void shouldGiveParentRequisitionGroupNotFoundErrorWhenParentGroupDoesNotExist() throws Exception {
         doThrow(new DataIntegrityViolationException("")).when(requisitionGroupMapper).insert(requisitionGroup);
-        when(facilityMapper.getIdForCode(headFacilityCode)).thenReturn(new Integer(1));
+        when(facilityMapper.getIdForCode(headFacilityCode)).thenReturn(1L);
 
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("Parent RG code not found");

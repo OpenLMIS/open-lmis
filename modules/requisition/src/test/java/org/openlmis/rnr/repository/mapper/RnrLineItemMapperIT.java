@@ -44,7 +44,7 @@ public class RnrLineItemMapperIT {
     private ProgramSupportedMapper programSupportedMapper;
 
     Product product;
-    int facilityId;
+    Long facilityId;
 
     @Before
     public void setUp() {
@@ -60,15 +60,15 @@ public class RnrLineItemMapperIT {
 
     @Test
     public void shouldInsertRequisitionLineItem() {
-        int rnrId = rnrMapper.insert(new Rnr(facilityId, "HIV", RnrStatus.INITIATED, "user"));
-        int requisitionLineItemId = rnrLineItemMapper.insert(new RnrLineItem(rnrId, product, "user"));
-        int requisitionLineItemId1 = rnrLineItemMapper.insert(new RnrLineItem(rnrId, product, "user"));
-        assertThat(requisitionLineItemId1 - requisitionLineItemId, is(1));
+        Long rnrId = rnrMapper.insert(new Rnr(facilityId, "HIV", RnrStatus.INITIATED, "user"));
+        Long requisitionLineItemId = rnrLineItemMapper.insert(new RnrLineItem(rnrId, product, "user"));
+        Long requisitionLineItemId1 = rnrLineItemMapper.insert(new RnrLineItem(rnrId, product, "user"));
+        assertThat(requisitionLineItemId1 - requisitionLineItemId, is(1L));
     }
 
     @Test
     public void shouldReturnRnrLineItemsByRnrId() {
-        int rnrId = rnrMapper.insert(new Rnr(facilityId, "HIV", RnrStatus.INITIATED, "user"));
+        Long rnrId = rnrMapper.insert(new Rnr(facilityId, "HIV", RnrStatus.INITIATED, "user"));
         RnrLineItem lineItem = new RnrLineItem(rnrId, product, "user");
         rnrLineItemMapper.insert(lineItem);
 
@@ -81,9 +81,9 @@ public class RnrLineItemMapperIT {
 
     @Test
     public void shouldUpdateRnrLineItem() {
-        int rnrId = rnrMapper.insert(new Rnr(facilityId, "HIV", RnrStatus.INITIATED, "user"));
+        Long rnrId = rnrMapper.insert(new Rnr(facilityId, "HIV", RnrStatus.INITIATED, "user"));
         RnrLineItem lineItem = new RnrLineItem(rnrId, product, "user");
-        int generatedId = rnrLineItemMapper.insert(lineItem);
+        Long generatedId = rnrLineItemMapper.insert(lineItem);
         lineItem.setId(generatedId);
         lineItem.setModifiedBy("user1");
         lineItem.setBeginningBalance(43);

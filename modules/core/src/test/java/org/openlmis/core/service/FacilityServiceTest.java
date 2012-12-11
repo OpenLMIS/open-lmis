@@ -44,9 +44,9 @@ public class FacilityServiceTest {
 
     @Test
     public void shouldGetFacilityById() throws Exception {
-        int ID = 1;
-        when(facilityRepository.getFacility(ID)).thenReturn(new Facility());
-        Facility facility = facilityService.getFacility(ID);
+        Long id = 1L;
+        when(facilityRepository.getFacility(id)).thenReturn(new Facility());
+        Facility facility = facilityService.getFacility(id);
         assertThat(facility, is(new Facility()));
     }
 

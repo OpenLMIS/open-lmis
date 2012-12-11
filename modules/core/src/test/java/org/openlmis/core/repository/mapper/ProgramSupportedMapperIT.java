@@ -18,9 +18,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
-import static org.openlmis.core.builder.FacilityBuilder.FACILITY_CODE;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramBuilder.*;
+import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -29,101 +29,105 @@ import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 @Transactional
 public class ProgramSupportedMapperIT {
 
-    public static final String YELLOW_FEVER = "YELL_FVR";
-    private int facilityId;
+  public static final String YELLOW_FEVER = "YELL_FVR";
+  private Long facilityId;
 
-    @Autowired
-    ProgramMapper programMapper;
+  @Autowired
+  ProgramMapper programMapper;
 
-    @Autowired
-    FacilityMapper facilityMapper;
+  @Autowired
+  FacilityMapper facilityMapper;
 
-    @Autowired
-    ProgramSupportedMapper programSupportedMapper;
+  @Autowired
+  ProgramSupportedMapper programSupportedMapper;
 
-    @Autowired
-    private RoleRightsMapper roleRightsMapper;
+  @Autowired
+  private RoleRightsMapper roleRightsMapper;
 
-    @Autowired
-    private UserMapper userMapper;
+  @Autowired
+  private UserMapper userMapper;
 
+  @Test
+  public void shouldSaveProgramSupported() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    facility.setId(facilityMapper.insert(facility));
+    Program program = make(a(defaultProgram, with(programCode, YELLOW_FEVER)));
+    program.setId(programMapper.insert(program));
+    ProgramSupported programSupported = make(a(defaultProgramSupported,
+        with(supportedFacilityCode, facility.getCode()),
+        with(supportedProgramCode, program.getCode())));
+    programSupportedMapper.addSupportedProgram(programSupported);
 
-    @Test
-    public void shouldSaveProgramSupported() throws Exception {
-        facilityId = facilityMapper.insert(make(a(defaultFacility)));
-        programMapper.insert(make(a(defaultProgram, with(programCode, YELLOW_FEVER))));
-        ProgramSupported programSupported = new ProgramSupported(FACILITY_CODE, YELLOW_FEVER, true, "user", now().toDate());
+    List<ProgramSupported> programsSupported = programSupportedMapper.getBy(facility.getId(), program.getId());
+    ProgramSupported result = programsSupported.get(0);
+    assertThat(result.getFacilityId(), is(facility.getId()));
+    assertThat(result.getProgramId(), is(program.getId()));
+  }
 
-        programSupportedMapper.addSupportedProgram(programSupported);
+  @Test
+  public void shouldDeleteProgramMapping() throws Exception {
+    facilityId = facilityMapper.insert(make(a(defaultFacility)));
+    Long programId = programMapper.insert(make(a(defaultProgram, with(programCode, YELLOW_FEVER))));
+    ProgramSupported programSupported = new ProgramSupported(facilityId, programId, true, "user", now().toDate());
+    programSupportedMapper.addSupportedProgram(programSupported);
 
-        List<ProgramSupported> programsSupported = programSupportedMapper.getBy(facilityId, YELLOW_FEVER);
-        assertThat(programSupported, is(programsSupported.get(0)));
-    }
+    programSupportedMapper.deleteObsoletePrograms(facilityId, programId);
 
-    @Test
-    public void shouldDeleteProgramMapping() throws Exception {
-        facilityId = facilityMapper.insert(make(a(defaultFacility)));
-        programMapper.insert(make(a(defaultProgram, with(programCode, YELLOW_FEVER))));
-        ProgramSupported programSupported = new ProgramSupported(FACILITY_CODE, YELLOW_FEVER, true, "user", now().toDate());
-        programSupportedMapper.addSupportedProgram(programSupported);
+    List<ProgramSupported> programsSupported = programSupportedMapper.getBy(facilityId, programId);
+    assertFalse(programsSupported.contains(programSupported));
+  }
 
-        programSupportedMapper.deleteObsoletePrograms(facilityId, YELLOW_FEVER);
+  @Test
+  public void shouldFetchActiveProgramsForGivenProgramIdsForAUserAndAFacility() {
+    User user = insertUser();
 
-        List<ProgramSupported> programsSupported = programSupportedMapper.getBy(facilityId, YELLOW_FEVER);
-        assertFalse(programsSupported.contains(programSupported));
-    }
+    Program activeProgram = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
+    Program inactiveProgram = insertProgram(make(a(defaultProgram, with(programCode, "p3"), with(programStatus, false))));
 
-    @Test
-    public void shouldFetchActiveProgramsForGivenProgramIdsForAUserAndAFacility() {
-        User user = insertUser();
+    Role r1 = new Role("r1", "random description");
+    roleRightsMapper.insertRole(r1);
 
-        Program activeProgram = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
-        Program inactiveProgram = insertProgram(make(a(defaultProgram, with(programCode, "p3"), with(programStatus, false))));
+    roleRightsMapper.createRoleRight(r1.getId(), CREATE_REQUISITION);
+    insertRoleAssignments(activeProgram, user, r1);
+    insertRoleAssignments(inactiveProgram, user, r1);
 
-        Role r1 = new Role("r1", "random description");
-        roleRightsMapper.insertRole(r1);
+    Facility facility = insertFacility(make(a(defaultFacility)));
 
-        roleRightsMapper.createRoleRight(r1.getId(), CREATE_REQUISITION);
-        insertRoleAssignments(activeProgram, user, r1);
-        insertRoleAssignments(inactiveProgram, user, r1);
+    insertProgramSupportedForFacility(activeProgram, facility, true);
+    insertProgramSupportedForFacility(inactiveProgram, facility, true);
 
-        Facility facility = insertFacility(make(a(defaultFacility)));
+    ArrayList<Long> programCodes = new ArrayList<>();
+    programCodes.add(activeProgram.getId());
+    programCodes.add(inactiveProgram.getId());
 
-        insertProgramSupportedForFacility(activeProgram, facility, true);
-        insertProgramSupportedForFacility(inactiveProgram, facility, true);
+    String programCodesCommaSeparated = programCodes.toString().replace("[", "{").replace("]", "}");
+    List<Program> programs = programSupportedMapper.filterActiveProgramsAndFacility(programCodesCommaSeparated, facility.getId());
+    assertEquals(1, programs.size());
+    assertEquals(activeProgram.getCode(), programs.get(0).getCode());
+  }
 
-        ArrayList<String> programCodes = new ArrayList<>();
-        programCodes.add(activeProgram.getCode());
-        programCodes.add(inactiveProgram.getCode());
+  private void insertProgramSupportedForFacility(Program program, Facility facility, boolean isActive) {
+    programSupportedMapper.addSupportedProgram(new ProgramSupported(facility.getCode(), program.getCode(), isActive));
+  }
 
-        String programCodesCommaSeparated = programCodes.toString().replace("[", "{").replace("]", "}");
-        List<Program> programs = programSupportedMapper.filterActiveProgramsAndFacility(programCodesCommaSeparated, facility.getId());
-        assertEquals(1, programs.size());
-        assertEquals(activeProgram.getCode(), programs.get(0).getCode());
-    }
+  private Program insertProgram(Program program) {
+    program.setId(programMapper.insert(program));
+    return program;
+  }
 
-    private void insertProgramSupportedForFacility(Program program, Facility facility, boolean isActive) {
-        programSupportedMapper.addSupportedProgram(new ProgramSupported(facility.getCode(), program.getCode(), isActive));
-    }
+  private Facility insertFacility(Facility facility) {
+    facility.setId(facilityMapper.insert(facility));
+    return facility;
+  }
 
-    private Program insertProgram(Program program) {
-        programMapper.insert(program);
-        return program;
-    }
+  private Role insertRoleAssignments(Program program, User user, Role role) {
+    roleRightsMapper.createRoleAssignment(user, role, program);
+    return role;
+  }
 
-    private Facility insertFacility(Facility facility) {
-        facility.setId(facilityMapper.insert(facility));
-        return facility;
-    }
-
-    private Role insertRoleAssignments(Program program, User user, Role role) {
-        roleRightsMapper.createRoleAssignment(user, role, program);
-        return role;
-    }
-
-    private User insertUser() {
-        User user = new User("random123123", "pwd");
-        userMapper.insert(user);
-        return user;
-    }
+  private User insertUser() {
+    User user = new User("random123123", "pwd");
+    userMapper.insert(user);
+    return user;
+  }
 }

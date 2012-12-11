@@ -14,11 +14,11 @@ public interface UserMapper {
     })
     User selectUserByUserNameAndPassword(@Param("userName") String userName, @Param("password") String password);
 
-    @Insert(value = "INSERT INTO users " +
+    @Select(value = "INSERT INTO users " +
             "(user_name, password, facility_id) VALUES " +
-            "(#{userName}, #{password}, #{facilityId})")
+            "(#{userName}, #{password}, #{facilityId}) returning id")
     @Options(useGeneratedKeys = true)
-    int insert(User user);
+    Long insert(User user);
 
     @Delete(value = "DELETE FROM users")
     void deleteAll();

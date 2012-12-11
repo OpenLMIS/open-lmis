@@ -63,10 +63,10 @@ public class ProgramControllerTest {
         when(session.getAttribute("USER")).thenReturn("dummyUser");
         request.setSession(session);
 
-        RoleAssignment roleAssignment = new RoleAssignment(1, 2, program.getCode());
+        RoleAssignment roleAssignment = new RoleAssignment(1L, 2L, program.getId());
         List<RoleAssignment> roleAssignments = new ArrayList<>(Arrays.asList(roleAssignment));
         when(roleRightsService.getProgramWithGivenRightForAUser(Right.CREATE_REQUISITION, "dummyUser")).thenReturn(roleAssignments);
-        int facilityId = 12345;
+        Long facilityId = 12345L;
         when(programService.filterActiveProgramsAndFacility(roleAssignments, facilityId)).thenReturn(programs);
 
         assertEquals(programs, controller.getUserSupportedProgramsToCreateRequisition(facilityId, request));

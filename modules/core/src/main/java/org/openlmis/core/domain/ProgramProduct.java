@@ -9,8 +9,6 @@ import java.util.Date;
 @NoArgsConstructor
 public class ProgramProduct {
 
-    private String id;
-
     private String programCode;
 
     private String productCode;

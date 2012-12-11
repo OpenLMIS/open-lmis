@@ -10,8 +10,8 @@ import java.util.Date;
 @NoArgsConstructor
 public class RnrLineItem {
 
-    private Integer id;
-    private Integer rnrId;
+    private Long id;
+    private Long rnrId;
     //todo hack to display it on UI. This is concatenated string of Product properties like name, strength, form and dosage unit
     private String product;
     private String productCode;
@@ -45,7 +45,7 @@ public class RnrLineItem {
     private String modifiedBy;
     private Date modifiedDate;
 
-    public RnrLineItem(Integer rnrId, Product product, String modifiedBy) {
+    public RnrLineItem(Long rnrId, Product product, String modifiedBy) {
         this.rnrId = rnrId;
 
         this.productCode = product.getCode();

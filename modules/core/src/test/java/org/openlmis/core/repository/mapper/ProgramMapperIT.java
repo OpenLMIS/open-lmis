@@ -1,6 +1,5 @@
 package org.openlmis.core.repository.mapper;
 
-import org.joda.time.DateTime;
 import org.junit.Test;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
@@ -15,66 +14,77 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
+import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
+import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
 
 @ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
 @Transactional
 @TransactionConfiguration(defaultRollback = true)
 public class ProgramMapperIT extends SpringIntegrationTest {
 
-    public static final String PROGRAM_CODE = "HIV";
+  public static final String PROGRAM_CODE = "HIV";
+  public static final Long PROGRAM_ID = 1L;
 
-    @Autowired
-    ProgramSupportedMapper programSupportedMapper;
+  @Autowired
+  ProgramSupportedMapper programSupportedMapper;
 
-    @Autowired
-    FacilityMapper facilityMapper;
+  @Autowired
+  FacilityMapper facilityMapper;
 
-    @Autowired
-    ProgramMapper programMapper;
+  @Autowired
+  ProgramMapper programMapper;
 
-    @Test
-    public void shouldGetAllActiveProgram() {
-        List<Program> programs = programMapper.getAllActive();
-        assertEquals(6, programs.size());
-        assertThat(programs, hasItem(new Program(PROGRAM_CODE, PROGRAM_CODE, PROGRAM_CODE, true)));
-    }
+  @Test
+  public void shouldGetAllActiveProgram() {
+    List<Program> programs = programMapper.getAllActive();
+    assertEquals(6, programs.size());
+    assertThat(programs, hasItem(new Program(PROGRAM_ID, PROGRAM_CODE, PROGRAM_CODE, PROGRAM_CODE, true)));
+  }
 
-    @Test
-    public void shouldGetProgramsWhichAreActiveByFacilityCode() {
-        Facility facility = make(a(FacilityBuilder.defaultFacility));
-        int facilityId = facilityMapper.insert(facility);
-        programSupportedMapper.addSupportedProgram(new ProgramSupported(facility.getCode(), PROGRAM_CODE, true, "test", DateTime.now().toDate()));
+  @Test
+  public void shouldGetProgramsWhichAreActiveByFacilityCode() {
+    Facility facility = make(a(FacilityBuilder.defaultFacility));
+    Long facilityId = facilityMapper.insert(facility);
+    Program program = make(a(defaultProgram));
+    Long programId = programMapper.insert(program);
+    ProgramSupported programSupported = make(a(defaultProgramSupported, with(supportedFacilityId, facilityId), with(supportedProgramId, programId)));
+    programSupportedMapper.addSupportedProgram(programSupported);
 
-        List<Program> programs = programMapper.getActiveByFacility(facilityId);
+    List<Program> programs = programMapper.getActiveByFacility(facilityId);
 
-        assertThat(programs.size(), is(1));
-        assertThat(programs.get(0).getCode(), is(PROGRAM_CODE));
-    }
+    assertThat(programs.size(), is(1));
+    assertThat(programs.get(0).getCode(), is(ProgramBuilder.PROGRAM_CODE));
+  }
 
-    @Test
-    public void shouldGetAllPrograms() throws Exception {
-        Program program = make(a(ProgramBuilder.defaultProgram));
-        program.setActive(false);
-        programMapper.insert(program);
-        List<Program> programs = programMapper.getAll();
-        assertEquals(8, programs.size());
-        assertTrue(programs.contains(program));
-    }
+  @Test
+  public void shouldGetAllPrograms() throws Exception {
+    Program program = make(a(defaultProgram));
+    program.setActive(false);
+    program.setId(programMapper.insert(program));
+    List<Program> programs = programMapper.getAll();
+    assertEquals(8, programs.size());
 
-    @Test
-    public void shouldGetProgramsSupportedByFacility() throws Exception {
-        Facility facility = make(a(defaultFacility));
-        int facilityId = facilityMapper.insert(facility);
-        programSupportedMapper.addSupportedProgram(new ProgramSupported(facility.getCode(),PROGRAM_CODE,true,facility.getModifiedBy(),facility.getModifiedDate()));
-        List<Program> supportedPrograms = programMapper.getByFacilityId(facilityId);
-        assertThat(supportedPrograms.get(0).getCode(), is(PROGRAM_CODE));
-    }
+    assertTrue("inserted program not found",programs.contains(program));
+  }
+
+  @Test
+  public void shouldGetProgramsSupportedByFacility() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    Long facilityId = facilityMapper.insert(facility);
+    Program program = make(a(defaultProgram));
+    Long programId = programMapper.insert(program);
+    ProgramSupported programSupported =
+        make(a(defaultProgramSupported, with(supportedFacilityId, facilityId), with(supportedProgramId, programId)));
+
+    programSupportedMapper.addSupportedProgram(programSupported);
+    List<Program> supportedPrograms = programMapper.getByFacilityId(facilityId);
+    assertThat(supportedPrograms.get(0).getCode(), is(ProgramBuilder.PROGRAM_CODE));
+  }
 }

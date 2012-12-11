@@ -6,9 +6,9 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class Role {
-    int id;
-    String name;
-    String description;
+    private Long id;
+    private String name;
+    private String description;
 
     public Role(String name, String description){
         this.name = name;

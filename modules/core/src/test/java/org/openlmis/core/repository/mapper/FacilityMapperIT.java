@@ -63,7 +63,7 @@ public class FacilityMapperIT {
         with(typeId, 2L),
         with(type, "lvl3_hospital")));
 
-    int facilityId = facilityMapper.insert(facility);
+    Long facilityId = facilityMapper.insert(facility);
 
     RequisitionHeader requisitionHeader = facilityMapper.getRequisitionHeaderData(facilityId);
 

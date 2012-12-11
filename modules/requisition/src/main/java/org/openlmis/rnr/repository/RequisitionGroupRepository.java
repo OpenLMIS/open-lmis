@@ -1,7 +1,6 @@
 package org.openlmis.rnr.repository;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.Facility;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.rnr.domain.RequisitionGroup;
 import org.openlmis.rnr.domain.RequisitionGroupMember;
@@ -28,7 +27,7 @@ public class RequisitionGroupRepository {
     }
 
     public void insert(RequisitionGroup requisitionGroup) {
-        Integer headFacilityId;
+        Long headFacilityId;
 
         try {
             headFacilityId = facilityMapper.getIdForCode(requisitionGroup.getHeadFacility().getCode());

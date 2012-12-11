@@ -27,7 +27,7 @@ public class RnrService {
     }
 
     @Transactional
-    public Rnr initRnr(int facilityId, String programCode, String modifiedBy) {
+    public Rnr initRnr(Long facilityId, String programCode, String modifiedBy) {
         Rnr requisition = rnrRepository.getRequisitionByFacilityAndProgram(facilityId, programCode);
         if(requisition.getId()==null){
             requisition = new Rnr(facilityId, programCode, RnrStatus.INITIATED, modifiedBy);

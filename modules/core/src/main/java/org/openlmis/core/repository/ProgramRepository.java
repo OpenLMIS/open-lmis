@@ -28,7 +28,7 @@ public class ProgramRepository {
         return programMapper.getAllActive();
     }
 
-    public List<Program> getByFacility(int facilityId) {
+    public List<Program> getByFacility(Long facilityId) {
         return programMapper.getActiveByFacility(facilityId);
     }
 
@@ -36,13 +36,13 @@ public class ProgramRepository {
         return programMapper.getAll();
     }
 
-    public List<Program> filterActiveProgramsAndFacility(List<RoleAssignment> roleAssignments, int facilityId) {
+    public List<Program> filterActiveProgramsAndFacility(List<RoleAssignment> roleAssignments, Long facilityId) {
         String programIds = getCommaSeparatedProgramsForDB(roleAssignments);
         return programSupportedMapper.filterActiveProgramsAndFacility(programIds, facilityId);
     }
 
     private String getCommaSeparatedProgramsForDB(List<RoleAssignment> roleAssignments) {
-        List<String> programIds = new ArrayList<>();
+        List<Long> programIds = new ArrayList<>();
         for (RoleAssignment roleAssignment : roleAssignments) {
             programIds.add(roleAssignment.getProgramId());
         }
