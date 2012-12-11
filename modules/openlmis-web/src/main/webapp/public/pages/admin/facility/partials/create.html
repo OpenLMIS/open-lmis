@@ -393,8 +393,8 @@
 </div>
 
 
-<a href="" class="btn" ng-show="facility.dataReportable" ng-click="deleteConfirmModal=true">Delete</a><br>
-<a href="" class="btn" ng-show="facility.dataReportable == 'false'" ng-click="restoreConfirmModal=true">Restore</a><br>
+<a href="" class="btn" ng-show="facility.id!=null && facility.dataReportable" ng-click="deleteConfirmModal=true">Delete</a><br>
+<a href="" class="btn" ng-show="facility.id!=null && facility.dataReportable == 'false'" ng-click="restoreConfirmModal=true">Restore</a><br>
 </div>
 
 </form>

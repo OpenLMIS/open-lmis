@@ -109,7 +109,7 @@ public class FacilityController extends BaseController {
             return new ResponseEntity<ModelMap>(modelMap, HttpStatus.BAD_REQUEST);
         }
         modelMap.put("facility", facility);
-        modelMap.put("success", facility.getName() + " " + message + " successfully");
+        modelMap.put("success", facility.getName() + " / " + facility.getCode() +" "+ message + " successfully");
         return new ResponseEntity<ModelMap>(modelMap, HttpStatus.OK);
     }
 
