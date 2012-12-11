@@ -52,7 +52,6 @@ SaveRnrTemplateController.resolve = {
         $timeout(function () {
             RnRColumnList.get({programCode: code}, function (data) {   //success
                 deferred.resolve(data.rnrTemplateForm);
-                deferred.resolve(data.rnrTemplateForm);
             }, function () {
                 $location.path('select-program');
             });
