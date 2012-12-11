@@ -41,7 +41,6 @@ public class TemplateConfigPage extends Page {
 
     private String TEMPLATE_SUCCESS_MESSAGE = "Template saved successfully!";
 
-    private String BASE_URL;
 
 
     public TemplateConfigPage(TestWebDriver driver) {
@@ -73,7 +72,7 @@ public class TemplateConfigPage extends Page {
     testWebDriver.waitForElementToAppear(SaveButton);
     SaveButton.click();
 
-    testWebDriver.waitForTextToAppear(TEMPLATE_SUCCESS_MESSAGE);
+    testWebDriver.waitForElementToAppear(saveSuccessMsg);
     String successMessage= testWebDriver.getText(saveSuccessMsg);
     SeleneseTestNgHelper.assertEquals(successMessage, TEMPLATE_SUCCESS_MESSAGE);
 

@@ -102,6 +102,8 @@ public class TestWebDriver {
         });
     }
 
+
+
     public void waitForTextToAppear(final String textToWaitFor) {
         (new WebDriverWait(driver, DEFAULT_WAIT_TIME)).until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver d) {

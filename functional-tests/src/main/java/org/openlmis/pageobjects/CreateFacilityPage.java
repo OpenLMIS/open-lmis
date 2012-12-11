@@ -104,8 +104,8 @@ public class CreateFacilityPage extends Page {
     @FindBy(how = How.ID, using = "go-down-date")
     private static WebElement goDownDate;
 
-    @FindBy(how = How.XPATH, using = "//input[@name='data-reportable' and @value='true']")
-    private static WebElement dataReportable;
+//    @FindBy(how = How.XPATH, using = "//input[@name='data-reportable' and @value='true']")
+//    private static WebElement dataReportable;
 
     @FindBy(how = How.ID, using = "comments")
     private static WebElement comments;
@@ -128,19 +128,19 @@ public class CreateFacilityPage extends Page {
     @FindBy(how = How.XPATH, using = "//a[contains(text(),'26')]")
     private static WebElement goDownDateCalender;
 
+    @FindBy(how = How.XPATH, using = "//div[@id='wrap']/div/div/div/h2")
+    private static WebElement addNewFacilityHeader;
 
-    //private String BASE_URL = "http://qa.221.134.198.28.xip.io/";
-    private String BASE_URL, baseUrl;
+    @FindBy(how = How.XPATH, using = "//div[contains(@id,'MsgDiv')]")
+    private static WebElement errorOrSuccessMessage;
+
+
+
 
 
 
     public CreateFacilityPage(TestWebDriver driver) throws  IOException {
         super(driver);
-        Properties props = new Properties();
-        props.load(new FileInputStream(System.getProperty("user.dir")+"/src/main/resources/config.properties"));
-        baseUrl = props.getProperty("baseUrl");
-        BASE_URL=baseUrl;
-        testWebDriver.setBaseURL(BASE_URL);
         PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
         testWebDriver.setImplicitWait(25);
 
@@ -153,11 +153,12 @@ public class CreateFacilityPage extends Page {
         manageFacilityMenuItem.click();
         testWebDriver.waitForElementToAppear(createFacility);
         createFacility.click();
-        testWebDriver.waitForTextToAppear("Add new facility");
+        testWebDriver.waitForElementToAppear(addNewFacilityHeader);
 
     }
 
     public String enterAndVerifyFacility() {
+        String message=null;
         Date dObj=new Date();
         SimpleDateFormat formatter_date_time = new SimpleDateFormat(
                 "yyyyMMdd-hhmmss");
@@ -166,7 +167,8 @@ public class CreateFacilityPage extends Page {
         String facilityCodeText="FCcode"+date_time;
         String facilityNameText="FCname"+date_time;
 
-        testWebDriver.waitForTextToAppear("Add new facility");
+        testWebDriver.waitForElementToAppear(addNewFacilityHeader);
+        testWebDriver.waitForElementToAppear(facilityCode);
         facilityCode.clear();
         facilityCode.sendKeys(facilityCodeText);
         facilityName.sendKeys(facilityNameText);
@@ -205,7 +207,7 @@ public class CreateFacilityPage extends Page {
         testWebDriver.sleep(500);
         goDownDateCalender.click();
 
-        dataReportable.click();
+//        dataReportable.click();
         comments.sendKeys("Comments");
 
 
@@ -214,9 +216,16 @@ public class CreateFacilityPage extends Page {
 
         SaveButton.click();
 
-        testWebDriver.waitForTextToAppear("created successfully");
-        String successMessage= testWebDriver.getText(saveSuccessMsgDiv);
-        SeleneseTestNgHelper.assertEquals(successMessage,facilityNameText + " created successfully");
+        testWebDriver.waitForElementToAppear(errorOrSuccessMessage);
+        if(saveSuccessMsgDiv.isDisplayed())
+        {
+            message= testWebDriver.getText(saveSuccessMsgDiv);
+        }
+        else
+        {
+            message= testWebDriver.getText(saveErrorMsgDiv);
+        }
+        SeleneseTestNgHelper.assertEquals(message,facilityNameText + " created successfully");
         testWebDriver.sleep(2000);
 
         return date_time;

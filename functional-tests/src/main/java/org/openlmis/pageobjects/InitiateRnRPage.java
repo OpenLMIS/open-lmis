@@ -46,16 +46,9 @@ public class InitiateRnRPage extends Page {
     private static WebElement successMessage;
 
 
-    private String BASE_URL, baseUrl;
 
-
-    public InitiateRnRPage(TestWebDriver driver) throws FileNotFoundException, IOException {
+    public InitiateRnRPage(TestWebDriver driver) throws  IOException {
         super(driver);
-        Properties props = new Properties();
-        props.load(new FileInputStream(System.getProperty("user.dir")+"/src/main/resources/config.properties"));
-        baseUrl = props.getProperty("baseUrl");
-        BASE_URL=baseUrl;
-        testWebDriver.setBaseURL(BASE_URL);
         PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
         testWebDriver.setImplicitWait(25);
     }
@@ -85,8 +78,4 @@ public class InitiateRnRPage extends Page {
         testWebDriver.sleep(1500);
         SeleneseTestNgHelper.assertEquals(successMessageText.trim(),successText);
     }
-
-
-
-
 }
