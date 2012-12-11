@@ -11,7 +11,7 @@ function FacilityController($scope, FacilityReferenceData, $routeParams, $http, 
         if ($routeParams.facilityId) {
             Facility.get({id:$routeParams.facilityId}, function (data) {
                 $scope.facility = data.facility;
-                $scope.populateFlags();
+                populateFlags($scope);
                 //TODO Need a more elegant solution
                 var foo = [];
                 $.each($scope.facility.supportedPrograms, function (index, supportedProgram) {
@@ -31,13 +31,6 @@ function FacilityController($scope, FacilityReferenceData, $routeParams, $http, 
         }
 
     }, {});
-
-    $scope.populateFlags = function () {
-        $(['suppliesOthers', 'sdp', 'hasElectricity', 'online', 'hasElectronicScc', 'hasElectronicDar', 'active', 'dataReportable']).each(function (index, field) {
-            var value = $scope.facility[field];
-            $scope.facility[field] = (value == null) ? "" : value.toString();
-        });
-    };
 
     $scope.saveFacility = function () {
         if ($scope.facilityForm.$error.pattern || $scope.facilityForm.$error.required) {
@@ -63,20 +56,29 @@ function FacilityController($scope, FacilityReferenceData, $routeParams, $http, 
             $scope.showError = "true";
             $scope.error = "";
             $scope.message = data.success;
+            $scope.facility = data.facility;
+            populateFlags($scope);
         }).error(function (data) {
                 $scope.showError = "true";
                 $scope.message = "";
                 $scope.error = data.error;
+                $scope.facility = facility;
+                populateFlags();
             });
     }
     $scope.deleteFacility = function () {
         postFacilityRequest('/admin/facility/update/delete.json');
     }
 
-    $scope.restoreFacility = function (activate) {
-        console.log(activate);
+    $scope.restoreFacility = function (active) {
+        $scope.facility.active = active;
         postFacilityRequest('/admin/facility/update/restore.json');
     }
-
-
 }
+
+var populateFlags = function ($scope) {
+    $(['suppliesOthers', 'sdp', 'hasElectricity', 'online', 'hasElectronicScc', 'hasElectronicDar', 'active', 'dataReportable']).each(function (index, field) {
+        var value = $scope.facility[field];
+        $scope.facility[field] = (value == null) ? "" : value.toString();
+    });
+};

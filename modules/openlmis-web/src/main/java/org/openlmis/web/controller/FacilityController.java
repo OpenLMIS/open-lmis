@@ -104,8 +104,10 @@ public class FacilityController extends BaseController {
             facilityService.updateDataReportableAndActiveFor(facility);
         } catch (RuntimeException exception) {
             modelMap.put("error", exception.getMessage());
+            modelMap.put("facility", facility);
             return new ResponseEntity<ModelMap>(modelMap, HttpStatus.BAD_REQUEST);
         }
+        modelMap.put("facility", facility);
         modelMap.put("success", facility.getName() + " " + message + " successfully");
         return new ResponseEntity<ModelMap>(modelMap, HttpStatus.OK);
     }
