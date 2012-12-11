@@ -14,9 +14,9 @@ function ConfigureRnRTemplateController($scope, Program, $location) {
     };
 }
 
-function SaveRnrTemplateController($scope, rnrColumns, sources, $http) {
-    $scope.rnrColumns = rnrColumns;
-    $scope.sources = sources;
+function SaveRnrTemplateController($scope, rnrTemplateForm, $http) {
+    $scope.rnrColumns = rnrTemplateForm.rnrColumns;
+    $scope.sources = rnrTemplateForm.sources;
 
     $scope.createProgramRnrTemplate = function () {
 
@@ -44,30 +44,15 @@ function SaveRnrTemplateController($scope, rnrColumns, sources, $http) {
     }
 
 }
-//TODO: need to find a better way to resolve common dependency
 SaveRnrTemplateController.resolve = {
-    rnrColumns: function ($q, RnRColumnList, $location, $route, $timeout){
+    rnrTemplateForm: function ($q, RnRColumnList, $location, $route, $timeout){
         var deferred = $q.defer();
         var code = $route.current.params.programCode;
 
         $timeout(function () {
             RnRColumnList.get({programCode: code}, function (data) {   //success
-                deferred.resolve(data.rnrTemplateForm.rnrColumns);
-                deferred.resolve(data.rnrTemplateForm.rnrColumns);
-            }, function () {
-                $location.path('select-program');
-            });
-        }, 100);
-
-        return deferred.promise;
-    },
-    sources: function ($q, RnRColumnList, $location, $route, $timeout){
-        var deferred = $q.defer();
-        var code = $route.current.params.programCode;
-
-        $timeout(function () {
-            RnRColumnList.get({programCode: code}, function (data) {   //success
-                deferred.resolve(data.rnrTemplateForm.sources);
+                deferred.resolve(data.rnrTemplateForm);
+                deferred.resolve(data.rnrTemplateForm);
             }, function () {
                 $location.path('select-program');
             });
@@ -75,8 +60,6 @@ SaveRnrTemplateController.resolve = {
 
         return deferred.promise;
     }
-
-
 
 }
 

@@ -2,7 +2,7 @@ describe('Rnr Template controllers', function () {
 
   describe('SaveRnrTemplateController', function () {
 
-    var scope, ctrl, $httpBackend, location, rnrColumnList;
+    var scope, ctrl, $httpBackend, location, rnrColumnList, sources, rnrTemplateForm;
 
     beforeEach(module('openlmis.services'));
     beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location) {
@@ -21,8 +21,10 @@ describe('Rnr Template controllers', function () {
         {"code":"C", "description":"Calculated"}
       ];
 
+      rnrTemplateForm = { 'rnrColumns': rnrColumnList, 'sources': sources};
 
-      ctrl = $controller(SaveRnrTemplateController, {$scope:scope,rnrColumns: rnrColumnList, sources: sources});
+
+      ctrl = $controller(SaveRnrTemplateController, {$scope:scope,rnrTemplateForm: rnrTemplateForm});
     }));
 
     it('should get list of rnr columns for configuring', function () {
