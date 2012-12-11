@@ -15,8 +15,7 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertEquals;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.*;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
@@ -47,7 +46,6 @@ public class FacilityMapperIT {
         with(name, "Rural Clinic"),
         with(type, "lvl3_hospital"),
         with(geographicZoneId, 2L)));
-
     facilityMapper.insert(trz001);
     facilityMapper.insert(trz002);
 
@@ -59,15 +57,13 @@ public class FacilityMapperIT {
 
   @Test
   public void shouldFetchFacilityAndFacilityTypeDataForRequisitionHeader() {
-    Facility facility1 = make(a(defaultFacility,
+    Facility facility = make(a(defaultFacility,
         with(code, "TRZ001"),
         with(name, "Ngorongoro Hospital"),
+        with(typeId, 2L),
         with(type, "lvl3_hospital")));
 
-    Facility facility2 = make(a(defaultFacility));
-
-    int facilityId = facilityMapper.insert(facility1);
-    facilityMapper.insert(facility2);
+    int facilityId = facilityMapper.insert(facility);
 
     RequisitionHeader requisitionHeader = facilityMapper.getRequisitionHeaderData(facilityId);
 
@@ -176,22 +172,42 @@ public class FacilityMapperIT {
     id = facilityMapper.getFacilityTypeIdForCode("InValid");
     assertThat(id, is(nullValue()));
   }
-    @Test
-    public void shouldUpdateDataReportableAndActiveForAFacility() throws Exception {
-        Facility facility = make(a(defaultFacility));
-        facility.setId(facilityMapper.insert(facility));
-        facility.setDataReportable(false);
-        facility.setActive(false);
-        Date modifiedDate = DateTime.now().toDate();
-        facility.setModifiedDate(modifiedDate);
-        facility.setModifiedBy("user1");
-        facilityMapper.updateDataReportableAndActiveFor(facility);
 
-        Facility updatedFacility = facilityMapper.get(facility.getId());
+  @Test
+  public void shouldReturnFacilityTypeById() {
+    Long id = facilityMapper.getFacilityTypeIdForCode(FACILITY_TYPE_CODE);
 
-        assertThat(updatedFacility.getDataReportable(), is(false));
-        assertThat(updatedFacility.getActive(), is(false));
-        assertThat(updatedFacility.getModifiedBy(), is("user1"));
-        assertThat(updatedFacility.getModifiedDate(), is(modifiedDate));
-    }
+    FacilityType facilityType = facilityMapper.getFacilityTypeById(id);
+    assertThat(facilityType, is(notNullValue()));
+    assertThat(facilityType.getId(), is(id));
+    assertThat(facilityType.getCode(), is(FACILITY_TYPE_CODE));
+  }
+
+  @Test
+  public void shouldReturnFacilityOperatorById() throws Exception {
+    Long id = facilityMapper.getOperatedByIdForCode(OPERATED_BY_MOH);
+
+    FacilityOperator operator = facilityMapper.getFacilityOperatorById(id);
+    assertThat(operator.getId(), is(id));
+    assertThat(operator.getCode(), is(OPERATED_BY_MOH));
+  }
+
+  @Test
+  public void shouldUpdateDataReportableAndActiveForAFacility() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    facility.setId(facilityMapper.insert(facility));
+    facility.setDataReportable(false);
+    facility.setActive(false);
+    Date modifiedDate = DateTime.now().toDate();
+    facility.setModifiedDate(modifiedDate);
+    facility.setModifiedBy("user1");
+    facilityMapper.updateDataReportableAndActiveFor(facility);
+
+    Facility updatedFacility = facilityMapper.get(facility.getId());
+
+    assertThat(updatedFacility.getDataReportable(), is(false));
+    assertThat(updatedFacility.getActive(), is(false));
+    assertThat(updatedFacility.getModifiedBy(), is("user1"));
+    assertThat(updatedFacility.getModifiedDate(), is(modifiedDate));
+  }
 }

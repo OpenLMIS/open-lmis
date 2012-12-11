@@ -41,8 +41,8 @@ public interface ProductMapper {
             "#{displayOrder}," +
             "#{primaryName}," + "#{fullName}," + "#{genericName}," + "#{alternateName}," + "#{description}," +
             "#{strength}," +
-            "(select id from product_form where LOWER(code) =LOWER(#{form.code})), " +
-            "(select id from dosage_unit where LOWER(code) =LOWER(#{dosageUnit.code}))," +
+            "#{form.id}, " +
+            "#{dosageUnit.id}," +
             " #{dispensingUnit}, #{dosesPerDispensingUnit}, #{dosesPerDay}," +
             "#{packSize}," + "#{alternatePackSize}," +
             "#{storeRefrigerated}," + "#{storeRoomTemperature}," + "#{hazardous}," + "#{flammable}," + "#{controlledSubstance}," + "#{lightSensitive}," + "#{approvedByWHO}," +
