@@ -1,4 +1,4 @@
-package org.openlmis.admin.form;
+package org.openlmis.web.form;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

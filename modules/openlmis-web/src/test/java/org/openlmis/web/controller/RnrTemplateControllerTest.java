@@ -1,9 +1,9 @@
-package org.openlmis.admin.controller;
+package org.openlmis.web.controller;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.openlmis.admin.form.RnrColumnList;
-import org.openlmis.admin.form.RnrTemplateForm;
+import org.openlmis.web.form.RnrColumnList;
+import org.openlmis.web.form.RnrTemplateForm;
 import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.service.RnrTemplateService;
 
@@ -29,7 +29,7 @@ public class RnrTemplateControllerTest {
 
     @Test
     public void shouldGetMasterColumnListForRnR() {
-        List<RnrColumn> allColumns = new ArrayList<RnrColumn>();
+        List<RnrColumn> allColumns = new ArrayList<>();
 
         when(rnrTemplateService.fetchAllRnRColumns(existingProgramCode)).thenReturn(allColumns);
         RnrTemplateForm rnrColumns = rnrTemplateController.fetchAllProgramRnrColumnList(existingProgramCode);

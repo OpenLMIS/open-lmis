@@ -1,4 +1,4 @@
-package org.openlmis.admin.controller;
+package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.handler.UploadHandlerFactory;

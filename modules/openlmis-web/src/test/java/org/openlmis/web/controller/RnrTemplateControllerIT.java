@@ -1,4 +1,4 @@
-package org.openlmis.admin.controller;
+package org.openlmis.web.controller;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -21,7 +21,7 @@ import static org.springframework.test.web.server.request.MockMvcRequestBuilders
 import static org.springframework.test.web.server.setup.MockMvcBuilders.standaloneSetup;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath*:/applicationContext-admin-web.xml")
+@ContextConfiguration(locations = "classpath*:/applicationContext.xml")
 public class RnrTemplateControllerIT {
 
     @Autowired

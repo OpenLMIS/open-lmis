@@ -1,4 +1,4 @@
-package org.openlmis.admin.form;
+package org.openlmis.web.form;
 
 import org.openlmis.rnr.domain.RnrColumn;
 

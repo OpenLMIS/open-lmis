@@ -17,10 +17,28 @@
     <mvc:annotation-driven/>
     <aop:aspectj-autoproxy/>
 
-    <import resource="classpath:/applicationContext-logistics-web.xml"/>
-    <import resource="classpath:/applicationContext-admin-web.xml"/>
+    <bean id="applicationProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+
+            <property name="locations">
+                <list>
+                    <value>classpath:/postgresql.properties</value>
+                </list>
+            </property>
+
+            <property name="ignoreResourceNotFound" value="true"/>
+            <property name="systemPropertiesModeName">
+                <value>SYSTEM_PROPERTIES_MODE_OVERRIDE</value>
+            </property>
+        </bean>
+
+    <context:component-scan base-package="org.openlmis.web"/>
+
     <import resource="classpath:/springSecurityContext.xml"/>
     <import resource="classpath:/applicationContext-authentication.xml"/>
+    <import resource="classpath:/applicationContext-requisition.xml"/>
+    <import resource="classpath:/applicationContext-core.xml"/>
+    <import resource="classpath:/applicationContext-upload.xml"/>
+
 
     <bean id="userAuthenticationProvider" class="org.openlmis.authentication.web.UserAuthenticationProvider"/>
 
@@ -43,5 +61,24 @@
             </property>
         </bean>
     </mvc:interceptors>
+
+    <bean id="modelMap" class="java.util.HashMap">
+        <constructor-arg>
+            <map>
+                <entry key="product">
+                    <value type="java.lang.Class">org.openlmis.core.domain.Product</value>
+                </entry>
+                <entry key="facility">
+                    <value type="java.lang.Class">org.openlmis.core.domain.Facility</value>
+                </entry>
+                <entry key="programSupported">
+                    <value type="java.lang.Class">org.openlmis.core.domain.ProgramSupported</value>
+                </entry>
+                <entry key="requisitionGroup">
+                    <value type="java.lang.Class">org.openlmis.rnr.domain.RequisitionGroup</value>
+                </entry>
+            </map>
+        </constructor-arg>
+    </bean>
 
 </beans>

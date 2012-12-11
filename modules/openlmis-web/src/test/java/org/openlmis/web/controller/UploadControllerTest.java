@@ -1,4 +1,4 @@
-package org.openlmis.admin.controller;
+package org.openlmis.web.controller;
 
 
 import org.junit.Before;

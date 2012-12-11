@@ -1,9 +1,9 @@
-package org.openlmis.admin.controller;
+package org.openlmis.web.controller;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.openlmis.admin.form.RnrColumnList;
-import org.openlmis.admin.form.RnrTemplateForm;
+import org.openlmis.web.form.RnrColumnList;
+import org.openlmis.web.form.RnrTemplateForm;
 import org.openlmis.rnr.domain.RnRColumnSource;
 import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.service.RnrTemplateService;

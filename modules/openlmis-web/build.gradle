@@ -1,4 +1,5 @@
 apply plugin: 'jetty'
+apply plugin: 'war'
 
 buildscript {
     repositories {
@@ -15,36 +16,36 @@ convention.plugins.jasmineGradlePlugin.sourceIncludes += 'src/main/webapp/**'
 
 dependencies {
     compile 'org.springframework:spring-webmvc:3.1.1.RELEASE',
+            'org.springframework:spring-core:3.1.1.RELEASE',
             'org.springframework:spring-web:3.1.1.RELEASE',
             'javax.servlet:servlet-api:2.5',
             'commons-collections:commons-collections:20040616',
             'org.codehaus.jackson:jackson-mapper-asl:1.9.9',
-            project(':modules:authentication'),
-            project(':modules:admin-web'),
-            project(':modules:logistics-web'),
+            'org.springframework.security:spring-security-taglibs:3.1.2.RELEASE',
             'org.json:json:20090211',
             'log4j:log4j:1.2.15',
             'org.aspectj:aspectjweaver:1.7.0',
             'cglib:cglib:2.2.2',
-            'commons-fileupload:commons-fileupload:1.2.2'
+            'commons-fileupload:commons-fileupload:1.2.2',
+            'javax.servlet:servlet-api:2.5',
+            project(':modules:authentication'),
+            project(':modules:requisition'),
+            project(':modules:core')
 
     testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
             'org.springframework:spring-test-mvc:1.0.0.M1',
-            'javax.servlet:servlet-api:2.5'
+            'javax.servlet:servlet-api:2.5',
+            'javax.servlet:servlet-api:2.5',
+            'org.powermock:powermock-api-mockito:1.4.12',
+            'org.powermock:powermock-module-junit4:1.4.12',
+            'org.codehaus.jackson:jackson-mapper-asl:1.9.9',
+            'cglib:cglib:2.2.2',
+            project(':modules:requisition')
+
 }
 
 [jettyRun]*.configure {
     contextPath = ''
-}
-
-war.dependsOn([':modules:admin-web:war', ':modules:logistics-web:war'])
-
-war.doFirst {
-    from zipTree(project(':modules:admin-web').war.archivePath)  //exclude { details -> details.file.name.endsWith('.xml') && details.file.text.contains('web') }
-    from zipTree(project(':modules:logistics-web').war.archivePath) //exclude { details -> details.file.name.endsWith('.xml') && details.file.text.contains('web') }
-    into('WEB-INF') {
-        from 'src/main/webapp/WEB-INF/web.xml'
-    }
 }
 
 task jettyRunWarDaemon(dependsOn: war)

@@ -1,3 +1,3 @@
-include "modules:core", "modules:authentication", "modules:admin-web",
-        "modules:logistics-web", "modules:openlmis-web", "functional-tests","modules:db","modules:upload","modules:requisition"
+include "modules:core", "modules:authentication",
+        "modules:openlmis-web", "functional-tests","modules:db","modules:upload","modules:requisition"
 
