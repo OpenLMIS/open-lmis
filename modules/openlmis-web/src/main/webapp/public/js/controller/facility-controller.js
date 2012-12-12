@@ -48,6 +48,7 @@ function FacilityController($scope, FacilityReferenceData, $routeParams, $http, 
                 $scope.facility = data.facility;
                 $scope.originalFacilityCode = data.facility.code;
                 $scope.originalFacilityName = data.facility.name;
+                populateFlags($scope);
             }).error(function (data) {
                     $scope.showError = "true";
                     $scope.message = "";

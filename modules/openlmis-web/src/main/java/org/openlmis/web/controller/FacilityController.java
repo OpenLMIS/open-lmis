@@ -69,6 +69,7 @@ public class FacilityController extends BaseController {
             facilityService.save(facility);
         } catch (RuntimeException exception) {
             modelMap.put("error", exception.getMessage());
+            modelMap.put("facility", facility);
             return new ResponseEntity<>(modelMap, HttpStatus.BAD_REQUEST);
         }
         if (createFlag) {
