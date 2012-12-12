@@ -112,6 +112,7 @@ public class FacilityControllerTest {
     public void shouldUpdateDataReportableAndActiveForFacilityDelete() throws Exception {
         MockHttpServletRequest httpServletRequest = httpRequest();
         Facility facility = new Facility();
+        facility.setId(123l);
         facility.setName("Test Facility");
         facility.setCode("Test Code");
         when(facilityService.getFacility(123l)).thenReturn(facility);
