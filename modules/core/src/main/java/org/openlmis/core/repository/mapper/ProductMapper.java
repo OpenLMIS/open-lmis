@@ -20,7 +20,7 @@ public interface ProductMapper {
       "primary_name," + "full_name," + "generic_name," + "alternate_name," + "description," +
       "strength," +
       "form_id," +
-      "dosage_unit_id, dispensing_unit, doses_per_dispensing_unit, doses_per_day," +
+      "dosage_unit_id, dispensing_unit, doses_per_dispensing_unit," +
       "pack_size," + "alternate_pack_size," +
       "store_refrigerated," + "store_room_temperature," + "hazardous," + "flammable," + "controlled_substance," + "light_sensitive," + "approved_by_who," +
       "contraceptive_cyp," +
@@ -43,7 +43,7 @@ public interface ProductMapper {
       "#{strength}," +
       "#{form.id}, " +
       "#{dosageUnit.id}," +
-      " #{dispensingUnit}, #{dosesPerDispensingUnit}, #{dosesPerDay}," +
+      " #{dispensingUnit}, #{dosesPerDispensingUnit}," +
       "#{packSize}," + "#{alternatePackSize}," +
       "#{storeRefrigerated}," + "#{storeRoomTemperature}," + "#{hazardous}," + "#{flammable}," + "#{controlledSubstance}," + "#{lightSensitive}," + "#{approvedByWHO}," +
       "#{contraceptiveCYP}," +

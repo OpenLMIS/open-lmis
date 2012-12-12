@@ -70,9 +70,6 @@ public class Product implements Importable {
     @ImportField(type = "int", name = "Doses Per Dispensing Unit")
     private Integer dosesPerDispensingUnit;
 
-    @ImportField(type = "int", name = "Doses Per Day")
-    private Integer dosesPerDay;
-
     @ImportField(type = "boolean", name = "Store Refrigerated")
     private Boolean storeRefrigerated;
 

@@ -35,9 +35,9 @@ import static org.openlmis.core.builder.ProductBuilder.*;
 public class ProductMapperIT {
 
     public static final String HIV = "HIV";
-  public static final String PRODUCT_DOSAGE_UNIT_MG = "mg";
+    public static final String PRODUCT_DOSAGE_UNIT_MG = "mg";
 
-  @Rule
+    @Rule
     public ExpectedException expectedEx = ExpectedException.none();
 
     @Autowired
@@ -53,9 +53,10 @@ public class ProductMapperIT {
     ProgramSupportedMapper programSupportedMapper;
     @Autowired
     ProductMapper productMapper;
-  private static final String PRODUCT_FORM_TABLET = "Tablet";
 
-  @Test
+    private static final String PRODUCT_FORM_TABLET = "Tablet";
+
+    @Test
     public void shouldNotSaveProductWithoutMandatoryFields() throws Exception {
         expectedEx.expect(DataIntegrityViolationException.class);
         expectedEx.expectMessage("null value in column \"primary_name\" violates not-null constraint");
@@ -69,16 +70,16 @@ public class ProductMapperIT {
     public void shouldGetFullSupplyAndActiveProductsByFacilityAndProgramInOrderOfDisplayAndProductCode() {
         Long facilityId = facilityMapper.insert(make(a(FacilityBuilder.defaultFacility)));
 
-        Product pro01 = product(HIV, "PRO01", true,true,6);
-        addToProgram("ARV", pro01,true);
+        Product pro01 = product(HIV, "PRO01", true, true, 6);
+        addToProgram("ARV", pro01, true);
         addToFacilityType("warehouse", pro01);
 
         product(HIV, "PRO02", true, true, 4);
 
-        Product pro03 = product(HIV, "PRO03", false, true,1);
+        Product pro03 = product(HIV, "PRO03", false, true, 1);
         addToFacilityType("warehouse", pro03);
 
-        Product pro04 = product(HIV, "PRO04", true, false,2);
+        Product pro04 = product(HIV, "PRO04", true, false, 2);
         addToFacilityType("warehouse", pro04);
 
 
@@ -111,37 +112,37 @@ public class ProductMapperIT {
         assertEquals("PRO07", products.get(3).getCode());
     }
 
-  @Test
-  public void shouldReturnDosageUnitIdForCode() {
-    Long id = productMapper.getDosageUnitIdForCode(PRODUCT_DOSAGE_UNIT_MG);
-    assertThat(id, CoreMatchers.is(1L));
+    @Test
+    public void shouldReturnDosageUnitIdForCode() {
+        Long id = productMapper.getDosageUnitIdForCode(PRODUCT_DOSAGE_UNIT_MG);
+        assertThat(id, CoreMatchers.is(1L));
 
-    id = productMapper.getDosageUnitIdForCode("invalid dosage unit");
-    assertThat(id, CoreMatchers.is(nullValue()));
-  }
+        id = productMapper.getDosageUnitIdForCode("invalid dosage unit");
+        assertThat(id, CoreMatchers.is(nullValue()));
+    }
 
-  @Test
-  public void shouldReturnProductFormIdForCode() {
-    Long id = productMapper.getProductFormIdForCode(PRODUCT_FORM_TABLET);
-    assertThat(id, CoreMatchers.is(1L));
+    @Test
+    public void shouldReturnProductFormIdForCode() {
+        Long id = productMapper.getProductFormIdForCode(PRODUCT_FORM_TABLET);
+        assertThat(id, CoreMatchers.is(1L));
 
-    id = productMapper.getProductFormIdForCode("invalid product form");
-    assertThat(id, CoreMatchers.is(nullValue()));
-  }
+        id = productMapper.getProductFormIdForCode("invalid product form");
+        assertThat(id, CoreMatchers.is(nullValue()));
+    }
 
     private void addToFacilityType(String facilityType, Product product) {
         facilityApprovedProductMapper.insert(new FacilityApprovedProduct(facilityType, product.getCode()));
     }
 
     private Product product(String programCode, String productCode, boolean isFullSupply, boolean isActive, Integer order) {
-        Product product = make(a(ProductBuilder.product, with(code, productCode), with(fullSupply, isFullSupply),with(displayOrder,order)));
+        Product product = make(a(ProductBuilder.product, with(code, productCode), with(fullSupply, isFullSupply), with(displayOrder, order)));
         productMapper.insert(product);
         addToProgram(programCode, product, isActive);
         return product;
     }
 
     private void addToProgram(String programCode, Product product, boolean isActive) {
-        ProgramProduct programProduct = new ProgramProduct(programCode, product.getCode(), null);
+        ProgramProduct programProduct = new ProgramProduct(programCode, product.getCode(), 10);
         programProduct.setActive(isActive);
         programProductMapper.insert(programProduct);
 

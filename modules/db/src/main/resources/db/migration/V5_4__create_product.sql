@@ -20,7 +20,6 @@ CREATE TABLE product (
   dosage_unit_id INTEGER REFERENCES dosage_unit(id),
   dispensing_unit VARCHAR(20),
   doses_per_dispensing_unit SMALLINT,
-  doses_per_day SMALLINT,
   pack_size SMALLINT NOT NULL,
   alternate_pack_size SMALLINT,
   store_refrigerated  BOOLEAN,
