@@ -9,4 +9,5 @@ classes
 .gradle
 *.DS_Store
 *.class
-css/
+modules/openlmis-web/src/main/webapp/public/css/
+
