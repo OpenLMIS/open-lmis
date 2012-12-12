@@ -14,6 +14,10 @@ public class RnrColumnSourceDeSerializer extends JsonDeserializer<RnRColumnSourc
     public RnRColumnSource deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
         ObjectCodec oc = jsonParser.getCodec();
         JsonNode node = oc.readTree(jsonParser);
-        return RnRColumnSource.valueOf(node.get("name").getTextValue());
+        RnRColumnSource columnSource = RnRColumnSource.valueOf(node.get("name").getTextValue());
+        if (columnSource == null) {
+            RnRColumnSource.valueOf(node.get("code").getTextValue());
+        }
+        return columnSource;
     }
 }

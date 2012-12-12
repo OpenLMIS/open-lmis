@@ -17,6 +17,8 @@ public class RnrColumnSourceSerializer extends JsonSerializer<RnRColumnSource> {
         generator.writeString(value.getDescription());
         generator.writeFieldName("name");
         generator.writeString(value.name());
+        generator.writeFieldName("code");
+        generator.writeString(value.getCode());
         generator.writeEndObject();
     }
 }

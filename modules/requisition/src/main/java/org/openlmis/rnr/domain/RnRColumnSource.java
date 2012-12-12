@@ -32,4 +32,8 @@ public enum RnRColumnSource {
     public String getDescription() {
         return description;
     }
+
+    public String getCode() {
+        return code;
+    }
 }
