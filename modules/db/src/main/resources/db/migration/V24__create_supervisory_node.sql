@@ -9,3 +9,5 @@ CREATE TABLE supervisory_node (
   modified_by VARCHAR(50),
   modified_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE UNIQUE INDEX uc_supervisory_node_code ON supervisory_node(LOWER(code));

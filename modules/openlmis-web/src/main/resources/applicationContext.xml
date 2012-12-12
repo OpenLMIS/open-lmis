@@ -80,6 +80,9 @@
                 <entry key="supervisoryNode">
                     <value type="java.lang.Class">org.openlmis.rnr.domain.SupervisoryNode</value>
                 </entry>
+                <entry key="requisitionGroup">
+                    <value type="java.lang.Class">org.openlmis.rnr.domain.RequisitionGroup</value>
+                </entry>
             </map>
         </constructor-arg>
     </bean>
@@ -91,6 +94,7 @@
                 <entry key="facility" value-ref="facilityPersistenceHandler"/>
                 <entry key="programSupported" value-ref="programSupportedPersistenceHandler"/>
                 <entry key="supervisoryNode" value-ref="supervisoryNodeHandler"/>
+                <entry key="requisitionGroup" value-ref="requisitionGroupHandler"/>
             </map>
         </constructor-arg>
     </bean>

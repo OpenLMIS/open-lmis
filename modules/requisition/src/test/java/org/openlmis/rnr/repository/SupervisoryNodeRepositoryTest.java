@@ -12,10 +12,10 @@ import org.openlmis.rnr.repository.mapper.SupervisoryNodeMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class SupervisoryNodeRepositoryTest {
@@ -49,7 +49,7 @@ public class SupervisoryNodeRepositoryTest {
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("Duplicate Supervisory Node Code");
 
-        new SupervisoryNodeRepository(supervisoryNodeMapper,facilityMapper).save(supervisoryNode);
+        new SupervisoryNodeRepository(supervisoryNodeMapper, facilityMapper).save(supervisoryNode);
 
         verify(supervisoryNodeMapper).insert(supervisoryNode);
     }
@@ -62,7 +62,7 @@ public class SupervisoryNodeRepositoryTest {
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("Supervisory Node as Parent does not exist");
 
-        new SupervisoryNodeRepository(supervisoryNodeMapper,facilityMapper).save(supervisoryNode);
+        new SupervisoryNodeRepository(supervisoryNodeMapper, facilityMapper).save(supervisoryNode);
 
         verify(supervisoryNodeMapper).getIdForCode(supervisoryNode.getParent().getCode());
     }
@@ -75,7 +75,7 @@ public class SupervisoryNodeRepositoryTest {
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("Facility Code does not exist");
 
-        new SupervisoryNodeRepository(supervisoryNodeMapper,facilityMapper).save(supervisoryNode);
+        new SupervisoryNodeRepository(supervisoryNodeMapper, facilityMapper).save(supervisoryNode);
 
         verify(facilityMapper).getIdForCode(supervisoryNode.getFacility().getCode());
         verify(supervisoryNodeMapper).getIdForCode(supervisoryNode.getParent().getCode());
@@ -86,7 +86,7 @@ public class SupervisoryNodeRepositoryTest {
         when(supervisoryNodeMapper.getIdForCode(supervisoryNode.getParent().getCode())).thenReturn(1L);
         when(facilityMapper.getIdForCode(supervisoryNode.getFacility().getCode())).thenReturn(1L);
 
-        new SupervisoryNodeRepository(supervisoryNodeMapper,facilityMapper).save(supervisoryNode);
+        new SupervisoryNodeRepository(supervisoryNodeMapper, facilityMapper).save(supervisoryNode);
 
         verify(facilityMapper).getIdForCode(supervisoryNode.getFacility().getCode());
         verify(supervisoryNodeMapper).getIdForCode(supervisoryNode.getParent().getCode());
@@ -95,4 +95,16 @@ public class SupervisoryNodeRepositoryTest {
         verify(supervisoryNodeMapper).insert(supervisoryNode);
     }
 
+    @Test
+    public void shouldSaveSupervisoryNodeIfParentNotSupplied() throws Exception {
+        when(facilityMapper.getIdForCode(supervisoryNode.getFacility().getCode())).thenReturn(1L);
+        supervisoryNode.setParent(null);
+        new SupervisoryNodeRepository(supervisoryNodeMapper, facilityMapper).save(supervisoryNode);
+
+        verify(facilityMapper).getIdForCode(supervisoryNode.getFacility().getCode());
+        verify(supervisoryNodeMapper, never()).getIdForCode(anyString());
+        assertThat(supervisoryNode.getParent(), is(nullValue()));
+        assertThat(supervisoryNode.getFacility().getId(), is(1L));
+        verify(supervisoryNodeMapper).insert(supervisoryNode);
+    }
 }

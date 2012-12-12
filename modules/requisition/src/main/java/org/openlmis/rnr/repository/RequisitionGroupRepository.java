@@ -1,48 +1,36 @@
 package org.openlmis.rnr.repository;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.rnr.domain.RequisitionGroup;
-import org.openlmis.rnr.domain.RequisitionGroupMember;
-import org.openlmis.rnr.mapper.RequisitionGroupMapper;
-import org.openlmis.rnr.repository.mapper.RequisitionGroupMemberMapper;
+import org.openlmis.rnr.repository.mapper.RequisitionGroupMapper;
+import org.openlmis.rnr.repository.mapper.SupervisoryNodeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.DuplicateKeyException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component
+@Repository
 @NoArgsConstructor
 public class RequisitionGroupRepository {
 
     private RequisitionGroupMapper requisitionGroupMapper;
-    private FacilityMapper facilityMapper;
-    private RequisitionGroupMemberMapper requisitionGroupMemberMapper;
+    private SupervisoryNodeMapper supervisoryNodeMapper;
+
 
     @Autowired
-    public RequisitionGroupRepository(RequisitionGroupMapper requisitionGroupMapper, FacilityMapper facilityMapper, RequisitionGroupMemberMapper requisitionGroupMemberMapper) {
+    public RequisitionGroupRepository(RequisitionGroupMapper requisitionGroupMapper, SupervisoryNodeMapper supervisoryNodeMapper) {
         this.requisitionGroupMapper = requisitionGroupMapper;
-        this.facilityMapper = facilityMapper;
-        this.requisitionGroupMemberMapper = requisitionGroupMemberMapper;
+        this.supervisoryNodeMapper = supervisoryNodeMapper;
     }
 
     public void insert(RequisitionGroup requisitionGroup) {
-        Long headFacilityId;
-
         try {
-            headFacilityId = facilityMapper.getIdForCode(requisitionGroup.getHeadFacility().getCode());
-            if (headFacilityId == null) {
-                throw new RuntimeException("Head Facility Not Found");
+            requisitionGroup.getSupervisoryNode().setId(supervisoryNodeMapper.getIdForCode(requisitionGroup.getSupervisoryNode().getCode()));
+            if (requisitionGroup.getSupervisoryNode().getId() == null) {
+                throw new RuntimeException("Supervisory Node Not Found");
             }
-            requisitionGroup.getHeadFacility().setId(headFacilityId);
-            requisitionGroup.setId(requisitionGroupMapper.insert(requisitionGroup));
-            RequisitionGroupMember requisitionGroupMember = new RequisitionGroupMember(requisitionGroup.getId(), requisitionGroup.getHeadFacility().getId());
-            requisitionGroupMember.setModifiedBy(requisitionGroup.getModifiedBy());
-            requisitionGroupMemberMapper.insert(requisitionGroupMember);
-        } catch (DuplicateKeyException e) {
-            throw new RuntimeException("Duplicate Requisition Group Code found");
+            requisitionGroupMapper.insert(requisitionGroup);
         } catch (DataIntegrityViolationException e) {
-            throw new RuntimeException("Parent RG code not found");
+            throw new RuntimeException("Duplicate Requisition Group Code found");
         }
     }
 }

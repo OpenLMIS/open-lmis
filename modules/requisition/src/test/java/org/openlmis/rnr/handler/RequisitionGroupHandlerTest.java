@@ -3,9 +3,7 @@ package org.openlmis.rnr.handler;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.openlmis.rnr.domain.RequisitionGroup;
-import org.openlmis.rnr.repository.RequisitionGroupRepository;
 import org.openlmis.rnr.service.RequisitionGroupService;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -14,28 +12,28 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 
-public class RequisitionGroupPersistenceHandlerTest {
+public class RequisitionGroupHandlerTest {
 
     public static final String USER = "USER";
-    RequisitionGroupPersistenceHandler requisitionGroupPersistenceHandler;
+    RequisitionGroupHandler requisitionGroupHandler;
 
     @Mock
-    RequisitionGroupRepository requisitionGroupRepository;
+    RequisitionGroupService requisitionGroupService;
 
     @Before
     public void setUp() throws Exception {
         initMocks(this);
-        requisitionGroupPersistenceHandler = new RequisitionGroupPersistenceHandler(requisitionGroupRepository);
+        requisitionGroupHandler = new RequisitionGroupHandler(requisitionGroupService);
     }
 
     @Test
-    public void shouldSaveRequisitionGroup() throws Exception {
+    public void shouldSaveRequisitionGroupWithModifiedBySet() throws Exception {
         RequisitionGroup requisitionGroup = new RequisitionGroup();
         requisitionGroup.setModifiedBy(USER);
 
-        requisitionGroupPersistenceHandler.save(requisitionGroup, "USER");
+        requisitionGroupHandler.save(requisitionGroup, "USER");
 
         assertThat(requisitionGroup.getModifiedBy(), is(USER));
-        verify(requisitionGroupRepository).insert(requisitionGroup);
+        verify(requisitionGroupService).save(requisitionGroup);
     }
 }
