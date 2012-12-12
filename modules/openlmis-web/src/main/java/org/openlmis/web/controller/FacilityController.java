@@ -103,6 +103,7 @@ public class FacilityController extends BaseController {
         }
         try {
             facilityService.updateDataReportableAndActiveFor(facility);
+            facility = facilityService.getFacility(facility.getId());
         } catch (RuntimeException exception) {
             modelMap.put("error", exception.getMessage());
             modelMap.put("facility", facility);

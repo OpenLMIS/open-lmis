@@ -11,6 +11,8 @@ function FacilityController($scope, FacilityReferenceData, $routeParams, $http, 
         if ($routeParams.facilityId) {
             Facility.get({id:$routeParams.facilityId}, function (data) {
                 $scope.facility = data.facility;
+                $scope.originalFacilityCode = data.facility.code;
+                $scope.originalFacilityName = data.facility.name;
                 populateFlags($scope);
                 //TODO Need a more elegant solution
                 var foo = [];
@@ -57,12 +59,16 @@ function FacilityController($scope, FacilityReferenceData, $routeParams, $http, 
             $scope.error = "";
             $scope.message = data.success;
             $scope.facility = data.facility;
+            $scope.originalFacilityCode = data.facility.code;
+            $scope.originalFacilityName = data.facility.name;
             populateFlags($scope);
         }).error(function (data) {
                 $scope.showError = "true";
                 $scope.message = "";
                 $scope.error = data.error;
                 $scope.facility = facility;
+                $scope.originalFacilityCode = data.facility.code;
+                $scope.originalFacilityName = data.facility.name;
                 populateFlags();
             });
     }
