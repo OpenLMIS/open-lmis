@@ -71,7 +71,7 @@ jettyRun {
     contextPath = ''
 }
 
-task jettyRunDev(dependsOn: jettyRun)
+task run(dependsOn: jettyRun)
 
 task explodedWar(type: Copy) {
     into "$buildDir/exploded"
