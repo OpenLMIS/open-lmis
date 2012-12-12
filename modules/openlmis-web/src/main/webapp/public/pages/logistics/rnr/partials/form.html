@@ -18,15 +18,15 @@
       <tr ng-repeat="rnrLineItem in $parent.rnr.lineItems">
         <input type="hidden" name="index" value="{{$index}}"/>
         <td class="cell-input" ng-repeat="column in programRnRColumnList">
-          <ng-switch on="column.source.code">
-                <span ng-switch-when="U">
+          <ng-switch on="column.source.name">
+                <span ng-switch-when="USER_INPUT">
 
                         <ng-switch on="column.name">
                           <span ng-switch-when="beginningBalance">
                               <input id="{{getId('A', $parent)}}" type="text"
                                      name="beginningBalance{{rnrLineItem['id']}}"
                                      ng-model="rnrLineItem[column.name]"
-                                     rnr-validator="positiveInteger" maxlength="8" ng-change="calculateConsumption(getIndex($parent))"/>
+                                     rnr-validator="positiveInteger" maxlength="8" ng-change="fillCalculatedRnrColumns(getIndex($parent))"/>
                               <span id="beginningBalance{{rnrLineItem['id']}}" style="display:none;">
                                Enter Numeric Data.
                               </span>
@@ -37,7 +37,7 @@
                                        name="quantityReceived{{rnrLineItem['id']}}"
                                        ng-model="rnrLineItem[column.name]"
                                        rnr-validator="positiveInteger" maxlength="8"
-                                       ng-change="calculateConsumption(getIndex($parent))"/>
+                                       ng-change="fillCalculatedRnrColumns(getIndex($parent))"/>
                                 <span id="quantityReceived{{rnrLineItem['id']}}" style="display:none;">
                                  Enter Numeric Data.
                                 </span>
@@ -47,7 +47,7 @@
                               <input id="{{getId('C', $parent)}}" type="text"
                                      name="quantityDispensed{{rnrLineItem['id']}}"
                                      ng-model="rnrLineItem[column.name]"
-                                     rnr-validator="positiveInteger" ng-change="calculateConsumption(getIndex($parent))"
+                                     rnr-validator="positiveInteger" ng-change="fillCalculatedRnrColumns(getIndex($parent))"
                                      maxlength="8"/>
                               <span id="quantityDispensed{{rnrLineItem['id']}}" style="display:none;">
                                Enter Numeric Data.
@@ -58,7 +58,7 @@
                               <input id="{{getId('D', $parent)}}" type="text"
                                      name="lossesAndAdjustments{{rnrLineItem['id']}}"
                                      ng-model="rnrLineItem[column.name]"
-                                     rnr-validator="positiveInteger" ng-change="calculateConsumption(getIndex($parent))"
+                                     rnr-validator="positiveInteger" ng-change="fillCalculatedRnrColumns(getIndex($parent))"
                                      maxlength="8"/>
                               <span id="lossesAndAdjustments{{rnrLineItem['id']}}" style="display:none;">
                                Enter Numeric Data.
@@ -68,7 +68,7 @@
                           <span ng-switch-when="stockInHand">
                               <input id="{{getId('E', $parent)}}" type="text" name="stockInHand{{rnrLineItem['id']}}"
                                      ng-model="rnrLineItem[column.name]"
-                                     rnr-validator="positiveInteger" ng-change="calculateConsumption(getIndex($parent))" maxlength="8"/>
+                                     rnr-validator="positiveInteger" ng-change="fillCalculatedRnrColumns(getIndex($parent))" maxlength="8"/>
                               <span id="stockInHand{{rnrLineItem['id']}}" style="display:none;">
                                Enter Numeric Data.
                               </span>
