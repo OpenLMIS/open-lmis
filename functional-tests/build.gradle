@@ -25,10 +25,10 @@ test {
 
 task buildOpenLmis(type: GradleBuild) {
     buildFile = '../modules/openlmis-web/build.gradle'
-    tasks = ['build', 'jettyRunWarDaemon']
+    tasks = ['jettyRunWarDaemon']
 }
 
-task functionalTest(type: Test, dependsOn: test) {
+task functionalTest(type: Test) {
     include '**/org/openlmis/functional/*.*'
     useTestNG()
 }
