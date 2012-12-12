@@ -140,6 +140,6 @@ public class DBWrapper {
             dbwrapper.dbConnection("delete from role_assignments;", "alter");
 
         }
-        dbwrapper.dbConnection("INSERT INTO role_assignments (user_id, role_id, program_id) VALUES (2, 2, 'HIV');", "alter");
+        dbwrapper.dbConnection("INSERT INTO role_assignments (user_id, role_id, program_id) VALUES (2, 2, 1);", "alter");
     }
 }
