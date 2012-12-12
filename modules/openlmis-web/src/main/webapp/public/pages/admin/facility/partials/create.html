@@ -364,7 +364,7 @@
 <div id="deleteModal" class="fade ng-pristine ng-valid modal hide" ui-modal="" ng-model="deleteConfirmModal">
     <div class="modal-header"><h1>Delete Facility</h1></div>
     <div class="modal-body">
-        <p>{{facility.name}}/{{facility.code}} will be soft-deleted from the system</p>
+        <p>"{{facility.name}}" / "{{facility.code}}" will be soft-deleted from the system</p>
     </div>
     <div class="modal-footer">
         <a href="" class="btn" ng-click="deleteFacility()" data-dismiss="modal">OK</a>
@@ -374,7 +374,7 @@
 <div id="restoreConfirmModal" class="fade ng-pristine ng-valid modal hide" ui-modal="" ng-model="restoreConfirmModal">
     <div class="modal-header"><h1>Restore Facility</h1></div>
     <div class="modal-body">
-        <p>{{facility.name}}/{{facility.code}} will be restored in the system</p>
+        <p>"{{facility.name}}" / "{{facility.code}}" will be restored in the system</p>
     </div>
     <div class="modal-footer">
         <a href="" class="btn" ng-click="activeConfirmModal=true" data-dismiss="modal">OK</a>
@@ -393,7 +393,7 @@
 </div>
 
 
-<a href="" class="btn" ng-show="facility.id!=null && facility.dataReportable" ng-click="deleteConfirmModal=true">Delete</a><br>
+<a href="" class="btn" ng-show="facility.id!=null && facility.dataReportable == 'true'" ng-click="deleteConfirmModal=true">Delete</a><br>
 <a href="" class="btn" ng-show="facility.id!=null && facility.dataReportable == 'false'" ng-click="restoreConfirmModal=true">Restore</a><br>
 </div>
 
