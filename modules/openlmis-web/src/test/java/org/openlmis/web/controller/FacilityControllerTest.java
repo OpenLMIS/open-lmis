@@ -114,6 +114,7 @@ public class FacilityControllerTest {
         Facility facility = new Facility();
         facility.setName("Test Facility");
         facility.setCode("Test Code");
+        when(facilityService.getFacility(123l)).thenReturn(facility);
 
         ResponseEntity responseEntity = facilityController.updateDataReportableAndActive(facility, "delete", httpServletRequest);
         ModelMap modelMap = (ModelMap)responseEntity.getBody();
@@ -130,8 +131,10 @@ public class FacilityControllerTest {
     public void shouldUpdateDataReportableAndActiveForFacilityRestore() throws Exception {
         MockHttpServletRequest httpServletRequest = httpRequest();
         Facility facility = new Facility();
+        facility.setId(123l);
         facility.setName("Test Facility");
         facility.setCode("Test Code");
+        when(facilityService.getFacility(123l)).thenReturn(facility);
 
         ResponseEntity responseEntity = facilityController.updateDataReportableAndActive(facility, "restore", httpServletRequest);
         ModelMap modelMap = (ModelMap) responseEntity.getBody();
