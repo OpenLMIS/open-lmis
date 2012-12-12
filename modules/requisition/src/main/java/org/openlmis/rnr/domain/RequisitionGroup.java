@@ -17,7 +17,7 @@ public class RequisitionGroup implements Importable {
     String code;
     @ImportField(mandatory = true, name = "Name of RG")
     String name;
-    @ImportField(mandatory = true, name = "Description")
+    @ImportField(name = "Description")
     String description;
     @ImportField(mandatory = true, nested = "code", name = "Supervisory Node")
     SupervisoryNode supervisoryNode;

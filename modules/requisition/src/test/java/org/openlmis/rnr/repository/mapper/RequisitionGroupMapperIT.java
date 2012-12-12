@@ -58,7 +58,7 @@ public class RequisitionGroupMapperIT {
         RequisitionGroup requisitionGroup = make(a(defaultRequisitionGroup));
         requisitionGroup.setSupervisoryNode(supervisoryNode);
 
-        int requisitionGroupID = requisitionGroupMapper.insert(requisitionGroup);
+        Long requisitionGroupID = requisitionGroupMapper.insert(requisitionGroup);
 
         RequisitionGroup resultRequisitionGroup = requisitionGroupMapper.getRequisitionGroupById(requisitionGroupID);
 

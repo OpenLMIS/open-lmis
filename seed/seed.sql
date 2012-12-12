@@ -5,3 +5,4 @@
 \i ../../seed/geographic_zones.sql
 \i ../../seed/product_forms.sql
 \i ../../seed/programs.sql
+\i ../../seed/schedule.sql

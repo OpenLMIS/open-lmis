@@ -48,4 +48,8 @@ public interface ProgramMapper {
             @Result(property = "active", column = "active")
     })
     List<Program> getByFacilityId(Long facilityId);
+
+
+    @Select("SELECT id FROM program WHERE LOWER(code) = LOWER(#{code})")
+    Long getIdForCode(String code);
 }

@@ -17,9 +17,9 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
@@ -87,4 +87,10 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     List<Program> supportedPrograms = programMapper.getByFacilityId(facilityId);
     assertThat(supportedPrograms.get(0).getCode(), is(ProgramBuilder.PROGRAM_CODE));
   }
+
+    @Test
+    public void shouldGetIdByCode() throws Exception {
+        Long id = programMapper.insert(make(a(defaultProgram)));
+        assertThat(id, is(programMapper.getIdForCode(ProgramBuilder.PROGRAM_CODE)));
+    }
 }
