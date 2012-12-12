@@ -31,6 +31,7 @@ public class FacilityBuilder {
   public static final String FACILITY_CODE = "F10010";
   public static final String FACILITY_TYPE_CODE = "warehouse";
   public static final long FACILITY_TYPE_ID = 1L;
+  public static final long GEOGRAPHIC_ZONE_ID = 2L;
   public static final Instantiator<Facility> defaultFacility = new Instantiator<Facility>() {
 
     @Override
@@ -43,7 +44,7 @@ public class FacilityBuilder {
       facility.setFacilityType(facilityType);
       facility.setName(lookup.valueOf(name, "Apollo Hospital"));
       GeographicZone geographicZoneValue = new GeographicZone();
-      geographicZoneValue.setId(lookup.valueOf(geographicZoneId, 2L));
+      geographicZoneValue.setId(lookup.valueOf(geographicZoneId, GEOGRAPHIC_ZONE_ID));
       facility.setGeographicZone(lookup.valueOf(geographicZone, geographicZoneValue));
       facility.setSdp(lookup.valueOf(sdp, true));
       facility.setActive(lookup.valueOf(active, true));

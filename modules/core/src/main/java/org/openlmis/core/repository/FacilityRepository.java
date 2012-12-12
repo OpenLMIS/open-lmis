@@ -43,6 +43,7 @@ public class FacilityRepository {
     try {
       validateAndSetFacilityOperator(facility);
       validateAndSetFacilityType(facility);
+      validateGeographicZone(facility);
       if (facility.getId() == null) {
         facility.setId(facilityMapper.insert(facility));
         addListOfSupportedPrograms(facility);
@@ -60,12 +61,25 @@ public class FacilityRepository {
     }
   }
 
+  private void validateGeographicZone(Facility facility) {
+    GeographicZone geographicZone  = facility.getGeographicZone();
+
+    if (geographicZone == null || geographicZone.getId() == null)
+      throw new RuntimeException("Missing mandatory reference data 'Geographic Zone Id'");
+
+    Long geographicZoneId = geographicZone.getId();
+    Boolean geographicZonePresent = facilityMapper.isGeographicZonePresent(geographicZoneId);
+
+    if (!geographicZonePresent)
+      throw new RuntimeException("Invalid reference data 'Geographic Zone Id'");
+  }
+
   private void validateAndSetFacilityType(Facility facility) {
     FacilityType facilityType = facility.getFacilityType();
     if (facilityType == null || facilityType.getCode() == null || facilityType.getCode().isEmpty())
       throw new RuntimeException("Missing mandatory reference data 'Facility Type'");
 
-    String facilityTypeCode=facilityType.getCode();
+    String facilityTypeCode = facilityType.getCode();
     Long facilityTypeId = facilityMapper.getFacilityTypeIdForCode(facilityTypeCode);
 
     if (facilityTypeId == null)
@@ -76,17 +90,15 @@ public class FacilityRepository {
   }
 
   private void validateAndSetFacilityOperator(Facility facility) {
-    if(facility.getOperatedBy() == null) return;
+    if (facility.getOperatedBy() == null) return;
 
     String operatedByCode = facility.getOperatedBy().getCode();
     if (operatedByCode == null || operatedByCode.isEmpty()) return;
 
     Long operatedById = facilityMapper.getOperatedByIdForCode(operatedByCode);
-    if (operatedById == null) {
-      throw new RuntimeException("Invalid reference data 'Operated By'");
-    } else {
-      facility.getOperatedBy().setId(operatedById);
-    }
+    if (operatedById == null) throw new RuntimeException("Invalid reference data 'Operated By'");
+
+    facility.getOperatedBy().setId(operatedById);
   }
 
   private void updateFacility(Facility facility) {
@@ -109,7 +121,7 @@ public class FacilityRepository {
     for (Program supportedProgram : facility.getSupportedPrograms()) {
       if (!(previouslySupportedPrograms).contains(supportedProgram)) {
         ProgramSupported newProgramsSupported = new ProgramSupported(facility.getId(), supportedProgram.getId(),
-                                                    supportedProgram.getActive(), facility.getModifiedBy(), facility.getModifiedDate());
+            supportedProgram.getActive(), facility.getModifiedBy(), facility.getModifiedDate());
         insertSupportedProgram(newProgramsSupported);
       }
     }

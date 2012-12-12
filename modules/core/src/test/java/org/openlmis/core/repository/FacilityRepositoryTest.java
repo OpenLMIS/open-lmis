@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.mapper.FacilityMapper;
@@ -54,7 +55,7 @@ public class FacilityRepositoryTest {
     mockStatic(DateTime.class);
     now = new DateTime(2012, 10, 10, 8, 0);
     when(DateTime.now()).thenReturn(now);
-
+    when(mockedFacilityMapper.isGeographicZonePresent(FacilityBuilder.GEOGRAPHIC_ZONE_ID)).thenReturn(Boolean.TRUE);
     repository = new FacilityRepository(mockedFacilityMapper, programSupportedMapper, programMapper);
   }
 
@@ -175,6 +176,17 @@ public class FacilityRepositoryTest {
 
     expectedEx.expect(RuntimeException.class);
     expectedEx.expectMessage("Invalid reference data 'Facility Type'");
+    repository.save(facility);
+  }
+
+  @Test
+  public void shouldRaiseInvalidReferenceGeographicZoneIdError() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    facility.getGeographicZone().setId(999L);
+    when(mockedFacilityMapper.isGeographicZonePresent(999L)).thenReturn(Boolean.FALSE);
+
+    expectedEx.expect(RuntimeException.class);
+    expectedEx.expectMessage("Invalid reference data 'Geographic Zone Id'");
     repository.save(facility);
   }
 
