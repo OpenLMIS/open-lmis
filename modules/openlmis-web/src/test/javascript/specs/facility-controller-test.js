@@ -20,6 +20,7 @@ describe("Facility", function () {
         {"operatorCode":"testCode"}
       ]});
       facility = {"facility":{"supportedPrograms":[]}};
+
       ctrl = $controller(FacilityController, {$scope:scope, $routeParams:routeParams});
       scope.facilityForm = {$error:{ pattern:"" }};
     }));
@@ -42,7 +43,7 @@ describe("Facility", function () {
 
     it('should give success message if save successful', function () {
       $httpBackend.flush();
-      $httpBackend.expectPOST('/admin/facility.json').respond(200, {"success":"Saved successfully"});
+      $httpBackend.expectPOST('/admin/facility.json').respond(200, {"success":"Saved successfully", "facility": facility});
       scope.saveFacility();
       $httpBackend.flush();
       expect("Saved successfully").toEqual(scope.message);
