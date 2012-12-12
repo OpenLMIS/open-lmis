@@ -216,7 +216,7 @@ public class FacilityRepositoryTest {
     programSupported.setFacilityCode("invalid Code");
     programSupported.setProgramCode("valid Code");
 
-    when(mockedFacilityMapper.getFacilityTypeIdForCode("invalid Code")).thenReturn(null);
+    when(mockedFacilityMapper.getIdForCode("invalid Code")).thenReturn(null);
     expectedEx.expect(RuntimeException.class);
     expectedEx.expectMessage("Invalid reference data 'Facility Code'");
     repository.addSupportedProgram(programSupported);

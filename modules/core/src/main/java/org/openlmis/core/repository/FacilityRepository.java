@@ -154,7 +154,7 @@ public class FacilityRepository {
   private void validateFacilityCode(String facilityCode) {
     if (facilityCode == null || facilityCode.isEmpty())
       throw new RuntimeException("Missing reference data 'Facility Code'");
-    Long facilityTypeId = facilityMapper.getFacilityTypeIdForCode(facilityCode);
+    Long facilityTypeId = facilityMapper.getIdForCode(facilityCode);
     if (facilityTypeId == null) throw new RuntimeException("Invalid reference data 'Facility Code'");
   }
 
