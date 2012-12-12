@@ -74,8 +74,11 @@ public class InitiateRnRPage extends Page {
         String facilityText=testWebDriver.getText(facilityLabel);
         SeleneseTestNgHelper.assertTrue(facilityText.contains("FCcode" + FCstring + " - FCname" + FCstring));
         saveButton.click();
+
+        testWebDriver.sleep(1500);
         String successMessageText=testWebDriver.getText(successMessage);
         testWebDriver.sleep(1500);
         SeleneseTestNgHelper.assertEquals(successMessageText.trim(),successText);
+
     }
 }
