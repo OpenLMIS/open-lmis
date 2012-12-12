@@ -16,7 +16,7 @@ public class RnrColumnSourceDeSerializer extends JsonDeserializer<RnRColumnSourc
         JsonNode node = oc.readTree(jsonParser);
         RnRColumnSource columnSource = RnRColumnSource.valueOf(node.get("name").getTextValue());
         if (columnSource == null) {
-            RnRColumnSource.valueOf(node.get("code").getTextValue());
+            columnSource = RnRColumnSource.valueOf(node.get("code").getTextValue());
         }
         return columnSource;
     }
