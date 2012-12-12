@@ -73,13 +73,12 @@ function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $l
 
         function fillNormalizedConsumption() {
             var m = 3;
-            var x = parseInt(lineItem.stockOutDays) == NaN ? 0 : parseInt(lineItem.stockOutDays);
-            var f = parseInt(lineItem.newPatientCount) == NaN ? 0 : parseInt(lineItem.newPatientCount);
+            var x = isNaN(parseInt(lineItem.stockOutDays)) ? 0 : parseInt(lineItem.stockOutDays);
+            var f = isNaN(parseInt(lineItem.newPatientCount)) ? 0 : parseInt(lineItem.newPatientCount);
             var dosesPerMonth = 1;
             var g = 1;
             // TODO : dosesPerMonth from programproduct table, g from product, rounding logic
-            lineItem.normalizedConsumption = ((m * 30) - x) == 0 ? c : (c * ((m * 30) / ((m * 30) - x)));// + ((f * dosesPerMonth / g ) * m);
-//            lineItem.normalizedConsumption = c;
+            lineItem.normalizedConsumption = Math.round(((m * 30) - x) == 0 ? c : (c * ((m * 30) / ((m * 30) - x))) + ((f * dosesPerMonth / g ) * m));
         }
 
         function fillConsumption() {

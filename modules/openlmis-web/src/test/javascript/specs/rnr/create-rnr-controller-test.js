@@ -158,21 +158,54 @@ describe('CreateRnrController', function () {
                 {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}},
                 {"indicator":"E", "name":"stockInHand", "source":{"name":"CALCULATED"}},
                 {"indicator":"F", "name":"newPatientCount", "source":{"name":"USER_INPUT"}},
-                // TODO : another test without this param
                 {"indicator":"X", "name":"stockOutDays", "source":{"name":"USER_INPUT"}}
             ]});
             ctrl = controller(CreateRnrController, {$scope:scope, $location:location});
         });
 
-        it('should calculate normalized consumption when all dependant columns are set', function () {
+        it('should calculate normalized consumption when newPatientCount is not set', function () {
             scope.$parent.rnr = {"id":"rnrId", "lineItems":[
-                {"id":1, "beginningBalance":1, "quantityReceived":10, "quantityDispensed":null, "lossesAndAdjustments":4, "stockInHand":2, "stockOutDays":5, "newPatientCount":0}
+                {"id":1, "beginningBalance":1, "quantityReceived":10, "quantityDispensed":null, "lossesAndAdjustments":4, "stockInHand":2, "stockOutDays":5, "newPatientCount":null}
             ]};
 
             httpBackend.flush();
 
             scope.fillCalculatedRnrColumns(0);
-            expect("5.29").toEqual(scope.$parent.rnr.lineItems[0].normalizedConsumption.toFixed(2));
-        })
+            expect(5).toEqual(scope.$parent.rnr.lineItems[0].normalizedConsumption);
+        });
+
+        it('should calculate normalized consumption when newPatientCount is set', function () {
+            scope.$parent.rnr = {"id":"rnrId", "lineItems":[
+                {"id":1, "beginningBalance":1, "quantityReceived":10, "quantityDispensed":null, "lossesAndAdjustments":4, "stockInHand":2, "stockOutDays":5, "newPatientCount":10}
+            ]};
+
+            httpBackend.flush();
+
+            scope.fillCalculatedRnrColumns(0);
+            expect(35).toEqual(scope.$parent.rnr.lineItems[0].normalizedConsumption);
+        });
+
+        it('should calculate normalized consumption when stockOutDays is not set', function () {
+            scope.$parent.rnr = {"id":"rnrId", "lineItems":[
+                {"id":1, "beginningBalance":1, "quantityReceived":10, "quantityDispensed":null, "lossesAndAdjustments":4, "stockInHand":2, "stockOutDays":null, "newPatientCount":10}
+            ]};
+
+            httpBackend.flush();
+
+            scope.fillCalculatedRnrColumns(0);
+            expect(35).toEqual(scope.$parent.rnr.lineItems[0].normalizedConsumption);
+        });
+
+        // TODO: Need variable values of 'number of doses per month' or g for this test.
+//        it('should calculate normalized consumption with ceiling logic for newPatientCount', function () {
+//            scope.$parent.rnr = {"id":"rnrId", "lineItems":[
+//                {"id":1, "beginningBalance":1, "quantityReceived":10, "quantityDispensed":null, "lossesAndAdjustments":4, "stockInHand":2, "stockOutDays":5, "newPatientCount":10}
+//            ]};
+//
+//            httpBackend.flush();
+//
+//            scope.fillCalculatedRnrColumns(0);
+//            expect(35).toEqual(scope.$parent.rnr.lineItems[0].normalizedConsumption);
+//        })
     });
 });
