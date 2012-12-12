@@ -1,19 +1,3 @@
-function ConfigureRnRTemplateController($scope, Program, $location) {
-    Program.get({}, function (data) {   //success
-        $scope.programs = data.programList;
-    }, {});
-
-    $scope.createRnrTemplate = function () {
-        if ($scope.$parent.program != undefined) {
-            $scope.error = "";
-            $location.path('/create-rnr-template/'+$scope.$parent.program.code);
-        }
-        else {
-            $scope.error = "Please select a program";
-        }
-    };
-}
-
 function SaveRnrTemplateController($scope, rnrTemplateForm, $http) {
     $scope.rnrColumns = rnrTemplateForm.rnrColumns;
     $scope.sources = rnrTemplateForm.sources;
@@ -44,6 +28,7 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, $http) {
     }
 
 }
+
 SaveRnrTemplateController.resolve = {
     rnrTemplateForm: function ($q, RnRColumnList, $location, $route, $timeout){
         var deferred = $q.defer();
@@ -59,7 +44,4 @@ SaveRnrTemplateController.resolve = {
 
         return deferred.promise;
     }
-
-}
-
-
+};
