@@ -25,8 +25,8 @@ import static org.openlmis.core.builder.ProgramBuilder.PROGRAM_CODE;
 @TransactionConfiguration(defaultRollback = true)
 public class ProgramProductMapperIT {
 
-   @Autowired
-   ProductMapper productMapper;
+    @Autowired
+    ProductMapper productMapper;
 
     @Autowired
     ProgramProductMapper programProductMapper;
@@ -36,10 +36,9 @@ public class ProgramProductMapperIT {
 
     @Test
     public void shouldInsertProductForAProgram() throws Exception {
-        productMapper.insert(make(a(ProductBuilder.product,with(displayOrder,1))));
+        productMapper.insert(make(a(ProductBuilder.product, with(displayOrder, 1))));
         programMapper.insert(make(a(ProgramBuilder.defaultProgram)));
-        ProgramProduct programProduct = new ProgramProduct(PROGRAM_CODE, PRODUCT_CODE);
-        programProduct.setActive(true);
+        ProgramProduct programProduct = new ProgramProduct(PROGRAM_CODE, PRODUCT_CODE, 10);
         int status = programProductMapper.insert(programProduct);
         assertThat(status, is(1));
     }

@@ -10,4 +10,5 @@ public class ProductForm {
     private long id;
     private String code;
     private int displayOrder;
+
 }

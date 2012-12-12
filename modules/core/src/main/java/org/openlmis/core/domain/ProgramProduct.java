@@ -10,18 +10,15 @@ import java.util.Date;
 public class ProgramProduct {
 
     private String programCode;
-
     private String productCode;
-
+    private Integer dosesPerMonth;
     private String modifiedBy;
-
     private Date modifiedDate;
-
     private boolean active;
 
-    public ProgramProduct(String programCode, String productCode) {
+    public ProgramProduct(String programCode, String productCode, Integer dosesPerMonth) {
         this.programCode = programCode;
         this.productCode = productCode;
+        this.dosesPerMonth = dosesPerMonth;
     }
-
 }

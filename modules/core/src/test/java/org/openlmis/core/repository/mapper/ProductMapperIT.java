@@ -141,7 +141,7 @@ public class ProductMapperIT {
     }
 
     private void addToProgram(String programCode, Product product, boolean isActive) {
-        ProgramProduct programProduct = new ProgramProduct(programCode, product.getCode());
+        ProgramProduct programProduct = new ProgramProduct(programCode, product.getCode(), null);
         programProduct.setActive(isActive);
         programProductMapper.insert(programProduct);
 
