@@ -198,8 +198,6 @@ public class FacilityMapperIT {
     facility.setId(facilityMapper.insert(facility));
     facility.setDataReportable(false);
     facility.setActive(false);
-    Date modifiedDate = DateTime.now().toDate();
-    facility.setModifiedDate(modifiedDate);
     facility.setModifiedBy("user1");
     facilityMapper.updateDataReportableAndActiveFor(facility);
 
@@ -208,7 +206,6 @@ public class FacilityMapperIT {
     assertThat(updatedFacility.getDataReportable(), is(false));
     assertThat(updatedFacility.getActive(), is(false));
     assertThat(updatedFacility.getModifiedBy(), is("user1"));
-    assertThat(updatedFacility.getModifiedDate(), is(modifiedDate));
   }
 
   @Test

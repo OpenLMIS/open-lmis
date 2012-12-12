@@ -31,7 +31,7 @@ CREATE TABLE facility (
     comment  TEXT,
     data_reportable BOOLEAN,
     modified_by VARCHAR(50),
-    modified_date TIMESTAMP
+    modified_date TIMESTAMP DEFAULT  CURRENT_TIMESTAMP
 );
 
 CREATE UNIQUE INDEX uc_facility_code ON facility(LOWER(code));

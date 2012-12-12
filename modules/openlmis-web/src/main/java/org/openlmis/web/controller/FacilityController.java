@@ -76,6 +76,7 @@ public class FacilityController extends BaseController {
         } else {
             modelMap.put("success", facility.getName() + " updated successfully");
         }
+        modelMap.put("facility", facility);
         return new ResponseEntity<>(modelMap, HttpStatus.OK);
     }
 

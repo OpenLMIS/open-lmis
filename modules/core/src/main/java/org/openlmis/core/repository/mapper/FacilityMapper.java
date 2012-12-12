@@ -217,7 +217,7 @@ public interface FacilityMapper {
   @Select("SELECT code FROM facility_type where id = #{id}")
   public String getFacilityTypeCodeFor(Long id);
 
-  @Update("UPDATE facility SET data_reportable=#{dataReportable}, is_active=#{active}, modified_by=#{modifiedBy}, modified_date=#{modifiedDate}" +
+  @Update("UPDATE facility SET data_reportable=#{dataReportable}, is_active=#{active}, modified_by=#{modifiedBy}, modified_date= DEFAULT    " +
       "WHERE id =#{id}")
   void updateDataReportableAndActiveFor(Facility facility);
 
