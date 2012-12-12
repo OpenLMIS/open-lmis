@@ -211,10 +211,16 @@ public class FacilityMapperIT {
     assertThat(updatedFacility.getModifiedDate(), is(modifiedDate));
   }
 
-    @Test
-    public void shouldGetIdByCode() throws Exception {
-        Facility facility = make(a(defaultFacility));
-        facility.setId(facilityMapper.insert(facility));
-        assertThat(facilityMapper.getIdForCode(facility.getCode()), is(facility.getId()));
-    }
+  @Test
+  public void shouldGetIdByCode() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    facility.setId(facilityMapper.insert(facility));
+    assertThat(facilityMapper.getIdForCode(facility.getCode()), is(facility.getId()));
+  }
+
+  @Test
+  public void shouldTellIfGeographicZoneIdExists() throws Exception {
+    assertThat(facilityMapper.isGeographicZonePresent(1L), is(true));
+    assertThat(facilityMapper.isGeographicZonePresent(9999L), is(false));
+  }
 }

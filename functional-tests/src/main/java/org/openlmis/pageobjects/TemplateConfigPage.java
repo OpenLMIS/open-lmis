@@ -38,6 +38,10 @@ public class TemplateConfigPage extends Page {
     @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv' and @ng-show='message']")
     private static WebElement saveSuccessMsg;
 
+    @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv' and @ng-show='error']")
+    private static WebElement saveErrorMsgDiv;
+
+
 
     private String TEMPLATE_SUCCESS_MESSAGE = "Template saved successfully!";
 
@@ -51,6 +55,7 @@ public class TemplateConfigPage extends Page {
 
 
     public void selectProgramToConfigTemplate(String programme) {
+
         testWebDriver.waitForElementToAppear(TemplateConfigTab);
         testWebDriver.mouseOver(TemplateConfigTab);
         TemplateConfigTab.click();
@@ -69,12 +74,22 @@ public class TemplateConfigPage extends Page {
     }
 
     public void configureTemplate(){
+        String message=null;
     testWebDriver.waitForElementToAppear(SaveButton);
     SaveButton.click();
 
-    testWebDriver.waitForElementToAppear(saveSuccessMsg);
-    String successMessage= testWebDriver.getText(saveSuccessMsg);
-    SeleneseTestNgHelper.assertEquals(successMessage, TEMPLATE_SUCCESS_MESSAGE);
+
+        testWebDriver.sleep(1500);
+        if(saveSuccessMsg.isDisplayed())
+        {
+            message= testWebDriver.getText(saveSuccessMsg);
+        }
+        else
+        {
+            message= testWebDriver.getText(saveErrorMsgDiv);
+        }
+
+    SeleneseTestNgHelper.assertEquals(message, TEMPLATE_SUCCESS_MESSAGE);
 
     }
 }

@@ -217,10 +217,13 @@ public interface FacilityMapper {
   @Select("SELECT code FROM facility_type where id = #{id}")
   public String getFacilityTypeCodeFor(Long id);
 
-    @Update("UPDATE facility SET data_reportable=#{dataReportable}, is_active=#{active}, modified_by=#{modifiedBy}, modified_date=#{modifiedDate}" +
-            "WHERE id =#{id}")
-    void updateDataReportableAndActiveFor(Facility facility);
+  @Update("UPDATE facility SET data_reportable=#{dataReportable}, is_active=#{active}, modified_by=#{modifiedBy}, modified_date=#{modifiedDate}" +
+      "WHERE id =#{id}")
+  void updateDataReportableAndActiveFor(Facility facility);
 
-    @Select("SELECT id FROM facility WHERE LOWER(code) = LOWER(#{code})")
-    Long getIdForCode(String code);
+  @Select("SELECT id FROM facility WHERE LOWER(code) = LOWER(#{code})")
+  Long getIdForCode(String code);
+
+  @Select("select 0<(select count(id) as count from geographic_zone where id=#{geographicZoneId})")
+  Boolean isGeographicZonePresent(Long geographicZoneId);
 }
