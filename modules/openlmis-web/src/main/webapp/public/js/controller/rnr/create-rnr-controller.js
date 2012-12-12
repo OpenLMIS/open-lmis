@@ -69,16 +69,28 @@ function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $l
 
         fillConsumption();
         fillStockInHand();
+        fillNormalizedConsumption();
+
+        function fillNormalizedConsumption() {
+            var m = 3;
+            var x = parseInt(lineItem.stockOutDays) == NaN ? 0 : parseInt(lineItem.stockOutDays);
+            var f = parseInt(lineItem.newPatientCount) == NaN ? 0 : parseInt(lineItem.newPatientCount);
+            var dosesPerMonth = 1;
+            var g = 1;
+            // TODO : dosesPerMonth from programproduct table, g from product, rounding logic
+            lineItem.normalizedConsumption = ((m * 30) - x) == 0 ? c : (c * ((m * 30) / ((m * 30) - x)));// + ((f * dosesPerMonth / g ) * m);
+//            lineItem.normalizedConsumption = c;
+        }
 
         function fillConsumption() {
             if (cSource == 'CALCULATED') {
-                lineItem.quantityDispensed = (a && b && d && e) ? a + b - d - e : null;
+                c = lineItem.quantityDispensed = (a && b && d && e) ? a + b - d - e : null;
             }
         }
 
         function fillStockInHand() {
             if (eSource == 'CALCULATED') {
-                lineItem.stockInHand = (a && b && c && d) ? a + b - d - c : null;
+                e = lineItem.stockInHand = (a && b && c && d) ? a + b - d - c : null;
             }
         }
     };

@@ -147,4 +147,32 @@ describe('CreateRnrController', function () {
             expect(5).toEqual(scope.$parent.rnr.lineItems[0].stockInHand);
         });
     });
+
+    describe('Fill normalized consumption', function () {
+
+        beforeEach(function () {
+            httpBackend.expect('GET', '/logistics/rnr/programCode/columns.json').respond({"rnrColumnList":[
+                {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}},
+                {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
+                {"indicator":"C", "name":"quantityDispensed", "source":{"name":"CALCULATED"}},
+                {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}},
+                {"indicator":"E", "name":"stockInHand", "source":{"name":"CALCULATED"}},
+                {"indicator":"F", "name":"newPatientCount", "source":{"name":"USER_INPUT"}},
+                // TODO : another test without this param
+                {"indicator":"X", "name":"stockOutDays", "source":{"name":"USER_INPUT"}}
+            ]});
+            ctrl = controller(CreateRnrController, {$scope:scope, $location:location});
+        });
+
+        it('should calculate normalized consumption when all dependant columns are set', function () {
+            scope.$parent.rnr = {"id":"rnrId", "lineItems":[
+                {"id":1, "beginningBalance":1, "quantityReceived":10, "quantityDispensed":null, "lossesAndAdjustments":4, "stockInHand":2, "stockOutDays":5, "newPatientCount":0}
+            ]};
+
+            httpBackend.flush();
+
+            scope.fillCalculatedRnrColumns(0);
+            expect("5.29").toEqual(scope.$parent.rnr.lineItems[0].normalizedConsumption.toFixed(2));
+        })
+    });
 });
