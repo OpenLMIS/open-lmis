@@ -56,35 +56,22 @@ describe('CreateRnrController', function () {
     });
 
     it('should validate  integer field', function () {
-        var valid = scope.positiveInteger(100);
-        expect(true).toEqual(valid);
-        valid = scope.positiveInteger(0);
-        expect(true).toEqual(valid);
-        valid = scope.positiveInteger(-1);
-        expect(false).toEqual(valid);
-        valid = scope.positiveInteger('a');
-        expect(false).toEqual(valid);
-        valid = scope.positiveInteger(5.5);
-        expect(false).toEqual(valid);
+        expect(scope.positiveInteger(100)).toEqual(true);
+        expect(scope.positiveInteger(0)).toEqual(true);
+        expect(scope.positiveInteger(-1)).toEqual(false);
+        expect(scope.positiveInteger('a')).toEqual(false);
+        expect(scope.positiveInteger(5.5)).toEqual(false);
     });
 
     it('should validate float field', function () {
-        var valid = scope.positiveFloat(100);
-        expect(true).toEqual(valid);
-        valid = scope.positiveFloat(1.000);
-        expect(true).toEqual(valid);
-        valid = scope.positiveFloat(0.0);
-        expect(true).toEqual(valid);
-        valid = scope.positiveFloat(0.01);
-        expect(true).toEqual(valid);
-        valid = scope.positiveFloat(1.000001);
-        expect(false).toEqual(valid);
-        valid = scope.positiveFloat(100.001);
-        expect(false).toEqual(valid);
-        valid = scope.positiveFloat(-1.0);
-        expect(false).toEqual(valid);
-        valid = scope.positiveFloat('a');
-        expect(false).toEqual(valid);
+        expect(scope.positiveFloat(100)).toEqual(true);
+        expect(scope.positiveFloat(1.000)).toEqual(true);
+        expect(scope.positiveFloat(0.0)).toEqual(true);
+        expect(scope.positiveFloat(0.01)).toEqual(true);
+        expect(scope.positiveFloat(1.000001)).toEqual(false);
+        expect(scope.positiveFloat(100.001)).toEqual(false);
+        expect(scope.positiveFloat(-1.0)).toEqual(false);
+        expect(scope.positiveFloat('a')).toEqual(false);
     });
 
     describe('Fill consumption when it is marked as a computed column', function () {
