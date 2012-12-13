@@ -14,7 +14,7 @@ INSERT INTO role_rights
 
 INSERT INTO users
   (id, user_name, password, role, facility_id) VALUES
-  (200, 'User123', 'Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==','USER', 1);
+  (200, 'User123', 'Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==','USER', null);
 
 INSERT INTO role_assignments
   (user_id, role_id, program_id) VALUES

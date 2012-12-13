@@ -167,6 +167,7 @@ public class CreateFacilityPage extends Page {
         String facilityCodeText="FCcode"+date_time;
         String facilityNameText="FCname"+date_time;
 
+        testWebDriver.sleep(1500);
         testWebDriver.waitForElementToAppear(addNewFacilityHeader);
         testWebDriver.waitForElementToAppear(facilityCode);
         facilityCode.clear();

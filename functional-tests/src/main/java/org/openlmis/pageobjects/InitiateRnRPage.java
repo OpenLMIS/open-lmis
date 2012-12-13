@@ -17,7 +17,10 @@ import java.util.Properties;
 
 public class InitiateRnRPage extends Page {
 
-    @FindBy(how = How.XPATH, using = "//a[contains(text(),'Create')]")
+    @FindBy(how = How.LINK_TEXT, using = "Requisitions")
+    private static WebElement requisitionsLink;
+
+    @FindBy(how = How.XPATH, using = "//a[contains(@href,'/public/pages/logistics/rnr/create.html')]")
     private static WebElement createRnRLink;
 
     @FindBy(how = How.XPATH, using = "//select[@ng-change='loadPrograms()']")
@@ -55,6 +58,8 @@ public class InitiateRnRPage extends Page {
 
 
     public void navigateAndInitiateRnr(String FCstring, String program) {
+        testWebDriver.waitForElementToAppear(requisitionsLink);
+        requisitionsLink.click();
         testWebDriver.waitForElementToAppear(createRnRLink);
         createRnRLink.click();
         testWebDriver.waitForElementToAppear(facilityDropDown);

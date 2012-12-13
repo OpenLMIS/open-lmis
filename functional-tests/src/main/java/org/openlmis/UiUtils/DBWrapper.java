@@ -74,16 +74,22 @@ public class DBWrapper {
         }
         dbwrapper.dbConnection("INSERT INTO users\n" +
                 "  (id, user_name, password, role, facility_id) VALUES\n" +
-                "  (2, 'User123', 'Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==','USER', null);", "alter");
+                "  (200, 'User123', 'Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==','USER', null);", "alter");
 
-        rs.close();
+        //rs.close();
     }
+
+//    public void insertUserAndAllocateFacility() throws IOException {
+//        DBWrapper dbwrapper = new DBWrapper();
+//        dbwrapper.dbConnection("INSERT INTO users\n" +
+//                "  (id, user_name, password, role, facility_id) VALUES\n" +
+//                "  (200, 'User123', 'Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==','USER', (Select id from facility order by modified_date DESC limit 1));", "alter");
+//
+//    }
 
     public void insertUserAndAllocateFacility() throws IOException {
         DBWrapper dbwrapper = new DBWrapper();
-        dbwrapper.dbConnection("INSERT INTO users\n" +
-                "  (id, user_name, password, role, facility_id) VALUES\n" +
-                "  (2, 'User123', 'Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==','USER', (Select id from facility order by modified_date DESC limit 1));", "alter");
+        dbwrapper.dbConnection("update users set facility_id = (Select id from facility order by modified_date DESC limit 1) where id=200;", "alter");
 
     }
 
@@ -100,7 +106,6 @@ public class DBWrapper {
 
 
     public void insertRoles() throws SQLException, IOException {
-        boolean flag = false;
         DBWrapper dbwrapper = new DBWrapper();
         ResultSet rs = dbwrapper.dbConnection("Select id from roles;", "select");
 
@@ -128,7 +133,7 @@ public class DBWrapper {
 
         }
 
-        dbwrapper.dbConnection("INSERT INTO role_rights (role_id, right_id) VALUES (1, 1),(1, 2),(2, 1),(2, 2),(2, 3);", "alter");
+        dbwrapper.dbConnection("INSERT INTO role_rights (role_id, right_id) VALUES (1, 'VIEW_REQUISITION'), (1, 'CREATE_REQUISITION'),(2, 'VIEW_REQUISITION'),(2, 'UPLOADS'),(2, 'MANAGE_FACILITY'),(2, 'CONFIGURE_RNR');", "alter");
     }
 
     public void insertRoleAssignment() throws SQLException, IOException {
@@ -140,6 +145,6 @@ public class DBWrapper {
             dbwrapper.dbConnection("delete from role_assignments;", "alter");
 
         }
-        dbwrapper.dbConnection("INSERT INTO role_assignments (user_id, role_id, program_id) VALUES (2, 2, 1);", "alter");
+        dbwrapper.dbConnection("INSERT INTO role_assignments (user_id, role_id, program_id) VALUES (100, 2, 1), (200, 1, 1);", "alter");
     }
 }

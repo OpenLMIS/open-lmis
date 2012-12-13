@@ -33,6 +33,11 @@ public class E2EInitiateRnR extends TestCaseHelper {
         CreateFacilityPage createfacilitypage=new CreateFacilityPage(testWebDriver);
         InitiateRnRPage initiateRnR=new InitiateRnRPage(testWebDriver);
 
+         dbWrapper.insertUser();
+        dbWrapper.insertRoles();
+        dbWrapper.insertRoleRights();
+        dbWrapper.insertRoleAssignment();
+
         loginpage.login(credentials[0], credentials[1]);
         createfacilitypage.navigateCreateFacility();
         String date_time=createfacilitypage.enterAndVerifyFacility();
@@ -43,9 +48,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
         config.selectProgramToConfigTemplate(program);
         config.configureTemplate();
 
-        dbWrapper.insertRoles();
-        dbWrapper.insertRoleRights();
-        dbWrapper.insertRoleAssignment();
+
 
         loginpage.logout();
 
