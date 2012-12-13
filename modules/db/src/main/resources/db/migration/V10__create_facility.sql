@@ -25,7 +25,7 @@ CREATE TABLE facility (
     has_electricity BOOLEAN,
     has_electronic_scc BOOLEAN,
     has_electronic_dar BOOLEAN,
-    is_active BOOLEAN NOT NULL,
+    active BOOLEAN NOT NULL,
     go_live_date DATE NOT NULL,
     go_down_date DATE,
     comment  TEXT,

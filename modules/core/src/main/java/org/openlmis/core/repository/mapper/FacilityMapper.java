@@ -12,7 +12,7 @@ public interface FacilityMapper {
   @Select("Insert into facility(code, name, description,gln,main_phone,fax,address1,address2, " +
       "geographic_zone_id,type_id,catchment_population,latitude,longitude,altitude,operated_by_id," +
       "cold_storage_gross_capacity,cold_storage_net_capacity,supplies_others,is_sdp,is_online," +
-      "is_satellite,satellite_parent_code,has_electricity,has_electronic_scc,has_electronic_dar,is_active," +
+      "is_satellite,satellite_parent_code,has_electricity,has_electronic_scc,has_electronic_dar,active," +
       "go_live_date,go_down_date,comment,data_reportable,modified_by,modified_date) " +
       "values(#{code}, #{name},#{description},#{gln},#{mainPhone},#{fax},#{address1}, #{address2}," +
       "#{geographicZone.id}," +
@@ -28,7 +28,7 @@ public interface FacilityMapper {
   @Select("SELECT id, code, name, description,gln,main_phone,fax,address1,address2," +
       "geographic_zone_id,type_id,catchment_population,latitude,longitude,altitude,operated_by_id," +
       "cold_storage_gross_capacity,cold_storage_net_capacity,supplies_others,is_sdp,is_online," +
-      "is_satellite,satellite_parent_code,has_electricity,has_electronic_scc,has_electronic_dar,is_active," +
+      "is_satellite,satellite_parent_code,has_electricity,has_electronic_scc,has_electronic_dar,active," +
       "go_live_date,go_down_date,comment,data_reportable,modified_by,modified_date " +
       "FROM FACILITY")
   @Results(value = {
@@ -58,7 +58,7 @@ public interface FacilityMapper {
       @Result(property = "satelliteParentCode", column = "satellite_parent_code"),
       @Result(property = "hasElectricity", column = "has_electricity"),
       @Result(property = "hasElectronicScc", column = "has_electronic_scc"),
-      @Result(property = "active", column = "is_active"),
+      @Result(property = "active", column = "active"),
       @Result(property = "goLiveDate", column = "go_live_date"),
       @Result(property = "goDownDate", column = "go_down_date"),
       @Result(property = "comment", column = "comment"),
@@ -72,7 +72,7 @@ public interface FacilityMapper {
   void deleteAll();
 
   @Select("SELECT * FROM users U, facility F " +
-      "where U.facility_id = F.id and U.user_name = #{userName}")
+      "where U.facility_id = F.id and U.user_name = #{userName} and f.active = true")
   @Results(value = {
       @Result(property = "id", column = "facility_id"),
       @Result(property = "name"),
@@ -182,7 +182,7 @@ public interface FacilityMapper {
       @Result(property = "hasElectricity", column = "has_electricity"),
       @Result(property = "hasElectronicScc", column = "has_electronic_scc"),
       @Result(property = "hasElectronicDar", column = "has_electronic_dar"),
-      @Result(property = "active", column = "is_active"),
+      @Result(property = "active", column = "active"),
       @Result(property = "goLiveDate", column = "go_live_date"),
       @Result(property = "goDownDate", column = "go_down_date"),
       @Result(property = "comment", column = "comment"),
@@ -201,7 +201,7 @@ public interface FacilityMapper {
       "cold_storage_gross_capacity=#{coldStorageGrossCapacity},cold_storage_net_capacity=#{coldStorageNetCapacity}," +
       "supplies_others=#{suppliesOthers},is_sdp=#{sdp},is_online=#{online},is_satellite=#{satellite},satellite_parent_code=#{satelliteParentCode}," +
       "has_electricity=#{hasElectricity}," +
-      "has_electronic_scc=#{hasElectronicScc},has_electronic_dar=#{hasElectronicDar},is_active=#{active},go_live_date=#{goLiveDate},go_down_date=#{goDownDate}," +
+      "has_electronic_scc=#{hasElectronicScc},has_electronic_dar=#{hasElectronicDar},active=#{active},go_live_date=#{goLiveDate},go_down_date=#{goDownDate}," +
       "comment=#{comment},data_reportable=#{dataReportable},modified_by=#{modifiedBy},modified_date=#{modifiedDate} WHERE id=#{id}")
   void update(Facility facility);
 
@@ -217,7 +217,7 @@ public interface FacilityMapper {
   @Select("SELECT code FROM facility_type where id = #{id}")
   public String getFacilityTypeCodeFor(Long id);
 
-  @Update("UPDATE facility SET data_reportable=#{dataReportable}, is_active=#{active}, modified_by=#{modifiedBy}, modified_date= DEFAULT    " +
+  @Update("UPDATE facility SET data_reportable=#{dataReportable}, active=#{active}, modified_by=#{modifiedBy}, modified_date= DEFAULT    " +
       "WHERE id =#{id}")
   void updateDataReportableAndActiveFor(Facility facility);
 
