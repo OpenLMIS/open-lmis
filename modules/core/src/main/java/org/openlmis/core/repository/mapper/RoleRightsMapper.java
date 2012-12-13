@@ -1,6 +1,9 @@
 package org.openlmis.core.repository.mapper;
 
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.openlmis.core.domain.*;
 import org.springframework.stereotype.Repository;
 
@@ -19,16 +22,15 @@ public interface RoleRightsMapper {
   @Options(useGeneratedKeys = true)
   int insertRole(Role role);
 
-  @Select("SELECT RA.user_id, RA.role_id, RA.program_id FROM " +
-      "role_assignments RA, users U, role_rights RR WHERE " +
+  @Select("SELECT " +
+      "RA.user_id AS userId, " +
+      "RA.role_id AS roleId, " +
+      "RA.program_id as programId " +
+      "FROM role_assignments RA, users U, role_rights RR WHERE " +
       "U.user_name = #{userName} " +
       "AND U.id  = RA.user_id " +
       "AND RA.role_id = RR.role_id " +
       "AND RR.right_id = #{right} ")
-  @Results(value = {
-      @Result(property = "userId", column = "user_id"),
-      @Result(property = "roleId", column = "role_id"),
-      @Result(property = "programId", column = "program_id")})
   List<RoleAssignment> getRoleAssignmentsWithGivenRightForAUser(@Param(value = "right") Right right,
                                                                 @Param(value = "userName") String userName);
 
@@ -45,7 +47,6 @@ public interface RoleRightsMapper {
       "AND U.id  = RA.user_id " +
       "AND RA.role_id = RR.role_id " +
       "AND R.id= RR.right_id")
-
   List<Right> getAllRightsForUser(String username);
 
 }

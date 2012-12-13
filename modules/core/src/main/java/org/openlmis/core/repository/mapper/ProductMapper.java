@@ -58,10 +58,6 @@ public interface ProductMapper {
   int insert(Product product);
 
   @Results(value = {
-      @Result(property = "code", column = "code"),
-      @Result(property = "primaryName", column = "primary_name"),
-      @Result(property = "dispensingUnit", column = "dispensing_unit"),
-      @Result(property = "strength", column = "strength"),
       @Result(property = "form.id", column = "form_id"),
       @Result(property = "form.code", column = "form_code"),
       @Result(property = "form.displayOrder", column = "form_display_order"),
@@ -69,8 +65,8 @@ public interface ProductMapper {
       @Result(property = "dosageUnit.code", column = "dosage_unit_code"),
       @Result(property = "dosageUnit.displayOrder", column = "dosage_unit_display_order")
   })
-  @Select("select p.id as id, p.code as code, p.primary_name as primary_name, " +
-      "p.dispensing_unit as dispensing_unit, p.dosage_unit_id as dosage_unit_id, " +
+  @Select("select p.id as id, p.code as code, p.primary_name as primaryName, " +
+      "p.dispensing_unit as dispensingUnit, p.dosage_unit_id as dosage_unit_id, " +
       "p.form_id as form_id, p.strength as strength, " +
       "pf.code as form_code , pf.display_order as form_display_order, " +
       "du.code as dosage_unit_code, du.display_order as dosage_unit_display_order " +

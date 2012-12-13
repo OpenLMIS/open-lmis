@@ -1,6 +1,5 @@
 package org.openlmis.core.repository.mapper;
 
-import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.openlmis.core.domain.ProgramProduct;
 import org.springframework.stereotype.Repository;
@@ -14,6 +13,4 @@ public interface ProgramProductMapper {
       "#{dosesPerMonth}, #{active}, #{modifiedBy}, #{modifiedDate})")
   int insert(ProgramProduct programProduct);
 
-  @Delete("DELETE FROM PROGRAM_PRODUCT")
-  void deleteAll();
 }

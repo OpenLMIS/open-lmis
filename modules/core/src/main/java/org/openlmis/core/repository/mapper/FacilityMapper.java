@@ -212,10 +212,8 @@ public interface FacilityMapper {
   Long getFacilityTypeIdForCode(String facilityTypeCode);
 
   @Select("SELECT code FROM facility_operator where id = #{id}")
+  @SuppressWarnings("unused")
   public String getFacilityOperatorCodeFor(Long id);
-
-  @Select("SELECT code FROM facility_type where id = #{id}")
-  public String getFacilityTypeCodeFor(Long id);
 
   @Update("UPDATE facility SET data_reportable=#{dataReportable}, active=#{active}, modified_by=#{modifiedBy}, modified_date= DEFAULT    " +
       "WHERE id =#{id}")
