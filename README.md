@@ -26,10 +26,10 @@ Running App on Jetty
 ---------------------
 You can use _gradle clean build setupdb seed testseed run_ to start the app.
 There are bunch of gradle tasks that you can see by doing _gradle tasks
-_build is to build the app.
-_setupdb_ is to recreate the database and schema.
-_seed_ is to seed in the reference data.
-_testseed_ puts in some test data which can be used to browse through basic functionality in the system.
-_run_ is to run the app in embedded jetty.
+* _build is to build the app.
+* _setupdb_ is to recreate the database and schema.
+* _seed_ is to seed in the reference data.
+* _testseed_ puts in some test data which can be used to browse through basic functionality in the system.
+* _run_ is to run the app in embedded jetty.
 
 Once run, you can access the home page at http://localhost:9091/
