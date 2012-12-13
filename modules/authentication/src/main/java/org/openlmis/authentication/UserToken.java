@@ -9,6 +9,7 @@ public class UserToken {
     private final String role;
     private final boolean authenticated;
 
+
     public UserToken(String userName, String role, boolean authenticated) {
         this.userName = userName;
         this.role = role;

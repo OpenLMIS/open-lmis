@@ -1,5 +1,9 @@
-INSERT INTO rights(id, name, description) VALUES
- (1, 'view requisition', 'Permission to view requisitions'),
- (2, 'create requisition', 'Permission to create, edit, submit and recall requisitions'),
- (3, 'approve requisition', 'Permission to approve and reject requisitions');
+INSERT INTO rights( id, description) VALUES
+ ('VIEW_REQUISITION', 'Permission to view requisitions'),
+ ('CREATE_REQUISITION', 'Permission to create, edit, submit and recall requisitions'),
+ ('APPROVE_REQUISITION', 'Permission to approve and reject requisitions'),
+ ('UPLOADS', 'Permission to upload'),
+ ('MANAGE_FACILITY','Permission to manage facility(crud)'),
+ ('CONFIGURE_RNR','Permission to create and edit r&r template for any program');
+
 

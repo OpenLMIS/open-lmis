@@ -29,8 +29,8 @@
 
     <http use-expressions="true" entry-point-ref="restAuthenticationEntryPoint">
         <intercept-url pattern="/favicon.*" access="permitAll"/>
-        <intercept-url pattern="/admin/**" access="hasRole('ADMIN')" requires-channel="http"/>
-        <intercept-url pattern="/logistics/**" access="hasRole('USER')" requires-channel="http"/>
+        <intercept-url pattern="/admin/**" access="isAuthenticated()" requires-channel="http"/>
+        <intercept-url pattern="/logistics/**" access="isAuthenticated()" requires-channel="http"/>
         <intercept-url pattern="/public/**" access="permitAll" requires-channel="http"/>
         <intercept-url pattern="/user*" access="permitAll" requires-channel="http"/>
         <intercept-url pattern="/**" access="isAuthenticated()" requires-channel="http"/>

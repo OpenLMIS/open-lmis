@@ -3,7 +3,6 @@ package org.openlmis.web.controller;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -28,18 +27,11 @@ public class HomeControllerTest {
         when(request.getSession()).thenReturn(session);
     }
 
-    @Test
-    public void shouldReturnAdminHomeUrlOnAdminLogin() {
-        when(session.getAttribute(UserAuthenticationSuccessHandler.IS_ADMIN)).thenReturn(true);
-        String homePageURl = homeController.homeDefault(request);
-        assertEquals("redirect:/public/pages/admin/index.html", homePageURl);
-    }
 
     @Test
-    public void shouldRedirectToIndexPageForUsersWhoAreNotAdmins() {
-        when(session.getAttribute(UserAuthenticationSuccessHandler.IS_ADMIN)).thenReturn(false);
+    public void shouldRedirectToHomePage() {
         String homePageURl = homeController.homeDefault(request);
-        assertEquals("redirect:/public/pages/logistics/rnr/create.html", homePageURl);
+        assertEquals("redirect:/public/pages/index.html", homePageURl);
     }
 
 }

@@ -5,10 +5,12 @@ INSERT INTO roles
 
 INSERT INTO role_rights
   (role_id, right_id) VALUES
-  (1, 1),
-  (1, 2),
-  (2, 1),
-  (2, 3);
+  (1, 'VIEW_REQUISITION'),
+  (1, 'CREATE_REQUISITION'),
+  (2, 'VIEW_REQUISITION'),
+  (2, 'UPLOADS'),
+  (2, 'MANAGE_FACILITY'),
+  (2, 'CONFIGURE_RNR');
 
 INSERT INTO users
   (id, user_name, password, role, facility_id) VALUES

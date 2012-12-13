@@ -12,14 +12,18 @@ import java.util.List;
 @NoArgsConstructor
 public class RoleRightsService {
 
-    private RoleRightsRepository roleRightsRepository;
+  private RoleRightsRepository roleRightsRepository;
 
-    @Autowired
-    public RoleRightsService(RoleRightsRepository roleRightsRepository) {
-        this.roleRightsRepository = roleRightsRepository;
-    }
+  @Autowired
+  public RoleRightsService(RoleRightsRepository roleRightsRepository) {
+    this.roleRightsRepository = roleRightsRepository;
+  }
 
-    public List<RoleAssignment> getProgramWithGivenRightForAUser(Right right, String userName){
-        return roleRightsRepository.getProgramWithGivenRightForAUser(right, userName);
-    }
+  public List<RoleAssignment> getProgramWithGivenRightForAUser(Right right, String userName) {
+    return roleRightsRepository.getProgramWithGivenRightForAUser(right, userName);
+  }
+
+  public List<Right> getAllRightsForUser(String username) {
+    return roleRightsRepository.getAllRightsForUser(username);
+  }
 }

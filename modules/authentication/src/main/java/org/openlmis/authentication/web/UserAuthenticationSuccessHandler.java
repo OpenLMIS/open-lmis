@@ -19,7 +19,6 @@ public class UserAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         request.getSession().setAttribute(USER, authentication.getPrincipal());
         request.getSession().setAttribute(IS_ADMIN, isAdmin(authentication));
-
         super.onAuthenticationSuccess(request, response, authentication);
     }
 

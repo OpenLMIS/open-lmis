@@ -21,7 +21,6 @@ import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramBuilder.*;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
-import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
@@ -86,8 +85,7 @@ public class ProgramSupportedMapperIT {
 
     Role r1 = new Role("r1", "random description");
     roleRightsMapper.insertRole(r1);
-
-    roleRightsMapper.createRoleRight(r1.getId(), CREATE_REQUISITION);
+    roleRightsMapper.createRoleRight(r1.getId(), Right.CREATE_REQUISITION);
     insertRoleAssignments(activeProgram, user, r1);
     insertRoleAssignments(inactiveProgram, user, r1);
 

@@ -1,26 +1,23 @@
 package org.openlmis.core.domain;
 
 public enum Right {
-    VIEW_REQUISITION(1, "view requisition", "Permission to view requisitions"),
-    CREATE_REQUISITION(2, "create requisition", "Permission to create, edit, submit and recall requisitions"),
-    APPROVE_REQUISITION(3, "approve requisition", "Permission to approve and reject requisitions");
+  VIEW_REQUISITION("view requisition", "Permission to view requisitions"),
+  CREATE_REQUISITION("create requisition", "Permission to create, edit, submit and recall requisitions"),
+  APPROVE_REQUISITION("approve requisition", "Permission to approve and reject requisitions"),
+  UPLOADS("upload", "Permission to upload"),
+  MANAGE_FACILITY("manage facility", "Permission to manage facility(crud)"),
+  CONFIGURE_RNR("configure rnr", "Permission to create and edit r&r template for any program");
 
-    private int id;
-    private final String name;
-    private final String description;
 
-    Right(int id, String name, String description) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-    }
+  private final String name;
+  private final String description;
 
-    @SuppressWarnings("unused")
-    public int getId() {
-        return this.id;
-    }
+  Right(String name, String description) {
+    this.name = name;
+    this.description = description;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 }
