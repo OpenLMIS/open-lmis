@@ -21,10 +21,9 @@ public enum RnRColumnSource {
         this.description = description;
     }
 
-    //TODO test
     public static RnRColumnSource getValueOf(String value) {
-        for (RnRColumnSource columnType : RnRColumnSource.values()) {
-            if (columnType.code.equalsIgnoreCase(value)) return columnType;
+        for (RnRColumnSource columnSource : RnRColumnSource.values()) {
+            if (columnSource.code.equalsIgnoreCase(value)) return columnSource;
         }
         return null;
     }
