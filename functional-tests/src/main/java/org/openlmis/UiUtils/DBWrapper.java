@@ -90,9 +90,9 @@ public class DBWrapper {
     public void deleteUser() throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();
         dbwrapper.dbConnection("delete from role_rights;", "alter");
+        dbwrapper.dbConnection("delete from role_assignments;", "alter");
         dbwrapper.dbConnection("delete from roles;", "alter");
         dbwrapper.dbConnection("delete from programs_supported;", "alter");
-        dbwrapper.dbConnection("delete from role_assignments;", "alter");
         dbwrapper.dbConnection("delete from users where user_name like('User%');", "alter");
         dbwrapper.dbConnection("delete from requisition;", "alter");
         dbwrapper.dbConnection("delete from facility;", "alter");

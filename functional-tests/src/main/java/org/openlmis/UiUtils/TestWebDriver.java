@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static org.testng.Assert.assertTrue;
@@ -129,15 +130,47 @@ public class TestWebDriver {
         new Select(element).selectByIndex(index);
     }
 
+    public boolean isSelected(WebElement element) {
+       return element.isSelected();
+    }
 
+    public WebElement getFirstSelectedOption(WebElement element) {
+        return  new Select(element).getFirstSelectedOption();
+    }
+
+    public List<WebElement> getAllSelectedOptions(WebElement element) {
+        return new Select(element).getAllSelectedOptions();
+    }
+
+    public List<WebElement> getOptions(WebElement element) {
+        return  new Select(element).getOptions();
+    }
+
+    public void deselectByIndex(WebElement element, int index) {
+        new Select(element).deselectByIndex(index);
+    }
+
+    public void deselectByValue(WebElement element, String value) {
+        new Select(element).deselectByValue(value);
+    }
+
+    public void deselectByVisibleText(WebElement element, String value) {
+        new Select(element).deselectByVisibleText(value);
+    }
+
+    public void deselectAll(WebElement element) {
+        new Select(element).deselectAll();
+    }
 
     public String getText(WebElement element) {
        return element.getText();
     }
 
-    public String getValue(WebElement element, String value) {
+    public String getAttribute(WebElement element, String value) {
         return element.getAttribute(value);
     }
+
+
 
     public void sleep(long timeToSleep) {
         try{
@@ -153,6 +186,8 @@ public class TestWebDriver {
         Actions action = new Actions(driver);
         action.click(element).perform();
     }
+
+
 
     public boolean mouseOver(final WebElement element) {
         boolean flag= false;
