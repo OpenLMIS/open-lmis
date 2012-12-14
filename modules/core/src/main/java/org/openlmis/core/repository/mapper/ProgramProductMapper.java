@@ -1,6 +1,5 @@
 package org.openlmis.core.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProgramProduct;
@@ -17,14 +16,12 @@ public interface ProgramProductMapper {
             "#{dosesPerMonth}, #{active}, #{modifiedBy}, #{modifiedDate}) returning id")
     Integer insert(ProgramProduct programProduct);
 
-    @Delete("DELETE FROM PROGRAM_PRODUCT")
-    void deleteAll();
-
     @Select("select p.id as product_id, p.code as product_code, #{programCode} as program_code, p.primary_name as primary_name, " +
-            "p.dispensing_unit as dispensing_unit, p.dosage_unit_id as dosage_unit_id, " +
-            "p.form_id as form_id, p.strength as strength, " +
-            "pf.code as form_code , pf.display_order as form_display_order, " +
-            "du.code as dosage_unit_code, du.display_order as dosage_unit_display_order " +
+            "p.dispensing_unit, p.dosage_unit_id, " +
+            "p.form_id, p.strength, p.doses_per_dispensing_unit, " +
+            "pf.code as form_code, pf.display_order as form_display_order, " +
+            "du.code as dosage_unit_code, du.display_order as dosage_unit_display_order, " +
+            "pp.doses_per_month " +
             "from product p, facility_approved_product fap, program_product pp, facility f, " +
             "product_form pf , dosage_unit du where " +
             "pp.program_id = (select id from program where LOWER(code)=  LOWER(#{programCode})) " +
@@ -43,9 +40,11 @@ public interface ProgramProductMapper {
             @Result(property = "product", column = "product_id", javaType = Product.class, one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getProductById")),
             @Result(property = "productCode", column = "product_code"),
             @Result(property = "programCode", column = "program_code"),
+            @Result(property = "dosesPerMonth", column = "doses_per_month"),
             @Result(property = "product.code", column = "product_code"),
             @Result(property = "product.primaryName", column = "primary_name"),
             @Result(property = "product.dispensingUnit", column = "dispensing_unit"),
+            @Result(property = "product.dosesPerDispensingUnit", column = "doses_per_dispensing_unit"),
             @Result(property = "product.strength", column = "strength"),
             @Result(property = "product.form.id", column = "form_id"),
             @Result(property = "product.form.code", column = "form_code"),

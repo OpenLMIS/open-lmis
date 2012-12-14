@@ -1,24 +1,24 @@
 <div class="rnr-table">
-  <form ng-submit="saveRnr()" id="save-rnr" name="saveRnrForm" novalidate ng-controller="CreateRnrController">
-    <table class="table table-striped table-bordered">
-      <thead>
-      <tr>
-        <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in programRnRColumnList">
-          {{programRnrColumn.label}}
-        </th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td class="col-formula" ng-repeat="programRnrColumn in programRnRColumnList">
-          <div class="indicator">{{programRnrColumn.indicator}}</div>
-          <div class="formula">{{programRnrColumn.formula}}</div>
-        </td>
-      </tr>
-      <tr ng-repeat="rnrLineItem in $parent.rnr.lineItems">
-        <input type="hidden" name="index" value="{{$index}}"/>
-        <td class="cell-input" ng-repeat="column in programRnRColumnList">
-          <ng-switch on="column.source.name">
+    <form ng-submit="saveRnr()" id="save-rnr" name="saveRnrForm" novalidate ng-controller="CreateRnrController">
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in programRnRColumnList">
+                    {{programRnrColumn.label}}
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="col-formula" ng-repeat="programRnrColumn in programRnRColumnList">
+                    <div class="indicator">{{programRnrColumn.indicator}}</div>
+                    <div class="formula">{{programRnrColumn.formula}}</div>
+                </td>
+            </tr>
+            <tr ng-repeat="rnrLineItem in $parent.rnr.lineItems">
+                <input type="hidden" name="index" value="{{$index}}"/>
+                <td class="cell-input" ng-repeat="column in programRnRColumnList">
+                    <ng-switch on="column.source.name">
                 <span ng-switch-when="USER_INPUT">
 
                         <ng-switch on="column.name">
@@ -26,7 +26,8 @@
                               <input id="{{getId('A', $parent)}}" type="text"
                                      name="beginningBalance{{rnrLineItem['id']}}"
                                      ng-model="rnrLineItem[column.name]"
-                                     rnr-validator="positiveInteger" maxlength="8" ng-change="fillCalculatedRnrColumns(getIndex($parent))"/>
+                                     rnr-validator="positiveInteger" maxlength="8"
+                                     ng-change="fillCalculatedRnrColumns(getIndex($parent))"/>
                               <span id="beginningBalance{{rnrLineItem['id']}}" style="display:none;">
                                Enter Numeric Data.
                               </span>
@@ -47,7 +48,8 @@
                               <input id="{{getId('C', $parent)}}" type="text"
                                      name="quantityDispensed{{rnrLineItem['id']}}"
                                      ng-model="rnrLineItem[column.name]"
-                                     rnr-validator="positiveInteger" ng-change="fillCalculatedRnrColumns(getIndex($parent))"
+                                     rnr-validator="positiveInteger"
+                                     ng-change="fillCalculatedRnrColumns(getIndex($parent))"
                                      maxlength="8"/>
                               <span id="quantityDispensed{{rnrLineItem['id']}}" style="display:none;">
                                Enter Numeric Data.
@@ -58,7 +60,8 @@
                               <input id="{{getId('D', $parent)}}" type="text"
                                      name="lossesAndAdjustments{{rnrLineItem['id']}}"
                                      ng-model="rnrLineItem[column.name]"
-                                     rnr-validator="positiveInteger" ng-change="fillCalculatedRnrColumns(getIndex($parent))"
+                                     rnr-validator="positiveInteger"
+                                     ng-change="fillCalculatedRnrColumns(getIndex($parent))"
                                      maxlength="8"/>
                               <span id="lossesAndAdjustments{{rnrLineItem['id']}}" style="display:none;">
                                Enter Numeric Data.
@@ -68,7 +71,8 @@
                           <span ng-switch-when="stockInHand">
                               <input id="{{getId('E', $parent)}}" type="text" name="stockInHand{{rnrLineItem['id']}}"
                                      ng-model="rnrLineItem[column.name]"
-                                     rnr-validator="positiveInteger" ng-change="fillCalculatedRnrColumns(getIndex($parent))" maxlength="8"/>
+                                     rnr-validator="positiveInteger"
+                                     ng-change="fillCalculatedRnrColumns(getIndex($parent))" maxlength="8"/>
                               <span id="stockInHand{{rnrLineItem['id']}}" style="display:none;">
                                Enter Numeric Data.
                               </span>
@@ -78,7 +82,8 @@
                               <input id="{{getId('F', $parent)}}" type="text"
                                      name="newPatientCount{{rnrLineItem['id']}}"
                                      ng-model="rnrLineItem[column.name]"
-                                     rnr-validator="positiveInteger" maxlength="8"/>
+                                     rnr-validator="positiveInteger" maxlength="8"
+                                     ng-change="fillCalculatedRnrColumns(getIndex($parent))"/>
                               <span id="newPatientCount{{rnrLineItem['id']}}" style="display:none;">
                                Enter Numeric Data.
                               </span>
@@ -127,26 +132,27 @@
                           <span ng-switch-when="stockOutDays">
                               <input id="{{getId('X', $parent)}}" type="text" name="stockOutDays{{rnrLineItem['id']}}"
                                      ng-model="rnrLineItem[column.name]"
-                                     rnr-validator="positiveInteger" maxlength="8"/>
+                                     rnr-validator="positiveInteger" maxlength="8"
+                                     ng-change="fillCalculatedRnrColumns(getIndex($parent))"/>
                               <span id="stockOutDays{{rnrLineItem['id']}}" style="display:none;">
                                Enter Numeric Data.
                               </span>
                           </span>
                         </ng-switch>
                 </span>
-                <span  id="{{column.indicator+'_'+$parent.$parent.$index}}" ng-bind="rnrLineItem[column.name]"
-                        class="cell-text" ng-switch-default ></span>
-          </ng-switch>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-    <div class="alert alert-error" id="saveSuccessMsgDiv" ng-model="error" ng-show="error">
-      {{error}}
-    </div>
-    <div class="alert alert-success" id="saveSuccessMsgDiv" ng-model="message" ng-show="message">
-      {{message}}
-    </div>
-    <input type="submit" class="btn" value="Save"/>
-  </form>
+                <span id="{{column.indicator+'_'+$parent.$parent.$index}}" ng-bind="rnrLineItem[column.name]"
+                      class="cell-text" ng-switch-default></span>
+                    </ng-switch>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="alert alert-error" id="saveSuccessMsgDiv" ng-model="error" ng-show="error">
+            {{error}}
+        </div>
+        <div class="alert alert-success" id="saveSuccessMsgDiv" ng-model="message" ng-show="message">
+            {{message}}
+        </div>
+        <input type="submit" class="btn" value="Save"/>
+    </form>
 </div>

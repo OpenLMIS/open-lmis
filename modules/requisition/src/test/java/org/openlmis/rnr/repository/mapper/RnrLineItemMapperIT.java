@@ -51,7 +51,7 @@ public class RnrLineItemMapperIT {
     @Before
     public void setUp() {
         product = make(a(ProductBuilder.product));
-        programProduct = new ProgramProduct("HIV", product, 10);
+        programProduct = new ProgramProduct("HIV", product, 30);
         facilityId = facilityMapper.insert(make(a(defaultFacility)));
         productMapper.insert(product);
         programProductMapper.insert(programProduct);
@@ -72,8 +72,11 @@ public class RnrLineItemMapperIT {
 
         List<RnrLineItem> rnrLineItems = rnrLineItemMapper.getRnrLineItemsByRnrId(rnrId);
         assertThat(rnrLineItems.size(), is(1));
-        assertThat(rnrLineItems.get(0).getRnrId(), is(rnrId));
-        assertThat(rnrLineItems.get(0).getProduct(), is("Primary Name Tablet strength mg"));
+        RnrLineItem rnrLineItem = rnrLineItems.get(0);
+        assertThat(rnrLineItem.getRnrId(), is(rnrId));
+        assertThat(rnrLineItem.getDosesPerMonth(), is(30));
+        assertThat(rnrLineItem.getDosesPerDispensingUnit(), is(10));
+        assertThat(rnrLineItem.getProduct(), is("Primary Name Tablet strength mg"));
     }
 
     @Test

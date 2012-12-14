@@ -29,9 +29,9 @@ public class RnrService {
     @Transactional
     public Rnr initRnr(Integer facilityId, String programCode, String modifiedBy) {
         Rnr requisition = rnrRepository.getRequisitionByFacilityAndProgram(facilityId, programCode);
-        if(requisition.getId()==null){
+        if (requisition.getId() == null) {
             requisition = new Rnr(facilityId, programCode, RnrStatus.INITIATED, modifiedBy);
-            List<ProgramProduct> programProducts =  programProductService.getByFacilityAndProgram(facilityId, programCode);
+            List<ProgramProduct> programProducts = programProductService.getByFacilityAndProgram(facilityId, programCode);
             for (ProgramProduct programProduct : programProducts) {
                 RnrLineItem requisitionLineItem = new RnrLineItem(requisition.getId(), programProduct, modifiedBy);
                 requisition.add(requisitionLineItem);

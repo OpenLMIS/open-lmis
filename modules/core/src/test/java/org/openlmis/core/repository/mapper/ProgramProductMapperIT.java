@@ -85,6 +85,7 @@ public class ProgramProductMapperIT {
 
         ProgramProduct programProduct = programProducts.get(0);
         assertEquals(HIV, programProduct.getProgramCode());
+        assertEquals(30, programProduct.getDosesPerMonth().intValue());
         Product product = programProduct.getProduct();
         assertEquals("PRO05", product.getCode());
         assertEquals("Primary Name", product.getPrimaryName());
@@ -96,6 +97,7 @@ public class ProgramProductMapperIT {
         assertEquals("Tablet", product.getForm().getCode());
         assertNotNull(product.getDosageUnit());
         assertEquals("mg", product.getDosageUnit().getCode());
+        assertEquals(10, product.getDosesPerDispensingUnit().intValue());
 
         assertEquals("PRO06", programProducts.get(1).getProduct().getCode());
         assertEquals("PRO01", programProducts.get(2).getProduct().getCode());
@@ -116,6 +118,7 @@ public class ProgramProductMapperIT {
     private void addToProgram(String programCode, Product product, boolean isActive) {
         ProgramProduct programProduct = new ProgramProduct(programCode, product.getCode(), 10);
         programProduct.setActive(isActive);
+        programProduct.setDosesPerMonth(30);
         programProductMapper.insert(programProduct);
 
     }

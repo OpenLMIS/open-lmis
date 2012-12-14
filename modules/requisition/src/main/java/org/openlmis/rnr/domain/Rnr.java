@@ -20,9 +20,9 @@ public class Rnr {
     private String modifiedBy;
     private Date modifiedDate;
 
-    public Rnr(){
-        System.out.println("");
+    public Rnr() {
     }
+
     public Rnr(Integer facilityId, String programCode, RnrStatus status, String modifiedBy) {
         this.facilityId = facilityId;
         this.programCode = programCode;

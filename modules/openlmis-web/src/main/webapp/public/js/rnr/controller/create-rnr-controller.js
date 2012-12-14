@@ -72,6 +72,7 @@ function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $l
         fillNormalizedConsumption();
 
         function fillNormalizedConsumption() {
+            if (!c) return;
             var m = 3;
             var x = isNaN(parseInt(lineItem.stockOutDays)) ? 0 : parseInt(lineItem.stockOutDays);
             var f = isNaN(parseInt(lineItem.newPatientCount)) ? 0 : parseInt(lineItem.newPatientCount);

@@ -9,13 +9,10 @@ import java.util.List;
 @Repository
 public interface RnrLineItemMapper {
 
-    @Select("insert into requisition_line_item(rnr_id, product_code, product, modified_by, modified_date) " +
-            "values (#{rnrId}, #{productCode}, #{product}, #{modifiedBy}, #{modifiedDate}) returning id")
+    @Select("insert into requisition_line_item(rnr_id, product_code, product, doses_per_month, doses_per_dispensing_unit, modified_by, modified_date) " +
+            "values (#{rnrId}, #{productCode}, #{product}, #{dosesPerMonth}, #{dosesPerDispensingUnit}, #{modifiedBy}, #{modifiedDate}) returning id")
     @Options(useGeneratedKeys=true)
     public Integer insert(RnrLineItem rnrLineItem);
-
-    @Delete("delete from requisition_line_item")
-    public void deleteAll();
 
     @Select("Select * from requisition_line_item where rnr_id = #{rnrId}")
     @Results(value = {
@@ -41,6 +38,8 @@ public interface RnrLineItemMapper {
             @Result(property = "maxStockQuantity", column = "max_stock_quantity"),
             @Result(property = "packsToShip", column = "packs_to_ship"),
             @Result(property = "cost", column = "cost"),
+            @Result(property = "dosesPerMonth", column = "doses_per_month"),
+            @Result(property = "dosesPerDispensingUnit", column = "doses_per_dispensing_unit"),
             @Result(property = "remarks", column = "remarks"),
             @Result(property = "modifiedBy", column = "modified_by"),
             @Result(property = "modifiedDate", column = "modified_date")
