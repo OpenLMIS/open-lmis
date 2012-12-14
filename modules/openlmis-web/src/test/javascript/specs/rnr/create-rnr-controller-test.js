@@ -165,7 +165,7 @@ describe('CreateRnrController', function () {
 
         it('should calculate normalized consumption when newPatientCount is not set', function () {
             scope.$parent.rnr = {"id":"rnrId", "lineItems":[
-                {"id":1, "beginningBalance":1, "quantityReceived":10, "quantityDispensed":null, "lossesAndAdjustments":4, "stockInHand":2, "stockOutDays":5, "newPatientCount":null, "dosesPerMonth":30}
+                {"id":1, "beginningBalance":1, "quantityReceived":10, "quantityDispensed":null, "lossesAndAdjustments":4, "stockInHand":2, "stockOutDays":5, "newPatientCount":null, "dosesPerMonth":30, "dosesPerDispensingUnit":28}
             ]};
 
             httpBackend.flush();
@@ -176,7 +176,7 @@ describe('CreateRnrController', function () {
 
         it('should calculate normalized consumption when newPatientCount and stockOutDays is not set', function () {
             scope.$parent.rnr = {"id":"rnrId", "lineItems":[
-                {"id":1, "beginningBalance":1, "quantityReceived":10, "quantityDispensed":null, "lossesAndAdjustments":4, "stockInHand":2, "stockOutDays":null, "newPatientCount":null, "dosesPerMonth":30}
+                {"id":1, "beginningBalance":1, "quantityReceived":10, "quantityDispensed":null, "lossesAndAdjustments":4, "stockInHand":2, "stockOutDays":null, "newPatientCount":null, "dosesPerMonth":30, "dosesPerDispensingUnit":28}
             ]};
 
             httpBackend.flush();
@@ -187,13 +187,13 @@ describe('CreateRnrController', function () {
 
         it('should calculate normalized consumption when newPatientCount is set', function () {
             scope.$parent.rnr = {"id":"rnrId", "lineItems":[
-                {"id":1, "beginningBalance":1, "quantityReceived":10, "quantityDispensed":null, "lossesAndAdjustments":4, "stockInHand":2, "stockOutDays":5, "newPatientCount":10, "dosesPerMonth":30}
+                {"id":1, "beginningBalance":1, "quantityReceived":10, "quantityDispensed":null, "lossesAndAdjustments":4, "stockInHand":2, "stockOutDays":5, "newPatientCount":10, "dosesPerMonth":30, "dosesPerDispensingUnit":28}
             ]};
 
             httpBackend.flush();
 
             scope.fillCalculatedRnrColumns(0);
-            expect(905).toEqual(scope.$parent.rnr.lineItems[0].normalizedConsumption);
+            expect(65).toEqual(scope.$parent.rnr.lineItems[0].normalizedConsumption);
         });
     });
 });

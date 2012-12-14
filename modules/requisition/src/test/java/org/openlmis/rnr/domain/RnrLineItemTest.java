@@ -22,5 +22,6 @@ public class RnrLineItemTest {
         assertEquals("ASPIRIN", rnrLineItem.getProductCode());
         assertEquals(30, rnrLineItem.getDosesPerMonth().intValue());
         assertEquals("foo", rnrLineItem.getModifiedBy());
+        assertEquals(10, rnrLineItem.getDosesPerDispensingUnit().intValue());
     }
 }

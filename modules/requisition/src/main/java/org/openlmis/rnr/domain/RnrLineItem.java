@@ -17,6 +17,7 @@ public class RnrLineItem {
     private String product;
     private String productCode;
     private Integer dosesPerMonth;
+    private Integer dosesPerDispensingUnit;
     private String unitOfIssue;
 
     private Integer quantityReceived;
@@ -53,6 +54,7 @@ public class RnrLineItem {
         Product product = programProduct.getProduct();
         this.productCode = product.getCode();
         this.unitOfIssue = product.getDispensingUnit();
+        this.dosesPerDispensingUnit = product.getDosesPerDispensingUnit();
         this.dosesPerMonth = programProduct.getDosesPerMonth();
         this.product = productName(product);
         this.modifiedBy = modifiedBy;

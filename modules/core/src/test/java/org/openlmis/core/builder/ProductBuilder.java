@@ -49,6 +49,7 @@ public class ProductBuilder {
             product.setTracer(true);
             product.setPackRoundingThreshold(1);
             product.setRoundToZero(true);
+            product.setDosesPerDispensingUnit(10);
             ProductForm form = new ProductForm();
             form.setCode("Tablet");
             form.setId(1L);
