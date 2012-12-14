@@ -53,7 +53,7 @@ public class TestWebDriver {
 
     public void verifyUrlInvalid() {
         String url = getCurrentUrl();
-        assertTrue(url.contains(BASE_URL + "public/pages/login.html?error=true"));
+        assertTrue(url.contains(BASE_URL + "public/pages/loginAs.html?error=true"));
     }
 
 

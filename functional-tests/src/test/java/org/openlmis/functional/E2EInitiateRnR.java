@@ -3,10 +3,7 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.CreateFacilityPage;
-import org.openlmis.pageobjects.InitiateRnRPage;
-import org.openlmis.pageobjects.LoginPage;
-import org.openlmis.pageobjects.TemplateConfigPage;
+import org.openlmis.pageobjects.*;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
@@ -29,16 +26,16 @@ public class E2EInitiateRnR extends TestCaseHelper {
     public void testE2EInitiateRnR(String program,String user, String password,String[] credentials) throws Exception {
 
         DBWrapper dbWrapper = new DBWrapper();
-        LoginPage loginpage=new LoginPage(testWebDriver);
-        CreateFacilityPage createfacilitypage=new CreateFacilityPage(testWebDriver);
-        InitiateRnRPage initiateRnR=new InitiateRnRPage(testWebDriver);
+        LoginPage loginPage=new LoginPage(testWebDriver);
 
-         dbWrapper.insertUser();
+        dbWrapper.insertUser();
         dbWrapper.insertRoles();
         dbWrapper.insertRoleRights();
         dbWrapper.insertRoleAssignment();
 
-        loginpage.login(credentials[0], credentials[1]);
+        HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+
+        CreateFacilityPage createfacilitypage=new CreateFacilityPage(testWebDriver);
         createfacilitypage.navigateCreateFacility();
         String date_time=createfacilitypage.enterAndVerifyFacility();
 
@@ -48,14 +45,14 @@ public class E2EInitiateRnR extends TestCaseHelper {
         config.selectProgramToConfigTemplate(program);
         config.configureTemplate();
 
+        homePage.logout();
 
+        HomePage homePage1 = loginPage.loginAs(user, password);
 
-        loginpage.logout();
-
-        loginpage.login(user, password);
+        InitiateRnRPage initiateRnR=new InitiateRnRPage(testWebDriver);
         initiateRnR.navigateAndInitiateRnr(date_time, program);
         initiateRnR.verifyRnRHeader(date_time,program);
-        loginpage.logout();
+        homePage1.logout();
 
     }
     @AfterClass
