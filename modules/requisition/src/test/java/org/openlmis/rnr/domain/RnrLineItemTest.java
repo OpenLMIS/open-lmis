@@ -14,7 +14,7 @@ public class RnrLineItemTest {
     @Test
     public void shouldConstructRnrLineItem() {
 
-        Product product = make(a(ProductBuilder.product, with(code, "ASPIRIN")));
+        Product product = make(a(ProductBuilder.defaultProduct, with(code, "ASPIRIN")));
         product.setDispensingUnit("Strip");
         RnrLineItem rnrLineItem = new RnrLineItem(1, new ProgramProduct("PRG_CODE", product, 30), "foo");
         assertEquals(1, rnrLineItem.getRnrId().intValue());

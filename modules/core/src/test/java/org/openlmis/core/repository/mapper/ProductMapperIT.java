@@ -6,6 +6,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.domain.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -14,7 +15,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.natpryce.makeiteasy.MakeItEasy.a;
+import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static junit.framework.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
@@ -65,5 +69,20 @@ public class ProductMapperIT {
 
         id = productMapper.getProductFormIdForCode("invalid product form");
         assertThat(id, CoreMatchers.is(nullValue()));
+    }
+
+    @Test
+    public void shouldReturnNullForInvalidProductCode() {
+        String code = "invalid_code";
+        Integer productId = productMapper.getIdByCode(code);
+        assertThat(productId, is(nullValue()));
+    }
+
+    @Test
+    public void shouldReturnProductIdForValidProductCode() {
+        Product product = make(a(ProductBuilder.defaultProduct));
+        productMapper.insert(product);
+        Integer id = productMapper.getIdByCode(product.getCode());
+        assertThat(id, is(product.getId()));
     }
 }

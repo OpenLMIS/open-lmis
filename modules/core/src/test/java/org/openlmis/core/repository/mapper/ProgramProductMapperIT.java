@@ -9,6 +9,7 @@ import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.domain.FacilityApprovedProduct;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -24,6 +25,7 @@ import static junit.framework.Assert.assertNotNull;
 import static org.openlmis.core.builder.ProductBuilder.*;
 import static org.openlmis.core.builder.ProgramBuilder.PROGRAM_CODE;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
+import static org.openlmis.core.builder.ProgramBuilder.programCode;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
@@ -48,9 +50,12 @@ public class ProgramProductMapperIT {
 
     @Test
     public void shouldInsertProductForAProgram() throws Exception {
-        productMapper.insert(make(a(ProductBuilder.product, with(displayOrder, 1))));
-        programMapper.insert(make(a(defaultProgram)));
-        ProgramProduct programProduct = new ProgramProduct(PROGRAM_CODE, PRODUCT_CODE, 10);
+        Product product = make(a(ProductBuilder.defaultProduct, with(displayOrder, 1)));
+        productMapper.insert(product);
+        Program program = make(a(defaultProgram));
+        programMapper.insert(program);
+        ProgramProduct programProduct = new ProgramProduct(program, product);
+        programProduct.setDosesPerMonth(10);
         Integer id = programProductMapper.insert(programProduct);
         assertNotNull(id);
     }
@@ -58,33 +63,41 @@ public class ProgramProductMapperIT {
     @Test
     public void shouldGetFullSupplyAndActiveProductsByFacilityAndProgramInOrderOfDisplayAndProductCode() {
         Integer facilityId = facilityMapper.insert(make(a(FacilityBuilder.defaultFacility)));
+        Program yellowFeverProgram = make(a(defaultProgram));
+        Program bpProgram = make(a(defaultProgram, with(programCode,"BP")));
 
-        Product pro01 = product(HIV, "PRO01", true, true, 6);
-        addToProgram("ARV", pro01, true);
+        programMapper.insert(bpProgram);
+        programMapper.insert(yellowFeverProgram);
+
+        Product pro01 = product("PRO01", true, 6);
+        Product pro02 = product("PRO02", true, 4);
+        Product pro03 = product("PRO03", false, 1);
+        Product pro04 = product("PRO04", true, 2);
+        Product pro05 = product("PRO05", true, 5);
+        Product pro06 = product("PRO06", true, 5);
+        Product pro07 = product("PRO07", true, null);
+
+        addToProgram(yellowFeverProgram, pro01, true);
+        addToProgram(yellowFeverProgram, pro02, true);
+        addToProgram(yellowFeverProgram, pro03, true);
+        addToProgram(yellowFeverProgram, pro04, false);
+        addToProgram(yellowFeverProgram, pro05, true);
+        addToProgram(yellowFeverProgram, pro06, true);
+        addToProgram(bpProgram,          pro07, true);
+
         addToFacilityType("warehouse", pro01);
-
-        product(HIV, "PRO02", true, true, 4);
-
-        Product pro03 = product(HIV, "PRO03", false, true, 1);
         addToFacilityType("warehouse", pro03);
-
-        Product pro04 = product(HIV, "PRO04", true, false, 2);
         addToFacilityType("warehouse", pro04);
-
-        Product pro06 = product(HIV, "PRO06", true, true, 5);
+        addToFacilityType("warehouse", pro05);
         addToFacilityType("warehouse", pro06);
-
-        Product pro07 = product(HIV, "PRO07", true, true, null);
         addToFacilityType("warehouse", pro07);
 
-        Product pro05 = product(HIV, "PRO05", true, true, 5);
-        addToFacilityType("warehouse", pro05);
-
-        List<ProgramProduct> programProducts = programProductMapper.getFullSupplyProductsByFacilityAndProgram(facilityId, HIV);
-        assertEquals(4, programProducts.size());
+        List<ProgramProduct> programProducts = programProductMapper.getFullSupplyProductsByFacilityAndProgram(facilityId, yellowFeverProgram.getCode());
+        assertEquals(3, programProducts.size());
 
         ProgramProduct programProduct = programProducts.get(0);
-        assertEquals(HIV, programProduct.getProgramCode());
+
+        assertEquals(yellowFeverProgram.getCode(), programProduct.getProgramCode());
         assertEquals(30, programProduct.getDosesPerMonth().intValue());
         Product product = programProduct.getProduct();
         assertEquals("PRO05", product.getCode());
@@ -101,22 +114,21 @@ public class ProgramProductMapperIT {
 
         assertEquals("PRO06", programProducts.get(1).getProduct().getCode());
         assertEquals("PRO01", programProducts.get(2).getProduct().getCode());
-        assertEquals("PRO07", programProducts.get(3).getProduct().getCode());
     }
 
     private void addToFacilityType(String facilityType, Product product) {
         facilityApprovedProductMapper.insert(new FacilityApprovedProduct(facilityType, product.getCode()));
     }
 
-    private Product product(String programCode, String productCode, boolean isFullSupply, boolean isActive, Integer order) {
-        Product product = make(a(ProductBuilder.product, with(code, productCode), with(fullSupply, isFullSupply), with(displayOrder, order)));
+    private Product product(String productCode, boolean isFullSupply, Integer order) {
+        Product product = make(a(ProductBuilder.defaultProduct, with(code, productCode), with(fullSupply, isFullSupply), with(displayOrder, order)));
         productMapper.insert(product);
-        addToProgram(programCode, product, isActive);
         return product;
     }
 
-    private void addToProgram(String programCode, Product product, boolean isActive) {
-        ProgramProduct programProduct = new ProgramProduct(programCode, product.getCode(), 10);
+    private void addToProgram(Program program, Product product, boolean isActive) {
+        ProgramProduct programProduct = new ProgramProduct(program, product);
+        programProduct.setDosesPerMonth(10);
         programProduct.setActive(isActive);
         programProduct.setDosesPerMonth(30);
         programProductMapper.insert(programProduct);

@@ -4,10 +4,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProductBuilder;
+import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProductMapper;
+import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
@@ -44,14 +47,21 @@ public class RnrLineItemMapperIT {
     @Autowired
     private RnrLineItemMapper rnrLineItemMapper;
 
+    @Autowired
+    private ProgramMapper programMapper;
+
     Product product;
+    Program program;
     ProgramProduct programProduct;
     Integer facilityId;
 
     @Before
     public void setUp() {
-        product = make(a(ProductBuilder.product));
-        programProduct = new ProgramProduct("HIV", product, 30);
+        product = make(a(ProductBuilder.defaultProduct));
+        program = make(a(ProgramBuilder.defaultProgram));
+        programMapper.insert(program);
+        programProduct = new ProgramProduct(program, product);
+        programProduct.setDosesPerMonth(30);
         facilityId = facilityMapper.insert(make(a(defaultFacility)));
         productMapper.insert(product);
         programProductMapper.insert(programProduct);
@@ -59,7 +69,7 @@ public class RnrLineItemMapperIT {
 
     @Test
     public void shouldInsertRequisitionLineItem() {
-        Integer rnrId = rnrMapper.insert(new Rnr(facilityId, "HIV", RnrStatus.INITIATED, "user"));
+        Integer rnrId = rnrMapper.insert(new Rnr(facilityId, program.getCode(), RnrStatus.INITIATED, "user"));
         Integer requisitionLineItemId = rnrLineItemMapper.insert(new RnrLineItem(rnrId, programProduct, "user"));
         assertNotNull(requisitionLineItemId);
     }

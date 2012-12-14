@@ -43,7 +43,7 @@ public class RnrServiceTest {
     public void shouldInitRequisition() {
         when(rnrRepository.getRequisitionByFacilityAndProgram(facilityId, HIV)).thenReturn(new Rnr());
         List<ProgramProduct> programProducts = new ArrayList<>();
-        programProducts.add(new ProgramProduct(null, make(a(ProductBuilder.product)), 10));
+        programProducts.add(new ProgramProduct(null, make(a(ProductBuilder.defaultProduct)), 10));
         when(programProductService.getByFacilityAndProgram(facilityId, HIV)).thenReturn(programProducts);
         Rnr rnr = rnrService.initRnr(facilityId, HIV, "user");
         verify(programProductService).getByFacilityAndProgram(facilityId, HIV);

@@ -56,7 +56,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
     public void shouldGiveErrorIfRequisitionGroupCodeDoesNotExist() throws Exception {
 
         when(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode())).thenReturn(null);
-        when(programMapper.getIdForCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1);
+        when(programMapper.getIdByCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1);
         when(scheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode())).thenReturn(1);
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("Requisition Group Code Does Not Exist");
@@ -69,7 +69,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
     @Test
     public void shouldGiveErrorIfProgramCodeDoesNotExist() throws Exception {
         when(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode())).thenReturn(1);
-        when(programMapper.getIdForCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(null);
+        when(programMapper.getIdByCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(null);
         when(scheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode())).thenReturn(1);
 
         expectedEx.expect(RuntimeException.class);
@@ -80,7 +80,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
     @Test
     public void shouldGiveErrorIfScheduleCodeDoesNotExist() throws Exception {
         when(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode())).thenReturn(1);
-        when(programMapper.getIdForCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1);
+        when(programMapper.getIdByCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1);
         when(scheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode())).thenReturn(null);
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("Schedule Code Does Not Exist");
@@ -100,14 +100,14 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
     @Test
     public void shouldSaveMappingIfAllCorrect() throws Exception {
         when(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode())).thenReturn(1);
-        when(programMapper.getIdForCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1);
+        when(programMapper.getIdByCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1);
         when(scheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode())).thenReturn(1);
 
         requisitionGroupProgramScheduleRepository.insert(requisitionGroupProgramSchedule);
 
         verify(requisitionGroupProgramScheduleMapper).insert(requisitionGroupProgramSchedule);
         verify(requisitionGroupMapper).getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode());
-        verify(programMapper).getIdForCode(requisitionGroupProgramSchedule.getProgram().getCode());
+        verify(programMapper).getIdByCode(requisitionGroupProgramSchedule.getProgram().getCode());
         verify(scheduleMapper).getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode());
 
         assertThat(requisitionGroupProgramSchedule.getSchedule().getId(), is(1));

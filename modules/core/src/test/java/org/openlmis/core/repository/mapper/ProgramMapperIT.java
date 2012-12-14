@@ -83,7 +83,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     @Test
     public void shouldGetIdByCode() throws Exception {
         Integer id = programMapper.insert(make(a(defaultProgram)));
-        assertThat(id, is(programMapper.getIdForCode(ProgramBuilder.PROGRAM_CODE)));
+        assertThat(id, is(programMapper.getIdByCode(ProgramBuilder.PROGRAM_CODE)));
     }
 
     @Test

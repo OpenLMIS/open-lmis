@@ -34,7 +34,7 @@ public class FacilityApprovedProductMapperIT {
 
     @Test
     public void shouldInsertFacilityApprovedProduct() throws Exception {
-        productMapper.insert(make(a(ProductBuilder.product)));
+        productMapper.insert(make(a(ProductBuilder.defaultProduct)));
         FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct();
         facilityApprovedProduct.setFacilityTypeCode(FACILITY_TYPE_CODE);
         facilityApprovedProduct.setProductCode(PRODUCT_CODE);

@@ -11,6 +11,8 @@ import java.util.Date;
 @NoArgsConstructor
 public class Product implements Importable {
 
+    private Integer id;
+
     @ImportField(mandatory = true, name = "Product Code")
     private String code;
 

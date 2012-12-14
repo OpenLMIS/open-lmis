@@ -32,7 +32,7 @@ public class RequisitionGroupProgramScheduleRepository {
 
         try{
             requisitionGroupProgramSchedule.getRequisitionGroup().setId(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode()));
-            requisitionGroupProgramSchedule.getProgram().setId(programMapper.getIdForCode(requisitionGroupProgramSchedule.getProgram().getCode()));
+            requisitionGroupProgramSchedule.getProgram().setId(programMapper.getIdByCode(requisitionGroupProgramSchedule.getProgram().getCode()));
             requisitionGroupProgramSchedule.getSchedule().setId(scheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode()));
 
             if (requisitionGroupProgramSchedule.getRequisitionGroup().getId() == null) {

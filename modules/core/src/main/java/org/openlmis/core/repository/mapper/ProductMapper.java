@@ -56,7 +56,7 @@ public interface ProductMapper {
             "#{packRoundingThreshold}," +
             "#{modifiedBy}, #{modifiedDate})")
     @Options(useGeneratedKeys = true)
-    int insert(Product product);
+    Integer insert(Product product);
 
     @Delete("delete from product")
     void deleteAll();
@@ -70,4 +70,7 @@ public interface ProductMapper {
     // Used by ProgramProductMapper
     @Select("SELECT * FROM product WHERE id = #{id}")
     Product getProductById(Integer id);
+
+    @Select("SELECT id from product where code = #{code}")
+    Integer getIdByCode(String code);
 }

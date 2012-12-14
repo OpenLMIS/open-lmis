@@ -39,14 +39,14 @@ public class ProductRepositoryTest {
 
   @Test
   public void shouldInsertProduct() throws Exception {
-    Product product = make(a(ProductBuilder.product));
+    Product product = make(a(ProductBuilder.defaultProduct));
     repository.insert(product);
     verify(mockedMapper).insert(product);
   }
 
   @Test
   public void shouldRaiseDuplicateProductCodeError() throws Exception {
-    Product product = make(a(ProductBuilder.product));
+    Product product = make(a(ProductBuilder.defaultProduct));
     expectedEx.expect(RuntimeException.class);
     expectedEx.expectMessage("Duplicate Product Code found");
     doThrow(new DuplicateKeyException("")).when(mockedMapper).insert(product);
@@ -55,7 +55,7 @@ public class ProductRepositoryTest {
 
   @Test
   public void shouldRaiseIncorrectReferenceDataError() throws Exception {
-    Product product = make(a(ProductBuilder.product));
+    Product product = make(a(ProductBuilder.defaultProduct));
     expectedEx.expect(RuntimeException.class);
     expectedEx.expectMessage("Missing/Invalid Reference data");
     doThrow(new DataIntegrityViolationException("foreign key")).when(mockedMapper).insert(product);
@@ -64,7 +64,7 @@ public class ProductRepositoryTest {
 
   @Test
   public void shouldRaiseMissingReferenceDataError() throws Exception {
-    Product product = make(a(ProductBuilder.product));
+    Product product = make(a(ProductBuilder.defaultProduct));
     expectedEx.expect(RuntimeException.class);
     expectedEx.expectMessage("Missing/Invalid Reference data");
     doThrow(new DataIntegrityViolationException("violates not-null constraint")).when(mockedMapper).insert(product);
@@ -73,7 +73,7 @@ public class ProductRepositoryTest {
 
   @Test
   public void shouldRaiseIncorrectDataValueError() throws Exception {
-    Product product = make(a(ProductBuilder.product));
+    Product product = make(a(ProductBuilder.defaultProduct));
     expectedEx.expect(RuntimeException.class);
     expectedEx.expectMessage("Incorrect data length");
     doThrow(new DataIntegrityViolationException("value too long")).when(mockedMapper).insert(product);
@@ -82,7 +82,7 @@ public class ProductRepositoryTest {
 
   @Test
   public void shouldRaiseInvalidReferenceDataDosageUnitError() throws Exception {
-    Product product = make(a(ProductBuilder.product));
+    Product product = make(a(ProductBuilder.defaultProduct));
     product.getDosageUnit().setCode("invalid code");
     when(mockedMapper.getDosageUnitIdForCode("invalid code")).thenReturn(null);
 
@@ -93,7 +93,7 @@ public class ProductRepositoryTest {
 
   @Test
   public void shouldSetDataDosageUnitIdForCode() throws Exception {
-    Product product = make(a(ProductBuilder.product));
+    Product product = make(a(ProductBuilder.defaultProduct));
     product.getDosageUnit().setCode("valid code");
     when(mockedMapper.getDosageUnitIdForCode("valid code")).thenReturn(1);
 
@@ -103,7 +103,7 @@ public class ProductRepositoryTest {
 
   @Test
   public void shouldRaiseInvalidReferenceDataProductFormError() throws Exception {
-    Product product = make(a(ProductBuilder.product));
+    Product product = make(a(ProductBuilder.defaultProduct));
     product.getForm().setCode("invalid code");
     when(mockedMapper.getProductFormIdForCode("invalid code")).thenReturn(null);
 
@@ -114,7 +114,7 @@ public class ProductRepositoryTest {
 
   @Test
   public void shouldSetProductFormIdForCode() throws Exception {
-    Product product = make(a(ProductBuilder.product));
+    Product product = make(a(ProductBuilder.defaultProduct));
     product.getForm().setCode("valid code");
     when(mockedMapper.getProductFormIdForCode("valid code")).thenReturn(1);
 
