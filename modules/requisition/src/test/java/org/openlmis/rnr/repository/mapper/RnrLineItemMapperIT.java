@@ -92,5 +92,4 @@ public class RnrLineItemMapperIT {
         assertThat(rnrLineItems.get(0).getLossesAndAdjustments(), is(10));
         assertThat(rnrLineItems.get(0).getProduct(), is("Primary Name Tablet strength mg"));
     }
-
 }

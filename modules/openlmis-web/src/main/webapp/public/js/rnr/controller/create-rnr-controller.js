@@ -75,7 +75,7 @@ function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $l
             var m = 3;
             var x = isNaN(parseInt(lineItem.stockOutDays)) ? 0 : parseInt(lineItem.stockOutDays);
             var f = isNaN(parseInt(lineItem.newPatientCount)) ? 0 : parseInt(lineItem.newPatientCount);
-            var dosesPerMonth = 1;
+            var dosesPerMonth = parseInt(lineItem.dosesPerMonth);
             var g = 1;
             // TODO : dosesPerMonth from programproduct table, g from product, rounding logic
             lineItem.normalizedConsumption = Math.round(((m * 30) - x) == 0 ? c : (c * ((m * 30) / ((m * 30) - x))) + ((f * dosesPerMonth / g ) * m));
