@@ -8,6 +8,8 @@ import org.openlmis.upload.handler.AbstractModelPersistenceHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 
 @NoArgsConstructor
 @Component("requisitionGroupProgramScheduleHandler")
@@ -25,7 +27,7 @@ public class RequisitionGroupProgramScheduleHandler extends AbstractModelPersist
     protected void save(Importable modelClass, String modifiedBy) {
         RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = (RequisitionGroupProgramSchedule) modelClass;
         requisitionGroupProgramSchedule.setModifiedBy(modifiedBy);
+        requisitionGroupProgramSchedule.setModifiedDate(new Date());
         requisitionGroupProgramScheduleService.save(requisitionGroupProgramSchedule);
-
     }
 }

@@ -15,22 +15,22 @@ public class SupervisoryNode implements Importable {
     Integer id;
 
     @ImportField(name = "Supervisory Node Code", mandatory = true)
-    String code;
+    private String code;
 
     @ImportField(name = "Name of Node", mandatory = true)
-    String name;
+    private String name;
 
     @ImportField(name = "Description")
-    String description;
+    private String description;
 
     @ImportField(name = "Is Approval Point", type = "boolean", mandatory = true)
-    Boolean approvalPoint;
+    private Boolean approvalPoint;
 
     @ImportField(name = "Parent Node", nested = "code")
-    SupervisoryNode parent;
+    private SupervisoryNode parent;
 
     @ImportField(name = "Facility Code", mandatory = true, nested = "code")
-    Facility facility;
+    private Facility facility;
 
     private String modifiedBy;
     private Date modifiedDate;

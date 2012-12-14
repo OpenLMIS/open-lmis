@@ -3,7 +3,6 @@ package org.openlmis.core.handler;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.repository.FacilityRepository;
-import org.openlmis.core.service.FacilityService;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.handler.AbstractModelPersistenceHandler;
 import org.springframework.beans.factory.annotation.Autowired;

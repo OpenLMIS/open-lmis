@@ -13,7 +13,7 @@ import org.openlmis.rnr.domain.Schedule;
 import org.openlmis.rnr.repository.mapper.RequisitionGroupMapper;
 import org.openlmis.rnr.repository.mapper.RequisitionGroupProgramScheduleMapper;
 import org.openlmis.rnr.repository.mapper.ScheduleMapper;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -90,7 +90,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
 
     @Test
     public void shouldGiveDuplicateRecordErrorIfDuplicateRGCodeAndProgramCodeFound() throws Exception {
-        doThrow(new DataIntegrityViolationException("")).when(requisitionGroupProgramScheduleMapper).insert(requisitionGroupProgramSchedule);
+        doThrow(new DuplicateKeyException("")).when(requisitionGroupProgramScheduleMapper).insert(requisitionGroupProgramSchedule);
 
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("Duplicate Requisition Group Code And Program Code Combination found");

@@ -5,11 +5,11 @@ import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.rnr.domain.SupervisoryNode;
 import org.openlmis.rnr.repository.mapper.SupervisoryNodeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.stereotype.Repository;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.stereotype.Component;
 
 
-@Repository
+@Component
 @NoArgsConstructor
 public class SupervisoryNodeRepository {
     private SupervisoryNodeMapper supervisoryNodeMapper;
@@ -23,18 +23,19 @@ public class SupervisoryNodeRepository {
 
     public void save(SupervisoryNode supervisoryNode) {
         supervisoryNode.getFacility().setId(facilityMapper.getIdForCode(supervisoryNode.getFacility().getCode()));
+        if (supervisoryNode.getParent() != null) {
+            supervisoryNode.getParent().setId(supervisoryNodeMapper.getIdForCode(supervisoryNode.getParent().getCode()));
+            if (supervisoryNode.getParent().getId() == null) {
+                throw new RuntimeException("Supervisory Node as Parent does not exist");
+            }
+        }
+        if (supervisoryNode.getFacility().getId() == null) {
+            throw new RuntimeException("Facility Code does not exist");
+        }
+
         try {
-            if (supervisoryNode.getParent() != null) {
-                supervisoryNode.getParent().setId(supervisoryNodeMapper.getIdForCode(supervisoryNode.getParent().getCode()));
-                if (supervisoryNode.getParent().getId() == null) {
-                    throw new RuntimeException("Supervisory Node as Parent does not exist");
-                }
-            }
-            if (supervisoryNode.getFacility().getId() == null) {
-                throw new RuntimeException("Facility Code does not exist");
-            }
             supervisoryNodeMapper.insert(supervisoryNode);
-        } catch (DataIntegrityViolationException e) {
+        } catch (DuplicateKeyException e) {
             throw new RuntimeException("Duplicate Supervisory Node Code");
         }
     }

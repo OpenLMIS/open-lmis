@@ -8,8 +8,10 @@ import org.openlmis.upload.handler.AbstractModelPersistenceHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@NoArgsConstructor
+import java.util.Date;
+
 @Component("supervisoryNodeHandler")
+@NoArgsConstructor
 public class SupervisoryNodeHandler extends AbstractModelPersistenceHandler {
 
     private SupervisoryNodeService supervisoryNodeService;
@@ -23,6 +25,7 @@ public class SupervisoryNodeHandler extends AbstractModelPersistenceHandler {
     protected void save(Importable modelClass, String modifiedBy) {
         SupervisoryNode supervisoryNode = (SupervisoryNode) modelClass;
         supervisoryNode.setModifiedBy(modifiedBy);
+        supervisoryNode.setModifiedDate(new Date());
         supervisoryNodeService.save(supervisoryNode);
     }
 }

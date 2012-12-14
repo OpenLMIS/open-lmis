@@ -11,8 +11,8 @@ import org.springframework.stereotype.Repository;
 public interface RequisitionGroupMapper {
 
 
-    @Select("INSERT INTO requisition_group(code,name,description,supervisory_node_id,modified_by) " +
-            "values (#{code},#{name},#{description},#{supervisoryNode.id},#{modifiedBy}) returning id")
+    @Select("INSERT INTO requisition_group(code,name,description,supervisory_node_id,modified_by, modified_date) " +
+            "values (#{code},#{name},#{description},#{supervisoryNode.id},#{modifiedBy}, #{modifiedDate}) returning id")
     @Options(useGeneratedKeys = true)
     Integer insert(RequisitionGroup requisitionGroup);
 

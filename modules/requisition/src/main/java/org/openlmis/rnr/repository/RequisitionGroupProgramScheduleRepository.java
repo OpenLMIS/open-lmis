@@ -7,7 +7,7 @@ import org.openlmis.rnr.repository.mapper.RequisitionGroupMapper;
 import org.openlmis.rnr.repository.mapper.RequisitionGroupProgramScheduleMapper;
 import org.openlmis.rnr.repository.mapper.ScheduleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -46,7 +46,7 @@ public class RequisitionGroupProgramScheduleRepository {
             }
 
             requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
-        }catch (DataIntegrityViolationException e){
+        }catch (DuplicateKeyException e){
             throw new RuntimeException("Duplicate Requisition Group Code And Program Code Combination found");
         }
     }

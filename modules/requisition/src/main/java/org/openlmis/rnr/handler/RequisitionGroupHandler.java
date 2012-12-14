@@ -8,6 +8,8 @@ import org.openlmis.upload.handler.AbstractModelPersistenceHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 @Component("requisitionGroupHandler")
 @NoArgsConstructor
 public class RequisitionGroupHandler extends AbstractModelPersistenceHandler {
@@ -23,6 +25,7 @@ public class RequisitionGroupHandler extends AbstractModelPersistenceHandler {
   protected void save(Importable importable, String userName) {
     RequisitionGroup requisitionGroup = (RequisitionGroup) importable;
     requisitionGroup.setModifiedBy(userName);
+    requisitionGroup.setModifiedDate(new Date());
     requisitionGroupService.save(requisitionGroup);
   }
 }

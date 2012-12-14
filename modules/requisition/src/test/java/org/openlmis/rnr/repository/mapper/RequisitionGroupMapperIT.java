@@ -64,6 +64,7 @@ public class RequisitionGroupMapperIT {
 
         assertThat(resultRequisitionGroup.getCode(), is(REQUISITION_GROUP_CODE));
         assertThat(requisitionGroupID, is(notNullValue()));
+        assertThat(resultRequisitionGroup.getModifiedDate(), is(requisitionGroup.getModifiedDate()));
         assertThat(resultRequisitionGroup.getName(), is(REQUISITION_GROUP_NAME));
         assertThat(resultRequisitionGroup.getSupervisoryNode().getId(), is(supervisoryNodeId));
     }

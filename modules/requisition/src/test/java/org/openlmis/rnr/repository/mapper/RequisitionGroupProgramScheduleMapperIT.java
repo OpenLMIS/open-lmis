@@ -12,6 +12,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+import java.util.List;
+
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
@@ -23,7 +26,7 @@ import static org.openlmis.rnr.builder.RequisitionGroupBuilder.defaultRequisitio
 @ContextConfiguration(locations = "classpath*:applicationContext-requisition.xml")
 @Transactional
 @TransactionConfiguration(defaultRollback = true)
-public class RequisitionGroupProgramScheduleMapperTest {
+public class RequisitionGroupProgramScheduleMapperIT {
 
     RequisitionGroupProgramSchedule requisitionGroupProgramSchedule;
 
@@ -31,6 +34,7 @@ public class RequisitionGroupProgramScheduleMapperTest {
     public void setUp() throws Exception {
         requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
         requisitionGroupProgramSchedule.setModifiedBy("User");
+        requisitionGroupProgramSchedule.setModifiedDate(new Date(0));
         requisitionGroupProgramSchedule.setProgram(make(a(defaultProgram)));
         requisitionGroupProgramSchedule.setRequisitionGroup(make(a(defaultRequisitionGroup)));
         Schedule schedule = new Schedule();
@@ -64,13 +68,17 @@ public class RequisitionGroupProgramScheduleMapperTest {
     }
 
     @Test
-    public void shouldGetIdByCode() throws Exception {
-        Schedule schedule = new Schedule();
-        schedule.setCode("SC1");
-        schedule.setName("Schedule 1");
+    public void shouldGetProgramIdsForRGById() throws Exception {
+        requisitionGroupProgramSchedule.getProgram().setId(programMapper.insert(requisitionGroupProgramSchedule.getProgram()));
+        requisitionGroupProgramSchedule.getRequisitionGroup().setId(requisitionGroupMapper.insert(requisitionGroupProgramSchedule.getRequisitionGroup()));
+        requisitionGroupProgramSchedule.getSchedule().setId(scheduleMapper.insert(requisitionGroupProgramSchedule.getSchedule()));
 
-        Integer id = scheduleMapper.insert(schedule);
-        assertThat(id, is(scheduleMapper.getIdForCode(schedule.getCode())));
+        requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
+
+        List<Integer> resultProgramId = requisitionGroupProgramScheduleMapper.getProgramIDsbyId(requisitionGroupProgramSchedule.getRequisitionGroup().getId());
+
+        assertThat(resultProgramId.size(), is(1));
+        assertThat(resultProgramId.get(0), is(requisitionGroupProgramSchedule.getProgram().getId()));
 
     }
 }

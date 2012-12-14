@@ -5,7 +5,7 @@ import org.openlmis.rnr.domain.RequisitionGroup;
 import org.openlmis.rnr.repository.mapper.RequisitionGroupMapper;
 import org.openlmis.rnr.repository.mapper.SupervisoryNodeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -29,7 +29,7 @@ public class RequisitionGroupRepository {
                 throw new RuntimeException("Supervisory Node Not Found");
             }
             requisitionGroupMapper.insert(requisitionGroup);
-        } catch (DataIntegrityViolationException e) {
+        } catch (DuplicateKeyException e) {
             throw new RuntimeException("Duplicate Requisition Group Code found");
         }
     }

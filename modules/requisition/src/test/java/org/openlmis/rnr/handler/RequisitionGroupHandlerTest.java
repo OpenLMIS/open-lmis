@@ -7,6 +7,7 @@ import org.openlmis.rnr.domain.RequisitionGroup;
 import org.openlmis.rnr.service.RequisitionGroupService;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -27,13 +28,14 @@ public class RequisitionGroupHandlerTest {
     }
 
     @Test
-    public void shouldSaveRequisitionGroupWithModifiedBySet() throws Exception {
+    public void shouldSaveRequisitionGroupWithModifiedByAndModifiedDateSet() throws Exception {
         RequisitionGroup requisitionGroup = new RequisitionGroup();
         requisitionGroup.setModifiedBy(USER);
 
         requisitionGroupHandler.save(requisitionGroup, "USER");
 
         assertThat(requisitionGroup.getModifiedBy(), is(USER));
+        assertThat(requisitionGroup.getModifiedDate(), is(notNullValue()));
         verify(requisitionGroupService).save(requisitionGroup);
     }
 }

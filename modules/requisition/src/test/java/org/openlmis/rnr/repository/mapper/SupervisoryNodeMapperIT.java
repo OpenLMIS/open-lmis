@@ -18,6 +18,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.openlmis.rnr.builder.SupervisoryNodeBuilder.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext-requisition.xml")
@@ -26,8 +27,6 @@ import static org.junit.Assert.assertThat;
 public class SupervisoryNodeMapperIT {
 
     SupervisoryNode supervisoryNode;
-    String code = "TSN";
-    String name = "Test Name";
     Facility facility;
 
     @Autowired
@@ -38,10 +37,8 @@ public class SupervisoryNodeMapperIT {
 
     @Before
     public void setUp() throws Exception {
-        supervisoryNode = new SupervisoryNode();
-        supervisoryNode.setCode(code);
-        supervisoryNode.setApprovalPoint(true);
-        supervisoryNode.setName(name);
+        supervisoryNode = make(a(defaultSupervisoryNode));
+
         facility = make(a(FacilityBuilder.defaultFacility));
         facility.setId(facilityMapper.insert(facility));
         supervisoryNode.setFacility(facility);
@@ -57,9 +54,10 @@ public class SupervisoryNodeMapperIT {
         SupervisoryNode resultSupervisoryNode = supervisoryNodeMapper.getSupervisoryNode(nodeId);
 
         assertThat(resultSupervisoryNode, is(notNullValue()));
-        assertThat(resultSupervisoryNode.getCode(), is(code));
-        assertThat(resultSupervisoryNode.getName(), is(name));
-        assertThat(resultSupervisoryNode.getApprovalPoint(), is(true));
+        assertThat(resultSupervisoryNode.getCode(), is(SUPERVISORY_NODE_CODE));
+        assertThat(resultSupervisoryNode.getName(), is(SUPERVISORY_NODE_NAME));
+        assertThat(resultSupervisoryNode.getApprovalPoint(), is(SUPERVISORY_NODE_APPROVAL_POINT));
+        assertThat(resultSupervisoryNode.getModifiedDate(), is(SUPERVISORY_NODE_DATE));
         assertThat(resultSupervisoryNode.getFacility().getId(), is(facility.getId()));
     }
 

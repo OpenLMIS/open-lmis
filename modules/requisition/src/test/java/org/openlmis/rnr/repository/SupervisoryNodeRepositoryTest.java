@@ -9,7 +9,7 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.rnr.domain.SupervisoryNode;
 import org.openlmis.rnr.repository.mapper.SupervisoryNodeMapper;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -43,7 +43,7 @@ public class SupervisoryNodeRepositoryTest {
 
     @Test
     public void shouldGiveErrorIfDuplicateCodeFound() throws Exception {
-        doThrow(new DataIntegrityViolationException("")).when(supervisoryNodeMapper).insert(supervisoryNode);
+        doThrow(new DuplicateKeyException("")).when(supervisoryNodeMapper).insert(supervisoryNode);
         when(supervisoryNodeMapper.getIdForCode(supervisoryNode.getParent().getCode())).thenReturn(1);
 
         expectedEx.expect(RuntimeException.class);

@@ -5,16 +5,20 @@ import com.natpryce.makeiteasy.Property;
 import com.natpryce.makeiteasy.PropertyLookup;
 import org.openlmis.rnr.domain.SupervisoryNode;
 
+import java.util.Date;
+
 import static com.natpryce.makeiteasy.Property.newProperty;
 
 public class SupervisoryNodeBuilder {
     public static final Property<SupervisoryNode, String> code = newProperty();
     public static final Property<SupervisoryNode, String> name = newProperty();
     public static final Property<SupervisoryNode, Boolean> approvalPoint = newProperty();
+    public static final Property<SupervisoryNode, Date> modifiedDate = newProperty();
 
     public static final String SUPERVISORY_NODE_CODE = "N1";
     public static final String SUPERVISORY_NODE_NAME = "Approval Point 1";
     public static final boolean SUPERVISORY_NODE_APPROVAL_POINT = true;
+    public static final Date SUPERVISORY_NODE_DATE = new Date(0);
 
     public static final Instantiator<SupervisoryNode> defaultSupervisoryNode = new Instantiator<SupervisoryNode>() {
         @Override
@@ -24,6 +28,7 @@ public class SupervisoryNodeBuilder {
             supervisoryNode.setName(lookup.valueOf(name, SUPERVISORY_NODE_NAME));
             supervisoryNode.setApprovalPoint(lookup.valueOf(approvalPoint, SUPERVISORY_NODE_APPROVAL_POINT));
             supervisoryNode.setModifiedBy("user");
+            supervisoryNode.setModifiedDate(lookup.valueOf(modifiedDate,SUPERVISORY_NODE_DATE));
             return supervisoryNode;
         }
     };

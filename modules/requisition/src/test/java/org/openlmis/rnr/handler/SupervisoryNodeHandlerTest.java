@@ -7,6 +7,7 @@ import org.openlmis.rnr.domain.SupervisoryNode;
 import org.openlmis.rnr.service.SupervisoryNodeService;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -28,6 +29,7 @@ public class SupervisoryNodeHandlerTest {
 
         new SupervisoryNodeHandler(supervisoryNodeService).save(supervisoryNode, USER);
         assertThat(supervisoryNode.getModifiedBy(), is(USER));
+        assertThat(supervisoryNode.getModifiedDate(), is(notNullValue()));
 
         verify(supervisoryNodeService).save(supervisoryNode);
     }
