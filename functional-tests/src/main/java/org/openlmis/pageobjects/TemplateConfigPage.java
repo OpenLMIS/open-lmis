@@ -51,7 +51,7 @@ public class TemplateConfigPage extends Page {
     SaveButton.click();
 
 
-        testWebDriver.sleep(1500);
+        testWebDriver.sleep(2000);
         if(saveSuccessMsg.isDisplayed())
         {
             message= testWebDriver.getText(saveSuccessMsg);

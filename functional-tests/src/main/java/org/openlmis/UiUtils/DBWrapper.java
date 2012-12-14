@@ -76,7 +76,6 @@ public class DBWrapper {
                 "  (id, user_name, password, role, facility_id) VALUES\n" +
                 "  (200, 'User123', 'Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==','USER', null);", "alter");
 
-        //rs.close();
     }
 
 

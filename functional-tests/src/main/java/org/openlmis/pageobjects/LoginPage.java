@@ -1,6 +1,7 @@
 package org.openlmis.pageobjects;
 
 
+import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -37,6 +38,7 @@ public class LoginPage extends Page {
         testWebDriver.setErrorMessage(ERROR_MESSAGE_LOGIN);
         PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
         testWebDriver.setImplicitWait(25);
+        SeleneseTestNgHelper.assertTrue(userNameField.isDisplayed());
     }
 
 

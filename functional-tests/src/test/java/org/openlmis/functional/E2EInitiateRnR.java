@@ -36,7 +36,6 @@ public class E2EInitiateRnR extends TestCaseHelper {
         HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
         CreateFacilityPage createFacilityPage = homePage.navigateCreateFacility();
-
         String date_time=createFacilityPage.enterAndVerifyFacility();
 
         dbWrapper.allocateFacilityToUser();
@@ -44,9 +43,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
         TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
         templateConfigPage.configureTemplate();
 
-        homePage.logout();
-
-        LoginPage loginPageSecond=new LoginPage(testWebDriver);
+        LoginPage loginPageSecond=homePage.logout();
         HomePage homePageUser = loginPageSecond.loginAs(user, password);
 
         InitiateRnRPage initiateRnRPage = homePageUser.navigateAndInitiateRnr(date_time, program);

@@ -67,12 +67,13 @@ public class HomePage extends Page {
         SeleneseTestNgHelper.assertTrue(usernameDisplay.isDisplayed());
     }
 
-    public void logout() {
+    public LoginPage logout() throws IOException{
         testWebDriver.waitForElementToAppear(usernameDisplay);
         testWebDriver.mouseOver(usernameDisplay);
         usernameDisplay.click();
         testWebDriver.waitForElementToAppear(logoutLink);
         logoutLink.click();
+        return new LoginPage(testWebDriver);
     }
 
     public boolean verifyWelcomeMessage(String user) {
