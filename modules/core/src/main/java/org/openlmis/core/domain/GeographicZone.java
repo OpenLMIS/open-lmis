@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GeographicZone {
-    Long id;
+    Integer id;
     String label;
     String value;
 }

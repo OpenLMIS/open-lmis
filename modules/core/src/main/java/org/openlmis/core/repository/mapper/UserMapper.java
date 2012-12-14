@@ -18,7 +18,7 @@ public interface UserMapper {
             "(user_name, password, facility_id) VALUES " +
             "(#{userName}, #{password}, #{facilityId}) returning id")
     @Options(useGeneratedKeys = true)
-    Long insert(User user);
+    Integer insert(User user);
 
     @Delete(value = "DELETE FROM users")
     void deleteAll();

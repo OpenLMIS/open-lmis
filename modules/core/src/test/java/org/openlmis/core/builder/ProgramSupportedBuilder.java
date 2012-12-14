@@ -11,12 +11,12 @@ import static org.joda.time.DateTime.now;
 public class ProgramSupportedBuilder {
   public static Property<ProgramSupported, String> supportedFacilityCode = newProperty();
   public static Property<ProgramSupported, String> supportedProgramCode = newProperty();
-  public static Property<ProgramSupported, Long> supportedFacilityId = newProperty();
-  public static Property<ProgramSupported, Long> supportedProgramId = newProperty();
+  public static Property<ProgramSupported, Integer> supportedFacilityId = newProperty();
+  public static Property<ProgramSupported, Integer> supportedProgramId = newProperty();
   public static final String FACILITY_CODE = "F_CD";
   public static final String PROGRAM_CODE = "P_CD";
-  public static final Long FACILITY_ID = 101L;
-  public static final Long PROGRAM_ID = 101L;
+  public static final Integer FACILITY_ID = 101;
+  public static final Integer PROGRAM_ID = 101;
 
 
   public static final Instantiator<ProgramSupported> defaultProgramSupported = new Instantiator<ProgramSupported>() {

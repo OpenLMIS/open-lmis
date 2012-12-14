@@ -13,8 +13,8 @@ import java.util.Date;
 @NoArgsConstructor
 public class ProgramSupported implements Importable {
 
-  private Long facilityId;
-  private Long programId;
+  private Integer facilityId;
+  private Integer programId;
 
   @ImportField(mandatory = true, name = "FacilityCode")
   private String facilityCode;
@@ -34,7 +34,7 @@ public class ProgramSupported implements Importable {
     this.active = active;
   }
 
-  public ProgramSupported(Long facilityId, Long programId, Boolean active, String modifiedBy, Date modifiedDate) {
+  public ProgramSupported(Integer facilityId, Integer programId, Boolean active, String modifiedBy, Date modifiedDate) {
     this.facilityId = facilityId;
     this.programId = programId;
     this.active = active;

@@ -30,7 +30,7 @@ import static org.openlmis.rnr.builder.SupervisoryNodeBuilder.defaultSupervisory
 public class RequisitionGroupMapperIT {
 
     SupervisoryNode supervisoryNode;
-    Long supervisoryNodeId;
+    Integer supervisoryNodeId;
 
 
     @Autowired
@@ -58,7 +58,7 @@ public class RequisitionGroupMapperIT {
         RequisitionGroup requisitionGroup = make(a(defaultRequisitionGroup));
         requisitionGroup.setSupervisoryNode(supervisoryNode);
 
-        Long requisitionGroupID = requisitionGroupMapper.insert(requisitionGroup);
+        Integer requisitionGroupID = requisitionGroupMapper.insert(requisitionGroup);
 
         RequisitionGroup resultRequisitionGroup = requisitionGroupMapper.getRequisitionGroupById(requisitionGroupID);
 

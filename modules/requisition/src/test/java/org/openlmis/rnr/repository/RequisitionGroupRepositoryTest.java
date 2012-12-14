@@ -64,7 +64,7 @@ public class RequisitionGroupRepositoryTest {
 
     @Test
     public void shouldSaveRequisitionGroup() throws Exception {
-        when(supervisoryNodeMapper.getIdForCode(requisitionGroup.getSupervisoryNode().getCode())).thenReturn(1L);
+        when(supervisoryNodeMapper.getIdForCode(requisitionGroup.getSupervisoryNode().getCode())).thenReturn(1);
 
         requisitionGroupRepository.insert(requisitionGroup);
         verify(requisitionGroupMapper).insert(requisitionGroup);

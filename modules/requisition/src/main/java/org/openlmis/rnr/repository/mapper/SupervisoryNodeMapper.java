@@ -21,13 +21,13 @@ public interface SupervisoryNodeMapper {
             @Result(property = "modifiedBy", column = "modified_by"),
             @Result(property = "modifiedDate", column = "modified_date")
     })
-    SupervisoryNode getSupervisoryNode(Long id);
+    SupervisoryNode getSupervisoryNode(Integer id);
 
     @Select("INSERT INTO supervisory_node (code, name, parent_id, facility_id, approval_point, description, modified_by)" +
             " VALUES (#{code}, #{name}, #{parent.id}, #{facility.id}, #{approvalPoint}, #{description}, #{modifiedBy}) returning id")
     @Options(useGeneratedKeys = true)
-    Long insert(SupervisoryNode supervisoryNode);
+    Integer insert(SupervisoryNode supervisoryNode);
 
     @Select("SELECT id FROM supervisory_node WHERE LOWER(code) = LOWER(#{code})")
-    Long getIdForCode(String code);
+    Integer getIdForCode(String code);
 }

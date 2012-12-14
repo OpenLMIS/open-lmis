@@ -29,7 +29,7 @@ public class RnrController {
 
 
     @RequestMapping(value = "/logistics/rnr/{facilityId}/{programCode}/init", method = RequestMethod.POST, headers = "Accept=application/json")
-    public Rnr initRnr(@PathVariable("facilityId") Long facilityId, @PathVariable("programCode") String programCode, HttpServletRequest request) {
+    public Rnr initRnr(@PathVariable("facilityId") Integer facilityId, @PathVariable("programCode") String programCode, HttpServletRequest request) {
         String modifiedBy = (String) request.getSession().getAttribute(USER);
         return rnrService.initRnr(facilityId, programCode, modifiedBy);
     }

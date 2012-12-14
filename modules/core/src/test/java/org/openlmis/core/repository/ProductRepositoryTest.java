@@ -95,7 +95,7 @@ public class ProductRepositoryTest {
   public void shouldSetDataDosageUnitIdForCode() throws Exception {
     Product product = make(a(ProductBuilder.product));
     product.getDosageUnit().setCode("valid code");
-    when(mockedMapper.getDosageUnitIdForCode("valid code")).thenReturn(1L);
+    when(mockedMapper.getDosageUnitIdForCode("valid code")).thenReturn(1);
 
     repository.insert(product);
     assertThat(product.getDosageUnit().getId(), is(1L));
@@ -116,7 +116,7 @@ public class ProductRepositoryTest {
   public void shouldSetProductFormIdForCode() throws Exception {
     Product product = make(a(ProductBuilder.product));
     product.getForm().setCode("valid code");
-    when(mockedMapper.getProductFormIdForCode("valid code")).thenReturn(1L);
+    when(mockedMapper.getProductFormIdForCode("valid code")).thenReturn(1);
 
     repository.insert(product);
     assertThat(product.getForm().getId(), is(1L));

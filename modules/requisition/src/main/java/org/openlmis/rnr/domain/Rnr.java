@@ -9,8 +9,8 @@ import java.util.List;
 @Data
 public class Rnr {
 
-    private Long id;
-    private Long facilityId;
+    private Integer id;
+    private Integer facilityId;
 
     private String programCode;
     private RnrStatus status;
@@ -23,7 +23,7 @@ public class Rnr {
     public Rnr(){
         System.out.println("");
     }
-    public Rnr(Long facilityId, String programCode, RnrStatus status, String modifiedBy) {
+    public Rnr(Integer facilityId, String programCode, RnrStatus status, String modifiedBy) {
         this.facilityId = facilityId;
         this.programCode = programCode;
         this.status = status;

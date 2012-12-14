@@ -14,7 +14,7 @@ public interface RequisitionGroupMapper {
     @Select("INSERT INTO requisition_group(code,name,description,supervisory_node_id,modified_by) " +
             "values (#{code},#{name},#{description},#{supervisoryNode.id},#{modifiedBy}) returning id")
     @Options(useGeneratedKeys = true)
-    Long insert(RequisitionGroup requisitionGroup);
+    Integer insert(RequisitionGroup requisitionGroup);
 
     @Select("SELECT rg.id, rg.code, rg.name, rg.description, " +
             "rg.supervisory_node_id, rg.modified_by, rg.modified_date FROM " +
@@ -28,8 +28,8 @@ public interface RequisitionGroupMapper {
             @Result(property = "modifiedBy", column = "modified_by"),
             @Result(property = "modifiedDate", column = "modified_date")
     })
-    RequisitionGroup getRequisitionGroupById(Long id);
+    RequisitionGroup getRequisitionGroupById(Integer id);
 
     @Select("SELECT id FROM requisition_group where LOWER(code) = LOWER(#{code})")
-    Long getIdForCode(String code);
+    Integer getIdForCode(String code);
 }

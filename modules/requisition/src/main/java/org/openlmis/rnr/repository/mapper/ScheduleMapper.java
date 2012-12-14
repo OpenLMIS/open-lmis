@@ -9,8 +9,8 @@ public interface ScheduleMapper {
 
 
     @Select("SELECT id FROM schedule WHERE LOWER(code) = LOWER(#{code})")
-    Long getIdForCode(String code);
+    Integer getIdForCode(String code);
 
     @Select("INSERT INTO schedule(code, name, description) VALUES(#{code}, #{name}, #{description}) returning id")
-    Long insert(Schedule schedule);
+    Integer insert(Schedule schedule);
 }

@@ -14,13 +14,10 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
-import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
-import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
-import static org.openlmis.core.domain.Right.VIEW_REQUISITION;
+import static org.openlmis.core.domain.Right.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
@@ -28,92 +25,88 @@ import static org.openlmis.core.domain.Right.VIEW_REQUISITION;
 @Transactional
 public class RoleRightsMapperIT {
 
-  @Autowired
-  RoleRightsMapper roleRightsMapper;
-
-  @Autowired
-  UserMapper userMapper;
-
-  @Autowired
-  ProgramMapper programMapper;
-
-  @Autowired
-  ProgramSupportedMapper programSupportedMapper;
+    @Autowired
+    RoleRightsMapper roleRightsMapper;
+    @Autowired
+    UserMapper userMapper;
+    @Autowired
+    ProgramMapper programMapper;
+    @Autowired
+    ProgramSupportedMapper programSupportedMapper;
 
 
+    @Test
+    public void shouldReturnProgramAvailableForAFacilityForAUserWithGivenRights() throws Exception {
+        Program program1 = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
+        Program program2 = insertProgram(make(a(defaultProgram, with(programCode, "p2"))));
 
-  @Test
-  public void shouldReturnProgramAvailableForAFacilityForAUserWithGivenRights() throws Exception {
-    Program program1 = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
-    Program program2 = insertProgram(make(a(defaultProgram, with(programCode, "p2"))));
+        User user = insertUser();
 
-    User user = insertUser();
+        Role r1 = new Role("r1", "random description");
+        roleRightsMapper.insertRole(r1);
 
-    Role r1 = new Role("r1", "random description");
-    roleRightsMapper.insertRole(r1);
-
-    Role r2 = new Role("r2", "random description");
-    roleRightsMapper.insertRole(r2);
+        Role r2 = new Role("r2", "random description");
+        roleRightsMapper.insertRole(r2);
 
 
-    roleRightsMapper.createRoleRight(r1.getId(), CREATE_REQUISITION);
-    roleRightsMapper.createRoleRight(r1.getId(), VIEW_REQUISITION);
-    roleRightsMapper.createRoleRight(r2.getId(), APPROVE_REQUISITION);
-    roleRightsMapper.createRoleRight(r2.getId(), VIEW_REQUISITION);
+        roleRightsMapper.createRoleRight(r1.getId(), CREATE_REQUISITION);
+        roleRightsMapper.createRoleRight(r1.getId(), VIEW_REQUISITION);
+        roleRightsMapper.createRoleRight(r2.getId(), APPROVE_REQUISITION);
+        roleRightsMapper.createRoleRight(r2.getId(), VIEW_REQUISITION);
 
-    insertRoleAssignments(program1, user, r1);
-    insertRoleAssignments(program1, user, r2);
-    insertRoleAssignments(program2, user, r2);
+        insertRoleAssignments(program1, user, r1);
+        insertRoleAssignments(program1, user, r2);
+        insertRoleAssignments(program2, user, r2);
 
-    List<RoleAssignment> roleAssignments =
-        roleRightsMapper.getRoleAssignmentsWithGivenRightForAUser(CREATE_REQUISITION, user.getUserName());
+        List<RoleAssignment> roleAssignments =
+                roleRightsMapper.getRoleAssignmentsWithGivenRightForAUser(CREATE_REQUISITION, user.getUserName());
 
-    assertEquals(1, roleAssignments.size());
-    assertEquals(program1.getId(), roleAssignments.get(0).getProgramId());
-    assertThat(roleAssignments.get(0).getRoleId(), is(r1.getId()));
-  }
+        assertEquals(1, roleAssignments.size());
+        assertEquals(program1.getId(), roleAssignments.get(0).getProgramId());
+        assertThat(roleAssignments.get(0).getRoleId(), is(r1.getId()));
+    }
 
-  @Test
-  public void shouldGetAllRightsForAUser() throws Exception {
-    User user = insertUser();
+    @Test
+    public void shouldGetAllRightsForAUser() throws Exception {
+        User user = insertUser();
 
-    List<Right> allRightsForUser = roleRightsMapper.getAllRightsForUser(user.getUserName());
-    assertThat(allRightsForUser.size(), is(0) );
+        List<Right> allRightsForUser = roleRightsMapper.getAllRightsForUser(user.getUserName());
+        assertThat(allRightsForUser.size(), is(0));
 
-    Program program = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
-    Role role = insertRole();
+        Program program = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
+        Role role = insertRole();
 
-    insertRoleAssignments(program, user, role);
+        insertRoleAssignments(program, user, role);
 
-    roleRightsMapper.createRoleRight(role.getId(), CREATE_REQUISITION);
-    roleRightsMapper.createRoleRight(role.getId(), VIEW_REQUISITION);
+        roleRightsMapper.createRoleRight(role.getId(), CREATE_REQUISITION);
+        roleRightsMapper.createRoleRight(role.getId(), VIEW_REQUISITION);
 
-    allRightsForUser = roleRightsMapper.getAllRightsForUser(user.getUserName());
-    assertThat(allRightsForUser.size(), is(2));
+        allRightsForUser = roleRightsMapper.getAllRightsForUser(user.getUserName());
+        assertThat(allRightsForUser.size(), is(2));
 
-  }
+    }
 
-  private Role insertRole() {
-    Role r1 = new Role("r1", "random description");
-    roleRightsMapper.insertRole(r1);
-    return r1;
-  }
+    private Role insertRole() {
+        Role r1 = new Role("r1", "random description");
+        roleRightsMapper.insertRole(r1);
+        return r1;
+    }
 
-  private Program insertProgram(Program program) {
-    program.setId(programMapper.insert(program));
-    return program;
-  }
+    private Program insertProgram(Program program) {
+        program.setId(programMapper.insert(program));
+        return program;
+    }
 
-  private Role insertRoleAssignments(Program program, User user, Role role) {
-    roleRightsMapper.createRoleAssignment(user, role, program);
-    return role;
-  }
+    private Role insertRoleAssignments(Program program, User user, Role role) {
+        roleRightsMapper.createRoleAssignment(user, role, program);
+        return role;
+    }
 
-  private User insertUser() {
-    User user = new User("random123123", "pwd");
-    user.setId(userMapper.insert(user));
-    return user;
-  }
+    private User insertUser() {
+        User user = new User("random123123", "pwd");
+        user.setId(userMapper.insert(user));
+        return user;
+    }
 
 
 }

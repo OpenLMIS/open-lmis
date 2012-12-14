@@ -16,12 +16,13 @@ public class ProductBuilder {
     public static final Property<Product, String> code = newProperty();
     public static final Property<Product, Boolean> fullSupply = newProperty();
     public static final Property<Product, Integer> displayOrder=newProperty();
-    private static final Integer nullInteger = null;
 
+    private static final Integer nullInteger = null;
     public static final Instantiator<Product> product = new Instantiator<Product>() {
         @Override
         public Product instantiate(PropertyLookup<Product> lookup) {
             Product product = new Product();
+
             product.setCode(lookup.valueOf(code, PRODUCT_CODE));
             product.setFullSupply(lookup.valueOf(fullSupply, true));
             product.setActive(true);

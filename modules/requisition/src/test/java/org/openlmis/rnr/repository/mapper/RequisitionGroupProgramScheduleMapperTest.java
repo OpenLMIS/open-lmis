@@ -69,7 +69,7 @@ public class RequisitionGroupProgramScheduleMapperTest {
         schedule.setCode("SC1");
         schedule.setName("Schedule 1");
 
-        Long id = scheduleMapper.insert(schedule);
+        Integer id = scheduleMapper.insert(schedule);
         assertThat(id, is(scheduleMapper.getIdForCode(schedule.getCode())));
 
     }

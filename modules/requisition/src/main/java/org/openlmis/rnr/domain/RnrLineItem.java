@@ -3,6 +3,7 @@ package org.openlmis.rnr.domain;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProgramProduct;
 
 import java.util.Date;
 
@@ -10,8 +11,8 @@ import java.util.Date;
 @NoArgsConstructor
 public class RnrLineItem {
 
-    private Long id;
-    private Long rnrId;
+    private Integer id;
+    private Integer rnrId;
     //todo hack to display it on UI. This is concatenated string of Product properties like name, strength, form and dosage unit
     private String product;
     private String productCode;
@@ -45,9 +46,10 @@ public class RnrLineItem {
     private String modifiedBy;
     private Date modifiedDate;
 
-    public RnrLineItem(Long rnrId, Product product, String modifiedBy) {
+    public RnrLineItem(Integer rnrId, ProgramProduct programProduct, String modifiedBy) {
         this.rnrId = rnrId;
 
+        Product product = programProduct.getProduct();
         this.productCode = product.getCode();
         this.unitOfIssue = product.getDispensingUnit();
         this.product = productName(product);

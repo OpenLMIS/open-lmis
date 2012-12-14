@@ -35,7 +35,7 @@ public class Product implements Importable {
     @ImportField(name = "Product Type")
     private String type;
 
-    @ImportField(name = "Display Order",type = "int")
+    @ImportField(name = "Display Order", type = "int")
     private Integer displayOrder;
 
     @ImportField(mandatory = true, name = "Product Primary Name")
@@ -56,10 +56,8 @@ public class Product implements Importable {
     @ImportField(name = "Product Strength")
     private String strength;
 
-
     @ImportField(type = "String", name = "Product Form", nested = "code")
     private ProductForm form;
-
 
     @ImportField(type = "String", name = "Dosage Units", nested = "code")
     private DosageUnit dosageUnit;

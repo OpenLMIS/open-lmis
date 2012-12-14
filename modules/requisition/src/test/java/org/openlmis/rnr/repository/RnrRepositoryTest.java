@@ -24,20 +24,20 @@ public class RnrRepositoryTest {
     private RnrMapper rnrMapper = mock(RnrMapper.class);
     private RnrLineItemMapper rnrLineItemMapper = mock(RnrLineItemMapper.class);
     private RnrRepository rnrRepository = new RnrRepository(rnrMapper, rnrLineItemMapper);
-    public Long facilityId = 1L;
+    public Integer facilityId = 1;
 
     @Test
     public void shouldInsertRnrAndItsLineItems() throws Exception {
         Rnr rnr = new Rnr();
         rnr.add(new RnrLineItem());
         rnr.add(new RnrLineItem());
-        when(rnrMapper.insert(rnr)).thenReturn(1L);
+        when(rnrMapper.insert(rnr)).thenReturn(1);
         rnrRepository.insert(rnr);
         verify(rnrMapper).insert(rnr);
         verify(rnrLineItemMapper, times(2)).insert(any(RnrLineItem.class));
-        assertThat(rnr.getId(), is(1L));
+        assertThat(rnr.getId(), is(1));
         RnrLineItem rnrLineItem = rnr.getLineItems().get(0);
-        assertThat(rnrLineItem.getRnrId(), is(1L));
+        assertThat(rnrLineItem.getRnrId(), is(1));
     }
 
     @Test
@@ -53,10 +53,10 @@ public class RnrRepositoryTest {
     @Test
     public void shouldReturnRnrAndItsLineItemsByFacilityAndProgram(){
         Rnr initiatedRequisition = new Rnr(facilityId, HIV, RnrStatus.INITIATED, "user");
-        initiatedRequisition.setId(1L);
+        initiatedRequisition.setId(1);
         when(rnrMapper.getRequisitionByFacilityAndProgram(facilityId, HIV)).thenReturn(initiatedRequisition);
         List<RnrLineItem> lineItems = new ArrayList<>();
-        when(rnrLineItemMapper.getRnrLineItemsByRnrId(1L)).thenReturn(lineItems);
+        when(rnrLineItemMapper.getRnrLineItemsByRnrId(1)).thenReturn(lineItems);
         Rnr rnr = rnrRepository.getRequisitionByFacilityAndProgram(facilityId, HIV);
         assertThat(rnr, is(equalTo(initiatedRequisition)));
         assertThat(rnr.getLineItems(), is(equalTo(lineItems)));

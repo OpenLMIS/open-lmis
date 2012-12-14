@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class FacilityType {
-    private Long id;
+    private Integer id;
     private String code;
     private String name;
     private String description;

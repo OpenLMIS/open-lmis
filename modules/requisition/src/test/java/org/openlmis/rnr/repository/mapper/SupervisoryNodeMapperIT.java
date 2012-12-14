@@ -52,7 +52,7 @@ public class SupervisoryNodeMapperIT {
     public void shouldInsertSupervisoryNode() throws Exception {
 
 
-        Long nodeId = supervisoryNodeMapper.insert(supervisoryNode);
+        Integer nodeId = supervisoryNodeMapper.insert(supervisoryNode);
 
         SupervisoryNode resultSupervisoryNode = supervisoryNodeMapper.getSupervisoryNode(nodeId);
 
@@ -65,9 +65,9 @@ public class SupervisoryNodeMapperIT {
 
     @Test
     public void shouldGetSupervisoryNodeIdByCode() throws Exception {
-        Long insertedId = supervisoryNodeMapper.insert(supervisoryNode);
+        Integer insertedId = supervisoryNodeMapper.insert(supervisoryNode);
 
-        Long fetchedId = supervisoryNodeMapper.getIdForCode(supervisoryNode.getCode());
+        Integer fetchedId = supervisoryNodeMapper.getIdForCode(supervisoryNode.getCode());
 
         assertThat(fetchedId, is(insertedId));
     }

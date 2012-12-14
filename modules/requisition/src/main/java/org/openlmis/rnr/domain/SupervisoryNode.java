@@ -12,7 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class SupervisoryNode implements Importable {
 
-    Long id;
+    Integer id;
 
     @ImportField(name = "Supervisory Node Code", mandatory = true)
     String code;

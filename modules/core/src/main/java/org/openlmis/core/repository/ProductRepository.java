@@ -10,8 +10,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
 @NoArgsConstructor
 public class ProductRepository {
@@ -47,7 +45,7 @@ public class ProductRepository {
     String productFormCode = form.getCode();
     if (productFormCode == null || productFormCode.isEmpty()) return;
 
-    Long productFormId = mapper.getProductFormIdForCode(productFormCode);
+    Integer productFormId = mapper.getProductFormIdForCode(productFormCode);
     if (productFormId == null) throw new RuntimeException("Invalid reference data 'Product Form'");
 
     form.setId(productFormId);
@@ -60,15 +58,11 @@ public class ProductRepository {
     String dosageUnitCode = dosageUnit.getCode();
     if (dosageUnitCode == null || dosageUnitCode.isEmpty()) return;
 
-    Long dosageUnitId = mapper.getDosageUnitIdForCode(dosageUnitCode);
+    Integer dosageUnitId = mapper.getDosageUnitIdForCode(dosageUnitCode);
     if (dosageUnitId == null)
       throw new RuntimeException("Invalid reference data 'Dosage Unit'");
 
     dosageUnit.setId(dosageUnitId);
-  }
-
-  public List<Product> getByFacilityAndProgram(Long facilityId, String programCode) {
-    return mapper.getFullSupplyProductsByFacilityAndProgram(facilityId, programCode);
   }
 
 }

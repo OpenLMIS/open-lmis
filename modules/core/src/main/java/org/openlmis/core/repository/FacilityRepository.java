@@ -33,7 +33,7 @@ public class FacilityRepository {
     return facilityMapper.getAll();
   }
 
-  public RequisitionHeader getHeader(Long facilityId) {
+  public RequisitionHeader getHeader(Integer facilityId) {
     return facilityMapper.getRequisitionHeaderData(facilityId);
   }
 
@@ -67,7 +67,7 @@ public class FacilityRepository {
     if (geographicZone == null || geographicZone.getId() == null)
       throw new RuntimeException("Missing mandatory reference data 'Geographic Zone Id'");
 
-    Long geographicZoneId = geographicZone.getId();
+    Integer geographicZoneId = geographicZone.getId();
     Boolean geographicZonePresent = facilityMapper.isGeographicZonePresent(geographicZoneId);
 
     if (!geographicZonePresent)
@@ -80,7 +80,7 @@ public class FacilityRepository {
       throw new RuntimeException("Missing mandatory reference data 'Facility Type'");
 
     String facilityTypeCode = facilityType.getCode();
-    Long facilityTypeId = facilityMapper.getFacilityTypeIdForCode(facilityTypeCode);
+    Integer facilityTypeId = facilityMapper.getFacilityTypeIdForCode(facilityTypeCode);
 
     if (facilityTypeId == null)
       throw new RuntimeException("Invalid reference data 'Facility Type'");
@@ -95,7 +95,7 @@ public class FacilityRepository {
     String operatedByCode = facility.getOperatedBy().getCode();
     if (operatedByCode == null || operatedByCode.isEmpty()) return;
 
-    Long operatedById = facilityMapper.getOperatedByIdForCode(operatedByCode);
+    Integer operatedById = facilityMapper.getOperatedByIdForCode(operatedByCode);
     if (operatedById == null) throw new RuntimeException("Invalid reference data 'Operated By'");
 
     facility.getOperatedBy().setId(operatedById);
@@ -154,7 +154,7 @@ public class FacilityRepository {
   private void validateFacilityCode(String facilityCode) {
     if (facilityCode == null || facilityCode.isEmpty())
       throw new RuntimeException("Missing reference data 'Facility Code'");
-    Long facilityTypeId = facilityMapper.getIdForCode(facilityCode);
+      Integer facilityTypeId = facilityMapper.getIdForCode(facilityCode);
     if (facilityTypeId == null) throw new RuntimeException("Invalid reference data 'Facility Code'");
   }
 
@@ -174,7 +174,7 @@ public class FacilityRepository {
     return facilityMapper.getHomeFacility(user);
   }
 
-  public Facility getFacility(Long id) {
+  public Facility getFacility(Integer id) {
     Facility facility = facilityMapper.get(id);
     facility.setSupportedPrograms(programMapper.getByFacilityId(facility.getId()));
     return facility;

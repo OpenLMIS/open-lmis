@@ -28,7 +28,7 @@ import static org.junit.Assert.assertThat;
 public class RnrMapperIT {
 
     public static final String HIV = "HIV";
-    Long facilityId;
+    Integer facilityId;
 
     @Autowired
     private FacilityMapper facilityMapper;
@@ -47,15 +47,15 @@ public class RnrMapperIT {
     @Test
     public void shouldReturnRequisitionId() {
         Rnr requisition = new Rnr(facilityId, "HIV", RnrStatus.INITIATED, "user");
-        Long id1 = rnrMapper.insert(requisition);
-        Long id2 = rnrMapper.insert(new Rnr(facilityId, "ARV", RnrStatus.INITIATED, "user"));
+        Integer id1 = rnrMapper.insert(requisition);
+        Integer id2 = rnrMapper.insert(new Rnr(facilityId, "ARV", RnrStatus.INITIATED, "user"));
         assertThat(id1, is(id2 - 1));
     }
 
     @Test
     public void shouldReturnRequisitionById() {
         Rnr requisition = new Rnr(facilityId, "HIV", RnrStatus.INITIATED, "user");
-        Long id = rnrMapper.insert(requisition);
+        Integer id = rnrMapper.insert(requisition);
         Rnr requisitionById = rnrMapper.getRequisitionById(id);
         assertThat(requisitionById.getId(), is(id));
         assertThat(requisitionById.getProgramCode(), is(equalTo("HIV")));
@@ -67,7 +67,7 @@ public class RnrMapperIT {
     @Test
     public void shouldUpdateRequisition() {
         Rnr requisition = new Rnr(facilityId, "HIV", RnrStatus.INITIATED, "user");
-        Long id = rnrMapper.insert(requisition);
+        Integer id = rnrMapper.insert(requisition);
         requisition.setId(id);
         requisition.setModifiedBy("user1");
         requisition.setStatus(RnrStatus.CREATED);
@@ -84,7 +84,7 @@ public class RnrMapperIT {
     @Test
     public void shouldReturnRequisitionByFacilityAndProgramAndIfExists() {
         Rnr requisition = new Rnr(facilityId, HIV, RnrStatus.INITIATED, "user");
-        Long rnrId = rnrMapper.insert(requisition);
+        Integer rnrId = rnrMapper.insert(requisition);
         Rnr rnr = rnrMapper.getRequisitionByFacilityAndProgram(facilityId, HIV);
         assertThat(rnr.getId(), is(rnrId));
     }

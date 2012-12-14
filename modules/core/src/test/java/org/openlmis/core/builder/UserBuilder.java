@@ -11,7 +11,7 @@ public class UserBuilder {
 
     public static final Property<User, String> userName = newProperty();
     public static final Property<User, String> role = newProperty();
-    public static final Property<User, Long> facilityId = newProperty();
+    public static final Property<User, Integer> facilityId = newProperty();
 
     public static final Instantiator<User> defaultUser = new Instantiator<User>() {
 
@@ -21,7 +21,7 @@ public class UserBuilder {
             user.setUserName(lookup.valueOf(userName, "User123"));
             user.setPassword("password");
             user.setRole(lookup.valueOf(role, "USER"));
-            user.setFacilityId(lookup.valueOf(facilityId, 9999L));
+            user.setFacilityId(lookup.valueOf(facilityId, 9999));
             return user;
         }
     };
