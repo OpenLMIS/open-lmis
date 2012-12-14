@@ -1,4 +1,4 @@
-function HeaderController($scope, User, $rootScope) {
+function HeaderController($scope, User, $rootScope, $http) {
     User.get({}, function (data) {
         if (data.authenticated == 'false') {
             $rootScope.modalShown = true;
@@ -20,4 +20,14 @@ function HeaderController($scope, User, $rootScope) {
             $(this).find("ul").show();
         });
     }();
+
+    $scope.logout = function () {
+            sessionStorage.clear();
+                $http({
+                    method:'GET',
+                    url:'/j_spring_security_logout',
+                    headers:{'Content-Type':'application/x-www-form-urlencoded'}
+                })
+
+    };
 }
