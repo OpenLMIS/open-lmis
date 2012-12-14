@@ -82,7 +82,9 @@ function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $l
             var f = isNaN(parseInt(lineItem.newPatientCount)) ? 0 : parseInt(lineItem.newPatientCount);
             var dosesPerMonth = parseInt(lineItem.dosesPerMonth);
             var g = parseInt(lineItem.dosesPerDispensingUnit);
-            lineItem.normalizedConsumption = Math.round(((m * 30) - x) == 0 ? c : (c * ((m * 30) / ((m * 30) - x))) + ((f * Math.ceil(dosesPerMonth / g) ) * m));
+            var consumptionAdjustedWithStockOutDays = ((m * 30) - x) == 0 ? c : (c * ((m * 30) / ((m * 30) - x)));
+            var adjustmentForNewPatients = (f * Math.ceil(dosesPerMonth / g) ) * m;
+            lineItem.normalizedConsumption = Math.round(consumptionAdjustedWithStockOutDays + adjustmentForNewPatients);
         }
     };
 
