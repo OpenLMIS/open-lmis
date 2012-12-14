@@ -64,33 +64,25 @@ function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $l
         var d = parseInt(lineItem.lossesAndAdjustments);
         var e = parseInt(lineItem.stockInHand);
 
-        var cSource = getSource('C');
-        var eSource = getSource('E');
+        if (getSource('C') == 'CALCULATED') fillConsumption();
+        if (getSource('E') == 'CALCULATED') fillStockInHand();
+        if (!isNaN(c)) fillNormalizedConsumption();
 
-        fillConsumption();
-        fillStockInHand();
-        fillNormalizedConsumption();
+        function fillConsumption() {
+            c = lineItem.quantityDispensed = (!isNaN(a) && !isNaN(b) && !isNaN(d) && !isNaN(e)) ? a + b - d - e : null;
+        }
+
+        function fillStockInHand() {
+            e = lineItem.stockInHand = (!isNaN(a) && !isNaN(b) && !isNaN(c) && !isNaN(d)) ? a + b - d - c : null;
+        }
 
         function fillNormalizedConsumption() {
-            if (!c) return;
             var m = 3;
             var x = isNaN(parseInt(lineItem.stockOutDays)) ? 0 : parseInt(lineItem.stockOutDays);
             var f = isNaN(parseInt(lineItem.newPatientCount)) ? 0 : parseInt(lineItem.newPatientCount);
             var dosesPerMonth = parseInt(lineItem.dosesPerMonth);
             var g = parseInt(lineItem.dosesPerDispensingUnit);
             lineItem.normalizedConsumption = Math.round(((m * 30) - x) == 0 ? c : (c * ((m * 30) / ((m * 30) - x))) + ((f * Math.ceil(dosesPerMonth / g) ) * m));
-        }
-
-        function fillConsumption() {
-            if (cSource == 'CALCULATED') {
-                c = lineItem.quantityDispensed = (a && b && d && e) ? a + b - d - e : null;
-            }
-        }
-
-        function fillStockInHand() {
-            if (eSource == 'CALCULATED') {
-                e = lineItem.stockInHand = (a && b && c && d) ? a + b - d - c : null;
-            }
         }
     };
 

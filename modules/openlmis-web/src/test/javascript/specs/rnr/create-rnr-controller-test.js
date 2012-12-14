@@ -136,6 +136,17 @@ describe('CreateRnrController', function () {
             expect(null).toEqual(scope.$parent.rnr.lineItems[0].stockInHand);
         });
 
+        it('should calculate stock in hand when all values are 0 - NaN check', function () {
+            scope.$parent.rnr = {"id":"rnrId", "lineItems":[
+                {"id":1, "beginningBalance":0, "quantityReceived":0, "quantityDispensed":0, "lossesAndAdjustments":0, "stockInHand":null}
+            ]};
+
+            httpBackend.flush();
+
+            scope.fillCalculatedRnrColumns(0);
+            expect(0).toEqual(scope.$parent.rnr.lineItems[0].stockInHand);
+        });
+
         it('should calculate stock in hand', function () {
             scope.$parent.rnr = {"id":"rnrId", "lineItems":[
                 {"id":1, "beginningBalance":1, "quantityReceived":10, "quantityDispensed":2, "lossesAndAdjustments":4, "stockInHand":null}
