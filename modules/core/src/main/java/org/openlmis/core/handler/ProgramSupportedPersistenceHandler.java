@@ -2,11 +2,12 @@ package org.openlmis.core.handler;
 
 import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.repository.FacilityRepository;
-import org.openlmis.core.service.FacilityService;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.handler.AbstractModelPersistenceHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Date;
 
 @Component("programSupportedPersistenceHandler")
 public class ProgramSupportedPersistenceHandler extends AbstractModelPersistenceHandler {
@@ -22,6 +23,7 @@ public class ProgramSupportedPersistenceHandler extends AbstractModelPersistence
     protected void save(Importable importable, String modifiedBy) {
         ProgramSupported programSupported = (ProgramSupported) importable;
         programSupported.setModifiedBy(modifiedBy);
+        programSupported.setModifiedDate(new Date());
         facilityRepository.addSupportedProgram(programSupported);
     }
 }

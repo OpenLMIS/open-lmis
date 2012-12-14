@@ -20,9 +20,6 @@ public interface ProgramSupportedMapper {
             "#{active}, #{modifiedBy}, #{modifiedDate})")
     void addSupportedProgram(ProgramSupported programSupported);
 
-    @Delete("DELETE FROM PROGRAMS_SUPPORTED")
-    void deleteAll();
-
     @Select("SELECT DISTINCT p.* " +
             "FROM program p, facility f, programs_supported ps, user u, program  WHERE " +
             "ps.program_id = ANY(#{programIds}::INTEGER[]) AND " +

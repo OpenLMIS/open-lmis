@@ -31,7 +31,7 @@ public interface ProductMapper {
             "special_storage_instructions," + "special_transport_instructions," +
             "active," + "full_supply," + "tracer," + "round_to_zero," + "archived," +
             "pack_rounding_threshold," +
-            "modified_by)" +
+            "modified_by, modified_date)" +
             "VALUES(" +
             "#{code}," +
             "#{alternateItemCode}," +
@@ -54,7 +54,7 @@ public interface ProductMapper {
             "#{specialStorageInstructions}," + "#{specialTransportInstructions}," +
             "#{active}," + "#{fullSupply}," + "#{tracer}," + "#{roundToZero}," + "#{archived}," +
             "#{packRoundingThreshold}," +
-            "#{modifiedBy})")
+            "#{modifiedBy}, #{modifiedDate})")
     @Options(useGeneratedKeys = true)
     int insert(Product product);
 
