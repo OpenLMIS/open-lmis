@@ -8,6 +8,8 @@ import org.openlmis.upload.handler.AbstractModelPersistenceHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 @Component("programProductPersistenceHandler")
 public class ProgramProductPersistenceHandler extends AbstractModelPersistenceHandler {
 
@@ -21,6 +23,8 @@ public class ProgramProductPersistenceHandler extends AbstractModelPersistenceHa
     @Override
     protected void save(Importable importable, String modifiedBy) {
         ProgramProduct programProduct = (ProgramProduct) importable;
+        programProduct.setModifiedBy(modifiedBy);
+        programProduct.setModifiedDate(new Date());
         programProductRepository.insert(programProduct);
     }
 }

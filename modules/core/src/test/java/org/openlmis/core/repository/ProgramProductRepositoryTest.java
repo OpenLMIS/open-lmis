@@ -49,8 +49,8 @@ public class ProgramProductRepositoryTest {
         Program program = make(a(ProgramBuilder.defaultProgram));
         ProgramProduct programProduct = new ProgramProduct(program, product);
         expectedEx.expect(RuntimeException.class);
-        expectedEx.expectMessage("Duplicate Product Code " + program.getCode() + " found for Program " + program.getCode());
-        doThrow(new DuplicateKeyException("Duplicate Product Code " + program.getCode() + " found for Program " + program.getCode())).when(programProductMapper).insert(programProduct);
+        expectedEx.expectMessage("Duplicate entry for Product Code and program Code combination found");
+        doThrow(new DuplicateKeyException("Duplicate entry for Product Code and program Code combination found")).when(programProductMapper).insert(programProduct);
         programProductRepository.insert(programProduct);
 
     }

@@ -89,6 +89,9 @@
                 <entry key="requisitionGroupMember">
                     <value type="java.lang.Class">org.openlmis.rnr.domain.RequisitionGroupMember</value>
                 </entry>
+                <entry key="programProduct">
+                    <value type="java.lang.Class">org.openlmis.core.domain.ProgramProduct</value>
+                </entry>
             </map>
         </constructor-arg>
     </bean>
@@ -103,6 +106,7 @@
                 <entry key="requisitionGroup" value-ref="requisitionGroupHandler"/>
                 <entry key="requisitionGroupProgramSchedule" value-ref="requisitionGroupProgramScheduleHandler"/>
                 <entry key="requisitionGroupMember" value-ref="requisitionGroupMemberHandler"/>
+                <entry key="programProduct" value-ref="programProductPersistenceHandler"/>
             </map>
         </constructor-arg>
     </bean>

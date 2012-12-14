@@ -6,6 +6,7 @@ import org.openlmis.core.repository.mapper.ProductMapper;
 import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -32,8 +33,12 @@ public class ProgramProductRepository {
     public void insert(ProgramProduct programProduct) {
         validateProgramCode(programProduct.getProgram().getCode());
         validateProductCode(programProduct.getProduct().getCode());
-        int id = programProductMapper.insert(programProduct);
-        programProduct.setId(id);
+        try {
+            int id = programProductMapper.insert(programProduct);
+            programProduct.setId(id);
+        }catch (DuplicateKeyException duplicateKeyException) {
+            throw new RuntimeException("Duplicate entry for Product Code and program Code combination found");
+        }
     }
 
     private void validateProductCode(String code) {
