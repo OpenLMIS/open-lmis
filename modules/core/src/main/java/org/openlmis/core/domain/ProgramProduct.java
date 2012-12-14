@@ -2,19 +2,20 @@ package org.openlmis.core.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
 import java.util.Date;
 
 @Data
 @NoArgsConstructor
-public class ProgramProduct {
+public class ProgramProduct implements Importable {
 
     private Integer id;
 
-    @ImportField(name = "Program Code", type = "String", nested = "program.code", mandatory = true)
+    @ImportField(name = "Program Code", type = "String", nested = "code", mandatory = true)
     private Program program;
-    @ImportField(name = "Product Code", type = "String", nested = "product.code", mandatory = true)
+    @ImportField(name = "Product Code", type = "String", nested = "code", mandatory = true)
     private Product product;
 
     // TODO : should change this to id.
