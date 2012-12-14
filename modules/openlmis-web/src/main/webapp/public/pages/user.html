@@ -1,11 +1,14 @@
-<div class="user-info">
+<div class="user-info" ng-controller="LogoutController" >
     <ul>
-        <li ng-click="showUserMenu($event)">
+        <li>
             <a href="javascript:void(0);" id="username">{{user}}</a>
             <ul class="user-menu">
                 <li><a href="javascript:void(0);">Profile</a></li>
-                <li><a href="/j_spring_security_logout">Logout</a></li>
+                <li ng-click="logout()">
+                    <a href="javascript:void(0);">Logout</a>
+                </li>
             </ul>
         </li>
     </ul>
 </div>
+

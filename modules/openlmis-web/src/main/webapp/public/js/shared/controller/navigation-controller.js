@@ -1,19 +1,29 @@
-function NavigationController($scope, UserRights) {
+function NavigationController($scope, User) {
 
-  UserRights.get({}, function (data) {
-     $scope.rights = data.rightList;
+
+    $scope.loadRights = function () {
+
+        if(sessionStorage['rights'] ==undefined){
+            User.get({}, function (data) {
+                    sessionStorage['rights'] = data.rights;
+            }, {});
+        }
+
+        $scope.rights = sessionStorage['rights'];
+
         $(".navigation > ul").show();
-  });
+    }();
 
+    $scope.showSubmenu = function () {
+        $(".navigation > ul > li").on("click", function () {
+            $(this).find("ul").show();
+        });
+    }();
 
-  $scope.showSubmenu = function() {
-    $(".navigation > ul > li").on("click", function() {
-      $(this).find("ul").show();
-    });
-  }();
+    $scope.hasPermission = function (permission) {
+        if ($scope.rights == undefined || $scope.rights.indexOf(permission) == undefined)   return false;
 
-  $scope.hasPermission = function(permission) {
-   return $scope.rights.indexOf(permission)>-1;
-  }
+        return $scope.rights.indexOf(permission) > -1;
+    }
 
 }

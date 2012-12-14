@@ -40,44 +40,33 @@ public class UserControllerTest {
   }
 
   @Test
-  public void shouldReturnUserInfoWhenLoggedInAsLogisticsUser() {
+  public void shouldReturnUserInfoOfLoggedInUser() {
     String username = "Foo";
     session.setAttribute(UserAuthenticationSuccessHandler.USER, username);
     session.setAttribute(UserAuthenticationSuccessHandler.IS_ADMIN, false);
-    HashMap<String, String> params = userController.user(httpServletRequest, null);
-    assertThat(params.get("name"), is("Foo"));
-    assertThat(params.get("authenticated"), is("true"));
-    assertThat(params.get("isAdmin"), is("false"));
+    HashMap<String, Object> params = userController.user(httpServletRequest, null);
+    assertThat(params.get("name").toString(), is("Foo"));
+    assertThat(params.get("authenticated").toString(), is("true"));
   }
 
-  @Test
-  public void shouldReturnUserInfoWhenLoggedInAsAdmin() {
-    String username = "Foo";
-    session.setAttribute(UserAuthenticationSuccessHandler.USER, username);
-    session.setAttribute(UserAuthenticationSuccessHandler.IS_ADMIN, true);
-    HashMap<String, String> params = userController.user(httpServletRequest, null);
-    assertThat(params.get("name"), is("Foo"));
-    assertThat(params.get("authenticated"), is("true"));
-    assertThat(params.get("isAdmin"), is("true"));
-  }
+
 
   @Test
   public void shouldNotReturnUserInfoWhenNotLoggedIn() {
     session.setAttribute(UserAuthenticationSuccessHandler.USER, null);
-    HashMap<String, String> params = userController.user(httpServletRequest, "true");
-    assertThat(params.get("error"), is("true"));
-    assertThat(params.get("authenticated"), is("false"));
-    assertThat(params.get("isAdmin"), is("false"));
+    HashMap<String, Object> params = userController.user(httpServletRequest, "true");
+    assertThat(params.get("error").toString(), is("true"));
+    assertThat(params.get("authenticated").toString(), is("false"));
   }
 
   @Test
-  public void shouldGetAllPrivilegesForAUser() throws Exception {
+  public void shouldGetAllPrivilegesForTheLoggedInUser() throws Exception {
     String username = "Foo";
     session.setAttribute(UserAuthenticationSuccessHandler.USER, username);
     List<Right> listOfRights = new ArrayList<>();
     when(roleRightService.getAllRightsForUser(username)).thenReturn(listOfRights);
-    List<Right> rights = userController.getAllRights(httpServletRequest);
+    HashMap<String, Object> params = userController.user(httpServletRequest, "true");
     verify(roleRightService).getAllRightsForUser(username);
-    assertThat(rights, is(listOfRights));
+    assertThat((List<Right>)params.get("rights"), is(listOfRights));
   }
 }

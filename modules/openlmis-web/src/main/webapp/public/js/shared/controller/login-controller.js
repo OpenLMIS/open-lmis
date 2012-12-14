@@ -8,6 +8,8 @@ function LoginController($scope, $http, $rootScope) {
             headers:{'Content-Type':'application/x-www-form-urlencoded'}
         }).success(function (data) {
                 if (data.authenticated == "true") {
+                    sessionStorage['rights'] = data.rights;
+
                     if (window.location.href.indexOf("login.html") != -1) {
                         window.location = "/";
                     }
