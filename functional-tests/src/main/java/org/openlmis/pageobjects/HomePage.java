@@ -20,6 +20,46 @@ public class HomePage extends Page {
     @FindBy(how = How.LINK_TEXT, using = "Logout")
     private static WebElement logoutLink;
 
+    @FindBy(how = How.XPATH, using = "//a[contains(text(),'Manage Facilities')]")
+    private static WebElement manageFacilityMenuItem;
+
+    @FindBy(how = How.LINK_TEXT, using = "Create")
+    private static WebElement createFacility;
+
+    @FindBy(how = How.XPATH, using = "//div[@id='wrap']/div/div/div/h2")
+    private static WebElement addNewFacilityHeader;
+
+    @FindBy(how = How.LINK_TEXT, using = "Template Configuration")
+    private static WebElement TemplateConfigTab;
+
+    @FindBy(how = How.LINK_TEXT, using = "R & R")
+    private static WebElement ConfigureTemplateSelectProgramPage;
+
+    @FindBy(how = How.ID, using = "selectProgram")
+    private static WebElement ProgramDropDown;
+
+    @FindBy(how = How.XPATH, using = "//a[contains(text(),'Next')]")
+    private static WebElement NextButton;
+
+    @FindBy(how = How.LINK_TEXT, using = "Requisitions")
+    private static WebElement requisitionsLink;
+
+    @FindBy(how = How.XPATH, using = "//a[contains(@href,'/public/pages/logistics/rnr/create.html')]")
+    private static WebElement createRnRLink;
+
+    @FindBy(how = How.XPATH, using = "//select[@ng-change='loadPrograms()']")
+    private static WebElement facilityDropDown;
+
+    @FindBy(how = How.XPATH, using = "//option[@value='0']")
+    private static WebElement programDropDown;
+
+    @FindBy(how = How.XPATH, using = "//select[2]")
+    private static WebElement programDropDownSelect;
+
+
+    @FindBy(how = How.XPATH, using = "//input[@value='Next']")
+    private static WebElement nextButton;
+
     public HomePage(TestWebDriver driver) throws  IOException {
         super(driver);
         PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
@@ -35,10 +75,44 @@ public class HomePage extends Page {
         logoutLink.click();
     }
 
-
     public boolean verifyWelcomeMessage(String user) {
         testWebDriver.waitForTextToAppear("Welcome " + user);
         return testWebDriver.getPageSource().contains("Welcome " + user);
+    }
+
+    public CreateFacilityPage navigateCreateFacility() throws IOException {
+        testWebDriver.waitForElementToAppear(manageFacilityMenuItem);
+        testWebDriver.click(manageFacilityMenuItem);
+        manageFacilityMenuItem.click();
+        testWebDriver.waitForElementToAppear(createFacility);
+        createFacility.click();
+        testWebDriver.waitForElementToAppear(addNewFacilityHeader);
+        return new CreateFacilityPage(testWebDriver);
+    }
+
+    public TemplateConfigPage selectProgramToConfigTemplate(String programme) {
+        testWebDriver.waitForElementToAppear(TemplateConfigTab);
+        testWebDriver.mouseOver(TemplateConfigTab);
+        TemplateConfigTab.click();
+        testWebDriver.waitForElementToAppear(ConfigureTemplateSelectProgramPage);
+        ConfigureTemplateSelectProgramPage.click();
+        testWebDriver.selectByVisibleText(ProgramDropDown, programme);
+        NextButton.click();
+        return new TemplateConfigPage(testWebDriver);
+    }
+
+    public InitiateRnRPage navigateAndInitiateRnr(String FCstring, String program) throws IOException {
+        testWebDriver.waitForElementToAppear(requisitionsLink);
+        requisitionsLink.click();
+        testWebDriver.waitForElementToAppear(createRnRLink);
+        createRnRLink.click();
+        testWebDriver.waitForElementToAppear(facilityDropDown);
+        testWebDriver.selectByVisibleText(facilityDropDown, "FCcode"+FCstring+"-FCname"+FCstring);
+        testWebDriver.waitForElementToAppear(programDropDown);
+        programDropDown.click();
+        testWebDriver.selectByVisibleText(programDropDownSelect,program);
+        nextButton.click();
+        return new InitiateRnRPage(testWebDriver);
     }
 
 }

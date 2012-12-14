@@ -26,6 +26,7 @@ public class TestWebDriver {
     public TestWebDriver(WebDriver driver)  {
 
         this.driver=driver;
+        maximizeBrowser();
     }
 
     public void setBaseURL(String BASE_URL)
@@ -82,6 +83,10 @@ public class TestWebDriver {
 
     public void quitDriver() {
         driver.quit();
+    }
+
+    public void maximizeBrowser(){
+        driver.manage().window().maximize();
     }
 
 

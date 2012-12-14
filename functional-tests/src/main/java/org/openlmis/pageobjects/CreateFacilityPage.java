@@ -9,22 +9,12 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Properties;
 
 
 public class CreateFacilityPage extends Page {
-
-
-    @FindBy(how = How.XPATH, using = "//a[contains(text(),'Manage Facilities')]")
-    private static WebElement manageFacilityMenuItem;
-
-    @FindBy(how = How.LINK_TEXT, using = "Create")
-    private static WebElement createFacility;
 
     @FindBy(how = How.ID, using = "code")
     private static WebElement facilityCode;
@@ -146,16 +136,6 @@ public class CreateFacilityPage extends Page {
 
     }
 
-
-    public void navigateCreateFacility() {
-        testWebDriver.waitForElementToAppear(manageFacilityMenuItem);
-        testWebDriver.click(manageFacilityMenuItem);
-        manageFacilityMenuItem.click();
-        testWebDriver.waitForElementToAppear(createFacility);
-        createFacility.click();
-        testWebDriver.waitForElementToAppear(addNewFacilityHeader);
-
-    }
 
     public String enterAndVerifyFacility() {
         String message=null;

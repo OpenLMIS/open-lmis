@@ -12,7 +12,7 @@ public class DBWrapper {
 
         final Properties props = new Properties();
 
-        System.out.println(System.getProperty("user.dir")+"/src/main/resources/config.properties");
+        System.out.println(System.getProperty("user.dir") + "/src/main/resources/config.properties");
         props.load(new FileInputStream(System.getProperty("user.dir")+"/src/main/resources/config.properties"));
         baseUrl = props.getProperty("baseUrl");
         dbUrl = props.getProperty("dbUrl");
@@ -79,15 +79,9 @@ public class DBWrapper {
         //rs.close();
     }
 
-//    public void insertUserAndAllocateFacility() throws IOException {
-//        DBWrapper dbwrapper = new DBWrapper();
-//        dbwrapper.dbConnection("INSERT INTO users\n" +
-//                "  (id, user_name, password, role, facility_id) VALUES\n" +
-//                "  (200, 'User123', 'Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==','USER', (Select id from facility order by modified_date DESC limit 1));", "alter");
-//
-//    }
 
-    public void insertUserAndAllocateFacility() throws IOException {
+
+    public void allocateFacilityToUser() throws IOException {
         DBWrapper dbwrapper = new DBWrapper();
         dbwrapper.dbConnection("update users set facility_id = (Select id from facility order by modified_date DESC limit 1) where id=200;", "alter");
 

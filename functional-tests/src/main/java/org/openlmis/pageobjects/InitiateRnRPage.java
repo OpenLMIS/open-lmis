@@ -9,32 +9,10 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Properties;
 
 
 public class InitiateRnRPage extends Page {
-
-    @FindBy(how = How.LINK_TEXT, using = "Requisitions")
-    private static WebElement requisitionsLink;
-
-    @FindBy(how = How.XPATH, using = "//a[contains(@href,'/public/pages/logistics/rnr/create.html')]")
-    private static WebElement createRnRLink;
-
-    @FindBy(how = How.XPATH, using = "//select[@ng-change='loadPrograms()']")
-    private static WebElement facilityDropDown;
-
-    @FindBy(how = How.XPATH, using = "//option[@value='0']")
-    private static WebElement programDropDown;
-
-    @FindBy(how = How.XPATH, using = "//select[2]")
-    private static WebElement programDropDownSelect;
-
-
-    @FindBy(how = How.XPATH, using = "//input[@value='Next']")
-    private static WebElement nextButton;
 
     @FindBy(how = How.XPATH, using = "//div[@id='requisition-header']/h2")
     private static WebElement requisitionHeader;
@@ -54,20 +32,6 @@ public class InitiateRnRPage extends Page {
         super(driver);
         PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
         testWebDriver.setImplicitWait(25);
-    }
-
-
-    public void navigateAndInitiateRnr(String FCstring, String program) {
-        testWebDriver.waitForElementToAppear(requisitionsLink);
-        requisitionsLink.click();
-        testWebDriver.waitForElementToAppear(createRnRLink);
-        createRnRLink.click();
-        testWebDriver.waitForElementToAppear(facilityDropDown);
-        testWebDriver.selectByVisibleText(facilityDropDown, "FCcode"+FCstring+"-FCname"+FCstring);
-        testWebDriver.waitForElementToAppear(programDropDown);
-        programDropDown.click();
-        testWebDriver.selectByVisibleText(programDropDownSelect,program);
-        nextButton.click();
     }
 
     public void verifyRnRHeader(String FCstring, String program)

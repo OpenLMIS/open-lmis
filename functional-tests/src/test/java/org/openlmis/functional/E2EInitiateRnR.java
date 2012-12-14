@@ -26,33 +26,32 @@ public class E2EInitiateRnR extends TestCaseHelper {
     public void testE2EInitiateRnR(String program,String user, String password,String[] credentials) throws Exception {
 
         DBWrapper dbWrapper = new DBWrapper();
-        LoginPage loginPage=new LoginPage(testWebDriver);
 
         dbWrapper.insertUser();
         dbWrapper.insertRoles();
         dbWrapper.insertRoleRights();
         dbWrapper.insertRoleAssignment();
 
+        LoginPage loginPage=new LoginPage(testWebDriver);
         HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
-        CreateFacilityPage createfacilitypage=new CreateFacilityPage(testWebDriver);
-        createfacilitypage.navigateCreateFacility();
-        String date_time=createfacilitypage.enterAndVerifyFacility();
+        CreateFacilityPage createFacilityPage = homePage.navigateCreateFacility();
 
-        dbWrapper.insertUserAndAllocateFacility();
+        String date_time=createFacilityPage.enterAndVerifyFacility();
 
-        TemplateConfigPage config=new TemplateConfigPage(testWebDriver);
-        config.selectProgramToConfigTemplate(program);
-        config.configureTemplate();
+        dbWrapper.allocateFacilityToUser();
+
+        TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
+        templateConfigPage.configureTemplate();
 
         homePage.logout();
 
-        HomePage homePage1 = loginPage.loginAs(user, password);
+        LoginPage loginPageSecond=new LoginPage(testWebDriver);
+        HomePage homePageUser = loginPageSecond.loginAs(user, password);
 
-        InitiateRnRPage initiateRnR=new InitiateRnRPage(testWebDriver);
-        initiateRnR.navigateAndInitiateRnr(date_time, program);
-        initiateRnR.verifyRnRHeader(date_time,program);
-        homePage1.logout();
+        InitiateRnRPage initiateRnRPage = homePageUser.navigateAndInitiateRnr(date_time, program);
+        initiateRnRPage.verifyRnRHeader(date_time,program);
+        homePageUser.logout();
 
     }
     @AfterClass
