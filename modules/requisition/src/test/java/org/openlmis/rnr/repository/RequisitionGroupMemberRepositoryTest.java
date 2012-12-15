@@ -87,7 +87,7 @@ public class RequisitionGroupMemberRepositoryTest {
     public void shouldGiveErrorIfFacilityDoesNotExist() throws Exception {
         when(requisitionGroupMapper.getIdForCode(requisitionGroupMember.getRequisitionGroup().getCode())).thenReturn(RG_ID);
         when(facilityMapper.getIdForCode(requisitionGroupMember.getFacility().getCode())).thenReturn(null);
-        when(requisitionGroupProgramScheduleMapper.getProgramIDsbyId(RG_ID)).thenReturn(programIdList);
+        when(requisitionGroupProgramScheduleMapper.getProgramIDsById(RG_ID)).thenReturn(programIdList);
 
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("Facility does not exist");
@@ -100,7 +100,7 @@ public class RequisitionGroupMemberRepositoryTest {
         when(requisitionGroupMapper.getIdForCode(requisitionGroupMember.getRequisitionGroup().getCode())).thenReturn(RG_ID);
         when(facilityMapper.getIdForCode(requisitionGroupMember.getFacility().getCode())).thenReturn(FACILITY_ID);
 
-        when(requisitionGroupProgramScheduleMapper.getProgramIDsbyId(RG_ID)).thenReturn(new ArrayList<Integer>());
+        when(requisitionGroupProgramScheduleMapper.getProgramIDsById(RG_ID)).thenReturn(new ArrayList<Integer>());
 
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("No Program(s) mapped for Requisition Group");
@@ -113,15 +113,15 @@ public class RequisitionGroupMemberRepositoryTest {
         when(requisitionGroupMapper.getIdForCode(requisitionGroupMember.getRequisitionGroup().getCode())).thenReturn(RG_ID);
         when(facilityMapper.getIdForCode(requisitionGroupMember.getFacility().getCode())).thenReturn(FACILITY_ID);
 
-        ArrayList<Integer> programIdsForRequisitionGroup = new ArrayList<Integer>();
+        ArrayList<Integer> programIdsForRequisitionGroup = new ArrayList<>();
         Integer commonProgramId = 1;
         programIdsForRequisitionGroup.add(commonProgramId);
         programIdsForRequisitionGroup.add(2);
         programIdsForRequisitionGroup.add(3);
 
-        when(requisitionGroupProgramScheduleMapper.getProgramIDsbyId(RG_ID)).thenReturn(programIdsForRequisitionGroup);
+        when(requisitionGroupProgramScheduleMapper.getProgramIDsById(RG_ID)).thenReturn(programIdsForRequisitionGroup);
 
-        ArrayList<Integer> requisitionGroupProgramIdsForFacility = new ArrayList<Integer>();
+        ArrayList<Integer> requisitionGroupProgramIdsForFacility = new ArrayList<>();
         requisitionGroupProgramIdsForFacility.add(commonProgramId);
         requisitionGroupProgramIdsForFacility.add(4);
 
@@ -141,7 +141,7 @@ public class RequisitionGroupMemberRepositoryTest {
     public void shouldGiveErrorIfDuplicateMappingFound() throws Exception {
         when(requisitionGroupMapper.getIdForCode(requisitionGroupMember.getRequisitionGroup().getCode())).thenReturn(RG_ID);
         when(facilityMapper.getIdForCode(requisitionGroupMember.getFacility().getCode())).thenReturn(FACILITY_ID);
-        when(requisitionGroupProgramScheduleMapper.getProgramIDsbyId(RG_ID)).thenReturn(programIdList);
+        when(requisitionGroupProgramScheduleMapper.getProgramIDsById(RG_ID)).thenReturn(programIdList);
 
         when(requisitionGroupMemberMapper.doesMappingExist(RG_ID,FACILITY_ID)).thenReturn(1);
 
@@ -155,7 +155,7 @@ public class RequisitionGroupMemberRepositoryTest {
     public void shouldSaveMappingIfAllConditionsCorrectlyMet() throws Exception {
         when(requisitionGroupMapper.getIdForCode(requisitionGroupMember.getRequisitionGroup().getCode())).thenReturn(RG_ID);
         when(facilityMapper.getIdForCode(requisitionGroupMember.getFacility().getCode())).thenReturn(FACILITY_ID);
-        when(requisitionGroupProgramScheduleMapper.getProgramIDsbyId(RG_ID)).thenReturn(programIdList);
+        when(requisitionGroupProgramScheduleMapper.getProgramIDsById(RG_ID)).thenReturn(programIdList);
 
         new RequisitionGroupMemberRepository(requisitionGroupMemberMapper,requisitionGroupProgramScheduleMapper,requisitionGroupMapper,facilityMapper, programMapper).insert(requisitionGroupMember);
 

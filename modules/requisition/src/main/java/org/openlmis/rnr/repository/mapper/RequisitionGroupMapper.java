@@ -10,26 +10,20 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RequisitionGroupMapper {
 
-
-    @Select("INSERT INTO requisition_group(code,name,description,supervisory_node_id,modified_by, modified_date) " +
-            "values (#{code},#{name},#{description},#{supervisoryNode.id},#{modifiedBy}, #{modifiedDate}) returning id")
+    @Select("INSERT INTO requisition_groups" +
+            "(code, name, description, supervisoryNodeId, modifiedBy, modifiedDate) " +
+            "values (#{code}, #{name}, #{description}, #{supervisoryNode.id}, #{modifiedBy}, #{modifiedDate}) " +
+            "returning id")
     @Options(useGeneratedKeys = true)
     Integer insert(RequisitionGroup requisitionGroup);
 
-    @Select("SELECT rg.id, rg.code, rg.name, rg.description, " +
-            "rg.supervisory_node_id, rg.modified_by, rg.modified_date FROM " +
-            "requisition_group rg WHERE rg.id = #{id}")
-    @Results(value={
-            @Result(property = "id", column = "id"),
-            @Result(property = "code", column = "code"),
-            @Result(property = "name", column = "name"),
-            @Result(property = "description", column = "description"),
-            @Result(property = "supervisoryNode.id", column = "supervisory_node_id"),
-            @Result(property = "modifiedBy", column = "modified_by"),
-            @Result(property = "modifiedDate", column = "modified_date")
+    @Select("SELECT id, code, name, description, supervisoryNodeId, modifiedBy, modifiedDate " +
+            "FROM requisition_groups WHERE id = #{id}")
+    @Results(value = {
+            @Result(property = "supervisoryNode.id", column = "supervisoryNodeId")
     })
     RequisitionGroup getRequisitionGroupById(Integer id);
 
-    @Select("SELECT id FROM requisition_group where LOWER(code) = LOWER(#{code})")
+    @Select("SELECT id FROM requisition_groups where LOWER(code) = LOWER(#{code})")
     Integer getIdForCode(String code);
 }

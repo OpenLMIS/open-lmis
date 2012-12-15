@@ -41,7 +41,7 @@ public class RequisitionGroupMemberRepository {
 
         requisitionGroupMember.getRequisitionGroup().setId(requisitionGroupMapper.getIdForCode(requisitionGroupMember.getRequisitionGroup().getCode()));
 
-        List<Integer> programIDsForRG = requisitionGroupProgramScheduleMapper.getProgramIDsbyId(requisitionGroupMember.getRequisitionGroup().getId());
+        List<Integer> programIDsForRG = requisitionGroupProgramScheduleMapper.getProgramIDsById(requisitionGroupMember.getRequisitionGroup().getId());
         List<Integer> requisitionGroupProgramIdsForFacility = requisitionGroupMemberMapper.getRequisitionGroupProgramIdsForId(requisitionGroupMember.getFacility().getId());
 
         if (requisitionGroupMember.getRequisitionGroup().getId() == null) {

@@ -75,7 +75,7 @@ public class RequisitionGroupProgramScheduleMapperIT {
 
         requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
 
-        List<Integer> resultProgramId = requisitionGroupProgramScheduleMapper.getProgramIDsbyId(requisitionGroupProgramSchedule.getRequisitionGroup().getId());
+        List<Integer> resultProgramId = requisitionGroupProgramScheduleMapper.getProgramIDsById(requisitionGroupProgramSchedule.getRequisitionGroup().getId());
 
         assertThat(resultProgramId.size(), is(1));
         assertThat(resultProgramId.get(0), is(requisitionGroupProgramSchedule.getProgram().getId()));

@@ -10,24 +10,19 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SupervisoryNodeMapper {
 
-    @Select("SELECT * FROM supervisory_node where id = #{id}")
+    @Select("SELECT * FROM supervisory_nodes where id = #{id}")
     @Results(value = {
-            @Result(property = "code", column = "code"),
-            @Result(property = "parent.id", column = "parent_id"),
-            @Result(property = "facility.id", column = "facility_id"),
-            @Result(property = "approvalPoint", column = "approval_point"),
-            @Result(property = "name", column = "name"),
-            @Result(property = "description", column = "description"),
-            @Result(property = "modifiedBy", column = "modified_by"),
-            @Result(property = "modifiedDate", column = "modified_date")
+            @Result(property = "parent.id", column = "parentId"),
+            @Result(property = "facility.id", column = "facilityId")
     })
     SupervisoryNode getSupervisoryNode(Integer id);
 
-    @Select("INSERT INTO supervisory_node (code, name, parent_id, facility_id, approval_point, description, modified_by, modified_date)" +
+    @Select("INSERT INTO supervisory_nodes " +
+            "(code, name, parentId, facilityId, approvalPoint, description, modifiedBy, modifiedDate)" +
             " VALUES (#{code}, #{name}, #{parent.id}, #{facility.id}, #{approvalPoint}, #{description}, #{modifiedBy}, #{modifiedDate}) returning id")
     @Options(useGeneratedKeys = true)
     Integer insert(SupervisoryNode supervisoryNode);
 
-    @Select("SELECT id FROM supervisory_node WHERE LOWER(code) = LOWER(#{code})")
+    @Select("SELECT id FROM supervisory_nodes WHERE LOWER(code) = LOWER(#{code})")
     Integer getIdForCode(String code);
 }

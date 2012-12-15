@@ -4,7 +4,7 @@ INSERT INTO roles
  (2, 'district pharmacist', '');
 
 INSERT INTO role_rights
-  (role_id, right_id) VALUES
+  (roleId, rightId) VALUES
   (1, 'VIEW_REQUISITION'),
   (1, 'CREATE_REQUISITION'),
   (2, 'VIEW_REQUISITION'),
@@ -13,10 +13,10 @@ INSERT INTO role_rights
   (2, 'CONFIGURE_RNR');
 
 INSERT INTO users
-  (id, user_name, password, role, facility_id) VALUES
+  (id, userName, password, role, facilityId) VALUES
   (200, 'User123', 'Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==','USER', 1);
 
 INSERT INTO role_assignments
-  (user_id, role_id, program_id) VALUES
+  (userId, roleId, programId) VALUES
   (100, 2, 1),
   (200, 1, 1);

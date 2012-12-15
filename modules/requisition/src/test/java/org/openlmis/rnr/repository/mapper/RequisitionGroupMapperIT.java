@@ -22,7 +22,6 @@ import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.rnr.builder.RequisitionGroupBuilder.*;
 import static org.openlmis.rnr.builder.SupervisoryNodeBuilder.defaultSupervisoryNode;
 
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext-requisition.xml")
 @Transactional
@@ -31,7 +30,6 @@ public class RequisitionGroupMapperIT {
 
     SupervisoryNode supervisoryNode;
     Integer supervisoryNodeId;
-
 
     @Autowired
     RequisitionGroupMapper requisitionGroupMapper;
