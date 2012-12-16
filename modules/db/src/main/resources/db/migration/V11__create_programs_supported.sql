@@ -1,5 +1,5 @@
 CREATE TABLE PROGRAMS_SUPPORTED (
-    facility_id INTEGER REFERENCES facility(id),
+    facility_id INTEGER REFERENCES facilities(id),
     program_id INTEGER REFERENCES program(id),
     active BOOLEAN NOT NULL,
     modified_by varchar(50),

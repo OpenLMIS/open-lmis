@@ -15,13 +15,13 @@ public interface ProgramSupportedMapper {
     //TODO : Change the OR query.
     @Insert("INSERT INTO PROGRAMS_SUPPORTED" +
             "(facility_id, program_id, active, modified_by, modified_date) VALUES " +
-            "((SELECT id FROM facility WHERE LOWER(code) = LOWER(#{facilityCode}) OR id = #{facilityId}), " +
+            "((SELECT id FROM facilities WHERE LOWER(code) = LOWER(#{facilityCode}) OR id = #{facilityId}), " +
             "(SELECT id FROM program WHERE LOWER(code) = LOWER(#{programCode}) OR id = #{programId}), " +
             "#{active}, #{modifiedBy}, #{modifiedDate})")
     void addSupportedProgram(ProgramSupported programSupported);
 
     @Select("SELECT DISTINCT p.* " +
-            "FROM program p, facility f, programs_supported ps, user u, program  WHERE " +
+            "FROM program p, facilities f, programs_supported ps, user u, program  WHERE " +
             "ps.program_id = ANY(#{programIds}::INTEGER[]) AND " +
             "ps.facility_id = #{facilityId} AND " +
             "ps.program_id = p.id AND " +

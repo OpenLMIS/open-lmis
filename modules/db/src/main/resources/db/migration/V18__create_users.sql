@@ -4,5 +4,5 @@ CREATE TABLE users (
   password VARCHAR(128) NOT NULL,
   facility_id INT,
   role VARCHAR(50),
-  FOREIGN KEY (facility_id) REFERENCES facility(id)
+  FOREIGN KEY (facility_id) REFERENCES facilities(id)
 );

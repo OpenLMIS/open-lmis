@@ -1,7 +1,7 @@
 CREATE TABLE supervisory_node (
   id serial PRIMARY KEY,
   parent_id INT REFERENCES supervisory_node(id),
-  facility_id INT NOT NULL REFERENCES facility(id),
+  facility_id INT NOT NULL REFERENCES facilities(id),
   name VARCHAR(50) NOT NULL,
   code VARCHAR(50) UNIQUE NOT NULL,
   description VARCHAR(250),

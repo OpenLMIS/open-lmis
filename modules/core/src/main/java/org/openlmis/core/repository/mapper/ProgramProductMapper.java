@@ -22,11 +22,10 @@ public interface ProgramProductMapper {
             "pf.code as form_code, pf.display_order as form_display_order, " +
             "du.code as dosage_unit_code, du.display_order as dosage_unit_display_order, " +
             "pp.doses_per_month " +
-            "from product p, facility_approved_product fap, program_product pp, facility f, " +
+            "from product p, facility_approved_product fap, program_product pp, facilities f, " +
             "product_form pf , dosage_unit du where " +
-            "pp.program_id = (select id from program where LOWER(code)=  LOWER(#{programCode})) " +
-            "and f.id = #{facilityId} " +
-            "and fap.facility_type_id= f.type_id " +
+            "pp.program_id = (select id from program where LOWER(code) =  LOWER(#{programCode})) " +
+            "and f.id = #{facilityId} and f.typeId = fap.facility_type_id " +
             "and fap.product_id = p.id " +
             "and fap.product_id = pp.product_id " +
             "and pp.product_id = p.id " +
