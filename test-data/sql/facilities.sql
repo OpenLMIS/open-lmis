@@ -6,7 +6,7 @@ insert into facilities
 ('F1756','Village Dispensary','IT department','G7645',9876234981,'fax','A','B',1,1,333,22.1,1.2,3.3,2,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/1887','TRUE','fc','TRUE'),
 ('F1757','Central Hospital','IT department','G7646',9876234981,'fax','A','B',1,2,333,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','TRUE','fc','TRUE');
 
-insert into programs_supported(facility_id, program_id, active, modified_by) values
+insert into programs_supported(facilityId, programId, active, modifiedBy) values
 (1, 1, true, 'Admin123'),
 (1, 2, true, 'Admin123'),
 (2, 1, true, 'Admin123'),

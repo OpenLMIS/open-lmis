@@ -62,7 +62,7 @@ public class FacilityRepository {
   }
 
   private void validateGeographicZone(Facility facility) {
-    GeographicZone geographicZone  = facility.getGeographicZone();
+    GeographicZone geographicZone = facility.getGeographicZone();
 
     if (geographicZone == null || geographicZone.getId() == null)
       throw new RuntimeException("Missing mandatory reference data 'Geographic Zone Id'");
@@ -112,7 +112,7 @@ public class FacilityRepository {
     List<Program> supportedPrograms = facility.getSupportedPrograms();
     for (Program previouslySupportedProgram : previouslySupportedPrograms) {
       if (!(supportedPrograms).contains(previouslySupportedProgram)) {
-        programSupportedMapper.deleteObsoletePrograms(facility.getId(), previouslySupportedProgram.getId());
+        programSupportedMapper.delete(facility.getId(), previouslySupportedProgram.getId());
       }
     }
   }
@@ -154,7 +154,7 @@ public class FacilityRepository {
   private void validateFacilityCode(String facilityCode) {
     if (facilityCode == null || facilityCode.isEmpty())
       throw new RuntimeException("Missing reference data 'Facility Code'");
-      Integer facilityTypeId = facilityMapper.getIdForCode(facilityCode);
+    Integer facilityTypeId = facilityMapper.getIdForCode(facilityCode);
     if (facilityTypeId == null) throw new RuntimeException("Invalid reference data 'Facility Code'");
   }
 

@@ -1,8 +1,8 @@
 CREATE TABLE PROGRAMS_SUPPORTED (
-    facility_id INTEGER REFERENCES facilities(id),
-    program_id INTEGER REFERENCES program(id),
+    facilityId INTEGER REFERENCES facilities(id),
+    programId INTEGER REFERENCES program(id),
     active BOOLEAN NOT NULL,
-    modified_by varchar(50),
-    modified_date TIMESTAMP,
-    PRIMARY KEY (facility_id, program_id)
+    modifiedBy varchar(50),
+    modifiedDate TIMESTAMP,
+    PRIMARY KEY (facilityId, programId)
 );
