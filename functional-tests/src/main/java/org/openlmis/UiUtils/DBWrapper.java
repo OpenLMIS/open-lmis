@@ -116,7 +116,7 @@ public class DBWrapper {
 
     public void insertRoleRights() throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();
-        ResultSet rs = dbwrapper.dbConnection("Select role_id from role_rights;", "select");
+        ResultSet rs = dbwrapper.dbConnection("Select roleId from role_rights;", "select");
 
         if (rs.next()) {
 
@@ -126,7 +126,7 @@ public class DBWrapper {
 
         }
 
-        dbwrapper.dbConnection("INSERT INTO role_rights (role_id, right_id) VALUES (1, 'VIEW_REQUISITION'), (1, 'CREATE_REQUISITION'),(2, 'VIEW_REQUISITION'),(2, 'UPLOADS'),(2, 'MANAGE_FACILITY'),(2, 'CONFIGURE_RNR');", "alter");
+        dbwrapper.dbConnection("INSERT INTO role_rights (roleId, rightId) VALUES (1, 'VIEW_REQUISITION'), (1, 'CREATE_REQUISITION'),(2, 'VIEW_REQUISITION'),(2, 'UPLOADS'),(2, 'MANAGE_FACILITY'),(2, 'CONFIGURE_RNR');", "alter");
     }
 
     public void insertRoleAssignment() throws SQLException, IOException {

@@ -12,8 +12,7 @@ import java.util.List;
 @Repository
 public interface RoleRightsMapper {
 
-    @Insert("INSERT INTO role_rights" +
-            "(roleId, rightId) VALUES " +
+    @Insert("INSERT INTO role_rights(roleId, rightId) VALUES " +
             "(#{roleId}, #{right})")
     int createRoleRight(@Param(value = "roleId") Integer roleId, @Param(value = "right") Right right);
 
@@ -25,9 +24,9 @@ public interface RoleRightsMapper {
 
     @Select("SELECT RA.userId, RA.roleId, RA.programId " +
             "FROM role_assignments RA, users U, role_rights RR WHERE " +
-            "U.userName = #{userName} " +
-            "AND U.id  = RA.userId " +
-            "AND RA.roleId = RR.roleId " +
+            "U.user_name = #{userName} " +
+            "AND U.id  = RA.user_id " +
+            "AND RA.role_id = RR.roleId " +
             "AND RR.rightId = #{right} ")
     List<RoleAssignment> getRoleAssignmentsWithGivenRightForAUser(@Param(value = "right") Right right,
                                                                   @Param(value = "userName") String userName);
