@@ -24,9 +24,9 @@ public interface RoleRightsMapper {
 
     @Select("SELECT RA.userId, RA.roleId, RA.programId " +
             "FROM role_assignments RA, users U, role_rights RR WHERE " +
-            "U.user_name = #{userName} " +
-            "AND U.id  = RA.user_id " +
-            "AND RA.role_id = RR.roleId " +
+            "U.userName = #{userName} " +
+            "AND U.id  = RA.userId " +
+            "AND RA.roleId = RR.roleId " +
             "AND RR.rightId = #{right} ")
     List<RoleAssignment> getRoleAssignmentsWithGivenRightForAUser(@Param(value = "right") Right right,
                                                                   @Param(value = "userName") String userName);
