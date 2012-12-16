@@ -10,36 +10,33 @@ import java.util.List;
 @Repository
 public interface ProgramProductMapper {
 
-    @Select("INSERT INTO program_product(program_id, product_id, doses_per_month, active, modified_by, modified_date)" +
+    @Select("INSERT INTO program_products(programId, productId, dosesPerMonth, active, modifiedBy, modifiedDate)" +
             "VALUES ((select id from program where LOWER(code)=  LOWER(#{program.code}))," +
             "(select id from product where LOWER(code)=  LOWER(#{product.code})), " +
             "#{dosesPerMonth}, #{active}, #{modifiedBy}, #{modifiedDate}) returning id")
     Integer insert(ProgramProduct programProduct);
 
-    @Select("select p.id as product_id, p.code as product_code, #{programCode} as program_code, p.primary_name as primary_name, " +
+    @Select("SELECT p.id AS product_id, p.code AS productCode, #{programCode} AS programCode, p.primary_name AS primary_name, " +
             "p.dispensing_unit, p.dosage_unit_id, " +
             "p.form_id, p.strength, p.doses_per_dispensing_unit, " +
-            "pf.code as form_code, pf.display_order as form_display_order, " +
-            "du.code as dosage_unit_code, du.display_order as dosage_unit_display_order, " +
-            "pp.doses_per_month " +
-            "from product p, facility_approved_product fap, program_product pp, facilities f, " +
+            "pf.code AS form_code, pf.display_order AS form_display_order, " +
+            "du.code AS dosage_unit_code, du.display_order AS dosage_unit_display_order, " +
+            "pp.dosesPerMonth " +
+            "from product p, facility_approved_product fap, program_products pp, facilities f, " +
             "product_form pf , dosage_unit du where " +
-            "pp.program_id = (select id from program where LOWER(code) =  LOWER(#{programCode})) " +
-            "and f.id = #{facilityId} and f.typeId = fap.facility_type_id " +
-            "and fap.product_id = p.id " +
-            "and fap.product_id = pp.product_id " +
-            "and pp.product_id = p.id " +
-            "and pf.id = p.form_id " +
-            "and du.id = p.dosage_unit_id " +
-            "and p.full_supply = 'TRUE' " +
-            "and p.active = true " +
-            "and pp.active = true " +
+            "pp.programId = (select id from program where LOWER(code) =  LOWER(#{programCode})) " +
+            "AND f.id = #{facilityId} AND f.typeId = fap.facility_type_id " +
+            "AND fap.product_id = p.id " +
+            "AND fap.product_id = pp.productId " +
+            "AND pp.productId = p.id " +
+            "AND pf.id = p.form_id " +
+            "AND du.id = p.dosage_unit_id " +
+            "AND p.full_supply = 'TRUE' " +
+            "AND p.active = true " +
+            "AND pp.active = true " +
             "ORDER BY p.display_order NULLS LAST, p.code")
     @Results(value = {
             @Result(property = "product", column = "product_id", javaType = Product.class, one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getProductById")),
-            @Result(property = "productCode", column = "product_code"),
-            @Result(property = "programCode", column = "program_code"),
-            @Result(property = "dosesPerMonth", column = "doses_per_month"),
             @Result(property = "product.code", column = "product_code"),
             @Result(property = "product.primaryName", column = "primary_name"),
             @Result(property = "product.dispensingUnit", column = "dispensing_unit"),
