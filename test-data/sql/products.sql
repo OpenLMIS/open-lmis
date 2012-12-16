@@ -1,4 +1,4 @@
-delete from facility_approved_product;
+delete from facility_approved_products;
 delete from program_products;
 delete from product;
 insert into product
@@ -10,7 +10,7 @@ insert into program_products(programId, productId, dosesPerMonth, active) values
 (1, 1, 30, true),
 (1, 2, 30, true),
 (1, 3, 30, true);
-insert into facility_approved_product(facility_type_id, product_id) values
+insert into facility_approved_products(facilityTypeId, productId) values
 (1, 1),
 (1, 2),
 (1, 3);
