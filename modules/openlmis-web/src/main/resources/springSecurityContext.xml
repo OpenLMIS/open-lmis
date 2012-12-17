@@ -17,7 +17,6 @@
     <mvc:annotation-driven/>
 
     <context:component-scan base-package="org.openlmis.web.controller"/>
-    <context:component-scan base-package="org.openlmis.admin.controller"/>
     <context:component-scan base-package="org.openlmis.web"/>
 
     <beans:bean id="restAuthenticationEntryPoint"
