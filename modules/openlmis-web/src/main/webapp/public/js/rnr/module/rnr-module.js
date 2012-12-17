@@ -70,6 +70,10 @@ rnrModule.fill = function (lineItem, programRnrColumnList) {
         lineItem.normalizedConsumption = Math.round(consumptionAdjustedWithStockOutDays + adjustmentForNewPatients);
     }
 
+    function fillAMC() {
+        lineItem.amc = lineItem.normalizedConsumption;
+    }
+
     var getSource = function (indicator) {
         var code;
         $(programRnrColumnList).each(function (i, column) {
@@ -90,6 +94,6 @@ rnrModule.fill = function (lineItem, programRnrColumnList) {
     if (getSource('C') == 'CALCULATED') fillConsumption();
     if (getSource('E') == 'CALCULATED') fillStockInHand();
     fillNormalizedConsumption();
-
+    fillAMC();
 
 }
