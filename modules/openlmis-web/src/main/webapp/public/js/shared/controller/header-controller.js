@@ -22,12 +22,7 @@ function HeaderController($scope, User, $rootScope, $http) {
     }();
 
     $scope.logout = function () {
-            sessionStorage.clear();
-                $http({
-                    method:'GET',
-                    url:'/j_spring_security_logout',
-                    headers:{'Content-Type':'application/x-www-form-urlencoded'}
-                })
-
+        sessionStorage.clear();
+        window.location = "/j_spring_security_logout";
     };
 }
