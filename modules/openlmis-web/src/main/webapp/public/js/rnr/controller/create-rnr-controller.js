@@ -34,54 +34,11 @@ function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $l
         });
     };
 
-    $scope.fillCalculatedRnrColumns = function (index) {
-        var lineItem = $scope.$parent.rnr.lineItems[index];
-        var a = parseInt(lineItem.beginningBalance);
-        var b = parseInt(lineItem.quantityReceived);
-        var c = parseInt(lineItem.quantityDispensed);
-        var d = parseInt(lineItem.lossesAndAdjustments);
-        var e = parseInt(lineItem.stockInHand);
-
-        if (getSource('C') == 'CALCULATED') fillConsumption();
-        if (getSource('E') == 'CALCULATED') fillStockInHand();
-        if (!isNaN(c)) fillNormalizedConsumption();
-
-        function fillConsumption() {
-            c = lineItem.quantityDispensed = (!isNaN(a) && !isNaN(b) && !isNaN(d) && !isNaN(e)) ? a + b - d - e : null;
-        }
-
-        function fillStockInHand() {
-            e = lineItem.stockInHand = (!isNaN(a) && !isNaN(b) && !isNaN(c) && !isNaN(d)) ? a + b - d - c : null;
-        }
-
-        function fillNormalizedConsumption() {
-            var m = 3; // will be picked up from the database in future
-            var x = isNaN(parseInt(lineItem.stockOutDays)) ? 0 : parseInt(lineItem.stockOutDays);
-            var f = isNaN(parseInt(lineItem.newPatientCount)) ? 0 : parseInt(lineItem.newPatientCount);
-            var dosesPerMonth = parseInt(lineItem.dosesPerMonth);
-            var g = parseInt(lineItem.dosesPerDispensingUnit);
-            var consumptionAdjustedWithStockOutDays = ((m * 30) - x) == 0 ? c : (c * ((m * 30) / ((m * 30) - x)));
-            var adjustmentForNewPatients = (f * Math.ceil(dosesPerMonth / g) ) * m;
-            lineItem.normalizedConsumption = Math.round(consumptionAdjustedWithStockOutDays + adjustmentForNewPatients);
-        }
-    };
-
-    var getSource = function (indicator) {
-        var code;
-        $($scope.programRnRColumnList).each(function (i, column) {
-            if (column.indicator == indicator) {
-                code = column.source.name;
-                return false;
-            }
-        });
-        return code;
+    $scope.fillCalculatedRnrColumns = function (lineItem) {
+        rnrModule.fill(lineItem, $scope.programRnRColumnList);
     };
 
     $scope.getId = function (prefix, parent) {
         return prefix + "_" + parent.$parent.$parent.$index;
     };
-
-    $scope.getIndex = function (parent) {
-        return parent.$parent.$parent.$index;
-    }
 }
