@@ -5,6 +5,25 @@ function FacilitySearchController($scope, facilities, $location) {
   $scope.editFacility = function (id) {
     $location.path('edit/' + id);
   };
+
+
+  $scope.filterFacilitiesByNameOrCode = function(query) {
+    var filteredFacilities = [];
+    var queryRegExp = RegExp(query, 'i');
+    angular.forEach($scope.facilityList, function(facility) {
+      if (facility.name.match(queryRegExp) || facility.code.match(queryRegExp)) {
+        filteredFacilities.push(facility);
+      }
+    });
+    $scope.resultCount = filteredFacilities.length;
+    return filteredFacilities;
+  };
+
+  $scope.clearSearch = function() {
+    $scope.query = "";
+    $scope.resultCount = 0;
+    angular.element("#searchFacility").focus();
+  };
 }
 
 FacilitySearchController.resolve = {
@@ -18,4 +37,3 @@ FacilitySearchController.resolve = {
     return deferred.promise;
   }
 };
-

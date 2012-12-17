@@ -344,4 +344,66 @@ table td.cell-input .cell-text {
 .cell-input input[type="text"]:focus {
   box-shadow: inset 0 0 5px rgba(82, 168, 236, 0.9);
   border-color: #60B2F1;
-} 
+}
+.search-query {
+  margin-top: 10px;
+}
+.form-tip {
+  font-size: 0.8em;
+  color: #666;
+  margin: 3px 0 0 5px;
+}
+.facility-list {
+  border: 1px solid #ccc;
+  margin: 10px 0;
+  border-radius: 3px;
+  position: relative;
+  h3 {
+    line-height: normal;
+    padding: 8px 10px;
+    margin: 0;
+    color: #444;
+    text-shadow: 0 1px 0 #FFF;
+    background: #f9f9f9; /* Old browsers */
+    background: -moz-linear-gradient(top, #f9f9f9 0%, #e0e0e0 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f9f9f9), color-stop(100%,#e0e0e0)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #f9f9f9 0%,#e0e0e0 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #f9f9f9 0%,#e0e0e0 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #f9f9f9 0%,#e0e0e0 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #f9f9f9 0%,#e0e0e0 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f9f9f9', endColorstr='#e0e0e0',GradientType=0 ); /* IE6-9 */
+  }
+  .close-btn {
+    position: absolute;
+    right: 11px;
+    top: 10px;
+    width: 16px;
+    height: 16px;
+    text-indent: -999em;
+    background: url(../images/close-icon.png) no-repeat left top;
+    opacity: 0.8;
+    &:hover {
+      opacity: 1;
+    }
+  }
+  ul {
+    margin: 0;
+    list-style: none;
+    li {
+      border-top: 1px solid #CCC;
+      &:first-child {
+        border-top: 0;
+      }
+      a {
+        padding: 10px;
+        display: block;
+      }
+      &:hover a {
+        background-color: #f9f9f9;
+      }
+    }
+  }
+}
+h3 {
+  font-size: 1.3em;
+}
