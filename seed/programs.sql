@@ -1,5 +1,5 @@
-delete from program;
-insert into program(code, name, description, budgeting_applies, uses_dar, active)
+delete from programs;
+insert into programs(code, name, description, budgeting_applies, uses_dar, active)
     values
     ('HIV','HIV','HIV',FALSE,FALSE,TRUE),
     ('ARV','ARV','ARV',FALSE,FALSE,TRUE),

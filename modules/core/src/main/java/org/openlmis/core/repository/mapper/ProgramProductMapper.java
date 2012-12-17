@@ -11,7 +11,7 @@ import java.util.List;
 public interface ProgramProductMapper {
 
     @Select("INSERT INTO program_products(programId, productId, dosesPerMonth, active, modifiedBy, modifiedDate)" +
-            "VALUES ((select id from program where LOWER(code)=  LOWER(#{program.code}))," +
+            "VALUES ((select id from programs where LOWER(code)=  LOWER(#{program.code}))," +
             "(select id from product where LOWER(code)=  LOWER(#{product.code})), " +
             "#{dosesPerMonth}, #{active}, #{modifiedBy}, #{modifiedDate}) returning id")
     Integer insert(ProgramProduct programProduct);
@@ -24,7 +24,7 @@ public interface ProgramProductMapper {
             "pp.dosesPerMonth " +
             "from product p, facility_approved_products fap, program_products pp, facilities f, " +
             "product_form pf , dosage_unit du where " +
-            "pp.programId = (select id from program where LOWER(code) =  LOWER(#{programCode})) " +
+            "pp.programId = (select id from programs where LOWER(code) =  LOWER(#{programCode})) " +
             "AND f.id = #{facilityId} AND f.typeId = fap.facilityTypeId " +
             "AND fap.productId = p.id " +
             "AND fap.productId = pp.productId " +

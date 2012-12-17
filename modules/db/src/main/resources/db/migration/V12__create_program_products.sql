@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS program_products;
 CREATE TABLE program_products (
     id SERIAL PRIMARY KEY,
-    programId INTEGER REFERENCES program(id) NOT NULL,
+    programId INTEGER REFERENCES programs(id) NOT NULL,
     productId INTEGER REFERENCES product(id) NOT NULL,
     dosesPerMonth INTEGER NOT NULL,
     active BOOLEAN,

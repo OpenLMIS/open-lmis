@@ -16,12 +16,12 @@ public interface ProgramSupportedMapper {
   @Insert("INSERT INTO programs_supported" +
       "(facilityId, programId, active, modifiedBy, modifiedDate) VALUES " +
       "((SELECT id FROM facilities WHERE LOWER(code) = LOWER(#{facilityCode}) OR id = #{facilityId}), " +
-      "(SELECT id FROM program WHERE LOWER(code) = LOWER(#{programCode}) OR id = #{programId}), " +
+      "(SELECT id FROM programs WHERE LOWER(code) = LOWER(#{programCode}) OR id = #{programId}), " +
       "#{active}, #{modifiedBy}, #{modifiedDate})")
   void addSupportedProgram(ProgramSupported programSupported);
 
   @Select("SELECT DISTINCT p.* " +
-      "FROM program p, facilities f, programs_supported ps, user u, program  WHERE " +
+      "FROM programs p, facilities f, programs_supported ps, user u WHERE " +
       "ps.programId = ANY(#{programIds}::INTEGER[]) AND " +
       "ps.facilityId = #{facilityId} AND " +
       "ps.programId = p.id AND " +

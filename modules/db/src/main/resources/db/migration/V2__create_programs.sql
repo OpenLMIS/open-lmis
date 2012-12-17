@@ -1,4 +1,4 @@
-CREATE TABLE program (
+CREATE TABLE programs (
     id SERIAL primary key,
     code varchar(50) not null unique,
     name varchar(50),

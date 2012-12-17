@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface RequisitionGroupProgramScheduleMapper {
 
-    @Insert("INSERT into requisition_group_program_schedules" +
+    @Insert("INSERT INTO requisition_group_program_schedules" +
             "(requisitionGroupId, programId, scheduleId, modifiedBy, modifiedDate) " +
             "VALUES(#{requisitionGroup.id}, #{program.id}, #{schedule.id}, #{modifiedBy}, #{modifiedDate})")
     Integer insert(RequisitionGroupProgramSchedule requisitionGroupProgramSchedule);
