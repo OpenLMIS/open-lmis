@@ -65,7 +65,7 @@ task testSeed(type: Exec) {
     commandLine 'psql', '-U', dbUser, '--file', '../../test-data/sql/seed.sql', '-w', dbName
 }
 
-task seed(dependsOn: ["migrateDB"], type: Exec) {
+task seed(type: Exec) {
     environment("PGPASSWORD", dbPassword)
     commandLine 'psql', '-U', dbUser,'--file', '../../seed/seed.sql', '-w', dbName
 }
