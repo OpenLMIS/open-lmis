@@ -78,6 +78,22 @@ task explodedWar(type: Copy) {
     with war
 }
 
+task deploy(dependsOn: "setupDB") << {
+  println("Deploying...")
+  //  cargoStopLocal.execute()  // when it works, stop goes from ci
+  tasks.migrateDB.execute()
+  tasks.seed.execute()
+
+  tasks.downloadFile.execute()
+  //  cargoRunLocal.execute()   // when it works start goes from ci
+}
+
+task downloadFile << {
+  println("Downloading war...")
+  ant.get(src: warSourceUrl.replace('buildVersion', buildVersion) + warName, dest: warDestination, verbose: 'true')
+  println("Downloaded")
+}
+
 task deployOpenLmis(type: GradleBuild) {
     tasks = ['build']
     tasks = ['cargoRedeployRemote']
