@@ -73,12 +73,12 @@ function FacilityController($scope, FacilityReferenceData, $routeParams, $http, 
                 $scope.facility = facility;
                 $scope.originalFacilityCode = data.facility.code;
                 $scope.originalFacilityName = data.facility.name;
-                populateFlags();
+                populateFlags($scope);
             });
-    }
+    };
     $scope.deleteFacility = function () {
         postFacilityRequest('/admin/facility/update/delete.json');
-    }
+    };
 
     $scope.restoreFacility = function (active) {
         $scope.facility.active = active;

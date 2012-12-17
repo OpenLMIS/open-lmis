@@ -5,12 +5,12 @@ describe("Facility Search Controller", function () {
   beforeEach(inject(function ($rootScope, _$httpBackend_, $controller) {
     scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
-    $httpBackend.expectGET('/admin/facilities.json').respond({"facilityList":"fac1"})
-    ctrl = $controller('FacilitySearchController',{$scope:scope});
+    var facilityResponse = "fac1";
+    $httpBackend.expectGET('/admin/facilities.json').respond(facilityResponse)
+    ctrl = $controller('FacilitySearchController',{$scope:scope, facilities:facilityResponse});
   }));
 
   it('should get all facilities',function() {
-    $httpBackend.flush();
     expect(scope.facilityList).toEqual("fac1");
   });
 
