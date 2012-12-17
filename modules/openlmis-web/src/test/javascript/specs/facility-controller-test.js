@@ -10,7 +10,7 @@ describe("Facility", function () {
       scope = $rootScope.$new();
       routeParams = $routeParams;
       $httpBackend = _$httpBackend_;
-      $httpBackend.expectGET('/admin/facility/reference-data.json').respond({"facilityTypes":[
+      var facilityReferenceData = {"facilityTypes":[
         {"type":"warehouse"}
       ], "programs":[
         {"code":"programCode", "id":"programId"}
@@ -18,15 +18,13 @@ describe("Facility", function () {
         {"zoneId":"testId"}
       ], "facilityOperators":[
         {"operatorCode":"testCode"}
-      ]});
-      facility = {"facility":{"supportedPrograms":[]}};
+      ]};
 
-      ctrl = $controller(FacilityController, {$scope:scope, $routeParams:routeParams});
+      ctrl = $controller(FacilityController, {$scope:scope, $routeParams:routeParams, facilityReferenceData : facilityReferenceData, facility: undefined});
       scope.facilityForm = {$error:{ pattern:"" }};
     }));
 
     it('should set facility reference data', function () {
-      $httpBackend.flush();
       expect(scope.facilityTypes).toEqual([
         {"type":"warehouse"}
       ]);
@@ -42,7 +40,7 @@ describe("Facility", function () {
     });
 
     it('should give success message if save successful', function () {
-      $httpBackend.flush();
+      facility={"code":"code"};
       $httpBackend.expectPOST('/admin/facility.json').respond(200, {"success":"Saved successfully", "facility": facility});
       scope.saveFacility();
       $httpBackend.flush();
@@ -51,7 +49,6 @@ describe("Facility", function () {
     });
 
     it('should give error if save failed', function () {
-      $httpBackend.flush();
       $httpBackend.expectPOST('/admin/facility.json').respond(404, {"error":"Save failed"});
       scope.saveFacility();
       $httpBackend.flush();
@@ -78,13 +75,12 @@ describe("Facility", function () {
   });
 
   describe("Facility Edit Controller", function () {
-
     beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $routeParams) {
       scope = $rootScope.$new();
       $httpBackend = _$httpBackend_;
       routeParams = $routeParams;
       routeParams.facilityId = "1";
-      $httpBackend.expectGET('/admin/facility/reference-data.json').respond({"facilityTypes":[
+      var facilityReferenceData = {"facilityTypes":[
         {"type":"warehouse"}
       ], "programs":[
         {"code":"programCode", "id":"programId"}
@@ -92,21 +88,20 @@ describe("Facility", function () {
         {"zoneId":"testId"}
       ], "facilityOperators":[
         {"operatorCode":"testCode"}
-      ]});
+      ]};
+//      $httpBackend.expectGET('/admin/facility/reference-data.json').respond(facilityReferenceData);
       facility = {"id":1, "code":"F1756", "name":"Village Dispensary", "description":"IT department", "gln":"G7645", "mainPhone":"9876234981", "fax":"fax", "address1":"A", "address2":"B", "geographicZone":{"id":1}, "facilityType":{"code":"warehouse"}, "catchmentPopulation":333, "latitude":22.1, "longitude":1.2, "altitude":3.3, "operatedBy":{"code":"NGO"}, "coldStorageGrossCapacity":9.9, "coldStorageNetCapacity":6.6, "suppliesOthers":true, "sdp":true, "hasElectricity":true, "online":true, "hasElectronicScc":true, "hasElectronicDar":null, "active":true, "goLiveDate":1352572200000, "goDownDate":-2592106200000, "satellite":true, "satelliteParentCode":null, "comment":"fc", "dataReportable":true, "supportedPrograms":[
         {"code":"ARV", "name":"ARV", "description":"ARV", "active":true},
         {"code":"HIV", "name":"HIV", "description":"HIV", "active":true}
       ], "modifiedBy":null, "modifiedDate":null};
-      $httpBackend.expectGET('/admin/facility/1.json').respond({"facility":facility});
-      ctrl = $controller(FacilityController, {$scope:scope, $routeParams:routeParams});
+   //   $httpBackend.expectGET('/admin/facility/1.json').respond({"facility":facility});
+      ctrl = $controller(FacilityController, {$scope:scope, $routeParams:routeParams, facilityReferenceData: facilityReferenceData, facility:facility});
       scope.facilityForm = {$error:{ pattern:"" }};
 
     }));
 
     it('should get facility if defined', function () {
-      $httpBackend.flush();
       expect([]).toEqual(scope.facility.supportedPrograms);
     });
-
   });
 });

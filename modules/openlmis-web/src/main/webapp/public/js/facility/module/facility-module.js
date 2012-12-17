@@ -3,8 +3,8 @@ angular.module('facility', ['openlmis']).
   config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
     when('/search', {controller:FacilitySearchController, templateUrl:'partials/search.html', resolve: FacilitySearchController.resolve}).
-    when('/create-facility', {controller:FacilityController, templateUrl:'partials/create.html'}).
-    when('/edit/:facilityId', {controller:FacilityController, templateUrl:'partials/create.html'}).
+    when('/create-facility', {controller:FacilityController, templateUrl:'partials/create.html', resolve: FacilityController.resolve}).
+    when('/edit/:facilityId', {controller:FacilityController, templateUrl:'partials/create.html', resolve: FacilityController.resolve}).
     otherwise({redirectTo:'/create-facility'});
 }]);
 
