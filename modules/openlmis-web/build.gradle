@@ -81,10 +81,10 @@ task explodedWar(type: Copy) {
 task deploy(type: GradleBuild, dependsOn: ":modules:db:setupDB") << {
   println("Deploying...")
   //  cargoStopLocal.execute()  // when it works, stop goes from ci
-  tasks.migrateDB.execute()
-  tasks.seed.execute()
+  project(':modules:db').tasks.migrateDB.execute()
+  project(':modules:db').tasks.seed.execute()
 
-  tasks.downloadFile.execute()
+  //tasks.downloadFile.execute()
   //  cargoRunLocal.execute()   // when it works start goes from ci
 }
 
