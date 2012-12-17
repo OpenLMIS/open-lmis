@@ -1,6 +1,6 @@
 delete from program_rnr_columns;
 insert into program_rnr_columns
-(column_id, program_code, is_visible, source, position, label)
+(masterColumnId, programCode, visible, source, position, label)
 values
 (1, 'HIV',  true, 'R', 1,  'Product Code'),
 (2, 'HIV',  true, 'R', 2,  'Product'),

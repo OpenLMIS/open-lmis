@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.rnr.domain.RnrColumn;
-import org.openlmis.rnr.repository.mapper.ProgramRnrColumnMapper;
+import org.openlmis.rnr.repository.mapper.RnrColumnMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -26,20 +26,20 @@ public class RnrTemplateRepositoryIT {
     RnrTemplateRepository rnrRepository;
 
     @Autowired
-    ProgramRnrColumnMapper programRnrColumnMapper;
+    RnrColumnMapper rnrColumnMapper;
 
     private List<RnrColumn> rnrColumns;
 
 
     @Before
     public void setUp() throws Exception {
-        rnrColumns = programRnrColumnMapper.fetchAllMasterRnRColumns();
-        programRnrColumnMapper.deleteAll();
+        rnrColumns = rnrColumnMapper.fetchAllMasterRnRColumns();
+        rnrColumnMapper.deleteAll();
     }
 
     @After
     public void tearDown() throws Exception {
-        programRnrColumnMapper.deleteAll();
+        rnrColumnMapper.deleteAll();
     }
 
     @Test
@@ -73,7 +73,7 @@ public class RnrTemplateRepositoryIT {
     public void shouldInsertRnRColumnsForAProgram() throws Exception {
         rnrRepository.insertAllProgramRnRColumns(EXISTING_PROGRAM_CODE, rnrColumns);
 
-        List<RnrColumn> programRnrColumns = programRnrColumnMapper.getAllRnrColumnsForProgram(EXISTING_PROGRAM_CODE);
+        List<RnrColumn> programRnrColumns = rnrColumnMapper.getAllRnrColumnsForProgram(EXISTING_PROGRAM_CODE);
         assertThat(programRnrColumns.size(), is(rnrColumns.size()));
         assertThat(programRnrColumns.contains(rnrColumns.get(0)), is(true));
     }
@@ -105,7 +105,7 @@ public class RnrTemplateRepositoryIT {
     }
 
     private void configureRnRTemplateForTheProgram(String existingProgramCode) {
-        programRnrColumnMapper.insert(existingProgramCode, rnrColumns.get(0));
+        rnrColumnMapper.insert(existingProgramCode, rnrColumns.get(0));
     }
 
 }

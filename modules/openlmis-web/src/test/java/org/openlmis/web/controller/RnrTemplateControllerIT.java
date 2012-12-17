@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openlmis.rnr.repository.mapper.ProgramRnrColumnMapper;
+import org.openlmis.rnr.repository.mapper.RnrColumnMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -28,11 +28,11 @@ public class RnrTemplateControllerIT {
     RnrTemplateController controller;
 
     @Autowired
-    ProgramRnrColumnMapper programRnrColumnMapper;
+    RnrColumnMapper rnrColumnMapper;
 
     @Before
     public void setUp() throws Exception {
-        programRnrColumnMapper.deleteAll();
+        rnrColumnMapper.deleteAll();
     }
 
     @Test

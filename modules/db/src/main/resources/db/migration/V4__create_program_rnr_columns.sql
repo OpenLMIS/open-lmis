@@ -1,11 +1,11 @@
 Drop TABLE IF EXISTS program_rnr_columns;
 CREATE TABLE program_rnr_columns(
     id SERIAL PRIMARY KEY ,
-    column_id INTEGER NOT NULL REFERENCES master_rnr_columns(id),
-    program_code VARCHAR(50) NOT NULL,
+    masterColumnId INTEGER NOT NULL REFERENCES master_rnr_columns(id),
+    programCode VARCHAR(50) NOT NULL,
     label VARCHAR(200) NOT NULL,
-    is_visible BOOLEAN NOT NULL,
+    visible BOOLEAN NOT NULL,
     position int NOT NULL,
     source VARCHAR(1),
-    UNIQUE (program_code, column_id)
+    UNIQUE (programCode, masterColumnId)
 );
