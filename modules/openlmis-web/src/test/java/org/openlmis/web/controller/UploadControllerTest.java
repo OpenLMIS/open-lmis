@@ -9,15 +9,16 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Product;
-import org.openlmis.web.handler.UploadHandlerFactory;
 import org.openlmis.upload.RecordHandler;
 import org.openlmis.upload.model.ModelClass;
 import org.openlmis.upload.parser.CSVParser;
+import org.openlmis.web.handler.UploadHandlerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -58,18 +59,18 @@ public class UploadControllerTest {
     @Test
     public void shouldThrowErrorIfUnsupportedModelIsSupplied() throws Exception {
         MultipartFile multipartFile = mock(MultipartFile.class);
-        ModelAndView modelAndView = controller.upload(multipartFile, "Random", request);
+        ResponseEntity<ModelMap> responseEntity = controller.upload(multipartFile, "Random", request);
 
-        assertEquals("Incorrect file", modelAndView.getModelMap().get("error"));
+        assertEquals("Incorrect file", responseEntity.getBody().get("error"));
     }
 
     @Test
     public void shouldThrowErrorIfFileIsEmpty() throws Exception {
         byte[] content = new byte[0];
         MockMultipartFile multiPartMock = new MockMultipartFile("csvFile", "mock.csv", null, content);
-        ModelAndView modelAndView = controller.upload(multiPartMock, "product", request);
+        ResponseEntity<ModelMap> responseEntity = controller.upload(multiPartMock, "product", request);
 
-        assertEquals("File is empty", modelAndView.getModelMap().get("error"));
+        assertEquals("File is empty", responseEntity.getBody().get("error"));
     }
 
     @Test
@@ -77,9 +78,9 @@ public class UploadControllerTest {
         byte[] content = new byte[1];
         MockMultipartFile multiPartMock = new MockMultipartFile("csvFile", "mock.csv", null, content);
 
-        ModelAndView modelAndView = controller.upload(multiPartMock, "product", request);
+        ResponseEntity<ModelMap> responseEntity = controller.upload(multiPartMock, "product", request);
 
-        assertEquals("File upload success. Total product uploaded in the system : 0", modelAndView.getModelMap().get("message"));
+        assertEquals("File upload success. Total product uploaded in the system : 0", responseEntity.getBody().get("message"));
     }
 
     @Test
@@ -90,9 +91,9 @@ public class UploadControllerTest {
         InputStream mockInputStream = mock(InputStream.class);
         when(mockMultiPart.getInputStream()).thenReturn(mockInputStream);
 
-        ModelAndView modelAndView = controller.upload(mockMultiPart, "product", request);
+        ResponseEntity<ModelMap> responseEntity = controller.upload(mockMultiPart, "product", request);
 
-        assertEquals("File upload success. Total product uploaded in the system : 0", modelAndView.getModelMap().get("message"));
+        assertEquals("File upload success. Total product uploaded in the system : 0", responseEntity.getBody().get("message"));
 
         verify(csvParser).process(eq(mockMultiPart.getInputStream()), argThat(modelMatcher(Product.class)), eq(handler), eq(USER));
     }
@@ -112,9 +113,9 @@ public class UploadControllerTest {
         byte[] content = new byte[1];
         MockMultipartFile multiPartMock = new MockMultipartFile("mock.doc", content);
 
-        ModelAndView modelAndView = controller.upload(multiPartMock, "product", request);
-        assertEquals("Incorrect file format , Please upload product data as a \".csv\" file", modelAndView.getModelMap().get("error"));
-        // verify(csvParser).process(mockedStream, Product.class, handler);
+        ResponseEntity<ModelMap> responseEntity = controller.upload(multiPartMock, "product", request);
+        assertEquals("Incorrect file format , Please upload product data as a \".csv\" file", responseEntity.getBody().get("error"));
+//        verify(csvParser).process(mockedStream, Product.class, handler);
     }
 
 }

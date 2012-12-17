@@ -6,12 +6,14 @@ import org.openlmis.upload.exception.UploadException;
 import org.openlmis.upload.model.ModelClass;
 import org.openlmis.upload.parser.CSVParser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -39,32 +41,32 @@ public class UploadController {
     }
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST, headers = "Accept=application/json")
-    public ModelAndView upload(@RequestParam(value = "csvFile", required = true) MultipartFile multipartFile,
+    public ResponseEntity<ModelMap> upload(@RequestParam(value = "csvFile", required = true) MultipartFile multipartFile,
                                @RequestParam(value = "model", required = true) String model, HttpServletRequest request) {
 
-        ModelAndView modelAndView = new ModelAndView();
+        ModelMap resultMap = new ModelMap();
         try {
             Class modelClass = modelMap.get(model);
             if (modelClass == null) {
-                return errorModelAndView(modelAndView, "Incorrect file");
+                return errorResponse(resultMap, "Incorrect file");
             }
             if(multipartFile.isEmpty()){
-                return errorModelAndView(modelAndView, "File is empty");
+                return errorResponse(resultMap, "File is empty");
             }
             if (!multipartFile.getOriginalFilename().endsWith(".csv")) {
-                return errorModelAndView(modelAndView, "Incorrect file format , Please upload " + model + " data as a \".csv\" file");
+                return errorResponse(resultMap, "Incorrect file format , Please upload " + model + " data as a \".csv\" file");
             }
             String modifiedBy = (String) request.getSession().getAttribute(USER);
             int recordsUploaded = csvParser.process(multipartFile.getInputStream(), new ModelClass(modelClass), uploadHandlerFactory.getHandler(model), modifiedBy);
-            modelAndView.addObject("message", "File upload success. Total " + model +" uploaded in the system : " + recordsUploaded);
+            resultMap.addObject("message", "File upload success. Total " + model + " uploaded in the system : " + recordsUploaded);
         } catch (UploadException | IOException e) {
-            return errorModelAndView(modelAndView, e.getMessage());
+            return errorResponse(resultMap, e.getMessage());
         }
-        return modelAndView;
+        return new ResponseEntity<ModelMap>(resultMap, HttpStatus.OK);
     }
 
-    private ModelAndView errorModelAndView(ModelAndView modelAndView, String errorMessage) {
-        modelAndView.addObject("error", errorMessage);
-        return modelAndView;
+    private ResponseEntity<ModelMap> errorResponse(ModelMap modelMap, String errorMessage) {
+        modelMap.put("error", errorMessage);
+        return new ResponseEntity<ModelMap>(modelMap, HttpStatus.BAD_REQUEST);
     }
 }
