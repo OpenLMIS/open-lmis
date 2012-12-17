@@ -1,16 +1,16 @@
 INSERT INTO roles
  (id, name, description) VALUES
- (1, 'store in-charge', ''),
- (2, 'district pharmacist', '');
+ (2, 'store in-charge', ''),
+ (3, 'district pharmacist', '');
 
 INSERT INTO role_rights
   (roleId, rightId) VALUES
-  (1, 'VIEW_REQUISITION'),
-  (1, 'CREATE_REQUISITION'),
   (2, 'VIEW_REQUISITION'),
-  (2, 'UPLOADS'),
-  (2, 'MANAGE_FACILITY'),
-  (2, 'CONFIGURE_RNR');
+  (2, 'CREATE_REQUISITION'),
+  (3, 'VIEW_REQUISITION'),
+  (3, 'UPLOADS'),
+  (3, 'MANAGE_FACILITY'),
+  (3, 'CONFIGURE_RNR');
 
 INSERT INTO users
   (id, userName, password, role, facilityId) VALUES
@@ -18,5 +18,4 @@ INSERT INTO users
 
 INSERT INTO role_assignments
   (userId, roleId, programId) VALUES
-  (100, 2, 1),
   (200, 1, 1);

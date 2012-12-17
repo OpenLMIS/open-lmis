@@ -23,7 +23,6 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static org.openlmis.core.builder.ProductBuilder.*;
-import static org.openlmis.core.builder.ProgramBuilder.PROGRAM_CODE;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
 
@@ -34,6 +33,7 @@ import static org.openlmis.core.builder.ProgramBuilder.programCode;
 public class ProgramProductMapperIT {
 
     public static final String HIV = "HIV";
+    public static final int MAX_MONTHS_OF_STOCK = 3;
 
     @Autowired
     ProgramMapper programMapper;
@@ -117,7 +117,7 @@ public class ProgramProductMapperIT {
     }
 
     private void addToFacilityType(String facilityType, Product product) {
-        facilityApprovedProductMapper.insert(new FacilityApprovedProduct(facilityType, product.getCode()));
+        facilityApprovedProductMapper.insert(new FacilityApprovedProduct(facilityType, product.getCode(), MAX_MONTHS_OF_STOCK));
     }
 
     private Product product(String productCode, boolean isFullSupply, Integer order) {

@@ -23,9 +23,10 @@ import static org.openlmis.core.builder.ProductBuilder.PRODUCT_CODE;
 @Transactional
 public class FacilityApprovedProductMapperIT {
 
+    public static final Integer MAX_MONTHS_OF_STOCK = 3;
+
     @Autowired
     ProductMapper productMapper;
-
     @Autowired
     FacilityMapper facilityMapper;
 
@@ -35,11 +36,10 @@ public class FacilityApprovedProductMapperIT {
     @Test
     public void shouldInsertFacilityApprovedProduct() throws Exception {
         productMapper.insert(make(a(ProductBuilder.defaultProduct)));
-        FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct();
-        facilityApprovedProduct.setFacilityTypeCode(FACILITY_TYPE_CODE);
-        facilityApprovedProduct.setProductCode(PRODUCT_CODE);
+        FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct(FACILITY_TYPE_CODE, PRODUCT_CODE, MAX_MONTHS_OF_STOCK);
         int status = facilityApprovedProductMapper.insert(facilityApprovedProduct);
 
         assertThat(status, is(1));
     }
+
 }

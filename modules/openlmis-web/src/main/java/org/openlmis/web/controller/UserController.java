@@ -31,7 +31,7 @@ public class UserController extends BaseController {
     if (userName != null) {
       params.put("name", userName);
       params.put("authenticated", "true");
-      params.put("rights",roleRightService.getAllRightsForUser(userName));
+      params.put("rights",roleRightService.getRights(userName));
     } else {
       params.put("authenticated", "false");
       params.put("error", error);

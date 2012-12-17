@@ -19,11 +19,12 @@ public class RoleRightsService {
     this.roleRightsRepository = roleRightsRepository;
   }
 
-  public List<RoleAssignment> getProgramWithGivenRightForAUser(Right right, String userName) {
-    return roleRightsRepository.getProgramWithGivenRightForAUser(right, userName);
+  public List<RoleAssignment> getRoleAssignments(Right right, String userName) {
+    return roleRightsRepository.getRoleAssignments(right, userName);
   }
 
-  public List<Right> getAllRightsForUser(String username) {
+  public List<Right> getRights(String username) {
     return roleRightsRepository.getAllRightsForUser(username);
   }
+
 }

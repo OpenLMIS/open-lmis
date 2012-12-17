@@ -64,9 +64,9 @@ public class UserControllerTest {
     String username = "Foo";
     session.setAttribute(UserAuthenticationSuccessHandler.USER, username);
     List<Right> listOfRights = new ArrayList<>();
-    when(roleRightService.getAllRightsForUser(username)).thenReturn(listOfRights);
+    when(roleRightService.getRights(username)).thenReturn(listOfRights);
     HashMap<String, Object> params = userController.user(httpServletRequest, "true");
-    verify(roleRightService).getAllRightsForUser(username);
+    verify(roleRightService).getRights(username);
     assertThat((List<Right>)params.get("rights"), is(listOfRights));
   }
 }

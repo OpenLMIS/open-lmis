@@ -42,8 +42,8 @@ public class ProgramController {
 
     @RequestMapping(value = "/logistics/facility/{facilityId}/user/programs.json", method = RequestMethod.GET, headers = "Accept=application/json")
     public List<Program> getUserSupportedProgramsToCreateRequisition(@PathVariable(value = "facilityId") Integer facilityId, HttpServletRequest request) {
-        List<RoleAssignment> userSupportedProgramRoles = roleRightsService.getProgramWithGivenRightForAUser(Right.CREATE_REQUISITION, loggedInUser(request));
-        return programService.filterActiveProgramsAndFacility(userSupportedProgramRoles, facilityId);
+        List<RoleAssignment> userRoles = roleRightsService.getRoleAssignments(Right.CREATE_REQUISITION, loggedInUser(request));
+        return programService.filterActiveProgramsAndFacility(userRoles, facilityId);
     }
 
     private String loggedInUser(HttpServletRequest request) {

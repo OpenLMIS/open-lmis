@@ -65,7 +65,7 @@ public class ProgramControllerTest {
 
         RoleAssignment roleAssignment = new RoleAssignment(1, 2, program.getId());
         List<RoleAssignment> roleAssignments = new ArrayList<>(Arrays.asList(roleAssignment));
-        when(roleRightsService.getProgramWithGivenRightForAUser(Right.CREATE_REQUISITION, "dummyUser")).thenReturn(roleAssignments);
+        when(roleRightsService.getRoleAssignments(Right.CREATE_REQUISITION, "dummyUser")).thenReturn(roleAssignments);
         Integer facilityId = 12345;
         when(programService.filterActiveProgramsAndFacility(roleAssignments, facilityId)).thenReturn(programs);
 

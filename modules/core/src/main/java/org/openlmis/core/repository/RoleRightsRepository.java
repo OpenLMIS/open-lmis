@@ -20,7 +20,7 @@ public class RoleRightsRepository {
         this.roleRightsMapper = roleRightsMapper;
     }
 
-    public List<RoleAssignment> getProgramWithGivenRightForAUser(Right right, String userName){
+    public List<RoleAssignment> getRoleAssignments(Right right, String userName){
         return roleRightsMapper.getRoleAssignmentsWithGivenRightForAUser(right, userName);
     }
 

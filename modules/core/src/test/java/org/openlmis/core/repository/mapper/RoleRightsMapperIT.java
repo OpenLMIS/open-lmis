@@ -26,14 +26,22 @@ import static org.openlmis.core.domain.Right.*;
 public class RoleRightsMapperIT {
 
     @Autowired
-    RoleRightsMapper roleRightsMapper;
-    @Autowired
     UserMapper userMapper;
     @Autowired
     ProgramMapper programMapper;
     @Autowired
     ProgramSupportedMapper programSupportedMapper;
 
+    @Autowired
+    RoleRightsMapper roleRightsMapper;
+
+    @Test
+    public void shouldSetupRightsForAdminRole() {
+        List<Right> adminRights = roleRightsMapper.getAllRightsForUser("Admin123");
+        assertEquals(Right.CONFIGURE_RNR, adminRights.get(0));
+        assertEquals(Right.MANAGE_FACILITY, adminRights.get(1));
+        assertEquals(Right.UPLOADS, adminRights.get(2));
+    }
 
     @Test
     public void shouldReturnProgramAvailableForAFacilityForAUserWithGivenRights() throws Exception {

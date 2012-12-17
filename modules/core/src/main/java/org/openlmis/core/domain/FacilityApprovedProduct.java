@@ -15,13 +15,16 @@ public class FacilityApprovedProduct {
 
     private String productCode;
 
+    private Integer maxMonthsOfStock;
+
     private String modifiedBy;
 
     private Date modifiedDate;
 
-    public FacilityApprovedProduct(String facilityTypeCode, String productCode) {
+    public FacilityApprovedProduct(String facilityTypeCode, String productCode, Integer maxMonthsOfStock) {
         this.facilityTypeCode = facilityTypeCode;
         this.productCode = productCode;
+        this.maxMonthsOfStock = maxMonthsOfStock;
     }
 
 }

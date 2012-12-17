@@ -1,27 +1,5 @@
 function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $location, $http) {
 
-    $scope.positiveInteger = function (value, errorHolder) {
-        var INTEGER_REGEXP = /^\d*$/;
-        var valid = INTEGER_REGEXP.test(value);
-
-        if (errorHolder != undefined) toggleErrorMessageDisplay(valid, errorHolder)
-
-        return valid;
-    };
-
-    var toggleErrorMessageDisplay = function (valid, errorHolder) {
-        if (valid) {
-            document.getElementById(errorHolder).style.display = 'none';
-        } else {
-            document.getElementById(errorHolder).style.display = 'block';
-        }
-    };
-
-    $scope.positiveFloat = function (value) {
-        var FLOAT_REGEXP = /^\d+(\.\d\d)?$/;
-        return FLOAT_REGEXP.test(value);
-    };
-
     RequisitionHeader.get({facilityId:$scope.$parent.facility}, function (data) {
         $scope.header = data.requisitionHeader;
     }, function () {
@@ -77,7 +55,7 @@ function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $l
         }
 
         function fillNormalizedConsumption() {
-            var m = 3;
+            var m = 3; // will be picked up from the database in future
             var x = isNaN(parseInt(lineItem.stockOutDays)) ? 0 : parseInt(lineItem.stockOutDays);
             var f = isNaN(parseInt(lineItem.newPatientCount)) ? 0 : parseInt(lineItem.newPatientCount);
             var dosesPerMonth = parseInt(lineItem.dosesPerMonth);

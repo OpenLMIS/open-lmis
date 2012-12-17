@@ -23,7 +23,7 @@ function InitiateRnrController($http, $scope, facilities, UserSupportedProgramIn
         }
     };
 
-    $scope.getRnrHeader = function () {
+    $scope.initRnr = function () {
         if (validate()) {
             $http.post('/logistics/rnr/' + encodeURIComponent($scope.facility) + '/' + encodeURIComponent($scope.program.code) + '/init.json', {}
             ).success(function (data) {
@@ -44,6 +44,7 @@ function InitiateRnrController($http, $scope, facilities, UserSupportedProgramIn
         return $scope.$parent.program;
     };
 }
+
 InitiateRnrController.resolve = {
     facilities:function ($q, $timeout, UserFacilityList) {
         var deferred = $q.defer();

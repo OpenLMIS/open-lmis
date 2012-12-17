@@ -27,14 +27,14 @@ describe('InitiateRnrController', function () {
   });
 
   it('should set error message if program not defined', function() {
-    scope.getRnrHeader();
+    scope.initRnr();
     expect(scope.error).toEqual("Please select Facility and program for facility to proceed");
   });
 
   it('should initiate rnr if facility and program chosen are correct',function () {
     scope.$parent.program = {"code" : "hiv"};
     $httpBackend.expectPOST('/logistics/rnr/undefined/hiv/init.json').respond({"rnr":{"test":"test"}});
-    scope.getRnrHeader();
+    scope.initRnr();
     $httpBackend.flush();
     expect(scope.$parent.rnr).toEqual({"test":"test"});
     expect(location.path()).toEqual("/create-rnr");
@@ -44,7 +44,7 @@ describe('InitiateRnrController', function () {
   it('should set error message if post fails for initiate rnr', function () {
     scope.$parent.program = {"code" : "hiv"};
     $httpBackend.expectPOST('/logistics/rnr/undefined/hiv/init.json').respond(404);
-    scope.getRnrHeader();
+    scope.initRnr();
     $httpBackend.flush();
     expect(scope.error).toEqual("Rnr initialization failed!");
   });

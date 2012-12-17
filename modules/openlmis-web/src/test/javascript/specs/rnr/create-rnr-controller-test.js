@@ -55,25 +55,6 @@ describe('CreateRnrController', function () {
         expect(scope.error).toEqual("Please correct errors before saving.");
     });
 
-    it('should validate  integer field', function () {
-        expect(scope.positiveInteger(100)).toEqual(true);
-        expect(scope.positiveInteger(0)).toEqual(true);
-        expect(scope.positiveInteger(-1)).toEqual(false);
-        expect(scope.positiveInteger('a')).toEqual(false);
-        expect(scope.positiveInteger(5.5)).toEqual(false);
-    });
-
-    it('should validate float field', function () {
-        expect(scope.positiveFloat(100)).toEqual(true);
-        expect(scope.positiveFloat(1.000)).toEqual(true);
-        expect(scope.positiveFloat(0.0)).toEqual(true);
-        expect(scope.positiveFloat(0.01)).toEqual(true);
-        expect(scope.positiveFloat(1.000001)).toEqual(false);
-        expect(scope.positiveFloat(100.001)).toEqual(false);
-        expect(scope.positiveFloat(-1.0)).toEqual(false);
-        expect(scope.positiveFloat('a')).toEqual(false);
-    });
-
     describe('Fill consumption when it is marked as a computed column', function () {
 
         beforeEach(function () {
