@@ -80,7 +80,7 @@ public class UploadControllerTest {
 
         ResponseEntity<ModelMap> responseEntity = controller.upload(multiPartMock, "product", request);
 
-        assertEquals("File upload success. Total product uploaded in the system : 0", responseEntity.getBody().get("message"));
+        assertEquals("File uploaded successfully. Total records uploaded: 0", responseEntity.getBody().get("message"));
     }
 
     @Test
@@ -93,7 +93,7 @@ public class UploadControllerTest {
 
         ResponseEntity<ModelMap> responseEntity = controller.upload(mockMultiPart, "product", request);
 
-        assertEquals("File upload success. Total product uploaded in the system : 0", responseEntity.getBody().get("message"));
+        assertEquals("File uploaded successfully. Total records uploaded: 0", responseEntity.getBody().get("message"));
 
         verify(csvParser).process(eq(mockMultiPart.getInputStream()), argThat(modelMatcher(Product.class)), eq(handler), eq(USER));
     }
