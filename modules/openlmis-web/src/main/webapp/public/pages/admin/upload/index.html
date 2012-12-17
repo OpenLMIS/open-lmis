@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="upload">
 <head>
-  <title>Products</title>
-  <meta charset="utf-8">
-  <title>Open-LMIS</title>
-  <script src="/public/js/shared/lib/jquery-1.8.2.min.js"></script>
-  <script src="/public/js/shared/lib/angular/angular.js"></script>
-  <script src="/public/js/shared/lib/angular/angular-resource.js"></script>
-  <script src="/public/js/shared/lib/bootstrap/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="/public/js/shared/lib/bootstrap/css/bootstrap.min.css">
-  <script src="/public/js/shared/lib/angular-ui/angular-ui.min.js"></script>
-  <link rel="stylesheet" href="/public/js/shared/lib/angular-ui/angular-ui.min.css">
+    <title>Products</title>
+    <meta charset="utf-8">
+    <title>Open-LMIS</title>
+    <script src="/public/js/shared/lib/jquery-1.8.2.min.js"></script>
+    <script src="/public/js/shared/lib/angular/angular.js"></script>
+    <script src="/public/js/shared/lib/angular/angular-resource.js"></script>
+    <script src="/public/js/shared/lib/bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/public/js/shared/lib/bootstrap/css/bootstrap.min.css">
+    <script src="/public/js/shared/lib/angular-ui/angular-ui.min.js"></script>
+    <link rel="stylesheet" href="/public/js/shared/lib/angular-ui/angular-ui.min.css">
 
   <script src="/public/js/shared/controller/header-controller.js"></script>
   <script src="/public/js/shared/controller/navigation-controller.js"></script>
@@ -28,31 +28,35 @@
 <ng-include src="'/public/pages/navigation.html'"></ng-include>
 
 <div class="content" ng-controller='UploadController'>
-  <form id="uploadForm" name="uploadForm" ng-submit="uploadFile()"  enctype="multipart/form-data" novalidate>
-    <div>
-      <fieldset>
-        <label style="padding-top: 10" for="model">Model:</label>
-        <select name="model" id="model">
-          <option value="product">Products</option>
-          <option value="facility">Facilities</option>
-          <option value="programSupported">Programs supported by facilities</option>
-          <option value="supervisoryNode">Supervisory Nodes</option>
-          <option value="requisitionGroup">Requisition Groups</option>
-          <option value="requisitionGroupProgramSchedule">Map Requisition Groups to Programs + Schedule</option>
-          <option value="requisitionGroupMember">Requisition Group Members</option>
-          <option value="programProduct">Program Product</option>
-        </select> <br/>
-        <label style="padding-top: 10" for="csvFile">File: </label>
-        <input name="csvFile" id="csvFile" type="file" accept=".csv"
-               value="Choose CSV File to upload" required/> </br>
-          <div class="alert alert-error" id="saveErrorMsgDiv" ng-model="error" ng-show="error">
-              {{error}}
-          </div>
-          <input  type="submit" value="Upload" class="btn">
-      </fieldset>
+    <form id="uploadForm" name="uploadForm" ng-submit="uploadFile()" enctype="multipart/form-data" novalidate>
+        <div>
+            <fieldset>
+                <label style="padding-top: 10" for="model">Model:</label>
+                <select name="model" id="model">
+                    <option value="product">Products</option>
+                    <option value="facility">Facilities</option>
+                    <option value="programSupported">Programs supported by facilities</option>
+                    <option value="supervisoryNode">Supervisory Nodes</option>
+                    <option value="requisitionGroup">Requisition Groups</option>
+                    <option value="requisitionGroupProgramSchedule">Map Requisition Groups to Programs + Schedule
+                    </option>
+                    <option value="requisitionGroupMember">Requisition Group Members</option>
+                    <option value="programProduct">Program Product</option>
+                </select> <br/>
+                <label style="padding-top: 10" for="csvFile">File: </label>
+                <input name="csvFile" id="csvFile" type="file" accept=".csv"
+                       value="Choose CSV File to upload" required/> </br>
+                <div class="alert alert-error" id="saveErrorMsgDiv" ng-model="error" ng-show="error">
+                    {{error}}
+                </div>
+                <div class="alert alert-success" id="saveSuccessMsgDiv" ng-model="message" ng-show="message">
+                    {{message}}
+                </div>
+                <input type="submit" value="Upload" class="btn">
+            </fieldset>
 
-    </div>
-  </form>
+        </div>
+    </form>
 </div>
 
 </body>

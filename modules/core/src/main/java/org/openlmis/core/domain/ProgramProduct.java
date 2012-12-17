@@ -21,6 +21,7 @@ public class ProgramProduct implements Importable {
     // TODO : should change this to id.
     private String programCode;
     private String productCode;
+    @ImportField (name ="Doses Per Month", type="int", mandatory = true)
     private Integer dosesPerMonth;
     private String modifiedBy;
     private Date modifiedDate;
