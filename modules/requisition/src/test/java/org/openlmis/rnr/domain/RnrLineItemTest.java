@@ -19,7 +19,7 @@ public class RnrLineItemTest {
         Program program = make(a(ProgramBuilder.defaultProgram));
         Product product = make(a(ProductBuilder.defaultProduct, with(code, "ASPIRIN")));
         product.setDispensingUnit("Strip");
-        RnrLineItem rnrLineItem = new RnrLineItem(1, new ProgramProduct(program, product, 30), "foo");
+        RnrLineItem rnrLineItem = new RnrLineItem(1, new ProgramProduct(program, product, 30, true), "foo");
         assertEquals(1, rnrLineItem.getRnrId().intValue());
         assertEquals("Strip", rnrLineItem.getUnitOfIssue());
         assertEquals("ASPIRIN", rnrLineItem.getProductCode());

@@ -60,7 +60,7 @@ public class RnrLineItemMapperIT {
         product = make(a(ProductBuilder.defaultProduct));
         program = make(a(ProgramBuilder.defaultProgram));
         programMapper.insert(program);
-        programProduct = new ProgramProduct(program, product, 30);
+        programProduct = new ProgramProduct(program, product, 30, true);
         facilityId = facilityMapper.insert(make(a(defaultFacility)));
         productMapper.insert(product);
         programProductMapper.insert(programProduct);

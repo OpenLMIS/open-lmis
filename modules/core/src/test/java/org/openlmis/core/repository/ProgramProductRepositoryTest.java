@@ -47,7 +47,7 @@ public class ProgramProductRepositoryTest {
     public void shouldThrowErrorIfInsertingDuplicateProductForAProgram() throws Exception {
         Product product = make(a(defaultProduct));
         Program program = make(a(ProgramBuilder.defaultProgram));
-        ProgramProduct programProduct = new ProgramProduct(program, product, null);
+        ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("Duplicate entry for Product Code and program Code combination found");
         doThrow(new DuplicateKeyException("Duplicate entry for Product Code and program Code combination found")).when(programProductMapper).insert(programProduct);
@@ -61,7 +61,7 @@ public class ProgramProductRepositoryTest {
         program.setCode("DummyProgram");
         Product product = new Product();
         product.setCode("DummyProduct");
-        ProgramProduct programProduct = new ProgramProduct(program, product, null);
+        ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
 
         programProductRepository.insert(programProduct);
         verify(programProductMapper).insert(programProduct);
@@ -70,7 +70,7 @@ public class ProgramProductRepositoryTest {
     @Test
     public void shouldThrowErrorWhenInsertingProductForInvalidProgram() {
         Product product = make(a(defaultProduct));
-        ProgramProduct programProduct = new ProgramProduct(new Program(), product, null);
+        ProgramProduct programProduct = new ProgramProduct(new Program(), product, 10, true);
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("Invalid Program Code");
         programProductRepository.insert(programProduct);
@@ -80,7 +80,7 @@ public class ProgramProductRepositoryTest {
     public void shouldThrowErrorWhenInsertingInvalidProductForAProgram() {
         Program program = make(a(ProgramBuilder.defaultProgram));
         when(programMapper.getIdByCode(program.getCode())).thenReturn(1);
-        ProgramProduct programProduct = new ProgramProduct(program, new Product(), null);
+        ProgramProduct programProduct = new ProgramProduct(program, new Product(), 10, true);
 
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("Invalid Product Code");

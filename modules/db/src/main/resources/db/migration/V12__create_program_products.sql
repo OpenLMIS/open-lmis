@@ -4,7 +4,7 @@ CREATE TABLE program_products (
     programId INTEGER REFERENCES programs(id) NOT NULL,
     productId INTEGER REFERENCES products(id) NOT NULL,
     dosesPerMonth INTEGER NOT NULL,
-    active BOOLEAN,
+    active BOOLEAN NOT NULL,
     modifiedBy VARCHAR(50),
     modifiedDate TIMESTAMP,
     UNIQUE (productId, programId)

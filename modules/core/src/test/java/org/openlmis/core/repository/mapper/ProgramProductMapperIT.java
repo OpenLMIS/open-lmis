@@ -54,7 +54,7 @@ public class ProgramProductMapperIT {
         productMapper.insert(product);
         Program program = make(a(defaultProgram));
         programMapper.insert(program);
-        ProgramProduct programProduct = new ProgramProduct(program, product, 10);
+        ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
         Integer id = programProductMapper.insert(programProduct);
         assertNotNull(id);
     }
@@ -126,8 +126,7 @@ public class ProgramProductMapperIT {
     }
 
     private void addToProgram(Program program, Product product, boolean isActive) {
-        ProgramProduct programProduct = new ProgramProduct(program, product, 30);
-        programProduct.setActive(isActive);
+        ProgramProduct programProduct = new ProgramProduct(program, product, 30, isActive);
         programProductMapper.insert(programProduct);
 
     }
