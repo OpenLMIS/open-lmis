@@ -19,7 +19,7 @@ public interface ProgramMapper {
   @Select("SELECT * FROM programs WHERE active=true")
   List<Program> getAllActive();
 
-  @Select("SELECT p.* " +
+  @Select("SELECT P.* " +
       "FROM programs P, programs_supported PS " +
       "WHERE P.id = PS.programId AND " +
       "PS.facilityId = #{facilityId} AND " +
