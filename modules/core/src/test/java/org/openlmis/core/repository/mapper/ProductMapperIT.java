@@ -46,7 +46,7 @@ public class ProductMapperIT {
     @Test
     public void shouldNotSaveProductWithoutMandatoryFields() throws Exception {
         expectedEx.expect(DataIntegrityViolationException.class);
-        expectedEx.expectMessage("null value in column \"primary_name\" violates not-null constraint");
+        expectedEx.expectMessage("null value in column \"primaryname\" violates not-null constraint");
         Product product = new Product();
         product.setCode("ABCD123");
         int status = productMapper.insert(product);

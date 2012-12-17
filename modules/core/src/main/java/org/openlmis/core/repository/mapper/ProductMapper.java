@@ -10,28 +10,28 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductMapper {
 
-    @Insert("INSERT INTO Product (" +
+    @Insert("INSERT INTO products (" +
             "code, " +
-            "alternate_item_code," +
-            "manufacturer," + "manufacturer_code," + "manufacturer_barcode," +
-            "moh_barcode," +
+            "alternateItemCode," +
+            "manufacturer," + "manufacturerCode," + "manufacturerBarcode," +
+            "mohBarcode," +
             "gtin," +
             "type," +
-            "display_order," +
-            "primary_name," + "full_name," + "generic_name," + "alternate_name," + "description," +
+            "displayOrder," +
+            "primaryName," + "fullName," + "genericName," + "alternateName," + "description," +
             "strength," +
-            "form_id," +
-            "dosage_unit_id, dispensing_unit, doses_per_dispensing_unit," +
-            "pack_size," + "alternate_pack_size," +
-            "store_refrigerated," + "store_room_temperature," + "hazardous," + "flammable," + "controlled_substance," + "light_sensitive," + "approved_by_who," +
-            "contraceptive_cyp," +
-            "pack_length," + "pack_width," + "pack_height," + "pack_weight," + "packs_per_carton," +
-            "carton_length," + "carton_width," + "carton_height," + "cartons_per_pallet," +
-            "expected_shelf_life," +
-            "special_storage_instructions," + "special_transport_instructions," +
-            "active," + "full_supply," + "tracer," + "round_to_zero," + "archived," +
-            "pack_rounding_threshold," +
-            "modified_by, modified_date)" +
+            "formId," +
+            "dosageUnitId, dispensingUnit, dosesPerDispensingUnit," +
+            "packSize," + "alternatePackSize," +
+            "storeRefrigerated," + "storeRoomTemperature," + "hazardous," + "flammable," + "controlledSubstance," + "lightSensitive," + "approvedByWho," +
+            "contraceptiveCyp," +
+            "packLength," + "packWidth," + "packHeight," + "packWeight," + "packsPerCarton," +
+            "cartonLength," + "cartonWidth," + "cartonHeight," + "cartonsPerPallet," +
+            "expectedShelfLife," +
+            "specialStorageInstructions," + "specialTransportInstructions," +
+            "active," + "fullSupply," + "tracer," + "roundToZero," + "archived," +
+            "packRoundingThreshold," +
+            "modifiedBy, modifiedDate)" +
             "VALUES(" +
             "#{code}," +
             "#{alternateItemCode}," +
@@ -58,9 +58,6 @@ public interface ProductMapper {
     @Options(useGeneratedKeys = true)
     Integer insert(Product product);
 
-    @Delete("delete from product")
-    void deleteAll();
-
     @Select("SELECT id FROM dosage_Unit where LOWER(code) = LOWER(#{code})")
     Integer getDosageUnitIdForCode(String code);
 
@@ -68,9 +65,9 @@ public interface ProductMapper {
     Integer getProductFormIdForCode(String code);
 
     // Used by ProgramProductMapper
-    @Select("SELECT * FROM product WHERE id = #{id}")
+    @Select("SELECT * FROM products WHERE id = #{id}")
     Product getProductById(Integer id);
 
-    @Select("SELECT id from product where code = #{code}")
+    @Select("SELECT id from products where code = #{code}")
     Integer getIdByCode(String code);
 }
