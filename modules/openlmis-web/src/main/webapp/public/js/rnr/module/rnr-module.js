@@ -25,7 +25,6 @@ var rnrModule = angular.module('rnr', ['openlmis']).config(['$routeProvider', fu
     });
 
 rnrModule.positiveInteger = function (value, errorHolder) {
-
     var toggleErrorMessageDisplay = function (valid, errorHolder) {
         if (valid) {
             document.getElementById(errorHolder).style.display = 'none';
@@ -43,18 +42,27 @@ rnrModule.positiveInteger = function (value, errorHolder) {
 };
 
 rnrModule.fill = function (lineItem, programRnrColumnList) {
+
+    function isNumber(number) {
+        return !isNaN(parseInt(number));
+    }
+
     function fillConsumption() {
-        c = lineItem.quantityDispensed = (!isNaN(a) && !isNaN(b) && !isNaN(d) && !isNaN(e)) ? a + b - d - e : null;
+        c = lineItem.quantityDispensed = (isNumber(a) && isNumber(b) && isNumber(d) && isNumber(e)) ? a + b - d - e : null;
     }
 
     function fillStockInHand() {
-        e = lineItem.stockInHand = (!isNaN(a) && !isNaN(b) && !isNaN(c) && !isNaN(d)) ? a + b - d - c : null;
+        e = lineItem.stockInHand = (isNumber(a) && isNumber(b) && isNumber(c) && isNumber(d)) ? a + b - d - c : null;
     }
 
     function fillNormalizedConsumption() {
+        if (!isNumber(c)) {
+            lineItem.normalizedConsumption = null;
+            return;
+        }
         var m = 3; // will be picked up from the database in future
-        var x = isNaN(parseInt(lineItem.stockOutDays)) ? 0 : parseInt(lineItem.stockOutDays);
-        var f = isNaN(parseInt(lineItem.newPatientCount)) ? 0 : parseInt(lineItem.newPatientCount);
+        var x = isNumber(lineItem.stockOutDays) ? parseInt(lineItem.stockOutDays) : 0;
+        var f = isNumber(lineItem.newPatientCount) ? parseInt(lineItem.newPatientCount) : 0;
         var dosesPerMonth = parseInt(lineItem.dosesPerMonth);
         var g = parseInt(lineItem.dosesPerDispensingUnit);
         var consumptionAdjustedWithStockOutDays = ((m * 30) - x) == 0 ? c : (c * ((m * 30) / ((m * 30) - x)));
@@ -81,7 +89,7 @@ rnrModule.fill = function (lineItem, programRnrColumnList) {
 
     if (getSource('C') == 'CALCULATED') fillConsumption();
     if (getSource('E') == 'CALCULATED') fillStockInHand();
-    if (!isNaN(c)) fillNormalizedConsumption();
+    fillNormalizedConsumption();
 
 
 }

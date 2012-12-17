@@ -18,6 +18,7 @@ function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $l
         $location.path('init-rnr');
     });
 
+    // TODO : is this required?
     var validate = function (data) {
         return (data.rnrColumnList.length > 0);
     };

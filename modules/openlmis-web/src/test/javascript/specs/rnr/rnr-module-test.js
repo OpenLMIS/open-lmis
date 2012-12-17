@@ -110,6 +110,20 @@ describe('RnrModuleTest', function () {
             rnrModule.fill(lineItem, programRnrColumnList);
             expect(65).toEqual(lineItem.normalizedConsumption);
         });
+
+        it('should not fill normalized consumption when consumption column is empty', function () {
+            var lineItem = {"id":1, "beginningBalance":1, "quantityReceived":2, "quantityDispensed":null, "lossesAndAdjustments":3, "stockInHand":null};
+
+            rnrModule.fill(lineItem, programRnrColumnList);
+            expect(null).toEqual(lineItem.normalizedConsumption);
+        });
+
+        it('should unset normalized consumption when consumption column is un-set', function () {
+            var lineItem = {"id":1, "beginningBalance":null, "quantityReceived":10, "quantityDispensed":null, "lossesAndAdjustments":null, "stockInHand":2, "stockOutDays":5, "newPatientCount":10, "dosesPerMonth":30, "dosesPerDispensingUnit":28, "normalizedConsumption" : 10};
+
+            rnrModule.fill(lineItem, programRnrColumnList);
+            expect(null).toEqual(lineItem.normalizedConsumption);
+        });
     });
 });
 
