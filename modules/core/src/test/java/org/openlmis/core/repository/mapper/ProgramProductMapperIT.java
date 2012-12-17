@@ -54,8 +54,7 @@ public class ProgramProductMapperIT {
         productMapper.insert(product);
         Program program = make(a(defaultProgram));
         programMapper.insert(program);
-        ProgramProduct programProduct = new ProgramProduct(program, product);
-        programProduct.setDosesPerMonth(10);
+        ProgramProduct programProduct = new ProgramProduct(program, product, 10);
         Integer id = programProductMapper.insert(programProduct);
         assertNotNull(id);
     }
@@ -64,7 +63,7 @@ public class ProgramProductMapperIT {
     public void shouldGetFullSupplyAndActiveProductsByFacilityAndProgramInOrderOfDisplayAndProductCode() {
         Integer facilityId = facilityMapper.insert(make(a(FacilityBuilder.defaultFacility)));
         Program yellowFeverProgram = make(a(defaultProgram));
-        Program bpProgram = make(a(defaultProgram, with(programCode,"BP")));
+        Program bpProgram = make(a(defaultProgram, with(programCode, "BP")));
 
         programMapper.insert(bpProgram);
         programMapper.insert(yellowFeverProgram);
@@ -83,7 +82,7 @@ public class ProgramProductMapperIT {
         addToProgram(yellowFeverProgram, pro04, false);
         addToProgram(yellowFeverProgram, pro05, true);
         addToProgram(yellowFeverProgram, pro06, true);
-        addToProgram(bpProgram,          pro07, true);
+        addToProgram(bpProgram, pro07, true);
 
         addToFacilityType("warehouse", pro01);
         addToFacilityType("warehouse", pro03);
@@ -97,7 +96,7 @@ public class ProgramProductMapperIT {
 
         ProgramProduct programProduct = programProducts.get(0);
 
-        assertEquals(yellowFeverProgram.getCode(), programProduct.getProgramCode());
+        assertEquals(yellowFeverProgram.getCode(), programProduct.getProgram().getCode());
         assertEquals(30, programProduct.getDosesPerMonth().intValue());
         Product product = programProduct.getProduct();
         assertEquals("PRO05", product.getCode());
@@ -127,10 +126,8 @@ public class ProgramProductMapperIT {
     }
 
     private void addToProgram(Program program, Product product, boolean isActive) {
-        ProgramProduct programProduct = new ProgramProduct(program, product);
-        programProduct.setDosesPerMonth(10);
+        ProgramProduct programProduct = new ProgramProduct(program, product, 30);
         programProduct.setActive(isActive);
-        programProduct.setDosesPerMonth(30);
         programProductMapper.insert(programProduct);
 
     }

@@ -17,30 +17,16 @@ public class ProgramProduct implements Importable {
     private Program program;
     @ImportField(name = "Product Code", type = "String", nested = "code", mandatory = true)
     private Product product;
-
-    // TODO : should change this to id.
-    private String programCode;
-    private String productCode;
-    @ImportField (name ="Doses Per Month", type="int", mandatory = true)
+    @ImportField(name = "Doses Per Month", type = "int", mandatory = true)
     private Integer dosesPerMonth;
+
     private String modifiedBy;
     private Date modifiedDate;
     private boolean active;
 
-    public ProgramProduct(String programCode, String productCode, Integer dosesPerMonth) {
-        this.programCode = programCode;
-        this.productCode = productCode;
-        this.dosesPerMonth = dosesPerMonth;
-    }
-
-    public ProgramProduct(String programCode, Product product, Integer dosesPerMonth) {
-        this(programCode, product.getCode(), dosesPerMonth);
-        this.product = product;
-    }
-
-    public ProgramProduct(Program program, Product product) {
+    public ProgramProduct(Program program, Product product, Integer dosesPerMonth) {
         this.program = program;
         this.product = product;
+        this.dosesPerMonth = dosesPerMonth;
     }
-
 }

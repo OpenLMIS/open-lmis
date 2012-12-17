@@ -1,10 +1,8 @@
 package org.openlmis.core.repository.mapper;
 
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProductForm;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -66,7 +64,7 @@ public interface ProductMapper {
 
     // Used by ProgramProductMapper
     @Select("SELECT * FROM products WHERE id = #{id}")
-    Product getProductById(Integer id);
+    Product getById(Integer id);
 
     @Select("SELECT id from products where code = #{code}")
     Integer getIdByCode(String code);
