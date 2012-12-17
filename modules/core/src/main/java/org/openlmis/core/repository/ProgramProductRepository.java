@@ -37,7 +37,7 @@ public class ProgramProductRepository {
             int id = programProductMapper.insert(programProduct);
             programProduct.setId(id);
         }catch (DuplicateKeyException duplicateKeyException) {
-            throw new RuntimeException("Duplicate entry for Product Code and program Code combination found");
+            throw new RuntimeException("Duplicate entry for Product Code and Program Code combination found");
         }
     }
 

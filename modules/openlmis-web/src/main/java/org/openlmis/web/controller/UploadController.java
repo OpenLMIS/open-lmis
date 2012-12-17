@@ -58,7 +58,7 @@ public class UploadController {
             }
             String modifiedBy = (String) request.getSession().getAttribute(USER);
             int recordsUploaded = csvParser.process(multipartFile.getInputStream(), new ModelClass(modelClass), uploadHandlerFactory.getHandler(model), modifiedBy);
-            resultMap.addObject("message", "File upload success. Total " + model + " uploaded in the system : " + recordsUploaded);
+            resultMap.addObject("message", "File uploaded successfully. Total records uploaded: " + recordsUploaded);
         } catch (UploadException | IOException e) {
             return errorResponse(resultMap, e.getMessage());
         }
