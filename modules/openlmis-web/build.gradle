@@ -78,7 +78,7 @@ task explodedWar(type: Copy) {
     with war
 }
 
-task deploy(type: GradleBuild, dependsOn: "setupDB") << {
+task deploy(type: GradleBuild, dependsOn: ":modules:db:setupDB") << {
   println("Deploying...")
   //  cargoStopLocal.execute()  // when it works, stop goes from ci
   tasks.migrateDB.execute()
