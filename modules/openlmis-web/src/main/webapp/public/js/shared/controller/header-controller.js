@@ -22,7 +22,6 @@ function HeaderController($scope, User, $rootScope, $http,localStorageService) {
     }();
 
     $scope.logout = function () {
-        //sessionStorage.clear();
         localStorageService.clearAll();
         window.location = "/j_spring_security_logout";
     };

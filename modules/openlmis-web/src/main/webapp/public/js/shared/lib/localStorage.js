@@ -1,6 +1,5 @@
 /* Start angularLocalStorage */
-//Add the key constants for localStorage('key','value') pairs in the application
-var localStorageKeys = { RIGHT:"RIGHTS" };
+
 var angularLocalStorage = angular.module('openlmis.localStorage', []);
 
 // You should set a prefix to avoid overwriting any local storage variables from the rest of your app

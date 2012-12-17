@@ -1,4 +1,4 @@
-function LoginController($scope, $http, $rootScope,localStorageService) {
+function LoginController($scope, $http,localStorageService) {
     $scope.doLogin = function () {
         var data = $.param({j_username:$scope.username, j_password:$scope.password});
         $http({

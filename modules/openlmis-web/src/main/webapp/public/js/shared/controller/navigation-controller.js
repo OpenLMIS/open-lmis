@@ -3,17 +3,17 @@ function NavigationController($scope, User, localStorageService) {
 
     $scope.loadRights = function () {
 
-        var sessionStorageRights = localStorageService.get(localStorageKeys.RIGHT);
+        var rights = localStorageService.get(localStorageKeys.RIGHT);
 
-        if(sessionStorageRights ==undefined){
+        if(rights ==undefined){
             User.get({}, function (data) {
-                sessionStorageRights=data.rights;
+                rights=data.rights;
 
                 location.reload();
             }, {});
         }
 
-        $scope.rights = sessionStorageRights;
+        $scope.rights = rights;
 
         $(".navigation > ul").show();
     }();
