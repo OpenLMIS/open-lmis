@@ -1,5 +1,5 @@
-Drop TABLE IF EXISTS program_rnr_template;
-CREATE TABLE program_rnr_template(
+Drop TABLE IF EXISTS program_rnr_columns;
+CREATE TABLE program_rnr_columns(
     id SERIAL PRIMARY KEY ,
     column_id INTEGER NOT NULL REFERENCES master_rnr_columns(id),
     program_code VARCHAR(50) NOT NULL,
