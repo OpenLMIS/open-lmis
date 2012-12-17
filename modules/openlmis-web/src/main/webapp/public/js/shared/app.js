@@ -1,7 +1,7 @@
 'use strict';
 
 /* App Module */
-angular.module('openlmis', ['openlmis.services', 'ui.directives'], function ($routeProvider, $locationProvider, $httpProvider) {
+angular.module('openlmis', ['openlmis.services','openlmis.localStorage','ui.directives'], function ($routeProvider, $locationProvider, $httpProvider) {
   var interceptor = ['$rootScope', '$q', function (scope, $q) {
     function success(response) {
       return response;

@@ -1,4 +1,4 @@
-function HeaderController($scope, User, $rootScope, $http) {
+function HeaderController($scope, User, $rootScope, $http,localStorageService) {
     User.get({}, function (data) {
         if (data.authenticated == 'false') {
             $rootScope.modalShown = true;
@@ -22,7 +22,8 @@ function HeaderController($scope, User, $rootScope, $http) {
     }();
 
     $scope.logout = function () {
-        sessionStorage.clear();
+        //sessionStorage.clear();
+        localStorageService.clearAll();
         window.location = "/j_spring_security_logout";
     };
 }
