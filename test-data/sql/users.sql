@@ -18,4 +18,4 @@ INSERT INTO users
 
 INSERT INTO role_assignments
   (userId, roleId, programId) VALUES
-  (200, 1, 1);
+  (200, 1, 2);
