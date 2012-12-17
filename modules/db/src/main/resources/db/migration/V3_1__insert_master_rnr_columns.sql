@@ -1,4 +1,4 @@
-INSERT INTO master_rnr_template
+INSERT INTO master_rnr_columns
 ( id ,  name                           ,  position  ,                         label                                  , source         , sourceConfigurable         ,                        formula                           , indicator          , used       ,  visible      , mandatory    ,  description)
 VALUES
 (  1 , 'productCode'                   ,          1 , 'Product Code'                                                 ,'R'             , false                      , ''                                                       , 'O'                , true       , true          , true         , 'Unique identifier for each commodity'                                                                            ),

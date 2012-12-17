@@ -23,7 +23,7 @@ public interface ProgramRnrColumnMapper {
 
   @Select("select m.id, m.name, m.description, m.formula, m.indicator, m.used, m.mandatory, m.sourceConfigurable, " +
       " p.position, p.label, p.is_visible AS visible, p.source as sourceString" +
-      " FROM program_rnr_template p INNER JOIN master_rnr_template m " +
+      " FROM program_rnr_template p INNER JOIN master_rnr_columns m " +
       " ON p.column_id = m.id " +
       " WHERE p.program_code = #{programCode} " +
       " ORDER BY visible DESC, position")
@@ -39,14 +39,14 @@ public interface ProgramRnrColumnMapper {
 
   @Select("SELECT m.id, m.name, m.description, m.used, m.mandatory, m.formula, m.indicator, " +
       " p.position, p.label, p.is_visible AS visible, p.source as sourceString" +
-      " FROM program_rnr_template p INNER JOIN master_rnr_template m" +
+      " FROM program_rnr_template p INNER JOIN master_rnr_columns m" +
       " ON p.column_id = m.id" +
       " WHERE p.program_code = #{programCode} AND p.is_visible = 'true'" +
       " ORDER BY visible desc, position")
   List<RnrColumn> getVisibleProgramRnrColumns(String programCode);
 
 
-  @Select(value = "SELECT * FROM master_rnr_template")
+  @Select(value = "SELECT * FROM master_rnr_columns")
   @Results(value = { @Result(property = "sourceString", column = "source")})
   List<RnrColumn> fetchAllMasterRnRColumns();
 

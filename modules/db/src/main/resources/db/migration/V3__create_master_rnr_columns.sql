@@ -1,5 +1,5 @@
-Drop TABLE IF EXISTS master_rnr_template;
-CREATE TABLE master_rnr_template (
+Drop TABLE IF EXISTS master_rnr_columns;
+CREATE TABLE master_rnr_columns (
     id serial PRIMARY KEY,
     name varchar(200) NOT NULL UNIQUE,
     position integer  NOT NULL,

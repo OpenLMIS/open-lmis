@@ -9,16 +9,16 @@ public class RnrColumn {
 
     private Integer id;
     private String name;
-    private String description;
     private int position;
-    private String label;
     private RnRColumnSource source;
     private Boolean sourceConfigurable;
+    private String label;
     private String formula;
     private String indicator;
     private boolean used;
     private boolean visible;
     private boolean mandatory;
+    private String description;
 
     @SuppressWarnings(value = "unused")
     public void setSourceString(String sourceString) {
