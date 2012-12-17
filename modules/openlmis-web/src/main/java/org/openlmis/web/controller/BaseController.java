@@ -10,11 +10,7 @@ public class BaseController {
         return (String) request.getSession().getAttribute(UserAuthenticationSuccessHandler.USER);
     }
 
-    protected Boolean isAdmin(HttpServletRequest request) {
-        return (Boolean) request.getSession().getAttribute(UserAuthenticationSuccessHandler.IS_ADMIN);
-    }
-
-    protected String homePageUrl(HttpServletRequest request) {
+    protected String homePageUrl() {
         return  "redirect:/public/pages/index.html" ;
     }
 

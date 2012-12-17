@@ -18,7 +18,6 @@ import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.IS_ADMIN;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 
 public class UserAuthenticationSuccessHandlerTest {
@@ -75,7 +74,6 @@ public class UserAuthenticationSuccessHandlerTest {
         userAuthenticationSuccessHandler.onAuthenticationSuccess(request, response, authentication);
 
         verify(session).setAttribute(USER, USERNAME);
-        verify(session).setAttribute(IS_ADMIN, true);
     }
 
 }

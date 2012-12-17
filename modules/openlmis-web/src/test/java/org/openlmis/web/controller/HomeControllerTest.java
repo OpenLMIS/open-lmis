@@ -30,7 +30,7 @@ public class HomeControllerTest {
 
     @Test
     public void shouldRedirectToHomePage() {
-        String homePageURl = homeController.homeDefault(request);
+        String homePageURl = homeController.homeDefault();
         assertEquals("redirect:/public/pages/index.html", homePageURl);
     }
 

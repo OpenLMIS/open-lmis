@@ -43,7 +43,6 @@ public class UserControllerTest {
   public void shouldReturnUserInfoOfLoggedInUser() {
     String username = "Foo";
     session.setAttribute(UserAuthenticationSuccessHandler.USER, username);
-    session.setAttribute(UserAuthenticationSuccessHandler.IS_ADMIN, false);
     HashMap<String, Object> params = userController.user(httpServletRequest, null);
     assertThat(params.get("name").toString(), is("Foo"));
     assertThat(params.get("authenticated").toString(), is("true"));
