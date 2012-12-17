@@ -5,7 +5,8 @@ function NavigationController($scope, User) {
 
         if(sessionStorage['rights'] ==undefined){
             User.get({}, function (data) {
-                    sessionStorage['rights'] = data.rights;
+                sessionStorage['rights'] = data.rights;
+                location.reload();
             }, {});
         }
 
