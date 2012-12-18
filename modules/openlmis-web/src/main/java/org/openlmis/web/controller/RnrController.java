@@ -3,6 +3,7 @@ package org.openlmis.web.controller;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.service.RnrService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,12 +30,14 @@ public class RnrController {
 
 
     @RequestMapping(value = "/logistics/rnr/{facilityId}/{programCode}/init", method = RequestMethod.POST, headers = "Accept=application/json")
+    @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
     public Rnr initRnr(@PathVariable("facilityId") Integer facilityId, @PathVariable("programCode") String programCode, HttpServletRequest request) {
         String modifiedBy = (String) request.getSession().getAttribute(USER);
         return rnrService.initRnr(facilityId, programCode, modifiedBy);
     }
 
     @RequestMapping(value = "/logistics/rnr/{rnrId}/save", method = RequestMethod.POST, headers = "Accept=application/json")
+    @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
     public void saveRnr(@RequestBody Rnr rnr, HttpServletRequest request){
         rnr.setModifiedBy((String) request.getSession().getAttribute(USER));
         rnrService.save(rnr);

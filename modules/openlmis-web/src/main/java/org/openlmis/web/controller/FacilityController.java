@@ -9,6 +9,7 @@ import org.openlmis.web.model.ReferenceData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,21 +37,25 @@ public class FacilityController extends BaseController {
     }
 
     @RequestMapping(value = "admin/facilities", method = RequestMethod.GET, headers = "Accept=application/json")
+    @PreAuthorize("hasPermission('','MANAGE_FACILITY')")
     public List<Facility> getAll() {
         return facilityService.getAll();
     }
 
     @RequestMapping(value = "logistics/user/facilities", method = RequestMethod.GET, headers = "Accept=application/json")
+    @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
     public List<Facility> getAllByUser(HttpServletRequest httpServletRequest) {
         return facilityService.getAllForUser(loggedInUser(httpServletRequest));
     }
 
     @RequestMapping(value = "logistics/facility/{facilityId}/requisition-header", method = RequestMethod.GET, headers = "Accept=application/json")
+    @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
     public RequisitionHeader getRequisitionHeader(@PathVariable(value = "facilityId") Integer facilityId) {
         return facilityService.getRequisitionHeader(facilityId);
     }
 
     @RequestMapping(value = "admin/facility/reference-data", method = RequestMethod.GET, headers = "Accept=application/json")
+    @PreAuthorize("hasPermission('','MANAGE_FACILITY')")
     public Map getReferenceData() {
         ReferenceData referenceData = new ReferenceData();
         return referenceData.addFacilityTypes(facilityService.getAllTypes()).
@@ -60,11 +65,12 @@ public class FacilityController extends BaseController {
     }
 
     @RequestMapping(value = "admin/facility", method = RequestMethod.POST, headers = "Accept=application/json")
+    @PreAuthorize("hasPermission('','MANAGE_FACILITY')")
     public ResponseEntity<ModelMap> addOrUpdate(@RequestBody Facility facility, HttpServletRequest request) {
         ModelMap modelMap = new ModelMap();
         String modifiedBy = (String) request.getSession().getAttribute(USER);
         facility.setModifiedBy(modifiedBy);
-        boolean createFlag = facility.getId()==null?true:false;
+        boolean createFlag = facility.getId() == null;
         try {
             facilityService.save(facility);
         } catch (RuntimeException exception) {
@@ -82,6 +88,7 @@ public class FacilityController extends BaseController {
     }
 
     @RequestMapping(value = "admin/facility/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @PreAuthorize("hasPermission('','MANAGE_FACILITY')")
     public ResponseEntity<ModelMap> getFacility(@PathVariable(value = "id") Integer id) {
         ModelMap modelMap = new ModelMap();
         modelMap.put("facility", facilityService.getFacility(id));
@@ -89,6 +96,7 @@ public class FacilityController extends BaseController {
     }
 
     @RequestMapping(value = "admin/facility/update/{operation}",  method = RequestMethod.POST,headers = "Accept=application/json")
+    @PreAuthorize("hasPermission('','MANAGE_FACILITY')")
     public ResponseEntity<ModelMap> updateDataReportableAndActive(@RequestBody Facility facility, @PathVariable(value = "operation") String operation,
                                                                   HttpServletRequest request) {
         ModelMap modelMap = new ModelMap();

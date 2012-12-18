@@ -8,6 +8,7 @@ import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.RoleRightsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,16 +32,19 @@ public class ProgramController {
     }
 
     @RequestMapping(value = "/admin/programs", method = RequestMethod.GET, headers = "Accept=application/json")
+    @PreAuthorize("hasPermission('','CONFIGURE_RNR')")
     public List<Program> getAllActivePrograms() {
         return programService.getAllActive();
     }
 
     @RequestMapping(value = "/logistics/facility/{facilityId}/programs.json", method = RequestMethod.GET, headers = "Accept=application/json")
+    @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
     public List<Program> getProgramsForFacility(@PathVariable(value = "facilityId") Integer facilityId) {
         return programService.getByFacility(facilityId);
     }
 
     @RequestMapping(value = "/logistics/facility/{facilityId}/user/programs.json", method = RequestMethod.GET, headers = "Accept=application/json")
+    @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
     public List<Program> getUserSupportedProgramsToCreateRequisition(@PathVariable(value = "facilityId") Integer facilityId, HttpServletRequest request) {
         List<RoleAssignment> userRoles = roleRightsService.getRoleAssignments(Right.CREATE_REQUISITION, loggedInUser(request));
         return programService.filterActiveProgramsAndFacility(userRoles, facilityId);

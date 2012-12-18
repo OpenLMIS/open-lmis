@@ -11,6 +11,7 @@ import org.openlmis.rnr.service.RnrTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +32,7 @@ public class RnrTemplateController {
 
     // TODO : url should have rnr-template and not rnr
     @RequestMapping(value = "/admin/rnr/{programCode}/columns", method = RequestMethod.GET, headers = "Accept=application/json")
+    @PreAuthorize("hasPermission('','CONFIGURE_RNR')")
     public RnrTemplateForm fetchAllProgramRnrColumnList(@PathVariable("programCode") String programCode) {
         List<RnRColumnSource> sources = new ArrayList<>();
         sources.add(RnRColumnSource.USER_INPUT);
@@ -39,11 +41,13 @@ public class RnrTemplateController {
     }
 
     @RequestMapping(value = "/logistics/rnr/{programCode}/columns", method = RequestMethod.GET, headers = "Accept=application/json")
+    @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
     public List<RnrColumn> fetchVisibleProgramRnrColumnList(@PathVariable("programCode") String programCode) {
         return rnrTemplateService.fetchVisibleRnRColumns(programCode);
     }
 
     @RequestMapping(value = "/admin/rnr/{programCode}/columns", method = RequestMethod.POST, headers = "Accept=application/json")
+    @PreAuthorize("hasPermission('','CONFIGURE_RNR')")
     public ResponseEntity saveRnRTemplateForProgram(@PathVariable("programCode") String programCode,
                                                     @RequestBody RnrColumnList rnrColumnList) {
 
