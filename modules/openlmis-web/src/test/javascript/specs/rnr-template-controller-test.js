@@ -12,8 +12,8 @@ describe('Rnr Template controllers', function () {
       scope.program = {code:"programCode"};
 
       rnrColumnList = [
-        {"id":1, "name":"product_code"},
-        {"id":2, "name":"product"}
+        {"id":1, "name":"product_code", "sourceConfigurable":"true", "source": {'code' : "U"}, "formulaValidated": "true"},
+        {"id":2, "name":"product", "sourceConfigurable":"true", "source": {'code' : "U"}, "formulaValidated": "true"}
       ];
 
       sources = [
@@ -25,6 +25,7 @@ describe('Rnr Template controllers', function () {
 
 
       ctrl = $controller(SaveRnrTemplateController, {$scope:scope,rnrTemplateForm: rnrTemplateForm});
+
     }));
 
     it('should get list of rnr columns for configuring', function () {
@@ -32,13 +33,34 @@ describe('Rnr Template controllers', function () {
       expect(scope.sources).toEqual(sources);
     });
 
-    it('should toggle arithmetic validation flag', function() {
-      scope.validate = true;
-      scope.toggleValidateFormulaFlag();
-      expect(scope.formulaValidated).toBeFalsy();
+    it('should set validateFormula flag on load', function () {
+      expect(scope.validateFormula).toBeTruthy();
     });
 
+    it('should toggle arithmetic validation flag', function() {
+      scope.validateFormula = true;
+      scope.toggleValidateFormulaFlag();
+      expect(scope.validateFormula).toBeFalsy();
+      expect(scope.arithmeticValidationStatusLabel).toEqual("OFF");
+      expect(scope.arithmeticValidationToggleLabel).toEqual("ON");
+      scope.toggleValidateFormulaFlag();
+      expect(scope.validateFormula).toBeTruthy();
+      expect(scope.arithmeticValidationStatusLabel).toEqual("ON");
+      expect(scope.arithmeticValidationToggleLabel).toEqual("OFF");
+    });
 
+    it('should set arithmetic validation message shown flag to True', function() {
+      scope.rnrColumns = rnrColumnList;
+      scope.setArithmeticValidationMessageShown();
+      expect(scope.arithmeticValidationMessageShown).toBeTruthy();
+    });
+
+    it('should set arithmetic validation message shown flag to False', function() {
+      scope.rnrColumns = rnrColumnList;
+      scope.rnrColumns[0].source.code = 'C';
+      scope.setArithmeticValidationMessageShown();
+      expect(scope.arithmeticValidationMessageShown).toBeFalsy();
+    });
 
   });
 });

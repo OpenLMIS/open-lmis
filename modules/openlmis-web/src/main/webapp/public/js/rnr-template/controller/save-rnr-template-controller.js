@@ -51,7 +51,7 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, $http) {
   };
   $scope.setArithmeticValidationMessageShown();
 
-  var setValidateLabel = function () {
+  var setArithmeticValidationLabel = function () {
     if($scope.validateFormula){
       $scope.arithmeticValidationStatusLabel = 'ON';
       $scope.arithmeticValidationToggleLabel = 'OFF';
@@ -60,7 +60,7 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, $http) {
       $scope.arithmeticValidationToggleLabel = 'ON';
     }
   };
-  setValidateLabel();
+  setArithmeticValidationLabel();
 
   $scope.toggleValidateFormulaFlag = function() {
     if($scope.validateFormula){
@@ -68,7 +68,7 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, $http) {
     }else{
       $scope.validateFormula = true;
     }
-    setValidateLabel();
+    setArithmeticValidationLabel();
   }
 }
 
