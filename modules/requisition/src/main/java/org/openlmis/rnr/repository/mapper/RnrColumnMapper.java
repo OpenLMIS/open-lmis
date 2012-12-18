@@ -10,9 +10,9 @@ import java.util.List;
 public interface RnrColumnMapper {
 
     @Insert("INSERT INTO program_rnr_columns " +
-            "(programCode,    masterColumnId,          visible,           label,              position,              source,            validated) " +
+            "(programCode,    masterColumnId,          visible,           label,              position,              source,            formulaValidated) " +
             "VALUES " +
-            "(#{programCode}, #{rnrColumn.id},  #{rnrColumn.visible}, #{rnrColumn.label}, #{rnrColumn.position}, #{rnrColumn.source.code}, #{rnrColumn.validated})")
+            "(#{programCode}, #{rnrColumn.id},  #{rnrColumn.visible}, #{rnrColumn.label}, #{rnrColumn.position}, #{rnrColumn.source.code}, #{rnrColumn.formulaValidated})")
     int insert(@Param("programCode") String programCode, @Param("rnrColumn") RnrColumn rnrColumn);
 
     @Delete("DELETE FROM program_rnr_columns")
@@ -23,7 +23,7 @@ public interface RnrColumnMapper {
     boolean isRnrTemplateDefined(@Param("programCode") String programCode);
 
     @Select("select m.id, m.name, m.description, m.formula, m.indicator, m.used, m.mandatory, m.sourceConfigurable, " +
-            " p.position, p.label, p.visible, p.source as sourceString, p.validated as validated" +
+            " p.position, p.label, p.visible, p.source as sourceString, p.formulaValidated as formulaValidated" +
             " FROM program_rnr_columns p INNER JOIN master_rnr_columns m " +
             " ON p.masterColumnId = m.id " +
             " WHERE p.programCode = #{programCode} " +
@@ -35,12 +35,12 @@ public interface RnrColumnMapper {
             "label = #{rnrColumn.label}, " +
             "position = #{rnrColumn.position}, " +
             "source = #{rnrColumn.source.code}, " +
-            "validated = #{rnrColumn.validated} " +
+            "formulaValidated = #{rnrColumn.formulaValidated} " +
             "WHERE programCode = #{programCode} AND masterColumnId = #{rnrColumn.id}")
     void update(@Param("programCode") String programCode, @Param("rnrColumn") RnrColumn rnrColumn);
 
     @Select("SELECT m.id, m.name, m.description, m.used, m.mandatory, m.formula, m.indicator, " +
-            " p.position, p.label, p.visible , p.source as sourceString, p.validated as validated" +
+            " p.position, p.label, p.visible , p.source as sourceString, p.formulaValidated as formulaValidated" +
             " FROM program_rnr_columns p INNER JOIN master_rnr_columns m" +
             " ON p.masterColumnId = m.id" +
             " WHERE p.programCode = #{programCode} AND p.visible = 'true'" +

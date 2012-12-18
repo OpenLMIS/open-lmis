@@ -46,7 +46,7 @@
         <input type="hidden" class="rnr-column-position" ng-model="rnrColumn.position" value="{{ rnrColumn.position }}"/>
         <span class="tpl-source">
             <span ng-show="rnrColumn.sourceConfigurable">
-                <select ng-model="rnrColumn.source.code" ng-options="c.code as c.description for c in sources" ng-change= "setValidateMessageShownFlag()">
+                <select ng-model="rnrColumn.source.code" ng-options="c.code as c.description for c in sources" ng-change= "setArithmeticValidationMessageShown()">
                 </select>
             </span>
             <span ng-hide="rnrColumn.sourceConfigurable">
@@ -66,9 +66,9 @@
       {{message}}
     </div>
 
-    <div ng-show="validateMessageShown">
-      Total Quantity Consumed ( C ) and Stock On Hand (E) are configured as user inputs. Validation of inputs (C = A + B +/- D -E) is {{validateLabel}}
-      <a href="javascript:void(0);" ng-click= "toggleValidateFlag()">Turn {{buttonLabel}}</a>
+    <div ng-show="arithmeticValidationMessageShown">
+      Total Quantity Consumed ( C ) and Stock On Hand (E) are configured as user inputs. Validation of inputs (C = A + B +/- D -E) is {{arithmeticValidationStatusLabel}}
+      <a href="javascript:void(0);" ng-click= "toggleValidateFormulaFlag()">Turn {{arithmeticValidationToggleLabel}}</a>
     </div>
     <input type="submit" class="btn" value="Save" />
   </form>

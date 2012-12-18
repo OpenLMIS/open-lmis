@@ -1,11 +1,11 @@
 function SaveRnrTemplateController($scope, rnrTemplateForm, $http) {
   $scope.rnrColumns = rnrTemplateForm.rnrColumns;
   $scope.sources = rnrTemplateForm.sources;
-  $scope.validate = $scope.rnrColumns[0].validated;
+  $scope.validateFormula = $scope.rnrColumns[0].formulaValidated;
 
   var setRnRTemplateValidateFlag = function() {
     $.each($scope.rnrColumns, function (index, column) {
-      column.validated = $scope.validate;
+      column.formulaValidated = $scope.validateFormula;
     });
   };
 
@@ -34,39 +34,39 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, $http) {
     $scope.message = "";
   }
 
-  $scope.validateMessageShown = false;
+  $scope.arithmeticValidationLabel = false;
 
-  $scope.setValidateMessageShownFlag = function() {
+  $scope.setArithmeticValidationMessageShown = function() {
     $.each($scope.rnrColumns, function (index, column) {
       if(column.sourceConfigurable){
         if(column.source.code == 'U'){
-          $scope.validateMessageShown = true;
+          $scope.arithmeticValidationMessageShown = true;
         }
         else{
-          $scope.validateMessageShown = false;
+          $scope.arithmeticValidationMessageShown = false;
           return (false);
         }
       }
     });
   };
-  $scope.setValidateMessageShownFlag();
+  $scope.setArithmeticValidationMessageShown();
 
   var setValidateLabel = function () {
-    if($scope.validate){
-      $scope.validateLabel = 'ON';
-      $scope.buttonLabel = 'OFF';
+    if($scope.validateFormula){
+      $scope.arithmeticValidationStatusLabel = 'ON';
+      $scope.arithmeticValidationToggleLabel = 'OFF';
     }else{
-      $scope.validateLabel = 'OFF';
-      $scope.buttonLabel = 'ON';
+      $scope.arithmeticValidationStatusLabel = 'OFF';
+      $scope.arithmeticValidationToggleLabel = 'ON';
     }
   };
   setValidateLabel();
 
-  $scope.toggleValidateFlag = function() {
-    if($scope.validate){
-      $scope.validate = false;
+  $scope.toggleValidateFormulaFlag = function() {
+    if($scope.validateFormula){
+      $scope.validateFormula = false;
     }else{
-      $scope.validate = true;
+      $scope.validateFormula = true;
     }
     setValidateLabel();
   }

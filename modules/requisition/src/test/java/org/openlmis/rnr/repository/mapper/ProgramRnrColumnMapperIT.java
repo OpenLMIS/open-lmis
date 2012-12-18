@@ -49,7 +49,7 @@ public class ProgramRnrColumnMapperIT {
         assertThat(rnrColumn1.isVisible(), is(false));
         assertThat(rnrColumn1.getPosition(), is(5));
         assertThat(rnrColumn1.getSource(), is(RnRColumnSource.USER_INPUT));
-        assertThat(rnrColumn1.getValidated(), is(true));
+        assertThat(rnrColumn1.isFormulaValidated(), is(true));
     }
 
     @Test
@@ -65,7 +65,7 @@ public class ProgramRnrColumnMapperIT {
         assertThat(updatedRnrColumn.getPosition(), is(5));
         assertThat(updatedRnrColumn.getLabel(), is("Some Random Label"));
         assertThat(updatedRnrColumn.getSource(), is(RnRColumnSource.CALCULATED));
-        assertThat(updatedRnrColumn.getValidated(), is(true));
+        assertThat(updatedRnrColumn.isFormulaValidated(), is(true));
     }
 
     @Test
@@ -97,7 +97,7 @@ public class ProgramRnrColumnMapperIT {
         assertThat(rnrColumns.size(), is(1));
         assertThat(rnrColumns.get(0).getSource(), is(RnRColumnSource.USER_INPUT));
         assertThat(rnrColumns.get(0).isVisible(), is(true));
-        assertThat(rnrColumns.get(0).getValidated(), is(true));
+        assertThat(rnrColumns.get(0).isFormulaValidated(), is(true));
     }
 
 
@@ -106,7 +106,7 @@ public class ProgramRnrColumnMapperIT {
         rnrColumn.setVisible(visible);
         rnrColumn.setPosition(position);
         rnrColumn.setSource(columnSource);
-        rnrColumn.setValidated(validated);
+        rnrColumn.setFormulaValidated(validated);
         return rnrColumnMapper.insert(HIV, rnrColumn);
     }
 
@@ -117,7 +117,7 @@ public class ProgramRnrColumnMapperIT {
         rnrColumn.setVisible(visible);
         rnrColumn.setPosition(position);
         rnrColumn.setSource(columnSource);
-        rnrColumn.setValidated(validated);
+        rnrColumn.setFormulaValidated(validated);
         rnrColumnMapper.update(HIV, rnrColumn);
     }
 }

@@ -34,8 +34,8 @@ describe('Rnr Template controllers', function () {
 
     it('should toggle arithmetic validation flag', function() {
       scope.validate = true;
-      scope.toggleValidateFlag();
-      expect(scope.validate).toBeFalsy();
+      scope.toggleValidateFormulaFlag();
+      expect(scope.formulaValidated).toBeFalsy();
     });
 
 
