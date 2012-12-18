@@ -2,8 +2,8 @@ package org.openlmis.rnr.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.FacilityApprovedProduct;
 import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.ProgramProduct;
 
 import java.util.Date;
 
@@ -47,14 +47,15 @@ public class RnrLineItem {
     private String modifiedBy;
     private Date modifiedDate;
 
-    public RnrLineItem(Integer rnrId, ProgramProduct programProduct, String modifiedBy) {
+    public RnrLineItem(Integer rnrId, FacilityApprovedProduct facilityApprovedProduct, String modifiedBy) {
         this.rnrId = rnrId;
 
-        Product product = programProduct.getProduct();
+        // TODO : ugly
+        Product product = facilityApprovedProduct.getProgramProduct().getProduct();
         this.productCode = product.getCode();
         this.unitOfIssue = product.getDispensingUnit();
         this.dosesPerDispensingUnit = product.getDosesPerDispensingUnit();
-        this.dosesPerMonth = programProduct.getDosesPerMonth();
+        this.dosesPerMonth = facilityApprovedProduct.getProgramProduct().getDosesPerMonth();
         this.product = productName(product);
         this.modifiedBy = modifiedBy;
     }

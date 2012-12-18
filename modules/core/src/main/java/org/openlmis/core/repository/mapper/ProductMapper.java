@@ -64,6 +64,10 @@ public interface ProductMapper {
 
     // Used by ProgramProductMapper
     @Select("SELECT * FROM products WHERE id = #{id}")
+    @Results(value = {
+            @Result(property = "form", column = "formId", javaType = ProductForm.class, one = @One(select = "org.openlmis.core.repository.mapper.ProductFormMapper.getById")),
+            @Result(property = "dosageUnit", column = "dosageUnitId", javaType = ProductForm.class, one = @One(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById"))
+    })
     Product getById(Integer id);
 
     @Select("SELECT id from products where code = #{code}")

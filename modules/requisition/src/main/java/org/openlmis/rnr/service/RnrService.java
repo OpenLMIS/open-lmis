@@ -1,8 +1,8 @@
 package org.openlmis.rnr.service;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.service.ProgramProductService;
+import org.openlmis.core.domain.FacilityApprovedProduct;
+import org.openlmis.core.service.FacilityApprovedProductService;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.domain.RnrStatus;
@@ -18,12 +18,12 @@ import java.util.List;
 public class RnrService {
 
     private RnrRepository rnrRepository;
-    private ProgramProductService programProductService;
+    private FacilityApprovedProductService facilityApprovedProductService;
 
     @Autowired
-    public RnrService(RnrRepository rnrRepository, ProgramProductService programProductService) {
+    public RnrService(RnrRepository rnrRepository, FacilityApprovedProductService facilityApprovedProductService) {
         this.rnrRepository = rnrRepository;
-        this.programProductService = programProductService;
+        this.facilityApprovedProductService = facilityApprovedProductService;
     }
 
     @Transactional
@@ -31,8 +31,8 @@ public class RnrService {
         Rnr requisition = rnrRepository.getRequisitionByFacilityAndProgram(facilityId, programCode);
         if (requisition.getId() == null) {
             requisition = new Rnr(facilityId, programCode, RnrStatus.INITIATED, modifiedBy);
-            List<ProgramProduct> programProducts = programProductService.getByFacilityAndProgram(facilityId, programCode);
-            for (ProgramProduct programProduct : programProducts) {
+            List<FacilityApprovedProduct> facilityApprovedProducts = facilityApprovedProductService.getByFacilityAndProgram(facilityId, programCode);
+            for (FacilityApprovedProduct programProduct : facilityApprovedProducts) {
                 RnrLineItem requisitionLineItem = new RnrLineItem(requisition.getId(), programProduct, modifiedBy);
                 requisition.add(requisitionLineItem);
             }

@@ -5,13 +5,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
+import org.openlmis.core.domain.FacilityApprovedProduct;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.repository.mapper.FacilityMapper;
-import org.openlmis.core.repository.mapper.ProductMapper;
-import org.openlmis.core.repository.mapper.ProgramMapper;
-import org.openlmis.core.repository.mapper.ProgramProductMapper;
+import org.openlmis.core.repository.mapper.*;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.domain.RnrStatus;
@@ -29,6 +27,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
+import static org.openlmis.core.builder.ProgramBuilder.PROGRAM_CODE;
 
 @ContextConfiguration(locations = "classpath*:applicationContext-requisition.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -43,6 +42,8 @@ public class RnrLineItemMapperIT {
     @Autowired
     private ProgramProductMapper programProductMapper;
     @Autowired
+    private FacilityApprovedProductMapper facilityApprovedProductMapper;
+    @Autowired
     private RnrMapper rnrMapper;
     @Autowired
     private RnrLineItemMapper rnrLineItemMapper;
@@ -50,33 +51,33 @@ public class RnrLineItemMapperIT {
     @Autowired
     private ProgramMapper programMapper;
 
-    Product product;
-    Program program;
-    ProgramProduct programProduct;
+    FacilityApprovedProduct facilityApprovedProduct;
     Integer facilityId;
 
     @Before
     public void setUp() {
-        product = make(a(ProductBuilder.defaultProduct));
-        program = make(a(ProgramBuilder.defaultProgram));
+        Product product = make(a(ProductBuilder.defaultProduct));
+        Program program = make(a(ProgramBuilder.defaultProgram));
         programMapper.insert(program);
-        programProduct = new ProgramProduct(program, product, 30, true);
+        ProgramProduct programProduct = new ProgramProduct(program, product, 30, true);
         facilityId = facilityMapper.insert(make(a(defaultFacility)));
         productMapper.insert(product);
         programProductMapper.insert(programProduct);
+        facilityApprovedProduct = new FacilityApprovedProduct("warehouse", programProduct, 30);
+        facilityApprovedProductMapper.insert(facilityApprovedProduct);
     }
 
     @Test
     public void shouldInsertRequisitionLineItem() {
-        Integer rnrId = rnrMapper.insert(new Rnr(facilityId, program.getCode(), RnrStatus.INITIATED, "user"));
-        Integer requisitionLineItemId = rnrLineItemMapper.insert(new RnrLineItem(rnrId, programProduct, "user"));
+        Integer rnrId = rnrMapper.insert(new Rnr(facilityId, PROGRAM_CODE, RnrStatus.INITIATED, "user"));
+        Integer requisitionLineItemId = rnrLineItemMapper.insert(new RnrLineItem(rnrId, facilityApprovedProduct, "user"));
         assertNotNull(requisitionLineItemId);
     }
 
     @Test
     public void shouldReturnRnrLineItemsByRnrId() {
         Integer rnrId = rnrMapper.insert(new Rnr(facilityId, "HIV", RnrStatus.INITIATED, "user"));
-        RnrLineItem lineItem = new RnrLineItem(rnrId, programProduct, "user");
+        RnrLineItem lineItem = new RnrLineItem(rnrId, facilityApprovedProduct, "user");
         rnrLineItemMapper.insert(lineItem);
 
         List<RnrLineItem> rnrLineItems = rnrLineItemMapper.getRnrLineItemsByRnrId(rnrId);
@@ -91,7 +92,7 @@ public class RnrLineItemMapperIT {
     @Test
     public void shouldUpdateRnrLineItem() {
         Integer rnrId = rnrMapper.insert(new Rnr(facilityId, "HIV", RnrStatus.INITIATED, "user"));
-        RnrLineItem lineItem = new RnrLineItem(rnrId, programProduct, "user");
+        RnrLineItem lineItem = new RnrLineItem(rnrId, facilityApprovedProduct, "user");
         Integer generatedId = rnrLineItemMapper.insert(lineItem);
         lineItem.setId(generatedId);
         lineItem.setModifiedBy("user1");

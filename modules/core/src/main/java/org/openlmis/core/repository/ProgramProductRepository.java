@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
 @NoArgsConstructor
 public class ProgramProductRepository {
@@ -20,14 +18,10 @@ public class ProgramProductRepository {
     private ProgramProductMapper programProductMapper;
 
     @Autowired
-    public ProgramProductRepository(ProgramProductMapper mapper, ProgramMapper programMapper, ProductMapper productMapper) {
-        this.programProductMapper = mapper;
+    public ProgramProductRepository(ProgramMapper programMapper, ProductMapper productMapper, ProgramProductMapper programProductMapper) {
+        this.programProductMapper = programProductMapper;
         this.programMapper = programMapper;
         this.productMapper = productMapper;
-    }
-
-    public List<ProgramProduct> getByFacilityAndProgram(Integer facilityId, String programCode) {
-        return programProductMapper.getFullSupplyProductsByFacilityAndProgram(facilityId, programCode);
     }
 
     public void insert(ProgramProduct programProduct) {
