@@ -156,5 +156,38 @@ describe('RnrModuleTest', function () {
             expect(null).toEqual(lineItem.amc);
         });
     });
+
+    describe('Fill Max Stock Quantity', function () {
+        beforeEach(function () {
+            programRnrColumnList = [
+                {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}},
+                {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
+                {"indicator":"C", "name":"quantityDispensed", "source":{"name":"CALCULATED"}},
+                {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}},
+                {"indicator":"E", "name":"stockInHand", "source":{"name":"CALCULATED"}},
+                {"indicator":"F", "name":"newPatientCount", "source":{"name":"USER_INPUT"}},
+                {"indicator":"X", "name":"stockOutDays", "source":{"name":"USER_INPUT"}}
+            ];
+        });
+
+        it('should set maxStockQuantity', function () {
+            var lineItem = {"id":1, "beginningBalance":5, "quantityReceived":20, "quantityDispensed":null,
+                "lossesAndAdjustments":5, "stockInHand":10, "dosesPerMonth":10, "dosesPerDispensingUnit":10, "maxMonthsOfStock": 3};
+
+            rnrModule.fill(lineItem, programRnrColumnList);
+            expect(30).toEqual(lineItem.maxStockQuantity);
+        });
+
+        it('should not set maxStockQuantity if amc is not set', function () {
+            var lineItem = {"id":1, "beginningBalance":null, "quantityReceived":10, "quantityDispensed":null, "lossesAndAdjustments":null,
+                "stockInHand":2, "dosesPerMonth":30, "dosesPerDispensingUnit":28, "normalizedConsumption":null, "maxMonthsOfStock": 3};
+
+            rnrModule.fill(lineItem, programRnrColumnList);
+            expect(null).toEqual(lineItem.amc);
+            expect(null).toEqual(lineItem.maxStockQuantity);
+        });
+
+    });
+
 });
 

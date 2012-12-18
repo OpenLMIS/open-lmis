@@ -74,6 +74,14 @@ rnrModule.fill = function (lineItem, programRnrColumnList) {
         lineItem.amc = lineItem.normalizedConsumption;
     }
 
+    function fillMaxStockQuantity() {
+        if (!isNumber(lineItem.amc)) {
+            lineItem.maxStockQuantity = null;
+            return;
+        }
+        lineItem.maxStockQuantity = lineItem.amc * lineItem.maxMonthsOfStock;
+    }
+
     var getSource = function (indicator) {
         var code;
         $(programRnrColumnList).each(function (i, column) {
@@ -95,5 +103,6 @@ rnrModule.fill = function (lineItem, programRnrColumnList) {
     if (getSource('E') == 'CALCULATED') fillStockInHand();
     fillNormalizedConsumption();
     fillAMC();
+    fillMaxStockQuantity();
 
 }

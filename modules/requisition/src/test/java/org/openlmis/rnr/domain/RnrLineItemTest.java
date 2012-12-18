@@ -22,13 +22,14 @@ public class RnrLineItemTest {
         product.setDispensingUnit("Strip");
 
         ProgramProduct programProduct = new ProgramProduct(program, product, 30, true);
-        RnrLineItem rnrLineItem = new RnrLineItem(1, new FacilityApprovedProduct("warehouse", programProduct, 30), "foo");
+        RnrLineItem rnrLineItem = new RnrLineItem(1, new FacilityApprovedProduct("warehouse", programProduct, 3), "foo");
+        assertEquals(3, rnrLineItem.getMaxMonthsOfStock().intValue());
         assertEquals(1, rnrLineItem.getRnrId().intValue());
         assertEquals("Strip", rnrLineItem.getUnitOfIssue());
         assertEquals("ASPIRIN", rnrLineItem.getProductCode());
         assertEquals(30, rnrLineItem.getDosesPerMonth().intValue());
         assertEquals("foo", rnrLineItem.getModifiedBy());
         assertEquals(10, rnrLineItem.getDosesPerDispensingUnit().intValue());
-        
+
     }
 }

@@ -20,7 +20,7 @@ public class RnrLineItem {
     private Integer dosesPerMonth;
     private Integer dosesPerDispensingUnit;
     private String unitOfIssue;
-    private String maxMonthsOfStock;
+    private Integer maxMonthsOfStock;
 
     private Integer quantityReceived;
     private Integer quantityDispensed;
@@ -50,6 +50,7 @@ public class RnrLineItem {
     public RnrLineItem(Integer rnrId, FacilityApprovedProduct facilityApprovedProduct, String modifiedBy) {
         this.rnrId = rnrId;
 
+        this.maxMonthsOfStock = facilityApprovedProduct.getMaxMonthsOfStock();
         // TODO : ugly
         Product product = facilityApprovedProduct.getProgramProduct().getProduct();
         this.productCode = product.getCode();
