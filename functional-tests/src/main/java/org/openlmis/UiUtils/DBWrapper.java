@@ -91,9 +91,13 @@ public class DBWrapper {
         dbwrapper.dbConnection("delete from role_rights;", "alter");
         dbwrapper.dbConnection("delete from role_assignments;", "alter");
         dbwrapper.dbConnection("delete from roles;", "alter");
-        dbwrapper.dbConnection("delete from programs_supported;", "alter");
+        dbwrapper.dbConnection("delete from facility_approved_products;", "alter");
+        dbwrapper.dbConnection("delete from program_products;", "alter");
+        dbwrapper.dbConnection("DELETE FROM requisition_line_items;", "alter");
+        dbwrapper.dbConnection("delete from products;", "alter");
         dbwrapper.dbConnection("delete from users where userName like('User%');", "alter");
-        dbwrapper.dbConnection("delete from requisitions;", "alter");
+        dbwrapper.dbConnection("delete from requisition;", "alter");
+        dbwrapper.dbConnection("delete from programs_supported;", "alter");
         dbwrapper.dbConnection("delete from facilities;", "alter");
     }
 
@@ -139,5 +143,47 @@ public class DBWrapper {
 
         }
         dbwrapper.dbConnection("INSERT INTO role_assignments (userId, roleId, programId) VALUES (1, 2, 1), (200, 1, 1);", "alter");
+    }
+
+    public void insertProducts() throws SQLException, IOException {
+        DBWrapper dbwrapper = new DBWrapper();
+        ResultSet rs = dbwrapper.dbConnection("Select id from products;", "select");
+
+        if (rs.next()) {
+//
+            dbwrapper.dbConnection("delete from facility_approved_products;", "alter");
+            dbwrapper.dbConnection("delete from program_products;", "alter");
+            dbwrapper.dbConnection("delete from products;", "alter");
+
+        }
+        dbwrapper.dbConnection("insert into products\n" +
+                "(code,    alternateItemCode,  manufacturer,       manufacturerCode,  manufacturerBarcode,   mohBarcode,   gtin,   type,         primaryName,    fullName,       genericName,    alternateName,    description,      strength,    formId,  dosageUnitId, dispensingUnit,  dosesPerDispensingUnit,  packSize,  alternatePackSize,  storeRefrigerated,   storeRoomTemperature,   hazardous,  flammable,   controlledSubstance,  lightSensitive,  approvedByWho,  contraceptiveCyp,  packLength,  packWidth, packHeight,  packWeight,  packsPerCarton, cartonLength,  cartonWidth,   cartonHeight, cartonsPerPallet,  expectedShelfLife,  specialStorageInstructions, specialTransportInstructions, active,  fullSupply, tracer,   packRoundingThreshold,  roundToZero,  archived) values\n" +
+                "('P100',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     1,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     TRUE,       TRUE,         1,                    FALSE,      TRUE)\n;", "alter");
+    }
+
+    public void insertProgramProducts() throws SQLException, IOException {
+        DBWrapper dbwrapper = new DBWrapper();
+        ResultSet rs = dbwrapper.dbConnection("Select id from program_products;", "select");
+
+        if (rs.next()) {
+            dbwrapper.dbConnection("delete from facility_approved_products;", "alter");
+            dbwrapper.dbConnection("delete from program_products;", "alter");
+
+        }
+        dbwrapper.dbConnection("insert into program_products(programId, productId, dosesPerMonth, active) values\n" +
+                "(1, (Select id from products order by modifiedDate DESC limit 1), 30, true);", "alter");
+    }
+
+    public void insertFacilityApprovedProducts() throws SQLException, IOException {
+        DBWrapper dbwrapper = new DBWrapper();
+        ResultSet rs = dbwrapper.dbConnection("Select id from facility_approved_products;", "select");
+
+        if (rs.next()) {
+
+            dbwrapper.dbConnection("delete from facility_approved_products;", "alter");
+
+        }
+        dbwrapper.dbConnection("insert into facility_approved_products(facilityTypeId, programProductId, maxMonthsOfStock) values\n" +
+                "((select id from facility_type where name='Lvl3 Hospital'), (select id from program_products where programId=(Select id from programs order by modifiedDate DESC limit 1) and productId=(Select id from products order by modifiedDate DESC limit 1)), 3);", "alter");
     }
 }

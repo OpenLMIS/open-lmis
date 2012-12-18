@@ -26,6 +26,22 @@ public class InitiateRnRPage extends Page {
     @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv' and @ng-model='message']")
     private static WebElement successMessage;
 
+    @FindBy(how = How.ID, using = "A_0")
+    private static WebElement beginningBalance;
+
+    @FindBy(how = How.ID, using = "B_0")
+    private static WebElement quantityReceived;
+
+    @FindBy(how = How.ID, using = "C_0")
+    private static WebElement quantityDispensed;
+
+    @FindBy(how = How.ID, using = "D_0")
+    private static WebElement lossesAndAdjustments;
+
+    @FindBy(how = How.ID, using = "E_0")
+    private static WebElement stockOnHand;
+
+    String successText="R&R saved successfully!";
 
 
     public InitiateRnRPage(TestWebDriver driver) throws  IOException {
@@ -36,18 +52,51 @@ public class InitiateRnRPage extends Page {
 
     public void verifyRnRHeader(String FCstring, String program)
     {
-        String successText="R&R saved successfully!";
        testWebDriver.waitForElementToAppear(requisitionHeader);
         String headerText=testWebDriver.getText(requisitionHeader);
         SeleneseTestNgHelper.assertTrue(headerText.contains("Report and Requisition for "+program));
         String facilityText=testWebDriver.getText(facilityLabel);
         SeleneseTestNgHelper.assertTrue(facilityText.contains("FCcode" + FCstring + " - FCname" + FCstring));
-        saveButton.click();
 
+    }
+
+    public void saveRnR(){
+        saveButton.click();
         testWebDriver.sleep(1500);
         String successMessageText=testWebDriver.getText(successMessage);
         testWebDriver.sleep(1500);
         SeleneseTestNgHelper.assertEquals(successMessageText.trim(),successText);
-
     }
+
+    public void enterBeginningBalance(String A)
+    {
+        beginningBalance.sendKeys(A);
+    }
+
+    public void enterQuantityReceived(String B)
+    {
+        quantityReceived.sendKeys(B);
+    }
+
+    public void enterQuantityDispensed(String C)
+    {
+        quantityDispensed.sendKeys(C);
+    }
+
+    public void enterLossesAndAdjustments(String D)
+    {
+        lossesAndAdjustments.sendKeys(D);
+    }
+
+    public void calculateAndVerifyStockOnHand(Integer A, Integer B, Integer C, Integer D)
+    {
+        enterBeginningBalance(A.toString());
+        enterQuantityReceived(B.toString());
+        enterQuantityDispensed(C.toString());
+        enterLossesAndAdjustments(D.toString());
+        testWebDriver.waitForElementToAppear(stockOnHand);
+        Integer StockOnHand = A+B-C-D;
+        SeleneseTestNgHelper.assertEquals(stockOnHand.getText().trim(), StockOnHand.toString().trim());
+    }
+
 }

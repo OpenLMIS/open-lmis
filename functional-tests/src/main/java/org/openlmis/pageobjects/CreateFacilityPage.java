@@ -161,7 +161,7 @@ public class CreateFacilityPage extends Page {
         address2.sendKeys("Address2");
 
         testWebDriver.selectByIndex(geographicZone,1);
-        testWebDriver.selectByIndex(facilityType,1);
+        testWebDriver.selectByVisibleText(facilityType,"Lvl3 Hospital");
 
         catchmentPopulation.sendKeys("500000");
         latitude.sendKeys("5555.5555");

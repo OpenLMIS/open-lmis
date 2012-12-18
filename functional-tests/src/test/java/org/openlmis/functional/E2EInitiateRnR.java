@@ -25,12 +25,16 @@ public class E2EInitiateRnR extends TestCaseHelper {
     @Test(dataProvider = "Data-Provider-Function-Positive")
     public void testE2EInitiateRnR(String program,String user, String password,String[] credentials) throws Exception {
 
+
         DBWrapper dbWrapper = new DBWrapper();
 
         dbWrapper.insertUser();
         dbWrapper.insertRoles();
         dbWrapper.insertRoleRights();
         dbWrapper.insertRoleAssignment();
+        dbWrapper.insertProducts();
+        dbWrapper.insertProgramProducts();
+        dbWrapper.insertFacilityApprovedProducts();
 
         LoginPage loginPage=new LoginPage(testWebDriver);
         HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
@@ -48,6 +52,10 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
         InitiateRnRPage initiateRnRPage = homePageUser.navigateAndInitiateRnr(date_time, program);
         initiateRnRPage.verifyRnRHeader(date_time,program);
+
+        initiateRnRPage.calculateAndVerifyStockOnHand(10,20,5,5);
+        initiateRnRPage.saveRnR();
+
         homePageUser.logout();
 
     }
