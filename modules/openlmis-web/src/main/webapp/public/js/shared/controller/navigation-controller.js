@@ -8,9 +8,10 @@ function NavigationController($scope, User, localStorageService) {
         if(rights ==undefined){
             User.get({}, function (data) {
                 rights=data.rights;
-
+                localStorageService.add(localStorageKeys.RIGHT,rights);
 
             }, {});
+
         }
 
         $scope.rights = rights;
