@@ -56,13 +56,15 @@ rnrModule.fill = function (lineItem, programRnrColumnList) {
     }
 
     function fillNormalizedConsumption() {
-        if (!isNumber(c)) {
+        var m = 3; // will be picked up from the database in future
+        var x = isNumber(lineItem.stockOutDays) ? parseInt(lineItem.stockOutDays) : NaN;
+        var f = isNumber(lineItem.newPatientCount) ? parseInt(lineItem.newPatientCount) : NaN;
+
+        if (!isNumber(c) || !isNumber(x) || !isNumber(f)) {
             lineItem.normalizedConsumption = null;
             return;
         }
-        var m = 3; // will be picked up from the database in future
-        var x = isNumber(lineItem.stockOutDays) ? parseInt(lineItem.stockOutDays) : 0;
-        var f = isNumber(lineItem.newPatientCount) ? parseInt(lineItem.newPatientCount) : 0;
+
         var dosesPerMonth = parseInt(lineItem.dosesPerMonth);
         var g = parseInt(lineItem.dosesPerDispensingUnit);
         var consumptionAdjustedWithStockOutDays = ((m * 30) - x) == 0 ? c : (c * ((m * 30) / ((m * 30) - x)));
