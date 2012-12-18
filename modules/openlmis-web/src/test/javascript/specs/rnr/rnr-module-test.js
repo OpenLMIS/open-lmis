@@ -83,11 +83,18 @@ describe('RnrModuleTest', function () {
             ];
         });
 
-        it('should calculate normalized consumption when newPatientCount is not set', function () {
-            var lineItem = {"id":1, "beginningBalance":1, "quantityReceived":10, "quantityDispensed":null, "lossesAndAdjustments":4, "stockInHand":2, "stockOutDays":5, "newPatientCount":null, "dosesPerMonth":30, "dosesPerDispensingUnit":28};
+        it('should not fill normalized consumption when newPatientCount is not set', function () {
+            var lineItem = {"id":1, "beginningBalance":1, "quantityReceived":10, "quantityDispensed":null, "lossesAndAdjustments":4, "stockInHand":2, "stockOutDays":5, "newPatientCount":null};
 
             rnrModule.fill(lineItem, programRnrColumnList);
-            expect(5).toEqual(lineItem.normalizedConsumption);
+            expect(null).toEqual(lineItem.normalizedConsumption);
+        });
+
+        it('should unset normalized consumption when newPatientCount is unset', function () {
+            var lineItem = {"id":1, "beginningBalance":1, "quantityReceived":10, "quantityDispensed":null, "lossesAndAdjustments":4, "stockInHand":2, "stockOutDays":5, "newPatientCount":null, "dosesPerMonth":30, "dosesPerDispensingUnit":28, "normalizedConsumption":10};
+
+            rnrModule.fill(lineItem, programRnrColumnList);
+            expect(null).toEqual(lineItem.normalizedConsumption);
         });
 
         it('should calculate normalized consumption when facility is stocked out for the entire reporting period', function () {
@@ -97,11 +104,18 @@ describe('RnrModuleTest', function () {
             expect(65).toEqual(lineItem.normalizedConsumption);
         });
 
-        it('should calculate normalized consumption when newPatientCount and stockOutDays is not set', function () {
-            var lineItem = {"id":1, "beginningBalance":1, "quantityReceived":10, "quantityDispensed":null, "lossesAndAdjustments":4, "stockInHand":2, "stockOutDays":null, "newPatientCount":null, "dosesPerMonth":30, "dosesPerDispensingUnit":28};
+        it('should not fill normalized consumption when stockOutDays is not set', function () {
+            var lineItem = {"id":1, "beginningBalance":1, "quantityReceived":10, "quantityDispensed":null, "lossesAndAdjustments":4, "stockInHand":2, "stockOutDays":null, "newPatientCount":10};
 
             rnrModule.fill(lineItem, programRnrColumnList);
-            expect(5).toEqual(lineItem.normalizedConsumption);
+            expect(null).toEqual(lineItem.normalizedConsumption);
+        });
+
+        it('should unset normalized consumption when stockOutDays is unset', function () {
+            var lineItem = {"id":1, "beginningBalance":1, "quantityReceived":10, "quantityDispensed":null, "lossesAndAdjustments":4, "stockInHand":2, "stockOutDays":null, "newPatientCount":10, "dosesPerMonth":30, "dosesPerDispensingUnit":28, "normalizedConsumption":10};
+
+            rnrModule.fill(lineItem, programRnrColumnList);
+            expect(null).toEqual(lineItem.normalizedConsumption);
         });
 
         it('should calculate normalized consumption when newPatientCount is set', function () {
@@ -141,10 +155,10 @@ describe('RnrModuleTest', function () {
 
         it('should set AMC to be equal to normalized consumption', function () {
             var lineItem = {"id":1, "beginningBalance":5, "quantityReceived":20, "quantityDispensed":null,
-                "lossesAndAdjustments":5, "stockInHand":10, "dosesPerMonth":10, "dosesPerDispensingUnit":10};
+                "lossesAndAdjustments":5, "stockInHand":10, "stockOutDays":5, "newPatientCount":10, "dosesPerMonth":10, "dosesPerDispensingUnit":10};
 
             rnrModule.fill(lineItem, programRnrColumnList);
-            expect(10).toEqual(lineItem.amc);
+            expect(lineItem.normalizedConsumption).toEqual(lineItem.amc);
         });
 
         it('should un-set AMC when normalized consumption would be unset', function () {
