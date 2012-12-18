@@ -38,7 +38,7 @@ public class InitiateRnRPage extends Page {
     @FindBy(how = How.ID, using = "D_0")
     private static WebElement lossesAndAdjustments;
 
-    @FindBy(how = How.ID, using = "E_0")
+    @FindBy(how = How.XPATH, using = "//span[@id='E_0']")
     private static WebElement stockOnHand;
 
     String successText="R&R saved successfully!";
@@ -70,21 +70,26 @@ public class InitiateRnRPage extends Page {
 
     public void enterBeginningBalance(String A)
     {
+        testWebDriver.sleep(1000);
+        testWebDriver.waitForElementToAppear(beginningBalance);
         beginningBalance.sendKeys(A);
     }
 
     public void enterQuantityReceived(String B)
     {
+        testWebDriver.waitForElementToAppear(quantityReceived);
         quantityReceived.sendKeys(B);
     }
 
     public void enterQuantityDispensed(String C)
     {
+        testWebDriver.waitForElementToAppear(quantityDispensed);
         quantityDispensed.sendKeys(C);
     }
 
     public void enterLossesAndAdjustments(String D)
     {
+        testWebDriver.waitForElementToAppear(lossesAndAdjustments);
         lossesAndAdjustments.sendKeys(D);
     }
 
@@ -96,7 +101,7 @@ public class InitiateRnRPage extends Page {
         enterLossesAndAdjustments(D.toString());
         testWebDriver.waitForElementToAppear(stockOnHand);
         Integer StockOnHand = A+B-C-D;
-        testWebDriver.sleep(1500);
+        testWebDriver.sleep(2000);
         SeleneseTestNgHelper.assertEquals(stockOnHand.getText().trim(), StockOnHand.toString().trim());
     }
 
