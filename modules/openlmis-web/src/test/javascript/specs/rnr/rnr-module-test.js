@@ -185,15 +185,17 @@ describe('RnrModuleTest', function () {
         });
 
         it('should set maxStockQuantity', function () {
-            var lineItem = {"id":1, "beginningBalance":5, "quantityReceived":20, "quantityDispensed":null,
-                "lossesAndAdjustments":5, "stockInHand":10, "stockOutDays":5, "newPatientCount":10, "dosesPerMonth":10, "dosesPerDispensingUnit":10, "maxMonthsOfStock":3};
+            var lineItem = {"id":1, "beginningBalance":5, "quantityReceived":20, "quantityDispensed":null, "newPatientCount":0, "stockOutDays":0,
+                "lossesAndAdjustments":5, "stockInHand":10, "dosesPerMonth":10, "dosesPerDispensingUnit":10, "maxMonthsOfStock":3};
 
             rnrModule.fill(lineItem, programRnrColumnList);
-            expect(123).toEqual(lineItem.maxStockQuantity);
+
+            expect(10).toEqual(lineItem.normalizedConsumption);
+            expect(30).toEqual(lineItem.maxStockQuantity);
         });
 
         it('should not set maxStockQuantity if amc is not set', function () {
-            var lineItem = {"id":1, "beginningBalance":null, "quantityReceived":10, "quantityDispensed":null, "lossesAndAdjustments":null,
+            var lineItem = {"id":1, "beginningBalance":null, "quantityReceived":10, "quantityDispensed":null, "lossesAndAdjustments":null, "newPatientCount":0, "stockOutDays":0,
                 "stockInHand":2, "dosesPerMonth":30, "dosesPerDispensingUnit":28, "normalizedConsumption":null, "maxMonthsOfStock":3};
 
             rnrModule.fill(lineItem, programRnrColumnList);
@@ -217,7 +219,7 @@ describe('RnrModuleTest', function () {
         });
 
         it('should set calculatedOrderQuantity', function () {
-            var lineItem = {"id":1, "beginningBalance":5, "quantityReceived":20, "quantityDispensed":null,
+            var lineItem = {"id":1, "beginningBalance":5, "quantityReceived":20, "quantityDispensed":null, "newPatientCount":0, "stockOutDays":0,
                 "lossesAndAdjustments":5, "stockInHand":10, "dosesPerMonth":10, "dosesPerDispensingUnit":10, "maxMonthsOfStock":3};
 
             rnrModule.fill(lineItem, programRnrColumnList);
@@ -225,7 +227,7 @@ describe('RnrModuleTest', function () {
         });
 
         it('should not set calculatedOrderQuantity when stock in hand is not set', function () {
-            var lineItem = {"id":1, "beginningBalance":5, "quantityReceived":20, "quantityDispensed":null,
+            var lineItem = {"id":1, "beginningBalance":5, "quantityReceived":20, "quantityDispensed":null, "newPatientCount":0, "stockOutDays":0,
                 "lossesAndAdjustments":5, "stockInHand":null, "dosesPerMonth":10, "dosesPerDispensingUnit":10, "maxMonthsOfStock":3};
 
             rnrModule.fill(lineItem, programRnrColumnList);
