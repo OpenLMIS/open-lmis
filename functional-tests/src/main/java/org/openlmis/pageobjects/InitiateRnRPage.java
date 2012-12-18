@@ -96,6 +96,7 @@ public class InitiateRnRPage extends Page {
         enterLossesAndAdjustments(D.toString());
         testWebDriver.waitForElementToAppear(stockOnHand);
         Integer StockOnHand = A+B-C-D;
+        testWebDriver.sleep(1500);
         SeleneseTestNgHelper.assertEquals(stockOnHand.getText().trim(), StockOnHand.toString().trim());
     }
 
