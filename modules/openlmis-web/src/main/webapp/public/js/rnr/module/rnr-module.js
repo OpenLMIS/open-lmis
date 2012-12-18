@@ -84,6 +84,14 @@ rnrModule.fill = function (lineItem, programRnrColumnList) {
         lineItem.maxStockQuantity = lineItem.amc * lineItem.maxMonthsOfStock;
     }
 
+    function fillCalculatedOrderQuantity() {
+        if (!isNumber(lineItem.maxStockQuantity) || !isNumber(lineItem.stockInHand)) {
+            lineItem.calculatedOrderQuantity = null;
+            return;
+        }
+        lineItem.calculatedOrderQuantity = lineItem.maxStockQuantity - lineItem.stockInHand;
+    }
+
     var getSource = function (indicator) {
         var code;
         $(programRnrColumnList).each(function (i, column) {
@@ -106,5 +114,5 @@ rnrModule.fill = function (lineItem, programRnrColumnList) {
     fillNormalizedConsumption();
     fillAMC();
     fillMaxStockQuantity();
-
+    fillCalculatedOrderQuantity();
 }
