@@ -32,5 +32,13 @@ describe('Rnr Template controllers', function () {
       expect(scope.sources).toEqual(sources);
     });
 
+    it('should toggle arithmetic validation flag', function() {
+      scope.validate = true;
+      scope.toggleValidateFlag();
+      expect(scope.validate).toBeFalsy();
+    });
+
+
+
   });
 });

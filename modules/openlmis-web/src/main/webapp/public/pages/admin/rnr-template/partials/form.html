@@ -46,7 +46,7 @@
         <input type="hidden" class="rnr-column-position" ng-model="rnrColumn.position" value="{{ rnrColumn.position }}"/>
         <span class="tpl-source">
             <span ng-show="rnrColumn.sourceConfigurable">
-                <select ng-model="rnrColumn.source.code" ng-options="c.code as c.description for c in sources">
+                <select ng-model="rnrColumn.source.code" ng-options="c.code as c.description for c in sources" ng-change= "setValidateMessageShownFlag()">
                 </select>
             </span>
             <span ng-hide="rnrColumn.sourceConfigurable">
@@ -58,13 +58,18 @@
         </li>
       </ul>
     </div>
-    <div class="alert alert-error" id="saveSuccessMsgDiv" ng-model="error" ng-show="error">
+
+    <div class="alert alert-error" id="saveErrorMsgDiv" ng-model="error" ng-show="error">
       {{error}}
     </div>
     <div class="alert alert-success" id="saveSuccessMsgDiv" ng-model="message" ng-show="message">
       {{message}}
     </div>
 
+    <div ng-show="validateMessageShown">
+      Total Quantity Consumed ( C ) and Stock On Hand (E) are configured as user inputs. Validation of inputs (C = A + B +/- D -E) is {{validateLabel}}
+      <a href="javascript:void(0);" ng-click= "toggleValidateFlag()">Turn {{buttonLabel}}</a>
+    </div>
     <input type="submit" class="btn" value="Save" />
   </form>
 </div>
