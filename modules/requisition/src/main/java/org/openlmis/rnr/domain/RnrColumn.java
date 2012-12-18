@@ -19,7 +19,7 @@ public class RnrColumn {
     private boolean visible;
     private boolean mandatory;
     private String description;
-    private Boolean validated;
+    private boolean validated = true;
 
     @SuppressWarnings(value = "unused")
     public void setSourceString(String sourceString) {
