@@ -9,7 +9,7 @@ function NavigationController($scope, User, localStorageService) {
             User.get({}, function (data) {
                 rights=data.rights;
 
-                location.reload();
+
             }, {});
         }
 
