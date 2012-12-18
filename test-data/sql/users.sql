@@ -16,6 +16,11 @@ INSERT INTO users
   (id, userName, password, role, facilityId) VALUES
   (200, 'User123', 'Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==','USER', (SELECT id FROM facilities WHERE code = 'F1756'));
 
+INSERT INTO supervisory_nodes
+  (parentId, facilityId, name, code, approvalPoint) VALUES
+  (null, (SELECT id FROM facilities WHERE code = 'F1756'), 'Node 1', 'N1', true);
+
 INSERT INTO role_assignments
-  (userId, roleId, programId) VALUES
-  (200, 2, 1);
+  (userId, roleId, programId, supervisoryNodeId) VALUES
+  (200, 2, 1, null),
+  (200, 2, 1, (SELECT id from supervisory_nodes WHERE code = 'N1'));
