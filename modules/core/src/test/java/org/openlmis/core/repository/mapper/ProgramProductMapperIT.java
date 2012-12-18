@@ -22,6 +22,7 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.ProductBuilder.*;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
@@ -76,20 +77,20 @@ public class ProgramProductMapperIT {
         Product pro06 = product("PRO06", true, 5);
         Product pro07 = product("PRO07", true, null);
 
-        addToProgram(yellowFeverProgram, pro01, true);
-        addToProgram(yellowFeverProgram, pro02, true);
-        addToProgram(yellowFeverProgram, pro03, true);
-        addToProgram(yellowFeverProgram, pro04, false);
-        addToProgram(yellowFeverProgram, pro05, true);
-        addToProgram(yellowFeverProgram, pro06, true);
-        addToProgram(bpProgram, pro07, true);
+        ProgramProduct programProduct1 = addToProgramProduct(yellowFeverProgram, pro01, true);
+        ProgramProduct programProduct2 = addToProgramProduct(yellowFeverProgram, pro02, true);
+        ProgramProduct programProduct3 = addToProgramProduct(yellowFeverProgram, pro03, true);
+        ProgramProduct programProduct4 = addToProgramProduct(yellowFeverProgram, pro04, false);
+        ProgramProduct programProduct5 = addToProgramProduct(yellowFeverProgram, pro05, true);
+        ProgramProduct programProduct6 = addToProgramProduct(yellowFeverProgram, pro06, true);
+        ProgramProduct programProduct7 = addToProgramProduct(bpProgram, pro07, true);
 
-        addToFacilityType("warehouse", pro01);
-        addToFacilityType("warehouse", pro03);
-        addToFacilityType("warehouse", pro04);
-        addToFacilityType("warehouse", pro05);
-        addToFacilityType("warehouse", pro06);
-        addToFacilityType("warehouse", pro07);
+        addToFacilityType("warehouse", programProduct1);
+        addToFacilityType("warehouse", programProduct3);
+        addToFacilityType("warehouse", programProduct4);
+        addToFacilityType("warehouse", programProduct5);
+        addToFacilityType("warehouse", programProduct6);
+        addToFacilityType("warehouse", programProduct7);
 
         List<ProgramProduct> programProducts = programProductMapper.getFullSupplyProductsByFacilityAndProgram(facilityId, yellowFeverProgram.getCode());
         assertEquals(3, programProducts.size());
@@ -102,9 +103,9 @@ public class ProgramProductMapperIT {
         assertEquals("PRO05", product.getCode());
         assertEquals("Primary Name", product.getPrimaryName());
         assertEquals("strength", product.getStrength());
-        Assert.assertThat(product.getForm().getCode(), Is.is("Tablet"));
+        assertThat(product.getForm().getCode(), Is.is("Tablet"));
         assertEquals("Strip", product.getDispensingUnit());
-        Assert.assertThat(product.getDosageUnit().getCode(), Is.is("mg"));
+        assertThat(product.getDosageUnit().getCode(), Is.is("mg"));
         assertNotNull(product.getForm());
         assertEquals("Tablet", product.getForm().getCode());
         assertNotNull(product.getDosageUnit());
@@ -115,8 +116,8 @@ public class ProgramProductMapperIT {
         assertEquals("PRO01", programProducts.get(2).getProduct().getCode());
     }
 
-    private void addToFacilityType(String facilityType, Product product) {
-        facilityApprovedProductMapper.insert(new FacilityApprovedProduct(facilityType, product.getCode(), MAX_MONTHS_OF_STOCK));
+    private void addToFacilityType(String facilityType, ProgramProduct programProduct) {
+        facilityApprovedProductMapper.insert(new FacilityApprovedProduct(facilityType, programProduct.getId(), MAX_MONTHS_OF_STOCK));
     }
 
     private Product product(String productCode, boolean isFullSupply, Integer order) {
@@ -125,9 +126,9 @@ public class ProgramProductMapperIT {
         return product;
     }
 
-    private void addToProgram(Program program, Product product, boolean isActive) {
+    private ProgramProduct addToProgramProduct(Program program, Product product, boolean isActive) {
         ProgramProduct programProduct = new ProgramProduct(program, product, 30, isActive);
-        programProductMapper.insert(programProduct);
-
+        programProduct.setId(programProductMapper.insert(programProduct));
+        return programProduct;
     }
 }

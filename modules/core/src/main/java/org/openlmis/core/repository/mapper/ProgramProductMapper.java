@@ -23,12 +23,10 @@ public interface ProgramProductMapper {
             "pp.programId, pp.dosesPerMonth " +
             "FROM products p, facility_approved_products fap, program_products pp, facilities f, " +
             "product_form pf , dosage_unit du where " +
-            "pp.programId = (select id from programs " +
-            "WHERE LOWER(code) =  LOWER(#{programCode})) " +
+            "pp.programId = (select id from programs WHERE LOWER(code) =  LOWER(#{programCode})) " +
             "AND f.id = #{facilityId} AND f.typeId = fap.facilityTypeId " +
-            "AND fap.productId = p.id " +
-            "AND fap.productId = pp.productId " +
-            "AND pp.productId = p.id " +
+            "AND fap.programProductId = pp.id " +
+            "AND p.id = pp.productId " +
             "AND pf.id = p.formId " +
             "AND du.id = p.dosageUnitId " +
             "AND p.fullSupply = 'TRUE' " +
@@ -47,4 +45,6 @@ public interface ProgramProductMapper {
     })
     List<ProgramProduct> getFullSupplyProductsByFacilityAndProgram(@Param("facilityId") Integer facilityId,
                                                                    @Param("programCode") String programCode);
+    // TODO : use programId
+
 }

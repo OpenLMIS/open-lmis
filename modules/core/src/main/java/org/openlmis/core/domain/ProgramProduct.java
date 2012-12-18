@@ -30,4 +30,5 @@ public class ProgramProduct implements Importable {
         this.dosesPerMonth = dosesPerMonth;
         this.active = active;
     }
+
 }

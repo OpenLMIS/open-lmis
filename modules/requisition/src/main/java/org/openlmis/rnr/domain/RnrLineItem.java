@@ -13,36 +13,35 @@ public class RnrLineItem {
 
     private Integer id;
     private Integer rnrId;
+
     //todo hack to display it on UI. This is concatenated string of Product properties like name, strength, form and dosage unit
     private String product;
     private String productCode;
     private Integer dosesPerMonth;
     private Integer dosesPerDispensingUnit;
     private String unitOfIssue;
+    private String maxMonthsOfStock;
 
     private Integer quantityReceived;
-
-  //TODO  rename to quantityConsumed
     private Integer quantityDispensed;
     private Integer beginningBalance;
-    private Integer estimatedConsumption;
-    private Integer stockInHand;
-    private Integer quantityRequested;
-    private String reasonForRequestedQuantity;
-    private Integer calculatedOrderQuantity;
-
-    private Integer quantityApproved;
     private Integer lossesAndAdjustments;
     private String reasonForLossesAndAdjustments;
-
-    private Integer newPatientCount;
+    private Integer stockInHand;
     private Integer stockOutDays;
-    private Float normalizedConsumption;
+    private Integer newPatientCount;
+    private Integer quantityRequested;
+    private String reasonForRequestedQuantity;
+
     private Float amc;
+    private Float normalizedConsumption;
+    private Integer calculatedOrderQuantity;
     private Integer maxStockQuantity;
 
-    private Integer packsToShip;
+    private Integer quantityApproved;
+
     private Float cost;
+    private Integer packsToShip;
     private String remarks;
 
     private String modifiedBy;
@@ -61,7 +60,7 @@ public class RnrLineItem {
     }
 
     private String productName(Product product) {
-        return  (product.getPrimaryName() == null ? "" : (product.getPrimaryName() + " ")) +
+        return (product.getPrimaryName() == null ? "" : (product.getPrimaryName() + " ")) +
                 (product.getForm().getCode() == null ? "" : (product.getForm().getCode() + " ")) +
                 (product.getStrength() == null ? "" : (product.getStrength() + " ")) +
                 (product.getDosageUnit().getCode() == null ? "" : product.getDosageUnit().getCode());

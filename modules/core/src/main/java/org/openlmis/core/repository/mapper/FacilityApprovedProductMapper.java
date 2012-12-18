@@ -8,9 +8,8 @@ import org.springframework.stereotype.Repository;
 public interface FacilityApprovedProductMapper {
 
     @Insert("INSERT INTO facility_approved_products(" +
-            "facilityTypeId, productId, maxMonthsOfStock, modifiedBy, modifiedDate) values " +
+            "facilityTypeId, programProductId, maxMonthsOfStock, modifiedBy, modifiedDate) values " +
             "((SELECT id FROM facility_type WHERE LOWER(code) = LOWER(#{facilityTypeCode}))," +
-            "(SELECT id FROM products WHERE LOWER(code) = LOWER(#{productCode})), " +
-            "#{maxMonthsOfStock}, #{modifiedBy}, #{modifiedDate})")
+            "#{programProductId}, #{maxMonthsOfStock}, #{modifiedBy}, #{modifiedDate})")
     int insert(FacilityApprovedProduct facilityApprovedProduct);
 }

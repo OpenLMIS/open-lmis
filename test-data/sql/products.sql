@@ -13,7 +13,7 @@ insert into program_products(programId, productId, dosesPerMonth, active) values
 (1, 2, 30, true),
 (1, 3, 30, true);
 
-insert into facility_approved_products(facilityTypeId, productId, maxMonthsOfStock) values
-(1, 1, 3),
-(1, 2, 3),
-(1, 3, 3);
+insert into facility_approved_products(facilityTypeId, programProductId, maxMonthsOfStock) values
+(1, (select id from program_products where programId=1 and productId=1), 3),
+(1, (select id from program_products where programId=1 and productId=2), 3),
+(1, (select id from program_products where programId=1 and productId=3), 3);

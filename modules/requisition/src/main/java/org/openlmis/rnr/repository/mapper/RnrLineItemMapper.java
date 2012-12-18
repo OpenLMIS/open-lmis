@@ -21,7 +21,6 @@ public interface RnrLineItemMapper {
             "SET quantityReceived = #{quantityReceived}, "+
             " quantityDispensed = #{quantityDispensed}, "+
             " beginningBalance = #{beginningBalance}, "+
-            " estimatedConsumption = #{estimatedConsumption}, "+
             " stockInHand = #{stockInHand}, "+
             " quantityRequested = #{quantityRequested}, "+
             " reasonForRequestedQuantity = #{reasonForRequestedQuantity}, "+

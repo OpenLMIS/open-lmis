@@ -11,9 +11,10 @@ public class FacilityApprovedProduct {
 
     private int id;
 
+    // TODO : change this to id
     private String facilityTypeCode;
 
-    private String productCode;
+    private Integer programProductId;
 
     private Integer maxMonthsOfStock;
 
@@ -21,9 +22,9 @@ public class FacilityApprovedProduct {
 
     private Date modifiedDate;
 
-    public FacilityApprovedProduct(String facilityTypeCode, String productCode, Integer maxMonthsOfStock) {
+    public FacilityApprovedProduct(String facilityTypeCode, Integer programProductId, Integer maxMonthsOfStock) {
         this.facilityTypeCode = facilityTypeCode;
-        this.productCode = productCode;
+        this.programProductId = programProductId;
         this.maxMonthsOfStock = maxMonthsOfStock;
     }
 
