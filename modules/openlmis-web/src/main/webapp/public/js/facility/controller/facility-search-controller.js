@@ -9,9 +9,10 @@ function FacilitySearchController($scope, facilities, $location) {
 
   $scope.filterFacilitiesByNameOrCode = function(query) {
     var filteredFacilities = [];
-    var queryRegExp = RegExp(query, 'i');
+    query = query || "";
+
     angular.forEach($scope.facilityList, function(facility) {
-      if (facility.name.match(queryRegExp) || facility.code.match(queryRegExp)) {
+      if (facility.name.toLowerCase().indexOf(query.toLowerCase()) >= 0 || facility.code.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
         filteredFacilities.push(facility);
       }
     });
