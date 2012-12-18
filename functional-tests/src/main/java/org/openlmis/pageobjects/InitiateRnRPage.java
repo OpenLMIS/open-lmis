@@ -38,7 +38,7 @@ public class InitiateRnRPage extends Page {
     @FindBy(how = How.ID, using = "D_0")
     private static WebElement lossesAndAdjustments;
 
-    @FindBy(how = How.XPATH, using = "//span[@id='E_0']")
+    @FindBy(how = How.ID, using = "E_0")
     private static WebElement stockOnHand;
 
     String successText="R&R saved successfully!";
