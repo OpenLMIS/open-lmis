@@ -210,7 +210,7 @@ describe('RnrModuleTest', function () {
             programRnrColumnList = [
                 {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}},
                 {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
-                {"indicator":"C", "name":"quantityDispensed", "source":{"name":"CALCULATED"}},
+                {"indicator":"C", "name":"quantityDispensed", "source":{"name":"USER_INPUT"}},
                 {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}},
                 {"indicator":"E", "name":"stockInHand", "source":{"name":"CALCULATED"}},
                 {"indicator":"F", "name":"newPatientCount", "source":{"name":"USER_INPUT"}},
@@ -219,11 +219,11 @@ describe('RnrModuleTest', function () {
         });
 
         it('should set calculatedOrderQuantity', function () {
-            var lineItem = {"id":1, "beginningBalance":5, "quantityReceived":20, "quantityDispensed":null, "newPatientCount":0, "stockOutDays":0,
-                "lossesAndAdjustments":5, "stockInHand":10, "dosesPerMonth":10, "dosesPerDispensingUnit":10, "maxMonthsOfStock":3};
+            var lineItem = {"id":1, "beginningBalance":5, "quantityReceived":20, "quantityDispensed":15, "newPatientCount":0, "stockOutDays":0,
+                "lossesAndAdjustments":5, "stockInHand":null, "dosesPerMonth":10, "dosesPerDispensingUnit":10, "maxMonthsOfStock":3};
 
             rnrModule.fill(lineItem, programRnrColumnList);
-            expect(20).toEqual(lineItem.calculatedOrderQuantity);
+            expect(40).toEqual(lineItem.calculatedOrderQuantity);
         });
 
         it('should not set calculatedOrderQuantity when stock in hand is not set', function () {
@@ -232,6 +232,14 @@ describe('RnrModuleTest', function () {
 
             rnrModule.fill(lineItem, programRnrColumnList);
             expect(null).toEqual(lineItem.calculatedOrderQuantity);
+        });
+
+        it('should set calculatedOrderQuantity to 0 when value goes negative', function () {
+            var lineItem = {"id":1, "beginningBalance":40, "quantityReceived":10, "quantityDispensed":10, "newPatientCount":10, "stockOutDays":100,
+                "lossesAndAdjustments":10, "stockInHand":null, "dosesPerMonth":30, "dosesPerDispensingUnit":10, "maxMonthsOfStock":3};
+
+            rnrModule.fill(lineItem, programRnrColumnList);
+            expect(0).toEqual(lineItem.calculatedOrderQuantity);
         });
     });
 });

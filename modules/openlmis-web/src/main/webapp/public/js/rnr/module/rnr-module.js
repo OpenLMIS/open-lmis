@@ -90,6 +90,7 @@ rnrModule.fill = function (lineItem, programRnrColumnList) {
             return;
         }
         lineItem.calculatedOrderQuantity = lineItem.maxStockQuantity - lineItem.stockInHand;
+        lineItem.calculatedOrderQuantity < 0 ? (lineItem.calculatedOrderQuantity = 0) : 0;
     }
 
     var getSource = function (indicator) {
