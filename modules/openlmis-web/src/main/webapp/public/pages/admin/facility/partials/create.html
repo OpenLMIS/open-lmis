@@ -174,9 +174,7 @@
               </select>
             </div>
           </div>
-        </div>
 
-        <div class="form-row clearfix">
           <div class="form-cell">
             <table class="table table-striped table-bordered" ng-show="facility.supportedPrograms">
               <thead>
@@ -367,57 +365,54 @@
         </div>
       </div><!-- /form-group -->
 
-      <div class="form-row clearfix">
-        <div class="form-cell">
-          <div class="alert alert-error" id="saveErrorMsgDiv" ng-model="error" ng-show="error">
-            {{error}}
-          </div>
-          <div class="alert alert-success" id="saveSuccessMsgDiv" ng-model="message" ng-show="message">
-            {{message}}
-          </div>
-        </div>
-      </div>
-
-      <div class="action-buttons">
+      <div id="action_buttons" class="action-buttons">
         <div class="form-cell button-row" ng-show="facility.dataReportable == 'true'">
-          <input type="submit" class="btn" value="Save"/>
+          <input type="submit" class="btn btn-success save-button" value="Save"/>
+          <a href="" class="btn btn-danger delete-button" ng-show="facility.id!=null" ng-click="deleteConfirmModal=true">Delete</a>
         </div>
+        <div class="form-cell button-row" ng-show="facility.dataReportable == 'false'">
+          <a href="" class="btn btn-success save-button" ng-show="facility.id!=null" ng-click="restoreConfirmModal=true">Restore</a>
+        </div>
+
+        <div class="toolbar-error" id="saveErrorMsgDiv" ng-model="error" ng-show="error">
+          {{error}}
+        </div>
+        <div class="toolbar-success" id="saveSuccessMsgDiv" ng-model="message" ng-show="message">
+          {{message}}
+        </div>
+        
       </div>
 
       <div id="deleteModal" class="fade ng-pristine ng-valid modal hide" ui-modal="" ng-model="deleteConfirmModal">
-          <div class="modal-header"><h1>Delete Facility</h1></div>
+          <div class="modal-header"><h3>Delete Facility</h3></div>
           <div class="modal-body">
               <p>"{{originalFacilityName}} / "{{originalFacilityCode}}" will be soft-deleted from the system</p>
           </div>
           <div class="modal-footer">
-              <a href="" class="btn" ng-click="deleteFacility()" data-dismiss="modal">OK</a>
+              <a href="" class="btn btn-danger" ng-click="deleteFacility()" data-dismiss="modal">Delete</a>
               <a href="" class="btn" data-dismiss="modal">Cancel</a>
           </div>
       </div>
       <div id="restoreConfirmModal" class="fade ng-pristine ng-valid modal hide" ui-modal="" ng-model="restoreConfirmModal">
-          <div class="modal-header"><h1>Restore Facility</h1></div>
+          <div class="modal-header"><h3>Restore Facility</h3></div>
           <div class="modal-body">
               <p>"{{originalFacilityName}}" / "{{originalFacilityCode}}" will be restored in the system</p>
           </div>
           <div class="modal-footer">
-              <a href="" class="btn" ng-click="activeConfirmModal=true" data-dismiss="modal">OK</a>
+              <a href="" class="btn btn-primary" ng-click="activeConfirmModal=true" data-dismiss="modal">OK</a>
               <a href="" class="btn" data-dismiss="modal">Cancel</a>
           </div>
       </div>
       <div id="activeConfirmModel" class="fade ng-pristine ng-valid modal hide" ui-modal="" ng-model="activeConfirmModal">
-          <div class="modal-header"><h1>Activate Facility</h1></div>
+          <div class="modal-header"><h3>Activate Facility</h3></div>
           <div class="modal-body">
-              <p>Do you want to set facility as Active?</p>
+              <p>Do you want to set facility as active?</p>
           </div>
           <div class="modal-footer">
-              <a href="" class="btn" ng-click="restoreFacility(true)" data-dismiss="modal">YES</a>
-              <a href="" class="btn" ng-click="restoreFacility(false)" data-dismiss="modal">NO</a>
+              <a href="" class="btn btn-primary" ng-click="restoreFacility(true)" data-dismiss="modal">Yes</a>
+              <a href="" class="btn" ng-click="restoreFacility(false)" data-dismiss="modal">No</a>
           </div>
       </div>
-
-
-      <a href="" class="btn" ng-show="facility.id!=null && facility.dataReportable == 'true'" ng-click="deleteConfirmModal=true">Delete</a><br>
-      <a href="" class="btn" ng-show="facility.id!=null && facility.dataReportable == 'false'" ng-click="restoreConfirmModal=true">Restore</a><br>
     </div>
 
   </form>

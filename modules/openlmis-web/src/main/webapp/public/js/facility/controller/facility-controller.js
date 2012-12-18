@@ -78,6 +78,11 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
     $scope.facility.active = active;
     postFacilityRequest('/admin/facility/update/restore.json');
   }
+
+  $scope.fixToolBar = function() {
+    var toolbarWidth = window.innerWidth - 279;
+    angular.element("#action_buttons").css("width", toolbarWidth + "px");
+  }();
 }
 
 var populateFlags = function ($scope) {
