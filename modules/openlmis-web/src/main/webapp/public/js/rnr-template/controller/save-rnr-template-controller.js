@@ -44,7 +44,6 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, $http) {
         }
         else{
           $scope.validateMessageShown = false;
-          $scope.validate = false;
           return (false);
         }
       }
