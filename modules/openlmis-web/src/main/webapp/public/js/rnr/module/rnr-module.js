@@ -55,12 +55,32 @@ rnrModule.fill = function (lineItem, programRnrColumnList) {
         e = lineItem.stockInHand = (isNumber(a) && isNumber(b) && isNumber(c) && isNumber(d)) ? a + b - d - c : null;
     }
 
+    var getSource = function (indicator) {
+        var code = null;
+        $(programRnrColumnList).each(function (i, column) {
+            if (column.indicator == indicator) {
+                code = column.source.name;
+                return false;
+            }
+        });
+        return code;
+    };
+
     function fillNormalizedConsumption() {
         var m = 3; // will be picked up from the database in future
-        var x = isNumber(lineItem.stockOutDays) ? parseInt(lineItem.stockOutDays) : NaN;
-        var f = isNumber(lineItem.newPatientCount) ? parseInt(lineItem.newPatientCount) : NaN;
+        var x = isNumber(lineItem.stockOutDays) ? parseInt(lineItem.stockOutDays) : null;
 
-        if (!isNumber(c) || !isNumber(x) || !isNumber(f)) {
+        var f = 0;
+        if (getSource('F') != null) {
+            if (isNumber(lineItem.newPatientCount)) {
+                f = parseInt(lineItem.newPatientCount);
+            } else {
+                lineItem.normalizedConsumption = null;
+                return;
+            }
+        }
+
+        if (!isNumber(c) || !isNumber(x)) {
             lineItem.normalizedConsumption = null;
             return;
         }
@@ -92,17 +112,6 @@ rnrModule.fill = function (lineItem, programRnrColumnList) {
         lineItem.calculatedOrderQuantity = lineItem.maxStockQuantity - lineItem.stockInHand;
         lineItem.calculatedOrderQuantity < 0 ? (lineItem.calculatedOrderQuantity = 0) : 0;
     }
-
-    var getSource = function (indicator) {
-        var code;
-        $(programRnrColumnList).each(function (i, column) {
-            if (column.indicator == indicator) {
-                code = column.source.name;
-                return false;
-            }
-        });
-        return code;
-    };
 
     var a = parseInt(lineItem.beginningBalance);
     var b = parseInt(lineItem.quantityReceived);

@@ -83,7 +83,7 @@ describe('RnrModuleTest', function () {
             ];
         });
 
-        it('should not fill normalized consumption when newPatientCount is not set', function () {
+        it('should not fill normalized consumption when newPatientCount is displayed but not set', function () {
             var lineItem = {"id":1, "beginningBalance":1, "quantityReceived":10, "quantityDispensed":null, "lossesAndAdjustments":4, "stockInHand":2, "stockOutDays":5, "newPatientCount":null};
 
             rnrModule.fill(lineItem, programRnrColumnList);
@@ -118,7 +118,7 @@ describe('RnrModuleTest', function () {
             expect(null).toEqual(lineItem.normalizedConsumption);
         });
 
-        it('should calculate normalized consumption when newPatientCount is set', function () {
+        it('should calculate normalized consumption when newPatientCount is displayed and set', function () {
             var lineItem = {"id":1, "beginningBalance":1, "quantityReceived":10, "quantityDispensed":null, "lossesAndAdjustments":4, "stockInHand":2, "stockOutDays":5, "newPatientCount":10, "dosesPerMonth":30, "dosesPerDispensingUnit":28};
 
             rnrModule.fill(lineItem, programRnrColumnList);
@@ -138,6 +138,23 @@ describe('RnrModuleTest', function () {
             rnrModule.fill(lineItem, programRnrColumnList);
             expect(null).toEqual(lineItem.normalizedConsumption);
         });
+
+        it('should calculate normalized consumption when newPatientCount is not displayed', function () {
+            programRnrColumnList = [
+                {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}},
+                {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
+                {"indicator":"C", "name":"quantityDispensed", "source":{"name":"CALCULATED"}},
+                {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}},
+                {"indicator":"E", "name":"stockInHand", "source":{"name":"CALCULATED"}},
+                {"indicator":"X", "name":"stockOutDays", "source":{"name":"USER_INPUT"}}
+            ];
+            var lineItem = {"id":1, "beginningBalance":1, "quantityReceived":10, "quantityDispensed":null,
+                "lossesAndAdjustments":4, "stockInHand":2, "stockOutDays":5, "newPatientCount":null, "dosesPerMonth":30, "dosesPerDispensingUnit":28};
+
+            rnrModule.fill(lineItem, programRnrColumnList);
+            expect(5).toEqual(lineItem.normalizedConsumption);
+        });
+
     });
 
     describe('Fill AMC', function () {
