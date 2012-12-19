@@ -73,24 +73,32 @@ public class InitiateRnRPage extends Page {
         testWebDriver.sleep(1000);
         testWebDriver.waitForElementToAppear(beginningBalance);
         beginningBalance.sendKeys(A);
+        String beginningBalanceValue=testWebDriver.getAttribute(beginningBalance,"value");
+        SeleneseTestNgHelper.assertEquals(beginningBalanceValue, A);
     }
 
     public void enterQuantityReceived(String B)
     {
         testWebDriver.waitForElementToAppear(quantityReceived);
         quantityReceived.sendKeys(B);
+        String quantityReceivedValue=testWebDriver.getAttribute(quantityReceived,"value");
+        SeleneseTestNgHelper.assertEquals(quantityReceivedValue, B);
     }
 
     public void enterQuantityDispensed(String C)
     {
         testWebDriver.waitForElementToAppear(quantityDispensed);
         quantityDispensed.sendKeys(C);
+        String quantityDispensedValue=testWebDriver.getAttribute(quantityDispensed,"value");
+        SeleneseTestNgHelper.assertEquals(quantityDispensedValue, C);
     }
 
     public void enterLossesAndAdjustments(String D)
     {
         testWebDriver.waitForElementToAppear(lossesAndAdjustments);
         lossesAndAdjustments.sendKeys(D);
+        String lossesAndAdjustmentsValue=testWebDriver.getAttribute(lossesAndAdjustments,"value");
+        SeleneseTestNgHelper.assertEquals(lossesAndAdjustmentsValue, D);
     }
 
     public void calculateAndVerifyStockOnHand(Integer A, Integer B, Integer C, Integer D)
@@ -99,10 +107,11 @@ public class InitiateRnRPage extends Page {
         enterQuantityReceived(B.toString());
         enterQuantityDispensed(C.toString());
         enterLossesAndAdjustments(D.toString());
+        beginningBalance.click();
         testWebDriver.waitForElementToAppear(stockOnHand);
         Integer StockOnHand = A+B-C-D;
-        testWebDriver.sleep(2000);
-        SeleneseTestNgHelper.assertEquals(stockOnHand.getText().trim(), StockOnHand.toString().trim());
+        testWebDriver.sleep(2500);
+        SeleneseTestNgHelper.assertEquals(stockOnHand.getText(), StockOnHand.toString());
     }
 
 }
