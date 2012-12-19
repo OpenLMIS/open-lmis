@@ -38,10 +38,8 @@ public class RequisitionGroupMemberRepository {
 
     public void insert(RequisitionGroupMember requisitionGroupMember) {
         requisitionGroupMember.getFacility().setId(facilityMapper.getIdForCode(requisitionGroupMember.getFacility().getCode()));
-
         requisitionGroupMember.getRequisitionGroup().setId(requisitionGroupMapper.getIdForCode(requisitionGroupMember.getRequisitionGroup().getCode()));
 
-        List<Integer> programIDsForRG = requisitionGroupProgramScheduleMapper.getProgramIDsById(requisitionGroupMember.getRequisitionGroup().getId());
         List<Integer> requisitionGroupProgramIdsForFacility = requisitionGroupMemberMapper.getRequisitionGroupProgramIdsForId(requisitionGroupMember.getFacility().getId());
 
         if (requisitionGroupMember.getRequisitionGroup().getId() == null) {
@@ -53,9 +51,9 @@ public class RequisitionGroupMemberRepository {
 
         if (requisitionGroupMemberMapper.doesMappingExist(requisitionGroupMember.getRequisitionGroup().getId(), requisitionGroupMember.getFacility().getId()) == 1) {
             throw new RuntimeException("Facility to Requisition Group mapping already exists");
-
         }
 
+        List<Integer> programIDsForRG = requisitionGroupProgramScheduleMapper.getProgramIDsById(requisitionGroupMember.getRequisitionGroup().getId());
         if (programIDsForRG.size() == 0) {
             throw new RuntimeException("No Program(s) mapped for Requisition Group");
         }

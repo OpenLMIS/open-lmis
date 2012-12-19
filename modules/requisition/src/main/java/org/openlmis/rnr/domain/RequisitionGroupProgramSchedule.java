@@ -2,6 +2,7 @@ package org.openlmis.rnr.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
@@ -13,13 +14,17 @@ import java.util.Date;
 public class RequisitionGroupProgramSchedule implements Importable {
 
     @ImportField(mandatory = true, name = "RG Code", nested = "code")
-    RequisitionGroup requisitionGroup;
+    private RequisitionGroup requisitionGroup;
 
     @ImportField(mandatory = true, name = "Program", nested = "code")
-    Program program;
+    private Program program;
 
     @ImportField(mandatory = true, name = "Schedule", nested = "code")
-    Schedule schedule;
+    private Schedule schedule;
+
+    private boolean directDelivery;
+
+    private Facility dropOffFacility;
 
     String modifiedBy;
     Date modifiedDate;

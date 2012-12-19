@@ -3,6 +3,9 @@ package org.openlmis.rnr.repository.mapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openlmis.core.builder.FacilityBuilder;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.rnr.domain.RequisitionGroupProgramSchedule;
 import org.openlmis.rnr.domain.Schedule;
@@ -28,6 +31,19 @@ import static org.openlmis.rnr.builder.RequisitionGroupBuilder.defaultRequisitio
 @TransactionConfiguration(defaultRollback = true)
 public class RequisitionGroupProgramScheduleMapperIT {
 
+    @Autowired
+    ProgramMapper programMapper;
+    @Autowired
+    ScheduleMapper scheduleMapper;
+    @Autowired
+    FacilityMapper facilityMapper;
+
+    @Autowired
+    RequisitionGroupMapper requisitionGroupMapper;
+
+    @Autowired
+    RequisitionGroupProgramScheduleMapper requisitionGroupProgramScheduleMapper;
+
     RequisitionGroupProgramSchedule requisitionGroupProgramSchedule;
 
     @Before
@@ -37,24 +53,18 @@ public class RequisitionGroupProgramScheduleMapperIT {
         requisitionGroupProgramSchedule.setModifiedDate(new Date(0));
         requisitionGroupProgramSchedule.setProgram(make(a(defaultProgram)));
         requisitionGroupProgramSchedule.setRequisitionGroup(make(a(defaultRequisitionGroup)));
+        requisitionGroupProgramSchedule.setDirectDelivery(true);
+
+        Facility facility = make(a(FacilityBuilder.defaultFacility));
+        Integer facilityId = facilityMapper.insert(facility);
+        facility.setId(facilityId);
+        requisitionGroupProgramSchedule.setDropOffFacility(facility);
+
         Schedule schedule = new Schedule();
         schedule.setCode("Q1stY");
         schedule.setName("QuarterYearly");
         requisitionGroupProgramSchedule.setSchedule(schedule);
-
     }
-
-    @Autowired
-    ProgramMapper programMapper;
-
-    @Autowired
-    RequisitionGroupMapper requisitionGroupMapper;
-
-    @Autowired
-    ScheduleMapper scheduleMapper;
-
-    @Autowired
-    RequisitionGroupProgramScheduleMapper requisitionGroupProgramScheduleMapper;
 
     @Test
     public void shouldInsertRGProgramSchedule() throws Exception {
@@ -79,6 +89,6 @@ public class RequisitionGroupProgramScheduleMapperIT {
 
         assertThat(resultProgramId.size(), is(1));
         assertThat(resultProgramId.get(0), is(requisitionGroupProgramSchedule.getProgram().getId()));
-
     }
+
 }
