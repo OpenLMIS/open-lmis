@@ -24,12 +24,10 @@ public class RnrTemplateServiceTest {
 
     private final static String EXISTING_PROGRAM_CODE = "HIV";
 
-    @Mock
-    private RnrTemplateRuleService rnrTemplateRuleService;
 
     @Before
     public void setUp() throws Exception {
-        service = new RnrTemplateService(repository, rnrTemplateRuleService);
+        service = new RnrTemplateService(repository);
     }
 
     @Test

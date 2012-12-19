@@ -15,10 +15,4 @@
 
     <context:component-scan base-package="org.openlmis.rnr"/>
 
-    <drools:kbase id="rnrTemplateRulesKnowledgeBase">
-        <drools:resources>
-            <drools:resource source="classpath:rnrTemplate.drl" type="DRL"/>
-        </drools:resources>
-    </drools:kbase>
-
 </beans>
