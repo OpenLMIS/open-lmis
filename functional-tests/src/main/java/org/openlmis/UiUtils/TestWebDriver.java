@@ -6,11 +6,22 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.remote.*;
+import org.openqa.selenium.*;
 
 
 
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.text.*;
+import java.io.*;
+import org.apache.commons.io.*;
+
+import java.awt.image.*;
+import java.awt.Robot;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
+import javax.imageio.ImageIO;
 
 import static org.testng.Assert.assertTrue;
 
@@ -167,6 +178,21 @@ public class TestWebDriver {
 
     public String getAttribute(WebElement element, String value) {
         return element.getAttribute(value);
+    }
+
+
+    public void takeScreenShotMethod(){
+        try{
+            Thread.sleep(1500);
+            Date dObj = new Date();
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd-hhmmss");
+            String time = formatter.format(dObj);
+            BufferedImage image = new Robot().createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
+            ImageIO.write(image, "png", new File(System.getProperty("user.dir")+"/src/main/resources/"+time+"-screenshot.png"));
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
 

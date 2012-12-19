@@ -107,12 +107,14 @@ public class InitiateRnRPage extends Page {
         enterQuantityReceived(B.toString());
         enterQuantityDispensed(C.toString());
         enterLossesAndAdjustments(D.toString());
+        testWebDriver.takeScreenShotMethod();
         beginningBalance.click();
         testWebDriver.waitForElementToAppear(stockOnHand);
         Integer StockOnHand = A+B-C-D;
         testWebDriver.sleep(4000);
+        testWebDriver.takeScreenShotMethod();
         String stockOnHandValue= stockOnHand.getText();
-        String StockOnHandValue =   StockOnHand.toString();
+        String StockOnHandValue = StockOnHand.toString();
         SeleneseTestNgHelper.assertEquals(stockOnHandValue, StockOnHandValue);
     }
 
