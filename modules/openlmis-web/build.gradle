@@ -59,8 +59,8 @@ dependencies {
 }
 
 cargo {
-    containerId = 'tomcat7x'
-    port = 8080
+  containerId = 'tomcat7x'
+  port = 8080
 }
  
 [jettyRun]*.configure {
