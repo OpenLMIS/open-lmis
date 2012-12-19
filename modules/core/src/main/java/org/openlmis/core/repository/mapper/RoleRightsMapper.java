@@ -22,22 +22,6 @@ public interface RoleRightsMapper {
     @Options(useGeneratedKeys = true)
     int insertRole(Role role);
 
-    @Select("SELECT RA.userId, RA.roleId, RA.programId " +
-            "FROM role_assignments RA, users U, role_rights RR WHERE " +
-            "U.userName = #{userName} " +
-            "AND U.id  = RA.userId " +
-            "AND RA.roleId = RR.roleId " +
-            "AND RR.rightId = #{right} ")
-    List<RoleAssignment> getRoleAssignmentsWithGivenRightForAUser(@Param(value = "right") Right right,
-                                                                  @Param(value = "userName") String userName);
-
-    @Insert("INSERT INTO role_assignments" +
-            "(userId, roleId, programId) VALUES " +
-            "(#{user.id}, #{role.id}, #{program.id})")
-    int createRoleAssignment(@Param(value = "user") User user,
-                             @Param(value = "role") Role role,
-                             @Param(value = "program") Program program);
-
     @Select("SELECT R.id, R.description " +
             "FROM role_assignments RA, users U, role_rights RR, rights R WHERE " +
             "U.userName = #{userName} " +

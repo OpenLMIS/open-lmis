@@ -3,9 +3,7 @@ package org.openlmis.core.repository.mapper;
 import org.junit.Test;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramSupported;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.service.SpringIntegrationTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -15,12 +13,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static com.natpryce.makeiteasy.MakeItEasy.with;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
+import static org.openlmis.core.builder.ProgramBuilder.programCode;
+import static org.openlmis.core.builder.ProgramBuilder.programStatus;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
 
 @ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
@@ -39,6 +40,15 @@ public class ProgramMapperIT extends SpringIntegrationTest {
 
     @Autowired
     ProgramMapper programMapper;
+
+    @Autowired
+    RoleRightsMapper roleRightsMapper;
+
+    @Autowired
+    RoleAssignmentMapper roleAssignmentMapper;
+
+    @Autowired
+    UserMapper userMapper;
 
     @Test
     public void shouldGetAllActiveProgram() {
@@ -91,5 +101,47 @@ public class ProgramMapperIT extends SpringIntegrationTest {
         Program program = make(a(defaultProgram));
         program.setId(programMapper.insert(program));
         assertThat(programMapper.getById(program.getId()), is(program));
+    }
+
+    @Test
+    public void shouldGetAllProgramsForAUserForWhichHeHasCreateRnrRight(){
+        Program activeProgram = insertProgram(make(a(defaultProgram, with(programCode, "P1"))));
+        Program inactiveProgram = insertProgram(make(a(defaultProgram, with(programCode, "P2"), with(programStatus, false))));
+        Program activeProgramWithoutRight = insertProgram(make(a(defaultProgram, with(programCode, "P3"))));
+
+        User user = insertUser();
+
+        Role createRnrRole = new Role("R1", "Create Rnr Role");
+        roleRightsMapper.insertRole(createRnrRole);
+        roleRightsMapper.createRoleRight(createRnrRole.getId(), Right.CREATE_REQUISITION);
+        insertRoleAssignments(activeProgram, user, createRnrRole);
+        insertRoleAssignments(inactiveProgram, user, createRnrRole);
+
+        Role viewRnrRole = new Role("R2", "View Rnr Role");
+        roleRightsMapper.insertRole(viewRnrRole);
+        roleRightsMapper.createRoleRight(viewRnrRole.getId(), Right.VIEW_REQUISITION);
+        insertRoleAssignments(activeProgramWithoutRight, user, viewRnrRole);
+
+        List<Program> programs = programMapper.getActiveProgramsForUser(user, Right.CREATE_REQUISITION);
+
+        assertThat(programs.size(), is(1));
+        assertThat(programs.get(0).getCode(), is("P1"));
+    }
+
+    private Program insertProgram(Program program) {
+        program.setId(programMapper.insert(program));
+        return program;
+    }
+
+    private Role insertRoleAssignments(Program program, User user, Role role) {
+        roleAssignmentMapper.createRoleAssignment(user, role, program);
+        return role;
+    }
+
+    private User insertUser() {
+        User user = new User("random123123", "pwd");
+        int id = userMapper.insert(user);
+        user.setId(id);
+        return user;
     }
 }

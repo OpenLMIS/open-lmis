@@ -44,6 +44,9 @@ public class ProgramSupportedMapperIT {
   private RoleRightsMapper roleRightsMapper;
 
   @Autowired
+  private RoleAssignmentMapper roleAssignmentMapper;
+
+  @Autowired
   private UserMapper userMapper;
 
   @Test
@@ -119,7 +122,7 @@ public class ProgramSupportedMapperIT {
   }
 
   private Role insertRoleAssignments(Program program, User user, Role role) {
-    roleRightsMapper.createRoleAssignment(user, role, program);
+    roleAssignmentMapper.createRoleAssignment(user, role, program);
     return role;
   }
 
