@@ -57,6 +57,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
         requisitionGroupProgramSchedule.setRequisitionGroup(make(a(RequisitionGroupBuilder.defaultRequisitionGroup)));
         requisitionGroupProgramSchedule.setProgram(make(a(ProgramBuilder.defaultProgram)));
         requisitionGroupProgramSchedule.setSchedule(new Schedule());
+        requisitionGroupProgramSchedule.setDropOffFacility(facility(dropOffFacility.getCode()));
     }
 
     @Test
@@ -106,7 +107,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
     @Test
     public void shouldSaveMappingIfAllCorrect() throws Exception {
         int facilityId = 99;
-        requisitionGroupProgramSchedule.setDropOffFacility(facility(dropOffFacility.getCode()));
+
 
         when(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode())).thenReturn(1);
         when(programMapper.getIdByCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1);
