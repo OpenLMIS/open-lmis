@@ -39,7 +39,7 @@ public class ProgramRnrColumnMapperIT {
 
         addProgramRnrColumn(rnrColumn, 5, false, "Some Random Label", RnRColumnSource.USER_INPUT, true);
 
-        List<RnrColumn> fetchedColumns = rnrColumnMapper.getAllRnrColumnsForProgram(HIV);
+        List<RnrColumn> fetchedColumns = rnrColumnMapper.fetchDefinedRnrColumnsForProgram(HIV);
 
         assertThat(fetchedColumns.size(), is(1));
 
@@ -58,7 +58,7 @@ public class ProgramRnrColumnMapperIT {
         addProgramRnrColumn(rnrColumn, 3, true, "Some Random Label", RnRColumnSource.USER_INPUT, false);
         updateProgramRnrColumn(rnrColumn.getId(), 5, false, "Some Random Label", RnRColumnSource.CALCULATED, true);
 
-        RnrColumn updatedRnrColumn = rnrColumnMapper.getAllRnrColumnsForProgram(HIV).get(0);
+        RnrColumn updatedRnrColumn = rnrColumnMapper.fetchDefinedRnrColumnsForProgram(HIV).get(0);
 
         assertThat(updatedRnrColumn.getId(), is(rnrColumn.getId()));
         assertThat(updatedRnrColumn.isVisible(), is(false));
@@ -79,7 +79,7 @@ public class ProgramRnrColumnMapperIT {
         RnrColumn notVisibleColumn2 = rnrColumnMapper.fetchAllMasterRnRColumns().get(3);
         addProgramRnrColumn(notVisibleColumn2, 1, false, "Some Random Label", RnRColumnSource.USER_INPUT, true);
 
-        List<RnrColumn> allRnrColumnsForProgram = rnrColumnMapper.getAllRnrColumnsForProgram(HIV);
+        List<RnrColumn> allRnrColumnsForProgram = rnrColumnMapper.fetchDefinedRnrColumnsForProgram(HIV);
         assertThat(allRnrColumnsForProgram.get(0), is(visibleColumn2));
         assertThat(allRnrColumnsForProgram.get(1), is(visibleColumn1));
         assertThat(allRnrColumnsForProgram.get(2), is(notVisibleColumn2));

@@ -1,7 +1,10 @@
 package org.openlmis.web.controller;
 
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatcher;
+import org.openlmis.rnr.domain.ProgramRnrTemplate;
 import org.openlmis.web.form.RnrColumnList;
 import org.openlmis.web.form.RnrTemplateForm;
 import org.openlmis.rnr.domain.RnrColumn;
@@ -39,9 +42,16 @@ public class RnrTemplateControllerTest {
 
     @Test
     public void shouldCreateARnRTemplateForAGivenProgramWithSpecifiedColumns() throws Exception {
-        RnrColumnList rnrColumns = new RnrColumnList();
-        rnrTemplateController.saveRnRTemplateForProgram(existingProgramCode, rnrColumns);
-        verify(rnrTemplateService).saveRnRTemplateForProgram(existingProgramCode, rnrColumns);
-    }
+        final RnrColumnList rnrColumns = new RnrColumnList();
 
+        rnrTemplateController.saveRnRTemplateForProgram(existingProgramCode, rnrColumns);
+        Matcher<ProgramRnrTemplate> matcher = new ArgumentMatcher<ProgramRnrTemplate>() {
+            @Override
+            public boolean matches(Object argument) {
+                ProgramRnrTemplate programRnrTemplate1 = (ProgramRnrTemplate)argument;
+                return programRnrTemplate1.getRnrColumns().equals(rnrColumns);
+            }
+        };
+        verify(rnrTemplateService).saveRnRTemplateForProgram(argThat(matcher));
+    }
 }

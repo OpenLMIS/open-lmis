@@ -2,6 +2,7 @@ package org.openlmis.web.controller;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.rnr.domain.ProgramRnrTemplate;
 import org.openlmis.web.form.RnrColumnList;
 import org.openlmis.web.form.RnrTemplateForm;
 import org.openlmis.rnr.domain.RnRColumnSource;
@@ -37,7 +38,6 @@ public class RnrTemplateController {
         return new RnrTemplateForm(rnrTemplateService.fetchAllRnRColumns(programCode), sources);
     }
 
-    // TODO : move this to logstics-web? or have another controller
     @RequestMapping(value = "/logistics/rnr/{programCode}/columns", method = RequestMethod.GET, headers = "Accept=application/json")
     public List<RnrColumn> fetchVisibleProgramRnrColumnList(@PathVariable("programCode") String programCode) {
         return rnrTemplateService.fetchVisibleRnRColumns(programCode);
@@ -47,7 +47,8 @@ public class RnrTemplateController {
     public ResponseEntity saveRnRTemplateForProgram(@PathVariable("programCode") String programCode,
                                                     @RequestBody RnrColumnList rnrColumnList) {
 
-        Map<String, String> validationErrors = rnrTemplateService.saveRnRTemplateForProgram(programCode, rnrColumnList);
+        ProgramRnrTemplate programRnrTemplate = new ProgramRnrTemplate(programCode, rnrColumnList);
+        Map<String, String> validationErrors = rnrTemplateService.saveRnRTemplateForProgram(programRnrTemplate);
         ResponseEntity responseEntity;
         if (validationErrors != null && validationErrors.size() > 0) {
             ValidationError errorWrapper = new ValidationError();

@@ -1,13 +1,13 @@
 package org.openlmis.rnr.service;
 
-import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.rnr.domain.ProgramRnrTemplate;
 import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,27 +27,21 @@ public class RnrTemplateService {
     }
 
     public List<RnrColumn> fetchAllRnRColumns(String programCode) {
-        List<RnrColumn> rnrColumns;
-        if (rnrRepository.isRnRTemPlateDefinedForProgram(programCode)) {
-            rnrColumns = rnrRepository.fetchProgramRnrColumns(programCode);
-        } else {
-            rnrColumns = rnrRepository.fetchAllMasterRnRColumns();
-        }
-        return rnrColumns == null ? new ArrayList<RnrColumn>() : rnrColumns;
+        List<RnrColumn> rnrColumns = rnrRepository.fetchRnrTemplateColumns(programCode);
+        return rnrColumns;
     }
 
 
-    public Map<String, String> saveRnRTemplateForProgram(String programCode, List<RnrColumn> rnrColumns) {
-        Map<String, String> errors = rnrTemplateRuleService.validate(rnrColumns);
+    public Map<String, String> saveRnRTemplateForProgram(ProgramRnrTemplate programTemplate) {
+        Map<String, String> errors = new HashMap<>();
+        errors.putAll(rnrTemplateRuleService.validate(programTemplate));
+        errors.putAll(programTemplate.validate());
+
         if (!(errors == null || errors.isEmpty())) {
             return errors;
         }
 
-        if (rnrRepository.isRnRTemPlateDefinedForProgram(programCode)) {
-            rnrRepository.updateAllProgramRnRColumns(programCode, rnrColumns);
-        } else {
-            rnrRepository.insertAllProgramRnRColumns(programCode, rnrColumns);
-        }
+        rnrRepository.saveProgramRnrTemplate(programTemplate);
         return null;
     }
 

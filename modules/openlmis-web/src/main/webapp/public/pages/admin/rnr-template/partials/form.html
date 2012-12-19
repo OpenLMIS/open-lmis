@@ -35,9 +35,6 @@
         </span>
           <input type="hidden" ng-model="rnrColumn.id" value="{{ rnrColumn.id }}"/>
         <span class="tpl-label">
-            <div class="alert alert-error"  ng-model="errorMap" ng-show="errorMap[rnrColumn.name]">
-                {{errorMap[rnrColumn.name]}}
-            </div>
             <input name="label" type="text" ng-model="rnrColumn.label" value="{{ rnrColumn.label }}" required/>
           <span class="col-desc">
             {{ rnrColumn.description }}
@@ -54,6 +51,11 @@
             </span>
             <br/>
             <a href="javascript:void(0);">{{ rnrColumn.formula }}</a>
+        </span>
+        <span class="tpl-error" ng-show="errorMap[rnrColumn.name]">
+            <div class="alert alert-error">
+            {{errorMap[rnrColumn.name]}}
+            </div>
         </span>
         </li>
       </ul>
