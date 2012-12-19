@@ -24,10 +24,15 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, $http) {
   };
 
   $scope.update = function () {
+    updatePosition();
+    $scope.setArithmeticValidationMessageShown();
+  };
+
+  function updatePosition() {
     $scope.rnrColumns.forEach(function (rnrColumn, index) {
       rnrColumn.position = index + 1;
     });
-  };
+  }
 
   function updateErrorMessage(message) {
     $scope.error = message;
@@ -39,7 +44,7 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, $http) {
   $scope.setArithmeticValidationMessageShown = function() {
     $.each($scope.rnrColumns, function (index, column) {
       if(column.sourceConfigurable){
-        if(column.source.code == 'U'){
+        if(column.source.code == 'U' && column.visible == true){
           $scope.arithmeticValidationMessageShown = true;
         }
         else{
