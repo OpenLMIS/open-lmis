@@ -25,6 +25,10 @@ public class TemplateConfigPage extends Page {
     @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv' and @ng-show='error']")
     private static WebElement saveErrorMsgDiv;
 
+    @FindBy(how = How.XPATH, using = "//li[@id='E']/span[@class='tpl-source']/span/select")
+    private static WebElement stockInHandDropDown;
+
+
 
 
     private String TEMPLATE_SUCCESS_MESSAGE = "Template saved successfully!";
@@ -47,8 +51,11 @@ public class TemplateConfigPage extends Page {
 
     public void configureTemplate(){
         String message=null;
-    testWebDriver.waitForElementToAppear(SaveButton);
-    SaveButton.click();
+
+        testWebDriver.waitForElementToAppear(SaveButton);
+        testWebDriver.selectByVisibleText(stockInHandDropDown,"Calculated");
+        testWebDriver.sleep(1500);
+        SaveButton.click();
 
 
         testWebDriver.sleep(2000);
