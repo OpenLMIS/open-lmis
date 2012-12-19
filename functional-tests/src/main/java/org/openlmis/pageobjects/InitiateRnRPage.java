@@ -110,8 +110,10 @@ public class InitiateRnRPage extends Page {
         beginningBalance.click();
         testWebDriver.waitForElementToAppear(stockOnHand);
         Integer StockOnHand = A+B-C-D;
-        testWebDriver.sleep(2500);
-        SeleneseTestNgHelper.assertEquals(stockOnHand.getText(), StockOnHand.toString());
+        testWebDriver.sleep(4000);
+        String stockOnHandValue= stockOnHand.getText();
+        String StockOnHandValue =   StockOnHand.toString();
+        SeleneseTestNgHelper.assertEquals(stockOnHandValue, StockOnHandValue);
     }
 
 }
