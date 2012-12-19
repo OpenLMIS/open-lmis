@@ -69,18 +69,12 @@ rnrModule.fill = function (lineItem, programRnrColumnList) {
     function fillNormalizedConsumption() {
         var m = 3; // will be picked up from the database in future
         var x = isNumber(lineItem.stockOutDays) ? parseInt(lineItem.stockOutDays) : null;
-
-        var f = 0;
-        if (getSource('F') != null) {
-            if (isNumber(lineItem.newPatientCount)) {
-                f = parseInt(lineItem.newPatientCount);
-            } else {
-                lineItem.normalizedConsumption = null;
-                return;
-            }
+        var f = isNumber(lineItem.newPatientCount) ? parseInt(lineItem.newPatientCount) : null;
+        if (getSource('F') == null) {
+            f = 0;
         }
 
-        if (!isNumber(c) || !isNumber(x)) {
+        if (!isNumber(c) || !isNumber(x) || !isNumber(f)) {
             lineItem.normalizedConsumption = null;
             return;
         }
