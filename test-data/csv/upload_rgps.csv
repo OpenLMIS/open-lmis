@@ -1,1 +1,8 @@
- RG Code,Program,ScheduleRG1,ESS_MEDS,Q1stMRG1,Malaria,Q1stMRG1,TB,MRG2,ESS_MEDS,Q1stMRG2,Malaria,Q1stMRG2,Vaccines,MRG3,Vaccines,M
+ RG Code,Program,Schedule,Direct Delivery
+RG1,ESS_MEDS,Q1stM,true
+RG1,Malaria,Q1stM,true
+RG1,TB,M,true
+RG2,ESS_MEDS,Q1stM,true
+RG2,Malaria,Q1stM,true
+RG2,Vaccines,M,true
+RG3,Vaccines,M,true

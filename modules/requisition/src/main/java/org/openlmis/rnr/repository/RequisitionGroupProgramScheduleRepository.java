@@ -1,6 +1,7 @@
 package org.openlmis.rnr.repository;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.rnr.domain.RequisitionGroupProgramSchedule;
 import org.openlmis.rnr.repository.mapper.RequisitionGroupMapper;
@@ -18,22 +19,24 @@ public class RequisitionGroupProgramScheduleRepository {
     private RequisitionGroupMapper requisitionGroupMapper;
     private ProgramMapper programMapper;
     private ScheduleMapper scheduleMapper;
+    private FacilityMapper facilityMapper;
 
     @Autowired
     public RequisitionGroupProgramScheduleRepository(RequisitionGroupProgramScheduleMapper requisitionGroupProgramScheduleMapper,
-                                                     RequisitionGroupMapper requisitionGroupMapper, ProgramMapper programMapper, ScheduleMapper scheduleMapper) {
+                                                     RequisitionGroupMapper requisitionGroupMapper, ProgramMapper programMapper, ScheduleMapper scheduleMapper, FacilityMapper facilityMapper) {
         this.requisitionGroupProgramScheduleMapper = requisitionGroupProgramScheduleMapper;
         this.requisitionGroupMapper = requisitionGroupMapper;
         this.programMapper = programMapper;
         this.scheduleMapper = scheduleMapper;
+        this.facilityMapper = facilityMapper;
     }
 
     public void insert(RequisitionGroupProgramSchedule requisitionGroupProgramSchedule) {
-
         try{
             requisitionGroupProgramSchedule.getRequisitionGroup().setId(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode()));
             requisitionGroupProgramSchedule.getProgram().setId(programMapper.getIdByCode(requisitionGroupProgramSchedule.getProgram().getCode()));
             requisitionGroupProgramSchedule.getSchedule().setId(scheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode()));
+            requisitionGroupProgramSchedule.getDropOffFacility().setId(facilityMapper.getIdForCode(requisitionGroupProgramSchedule.getDropOffFacility().getCode()));
 
             if (requisitionGroupProgramSchedule.getRequisitionGroup().getId() == null) {
                 throw new RuntimeException("Requisition Group Code Does Not Exist");
