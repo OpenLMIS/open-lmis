@@ -22,8 +22,10 @@ public class RequisitionGroupProgramSchedule implements Importable {
     @ImportField(mandatory = true, name = "Schedule", nested = "code")
     private Schedule schedule;
 
+    @ImportField(mandatory = true, name = "Direct Delivery")
     private boolean directDelivery;
 
+    @ImportField(name = "Drop off Facility", nested = "code")
     private Facility dropOffFacility;
 
     String modifiedBy;
