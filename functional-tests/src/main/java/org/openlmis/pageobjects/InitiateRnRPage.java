@@ -41,6 +41,9 @@ public class InitiateRnRPage extends Page {
     @FindBy(how = How.ID, using = "E_0")
     private static WebElement stockOnHand;
 
+    @FindBy(how = How.ID, using = "F_0")
+    private static WebElement newPatientsAdded;
+
     String successText="R&R saved successfully!";
 
 
@@ -100,13 +103,23 @@ public class InitiateRnRPage extends Page {
         String lossesAndAdjustmentsValue=testWebDriver.getAttribute(lossesAndAdjustments,"value");
         SeleneseTestNgHelper.assertEquals(lossesAndAdjustmentsValue, D);
     }
+    //newPatientsAdded
 
-    public void calculateAndVerifyStockOnHand(Integer A, Integer B, Integer C, Integer D)
+    public void enternewPatientsAdded(String F)
+    {
+        testWebDriver.waitForElementToAppear(newPatientsAdded);
+        newPatientsAdded.sendKeys(F);
+        String newPatientsAddedValue=testWebDriver.getAttribute(newPatientsAdded,"value");
+        SeleneseTestNgHelper.assertEquals(newPatientsAddedValue, F);
+    }
+
+    public void calculateAndVerifyStockOnHand(Integer A, Integer B, Integer C, Integer D, Integer F)
     {
         enterBeginningBalance(A.toString());
         enterQuantityReceived(B.toString());
         enterQuantityDispensed(C.toString());
         enterLossesAndAdjustments(D.toString());
+        enternewPatientsAdded(F.toString());
         testWebDriver.takeScreenShotMethod();
         beginningBalance.click();
         testWebDriver.waitForElementToAppear(stockOnHand);
