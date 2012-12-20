@@ -1,5 +1,5 @@
-delete from geopolitical_level;
-INSERT INTO geopolitical_level
+delete from geopolitical_levels;
+INSERT INTO geopolitical_levels
 (id, name) VALUES
 (1, 'state'),
 (2, 'city'),
