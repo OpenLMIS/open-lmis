@@ -5,6 +5,7 @@ import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.Role;
 import org.openlmis.core.repository.mapper.RoleMapper;
 import org.openlmis.core.repository.mapper.RoleRightsMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class RoleRightsRepository {
     private RoleRightsMapper roleRightsMapper;
     private RoleMapper roleMapper;
 
+    @Autowired
     public RoleRightsRepository(RoleRightsMapper roleRightsMapper, RoleMapper roleMapper) {
         this.roleRightsMapper = roleRightsMapper;
         this.roleMapper = roleMapper;
