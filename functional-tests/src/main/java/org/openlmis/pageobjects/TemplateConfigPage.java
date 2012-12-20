@@ -8,6 +8,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
+import org.openqa.selenium.support.ui.Select;
 
 
 public class TemplateConfigPage extends Page {
@@ -28,8 +29,11 @@ public class TemplateConfigPage extends Page {
     @FindBy(how = How.XPATH, using = "//li[@id='E']/span[@class='tpl-source']/span/select")
     private static WebElement stockInHandDropDown;
 
+    @FindBy(how = How.XPATH, using = "//li[@id='A']/span/span/span/span/input[@type='checkbox']")
+    private static WebElement checkboxBeginningBalance;
 
-
+    @FindBy(how = How.XPATH, using = "//li[@id='C']/span[@class='tpl-source']/span/select")
+    private static WebElement dropDownTotalConsumedQuantity;
 
     private String TEMPLATE_SUCCESS_MESSAGE = "Template saved successfully!";
 
@@ -45,18 +49,29 @@ public class TemplateConfigPage extends Page {
 
     }
 
-    public void excludeRemarks(){
+    public void excludeBeginningBalance(){
+        checkboxBeginningBalance.click();
+    }
 
+    public void verifySourceForTotalConsumedQuantity(){
+        Select select = new Select(dropDownTotalConsumedQuantity);
+        SeleneseTestNgHelper.assertEquals(select.getFirstSelectedOption().getText(), "User Input");
+    }
+
+    public void verifySourceForStockOnHand(){
+        Select select = new Select(stockInHandDropDown);
+        SeleneseTestNgHelper.assertEquals(select.getFirstSelectedOption().getText(), "User Input");
     }
 
     public void configureTemplate(){
         String message=null;
 
         testWebDriver.waitForElementToAppear(SaveButton);
+        verifySourceForTotalConsumedQuantity();
+        verifySourceForStockOnHand();
         testWebDriver.selectByVisibleText(stockInHandDropDown,"Calculated");
         testWebDriver.sleep(1500);
         SaveButton.click();
-
 
         testWebDriver.sleep(2000);
         if(saveSuccessMsg.isDisplayed())

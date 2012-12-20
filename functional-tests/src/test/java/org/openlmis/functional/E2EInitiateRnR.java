@@ -20,6 +20,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     {
         DBWrapper dbWrapper = new DBWrapper();
         dbWrapper.deleteUser();
+        dbWrapper.deleteProgramRnrColumns();
     }
 
     @Test(dataProvider = "Data-Provider-Function-Positive")

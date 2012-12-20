@@ -86,6 +86,11 @@ public class DBWrapper {
 
     }
 
+    public void deleteProgramRnrColumns() throws IOException {
+        DBWrapper dbwrapper = new DBWrapper();
+        dbwrapper.dbConnection("delete from program_rnr_columns;", "alter");
+    }
+
     public void deleteUser() throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();
         dbwrapper.dbConnection("delete from role_rights;", "alter");
