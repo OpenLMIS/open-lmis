@@ -70,9 +70,7 @@ rnrModule.fill = function (lineItem, programRnrColumnList) {
         var m = 3; // will be picked up from the database in future
         var x = isNumber(lineItem.stockOutDays) ? parseInt(lineItem.stockOutDays) : null;
         var f = isNumber(lineItem.newPatientCount) ? parseInt(lineItem.newPatientCount) : null;
-        if (getSource('F') == null) {
-            f = 0;
-        }
+        if (getSource('F') == null) f = 0;
 
         if (!isNumber(c) || !isNumber(x) || !isNumber(f)) {
             lineItem.normalizedConsumption = null;
@@ -124,9 +122,7 @@ rnrModule.fill = function (lineItem, programRnrColumnList) {
             lineItem.packsToShip = null;
             return;
         }
-
         lineItem.packsToShip = orderQuantity/packSize;
-
         applyRoundingRules();
     }
 
