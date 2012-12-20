@@ -1,6 +1,5 @@
 package org.openlmis.core.repository.mapper;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.domain.*;
@@ -36,44 +35,37 @@ public class RoleAssignmentMapperIT {
     RoleRightsMapper roleRightsMapper;
     @Autowired
     RoleAssignmentMapper roleAssignmentMapper;
-
-    private Program program1;
-    private Program program2;
-    private User user;
-    private Role createAndViewRole;
-    private Role approveAndViewRole;
-
-    @Before
-    public void setUp() {
-        program1 = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
-        program2 = insertProgram(make(a(defaultProgram, with(programCode, "p2"))));
-
-        user = insertUser();
-
-        createAndViewRole = new Role("createAndViewRole", "random description");
-        roleRightsMapper.insertRole(createAndViewRole);
-
-        approveAndViewRole = new Role("approveAndViewRole", "random description");
-        roleRightsMapper.insertRole(approveAndViewRole);
-
-        roleRightsMapper.createRoleRight(createAndViewRole.getId(), CREATE_REQUISITION);
-        roleRightsMapper.createRoleRight(createAndViewRole.getId(), VIEW_REQUISITION);
-        roleRightsMapper.createRoleRight(approveAndViewRole.getId(), APPROVE_REQUISITION);
-        roleRightsMapper.createRoleRight(approveAndViewRole.getId(), VIEW_REQUISITION);
-    }
+    @Autowired
+    RoleMapper roleMapper;
 
     @Test
-    public void shouldReturnProgramAvailableForAFacilityForAUserWithGivenRights() {
-        insertRoleAssignments(program1, user, createAndViewRole, null);
-        insertRoleAssignments(program1, user, approveAndViewRole, null);
-        insertRoleAssignments(program2, user, approveAndViewRole, null);
+    public void shouldReturnProgramAvailableForAFacilityForAUserWithGivenRights() throws Exception {
+        Program program1 = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
+        Program program2 = insertProgram(make(a(defaultProgram, with(programCode, "p2"))));
+
+        User user = insertUser();
+
+        Role r1 = new Role("r1", "random description");
+        roleMapper.insert(r1);
+
+        Role r2 = new Role("r2", "random description");
+        roleMapper.insert(r2);
+
+        roleRightsMapper.createRoleRight(r1.getId(), CREATE_REQUISITION);
+        roleRightsMapper.createRoleRight(r1.getId(), VIEW_REQUISITION);
+        roleRightsMapper.createRoleRight(r2.getId(), APPROVE_REQUISITION);
+        roleRightsMapper.createRoleRight(r2.getId(), VIEW_REQUISITION);
+
+        insertRoleAssignments(program1, user, r1, null);
+        insertRoleAssignments(program1, user, r2, null);
+        insertRoleAssignments(program2, user, r2, null);
 
         List<RoleAssignment> roleAssignments =
                 roleAssignmentMapper.getRoleAssignmentsWithGivenRightForAUser(CREATE_REQUISITION, user.getUserName());
 
         assertEquals(1, roleAssignments.size());
         assertEquals(program1.getId(), roleAssignments.get(0).getProgramId());
-        assertThat(roleAssignments.get(0).getRoleId(), is(createAndViewRole.getId()));
+        assertThat(roleAssignments.get(0).getRoleId(), is(r1.getId()));
     }
 
     private Program insertProgram(Program program) {

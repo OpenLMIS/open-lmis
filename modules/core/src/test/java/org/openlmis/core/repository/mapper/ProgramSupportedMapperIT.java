@@ -49,6 +49,9 @@ public class ProgramSupportedMapperIT {
   @Autowired
   private UserMapper userMapper;
 
+  @Autowired
+  RoleMapper roleMapper;
+
   @Test
   public void shouldSaveProgramSupported() throws Exception {
     Facility facility = make(a(defaultFacility));
@@ -87,7 +90,7 @@ public class ProgramSupportedMapperIT {
     Program inactiveProgram = insertProgram(make(a(defaultProgram, with(programCode, "p3"), with(programStatus, false))));
 
     Role r1 = new Role("r1", "random description");
-    roleRightsMapper.insertRole(r1);
+    roleMapper.insert(r1);
     roleRightsMapper.createRoleRight(r1.getId(), Right.CREATE_REQUISITION);
     insertRoleAssignments(activeProgram, user, r1);
     insertRoleAssignments(inactiveProgram, user, r1);

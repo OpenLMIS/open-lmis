@@ -35,6 +35,8 @@ public class RoleRightsMapperIT {
     RoleRightsMapper roleRightsMapper;
     @Autowired
     RoleAssignmentMapper roleAssignmentMapper;
+    @Autowired
+    RoleMapper roleMapper;
 
     @Test
     public void shouldSetupRightsForAdminRole() {
@@ -65,7 +67,7 @@ public class RoleRightsMapperIT {
 
     private Role insertRole() {
         Role r1 = new Role("r1", "random description");
-        roleRightsMapper.insertRole(r1);
+        roleMapper.insert(r1);
         return r1;
     }
 
