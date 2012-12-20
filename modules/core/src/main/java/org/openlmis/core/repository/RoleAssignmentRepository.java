@@ -23,4 +23,5 @@ public class RoleAssignmentRepository {
     public List<RoleAssignment> getRoleAssignments(Right right, String userName){
         return roleAssignmentMapper.getRoleAssignmentsWithGivenRightForAUser(right, userName);
     }
+
 }
