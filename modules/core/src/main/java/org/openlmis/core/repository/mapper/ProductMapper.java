@@ -56,7 +56,7 @@ public interface ProductMapper {
     @Options(useGeneratedKeys = true)
     Integer insert(Product product);
 
-    @Select("SELECT id FROM dosage_Unit where LOWER(code) = LOWER(#{code})")
+    @Select("SELECT id FROM dosage_Units where LOWER(code) = LOWER(#{code})")
     Integer getDosageUnitIdForCode(String code);
 
     @Select("SELECT id FROM product_forms where LOWER(code) = LOWER(#{code})")

@@ -18,7 +18,7 @@ public interface FacilityApprovedProductMapper {
 
     @Select("SELECT * " +
             "FROM products p, facility_approved_products fap, program_products pp, facilities f, " +
-            "product_forms pf , dosage_unit du where " +
+            "product_forms pf , dosage_units du where " +
             "pp.programId = (select id from programs WHERE LOWER(code) =  LOWER(#{programCode})) " +
             "AND f.id = #{facilityId} AND f.typeId = fap.facilityTypeId " +
             "AND fap.programProductId = pp.id " +
