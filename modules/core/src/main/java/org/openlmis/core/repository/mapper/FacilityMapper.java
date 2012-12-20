@@ -39,9 +39,9 @@ public interface FacilityMapper {
   Facility getHomeFacility(String userName);
 
   @Select("SELECT F.name as facilityName,  F.code as facilityCode, F.operatedById, " +
-      "FT.name as facilityType, FT.nominal_max_month, " +
-      "FT.nominal_eop, GZ.name as zone, GL.name as label, GZP.name as parent_zone, GLP.name as parent_label " +
-      "FROM facilities F, facility_type FT, geographic_zones GZ, geographic_zones GZP, geopolitical_levels GL, geopolitical_levels GLP " +
+      "FT.name as facilityType, FT.nominalMaxMonth, " +
+      "FT.nominalEop, GZ.name as zone, GL.name as label, GZP.name as parent_zone, GLP.name as parent_label " +
+      "FROM facilities F, facility_types FT, geographic_zones GZ, geographic_zones GZP, geopolitical_levels GL, geopolitical_levels GLP " +
       "WHERE F.id = #{facilityId} AND " +
       "F.typeId = FT.id AND " +
       "F.geographicZoneId = GZ.id AND " +
@@ -51,8 +51,8 @@ public interface FacilityMapper {
   @Results(value = {
       @Result(property = "facilityOperatedBy", column = "operatedById", javaType = String.class,
           one = @One(select = "getFacilityOperatorCodeFor")),
-      @Result(property = "maximumStockLevel", column = "nominal_max_month"),
-      @Result(property = "emergencyOrderPoint", column = "nominal_eop"),
+      @Result(property = "maximumStockLevel", column = "nominalMaxMonth"),
+      @Result(property = "emergencyOrderPoint", column = "nominalEop"),
       @Result(property = "zone.value", column = "zone"),
       @Result(property = "zone.label", column = "label"),
       @Result(property = "parentZone.value", column = "parent_zone"),
@@ -61,24 +61,10 @@ public interface FacilityMapper {
   RequisitionHeader getRequisitionHeaderData(Integer facilityId);
 
 
-  @Select("SELECT * FROM facility_type ORDER BY display_order")
-  @Results(value = {
-      @Result(property = "levelId", column = "level_id"),
-      @Result(property = "nominalMaxMonth", column = "nominal_max_month"),
-      @Result(property = "nominalEop", column = "nominal_eop"),
-      @Result(property = "displayOrder", column = "display_order"),
-      @Result(property = "active", column = "is_active")
-  })
+  @Select("SELECT * FROM facility_types ORDER BY displayOrder")
   List<FacilityType> getAllTypes();
 
-  @Select("SELECT * FROM facility_type where id = #{id}")
-  @Results(value = {
-      @Result(property = "levelId", column = "level_id"),
-      @Result(property = "nominalMaxMonth", column = "nominal_max_month"),
-      @Result(property = "nominalEop", column = "nominal_eop"),
-      @Result(property = "displayOrder", column = "display_order"),
-      @Result(property = "active", column = "is_active")
-  })
+  @Select("SELECT * FROM facility_types where id = #{id}")
   public FacilityType getFacilityTypeById(Integer id);
 
   @Select("SELECT * FROM facility_operators ORDER BY displayOrder")
@@ -120,7 +106,7 @@ public interface FacilityMapper {
       "comment = #{comment}, dataReportable = #{dataReportable}, modifiedBy = #{modifiedBy}, modifiedDate = #{modifiedDate} WHERE id=#{id}")
   void update(Facility facility);
 
-  @Select("SELECT id FROM facility_type where LOWER(code) = LOWER(#{code})")
+  @Select("SELECT id FROM facility_types where LOWER(code) = LOWER(#{code})")
   Integer getFacilityTypeIdForCode(String facilityTypeCode);
 
   @Update("UPDATE facilities SET dataReportable = #{dataReportable}, active=#{active}, modifiedBy=#{modifiedBy}, modifiedDate= DEFAULT " +

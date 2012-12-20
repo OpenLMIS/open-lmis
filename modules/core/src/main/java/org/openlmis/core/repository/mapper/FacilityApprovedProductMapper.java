@@ -12,7 +12,7 @@ public interface FacilityApprovedProductMapper {
 
     @Insert("INSERT INTO facility_approved_products(" +
             "facilityTypeId, programProductId, maxMonthsOfStock, modifiedBy, modifiedDate) values " +
-            "((SELECT id FROM facility_type WHERE LOWER(code) = LOWER(#{facilityTypeCode}))," +
+            "((SELECT id FROM facility_types WHERE LOWER(code) = LOWER(#{facilityTypeCode}))," +
             "#{programProduct.id}, #{maxMonthsOfStock}, #{modifiedBy}, #{modifiedDate})")
     int insert(FacilityApprovedProduct facilityApprovedProduct);
 

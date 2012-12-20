@@ -1,5 +1,5 @@
-delete from facility_type;
-INSERT INTO facility_type (code, name, description, level_id, nominal_max_month, nominal_eop, display_order, is_active)
+delete from facility_types;
+INSERT INTO facility_types (code, name, description, levelId, nominalMaxMonth, nominalEop, displayOrder, active)
 VALUES
 ('warehouse','Warehouse', 'Central Supply Depot',null,3,0.5, 11, TRUE),
 ('lvl3_hospital','Lvl3 Hospital', 'State Hospital',null,3,0.5,1, TRUE),
