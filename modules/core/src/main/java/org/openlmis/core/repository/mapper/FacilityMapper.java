@@ -41,7 +41,7 @@ public interface FacilityMapper {
   @Select("SELECT F.name as facilityName,  F.code as facilityCode, F.operatedById, " +
       "FT.name as facilityType, FT.nominal_max_month, " +
       "FT.nominal_eop, GZ.name as zone, GL.name as label, GZP.name as parent_zone, GLP.name as parent_label " +
-      "FROM facilities F, facility_type FT, geographic_zone GZ, geographic_zone GZP, geopolitical_levels GL, geopolitical_levels GLP " +
+      "FROM facilities F, facility_type FT, geographic_zones GZ, geographic_zones GZP, geopolitical_levels GL, geopolitical_levels GLP " +
       "WHERE F.id = #{facilityId} AND " +
       "F.typeId = FT.id AND " +
       "F.geographicZoneId = GZ.id AND " +
@@ -95,7 +95,7 @@ public interface FacilityMapper {
   Integer getOperatedByIdForCode(String code);
 
 
-  @Select("SELECT GZ.id as id, GZ.name as value, GL.name as label FROM geographic_zone GZ, geopolitical_levels GL where GZ.level = GL.id")
+  @Select("SELECT GZ.id as id, GZ.name as value, GL.name as label FROM geographic_zones GZ, geopolitical_levels GL where GZ.level = GL.id")
   List<GeographicZone> getAllGeographicZones();
 
   @Select("SELECT * FROM facilities WHERE id = #{id}")
@@ -130,6 +130,6 @@ public interface FacilityMapper {
   @Select("SELECT id FROM facilities WHERE LOWER(code) = LOWER(#{code})")
   Integer getIdForCode(String code);
 
-  @Select("select 0<(select count(id) as count from geographic_zone where id=#{geographicZoneId})")
+  @Select("select 0<(select count(id) as count from geographic_zones where id=#{geographicZoneId})")
   Boolean isGeographicZonePresent(Integer geographicZoneId);
 }

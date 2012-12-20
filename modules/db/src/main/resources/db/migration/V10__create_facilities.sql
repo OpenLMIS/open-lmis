@@ -8,7 +8,7 @@ CREATE TABLE facilities (
     fax VARCHAR(20),
     address1 VARCHAR(50),
     address2 VARCHAR(50),
-    geographicZoneId INTEGER NOT NULL REFERENCES geographic_zone(id),
+    geographicZoneId INTEGER NOT NULL REFERENCES geographic_zones(id),
     typeId INTEGER NOT NULL REFERENCES facility_type(id),
     catchmentPopulation INTEGER,
     latitude NUMERIC(8,4),

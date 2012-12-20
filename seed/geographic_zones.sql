@@ -1,5 +1,5 @@
-delete from geographic_zone;
-INSERT INTO geographic_zone
+delete from geographic_zones;
+INSERT INTO geographic_zones
 (id, name, level, parent) values
 (1,'Arusha', 1, 1),
 (2,'Dodoma', 2, 1),
