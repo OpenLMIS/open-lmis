@@ -1,6 +1,7 @@
 package org.openlmis.rnr.repository;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.RequisitionGroup;
 import org.openlmis.rnr.repository.mapper.RequisitionGroupMapper;
 import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
@@ -26,11 +27,11 @@ public class RequisitionGroupRepository {
         try {
             requisitionGroup.getSupervisoryNode().setId(supervisoryNodeMapper.getIdForCode(requisitionGroup.getSupervisoryNode().getCode()));
             if (requisitionGroup.getSupervisoryNode().getId() == null) {
-                throw new RuntimeException("Supervisory Node Not Found");
+                throw new DataException("Supervisory Node Not Found");
             }
             requisitionGroupMapper.insert(requisitionGroup);
         } catch (DuplicateKeyException e) {
-            throw new RuntimeException("Duplicate Requisition Group Code found");
+            throw new DataException("Duplicate Requisition Group Code found");
         }
     }
 }

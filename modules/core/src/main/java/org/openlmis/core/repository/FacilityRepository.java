@@ -3,6 +3,7 @@ package org.openlmis.core.repository;
 import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.core.repository.mapper.ProgramSupportedMapper;
@@ -51,13 +52,13 @@ public class FacilityRepository {
         updateFacility(facility);
       }
     } catch (DuplicateKeyException duplicateKeyException) {
-      throw new RuntimeException("Duplicate Facility Code found");
+      throw new DataException("Duplicate Facility Code found");
     } catch (DataIntegrityViolationException integrityViolationException) {
       String errorMessage = integrityViolationException.getMessage().toLowerCase();
       if (errorMessage.contains("foreign key") || errorMessage.contains("not-null constraint")) {
-        throw new RuntimeException("Missing/Invalid Reference data");
+        throw new DataException("Missing/Invalid Reference data");
       }
-      throw new RuntimeException("Incorrect data length");
+      throw new DataException("Incorrect data length");
     }
   }
 
@@ -65,25 +66,25 @@ public class FacilityRepository {
     GeographicZone geographicZone = facility.getGeographicZone();
 
     if (geographicZone == null || geographicZone.getId() == null)
-      throw new RuntimeException("Missing mandatory reference data 'Geographic Zone Id'");
+      throw new DataException("Missing mandatory reference data 'Geographic Zone Id'");
 
     Integer geographicZoneId = geographicZone.getId();
     Boolean geographicZonePresent = facilityMapper.isGeographicZonePresent(geographicZoneId);
 
     if (!geographicZonePresent)
-      throw new RuntimeException("Invalid reference data 'Geographic Zone Id'");
+      throw new DataException("Invalid reference data 'Geographic Zone Id'");
   }
 
   private void validateAndSetFacilityType(Facility facility) {
     FacilityType facilityType = facility.getFacilityType();
     if (facilityType == null || facilityType.getCode() == null || facilityType.getCode().isEmpty())
-      throw new RuntimeException("Missing mandatory reference data 'Facility Type'");
+      throw new DataException("Missing mandatory reference data 'Facility Type'");
 
     String facilityTypeCode = facilityType.getCode();
     Integer facilityTypeId = facilityMapper.getFacilityTypeIdForCode(facilityTypeCode);
 
     if (facilityTypeId == null)
-      throw new RuntimeException("Invalid reference data 'Facility Type'");
+      throw new DataException("Invalid reference data 'Facility Type'");
 
     facilityType.setId(facilityTypeId);
 
@@ -96,7 +97,7 @@ public class FacilityRepository {
     if (operatedByCode == null || operatedByCode.isEmpty()) return;
 
     Integer operatedById = facilityMapper.getOperatedByIdForCode(operatedByCode);
-    if (operatedById == null) throw new RuntimeException("Invalid reference data 'Operated By'");
+    if (operatedById == null) throw new DataException("Invalid reference data 'Operated By'");
 
     facility.getOperatedBy().setId(operatedById);
   }
@@ -140,9 +141,9 @@ public class FacilityRepository {
       programSupported.setModifiedDate(DateTime.now().toDate());
       programSupportedMapper.addSupportedProgram(programSupported);
     } catch (DuplicateKeyException duplicateKeyException) {
-      throw new RuntimeException("Facility has already been mapped to the program");
+      throw new DataException("Facility has already been mapped to the program");
     } catch (DataIntegrityViolationException integrityViolationException) {
-      throw new RuntimeException("Invalid reference data 'Program Code'");
+      throw new DataException("Invalid reference data 'Program Code'");
     }
   }
 
@@ -153,9 +154,9 @@ public class FacilityRepository {
 
   private void validateFacilityCode(String facilityCode) {
     if (facilityCode == null || facilityCode.isEmpty())
-      throw new RuntimeException("Missing reference data 'Facility Code'");
+      throw new DataException("Missing reference data 'Facility Code'");
     Integer facilityTypeId = facilityMapper.getIdForCode(facilityCode);
-    if (facilityTypeId == null) throw new RuntimeException("Invalid reference data 'Facility Code'");
+    if (facilityTypeId == null) throw new DataException("Invalid reference data 'Facility Code'");
   }
 
   public List<FacilityType> getAllTypes() {

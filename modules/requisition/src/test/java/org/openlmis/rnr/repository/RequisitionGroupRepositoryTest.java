@@ -5,6 +5,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.MockitoAnnotations.Mock;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.builder.RequisitionGroupBuilder;
 import org.openlmis.rnr.domain.RequisitionGroup;
 import org.openlmis.core.domain.SupervisoryNode;
@@ -42,7 +43,7 @@ public class RequisitionGroupRepositoryTest {
     @Test
     public void shouldGiveDuplicateRGCodeErrorIfDuplicateRGCodeFound() throws Exception {
         doThrow(new DuplicateKeyException("")).when(requisitionGroupMapper).insert(requisitionGroup);
-        expectedEx.expect(RuntimeException.class);
+        expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Duplicate Requisition Group Code found");
 
         requisitionGroupRepository.insert(requisitionGroup);
@@ -54,7 +55,7 @@ public class RequisitionGroupRepositoryTest {
     public void shouldGiveSupervisoryNodeNotFoundErrorIfTheSupervisoryNodeDoesNotExist() throws Exception {
         when(supervisoryNodeMapper.getIdForCode(requisitionGroup.getSupervisoryNode().getCode())).thenReturn(null);
 
-        expectedEx.expect(RuntimeException.class);
+        expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Supervisory Node Not Found");
         requisitionGroupRepository.insert(requisitionGroup);
 

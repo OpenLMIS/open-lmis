@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.MockitoAnnotations.Mock;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
@@ -46,7 +47,7 @@ public class SupervisoryNodeRepositoryTest {
         doThrow(new DuplicateKeyException("")).when(supervisoryNodeMapper).insert(supervisoryNode);
         when(supervisoryNodeMapper.getIdForCode(supervisoryNode.getParent().getCode())).thenReturn(1);
 
-        expectedEx.expect(RuntimeException.class);
+        expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Duplicate Supervisory Node Code");
 
         new SupervisoryNodeRepository(supervisoryNodeMapper, facilityMapper).save(supervisoryNode);
@@ -59,7 +60,7 @@ public class SupervisoryNodeRepositoryTest {
 
         when(supervisoryNodeMapper.getIdForCode(supervisoryNode.getParent().getCode())).thenReturn(null);
 
-        expectedEx.expect(RuntimeException.class);
+        expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Supervisory Node as Parent does not exist");
 
         new SupervisoryNodeRepository(supervisoryNodeMapper, facilityMapper).save(supervisoryNode);
@@ -72,7 +73,7 @@ public class SupervisoryNodeRepositoryTest {
         when(supervisoryNodeMapper.getIdForCode(supervisoryNode.getParent().getCode())).thenReturn(1);
         when(facilityMapper.getIdForCode(supervisoryNode.getFacility().getCode())).thenReturn(null);
 
-        expectedEx.expect(RuntimeException.class);
+        expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Facility Code does not exist");
 
         new SupervisoryNodeRepository(supervisoryNodeMapper, facilityMapper).save(supervisoryNode);

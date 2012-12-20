@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProductMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
@@ -47,7 +48,7 @@ public class ProductRepositoryTest {
   @Test
   public void shouldRaiseDuplicateProductCodeError() throws Exception {
     Product product = make(a(ProductBuilder.defaultProduct));
-    expectedEx.expect(RuntimeException.class);
+    expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Duplicate Product Code found");
     doThrow(new DuplicateKeyException("")).when(mockedMapper).insert(product);
     repository.insert(product);
@@ -56,7 +57,7 @@ public class ProductRepositoryTest {
   @Test
   public void shouldRaiseIncorrectReferenceDataError() throws Exception {
     Product product = make(a(ProductBuilder.defaultProduct));
-    expectedEx.expect(RuntimeException.class);
+    expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Missing/Invalid Reference data");
     doThrow(new DataIntegrityViolationException("foreign key")).when(mockedMapper).insert(product);
     repository.insert(product);
@@ -65,7 +66,7 @@ public class ProductRepositoryTest {
   @Test
   public void shouldRaiseMissingReferenceDataError() throws Exception {
     Product product = make(a(ProductBuilder.defaultProduct));
-    expectedEx.expect(RuntimeException.class);
+    expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Missing/Invalid Reference data");
     doThrow(new DataIntegrityViolationException("violates not-null constraint")).when(mockedMapper).insert(product);
     repository.insert(product);
@@ -74,7 +75,7 @@ public class ProductRepositoryTest {
   @Test
   public void shouldRaiseIncorrectDataValueError() throws Exception {
     Product product = make(a(ProductBuilder.defaultProduct));
-    expectedEx.expect(RuntimeException.class);
+    expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Incorrect data length");
     doThrow(new DataIntegrityViolationException("value too long")).when(mockedMapper).insert(product);
     repository.insert(product);
@@ -86,7 +87,7 @@ public class ProductRepositoryTest {
     product.getDosageUnit().setCode("invalid code");
     when(mockedMapper.getDosageUnitIdForCode("invalid code")).thenReturn(null);
 
-    expectedEx.expect(RuntimeException.class);
+    expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Invalid reference data 'Dosage Unit'");
     repository.insert(product);
   }
@@ -107,7 +108,7 @@ public class ProductRepositoryTest {
     product.getForm().setCode("invalid code");
     when(mockedMapper.getProductFormIdForCode("invalid code")).thenReturn(null);
 
-    expectedEx.expect(RuntimeException.class);
+    expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Invalid reference data 'Product Form'");
     repository.insert(product);
   }

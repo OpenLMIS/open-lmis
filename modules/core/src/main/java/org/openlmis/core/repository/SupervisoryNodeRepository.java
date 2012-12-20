@@ -1,6 +1,7 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
@@ -26,17 +27,17 @@ public class SupervisoryNodeRepository {
         if (supervisoryNode.getParent() != null) {
             supervisoryNode.getParent().setId(supervisoryNodeMapper.getIdForCode(supervisoryNode.getParent().getCode()));
             if (supervisoryNode.getParent().getId() == null) {
-                throw new RuntimeException("Supervisory Node as Parent does not exist");
+                throw new DataException("Supervisory Node as Parent does not exist");
             }
         }
         if (supervisoryNode.getFacility().getId() == null) {
-            throw new RuntimeException("Facility Code does not exist");
+            throw new DataException("Facility Code does not exist");
         }
 
         try {
             supervisoryNodeMapper.insert(supervisoryNode);
         } catch (DuplicateKeyException e) {
-            throw new RuntimeException("Duplicate Supervisory Node Code");
+            throw new DataException("Duplicate Supervisory Node Code");
         }
     }
 }

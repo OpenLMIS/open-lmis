@@ -12,6 +12,7 @@ import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.core.repository.mapper.ProgramSupportedMapper;
@@ -100,7 +101,7 @@ public class FacilityRepositoryTest {
   @Test
   public void shouldRaiseDuplicateFacilityCodeError() throws Exception {
     Facility facility = make(a(defaultFacility));
-    expectedEx.expect(RuntimeException.class);
+    expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Duplicate Facility Code found");
     doThrow(new DuplicateKeyException("")).when(mockedFacilityMapper).insert(facility);
     repository.save(facility);
@@ -109,7 +110,7 @@ public class FacilityRepositoryTest {
   @Test
   public void shouldRaiseIncorrectReferenceDataError() throws Exception {
     Facility facility = make(a(defaultFacility));
-    expectedEx.expect(RuntimeException.class);
+    expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Missing/Invalid Reference data");
     doThrow(new DataIntegrityViolationException("foreign key")).when(mockedFacilityMapper).insert(facility);
     repository.save(facility);
@@ -118,7 +119,7 @@ public class FacilityRepositoryTest {
   @Test
   public void shouldRaiseMissingReferenceDataError() throws Exception {
     Facility facility = make(a(defaultFacility));
-    expectedEx.expect(RuntimeException.class);
+    expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Missing/Invalid Reference data");
     doThrow(new DataIntegrityViolationException("violates not-null constraint")).when(mockedFacilityMapper).insert(facility);
     repository.save(facility);
@@ -132,7 +133,7 @@ public class FacilityRepositoryTest {
 
     when(mockedFacilityMapper.getFacilityTypeIdForCode("facility code")).thenReturn(1);
 
-    expectedEx.expect(RuntimeException.class);
+    expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Facility has already been mapped to the program");
     doThrow(new DuplicateKeyException("Facility has already been mapped to the program")).when(programSupportedMapper).addSupportedProgram(programSupported);
     repository.addSupportedProgram(programSupported);
@@ -141,7 +142,7 @@ public class FacilityRepositoryTest {
   @Test
   public void shouldRaiseIncorrectDataValueError() throws Exception {
     Facility facility = make(a(defaultFacility));
-    expectedEx.expect(RuntimeException.class);
+    expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Incorrect data length");
     doThrow(new DataIntegrityViolationException("value too long")).when(mockedFacilityMapper).insert(facility);
     repository.save(facility);
@@ -153,7 +154,7 @@ public class FacilityRepositoryTest {
     facility.getOperatedBy().setCode("invalid code");
     when(mockedFacilityMapper.getOperatedByIdForCode("invalid code")).thenReturn(null);
 
-    expectedEx.expect(RuntimeException.class);
+    expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Invalid reference data 'Operated By'");
     repository.save(facility);
   }
@@ -174,7 +175,7 @@ public class FacilityRepositoryTest {
     facility.getFacilityType().setCode("invalid code");
     when(mockedFacilityMapper.getFacilityTypeIdForCode("invalid code")).thenReturn(null);
 
-    expectedEx.expect(RuntimeException.class);
+    expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Invalid reference data 'Facility Type'");
     repository.save(facility);
   }
@@ -185,7 +186,7 @@ public class FacilityRepositoryTest {
     facility.getGeographicZone().setId(999);
     when(mockedFacilityMapper.isGeographicZonePresent(999)).thenReturn(Boolean.FALSE);
 
-    expectedEx.expect(RuntimeException.class);
+    expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Invalid reference data 'Geographic Zone Id'");
     repository.save(facility);
   }
@@ -195,7 +196,7 @@ public class FacilityRepositoryTest {
     Facility facility = make(a(defaultFacility));
     facility.getFacilityType().setCode("");
 
-    expectedEx.expect(RuntimeException.class);
+    expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Missing mandatory reference data 'Facility Type'");
     repository.save(facility);
   }
@@ -217,7 +218,7 @@ public class FacilityRepositoryTest {
     programSupported.setProgramCode("valid Code");
 
     when(mockedFacilityMapper.getIdForCode("invalid Code")).thenReturn(null);
-    expectedEx.expect(RuntimeException.class);
+    expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Invalid reference data 'Facility Code'");
     repository.addSupportedProgram(programSupported);
   }
@@ -227,7 +228,7 @@ public class FacilityRepositoryTest {
     ProgramSupported programSupported = new ProgramSupported();
     programSupported.setFacilityCode("");
     programSupported.setProgramCode("valid Code");
-    expectedEx.expect(RuntimeException.class);
+    expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Missing reference data 'Facility Code'");
     repository.addSupportedProgram(programSupported);
   }

@@ -2,6 +2,7 @@ package org.openlmis.rnr.repository;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.rnr.domain.RequisitionGroupProgramSchedule;
@@ -42,18 +43,18 @@ public class RequisitionGroupProgramScheduleRepository {
                 requisitionGroupProgramSchedule.getDropOffFacility().setId(facilityMapper.getIdForCode(dropOffFacility.getCode()));
 
             if (requisitionGroupProgramSchedule.getRequisitionGroup().getId() == null) {
-                throw new RuntimeException("Requisition Group Code Does Not Exist");
+                throw new DataException("Requisition Group Code Does Not Exist");
             }
             if (requisitionGroupProgramSchedule.getProgram().getId() == null) {
-                throw new RuntimeException("Program Code Does Not Exist");
+                throw new DataException("Program Code Does Not Exist");
             }
             if (requisitionGroupProgramSchedule.getSchedule().getId() == null) {
-                throw new RuntimeException("Schedule Code Does Not Exist");
+                throw new DataException("Schedule Code Does Not Exist");
             }
 
             requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
         } catch (DuplicateKeyException e) {
-            throw new RuntimeException("Duplicate Requisition Group Code And Program Code Combination found");
+            throw new DataException("Duplicate Requisition Group Code And Program Code Combination found");
         }
     }
 }

@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.DosageUnit;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProductForm;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -27,13 +28,13 @@ public class ProductRepository {
       validateAndSetProductForm(product);
       mapper.insert(product);
     } catch (DuplicateKeyException duplicateKeyException) {
-      throw new RuntimeException("Duplicate Product Code found");
+      throw new DataException("Duplicate Product Code found");
     } catch (DataIntegrityViolationException dataIntegrityViolationException) {
       String errorMessage = dataIntegrityViolationException.getMessage().toLowerCase();
       if (errorMessage.contains("foreign key") || errorMessage.contains("violates not-null constraint")) {
-        throw new RuntimeException("Missing/Invalid Reference data");
+        throw new DataException("Missing/Invalid Reference data");
       } else {
-        throw new RuntimeException("Incorrect data length");
+        throw new DataException("Incorrect data length");
       }
     }
   }
@@ -46,7 +47,7 @@ public class ProductRepository {
     if (productFormCode == null || productFormCode.isEmpty()) return;
 
     Integer productFormId = mapper.getProductFormIdForCode(productFormCode);
-    if (productFormId == null) throw new RuntimeException("Invalid reference data 'Product Form'");
+    if (productFormId == null) throw new DataException("Invalid reference data 'Product Form'");
 
     form.setId(productFormId);
   }
@@ -60,7 +61,7 @@ public class ProductRepository {
 
     Integer dosageUnitId = mapper.getDosageUnitIdForCode(dosageUnitCode);
     if (dosageUnitId == null)
-      throw new RuntimeException("Invalid reference data 'Dosage Unit'");
+      throw new DataException("Invalid reference data 'Dosage Unit'");
 
     dosageUnit.setId(dosageUnitId);
   }

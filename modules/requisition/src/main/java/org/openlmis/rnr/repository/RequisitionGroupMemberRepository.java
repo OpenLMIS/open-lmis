@@ -2,6 +2,7 @@ package org.openlmis.rnr.repository;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Program;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.rnr.domain.RequisitionGroupMember;
@@ -43,27 +44,27 @@ public class RequisitionGroupMemberRepository {
         List<Integer> requisitionGroupProgramIdsForFacility = requisitionGroupMemberMapper.getRequisitionGroupProgramIdsForId(requisitionGroupMember.getFacility().getId());
 
         if (requisitionGroupMember.getRequisitionGroup().getId() == null) {
-            throw new RuntimeException("Requisition Group does not exist");
+            throw new DataException("Requisition Group does not exist");
         }
         if (requisitionGroupMember.getFacility().getId() == null) {
-            throw new RuntimeException("Facility does not exist");
+            throw new DataException("Facility does not exist");
         }
 
         // TODO : can be done through db constraints
         if (requisitionGroupMemberMapper.doesMappingExist(requisitionGroupMember.getRequisitionGroup().getId(), requisitionGroupMember.getFacility().getId()) == 1) {
-            throw new RuntimeException("Facility to Requisition Group mapping already exists");
+            throw new DataException("Facility to Requisition Group mapping already exists");
         }
 
         List<Integer> programIDsForRG = requisitionGroupProgramScheduleMapper.getProgramIDsById(requisitionGroupMember.getRequisitionGroup().getId());
         if (programIDsForRG.size() == 0) {
-            throw new RuntimeException("No Program(s) mapped for Requisition Group");
+            throw new DataException("No Program(s) mapped for Requisition Group");
         }
 
         List<Integer> commonProgramsId = intersection(requisitionGroupProgramIdsForFacility, programIDsForRG);
         if (commonProgramsId.size() > 0) {
             Program duplicateProgram = programMapper.getById(commonProgramsId.get(0));
             duplicateProgram.setId(commonProgramsId.get(0));
-            throw new RuntimeException("Facility " + requisitionGroupMember.getFacility().getCode() + " is already assigned to Requisition Group " +
+            throw new DataException("Facility " + requisitionGroupMember.getFacility().getCode() + " is already assigned to Requisition Group " +
                     requisitionGroupMemberMapper.getRequisitionGroupCodeForProgramAndFacility(duplicateProgram.getId(), requisitionGroupMember.getFacility().getId())
                     + " running same program " + duplicateProgram.getCode());
         }

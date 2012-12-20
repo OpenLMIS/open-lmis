@@ -2,6 +2,7 @@ package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProductMapper;
 import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
@@ -31,19 +32,19 @@ public class ProgramProductRepository {
             int id = programProductMapper.insert(programProduct);
             programProduct.setId(id);
         }catch (DuplicateKeyException duplicateKeyException) {
-            throw new RuntimeException("Duplicate entry for Product Code and Program Code combination found");
+            throw new DataException("Duplicate entry for Product Code and Program Code combination found");
         }
     }
 
     private void validateProductCode(String code) {
         if (code == null || code.isEmpty() || productMapper.getIdByCode(code) == null) {
-            throw new RuntimeException("Invalid Product Code");
+            throw new DataException("Invalid Product Code");
         }
     }
 
     private void validateProgramCode(String code) {
         if (code == null || code.isEmpty() || programMapper.getIdByCode(code) == null) {
-            throw new RuntimeException("Invalid Program Code");
+            throw new DataException("Invalid Program Code");
         }
     }
 }

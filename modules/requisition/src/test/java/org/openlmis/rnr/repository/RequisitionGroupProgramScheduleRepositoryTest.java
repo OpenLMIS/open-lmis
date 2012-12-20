@@ -8,6 +8,7 @@ import org.mockito.MockitoAnnotations.Mock;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.rnr.builder.RequisitionGroupBuilder;
@@ -64,7 +65,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
         when(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode())).thenReturn(null);
         when(programMapper.getIdByCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1);
         when(scheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode())).thenReturn(1);
-        expectedEx.expect(RuntimeException.class);
+        expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Requisition Group Code Does Not Exist");
         requisitionGroupProgramScheduleRepository.insert(requisitionGroupProgramSchedule);
 
@@ -78,7 +79,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
         when(programMapper.getIdByCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(null);
         when(scheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode())).thenReturn(1);
 
-        expectedEx.expect(RuntimeException.class);
+        expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Program Code Does Not Exist");
         requisitionGroupProgramScheduleRepository.insert(requisitionGroupProgramSchedule);
     }
@@ -88,7 +89,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
         when(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode())).thenReturn(1);
         when(programMapper.getIdByCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1);
         when(scheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode())).thenReturn(null);
-        expectedEx.expect(RuntimeException.class);
+        expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Schedule Code Does Not Exist");
 
         requisitionGroupProgramScheduleRepository.insert(requisitionGroupProgramSchedule);
@@ -98,7 +99,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
     public void shouldGiveDuplicateRecordErrorIfDuplicateRGCodeAndProgramCodeFound() throws Exception {
         doThrow(new DuplicateKeyException("")).when(requisitionGroupProgramScheduleMapper).insert(requisitionGroupProgramSchedule);
 
-        expectedEx.expect(RuntimeException.class);
+        expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Duplicate Requisition Group Code And Program Code Combination found");
         requisitionGroupProgramScheduleRepository.insert(requisitionGroupProgramSchedule);
     }

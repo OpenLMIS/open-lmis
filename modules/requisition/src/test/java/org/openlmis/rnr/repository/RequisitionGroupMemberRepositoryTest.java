@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.rnr.domain.RequisitionGroup;
@@ -77,7 +78,7 @@ public class RequisitionGroupMemberRepositoryTest {
     public void shouldGiveErrorIfRGDoesNotExist() throws Exception {
         when(requisitionGroupMapper.getIdForCode(requisitionGroupMember.getRequisitionGroup().getCode())).thenReturn(null);
 
-        expectedEx.expect(RuntimeException.class);
+        expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Requisition Group does not exist");
 
         new RequisitionGroupMemberRepository(requisitionGroupMemberMapper,requisitionGroupProgramScheduleMapper,requisitionGroupMapper,facilityMapper, programMapper).insert(requisitionGroupMember);
@@ -89,7 +90,7 @@ public class RequisitionGroupMemberRepositoryTest {
         when(facilityMapper.getIdForCode(requisitionGroupMember.getFacility().getCode())).thenReturn(null);
         when(requisitionGroupProgramScheduleMapper.getProgramIDsById(RG_ID)).thenReturn(programIdList);
 
-        expectedEx.expect(RuntimeException.class);
+        expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Facility does not exist");
 
         new RequisitionGroupMemberRepository(requisitionGroupMemberMapper,requisitionGroupProgramScheduleMapper,requisitionGroupMapper,facilityMapper, programMapper).insert(requisitionGroupMember);
@@ -102,7 +103,7 @@ public class RequisitionGroupMemberRepositoryTest {
 
         when(requisitionGroupProgramScheduleMapper.getProgramIDsById(RG_ID)).thenReturn(new ArrayList<Integer>());
 
-        expectedEx.expect(RuntimeException.class);
+        expectedEx.expect(DataException.class);
         expectedEx.expectMessage("No Program(s) mapped for Requisition Group");
 
         new RequisitionGroupMemberRepository(requisitionGroupMemberMapper,requisitionGroupProgramScheduleMapper,requisitionGroupMapper,facilityMapper, programMapper).insert(requisitionGroupMember);
@@ -131,7 +132,7 @@ public class RequisitionGroupMemberRepositoryTest {
 
         when(requisitionGroupMemberMapper.getRequisitionGroupCodeForProgramAndFacility(commonProgramId, FACILITY_ID)).thenReturn("DCODE");
 
-        expectedEx.expect(RuntimeException.class);
+        expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Facility " + FACILITY_CODE + " is already assigned to Requisition Group DCODE running same program " + PROGRAM_CODE);
 
         new RequisitionGroupMemberRepository(requisitionGroupMemberMapper,requisitionGroupProgramScheduleMapper,requisitionGroupMapper,facilityMapper, programMapper).insert(requisitionGroupMember);
@@ -145,7 +146,7 @@ public class RequisitionGroupMemberRepositoryTest {
 
         when(requisitionGroupMemberMapper.doesMappingExist(RG_ID,FACILITY_ID)).thenReturn(1);
 
-        expectedEx.expect(RuntimeException.class);
+        expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Facility to Requisition Group mapping already exists");
 
         new RequisitionGroupMemberRepository(requisitionGroupMemberMapper,requisitionGroupProgramScheduleMapper,requisitionGroupMapper,facilityMapper, programMapper).insert(requisitionGroupMember);

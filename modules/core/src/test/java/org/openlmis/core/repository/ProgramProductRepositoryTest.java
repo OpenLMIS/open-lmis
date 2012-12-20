@@ -10,6 +10,7 @@ import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProductMapper;
 import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
@@ -48,7 +49,7 @@ public class ProgramProductRepositoryTest {
         Product product = make(a(defaultProduct));
         Program program = make(a(ProgramBuilder.defaultProgram));
         ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
-        expectedEx.expect(RuntimeException.class);
+        expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Duplicate entry for Product Code and Program Code combination found");
         doThrow(new DuplicateKeyException("Duplicate entry for Product Code and Program Code combination found")).when(programProductMapper).insert(programProduct);
         programProductRepository.insert(programProduct);
@@ -71,7 +72,7 @@ public class ProgramProductRepositoryTest {
     public void shouldThrowErrorWhenInsertingProductForInvalidProgram() {
         Product product = make(a(defaultProduct));
         ProgramProduct programProduct = new ProgramProduct(new Program(), product, 10, true);
-        expectedEx.expect(RuntimeException.class);
+        expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Invalid Program Code");
         programProductRepository.insert(programProduct);
     }
@@ -82,7 +83,7 @@ public class ProgramProductRepositoryTest {
         when(programMapper.getIdByCode(program.getCode())).thenReturn(1);
         ProgramProduct programProduct = new ProgramProduct(program, new Product(), 10, true);
 
-        expectedEx.expect(RuntimeException.class);
+        expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Invalid Product Code");
 
         programProductRepository.insert(programProduct);
