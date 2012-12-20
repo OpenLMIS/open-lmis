@@ -64,7 +64,7 @@ public class UploadController {
         } catch (UploadException | IOException e) {
             return errorResponse(resultMap, e.getMessage());
         }
-        return new ResponseEntity<ModelMap>(resultMap, HttpStatus.OK);
+        return new ResponseEntity<>(resultMap, HttpStatus.OK);
     }
 
     private ResponseEntity<ModelMap> errorResponse(ModelMap modelMap, String errorMessage) {

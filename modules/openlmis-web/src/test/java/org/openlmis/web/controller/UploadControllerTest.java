@@ -30,7 +30,6 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class UploadControllerTest {
 
-
     public static final String USER = "user";
     @Mock
     CSVParser csvParser;
@@ -39,7 +38,6 @@ public class UploadControllerTest {
 
     @Mock
     RecordHandler handler;
-
     @Mock
     private UploadHandlerFactory uploadHandlerFactory;
 
