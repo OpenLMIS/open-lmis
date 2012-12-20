@@ -22,8 +22,6 @@ describe('Rnr Template controllers', function () {
       ];
 
       rnrTemplateForm = { 'rnrColumns': rnrColumnList, 'sources': sources};
-
-
       ctrl = $controller(SaveRnrTemplateController, {$scope:scope,rnrTemplateForm: rnrTemplateForm});
 
     }));

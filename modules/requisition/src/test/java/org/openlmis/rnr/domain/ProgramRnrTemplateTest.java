@@ -16,10 +16,10 @@ public class ProgramRnrTemplateTest {
     @Test
     public void shouldGiveErrorIfDependentsAreMissing() throws Exception {
         Map<String,String> errors = new ProgramRnrTemplate("programCode", asList(
-                rnrColumn("quantityRequested", false, null, "Requested Quantity"),
-                rnrColumn("reasonForRequestedQuantity", false, null, "Requested Quantity Reason"),
-                rnrColumn("stockOutDays", false, RnRColumnSource.CALCULATED, "stockOutDays"),
-                rnrColumn("normalizedConsumption", false, RnRColumnSource.USER_INPUT, "normalizedConsumption"),
+                rnrColumn(QUANTITY_REQUESTED, false, null, "Requested Quantity"),
+                rnrColumn(REASON_FOR_REQUESTED_QUANTITY, false, null, "Requested Quantity Reason"),
+                rnrColumn(STOCK_OUT_DAYS, false, RnRColumnSource.CALCULATED, "stockOutDays"),
+                rnrColumn(NORMALIZED_CONSUMPTION, false, RnRColumnSource.USER_INPUT, "normalizedConsumption"),
                 rnrColumn(STOCK_IN_HAND, true, RnRColumnSource.USER_INPUT, "stock in hand"),
                 rnrColumn(QUANTITY_DISPENSED, true, RnRColumnSource.USER_INPUT, "quantity dispensed"),
                 rnrColumn(QUANTITY_RECEIVED, true, RnRColumnSource.USER_INPUT, "quantity received"),
@@ -33,10 +33,10 @@ public class ProgramRnrTemplateTest {
     @Test
     public void shouldNotGiveErrorIfDependentsAreNotMissing() throws Exception {
         Map<String,String> errors = new ProgramRnrTemplate("programCode", asList(
-                rnrColumn("quantityRequested", false, null, "Requested Quantity"),
-                rnrColumn("reasonForRequestedQuantity", false, null, "Requested Quantity Reason"),
-                rnrColumn("stockOutDays", false, RnRColumnSource.CALCULATED, "stockOutDays"),
-                rnrColumn("normalizedConsumption", false, RnRColumnSource.USER_INPUT, "normalizedConsumption"),
+                rnrColumn(QUANTITY_REQUESTED, false, null, "Requested Quantity"),
+                rnrColumn(REASON_FOR_REQUESTED_QUANTITY, false, null, "Requested Quantity Reason"),
+                rnrColumn(STOCK_OUT_DAYS, false, RnRColumnSource.CALCULATED, "stockOutDays"),
+                rnrColumn(NORMALIZED_CONSUMPTION, false, RnRColumnSource.USER_INPUT, "normalizedConsumption"),
                 rnrColumn(STOCK_IN_HAND, true, RnRColumnSource.USER_INPUT, "stock in hand"),
                 rnrColumn(QUANTITY_DISPENSED, true, RnRColumnSource.USER_INPUT, "quantity dispensed"),
                 rnrColumn(QUANTITY_RECEIVED, true, RnRColumnSource.USER_INPUT, "quantity received"),
@@ -50,10 +50,10 @@ public class ProgramRnrTemplateTest {
     @Test
     public void shouldReturnValidationErrorWhenDependantColumnsForQuantityDispensedIsNotVisible() {
         Map<String,String> errors = new ProgramRnrTemplate("programCode", asList(
-                rnrColumn("quantityRequested", false, null, "Requested Quantity"),
-                rnrColumn("reasonForRequestedQuantity", false, null, "Requested Quantity Reason"),
-                rnrColumn("stockOutDays", false, RnRColumnSource.CALCULATED, "stockOutDays"),
-                rnrColumn("normalizedConsumption", false, RnRColumnSource.USER_INPUT, "normalizedConsumption"),
+                rnrColumn(QUANTITY_REQUESTED, false, null, "Requested Quantity"),
+                rnrColumn(REASON_FOR_REQUESTED_QUANTITY, false, null, "Requested Quantity Reason"),
+                rnrColumn(STOCK_OUT_DAYS, false, RnRColumnSource.CALCULATED, "stockOutDays"),
+                rnrColumn(NORMALIZED_CONSUMPTION, false, RnRColumnSource.USER_INPUT, "normalizedConsumption"),
                 rnrColumn(STOCK_IN_HAND, true, RnRColumnSource.USER_INPUT, "stock in hand"),
                 rnrColumn(QUANTITY_DISPENSED, true, RnRColumnSource.CALCULATED, "quantity dispensed"),
                 rnrColumn(QUANTITY_RECEIVED, true, RnRColumnSource.USER_INPUT, "quantity received"),
@@ -67,10 +67,10 @@ public class ProgramRnrTemplateTest {
     @Test
     public void shouldReturnValidationErrorWhenDependantColumnsForStockInHandIsNotVisible() {
         Map<String, String> errors = new ProgramRnrTemplate("programCode", asList(
-                rnrColumn("quantityRequested", false, null, "Requested Quantity"),
-                rnrColumn("reasonForRequestedQuantity", false, null, "Requested Quantity Reason"),
-                rnrColumn("stockOutDays", false, RnRColumnSource.CALCULATED, "stockOutDays"),
-                rnrColumn("normalizedConsumption", false, RnRColumnSource.USER_INPUT, "normalizedConsumption"),
+                rnrColumn(QUANTITY_REQUESTED, false, null, "Requested Quantity"),
+                rnrColumn(REASON_FOR_REQUESTED_QUANTITY, false, null, "Requested Quantity Reason"),
+                rnrColumn(STOCK_OUT_DAYS, false, RnRColumnSource.CALCULATED, "stockOutDays"),
+                rnrColumn(NORMALIZED_CONSUMPTION, false, RnRColumnSource.USER_INPUT, "normalizedConsumption"),
                 rnrColumn(STOCK_IN_HAND, true, RnRColumnSource.CALCULATED, "stock in hand"),
                 rnrColumn(QUANTITY_DISPENSED, true, RnRColumnSource.USER_INPUT, "quantity dispensed"),
                 rnrColumn(QUANTITY_RECEIVED, true, RnRColumnSource.USER_INPUT, "quantity received"),
@@ -85,10 +85,10 @@ public class ProgramRnrTemplateTest {
     @Test
     public void shouldReturnValidationErrorWhenStockInHandAndQuantityDispensedBothAreCalculated() {
         Map<String, String> errors = new ProgramRnrTemplate("programCode", asList(
-                rnrColumn("quantityRequested", false, null, "Requested Quantity"),
-                rnrColumn("reasonForRequestedQuantity", false, null, "Requested Quantity Reason"),
-                rnrColumn("stockOutDays", false, RnRColumnSource.CALCULATED, "stockOutDays"),
-                rnrColumn("normalizedConsumption", false, RnRColumnSource.USER_INPUT, "normalizedConsumption"),
+                rnrColumn(QUANTITY_REQUESTED, false, null, "Requested Quantity"),
+                rnrColumn(REASON_FOR_REQUESTED_QUANTITY, false, null, "Requested Quantity Reason"),
+                rnrColumn(STOCK_OUT_DAYS, false, RnRColumnSource.CALCULATED, "stockOutDays"),
+                rnrColumn(NORMALIZED_CONSUMPTION, false, RnRColumnSource.USER_INPUT, "normalizedConsumption"),
                 rnrColumn(STOCK_IN_HAND, true, RnRColumnSource.CALCULATED, "stock in hand"),
                 rnrColumn(QUANTITY_DISPENSED, true, RnRColumnSource.CALCULATED, "quantity dispensed"),
                 rnrColumn(QUANTITY_RECEIVED, true, RnRColumnSource.USER_INPUT, "quantity received"),
@@ -105,30 +105,30 @@ public class ProgramRnrTemplateTest {
     @Test
     public void shouldReturnValidationErrorWhenOnlyTheNumberOfStockOutDaysIsSelectedButNotNormalizedConsumption() {
         Map<String, String> errors = new ProgramRnrTemplate("programCode", asList(
-                rnrColumn("stockOutDays", true, RnRColumnSource.CALCULATED, "stockOutDays"),
-                rnrColumn("normalizedConsumption", false, RnRColumnSource.USER_INPUT, "normalizedConsumption"),
-                rnrColumn("stockInHand", false, RnRColumnSource.CALCULATED, "stockInHand"),
-                rnrColumn("beginningBalance", true, RnRColumnSource.USER_INPUT, "beginningBalance"),
-                rnrColumn("quantityReceived", true, RnRColumnSource.USER_INPUT, "quantityReceived"),
-                rnrColumn("lossesAndAdjustments", true, RnRColumnSource.USER_INPUT, "lossesAndAdjustments"),
-                rnrColumn("quantityRequested", false, null, "Requested Quantity"),
-                rnrColumn("reasonForRequestedQuantity", false, null, "Requested Quantity Reason"),
-                rnrColumn("quantityDispensed", false, RnRColumnSource.CALCULATED, "quantityDispensed"))).validate();
+                rnrColumn(STOCK_OUT_DAYS, true, RnRColumnSource.CALCULATED, "stockOutDays"),
+                rnrColumn(NORMALIZED_CONSUMPTION, false, RnRColumnSource.USER_INPUT, "normalizedConsumption"),
+                rnrColumn(STOCK_IN_HAND, false, RnRColumnSource.CALCULATED, "stockInHand"),
+                rnrColumn(BEGINNING_BALANCE, true, RnRColumnSource.USER_INPUT, "beginningBalance"),
+                rnrColumn(QUANTITY_RECEIVED, true, RnRColumnSource.USER_INPUT, "quantityReceived"),
+                rnrColumn(LOSSES_AND_ADJUSTMENTS, true, RnRColumnSource.USER_INPUT, "lossesAndAdjustments"),
+                rnrColumn(QUANTITY_REQUESTED, false, null, "Requested Quantity"),
+                rnrColumn(REASON_FOR_REQUESTED_QUANTITY, false, null, "Requested Quantity Reason"),
+                rnrColumn(QUANTITY_DISPENSED, false, RnRColumnSource.CALCULATED, "quantityDispensed"))).validate();
         assertEquals("'normalizedConsumption' is needed if you report 'stockOutDays'", errors.get("stockOutDays"));
     }
 
     @Test
     public void shouldReturnValidationErrorWhenOnlyNormalizedConsumptionIsSelectedButNotNumberOfStockOutDays() {
         Map<String, String> errors = new ProgramRnrTemplate("programCode", asList(
-                rnrColumn("stockOutDays", false, RnRColumnSource.CALCULATED, "Number of Stock out days"),
-                rnrColumn("normalizedConsumption", true, RnRColumnSource.USER_INPUT, "Normalized Consumption"),
-                rnrColumn("stockInHand", false, RnRColumnSource.CALCULATED, "stockInHand"),
-                rnrColumn("beginningBalance", true, RnRColumnSource.USER_INPUT, "beginningBalance"),
-                rnrColumn("quantityReceived", true, RnRColumnSource.USER_INPUT, "quantityReceived"),
-                rnrColumn("lossesAndAdjustments", true, RnRColumnSource.USER_INPUT, "lossesAndAdjustments"),
-                rnrColumn("quantityRequested", false, null, "Requested Quantity"),
-                rnrColumn("reasonForRequestedQuantity", false, null, "Requested Quantity Reason"),
-                rnrColumn("quantityDispensed", false, RnRColumnSource.CALCULATED, "quantityDispensed"))).validate();
+                rnrColumn(STOCK_OUT_DAYS, false, RnRColumnSource.CALCULATED, "Number of Stock out days"),
+                rnrColumn(NORMALIZED_CONSUMPTION, true, RnRColumnSource.USER_INPUT, "Normalized Consumption"),
+                rnrColumn(STOCK_IN_HAND, false, RnRColumnSource.CALCULATED, "stockInHand"),
+                rnrColumn(BEGINNING_BALANCE, true, RnRColumnSource.USER_INPUT, "beginningBalance"),
+                rnrColumn(QUANTITY_RECEIVED, true, RnRColumnSource.USER_INPUT, "quantityReceived"),
+                rnrColumn(LOSSES_AND_ADJUSTMENTS, true, RnRColumnSource.USER_INPUT, "lossesAndAdjustments"),
+                rnrColumn(QUANTITY_REQUESTED, false, null, "Requested Quantity"),
+                rnrColumn(REASON_FOR_REQUESTED_QUANTITY, false, null, "Requested Quantity Reason"),
+                rnrColumn(QUANTITY_DISPENSED, false, RnRColumnSource.CALCULATED, "quantityDispensed"))).validate();
         assertEquals("User needs to enter 'Number of Stock out days' to calculate 'Normalized Consumption'", errors.get("normalizedConsumption"));
     }
 
@@ -136,20 +136,19 @@ public class ProgramRnrTemplateTest {
     public void shouldReturnValidationErrorWhenOnlyRequestedAmountIsSelectedButNotReasonForRequestedAmount() {
 
         Map<String, String> errors = new ProgramRnrTemplate("programCode", asList(
-                rnrColumn("stockOutDays", false, RnRColumnSource.CALCULATED, "Number of Stock out days"),
-                rnrColumn("normalizedConsumption", true, RnRColumnSource.USER_INPUT, "Normalized Consumption"),
-                rnrColumn("stockInHand", false, RnRColumnSource.CALCULATED, "stockInHand"),
-                rnrColumn("beginningBalance", true, RnRColumnSource.USER_INPUT, "beginningBalance"),
-                rnrColumn("quantityReceived", true, RnRColumnSource.USER_INPUT, "quantityReceived"),
-                rnrColumn("lossesAndAdjustments", true, RnRColumnSource.USER_INPUT, "lossesAndAdjustments"),
-                rnrColumn("quantityDispensed", false, RnRColumnSource.CALCULATED, "quantityDispensed"),
-                rnrColumn("quantityRequested", true, null, "Requested Quantity"),
-                rnrColumn("reasonForRequestedQuantity", false, null, "Requested Quantity Reason"))).validate();
+                rnrColumn(STOCK_OUT_DAYS, false, RnRColumnSource.CALCULATED, "Number of Stock out days"),
+                rnrColumn(NORMALIZED_CONSUMPTION, true, RnRColumnSource.USER_INPUT, "Normalized Consumption"),
+                rnrColumn(STOCK_IN_HAND, false, RnRColumnSource.CALCULATED, "stockInHand"),
+                rnrColumn(BEGINNING_BALANCE, true, RnRColumnSource.USER_INPUT, "beginningBalance"),
+                rnrColumn(QUANTITY_RECEIVED, true, RnRColumnSource.USER_INPUT, "quantityReceived"),
+                rnrColumn(LOSSES_AND_ADJUSTMENTS, true, RnRColumnSource.USER_INPUT, "lossesAndAdjustments"),
+                rnrColumn(QUANTITY_DISPENSED, false, RnRColumnSource.CALCULATED, "quantityDispensed"),
+                rnrColumn(QUANTITY_REQUESTED, true, null, "Requested Quantity"),
+                rnrColumn(REASON_FOR_REQUESTED_QUANTITY, false, null, "Requested Quantity Reason"))).validate();
         assertEquals("'Requested Quantity' must include an 'Requested Quantity Reason' from the user", errors.get("quantityRequested"));
     }
 
     private RnrColumn rnrColumn(String columnName, boolean visible, RnRColumnSource selectedColumnSource, String label) {
-
         RnrColumn rnrColumn = new RnrColumn();
         rnrColumn.setSource(selectedColumnSource);
         rnrColumn.setVisible(visible);

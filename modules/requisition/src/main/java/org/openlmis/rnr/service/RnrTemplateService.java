@@ -24,15 +24,14 @@ public class RnrTemplateService {
     }
 
     public List<RnrColumn> fetchAllRnRColumns(String programCode) {
-        List<RnrColumn> rnrColumns = rnrRepository.fetchRnrTemplateColumns(programCode);
-        return rnrColumns;
+        return rnrRepository.fetchRnrTemplateColumns(programCode);
     }
 
 
     public Map<String, String> saveRnRTemplateForProgram(ProgramRnrTemplate programTemplate) {
         Map<String, String> errors =(programTemplate.validate());
 
-        if (!(errors == null || errors.isEmpty())) {
+        if (!(errors.isEmpty())) {
             return errors;
         }
 

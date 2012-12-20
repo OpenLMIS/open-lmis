@@ -60,6 +60,18 @@ public class ProgramRnrTemplate {
         return rnrColumnsMap.get(columnName).getLabel();
     }
 
+    private boolean validateDependentsVisible(String columnToEvaluate, List<String> dependents) {
+        if (columnsVisible(columnToEvaluate) && columnsCalculated(columnToEvaluate)) {
+            return columnsVisible(dependents.toArray(new String[dependents.size()])) ;
+        }
+        return true;
+    }
+
+    private boolean areSelectedTogether(String column1, String column2) {
+        return (columnsVisible(column1) && columnsVisible(column2)) || (!columnsVisible(column1) && !columnsVisible(column2));
+    }
+
+
     public Map<String, String> validate() {
         validateDependentFieldsAreSelected();
         validateStockInHandHasAllDependentColumnsChecked();
@@ -84,7 +96,6 @@ public class ProgramRnrTemplate {
         }
     }
 
-
     private void validateQuantityDispensedAndStockInHandCannotBeCalculated() {
 
         if (columnsVisible(QUANTITY_DISPENSED) && columnsVisible(STOCK_IN_HAND)) {
@@ -93,14 +104,6 @@ public class ProgramRnrTemplate {
                 errorMap.put(STOCK_IN_HAND, "Interdependent fields ('" + getRnrColumnLabelFor(QUANTITY_DISPENSED) + "', '" + getRnrColumnLabelFor(STOCK_IN_HAND) + "') cannot be of type Calculated at the same time");
             }
         }
-    }
-
-
-    private boolean validateDependentsVisible(String columnToEvaluate, List<String> dependents) {
-        if (columnsVisible(columnToEvaluate) && columnsCalculated(columnToEvaluate)) {
-            return columnsVisible(dependents.toArray(new String[dependents.size()])) ;
-        }
-        return true;
     }
 
     private void validateStockInHandHasAllDependentColumnsChecked() {
@@ -133,10 +136,6 @@ public class ProgramRnrTemplate {
                 errorMap.put(NORMALIZED_CONSUMPTION, "User needs to enter '" + getRnrColumnLabelFor(STOCK_OUT_DAYS) + "' to calculate '" + getRnrColumnLabelFor(NORMALIZED_CONSUMPTION) + "'");
             }
         }
-    }
-
-    private boolean areSelectedTogether(String column1, String column2) {
-        return (columnsVisible(column1) && columnsVisible(column2)) || (!columnsVisible(column1) && !columnsVisible(column2));
     }
 
     private void quantityRequestedAndReasonForRequestedQuantityBothShouldBeVisibleTogether() {
