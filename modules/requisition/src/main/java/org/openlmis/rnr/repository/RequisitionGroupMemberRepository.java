@@ -49,6 +49,7 @@ public class RequisitionGroupMemberRepository {
             throw new RuntimeException("Facility does not exist");
         }
 
+        // TODO : can be done through db constraints
         if (requisitionGroupMemberMapper.doesMappingExist(requisitionGroupMember.getRequisitionGroup().getId(), requisitionGroupMember.getFacility().getId()) == 1) {
             throw new RuntimeException("Facility to Requisition Group mapping already exists");
         }

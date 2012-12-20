@@ -22,21 +22,23 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+
 @Component
 @NoArgsConstructor
 public class CSVParser {
 
     @Transactional
     public int process(InputStream inputStream, ModelClass modelClass, RecordHandler recordHandler, String modifiedBy)
-            throws SuperCsvException, IOException {
+            throws UploadException {
         CsvPreference csvPreference = new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE)
                 .surroundingSpacesNeedQuotes(true).build();
 
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-        CsvDozerBeanReader  csvBeanReader = new CsvDozerBeanReader(bufferedReader, csvPreference);
+        CsvDozerBeanReader csvBeanReader = new CsvDozerBeanReader(bufferedReader, csvPreference);
 
         String[] headers = parseHeaders(csvBeanReader);
-        List<String> headersSet = Arrays.asList(headers);
+        List<String> headersSet = asList(headers);
 
         modelClass.validateHeaders(headersSet);
         List<CellProcessor> cellProcessors = CsvCellProcessors.getProcessors(modelClass, headersSet);
@@ -46,11 +48,16 @@ public class CSVParser {
         return csvBeanReader.getRowNumber() - 1;
     }
 
-    private String[] parseHeaders(CsvDozerBeanReader csvBeanReader) throws IOException {
-        String[] headers = csvBeanReader.getHeader(true);
+    private String[] parseHeaders(CsvDozerBeanReader csvBeanReader) throws UploadException {
+        String[] headers;
+        try {
+            headers = csvBeanReader.getHeader(true);
+        } catch (IOException e) {
+            throw new UploadException(e.getMessage());
+        }
         for (int i = 0; i < headers.length; i++) {
-            if(headers[i] == null) {
-                throw new UploadException("Header for column " + (i+1) + " is missing.");
+            if (headers[i] == null) {
+                throw new UploadException("Header for column " + (i + 1) + " is missing.");
             }
             headers[i] = headers[i].trim();
         }
@@ -58,8 +65,9 @@ public class CSVParser {
     }
 
     private void parse(ModelClass modelClass, RecordHandler recordHandler,
-                       CsvDozerBeanReader csvBeanReader, String[] userFriendlyHeaders, CellProcessor[] processors, String modifiedBy) throws SuperCsvException, IOException {
-        String[] fieldMappings  = modelClass.getFieldMappings(userFriendlyHeaders);
+                       CsvDozerBeanReader csvBeanReader, String[] userFriendlyHeaders,
+                       CellProcessor[] processors, String modifiedBy) throws UploadException {
+        String[] fieldMappings = modelClass.getFieldMappings(userFriendlyHeaders);
         Importable importedModel;
         try {
             csvBeanReader.configureBeanMapping(modelClass.getClazz(), fieldMappings);
@@ -67,17 +75,26 @@ public class CSVParser {
                 recordHandler.execute(importedModel, csvBeanReader.getRowNumber(), modifiedBy);
             }
         } catch (SuperCsvConstraintViolationException constraintException) {
-            createException("Missing Mandatory data in field :", userFriendlyHeaders, constraintException);
+            createHeaderException("Missing Mandatory data in field :", userFriendlyHeaders, constraintException);
         } catch (SuperCsvCellProcessorException processorException) {
-            createException("Incorrect Data type in field :", userFriendlyHeaders, processorException);
+            createHeaderException("Incorrect Data type in field :", userFriendlyHeaders, processorException);
+        } catch (SuperCsvException superCsvException) {
+            createDataException("Columns does not match the headers:", userFriendlyHeaders, superCsvException);
+        } catch (IOException e) {
+            throw new UploadException(e.getMessage());
         }
     }
 
 
-    private void createException(String error, String[] headers, SuperCsvCellProcessorException exception) throws SuperCsvException {
+    private void createHeaderException(String error, String[] headers, SuperCsvException exception) {
         CsvContext csvContext = exception.getCsvContext();
         String header = headers[csvContext.getColumnNumber() - 1];
         throw new UploadException(String.format("%s '%s' of Record No. %d", error, header, csvContext.getRowNumber() - 1));
+    }
+
+    private void createDataException(String error, String[] headers, SuperCsvException exception) {
+        CsvContext csvContext = exception.getCsvContext();
+        throw new UploadException(String.format("%s '%s' in Record No. %d:%s", error, asList(headers), csvContext.getRowNumber() - 1, csvContext.getRowSource().toString()));
     }
 
 }

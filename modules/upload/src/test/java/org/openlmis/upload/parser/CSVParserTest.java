@@ -24,7 +24,6 @@ public class CSVParserTest {
 
     private CSVParser csvParser;
     private DummyRecordHandler recordHandler;
-    private CsvCellProcessors csvUtil;
 
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
@@ -48,7 +47,7 @@ public class CSVParserTest {
         InputStream inputStream = new ByteArrayInputStream(csvInput.getBytes("UTF-8"));
 
 
-        csvParser.process(inputStream, dummyImportableClass , recordHandler, "user");
+        csvParser.process(inputStream, dummyImportableClass, recordHandler, "user");
 
         List<Importable> importedObjects = recordHandler.getImportedObjects();
         assertEquals(23, ((DummyImportable) importedObjects.get(0)).getMandatoryIntField());
@@ -100,6 +99,20 @@ public class CSVParserTest {
 
         expectedEx.expect(UploadException.class);
         expectedEx.expectMessage("Header for column 2 is missing.");
+
+        csvParser.process(inputStream, dummyImportableClass, recordHandler, "user");
+    }
+
+    @Test
+    public void shouldReportFewerOrMoreColumnData() throws IOException {
+        String csvInput =
+                "Mandatory String Field,mandatoryIntField,optionalStringField,OPTIONAL INT FIELD\n" +
+                        "a,1,,,\n";
+
+        InputStream inputStream = new ByteArrayInputStream(csvInput.getBytes("UTF-8"));
+
+        expectedEx.expect(UploadException.class);
+        expectedEx.expectMessage("Columns does not match the headers: '[Mandatory String Field, mandatoryIntField, optionalStringField, OPTIONAL INT FIELD]' in Record No. 1:[a, 1, null, null, null]");
 
         csvParser.process(inputStream, dummyImportableClass, recordHandler, "user");
     }
