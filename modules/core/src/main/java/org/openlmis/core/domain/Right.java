@@ -3,11 +3,11 @@ package org.openlmis.core.domain;
 import lombok.Getter;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openlmis.core.serializer.RightDeSerializer;
 import org.openlmis.core.serializer.RightSerializer;
-import org.openlmis.core.serializer.RightsDeSerializer;
 
 @JsonSerialize(using = RightSerializer.class)
-@JsonDeserialize(using = RightsDeSerializer.class)
+@JsonDeserialize(using = RightDeSerializer.class)
 public enum Right {
 
   VIEW_REQUISITION("view requisition", "Permission to view requisitions"),
