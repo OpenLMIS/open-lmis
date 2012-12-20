@@ -7,9 +7,8 @@ function LoginController($scope, $http,localStorageService) {
             data:data,
             headers:{'Content-Type':'application/x-www-form-urlencoded'}
         }).success(function (data) {
-                if (data.authenticated == "true") {
-                    localStorageService.add(localStorageKeys.RIGHT,data.rights);
-
+            if (data.authenticated == "true") {
+              localStorageService.add(localStorageKeys.RIGHT,getRights(data.rights));
           if (window.location.href.indexOf("login.html") != -1) {
             window.location = "/";
           } else {
@@ -22,5 +21,13 @@ function LoginController($scope, $http,localStorageService) {
       error(function (data) {
         $scope.error = "Server Error!!";
       });
+  };
+
+  function getRights(rightList) {
+    var rights = [];
+    $.each(rightList, function (index, right) {
+      rights.push(right.right);
+    });
+    return rights;
   }
 }

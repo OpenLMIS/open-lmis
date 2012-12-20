@@ -1,5 +1,13 @@
 package org.openlmis.core.domain;
 
+import lombok.Getter;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openlmis.core.serializer.RightSerializer;
+import org.openlmis.core.serializer.RightsDeSerializer;
+
+@JsonSerialize(using = RightSerializer.class)
+@JsonDeserialize(using = RightsDeSerializer.class)
 public enum Right {
 
   VIEW_REQUISITION("view requisition", "Permission to view requisitions"),
@@ -9,16 +17,13 @@ public enum Right {
   MANAGE_FACILITY("manage facility", "Permission to manage facility(crud)"),
   CONFIGURE_RNR("configure rnr", "Permission to create and edit r&r template for any program");
 
-  private final String rightName;
-  private final String description;
+    @Getter
+    private final String rightName;
+    @Getter
+    private final String description;
 
   private Right(String rightName, String description) {
     this.rightName = rightName;
     this.description = description;
   }
-
-  public String getRightName() {
-    return rightName;
-  }
-
 }

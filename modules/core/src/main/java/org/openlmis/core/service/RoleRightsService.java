@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static java.util.Arrays.asList;
+
 @Service
 @NoArgsConstructor
 public class RoleRightsService {
@@ -29,5 +31,9 @@ public class RoleRightsService {
 
     public List<Right> getRights(String username) {
         return roleRightsRepository.getAllRightsForUser(username);
+    }
+
+    public List<Right> getAllRights() {
+        return asList(Right.values());
     }
 }
