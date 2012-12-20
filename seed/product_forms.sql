@@ -1,5 +1,5 @@
-delete from product_form;
-INSERT INTO product_form(id, code, display_order) VALUES
+delete from product_forms;
+INSERT INTO product_forms(id, code, displayOrder) VALUES
 (1,'Tablet',1),
 (2,'Capsule',2),
 (3,'Bottle',3),

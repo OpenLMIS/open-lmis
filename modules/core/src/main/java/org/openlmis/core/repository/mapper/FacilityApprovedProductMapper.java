@@ -2,7 +2,6 @@ package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.FacilityApprovedProduct;
-import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProgramProduct;
 import org.springframework.stereotype.Repository;
 
@@ -19,7 +18,7 @@ public interface FacilityApprovedProductMapper {
 
     @Select("SELECT * " +
             "FROM products p, facility_approved_products fap, program_products pp, facilities f, " +
-            "product_form pf , dosage_unit du where " +
+            "product_forms pf , dosage_unit du where " +
             "pp.programId = (select id from programs WHERE LOWER(code) =  LOWER(#{programCode})) " +
             "AND f.id = #{facilityId} AND f.typeId = fap.facilityTypeId " +
             "AND fap.programProductId = pp.id " +

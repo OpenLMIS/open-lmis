@@ -59,7 +59,7 @@ public interface ProductMapper {
     @Select("SELECT id FROM dosage_Unit where LOWER(code) = LOWER(#{code})")
     Integer getDosageUnitIdForCode(String code);
 
-    @Select("SELECT id FROM product_form where LOWER(code) = LOWER(#{code})")
+    @Select("SELECT id FROM product_forms where LOWER(code) = LOWER(#{code})")
     Integer getProductFormIdForCode(String code);
 
     // Used by ProgramProductMapper
