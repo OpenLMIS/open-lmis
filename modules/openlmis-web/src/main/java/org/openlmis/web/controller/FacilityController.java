@@ -64,7 +64,7 @@ public class FacilityController extends BaseController {
                 addPrograms(programService.getAll()).get();
     }
 
-    @RequestMapping(value = "admin/facility/", method = RequestMethod.POST, headers = "Accept=application/json")
+    @RequestMapping(value = "admin/facility", method = RequestMethod.POST, headers = "Accept=application/json")
     @PreAuthorize("hasPermission('','MANAGE_FACILITY')")
     public ResponseEntity<ModelMap> addOrUpdate(@RequestBody Facility facility, HttpServletRequest request) {
         ModelMap modelMap = new ModelMap();
