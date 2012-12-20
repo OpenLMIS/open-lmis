@@ -19,6 +19,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
 import static org.openlmis.core.builder.SupervisoryNodeBuilder.SUPERVISORY_NODE_CODE;
@@ -80,7 +81,7 @@ public class SupervisoryNodeMapperIT {
     }
 
     @Test
-    public void shouldGetSupervisoryNodesForAUserAndProgramWithAppropriateRight() {
+    public void shouldGetAllSupervisoryNodesInTheHierarchyForAUserAndProgramWithAppropriateRight() {
         Program program1 = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
         Program program2 = insertProgram(make(a(defaultProgram, with(programCode, "p2"))));
 
@@ -99,19 +100,25 @@ public class SupervisoryNodeMapperIT {
 
         supervisoryNodeMapper.insert(supervisoryNode);
 
-        SupervisoryNode node = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN1")));
-        node.setFacility(facility);
-        SupervisoryNode supervisoryNode1 = insertSupervisoryNode(node);
+        SupervisoryNode supervisoryNode1 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN1")));
+        supervisoryNode1.setFacility(facility);
+        supervisoryNode1 = insertSupervisoryNode(supervisoryNode1);
+
+        SupervisoryNode childNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "CN1")));
+        childNode.setFacility(facility);
+        childNode.setParent(supervisoryNode);
+        childNode = insertSupervisoryNode(childNode);
 
         insertRoleAssignments(program1, user, createAndViewRole, supervisoryNode);
         insertRoleAssignments(program1, user, approveAndViewRole, supervisoryNode1);
         insertRoleAssignments(program2, user, createAndViewRole, supervisoryNode);
         insertRoleAssignments(program1, user, createAndViewRole, null);
 
-        List<SupervisoryNode> userSupervisoryNodes = supervisoryNodeMapper.getAllForAUserByProgramAndRight(user.getId(), program1.getId(), CREATE_REQUISITION);
+        List<SupervisoryNode> userSupervisoryNodes = supervisoryNodeMapper.getAllSupervisoryNodesInHierarchyBy(user.getId(), program1.getId(), CREATE_REQUISITION);
 
-        assertThat(userSupervisoryNodes.size(), is(1));
-        assertThat(userSupervisoryNodes.get(0).getCode(), is(SUPERVISORY_NODE_CODE));
+        assertThat(userSupervisoryNodes.size(), is(2));
+        assertTrue(userSupervisoryNodes.contains(supervisoryNode));
+        assertTrue(userSupervisoryNodes.contains(childNode));
     }
 
     private SupervisoryNode insertSupervisoryNode(SupervisoryNode supervisoryNode) {

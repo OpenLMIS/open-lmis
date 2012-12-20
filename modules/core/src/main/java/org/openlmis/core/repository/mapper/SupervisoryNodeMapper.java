@@ -26,13 +26,24 @@ public interface SupervisoryNodeMapper {
     @Select("SELECT id FROM supervisory_nodes WHERE LOWER(code) = LOWER(#{code})")
     Integer getIdForCode(String code);
 
-    @Select("SELECT s.* FROM " +
-            "supervisory_nodes s " +
-            "INNER JOIN role_assignments ra ON s.id = ra.supervisoryNodeId " +
-            "INNER JOIN role_rights rr ON ra.roleId = rr.roleId " +
-            "WHERE rr.rightId = #{right.name} " +
-            "AND ra.userId = #{userId} " +
-            "AND ra.programId = #{programId}")
-    List<SupervisoryNode> getAllForAUserByProgramAndRight(@Param(value = "userId") Integer userId, @Param(value = "programId") Integer programId,
-                                                          @Param(value = "right") Right right);
+    @Select("WITH  recursive  supervisoryNodesRec AS " +
+            "   (" +
+            "   SELECT *" +
+            "   FROM supervisory_nodes " +
+            "   WHERE id in  (SELECT s.id FROM  " +
+            "       supervisory_nodes s " +
+            "       INNER JOIN role_assignments ra ON s.id = ra.supervisoryNodeId  " +
+            "       INNER JOIN role_rights rr ON ra.roleId = rr.roleId  " +
+            "       WHERE rr.rightId = #{right.name}  " +
+            "       AND ra.userId = #{userId}  " +
+            "       AND ra.programId = #{programId}) " +
+            "   UNION " +
+            "   SELECT sn.* " +
+            "   FROM supervisory_nodes sn " +
+            "   JOIN supervisoryNodesRec " +
+            "   ON sn.parentId = supervisoryNodesRec.id " +
+            "   )" +
+            "SELECT * FROM supervisoryNodesRec")
+    List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(@Param(value = "userId") Integer userId, @Param(value = "programId") Integer programId,
+                                                              @Param(value = "right") Right right);
 }
