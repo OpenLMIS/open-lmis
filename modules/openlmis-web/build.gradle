@@ -61,6 +61,12 @@ dependencies {
 cargo {
   containerId = 'tomcat7x'
   port = 8080
+  
+  remote {
+    hostname = '192.168.34.4'
+    username = 'openlmis'
+    password = ''
+  }
 }
  
 [jettyRun]*.configure {
