@@ -6,19 +6,24 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
+import java.util.List;
+
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
+import static org.openlmis.core.builder.ProgramBuilder.programCode;
+import static org.openlmis.core.builder.SupervisoryNodeBuilder.SUPERVISORY_NODE_CODE;
+import static org.openlmis.core.builder.SupervisoryNodeBuilder.code;
+import static org.openlmis.core.domain.Right.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
@@ -31,9 +36,16 @@ public class SupervisoryNodeMapperIT {
 
     @Autowired
     SupervisoryNodeMapper supervisoryNodeMapper;
-
+    @Autowired
+    RoleAssignmentMapper roleAssignmentMapper;
     @Autowired
     FacilityMapper facilityMapper;
+    @Autowired
+    RoleRightsMapper roleRightsMapper;
+    @Autowired
+    ProgramMapper programMapper;
+    @Autowired
+    UserMapper userMapper;
 
     @Before
     public void setUp() throws Exception {
@@ -51,7 +63,7 @@ public class SupervisoryNodeMapperIT {
         SupervisoryNode resultSupervisoryNode = supervisoryNodeMapper.getSupervisoryNode(supervisoryNode.getId());
 
         assertThat(resultSupervisoryNode, is(notNullValue()));
-        assertThat(resultSupervisoryNode.getCode(), CoreMatchers.is(SupervisoryNodeBuilder.SUPERVISORY_NODE_CODE));
+        assertThat(resultSupervisoryNode.getCode(), CoreMatchers.is(SUPERVISORY_NODE_CODE));
         assertThat(resultSupervisoryNode.getName(), CoreMatchers.is(SupervisoryNodeBuilder.SUPERVISORY_NODE_NAME));
         assertThat(resultSupervisoryNode.getApprovalPoint(), CoreMatchers.is(SupervisoryNodeBuilder.SUPERVISORY_NODE_APPROVAL_POINT));
         assertThat(resultSupervisoryNode.getModifiedDate(), CoreMatchers.is(SupervisoryNodeBuilder.SUPERVISORY_NODE_DATE));
@@ -65,5 +77,61 @@ public class SupervisoryNodeMapperIT {
         Integer fetchedId = supervisoryNodeMapper.getIdForCode(supervisoryNode.getCode());
 
         assertThat(fetchedId, is(supervisoryNode.getId()));
+    }
+
+    @Test
+    public void shouldGetSupervisoryNodesForAUserAndProgramWithAppropriateRight() {
+        Program program1 = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
+        Program program2 = insertProgram(make(a(defaultProgram, with(programCode, "p2"))));
+
+        User user = insertUser();
+
+        Role createAndViewRole = new Role("createAndViewRole", "random description");
+        roleRightsMapper.insertRole(createAndViewRole);
+
+        Role approveAndViewRole = new Role("approveAndViewRole", "random description");
+        roleRightsMapper.insertRole(approveAndViewRole);
+
+        roleRightsMapper.createRoleRight(createAndViewRole.getId(), CREATE_REQUISITION);
+        roleRightsMapper.createRoleRight(createAndViewRole.getId(), VIEW_REQUISITION);
+        roleRightsMapper.createRoleRight(approveAndViewRole.getId(), APPROVE_REQUISITION);
+        roleRightsMapper.createRoleRight(approveAndViewRole.getId(), VIEW_REQUISITION);
+
+        supervisoryNodeMapper.insert(supervisoryNode);
+
+        SupervisoryNode node = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN1")));
+        node.setFacility(facility);
+        SupervisoryNode supervisoryNode1 = insertSupervisoryNode(node);
+
+        insertRoleAssignments(program1, user, createAndViewRole, supervisoryNode);
+        insertRoleAssignments(program1, user, approveAndViewRole, supervisoryNode1);
+        insertRoleAssignments(program2, user, createAndViewRole, supervisoryNode);
+        insertRoleAssignments(program1, user, createAndViewRole, null);
+
+        List<SupervisoryNode> userSupervisoryNodes = supervisoryNodeMapper.getAllForAUserByProgramAndRight(user.getId(), program1.getId(), CREATE_REQUISITION);
+
+        assertThat(userSupervisoryNodes.size(), is(1));
+        assertThat(userSupervisoryNodes.get(0).getCode(), is(SUPERVISORY_NODE_CODE));
+    }
+
+    private SupervisoryNode insertSupervisoryNode(SupervisoryNode supervisoryNode) {
+        supervisoryNodeMapper.insert(supervisoryNode);
+        return supervisoryNode;
+    }
+
+    private Program insertProgram(Program program) {
+        program.setId(programMapper.insert(program));
+        return program;
+    }
+
+    private Role insertRoleAssignments(Program program, User user, Role role, SupervisoryNode supervisoryNode) {
+        roleAssignmentMapper.createRoleAssignment(user, role, program, supervisoryNode);
+        return role;
+    }
+
+    private User insertUser() {
+        User user = new User("random123123", "pwd");
+        user.setId(userMapper.insert(user));
+        return user;
     }
 }

@@ -1,8 +1,11 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface SupervisoryNodeMapper {
@@ -22,4 +25,14 @@ public interface SupervisoryNodeMapper {
 
     @Select("SELECT id FROM supervisory_nodes WHERE LOWER(code) = LOWER(#{code})")
     Integer getIdForCode(String code);
+
+    @Select("SELECT s.* FROM " +
+            "supervisory_nodes s " +
+            "INNER JOIN role_assignments ra ON s.id = ra.supervisoryNodeId " +
+            "INNER JOIN role_rights rr ON ra.roleId = rr.roleId " +
+            "WHERE rr.rightId = #{right.name} " +
+            "AND ra.userId = #{userId} " +
+            "AND ra.programId = #{programId}")
+    List<SupervisoryNode> getAllForAUserByProgramAndRight(@Param(value = "userId") Integer userId, @Param(value = "programId") Integer programId,
+                                                          @Param(value = "right") Right right);
 }
