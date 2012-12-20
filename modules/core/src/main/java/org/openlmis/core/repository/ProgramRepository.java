@@ -1,7 +1,9 @@
 package org.openlmis.core.repository;
 
 import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.RoleAssignment;
+import org.openlmis.core.domain.User;
 import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.core.repository.mapper.ProgramSupportedMapper;
 import org.openlmis.core.repository.mapper.RoleRightsMapper;
@@ -34,6 +36,10 @@ public class ProgramRepository {
 
     public List<Program> getAll() {
         return programMapper.getAll();
+    }
+
+    public List<Program> getActiveProgramsForUser(Integer userId, Right right){
+        return programMapper.getActiveProgramsForUser(userId, right);
     }
 
     public List<Program> filterActiveProgramsAndFacility(List<RoleAssignment> roleAssignments, Integer facilityId) {

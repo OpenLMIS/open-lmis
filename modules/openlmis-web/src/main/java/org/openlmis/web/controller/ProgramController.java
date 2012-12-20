@@ -50,6 +50,12 @@ public class ProgramController {
         return programService.filterActiveProgramsAndFacility(userRoles, facilityId);
     }
 
+    @RequestMapping(value = "/logistics/{userId}/programs.json", method = RequestMethod.GET, headers = "Accept=application/json")
+    @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
+    public List<Program> getActiveProgramsForUserForCreateRequisition(@PathVariable(value = "userId") Integer userId) {
+        return programService.getActiveProgramsForUserForCreateRequisition(userId);
+    }
+
     private String loggedInUser(HttpServletRequest request) {
         return (String) request.getSession().getAttribute(UserAuthenticationSuccessHandler.USER);
     }

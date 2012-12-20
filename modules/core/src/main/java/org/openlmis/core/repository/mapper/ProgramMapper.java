@@ -54,9 +54,9 @@ public interface ProgramMapper {
             "FROM programs p " +
             "INNER JOIN role_assignments ra ON p.id = ra.programId " +
             "INNER JOIN role_rights rr ON ra.roleId = rr.roleId " +
-            "WHERE ra.userId = #{user.id} " +
+            "WHERE ra.userId = #{userId} " +
             "AND rr.rightId = #{right.name} " +
             "AND p.active = true")
-    List<Program> getActiveProgramsForUser(@Param(value = "user") User user, @Param(value = "right") Right right);
+    List<Program> getActiveProgramsForUser(@Param(value = "userId") Integer userId, @Param(value = "right") Right right);
 
 }
