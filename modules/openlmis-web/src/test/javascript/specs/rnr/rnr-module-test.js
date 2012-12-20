@@ -259,5 +259,55 @@ describe('RnrModuleTest', function () {
             expect(0).toEqual(lineItem.calculatedOrderQuantity);
         });
     });
+
+    describe('Fill Packs To Ship', function () {
+        beforeEach(function () {
+            programRnrColumnList = [
+                {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}},
+                {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
+                {"indicator":"C", "name":"quantityDispensed", "source":{"name":"USER_INPUT"}},
+                {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}},
+                {"indicator":"E", "name":"stockInHand", "source":{"name":"CALCULATED"}},
+                {"indicator":"F", "name":"newPatientCount", "source":{"name":"USER_INPUT"}},
+                {"indicator":"X", "name":"stockOutDays", "source":{"name":"USER_INPUT"}}
+            ];
+        });
+
+        it('should set packsToShip when calculated quantity is available and requested quantity is null', function () {
+            var lineItem = {"id":1, "beginningBalance":5, "quantityReceived":20, "quantityDispensed":15, "newPatientCount":0,
+                            "stockOutDays":0, "lossesAndAdjustments":5, "stockInHand":null, "dosesPerMonth":10,
+                            "dosesPerDispensingUnit":10, "maxMonthsOfStock":3, "packSize":12};
+
+            rnrModule.fill(lineItem, programRnrColumnList);
+            expect(3).toEqual(lineItem.packsToShip);
+        });
+
+        it('should set packsToShip when requested quantity is available', function () {
+            var lineItem = {"id":1, "beginningBalance":5, "quantityReceived":20, "quantityDispensed":15, "newPatientCount":0,
+                "stockOutDays":3,"lossesAndAdjustments":5, "stockInHand":null, "dosesPerMonth":10, "dosesPerDispensingUnit":10,
+                "maxMonthsOfStock":3, "packSize":12, "quantityRequested": 100};
+
+            rnrModule.fill(lineItem, programRnrColumnList);
+            expect(8).toEqual(lineItem.packsToShip);
+        });
+
+        it('should set packsToShip to one when rounded value of packsToShip is zero and roundToZero is false', function () {
+            var lineItem = {"id":1, "beginningBalance":5, "quantityReceived":20, "quantityDispensed":15, "newPatientCount":0,
+                "stockOutDays":3,"lossesAndAdjustments":5, "stockInHand":null, "dosesPerMonth":10, "dosesPerDispensingUnit":10,
+                "maxMonthsOfStock":3, "packSize":10, "quantityRequested": 4, "roundToZero":false};
+
+            rnrModule.fill(lineItem, programRnrColumnList);
+            expect(1).toEqual(lineItem.packsToShip);
+        });
+
+        it('should set packsToShip to zero when rounded value of packsToShip is zero and roundToZero is true', function () {
+            var lineItem = {"id":1, "beginningBalance":5, "quantityReceived":20, "quantityDispensed":15, "newPatientCount":0,
+                "stockOutDays":3,"lossesAndAdjustments":5, "stockInHand":null, "dosesPerMonth":10, "dosesPerDispensingUnit":10,
+                "maxMonthsOfStock":3, "packSize":10, "quantityRequested": 4, "roundToZero":true};
+
+            rnrModule.fill(lineItem, programRnrColumnList);
+            expect(0).toEqual(lineItem.packsToShip);
+        });
+    });
 });
 

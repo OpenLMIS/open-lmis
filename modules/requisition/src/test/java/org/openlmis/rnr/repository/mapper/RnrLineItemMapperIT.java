@@ -70,7 +70,7 @@ public class RnrLineItemMapperIT {
     @Test
     public void shouldInsertRequisitionLineItem() {
         Integer rnrId = rnrMapper.insert(new Rnr(facilityId, PROGRAM_CODE, RnrStatus.INITIATED, "user"));
-        Integer requisitionLineItemId = rnrLineItemMapper.insert(new RnrLineItem(rnrId, facilityApprovedProduct, "user"));
+		Integer requisitionLineItemId = rnrLineItemMapper.insert(new RnrLineItem(rnrId, facilityApprovedProduct, "user"));
         assertNotNull(requisitionLineItemId);
     }
 
@@ -78,6 +78,7 @@ public class RnrLineItemMapperIT {
     public void shouldReturnRnrLineItemsByRnrId() {
         Integer rnrId = rnrMapper.insert(new Rnr(facilityId, "HIV", RnrStatus.INITIATED, "user"));
         RnrLineItem lineItem = new RnrLineItem(rnrId, facilityApprovedProduct, "user");
+		lineItem.setPacksToShip(20);
         rnrLineItemMapper.insert(lineItem);
 
         List<RnrLineItem> rnrLineItems = rnrLineItemMapper.getRnrLineItemsByRnrId(rnrId);
@@ -87,6 +88,10 @@ public class RnrLineItemMapperIT {
         assertThat(rnrLineItem.getDosesPerMonth(), is(30));
         assertThat(rnrLineItem.getDosesPerDispensingUnit(), is(10));
         assertThat(rnrLineItem.getProduct(), is("Primary Name Tablet strength mg"));
+		assertThat(rnrLineItem.getPacksToShip(), is(20));
+		assertThat(rnrLineItem.getDispensingUnit(), is("Strip"));
+		assertThat(rnrLineItem.getRoundToZero(), is(true));
+		assertThat(rnrLineItem.getPackSize(), is(10));
     }
 
     @Test
@@ -98,7 +103,8 @@ public class RnrLineItemMapperIT {
         lineItem.setModifiedBy("user1");
         lineItem.setBeginningBalance(43);
         lineItem.setLossesAndAdjustments(10);
-        rnrLineItemMapper.update(lineItem);
+        int updateCount = rnrLineItemMapper.update(lineItem);
+		assertThat(updateCount, is(1));
         List<RnrLineItem> rnrLineItems = rnrLineItemMapper.getRnrLineItemsByRnrId(rnrId);
 
         assertThat(rnrLineItems.get(0).getBeginningBalance(), is(43));

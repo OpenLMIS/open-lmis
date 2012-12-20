@@ -25,7 +25,7 @@ public class RnrLineItemTest {
         RnrLineItem rnrLineItem = new RnrLineItem(1, new FacilityApprovedProduct("warehouse", programProduct, 3), "foo");
         assertEquals(3, rnrLineItem.getMaxMonthsOfStock().intValue());
         assertEquals(1, rnrLineItem.getRnrId().intValue());
-        assertEquals("Strip", rnrLineItem.getUnitOfIssue());
+        assertEquals("Strip", rnrLineItem.getDispensingUnit());
         assertEquals("ASPIRIN", rnrLineItem.getProductCode());
         assertEquals(30, rnrLineItem.getDosesPerMonth().intValue());
         assertEquals("foo", rnrLineItem.getModifiedBy());

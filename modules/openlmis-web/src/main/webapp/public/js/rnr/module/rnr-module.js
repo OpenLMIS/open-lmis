@@ -107,6 +107,29 @@ rnrModule.fill = function (lineItem, programRnrColumnList) {
         lineItem.calculatedOrderQuantity < 0 ? (lineItem.calculatedOrderQuantity = 0) : 0;
     }
 
+    function applyRoundingRules(){
+        var packsToShip = Math.round(lineItem.packsToShip);
+        if(lineItem.packsToShip < 1 && lineItem.packsToShip > 0 && packsToShip == 0 && lineItem.roundToZero == false)
+            packsToShip = 1;
+
+        lineItem.packsToShip = packsToShip;
+    }
+
+    function fillPacksToShip() {
+        var packSize = parseInt(lineItem.packSize);
+        var orderQuantity = lineItem.quantityRequested == null?
+                                lineItem.calculatedOrderQuantity : lineItem.quantityRequested;
+
+        if(orderQuantity == null || !isNumber(orderQuantity)) {
+            lineItem.packsToShip = null;
+            return;
+        }
+
+        lineItem.packsToShip = orderQuantity/packSize;
+
+        applyRoundingRules();
+    }
+
     var a = parseInt(lineItem.beginningBalance);
     var b = parseInt(lineItem.quantityReceived);
     var c = parseInt(lineItem.quantityDispensed);
@@ -119,4 +142,5 @@ rnrModule.fill = function (lineItem, programRnrColumnList) {
     fillAMC();
     fillMaxStockQuantity();
     fillCalculatedOrderQuantity();
+    fillPacksToShip();
 }
