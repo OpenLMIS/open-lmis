@@ -1,4 +1,4 @@
-package org.openlmis.rnr.repository;
+package org.openlmis.core.repository;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -7,8 +7,8 @@ import org.junit.rules.ExpectedException;
 import org.mockito.MockitoAnnotations.Mock;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.repository.mapper.FacilityMapper;
-import org.openlmis.rnr.domain.SupervisoryNode;
-import org.openlmis.rnr.repository.mapper.SupervisoryNodeMapper;
+import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
 import org.springframework.dao.DuplicateKeyException;
 
 import static org.hamcrest.CoreMatchers.is;

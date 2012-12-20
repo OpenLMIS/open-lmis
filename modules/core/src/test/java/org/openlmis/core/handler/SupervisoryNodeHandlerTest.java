@@ -1,10 +1,11 @@
-package org.openlmis.rnr.handler;
+package org.openlmis.core.handler;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations.Mock;
-import org.openlmis.rnr.domain.SupervisoryNode;
-import org.openlmis.rnr.service.SupervisoryNodeService;
+import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.handler.SupervisoryNodeHandler;
+import org.openlmis.core.service.SupervisoryNodeService;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;

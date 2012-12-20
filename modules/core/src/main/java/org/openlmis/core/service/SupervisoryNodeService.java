@@ -1,8 +1,8 @@
-package org.openlmis.rnr.service;
+package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.rnr.domain.SupervisoryNode;
-import org.openlmis.rnr.repository.SupervisoryNodeRepository;
+import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

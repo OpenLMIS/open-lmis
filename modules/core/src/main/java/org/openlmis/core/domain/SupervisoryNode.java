@@ -1,8 +1,7 @@
-package org.openlmis.rnr.domain;
+package org.openlmis.core.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.Facility;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 

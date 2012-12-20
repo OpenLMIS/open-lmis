@@ -78,7 +78,7 @@
                     <value type="java.lang.Class">org.openlmis.rnr.domain.RequisitionGroup</value>
                 </entry>
                 <entry key="supervisoryNode">
-                    <value type="java.lang.Class">org.openlmis.rnr.domain.SupervisoryNode</value>
+                    <value type="java.lang.Class">org.openlmis.core.domain.SupervisoryNode</value>
                 </entry>
                 <entry key="requisitionGroup">
                     <value type="java.lang.Class">org.openlmis.rnr.domain.RequisitionGroup</value>

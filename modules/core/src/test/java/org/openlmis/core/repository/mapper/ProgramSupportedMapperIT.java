@@ -122,7 +122,7 @@ public class ProgramSupportedMapperIT {
   }
 
   private Role insertRoleAssignments(Program program, User user, Role role) {
-    roleAssignmentMapper.createRoleAssignment(user, role, program);
+    roleAssignmentMapper.createRoleAssignment(user, role, program, null);
     return role;
   }
 

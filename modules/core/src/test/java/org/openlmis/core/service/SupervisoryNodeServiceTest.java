@@ -1,10 +1,11 @@
-package org.openlmis.rnr.service;
+package org.openlmis.core.service;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations.Mock;
-import org.openlmis.rnr.domain.SupervisoryNode;
-import org.openlmis.rnr.repository.SupervisoryNodeRepository;
+import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.repository.SupervisoryNodeRepository;
+import org.openlmis.core.service.SupervisoryNodeService;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;

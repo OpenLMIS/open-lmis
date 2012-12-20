@@ -3,6 +3,7 @@ package org.openlmis.core.repository.mapper;
 import org.junit.Test;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
+import org.openlmis.core.builder.SupervisoryNodeBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.service.SpringIntegrationTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,9 @@ public class ProgramMapperIT extends SpringIntegrationTest {
 
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    SupervisoryNodeMapper supervisoryNodeMapper;
 
     @Test
     public void shouldGetAllActiveProgram() {
@@ -104,23 +108,31 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     }
 
     @Test
-    public void shouldGetAllProgramsForAUserForWhichHeHasCreateRnrRight(){
+    public void shouldGetAllProgramsForUserSupervisedFacilitiesForWhichHeHasCreateRnrRight(){
+        Facility facility = make(a(defaultFacility));
+        facility.setId(facilityMapper.insert(facility));
+        SupervisoryNode node = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
+        node.setFacility(facility);
+        SupervisoryNode supervisoryNode = insertSupervisoryNode(node);
+
         Program activeProgram = insertProgram(make(a(defaultProgram, with(programCode, "P1"))));
         Program inactiveProgram = insertProgram(make(a(defaultProgram, with(programCode, "P2"), with(programStatus, false))));
         Program activeProgramWithoutRight = insertProgram(make(a(defaultProgram, with(programCode, "P3"))));
+        Program activeProgramForHomeFacility = insertProgram(make(a(defaultProgram, with(programCode, "P4"))));
 
         User user = insertUser();
 
         Role createRnrRole = new Role("R1", "Create Rnr Role");
         roleRightsMapper.insertRole(createRnrRole);
         roleRightsMapper.createRoleRight(createRnrRole.getId(), Right.CREATE_REQUISITION);
-        insertRoleAssignments(activeProgram, user, createRnrRole);
-        insertRoleAssignments(inactiveProgram, user, createRnrRole);
+        insertRoleAssignments(activeProgram, user, createRnrRole, supervisoryNode);
+        insertRoleAssignments(inactiveProgram, user, createRnrRole, supervisoryNode);
+        insertRoleAssignments(activeProgramForHomeFacility, user, createRnrRole, null);
 
         Role viewRnrRole = new Role("R2", "View Rnr Role");
         roleRightsMapper.insertRole(viewRnrRole);
         roleRightsMapper.createRoleRight(viewRnrRole.getId(), Right.VIEW_REQUISITION);
-        insertRoleAssignments(activeProgramWithoutRight, user, viewRnrRole);
+        insertRoleAssignments(activeProgramWithoutRight, user, viewRnrRole, supervisoryNode);
 
         List<Program> programs = programMapper.getActiveProgramsForUser(user.getId(), Right.CREATE_REQUISITION);
 
@@ -128,13 +140,18 @@ public class ProgramMapperIT extends SpringIntegrationTest {
         assertThat(programs.get(0).getCode(), is("P1"));
     }
 
+    private SupervisoryNode insertSupervisoryNode(SupervisoryNode supervisoryNode) {
+        supervisoryNodeMapper.insert(supervisoryNode);
+        return supervisoryNode;
+    }
+
     private Program insertProgram(Program program) {
         program.setId(programMapper.insert(program));
         return program;
     }
 
-    private Role insertRoleAssignments(Program program, User user, Role role) {
-        roleAssignmentMapper.createRoleAssignment(user, role, program);
+    private Role insertRoleAssignments(Program program, User user, Role role, SupervisoryNode supervisoryNode) {
+        roleAssignmentMapper.createRoleAssignment(user, role, program, supervisoryNode);
         return role;
     }
 

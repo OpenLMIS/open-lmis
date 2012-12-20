@@ -1,8 +1,8 @@
-package org.openlmis.rnr.handler;
+package org.openlmis.core.handler;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.rnr.domain.SupervisoryNode;
-import org.openlmis.rnr.service.SupervisoryNodeService;
+import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.service.SupervisoryNodeService;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.handler.AbstractModelPersistenceHandler;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -5,8 +5,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.repository.mapper.FacilityMapper;
+import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
 import org.openlmis.rnr.domain.RequisitionGroup;
-import org.openlmis.rnr.domain.SupervisoryNode;
+import org.openlmis.core.domain.SupervisoryNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -20,7 +21,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.rnr.builder.RequisitionGroupBuilder.*;
-import static org.openlmis.rnr.builder.SupervisoryNodeBuilder.defaultSupervisoryNode;
+import static org.openlmis.core.builder.SupervisoryNodeBuilder.defaultSupervisoryNode;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext-requisition.xml")

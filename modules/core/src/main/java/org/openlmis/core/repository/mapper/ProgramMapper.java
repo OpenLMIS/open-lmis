@@ -56,6 +56,7 @@ public interface ProgramMapper {
             "INNER JOIN role_rights rr ON ra.roleId = rr.roleId " +
             "WHERE ra.userId = #{userId} " +
             "AND rr.rightId = #{right.name} " +
+            "AND ra.supervisoryNodeId IS NOT NULL " +
             "AND p.active = true")
     List<Program> getActiveProgramsForUser(@Param(value = "userId") Integer userId, @Param(value = "right") Right right);
 

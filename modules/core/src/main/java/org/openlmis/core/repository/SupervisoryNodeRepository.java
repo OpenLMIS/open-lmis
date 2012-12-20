@@ -1,9 +1,9 @@
-package org.openlmis.rnr.repository;
+package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.repository.mapper.FacilityMapper;
-import org.openlmis.rnr.domain.SupervisoryNode;
-import org.openlmis.rnr.repository.mapper.SupervisoryNodeMapper;
+import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;

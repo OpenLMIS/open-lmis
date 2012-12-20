@@ -2,10 +2,7 @@ package org.openlmis.core.repository.mapper;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.Role;
-import org.openlmis.core.domain.RoleAssignment;
-import org.openlmis.core.domain.User;
+import org.openlmis.core.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -57,9 +54,9 @@ public class RoleAssignmentMapperIT {
         roleRightsMapper.createRoleRight(r2.getId(), APPROVE_REQUISITION);
         roleRightsMapper.createRoleRight(r2.getId(), VIEW_REQUISITION);
 
-        insertRoleAssignments(program1, user, r1);
-        insertRoleAssignments(program1, user, r2);
-        insertRoleAssignments(program2, user, r2);
+        insertRoleAssignments(program1, user, r1, null);
+        insertRoleAssignments(program1, user, r2, null);
+        insertRoleAssignments(program2, user, r2, null);
 
         List<RoleAssignment> roleAssignments =
                 roleAssignmentMapper.getRoleAssignmentsWithGivenRightForAUser(CREATE_REQUISITION, user.getUserName());
@@ -74,8 +71,8 @@ public class RoleAssignmentMapperIT {
         return program;
     }
 
-    private Role insertRoleAssignments(Program program, User user, Role role) {
-        roleAssignmentMapper.createRoleAssignment(user, role, program);
+    private Role insertRoleAssignments(Program program, User user, Role role, SupervisoryNode supervisoryNode) {
+        roleAssignmentMapper.createRoleAssignment(user, role, program, supervisoryNode);
         return role;
     }
 

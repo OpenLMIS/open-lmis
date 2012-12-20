@@ -22,9 +22,10 @@ public interface RoleAssignmentMapper {
                                                                   @Param(value = "userName") String userName);
 
     @Insert("INSERT INTO role_assignments" +
-            "(userId, roleId, programId) VALUES " +
-            "(#{user.id}, #{role.id}, #{program.id})")
+            "(userId, roleId, programId, supervisoryNodeId) VALUES " +
+            "(#{user.id}, #{role.id}, #{program.id}, #{supervisoryNode.id})")
     int createRoleAssignment(@Param(value = "user") User user,
                              @Param(value = "role") Role role,
-                             @Param(value = "program") Program program);
+                             @Param(value = "program") Program program,
+                             @Param(value = "supervisoryNode") SupervisoryNode supervisoryNode);
 }

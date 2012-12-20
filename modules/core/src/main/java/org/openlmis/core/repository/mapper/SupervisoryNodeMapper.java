@@ -1,10 +1,7 @@
-package org.openlmis.rnr.repository.mapper;
+package org.openlmis.core.repository.mapper;
 
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
-import org.openlmis.rnr.domain.SupervisoryNode;
+import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.SupervisoryNode;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -17,9 +14,9 @@ public interface SupervisoryNodeMapper {
     })
     SupervisoryNode getSupervisoryNode(Integer id);
 
-    @Select("INSERT INTO supervisory_nodes " +
+    @Insert("INSERT INTO supervisory_nodes " +
             "(code, name, parentId, facilityId, approvalPoint, description, modifiedBy, modifiedDate)" +
-            " VALUES (#{code}, #{name}, #{parent.id}, #{facility.id}, #{approvalPoint}, #{description}, #{modifiedBy}, #{modifiedDate}) returning id")
+            " VALUES (#{code}, #{name}, #{parent.id}, #{facility.id}, #{approvalPoint}, #{description}, #{modifiedBy}, #{modifiedDate})")
     @Options(useGeneratedKeys = true)
     Integer insert(SupervisoryNode supervisoryNode);
 

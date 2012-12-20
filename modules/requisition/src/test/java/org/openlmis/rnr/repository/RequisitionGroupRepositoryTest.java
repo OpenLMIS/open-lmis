@@ -7,9 +7,9 @@ import org.junit.rules.ExpectedException;
 import org.mockito.MockitoAnnotations.Mock;
 import org.openlmis.rnr.builder.RequisitionGroupBuilder;
 import org.openlmis.rnr.domain.RequisitionGroup;
-import org.openlmis.rnr.domain.SupervisoryNode;
+import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.rnr.repository.mapper.RequisitionGroupMapper;
-import org.openlmis.rnr.repository.mapper.SupervisoryNodeMapper;
+import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
 import org.springframework.dao.DuplicateKeyException;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;

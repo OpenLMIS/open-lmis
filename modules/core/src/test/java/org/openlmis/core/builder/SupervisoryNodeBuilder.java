@@ -1,9 +1,9 @@
-package org.openlmis.rnr.builder;
+package org.openlmis.core.builder;
 
 import com.natpryce.makeiteasy.Instantiator;
 import com.natpryce.makeiteasy.Property;
 import com.natpryce.makeiteasy.PropertyLookup;
-import org.openlmis.rnr.domain.SupervisoryNode;
+import org.openlmis.core.domain.SupervisoryNode;
 
 import java.util.Date;
 
@@ -28,7 +28,7 @@ public class SupervisoryNodeBuilder {
             supervisoryNode.setName(lookup.valueOf(name, SUPERVISORY_NODE_NAME));
             supervisoryNode.setApprovalPoint(lookup.valueOf(approvalPoint, SUPERVISORY_NODE_APPROVAL_POINT));
             supervisoryNode.setModifiedBy("user");
-            supervisoryNode.setModifiedDate(lookup.valueOf(modifiedDate,SUPERVISORY_NODE_DATE));
+            supervisoryNode.setModifiedDate(lookup.valueOf(modifiedDate, SUPERVISORY_NODE_DATE));
             return supervisoryNode;
         }
     };

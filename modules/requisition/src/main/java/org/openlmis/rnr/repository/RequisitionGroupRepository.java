@@ -3,7 +3,7 @@ package org.openlmis.rnr.repository;
 import lombok.NoArgsConstructor;
 import org.openlmis.rnr.domain.RequisitionGroup;
 import org.openlmis.rnr.repository.mapper.RequisitionGroupMapper;
-import org.openlmis.rnr.repository.mapper.SupervisoryNodeMapper;
+import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
