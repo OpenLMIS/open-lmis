@@ -60,6 +60,12 @@ public class HomePage extends Page {
     @FindBy(how = How.XPATH, using = "//input[@value='Next']")
     private static WebElement nextButton;
 
+    @FindBy(how = How.LINK_TEXT, using = "Manage Facilities")
+    private static WebElement manageFacilityLink;
+
+    @FindBy(how = How.LINK_TEXT, using = "Search")
+    private static WebElement searchLink;
+
     public HomePage(TestWebDriver driver) throws  IOException {
         super(driver);
         PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
@@ -114,6 +120,14 @@ public class HomePage extends Page {
         testWebDriver.selectByVisibleText(programDropDownSelect,program);
         nextButton.click();
         return new InitiateRnRPage(testWebDriver);
+    }
+
+    public DeleteFacilityPage navigateSearchFacility() throws IOException {
+        testWebDriver.waitForElementToAppear(manageFacilityLink);
+        manageFacilityLink.click();
+        testWebDriver.waitForElementToAppear(searchLink);
+        searchLink.click();
+        return new DeleteFacilityPage(testWebDriver);
     }
 
 }

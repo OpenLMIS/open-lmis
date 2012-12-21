@@ -36,9 +36,6 @@ public class DriverFactory {
         if (driverType.equalsIgnoreCase("Firefox")) {
             return createFirefoxDriver(enableJavascript);
         }
-//        } else if (driverType.equalsIgnoreCase("IE")) {
-//            return new InternetExplorerDriver();
-//        }
 //        else if (driverType.equals("<path_to_chromedriver> /Users/Manjot/Downloads/chromedriver"))
 //        {
 //                return new ChromeDriver();

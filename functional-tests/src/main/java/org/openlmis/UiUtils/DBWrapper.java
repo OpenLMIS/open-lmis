@@ -103,6 +103,7 @@ public class DBWrapper {
         dbwrapper.dbConnection("delete from users where userName like('User%');", "alter");
         dbwrapper.dbConnection("delete from requisition;", "alter");
         dbwrapper.dbConnection("delete from programs_supported;", "alter");
+        dbwrapper.dbConnection("delete from supervisory_nodes;", "alter");
         dbwrapper.dbConnection("delete from facilities;", "alter");
     }
 

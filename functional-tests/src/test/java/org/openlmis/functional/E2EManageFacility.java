@@ -13,20 +13,19 @@ import org.testng.annotations.Test;
 @TransactionConfiguration(defaultRollback=true)
 @Transactional
 
-public class E2EInitiateRnR extends TestCaseHelper {
+public class E2EManageFacility extends TestCaseHelper {
 
     @BeforeClass
     public void setUp() throws Exception
     {
         DBWrapper dbWrapper = new DBWrapper();
         dbWrapper.deleteUser();
-        dbWrapper.deleteProgramRnrColumns();
     }
 
     @Test(dataProvider = "Data-Provider-Function-Positive")
-    public void testE2EInitiateRnR(String program,String user, String password,String[] credentials) throws Exception {
+    public void testE2EInitiateRnR(String[] credentials) throws Exception {
 
-
+        LoginPage loginPage=new LoginPage(testWebDriver);
         DBWrapper dbWrapper = new DBWrapper();
 
         dbWrapper.insertUser();
@@ -38,27 +37,19 @@ public class E2EInitiateRnR extends TestCaseHelper {
         dbWrapper.insertFacilityApprovedProducts();
 
 
-        LoginPage loginPage=new LoginPage(testWebDriver);
+
         HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
         CreateFacilityPage createFacilityPage = homePage.navigateCreateFacility();
         String date_time=createFacilityPage.enterAndVerifyFacility();
 
-        dbWrapper.allocateFacilityToUser();
+        DeleteFacilityPage deleteFacilityPage=homePage.navigateSearchFacility();
+        deleteFacilityPage.searchFacility(date_time);
+        deleteFacilityPage.deleteAndVerifyFacility("FCcode"+date_time,"FCname"+date_time );
+        deleteFacilityPage.restoreAndVerifyFacility("FCcode"+date_time,"FCname"+date_time );
 
-        TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
-        templateConfigPage.configureTemplate();
+        homePage.logout();
 
-        LoginPage loginPageSecond=homePage.logout();
-        HomePage homePageUser = loginPageSecond.loginAs(user, password);
-
-        InitiateRnRPage initiateRnRPage = homePageUser.navigateAndInitiateRnr(date_time, program);
-        initiateRnRPage.verifyRnRHeader(date_time,program);
-
-        initiateRnRPage.calculateAndVerifyStockOnHand(10,20,5,5,1);
-        initiateRnRPage.saveRnR();
-
-        homePageUser.logout();
 
     }
     @AfterClass
@@ -72,7 +63,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     @DataProvider(name = "Data-Provider-Function-Positive")
     public Object[][] parameterIntTestProviderPositive() {
         return new Object[][]{
-                {"HIV","User123", "User123",new String[]{"Admin123", "Admin123"}}
+                {new String[]{"Admin123", "Admin123"}}
         };
     }
 }

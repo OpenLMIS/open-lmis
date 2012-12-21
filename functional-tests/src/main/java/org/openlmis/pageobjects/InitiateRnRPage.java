@@ -103,7 +103,6 @@ public class InitiateRnRPage extends Page {
         String lossesAndAdjustmentsValue=testWebDriver.getAttribute(lossesAndAdjustments,"value");
         SeleneseTestNgHelper.assertEquals(lossesAndAdjustmentsValue, D);
     }
-    //newPatientsAdded
 
     public void enternewPatientsAdded(String F)
     {
@@ -123,7 +122,8 @@ public class InitiateRnRPage extends Page {
         beginningBalance.click();
         testWebDriver.waitForElementToAppear(stockOnHand);
         Integer StockOnHand = A+B-C-D;
-        testWebDriver.sleep(4000);
+
+        testWebDriver.sleep(1000);
         String stockOnHandValue= stockOnHand.getText();
         String StockOnHandValue = StockOnHand.toString();
         SeleneseTestNgHelper.assertEquals(stockOnHandValue, StockOnHandValue);

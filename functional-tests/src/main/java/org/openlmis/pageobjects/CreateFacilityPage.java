@@ -94,8 +94,6 @@ public class CreateFacilityPage extends Page {
     @FindBy(how = How.ID, using = "go-down-date")
     private static WebElement goDownDate;
 
-//    @FindBy(how = How.XPATH, using = "//input[@name='data-reportable' and @value='true']")
-//    private static WebElement dataReportable;
 
     @FindBy(how = How.ID, using = "comments")
     private static WebElement comments;
@@ -180,6 +178,7 @@ public class CreateFacilityPage extends Page {
         hasElectronicDar.click();
         isActive.click();
 
+        testWebDriver.sleep(500);
         goLiveDate.click();
         testWebDriver.sleep(500);
         goLiveDateCalender.click();
@@ -188,7 +187,6 @@ public class CreateFacilityPage extends Page {
         testWebDriver.sleep(500);
         goDownDateCalender.click();
 
-//        dataReportable.click();
         comments.sendKeys("Comments");
 
 

@@ -102,7 +102,10 @@ public class TestWebDriver {
 
 
     public void close() {
-        driver.close();
+        for(String window: driver.getWindowHandles()){
+            driver.switchTo().window(window);
+            driver.close();
+        }
     }
 
     public void waitForElementToAppear(final WebElement element) {
