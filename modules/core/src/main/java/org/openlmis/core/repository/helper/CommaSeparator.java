@@ -1,10 +1,12 @@
 package org.openlmis.core.repository.helper;
 
 import org.openlmis.core.domain.BaseModel;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class CommaSeparator<T extends BaseModel> {
 
     public String commaSeparate(List<T> list) {
