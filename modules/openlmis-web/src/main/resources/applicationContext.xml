@@ -75,19 +75,19 @@
                     <value type="java.lang.Class">org.openlmis.core.domain.ProgramSupported</value>
                 </entry>
                 <entry key="requisitionGroup">
-                    <value type="java.lang.Class">org.openlmis.rnr.domain.RequisitionGroup</value>
+                    <value type="java.lang.Class">org.openlmis.core.domain.RequisitionGroup</value>
                 </entry>
                 <entry key="supervisoryNode">
                     <value type="java.lang.Class">org.openlmis.core.domain.SupervisoryNode</value>
                 </entry>
                 <entry key="requisitionGroup">
-                    <value type="java.lang.Class">org.openlmis.rnr.domain.RequisitionGroup</value>
+                    <value type="java.lang.Class">org.openlmis.core.domain.RequisitionGroup</value>
                 </entry>
                 <entry key="requisitionGroupProgramSchedule">
-                    <value type="java.lang.Class">org.openlmis.rnr.domain.RequisitionGroupProgramSchedule</value>
+                    <value type="java.lang.Class">org.openlmis.core.domain.RequisitionGroupProgramSchedule</value>
                 </entry>
                 <entry key="requisitionGroupMember">
-                    <value type="java.lang.Class">org.openlmis.rnr.domain.RequisitionGroupMember</value>
+                    <value type="java.lang.Class">org.openlmis.core.domain.RequisitionGroupMember</value>
                 </entry>
                 <entry key="programProduct">
                     <value type="java.lang.Class">org.openlmis.core.domain.ProgramProduct</value>

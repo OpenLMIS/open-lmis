@@ -137,7 +137,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
         roleRightsMapper.createRoleRight(viewRnrRole.getId(), Right.VIEW_REQUISITION);
         insertRoleAssignments(activeProgramWithoutRight, user, viewRnrRole, supervisoryNode);
 
-        List<Program> programs = programMapper.getActiveProgramsForUser(user.getId(), Right.CREATE_REQUISITION);
+        List<Program> programs = programMapper.getUserSupervisedActivePrograms(user.getUserName(), Right.CREATE_REQUISITION);
 
         assertThat(programs.size(), is(1));
         assertThat(programs.get(0).getCode(), is("P1"));

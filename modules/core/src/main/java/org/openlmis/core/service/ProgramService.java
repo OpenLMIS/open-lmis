@@ -4,7 +4,6 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.RoleAssignment;
-import org.openlmis.core.domain.User;
 import org.openlmis.core.repository.ProgramRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,7 +37,7 @@ public class ProgramService {
         return programRepository.filterActiveProgramsAndFacility(roleAssignments, facilityId);
     }
 
-    public List<Program> getActiveProgramsForUserForCreateRequisition(Integer userId) {
-        return programRepository.getActiveProgramsForUser(userId, Right.CREATE_REQUISITION);
+    public List<Program> getUserSupervisedActivePrograms(String userName, Right right) {
+        return programRepository.getUserSupervisedActivePrograms(userName, right);
     }
 }
