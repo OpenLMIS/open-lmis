@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.FacilityApprovedProduct;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProgramProduct;
 
 import java.util.Date;
 
@@ -48,20 +49,23 @@ public class RnrLineItem {
 
     private String modifiedBy;
     private Date modifiedDate;
+	private Float price;
 
-    public RnrLineItem(Integer rnrId, FacilityApprovedProduct facilityApprovedProduct, String modifiedBy) {
+	public RnrLineItem(Integer rnrId, FacilityApprovedProduct facilityApprovedProduct, String modifiedBy) {
         this.rnrId = rnrId;
 
         this.maxMonthsOfStock = facilityApprovedProduct.getMaxMonthsOfStock();
-        // TODO : ugly
-        Product product = facilityApprovedProduct.getProgramProduct().getProduct();
+		ProgramProduct programProduct = facilityApprovedProduct.getProgramProduct();
+		// TODO : ugly
+		Product product = programProduct.getProduct();
         this.productCode = product.getCode();
         this.dispensingUnit = product.getDispensingUnit();
         this.dosesPerDispensingUnit = product.getDosesPerDispensingUnit();
-        this.dosesPerMonth = facilityApprovedProduct.getProgramProduct().getDosesPerMonth();
+        this.dosesPerMonth = programProduct.getDosesPerMonth();
 		this.packSize = product.getPackSize();
 		this.roundToZero = product.getRoundToZero();
         this.product = productName(product);
+		this.price = facilityApprovedProduct.getProgramProduct().getCurrentPrice();
         this.modifiedBy = modifiedBy;
     }
 

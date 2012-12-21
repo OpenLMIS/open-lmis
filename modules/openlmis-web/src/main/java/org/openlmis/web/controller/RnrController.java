@@ -27,8 +27,6 @@ public class RnrController {
         this.rnrService = rnrService;
     }
 
-
-
     @RequestMapping(value = "/logistics/rnr/{facilityId}/{programCode}/init", method = RequestMethod.POST, headers = "Accept=application/json")
     @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
     public Rnr initRnr(@PathVariable("facilityId") Integer facilityId, @PathVariable("programCode") String programCode, HttpServletRequest request) {

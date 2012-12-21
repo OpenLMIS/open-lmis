@@ -15,7 +15,11 @@ public interface RnrMapper {
     @Delete("delete from requisition")
     public void deleteAll();
 
-    @Update("update requisition set modified_by = #{modifiedBy}, status = #{status}, modified_date= DEFAULT where id = #{id}")
+    @Update("update requisition set modified_by = #{modifiedBy}, status = #{status}, modified_date= DEFAULT, " +
+			"fullSupplyItemsSubmittedCost = #{fullSupplyItemsSubmittedCost}, " +
+			"nonFullSupplyItemsSubmittedCost = #{nonFullSupplyItemsSubmittedCost}, " +
+			"totalSubmittedCost = #{totalSubmittedCost} " +
+			"where id = #{id}")
     public void update(Rnr requisition);
 
     @Select("Select * from requisition where id = #{rnrId}")

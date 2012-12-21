@@ -14,6 +14,9 @@ public class Rnr {
 
     private String programCode;
     private RnrStatus status;
+	private Float fullSupplyItemsSubmittedCost;
+	private Float nonFullSupplyItemsSubmittedCost;
+	private Float totalSubmittedCost;
 
     private List<RnrLineItem> lineItems = new ArrayList<>();
 

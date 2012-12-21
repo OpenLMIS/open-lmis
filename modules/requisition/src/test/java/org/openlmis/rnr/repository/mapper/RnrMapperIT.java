@@ -56,12 +56,12 @@ public class RnrMapperIT {
     public void shouldReturnRequisitionById() {
         Rnr requisition = new Rnr(facilityId, "HIV", RnrStatus.INITIATED, "user");
         Integer id = rnrMapper.insert(requisition);
-        Rnr requisitionById = rnrMapper.getRequisitionById(id);
-        assertThat(requisitionById.getId(), is(id));
-        assertThat(requisitionById.getProgramCode(), is(equalTo("HIV")));
-        assertThat(requisitionById.getFacilityId(), is(equalTo(facilityId)));
-        assertThat(requisitionById.getModifiedBy(), is(equalTo("user")));
-        assertThat(requisitionById.getStatus(), is(equalTo(RnrStatus.INITIATED)));
+        Rnr fetchedRequisition = rnrMapper.getRequisitionById(id);
+        assertThat(fetchedRequisition.getId(), is(id));
+        assertThat(fetchedRequisition.getProgramCode(), is(equalTo("HIV")));
+        assertThat(fetchedRequisition.getFacilityId(), is(equalTo(facilityId)));
+        assertThat(fetchedRequisition.getModifiedBy(), is(equalTo("user")));
+        assertThat(fetchedRequisition.getStatus(), is(equalTo(RnrStatus.INITIATED)));
     }
 
     @Test
@@ -71,6 +71,8 @@ public class RnrMapperIT {
         requisition.setId(id);
         requisition.setModifiedBy("user1");
         requisition.setStatus(RnrStatus.CREATED);
+		requisition.setFullSupplyItemsSubmittedCost(100.5F);
+		requisition.setTotalSubmittedCost(100.5F);
 
         rnrMapper.update(requisition);
 
@@ -79,6 +81,8 @@ public class RnrMapperIT {
         assertThat(updatedRequisition.getId(), is(id));
         assertThat(updatedRequisition.getModifiedBy(), is(equalTo("user1")));
         assertThat(updatedRequisition.getStatus(), is(equalTo(RnrStatus.CREATED)));
+		assertThat(updatedRequisition.getFullSupplyItemsSubmittedCost(), is(100.5F));
+		assertThat(updatedRequisition.getTotalSubmittedCost(), is(100.5F));
     }
 
     @Test

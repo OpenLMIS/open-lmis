@@ -41,7 +41,7 @@ rnrModule.positiveInteger = function (value, errorHolder) {
     return valid;
 };
 
-rnrModule.fill = function (lineItem, programRnrColumnList) {
+rnrModule.fill = function (lineItem, programRnrColumnList, rnr){
 
     function isNumber(number) {
         return !isNaN(parseInt(number));
@@ -126,6 +126,39 @@ rnrModule.fill = function (lineItem, programRnrColumnList) {
         applyRoundingRules();
     }
 
+    function fillCost() {
+        if(!isNumber(lineItem.packsToShip)) {
+            lineItem.cost = null;
+            return;
+        }
+        lineItem.cost = lineItem.packsToShip * lineItem.price;
+    }
+
+    function fillFullSupplyItemsSubmittedCost() {
+        if(rnr == null ||  rnr.lineItems == null) return;
+
+        var cost = 0;
+        var lineItems = rnr.lineItems;
+        for(var lineItemIndex in lineItems){
+            var lineItem = lineItems[lineItemIndex];
+            if(lineItem == null || lineItem.cost == null || !isNumber(lineItem.cost)) continue;
+            cost += lineItem.cost;
+        }
+        rnr.fullSupplyItemsSubmittedCost = cost;
+    }
+
+    function fillTotalSubmittedCost(){
+        if(rnr == null) return;
+
+        var cost = 0;
+        if(rnr.fullSupplyItemsSubmittedCost != null && isNumber(rnr.fullSupplyItemsSubmittedCost))
+            cost += rnr.fullSupplyItemsSubmittedCost;
+        if(rnr.nonFullSupplyItemsSubmittedCost != null && isNumber(rnr.nonFullSupplyItemsSubmittedCost))
+            cost += rnr.nonFullSupplyItemsSubmittedCost;
+
+        rnr.totalSubmittedCost = cost;
+    }
+
     var a = parseInt(lineItem.beginningBalance);
     var b = parseInt(lineItem.quantityReceived);
     var c = parseInt(lineItem.quantityDispensed);
@@ -139,4 +172,7 @@ rnrModule.fill = function (lineItem, programRnrColumnList) {
     fillMaxStockQuantity();
     fillCalculatedOrderQuantity();
     fillPacksToShip();
+    fillCost();
+    fillFullSupplyItemsSubmittedCost();
+    fillTotalSubmittedCost();
 }

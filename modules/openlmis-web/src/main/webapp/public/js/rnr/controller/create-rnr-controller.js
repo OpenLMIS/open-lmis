@@ -7,9 +7,23 @@ function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $l
     });
 
     ProgramRnRColumnList.get({programCode:$scope.$parent.program.code}, function (data) {
+        function resetFullSupplyItemsCostIfNull(rnr){
+            if(rnr == null) return;
+            if(rnr.fullSupplyItemsSubmittedCost == null)
+               rnr.fullSupplyItemsSubmittedCost = 0;
+        }
+
+        function resetTotalSubmittedCostIfNull(rnr){
+            if(rnr == null) return;
+            if(rnr.totalSubmittedCost == null)
+               rnr.totalSubmittedCost = 0;
+        }
+
         if (validate(data)) {
             $scope.$parent.error = "";
             $scope.programRnRColumnList = data.rnrColumnList;
+            resetFullSupplyItemsCostIfNull($scope.$parent.rnr);
+            resetTotalSubmittedCostIfNull($scope.$parent.rnr);
         } else {
             $scope.$parent.error = "Please contact Admin to define R&R template for this program";
             $location.path('init-rnr');
@@ -35,8 +49,8 @@ function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $l
         });
     };
 
-    $scope.fillCalculatedRnrColumns = function (lineItem) {
-        rnrModule.fill(lineItem, $scope.programRnRColumnList);
+    $scope.fillCalculatedRnrColumns = function (lineItem, rnr) {
+        rnrModule.fill(lineItem, $scope.programRnRColumnList, rnr);
     };
 
     $scope.getId = function (prefix, parent) {

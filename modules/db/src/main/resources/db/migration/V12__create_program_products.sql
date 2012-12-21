@@ -5,6 +5,7 @@ CREATE TABLE program_products (
     productId INTEGER REFERENCES products(id) NOT NULL,
     dosesPerMonth INTEGER NOT NULL,
     active BOOLEAN NOT NULL,
+    currentPrice FLOAT,
     modifiedBy VARCHAR(50),
     modifiedDate TIMESTAMP,
     UNIQUE (productId, programId)

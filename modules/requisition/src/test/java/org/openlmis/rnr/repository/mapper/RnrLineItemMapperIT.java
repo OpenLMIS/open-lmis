@@ -59,7 +59,7 @@ public class RnrLineItemMapperIT {
         Product product = make(a(ProductBuilder.defaultProduct));
         Program program = make(a(ProgramBuilder.defaultProgram));
         programMapper.insert(program);
-        ProgramProduct programProduct = new ProgramProduct(program, product, 30, true);
+        ProgramProduct programProduct = new ProgramProduct(program, product, 30, true, 12.5F);
         facilityId = facilityMapper.insert(make(a(defaultFacility)));
         productMapper.insert(product);
         programProductMapper.insert(programProduct);
@@ -92,6 +92,7 @@ public class RnrLineItemMapperIT {
 		assertThat(rnrLineItem.getDispensingUnit(), is("Strip"));
 		assertThat(rnrLineItem.getRoundToZero(), is(true));
 		assertThat(rnrLineItem.getPackSize(), is(10));
+		assertThat(rnrLineItem.getPrice(), is(12.5F));
     }
 
     @Test
