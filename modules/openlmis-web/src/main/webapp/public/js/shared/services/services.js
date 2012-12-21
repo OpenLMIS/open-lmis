@@ -40,3 +40,11 @@ services.factory('FacilityReferenceData', function ($resource) {
 services.factory('AllFacilities', function ($resource) {
     return $resource('/admin/facilities.json', {}, {});
 });
+
+services.factory('Rights', function ($resource) {
+    return $resource('/rights.json', {}, {});
+});
+
+services.factory('Role', function ($resource) {
+    return $resource('/role.json', {}, {});
+});

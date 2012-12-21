@@ -1,5 +1,5 @@
 CREATE TABLE roles (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(200) NOT NULL UNIQUE,
-  description VARCHAR(200)
+  name VARCHAR(50) NOT NULL UNIQUE,
+  description VARCHAR(250)
 );

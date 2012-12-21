@@ -28,7 +28,7 @@ public class RoleRightsRepository {
     }
 
     public void saveRole(Role role) {
-        role.setId(roleMapper.insert(role));
+        roleMapper.insert(role);
         for (Right right : role.getRights()) {
             roleRightsMapper.createRoleRight(role.getId(), right);
         }

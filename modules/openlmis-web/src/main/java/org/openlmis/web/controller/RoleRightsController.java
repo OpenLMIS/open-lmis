@@ -33,6 +33,7 @@ public class RoleRightsController extends BaseController {
         return roleRightsService.getAllRights();
     }
 
+    @RequestMapping(value = "/role", method = RequestMethod.POST, headers = "Accept=application/json")
     public ResponseEntity<ModelMap> saveRole(@RequestBody Role role, HttpServletRequest request){
         role.setModifiedBy(loggedInUser(request));
         ModelMap modelMap = new ModelMap();
