@@ -1,6 +1,7 @@
 package org.openlmis.functional;
 
 
+import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
@@ -12,6 +13,8 @@ import org.testng.annotations.Test;
 
 @TransactionConfiguration(defaultRollback=true)
 @Transactional
+
+@Listeners(CaptureScreenshotOnFailureListener.class)
 
 public class E2EManageFacility extends TestCaseHelper {
 

@@ -1,17 +1,18 @@
 package org.openlmis.functional;
 
 
+import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
 
 @TransactionConfiguration(defaultRollback=true)
 @Transactional
+
+@Listeners(CaptureScreenshotOnFailureListener.class)
 
 public class E2EInitiateRnR extends TestCaseHelper {
 
@@ -53,7 +54,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
         HomePage homePageUser = loginPageSecond.loginAs(user, password);
 
         InitiateRnRPage initiateRnRPage = homePageUser.navigateAndInitiateRnr(date_time, program);
-        initiateRnRPage.verifyRnRHeader(date_time,program);
+        initiateRnRPage.verifyRnRHeader(date_time, program);
 
         initiateRnRPage.calculateAndVerifyStockOnHand(10,20,5,5,1);
         initiateRnRPage.saveRnR();
@@ -72,7 +73,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     @DataProvider(name = "Data-Provider-Function-Positive")
     public Object[][] parameterIntTestProviderPositive() {
         return new Object[][]{
-                {"HIV","User123", "User123",new String[]{"Admin123", "Admin123"}}
+                {"HIV","User1234", "User123",new String[]{"Admin123", "Admin123"}}
         };
     }
 }

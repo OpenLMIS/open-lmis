@@ -6,29 +6,22 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.openqa.selenium.remote.*;
-import org.openqa.selenium.*;
 
-
-
-import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.text.*;
-import java.io.*;
-import org.apache.commons.io.*;
-
-import java.awt.image.*;
-import java.awt.Robot;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
 import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.testng.Assert.assertTrue;
 
 
 public class TestWebDriver {
 
-    private WebDriver driver;
+    private static WebDriver driver;
     private String BASE_URL;
     private String ERROR_MESSAGE_LOGIN;
     private int DEFAULT_WAIT_TIME = 30;
@@ -45,6 +38,8 @@ public class TestWebDriver {
         this.BASE_URL=BASE_URL;
         get();
     }
+
+
 
     public void setErrorMessage(String ERROR_MESSAGE_LOGIN)
     {
@@ -73,7 +68,7 @@ public class TestWebDriver {
         driver.get(BASE_URL);
     }
 
-    public WebDriver getDriver()
+    public static WebDriver getDriver()
     {
         return driver;
     }
