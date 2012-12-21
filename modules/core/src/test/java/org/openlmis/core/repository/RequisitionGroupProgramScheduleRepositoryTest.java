@@ -94,7 +94,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
     @Test
     public void shouldGiveDuplicateRecordErrorIfDuplicateRGCodeAndProgramCodeFound() throws Exception {
         doThrow(new DuplicateKeyException("")).when(requisitionGroupProgramScheduleMapper).insert(requisitionGroupProgramSchedule);
-
+        requisitionGroupProgramSchedule.setDirectDelivery(true);
         expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Duplicate Requisition Group Code And Program Code Combination found");
         requisitionGroupProgramScheduleRepository.insert(requisitionGroupProgramSchedule);
@@ -124,6 +124,42 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
         assertThat(requisitionGroupProgramSchedule.isDirectDelivery(), is(false));
         assertThat(requisitionGroupProgramSchedule.getDropOffFacility().getId(), is(facilityId));
     }
+
+
+    @Test
+    public void shouldGiveErrorWhenDropOffFacilityIsProvidedAndDirectDeliveryIsTrue() {
+        requisitionGroupProgramSchedule.setDirectDelivery(true);
+        requisitionGroupProgramSchedule.setDropOffFacility(dropOffFacility);
+        expectedEx.expect(DataException.class);
+        expectedEx.expectMessage("Incorrect combination of Direct Delivery and Drop off Facility");
+        requisitionGroupProgramScheduleRepository.insert(requisitionGroupProgramSchedule);
+    }
+
+    @Test
+    public void shouldGiveErrorWhenDropOffFacilityIsNotProvidedAndDirectDeliveryIsFalse(){
+        requisitionGroupProgramSchedule.setDirectDelivery(false);
+
+        expectedEx.expect(DataException.class);
+        expectedEx.expectMessage("Drop off facility code not defined");
+        requisitionGroupProgramScheduleRepository.insert(requisitionGroupProgramSchedule);
+    }
+
+    @Test
+    public void shouldGiveErrorIfFacilityCodeDoesNotExist(){
+        when(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode())).thenReturn(1);
+        when(programMapper.getIdByCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1);
+        when(scheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode())).thenReturn(1);
+        requisitionGroupProgramSchedule.setDropOffFacility(dropOffFacility);
+        when(facilityMapper.getIdForCode(requisitionGroupProgramSchedule.getDropOffFacility().getCode())).thenReturn(null);
+
+        requisitionGroupProgramSchedule.setDirectDelivery(false);
+
+        expectedEx.expect(DataException.class);
+        expectedEx.expectMessage("Drop off facility code is not present");
+        requisitionGroupProgramScheduleRepository.insert(requisitionGroupProgramSchedule);
+    }
+
+
 
     private Facility facility(String facilityCode) {
         requisitionGroupProgramSchedule.setDirectDelivery(false);

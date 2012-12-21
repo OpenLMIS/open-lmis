@@ -48,6 +48,18 @@ public class RequisitionGroupProgramScheduleRepository {
                 throw new DataException("Schedule Code Does Not Exist");
             }
 
+            if(requisitionGroupProgramSchedule.isDirectDelivery() &&  requisitionGroupProgramSchedule.getDropOffFacility()!=null){
+                throw new DataException("Incorrect combination of Direct Delivery and Drop off Facility");
+            }
+
+            if(!requisitionGroupProgramSchedule.isDirectDelivery() &&  requisitionGroupProgramSchedule.getDropOffFacility()==null){
+                throw new DataException("Drop off facility code not defined");
+            }
+
+            if(requisitionGroupProgramSchedule.getDropOffFacility()!=null && requisitionGroupProgramSchedule.getDropOffFacility().getId()==null){
+                throw new DataException("Drop off facility code is not present");
+            }
+
             requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
         } catch (DuplicateKeyException e) {
             throw new DataException("Duplicate Requisition Group Code And Program Code Combination found");
