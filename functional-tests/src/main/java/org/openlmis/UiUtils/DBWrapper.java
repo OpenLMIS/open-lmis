@@ -60,21 +60,21 @@ public class DBWrapper {
         }
     }
 
-    public void insertUser() throws SQLException, IOException {
+    public void insertUser(String userName, String password) throws SQLException, IOException {
         boolean flag = false;
         DBWrapper dbwrapper = new DBWrapper();
         ResultSet rs = dbwrapper.dbConnection("Select userName from users;", "select");
         if (rs.next()) {
-            if (rs.getString(1).contains("User")) {
+            if (rs.getString(1).contains(userName)) {
                 flag = true;
             }
         }
         if (flag) {
-            dbwrapper.dbConnection("delete from users where userName like('User%');", "alter");
+            dbwrapper.dbConnection("delete from users where userName like('"+userName+"');", "alter");
         }
         dbwrapper.dbConnection("INSERT INTO users\n" +
                 "  (id, userName, password, role, facilityId) VALUES\n" +
-                "  (200, 'User123', 'Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==','USER', null);", "alter");
+                "  (200, '"+userName+"', '"+password+"','USER', null);", "alter");
 
     }
 

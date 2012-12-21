@@ -29,7 +29,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
         DBWrapper dbWrapper = new DBWrapper();
 
-        dbWrapper.insertUser();
+        dbWrapper.insertUser(user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==");
         dbWrapper.insertRoles();
         dbWrapper.insertRoleRights();
         dbWrapper.insertRoleAssignment();
