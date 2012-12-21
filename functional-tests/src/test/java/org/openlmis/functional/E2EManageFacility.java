@@ -26,7 +26,7 @@ public class E2EManageFacility extends TestCaseHelper {
     }
 
     @Test(dataProvider = "Data-Provider-Function-Positive")
-    public void testE2EInitiateRnR(String[] credentials) throws Exception {
+    public void testE2EManageFacility(String[] credentials) throws Exception {
 
         LoginPage loginPage=new LoginPage(testWebDriver);
         DBWrapper dbWrapper = new DBWrapper();
