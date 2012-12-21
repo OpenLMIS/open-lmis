@@ -301,5 +301,7 @@ public class FacilityRepositoryTest {
     verify(mockedFacilityMapper).updateDataReportableAndActiveFor(facility);
 
   }
+    
+
 
 }

@@ -13,7 +13,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.*;
 
 @Component
 @NoArgsConstructor
@@ -185,4 +185,9 @@ public class FacilityRepository {
     facilityMapper.updateDataReportableAndActiveFor(facility);
 
   }
+
+
+    public List<Facility> getFacilities(Integer programId, List<RequisitionGroup> requisitionGroups) {
+        return facilityMapper.get(programId, requisitionGroups);
+    }
 }

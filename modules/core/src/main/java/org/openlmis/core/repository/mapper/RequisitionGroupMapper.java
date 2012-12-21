@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Select;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface RequisitionGroupMapper {
 
@@ -26,4 +28,6 @@ public interface RequisitionGroupMapper {
 
     @Select("SELECT id FROM requisition_groups where LOWER(code) = LOWER(#{code})")
     Integer getIdForCode(String code);
+
+    List<RequisitionGroup> getRequisitionGroupBySupervisoryNodes(String supervisoryNodeIdsAsString);
 }

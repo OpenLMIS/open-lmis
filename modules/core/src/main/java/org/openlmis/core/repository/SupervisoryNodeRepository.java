@@ -1,6 +1,7 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Right;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.domain.SupervisoryNode;
@@ -8,6 +9,8 @@ import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 
 @Component
@@ -39,5 +42,9 @@ public class SupervisoryNodeRepository {
         } catch (DuplicateKeyException e) {
             throw new DataException("Duplicate Supervisory Node Code");
         }
+    }
+
+    public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Integer userId, Integer programId, Right right) {
+        return supervisoryNodeMapper.getAllSupervisoryNodesInHierarchyBy(userId, programId, right);
     }
 }

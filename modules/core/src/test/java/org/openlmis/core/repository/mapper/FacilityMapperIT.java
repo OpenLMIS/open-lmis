@@ -218,4 +218,9 @@ public class FacilityMapperIT {
         assertThat(facilityMapper.isGeographicZonePresent(1), is(true));
         assertThat(facilityMapper.isGeographicZonePresent(9999), is(false));
     }
+
+    @Test
+    public void shouldReturnUserSupervisedFacilities(){
+        //User user = insertUser();
+    }
 }

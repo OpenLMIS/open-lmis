@@ -15,11 +15,19 @@ import java.util.List;
 @NoArgsConstructor
 public class FacilityService {
 
+
     private FacilityRepository facilityRepository;
 
+    private SupervisoryNodeService supervisoryNodeService;
+    private RequisitionGroupService requisitionGroupService;
+
+
     @Autowired
-    public FacilityService(FacilityRepository facilityRepository) {
+    public FacilityService(FacilityRepository facilityRepository, SupervisoryNodeService supervisoryNodeService, RequisitionGroupService requisitionGroupService) {
+
         this.facilityRepository = facilityRepository;
+        this.supervisoryNodeService = supervisoryNodeService;
+        this.requisitionGroupService = requisitionGroupService;
     }
 
     public List<Facility> getAll() {
@@ -63,5 +71,11 @@ public class FacilityService {
 
     public void updateDataReportableAndActiveFor(Facility facility) {
         facilityRepository.updateDataReportableAndActiveFor(facility);
+    }
+
+    public List<Facility> getUserSupervisedFacilities(Integer userId, Integer programId, Right right) {
+        List<SupervisoryNode> supervisoryNodes = supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(userId, programId, right);
+        List<RequisitionGroup> requisitionGroups = requisitionGroupService.getRequisitionGroupsForSupervisoryNodes(supervisoryNodes);
+        return facilityRepository.getFacilities(programId, requisitionGroups);
     }
 }

@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Data
 @NoArgsConstructor
-public class RequisitionGroup implements Importable {
+public class RequisitionGroup implements Importable, BaseModel {
 
 
     Integer id;

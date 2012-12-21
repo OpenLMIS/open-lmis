@@ -5,7 +5,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.RequisitionGroup;
+import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.repository.FacilityRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -16,6 +21,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
+import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 
 public class FacilityServiceTest {
     @Mock
@@ -23,10 +29,15 @@ public class FacilityServiceTest {
 
     FacilityService facilityService;
 
+    @Mock
+    private SupervisoryNodeService supervisoryNodeService;
+    @Mock
+    private RequisitionGroupService requisitionGroupService;
+
     @Before
     public void setUp() throws Exception {
         initMocks(this);
-        facilityService = new FacilityService(facilityRepository);
+        facilityService = new FacilityService(facilityRepository, supervisoryNodeService, requisitionGroupService);
     }
 
     @Test
@@ -57,5 +68,24 @@ public class FacilityServiceTest {
         verify(facilityRepository).updateDataReportableAndActiveFor(facility);
 
 
+    }
+
+    @Test
+    public void shouldReturnUserSupervisedFacilitiesForAProgram(){
+        Integer userId = 1;
+        Integer programId = 1;
+        List<Facility> facilities = new ArrayList<>();
+        List<SupervisoryNode> supervisoryNodes = new ArrayList<>();
+        List<RequisitionGroup> requisitionGroups = new ArrayList<>();
+        when(facilityRepository.getFacilities(programId, requisitionGroups)).thenReturn(facilities);
+        when(supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(userId, programId, CREATE_REQUISITION)).thenReturn(supervisoryNodes);
+        when(requisitionGroupService.getRequisitionGroupsForSupervisoryNodes(supervisoryNodes)).thenReturn(requisitionGroups);
+
+        List<Facility> result = facilityService.getUserSupervisedFacilities(userId, programId, CREATE_REQUISITION);
+
+        verify(facilityRepository).getFacilities(programId, requisitionGroups);
+        verify(supervisoryNodeService).getAllSupervisoryNodesInHierarchyBy(userId, programId, CREATE_REQUISITION);
+        verify(requisitionGroupService).getRequisitionGroupsForSupervisoryNodes(supervisoryNodes);
+        assertThat(result, is(facilities));
     }
 }
