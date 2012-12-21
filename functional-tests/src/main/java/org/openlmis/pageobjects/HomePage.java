@@ -88,6 +88,7 @@ public class HomePage extends Page {
     }
 
     public CreateFacilityPage navigateCreateFacility() throws IOException {
+        SeleneseTestNgHelper.assertTrue(manageFacilityMenuItem.isDisplayed());
         testWebDriver.waitForElementToAppear(manageFacilityMenuItem);
         testWebDriver.click(manageFacilityMenuItem);
         manageFacilityMenuItem.click();
