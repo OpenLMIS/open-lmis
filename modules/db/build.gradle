@@ -23,7 +23,7 @@ dependencies {
 task setupDB(dependsOn: ["createDB", clean]) << {
     ext.flyway_classpath = files(configurations.flyway)
     ant.taskdef(name: 'flywayInit', classname: 'com.googlecode.flyway.ant.InitTask', classpath: ext.flyway_classpath.asPath)
-    ant.flywayInit(driver: 'org.postgresql.Driver', url: 'jdbc:postgresql:' + dbName, user: dbUser, password: dbPassword)
+    ant.flywayInit( driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$dbName", user: dbUser, password: dbPassword)
     tasks.migrateDB.execute()
 }
 
@@ -41,8 +41,8 @@ task dropDB() << {
 
 boolean dropIfInUse(String dbName, String pid) {
     try {
-        executeSql('select pg_terminate_backend(' + pid + ') from pg_stat_activity where datname=\'' + dbName + '\'')
-        executeSql('drop database if exists ' + dbName)
+        executeSql('SELECT pg_terminate_backend(' + pid + ') FROM pg_stat_activity WHERE datname=\'' + dbName + '\'')
+        executeSql('DROP DATABASE IF EXISTS ' + dbName)
         return true
     } catch (Exception e) {
         return false
@@ -62,12 +62,12 @@ task migrateDB() << {
 
 task testSeed(type: Exec) {
     environment("PGPASSWORD", dbPassword)
-    commandLine 'psql', '-U', dbUser, '--file', '../../test-data/sql/seed.sql', '-w', dbName
+    commandLine 'psql', '-U', dbUser, '--file', '../../test-data/sql/seed.sql', '-w', dbName, '-h', databaseHostName
 }
 
 task seed(type: Exec) {
     environment("PGPASSWORD", dbPassword)
-    commandLine 'psql', '-U', dbUser,'--file', '../../seed/seed.sql', '-w', dbName
+    commandLine 'psql', '-U', dbUser,'--file', '../../seed/seed.sql', '-w', dbName, '-h', databaseHostName
 }
 
 def executeSql(String statement) {

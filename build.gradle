@@ -28,3 +28,14 @@ subprojects {
 
 }
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'net.saliman:gradle-properties-plugin:1.1.0'
+    }
+}
+// invoke the plugin
+apply plugin: 'properties'
+
