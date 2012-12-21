@@ -60,6 +60,27 @@ public class DeleteFacilityPage extends Page {
     @FindBy(how = How.LINK_TEXT, using = "Yes")
     private static WebElement yesLink;
 
+    @FindBy(how = How.ID, using = "catchment-population")
+    private static WebElement catchmentPopulation;
+
+    @FindBy(how = How.ID, using = "latitude")
+    private static WebElement latitude;
+
+    @FindBy(how = How.ID, using = "longitude")
+    private static WebElement longitude;
+
+    @FindBy(how = How.ID, using = "altitude")
+    private static WebElement altitude;
+
+    @FindBy(how = How.XPATH, using = "//div[@id='wrap']/div/div/div/h2")
+    private static WebElement addNewFacilityHeader;
+
+    @FindBy(how = How.ID, using = "code")
+    private static WebElement facilityCode;
+
+    @FindBy(how = How.XPATH, using = "//input[@value='Save']")
+    private static WebElement SaveButton;
+
 
     public DeleteFacilityPage(TestWebDriver driver) throws  IOException {
         super(driver);
@@ -104,7 +125,7 @@ public class DeleteFacilityPage extends Page {
 
     }
 
-    public void restoreAndVerifyFacility(String facilityCodeValue, String facilityNameValue) {
+    public HomePage restoreAndVerifyFacility(String facilityCodeValue, String facilityNameValue) throws IOException {
         String expectedIsActiveMessageOnAlert= "Do you want to set facility as active?";
 
         testWebDriver.waitForElementToAppear(restoreButton);
@@ -126,6 +147,35 @@ public class DeleteFacilityPage extends Page {
         String dataReportableValue=dataReportable.getText();
         SeleneseTestNgHelper.assertEquals(dataReportableValue.trim(), "Yes");
         SeleneseTestNgHelper.assertTrue(isActiveRadioYesOption.isSelected());
+        return new HomePage(testWebDriver);
+    }
+
+    public void editAndVerifyFacility() {
+        String catchmentPopulationValue="600000";
+        String  latitudeValue="6555.5555";
+        String longitudeValue="6444.4444";
+        String altitudeValue="6545.4545";
+
+        testWebDriver.waitForElementToAppear(facilityList);
+        facilityList.click();
+        testWebDriver.waitForElementToAppear(deleteButton);
+        testWebDriver.sleep(1500);
+        testWebDriver.waitForElementToAppear(addNewFacilityHeader);
+        testWebDriver.waitForElementToAppear(facilityCode);
+        catchmentPopulation.clear();
+        catchmentPopulation.sendKeys(catchmentPopulationValue);
+        latitude.clear();
+        latitude.sendKeys(latitudeValue);
+        longitude.clear();
+        longitude.sendKeys(longitudeValue);
+        altitude.clear();
+        altitude.sendKeys(altitudeValue);
+        SaveButton.click();
+
+        SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(catchmentPopulation,"value"), catchmentPopulationValue);
+        SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(latitude,"value"), latitudeValue);
+        SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(longitude,"value"), longitudeValue);
+        SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(altitude,"value"), altitudeValue);
 
     }
 
