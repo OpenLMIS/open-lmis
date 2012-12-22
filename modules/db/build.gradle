@@ -23,7 +23,7 @@ dependencies {
 task setupDB(dependsOn: ["createDB", clean]) << {
     ext.flyway_classpath = files(configurations.flyway)
     ant.taskdef(name: 'flywayInit', classname: 'com.googlecode.flyway.ant.InitTask', classpath: ext.flyway_classpath.asPath)
-    ant.flywayInit( driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$dbName", user: dbUser, password: dbPassword)
+    ant.flywayInit(driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$dbName", user: dbUser, password: dbPassword)
     tasks.migrateDB.execute()
 }
 
@@ -67,7 +67,7 @@ task testSeed(type: Exec) {
 
 task seed(type: Exec) {
     environment("PGPASSWORD", dbPassword)
-    commandLine 'psql', '-U', dbUser,'--file', '../../seed/seed.sql', '-w', dbName, '-h', databaseHostName
+    commandLine 'psql', '-U', dbUser, '--file', 'src/main/resources/seed/seed.sql', '-w', dbName, '-h', databaseHostName
 }
 
 def executeSql(String statement) {
