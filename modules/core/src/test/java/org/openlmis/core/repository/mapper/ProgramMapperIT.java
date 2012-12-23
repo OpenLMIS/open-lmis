@@ -160,8 +160,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
 
     private User insertUser() {
         User user = new User("random123123", "pwd");
-        int id = userMapper.insert(user);
-        user.setId(id);
+        userMapper.insert(user);
         return user;
     }
 }

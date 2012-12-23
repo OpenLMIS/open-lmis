@@ -140,7 +140,7 @@ public class SupervisoryNodeMapperIT {
 
     private User insertUser() {
         User user = new User("random123123", "pwd");
-        user.setId(userMapper.insert(user));
+        userMapper.insert(user);
         return user;
     }
 }

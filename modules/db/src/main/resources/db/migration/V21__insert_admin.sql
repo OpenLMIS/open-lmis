@@ -9,8 +9,8 @@ INSERT INTO roles
   ((select id from roles where name = 'admin'), 'CONFIGURE_RNR');
 
 INSERT INTO users
-  (userName, password, role, facilityId) VALUES
-  ('Admin123', 'TQskzK3iLfbRVHeM1muvBCiKribfl6lh8+o91hb74G3OvsybvkzpPI4S3KIeWTXAiwlUU0iSxWi4wSuS8mokSA==','ADMIN', null);
+  (userName, password, facilityId) VALUES
+  ('Admin123', 'TQskzK3iLfbRVHeM1muvBCiKribfl6lh8+o91hb74G3OvsybvkzpPI4S3KIeWTXAiwlUU0iSxWi4wSuS8mokSA==', null);
 
 INSERT INTO role_assignments
   (userId, roleId) VALUES
