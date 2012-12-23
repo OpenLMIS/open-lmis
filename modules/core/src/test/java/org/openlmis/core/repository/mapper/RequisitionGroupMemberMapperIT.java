@@ -55,7 +55,7 @@ public class RequisitionGroupMemberMapperIT {
         Facility facility = make(a(FacilityBuilder.defaultFacility));
         requisitionGroup = make(a(defaultRequisitionGroup));
 
-        facility.setId(facilityMapper.insert(facility));
+        facilityMapper.insert(facility);
         requisitionGroup.setId(requisitionGroupMapper.insert(requisitionGroup));
 
         requisitionGroupMember.setFacility(facility);

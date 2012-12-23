@@ -55,7 +55,7 @@ public class SupervisoryNodeMapperIT {
         supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
 
         facility = make(a(FacilityBuilder.defaultFacility));
-        facility.setId(facilityMapper.insert(facility));
+        facilityMapper.insert(facility);
         supervisoryNode.setFacility(facility);
     }
 

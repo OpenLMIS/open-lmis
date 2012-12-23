@@ -3,7 +3,6 @@ package org.openlmis.core.repository.mapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openlmis.core.builder.RequisitionGroupBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.SupervisoryNode;
@@ -43,7 +42,7 @@ public class RequisitionGroupMapperIT {
     @Before
     public void setUp() throws Exception {
         Facility facility = make(a(defaultFacility));
-        facility.setId(facilityMapper.insert(facility));
+        facilityMapper.insert(facility);
         supervisoryNode = make(a(defaultSupervisoryNode));
         supervisoryNode.setFacility(facility);
 

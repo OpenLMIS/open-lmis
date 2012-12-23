@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
-import org.openlmis.core.builder.RequisitionGroupBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.RequisitionGroupProgramSchedule;
 import org.openlmis.core.domain.Schedule;
@@ -22,7 +21,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
-import static org.openlmis.core.builder.RequisitionGroupBuilder.*;
+import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
@@ -55,8 +54,7 @@ public class RequisitionGroupProgramScheduleMapperIT {
         requisitionGroupProgramSchedule.setDirectDelivery(true);
 
         Facility facility = make(a(FacilityBuilder.defaultFacility));
-        Integer facilityId = facilityMapper.insert(facility);
-        facility.setId(facilityId);
+        facilityMapper.insert(facility);
         requisitionGroupProgramSchedule.setDropOffFacility(facility);
 
         Schedule schedule = new Schedule();

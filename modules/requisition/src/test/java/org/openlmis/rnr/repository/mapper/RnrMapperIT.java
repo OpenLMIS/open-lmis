@@ -28,7 +28,7 @@ import static org.junit.Assert.assertThat;
 public class RnrMapperIT {
 
     public static final String HIV = "HIV";
-    Integer facilityId;
+    Facility facility;
 
     @Autowired
     private FacilityMapper facilityMapper;
@@ -40,33 +40,33 @@ public class RnrMapperIT {
 
     @Before
     public void setUp() {
-        Facility facility = make(a(FacilityBuilder.defaultFacility));
-        facilityId = facilityMapper.insert(facility);
+        facility = make(a(FacilityBuilder.defaultFacility));
+        facilityMapper.insert(facility);
     }
 
     @Test
     public void shouldReturnRequisitionId() {
-        Rnr requisition = new Rnr(facilityId, "HIV", RnrStatus.INITIATED, "user");
+        Rnr requisition = new Rnr(facility.getId(), "HIV", RnrStatus.INITIATED, "user");
         Integer id1 = rnrMapper.insert(requisition);
-        Integer id2 = rnrMapper.insert(new Rnr(facilityId, "ARV", RnrStatus.INITIATED, "user"));
+        Integer id2 = rnrMapper.insert(new Rnr(facility.getId(), "ARV", RnrStatus.INITIATED, "user"));
         assertThat(id1, is(id2 - 1));
     }
 
     @Test
     public void shouldReturnRequisitionById() {
-        Rnr requisition = new Rnr(facilityId, "HIV", RnrStatus.INITIATED, "user");
+        Rnr requisition = new Rnr(facility.getId(), "HIV", RnrStatus.INITIATED, "user");
         Integer id = rnrMapper.insert(requisition);
         Rnr fetchedRequisition = rnrMapper.getRequisitionById(id);
         assertThat(fetchedRequisition.getId(), is(id));
         assertThat(fetchedRequisition.getProgramCode(), is(equalTo("HIV")));
-        assertThat(fetchedRequisition.getFacilityId(), is(equalTo(facilityId)));
+        assertThat(fetchedRequisition.getFacilityId(), is(equalTo(facility.getId())));
         assertThat(fetchedRequisition.getModifiedBy(), is(equalTo("user")));
         assertThat(fetchedRequisition.getStatus(), is(equalTo(RnrStatus.INITIATED)));
     }
 
     @Test
     public void shouldUpdateRequisition() {
-        Rnr requisition = new Rnr(facilityId, "HIV", RnrStatus.INITIATED, "user");
+        Rnr requisition = new Rnr(facility.getId(), "HIV", RnrStatus.INITIATED, "user");
         Integer id = rnrMapper.insert(requisition);
         requisition.setId(id);
         requisition.setModifiedBy("user1");
@@ -87,9 +87,9 @@ public class RnrMapperIT {
 
     @Test
     public void shouldReturnRequisitionByFacilityAndProgramAndIfExists() {
-        Rnr requisition = new Rnr(facilityId, HIV, RnrStatus.INITIATED, "user");
+        Rnr requisition = new Rnr(facility.getId(), HIV, RnrStatus.INITIATED, "user");
         Integer rnrId = rnrMapper.insert(requisition);
-        Rnr rnr = rnrMapper.getRequisitionByFacilityAndProgram(facilityId, HIV);
+        Rnr rnr = rnrMapper.getRequisitionByFacilityAndProgram(facility.getId(), HIV);
         assertThat(rnr.getId(), is(rnrId));
     }
 

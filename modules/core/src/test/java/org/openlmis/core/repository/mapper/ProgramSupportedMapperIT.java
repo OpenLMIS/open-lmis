@@ -29,7 +29,6 @@ import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
 public class ProgramSupportedMapperIT {
 
   public static final String YELLOW_FEVER = "YELL_FVR";
-  private Integer facilityId;
 
   @Autowired
   ProgramMapper programMapper;
@@ -55,7 +54,7 @@ public class ProgramSupportedMapperIT {
   @Test
   public void shouldSaveProgramSupported() throws Exception {
     Facility facility = make(a(defaultFacility));
-    facility.setId(facilityMapper.insert(facility));
+    facilityMapper.insert(facility);
     Program program = make(a(defaultProgram, with(programCode, YELLOW_FEVER)));
     program.setId(programMapper.insert(program));
     ProgramSupported programSupported = make(a(defaultProgramSupported,
@@ -71,14 +70,15 @@ public class ProgramSupportedMapperIT {
 
   @Test
   public void shouldDeleteProgramMapping() throws Exception {
-    facilityId = facilityMapper.insert(make(a(defaultFacility)));
+    Facility facility = make(a(defaultFacility));
+    facilityMapper.insert(facility);
     Integer programId = programMapper.insert(make(a(defaultProgram, with(programCode, YELLOW_FEVER))));
-    ProgramSupported programSupported = new ProgramSupported(facilityId, programId, true, "user", now().toDate());
+    ProgramSupported programSupported = new ProgramSupported(facility.getId(), programId, true, "user", now().toDate());
     programSupportedMapper.addSupportedProgram(programSupported);
 
-    programSupportedMapper.delete(facilityId, programId);
+    programSupportedMapper.delete(facility.getId(), programId);
 
-    List<ProgramSupported> programsSupported = programSupportedMapper.getBy(facilityId, programId);
+    List<ProgramSupported> programsSupported = programSupportedMapper.getBy(facility.getId(), programId);
     assertFalse(programsSupported.contains(programSupported));
   }
 
@@ -120,7 +120,7 @@ public class ProgramSupportedMapperIT {
   }
 
   private Facility insertFacility(Facility facility) {
-    facility.setId(facilityMapper.insert(facility));
+    facilityMapper.insert(facility);
     return facility;
   }
 

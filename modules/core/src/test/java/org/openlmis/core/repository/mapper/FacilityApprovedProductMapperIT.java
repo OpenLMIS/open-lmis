@@ -6,10 +6,7 @@ import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
-import org.openlmis.core.domain.FacilityApprovedProduct;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -68,7 +65,8 @@ public class FacilityApprovedProductMapperIT {
 
     @Test
     public void shouldGetFullSupplyAndActiveProductsByFacilityAndProgramInOrderOfDisplayAndProductCode() {
-        Integer facilityId = facilityMapper.insert(make(a(FacilityBuilder.defaultFacility)));
+      Facility facility = make(a(FacilityBuilder.defaultFacility));
+      facilityMapper.insert(facility);
         Program yellowFeverProgram = make(a(defaultProgram));
         Program bpProgram = make(a(defaultProgram, with(programCode, "BP")));
 
@@ -98,7 +96,8 @@ public class FacilityApprovedProductMapperIT {
         addToFacilityType("warehouse", programProduct6);
         addToFacilityType("warehouse", programProduct7);
 
-        List<FacilityApprovedProduct> facilityApprovedProducts = facilityApprovedProductMapper.getFullSupplyProductsByFacilityAndProgram(facilityId, yellowFeverProgram.getCode());
+        List<FacilityApprovedProduct> facilityApprovedProducts = facilityApprovedProductMapper.getFullSupplyProductsByFacilityAndProgram(
+            facility.getId(), yellowFeverProgram.getCode());
         assertEquals(3, facilityApprovedProducts.size());
 
         FacilityApprovedProduct facilityApprovedProduct = facilityApprovedProducts.get(0);

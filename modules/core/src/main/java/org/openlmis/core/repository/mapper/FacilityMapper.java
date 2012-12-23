@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface FacilityMapper {
 
-    @Select("Insert into facilities(code, name, description, gln, mainPhone, fax, address1, address2, " +
+    @Insert("Insert into facilities(code, name, description, gln, mainPhone, fax, address1, address2, " +
             "geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById," +
             "coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, online," +
             "satellite, satelliteParentCode, hasElectricity, hasElectronicScc, hasElectronicDar, active," +
@@ -21,7 +21,7 @@ public interface FacilityMapper {
             "#{operatedBy.id}," +
             "#{coldStorageGrossCapacity}, #{coldStorageNetCapacity}, #{suppliesOthers}, #{sdp},#{online}," +
             "#{satellite}, #{satelliteParentCode}, #{hasElectricity}, #{hasElectronicScc}, #{hasElectronicDar}, #{active}," +
-            "#{goLiveDate}, #{goDownDate}, #{comment}, #{dataReportable}, #{modifiedBy}, #{modifiedDate}) returning id")
+            "#{goLiveDate}, #{goDownDate}, #{comment}, #{dataReportable}, #{modifiedBy}, #{modifiedDate})")
     @Options(useGeneratedKeys = true)
     Integer insert(Facility facility);
 

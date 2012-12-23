@@ -61,9 +61,9 @@ public class FacilityMapperIT {
                 with(typeId, 2),
                 with(type, "lvl3_hospital")));
 
-        Integer facilityId = facilityMapper.insert(facility);
+        facilityMapper.insert(facility);
 
-        RequisitionHeader requisitionHeader = facilityMapper.getRequisitionHeaderData(facilityId);
+        RequisitionHeader requisitionHeader = facilityMapper.getRequisitionHeaderData(facility.getId());
 
         assertEquals("TRZ001", requisitionHeader.getFacilityCode());
         assertEquals("Ngorongoro Hospital", requisitionHeader.getFacilityName());
@@ -134,7 +134,7 @@ public class FacilityMapperIT {
     @Test
     public void shouldGetFacilityById() throws Exception {
         Facility facility = make(a(defaultFacility));
-        facility.setId(facilityMapper.insert(facility));
+        facilityMapper.insert(facility);
         Facility resultFacility = facilityMapper.get(facility.getId());
         assertThat(resultFacility.getCode(), is("F10010"));
         assertThat(resultFacility.getId(), is(facility.getId()));
@@ -144,7 +144,7 @@ public class FacilityMapperIT {
     @Test
     public void shouldUpdateFacility() throws Exception {
         Facility facility = make(a(defaultFacility));
-        facility.setId(facilityMapper.insert(facility));
+        facilityMapper.insert(facility);
         facility.setCode("NewTestCode");
 
         facilityMapper.update(facility);
@@ -193,7 +193,7 @@ public class FacilityMapperIT {
     @Test
     public void shouldUpdateDataReportableAndActiveForAFacility() throws Exception {
         Facility facility = make(a(defaultFacility));
-        facility.setId(facilityMapper.insert(facility));
+        facilityMapper.insert(facility);
         facility.setDataReportable(false);
         facility.setActive(false);
         facility.setModifiedBy("user1");
@@ -209,7 +209,7 @@ public class FacilityMapperIT {
     @Test
     public void shouldGetIdByCode() throws Exception {
         Facility facility = make(a(defaultFacility));
-        facility.setId(facilityMapper.insert(facility));
+        facilityMapper.insert(facility);
         assertThat(facilityMapper.getIdForCode(facility.getCode()), is(facility.getId()));
     }
 
@@ -219,8 +219,4 @@ public class FacilityMapperIT {
         assertThat(facilityMapper.isGeographicZonePresent(9999), is(false));
     }
 
-    @Test
-    public void shouldReturnUserSupervisedFacilities(){
-        //User user = insertUser();
-    }
 }

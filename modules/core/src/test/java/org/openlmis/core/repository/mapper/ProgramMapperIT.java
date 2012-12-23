@@ -67,13 +67,13 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     @Test
     public void shouldGetProgramsWhichAreActiveByFacilityCode() {
         Facility facility = make(a(FacilityBuilder.defaultFacility));
-        Integer facilityId = facilityMapper.insert(facility);
+        facilityMapper.insert(facility);
         Program program = make(a(defaultProgram));
         Integer programId = programMapper.insert(program);
-        ProgramSupported programSupported = make(a(defaultProgramSupported, with(supportedFacilityId, facilityId), with(supportedProgramId, programId)));
+        ProgramSupported programSupported = make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()), with(supportedProgramId, programId)));
         programSupportedMapper.addSupportedProgram(programSupported);
 
-        List<Program> programs = programMapper.getActiveByFacility(facilityId);
+        List<Program> programs = programMapper.getActiveByFacility(facility.getId());
 
         assertThat(programs.size(), is(1));
         assertThat(programs.get(0).getCode(), is(ProgramBuilder.PROGRAM_CODE));
@@ -88,12 +88,13 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     @Test
     public void shouldGetProgramsSupportedByFacility() throws Exception {
         Facility facility = make(a(defaultFacility));
-        Integer facilityId = facilityMapper.insert(facility);
+        facilityMapper.insert(facility);
         Program program = make(a(defaultProgram));
         Integer programId = programMapper.insert(program);
-        ProgramSupported programSupported = make(a(defaultProgramSupported, with(supportedFacilityId, facilityId), with(supportedProgramId, programId)));
+        ProgramSupported programSupported = make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()),
+            with(supportedProgramId, programId)));
         programSupportedMapper.addSupportedProgram(programSupported);
-        List<Program> supportedPrograms = programMapper.getByFacilityId(facilityId);
+        List<Program> supportedPrograms = programMapper.getByFacilityId(facility.getId());
         assertThat(supportedPrograms.get(0).getCode(), is(ProgramBuilder.PROGRAM_CODE));
     }
 
@@ -113,7 +114,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     @Test
     public void shouldGetAllProgramsForUserSupervisedFacilitiesForWhichHeHasCreateRnrRight(){
         Facility facility = make(a(defaultFacility));
-        facility.setId(facilityMapper.insert(facility));
+        facilityMapper.insert(facility);
         SupervisoryNode node = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
         node.setFacility(facility);
         SupervisoryNode supervisoryNode = insertSupervisoryNode(node);

@@ -46,7 +46,7 @@ public class FacilityRepository {
       validateAndSetFacilityType(facility);
       validateGeographicZone(facility);
       if (facility.getId() == null) {
-        facility.setId(facilityMapper.insert(facility));
+        facilityMapper.insert(facility);
         addListOfSupportedPrograms(facility);
       } else {
         updateFacility(facility);
