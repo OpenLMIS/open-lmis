@@ -18,8 +18,8 @@ public interface SupervisoryNodeMapper {
     SupervisoryNode getSupervisoryNode(Integer id);
 
     @Insert("INSERT INTO supervisory_nodes " +
-            "(code, name, parentId, facilityId, approvalPoint, description, modifiedBy, modifiedDate)" +
-            " VALUES (#{code}, #{name}, #{parent.id}, #{facility.id}, #{approvalPoint}, #{description}, #{modifiedBy}, #{modifiedDate})")
+            "(code, name, parentId, facilityId, description, modifiedBy, modifiedDate)" +
+            " VALUES (#{code}, #{name}, #{parent.id}, #{facility.id}, #{description}, #{modifiedBy}, #{modifiedDate})")
     @Options(useGeneratedKeys = true)
     Integer insert(SupervisoryNode supervisoryNode);
 

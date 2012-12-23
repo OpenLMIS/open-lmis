@@ -26,7 +26,6 @@ public class SupervisoryNodeBuilder {
             SupervisoryNode supervisoryNode = new SupervisoryNode();
             supervisoryNode.setCode(lookup.valueOf(code, SUPERVISORY_NODE_CODE));
             supervisoryNode.setName(lookup.valueOf(name, SUPERVISORY_NODE_NAME));
-            supervisoryNode.setApprovalPoint(lookup.valueOf(approvalPoint, SUPERVISORY_NODE_APPROVAL_POINT));
             supervisoryNode.setModifiedBy("user");
             supervisoryNode.setModifiedDate(lookup.valueOf(modifiedDate, SUPERVISORY_NODE_DATE));
             return supervisoryNode;

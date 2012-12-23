@@ -17,8 +17,8 @@ INSERT INTO users
   (200, 'User123', 'Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==', (SELECT id FROM facilities WHERE code = 'F1756'));
 
 INSERT INTO supervisory_nodes
-  (parentId, facilityId, name, code, approvalPoint) VALUES
-  (null, (SELECT id FROM facilities WHERE code = 'F1756'), 'Node 1', 'N1', true);
+  (parentId, facilityId, name, code) VALUES
+  (null, (SELECT id FROM facilities WHERE code = 'F1756'), 'Node 1', 'N1');
 
 INSERT INTO role_assignments
   (userId, roleId, programId, supervisoryNodeId) VALUES

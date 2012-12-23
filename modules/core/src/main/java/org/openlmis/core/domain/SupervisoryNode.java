@@ -22,9 +22,6 @@ public class SupervisoryNode implements Importable {
     @ImportField(name = "Description")
     private String description;
 
-    @ImportField(name = "Is Approval Point", type = "boolean", mandatory = true)
-    private Boolean approvalPoint;
-
     @ImportField(name = "Parent Node", nested = "code")
     private SupervisoryNode parent;
 
