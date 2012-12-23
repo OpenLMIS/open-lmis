@@ -56,7 +56,7 @@ public class ProgramSupportedMapperIT {
     Facility facility = make(a(defaultFacility));
     facilityMapper.insert(facility);
     Program program = make(a(defaultProgram, with(programCode, YELLOW_FEVER)));
-    program.setId(programMapper.insert(program));
+    programMapper.insert(program);
     ProgramSupported programSupported = make(a(defaultProgramSupported,
         with(supportedFacilityCode, facility.getCode()),
         with(supportedProgramCode, program.getCode())));
@@ -72,13 +72,14 @@ public class ProgramSupportedMapperIT {
   public void shouldDeleteProgramMapping() throws Exception {
     Facility facility = make(a(defaultFacility));
     facilityMapper.insert(facility);
-    Integer programId = programMapper.insert(make(a(defaultProgram, with(programCode, YELLOW_FEVER))));
-    ProgramSupported programSupported = new ProgramSupported(facility.getId(), programId, true, "user", now().toDate());
+    Program program = make(a(defaultProgram, with(programCode, YELLOW_FEVER)));
+    programMapper.insert(program);
+    ProgramSupported programSupported = new ProgramSupported(facility.getId(), program.getId(), true, "user", now().toDate());
     programSupportedMapper.addSupportedProgram(programSupported);
 
-    programSupportedMapper.delete(facility.getId(), programId);
+    programSupportedMapper.delete(facility.getId(), program.getId());
 
-    List<ProgramSupported> programsSupported = programSupportedMapper.getBy(facility.getId(), programId);
+    List<ProgramSupported> programsSupported = programSupportedMapper.getBy(facility.getId(), program.getId());
     assertFalse(programsSupported.contains(programSupported));
   }
 
@@ -115,7 +116,7 @@ public class ProgramSupportedMapperIT {
   }
 
   private Program insertProgram(Program program) {
-    program.setId(programMapper.insert(program));
+    programMapper.insert(program);
     return program;
   }
 

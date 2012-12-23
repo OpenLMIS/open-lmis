@@ -51,7 +51,7 @@ public class FacilityApprovedProductMapperIT {
     public void shouldInsertFacilityApprovedProduct() throws Exception {
         Program program = make(a(ProgramBuilder.defaultProgram));
         Product product = make(a(ProductBuilder.defaultProduct));
-        program.setId(programMapper.insert(program));
+        programMapper.insert(program);
         productMapper.insert(product);
 
         ProgramProduct programProduct = new ProgramProduct(program, product, 30, true);

@@ -72,7 +72,7 @@ public class RoleRightsMapperIT {
     }
 
     private Program insertProgram(Program program) {
-        program.setId(programMapper.insert(program));
+        programMapper.insert(program);
         return program;
     }
 

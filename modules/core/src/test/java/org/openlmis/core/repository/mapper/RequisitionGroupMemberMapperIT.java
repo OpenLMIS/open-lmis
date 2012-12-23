@@ -78,7 +78,7 @@ public class RequisitionGroupMemberMapperIT {
         schedule.setCode("Q1stY");
         schedule.setName("QuarterYearly");
         requisitionGroupProgramSchedule.setSchedule(schedule);
-        requisitionGroupProgramSchedule.getProgram().setId(programMapper.insert(requisitionGroupProgramSchedule.getProgram()));
+        programMapper.insert(requisitionGroupProgramSchedule.getProgram());
         requisitionGroupProgramSchedule.getSchedule().setId(scheduleMapper.insert(requisitionGroupProgramSchedule.getSchedule()));
 
         requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
@@ -99,7 +99,7 @@ public class RequisitionGroupMemberMapperIT {
         schedule.setCode("Q1stY");
         schedule.setName("QuarterYearly");
         requisitionGroupProgramSchedule.setSchedule(schedule);
-        requisitionGroupProgramSchedule.getProgram().setId(programMapper.insert(requisitionGroupProgramSchedule.getProgram()));
+        programMapper.insert(requisitionGroupProgramSchedule.getProgram());
         requisitionGroupProgramSchedule.getSchedule().setId(scheduleMapper.insert(requisitionGroupProgramSchedule.getSchedule()));
 
         requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
@@ -118,7 +118,7 @@ public class RequisitionGroupMemberMapperIT {
         schedule.setCode("Q1stY");
         schedule.setName("QuarterYearly");
         requisitionGroupProgramSchedule.setSchedule(schedule);
-        requisitionGroupProgramSchedule.getProgram().setId(programMapper.insert(requisitionGroupProgramSchedule.getProgram()));
+        programMapper.insert(requisitionGroupProgramSchedule.getProgram());
         requisitionGroupProgramSchedule.getSchedule().setId(scheduleMapper.insert(requisitionGroupProgramSchedule.getSchedule()));
 
         requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);

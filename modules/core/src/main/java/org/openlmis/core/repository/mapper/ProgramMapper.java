@@ -1,11 +1,11 @@
 package org.openlmis.core.repository.mapper;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.Right;
-import org.openlmis.core.domain.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -13,10 +13,10 @@ import java.util.List;
 @Repository
 public interface ProgramMapper {
 
-    @Select("INSERT INTO programs(code, name, description, active)" +
-            " VALUES (#{program.code}, #{program.name}, #{program.description}, #{program.active}) returning id")
+    @Insert("INSERT INTO programs(code, name, description, active)" +
+            " VALUES (#{code}, #{name}, #{description}, #{active})")
     @Options(useGeneratedKeys = true)
-    Integer insert(@Param("program") Program program);
+    Integer insert(Program program);
 
     @Select("SELECT * FROM programs WHERE active=true")
     List<Program> getAllActive();
