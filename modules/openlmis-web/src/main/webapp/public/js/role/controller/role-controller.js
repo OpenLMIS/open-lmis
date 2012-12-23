@@ -1,9 +1,10 @@
-function RoleController($scope, rights, Role) {
+function RoleController($scope, Role, Rights) {
 
-  $scope.rights = rights;
   $scope.role = {rights:[]};
-  $scope.error = '';
-  $scope.showError = '';
+
+  Rights.get({}, function (data) {
+    $scope.rights = data.rightList;
+  }, {});
 
   $scope.updateRights = function (checked, rightToUpdate) {
     if (checked == true) {
@@ -37,17 +38,3 @@ function RoleController($scope, rights, Role) {
     }
   }
 }
-
-RoleController.resolve = {
-  rights:function ($q, Rights, $location, $route, $timeout) {
-    var deferred = $q.defer();
-    var code = $route.current.params.programCode;
-
-    $timeout(function () {
-      Rights.get({}, function (data) {
-        deferred.resolve(data.rightList);
-      }, {});
-    }, 100);
-    return deferred.promise;
-  }
-};
