@@ -150,7 +150,7 @@ public class DeleteFacilityPage extends Page {
         return new HomePage(testWebDriver);
     }
 
-    public void editAndVerifyFacility() {
+    public void editAndVerifyFacility(String facilityNameValue) {
         String catchmentPopulationValue="600000";
         String  latitudeValue="6555.5555";
         String longitudeValue="6444.4444";
@@ -176,6 +176,9 @@ public class DeleteFacilityPage extends Page {
         SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(latitude,"value"), latitudeValue);
         SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(longitude,"value"), longitudeValue);
         SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(altitude,"value"), altitudeValue);
+
+        String updateMessage=messageDiv.getText();
+        SeleneseTestNgHelper.assertEquals(updateMessage, facilityNameValue+" updated successfully");
 
     }
 

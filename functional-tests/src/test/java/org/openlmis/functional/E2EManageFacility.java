@@ -22,16 +22,16 @@ public class E2EManageFacility extends TestCaseHelper {
     public void setUp() throws Exception
     {
         DBWrapper dbWrapper = new DBWrapper();
-        dbWrapper.deleteUser();
+        dbWrapper.deleteData();
     }
 
     @Test(dataProvider = "Data-Provider-Function-Positive")
-    public void testE2EManageFacility(String[] credentials) throws Exception {
+    public void testE2EManageFacility(String user,  String[] credentials) throws Exception {
 
         LoginPage loginPage=new LoginPage(testWebDriver);
         DBWrapper dbWrapper = new DBWrapper();
 
-        dbWrapper.insertUser("User123", "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==");
+        dbWrapper.insertUser(user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==");
         dbWrapper.insertFacility();
         dbWrapper.insertRoles();
         dbWrapper.insertRoleRights();
@@ -55,7 +55,7 @@ public class E2EManageFacility extends TestCaseHelper {
 
         DeleteFacilityPage deleteFacilityPage1=homePage1.navigateSearchFacility();
         deleteFacilityPage1.searchFacility(date_time);
-        deleteFacilityPage1.editAndVerifyFacility();
+        deleteFacilityPage1.editAndVerifyFacility("FCname"+date_time);
 
         homePage.logout();
 
@@ -65,14 +65,14 @@ public class E2EManageFacility extends TestCaseHelper {
     public void tearDown() throws Exception
     {
         DBWrapper dbWrapper = new DBWrapper();
-        dbWrapper.deleteUser();
+        dbWrapper.deleteData();
 
     }
 
     @DataProvider(name = "Data-Provider-Function-Positive")
     public Object[][] parameterIntTestProviderPositive() {
         return new Object[][]{
-                {new String[]{"Admin123", "Admin123"}}
+                {"User123", new String[]{"Admin123", "Admin123"}}
         };
     }
 }

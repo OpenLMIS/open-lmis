@@ -104,12 +104,8 @@ public class DBWrapper {
 
     }
 
-    public void deleteProgramRnrColumns() throws IOException {
-        DBWrapper dbwrapper = new DBWrapper();
-        dbwrapper.dbConnection("delete from program_rnr_columns;", "alter");
-    }
 
-    public void deleteUser() throws SQLException, IOException {
+    public void deleteData() throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();
         dbwrapper.dbConnection("delete from role_rights;", "alter");
         dbwrapper.dbConnection("delete from role_assignments;", "alter");
@@ -123,6 +119,7 @@ public class DBWrapper {
         dbwrapper.dbConnection("delete from programs_supported;", "alter");
         dbwrapper.dbConnection("delete from supervisory_nodes;", "alter");
         dbwrapper.dbConnection("delete from facilities;", "alter");
+        dbwrapper.dbConnection("delete from program_rnr_columns;", "alter");
     }
 
 

@@ -20,8 +20,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     public void setUp() throws Exception
     {
         DBWrapper dbWrapper = new DBWrapper();
-        dbWrapper.deleteUser();
-        dbWrapper.deleteProgramRnrColumns();
+        dbWrapper.deleteData();
     }
 
     @Test(dataProvider = "Data-Provider-Function-Positive")
@@ -68,7 +67,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     public void tearDown() throws Exception
     {
         DBWrapper dbWrapper = new DBWrapper();
-        dbWrapper.deleteUser();
+        dbWrapper.deleteData();
 
     }
 
