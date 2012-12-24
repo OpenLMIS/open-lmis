@@ -19,6 +19,7 @@ public class ProgramBuilder {
         @Override
         public Program instantiate(PropertyLookup<Program> lookup) {
             Program program = new Program();
+            program.setId(lookup.valueOf(programId, 1));
             program.setCode(lookup.valueOf(programCode, PROGRAM_CODE));
             program.setName("Yellow Fever");
             program.setDescription("Yellow Fever program");
