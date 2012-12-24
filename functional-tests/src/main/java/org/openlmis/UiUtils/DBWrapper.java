@@ -171,8 +171,8 @@ public class DBWrapper {
 
         }
         dbwrapper.dbConnection("INSERT INTO supervisory_nodes\n" +
-                "  (parentId, facilityId, name, code, approvalPoint) VALUES\n" +
-                "  (null, (SELECT id FROM facilities WHERE code = 'F1756'), 'Node 1', 'N1', true);", "alter");
+                "  (parentId, facilityId, name, code) VALUES\n" +
+                "  (null, (SELECT id FROM facilities WHERE code = 'F1756'), 'Node 1', 'N1');", "alter");
     }
 
     public void insertRoleAssignment() throws SQLException, IOException {
