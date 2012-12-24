@@ -12,6 +12,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
@@ -28,7 +30,6 @@ import static org.openlmis.core.builder.SupervisoryNodeBuilder.defaultSupervisor
 public class RequisitionGroupMapperIT {
 
     SupervisoryNode supervisoryNode;
-    Integer supervisoryNodeId;
 
     @Autowired
     RequisitionGroupMapper requisitionGroupMapper;
@@ -38,6 +39,7 @@ public class RequisitionGroupMapperIT {
 
     @Autowired
     FacilityMapper facilityMapper;
+    private RequisitionGroup requisitionGroup;
 
     @Before
     public void setUp() throws Exception {
@@ -45,14 +47,12 @@ public class RequisitionGroupMapperIT {
         facilityMapper.insert(facility);
         supervisoryNode = make(a(defaultSupervisoryNode));
         supervisoryNode.setFacility(facility);
-
-        supervisoryNodeId = supervisoryNodeMapper.insert(supervisoryNode);
-        supervisoryNode.setId(supervisoryNodeId);
+        supervisoryNodeMapper.insert(supervisoryNode);
+        requisitionGroup = make(a(defaultRequisitionGroup));
     }
 
     @Test
     public void shouldInsertRequisitionGroup() throws Exception {
-        RequisitionGroup requisitionGroup = make(a(defaultRequisitionGroup));
         requisitionGroup.setSupervisoryNode(supervisoryNode);
 
         requisitionGroupMapper.insert(requisitionGroup);
@@ -63,6 +63,16 @@ public class RequisitionGroupMapperIT {
         assertThat(requisitionGroup.getId(), is(notNullValue()));
         assertThat(resultRequisitionGroup.getModifiedDate(), is(requisitionGroup.getModifiedDate()));
         assertThat(resultRequisitionGroup.getName(), is(REQUISITION_GROUP_NAME));
-        assertThat(resultRequisitionGroup.getSupervisoryNode().getId(), is(supervisoryNodeId));
+        assertThat(resultRequisitionGroup.getSupervisoryNode().getId(), is(supervisoryNode.getId()));
+    }
+
+    @Test
+    public void shouldGetRequisitionGroupsForSupervisoryNodes(){
+        requisitionGroup.setSupervisoryNode(supervisoryNode);
+        requisitionGroupMapper.insert(requisitionGroup);
+
+        List<RequisitionGroup> requisitionGroups = requisitionGroupMapper.getRequisitionGroupBySupervisoryNodes("{" + supervisoryNode.getId() + "}");
+
+        assertThat(requisitionGroups.size(), is(1));
     }
 }

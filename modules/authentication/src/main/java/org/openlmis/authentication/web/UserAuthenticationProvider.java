@@ -1,11 +1,15 @@
 package org.openlmis.authentication.web;
 
+import org.openlmis.authentication.UserToken;
 import org.openlmis.authentication.service.UserAuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserAuthenticationProvider implements AuthenticationProvider {
 
@@ -21,10 +25,14 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 
         String userName = (String) authentication.getPrincipal();
         String password = (String) authentication.getCredentials();
-        Boolean isAuthenticated =  userAuthenticationService.authorizeUser(userName, password);
+        UserToken userToken =  userAuthenticationService.authorizeUser(userName, password);
 
-        if (isAuthenticated) {
-          return new UsernamePasswordAuthenticationToken(userName, password, null);
+        if (userToken.isAuthenticated()) {
+            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userName, password, null);
+            Map userDetails = new HashMap();
+            userDetails.put(UserAuthenticationSuccessHandler.USER_ID, userToken.getUserId());
+            usernamePasswordAuthenticationToken.setDetails(userDetails);
+            return usernamePasswordAuthenticationToken;
         } else {
           return null;
         }

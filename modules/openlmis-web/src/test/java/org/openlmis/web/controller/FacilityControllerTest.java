@@ -1,5 +1,6 @@
 package org.openlmis.web.controller;
 
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.openlmis.core.domain.*;
@@ -23,9 +24,11 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
+import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 
 public class FacilityControllerTest {
 
+    public static final Integer userId = 1;
     private ProgramService programService;
     private FacilityService facilityService;
     private FacilityController facilityController;
@@ -38,7 +41,8 @@ public class FacilityControllerTest {
         facilityController = new FacilityController(facilityService, programService);
         MockHttpSession mockHttpSession = new MockHttpSession();
         httpServletRequest.setSession(mockHttpSession);
-        mockHttpSession.setAttribute(USER,USER);
+        mockHttpSession.setAttribute(USER, USER);
+        mockHttpSession.setAttribute(USER_ID, userId);
     }
 
     @Test
@@ -144,6 +148,18 @@ public class FacilityControllerTest {
         assertThat((String)modelMap.get("success"),is("\"Test Facility\" / \"Test Code\" restored successfully"));
         verify(facilityService).updateDataReportableAndActiveFor(facility);
         assertThat(facility.getDataReportable(),is(true));
+    }
+
+    @Test
+    public void shouldReturnUserSupervisedFacilitiesForAProgram(){
+        Integer programId =1;
+        List<Facility> facilities = new ArrayList<>();
+        when(facilityService.getUserSupervisedFacilities(userId, programId, Right.CREATE_REQUISITION)).thenReturn(facilities);
+        ResponseEntity<ModelMap> responseEntity = facilityController.getUserSupervisedFacilitiesSupportingProgram(programId, httpServletRequest);
+        verify(facilityService).getUserSupervisedFacilities(userId, programId, Right.CREATE_REQUISITION);
+        ModelMap map = responseEntity.getBody();
+        assertThat((List<Facility>)map.get("facilities"), is(facilities));
+
     }
 
     private MockHttpServletRequest httpRequest() {

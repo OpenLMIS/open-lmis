@@ -3,7 +3,9 @@ package org.openlmis.authentication.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.openlmis.authentication.UserToken;
 import org.openlmis.core.domain.User;
+import org.openlmis.core.repository.mapper.RoleRightsMapper;
 import org.openlmis.core.repository.mapper.UserMapper;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -33,10 +35,10 @@ public class UserAuthenticationServiceTest {
         String validPassword = "validPassword";
         String hashPassword = hash("validPassword");
 
-        when(mockUserMapper.authenticate(validUser, hashPassword)).thenReturn(true);
-        boolean isAuthenticated = userAuthenticationService.authorizeUser(validUser, validPassword);
-        verify(mockUserMapper).authenticate(validUser, hashPassword);
-        assertThat(isAuthenticated, is(true));
+        when(mockUserMapper.selectUserByUserNameAndPassword(validUser, hashPassword)).thenReturn(new User(validUser, validPassword));
+        UserToken userToken = userAuthenticationService.authorizeUser(validUser, validPassword);
+        verify(mockUserMapper).selectUserByUserNameAndPassword(validUser, hashPassword);
+        assertThat(userToken.isAuthenticated(), is(true));
     }
 
     @Test
@@ -44,9 +46,9 @@ public class UserAuthenticationServiceTest {
         String validUser = "validUser";
         String invalidPassword = "invalidPassword";
         String hashPassword = hash(invalidPassword);
-        when(mockUserMapper.authenticate(validUser, hashPassword)).thenReturn(false);
-        boolean isAuthenticated = userAuthenticationService.authorizeUser(validUser, invalidPassword);
-        verify(mockUserMapper).authenticate(validUser, hashPassword);
-        assertThat(isAuthenticated, is(false));
+        when(mockUserMapper.selectUserByUserNameAndPassword(validUser, hashPassword)).thenReturn(null);
+        UserToken userToken = userAuthenticationService.authorizeUser(validUser, invalidPassword);
+        verify(mockUserMapper).selectUserByUserNameAndPassword(validUser, hashPassword);
+        assertThat(userToken.isAuthenticated(), is(false));
     }
 }

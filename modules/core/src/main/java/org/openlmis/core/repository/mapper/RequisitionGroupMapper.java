@@ -25,5 +25,6 @@ public interface RequisitionGroupMapper {
     @Select("SELECT id FROM requisition_groups where LOWER(code) = LOWER(#{code})")
     Integer getIdForCode(String code);
 
+    @Select("SELECT id FROM requisition_groups where supervisoryNodeId = ANY(#{supervisoryNodeIdsAsString}::INTEGER[])")
     List<RequisitionGroup> getRequisitionGroupBySupervisoryNodes(String supervisoryNodeIdsAsString);
 }

@@ -9,8 +9,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
@@ -19,18 +19,23 @@ import static org.junit.Assert.assertTrue;
 public class UserMapperIT {
 
 
-  @Autowired
-  UserMapper userMapper;
+    @Autowired
+    UserMapper userMapper;
 
-  @Test
-  public void shouldAuthenticateCorrectUsernamePassword() throws Exception {
-    User someUser = new User("someUserName","somePassword");
-    userMapper.insert(someUser);
+    @Test
+    public void shouldGetUserByUserNameAndPassword() throws Exception {
+        User someUser = new User("someUserName", "somePassword");
+        userMapper.insert(someUser);
 
-    assertTrue(userMapper.authenticate("someUserName", "somePassword"));
-    assertFalse(userMapper.authenticate("someUserName", "wrongPassword"));
-    assertFalse(userMapper.authenticate("wrongUserName", "somePassword"));
-  }
+        User user = userMapper.selectUserByUserNameAndPassword("someUserName", "somePassword");
+        assertThat(user, is(notNullValue()));
+        assertThat(user.getUserName(), is("someUserName"));
+        assertThat(user.getId(), is(someUser.getId()));
+        User user1 = userMapper.selectUserByUserNameAndPassword("someUserName", "wrongPassword");
+        assertThat(user1, is(nullValue()));
+        User user2 = userMapper.selectUserByUserNameAndPassword("wrongUserName", "somePassword");
+        assertThat(user2, is(nullValue()));
+    }
 
 
 }

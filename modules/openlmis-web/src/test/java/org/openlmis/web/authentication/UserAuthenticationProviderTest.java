@@ -2,6 +2,7 @@ package org.openlmis.web.authentication;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.openlmis.authentication.UserToken;
 import org.openlmis.authentication.service.UserAuthenticationService;
 import org.openlmis.authentication.web.UserAuthenticationProvider;
 import org.springframework.security.authentication.TestingAuthenticationToken;
@@ -32,7 +33,7 @@ public class UserAuthenticationProviderTest {
 
         String validUser = "validUser";
         String password = "password";
-        when(userService.authorizeUser(validUser, password)).thenReturn(true);
+        when(userService.authorizeUser(validUser, password)).thenReturn(new UserToken(validUser, 1, true));
         Authentication authentication = new TestingAuthenticationToken(validUser, password);
 
         Authentication authenticate = userAuthenticationProvider.authenticate(authentication);
@@ -49,7 +50,7 @@ public class UserAuthenticationProviderTest {
     public void shouldNotAuthenticateInvalidUser() {
         String invalidUser = "invalidUser";
         String password = "password";
-        when(userService.authorizeUser(invalidUser, password)).thenReturn(false);
+        when(userService.authorizeUser(invalidUser, password)).thenReturn(new UserToken(invalidUser, null, false));
         Authentication authentication = new TestingAuthenticationToken(invalidUser, password);
 
         Authentication authenticate = userAuthenticationProvider.authenticate(authentication);

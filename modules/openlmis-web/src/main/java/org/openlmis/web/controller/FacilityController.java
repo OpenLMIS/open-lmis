@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
+import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 
 @Controller
 @NoArgsConstructor
@@ -96,7 +97,7 @@ public class FacilityController extends BaseController {
         return new ResponseEntity<>(modelMap, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "admin/facility/update/{operation}",  method = RequestMethod.POST,headers = "Accept=application/json")
+    @RequestMapping(value = "admin/facility/update/{operation}", method = RequestMethod.POST, headers = "Accept=application/json")
     @PreAuthorize("hasPermission('','MANAGE_FACILITY')")
     public ResponseEntity<ModelMap> updateDataReportableAndActive(@RequestBody Facility facility, @PathVariable(value = "operation") String operation,
                                                                   HttpServletRequest request) {
@@ -104,7 +105,7 @@ public class FacilityController extends BaseController {
         String modifiedBy = (String) request.getSession().getAttribute(USER);
         facility.setModifiedBy(modifiedBy);
         String message;
-        if("delete".equalsIgnoreCase(operation)){
+        if ("delete".equalsIgnoreCase(operation)) {
             facility.setDataReportable(false);
             facility.setActive(false);
             message = "deleted";
@@ -118,19 +119,21 @@ public class FacilityController extends BaseController {
         } catch (RuntimeException exception) {
             modelMap.put("error", exception.getMessage());
             modelMap.put("facility", facility);
-            return new ResponseEntity<ModelMap>(modelMap, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(modelMap, HttpStatus.BAD_REQUEST);
         }
         modelMap.put("facility", facility);
-        modelMap.put("success", "\"" + facility.getName() + "\" / \"" + facility.getCode() +"\" "+ message + " successfully");
-        return new ResponseEntity<ModelMap>(modelMap, HttpStatus.OK);
+        modelMap.put("success", "\"" + facility.getName() + "\" / \"" + facility.getCode() + "\" " + message + " successfully");
+        return new ResponseEntity<>(modelMap, HttpStatus.OK);
     }
 
-
+    @RequestMapping(value = "create/rnr/{programId}/facilites.json", method = RequestMethod.POST, headers = "Accept=application/json")
+    @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
     public ResponseEntity<ModelMap> getUserSupervisedFacilitiesSupportingProgram(@PathVariable(value = "programId") Integer programId, HttpServletRequest request) {
         ModelMap modelMap = new ModelMap();
-        Integer userId = (Integer) request.getSession().getAttribute("USER_ID");
-        facilityService.getUserSupervisedFacilities(userId, programId, Right.CREATE_REQUISITION);
-        return null;
+        Integer userId = (Integer) request.getSession().getAttribute(USER_ID);
+        List<Facility> facilities = facilityService.getUserSupervisedFacilities(userId, programId, Right.CREATE_REQUISITION);
+        modelMap.put("facilities", facilities);
+        return new ResponseEntity<>(modelMap, HttpStatus.OK);
     }
 
 }
