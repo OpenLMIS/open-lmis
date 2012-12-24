@@ -126,7 +126,7 @@ public class FacilityController extends BaseController {
         return new ResponseEntity<>(modelMap, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "create/rnr/{programId}/facilites.json", method = RequestMethod.POST, headers = "Accept=application/json")
+    @RequestMapping(value = "create/rnr/{programId}/facilities.json", method = RequestMethod.POST, headers = "Accept=application/json")
     @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
     public ResponseEntity<ModelMap> getUserSupervisedFacilitiesSupportingProgram(@PathVariable(value = "programId") Integer programId, HttpServletRequest request) {
         ModelMap modelMap = new ModelMap();
