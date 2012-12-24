@@ -56,3 +56,7 @@ services.factory('UserSupervisedProgramList', function($resource) {
 services.factory('UserSupervisedFacilitiesForProgram', function($resource) {
     return $resource('/create/requisition/supervised/:programId/facilities.json',{}, {})
 });
+
+services.factory('ReferenceData', function($resource) {
+    return $resource('/reference-data/currency.json', {}, {});
+});

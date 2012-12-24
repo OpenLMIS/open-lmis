@@ -1,7 +1,7 @@
-function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $location, $http) {
-
+function CreateRnrController($scope, ReferenceData, RequisitionHeader, ProgramRnRColumnList, localStorageService, $location, $http) {
     RequisitionHeader.get({facilityId:$scope.$parent.facility}, function (data) {
         $scope.header = data.requisitionHeader;
+        $scope.getCurrency();
     }, function () {
         $location.path("init-rnr");
     });
@@ -49,11 +49,28 @@ function CreateRnrController($scope, RequisitionHeader, ProgramRnRColumnList, $l
         });
     };
 
-    $scope.fillCalculatedRnrColumns = function (lineItem, rnr) {
+    $scope.getCurrency = function () {
+           ReferenceData.get({}, function (data) {
+                $scope.currency = data.responseData;
+           }, {});
+    };
+
+    $scope.fillCalculatedRnrColumns = function (lineItem, rnr, data) {
         rnrModule.fill(lineItem, $scope.programRnRColumnList, rnr);
     };
 
     $scope.getId = function (prefix, parent) {
         return prefix + "_" + parent.$parent.$parent.$index;
     };
+
+    $scope.hide = function () {
+     return "";
+    }
+
+    $scope.show = function(data) {
+        if(data != 0 && (data == undefined || data == null || data == false)){
+            return "";
+        }
+        return "defined";
+    }
 }

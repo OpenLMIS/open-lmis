@@ -1,4 +1,4 @@
-<div class="rnr-table">
+<div class="rnr-table" >
     <form ng-submit="saveRnr()" id="save-rnr" name="saveRnrForm" ng-controller="CreateRnrController" novalidate>
         <table class="table table-striped table-bordered">
             <thead>
@@ -141,8 +141,28 @@
                                 </span>
                             </ng-switch>
                         </span>
-                        <span id="{{column.indicator+'_'+$parent.$parent.$index}}" ng-bind="rnrLineItem[column.name]"
-                              class="cell-text" ng-switch-default>
+                        <span ng-switch-default>
+                            <ng-switch on="column.name">
+                                <span ng-switch-when="price">
+                                    <span id="{{'priceCurrency_'+$parent.$parent.$index}}" class="cell-text" ng-show="show(rnrLineItem[column.name])">
+                                        {{currency}}
+                                    </span>
+                                    <span id="{{column.indicator+'_'+$parent.$parent.$index}}" ng-bind="rnrLineItem[column.name]"
+                                        class="cell-text">
+                                    </span>
+                                </span>
+                                <span ng-switch-when="cost">
+                                    <span id="{{'costCurrency_'+$parent.$parent.$index}}" class="cell-text" ng-show="show(rnrLineItem[column.name])" >
+                                        {{currency}}
+                                    </span>
+                                    <span id="{{column.indicator+'_'+$parent.$parent.$index}}" ng-bind="rnrLineItem[column.name]"
+                                        class="cell-text">
+                                    </span>
+                                </span>
+                                 <span id="{{column.indicator+'_'+$parent.$parent.$index}}" ng-bind="rnrLineItem[column.name]"
+                                       class="cell-text" ng-switch-default>
+                                 </span>
+                            </ng-switch>
                         </span>
                     </ng-switch>
                 </td>
@@ -150,6 +170,9 @@
             <tr>
                 <td>Total R&R Cost :</td>
                 <td>
+                    <span id="totalCostCurrency" class="cell-text">
+                                        {{currency}}
+                    </span>
                     <span id="totalCost" ng-bind="$parent.rnr.totalSubmittedCost"
                           class="cell-text">
                     </span>

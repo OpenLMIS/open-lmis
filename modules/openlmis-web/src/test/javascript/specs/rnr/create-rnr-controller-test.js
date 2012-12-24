@@ -3,8 +3,9 @@ describe('CreateRnrController', function () {
     var scope, ctrl, httpBackend, location, requisitionHeader, controller;
 
     beforeEach(module('openlmis.services'));
+    beforeEach(module('openlmis.localStorage'));
 
-    beforeEach(inject(function ($httpBackend, $rootScope, $location, $controller) {
+    beforeEach(inject(function ($httpBackend, $rootScope, $location, $controller, _localStorageService_) {
         scope = $rootScope.$new();
         location = $location;
         controller = $controller;
@@ -12,17 +13,19 @@ describe('CreateRnrController', function () {
         scope.$parent.facility = "10134";
         scope.$parent.program = {code:"programCode"};
         scope.saveRnrForm = {$error:{ rnrError:false }};
+        localStorageService = _localStorageService_;
 
         requisitionHeader = {"requisitionHeader":{"facilityName":"National Warehouse",
             "facilityCode":"10134", "facilityType":{"code":"Warehouse"}, "facilityOperatedBy":"MoH", "maximumStockLevel":3, "emergencyOrderPoint":0.5,
             "zone":{"label":"state", "value":"Arusha"}, "parentZone":{"label":"state", "value":"Arusha"}}};
 
+
         httpBackend.when('GET', '/logistics/facility/10134/requisition-header.json').respond(requisitionHeader);
         httpBackend.when('GET', '/logistics/rnr/programCode/columns.json').respond({"rnrColumnList":[
             {"testField":"test"}
         ]});
-
-        ctrl = controller(CreateRnrController, {$scope:scope, $location:location});
+        httpBackend.when('GET', '/reference-data/currency.json').respond({"responseData":"$"});
+        ctrl = controller(CreateRnrController, {$scope:scope, $location:location, localStorageService:localStorageService});
     }));
 
     it('should get header data', function () {
@@ -55,4 +58,9 @@ describe('CreateRnrController', function () {
         expect(scope.error).toEqual("Please correct errors before saving.");
     });
 
+    it('should get Currency from service', function () {
+        scope.getCurrency();
+        httpBackend.flush();
+        expect(scope.currency).toEqual("$");
+    });
 });
