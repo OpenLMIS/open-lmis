@@ -1,10 +1,15 @@
-function InitiateRnrController($http, $scope, facilities, UserSupportedProgramInFacilityForAnOperation, $location) {
+function InitiateRnrController($http, $scope, facilities, programs, UserSupportedProgramInFacilityForAnOperation,UserSupervisedFacilitiesForProgram,  $location) {
 
     $scope.programOptionMsg = "--choose program--";
     $scope.facilities = facilities;
     $scope.facilityOptionMsg = "--choose facility--";
     if ($scope.facilities == null || $scope.facilities.length == 0) {
         $scope.facilityOptionMsg = "--none assigned--";
+    }
+
+    $scope.$parent.programs = programs;
+    if ($scope.$parent.programs == null || $scope.$parent.programs.length == 0) {
+        $scope.programOptionMsg = "--none assigned--";
     }
 
     $scope.loadPrograms = function () {
@@ -20,6 +25,22 @@ function InitiateRnrController($http, $scope, facilities, UserSupportedProgramIn
             $scope.$parent.program = null;
             $scope.$parent.programsForFacility = null;
             $scope.programOptionMsg = "--choose program--";
+        }
+    };
+
+    $scope.loadFacilities = function () {
+        if ($scope.$parent.program) {
+            UserSupervisedFacilitiesForProgram.get({programId:$scope.$parent.program.id}, function (data) {
+                $scope.$parent.facilities = data.facilities;
+                $scope.facilityOptionMsg = "--choose facility--";
+                if ($scope.$parent.facilities == null || $scope.$parent.facilities.length == 0) {
+                    $scope.facilityOptionMsg = "--none assigned--";
+                }
+            }, {});
+        } else {
+            $scope.$parent.program = null;
+            $scope.$parent.facilities = null;
+            $scope.facilityOptionMsg = "--choose facility--";
         }
     };
 
@@ -45,6 +66,7 @@ function InitiateRnrController($http, $scope, facilities, UserSupportedProgramIn
     };
 }
 
+
 InitiateRnrController.resolve = {
     facilities:function ($q, $timeout, UserFacilityList) {
         var deferred = $q.defer();
@@ -56,5 +78,22 @@ InitiateRnrController.resolve = {
         }, 100);
 
         return deferred.promise;
-    }
+    },
+    programs:function () {}
+}
+
+function InitiateSupervisedRnrController(){};
+InitiateSupervisedRnrController.resolve = {
+    programs:function ($q, $timeout, UserSupervisedProgramList) {
+        var deferred = $q.defer();
+        $timeout(function () {
+            UserSupervisedProgramList.get({}, function (data) {
+                    deferred.resolve(data.programList);
+                }, {}
+            );
+        }, 100);
+
+        return deferred.promise;
+    },
+    facilities:function () {}
 }

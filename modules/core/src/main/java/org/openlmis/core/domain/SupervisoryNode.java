@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Data
 @NoArgsConstructor
-public class SupervisoryNode implements Importable {
+public class SupervisoryNode implements Importable, BaseModel {
 
     Integer id;
 

@@ -1,6 +1,6 @@
 describe('InitiateRnrController', function () {
 
-  var scope, ctrl, $httpBackend, location,facilities;
+  var scope, ctrl, $httpBackend, location,facilities, programs;
 
   beforeEach(module('openlmis.services'));
   beforeEach(inject(function ($rootScope,_$httpBackend_,$controller,$location,$http) {
@@ -9,10 +9,11 @@ describe('InitiateRnrController', function () {
     location=$location;
     expect(scope.facilities).toBeUndefined();
     facilities = [{"code":"10134","name":"National Warehouse","description":null}];
-    ctrl = $controller(InitiateRnrController, {$scope:scope, facilities: facilities});
+    programs = [{"code":"HIV","id":1}];
+    ctrl = $controller(InitiateRnrController, {$scope:scope, facilities: facilities, programs: programs});
   }));
 
-  it('should setf acilities in scope', function() {
+  it('should set facilities in scope', function() {
     expect(scope.facilities).toEqual(facilities);
   });
 

@@ -48,3 +48,11 @@ services.factory('Rights', function ($resource) {
 services.factory('Role', function ($resource) {
     return $resource('/role.json', {}, {});
 });
+
+services.factory('UserSupervisedProgramList', function($resource) {
+    return $resource('/create/requisition/supervised/programs.json',{}, {})
+});
+
+services.factory('UserSupervisedFacilitiesForProgram', function($resource) {
+    return $resource('/create/requisition/supervised/:programId/facilities.json',{}, {})
+});
