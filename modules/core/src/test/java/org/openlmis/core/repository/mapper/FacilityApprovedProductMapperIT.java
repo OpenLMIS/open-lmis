@@ -55,7 +55,7 @@ public class FacilityApprovedProductMapperIT {
         productMapper.insert(product);
 
         ProgramProduct programProduct = new ProgramProduct(program, product, 30, true);
-        programProduct.setId(programProductMapper.insert(programProduct));
+        programProductMapper.insert(programProduct);
 
         FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct(FACILITY_TYPE_CODE, programProduct, MAX_MONTHS_OF_STOCK);
         int status = facilityApprovedProductMapper.insert(facilityApprovedProduct);
@@ -134,7 +134,7 @@ public class FacilityApprovedProductMapperIT {
 
     private ProgramProduct addToProgramProduct(Program program, Product product, boolean isActive) {
         ProgramProduct programProduct = new ProgramProduct(program, product, 30, isActive);
-        programProduct.setId(programProductMapper.insert(programProduct));
+        programProductMapper.insert(programProduct);
         return programProduct;
     }
 

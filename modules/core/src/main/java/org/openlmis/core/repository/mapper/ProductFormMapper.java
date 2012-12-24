@@ -7,7 +7,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductFormMapper {
 
-    // Used by mapper
+    // Used by ProductMapper
+  @SuppressWarnings("unused")
     @Select("SELECT * FROM product_forms WHERE id = #{id}")
     ProductForm getById(Integer id);
 

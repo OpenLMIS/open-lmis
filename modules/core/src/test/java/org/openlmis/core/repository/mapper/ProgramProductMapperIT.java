@@ -14,6 +14,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static org.openlmis.core.builder.ProductBuilder.displayOrder;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
@@ -46,8 +47,8 @@ public class ProgramProductMapperIT {
         Program program = make(a(defaultProgram));
         programMapper.insert(program);
         ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
-        Integer id = programProductMapper.insert(programProduct);
-        assertNotNull(id);
+        assertEquals(1, programProductMapper.insert(programProduct).intValue());
+        assertNotNull(programProduct.getId());
     }
 
 }

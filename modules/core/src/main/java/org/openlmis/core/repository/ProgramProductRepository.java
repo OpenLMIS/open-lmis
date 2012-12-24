@@ -29,8 +29,7 @@ public class ProgramProductRepository {
         validateProgramCode(programProduct.getProgram().getCode());
         validateProductCode(programProduct.getProduct().getCode());
         try {
-            int id = programProductMapper.insert(programProduct);
-            programProduct.setId(id);
+            programProductMapper.insert(programProduct);
         }catch (DuplicateKeyException duplicateKeyException) {
             throw new DataException("Duplicate entry for Product Code and Program Code combination found");
         }
