@@ -1,4 +1,4 @@
-package org.openlmis.core.handler;
+package org.openlmis.core.upload;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.RequisitionGroupProgramSchedule;

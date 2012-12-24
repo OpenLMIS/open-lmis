@@ -1,7 +1,6 @@
-package org.openlmis.core.handler;
+package org.openlmis.core.upload;
 
 import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.repository.ProgramProductRepository;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.handler.AbstractModelPersistenceHandler;

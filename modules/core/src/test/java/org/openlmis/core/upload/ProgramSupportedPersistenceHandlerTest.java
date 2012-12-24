@@ -1,4 +1,4 @@
-package org.openlmis.core.handler;
+package org.openlmis.core.upload;
 
 import org.junit.Before;
 import org.junit.Test;

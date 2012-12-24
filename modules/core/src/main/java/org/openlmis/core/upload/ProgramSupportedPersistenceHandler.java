@@ -1,4 +1,4 @@
-package org.openlmis.core.handler;
+package org.openlmis.core.upload;
 
 import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.repository.FacilityRepository;
