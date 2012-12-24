@@ -50,25 +50,6 @@ dependencies {
 
 }
 
-apply plugin: 'cargo'
-
-dependencies {
-    def cargoVersion = '1.2.2'
-    cargo "org.codehaus.cargo:cargo-core-uberjar:$cargoVersion",
-          "org.codehaus.cargo:cargo-ant:$cargoVersion"
-}
-
-cargo {
-  containerId = 'tomcat7x'
-  port = 8080
-  
-  remote {
-    hostname = '192.168.34.4'
-    username = 'openlmis'
-    password = ''
-  }
-}
- 
 [jettyRun]*.configure {
     contextPath = ''
 }
