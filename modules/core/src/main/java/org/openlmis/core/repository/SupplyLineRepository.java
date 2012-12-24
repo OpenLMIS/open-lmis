@@ -1,5 +1,6 @@
 package org.openlmis.core.repository;
 
+import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.SupplyLineMapper;
@@ -8,6 +9,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@NoArgsConstructor
 public class SupplyLineRepository {
 
     private SupplyLineMapper supplyLineMapper;

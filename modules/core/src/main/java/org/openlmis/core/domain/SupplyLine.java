@@ -2,14 +2,14 @@ package org.openlmis.core.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.libs.com.zwitserloot.cmdreader.Mandatory;
+import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
 import java.util.Date;
 
 @Data
 @NoArgsConstructor
-public class SupplyLine {
+public class SupplyLine implements Importable {
 
     @ImportField (mandatory = true , name = "Supervising Node" , nested = "code")
     SupervisoryNode supervisoryNode;
