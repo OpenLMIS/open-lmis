@@ -6,7 +6,7 @@
     </select> <br/>
     <br/>
     <label>Facility</label>
-    <select ng-model="$parent.facility" ng-options="i.id as i.code + '-' + i.name for i in facilities">
+    <select ng-model="$parent.facility" ng-options="i.id as i.code + '-' + i.name for i in $parent.facilities">
         <option value="">{{facilityOptionMsg}}</option>
     </select> <br/>
     <br/>
