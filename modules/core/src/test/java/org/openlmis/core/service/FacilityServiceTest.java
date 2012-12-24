@@ -77,15 +77,15 @@ public class FacilityServiceTest {
         List<Facility> facilities = new ArrayList<>();
         List<SupervisoryNode> supervisoryNodes = new ArrayList<>();
         List<RequisitionGroup> requisitionGroups = new ArrayList<>();
-        when(facilityRepository.getFacilities(programId, requisitionGroups)).thenReturn(facilities);
+        when(facilityRepository.getFacilitiesBy(programId, requisitionGroups)).thenReturn(facilities);
         when(supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(userId, programId, CREATE_REQUISITION)).thenReturn(supervisoryNodes);
-        when(requisitionGroupService.getRequisitionGroupsForSupervisoryNodes(supervisoryNodes)).thenReturn(requisitionGroups);
+        when(requisitionGroupService.getRequisitionGroupsBy(supervisoryNodes)).thenReturn(requisitionGroups);
 
         List<Facility> result = facilityService.getUserSupervisedFacilities(userId, programId, CREATE_REQUISITION);
 
-        verify(facilityRepository).getFacilities(programId, requisitionGroups);
+        verify(facilityRepository).getFacilitiesBy(programId, requisitionGroups);
         verify(supervisoryNodeService).getAllSupervisoryNodesInHierarchyBy(userId, programId, CREATE_REQUISITION);
-        verify(requisitionGroupService).getRequisitionGroupsForSupervisoryNodes(supervisoryNodes);
+        verify(requisitionGroupService).getRequisitionGroupsBy(supervisoryNodes);
         assertThat(result, is(facilities));
     }
 }

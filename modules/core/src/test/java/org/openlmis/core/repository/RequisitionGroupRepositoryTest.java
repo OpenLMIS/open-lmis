@@ -5,7 +5,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.MockitoAnnotations.Mock;
-import org.openlmis.core.builder.SupervisoryNodeBuilder;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.builder.RequisitionGroupBuilder;
@@ -86,7 +85,7 @@ public class RequisitionGroupRepositoryTest {
         when(supervisoryNodeMapper.getIdForCode(requisitionGroup.getSupervisoryNode().getCode())).thenReturn(1);
 
         List<SupervisoryNode> supervisoryNodes = new ArrayList<>();
-        when(commaSeparator.commaSeparate(supervisoryNodes)).thenReturn("{1, 2}");
+        when(commaSeparator.commaSeparateIds(supervisoryNodes)).thenReturn("{1, 2}");
         List<RequisitionGroup> requisitionGroups = new ArrayList<>();
         when(requisitionGroupMapper.getRequisitionGroupBySupervisoryNodes("{1, 2}")).thenReturn(requisitionGroups);
         List<RequisitionGroup> result = requisitionGroupRepository.getRequisitionGroups(supervisoryNodes);

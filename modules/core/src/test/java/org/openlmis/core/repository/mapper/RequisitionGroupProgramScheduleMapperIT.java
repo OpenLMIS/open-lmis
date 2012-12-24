@@ -66,7 +66,7 @@ public class RequisitionGroupProgramScheduleMapperIT {
     @Test
     public void shouldInsertRGProgramSchedule() throws Exception {
         programMapper.insert(requisitionGroupProgramSchedule.getProgram());
-        requisitionGroupProgramSchedule.getRequisitionGroup().setId(requisitionGroupMapper.insert(requisitionGroupProgramSchedule.getRequisitionGroup()));
+        requisitionGroupMapper.insert(requisitionGroupProgramSchedule.getRequisitionGroup());
         requisitionGroupProgramSchedule.getSchedule().setId(scheduleMapper.insert(requisitionGroupProgramSchedule.getSchedule()));
 
         Integer status = requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
@@ -77,7 +77,7 @@ public class RequisitionGroupProgramScheduleMapperIT {
     @Test
     public void shouldGetProgramIdsForRGById() throws Exception {
         programMapper.insert(requisitionGroupProgramSchedule.getProgram());
-        requisitionGroupProgramSchedule.getRequisitionGroup().setId(requisitionGroupMapper.insert(requisitionGroupProgramSchedule.getRequisitionGroup()));
+        requisitionGroupMapper.insert(requisitionGroupProgramSchedule.getRequisitionGroup());
         requisitionGroupProgramSchedule.getSchedule().setId(scheduleMapper.insert(requisitionGroupProgramSchedule.getSchedule()));
 
         requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);

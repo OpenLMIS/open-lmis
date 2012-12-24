@@ -1,9 +1,6 @@
 package org.openlmis.core.repository.mapper;
 
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.springframework.stereotype.Repository;
 
@@ -12,10 +9,9 @@ import java.util.List;
 @Repository
 public interface RequisitionGroupMapper {
 
-    @Select("INSERT INTO requisition_groups" +
+    @Insert("INSERT INTO requisition_groups" +
             "(code, name, description, supervisoryNodeId, modifiedBy, modifiedDate) " +
-            "values (#{code}, #{name}, #{description}, #{supervisoryNode.id}, #{modifiedBy}, #{modifiedDate}) " +
-            "returning id")
+            "values (#{code}, #{name}, #{description}, #{supervisoryNode.id}, #{modifiedBy}, #{modifiedDate}) ")
     @Options(useGeneratedKeys = true)
     Integer insert(RequisitionGroup requisitionGroup);
 

@@ -20,4 +20,8 @@ public class   RequisitionGroupMember implements Importable {
     private String modifiedBy;
     private Date modifiedDate;
 
+    public RequisitionGroupMember(RequisitionGroup requisitionGroup, Facility facility) {
+        this.requisitionGroup = requisitionGroup;
+        this.facility = facility;
+    }
 }

@@ -1,7 +1,6 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.domain.RequisitionGroup;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -45,7 +43,7 @@ public class RequisitionGroupRepository {
 
     public List<RequisitionGroup> getRequisitionGroups(List<SupervisoryNode> supervisoryNodes) {
 
-        return requisitionGroupMapper.getRequisitionGroupBySupervisoryNodes(commaSeparator.commaSeparate(supervisoryNodes));
+        return requisitionGroupMapper.getRequisitionGroupBySupervisoryNodes(commaSeparator.commaSeparateIds(supervisoryNodes));
     }
 
 

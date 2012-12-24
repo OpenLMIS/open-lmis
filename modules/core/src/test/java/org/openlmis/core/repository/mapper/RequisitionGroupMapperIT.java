@@ -55,12 +55,12 @@ public class RequisitionGroupMapperIT {
         RequisitionGroup requisitionGroup = make(a(defaultRequisitionGroup));
         requisitionGroup.setSupervisoryNode(supervisoryNode);
 
-        Integer requisitionGroupID = requisitionGroupMapper.insert(requisitionGroup);
+        requisitionGroupMapper.insert(requisitionGroup);
 
-        RequisitionGroup resultRequisitionGroup = requisitionGroupMapper.getRequisitionGroupById(requisitionGroupID);
+        RequisitionGroup resultRequisitionGroup = requisitionGroupMapper.getRequisitionGroupById(requisitionGroup.getId());
 
         assertThat(resultRequisitionGroup.getCode(), is(REQUISITION_GROUP_CODE));
-        assertThat(requisitionGroupID, is(notNullValue()));
+        assertThat(requisitionGroup.getId(), is(notNullValue()));
         assertThat(resultRequisitionGroup.getModifiedDate(), is(requisitionGroup.getModifiedDate()));
         assertThat(resultRequisitionGroup.getName(), is(REQUISITION_GROUP_NAME));
         assertThat(resultRequisitionGroup.getSupervisoryNode().getId(), is(supervisoryNodeId));

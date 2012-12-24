@@ -89,7 +89,6 @@ public interface FacilityMapper {
             @Result(property = "geographicZone.id", column = "geographicZoneId"),
             @Result(property = "facilityType", column = "typeId", javaType = Integer.class, one = @One(select = "getFacilityTypeById")),
             @Result(property = "operatedBy", column = "operatedById", javaType = Integer.class, one = @One(select = "getFacilityOperatorById")),
-            @Result(property = "suppliesOthers", column = "supplies_others")
     })
     Facility get(Integer id);
 
@@ -119,5 +118,14 @@ public interface FacilityMapper {
     @Select("select 0<(select count(id) as count from geographic_zones where id=#{geographicZoneId})")
     Boolean isGeographicZonePresent(Integer geographicZoneId);
 
-    List<Facility> get(Integer programId, List<RequisitionGroup> requisitionGroups);
+    @Select("SELECT DISTINCT f.* FROM facilities f " +
+            "INNER JOIN programs_supported ps ON f.id=ps.facilityId " +
+            "INNER JOIN requisition_group_members rgm ON f.id= rgm.facilityId " +
+            "WHERE ps.programId = #{programId} and rgm.requisitionGroupId = ANY(#{requisitionGroupIds}::INTEGER[])")
+    @Results(value = {
+            @Result(property = "geographicZone.id", column = "geographicZoneId"),
+            @Result(property = "facilityType", column = "typeId", javaType = Integer.class, one = @One(select = "getFacilityTypeById")),
+            @Result(property = "operatedBy", column = "operatedById", javaType = Integer.class, one = @One(select = "getFacilityOperatorById")),
+    })
+    List<Facility> getFacilitiesBy(@Param(value = "programId")Integer programId, @Param(value = "requisitionGroupIds")String requisitionGroupIds);
 }

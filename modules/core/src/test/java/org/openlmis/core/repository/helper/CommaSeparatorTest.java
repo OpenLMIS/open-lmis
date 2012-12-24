@@ -17,7 +17,7 @@ public class CommaSeparatorTest {
         models.add(model(1));
         models.add(model(2));
         CommaSeparator commaSeparator = new CommaSeparator();
-        String result = commaSeparator.commaSeparate(models);
+        String result = commaSeparator.commaSeparateIds(models);
         assertThat(result, is("{1, 2}"));
     }
 

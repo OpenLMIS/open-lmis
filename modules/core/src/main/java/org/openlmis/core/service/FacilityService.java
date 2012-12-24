@@ -75,7 +75,7 @@ public class FacilityService {
 
     public List<Facility> getUserSupervisedFacilities(Integer userId, Integer programId, Right right) {
         List<SupervisoryNode> supervisoryNodes = supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(userId, programId, right);
-        List<RequisitionGroup> requisitionGroups = requisitionGroupService.getRequisitionGroupsForSupervisoryNodes(supervisoryNodes);
-        return facilityRepository.getFacilities(programId, requisitionGroups);
+        List<RequisitionGroup> requisitionGroups = requisitionGroupService.getRequisitionGroupsBy(supervisoryNodes);
+        return facilityRepository.getFacilitiesBy(programId, requisitionGroups);
     }
 }

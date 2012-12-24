@@ -26,7 +26,7 @@ public class RequisitionGroupService {
   }
 
 
-    public List<RequisitionGroup> getRequisitionGroupsForSupervisoryNodes(List<SupervisoryNode> supervisoryNodes) {
+    public List<RequisitionGroup> getRequisitionGroupsBy(List<SupervisoryNode> supervisoryNodes) {
         return requisitionGroupRepository.getRequisitionGroups(supervisoryNodes);
     }
 }

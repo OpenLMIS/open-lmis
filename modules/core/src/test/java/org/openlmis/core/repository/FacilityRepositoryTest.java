@@ -57,7 +57,7 @@ public class FacilityRepositoryTest {
     now = new DateTime(2012, 10, 10, 8, 0);
     when(DateTime.now()).thenReturn(now);
     when(mockedFacilityMapper.isGeographicZonePresent(FacilityBuilder.GEOGRAPHIC_ZONE_ID)).thenReturn(Boolean.TRUE);
-    repository = new FacilityRepository(mockedFacilityMapper, programSupportedMapper, programMapper);
+    repository = new FacilityRepository(mockedFacilityMapper, programSupportedMapper, programMapper, null);
   }
 
   @Test

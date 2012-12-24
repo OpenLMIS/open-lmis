@@ -2,6 +2,8 @@ package org.openlmis.core.repository.mapper;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openlmis.core.builder.FacilityBuilder;
+import org.openlmis.core.builder.RequisitionGroupBuilder;
 import org.openlmis.core.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -16,6 +18,9 @@ import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.*;
+import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
+import static org.openlmis.core.builder.ProgramBuilder.programCode;
+import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.core.builder.UserBuilder.facilityId;
 
@@ -31,6 +36,19 @@ public class FacilityMapperIT {
 
     @Autowired
     FacilityMapper facilityMapper;
+
+    @Autowired
+    RequisitionGroupMapper requisitionGroupMapper;
+
+    @Autowired
+    ProgramSupportedMapper programSupportedMapper;
+
+    @Autowired
+    ProgramMapper programMapper;
+
+
+    @Autowired
+    RequisitionGroupMemberMapper requisitionGroupMemberMapper;
 
     @Test
     public void shouldFetchAllFacilitiesAvailable() throws Exception {
@@ -217,6 +235,43 @@ public class FacilityMapperIT {
     public void shouldTellIfGeographicZoneIdExists() throws Exception {
         assertThat(facilityMapper.isGeographicZonePresent(1), is(true));
         assertThat(facilityMapper.isGeographicZonePresent(9999), is(false));
+    }
+
+    @Test
+    public void shouldGetAllFacilitiesForRequisitionGroupsWhichSupportGivenProgram() {
+        RequisitionGroup rg1 = make(a(RequisitionGroupBuilder.defaultRequisitionGroup, with(RequisitionGroupBuilder.code, "RG1")));
+        RequisitionGroup rg2 = make(a(RequisitionGroupBuilder.defaultRequisitionGroup, with(RequisitionGroupBuilder.code, "RG2")));
+        requisitionGroupMapper.insert(rg1);
+        requisitionGroupMapper.insert(rg2);
+
+        Facility facilitySupportingProgramInRG1 = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.code, "F1")));
+        Facility facilityNotSupportingProgramInRG2 = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.code, "F2")));
+        Facility facilitySupportingProgramNotInAnyRG = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.code, "F3")));
+        facilityMapper.insert(facilitySupportingProgramInRG1);
+        facilityMapper.insert(facilityNotSupportingProgramInRG2);
+        facilityMapper.insert(facilitySupportingProgramNotInAnyRG);
+
+
+        requisitionGroupMemberMapper.insert(new RequisitionGroupMember(rg1, facilitySupportingProgramInRG1));
+        requisitionGroupMemberMapper.insert(new RequisitionGroupMember(rg2, facilitySupportingProgramInRG1));
+        requisitionGroupMemberMapper.insert(new RequisitionGroupMember(rg2, facilityNotSupportingProgramInRG2));
+
+        programMapper.insert(make(a(defaultProgram, with(programCode, "Random"))));
+
+
+        programSupportedMapper.addSupportedProgram(make(a(defaultProgramSupported,
+                with(supportedFacilityId, facilitySupportingProgramInRG1.getId()),
+                with(supportedProgramId, make(a(defaultProgram, with(programCode, "Random"))).getId()))));
+
+        programSupportedMapper.addSupportedProgram(make(a(defaultProgramSupported,
+                with(supportedFacilityId, facilitySupportingProgramNotInAnyRG.getId()),
+                with(supportedProgramId, make(a(defaultProgram, with(programCode, "Random"))).getId()))));
+
+        List<Facility> facilities = facilityMapper.getFacilitiesBy(make(a(defaultProgram, with(programCode, "Random"))).getId(), "{" + rg1.getId() + "," + rg2.getId() + " }");
+
+        assertThat(facilities.size(), is(1));
+        assertThat(facilities.get(0).getCode(), is("F1"));
+
     }
 
 }

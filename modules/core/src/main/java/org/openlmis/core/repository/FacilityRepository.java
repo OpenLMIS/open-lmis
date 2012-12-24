@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.core.repository.mapper.ProgramSupportedMapper;
@@ -22,12 +23,15 @@ public class FacilityRepository {
   private FacilityMapper facilityMapper;
   private ProgramSupportedMapper programSupportedMapper;
   private ProgramMapper programMapper;
+  private CommaSeparator commaSeparator;
 
   @Autowired
-  public FacilityRepository(FacilityMapper facilityMapper, ProgramSupportedMapper programSupportedMapper, ProgramMapper programMapper) {
+  public FacilityRepository(FacilityMapper facilityMapper, ProgramSupportedMapper programSupportedMapper,
+                            ProgramMapper programMapper, CommaSeparator commaSeparator) {
     this.facilityMapper = facilityMapper;
     this.programSupportedMapper = programSupportedMapper;
     this.programMapper = programMapper;
+      this.commaSeparator = commaSeparator;
   }
 
   public List<Facility> getAll() {
@@ -187,7 +191,7 @@ public class FacilityRepository {
   }
 
 
-    public List<Facility> getFacilities(Integer programId, List<RequisitionGroup> requisitionGroups) {
-        return facilityMapper.get(programId, requisitionGroups);
+    public List<Facility> getFacilitiesBy(Integer programId, List<RequisitionGroup> requisitionGroups) {
+        return facilityMapper.getFacilitiesBy(programId, commaSeparator.commaSeparateIds(requisitionGroups));
     }
 }

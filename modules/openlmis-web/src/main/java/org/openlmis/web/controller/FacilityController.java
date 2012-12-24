@@ -3,6 +3,7 @@ package org.openlmis.web.controller;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.RequisitionHeader;
+import org.openlmis.core.domain.Right;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.web.model.ReferenceData;
@@ -122,6 +123,14 @@ public class FacilityController extends BaseController {
         modelMap.put("facility", facility);
         modelMap.put("success", "\"" + facility.getName() + "\" / \"" + facility.getCode() +"\" "+ message + " successfully");
         return new ResponseEntity<ModelMap>(modelMap, HttpStatus.OK);
+    }
+
+
+    public ResponseEntity<ModelMap> getUserSupervisedFacilitiesSupportingProgram(@PathVariable(value = "programId") Integer programId, HttpServletRequest request) {
+        ModelMap modelMap = new ModelMap();
+        Integer userId = (Integer) request.getSession().getAttribute("USER_ID");
+        facilityService.getUserSupervisedFacilities(userId, programId, Right.CREATE_REQUISITION);
+        return null;
     }
 
 }

@@ -9,7 +9,7 @@ import java.util.List;
 @Component
 public class CommaSeparator<T extends BaseModel> {
 
-    public String commaSeparate(List<T> list) {
+    public String commaSeparateIds(List<T> list) {
         List<Integer> ids = new ArrayList<>();
 
         for (T t : list) {
