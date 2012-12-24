@@ -92,6 +92,9 @@
                 <entry key="programProduct">
                     <value type="java.lang.Class">org.openlmis.core.domain.ProgramProduct</value>
                 </entry>
+                <entry key="supplyLine">
+                    <value type="java.lang.Class">org.openlmis.core.domain.SupplyLine</value>
+                </entry>
             </map>
         </constructor-arg>
     </bean>
@@ -107,6 +110,7 @@
                 <entry key="requisitionGroupProgramSchedule" value-ref="requisitionGroupProgramScheduleHandler"/>
                 <entry key="requisitionGroupMember" value-ref="requisitionGroupMemberHandler"/>
                 <entry key="programProduct" value-ref="programProductPersistenceHandler"/>
+                <entry key="supplyLine" value-ref="supplyLineHandler"/>
             </map>
         </constructor-arg>
     </bean>
