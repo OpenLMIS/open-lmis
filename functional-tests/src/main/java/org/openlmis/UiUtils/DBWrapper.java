@@ -13,7 +13,7 @@ public class DBWrapper {
         final Properties props = new Properties();
 
         System.out.println(System.getProperty("user.dir") + "/src/main/resources/config.properties");
-        props.load(new FileInputStream(System.getProperty("user.dir")+"/src/main/resources/config.properties"));
+        props.load(new FileInputStream(System.getProperty("user.dir") + "/src/main/resources/config.properties"));
         baseUrl = props.getProperty("baseUrl");
         dbUrl = props.getProperty("dbUrl");
         dbUser = props.getProperty("dbUser");
@@ -73,11 +73,29 @@ public class DBWrapper {
             dbwrapper.dbConnection("delete from users where userName like('"+userName+"');", "alter");
         }
         dbwrapper.dbConnection("INSERT INTO users\n" +
-                "  (id, userName, password, role, facilityId) VALUES\n" +
-                "  (200, '"+userName+"', '"+password+"','USER', null);", "alter");
+                "  (id, userName, password, facilityId) VALUES\n" +
+                "  (200, '"+userName+"', '"+password+"', null);", "alter");
 
     }
 
+    public void insertFacility() throws IOException , SQLException
+    {
+
+        DBWrapper dbWrapper=new DBWrapper();
+        ResultSet rs = dbWrapper.dbConnection("Select code from facilities;", "select");
+
+        if (rs.next()) {
+
+            dbWrapper.dbConnection("delete from facilities;", "alter");
+
+
+        }
+        dbWrapper.dbConnection("INSERT INTO facilities\n" +
+                "(code, name, description, gln, mainPhone, fax, address1, address2, geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById, coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, hasElectricity, online, hasElectronicScc, hasElectronicDar, active, goLiveDate, goDownDate, satellite, comment, dataReportable) values\n" +
+                "('F1756','Village Dispensary','IT department','G7645',9876234981,'fax','A','B',1,1,333,22.1,1.2,3.3,2,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/1887','TRUE','fc','TRUE'),\n" +
+                "('F1757','Central Hospital','IT department','G7646',9876234981,'fax','A','B',1,2,333,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','TRUE','fc','TRUE');\n", "alter");
+
+    }
 
 
     public void allocateFacilityToUser() throws IOException {
@@ -118,9 +136,9 @@ public class DBWrapper {
             dbwrapper.dbConnection("delete from roles;", "alter");
         }
         dbwrapper.dbConnection("INSERT INTO roles\n" +
-                "(id, name, description) VALUES\n" +
-                "(1, 'store in-charge', ''),\n" +
-                "(2, 'district pharmacist', '');", "alter");
+                " (id, name, description) VALUES\n" +
+                " (2, 'store in-charge', ''),\n" +
+                " (3, 'district pharmacist', '');", "alter");
 
     }
 
@@ -136,7 +154,28 @@ public class DBWrapper {
 
         }
 
-        dbwrapper.dbConnection("INSERT INTO role_rights (roleId, rightId) VALUES (1, 'VIEW_REQUISITION'), (1, 'CREATE_REQUISITION'),(2, 'VIEW_REQUISITION'),(2, 'UPLOADS'),(2, 'MANAGE_FACILITY'),(2, 'CONFIGURE_RNR');", "alter");
+        dbwrapper.dbConnection("INSERT INTO role_rights\n" +
+                "  (roleId, rightId) VALUES\n" +
+                "  (2, 'VIEW_REQUISITION'),\n" +
+                "  (2, 'CREATE_REQUISITION'),\n" +
+                "  (3, 'VIEW_REQUISITION'),\n" +
+                "  (3, 'UPLOADS'),\n" +
+                "  (3, 'MANAGE_FACILITY'),\n" +
+                "  (3, 'CONFIGURE_RNR');", "alter");
+    }
+
+    public void insertSupervisoryNodes() throws SQLException, IOException {
+        DBWrapper dbwrapper = new DBWrapper();
+        ResultSet rs = dbwrapper.dbConnection("Select facilityId from supervisory_nodes;", "select");
+
+        if (rs.next()) {
+
+            dbwrapper.dbConnection("delete from supervisory_nodes;", "alter");
+
+        }
+        dbwrapper.dbConnection("INSERT INTO supervisory_nodes\n" +
+                "  (parentId, facilityId, name, code, approvalPoint) VALUES\n" +
+                "  (null, (SELECT id FROM facilities WHERE code = 'F1756'), 'Node 1', 'N1', true);", "alter");
     }
 
     public void insertRoleAssignment() throws SQLException, IOException {
@@ -148,7 +187,8 @@ public class DBWrapper {
             dbwrapper.dbConnection("delete from role_assignments;", "alter");
 
         }
-        dbwrapper.dbConnection("INSERT INTO role_assignments (userId, roleId, programId) VALUES (1, 2, 1), (200, 1, 1);", "alter");
+        dbwrapper.dbConnection("INSERT INTO role_assignments (userId, roleId, programId, supervisoryNodeId) VALUES (1, 3, 1, null), (200, 2, 1, null),\n" +
+                "  (200, 2, 1, (SELECT id from supervisory_nodes WHERE code = 'N1'));", "alter");
     }
 
     public void insertProducts() throws SQLException, IOException {
@@ -156,7 +196,6 @@ public class DBWrapper {
         ResultSet rs = dbwrapper.dbConnection("Select id from products;", "select");
 
         if (rs.next()) {
-//
             dbwrapper.dbConnection("delete from facility_approved_products;", "alter");
             dbwrapper.dbConnection("delete from program_products;", "alter");
             dbwrapper.dbConnection("delete from products;", "alter");

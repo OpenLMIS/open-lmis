@@ -31,8 +31,10 @@ public class E2EInitiateRnR extends TestCaseHelper {
         DBWrapper dbWrapper = new DBWrapper();
 
         dbWrapper.insertUser(user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==");
+        dbWrapper.insertFacility();
         dbWrapper.insertRoles();
         dbWrapper.insertRoleRights();
+        dbWrapper.insertSupervisoryNodes();
         dbWrapper.insertRoleAssignment();
         dbWrapper.insertProducts();
         dbWrapper.insertProgramProducts();
@@ -73,7 +75,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     @DataProvider(name = "Data-Provider-Function-Positive")
     public Object[][] parameterIntTestProviderPositive() {
         return new Object[][]{
-                {"HIV","User1234", "User123",new String[]{"Admin123", "Admin123"}}
+                {"HIV","User123", "User123",new String[]{"Admin123", "Admin123"}}
         };
     }
 }

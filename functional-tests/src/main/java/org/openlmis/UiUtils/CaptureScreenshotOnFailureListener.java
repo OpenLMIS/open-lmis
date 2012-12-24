@@ -14,7 +14,6 @@ import java.util.Date;
 
 public class CaptureScreenshotOnFailureListener extends TestListenerAdapter
 {
-//    protected static TestWebDriver testWebDriver;
 
     @Override
     public void onTestFailure (ITestResult testResult)
