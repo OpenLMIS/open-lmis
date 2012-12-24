@@ -7,7 +7,6 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.openlmis.core.builder.SupplyLineBuilder;
-import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.core.exception.DataException;
@@ -62,8 +61,6 @@ public class SupplyLineRepositoryTest {
 
     @Test
     public void shouldThrowErrorIfProgramDoesNotExist() {
-
-        supplyLine.setProgram(new Program());
         when(programMapper.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(null);
 
         expectedEx.expect(DataException.class);
@@ -74,7 +71,6 @@ public class SupplyLineRepositoryTest {
     @Test
     public void shouldThrowErrorIfFacilityDoesNotExist() {
 
-        supplyLine.setProgram(new Program());
         when(programMapper.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1);
         when(facilityMapper.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenReturn(null);
 
@@ -86,10 +82,9 @@ public class SupplyLineRepositoryTest {
     @Test
     public void shouldThrowErrorIfSupervisoryNodeDoesNotExist() {
 
-        supplyLine.setProgram(new Program());
         when(programMapper.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1);
         when(facilityMapper.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenReturn(1);
-        when(supervisoryNodeMapper.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenReturn(null);
+        when(supervisoryNodeMapper.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(null);
 
         expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Supervising Node does not exist");
