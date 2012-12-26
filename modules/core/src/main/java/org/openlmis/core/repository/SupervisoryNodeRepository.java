@@ -17,24 +17,21 @@ import java.util.List;
 @NoArgsConstructor
 public class SupervisoryNodeRepository {
     private SupervisoryNodeMapper supervisoryNodeMapper;
-    private FacilityMapper facilityMapper;
+    private FacilityRepository facilityRepository;
 
     @Autowired
-    public SupervisoryNodeRepository(SupervisoryNodeMapper supervisoryNodeMapper, FacilityMapper facilityMapper) {
+    public SupervisoryNodeRepository(SupervisoryNodeMapper supervisoryNodeMapper, FacilityRepository facilityRepository) {
         this.supervisoryNodeMapper = supervisoryNodeMapper;
-        this.facilityMapper = facilityMapper;
+        this.facilityRepository = facilityRepository;
     }
 
     public void save(SupervisoryNode supervisoryNode) {
-        supervisoryNode.getFacility().setId(facilityMapper.getIdForCode(supervisoryNode.getFacility().getCode()));
+        supervisoryNode.getFacility().setId(facilityRepository.getIdForCode(supervisoryNode.getFacility().getCode()));
         if (supervisoryNode.getParent() != null) {
             supervisoryNode.getParent().setId(supervisoryNodeMapper.getIdForCode(supervisoryNode.getParent().getCode()));
             if (supervisoryNode.getParent().getId() == null) {
                 throw new DataException("Supervisory Node as Parent does not exist");
             }
-        }
-        if (supervisoryNode.getFacility().getId() == null) {
-            throw new DataException("Facility Code does not exist");
         }
 
         try {

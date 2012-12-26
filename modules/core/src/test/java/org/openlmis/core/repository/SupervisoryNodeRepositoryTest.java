@@ -8,7 +8,6 @@ import org.mockito.MockitoAnnotations.Mock;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
 import org.springframework.dao.DuplicateKeyException;
 
@@ -29,7 +28,7 @@ public class SupervisoryNodeRepositoryTest {
     @Mock
     SupervisoryNodeMapper supervisoryNodeMapper;
     @Mock
-    FacilityMapper facilityMapper;
+    FacilityRepository facilityRepository;
 
     private SupervisoryNodeRepository repository;
 
@@ -41,7 +40,7 @@ public class SupervisoryNodeRepositoryTest {
         parent.setCode("PSN");
         supervisoryNode.setParent(parent);
         supervisoryNode.setFacility(new Facility());
-        repository = new SupervisoryNodeRepository(supervisoryNodeMapper, facilityMapper);
+        repository = new SupervisoryNodeRepository(supervisoryNodeMapper, facilityRepository);
     }
 
     @Test
@@ -73,25 +72,25 @@ public class SupervisoryNodeRepositoryTest {
     @Test
     public void shouldGiveErrorIfFacilityCodeDoesNotExist() throws Exception {
         when(supervisoryNodeMapper.getIdForCode(supervisoryNode.getParent().getCode())).thenReturn(1);
-        when(facilityMapper.getIdForCode(supervisoryNode.getFacility().getCode())).thenReturn(null);
+        when(facilityRepository.getIdForCode(supervisoryNode.getFacility().getCode())).thenThrow(new DataException("Invalid Facility Code"));
 
         expectedEx.expect(DataException.class);
-        expectedEx.expectMessage("Facility Code does not exist");
+        expectedEx.expectMessage("Invalid Facility Code");
 
         repository.save(supervisoryNode);
 
-        verify(facilityMapper).getIdForCode(supervisoryNode.getFacility().getCode());
+        verify(facilityRepository).getIdForCode(supervisoryNode.getFacility().getCode());
         verify(supervisoryNodeMapper).getIdForCode(supervisoryNode.getParent().getCode());
     }
 
     @Test
     public void shouldSaveSupervisoryNode() throws Exception {
         when(supervisoryNodeMapper.getIdForCode(supervisoryNode.getParent().getCode())).thenReturn(1);
-        when(facilityMapper.getIdForCode(supervisoryNode.getFacility().getCode())).thenReturn(1);
+        when(facilityRepository.getIdForCode(supervisoryNode.getFacility().getCode())).thenReturn(1);
 
         repository.save(supervisoryNode);
 
-        verify(facilityMapper).getIdForCode(supervisoryNode.getFacility().getCode());
+        verify(facilityRepository).getIdForCode(supervisoryNode.getFacility().getCode());
         verify(supervisoryNodeMapper).getIdForCode(supervisoryNode.getParent().getCode());
         assertThat(supervisoryNode.getParent().getId(), is(1));
         assertThat(supervisoryNode.getFacility().getId(), is(1));
@@ -100,11 +99,11 @@ public class SupervisoryNodeRepositoryTest {
 
     @Test
     public void shouldSaveSupervisoryNodeIfParentNotSupplied() throws Exception {
-        when(facilityMapper.getIdForCode(supervisoryNode.getFacility().getCode())).thenReturn(1);
+        when(facilityRepository.getIdForCode(supervisoryNode.getFacility().getCode())).thenReturn(1);
         supervisoryNode.setParent(null);
         repository.save(supervisoryNode);
 
-        verify(facilityMapper).getIdForCode(supervisoryNode.getFacility().getCode());
+        verify(facilityRepository).getIdForCode(supervisoryNode.getFacility().getCode());
         verify(supervisoryNodeMapper, never()).getIdForCode(anyString());
         assertThat(supervisoryNode.getParent(), is(nullValue()));
         assertThat(supervisoryNode.getFacility().getId(), is(1));
