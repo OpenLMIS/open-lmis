@@ -38,6 +38,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
         dbWrapper.insertProducts();
         dbWrapper.insertProgramProducts();
         dbWrapper.insertFacilityApprovedProducts();
+        dbWrapper.insertRequisitionGroup();
+        dbWrapper.insertRequisitionGroupMembers();
 
 
         LoginPage loginPage=new LoginPage(testWebDriver);

@@ -40,6 +40,8 @@ public class E2EManageFacility extends TestCaseHelper {
         dbWrapper.insertProducts();
         dbWrapper.insertProgramProducts();
         dbWrapper.insertFacilityApprovedProducts();
+        dbWrapper.insertRequisitionGroup();
+        dbWrapper.insertRequisitionGroupMembers();
 
 
 

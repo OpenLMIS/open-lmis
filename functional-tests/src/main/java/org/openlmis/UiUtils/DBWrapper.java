@@ -121,6 +121,8 @@ public class DBWrapper {
         dbwrapper.dbConnection("delete from requisition_group_members;", "alter");
         dbwrapper.dbConnection("delete from facilities;", "alter");
         dbwrapper.dbConnection("delete from program_rnr_columns;", "alter");
+        dbwrapper.dbConnection("delete from requisition_groups;", "alter");
+        dbwrapper.dbConnection("delete from requisition_group_members;", "alter");
     }
 
 
@@ -175,6 +177,34 @@ public class DBWrapper {
                 "  (parentId, facilityId, name, code) VALUES\n" +
                 "  (null, (SELECT id FROM facilities WHERE code = 'F1756'), 'Node 1', 'N1'),\n" +
                 "  ((select id from  supervisory_nodes where code ='N1'), (SELECT id FROM facilities WHERE code = 'F1757'), 'Node 1', 'N2');", "alter");
+    }
+
+    public void insertRequisitionGroup() throws SQLException, IOException {
+        DBWrapper dbwrapper = new DBWrapper();
+        ResultSet rs = dbwrapper.dbConnection("Select id from requisition_groups;", "select");
+
+        if (rs.next()) {
+
+            dbwrapper.dbConnection("delete from requisition_groups;", "alter");
+
+        }
+        dbwrapper.dbConnection("INSERT INTO requisition_groups ( code ,name,description,supervisoryNodeId )values\n" +
+                "('RG2','Requistion Group 2','Supports EM(Q1M)',(select id from  supervisory_nodes where code ='N1')),\n" +
+                "('RG1','Requistion Group 1','Supports EM(Q2M)',(select id from  supervisory_nodes where code ='N2'));", "alter");
+    }
+
+    public void insertRequisitionGroupMembers() throws SQLException, IOException {
+        DBWrapper dbwrapper = new DBWrapper();
+        ResultSet rs = dbwrapper.dbConnection("Select requisitiongroupid from requisition_group_members;", "select");
+
+        if (rs.next()) {
+
+            dbwrapper.dbConnection("delete from requisition_group_members;", "alter");
+
+        }
+        dbwrapper.dbConnection("INSERT INTO requisition_group_members ( requisitionGroupId ,facilityId )values\n" +
+                "((select id from  requisition_groups where code ='RG1'),(select id from  facilities where code ='F1756')),\n" +
+                "((select id from  requisition_groups where code ='RG2'),(select id from  facilities where code ='F1757'));", "alter");
     }
 
     public void insertRoleAssignment() throws SQLException, IOException {
