@@ -7,6 +7,9 @@ import org.openlmis.upload.Importable;
 import org.openlmis.upload.handler.AbstractModelPersistenceHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import sun.text.resources.FormatData_ar_YE;
+
+import java.util.Date;
 
 @Component
 @NoArgsConstructor
@@ -23,6 +26,7 @@ public class SupplyLineHandler extends AbstractModelPersistenceHandler {
     protected void save(Importable modelClass, String modifiedBy) {
         SupplyLine supplyLine = (SupplyLine) modelClass;
         supplyLine.setModifiedBy(modifiedBy);
+        supplyLine.setModifiedDate(new Date());
         supplyLineRepository.insert(supplyLine);
     }
 }

@@ -56,10 +56,11 @@ public class SupplyLineRepositoryTest {
         when(programRepository.getIdForCode(supplyLine.getProgram().getCode())).thenReturn(1);
         when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(1);
         when(supervisoryNodeRepository.getSupervisoryNodeParentId(1)).thenReturn(null);
+        doThrow(new DuplicateKeyException("Duplicate entry for Supply Line found")).when(supplyLineMapper).insert(supplyLine);
 
         expectedEx.expect(DataException.class);
-        expectedEx.expectMessage("Duplicate entry for Supply Line found.");
-        doThrow(new DuplicateKeyException("Duplicate entry for Supply Line found.")).when(supplyLineMapper).insert(supplyLine);
+        expectedEx.expectMessage("Duplicate entry for Supply Line found");
+
         supplyLineRepository.insert(supplyLine);
     }
 

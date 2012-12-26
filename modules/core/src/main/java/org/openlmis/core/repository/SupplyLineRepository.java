@@ -35,7 +35,7 @@ public class SupplyLineRepository {
         try {
             supplyLineMapper.insert(supplyLine);
         } catch (DuplicateKeyException ex) {
-            throw new DataException("Duplicate entry for Supply Line found.");
+            throw new DataException("Duplicate entry for Supply Line found");
         }
     }
 

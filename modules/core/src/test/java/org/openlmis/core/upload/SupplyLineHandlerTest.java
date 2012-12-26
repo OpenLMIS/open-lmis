@@ -9,7 +9,9 @@ import org.openlmis.core.repository.SupplyLineRepository;
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.isNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -29,6 +31,7 @@ public class SupplyLineHandlerTest {
         SupplyLine supplyLine = make(a(SupplyLineBuilder.defaultSupplyLine));
         supplyLineHandler.save(supplyLine, "user");
         assertThat(supplyLine.getModifiedBy(), is("user"));
+        assertThat(supplyLine.getModifiedDate(), is(notNullValue()));
         verify(supplyLineRepository).insert(supplyLine);
 
     }
