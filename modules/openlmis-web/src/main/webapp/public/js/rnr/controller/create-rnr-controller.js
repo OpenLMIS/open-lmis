@@ -67,10 +67,18 @@ function CreateRnrController($scope, ReferenceData, RequisitionHeader, ProgramRn
      return "";
     }
 
-    $scope.show = function(data) {
-        if(data != 0 && (data == undefined || data == null || data == false)){
+    $scope.showCurrencySymbol = function(value) {
+        if(value != 0 && (value == undefined || value == null || value == false)){
             return "";
         }
         return "defined";
+    }
+
+    $scope.showSelectedColumn = function(columnName){
+        if(columnName == "quantityApproved"){
+            return undefined;
+        }
+        return "defined";
+
     }
 }
