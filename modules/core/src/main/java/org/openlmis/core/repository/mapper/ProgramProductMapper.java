@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface ProgramProductMapper {
 
     @Insert({"INSERT INTO program_products(programId, productId, dosesPerMonth, active, modifiedBy, modifiedDate)",
-            "VALUES ((SELECT id FROM programs WHERE LOWER(code) = LOWER(#{program.code})),",
+            "VALUES (#{program.id},",
             "(SELECT id FROM products WHERE LOWER(code) = LOWER(#{product.code})),",
             "#{dosesPerMonth}, #{active}, #{modifiedBy}, #{modifiedDate})"})
     @Options(useGeneratedKeys = true)

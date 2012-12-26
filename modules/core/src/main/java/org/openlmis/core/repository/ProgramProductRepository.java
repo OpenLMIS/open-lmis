@@ -4,7 +4,6 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProductMapper;
-import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -14,23 +13,24 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 public class ProgramProductRepository {
 
-    private ProgramMapper programMapper;
+    private ProgramRepository programRepository;
     private ProductMapper productMapper;
     private ProgramProductMapper programProductMapper;
 
     @Autowired
-    public ProgramProductRepository(ProgramMapper programMapper, ProductMapper productMapper, ProgramProductMapper programProductMapper) {
+    public ProgramProductRepository(ProgramRepository programRepository, ProductMapper productMapper, ProgramProductMapper programProductMapper) {
         this.programProductMapper = programProductMapper;
-        this.programMapper = programMapper;
+        this.programRepository = programRepository;
         this.productMapper = productMapper;
     }
 
     public void insert(ProgramProduct programProduct) {
-        validateProgramCode(programProduct.getProgram().getCode());
+        programProduct.getProgram().setId(programRepository.getIdForCode(programProduct.getProduct().getCode()));
         validateProductCode(programProduct.getProduct().getCode());
+
         try {
             programProductMapper.insert(programProduct);
-        }catch (DuplicateKeyException duplicateKeyException) {
+        } catch (DuplicateKeyException duplicateKeyException) {
             throw new DataException("Duplicate entry for Product Code and Program Code combination found");
         }
     }
@@ -38,12 +38,6 @@ public class ProgramProductRepository {
     private void validateProductCode(String code) {
         if (code == null || code.isEmpty() || productMapper.getIdByCode(code) == null) {
             throw new DataException("Invalid Product Code");
-        }
-    }
-
-    private void validateProgramCode(String code) {
-        if (code == null || code.isEmpty() || programMapper.getIdForCode(code) == null) {
-            throw new DataException("Invalid Program Code");
         }
     }
 }

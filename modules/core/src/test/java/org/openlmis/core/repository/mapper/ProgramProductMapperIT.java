@@ -24,19 +24,10 @@ import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 @Transactional
 @TransactionConfiguration(defaultRollback = true)
 public class ProgramProductMapperIT {
-
-    public static final String HIV = "HIV";
-
     @Autowired
     ProgramMapper programMapper;
     @Autowired
-    FacilityMapper facilityMapper;
-    @Autowired
-    ProgramSupportedMapper programSupportedMapper;
-    @Autowired
     ProductMapper productMapper;
-    @Autowired
-    FacilityApprovedProductMapper facilityApprovedProductMapper;
     @Autowired
     ProgramProductMapper programProductMapper;
 
@@ -50,5 +41,4 @@ public class ProgramProductMapperIT {
         assertEquals(1, programProductMapper.insert(programProduct).intValue());
         assertNotNull(programProduct.getId());
     }
-
 }

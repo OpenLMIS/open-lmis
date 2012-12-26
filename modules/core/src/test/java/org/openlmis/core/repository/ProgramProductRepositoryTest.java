@@ -12,7 +12,6 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProductMapper;
-import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
 import org.springframework.dao.DuplicateKeyException;
 
@@ -34,14 +33,14 @@ public class ProgramProductRepositoryTest {
     ProgramProductMapper programProductMapper;
 
     @Mock
-    private ProgramMapper programMapper;
+    private ProgramRepository programRepository;
 
     @Mock
     private ProductMapper productMapper;
 
     @Before
     public void setUp() throws Exception {
-        programProductRepository = new ProgramProductRepository(programMapper, productMapper, programProductMapper);
+        programProductRepository = new ProgramProductRepository(programRepository, productMapper, programProductMapper);
     }
 
     @Test
@@ -80,7 +79,7 @@ public class ProgramProductRepositoryTest {
     @Test
     public void shouldThrowErrorWhenInsertingInvalidProductForAProgram() {
         Program program = make(a(ProgramBuilder.defaultProgram));
-        when(programMapper.getIdForCode(program.getCode())).thenReturn(1);
+        when(programRepository.getIdForCode(program.getCode())).thenReturn(1);
         ProgramProduct programProduct = new ProgramProduct(program, new Product(), 10, true);
 
         expectedEx.expect(DataException.class);
