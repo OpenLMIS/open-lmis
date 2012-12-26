@@ -4,7 +4,6 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -28,9 +27,9 @@ public class SupervisoryNodeRepository {
     public void save(SupervisoryNode supervisoryNode) {
         supervisoryNode.getFacility().setId(facilityRepository.getIdForCode(supervisoryNode.getFacility().getCode()));
         if (supervisoryNode.getParent() != null) {
-            supervisoryNode.getParent().setId(supervisoryNodeMapper.getIdForCode(supervisoryNode.getParent().getCode()));
+            supervisoryNode.getParent().setId(getSupervisoryNodeParentId(supervisoryNode.getId()));
             if (supervisoryNode.getParent().getId() == null) {
-                throw new DataException("Supervisory Node as Parent does not exist");
+                throw new DataException("Supervisory Node Parent does not exist");
             }
         }
 

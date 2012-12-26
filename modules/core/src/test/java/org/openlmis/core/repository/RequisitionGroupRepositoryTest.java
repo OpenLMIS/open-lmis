@@ -11,7 +11,6 @@ import org.openlmis.core.builder.RequisitionGroupBuilder;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.repository.mapper.RequisitionGroupMapper;
 import org.openlmis.core.domain.SupervisoryNode;
-import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
 import org.springframework.dao.DuplicateKeyException;
 
 import java.util.ArrayList;
@@ -36,14 +35,14 @@ public class RequisitionGroupRepositoryTest {
     RequisitionGroupMapper requisitionGroupMapper;
 
     @Mock
-    SupervisoryNodeMapper supervisoryNodeMapper;
+    SupervisoryNodeRepository supervisoryNodeRepository;
     @Mock
     private CommaSeparator commaSeparator;
 
     @Before
     public void setUp() throws Exception {
         initMocks(this);
-        requisitionGroupRepository = new RequisitionGroupRepository(requisitionGroupMapper, supervisoryNodeMapper, commaSeparator);
+        requisitionGroupRepository = new RequisitionGroupRepository(requisitionGroupMapper, supervisoryNodeRepository, commaSeparator);
         requisitionGroup = make(a(RequisitionGroupBuilder.defaultRequisitionGroup));
         requisitionGroup.setSupervisoryNode(new SupervisoryNode());
     }
@@ -61,28 +60,28 @@ public class RequisitionGroupRepositoryTest {
 
     @Test
     public void shouldGiveSupervisoryNodeNotFoundErrorIfTheSupervisoryNodeDoesNotExist() throws Exception {
-        when(supervisoryNodeMapper.getIdForCode(requisitionGroup.getSupervisoryNode().getCode())).thenReturn(null);
+        when(supervisoryNodeRepository.getIdForCode(requisitionGroup.getSupervisoryNode().getCode())).thenThrow(new DataException("Invalid Supervisory Node Code"));
 
         expectedEx.expect(DataException.class);
-        expectedEx.expectMessage("Supervisory Node Not Found");
+        expectedEx.expectMessage("Invalid Supervisory Node Code");
         requisitionGroupRepository.insert(requisitionGroup);
 
-        verify(supervisoryNodeMapper).getIdForCode(requisitionGroup.getSupervisoryNode().getCode());
+        verify(supervisoryNodeRepository).getIdForCode(requisitionGroup.getSupervisoryNode().getCode());
         verify(requisitionGroupMapper, never()).insert(requisitionGroup);
     }
 
     @Test
     public void shouldSaveRequisitionGroup() throws Exception {
-        when(supervisoryNodeMapper.getIdForCode(requisitionGroup.getSupervisoryNode().getCode())).thenReturn(1);
+        when(supervisoryNodeRepository.getIdForCode(requisitionGroup.getSupervisoryNode().getCode())).thenReturn(1);
 
         requisitionGroupRepository.insert(requisitionGroup);
         verify(requisitionGroupMapper).insert(requisitionGroup);
-        verify(supervisoryNodeMapper).getIdForCode(requisitionGroup.getSupervisoryNode().getCode());
+        verify(supervisoryNodeRepository).getIdForCode(requisitionGroup.getSupervisoryNode().getCode());
     }
 
     @Test
     public void shouldGetRequisitionGroupForSupervisoryNodes() throws Exception {
-        when(supervisoryNodeMapper.getIdForCode(requisitionGroup.getSupervisoryNode().getCode())).thenReturn(1);
+        when(supervisoryNodeRepository.getIdForCode(requisitionGroup.getSupervisoryNode().getCode())).thenReturn(1);
 
         List<SupervisoryNode> supervisoryNodes = new ArrayList<>();
         when(commaSeparator.commaSeparateIds(supervisoryNodes)).thenReturn("{1, 2}");
