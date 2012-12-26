@@ -19,31 +19,28 @@ public class RequisitionGroupMemberRepository {
     private RequisitionGroupMemberMapper requisitionGroupMemberMapper;
     private RequisitionGroupProgramScheduleMapper requisitionGroupProgramScheduleMapper;
     private RequisitionGroupMapper requisitionGroupMapper;
-    private FacilityMapper facilityMapper;
+    private FacilityRepository facilityRepository;
     private ProgramMapper programMapper;
 
     @Autowired
     public RequisitionGroupMemberRepository(RequisitionGroupMemberMapper requisitionGroupMemberMapper, RequisitionGroupProgramScheduleMapper requisitionGroupProgramScheduleMapper,
-                                            RequisitionGroupMapper requisitionGroupMapper, FacilityMapper facilityMapper, ProgramMapper programMapper) {
+                                            RequisitionGroupMapper requisitionGroupMapper, FacilityRepository facilityRepository, ProgramMapper programMapper) {
         this.requisitionGroupMemberMapper = requisitionGroupMemberMapper;
         this.requisitionGroupProgramScheduleMapper = requisitionGroupProgramScheduleMapper;
         this.requisitionGroupMapper = requisitionGroupMapper;
-        this.facilityMapper = facilityMapper;
+        this.facilityRepository = facilityRepository;
         this.programMapper = programMapper;
     }
 
 
     public void insert(RequisitionGroupMember requisitionGroupMember) {
-        requisitionGroupMember.getFacility().setId(facilityMapper.getIdForCode(requisitionGroupMember.getFacility().getCode()));
+        requisitionGroupMember.getFacility().setId(facilityRepository.getIdForCode(requisitionGroupMember.getFacility().getCode()));
         requisitionGroupMember.getRequisitionGroup().setId(requisitionGroupMapper.getIdForCode(requisitionGroupMember.getRequisitionGroup().getCode()));
 
         List<Integer> requisitionGroupProgramIdsForFacility = requisitionGroupMemberMapper.getRequisitionGroupProgramIdsForId(requisitionGroupMember.getFacility().getId());
 
         if (requisitionGroupMember.getRequisitionGroup().getId() == null) {
             throw new DataException("Requisition Group does not exist");
-        }
-        if (requisitionGroupMember.getFacility().getId() == null) {
-            throw new DataException("Facility does not exist");
         }
 
         // TODO : can be done through db constraints
