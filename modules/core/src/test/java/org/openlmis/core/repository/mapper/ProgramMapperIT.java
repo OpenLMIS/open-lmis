@@ -54,9 +54,6 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     @Autowired
     SupervisoryNodeMapper supervisoryNodeMapper;
 
-    @Autowired
-    RoleMapper roleMapper;
-
     @Test
     public void shouldGetAllActiveProgram() {
         List<Program> programs = programMapper.getAllActive();
@@ -128,14 +125,14 @@ public class ProgramMapperIT extends SpringIntegrationTest {
         User user = insertUser();
 
         Role createRnrRole = new Role("R1", "Create Rnr Role");
-        roleMapper.insert(createRnrRole);
+        roleRightsMapper.insertRole(createRnrRole);
         roleRightsMapper.createRoleRight(createRnrRole.getId(), Right.CREATE_REQUISITION);
         insertRoleAssignments(activeProgram, user, createRnrRole, supervisoryNode);
         insertRoleAssignments(inactiveProgram, user, createRnrRole, supervisoryNode);
         insertRoleAssignments(activeProgramForHomeFacility, user, createRnrRole, null);
 
         Role viewRnrRole = new Role("R2", "View Rnr Role");
-        roleMapper.insert(viewRnrRole);
+        roleRightsMapper.insertRole(viewRnrRole);
         roleRightsMapper.createRoleRight(viewRnrRole.getId(), Right.CONFIGURE_RNR);
         insertRoleAssignments(activeProgramWithoutRight, user, viewRnrRole, supervisoryNode);
 

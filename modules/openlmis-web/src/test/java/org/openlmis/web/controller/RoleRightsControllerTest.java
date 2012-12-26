@@ -9,6 +9,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.Role;
 import org.openlmis.core.service.RoleRightsService;
+import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
@@ -19,9 +20,7 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -71,5 +70,14 @@ public class RoleRightsControllerTest {
         ModelMap expectedModelMap = new ModelMap();
         expectedModelMap.put("error", "Error message");
         assertThat(responseEntity.getBody(), is(expectedModelMap));
+    }
+
+    @Test
+    public void shouldGetAllRolesWithRights() throws Exception {
+        List<Role> roles = new ArrayList<>();
+        when(roleRightsService.getAllRoles()).thenReturn(roles);
+        OpenLmisResponse response = new RoleRightsController(roleRightsService).getAll();
+        assertThat((List<Role>)response.getResponseData(), is(roles));
+        verify(roleRightsService).getAllRoles();
     }
 }

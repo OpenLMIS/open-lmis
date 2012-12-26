@@ -9,13 +9,16 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Role;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.repository.mapper.RoleMapper;
 import org.openlmis.core.repository.mapper.RoleRightsMapper;
 import org.springframework.dao.DuplicateKeyException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static java.util.Arrays.asList;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.*;
 import static org.openlmis.core.domain.Right.CONFIGURE_RNR;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 
@@ -25,9 +28,6 @@ public class RoleRightsRepositoryTest {
     Role role;
     @Mock
     RoleRightsMapper roleRightsMapper;
-
-    @Mock
-    RoleMapper roleMapper;
 
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
@@ -42,20 +42,29 @@ public class RoleRightsRepositoryTest {
     public void shouldSaveRoleWithMappings() throws Exception {
         role.setRights(asList(CONFIGURE_RNR, CREATE_REQUISITION));
         role.setId(1);
-        new RoleRightsRepository(roleRightsMapper, roleMapper).saveRole(role);
+        new RoleRightsRepository(roleRightsMapper).saveRole(role);
 
-        verify(roleMapper).insert(role);
+        verify(roleRightsMapper).insertRole(role);
         verify(roleRightsMapper).createRoleRight(1, CONFIGURE_RNR);
         verify(roleRightsMapper).createRoleRight(1, CREATE_REQUISITION);
     }
 
     @Test
     public void shouldNotSaveDuplicateRole() throws Exception {
-        doThrow(DuplicateKeyException.class).when(roleMapper).insert(role);
+        doThrow(DuplicateKeyException.class).when(roleRightsMapper).insertRole(role);
 
         expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Duplicate Role found");
 
-        new RoleRightsRepository(roleRightsMapper, roleMapper).saveRole(role);
+        new RoleRightsRepository(roleRightsMapper).saveRole(role);
+    }
+
+    @Test
+    public void shouldGetAllRolesInTheSystem() throws Exception {
+        List<Role> roles = new ArrayList<>();
+        when(roleRightsMapper.getAllRoles()).thenReturn(roles);
+        List<Role> allRoles = new RoleRightsRepository(roleRightsMapper).getAllRoles();
+        assertThat(allRoles, is(roles));
+        verify(roleRightsMapper).getAllRoles();
     }
 }

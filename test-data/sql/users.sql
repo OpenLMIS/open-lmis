@@ -4,7 +4,7 @@ INSERT INTO roles
  ('district pharmacist', '');
 
 INSERT INTO role_rights
-  (roleId, rightId) VALUES
+  (roleId, rightName) VALUES
   (2, 'CREATE_REQUISITION'),
   (3, 'UPLOADS'),
   (3, 'MANAGE_FACILITY'),

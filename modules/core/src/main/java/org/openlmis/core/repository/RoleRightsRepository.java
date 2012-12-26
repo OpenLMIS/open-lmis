@@ -4,7 +4,6 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.Role;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.repository.mapper.RoleMapper;
 import org.openlmis.core.repository.mapper.RoleRightsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -17,12 +16,10 @@ import java.util.List;
 public class RoleRightsRepository {
 
     private RoleRightsMapper roleRightsMapper;
-    private RoleMapper roleMapper;
 
     @Autowired
-    public RoleRightsRepository(RoleRightsMapper roleRightsMapper, RoleMapper roleMapper) {
+    public RoleRightsRepository(RoleRightsMapper roleRightsMapper) {
         this.roleRightsMapper = roleRightsMapper;
-        this.roleMapper = roleMapper;
     }
 
     public List<Right> getAllRightsForUser(String username) {
@@ -31,7 +28,7 @@ public class RoleRightsRepository {
 
     public void saveRole(Role role) {
         try {
-            roleMapper.insert(role);
+            roleRightsMapper.insertRole(role);
         } catch (DuplicateKeyException e) {
             throw new DataException("Duplicate Role found");
         }
@@ -39,5 +36,9 @@ public class RoleRightsRepository {
         for (Right right : role.getRights()) {
             roleRightsMapper.createRoleRight(role.getId(), right);
         }
+    }
+
+    public List<Role> getAllRoles() {
+        return roleRightsMapper.getAllRoles();
     }
 }

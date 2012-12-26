@@ -47,8 +47,6 @@ public class SupervisoryNodeMapperIT {
     ProgramMapper programMapper;
     @Autowired
     UserMapper userMapper;
-    @Autowired
-    RoleMapper roleMapper;
 
     @Before
     public void setUp() throws Exception {
@@ -89,10 +87,10 @@ public class SupervisoryNodeMapperIT {
         User user = insertUser();
 
         Role createRole = new Role("create role", "random description");
-        roleMapper.insert(createRole);
+        roleRightsMapper.insertRole(createRole);
 
         Role configureRnrRole = new Role("configure rnr", "random description");
-        roleMapper.insert(configureRnrRole);
+        roleRightsMapper.insertRole(configureRnrRole);
 
         roleRightsMapper.createRoleRight(createRole.getId(), CREATE_REQUISITION);
         roleRightsMapper.createRoleRight(configureRnrRole.getId(), CONFIGURE_RNR);

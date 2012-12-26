@@ -51,4 +51,8 @@ public class RoleRightsService {
        role.validate();
        roleRightsRepository.saveRole(role);
     }
+
+    public List<Role> getAllRoles() {
+        return roleRightsRepository.getAllRoles();
+    }
 }

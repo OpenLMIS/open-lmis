@@ -1,7 +1,6 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.openlmis.core.domain.*;
@@ -17,7 +16,7 @@ public interface RoleAssignmentMapper {
             "U.userName = #{userName} " +
             "AND U.id  = RA.userId " +
             "AND RA.roleId = RR.roleId " +
-            "AND RR.rightId = #{right} ")
+            "AND RR.rightName = #{right} ")
     List<RoleAssignment> getRoleAssignmentsWithGivenRightForAUser(@Param(value = "right") Right right,
                                                                   @Param(value = "userName") String userName);
 

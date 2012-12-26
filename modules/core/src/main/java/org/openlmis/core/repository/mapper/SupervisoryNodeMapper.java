@@ -34,7 +34,7 @@ public interface SupervisoryNodeMapper {
             "       supervisory_nodes s " +
             "       INNER JOIN role_assignments ra ON s.id = ra.supervisoryNodeId  " +
             "       INNER JOIN role_rights rr ON ra.roleId = rr.roleId  " +
-            "       WHERE rr.rightId = #{right.name}  " +
+            "       WHERE rr.rightName = #{right}  " +
             "       AND ra.userId = #{userId}  " +
             "       AND ra.programId = #{programId}) " +
             "   UNION " +

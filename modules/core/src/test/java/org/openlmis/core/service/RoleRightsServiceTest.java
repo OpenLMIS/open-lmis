@@ -12,6 +12,7 @@ import org.openlmis.core.domain.Role;
 import org.openlmis.core.repository.RoleAssignmentRepository;
 import org.openlmis.core.repository.RoleRightsRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -63,6 +64,16 @@ public class RoleRightsServiceTest {
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("error-message");
         roleRightsService.saveRole(role);
-        verify(roleRightsRepository,never()).saveRole(role);
+        verify(roleRightsRepository, never()).saveRole(role);
+    }
+
+    @Test
+    public void shouldReturnAllRoles() throws Exception {
+        List<Role> allRoles = new ArrayList<>();
+        when(roleRightsRepository.getAllRoles()).thenReturn(allRoles);
+
+        assertThat(roleRightsService.getAllRoles(), is(allRoles));
+
+        verify(roleRightsRepository).getAllRoles();
     }
 }

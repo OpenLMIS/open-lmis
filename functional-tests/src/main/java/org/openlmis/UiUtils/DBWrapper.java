@@ -155,7 +155,7 @@ public class DBWrapper {
         }
 
         dbwrapper.dbConnection("INSERT INTO role_rights\n" +
-                "  (roleId, rightId) VALUES\n" +
+                "  (roleId, right) VALUES\n" +
                 "  (2, 'CREATE_REQUISITION'),\n" +
                 "  (3, 'UPLOADS'),\n" +
                 "  (3, 'MANAGE_ROLE'),\n" +

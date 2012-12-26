@@ -35,8 +35,6 @@ public class RoleAssignmentMapperIT {
     RoleRightsMapper roleRightsMapper;
     @Autowired
     RoleAssignmentMapper roleAssignmentMapper;
-    @Autowired
-    RoleMapper roleMapper;
 
     @Test
     public void shouldReturnProgramAvailableForAFacilityForAUserWithGivenRights() throws Exception {
@@ -46,10 +44,10 @@ public class RoleAssignmentMapperIT {
         User user = insertUser();
 
         Role r1 = new Role("r1", "random description");
-        roleMapper.insert(r1);
+        roleRightsMapper.insertRole(r1);
 
         Role r2 = new Role("r2", "random description");
-        roleMapper.insert(r2);
+        roleRightsMapper.insertRole(r2);
 
         roleRightsMapper.createRoleRight(r1.getId(), CREATE_REQUISITION);
         roleRightsMapper.createRoleRight(r1.getId(), CONFIGURE_RNR);

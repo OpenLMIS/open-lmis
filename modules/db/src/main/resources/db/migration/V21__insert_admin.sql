@@ -3,7 +3,7 @@ INSERT INTO roles
  ('Admin', 'Admin');
 
  INSERT INTO role_rights
-  (roleId, rightId) VALUES
+  (roleId, rightName) VALUES
   ((select id from roles where name = 'Admin'), 'UPLOADS'),
   ((select id from roles where name = 'Admin'), 'MANAGE_FACILITY'),
   ((select id from roles where name = 'Admin'), 'MANAGE_ROLE'),

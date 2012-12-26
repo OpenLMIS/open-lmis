@@ -1,4 +1,4 @@
-INSERT INTO rights(id, description) VALUES
+INSERT INTO rights(name, description) VALUES
  ('CREATE_REQUISITION', 'Permission to create, edit, submit and recall requisitions'),
  ('UPLOADS', 'Permission to upload'),
  ('MANAGE_FACILITY','Permission to manage facilities(crud)'),
