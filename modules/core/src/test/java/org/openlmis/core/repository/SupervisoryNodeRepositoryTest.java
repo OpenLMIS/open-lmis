@@ -6,9 +6,9 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.MockitoAnnotations.Mock;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.FacilityMapper;
-import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
 import org.springframework.dao.DuplicateKeyException;
 
@@ -28,9 +28,10 @@ public class SupervisoryNodeRepositoryTest {
 
     @Mock
     SupervisoryNodeMapper supervisoryNodeMapper;
-
     @Mock
     FacilityMapper facilityMapper;
+
+    private SupervisoryNodeRepository repository;
 
     @Before
     public void setUp() throws Exception {
@@ -40,6 +41,7 @@ public class SupervisoryNodeRepositoryTest {
         parent.setCode("PSN");
         supervisoryNode.setParent(parent);
         supervisoryNode.setFacility(new Facility());
+        repository = new SupervisoryNodeRepository(supervisoryNodeMapper, facilityMapper);
     }
 
     @Test
@@ -48,9 +50,9 @@ public class SupervisoryNodeRepositoryTest {
         when(supervisoryNodeMapper.getIdForCode(supervisoryNode.getParent().getCode())).thenReturn(1);
 
         expectedEx.expect(DataException.class);
-        expectedEx.expectMessage("Duplicate Supervisory Node Code");
+        expectedEx.expectMessage("Duplicate SupervisoryNode Code");
 
-        new SupervisoryNodeRepository(supervisoryNodeMapper, facilityMapper).save(supervisoryNode);
+        repository.save(supervisoryNode);
 
         verify(supervisoryNodeMapper).insert(supervisoryNode);
     }
@@ -63,7 +65,7 @@ public class SupervisoryNodeRepositoryTest {
         expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Supervisory Node as Parent does not exist");
 
-        new SupervisoryNodeRepository(supervisoryNodeMapper, facilityMapper).save(supervisoryNode);
+        repository.save(supervisoryNode);
 
         verify(supervisoryNodeMapper).getIdForCode(supervisoryNode.getParent().getCode());
     }
@@ -76,7 +78,7 @@ public class SupervisoryNodeRepositoryTest {
         expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Facility Code does not exist");
 
-        new SupervisoryNodeRepository(supervisoryNodeMapper, facilityMapper).save(supervisoryNode);
+        repository.save(supervisoryNode);
 
         verify(facilityMapper).getIdForCode(supervisoryNode.getFacility().getCode());
         verify(supervisoryNodeMapper).getIdForCode(supervisoryNode.getParent().getCode());
@@ -87,7 +89,7 @@ public class SupervisoryNodeRepositoryTest {
         when(supervisoryNodeMapper.getIdForCode(supervisoryNode.getParent().getCode())).thenReturn(1);
         when(facilityMapper.getIdForCode(supervisoryNode.getFacility().getCode())).thenReturn(1);
 
-        new SupervisoryNodeRepository(supervisoryNodeMapper, facilityMapper).save(supervisoryNode);
+        repository.save(supervisoryNode);
 
         verify(facilityMapper).getIdForCode(supervisoryNode.getFacility().getCode());
         verify(supervisoryNodeMapper).getIdForCode(supervisoryNode.getParent().getCode());
@@ -100,12 +102,36 @@ public class SupervisoryNodeRepositoryTest {
     public void shouldSaveSupervisoryNodeIfParentNotSupplied() throws Exception {
         when(facilityMapper.getIdForCode(supervisoryNode.getFacility().getCode())).thenReturn(1);
         supervisoryNode.setParent(null);
-        new SupervisoryNodeRepository(supervisoryNodeMapper, facilityMapper).save(supervisoryNode);
+        repository.save(supervisoryNode);
 
         verify(facilityMapper).getIdForCode(supervisoryNode.getFacility().getCode());
         verify(supervisoryNodeMapper, never()).getIdForCode(anyString());
         assertThat(supervisoryNode.getParent(), is(nullValue()));
         assertThat(supervisoryNode.getFacility().getId(), is(1));
         verify(supervisoryNodeMapper).insert(supervisoryNode);
+    }
+
+    @Test
+    public void shouldReturnIdForTheGivenCode() {
+        when(supervisoryNodeMapper.getIdForCode("ABC")).thenReturn(10);
+        assertThat(repository.getIdForCode("ABC"), is(10));
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenCodeDoesNotExist() {
+        when(supervisoryNodeMapper.getIdForCode("ABC")).thenReturn(null);
+        expectedEx.expect(DataException.class);
+        expectedEx.expectMessage("Invalid SupervisoryNode Code");
+        repository.getIdForCode("ABC");
+    }
+
+    @Test
+    public void shouldReturnParentIdForASupervisoryNode() {
+        when(supervisoryNodeMapper.getSupervisoryNode(10)).thenReturn(supervisoryNode);
+
+        assertThat(repository.getSupervisoryNodeParentId(10), is(nullValue()));
+
+        supervisoryNode.getParent().setId(20);
+        assertThat(repository.getSupervisoryNodeParentId(10), is(20));
     }
 }

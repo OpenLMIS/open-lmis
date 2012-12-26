@@ -80,7 +80,7 @@ public class ProgramProductRepositoryTest {
     @Test
     public void shouldThrowErrorWhenInsertingInvalidProductForAProgram() {
         Program program = make(a(ProgramBuilder.defaultProgram));
-        when(programMapper.getIdByCode(program.getCode())).thenReturn(1);
+        when(programMapper.getIdForCode(program.getCode())).thenReturn(1);
         ProgramProduct programProduct = new ProgramProduct(program, new Product(), 10, true);
 
         expectedEx.expect(DataException.class);

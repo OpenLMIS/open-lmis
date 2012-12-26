@@ -45,7 +45,7 @@ public interface ProgramMapper {
 
 
     @Select("SELECT id FROM programs WHERE LOWER(code) = LOWER(#{code})")
-    Integer getIdByCode(String code);
+    Integer getIdForCode(String code);
 
     @Select("SELECT * FROM programs WHERE id = #{id}")
     Program getById(Integer id);

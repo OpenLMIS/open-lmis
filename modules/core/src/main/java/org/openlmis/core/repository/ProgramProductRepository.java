@@ -42,7 +42,7 @@ public class ProgramProductRepository {
     }
 
     private void validateProgramCode(String code) {
-        if (code == null || code.isEmpty() || programMapper.getIdByCode(code) == null) {
+        if (code == null || code.isEmpty() || programMapper.getIdForCode(code) == null) {
             throw new DataException("Invalid Program Code");
         }
     }

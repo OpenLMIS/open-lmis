@@ -32,7 +32,7 @@ public class RequisitionGroupProgramScheduleRepository {
     public void insert(RequisitionGroupProgramSchedule requisitionGroupProgramSchedule) {
         try {
             requisitionGroupProgramSchedule.getRequisitionGroup().setId(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode()));
-            requisitionGroupProgramSchedule.getProgram().setId(programMapper.getIdByCode(requisitionGroupProgramSchedule.getProgram().getCode()));
+            requisitionGroupProgramSchedule.getProgram().setId(programMapper.getIdForCode(requisitionGroupProgramSchedule.getProgram().getCode()));
             requisitionGroupProgramSchedule.getSchedule().setId(scheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode()));
             Facility dropOffFacility = requisitionGroupProgramSchedule.getDropOffFacility();
             if (dropOffFacility != null)
