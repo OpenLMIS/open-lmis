@@ -136,9 +136,9 @@ public class DBWrapper {
             dbwrapper.dbConnection("delete from roles;", "alter");
         }
         dbwrapper.dbConnection("INSERT INTO roles\n" +
-                " (id, name, description) VALUES\n" +
-                " (2, 'store in-charge', ''),\n" +
-                " (3, 'district pharmacist', '');", "alter");
+                " (name, description) VALUES\n" +
+                " ('store in-charge', ''),\n" +
+                " ('district pharmacist', '');", "alter");
 
     }
 
@@ -155,12 +155,11 @@ public class DBWrapper {
         }
 
         dbwrapper.dbConnection("INSERT INTO role_rights\n" +
-                "  (roleId, right) VALUES\n" +
-                "  (2, 'CREATE_REQUISITION'),\n" +
-                "  (3, 'UPLOADS'),\n" +
-                "  (3, 'MANAGE_ROLE'),\n" +
-                "  (3, 'MANAGE_FACILITY'),\n" +
-                "  (3, 'CONFIGURE_RNR');", "alter");
+                "  (roleId, rightName) VALUES\n" +
+                "  ((select id from roles where name='store in-charge'), 'CREATE_REQUISITION'),\n" +
+                "  ((select id from roles where name='district pharmacist'), 'UPLOADS'),\n" +
+                "  ((select id from roles where name='district pharmacist'), 'MANAGE_FACILITY'),\n" +
+                "  ((select id from roles where name='district pharmacist'), 'CONFIGURE_RNR');", "alter");
     }
 
     public void insertSupervisoryNodes() throws SQLException, IOException {
@@ -174,7 +173,14 @@ public class DBWrapper {
         }
         dbwrapper.dbConnection("INSERT INTO supervisory_nodes\n" +
                 "  (parentId, facilityId, name, code) VALUES\n" +
-                "  (null, (SELECT id FROM facilities WHERE code = 'F1756'), 'Node 1', 'N1'),\n" +
+                "  (null, (SELECT id FROM facilities WHERE code = 'F1756'), 'Node 1', 'N1');", "alter");
+    }
+
+    public void insertSupervisoryNodesSecond() throws SQLException, IOException {
+        DBWrapper dbwrapper = new DBWrapper();
+
+        dbwrapper.dbConnection("INSERT INTO supervisory_nodes\n" +
+                "  (parentId, facilityId, name, code) VALUES\n" +
                 "  ((select id from  supervisory_nodes where code ='N1'), (SELECT id FROM facilities WHERE code = 'F1757'), 'Node 1', 'N2');", "alter");
     }
 
@@ -215,9 +221,14 @@ public class DBWrapper {
             dbwrapper.dbConnection("delete from role_assignments;", "alter");
 
         }
-        dbwrapper.dbConnection("INSERT INTO role_assignments (userId, roleId, programId, supervisoryNodeId) VALUES (1, 3, 1, null), (200, 2, 1, null),\n" +
-                "  (200, 2, 1, (SELECT id from supervisory_nodes WHERE code = 'N1'));", "alter");
+        dbwrapper.dbConnection(" INSERT INTO role_assignments\n" +
+                "            (userId, roleId, programId, supervisoryNodeId) VALUES \n" +
+                "    (1, (SELECT id FROM roles WHERE name = 'district pharmacist'), 1, null),\n" +
+                "    (200, (SELECT id FROM roles WHERE name = 'store in-charge'), 1, null),\n" +
+                "    (200, (SELECT id FROM roles WHERE name = 'store in-charge'), 1, (SELECT id from supervisory_nodes WHERE code = 'N1'));", "alter");
     }
+
+
 
     public void insertProducts() throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();

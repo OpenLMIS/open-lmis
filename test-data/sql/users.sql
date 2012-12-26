@@ -5,10 +5,10 @@ INSERT INTO roles
 
 INSERT INTO role_rights
   (roleId, rightName) VALUES
-  (2, 'CREATE_REQUISITION'),
-  (3, 'UPLOADS'),
-  (3, 'MANAGE_FACILITY'),
-  (3, 'CONFIGURE_RNR');
+  ((select id from roles where name='store in-charge'), 'CREATE_REQUISITION'),
+  ((select id from roles where name='district pharmacist'), 'UPLOADS'),
+  ((select id from roles where name='district pharmacist'), 'MANAGE_FACILITY'),
+  ((select id from roles where name='district pharmacist'), 'CONFIGURE_RNR');
 
 INSERT INTO users
   (id, userName, password, facilityId) VALUES

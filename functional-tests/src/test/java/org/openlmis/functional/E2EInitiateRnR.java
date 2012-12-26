@@ -34,6 +34,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
         dbWrapper.insertRoles();
         dbWrapper.insertRoleRights();
         dbWrapper.insertSupervisoryNodes();
+        dbWrapper.insertSupervisoryNodesSecond();
         dbWrapper.insertRoleAssignment();
         dbWrapper.insertProducts();
         dbWrapper.insertProgramProducts();
