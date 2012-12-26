@@ -26,13 +26,13 @@ public class SupplyLineRepository {
     }
 
     public void insert(SupplyLine supplyLine) {
+        supplyLine.getProgram().setId(programRepository.getIdForCode(supplyLine.getProgram().getCode()));
+        supplyLine.getSupplyingFacility().setId(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode()));
+        supplyLine.getSupervisoryNode().setId(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode()));
+
+        validateIfSupervisoryNodeIsTopmostNode(supplyLine);
+
         try {
-            supplyLine.getProgram().setId(programRepository.getIdForCode(supplyLine.getProgram().getCode()));
-            supplyLine.getSupplyingFacility().setId(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode()));
-            supplyLine.getSupervisoryNode().setId(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode()));
-
-            validateIfSupervisoryNodeIsTopmostNode(supplyLine);
-
             supplyLineMapper.insert(supplyLine);
         } catch (DuplicateKeyException ex) {
             throw new DataException("Duplicate entry for Supply Line found.");
