@@ -63,4 +63,14 @@ describe('CreateRnrController', function () {
         httpBackend.flush();
         expect(scope.currency).toEqual("$");
     });
+
+    it("should get undefined when the column name is quantityApproved", function(){
+        var isShown = scope.showSelectedColumn("quantityApproved");
+        expect(isShown).toEqual(undefined);
+    });
+
+    it("should get 'defined' when the column name is not quantityApproved", function(){
+        var isShown = scope.showSelectedColumn("anyOtherColumn");
+        expect(isShown).toEqual("defined");
+    });
 });
