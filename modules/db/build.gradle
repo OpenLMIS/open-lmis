@@ -62,12 +62,12 @@ task migrateDB() << {
 
 task testSeed(type: Exec) {
     environment("PGPASSWORD", dbPassword)
-    commandLine 'psql', '-U', dbUser, '--file', '../../test-data/sql/seed.sql', '-w', dbName, '-h', databaseHostName
+    commandLine 'psql', '-U', dbUser, '--file', '../../test-data/sql/seed.sql','-h', databaseHostName, '-w', dbName
 }
 
 task seed(type: Exec) {
     environment("PGPASSWORD", dbPassword)
-    commandLine 'psql', '-U', dbUser, '--file', 'src/main/resources/seed/seed.sql', '-w', dbName, '-h', databaseHostName
+    commandLine 'psql', '-U', dbUser, '--file', 'src/main/resources/seed/seed.sql', '-h', databaseHostName, '-w', dbName
 }
 
 def executeSql(String statement) {
