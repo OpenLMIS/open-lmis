@@ -88,16 +88,14 @@ public class SupervisoryNodeMapperIT {
 
         User user = insertUser();
 
-        Role createAndViewRole = new Role("createAndViewRole", "random description");
-        roleMapper.insert(createAndViewRole);
+        Role createRole = new Role("create role", "random description");
+        roleMapper.insert(createRole);
 
-        Role approveAndViewRole = new Role("approveAndViewRole", "random description");
-        roleMapper.insert(approveAndViewRole);
+        Role configureRnrRole = new Role("configure rnr", "random description");
+        roleMapper.insert(configureRnrRole);
 
-        roleRightsMapper.createRoleRight(createAndViewRole.getId(), CREATE_REQUISITION);
-        roleRightsMapper.createRoleRight(createAndViewRole.getId(), VIEW_REQUISITION);
-        roleRightsMapper.createRoleRight(approveAndViewRole.getId(), APPROVE_REQUISITION);
-        roleRightsMapper.createRoleRight(approveAndViewRole.getId(), VIEW_REQUISITION);
+        roleRightsMapper.createRoleRight(createRole.getId(), CREATE_REQUISITION);
+        roleRightsMapper.createRoleRight(configureRnrRole.getId(), CONFIGURE_RNR);
 
         supervisoryNodeMapper.insert(supervisoryNode);
 
@@ -110,10 +108,10 @@ public class SupervisoryNodeMapperIT {
         childNode.setParent(supervisoryNode);
         childNode = insertSupervisoryNode(childNode);
 
-        insertRoleAssignments(program1, user, createAndViewRole, supervisoryNode);
-        insertRoleAssignments(program1, user, approveAndViewRole, supervisoryNode1);
-        insertRoleAssignments(program2, user, createAndViewRole, supervisoryNode);
-        insertRoleAssignments(program1, user, createAndViewRole, null);
+        insertRoleAssignments(program1, user, createRole, supervisoryNode);
+        insertRoleAssignments(program1, user, configureRnrRole, supervisoryNode1);
+        insertRoleAssignments(program2, user, createRole, supervisoryNode);
+        insertRoleAssignments(program1, user, createRole, null);
 
         List<SupervisoryNode> userSupervisoryNodes = supervisoryNodeMapper.getAllSupervisoryNodesInHierarchyBy(user.getId(), program1.getId(), CREATE_REQUISITION);
 

@@ -52,9 +52,8 @@ public class RoleAssignmentMapperIT {
         roleMapper.insert(r2);
 
         roleRightsMapper.createRoleRight(r1.getId(), CREATE_REQUISITION);
-        roleRightsMapper.createRoleRight(r1.getId(), VIEW_REQUISITION);
-        roleRightsMapper.createRoleRight(r2.getId(), APPROVE_REQUISITION);
-        roleRightsMapper.createRoleRight(r2.getId(), VIEW_REQUISITION);
+        roleRightsMapper.createRoleRight(r1.getId(), CONFIGURE_RNR);
+        roleRightsMapper.createRoleRight(r2.getId(), CONFIGURE_RNR);
 
         insertRoleAssignments(program1, user, r1, null);
         insertRoleAssignments(program1, user, r2, null);

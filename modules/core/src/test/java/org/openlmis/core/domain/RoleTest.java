@@ -8,7 +8,7 @@ import org.junit.rules.ExpectedException;
 import java.util.ArrayList;
 
 import static java.util.Arrays.asList;
-import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
+import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 
 public class RoleTest {
 
@@ -41,7 +41,7 @@ public class RoleTest {
     @Test
     public void shouldGiveErrorIfRoleDoesNotHaveAnyName() throws Exception {
         Role role = new Role("", " description");
-        role.setRights(asList(APPROVE_REQUISITION));
+        role.setRights(asList(CREATE_REQUISITION));
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("Role can not be created without name.");
         role.validate();

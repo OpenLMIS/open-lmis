@@ -16,7 +16,7 @@ import org.springframework.dao.DuplicateKeyException;
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
-import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
+import static org.openlmis.core.domain.Right.CONFIGURE_RNR;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -40,12 +40,12 @@ public class RoleRightsRepositoryTest {
 
     @Test
     public void shouldSaveRoleWithMappings() throws Exception {
-        role.setRights(asList(APPROVE_REQUISITION, CREATE_REQUISITION));
+        role.setRights(asList(CONFIGURE_RNR, CREATE_REQUISITION));
         role.setId(1);
         new RoleRightsRepository(roleRightsMapper, roleMapper).saveRole(role);
 
         verify(roleMapper).insert(role);
-        verify(roleRightsMapper).createRoleRight(1, APPROVE_REQUISITION);
+        verify(roleRightsMapper).createRoleRight(1, CONFIGURE_RNR);
         verify(roleRightsMapper).createRoleRight(1, CREATE_REQUISITION);
     }
 

@@ -10,12 +10,11 @@ import org.openlmis.core.serializer.RightSerializer;
 @JsonDeserialize(using = RightDeSerializer.class)
 public enum Right {
 
-  VIEW_REQUISITION("view requisition", "Permission to view requisitions"),
-  CREATE_REQUISITION("create requisition", "Permission to create, edit, submit and recall requisitions"),
-  APPROVE_REQUISITION("approve requisition", "Permission to approve and reject requisitions"),
-  UPLOADS("upload", "Permission to upload"),
-  MANAGE_FACILITY("manage facility", "Permission to manage facility(crud)"),
-  CONFIGURE_RNR("configure rnr", "Permission to create and edit r&r template for any program");
+    CONFIGURE_RNR("Admin - Configure Requisition Templates", "Permission to create and edit r&r template for any program"),
+    MANAGE_FACILITY("Admin - Manage Facilities", "Permission to manage facility(crud)"),
+    MANAGE_ROLE("Admin - Manage Roles", "Permission to create and edit roles in the system"),
+    UPLOADS("Admin - Uploads", "Permission to upload"),
+    CREATE_REQUISITION("Requisition - Create", "Permission to create, edit, submit and recall requisitions");
 
     @Getter
     private final String rightName;

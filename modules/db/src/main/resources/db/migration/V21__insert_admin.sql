@@ -1,12 +1,13 @@
 INSERT INTO roles
  (name, description) VALUES
- ('admin', '');
+ ('Admin', 'Admin');
 
  INSERT INTO role_rights
   (roleId, rightId) VALUES
-  ((select id from roles where name = 'admin'), 'UPLOADS'),
-  ((select id from roles where name = 'admin'), 'MANAGE_FACILITY'),
-  ((select id from roles where name = 'admin'), 'CONFIGURE_RNR');
+  ((select id from roles where name = 'Admin'), 'UPLOADS'),
+  ((select id from roles where name = 'Admin'), 'MANAGE_FACILITY'),
+  ((select id from roles where name = 'Admin'), 'MANAGE_ROLE'),
+  ((select id from roles where name = 'Admin'), 'CONFIGURE_RNR');
 
 INSERT INTO users
   (userName, password, facilityId) VALUES
@@ -14,7 +15,7 @@ INSERT INTO users
 
 INSERT INTO role_assignments
   (userId, roleId) VALUES
-  ((select id from users where userName='Admin123'), (select id from roles where name = 'admin'));
+  ((select id from users where userName='Admin123'), (select id from roles where name = 'Admin'));
 
 
 

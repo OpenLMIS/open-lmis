@@ -43,7 +43,8 @@ public class RoleRightsMapperIT {
         List<Right> adminRights = roleRightsMapper.getAllRightsForUser("Admin123");
         assertEquals(Right.CONFIGURE_RNR, adminRights.get(0));
         assertEquals(Right.MANAGE_FACILITY, adminRights.get(1));
-        assertEquals(Right.UPLOADS, adminRights.get(2));
+        assertEquals(Right.MANAGE_ROLE, adminRights.get(2));
+        assertEquals(Right.UPLOADS, adminRights.get(3));
     }
 
     @Test
@@ -59,7 +60,7 @@ public class RoleRightsMapperIT {
         insertRoleAssignments(program, user, role);
 
         roleRightsMapper.createRoleRight(role.getId(), CREATE_REQUISITION);
-        roleRightsMapper.createRoleRight(role.getId(), VIEW_REQUISITION);
+        roleRightsMapper.createRoleRight(role.getId(), CONFIGURE_RNR);
 
         allRightsForUser = roleRightsMapper.getAllRightsForUser(user.getUserName());
         assertThat(allRightsForUser.size(), is(2));

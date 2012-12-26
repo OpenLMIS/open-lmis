@@ -1,13 +1,11 @@
 INSERT INTO roles
- (id, name, description) VALUES
- (2, 'store in-charge', ''),
- (3, 'district pharmacist', '');
+ (name, description) VALUES
+ ('store in-charge', ''),
+ ('district pharmacist', '');
 
 INSERT INTO role_rights
   (roleId, rightId) VALUES
-  (2, 'VIEW_REQUISITION'),
   (2, 'CREATE_REQUISITION'),
-  (3, 'VIEW_REQUISITION'),
   (3, 'UPLOADS'),
   (3, 'MANAGE_FACILITY'),
   (3, 'CONFIGURE_RNR');
@@ -23,5 +21,5 @@ INSERT INTO supervisory_nodes
 
 INSERT INTO role_assignments
   (userId, roleId, programId, supervisoryNodeId) VALUES
-  (200, 2, 1, null),
-  (200, 2, 1, (SELECT id from supervisory_nodes WHERE code = 'N1'));
+  (200, (SELECT id FROM roles WHERE name = 'store in-charge'), 1, null),
+  (200, (SELECT id FROM roles WHERE name = 'store in-charge'), 1, (SELECT id from supervisory_nodes WHERE code = 'N1'));

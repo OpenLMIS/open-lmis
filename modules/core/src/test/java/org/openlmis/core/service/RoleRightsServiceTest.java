@@ -18,7 +18,8 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
-import static org.openlmis.core.domain.Right.VIEW_REQUISITION;
+import static org.openlmis.core.domain.Right.CONFIGURE_RNR;
+import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RoleRightsServiceTest {
@@ -45,12 +46,12 @@ public class RoleRightsServiceTest {
     @Test
     public void shouldGetAllRightsInAlphabeticalOrder() throws Exception {
         List<Right> allRights = new RoleRightsService().getAllRights();
-        assertThat(allRights.get(0), is(Right.APPROVE_REQUISITION));
+        assertThat(allRights.get(0), is(CONFIGURE_RNR));
     }
 
     @Test
     public void shouldSaveRole() throws Exception {
-        role.setRights(asList(VIEW_REQUISITION));
+        role.setRights(asList(CREATE_REQUISITION));
         roleRightsService.saveRole(role);
         verify(roleRightsRepository).saveRole(role);
     }

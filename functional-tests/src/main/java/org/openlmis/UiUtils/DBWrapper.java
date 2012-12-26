@@ -156,10 +156,9 @@ public class DBWrapper {
 
         dbwrapper.dbConnection("INSERT INTO role_rights\n" +
                 "  (roleId, rightId) VALUES\n" +
-                "  (2, 'VIEW_REQUISITION'),\n" +
                 "  (2, 'CREATE_REQUISITION'),\n" +
-                "  (3, 'VIEW_REQUISITION'),\n" +
                 "  (3, 'UPLOADS'),\n" +
+                "  (3, 'MANAGE_ROLE'),\n" +
                 "  (3, 'MANAGE_FACILITY'),\n" +
                 "  (3, 'CONFIGURE_RNR');", "alter");
     }
