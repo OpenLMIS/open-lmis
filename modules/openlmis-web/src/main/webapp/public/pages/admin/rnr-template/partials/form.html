@@ -61,6 +61,11 @@
       </ul>
     </div>
 
+    <div class="alert alert-info arithmetic-valid-msg" ng-show="arithmeticValidationMessageShown">
+      Total Quantity Consumed (C) and Stock On Hand (E) are configured as user inputs. Validation of inputs (C = A + B +/- D -E) is <strong>{{arithmeticValidationStatusLabel}}</strong>.
+      <a href="javascript:void(0);" class="btn btn-primary btn-mini pull-right" ng-click= "toggleValidateFormulaFlag()">Turn {{arithmeticValidationToggleLabel}}</a>
+    </div>
+
     <div class="alert alert-error" id="saveErrorMsgDiv" ng-model="error" ng-show="error">
       {{error}}
     </div>
@@ -68,10 +73,6 @@
       {{message}}
     </div>
 
-    <div ng-show="arithmeticValidationMessageShown">
-      Total Quantity Consumed ( C ) and Stock On Hand (E) are configured as user inputs. Validation of inputs (C = A + B +/- D -E) is {{arithmeticValidationStatusLabel}}
-      <a href="javascript:void(0);" ng-click= "toggleValidateFormulaFlag()">Turn {{arithmeticValidationToggleLabel}}</a>
-    </div>
     <input type="submit" class="btn" value="Save" />
   </form>
 </div>
