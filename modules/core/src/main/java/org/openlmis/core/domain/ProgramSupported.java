@@ -28,12 +28,6 @@ public class ProgramSupported implements Importable {
   private String modifiedBy;
   private Date modifiedDate;
 
-  public ProgramSupported(String facilityCode, String programCode, boolean active) {
-    this.facilityCode = facilityCode;
-    this.programCode = programCode;
-    this.active = active;
-  }
-
   public ProgramSupported(Integer facilityId, Integer programId, Boolean active, String modifiedBy, Date modifiedDate) {
     this.facilityId = facilityId;
     this.programId = programId;

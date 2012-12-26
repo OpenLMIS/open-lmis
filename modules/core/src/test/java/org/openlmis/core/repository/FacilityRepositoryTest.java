@@ -216,19 +216,9 @@ public class FacilityRepositoryTest {
         programSupported.setFacilityCode("invalid Code");
         programSupported.setProgramCode("valid Code");
 
-        when(mockedFacilityMapper.getIdForCode("invalid Code")).thenReturn(null);
+        when(mockedFacilityMapper.getIdForCode("invalid Code")).thenThrow(new DataException("Invalid Facility Code"));
         expectedEx.expect(DataException.class);
-        expectedEx.expectMessage("Invalid reference data 'Facility Code'");
-        repository.addSupportedProgram(programSupported);
-    }
-
-    @Test
-    public void shouldRaiseErrorWhenProgramSupportedIsSpecifiedWithoutFacilityCode() throws Exception {
-        ProgramSupported programSupported = new ProgramSupported();
-        programSupported.setFacilityCode("");
-        programSupported.setProgramCode("valid Code");
-        expectedEx.expect(DataException.class);
-        expectedEx.expectMessage("Missing reference data 'Facility Code'");
+        expectedEx.expectMessage("Invalid Facility Code");
         repository.addSupportedProgram(programSupported);
     }
 

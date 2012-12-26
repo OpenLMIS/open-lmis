@@ -55,8 +55,8 @@ public class ProgramSupportedMapperIT {
     Program program = make(a(defaultProgram, with(programCode, YELLOW_FEVER)));
     programMapper.insert(program);
     ProgramSupported programSupported = make(a(defaultProgramSupported,
-        with(supportedFacilityCode, facility.getCode()),
-        with(supportedProgramCode, program.getCode())));
+        with(supportedFacilityId, facility.getId()),
+        with(supportedProgramId, program.getId())));
     programSupportedMapper.addSupportedProgram(programSupported);
 
     List<ProgramSupported> programsSupported = programSupportedMapper.getBy(facility.getId(), program.getId());
@@ -109,7 +109,7 @@ public class ProgramSupportedMapperIT {
   }
 
   private void insertProgramSupportedForFacility(Program program, Facility facility, boolean isActive) {
-    programSupportedMapper.addSupportedProgram(new ProgramSupported(facility.getCode(), program.getCode(), isActive));
+    programSupportedMapper.addSupportedProgram(new ProgramSupported(facility.getId(), program.getId(), isActive, null, null));
   }
 
   private Program insertProgram(Program program) {

@@ -152,15 +152,8 @@ public class FacilityRepository {
     }
 
     public void addSupportedProgram(ProgramSupported programSupported) {
-        validateFacilityCode(programSupported.getFacilityCode());
+        programSupported.setFacilityId(facilityMapper.getIdForCode(programSupported.getFacilityCode()));
         insertSupportedProgram(programSupported);
-    }
-
-    private void validateFacilityCode(String facilityCode) {
-        if (facilityCode == null || facilityCode.isEmpty())
-            throw new DataException("Missing reference data 'Facility Code'");
-        Integer facilityTypeId = facilityMapper.getIdForCode(facilityCode);
-        if (facilityTypeId == null) throw new DataException("Invalid reference data 'Facility Code'");
     }
 
     public List<FacilityType> getAllTypes() {
