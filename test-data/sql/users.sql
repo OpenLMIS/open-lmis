@@ -16,7 +16,10 @@ INSERT INTO users
 
 INSERT INTO supervisory_nodes
   (parentId, facilityId, name, code) VALUES
-  (null, (SELECT id FROM facilities WHERE code = 'F1756'), 'Node 1', 'N1'),
+  (null, (SELECT id FROM facilities WHERE code = 'F1756'), 'Node 1', 'N1');
+
+ INSERT INTO supervisory_nodes
+  (parentId, facilityId, name, code) VALUES
   ((select id from  supervisory_nodes where code ='N1'), (SELECT id FROM facilities WHERE code = 'F1757'), 'Node 1', 'N2');
 
 INSERT INTO role_assignments

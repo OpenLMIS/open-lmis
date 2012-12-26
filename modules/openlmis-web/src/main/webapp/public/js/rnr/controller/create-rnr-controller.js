@@ -1,12 +1,25 @@
-function CreateRnrController($scope, ReferenceData, RequisitionHeader, ProgramRnRColumnList, localStorageService, $location, $http) {
-    RequisitionHeader.get({facilityId:$scope.$parent.facility}, function (data) {
+function CreateRnrController($scope, ReferenceData, RequisitionHeader, ProgramRnRColumnList, localStorageService, $location, $http, $route) {
+
+    $http.post('/logistics/rnr/' + encodeURIComponent($route.current.params.facility) + '/' + encodeURIComponent($route.current.params.program) + '/init.json', {}
+    ).success(function (data) {
+            $scope.$parent.error = "";
+            $scope.rnr = data.rnr;
+        }
+    ).error(function () {
+            $scope.$parent.message = "";
+            $scope.$parent.error = "Rnr initialization failed!";
+            $location.path($scope.$parent.sourceUrl);
+    });
+
+
+    RequisitionHeader.get({facilityId:$route.current.params.facility}, function (data) {
         $scope.header = data.requisitionHeader;
         $scope.getCurrency();
     }, function () {
-        $location.path("init-rnr");
+        $location.path($scope.$parent.sourceUrl);
     });
 
-    ProgramRnRColumnList.get({programCode:$scope.$parent.program.code}, function (data) {
+    ProgramRnRColumnList.get({programCode:$route.current.params.program}, function (data) {
         function resetFullSupplyItemsCostIfNull(rnr){
             if(rnr == null) return;
             if(rnr.fullSupplyItemsSubmittedCost == null)
@@ -26,10 +39,10 @@ function CreateRnrController($scope, ReferenceData, RequisitionHeader, ProgramRn
             resetTotalSubmittedCostIfNull($scope.$parent.rnr);
         } else {
             $scope.$parent.error = "Please contact Admin to define R&R template for this program";
-            $location.path('init-rnr');
+            $location.path($scope.$parent.sourceUrl);
         }
     }, function () {
-        $location.path('init-rnr');
+        $location.path($scope.$parent.sourceUrl);
     });
 
     // TODO : is this required?

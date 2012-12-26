@@ -121,7 +121,8 @@ public interface FacilityMapper {
     @Select("SELECT DISTINCT f.* FROM facilities f " +
             "INNER JOIN programs_supported ps ON f.id=ps.facilityId " +
             "INNER JOIN requisition_group_members rgm ON f.id= rgm.facilityId " +
-            "WHERE ps.programId = #{programId} and rgm.requisitionGroupId = ANY(#{requisitionGroupIds}::INTEGER[])")
+            "WHERE ps.programId = #{programId} " +
+            "AND rgm.requisitionGroupId = ANY(#{requisitionGroupIds}::INTEGER[])")
     @Results(value = {
             @Result(property = "geographicZone.id", column = "geographicZoneId"),
             @Result(property = "facilityType", column = "typeId", javaType = Integer.class, one = @One(select = "getFacilityTypeById")),

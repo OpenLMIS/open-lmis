@@ -7,23 +7,24 @@ function InitiateRnrController($http, $scope, facilities, programs, UserSupporte
         $scope.facilityOptionMsg = "--none assigned--";
     }
 
-    $scope.$parent.programs = programs;
-    if ($scope.$parent.programs == null || $scope.$parent.programs.length == 0) {
+    $scope.programs = programs;
+    if ($scope.programs == null || $scope.programs.length == 0) {
         $scope.programOptionMsg = "--none assigned--";
     }
+    $scope.$parent.program = null;
+    $scope.$parent.facility = null;
 
     $scope.loadPrograms = function () {
         if ($scope.$parent.facility) {
             UserSupportedProgramInFacilityForAnOperation.get({facilityId:$scope.$parent.facility}, function (data) {
-                $scope.$parent.programsForFacility = data.programList;
+                $scope.programs = data.programList;
                 $scope.programOptionMsg = "--choose program--";
-                if ($scope.$parent.programsForFacility == null || $scope.$parent.programsForFacility.length == 0) {
+                if ($scope.programs == null || $scope.programs.length == 0) {
                     $scope.programOptionMsg = "--none assigned--";
                 }
             }, {});
         } else {
-            $scope.$parent.program = null;
-            $scope.$parent.programsForFacility = null;
+            $scope.programs = null;
             $scope.programOptionMsg = "--choose program--";
         }
     };
@@ -31,31 +32,24 @@ function InitiateRnrController($http, $scope, facilities, programs, UserSupporte
     $scope.loadFacilities = function () {
         if ($scope.$parent.program) {
             UserSupervisedFacilitiesForProgram.get({programId:$scope.$parent.program.id}, function (data) {
-                $scope.$parent.facilities = data.facilities;
+                $scope.facilities = data.facilities;
                 $scope.facilityOptionMsg = "--choose facility--";
-                if ($scope.$parent.facilities == null || $scope.$parent.facilities.length == 0) {
+                if ($scope.facilities == null || $scope.facilities.length == 0) {
                     $scope.facilityOptionMsg = "--none assigned--";
                 }
             }, {});
         } else {
-            $scope.$parent.program = null;
-            $scope.$parent.facilities = null;
+            $scope.facilities = null;
             $scope.facilityOptionMsg = "--choose facility--";
         }
     };
 
     $scope.initRnr = function () {
         if (validate()) {
-            $http.post('/logistics/rnr/' + encodeURIComponent($scope.facility) + '/' + encodeURIComponent($scope.program.code) + '/init.json', {}
-            ).success(function (data) {
                     $scope.error = "";
-                    $scope.$parent.rnr = data.rnr;
-                    $location.path('create-rnr');
-                }
-            ).error(function () {
-                    $scope.error = "Rnr initialization failed!";
-                    $scope.message = "";
-                });
+                    $scope.$parent.sourceUrl =  $location.$$url;
+                    $location.path('/create-rnr/'+ $scope.facility +'/'+ $scope.program.code);
+
         } else {
             $scope.error = "Please select Facility and program for facility to proceed";
         }
