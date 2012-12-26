@@ -118,6 +118,7 @@ public class DBWrapper {
         dbwrapper.dbConnection("delete from requisition;", "alter");
         dbwrapper.dbConnection("delete from programs_supported;", "alter");
         dbwrapper.dbConnection("delete from supervisory_nodes;", "alter");
+        dbwrapper.dbConnection("delete from requisition_group_members;", "alter");
         dbwrapper.dbConnection("delete from facilities;", "alter");
         dbwrapper.dbConnection("delete from program_rnr_columns;", "alter");
     }
@@ -172,7 +173,8 @@ public class DBWrapper {
         }
         dbwrapper.dbConnection("INSERT INTO supervisory_nodes\n" +
                 "  (parentId, facilityId, name, code) VALUES\n" +
-                "  (null, (SELECT id FROM facilities WHERE code = 'F1756'), 'Node 1', 'N1');", "alter");
+                "  (null, (SELECT id FROM facilities WHERE code = 'F1756'), 'Node 1', 'N1'),\n" +
+                "  ((select id from  supervisory_nodes where code ='N1'), (SELECT id FROM facilities WHERE code = 'F1757'), 'Node 1', 'N2');", "alter");
     }
 
     public void insertRoleAssignment() throws SQLException, IOException {

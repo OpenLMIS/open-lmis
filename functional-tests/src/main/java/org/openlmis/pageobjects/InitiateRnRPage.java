@@ -20,7 +20,7 @@ public class InitiateRnRPage extends Page {
     @FindBy(how = How.XPATH, using = "//div[@id='requisition-header']/div/table/tbody/tr/td")
     private static WebElement facilityLabel;
 
-    @FindBy(how = How.XPATH, using = "//input[@value='Save']")
+    @FindBy(how = How.XPATH, using = "//form[@id='save-rnr']/input")
     private static WebElement saveButton;
 
     @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv' and @ng-model='message']")
@@ -38,7 +38,7 @@ public class InitiateRnRPage extends Page {
     @FindBy(how = How.ID, using = "D_0")
     private static WebElement lossesAndAdjustments;
 
-    @FindBy(how = How.ID, using = "E_0")
+    @FindBy(how = How.ID, using = "E_8")
     private static WebElement stockOnHand;
 
     @FindBy(how = How.ID, using = "F_0")
@@ -122,7 +122,6 @@ public class InitiateRnRPage extends Page {
         beginningBalance.click();
         testWebDriver.waitForElementToAppear(stockOnHand);
         Integer StockOnHand = A+B-C-D;
-
         testWebDriver.sleep(1000);
         String stockOnHandValue= stockOnHand.getText();
         String StockOnHandValue = StockOnHand.toString();
