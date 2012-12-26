@@ -1,4 +1,4 @@
-function RoleController($scope, Role, Rights) {
+function SaveRoleController($scope, Role, Rights) {
 
   $scope.role = {rights:[]};
 

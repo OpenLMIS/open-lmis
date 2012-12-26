@@ -21,27 +21,30 @@ public interface RoleRightsMapper {
       "AND RA.roleId = RR.roleId"})
   List<Right> getAllRightsForUser(String username);
 
+  //used below
+  @SuppressWarnings("unused")
   @Select("SELECT rightName FROM role_rights RR WHERE roleId = #{roleId}")
   List<Right> getAllRightsForRole(Integer roleId);
 
   @Insert({"INSERT INTO roles",
-      "(name, description) VALUES",
-      "(#{name}, #{description})"})
+      "(name, description, modifiedBy) VALUES",
+      "(#{name}, #{description}, #{modifiedBy})"})
   @Options(useGeneratedKeys = true)
   int insertRole(Role role);
 
-  @Select("SELECT id, name, description from roles WHERE id = #{id}")
+  @Select("SELECT * FROM roles WHERE id = #{id}")
+  @Results(value = {
+      @Result(property = "id", column = "id"),
+      @Result(property = "rights", javaType = List.class, column = "id",
+          many = @Many(select = "getAllRightsForRole"))
+  })
   Role getRole(Integer id);
 
   @Select("SELECT * FROM roles ORDER BY id")
   @Results(value = {
       @Result(property = "id", column = "id"),
-      @Result(property = "name", column = "name"),
-      @Result(property = "description", column = "description"),
       @Result(property = "rights", javaType = List.class, column = "id",
           many = @Many(select = "getAllRightsForRole"))
   })
   List<Role> getAllRoles();
-
-
 }

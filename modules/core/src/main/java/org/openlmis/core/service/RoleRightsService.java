@@ -55,4 +55,8 @@ public class RoleRightsService {
     public List<Role> getAllRoles() {
         return roleRightsRepository.getAllRoles();
     }
+
+  public Role getRole(int id) {
+    return roleRightsRepository.getRole(id);
+  }
 }

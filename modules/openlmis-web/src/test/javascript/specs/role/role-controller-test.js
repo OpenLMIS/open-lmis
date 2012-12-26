@@ -7,7 +7,7 @@ describe("Role", function () {
         scope = $rootScope.$new();
         $httpBackend = _$httpBackend_;
         $httpBackend.expectGET('/rights.json').respond({"rightList":"test list"})
-        ctrl = $controller(RoleController, {$scope:scope, rights:{} });
+        ctrl = $controller(SaveRoleController, {$scope:scope, rights:{} });
       }
     ));
 

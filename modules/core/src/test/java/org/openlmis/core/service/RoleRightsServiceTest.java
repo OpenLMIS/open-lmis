@@ -76,4 +76,15 @@ public class RoleRightsServiceTest {
 
         verify(roleRightsRepository).getAllRoles();
     }
+
+  @Test
+  public void shouldGetRoleById() throws Exception {
+    Role role = new Role();
+    int roleId = 1;
+    when(roleRightsRepository.getRole(roleId)).thenReturn(role);
+
+    assertThat(roleRightsService.getRole(roleId), is(role));
+
+    verify(roleRightsRepository).getRole(roleId);
+  }
 }

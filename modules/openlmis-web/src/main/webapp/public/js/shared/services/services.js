@@ -49,6 +49,10 @@ services.factory('Role', function ($resource) {
     return $resource('/role.json', {}, {});
 });
 
+services.factory('AllRoles', function ($resource) {
+    return $resource('/roles.json', {}, {});
+});
+
 services.factory('UserSupervisedProgramList', function($resource) {
     return $resource('/create/requisition/supervised/programs.json',{}, {})
 });

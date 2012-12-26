@@ -41,4 +41,8 @@ public class RoleRightsRepository {
     public List<Role> getAllRoles() {
         return roleRightsMapper.getAllRoles();
     }
+
+  public Role getRole(int roleId) {
+    return roleRightsMapper.getRole(roleId);
+  }
 }

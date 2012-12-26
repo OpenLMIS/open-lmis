@@ -10,6 +10,10 @@ public class BaseController {
         return (String) request.getSession().getAttribute(UserAuthenticationSuccessHandler.USER);
     }
 
+  protected Integer loggedInUserId(HttpServletRequest request) {
+        return (Integer) request.getSession().getAttribute(UserAuthenticationSuccessHandler.USER_ID);
+    }
+
     protected String homePageUrl() {
         return  "redirect:/public/pages/index.html" ;
     }

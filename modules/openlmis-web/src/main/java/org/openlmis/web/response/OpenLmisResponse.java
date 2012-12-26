@@ -8,7 +8,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OpenLmisResponse {
-	private Object responseData;
-	private String errorMsg;
-	private String successMsg;
+  private Object responseData;
+  private String errorMsg;
+  private String successMsg;
+
+  public OpenLmisResponse(Object responseData) {
+    this.responseData = responseData;
+  }
 }
