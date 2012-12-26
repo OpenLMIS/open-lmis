@@ -23,8 +23,8 @@ public class RnrTemplateService {
         this.rnrRepository = rnrRepository;
     }
 
-    public List<RnrColumn> fetchAllRnRColumns(String programCode) {
-        return rnrRepository.fetchRnrTemplateColumns(programCode);
+    public List<RnrColumn> fetchAllRnRColumns(Integer programId) {
+        return rnrRepository.fetchRnrTemplateColumns(programId);
     }
 
 
@@ -40,7 +40,7 @@ public class RnrTemplateService {
     }
 
 
-    public List<RnrColumn> fetchVisibleRnRColumns(String programCode) {
-        return rnrRepository.fetchVisibleProgramRnRColumns(programCode);
+    public List<RnrColumn> fetchVisibleRnRColumns(Integer programId) {
+        return rnrRepository.fetchVisibleProgramRnRColumns(programId);
     }
 }

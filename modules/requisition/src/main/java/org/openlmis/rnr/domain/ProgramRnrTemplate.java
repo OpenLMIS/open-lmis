@@ -23,21 +23,17 @@ public class ProgramRnrTemplate {
     private Map<String, String> errorMap = new HashMap<>();
 
     @Getter
-    private String programCode;
+    private Integer programId;
     @Getter
     private List<RnrColumn> rnrColumns;
 
-    public ProgramRnrTemplate(String programCode, List<RnrColumn> rnrColumns) {
-        this.programCode = programCode;
+    public ProgramRnrTemplate(Integer programId, List<RnrColumn> rnrColumns) {
+        this.programId = programId;
         this.rnrColumns = rnrColumns;
 
         for (RnrColumn rnrColumn : rnrColumns) {
             rnrColumnsMap.put(rnrColumn.getName(), rnrColumn);
         }
-    }
-
-    public RnrColumn rnrColumn(String name) {
-        return rnrColumnsMap.get(name);
     }
 
     public boolean columnsVisible(String... rnrColumnNames) {
@@ -148,4 +144,6 @@ public class ProgramRnrTemplate {
             }
         }
     }
+
+
 }

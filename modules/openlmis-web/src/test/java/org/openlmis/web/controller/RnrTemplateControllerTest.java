@@ -22,7 +22,7 @@ public class RnrTemplateControllerTest {
     private RnrTemplateService rnrTemplateService;
     private RnrTemplateController rnrTemplateController;
 
-    String existingProgramCode = "HIV";
+    private Integer existingProgramId = 1;
 
     @Before
     public void setUp() throws Exception {
@@ -34,9 +34,9 @@ public class RnrTemplateControllerTest {
     public void shouldGetMasterColumnListForRnR() {
         List<RnrColumn> allColumns = new ArrayList<>();
 
-        when(rnrTemplateService.fetchAllRnRColumns(existingProgramCode)).thenReturn(allColumns);
-        RnrTemplateForm rnrColumns = rnrTemplateController.fetchAllProgramRnrColumnList(existingProgramCode);
-        verify(rnrTemplateService).fetchAllRnRColumns(existingProgramCode);
+        when(rnrTemplateService.fetchAllRnRColumns(existingProgramId)).thenReturn(allColumns);
+        RnrTemplateForm rnrColumns = rnrTemplateController.fetchAllProgramRnrColumnList(existingProgramId);
+        verify(rnrTemplateService).fetchAllRnRColumns(existingProgramId);
         assertThat(rnrColumns.getRnrColumns(),is(allColumns));
     }
 
@@ -44,7 +44,7 @@ public class RnrTemplateControllerTest {
     public void shouldCreateARnRTemplateForAGivenProgramWithSpecifiedColumns() throws Exception {
         final RnrColumnList rnrColumns = new RnrColumnList();
 
-        rnrTemplateController.saveRnRTemplateForProgram(existingProgramCode, rnrColumns);
+        rnrTemplateController.saveRnRTemplateForProgram(existingProgramId, rnrColumns);
         Matcher<ProgramRnrTemplate> matcher = new ArgumentMatcher<ProgramRnrTemplate>() {
             @Override
             public boolean matches(Object argument) {

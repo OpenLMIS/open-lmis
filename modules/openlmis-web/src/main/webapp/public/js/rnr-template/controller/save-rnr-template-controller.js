@@ -11,7 +11,7 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, $http) {
 
   $scope.createProgramRnrTemplate = function () {
     setRnRTemplateValidateFlag();
-    $http.post('/admin/rnr/' + $scope.program.code + '/columns.json', $scope.rnrColumns).success(function () {
+    $http.post('/admin/rnr/' + $scope.program.id + '/columns.json', $scope.rnrColumns).success(function () {
       $scope.message = "Template saved successfully!";
       $scope.error = "";
       $scope.errorMap = undefined;
@@ -80,10 +80,10 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, $http) {
 SaveRnrTemplateController.resolve = {
   rnrTemplateForm:function ($q, RnRColumnList, $location, $route, $timeout) {
     var deferred = $q.defer();
-    var code = $route.current.params.programCode;
+    var id = $route.current.params.programId;
 
     $timeout(function () {
-      RnRColumnList.get({programCode:code}, function (data) {
+      RnRColumnList.get({programId:id}, function (data) {
         deferred.resolve(data.rnrTemplateForm);
       }, function () {
         $location.path('select-program');

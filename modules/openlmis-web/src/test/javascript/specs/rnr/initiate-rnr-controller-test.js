@@ -33,10 +33,10 @@ describe('InitiateRnrController', function () {
   });
 
   it('should initiate rnr if facility and program chosen are correct',function () {
-    scope.$parent.program = {"code" : "hiv"};
+    scope.$parent.program = {"code" : "hiv", "id":1};
     scope.$parent.facility = 1;
     scope.initRnr();
-    expect(location.path()).toEqual("/create-rnr/1/hiv");
+    expect(location.path()).toEqual("/create-rnr/1/1");
     expect(scope.error).toEqual("");
   });
 

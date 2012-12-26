@@ -19,7 +19,7 @@ public interface FacilityApprovedProductMapper {
     @Select("SELECT * " +
             "FROM products p, facility_approved_products fap, program_products pp, facilities f, " +
             "product_forms pf , dosage_units du where " +
-            "pp.programId = (select id from programs WHERE LOWER(code) =  LOWER(#{programCode})) " +
+            "pp.programId = #{programId} " +
             "AND f.id = #{facilityId} AND f.typeId = fap.facilityTypeId " +
             "AND fap.programProductId = pp.id " +
             "AND p.id = pp.productId " +
@@ -33,6 +33,6 @@ public interface FacilityApprovedProductMapper {
             @Result(property = "programProduct", column = "programProductID", javaType = ProgramProduct.class, one = @One(select =  "org.openlmis.core.repository.mapper.ProgramProductMapper.getById")),
     })
     List<FacilityApprovedProduct> getFullSupplyProductsByFacilityAndProgram(@Param("facilityId") Integer facilityId,
-                                                                            @Param("programCode") String programCode);
+                                                                            @Param("programId") Integer programId);
 
 }

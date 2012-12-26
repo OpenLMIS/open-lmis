@@ -20,7 +20,7 @@ import static org.mockito.Mockito.*;
 
 public class RnrRepositoryTest {
 
-    public static final String HIV = "HIV";
+    public static final Integer HIV = 1;
     private RnrMapper rnrMapper = mock(RnrMapper.class);
     private RnrLineItemMapper rnrLineItemMapper = mock(RnrLineItemMapper.class);
     private RnrRepository rnrRepository = new RnrRepository(rnrMapper, rnrLineItemMapper);
@@ -29,13 +29,12 @@ public class RnrRepositoryTest {
     @Test
     public void shouldInsertRnrAndItsLineItems() throws Exception {
         Rnr rnr = new Rnr();
+        rnr.setId(1);
         rnr.add(new RnrLineItem());
         rnr.add(new RnrLineItem());
-        when(rnrMapper.insert(rnr)).thenReturn(1);
         rnrRepository.insert(rnr);
         verify(rnrMapper).insert(rnr);
         verify(rnrLineItemMapper, times(2)).insert(any(RnrLineItem.class));
-        assertThat(rnr.getId(), is(1));
         RnrLineItem rnrLineItem = rnr.getLineItems().get(0);
         assertThat(rnrLineItem.getRnrId(), is(1));
     }

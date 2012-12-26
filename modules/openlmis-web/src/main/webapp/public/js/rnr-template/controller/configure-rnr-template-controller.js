@@ -5,7 +5,7 @@ function ConfigureRnRTemplateController($scope, programs, $location) {
   $scope.createRnrTemplate = function () {
     if ($scope.$parent.program != undefined) {
       $scope.error = "";
-      $location.path('/create-rnr-template/' + $scope.$parent.program.code);
+      $location.path('/create-rnr-template/' + $scope.$parent.program.id);
     } else {
       $scope.error = "Please select a program";
     }

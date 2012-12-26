@@ -31,27 +31,27 @@ public class RnrTemplateController {
     }
 
     // TODO : url should have rnr-template and not rnr
-    @RequestMapping(value = "/admin/rnr/{programCode}/columns", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "/admin/rnr/{programId}/columns", method = RequestMethod.GET, headers = "Accept=application/json")
     @PreAuthorize("hasPermission('','CONFIGURE_RNR')")
-    public RnrTemplateForm fetchAllProgramRnrColumnList(@PathVariable("programCode") String programCode) {
+    public RnrTemplateForm fetchAllProgramRnrColumnList(@PathVariable("programId") Integer programId) {
         List<RnRColumnSource> sources = new ArrayList<>();
         sources.add(RnRColumnSource.USER_INPUT);
         sources.add(RnRColumnSource.CALCULATED);
-        return new RnrTemplateForm(rnrTemplateService.fetchAllRnRColumns(programCode), sources);
+        return new RnrTemplateForm(rnrTemplateService.fetchAllRnRColumns(programId), sources);
     }
 
-    @RequestMapping(value = "/logistics/rnr/{programCode}/columns", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "/logistics/rnr/{programId}/columns", method = RequestMethod.GET, headers = "Accept=application/json")
     @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
-    public List<RnrColumn> fetchVisibleProgramRnrColumnList(@PathVariable("programCode") String programCode) {
-        return rnrTemplateService.fetchVisibleRnRColumns(programCode);
+    public List<RnrColumn> fetchVisibleProgramRnrColumnList(@PathVariable("programId") Integer programId) {
+        return rnrTemplateService.fetchVisibleRnRColumns(programId);
     }
 
-    @RequestMapping(value = "/admin/rnr/{programCode}/columns", method = RequestMethod.POST, headers = "Accept=application/json")
+    @RequestMapping(value = "/admin/rnr/{programId}/columns", method = RequestMethod.POST, headers = "Accept=application/json")
     @PreAuthorize("hasPermission('','CONFIGURE_RNR')")
-    public ResponseEntity saveRnRTemplateForProgram(@PathVariable("programCode") String programCode,
+    public ResponseEntity saveRnRTemplateForProgram(@PathVariable("programId") Integer programId,
                                                     @RequestBody RnrColumnList rnrColumnList) {
 
-        ProgramRnrTemplate programRnrTemplate = new ProgramRnrTemplate(programCode, rnrColumnList);
+        ProgramRnrTemplate programRnrTemplate = new ProgramRnrTemplate(programId, rnrColumnList);
         Map<String, String> validationErrors = rnrTemplateService.saveRnRTemplateForProgram(programRnrTemplate);
         ResponseEntity responseEntity;
         if (validationErrors != null && validationErrors.size() > 0) {

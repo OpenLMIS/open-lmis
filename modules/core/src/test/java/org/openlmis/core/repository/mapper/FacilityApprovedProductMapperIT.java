@@ -97,7 +97,7 @@ public class FacilityApprovedProductMapperIT {
         addToFacilityType("warehouse", programProduct7);
 
         List<FacilityApprovedProduct> facilityApprovedProducts = facilityApprovedProductMapper.getFullSupplyProductsByFacilityAndProgram(
-            facility.getId(), yellowFeverProgram.getCode());
+            facility.getId(), yellowFeverProgram.getId());
         assertEquals(3, facilityApprovedProducts.size());
 
         FacilityApprovedProduct facilityApprovedProduct = facilityApprovedProducts.get(0);

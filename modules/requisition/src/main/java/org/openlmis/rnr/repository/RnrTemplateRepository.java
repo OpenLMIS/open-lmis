@@ -25,7 +25,7 @@ public class RnrTemplateRepository {
 
     @Transactional
     public void saveProgramRnrTemplate(ProgramRnrTemplate programTemplate) {
-        if (rnrColumnMapper.isRnrTemplateDefined(programTemplate.getProgramCode())) {
+        if (rnrColumnMapper.isRnrTemplateDefined(programTemplate.getProgramId())) {
             updateAllProgramRnRColumns(programTemplate);
         } else {
             insertAllProgramRnRColumns(programTemplate);
@@ -34,23 +34,23 @@ public class RnrTemplateRepository {
 
     private void insertAllProgramRnRColumns(ProgramRnrTemplate programRnrTemplate) {
         for (RnrColumn rnrColumn : programRnrTemplate.getRnrColumns()) {
-            rnrColumnMapper.insert(programRnrTemplate.getProgramCode(), rnrColumn);
+            rnrColumnMapper.insert(programRnrTemplate.getProgramId(), rnrColumn);
         }
     }
 
     private void updateAllProgramRnRColumns(ProgramRnrTemplate programRnrTemplate) {
         for (RnrColumn rnrColumn : programRnrTemplate.getRnrColumns()) {
-            rnrColumnMapper.update(programRnrTemplate.getProgramCode(), rnrColumn);
+            rnrColumnMapper.update(programRnrTemplate.getProgramId(), rnrColumn);
         }
     }
 
-    public List<RnrColumn> fetchVisibleProgramRnRColumns(String programCode) {
-        return rnrColumnMapper.getVisibleProgramRnrColumns(programCode);
+    public List<RnrColumn> fetchVisibleProgramRnRColumns(Integer programId) {
+        return rnrColumnMapper.getVisibleProgramRnrColumns(programId);
     }
 
-    public List<RnrColumn> fetchRnrTemplateColumns(String programCode) {
-        if (rnrColumnMapper.isRnrTemplateDefined(programCode)) {
-            return rnrColumnMapper.fetchDefinedRnrColumnsForProgram(programCode);
+    public List<RnrColumn> fetchRnrTemplateColumns(Integer programId) {
+        if (rnrColumnMapper.isRnrTemplateDefined(programId)) {
+            return rnrColumnMapper.fetchDefinedRnrColumnsForProgram(programId);
         } else {
             return rnrColumnMapper.fetchAllMasterRnRColumns();
         }

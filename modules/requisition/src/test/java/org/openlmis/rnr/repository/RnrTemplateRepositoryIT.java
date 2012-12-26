@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class RnrTemplateRepositoryIT {
 
-    public static final String EXISTING_PROGRAM_CODE = "HIV";
+    public static final Integer EXISTING_PROGRAM_ID = 1;
     ProgramRnrTemplate template;
 
     RnrTemplateRepository rnrRepository;
@@ -33,15 +33,15 @@ public class RnrTemplateRepositoryIT {
     @Before
     public void setUp() throws Exception {
         rnrRepository = new RnrTemplateRepository(rnrColumnMapper);
-        template = new ProgramRnrTemplate(EXISTING_PROGRAM_CODE, rnrColumns);
+        template = new ProgramRnrTemplate(EXISTING_PROGRAM_ID, rnrColumns);
         rnrColumnMapper.deleteAll();
     }
 
     @Test
     public void shouldRetrieveAllColumnsFromMasterTable() throws Exception {
-        when(rnrColumnMapper.isRnrTemplateDefined(EXISTING_PROGRAM_CODE)).thenReturn(false);
+        when(rnrColumnMapper.isRnrTemplateDefined(EXISTING_PROGRAM_ID)).thenReturn(false);
         when(rnrColumnMapper.fetchAllMasterRnRColumns()).thenReturn(rnrColumns);
-        List<RnrColumn> result = rnrRepository.fetchRnrTemplateColumns(EXISTING_PROGRAM_CODE);
+        List<RnrColumn> result = rnrRepository.fetchRnrTemplateColumns(EXISTING_PROGRAM_ID);
 
         assertThat(result,is(rnrColumns));
         verify(rnrColumnMapper).fetchAllMasterRnRColumns();
@@ -49,12 +49,12 @@ public class RnrTemplateRepositoryIT {
 
     @Test
     public void shouldRetrieveAlreadyDefinedRnrColumnsForAProgram() throws Exception {
-        when(rnrColumnMapper.isRnrTemplateDefined(EXISTING_PROGRAM_CODE)).thenReturn(true);
-        when(rnrColumnMapper.fetchDefinedRnrColumnsForProgram(EXISTING_PROGRAM_CODE)).thenReturn(rnrColumns);
-        List<RnrColumn> result = rnrRepository.fetchRnrTemplateColumns(EXISTING_PROGRAM_CODE);
+        when(rnrColumnMapper.isRnrTemplateDefined(EXISTING_PROGRAM_ID)).thenReturn(true);
+        when(rnrColumnMapper.fetchDefinedRnrColumnsForProgram(EXISTING_PROGRAM_ID)).thenReturn(rnrColumns);
+        List<RnrColumn> result = rnrRepository.fetchRnrTemplateColumns(EXISTING_PROGRAM_ID);
         assertThat(result, is(rnrColumns));
         verify(rnrColumnMapper,never()).fetchAllMasterRnRColumns();
-        verify(rnrColumnMapper).fetchDefinedRnrColumnsForProgram(EXISTING_PROGRAM_CODE);
+        verify(rnrColumnMapper).fetchDefinedRnrColumnsForProgram(EXISTING_PROGRAM_ID);
 
     }
 
@@ -63,16 +63,16 @@ public class RnrTemplateRepositoryIT {
         rnrColumns.add(new RnrColumn());
         rnrColumns.add(new RnrColumn());
         rnrRepository.saveProgramRnrTemplate(template);
-        verify(rnrColumnMapper, times(2)).insert(eq(EXISTING_PROGRAM_CODE),any(RnrColumn.class));
+        verify(rnrColumnMapper, times(2)).insert(eq(EXISTING_PROGRAM_ID),any(RnrColumn.class));
     }
 
     @Test
     public void shouldUpdateRnRColumnsForAProgramIfRnrTemplateAlreadyDefined() throws Exception {
-        when(rnrColumnMapper.isRnrTemplateDefined(EXISTING_PROGRAM_CODE)).thenReturn(true);
+        when(rnrColumnMapper.isRnrTemplateDefined(EXISTING_PROGRAM_ID)).thenReturn(true);
         rnrColumns.add(new RnrColumn());
         rnrColumns.add(new RnrColumn());
         rnrRepository.saveProgramRnrTemplate(template);
-        verify(rnrColumnMapper, times(2)).update(eq(EXISTING_PROGRAM_CODE),any(RnrColumn.class));
+        verify(rnrColumnMapper, times(2)).update(eq(EXISTING_PROGRAM_ID),any(RnrColumn.class));
     }
 
 }

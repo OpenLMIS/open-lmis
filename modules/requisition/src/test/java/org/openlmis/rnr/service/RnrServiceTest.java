@@ -25,7 +25,7 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class RnrServiceTest {
 
-    public static final String HIV = "HIV";
+    public static final Integer HIV = 1;
     public Integer facilityId = 1;
 
     @Autowired

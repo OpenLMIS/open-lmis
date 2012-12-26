@@ -27,11 +27,11 @@ public class RnrService {
     }
 
     @Transactional
-    public Rnr initRnr(Integer facilityId, String programCode, String modifiedBy) {
-        Rnr requisition = rnrRepository.getRequisitionByFacilityAndProgram(facilityId, programCode);
+    public Rnr initRnr(Integer facilityId, Integer programId, String modifiedBy) {
+        Rnr requisition = rnrRepository.getRequisitionByFacilityAndProgram(facilityId, programId);
         if (requisition.getId() == null) {
-            requisition = new Rnr(facilityId, programCode, RnrStatus.INITIATED, modifiedBy);
-            List<FacilityApprovedProduct> facilityApprovedProducts = facilityApprovedProductService.getByFacilityAndProgram(facilityId, programCode);
+            requisition = new Rnr(facilityId, programId, RnrStatus.INITIATED, modifiedBy);
+            List<FacilityApprovedProduct> facilityApprovedProducts = facilityApprovedProductService.getByFacilityAndProgram(facilityId, programId);
             for (FacilityApprovedProduct programProduct : facilityApprovedProducts) {
                 RnrLineItem requisitionLineItem = new RnrLineItem(requisition.getId(), programProduct, modifiedBy);
                 requisition.add(requisitionLineItem);

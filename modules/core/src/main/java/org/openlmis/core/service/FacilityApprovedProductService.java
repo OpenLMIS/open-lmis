@@ -21,8 +21,8 @@ public class FacilityApprovedProductService {
         this.repository = repository;
     }
 
-    public List<FacilityApprovedProduct> getByFacilityAndProgram(Integer facilityId, String programCode) {
-        return repository.getByFacilityAndProgram(facilityId, programCode);
+    public List<FacilityApprovedProduct> getByFacilityAndProgram(Integer facilityId, Integer programId) {
+        return repository.getByFacilityAndProgram(facilityId, programId);
     }
 
 }

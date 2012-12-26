@@ -24,8 +24,8 @@ public class FacilityApprovedProductRepository {
         this.facilityApprovedProductMapper = facilityApprovedProductMapper;
     }
 
-    public List<FacilityApprovedProduct> getByFacilityAndProgram(Integer facilityId, String programCode) {
-        return facilityApprovedProductMapper.getFullSupplyProductsByFacilityAndProgram(facilityId, programCode);
+    public List<FacilityApprovedProduct> getByFacilityAndProgram(Integer facilityId, Integer programId) {
+        return facilityApprovedProductMapper.getFullSupplyProductsByFacilityAndProgram(facilityId, programId);
     }
 
 }

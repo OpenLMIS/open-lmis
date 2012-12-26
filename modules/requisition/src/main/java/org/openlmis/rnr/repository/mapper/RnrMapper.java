@@ -7,15 +7,15 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RnrMapper {
 
-    @Select("insert into requisition(facility_id, program_code, status, modified_by) " +
-            "values (#{facilityId}, #{programCode}, #{status}, #{modifiedBy}) returning id")
+    @Insert("insert into requisition(facilityId, programId, status, modifiedBy) " +
+            "values (#{facilityId}, #{programId}, #{status}, #{modifiedBy})")
     @Options(useGeneratedKeys = true)
-    public Integer insert(Rnr requisition);
+    public void insert(Rnr requisition);
 
     @Delete("delete from requisition")
     public void deleteAll();
 
-    @Update("update requisition set modified_by = #{modifiedBy}, status = #{status}, modified_date= DEFAULT, " +
+    @Update("update requisition set modifiedBy = #{modifiedBy}, status = #{status}, modifiedDate= DEFAULT, " +
 			"fullSupplyItemsSubmittedCost = #{fullSupplyItemsSubmittedCost}, " +
 			"nonFullSupplyItemsSubmittedCost = #{nonFullSupplyItemsSubmittedCost}, " +
 			"totalSubmittedCost = #{totalSubmittedCost} " +
@@ -23,21 +23,10 @@ public interface RnrMapper {
     public void update(Rnr requisition);
 
     @Select("Select * from requisition where id = #{rnrId}")
-    @Results(value = {
-            @Result(property = "facilityId", column = "facility_id"),
-            @Result(property = "programCode", column = "program_code"),
-            @Result(property = "modifiedBy", column = "modified_by"),
-            @Result(property = "modifiedDate", column = "modified_date")
-    })
-    public Rnr getRequisitionById(Integer rnrId);
+      public Rnr getRequisitionById(Integer rnrId);
 
-    @Select("Select * from requisition where facility_id = #{facilityId} and program_code= #{programCode}")
-    @Results(value = {
-            @Result(property = "facilityId", column = "facility_id"),
-            @Result(property = "programCode", column = "program_code"),
-            @Result(property = "modifiedBy", column = "modified_by"),
-            @Result(property = "modifiedDate", column = "modified_date")
-    })
+    @Select("Select * from requisition where facilityId = #{facilityId} and programId= #{programId}")
+
     public Rnr getRequisitionByFacilityAndProgram(@Param("facilityId") Integer facilityId,
-                                                  @Param("programCode") String programCode);
+                                                  @Param("programId") Integer programId);
 }

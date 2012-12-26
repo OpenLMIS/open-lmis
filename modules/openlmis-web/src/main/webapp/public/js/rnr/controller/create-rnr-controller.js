@@ -19,7 +19,7 @@ function CreateRnrController($scope, ReferenceData, RequisitionHeader, ProgramRn
         $location.path($scope.$parent.sourceUrl);
     });
 
-    ProgramRnRColumnList.get({programCode:$route.current.params.program}, function (data) {
+    ProgramRnRColumnList.get({programId:$route.current.params.program}, function (data) {
         function resetFullSupplyItemsCostIfNull(rnr){
             if(rnr == null) return;
             if(rnr.fullSupplyItemsSubmittedCost == null)

@@ -24,6 +24,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.builder.FacilityBuilder.FACILITY_CODE;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramBuilder.PROGRAM_CODE;
+import static org.openlmis.core.builder.ProgramBuilder.PROGRAM_ID;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
 

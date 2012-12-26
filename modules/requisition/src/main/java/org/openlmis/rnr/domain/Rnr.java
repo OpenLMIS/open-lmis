@@ -12,7 +12,7 @@ public class Rnr {
     private Integer id;
     private Integer facilityId;
 
-    private String programCode;
+    private Integer programId;
     private RnrStatus status;
 	private Float fullSupplyItemsSubmittedCost;
 	private Float nonFullSupplyItemsSubmittedCost;
@@ -26,9 +26,9 @@ public class Rnr {
     public Rnr() {
     }
 
-    public Rnr(Integer facilityId, String programCode, RnrStatus status, String modifiedBy) {
+    public Rnr(Integer facilityId, Integer programId, RnrStatus status, String modifiedBy) {
         this.facilityId = facilityId;
-        this.programCode = programCode;
+        this.programId = programId;
         this.status = status;
         this.modifiedBy = modifiedBy;
     }

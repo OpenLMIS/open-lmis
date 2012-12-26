@@ -11,11 +11,11 @@ describe('CreateRnrController', function () {
         controller = $controller;
         httpBackend = $httpBackend;
         scope.$parent.facility = "10134";
-        scope.$parent.program = {code:"programCode"};
+        scope.$parent.program = {code:"programCode", "id":1};
         scope.saveRnrForm = {$error:{ rnrError:false }};
         localStorageService = _localStorageService_;
         route = $route;
-        route.current = {"params":{"facility":"1", "program":"HIV"}};
+        route.current = {"params":{"facility":"1", "program":"1"}};
 
         requisitionHeader = {"requisitionHeader":{"facilityName":"National Warehouse",
             "facilityCode":"10134", "facilityType":{"code":"Warehouse"}, "facilityOperatedBy":"MoH", "maximumStockLevel":3, "emergencyOrderPoint":0.5,
@@ -23,8 +23,8 @@ describe('CreateRnrController', function () {
 
 
         httpBackend.when('GET', '/logistics/facility/1/requisition-header.json').respond(requisitionHeader);
-        httpBackend.when('POST', '/logistics/rnr/1/HIV/init.json').respond({"rnr":{"status":"CREATED"}});
-        httpBackend.when('GET', '/logistics/rnr/HIV/columns.json').respond({"rnrColumnList":[
+        httpBackend.when('POST', '/logistics/rnr/1/1/init.json').respond({"rnr":{"status":"CREATED"}});
+        httpBackend.when('GET', '/logistics/rnr/1/columns.json').respond({"rnrColumnList":[
             {"testField":"test"}
         ]});
         httpBackend.when('GET', '/reference-data/currency.json').respond({"responseData":"$"});

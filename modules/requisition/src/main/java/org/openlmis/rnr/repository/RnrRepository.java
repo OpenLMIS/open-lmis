@@ -24,11 +24,10 @@ public class RnrRepository {
     }
 
     public void insert(Rnr requisition) {
-        Integer rnrId = rnrMapper.insert(requisition);
-        requisition.setId(rnrId);
+        rnrMapper.insert(requisition);
         List<RnrLineItem> lineItems = requisition.getLineItems();
         for (RnrLineItem lineItem : lineItems) {
-            lineItem.setRnrId(rnrId);
+            lineItem.setRnrId(requisition.getId());
             lineItem.setModifiedBy(requisition.getModifiedBy());
             Integer id = rnrLineItemMapper.insert(lineItem);
             lineItem.setId(id);
@@ -43,8 +42,8 @@ public class RnrRepository {
         }
     }
 
-    public Rnr getRequisitionByFacilityAndProgram(Integer facilityId, String programCode) {
-        Rnr rnr = rnrMapper.getRequisitionByFacilityAndProgram(facilityId, programCode);
+    public Rnr getRequisitionByFacilityAndProgram(Integer facilityId, Integer programId) {
+        Rnr rnr = rnrMapper.getRequisitionByFacilityAndProgram(facilityId, programId);
         if(rnr == null) return new Rnr();
         rnr.setLineItems(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()));
         return rnr;

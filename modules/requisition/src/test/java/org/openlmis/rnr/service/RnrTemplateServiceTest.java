@@ -22,7 +22,7 @@ public class RnrTemplateServiceTest {
 
     private RnrTemplateService service;
 
-    private final static String EXISTING_PROGRAM_CODE = "HIV";
+    private final static Integer EXISTING_PROGRAM_ID = 1;
 
 
     @Before
@@ -32,8 +32,8 @@ public class RnrTemplateServiceTest {
 
     @Test
     public void shouldFetchAllRnRColumns() throws Exception {
-        service.fetchAllRnRColumns(EXISTING_PROGRAM_CODE);
-        verify(repository).fetchRnrTemplateColumns(EXISTING_PROGRAM_CODE);
+        service.fetchAllRnRColumns(EXISTING_PROGRAM_ID);
+        verify(repository).fetchRnrTemplateColumns(EXISTING_PROGRAM_ID);
     }
 
     @Test

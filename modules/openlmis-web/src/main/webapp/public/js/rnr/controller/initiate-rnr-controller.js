@@ -48,7 +48,7 @@ function InitiateRnrController($http, $scope, facilities, programs, UserSupporte
         if (validate()) {
                     $scope.error = "";
                     $scope.$parent.sourceUrl =  $location.$$url;
-                    $location.path('/create-rnr/'+ $scope.facility +'/'+ $scope.program.code);
+                    $location.path('/create-rnr/'+ $scope.facility +'/'+ $scope.program.id);
 
         } else {
             $scope.error = "Please select Facility and program for facility to proceed";

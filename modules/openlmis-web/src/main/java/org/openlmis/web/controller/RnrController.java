@@ -27,11 +27,11 @@ public class RnrController {
         this.rnrService = rnrService;
     }
 
-    @RequestMapping(value = "/logistics/rnr/{facilityId}/{programCode}/init", method = RequestMethod.POST, headers = "Accept=application/json")
+    @RequestMapping(value = "/logistics/rnr/{facilityId}/{programId}/init", method = RequestMethod.POST, headers = "Accept=application/json")
     @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
-    public Rnr initRnr(@PathVariable("facilityId") Integer facilityId, @PathVariable("programCode") String programCode, HttpServletRequest request) {
+    public Rnr initRnr(@PathVariable("facilityId") Integer facilityId, @PathVariable("programId") Integer programId, HttpServletRequest request) {
         String modifiedBy = (String) request.getSession().getAttribute(USER);
-        return rnrService.initRnr(facilityId, programCode, modifiedBy);
+        return rnrService.initRnr(facilityId, programId, modifiedBy);
     }
 
     @RequestMapping(value = "/logistics/rnr/{rnrId}/save", method = RequestMethod.POST, headers = "Accept=application/json")
