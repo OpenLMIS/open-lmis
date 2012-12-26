@@ -56,7 +56,7 @@ function CreateRnrController($scope, ReferenceData, RequisitionHeader, ProgramRn
             $scope.message = "";
             return;
         }
-        $http.post('/logistics/rnr/' + $scope.$parent.rnr.id + '/save.json', $scope.$parent.rnr).success(function (data) {
+        $http.post('/logistics/rnr/' + $scope.rnr.id + '/save.json', $scope.rnr).success(function (data) {
             $scope.message = "R&R saved successfully!";
             $scope.error = "";
         });
@@ -88,7 +88,7 @@ function CreateRnrController($scope, ReferenceData, RequisitionHeader, ProgramRn
     }
 
     $scope.showSelectedColumn = function(columnName){
-        var rnr = $scope.$parent.rnr ;
+        var rnr = $scope.rnr ;
         if((rnr.status == "INITIATED" || rnr.status == "CREATED") && columnName == "quantityApproved")
             return undefined;
         return "defined";

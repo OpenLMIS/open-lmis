@@ -24,7 +24,7 @@ describe('InitiateRnrController', function () {
     scope.loadPrograms();
 
     $httpBackend.flush();
-    expect(scope.programsForFacility).toEqual(programsForFacility);
+    expect(scope.programs).toEqual(programsForFacility);
   });
 
   it('should set error message if program not defined', function() {
@@ -34,21 +34,13 @@ describe('InitiateRnrController', function () {
 
   it('should initiate rnr if facility and program chosen are correct',function () {
     scope.$parent.program = {"code" : "hiv"};
-    $httpBackend.expectPOST('/logistics/rnr/undefined/hiv/init.json').respond({"rnr":{"test":"test"}});
+    scope.$parent.facility = 1;
     scope.initRnr();
-    $httpBackend.flush();
-    expect(scope.$parent.rnr).toEqual({"test":"test"});
-    expect(location.path()).toEqual("/create-rnr");
+    expect(location.path()).toEqual("/create-rnr/1/hiv");
     expect(scope.error).toEqual("");
   });
 
-  it('should set error message if post fails for initiate rnr', function () {
-    scope.$parent.program = {"code" : "hiv"};
-    $httpBackend.expectPOST('/logistics/rnr/undefined/hiv/init.json').respond(404);
-    scope.initRnr();
-    $httpBackend.flush();
-    expect(scope.error).toEqual("Rnr initialization failed!");
-  });
+
 
 //    it('should reset program if facility set to null and attempt to load programs is made', function () {
 //      scope.$parent.facility = {"code" : "hiv"};
