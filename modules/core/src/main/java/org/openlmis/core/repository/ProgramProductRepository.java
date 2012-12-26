@@ -25,7 +25,7 @@ public class ProgramProductRepository {
     }
 
     public void insert(ProgramProduct programProduct) {
-        programProduct.getProgram().setId(programRepository.getIdForCode(programProduct.getProduct().getCode()));
+        programProduct.getProgram().setId(programRepository.getIdForCode(programProduct.getProgram().getCode()));
         validateProductCode(programProduct.getProduct().getCode());
 
         try {

@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
@@ -20,6 +19,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.openlmis.core.builder.ProductBuilder.defaultProduct;
+import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(org.mockito.runners.MockitoJUnitRunner.class)
@@ -27,14 +27,12 @@ public class ProgramProductRepositoryTest {
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
 
-    ProgramProductRepository programProductRepository;
+    private ProgramProductRepository programProductRepository;
 
     @Mock
     ProgramProductMapper programProductMapper;
-
     @Mock
     private ProgramRepository programRepository;
-
     @Mock
     private ProductMapper productMapper;
 
@@ -46,7 +44,7 @@ public class ProgramProductRepositoryTest {
     @Test
     public void shouldThrowErrorIfInsertingDuplicateProductForAProgram() throws Exception {
         Product product = make(a(defaultProduct));
-        Program program = make(a(ProgramBuilder.defaultProgram));
+        Program program = make(a(defaultProgram));
         ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
         expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Duplicate entry for Product Code and Program Code combination found");
@@ -70,7 +68,10 @@ public class ProgramProductRepositoryTest {
     @Test
     public void shouldThrowErrorWhenInsertingProductForInvalidProgram() {
         Product product = make(a(defaultProduct));
-        ProgramProduct programProduct = new ProgramProduct(new Program(), product, 10, true);
+        Program program = make(a(defaultProgram));
+        ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
+        when(programRepository.getIdForCode(programProduct.getProgram().getCode())).thenThrow(new DataException("Invalid Program Code"));
+
         expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Invalid Program Code");
         programProductRepository.insert(programProduct);
@@ -78,7 +79,7 @@ public class ProgramProductRepositoryTest {
 
     @Test
     public void shouldThrowErrorWhenInsertingInvalidProductForAProgram() {
-        Program program = make(a(ProgramBuilder.defaultProgram));
+        Program program = make(a(defaultProgram));
         when(programRepository.getIdForCode(program.getCode())).thenReturn(1);
         ProgramProduct programProduct = new ProgramProduct(program, new Product(), 10, true);
 
