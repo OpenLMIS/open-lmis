@@ -75,10 +75,9 @@ function CreateRnrController($scope, ReferenceData, RequisitionHeader, ProgramRn
     }
 
     $scope.showSelectedColumn = function(columnName){
-        if(columnName == "quantityApproved"){
+        var rnr = $scope.$parent.rnr ;
+        if((rnr.status == "INITIATED" || rnr.status == "CREATED") && columnName == "quantityApproved")
             return undefined;
-        }
         return "defined";
-
     }
 }

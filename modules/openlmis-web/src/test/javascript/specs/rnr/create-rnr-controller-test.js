@@ -64,13 +64,33 @@ describe('CreateRnrController', function () {
         expect(scope.currency).toEqual("$");
     });
 
-    it("should get undefined when the column name is quantityApproved", function(){
+    it("should get undefined when the column name is quantityApproved and status is INITIATED", function(){
+        scope.$parent.rnr = {"status":"INITIATED"};
+        var isShown = scope.showSelectedColumn("quantityApproved");
+        expect(isShown).toEqual(undefined);
+    });
+
+    it("should get undefined when the column name is quantityApproved and status is CREATED", function(){
+        scope.$parent.rnr = {"status":"CREATED"};
         var isShown = scope.showSelectedColumn("quantityApproved");
         expect(isShown).toEqual(undefined);
     });
 
     it("should get 'defined' when the column name is not quantityApproved", function(){
+        scope.$parent.rnr = {"status":"whatever"};
         var isShown = scope.showSelectedColumn("anyOtherColumn");
+        expect(isShown).toEqual("defined");
+    });
+
+    it("should get 'defined' when the column name is quantityApproved and status is SUBMITTED", function(){
+        scope.$parent.rnr = {"status":"SUBMITTED"};
+        var isShown = scope.showSelectedColumn("quantityApproved");
+        expect(isShown).toEqual("defined");
+    });
+
+    it("should get 'defined' when the column name is quantityApproved and status is SUBMITTED", function(){
+        scope.$parent.rnr = {"status":"APPROVED"};
+        var isShown = scope.showSelectedColumn("quantityApproved");
         expect(isShown).toEqual("defined");
     });
 });
