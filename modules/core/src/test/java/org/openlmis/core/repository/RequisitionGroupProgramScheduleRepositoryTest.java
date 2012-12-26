@@ -12,7 +12,10 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.RequisitionGroupProgramSchedule;
 import org.openlmis.core.domain.Schedule;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.repository.mapper.*;
+import org.openlmis.core.repository.mapper.FacilityMapper;
+import org.openlmis.core.repository.mapper.RequisitionGroupMapper;
+import org.openlmis.core.repository.mapper.RequisitionGroupProgramScheduleMapper;
+import org.openlmis.core.repository.mapper.ScheduleMapper;
 import org.springframework.dao.DuplicateKeyException;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
@@ -32,16 +35,15 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
     @Mock
     RequisitionGroupMapper requisitionGroupMapper;
     @Mock
-    ProgramMapper programMapper;
+    ProgramRepository programRepository;
     @Mock
     ScheduleMapper scheduleMapper;
     @Mock
     FacilityMapper facilityMapper;
-
-    private Facility dropOffFacility;
-
     @Mock
     RequisitionGroupProgramScheduleMapper requisitionGroupProgramScheduleMapper;
+
+    private Facility dropOffFacility;
 
     @Before
     public void setUp() throws Exception {
@@ -49,7 +51,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
 
         dropOffFacility = make(a(FacilityBuilder.defaultFacility));
 
-        requisitionGroupProgramScheduleRepository = new RequisitionGroupProgramScheduleRepository(requisitionGroupProgramScheduleMapper, requisitionGroupMapper, programMapper, scheduleMapper, facilityMapper);
+        requisitionGroupProgramScheduleRepository = new RequisitionGroupProgramScheduleRepository(requisitionGroupProgramScheduleMapper, requisitionGroupMapper, programRepository, scheduleMapper, facilityMapper);
         requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
         requisitionGroupProgramSchedule.setRequisitionGroup(make(a(RequisitionGroupBuilder.defaultRequisitionGroup)));
         requisitionGroupProgramSchedule.setProgram(make(a(ProgramBuilder.defaultProgram)));
@@ -59,8 +61,6 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
     @Test
     public void shouldGiveErrorIfRequisitionGroupCodeDoesNotExist() throws Exception {
         when(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode())).thenReturn(null);
-        when(programMapper.getIdForCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1);
-        when(scheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode())).thenReturn(1);
         expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Requisition Group Code Does Not Exist");
         requisitionGroupProgramScheduleRepository.insert(requisitionGroupProgramSchedule);
@@ -72,18 +72,17 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
     @Test
     public void shouldGiveErrorIfProgramCodeDoesNotExist() throws Exception {
         when(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode())).thenReturn(1);
-        when(programMapper.getIdForCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(null);
-        when(scheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode())).thenReturn(1);
+        when(programRepository.getIdForCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenThrow(new DataException("Invalid Program Code"));
 
         expectedEx.expect(DataException.class);
-        expectedEx.expectMessage("Program Code Does Not Exist");
+        expectedEx.expectMessage("Invalid Program Code");
         requisitionGroupProgramScheduleRepository.insert(requisitionGroupProgramSchedule);
     }
 
     @Test
     public void shouldGiveErrorIfScheduleCodeDoesNotExist() throws Exception {
         when(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode())).thenReturn(1);
-        when(programMapper.getIdForCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1);
+        when(programRepository.getIdForCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1);
         when(scheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode())).thenReturn(null);
         expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Schedule Code Does Not Exist");
@@ -106,7 +105,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
 
         requisitionGroupProgramSchedule.setDropOffFacility(facility(dropOffFacility.getCode()));
         when(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode())).thenReturn(1);
-        when(programMapper.getIdForCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1);
+        when(programRepository.getIdForCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1);
         when(scheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode())).thenReturn(1);
         when(facilityMapper.getIdForCode(dropOffFacility.getCode())).thenReturn(facilityId);
 
@@ -114,7 +113,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
 
         verify(requisitionGroupProgramScheduleMapper).insert(requisitionGroupProgramSchedule);
         verify(requisitionGroupMapper).getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode());
-        verify(programMapper).getIdForCode(requisitionGroupProgramSchedule.getProgram().getCode());
+        verify(programRepository).getIdForCode(requisitionGroupProgramSchedule.getProgram().getCode());
         verify(scheduleMapper).getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode());
         verify(facilityMapper).getIdForCode(dropOffFacility.getCode());
 
@@ -136,7 +135,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
     }
 
     @Test
-    public void shouldGiveErrorWhenDropOffFacilityIsNotProvidedAndDirectDeliveryIsFalse(){
+    public void shouldGiveErrorWhenDropOffFacilityIsNotProvidedAndDirectDeliveryIsFalse() {
         requisitionGroupProgramSchedule.setDirectDelivery(false);
 
         expectedEx.expect(DataException.class);
@@ -145,9 +144,9 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
     }
 
     @Test
-    public void shouldGiveErrorIfFacilityCodeDoesNotExist(){
+    public void shouldGiveErrorIfFacilityCodeDoesNotExist() {
         when(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode())).thenReturn(1);
-        when(programMapper.getIdForCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1);
+        when(programRepository.getIdForCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1);
         when(scheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode())).thenReturn(1);
         requisitionGroupProgramSchedule.setDropOffFacility(dropOffFacility);
         when(facilityMapper.getIdForCode(requisitionGroupProgramSchedule.getDropOffFacility().getCode())).thenReturn(null);
@@ -158,7 +157,6 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
         expectedEx.expectMessage("Drop off facility code is not present");
         requisitionGroupProgramScheduleRepository.insert(requisitionGroupProgramSchedule);
     }
-
 
 
     private Facility facility(String facilityCode) {
