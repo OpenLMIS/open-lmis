@@ -1,10 +1,13 @@
 package org.openlmis.rnr.repository;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.rnr.domain.LossesAndAdjustments;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
+import org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper;
 import org.openlmis.rnr.repository.mapper.RnrLineItemMapper;
 import org.openlmis.rnr.repository.mapper.RnrMapper;
+import org.openlmis.rnr.service.LossesAndAdjustmentsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -16,11 +19,13 @@ public class RnrRepository {
 
     private RnrMapper rnrMapper;
     private RnrLineItemMapper rnrLineItemMapper;
+    private LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
 
     @Autowired
-    public RnrRepository(RnrMapper rnrMapper, RnrLineItemMapper rnrLineItemMapper) {
+    public RnrRepository(RnrMapper rnrMapper, RnrLineItemMapper rnrLineItemMapper, LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper) {
         this.rnrMapper = rnrMapper;
         this.rnrLineItemMapper = rnrLineItemMapper;
+        this.lossesAndAdjustmentsMapper = lossesAndAdjustmentsMapper;
     }
 
     public void insert(Rnr requisition) {
@@ -30,6 +35,10 @@ public class RnrRepository {
             lineItem.setRnrId(requisition.getId());
             lineItem.setModifiedBy(requisition.getModifiedBy());
             rnrLineItemMapper.insert(lineItem);
+            List<LossesAndAdjustments> lossesAndAdjustments = lineItem.getLossesAndAdjustmentsList();
+            for(LossesAndAdjustments lossesAndAdjustment : lossesAndAdjustments){
+                lossesAndAdjustmentsMapper.insert(lineItem, lossesAndAdjustment);
+            }
         }
     }
 
@@ -38,6 +47,10 @@ public class RnrRepository {
         List<RnrLineItem> lineItems = rnr.getLineItems();
         for (RnrLineItem lineItem : lineItems) {
             rnrLineItemMapper.update(lineItem);
+            List<LossesAndAdjustments> lossesAndAdjustments = lineItem.getLossesAndAdjustmentsList();
+            for(LossesAndAdjustments lossesAndAdjustment : lossesAndAdjustments){
+                lossesAndAdjustmentsMapper.update(lineItem, lossesAndAdjustment);
+            }
         }
     }
 

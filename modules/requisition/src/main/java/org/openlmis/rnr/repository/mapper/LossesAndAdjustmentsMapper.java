@@ -28,4 +28,13 @@ public interface LossesAndAdjustmentsMapper {
 
     @Select("SELECT * FROM losses_adjustments_types WHERE name = #{name}")
     LossesAndAdjustmentsType getLossesAndAdjustmentTypeByName(LossesAndAdjustmentsTypeEnum lossesAndAdjustmentsType);
+
+    @Delete("DELETE FROM requisition_line_item_losses_adjustments WHERE id = #{lossesAndAdjustmentsId}")
+    void delete(Integer lossesAndAdjustmentsId);
+
+    @Update("UPDATE requisition_line_item_losses_adjustments " +
+            "SET quantity = #{lossesAndAdjustments.quantity}, " +
+            "type = #{lossesAndAdjustments.type.name} " +
+            "WHERE requisitionLineItemId = #{rnrLineItem.id} ")
+    public Integer update(@Param(value = "rnrLineItem") RnrLineItem rnrLineItem, @Param(value = "lossesAndAdjustments") LossesAndAdjustments lossesAndAdjustments);
 }

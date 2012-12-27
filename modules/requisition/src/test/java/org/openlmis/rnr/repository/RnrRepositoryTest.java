@@ -1,56 +1,82 @@
 package org.openlmis.rnr.repository;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.rnr.domain.LossesAndAdjustments;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.domain.RnrStatus;
+import org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper;
 import org.openlmis.rnr.repository.mapper.RnrLineItemMapper;
 import org.openlmis.rnr.repository.mapper.RnrMapper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class RnrRepositoryTest {
 
     public static final Integer HIV = 1;
-    private RnrMapper rnrMapper = mock(RnrMapper.class);
-    private RnrLineItemMapper rnrLineItemMapper = mock(RnrLineItemMapper.class);
-    private RnrRepository rnrRepository = new RnrRepository(rnrMapper, rnrLineItemMapper);
+
+    @Mock
+    RnrMapper rnrMapper;
+    @Mock
+    RnrLineItemMapper rnrLineItemMapper;
+    @Mock
+    LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
+
+    private RnrRepository rnrRepository;
     public Integer facilityId = 1;
+
+    private LossesAndAdjustments lossesAndAdjustments = new LossesAndAdjustments();
+    RnrLineItem rnrLineItem1;
+    RnrLineItem rnrLineItem2;
+    Rnr rnr;
+
+    @Before
+    public void setUp() throws Exception {
+        rnrRepository = new RnrRepository(rnrMapper, rnrLineItemMapper, lossesAndAdjustmentsMapper);
+        rnr = new Rnr();
+        rnrLineItem1 = new RnrLineItem();
+        rnrLineItem2 = new RnrLineItem();
+        rnr.add(rnrLineItem1);
+        rnr.add(rnrLineItem2);
+        rnrLineItem1.addLossesAndAdjustments(lossesAndAdjustments);
+        rnrLineItem2.addLossesAndAdjustments(lossesAndAdjustments);
+    }
 
     @Test
     public void shouldInsertRnrAndItsLineItems() throws Exception {
-        Rnr rnr = new Rnr();
         rnr.setId(1);
-        rnr.add(new RnrLineItem());
-        rnr.add(new RnrLineItem());
         rnrRepository.insert(rnr);
+
         verify(rnrMapper).insert(rnr);
         verify(rnrLineItemMapper, times(2)).insert(any(RnrLineItem.class));
+        verify(lossesAndAdjustmentsMapper, times(2)).insert(any(RnrLineItem.class), any(LossesAndAdjustments.class));
         RnrLineItem rnrLineItem = rnr.getLineItems().get(0);
         assertThat(rnrLineItem.getRnrId(), is(1));
     }
 
     @Test
     public void shouldUpdateRnrAndItsLineItems() throws Exception {
-        Rnr rnr = new Rnr();
-        rnr.add(new RnrLineItem());
-        rnr.add(new RnrLineItem());
         rnrRepository.update(rnr);
+
         verify(rnrMapper).update(rnr);
+        verify(lossesAndAdjustmentsMapper, times(2)).update(any(RnrLineItem.class), any(LossesAndAdjustments.class));
         verify(rnrLineItemMapper, times(2)).update(any(RnrLineItem.class));
     }
 
     @Test
-    public void shouldReturnRnrAndItsLineItemsByFacilityAndProgram(){
+    public void shouldReturnRnrAndItsLineItemsByFacilityAndProgram() {
         Rnr initiatedRequisition = new Rnr(facilityId, HIV, RnrStatus.INITIATED, "user");
         initiatedRequisition.setId(1);
         when(rnrMapper.getRequisitionByFacilityAndProgram(facilityId, HIV)).thenReturn(initiatedRequisition);
@@ -62,7 +88,7 @@ public class RnrRepositoryTest {
     }
 
     @Test
-    public void shouldReturnEmptyRnrIfRnrByFacilityAndProgramDoesNotExist(){
+    public void shouldReturnEmptyRnrIfRnrByFacilityAndProgramDoesNotExist() {
         when(rnrMapper.getRequisitionByFacilityAndProgram(facilityId, HIV)).thenReturn(null);
         Rnr rnr = rnrRepository.getRequisitionByFacilityAndProgram(facilityId, HIV);
         assertThat(rnr, is(notNullValue()));

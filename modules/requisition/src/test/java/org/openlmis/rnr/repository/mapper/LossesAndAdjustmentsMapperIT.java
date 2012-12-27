@@ -54,6 +54,7 @@ public class LossesAndAdjustmentsMapperIT {
 
     RnrLineItem rnrLineItem;
     LossesAndAdjustments lossesAndAdjustments;
+    LossesAndAdjustmentsType lossesAndAdjustmentsType;
 
     @Before
     public void setUp() throws Exception {
@@ -73,7 +74,7 @@ public class LossesAndAdjustmentsMapperIT {
         rnrLineItem = new RnrLineItem(requisition.getId(), facilityApprovedProduct, "user");
         rnrLineItemMapper.insert(rnrLineItem);
         lossesAndAdjustments = new LossesAndAdjustments();
-        LossesAndAdjustmentsType lossesAndAdjustmentsType = new LossesAndAdjustmentsType();
+        lossesAndAdjustmentsType = new LossesAndAdjustmentsType();
         lossesAndAdjustmentsType.setName(LossesAndAdjustmentsTypeEnum.CLINIC_RETURN);
         lossesAndAdjustments.setType(lossesAndAdjustmentsType);
         lossesAndAdjustments.setQuantity(20);
@@ -101,4 +102,26 @@ public class LossesAndAdjustmentsMapperIT {
         assertThat(lossesAndAdjustmentType.isAdditive(), is(true));
         assertThat(lossesAndAdjustmentType.getDisplayOrder(), is(9));
     }
+
+
+    @Test
+    public void shouldDeleteLossesAndAdjustment() throws Exception {
+        Integer id = lossesAndAdjustmentsMapper.insert(rnrLineItem, lossesAndAdjustments);
+        lossesAndAdjustmentsMapper.delete(id);
+        assertThat(lossesAndAdjustmentsMapper.getByRnrLineItem(rnrLineItem.getId()).size(), is(0));
+    }
+
+    @Test
+    public void shouldUpdateLossesAndAdjustments() throws Exception {
+        lossesAndAdjustmentsMapper.insert(rnrLineItem, lossesAndAdjustments);
+        lossesAndAdjustments.setQuantity(50);
+        lossesAndAdjustmentsType.setName(LossesAndAdjustmentsTypeEnum.TRANSFER_OUT);
+        lossesAndAdjustments.setType(lossesAndAdjustmentsType);
+        lossesAndAdjustmentsMapper.update(rnrLineItem, lossesAndAdjustments);
+        List<LossesAndAdjustments> lossesAndAdjustments = lossesAndAdjustmentsMapper.getByRnrLineItem(rnrLineItem.getId());
+        assertThat(lossesAndAdjustments.size(), is(1));
+        assertThat(lossesAndAdjustments.get(0).getQuantity(), is(50));
+        assertThat(lossesAndAdjustments.get(0).getType().getName(), is(LossesAndAdjustmentsTypeEnum.TRANSFER_OUT));
+    }
+
 }

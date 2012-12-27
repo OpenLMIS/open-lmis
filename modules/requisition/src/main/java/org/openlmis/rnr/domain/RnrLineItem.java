@@ -6,6 +6,7 @@ import org.openlmis.core.domain.FacilityApprovedProduct;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProgramProduct;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class RnrLineItem {
     private Integer quantityDispensed;
     private Integer beginningBalance;
     private Integer lossesAndAdjustments;
-    private List<LossesAndAdjustments> lossesAndAdjustmentsList;
+    private List<LossesAndAdjustments> lossesAndAdjustmentsList = new ArrayList<>();
     private String reasonForLossesAndAdjustments;
     private Integer stockInHand;
     private Integer stockOutDays;
@@ -77,5 +78,9 @@ public class RnrLineItem {
                 (product.getStrength() == null ? "" : (product.getStrength() + " ")) +
                 (product.getDosageUnit().getCode() == null ? "" : product.getDosageUnit().getCode());
 
+    }
+
+    public void addLossesAndAdjustments(LossesAndAdjustments lossesAndAdjustments) {
+        this.lossesAndAdjustmentsList.add(lossesAndAdjustments);
     }
 }
