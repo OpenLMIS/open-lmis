@@ -47,4 +47,10 @@ public interface RoleRightsMapper {
           many = @Many(select = "getAllRightsForRole"))
   })
   List<Role> getAllRoles();
+
+  @Update("UPDATE roles SET name=#{name} , description=#{description} , modifiedBy=#{modifiedBy} WHERE id=#{id}")
+  void updateRole(Role role);
+
+  @Delete("DELETE FROM role_rights WHERE roleId=#{roleId}")
+  int deleteAllRightsForRole( int roleId);
 }

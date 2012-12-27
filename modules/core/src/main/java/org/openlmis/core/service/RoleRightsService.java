@@ -61,6 +61,6 @@ public class RoleRightsService {
   }
 
   public void updateRole(Role role) {
-
+       roleRightsRepository.updateRole(role);
   }
 }

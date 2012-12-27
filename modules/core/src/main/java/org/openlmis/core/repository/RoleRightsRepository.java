@@ -45,4 +45,15 @@ public class RoleRightsRepository {
   public Role getRole(int roleId) {
     return roleRightsMapper.getRole(roleId);
   }
+
+  public void updateRole(Role role) {
+     roleRightsMapper.updateRole(role);
+     List<Right> rights = role.getRights();
+
+     roleRightsMapper.deleteAllRightsForRole(role.getId());
+
+     for (Right right : rights) {
+        roleRightsMapper.createRoleRight(role.getId(), right);
+     }
+  }
 }

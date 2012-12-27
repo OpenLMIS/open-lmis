@@ -87,4 +87,12 @@ public class RoleRightsServiceTest {
 
     verify(roleRightsRepository).getRole(roleId);
   }
+
+  @Test
+  public void shouldUpdateRole(){
+     role.setRights(asList(CREATE_REQUISITION));
+     roleRightsService.updateRole(role);
+     verify(roleRightsRepository).updateRole(role);
+
+  }
 }

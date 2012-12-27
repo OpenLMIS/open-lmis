@@ -80,4 +80,13 @@ public class RoleRightsRepositoryTest {
     verify(roleRightsMapper).getRole(roleId);
   }
 
+  @Test
+  public void shouldUpdateRole(){
+    role.setRights(asList(CONFIGURE_RNR));
+    role.setId(100);
+    new RoleRightsRepository(roleRightsMapper).updateRole(role);
+    verify(roleRightsMapper).updateRole(role);
+    verify(roleRightsMapper).deleteAllRightsForRole(100);
+    verify(roleRightsMapper).createRoleRight(100, CONFIGURE_RNR);
+  }
 }

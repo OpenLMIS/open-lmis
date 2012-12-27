@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.*;
@@ -111,6 +112,35 @@ public class RoleRightsMapperIT {
     assertThat(fetchedRole.getName(), is("role name"));
     assertTrue(fetchedRole.getRights().contains(CONFIGURE_RNR));
     assertTrue(fetchedRole.getRights().contains(CREATE_REQUISITION));
+  }
+
+  @Test
+  public void shouldUpdateRole() {
+    Role role = new Role(11, "Right Name", "Right Desc", 1111, null, null);
+    roleRightsMapper.insertRole(role);
+
+    role.setName("Right2");
+    role.setRights(asList(CREATE_REQUISITION));
+    role.setDescription("Right Description Changed");
+    role.setModifiedBy(222);
+
+    roleRightsMapper.updateRole(role);
+
+    Role updatedRole = roleRightsMapper.getRole(role.getId());
+
+    assertThat(updatedRole.getName(), is("Right2"));
+    assertThat(updatedRole.getDescription(), is("Right Description Changed"));
+    assertThat(updatedRole.getModifiedBy(), is(222));
+  }
+
+  @Test
+  public void shouldDeleteRights() throws Exception {
+    Role role = new Role(11, "Right Name", "Right Desc", 1111, null, null);
+    roleRightsMapper.insertRole(role);
+    roleRightsMapper.createRoleRight(role.getId(), CREATE_REQUISITION);
+    roleRightsMapper.createRoleRight(role.getId(), UPLOADS);
+
+    assertThat(roleRightsMapper.deleteAllRightsForRole(role.getId()), is(2));
   }
 
   private Role insertRole() {
