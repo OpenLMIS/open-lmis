@@ -20,17 +20,23 @@ public class HomePage extends Page {
     @FindBy(how = How.LINK_TEXT, using = "Logout")
     private static WebElement logoutLink;
 
-    @FindBy(how = How.XPATH, using = "//a[contains(text(),'Manage Facilities')]")
+    @FindBy(how = How.XPATH, using = "//a[contains(text(),'Manage')]")
     private static WebElement manageFacilityMenuItem;
 
-    @FindBy(how = How.LINK_TEXT, using = "Create")
+    @FindBy(how = How.XPATH, using = "//a[contains(text(),'Facilities')]")
+    private static WebElement facilityMenuItem;
+
+    @FindBy(how = How.LINK_TEXT, using = "Add new")
     private static WebElement createFacility;
 
     @FindBy(how = How.XPATH, using = "//div[@id='wrap']/div/div/div/h2")
     private static WebElement addNewFacilityHeader;
 
-    @FindBy(how = How.LINK_TEXT, using = "Template Configuration")
+    @FindBy(how = How.LINK_TEXT, using = "Configure")
     private static WebElement TemplateConfigTab;
+
+    @FindBy(how = How.LINK_TEXT, using = "R & R Template")
+    private static WebElement RnRTemplateConfigTab;
 
     @FindBy(how = How.LINK_TEXT, using = "R & R")
     private static WebElement ConfigureTemplateSelectProgramPage;
@@ -43,6 +49,12 @@ public class HomePage extends Page {
 
     @FindBy(how = How.LINK_TEXT, using = "Requisitions")
     private static WebElement requisitionsLink;
+
+    @FindBy(how = How.LINK_TEXT, using = "Create")
+    private static WebElement createLink;
+
+    @FindBy(how = How.LINK_TEXT, using = "My Facility")
+    private static WebElement myFacilityLink;
 
     @FindBy(how = How.XPATH, using = "//a[contains(@href,'/public/pages/logistics/rnr/create.html')]")
     private static WebElement createRnRLink;
@@ -60,7 +72,7 @@ public class HomePage extends Page {
     @FindBy(how = How.XPATH, using = "//input[@value='Next']")
     private static WebElement nextButton;
 
-    @FindBy(how = How.LINK_TEXT, using = "Manage Facilities")
+    @FindBy(how = How.LINK_TEXT, using = "Manage")
     private static WebElement manageFacilityLink;
 
     @FindBy(how = How.LINK_TEXT, using = "Search")
@@ -92,6 +104,8 @@ public class HomePage extends Page {
         testWebDriver.waitForElementToAppear(manageFacilityMenuItem);
         testWebDriver.click(manageFacilityMenuItem);
         manageFacilityMenuItem.click();
+        testWebDriver.waitForElementToAppear(facilityMenuItem);
+        facilityMenuItem.click();
         testWebDriver.waitForElementToAppear(createFacility);
         createFacility.click();
         testWebDriver.waitForElementToAppear(addNewFacilityHeader);
@@ -102,8 +116,10 @@ public class HomePage extends Page {
         testWebDriver.waitForElementToAppear(TemplateConfigTab);
         testWebDriver.mouseOver(TemplateConfigTab);
         TemplateConfigTab.click();
-        testWebDriver.waitForElementToAppear(ConfigureTemplateSelectProgramPage);
-        ConfigureTemplateSelectProgramPage.click();
+        testWebDriver.waitForElementToAppear(RnRTemplateConfigTab);
+        RnRTemplateConfigTab.click();
+//        testWebDriver.waitForElementToAppear(ConfigureTemplateSelectProgramPage);
+//        ConfigureTemplateSelectProgramPage.click();
         testWebDriver.selectByVisibleText(ProgramDropDown, programme);
         NextButton.click();
         return new TemplateConfigPage(testWebDriver);
@@ -112,8 +128,10 @@ public class HomePage extends Page {
     public InitiateRnRPage navigateAndInitiateRnr(String FCstring, String program) throws IOException {
         testWebDriver.waitForElementToAppear(requisitionsLink);
         requisitionsLink.click();
-        testWebDriver.waitForElementToAppear(createRnRLink);
-        createRnRLink.click();
+        testWebDriver.waitForElementToAppear(createLink);
+        createLink.click();
+        testWebDriver.waitForElementToAppear(myFacilityLink);
+        myFacilityLink.click();
         testWebDriver.waitForElementToAppear(facilityDropDown);
         testWebDriver.selectByVisibleText(facilityDropDown, "FCcode"+FCstring+"-FCname"+FCstring);
         testWebDriver.waitForElementToAppear(programDropDown);
@@ -126,8 +144,8 @@ public class HomePage extends Page {
     public DeleteFacilityPage navigateSearchFacility() throws IOException {
         testWebDriver.waitForElementToAppear(manageFacilityLink);
         manageFacilityLink.click();
-        testWebDriver.waitForElementToAppear(searchLink);
-        searchLink.click();
+        testWebDriver.waitForElementToAppear(facilityMenuItem);
+        facilityMenuItem.click();
         return new DeleteFacilityPage(testWebDriver);
     }
 
