@@ -1,4 +1,4 @@
-function CreateRnrController($scope, ReferenceData, RequisitionHeader, ProgramRnRColumnList, $location, $http, $route) {
+function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $location, $http, $route) {
 
     $http.post('/logistics/rnr/' + encodeURIComponent($route.current.params.facility) + '/' + encodeURIComponent($route.current.params.program) + '/init.json', {}
     ).success(function (data) {
@@ -9,27 +9,24 @@ function CreateRnrController($scope, ReferenceData, RequisitionHeader, ProgramRn
             $scope.$parent.message = "";
             $scope.$parent.error = "Rnr initialization failed!";
             $location.path($scope.$parent.sourceUrl);
-    });
+        });
 
+    ReferenceData.get({}, function (data) {
+        $scope.currency = data.responseData;
+    }, {});
 
-    RequisitionHeader.get({facilityId:$route.current.params.facility}, function (data) {
-        $scope.header = data.requisitionHeader;
-        $scope.getCurrency();
-    }, function () {
-        $location.path($scope.$parent.sourceUrl);
-    });
 
     ProgramRnRColumnList.get({programId:$route.current.params.program}, function (data) {
-        function resetFullSupplyItemsCostIfNull(rnr){
-            if(rnr == null) return;
-            if(rnr.fullSupplyItemsSubmittedCost == null)
-               rnr.fullSupplyItemsSubmittedCost = 0;
+        function resetFullSupplyItemsCostIfNull(rnr) {
+            if (rnr == null) return;
+            if (rnr.fullSupplyItemsSubmittedCost == null)
+                rnr.fullSupplyItemsSubmittedCost = 0;
         }
 
-        function resetTotalSubmittedCostIfNull(rnr){
-            if(rnr == null) return;
-            if(rnr.totalSubmittedCost == null)
-               rnr.totalSubmittedCost = 0;
+        function resetTotalSubmittedCostIfNull(rnr) {
+            if (rnr == null) return;
+            if (rnr.totalSubmittedCost == null)
+                rnr.totalSubmittedCost = 0;
         }
 
         if (validate(data)) {
@@ -51,7 +48,7 @@ function CreateRnrController($scope, ReferenceData, RequisitionHeader, ProgramRn
     };
 
     $scope.saveRnr = function () {
-        if ($scope.saveRnrForm.$error.rnrError != undefined && $scope.saveRnrForm.$error.rnrError != false && $scope.saveRnrForm.$error.rnrError.length > 0) {
+        if ($scope.saveRnrForm.$invalid) {
             $scope.error = "Please correct errors before saving.";
             $scope.message = "";
             return;
@@ -62,11 +59,6 @@ function CreateRnrController($scope, ReferenceData, RequisitionHeader, ProgramRn
         });
     };
 
-    $scope.getCurrency = function () {
-           ReferenceData.get({}, function (data) {
-                $scope.currency = data.responseData;
-           }, {});
-    };
 
     $scope.fillCalculatedRnrColumns = function (lineItem, rnr, data) {
         rnrModule.fill(lineItem, $scope.programRnRColumnList, rnr);
@@ -77,20 +69,20 @@ function CreateRnrController($scope, ReferenceData, RequisitionHeader, ProgramRn
     };
 
     $scope.hide = function () {
-     return "";
-    }
+        return "";
+    };
 
-    $scope.showCurrencySymbol = function(value) {
-        if(value != 0 && (value == undefined || value == null || value == false)){
+    $scope.showCurrencySymbol = function (value) {
+        if (value != 0 && (value == undefined || value == null || value == false)) {
             return "";
         }
         return "defined";
-    }
+    };
 
-    $scope.showSelectedColumn = function(columnName){
+    $scope.showSelectedColumn = function (columnName) {
 
-        if(($scope.rnr.status == "INITIATED" || $scope.rnr.status == "CREATED") && columnName == "quantityApproved")
+        if (($scope.rnr.status == "INITIATED" || $scope.rnr.status == "CREATED") && columnName == "quantityApproved")
             return undefined;
         return "defined";
-    }
+    };
 }

@@ -36,13 +36,6 @@ describe('CreateRnrController', function () {
         expect(scope.rnr).toEqual({"status":"CREATED"});
     });
 
-    it('should get header data', function () {
-        httpBackend.flush();
-        expect(scope.header).toEqual({"facilityName":"National Warehouse",
-            "facilityCode":"10134", "facilityType":{"code":"Warehouse"}, "facilityOperatedBy":"MoH", "maximumStockLevel":3, "emergencyOrderPoint":0.5,
-            "zone":{"label":"state", "value":"Arusha"}, "parentZone":{"label":"state", "value":"Arusha"}});
-    });
-
     it('should get list of Rnr Columns for program', function () {
         httpBackend.flush();
         expect([
@@ -58,16 +51,13 @@ describe('CreateRnrController', function () {
         expect(scope.message).toEqual("R&R saved successfully!");
     });
 
-    it('should not save work in progress when for invalid form', function () {
-        scope.saveRnrForm.$error.rnrError = [
-            {}
-        ];
+    it('should not save work in progress when invalid form', function () {
+        scope.saveRnrForm.$invalid = true;
         scope.saveRnr();
         expect(scope.error).toEqual("Please correct errors before saving.");
     });
 
     it('should get Currency from service', function () {
-        scope.getCurrency();
         httpBackend.flush();
         expect(scope.currency).toEqual("$");
     });
