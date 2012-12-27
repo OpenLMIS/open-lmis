@@ -3,7 +3,7 @@ package org.openlmis.core.repository.mapper;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
-import org.openlmis.core.domain.Schedule;
+import org.openlmis.core.domain.ProcessingSchedule;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,8 +18,8 @@ public interface ScheduleMapper {
             "(code, name, description) " +
             "VALUES(#{name}, #{code}, #{description})")
     @Options(useGeneratedKeys = true)
-    Integer insert(Schedule schedule);
+    Integer insert(ProcessingSchedule schedule);
 
     @Select("SELECT * FROM processing_schedules")
-    List<Schedule> getAll();
+    List<ProcessingSchedule> getAll();
 }

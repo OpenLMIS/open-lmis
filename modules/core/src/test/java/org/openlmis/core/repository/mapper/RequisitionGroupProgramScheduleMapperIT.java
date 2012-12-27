@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.RequisitionGroupProgramSchedule;
-import org.openlmis.core.domain.Schedule;
+import org.openlmis.core.domain.ProcessingSchedule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -57,7 +57,7 @@ public class RequisitionGroupProgramScheduleMapperIT {
         facilityMapper.insert(facility);
         requisitionGroupProgramSchedule.setDropOffFacility(facility);
 
-        Schedule schedule = new Schedule();
+        ProcessingSchedule schedule = new ProcessingSchedule();
         schedule.setCode("Q1stY");
         schedule.setName("QuarterYearly");
         requisitionGroupProgramSchedule.setSchedule(schedule);

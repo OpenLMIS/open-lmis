@@ -2,14 +2,12 @@ package org.openlmis.core.repository.mapper;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openlmis.core.domain.Schedule;
+import org.openlmis.core.domain.ProcessingSchedule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -31,7 +29,7 @@ public class ScheduleMapperIT {
 
     @Test
     public void shouldInsertASchedule() throws Exception {
-        Schedule schedule = new Schedule("testCode", "testName");
+        ProcessingSchedule schedule = new ProcessingSchedule("testCode", "testName");
 
         Integer insertionCount = scheduleMapper.insert(schedule);
         assertThat(insertionCount, is(1));

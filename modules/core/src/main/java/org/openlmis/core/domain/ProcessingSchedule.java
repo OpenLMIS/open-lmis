@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Data
 @NoArgsConstructor
-public class Schedule {
+public class ProcessingSchedule {
     private Integer id;
 
     private String code;
@@ -17,7 +17,7 @@ public class Schedule {
     private Integer modifiedBy;
     private Date modifiedDate;
 
-    public Schedule(String code, String name) {
+    public ProcessingSchedule(String code, String name) {
         this.code = code;
         this.name = name;
     }

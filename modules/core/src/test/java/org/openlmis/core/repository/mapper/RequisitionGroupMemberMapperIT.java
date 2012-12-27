@@ -74,7 +74,7 @@ public class RequisitionGroupMemberMapperIT {
         RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
         requisitionGroupProgramSchedule.setProgram(make(a(defaultProgram)));
         requisitionGroupProgramSchedule.setRequisitionGroup(requisitionGroup);
-        Schedule schedule = new Schedule();
+        ProcessingSchedule schedule = new ProcessingSchedule();
         schedule.setCode("Q1stY");
         schedule.setName("QuarterYearly");
         requisitionGroupProgramSchedule.setSchedule(schedule);
@@ -95,7 +95,7 @@ public class RequisitionGroupMemberMapperIT {
         RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
         requisitionGroupProgramSchedule.setProgram(make(a(defaultProgram)));
         requisitionGroupProgramSchedule.setRequisitionGroup(requisitionGroup);
-        Schedule schedule = new Schedule();
+        ProcessingSchedule schedule = new ProcessingSchedule();
         schedule.setCode("Q1stY");
         schedule.setName("QuarterYearly");
         requisitionGroupProgramSchedule.setSchedule(schedule);
@@ -114,7 +114,7 @@ public class RequisitionGroupMemberMapperIT {
         RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
         requisitionGroupProgramSchedule.setProgram(make(a(defaultProgram)));
         requisitionGroupProgramSchedule.setRequisitionGroup(requisitionGroup);
-        Schedule schedule = new Schedule();
+        ProcessingSchedule schedule = new ProcessingSchedule();
         schedule.setCode("Q1stY");
         schedule.setName("QuarterYearly");
         requisitionGroupProgramSchedule.setSchedule(schedule);

@@ -10,7 +10,7 @@ import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.builder.RequisitionGroupBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.RequisitionGroupProgramSchedule;
-import org.openlmis.core.domain.Schedule;
+import org.openlmis.core.domain.ProcessingSchedule;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.RequisitionGroupMapper;
@@ -55,7 +55,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
         requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
         requisitionGroupProgramSchedule.setRequisitionGroup(make(a(RequisitionGroupBuilder.defaultRequisitionGroup)));
         requisitionGroupProgramSchedule.setProgram(make(a(ProgramBuilder.defaultProgram)));
-        requisitionGroupProgramSchedule.setSchedule(new Schedule());
+        requisitionGroupProgramSchedule.setSchedule(new ProcessingSchedule());
     }
 
     @Test
