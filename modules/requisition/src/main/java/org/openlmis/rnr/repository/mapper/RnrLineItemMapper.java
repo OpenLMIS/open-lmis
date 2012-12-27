@@ -19,6 +19,10 @@ public interface RnrLineItemMapper {
     public void insert(RnrLineItem rnrLineItem);
 
     @Select("SELECT * FROM requisition_line_items WHERE rnrId = #{rnrId}")
+    @Results(value = {
+            @Result(property = "lossesAndAdjustmentsList", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper.getByRnrLineItem"))
+    })
     public List<RnrLineItem> getRnrLineItemsByRnrId(Integer rnrId);
 
     @Update("UPDATE requisition_line_items " +

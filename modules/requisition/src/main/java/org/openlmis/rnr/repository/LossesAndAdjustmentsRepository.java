@@ -1,11 +1,15 @@
-package org.openlmis.rnr.repository.mapper;
+package org.openlmis.rnr.repository;
 
+import lombok.NoArgsConstructor;
 import org.openlmis.rnr.domain.LossesAndAdjustments;
 import org.openlmis.rnr.domain.RnrLineItem;
+import org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
+@Repository
+@NoArgsConstructor
 public class LossesAndAdjustmentsRepository {
 
 
@@ -21,7 +25,7 @@ public class LossesAndAdjustmentsRepository {
         lossesAndAdjustments.setId(id);
     }
 
-    public List<LossesAndAdjustments> getByRequisitionLineItem(RnrLineItem rnrLineItem) {
-        return lossesAndAdjustmentsMapper.getByRequisitionLineItem(rnrLineItem);
+    public List<LossesAndAdjustments> getByRnrLineItem(RnrLineItem rnrLineItem) {
+        return lossesAndAdjustmentsMapper.getByRnrLineItem(rnrLineItem.getId());
     }
 }

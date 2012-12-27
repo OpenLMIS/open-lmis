@@ -73,7 +73,9 @@ public class LossesAndAdjustmentsMapperIT {
         rnrLineItem = new RnrLineItem(requisition.getId(), facilityApprovedProduct, "user");
         rnrLineItemMapper.insert(rnrLineItem);
         lossesAndAdjustments = new LossesAndAdjustments();
-        lossesAndAdjustments.setType(LossesAndAdjustmentType.CLINIC_RETURN);
+        LossesAndAdjustmentsType lossesAndAdjustmentsType = new LossesAndAdjustmentsType();
+        lossesAndAdjustmentsType.setName(LossesAndAdjustmentsTypeEnum.CLINIC_RETURN);
+        lossesAndAdjustments.setType(lossesAndAdjustmentsType);
         lossesAndAdjustments.setQuantity(20);
     }
 
@@ -86,10 +88,17 @@ public class LossesAndAdjustmentsMapperIT {
     @Test
     public void shouldGetLossesAndAdjustmentByRequisitionLineItemId() {
         Integer id = lossesAndAdjustmentsMapper.insert(rnrLineItem, lossesAndAdjustments);
-        List<LossesAndAdjustments> lossesAndAdjustments = lossesAndAdjustmentsMapper.getByRequisitionLineItem(rnrLineItem);
+        List<LossesAndAdjustments> lossesAndAdjustments = lossesAndAdjustmentsMapper.getByRnrLineItem(rnrLineItem.getId());
         assertThat(lossesAndAdjustments.size(), is(1));
         assertThat(lossesAndAdjustments.get(0).getId(), is(id));
         assertThat(lossesAndAdjustments.get(0).getQuantity(), is(20));
     }
 
+    @Test
+    public void shouldGetLossesAndAdjustmentsTypesByName() throws Exception {
+        LossesAndAdjustmentsType lossesAndAdjustmentType = lossesAndAdjustmentsMapper.getLossesAndAdjustmentTypeByName(LossesAndAdjustmentsTypeEnum.CLINIC_RETURN);
+        assertThat(lossesAndAdjustmentType.getName(), is(LossesAndAdjustmentsTypeEnum.CLINIC_RETURN));
+        assertThat(lossesAndAdjustmentType.isAdditive(), is(true));
+        assertThat(lossesAndAdjustmentType.getDisplayOrder(), is(9));
+    }
 }

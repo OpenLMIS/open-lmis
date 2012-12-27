@@ -1,6 +1,6 @@
 package org.openlmis.rnr.domain;
 
-public enum LossesAndAdjustmentType {
+public enum LossesAndAdjustmentsTypeEnum {
 
     TRANSFER_IN("Transfer In"),
     TRANSFER_OUT("Transfer Out"),
@@ -14,7 +14,7 @@ public enum LossesAndAdjustmentType {
 
     private String description;
 
-    LossesAndAdjustmentType(String description) {
+    LossesAndAdjustmentsTypeEnum(String description) {
         this.description = description;
     }
 }

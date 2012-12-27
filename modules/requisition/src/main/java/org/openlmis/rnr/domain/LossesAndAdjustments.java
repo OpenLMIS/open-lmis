@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 public class LossesAndAdjustments {
 
     private Integer id;
-    private LossesAndAdjustmentType type;
+    private LossesAndAdjustmentsType type;
     private Integer quantity;
 
 }

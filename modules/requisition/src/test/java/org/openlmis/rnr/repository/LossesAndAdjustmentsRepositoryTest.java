@@ -7,7 +7,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.rnr.domain.LossesAndAdjustments;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper;
-import org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsRepository;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;

@@ -7,6 +7,7 @@ import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProgramProduct;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -29,6 +30,7 @@ public class RnrLineItem {
     private Integer quantityDispensed;
     private Integer beginningBalance;
     private Integer lossesAndAdjustments;
+    private List<LossesAndAdjustments> lossesAndAdjustmentsList;
     private String reasonForLossesAndAdjustments;
     private Integer stockInHand;
     private Integer stockOutDays;

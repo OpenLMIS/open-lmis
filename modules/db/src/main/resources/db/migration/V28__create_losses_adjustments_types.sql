@@ -4,5 +4,5 @@ CREATE TABLE losses_adjustments_types (
   additive BOOLEAN,
   displayOrder INTEGER,
 
-   CONSTRAINT unique_losses_and_adjustments UNIQUE (name )
+   CONSTRAINT unique_losses_adjustments UNIQUE (name )
 );

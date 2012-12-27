@@ -7,9 +7,7 @@ import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.mapper.*;
-import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrLineItem;
-import org.openlmis.rnr.domain.RnrStatus;
+import org.openlmis.rnr.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -48,6 +46,9 @@ public class RnrLineItemMapperIT {
     @Autowired
     private ProgramMapper programMapper;
 
+    @Autowired
+    private LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
+
     FacilityApprovedProduct facilityApprovedProduct;
     Facility facility;
 
@@ -82,7 +83,23 @@ public class RnrLineItemMapperIT {
         lineItem.setPacksToShip(20);
         rnrLineItemMapper.insert(lineItem);
 
+        LossesAndAdjustments lossesAndAdjustmentsClinicReturn = new LossesAndAdjustments();
+        LossesAndAdjustmentsType lossesAndAdjustmentsTypeClinicReturn = new LossesAndAdjustmentsType();
+        lossesAndAdjustmentsTypeClinicReturn.setName(LossesAndAdjustmentsTypeEnum.CLINIC_RETURN);
+        lossesAndAdjustmentsClinicReturn.setType(lossesAndAdjustmentsTypeClinicReturn);
+        lossesAndAdjustmentsClinicReturn.setQuantity(20);
+
+        LossesAndAdjustments lossesAndAdjustmentsTransferIn = new LossesAndAdjustments();
+        LossesAndAdjustmentsType lossesAndAdjustmentsTypeTransferIn = new LossesAndAdjustmentsType();
+        lossesAndAdjustmentsTypeTransferIn.setName(LossesAndAdjustmentsTypeEnum.TRANSFER_IN);
+        lossesAndAdjustmentsTransferIn.setType(lossesAndAdjustmentsTypeTransferIn);
+        lossesAndAdjustmentsTransferIn.setQuantity(45);
+
+        lossesAndAdjustmentsMapper.insert(lineItem, lossesAndAdjustmentsClinicReturn);
+        lossesAndAdjustmentsMapper.insert(lineItem, lossesAndAdjustmentsTransferIn);
+
         List<RnrLineItem> rnrLineItems = rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId());
+
         assertThat(rnrLineItems.size(), is(1));
         RnrLineItem rnrLineItem = rnrLineItems.get(0);
         assertThat(rnrLineItem.getRnrId(), is(rnr.getId()));
