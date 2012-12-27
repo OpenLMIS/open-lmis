@@ -66,4 +66,10 @@ public class RoleRightsController extends BaseController {
     Role role = roleRightsService.getRole(id);
     return new OpenLmisResponse(role);
   }
+
+  @RequestMapping(value = "/role/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
+   @PreAuthorize("hasPermission('','MANAGE_ROLE')")
+   public OpenLmisResponse update(@PathVariable("id") Integer id) {
+     return new OpenLmisResponse();
+   }
 }

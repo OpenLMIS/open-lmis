@@ -36,7 +36,7 @@
             <div id="rights" ng-repeat="right in rights">
               <label for="{{right.rightName}}">{{right.rightName}}</label>
               <input name="rights" id="{{right.rightName}}" ng-required="role.rights.length==0" type="checkbox"
-                     ng-model="checked"
+                     ng-model="checked" ng-checked="contains(right.right)"
                      ng-change="updateRights(checked, right)"/>
             </div>
           <span class="field-error" ng-show="roleForm.rights.$error.required && showError">

@@ -1,6 +1,12 @@
-function SaveRoleController($scope, Role, Rights) {
+function SaveRoleController($scope, CreateRole, Role, Rights, $routeParams) {
 
-  $scope.role = {rights:[]};
+  if ($routeParams.id) {
+    Role.get({id:$routeParams.id}, function (data) {
+      $scope.role = data.openLmisResponse.responseData;
+    });
+  } else {
+    $scope.role = {rights:[]};
+  }
 
   Rights.get({}, function (data) {
     $scope.rights = data.rightList;
@@ -22,13 +28,24 @@ function SaveRoleController($scope, Role, Rights) {
     })
   }
 
+  $scope.contains = function (right) {
+    var containFlag = false;
+    $($scope.role.rights).each(function (index, assignedRight) {
+      if (assignedRight.right == right) {
+        containFlag = true;
+        return false;
+      }
+    });
+    return containFlag;
+  };
+
   $scope.saveRole = function () {
     if ($scope.roleForm.$invalid) {
       $scope.showError = true;
       $scope.error = "Please correct the errors";
     }
     else {
-      Role.save({}, $scope.role, function (data) {
+      CreateRole.save({}, $scope.role, function (data) {
         $scope.message = data.success;
         $scope.error = "";
       }, function (data) {

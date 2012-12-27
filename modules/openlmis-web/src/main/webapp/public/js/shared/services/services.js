@@ -45,8 +45,12 @@ services.factory('Rights', function ($resource) {
     return $resource('/rights.json', {}, {});
 });
 
-services.factory('Role', function ($resource) {
+services.factory('CreateRole', function ($resource) {
     return $resource('/role.json', {}, {});
+});
+
+services.factory('Role', function ($resource) {
+    return $resource('/role/:id.json', {}, {});
 });
 
 services.factory('AllRoles', function ($resource) {

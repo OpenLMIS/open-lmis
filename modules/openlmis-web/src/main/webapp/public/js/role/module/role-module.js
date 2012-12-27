@@ -3,6 +3,6 @@ angular.module('role', ['openlmis']).config(['$routeProvider', function ($routeP
   $routeProvider.
     when('/create', {controller:SaveRoleController, templateUrl:'partials/create.html'}).
     when('/list', {controller:ListRoleController, templateUrl:'partials/list.html'}).
-    when('/edit/:id', {controller:SaveRoleController, templateUrl:'partials/list.html'}).
+    when('/edit/:id', {controller:SaveRoleController, templateUrl:'partials/create.html'}).
     otherwise({redirectTo:'/list'});
 }]);
