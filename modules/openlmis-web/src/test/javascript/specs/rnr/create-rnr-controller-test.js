@@ -52,7 +52,7 @@ describe('CreateRnrController', function () {
     });
 
     it('should not save work in progress when invalid form', function () {
-        scope.saveRnrForm.$invalid = true;
+        scope.saveRnrForm.$error.rnrError = true;
         scope.saveRnr();
         expect(scope.error).toEqual("Please correct errors before saving.");
     });

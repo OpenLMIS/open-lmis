@@ -48,7 +48,7 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     };
 
     $scope.saveRnr = function () {
-        if ($scope.saveRnrForm.$invalid) {
+        if ($scope.saveRnrForm.$error.rnrError) {
             $scope.error = "Please correct errors before saving.";
             $scope.message = "";
             return;

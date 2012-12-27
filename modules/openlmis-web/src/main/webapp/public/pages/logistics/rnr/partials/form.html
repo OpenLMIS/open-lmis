@@ -129,7 +129,11 @@
                                        <input id="{{getId('W', $parent)}}" type="text"
                                             name="reasonForRequestedQuantity{{rnrLineItem['id']}}"
                                             ng-model="rnrLineItem[column.name]"
+                                            ng-required="rnrLineItem.quantityRequested"
                                             maxlength="250"/>
+                                          <span ng-show="rnrLineItem.quantityRequested && !rnrLineItem.reasonForRequestedQuantity">
+                                          Please enter a reason
+                                        </span>
                                    </span>
 
                                    <span ng-switch-when="stockOutDays">
