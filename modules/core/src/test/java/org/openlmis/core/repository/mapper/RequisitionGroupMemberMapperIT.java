@@ -46,7 +46,7 @@ public class RequisitionGroupMemberMapperIT {
     ProgramMapper programMapper;
 
     @Autowired
-    ScheduleMapper scheduleMapper;
+    ProcessingScheduleMapper processingScheduleMapper;
 
     @Before
     public void setUp() throws Exception {
@@ -79,7 +79,7 @@ public class RequisitionGroupMemberMapperIT {
         schedule.setName("QuarterYearly");
         requisitionGroupProgramSchedule.setSchedule(schedule);
         programMapper.insert(requisitionGroupProgramSchedule.getProgram());
-        requisitionGroupProgramSchedule.getSchedule().setId(scheduleMapper.insert(requisitionGroupProgramSchedule.getSchedule()));
+        requisitionGroupProgramSchedule.getSchedule().setId(processingScheduleMapper.insert(requisitionGroupProgramSchedule.getSchedule()));
 
         requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
         requisitionGroupMemberMapper.insert(requisitionGroupMember);
@@ -100,7 +100,7 @@ public class RequisitionGroupMemberMapperIT {
         schedule.setName("QuarterYearly");
         requisitionGroupProgramSchedule.setSchedule(schedule);
         programMapper.insert(requisitionGroupProgramSchedule.getProgram());
-        requisitionGroupProgramSchedule.getSchedule().setId(scheduleMapper.insert(requisitionGroupProgramSchedule.getSchedule()));
+        requisitionGroupProgramSchedule.getSchedule().setId(processingScheduleMapper.insert(requisitionGroupProgramSchedule.getSchedule()));
 
         requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
         requisitionGroupMemberMapper.insert(requisitionGroupMember);
@@ -119,7 +119,7 @@ public class RequisitionGroupMemberMapperIT {
         schedule.setName("QuarterYearly");
         requisitionGroupProgramSchedule.setSchedule(schedule);
         programMapper.insert(requisitionGroupProgramSchedule.getProgram());
-        requisitionGroupProgramSchedule.getSchedule().setId(scheduleMapper.insert(requisitionGroupProgramSchedule.getSchedule()));
+        requisitionGroupProgramSchedule.getSchedule().setId(processingScheduleMapper.insert(requisitionGroupProgramSchedule.getSchedule()));
 
         requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
         requisitionGroupMemberMapper.insert(requisitionGroupMember);

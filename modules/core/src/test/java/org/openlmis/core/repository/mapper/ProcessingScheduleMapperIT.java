@@ -17,27 +17,27 @@ import static org.junit.Assert.assertThat;
 @ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
 @Transactional
 @TransactionConfiguration(defaultRollback = true)
-public class ScheduleMapperIT {
+public class ProcessingScheduleMapperIT {
 
     @Autowired
-    ScheduleMapper scheduleMapper;
+    ProcessingScheduleMapper processingScheduleMapper;
 
     @Test
     public void shouldGetIdByCode() throws Exception {
-        assertThat(scheduleMapper.getIdForCode("Q1stM"), is(1));
+        assertThat(processingScheduleMapper.getIdForCode("Q1stM"), is(1));
     }
 
     @Test
     public void shouldInsertASchedule() throws Exception {
         ProcessingSchedule schedule = new ProcessingSchedule("testCode", "testName");
 
-        Integer insertionCount = scheduleMapper.insert(schedule);
+        Integer insertionCount = processingScheduleMapper.insert(schedule);
         assertThat(insertionCount, is(1));
         assertThat(schedule.getId(), is(notNullValue()));
     }
 
     @Test
     public void shouldGetAllSchedules() throws Exception {
-        assertThat(scheduleMapper.getAll().size(), is(2));
+        assertThat(processingScheduleMapper.getAll().size(), is(2));
     }
 }

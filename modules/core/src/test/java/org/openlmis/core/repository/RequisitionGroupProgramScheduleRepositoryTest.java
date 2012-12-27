@@ -15,7 +15,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.RequisitionGroupMapper;
 import org.openlmis.core.repository.mapper.RequisitionGroupProgramScheduleMapper;
-import org.openlmis.core.repository.mapper.ScheduleMapper;
+import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
 import org.springframework.dao.DuplicateKeyException;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
@@ -37,7 +37,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
     @Mock
     ProgramRepository programRepository;
     @Mock
-    ScheduleMapper scheduleMapper;
+    ProcessingScheduleMapper processingScheduleMapper;
     @Mock
     FacilityMapper facilityMapper;
     @Mock
@@ -51,7 +51,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
 
         dropOffFacility = make(a(FacilityBuilder.defaultFacility));
 
-        requisitionGroupProgramScheduleRepository = new RequisitionGroupProgramScheduleRepository(requisitionGroupProgramScheduleMapper, requisitionGroupMapper, programRepository, scheduleMapper, facilityMapper);
+        requisitionGroupProgramScheduleRepository = new RequisitionGroupProgramScheduleRepository(requisitionGroupProgramScheduleMapper, requisitionGroupMapper, programRepository, processingScheduleMapper, facilityMapper);
         requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
         requisitionGroupProgramSchedule.setRequisitionGroup(make(a(RequisitionGroupBuilder.defaultRequisitionGroup)));
         requisitionGroupProgramSchedule.setProgram(make(a(ProgramBuilder.defaultProgram)));
@@ -83,7 +83,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
     public void shouldGiveErrorIfScheduleCodeDoesNotExist() throws Exception {
         when(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode())).thenReturn(1);
         when(programRepository.getIdForCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1);
-        when(scheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode())).thenReturn(null);
+        when(processingScheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode())).thenReturn(null);
         expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Schedule Code Does Not Exist");
 
@@ -106,7 +106,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
         requisitionGroupProgramSchedule.setDropOffFacility(facility(dropOffFacility.getCode()));
         when(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode())).thenReturn(1);
         when(programRepository.getIdForCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1);
-        when(scheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode())).thenReturn(1);
+        when(processingScheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode())).thenReturn(1);
         when(facilityMapper.getIdForCode(dropOffFacility.getCode())).thenReturn(facilityId);
 
         requisitionGroupProgramScheduleRepository.insert(requisitionGroupProgramSchedule);
@@ -114,7 +114,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
         verify(requisitionGroupProgramScheduleMapper).insert(requisitionGroupProgramSchedule);
         verify(requisitionGroupMapper).getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode());
         verify(programRepository).getIdForCode(requisitionGroupProgramSchedule.getProgram().getCode());
-        verify(scheduleMapper).getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode());
+        verify(processingScheduleMapper).getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode());
         verify(facilityMapper).getIdForCode(dropOffFacility.getCode());
 
         assertThat(requisitionGroupProgramSchedule.getSchedule().getId(), is(1));
@@ -147,7 +147,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
     public void shouldGiveErrorIfFacilityCodeDoesNotExist() {
         when(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode())).thenReturn(1);
         when(programRepository.getIdForCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1);
-        when(scheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode())).thenReturn(1);
+        when(processingScheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode())).thenReturn(1);
         requisitionGroupProgramSchedule.setDropOffFacility(dropOffFacility);
         when(facilityMapper.getIdForCode(requisitionGroupProgramSchedule.getDropOffFacility().getCode())).thenReturn(null);
 

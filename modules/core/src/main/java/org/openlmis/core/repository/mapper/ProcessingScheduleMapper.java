@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ScheduleMapper {
+public interface ProcessingScheduleMapper {
 
     @Select("SELECT id FROM processing_schedules WHERE LOWER(code) = LOWER(#{code})")
     Integer getIdForCode(String code);

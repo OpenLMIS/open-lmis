@@ -32,7 +32,7 @@ public class RequisitionGroupProgramScheduleMapperIT {
     @Autowired
     ProgramMapper programMapper;
     @Autowired
-    ScheduleMapper scheduleMapper;
+    ProcessingScheduleMapper processingScheduleMapper;
     @Autowired
     FacilityMapper facilityMapper;
 
@@ -67,7 +67,7 @@ public class RequisitionGroupProgramScheduleMapperIT {
     public void shouldInsertRGProgramSchedule() throws Exception {
         programMapper.insert(requisitionGroupProgramSchedule.getProgram());
         requisitionGroupMapper.insert(requisitionGroupProgramSchedule.getRequisitionGroup());
-        requisitionGroupProgramSchedule.getSchedule().setId(scheduleMapper.insert(requisitionGroupProgramSchedule.getSchedule()));
+        requisitionGroupProgramSchedule.getSchedule().setId(processingScheduleMapper.insert(requisitionGroupProgramSchedule.getSchedule()));
 
         Integer status = requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
 
@@ -78,7 +78,7 @@ public class RequisitionGroupProgramScheduleMapperIT {
     public void shouldGetProgramIdsForRGById() throws Exception {
         programMapper.insert(requisitionGroupProgramSchedule.getProgram());
         requisitionGroupMapper.insert(requisitionGroupProgramSchedule.getRequisitionGroup());
-        requisitionGroupProgramSchedule.getSchedule().setId(scheduleMapper.insert(requisitionGroupProgramSchedule.getSchedule()));
+        requisitionGroupProgramSchedule.getSchedule().setId(processingScheduleMapper.insert(requisitionGroupProgramSchedule.getSchedule()));
 
         requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
 

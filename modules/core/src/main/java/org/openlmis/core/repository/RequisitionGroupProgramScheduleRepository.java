@@ -7,7 +7,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.RequisitionGroupMapper;
 import org.openlmis.core.repository.mapper.RequisitionGroupProgramScheduleMapper;
-import org.openlmis.core.repository.mapper.ScheduleMapper;
+import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
@@ -19,16 +19,16 @@ public class RequisitionGroupProgramScheduleRepository {
     private RequisitionGroupProgramScheduleMapper requisitionGroupProgramScheduleMapper;
     private RequisitionGroupMapper requisitionGroupMapper;
     private ProgramRepository programRepository;
-    private ScheduleMapper scheduleMapper;
+    private ProcessingScheduleMapper processingScheduleMapper;
     private FacilityMapper facilityMapper;
 
     @Autowired
     public RequisitionGroupProgramScheduleRepository(RequisitionGroupProgramScheduleMapper requisitionGroupProgramScheduleMapper,
-                                                     RequisitionGroupMapper requisitionGroupMapper, ProgramRepository programRepository, ScheduleMapper scheduleMapper, FacilityMapper facilityMapper) {
+                                                     RequisitionGroupMapper requisitionGroupMapper, ProgramRepository programRepository, ProcessingScheduleMapper processingScheduleMapper, FacilityMapper facilityMapper) {
         this.requisitionGroupProgramScheduleMapper = requisitionGroupProgramScheduleMapper;
         this.requisitionGroupMapper = requisitionGroupMapper;
         this.programRepository = programRepository;
-        this.scheduleMapper = scheduleMapper;
+        this.processingScheduleMapper = processingScheduleMapper;
         this.facilityMapper = facilityMapper;
     }
 
@@ -36,7 +36,7 @@ public class RequisitionGroupProgramScheduleRepository {
         try {
             requisitionGroupProgramSchedule.getRequisitionGroup().setId(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode()));
             requisitionGroupProgramSchedule.getProgram().setId(programRepository.getIdForCode(requisitionGroupProgramSchedule.getProgram().getCode()));
-            requisitionGroupProgramSchedule.getSchedule().setId(scheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode()));
+            requisitionGroupProgramSchedule.getSchedule().setId(processingScheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode()));
             Facility dropOffFacility = requisitionGroupProgramSchedule.getDropOffFacility();
             if (dropOffFacility != null)
                 requisitionGroupProgramSchedule.getDropOffFacility().setId(facilityMapper.getIdForCode(dropOffFacility.getCode()));
