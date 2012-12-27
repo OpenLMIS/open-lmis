@@ -5,4 +5,4 @@
 \i src/main/resources/seed/geographic_zones.sql
 \i src/main/resources/seed/product_forms.sql
 \i src/main/resources/seed/programs.sql
-\i src/main/resources/seed/schedules.sql
+\i src/main/resources/seed/processing_schedules.sql

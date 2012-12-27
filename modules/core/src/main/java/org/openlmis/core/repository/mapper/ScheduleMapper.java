@@ -11,15 +11,15 @@ import java.util.List;
 @Repository
 public interface ScheduleMapper {
 
-    @Select("SELECT id FROM schedules WHERE LOWER(code) = LOWER(#{code})")
+    @Select("SELECT id FROM processing_schedules WHERE LOWER(code) = LOWER(#{code})")
     Integer getIdForCode(String code);
 
-    @Insert("INSERT INTO schedules" +
+    @Insert("INSERT INTO processing_schedules" +
             "(code, name, description) " +
             "VALUES(#{name}, #{code}, #{description})")
     @Options(useGeneratedKeys = true)
     Integer insert(Schedule schedule);
 
-    @Select("SELECT * FROM schedules")
+    @Select("SELECT * FROM processing_schedules")
     List<Schedule> getAll();
 }

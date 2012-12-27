@@ -1,4 +1,4 @@
-CREATE TABLE schedules (
+CREATE TABLE processing_schedules (
   id SERIAL PRIMARY KEY,
   code VARCHAR(50) UNIQUE NOT NULL,
   name VARCHAR(50) NOT NULL,
@@ -7,4 +7,4 @@ CREATE TABLE schedules (
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE UNIQUE INDEX ucScheduleCode ON schedules(LOWER(code));
+CREATE UNIQUE INDEX ucScheduleCode ON processing_schedules(LOWER(code));
