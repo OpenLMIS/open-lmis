@@ -56,7 +56,7 @@ function InitiateRnrController($http, $scope, facilities, programs, UserSupporte
     };
 
     var validate = function () {
-        return $scope.$parent.program;
+        return $scope.$parent.program && $scope.$parent.facility;
     };
 }
 
