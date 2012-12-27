@@ -16,7 +16,7 @@ public interface RnrLineItemMapper {
 			"#{rnrId}, #{productCode}, #{product}, #{dispensingUnit}, #{dosesPerMonth}, #{dosesPerDispensingUnit}, #{maxMonthsOfStock}, " +
 			"#{packsToShip}, #{packSize}, #{price}, #{roundToZero}, #{modifiedBy}, #{modifiedDate})")
     @Options(useGeneratedKeys=true)
-    public Integer insert(RnrLineItem rnrLineItem);
+    public void insert(RnrLineItem rnrLineItem);
 
     @Select("SELECT * FROM requisition_line_items WHERE rnrId = #{rnrId}")
     public List<RnrLineItem> getRnrLineItemsByRnrId(Integer rnrId);

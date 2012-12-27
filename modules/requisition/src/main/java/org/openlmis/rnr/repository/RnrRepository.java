@@ -29,8 +29,7 @@ public class RnrRepository {
         for (RnrLineItem lineItem : lineItems) {
             lineItem.setRnrId(requisition.getId());
             lineItem.setModifiedBy(requisition.getModifiedBy());
-            Integer id = rnrLineItemMapper.insert(lineItem);
-            lineItem.setId(id);
+            rnrLineItemMapper.insert(lineItem);
         }
     }
 
@@ -44,7 +43,7 @@ public class RnrRepository {
 
     public Rnr getRequisitionByFacilityAndProgram(Integer facilityId, Integer programId) {
         Rnr rnr = rnrMapper.getRequisitionByFacilityAndProgram(facilityId, programId);
-        if(rnr == null) return new Rnr();
+        if (rnr == null) return new Rnr();
         rnr.setLineItems(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()));
         return rnr;
     }

@@ -69,8 +69,9 @@ public class RnrLineItemMapperIT {
     public void shouldInsertRequisitionLineItem() {
         Rnr rnr = new Rnr(facility.getId(), PROGRAM_ID, RnrStatus.INITIATED, "user");
         rnrMapper.insert(rnr);
-        Integer requisitionLineItemId = rnrLineItemMapper.insert(new RnrLineItem(rnr.getId(), facilityApprovedProduct, "user"));
-        assertNotNull(requisitionLineItemId);
+        RnrLineItem rnrLineItem = new RnrLineItem(rnr.getId(), facilityApprovedProduct, "user");
+        rnrLineItemMapper.insert(rnrLineItem);
+        assertNotNull(rnrLineItem.getId());
     }
 
     @Test
