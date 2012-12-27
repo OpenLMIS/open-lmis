@@ -4,14 +4,16 @@ package org.openlmis.core.domain;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 public class Schedule {
+    private Integer id;
 
-    Integer id;
-
-    String code;
-    String name;
-    String description;
-
+    private String code;
+    private String name;
+    private String description;
+    private Integer modifiedBy;
+    private Date modifiedDate;
 }
