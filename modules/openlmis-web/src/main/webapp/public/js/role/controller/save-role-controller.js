@@ -2,14 +2,14 @@ function SaveRoleController($scope, CreateRole, Role, Rights, $routeParams) {
 
   if ($routeParams.id) {
     Role.get({id:$routeParams.id}, function (data) {
-      $scope.role = data.openLmisResponse.responseData;
+      $scope.role = data.role;
     });
   } else {
     $scope.role = {rights:[]};
   }
 
   Rights.get({}, function (data) {
-    $scope.rights = data.rightList;
+    $scope.rights = data.rights;
   }, {});
 
   $scope.updateRights = function (checked, rightToUpdate) {

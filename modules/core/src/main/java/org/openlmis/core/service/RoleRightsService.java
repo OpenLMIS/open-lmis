@@ -59,4 +59,8 @@ public class RoleRightsService {
   public Role getRole(int id) {
     return roleRightsRepository.getRole(id);
   }
+
+  public void updateRole(Role role) {
+
+  }
 }

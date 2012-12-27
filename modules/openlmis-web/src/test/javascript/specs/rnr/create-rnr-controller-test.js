@@ -27,7 +27,7 @@ describe('CreateRnrController', function () {
         httpBackend.when('GET', '/logistics/rnr/1/columns.json').respond({"rnrColumnList":[
             {"testField":"test"}
         ]});
-        httpBackend.when('GET', '/reference-data/currency.json').respond({"responseData":"$"});
+        httpBackend.when('GET', '/reference-data/currency.json').respond({"currency":"$"});
         ctrl = controller(CreateRnrController, {$scope:scope, $location:location, $route : route,  localStorageService:localStorageService});
     }));
 

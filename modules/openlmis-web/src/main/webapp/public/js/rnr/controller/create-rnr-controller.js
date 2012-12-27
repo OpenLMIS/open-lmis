@@ -12,7 +12,7 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
         });
 
     ReferenceData.get({}, function (data) {
-        $scope.currency = data.responseData;
+        $scope.currency = data.currency;
     }, {});
 
 

@@ -6,7 +6,7 @@ describe("Role", function () {
     beforeEach(inject(function ($rootScope, _$httpBackend_, $controller) {
         scope = $rootScope.$new();
         $httpBackend = _$httpBackend_;
-        $httpBackend.expectGET('/rights.json').respond({"rightList":"test list"})
+        $httpBackend.expectGET('/rights.json').respond({"rights":"test list"})
         ctrl = $controller(SaveRoleController, {$scope:scope, rights:{} });
       }
     ));

@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import static org.openlmis.web.response.OpenLmisResponse.CURRENCY;
+
 
 @Controller
 @NoArgsConstructor
@@ -23,9 +25,8 @@ public class StaticReferenceDataController extends BaseController {
 	}
 
 	@RequestMapping(value = "/reference-data/currency", method = RequestMethod.GET)
-	public ResponseEntity getCurrency() {
-		OpenLmisResponse response = new OpenLmisResponse();
-		response.setResponseData(staticReferenceDataReader.getCurrency());
+	public ResponseEntity<OpenLmisResponse> getCurrency() {
+		OpenLmisResponse response = new OpenLmisResponse(CURRENCY, staticReferenceDataReader.getCurrency());
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 }
