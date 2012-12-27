@@ -68,3 +68,7 @@ services.factory('UserSupervisedFacilitiesForProgram', function($resource) {
 services.factory('ReferenceData', function($resource) {
     return $resource('/reference-data/currency.json', {}, {});
 });
+
+services.factory('Requisition', function($resource) {
+    return $resource('/logistics/rnr/facility/:facilityId/program/:programId.json', {}, {update : {method:'PUT'}});
+});

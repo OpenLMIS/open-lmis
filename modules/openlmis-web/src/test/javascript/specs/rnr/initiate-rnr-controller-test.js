@@ -35,7 +35,9 @@ describe('InitiateRnrController', function () {
   it('should initiate rnr if facility and program chosen are correct',function () {
     scope.$parent.program = {"code" : "hiv", "id":1};
     scope.$parent.facility = 1;
+    $httpBackend.expectGET('/logistics/rnr/facility/1/program/1.json').respond(200);
     scope.initRnr();
+    $httpBackend.flush();
     expect(location.path()).toEqual("/create-rnr/1/1");
     expect(scope.error).toEqual("");
   });

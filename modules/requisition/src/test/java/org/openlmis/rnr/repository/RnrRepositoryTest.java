@@ -1,10 +1,13 @@
 package org.openlmis.rnr.repository;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.LossesAndAdjustments;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
@@ -16,7 +19,7 @@ import org.openlmis.rnr.repository.mapper.RnrMapper;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
@@ -24,6 +27,9 @@ import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RnrRepositoryTest {
+
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
 
     public static final Integer HIV = 1;
 
@@ -88,10 +94,10 @@ public class RnrRepositoryTest {
     }
 
     @Test
-    public void shouldReturnEmptyRnrIfRnrByFacilityAndProgramDoesNotExist() {
+    public void shouldThrowErrorIfRnrNotDefined(){
         when(rnrMapper.getRequisitionByFacilityAndProgram(facilityId, HIV)).thenReturn(null);
+        expectedException.expect(DataException.class);
+        expectedException.expectMessage("Requisition does not exist. Please initiate.");
         Rnr rnr = rnrRepository.getRequisitionByFacilityAndProgram(facilityId, HIV);
-        assertThat(rnr, is(notNullValue()));
-        assertThat(rnr.getId(), is(nullValue()));
     }
 }

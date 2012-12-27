@@ -55,4 +55,8 @@ public class RnrTemplateRepository {
             return rnrColumnMapper.fetchAllMasterRnRColumns();
         }
     }
+
+  public boolean isRnrTemplateDefined(Integer programId) {
+    return rnrColumnMapper.isRnrTemplateDefined(programId);
+  }
 }

@@ -1,13 +1,13 @@
 package org.openlmis.rnr.repository;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.LossesAndAdjustments;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper;
 import org.openlmis.rnr.repository.mapper.RnrLineItemMapper;
 import org.openlmis.rnr.repository.mapper.RnrMapper;
-import org.openlmis.rnr.service.LossesAndAdjustmentsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -56,7 +56,7 @@ public class RnrRepository {
 
     public Rnr getRequisitionByFacilityAndProgram(Integer facilityId, Integer programId) {
         Rnr rnr = rnrMapper.getRequisitionByFacilityAndProgram(facilityId, programId);
-        if (rnr == null) return new Rnr();
+        if (rnr == null) throw new DataException("Requisition does not exist. Please initiate.");
         rnr.setLineItems(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()));
         return rnr;
     }
