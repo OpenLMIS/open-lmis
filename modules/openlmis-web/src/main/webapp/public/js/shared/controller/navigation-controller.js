@@ -18,8 +18,8 @@ function NavigationController($scope, User, localStorageService) {
     }();
 
     $scope.showSubmenu = function () {
-        $(".navigation > ul > li").on("click", function () {
-            $(this).find("ul").show();
+        $(".navigation li:not(.navgroup)").on("click", function () {
+            $(this).children("ul").show();
         });
     }();
 

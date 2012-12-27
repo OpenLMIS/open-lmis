@@ -1,35 +1,49 @@
 <div class="navigation" ng-controller="NavigationController">
-    <ul style="display:none">
-        <li><a href="/">Home</a></li>
-        <li class="has-children" ng-show="hasPermission('CREATE_REQUISITION')"><a href="javascript: void(0)">Requisitions</a>
-            <ul>
-                <li><a href="/public/pages/logistics/rnr/create.html">Create</a></li>
-                <li><a href="/public/pages/logistics/rnr/create.html#/supervised/init-rnr">Create My Supervised Facility</a></li>
-            </ul>
+  <ul style="display:none">
+    <li><a href="/">Home</a></li>
+
+    <li class="has-children" ng-show="hasPermission('CREATE_REQUISITION')"><a href="javascript: void(0)">Requisitions</a>
+      <ul>
+        <li>
+          <a href="javascript: void(0);">Create</a>
+          <ul>
+            <li><a href="/public/pages/logistics/rnr/create.html">My Facility</a></li>
+            <li><a href="/public/pages/logistics/rnr/create.html#/supervised/init-rnr">My Supervised Facility</a></li>
+          </ul>
+        </li>
+          
+      </ul>
+    </li>
+
+    <li class="has-children navgroup">
+      <a href="javascript: void(0)">Administration</a>
+      <ul>
+        <li ng-show="hasPermission('UPLOADS')">
+          <a href="/public/pages/admin/upload/index.html">Upload</a>
         </li>
 
-        <li class="has-children" ng-show="hasPermission('CONFIGURE_RNR')"><a href="javascript: void(0)">Template Configuration</a>
-            <ul>
-                <li><a href="/public/pages/admin/rnr-template/create.html">R & R</a></li>
-            </ul>
+        <li class="has-children">
+          <a href="javascript: void(0);">Configure</a>
+          <ul>
+            <li ng-show="hasPermission('CONFIGURE_RNR')">
+              <a href="/public/pages/admin/rnr-template/create.html">R &amp; R Template</a>
+            </li>
+          </ul>
         </li>
+        
+        <li class="has-children">
+          <a href="javascript: void(0);">Manage</a>
+          <ul>
+            <li ng-show="hasPermission('MANAGE_FACILITY')">
+              <a href="/public/pages/admin/facility/index.html#/search">Facilities</a>
+            </li>
+            <li ng-show="hasPermission('MANAGE_ROLE')">
+              <a href="/public/pages/admin/role/index.html">Role assignments</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
 
-        <li class="menu-orders" ng-show="hasPermission('UPLOADS')">
-            <a href="/public/pages/admin/upload/index.html">Upload Data</a>
-        </li>
-        <li class="menu-orders" ng-show="hasPermission('MANAGE_ROLE')">
-            <a href="/public/pages/admin/role/index.html">Manage Roles</a>
-        </li>
-        <li class="has-children" ng-show="hasPermission('MANAGE_FACILITY')"><a href="javascript: void(0)">Manage Facilities</a>
-            <ul>
-                <li ng-show="hasPermission('MANAGE_FACILITY')"><a
-                        href="/public/pages/admin/facility/index.html">Create</a></li>
-                <li ng-show="hasPermission('MANAGE_FACILITY')"><a
-                        href="/public/pages/admin/facility/index.html#/search">Search</a>
-                </li>
-            </ul>
-        </li>
-
-
-    </ul>
+  </ul>
 </div>

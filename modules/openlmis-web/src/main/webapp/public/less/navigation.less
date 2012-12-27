@@ -19,6 +19,57 @@
   box-shadow: 0 1px 0 rgba(255, 255, 255, 1);
   font-size: 1.2em;
   position: relative;
+  &.navgroup {
+    background-image: none !important;
+    background-color: #f4f4f4;
+    &:hover {
+      background-color: #f4f4f4;
+    }
+    > a {
+    background: #555; /* Old browsers */
+    background: -moz-linear-gradient(top, #777777 0%, #555555 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#777777), color-stop(100%,#555555)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #777777 0%,#555555 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #777777 0%,#555555 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #777777 0%,#555555 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #777777 0%,#555555 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#777777', endColorstr='#555555',GradientType=0 ); /* IE6-9 */
+    font-size: 0.8em;
+    font-weight: bold;
+    text-shadow: none;
+    color: #FFF;
+    padding: 5px 20px;
+    }
+    > ul {
+      position: static;
+      display: block;
+      width: auto;
+      background: transparent;
+      padding: 0;
+      box-shadow: none;
+      font-size: 0.8em;
+      > li {
+        border-bottom: 1px solid #CBCBCB;
+        border-top: 1px solid transparent;
+        padding: 0;
+        > a {
+          padding: 11px 20px;
+          margin: 0;
+          text-shadow: 0 1px 0 white;
+        }
+        &:hover {
+          background-color: #FFF;
+          > a {
+            background-color: transparent;
+          }
+        }
+        > ul {
+          left: 249px;
+          top: -1px;
+        }
+      }
+    }
+  }
 }
 .navigation ul li a {
   display: block;
@@ -50,14 +101,14 @@
 .navigation ul li:hover {
   background-color: #FFF;
 }
-.navigation ul li:hover ul {
+.navigation ul li:hover > ul {
   display: block;
 }
 .navigation ul ul {
   position: absolute;
   width: 175px;
   background: #FFF;
-  padding: 2px 11px;
+  padding: 2px 0;
   font-size: 0.7em;
   left: 249px;
   top: -1px;
@@ -68,12 +119,13 @@
 .navigation ul ul li {
   border-top: 1px solid #EEE;
   border-bottom: 0;
+  padding: 0 11px;
 }
 .navigation ul ul li:first-child {
   border-top: 0;
 }
-.navigation ul ul li:hover a {
-  background: #e1e1e1;
+.navigation ul ul li:hover > a {
+  background-color: #e1e1e1;
 }
 .navigation ul ul li a {
   padding: 6px 12px;
@@ -99,5 +151,9 @@
 }
 .navigation ul li.is-selected ul li:hover a,
 .navigation ul ul li.is-selected:hover a {
-  background: #EEE;
+  background-color: #EEE;
+}
+.navigation ul ul ul {
+  left: 173px;
+  top: -5px;
 }
