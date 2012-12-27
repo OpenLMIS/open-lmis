@@ -16,4 +16,9 @@ public class Schedule {
     private String description;
     private Integer modifiedBy;
     private Date modifiedDate;
+
+    public Schedule(String code, String name) {
+        this.code = code;
+        this.name = name;
+    }
 }

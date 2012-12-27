@@ -9,7 +9,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -23,12 +26,20 @@ public class ScheduleMapperIT {
 
     @Test
     public void shouldGetIdByCode() throws Exception {
-        Schedule schedule = new Schedule();
-        schedule.setCode("SC1");
-        schedule.setName("Schedule 1");
+        assertThat(scheduleMapper.getIdForCode("Q1stM"), is(1));
+    }
 
-        Integer id = scheduleMapper.insert(schedule);
-        assertThat(id, is(scheduleMapper.getIdForCode(schedule.getCode())));
+    @Test
+    public void shouldInsertASchedule() throws Exception {
+        Schedule schedule = new Schedule("testCode", "testName");
 
+        Integer insertionCount = scheduleMapper.insert(schedule);
+        assertThat(insertionCount, is(1));
+        assertThat(schedule.getId(), is(notNullValue()));
+    }
+
+    @Test
+    public void shouldGetAllSchedules() throws Exception {
+        assertThat(scheduleMapper.getAll().size(), is(2));
     }
 }
