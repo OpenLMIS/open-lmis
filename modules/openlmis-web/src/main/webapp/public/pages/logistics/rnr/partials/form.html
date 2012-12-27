@@ -1,17 +1,15 @@
-
 <div class="rnr-table" ng-controller="CreateRnrController">
-    <div ng-hide="programRnRColumnList && rnr.lineItems">Loading...</div>
-       <form name="saveRnrForm" ng-submit="saveRnr()" id="save-rnr" novalidate ng-show="programRnRColumnList && rnr.lineItems">
+    <div ng-hide="programRnRColumnList">Loading...</div>
+       <form name="saveRnrForm" ng-submit="saveRnr()" id="save-rnr" novalidate>
            <table class="table table-striped table-bordered">
                <thead>
                <tr>
                    <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in programRnRColumnList"  ng-show="showSelectedColumn(programRnrColumn.name)">
-                     <!--ng-hide="programRnrColumn.name == 'beginningBalance'"-->
                        {{programRnrColumn.label}}
                    </th>
                </tr>
                </thead>
-               <tbody>
+               <tbody ng-show="programRnRColumnList && (rnr.lineItems.length > 0)">
                <tr>
                    <td class="col-formula" ng-repeat="programRnrColumn in programRnRColumnList" ng-show="showSelectedColumn(programRnrColumn.name)">
                        <div class="indicator">{{programRnrColumn.indicator}}</div>

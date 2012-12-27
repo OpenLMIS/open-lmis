@@ -1,5 +1,6 @@
 package org.openlmis.web.controller;
 
+import lombok.NoArgsConstructor;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.service.RnrService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +16,10 @@ import javax.servlet.http.HttpServletRequest;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 
 @Controller
+@NoArgsConstructor
 public class RnrController {
 
     private RnrService rnrService;
-
-    public RnrController() {
-    }
 
     @Autowired
     public RnrController(RnrService rnrService) {
