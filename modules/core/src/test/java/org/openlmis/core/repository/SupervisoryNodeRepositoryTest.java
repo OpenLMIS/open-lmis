@@ -58,7 +58,7 @@ public class SupervisoryNodeRepositoryTest {
 
     @Test
     public void shouldGiveErrorIfParentNodeCodeDoesNotExist() throws Exception {
-        when(supervisoryNodeMapper.getSupervisoryNode(supervisoryNodeWithParent.getId())).thenReturn(new SupervisoryNode());
+        when(supervisoryNodeMapper.getIdForCode(supervisoryNodeWithParent.getParent().getCode())).thenThrow(new DataException("Invalid SupervisoryNode Code"));
 
         expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Supervisory Node Parent does not exist");
@@ -84,7 +84,7 @@ public class SupervisoryNodeRepositoryTest {
 
     @Test
     public void shouldSaveSupervisoryNode() throws Exception {
-        when(supervisoryNodeMapper.getSupervisoryNode(supervisoryNodeWithParent.getId())).thenReturn(supervisoryNodeWithParent);
+        when(supervisoryNodeMapper.getIdForCode(supervisoryNodeWithParent.getParent().getCode())).thenReturn(supervisoryNodeWithParent.getParent().getId());
         when(facilityRepository.getIdForCode(supervisoryNodeWithParent.getFacility().getCode())).thenReturn(1);
 
         repository.save(supervisoryNodeWithParent);

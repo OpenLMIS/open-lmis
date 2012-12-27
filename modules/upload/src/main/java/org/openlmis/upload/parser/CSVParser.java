@@ -19,7 +19,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -81,10 +80,9 @@ public class CSVParser {
         } catch (SuperCsvException superCsvException) {
             createDataException("Columns does not match the headers:", userFriendlyHeaders, superCsvException);
         } catch (IOException e) {
-            throw new UploadException(e.getMessage());
+            throw new UploadException(e.getStackTrace().toString());
         }
     }
-
 
     private void createHeaderException(String error, String[] headers, SuperCsvException exception) {
         CsvContext csvContext = exception.getCsvContext();
@@ -96,5 +94,4 @@ public class CSVParser {
         CsvContext csvContext = exception.getCsvContext();
         throw new UploadException(String.format("%s '%s' in Record No. %d:%s", error, asList(headers), csvContext.getRowNumber() - 1, csvContext.getRowSource().toString()));
     }
-
 }

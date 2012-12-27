@@ -26,12 +26,7 @@ public class SupervisoryNodeRepository {
 
     public void save(SupervisoryNode supervisoryNode) {
         supervisoryNode.getFacility().setId(facilityRepository.getIdForCode(supervisoryNode.getFacility().getCode()));
-        if (supervisoryNode.getParent() != null) {
-            supervisoryNode.getParent().setId(getSupervisoryNodeParentId(supervisoryNode.getId()));
-            if (supervisoryNode.getParent().getId() == null) {
-                throw new DataException("Supervisory Node Parent does not exist");
-            }
-        }
+        validateParentNode(supervisoryNode);
 
         try {
             supervisoryNodeMapper.insert(supervisoryNode);
@@ -55,5 +50,16 @@ public class SupervisoryNodeRepository {
     public Integer getSupervisoryNodeParentId(Integer supervisoryNodeId) {
         SupervisoryNode parent = supervisoryNodeMapper.getSupervisoryNode(supervisoryNodeId).getParent();
         return parent == null ? null : parent.getId();
+    }
+
+    private void validateParentNode(SupervisoryNode supervisoryNode) {
+        SupervisoryNode parentNode = supervisoryNode.getParent();
+        if (parentNode != null) {
+            try {
+                parentNode.setId(getIdForCode(parentNode.getCode()));
+            } catch (DataException e) {
+                throw new DataException("Supervisory Node Parent does not exist");
+            }
+        }
     }
 }
