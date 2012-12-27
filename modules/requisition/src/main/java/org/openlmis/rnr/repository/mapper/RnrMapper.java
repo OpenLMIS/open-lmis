@@ -26,7 +26,6 @@ public interface RnrMapper {
       public Rnr getRequisitionById(Integer rnrId);
 
     @Select("Select * from requisition where facilityId = #{facilityId} and programId= #{programId}")
-
     public Rnr getRequisitionByFacilityAndProgram(@Param("facilityId") Integer facilityId,
                                                   @Param("programId") Integer programId);
 }

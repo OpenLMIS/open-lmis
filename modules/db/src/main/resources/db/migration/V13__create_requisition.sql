@@ -9,5 +9,6 @@ CREATE TABLE requisition (
   totalSubmittedCost FLOAT ,
   modifiedBy VARCHAR(50),
   modifiedDate TIMESTAMP  DEFAULT  CURRENT_TIMESTAMP,
-  check (totalSubmittedCost = fullSupplyItemsSubmittedCost + nonFullSupplyItemsSubmittedCost)
+  check (totalSubmittedCost = fullSupplyItemsSubmittedCost + nonFullSupplyItemsSubmittedCost),
+  UNIQUE(facilityId,programId)
 );

@@ -1,4 +1,4 @@
-function CreateRnrController($scope, ReferenceData, RequisitionHeader, ProgramRnRColumnList, localStorageService, $location, $http, $route) {
+function CreateRnrController($scope, ReferenceData, RequisitionHeader, ProgramRnRColumnList, $location, $http, $route) {
 
     $http.post('/logistics/rnr/' + encodeURIComponent($route.current.params.facility) + '/' + encodeURIComponent($route.current.params.program) + '/init.json', {}
     ).success(function (data) {
@@ -88,8 +88,8 @@ function CreateRnrController($scope, ReferenceData, RequisitionHeader, ProgramRn
     }
 
     $scope.showSelectedColumn = function(columnName){
-        var rnr = $scope.rnr ;
-        if((rnr.status == "INITIATED" || rnr.status == "CREATED") && columnName == "quantityApproved")
+
+        if(($scope.rnr.status == "INITIATED" || $scope.rnr.status == "CREATED") && columnName == "quantityApproved")
             return undefined;
         return "defined";
     }
