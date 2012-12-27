@@ -28,8 +28,8 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class RnrRepositoryTest {
 
-  @Rule
-  public ExpectedException expectedException = ExpectedException.none();
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     public static final Integer HIV = 1;
 
@@ -94,7 +94,7 @@ public class RnrRepositoryTest {
     }
 
     @Test
-    public void shouldThrowErrorIfRnrNotDefined(){
+    public void shouldThrowErrorIfRnrNotDefined() {
         when(rnrMapper.getRequisitionByFacilityAndProgram(facilityId, HIV)).thenReturn(null);
         expectedException.expect(DataException.class);
         expectedException.expectMessage("Requisition does not exist. Please initiate.");
