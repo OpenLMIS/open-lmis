@@ -1,0 +1,10 @@
+INSERT INTO losses_adjustments_types (name, additive, displayOrder) VALUES
+('TRANSFER_IN'	,TRUE	,2),
+('TRANSFER_OUT'	,FALSE,	3),
+('DAMAGED',	FALSE	,1),
+('LOST',	FALSE,	7),
+('STOLEN',	FALSE,	8),
+('EXPIRED'	,FALSE	,4),
+('PASSED_OPEN_VIAL_TIME_LIMIT',	FALSE	,5),
+('COLD_CHAIN_FAILURE',	 FALSE,	6),
+('CLINIC_RETURN',	TRUE,	9);

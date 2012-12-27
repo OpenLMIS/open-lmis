@@ -100,8 +100,7 @@ public class RnrLineItemMapperIT {
         Rnr rnr = new Rnr(facility.getId(), PROGRAM_ID, RnrStatus.INITIATED, "user");
         rnrMapper.insert(rnr);
         RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityApprovedProduct, "user");
-        Integer generatedId = rnrLineItemMapper.insert(lineItem);
-        lineItem.setId(generatedId);
+        rnrLineItemMapper.insert(lineItem);
         lineItem.setModifiedBy("user1");
         lineItem.setBeginningBalance(43);
         lineItem.setLossesAndAdjustments(10);

@@ -9,12 +9,12 @@ import java.util.List;
 @Repository
 public interface RnrLineItemMapper {
 
-    @Select("INSERT INTO requisition_line_items" +
+    @Insert("INSERT INTO requisition_line_items" +
 			"(rnrId, productCode, product, dispensingUnit, dosesPerMonth, dosesPerDispensingUnit, maxMonthsOfStock, packsToShip, " +
 			"packSize, price, roundToZero, modifiedBy, modifiedDate) " +
             "VALUES (" +
 			"#{rnrId}, #{productCode}, #{product}, #{dispensingUnit}, #{dosesPerMonth}, #{dosesPerDispensingUnit}, #{maxMonthsOfStock}, " +
-			"#{packsToShip}, #{packSize}, #{price}, #{roundToZero}, #{modifiedBy}, #{modifiedDate}) returning id")
+			"#{packsToShip}, #{packSize}, #{price}, #{roundToZero}, #{modifiedBy}, #{modifiedDate})")
     @Options(useGeneratedKeys=true)
     public Integer insert(RnrLineItem rnrLineItem);
 
