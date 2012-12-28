@@ -78,26 +78,38 @@
                                                <tr ng-repeat="lossAndAdjustment in rnrLineItem[column.name]">
                                                    <td>{{lossAndAdjustment.type.name.description}}</td>
                                                    <td><input id="{{getId('D', $parent, true)}}" type="text"
-                                                              name="lossesAndAdjustments{{rnrLineItem['id']}}"
+                                                              name="lossesAndAdjustments{{lossAndAdjustment.id}}"
                                                               ng-model="lossAndAdjustment.quantity"
-                                                              maxlength="8"/>
-                                                       <!--rnr-validator="positiveInteger"
-                                                      ng-change="fillCalculatedRnrColumns(rnrLineItem, rnr)"-->
+                                                              rnr-validator="positiveInteger"
+                                                              maxlength="8"
+                                                              ng-change="calculateTotalLossesAndAdjustments(rnrLineItem[column.name], rnrLineItem)"/>
+                                                      <!--ng-change="fillCalculatedRnrColumns(rnrLineItem, rnr)"-->
+                                                       <span class="rnr-form-error" id="lossesAndAdjustments{{lossAndAdjustment.id}}"
+                                                       style="display:none;">
+                                                       Enter Numeric Data
+                                                       </span>
 
-                                                           <span class="rnr-form-error" id="lossesAndAdjustments{{rnrLineItem['id']}}"
-                                                                 style="display:none;">
-                                                           Enter Numeric Data
-                                                           </span>
                                                    </td>
-                                                   <td><a href="" class="btn btn-danger" ng-click="" data-dismiss="modal">Remove</a></td>
+                                                   <td><a href="#" class="btn btn-danger" ng-click="removeLossAndAdjustment(lossAndAdjustment.id)"
+                                                          data-dismiss="modal">Remove</a></td>
                                                </tr>
                                                <tr>
                                                    <td>Total</td>
-                                                   <td id=></td>
+                                                   <td>{{rnrLineItem.totalLossesAndAdjustments}}</td>
                                                    <td></td>
                                                </tr>
+                                               <tr>
+                                                   <td colspan="3"><b>Add new Loss/Adjustment</b></td>
+                                               </tr>
+                                               <tr>
+                                                   <td>
+                                                      <!-- <select id="operated-by" ng-model="facility.operatedBy.code"
+                                                               ng-options="i.code as i.text for i in facilityOperators" ng-disabled="facility.dataReportable == 'false'">
+                                                           <option value="">--Select Facility Operated By--</option>
+                                                       </select>-->
+                                                   </td>
+                                               </tr>
                                            </table>
-                                           <p><b>Add new Loss/Adjustment</b></p>
                                        </div>
                                        <div class="modal-footer">
                                            <a href="" class="btn btn-success save-button" ng-click="" data-dismiss="modal">Save Changes</a>

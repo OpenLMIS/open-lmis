@@ -16,13 +16,9 @@ public interface RnrLineItemMapper {
 			"#{rnrId}, #{productCode}, #{product}, #{dispensingUnit}, #{dosesPerMonth}, #{dosesPerDispensingUnit}, #{maxMonthsOfStock}, " +
 			"#{packsToShip}, #{packSize}, #{price}, #{roundToZero}, #{modifiedBy}, #{modifiedDate})")
     @Options(useGeneratedKeys=true)
-    public void insert(RnrLineItem rnrLineItem);
+    public Integer insert(RnrLineItem rnrLineItem);
 
     @Select("SELECT * FROM requisition_line_items WHERE rnrId = #{rnrId}")
-    @Results(value = {
-            @Result(property = "lossesAndAdjustments", javaType = List.class, column = "id",
-                    many = @Many(select = "org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper.getByRnrLineItem"))
-    })
     public List<RnrLineItem> getRnrLineItemsByRnrId(Integer rnrId);
 
     @Update("UPDATE requisition_line_items " +
@@ -30,11 +26,10 @@ public interface RnrLineItemMapper {
             " quantityDispensed = #{quantityDispensed}, "+
             " beginningBalance = #{beginningBalance}, "+
             " stockInHand = #{stockInHand}, "+
-            " quantityRequested = #{quantityRequested}, "+
-            " reasonForRequestedQuantity = #{reasonForRequestedQuantity}, "+
+            " quantityRequested = #{quantityRequested}, " +
+            " totalLossesAndAdjustments = #{totalLossesAndAdjustments}, "+
             " calculatedOrderQuantity = #{calculatedOrderQuantity}, "+
             " quantityApproved = #{quantityApproved}, "+
-            " reasonForLossesAndAdjustments = #{reasonForLossesAndAdjustments}, "+
             " newPatientCount = #{newPatientCount}, "+
             " stockOutDays = #{stockOutDays}, "+
             " normalizedConsumption = #{normalizedConsumption}, "+

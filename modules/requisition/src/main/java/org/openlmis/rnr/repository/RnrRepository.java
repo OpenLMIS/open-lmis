@@ -59,6 +59,13 @@ public class RnrRepository {
         Rnr rnr = rnrMapper.getRequisitionByFacilityAndProgram(facilityId, programId);
         if (rnr == null) throw new DataException("Requisition does not exist. Please initiate.");
         rnr.setLineItems(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()));
+        for(RnrLineItem rnrLineItem : rnr.getLineItems()){
+            rnrLineItem.setLossesAndAdjustments(lossesAndAdjustmentsMapper.getByRnrLineItem(rnrLineItem.getId()));
+        }
         return rnr;
+    }
+
+    public void removeLossAndAdjustment(Integer lossAndAdjustmentId) {
+        lossesAndAdjustmentsMapper.delete(lossAndAdjustmentId);
     }
 }

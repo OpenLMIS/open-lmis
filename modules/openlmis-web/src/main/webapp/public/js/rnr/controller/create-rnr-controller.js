@@ -1,4 +1,4 @@
-function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $location, Requisition, $route) {
+function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $location, Requisition, $route, RemoveLossAdjustment) {
 
     if (!$scope.$parent.rnr) {
         Requisition.get({facilityId:$route.current.params.facility, programId:$route.current.params.program},
@@ -64,12 +64,11 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
         rnrModule.fill(lineItem, $scope.programRnRColumnList, rnr);
     };
 
-    $scope.getId = function (prefix, parent) {
-        return prefix + "_" + parent.$parent.$parent.$index;
-    };
-
     $scope.getId = function (prefix, parent, isLossAdjustment) {
-        return prefix + "_" + parent.$parent.$parent.$index + "_" + parent.$parent.$parent.$parent.$index;
+       if(isLossAdjustment != null && isLossAdjustment != undefined && isLossAdjustment) {
+         return prefix + "_" + parent.$parent.$parent.$index + "_" + parent.$parent.$parent.$parent.$index;
+        }
+        return prefix + "_" + parent.$parent.$parent.$index;
     };
 
     $scope.hide = function () {
@@ -88,4 +87,24 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
             return undefined;
         return "defined";
     };
+
+    $scope.removeLossAndAdjustment = function (id) {
+        RemoveLossAdjustment.delete({lossAndAdjustmentId:id}, function (data) {
+            $location.path('/create-rnr/' + $route.current.params.facility + '/' + $route.current.params.program);
+        }, {});
+    }
+
+    $scope.calculateTotalLossesAndAdjustments = function (lossesAndAdjustments, rnrLineItem) {
+        for (i = 0; i < lossesAndAdjustments.length; i++) {
+            if (!isNaN(parseInt(lossesAndAdjustments[i].quantity))) {
+                if (lossesAndAdjustments[i].type.additive) {
+                    rnrLineItem.totalLossesAndAdjustments += parseInt(lossesAndAdjustments[i].quantity);
+                } else {
+                    rnrLineItem.totalLossesAndAdjustments -= parseInt(lossesAndAdjustments[i].quantity);
+                }
+            }
+        }
+    }
+
 }
+

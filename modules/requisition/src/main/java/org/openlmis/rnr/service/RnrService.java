@@ -51,4 +51,8 @@ public class RnrService {
   public Rnr get(Integer facilityId, Integer programId) {
     return  rnrRepository.getRequisitionByFacilityAndProgram(facilityId, programId);
   }
+
+    public void removeLossAndAdjustment(Integer lossAndAdjustmentId) {
+        rnrRepository.removeLossAndAdjustment(lossAndAdjustmentId);
+    }
 }

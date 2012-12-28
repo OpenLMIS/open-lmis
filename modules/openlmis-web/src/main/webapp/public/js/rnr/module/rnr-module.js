@@ -45,7 +45,7 @@ rnrModule.positiveInteger = function (value, errorHolder) {
 rnrModule.fill = function (lineItem, programRnrColumnList, rnr){
 
     function isNumber(number) {
-        return !isNaN(parseInt(number));
+            return !isNaN(parseInt(number));
     }
 
     function fillConsumption() {

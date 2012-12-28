@@ -31,6 +31,7 @@ public class RnrLineItem {
     private Integer quantityDispensed;
     private Integer beginningBalance;
     private List<LossesAndAdjustments> lossesAndAdjustments = new ArrayList<>();
+    private Integer totalLossesAndAdjustments;
     private String reasonForLossesAndAdjustments;
     private Integer stockInHand;
     private Integer stockOutDays;

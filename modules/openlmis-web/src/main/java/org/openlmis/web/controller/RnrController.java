@@ -23,38 +23,45 @@ import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.U
 @NoArgsConstructor
 public class RnrController {
 
-  private RnrService rnrService;
+    private RnrService rnrService;
 
-  @Autowired
-  public RnrController(RnrService rnrService) {
-    this.rnrService = rnrService;
-  }
 
-  @RequestMapping(value = "/logistics/rnr/facility/{facilityId}/program/{programId}", method = RequestMethod.POST, headers = "Accept=application/json")
-  @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> initRnr(@PathVariable("facilityId") Integer facilityId, @PathVariable("programId") Integer programId, HttpServletRequest request) {
-    String modifiedBy = (String) request.getSession().getAttribute(USER);
-    try {
-      return OpenLmisResponse.response("rnr", rnrService.initRnr(facilityId, programId, modifiedBy));
-    } catch (DataException e) {
-      return OpenLmisResponse.error(e.getMessage(), HttpStatus.BAD_REQUEST);
+    @Autowired
+    public RnrController(RnrService rnrService) {
+        this.rnrService = rnrService;
     }
-  }
 
-  @RequestMapping(value = "/logistics/rnr/facility/{facilityId}/program/{programId}", method = RequestMethod.GET, headers = "Accept=application/json")
-  @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> get(@PathVariable("facilityId") Integer facilityId, @PathVariable("programId") Integer programId) {
-    try{
-    return OpenLmisResponse.response("rnr", rnrService.get(facilityId, programId));
-    }catch(DataException e) {
-      return OpenLmisResponse.error(e.getMessage(), HttpStatus.BAD_REQUEST);
+    @RequestMapping(value = "/logistics/rnr/facility/{facilityId}/program/{programId}", method = RequestMethod.POST, headers = "Accept=application/json")
+    @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
+    public ResponseEntity<OpenLmisResponse> initRnr(@PathVariable("facilityId") Integer facilityId, @PathVariable("programId") Integer programId, HttpServletRequest request) {
+        String modifiedBy = (String) request.getSession().getAttribute(USER);
+        try {
+            return OpenLmisResponse.response("rnr", rnrService.initRnr(facilityId, programId, modifiedBy));
+        } catch (DataException e) {
+            return OpenLmisResponse.error(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
-  }
 
-  @RequestMapping(value = "/logistics/rnr/facility/{facilityId}/program/{programId}", method = RequestMethod.PUT, headers = "Accept=application/json")
-  @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
-  public void saveRnr(@RequestBody Rnr rnr, HttpServletRequest request){
-    rnr.setModifiedBy((String) request.getSession().getAttribute(USER));
-    rnrService.save(rnr);
-  }
+    @RequestMapping(value = "/logistics/rnr/facility/{facilityId}/program/{programId}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
+    public ResponseEntity<OpenLmisResponse> get(@PathVariable("facilityId") Integer facilityId, @PathVariable("programId") Integer programId) {
+        try {
+            return OpenLmisResponse.response("rnr", rnrService.get(facilityId, programId));
+        } catch (DataException e) {
+            return OpenLmisResponse.error(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/logistics/rnr/facility/{facilityId}/program/{programId}", method = RequestMethod.PUT, headers = "Accept=application/json")
+    @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
+    public void saveRnr(@RequestBody Rnr rnr, HttpServletRequest request) {
+        rnr.setModifiedBy((String) request.getSession().getAttribute(USER));
+        rnrService.save(rnr);
+    }
+
+    @RequestMapping(value = "/logistics/rnr/lossAndAdjustment/{lossAndAdjustmentId}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+    @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
+    public void removeLossAndAdjustment(@PathVariable("lossAndAdjustmentId") Integer lossAndAdjustmentId) {
+        rnrService.removeLossAndAdjustment(lossAndAdjustmentId);
+    }
 }
