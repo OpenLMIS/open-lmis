@@ -121,6 +121,9 @@ public class RoleRightsMapperIT {
     Role role = new Role(11, "Right Name", "Right Desc", 1111, null, null);
     roleRightsMapper.insertRole(role);
 
+    //Role insertedRole = roleRightsMapper.getRole(role.getId());
+    //Date modifiedDate = insertedRole.getModifiedDate();
+
     role.setName("Right2");
     role.setRights(asList(CREATE_REQUISITION));
     role.setDescription("Right Description Changed");
@@ -129,10 +132,10 @@ public class RoleRightsMapperIT {
     roleRightsMapper.updateRole(role);
 
     Role updatedRole = roleRightsMapper.getRole(role.getId());
-
     assertThat(updatedRole.getName(), is("Right2"));
     assertThat(updatedRole.getDescription(), is("Right Description Changed"));
     assertThat(updatedRole.getModifiedBy(), is(222));
+    //assertTrue(updatedRole.getModifiedDate().after(modifiedDate));
   }
 
   @Test
