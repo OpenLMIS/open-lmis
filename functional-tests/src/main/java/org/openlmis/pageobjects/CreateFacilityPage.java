@@ -116,8 +116,8 @@ public class CreateFacilityPage extends Page {
     @FindBy(how = How.XPATH, using = "//a[contains(text(),'26')]")
     private static WebElement goDownDateCalender;
 
-    @FindBy(how = How.XPATH, using = "//div[@id='wrap']/div/div/div/h2")
-    private static WebElement addNewFacilityHeader;
+    @FindBy(how = How.XPATH, using = "//div[@class='ng-scope']/div[@ng-hide='facility.id']/h2")
+    private static WebElement facilityHeader;
 
     @FindBy(how = How.XPATH, using = "//div[contains(@id,'MsgDiv')]")
     private static WebElement errorOrSuccessMessage;
@@ -146,7 +146,9 @@ public class CreateFacilityPage extends Page {
         String facilityNameText="FCname"+date_time;
 
         testWebDriver.sleep(1500);
-        testWebDriver.waitForElementToAppear(addNewFacilityHeader);
+        testWebDriver.waitForElementToAppear(facilityHeader);
+        SeleneseTestNgHelper.assertEquals(facilityHeader.getText().trim(), "Add new facility");
+
         testWebDriver.waitForElementToAppear(facilityCode);
         facilityCode.clear();
         facilityCode.sendKeys(facilityCodeText);

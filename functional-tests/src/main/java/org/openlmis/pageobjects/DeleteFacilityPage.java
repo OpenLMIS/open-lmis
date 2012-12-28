@@ -72,14 +72,15 @@ public class DeleteFacilityPage extends Page {
     @FindBy(how = How.ID, using = "altitude")
     private static WebElement altitude;
 
-    @FindBy(how = How.XPATH, using = "//div[@id='wrap']/div/div/div/h2")
-    private static WebElement addNewFacilityHeader;
 
     @FindBy(how = How.ID, using = "code")
     private static WebElement facilityCode;
 
     @FindBy(how = How.XPATH, using = "//input[@value='Save']")
     private static WebElement SaveButton;
+
+    @FindBy(how = How.XPATH, using = "//div[@class='ng-scope']/div[@ng-show='facility.id']/h2")
+    private static WebElement facilityHeader;
 
 
     public DeleteFacilityPage(TestWebDriver driver) throws  IOException {
@@ -104,6 +105,10 @@ public class DeleteFacilityPage extends Page {
         String expectedMessageOnFacilityScreenAfterDelete="\""+facilityNameValue+"\" / \""+facilityCodeValue+"\" deleted successfully";
         testWebDriver.waitForElementToAppear(facilityList);
         facilityList.click();
+
+        testWebDriver.waitForElementToAppear(facilityHeader);
+        SeleneseTestNgHelper.assertEquals(facilityHeader.getText().trim(), "Edit facility");
+
         testWebDriver.waitForElementToAppear(deleteButton);
         deleteButton.click();
         testWebDriver.waitForElementToAppear(deleteMessageOnAlert);
@@ -147,6 +152,10 @@ public class DeleteFacilityPage extends Page {
         String dataReportableValue=dataReportable.getText();
         SeleneseTestNgHelper.assertEquals(dataReportableValue.trim(), "Yes");
         SeleneseTestNgHelper.assertTrue(isActiveRadioYesOption.isSelected());
+
+        testWebDriver.waitForElementToAppear(facilityHeader);
+        SeleneseTestNgHelper.assertEquals(facilityHeader.getText().trim(), "Edit facility");
+
         return new HomePage(testWebDriver);
     }
 
@@ -158,9 +167,12 @@ public class DeleteFacilityPage extends Page {
 
         testWebDriver.waitForElementToAppear(facilityList);
         facilityList.click();
+
+        testWebDriver.waitForElementToAppear(facilityHeader);
+        SeleneseTestNgHelper.assertEquals(facilityHeader.getText().trim(), "Edit facility");
+
         testWebDriver.waitForElementToAppear(deleteButton);
         testWebDriver.sleep(1500);
-        testWebDriver.waitForElementToAppear(addNewFacilityHeader);
         testWebDriver.waitForElementToAppear(facilityCode);
         catchmentPopulation.clear();
         catchmentPopulation.sendKeys(catchmentPopulationValue);

@@ -29,8 +29,8 @@ public class HomePage extends Page {
     @FindBy(how = How.LINK_TEXT, using = "Add new")
     private static WebElement createFacility;
 
-    @FindBy(how = How.XPATH, using = "//div[@id='wrap']/div/div/div/h2")
-    private static WebElement addNewFacilityHeader;
+    @FindBy(how = How.XPATH, using = "//div[@class='ng-scope']/div[@ng-hide='facility.id']/h2")
+    private static WebElement facilityHeader;
 
     @FindBy(how = How.LINK_TEXT, using = "Configure")
     private static WebElement TemplateConfigTab;
@@ -108,7 +108,8 @@ public class HomePage extends Page {
         facilityMenuItem.click();
         testWebDriver.waitForElementToAppear(createFacility);
         createFacility.click();
-        testWebDriver.waitForElementToAppear(addNewFacilityHeader);
+        testWebDriver.waitForElementToAppear(facilityHeader);
+        SeleneseTestNgHelper.assertEquals(facilityHeader.getText().trim(), "Add new facility");
         return new CreateFacilityPage(testWebDriver);
     }
 
@@ -118,8 +119,6 @@ public class HomePage extends Page {
         TemplateConfigTab.click();
         testWebDriver.waitForElementToAppear(RnRTemplateConfigTab);
         RnRTemplateConfigTab.click();
-//        testWebDriver.waitForElementToAppear(ConfigureTemplateSelectProgramPage);
-//        ConfigureTemplateSelectProgramPage.click();
         testWebDriver.selectByVisibleText(ProgramDropDown, programme);
         NextButton.click();
         return new TemplateConfigPage(testWebDriver);
