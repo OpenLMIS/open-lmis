@@ -1,5 +1,10 @@
 package org.openlmis.rnr.domain;
 
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+@JsonSerialize(using = LossesAndAdjustmentsTypeEnumSerializer.class)
+@JsonDeserialize(using = LossesAndAdjustmentsTypeEnumDeSerializer.class)
 public enum LossesAndAdjustmentsTypeEnum {
 
     TRANSFER_IN("Transfer In"),
@@ -16,5 +21,9 @@ public enum LossesAndAdjustmentsTypeEnum {
 
     LossesAndAdjustmentsTypeEnum(String description) {
         this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }
