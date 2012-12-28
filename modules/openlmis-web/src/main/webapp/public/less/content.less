@@ -461,3 +461,38 @@ table td.cell-input .cell-text {
 h3 {
   font-size: 1.3em;
 }
+.checkbox-list {
+  input[type="checkbox"] {
+    float: left;
+    margin-top: 8px;
+  }
+  label {
+    float: left;
+    cursor: pointer;
+    padding: 5px 10px;
+
+  }
+  &:hover {
+    background: #EEE;
+  }
+}
+.button-row {
+  padding: 10px 0;
+}
+.gradient-header th {
+  background: #EEE;
+  font-weight: bold;
+  color: #444;
+  min-width: 93px;
+  text-shadow: 0 1px 0 #FFF;
+  font-size: 0.9em;
+  background: #f9f9f9; /* Old browsers */
+  background: -moz-linear-gradient(top, #f9f9f9 0%, #e0e0e0 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f9f9f9), color-stop(100%,#e0e0e0)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #f9f9f9 0%,#e0e0e0 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, #f9f9f9 0%,#e0e0e0 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, #f9f9f9 0%,#e0e0e0 100%); /* IE10+ */
+  background: linear-gradient(to bottom, #f9f9f9 0%,#e0e0e0 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f9f9f9', endColorstr='#e0e0e0',GradientType=0 ); /* IE6-9 */
+}
+

@@ -25,7 +25,7 @@ function SaveRoleController($scope, $routeParams,$location, Roles, Role, Rights)
       if (rightToUpdate == right) {
         $scope.role.rights.splice(index, 1);
       }
-    })
+    });
   }
 
   $scope.contains = function (right) {
