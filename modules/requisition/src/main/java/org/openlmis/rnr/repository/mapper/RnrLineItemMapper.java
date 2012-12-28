@@ -20,7 +20,7 @@ public interface RnrLineItemMapper {
 
     @Select("SELECT * FROM requisition_line_items WHERE rnrId = #{rnrId}")
     @Results(value = {
-            @Result(property = "lossesAndAdjustmentsList", javaType = List.class, column = "id",
+            @Result(property = "lossesAndAdjustments", javaType = List.class, column = "id",
                     many = @Many(select = "org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper.getByRnrLineItem"))
     })
     public List<RnrLineItem> getRnrLineItemsByRnrId(Integer rnrId);
@@ -34,7 +34,6 @@ public interface RnrLineItemMapper {
             " reasonForRequestedQuantity = #{reasonForRequestedQuantity}, "+
             " calculatedOrderQuantity = #{calculatedOrderQuantity}, "+
             " quantityApproved = #{quantityApproved}, "+
-            " lossesAndAdjustments = #{lossesAndAdjustments}, "+
             " reasonForLossesAndAdjustments = #{reasonForLossesAndAdjustments}, "+
             " newPatientCount = #{newPatientCount}, "+
             " stockOutDays = #{stockOutDays}, "+

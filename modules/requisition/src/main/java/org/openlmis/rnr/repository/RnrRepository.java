@@ -35,9 +35,10 @@ public class RnrRepository {
             lineItem.setRnrId(requisition.getId());
             lineItem.setModifiedBy(requisition.getModifiedBy());
             rnrLineItemMapper.insert(lineItem);
-            List<LossesAndAdjustments> lossesAndAdjustments = lineItem.getLossesAndAdjustmentsList();
+            List<LossesAndAdjustments> lossesAndAdjustments = lineItem.getLossesAndAdjustments();
             for(LossesAndAdjustments lossesAndAdjustment : lossesAndAdjustments){
-                lossesAndAdjustmentsMapper.insert(lineItem, lossesAndAdjustment);
+                Integer id = lossesAndAdjustmentsMapper.insert(lineItem, lossesAndAdjustment);
+                lossesAndAdjustment.setId(id);
             }
         }
     }
@@ -47,9 +48,9 @@ public class RnrRepository {
         List<RnrLineItem> lineItems = rnr.getLineItems();
         for (RnrLineItem lineItem : lineItems) {
             rnrLineItemMapper.update(lineItem);
-            List<LossesAndAdjustments> lossesAndAdjustments = lineItem.getLossesAndAdjustmentsList();
+            List<LossesAndAdjustments> lossesAndAdjustments = lineItem.getLossesAndAdjustments();
             for(LossesAndAdjustments lossesAndAdjustment : lossesAndAdjustments){
-                lossesAndAdjustmentsMapper.update(lineItem, lossesAndAdjustment);
+                lossesAndAdjustmentsMapper.update(lossesAndAdjustment);
             }
         }
     }

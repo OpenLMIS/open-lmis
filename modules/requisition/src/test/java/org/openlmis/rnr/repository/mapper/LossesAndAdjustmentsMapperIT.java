@@ -113,11 +113,12 @@ public class LossesAndAdjustmentsMapperIT {
 
     @Test
     public void shouldUpdateLossesAndAdjustments() throws Exception {
-        lossesAndAdjustmentsMapper.insert(rnrLineItem, lossesAndAdjustments);
+        Integer id = lossesAndAdjustmentsMapper.insert(rnrLineItem, lossesAndAdjustments);
+        lossesAndAdjustments.setId(id);
         lossesAndAdjustments.setQuantity(50);
         lossesAndAdjustmentsType.setName(LossesAndAdjustmentsTypeEnum.TRANSFER_OUT);
         lossesAndAdjustments.setType(lossesAndAdjustmentsType);
-        lossesAndAdjustmentsMapper.update(rnrLineItem, lossesAndAdjustments);
+        lossesAndAdjustmentsMapper.update(lossesAndAdjustments);
         List<LossesAndAdjustments> lossesAndAdjustments = lossesAndAdjustmentsMapper.getByRnrLineItem(rnrLineItem.getId());
         assertThat(lossesAndAdjustments.size(), is(1));
         assertThat(lossesAndAdjustments.get(0).getQuantity(), is(50));

@@ -121,13 +121,11 @@ public class RnrLineItemMapperIT {
         rnrLineItemMapper.insert(lineItem);
         lineItem.setModifiedBy("user1");
         lineItem.setBeginningBalance(43);
-        lineItem.setLossesAndAdjustments(10);
         int updateCount = rnrLineItemMapper.update(lineItem);
         assertThat(updateCount, is(1));
         List<RnrLineItem> rnrLineItems = rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId());
 
         assertThat(rnrLineItems.get(0).getBeginningBalance(), is(43));
-        assertThat(rnrLineItems.get(0).getLossesAndAdjustments(), is(10));
         assertThat(rnrLineItems.get(0).getProduct(), is("Primary Name Tablet strength mg"));
     }
 }

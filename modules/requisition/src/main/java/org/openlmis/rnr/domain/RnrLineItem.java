@@ -30,8 +30,7 @@ public class RnrLineItem {
     private Integer quantityReceived;
     private Integer quantityDispensed;
     private Integer beginningBalance;
-    private Integer lossesAndAdjustments;
-    private List<LossesAndAdjustments> lossesAndAdjustmentsList = new ArrayList<>();
+    private List<LossesAndAdjustments> lossesAndAdjustments = new ArrayList<>();
     private String reasonForLossesAndAdjustments;
     private Integer stockInHand;
     private Integer stockOutDays;
@@ -81,6 +80,6 @@ public class RnrLineItem {
     }
 
     public void addLossesAndAdjustments(LossesAndAdjustments lossesAndAdjustments) {
-        this.lossesAndAdjustmentsList.add(lossesAndAdjustments);
+        this.lossesAndAdjustments.add(lossesAndAdjustments);
     }
 }

@@ -77,7 +77,7 @@ public class RnrRepositoryTest {
         rnrRepository.update(rnr);
 
         verify(rnrMapper).update(rnr);
-        verify(lossesAndAdjustmentsMapper, times(2)).update(any(RnrLineItem.class), any(LossesAndAdjustments.class));
+        verify(lossesAndAdjustmentsMapper, times(2)).update(any(LossesAndAdjustments.class));
         verify(rnrLineItemMapper, times(2)).update(any(RnrLineItem.class));
     }
 

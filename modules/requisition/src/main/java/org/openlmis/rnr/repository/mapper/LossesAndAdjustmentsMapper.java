@@ -33,8 +33,8 @@ public interface LossesAndAdjustmentsMapper {
     void delete(Integer lossesAndAdjustmentsId);
 
     @Update("UPDATE requisition_line_item_losses_adjustments " +
-            "SET quantity = #{lossesAndAdjustments.quantity}, " +
-            "type = #{lossesAndAdjustments.type.name} " +
-            "WHERE requisitionLineItemId = #{rnrLineItem.id} ")
-    public Integer update(@Param(value = "rnrLineItem") RnrLineItem rnrLineItem, @Param(value = "lossesAndAdjustments") LossesAndAdjustments lossesAndAdjustments);
+            "SET quantity = #{quantity}, " +
+            "type = #{type.name} " +
+            "WHERE id    = #{id} ")
+    public Integer update(LossesAndAdjustments lossesAndAdjustments);
 }
