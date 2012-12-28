@@ -1,4 +1,4 @@
-function SaveRoleController($scope, $routeParams, Roles, Role, Rights) {
+function SaveRoleController($scope, $routeParams,$location, Roles, Role, Rights) {
 
   if ($routeParams.id) {
     Role.get({id:$routeParams.id}, function (data) {
@@ -57,8 +57,10 @@ function SaveRoleController($scope, $routeParams, Roles, Role, Rights) {
       var id = $routeParams.id;
       if (id) {
         Role.update({id:id}, $scope.role, successHandler, errorHandler);
+        $location.path('partials/list.html');
       } else {
         Roles.save({}, $scope.role, successHandler, errorHandler);
+        $location.path('partials/list.html');
       }
     }
   }

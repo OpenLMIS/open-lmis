@@ -1,7 +1,7 @@
 <div ng-hide="rights">Loading...</div>
 <div ng-show="rights">
-  <h2>Add new role</h2>
-
+  <div ng-hide="role.id"><h2>Add new role</h2></div>
+  <div ng-show="role.id"><h2>Edit role</h2></div>
   <form ng-submit="saveRole()" id="create-role" name="roleForm" novalidate>
     <div class="app-form">
 
@@ -55,7 +55,7 @@
       </div>
 
       <div class="form-cell button-row">
-        <input type="submit" class="btn btn-success save-button" value="Save"/>
+         <input type="submit" class="btn btn-success save-button" value="Save"/>
       </div>
 
     </div>
