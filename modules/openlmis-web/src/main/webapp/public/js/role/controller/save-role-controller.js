@@ -1,30 +1,29 @@
 function SaveRoleController($scope, $routeParams,$location, Roles, Role, Rights) {
   $scope.$parent.error = "";
   $scope.$parent.message = "";
+  $scope.role = {rights:[]};
 
   if ($routeParams.id) {
     Role.get({id:$routeParams.id}, function (data) {
       $scope.role = data.role;
     });
-  } else {
-    $scope.role = {rights:[]};
   }
 
   Rights.get({}, function (data) {
     $scope.rights = data.rights;
   }, {});
 
-  $scope.updateRights = function (checked, rightToUpdate) {
+  $scope.updateRights = function (checked, rightClicked) {
     if (checked == true) {
-      $scope.role.rights.push(rightToUpdate);
+      $scope.role.rights.push(rightClicked);
     } else {
-      deleteRight(rightToUpdate);
+      deleteRight(rightClicked);
     }
   };
 
-  function deleteRight(rightToUpdate) {
-    $.each($scope.role.rights, function (index, right) {
-      if (rightToUpdate == right) {
+  function deleteRight(rightClicked) {
+    $.each($scope.role.rights, function (index, rightObj) {
+      if (rightClicked.right == rightObj.right) {
         $scope.role.rights.splice(index, 1);
       }
     });
@@ -50,19 +49,17 @@ function SaveRoleController($scope, $routeParams,$location, Roles, Role, Rights)
     var successHandler = function (data) {
       $scope.$parent.message = data.success;
       $scope.$parent.$error = "";
+      $location.path('list');
     };
 
     if ($scope.roleForm.$invalid) {
       $scope.showError = true;
-      $scope.error = "Please correct the errors";
     } else {
       var id = $routeParams.id;
       if (id) {
         Role.update({id:id}, $scope.role, successHandler, errorHandler);
-        $location.path('list');
       } else {
         Roles.save({}, $scope.role, successHandler, errorHandler);
-        $location.path('list');
       }
     }
   }

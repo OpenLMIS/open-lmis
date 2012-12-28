@@ -30,8 +30,8 @@ public class OpenLmisResponse {
     return new ResponseEntity<>(new OpenLmisResponse(SUCCESS, successMsg), HttpStatus.OK);
   }
 
-  public static ResponseEntity<OpenLmisResponse> error(String successMsg, HttpStatus statusCode) {
-    return new ResponseEntity<>(new OpenLmisResponse(ERROR, successMsg), statusCode);
+  public static ResponseEntity<OpenLmisResponse> error(String errorMsg, HttpStatus statusCode) {
+    return new ResponseEntity<>(new OpenLmisResponse(ERROR, errorMsg), statusCode);
   }
 
   public static ResponseEntity<OpenLmisResponse> response(String key, Object value) {

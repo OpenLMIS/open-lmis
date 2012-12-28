@@ -12,20 +12,24 @@ import java.util.List;
 @NoArgsConstructor
 public class
     Role {
-    private Integer id;
-    private String name;
-    private String description;
-    private Integer modifiedBy;
-    private Date modifiedDate;
-    private List<Right> rights;
+  private Integer id;
+  private String name;
+  private String description;
+  private Integer modifiedBy;
+  private Date modifiedDate;
+  private List<Right> rights;
 
-    public Role(String name, String description){
-        this.name = name;
-        this.description = description;
-    }
+  public Role(String name, String description) {
+    this(null, name, description);
+  }
 
-    public void validate() {
-        if(name==null || name.isEmpty()) throw new RuntimeException("Role can not be created without name.");
-        if(rights==null || rights.isEmpty()) throw new RuntimeException("Role can not be created without any rights assigned to it.");
-    }
+  public Role(Integer id, String name, String description) {
+    this(id, name, description, null, null, null);
+  }
+
+  public void validate() {
+    if (name == null || name.isEmpty()) throw new RuntimeException("Role can not be created without name.");
+    if (rights == null || rights.isEmpty())
+      throw new RuntimeException("Role can not be created without any rights assigned to it.");
+  }
 }

@@ -2,6 +2,7 @@ package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Role;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +44,8 @@ public class RoleRightsController extends BaseController {
     try {
       roleRightsService.saveRole(role);
       return success("'" + role.getName() + "' created successfully");
-    } catch (RuntimeException e) {
-      return error(e.getMessage(), HttpStatus.BAD_REQUEST);
+    } catch (DataException e) {
+      return error(e.getMessage(), HttpStatus.CONFLICT);
     }
   }
 
@@ -66,8 +67,12 @@ public class RoleRightsController extends BaseController {
   @RequestMapping(value = "/roles/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('','MANAGE_ROLE')")
   public ResponseEntity<OpenLmisResponse> updateRole(@PathVariable("id") Integer id, @RequestBody Role role) {
-    role.setId(id);
-    roleRightsService.updateRole(role);
+    try {
+      role.setId(id);
+      roleRightsService.updateRole(role);
+    } catch (DataException e) {
+      return error(e.getMessage(), HttpStatus.CONFLICT);
+    }
     return new ResponseEntity<>(new OpenLmisResponse(SUCCESS, "Role updated successfully"), HttpStatus.OK);
   }
 }

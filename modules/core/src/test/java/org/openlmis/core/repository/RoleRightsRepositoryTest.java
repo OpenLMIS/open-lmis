@@ -60,6 +60,18 @@ public class RoleRightsRepositoryTest {
   }
 
   @Test
+  public void shouldNotUpdateToDuplicateRoleName() {
+    Role role = new Role("Name", "Desc");
+    role.setId(123);
+    doThrow(DuplicateKeyException.class).when(roleRightsMapper).updateRole(role);
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("Duplicate Role found");
+
+    new RoleRightsRepository(roleRightsMapper).updateRole(role);
+  }
+
+  @Test
   public void shouldGetAllRolesInTheSystem() throws Exception {
     List<Role> roles = new ArrayList<>();
     when(roleRightsMapper.getAllRoles()).thenReturn(roles);
@@ -81,7 +93,7 @@ public class RoleRightsRepositoryTest {
   }
 
   @Test
-  public void shouldUpdateRole(){
+  public void shouldUpdateRole() {
     role.setRights(asList(CONFIGURE_RNR));
     role.setId(100);
     new RoleRightsRepository(roleRightsMapper).updateRole(role);

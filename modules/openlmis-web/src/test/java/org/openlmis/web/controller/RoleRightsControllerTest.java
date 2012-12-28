@@ -8,8 +8,10 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.Role;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.web.response.OpenLmisResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
@@ -67,10 +69,13 @@ public class RoleRightsControllerTest {
 
   @Test
   public void shouldGiveErrorIfRoleNotSaved() throws Exception {
-    doThrow(new RuntimeException("Error message")).when(roleRightsService).saveRole(role);
+    doThrow(new DataException("Error message")).when(roleRightsService).saveRole(role);
+
     ResponseEntity<OpenLmisResponse> responseEntity = controller.createRole(role, httpServletRequest);
+
     verify(roleRightsService).saveRole(role);
     assertThat(responseEntity.getBody().getErrorMsg(), is("Error message"));
+    assertThat(responseEntity.getStatusCode(), is(HttpStatus.CONFLICT));
   }
 
   @Test
@@ -102,5 +107,19 @@ public class RoleRightsControllerTest {
 
     assertThat(response.getSuccessMsg(), is("Role updated successfully"));
     verify(roleRightsService).updateRole(role);
+  }
+
+  @Test
+  public void shouldReturnErrorMsgIfUpdateFails() throws Exception {
+    Role role = new Role(123, "Role Name", "Desc");
+
+    doThrow(new DataException("Duplicate Role found")).when(roleRightsService).updateRole(role);
+
+    ResponseEntity<OpenLmisResponse> responseEntity = controller.updateRole(role.getId(), role);
+
+    assertThat(responseEntity.getStatusCode(), is(HttpStatus.CONFLICT));
+    assertThat(responseEntity.getBody().getErrorMsg(), is("Duplicate Role found"));
+
+
   }
 }

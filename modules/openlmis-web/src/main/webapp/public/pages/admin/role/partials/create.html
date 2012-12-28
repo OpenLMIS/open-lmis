@@ -1,5 +1,5 @@
-<div ng-hide="rights">Loading...</div>
-<div ng-show="rights">
+<div ng-hide="rights && role">Loading...</div>
+<div ng-show="rights && role">
   <div ng-hide="role.id"><h2>Add new role</h2></div>
   <div ng-show="role.id"><h2>Edit role</h2></div>
   <form ng-submit="saveRole()" id="create-role" name="roleForm" novalidate>

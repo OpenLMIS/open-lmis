@@ -15,45 +15,49 @@ import java.util.List;
 @NoArgsConstructor
 public class RoleRightsRepository {
 
-    private RoleRightsMapper roleRightsMapper;
+  private RoleRightsMapper roleRightsMapper;
 
-    @Autowired
-    public RoleRightsRepository(RoleRightsMapper roleRightsMapper) {
-        this.roleRightsMapper = roleRightsMapper;
+  @Autowired
+  public RoleRightsRepository(RoleRightsMapper roleRightsMapper) {
+    this.roleRightsMapper = roleRightsMapper;
+  }
+
+  public List<Right> getAllRightsForUser(String username) {
+    return roleRightsMapper.getAllRightsForUser(username);
+  }
+
+  public void saveRole(Role role) {
+    try {
+      roleRightsMapper.insertRole(role);
+    } catch (DuplicateKeyException e) {
+      throw new DataException("Duplicate Role found");
     }
 
-    public List<Right> getAllRightsForUser(String username) {
-        return roleRightsMapper.getAllRightsForUser(username);
+    for (Right right : role.getRights()) {
+      roleRightsMapper.createRoleRight(role.getId(), right);
     }
+  }
 
-    public void saveRole(Role role) {
-        try {
-            roleRightsMapper.insertRole(role);
-        } catch (DuplicateKeyException e) {
-            throw new DataException("Duplicate Role found");
-        }
-
-        for (Right right : role.getRights()) {
-            roleRightsMapper.createRoleRight(role.getId(), right);
-        }
-    }
-
-    public List<Role> getAllRoles() {
-        return roleRightsMapper.getAllRoles();
-    }
+  public List<Role> getAllRoles() {
+    return roleRightsMapper.getAllRoles();
+  }
 
   public Role getRole(int roleId) {
     return roleRightsMapper.getRole(roleId);
   }
 
   public void updateRole(Role role) {
-     roleRightsMapper.updateRole(role);
-     List<Right> rights = role.getRights();
+    try {
+      roleRightsMapper.updateRole(role);
+    } catch (DuplicateKeyException e) {
+      throw new DataException("Duplicate Role found");
+    }
+    List<Right> rights = role.getRights();
 
-     roleRightsMapper.deleteAllRightsForRole(role.getId());
+    roleRightsMapper.deleteAllRightsForRole(role.getId());
 
-     for (Right right : rights) {
-        roleRightsMapper.createRoleRight(role.getId(), right);
-     }
+    for (Right right : rights) {
+      roleRightsMapper.createRoleRight(role.getId(), right);
+    }
   }
 }
