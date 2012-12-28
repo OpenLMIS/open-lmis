@@ -50,12 +50,9 @@
       <div class="alert alert-error" id="saveFailMessage" ng-model="error" ng-show="error">
         {{error}}
       </div>
-      <div class="alert alert-success" id="saveSuccessMsgDiv" ng-model="message" ng-show="message">
-        {{message}}
-      </div>
-
       <div class="form-cell button-row">
          <input type="submit" class="btn btn-success save-button" value="Save"/>
+         <a ng-href="#list" class="btn btn-cancel">Cancel</a>
       </div>
 
     </div>

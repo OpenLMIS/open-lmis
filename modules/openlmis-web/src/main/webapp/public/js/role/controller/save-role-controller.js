@@ -1,4 +1,6 @@
 function SaveRoleController($scope, $routeParams,$location, Roles, Role, Rights) {
+  $scope.$parent.error = "";
+  $scope.$parent.message = "";
 
   if ($routeParams.id) {
     Role.get({id:$routeParams.id}, function (data) {
@@ -46,8 +48,8 @@ function SaveRoleController($scope, $routeParams,$location, Roles, Role, Rights)
     };
 
     var successHandler = function (data) {
-      $scope.message = data.success;
-      $scope.error = "";
+      $scope.$parent.message = data.success;
+      $scope.$parent.$error = "";
     };
 
     if ($scope.roleForm.$invalid) {
@@ -57,10 +59,10 @@ function SaveRoleController($scope, $routeParams,$location, Roles, Role, Rights)
       var id = $routeParams.id;
       if (id) {
         Role.update({id:id}, $scope.role, successHandler, errorHandler);
-        $location.path('partials/list.html');
+        $location.path('list');
       } else {
         Roles.save({}, $scope.role, successHandler, errorHandler);
-        $location.path('partials/list.html');
+        $location.path('list');
       }
     }
   }
