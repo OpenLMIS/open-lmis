@@ -53,18 +53,22 @@ services.factory('Roles', function ($resource) {
     return $resource('/roles.json', {}, {});
 });
 
-services.factory('UserSupervisedProgramList', function($resource) {
-    return $resource('/create/requisition/supervised/programs.json',{}, {})
+services.factory('UserSupervisedProgramList', function ($resource) {
+    return $resource('/create/requisition/supervised/programs.json', {}, {})
 });
 
-services.factory('UserSupervisedFacilitiesForProgram', function($resource) {
-    return $resource('/create/requisition/supervised/:programId/facilities.json',{}, {})
+services.factory('UserSupervisedFacilitiesForProgram', function ($resource) {
+    return $resource('/create/requisition/supervised/:programId/facilities.json', {}, {})
 });
 
-services.factory('ReferenceData', function($resource) {
+services.factory('ReferenceData', function ($resource) {
     return $resource('/reference-data/currency.json', {}, {});
 });
 
 services.factory('Requisition', function($resource) {
     return $resource('/logistics/rnr/facility/:facilityId/program/:programId.json', {}, {update : {method:'PUT'}});
+});
+
+services.factory('AllSchedules', function ($resource) {
+    return $resource('/schedule.json', {}, {});
 });

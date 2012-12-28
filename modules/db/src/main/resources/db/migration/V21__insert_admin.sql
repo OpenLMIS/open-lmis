@@ -7,6 +7,7 @@ INSERT INTO roles
   ((select id from roles where name = 'Admin'), 'UPLOADS'),
   ((select id from roles where name = 'Admin'), 'MANAGE_FACILITY'),
   ((select id from roles where name = 'Admin'), 'MANAGE_ROLE'),
+  ((select id from roles where name = 'Admin'), 'MANAGE_SCHEDULE'),
   ((select id from roles where name = 'Admin'), 'CONFIGURE_RNR');
 
 INSERT INTO users

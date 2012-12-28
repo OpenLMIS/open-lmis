@@ -13,6 +13,7 @@ public enum Right {
     CONFIGURE_RNR("Admin - Configure Requisition Templates", "Permission to create and edit r&r template for any program"),
     MANAGE_FACILITY("Admin - Manage Facilities", "Permission to manage facility(crud)"),
     MANAGE_ROLE("Admin - Manage Roles", "Permission to create and edit roles in the system"),
+    MANAGE_SCHEDULE("Admin - Manage Schedules", "Permission to create and edit schedules in the system"),
     UPLOADS("Admin - Uploads", "Permission to upload"),
     CREATE_REQUISITION("Requisition - Create", "Permission to create, edit, submit and recall requisitions");
 

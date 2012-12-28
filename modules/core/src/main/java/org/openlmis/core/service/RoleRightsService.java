@@ -48,7 +48,7 @@ public class RoleRightsService {
     }
 
     public void saveRole(Role role) {
-       role.validate();
+        role.validate();
        roleRightsRepository.saveRole(role);
     }
 

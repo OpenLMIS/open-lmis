@@ -1,0 +1,743 @@
+From a8eeae35e4ddd23591bafe83ad5f7428edd695bf Mon Sep 17 00:00:00 2001
+From: Sanchit Bahal <sanchit.bahal@live.com>
+Date: Fri, 28 Dec 2012 13:30:54 +0530
+Subject: [PATCH] |#140| +Mridul | Created UI for viewing schedules. Changed
+ the response type to ResponseEntity from the get all
+ schedules API.
+
+---
+ .../main/java/org/openlmis/core/domain/Right.java  |    1 +
+ .../repository/ProcessingScheduleRepository.java   |    2 +
+ .../core/service/ProcessingScheduleService.java    |    2 +
+ .../openlmis/core/service/RoleRightsService.java   |    2 +-
+ .../core/repository/mapper/RoleRightsMapperIT.java |  210 ++++++++++----------
+ .../resources/db/migration/V20__insert_rights.sql  |    1 +
+ .../resources/db/migration/V21__insert_admin.sql   |    1 +
+ .../migration/V25__create_processing_schedules.sql |   10 +
+ .../db/migration/V25__create_schedules.sql         |   10 -
+ .../controller/ProcessingScheduleController.java   |   30 +++
+ .../js/schedule/controller/schedule-controller.js  |    7 +
+ .../webapp/public/js/schedule/domain/schedule.js   |   13 ++
+ .../public/js/schedule/module/schedule-module.js   |    3 +
+ .../webapp/public/js/shared/services/services.js   |   17 +-
+ .../webapp/public/pages/admin/schedule/index.html  |   84 ++++++++
+ .../public/pages/logistics/rnr/partials/form.html  |    2 +-
+ .../src/main/webapp/public/pages/navigation.html   |   86 ++++----
+ .../ProcessingScheduleControllerTest.java          |   42 ++++
+ 18 files changed, 360 insertions(+), 163 deletions(-)
+ create mode 100644 modules/db/src/main/resources/db/migration/V25__create_processing_schedules.sql
+ delete mode 100644 modules/db/src/main/resources/db/migration/V25__create_schedules.sql
+ create mode 100644 modules/openlmis-web/src/main/java/org/openlmis/web/controller/ProcessingScheduleController.java
+ create mode 100644 modules/openlmis-web/src/main/webapp/public/js/schedule/controller/schedule-controller.js
+ create mode 100644 modules/openlmis-web/src/main/webapp/public/js/schedule/domain/schedule.js
+ create mode 100644 modules/openlmis-web/src/main/webapp/public/js/schedule/module/schedule-module.js
+ create mode 100644 modules/openlmis-web/src/main/webapp/public/pages/admin/schedule/index.html
+ create mode 100644 modules/openlmis-web/src/test/resources/org/openlmis/web/controller/ProcessingScheduleControllerTest.java
+
+diff --git a/modules/core/src/main/java/org/openlmis/core/domain/Right.java b/modules/core/src/main/java/org/openlmis/core/domain/Right.java
+index c790e99..425c916 100644
+--- a/modules/core/src/main/java/org/openlmis/core/domain/Right.java
++++ b/modules/core/src/main/java/org/openlmis/core/domain/Right.java
+@@ -13,6 +13,7 @@ public enum Right {
+     CONFIGURE_RNR("Admin - Configure Requisition Templates", "Permission to create and edit r&r template for any program"),
+     MANAGE_FACILITY("Admin - Manage Facilities", "Permission to manage facility(crud)"),
+     MANAGE_ROLE("Admin - Manage Roles", "Permission to create and edit roles in the system"),
++    MANAGE_SCHEDULE("Admin - Manage Schedules", "Permission to create and edit schedules in the system"),
+     UPLOADS("Admin - Uploads", "Permission to upload"),
+     CREATE_REQUISITION("Requisition - Create", "Permission to create, edit, submit and recall requisitions");
+ 
+diff --git a/modules/core/src/main/java/org/openlmis/core/repository/ProcessingScheduleRepository.java b/modules/core/src/main/java/org/openlmis/core/repository/ProcessingScheduleRepository.java
+index a704297..7349971 100644
+--- a/modules/core/src/main/java/org/openlmis/core/repository/ProcessingScheduleRepository.java
++++ b/modules/core/src/main/java/org/openlmis/core/repository/ProcessingScheduleRepository.java
+@@ -3,6 +3,7 @@ package org.openlmis.core.repository;
+ import lombok.NoArgsConstructor;
+ import org.openlmis.core.domain.ProcessingSchedule;
+ import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
++import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.stereotype.Repository;
+ 
+ import java.util.List;
+@@ -12,6 +13,7 @@ import java.util.List;
+ public class ProcessingScheduleRepository {
+     private ProcessingScheduleMapper processingScheduleMapper;
+ 
++    @Autowired
+     public ProcessingScheduleRepository(ProcessingScheduleMapper processingScheduleMapper) {
+         this.processingScheduleMapper = processingScheduleMapper;
+     }
+diff --git a/modules/core/src/main/java/org/openlmis/core/service/ProcessingScheduleService.java b/modules/core/src/main/java/org/openlmis/core/service/ProcessingScheduleService.java
+index 4bfa12e..902f179 100644
+--- a/modules/core/src/main/java/org/openlmis/core/service/ProcessingScheduleService.java
++++ b/modules/core/src/main/java/org/openlmis/core/service/ProcessingScheduleService.java
+@@ -3,6 +3,7 @@ package org.openlmis.core.service;
+ import lombok.NoArgsConstructor;
+ import org.openlmis.core.domain.ProcessingSchedule;
+ import org.openlmis.core.repository.ProcessingScheduleRepository;
++import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.stereotype.Service;
+ 
+ import java.util.List;
+@@ -12,6 +13,7 @@ import java.util.List;
+ public class ProcessingScheduleService {
+     private ProcessingScheduleRepository processingScheduleRepository;
+ 
++    @Autowired
+     public ProcessingScheduleService(ProcessingScheduleRepository processingScheduleRepository) {
+         this.processingScheduleRepository = processingScheduleRepository;
+     }
+diff --git a/modules/core/src/main/java/org/openlmis/core/service/RoleRightsService.java b/modules/core/src/main/java/org/openlmis/core/service/RoleRightsService.java
+index 47c9910..da9cda3 100644
+--- a/modules/core/src/main/java/org/openlmis/core/service/RoleRightsService.java
++++ b/modules/core/src/main/java/org/openlmis/core/service/RoleRightsService.java
+@@ -48,7 +48,7 @@ public class RoleRightsService {
+     }
+ 
+     public void saveRole(Role role) {
+-       role.validate();
++        role.validate();
+        roleRightsRepository.saveRole(role);
+     }
+ 
+diff --git a/modules/core/src/test/java/org/openlmis/core/repository/mapper/RoleRightsMapperIT.java b/modules/core/src/test/java/org/openlmis/core/repository/mapper/RoleRightsMapperIT.java
+index 333d850..057d6db 100644
+--- a/modules/core/src/test/java/org/openlmis/core/repository/mapper/RoleRightsMapperIT.java
++++ b/modules/core/src/test/java/org/openlmis/core/repository/mapper/RoleRightsMapperIT.java
+@@ -30,110 +30,112 @@ import static org.openlmis.core.domain.Right.*;
+ @Transactional
+ public class RoleRightsMapperIT {
+ 
+-  @Autowired
+-  UserMapper userMapper;
+-  @Autowired
+-  ProgramMapper programMapper;
+-  @Autowired
+-  ProgramSupportedMapper programSupportedMapper;
+-  @Autowired
+-  RoleRightsMapper roleRightsMapper;
+-  @Autowired
+-  RoleAssignmentMapper roleAssignmentMapper;
+-
+-  @Test
+-  public void shouldSetupRightsForAdminRole() {
+-    List<Right> adminRights = roleRightsMapper.getAllRightsForUser("Admin123");
+-    assertEquals(CONFIGURE_RNR, adminRights.get(0));
+-    assertEquals(MANAGE_FACILITY, adminRights.get(1));
+-    assertEquals(MANAGE_ROLE, adminRights.get(2));
+-    assertEquals(UPLOADS, adminRights.get(3));
+-  }
+-
+-  @Test
+-  public void shouldGetAllRightsForAUser() throws Exception {
+-    User user = insertUser();
+-
+-    List<Right> allRightsForUser = roleRightsMapper.getAllRightsForUser(user.getUserName());
+-    assertThat(allRightsForUser.size(), is(0));
+-
+-    Program program = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
+-    Role role = insertRole();
+-
+-    insertRoleAssignments(program, user, role);
+-
+-    roleRightsMapper.createRoleRight(role.getId(), CREATE_REQUISITION);
+-    roleRightsMapper.createRoleRight(role.getId(), CONFIGURE_RNR);
+-
+-    allRightsForUser = roleRightsMapper.getAllRightsForUser(user.getUserName());
+-    assertThat(allRightsForUser.size(), is(2));
+-  }
+-
+-  @Test
+-  public void shouldGetRoleAndRights() throws Exception {
+-    Role role = new Role(111, "role name", "description", 123, null, null);
+-    roleRightsMapper.insertRole(role);
+-
+-    roleRightsMapper.createRoleRight(role.getId(), CREATE_REQUISITION);
+-    roleRightsMapper.createRoleRight(role.getId(), MANAGE_FACILITY);
+-
+-    Role resultRole = roleRightsMapper.getRole(role.getId());
+-
+-    assertThat(resultRole.getId(), is(not(111)));
+-    assertThat(resultRole.getId(), is(notNullValue()));
+-    assertThat(resultRole.getName(), is(role.getName()));
+-    assertThat(resultRole.getDescription(), is(role.getDescription()));
+-    assertThat(resultRole.getModifiedBy(), is(role.getModifiedBy()));
+-    assertTrue(resultRole.getRights().contains(CREATE_REQUISITION));
+-    assertTrue(resultRole.getRights().contains(MANAGE_FACILITY));
+-  }
+-
+-  @Test(expected = DuplicateKeyException.class)
+-  public void shouldThrowDuplicateKeyExceptionIfDuplicateRoleName() throws Exception {
+-    String duplicateRoleName = "role name";
+-    Role role = new Role(duplicateRoleName, "");
+-    Role role2 = new Role(duplicateRoleName, "any other description");
+-    roleRightsMapper.insertRole(role);
+-    roleRightsMapper.insertRole(role2);
+-  }
+-
+-  @Test
+-  public void shouldReturnAllRolesInSystem() throws Exception {
+-    Role role = new Role("role name", "");
+-    roleRightsMapper.insertRole(role);
+-    roleRightsMapper.createRoleRight(role.getId(), CONFIGURE_RNR);
+-    roleRightsMapper.createRoleRight(role.getId(), CREATE_REQUISITION);
+-
+-    List<Role> roles = roleRightsMapper.getAllRoles();
+-
+-    assertThat(roles.get(0).getName(), is("Admin"));
+-    Role fetchedRole = roles.get(1);
+-    assertThat(fetchedRole.getName(), is("role name"));
+-    assertTrue(fetchedRole.getRights().contains(CONFIGURE_RNR));
+-    assertTrue(fetchedRole.getRights().contains(CREATE_REQUISITION));
+-  }
+-
+-  private Role insertRole() {
+-    Role r1 = new Role("r1", "random description");
+-    roleRightsMapper.insertRole(r1);
+-    return r1;
+-  }
+-
+-  private Program insertProgram(Program program) {
+-    programMapper.insert(program);
+-    return program;
+-  }
+-
+-  private Role insertRoleAssignments(Program program, User user, Role role) {
+-    roleAssignmentMapper.createRoleAssignment(user, role, program, null);
+-    return role;
+-  }
+-
+-  private User insertUser() {
+-    User user = new User("random123123", "pwd");
+-    userMapper.insert(user);
+-    return user;
+-  }
++    @Autowired
++    UserMapper userMapper;
++    @Autowired
++    ProgramMapper programMapper;
++    @Autowired
++    ProgramSupportedMapper programSupportedMapper;
++    @Autowired
++    RoleRightsMapper roleRightsMapper;
++    @Autowired
++    RoleAssignmentMapper roleAssignmentMapper;
++
++    @Test
++    public void shouldSetupRightsForAdminRole() {
++        List<Right> adminRights = roleRightsMapper.getAllRightsForUser("Admin123");
++        assertEquals(5, adminRights.size());
++        assertEquals(CONFIGURE_RNR, adminRights.get(0));
++        assertEquals(MANAGE_FACILITY, adminRights.get(1));
++        assertEquals(MANAGE_ROLE, adminRights.get(2));
++        assertEquals(MANAGE_SCHEDULE, adminRights.get(3));
++        assertEquals(UPLOADS, adminRights.get(4));
++    }
++
++    @Test
++    public void shouldGetAllRightsForAUser() throws Exception {
++        User user = insertUser();
++
++        List<Right> allRightsForUser = roleRightsMapper.getAllRightsForUser(user.getUserName());
++        assertThat(allRightsForUser.size(), is(0));
++
++        Program program = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
++        Role role = insertRole();
++
++        insertRoleAssignments(program, user, role);
++
++        roleRightsMapper.createRoleRight(role.getId(), CREATE_REQUISITION);
++        roleRightsMapper.createRoleRight(role.getId(), CONFIGURE_RNR);
++
++        allRightsForUser = roleRightsMapper.getAllRightsForUser(user.getUserName());
++        assertThat(allRightsForUser.size(), is(2));
++    }
++
++    @Test
++    public void shouldGetRoleAndRights() throws Exception {
++        Role role = new Role(111, "role name", "description", 123, null, null);
++        roleRightsMapper.insertRole(role);
++
++        roleRightsMapper.createRoleRight(role.getId(), CREATE_REQUISITION);
++        roleRightsMapper.createRoleRight(role.getId(), MANAGE_FACILITY);
++
++        Role resultRole = roleRightsMapper.getRole(role.getId());
++
++        assertThat(resultRole.getId(), is(not(111)));
++        assertThat(resultRole.getId(), is(notNullValue()));
++        assertThat(resultRole.getName(), is(role.getName()));
++        assertThat(resultRole.getDescription(), is(role.getDescription()));
++        assertThat(resultRole.getModifiedBy(), is(role.getModifiedBy()));
++        assertTrue(resultRole.getRights().contains(CREATE_REQUISITION));
++        assertTrue(resultRole.getRights().contains(MANAGE_FACILITY));
++    }
++
++    @Test(expected = DuplicateKeyException.class)
++    public void shouldThrowDuplicateKeyExceptionIfDuplicateRoleName() throws Exception {
++        String duplicateRoleName = "role name";
++        Role role = new Role(duplicateRoleName, "");
++        Role role2 = new Role(duplicateRoleName, "any other description");
++        roleRightsMapper.insertRole(role);
++        roleRightsMapper.insertRole(role2);
++    }
++
++    @Test
++    public void shouldReturnAllRolesInSystem() throws Exception {
++        Role role = new Role("role name", "");
++        roleRightsMapper.insertRole(role);
++        roleRightsMapper.createRoleRight(role.getId(), CONFIGURE_RNR);
++        roleRightsMapper.createRoleRight(role.getId(), CREATE_REQUISITION);
++
++        List<Role> roles = roleRightsMapper.getAllRoles();
++
++        assertThat(roles.get(0).getName(), is("Admin"));
++        Role fetchedRole = roles.get(1);
++        assertThat(fetchedRole.getName(), is("role name"));
++        assertTrue(fetchedRole.getRights().contains(CONFIGURE_RNR));
++        assertTrue(fetchedRole.getRights().contains(CREATE_REQUISITION));
++    }
++
++    private Role insertRole() {
++        Role r1 = new Role("r1", "random description");
++        roleRightsMapper.insertRole(r1);
++        return r1;
++    }
++
++    private Program insertProgram(Program program) {
++        programMapper.insert(program);
++        return program;
++    }
++
++    private Role insertRoleAssignments(Program program, User user, Role role) {
++        roleAssignmentMapper.createRoleAssignment(user, role, program, null);
++        return role;
++    }
++
++    private User insertUser() {
++        User user = new User("random123123", "pwd");
++        userMapper.insert(user);
++        return user;
++    }
+ 
+ 
+ }
+diff --git a/modules/db/src/main/resources/db/migration/V20__insert_rights.sql b/modules/db/src/main/resources/db/migration/V20__insert_rights.sql
+index 5ed5a1c..1ee8e78 100644
+--- a/modules/db/src/main/resources/db/migration/V20__insert_rights.sql
++++ b/modules/db/src/main/resources/db/migration/V20__insert_rights.sql
+@@ -3,4 +3,5 @@ INSERT INTO rights(name, description) VALUES
+  ('UPLOADS', 'Permission to upload'),
+  ('MANAGE_FACILITY','Permission to manage facilities(crud)'),
+  ('MANAGE_ROLE','Permission to create and edit roles in the system'),
++ ('MANAGE_SCHEDULE','Permission to create and edit schedules in the system'),
+  ('CONFIGURE_RNR','Permission to create and edit r&r template for any program');
+\ No newline at end of file
+diff --git a/modules/db/src/main/resources/db/migration/V21__insert_admin.sql b/modules/db/src/main/resources/db/migration/V21__insert_admin.sql
+index ecd40a9..a4dc9ed 100644
+--- a/modules/db/src/main/resources/db/migration/V21__insert_admin.sql
++++ b/modules/db/src/main/resources/db/migration/V21__insert_admin.sql
+@@ -7,6 +7,7 @@ INSERT INTO roles
+   ((select id from roles where name = 'Admin'), 'UPLOADS'),
+   ((select id from roles where name = 'Admin'), 'MANAGE_FACILITY'),
+   ((select id from roles where name = 'Admin'), 'MANAGE_ROLE'),
++  ((select id from roles where name = 'Admin'), 'MANAGE_SCHEDULE'),
+   ((select id from roles where name = 'Admin'), 'CONFIGURE_RNR');
+ 
+ INSERT INTO users
+diff --git a/modules/db/src/main/resources/db/migration/V25__create_processing_schedules.sql b/modules/db/src/main/resources/db/migration/V25__create_processing_schedules.sql
+new file mode 100644
+index 0000000..3a1548c
+--- /dev/null
++++ b/modules/db/src/main/resources/db/migration/V25__create_processing_schedules.sql
+@@ -0,0 +1,10 @@
++CREATE TABLE processing_schedules (
++  id SERIAL PRIMARY KEY,
++  code VARCHAR(50) UNIQUE NOT NULL,
++  name VARCHAR(50) NOT NULL,
++  description VARCHAR(250),
++  modifiedBy INTEGER,
++  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
++);
++
++CREATE UNIQUE INDEX ucScheduleCode ON processing_schedules(LOWER(code));
+\ No newline at end of file
+diff --git a/modules/db/src/main/resources/db/migration/V25__create_schedules.sql b/modules/db/src/main/resources/db/migration/V25__create_schedules.sql
+deleted file mode 100644
+index 3a1548c..0000000
+--- a/modules/db/src/main/resources/db/migration/V25__create_schedules.sql
++++ /dev/null
+@@ -1,10 +0,0 @@
+-CREATE TABLE processing_schedules (
+-  id SERIAL PRIMARY KEY,
+-  code VARCHAR(50) UNIQUE NOT NULL,
+-  name VARCHAR(50) NOT NULL,
+-  description VARCHAR(250),
+-  modifiedBy INTEGER,
+-  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-);
+-
+-CREATE UNIQUE INDEX ucScheduleCode ON processing_schedules(LOWER(code));
+\ No newline at end of file
+diff --git a/modules/openlmis-web/src/main/java/org/openlmis/web/controller/ProcessingScheduleController.java b/modules/openlmis-web/src/main/java/org/openlmis/web/controller/ProcessingScheduleController.java
+new file mode 100644
+index 0000000..ec03dc6
+--- /dev/null
++++ b/modules/openlmis-web/src/main/java/org/openlmis/web/controller/ProcessingScheduleController.java
+@@ -0,0 +1,30 @@
++package org.openlmis.web.controller;
++
++import lombok.NoArgsConstructor;
++import org.openlmis.core.service.ProcessingScheduleService;
++import org.openlmis.web.response.OpenLmisResponse;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.http.ResponseEntity;
++import org.springframework.security.access.prepost.PreAuthorize;
++import org.springframework.stereotype.Controller;
++import org.springframework.web.bind.annotation.RequestMapping;
++import org.springframework.web.bind.annotation.RequestMethod;
++
++@Controller
++@NoArgsConstructor
++public class ProcessingScheduleController extends BaseController {
++
++    public static final String SCHEDULES = "schedules";
++    private ProcessingScheduleService scheduleService;
++
++    @Autowired
++    public ProcessingScheduleController(ProcessingScheduleService scheduleService) {
++        this.scheduleService = scheduleService;
++    }
++
++    @RequestMapping(value = "schedule", method = RequestMethod.GET, headers = "Accept=application/json")
++    @PreAuthorize("hasPermission('','MANAGE_SCHEDULE')")
++    public ResponseEntity<OpenLmisResponse> getAll() {
++        return OpenLmisResponse.response(SCHEDULES, scheduleService.getAll());
++    }
++}
+diff --git a/modules/openlmis-web/src/main/webapp/public/js/schedule/controller/schedule-controller.js b/modules/openlmis-web/src/main/webapp/public/js/schedule/controller/schedule-controller.js
+new file mode 100644
+index 0000000..c494171
+--- /dev/null
++++ b/modules/openlmis-web/src/main/webapp/public/js/schedule/controller/schedule-controller.js
+@@ -0,0 +1,7 @@
++function ScheduleController($scope, AllSchedules) {
++    AllSchedules.get({}, function (data) {
++        $scope.schedules = data.schedules;
++    }, function () {
++        $location.path($scope.$parent.sourceUrl);
++    });
++}
+\ No newline at end of file
+diff --git a/modules/openlmis-web/src/main/webapp/public/js/schedule/domain/schedule.js b/modules/openlmis-web/src/main/webapp/public/js/schedule/domain/schedule.js
+new file mode 100644
+index 0000000..881e0ab
+--- /dev/null
++++ b/modules/openlmis-web/src/main/webapp/public/js/schedule/domain/schedule.js
+@@ -0,0 +1,13 @@
++function Schedule(){
++    this.id;
++
++    this.code;
++    this.name;
++    this.description;
++    this.modifiedBy;
++    this.modifiedDate;    
++    
++    this.createFromJson = function(scheduleJson){
++
++    }
++}
+diff --git a/modules/openlmis-web/src/main/webapp/public/js/schedule/module/schedule-module.js b/modules/openlmis-web/src/main/webapp/public/js/schedule/module/schedule-module.js
+new file mode 100644
+index 0000000..6cc6e44
+--- /dev/null
++++ b/modules/openlmis-web/src/main/webapp/public/js/schedule/module/schedule-module.js
+@@ -0,0 +1,3 @@
++angular.module('schedule', ['openlmis']).
++    config(['$routeProvider', function($routeProvider) {
++}]);
+\ No newline at end of file
+diff --git a/modules/openlmis-web/src/main/webapp/public/js/shared/services/services.js b/modules/openlmis-web/src/main/webapp/public/js/shared/services/services.js
+index aa1063e..6522742 100644
+--- a/modules/openlmis-web/src/main/webapp/public/js/shared/services/services.js
++++ b/modules/openlmis-web/src/main/webapp/public/js/shared/services/services.js
+@@ -57,14 +57,19 @@ services.factory('AllRoles', function ($resource) {
+     return $resource('/roles.json', {}, {});
+ });
+ 
+-services.factory('UserSupervisedProgramList', function($resource) {
+-    return $resource('/create/requisition/supervised/programs.json',{}, {})
++services.factory('UserSupervisedProgramList', function ($resource) {
++    return $resource('/create/requisition/supervised/programs.json', {}, {})
+ });
+ 
+-services.factory('UserSupervisedFacilitiesForProgram', function($resource) {
+-    return $resource('/create/requisition/supervised/:programId/facilities.json',{}, {})
++services.factory('UserSupervisedFacilitiesForProgram', function ($resource) {
++    return $resource('/create/requisition/supervised/:programId/facilities.json', {}, {})
+ });
+ 
+-services.factory('ReferenceData', function($resource) {
++services.factory('ReferenceData', function ($resource) {
+     return $resource('/reference-data/currency.json', {}, {});
+-});
+\ No newline at end of file
++});
++
++services.factory('AllSchedules', function ($resource) {
++    return $resource('/schedule.json', {}, {});
++});
++
+diff --git a/modules/openlmis-web/src/main/webapp/public/pages/admin/schedule/index.html b/modules/openlmis-web/src/main/webapp/public/pages/admin/schedule/index.html
+new file mode 100644
+index 0000000..80deaac
+--- /dev/null
++++ b/modules/openlmis-web/src/main/webapp/public/pages/admin/schedule/index.html
+@@ -0,0 +1,84 @@
++<!doctype html>
++<html lang="en" ng-app="schedule">
++
++<head>
++    <meta charset="utf-8">
++    <title>Open-LMIS</title>
++    <script src="/public/js/shared/lib/jquery-1.8.2.min.js"></script>
++    <script src="/public/js/shared/lib/jquery-ui-1.9.2.custom.min.js"></script>
++    <script src="/public/js/shared/lib/angular/angular.js"></script>
++    <script src="/public/js/shared/lib/angular/angular-resource.js"></script>
++    <script src="/public/js/shared/lib/bootstrap/js/bootstrap.min.js"></script>
++    <link rel="stylesheet" href="/public/js/shared/lib/bootstrap/css/bootstrap.min.css">
++    <script src="/public/js/shared/lib/angular-ui/angular-ui.min.js"></script>
++    <link rel="stylesheet" href="/public/js/shared/lib/angular-ui/angular-ui.min.css">
++
++    <script src="/public/js/shared/services/services.js"></script>
++    <script src="/public/js/shared/app.js"></script>
++    <link rel="stylesheet" href="/public/css/app.css">
++    <script src="/public/js/shared/controller/login-controller.js"></script>
++    <script src="/public/js/shared/controller/header-controller.js"></script>
++    <script src="/public/js/shared/controller/navigation-controller.js"></script>
++    <script src="/public/js/shared/lib/localStorage.js"></script>
++    <script src="/public/js/shared/localStorageKeys.js"></script>
++
++    <script src="/public/js/schedule/module/schedule-module.js"></script>
++    <script src="/public/js/schedule/controller/schedule-controller.js"></script>
++    <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/app.css">
++</head>
++<body onunload="">
++<div id="wrap">
++    <ng-include src="'/public/pages/header.html'"></ng-include>
++    <ng-include src="'/public/pages/navigation.html'"></ng-include>
++    <div class="content">
++        <div ng-controller="ScheduleController">
++            <div ng-hide="schedules">Loading...</div>
++            <div ng-show="schedules" novalidate>
++                <table class="table table-striped table-bordered">
++                    <thead>
++                    <tr>
++                        <th>
++                            Code
++                        </th>
++                        <th>
++                            Name
++                        </th>
++                        <th>
++                            Description
++                        </th>
++                        <th>
++                            Last Modified
++                        </th>
++                    </tr>
++                    </thead>
++                    <tbody ng-show="schedules && (schedules.length > 0)">
++                    <tr ng-repeat="schedule in schedules">
++                        <td class="cell-text">
++                            {{schedule.code}}
++                        </td>
++                        <td class="cell-text">
++                            {{schedule.name}}
++
++                        </td>
++                        <td class="cell-text">
++                            {{schedule.description}}
++                        </td>
++                        <td class="cell-text">
++                            {{schedule.modifiedDate}}
++                        </td>
++                    </tr>
++                    </tbody>
++                </table>
++                <div class="alert alert-error" id="saveFailMessage" ng-model="error" ng-show="error">
++                    {{error}}
++                </div>
++                <div class="alert alert-success" id="saveSuccessMsgDiv" ng-model="message" ng-show="message">
++                    {{message}}
++                </div>
++                <input type="button" class="btn" value="Add a Schedule"/>
++            </div>
++        </div>
++    </div>
++</div>
++</body>
++</html>
+\ No newline at end of file
+diff --git a/modules/openlmis-web/src/main/webapp/public/pages/logistics/rnr/partials/form.html b/modules/openlmis-web/src/main/webapp/public/pages/logistics/rnr/partials/form.html
+index 49a3551..6a6f283 100644
+--- a/modules/openlmis-web/src/main/webapp/public/pages/logistics/rnr/partials/form.html
++++ b/modules/openlmis-web/src/main/webapp/public/pages/logistics/rnr/partials/form.html
+@@ -27,7 +27,7 @@
+                                             name="beginningBalance{{rnrLineItem['id']}}"
+                                             ng-model="rnrLineItem[column.name]"
+                                             rnr-validator="positiveInteger" maxlength="8"
+-                                            ng-change="fillCalculatedRnrColumns(rnrLineItem, rnr)"/>
++                                            ng-change="rnrLineItem.fillCalculatedRnrColumns(rnrLineItem, rnr)"/>
+                                      <span class="rnr-form-error" id="beginningBalance{{rnrLineItem['id']}}" style="display:none;">
+                                       Enter Numeric Data
+                                      </span>
+diff --git a/modules/openlmis-web/src/main/webapp/public/pages/navigation.html b/modules/openlmis-web/src/main/webapp/public/pages/navigation.html
+index 1f078d7..24b3001 100644
+--- a/modules/openlmis-web/src/main/webapp/public/pages/navigation.html
++++ b/modules/openlmis-web/src/main/webapp/public/pages/navigation.html
+@@ -1,49 +1,53 @@
+ <div class="navigation" ng-controller="NavigationController">
+-  <ul style="display:none">
+-    <li><a href="/">Home</a></li>
++    <ul style="display:none">
++        <li><a href="/">Home</a></li>
+ 
+-    <li class="has-children" ng-show="hasPermission('CREATE_REQUISITION')"><a href="javascript: void(0)">Requisitions</a>
+-      <ul>
+-        <li>
+-          <a href="javascript: void(0);">Create</a>
+-          <ul>
+-            <li><a href="/public/pages/logistics/rnr/create.html">My Facility</a></li>
+-            <li><a href="/public/pages/logistics/rnr/create.html#/supervised/init-rnr">My Supervised Facility</a></li>
+-          </ul>
+-        </li>
+-          
+-      </ul>
+-    </li>
++        <li class="has-children" ng-show="hasPermission('CREATE_REQUISITION')"><a href="javascript: void(0)">Requisitions</a>
++            <ul>
++                <li>
++                    <a href="javascript: void(0);">Create</a>
++                    <ul>
++                        <li><a href="/public/pages/logistics/rnr/create.html">My Facility</a></li>
++                        <li><a href="/public/pages/logistics/rnr/create.html#/supervised/init-rnr">My Supervised
++                            Facility</a></li>
++                    </ul>
++                </li>
+ 
+-    <li class="has-children navgroup">
+-      <a href="javascript: void(0)">Administration</a>
+-      <ul>
+-        <li ng-show="hasPermission('UPLOADS')">
+-          <a href="/public/pages/admin/upload/index.html">Upload</a>
++            </ul>
+         </li>
+ 
+-        <li class="has-children">
+-          <a href="javascript: void(0);">Configure</a>
+-          <ul>
+-            <li ng-show="hasPermission('CONFIGURE_RNR')">
+-              <a href="/public/pages/admin/rnr-template/create.html">R &amp; R Template</a>
+-            </li>
+-          </ul>
+-        </li>
+-        
+-        <li class="has-children">
+-          <a href="javascript: void(0);">Manage</a>
+-          <ul>
+-            <li ng-show="hasPermission('MANAGE_FACILITY')">
+-              <a href="/public/pages/admin/facility/index.html#/search">Facilities</a>
+-            </li>
+-            <li ng-show="hasPermission('MANAGE_ROLE')">
+-              <a href="/public/pages/admin/role/index.html">Role assignments</a>
+-            </li>
+-          </ul>
++        <li class="has-children navgroup">
++            <a href="javascript: void(0)">Administration</a>
++            <ul>
++                <li ng-show="hasPermission('UPLOADS')">
++                    <a href="/public/pages/admin/upload/index.html">Upload</a>
++                </li>
++
++                <li class="has-children">
++                    <a href="javascript: void(0);">Configure</a>
++                    <ul>
++                        <li ng-show="hasPermission('CONFIGURE_RNR')">
++                            <a href="/public/pages/admin/rnr-template/create.html">R &amp; R Template</a>
++                        </li>
++                    </ul>
++                </li>
++
++                <li class="has-children">
++                    <a href="javascript: void(0);">Manage</a>
++                    <ul>
++                        <li ng-show="hasPermission('MANAGE_FACILITY')">
++                            <a href="javascript:void(0)" onclick="navigateToURL(/facility#/search)">Facilities</a>
++                        </li>
++                        <li ng-show="hasPermission('MANAGE_ROLE')">
++                            <a href="/public/pages/admin/role/index.html">Role assignments</a>
++                        </li>
++                        <li ng-show="hasPermission('MANAGE_SCHEDULE')">
++                            <a href="/public/pages/admin/schedule/index.html">Schedules</a>
++                        </li>
++                    </ul>
++                </li>
++            </ul>
+         </li>
+-      </ul>
+-    </li>
+ 
+-  </ul>
++    </ul>
+ </div>
+diff --git a/modules/openlmis-web/src/test/resources/org/openlmis/web/controller/ProcessingScheduleControllerTest.java b/modules/openlmis-web/src/test/resources/org/openlmis/web/controller/ProcessingScheduleControllerTest.java
+new file mode 100644
+index 0000000..6d4d8d3
+--- /dev/null
++++ b/modules/openlmis-web/src/test/resources/org/openlmis/web/controller/ProcessingScheduleControllerTest.java
+@@ -0,0 +1,42 @@
++package org.openlmis.web.controller;
++
++import org.junit.Before;
++import org.junit.Test;
++import org.mockito.Mock;
++import org.openlmis.core.domain.ProcessingSchedule;
++import org.openlmis.core.service.ProcessingScheduleService;
++import org.openlmis.web.response.OpenLmisResponse;
++import org.springframework.http.ResponseEntity;
++
++import java.util.ArrayList;
++import java.util.List;
++import java.util.Map;
++
++import static org.hamcrest.CoreMatchers.is;
++import static org.junit.Assert.assertThat;
++import static org.mockito.Mockito.when;
++import static org.mockito.MockitoAnnotations.initMocks;
++
++public class ProcessingScheduleControllerTest {
++    @Mock
++    ProcessingScheduleService processingScheduleService;
++
++    ProcessingScheduleController processingScheduleController;
++
++    @Before
++    public void setUp() throws Exception {
++        initMocks(this);
++        processingScheduleController = new ProcessingScheduleController(processingScheduleService);
++    }
++
++    @Test
++    public void shouldGetAll() throws Exception {
++        List<ProcessingSchedule> processingSchedules = new ArrayList<>();
++        when(processingScheduleService.getAll()).thenReturn(processingSchedules);
++
++        ResponseEntity<OpenLmisResponse> responseEntity = processingScheduleController.getAll();
++
++        Map<String, Object> responseEntityData = responseEntity.getBody().getData();
++        assertThat((List<ProcessingSchedule>) responseEntityData.get(ProcessingScheduleController.SCHEDULES), is(processingSchedules));
++    }
++}
+-- 
+1.7.10.2 (Apple Git-33)
+
