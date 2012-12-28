@@ -189,6 +189,8 @@ public class DeleteFacilityPage extends Page {
         SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(longitude,"value"), longitudeValue);
         SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(altitude,"value"), altitudeValue);
 
+        testWebDriver.sleep(1000);
+        testWebDriver.waitForElementToAppear(messageDiv);
         String updateMessage=messageDiv.getText();
         SeleneseTestNgHelper.assertEquals(updateMessage, facilityNameValue+" updated successfully");
 
