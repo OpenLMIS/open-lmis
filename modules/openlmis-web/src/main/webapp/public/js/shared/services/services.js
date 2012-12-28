@@ -70,8 +70,9 @@ services.factory('Requisition', function($resource) {
 });
 
 services.factory('RemoveLossAdjustment', function($resource) {
-    return $resource('/logistics/rnr/lossAndAdjustment/:lossAndAdjustmentId.json', {}, {update : {method:'DELETE'}})
+    return $resource('/logistics/rnr/lossAndAdjustment/:lossAndAdjustmentId.json', {}, {});
 });
+
 services.factory('AllSchedules', function ($resource) {
     return $resource('/schedule.json', {}, {});
 });
