@@ -1,5 +1,6 @@
 <div xmlns="http://www.w3.org/1999/html">
-  <h2>Add new facility</h2>
+  <div ng-hide="facility.id"><h2>Add new facility</h2></div>
+  <div ng-show="facility.id"><h2>Edit facility</h2></div>
 
   <form ng-submit="saveFacility()" id="create-facility" name="facilityForm" novalidate ng-disabled="facility.dataReportable == 'false'">
     <div class="app-form">
