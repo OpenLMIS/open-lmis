@@ -101,7 +101,7 @@ describe("Facility", function () {
     }));
 
     it('should get facility if defined', function () {
-      expect([]).toEqual(scope.facility.supportedPrograms);
+      expect(scope.facility.supportedPrograms).toEqual([]);
     });
   });
 });

@@ -45,15 +45,11 @@ services.factory('Rights', function ($resource) {
     return $resource('/rights.json', {}, {});
 });
 
-services.factory('CreateRole', function ($resource) {
-    return $resource('/role.json', {}, {});
-});
-
 services.factory('Role', function ($resource) {
-    return $resource('/role/:id.json', {}, {});
+    return $resource('/roles/:id.json', {}, {update: {method:'PUT'}});
 });
 
-services.factory('AllRoles', function ($resource) {
+services.factory('Roles', function ($resource) {
     return $resource('/roles.json', {}, {});
 });
 

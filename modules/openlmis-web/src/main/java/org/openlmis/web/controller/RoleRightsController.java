@@ -36,7 +36,7 @@ public class RoleRightsController extends BaseController {
     return OpenLmisResponse.response(RIGHTS, roleRightsService.getAllRights());
   }
 
-  @RequestMapping(value = "/role", method = RequestMethod.POST, headers = "Accept=application/json")
+  @RequestMapping(value = "/roles", method = RequestMethod.POST, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('','MANAGE_ROLE')")
   public ResponseEntity<OpenLmisResponse> createRole(@RequestBody Role role, HttpServletRequest request) {
     role.setModifiedBy(loggedInUserId(request));
@@ -56,14 +56,14 @@ public class RoleRightsController extends BaseController {
   }
 
 
-  @RequestMapping(value = "/role/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+  @RequestMapping(value = "/roles/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('','MANAGE_ROLE')")
   public ResponseEntity<OpenLmisResponse> get(@PathVariable("id") Integer id) {
     Role role = roleRightsService.getRole(id);
     return response(ROLE, role);
   }
 
-  @RequestMapping(value = "/role/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
+  @RequestMapping(value = "/roles/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('','MANAGE_ROLE')")
   public ResponseEntity<OpenLmisResponse> updateRole(@PathVariable("id") Integer id, @RequestBody Role role) {
     role.setId(id);
