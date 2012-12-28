@@ -60,7 +60,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
         InitiateRnRPage initiateRnRPage = homePageUser.navigateAndInitiateRnr(date_time, program);
         initiateRnRPage.verifyRnRHeader(date_time, program);
 
-        initiateRnRPage.calculateAndVerifyStockOnHand(10,20,5,5,1);
+        //initiateRnRPage.calculateAndVerifyStockOnHand(10,20,5,5,1);
         initiateRnRPage.saveRnR();
 
         homePageUser.logout();
