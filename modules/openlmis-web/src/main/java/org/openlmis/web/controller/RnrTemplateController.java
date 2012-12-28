@@ -30,8 +30,7 @@ public class RnrTemplateController {
         this.rnrTemplateService = rnrTemplateService;
     }
 
-    // TODO : url should have rnr-template and not rnr
-    @RequestMapping(value = "/admin/rnr/{programId}/columns", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "/program/{programId}/rnr-template", method = RequestMethod.GET, headers = "Accept=application/json")
     @PreAuthorize("hasPermission('','CONFIGURE_RNR')")
     public RnrTemplateForm fetchAllProgramRnrColumnList(@PathVariable("programId") Integer programId) {
         List<RnRColumnSource> sources = new ArrayList<>();
@@ -46,7 +45,7 @@ public class RnrTemplateController {
         return rnrTemplateService.fetchVisibleRnRColumns(programId);
     }
 
-    @RequestMapping(value = "/admin/rnr/{programId}/columns", method = RequestMethod.POST, headers = "Accept=application/json")
+    @RequestMapping(value = "/program/{programId}/rnr-template", method = RequestMethod.POST, headers = "Accept=application/json")
     @PreAuthorize("hasPermission('','CONFIGURE_RNR')")
     public ResponseEntity saveRnRTemplateForProgram(@PathVariable("programId") Integer programId,
                                                     @RequestBody RnrColumnList rnrColumnList) {
