@@ -32,24 +32,26 @@ describe('InitiateRnrController', function () {
     expect(scope.error).toEqual("Please select Facility and program for facility to proceed");
   });
 
-  it('should initiate rnr if facility and program chosen are correct',function () {
+  it('should get existing rnr if already initiated',function () {
     scope.$parent.program = {"code" : "hiv", "id":1};
     scope.$parent.facility = 1;
-    $httpBackend.expectGET('/logistics/rnr/facility/1/program/1.json').respond(200);
+    $httpBackend.expectGET('/logistics/rnr/facility/1/program/1.json').respond({"rnr":{"id":1}});
     scope.initRnr();
     $httpBackend.flush();
     expect(location.path()).toEqual("/create-rnr/1/1");
     expect(scope.error).toEqual("");
+    expect(scope.$parent.rnr).toEqual({"id":1});
   });
 
-
-
-//    it('should reset program if facility set to null and attempt to load programs is made', function () {
-//      scope.$parent.facility = {"code" : "hiv"};
-//      $httpBackend.expectPOST('/logistics/rnr/undefined/hiv/init.json').respond(404);
-//      scope.getRnrHeader();
-//      $httpBackend.flush();
-//      expect(scope.error).toEqual("Rnr initialization failed!");
-//    });
-
+it('should create a rnr if rnr not already initiated',function () {
+    scope.$parent.program = {"code" : "hiv", "id":1};
+    scope.$parent.facility = 1;
+    $httpBackend.expectGET('/logistics/rnr/facility/1/program/1.json').respond(404);
+    $httpBackend.expectPOST('/logistics/rnr/facility/1/program/1.json').respond({"rnr":{"id":1}});
+    scope.initRnr();
+    $httpBackend.flush();
+    expect(location.path()).toEqual("/create-rnr/1/1");
+    expect(scope.error).toEqual("");
+    expect(scope.$parent.rnr).toEqual({"id":1});
+  });
 });

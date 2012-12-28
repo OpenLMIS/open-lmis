@@ -1,7 +1,7 @@
 function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $location, Requisition, $route) {
 
   if (!$scope.$parent.rnr) {
-    Requisition.get({facilityId:encodeURIComponent($route.current.params.facility), programId:encodeURIComponent($route.current.params.program)},
+    Requisition.get({facilityId:$route.current.params.facility, programId:$route.current.params.program},
       function (data) {
         $scope.rnr = data.rnr;
       }, function (data) {
@@ -52,7 +52,7 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
       return;
     }
 
-    Requisition.update({facilityId:encodeURIComponent($route.current.params.facility), programId:encodeURIComponent($route.current.params.program)},
+    Requisition.update({facilityId:$route.current.params.facility, programId:$route.current.params.program},
       $scope.rnr, function (data) {
         $scope.message = "R&R saved successfully!";
         $scope.error = "";
