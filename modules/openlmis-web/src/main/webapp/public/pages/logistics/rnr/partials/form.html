@@ -55,7 +55,7 @@
                                       Enter Numeric Data
                                      </span>
                                    </span>
-
+<!--
                                    <span ng-switch-when="lossesAndAdjustments">
                                      <input id="{{getId('D', $parent)}}" type="text"
                                             name="lossesAndAdjustments{{rnrLineItem['id']}}"
@@ -66,7 +66,56 @@
                                      <span class="rnr-form-error" id="lossesAndAdjustments{{rnrLineItem['id']}}" style="display:none;">
                                       Enter Numeric Data
                                      </span>
+                                   </span>-->
+
+
+                                   <span ng-switch-when="lossesAndAdjustments">
+                                   <div id="lossesAndAdjustments" class="fade ng-pristine ng-valid modal hide" ui-modal=""
+                                        ng-model="lossesAndAdjustmentsModal">
+                                       <div class="modal-header"><h3>Losses And Adjustments</h3></div>
+                                       <div class="modal-body">
+                                           <table class="table table-striped">
+                                               <tr ng-repeat="lossAndAdjustment in rnrLineItem[column.name]">
+                                                   <td>{{lossAndAdjustment.type.name.description}}</td>
+                                                   <td><input id="{{getId('D', $parent, true)}}" type="text"
+                                                              name="lossesAndAdjustments{{rnrLineItem['id']}}"
+                                                              ng-model="lossAndAdjustment.quantity"
+                                                              maxlength="8"/>
+                                                       <!--rnr-validator="positiveInteger"
+                                                      ng-change="fillCalculatedRnrColumns(rnrLineItem, rnr)"-->
+
+                                                           <span class="rnr-form-error" id="lossesAndAdjustments{{rnrLineItem['id']}}"
+                                                                 style="display:none;">
+                                                           Enter Numeric Data
+                                                           </span>
+                                                   </td>
+                                                   <td><a href="" class="btn btn-danger" ng-click="" data-dismiss="modal">Remove</a></td>
+                                               </tr>
+                                               <tr>
+                                                   <td>Total</td>
+                                                   <td id=></td>
+                                                   <td></td>
+                                               </tr>
+                                           </table>
+                                           <p><b>Add new Loss/Adjustment</b></p>
+                                       </div>
+                                       <div class="modal-footer">
+                                           <a href="" class="btn btn-success save-button" ng-click="" data-dismiss="modal">Save Changes</a>
+                                       </div>
+                                   </div>
+                                     <!--<input id="{{getId('D', $parent)}}" type="text"
+                                            name="lossesAndAdjustments{{rnrLineItem['id']}}"
+                                            ng-model="rnrLineItem[column.name]"
+                                            rnr-validator="positiveInteger"
+                                            ng-change="fillCalculatedRnrColumns(rnrLineItem, rnr)"
+                                            maxlength="8"/>-->
+                                      <a href="" ng-click="lossesAndAdjustmentsModal=true">Add loss/adjustment</a>
+                                     <!--<span class="rnr-form-error" id="lossesAndAdjustments{{rnrLineItem['id']}}"-->
+                                           <!--style="display:none;">-->
+                                      <!--Enter Numeric Data-->
+                                     <!--</span>-->
                                    </span>
+
 
                                    <span ng-switch-when="stockInHand">
                                      <input id="{{getId('E', $parent)}}" type="text" name="stockInHand{{rnrLineItem['id']}}"
