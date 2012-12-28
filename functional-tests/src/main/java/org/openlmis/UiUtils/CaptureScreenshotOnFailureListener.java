@@ -15,6 +15,19 @@ import java.util.Date;
 public class CaptureScreenshotOnFailureListener extends TestListenerAdapter
 {
 
+    Date dObjnew = new Date();
+    SimpleDateFormat formatternew = new SimpleDateFormat("yyyyMMdd");
+    String dateFolder = formatternew.format(dObjnew);
+    String screenShotsFolder=null;
+
+    private void createDirectory()
+    {
+        screenShotsFolder = System.getProperty("user.dir") + "/src/main/resources/"+dateFolder+"/";
+        if(!new File(screenShotsFolder).exists()) {
+            (new File(screenShotsFolder)).mkdir(); }
+
+    }
+
     @Override
     public void onTestFailure (ITestResult testResult)
     {
@@ -22,14 +35,11 @@ public class CaptureScreenshotOnFailureListener extends TestListenerAdapter
         super.onTestFailure(testResult);
 
         WebDriver driver = TestWebDriver.getDriver();
-
+        createDirectory();
         // Create a calendar object so we can create a date and time for the screenshot
         Date dObj = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd-hhmmss");
         String time = formatter.format(dObj);
-        // Get the users home path and append the screen shots folder destination
-        String userDir = System.getProperty("user.dir");
-        String screenShotsFolder = userDir + "/src/main/resources/";
 
         // The file includes the the test method and the test class
         String testMethodAndTestClass = testResult.getMethod().getMethodName() + "(" + testResult.getTestClass().getName() + ")";
@@ -41,6 +51,7 @@ public class CaptureScreenshotOnFailureListener extends TestListenerAdapter
                 + testMethodAndTestClass + "-"
                 +time+"-screenshot"
                 + ".png";
+
 
 
         // Take the screen shot and then copy the file to the screen shot folder
