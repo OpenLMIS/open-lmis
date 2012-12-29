@@ -39,9 +39,15 @@ public class RnrControllerTest {
   @Test
   public void shouldSaveWIPRnr() throws Exception {
     Rnr rnr = new Rnr();
-    controller.saveRnr(rnr, request);
+    int programId = 456;
+    int facilityId = 123;
+
+    controller.saveRnr(rnr, facilityId, programId, request);
+
     verify(rnrService).save(rnr);
     assertThat(rnr.getModifiedBy(), is(equalTo(USER)));
+    assertThat(rnr.getFacilityId(), is(facilityId));
+    assertThat(rnr.getProgramId(), is(programId));
   }
 
   @Test
