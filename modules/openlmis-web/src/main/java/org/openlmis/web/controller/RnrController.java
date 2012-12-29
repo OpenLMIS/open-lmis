@@ -17,12 +17,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
-
 @Controller
 @NoArgsConstructor
 public class RnrController extends BaseController {
 
+  public static final String RNR = "rnr";
   private RnrService rnrService;
 
 
@@ -31,28 +30,30 @@ public class RnrController extends BaseController {
     this.rnrService = rnrService;
   }
 
-  @RequestMapping(value = "/logistics/rnr/facility/{facilityId}/program/{programId}", method = RequestMethod.POST, headers = "Accept=application/json")
+  @RequestMapping(value = "/facility/{facilityId}/program/{programId}/rnr", method = RequestMethod.POST, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> initRnr(@PathVariable("facilityId") Integer facilityId, @PathVariable("programId") Integer programId, HttpServletRequest request) {
-    String modifiedBy = (String) request.getSession().getAttribute(USER);
+  public ResponseEntity<OpenLmisResponse> initiateRnr(@PathVariable("facilityId") Integer facilityId,
+                                                      @PathVariable("programId") Integer programId,
+                                                      HttpServletRequest request) {
     try {
-      return OpenLmisResponse.response("rnr", rnrService.initRnr(facilityId, programId, modifiedBy));
+      return OpenLmisResponse.response(RNR, rnrService.initRnr(facilityId, programId, loggedInUser(request)));
     } catch (DataException e) {
       return OpenLmisResponse.error(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
   }
 
-  @RequestMapping(value = "/logistics/rnr/facility/{facilityId}/program/{programId}", method = RequestMethod.GET, headers = "Accept=application/json")
+  @RequestMapping(value = "/facility/{facilityId}/program/{programId}/rnr", method = RequestMethod.GET, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> get(@PathVariable("facilityId") Integer facilityId, @PathVariable("programId") Integer programId) {
+  public ResponseEntity<OpenLmisResponse> get(@PathVariable("facilityId") Integer facilityId,
+                                              @PathVariable("programId") Integer programId) {
     try {
-      return OpenLmisResponse.response("rnr", rnrService.get(facilityId, programId));
+      return OpenLmisResponse.response(RNR, rnrService.get(facilityId, programId));
     } catch (DataException e) {
       return OpenLmisResponse.error(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
   }
 
-  @RequestMapping(value = "/logistics/rnr/facility/{facilityId}/program/{programId}", method = RequestMethod.PUT, headers = "Accept=application/json")
+  @RequestMapping(value = "/facility/{facilityId}/program/{programId}/rnr", method = RequestMethod.PUT, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
   public void saveRnr(@RequestBody Rnr rnr,
                       @PathVariable("facilityId") int facilityId,
@@ -64,7 +65,7 @@ public class RnrController extends BaseController {
     rnrService.save(rnr);
   }
 
-  @RequestMapping(value = "/logistics/rnr/lossAndAdjustment/{lossAndAdjustmentId}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+  @RequestMapping(value = "/rnr/lossAndAdjustment/{lossAndAdjustmentId}", method = RequestMethod.DELETE, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
   public void removeLossAndAdjustment(@PathVariable("lossAndAdjustmentId") Integer lossAndAdjustmentId) {
     rnrService.removeLossAndAdjustment(lossAndAdjustmentId);

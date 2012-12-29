@@ -23,12 +23,12 @@ describe('CreateRnrController', function () {
 
 
     httpBackend.when('GET', '/logistics/facility/1/requisition-header.json').respond(requisitionHeader);
-    httpBackend.when('POST', '/logistics/rnr/facility/1/program/1.json').respond({"rnr":{"status":"CREATED"}});
+    httpBackend.when('POST', '/facility/1/program/1/rnr.json').respond({"rnr":{"status":"CREATED"}});
     httpBackend.when('GET', '/logistics/rnr/1/columns.json').respond({"rnrColumnList":[
       {"testField":"test"}
     ]});
     httpBackend.when('GET', '/reference-data/currency.json').respond({"currency":"$"});
-    httpBackend.expect('GET', '/logistics/rnr/facility/1/program/1.json').respond({"rnr":{"status":"CREATED"}});
+    httpBackend.expect('GET', '/facility/1/program/1/rnr.json').respond({"rnr":{"status":"CREATED"}});
     ctrl = controller(CreateRnrController, {$scope:scope, $location:location, $route:route, localStorageService:localStorageService});
   }));
 
@@ -47,7 +47,7 @@ describe('CreateRnrController', function () {
 
   it('should save work in progress for rnr', function () {
     scope.rnr = {"id":"rnrId"};
-    httpBackend.expect('PUT', '/logistics/rnr/facility/1/program/1.json').respond(200);
+    httpBackend.expect('PUT', '/facility/1/program/1/rnr.json').respond(200);
     scope.saveRnr();
     httpBackend.flush();
     expect(scope.message).toEqual("R&R saved successfully!");

@@ -66,11 +66,11 @@ services.factory('ReferenceData', function ($resource) {
 });
 
 services.factory('Requisition', function($resource) {
-    return $resource('/logistics/rnr/facility/:facilityId/program/:programId.json', {}, {update : {method:'PUT'}});
+    return $resource('/facility/:facilityId/program/:programId/rnr.json', {}, {update : {method:'PUT'}});
 });
 
 services.factory('RemoveLossAdjustment', function($resource) {
-    return $resource('/logistics/rnr/lossAndAdjustment/:lossAndAdjustmentId.json', {}, {});
+    return $resource('/rnr/lossAndAdjustment/:lossAndAdjustmentId.json', {}, {});
 });
 
 services.factory('AllSchedules', function ($resource) {
