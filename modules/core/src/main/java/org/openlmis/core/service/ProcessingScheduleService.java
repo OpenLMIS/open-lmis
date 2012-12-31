@@ -11,14 +11,18 @@ import java.util.List;
 @Service
 @NoArgsConstructor
 public class ProcessingScheduleService {
-    private ProcessingScheduleRepository processingScheduleRepository;
+    private ProcessingScheduleRepository repository;
 
     @Autowired
-    public ProcessingScheduleService(ProcessingScheduleRepository processingScheduleRepository) {
-        this.processingScheduleRepository = processingScheduleRepository;
+    public ProcessingScheduleService(ProcessingScheduleRepository repository) {
+        this.repository = repository;
     }
 
     public List<ProcessingSchedule> getAll() {
-        return processingScheduleRepository.getAll();
+        return repository.getAll();
+    }
+
+    public void save(ProcessingSchedule processingSchedule) {
+        repository.save(processingSchedule);
     }
 }

@@ -13,7 +13,9 @@ import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -38,5 +40,15 @@ public class ProcessingScheduleControllerTest {
 
         Map<String, Object> responseEntityData = responseEntity.getBody().getData();
         assertThat((List<ProcessingSchedule>) responseEntityData.get(ProcessingScheduleController.SCHEDULES), is(processingSchedules));
+    }
+
+    @Test
+    public void shouldSaveASchedule() {
+        ProcessingSchedule processingSchedule = new ProcessingSchedule("testCode", "testName");
+        ResponseEntity<OpenLmisResponse> response = processingScheduleController.save(processingSchedule);
+        verify(processingScheduleService).save(processingSchedule);
+        assertThat(response, is(notNullValue()));
+        ProcessingSchedule savedSchedule = (ProcessingSchedule)response.getBody().getData().get("savedSchedule");
+        assertThat(savedSchedule, is(processingSchedule));
     }
 }

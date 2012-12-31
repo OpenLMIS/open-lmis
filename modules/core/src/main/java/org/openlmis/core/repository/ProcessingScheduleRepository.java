@@ -21,4 +21,8 @@ public class ProcessingScheduleRepository {
     public List<ProcessingSchedule> getAll() {
         return processingScheduleMapper.getAll();
     }
+
+    public void save(ProcessingSchedule processingSchedule) {
+        processingScheduleMapper.insert(processingSchedule);
+    }
 }

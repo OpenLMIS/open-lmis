@@ -5,12 +5,16 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.openlmis.core.domain.ProcessingSchedule;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.notNull;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -36,5 +40,12 @@ public class ProcessingScheduleRepositoryTest {
         List<ProcessingSchedule> schedules = repository.getAll();
 
         assertThat(schedules, is(scheduleList));
+    }
+
+    @Test
+    public void shouldInsertASchedule() throws Exception {
+        ProcessingSchedule processingSchedule = new ProcessingSchedule("testScheduleCode","testScheduleName");
+        repository.save(processingSchedule);
+        verify(processingScheduleMapper).insert(processingSchedule);
     }
 }
