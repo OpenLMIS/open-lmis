@@ -1,4 +1,4 @@
-function SaveRoleController($scope, $routeParams,$location, Roles, Role, Rights) {
+function SaveRoleController($scope, $routeParams, $location, Roles, Role, Rights) {
   $scope.$parent.error = "";
   $scope.$parent.message = "";
   $scope.role = {rights:[]};
@@ -17,17 +17,12 @@ function SaveRoleController($scope, $routeParams,$location, Roles, Role, Rights)
     if (checked == true) {
       $scope.role.rights.push(rightClicked);
     } else {
-      deleteRight(rightClicked);
+      $scope.role.rights = $.grep($scope.role.rights, function (rightObj) {
+        return (rightObj.right != rightClicked.right);
+      });
     }
   };
 
-  function deleteRight(rightClicked) {
-    $.each($scope.role.rights, function (index, rightObj) {
-      if (rightClicked.right == rightObj.right) {
-        $scope.role.rights.splice(index, 1);
-      }
-    });
-  }
 
   $scope.contains = function (right) {
     var containFlag = false;
