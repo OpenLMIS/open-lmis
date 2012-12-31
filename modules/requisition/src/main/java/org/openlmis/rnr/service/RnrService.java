@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.FacilityApprovedProduct;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityApprovedProductService;
+import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.domain.RnrStatus;
@@ -54,5 +55,9 @@ public class RnrService {
 
     public void removeLossAndAdjustment(Integer lossAndAdjustmentId) {
         rnrRepository.removeLossAndAdjustment(lossAndAdjustmentId);
+    }
+
+    public List<LossesAndAdjustmentsType> getLossesAndAdjustmentsTypes() {
+        return rnrRepository.getLossesAndAdjustmentsTypes();
     }
 }

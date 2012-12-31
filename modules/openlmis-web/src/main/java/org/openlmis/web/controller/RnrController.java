@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.service.RnrService;
+import org.openlmis.web.model.RnrReferenceData;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 @Controller
 @NoArgsConstructor
@@ -65,9 +67,16 @@ public class RnrController extends BaseController {
     rnrService.save(rnr);
   }
 
-  @RequestMapping(value = "/rnr/lossAndAdjustment/{lossAndAdjustmentId}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-  @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
-  public void removeLossAndAdjustment(@PathVariable("lossAndAdjustmentId") Integer lossAndAdjustmentId) {
-    rnrService.removeLossAndAdjustment(lossAndAdjustmentId);
-  }
+    @RequestMapping(value = "/logistics/rnr/lossAndAdjustment/{lossAndAdjustmentId}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+    @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
+    public void removeLossAndAdjustment(@PathVariable("lossAndAdjustmentId") Integer lossAndAdjustmentId) {
+        rnrService.removeLossAndAdjustment(lossAndAdjustmentId);
+    }
+
+    @RequestMapping(value = "/rnr/lossAndAdjustments/reference-data", method = RequestMethod.GET, headers = "Accept=application/json")
+    @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
+    public Map getReferenceData() {
+        RnrReferenceData referenceData = new RnrReferenceData();
+        return referenceData.addLossesAndAdjustmentsTypes(rnrService.getLossesAndAdjustmentsTypes()).get();
+    }
 }

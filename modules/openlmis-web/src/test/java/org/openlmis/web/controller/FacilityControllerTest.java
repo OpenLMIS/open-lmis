@@ -1,12 +1,11 @@
 package org.openlmis.web.controller;
 
-import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
-import org.openlmis.web.model.ReferenceData;
+import org.openlmis.web.model.FacilityReferenceData;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -61,13 +60,13 @@ public class FacilityControllerTest {
         Map referenceData = facilityController.getReferenceData();
 
         verify(facilityService).getAllOperators();
-        assertThat((List<FacilityOperator>) referenceData.get(ReferenceData.FACILITY_OPERATORS), is(equalTo(facilityOperators)));
+        assertThat((List<FacilityOperator>) referenceData.get(FacilityReferenceData.FACILITY_OPERATORS), is(equalTo(facilityOperators)));
         verify(facilityService).getAllTypes();
-        assertThat((List<FacilityType>) referenceData.get(ReferenceData.FACILITY_TYPES), is(equalTo(facilityTypes)));
+        assertThat((List<FacilityType>) referenceData.get(FacilityReferenceData.FACILITY_TYPES), is(equalTo(facilityTypes)));
         verify(facilityService).getAllZones();
-        assertThat((List<GeographicZone>) referenceData.get(ReferenceData.GEOGRAPHIC_ZONES), is(equalTo(allZones)));
+        assertThat((List<GeographicZone>) referenceData.get(FacilityReferenceData.GEOGRAPHIC_ZONES), is(equalTo(allZones)));
         verify(programService).getAll();
-        assertThat((List<Program>) referenceData.get(ReferenceData.PROGRAMS), is(equalTo(allPrograms)));
+        assertThat((List<Program>) referenceData.get(FacilityReferenceData.PROGRAMS), is(equalTo(allPrograms)));
     }
 
     @Test

@@ -9,7 +9,7 @@ import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 
-public class ReferenceData {
+public class FacilityReferenceData {
 
     public static final String FACILITY_TYPES = "facilityTypes";
     public static final String FACILITY_OPERATORS = "facilityOperators";
@@ -18,17 +18,17 @@ public class ReferenceData {
     MultiValueMap referenceData = new LinkedMultiValueMap<>();
 
 
-    public ReferenceData addFacilityTypes(List<FacilityType> facilityTypes) {
+    public FacilityReferenceData addFacilityTypes(List<FacilityType> facilityTypes) {
         referenceData.put(FACILITY_TYPES, facilityTypes);
         return this;
     }
 
-    public ReferenceData addFacilityOperators(List<FacilityOperator> allOperators) {
+    public FacilityReferenceData addFacilityOperators(List<FacilityOperator> allOperators) {
         referenceData.put(FACILITY_OPERATORS, allOperators);
         return this;
     }
 
-    public ReferenceData addGeographicZones(List<GeographicZone> allZones) {
+    public FacilityReferenceData addGeographicZones(List<GeographicZone> allZones) {
         referenceData.put(GEOGRAPHIC_ZONES, allZones);
         return this;
     }
@@ -37,7 +37,7 @@ public class ReferenceData {
         return referenceData;
     }
 
-    public ReferenceData addPrograms(List<Program> programs) {
+    public FacilityReferenceData addPrograms(List<Program> programs) {
         referenceData.put(PROGRAMS, programs);
         return this;
     }

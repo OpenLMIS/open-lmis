@@ -125,4 +125,10 @@ public class LossesAndAdjustmentsMapperIT {
         assertThat(lossesAndAdjustments.get(0).getType().getName(), is(LossesAndAdjustmentsTypeEnum.TRANSFER_OUT));
     }
 
+    @Test
+    public void shouldReturnAllLossesAndAdjustmentsTypes(){
+        List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes = lossesAndAdjustmentsMapper.getLossesAndAdjustmentsTypes();
+        assertThat(lossesAndAdjustmentsTypes.size(), is(9));
+    }
+
 }

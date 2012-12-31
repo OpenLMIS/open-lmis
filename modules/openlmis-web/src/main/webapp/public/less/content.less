@@ -314,6 +314,7 @@ input[ui-date] {
   box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2);
   text-shadow: 0 1px 0 white;
 }
+
 .info-box > table td {
   padding: 4px 20px 10px 0;
 }
@@ -461,6 +462,100 @@ table td.cell-input .cell-text {
 h3 {
   font-size: 1.3em;
 }
+.adjustment-field {
+  input[type="text"] {
+    width: 100px;
+    border: 1px solid #BBB;
+    padding: 1px 6px;
+    border-radius: 4px;
+    margin-right: 15px;
+    text-align: right;
+  }
+  > * {
+    vertical-align: top;
+    margin-right: 10px;
+  }
+}
+.adjustment-list {
+  border: 1px solid #CCC;
+  background: #fafafa;
+  margin-top: 10px;
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    li {
+      border-top: 1px solid #eee;
+      &:first-child {
+        border-top: 0 none;
+      }
+      .tpl-adjustment-type {
+        line-height: 26px;
+        width: 220px;
+      }
+      .tpl-adjustment-qty {
+        float: right;
+        text-align: right;
+        input {
+          width: 70px;
+          text-align: right;
+          padding-right: 10px;
+          border-radius: 3px;
+        }
+      }
+      .tpl-adjustment-delete {
+        float: right;
+      }
+    }
+  }
+}
+.adjustment-field {
+  input[type="text"] {
+    width: 100px;
+    border: 1px solid #BBB;
+    padding: 1px 6px;
+    border-radius: 4px;
+    margin-right: 15px;
+    text-align: right;
+  }
+  > * {
+    vertical-align: top;
+    margin-right: 10px;
+  }
+}
+.adjustment-list {
+  border: 1px solid #CCC;
+  background: #fafafa;
+  margin-top: 10px;
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    li {
+      border-top: 1px solid #eee;
+      &:first-child {
+        border-top: 0 none;
+      }
+      .tpl-adjustment-type {
+        line-height: 26px;
+        width: 220px;
+      }
+      .tpl-adjustment-qty {
+        float: right;
+        text-align: right;
+        input {
+          width: 70px;
+          text-align: right;
+          padding-right: 10px;
+          border-radius: 3px;
+        }
+      }
+      .tpl-adjustment-delete {
+        float: right;
+      }
+    }
+  }
+}
 .checkbox-list {
   input[type="checkbox"] {
     float: left;
@@ -495,4 +590,3 @@ h3 {
   background: linear-gradient(to bottom, #f9f9f9 0%,#e0e0e0 100%); /* W3C */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f9f9f9', endColorstr='#e0e0e0',GradientType=0 ); /* IE6-9 */
 }
-

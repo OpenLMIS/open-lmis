@@ -3,6 +3,7 @@ package org.openlmis.rnr.repository;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.LossesAndAdjustments;
+import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper;
@@ -67,5 +68,9 @@ public class RnrRepository {
 
     public void removeLossAndAdjustment(Integer lossAndAdjustmentId) {
         lossesAndAdjustmentsMapper.delete(lossAndAdjustmentId);
+    }
+
+    public List<LossesAndAdjustmentsType> getLossesAndAdjustmentsTypes() {
+        return lossesAndAdjustmentsMapper.getLossesAndAdjustmentsTypes();
     }
 }

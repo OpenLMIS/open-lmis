@@ -37,4 +37,7 @@ public interface LossesAndAdjustmentsMapper {
             "type = #{type.name} " +
             "WHERE id    = #{id} ")
     public Integer update(LossesAndAdjustments lossesAndAdjustments);
+
+    @Select("SELECT * FROM losses_adjustments_types")
+    List<LossesAndAdjustmentsType> getLossesAndAdjustmentsTypes();
 }

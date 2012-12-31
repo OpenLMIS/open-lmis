@@ -6,7 +6,7 @@ import org.openlmis.core.domain.RequisitionHeader;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
-import org.openlmis.web.model.ReferenceData;
+import org.openlmis.web.model.FacilityReferenceData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,8 +59,8 @@ public class FacilityController extends BaseController {
     @RequestMapping(value = "admin/facility/reference-data", method = RequestMethod.GET, headers = "Accept=application/json")
     @PreAuthorize("hasPermission('','MANAGE_FACILITY')")
     public Map getReferenceData() {
-        ReferenceData referenceData = new ReferenceData();
-        return referenceData.addFacilityTypes(facilityService.getAllTypes()).
+        FacilityReferenceData facilityReferenceData = new FacilityReferenceData();
+        return facilityReferenceData.addFacilityTypes(facilityService.getAllTypes()).
                 addFacilityOperators(facilityService.getAllOperators()).
                 addGeographicZones(facilityService.getAllZones()).
                 addPrograms(programService.getAll()).get();
