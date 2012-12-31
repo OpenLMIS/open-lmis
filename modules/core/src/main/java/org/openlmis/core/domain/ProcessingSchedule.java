@@ -21,4 +21,10 @@ public class ProcessingSchedule {
         this.code = code;
         this.name = name;
     }
+
+    public void validate() {
+        if (code == null || code.isEmpty()) throw new RuntimeException("Schedule can not be saved without its code.");
+        if (name == null || name.isEmpty())
+            throw new RuntimeException("Schedule can not be saved without its name.");
+    }
 }

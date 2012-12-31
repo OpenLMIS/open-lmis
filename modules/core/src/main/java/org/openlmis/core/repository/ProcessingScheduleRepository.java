@@ -23,6 +23,7 @@ public class ProcessingScheduleRepository {
     }
 
     public void save(ProcessingSchedule processingSchedule) {
+        processingSchedule.validate();
         processingScheduleMapper.insert(processingSchedule);
     }
 }

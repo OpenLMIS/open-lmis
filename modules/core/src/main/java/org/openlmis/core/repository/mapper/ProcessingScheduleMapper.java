@@ -16,7 +16,7 @@ public interface ProcessingScheduleMapper {
 
     @Insert("INSERT INTO processing_schedules" +
             "(code, name, description) " +
-            "VALUES(#{name}, #{code}, #{description})")
+            "VALUES(#{code}, #{name}, #{description})")
     @Options(useGeneratedKeys = true)
     Integer insert(ProcessingSchedule schedule);
 

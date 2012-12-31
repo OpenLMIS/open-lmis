@@ -5,9 +5,12 @@ import org.openlmis.core.domain.ProcessingSchedule;
 import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -32,8 +35,12 @@ public class ProcessingScheduleController extends BaseController {
 
     @RequestMapping(value = "schedule", method = RequestMethod.POST, headers = "Accept=application/json")
     @PreAuthorize("hasPermission('','MANAGE_SCHEDULE')")
-    public ResponseEntity<OpenLmisResponse> save(ProcessingSchedule processingSchedule) {
-        processingScheduleService.save(processingSchedule);
+    public ResponseEntity<OpenLmisResponse> save(@RequestBody ProcessingSchedule processingSchedule) {
+        try{
+            processingScheduleService.save(processingSchedule);
+        }catch(Exception e){
+            return OpenLmisResponse.error(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
         return OpenLmisResponse.response(SAVED_SCHEDULE, processingSchedule);
     }
 }
