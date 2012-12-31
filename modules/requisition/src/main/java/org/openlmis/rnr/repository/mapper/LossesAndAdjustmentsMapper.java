@@ -6,7 +6,6 @@ import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsTypeEnum;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -38,6 +37,6 @@ public interface LossesAndAdjustmentsMapper {
             "WHERE id    = #{id} ")
     public Integer update(LossesAndAdjustments lossesAndAdjustments);
 
-    @Select("SELECT * FROM losses_adjustments_types")
+    @Select("SELECT * FROM losses_adjustments_types ORDER BY displayOrder")
     List<LossesAndAdjustmentsType> getLossesAndAdjustmentsTypes();
 }

@@ -69,8 +69,8 @@ services.factory('Requisition', function($resource) {
     return $resource('/facility/:facilityId/program/:programId/rnr.json', {}, {update : {method:'PUT'}});
 });
 
-services.factory('RemoveLossAdjustment', function($resource) {
-    return $resource('/logistics/rnr/lossAndAdjustment/:lossAndAdjustmentId.json', {}, {remove : {method: 'DELETE'}})
+services.factory('LossesAndAdjustmentsReferenceData', function($resource) {
+  return $resource('/rnr/lossAndAdjustments/reference-data.json', {}, {})
 });
 
 services.factory('AllSchedules', function ($resource) {

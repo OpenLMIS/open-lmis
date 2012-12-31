@@ -1,4 +1,4 @@
-function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $location, Requisition, $route, RemoveLossAdjustment) {
+function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $location, Requisition, $route, LossesAndAdjustmentsReferenceData) {
 
   if (!$scope.$parent.rnr) {
     Requisition.get({facilityId:$route.current.params.facility, programId:$route.current.params.program},
@@ -82,29 +82,48 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     return "defined";
   };
 
-    $scope.showSelectedColumn = function (columnName) {
-        if (($scope.rnr.status == "INITIATED" || $scope.rnr.status == "CREATED") && columnName == "quantityApproved")
-            return undefined;
-        return "defined";
-    };
-
-  $scope.removeLossAndAdjustment = function (id) {
-    RemoveLossAdjustment.remove({lossAndAdjustmentId:id}, function (data) {
-      $location.path('/create-rnr/' + $route.current.params.facility + '/' + $route.current.params.program);
-    }, {});
+  $scope.showSelectedColumn = function (columnName) {
+    if (($scope.rnr.status == "INITIATED" || $scope.rnr.status == "CREATED") && columnName == "quantityApproved")
+      return undefined;
+    return "defined";
   };
 
-    $scope.calculateTotalLossesAndAdjustments = function (lossesAndAdjustments, rnrLineItem) {
-        for (var i = 0; i < lossesAndAdjustments.length; i++) {
-            if (!isNaN(parseInt(lossesAndAdjustments[i].quantity))) {
-                if (lossesAndAdjustments[i].type.additive) {
-                    rnrLineItem.totalLossesAndAdjustments += parseInt(lossesAndAdjustments[i].quantity);
-                } else {
-                    rnrLineItem.totalLossesAndAdjustments -= parseInt(lossesAndAdjustments[i].quantity);
-                }
-            }
-        }
-    };
+  $scope.removeLossAndAdjustment = function (lineItem, lossAndAdjustmentToDelete) {
+    $(lineItem.lossesAndAdjustments).each(function(index,lossAndAdjustment){
+      if(lossAndAdjustment.type == lossAndAdjustmentToDelete.type){
+        lineItem.lossesAndAdjustments.splice(index, 1);
+        $scope.lossesAndAdjustmentTypes.splice(lossAndAdjustment.type.displayOrder-1, 0, lossAndAdjustmentToDelete.type);
+      }
+    })
 
+  };
+
+  $scope.showModal = function (lineItem) {
+    if(!$scope.lossesAndAdjustmentTypes){
+    LossesAndAdjustmentsReferenceData.get({}, function (data) {
+      $scope.lossesAndAdjustmentTypes = data.lossAdjustmentTypes;
+      lineItem.lossesAndAdjustmentsModal = true;
+    }, {});
+    }
+  };
+
+  $scope.addLossAndAdjustment = function (lineItem, newLossAndAdjustment) {
+    var lossAndAdjustment = {"type":newLossAndAdjustment.type, "quantity":newLossAndAdjustment.quantity};
+    lineItem.lossesAndAdjustments.push(lossAndAdjustment);
+    var quantity = parseInt(newLossAndAdjustment.quantity);
+    if (!isNaN(quantity)) {
+      if (newLossAndAdjustment.type.additive) {
+        lineItem.totalLossesAndAdjustments += quantity;
+      } else {
+        lineItem.totalLossesAndAdjustments -= quantity;
+      }
+      $($scope.lossesAndAdjustmentTypes).each(function(index, lossAndAdjustmentType)
+        {
+         if(lossAndAdjustmentType == newLossAndAdjustment.type){
+            $scope.lossesAndAdjustmentTypes.splice(index,1);
+         }
+        })
+    }
+  };
 }
 

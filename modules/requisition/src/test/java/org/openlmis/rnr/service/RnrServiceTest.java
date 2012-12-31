@@ -84,4 +84,5 @@ public class RnrServiceTest {
     verify(rnrRepository).insert(rnr);
     assertThat(rnr, is(initiatedRnr));
   }
+
 }
