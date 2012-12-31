@@ -9,15 +9,16 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Product;
+import org.openlmis.upload.Importable;
 import org.openlmis.upload.RecordHandler;
 import org.openlmis.upload.model.ModelClass;
 import org.openlmis.upload.parser.CSVParser;
 import org.openlmis.web.handler.UploadHandlerFactory;
+import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
@@ -30,90 +31,93 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class UploadControllerTest {
 
-    public static final String USER = "user";
-    @Mock
-    CSVParser csvParser;
+  public static final String USER = "user";
+  @Mock
+  CSVParser csvParser;
 
-    UploadController controller;
+  UploadController controller;
 
-    @Mock
-    RecordHandler handler;
-    @Mock
-    private UploadHandlerFactory uploadHandlerFactory;
+  @Mock
+  RecordHandler handler;
 
-    private MockHttpServletRequest request;
+  @Mock
+  @SuppressWarnings("unused")
+  private UploadHandlerFactory uploadHandlerFactory;
 
-    @Before
-    public void setUp() throws Exception {
-        Map<String, Class> modelMap = new HashMap<String, Class>(){{put("product", Product.class);}};
-        when(uploadHandlerFactory.getHandler(any(String.class))).thenReturn(handler);
-        request = new MockHttpServletRequest();
-        MockHttpSession session = new MockHttpSession();
-        session.setAttribute(UserAuthenticationSuccessHandler.USER, USER);
-        request.setSession(session);
-        controller = new UploadController(csvParser , uploadHandlerFactory, modelMap);//, new HashMap<String, RecordHandler>());
-    }
+  private MockHttpServletRequest request;
 
-    @Test
-    public void shouldThrowErrorIfUnsupportedModelIsSupplied() throws Exception {
-        MultipartFile multipartFile = mock(MultipartFile.class);
-        ResponseEntity<ModelMap> responseEntity = controller.upload(multipartFile, "Random", request);
+  @Before
+  public void setUp() throws Exception {
+    Map<String, Class<? extends Importable>> modelMap = new HashMap<String, Class<? extends Importable>>() {{
+      put("product", Product.class);
+    }};
+    when(uploadHandlerFactory.getHandler(any(String.class))).thenReturn(handler);
+    request = new MockHttpServletRequest();
+    MockHttpSession session = new MockHttpSession();
+    session.setAttribute(UserAuthenticationSuccessHandler.USER, USER);
+    request.setSession(session);
+    controller = new UploadController(csvParser, uploadHandlerFactory, modelMap);//, new HashMap<String, RecordHandler>());
+  }
 
-        assertEquals("Incorrect file", responseEntity.getBody().get("error"));
-    }
+  @Test
+  public void shouldThrowErrorIfUnsupportedModelIsSupplied() throws Exception {
+    MultipartFile multipartFile = mock(MultipartFile.class);
+    ResponseEntity<OpenLmisResponse> responseEntity = controller.upload(multipartFile, "Random", request);
 
-    @Test
-    public void shouldThrowErrorIfFileIsEmpty() throws Exception {
-        byte[] content = new byte[0];
-        MockMultipartFile multiPartMock = new MockMultipartFile("csvFile", "mock.csv", null, content);
-        ResponseEntity<ModelMap> responseEntity = controller.upload(multiPartMock, "product", request);
+    assertEquals("Incorrect file", responseEntity.getBody().getErrorMsg());
+  }
 
-        assertEquals("File is empty", responseEntity.getBody().get("error"));
-    }
+  @Test
+  public void shouldThrowErrorIfFileIsEmpty() throws Exception {
+    byte[] content = new byte[0];
+    MockMultipartFile multiPartMock = new MockMultipartFile("csvFile", "mock.csv", null, content);
+    ResponseEntity<OpenLmisResponse> responseEntity = controller.upload(multiPartMock, "product", request);
 
-    @Test
-    public void shouldParseIfFileIsCsv() throws Exception {
-        byte[] content = new byte[1];
-        MockMultipartFile multiPartMock = new MockMultipartFile("csvFile", "mock.csv", null, content);
+    assertEquals("File is empty", responseEntity.getBody().getErrorMsg());
+  }
 
-        ResponseEntity<ModelMap> responseEntity = controller.upload(multiPartMock, "product", request);
+  @Test
+  public void shouldParseIfFileIsCsv() throws Exception {
+    byte[] content = new byte[1];
+    MockMultipartFile multiPartMock = new MockMultipartFile("csvFile", "mock.csv", null, content);
 
-        assertEquals("File uploaded successfully. Total records uploaded: 0", responseEntity.getBody().get("message"));
-    }
+    ResponseEntity<OpenLmisResponse> responseEntity = controller.upload(multiPartMock, "product", request);
 
-    @Test
-    public void shouldUseCsvParserService() throws Exception {
-        byte[] content = new byte[1];
-        MultipartFile mockMultiPart = spy(new MockMultipartFile("csvFile", "mock.csv", null, content));
+    assertEquals("File uploaded successfully. Total records uploaded: 0", responseEntity.getBody().getSuccessMsg());
+  }
 
-        InputStream mockInputStream = mock(InputStream.class);
-        when(mockMultiPart.getInputStream()).thenReturn(mockInputStream);
+  @Test
+  public void shouldUseCsvParserService() throws Exception {
+    byte[] content = new byte[1];
+    MultipartFile mockMultiPart = spy(new MockMultipartFile("csvFile", "mock.csv", null, content));
 
-        ResponseEntity<ModelMap> responseEntity = controller.upload(mockMultiPart, "product", request);
+    InputStream mockInputStream = mock(InputStream.class);
+    when(mockMultiPart.getInputStream()).thenReturn(mockInputStream);
 
-        assertEquals("File uploaded successfully. Total records uploaded: 0", responseEntity.getBody().get("message"));
+    ResponseEntity<OpenLmisResponse> responseEntity = controller.upload(mockMultiPart, "product", request);
 
-        verify(csvParser).process(eq(mockMultiPart.getInputStream()), argThat(modelMatcher(Product.class)), eq(handler), eq(USER));
-    }
+    assertEquals("File uploaded successfully. Total records uploaded: 0", responseEntity.getBody().getSuccessMsg());
 
-    private ArgumentMatcher<ModelClass> modelMatcher(final Class clazz) {
-        return new ArgumentMatcher<ModelClass>(){
-            @Override
-            public boolean matches(Object item) {
-                ModelClass modelClass = (ModelClass)item;
-                return  modelClass.getClazz().equals(clazz);
-            }
-        };
-    }
+    verify(csvParser).process(eq(mockMultiPart.getInputStream()), argThat(modelMatcher(Product.class)), eq(handler), eq(USER));
+  }
 
-    @Test
-    public void shouldGiveErrorIfFileNotOfTypeCsv() throws Exception {
-        byte[] content = new byte[1];
-        MockMultipartFile multiPartMock = new MockMultipartFile("mock.doc", content);
+  private ArgumentMatcher<ModelClass> modelMatcher(final Class clazz) {
+    return new ArgumentMatcher<ModelClass>() {
+      @Override
+      public boolean matches(Object item) {
+        ModelClass modelClass = (ModelClass) item;
+        return modelClass.getClazz().equals(clazz);
+      }
+    };
+  }
 
-        ResponseEntity<ModelMap> responseEntity = controller.upload(multiPartMock, "product", request);
-        assertEquals("Incorrect file format , Please upload product data as a \".csv\" file", responseEntity.getBody().get("error"));
-//        verify(csvParser).process(mockedStream, Product.class, handler);
-    }
+  @Test
+  public void shouldGiveErrorIfFileNotOfTypeCsv() throws Exception {
+    byte[] content = new byte[1];
+    MockMultipartFile multiPartMock = new MockMultipartFile("mock.doc", content);
+
+    ResponseEntity<OpenLmisResponse> responseEntity = controller.upload(multiPartMock, "product", request);
+    assertEquals("Incorrect file format , Please upload product data as a \".csv\" file", responseEntity.getBody().getErrorMsg());
+  }
 
 }

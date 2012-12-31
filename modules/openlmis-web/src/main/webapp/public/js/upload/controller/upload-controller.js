@@ -18,7 +18,7 @@ function UploadController($scope, $http) {
     $scope.uploadComplete = function (evt, data) {
         $scope.$apply(function () {
             if (evt.target.status == 200) {
-                $scope.message = $.parseJSON(evt.target.responseText).message;
+                $scope.message = $.parseJSON(evt.target.responseText).success;
             } else {
                 $scope.error = $.parseJSON(evt.target.responseText).error;
             }
