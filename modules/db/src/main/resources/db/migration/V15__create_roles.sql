@@ -5,3 +5,5 @@ CREATE TABLE roles (
   modifiedBy INTEGER,
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE UNIQUE INDEX unique_role_name ON roles(LOWER(name));
