@@ -104,6 +104,8 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
       $scope.lossesAndAdjustmentTypes = data.lossAdjustmentTypes;
       lineItem.lossesAndAdjustmentsModal = true;
     }, {});
+    }else {
+      lineItem.lossesAndAdjustmentsModal = true;
     }
   };
 
