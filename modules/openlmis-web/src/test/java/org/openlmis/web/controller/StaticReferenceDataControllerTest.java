@@ -12,7 +12,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.openlmis.web.response.OpenLmisResponse.CURRENCY;
+import static org.openlmis.web.controller.StaticReferenceDataController.CURRENCY;
 
 public class StaticReferenceDataControllerTest {
 

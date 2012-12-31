@@ -15,11 +15,6 @@ public class OpenLmisResponse {
   public static final String ERROR = "error";
   public static final String SUCCESS = "success";
 
-  public static final String CURRENCY = "currency";
-  public static final String ROLE = "role";
-  public static final String ROLES = "roles";
-  public static final String RIGHTS = "rights";
-
   private Map<String, Object> data = new HashMap<>();
 
   public OpenLmisResponse(String key, Object data) {

@@ -10,14 +10,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import static org.openlmis.web.response.OpenLmisResponse.CURRENCY;
-
 
 @Controller
 @NoArgsConstructor
 public class StaticReferenceDataController extends BaseController {
 
-	private StaticReferenceDataReader staticReferenceDataReader;
+  public static final String CURRENCY = "currency";
+  private StaticReferenceDataReader staticReferenceDataReader;
 
 	@Autowired
 	public StaticReferenceDataController(StaticReferenceDataReader staticReferenceDataReader) {

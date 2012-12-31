@@ -26,6 +26,10 @@ public class RoleRightsController extends BaseController {
 
   private RoleRightsService roleRightsService;
 
+  public static final String ROLE = "role";
+  public static final String ROLES = "roles";
+  public static final String RIGHTS = "rights";
+
   @Autowired
   public RoleRightsController(RoleRightsService roleRightsService) {
     this.roleRightsService = roleRightsService;
