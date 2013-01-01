@@ -13,7 +13,7 @@
            <table class="table table-striped table-bordered">
                <thead>
                <tr>
-                   <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in programRnRColumnList"  ng-show="true">
+                   <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in programRnRColumnList"  ng-show="showSelectedColumn(programRnrColumn.name)">
                        {{programRnrColumn.label}}
                    </th>
                </tr>
@@ -21,7 +21,7 @@
                <tbody ng-show="programRnRColumnList && (rnr.lineItems.length > 0)">
                <tr ng-repeat="rnrLineItem in rnr.lineItems">
                    <input type="hidden" name="index" value="{{$index}}"/>
-                   <td class="cell-input" ng-repeat="column in programRnRColumnList" ng-show="true">
+                   <td class="cell-input" ng-repeat="column in programRnRColumnList" ng-show="showSelectedColumn(programRnrColumn.name)">
                        <ng-switch on="column.source.name">
                            <span ng-switch-when="USER_INPUT">
                                <ng-switch on="column.name">
@@ -61,15 +61,15 @@
 
                                    <span ng-switch-when="lossesAndAdjustments">
                                    <div id="lossesAndAdjustments" class="fade ng-pristine ng-valid modal hide" ui-modal
-                                        ng-model="rnrLineItem.lossesAndAdjustmentsModal">
+                                        ng-model="lossesAndAdjustmentsModal[rnrLineItem.id]">
                                        <div class="modal-header"><h3>Losses And Adjustments</h3></div>
                                        <div class="modal-body">
                                          <div class="adjustment-field">
                                            <h5>Add new Loss/Adjustment</h5>
-                                           <select ng-model="lossAndAdjustment.type" ng-options="i as i.name.description for i in lossesAndAdjustmentTypes">
+                                           <select ng-model="lossAndAdjustment.type" ng-options="i as i.name.description for i in lossesAndAdjustmentTypesToDisplay">
                                              <option value="">--Select Type--</option>
                                            </select>
-                                           <input type="tex t" name="quantityOfLossAndAdjustment" ng-model="lossAndAdjustment.quantity"
+                                           <input type="text" name="quantityOfLossAndAdjustment" ng-model="lossAndAdjustment.quantity"
                                                   rnr-validator="positiveInteger" placeholder="Quantity" />
                                          <div class="rnr-form-error"
                                               id="quantityOfLossAndAdjustment"
@@ -80,8 +80,8 @@
                                                   ng-disabled="!(lossAndAdjustment.type && lossAndAdjustment.quantity)"
                                                   class="btn btn-primary" value="Add" />
                                          </div>
-                                         <hr ng-show="rnrLineItem[column.name].length" />
-                                         <div class="adjustment-list" ng-show="rnrLineItem[column.name].length">
+                                         <hr ng-show="rnrLineItem[column.name].lossesAndAdjustments.length > 0" />
+                                         <div class="adjustment-list" ng-show="rnrLineItem[column.name].lossesAndAdjustments.length > 0">
                                            <ul>
                                              <li ng-repeat="oneLossAndAdjustment in rnrLineItem.lossesAndAdjustments" class="clearfix">
                                                <span class="tpl-adjustment-type">
@@ -112,10 +112,10 @@
 
                                        </div>
                                        <div class="modal-footer">
-                                           <a class="btn btn-success save-button" ng-click="" data-dismiss="modal">Save Changes</a>
+                                           <a class="btn btn-success save-button" ng-click="" data-dismiss="modal">Done</a>
                                        </div>
                                    </div>
-                                      <a ng-click="showModal(rnrLineItem)">Add</a>
+                                      <a ng-click="showLossesAndAdjustmentModalForLineItem(rnrLineItem)">Add loss/adjustment</a>
                                    </span>
 
 

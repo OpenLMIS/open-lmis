@@ -1,5 +1,7 @@
 function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $location, Requisition, $route, LossesAndAdjustmentsReferenceData) {
 
+  $scope.lossesAndAdjustmentsModal = [];
+
   if (!$scope.$parent.rnr) {
     Requisition.get({facilityId:$route.current.params.facility, programId:$route.current.params.program},
       function (data) {
@@ -14,6 +16,9 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     $scope.currency = data.currency;
   }, {});
 
+  LossesAndAdjustmentsReferenceData.get({}, function (data) {
+    $scope.allTypes = data.lossAdjustmentTypes;
+  }, {});
 
   ProgramRnRColumnList.get({programId:$route.current.params.program}, function (data) {
     function resetFullSupplyItemsCostIfNull(rnr) {
@@ -88,44 +93,49 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     return "defined";
   };
 
-  $scope.removeLossAndAdjustment = function (lineItem, lossAndAdjustmentToDelete) {
-    $(lineItem.lossesAndAdjustments).each(function(index,lossAndAdjustment){
-      if(lossAndAdjustment.type == lossAndAdjustmentToDelete.type){
-        lineItem.lossesAndAdjustments.splice(index, 1);
-        $scope.lossesAndAdjustmentTypes.splice(lossAndAdjustment.type.displayOrder-1, 0, lossAndAdjustmentToDelete.type);
-      }
-    })
-
+  $scope.showLossesAndAdjustmentModalForLineItem = function (lineItem) {
+    updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem);
+    $scope.lossesAndAdjustmentsModal[lineItem.id] = true;
   };
 
-  $scope.showModal = function (lineItem) {
-    if(!$scope.lossesAndAdjustmentTypes){
-    LossesAndAdjustmentsReferenceData.get({}, function (data) {
-      $scope.lossesAndAdjustmentTypes = data.lossAdjustmentTypes;
-      lineItem.lossesAndAdjustmentsModal = true;
-    }, {});
-    }else {
-      lineItem.lossesAndAdjustmentsModal = true;
-    }
-  };
+  function updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem) {
+    var lossesAndAdjustmentTypesForLineItem = [];
+    $(lineItem.lossesAndAdjustments).each(function (index, lineItemLossAndAdjustment) {
+        lossesAndAdjustmentTypesForLineItem.push(lineItemLossAndAdjustment.type);
+      });
 
-  $scope.addLossAndAdjustment = function (lineItem, newLossAndAdjustment) {
-    var lossAndAdjustment = {"type":newLossAndAdjustment.type, "quantity":newLossAndAdjustment.quantity};
-    lineItem.lossesAndAdjustments.push(lossAndAdjustment);
-    var quantity = parseInt(newLossAndAdjustment.quantity);
+    $scope.lossesAndAdjustmentTypesToDisplay = $.grep($scope.allTypes, function(lAndATypeObject){
+      return $.inArray(lAndATypeObject, lossesAndAdjustmentTypesForLineItem) == -1;
+    });
+  }
+
+  function updateTotalLossesAndAdjustment(quantity, additive, lineItem) {
     if (!isNaN(quantity)) {
-      if (newLossAndAdjustment.type.additive) {
+      if (additive) {
         lineItem.totalLossesAndAdjustments += quantity;
       } else {
         lineItem.totalLossesAndAdjustments -= quantity;
       }
-      $($scope.lossesAndAdjustmentTypes).each(function(index, lossAndAdjustmentType)
-        {
-         if(lossAndAdjustmentType == newLossAndAdjustment.type){
-            $scope.lossesAndAdjustmentTypes.splice(index,1);
-         }
-        })
     }
+  }
+
+  $scope.removeLossAndAdjustment = function (lineItem, lossAndAdjustmentToDelete) {
+    lineItem.lossesAndAdjustments = $.grep(lineItem.lossesAndAdjustments, function(lossAndAdjustmentObj) {
+      return lossAndAdjustmentObj != lossAndAdjustmentToDelete;
+    });
+    var quantity = parseInt(lossAndAdjustmentToDelete.quantity);
+    updateTotalLossesAndAdjustment(quantity, !lossAndAdjustmentToDelete.type.additive, lineItem);
+    updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem);
+  };
+
+  $scope.addLossAndAdjustment = function (lineItem, newLossAndAdjustment) {
+    var lossAndAdjustment = {"type":newLossAndAdjustment.type, "quantity":newLossAndAdjustment.quantity};
+    newLossAndAdjustment.type = undefined;
+    newLossAndAdjustment.quantity = undefined;
+    lineItem.lossesAndAdjustments.push(lossAndAdjustment);
+    var quantity = parseInt(lossAndAdjustment.quantity);
+    updateTotalLossesAndAdjustment(quantity, lossAndAdjustment.type.additive, lineItem);
+    updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem);
   };
 }
 
