@@ -123,10 +123,6 @@ public class CreateFacilityPage extends Page {
     private static WebElement errorOrSuccessMessage;
 
 
-
-
-
-
     public CreateFacilityPage(TestWebDriver driver) throws  IOException {
         super(driver);
         PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);

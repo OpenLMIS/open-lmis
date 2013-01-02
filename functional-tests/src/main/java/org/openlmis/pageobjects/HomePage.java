@@ -26,6 +26,9 @@ public class HomePage extends Page {
     @FindBy(how = How.XPATH, using = "//a[contains(text(),'Facilities')]")
     private static WebElement facilityMenuItem;
 
+    @FindBy(how = How.XPATH, using = "//a[contains(text(),'Role assignments')]")
+    private static WebElement manageRoleAssignmentLink;
+
     @FindBy(how = How.LINK_TEXT, using = "Add new")
     private static WebElement createFacility;
 
@@ -73,7 +76,7 @@ public class HomePage extends Page {
     private static WebElement nextButton;
 
     @FindBy(how = How.LINK_TEXT, using = "Manage")
-    private static WebElement manageFacilityLink;
+    private static WebElement manageLink;
 
     @FindBy(how = How.LINK_TEXT, using = "Search")
     private static WebElement searchLink;
@@ -132,7 +135,7 @@ public class HomePage extends Page {
         testWebDriver.waitForElementToAppear(myFacilityLink);
         myFacilityLink.click();
         testWebDriver.waitForElementToAppear(facilityDropDown);
-        testWebDriver.selectByVisibleText(facilityDropDown, "FCcode"+FCstring+"-FCname"+FCstring);
+        testWebDriver.selectByVisibleText(facilityDropDown, "FCcode" + FCstring + "-FCname" + FCstring);
         testWebDriver.waitForElementToAppear(programDropDown);
         programDropDown.click();
         testWebDriver.selectByVisibleText(programDropDownSelect,program);
@@ -141,11 +144,19 @@ public class HomePage extends Page {
     }
 
     public DeleteFacilityPage navigateSearchFacility() throws IOException {
-        testWebDriver.waitForElementToAppear(manageFacilityLink);
-        manageFacilityLink.click();
+        testWebDriver.waitForElementToAppear(manageLink);
+        manageLink.click();
         testWebDriver.waitForElementToAppear(facilityMenuItem);
         facilityMenuItem.click();
         return new DeleteFacilityPage(testWebDriver);
+    }
+
+    public RolesPage navigateRoleAssignments() throws IOException {
+        testWebDriver.waitForElementToAppear(manageLink);
+        manageLink.click();
+        testWebDriver.waitForElementToAppear(manageRoleAssignmentLink);
+        manageRoleAssignmentLink.click();
+        return new RolesPage(testWebDriver);
     }
 
 }

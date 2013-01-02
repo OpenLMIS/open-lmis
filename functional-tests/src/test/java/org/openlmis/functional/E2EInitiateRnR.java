@@ -9,6 +9,9 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @TransactionConfiguration(defaultRollback=true)
 @Transactional
 
@@ -26,21 +29,17 @@ public class E2EInitiateRnR extends TestCaseHelper {
     @Test(dataProvider = "Data-Provider-Function-Positive")
     public void testE2EInitiateRnR(String program,String user, String password,String[] credentials) throws Exception {
 
-
         DBWrapper dbWrapper = new DBWrapper();
 
         dbWrapper.insertUser(user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==");
-        dbWrapper.insertFacility();
-        dbWrapper.insertRoles();
-        dbWrapper.insertRoleRights();
-        dbWrapper.insertSupervisoryNodes();
-        dbWrapper.insertSupervisoryNodesSecond();
-        dbWrapper.insertRoleAssignment();
-        dbWrapper.insertProducts();
-        dbWrapper.insertProgramProducts();
-        dbWrapper.insertFacilityApprovedProducts();
-        dbWrapper.insertRequisitionGroup();
-        dbWrapper.insertRequisitionGroupMembers();
+
+//        dbWrapper.insertSupervisoryNodes();
+//        dbWrapper.insertSupervisoryNodesSecond();
+//        dbWrapper.insertProducts();
+//        dbWrapper.insertProgramProducts();
+//        dbWrapper.insertFacilityApprovedProducts();
+//        dbWrapper.insertRequisitionGroup();
+//        dbWrapper.insertRequisitionGroupMembers();
 
 
         LoginPage loginPage=new LoginPage(testWebDriver);
@@ -53,6 +52,14 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
         TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
         templateConfigPage.configureTemplate();
+
+        RolesPage rolesPage = homePage.navigateRoleAssignments();
+        List<String> userRoleList = new ArrayList<String>();
+        userRoleList.add("Create Requisition");
+
+        rolesPage.createRole("User", "User", userRoleList);
+
+        dbWrapper.insertRoleAssignment("User");
 
         LoginPage loginPageSecond=homePage.logout();
         HomePage homePageUser = loginPageSecond.loginAs(user, password);
@@ -79,5 +86,6 @@ public class E2EInitiateRnR extends TestCaseHelper {
         return new Object[][]{
                 {"HIV","User123", "User123",new String[]{"Admin123", "Admin123"}}
         };
+
     }
 }

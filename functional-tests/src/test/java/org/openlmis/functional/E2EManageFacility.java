@@ -32,19 +32,6 @@ public class E2EManageFacility extends TestCaseHelper {
         DBWrapper dbWrapper = new DBWrapper();
 
         dbWrapper.insertUser(user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==");
-        dbWrapper.insertFacility();
-        dbWrapper.insertRoles();
-        dbWrapper.insertRoleRights();
-        dbWrapper.insertSupervisoryNodes();
-        dbWrapper.insertSupervisoryNodesSecond();
-        dbWrapper.insertRoleAssignment();
-        dbWrapper.insertProducts();
-        dbWrapper.insertProgramProducts();
-        dbWrapper.insertFacilityApprovedProducts();
-        dbWrapper.insertRequisitionGroup();
-        dbWrapper.insertRequisitionGroupMembers();
-
-
 
         HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 

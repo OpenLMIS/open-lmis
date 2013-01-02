@@ -105,11 +105,13 @@ public class DBWrapper {
     }
 
 
+    //delete from role_assignments where userid not in (1);
+
     public void deleteData() throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();
-        dbwrapper.dbConnection("delete from role_rights;", "alter");
-        dbwrapper.dbConnection("delete from role_assignments;", "alter");
-        dbwrapper.dbConnection("delete from roles;", "alter");
+        dbwrapper.dbConnection("delete from role_rights where roleid not in(1);", "alter");
+        dbwrapper.dbConnection("delete from role_assignments where userid not in (1);", "alter");
+        dbwrapper.dbConnection("delete from roles where name not in ('Admin');", "alter");
         dbwrapper.dbConnection("delete from facility_approved_products;", "alter");
         dbwrapper.dbConnection("delete from program_products;", "alter");
         dbwrapper.dbConnection("DELETE FROM requisition_line_items;", "alter");
@@ -212,20 +214,19 @@ public class DBWrapper {
                 "((select id from  requisition_groups where code ='RG2'),(select id from  facilities where code ='F1757'));", "alter");
     }
 
-    public void insertRoleAssignment() throws SQLException, IOException {
+    public void insertRoleAssignment(String userId) throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();
         ResultSet rs = dbwrapper.dbConnection("Select userId from role_assignments;", "select");
 
         if (rs.next()) {
 
-            dbwrapper.dbConnection("delete from role_assignments;", "alter");
+            dbwrapper.dbConnection("delete from role_assignments where userId=200;", "alter");
 
         }
         dbwrapper.dbConnection(" INSERT INTO role_assignments\n" +
                 "            (userId, roleId, programId, supervisoryNodeId) VALUES \n" +
-                "    (1, (SELECT id FROM roles WHERE name = 'district pharmacist'), 1, null),\n" +
-                "    (200, (SELECT id FROM roles WHERE name = 'store in-charge'), 1, null),\n" +
-                "    (200, (SELECT id FROM roles WHERE name = 'store in-charge'), 1, (SELECT id from supervisory_nodes WHERE code = 'N1'));", "alter");
+                "    (200, (SELECT id FROM roles WHERE name = '"+userId+"'), 1, null),\n" +
+                "    (200, (SELECT id FROM roles WHERE name = '"+userId+"'), 1, (SELECT id from supervisory_nodes WHERE code = 'N1'));", "alter");
     }
 
 
