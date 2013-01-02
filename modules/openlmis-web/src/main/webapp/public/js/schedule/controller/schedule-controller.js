@@ -16,7 +16,7 @@ function ScheduleController($scope, Schedules) {
       $scope.newSchedule = {};
     }, function (data) {
       $scope.message = "";
-      $scope.error = "Save failed";
+      $scope.error = data.data.error;
     });
   }
 

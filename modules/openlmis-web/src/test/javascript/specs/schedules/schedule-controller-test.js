@@ -31,5 +31,15 @@ describe("Schedule", function () {
       expect(scope.schedules).toEqual([newScheduleWithId, existingSchedule]);
       expect(scope.message).toEqual("Schedule Saved Successfully");
     })
+
+    it('should show failure error on create a new schedule', function() {
+      var schedule = {"name":"newName", "code":"newCode", "description":"newDescription"};
+      $httpBackend.expectPOST('/schedules.json').respond(400, {"error":"errorMsg"});
+
+      scope.createSchedule(schedule);
+      $httpBackend.flush();
+      expect(scope.message).toEqual("");
+      expect(scope.error).toEqual("errorMsg");
+    })
   });
 });

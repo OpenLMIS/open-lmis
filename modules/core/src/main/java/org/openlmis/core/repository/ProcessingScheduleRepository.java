@@ -11,19 +11,23 @@ import java.util.List;
 @Repository
 @NoArgsConstructor
 public class ProcessingScheduleRepository {
-    private ProcessingScheduleMapper processingScheduleMapper;
+  private ProcessingScheduleMapper processingScheduleMapper;
 
-    @Autowired
-    public ProcessingScheduleRepository(ProcessingScheduleMapper processingScheduleMapper) {
-        this.processingScheduleMapper = processingScheduleMapper;
-    }
+  @Autowired
+  public ProcessingScheduleRepository(ProcessingScheduleMapper processingScheduleMapper) {
+    this.processingScheduleMapper = processingScheduleMapper;
+  }
 
-    public List<ProcessingSchedule> getAll() {
-        return processingScheduleMapper.getAll();
-    }
+  public List<ProcessingSchedule> getAll() {
+    return processingScheduleMapper.getAll();
+  }
 
-    public void save(ProcessingSchedule processingSchedule) {
-        processingSchedule.validate();
-        processingScheduleMapper.insert(processingSchedule);
-    }
+  public void save(ProcessingSchedule processingSchedule) {
+    processingSchedule.validate();
+    processingScheduleMapper.insert(processingSchedule);
+  }
+
+  public ProcessingSchedule get(Integer id) {
+    return processingScheduleMapper.get(id);
+  }
 }

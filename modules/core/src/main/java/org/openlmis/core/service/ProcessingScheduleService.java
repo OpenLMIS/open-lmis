@@ -22,7 +22,8 @@ public class ProcessingScheduleService {
         return repository.getAll();
     }
 
-    public void save(ProcessingSchedule processingSchedule) {
-        repository.save(processingSchedule);
+    public ProcessingSchedule save(ProcessingSchedule processingSchedule) {
+      repository.save(processingSchedule);
+      return repository.get(processingSchedule.getId());
     }
 }
