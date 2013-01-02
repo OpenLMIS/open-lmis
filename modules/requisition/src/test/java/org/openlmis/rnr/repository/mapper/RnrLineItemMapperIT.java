@@ -122,6 +122,7 @@ public class RnrLineItemMapperIT {
         lineItem.setModifiedBy("user1");
         lineItem.setBeginningBalance(43);
         lineItem.setTotalLossesAndAdjustments(20);
+        lineItem.setReasonForRequestedQuantity("Quantity Requested more in liu of coming rains");
         int updateCount = rnrLineItemMapper.update(lineItem);
         assertThat(updateCount, is(1));
         List<RnrLineItem> rnrLineItems = rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId());
@@ -129,5 +130,6 @@ public class RnrLineItemMapperIT {
         assertThat(rnrLineItems.get(0).getBeginningBalance(), is(43));
         assertThat(rnrLineItems.get(0).getTotalLossesAndAdjustments(), is(20));
         assertThat(rnrLineItems.get(0).getProduct(), is("Primary Name Tablet strength mg"));
+        assertThat(rnrLineItems.get(0).getReasonForRequestedQuantity(), is("Quantity Requested more in liu of coming rains"));
     }
 }

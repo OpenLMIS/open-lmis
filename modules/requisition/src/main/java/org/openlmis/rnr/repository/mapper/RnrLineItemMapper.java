@@ -27,6 +27,7 @@ public interface RnrLineItemMapper {
             " beginningBalance = #{beginningBalance}, "+
             " stockInHand = #{stockInHand}, "+
             " quantityRequested = #{quantityRequested}, " +
+            " reasonForRequestedQuantity = #{reasonForRequestedQuantity}, " +
             " totalLossesAndAdjustments = #{totalLossesAndAdjustments}, "+
             " calculatedOrderQuantity = #{calculatedOrderQuantity}, "+
             " quantityApproved = #{quantityApproved}, "+
