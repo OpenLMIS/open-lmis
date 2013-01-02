@@ -66,13 +66,13 @@
                                        <div class="modal-body">
                                          <div class="adjustment-field">
                                            <h5>Add new Loss/Adjustment</h5>
-                                           <select ng-model="lossAndAdjustment.type" ng-options="i as i.name.description for i in lossesAndAdjustmentTypesToDisplay">
+                                           <select ng-model="lossAndAdjustment.type" ng-options="i as i.description for i in lossesAndAdjustmentTypesToDisplay">
                                              <option value="">--Select Type--</option>
                                            </select>
-                                           <input type="text" name="quantityOfLossAndAdjustment" ng-model="lossAndAdjustment.quantity"
-                                                  rnr-validator="positiveInteger" placeholder="Quantity" />
+                                           <input type="text" name="quantity{{rnrLineItem.id}}" ng-model="lossAndAdjustment.quantity"
+                                                  rnr-validator="positiveInteger" maxlength="8" placeholder="Quantity" />
                                          <div class="rnr-form-error"
-                                              id="quantityOfLossAndAdjustment"
+                                              id="quantity{{rnrLineItem.id}}"
                                                style="display:none;">
                                                        Enter Numeric Data
                                                        </div>
@@ -85,7 +85,7 @@
                                            <ul>
                                              <li ng-repeat="oneLossAndAdjustment in rnrLineItem.lossesAndAdjustments" class="clearfix">
                                                <span class="tpl-adjustment-type">
-                                                 {{oneLossAndAdjustment.type.name.description}}
+                                                 {{oneLossAndAdjustment.type.description}}
                                                </span>
                                                <span class="tpl-adjustment-delete">
                                                  <a class="close"

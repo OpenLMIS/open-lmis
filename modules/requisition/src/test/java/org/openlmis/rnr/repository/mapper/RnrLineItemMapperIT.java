@@ -85,13 +85,13 @@ public class RnrLineItemMapperIT {
 
         LossesAndAdjustments lossesAndAdjustmentsClinicReturn = new LossesAndAdjustments();
         LossesAndAdjustmentsType lossesAndAdjustmentsTypeClinicReturn = new LossesAndAdjustmentsType();
-        lossesAndAdjustmentsTypeClinicReturn.setName(LossesAndAdjustmentsTypeEnum.CLINIC_RETURN);
+        lossesAndAdjustmentsTypeClinicReturn.setName("CLINIC_RETURN");
         lossesAndAdjustmentsClinicReturn.setType(lossesAndAdjustmentsTypeClinicReturn);
         lossesAndAdjustmentsClinicReturn.setQuantity(20);
 
         LossesAndAdjustments lossesAndAdjustmentsTransferIn = new LossesAndAdjustments();
         LossesAndAdjustmentsType lossesAndAdjustmentsTypeTransferIn = new LossesAndAdjustmentsType();
-        lossesAndAdjustmentsTypeTransferIn.setName(LossesAndAdjustmentsTypeEnum.TRANSFER_IN);
+        lossesAndAdjustmentsTypeTransferIn.setName("TRANSFER_IN");
         lossesAndAdjustmentsTransferIn.setType(lossesAndAdjustmentsTypeTransferIn);
         lossesAndAdjustmentsTransferIn.setQuantity(45);
 

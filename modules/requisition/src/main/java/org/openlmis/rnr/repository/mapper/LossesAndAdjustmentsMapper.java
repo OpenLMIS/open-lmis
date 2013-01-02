@@ -3,7 +3,6 @@ package org.openlmis.rnr.repository.mapper;
 import org.apache.ibatis.annotations.*;
 import org.openlmis.rnr.domain.LossesAndAdjustments;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
-import org.openlmis.rnr.domain.LossesAndAdjustmentsTypeEnum;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.springframework.stereotype.Repository;
 
@@ -23,9 +22,8 @@ public interface LossesAndAdjustmentsMapper {
   })
   List<LossesAndAdjustments> getByRnrLineItem(Integer rnrLineItemId);
 
-
-  @Select("SELECT * FROM losses_adjustments_types WHERE name = #{name}")
-  LossesAndAdjustmentsType getLossesAndAdjustmentTypeByName(LossesAndAdjustmentsTypeEnum lossesAndAdjustmentsType);
+  @Select("SELECT * FROM losses_adjustments_types WHERE name = #{lossesAndAdjustmentsTypeName}")
+  LossesAndAdjustmentsType getLossesAndAdjustmentTypeByName(String lossesAndAdjustmentsTypeName);
 
   @Delete("DELETE FROM requisition_line_item_losses_adjustments WHERE id = #{lossesAndAdjustmentsId}")
   void delete(Integer lossesAndAdjustmentsId);

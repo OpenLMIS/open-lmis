@@ -1,7 +1,9 @@
 CREATE TABLE losses_adjustments_types (
 
-  name VARCHAR(250),
+  name VARCHAR(50),
+  description VARCHAR(100),
   additive BOOLEAN,
   displayOrder INTEGER,
-  CONSTRAINT unique_losses_adjustments UNIQUE (name )
+  UNIQUE (name),
+  UNIQUE (description)
 );

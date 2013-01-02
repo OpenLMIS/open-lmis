@@ -32,7 +32,7 @@ describe('CreateRnrController', function () {
     httpBackend.expect('GET', '/rnr/lossAndAdjustments/reference-data.json').respond({"lossAdjustmentTypes":{}});
     ctrl = controller(CreateRnrController, {$scope:scope, $location:location, $route:route, localStorageService:localStorageService});
 
-    scope.allTypes = [{"name" : {"name" : "some name"}},{"name" : {"name" : "some other name"}}];
+    scope.allTypes = [{"name" : "some name"},{"name" : "some other name"}];
   }));
 
   it('should set rnr in scope after successful initialization', function () {
@@ -98,15 +98,15 @@ describe('CreateRnrController', function () {
   });
 
   it("should display modal window with appropriate type options to add losses and adjustments", function () {
-    var lineItem = { "id" : "1", lossesAndAdjustments: [{"type" : {"name" : {"name" : "some name"}}, "quantity": "4"}]};
+    var lineItem = { "id" : "1", lossesAndAdjustments: [{"type" : {"name" : "some name"}, "quantity": "4"}]};
     scope.showLossesAndAdjustmentModalForLineItem(lineItem);
     expect(scope.lossesAndAdjustmentsModal[1]).toBeTruthy();
-    expect(scope.lossesAndAdjustmentTypesToDisplay).toEqual([{"name" : {"name" : "some other name"}}]);
+    expect(scope.lossesAndAdjustmentTypesToDisplay).toEqual([{"name" : "some other name"}]);
   });
 
   it("should add losses and adjustments for line item and update total losses and adjustments", function () {
-    var lossAndAdjustment = {"type": {"name" : {"name" : "CLINIC_RETURN"}, "additive" : true}, "quantity" : 45};
-    var expectedLossAndAdjustment = {"type": {"name" : {"name" : "CLINIC_RETURN"}, "additive" : true}, "quantity" : 45};
+    var lossAndAdjustment = {"type": {"name" : "CLINIC_RETURN", "additive" : true}, "quantity" : 45};
+    var expectedLossAndAdjustment = {"type": {"name" : "CLINIC_RETURN", "additive" : true}, "quantity" : 45};
     var lineItem = {"id" : "1","totalLossesAndAdjustments" : 0, lossesAndAdjustments: []};
     scope.addLossAndAdjustment(lineItem, lossAndAdjustment);
     expect(lineItem.totalLossesAndAdjustments).toEqual(45);
@@ -114,7 +114,7 @@ describe('CreateRnrController', function () {
   });
 
   it("should remove losses and adjustments for line item and update total losses and adjustments", function () {
-    var lossAndAdjustment = {"type": {"name" : {"name" : "CLINIC_RETURN"}, "additive" : true}, "quantity" : 45};
+    var lossAndAdjustment = {"type": {"name" : "CLINIC_RETURN", "additive" : true}, "quantity" : 45};
     var lineItem = {"id" : "1","totalLossesAndAdjustments" : 45, lossesAndAdjustments: [lossAndAdjustment]};
     scope.removeLossAndAdjustment(lineItem, lossAndAdjustment);
     expect(lineItem.totalLossesAndAdjustments).toEqual(0);
@@ -122,7 +122,7 @@ describe('CreateRnrController', function () {
   });
 
   it("should re evaluate total losses and adjustments for line item", function () {
-    var lossAndAdjustment = {"type": {"name" : {"name" : "CLINIC_RETURN"}, "additive" : true}, "quantity" : 45};
+    var lossAndAdjustment = {"type": {"name" : "CLINIC_RETURN", "additive" : true}, "quantity" : 45};
     var lineItem = {"id" : "1","totalLossesAndAdjustments" : 40, lossesAndAdjustments: [lossAndAdjustment]};
     scope.reEvaluateTotalLossesAndAdjustments(lineItem);
     expect(lineItem.totalLossesAndAdjustments).toEqual(45);

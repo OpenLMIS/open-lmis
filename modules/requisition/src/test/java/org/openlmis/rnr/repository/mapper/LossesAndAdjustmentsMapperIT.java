@@ -74,7 +74,7 @@ public class LossesAndAdjustmentsMapperIT {
     rnrLineItemMapper.insert(rnrLineItem);
     lossAndAdjustment = new LossesAndAdjustments();
     lossesAndAdjustmentsType = new LossesAndAdjustmentsType();
-    lossesAndAdjustmentsType.setName(LossesAndAdjustmentsTypeEnum.CLINIC_RETURN);
+    lossesAndAdjustmentsType.setName("CLINIC_RETURN");
     lossAndAdjustment.setType(lossesAndAdjustmentsType);
     lossAndAdjustment.setQuantity(20);
   }
@@ -89,14 +89,6 @@ public class LossesAndAdjustmentsMapperIT {
     assertThat(lossesAndAdjustmentsList.size(), is(1));
     assertThat(lineItemLossAndAdjustment.getQuantity(), is(lossAndAdjustment.getQuantity()));
     assertThat(lineItemLossAndAdjustment.getType().getName(), is(lossAndAdjustment.getType().getName()));
-  }
-
-  @Test
-  public void shouldGetLossesAndAdjustmentsTypesByName() throws Exception {
-    LossesAndAdjustmentsType lossesAndAdjustmentType = lossesAndAdjustmentsMapper.getLossesAndAdjustmentTypeByName(LossesAndAdjustmentsTypeEnum.CLINIC_RETURN);
-    assertThat(lossesAndAdjustmentType.getName(), is(LossesAndAdjustmentsTypeEnum.CLINIC_RETURN));
-    assertThat(lossesAndAdjustmentType.getAdditive(), is(true));
-    assertThat(lossesAndAdjustmentType.getDisplayOrder(), is(9));
   }
 
   @Test

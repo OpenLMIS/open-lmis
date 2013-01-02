@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LossesAndAdjustmentsType {
 
-    private LossesAndAdjustmentsTypeEnum name;
+    private String name;
+    private String description;
     private Boolean additive;
     private Integer displayOrder;
 

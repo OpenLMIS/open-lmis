@@ -101,11 +101,11 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
   function updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem) {
     var lossesAndAdjustmentTypesForLineItem = [];
     $(lineItem.lossesAndAdjustments).each(function (index, lineItemLossAndAdjustment) {
-        lossesAndAdjustmentTypesForLineItem.push(lineItemLossAndAdjustment.type.name.name);
+        lossesAndAdjustmentTypesForLineItem.push(lineItemLossAndAdjustment.type.name);
       });
 
     $scope.lossesAndAdjustmentTypesToDisplay = $.grep($scope.allTypes, function(lAndATypeObject){
-      return $.inArray(lAndATypeObject.name.name, lossesAndAdjustmentTypesForLineItem) == -1;
+      return $.inArray(lAndATypeObject.name, lossesAndAdjustmentTypesForLineItem) == -1;
     });
   }
 
