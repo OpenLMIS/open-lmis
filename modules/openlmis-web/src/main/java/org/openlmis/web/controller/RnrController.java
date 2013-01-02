@@ -67,12 +67,6 @@ public class RnrController extends BaseController {
     rnrService.save(rnr);
   }
 
-    @RequestMapping(value = "/logistics/rnr/lossAndAdjustment/{lossAndAdjustmentId}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-    @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
-    public void removeLossAndAdjustment(@PathVariable("lossAndAdjustmentId") Integer lossAndAdjustmentId) {
-        rnrService.removeLossAndAdjustment(lossAndAdjustmentId);
-    }
-
     @RequestMapping(value = "/rnr/lossAndAdjustments/reference-data", method = RequestMethod.GET, headers = "Accept=application/json")
     @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
     public Map getReferenceData() {

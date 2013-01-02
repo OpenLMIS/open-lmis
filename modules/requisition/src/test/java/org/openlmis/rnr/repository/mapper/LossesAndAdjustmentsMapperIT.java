@@ -23,7 +23,6 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -33,105 +32,87 @@ import static org.junit.Assert.assertThat;
 public class LossesAndAdjustmentsMapperIT {
 
 
-    public static final Integer HIV = 1;
-    @Autowired
-    LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
+  public static final Integer HIV = 1;
+  @Autowired
+  LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
 
-    @Autowired
-    RnrMapper rnrMapper;
+  @Autowired
+  RnrMapper rnrMapper;
 
-    @Autowired
-    RnrLineItemMapper rnrLineItemMapper;
-    @Autowired
-    FacilityMapper facilityMapper;
+  @Autowired
+  RnrLineItemMapper rnrLineItemMapper;
+  @Autowired
+  FacilityMapper facilityMapper;
 
-    @Autowired
-    ProgramMapper programMapper;
-    @Autowired
-    ProductMapper productMapper;
-    @Autowired
-    ProgramProductMapper programProductMapper;
+  @Autowired
+  ProgramMapper programMapper;
+  @Autowired
+  ProductMapper productMapper;
+  @Autowired
+  ProgramProductMapper programProductMapper;
 
-    RnrLineItem rnrLineItem;
-    LossesAndAdjustments lossesAndAdjustments;
-    LossesAndAdjustmentsType lossesAndAdjustmentsType;
+  RnrLineItem rnrLineItem;
+  LossesAndAdjustments lossAndAdjustment;
+  LossesAndAdjustmentsType lossesAndAdjustmentsType;
 
-    @Before
-    public void setUp() throws Exception {
-        Product product = make(a(ProductBuilder.defaultProduct));
-        Program program = make(a(ProgramBuilder.defaultProgram));
-        programMapper.insert(program);
-        ProgramProduct programProduct = new ProgramProduct(program, product, 30, true, 12.5F);
-        productMapper.insert(product);
-        programProductMapper.insert(programProduct);
-        FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct("warehouse", programProduct, 3);
-        Facility facility = make(a(FacilityBuilder.defaultFacility));
-        facilityMapper.insert(facility);
+  @Before
+  public void setUp() throws Exception {
+    Product product = make(a(ProductBuilder.defaultProduct));
+    Program program = make(a(ProgramBuilder.defaultProgram));
+    programMapper.insert(program);
+    ProgramProduct programProduct = new ProgramProduct(program, product, 30, true, 12.5F);
+    productMapper.insert(product);
+    programProductMapper.insert(programProduct);
+    FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct("warehouse", programProduct, 3);
+    Facility facility = make(a(FacilityBuilder.defaultFacility));
+    facilityMapper.insert(facility);
 
-        Rnr requisition = new Rnr(facility.getId(), HIV, RnrStatus.INITIATED, "user");
-        rnrMapper.insert(requisition);
+    Rnr requisition = new Rnr(facility.getId(), HIV, RnrStatus.INITIATED, "user");
+    rnrMapper.insert(requisition);
 
-        rnrLineItem = new RnrLineItem(requisition.getId(), facilityApprovedProduct, "user");
-        rnrLineItemMapper.insert(rnrLineItem);
-        lossesAndAdjustments = new LossesAndAdjustments();
-        lossesAndAdjustmentsType = new LossesAndAdjustmentsType();
-        lossesAndAdjustmentsType.setName(LossesAndAdjustmentsTypeEnum.CLINIC_RETURN);
-        lossesAndAdjustments.setType(lossesAndAdjustmentsType);
-        lossesAndAdjustments.setQuantity(20);
-    }
+    rnrLineItem = new RnrLineItem(requisition.getId(), facilityApprovedProduct, "user");
+    rnrLineItemMapper.insert(rnrLineItem);
+    lossAndAdjustment = new LossesAndAdjustments();
+    lossesAndAdjustmentsType = new LossesAndAdjustmentsType();
+    lossesAndAdjustmentsType.setName(LossesAndAdjustmentsTypeEnum.CLINIC_RETURN);
+    lossAndAdjustment.setType(lossesAndAdjustmentsType);
+    lossAndAdjustment.setQuantity(20);
+  }
 
-    @Test
-    public void shouldInsertLossesAndAdjustments() {
-        Integer id = lossesAndAdjustmentsMapper.insert(rnrLineItem, lossesAndAdjustments);
-        assertThat(id, is(notNullValue()));
-    }
+  @Test
+  public void shouldInsertLossesAndAdjustments() {
+    lossesAndAdjustmentsMapper.insert(rnrLineItem, lossAndAdjustment);
 
-    @Test
-    public void shouldGetLossesAndAdjustmentByRequisitionLineItemId() {
-        Integer id = lossesAndAdjustmentsMapper.insert(rnrLineItem, lossesAndAdjustments);
-        List<LossesAndAdjustments> lossesAndAdjustments = lossesAndAdjustmentsMapper.getByRnrLineItem(rnrLineItem.getId());
-        assertThat(lossesAndAdjustments.size(), is(1));
-        assertThat(lossesAndAdjustments.get(0).getId(), is(id));
-        assertThat(lossesAndAdjustments.get(0).getQuantity(), is(20));
-    }
+    List<LossesAndAdjustments> lossesAndAdjustmentsList = lossesAndAdjustmentsMapper.getByRnrLineItem(rnrLineItem.getId());
+    LossesAndAdjustments lineItemLossAndAdjustment = lossesAndAdjustmentsList.get(0);
 
-    @Test
-    public void shouldGetLossesAndAdjustmentsTypesByName() throws Exception {
-        LossesAndAdjustmentsType lossesAndAdjustmentType = lossesAndAdjustmentsMapper.getLossesAndAdjustmentTypeByName(LossesAndAdjustmentsTypeEnum.CLINIC_RETURN);
-        assertThat(lossesAndAdjustmentType.getName(), is(LossesAndAdjustmentsTypeEnum.CLINIC_RETURN));
-        assertThat(lossesAndAdjustmentType.isAdditive(), is(true));
-        assertThat(lossesAndAdjustmentType.getDisplayOrder(), is(9));
-    }
+    assertThat(lossesAndAdjustmentsList.size(), is(1));
+    assertThat(lineItemLossAndAdjustment.getQuantity(), is(lossAndAdjustment.getQuantity()));
+    assertThat(lineItemLossAndAdjustment.getType().getName(), is(lossAndAdjustment.getType().getName()));
+  }
 
+  @Test
+  public void shouldGetLossesAndAdjustmentsTypesByName() throws Exception {
+    LossesAndAdjustmentsType lossesAndAdjustmentType = lossesAndAdjustmentsMapper.getLossesAndAdjustmentTypeByName(LossesAndAdjustmentsTypeEnum.CLINIC_RETURN);
+    assertThat(lossesAndAdjustmentType.getName(), is(LossesAndAdjustmentsTypeEnum.CLINIC_RETURN));
+    assertThat(lossesAndAdjustmentType.getAdditive(), is(true));
+    assertThat(lossesAndAdjustmentType.getDisplayOrder(), is(9));
+  }
 
-    @Test
-    public void shouldDeleteLossesAndAdjustment() throws Exception {
-        Integer id = lossesAndAdjustmentsMapper.insert(rnrLineItem, lossesAndAdjustments);
-        lossesAndAdjustmentsMapper.delete(id);
-        assertThat(lossesAndAdjustmentsMapper.getByRnrLineItem(rnrLineItem.getId()).size(), is(0));
-    }
+  @Test
+  public void shouldDeleteLossesAndAdjustmentForLineItem() throws Exception {
+    lossesAndAdjustmentsMapper.insert(rnrLineItem, lossAndAdjustment);
+    lossesAndAdjustmentsMapper.deleteByLineItemId(rnrLineItem.getId());
+    assertThat(lossesAndAdjustmentsMapper.getByRnrLineItem(rnrLineItem.getId()).size(), is(0));
+  }
 
-    @Test
-    public void shouldUpdateLossesAndAdjustments() throws Exception {
-        Integer id = lossesAndAdjustmentsMapper.insert(rnrLineItem, lossesAndAdjustments);
-        lossesAndAdjustments.setId(id);
-        lossesAndAdjustments.setQuantity(50);
-        lossesAndAdjustmentsType.setName(LossesAndAdjustmentsTypeEnum.TRANSFER_OUT);
-        lossesAndAdjustments.setType(lossesAndAdjustmentsType);
-        lossesAndAdjustmentsMapper.update(lossesAndAdjustments);
-        List<LossesAndAdjustments> lossesAndAdjustments = lossesAndAdjustmentsMapper.getByRnrLineItem(rnrLineItem.getId());
-        assertThat(lossesAndAdjustments.size(), is(1));
-        assertThat(lossesAndAdjustments.get(0).getQuantity(), is(50));
-        assertThat(lossesAndAdjustments.get(0).getType().getName(), is(LossesAndAdjustmentsTypeEnum.TRANSFER_OUT));
-    }
-
-    @Test
-    public void shouldReturnAllLossesAndAdjustmentsTypesAccordingToDisplayOrder(){
-        List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes = lossesAndAdjustmentsMapper.getLossesAndAdjustmentsTypes();
-        assertThat(lossesAndAdjustmentsTypes.size(), is(9));
-        assertThat(lossesAndAdjustmentsTypes.get(0).getDisplayOrder(), is(1));
-        assertThat(lossesAndAdjustmentsTypes.get(1).getDisplayOrder(), is(2));
-        assertThat(lossesAndAdjustmentsTypes.get(2).getDisplayOrder(), is(3));
-    }
+  @Test
+  public void shouldReturnAllLossesAndAdjustmentsTypesAccordingToDisplayOrder() {
+    List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes = lossesAndAdjustmentsMapper.getLossesAndAdjustmentsTypes();
+    assertThat(lossesAndAdjustmentsTypes.size(), is(9));
+    assertThat(lossesAndAdjustmentsTypes.get(0).getDisplayOrder(), is(1));
+    assertThat(lossesAndAdjustmentsTypes.get(1).getDisplayOrder(), is(2));
+    assertThat(lossesAndAdjustmentsTypes.get(2).getDisplayOrder(), is(3));
+  }
 
 }

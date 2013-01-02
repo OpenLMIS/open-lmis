@@ -101,11 +101,11 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
   function updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem) {
     var lossesAndAdjustmentTypesForLineItem = [];
     $(lineItem.lossesAndAdjustments).each(function (index, lineItemLossAndAdjustment) {
-        lossesAndAdjustmentTypesForLineItem.push(lineItemLossAndAdjustment.type);
+        lossesAndAdjustmentTypesForLineItem.push(lineItemLossAndAdjustment.type.name.name);
       });
 
     $scope.lossesAndAdjustmentTypesToDisplay = $.grep($scope.allTypes, function(lAndATypeObject){
-      return $.inArray(lAndATypeObject, lossesAndAdjustmentTypesForLineItem) == -1;
+      return $.inArray(lAndATypeObject.name.name, lossesAndAdjustmentTypesForLineItem) == -1;
     });
   }
 
@@ -118,6 +118,14 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
       }
     }
   }
+
+  $scope.reEvaluateTotalLossesAndAdjustments = function(lineItem) {
+    lineItem.totalLossesAndAdjustments = 0;
+    $(lineItem.lossesAndAdjustments).each(function(index, lossAndAdjustmentObject) {
+      var quantity = parseInt(lossAndAdjustmentObject.quantity);
+      updateTotalLossesAndAdjustment(quantity, lossAndAdjustmentObject.type.additive, lineItem);
+    });
+  };
 
   $scope.removeLossAndAdjustment = function (lineItem, lossAndAdjustmentToDelete) {
     lineItem.lossesAndAdjustments = $.grep(lineItem.lossesAndAdjustments, function(lossAndAdjustmentObj) {

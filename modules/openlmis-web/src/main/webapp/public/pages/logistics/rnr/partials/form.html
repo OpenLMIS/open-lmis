@@ -80,24 +80,26 @@
                                                   ng-disabled="!(lossAndAdjustment.type && lossAndAdjustment.quantity)"
                                                   class="btn btn-primary" value="Add" />
                                          </div>
-                                         <hr ng-show="rnrLineItem[column.name].lossesAndAdjustments.length > 0" />
-                                         <div class="adjustment-list" ng-show="rnrLineItem[column.name].lossesAndAdjustments.length > 0">
+                                         <hr ng-show="rnrLineItem.lossesAndAdjustments.length > 0" />
+                                         <div class="adjustment-list" ng-show="rnrLineItem.lossesAndAdjustments.length > 0">
                                            <ul>
                                              <li ng-repeat="oneLossAndAdjustment in rnrLineItem.lossesAndAdjustments" class="clearfix">
                                                <span class="tpl-adjustment-type">
                                                  {{oneLossAndAdjustment.type.name.description}}
                                                </span>
                                                <span class="tpl-adjustment-delete">
-                                                 <a class="btn btn-danger"
-                                                    ng-click="removeLossAndAdjustment(rnrLineItem,oneLossAndAdjustment)">Remove</a>
+                                                 <a class="close"
+                                                    ng-click="removeLossAndAdjustment(rnrLineItem,oneLossAndAdjustment)">&times;</a>
                                                </span>
                                                <span class="tpl-adjustment-qty">
-                                                 <input id="{{getId('D', $parent, true)}}" type="text"
+                                                 <input id="{{getId('D', $parent, true)}}" name="{{oneLossAndAdjustment.type.displayOrder}}"
+                                                              type="text"
                                                               ng-model="oneLossAndAdjustment.quantity"
+                                                              ng-change="reEvaluateTotalLossesAndAdjustments(rnrLineItem)"
                                                               rnr-validator="positiveInteger"
                                                               maxlength="8"
                                                               />
-                                                 <span class="rnr-form-error" id="lossesAndAdjustments{{oneLossAndAdjustment.id}}"
+                                                 <span class="rnr-form-error" id="{{oneLossAndAdjustment.type.displayOrder}}"
                                                        style="display:none;">
                                                        Enter Numeric Data
                                                        </span>
@@ -106,16 +108,19 @@
                                            </ul>
                                          </div>
 
-                                         <div class="adjustment-total" ng-show="rnrLineItem.lossesAndAdjustments.length > 0">
-                                           Total: {{rnrLineItem.totalLossesAndAdjustments}}
+                                         <div class="adjustment-total clearfix alert alert-warning" ng-show="rnrLineItem.lossesAndAdjustments.length > 0">
+                                           <span class="pull-left">Total</span> {{rnrLineItem.totalLossesAndAdjustments}}
                                          </div>
 
                                        </div>
                                        <div class="modal-footer">
-                                           <a class="btn btn-success save-button" ng-click="" data-dismiss="modal">Done</a>
+                                           <a class="btn btn-success save-button" data-dismiss="modal">Done</a>
                                        </div>
                                    </div>
-                                      <a ng-click="showLossesAndAdjustmentModalForLineItem(rnrLineItem)">Add loss/adjustment</a>
+                                      <a ng-click="showLossesAndAdjustmentModalForLineItem(rnrLineItem)" class="rnr-adjustment">
+                                        <span class="add-adjustment" ng-hide="rnrLineItem.lossesAndAdjustments.length > 0">Add Adjustments</span>
+                                        <span class="adjustment-value" ng-show="rnrLineItem.lossesAndAdjustments.length > 0">{{rnrLineItem.totalLossesAndAdjustments}}</span>
+                                      </a>
                                    </span>
 
 

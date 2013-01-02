@@ -12,31 +12,33 @@ import java.util.List;
 @Repository
 public interface LossesAndAdjustmentsMapper {
 
-    @Select("INSERT INTO requisition_line_item_losses_adjustments(requisitionLineItemId, type, quantity) " +
-            "VALUES(#{rnrLineItem.id}, #{lossesAndAdjustments.type.name}, #{lossesAndAdjustments.quantity}) RETURNING id")
-    @Options(useGeneratedKeys = true)
-    public Integer insert(@Param(value = "rnrLineItem") RnrLineItem rnrLineItem, @Param(value = "lossesAndAdjustments") LossesAndAdjustments lossesAndAdjustments);
+  @Insert("INSERT INTO requisition_line_item_losses_adjustments(requisitionLineItemId, type, quantity) " +
+      "VALUES(#{rnrLineItem.id}, #{lossesAndAdjustments.type.name}, #{lossesAndAdjustments.quantity})")
+  public Integer insert(@Param(value = "rnrLineItem") RnrLineItem rnrLineItem, @Param(value = "lossesAndAdjustments") LossesAndAdjustments lossesAndAdjustments);
 
 
-    @Select("select * from requisition_line_item_losses_adjustments where requisitionLineItemId = #{rnrLineItemId}")
-    @Results(value = {
-            @Result(property = "type", column = "type", javaType = String.class, one = @One(select = "getLossesAndAdjustmentTypeByName"))
-    })
-    List<LossesAndAdjustments> getByRnrLineItem(Integer rnrLineItemId);
+  @Select("select * from requisition_line_item_losses_adjustments where requisitionLineItemId = #{rnrLineItemId}")
+  @Results(value = {
+      @Result(property = "type", column = "type", javaType = String.class, one = @One(select = "getLossesAndAdjustmentTypeByName"))
+  })
+  List<LossesAndAdjustments> getByRnrLineItem(Integer rnrLineItemId);
 
 
-    @Select("SELECT * FROM losses_adjustments_types WHERE name = #{name}")
-    LossesAndAdjustmentsType getLossesAndAdjustmentTypeByName(LossesAndAdjustmentsTypeEnum lossesAndAdjustmentsType);
+  @Select("SELECT * FROM losses_adjustments_types WHERE name = #{name}")
+  LossesAndAdjustmentsType getLossesAndAdjustmentTypeByName(LossesAndAdjustmentsTypeEnum lossesAndAdjustmentsType);
 
-    @Delete("DELETE FROM requisition_line_item_losses_adjustments WHERE id = #{lossesAndAdjustmentsId}")
-    void delete(Integer lossesAndAdjustmentsId);
+  @Delete("DELETE FROM requisition_line_item_losses_adjustments WHERE id = #{lossesAndAdjustmentsId}")
+  void delete(Integer lossesAndAdjustmentsId);
 
-    @Update("UPDATE requisition_line_item_losses_adjustments " +
-            "SET quantity = #{quantity}, " +
-            "type = #{type.name} " +
-            "WHERE id    = #{id} ")
-    public Integer update(LossesAndAdjustments lossesAndAdjustments);
+  @Update("UPDATE requisition_line_item_losses_adjustments " +
+      "SET quantity = #{quantity}, " +
+      "type = #{type.name} " +
+      "WHERE id    = #{id} ")
+  public Integer update(LossesAndAdjustments lossesAndAdjustments);
 
-    @Select("SELECT * FROM losses_adjustments_types ORDER BY displayOrder")
-    List<LossesAndAdjustmentsType> getLossesAndAdjustmentsTypes();
+  @Select("SELECT * FROM losses_adjustments_types ORDER BY displayOrder")
+  List<LossesAndAdjustmentsType> getLossesAndAdjustmentsTypes();
+
+  @Delete("DELETE FROM requisition_line_item_losses_adjustments WHERE requisitionLineItemId = #{rnrLineItemId}")
+  void deleteByLineItemId(Integer rnrLineItemId);
 }
