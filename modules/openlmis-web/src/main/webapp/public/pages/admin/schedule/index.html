@@ -2,84 +2,84 @@
 <html lang="en" ng-app="schedule">
 
 <head>
-    <meta charset="utf-8">
-    <title>Open-LMIS</title>
-    <script src="/public/js/shared/lib/jquery-1.8.2.min.js"></script>
-    <script src="/public/js/shared/lib/jquery-ui-1.9.2.custom.min.js"></script>
-    <script src="/public/js/shared/lib/angular/angular.js"></script>
-    <script src="/public/js/shared/lib/angular/angular-resource.js"></script>
-    <script src="/public/js/shared/lib/bootstrap/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="/public/js/shared/lib/bootstrap/css/bootstrap.min.css">
-    <script src="/public/js/shared/lib/angular-ui/angular-ui.min.js"></script>
-    <link rel="stylesheet" href="/public/js/shared/lib/angular-ui/angular-ui.min.css">
+  <meta charset="utf-8">
+  <title>Open-LMIS</title>
+  <script src="/public/js/shared/lib/jquery-1.8.2.min.js"></script>
+  <script src="/public/js/shared/lib/jquery-ui-1.9.2.custom.min.js"></script>
+  <script src="/public/js/shared/lib/angular/angular.js"></script>
+  <script src="/public/js/shared/lib/angular/angular-resource.js"></script>
+  <script src="/public/js/shared/lib/bootstrap/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="/public/js/shared/lib/bootstrap/css/bootstrap.min.css">
+  <script src="/public/js/shared/lib/angular-ui/angular-ui.min.js"></script>
+  <link rel="stylesheet" href="/public/js/shared/lib/angular-ui/angular-ui.min.css">
 
-    <script src="/public/js/shared/services/services.js"></script>
-    <script src="/public/js/shared/app.js"></script>
-    <link rel="stylesheet" href="/public/css/app.css">
-    <script src="/public/js/shared/controller/login-controller.js"></script>
-    <script src="/public/js/shared/controller/header-controller.js"></script>
-    <script src="/public/js/shared/controller/navigation-controller.js"></script>
-    <script src="/public/js/shared/lib/localStorage.js"></script>
-    <script src="/public/js/shared/localStorageKeys.js"></script>
+  <script src="/public/js/shared/services/services.js"></script>
+  <script src="/public/js/shared/app.js"></script>
+  <link rel="stylesheet" href="/public/css/app.css">
+  <script src="/public/js/shared/controller/login-controller.js"></script>
+  <script src="/public/js/shared/controller/header-controller.js"></script>
+  <script src="/public/js/shared/controller/navigation-controller.js"></script>
+  <script src="/public/js/shared/lib/localStorage.js"></script>
+  <script src="/public/js/shared/localStorageKeys.js"></script>
 
-    <script src="/public/js/schedule/module/schedule-module.js"></script>
-    <script src="/public/js/schedule/controller/schedule-controller.js"></script>
-    <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/app.css">
+  <script src="/public/js/schedule/module/schedule-module.js"></script>
+  <script src="/public/js/schedule/controller/schedule-controller.js"></script>
+  <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/app.css">
 </head>
 <body onunload="">
 <div id="wrap">
-    <ng-include src="'/public/pages/header.html'"></ng-include>
-    <ng-include src="'/public/pages/navigation.html'"></ng-include>
-    <div class="content">
-        <div ng-controller="ScheduleController">
-            <div ng-hide="schedules">Loading...</div>
-            <div ng-show="schedules" novalidate>
-                <ul>
-                    <li>
-                        <span class="form-row clearfix">Code</span>
-                        <span class="form-row clearfix">Name</span>
-                        <span class="form-row clearfix">Description</span>
-                        <span class="form-row clearfix">Last Modified Date</span>
-                        <span class="form-row clearfix"></span>
-                    </li>
+  <ng-include src="'/public/pages/header.html'"></ng-include>
+  <ng-include src="'/public/pages/navigation.html'"></ng-include>
+  <div class="content">
+    <div ng-controller="ScheduleController">
+      <div ng-hide="schedules">Loading...</div>
+      <div ng-show="schedules" novalidate>
+        <ul>
+          <li>
+            <span class="form-row clearfix">Code</span>
+            <span class="form-row clearfix">Name</span>
+            <span class="form-row clearfix">Description</span>
+            <span class="form-row clearfix">Last Modified Date</span>
+            <span class="form-row clearfix"></span>
+          </li>
 
-                    <li class="form-row clearfix" ng-repeat="schedule in schedules" ng-show="schedules && (schedules.length > 0)">
-                        <form name="scheduleRowForm_{{$index}}" ng-submit="saveSchedule({{schedule}})">
-                            <span class="cell-text">
-                                <input type="text" ng-model="schedule.code"/>
-                            </span>
-                            <span class="cell-text">
-                                <input type="text" ng-model="schedule.name"/>
-                            </span>
-                            <span class="cell-text">
-                                <input type="text" ng-model="schedule.description"/>
-                            </span>
-                            <span class="cell-text">
-                                {{schedule.modifiedDate | date:'dd/mm/yyyy'}}
-                            </span>
-                            <span>
-                                <input type="submit" class="btn btn-primary" value="Edit"/>
-                            </span>
-                            <span>
-                                <input type="submit" class="btn btn-cancel" value="Cancel"/>
-                            </span>
-                            <span>
-                                <input type="submit" class="btn btn-primary" value="Save"/>
-                            </span>
+          <li class="form-row clearfix" ng-repeat="schedule in schedules" ng-show="schedules && (schedules.length > 0)">
+            <form name="scheduleRowForm_{{$index}}" ng-submit="saveSchedule({{schedule}})">
+              <span class="cell-text">
+                <input type="text" ng-model="schedule.code"/>
+              </span>
+              <span class="cell-text">
+                <input type="text" ng-model="schedule.name"/>
+              </span>
+              <span class="cell-text">
+                <input type="text" ng-model="schedule.description"/>
+              </span>
+              <span class="cell-text">
+                {{schedule.modifiedDate | date:'dd/mm/yyyy'}}
+              </span>
+              <span>
+                <input type="submit" class="btn btn-primary" value="Edit"/>
+              </span>
+              <span>
+                <input type="submit" class="btn btn-cancel" value="Cancel"/>
+              </span>
+              <span>
+                <input type="submit" class="btn btn-primary" value="Save"/>
+              </span>
 
-                        </form>
-                    </li>
-                </ul>
-                <div class="alert alert-error" id="saveFailMessage" ng-model="error" ng-show="error">
-                    {{error}}
-                </div>
-                <div class="alert alert-success" id="saveSuccessMsgDiv" ng-model="message" ng-show="message">
-                    {{message}}
-                </div>
-                <input type="button" class="btn" value="Add a Schedule"/>
-            </div>
+            </form>
+          </li>
+        </ul>
+        <div class="alert alert-error" id="saveFailMessage" ng-model="error" ng-show="error">
+          {{error}}
         </div>
+        <div class="alert alert-success" id="saveSuccessMsgDiv" ng-model="message" ng-show="message">
+          {{message}}
+        </div>
+        <input type="button" class="btn" value="Add a Schedule"/>
+      </div>
     </div>
+  </div>
 </div>
 </body>
 </html>
