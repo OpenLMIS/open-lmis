@@ -48,6 +48,12 @@ public class RolesPage extends Page {
     @FindBy(how = How.XPATH, using = "//input[@value='Save']")
     private static WebElement saveButton;
 
+    @FindBy(how = How.ID, using = "saveSuccessMsgDiv")
+    private static WebElement saveSuccessMsgDiv;
+
+    @FindBy(how = How.ID, using = "saveFailMessage")
+    private static WebElement saveErrorMsgDiv;
+
     public RolesPage(TestWebDriver driver) throws IOException {
         super(driver);
 
@@ -71,6 +77,8 @@ public class RolesPage extends Page {
         roleNameField.sendKeys(roleName);
         roleDescription.sendKeys(roleDesc);
         saveButton.click();
+        testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
+        SeleneseTestNgHelper.assertEquals(saveSuccessMsgDiv.getText().trim(),"'" +roleName+ "' created successfully");
 
     }
 }

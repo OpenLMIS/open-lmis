@@ -104,11 +104,11 @@ public class CreateFacilityPage extends Page {
     @FindBy(how = How.XPATH, using = "//input[@value='Save']")
     private static WebElement SaveButton;
 
-    @FindBy(how = How.ID, using = "saveSuccessMsgDiv")
-    private static WebElement saveSuccessMsgDiv;
+        @FindBy(how = How.ID, using = "saveSuccessMsgDiv")
+        private static WebElement saveSuccessMsgDiv;
 
-    @FindBy(how = How.ID, using = "saveErrorMsgDiv")
-    private static WebElement saveErrorMsgDiv;
+        @FindBy(how = How.ID, using = "saveErrorMsgDiv")
+        private static WebElement saveErrorMsgDiv;
 
     @FindBy(how = How.XPATH, using = "//a[contains(text(),'25')]")
     private static WebElement goLiveDateCalender;
