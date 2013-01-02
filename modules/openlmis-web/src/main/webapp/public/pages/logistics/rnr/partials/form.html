@@ -180,7 +180,7 @@
                                             ng-model="rnrLineItem[column.name]"
                                             ng-required="rnrLineItem.quantityRequested"
                                             maxlength="250"/>
-                                          <span ng-show="rnrLineItem.quantityRequested && !rnrLineItem.reasonForRequestedQuantity">
+                                          <span class="alert alert-warning reason-request" ng-show="rnrLineItem.quantityRequested && !rnrLineItem.reasonForRequestedQuantity">
                                           Please enter a reason
                                         </span>
                                    </span>
