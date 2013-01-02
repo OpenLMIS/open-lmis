@@ -24,59 +24,60 @@ import static org.openlmis.web.response.OpenLmisResponse.*;
 public class RoleRightsController extends BaseController {
 
 
-  private RoleRightsService roleRightsService;
+    private RoleRightsService roleRightsService;
 
-  public static final String ROLE = "role";
-  public static final String ROLES = "roles";
-  public static final String RIGHTS = "rights";
+    public static final String ROLE = "role";
+    public static final String ROLES = "roles";
+    public static final String RIGHTS = "rights";
 
-  @Autowired
-  public RoleRightsController(RoleRightsService roleRightsService) {
-    this.roleRightsService = roleRightsService;
-  }
-
-  @RequestMapping(value = "/rights", method = RequestMethod.GET, headers = "Accept=application/json")
-  @PreAuthorize("hasPermission('','MANAGE_ROLE')")
-  public ResponseEntity<OpenLmisResponse> getAllRights() {
-    return OpenLmisResponse.response(RIGHTS, roleRightsService.getAllRights());
-  }
-
-  @RequestMapping(value = "/roles", method = RequestMethod.POST, headers = "Accept=application/json")
-  @PreAuthorize("hasPermission('','MANAGE_ROLE')")
-  public ResponseEntity<OpenLmisResponse> createRole(@RequestBody Role role, HttpServletRequest request) {
-    role.setModifiedBy(loggedInUserId(request));
-    try {
-      roleRightsService.saveRole(role);
-      return success("'" + role.getName() + "' created successfully");
-    } catch (DataException e) {
-      return error(e.getMessage(), HttpStatus.CONFLICT);
+    @Autowired
+    public RoleRightsController(RoleRightsService roleRightsService) {
+        this.roleRightsService = roleRightsService;
     }
-  }
 
-  @RequestMapping(value = "/roles", method = RequestMethod.GET, headers = "Accept=application/json")
-  @PreAuthorize("hasPermission('','MANAGE_ROLE')")
-  public ResponseEntity<OpenLmisResponse> getAll() {
-    OpenLmisResponse response = new OpenLmisResponse(ROLES, roleRightsService.getAllRoles());
-    return new ResponseEntity<>(response, HttpStatus.OK);
-  }
-
-
-  @RequestMapping(value = "/roles/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-  @PreAuthorize("hasPermission('','MANAGE_ROLE')")
-  public ResponseEntity<OpenLmisResponse> get(@PathVariable("id") Integer id) {
-    Role role = roleRightsService.getRole(id);
-    return response(ROLE, role);
-  }
-
-  @RequestMapping(value = "/roles/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
-  @PreAuthorize("hasPermission('','MANAGE_ROLE')")
-  public ResponseEntity<OpenLmisResponse> updateRole(@PathVariable("id") Integer id, @RequestBody Role role) {
-    try {
-      role.setId(id);
-      roleRightsService.updateRole(role);
-    } catch (DataException e) {
-      return error(e.getMessage(), HttpStatus.CONFLICT);
+    @RequestMapping(value = "/rights", method = RequestMethod.GET, headers = "Accept=application/json")
+    @PreAuthorize("hasPermission('','MANAGE_ROLE')")
+    public ResponseEntity<OpenLmisResponse> getAllRights() {
+        return OpenLmisResponse.response(RIGHTS, roleRightsService.getAllRights());
     }
-    return new ResponseEntity<>(new OpenLmisResponse(SUCCESS, "Role updated successfully"), HttpStatus.OK);
-  }
+
+    @RequestMapping(value = "/roles", method = RequestMethod.POST, headers = "Accept=application/json")
+    @PreAuthorize("hasPermission('','MANAGE_ROLE')")
+    public ResponseEntity<OpenLmisResponse> createRole(@RequestBody Role role, HttpServletRequest request) {
+        role.setModifiedBy(loggedInUserId(request));
+        try {
+            roleRightsService.saveRole(role);
+            return success("'" + role.getName() + "' created successfully");
+        } catch (DataException e) {
+            return error(e.getMessage(), HttpStatus.CONFLICT);
+        }
+    }
+
+    @RequestMapping(value = "/roles", method = RequestMethod.GET, headers = "Accept=application/json")
+    @PreAuthorize("hasPermission('','MANAGE_ROLE')")
+    public ResponseEntity<OpenLmisResponse> getAll() {
+        OpenLmisResponse response = new OpenLmisResponse(ROLES, roleRightsService.getAllRoles());
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/roles/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @PreAuthorize("hasPermission('','MANAGE_ROLE')")
+    public ResponseEntity<OpenLmisResponse> get(@PathVariable("id") Integer id) {
+        Role role = roleRightsService.getRole(id);
+        return response(ROLE, role);
+    }
+
+    @RequestMapping(value = "/roles/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
+    @PreAuthorize("hasPermission('','MANAGE_ROLE')")
+    public ResponseEntity<OpenLmisResponse> updateRole(@PathVariable("id") Integer id, @RequestBody Role role, HttpServletRequest request) {
+        role.setModifiedBy(loggedInUserId(request));
+        try {
+            role.setId(id);
+            roleRightsService.updateRole(role);
+        } catch (DataException e) {
+            return error(e.getMessage(), HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity<>(new OpenLmisResponse(SUCCESS, "Role updated successfully"), HttpStatus.OK);
+    }
 }
