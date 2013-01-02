@@ -11,10 +11,10 @@ public interface RnrLineItemMapper {
 
     @Insert("INSERT INTO requisition_line_items" +
 			"(rnrId, productCode, product, dispensingUnit, dosesPerMonth, dosesPerDispensingUnit, maxMonthsOfStock, packsToShip, " +
-			"packSize, price, roundToZero, modifiedBy, modifiedDate) " +
+			"packSize, price, roundToZero, packRoundingThreshold, modifiedBy, modifiedDate) " +
             "VALUES (" +
 			"#{rnrId}, #{productCode}, #{product}, #{dispensingUnit}, #{dosesPerMonth}, #{dosesPerDispensingUnit}, #{maxMonthsOfStock}, " +
-			"#{packsToShip}, #{packSize}, #{price}, #{roundToZero}, #{modifiedBy}, #{modifiedDate})")
+			"#{packsToShip}, #{packSize}, #{price}, #{roundToZero}, #{packRoundingThreshold}, #{modifiedBy}, #{modifiedDate})")
     @Options(useGeneratedKeys=true)
     public Integer insert(RnrLineItem rnrLineItem);
 

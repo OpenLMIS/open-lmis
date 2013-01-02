@@ -21,6 +21,7 @@ public class RnrLineItem {
     private String product;
     private String productCode;
 	private Boolean roundToZero;
+    private Integer packRoundingThreshold;
 	private Integer packSize;
 	private Integer dosesPerMonth;
 	private Integer dosesPerDispensingUnit;
@@ -67,6 +68,7 @@ public class RnrLineItem {
         this.dosesPerMonth = programProduct.getDosesPerMonth();
 		this.packSize = product.getPackSize();
 		this.roundToZero = product.getRoundToZero();
+        this.packRoundingThreshold = product.getPackRoundingThreshold();
         this.product = productName(product);
 		this.price = facilityApprovedProduct.getProgramProduct().getCurrentPrice();
         this.modifiedBy = modifiedBy;

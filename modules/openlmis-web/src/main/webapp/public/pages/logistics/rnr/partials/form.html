@@ -29,7 +29,7 @@
                                             name="beginningBalance{{rnrLineItem['id']}}"
                                             ng-model="rnrLineItem[column.name]"
                                             rnr-validator="positiveInteger" maxlength="8"
-                                            ng-change="rnrLineItem.fillCalculatedRnrColumns(rnrLineItem, rnr)"/>
+                                            ng-change="fillCalculatedRnrColumns(rnrLineItem, rnr)"/>
                                      <span class="rnr-form-error" id="beginningBalance{{rnrLineItem['id']}}" style="display:none;">
                                       Enter Numeric Data
                                      </span>
@@ -113,12 +113,13 @@
 
                                        </div>
                                        <div class="modal-footer">
-                                           <a class="btn btn-success save-button" data-dismiss="modal">Done</a>
+                                           <a class="btn btn-success save-button" ng-click="fillCalculatedRnrColumns(rnrLineItem, rnr)" data-dismiss="modal">Done</a>
                                        </div>
                                    </div>
                                       <a ng-click="showLossesAndAdjustmentModalForLineItem(rnrLineItem)" class="rnr-adjustment">
                                         <span class="add-adjustment" ng-hide="rnrLineItem.lossesAndAdjustments.length > 0">Add Adjustments</span>
-                                        <span class="adjustment-value" ng-show="rnrLineItem.lossesAndAdjustments.length > 0">{{rnrLineItem.totalLossesAndAdjustments}}</span>
+                                        <span class="adjustment-value" ng-show="rnrLineItem.lossesAndAdjustments.length > 0">
+                                          {{rnrLineItem.totalLossesAndAdjustments}}</span>
                                       </a>
                                    </span>
 

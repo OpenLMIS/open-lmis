@@ -42,10 +42,10 @@ rnrModule.positiveInteger = function (value, errorHolder) {
     return valid;
 };
 
-rnrModule.fill = function (lineItem, programRnrColumnList, rnr){
+rnrModule.fill = function (lineItem, programRnrColumnList, rnr) {
 
     function isNumber(number) {
-            return !isNaN(parseInt(number));
+        return !isNaN(parseInt(number));
     }
 
     function fillConsumption() {
@@ -106,29 +106,34 @@ rnrModule.fill = function (lineItem, programRnrColumnList, rnr){
         lineItem.calculatedOrderQuantity < 0 ? (lineItem.calculatedOrderQuantity = 0) : 0;
     }
 
-    function applyRoundingRules(){
-        var packsToShip = Math.round(lineItem.packsToShip);
-        if(lineItem.packsToShip < 1 && lineItem.packsToShip > 0 && packsToShip == 0 && lineItem.roundToZero == false)
-            packsToShip = 1;
+    function applyRoundingRules(orderQuantity) {
+        var remainderQuantity = orderQuantity % parseInt(lineItem.packSize);
+        var packsToShip = lineItem.packsToShip;
+        if (remainderQuantity >= lineItem.packRoundingThreshold && packsToShip != 0) {
+            packsToShip += 1;
+        }
 
+        if (packsToShip == 0 && lineItem.roundToZero == false) {
+            packsToShip = 1;
+        }
         lineItem.packsToShip = packsToShip;
     }
 
     function fillPacksToShip() {
         var packSize = parseInt(lineItem.packSize);
-        var orderQuantity = lineItem.quantityRequested == null?
-                                lineItem.calculatedOrderQuantity : lineItem.quantityRequested;
+        var orderQuantity = lineItem.quantityRequested == null ?
+            lineItem.calculatedOrderQuantity : lineItem.quantityRequested;
 
-        if(orderQuantity == null || !isNumber(orderQuantity)) {
+        if (orderQuantity == null || !isNumber(orderQuantity)) {
             lineItem.packsToShip = null;
             return;
         }
-        lineItem.packsToShip = orderQuantity/packSize;
-        applyRoundingRules();
+        lineItem.packsToShip = Math.floor(orderQuantity / packSize);
+        applyRoundingRules(orderQuantity);
     }
 
     function fillCost() {
-        if(!isNumber(lineItem.packsToShip)) {
+        if (!isNumber(lineItem.packsToShip)) {
             lineItem.cost = null;
             return;
         }
@@ -136,25 +141,25 @@ rnrModule.fill = function (lineItem, programRnrColumnList, rnr){
     }
 
     function fillFullSupplyItemsSubmittedCost() {
-        if(rnr == null ||  rnr.lineItems == null) return;
+        if (rnr == null || rnr.lineItems == null) return;
 
         var cost = 0;
         var lineItems = rnr.lineItems;
-        for(var lineItemIndex in lineItems){
+        for (var lineItemIndex in lineItems) {
             var lineItem = lineItems[lineItemIndex];
-            if(lineItem == null || lineItem.cost == null || !isNumber(lineItem.cost)) continue;
+            if (lineItem == null || lineItem.cost == null || !isNumber(lineItem.cost)) continue;
             cost += lineItem.cost;
         }
         rnr.fullSupplyItemsSubmittedCost = cost;
     }
 
-    function fillTotalSubmittedCost(){
-        if(rnr == null) return;
+    function fillTotalSubmittedCost() {
+        if (rnr == null) return;
 
         var cost = 0;
-        if(rnr.fullSupplyItemsSubmittedCost != null && isNumber(rnr.fullSupplyItemsSubmittedCost))
+        if (rnr.fullSupplyItemsSubmittedCost != null && isNumber(rnr.fullSupplyItemsSubmittedCost))
             cost += rnr.fullSupplyItemsSubmittedCost;
-        if(rnr.nonFullSupplyItemsSubmittedCost != null && isNumber(rnr.nonFullSupplyItemsSubmittedCost))
+        if (rnr.nonFullSupplyItemsSubmittedCost != null && isNumber(rnr.nonFullSupplyItemsSubmittedCost))
             cost += rnr.nonFullSupplyItemsSubmittedCost;
 
         rnr.totalSubmittedCost = cost;
@@ -163,7 +168,7 @@ rnrModule.fill = function (lineItem, programRnrColumnList, rnr){
     var a = parseInt(lineItem.beginningBalance);
     var b = parseInt(lineItem.quantityReceived);
     var c = parseInt(lineItem.quantityDispensed);
-    var d = parseInt(lineItem.lossesAndAdjustments);
+    var d = parseInt(lineItem.totalLossesAndAdjustments);
     var e = parseInt(lineItem.stockInHand);
 
     if (getSource('C') == 'CALCULATED') fillConsumption();

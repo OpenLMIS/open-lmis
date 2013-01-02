@@ -29,6 +29,7 @@ dosesPerMonth integer not null,
 dosesPerDispensingUnit integer not null,
 packSize smallint not null,
 roundToZero BOOLEAN,
+packRoundingThreshold integer,
 modifiedBy VARCHAR(50),
 modifiedDate TIMESTAMP  DEFAULT  CURRENT_TIMESTAMP
 );
