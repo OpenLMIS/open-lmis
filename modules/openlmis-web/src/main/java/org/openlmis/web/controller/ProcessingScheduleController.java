@@ -27,13 +27,13 @@ public class ProcessingScheduleController extends BaseController {
         this.processingScheduleService = processingScheduleService;
     }
 
-    @RequestMapping(value = "schedule", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "/schedules", method = RequestMethod.GET, headers = "Accept=application/json")
     @PreAuthorize("hasPermission('','MANAGE_SCHEDULE')")
     public ResponseEntity<OpenLmisResponse> getAll() {
         return OpenLmisResponse.response(SCHEDULES, processingScheduleService.getAll());
     }
 
-    @RequestMapping(value = "schedule", method = RequestMethod.POST, headers = "Accept=application/json")
+    @RequestMapping(value = "/schedules", method = RequestMethod.POST, headers = "Accept=application/json")
     @PreAuthorize("hasPermission('','MANAGE_SCHEDULE')")
     public ResponseEntity<OpenLmisResponse> save(@RequestBody ProcessingSchedule processingSchedule) {
         try{

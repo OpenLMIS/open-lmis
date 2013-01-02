@@ -1,23 +1,26 @@
-function ScheduleController($scope, AllSchedules, Schedule) {
-    AllSchedules.get({}, function (data) {
-        $scope.schedules = data.schedules;
-    }, function () {
-        $location.path($scope.$parent.sourceUrl);
+function ScheduleController($scope, Schedules) {
+  Schedules.get({}, function (data) {
+    $scope.initialSchedules = angular.copy(data.schedules, $scope.initialSchedules);
+    $scope.schedules = data.schedules;
+    $scope.newSchedule = {};
+  }, function (data) {
+    $location.path($scope.$parent.sourceUrl);
+  });
+
+  $scope.createSchedule = function () {
+
+    Schedules.save({}, $scope.newSchedule, function (data) {
+      $scope.schedules.push(data.schedule);
+      $scope.message = "Schedule Saved Successfully";
+      $scope.error = "";
+      $scope.newSchedule = {};
+    }, function (data) {
+      $scope.message = "";
+      $scope.error = "Save failed";
     });
+  }
 
-
-    $scope.saveSchedule = function(scheduleRow){
-        function successHandler(data){
-            $scope.message = "Schedule Saved Successfully";
-            $scope.error = "";
-        }
-
-        function errorHandler(){
-            $scope.message = "";
-            $scope.error = "Save failed";
-        }
-
-        $scope.message = "";
-        Schedule.save({}, scheduleRow, successHandler, errorHandler);
-    }
+  $scope.scheduleLoaded = function () {
+    return !($scope.schedules == undefined || $scope.schedules == null);
+  }
 }

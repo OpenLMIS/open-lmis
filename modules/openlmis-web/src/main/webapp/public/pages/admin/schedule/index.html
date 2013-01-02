@@ -32,19 +32,39 @@
   <ng-include src="'/public/pages/navigation.html'"></ng-include>
   <div class="content">
     <div ng-controller="ScheduleController">
-      <div ng-hide="schedules">Loading...</div>
-      <div ng-show="schedules" novalidate>
+      <div ng-hide="scheduleLoaded()">Loading...</div>
+      <div ng-show="scheduleLoaded()" novalidate>
         <ul>
           <li>
-            <span class="form-row clearfix">Code</span>
-            <span class="form-row clearfix">Name</span>
-            <span class="form-row clearfix">Description</span>
-            <span class="form-row clearfix">Last Modified Date</span>
-            <span class="form-row clearfix"></span>
+            <span class="form-row clearfix cell-text">Code</span>
+            <span class="form-row clearfix cell-text">Name</span>
+            <span class="form-row clearfix cell-text">Description</span>
+            <span class="form-row clearfix cell-text">Last Modified Date</span>
+            <span class="form-row clearfix cell-text"></span>
           </li>
-
+          <li>
+            <form name="createScheduleForm" ng-submit="createSchedule()">
+              <span class="cell-text">
+                <input id="code" type="text" ng-model="newSchedule.code"/>
+              </span>
+              <span>
+                <input id="name" type="text" ng-model="newSchedule.name"/>
+              </span>
+              <span>
+                <input id="description" type="text" ng-model="newSchedule.description"/>
+              </span>
+              <span>
+              </span>
+              <span>
+                <input type="submit" class="btn btn-primary" value="Create"/>
+              </span>
+              <span>
+                <input type="reset" class="btn btn-cancel" value="Cancel"/>
+              </span>
+            </form>
+          </li>
           <li class="form-row clearfix" ng-repeat="schedule in schedules" ng-show="schedules && (schedules.length > 0)">
-            <form name="scheduleRowForm_{{$index}}" ng-submit="saveSchedule({{schedule}})">
+            <form name="editScheduleForm_{{$index}}" ng-submit="saveSchedule({{schedule}})">
               <span class="cell-text">
                 <input type="text" ng-model="schedule.code"/>
               </span>
@@ -58,15 +78,14 @@
                 {{schedule.modifiedDate | date:'dd/mm/yyyy'}}
               </span>
               <span>
-                <input type="submit" class="btn btn-primary" value="Edit"/>
+                <input type="button" class="btn btn-primary" value="Edit"/>
               </span>
               <span>
-                <input type="submit" class="btn btn-cancel" value="Cancel"/>
+                <input type="reset" class="btn btn-cancel" value="Cancel"/>
               </span>
               <span>
                 <input type="submit" class="btn btn-primary" value="Save"/>
               </span>
-
             </form>
           </li>
         </ul>
