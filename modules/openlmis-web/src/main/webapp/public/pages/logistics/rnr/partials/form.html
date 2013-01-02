@@ -21,7 +21,7 @@
                <tbody ng-show="programRnRColumnList && (rnr.lineItems.length > 0)">
                <tr ng-repeat="rnrLineItem in rnr.lineItems">
                    <input type="hidden" name="index" value="{{$index}}"/>
-                   <td class="cell-input" ng-repeat="column in programRnRColumnList" ng-show="showSelectedColumn(programRnrColumn.name)">
+                   <td class="cell-input" ng-repeat="column in programRnRColumnList" ng-show="showSelectedColumn(column.name)">
                        <ng-switch on="column.source.name">
                            <span ng-switch-when="USER_INPUT">
                                <ng-switch on="column.name">
