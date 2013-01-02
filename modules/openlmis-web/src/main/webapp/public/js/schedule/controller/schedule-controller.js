@@ -10,7 +10,7 @@ function ScheduleController($scope, Schedules) {
   $scope.createSchedule = function () {
 
     Schedules.save({}, $scope.newSchedule, function (data) {
-      $scope.schedules.push(data.schedule);
+      $scope.schedules.unshift(data.schedule);
       $scope.message = "Schedule Saved Successfully";
       $scope.error = "";
       $scope.newSchedule = {};

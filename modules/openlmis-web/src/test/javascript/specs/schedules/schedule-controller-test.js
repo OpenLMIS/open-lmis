@@ -28,7 +28,7 @@ describe("Schedule", function () {
       scope.createSchedule(newSchedule);
       $httpBackend.flush();
       expect(scope.schedules.length).toEqual(2);
-      expect(scope.schedules).toEqual([existingSchedule,newScheduleWithId]);
+      expect(scope.schedules).toEqual([newScheduleWithId, existingSchedule]);
       expect(scope.message).toEqual("Schedule Saved Successfully");
     })
   });
