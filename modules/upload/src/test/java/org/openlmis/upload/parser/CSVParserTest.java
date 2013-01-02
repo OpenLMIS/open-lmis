@@ -112,7 +112,7 @@ public class CSVParserTest {
         InputStream inputStream = new ByteArrayInputStream(csvInput.getBytes("UTF-8"));
 
         expectedEx.expect(UploadException.class);
-        expectedEx.expectMessage("Columns does not match the headers: '[Mandatory String Field, mandatoryIntField, optionalStringField, OPTIONAL INT FIELD]' in Record No. 1:[a, 1, null, null, null]");
+        expectedEx.expectMessage("Incorrect file format, Column name missing");
 
         csvParser.process(inputStream, dummyImportableClass, recordHandler, "user");
     }

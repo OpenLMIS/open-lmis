@@ -78,6 +78,9 @@ public class CSVParser {
         } catch (SuperCsvCellProcessorException processorException) {
             createHeaderException("Incorrect Data type in field :", userFriendlyHeaders, processorException);
         } catch (SuperCsvException superCsvException) {
+            if(csvBeanReader.length() > userFriendlyHeaders.length) {
+                throw new UploadException("Incorrect file format, Column name missing");
+            }
             createDataException("Columns does not match the headers:", userFriendlyHeaders, superCsvException);
         } catch (IOException e) {
             throw new UploadException(e.getStackTrace().toString());
