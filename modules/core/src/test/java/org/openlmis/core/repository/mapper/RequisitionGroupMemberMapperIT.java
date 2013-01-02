@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
+import org.openlmis.core.builder.ProcessingScheduleBuilder;
 import org.openlmis.core.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -19,7 +20,8 @@ import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
-import static org.openlmis.core.builder.RequisitionGroupBuilder.*;
+import static org.openlmis.core.builder.RequisitionGroupBuilder.REQUISITION_GROUP_CODE;
+import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
@@ -48,6 +50,8 @@ public class RequisitionGroupMemberMapperIT {
     @Autowired
     ProcessingScheduleMapper processingScheduleMapper;
 
+    ProcessingSchedule processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
+
     @Before
     public void setUp() throws Exception {
         requisitionGroupMember = new RequisitionGroupMember();
@@ -61,6 +65,8 @@ public class RequisitionGroupMemberMapperIT {
         requisitionGroupMember.setFacility(facility);
         requisitionGroupMember.setRequisitionGroup(requisitionGroup);
         requisitionGroupMember.setModifiedBy("User");
+
+        processingScheduleMapper.insert(processingSchedule);
     }
 
     @Test
@@ -74,12 +80,8 @@ public class RequisitionGroupMemberMapperIT {
         RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
         requisitionGroupProgramSchedule.setProgram(make(a(defaultProgram)));
         requisitionGroupProgramSchedule.setRequisitionGroup(requisitionGroup);
-        ProcessingSchedule schedule = new ProcessingSchedule();
-        schedule.setCode("Q1stY");
-        schedule.setName("QuarterYearly");
-        requisitionGroupProgramSchedule.setSchedule(schedule);
+        requisitionGroupProgramSchedule.setSchedule(processingSchedule);
         programMapper.insert(requisitionGroupProgramSchedule.getProgram());
-        requisitionGroupProgramSchedule.getSchedule().setId(processingScheduleMapper.insert(requisitionGroupProgramSchedule.getSchedule()));
 
         requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
         requisitionGroupMemberMapper.insert(requisitionGroupMember);
@@ -95,12 +97,8 @@ public class RequisitionGroupMemberMapperIT {
         RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
         requisitionGroupProgramSchedule.setProgram(make(a(defaultProgram)));
         requisitionGroupProgramSchedule.setRequisitionGroup(requisitionGroup);
-        ProcessingSchedule schedule = new ProcessingSchedule();
-        schedule.setCode("Q1stY");
-        schedule.setName("QuarterYearly");
-        requisitionGroupProgramSchedule.setSchedule(schedule);
+        requisitionGroupProgramSchedule.setSchedule(processingSchedule);
         programMapper.insert(requisitionGroupProgramSchedule.getProgram());
-        requisitionGroupProgramSchedule.getSchedule().setId(processingScheduleMapper.insert(requisitionGroupProgramSchedule.getSchedule()));
 
         requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
         requisitionGroupMemberMapper.insert(requisitionGroupMember);
@@ -114,12 +112,8 @@ public class RequisitionGroupMemberMapperIT {
         RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
         requisitionGroupProgramSchedule.setProgram(make(a(defaultProgram)));
         requisitionGroupProgramSchedule.setRequisitionGroup(requisitionGroup);
-        ProcessingSchedule schedule = new ProcessingSchedule();
-        schedule.setCode("Q1stY");
-        schedule.setName("QuarterYearly");
-        requisitionGroupProgramSchedule.setSchedule(schedule);
+        requisitionGroupProgramSchedule.setSchedule(processingSchedule);
         programMapper.insert(requisitionGroupProgramSchedule.getProgram());
-        requisitionGroupProgramSchedule.getSchedule().setId(processingScheduleMapper.insert(requisitionGroupProgramSchedule.getSchedule()));
 
         requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
         requisitionGroupMemberMapper.insert(requisitionGroupMember);

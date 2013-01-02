@@ -20,8 +20,11 @@ public class ProcessingSchedule {
     private Date modifiedDate;
 
     public ProcessingSchedule(String code, String name) {
-        this.code = code;
-        this.name = name;
+        this(code, name, null);
+    }
+
+    public ProcessingSchedule(String code, String name, String description){
+        this(null, code, name, description, null, null);
     }
 
     public void validate() {

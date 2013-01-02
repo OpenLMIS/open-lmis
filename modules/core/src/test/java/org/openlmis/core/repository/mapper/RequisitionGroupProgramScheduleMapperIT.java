@@ -20,6 +20,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.openlmis.core.builder.ProcessingScheduleBuilder.defaultProcessingSchedule;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
 
@@ -57,9 +58,9 @@ public class RequisitionGroupProgramScheduleMapperIT {
         facilityMapper.insert(facility);
         requisitionGroupProgramSchedule.setDropOffFacility(facility);
 
-        ProcessingSchedule schedule = new ProcessingSchedule();
-        schedule.setCode("Q1stY");
-        schedule.setName("QuarterYearly");
+        ProcessingSchedule schedule = make(a(defaultProcessingSchedule));
+        processingScheduleMapper.insert(schedule);
+
         requisitionGroupProgramSchedule.setSchedule(schedule);
     }
 
@@ -67,18 +68,16 @@ public class RequisitionGroupProgramScheduleMapperIT {
     public void shouldInsertRGProgramSchedule() throws Exception {
         programMapper.insert(requisitionGroupProgramSchedule.getProgram());
         requisitionGroupMapper.insert(requisitionGroupProgramSchedule.getRequisitionGroup());
-        requisitionGroupProgramSchedule.getSchedule().setId(processingScheduleMapper.insert(requisitionGroupProgramSchedule.getSchedule()));
 
-        Integer status = requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
+        Integer recordCount = requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
 
-        assertThat(status, is(1));
+        assertThat(recordCount, is(1));
     }
 
     @Test
     public void shouldGetProgramIdsForRGById() throws Exception {
         programMapper.insert(requisitionGroupProgramSchedule.getProgram());
         requisitionGroupMapper.insert(requisitionGroupProgramSchedule.getRequisitionGroup());
-        requisitionGroupProgramSchedule.getSchedule().setId(processingScheduleMapper.insert(requisitionGroupProgramSchedule.getSchedule()));
 
         requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
 

@@ -1,6 +1,6 @@
 package org.openlmis.core.repository.mapper;
 
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.domain.ProcessingSchedule;
@@ -11,11 +11,14 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.openlmis.core.builder.ProcessingScheduleBuilder.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
@@ -25,43 +28,86 @@ public class ProcessingScheduleMapperIT {
 
     @Autowired
     ProcessingScheduleMapper processingScheduleMapper;
+    private ProcessingSchedule processingSchedule;
+
+    @Before
+    public void setUp() throws Exception {
+        processingSchedule = make(a(defaultProcessingSchedule));
+    }
 
     @Test
     public void shouldGetIdByCode() throws Exception {
-        assertThat(processingScheduleMapper.getIdForCode("Q1stM"), is(1));
+        processingScheduleMapper.insert(processingSchedule);
+        assertThat(processingSchedule.getId(), is(notNullValue()));
+        assertThat(processingScheduleMapper.getIdForCode("Q1stM"), is(processingSchedule.getId()));
     }
 
     @Test
     public void shouldInsertASchedule() throws Exception {
-        ProcessingSchedule schedule = new ProcessingSchedule("testCode", "testName");
+        processingSchedule = make(a(defaultProcessingSchedule,
+                with(code, "test code"),
+                with(name, "test name"),
+                with(description, "desc"),
+                with(modifiedBy, 1)));
 
-        Integer insertionCount = processingScheduleMapper.insert(schedule);
+        Integer insertionCount = processingScheduleMapper.insert(processingSchedule);
+
         assertThat(insertionCount, is(1));
-        assertThat(schedule.getId(), is(notNullValue()));
+        assertThat(processingSchedule.getId(), is(notNullValue()));
+
+        processingSchedule = processingScheduleMapper.get(processingSchedule.getId());
+
+        assertThat(processingSchedule.getCode(), is("test code"));
+        assertThat(processingSchedule.getName(), is("test name"));
+        assertThat(processingSchedule.getDescription(), is("desc"));
+        assertThat(processingSchedule.getModifiedBy(), is(1));
+        assertThat(processingSchedule.getModifiedDate(), is(notNullValue()));
     }
 
     @Test
     public void shouldGetAllSchedules() throws Exception {
-        assertThat(processingScheduleMapper.getAll().size(), is(2));
+        ProcessingSchedule processingSchedule2 = make(a(defaultProcessingSchedule,
+                with(code, "test code"),
+                with(name, "test name"),
+                with(description, "desc"),
+                with(modifiedBy, 1)));
+        processingScheduleMapper.insert(processingSchedule);
+        processingScheduleMapper.insert(processingSchedule2);
+
+        List<ProcessingSchedule> processingSchedules = processingScheduleMapper.getAll();
+        assertThat(processingSchedules.size(), is(2));
+        assertThat(processingSchedules.get(0).getCode(), is(processingSchedule.getCode()));
+        assertThat(processingSchedules.get(1).getCode(), is(processingSchedule2.getCode()));
     }
 
-    @Ignore
     @Test
     public void shouldGetScheduleById() throws Exception {
-        ProcessingSchedule processingSchedule = processingScheduleMapper.get(new Integer(1));
+        processingScheduleMapper.insert(processingSchedule);
+        processingSchedule = processingScheduleMapper.get(processingSchedule.getId());
 
-        assertThat(processingSchedule.getId(), is(1));
         assertThat(processingSchedule.getCode(), is("Q1stM"));
         assertThat(processingSchedule.getName(), is("QuarterMonthly"));
         assertThat(processingSchedule.getDescription(), is("QuarterMonth"));
     }
 
-    @Ignore
     @Test
     public void shouldUpdateAnExistingSchedule() throws Exception {
-        ProcessingSchedule processingSchedule = new ProcessingSchedule(
-                1, "Q1stM_updated", "QuarterMonthly_Updated", "QuarterMonthDesc_Updated", null, null);
+        processingScheduleMapper.insert(processingSchedule);
+
+        processingSchedule.setCode("Q1stM_updated");
+        processingSchedule.setName("QuarterMonthly_Updated");
+        processingSchedule.setDescription("QuarterMonthDesc_Updated");
+        processingSchedule.setModifiedBy(2);
+
         Integer updateCount = processingScheduleMapper.update(processingSchedule);
+
         assertThat(updateCount, is(1));
+        ProcessingSchedule updatedSchedule = processingScheduleMapper.get(processingSchedule.getId());
+        assertThat(updatedSchedule.getCode(), is("Q1stM_updated"));
+        assertThat(updatedSchedule.getName(), is("QuarterMonthly_Updated"));
+        assertThat(updatedSchedule.getDescription(), is("QuarterMonthDesc_Updated"));
+        assertThat(updatedSchedule.getModifiedBy(), is(2));
+        //TODO : need to figure out a way to flush session cache before committing so that the updated default value can be fetched
+        // assertThat(updatedSchedule.getModifiedDate(), is(not(creationDate)));
     }
 }
