@@ -3,6 +3,7 @@ package org.openlmis.upload.handler;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.RecordHandler;
 import org.openlmis.upload.exception.UploadException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
 @Component("AbstractModelPersistenceHandler")
@@ -12,7 +13,10 @@ public abstract class AbstractModelPersistenceHandler implements RecordHandler<I
     public void execute(Importable importable, int rowNumber, String modifiedBy) {
         try {
             save(importable, modifiedBy);
-        } catch (RuntimeException exception) {
+        } catch (DataIntegrityViolationException dataIntegrityViloationException) {
+            throw new UploadException(String.format("%s in Record No. %d", "Incorrect data length" , rowNumber - 1));
+        }
+        catch (RuntimeException exception) {
             throw new UploadException(String.format("%s in Record No. %d", exception.getMessage(), rowNumber - 1));
         }
     }
