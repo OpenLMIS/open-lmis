@@ -36,7 +36,7 @@
         <a href="#" class="pull-right btn btn-primary">Add schedule</a>
       </h2>
       <div ng-hide="scheduleLoaded()">Loading...</div>
-      <div ng-show="scheduleLoaded()" novalidate>
+      <div ng-show="scheduleLoaded()">
         <div class="row-fluid schedule-header">
           <div class="span1">&nbsp;</div>
           <div class="span1">Code</div>
@@ -47,44 +47,44 @@
         <form id="createScheduleForm" name="createScheduleForm" ng-submit="createSchedule()">
           <div class="row-fluid schedule-row">
             <div class="span1">
-              <input type="submit" class="btn btn-primary" value="Create"/>
+              <input type="submit" class="btn btn-primary" value="Create" ng-disabled="isClean() || myForm.$invalid" />
               <input type="reset" class="btn btn-cancel" value="Reset"/>
             </div>
             <div class="span1">
-              <input id="code" type="text" ng-model="newSchedule.code"/>
+              <input name="code" type="text" ng-model="newSchedule.code" maxlength="50" required/>
             </div>
             <div class="span3">
-              <input id="name" type="text" ng-model="newSchedule.name"/>
+              <input id="name" type="text" ng-model="newSchedule.name" maxlength="50" required/>
             </div>
             <div class="span5">
-              <input id="description" type="text" ng-model="newSchedule.description"/>
+              <input id="description" type="text" ng-model="newSchedule.description" maxlength="250" required/>
             </div>
             <div class="span2">
-              {{schedule.modifiedDate | date:'dd/MM/yyyy'}}
+              &nbsp;
             </div>
           </div>
         </form>
         <form ng-repeat="schedule in schedules" id="editScheduleForm_{{$index}}" name="editScheduleForm_{{$index}}"
-              ng-submit="updateSchedule({{schedule}})" ng-show="schedules && (schedules.length > 0)">
+              ng-submit ="updateSchedule(schedule); edit=false;" ng-show="schedules && (schedules.length > 0)">
           <div class="row-fluid schedule-row">
             <div class="span1">
-              <input ng-hide="edit" type="button" class="btn btn-mini" value="Edit" ng-click="edit=true" />
+              <input ng-hide="edit" type="button" class="btn btn-mini" value="Edit" ng-click="startScheduleEdit(schedule); edit=true"/>
               <div ng-show="edit">
-                <input type="submit" class="btn btn-primary btn-mini" value="Save" />
-                <input type="reset" class="btn btn-danger btn-mini" value="Cancel" ng-click="edit=false" />
+                <input type="submit" class="btn btn-primary btn-mini" value="Save"></button>
+                <input type="button" class="btn btn-danger btn-mini" value="Cancel" ng-click="endScheduleEdit(schedule); edit=false" />
               </div>
             </div>
             <div class="span1">
               <span ng-hide="edit" ng-bind="schedule.code"></span>
-              <input ng-show="edit" type="text" ng-model="schedule.code"/>
+              <input id="code_{{$index}}" name="code" ng-show="edit" type="text" ng-model="schedule.code" maxlength="50" required/>
             </div>
             <div class="span3">
               <span ng-hide="edit" ng-bind="schedule.name"></span>
-              <input ng-show="edit" type="text" ng-model="schedule.name"/>
+              <input id="name_{{$index}}" name="name" ng-show="edit" type="text" ng-model="schedule.name" maxlength="50" required/>
             </div>
             <div class="span5">
               <span ng-hide="edit" ng-bind="schedule.description"></span>
-              <input ng-show="edit" type="text" ng-model="schedule.description"/>
+              <input id="desc_{{$index}}" name="desc" ng-show="edit" type="text" ng-model="schedule.description" maxlength="250"/>
             </div>
             <div class="span2">
               {{schedule.modifiedDate | date:'dd/mm/yyyy'}}

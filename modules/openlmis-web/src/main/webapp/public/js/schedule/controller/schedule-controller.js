@@ -1,6 +1,7 @@
 function ScheduleController($scope, Schedules, Schedule) {
   $scope.newSchedule = {};
   $scope.schedules = {};
+  $scope.editSchedule = {};
   Schedules.get({}, function (data) {
     $scope.initialSchedules = angular.copy(data.schedules, $scope.initialSchedules);
     $scope.schedules = data.schedules;
@@ -41,6 +42,7 @@ function ScheduleController($scope, Schedules, Schedule) {
       $scope.message = "Schedule Saved Successfully";
       $scope.error = "";
       $scope.newSchedule = {};
+      $scope.editSchedule = {};
     }, function (data) {
       $scope.message = "";
       $scope.error = data.data.error;
@@ -51,5 +53,15 @@ function ScheduleController($scope, Schedules, Schedule) {
     return !($scope.schedules == undefined || $scope.schedules == null);
   }
 
+  $scope.startScheduleEdit = function (scheduleUnderEdit) {
+    $scope.editSchedule.code = scheduleUnderEdit.code;
+    $scope.editSchedule.name = scheduleUnderEdit.code;
+    $scope.editSchedule.description = scheduleUnderEdit.code;
+  }
 
+  $scope.endScheduleEdit = function (scheduleUnderEdit) {
+    scheduleUnderEdit.code = $scope.editSchedule.code;
+    scheduleUnderEdit.name = $scope.editSchedule.code;
+    scheduleUnderEdit.description = $scope.editSchedule.code;
+  }
 }
