@@ -16,7 +16,7 @@ public interface RoleRightsMapper {
 
   @Select({"SELECT RR.rightName",
       "FROM users U, role_assignments RA, role_rights RR WHERE",
-      "U.userName = #{userName}",
+      "lower(U.userName) = lower(#{userName}) ",
       "AND U.id = RA.userId",
       "AND RA.roleId = RR.roleId"})
   List<Right> getAllRightsForUser(String username);
