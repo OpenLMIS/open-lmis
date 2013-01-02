@@ -21,20 +21,20 @@ public class ProcessingScheduleServiceTest {
   public ExpectedException exException = ExpectedException.none();
 
   @Mock
-  private ProcessingScheduleRepository processingScheduleRepository;
+  private ProcessingScheduleRepository repository;
   private ProcessingScheduleService service;
 
   @Before
   public void setUp() throws Exception {
     initMocks(this);
-    service = new ProcessingScheduleService(processingScheduleRepository);
+    service = new ProcessingScheduleService(repository);
   }
 
   @Test
   public void shouldGetAllSchedules() throws Exception {
     List<ProcessingSchedule> processingScheduleList = new ArrayList<>();
     processingScheduleList.add(new ProcessingSchedule());
-    when(processingScheduleRepository.getAll()).thenReturn(processingScheduleList);
+    when(repository.getAll()).thenReturn(processingScheduleList);
 
     List<ProcessingSchedule> processingSchedules = service.getAll();
 
@@ -45,36 +45,49 @@ public class ProcessingScheduleServiceTest {
   public void shouldInsertAndReturnInsertedSchedule() throws Exception {
     ProcessingSchedule processingSchedule = new ProcessingSchedule("testCode", "testName");
     ProcessingSchedule mockedSchedule = mock(ProcessingSchedule.class);
-    when(processingScheduleRepository.get(processingSchedule.getId())).thenReturn(mockedSchedule);
+    when(repository.get(processingSchedule.getId())).thenReturn(mockedSchedule);
 
     ProcessingSchedule returnedSchedule = service.save(processingSchedule);
 
-    verify(processingScheduleRepository).save(processingSchedule);
+    verify(repository).create(processingSchedule);
+    assertThat(returnedSchedule, is(mockedSchedule));
+  }
+
+  @Test
+  public void shouldUpdateAndReturnUpdatedSchedule() throws Exception {
+    ProcessingSchedule processingSchedule = new ProcessingSchedule();
+    processingSchedule.setId(1);
+    ProcessingSchedule mockedSchedule = mock(ProcessingSchedule.class);
+    when(repository.get(processingSchedule.getId())).thenReturn(mockedSchedule);
+
+    ProcessingSchedule returnedSchedule = service.save(processingSchedule);
+
+    verify(repository).update(processingSchedule);
     assertThat(returnedSchedule, is(mockedSchedule));
   }
 
   @Test
   public void shouldThrowErrorWhenTryingToSaveAScheduleWithNoCode() {
     ProcessingSchedule processingSchedule = new ProcessingSchedule();
-    doThrow(new RuntimeException("Schedule can not be saved without its code.")).when(processingScheduleRepository).save(processingSchedule);
+    doThrow(new RuntimeException("Schedule can not be saved without its code.")).when(repository).create(processingSchedule);
 
     exException.expect(RuntimeException.class);
     exException.expectMessage("Schedule can not be saved without its code.");
 
     service.save(processingSchedule);
-    verify(processingScheduleRepository).save(processingSchedule);
+    verify(repository).create(processingSchedule);
   }
 
   @Test
   public void shouldThrowErrorWhenTryingToSaveAScheduleWithNoName() {
     ProcessingSchedule processingSchedule = new ProcessingSchedule();
     processingSchedule.setCode("testCode");
-    doThrow(new RuntimeException("Schedule can not be saved without its name.")).when(processingScheduleRepository).save(processingSchedule);
+    doThrow(new RuntimeException("Schedule can not be saved without its name.")).when(repository).create(processingSchedule);
 
     exException.expect(RuntimeException.class);
     exException.expectMessage("Schedule can not be saved without its name.");
 
     service.save(processingSchedule);
-    verify(processingScheduleRepository).save(processingSchedule);
+    verify(repository).create(processingSchedule);
   }
 }

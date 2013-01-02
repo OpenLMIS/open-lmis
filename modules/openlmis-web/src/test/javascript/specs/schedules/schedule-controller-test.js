@@ -30,16 +30,39 @@ describe("Schedule", function () {
       expect(scope.schedules.length).toEqual(2);
       expect(scope.schedules).toEqual([newScheduleWithId, existingSchedule]);
       expect(scope.message).toEqual("Schedule Saved Successfully");
-    })
+    });
 
-    it('should show failure error on create a new schedule', function() {
+    it('should show failure error on creating a new schedule', function() {
       var schedule = {"name":"newName", "code":"newCode", "description":"newDescription"};
       $httpBackend.expectPOST('/schedules.json').respond(400, {"error":"errorMsg"});
 
       scope.createSchedule(schedule);
       $httpBackend.flush();
+
       expect(scope.message).toEqual("");
       expect(scope.error).toEqual("errorMsg");
-    })
+    });
+
+    it('should update an existing schedule', function() {
+      var updatedSchedule = {"id":1, "name":"newName", "code":"newCode", "description":"newDescription", "modifiedBy":"", "modifiedDate":"12345"};
+      $httpBackend.expectPUT('/schedules/1.json').respond(200,{"schedule":updatedSchedule});
+
+      scope.updateSchedule(existingSchedule);
+      $httpBackend.flush();
+
+      expect(scope.schedules.length).toEqual(1);
+      expect(scope.schedules).toEqual([{"id":1, "name":"newName", "code":"newCode", "description":"newDescription", "modifiedBy":"", "modifiedDate":"12345"}]);
+      expect(scope.message).toEqual("Schedule Saved Successfully");
+    });
+
+    it('should show failure error on updating an existing schedule', function() {
+      var updatedSchedule = {"id":1, "name":"newName", "code":"newCode", "description":"newDescription"};
+      $httpBackend.expectPUT('/schedules/1.json').respond(400, {"error":"errorMsg"});
+
+      scope.updateSchedule(updatedSchedule);
+      $httpBackend.flush();
+      expect(scope.message).toEqual("");
+      expect(scope.error).toEqual("errorMsg");
+    });
   });
 });

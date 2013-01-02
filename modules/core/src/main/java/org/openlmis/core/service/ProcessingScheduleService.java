@@ -23,7 +23,11 @@ public class ProcessingScheduleService {
     }
 
     public ProcessingSchedule save(ProcessingSchedule processingSchedule) {
-      repository.save(processingSchedule);
+      if(processingSchedule.getId() == null || processingSchedule.getId() == 0){
+        repository.create(processingSchedule);
+      }else{
+        repository.update(processingSchedule);
+      }
       return repository.get(processingSchedule.getId());
     }
 }

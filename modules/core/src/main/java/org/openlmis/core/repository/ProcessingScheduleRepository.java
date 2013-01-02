@@ -22,12 +22,17 @@ public class ProcessingScheduleRepository {
     return processingScheduleMapper.getAll();
   }
 
-  public void save(ProcessingSchedule processingSchedule) {
+  public void create(ProcessingSchedule processingSchedule) {
     processingSchedule.validate();
     processingScheduleMapper.insert(processingSchedule);
   }
 
   public ProcessingSchedule get(Integer id) {
     return processingScheduleMapper.get(id);
+  }
+
+  public void update(ProcessingSchedule processingSchedule) {
+    processingSchedule.validate();
+    processingScheduleMapper.update(processingSchedule);
   }
 }

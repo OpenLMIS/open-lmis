@@ -85,4 +85,43 @@ public class ProcessingScheduleControllerTest {
     assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     assertThat(response.getBody().getErrorMsg(), is("Schedule can not be saved without its name."));
   }
+
+  @Test
+  public void shouldUpdateAndReturnTheSchedule() {
+    ProcessingSchedule processingSchedule = new ProcessingSchedule("testCode", "testName");
+    ProcessingSchedule mockedSchedule = mock(ProcessingSchedule.class);
+    when(processingScheduleService.save(processingSchedule)).thenReturn(mockedSchedule);
+
+    ResponseEntity<OpenLmisResponse> response = processingScheduleController.update(processingSchedule, 1);
+
+    assertThat(response, is(notNullValue()));
+    ProcessingSchedule savedSchedule = (ProcessingSchedule) response.getBody().getData().get(SCHEDULE);
+    assertThat(savedSchedule, is(mockedSchedule));
+  }
+
+  @Test
+  public void shouldReturnErrorResponseWhenTryingToUpdateAScheduleWithNoCodeSet() throws Exception {
+    ProcessingSchedule processingSchedule = new ProcessingSchedule();
+    processingSchedule.setId(1);
+    doThrow(new RuntimeException("Schedule can not be saved without its code.")).when(processingScheduleService).save(processingSchedule);
+    ResponseEntity<OpenLmisResponse> response = processingScheduleController.create(processingSchedule);
+
+    verify(processingScheduleService).save(processingSchedule);
+
+    assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+    assertThat(response.getBody().getErrorMsg(), is("Schedule can not be saved without its code."));
+  }
+
+  @Test
+  public void shouldReturnErrorResponseWhenTryingToUpdateAScheduleWithNoNameSet() {
+    ProcessingSchedule processingSchedule = new ProcessingSchedule();
+    processingSchedule.setId(1);
+    processingSchedule.setCode("testCode");
+    doThrow(new RuntimeException("Schedule can not be saved without its name.")).when(processingScheduleService).save(processingSchedule);
+    ResponseEntity<OpenLmisResponse> response = processingScheduleController.create(processingSchedule);
+
+    verify(processingScheduleService).save(processingSchedule);
+    assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+    assertThat(response.getBody().getErrorMsg(), is("Schedule can not be saved without its name."));
+  }
 }

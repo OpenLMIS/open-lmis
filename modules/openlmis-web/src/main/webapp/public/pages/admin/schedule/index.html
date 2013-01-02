@@ -44,7 +44,7 @@
           <div class="span5">Description</div>
           <div class="span2">Last Modified</div>
         </div>
-        <form name="createScheduleForm" ng-submit="createSchedule()">
+        <form id="createScheduleForm" name="createScheduleForm" ng-submit="createSchedule()">
           <div class="row-fluid schedule-row">
             <div class="span1">
               <input type="submit" class="btn btn-primary" value="Create"/>
@@ -64,13 +64,14 @@
             </div>
           </div>
         </form>
-        <form ng-repeat="schedule in schedules" name="editScheduleForm_{{$index}}" ng-submit="saveSchedule({{schedule}})" ng-show="schedules && (schedules.length > 0)">
+        <form ng-repeat="schedule in schedules" id="editScheduleForm_{{$index}}" name="editScheduleForm_{{$index}}"
+              ng-submit="updateSchedule({{schedule}})" ng-show="schedules && (schedules.length > 0)">
           <div class="row-fluid schedule-row">
             <div class="span1">
               <input ng-hide="edit" type="button" class="btn btn-mini" value="Edit" ng-click="edit=true" />
               <div ng-show="edit">
-                <input type="button" class="btn btn-primary btn-mini" value="Save" />
-                <input type="button" class="btn btn-danger btn-mini" value="Cancel" ng-click="edit=false" />
+                <input type="submit" class="btn btn-primary btn-mini" value="Save" />
+                <input type="reset" class="btn btn-danger btn-mini" value="Cancel" ng-click="edit=false" />
               </div>
             </div>
             <div class="span1">

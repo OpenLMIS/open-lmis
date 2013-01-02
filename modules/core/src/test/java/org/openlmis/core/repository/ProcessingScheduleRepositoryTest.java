@@ -46,9 +46,9 @@ public class ProcessingScheduleRepositoryTest {
   }
 
   @Test
-  public void shouldInsertASchedule() throws Exception {
+  public void shouldInsertASchedule() {
     ProcessingSchedule processingSchedule = new ProcessingSchedule("testScheduleCode", "testScheduleName");
-    repository.save(processingSchedule);
+    repository.create(processingSchedule);
     verify(processingScheduleMapper).insert(processingSchedule);
   }
 
@@ -57,7 +57,7 @@ public class ProcessingScheduleRepositoryTest {
     ProcessingSchedule processingSchedule = new ProcessingSchedule();
     expectedEx.expect(RuntimeException.class);
     expectedEx.expectMessage("Schedule can not be saved without its code.");
-    repository.save(processingSchedule);
+    repository.create(processingSchedule);
   }
 
   @Test
@@ -66,7 +66,7 @@ public class ProcessingScheduleRepositoryTest {
     processingSchedule.setCode("testCode");
     expectedEx.expect(RuntimeException.class);
     expectedEx.expectMessage("Schedule can not be saved without its name.");
-    repository.save(processingSchedule);
+    repository.create(processingSchedule);
   }
 
   @Test
@@ -75,5 +75,29 @@ public class ProcessingScheduleRepositoryTest {
     when(processingScheduleMapper.get(1)).thenReturn(mockedProcessingSchedule);
     ProcessingSchedule fetchedSchedule = repository.get(1);
     assertThat(fetchedSchedule, is(mockedProcessingSchedule));
+  }
+
+  @Test
+  public void shouldUpdateAnExistingSchedule() throws Exception {
+    ProcessingSchedule processingSchedule = new ProcessingSchedule("testScheduleCode", "testScheduleName");
+    repository.update(processingSchedule);
+    verify(processingScheduleMapper).update(processingSchedule);
+  }
+
+  @Test
+  public void shouldNotUpdateScheduleWithoutItsCode() throws Exception {
+    ProcessingSchedule processingSchedule = new ProcessingSchedule();
+    expectedEx.expect(RuntimeException.class);
+    expectedEx.expectMessage("Schedule can not be saved without its code.");
+    repository.update(processingSchedule);
+  }
+
+  @Test
+  public void shouldNotUpdateScheduleWithoutItsName() throws Exception {
+    ProcessingSchedule processingSchedule = new ProcessingSchedule();
+    processingSchedule.setCode("testCode");
+    expectedEx.expect(RuntimeException.class);
+    expectedEx.expectMessage("Schedule can not be saved without its name.");
+    repository.update(processingSchedule);
   }
 }

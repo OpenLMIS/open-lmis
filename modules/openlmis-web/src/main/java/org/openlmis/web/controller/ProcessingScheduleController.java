@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,12 +36,22 @@ public class ProcessingScheduleController extends BaseController {
   @RequestMapping(value = "/schedules", method = RequestMethod.POST, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('','MANAGE_SCHEDULE')")
   public ResponseEntity<OpenLmisResponse> create(@RequestBody ProcessingSchedule processingSchedule) {
+    return saveSchedule(processingSchedule);
+  }
+
+  @RequestMapping(value = "/schedules/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
+  @PreAuthorize("hasPermission('','MANAGE_SCHEDULE')")
+  public ResponseEntity<OpenLmisResponse> update(@RequestBody ProcessingSchedule processingSchedule, @PathVariable("id") Integer id) {
+    processingSchedule.setId(id);
+    return saveSchedule(processingSchedule);
+  }
+
+  private ResponseEntity<OpenLmisResponse> saveSchedule(ProcessingSchedule processingSchedule) {
     try {
       final ProcessingSchedule savedSchedule = processingScheduleService.save(processingSchedule);
       return OpenLmisResponse.response(SCHEDULE, savedSchedule);
     } catch (Exception e) {
       return OpenLmisResponse.error(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
-
   }
 }
