@@ -76,3 +76,7 @@ services.factory('LossesAndAdjustmentsReferenceData', function($resource) {
 services.factory('AllSchedules', function ($resource) {
     return $resource('/schedule.json', {}, {});
 });
+
+services.factory('Schedule', function ($resource) {
+    return $resource('/schedule.json', {}, {});
+});

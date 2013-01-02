@@ -34,41 +34,42 @@
         <div ng-controller="ScheduleController">
             <div ng-hide="schedules">Loading...</div>
             <div ng-show="schedules" novalidate>
-                <table class="table table-striped table-bordered">
-                    <thead>
-                    <tr>
-                        <th>
-                            Code
-                        </th>
-                        <th>
-                            Name
-                        </th>
-                        <th>
-                            Description
-                        </th>
-                        <th>
-                            Last Modified
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody ng-show="schedules && (schedules.length > 0)">
-                    <tr ng-repeat="schedule in schedules">
-                        <td class="cell-text">
-                            {{schedule.code}}
-                        </td>
-                        <td class="cell-text">
-                            {{schedule.name}}
+                <ul>
+                    <li>
+                        <span class="form-row clearfix">Code</span>
+                        <span class="form-row clearfix">Name</span>
+                        <span class="form-row clearfix">Description</span>
+                        <span class="form-row clearfix">Last Modified Date</span>
+                        <span class="form-row clearfix"></span>
+                    </li>
 
-                        </td>
-                        <td class="cell-text">
-                            {{schedule.description}}
-                        </td>
-                        <td class="cell-text">
-                            {{schedule.modifiedDate}}
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                    <li class="form-row clearfix" ng-repeat="schedule in schedules" ng-show="schedules && (schedules.length > 0)">
+                        <form name="scheduleRowForm_{{$index}}" ng-submit="saveSchedule({{schedule}})">
+                            <span class="cell-text">
+                                <input type="text" ng-model="schedule.code"/>
+                            </span>
+                            <span class="cell-text">
+                                <input type="text" ng-model="schedule.name"/>
+                            </span>
+                            <span class="cell-text">
+                                <input type="text" ng-model="schedule.description"/>
+                            </span>
+                            <span class="cell-text">
+                                {{schedule.modifiedDate | date:'dd/mm/yyyy'}}
+                            </span>
+                            <span>
+                                <input type="submit" class="btn btn-primary" value="Edit"/>
+                            </span>
+                            <span>
+                                <input type="submit" class="btn btn-cancel" value="Cancel"/>
+                            </span>
+                            <span>
+                                <input type="submit" class="btn btn-primary" value="Save"/>
+                            </span>
+
+                        </form>
+                    </li>
+                </ul>
                 <div class="alert alert-error" id="saveFailMessage" ng-model="error" ng-show="error">
                     {{error}}
                 </div>
