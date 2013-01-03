@@ -1,6 +1,6 @@
 <div>
   <h2>Schedules
-    <a href="#" class="pull-right btn btn-primary">Add schedule</a>
+    <a href="#" class="pull-right btn btn-primary" ng-click="startAddNewSchedule()">Add schedule</a>
   </h2>
 
   <div ng-hide="scheduleLoaded()">Loading...</div>
@@ -13,11 +13,12 @@
       <div class="span2">Last Modified</div>
       <div class="span1">&nbsp;</div>
     </div>
-    <form id="createScheduleForm" name="createScheduleForm" ng-submit="createSchedule()" novalidate>
+
+    <form id="createScheduleForm" ng-show="newScheduleMode" name="createScheduleForm" ng-submit="createSchedule()" novalidate>
       <div class="row-fluid schedule-row">
         <div class="span1">
           <input type="submit" class="btn btn-primary" value="Create"/>
-          <input type="reset" class="btn btn-cancel" value="Reset" ng-click="showErrorForCreate = false"/>
+          <input type="button" class="btn btn-cancel" value="Cancel" ng-click="completeAddNewSchedule()" />
         </div>
         <div class="span1">
           <input name="code" id="code" type="text" ng-model="newSchedule.code" maxlength="50" ng-required="true"/>
@@ -36,7 +37,7 @@
         </div>
       </div>
     </form>
-    <form ng-repeat="schedule in schedules" id="editScheduleForm_{{$index}}" name="editScheduleForm"
+    <form class="schedule-form" ng-repeat="schedule in schedules" id="editScheduleForm_{{$index}}" name="editScheduleForm"
           ng-submit="updateSchedule(schedule, editScheduleForm); edit=false;" ng-show="schedules && (schedules.length > 0)"
           novalidate>
       <div class="row-fluid schedule-row">
