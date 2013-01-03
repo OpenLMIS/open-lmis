@@ -1,6 +1,7 @@
-function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $location, Requisition, $route, LossesAndAdjustmentsReferenceData) {
+function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $location, Requisition, $route, LossesAndAdjustmentsReferenceData, $rootScope) {
 
   $scope.lossesAndAdjustmentsModal = [];
+  $rootScope.fixToolBar();
 
   if (!$scope.$parent.rnr) {
     Requisition.get({facilityId:$route.current.params.facility, programId:$route.current.params.program},

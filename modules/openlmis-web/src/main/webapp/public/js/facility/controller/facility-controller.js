@@ -1,4 +1,4 @@
-function FacilityController($scope, facilityReferenceData, $routeParams, $http, facility) {
+function FacilityController($scope, facilityReferenceData, $routeParams, $http, facility, $rootScope) {
 
     $scope.facilityTypes = facilityReferenceData.facilityTypes;
     $scope.geographicZones = facilityReferenceData.geographicZones;
@@ -77,12 +77,9 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
   $scope.restoreFacility = function (active) {
     $scope.facility.active = active;
     postFacilityRequest('/admin/facility/update/restore.json');
-  }
+  };
 
-  $scope.fixToolBar = function() {
-    var toolbarWidth = window.innerWidth - 279;
-    angular.element("#action_buttons").css("width", toolbarWidth + "px");
-  }();
+  $rootScope.fixToolBar();
 }
 
 var populateFlags = function ($scope) {
@@ -91,7 +88,6 @@ var populateFlags = function ($scope) {
     $scope.facility[field] = (value == null) ? "" : value.toString();
   });
 };
-
 
 FacilityController.resolve = {
 
