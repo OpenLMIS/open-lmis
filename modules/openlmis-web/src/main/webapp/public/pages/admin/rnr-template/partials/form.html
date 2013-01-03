@@ -15,20 +15,8 @@
       <ul ui-sortable ui-options="{update: update, handle: '.drag-handle', placeholder: 'sortable-placeholder', containment: '.content'}" ng-model="rnrColumns" id="sortable">
         <li id="{{rnrColumn.indicator}}" ng-repeat="rnrColumn in rnrColumns">
          <div class="drag-handle"></div>
-         <span ng-switch on="rnrColumn.mandatory">
-          <span ng-switch-when="true" class="tpl-visible">
-            <input type="checkbox" ng-model="rnrColumn.visible" checked disabled/>
-          </span>
-          <span ng-switch-default>
-                <span ng-switch on="rnrColumn.visible">
-                  <span ng-switch-when="true" class="tpl-visible">
-                    <input type="checkbox" ng-click="update()" ng-model="rnrColumn.visible" checked/>
-                  </span>
-                  <span ng-switch-default class="tpl-visible">
-                    <input type="checkbox" ng-click="update()" ng-model="rnrColumn.visible"/>
-                  </span>
-              </span>
-          </span>
+        <span class="tpl-visible">
+            <input type="checkbox" ng-model="rnrColumn.visible" ng-click="update()" ng-disabled="rnrColumn.mandatory"/>
         </span>
         <span class="tpl-indicator">
           <div class="indicator">{{ rnrColumn.indicator }}</div>

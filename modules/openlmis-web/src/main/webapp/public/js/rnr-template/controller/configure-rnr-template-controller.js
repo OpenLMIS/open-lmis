@@ -10,7 +10,7 @@ function ConfigureRnRTemplateController($scope, programs, $location) {
       $scope.error = "Please select a program";
     }
   };
-}
+};
 
 ConfigureRnRTemplateController.resolve = {
   programs:function ($q, Program, $location, $route, $timeout) {
