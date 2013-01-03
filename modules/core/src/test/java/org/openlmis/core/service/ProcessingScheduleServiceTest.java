@@ -5,7 +5,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.ProcessingSchedule;
+import org.openlmis.core.repository.ProcessingPeriodRepository;
 import org.openlmis.core.repository.ProcessingScheduleRepository;
 
 import java.util.ArrayList;
@@ -21,13 +23,19 @@ public class ProcessingScheduleServiceTest {
   public ExpectedException exException = ExpectedException.none();
 
   @Mock
+  @SuppressWarnings("unused")
   private ProcessingScheduleRepository repository;
+
+  @Mock
+  @SuppressWarnings("unused")
+  private ProcessingPeriodRepository periodRepository;
+
   private ProcessingScheduleService service;
 
   @Before
   public void setUp() throws Exception {
     initMocks(this);
-    service = new ProcessingScheduleService(repository);
+    service = new ProcessingScheduleService(repository, periodRepository);
   }
 
   @Test
@@ -89,5 +97,14 @@ public class ProcessingScheduleServiceTest {
 
     service.save(processingSchedule);
     verify(repository).create(processingSchedule);
+  }
+
+  @Test
+  public void shouldGetAllPeriodsForGivenSchedule() throws Exception {
+    List<ProcessingPeriod> periodList = new ArrayList<>();
+    when(periodRepository.getAll(123)).thenReturn(periodList);
+
+    assertThat(service.getAllPeriods(123), is(periodList));
+    verify(periodRepository).getAll(123);
   }
 }
