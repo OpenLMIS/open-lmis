@@ -30,6 +30,7 @@ describe('CreateRnrController', function () {
     httpBackend.when('GET', '/reference-data/currency.json').respond({"currency":"$"});
     httpBackend.expect('GET', '/facility/1/program/1/rnr.json').respond({"rnr":{"status":"CREATED"}});
     httpBackend.expect('GET', '/rnr/lossAndAdjustments/reference-data.json').respond({"lossAdjustmentTypes":{}});
+    $rootScope.fixToolBar = function(){};
     ctrl = controller(CreateRnrController, {$scope:scope, $location:location, $route:route, localStorageService:localStorageService});
 
     scope.allTypes = [{"name" : "some name"},{"name" : "some other name"}];

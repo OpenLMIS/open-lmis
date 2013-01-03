@@ -19,7 +19,7 @@ describe("Facility", function () {
       ], "facilityOperators":[
         {"operatorCode":"testCode"}
       ]};
-
+      $rootScope.fixToolBar = function () {};
       ctrl = $controller(FacilityController, {$scope:scope, $routeParams:routeParams, facilityReferenceData : facilityReferenceData, facility: undefined});
       scope.facilityForm = {$error:{ pattern:"" }};
     }));
@@ -77,6 +77,7 @@ describe("Facility", function () {
   describe("Facility Edit Controller", function () {
     beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $routeParams) {
       scope = $rootScope.$new();
+      $rootScope.fixToolBar = function(){};
       $httpBackend = _$httpBackend_;
       routeParams = $routeParams;
       routeParams.facilityId = "1";
