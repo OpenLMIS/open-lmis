@@ -1,35 +1,40 @@
-Development Environment Setup
------------------------------
+System Requirement
+---------------------------
 
-1. Clone the project repository using git.
-2. Install HomeBrew (Mac users only).
-3. Run _brew install gradle_ for Mac. 
+- JDK 7
+- Gradle 1.2
 
-   For Linux users
+  ### For Linux users
    Download the source binary directly from the gradle website.
    Copy the downloaded folder to /usr/bin. Add the path to gradle bin folder to your /etc/profile file
    export PATH="$PATH:/usr/bin/gradle-1.1/bin"
 
-4. Install PostgreSQL.
-5. Setup _postgres_ user with password as configured in _gradle.properties_ file.
-6. Create _open_lmis_ database.
-	create database open_lmis;
-7. Run _gradle build_ to run all tests and build a WAR.
+  ### For Mac users
+   * Install HomeBrew
+   * Run ```brew install gradle```
+- Git
+- Postgresql 9
+
 
 IntelliJ IDEA Setup
 -------------------
-1. Run "gradle idea" to create the project files
+1. Run ```gradle idea``` to create the intellij project files
 2. Open the open-lmis.ipr file
 
+ 
+Running App on embedded Jetty server
+--------------------------------------------------
+1. Clone the project repository using git.
+3. Setup _postgres_ user with password as configured in _gradle.properties_ file.
 
-Running App on Jetty
----------------------
-You can use _gradle clean build setupdb seed testseed run_ to start the app.
-There are bunch of gradle tasks that you can see by doing _gradle tasks_
-* _build_ is to build the app.
-* _setupdb_ is to recreate the database and schema.
-* _seed_ is to seed in the reference data.
-* _testseed_ puts in some test data which can be used to browse through basic functionality in the system.
-* _run_ is to run the app in embedded jetty.
+3. You can use ```gradle clean build setupdb seed testseed run``` to start the app.
+ 
+ There are bunch of gradle tasks that you can see by running ```gradle tasks```
+
+ - ```build``` is to build the app.
+ - ```setupdb``` is to recreate the database and schema.
+ - ```seed``` is to seed in the reference data.
+ - ```testseed``` puts in some test data which can be used to browse through basic functionality in the system.
+ - ```run``` is to start the embedded jetty server.
 
 Once run, you can access the home page at http://localhost:9091/
