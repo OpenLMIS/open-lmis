@@ -16,9 +16,18 @@ describe("Period", function () {
       ctrl = $controller(SchedulePeriodController, {$scope:scope, $routeParams:routeParams});
     }));
 
-    it('should show all the periods for given schedule', function() {
+    it('should show all the periods for given schedule', function () {
       $httpBackend.flush();
       expect(scope.periodList).toEqual([existingPeriod]);
     });
+
+    it('should calculate no. of days', function () {
+      $httpBackend.flush();
+      expect(scope.calculateDays(new Date(2011,3,1,0,0).getTime(), new Date(2011,4,1,0,0).getTime())).toEqual(30);
+      expect(scope.calculateDays(new Date(2011,3,1,0,0).getTime(), new Date(2011,3,1,0,0).getTime())).toEqual(0);
+      expect(scope.calculateDays(new Date(2011,3,1,23,59,59).getTime(), new Date(2011,4,1,0,0).getTime())).toEqual(30);
+      expect(scope.calculateDays(new Date(2011,3,1,23,59,59).getTime(), new Date(2011,3,2,0,0).getTime())).toEqual(1);
+    });
+
   });
 });

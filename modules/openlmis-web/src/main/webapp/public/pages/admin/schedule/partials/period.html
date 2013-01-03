@@ -29,9 +29,9 @@
           <tr ng-repeat="period in periodList">
             <td>{{period.name}}</td>
             <td>{{period.description}}</td>
-            <td>{{period.startDate | date:'dd/mm/yyyy'}}</td>
-            <td>{{period.endDate | date:'dd/mm/yyyy'}}</td>
-            <td></td>
+            <td>{{period.startDate | date:'dd/MM/yyyy'}}</td>
+            <td>{{period.endDate | date:'dd/MM/yyyy'}}</td>
+            <td>{{calculateDays(period.startDate, period.endDate)}}</td>
             <td></td>
             <td></td>
           </tr>

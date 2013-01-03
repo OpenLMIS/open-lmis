@@ -17,5 +17,4 @@ public class ProcessingPeriod {
   private Date endDate;
   private Date modifiedDate;
 
-
 }
