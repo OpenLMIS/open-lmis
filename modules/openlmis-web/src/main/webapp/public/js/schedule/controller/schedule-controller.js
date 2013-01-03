@@ -41,6 +41,11 @@ function ScheduleController($scope, Schedules, Schedule) {
       }
     }
 
+    $scope.error = "";
+    if ($scope.editScheduleForm.$invalid) {
+      $scope.showErrorForEdit = true;
+      return;
+    }
     $scope.showErrorForEdit = true;
     Schedule.update({id:schedule.id}, schedule, function (data) {
       updateUiData(data.schedule);
