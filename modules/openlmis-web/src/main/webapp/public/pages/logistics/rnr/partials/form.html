@@ -226,11 +226,22 @@
                            </span>
                        </ng-switch>
                    </td>
+                   <td>
+                    <span class="alert alert-warning reason-request" ng-show="rnrLineItem['stockInHand']<0">
+                                           Stock On Hand is calculated to be negative , Please validate entries
+                                        </span>
+                                        <span class="alert alert-warning reason-request" ng-show="rnrLineItem['quantityDispensed']<0">
+                                            Total Quantity Consumed is calculated to be negative , Please validate entries
+                                        </span>
+                       <span class="alert alert-warning reason-request" ng-show="arithMaticallyInValid(rnrLineItem)">
+                                            The entries are arithmetically invalid , Please recheck
+                                        </span>
+                    </td>
                </tr>
 
                </tbody>
            </table>
-           
+
    </div>
    <br />
   <div id="action_buttons" class="action-buttons">
