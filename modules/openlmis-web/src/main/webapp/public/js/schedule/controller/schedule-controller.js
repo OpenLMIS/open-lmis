@@ -11,17 +11,21 @@ function ScheduleController($scope, Schedules, Schedule) {
   });
 
   $scope.createSchedule = function () {
-
+    $scope.error = "";
+    if ($scope.createScheduleForm.$invalid) {
+      $scope.showErrorForCreate = true;
+      return;
+    }
+    $scope.showErrorForCreate = false;
     Schedules.save({}, $scope.newSchedule, function (data) {
       $scope.schedules.unshift(data.schedule);
       $scope.message = "Schedule Saved Successfully";
-      $scope.error = "";
       $scope.newSchedule = {};
     }, function (data) {
       $scope.message = "";
       $scope.error = data.data.error;
     });
-  }
+  };
 
   $scope.updateSchedule = function (schedule) {
     function updateUiData(sourceSchedule) {
@@ -37,6 +41,7 @@ function ScheduleController($scope, Schedules, Schedule) {
       }
     }
 
+    $scope.showErrorForEdit = true;
     Schedule.update({id:schedule.id}, schedule, function (data) {
       updateUiData(data.schedule);
       $scope.message = "Schedule Saved Successfully";
