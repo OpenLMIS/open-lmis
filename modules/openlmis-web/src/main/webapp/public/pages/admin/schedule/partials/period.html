@@ -23,7 +23,6 @@
   <script src="/public/js/shared/localStorageKeys.js"></script>
 
   <script src="/public/js/schedule/module/schedule-module.js"></script>
-  <script src="/public/js/schedule/controller/schedule-controller.js"></script>
   <script src="/public/js/schedule/controller/schedule-period-controller.js"></script>
   <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/app.css">
 </head>
@@ -32,7 +31,18 @@
   <ng-include src="'/public/pages/header.html'"></ng-include>
   <ng-include src="'/public/pages/navigation.html'"></ng-include>
   <div class="content">
-    <div ng-view></div>
+    <div ng-controller="SchedulePeriodController">
+      <a href="#list" class="pull-right btn btn-primary">Back to Schedules</a>
+      <!--<div ng-hide="scheduleLoaded()">Loading...</div>-->
+      <div ng-show="true">
+        <div class="alert alert-error" id="saveFailMessage" ng-model="error" ng-show="error">
+          {{error}}
+        </div>
+        <div class="alert alert-success" id="saveSuccessMsgDiv" ng-model="message" ng-show="message">
+          {{message}}
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 </body>

@@ -1,0 +1,85 @@
+<div>
+  <h2>Schedules
+    <a href="#" class="pull-right btn btn-primary">Add schedule</a>
+  </h2>
+
+  <div ng-hide="scheduleLoaded()">Loading...</div>
+  <div ng-show="scheduleLoaded()">
+    <div class="row-fluid schedule-header">
+      <div class="span1">&nbsp;</div>
+      <div class="span1">Code</div>
+      <div class="span3">Name</div>
+      <div class="span4">Description</div>
+      <div class="span2">Last Modified</div>
+      <div class="span1">&nbsp;</div>
+    </div>
+    <form id="createScheduleForm" name="createScheduleForm" ng-submit="createSchedule()" novalidate>
+      <div class="row-fluid schedule-row">
+        <div class="span1">
+          <input type="submit" class="btn btn-primary" value="Create"/>
+          <input type="reset" class="btn btn-cancel" value="Reset" ng-click="showErrorForCreate = false"/>
+        </div>
+        <div class="span1">
+          <input name="code" id="code" type="text" ng-model="newSchedule.code" maxlength="50" ng-required="true"/>
+          <span class="rnr-form-error" ng-show="createScheduleForm.code.$error.required && showErrorForCreate">Please fill this value</span>
+        </div>
+        <div class="span3">
+          <input name="name" id="name" type="text" ng-model="newSchedule.name" maxlength="50" ng-required="true"/>
+          <span class="rnr-form-error" ng-show="createScheduleForm.name.$error.required && showErrorForCreate">Please fill this value</span>
+        </div>
+        <div class="span4">
+          <input name="description" id="description" type="text" ng-model="newSchedule.description"
+                 maxlength="250"/>
+        </div>
+        <div class="span2">
+          &nbsp;
+        </div>
+      </div>
+    </form>
+    <form ng-repeat="schedule in schedules" id="editScheduleForm_{{$index}}" name="editScheduleForm"
+          ng-submit="updateSchedule(schedule, editScheduleForm); edit=false;" ng-show="schedules && (schedules.length > 0)"
+          novalidate>
+      <div class="row-fluid schedule-row">
+        <div class="span1">
+          <input type="button" ng-hide="edit" class="btn btn-mini" value="Edit"
+                 ng-click="startScheduleEdit(schedule); edit=true"/>
+
+          <div ng-show="edit">
+            <input type="submit" class="btn btn-primary btn-mini" value="Save"></button>
+            <input type="button" class="btn btn-danger btn-mini" value="Cancel"
+                   ng-click="endScheduleEdit(schedule); edit=false"/>
+          </div>
+        </div>
+        <div class="span1" style="overflow: visible;">
+          <span ng-hide="edit" ng-bind="schedule.code"></span>
+          <input id="code_{{$index}}" name="code" ng-show="edit" type="text" ng-model="schedule.code" maxlength="50"
+                 ng-required="true"/>
+          <span ng-show="editScheduleForm.code.$error.required && showErrorForEdit">Please fill this value</span>
+        </div>
+        <div class="span3">
+          <span ng-hide="edit" ng-bind="schedule.name"></span>
+          <input id="name_{{$index}}" name="name" ng-show="edit" type="text" ng-model="schedule.name" maxlength="50"
+                 ng-required="true"/>
+          <span ng-show="editScheduleForm.name.$error.required && showErrorForEdit">Please fill this value</span>
+        </div>
+        <div class="span4">
+          <span ng-hide="edit" ng-bind="schedule.description"></span>
+          <input id="desc_{{$index}}" name="desc" ng-show="edit" type="text" ng-model="schedule.description"
+                 maxlength="250"/>
+        </div>
+        <div class="span2">
+          {{schedule.modifiedDate | date:'dd/mm/yyyy'}}
+        </div>
+        <div class="span1">
+          <a ng-href="#" class="btn btn-mini">Add Period</a>
+        </div>
+      </div>
+    </form>
+    <div class="alert alert-error" id="saveFailMessage" ng-model="error" ng-show="error">
+      {{error}}
+    </div>
+    <div class="alert alert-success" id="saveSuccessMsgDiv" ng-model="message" ng-show="message">
+      {{message}}
+    </div>
+  </div>
+</div>

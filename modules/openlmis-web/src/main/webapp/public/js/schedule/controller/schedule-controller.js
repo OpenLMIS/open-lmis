@@ -27,7 +27,7 @@ function ScheduleController($scope, Schedules, Schedule) {
     });
   };
 
-  $scope.updateSchedule = function (schedule) {
+  $scope.updateSchedule = function (schedule, form) {
     function updateUiData(sourceSchedule) {
       var schedulesLength = $scope.schedules.length;
       for (var i = 0; i < schedulesLength; i++) {
@@ -42,7 +42,7 @@ function ScheduleController($scope, Schedules, Schedule) {
     }
 
     $scope.error = "";
-    if ($scope.editScheduleForm.$invalid) {
+    if (form.$invalid) {
       $scope.showErrorForEdit = true;
       return;
     }

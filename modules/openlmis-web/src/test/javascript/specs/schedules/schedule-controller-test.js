@@ -5,6 +5,7 @@ describe("Schedule", function () {
 
     var scope, $httpBackend, ctrl, routeParams, facility;
     var existingSchedule = {"id":1, "name":"name", "code":"code", "description":"description"};
+    var editScheduleForm = {$invalid : false};
 
     beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $routeParams) {
       scope = $rootScope.$new();
@@ -48,8 +49,7 @@ describe("Schedule", function () {
       var updatedSchedule = {"id":1, "name":"newName", "code":"newCode", "description":"newDescription", "modifiedBy":"", "modifiedDate":"12345"};
       $httpBackend.expectPUT('/schedules/1.json').respond(200,{"schedule":updatedSchedule});
 
-      scope.editScheduleForm = {$invalid : false};
-      scope.updateSchedule(existingSchedule);
+      scope.updateSchedule(existingSchedule, editScheduleForm);
       $httpBackend.flush();
 
       expect(scope.schedules.length).toEqual(1);
@@ -61,8 +61,8 @@ describe("Schedule", function () {
       var updatedSchedule = {"id":1, "name":"newName", "code":"newCode", "description":"newDescription"};
       $httpBackend.expectPUT('/schedules/1.json').respond(400, {"error":"errorMsg"});
 
-      scope.editScheduleForm = {$invalid : false};
-      scope.updateSchedule(updatedSchedule);
+      var editScheduleForm = {$invalid : false};
+      scope.updateSchedule(updatedSchedule, editScheduleForm);
       $httpBackend.flush();
       expect(scope.message).toEqual("");
       expect(scope.error).toEqual("errorMsg");
