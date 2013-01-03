@@ -1,12 +1,22 @@
 function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $location, Requisition, $route, LossesAndAdjustmentsReferenceData, $rootScope) {
 
   $scope.lossesAndAdjustmentsModal = [];
+  $scope.rnrLineItems = [];
   $rootScope.fixToolBar();
 
   if (!$scope.$parent.rnr) {
     Requisition.get({facilityId:$route.current.params.facility, programId:$route.current.params.program},
       function (data) {
         $scope.rnr = data.rnr;
+          function populateRnrLineItems(rnr) {
+              $(rnr.lineItems).each(function (i, lineItem) {
+
+                  var rnrLineItem =  new RnrLineItem(lineItem);
+                  $scope.rnrLineItems.push(rnrLineItem);
+              });
+          }
+
+          populateRnrLineItems($scope.rnr);
       }, function (data) {
         $scope.$parent.error = data.data.error;
         $location.path($scope.$parent.sourceUrl);
@@ -66,25 +76,6 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
   };
 
 
-  $scope.fillCalculatedRnrColumns = function (lineItem, rnr) {
-    rnrModule.fill(lineItem, $scope.programRnRColumnList, rnr);
-  };
-
-   $scope.arithMaticallyInValid = function(lineItem) {
-        if($scope.programRnRColumnList[0].formulaValidated){
-            var a = parseInt(lineItem.beginningBalance);
-            var b = parseInt(lineItem.quantityReceived);
-            var c = parseInt(lineItem.quantityDispensed);
-            var d = parseInt(lineItem.totalLossesAndAdjustments);
-            var e = parseInt(lineItem.stockInHand);
-            return (isNumber(c) && isNumber(a) && isNumber(b) && isNumber(d) && isNumber(e)) ? c!=(a + b - d - e) : null;
-        }
-        return false;
-    };
-
-   var isNumber =function (number) {
-        return !isNaN(parseInt(number));
-    };
   $scope.getId = function (prefix, parent, isLossAdjustment) {
     if (isLossAdjustment != null && isLossAdjustment != undefined && isLossAdjustment) {
       return prefix + "_" + parent.$parent.$parent.$index + "_" + parent.$parent.$parent.$parent.$index;
@@ -116,8 +107,8 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
 
   function updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem) {
     var lossesAndAdjustmentTypesForLineItem = [];
-    $(lineItem.lossesAndAdjustments).each(function (index, lineItemLossAndAdjustment) {
-        lossesAndAdjustmentTypesForLineItem.push(lineItemLossAndAdjustment.type.name);
+      $(lineItem.lossesAndAdjustments).each(function (index, lineItemLossAndAdjustment) {
+          lossesAndAdjustmentTypesForLineItem.push(lineItemLossAndAdjustment.type.name);
       });
 
     $scope.lossesAndAdjustmentTypesToDisplay = $.grep($scope.allTypes, function(lAndATypeObject){
