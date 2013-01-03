@@ -2,8 +2,10 @@ package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProcessingSchedule;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -24,7 +26,11 @@ public class ProcessingScheduleRepository {
 
   public void create(ProcessingSchedule processingSchedule) {
     processingSchedule.validate();
-    processingScheduleMapper.insert(processingSchedule);
+    try{
+      processingScheduleMapper.insert(processingSchedule);
+    }catch(DuplicateKeyException duplicateKeyException){
+      throw new DataException("A Schedule with this code already exists");
+    }
   }
 
   public ProcessingSchedule get(Integer id) {
@@ -33,6 +39,11 @@ public class ProcessingScheduleRepository {
 
   public void update(ProcessingSchedule processingSchedule) {
     processingSchedule.validate();
-    processingScheduleMapper.update(processingSchedule);
+    try {
+      processingScheduleMapper.update(processingSchedule);
+    } catch (DuplicateKeyException duplicateKeyException) {
+      throw new DataException("A Schedule with this code already exists");
+    }
   }
+
 }

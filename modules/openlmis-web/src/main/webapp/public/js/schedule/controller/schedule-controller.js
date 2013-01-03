@@ -19,7 +19,7 @@ function ScheduleController($scope, Schedules, Schedule) {
     $scope.showErrorForCreate = false;
     Schedules.save({}, $scope.newSchedule, function (data) {
       $scope.schedules.unshift(data.schedule);
-      $scope.message = "Schedule Saved Successfully";
+      $scope.message = data.success;
       $scope.newSchedule = {};
     }, function (data) {
       $scope.message = "";
@@ -60,10 +60,11 @@ function ScheduleController($scope, Schedules, Schedule) {
     Schedule.update({id:schedule.id}, schedule, function (data) {
       updateUiData(data.schedule);
       $scope.completeAddNewSchedule();
-      $scope.message = "Schedule Saved Successfully";
+      $scope.message = data.success;
       $scope.error = "";
       $scope.newSchedule = {};
       $scope.editSchedule = {};
+      $scope.$parent.edit = false;
     }, function (data) {
       $scope.message = "";
       $scope.error = data.data.error;
@@ -76,13 +77,13 @@ function ScheduleController($scope, Schedules, Schedule) {
 
   $scope.startScheduleEdit = function (scheduleUnderEdit) {
     $scope.editSchedule.code = scheduleUnderEdit.code;
-    $scope.editSchedule.name = scheduleUnderEdit.code;
-    $scope.editSchedule.description = scheduleUnderEdit.code;
+    $scope.editSchedule.name = scheduleUnderEdit.name;
+    $scope.editSchedule.description = scheduleUnderEdit.description;
   }
 
   $scope.endScheduleEdit = function (scheduleUnderEdit) {
     scheduleUnderEdit.code = $scope.editSchedule.code;
-    scheduleUnderEdit.name = $scope.editSchedule.code;
-    scheduleUnderEdit.description = $scope.editSchedule.code;
+    scheduleUnderEdit.name = $scope.editSchedule.name;
+    scheduleUnderEdit.description = $scope.editSchedule.description;
   }
 }

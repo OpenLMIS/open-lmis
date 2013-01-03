@@ -38,7 +38,7 @@
       </div>
     </form>
     <form class="schedule-form" ng-repeat="schedule in schedules" id="editScheduleForm_{{$index}}" name="editScheduleForm"
-          ng-submit="updateSchedule(schedule, editScheduleForm); edit=false;" ng-show="schedules && (schedules.length > 0)"
+          ng-submit="updateSchedule(schedule, editScheduleForm);" ng-show="schedules && (schedules.length > 0)"
           novalidate>
       <div class="row-fluid schedule-row">
         <div class="span1">

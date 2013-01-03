@@ -5,17 +5,20 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
+import org.openlmis.core.builder.ProcessingScheduleBuilder;
 import org.openlmis.core.domain.ProcessingSchedule;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
+import org.springframework.dao.DuplicateKeyException;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.natpryce.makeiteasy.MakeItEasy.a;
+import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ProcessingScheduleRepositoryTest {
@@ -98,6 +101,26 @@ public class ProcessingScheduleRepositoryTest {
     processingSchedule.setCode("testCode");
     expectedEx.expect(RuntimeException.class);
     expectedEx.expectMessage("Schedule can not be saved without its name.");
+    repository.update(processingSchedule);
+  }
+
+  @Test
+  public void shouldThrowExceptionForDuplicateCodeWhenTryingToInsertScheduleWithExistingCode() throws Exception {
+    ProcessingSchedule processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
+    when(processingScheduleMapper.insert(processingSchedule)).thenThrow(new DuplicateKeyException(""));
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("A Schedule with this code already exists");
+
+    repository.create(processingSchedule);
+  }
+
+  @Test
+  public void shouldThrowExceptionForDuplicateCodeWhenTryingToUpdateScheduleWithExistingCode() throws Exception {
+    ProcessingSchedule processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
+    when(processingScheduleMapper.update(processingSchedule)).thenThrow(new DuplicateKeyException(""));
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("A Schedule with this code already exists");
+
     repository.update(processingSchedule);
   }
 }
