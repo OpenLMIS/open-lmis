@@ -122,7 +122,7 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
   $scope.reEvaluateTotalLossesAndAdjustments = function(lineItem) {
     lineItem.totalLossesAndAdjustments = 0;
     $(lineItem.lossesAndAdjustments).each(function(index, lossAndAdjustmentObject) {
-      var quantity = parseInt(lossAndAdjustmentObject.quantity);
+      var quantity = parseInt(lossAndAdjustmentObject.quantity, 10);
       updateTotalLossesAndAdjustment(quantity, lossAndAdjustmentObject.type.additive, lineItem);
     });
   };
@@ -131,7 +131,7 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     lineItem.lossesAndAdjustments = $.grep(lineItem.lossesAndAdjustments, function(lossAndAdjustmentObj) {
       return lossAndAdjustmentObj != lossAndAdjustmentToDelete;
     });
-    var quantity = parseInt(lossAndAdjustmentToDelete.quantity);
+    var quantity = parseInt(lossAndAdjustmentToDelete.quantity, 10);
     updateTotalLossesAndAdjustment(quantity, !lossAndAdjustmentToDelete.type.additive, lineItem);
     updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem);
   };
@@ -141,7 +141,7 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     newLossAndAdjustment.type = undefined;
     newLossAndAdjustment.quantity = undefined;
     lineItem.lossesAndAdjustments.push(lossAndAdjustment);
-    var quantity = parseInt(lossAndAdjustment.quantity);
+    var quantity = parseInt(lossAndAdjustment.quantity, 10);
     updateTotalLossesAndAdjustment(quantity, lossAndAdjustment.type.additive, lineItem);
     updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem);
   };
