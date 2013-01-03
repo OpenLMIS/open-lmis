@@ -20,7 +20,7 @@ public class InitiateRnRPage extends Page {
     @FindBy(how = How.XPATH, using = "//div[@id='requisition-header']/div/table/tbody/tr/td")
     private static WebElement facilityLabel;
 
-    @FindBy(how = How.XPATH, using = "//form[@id='save-rnr']/input")
+    @FindBy(how = How.XPATH, using = "//input[@value='Save']")
     private static WebElement saveButton;
 
     @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv' and @ng-model='message']")

@@ -60,7 +60,7 @@ public class DBWrapper {
         }
     }
 
-    public void insertUser(String userName, String password) throws SQLException, IOException {
+    public void insertUser(String userId, String userName, String password) throws SQLException, IOException {
         boolean flag = false;
         DBWrapper dbwrapper = new DBWrapper();
         ResultSet rs = dbwrapper.dbConnection("Select userName from users;", "select");
@@ -74,7 +74,7 @@ public class DBWrapper {
         }
         dbwrapper.dbConnection("INSERT INTO users\n" +
                 "  (id, userName, password, facilityId) VALUES\n" +
-                "  (200, '"+userName+"', '"+password+"', null);", "alter");
+                "  ('"+userId+"', '"+userName+"', '"+password+"', null);", "alter");
 
     }
 
