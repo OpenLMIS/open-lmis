@@ -80,3 +80,7 @@ services.factory('Schedules', function ($resource) {
 services.factory('Schedule', function ($resource) {
   return $resource('/schedules/:id.json', {}, {update: {method:'PUT'}});
 });
+
+services.factory('Periods', function ($resource) {
+  return $resource('/schedules/:scheduleId/periods.json', {}, {});
+});

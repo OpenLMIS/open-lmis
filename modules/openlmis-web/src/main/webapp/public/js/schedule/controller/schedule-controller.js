@@ -30,13 +30,11 @@ function ScheduleController($scope, Schedules, Schedule) {
   $scope.startAddNewSchedule = function() {
     $scope.$parent.newScheduleMode = true;
     angular.element("#createScheduleForm").find("#code").focus();
-    console.log("start")
   };
 
   $scope.completeAddNewSchedule = function() {
     $scope.$parent.newScheduleMode = false;
     $scope.showErrorForCreate = false;
-    console.log("end")
   };
 
   $scope.updateSchedule = function (schedule, form) {
