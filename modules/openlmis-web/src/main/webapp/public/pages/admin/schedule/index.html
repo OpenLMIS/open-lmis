@@ -41,8 +41,9 @@
           <div class="span1">&nbsp;</div>
           <div class="span1">Code</div>
           <div class="span3">Name</div>
-          <div class="span5">Description</div>
+          <div class="span4">Description</div>
           <div class="span2">Last Modified</div>
+          <div class="span1">&nbsp;</div>
         </div>
         <form id="createScheduleForm" name="createScheduleForm" ng-submit="createSchedule()">
           <div class="row-fluid schedule-row">
@@ -56,8 +57,11 @@
             <div class="span3">
               <input id="name" type="text" ng-model="newSchedule.name" maxlength="50" required/>
             </div>
-            <div class="span5">
+            <div class="span4">
               <input id="description" type="text" ng-model="newSchedule.description" maxlength="250" required/>
+            </div>
+            <div class="span2">
+              &nbsp;
             </div>
             <div class="span2">
               &nbsp;
@@ -87,13 +91,16 @@
               <input id="name_{{$index}}" name="name" ng-show="edit" type="text" ng-model="schedule.name" maxlength="50"
                      required/>
             </div>
-            <div class="span5">
+            <div class="span4">
               <span ng-hide="edit" ng-bind="schedule.description"></span>
               <input id="desc_{{$index}}" name="desc" ng-show="edit" type="text" ng-model="schedule.description"
                      maxlength="250"/>
             </div>
             <div class="span2">
               {{schedule.modifiedDate | date:'dd/mm/yyyy'}}
+            </div>
+            <div class="span1">
+              <a ng-href="#manage-period" class="btn btn-mini">Add Period</a>
             </div>
           </div>
         </form>
