@@ -65,12 +65,16 @@ services.factory('ReferenceData', function ($resource) {
     return $resource('/reference-data/currency.json', {}, {});
 });
 
+services.factory('Requisitions', function($resource) {
+    return $resource('/requisitions/:id/:operation.json', {}, {update : {method:'PUT'}});
+});
+
 services.factory('Requisition', function($resource) {
-    return $resource('/facility/:facilityId/program/:programId/rnr.json', {}, {update : {method:'PUT'}});
+  return $resource('/requisitions.json', {}, {});
 });
 
 services.factory('LossesAndAdjustmentsReferenceData', function($resource) {
-  return $resource('/rnr/lossAndAdjustments/reference-data.json', {}, {})
+  return $resource('/requisitions/lossAndAdjustments/reference-data.json', {}, {})
 });
 
 services.factory('Schedules', function ($resource) {

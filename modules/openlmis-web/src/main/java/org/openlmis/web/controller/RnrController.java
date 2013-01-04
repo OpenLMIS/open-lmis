@@ -11,10 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -32,10 +29,10 @@ public class RnrController extends BaseController {
     this.rnrService = rnrService;
   }
 
-  @RequestMapping(value = "/facility/{facilityId}/program/{programId}/rnr", method = RequestMethod.POST, headers = "Accept=application/json")
+  @RequestMapping(value = "/requisitions", method = RequestMethod.POST, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> initiateRnr(@PathVariable("facilityId") Integer facilityId,
-                                                      @PathVariable("programId") Integer programId,
+  public ResponseEntity<OpenLmisResponse> initiateRnr(@RequestParam("facilityId") Integer facilityId,
+                                                      @RequestParam("programId") Integer programId,
                                                       HttpServletRequest request) {
     try {
       return OpenLmisResponse.response(RNR, rnrService.initRnr(facilityId, programId, loggedInUserId(request)));
@@ -44,33 +41,28 @@ public class RnrController extends BaseController {
     }
   }
 
-  @RequestMapping(value = "/facility/{facilityId}/program/{programId}/rnr", method = RequestMethod.GET, headers = "Accept=application/json")
+  @RequestMapping(value = "/requisitions", method = RequestMethod.GET, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> get(@PathVariable("facilityId") Integer facilityId,
-                                              @PathVariable("programId") Integer programId) {
+  public ResponseEntity<OpenLmisResponse> get(@RequestParam("facilityId") Integer facilityId,
+                                              @RequestParam("programId") Integer programId) {
     return OpenLmisResponse.response(RNR, rnrService.get(facilityId, programId));
   }
 
-  @RequestMapping(value = "/facility/{facilityId}/program/{programId}/rnr", method = RequestMethod.PUT, headers = "Accept=application/json")
+  @RequestMapping(value = "/requisitions/{id}/save", method = RequestMethod.PUT, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
-  public void saveRnr(@RequestBody Rnr rnr,
-                      @PathVariable("facilityId") int facilityId,
-                      @PathVariable("programId") int programId,
-                      HttpServletRequest request) {
-    rnr.setFacilityId(facilityId);
-    rnr.setProgramId(programId);
+  public void saveRnr(@RequestBody Rnr rnr, HttpServletRequest request) {
     rnr.setModifiedBy(loggedInUserId(request));
     rnrService.save(rnr);
   }
 
-  @RequestMapping(value = "/facility/{facilityId}/program/{programId}/rnr/submit", method = RequestMethod.POST, headers = "Accept=application/json")
+  @RequestMapping(value = "/requisitions/{id}/submit", method = RequestMethod.PUT, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
   public void submit(Rnr rnr, HttpServletRequest request) {
     rnr.setModifiedBy(loggedInUserId(request));
     rnrService.submit(rnr);
   }
 
-  @RequestMapping(value = "/rnr/lossAndAdjustments/reference-data", method = RequestMethod.GET, headers = "Accept=application/json")
+  @RequestMapping(value = "/requisitions/lossAndAdjustments/reference-data", method = RequestMethod.GET, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
   public Map getReferenceData() {
     RnrReferenceData referenceData = new RnrReferenceData();

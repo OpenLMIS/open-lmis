@@ -49,7 +49,7 @@ function InitiateRnrController($scope, Requisition, facilities, programs, UserSu
       $scope.error = "";
       $scope.$parent.sourceUrl = $location.$$url;
 
-      Requisition.get({facilityId:$scope.facility, programId:$scope.program.id},
+      Requisition.get({facilityId:$scope.facility, programId:$scope.program.id},{},
         function (data) {
           if (data.rnr) {
             $scope.$parent.rnr = data.rnr;
@@ -59,7 +59,7 @@ function InitiateRnrController($scope, Requisition, facilities, programs, UserSu
             Requisition.save({facilityId:$scope.facility, programId:$scope.program.id}, {}, function (data) {
               $scope.$parent.rnr = data.rnr;
               $location.path('/create-rnr/' + $scope.facility + '/' + $scope.program.id);
-            }, function (data) {
+            }, function () {
               $scope.error = "Requisition does not exist. Please initiate.";
             })
           }

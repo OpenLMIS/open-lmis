@@ -1,4 +1,4 @@
-function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $location, Requisition, $route, LossesAndAdjustmentsReferenceData, $rootScope) {
+function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $location, Requisition, Requisitions, $route, LossesAndAdjustmentsReferenceData, $rootScope) {
 
   $scope.lossesAndAdjustmentsModal = [];
   $scope.rnrLineItems = [];
@@ -64,7 +64,7 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
       return;
     }
 
-    Requisition.update({facilityId:$route.current.params.facility, programId:$route.current.params.program},
+    Requisitions.update({id: $scope.rnr.id, operation: "save"},
       $scope.rnr, function (data) {
         $scope.message = "R&R saved successfully!";
         $scope.error = "";
