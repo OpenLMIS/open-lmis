@@ -25,12 +25,7 @@ public interface FacilityMapper {
     @Options(useGeneratedKeys = true)
     Integer insert(Facility facility);
 
-    @Select("SELECT * FROM facilities")
-    @Results(value = {
-            @Result(property = "geographicZone.id", column = "geographicZoneId"),
-            @Result(property = "facilityType", column = "typeId", javaType = Integer.class, one = @One(select = "getFacilityTypeById")),
-            @Result(property = "operatedBy", column = "operatedById", javaType = Integer.class, one = @One(select = "getFacilityOperatorById")),
-    })
+    @Select("SELECT id, code, name FROM facilities")
     List<Facility> getAll();
 
     @Select("SELECT * FROM users U, facilities F " +
