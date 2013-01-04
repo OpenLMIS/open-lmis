@@ -117,7 +117,8 @@
                                        </div>
                                    </div>
                                       <a ng-click="showLossesAndAdjustmentModalForLineItem(rnrLineItem.rnrLineItem)" class="rnr-adjustment">
-                                        <span class="adjustment-value" >
+                                        <span class="add-adjustment" ng-hide="rnrLineItem.rnrLineItem.lossesAndAdjustments.length > 0">Add Adjustments</span>
+                                        <span class="adjustment-value" ng-show="rnrLineItem.rnrLineItem.lossesAndAdjustments.length > 0">
                                           {{rnrLineItem.rnrLineItem.totalLossesAndAdjustments}}</span>
                                       </a>
                                    </span>
