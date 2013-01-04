@@ -2,7 +2,7 @@ var RnrLineItem = function (lineItem) {
 
     this.rnrLineItem = lineItem;
 
-    this.arithMaticallyInValid = function (programRnRColumnList) {
+    this.arithmeticallyInvalid = function (programRnRColumnList) {
         if (programRnRColumnList[0].formulaValidated) {
             var a = parseInt(this.rnrLineItem.beginningBalance);
             var b = parseInt(this.rnrLineItem.quantityReceived);

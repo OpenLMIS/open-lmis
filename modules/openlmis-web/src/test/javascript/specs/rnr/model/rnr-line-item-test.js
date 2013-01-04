@@ -437,5 +437,38 @@ describe('RnrLineItem', function () {
             expect(lineItem.lossesAndAdjustments).toEqual([expectedLossAndAdjustment]);
         });
     });
+
+    describe('Arithmetic validation', function () {
+        var programRnrColumnList;
+        beforeEach(function () {
+            programRnrColumnList = [
+                {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidated":true}
+            ];
+        });
+
+
+        it("should do arithmetic validations if on ", function () {
+            var lineItem = {"id":"1", "beginningBalance":3, "quantityReceived":3, "quantityDispensed":3, "totalLossesAndAdjustments":-3, "stockInHand":3};
+            var rnrLineItem = new RnrLineItem(lineItem);
+            var arithmeticallyInvalid = rnrLineItem.arithmeticallyInvalid(programRnrColumnList);
+
+            expect(arithmeticallyInvalid).toEqual(true);
+
+            lineItem.totalLossesAndAdjustments = 3;
+            lineItem.quantityDispensed = 0;
+
+            arithmeticallyInvalid = rnrLineItem.arithmeticallyInvalid(programRnrColumnList);
+            expect(arithmeticallyInvalid).toEqual(false);
+
+        });
+
+        it("should return false arithmetic validations if off ", function () {
+            programRnrColumnList[0].formulaValidated=false;
+            var lineItem = {"id":"1", "beginningBalance":3, "quantityReceived":3, "quantityDispensed":3, "totalLossesAndAdjustments":-3, "stockInHand":3};
+            var rnrLineItem = new RnrLineItem(lineItem);
+            expect(rnrLineItem.arithmeticallyInvalid(programRnrColumnList)).toEqual(false);
+        });
+
+    });
 });
 
