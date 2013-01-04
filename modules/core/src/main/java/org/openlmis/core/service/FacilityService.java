@@ -43,10 +43,6 @@ public class FacilityService {
         facilityRepository.save(facility);
     }
 
-    public void addSupportedProgram(ProgramSupported programSupported) {
-        facilityRepository.addSupportedProgram(programSupported);
-    }
-
     public List<FacilityType> getAllTypes() {
         return facilityRepository.getAllTypes();
     }

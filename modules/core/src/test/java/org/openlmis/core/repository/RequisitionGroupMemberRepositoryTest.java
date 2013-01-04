@@ -4,12 +4,17 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.RequisitionGroupMember;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.repository.mapper.*;
+import org.openlmis.core.repository.mapper.ProgramMapper;
+import org.openlmis.core.repository.mapper.RequisitionGroupMapper;
+import org.openlmis.core.repository.mapper.RequisitionGroupMemberMapper;
+import org.openlmis.core.repository.mapper.RequisitionGroupProgramScheduleMapper;
 
 import java.util.ArrayList;
 
@@ -28,140 +33,150 @@ import static org.openlmis.core.builder.ProgramBuilder.PROGRAM_ID;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
 
+@RunWith(MockitoJUnitRunner.class)
 public class RequisitionGroupMemberRepositoryTest {
 
-    ArrayList<Integer> programIdList;
-    public static final Integer RG_ID = 1;
-    public static final Integer FACILITY_ID = 100;
-    RequisitionGroup requisitionGroup;
-    RequisitionGroupMember requisitionGroupMember;
+  ArrayList<Integer> programIdList;
+  public static final Integer RG_ID = 1;
+  public static final Integer FACILITY_ID = 100;
+  RequisitionGroup requisitionGroup;
+  RequisitionGroupMember requisitionGroupMember;
 
-    @Rule
-    public ExpectedException expectedEx = ExpectedException.none();
+  @Rule
+  public ExpectedException expectedEx = ExpectedException.none();
 
-    @Mock
-    RequisitionGroupMemberMapper requisitionGroupMemberMapper;
+  @Mock
+  RequisitionGroupMemberMapper requisitionGroupMemberMapper;
 
-    @Mock
-    RequisitionGroupProgramScheduleMapper requisitionGroupProgramScheduleMapper;
+  @Mock
+  RequisitionGroupProgramScheduleMapper requisitionGroupProgramScheduleMapper;
 
-    @Mock
-    RequisitionGroupMapper requisitionGroupMapper;
+  @Mock
+  RequisitionGroupMapper requisitionGroupMapper;
 
-    @Mock
-    FacilityRepository facilityRepository;
+  @Mock
+  FacilityRepository facilityRepository;
 
-    @Mock
-    ProgramMapper programMapper;
-
-
-    @Before
-    public void setUp() throws Exception {
-        requisitionGroup = make(a(defaultRequisitionGroup));
-        Facility facility = make(a(defaultFacility));
-
-        requisitionGroupMember = new RequisitionGroupMember();
-        requisitionGroupMember.setRequisitionGroup(requisitionGroup);
-        requisitionGroupMember.setFacility(facility);
-
-        programIdList = new ArrayList<>();
-        programIdList.add(1);
-
-        initMocks(this);
-    }
+  @Mock
+  ProgramMapper programMapper;
+  private RequisitionGroupMemberRepository repository;
 
 
-    @Test
-    public void shouldGiveErrorIfRGDoesNotExist() throws Exception {
-        when(requisitionGroupMapper.getIdForCode(requisitionGroupMember.getRequisitionGroup().getCode())).thenReturn(null);
+  @Before
+  public void setUp() throws Exception {
+    requisitionGroup = make(a(defaultRequisitionGroup));
+    Facility facility = make(a(defaultFacility));
 
-        expectedEx.expect(DataException.class);
-        expectedEx.expectMessage("Requisition Group does not exist");
+    requisitionGroupMember = new RequisitionGroupMember();
+    requisitionGroupMember.setRequisitionGroup(requisitionGroup);
+    requisitionGroupMember.setFacility(facility);
 
-        new RequisitionGroupMemberRepository(requisitionGroupMemberMapper,requisitionGroupProgramScheduleMapper,requisitionGroupMapper, facilityRepository, programMapper).insert(requisitionGroupMember);
-    }
+    programIdList = new ArrayList<>();
+    programIdList.add(1);
 
-    @Test
-    public void shouldGiveErrorIfFacilityDoesNotExist() throws Exception {
-        when(requisitionGroupMapper.getIdForCode(requisitionGroupMember.getRequisitionGroup().getCode())).thenReturn(RG_ID);
-        when(facilityRepository.getIdForCode(requisitionGroupMember.getFacility().getCode())).thenThrow(new DataException("Invalid Facility Code"));
+    initMocks(this);
+    repository = new RequisitionGroupMemberRepository(requisitionGroupMemberMapper, requisitionGroupProgramScheduleMapper, requisitionGroupMapper, facilityRepository, programMapper);
+  }
 
-        expectedEx.expect(DataException.class);
-        expectedEx.expectMessage("Invalid Facility Code");
 
-        new RequisitionGroupMemberRepository(requisitionGroupMemberMapper,requisitionGroupProgramScheduleMapper,requisitionGroupMapper, facilityRepository, programMapper).insert(requisitionGroupMember);
-    }
+  @Test
+  public void shouldGiveErrorIfRGDoesNotExist() throws Exception {
+    when(requisitionGroupMapper.getIdForCode(requisitionGroupMember.getRequisitionGroup().getCode())).thenReturn(null);
 
-    @Test
-    public void shouldGiveErrorIfNoProgramsMappedToRG() throws Exception {
-        when(requisitionGroupMapper.getIdForCode(requisitionGroupMember.getRequisitionGroup().getCode())).thenReturn(RG_ID);
-        when(facilityRepository.getIdForCode(requisitionGroupMember.getFacility().getCode())).thenReturn(FACILITY_ID);
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("Requisition Group does not exist");
 
-        when(requisitionGroupProgramScheduleMapper.getProgramIDsById(RG_ID)).thenReturn(new ArrayList<Integer>());
+    repository.insert(requisitionGroupMember);
+  }
 
-        expectedEx.expect(DataException.class);
-        expectedEx.expectMessage("No Program(s) mapped for Requisition Group");
+  @Test
+  public void shouldGiveErrorIfFacilityDoesNotExist() throws Exception {
+    when(requisitionGroupMapper.getIdForCode(requisitionGroupMember.getRequisitionGroup().getCode())).thenReturn(RG_ID);
+    when(facilityRepository.getIdForCode(requisitionGroupMember.getFacility().getCode())).thenThrow(new DataException("Invalid Facility Code"));
 
-        new RequisitionGroupMemberRepository(requisitionGroupMemberMapper,requisitionGroupProgramScheduleMapper,requisitionGroupMapper, facilityRepository, programMapper).insert(requisitionGroupMember);
-    }
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("Invalid Facility Code");
 
-    @Test
-    public void shouldGiveErrorIfFacilityIsBeingMappedToAProgramWhichItIsAlreadyMappedTo() throws Exception {
-        when(requisitionGroupMapper.getIdForCode(requisitionGroupMember.getRequisitionGroup().getCode())).thenReturn(RG_ID);
-        when(facilityRepository.getIdForCode(requisitionGroupMember.getFacility().getCode())).thenReturn(FACILITY_ID);
+    repository.insert(requisitionGroupMember);
+  }
 
-        ArrayList<Integer> programIdsForRequisitionGroup = new ArrayList<>();
-        Integer commonProgramId = 1;
-        programIdsForRequisitionGroup.add(commonProgramId);
-        programIdsForRequisitionGroup.add(2);
-        programIdsForRequisitionGroup.add(3);
+  @Test
+  public void shouldGiveErrorIfNoProgramsMappedToRG() throws Exception {
+    when(requisitionGroupMapper.getIdForCode(requisitionGroupMember.getRequisitionGroup().getCode())).thenReturn(RG_ID);
+    when(facilityRepository.getIdForCode(requisitionGroupMember.getFacility().getCode())).thenReturn(FACILITY_ID);
 
-        when(requisitionGroupProgramScheduleMapper.getProgramIDsById(RG_ID)).thenReturn(programIdsForRequisitionGroup);
+    when(requisitionGroupProgramScheduleMapper.getProgramIDsById(RG_ID)).thenReturn(new ArrayList<Integer>());
 
-        ArrayList<Integer> requisitionGroupProgramIdsForFacility = new ArrayList<>();
-        requisitionGroupProgramIdsForFacility.add(commonProgramId);
-        requisitionGroupProgramIdsForFacility.add(4);
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("No Program(s) mapped for Requisition Group");
 
-        when(requisitionGroupMemberMapper.getRequisitionGroupProgramIdsForId(FACILITY_ID)).thenReturn(requisitionGroupProgramIdsForFacility);
+    repository.insert(requisitionGroupMember);
+  }
 
-        when(programMapper.getById(commonProgramId)).thenReturn(make(a(defaultProgram)));
+  @Test
+  public void shouldGiveErrorIfFacilityIsBeingMappedToAProgramWhichItIsAlreadyMappedTo() throws Exception {
+    when(requisitionGroupMapper.getIdForCode(requisitionGroupMember.getRequisitionGroup().getCode())).thenReturn(RG_ID);
+    when(facilityRepository.getIdForCode(requisitionGroupMember.getFacility().getCode())).thenReturn(FACILITY_ID);
 
-        when(requisitionGroupMemberMapper.getRequisitionGroupCodeForProgramAndFacility(commonProgramId, FACILITY_ID)).thenReturn("DCODE");
+    ArrayList<Integer> programIdsForRequisitionGroup = new ArrayList<>();
+    Integer commonProgramId = 1;
+    programIdsForRequisitionGroup.add(commonProgramId);
+    programIdsForRequisitionGroup.add(2);
+    programIdsForRequisitionGroup.add(3);
 
-        expectedEx.expect(DataException.class);
-        expectedEx.expectMessage("Facility " + FACILITY_CODE + " is already assigned to Requisition Group DCODE running same program " + PROGRAM_CODE);
+    when(requisitionGroupProgramScheduleMapper.getProgramIDsById(RG_ID)).thenReturn(programIdsForRequisitionGroup);
 
-        new RequisitionGroupMemberRepository(requisitionGroupMemberMapper,requisitionGroupProgramScheduleMapper,requisitionGroupMapper, facilityRepository, programMapper).insert(requisitionGroupMember);
-    }
+    ArrayList<Integer> requisitionGroupProgramIdsForFacility = new ArrayList<>();
+    requisitionGroupProgramIdsForFacility.add(commonProgramId);
+    requisitionGroupProgramIdsForFacility.add(4);
 
-    @Test
-    public void shouldGiveErrorIfDuplicateMappingFound() throws Exception {
-        when(requisitionGroupMapper.getIdForCode(requisitionGroupMember.getRequisitionGroup().getCode())).thenReturn(RG_ID);
-        when(facilityRepository.getIdForCode(requisitionGroupMember.getFacility().getCode())).thenReturn(FACILITY_ID);
-        when(requisitionGroupProgramScheduleMapper.getProgramIDsById(RG_ID)).thenReturn(programIdList);
+    when(requisitionGroupMemberMapper.getRequisitionGroupProgramIdsForId(FACILITY_ID)).thenReturn(requisitionGroupProgramIdsForFacility);
 
-        when(requisitionGroupMemberMapper.doesMappingExist(RG_ID,FACILITY_ID)).thenReturn(1);
+    when(programMapper.getById(commonProgramId)).thenReturn(make(a(defaultProgram)));
 
-        expectedEx.expect(DataException.class);
-        expectedEx.expectMessage("Facility to Requisition Group mapping already exists");
+    when(requisitionGroupMemberMapper.getRGCodeForProgramAndFacility(commonProgramId, FACILITY_ID)).thenReturn("DCODE");
 
-        new RequisitionGroupMemberRepository(requisitionGroupMemberMapper,requisitionGroupProgramScheduleMapper,requisitionGroupMapper, facilityRepository, programMapper).insert(requisitionGroupMember);
-    }
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("Facility " + FACILITY_CODE + " is already assigned to Requisition Group DCODE running same program " + PROGRAM_CODE);
 
-    @Test
-    public void shouldSaveMappingIfAllConditionsCorrectlyMet() throws Exception {
-        when(requisitionGroupMapper.getIdForCode(requisitionGroupMember.getRequisitionGroup().getCode())).thenReturn(RG_ID);
-        when(facilityRepository.getIdForCode(requisitionGroupMember.getFacility().getCode())).thenReturn(FACILITY_ID);
-        when(requisitionGroupProgramScheduleMapper.getProgramIDsById(RG_ID)).thenReturn(programIdList);
+    repository.insert(requisitionGroupMember);
+  }
 
-        new RequisitionGroupMemberRepository(requisitionGroupMemberMapper,requisitionGroupProgramScheduleMapper,requisitionGroupMapper, facilityRepository, programMapper).insert(requisitionGroupMember);
+  @Test
+  public void shouldGiveErrorIfDuplicateMappingFound() throws Exception {
+    when(requisitionGroupMapper.getIdForCode(requisitionGroupMember.getRequisitionGroup().getCode())).thenReturn(RG_ID);
+    when(facilityRepository.getIdForCode(requisitionGroupMember.getFacility().getCode())).thenReturn(FACILITY_ID);
+    when(requisitionGroupProgramScheduleMapper.getProgramIDsById(RG_ID)).thenReturn(programIdList);
 
-        verify(requisitionGroupMemberMapper).insert(requisitionGroupMember);
-        assertThat(requisitionGroupMember.getFacility().getId(),is(notNullValue()));
-        assertThat(requisitionGroupMember.getRequisitionGroup().getId(),is(notNullValue()));
+    when(requisitionGroupMemberMapper.doesMappingExist(RG_ID, FACILITY_ID)).thenReturn(1);
 
-    }
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("Facility to Requisition Group mapping already exists");
 
+    repository.insert(requisitionGroupMember);
+  }
+
+  @Test
+  public void shouldSaveMappingIfAllConditionsCorrectlyMet() throws Exception {
+    when(requisitionGroupMapper.getIdForCode(requisitionGroupMember.getRequisitionGroup().getCode())).thenReturn(RG_ID);
+    when(facilityRepository.getIdForCode(requisitionGroupMember.getFacility().getCode())).thenReturn(FACILITY_ID);
+    when(requisitionGroupProgramScheduleMapper.getProgramIDsById(RG_ID)).thenReturn(programIdList);
+
+    repository.insert(requisitionGroupMember);
+
+    verify(requisitionGroupMemberMapper).insert(requisitionGroupMember);
+    assertThat(requisitionGroupMember.getFacility().getId(), is(notNullValue()));
+    assertThat(requisitionGroupMember.getRequisitionGroup().getId(), is(notNullValue()));
+
+  }
+
+  @Test
+  public void shouldReturnRGCodeForFacilityProgram() {
+    String expectedRGCode = "test rg code";
+    when(requisitionGroupMemberMapper.getRGCodeForProgramAndFacility(FACILITY_ID, PROGRAM_ID)).thenReturn(expectedRGCode);
+    String rgCode = repository.getRGCodeForProgramAndFacility(FACILITY_ID, PROGRAM_ID);
+    assertThat(rgCode, is(expectedRGCode));
+  }
 
 }
 

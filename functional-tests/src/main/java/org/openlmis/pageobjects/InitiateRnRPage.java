@@ -38,11 +38,35 @@ public class InitiateRnRPage extends Page {
     @FindBy(how = How.ID, using = "D_0")
     private static WebElement lossesAndAdjustments;
 
-    @FindBy(how = How.ID, using = "E_8")
+    @FindBy(how = How.ID, using = "E_7")
     private static WebElement stockOnHand;
 
-    @FindBy(how = How.ID, using = "F_0")
-    private static WebElement newPatientsAdded;
+    @FindBy(how = How.XPATH, using = "//a[@class='rnr-adjustment']/span[@class='add-adjustment']")
+    private static WebElement addDescription;
+
+    @FindBy(how = How.XPATH, using = "//div[@id='lossesAndAdjustments']/div[@class='modal-body']/div[@class='adjustment-field']/select")
+    private static WebElement lossesAndAdjustmentSelect;
+
+
+    @FindBy(how = How.XPATH, using = "//input[@ng-model='lossAndAdjustment.quantity']")
+    private static WebElement quantityAdj;
+
+    @FindBy(how = How.XPATH, using = "//input[@value='Add']")
+    private static WebElement addButton;
+
+    @FindBy(how = How.XPATH, using = "//div[@class='adjustment-list']/ul/li/span[@class='tpl-adjustment-type ng-binding']")
+    private static WebElement adjList;
+
+    @FindBy(how = How.XPATH, using = "//input[@id='D_6_0']")
+    private static WebElement adjListValue;
+
+    @FindBy(how = How.XPATH, using = "//div[@class='adjustment-total clearfix alert alert-warning ng-binding']")
+    private static WebElement totalAdj;
+
+    @FindBy(how = How.XPATH, using = " //a[contains(text(),'Done')]")
+    private static WebElement doneButton;
+
+
 
     String successText="R&R saved successfully!";
 
@@ -96,32 +120,40 @@ public class InitiateRnRPage extends Page {
         SeleneseTestNgHelper.assertEquals(quantityDispensedValue, C);
     }
 
-    public void enterLossesAndAdjustments(String D)
+    public void enterLossesAndAdjustments(String adj)
     {
-        testWebDriver.waitForElementToAppear(lossesAndAdjustments);
-        lossesAndAdjustments.sendKeys(D);
-        String lossesAndAdjustmentsValue=testWebDriver.getAttribute(lossesAndAdjustments,"value");
-        SeleneseTestNgHelper.assertEquals(lossesAndAdjustmentsValue, D);
+        testWebDriver.waitForElementToAppear(addDescription);
+        addDescription.click();
+        testWebDriver.waitForElementToAppear(lossesAndAdjustmentSelect);
+        testWebDriver.selectByVisibleText(lossesAndAdjustmentSelect,"Transfer In");
+        testWebDriver.waitForElementToAppear(quantityAdj);
+        quantityAdj.clear();
+        quantityAdj.sendKeys(adj);
+        addButton.click();
+        testWebDriver.waitForElementToAppear(adjList);
+        String labelAdj=testWebDriver.getText(adjList);
+        SeleneseTestNgHelper.assertEquals(labelAdj.trim(),"Transfer In" );
+        String adjValue=testWebDriver.getAttribute(adjListValue,"value");
+        SeleneseTestNgHelper.assertEquals(adjValue, adj);
+        testWebDriver.waitForElementToAppear(totalAdj);
+        String totalAdjValue=testWebDriver.getText(totalAdj);
+        SeleneseTestNgHelper.assertEquals(totalAdjValue.substring("Total ".length()), adj);
+        doneButton.click();
+        testWebDriver.sleep(1000);
+
+
     }
 
-    public void enternewPatientsAdded(String F)
-    {
-        testWebDriver.waitForElementToAppear(newPatientsAdded);
-        newPatientsAdded.sendKeys(F);
-        String newPatientsAddedValue=testWebDriver.getAttribute(newPatientsAdded,"value");
-        SeleneseTestNgHelper.assertEquals(newPatientsAddedValue, F);
-    }
 
-    public void calculateAndVerifyStockOnHand(Integer A, Integer B, Integer C, Integer D, Integer F)
+    public void calculateAndVerifyStockOnHand(Integer A, Integer B, Integer C, Integer D)
     {
         enterBeginningBalance(A.toString());
         enterQuantityReceived(B.toString());
         enterQuantityDispensed(C.toString());
         enterLossesAndAdjustments(D.toString());
-        enternewPatientsAdded(F.toString());
         beginningBalance.click();
         testWebDriver.waitForElementToAppear(stockOnHand);
-        Integer StockOnHand = A+B-C-D;
+        Integer StockOnHand = A+B-C+D;
         testWebDriver.sleep(1000);
         String stockOnHandValue= stockOnHand.getText();
         String StockOnHandValue = StockOnHand.toString();

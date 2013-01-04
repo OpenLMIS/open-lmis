@@ -14,75 +14,75 @@ import java.util.List;
 @NoArgsConstructor
 public class RnrLineItem {
 
-    private Integer id;
-    private Integer rnrId;
+  private Integer id;
+  private Integer rnrId;
 
-    //todo hack to display it on UI. This is concatenated string of Product properties like name, strength, form and dosage unit
-    private String product;
-    private String productCode;
-	private Boolean roundToZero;
-    private Integer packRoundingThreshold;
-	private Integer packSize;
-	private Integer dosesPerMonth;
-	private Integer dosesPerDispensingUnit;
-    private String dispensingUnit;
-    private Integer maxMonthsOfStock;
+  //todo hack to display it on UI. This is concatenated string of Product properties like name, strength, form and dosage unit
+  private String product;
+  private String productCode;
+  private Boolean roundToZero;
+  private Integer packRoundingThreshold;
+  private Integer packSize;
+  private Integer dosesPerMonth;
+  private Integer dosesPerDispensingUnit;
+  private String dispensingUnit;
+  private Integer maxMonthsOfStock;
 
-    private Integer quantityReceived;
-    private Integer quantityDispensed;
-    private Integer beginningBalance;
-    private List<LossesAndAdjustments> lossesAndAdjustments = new ArrayList<>();
-    private Integer totalLossesAndAdjustments = 0;
-    private String reasonForLossesAndAdjustments;
-    private Integer stockInHand;
-    private Integer stockOutDays;
-    private Integer newPatientCount;
-    private Integer quantityRequested;
-    private String reasonForRequestedQuantity;
+  private Integer quantityReceived;
+  private Integer quantityDispensed;
+  private Integer beginningBalance;
+  private List<LossesAndAdjustments> lossesAndAdjustments = new ArrayList<>();
+  private Integer totalLossesAndAdjustments = 0;
+  private String reasonForLossesAndAdjustments;
+  private Integer stockInHand;
+  private Integer stockOutDays;
+  private Integer newPatientCount;
+  private Integer quantityRequested;
+  private String reasonForRequestedQuantity;
 
-    private Float amc;
-    private Float normalizedConsumption;
-    private Integer calculatedOrderQuantity;
-    private Integer maxStockQuantity;
+  private Float amc;
+  private Float normalizedConsumption;
+  private Integer calculatedOrderQuantity;
+  private Integer maxStockQuantity;
 
-    private Integer quantityApproved;
+  private Integer quantityApproved;
 
-    private Float cost;
-    private Integer packsToShip;
-    private String remarks;
+  private Float cost;
+  private Integer packsToShip;
+  private String remarks;
 
-    private String modifiedBy;
-    private Date modifiedDate;
-	private Float price;
+  private Integer modifiedBy;
+  private Date modifiedDate;
+  private Float price;
 
-	public RnrLineItem(Integer rnrId, FacilityApprovedProduct facilityApprovedProduct, String modifiedBy) {
-        this.rnrId = rnrId;
+  public RnrLineItem(Integer rnrId, FacilityApprovedProduct facilityApprovedProduct, Integer modifiedBy) {
+    this.rnrId = rnrId;
 
-        this.maxMonthsOfStock = facilityApprovedProduct.getMaxMonthsOfStock();
-		ProgramProduct programProduct = facilityApprovedProduct.getProgramProduct();
-		// TODO : ugly
-		Product product = programProduct.getProduct();
-        this.productCode = product.getCode();
-        this.dispensingUnit = product.getDispensingUnit();
-        this.dosesPerDispensingUnit = product.getDosesPerDispensingUnit();
-        this.dosesPerMonth = programProduct.getDosesPerMonth();
-		this.packSize = product.getPackSize();
-		this.roundToZero = product.getRoundToZero();
-        this.packRoundingThreshold = product.getPackRoundingThreshold();
-        this.product = productName(product);
-		this.price = facilityApprovedProduct.getProgramProduct().getCurrentPrice();
-        this.modifiedBy = modifiedBy;
-    }
+    this.maxMonthsOfStock = facilityApprovedProduct.getMaxMonthsOfStock();
+    ProgramProduct programProduct = facilityApprovedProduct.getProgramProduct();
+    // TODO : ugly
+    Product product = programProduct.getProduct();
+    this.productCode = product.getCode();
+    this.dispensingUnit = product.getDispensingUnit();
+    this.dosesPerDispensingUnit = product.getDosesPerDispensingUnit();
+    this.dosesPerMonth = programProduct.getDosesPerMonth();
+    this.packSize = product.getPackSize();
+    this.roundToZero = product.getRoundToZero();
+    this.packRoundingThreshold = product.getPackRoundingThreshold();
+    this.product = productName(product);
+    this.price = facilityApprovedProduct.getProgramProduct().getCurrentPrice();
+    this.modifiedBy = modifiedBy;
+  }
 
-    private String productName(Product product) {
-        return (product.getPrimaryName() == null ? "" : (product.getPrimaryName() + " ")) +
-                (product.getForm().getCode() == null ? "" : (product.getForm().getCode() + " ")) +
-                (product.getStrength() == null ? "" : (product.getStrength() + " ")) +
-                (product.getDosageUnit().getCode() == null ? "" : product.getDosageUnit().getCode());
+  private String productName(Product product) {
+    return (product.getPrimaryName() == null ? "" : (product.getPrimaryName() + " ")) +
+      (product.getForm().getCode() == null ? "" : (product.getForm().getCode() + " ")) +
+      (product.getStrength() == null ? "" : (product.getStrength() + " ")) +
+      (product.getDosageUnit().getCode() == null ? "" : product.getDosageUnit().getCode());
 
-    }
+  }
 
-    public void addLossesAndAdjustments(LossesAndAdjustments lossesAndAdjustments) {
-        this.lossesAndAdjustments.add(lossesAndAdjustments);
-    }
+  public void addLossesAndAdjustments(LossesAndAdjustments lossesAndAdjustments) {
+    this.lossesAndAdjustments.add(lossesAndAdjustments);
+  }
 }

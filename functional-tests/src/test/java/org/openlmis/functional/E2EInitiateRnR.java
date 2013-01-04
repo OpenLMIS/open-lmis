@@ -32,14 +32,17 @@ public class E2EInitiateRnR extends TestCaseHelper {
         DBWrapper dbWrapper = new DBWrapper();
 
         dbWrapper.insertUser("200", user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==");
+        dbWrapper.insertFacility();
+        dbWrapper.insertSupervisoryNodes();
+        dbWrapper.insertSupervisoryNodesSecond();
+        dbWrapper.insertProducts();
+        dbWrapper.insertProgramProducts();
+        dbWrapper.insertFacilityApprovedProducts();
+        dbWrapper.insertRequisitionGroup();
+        dbWrapper.insertRequisitionGroupMembers();
+        dbWrapper.insertSchedules();
+        dbWrapper.insertProcessingPeriods();
 
-//        dbWrapper.insertSupervisoryNodes();
-//        dbWrapper.insertSupervisoryNodesSecond();
-//        dbWrapper.insertProducts();
-//        dbWrapper.insertProgramProducts();
-//        dbWrapper.insertFacilityApprovedProducts();
-//        dbWrapper.insertRequisitionGroup();
-//        dbWrapper.insertRequisitionGroupMembers();
 
 
         LoginPage loginPage=new LoginPage(testWebDriver);
@@ -54,7 +57,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
         templateConfigPage.configureTemplate();
 
         RolesPage rolesPage = homePage.navigateRoleAssignments();
-        List<String> userRoleList = new ArrayList<String>();
+        List<String> userRoleList = new ArrayList<>();
         userRoleList.add("Create Requisition");
 
         rolesPage.createRole("User", "User", userRoleList);
@@ -67,7 +70,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
         InitiateRnRPage initiateRnRPage = homePageUser.navigateAndInitiateRnr(date_time, program);
         initiateRnRPage.verifyRnRHeader(date_time, program);
 
-        //initiateRnRPage.calculateAndVerifyStockOnHand(10,20,5,5,1);
+        initiateRnRPage.calculateAndVerifyStockOnHand(10,10,10,1);
         initiateRnRPage.saveRnR();
 
         homePageUser.logout();

@@ -32,7 +32,6 @@ public class ProgramSupportedPersistenceHandlerTest {
         programSupportedPersistenceHandler.save(programSupported, "user");
         verify(facilityRepository).addSupportedProgram(programSupported);
         assertThat(programSupported.getModifiedBy(), is("user"));
-        assertThat(programSupported.getModifiedDate(), is(notNullValue()));
     }
 
 }

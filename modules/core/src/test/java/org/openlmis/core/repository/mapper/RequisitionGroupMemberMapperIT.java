@@ -117,7 +117,7 @@ public class RequisitionGroupMemberMapperIT {
 
         requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
         requisitionGroupMemberMapper.insert(requisitionGroupMember);
-        assertThat(requisitionGroupMemberMapper.getRequisitionGroupCodeForProgramAndFacility(requisitionGroupProgramSchedule.getProgram().getId(),
-                requisitionGroupMember.getFacility().getId()), is(REQUISITION_GROUP_CODE));
+        assertThat(requisitionGroupMemberMapper.getRGCodeForProgramAndFacility(requisitionGroupProgramSchedule.getProgram().getId(),
+          requisitionGroupMember.getFacility().getId()), is(REQUISITION_GROUP_CODE));
     }
 }

@@ -31,6 +31,7 @@ import static org.mockito.Mockito.*;
 public class RnrServiceTest {
 
   public static final Integer HIV = 1;
+  public static final int USER_ID = 1;
   public Integer facilityId = 1;
 
   @Rule
@@ -57,10 +58,10 @@ public class RnrServiceTest {
     ProgramProduct programProduct = new ProgramProduct(null, make(a(ProductBuilder.defaultProduct)), 10, true);
     facilityApprovedProducts.add(new FacilityApprovedProduct("warehouse", programProduct, 30));
     when(facilityApprovedProductService.getByFacilityAndProgram(facilityId, HIV)).thenReturn(facilityApprovedProducts);
-    Rnr rnr = rnrService.initRnr(facilityId, HIV, "user");
+    Rnr rnr = rnrService.initRnr(facilityId, HIV, 1);
     verify(facilityApprovedProductService).getByFacilityAndProgram(facilityId, HIV);
     verify(rnrRepository).insert(rnr);
-    assertThat(rnr.getLineItems().size(), is(1));
+    assertThat(rnr.getLineItems().size(), is(USER_ID));
   }
 
   @Test
@@ -68,21 +69,14 @@ public class RnrServiceTest {
     when(rnrTemplateRepository.isRnrTemplateDefined(HIV)).thenReturn(false);
     expectedException.expect(DataException.class);
     expectedException.expectMessage("Please contact Admin to define R&R template for this program");
-    Rnr rnr = rnrService.initRnr(facilityId, HIV, "user");
+    Rnr rnr = rnrService.initRnr(facilityId, HIV, 1);
     verify(facilityApprovedProductService, never()).getByFacilityAndProgram(facilityId, HIV);
     verify(rnrRepository, never()).insert(rnr);
   }
 
-  @Test @Ignore
-  public void shouldReturnExistingRnrIfAlreadyInitiated() {
-    Rnr initiatedRnr = new Rnr();
-    initiatedRnr.setId(1);
-    when(rnrTemplateRepository.isRnrTemplateDefined(HIV)).thenReturn(true);
-    when(rnrRepository.getRequisitionByFacilityAndProgram(facilityId, HIV)).thenReturn(initiatedRnr);
-    Rnr rnr = rnrService.initRnr(facilityId, HIV, "user");
-    verify(facilityApprovedProductService).getByFacilityAndProgram(facilityId, HIV);
-    verify(rnrRepository).insert(rnr);
-    assertThat(rnr, is(initiatedRnr));
+  @Test
+  public void shouldSubmitRnr() throws Exception {
+    rnrService.submit(new Rnr());
+    verify(rnrRepository).submit(new Rnr());
   }
-
 }

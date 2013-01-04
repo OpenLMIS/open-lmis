@@ -7,7 +7,6 @@ import org.openlmis.core.service.FacilityApprovedProductService;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
-import org.openlmis.rnr.domain.RnrStatus;
 import org.openlmis.rnr.repository.RnrRepository;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +32,9 @@ public class RnrService {
     }
 
     @Transactional
-    public Rnr initRnr(Integer facilityId, Integer programId, String modifiedBy) {
+    public Rnr initRnr(Integer facilityId, Integer programId, Integer modifiedBy) {
       if(!rnrTemplateRepository.isRnrTemplateDefined(programId)) throw new DataException("Please contact Admin to define R&R template for this program");
-      Rnr requisition = new Rnr(facilityId, programId, RnrStatus.INITIATED, modifiedBy);
+      Rnr requisition = new Rnr(facilityId, programId, modifiedBy);
             List<FacilityApprovedProduct> facilityApprovedProducts = facilityApprovedProductService.getByFacilityAndProgram(facilityId, programId);
             for (FacilityApprovedProduct programProduct : facilityApprovedProducts) {
                 RnrLineItem requisitionLineItem = new RnrLineItem(requisition.getId(), programProduct, modifiedBy);
@@ -60,4 +59,8 @@ public class RnrService {
     public List<LossesAndAdjustmentsType> getLossesAndAdjustmentsTypes() {
         return rnrRepository.getLossesAndAdjustmentsTypes();
     }
+
+  public void submit(Rnr rnr) {
+    rnrRepository.submit(rnr);
+  }
 }

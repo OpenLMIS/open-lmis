@@ -21,75 +21,72 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext-requisition.xml")
-@TransactionConfiguration(defaultRollback=true)
+@TransactionConfiguration(defaultRollback = true)
 @Transactional
 public class RnrMapperIT {
 
-    public static final Integer HIV = 1;
-    Facility facility;
+  public static final int MODIFIED_BY = 1;
+  public static final Integer HIV = MODIFIED_BY;
+  public static final int USER_2 = 2;
+  Facility facility;
 
-    @Autowired
-    private FacilityMapper facilityMapper;
-    @Autowired
-    private ProgramSupportedMapper programSupportedMapper;
+  @Autowired
+  private FacilityMapper facilityMapper;
+  @Autowired
+  private RnrMapper rnrMapper;
+  private Rnr requisition;
 
-    @Autowired
-    private RnrMapper rnrMapper;
+  @Before
+  public void setUp() {
+    facility = make(a(FacilityBuilder.defaultFacility));
+    facilityMapper.insert(facility);
+    requisition = new Rnr(facility.getId(), HIV, MODIFIED_BY);
+    requisition.setStatus(INITIATED);
+  }
 
-    @Before
-    public void setUp() {
-        facility = make(a(FacilityBuilder.defaultFacility));
-        facilityMapper.insert(facility);
-    }
+  @Test
+  public void shouldSetRequisitionId() {
+    rnrMapper.insert(requisition);
+    assertThat(requisition.getId(), is(notNullValue()));
+  }
 
-    @Test
-    public void shouldReturnRequisitionId() {
-        Rnr requisition = new Rnr(facility.getId(), HIV, RnrStatus.INITIATED, "user");
-        rnrMapper.insert(requisition);
-        assertThat(requisition.getId(), is(notNullValue()));
-    }
+  @Test
+  public void shouldReturnRequisitionById() {
+    rnrMapper.insert(requisition);
+    Rnr fetchedRequisition = rnrMapper.getRequisitionById(requisition.getId());
+    assertThat(fetchedRequisition.getId(), is(requisition.getId()));
+    assertThat(fetchedRequisition.getProgramId(), is(equalTo(HIV)));
+    assertThat(fetchedRequisition.getFacilityId(), is(equalTo(facility.getId())));
+    assertThat(fetchedRequisition.getModifiedBy(), is(equalTo(MODIFIED_BY)));
+    assertThat(fetchedRequisition.getStatus(), is(equalTo(INITIATED)));
+  }
 
-    @Test
-    public void shouldReturnRequisitionById() {
-        Rnr requisition = new Rnr(facility.getId(), HIV, RnrStatus.INITIATED, "user");
-        rnrMapper.insert(requisition);
-        Rnr fetchedRequisition = rnrMapper.getRequisitionById(requisition.getId());
-        assertThat(fetchedRequisition.getId(), is(requisition.getId()));
-        assertThat(fetchedRequisition.getProgramId(), is(equalTo(HIV)));
-        assertThat(fetchedRequisition.getFacilityId(), is(equalTo(facility.getId())));
-        assertThat(fetchedRequisition.getModifiedBy(), is(equalTo("user")));
-        assertThat(fetchedRequisition.getStatus(), is(equalTo(RnrStatus.INITIATED)));
-    }
+  @Test
+  public void shouldUpdateRequisition() {
+    rnrMapper.insert(requisition);
+    requisition.setModifiedBy(USER_2);
+    requisition.setFullSupplyItemsSubmittedCost(100.5F);
+    requisition.setTotalSubmittedCost(100.5F);
 
-    @Test
-    public void shouldUpdateRequisition() {
-        Rnr requisition = new Rnr(facility.getId(), HIV, RnrStatus.INITIATED, "user");
-        rnrMapper.insert(requisition);
-        requisition.setModifiedBy("user1");
-        requisition.setStatus(RnrStatus.CREATED);
-		requisition.setFullSupplyItemsSubmittedCost(100.5F);
-		requisition.setTotalSubmittedCost(100.5F);
+    rnrMapper.update(requisition);
 
-        rnrMapper.update(requisition);
+    Rnr updatedRequisition = rnrMapper.getRequisitionById(requisition.getId());
 
-        Rnr updatedRequisition = rnrMapper.getRequisitionById(requisition.getId());
+    assertThat(updatedRequisition.getId(), is(requisition.getId()));
+    assertThat(updatedRequisition.getModifiedBy(), is(equalTo(USER_2)));
+    assertThat(updatedRequisition.getFullSupplyItemsSubmittedCost(), is(100.5F));
+    assertThat(updatedRequisition.getTotalSubmittedCost(), is(100.5F));
+  }
 
-        assertThat(updatedRequisition.getId(), is(requisition.getId()));
-        assertThat(updatedRequisition.getModifiedBy(), is(equalTo("user1")));
-        assertThat(updatedRequisition.getStatus(), is(equalTo(RnrStatus.CREATED)));
-		assertThat(updatedRequisition.getFullSupplyItemsSubmittedCost(), is(100.5F));
-		assertThat(updatedRequisition.getTotalSubmittedCost(), is(100.5F));
-    }
-
-    @Test
-    public void shouldReturnRequisitionByFacilityAndProgramAndIfExists() {
-        Rnr requisition = new Rnr(facility.getId(), HIV, RnrStatus.INITIATED, "user");
-        rnrMapper.insert(requisition);
-        Rnr rnr = rnrMapper.getRequisitionByFacilityAndProgram(facility.getId(), HIV);
-        assertThat(rnr.getId(), is(requisition.getId()));
-    }
+  @Test
+  public void shouldReturnRequisitionByFacilityAndProgramAndIfExists() {
+    rnrMapper.insert(requisition);
+    Rnr rnr = rnrMapper.getRequisitionByFacilityAndProgram(facility.getId(), HIV);
+    assertThat(rnr.getId(), is(requisition.getId()));
+  }
 
 }

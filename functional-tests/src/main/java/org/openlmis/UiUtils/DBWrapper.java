@@ -12,7 +12,6 @@ public class DBWrapper {
 
         final Properties props = new Properties();
 
-        System.out.println(System.getProperty("user.dir") + "/src/main/resources/config.properties");
         props.load(new FileInputStream(System.getProperty("user.dir") + "/src/main/resources/config.properties"));
         baseUrl = props.getProperty("baseUrl");
         dbUrl = props.getProperty("dbUrl");
@@ -95,6 +94,12 @@ public class DBWrapper {
                 "('F1756','Village Dispensary','IT department','G7645',9876234981,'fax','A','B',1,1,333,22.1,1.2,3.3,2,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/1887','TRUE','fc','TRUE'),\n" +
                 "('F1757','Central Hospital','IT department','G7646',9876234981,'fax','A','B',1,2,333,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','TRUE','fc','TRUE');\n", "alter");
 
+        dbWrapper.dbConnection("insert into programs_supported(facilityId, programId, active, modifiedBy) VALUES\n" +
+            "((SELECT id FROM facilities WHERE code = 'F1756'), 1, true, 'Admin123'),\n" +
+            "((SELECT id FROM facilities WHERE code = 'F1756'), 2, true, 'Admin123'),\n" +
+            "((SELECT id FROM facilities WHERE code = 'F1757'), 1, true, 'Admin123'),\n" +
+            "((SELECT id FROM facilities WHERE code = 'F1757'), 2, true, 'Admin123');","alter");
+
     }
 
 
@@ -104,8 +109,6 @@ public class DBWrapper {
 
     }
 
-
-    //delete from role_assignments where userid not in (1);
 
     public void deleteData() throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();
@@ -122,6 +125,7 @@ public class DBWrapper {
         dbwrapper.dbConnection("delete from supervisory_nodes;", "alter");
         dbwrapper.dbConnection("delete from requisition_group_members;", "alter");
         dbwrapper.dbConnection("delete from facilities;", "alter");
+        dbwrapper.dbConnection("delete from programs_supported;", "alter");
         dbwrapper.dbConnection("delete from program_rnr_columns;", "alter");
         dbwrapper.dbConnection("delete from requisition_groups;", "alter");
         dbwrapper.dbConnection("delete from requisition_group_members;", "alter");
@@ -243,7 +247,9 @@ public class DBWrapper {
         }
         dbwrapper.dbConnection("insert into products\n" +
                 "(code,    alternateItemCode,  manufacturer,       manufacturerCode,  manufacturerBarcode,   mohBarcode,   gtin,   type,         primaryName,    fullName,       genericName,    alternateName,    description,      strength,    formId,  dosageUnitId, dispensingUnit,  dosesPerDispensingUnit,  packSize,  alternatePackSize,  storeRefrigerated,   storeRoomTemperature,   hazardous,  flammable,   controlledSubstance,  lightSensitive,  approvedByWho,  contraceptiveCyp,  packLength,  packWidth, packHeight,  packWeight,  packsPerCarton, cartonLength,  cartonWidth,   cartonHeight, cartonsPerPallet,  expectedShelfLife,  specialStorageInstructions, specialTransportInstructions, active,  fullSupply, tracer,   packRoundingThreshold,  roundToZero,  archived) values\n" +
-                "('P100',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     1,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     TRUE,       TRUE,         1,                    FALSE,      TRUE)\n;", "alter");
+                "('P100',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     TRUE,       TRUE,         1,                    FALSE,      TRUE),\n" +
+                "('P101',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     TRUE,       TRUE,         1,                    FALSE,      TRUE),\n" +
+                "('P102',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     TRUE,       TRUE,         1,                    TRUE,      TRUE);\n","alter");
     }
 
     public void insertProgramProducts() throws SQLException, IOException {
@@ -255,8 +261,10 @@ public class DBWrapper {
             dbwrapper.dbConnection("delete from program_products;", "alter");
 
         }
-        dbwrapper.dbConnection("insert into program_products(programId, productId, dosesPerMonth, active) values\n" +
-                "(1, (Select id from products order by modifiedDate DESC limit 1), 30, true);", "alter");
+        dbwrapper.dbConnection("INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active) VALUES\n" +
+                "(1, (SELECT id from products WHERE code = 'P100'), 30, 12.5, true),\n" +
+                "(1, (SELECT id from products WHERE code = 'P101'), 30, 50, true),\n" +
+                "(1, (SELECT id from products WHERE code = 'P102'), 30, 0, true);", "alter");
     }
 
     public void insertFacilityApprovedProducts() throws SQLException, IOException {
@@ -270,5 +278,40 @@ public class DBWrapper {
         }
         dbwrapper.dbConnection("insert into facility_approved_products(facilityTypeId, programProductId, maxMonthsOfStock) values\n" +
                 "((select id from facility_types where name='Lvl3 Hospital'), (select id from program_products where programId=(Select id from programs order by modifiedDate DESC limit 1) and productId=(Select id from products order by modifiedDate DESC limit 1)), 3);", "alter");
+//                "((select id from facility_types where name='Lvl3 Hospital'), (select id from program_products where programId=(Select id from programs order by modifiedDate DESC limit 1) and productId=(Select id from products order by modifiedDate DESC limit 1)), 3),\n" +
+//                "((select id from facility_types where name='Lvl3 Hospital'), (select id from program_products where programId=(Select id from programs order by modifiedDate DESC limit 1) and productId=(Select id from products order by modifiedDate DESC limit 1)), 3);","alter");
+
+//        dbwrapper.dbConnection("insert into facility_approved_products(facilityTypeId, programProductId, maxMonthsOfStock) values\n" +
+//                "((select id from facility_types where name='Lvl3 Hospital'), (select id from program_products where programId=(Select id from programs order by modifiedDate DESC limit 1) and productId=(Select id from products order by modifiedDate DESC limit 1)), 3);", "alter");
     }
+
+    public void insertSchedules() throws SQLException, IOException {
+        DBWrapper dbwrapper = new DBWrapper();
+        ResultSet rs = dbwrapper.dbConnection("Select id from processing_schedules;", "select");
+
+        if (rs.next()) {
+            dbwrapper.dbConnection("delete from processing_periods;", "alter");
+            dbwrapper.dbConnection("delete from processing_schedules;", "alter");
+
+        }
+        dbwrapper.dbConnection("INSERT INTO processing_schedules(code, name, description) values('Q1stM', 'QuarterMonthly', 'QuarterMonth');", "alter");
+        dbwrapper.dbConnection("INSERT INTO processing_schedules(code, name, description) values('M', 'Monthly', 'Month');", "alter");
+    }
+
+    public void insertProcessingPeriods() throws SQLException, IOException {
+        DBWrapper dbwrapper = new DBWrapper();
+        ResultSet rs = dbwrapper.dbConnection("Select id from processing_periods;", "select");
+
+        if (rs.next()) {
+
+            dbwrapper.dbConnection("delete from processing_periods;", "alter");
+
+        }
+        dbwrapper.dbConnection("INSERT INTO processing_periods\n" +
+                "(name, description, startDate, endDate, scheduleId, modifiedBy) VALUES\n" +
+                "('Period1', 'first period',  '2012-12-01', '2013-01-15', (SELECT id FROM processing_schedules LIMIT 1), (SELECT id FROM users LIMIT 1)),\n" +
+                "('Period2', 'second period', '2013-01-16', '2013-04-30', (SELECT id FROM processing_schedules LIMIT 1), (SELECT id FROM users LIMIT 1));", "alter");
+
+    }
+
 }

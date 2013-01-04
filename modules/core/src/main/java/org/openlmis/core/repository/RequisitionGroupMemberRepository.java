@@ -58,11 +58,14 @@ public class RequisitionGroupMemberRepository {
             Program duplicateProgram = programMapper.getById(commonProgramsId.get(0));
             duplicateProgram.setId(commonProgramsId.get(0));
             throw new DataException("Facility " + requisitionGroupMember.getFacility().getCode() + " is already assigned to Requisition Group " +
-                    requisitionGroupMemberMapper.getRequisitionGroupCodeForProgramAndFacility(duplicateProgram.getId(), requisitionGroupMember.getFacility().getId())
+                    requisitionGroupMemberMapper.getRGCodeForProgramAndFacility(duplicateProgram.getId(), requisitionGroupMember.getFacility().getId())
                     + " running same program " + duplicateProgram.getCode());
         }
 
         requisitionGroupMemberMapper.insert(requisitionGroupMember);
     }
 
+  public String getRGCodeForProgramAndFacility(int facilityId, int programId) {
+    return requisitionGroupMemberMapper.getRGCodeForProgramAndFacility(facilityId,programId);
+  }
 }

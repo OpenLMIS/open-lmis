@@ -1,42 +1,6 @@
 <div ng-controller="SchedulePeriodController">
-
-  <h2>Periods
-    <a href="#/list" class="pull-right btn btn-primary">Back to Schedules</a>
+  <h2>
+    Schedule: {{$scope.$parent.$parent.schedule.name}}
   </h2>
-
-    <span>
-      <div class="alert alert-error" id="saveFailMessage" ng-model="error" ng-show="error">
-        {{error}}
-      </div>
-      <div class="alert alert-success" id="saveSuccessMsgDiv" ng-model="message" ng-show="message">
-        {{message}}
-      </div>
-
-      <div>
-        <table class="table table-striped table-bordered">
-          <thead>
-          <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Start date</th>
-            <th>End date</th>
-            <th>Total days</th>
-            <th>Number of months</th>
-            <th>&nbsp;</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr ng-repeat="period in periodList">
-            <td>{{period.name}}</td>
-            <td>{{period.description}}</td>
-            <td>{{period.startDate | date:'dd/MM/yyyy'}}</td>
-            <td>{{period.endDate | date:'dd/MM/yyyy'}}</td>
-            <td>{{calculateDays(period.startDate, period.endDate)}}</td>
-            <td></td>
-            <td></td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-    </span>
+  <ng-include src="'/public/pages/admin/schedule/period/partials/list.html'"></ng-include>
 </div>

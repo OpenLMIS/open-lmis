@@ -61,4 +61,8 @@ public class ProcessingScheduleController extends BaseController {
       return OpenLmisResponse.error(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
   }
+
+  public ResponseEntity<OpenLmisResponse> get(Integer id) {
+    return OpenLmisResponse.response(SCHEDULE, processingScheduleService.get(id));
+  }
 }

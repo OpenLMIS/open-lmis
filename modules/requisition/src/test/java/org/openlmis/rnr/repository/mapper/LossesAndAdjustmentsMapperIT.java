@@ -24,6 +24,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext-requisition.xml")
@@ -32,7 +33,8 @@ import static org.junit.Assert.assertThat;
 public class LossesAndAdjustmentsMapperIT {
 
 
-  public static final Integer HIV = 1;
+  public static final int MODIFIED_BY = 1;
+  public static final Integer HIV = MODIFIED_BY;
   @Autowired
   LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
 
@@ -67,10 +69,11 @@ public class LossesAndAdjustmentsMapperIT {
     Facility facility = make(a(FacilityBuilder.defaultFacility));
     facilityMapper.insert(facility);
 
-    Rnr requisition = new Rnr(facility.getId(), HIV, RnrStatus.INITIATED, "user");
+    Rnr requisition = new Rnr(facility.getId(), HIV, MODIFIED_BY);
+    requisition.setStatus(INITIATED);
     rnrMapper.insert(requisition);
 
-    rnrLineItem = new RnrLineItem(requisition.getId(), facilityApprovedProduct, "user");
+    rnrLineItem = new RnrLineItem(requisition.getId(), facilityApprovedProduct, MODIFIED_BY);
     rnrLineItemMapper.insert(rnrLineItem);
     lossAndAdjustment = new LossesAndAdjustments();
     lossesAndAdjustmentsType = new LossesAndAdjustmentsType();
@@ -86,7 +89,7 @@ public class LossesAndAdjustmentsMapperIT {
     List<LossesAndAdjustments> lossesAndAdjustmentsList = lossesAndAdjustmentsMapper.getByRnrLineItem(rnrLineItem.getId());
     LossesAndAdjustments lineItemLossAndAdjustment = lossesAndAdjustmentsList.get(0);
 
-    assertThat(lossesAndAdjustmentsList.size(), is(1));
+    assertThat(lossesAndAdjustmentsList.size(), is(MODIFIED_BY));
     assertThat(lineItemLossAndAdjustment.getQuantity(), is(lossAndAdjustment.getQuantity()));
     assertThat(lineItemLossAndAdjustment.getType().getName(), is(lossAndAdjustment.getType().getName()));
   }
@@ -102,8 +105,8 @@ public class LossesAndAdjustmentsMapperIT {
   public void shouldReturnAllLossesAndAdjustmentsTypesAccordingToDisplayOrder() {
     List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes = lossesAndAdjustmentsMapper.getLossesAndAdjustmentsTypes();
     assertThat(lossesAndAdjustmentsTypes.size(), is(9));
-    assertThat(lossesAndAdjustmentsTypes.get(0).getDisplayOrder(), is(1));
-    assertThat(lossesAndAdjustmentsTypes.get(1).getDisplayOrder(), is(2));
+    assertThat(lossesAndAdjustmentsTypes.get(0).getDisplayOrder(), is(MODIFIED_BY));
+    assertThat(lossesAndAdjustmentsTypes.get(MODIFIED_BY).getDisplayOrder(), is(2));
     assertThat(lossesAndAdjustmentsTypes.get(2).getDisplayOrder(), is(3));
   }
 
