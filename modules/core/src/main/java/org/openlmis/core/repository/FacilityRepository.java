@@ -153,6 +153,7 @@ public class FacilityRepository {
 
     public void addSupportedProgram(ProgramSupported programSupported) {
         programSupported.setFacilityId(facilityMapper.getIdForCode(programSupported.getFacilityCode()));
+        programSupported.setProgramId(programMapper.getIdForCode(programSupported.getProgramCode()));
         insertSupportedProgram(programSupported);
     }
 
