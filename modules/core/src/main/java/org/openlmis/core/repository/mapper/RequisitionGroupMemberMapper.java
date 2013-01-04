@@ -33,7 +33,7 @@ public interface RequisitionGroupMemberMapper {
             "FROM requisition_groups rg, requisition_group_program_schedules rgps,requisition_group_members rgm " +
             "WHERE RG.id = rgps.requisitionGroupId " +
             "AND rgps.requisitionGroupId = rgm.requisitionGroupId " +
-            "AND rgps.programId = #{commonProgramId} " +
+            "AND rgps.programId = #{programId} " +
             "AND RGM.facilityId = #{facilityId}")
-    String getRequisitionGroupCodeForProgramAndFacility(@Param(value = "commonProgramId") Integer commonProgramId,@Param(value = "facilityId") Integer facilityId);
+    String getRGCodeForProgramAndFacility(@Param(value = "programId") Integer programId, @Param(value = "facilityId") Integer facilityId);
 }

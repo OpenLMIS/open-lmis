@@ -38,7 +38,7 @@ public class RnrController extends BaseController {
                                                       @PathVariable("programId") Integer programId,
                                                       HttpServletRequest request) {
     try {
-      return OpenLmisResponse.response(RNR, rnrService.initRnr(facilityId, programId, loggedInUser(request)));
+      return OpenLmisResponse.response(RNR, rnrService.initRnr(facilityId, programId, loggedInUserId(request)));
     } catch (DataException e) {
       return OpenLmisResponse.error(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
@@ -55,7 +55,7 @@ public class RnrController extends BaseController {
     }
   }
 
-  @RequestMapping(value = "/facility/{facilityId}/program/{programId}/rnr", method = RequestMethod.PUT, headers = "Accept=application/json")
+  @RequestMapping(value = "/facility/{facilityId}/program/{programId}/rnr/", method = RequestMethod.PUT, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
   public void saveRnr(@RequestBody Rnr rnr,
                       @PathVariable("facilityId") int facilityId,
@@ -63,14 +63,21 @@ public class RnrController extends BaseController {
                       HttpServletRequest request) {
     rnr.setFacilityId(facilityId);
     rnr.setProgramId(programId);
-    rnr.setModifiedBy(loggedInUser(request));
+    rnr.setModifiedBy(loggedInUserId(request));
     rnrService.save(rnr);
   }
 
-    @RequestMapping(value = "/rnr/lossAndAdjustments/reference-data", method = RequestMethod.GET, headers = "Accept=application/json")
-    @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
-    public Map getReferenceData() {
-        RnrReferenceData referenceData = new RnrReferenceData();
-        return referenceData.addLossesAndAdjustmentsTypes(rnrService.getLossesAndAdjustmentsTypes()).get();
-    }
+  @RequestMapping(value = "/facility/{facilityId}/program/{programId}/rnr/submit", method = RequestMethod.POST, headers = "Accept=application/json")
+  @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
+  public void submit(Rnr rnr, HttpServletRequest request) {
+    rnr.setModifiedBy(loggedInUserId(request));
+    rnrService.submit(rnr);
+  }
+
+  @RequestMapping(value = "/rnr/lossAndAdjustments/reference-data", method = RequestMethod.GET, headers = "Accept=application/json")
+  @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
+  public Map getReferenceData() {
+    RnrReferenceData referenceData = new RnrReferenceData();
+    return referenceData.addLossesAndAdjustmentsTypes(rnrService.getLossesAndAdjustmentsTypes()).get();
+  }
 }

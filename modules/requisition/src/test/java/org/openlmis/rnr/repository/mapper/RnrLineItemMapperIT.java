@@ -30,106 +30,108 @@ import static org.openlmis.core.builder.ProgramBuilder.PROGRAM_ID;
 @TransactionConfiguration(defaultRollback = true)
 public class RnrLineItemMapperIT {
 
-    @Autowired
-    private FacilityMapper facilityMapper;
-    @Autowired
-    private ProductMapper productMapper;
-    @Autowired
-    private ProgramProductMapper programProductMapper;
-    @Autowired
-    private FacilityApprovedProductMapper facilityApprovedProductMapper;
-    @Autowired
-    private RnrMapper rnrMapper;
-    @Autowired
-    private RnrLineItemMapper rnrLineItemMapper;
+  public static final int MODIFIED_BY = 1;
+  @Autowired
+  private FacilityMapper facilityMapper;
+  @Autowired
+  private ProductMapper productMapper;
+  @Autowired
+  private ProgramProductMapper programProductMapper;
+  @Autowired
+  private FacilityApprovedProductMapper facilityApprovedProductMapper;
+  @Autowired
+  private RnrMapper rnrMapper;
+  @Autowired
+  private RnrLineItemMapper rnrLineItemMapper;
 
-    @Autowired
-    private ProgramMapper programMapper;
+  @Autowired
+  private ProgramMapper programMapper;
 
-    @Autowired
-    private LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
+  @Autowired
+  private LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
 
-    FacilityApprovedProduct facilityApprovedProduct;
-    Facility facility;
+  FacilityApprovedProduct facilityApprovedProduct;
+  Facility facility;
 
-    @Before
-    public void setUp() {
-        Product product = make(a(ProductBuilder.defaultProduct));
-        Program program = make(a(ProgramBuilder.defaultProgram));
-        programMapper.insert(program);
-        ProgramProduct programProduct = new ProgramProduct(program, product, 30, true, 12.5F);
-        facility = make(a(defaultFacility));
-        facilityMapper.insert(facility);
-        productMapper.insert(product);
-        programProductMapper.insert(programProduct);
-        facilityApprovedProduct = new FacilityApprovedProduct("warehouse", programProduct, 3);
-        facilityApprovedProductMapper.insert(facilityApprovedProduct);
-    }
+  @Before
+  public void setUp() {
+    Product product = make(a(ProductBuilder.defaultProduct));
+    Program program = make(a(ProgramBuilder.defaultProgram));
+    programMapper.insert(program);
+    ProgramProduct programProduct = new ProgramProduct(program, product, 30, true, 12.5F);
+    facility = make(a(defaultFacility));
+    facilityMapper.insert(facility);
+    productMapper.insert(product);
+    programProductMapper.insert(programProduct);
+    facilityApprovedProduct = new FacilityApprovedProduct("warehouse", programProduct, 3);
+    facilityApprovedProductMapper.insert(facilityApprovedProduct);
+  }
 
-    @Test
-    public void shouldInsertRequisitionLineItem() {
-        Rnr rnr = new Rnr(facility.getId(), PROGRAM_ID, RnrStatus.INITIATED, "user");
-        rnrMapper.insert(rnr);
-        RnrLineItem rnrLineItem = new RnrLineItem(rnr.getId(), facilityApprovedProduct, "user");
-        rnrLineItemMapper.insert(rnrLineItem);
-        assertNotNull(rnrLineItem.getId());
-    }
+  @Test
+  public void shouldInsertRequisitionLineItem() {
+    Rnr rnr = new Rnr(facility.getId(), PROGRAM_ID, MODIFIED_BY);
+    rnrMapper.insert(rnr);
+    RnrLineItem rnrLineItem = new RnrLineItem(rnr.getId(), facilityApprovedProduct, MODIFIED_BY);
+    rnrLineItemMapper.insert(rnrLineItem);
+    assertNotNull(rnrLineItem.getId());
+  }
 
-    @Test
-    public void shouldReturnRnrLineItemsByRnrId() {
-        Rnr rnr = new Rnr(facility.getId(), PROGRAM_ID, RnrStatus.INITIATED, "user");
-        rnrMapper.insert(rnr);
-        RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityApprovedProduct, "user");
-        lineItem.setPacksToShip(20);
-        rnrLineItemMapper.insert(lineItem);
+  @Test
+  public void shouldReturnRnrLineItemsByRnrId() {
+    Rnr rnr = new Rnr(facility.getId(), PROGRAM_ID, MODIFIED_BY);
+    rnrMapper.insert(rnr);
+    RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityApprovedProduct, MODIFIED_BY);
+    lineItem.setPacksToShip(20);
+    rnrLineItemMapper.insert(lineItem);
 
-        LossesAndAdjustments lossesAndAdjustmentsClinicReturn = new LossesAndAdjustments();
-        LossesAndAdjustmentsType lossesAndAdjustmentsTypeClinicReturn = new LossesAndAdjustmentsType();
-        lossesAndAdjustmentsTypeClinicReturn.setName("CLINIC_RETURN");
-        lossesAndAdjustmentsClinicReturn.setType(lossesAndAdjustmentsTypeClinicReturn);
-        lossesAndAdjustmentsClinicReturn.setQuantity(20);
+    LossesAndAdjustments lossesAndAdjustmentsClinicReturn = new LossesAndAdjustments();
+    LossesAndAdjustmentsType lossesAndAdjustmentsTypeClinicReturn = new LossesAndAdjustmentsType();
+    lossesAndAdjustmentsTypeClinicReturn.setName("CLINIC_RETURN");
+    lossesAndAdjustmentsClinicReturn.setType(lossesAndAdjustmentsTypeClinicReturn);
+    lossesAndAdjustmentsClinicReturn.setQuantity(20);
 
-        LossesAndAdjustments lossesAndAdjustmentsTransferIn = new LossesAndAdjustments();
-        LossesAndAdjustmentsType lossesAndAdjustmentsTypeTransferIn = new LossesAndAdjustmentsType();
-        lossesAndAdjustmentsTypeTransferIn.setName("TRANSFER_IN");
-        lossesAndAdjustmentsTransferIn.setType(lossesAndAdjustmentsTypeTransferIn);
-        lossesAndAdjustmentsTransferIn.setQuantity(45);
+    LossesAndAdjustments lossesAndAdjustmentsTransferIn = new LossesAndAdjustments();
+    LossesAndAdjustmentsType lossesAndAdjustmentsTypeTransferIn = new LossesAndAdjustmentsType();
+    lossesAndAdjustmentsTypeTransferIn.setName("TRANSFER_IN");
+    lossesAndAdjustmentsTransferIn.setType(lossesAndAdjustmentsTypeTransferIn);
+    lossesAndAdjustmentsTransferIn.setQuantity(45);
 
-        lossesAndAdjustmentsMapper.insert(lineItem, lossesAndAdjustmentsClinicReturn);
-        lossesAndAdjustmentsMapper.insert(lineItem, lossesAndAdjustmentsTransferIn);
+    lossesAndAdjustmentsMapper.insert(lineItem, lossesAndAdjustmentsClinicReturn);
+    lossesAndAdjustmentsMapper.insert(lineItem, lossesAndAdjustmentsTransferIn);
 
-        List<RnrLineItem> rnrLineItems = rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId());
+    List<RnrLineItem> rnrLineItems = rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId());
 
-        assertThat(rnrLineItems.size(), is(1));
-        RnrLineItem rnrLineItem = rnrLineItems.get(0);
-        assertThat(rnrLineItem.getRnrId(), is(rnr.getId()));
-        assertThat(rnrLineItem.getDosesPerMonth(), is(30));
-        assertThat(rnrLineItem.getDosesPerDispensingUnit(), is(10));
-        assertThat(rnrLineItem.getProduct(), is("Primary Name Tablet strength mg"));
-        assertThat(rnrLineItem.getPacksToShip(), is(20));
-        assertThat(rnrLineItem.getDispensingUnit(), is("Strip"));
-        assertThat(rnrLineItem.getRoundToZero(), is(true));
-        assertThat(rnrLineItem.getPackSize(), is(10));
-        assertThat(rnrLineItem.getPrice(), is(12.5F));
-    }
+    assertThat(rnrLineItems.size(), is(1));
+    RnrLineItem rnrLineItem = rnrLineItems.get(0);
+    assertThat(rnrLineItem.getRnrId(), is(rnr.getId()));
+    assertThat(rnrLineItem.getDosesPerMonth(), is(30));
+    assertThat(rnrLineItem.getDosesPerDispensingUnit(), is(10));
+    assertThat(rnrLineItem.getProduct(), is("Primary Name Tablet strength mg"));
+    assertThat(rnrLineItem.getPacksToShip(), is(20));
+    assertThat(rnrLineItem.getDispensingUnit(), is("Strip"));
+    assertThat(rnrLineItem.getRoundToZero(), is(true));
+    assertThat(rnrLineItem.getPackSize(), is(10));
+    assertThat(rnrLineItem.getPrice(), is(12.5F));
+  }
 
-    @Test
-    public void shouldUpdateRnrLineItem() {
-        Rnr rnr = new Rnr(facility.getId(), PROGRAM_ID, RnrStatus.INITIATED, "user");
-        rnrMapper.insert(rnr);
-        RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityApprovedProduct, "user");
-        rnrLineItemMapper.insert(lineItem);
-        lineItem.setModifiedBy("user1");
-        lineItem.setBeginningBalance(43);
-        lineItem.setTotalLossesAndAdjustments(20);
-        lineItem.setReasonForRequestedQuantity("Quantity Requested more in liu of coming rains");
-        int updateCount = rnrLineItemMapper.update(lineItem);
-        assertThat(updateCount, is(1));
-        List<RnrLineItem> rnrLineItems = rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId());
+  @Test
+  public void shouldUpdateRnrLineItem() {
+    Rnr rnr = new Rnr(facility.getId(), PROGRAM_ID, MODIFIED_BY);
+    rnrMapper.insert(rnr);
+    RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityApprovedProduct, MODIFIED_BY);
+    rnrLineItemMapper.insert(lineItem);
+    int anotherModifiedBy = 2;
+    lineItem.setModifiedBy(anotherModifiedBy);
+    lineItem.setBeginningBalance(43);
+    lineItem.setTotalLossesAndAdjustments(20);
+    lineItem.setReasonForRequestedQuantity("Quantity Requested more in liu of coming rains");
+    int updateCount = rnrLineItemMapper.update(lineItem);
+    assertThat(updateCount, is(1));
+    List<RnrLineItem> rnrLineItems = rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId());
 
-        assertThat(rnrLineItems.get(0).getBeginningBalance(), is(43));
-        assertThat(rnrLineItems.get(0).getTotalLossesAndAdjustments(), is(20));
-        assertThat(rnrLineItems.get(0).getProduct(), is("Primary Name Tablet strength mg"));
-        assertThat(rnrLineItems.get(0).getReasonForRequestedQuantity(), is("Quantity Requested more in liu of coming rains"));
-    }
+    assertThat(rnrLineItems.get(0).getBeginningBalance(), is(43));
+    assertThat(rnrLineItems.get(0).getTotalLossesAndAdjustments(), is(20));
+    assertThat(rnrLineItems.get(0).getProduct(), is("Primary Name Tablet strength mg"));
+    assertThat(rnrLineItems.get(0).getReasonForRequestedQuantity(), is("Quantity Requested more in liu of coming rains"));
+  }
 }

@@ -15,51 +15,58 @@ import java.util.List;
 @Component
 @NoArgsConstructor
 public class SupervisoryNodeRepository {
-    private SupervisoryNodeMapper supervisoryNodeMapper;
-    private FacilityRepository facilityRepository;
+  private SupervisoryNodeMapper supervisoryNodeMapper;
+  private FacilityRepository facilityRepository;
+  private RequisitionGroupMemberRepository requisitionGroupMemberRepository;
 
-    @Autowired
-    public SupervisoryNodeRepository(SupervisoryNodeMapper supervisoryNodeMapper, FacilityRepository facilityRepository) {
-        this.supervisoryNodeMapper = supervisoryNodeMapper;
-        this.facilityRepository = facilityRepository;
+  @Autowired
+  public SupervisoryNodeRepository(SupervisoryNodeMapper supervisoryNodeMapper, FacilityRepository facilityRepository, RequisitionGroupMemberRepository requisitionGroupMemberRepository) {
+    this.supervisoryNodeMapper = supervisoryNodeMapper;
+    this.facilityRepository = facilityRepository;
+    this.requisitionGroupMemberRepository = requisitionGroupMemberRepository;
+  }
+
+  public void save(SupervisoryNode supervisoryNode) {
+    supervisoryNode.getFacility().setId(facilityRepository.getIdForCode(supervisoryNode.getFacility().getCode()));
+    validateParentNode(supervisoryNode);
+
+    try {
+      supervisoryNodeMapper.insert(supervisoryNode);
+    } catch (DuplicateKeyException e) {
+      throw new DataException("Duplicate SupervisoryNode Code");
     }
+  }
 
-    public void save(SupervisoryNode supervisoryNode) {
-        supervisoryNode.getFacility().setId(facilityRepository.getIdForCode(supervisoryNode.getFacility().getCode()));
-        validateParentNode(supervisoryNode);
+  public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Integer userId, Integer programId, Right right) {
+    return supervisoryNodeMapper.getAllSupervisoryNodesInHierarchyBy(userId, programId, right);
+  }
 
-        try {
-            supervisoryNodeMapper.insert(supervisoryNode);
-        } catch (DuplicateKeyException e) {
-            throw new DataException("Duplicate SupervisoryNode Code");
-        }
+  public Integer getIdForCode(String code) {
+    Integer supervisoryNodeId = supervisoryNodeMapper.getIdForCode(code);
+    if (supervisoryNodeId == null)
+      throw new DataException("Invalid SupervisoryNode Code");
+
+    return supervisoryNodeId;
+  }
+
+  public Integer getSupervisoryNodeParentId(Integer supervisoryNodeId) {
+    SupervisoryNode parent = supervisoryNodeMapper.getSupervisoryNode(supervisoryNodeId).getParent();
+    return parent == null ? null : parent.getId();
+  }
+
+  private void validateParentNode(SupervisoryNode supervisoryNode) {
+    SupervisoryNode parentNode = supervisoryNode.getParent();
+    if (parentNode != null) {
+      try {
+        parentNode.setId(getIdForCode(parentNode.getCode()));
+      } catch (DataException e) {
+        throw new DataException("Supervisory Node Parent does not exist");
+      }
     }
+  }
 
-    public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Integer userId, Integer programId, Right right) {
-        return supervisoryNodeMapper.getAllSupervisoryNodesInHierarchyBy(userId, programId, right);
-    }
-
-    public Integer getIdForCode(String code) {
-        Integer supervisoryNodeId = supervisoryNodeMapper.getIdForCode(code);
-        if (supervisoryNodeId == null)
-            throw new DataException("Invalid SupervisoryNode Code");
-
-        return supervisoryNodeId;
-    }
-
-    public Integer getSupervisoryNodeParentId(Integer supervisoryNodeId) {
-        SupervisoryNode parent = supervisoryNodeMapper.getSupervisoryNode(supervisoryNodeId).getParent();
-        return parent == null ? null : parent.getId();
-    }
-
-    private void validateParentNode(SupervisoryNode supervisoryNode) {
-        SupervisoryNode parentNode = supervisoryNode.getParent();
-        if (parentNode != null) {
-            try {
-                parentNode.setId(getIdForCode(parentNode.getCode()));
-            } catch (DataException e) {
-                throw new DataException("Supervisory Node Parent does not exist");
-            }
-        }
-    }
+  public SupervisoryNode getFor(Integer facilityId, Integer programId) {
+    String rgCode = requisitionGroupMemberRepository.getRGCodeForProgramAndFacility(facilityId, programId);
+    return supervisoryNodeMapper.getFor(rgCode);
+  }
 }

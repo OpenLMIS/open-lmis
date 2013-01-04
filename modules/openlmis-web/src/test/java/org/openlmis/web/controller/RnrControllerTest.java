@@ -20,6 +20,7 @@ public class RnrControllerTest {
 
   MockHttpServletRequest request;
   private static final String USER = "user";
+  private static final Integer USER_ID = 1;
 
   RnrService rnrService;
 
@@ -30,6 +31,8 @@ public class RnrControllerTest {
     request = new MockHttpServletRequest();
     MockHttpSession session = new MockHttpSession();
     session.setAttribute(UserAuthenticationSuccessHandler.USER, USER);
+    session.setAttribute(UserAuthenticationSuccessHandler.USER_ID, USER_ID);
+
     request.setSession(session);
 
     rnrService = mock(RnrService.class);
@@ -45,7 +48,7 @@ public class RnrControllerTest {
     controller.saveRnr(rnr, facilityId, programId, request);
 
     verify(rnrService).save(rnr);
-    assertThat(rnr.getModifiedBy(), is(equalTo(USER)));
+    assertThat(rnr.getModifiedBy(), is(equalTo(USER_ID)));
     assertThat(rnr.getFacilityId(), is(facilityId));
     assertThat(rnr.getProgramId(), is(programId));
   }
@@ -53,7 +56,7 @@ public class RnrControllerTest {
   @Test
   public void shouldGiveErrorIfInitiatingFails() throws Exception {
     String errorMessage = "error-message";
-    doThrow(new DataException(errorMessage)).when(rnrService).initRnr(1, 2, USER);
+    doThrow(new DataException(errorMessage)).when(rnrService).initRnr(1, 2, USER_ID);
     ResponseEntity<OpenLmisResponse> response = controller.initiateRnr(1, 2, request);
     assertThat(response.getBody().getErrorMsg(), is(equalTo(errorMessage)));
   }
@@ -64,5 +67,13 @@ public class RnrControllerTest {
     doThrow(new DataException(errorMessage)).when(rnrService).get(1, 2);
     ResponseEntity<OpenLmisResponse> response = controller.get(1, 2);
     assertThat(response.getBody().getErrorMsg(), is(equalTo(errorMessage)));
+  }
+
+  @Test
+  public void shouldAllowSubmittingOfRnrAndTagWithModifiedBy() throws Exception {
+    Rnr rnr = new Rnr();
+    controller.submit(rnr, request);
+    verify(rnrService).submit(rnr);
+    assertThat(rnr.getModifiedBy(), is(USER_ID));
   }
 }
