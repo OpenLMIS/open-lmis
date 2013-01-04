@@ -75,7 +75,7 @@
                                                style="display:none;">
                                                        Enter Numeric Data
                                                        </div>
-                                           <input type="button" ng-click="addLossAndAdjustment(rnrLineItem.rnrLineItem,lossAndAdjustment)"
+                                           <input type="button" ng-click="addLossAndAdjustment(rnrLineItem,lossAndAdjustment)"
                                                   ng-disabled="!(lossAndAdjustment.type && lossAndAdjustment.quantity)"
                                                   class="btn btn-primary" value="Add" />
                                          </div>
@@ -88,13 +88,13 @@
                                                </span>
                                                <span class="tpl-adjustment-delete">
                                                  <a class="close"
-                                                    ng-click="removeLossAndAdjustment(rnrLineItem.rnrLineItem,oneLossAndAdjustment)">&times;</a>
+                                                    ng-click="removeLossAndAdjustment(rnrLineItem,oneLossAndAdjustment)">&times;</a>
                                                </span>
                                                <span class="tpl-adjustment-qty">
                                                  <input id="{{getId('D', $parent, true)}}" name="{{oneLossAndAdjustment.type.displayOrder}}"
                                                               type="text"
                                                               ng-model="oneLossAndAdjustment.quantity"
-                                                              ng-change="reEvaluateTotalLossesAndAdjustments(rnrLineItem.rnrLineItem)"
+                                                              ng-change="rnrLineItem.reEvaluateTotalLossesAndAdjustments()"
                                                               rnr-validator="positiveInteger"
                                                               maxlength="8"
                                                               />

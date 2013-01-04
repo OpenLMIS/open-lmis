@@ -1,24 +1,48 @@
 var RnrLineItem = function (lineItem) {
 
-    this.rnrLineItem  = lineItem;
+    this.rnrLineItem = lineItem;
 
-    this.arithMaticallyInValid =  function (programRnRColumnList) {
-        if(programRnRColumnList[0].formulaValidated){
+    this.arithMaticallyInValid = function (programRnRColumnList) {
+        if (programRnRColumnList[0].formulaValidated) {
             var a = parseInt(this.rnrLineItem.beginningBalance);
             var b = parseInt(this.rnrLineItem.quantityReceived);
             var c = parseInt(this.rnrLineItem.quantityDispensed);
             var d = parseInt(this.rnrLineItem.totalLossesAndAdjustments);
             var e = parseInt(this.rnrLineItem.stockInHand);
-            return (isNumber(c) && isNumber(a) && isNumber(b) && isNumber(d) && isNumber(e)) ? c!=(a + b - d - e) : null;
+            return (isNumber(c) && isNumber(a) && isNumber(b) && isNumber(d) && isNumber(e)) ? c != (a + b - d - e) : null;
         }
         return false;
     }
-    var isNumber =function (number) {
-        return !isNaN(parseInt(number));
+
+    this.reEvaluateTotalLossesAndAdjustments = function () {
+        var rnrLineItem = this.rnrLineItem;
+        rnrLineItem.totalLossesAndAdjustments = 0;
+
+        $(rnrLineItem.lossesAndAdjustments).each(function (index, lossAndAdjustmentObject) {
+            var quantity = parseInt(lossAndAdjustmentObject.quantity, 10);
+            updateTotalLossesAndAdjustment(rnrLineItem,quantity, lossAndAdjustmentObject.type.additive);
+        });
+    }
+
+    this.removeLossAndAdjustment = function (lossAndAdjustmentToDelete) {
+        this.rnrLineItem.lossesAndAdjustments = $.grep(this.rnrLineItem.lossesAndAdjustments, function (lossAndAdjustmentObj) {
+            return lossAndAdjustmentObj != lossAndAdjustmentToDelete;
+        });
+        var quantity = parseInt(lossAndAdjustmentToDelete.quantity, 10);
+        updateTotalLossesAndAdjustment(this.rnrLineItem, quantity, !lossAndAdjustmentToDelete.type.additive);
+    };
+
+    this.addLossAndAdjustment = function (newLossAndAdjustment) {
+        var lossAndAdjustment = {"type":newLossAndAdjustment.type, "quantity":newLossAndAdjustment.quantity};
+        newLossAndAdjustment.type = undefined;
+        newLossAndAdjustment.quantity = undefined;
+        this.rnrLineItem.lossesAndAdjustments.push(lossAndAdjustment);
+        var quantity = parseInt(lossAndAdjustment.quantity, 10);
+        updateTotalLossesAndAdjustment(this.rnrLineItem, quantity, lossAndAdjustment.type.additive);
     };
 
     this.fill = function (rnr, programRnRColumnList) {
-        var rnrLineItem= this.rnrLineItem;
+        var rnrLineItem = this.rnrLineItem;
 
         function fillConsumption() {
             c = rnrLineItem.quantityDispensed = (isNumber(a) && isNumber(b) && isNumber(d) && isNumber(e)) ? a + b - d - e : null;
@@ -154,6 +178,21 @@ var RnrLineItem = function (lineItem) {
         fillFullSupplyItemsSubmittedCost();
         fillTotalSubmittedCost();
     }
+
+    var updateTotalLossesAndAdjustment = function(rnrLineItem, quantity, additive) {
+        if (!isNaN(quantity)) {
+            if (additive) {
+                rnrLineItem.totalLossesAndAdjustments += quantity;
+            } else {
+                rnrLineItem.totalLossesAndAdjustments -= quantity;
+            }
+        }
+    }
+
+    var isNumber = function (number) {
+        return !isNaN(parseInt(number));
+    };
+
 
 };
 
