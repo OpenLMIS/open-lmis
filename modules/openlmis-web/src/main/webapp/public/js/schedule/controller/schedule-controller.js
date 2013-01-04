@@ -1,4 +1,4 @@
-function ScheduleController($scope, Schedules, Schedule) {
+function ScheduleController($scope, Schedules, Schedule, $location) {
   $scope.newSchedule = {};
   $scope.schedules = {};
   $scope.editSchedule = {};
@@ -85,5 +85,9 @@ function ScheduleController($scope, Schedules, Schedule) {
     scheduleUnderEdit.code = $scope.editSchedule.code;
     scheduleUnderEdit.name = $scope.editSchedule.name;
     scheduleUnderEdit.description = $scope.editSchedule.description;
+  }
+
+  $scope.navigateToPeriodFor = function (scheduleForPeriod) {
+    $location.path('/manage-period/' + scheduleForPeriod.id);
   }
 }

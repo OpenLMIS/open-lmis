@@ -1,4 +1,7 @@
-function SchedulePeriodController($scope, $routeParams, Periods) {
+function SchedulePeriodController($scope, $routeParams, Periods, Schedule) {
+  Schedule.get({id:$routeParams.id}, function (data) {
+    $scope.schedule = data.schedule;
+  }, {});
 
   Periods.get({scheduleId:$routeParams.id}, function (data) {
     $scope.periodList = data.periods;

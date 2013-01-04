@@ -61,6 +61,29 @@ public class ProcessingScheduleControllerTest {
   }
 
   @Test
+  public void shouldGetASchedule() throws Exception {
+
+    ProcessingSchedule processingSchedule = new ProcessingSchedule();
+    when(processingScheduleService.get(1)).thenReturn(processingSchedule);
+
+    ResponseEntity<OpenLmisResponse> responseEntity = processingScheduleController.get(1);
+
+    Map<String, Object> responseEntityData = responseEntity.getBody().getData();
+    assertThat((ProcessingSchedule) responseEntityData.get(SCHEDULE), is(processingSchedule));
+  }
+
+  @Test
+  public void shouldReturnErrorMessageWhileGettingAScheduleForIdThatDoesNotExist() {
+    ProcessingSchedule processingSchedule = new ProcessingSchedule();
+    when(processingScheduleService.get(1)).thenReturn(processingSchedule);
+
+    ResponseEntity<OpenLmisResponse> responseEntity = processingScheduleController.get(1);
+
+    Map<String, Object> responseEntityData = responseEntity.getBody().getData();
+    assertThat((ProcessingSchedule) responseEntityData.get(SCHEDULE), is(processingSchedule));
+  }
+
+  @Test
   public void shouldCreateAndReturnANewSchedule() {
     ProcessingSchedule processingSchedule = new ProcessingSchedule("testCode", "testName");
     ProcessingSchedule mockedSchedule = mock(ProcessingSchedule.class);
@@ -141,4 +164,6 @@ public class ProcessingScheduleControllerTest {
     assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     assertThat(response.getBody().getErrorMsg(), is("Schedule can not be saved without its name."));
   }
+
+
 }

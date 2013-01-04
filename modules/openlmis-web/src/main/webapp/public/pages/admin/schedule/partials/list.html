@@ -72,7 +72,7 @@
           {{schedule.modifiedDate | date:'dd/MM/yyyy'}}
         </div>
         <div class="span1">
-          <a ng-href="#manage-period/{{schedule.id}}" class="btn btn-mini">Add Period</a>
+          <input type=button ng-click="navigateToPeriodFor(schedule)" class="btn btn-mini" value="Add Period"/>
         </div>
       </div>
     </form>

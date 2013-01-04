@@ -3,14 +3,15 @@ describe("Schedule", function () {
 
   describe("Schedule Controller", function () {
 
-    var scope, $httpBackend, ctrl, routeParams, facility;
+    var scope, $httpBackend, ctrl, routeParams, facility, location;
     var existingSchedule = {"id":1, "name":"name", "code":"code", "description":"description"};
     var editScheduleForm = {$invalid : false};
 
-    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $routeParams) {
+    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location, $routeParams) {
       scope = $rootScope.$new();
       routeParams = $routeParams;
       $httpBackend = _$httpBackend_;
+      location = $location;
 
       $httpBackend.expectGET('/schedules.json').respond(200, {"schedules":[existingSchedule]});
       ctrl = $controller(ScheduleController, {$scope:scope, $routeParams:routeParams});
@@ -67,5 +68,12 @@ describe("Schedule", function () {
       expect(scope.message).toEqual("");
       expect(scope.error).toEqual("errorMsg");
     });
+
+    it('should set correct schedule in the scope and navigate to period', function() {
+      var selectedSchedule = {"id":1, "name":"newName", "code":"newCode", "description":"newDescription"};
+      scope.navigateToPeriodFor(selectedSchedule);
+      expect(location.path()).toEqual("/manage-period/1");
+    });
+
   });
 });

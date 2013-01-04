@@ -38,4 +38,8 @@ public class ProcessingScheduleService {
   public List<ProcessingPeriod> getAllPeriods(int scheduleId) {
     return periodRepository.getAll(scheduleId);
   }
+
+  public ProcessingSchedule get(Integer id) {
+    return repository.get(id);
+  }
 }

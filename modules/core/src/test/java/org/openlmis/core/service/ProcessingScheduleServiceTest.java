@@ -50,6 +50,16 @@ public class ProcessingScheduleServiceTest {
   }
 
   @Test
+  public void shouldGetASchedule() throws Exception {
+    ProcessingSchedule processingSchedule = new ProcessingSchedule();
+    when(repository.get(1)).thenReturn(processingSchedule);
+
+    ProcessingSchedule expectedProcessingSchedule = service.get(1);
+
+    assertThat(processingSchedule, is(expectedProcessingSchedule));
+  }
+
+  @Test
   public void shouldInsertAndReturnInsertedSchedule() throws Exception {
     ProcessingSchedule processingSchedule = new ProcessingSchedule("testCode", "testName");
     ProcessingSchedule mockedSchedule = mock(ProcessingSchedule.class);
