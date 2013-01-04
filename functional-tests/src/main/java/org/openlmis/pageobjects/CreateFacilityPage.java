@@ -194,7 +194,7 @@ public class CreateFacilityPage extends Page {
         SaveButton.click();
 
 
-        testWebDriver.sleep(1500);
+        testWebDriver.sleep(2500);
         if(saveSuccessMsgDiv.isDisplayed())
         {
             message= testWebDriver.getText(saveSuccessMsgDiv);

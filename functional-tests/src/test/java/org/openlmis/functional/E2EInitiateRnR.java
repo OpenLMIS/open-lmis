@@ -71,6 +71,11 @@ public class E2EInitiateRnR extends TestCaseHelper {
         initiateRnRPage.verifyRnRHeader(date_time, program);
 
         initiateRnRPage.calculateAndVerifyStockOnHand(10,10,10,1);
+        initiateRnRPage.enterValuesAndVerifyCalculatedOrderQuantity(10,10,101,101,303,292);
+        initiateRnRPage.verifyPacksToShip(30);
+        initiateRnRPage.enterAndVerifyRequestedQuantityExplanation(10);
+        initiateRnRPage.verifyPacksToShip(1);
+        initiateRnRPage.calculateAndVerifyTotalCost();
         initiateRnRPage.saveRnR();
 
         homePageUser.logout();

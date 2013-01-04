@@ -262,7 +262,7 @@ public class DBWrapper {
 
         }
         dbwrapper.dbConnection("INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active) VALUES\n" +
-                "(1, (SELECT id from products WHERE code = 'P100'), 30, 12.5, true),\n" +
+                "(1, (SELECT id from products WHERE code = 'P100'), 30, 12, true),\n" +
                 "(1, (SELECT id from products WHERE code = 'P101'), 30, 50, true),\n" +
                 "(1, (SELECT id from products WHERE code = 'P102'), 30, 0, true);", "alter");
     }

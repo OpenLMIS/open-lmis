@@ -41,6 +41,40 @@ public class InitiateRnRPage extends Page {
     @FindBy(how = How.ID, using = "E_7")
     private static WebElement stockOnHand;
 
+    @FindBy(how = How.ID, using = "F_0")
+    private static WebElement newPatient;
+
+    @FindBy(how = How.ID, using = "H_12")
+    private static WebElement maximumStockQuantity;
+
+    @FindBy(how = How.ID, using = "I_13")
+    private static WebElement caculatedOrderQuantity;
+
+    @FindBy(how = How.ID, using = "J_0")
+    private static WebElement requestedQuantity;
+
+    @FindBy(how = How.ID, using = "N_10")
+    private static WebElement adjustedTotalConsumption;
+
+    @FindBy(how = How.ID, using = "P_11")
+    private static WebElement amc;
+
+    @FindBy(how = How.ID, using = "Q_19")
+    private static WebElement totalCost;
+
+    @FindBy(how = How.ID, using = "T_18")
+    private static WebElement pricePerPack;
+
+    @FindBy(how = How.ID, using = "V_17")
+    private static WebElement packsToShip;
+
+    @FindBy(how = How.ID, using = "W_0")
+    private static WebElement requestedQuantityExplanation;
+
+    @FindBy(how = How.ID, using = "X_0")
+    private static WebElement totalStockOutDays;
+
+
     @FindBy(how = How.XPATH, using = "//a[@class='rnr-adjustment']/span[@class='add-adjustment']")
     private static WebElement addDescription;
 
@@ -63,9 +97,11 @@ public class InitiateRnRPage extends Page {
     @FindBy(how = How.XPATH, using = "//div[@class='adjustment-total clearfix alert alert-warning ng-binding']")
     private static WebElement totalAdj;
 
-    @FindBy(how = How.XPATH, using = " //a[contains(text(),'Done')]")
+    @FindBy(how = How.XPATH, using = "//a[contains(text(),'Done')]")
     private static WebElement doneButton;
 
+    @FindBy(how = How.XPATH, using = "//span[@class='alert alert-warning reason-request']")
+    private static WebElement requestedQtyWarningMessage;
 
 
     String successText="R&R saved successfully!";
@@ -159,5 +195,59 @@ public class InitiateRnRPage extends Page {
         String StockOnHandValue = StockOnHand.toString();
         SeleneseTestNgHelper.assertEquals(stockOnHandValue, StockOnHandValue);
     }
+
+    public void enterAndVerifyRequestedQuantityExplanation(Integer A)
+    {
+        String expectedWarningMessage="Please enter a reason";
+        testWebDriver.waitForElementToAppear(requestedQuantity);
+        requestedQuantity.sendKeys(A.toString());
+        testWebDriver.waitForElementToAppear(requestedQtyWarningMessage);
+        String warningMessage=testWebDriver.getText(requestedQtyWarningMessage);
+        SeleneseTestNgHelper.assertEquals(warningMessage.trim(), expectedWarningMessage);
+        requestedQuantityExplanation.sendKeys("Due to bad climate");
+        testWebDriver.sleep(1000);
+    }
+
+    public void enterValuesAndVerifyCalculatedOrderQuantity(Integer F, Integer X,Integer N, Integer P, Integer H, Integer I)
+    {
+        testWebDriver.waitForElementToAppear(newPatient);
+        newPatient.sendKeys(F.toString());
+        testWebDriver.waitForElementToAppear(totalStockOutDays);
+        totalStockOutDays.sendKeys(X.toString());
+        testWebDriver.waitForElementToAppear(adjustedTotalConsumption);
+        String actualAdjustedTotalConsumption=testWebDriver.getText(adjustedTotalConsumption);
+        SeleneseTestNgHelper.assertEquals(actualAdjustedTotalConsumption,N.toString());
+        String actualAmc=testWebDriver.getText(amc);
+        SeleneseTestNgHelper.assertEquals(actualAmc.trim(),P.toString());
+        String actualMaximumStockQuantity=testWebDriver.getText(maximumStockQuantity);
+        SeleneseTestNgHelper.assertEquals(actualMaximumStockQuantity.trim(), H.toString() );
+        String actualCalculatedOrderQuantity=testWebDriver.getText(caculatedOrderQuantity);
+        SeleneseTestNgHelper.assertEquals(actualCalculatedOrderQuantity.trim(), I.toString());
+        testWebDriver.sleep(1000);
+
+
+    }
+
+    public void verifyPacksToShip(Integer V)
+    {
+      testWebDriver.waitForElementToAppear(packsToShip);
+      String actualPacksToShip=testWebDriver.getText(packsToShip);
+      SeleneseTestNgHelper.assertEquals(actualPacksToShip.trim(), V.toString());
+      testWebDriver.sleep(500);
+
+    }
+
+    public void calculateAndVerifyTotalCost()
+    {
+      testWebDriver.waitForElementToAppear(packsToShip);
+      String actualPacksToShip=testWebDriver.getText(packsToShip);
+      testWebDriver.waitForElementToAppear(pricePerPack);
+      String actualPricePerPack=testWebDriver.getText(pricePerPack);
+      Integer actualTotalCost=Integer.parseInt(actualPacksToShip)*Integer.parseInt(actualPricePerPack);
+      SeleneseTestNgHelper.assertEquals(actualTotalCost.toString(), totalCost.getText());
+      testWebDriver.sleep(500);
+    }
+
+
 
 }
