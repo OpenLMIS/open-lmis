@@ -76,7 +76,11 @@ public class RnrServiceTest {
 
   @Test
   public void shouldSubmitRnr() throws Exception {
-    rnrService.submit(new Rnr());
+    Rnr rnr = new Rnr();
+    String testMessage = "test message";
+    when(rnrRepository.submit(rnr)).thenReturn(testMessage);
+    String message = rnrService.submit(rnr);
+    assertThat(message, is(testMessage));
     verify(rnrRepository).submit(new Rnr());
   }
 }

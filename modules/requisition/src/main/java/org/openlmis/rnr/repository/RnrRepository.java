@@ -80,13 +80,14 @@ public class RnrRepository {
     return lossesAndAdjustmentsMapper.getLossesAndAdjustmentsTypes();
   }
 
-  public void submit(Rnr rnr) {
-    SupervisoryNode supervisoryNode = supervisoryNodeRepository.getFor(rnr.getFacilityId(), rnr.getProgramId());
-    if(supervisoryNode == null) {
-      rnrMapper.update(rnr);
-      throw new DataException("There is no supervisory node to process the R&R further, Please contact the Administrator");
-    }
+  public String submit(Rnr rnr) {
     rnr.setStatus(SUBMITTED);
     rnrMapper.update(rnr);
+    SupervisoryNode supervisoryNode = supervisoryNodeRepository.getFor(rnr.getFacilityId(), rnr.getProgramId());
+    if(supervisoryNode == null) {
+      return "There is no supervisory node to process the R&R further, Please contact the Administrator";
+    }
+    return "R&R submitted successfully!";
   }
 }
+

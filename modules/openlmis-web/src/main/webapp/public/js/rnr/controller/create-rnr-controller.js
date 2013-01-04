@@ -65,11 +65,32 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     }
 
     Requisitions.update({id: $scope.rnr.id, operation: "save"},
-      $scope.rnr, function (data) {
+      $scope.rnr, function () {
         $scope.message = "R&R saved successfully!";
         $scope.error = "";
       }, {});
   };
+
+  $scope.submitRnr = function() {
+
+    if($scope.saveRnrForm.$error.required){
+      $scope.error = 'Please complete the R&R form before submitting';
+      $scope.message = "";
+      return;
+    }
+    if($scope.saveRnrForm.$error.rnrError){
+      $scope.error = "R&R has errors, please clear them before submission";
+      $scope.message = "";
+      return;
+    }
+    Requisitions.update({id: $scope.rnr.id, operation: "submit"},
+      $scope.rnr, function (data) {
+        $scope.rnr.status = "SUBMITTED";
+        $scope.message = data.success;
+        $scope.error = "";
+      }, {});
+  };
+
 
 
   $scope.getId = function (prefix, parent, isLossAdjustment) {

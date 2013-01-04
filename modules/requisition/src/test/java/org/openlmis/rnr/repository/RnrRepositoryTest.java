@@ -118,22 +118,21 @@ public class RnrRepositoryTest {
   }
 
   @Test
-  public void shouldGiveErrorWhileSubmittingRnrIfSupervisingNodeNotPresent() throws Exception {
+  public void shouldReturnMessageWhileSubmittingRnrIfSupervisingNodeNotPresent()  {
     when(supervisoryNodeRepository.getFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(null);
 
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("There is no supervisory node to process the R&R further, Please contact the Administrator");
-
-    rnrRepository.submit(rnr);
+    String message = rnrRepository.submit(rnr);
     verify(rnrMapper).update(rnr);
-    assertThat(rnr.getStatus(), is(INITIATED));
+    assertThat(rnr.getStatus(), is(SUBMITTED));
+    assertThat(message, is("There is no supervisory node to process the R&R further, Please contact the Administrator"));
   }
 
   @Test
-  public void shouldSubmitValidRnr() throws Exception {
+  public void shouldSubmitValidRnrAndSetMessage()  {
     when(supervisoryNodeRepository.getFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(new SupervisoryNode());
-    rnrRepository.submit(rnr);
+    String message = rnrRepository.submit(rnr);
     verify(rnrMapper).update(rnr);
     assertThat(rnr.getStatus(), is(SUBMITTED));
+    assertThat(message, is("R&R submitted successfully!"));
   }
 }

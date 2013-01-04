@@ -105,4 +105,29 @@ describe('CreateRnrController', function () {
     expect(scope.lossesAndAdjustmentTypesToDisplay).toEqual([{"name" : "some other name"}]);
   });
 
+  it('should not submit rnr with required fields missing', function () {
+    scope.rnr = {"id":"rnrId"};
+    scope.saveRnrForm={$error: {required:true}};
+    scope.submitRnr();
+    expect(scope.error).toEqual("Please complete the R&R form before submitting");
+  });
+
+  it('should not submit rnr with error in the form', function () {
+    scope.rnr = {"id":"rnrId"};
+    scope.saveRnrForm={$error: {rnrError:true}};
+    scope.submitRnr();
+    expect(scope.error).toEqual("R&R has errors, please clear them before submission");
+  });
+
+  it('should submit valid rnr', function () {
+    scope.rnr = {"id":"rnrId"};
+    httpBackend.expect('PUT', '/requisitions/rnrId/submit.json').respond(200, {success: "R&R submitted successfully!"});
+    scope.submitRnr();
+    httpBackend.flush();
+    expect(scope.message).toEqual("R&R submitted successfully!");
+    expect(scope.error).toEqual("");
+    expect(scope.rnr.status).toEqual("SUBMITTED");
+  });
+
 });
+

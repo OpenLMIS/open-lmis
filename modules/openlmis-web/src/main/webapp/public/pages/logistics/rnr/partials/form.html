@@ -1,6 +1,6 @@
 <div ng-controller="CreateRnrController">
 <div ng-hide="programRnRColumnList">Loading...</div>
-<form name="saveRnrForm" ng-submit="saveRnr()" id="save-rnr" novalidate>
+<form name="saveRnrForm" ng-submit="submitRnr()" id="rnr-form" novalidate>
 <div class="total-cost alert alert-info">Total R&amp;R Cost: 
 <span id="totalCostCurrency" class="cell-text">
                                            {{currency}}
@@ -246,7 +246,10 @@
    <br />
   <div id="action_buttons" class="action-buttons">
       <div class="form-cell button-row">
-        <input type="submit" class="btn btn-success save-button" value="Save"/>
+        <input type="button" ng-click="saveRnr()" class="btn btn-primary save-button" value="Save"/>
+      </div>
+    <div class="form-cell button-row">
+        <input type="submit" class="btn btn-success" value="Submit"/>
       </div>
   <div class="toolbar-error" id="saveFailMessage" ng-model="error" ng-show="error">
     {{error}}

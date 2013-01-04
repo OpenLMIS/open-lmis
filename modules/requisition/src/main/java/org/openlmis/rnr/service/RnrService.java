@@ -60,7 +60,8 @@ public class RnrService {
         return rnrRepository.getLossesAndAdjustmentsTypes();
     }
 
-  public void submit(Rnr rnr) {
-    rnrRepository.submit(rnr);
+  public String submit(Rnr rnr) {
+    return rnrRepository.submit(rnr);
   }
 }
+

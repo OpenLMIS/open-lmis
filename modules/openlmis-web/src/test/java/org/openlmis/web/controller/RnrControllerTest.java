@@ -69,8 +69,12 @@ public class RnrControllerTest {
   @Test
   public void shouldAllowSubmittingOfRnrAndTagWithModifiedBy() throws Exception {
     Rnr rnr = new Rnr();
-    controller.submit(rnr, request);
+    String testMessage = "test message";
+    when(rnrService.submit(rnr)).thenReturn(testMessage);
+    ResponseEntity<OpenLmisResponse> response = controller.submit(rnr, request);
+    assertThat(response.getBody().getSuccessMsg(), is(testMessage));
     verify(rnrService).submit(rnr);
     assertThat(rnr.getModifiedBy(), is(USER_ID));
   }
 }
+
