@@ -51,7 +51,7 @@ public class RnrController extends BaseController {
     return OpenLmisResponse.response(RNR, rnrService.get(facilityId, programId));
   }
 
-  @RequestMapping(value = "/facility/{facilityId}/program/{programId}/rnr/", method = RequestMethod.PUT, headers = "Accept=application/json")
+  @RequestMapping(value = "/facility/{facilityId}/program/{programId}/rnr", method = RequestMethod.PUT, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
   public void saveRnr(@RequestBody Rnr rnr,
                       @PathVariable("facilityId") int facilityId,

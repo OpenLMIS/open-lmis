@@ -46,7 +46,7 @@ describe('InitiateRnrController', function () {
 it('should create a rnr if rnr not already initiated',function () {
     scope.$parent.program = {"code" : "hiv", "id":1};
     scope.$parent.facility = 1;
-    $httpBackend.expectGET('/facility/1/program/1/rnr.json').respond(404);
+    $httpBackend.expectGET('/facility/1/program/1/rnr.json').respond(null);
     $httpBackend.expectPOST('/facility/1/program/1/rnr.json').respond({"rnr":{"id":1}});
     scope.initRnr();
     $httpBackend.flush();
