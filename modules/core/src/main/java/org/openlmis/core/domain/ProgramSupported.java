@@ -16,13 +16,13 @@ public class ProgramSupported implements Importable {
   private Integer facilityId;
   private Integer programId;
 
-  @ImportField(mandatory = true, name = "FacilityCode")
+  @ImportField(mandatory = true, name = "Facility Code")
   private String facilityCode;
 
-  @ImportField(mandatory = true, name = "ProgramCode")
+  @ImportField(mandatory = true, name = "Program Code")
   private String programCode;
 
-  @ImportField(mandatory = true, name = "ProgramIsActive", type = "boolean")
+  @ImportField(mandatory = true, name = "Program Is Active", type = "boolean")
   private Boolean active;
 
   private String modifiedBy;
