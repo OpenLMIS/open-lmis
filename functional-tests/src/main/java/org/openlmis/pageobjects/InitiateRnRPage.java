@@ -153,7 +153,7 @@ public class InitiateRnRPage extends Page {
         enterLossesAndAdjustments(D.toString());
         beginningBalance.click();
         testWebDriver.waitForElementToAppear(stockOnHand);
-        Integer StockOnHand = A+B-C-D;
+        Integer StockOnHand = A+B-C+D;
         testWebDriver.sleep(1000);
         String stockOnHandValue= stockOnHand.getText();
         String StockOnHandValue = StockOnHand.toString();
