@@ -10,7 +10,7 @@ var RnrLineItem = function (lineItem) {
             var c = parseInt(this.rnrLineItem.quantityDispensed);
             var d = parseInt(this.rnrLineItem.totalLossesAndAdjustments);
             var e = parseInt(this.rnrLineItem.stockInHand);
-            return (isNumber(c) && isNumber(a) && isNumber(b) && isNumber(d) && isNumber(e)) ? c != (a + b - d - e) : null;
+            return (isNumber(c) && isNumber(a) && isNumber(b) && isNumber(d) && isNumber(e)) ? c != (a + b + d - e) : null;
         }
         return false;
     }
@@ -46,11 +46,11 @@ var RnrLineItem = function (lineItem) {
         var rnrLineItem = this.rnrLineItem;
 
         function fillConsumption() {
-            c = rnrLineItem.quantityDispensed = (isNumber(a) && isNumber(b) && isNumber(d) && isNumber(e)) ? a + b - d - e : null;
+            c = rnrLineItem.quantityDispensed = (isNumber(a) && isNumber(b) && isNumber(d) && isNumber(e)) ? a + b + d - e : null;
         }
 
         function fillStockInHand() {
-            e = rnrLineItem.stockInHand = (isNumber(a) && isNumber(b) && isNumber(c) && isNumber(d)) ? a + b - d - c : null;
+            e = rnrLineItem.stockInHand = (isNumber(a) && isNumber(b) && isNumber(c) && isNumber(d)) ? a + b + d - c : null;
         }
 
         var getSource = function (indicator) {

@@ -25,7 +25,7 @@ describe('RnrLineItem', function () {
             var lineItem = {"id":1, "beginningBalance":5, "quantityReceived":20, "quantityDispensed":null, "totalLossesAndAdjustments":5, "stockInHand":10};
             var rnrLineItem = new RnrLineItem(lineItem);
             rnrLineItem.fill(null, programRnrColumnList);
-            expect(10).toEqual(lineItem.quantityDispensed);
+            expect(20).toEqual(lineItem.quantityDispensed);
         });
     });
 
@@ -62,7 +62,7 @@ describe('RnrLineItem', function () {
 
             var rnrLineItem = new RnrLineItem(lineItem);
             rnrLineItem.fill(null, programRnrColumnList);
-            expect(5).toEqual(lineItem.stockInHand);
+            expect(13).toEqual(lineItem.stockInHand);
         });
     });
 
@@ -101,7 +101,7 @@ describe('RnrLineItem', function () {
 
             var rnrLineItem = new RnrLineItem(lineItem);
             rnrLineItem.fill(null, programRnrColumnList);
-            expect(65).toEqual(lineItem.normalizedConsumption);
+            expect(73).toEqual(lineItem.normalizedConsumption);
         });
 
         it('should not fill normalized consumption when stockOutDays is not set', function () {
@@ -121,7 +121,7 @@ describe('RnrLineItem', function () {
         });
 
         it('should calculate normalized consumption when newPatientCount is displayed and set', function () {
-            var lineItem = {"id":1, "beginningBalance":1, "quantityReceived":10, "quantityDispensed":null, "totalLossesAndAdjustments":4, "stockInHand":2, "stockOutDays":5, "newPatientCount":10, "dosesPerMonth":30, "dosesPerDispensingUnit":28};
+            var lineItem = {"id":1, "beginningBalance":1, "quantityReceived":10, "quantityDispensed":null, "totalLossesAndAdjustments":-4, "stockInHand":2, "stockOutDays":5, "newPatientCount":10, "dosesPerMonth":30, "dosesPerDispensingUnit":28};
 
             var rnrLineItem = new RnrLineItem(lineItem);
             rnrLineItem.fill(null, programRnrColumnList);
@@ -154,7 +154,7 @@ describe('RnrLineItem', function () {
                 {"indicator":"X", "name":"stockOutDays", "source":{"name":"USER_INPUT"}}
             ];
             var lineItem = {"id":1, "beginningBalance":1, "quantityReceived":10, "quantityDispensed":null,
-                "totalLossesAndAdjustments":4, "stockInHand":2, "stockOutDays":5, "newPatientCount":null, "dosesPerMonth":30, "dosesPerDispensingUnit":28};
+                "totalLossesAndAdjustments":-4, "stockInHand":2, "stockOutDays":5, "newPatientCount":null, "dosesPerMonth":30, "dosesPerDispensingUnit":28};
 
             var rnrLineItem = new RnrLineItem(lineItem);
             rnrLineItem.fill(null, programRnrColumnList);
@@ -211,7 +211,7 @@ describe('RnrLineItem', function () {
 
         it('should set maxStockQuantity', function () {
             var lineItem = {"id":1, "beginningBalance":5, "quantityReceived":20, "quantityDispensed":null, "newPatientCount":0, "stockOutDays":0,
-                "totalLossesAndAdjustments":5, "stockInHand":10, "dosesPerMonth":10, "dosesPerDispensingUnit":10, "maxMonthsOfStock":3};
+                "totalLossesAndAdjustments":-5, "stockInHand":10, "dosesPerMonth":10, "dosesPerDispensingUnit":10, "maxMonthsOfStock":3};
 
             var rnrLineItem = new RnrLineItem(lineItem);
             rnrLineItem.fill(null, programRnrColumnList);
@@ -247,7 +247,7 @@ describe('RnrLineItem', function () {
 
         it('should set calculatedOrderQuantity', function () {
             var lineItem = {"id":1, "beginningBalance":5, "quantityReceived":20, "quantityDispensed":15, "newPatientCount":0, "stockOutDays":0,
-                "totalLossesAndAdjustments":5, "stockInHand":null, "dosesPerMonth":10, "dosesPerDispensingUnit":10, "maxMonthsOfStock":3};
+                "totalLossesAndAdjustments":-5, "stockInHand":null, "dosesPerMonth":10, "dosesPerDispensingUnit":10, "maxMonthsOfStock":3};
 
             var rnrLineItem = new RnrLineItem(lineItem);
             rnrLineItem.fill(null, programRnrColumnList);
@@ -288,7 +288,7 @@ describe('RnrLineItem', function () {
 
         it('should set packsToShip when calculated quantity is available and requested quantity is null', function () {
             var lineItem = {"id":1, "beginningBalance":5, "quantityReceived":20, "quantityDispensed":15, "newPatientCount":0,
-                "stockOutDays":0, "totalLossesAndAdjustments":5, "stockInHand":null, "dosesPerMonth":10,
+                "stockOutDays":0, "totalLossesAndAdjustments":-5, "stockInHand":null, "dosesPerMonth":10,
                 "dosesPerDispensingUnit":10, "maxMonthsOfStock":3, "packSize":12};
 
             var rnrLineItem = new RnrLineItem(lineItem);
@@ -454,7 +454,6 @@ describe('RnrLineItem', function () {
 
             expect(arithmeticallyInvalid).toEqual(true);
 
-            lineItem.totalLossesAndAdjustments = 3;
             lineItem.quantityDispensed = 0;
 
             arithmeticallyInvalid = rnrLineItem.arithmeticallyInvalid(programRnrColumnList);
