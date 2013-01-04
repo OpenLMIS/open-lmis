@@ -24,6 +24,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext-requisition.xml")
@@ -69,6 +70,7 @@ public class LossesAndAdjustmentsMapperIT {
     facilityMapper.insert(facility);
 
     Rnr requisition = new Rnr(facility.getId(), HIV, MODIFIED_BY);
+    requisition.setStatus(INITIATED);
     rnrMapper.insert(requisition);
 
     rnrLineItem = new RnrLineItem(requisition.getId(), facilityApprovedProduct, MODIFIED_BY);

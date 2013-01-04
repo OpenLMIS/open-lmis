@@ -64,7 +64,7 @@ public class RnrRepository {
 
   public Rnr getRequisitionByFacilityAndProgram(Integer facilityId, Integer programId) {
     Rnr rnr = rnrMapper.getRequisitionByFacilityAndProgram(facilityId, programId);
-    if (rnr == null) throw new DataException("Requisition does not exist. Please initiate.");
+    if (rnr == null) return null;
     rnr.setLineItems(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()));
     for (RnrLineItem rnrLineItem : rnr.getLineItems()) {
       rnrLineItem.setLossesAndAdjustments(lossesAndAdjustmentsMapper.getByRnrLineItem(rnrLineItem.getId()));

@@ -15,6 +15,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
+import static org.openlmis.web.controller.RnrController.RNR;
 
 public class RnrControllerTest {
 
@@ -62,11 +63,11 @@ public class RnrControllerTest {
   }
 
   @Test
-  public void shouldGiveErrorIfGettingRequisitionFails() throws Exception {
-    String errorMessage = "error-message";
-    doThrow(new DataException(errorMessage)).when(rnrService).get(1, 2);
+  public void shouldReturnNullIfGettingRequisitionFails() throws Exception {
+    Rnr expectedRnr = null;
+    when(rnrService.get(1, 2)).thenReturn(expectedRnr);
     ResponseEntity<OpenLmisResponse> response = controller.get(1, 2);
-    assertThat(response.getBody().getErrorMsg(), is(equalTo(errorMessage)));
+    assertThat((Rnr)response.getBody().getData().get(RNR), is(expectedRnr));
   }
 
   @Test

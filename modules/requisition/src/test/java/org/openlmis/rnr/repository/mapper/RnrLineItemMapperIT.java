@@ -23,6 +23,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramBuilder.PROGRAM_ID;
+import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 
 @ContextConfiguration(locations = "classpath*:applicationContext-requisition.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -52,6 +53,7 @@ public class RnrLineItemMapperIT {
 
   FacilityApprovedProduct facilityApprovedProduct;
   Facility facility;
+  private Rnr rnr;
 
   @Before
   public void setUp() {
@@ -65,11 +67,13 @@ public class RnrLineItemMapperIT {
     programProductMapper.insert(programProduct);
     facilityApprovedProduct = new FacilityApprovedProduct("warehouse", programProduct, 3);
     facilityApprovedProductMapper.insert(facilityApprovedProduct);
+    rnr = new Rnr(facility.getId(), PROGRAM_ID, MODIFIED_BY);
+    rnr.setStatus(INITIATED);
   }
 
   @Test
   public void shouldInsertRequisitionLineItem() {
-    Rnr rnr = new Rnr(facility.getId(), PROGRAM_ID, MODIFIED_BY);
+
     rnrMapper.insert(rnr);
     RnrLineItem rnrLineItem = new RnrLineItem(rnr.getId(), facilityApprovedProduct, MODIFIED_BY);
     rnrLineItemMapper.insert(rnrLineItem);
@@ -78,7 +82,6 @@ public class RnrLineItemMapperIT {
 
   @Test
   public void shouldReturnRnrLineItemsByRnrId() {
-    Rnr rnr = new Rnr(facility.getId(), PROGRAM_ID, MODIFIED_BY);
     rnrMapper.insert(rnr);
     RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityApprovedProduct, MODIFIED_BY);
     lineItem.setPacksToShip(20);
@@ -116,7 +119,6 @@ public class RnrLineItemMapperIT {
 
   @Test
   public void shouldUpdateRnrLineItem() {
-    Rnr rnr = new Rnr(facility.getId(), PROGRAM_ID, MODIFIED_BY);
     rnrMapper.insert(rnr);
     RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityApprovedProduct, MODIFIED_BY);
     rnrLineItemMapper.insert(lineItem);

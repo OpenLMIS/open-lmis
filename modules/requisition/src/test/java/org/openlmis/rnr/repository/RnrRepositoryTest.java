@@ -110,11 +110,11 @@ public class RnrRepositoryTest {
   }
 
   @Test
-  public void shouldThrowErrorIfRnrNotDefined() {
-    when(rnrMapper.getRequisitionByFacilityAndProgram(facilityId, HIV)).thenReturn(null);
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("Requisition does not exist. Please initiate.");
-    rnrRepository.getRequisitionByFacilityAndProgram(facilityId, HIV);
+  public void shouldReturnNullIfRnrNotDefined() {
+    Rnr expectedRnr = null;
+    when(rnrMapper.getRequisitionByFacilityAndProgram(facilityId, HIV)).thenReturn(expectedRnr);
+    Rnr rnr = rnrRepository.getRequisitionByFacilityAndProgram(facilityId, HIV);
+    assertThat(rnr, is(expectedRnr));
   }
 
   @Test

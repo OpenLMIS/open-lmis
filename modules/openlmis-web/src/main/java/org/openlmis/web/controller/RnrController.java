@@ -48,11 +48,7 @@ public class RnrController extends BaseController {
   @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> get(@PathVariable("facilityId") Integer facilityId,
                                               @PathVariable("programId") Integer programId) {
-    try {
-      return OpenLmisResponse.response(RNR, rnrService.get(facilityId, programId));
-    } catch (DataException e) {
-      return OpenLmisResponse.error(e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
+    return OpenLmisResponse.response(RNR, rnrService.get(facilityId, programId));
   }
 
   @RequestMapping(value = "/facility/{facilityId}/program/{programId}/rnr/", method = RequestMethod.PUT, headers = "Accept=application/json")
