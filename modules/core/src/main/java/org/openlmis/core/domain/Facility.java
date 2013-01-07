@@ -3,6 +3,7 @@ package org.openlmis.core.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
@@ -10,9 +11,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonSerialize(include = Inclusion.NON_NULL)
 public class Facility implements Importable {
 
     private Integer id;
