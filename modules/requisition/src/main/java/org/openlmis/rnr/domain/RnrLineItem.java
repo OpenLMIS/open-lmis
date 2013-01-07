@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.FacilityApprovedProduct;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.exception.DataException;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,6 +15,8 @@ import java.util.List;
 @NoArgsConstructor
 public class RnrLineItem {
 
+  public static final Float MULTIPLIER = 3f;
+  public static final Float NUMBER_OF_DAYS = 30f;
   private Integer id;
   private Integer rnrId;
 
@@ -76,13 +79,115 @@ public class RnrLineItem {
 
   private String productName(Product product) {
     return (product.getPrimaryName() == null ? "" : (product.getPrimaryName() + " ")) +
-      (product.getForm().getCode() == null ? "" : (product.getForm().getCode() + " ")) +
-      (product.getStrength() == null ? "" : (product.getStrength() + " ")) +
-      (product.getDosageUnit().getCode() == null ? "" : product.getDosageUnit().getCode());
+        (product.getForm().getCode() == null ? "" : (product.getForm().getCode() + " ")) +
+        (product.getStrength() == null ? "" : (product.getStrength() + " ")) +
+        (product.getDosageUnit().getCode() == null ? "" : product.getDosageUnit().getCode());
 
   }
 
   public void addLossesAndAdjustments(LossesAndAdjustments lossesAndAdjustments) {
     this.lossesAndAdjustments.add(lossesAndAdjustments);
+  }
+
+  public boolean validate() {
+    validateMandatoryFields();
+    validateCalculatedFields();
+
+    return true;
+  }
+
+  private void validateCalculatedFields() {
+    if (quantityDispensed != (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand)) {
+      throw new DataException("R&R has errors, please correct them before submission");
+    }
+    if(!totalLossesAndAdjustments.equals(calculateTotalLossesAndAdjustments())) {
+      throw new DataException("R&R has errors, please correct them before submission");
+    }
+    if(!(normalizedConsumption.intValue() == (calculateNormalizedConsumption()))) {
+      throw new DataException("R&R has errors, please correct them before submission");
+    }
+    if(!normalizedConsumption.equals(amc)){
+      throw new DataException("R&R has errors, please correct them before submission");
+    }
+    if(!maxStockQuantity.equals(calculateMaxStockQuantity())) {
+      throw new DataException("R&R has errors, please correct them before submission");
+    }
+    if(!calculatedOrderQuantity.equals(calculateOrderQuantity())){
+      throw new DataException("R&R has errors, please correct them before submission");
+    }
+    if(!packsToShip.equals(calculatePacksToShip())){
+      throw new DataException("R&R has errors, please correct them before submission");
+    }
+    if(!cost.equals(calculateCost())){
+      throw new DataException("R&R has errors, please correct them before submission");
+    }
+  }
+
+  private Float calculateCost() {
+    return packsToShip * price;
+  }
+
+  private Integer calculatePacksToShip() {
+    Integer orderQuantity = quantityRequested == null ? calculatedOrderQuantity : quantityRequested;
+    Double packsToShip = Math.floor(orderQuantity/packSize);
+    return rounded(packsToShip);
+  }
+
+  private Integer rounded(Double packsToShip) {
+    Integer orderQuantity = quantityRequested == null ? calculatedOrderQuantity : quantityRequested;
+    Integer remainderQuantity = orderQuantity % packSize;
+    if (remainderQuantity >= packRoundingThreshold && packsToShip != 0) {
+      packsToShip += 1;
+    }
+
+    if (packsToShip == 0 && !roundToZero) {
+      packsToShip = 1d;
+    }
+    return packsToShip.intValue();
+  }
+
+  private Integer calculateOrderQuantity() {
+    return maxStockQuantity - stockInHand;
+  }
+
+  private Integer calculateMaxStockQuantity() {
+    return maxMonthsOfStock * amc.intValue();
+  }
+
+  private Integer calculateNormalizedConsumption() {
+    Float consumptionAdjustedWithStockOutDays = ((MULTIPLIER * NUMBER_OF_DAYS) - stockOutDays) == 0 ? quantityDispensed :
+       (quantityDispensed * ((MULTIPLIER * NUMBER_OF_DAYS) / ((MULTIPLIER * NUMBER_OF_DAYS) - stockOutDays)));
+    Float adjustmentForNewPatients = (newPatientCount * ((Double)Math.ceil(dosesPerMonth / dosesPerDispensingUnit)).floatValue() ) * MULTIPLIER;
+
+    return Math.round(consumptionAdjustedWithStockOutDays + adjustmentForNewPatients);
+  }
+
+  private Integer calculateTotalLossesAndAdjustments() {
+    Integer total = 0;
+    for(LossesAndAdjustments lossAndAdjustment : lossesAndAdjustments) {
+      if(lossAndAdjustment.getType().getAdditive()) {
+        total += lossAndAdjustment.getQuantity();
+      } else {
+        total -= lossAndAdjustment.getQuantity();
+      }
+    }
+    return total;
+  }
+
+  private void validateMandatoryFields() {
+    isPresent(beginningBalance);
+    isPresent(quantityReceived);
+    isPresent(quantityDispensed);
+    isPresent(newPatientCount);
+    isPresent(stockOutDays);
+    if (quantityRequested != null) {
+      isPresent(reasonForRequestedQuantity);
+    }
+  }
+
+  private void isPresent(Object value) {
+    if (value == null) {
+      throw new DataException("R&R has errors, please correct them before submission");
+    }
   }
 }

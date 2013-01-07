@@ -1,7 +1,6 @@
 package org.openlmis.rnr.service;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -76,11 +75,12 @@ public class RnrServiceTest {
 
   @Test
   public void shouldSubmitRnr() throws Exception {
-    Rnr rnr = new Rnr();
+    Rnr rnr = mock(Rnr.class);
     String testMessage = "test message";
     when(rnrRepository.submit(rnr)).thenReturn(testMessage);
     String message = rnrService.submit(rnr);
+    verify(rnr).validate();
     assertThat(message, is(testMessage));
-    verify(rnrRepository).submit(new Rnr());
+    verify(rnrRepository).submit(rnr);
   }
 }

@@ -104,7 +104,7 @@ describe('CreateRnrController', function () {
     scope.rnr = {"id":"rnrId"};
     scope.saveRnrForm={$error: {required:true}};
     scope.submitRnr();
-    expect(scope.error).toEqual("Please complete the R&R form before submitting");
+    expect(scope.error).toEqual("Please complete the highlighted fields on the R&R form before submitting");
   });
 
   it('should not submit rnr with error in the form', function () {

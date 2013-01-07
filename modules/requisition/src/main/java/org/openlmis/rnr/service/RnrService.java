@@ -61,6 +61,7 @@ public class RnrService {
     }
 
   public String submit(Rnr rnr) {
+    rnr.validate();
     return rnrRepository.submit(rnr);
   }
 }

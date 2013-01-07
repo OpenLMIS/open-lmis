@@ -87,7 +87,7 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
 
     if ($scope.saveRnrForm.$error.required) {
       $scope.inputClass = "required";
-      $scope.error = 'Please complete the R&R form before submitting';
+      $scope.error = 'Please complete the highlighted fields on the R&R form before submitting';
       $scope.message = "";
       return;
     }
