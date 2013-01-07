@@ -74,11 +74,6 @@ describe('CreateRnrController', function () {
     expect(isShown).toEqual(undefined);
   });
 
-  it("should get undefined when the column name is quantityApproved and status is CREATED", function () {
-    scope.rnr = {"status":"CREATED"};
-    var isShown = scope.showSelectedColumn("quantityApproved");
-    expect(isShown).toEqual(undefined);
-  });
 
   it("should get 'defined' when the column name is not quantityApproved", function () {
     scope.rnr = {"status":"whatever"};
@@ -89,10 +84,10 @@ describe('CreateRnrController', function () {
   it("should get 'defined' when the column name is quantityApproved and status is SUBMITTED", function () {
     scope.rnr = {"status":"SUBMITTED"};
     var isShown = scope.showSelectedColumn("quantityApproved");
-    expect(isShown).toEqual("defined");
+    expect(isShown).toEqual(undefined);
   });
 
-  it("should get 'defined' when the column name is quantityApproved and status is SUBMITTED", function () {
+  it("should get 'undefined' when the column name is quantityApproved and status is APPROVED", function () {
     scope.rnr = {"status":"APPROVED"};
     var isShown = scope.showSelectedColumn("quantityApproved");
     expect(isShown).toEqual("defined");
