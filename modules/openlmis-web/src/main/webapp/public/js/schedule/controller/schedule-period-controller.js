@@ -15,8 +15,10 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule) {
     var endDate = new Date(endTime);
     endDate.setHours(0);
     startDate.setHours(0);
-
-    return Math.ceil(((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)));
+    var days = Math.ceil(((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)));
+    if(days >= 0)
+      return (days+1);
+    else return null;
   }
 
   $scope.createPeriod = function () {

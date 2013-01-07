@@ -26,20 +26,20 @@
           <input name="startDate" id="startDate" type="text" ui-date readonly ng-model="newPeriod.startDate"
                  value="{{newPeriod.startDate | date:'dd/MM/yyyy'}}" ng-required="true">
 
-          <span class="rnr-form-error"
-                ng-show="createPeriodForm.startDate.$error.required">Please fill this value</span>
+          <span class="rnr-form-error" ng-show="createPeriodForm.startDate.$error.required && showErrorForCreate">Please fill this value</span>
         </div>
         <div class="span3 form-cell">
           <label>End Date <span class="label-required">*</span></label>
           <input name="endDate" id="endDate" type="text" ui-date readonly ng-model="newPeriod.endDate"
                  value="{{newPeriod.endDate | date:'dd/MM/yyyy'}}" ng-required="true"/>
-          <span class="rnr-form-error" ng-show="createPeriodForm.endDate.$error.required">Please fill this value</span>
+
+          <span class="rnr-form-error" ng-show="createPeriodForm.endDate.$error.required && showErrorForCreate">Please fill this value</span>
         </div>
       </div>
       <div class="row-fluid form-row">
         <div class="span3 form-cell">
           <label>Total Days: </label>
-          <span class="cell-text">{{calculateDays(newPeriod.startDate, newPeriod.endDate)}}</span>
+          <span class="cell-text" ng-show="calculateDays(newPeriod.startDate, newPeriod.endDate)">{{calculateDays(newPeriod.startDate, newPeriod.endDate)}}</span>
         </div>
         <div class="span3 form-cell ">
           <label>Number of Months: </label>
