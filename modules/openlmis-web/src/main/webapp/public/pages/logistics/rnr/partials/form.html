@@ -68,7 +68,7 @@
                                        <div class="modal-body">
                                          <div class="adjustment-field">
                                            <h5>Add new Loss/Adjustment</h5>
-                                           <select ng-disabled="disableFormForSubmittedRnr" ng-model="lossAndAdjustment.type" ng-options="i as i.description for i in lossesAndAdjustmentTypesToDisplay">
+                                           <select ng-disabled="disableFormForSubmittedRnr()" ng-model="lossAndAdjustment.type" ng-options="i as i.description for i in lossesAndAdjustmentTypesToDisplay">
                                              <option value="">--Select Type--</option>
                                            </select>
                                            <input ng-disabled="disableFormForSubmittedRnr()" type="text" name="quantity{{rnrLineItem.rnrLineItem.id}}" ng-model="lossAndAdjustment.quantity"
