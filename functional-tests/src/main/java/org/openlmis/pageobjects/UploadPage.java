@@ -72,4 +72,20 @@ public class UploadPage extends Page {
         SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
     }
 
+    public void uploadProgramSupportedByFacilities() throws FileNotFoundException {
+        selectUploadType("Programs supported by facilities");
+        uploadFile("program_supported.csv");
+        testWebDriver.sleep(250);
+        testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
+        SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
+    }
+
+    public void uploadSupervisoryNodes() throws FileNotFoundException {
+        selectUploadType("Supervisory Nodes");
+        uploadFile("Supervisory_Nodes.csv");
+        testWebDriver.sleep(250);
+        testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
+        SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
+    }
+
 }
