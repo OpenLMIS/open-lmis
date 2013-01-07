@@ -7,7 +7,7 @@ function LoginController($scope, $http,localStorageService) {
             data:data,
             headers:{'Content-Type':'application/x-www-form-urlencoded'}
         }).success(function (data) {
-            if (data.authenticated == "true") {
+            if (data.authenticated) {
               localStorageService.add(localStorageKeys.RIGHT,getRights(data.rights));
           if (window.location.href.indexOf("login.html") != -1) {
             window.location = "/";

@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -45,9 +45,8 @@ public class UserControllerTest {
     session.setAttribute(UserAuthenticationSuccessHandler.USER, username);
     HashMap<String, Object> params = userController.user(httpServletRequest, null);
     assertThat(params.get("name").toString(), is("Foo"));
-    assertThat(params.get("authenticated").toString(), is("true"));
+    assertThat((Boolean) params.get("authenticated"), is(true));
   }
-
 
 
   @Test
@@ -55,7 +54,7 @@ public class UserControllerTest {
     session.setAttribute(UserAuthenticationSuccessHandler.USER, null);
     HashMap<String, Object> params = userController.user(httpServletRequest, "true");
     assertThat(params.get("error").toString(), is("true"));
-    assertThat(params.get("authenticated").toString(), is("false"));
+    assertThat((Boolean)params.get("authenticated"), is(false));
   }
 
   @Test

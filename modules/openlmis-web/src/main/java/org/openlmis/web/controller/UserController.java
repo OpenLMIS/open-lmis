@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 
 
@@ -31,10 +33,10 @@ public class UserController extends BaseController {
     HashMap<String, Object> params = new HashMap<>();
     if (userName != null) {
       params.put("name", userName);
-      params.put("authenticated", "true");
+      params.put("authenticated", TRUE);
       params.put("rights", roleRightService.getRights(userName));
     } else {
-      params.put("authenticated", "false");
+      params.put("authenticated", FALSE);
       params.put("error", error);
     }
     return params;
