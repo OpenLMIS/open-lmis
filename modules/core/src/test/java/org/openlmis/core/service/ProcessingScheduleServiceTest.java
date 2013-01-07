@@ -13,10 +13,13 @@ import org.openlmis.core.repository.ProcessingScheduleRepository;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.natpryce.makeiteasy.MakeItEasy.a;
+import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 
 public class ProcessingScheduleServiceTest {
   @Rule
@@ -116,5 +119,12 @@ public class ProcessingScheduleServiceTest {
 
     assertThat(service.getAllPeriods(123), is(periodList));
     verify(periodRepository).getAll(123);
+  }
+
+  @Test
+  public void shouldInsertAPeriod() throws Exception {
+    ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod));
+    service.savePeriod(processingPeriod);
+    verify(periodRepository).insert(processingPeriod);
   }
 }

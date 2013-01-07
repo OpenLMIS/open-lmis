@@ -32,6 +32,7 @@ public class FacilityBuilder {
   public static final String FACILITY_TYPE_CODE = "warehouse";
   public static final Integer FACILITY_TYPE_ID = 1;
   public static final Integer GEOGRAPHIC_ZONE_ID = 2;
+
   public static final Instantiator<Facility> defaultFacility = new Instantiator<Facility>() {
 
     @Override

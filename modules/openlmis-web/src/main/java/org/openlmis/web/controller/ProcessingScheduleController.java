@@ -51,6 +51,12 @@ public class ProcessingScheduleController extends BaseController {
     return saveSchedule(processingSchedule, false);
   }
 
+  @RequestMapping(value = "/schedules/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+  @PreAuthorize("hasPermission('','MANAGE_SCHEDULE')")
+  public ResponseEntity<OpenLmisResponse> get(@PathVariable("id") Integer id) {
+    return OpenLmisResponse.response(SCHEDULE, processingScheduleService.get(id));
+  }
+
   private ResponseEntity<OpenLmisResponse> saveSchedule(ProcessingSchedule processingSchedule, boolean createOperation) {
     try {
       ProcessingSchedule savedSchedule = processingScheduleService.save(processingSchedule);
@@ -60,9 +66,5 @@ public class ProcessingScheduleController extends BaseController {
     } catch (DataException e) {
       return OpenLmisResponse.error(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
-  }
-
-  public ResponseEntity<OpenLmisResponse> get(Integer id) {
-    return OpenLmisResponse.response(SCHEDULE, processingScheduleService.get(id));
   }
 }

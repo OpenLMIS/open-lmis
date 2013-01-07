@@ -42,4 +42,8 @@ public class ProcessingScheduleService {
   public ProcessingSchedule get(Integer id) {
     return repository.get(id);
   }
+
+  public void savePeriod(ProcessingPeriod processingPeriod) {
+    periodRepository.insert(processingPeriod);
+  }
 }
