@@ -2,6 +2,7 @@ function ScheduleController($scope, Schedules, Schedule, $location) {
   $scope.newSchedule = {};
   $scope.schedules = {};
   $scope.editSchedule = {};
+
   Schedules.get({}, function (data) {
     $scope.initialSchedules = angular.copy(data.schedules, $scope.initialSchedules);
     $scope.schedules = data.schedules;
