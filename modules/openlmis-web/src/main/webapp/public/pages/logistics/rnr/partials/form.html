@@ -247,9 +247,7 @@
   <div id="action_buttons" class="action-buttons">
       <div class="form-cell button-row">
         <input ng-disabled="disableFormForSubmittedRnr()" type="button" ng-click="saveRnr()" class="btn btn-primary save-button" value="Save"/>
-      </div>
-    <div class="form-cell button-row">
-        <input ng-disabled="disableFormForSubmittedRnr()" type="submit" class="btn btn-success" value="Submit"/>
+        <input ng-disabled="disableFormForSubmittedRnr()" type="submit" class="btn btn-success pull-right" value="Submit"/>
       </div>
   <div class="toolbar-error" id="saveFailMessage" ng-model="error" ng-show="error">
     {{error}}

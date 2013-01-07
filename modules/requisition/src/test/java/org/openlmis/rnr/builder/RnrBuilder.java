@@ -12,7 +12,7 @@ import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 public class RnrBuilder {
 
 
-  public static final Instantiator<Rnr> defaultFacility = new Instantiator<Rnr>() {
+  public static final Instantiator<Rnr> defaultRnr = new Instantiator<Rnr>() {
 
     @Override
     public Rnr instantiate(PropertyLookup<Rnr> lookup) {
@@ -21,8 +21,9 @@ public class RnrBuilder {
       rnr.setProgramId(1);
       rnr.setStatus(SUBMITTED);
       rnr.setFullSupplyItemsSubmittedCost(0f);
-      RnrLineItem rnrLineItem = make(a(RnrLineItemBuilder.defaultRnrLineItem));
-      rnr.add(rnrLineItem);
+      RnrLineItem rnrLineItemCost48 = make(a(RnrLineItemBuilder.defaultRnrLineItem));
+      rnr.add(rnrLineItemCost48);
+
       return rnr;
     }
   };

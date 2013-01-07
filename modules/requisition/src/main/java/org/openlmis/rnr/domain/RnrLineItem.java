@@ -90,37 +90,28 @@ public class RnrLineItem {
   }
 
   public boolean validate() {
-    validateMandatoryFields();
-    validateCalculatedFields();
-
+    if (!validateMandatoryFields() || !validateCalculatedFields()) {
+      throw new DataException("R&R has errors, please correct them before submission");
+    }
     return true;
   }
 
-  private void validateCalculatedFields() {
-    if (quantityDispensed != (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand)) {
-      throw new DataException("R&R has errors, please correct them before submission");
-    }
-    if(!totalLossesAndAdjustments.equals(calculateTotalLossesAndAdjustments())) {
-      throw new DataException("R&R has errors, please correct them before submission");
-    }
-    if(!(normalizedConsumption.intValue() == (calculateNormalizedConsumption()))) {
-      throw new DataException("R&R has errors, please correct them before submission");
-    }
-    if(!normalizedConsumption.equals(amc)){
-      throw new DataException("R&R has errors, please correct them before submission");
-    }
-    if(!maxStockQuantity.equals(calculateMaxStockQuantity())) {
-      throw new DataException("R&R has errors, please correct them before submission");
-    }
-    if(!calculatedOrderQuantity.equals(calculateOrderQuantity())){
-      throw new DataException("R&R has errors, please correct them before submission");
-    }
-    if(!packsToShip.equals(calculatePacksToShip())){
-      throw new DataException("R&R has errors, please correct them before submission");
-    }
-    if(!cost.equals(calculateCost())){
-      throw new DataException("R&R has errors, please correct them before submission");
-    }
+  private boolean validateMandatoryFields() {
+    return !(!isPresent(beginningBalance) || !isPresent(quantityReceived) || !isPresent(quantityDispensed) ||
+        !isPresent(newPatientCount) || !isPresent(stockOutDays)) && (quantityRequested == null || isPresent(reasonForRequestedQuantity));
+  }
+
+  private boolean validateCalculatedFields() {
+    return quantityDispensed == (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand) &&
+        totalLossesAndAdjustments.equals(calculateTotalLossesAndAdjustments()) &&
+        normalizedConsumption.intValue() == (calculateNormalizedConsumption()) &&
+        normalizedConsumption.equals(amc) && maxStockQuantity.equals(calculateMaxStockQuantity()) &&
+        calculatedOrderQuantity.equals(calculateOrderQuantity()) &&
+        packsToShip.equals(calculatePacksToShip()) && cost.equals(calculateCost());
+  }
+
+  private boolean isPresent(Object value) {
+    return value != null;
   }
 
   private Float calculateCost() {
@@ -129,7 +120,7 @@ public class RnrLineItem {
 
   private Integer calculatePacksToShip() {
     Integer orderQuantity = quantityRequested == null ? calculatedOrderQuantity : quantityRequested;
-    Double packsToShip = Math.floor(orderQuantity/packSize);
+    Double packsToShip = Math.floor(orderQuantity / packSize);
     return rounded(packsToShip);
   }
 
@@ -156,38 +147,21 @@ public class RnrLineItem {
 
   private Integer calculateNormalizedConsumption() {
     Float consumptionAdjustedWithStockOutDays = ((MULTIPLIER * NUMBER_OF_DAYS) - stockOutDays) == 0 ? quantityDispensed :
-       (quantityDispensed * ((MULTIPLIER * NUMBER_OF_DAYS) / ((MULTIPLIER * NUMBER_OF_DAYS) - stockOutDays)));
-    Float adjustmentForNewPatients = (newPatientCount * ((Double)Math.ceil(dosesPerMonth / dosesPerDispensingUnit)).floatValue() ) * MULTIPLIER;
+        (quantityDispensed * ((MULTIPLIER * NUMBER_OF_DAYS) / ((MULTIPLIER * NUMBER_OF_DAYS) - stockOutDays)));
+    Float adjustmentForNewPatients = (newPatientCount * ((Double) Math.ceil(dosesPerMonth / dosesPerDispensingUnit)).floatValue()) * MULTIPLIER;
 
     return Math.round(consumptionAdjustedWithStockOutDays + adjustmentForNewPatients);
   }
 
   private Integer calculateTotalLossesAndAdjustments() {
     Integer total = 0;
-    for(LossesAndAdjustments lossAndAdjustment : lossesAndAdjustments) {
-      if(lossAndAdjustment.getType().getAdditive()) {
+    for (LossesAndAdjustments lossAndAdjustment : lossesAndAdjustments) {
+      if (lossAndAdjustment.getType().getAdditive()) {
         total += lossAndAdjustment.getQuantity();
       } else {
         total -= lossAndAdjustment.getQuantity();
       }
     }
     return total;
-  }
-
-  private void validateMandatoryFields() {
-    isPresent(beginningBalance);
-    isPresent(quantityReceived);
-    isPresent(quantityDispensed);
-    isPresent(newPatientCount);
-    isPresent(stockOutDays);
-    if (quantityRequested != null) {
-      isPresent(reasonForRequestedQuantity);
-    }
-  }
-
-  private void isPresent(Object value) {
-    if (value == null) {
-      throw new DataException("R&R has errors, please correct them before submission");
-    }
   }
 }

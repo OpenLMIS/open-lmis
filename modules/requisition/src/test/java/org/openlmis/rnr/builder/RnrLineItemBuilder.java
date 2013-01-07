@@ -1,13 +1,17 @@
 package org.openlmis.rnr.builder;
 
 import com.natpryce.makeiteasy.Instantiator;
+import com.natpryce.makeiteasy.Property;
 import com.natpryce.makeiteasy.PropertyLookup;
 import org.openlmis.rnr.domain.LossesAndAdjustments;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.domain.RnrLineItem;
 
+import static com.natpryce.makeiteasy.Property.newProperty;
+
 public class RnrLineItemBuilder {
 
+  public static final Property<RnrLineItem,Float> cost = newProperty();
   public static final Instantiator<RnrLineItem> defaultRnrLineItem = new Instantiator<RnrLineItem>() {
 
     @Override
@@ -46,7 +50,7 @@ public class RnrLineItemBuilder {
       rnrLineItem.setPackRoundingThreshold(3);
       rnrLineItem.setRoundToZero(true);
       rnrLineItem.setPrice(4f);
-      rnrLineItem.setCost(48f);
+      rnrLineItem.setCost(lookup.valueOf(cost, 48f));
       return rnrLineItem;
     }
   };
