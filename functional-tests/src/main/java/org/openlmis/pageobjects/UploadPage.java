@@ -54,6 +54,7 @@ public class UploadPage extends Page {
         selectUploadType("Facilities");
         uploadFile("facilities.csv");
         testWebDriver.sleep(250);
+        testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
         SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
 
     }
