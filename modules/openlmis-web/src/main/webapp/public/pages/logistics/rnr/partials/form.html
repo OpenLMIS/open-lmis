@@ -1,7 +1,7 @@
-<div ng-controller="CreateRnrController">
+<div ng-controller="CreateRnrController" >
 <div ng-hide="programRnRColumnList">Loading...</div>
-<form name="saveRnrForm" ng-submit="submitRnr()" id="rnr-form" novalidate>
-<div class="total-cost alert alert-info">Total R&amp;R Cost: 
+<form name="saveRnrForm" ng-submit="submitRnr()" id="rnr-form" novalidate >
+<div class="total-cost alert alert-info">Total R&amp;R Cost:
 <span id="totalCostCurrency" class="cell-text">
                                            {{currency}}
                        </span>
@@ -13,7 +13,7 @@
            <table class="table table-striped table-bordered">
                <thead>
                <tr>
-                   <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in programRnRColumnList"  ng-show="showSelectedColumn(programRnrColumn.name)">
+                   <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in programRnRColumnList" ng-show="showSelectedColumn(programRnrColumn.name)">
                        {{programRnrColumn.label}}
                    </th>
                </tr>
@@ -25,34 +25,37 @@
                            <span ng-switch-when="USER_INPUT">
                                <ng-switch on="column.name">
                                    <span ng-switch-when="beginningBalance">
-                                     <input id="{{getId('A', $parent)}}" type="text"
+                                     <input  id="{{getId('A', $parent)}}" type="text"
+                                             ng-required="true" ng-disabled="disableFormForSubmittedRnr()"
                                             name="beginningBalance{{rnrLineItem.rnrLineItem['id']}}"
                                             ng-model="rnrLineItem.rnrLineItem[column.name]"
                                             rnr-validator="positiveInteger" maxlength="8"
-                                            ng-change="rnrLineItem.fill(rnr, programRnRColumnList)"/>
+                                            ng-change="rnrLineItem.fill(rnr, programRnRColumnList)" ng-class="highlightRequired(rnrLineItem.rnrLineItem[column.name])"/>
                                      <span class="rnr-form-error" id="beginningBalance{{rnrLineItem.rnrLineItem['id']}}" style="display:none;">
                                       Enter Numeric Data
                                      </span>
                                    </span>
 
                                    <span ng-switch-when="quantityReceived">
-                                       <input id="{{getId('B', $parent)}}" type="text"
+                                       <input ng-required="true" ng-disabled="disableFormForSubmittedRnr()" id="{{getId('B', $parent)}}" type="text"
                                               name="quantityReceived{{rnrLineItem.rnrLineItem['id']}}"
                                               ng-model="rnrLineItem.rnrLineItem[column.name]"
                                               rnr-validator="positiveInteger" maxlength="8"
-                                              ng-change="rnrLineItem.fill(rnr, programRnRColumnList)"/>
+                                              ng-change="rnrLineItem.fill(rnr, programRnRColumnList)"
+                                              ng-class="highlightRequired(rnrLineItem.rnrLineItem[column.name])"/>
                                        <span class="rnr-form-error" id="quantityReceived{{rnrLineItem.rnrLineItem['id']}}" style="display:none;">
                                         Enter Numeric Data
                                        </span>
                                    </span>
 
                                    <span ng-switch-when="quantityDispensed">
-                                     <input id="{{getId('C', $parent)}}" type="text"
+                                     <input ng-required="true" ng-disabled="disableFormForSubmittedRnr()" id="{{getId('C', $parent)}}" type="text"
                                             name="quantityDispensed{{rnrLineItem.rnrLineItem['id']}}"
                                             ng-model="rnrLineItem.rnrLineItem[column.name]"
                                             rnr-validator="positiveInteger"
                                             ng-change="rnrLineItem.fill(rnr, programRnRColumnList)"
-                                            maxlength="8"/>
+                                            maxlength="8"
+                                            ng-class="highlightRequired(rnrLineItem.rnrLineItem[column.name])"/>
                                      <span class="rnr-form-error" id="quantityDispensed{{rnrLineItem.rnrLineItem['id']}}" style="display:none;">
                                       Enter Numeric Data
                                      </span>
@@ -65,10 +68,10 @@
                                        <div class="modal-body">
                                          <div class="adjustment-field">
                                            <h5>Add new Loss/Adjustment</h5>
-                                           <select ng-model="lossAndAdjustment.type" ng-options="i as i.description for i in lossesAndAdjustmentTypesToDisplay">
+                                           <select ng-disabled="disableFormForSubmittedRnr" ng-model="lossAndAdjustment.type" ng-options="i as i.description for i in lossesAndAdjustmentTypesToDisplay">
                                              <option value="">--Select Type--</option>
                                            </select>
-                                           <input type="text" name="quantity{{rnrLineItem.rnrLineItem.id}}" ng-model="lossAndAdjustment.quantity"
+                                           <input ng-disabled="disableFormForSubmittedRnr()" type="text" name="quantity{{rnrLineItem.rnrLineItem.id}}" ng-model="lossAndAdjustment.quantity"
                                                   rnr-validator="positiveInteger" maxlength="8" placeholder="Quantity" />
                                          <div class="rnr-form-error"
                                               id="quantity{{rnrLineItem.rnrLineItem.id}}"
@@ -91,7 +94,7 @@
                                                     ng-click="removeLossAndAdjustment(rnrLineItem,oneLossAndAdjustment)">&times;</a>
                                                </span>
                                                <span class="tpl-adjustment-qty">
-                                                 <input id="{{getId('D', $parent, true)}}" name="{{oneLossAndAdjustment.type.displayOrder}}"
+                                                 <input ng-disabled="disableFormForSubmittedRnr()" id="{{getId('D', $parent, true)}}" name="{{oneLossAndAdjustment.type.displayOrder}}"
                                                               type="text"
                                                               ng-model="oneLossAndAdjustment.quantity"
                                                               ng-change="rnrLineItem.reEvaluateTotalLossesAndAdjustments()"
@@ -125,28 +128,30 @@
 
 
                                    <span ng-switch-when="stockInHand">
-                                     <input id="{{getId('E', $parent)}}" type="text" name="stockInHand{{rnrLineItem.rnrLineItem['id']}}"
+                                     <input ng-required="true" ng-disabled="disableFormForSubmittedRnr()" id="{{getId('E', $parent)}}" type="text" name="stockInHand{{rnrLineItem.rnrLineItem['id']}}"
                                             ng-model="rnrLineItem.rnrLineItem[column.name]"
                                             rnr-validator="positiveInteger"
-                                            ng-change="rnrLineItem.fill(rnr, programRnRColumnList)" maxlength="8"/>
+                                            ng-change="rnrLineItem.fill(rnr, programRnRColumnList)" maxlength="8"
+                                            ng-class="highlightRequired(rnrLineItem.rnrLineItem[column.name])"/>
                                      <span class="rnr-form-error" id="stockInHand{{rnrLineItem.rnrLineItem['id']}}" style="display:none;">
                                       Enter Numeric Data
                                      </span>
                                    </span>
 
                                    <span ng-switch-when="newPatientCount">
-                                     <input id="{{getId('F', $parent)}}" type="text"
+                                     <input ng-required="true" ng-disabled="disableFormForSubmittedRnr()" id="{{getId('F', $parent)}}" type="text"
                                             name="newPatientCount{{rnrLineItem.rnrLineItem['id']}}"
                                             ng-model="rnrLineItem.rnrLineItem[column.name]"
                                             rnr-validator="positiveInteger" maxlength="8"
-                                            ng-change="rnrLineItem.fill(rnr, programRnRColumnList)"/>
+                                            ng-change="rnrLineItem.fill(rnr, programRnRColumnList)"
+                                            ng-class="highlightRequired(rnrLineItem.rnrLineItem[column.name])"/>
                                      <span class="rnr-form-error" id="newPatientCount{{rnrLineItem.rnrLineItem['id']}}" style="display:none;">
                                       Enter Numeric Data
                                      </span>
                                    </span>
 
                                    <span ng-switch-when="quantityRequested">
-                                     <input id="{{getId('J', $parent)}}" type="text"
+                                     <input ng-disabled="disableFormForSubmittedRnr()" id="{{getId('J', $parent)}}" type="text"
                                             name="quantityRequested{{rnrLineItem.rnrLineItem['id']}}"
                                             ng-model="rnrLineItem.rnrLineItem[column.name]"
                                             rnr-validator="positiveInteger" maxlength="8"
@@ -157,7 +162,7 @@
                                    </span>
 
                                    <span ng-switch-when="quantityApproved">
-                                     <input id="{{getId('K', $parent)}}" type="text"
+                                     <input  id="{{getId('K', $parent)}}" type="text"
                                             name="quantityApproved{{rnrLineItem.rnrLineItem['id']}}"
                                             ng-model="rnrLineItem.rnrLineItem[column.name]"
                                             rnr-validator="positiveInteger" maxlength="8"/>
@@ -167,20 +172,14 @@
                                    </span>
 
                                    <span ng-switch-when="remarks">
-                                       <input id="{{getId('L', $parent)}}" type="text" name="remarks{{rnrLineItem.rnrLineItem['id']}}"
+                                       <input ng-disabled="disableFormForSubmittedRnr()" id="{{getId('L', $parent)}}" type="text" name="remarks{{rnrLineItem.rnrLineItem['id']}}"
                                              ng-model="rnrLineItem.rnrLineItem[column.name]"
                                              maxlength="250"/>
                                    </span>
 
-                                   <span ng-switch-when="reasonForLossesAndAdjustments">
-                                       <input id="{{getId('S', $parent)}}" type="text"
-                                            name="reasonForLossesAndAdjustments{{rnrLineItem.rnrLineItem['id']}}"
-                                            ng-model="rnrLineItem.rnrLineItem[column.name]"
-                                            maxlength="250"/>
-                                   </span>
 
                                    <span ng-switch-when="reasonForRequestedQuantity">
-                                       <input id="{{getId('W', $parent)}}" type="text"
+                                       <input ng-disabled="disableFormForSubmittedRnr()" id="{{getId('W', $parent)}}" type="text"
                                             name="reasonForRequestedQuantity{{rnrLineItem.rnrLineItem['id']}}"
                                             ng-model="rnrLineItem.rnrLineItem[column.name]"
                                             ng-required="rnrLineItem.rnrLineItem.quantityRequested"
@@ -191,10 +190,11 @@
                                    </span>
 
                                    <span ng-switch-when="stockOutDays">
-                                       <input id="{{getId('X', $parent)}}" type="text" name="stockOutDays{{rnrLineItem.rnrLineItem['id']}}"
+                                       <input ng-required="true" ng-disabled="disableFormForSubmittedRnr()" id="{{getId('X', $parent)}}" type="text" name="stockOutDays{{rnrLineItem.rnrLineItem['id']}}"
                                        ng-model="rnrLineItem.rnrLineItem[column.name]"
                                        rnr-validator="positiveInteger" maxlength="8"
-                                       ng-change="rnrLineItem.fill(rnr, programRnRColumnList)"/>
+                                       ng-change="rnrLineItem.fill(rnr, programRnRColumnList)"
+                                       ng-class="highlightRequired(rnrLineItem.rnrLineItem[column.name])"/>
                                        <span class="rnr-form-error" id="stockOutDays{{rnrLineItem.rnrLineItem['id']}}" style="display:none;">
                                        Enter Numeric Data
                                        </span>
@@ -246,10 +246,10 @@
    <br />
   <div id="action_buttons" class="action-buttons">
       <div class="form-cell button-row">
-        <input type="button" ng-click="saveRnr()" class="btn btn-primary save-button" value="Save"/>
+        <input ng-disabled="disableFormForSubmittedRnr()" type="button" ng-click="saveRnr()" class="btn btn-primary save-button" value="Save"/>
       </div>
     <div class="form-cell button-row">
-        <input type="submit" class="btn btn-success" value="Submit"/>
+        <input ng-disabled="disableFormForSubmittedRnr()" type="submit" class="btn btn-success" value="Submit"/>
       </div>
   <div class="toolbar-error" id="saveFailMessage" ng-model="error" ng-show="error">
     {{error}}

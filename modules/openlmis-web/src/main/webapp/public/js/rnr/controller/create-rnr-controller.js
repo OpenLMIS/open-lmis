@@ -1,10 +1,18 @@
 function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $location, Requisition, Requisitions, $route, LossesAndAdjustmentsReferenceData, $rootScope) {
 
+  $scope.disableFormForSubmittedRnr = function () {
+    if ($scope.rnr != null && $scope.rnr.status == 'SUBMITTED') {
+      return true;
+    }
+    return false;
+  };
+
+
   $scope.lossesAndAdjustmentsModal = [];
   $scope.rnrLineItems = [];
   $rootScope.fixToolBar();
-
   if (!$scope.$parent.rnr) {
+    // TODO : is this required?
     Requisition.get({facilityId:$route.current.params.facility, programId:$route.current.params.program},
       function (data) {
         if (data.rnr) {
@@ -26,7 +34,6 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
   LossesAndAdjustmentsReferenceData.get({}, function (data) {
     $scope.allTypes = data.lossAdjustmentTypes;
   }, {});
-
   ProgramRnRColumnList.get({programId:$route.current.params.program}, function (data) {
     function resetFullSupplyItemsCostIfNull(rnr) {
       if (rnr == null) return;
@@ -52,7 +59,6 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     $location.path($scope.$parent.sourceUrl);
   });
 
-  // TODO : is this required?
   var validate = function (data) {
     return (data.rnrColumnList.length > 0);
   };
@@ -64,34 +70,39 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
       return;
     }
 
-    Requisitions.update({id: $scope.rnr.id, operation: "save"},
+    Requisitions.update({id:$scope.rnr.id, operation:"save"},
       $scope.rnr, function () {
         $scope.message = "R&R saved successfully!";
         $scope.error = "";
       }, {});
   };
 
-  $scope.submitRnr = function() {
+  $scope.highlightRequired = function(value) {
+    if(!value &&  $scope.inputClass == 'required') {
+      return "required-error";
+    }
+  };
 
-    if($scope.saveRnrForm.$error.required){
+  $scope.submitRnr = function () {
+
+    if ($scope.saveRnrForm.$error.required) {
+      $scope.inputClass = "required";
       $scope.error = 'Please complete the R&R form before submitting';
       $scope.message = "";
       return;
     }
-    if($scope.saveRnrForm.$error.rnrError){
+    if ($scope.saveRnrForm.$error.rnrError) {
       $scope.error = "R&R has errors, please clear them before submission";
       $scope.message = "";
       return;
     }
-    Requisitions.update({id: $scope.rnr.id, operation: "submit"},
+    Requisitions.update({id:$scope.rnr.id, operation:"submit"},
       $scope.rnr, function (data) {
         $scope.rnr.status = "SUBMITTED";
         $scope.message = data.success;
         $scope.error = "";
       }, {});
   };
-
-
 
   $scope.getId = function (prefix, parent, isLossAdjustment) {
     if (isLossAdjustment != null && isLossAdjustment != undefined && isLossAdjustment) {
@@ -112,7 +123,7 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
   };
 
   $scope.showSelectedColumn = function (columnName) {
-    if (($scope.rnr.status == "INITIATED" || $scope.rnr.status == "CREATED") && columnName == "quantityApproved")
+    if (($scope.rnr.status == "INITIATED" || $scope.rnr.status == "SUBMITTED") && columnName == "quantityApproved")
       return undefined;
     return "defined";
   };
@@ -150,5 +161,5 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
       $scope.rnrLineItems.push(rnrLineItem);
     });
   }
-}
 
+}
