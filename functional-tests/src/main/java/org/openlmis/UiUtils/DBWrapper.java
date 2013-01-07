@@ -77,6 +77,18 @@ public class DBWrapper {
 
     }
 
+    public void deleteFacilities() throws IOException , SQLException
+    {
+
+        DBWrapper dbWrapper=new DBWrapper();
+
+            dbWrapper.dbConnection("DELETE FROM requisition_line_item_losses_adjustments;", "alter");
+            dbWrapper.dbConnection("DELETE FROM requisition_line_items;", "alter");
+            dbWrapper.dbConnection("DELETE FROM requisition;", "alter");
+            dbWrapper.dbConnection("delete from facilities;", "alter");
+
+        }
+
     public void insertFacility() throws IOException , SQLException
     {
 
@@ -120,11 +132,13 @@ public class DBWrapper {
         dbwrapper.dbConnection("DELETE FROM requisition_line_items;", "alter");
         dbwrapper.dbConnection("delete from products;", "alter");
         dbwrapper.dbConnection("delete from users where userName like('User%');", "alter");
-        dbwrapper.dbConnection("delete from requisition;", "alter");
+        dbwrapper.dbConnection("DELETE FROM requisition_line_item_losses_adjustments;", "alter");
+        dbwrapper.dbConnection("DELETE FROM requisition_line_items;", "alter");
+        dbwrapper.dbConnection("DELETE FROM requisition;", "alter");
+        dbwrapper.dbConnection("delete from facilities;", "alter");
         dbwrapper.dbConnection("delete from programs_supported;", "alter");
         dbwrapper.dbConnection("delete from supervisory_nodes;", "alter");
         dbwrapper.dbConnection("delete from requisition_group_members;", "alter");
-        dbwrapper.dbConnection("delete from facilities;", "alter");
         dbwrapper.dbConnection("delete from programs_supported;", "alter");
         dbwrapper.dbConnection("delete from program_rnr_columns;", "alter");
         dbwrapper.dbConnection("delete from requisition_groups;", "alter");

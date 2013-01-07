@@ -81,6 +81,9 @@ public class HomePage extends Page {
     @FindBy(how = How.LINK_TEXT, using = "Search")
     private static WebElement searchLink;
 
+    @FindBy(how = How.XPATH, using = "//a[contains(text(),'Upload')]")
+    private static WebElement uploadLink;
+
     public HomePage(TestWebDriver driver) throws  IOException {
         super(driver);
         PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
@@ -157,6 +160,12 @@ public class HomePage extends Page {
         testWebDriver.waitForElementToAppear(manageRoleAssignmentLink);
         manageRoleAssignmentLink.click();
         return new RolesPage(testWebDriver);
+    }
+
+    public UploadPage navigateUploads() throws IOException {
+        testWebDriver.waitForElementToAppear(uploadLink);
+        uploadLink.click();
+        return new UploadPage(testWebDriver);
     }
 
 }
