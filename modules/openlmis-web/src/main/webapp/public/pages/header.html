@@ -1,8 +1,10 @@
-<div ng-controller="HeaderController">
-    <div ui-modal class="fade" ng-model="modalShown" style="opacity: 100" data-keyboard="false" data-backdrop="static"
-         id="myModal">
+<div ng-show="modalShown" id="myModal">
+    <div class="modal-backdrop"></div>
+    <div class="modal fade in">
         <ng-include src="'/public/pages/login-form.html'"/>
     </div>
+</div>
+<div ng-controller="HeaderController">
     <div class="header">
         <div class="header-top">
             <div class="logo">
