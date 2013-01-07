@@ -46,16 +46,30 @@ public class UploadPage extends Page {
         uploadFilePath = System.getProperty("user.dir") + "/src/main/resources/"+fileName;
         setCsvPath.sendKeys(uploadFilePath);
         uploadButton.click();
-
     }
 
     public void uploadFacilities() throws FileNotFoundException {
-
         selectUploadType("Facilities");
         uploadFile("facilities.csv");
         testWebDriver.sleep(250);
         testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
         SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
-
     }
+
+    public void uploadProducts() throws FileNotFoundException {
+        selectUploadType("Products");
+        uploadFile("products.csv");
+        testWebDriver.sleep(250);
+        testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
+        SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
+    }
+
+    public void uploadProgramProductMapping() throws FileNotFoundException {
+        selectUploadType("Program Product");
+        uploadFile("program_product.csv");
+        testWebDriver.sleep(250);
+        testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
+        SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
+    }
+
 }

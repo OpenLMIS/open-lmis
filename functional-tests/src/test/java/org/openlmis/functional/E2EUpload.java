@@ -14,7 +14,7 @@ import org.testng.annotations.*;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
-public class Upload extends TestCaseHelper {
+public class E2EUpload extends TestCaseHelper {
 
     @BeforeClass
     public void setUp() throws Exception
@@ -25,7 +25,7 @@ public class Upload extends TestCaseHelper {
     }
 
     @Test(dataProvider = "Data-Provider-Function-Positive")
-    public void uploadFacilities(String user,  String[] credentials) throws Exception {
+    public void uploadCSVFiles(String user, String[] credentials) throws Exception {
 
         LoginPage loginPage=new LoginPage(testWebDriver);
 
@@ -33,6 +33,12 @@ public class Upload extends TestCaseHelper {
 
         UploadPage uploadPage = homePage.navigateUploads();
         uploadPage.uploadFacilities();
+        testWebDriver.setImplicitWait(2500);
+
+        uploadPage.uploadProducts();
+        testWebDriver.setImplicitWait(2500);
+
+        uploadPage.uploadProgramProductMapping();
         testWebDriver.setImplicitWait(2500);
 
         homePage.logout();
