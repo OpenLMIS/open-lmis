@@ -66,6 +66,12 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule, $loca
   var resetNewPeriod = function(endDate){
         $scope.newPeriod = {};
         $scope.newPeriod.startDate = endDate + $scope.oneDay;
+        $scope.refreshEndDateOffset($scope.newPeriod.startDate);
+  };
+
+  $scope.refreshEndDateOffset = function(startDateTime){
+    $scope.endDateOffset =Math.ceil((startDateTime+$scope.oneDay-(new Date()).getTime())/$scope.oneDay);
+    $scope.newPeriod.endDate = undefined;
   };
 
   $scope.blurDateFields = function() {

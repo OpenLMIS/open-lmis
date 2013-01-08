@@ -22,16 +22,16 @@
       </div>
       <div class="row-fluid form-row">
         <div class="span3 form-cell">
-          <label>Start Date <span class="label-required">*</span></label>
-          <input name="startDate" id="startDate" type="text" ui-date="{minDate:'+0D', dateFormat: 'dd/mm/yy'}" readonly ng-model="newPeriod.startDate"
-                 value="{{newPeriod.startDate | date:'dd/MM/yy'}}" ng-required="true" ng-change="blurDateFields()" ng-disabled= "periodList" />
+          <label>Start Date(dd/mm/yyyy) <span class="label-required">*</span></label>
+          <input name="startDate" id="startDate" type="text" ui-date="{minDate:'0D', dateFormat: 'dd/mm/yy'}" readonly ng-model="newPeriod.startDate"
+                 value="{{newPeriod.startDate | date:'dd/MM/yyyy'}}" ng-required="true" ng-change="blurDateFields();refreshEndDateOffset(newPeriod.startDate.getTime())" ng-disabled="periodList.length>0" />
 
           <span class="rnr-form-error" ng-show="createPeriodForm.startDate.$error.required && showErrorForCreate">Please fill this value</span>
         </div>
         <div class="span3 form-cell">
-          <label>End Date <span class="label-required">*</span></label>
-          <input name="endDate" id="endDate" type="text" ui-date="{minDate:'+1D', dateFormat: 'dd/mm/yy'}" readonly ng-model="newPeriod.endDate"
-                 value="{{newPeriod.endDate | date:'dd/MM/yy'}}" ng-required="true" ng-change="blurDateFields()"/>
+          <label>End Date(dd/mm/yyyy) <span class="label-required">*</span></label>
+          <input name="endDate" id="endDate" type="text" ui-date="{minDate:endDateOffset, dateFormat: 'dd/mm/yy'}" readonly ng-model="newPeriod.endDate"
+                 value="{{newPeriod.endDate | date:'dd/MM/yyyy'}}" ng-required="true" ng-change="blurDateFields()" ng-disabled="!newPeriod.startDate"/>
 
           <span class="rnr-form-error" ng-show="createPeriodForm.endDate.$error.required && showErrorForCreate">Please fill this value</span>
         </div>
