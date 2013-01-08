@@ -43,7 +43,7 @@ describe("Schedule", function () {
       $httpBackend.flush();
 
       expect(scope.message).toEqual("");
-      expect(scope.error).toEqual("errorMsg");
+      expect(scope.newSchedule.error).toEqual("errorMsg");
     });
 
     it('should update an existing schedule', function() {
