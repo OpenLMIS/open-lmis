@@ -609,15 +609,55 @@ h3 {
   padding: 12px 0;
   border: 1px solid #eee;
   border-top: 0;
-  &:hover {
-    background-color: #f5f5f5;
-  }
   input[type="text"] {
     width: 95%;
   }
 }
 .schedule-form {
   margin: 0;
+  &.schedule-form-active {
+    background-color: #FFFBDF;
+    border-style: solid;
+    border-width: 2px 1px;
+    border-color: #C2A717 #DFDFDF;
+    input {
+      margin: 0;
+    }
+    .schedule-row {
+      border: 0 none;
+      padding: 16px 0;
+    }
+    .schedule-button-row {
+      background-color: #F3E9B1;
+      padding: 8px 0;
+      div {
+        min-height: 20px;
+      }
+    }
+  }
+}
+.edit-schedule-form {
+  margin: 0;
+  .schedule-form-active {
+    background-color: #E7F7FF;
+    border-style: solid;
+    border-width: 2px 1px;
+    border-color: #479EEE #DFDFDF;
+    input {
+      margin: 0;
+    }
+    .schedule-row {
+      border: 0 none;
+      padding: 16px 0;
+    }
+    .schedule-button-row {
+      background-color: #BCDFF3;
+      padding: 8px 0;
+      div {
+        min-height: 20px;
+      }
+    }
+  }
 }
 
 input.required-error {
@@ -631,3 +671,56 @@ input.required-error {
 input[type='text'] {
   outline: 0 none !important;
 }
+.row-fluid [class*="span"] {
+  word-wrap: break-word;
+}
+
+input:focus:required:invalid:focus.ng-pristine,
+textarea:focus:required:invalid:focus.ng-pristine,
+select:focus:required:invalid:focus.ng-pristine {
+  border-color: rgba(82, 168, 236, 0.8);
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+  color: #555;
+}
+
+@-webkit-keyframes highlight {
+  0% {
+    background: transparent;
+  }
+  10% {
+    background: #FFFFD3;
+  }
+  50% {
+    background: #FFFFD3;
+  }
+  100% {
+    background: transparent;
+  }
+}
+@-moz-keyframes highlight {
+  0% {
+    background: transparent;
+  }
+  10% {
+    background: #FFFFD3;
+  }
+  50% {
+    background: #FFFFD3;
+  }
+  100% {
+    background: transparent;
+  }
+}
+.updated-item {
+  -webkit-animation-name: highlight;
+  -webkit-animation-duration: 3s;
+  -webkit-animation-timing-function: ease;
+  -webkit-animation-iteration-count: 1;
+  -moz-animation-name: highlight;
+  -moz-animation-duration: 3s;
+  -moz-animation-timing-function: ease;
+  -moz-animation-iteration-count: 1;
+}
+

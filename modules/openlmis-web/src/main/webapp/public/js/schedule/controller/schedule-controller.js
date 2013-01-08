@@ -1,12 +1,24 @@
 function ScheduleController($scope, Schedules, Schedule, $location) {
+  $scope.schedulesBackupMap = [];
   $scope.newSchedule = {};
   $scope.schedules = {};
   $scope.editSchedule = {};
 
+  $scope.getBackupSchedule = function (schedule) {
+    return {
+      code: schedule.code,
+      name: schedule.name,
+      description: schedule.description
+    };
+  };
+
   Schedules.get({}, function (data) {
     $scope.initialSchedules = angular.copy(data.schedules, $scope.initialSchedules);
     $scope.schedules = data.schedules;
-
+    for(scheduleIndex in data.schedules){
+      var schedule = data.schedules[scheduleIndex];
+      $scope.schedulesBackupMap[schedule.id] =  $scope.getBackupSchedule(schedule);
+    }
   }, function (data) {
     $location.path($scope.$parent.sourceUrl);
   });
@@ -20,20 +32,32 @@ function ScheduleController($scope, Schedules, Schedule, $location) {
     $scope.showErrorForCreate = false;
     Schedules.save({}, $scope.newSchedule, function (data) {
       $scope.schedules.unshift(data.schedule);
+      $scope.completeAddNewSchedule(data.schedule);
       $scope.message = data.success;
+      setTimeout(function() {
+        $scope.$apply(function() {
+          $scope.message = "";
+        });
+      }, 4000);
       $scope.newSchedule = {};
     }, function (data) {
       $scope.message = "";
-      $scope.error = data.data.error;
+      $scope.newSchedule.error = data.data.error;
     });
   };
 
   $scope.startAddNewSchedule = function() {
     $scope.$parent.newScheduleMode = true;
-    angular.element("#createScheduleForm").find("#code").focus();
+    $scope.$parent.formActive = "schedule-form-active";
   };
 
-  $scope.completeAddNewSchedule = function() {
+  $scope.completeAddNewSchedule = function(schedule) {
+    $scope.schedulesBackupMap[schedule.id] = $scope.getBackupSchedule(schedule);
+    $scope.$parent.newScheduleMode = false;
+    $scope.showErrorForCreate = false;
+  };
+
+  $scope.cancelAddNewSchedule = function(schedule) {
     $scope.$parent.newScheduleMode = false;
     $scope.showErrorForCreate = false;
   };
@@ -57,38 +81,54 @@ function ScheduleController($scope, Schedules, Schedule, $location) {
       $scope.showErrorForEdit = true;
       return;
     }
+    delete schedule.edit;
+    delete schedule.editFormActive;
+    delete schedule.error;
     $scope.showErrorForEdit = true;
+
     Schedule.update({id:schedule.id}, schedule, function (data) {
-      updateUiData(data.schedule);
-      $scope.completeAddNewSchedule();
+      var returnedSchedule = data.schedule;
+      $scope.schedulesBackupMap[returnedSchedule.id] = $scope.getBackupSchedule(returnedSchedule);
+
+      updateUiData(returnedSchedule);
       $scope.message = data.success;
+      setTimeout(function() {
+        $scope.$apply(function() {
+          $scope.message = "";
+        });
+      }, 4000);
       $scope.error = "";
       $scope.newSchedule = {};
       $scope.editSchedule = {};
-      $scope.$parent.edit = false;
+      schedule.edit = false;
+      schedule.editFormActive = "updated-item";
     }, function (data) {
       $scope.message = "";
       $scope.error = data.data.error;
+      schedule.edit = true;
+      $scope.startScheduleEdit(schedule);
+      schedule.error = data.data.error;
     });
-  }
+  };
 
   $scope.scheduleLoaded = function () {
     return !($scope.schedules == undefined || $scope.schedules == null);
-  }
+  };
 
   $scope.startScheduleEdit = function (scheduleUnderEdit) {
-    $scope.editSchedule.code = scheduleUnderEdit.code;
-    $scope.editSchedule.name = scheduleUnderEdit.name;
-    $scope.editSchedule.description = scheduleUnderEdit.description;
-  }
+    scheduleUnderEdit.editFormActive = "schedule-form-active";
+  };
 
-  $scope.endScheduleEdit = function (scheduleUnderEdit) {
-    scheduleUnderEdit.code = $scope.editSchedule.code;
-    scheduleUnderEdit.name = $scope.editSchedule.name;
-    scheduleUnderEdit.description = $scope.editSchedule.description;
-  }
+  $scope.cancelScheduleEdit = function (scheduleUnderEdit) {
+    var backupScheduleRow = $scope.schedulesBackupMap[scheduleUnderEdit.id];
+    scheduleUnderEdit.code = backupScheduleRow.code;
+    scheduleUnderEdit.name = backupScheduleRow.name;
+    scheduleUnderEdit.description = backupScheduleRow.description;
+    delete scheduleUnderEdit.editFormActive;
+    delete scheduleUnderEdit.error;
+  };
 
   $scope.navigateToPeriodFor = function (scheduleForPeriod) {
     $location.path('/manage-period/' + scheduleForPeriod.id);
-  }
+  };
 }

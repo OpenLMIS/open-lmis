@@ -14,71 +14,93 @@
       <div class="span1">&nbsp;</div>
     </div>
 
-    <form id="createScheduleForm" ng-show="newScheduleMode" name="createScheduleForm" ng-submit="createSchedule()" novalidate>
+    <form class="schedule-form" id="createScheduleForm" ng-show="newScheduleMode" name="createScheduleForm" ng-submit="createSchedule()" ng-class="formActive" novalidate>
       <div class="row-fluid schedule-row">
+        <div class="span1"></div>
         <div class="span1">
-          <input type="submit" class="btn btn-primary" value="Create"/>
-          <input type="button" class="btn btn-cancel" value="Cancel" ng-click="completeAddNewSchedule()" />
-        </div>
-        <div class="span1">
-          <input name="code" id="code" type="text" ng-model="newSchedule.code" maxlength="50" ng-required="true"/>
-          <span class="rnr-form-error" ng-show="createScheduleForm.code.$error.required && showErrorForCreate">Please fill this value</span>
+          <input name="code" id="code" type="text" ng-model="newSchedule.code" maxlength="50" ng-required="true" placeholder="Code" />
+          <span class="rnr-form-error" ng-show="createScheduleForm.code.$error.required && showErrorForCreate">Required</span>
         </div>
         <div class="span3">
-          <input name="name" id="name" type="text" ng-model="newSchedule.name" maxlength="50" ng-required="true"/>
-          <span class="rnr-form-error" ng-show="createScheduleForm.name.$error.required && showErrorForCreate">Please fill this value</span>
+          <input name="name" id="name" type="text" ng-model="newSchedule.name" maxlength="50" ng-required="true" placeholder="Name" />
+          <span class="rnr-form-error" ng-show="createScheduleForm.name.$error.required && showErrorForCreate">Required</span>
         </div>
         <div class="span4">
           <input name="description" id="description" type="text" ng-model="newSchedule.description"
-                 maxlength="250"/>
+                 maxlength="250" placeholder="Description (optional)" />
         </div>
         <div class="span2">
           &nbsp;
         </div>
       </div>
-    </form>
-    <form class="schedule-form" ng-repeat="schedule in schedules" id="editScheduleForm_{{$index}}" name="editScheduleForm"
-          ng-submit="updateSchedule(schedule, editScheduleForm);" ng-show="schedules && (schedules.length > 0)"
-          novalidate>
-      <div class="row-fluid schedule-row">
-        <div class="span1">
-          <input type="button" ng-hide="edit" class="btn btn-mini" value="Edit"
-                 ng-click="startScheduleEdit(schedule); edit=true"/>
-
-          <div ng-show="edit">
-            <input type="submit" class="btn btn-primary btn-mini" value="Save"></button>
-            <input type="button" class="btn btn-danger btn-mini" value="Cancel"
-                   ng-click="endScheduleEdit(schedule); edit=false"/>
-          </div>
-        </div>
-        <div class="span1" style="overflow: visible;">
-          <span ng-hide="edit" ng-bind="schedule.code"></span>
-          <input id="code_{{$index}}" name="code" ng-show="edit" type="text" ng-model="schedule.code" maxlength="50"
-                 ng-required="true"/>
-          <span ng-show="editScheduleForm.code.$error.required && showErrorForEdit">Please fill this value</span>
-        </div>
-        <div class="span3">
-          <span ng-hide="edit" ng-bind="schedule.name"></span>
-          <input id="name_{{$index}}" name="name" ng-show="edit" type="text" ng-model="schedule.name" maxlength="50"
-                 ng-required="true"/>
-          <span ng-show="editScheduleForm.name.$error.required && showErrorForEdit">Please fill this value</span>
-        </div>
-        <div class="span4">
-          <span ng-hide="edit" ng-bind="schedule.description"></span>
-          <input id="desc_{{$index}}" name="desc" ng-show="edit" type="text" ng-model="schedule.description"
-                 maxlength="250"/>
-        </div>
-        <div class="span2">
-          {{schedule.modifiedDate | date:'dd/MM/yyyy'}}
-        </div>
-        <div class="span1">
-          <input type=button ng-click="navigateToPeriodFor(schedule)" class="btn btn-mini" value="Add Period"/>
+      <div ng-show="newSchedule.error" class="row-fluid">
+        <div class="span1"></div>
+        <div class="span11 rnr-form-error" ng-bind="newSchedule.error"></div>
+      </div>
+      <div class="row-fluid schedule-button-row">
+        <div class="span1"></div>
+        <div class="span11">
+          <input type="submit" class="btn btn-success btn-small" value="Create"/>
+          <input type="button" class="btn btn-cancel btn-small" value="Cancel" ng-click="cancelAddNewSchedule()" />
         </div>
       </div>
     </form>
-    <div class="alert alert-error" id="saveFailMessage" ng-model="error" ng-show="error">
-      {{error}}
-    </div>
+
+    <form class="edit-schedule-form" ng-repeat="schedule in schedules" id="editScheduleForm_{{$index}}" name="editScheduleForm"
+          ng-submit="updateSchedule(schedule, editScheduleForm);" ng-show="schedules && (schedules.length > 0)"
+          novalidate>
+      <input type="hidden" ng-model="backupScheduleRow" />
+      <div ng-class="schedule.editFormActive">
+      <div class="row-fluid schedule-row">
+        <div class="span1">
+          <input type="button" ng-hide="schedule.edit" class="btn btn-mini pull-right" value="Edit"
+                 ng-click="startScheduleEdit(schedule, backupScheduleRow); schedule.edit=true;"/>
+        </div>
+
+        <div class="span1" style="overflow: visible;">
+          <span ng-hide="schedule.edit" ng-bind="schedule.code"></span>
+          <input id="code_{{$index}}" name="code" ng-show="schedule.edit" type="text" ng-model="schedule.code" maxlength="50"
+                 ng-required="true" placeholder="Code" />
+          <span class="rnr-form-error" ng-show="editScheduleForm.code.$error.required && showErrorForEdit">Required</span>
+        </div>
+
+        <div class="span3">
+          <span ng-hide="schedule.edit" ng-bind="schedule.name"></span>
+          <input id="name_{{$index}}" name="name" ng-show="schedule.edit" type="text" ng-model="schedule.name" maxlength="50"
+                 ng-required="true" placeholder="Name" />
+          <span class="rnr-form-error" ng-show="editScheduleForm.name.$error.required && showErrorForEdit">Required</span>
+        </div>
+
+        <div class="span4">
+          <span ng-hide="schedule.edit" ng-bind="schedule.description"></span>
+          <input id="desc_{{$index}}" name="desc" ng-show="schedule.edit" type="text" ng-model="schedule.description"
+                 maxlength="250" placeholder="Description (optional)" />
+        </div>
+
+        <div class="span2">
+          {{schedule.modifiedDate | date:'dd/MM/yyyy'}}
+        </div>
+
+        <div class="span1">
+          <input ng-hide="schedule.edit" type=button ng-click="navigateToPeriodFor(schedule)" class="btn btn-mini" value="Add Period"/>
+        </div>
+      </div>
+
+      <div ng-show="schedule.error" class="row-fluid">
+        <div class="span1"></div>
+        <div class="span11 rnr-form-error" ng-bind="schedule.error"></div>
+      </div>
+
+      <div ng-show="schedule.edit" class="row-fluid schedule-button-row">
+        <div class="span1"></div>
+        <div class="span11">
+          <input type="submit" class="btn btn-success btn-small" value="Save" />
+          <input type="button" class="btn btn-cancel btn-small" value="Cancel" ng-click="cancelScheduleEdit(schedule, backupScheduleRow); schedule.edit=false" />
+        </div>
+      </div>
+     </div>
+    </form>
+    <br />
     <div class="alert alert-success" id="saveSuccessMsgDiv" ng-model="message" ng-show="message">
       {{message}}
     </div>
