@@ -5,6 +5,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
+import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProcessingPeriodMapper;
@@ -17,6 +18,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 
 public class ProcessingPeriodRepositoryTest {
 
@@ -54,7 +57,7 @@ public class ProcessingPeriodRepositoryTest {
   }
 
   @Test
-  public void shouldNotInsertAPeriodWithSameNameForASchedule() throws Exception {
+    public void shouldNotInsertAPeriodWithSameNameForASchedule() throws Exception {
     ProcessingPeriod processingPeriod = mock(ProcessingPeriod.class);
     doNothing().when(processingPeriod).validate();
     doThrow(DuplicateKeyException.class).when(mapper).insert(processingPeriod);
@@ -77,5 +80,20 @@ public class ProcessingPeriodRepositoryTest {
 
     repository.insert(processingPeriod);
     verify(processingPeriod).validate();
+  }
+
+  @Test
+  public void shouldNotInsertAPeriodIfItsStartDateIsSmallerThanEndDateOfPreviousPeriod() throws Exception {
+    final ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod));
+    ProcessingPeriod lastAddedPeriod = make(a(defaultProcessingPeriod, with(ProcessingPeriodBuilder.endDate, processingPeriod.getStartDate())));
+    when(mapper.getLastAddedProcessingPeriod(processingPeriod.getScheduleId())).thenReturn(lastAddedPeriod);
+    doThrow(DataException.class).when(mapper).insert(processingPeriod);
+
+    exException.expect(DataException.class);
+    exException.expectMessage("Period's Start Date is smaller than Previous Period's End Date");
+
+    repository.insert(processingPeriod);
+
+    verify(mapper).insert(processingPeriod);
   }
 }

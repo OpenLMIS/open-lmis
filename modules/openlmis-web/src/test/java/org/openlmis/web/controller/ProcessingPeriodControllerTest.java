@@ -74,27 +74,14 @@ public class ProcessingPeriodControllerTest {
   }
 
   @Test
-  public void shouldGiveErrorResponseWhenCreatingANewPeriodWithExistingNameForAGivenSchedule() throws Exception {
+  public void shouldGiveErrorResponseWhenCreatingANewPeriodResultsThrowsDataException() throws Exception {
     ProcessingPeriod processingPeriod = new ProcessingPeriod();
-    doThrow(DataException.class).when(service).savePeriod(processingPeriod);
-
-    ResponseEntity<OpenLmisResponse> responseEntity = controller.save(SCHEDULE_ID, processingPeriod, request);
-
-    verify(service).savePeriod(processingPeriod);
-    assertThat(responseEntity.getStatusCode(), is(HttpStatus.CONFLICT));
-    assertThat(responseEntity.getBody().getErrorMsg(), is("Period Name already exists for this schedule"));
-  }
-
-  @Test
-  public void shouldGiveErrorResponseWhenCreatingANewPeriodWhenProcessingPeriodIsNotValid() throws Exception {
-    ProcessingPeriod processingPeriod = new ProcessingPeriod();
-    doThrow(new RuntimeException("errorMsg")).when(service).savePeriod(processingPeriod);
+    doThrow(new DataException("error-message")).when(service).savePeriod(processingPeriod);
 
     ResponseEntity<OpenLmisResponse> responseEntity = controller.save(SCHEDULE_ID, processingPeriod, request);
 
     verify(service).savePeriod(processingPeriod);
     assertThat(responseEntity.getStatusCode(), is(HttpStatus.BAD_REQUEST));
-    assertThat(responseEntity.getBody().getErrorMsg(), is("errorMsg"));
+    assertThat(responseEntity.getBody().getErrorMsg(), is("error-message"));
   }
-
 }

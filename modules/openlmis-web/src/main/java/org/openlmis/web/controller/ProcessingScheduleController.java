@@ -54,7 +54,12 @@ public class ProcessingScheduleController extends BaseController {
   @RequestMapping(value = "/schedules/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('','MANAGE_SCHEDULE')")
   public ResponseEntity<OpenLmisResponse> get(@PathVariable("id") Integer id) {
-    return OpenLmisResponse.response(SCHEDULE, processingScheduleService.get(id));
+    try{
+      ProcessingSchedule processingSchedule = processingScheduleService.get(id);
+      return OpenLmisResponse.response(SCHEDULE, processingSchedule);
+    } catch (DataException e){
+      return OpenLmisResponse.error(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
   }
 
   private ResponseEntity<OpenLmisResponse> saveSchedule(ProcessingSchedule processingSchedule, boolean createOperation) {

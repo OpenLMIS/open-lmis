@@ -17,6 +17,7 @@ public class ProcessingPeriodBuilder {
   public static final Property<ProcessingPeriod, Integer> scheduleId = newProperty();
   public static final Property<ProcessingPeriod, Date> startDate = newProperty();
   public static final Property<ProcessingPeriod, Date> endDate = newProperty();
+  public static final Property<ProcessingPeriod, Integer> numberOfMonths = newProperty();
   public static final Property<ProcessingPeriod, Integer> modifiedBy = newProperty();
 
   public static final String PERIOD_NAME = "Month1";
@@ -24,6 +25,7 @@ public class ProcessingPeriodBuilder {
   public static final Integer MODIFIED_BY = 1;
   public static final Calendar START_DATE;
   public static final Calendar END_DATE;
+  public static final Integer NUMBER_OF_MONTHS = 1;
 
   public static final Integer SCHEDULE_ID = 1;
 
@@ -42,6 +44,7 @@ public class ProcessingPeriodBuilder {
       period.setDescription(lookup.valueOf(description, PERIOD_DESC));
       period.setStartDate(lookup.valueOf(startDate, START_DATE.getTime()));
       period.setEndDate(lookup.valueOf(endDate, END_DATE.getTime()));
+      period.setNumberOfMonths(lookup.valueOf(numberOfMonths, NUMBER_OF_MONTHS));
       period.setModifiedBy(lookup.valueOf(modifiedBy, MODIFIED_BY));
       period.setScheduleId(lookup.valueOf(scheduleId, SCHEDULE_ID));
       return period;

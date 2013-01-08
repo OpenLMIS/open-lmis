@@ -32,12 +32,18 @@ describe("Period", function () {
       expect(scope.calculateDays(new Date(2011,3,1,23,59,59).getTime(), new Date(2011,3,2,0,0).getTime())).toEqual(1);
     });
 
+    it('should calculate no. of months', function () {
+      scope.newPeriod = {"name":"newName", "startDate":new Date(2011,3,1,0,0).getTime(), "endDate":new Date(2011,4,1,0,0).getTime(), "description":"newDescription"};
+      $httpBackend.flush();
+      expect(scope.calculateMonths()).toEqual(1);
+    });
+
     it('should create a new period', function() {
-      var newPeriod = {"name":"newName", "startDate":"01/01/2012", "endDate":"01/05/2012", "description":"newDescription"};
-      var newPeriodWithId = {"id":11, "name":"newName", "startDate":"01/01/2012", "endDate":"01/05/2012", "description":"newDescription"};
+      scope.newPeriod = {"name":"newName", "startDate":new Date(2011,3,1,0,0).getTime(), "endDate":new Date(2011,4,1,0,0).getTime(), "description":"newDescription"};
+      var newPeriodWithId = {"id":11, "name":"newName", "startDate":new Date(2011,3,1,0,0).getTime(), "endDate":new Date(2011,4,1,0,0).getTime(), "description":"newDescription"};
       $httpBackend.expectPOST('/schedules/123/periods.json').respond(200, {"period":newPeriodWithId, "success":"success message"});
       scope.createPeriodForm = {$invalid : false};
-      scope.createPeriod(newPeriod);
+      scope.createPeriod();
       $httpBackend.flush();
       expect(scope.periodList.length).toEqual(2);
       expect(scope.periodList).toEqual([newPeriodWithId, existingPeriod]);

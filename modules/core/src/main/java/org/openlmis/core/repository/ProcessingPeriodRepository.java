@@ -29,9 +29,16 @@ public class ProcessingPeriodRepository {
   public void insert(ProcessingPeriod processingPeriod) {
     processingPeriod.validate();
     try{
+      validateStartDate(processingPeriod);
       mapper.insert(processingPeriod);
     }catch (DuplicateKeyException e){
       throw new DataException("Period Name already exists for this schedule");
     }
+  }
+
+  private void validateStartDate(ProcessingPeriod processingPeriod) {
+    ProcessingPeriod lastAddedProcessingPeriod = mapper.getLastAddedProcessingPeriod(processingPeriod.getScheduleId());
+    if(lastAddedProcessingPeriod !=null && lastAddedProcessingPeriod.getEndDate().compareTo(processingPeriod.getStartDate())>=0)
+     throw  new DataException("Period's Start Date is smaller than Previous Period's End Date");
   }
 }

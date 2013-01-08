@@ -45,8 +45,6 @@ public class ProcessingPeriodController extends BaseController {
     try {
       processingScheduleService.savePeriod(processingPeriod);
     } catch (DataException e) {
-      return OpenLmisResponse.error("Period Name already exists for this schedule", HttpStatus.CONFLICT);
-    } catch (RuntimeException e){
       return OpenLmisResponse.error(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
     return OpenLmisResponse.success("Period added successfully");

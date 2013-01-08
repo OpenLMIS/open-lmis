@@ -5,6 +5,7 @@ CREATE TABLE processing_periods (
   description VARCHAR(250),
   startDate TIMESTAMP NOT NULL,
   endDate TIMESTAMP NOT NULL,
+  numberOfMonths INTEGER,
   modifiedBy INTEGER,
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

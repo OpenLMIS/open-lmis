@@ -74,13 +74,14 @@ public class ProcessingScheduleControllerTest {
 
   @Test
   public void shouldReturnErrorMessageWhileGettingAScheduleForIdThatDoesNotExist() {
-    ProcessingSchedule processingSchedule = new ProcessingSchedule();
-    when(processingScheduleService.get(1)).thenReturn(processingSchedule);
+    doThrow(new DataException("Schedule not found")).when(processingScheduleService).get(1);
 
-    ResponseEntity<OpenLmisResponse> responseEntity = processingScheduleController.get(1);
+    ResponseEntity<OpenLmisResponse> response = processingScheduleController.get(1);
 
-    Map<String, Object> responseEntityData = responseEntity.getBody().getData();
-    assertThat((ProcessingSchedule) responseEntityData.get(SCHEDULE), is(processingSchedule));
+    verify(processingScheduleService).get(1);
+
+    assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND));
+    assertThat(response.getBody().getErrorMsg(), is("Schedule not found"));
   }
 
   @Test

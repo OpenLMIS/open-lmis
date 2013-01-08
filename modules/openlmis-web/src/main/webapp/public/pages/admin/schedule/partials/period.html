@@ -23,27 +23,25 @@
       <div class="row-fluid form-row">
         <div class="span3 form-cell">
           <label>Start Date <span class="label-required">*</span></label>
-          <input name="startDate" id="startDate" type="text" ui-date readonly ng-model="newPeriod.startDate"
-                 value="{{newPeriod.startDate | date:'dd/MM/yyyy'}}" ng-required="true">
+          <input name="startDate" id="startDate" type="text" ui-date="{minDate:'+0D'}" readonly ng-model="newPeriod.startDate"
+                 value="{{newPeriod.startDate | date:'dd/MM/yyyy'}}" ng-required="true" ng-disabled="newPeriod.startDate">
 
           <span class="rnr-form-error" ng-show="createPeriodForm.startDate.$error.required && showErrorForCreate">Please fill this value</span>
         </div>
         <div class="span3 form-cell">
           <label>End Date <span class="label-required">*</span></label>
-          <input name="endDate" id="endDate" type="text" ui-date readonly ng-model="newPeriod.endDate"
+          <input name="endDate" id="endDate" type="text" ui-date="{minDate:'+1D'}" readonly ng-model="newPeriod.endDate"
                  value="{{newPeriod.endDate | date:'dd/MM/yyyy'}}" ng-required="true"/>
 
           <span class="rnr-form-error" ng-show="createPeriodForm.endDate.$error.required && showErrorForCreate">Please fill this value</span>
         </div>
       </div>
       <div class="row-fluid form-row">
-        <div class="span3 form-cell">
-          <label>Total Days: </label>
-          <span class="cell-text" ng-show="calculateDays(newPeriod.startDate, newPeriod.endDate)">{{calculateDays(newPeriod.startDate, newPeriod.endDate)}}</span>
+        <div class="span3 form-cell">Total Days:
+          <span class="cell-text" ng-show="calculateDays(newPeriod.startDate, newPeriod.endDate)+1">{{calculateDays(newPeriod.startDate, newPeriod.endDate)}}</span>
         </div>
-        <div class="span3 form-cell ">
-          <label>Number of Months: </label>
-          <label name="monthsCount" class="cell-text" ng-bind="totalMonths"/>
+        <div class="span3 form-cell">Number Of Months:
+          <span class="cell-text" ng-show="calculateMonths()" ng-model="newPeriod.numberOfMonths">{{calculateMonths()}}</span>
         </div>
       </div>
       <div>
@@ -86,7 +84,7 @@
           <td>{{period.startDate | date:'dd/MM/yyyy'}}</td>
           <td>{{period.endDate | date:'dd/MM/yyyy'}}</td>
           <td>{{calculateDays(period.startDate, period.endDate)}}</td>
-          <td></td>
+          <td>{{period.numberOfMonths}}</td>
           <td></td>
         </tr>
         </tbody>

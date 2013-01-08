@@ -3,6 +3,7 @@ package org.openlmis.core.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.ProcessingSchedule;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProcessingPeriodRepository;
 import org.openlmis.core.repository.ProcessingScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,9 @@ public class ProcessingScheduleService {
   }
 
   public ProcessingSchedule get(Integer id) {
-    return repository.get(id);
+    ProcessingSchedule processingSchedule = repository.get(id);
+    if(processingSchedule == null) throw  new DataException("Schedule not found");
+    return processingSchedule;
   }
 
   public void savePeriod(ProcessingPeriod processingPeriod) {
