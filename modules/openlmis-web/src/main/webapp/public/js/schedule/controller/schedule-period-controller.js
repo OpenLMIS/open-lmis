@@ -1,11 +1,13 @@
-function SchedulePeriodController($scope, $routeParams, Periods, Schedule) {
+function SchedulePeriodController($scope, $routeParams, Periods, Schedule, $location) {
   $scope.newPeriod = {};
   $scope.oneDay =1000 * 60 * 60 * 24;
 
   Schedule.get({id:$routeParams.id}, function (data) {
+    $scope.error= "";
     $scope.schedule = data.schedule;
   }, function(data){
-    $scope.error = "Error Identifying Schedule";
+    $scope.$parent.error = "Error Identifying Schedule";
+    $location.path("/list");
   });
 
   Periods.get({scheduleId:$routeParams.id}, function (data) {
@@ -13,15 +15,13 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule) {
     resetNewPeriod($scope.periodList[0].endDate);
   }, {});
 
-
-
   $scope.calculateDays = function (startTime, endTime) {
     var startDate = new Date(startTime);
     var endDate = new Date(endTime);
     endDate.setHours(0);
     startDate.setHours(0);
     var days = Math.ceil(((endDate.getTime() - startDate.getTime()) / $scope.oneDay));
-    if(days >= 0)
+    if(days > 0)
       return days;
     else return null;
   };
@@ -66,6 +66,10 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule) {
   var resetNewPeriod = function(endDate){
         $scope.newPeriod = {};
         $scope.newPeriod.startDate = endDate + $scope.oneDay;
-    };
+  };
+
+  $scope.blurDateFields = function() {
+    angular.element("input[ui-date]").blur();
+  };
 
 }

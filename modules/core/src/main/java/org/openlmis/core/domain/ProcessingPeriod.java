@@ -28,7 +28,7 @@ public class ProcessingPeriod {
       throw new DataException("Period can not be saved without its End Date.");
     if (name == null || name.isEmpty())
       throw new DataException("Period can not be saved without its Name.");
-    if (endDate.before(startDate)) {
+    if (endDate.compareTo(startDate)<=0) {
       throw new DataException("Period End Date can not be earlier than Start Date.");
     }
   }

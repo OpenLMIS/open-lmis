@@ -101,6 +101,9 @@
      </div>
     </form>
     <br />
+    <div class="alert alert-error" id="saveFailMessage" ng-model="error" ng-show="error">
+      {{error}}
+    </div>
     <div class="alert alert-success" id="saveSuccessMsgDiv" ng-model="message" ng-show="message">
       {{message}}
     </div>

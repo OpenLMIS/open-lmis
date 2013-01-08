@@ -27,7 +27,7 @@ describe("Period", function () {
     it('should calculate no. of days', function () {
       $httpBackend.flush();
       expect(scope.calculateDays(new Date(2011,3,1,0,0).getTime(), new Date(2011,4,1,0,0).getTime())).toEqual(30);
-      expect(scope.calculateDays(new Date(2011,3,1,0,0).getTime(), new Date(2011,3,1,0,0).getTime())).toEqual(0);
+      expect(scope.calculateDays(new Date(2011,3,1,0,0).getTime(), new Date(2011,3,1,0,0).getTime())).toEqual(null);
       expect(scope.calculateDays(new Date(2011,3,1,23,59,59).getTime(), new Date(2011,4,1,0,0).getTime())).toEqual(30);
       expect(scope.calculateDays(new Date(2011,3,1,23,59,59).getTime(), new Date(2011,3,2,0,0).getTime())).toEqual(1);
     });
@@ -53,10 +53,10 @@ describe("Period", function () {
     });
 
     it('should not create a new period if Start Date is greater than End Date', function() {
+      $httpBackend.flush();
       scope.newPeriod = {"name":"newName", "startDate":new Date(2011,3,1,0,0), "endDate":new Date(2011,2,1,0,0), "description":"newDescription"};
       scope.createPeriodForm = {$invalid : false};
       scope.createPeriod();
-      $httpBackend.flush();
       expect(scope.periodList.length).toEqual(1);
       expect(scope.periodList).toEqual([existingPeriod]);
       expect(scope.error).toEqual("End Date must be greater than Start Date");
