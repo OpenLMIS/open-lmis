@@ -28,6 +28,11 @@ public class UploadPage extends Page {
     @FindBy(how = How.ID, using = "saveSuccessMsgDiv")
     private static WebElement saveSuccessMsgDiv;
 
+    @FindBy(how = How.ID, using = "saveErrorMsgDiv")
+    private static WebElement saveErrorMsgDiv;
+
+
+
     public UploadPage(TestWebDriver driver) throws IOException {
         super(driver);
 
@@ -52,7 +57,7 @@ public class UploadPage extends Page {
         selectUploadType("Facilities");
         uploadFile("facilities.csv");
         testWebDriver.sleep(250);
-        testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
+        testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
         SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
     }
 
@@ -60,7 +65,7 @@ public class UploadPage extends Page {
         selectUploadType("Products");
         uploadFile("products.csv");
         testWebDriver.sleep(250);
-        testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
+        testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
         SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
     }
 
@@ -68,7 +73,7 @@ public class UploadPage extends Page {
         selectUploadType("Program Product");
         uploadFile("program_product.csv");
         testWebDriver.sleep(250);
-        testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
+        testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
         SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
     }
 
@@ -76,7 +81,7 @@ public class UploadPage extends Page {
         selectUploadType("Programs supported by facilities");
         uploadFile("program_supported.csv");
         testWebDriver.sleep(250);
-        testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
+        testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
         SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
     }
 
@@ -84,7 +89,31 @@ public class UploadPage extends Page {
         selectUploadType("Supervisory Nodes");
         uploadFile("Supervisory_Nodes.csv");
         testWebDriver.sleep(250);
-        testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
+        testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
+        SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
+    }
+
+    public void uploadRequisitionGroup() throws FileNotFoundException {
+        selectUploadType("Requisition Groups");
+        uploadFile("Requisition_Groups.csv");
+        testWebDriver.sleep(250);
+        testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
+        SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
+    }
+
+    public void uploadRequisitionGroupMembers() throws FileNotFoundException {
+        selectUploadType("Requisition Group Members");
+        uploadFile("Requisition_Group_Members.csv");
+        testWebDriver.sleep(250);
+        testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
+        SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
+    }
+
+    public void uploadRequisitionGroupProgramSchedule() throws FileNotFoundException {
+        selectUploadType("Map Requisition Groups to Programs + Schedule");
+        uploadFile("Requisition_Group_Program_Schedule.csv");
+        testWebDriver.sleep(250);
+        testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
         SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
     }
 

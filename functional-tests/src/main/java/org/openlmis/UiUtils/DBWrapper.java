@@ -141,6 +141,7 @@ public class DBWrapper {
         dbwrapper.dbConnection("delete from requisition_group_members;", "alter");
         dbwrapper.dbConnection("delete from programs_supported;", "alter");
         dbwrapper.dbConnection("delete from program_rnr_columns;", "alter");
+        dbwrapper.dbConnection("delete from requisition_group_program_schedules ;", "alter");
         dbwrapper.dbConnection("delete from requisition_groups;", "alter");
         dbwrapper.dbConnection("delete from requisition_group_members;", "alter");
     }
