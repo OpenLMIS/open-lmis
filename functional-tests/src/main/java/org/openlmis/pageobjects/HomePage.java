@@ -26,7 +26,7 @@ public class HomePage extends Page {
     @FindBy(how = How.XPATH, using = "//a[contains(text(),'Facilities')]")
     private static WebElement facilityMenuItem;
 
-    @FindBy(how = How.XPATH, using = "//a[contains(text(),'Role assignments')]")
+    @FindBy(how = How.XPATH, using = "//a[contains(text(),'Roles')]")
     private static WebElement manageRoleAssignmentLink;
 
     @FindBy(how = How.LINK_TEXT, using = "Add new")
