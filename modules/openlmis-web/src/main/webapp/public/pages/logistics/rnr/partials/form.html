@@ -183,7 +183,7 @@
                                             name="reasonForRequestedQuantity{{rnrLineItem.rnrLineItem['id']}}"
                                             ng-model="rnrLineItem.rnrLineItem[column.name]"
                                             ng-required="rnrLineItem.rnrLineItem.quantityRequested"
-                                            ng-class="highlightWarning(rnrLineItem.rnrLineItem[column.name])"
+                                            ng-class="highlightWarning(rnrLineItem.rnrLineItem[column.name],$parent.$parent.$parent.$index )"
                                             maxlength="250"/>
                                           <span class="alert alert-warning reason-request" ng-show="rnrLineItem.rnrLineItem.quantityRequested && !rnrLineItem.rnrLineItem.reasonForRequestedQuantity">
                                           Please enter a reason

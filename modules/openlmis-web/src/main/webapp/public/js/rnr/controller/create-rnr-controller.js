@@ -86,8 +86,8 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     }
   };
 
-  $scope.highlightWarning = function (value) {
-    if (isUndefined(value) && $scope.inputClass == 'required') {
+  $scope.highlightWarning = function (value, index) {
+    if (isUndefined(value) && $scope.inputClass == 'required' && $scope.rnrLineItems[index].rnrLineItem.quantityRequested) {
       return "warning-error";
     }
   };
