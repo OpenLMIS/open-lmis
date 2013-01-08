@@ -33,25 +33,27 @@ describe("Period", function () {
     });
 
     it('should calculate no. of months', function () {
-      scope.newPeriod = {"name":"newName", "startDate":new Date(2011,3,1,0,0).getTime(), "endDate":new Date(2011,4,1,0,0).getTime(), "description":"newDescription"};
       $httpBackend.flush();
+      scope.newPeriod = {"name":"newName", "startDate":new Date(2011,3,1,0,0), "endDate":new Date(2011,4,1,0,0), "description":"newDescription"};
       expect(scope.calculateMonths()).toEqual(1);
     });
 
     it('should create a new period', function() {
-      scope.newPeriod = {"name":"newName", "startDate":new Date(2011,3,1,0,0).getTime(), "endDate":new Date(2011,4,1,0,0).getTime(), "description":"newDescription"};
-      var newPeriodWithId = {"id":11, "name":"newName", "startDate":new Date(2011,3,1,0,0).getTime(), "endDate":new Date(2011,4,1,0,0).getTime(), "description":"newDescription"};
-      $httpBackend.expectPOST('/schedules/123/periods.json').respond(200, {"period":newPeriodWithId, "success":"success message"});
+      $httpBackend.flush();
+      var newPeriod = {"name":"newName", "startDate":new Date(2011,3,1,0,0), "endDate":new Date(2011,4,1,0,0), "description":"newDescription"};
+      scope.newPeriod = newPeriod;
+      $httpBackend.expectPOST('/schedules/123/periods.json').respond(200, {"success":"success message"});
+
       scope.createPeriodForm = {$invalid : false};
       scope.createPeriod();
       $httpBackend.flush();
       expect(scope.periodList.length).toEqual(2);
-      expect(scope.periodList).toEqual([newPeriodWithId, existingPeriod]);
+      expect(scope.periodList).toEqual([newPeriod, existingPeriod]);
       expect(scope.message).toEqual("success message");
     });
 
     it('should not create a new period if Start Date is greater than End Date', function() {
-      scope.newPeriod = {"name":"newName", "startDate":new Date(2011,3,1,0,0).getTime(), "endDate":new Date(2011,2,1,0,0).getTime(), "description":"newDescription"};
+      scope.newPeriod = {"name":"newName", "startDate":new Date(2011,3,1,0,0), "endDate":new Date(2011,2,1,0,0), "description":"newDescription"};
       scope.createPeriodForm = {$invalid : false};
       scope.createPeriod();
       $httpBackend.flush();
