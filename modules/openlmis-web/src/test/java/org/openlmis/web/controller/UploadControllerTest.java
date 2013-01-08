@@ -9,11 +9,10 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Product;
-import org.openlmis.upload.Importable;
 import org.openlmis.upload.RecordHandler;
 import org.openlmis.upload.model.ModelClass;
 import org.openlmis.upload.parser.CSVParser;
-import org.openlmis.web.handler.UploadHandlerFactory;
+import org.openlmis.web.model.UploadBean;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -26,6 +25,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -40,23 +41,23 @@ public class UploadControllerTest {
   @Mock
   RecordHandler handler;
 
-  @Mock
-  @SuppressWarnings("unused")
-  private UploadHandlerFactory uploadHandlerFactory;
 
   private MockHttpServletRequest request;
+  private UploadBean productUploadBean;
+
+  Map<String, UploadBean> uploadBeansMap;
 
   @Before
   public void setUp() throws Exception {
-    Map<String, Class<? extends Importable>> modelMap = new HashMap<String, Class<? extends Importable>>() {{
-      put("product", Product.class);
+    productUploadBean = new UploadBean("product", handler, Product.class);
+    uploadBeansMap = new HashMap<String, UploadBean>() {{
+      put("product", productUploadBean);
     }};
-    when(uploadHandlerFactory.getHandler(any(String.class))).thenReturn(handler);
     request = new MockHttpServletRequest();
     MockHttpSession session = new MockHttpSession();
     session.setAttribute(UserAuthenticationSuccessHandler.USER, USER);
     request.setSession(session);
-    controller = new UploadController(csvParser, uploadHandlerFactory, modelMap);//, new HashMap<String, RecordHandler>());
+    controller = new UploadController(csvParser, uploadBeansMap);//, new HashMap<String, RecordHandler>());
   }
 
   @Test
@@ -120,4 +121,10 @@ public class UploadControllerTest {
     assertEquals("Incorrect file format , Please upload product data as a \".csv\" file", responseEntity.getBody().getErrorMsg());
   }
 
+  @Test
+  public void shouldGetListOfUploadsSupported() throws Exception {
+    ResponseEntity<OpenLmisResponse> responseEntity = controller.getSupportedUploads();
+    Map<String, UploadBean> result = (Map<String, UploadBean>) responseEntity.getBody().getData().get("supportedUploads");
+    assertThat(result, is(uploadBeansMap));
+  }
 }

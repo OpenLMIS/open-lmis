@@ -21,17 +21,17 @@
 
     <bean id="applicationProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 
-            <property name="locations">
-                <list>
-                    <value>classpath:/postgresql.properties</value>
-                    <value>classpath*:/countrySpecific.properties</value>
-                </list>
-            </property>
+        <property name="locations">
+            <list>
+                <value>classpath:/postgresql.properties</value>
+                <value>classpath*:/countrySpecific.properties</value>
+            </list>
+        </property>
 
-            <property name="ignoreResourceNotFound" value="false"/>
-            <property name="systemPropertiesModeName">
-                <value>SYSTEM_PROPERTIES_MODE_OVERRIDE</value>
-            </property>
+        <property name="ignoreResourceNotFound" value="false"/>
+        <property name="systemPropertiesModeName">
+            <value>SYSTEM_PROPERTIES_MODE_OVERRIDE</value>
+        </property>
     </bean>
 
     <import resource="classpath:/springSecurityContext.xml"/>
@@ -44,7 +44,7 @@
     <bean id="userAuthenticationProvider" class="org.openlmis.authentication.web.UserAuthenticationProvider"/>
 
     <bean id="multipartResolver"
-            class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
 
     <mvc:resources mapping="/public/**" location="/public/"/>
     <mvc:resources mapping="/error/**" location="/public/"/>
@@ -63,55 +63,92 @@
         </bean>
     </mvc:interceptors>
 
-    <bean id="modelMap" class="java.util.HashMap">
+
+    <bean id="uploadBeansMap" class="java.util.HashMap">
         <constructor-arg>
             <map>
                 <entry key="product">
-                    <value type="java.lang.Class">org.openlmis.core.domain.Product</value>
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Products"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.Product</value>
+                        </property>
+                        <property name="recordHandler" ref="productPersistenceHandler"/>
+                    </bean>
                 </entry>
                 <entry key="facility">
-                    <value type="java.lang.Class">org.openlmis.core.domain.Facility</value>
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Facilities"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.Facility</value>
+                        </property>
+                        <property name="recordHandler" ref="facilityPersistenceHandler"/>
+                    </bean>
                 </entry>
                 <entry key="programSupported">
-                    <value type="java.lang.Class">org.openlmis.core.domain.ProgramSupported</value>
-                </entry>
-                <entry key="requisitionGroup">
-                    <value type="java.lang.Class">org.openlmis.core.domain.RequisitionGroup</value>
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Programs supported by facilities"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.ProgramSupported</value>
+                        </property>
+                        <property name="recordHandler" ref="programSupportedPersistenceHandler"/>
+                    </bean>
                 </entry>
                 <entry key="supervisoryNode">
-                    <value type="java.lang.Class">org.openlmis.core.domain.SupervisoryNode</value>
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Supervisory Nodes"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.SupervisoryNode</value>
+                        </property>
+                        <property name="recordHandler" ref="supervisoryNodeHandler"/>
+                    </bean>
                 </entry>
                 <entry key="requisitionGroup">
-                    <value type="java.lang.Class">org.openlmis.core.domain.RequisitionGroup</value>
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Requisition Groups"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.RequisitionGroup</value>
+                        </property>
+                        <property name="recordHandler" ref="requisitionGroupHandler"/>
+                    </bean>
                 </entry>
                 <entry key="requisitionGroupProgramSchedule">
-                    <value type="java.lang.Class">org.openlmis.core.domain.RequisitionGroupProgramSchedule</value>
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Map Requisition Groups to Programs + Schedule"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.RequisitionGroupProgramSchedule
+                            </value>
+                        </property>
+                        <property name="recordHandler" ref="requisitionGroupProgramScheduleHandler"/>
+                    </bean>
                 </entry>
                 <entry key="requisitionGroupMember">
-                    <value type="java.lang.Class">org.openlmis.core.domain.RequisitionGroupMember</value>
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Requisition Group Members"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.RequisitionGroupMember</value>
+                        </property>
+                        <property name="recordHandler" ref="requisitionGroupMemberHandler"/>
+                    </bean>
                 </entry>
                 <entry key="programProduct">
-                    <value type="java.lang.Class">org.openlmis.core.domain.ProgramProduct</value>
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Program Product"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.ProgramProduct</value>
+                        </property>
+                        <property name="recordHandler" ref="programProductPersistenceHandler"/>
+                    </bean>
                 </entry>
                 <entry key="supplyLine">
-                    <value type="java.lang.Class">org.openlmis.core.domain.SupplyLine</value>
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Supply Lines"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.SupplyLine</value>
+                        </property>
+                        <property name="recordHandler" ref="supplyLineHandler"/>
+                    </bean>
                 </entry>
-            </map>
-        </constructor-arg>
-    </bean>
-
-    <bean id="persistenceHandlerMap" class="java.util.HashMap">
-        <constructor-arg>
-            <map>
-                <entry key="product" value-ref="productPersistenceHandler"/>
-                <entry key="facility" value-ref="facilityPersistenceHandler"/>
-                <entry key="programSupported" value-ref="programSupportedPersistenceHandler"/>
-                <entry key="supervisoryNode" value-ref="supervisoryNodeHandler"/>
-                <entry key="requisitionGroup" value-ref="requisitionGroupHandler"/>
-                <entry key="requisitionGroupProgramSchedule" value-ref="requisitionGroupProgramScheduleHandler"/>
-                <entry key="requisitionGroupMember" value-ref="requisitionGroupMemberHandler"/>
-                <entry key="programProduct" value-ref="programProductPersistenceHandler"/>
-                <entry key="supplyLine" value-ref="supplyLineHandler"/>
             </map>
         </constructor-arg>
     </bean>

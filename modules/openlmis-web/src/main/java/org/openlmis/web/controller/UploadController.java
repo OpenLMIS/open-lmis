@@ -1,11 +1,10 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.upload.Importable;
 import org.openlmis.upload.exception.UploadException;
 import org.openlmis.upload.model.ModelClass;
 import org.openlmis.upload.parser.CSVParser;
-import org.openlmis.web.handler.UploadHandlerFactory;
+import org.openlmis.web.model.UploadBean;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,20 +26,16 @@ import static org.openlmis.web.response.OpenLmisResponse.success;
 
 @Controller
 @NoArgsConstructor
-@RequestMapping("/admin")
 public class UploadController extends BaseController {
 
   @Autowired
   private CSVParser csvParser;
   @Resource
-  private Map<String, Class<? extends Importable>> modelMap;
-  @Autowired
-  private UploadHandlerFactory uploadHandlerFactory;
+  private Map<String, UploadBean> uploadBeansMap;
 
-  public UploadController(CSVParser csvParser, UploadHandlerFactory uploadHandlerFactory, Map<String, Class<? extends Importable>> modelMap) {
+  public UploadController(CSVParser csvParser, Map<String, UploadBean> uploadBeansMap) {
     this.csvParser = csvParser;
-    this.uploadHandlerFactory = uploadHandlerFactory;
-    this.modelMap = modelMap;
+    this.uploadBeansMap = uploadBeansMap;
   }
 
   @RequestMapping(value = "/upload", method = RequestMethod.POST, headers = "Accept=application/json")
@@ -56,24 +51,30 @@ public class UploadController extends BaseController {
 
       String modifiedBy = loggedInUser(request);
       int recordsUploaded = csvParser.process(csvFile.getInputStream(),
-          new ModelClass(modelMap.get(model)),
-          uploadHandlerFactory.getHandler(model), modifiedBy);
+          new ModelClass(uploadBeansMap.get(model).getImportableClass()),
+          uploadBeansMap.get(model).getRecordHandler(), modifiedBy);
       return success("File uploaded successfully. Total records uploaded: " + recordsUploaded);
     } catch (UploadException | IOException e) {
       return error(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
   }
 
-  private String validateFile(String model, MultipartFile csvFile) {
-    String error = null;
-    if (modelMap.get(model) == null) {
-      error = "Incorrect file";
-    } else if (csvFile.isEmpty()) {
-      error = "File is empty";
-    } else if (!csvFile.getOriginalFilename().endsWith(".csv")) {
-      error = "Incorrect file format , Please upload " + model + " data as a \".csv\" file";
-    }
-    return error;
+  @RequestMapping(value = "/supported-uploads", method = RequestMethod.GET, headers = "Accept=application/json")
+  @PreAuthorize("hasPermission('','UPLOADS')")
+  public ResponseEntity<OpenLmisResponse> getSupportedUploads() {
+    return OpenLmisResponse.response("supportedUploads", uploadBeansMap);
   }
+
+  private String validateFile(String model, MultipartFile csvFile) {
+     String error = null;
+     if (!uploadBeansMap.containsKey(model)) {
+       error = "Incorrect file";
+     } else if (csvFile.isEmpty()) {
+       error = "File is empty";
+     } else if (!csvFile.getOriginalFilename().endsWith(".csv")) {
+       error = "Incorrect file format , Please upload " + model + " data as a \".csv\" file";
+     }
+     return error;
+   }
 
 }

@@ -7,12 +7,11 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
-import org.openlmis.upload.Importable;
 import org.openlmis.upload.RecordHandler;
 import org.openlmis.upload.parser.CSVParser;
 import org.openlmis.web.controller.upload.MandatoryFields;
 import org.openlmis.web.controller.upload.NonMandatoryFields;
-import org.openlmis.web.handler.UploadHandlerFactory;
+import org.openlmis.web.model.UploadBean;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,7 +27,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -42,10 +42,6 @@ public class UploadControllerIT {
   @Mock
   RecordHandler handler;
 
-  @Mock
-  @SuppressWarnings("unused")
-  private UploadHandlerFactory uploadHandlerFactory;
-
   private MockHttpServletRequest request;
 
   @Autowired
@@ -54,16 +50,15 @@ public class UploadControllerIT {
   @Before
   public void setUp() throws Exception {
     initMocks(this);
-    Map<String, Class<? extends Importable>> modelMap = new HashMap<String, Class<? extends Importable>>() {{
-      put("mandatoryFields", MandatoryFields.class);
-      put("nonMandatoryFields", NonMandatoryFields.class);
-    }};
-    when(uploadHandlerFactory.getHandler(any(String.class))).thenReturn(handler);
+    Map<String, UploadBean> uploadBeansMap = new HashMap<String, UploadBean>() {{
+          put("mandatoryFields", new UploadBean("mandatoryFields", handler, MandatoryFields.class));
+          put("nonMandatoryFields", new UploadBean("nonMandatoryFields", handler, NonMandatoryFields.class));
+        }};
     request = new MockHttpServletRequest();
     MockHttpSession session = new MockHttpSession();
     session.setAttribute(UserAuthenticationSuccessHandler.USER, USER);
     request.setSession(session);
-    controller = new UploadController(csvParser, uploadHandlerFactory, modelMap);
+    controller = new UploadController(csvParser, uploadBeansMap);
   }
 
   @Test

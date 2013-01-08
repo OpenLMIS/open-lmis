@@ -34,18 +34,9 @@
         <div>
             <fieldset>
                 <label style="padding-top: 10" for="model">Model:</label>
-                <select name="model" id="model">
-                    <option value="product">Products</option>
-                    <option value="facility">Facilities</option>
-                    <option value="programSupported">Programs supported by facilities</option>
-                    <option value="supervisoryNode">Supervisory Nodes</option>
-                    <option value="requisitionGroup">Requisition Groups</option>
-                    <option value="requisitionGroupProgramSchedule">Map Requisition Groups to Programs + Schedule
-                    </option>
-                    <option value="requisitionGroupMember">Requisition Group Members</option>
-                    <option value="programProduct">Program Product</option>
-                    <option value="supplyLine">Supply Lines</option>
-                </select> <br/>
+
+              <select name="model" id="model" ng-model="model" ng-options="k as v.displayName for (k,v) in supportedUploads"></select>
+              <br/>
                 <label style="padding-top: 10" for="csvFile">File: </label>
                 <input name="csvFile" id="csvFile" type="file" accept=".csv"
                        value="Choose CSV File to upload" required/> </br>

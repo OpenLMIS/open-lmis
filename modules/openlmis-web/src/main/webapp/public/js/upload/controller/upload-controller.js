@@ -1,4 +1,8 @@
-function UploadController($scope, $http) {
+function UploadController($scope, SupportedUploads) {
+
+    SupportedUploads.get({},function(data){
+        $scope.supportedUploads = data.supportedUploads;
+    },{});
 
     $scope.uploadFile = function () {
         if (document.getElementById('csvFile').value == "") {
@@ -11,7 +15,7 @@ function UploadController($scope, $http) {
         var xhr = new XMLHttpRequest();
         var fd = document.getElementById('uploadForm');
         xhr.addEventListener("load", $scope.uploadComplete, false);
-        xhr.open("POST", "/admin/upload.json");
+        xhr.open("POST", "/upload.json");
         xhr.send(new FormData(fd));
     };
 
