@@ -49,7 +49,8 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, $http) {
         }
         else{
           $scope.arithmeticValidationMessageShown = false;
-          return (false);
+          $scope.validateFormula = true ;
+          return false;
         }
       }
     });
@@ -68,11 +69,7 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, $http) {
   setArithmeticValidationLabel();
 
   $scope.toggleValidateFormulaFlag = function() {
-    if($scope.validateFormula){
-      $scope.validateFormula = false;
-    }else{
-      $scope.validateFormula = true;
-    }
+    $scope.validateFormula = !$scope.validateFormula;
     setArithmeticValidationLabel();
   }
 }

@@ -34,7 +34,6 @@ public class RnrTemplateRepositoryTest {
   public void setUp() throws Exception {
     rnrRepository = new RnrTemplateRepository(rnrColumnMapper);
     template = new ProgramRnrTemplate(EXISTING_PROGRAM_ID, rnrColumns);
-    rnrColumnMapper.deleteAll();
   }
 
   @Test

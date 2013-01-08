@@ -57,10 +57,8 @@ public class ProgramRnrTemplate {
     }
 
     private boolean validateDependentsVisible(String columnToEvaluate, List<String> dependents) {
-        if (columnsVisible(columnToEvaluate) && columnsCalculated(columnToEvaluate)) {
-            return columnsVisible(dependents.toArray(new String[dependents.size()])) ;
-        }
-        return true;
+      return !(columnsVisible(columnToEvaluate) && columnsCalculated(columnToEvaluate)) ||
+          columnsVisible(dependents.toArray(new String[dependents.size()]));
     }
 
     private boolean areSelectedTogether(String column1, String column2) {

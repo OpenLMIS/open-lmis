@@ -15,10 +15,6 @@ public interface RnrColumnMapper {
             "(#{programId}, #{rnrColumn.id},  #{rnrColumn.visible}, #{rnrColumn.label}, #{rnrColumn.position}, #{rnrColumn.source.code}, #{rnrColumn.formulaValidated})")
     int     insert(@Param("programId") Integer programId, @Param("rnrColumn") RnrColumn rnrColumn);
 
-    //TODO get rid of delete, only used in tests
-    @Delete("DELETE FROM program_rnr_columns")
-    void deleteAll();
-
     @Select("select 0<(select count(id) as count from program_rnr_columns where programId = #{programId})")
     boolean isRnrTemplateDefined(@Param("programId") Integer programId);
 
