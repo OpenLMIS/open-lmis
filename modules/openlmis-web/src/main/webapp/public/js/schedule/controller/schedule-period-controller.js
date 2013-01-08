@@ -6,7 +6,7 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule, $loca
     $scope.error= "";
     $scope.schedule = data.schedule;
   }, function(data){
-    $scope.$parent.error = "Error Identifying Schedule";
+    $scope.$parent.errorInValidSchedule = "Error Identifying Schedule";
     $location.path("/list");
   });
 
