@@ -24,6 +24,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -78,9 +79,28 @@ public class RnrServiceTest {
     Rnr rnr = mock(Rnr.class);
     String testMessage = "test message";
     when(rnrRepository.submit(rnr)).thenReturn(testMessage);
+    when(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId())).thenReturn(true);
     String message = rnrService.submit(rnr);
-    verify(rnr).validate();
+    verify(rnr).validate(true);
     assertThat(message, is(testMessage));
     verify(rnrRepository).submit(rnr);
+  }
+
+  @Test
+  public void shouldThrowExceptionInCaseOfInvalidRnrButAlsoSaveIt() throws Exception {
+    Rnr rnr = mock(Rnr.class);
+    String errorMessage = "some error";
+    Integer programId = 1;
+    when(rnr.getProgramId()).thenReturn(programId);
+    boolean formulaValidated = true;
+    when(rnrTemplateRepository.isFormulaValidated(programId)).thenReturn(formulaValidated);
+    doThrow(new DataException(errorMessage)).when(rnr).validate(formulaValidated);
+    try{
+      rnrService.submit(rnr);
+    }catch(Exception e) {
+      assertTrue(e.getClass().equals(DataException.class));
+      assertThat(e.getMessage(),is(errorMessage));
+    }
+    verify(rnrRepository).update(rnr);
   }
 }

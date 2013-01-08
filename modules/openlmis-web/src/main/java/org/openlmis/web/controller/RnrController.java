@@ -59,7 +59,11 @@ public class RnrController extends BaseController {
   @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> submit(@RequestBody Rnr rnr, HttpServletRequest request) {
     rnr.setModifiedBy(loggedInUserId(request));
-    return OpenLmisResponse.success(rnrService.submit(rnr));
+    try{
+      return OpenLmisResponse.success(rnrService.submit(rnr));
+    }catch(DataException e) {
+      return OpenLmisResponse.error(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
   }
 
   @RequestMapping(value = "/requisitions/lossAndAdjustments/reference-data", method = RequestMethod.GET, headers = "Accept=application/json")

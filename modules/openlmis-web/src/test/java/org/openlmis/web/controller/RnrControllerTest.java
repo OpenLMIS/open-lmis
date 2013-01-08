@@ -7,6 +7,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.service.RnrService;
 import org.openlmis.web.response.OpenLmisResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
@@ -75,6 +76,17 @@ public class RnrControllerTest {
     assertThat(response.getBody().getSuccessMsg(), is(testMessage));
     verify(rnrService).submit(rnr);
     assertThat(rnr.getModifiedBy(), is(USER_ID));
+  }
+
+  @Test
+  public void shouldReturnErrorMessageButStillSaveRnrIfRnrNotValid() throws Exception {
+    Rnr rnr = new Rnr();
+    doThrow(new DataException("some error")).when(rnrService).submit(rnr);
+
+    ResponseEntity<OpenLmisResponse> response = controller.submit(rnr, request);
+
+    assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+    assertThat(response.getBody().getErrorMsg(), is("some error"));
   }
 }
 

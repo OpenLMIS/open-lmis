@@ -1,18 +1,14 @@
 function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $location, Requisition, Requisitions, $route, LossesAndAdjustmentsReferenceData, $rootScope) {
 
   $scope.disableFormForSubmittedRnr = function () {
-    if ($scope.rnr != null && $scope.rnr.status == 'SUBMITTED') {
-      return true;
-    }
-    return false;
-  };
+    return $scope.rnr != null && $scope.rnr.status == 'SUBMITTED';
 
+  };
 
   $scope.lossesAndAdjustmentsModal = [];
   $scope.rnrLineItems = [];
   $rootScope.fixToolBar();
   if (!$scope.$parent.rnr) {
-    // TODO : is this required?
     Requisition.get({facilityId:$route.current.params.facility, programId:$route.current.params.program},
       function (data) {
         if (data.rnr) {
@@ -64,6 +60,8 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
   };
 
   $scope.saveRnr = function () {
+    $scope.submitError = "";
+    $scope.submitMessage = "";
     if ($scope.saveRnrForm.$error.rnrError) {
       $scope.error = "Please correct errors before saving.";
       $scope.message = "";
@@ -77,31 +75,51 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
       }, {});
   };
 
-  $scope.highlightRequired = function(value) {
-    if(!value &&  $scope.inputClass == 'required') {
+  $scope.highlightRequired = function (value) {
+    if (!value && $scope.inputClass == 'required') {
       return "required-error";
     }
   };
 
+  function formulaValid() {
+    var valid = true;
+    $scope.rnrLineItems.forEach(function (lineItem) {
+      if (lineItem.arithmeticallyInvalid($scope.programRnRColumnList)){
+        valid =  false;
+      }
+    });
+    return valid;
+  }
+
   $scope.submitRnr = function () {
+    if ($scope.saveRnrForm.$error.rnrError) {
+      $scope.submitError = "Please correct the errors on the R&R form before submitting";
+      $scope.submitMessage = "";
+      return;
+    }
 
     if ($scope.saveRnrForm.$error.required) {
       $scope.inputClass = "required";
-      $scope.error = 'Please complete the highlighted fields on the R&R form before submitting';
-      $scope.message = "";
+      $scope.saveRnr();
+      $scope.submitMessage = "";
+      $scope.submitError = 'Please complete the highlighted fields on the R&R form before submitting';
       return;
     }
-    if ($scope.saveRnrForm.$error.rnrError) {
-      $scope.error = "R&R has errors, please clear them before submission";
-      $scope.message = "";
+    if (!formulaValid()) {
+      $scope.saveRnr();
+      $scope.submitError = "Please correct the errors on the R&R form before submitting";
+      $scope.submitMessage = "";
       return;
     }
+
     Requisitions.update({id:$scope.rnr.id, operation:"submit"},
       $scope.rnr, function (data) {
         $scope.rnr.status = "SUBMITTED";
-        $scope.message = data.success;
-        $scope.error = "";
-      }, {});
+        $scope.submitMessage = data.success;
+        $scope.submitError = "";
+      }, function (data) {
+        $scope.submitError = data.data.error;
+      });
   };
 
   $scope.getId = function (prefix, parent, isLossAdjustment) {

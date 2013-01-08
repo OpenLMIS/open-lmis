@@ -36,9 +36,12 @@ public class Rnr {
     lineItems.add(rnrLineItem);
   }
 
-  public boolean validate() {
+  public boolean validate(boolean formulaValidated) {
     if(!validateFullSupplyCost() || !validateTotalSubmittedCost()){
       throw new DataException("R&R has errors, please correct them before submission");
+    }
+    for(RnrLineItem lineItem : lineItems){
+      lineItem.validate(formulaValidated);
     }
     return true;
   }

@@ -103,24 +103,53 @@ describe('CreateRnrController', function () {
   it('should not submit rnr with required fields missing', function () {
     scope.rnr = {"id":"rnrId"};
     scope.saveRnrForm={$error: {required:true}};
+    httpBackend.expect('PUT','/requisitions/rnrId/save.json').respond(200);
     scope.submitRnr();
-    expect(scope.error).toEqual("Please complete the highlighted fields on the R&R form before submitting");
+    httpBackend.flush();
+    expect(scope.submitError).toEqual("Please complete the highlighted fields on the R&R form before submitting");
   });
 
   it('should not submit rnr with error in the form', function () {
     scope.rnr = {"id":"rnrId"};
     scope.saveRnrForm={$error: {rnrError:true}};
     scope.submitRnr();
-    expect(scope.error).toEqual("R&R has errors, please clear them before submission");
+    expect(scope.submitError).toEqual("Please correct the errors on the R&R form before submitting");
+  });
+
+  it('should not submit rnr with formula validation error but should save', function() {
+    var lineItem = { "beginningBalance" : 1, totalLossesAndAdjustments: 1, quantityDispensed: 1,
+      quantityReceived : 1, stockInHand: 1};
+    scope.rnrLineItems.push(new RnrLineItem(lineItem));
+    scope.rnr = {"id":1};
+    scope.programRnRColumnList = [
+      {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidated": true},
+      {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
+      {"indicator":"C", "name":"quantityDispensed", "source":{"name":"CALCULATED"}},
+      {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}},
+      {"indicator":"E", "name":"stockInHand", "source":{"name":"USER_INPUT"}}
+    ];
+    httpBackend.expect('PUT', '/requisitions/1/save.json').respond(200);
+    scope.submitRnr();
+    httpBackend.flush();
   });
 
   it('should submit valid rnr', function () {
-    scope.rnr = {"id":"rnrId"};
+    var lineItem = { "beginningBalance" : 1, totalLossesAndAdjustments: 1, quantityDispensed: 2,
+      quantityReceived : 1, stockInHand: 1};
+    scope.rnrLineItems.push(new RnrLineItem(lineItem));
+
+    scope.rnr = {"id":"rnrId", lineItems : [lineItem]};
+    scope.programRnrColumnList = [
+      {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidated": true},
+      {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
+      {"indicator":"C", "name":"quantityDispensed", "source":{"name":"CALCULATED"}},
+      {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}},
+      {"indicator":"E", "name":"stockInHand", "source":{"name":"USER_INPUT"}}
+    ];
     httpBackend.expect('PUT', '/requisitions/rnrId/submit.json').respond(200, {success: "R&R submitted successfully!"});
     scope.submitRnr();
     httpBackend.flush();
-    expect(scope.message).toEqual("R&R submitted successfully!");
-    expect(scope.error).toEqual("");
+    expect(scope.submitMessage).toEqual("R&R submitted successfully!");
     expect(scope.rnr.status).toEqual("SUBMITTED");
   });
 

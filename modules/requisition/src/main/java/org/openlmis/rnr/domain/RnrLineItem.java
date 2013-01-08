@@ -89,8 +89,8 @@ public class RnrLineItem {
     this.lossesAndAdjustments.add(lossesAndAdjustments);
   }
 
-  public boolean validate() {
-    if (!validateMandatoryFields() || !validateCalculatedFields()) {
+  public boolean validate(boolean formulaValidated) {
+    if (!validateMandatoryFields() || !validateCalculatedFields(formulaValidated)) {
       throw new DataException("R&R has errors, please correct them before submission");
     }
     return true;
@@ -101,8 +101,12 @@ public class RnrLineItem {
         !isPresent(newPatientCount) || !isPresent(stockOutDays)) && (quantityRequested == null || isPresent(reasonForRequestedQuantity));
   }
 
-  private boolean validateCalculatedFields() {
-    return quantityDispensed == (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand) &&
+  private boolean validateCalculatedFields(boolean formulaValidated) {
+    boolean validQuantityDispensed = true;
+    if(formulaValidated) {
+      validQuantityDispensed = quantityDispensed == (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand);
+    }
+    return validQuantityDispensed &&
         totalLossesAndAdjustments.equals(calculateTotalLossesAndAdjustments()) &&
         normalizedConsumption.intValue() == (calculateNormalizedConsumption()) &&
         normalizedConsumption.equals(amc) && maxStockQuantity.equals(calculateMaxStockQuantity()) &&

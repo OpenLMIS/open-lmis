@@ -26,6 +26,7 @@ public class RnrLineItemTest {
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
   private RnrLineItem lineItem;
+  private boolean formulaValidated = false;
 
   @Before
   public void setUp() throws Exception {
@@ -55,7 +56,7 @@ public class RnrLineItemTest {
     lineItem.setBeginningBalance(null);
     expectedException.expect(DataException.class);
     expectedException.expectMessage("R&R has errors, please correct them before submission");
-    lineItem.validate();
+    lineItem.validate(formulaValidated);
   }
 
   @Test
@@ -63,7 +64,7 @@ public class RnrLineItemTest {
     lineItem.setQuantityReceived(null);
     expectedException.expect(DataException.class);
     expectedException.expectMessage("R&R has errors, please correct them before submission");
-    lineItem.validate();
+    lineItem.validate(formulaValidated);
   }
 
   @Test
@@ -71,7 +72,7 @@ public class RnrLineItemTest {
     lineItem.setQuantityDispensed(null);
     expectedException.expect(DataException.class);
     expectedException.expectMessage("R&R has errors, please correct them before submission");
-    lineItem.validate();
+    lineItem.validate(formulaValidated);
   }
 
   @Test
@@ -79,7 +80,7 @@ public class RnrLineItemTest {
     lineItem.setNewPatientCount(null);
     expectedException.expect(DataException.class);
     expectedException.expectMessage("R&R has errors, please correct them before submission");
-    lineItem.validate();
+    lineItem.validate(formulaValidated);
   }
 
   @Test
@@ -87,7 +88,7 @@ public class RnrLineItemTest {
     lineItem.setStockOutDays(null);
     expectedException.expect(DataException.class);
     expectedException.expectMessage("R&R has errors, please correct them before submission");
-    lineItem.validate();
+    lineItem.validate(formulaValidated);
   }
 
   @Test
@@ -95,16 +96,17 @@ public class RnrLineItemTest {
     lineItem.setQuantityRequested(70);
     expectedException.expect(DataException.class);
     expectedException.expectMessage("R&R has errors, please correct them before submission");
-    lineItem.validate();
+    lineItem.validate(formulaValidated);
   }
 
   @Test
   public void shouldNotThrowErrorForExplanationNotPresentIfRequestedQuantityNotSet() throws Exception {
-    assertTrue(lineItem.validate());
+    assertTrue(lineItem.validate(formulaValidated));
   }
 
   @Test
-  public void shouldThrowExceptionIfCalculationForQuantityDispensedAndStockInHandNotValid() throws Exception {
+  public void shouldThrowExceptionIfCalculationForQuantityDispensedAndStockInHandNotValidAndFormulaValidatedTrue() throws Exception {
+    formulaValidated = true;
     lineItem.setBeginningBalance(10);
     lineItem.setQuantityReceived(3);
     lineItem.setTotalLossesAndAdjustments(1);
@@ -112,17 +114,42 @@ public class RnrLineItemTest {
     lineItem.setQuantityDispensed(9);
     expectedException.expect(DataException.class);
     expectedException.expectMessage("R&R has errors, please correct them before submission");
-    lineItem.validate();
+    lineItem.validate(formulaValidated);
   }
 
   @Test
-  public void shouldNotThrowExceptionIfCalculationForQuantityDispensedAndStockInHandNotValid() throws Exception {
+  public void shouldNotThrowExceptionIfCalculationForQuantityDispensedAndStockInHandValidAndFormulaValidatedTrue() throws Exception {
+    formulaValidated = true;
     lineItem.setBeginningBalance(10);
     lineItem.setQuantityReceived(3);
     lineItem.setTotalLossesAndAdjustments(1);
     lineItem.setStockInHand(4);
     lineItem.setQuantityDispensed(10);
-    assertTrue(lineItem.validate());
+    assertTrue(lineItem.validate(formulaValidated));
+  }
+
+  @Test
+  public void shouldNotThrowExceptionIfCalculationForQuantityDispensedAndStockInHandNotValidAndFormulaValidatedFalse() throws Exception {
+    lineItem.setBeginningBalance(10);
+    lineItem.setQuantityReceived(3);
+    lineItem.setTotalLossesAndAdjustments(1);
+    lineItem.setStockInHand(4);
+    lineItem.setQuantityDispensed(9);
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("R&R has errors, please correct them before submission");
+    lineItem.validate(formulaValidated);
+  }
+
+
+  @Test
+  public void shouldNotThrowExceptionIfCalculationForQuantityDispensedAndStockInHandValidAndFormulaValidatedFalse() throws Exception {
+    formulaValidated = true;
+    lineItem.setBeginningBalance(10);
+    lineItem.setQuantityReceived(3);
+    lineItem.setTotalLossesAndAdjustments(1);
+    lineItem.setStockInHand(4);
+    lineItem.setQuantityDispensed(10);
+    assertTrue(lineItem.validate(formulaValidated));
   }
 
   @Test
@@ -143,12 +170,12 @@ public class RnrLineItemTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("R&R has errors, please correct them before submission");
 
-    lineItem.validate();
+    lineItem.validate(formulaValidated);
   }
 
 
   @Test
-  public void shouldNotThrowExceptionIfCalculationForTotalLossesAndAdjustmentsNotValid() throws Exception {
+  public void shouldNotThrowExceptionIfCalculationForTotalLossesAndAdjustmentsValid() throws Exception {
     LossesAndAdjustmentsType additive = new LossesAndAdjustmentsType();
     LossesAndAdjustmentsType subtractive = new LossesAndAdjustmentsType();
     additive.setAdditive(true);
@@ -163,7 +190,7 @@ public class RnrLineItemTest {
     lineItem.setLossesAndAdjustments(lossesAndAdjustmentsList);
     lineItem.setTotalLossesAndAdjustments(1);
 
-    assertTrue(lineItem.validate());
+    assertTrue(lineItem.validate(formulaValidated));
   }
 
   @Test
@@ -176,7 +203,7 @@ public class RnrLineItemTest {
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("R&R has errors, please correct them before submission");
-    assertTrue(lineItem.validate());
+    assertTrue(lineItem.validate(formulaValidated));
   }
 
   @Test
@@ -186,7 +213,7 @@ public class RnrLineItemTest {
     lineItem.setDosesPerMonth(30);
     lineItem.setDosesPerDispensingUnit(10);
     lineItem.setNormalizedConsumption(37F);
-    assertTrue(lineItem.validate());
+    assertTrue(lineItem.validate(formulaValidated));
   }
 
   @Test
@@ -195,7 +222,7 @@ public class RnrLineItemTest {
     lineItem.setAmc(10f);
     expectedException.expect(DataException.class);
     expectedException.expectMessage("R&R has errors, please correct them before submission");
-    lineItem.validate();
+    lineItem.validate(formulaValidated);
 
   }
 
@@ -208,7 +235,7 @@ public class RnrLineItemTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("R&R has errors, please correct them before submission");
 
-    lineItem.validate();
+    lineItem.validate(formulaValidated);
   }
 
   @Test
@@ -220,7 +247,7 @@ public class RnrLineItemTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("R&R has errors, please correct them before submission");
 
-    lineItem.validate();
+    lineItem.validate(formulaValidated);
   }
 
   @Test
@@ -234,7 +261,7 @@ public class RnrLineItemTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("R&R has errors, please correct them before submission");
 
-    lineItem.validate();
+    lineItem.validate(formulaValidated);
   }
 
   @Test
@@ -246,11 +273,11 @@ public class RnrLineItemTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("R&R has errors, please correct them before submission");
 
-    lineItem.validate();
+    lineItem.validate(formulaValidated);
   }
 
   @Test
   public void shouldNotThrowErrorIfAllMandatoryFieldsPresent() throws Exception {
-    assertTrue(lineItem.validate());
+    assertTrue(lineItem.validate(formulaValidated));
   }
 }

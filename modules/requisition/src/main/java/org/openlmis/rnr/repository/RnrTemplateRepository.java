@@ -59,4 +59,8 @@ public class RnrTemplateRepository {
   public boolean isRnrTemplateDefined(Integer programId) {
     return rnrColumnMapper.isRnrTemplateDefined(programId);
   }
+
+  public boolean isFormulaValidated(Integer programId) {
+    return rnrColumnMapper.isFormulaValidated(programId);
+  }
 }

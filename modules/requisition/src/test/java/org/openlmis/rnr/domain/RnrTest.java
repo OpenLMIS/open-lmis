@@ -9,6 +9,8 @@ import org.openlmis.rnr.builder.RnrBuilder;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.cost;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
 
@@ -32,7 +34,7 @@ public class RnrTest {
     exception.expect(DataException.class);
     exception.expectMessage("R&R has errors, please correct them before submission");
 
-    rnr.validate();
+    rnr.validate(true);
   }
 
   @Test
@@ -44,7 +46,22 @@ public class RnrTest {
     exception.expect(DataException.class);
     exception.expectMessage("R&R has errors, please correct them before submission");
 
-    rnr.validate();
+    rnr.validate(true);
+  }
+
+  @Test
+  public void shouldValidateEachLineItem() throws Exception {
+    RnrLineItem rnrLineItem1 = mock(RnrLineItem.class);
+    RnrLineItem rnrLineItem2 = mock(RnrLineItem.class);
+    Rnr rnr = new Rnr();
+    rnr.add(rnrLineItem1);
+    rnr.add(rnrLineItem2);
+
+    boolean formulaValidated = true;
+    rnr.validate(formulaValidated);
+
+    verify(rnrLineItem1).validate(formulaValidated);
+    verify(rnrLineItem2).validate(formulaValidated);
   }
 
   @Test
@@ -53,6 +70,7 @@ public class RnrTest {
     rnr.setNonFullSupplyItemsSubmittedCost(40f);
     rnr.setTotalSubmittedCost(88f);
 
-    assertTrue(rnr.validate());
+    assertTrue(rnr.validate(true));
   }
+
 }

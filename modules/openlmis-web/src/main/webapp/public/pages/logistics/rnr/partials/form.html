@@ -249,12 +249,18 @@
         <input ng-disabled="disableFormForSubmittedRnr()" type="button" ng-click="saveRnr()" class="btn btn-primary save-button" value="Save"/>
         <input ng-disabled="disableFormForSubmittedRnr()" type="submit" class="btn btn-success pull-right" value="Submit"/>
       </div>
-  <div class="toolbar-error" id="saveFailMessage" ng-model="error" ng-show="error">
+  <div class="toolbar-error" id="saveFailMessage" ng-model="error" ng-show="error && !submitError && !submitMessage">
     {{error}}
   </div>
-  <div class="toolbar-success" id="saveSuccessMsgDiv" ng-model="message" ng-show="message">
+    <div class="toolbar-error" id="submitFailMessage" ng-model="submitError" ng-show="submitError">
+      {{submitError}}
+    </div>
+  <div class="toolbar-success" id="saveSuccessMsgDiv" ng-model="message" ng-show="!submitMessage && !submitError && message">
     {{message}}
   </div>
+    <div class="toolbar-success" id="submitSuccessMsgDiv" ng-model="submitMessage" ng-show="submitMessage">
+      {{submitMessage}}
+    </div>
    </div>
 </form>
  </div>
