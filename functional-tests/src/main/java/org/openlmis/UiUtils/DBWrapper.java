@@ -135,15 +135,17 @@ public class DBWrapper {
         dbwrapper.dbConnection("DELETE FROM requisition_line_item_losses_adjustments;", "alter");
         dbwrapper.dbConnection("DELETE FROM requisition_line_items;", "alter");
         dbwrapper.dbConnection("DELETE FROM requisition;", "alter");
+        dbwrapper.dbConnection("delete from supply_lines;", "alter");
+        dbwrapper.dbConnection("delete from supervisory_nodes;", "alter");
         dbwrapper.dbConnection("delete from facilities;", "alter");
         dbwrapper.dbConnection("delete from programs_supported;", "alter");
-        dbwrapper.dbConnection("delete from supervisory_nodes;", "alter");
         dbwrapper.dbConnection("delete from requisition_group_members;", "alter");
         dbwrapper.dbConnection("delete from programs_supported;", "alter");
         dbwrapper.dbConnection("delete from program_rnr_columns;", "alter");
         dbwrapper.dbConnection("delete from requisition_group_program_schedules ;", "alter");
         dbwrapper.dbConnection("delete from requisition_groups;", "alter");
         dbwrapper.dbConnection("delete from requisition_group_members;", "alter");
+
     }
 
 

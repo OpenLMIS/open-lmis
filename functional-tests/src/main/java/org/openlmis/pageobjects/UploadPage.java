@@ -117,4 +117,14 @@ public class UploadPage extends Page {
         SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
     }
 
+    public void uploadSupplyLines() throws FileNotFoundException {
+        selectUploadType("Supply Lines");
+        uploadFile("Supply_Lines.csv");
+        testWebDriver.sleep(250);
+        testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
+        SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
+    }
+
+
+
 }
