@@ -61,6 +61,7 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
 
   $scope.saveRnr = function () {
     $scope.submitError = "";
+    $scope.inputClass = "";
     $scope.submitMessage = "";
     if ($scope.saveRnrForm.$error.rnrError) {
       $scope.error = "Please correct errors before saving.";
@@ -75,16 +76,25 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
       }, {});
   };
 
+  function isUndefined(value) {
+    return (value == null || value == undefined || value.trim().length == 0 || value == false);
+  }
+
   $scope.highlightRequired = function (value) {
-    if (!value && $scope.inputClass == 'required') {
+    if (isUndefined(value) && $scope.inputClass == 'required') {
       return "required-error";
     }
   };
 
+  $scope.highlightWarning = function (value) {
+    if (isUndefined(value) && $scope.inputClass == 'required') {
+      return "warning-error";
+    }
+  };
   function formulaValid() {
     var valid = true;
     $scope.rnrLineItems.forEach(function (lineItem) {
-      if (lineItem.arithmeticallyInvalid($scope.programRnRColumnList)){
+      if (lineItem.arithmeticallyInvalid($scope.programRnRColumnList) || lineItem.rnrLineItem.stockInHand <0 || lineItem.rnrLineItem.quantityDispensed < 0){
         valid =  false;
       }
     });
@@ -99,8 +109,8 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     }
 
     if ($scope.saveRnrForm.$error.required) {
-      $scope.inputClass = "required";
       $scope.saveRnr();
+      $scope.inputClass = "required";
       $scope.submitMessage = "";
       $scope.submitError = 'Please complete the highlighted fields on the R&R form before submitting';
       return;
@@ -123,7 +133,7 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
   };
 
   $scope.getId = function (prefix, parent, isLossAdjustment) {
-    if (isLossAdjustment != null && isLossAdjustment != undefined && isLossAdjustment) {
+    if (isLossAdjustment != null && isLossAdjustment != isUndefined && isLossAdjustment) {
       return prefix + "_" + parent.$parent.$parent.$index + "_" + parent.$parent.$parent.$parent.$index;
     }
     return prefix + "_" + parent.$parent.$parent.$index;
@@ -134,7 +144,7 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
   };
 
   $scope.showCurrencySymbol = function (value) {
-    if (value != 0 && (value == undefined || value == null || value == false)) {
+    if (value != 0 && isUndefined(value) ){
       return "";
     }
     return "defined";

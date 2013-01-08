@@ -183,6 +183,7 @@
                                             name="reasonForRequestedQuantity{{rnrLineItem.rnrLineItem['id']}}"
                                             ng-model="rnrLineItem.rnrLineItem[column.name]"
                                             ng-required="rnrLineItem.rnrLineItem.quantityRequested"
+                                            ng-class="highlightWarning(rnrLineItem.rnrLineItem[column.name])"
                                             maxlength="250"/>
                                           <span class="alert alert-warning reason-request" ng-show="rnrLineItem.rnrLineItem.quantityRequested && !rnrLineItem.rnrLineItem.reasonForRequestedQuantity">
                                           Please enter a reason
@@ -247,7 +248,7 @@
   <div id="action_buttons" class="action-buttons">
       <div class="form-cell button-row">
         <input ng-disabled="disableFormForSubmittedRnr()" type="button" ng-click="saveRnr()" class="btn btn-primary save-button" value="Save"/>
-        <input ng-disabled="disableFormForSubmittedRnr()" type="submit" class="btn btn-success pull-right" value="Submit"/>
+        <input ng-disabled="disableFormForSubmittedRnr()" type="submit" class="btn btn-success submit-button" value="Submit"/>
       </div>
   <div class="toolbar-error" id="saveFailMessage" ng-model="error" ng-show="error && !submitError && !submitMessage">
     {{error}}

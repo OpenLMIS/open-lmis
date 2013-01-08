@@ -28,12 +28,6 @@ public interface LossesAndAdjustmentsMapper {
   @Delete("DELETE FROM requisition_line_item_losses_adjustments WHERE id = #{lossesAndAdjustmentsId}")
   void delete(Integer lossesAndAdjustmentsId);
 
-  @Update("UPDATE requisition_line_item_losses_adjustments " +
-      "SET quantity = #{quantity}, " +
-      "type = #{type.name} " +
-      "WHERE id    = #{id} ")
-  public Integer update(LossesAndAdjustments lossesAndAdjustments);
-
   @Select("SELECT * FROM losses_adjustments_types ORDER BY displayOrder")
   List<LossesAndAdjustmentsType> getLossesAndAdjustmentsTypes();
 

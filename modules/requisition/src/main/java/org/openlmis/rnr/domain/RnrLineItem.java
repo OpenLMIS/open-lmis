@@ -106,9 +106,9 @@ public class RnrLineItem {
     if(formulaValidated) {
       validQuantityDispensed = quantityDispensed == (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand);
     }
-    return validQuantityDispensed &&
+    return ((quantityDispensed >= 0) && (stockInHand >= 0)) && validQuantityDispensed &&
         totalLossesAndAdjustments.equals(calculateTotalLossesAndAdjustments()) &&
-        normalizedConsumption.intValue() == (calculateNormalizedConsumption()) &&
+        (normalizedConsumption.intValue() == (calculateNormalizedConsumption())) &&
         normalizedConsumption.equals(amc) && maxStockQuantity.equals(calculateMaxStockQuantity()) &&
         calculatedOrderQuantity.equals(calculateOrderQuantity()) &&
         packsToShip.equals(calculatePacksToShip()) && cost.equals(calculateCost());
@@ -142,7 +142,7 @@ public class RnrLineItem {
   }
 
   private Integer calculateOrderQuantity() {
-    return maxStockQuantity - stockInHand;
+    return (maxStockQuantity - stockInHand < 0) ? 0 : maxStockQuantity - stockInHand;
   }
 
   private Integer calculateMaxStockQuantity() {

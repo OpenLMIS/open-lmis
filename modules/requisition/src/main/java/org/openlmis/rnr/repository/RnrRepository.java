@@ -2,10 +2,11 @@ package org.openlmis.rnr.repository;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.SupervisoryNode;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
-import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
-import org.openlmis.rnr.domain.*;
+import org.openlmis.rnr.domain.LossesAndAdjustments;
+import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
+import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper;
 import org.openlmis.rnr.repository.mapper.RnrLineItemMapper;
 import org.openlmis.rnr.repository.mapper.RnrMapper;
@@ -82,7 +83,7 @@ public class RnrRepository {
 
   public String submit(Rnr rnr) {
     rnr.setStatus(SUBMITTED);
-    rnrMapper.update(rnr);
+    update(rnr);
     SupervisoryNode supervisoryNode = supervisoryNodeRepository.getFor(rnr.getFacilityId(), rnr.getProgramId());
     if(supervisoryNode == null) {
       return "There is no supervisory node to process the R&R further, Please contact the Administrator";

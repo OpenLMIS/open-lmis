@@ -101,7 +101,7 @@ public class ProgramRnrColumnMapperIT {
     RnrColumn quantityDispensed = allColumns.get(5);
     RnrColumn stockInHand = allColumns.get(7);
     addProgramRnrColumn(quantityDispensed, 1, true, "Col1", USER_INPUT, true);
-    addProgramRnrColumn(stockInHand, 2, true, "Col2", USER_INPUT, true);
+    addProgramRnrColumn(stockInHand, 2, true, "Col2", CALCULATED, true);
 
     assertThat(rnrColumnMapper.isFormulaValidated(PROGRAM_ID), is(true));
 
@@ -112,8 +112,8 @@ public class ProgramRnrColumnMapperIT {
     List<RnrColumn> allColumns = rnrColumnMapper.fetchAllMasterRnRColumns();
     RnrColumn quantityDispensed = allColumns.get(5);
     RnrColumn stockInHand = allColumns.get(7);
-    addProgramRnrColumn(quantityDispensed, 1, true, "Col1", USER_INPUT, true);
-    addProgramRnrColumn(stockInHand, 2, true, "Col2", CALCULATED, true);
+    addProgramRnrColumn(quantityDispensed, 1, true, "Col1", USER_INPUT, false);
+    addProgramRnrColumn(stockInHand, 2, true, "Col2", CALCULATED, false);
 
     assertThat(rnrColumnMapper.isFormulaValidated(PROGRAM_ID), is(false));
 
