@@ -70,6 +70,9 @@ public class E2EUpload extends TestCaseHelper {
         uploadPage.uploadRequisitionGroup();
         testWebDriver.setImplicitWait(2500);
 
+        dbWrapper.insertSchedules();
+        dbWrapper.insertProcessingPeriods();
+
         uploadPage.uploadRequisitionGroupProgramSchedule();
         testWebDriver.setImplicitWait(2500);
 

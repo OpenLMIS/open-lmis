@@ -62,15 +62,15 @@ public class DBWrapper {
     public void insertUser(String userId, String userName, String password) throws SQLException, IOException {
         boolean flag = false;
         DBWrapper dbwrapper = new DBWrapper();
-        ResultSet rs = dbwrapper.dbConnection("Select userName from users;", "select");
-        if (rs.next()) {
-            if (rs.getString(1).contains(userName)) {
-                flag = true;
-            }
-        }
-        if (flag) {
+//        ResultSet rs = dbwrapper.dbConnection("Select userName from users;", "select");
+//        if (rs.next()) {
+//            if (rs.getString(1).contains(userName)) {
+//                flag = true;
+//            }
+//        }
+//        if (flag) {
             dbwrapper.dbConnection("delete from users where userName like('"+userName+"');", "alter");
-        }
+       // }
         dbwrapper.dbConnection("INSERT INTO users\n" +
                 "  (id, userName, password, facilityId) VALUES\n" +
                 "  ('"+userId+"', '"+userName+"', '"+password+"', null);", "alter");
@@ -145,6 +145,8 @@ public class DBWrapper {
         dbwrapper.dbConnection("delete from requisition_group_program_schedules ;", "alter");
         dbwrapper.dbConnection("delete from requisition_groups;", "alter");
         dbwrapper.dbConnection("delete from requisition_group_members;", "alter");
+        dbwrapper.dbConnection("delete from processing_periods;", "alter");
+        dbwrapper.dbConnection("delete from processing_schedules;", "alter");
 
     }
 
@@ -295,11 +297,7 @@ public class DBWrapper {
         }
         dbwrapper.dbConnection("insert into facility_approved_products(facilityTypeId, programProductId, maxMonthsOfStock) values\n" +
                 "((select id from facility_types where name='Lvl3 Hospital'), (select id from program_products where programId=(Select id from programs order by modifiedDate DESC limit 1) and productId=(Select id from products order by modifiedDate DESC limit 1)), 3);", "alter");
-//                "((select id from facility_types where name='Lvl3 Hospital'), (select id from program_products where programId=(Select id from programs order by modifiedDate DESC limit 1) and productId=(Select id from products order by modifiedDate DESC limit 1)), 3),\n" +
-//                "((select id from facility_types where name='Lvl3 Hospital'), (select id from program_products where programId=(Select id from programs order by modifiedDate DESC limit 1) and productId=(Select id from products order by modifiedDate DESC limit 1)), 3);","alter");
 
-//        dbwrapper.dbConnection("insert into facility_approved_products(facilityTypeId, programProductId, maxMonthsOfStock) values\n" +
-//                "((select id from facility_types where name='Lvl3 Hospital'), (select id from program_products where programId=(Select id from programs order by modifiedDate DESC limit 1) and productId=(Select id from products order by modifiedDate DESC limit 1)), 3);", "alter");
     }
 
     public void insertSchedules() throws SQLException, IOException {
