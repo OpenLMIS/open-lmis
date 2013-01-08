@@ -9,6 +9,9 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @TransactionConfiguration(defaultRollback=true)
 @Transactional
 
@@ -30,16 +33,33 @@ public class E2EUpload extends TestCaseHelper {
         LoginPage loginPage=new LoginPage(testWebDriver);
 
         HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+        TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate("HIV");
+        templateConfigPage.configureTemplate();
+
+        RolesPage rolesPage = homePage.navigateRoleAssignments();
+        List<String> userRoleList = new ArrayList<>();
+        userRoleList.add("Create Requisition");
+
+        rolesPage.createRole("User", "User", userRoleList);
+
+        DBWrapper dbWrapper = new DBWrapper();
+        dbWrapper.insertUser("200", "User123", "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==");
+
+        dbWrapper.insertRoleAssignment("User");
 
         UploadPage uploadPage = homePage.navigateUploads();
-        uploadPage.uploadFacilities();
-        testWebDriver.setImplicitWait(2500);
 
         uploadPage.uploadProducts();
         testWebDriver.setImplicitWait(2500);
 
         uploadPage.uploadProgramProductMapping();
         testWebDriver.setImplicitWait(2500);
+
+        uploadPage.uploadFacilities();
+        testWebDriver.setImplicitWait(2500);
+
+        dbWrapper.insertFacilityApprovedProducts();
+        dbWrapper.allocateFacilityToUser();
 
         uploadPage.uploadProgramSupportedByFacilities();
         testWebDriver.setImplicitWait(2500);
@@ -59,7 +79,13 @@ public class E2EUpload extends TestCaseHelper {
         uploadPage.uploadSupplyLines();
         testWebDriver.setImplicitWait(2500);
 
-        homePage.logout();
+
+
+        LoginPage loginPageSecond=homePage.logout();
+        HomePage homePageUser = loginPageSecond.loginAs("User123", "User123");
+
+        InitiateRnRPage initiateRnRPage = homePageUser.navigateAndInitiateRnr("F11","F11 Village Dispensary", "", "HIV");
+        initiateRnRPage.verifyRnRHeader("F11","F11 Village Dispensary", "", "HIV");
 
     }
     @AfterClass

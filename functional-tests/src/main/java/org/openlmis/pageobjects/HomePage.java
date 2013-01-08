@@ -130,7 +130,7 @@ public class HomePage extends Page {
         return new TemplateConfigPage(testWebDriver);
     }
 
-    public InitiateRnRPage navigateAndInitiateRnr(String FCstring, String program) throws IOException {
+    public InitiateRnRPage navigateAndInitiateRnr(String FCode, String FName, String FCstring, String program) throws IOException {
         testWebDriver.waitForElementToAppear(requisitionsLink);
         requisitionsLink.click();
         testWebDriver.waitForElementToAppear(createLink);
@@ -138,7 +138,7 @@ public class HomePage extends Page {
         testWebDriver.waitForElementToAppear(myFacilityLink);
         myFacilityLink.click();
         testWebDriver.waitForElementToAppear(facilityDropDown);
-        testWebDriver.selectByVisibleText(facilityDropDown, "FCcode" + FCstring + "-FCname" + FCstring);
+        testWebDriver.selectByVisibleText(facilityDropDown, FCode + FCstring + "-" + FName + FCstring);
         testWebDriver.waitForElementToAppear(programDropDown);
         programDropDown.click();
         testWebDriver.selectByVisibleText(programDropDownSelect,program);

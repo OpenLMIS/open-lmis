@@ -331,4 +331,32 @@ public class DBWrapper {
 
     }
 
+    public void configureTemplate() throws SQLException, IOException {
+        DBWrapper dbwrapper = new DBWrapper();
+
+        dbwrapper.dbConnection("INSERT INTO program_rnr_columns\n" +
+                "(masterColumnId, programId, visible, source, position, label) VALUES\n" +
+                "(1, (select id from programs where code = 'HIV'),  true, 'R', 1,  'Product Code'),\n" +
+        "(2, (select id from programs where code = 'HIV'),  true, 'R', 2,  'Product'),\n" +
+        "(3, (select id from programs where code = 'HIV'),  true, 'R', 3,  'Unit/Unit of Issue'),\n" +
+        "(4, (select id from programs where code = 'HIV'),  true, 'U', 4,  'Beginning Balance'),\n" +
+        "(5, (select id from programs where code = 'HIV'),  true, 'U', 5,  'Total Received Quantity'),\n" +
+        "(6, (select id from programs where code = 'HIV'),  true, 'U', 6,  'Total Consumed Quantity'),\n" +
+        "(7, (select id from programs where code = 'HIV'),  true, 'U', 7,  'Total Losses / Adjustments'),\n" +
+        "(8, (select id from programs where code = 'HIV'),  true, 'C', 8,  'Stock on Hand'),\n" +
+        "(9, (select id from programs where code = 'HIV'),  true, 'U', 9, 'New Patients'),\n" +
+        "(10, (select id from programs where code = 'HIV'), true, 'U', 10, 'Total Stockout days'),\n" +
+        "(11, (select id from programs where code = 'HIV'), true, 'C', 11, 'Adjusted Total Consumption'),\n" +
+        "(12, (select id from programs where code = 'HIV'), true, 'C', 12, 'Average Monthly Consumption(AMC)'),\n" +
+        "(13, (select id from programs where code = 'HIV'), true, 'C', 13, 'Maximum Stock Quantity'),\n" +
+        "(14, (select id from programs where code = 'HIV'), true, 'C', 14, 'Calculated Order Quantity'),\n" +
+        "(15, (select id from programs where code = 'HIV'), true, 'U', 15, 'Requested Quantity'),\n" +
+        "(16, (select id from programs where code = 'HIV'), true, 'U', 16, 'Requested Quantity Explanation'),\n" +
+        "(17, (select id from programs where code = 'HIV'), true, 'U', 17, 'Approved Quantity'),\n" +
+        "(18, (select id from programs where code = 'HIV'), true, 'C', 18, 'Packs to Ship'),\n" +
+        "(19, (select id from programs where code = 'HIV'), true, 'R', 19, 'Price per pack'),\n" +
+        "(20, (select id from programs where code = 'HIV'), true, 'C', 20, 'Total cost'),\n" +
+        "(21, (select id from programs where code = 'HIV'), true, 'U', 21, 'Remarks');", "alter");
+    }
+
 }

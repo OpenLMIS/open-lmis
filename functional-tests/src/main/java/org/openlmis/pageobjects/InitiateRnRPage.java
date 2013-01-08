@@ -113,13 +113,13 @@ public class InitiateRnRPage extends Page {
         testWebDriver.setImplicitWait(25);
     }
 
-    public void verifyRnRHeader(String FCstring, String program)
+    public void verifyRnRHeader(String FCode, String FName, String FCstring, String program)
     {
        testWebDriver.waitForElementToAppear(requisitionHeader);
         String headerText=testWebDriver.getText(requisitionHeader);
         SeleneseTestNgHelper.assertTrue(headerText.contains("Report and Requisition for "+program));
         String facilityText=testWebDriver.getText(facilityLabel);
-        SeleneseTestNgHelper.assertTrue(facilityText.contains("FCcode" + FCstring + " - FCname" + FCstring));
+        SeleneseTestNgHelper.assertTrue(facilityText.contains(FCode + FCstring + " - " + FName + FCstring));
 
     }
 

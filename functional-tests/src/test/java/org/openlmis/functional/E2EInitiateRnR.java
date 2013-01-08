@@ -67,8 +67,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
         LoginPage loginPageSecond=homePage.logout();
         HomePage homePageUser = loginPageSecond.loginAs(user, password);
 
-        InitiateRnRPage initiateRnRPage = homePageUser.navigateAndInitiateRnr(date_time, program);
-        initiateRnRPage.verifyRnRHeader(date_time, program);
+        InitiateRnRPage initiateRnRPage = homePageUser.navigateAndInitiateRnr("FCcode", "FCname", date_time, program);
+        initiateRnRPage.verifyRnRHeader("FCcode", "FCname", date_time, program);
 
         initiateRnRPage.calculateAndVerifyStockOnHand(10,10,10,1);
         initiateRnRPage.enterValuesAndVerifyCalculatedOrderQuantity(10,10,101,101,303,292);
