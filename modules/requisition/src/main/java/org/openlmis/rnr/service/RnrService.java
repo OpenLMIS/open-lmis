@@ -2,8 +2,10 @@ package org.openlmis.rnr.service;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.FacilityApprovedProduct;
+import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityApprovedProductService;
+import org.openlmis.core.service.SupervisoryNodeService;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
@@ -15,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
+
 @Service
 @NoArgsConstructor
 public class RnrService {
@@ -23,12 +27,14 @@ public class RnrService {
   private RnrTemplateRepository rnrTemplateRepository;
 
   private FacilityApprovedProductService facilityApprovedProductService;
+  private SupervisoryNodeService supervisoryNodeService;
 
   @Autowired
-  public RnrService(RnrRepository rnrRepository, RnrTemplateRepository rnrTemplateRepository, FacilityApprovedProductService facilityApprovedProductService) {
+  public RnrService(RnrRepository rnrRepository, RnrTemplateRepository rnrTemplateRepository, FacilityApprovedProductService facilityApprovedProductService, SupervisoryNodeService supervisoryNodeRepository) {
     this.rnrRepository = rnrRepository;
     this.rnrTemplateRepository = rnrTemplateRepository;
     this.facilityApprovedProductService = facilityApprovedProductService;
+    this.supervisoryNodeService = supervisoryNodeRepository;
   }
 
   @Transactional
@@ -64,7 +70,14 @@ public class RnrService {
       rnrRepository.update(rnr);
       throw e;
     }
-    return rnrRepository.submit(rnr);
+    rnr.setStatus(SUBMITTED);
+    rnrRepository.update(rnr);
+
+    SupervisoryNode supervisoryNode = supervisoryNodeService.getFor(rnr.getFacilityId(), rnr.getProgramId());
+    if (supervisoryNode == null) {
+      return "There is no supervisory node to process the R&R further, Please contact the Administrator";
+    }
+    return "R&R submitted successfully!";
   }
 }
 

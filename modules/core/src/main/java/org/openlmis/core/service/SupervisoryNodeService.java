@@ -26,4 +26,8 @@ public class SupervisoryNodeService {
     public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Integer userId, Integer programId, Right right) {
         return supervisoryNodeRepository.getAllSupervisoryNodesInHierarchyBy(userId, programId, right);
     }
+
+  public SupervisoryNode getFor(int facilityId, int programId) {
+    return supervisoryNodeRepository.getFor(facilityId, programId);
+  }
 }

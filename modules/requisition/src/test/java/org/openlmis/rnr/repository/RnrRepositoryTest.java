@@ -7,7 +7,6 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.rnr.domain.LossesAndAdjustments;
 import org.openlmis.rnr.domain.Rnr;
@@ -25,7 +24,6 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
-import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RnrRepositoryTest {
@@ -56,7 +54,7 @@ public class RnrRepositoryTest {
 
   @Before
   public void setUp() throws Exception {
-    rnrRepository = new RnrRepository(rnrMapper, rnrLineItemMapper, lossesAndAdjustmentsMapper, supervisoryNodeRepository);
+    rnrRepository = new RnrRepository(rnrMapper, rnrLineItemMapper, lossesAndAdjustmentsMapper);
     rnr = new Rnr();
     rnrLineItem1 = new RnrLineItem();
     rnrLineItem1.setId(1);
@@ -116,26 +114,4 @@ public class RnrRepositoryTest {
     assertThat(rnr, is(expectedRnr));
   }
 
-  @Test
-  public void shouldReturnMessageWhileSubmittingRnrIfSupervisingNodeNotPresent()  {
-    when(supervisoryNodeRepository.getFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(null);
-
-    String message = rnrRepository.submit(rnr);
-    verify(rnrMapper).update(rnr);
-    assertThat(rnr.getStatus(), is(SUBMITTED));
-    assertThat(message, is("There is no supervisory node to process the R&R further, Please contact the Administrator"));
-  }
-
-  @Test
-  public void shouldSubmitValidRnrAndSetMessage()  {
-    when(supervisoryNodeRepository.getFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(new SupervisoryNode());
-    String message = rnrRepository.submit(rnr);
-    verify(rnrMapper).update(rnr);
-
-    verify(rnrLineItemMapper, times(2)).update(any(RnrLineItem.class));
-    verify(lossesAndAdjustmentsMapper, times(2)).deleteByLineItemId(any(Integer.class));
-    verify(lossesAndAdjustmentsMapper, times(2)).insert(any(RnrLineItem.class), any(LossesAndAdjustments.class));
-    assertThat(rnr.getStatus(), is(SUBMITTED));
-    assertThat(message, is("R&R submitted successfully!"));
-  }
 }

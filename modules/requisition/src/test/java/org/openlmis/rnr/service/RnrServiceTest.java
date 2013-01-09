@@ -10,8 +10,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.domain.FacilityApprovedProduct;
 import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityApprovedProductService;
+import org.openlmis.core.service.SupervisoryNodeService;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.repository.RnrRepository;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
@@ -26,6 +28,8 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
+import static org.openlmis.rnr.builder.RnrBuilder.defaultRnr;
+import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RnrServiceTest {
@@ -44,10 +48,16 @@ public class RnrServiceTest {
   private RnrRepository rnrRepository;
   @Mock
   private RnrTemplateRepository rnrTemplateRepository;
+  @Mock
+  private SupervisoryNodeService supervisoryNodeService;
+
+  private Rnr rnr;
+
 
   @Before
   public void setup() {
-    rnrService = new RnrService(rnrRepository, rnrTemplateRepository, facilityApprovedProductService);
+    rnrService = new RnrService(rnrRepository, rnrTemplateRepository, facilityApprovedProductService, supervisoryNodeService);
+    rnr = spy(make(a(defaultRnr)));
   }
 
   @Test
@@ -75,20 +85,7 @@ public class RnrServiceTest {
   }
 
   @Test
-  public void shouldSubmitRnr() throws Exception {
-    Rnr rnr = mock(Rnr.class);
-    String testMessage = "test message";
-    when(rnrRepository.submit(rnr)).thenReturn(testMessage);
-    when(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId())).thenReturn(true);
-    String message = rnrService.submit(rnr);
-    verify(rnr).validate(true);
-    assertThat(message, is(testMessage));
-    verify(rnrRepository).submit(rnr);
-  }
-
-  @Test
   public void shouldThrowExceptionInCaseOfInvalidRnrButAlsoSaveIt() throws Exception {
-    Rnr rnr = mock(Rnr.class);
     String errorMessage = "some error";
     Integer programId = 1;
     when(rnr.getProgramId()).thenReturn(programId);
@@ -103,4 +100,26 @@ public class RnrServiceTest {
     }
     verify(rnrRepository).update(rnr);
   }
+
+  @Test
+   public void shouldReturnMessageWhileSubmittingRnrIfSupervisingNodeNotPresent()  {
+    doReturn(true).when(rnr).validate(false);
+     when(supervisoryNodeService.getFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(null);
+
+     String message = rnrService.submit(rnr);
+     verify(rnrRepository).update(rnr);
+     assertThat(rnr.getStatus(), is(SUBMITTED));
+     assertThat(message, is("There is no supervisory node to process the R&R further, Please contact the Administrator"));
+   }
+
+   @Test
+   public void shouldSubmitValidRnrAndSetMessage()  {
+     doReturn(true).when(rnr).validate(false);
+     when(supervisoryNodeService.getFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(new SupervisoryNode());
+     String message = rnrService.submit(rnr);
+     verify(rnrRepository).update(rnr);
+
+     assertThat(rnr.getStatus(), is(SUBMITTED));
+     assertThat(message, is("R&R submitted successfully!"));
+   }
 }
