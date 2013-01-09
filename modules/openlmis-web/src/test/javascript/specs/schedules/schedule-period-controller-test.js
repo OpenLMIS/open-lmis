@@ -93,5 +93,27 @@ describe("Period", function () {
       expect(scope.periodList.length).toEqual(0);
       expect(scope.newPeriod.startDate).toEqual(undefined);
     });
+
+    it('should refresh end Date offset after creating a period', function() {
+      var newPeriod = {"name":"newName", "startDate":new Date(9999,3,1,0,0), "endDate":new Date(2013,4,1,0,0), "description":"newDescription"};
+      spyOn(Date, 'now').andCallFake(function() {return new Date(9999,3,1,0,0).getTime();});
+      scope.refreshEndDateOffset(newPeriod.startDate.getTime());
+
+      expect(scope.endDateOffset).toEqual(1);
+    });
+
+    it('should reset new period after creating a period', function() {
+      $httpBackend.flush();
+      var newPeriod = {"name":"newName", "startDate":new Date(2011,3,1,0,0), "endDate":new Date(2011,4,1,0,0), "description":"newDescription"};
+      scope.newPeriod = newPeriod;
+      $httpBackend.expectPOST('/schedules/123/periods.json').respond(200, {"success":"success message"});
+
+      scope.createPeriodForm = {$invalid : false};
+      scope.createPeriod();
+      $httpBackend.flush();
+
+      expect(scope.newPeriod.startDate).toEqual(new Date(2011,4,2,0,0).getTime());
+      expect(scope.message).toEqual("success message");
+    });
   });
 });

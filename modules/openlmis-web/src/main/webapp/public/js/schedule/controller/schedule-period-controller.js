@@ -78,7 +78,7 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Perio
   };
 
   $scope.refreshEndDateOffset = function (startDateTime) {
-    $scope.endDateOffset = Math.ceil((startDateTime + $scope.oneDay - (new Date()).getTime()) / $scope.oneDay);
+    $scope.endDateOffset = Math.ceil((startDateTime + $scope.oneDay - Date.now()) / $scope.oneDay);
     $scope.newPeriod.endDate = undefined;
   };
 
