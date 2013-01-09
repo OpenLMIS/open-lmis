@@ -35,6 +35,7 @@ public class ProcessingScheduleServiceTest {
   private ProcessingPeriodRepository periodRepository;
 
   private ProcessingScheduleService service;
+  private final int PROCESSING_PERIOD_ID = 1;
 
   @Before
   public void setUp() throws Exception {
@@ -135,5 +136,26 @@ public class ProcessingScheduleServiceTest {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod));
     service.savePeriod(processingPeriod);
     verify(periodRepository).insert(processingPeriod);
+  }
+
+  @Test
+  public void shouldDeletePeriodIfStartDateGreaterThanCurrentDate(){
+    ProcessingPeriod processingPeriod = new ProcessingPeriod();
+    processingPeriod.setId(PROCESSING_PERIOD_ID);
+    service.deletePeriod(processingPeriod.getId());
+    verify(periodRepository).delete(processingPeriod.getId());
+  }
+
+  @Test
+  public void shouldThrowExceptionIfStartDateLessThanOrEqualToCurrentDateWhenDeletingPeriod(){
+    ProcessingPeriod processingPeriod = new ProcessingPeriod();
+    processingPeriod.setId(PROCESSING_PERIOD_ID);
+    String errorMessage = "some error";
+    doThrow(new DataException( errorMessage)).when(periodRepository).delete(processingPeriod.getId());
+
+    exException.expect(DataException.class);
+    exException.expectMessage( errorMessage);
+
+    service.deletePeriod(processingPeriod.getId());
   }
 }

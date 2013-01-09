@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -28,17 +29,30 @@ public class ProcessingPeriodRepository {
 
   public void insert(ProcessingPeriod processingPeriod) {
     processingPeriod.validate();
-    try{
-      validateStartDate(processingPeriod);
+    try {
+      validateStartDateGreaterThanLastPeriodEndDate(processingPeriod);
       mapper.insert(processingPeriod);
-    }catch (DuplicateKeyException e){
+    } catch (DuplicateKeyException e) {
       throw new DataException("Period Name already exists for this schedule");
     }
   }
 
-  private void validateStartDate(ProcessingPeriod processingPeriod) {
+
+  private void validateStartDateGreaterThanLastPeriodEndDate(ProcessingPeriod processingPeriod) {
     ProcessingPeriod lastAddedProcessingPeriod = mapper.getLastAddedProcessingPeriod(processingPeriod.getScheduleId());
-    if(lastAddedProcessingPeriod !=null && lastAddedProcessingPeriod.getEndDate().compareTo(processingPeriod.getStartDate())>=0)
-     throw  new DataException("Period's Start Date is smaller than Previous Period's End Date");
+    if (lastAddedProcessingPeriod != null && lastAddedProcessingPeriod.getEndDate().compareTo(processingPeriod.getStartDate()) >= 0)
+      throw new DataException("Period's Start Date is smaller than Previous Period's End Date");
+  }
+
+  public void delete(Integer processingPeriodId) {
+    ProcessingPeriod processingPeriod = mapper.getById(processingPeriodId);
+    validateStartDateGreaterThanCurrentDate(processingPeriod);
+    mapper.delete(processingPeriodId);
+  }
+
+  private void validateStartDateGreaterThanCurrentDate(ProcessingPeriod processingPeriod) {
+    if (processingPeriod.getStartDate().compareTo(new Date()) <= 0) {
+      throw new DataException("Period's Start Date is smaller than Current Date");
+    }
   }
 }

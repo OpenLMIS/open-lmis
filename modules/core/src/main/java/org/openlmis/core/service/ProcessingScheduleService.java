@@ -49,4 +49,9 @@ public class ProcessingScheduleService {
   public void savePeriod(ProcessingPeriod processingPeriod) {
     periodRepository.insert(processingPeriod);
   }
+
+
+  public void deletePeriod(Integer processingPeriodId) {
+    periodRepository.delete(processingPeriodId);
+  }
 }

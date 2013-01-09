@@ -1,5 +1,6 @@
 package org.openlmis.web.controller;
 
+import org.joda.time.Period;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -18,8 +19,8 @@ import org.springframework.mock.web.MockHttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -36,6 +37,7 @@ public class ProcessingPeriodControllerTest {
   private final Integer SCHEDULE_ID = 123;
   private final Integer USER_ID = 5;
   private MockHttpServletRequest request;
+  private final int PROCESSING_PERIOD_ID = 1;
 
   @Before
   public void setUp() throws Exception {
@@ -83,5 +85,27 @@ public class ProcessingPeriodControllerTest {
     verify(service).savePeriod(processingPeriod);
     assertThat(responseEntity.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     assertThat(responseEntity.getBody().getErrorMsg(), is("error-message"));
+  }
+
+  @Test
+  public void shouldReturnErrorResponseIfStartDateLessThanOrEqualToCurrentDateWhenDeletingAPeriod(){
+    String errorMessage = "some error";
+    doThrow(new DataException(errorMessage)).when(service).deletePeriod(PROCESSING_PERIOD_ID);
+
+    ResponseEntity<OpenLmisResponse> responseEntity = controller.delete(PROCESSING_PERIOD_ID);
+
+    verify(service).deletePeriod(PROCESSING_PERIOD_ID);
+    assertThat(responseEntity.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+    assertThat(responseEntity.getBody().getErrorMsg(), is(errorMessage));
+  }
+
+  @Test
+  public void shouldDeletePeriodIfStartDateGreaterThanCurrentDate(){
+    ResponseEntity<OpenLmisResponse> responseEntity = controller.delete(PROCESSING_PERIOD_ID);
+
+    verify(service).deletePeriod(PROCESSING_PERIOD_ID);
+    assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
+    assertThat(responseEntity.getBody().getSuccessMsg(), is("Period deleted successfully"));
+
   }
 }

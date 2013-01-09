@@ -12,6 +12,7 @@ import org.openlmis.core.repository.mapper.ProcessingPeriodMapper;
 import org.springframework.dao.DuplicateKeyException;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -19,7 +20,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
+import static org.openlmis.core.builder.ProcessingPeriodBuilder.*;
 
 public class ProcessingPeriodRepositoryTest {
 
@@ -67,7 +68,6 @@ public class ProcessingPeriodRepositoryTest {
 
     repository.insert(processingPeriod);
 
-    verify(mapper).insert(processingPeriod);
   }
 
   @Test
@@ -93,7 +93,42 @@ public class ProcessingPeriodRepositoryTest {
     exException.expectMessage("Period's Start Date is smaller than Previous Period's End Date");
 
     repository.insert(processingPeriod);
+  }
 
-    verify(mapper).insert(processingPeriod);
+  @Test
+  public void shouldThrowExceptionIfStartDateLessThanCurrentDateWhenDeletingPeriod(){
+    Calendar currentDate = Calendar.getInstance();
+    Calendar periodStartDate = (Calendar)currentDate.clone();
+    periodStartDate.add(Calendar.DATE, -1);
+    ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod, with(startDate, periodStartDate.getTime())));
+    when(mapper.getById(processingPeriod.getId())).thenReturn(processingPeriod);
+    exException.expect(DataException.class);
+    exException.expectMessage("Period's Start Date is smaller than Current Date");
+
+    repository.delete(processingPeriod.getId());
+  }
+
+  @Test
+  public void shouldThrowExceptionIfStartDateEqualToCurrentDateWhenDeletingPeriod(){
+    Calendar periodStartDate = Calendar.getInstance();
+    ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod, with(startDate, periodStartDate.getTime())));
+    when(mapper.getById(processingPeriod.getId())).thenReturn(processingPeriod);
+    exException.expect(DataException.class);
+    exException.expectMessage("Period's Start Date is smaller than Current Date");
+
+    repository.delete(processingPeriod.getId());
+  }
+
+  @Test
+  public void shouldDeleteAPeriodIfStartDateGreaterThanCurrentDate(){
+    Calendar currentDate = Calendar.getInstance();
+    Calendar periodStartDate = (Calendar)currentDate.clone();
+    periodStartDate.add(Calendar.DATE, 1);
+    ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod, with(startDate, periodStartDate.getTime())));
+    when(mapper.getById(processingPeriod.getId())).thenReturn(processingPeriod);
+
+    repository.delete(processingPeriod.getId());
+
+    verify(mapper).delete(processingPeriod.getId());
   }
 }

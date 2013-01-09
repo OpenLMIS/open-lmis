@@ -1,5 +1,6 @@
 package org.openlmis.core.repository.mapper;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
@@ -22,4 +23,10 @@ public interface ProcessingPeriodMapper {
 
   @Select("SELECT * FROM processing_periods WHERE scheduleId = #{scheduleId} ORDER BY startDate DESC LIMIT 1")
   ProcessingPeriod getLastAddedProcessingPeriod(Integer scheduleId);
+
+  @Delete("DELETE FROM processing_periods where id = #{id} ")
+  public void delete(Integer id);
+
+  @Select("SELECT * FROM processing_periods where id = #{id}" )
+  ProcessingPeriod getById(Integer id);
 }

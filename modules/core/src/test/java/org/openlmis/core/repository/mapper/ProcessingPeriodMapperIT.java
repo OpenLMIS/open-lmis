@@ -130,5 +130,23 @@ public class ProcessingPeriodMapperIT {
     assertThat(fetchedPeriod.getId(), is(period2.getId()));
   }
 
+  @Test
+  public void shouldDeleteAPeriod(){
+
+    ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod, with(scheduleId, schedule.getId())));
+    periodMapper.insert(processingPeriod);
+
+    periodMapper.delete(processingPeriod.getId());
+    assertThat(periodMapper.getAll(schedule.getId()).size(), is(0));
+  }
+
+  @Test
+  public void shouldGetPeriodById(){
+    ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod, with(scheduleId, schedule.getId())));
+    periodMapper.insert(processingPeriod);
+
+    ProcessingPeriod period = periodMapper.getById(processingPeriod.getId());
+    assertThat(period.getName(), is(processingPeriod.getName()));
+  }
 
 }
