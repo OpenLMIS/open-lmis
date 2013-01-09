@@ -78,6 +78,9 @@ public class HomePage extends Page {
     @FindBy(how = How.LINK_TEXT, using = "Manage")
     private static WebElement manageLink;
 
+    @FindBy(how = How.LINK_TEXT, using = "Schedules")
+    private static WebElement schedulesLink;
+
     @FindBy(how = How.LINK_TEXT, using = "Search")
     private static WebElement searchLink;
 
@@ -141,7 +144,7 @@ public class HomePage extends Page {
         testWebDriver.selectByVisibleText(facilityDropDown, FCode + FCstring + "-" + FName + FCstring);
         testWebDriver.waitForElementToAppear(programDropDown);
         programDropDown.click();
-        testWebDriver.selectByVisibleText(programDropDownSelect,program);
+        testWebDriver.selectByVisibleText(programDropDownSelect, program);
         nextButton.click();
         return new InitiateRnRPage(testWebDriver);
     }
@@ -166,6 +169,15 @@ public class HomePage extends Page {
         testWebDriver.waitForElementToAppear(uploadLink);
         uploadLink.click();
         return new UploadPage(testWebDriver);
+    }
+
+    public ManageSchedulePage navigateToSchedule() throws IOException{
+        testWebDriver.waitForElementToAppear(manageLink);
+        manageLink.click();
+        testWebDriver.waitForElementToAppear(schedulesLink);
+        schedulesLink.click();
+        return new ManageSchedulePage(testWebDriver);
+
     }
 
 }
