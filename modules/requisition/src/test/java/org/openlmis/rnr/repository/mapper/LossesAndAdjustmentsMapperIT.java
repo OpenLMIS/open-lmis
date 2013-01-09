@@ -34,7 +34,7 @@ public class LossesAndAdjustmentsMapperIT {
 
 
   public static final int MODIFIED_BY = 1;
-  public static final Integer HIV = MODIFIED_BY;
+  public static final Integer HIV = 1;
   @Autowired
   LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
 
@@ -89,7 +89,7 @@ public class LossesAndAdjustmentsMapperIT {
     List<LossesAndAdjustments> lossesAndAdjustmentsList = lossesAndAdjustmentsMapper.getByRnrLineItem(rnrLineItem.getId());
     LossesAndAdjustments lineItemLossAndAdjustment = lossesAndAdjustmentsList.get(0);
 
-    assertThat(lossesAndAdjustmentsList.size(), is(MODIFIED_BY));
+    assertThat(lossesAndAdjustmentsList.size(), is(1));
     assertThat(lineItemLossAndAdjustment.getQuantity(), is(lossAndAdjustment.getQuantity()));
     assertThat(lineItemLossAndAdjustment.getType().getName(), is(lossAndAdjustment.getType().getName()));
   }
@@ -105,8 +105,8 @@ public class LossesAndAdjustmentsMapperIT {
   public void shouldReturnAllLossesAndAdjustmentsTypesAccordingToDisplayOrder() {
     List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes = lossesAndAdjustmentsMapper.getLossesAndAdjustmentsTypes();
     assertThat(lossesAndAdjustmentsTypes.size(), is(9));
-    assertThat(lossesAndAdjustmentsTypes.get(0).getDisplayOrder(), is(MODIFIED_BY));
-    assertThat(lossesAndAdjustmentsTypes.get(MODIFIED_BY).getDisplayOrder(), is(2));
+    assertThat(lossesAndAdjustmentsTypes.get(0).getDisplayOrder(), is(1));
+    assertThat(lossesAndAdjustmentsTypes.get(1).getDisplayOrder(), is(2));
     assertThat(lossesAndAdjustmentsTypes.get(2).getDisplayOrder(), is(3));
   }
 
