@@ -79,11 +79,11 @@ public class RnrControllerTest {
   }
 
   @Test
-  public void shouldReturnErrorMessageIfRnrNotValid() throws Exception {
+  public void shouldReturnErrorMessageIfRnrNotValidButShouldSaveIt() throws Exception {
     doThrow(new DataException("some error")).when(rnrService).submit(rnr);
 
     ResponseEntity<OpenLmisResponse> response = controller.submit(rnr, request);
-
+    verify(rnrService).save(rnr);
     assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     assertThat(response.getBody().getErrorMsg(), is("some error"));
   }

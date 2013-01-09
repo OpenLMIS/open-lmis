@@ -62,6 +62,7 @@ public class RnrController extends BaseController {
     try{
       return OpenLmisResponse.success(rnrService.submit(rnr));
     }catch(DataException e) {
+      rnrService.save(rnr);
       return OpenLmisResponse.error(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
   }

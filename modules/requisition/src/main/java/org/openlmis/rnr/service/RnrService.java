@@ -3,6 +3,7 @@ package org.openlmis.rnr.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.FacilityApprovedProduct;
 import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityApprovedProductService;
 import org.openlmis.core.service.SupervisoryNodeService;
@@ -68,12 +69,8 @@ public class RnrService {
   }
 
   public String submit(Rnr rnr) {
-    try {
-      rnr.validate(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId()));
-    } catch (DataException e) {
-      rnrRepository.update(rnr);
-      throw e;
-    }
+
+    rnr.validate(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId()));
     rnr.setStatus(SUBMITTED);
     rnrRepository.update(rnr);
 
@@ -88,6 +85,11 @@ public class RnrService {
     rnr.validate(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId()));
     rnr.setStatus(AUTHORIZED);
     rnrRepository.update(rnr);
+
+    User approver = supervisoryNodeService.getApproverFor(rnr.getFacilityId(), rnr.getProgramId());
+
+    if(approver == null)return new Message(RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR);
+
     return new Message(RNR_AUTHORIZED_SUCCESSFULLY);
   }
 }
