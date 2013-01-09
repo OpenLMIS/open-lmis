@@ -77,12 +77,12 @@ describe("Schedule", function () {
     it('should show failure error on updating an existing schedule', function () {
       var updatedSchedule = {"id":1, "code":"newCode", "name":"newName", "description":"newDescription"};
       $httpBackend.expectPUT('/schedules/1.json').respond(400, {"error":"errorMsg"});
-
+      scope.schedulesBackupMap[1]=updatedSchedule;
       var editScheduleForm = {$invalid:false};
       scope.updateSchedule(updatedSchedule, editScheduleForm);
       $httpBackend.flush();
       expect(scope.message).toEqual("");
-      expect(scope.error).toEqual("errorMsg");
+      expect(scope.schedulesBackupMap[1].error).toEqual("errorMsg");
     });
 
     it('should set correct schedule in the scope and navigate to period', function () {
