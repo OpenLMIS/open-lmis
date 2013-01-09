@@ -71,11 +71,6 @@
 .form-row select {
   width: 320px;
 }
-.form-row .label-required {
-  color: #D31717;
-  font-weight: bold;
-  font-size: 1.2em;
-}
 .form-row .form-field {
   position: relative;
 }
@@ -127,6 +122,18 @@
     }
   }
 }
+
+.label-required {
+  color: #D31717;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.form-error {
+  color: #E93434;
+  font-size: 0.8em;
+}
+
 .arithmetic-valid-msg {
   .btn {
     width: 70px;
@@ -615,16 +622,15 @@ h3 {
   border: 1px solid #eee;
   border-top: 0;
   input[type="text"] {
-    width: 95%;
+    width: 76%;
   }
 }
-.schedule-form {
+.schedule-form,
+.edit-schedule-form {
   margin: 0;
-  &.schedule-form-active {
-    background-color: #FFFBDF;
+  .schedule-form-active {
     border-style: solid;
     border-width: 2px 1px;
-    border-color: #C2A717 #DFDFDF;
     input {
       margin: 0;
     }
@@ -633,34 +639,31 @@ h3 {
       padding: 16px 0;
     }
     .schedule-button-row {
-      background-color: #F3E9B1;
       padding: 8px 0;
       div {
         min-height: 20px;
       }
+    }
+  }
+  .form-error {
+    line-height: 24px;
+  }
+}
+.schedule-form {
+  .schedule-form-active {
+    background-color: #FFFBDF;
+    border-color: #C2A717 #DFDFDF;
+    .schedule-button-row {
+      background-color: #F3E9B1;
     }
   }
 }
 .edit-schedule-form {
-  margin: 0;
   .schedule-form-active {
     background-color: #E7F7FF;
-    border-style: solid;
-    border-width: 2px 1px;
     border-color: #479EEE #DFDFDF;
-    input {
-      margin: 0;
-    }
-    .schedule-row {
-      border: 0 none;
-      padding: 16px 0;
-    }
     .schedule-button-row {
       background-color: #BCDFF3;
-      padding: 8px 0;
-      div {
-        min-height: 20px;
-      }
     }
   }
 }
