@@ -72,4 +72,10 @@ public class RnrController extends BaseController {
     RnrReferenceData referenceData = new RnrReferenceData();
     return referenceData.addLossesAndAdjustmentsTypes(rnrService.getLossesAndAdjustmentsTypes()).get();
   }
+
+  public ResponseEntity<OpenLmisResponse> authorize(Rnr rnr, HttpServletRequest request) {
+    rnr.setModifiedBy(loggedInUserId(request));
+    rnrService.authorize(rnr);
+    return  OpenLmisResponse.success("R&R authorized successfully!");
+  }
 }

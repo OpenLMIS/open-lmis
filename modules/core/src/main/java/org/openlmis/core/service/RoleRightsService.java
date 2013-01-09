@@ -29,7 +29,7 @@ public class RoleRightsService {
     }
 
     public List<RoleAssignment> getRoleAssignments(Right right, String userName) {
-        return roleAssignmentRepository.getRoleAssignments(right, userName);
+        return roleAssignmentRepository.getRoleAssignmentsForUserWithRight(right, userName);
     }
 
     public List<Right> getRights(String username) {

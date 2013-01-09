@@ -27,6 +27,7 @@ public class RnrControllerTest {
   RnrService rnrService;
 
   RnrController controller;
+  private Rnr rnr;
 
   @Before
   public void setUp() throws Exception {
@@ -39,11 +40,11 @@ public class RnrControllerTest {
 
     rnrService = mock(RnrService.class);
     controller = new RnrController(rnrService);
+    rnr = new Rnr();
   }
 
   @Test
   public void shouldSaveWIPRnr() throws Exception {
-    Rnr rnr = new Rnr();
 
     controller.saveRnr(rnr, request);
 
@@ -64,12 +65,11 @@ public class RnrControllerTest {
     Rnr expectedRnr = null;
     when(rnrService.get(1, 2)).thenReturn(expectedRnr);
     ResponseEntity<OpenLmisResponse> response = controller.get(1, 2);
-    assertThat((Rnr)response.getBody().getData().get(RNR), is(expectedRnr));
+    assertThat((Rnr) response.getBody().getData().get(RNR), is(expectedRnr));
   }
 
   @Test
   public void shouldAllowSubmittingOfRnrAndTagWithModifiedBy() throws Exception {
-    Rnr rnr = new Rnr();
     String testMessage = "test message";
     when(rnrService.submit(rnr)).thenReturn(testMessage);
     ResponseEntity<OpenLmisResponse> response = controller.submit(rnr, request);
@@ -79,8 +79,7 @@ public class RnrControllerTest {
   }
 
   @Test
-  public void shouldReturnErrorMessageButStillSaveRnrIfRnrNotValid() throws Exception {
-    Rnr rnr = new Rnr();
+  public void shouldReturnErrorMessageIfRnrNotValid() throws Exception {
     doThrow(new DataException("some error")).when(rnrService).submit(rnr);
 
     ResponseEntity<OpenLmisResponse> response = controller.submit(rnr, request);
@@ -88,5 +87,14 @@ public class RnrControllerTest {
     assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     assertThat(response.getBody().getErrorMsg(), is("some error"));
   }
+
+  @Test
+  public void shouldAuthorizeRnrAndSetModifiedBy() throws Exception {
+    ResponseEntity<OpenLmisResponse> response = controller.authorize(rnr, request);
+    verify(rnrService).authorize(rnr);
+    assertThat(rnr.getModifiedBy(), is(USER_ID));
+    assertThat(response.getBody().getSuccessMsg(), is("R&R authorized successfully!"));
+  }
+
 }
 

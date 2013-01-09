@@ -7,6 +7,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityApprovedProductService;
 import org.openlmis.core.service.SupervisoryNodeService;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
+import org.openlmis.rnr.domain.Message;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.repository.RnrRepository;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
 import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 
 @Service
@@ -28,6 +30,8 @@ public class RnrService {
 
   private FacilityApprovedProductService facilityApprovedProductService;
   private SupervisoryNodeService supervisoryNodeService;
+  public static final String RNR_AUTHORIZED_SUCCESSFULLY = "rnr.authorized.success";
+  public static final String RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR = "rnr.authorized.success.without.supervisor";
 
   @Autowired
   public RnrService(RnrRepository rnrRepository, RnrTemplateRepository rnrTemplateRepository, FacilityApprovedProductService facilityApprovedProductService, SupervisoryNodeService supervisoryNodeRepository) {
@@ -78,6 +82,13 @@ public class RnrService {
       return "There is no supervisory node to process the R&R further, Please contact the Administrator";
     }
     return "R&R submitted successfully!";
+  }
+
+  public Message authorize(Rnr rnr) {
+    rnr.validate(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId()));
+    rnr.setStatus(AUTHORIZED);
+    rnrRepository.update(rnr);
+    return new Message(RNR_AUTHORIZED_SUCCESSFULLY);
   }
 }
 

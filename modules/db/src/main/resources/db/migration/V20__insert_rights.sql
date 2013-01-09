@@ -4,4 +4,5 @@ INSERT INTO rights(name, description) VALUES
  ('MANAGE_FACILITY','Permission to manage facilities(crud)'),
  ('MANAGE_ROLE','Permission to create and edit roles in the system'),
  ('MANAGE_SCHEDULE','Permission to create and edit schedules in the system'),
+ ('APPROVE_REQUISITION','Permission to approve requisitions'),
  ('CONFIGURE_RNR','Permission to create and edit r&r template for any program');

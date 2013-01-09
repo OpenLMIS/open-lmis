@@ -1,6 +1,7 @@
 package org.openlmis.rnr.service;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -11,9 +12,11 @@ import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.domain.FacilityApprovedProduct;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityApprovedProductService;
 import org.openlmis.core.service.SupervisoryNodeService;
+import org.openlmis.rnr.domain.Message;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.repository.RnrRepository;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
@@ -29,7 +32,10 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.openlmis.rnr.builder.RnrBuilder.defaultRnr;
+import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
 import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
+import static org.openlmis.rnr.service.RnrService.RNR_AUTHORIZED_SUCCESSFULLY;
+import static org.openlmis.rnr.service.RnrService.RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RnrServiceTest {
@@ -52,6 +58,7 @@ public class RnrServiceTest {
   private SupervisoryNodeService supervisoryNodeService;
 
   private Rnr rnr;
+
 
 
   @Before
@@ -92,34 +99,73 @@ public class RnrServiceTest {
     boolean formulaValidated = true;
     when(rnrTemplateRepository.isFormulaValidated(programId)).thenReturn(formulaValidated);
     doThrow(new DataException(errorMessage)).when(rnr).validate(formulaValidated);
-    try{
+    try {
       rnrService.submit(rnr);
-    }catch(Exception e) {
+    } catch (Exception e) {
       assertTrue(e.getClass().equals(DataException.class));
-      assertThat(e.getMessage(),is(errorMessage));
+      assertThat(e.getMessage(), is(errorMessage));
     }
     verify(rnrRepository).update(rnr);
   }
 
   @Test
-   public void shouldReturnMessageWhileSubmittingRnrIfSupervisingNodeNotPresent()  {
+  public void shouldReturnMessageWhileSubmittingRnrIfSupervisingNodeNotPresent() {
     doReturn(true).when(rnr).validate(false);
-     when(supervisoryNodeService.getFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(null);
+    when(supervisoryNodeService.getFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(null);
 
-     String message = rnrService.submit(rnr);
-     verify(rnrRepository).update(rnr);
-     assertThat(rnr.getStatus(), is(SUBMITTED));
-     assertThat(message, is("There is no supervisory node to process the R&R further, Please contact the Administrator"));
-   }
+    String message = rnrService.submit(rnr);
+    verify(rnrRepository).update(rnr);
+    assertThat(rnr.getStatus(), is(SUBMITTED));
+    assertThat(message, is("There is no supervisory node to process the R&R further, Please contact the Administrator"));
+  }
 
-   @Test
-   public void shouldSubmitValidRnrAndSetMessage()  {
-     doReturn(true).when(rnr).validate(false);
-     when(supervisoryNodeService.getFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(new SupervisoryNode());
-     String message = rnrService.submit(rnr);
-     verify(rnrRepository).update(rnr);
+  @Test
+  public void shouldSubmitValidRnrAndSetMessage() {
+    doReturn(true).when(rnr).validate(false);
+    when(supervisoryNodeService.getFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(new SupervisoryNode());
+    String message = rnrService.submit(rnr);
+    verify(rnrRepository).update(rnr);
 
-     assertThat(rnr.getStatus(), is(SUBMITTED));
-     assertThat(message, is("R&R submitted successfully!"));
-   }
+    assertThat(rnr.getStatus(), is(SUBMITTED));
+    assertThat(message, is("R&R submitted successfully!"));
+  }
+
+  @Test
+  public void shouldAuthorizeAValidRnr() throws Exception {
+    when(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId())).thenReturn(true);
+    doReturn(true).when(rnr).validate(true);
+
+    Message authorize = rnrService.authorize(rnr);
+
+    verify(rnrTemplateRepository).isFormulaValidated(rnr.getProgramId());
+    verify(rnr).validate(true);
+    verify(rnrRepository).update(rnr);
+    assertThat(rnr.getStatus(), is(AUTHORIZED));
+    assertThat(authorize.getCode(), is(RNR_AUTHORIZED_SUCCESSFULLY));
+  }
+
+  @Test @Ignore("work in progress")
+  public void shouldAuthorizeAValidRnrAndAdviseUserIfRnrDoesNotHaveApprover() throws Exception {
+    when(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId())).thenReturn(true);
+    when(supervisoryNodeService.getApproverFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(new User());
+    doReturn(true).when(rnr).validate(true);
+    Message message= rnrService.authorize(rnr);
+
+    verify(rnrTemplateRepository).isFormulaValidated(rnr.getProgramId());
+
+    verify(rnr).validate(true);
+    verify(rnrRepository).update(rnr);
+    assertThat(rnr.getStatus(), is(AUTHORIZED));
+    assertThat(message.getCode(), is(RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR));
+  }
+
+  @Test
+  public void shouldNotAuthorizeInvalidRnr() throws Exception {
+    when(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId())).thenReturn(true);
+    doThrow(new DataException("error-message")).when(rnr).validate(true);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error-message");
+    rnrService.authorize(rnr);
+  }
 }
