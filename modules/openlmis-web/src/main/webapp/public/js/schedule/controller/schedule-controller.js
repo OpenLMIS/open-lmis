@@ -82,9 +82,8 @@ function ScheduleController($scope, Schedules, Schedule, $location) {
       $scope.showErrorForEdit = true;
       return;
     }
-    delete schedule.edit;
-    delete schedule.editFormActive;
-    delete schedule.error;
+
+    $scope.schedulesBackupMap[schedule.id].error = '';
     $scope.showErrorForEdit = true;
 
     Schedule.update({id:schedule.id}, schedule, function (data) {
@@ -101,14 +100,13 @@ function ScheduleController($scope, Schedules, Schedule, $location) {
       $scope.error = "";
       $scope.newSchedule = {};
       $scope.editSchedule = {};
-      schedule.edit = false;
-      schedule.editFormActive = "updated-item";
+
+      $scope.schedulesBackupMap[returnedSchedule.id].editFormActive = 'updated-item';
+      $scope.schedulesBackupMap[returnedSchedule.id].edit = false;
     }, function (data) {
       $scope.message = "";
-      $scope.error = data.data.error;
-      schedule.edit = true;
       $scope.startScheduleEdit(schedule);
-      schedule.error = data.data.error;
+      $scope.schedulesBackupMap[schedule.id].error = data.data.error;
     });
   };
 
@@ -117,7 +115,7 @@ function ScheduleController($scope, Schedules, Schedule, $location) {
   };
 
   $scope.startScheduleEdit = function (scheduleUnderEdit) {
-    scheduleUnderEdit.editFormActive = "schedule-form-active";
+    $scope.schedulesBackupMap[scheduleUnderEdit.id].editFormActive = "schedule-form-active";
   };
 
   $scope.cancelScheduleEdit = function (scheduleUnderEdit) {
@@ -125,8 +123,8 @@ function ScheduleController($scope, Schedules, Schedule, $location) {
     scheduleUnderEdit.code = backupScheduleRow.code;
     scheduleUnderEdit.name = backupScheduleRow.name;
     scheduleUnderEdit.description = backupScheduleRow.description;
-    delete scheduleUnderEdit.editFormActive;
-    delete scheduleUnderEdit.error;
+    $scope.schedulesBackupMap[scheduleUnderEdit.id].error = '';
+    $scope.schedulesBackupMap[scheduleUnderEdit.id].editFormActive = '';
   };
 
   $scope.navigateToPeriodFor = function (scheduleForPeriod) {

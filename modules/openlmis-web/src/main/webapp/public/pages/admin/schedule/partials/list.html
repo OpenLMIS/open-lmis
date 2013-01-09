@@ -55,32 +55,32 @@
           ng-submit="updateSchedule(schedule, editScheduleForm);" ng-show="schedules && (schedules.length > 0)"
           novalidate>
       <input type="hidden" ng-model="backupScheduleRow" />
-      <div ng-class="schedule.editFormActive">
+      <div ng-class="schedulesBackupMap[schedule.id].editFormActive">
       <div class="row-fluid schedule-row">
         <div class="span1">
-          <input type="button" ng-hide="schedule.edit" class="btn btn-mini pull-right" value="Edit"
-                 ng-click="startScheduleEdit(schedule, backupScheduleRow); schedule.edit=true;"/>
+          <input type="button" ng-hide="schedulesBackupMap[schedule.id].edit" class="btn btn-mini pull-right" value="Edit"
+                 ng-click="startScheduleEdit(schedule, backupScheduleRow); schedulesBackupMap[schedule.id].edit=true;"/>
         </div>
 
         <div class="span2" style="overflow: visible;">
-          <span ng-hide="schedule.edit" ng-bind="schedule.code"></span>
-          <input id="code_{{$index}}" name="code" ng-show="schedule.edit" type="text" ng-model="schedule.code" maxlength="50"
+          <span ng-hide="schedulesBackupMap[schedule.id].edit" ng-bind="schedule.code"></span>
+          <input id="code_{{$index}}" name="code" ng-show="schedulesBackupMap[schedule.id].edit" type="text" ng-model="schedule.code" maxlength="50"
                  ng-required="true" placeholder="Code" />
-          <span ng-show="schedule.edit" class="label-required">*</span>
+          <span ng-show="schedulesBackupMap[schedule.id].edit" class="label-required">*</span>
           <span class="form-error" ng-show="editScheduleForm.code.$error.required && showErrorForEdit">Required</span>
         </div>
 
         <div class="span2">
-          <span ng-hide="schedule.edit" ng-bind="schedule.name"></span>
-          <input id="name_{{$index}}" name="name" ng-show="schedule.edit" type="text" ng-model="schedule.name" maxlength="50"
+          <span ng-hide="schedulesBackupMap[schedule.id].edit" ng-bind="schedule.name"></span>
+          <input id="name_{{$index}}" name="name" ng-show="schedulesBackupMap[schedule.id].edit" type="text" ng-model="schedule.name" maxlength="50"
                  ng-required="true" placeholder="Name" />
-          <span ng-show="schedule.edit" class="label-required">*</span>
+          <span ng-show="schedulesBackupMap[schedule.id].edit" class="label-required">*</span>
           <span class="form-error" ng-show="editScheduleForm.name.$error.required && showErrorForEdit">Required</span>
         </div>
 
         <div class="span4">
-          <span ng-hide="schedule.edit" ng-bind="schedule.description"></span>
-          <input id="desc_{{$index}}" name="desc" ng-show="schedule.edit" type="text" ng-model="schedule.description"
+          <span ng-hide="schedulesBackupMap[schedule.id].edit" ng-bind="schedule.description"></span>
+          <input id="desc_{{$index}}" name="desc" ng-show="schedulesBackupMap[schedule.id].edit" type="text" ng-model="schedule.description"
                  maxlength="250" placeholder="Description (optional)" />
         </div>
 
@@ -89,17 +89,17 @@
         </div>
 
         <div class="span1">
-          <input ng-hide="schedule.edit" type=button ng-click="navigateToPeriodFor(schedule)" class="btn btn-mini btn-primary" value="Add Period"/>
+          <input ng-hide="schedulesBackupMap[schedule.id].edit" type=button ng-click="navigateToPeriodFor(schedule)" class="btn btn-mini btn-primary" value="Add Period"/>
         </div>
       </div>
 
-      <div ng-show="schedule.edit" class="row-fluid schedule-button-row">
+      <div ng-show="schedulesBackupMap[schedule.id].edit" class="row-fluid schedule-button-row">
         <div class="span1"></div>
         <div class="span2">
           <input type="submit" class="btn btn-success btn-small" value="Save" />
-          <input type="button" class="btn btn-cancel btn-small" value="Cancel" ng-click="cancelScheduleEdit(schedule, backupScheduleRow); schedule.edit=false" />
+          <input type="button" class="btn btn-cancel btn-small" value="Cancel" ng-click="cancelScheduleEdit(schedule, backupScheduleRow); schedulesBackupMap[schedule.id].edit=false" />
         </div>
-        <div ng-show="schedule.error" class="span9 form-error" ng-bind="schedule.error"></div>
+        <div ng-show="schedulesBackupMap[schedule.id].error" class="span9 form-error" ng-bind="schedulesBackupMap[schedule.id].error"></div>
       </div>
      </div>
     </form>
