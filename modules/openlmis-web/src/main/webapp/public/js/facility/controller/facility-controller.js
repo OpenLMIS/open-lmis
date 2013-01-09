@@ -79,6 +79,10 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
     postFacilityRequest('/admin/facility/update/restore.json');
   };
 
+  $scope.blurDateFields = function() {
+    angular.element("input[ui-date]").blur();
+  };
+
   $rootScope.fixToolBar();
 }
 
