@@ -89,6 +89,10 @@ services.factory('Periods', function ($resource) {
   return $resource('/schedules/:scheduleId/periods.json', {}, {});
 });
 
+services.factory('Period', function ($resource) {
+  return $resource('/periods/:id.json', {}, {});
+});
+
 services.factory('SupportedUploads', function ($resource) {
   return $resource('/supported-uploads.json', {}, {});
 });

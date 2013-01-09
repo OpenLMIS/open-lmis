@@ -1,6 +1,5 @@
 package org.openlmis.web.controller;
 
-import org.joda.time.Period;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -88,7 +87,7 @@ public class ProcessingPeriodControllerTest {
   }
 
   @Test
-  public void shouldReturnErrorResponseIfStartDateLessThanOrEqualToCurrentDateWhenDeletingAPeriod(){
+  public void shouldReturnErrorResponseIfStartDateLessThanOrEqualToCurrentDateWhenDeletingAPeriod() {
     String errorMessage = "some error";
     doThrow(new DataException(errorMessage)).when(service).deletePeriod(PROCESSING_PERIOD_ID);
 
@@ -100,7 +99,7 @@ public class ProcessingPeriodControllerTest {
   }
 
   @Test
-  public void shouldDeletePeriodIfStartDateGreaterThanCurrentDate(){
+  public void shouldDeletePeriodIfStartDateGreaterThanCurrentDate() {
     ResponseEntity<OpenLmisResponse> responseEntity = controller.delete(PROCESSING_PERIOD_ID);
 
     verify(service).deletePeriod(PROCESSING_PERIOD_ID);

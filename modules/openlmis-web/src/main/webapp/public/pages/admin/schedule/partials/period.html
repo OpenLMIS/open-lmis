@@ -97,7 +97,7 @@
           <td>{{period.endDate | date:'dd/MM/yyyy'}}</td>
           <td>{{calculateDays(period.startDate, period.endDate)}}</td>
           <td>{{period.numberOfMonths}}</td>
-          <td></td>
+          <td ><input ng-show="showDeleteButton($index)" type="button" ng-click="deletePeriod(period.id)" class="btn btn-danger" value="DELETE"/></td>
         </tr>
         </tbody>
       </table>

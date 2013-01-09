@@ -47,10 +47,12 @@ public class ProcessingPeriodController extends BaseController {
     } catch (DataException e) {
       return OpenLmisResponse.error(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
-    return OpenLmisResponse.success("Period added successfully");
+    ResponseEntity<OpenLmisResponse> successResponse =  OpenLmisResponse.success("Period added successfully");
+    successResponse.getBody().setData("id", processingPeriod.getId());
+    return  successResponse;
   }
 
-  @RequestMapping(value = "/periods/{id}", method = RequestMethod.POST, headers = "Accept=application/json")
+  @RequestMapping(value = "/periods/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('','MANAGE_SCHEDULE')")
   public ResponseEntity<OpenLmisResponse> delete(@PathVariable("id") Integer id) {
     try {
