@@ -12,21 +12,20 @@ import org.openlmis.upload.parser.CSVParser;
 import org.openlmis.web.controller.upload.MandatoryFields;
 import org.openlmis.web.controller.upload.NonMandatoryFields;
 import org.openlmis.web.model.UploadBean;
-import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import static junit.framework.Assert.assertEquals;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -51,9 +50,9 @@ public class UploadControllerIT {
   public void setUp() throws Exception {
     initMocks(this);
     Map<String, UploadBean> uploadBeansMap = new HashMap<String, UploadBean>() {{
-          put("mandatoryFields", new UploadBean("mandatoryFields", handler, MandatoryFields.class));
-          put("nonMandatoryFields", new UploadBean("nonMandatoryFields", handler, NonMandatoryFields.class));
-        }};
+      put("mandatoryFields", new UploadBean("mandatoryFields", handler, MandatoryFields.class));
+      put("nonMandatoryFields", new UploadBean("nonMandatoryFields", handler, NonMandatoryFields.class));
+    }};
     request = new MockHttpServletRequest();
     MockHttpSession session = new MockHttpSession();
     session.setAttribute(UserAuthenticationSuccessHandler.USER, USER);
@@ -67,15 +66,17 @@ public class UploadControllerIT {
         .getResourceAsStream("mandatory-fields.csv");
 
     MockMultipartFile multiPart = new MockMultipartFile("csvFile", "mock.csv", null, in);
-    ResponseEntity<OpenLmisResponse> responseEntity = controller.upload(multiPart, "mandatoryFields", request);
+    RedirectView view = controller.upload(multiPart, "mandatoryFields", request);
+    assertThat(view.getUrl(), is("/public/pages/admin/upload/index.html#/upload?" +
+        "model=mandatoryFields" +
+        "&success=File uploaded successfully. Total records uploaded: 2"));
+
     ArgumentCaptor<MandatoryFields> validUploadTypeArgumentCaptor = ArgumentCaptor.forClass(MandatoryFields.class);
     verify(handler).execute(validUploadTypeArgumentCaptor.capture(), eq(2), eq("user"));
 
-    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-    assertEquals("File uploaded successfully. Total records uploaded: 2", responseEntity.getBody().getSuccessMsg());
-    assertEquals("Val11", validUploadTypeArgumentCaptor.getValue().getFieldA());
-    assertEquals("Val12", validUploadTypeArgumentCaptor.getValue().getFieldB());
-    assertEquals("Nested Val13", validUploadTypeArgumentCaptor.getValue().getNestedValidUploadType().getNestedField());
+    assertThat(validUploadTypeArgumentCaptor.getValue().getFieldA(), is("Val11"));
+    assertThat(validUploadTypeArgumentCaptor.getValue().getFieldB(), is("Val12"));
+    assertThat(validUploadTypeArgumentCaptor.getValue().getNestedValidUploadType().getNestedField(), is("Nested Val13"));
   }
 
   @Test
@@ -84,12 +85,15 @@ public class UploadControllerIT {
         .getResourceAsStream("non-mandatory-fields.csv");
     MockMultipartFile multiPart = new MockMultipartFile("csvFile", "mock.csv", null, in);
 
-    ResponseEntity<OpenLmisResponse> responseEntity = controller.upload(multiPart, "nonMandatoryFields", request);
-    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    RedirectView view = controller.upload(multiPart, "nonMandatoryFields", request);
+
+    assertThat(view.getUrl(), is("/public/pages/admin/upload/index.html#/upload?" +
+            "model=nonMandatoryFields" +
+            "&success=File uploaded successfully. Total records uploaded: 3"));
+
     ArgumentCaptor<NonMandatoryFields> nonMandatoryFieldsArgumentCaptor = ArgumentCaptor.forClass(NonMandatoryFields.class);
     verify(handler).execute(nonMandatoryFieldsArgumentCaptor.capture(), eq(4), eq("user"));
 
-    assertEquals("File uploaded successfully. Total records uploaded: 3", responseEntity.getBody().getSuccessMsg());
   }
 
 

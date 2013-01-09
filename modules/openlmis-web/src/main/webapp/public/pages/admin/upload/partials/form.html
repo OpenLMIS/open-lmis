@@ -1,0 +1,25 @@
+<div>
+  <form id="uploadForm" name="uploadForm" action="/upload" method="POST" enctype="multipart/form-data" novalidate>
+    <div>
+      <fieldset>
+        <label style="padding-top: 10" for="model">Model:</label>
+
+        <select name="model" id="model" ng-model="model"
+                ng-options="k as v.displayName for (k,v) in supportedUploads" required></select>
+        <br/>
+        <label style="padding-top: 10" for="csvFile">File: </label>
+        <input name="csvFile" id="csvFile" ng-model="csvFile" type="file" accept=".csv"
+               value="Choose CSV File to upload" required/>
+        <br>
+        <div class="alert alert-error" id="saveErrorMsgDiv" ng-show="errorMsg">
+          {{errorMsg}}
+        </div>
+        <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="successMsg">
+          {{successMsg}}
+        </div>
+        <input type="submit" value="Upload" class="btn">
+      </fieldset>
+
+    </div>
+  </form>
+</div>

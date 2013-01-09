@@ -7,7 +7,6 @@ import org.openlmis.upload.parser.CSVParser;
 import org.openlmis.web.model.UploadBean;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -15,14 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Map;
-
-import static org.openlmis.web.response.OpenLmisResponse.error;
-import static org.openlmis.web.response.OpenLmisResponse.success;
 
 @Controller
 @NoArgsConstructor
@@ -33,29 +30,32 @@ public class UploadController extends BaseController {
   @Resource
   private Map<String, UploadBean> uploadBeansMap;
 
+  String uploadPage = "/public/pages/admin/upload/index.html#/upload?";
+
+
   public UploadController(CSVParser csvParser, Map<String, UploadBean> uploadBeansMap) {
     this.csvParser = csvParser;
     this.uploadBeansMap = uploadBeansMap;
   }
 
-  @RequestMapping(value = "/upload", method = RequestMethod.POST, headers = "Accept=application/json")
+  @RequestMapping(value = "/upload", method = RequestMethod.POST)
   @PreAuthorize("hasPermission('','UPLOADS')")
-  public ResponseEntity<OpenLmisResponse> upload(@RequestParam(value = "csvFile", required = true) MultipartFile csvFile,
-                                                 @RequestParam(value = "model", required = true) String model,
-                                                 HttpServletRequest request) {
+  public RedirectView upload(@RequestParam(value = "csvFile", required = true) MultipartFile csvFile,
+                     @RequestParam(value = "model", required = true) String model,
+                     HttpServletRequest request) {
     try {
       String error = validateFile(model, csvFile);
       if (error != null) {
-        return error(error, HttpStatus.BAD_REQUEST);
+        return errorPage(error, model);
       }
 
       String modifiedBy = loggedInUser(request);
       int recordsUploaded = csvParser.process(csvFile.getInputStream(),
           new ModelClass(uploadBeansMap.get(model).getImportableClass()),
           uploadBeansMap.get(model).getRecordHandler(), modifiedBy);
-      return success("File uploaded successfully. Total records uploaded: " + recordsUploaded);
+      return successPage(recordsUploaded, model);
     } catch (UploadException | IOException e) {
-      return error(e.getMessage(), HttpStatus.BAD_REQUEST);
+      return errorPage(e.getMessage(), model);
     }
   }
 
@@ -66,15 +66,23 @@ public class UploadController extends BaseController {
   }
 
   private String validateFile(String model, MultipartFile csvFile) {
-     String error = null;
-     if (!uploadBeansMap.containsKey(model)) {
-       error = "Incorrect file";
-     } else if (csvFile.isEmpty()) {
-       error = "File is empty";
-     } else if (!csvFile.getOriginalFilename().endsWith(".csv")) {
-       error = "Incorrect file format , Please upload " + model + " data as a \".csv\" file";
-     }
-     return error;
-   }
+    String error = null;
+    if (!uploadBeansMap.containsKey(model)) {
+      error = "Incorrect file";
+    } else if (csvFile.isEmpty()) {
+      error = "File is empty";
+    } else if (!csvFile.getOriginalFilename().endsWith(".csv")) {
+      error = "Incorrect file format , Please upload " + model + " data as a \".csv\" file";
+    }
+    return error;
+  }
+
+  private RedirectView successPage(int recordsUploaded, String model) {
+    return new RedirectView(uploadPage + "model=" + model + "&success=" + "File uploaded successfully. Total records uploaded: " + recordsUploaded);
+  }
+
+  private RedirectView errorPage(String error, String model) {
+    return new RedirectView(uploadPage + "model=" + model + "&error=" + error);
+  }
 
 }

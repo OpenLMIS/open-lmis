@@ -28,30 +28,8 @@
 <body onunload="">
 <ng-include src="'/public/pages/header.html'"></ng-include>
 <ng-include src="'/public/pages/navigation.html'"></ng-include>
-
-<div class="content" ng-controller='UploadController'>
-    <form id="uploadForm" name="uploadForm" ng-submit="uploadFile()" enctype="multipart/form-data" novalidate>
-        <div>
-            <fieldset>
-                <label style="padding-top: 10" for="model">Model:</label>
-
-              <select name="model" id="model" ng-model="model" ng-options="k as v.displayName for (k,v) in supportedUploads"></select>
-              <br/>
-                <label style="padding-top: 10" for="csvFile">File: </label>
-                <input name="csvFile" id="csvFile" type="file" accept=".csv"
-                       value="Choose CSV File to upload" required/> </br>
-                <div class="alert alert-error" id="saveErrorMsgDiv" ng-model="error" ng-show="error">
-                    {{error}}
-                </div>
-                <div class="alert alert-success" id="saveSuccessMsgDiv" ng-model="message" ng-show="message">
-                    {{message}}
-                </div>
-                <input type="submit" value="Upload" class="btn">
-            </fieldset>
-
-        </div>
-    </form>
+<div class="content">
+    <div ng-view></div>
 </div>
-
 </body>
 </html>
