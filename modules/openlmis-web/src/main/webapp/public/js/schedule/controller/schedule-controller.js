@@ -3,6 +3,7 @@ function ScheduleController($scope, Schedules, Schedule, $location) {
   $scope.newSchedule = {};
   $scope.schedules = {};
   $scope.editSchedule = {};
+  $scope.creationError = '';
 
   $scope.getBackupSchedule = function (schedule) {
     return {
@@ -15,7 +16,7 @@ function ScheduleController($scope, Schedules, Schedule, $location) {
   Schedules.get({}, function (data) {
     $scope.initialSchedules = angular.copy(data.schedules, $scope.initialSchedules);
     $scope.schedules = data.schedules;
-    for(scheduleIndex in data.schedules){
+    for(var scheduleIndex in data.schedules){
       var schedule = data.schedules[scheduleIndex];
       $scope.schedulesBackupMap[schedule.id] =  $scope.getBackupSchedule(schedule);
     }
@@ -42,7 +43,7 @@ function ScheduleController($scope, Schedules, Schedule, $location) {
       $scope.newSchedule = {};
     }, function (data) {
       $scope.message = "";
-      $scope.newSchedule.error = data.data.error;
+      $scope.creationError = data.data.error;
     });
   };
 
