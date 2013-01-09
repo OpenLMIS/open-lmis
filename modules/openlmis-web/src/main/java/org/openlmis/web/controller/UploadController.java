@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.view.RedirectView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -30,7 +29,7 @@ public class UploadController extends BaseController {
   @Resource
   private Map<String, UploadBean> uploadBeansMap;
 
-  String uploadPage = "/public/pages/admin/upload/index.html#/upload?";
+  String uploadPage = "redirect:/public/pages/admin/upload/index.html#/upload?";
 
 
   public UploadController(CSVParser csvParser, Map<String, UploadBean> uploadBeansMap) {
@@ -40,9 +39,9 @@ public class UploadController extends BaseController {
 
   @RequestMapping(value = "/upload", method = RequestMethod.POST)
   @PreAuthorize("hasPermission('','UPLOADS')")
-  public RedirectView upload(@RequestParam(value = "csvFile", required = true) MultipartFile csvFile,
-                     @RequestParam(value = "model", required = true) String model,
-                     HttpServletRequest request) {
+  public String upload(@RequestParam(value = "csvFile", required = true) MultipartFile csvFile,
+                       @RequestParam(value = "model", required = true) String model,
+                       HttpServletRequest request) {
     try {
       String error = validateFile(model, csvFile);
       if (error != null) {
@@ -77,12 +76,12 @@ public class UploadController extends BaseController {
     return error;
   }
 
-  private RedirectView successPage(int recordsUploaded, String model) {
-    return new RedirectView(uploadPage + "model=" + model + "&success=" + "File uploaded successfully. Total records uploaded: " + recordsUploaded);
+  private String successPage(int recordsUploaded, String model) {
+    return uploadPage + "model=" + model + "&success=" + "File uploaded successfully. Total records uploaded: " + recordsUploaded;
   }
 
-  private RedirectView errorPage(String error, String model) {
-    return new RedirectView(uploadPage + "model=" + model + "&error=" + error);
+  private String errorPage(String error, String model) {
+    return uploadPage + "model=" + model + "&error=" + error;
   }
 
 }

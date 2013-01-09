@@ -19,7 +19,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -57,24 +56,24 @@ public class UploadControllerTest {
     MockHttpSession session = new MockHttpSession();
     session.setAttribute(UserAuthenticationSuccessHandler.USER, USER);
     request.setSession(session);
-    controller = new UploadController(csvParser, uploadBeansMap);//, new HashMap<String, RecordHandler>());
+    controller = new UploadController(csvParser, uploadBeansMap);
   }
 
   @Test
   public void shouldThrowErrorIfUnsupportedModelIsSupplied() throws Exception {
     MultipartFile multipartFile = mock(MultipartFile.class);
-//    ResponseEntity<OpenLmisResponse> responseEntity = controller.upload(multipartFile, "Random", request);
-//
-//    assertEquals("Incorrect file", responseEntity.getBody().getErrorMsg());
+    String uploadPage = controller.upload(multipartFile, "Random", request);
+    assertThat(uploadPage, is("redirect:/public/pages/admin/upload/index.html#/upload?model=Random&" +
+        "error=Incorrect file"));
   }
 
   @Test
   public void shouldThrowErrorIfFileIsEmpty() throws Exception {
     byte[] content = new byte[0];
     MockMultipartFile multiPartMock = new MockMultipartFile("csvFile", "mock.csv", null, content);
-    RedirectView view = controller.upload(multiPartMock, "product", request);
-    assertThat(view.getUrl(), is("/public/pages/admin/upload/index.html#/upload?model=product&"+
-    "error=File is empty"));
+    String uploadPage = controller.upload(multiPartMock, "product", request);
+    assertThat(uploadPage, is("redirect:/public/pages/admin/upload/index.html#/upload?model=product&" +
+        "error=File is empty"));
   }
 
   @Test
@@ -82,9 +81,9 @@ public class UploadControllerTest {
     byte[] content = new byte[1];
     MockMultipartFile multiPartMock = new MockMultipartFile("csvFile", "mock.csv", null, content);
 
-    RedirectView view = controller.upload(multiPartMock, "product", request);
-    assertThat(view.getUrl(), is("/public/pages/admin/upload/index.html#/upload?model=product&"+
-    "success=File uploaded successfully. Total records uploaded: 0"));
+    String uploadPage = controller.upload(multiPartMock, "product", request);
+    assertThat(uploadPage, is("redirect:/public/pages/admin/upload/index.html#/upload?model=product&" +
+        "success=File uploaded successfully. Total records uploaded: 0"));
   }
 
   @Test
@@ -95,9 +94,9 @@ public class UploadControllerTest {
     InputStream mockInputStream = mock(InputStream.class);
     when(mockMultiPart.getInputStream()).thenReturn(mockInputStream);
 
-    RedirectView view = controller.upload(mockMultiPart, "product", request);
+    String uploadPage = controller.upload(mockMultiPart, "product", request);
 
-    assertThat(view.getUrl(), is("/public/pages/admin/upload/index.html#/upload?model=product&"+
+    assertThat(uploadPage, is("redirect:/public/pages/admin/upload/index.html#/upload?model=product&" +
         "success=File uploaded successfully. Total records uploaded: 0"));
 
     verify(csvParser).process(eq(mockMultiPart.getInputStream()), argThat(modelMatcher(Product.class)), eq(handler), eq(USER));
@@ -118,8 +117,8 @@ public class UploadControllerTest {
     byte[] content = new byte[1];
     MockMultipartFile multiPartMock = new MockMultipartFile("mock.doc", content);
 
-    RedirectView view = controller.upload(multiPartMock, "product", request);
-    assertThat(view.getUrl(), is("/public/pages/admin/upload/index.html#/upload?model=product&"+
+    String uploadPage = controller.upload(multiPartMock, "product", request);
+    assertThat(uploadPage, is("redirect:/public/pages/admin/upload/index.html#/upload?model=product&" +
         "error=Incorrect file format , Please upload product data as a \".csv\" file"));
   }
 

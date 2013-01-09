@@ -18,7 +18,6 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -66,8 +65,8 @@ public class UploadControllerIT {
         .getResourceAsStream("mandatory-fields.csv");
 
     MockMultipartFile multiPart = new MockMultipartFile("csvFile", "mock.csv", null, in);
-    RedirectView view = controller.upload(multiPart, "mandatoryFields", request);
-    assertThat(view.getUrl(), is("/public/pages/admin/upload/index.html#/upload?" +
+    String uploadPage = controller.upload(multiPart, "mandatoryFields", request);
+    assertThat(uploadPage, is("redirect:/public/pages/admin/upload/index.html#/upload?" +
         "model=mandatoryFields" +
         "&success=File uploaded successfully. Total records uploaded: 2"));
 
@@ -85,11 +84,11 @@ public class UploadControllerIT {
         .getResourceAsStream("non-mandatory-fields.csv");
     MockMultipartFile multiPart = new MockMultipartFile("csvFile", "mock.csv", null, in);
 
-    RedirectView view = controller.upload(multiPart, "nonMandatoryFields", request);
+    String uploadPage = controller.upload(multiPart, "nonMandatoryFields", request);
 
-    assertThat(view.getUrl(), is("/public/pages/admin/upload/index.html#/upload?" +
-            "model=nonMandatoryFields" +
-            "&success=File uploaded successfully. Total records uploaded: 3"));
+    assertThat(uploadPage, is("redirect:/public/pages/admin/upload/index.html#/upload?" +
+        "model=nonMandatoryFields" +
+        "&success=File uploaded successfully. Total records uploaded: 3"));
 
     ArgumentCaptor<NonMandatoryFields> nonMandatoryFieldsArgumentCaptor = ArgumentCaptor.forClass(NonMandatoryFields.class);
     verify(handler).execute(nonMandatoryFieldsArgumentCaptor.capture(), eq(4), eq("user"));
