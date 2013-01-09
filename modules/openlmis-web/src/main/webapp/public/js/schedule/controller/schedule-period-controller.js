@@ -2,6 +2,7 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Perio
   $scope.newPeriod = {};
   $scope.oneDay = 1000 * 60 * 60 * 24;
   $scope.lastPeriodId = "";
+  var displayTime = 8000;
 
   Schedule.get({id:$routeParams.id}, function (data) {
     $scope.error = "";
@@ -61,7 +62,7 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Perio
         $scope.$apply(function () {
           $scope.message = "";
         });
-      }, 4000);
+      }, displayTime);
       $scope.error = "";
       resetNewPeriod(new Date($scope.periodList[0].endDate).getTime());
     }, function (data) {
@@ -108,12 +109,13 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Perio
         }
       }
     });
+
     setTimeout(function () {
       $scope.$apply(function () {
         $scope.message = "";
         $scope.error = "";
       });
-    }, 4000);
+    }, displayTime);
   }
 
   var inValidateStartDate = function (periodToDelete) {

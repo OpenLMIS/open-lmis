@@ -32,7 +32,7 @@
             <label>Start Date(dd/mm/yyyy) <span class="label-required">*</span>
             </label>
             <div class="form-field">
-              <input name="startDate" id="startDate" type="text" ui-date="{minDate:'0D', dateFormat: 'dd/mm/yy'}" readonly ng-model="newPeriod.startDate"
+              <input name="startDate" id="startDate" type="text" ui-date="{dateFormat: 'dd/mm/yy'}" readonly ng-model="newPeriod.startDate"
                      value="{{newPeriod.startDate | date:'dd/MM/yyyy'}}" ng-required="true" ng-change="blurDateFields();refreshEndDateOffset(newPeriod.startDate.getTime())" ng-disabled="periodList.length>0" />
 
               <span class="field-error" ng-show="createPeriodForm.startDate.$error.required && showErrorForCreate">Please fill this value</span>
@@ -97,7 +97,7 @@
           <td>{{period.endDate | date:'dd/MM/yyyy'}}</td>
           <td>{{calculateDays(period.startDate, period.endDate)}}</td>
           <td>{{period.numberOfMonths}}</td>
-          <td ><input ng-show="showDeleteButton($index)" type="button" ng-click="deletePeriod(period.id)" class="btn btn-danger" value="DELETE"/></td>
+          <td class="delete-button"><input ng-show="showDeleteButton($index)" type="button" ng-click="deletePeriod(period.id)" class="btn btn-danger btn btn-mini" value="Delete"/></td>
         </tr>
         </tbody>
       </table>

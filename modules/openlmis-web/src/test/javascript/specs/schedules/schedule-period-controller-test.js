@@ -93,18 +93,5 @@ describe("Period", function () {
       expect(scope.periodList.length).toEqual(0);
       expect(scope.newPeriod.startDate).toEqual(undefined);
     });
-
-   /* it('should delete a period and update start date', function() {
-      scope.periodList = [{"id": "periodId1", "name":"newName", "startDate":new Date(9999, 3, 1, 0, 0), "endDate":new Date(2011, 2, 1, 0, 0), "description":"newDescription"},
-        {"id": "periodId2", "name":"newName", "startDate":new Date(9999, 3, 1, 0, 0), "endDate":new Date(2011, 2, 1, 0, 0), "description":"newDescription"}];
-      $httpBackend.expectDELETE('/periods/periodId1.json').respond(200, {"success" : "Period deleted successfully"});
-      scope.newPeriod = {"name":"newName", "startDate":new Date(2011, 3, 1, 0, 0), "endDate":new Date(2011, 2, 1, 0, 0), "description":"newDescription"};
-      scope.deletePeriod("periodId1");
-      $httpBackend.flush();
-      expect(scope.message).toEqual("Period deleted successfully");
-      expect(scope.error).toEqual("");
-      expect(scope.periodList.length).toEqual(1);
-      expect(scope.newPeriod.startDate).toEqual(new Date(2011, 2, 2, 0, 0));
-    });*/
   });
 });
