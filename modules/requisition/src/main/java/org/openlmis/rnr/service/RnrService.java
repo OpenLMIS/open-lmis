@@ -53,10 +53,6 @@ public class RnrService {
     return rnrRepository.getRequisitionByFacilityAndProgram(facilityId, programId);
   }
 
-  public void removeLossAndAdjustment(Integer lossAndAdjustmentId) {
-    rnrRepository.removeLossAndAdjustment(lossAndAdjustmentId);
-  }
-
   public List<LossesAndAdjustmentsType> getLossesAndAdjustmentsTypes() {
     return rnrRepository.getLossesAndAdjustmentsTypes();
   }
