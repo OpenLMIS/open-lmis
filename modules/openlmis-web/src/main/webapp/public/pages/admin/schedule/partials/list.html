@@ -26,14 +26,14 @@
                    placeholder="Code"/>
             <span class="label-required">*</span>
             <span class="form-error"
-                  ng-show="createScheduleForm.code.$error.required && showErrorForCreate">Required</span>
+                  ng-show="createScheduleForm.code.$error.required && showErrorForCreate">Please Fill In this value</span>
           </div>
           <div class="span2">
             <input name="name" id="name" type="text" ng-model="newSchedule.name" maxlength="50" ng-required="true"
                    placeholder="Name"/>
             <span class="label-required">*</span>
             <span class="form-error"
-                  ng-show="createScheduleForm.name.$error.required && showErrorForCreate">Required</span>
+                  ng-show="createScheduleForm.name.$error.required && showErrorForCreate">Please Fill In this value</span>
           </div>
           <div class="span4">
             <input name="description" id="description" type="text" ng-model="newSchedule.description"
@@ -74,7 +74,7 @@
                    ng-model="schedule.code" maxlength="50"
                    ng-required="true" placeholder="Code"/>
             <span ng-show="schedulesBackupMap[schedule.id].edit" class="label-required">*</span>
-            <span class="form-error" ng-show="editScheduleForm.code.$error.required && showErrorForEdit">Required</span>
+            <span class="form-error" ng-show="editScheduleForm.code.$error.required && showErrorForEdit">Please Fill In this value</span>
           </div>
 
           <div class="span2">
@@ -83,7 +83,7 @@
                    ng-model="schedule.name" maxlength="50"
                    ng-required="true" placeholder="Name"/>
             <span ng-show="schedulesBackupMap[schedule.id].edit" class="label-required">*</span>
-            <span class="form-error" ng-show="editScheduleForm.name.$error.required && showErrorForEdit">Required</span>
+            <span class="form-error" ng-show="editScheduleForm.name.$error.required && showErrorForEdit">Please Fill In this value</span>
           </div>
 
           <div class="span4">
