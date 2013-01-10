@@ -55,6 +55,13 @@ public class ManageSchedulePage extends Page {
     @FindBy(how = How.XPATH, using = " //input[@type='submit' and @value='Save']")
     private static WebElement saveButton;
 
+    @FindBy(how = How.XPATH, using = "//input[@value='Add Period']")
+    private static WebElement addPeriodButton;
+
+    @FindBy(how = How.ID, using = "name")
+    private static WebElement namePeriod;
+
+
 
     public ManageSchedulePage(TestWebDriver driver) throws  IOException {
         super(driver);
@@ -104,6 +111,14 @@ public class ManageSchedulePage extends Page {
         SeleneseTestNgHelper.assertEquals(codeFirstNonEditableField.getText().trim(), "M");
 
 
+    }
+
+    public PeriodsPage navigatePeriods() throws IOException
+    {
+        testWebDriver.waitForElementToAppear(addPeriodButton);
+        addPeriodButton.click();
+        testWebDriver.waitForElementToAppear(namePeriod);
+        return new PeriodsPage(testWebDriver);
     }
 
     public void enterEditScheduleDetails(String code, String name, String desc)

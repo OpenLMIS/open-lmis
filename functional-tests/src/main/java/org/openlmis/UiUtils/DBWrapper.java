@@ -59,15 +59,9 @@ public class DBWrapper {
     public void insertUser(String userId, String userName, String password) throws SQLException, IOException {
         boolean flag = false;
         DBWrapper dbwrapper = new DBWrapper();
-//        ResultSet rs = dbwrapper.dbConnection("Select userName from users;", "select");
-//        if (rs.next()) {
-//            if (rs.getString(1).contains(userName)) {
-//                flag = true;
-//            }
-//        }
-//        if (flag) {
-            dbwrapper.dbConnection("delete from users where userName like('"+userName+"');", "alter");
-       // }
+
+            //dbwrapper.dbConnection("delete from users where userName like('"+userName+"');", "alter");
+
         dbwrapper.dbConnection("INSERT INTO users\n" +
                 "  (id, userName, password, facilityId) VALUES\n" +
                 "  ('"+userId+"', '"+userName+"', '"+password+"', null);", "alter");
@@ -236,13 +230,10 @@ public class DBWrapper {
 
     public void insertRoleAssignment(String userId) throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();
-        ResultSet rs = dbwrapper.dbConnection("Select userId from role_assignments;", "select");
 
-        if (rs.next()) {
 
-            dbwrapper.dbConnection("delete from role_assignments where userId=200;", "alter");
+        dbwrapper.dbConnection("delete from role_assignments where userId=200;", "alter");
 
-        }
         dbwrapper.dbConnection(" INSERT INTO role_assignments\n" +
                 "            (userId, roleId, programId, supervisoryNodeId) VALUES \n" +
                 "    (200, (SELECT id FROM roles WHERE name = '"+userId+"'), 1, null),\n" +
@@ -285,13 +276,9 @@ public class DBWrapper {
 
     public void insertFacilityApprovedProducts() throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();
-        ResultSet rs = dbwrapper.dbConnection("Select id from facility_approved_products;", "select");
-
-        if (rs.next()) {
 
             dbwrapper.dbConnection("delete from facility_approved_products;", "alter");
 
-        }
         dbwrapper.dbConnection("insert into facility_approved_products(facilityTypeId, programProductId, maxMonthsOfStock) values\n" +
                 "((select id from facility_types where name='Lvl3 Hospital'), (select id from program_products where programId=(Select id from programs order by modifiedDate DESC limit 1) and productId=(Select id from products order by modifiedDate DESC limit 1)), 3);", "alter");
 
