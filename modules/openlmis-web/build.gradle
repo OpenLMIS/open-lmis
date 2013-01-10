@@ -57,7 +57,7 @@ task jettyRunWarDaemon(dependsOn: war)
 
 jettyRunWarDaemon.doFirst {
     jettyRunWar.daemon = true
-    jettyRunWar.httpPort = 9090
+    jettyRunWar.httpPort = 9091
     jettyRunWar.contextPath = ''
     jettyRunWar.execute()
 }
