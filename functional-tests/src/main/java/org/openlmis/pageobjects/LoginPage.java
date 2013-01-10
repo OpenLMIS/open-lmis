@@ -28,11 +28,17 @@ public class LoginPage extends Page {
 
     private String baseUrl;
 
+    /*
+    baseUrl = http://localhost:9090/
+dbUrl = jdbc:postgresql://localhost:5432/open_lmis
+dbUser = postgres
+dbPassword = p@ssw0rd
+     */
+
     public LoginPage(TestWebDriver driver) throws  IOException{
         super(driver);
-        Properties props = new Properties();
-        props.load(new FileInputStream(System.getProperty("user.dir")+"/src/main/resources/config.properties"));
-        baseUrl = props.getProperty("baseUrl");
+
+        baseUrl = "http://localhost:9091/";
         BASE_URL=baseUrl;
         testWebDriver.setBaseURL(BASE_URL);
         testWebDriver.setErrorMessage(ERROR_MESSAGE_LOGIN);

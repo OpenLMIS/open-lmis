@@ -10,13 +10,10 @@ public class DBWrapper {
 
     public DBWrapper() throws IOException {
 
-        final Properties props = new Properties();
-
-        props.load(new FileInputStream(System.getProperty("user.dir") + "/src/main/resources/config.properties"));
-        baseUrl = props.getProperty("baseUrl");
-        dbUrl = props.getProperty("dbUrl");
-        dbUser = props.getProperty("dbUser");
-        dbPassword = props.getProperty("dbPassword");
+        baseUrl = "http://localhost:9091/";
+        dbUrl = "jdbc:postgresql://localhost:5432/open_lmis";
+        dbUser = "postgres";
+        dbPassword = "p@ssw0rd";
     }
 
     public ResultSet dbConnection(String Query, String indicator) {
