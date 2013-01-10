@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
+
 @Service
 @NoArgsConstructor
 public class SupervisoryNodeService {
@@ -28,8 +30,8 @@ public class SupervisoryNodeService {
     supervisoryNodeRepository.save(supervisoryNode);
   }
 
-  public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Integer userId, Integer programId, Right right) {
-    return supervisoryNodeRepository.getAllSupervisoryNodesInHierarchyBy(userId, programId, right);
+  public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Integer userId, Integer programId, Right... rights) {
+    return supervisoryNodeRepository.getAllSupervisoryNodesInHierarchyBy(userId, programId, rights);
   }
 
   public SupervisoryNode getFor(int facilityId, int programId) {
@@ -38,10 +40,11 @@ public class SupervisoryNodeService {
 
   public User getApproverFor(Integer facilityId, Integer programId) {
     SupervisoryNode supervisoryNode = supervisoryNodeRepository.getFor(facilityId, programId);
+    if(supervisoryNode == null ) return  null;
     Integer supervisoryNodeId = supervisoryNode.getId();
 
     List<User> users;
-    while ((users = userRepository.getUsersWithRightInNodeForProgram(programId, supervisoryNodeId, Right.APPROVE_REQUISITION)).size() == 0) {
+    while ((users = userRepository.getUsersWithRightInNodeForProgram(programId, supervisoryNodeId, APPROVE_REQUISITION)).size() == 0) {
       supervisoryNodeId = supervisoryNodeRepository.getSupervisoryNodeParentId(supervisoryNodeId);
       if(supervisoryNodeId == null) return null;
     }

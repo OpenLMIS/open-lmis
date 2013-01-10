@@ -5,7 +5,6 @@ import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.Right;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -54,11 +53,19 @@ public interface ProgramMapper {
             "FROM programs p " +
             "INNER JOIN role_assignments ra ON p.id = ra.programId " +
             "INNER JOIN role_rights rr ON ra.roleId = rr.roleId " +
-            "INNER JOIN users u ON u.id = ra.userId " +
-            "WHERE u.userName = #{userName} " +
-            "AND rr.rightName = #{right.name} " +
+            "WHERE ra.userId = #{userId} " +
+            "AND rr.rightName = ANY (#{commaSeparatedRights}::VARCHAR[]) " +
             "AND ra.supervisoryNodeId IS NOT NULL " +
             "AND p.active = true")
-    List<Program> getUserSupervisedActivePrograms(@Param(value = "userName") String userName, @Param(value = "right") Right right);
+    List<Program> getUserSupervisedActivePrograms(@Param(value = "userId") Integer userId, @Param(value = "commaSeparatedRights") String commaSeparatedRights);
+
+  @Select({"SELECT p.* FROM programs p INNER JOIN programs_supported ps ON p.id = ps.programId",
+  "INNER JOIN role_assignments ra ON ra.programId = p.id",
+  "INNER JOIN role_rights rr ON rr.roleId = ra.roleId",
+  "WHERE p.active = true and  ps.active=true and ra.userId = #{userId} and ps.facilityId = #{facilityId} and rr.rightName = ANY(#{commaSeparatedRights}::VARCHAR[])",
+  ""})
+  List<Program> getProgramsSupportedByFacilityForUserWithRight(@Param("facilityId")Integer facilityId, @Param("userId") Integer userId, @Param("commaSeparatedRights") String commaSeparatedRights);
+
+
 
 }

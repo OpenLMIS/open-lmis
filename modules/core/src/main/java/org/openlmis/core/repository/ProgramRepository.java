@@ -3,7 +3,6 @@ package org.openlmis.core.repository;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.Right;
-import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.core.repository.mapper.ProgramSupportedMapper;
@@ -11,8 +10,9 @@ import org.openlmis.core.repository.mapper.RoleRightsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import static org.openlmis.core.domain.Right.getCommaSeparatedRightNames;
 
 @Component
 @NoArgsConstructor
@@ -41,13 +41,12 @@ public class ProgramRepository {
         return programMapper.getAll();
     }
 
-    public List<Program> getUserSupervisedActivePrograms(String userName, Right right) {
-        return programMapper.getUserSupervisedActivePrograms(userName, right);
+    public List<Program> getUserSupervisedActiveProgramsWithRights(Integer userId, Right... rights) {
+        return programMapper.getUserSupervisedActivePrograms(userId, getCommaSeparatedRightNames(rights));
     }
 
-    public List<Program> filterActiveProgramsAndFacility(List<RoleAssignment> roleAssignments, Integer facilityId) {
-        String programIds = getCommaSeparatedProgramsForDB(roleAssignments);
-        return programSupportedMapper.filterActiveProgramsAndFacility(programIds, facilityId);
+    public List<Program> getProgramsSupportedByFacilityForUserWithRight(Integer facilityId, Integer userId, Right... rights) {
+        return programMapper.getProgramsSupportedByFacilityForUserWithRight(facilityId, userId, getCommaSeparatedRightNames(rights));
     }
 
     public Integer getIdForCode(String code) {
@@ -59,11 +58,4 @@ public class ProgramRepository {
         return programId;
     }
 
-    private String getCommaSeparatedProgramsForDB(List<RoleAssignment> roleAssignments) {
-        List<Integer> programIds = new ArrayList<>();
-        for (RoleAssignment roleAssignment : roleAssignments) {
-            programIds.add(roleAssignment.getProgramId());
-        }
-        return programIds.toString().replace("[", "{").replace("]", "}");
-    }
 }

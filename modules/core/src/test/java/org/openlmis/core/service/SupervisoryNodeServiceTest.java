@@ -64,8 +64,6 @@ public class SupervisoryNodeServiceTest {
 
   @Test
   public void shouldGetApproverForProgramAndFacility() throws Exception {
-    final Integer userId = 1;
-    final Integer roleId = 1;
     final Integer supervisoryNodeId = 1;
     final Integer facilityId = 1;
     final Integer programId = 1;
@@ -116,7 +114,6 @@ public class SupervisoryNodeServiceTest {
     int facilityId = 1;
     final int programId = 2;
     int nodeId = 1;
-    final int userId = 1;
     SupervisoryNode node = new SupervisoryNode();
     node.setId(nodeId);
     when(supervisoryNodeRepository.getFor(facilityId, programId)).thenReturn(node);
@@ -127,6 +124,17 @@ public class SupervisoryNodeServiceTest {
 
     verify(supervisoryNodeRepository).getFor(facilityId, programId);
     verify(supervisoryNodeRepository).getSupervisoryNodeParentId(nodeId);
+    assertThat(user, is(nullValue()));
+  }
+
+  @Test
+  public void shouldReturnNullIfNoSupervisoryNodeFoundForFacilityAndProgram() throws Exception {
+    int facilityId = 1;
+    final int programId = 2;
+    when(supervisoryNodeRepository.getFor(facilityId, programId)).thenReturn(null);
+    User user = supervisoryNodeService.getApproverFor(facilityId, programId);
+
+    verify(supervisoryNodeRepository).getFor(facilityId, programId);
     assertThat(user, is(nullValue()));
   }
 }

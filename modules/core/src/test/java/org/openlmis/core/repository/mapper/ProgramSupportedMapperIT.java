@@ -9,15 +9,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
 import static org.joda.time.DateTime.now;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramBuilder.*;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
@@ -78,58 +75,5 @@ public class ProgramSupportedMapperIT {
 
     List<ProgramSupported> programsSupported = programSupportedMapper.getBy(facility.getId(), program.getId());
     assertFalse(programsSupported.contains(programSupported));
-  }
-
-  @Test
-  public void shouldFetchActiveProgramsForGivenProgramIdsForAUserAndAFacility() {
-    User user = insertUser();
-
-    Program activeProgram = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
-    Program inactiveProgram = insertProgram(make(a(defaultProgram, with(programCode, "p3"), with(programStatus, false))));
-
-    Role r1 = new Role("r1", "random description");
-    roleRightsMapper.insertRole(r1);
-    roleRightsMapper.createRoleRight(r1.getId(), Right.CREATE_REQUISITION);
-    insertRoleAssignments(activeProgram, user, r1);
-    insertRoleAssignments(inactiveProgram, user, r1);
-
-    Facility facility = insertFacility(make(a(defaultFacility)));
-
-    insertProgramSupportedForFacility(activeProgram, facility, true);
-    insertProgramSupportedForFacility(inactiveProgram, facility, true);
-
-    ArrayList<Integer> programCodes = new ArrayList<>();
-    programCodes.add(activeProgram.getId());
-    programCodes.add(inactiveProgram.getId());
-
-    String programCodesCommaSeparated = programCodes.toString().replace("[", "{").replace("]", "}");
-    List<Program> programs = programSupportedMapper.filterActiveProgramsAndFacility(programCodesCommaSeparated, facility.getId());
-    assertEquals(1, programs.size());
-    assertEquals(activeProgram.getCode(), programs.get(0).getCode());
-  }
-
-  private void insertProgramSupportedForFacility(Program program, Facility facility, boolean isActive) {
-    programSupportedMapper.addSupportedProgram(new ProgramSupported(facility.getId(), program.getId(), isActive, null, null));
-  }
-
-  private Program insertProgram(Program program) {
-    programMapper.insert(program);
-    return program;
-  }
-
-  private Facility insertFacility(Facility facility) {
-    facilityMapper.insert(facility);
-    return facility;
-  }
-
-  private Role insertRoleAssignments(Program program, User user, Role role) {
-    roleAssignmentMapper.createRoleAssignment(user, role, program, null);
-    return role;
-  }
-
-  private User insertUser() {
-    User user = new User("random123123", "pwd");
-    userMapper.insert(user);
-    return user;
   }
 }

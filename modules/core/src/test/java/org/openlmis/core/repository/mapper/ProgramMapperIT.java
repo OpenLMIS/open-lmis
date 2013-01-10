@@ -19,6 +19,7 @@ import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
@@ -30,136 +31,188 @@ import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
 @TransactionConfiguration(defaultRollback = true)
 public class ProgramMapperIT extends SpringIntegrationTest {
 
-    public static final String PROGRAM_CODE = "HIV";
-    public static final Integer PROGRAM_ID = 1;
+  public static final String PROGRAM_CODE = "HIV";
+  public static final Integer PROGRAM_ID = 1;
 
-    @Autowired
-    ProgramSupportedMapper programSupportedMapper;
+  @Autowired
+  ProgramSupportedMapper programSupportedMapper;
 
-    @Autowired
-    FacilityMapper facilityMapper;
+  @Autowired
+  FacilityMapper facilityMapper;
 
-    @Autowired
-    ProgramMapper programMapper;
+  @Autowired
+  ProgramMapper programMapper;
 
-    @Autowired
-    RoleRightsMapper roleRightsMapper;
+  @Autowired
+  RoleRightsMapper roleRightsMapper;
 
-    @Autowired
-    RoleAssignmentMapper roleAssignmentMapper;
+  @Autowired
+  RoleAssignmentMapper roleAssignmentMapper;
 
-    @Autowired
-    UserMapper userMapper;
+  @Autowired
+  UserMapper userMapper;
 
-    @Autowired
-    SupervisoryNodeMapper supervisoryNodeMapper;
+  @Autowired
+  SupervisoryNodeMapper supervisoryNodeMapper;
 
-    @Test
-    public void shouldGetAllActiveProgram() {
-        List<Program> programs = programMapper.getAllActive();
-        assertEquals(6, programs.size());
-        assertThat(programs, hasItem(new Program(PROGRAM_ID, PROGRAM_CODE, PROGRAM_CODE, PROGRAM_CODE, true)));
-    }
+  @Test
+  public void shouldGetAllActiveProgram() {
+    List<Program> programs = programMapper.getAllActive();
+    assertEquals(6, programs.size());
+    assertThat(programs, hasItem(new Program(PROGRAM_ID, PROGRAM_CODE, PROGRAM_CODE, PROGRAM_CODE, true)));
+  }
 
-    @Test
-    public void shouldGetProgramsWhichAreActiveByFacilityCode() {
-        Facility facility = make(a(FacilityBuilder.defaultFacility));
-        facilityMapper.insert(facility);
-        Program program = make(a(defaultProgram));
-        programMapper.insert(program);
-        ProgramSupported programSupported = make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()), with(supportedProgramId, program.getId())));
-        programSupportedMapper.addSupportedProgram(programSupported);
+  @Test
+  public void shouldGetProgramsWhichAreActiveByFacilityCode() {
+    Facility facility = make(a(FacilityBuilder.defaultFacility));
+    facilityMapper.insert(facility);
+    Program program = make(a(defaultProgram));
+    programMapper.insert(program);
+    ProgramSupported programSupported = make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()), with(supportedProgramId, program.getId())));
+    programSupportedMapper.addSupportedProgram(programSupported);
 
-        List<Program> programs = programMapper.getActiveByFacility(facility.getId());
+    List<Program> programs = programMapper.getActiveByFacility(facility.getId());
 
-        assertThat(programs.size(), is(1));
-        assertThat(programs.get(0).getCode(), is(ProgramBuilder.PROGRAM_CODE));
-    }
+    assertThat(programs.size(), is(1));
+    assertThat(programs.get(0).getCode(), is(ProgramBuilder.PROGRAM_CODE));
+  }
 
-    @Test
-    public void shouldGetAllPrograms() throws Exception {
-        List<Program> programs = programMapper.getAll();
-        assertEquals(7, programs.size());
-    }
+  @Test
+  public void shouldGetAllPrograms() throws Exception {
+    List<Program> programs = programMapper.getAll();
+    assertEquals(7, programs.size());
+  }
 
-    @Test
-    public void shouldGetProgramsSupportedByFacility() throws Exception {
-        Facility facility = make(a(defaultFacility));
-        facilityMapper.insert(facility);
-        Program program = make(a(defaultProgram));
-        programMapper.insert(program);
-        ProgramSupported programSupported = make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()),
-            with(supportedProgramId, program.getId())));
-        programSupportedMapper.addSupportedProgram(programSupported);
-        List<Program> supportedPrograms = programMapper.getByFacilityId(facility.getId());
-        assertThat(supportedPrograms.get(0).getCode(), is(ProgramBuilder.PROGRAM_CODE));
-    }
+  @Test
+  public void shouldGetProgramsSupportedByFacility() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    facilityMapper.insert(facility);
+    Program program = make(a(defaultProgram));
+    programMapper.insert(program);
+    ProgramSupported programSupported = make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()),
+        with(supportedProgramId, program.getId())));
+    programSupportedMapper.addSupportedProgram(programSupported);
+    List<Program> supportedPrograms = programMapper.getByFacilityId(facility.getId());
+    assertThat(supportedPrograms.get(0).getCode(), is(ProgramBuilder.PROGRAM_CODE));
+  }
 
-    @Test
-    public void shouldGetIdByCode() throws Exception {
-      Program program = make(a(defaultProgram));
-      programMapper.insert(program);
-      assertThat(program.getId(), is(programMapper.getIdForCode(ProgramBuilder.PROGRAM_CODE)));
-    }
+  @Test
+  public void shouldGetIdByCode() throws Exception {
+    Program program = make(a(defaultProgram));
+    programMapper.insert(program);
+    assertThat(program.getId(), is(programMapper.getIdForCode(ProgramBuilder.PROGRAM_CODE)));
+  }
 
-    @Test
-    public void shouldReturnProgramById() throws Exception {
-        Program program = make(a(defaultProgram));
-        programMapper.insert(program);
-        assertThat(programMapper.getById(program.getId()), is(program));
-    }
+  @Test
+  public void shouldReturnProgramById() throws Exception {
+    Program program = make(a(defaultProgram));
+    programMapper.insert(program);
+    assertThat(programMapper.getById(program.getId()), is(program));
+  }
 
-    @Test
-    public void shouldGetAllProgramsForUserSupervisedFacilitiesForWhichHeHasCreateRnrRight(){
-        Facility facility = make(a(defaultFacility));
-        facilityMapper.insert(facility);
-        SupervisoryNode node = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
-        node.setFacility(facility);
-        SupervisoryNode supervisoryNode = insertSupervisoryNode(node);
+  @Test
+  public void shouldGetAllProgramsForUserSupervisedFacilitiesForWhichHeHasCreateRnrRight() {
+    Facility facility = make(a(defaultFacility));
+    facilityMapper.insert(facility);
+    SupervisoryNode node = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
+    node.setFacility(facility);
+    SupervisoryNode supervisoryNode = insertSupervisoryNode(node);
 
-        Program activeProgram = insertProgram(make(a(defaultProgram, with(programCode, "P1"))));
-        Program inactiveProgram = insertProgram(make(a(defaultProgram, with(programCode, "P2"), with(programStatus, false))));
-        Program activeProgramWithoutRight = insertProgram(make(a(defaultProgram, with(programCode, "P3"))));
-        Program activeProgramForHomeFacility = insertProgram(make(a(defaultProgram, with(programCode, "P4"))));
+    Program activeProgramWithCreateRight = insertProgram(make(a(defaultProgram, with(programCode, "P1"))));
+    Program inactiveProgram = insertProgram(make(a(defaultProgram, with(programCode, "P2"), with(programStatus, false))));
+    Program activeProgramWithConfigureRight = insertProgram(make(a(defaultProgram, with(programCode, "P3"))));
+    Program activeProgramForHomeFacility = insertProgram(make(a(defaultProgram, with(programCode, "P4"))));
 
-        User user = insertUser();
+    User user = insertUser();
 
-        Role createRnrRole = new Role("R1", "Create Rnr Role");
-        roleRightsMapper.insertRole(createRnrRole);
-        roleRightsMapper.createRoleRight(createRnrRole.getId(), Right.CREATE_REQUISITION);
-        insertRoleAssignments(activeProgram, user, createRnrRole, supervisoryNode);
-        insertRoleAssignments(inactiveProgram, user, createRnrRole, supervisoryNode);
-        insertRoleAssignments(activeProgramForHomeFacility, user, createRnrRole, null);
+    Role createRnrRole = new Role("R1", "Create Requisition");
+    roleRightsMapper.insertRole(createRnrRole);
+    roleRightsMapper.createRoleRight(createRnrRole.getId(), Right.CREATE_REQUISITION);
+    insertRoleAssignments(activeProgramWithCreateRight, user, createRnrRole, supervisoryNode);
+    insertRoleAssignments(inactiveProgram, user, createRnrRole, supervisoryNode);
+    insertRoleAssignments(activeProgramForHomeFacility, user, createRnrRole, null);
 
-        Role viewRnrRole = new Role("R2", "View Rnr Role");
-        roleRightsMapper.insertRole(viewRnrRole);
-        roleRightsMapper.createRoleRight(viewRnrRole.getId(), Right.CONFIGURE_RNR);
-        insertRoleAssignments(activeProgramWithoutRight, user, viewRnrRole, supervisoryNode);
+    Role configureRnrRole = new Role("R2", "View Rnr Role");
+    roleRightsMapper.insertRole(configureRnrRole);
+    roleRightsMapper.createRoleRight(configureRnrRole.getId(), Right.CONFIGURE_RNR);
+    insertRoleAssignments(activeProgramWithConfigureRight, user, configureRnrRole, supervisoryNode);
 
-        List<Program> programs = programMapper.getUserSupervisedActivePrograms(user.getUserName(), Right.CREATE_REQUISITION);
+    List<Program> programs = programMapper.getUserSupervisedActivePrograms(user.getId(), "{CREATE_REQUISITION, CONFIGURE_RNR}");
 
-        assertThat(programs.size(), is(1));
-        assertThat(programs.get(0).getCode(), is("P1"));
-    }
+    assertThat(programs.size(), is(2));
+    assertThat(programs.contains(activeProgramWithCreateRight), is(true));
+    assertThat(programs.contains(activeProgramWithConfigureRight), is(true));
+  }
 
-    private SupervisoryNode insertSupervisoryNode(SupervisoryNode supervisoryNode) {
-        supervisoryNodeMapper.insert(supervisoryNode);
-        return supervisoryNode;
-    }
+  @Test
+  public void shouldFetchActiveProgramsSupportedByAFacilityForAUserWithRight() {
+    User user = insertUser();
 
-    private Program insertProgram(Program program) {
-        programMapper.insert(program);
-        return program;
-    }
+    Program activeProgram = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
+    Program anotherActiveProgram = insertProgram(make(a(defaultProgram, with(programCode, "p2"))));
+    Program inactiveProgram = insertProgram(make(a(defaultProgram, with(programCode, "p3"), with(programStatus, false))));
 
-    private Role insertRoleAssignments(Program program, User user, Role role, SupervisoryNode supervisoryNode) {
-        roleAssignmentMapper.createRoleAssignment(user, role, program, supervisoryNode);
-        return role;
-    }
+    Facility facility = insertFacility(make(a(defaultFacility)));
 
-    private User insertUser() {
-        User user = new User("random123123", "pwd");
-        userMapper.insert(user);
-        return user;
-    }
+    Role r1 = new Role("r1", "random description");
+    roleRightsMapper.insertRole(r1);
+    roleRightsMapper.createRoleRight(r1.getId(), Right.CREATE_REQUISITION);
+
+    Role r2 = new Role("r2", "authorize role");
+    roleRightsMapper.insertRole(r2);
+    roleRightsMapper.createRoleRight(r2.getId(), Right.AUTHORIZE_REQUISITION);
+
+    insertRoleAssignments(activeProgram, user, r1);
+    insertRoleAssignments(anotherActiveProgram, user, r2);
+    insertRoleAssignments(inactiveProgram, user, r1);
+
+
+    insertProgramSupportedForFacility(activeProgram, facility, true);
+    insertProgramSupportedForFacility(anotherActiveProgram, facility, true);
+    insertProgramSupportedForFacility(inactiveProgram, facility, true);
+
+    final String rights = "{CREATE_REQUISITION, AUTHORIZE_REQUISITION}";
+
+    List<Program> programs = programMapper.getProgramsSupportedByFacilityForUserWithRight(facility.getId(), user.getId(), rights);
+    assertThat(programs.size(), is(2));
+    assertTrue(programs.contains(activeProgram));
+    assertTrue(programs.contains(anotherActiveProgram));
+  }
+
+
+  private SupervisoryNode insertSupervisoryNode(SupervisoryNode supervisoryNode) {
+    supervisoryNodeMapper.insert(supervisoryNode);
+    return supervisoryNode;
+  }
+
+  private Program insertProgram(Program program) {
+    programMapper.insert(program);
+    return program;
+  }
+
+  private Role insertRoleAssignments(Program program, User user, Role role, SupervisoryNode supervisoryNode) {
+    roleAssignmentMapper.createRoleAssignment(user, role, program, supervisoryNode);
+    return role;
+  }
+
+
+  private void insertProgramSupportedForFacility(Program program, Facility facility, boolean isActive) {
+    programSupportedMapper.addSupportedProgram(new ProgramSupported(facility.getId(), program.getId(), isActive, null, null));
+  }
+
+  private Facility insertFacility(Facility facility) {
+    facilityMapper.insert(facility);
+    return facility;
+  }
+
+  private Role insertRoleAssignments(Program program, User user, Role role) {
+    roleAssignmentMapper.createRoleAssignment(user, role, program, null);
+    return role;
+  }
+
+  private User insertUser() {
+    User user = new User("random123123", "pwd");
+    userMapper.insert(user);
+    return user;
+  }
 }

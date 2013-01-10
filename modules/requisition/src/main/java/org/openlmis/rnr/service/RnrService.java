@@ -5,10 +5,10 @@ import org.openlmis.core.domain.FacilityApprovedProduct;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.FacilityApprovedProductService;
 import org.openlmis.core.service.SupervisoryNodeService;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
-import org.openlmis.rnr.domain.Message;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.repository.RnrRepository;
@@ -81,16 +81,16 @@ public class RnrService {
     return "R&R submitted successfully!";
   }
 
-  public Message authorize(Rnr rnr) {
+  public OpenLmisMessage authorize(Rnr rnr) {
     rnr.validate(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId()));
     rnr.setStatus(AUTHORIZED);
     rnrRepository.update(rnr);
 
     User approver = supervisoryNodeService.getApproverFor(rnr.getFacilityId(), rnr.getProgramId());
 
-    if(approver == null)return new Message(RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR);
+    if(approver == null)return new OpenLmisMessage(RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR);
 
-    return new Message(RNR_AUTHORIZED_SUCCESSFULLY);
+    return new OpenLmisMessage(RNR_AUTHORIZED_SUCCESSFULLY);
   }
 }
 

@@ -13,11 +13,16 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
 import org.springframework.dao.DuplicateKeyException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
+import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
+import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -150,5 +155,16 @@ public class SupervisoryNodeRepositoryTest {
     SupervisoryNode actualSupervisoryNode = repository.getFor(facilityId, programId);
 
     assertThat(actualSupervisoryNode, is(expectedSupervisoryNode));
+  }
+
+  @Test
+  public void shouldGetAllSupervisoryNodesInHierarchy() throws Exception {
+    Integer userId =1;
+    Integer programId =1;
+    List<SupervisoryNode> expectedList = new ArrayList<>();
+    when(supervisoryNodeMapper.getAllSupervisoryNodesInHierarchyBy(userId, programId, "{CREATE_REQUISITION, AUTHORIZE_REQUISITION}")).thenReturn(expectedList);
+    List<SupervisoryNode> actualList = repository.getAllSupervisoryNodesInHierarchyBy(userId, programId, CREATE_REQUISITION, AUTHORIZE_REQUISITION);
+    verify(supervisoryNodeMapper).getAllSupervisoryNodesInHierarchyBy(userId, programId, "{CREATE_REQUISITION, AUTHORIZE_REQUISITION}");
+    assertThat(actualList, is(expectedList));
   }
 }

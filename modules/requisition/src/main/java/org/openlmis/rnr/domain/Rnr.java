@@ -3,6 +3,7 @@ package org.openlmis.rnr.domain;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.message.OpenLmisMessage;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,6 +26,7 @@ public class Rnr {
 
   private Integer modifiedBy;
   private Date modifiedDate;
+  public static final String RNR_VALIDATION_ERROR = "rnr.validation.error";
 
   public Rnr(Integer facilityId, Integer programId, Integer modifiedBy) {
     this.facilityId = facilityId;
@@ -36,9 +38,9 @@ public class Rnr {
     lineItems.add(rnrLineItem);
   }
 
-  public boolean validate(boolean formulaValidated) {
+  public boolean validate(boolean formulaValidated){
     if(!validateFullSupplyCost() || !validateTotalSubmittedCost()){
-      throw new DataException("R&R has errors, please correct them before submission");
+      throw new DataException(new OpenLmisMessage(RNR_VALIDATION_ERROR));
     }
     for(RnrLineItem lineItem : lineItems){
       lineItem.validate(formulaValidated);

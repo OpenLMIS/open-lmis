@@ -55,7 +55,6 @@ public class FacilityService {
         return facilityRepository.getAllGeographicZones();
     }
 
-    //TODO this will also return facilities based on requisition group
     public List<Facility> getAllForUser(String user) {
         Facility homeFacility = facilityRepository.getHomeFacility(user);
         return homeFacility == null ? Collections.<Facility>emptyList() : Arrays.asList(homeFacility);
@@ -69,8 +68,8 @@ public class FacilityService {
         facilityRepository.updateDataReportableAndActiveFor(facility);
     }
 
-    public List<Facility> getUserSupervisedFacilities(Integer userId, Integer programId, Right right) {
-        List<SupervisoryNode> supervisoryNodes = supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(userId, programId, right);
+    public List<Facility> getUserSupervisedFacilities(Integer userId, Integer programId, Right... rights) {
+        List<SupervisoryNode> supervisoryNodes = supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(userId, programId, rights);
         List<RequisitionGroup> requisitionGroups = requisitionGroupService.getRequisitionGroupsBy(supervisoryNodes);
         return facilityRepository.getFacilitiesBy(programId, requisitionGroups);
     }

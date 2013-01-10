@@ -1,10 +1,7 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.Right;
-import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.RoleRightsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +14,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
+import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+
 @Controller
 @NoArgsConstructor
-public class ProgramController {
+public class ProgramController extends BaseController {
 
     private ProgramService programService;
 
@@ -44,19 +44,14 @@ public class ProgramController {
     }
 
     @RequestMapping(value = "/logistics/facility/{facilityId}/user/programs.json", method = RequestMethod.GET, headers = "Accept=application/json")
-    @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
-    public List<Program> getUserSupportedProgramsToCreateRequisition(@PathVariable(value = "facilityId") Integer facilityId, HttpServletRequest request) {
-        List<RoleAssignment> userRoles = roleRightsService.getRoleAssignments(Right.CREATE_REQUISITION, loggedInUser(request));
-        return programService.filterActiveProgramsAndFacility(userRoles, facilityId);
+    public List<Program> getUserSupportedProgramsToCreateOrAuthorizeRequisition(@PathVariable(value = "facilityId") Integer facilityId, HttpServletRequest request) {
+        return programService.getProgramsSupportedByFacilityForUserWithRight(facilityId, loggedInUserId(request), CREATE_REQUISITION, AUTHORIZE_REQUISITION);
     }
 
     @RequestMapping(value = "/create/requisition/supervised/programs.json", method = RequestMethod.GET, headers = "Accept=application/json")
-    @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
-    public List<Program> getUserSupervisedActiveProgramsForCreateRequisition(HttpServletRequest request) {
-        return programService.getUserSupervisedActivePrograms(loggedInUser(request), Right.CREATE_REQUISITION);
+    public List<Program> getUserSupervisedActiveProgramsForCreateAndAuthorizeRequisition(HttpServletRequest request) {
+        return programService.getUserSupervisedActiveProgramsWithRights(loggedInUserId(request), CREATE_REQUISITION, AUTHORIZE_REQUISITION);
     }
 
-    private String loggedInUser(HttpServletRequest request) {
-        return (String) request.getSession().getAttribute(UserAuthenticationSuccessHandler.USER);
-    }
+
 }

@@ -1,7 +1,6 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.springframework.stereotype.Repository;
 
@@ -34,7 +33,7 @@ public interface SupervisoryNodeMapper {
     "       supervisory_nodes s " +
     "       INNER JOIN role_assignments ra ON s.id = ra.supervisoryNodeId  " +
     "       INNER JOIN role_rights rr ON ra.roleId = rr.roleId  " +
-    "       WHERE rr.rightName = #{right}  " +
+    "       WHERE rr.rightName = ANY (#{commaSeparatedRights}::VARCHAR[])  " +
     "       AND ra.userId = #{userId}  " +
     "       AND ra.programId = #{programId}) " +
     "   UNION " +
@@ -45,7 +44,7 @@ public interface SupervisoryNodeMapper {
     "   )" +
     "SELECT * FROM supervisoryNodesRec")
   List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(@Param(value = "userId") Integer userId, @Param(value = "programId") Integer programId,
-                                                            @Param(value = "right") Right right);
+                                                            @Param(value = "commaSeparatedRights") String commaSeparatedRights);
 
   @Select({"SELECT SN.* FROM supervisory_nodes SN INNER JOIN requisition_groups RG ON RG.supervisoryNodeId = SN.id",
     "WHERE RG.code = #{rgCode}"})

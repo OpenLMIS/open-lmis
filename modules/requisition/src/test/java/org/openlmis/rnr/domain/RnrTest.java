@@ -13,6 +13,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.cost;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
+import static org.openlmis.rnr.domain.Rnr.RNR_VALIDATION_ERROR;
 
 public class RnrTest {
 
@@ -32,7 +33,7 @@ public class RnrTest {
     rnr.setFullSupplyItemsSubmittedCost(60f);
 
     exception.expect(DataException.class);
-    exception.expectMessage("R&R has errors, please correct them before submission");
+    exception.expectMessage(RNR_VALIDATION_ERROR);
 
     rnr.validate(true);
   }
@@ -44,7 +45,7 @@ public class RnrTest {
     rnr.setTotalSubmittedCost(90f);
 
     exception.expect(DataException.class);
-    exception.expectMessage("R&R has errors, please correct them before submission");
+    exception.expectMessage(RNR_VALIDATION_ERROR);
 
     rnr.validate(true);
   }

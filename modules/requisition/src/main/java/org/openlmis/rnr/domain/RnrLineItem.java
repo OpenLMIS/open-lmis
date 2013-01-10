@@ -6,6 +6,7 @@ import org.openlmis.core.domain.FacilityApprovedProduct;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.message.OpenLmisMessage;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -91,7 +92,7 @@ public class RnrLineItem {
 
   public boolean validate(boolean formulaValidated) {
     if (!validateMandatoryFields() || !validateCalculatedFields(formulaValidated)) {
-      throw new DataException("R&R has errors, please correct them before submission");
+      throw  new DataException(new OpenLmisMessage(Rnr.RNR_VALIDATION_ERROR));
     }
     return true;
   }

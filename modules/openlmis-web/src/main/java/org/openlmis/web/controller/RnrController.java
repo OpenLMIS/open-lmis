@@ -2,6 +2,7 @@ package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.service.RnrService;
 import org.openlmis.web.model.RnrReferenceData;
@@ -11,7 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -59,11 +63,11 @@ public class RnrController extends BaseController {
   @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> submit(@RequestBody Rnr rnr, HttpServletRequest request) {
     rnr.setModifiedBy(loggedInUserId(request));
-    try{
+    try {
       return OpenLmisResponse.success(rnrService.submit(rnr));
-    }catch(DataException e) {
+    } catch (DataException e) {
       rnrService.save(rnr);
-      return OpenLmisResponse.error(e.getMessage(), HttpStatus.BAD_REQUEST);
+      return OpenLmisResponse.error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -74,9 +78,16 @@ public class RnrController extends BaseController {
     return referenceData.addLossesAndAdjustmentsTypes(rnrService.getLossesAndAdjustmentsTypes()).get();
   }
 
-  public ResponseEntity<OpenLmisResponse> authorize(Rnr rnr, HttpServletRequest request) {
+  @RequestMapping(value = "/requisitions/{id}/authorize", method = RequestMethod.PUT, headers = "Accept=application/json")
+  @PreAuthorize("hasPermission('', 'APPROVE_REQUISITION')")
+  public ResponseEntity<OpenLmisResponse> authorize(@RequestBody Rnr rnr, HttpServletRequest request) {
     rnr.setModifiedBy(loggedInUserId(request));
-    rnrService.authorize(rnr);
-    return  OpenLmisResponse.success("R&R authorized successfully!");
+    try {
+      OpenLmisMessage openLmisMessage = rnrService.authorize(rnr);
+      return OpenLmisResponse.success(openLmisMessage);
+    } catch (DataException e) {
+      rnrService.save(rnr);
+      return OpenLmisResponse.error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
+    }
   }
 }

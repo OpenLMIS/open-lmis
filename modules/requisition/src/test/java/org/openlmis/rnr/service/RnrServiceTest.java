@@ -13,9 +13,9 @@ import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.FacilityApprovedProductService;
 import org.openlmis.core.service.SupervisoryNodeService;
-import org.openlmis.rnr.domain.Message;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.repository.RnrRepository;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
@@ -117,7 +117,7 @@ public class RnrServiceTest {
     doReturn(true).when(rnr).validate(true);
     when(supervisoryNodeService.getApproverFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(new User());
 
-    Message authorize = rnrService.authorize(rnr);
+    OpenLmisMessage authorize = rnrService.authorize(rnr);
 
     verify(rnrTemplateRepository).isFormulaValidated(rnr.getProgramId());
     verify(rnr).validate(true);
@@ -132,13 +132,13 @@ public class RnrServiceTest {
     when(supervisoryNodeService.getApproverFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(null);
     doReturn(true).when(rnr).validate(true);
 
-    Message message= rnrService.authorize(rnr);
+    OpenLmisMessage openLmisMessage = rnrService.authorize(rnr);
 
     verify(rnrTemplateRepository).isFormulaValidated(rnr.getProgramId());
     verify(rnr).validate(true);
     verify(rnrRepository).update(rnr);
     assertThat(rnr.getStatus(), is(AUTHORIZED));
-    assertThat(message.getCode(), is(RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR));
+    assertThat(openLmisMessage.getCode(), is(RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR));
   }
 
   @Test

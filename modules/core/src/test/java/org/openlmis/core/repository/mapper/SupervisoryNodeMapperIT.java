@@ -5,7 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
-import org.openlmis.core.builder.RequisitionGroupBuilder;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
 import org.openlmis.core.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,7 +115,7 @@ public class SupervisoryNodeMapperIT {
     insertRoleAssignments(program2, user, createRole, supervisoryNode);
     insertRoleAssignments(program1, user, createRole, null);
 
-    List<SupervisoryNode> userSupervisoryNodes = supervisoryNodeMapper.getAllSupervisoryNodesInHierarchyBy(user.getId(), program1.getId(), CREATE_REQUISITION);
+    List<SupervisoryNode> userSupervisoryNodes = supervisoryNodeMapper.getAllSupervisoryNodesInHierarchyBy(user.getId(), program1.getId(), "{CREATE_REQUISITION}");
 
     assertThat(userSupervisoryNodes.size(), is(2));
     assertTrue(userSupervisoryNodes.contains(supervisoryNode));

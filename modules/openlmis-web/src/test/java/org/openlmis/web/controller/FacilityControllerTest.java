@@ -24,6 +24,8 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
+import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
+import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 
 public class FacilityControllerTest {
 
@@ -153,9 +155,9 @@ public class FacilityControllerTest {
     public void shouldReturnUserSupervisedFacilitiesForAProgram(){
         Integer programId =1;
         List<Facility> facilities = new ArrayList<>();
-        when(facilityService.getUserSupervisedFacilities(userId, programId, Right.CREATE_REQUISITION)).thenReturn(facilities);
+        when(facilityService.getUserSupervisedFacilities(userId, programId, CREATE_REQUISITION, AUTHORIZE_REQUISITION)).thenReturn(facilities);
         ResponseEntity<ModelMap> responseEntity = facilityController.getUserSupervisedFacilitiesSupportingProgram(programId, httpServletRequest);
-        verify(facilityService).getUserSupervisedFacilities(userId, programId, Right.CREATE_REQUISITION);
+        verify(facilityService).getUserSupervisedFacilities(userId, programId, CREATE_REQUISITION, AUTHORIZE_REQUISITION);
         ModelMap map = responseEntity.getBody();
         assertThat((List<Facility>)map.get("facilities"), is(facilities));
 

@@ -3,7 +3,6 @@ package org.openlmis.web.controller;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.RequisitionHeader;
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.web.model.FacilityReferenceData;
@@ -24,6 +23,8 @@ import java.util.Map;
 
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
+import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
+import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 
 @Controller
 @NoArgsConstructor
@@ -45,7 +46,6 @@ public class FacilityController extends BaseController {
     }
 
     @RequestMapping(value = "logistics/user/facilities", method = RequestMethod.GET, headers = "Accept=application/json")
-    @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
     public List<Facility> getAllByUser(HttpServletRequest httpServletRequest) {
         return facilityService.getAllForUser(loggedInUser(httpServletRequest));
     }
@@ -127,11 +127,10 @@ public class FacilityController extends BaseController {
     }
 
     @RequestMapping(value = "/create/requisition/supervised/{programId}/facilities.json", method = RequestMethod.GET, headers = "Accept=application/json")
-    @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
     public ResponseEntity<ModelMap> getUserSupervisedFacilitiesSupportingProgram(@PathVariable(value = "programId") Integer programId, HttpServletRequest request) {
         ModelMap modelMap = new ModelMap();
         Integer userId = (Integer) request.getSession().getAttribute(USER_ID);
-        List<Facility> facilities = facilityService.getUserSupervisedFacilities(userId, programId, Right.CREATE_REQUISITION);
+        List<Facility> facilities = facilityService.getUserSupervisedFacilities(userId, programId, CREATE_REQUISITION, AUTHORIZE_REQUISITION);
         modelMap.put("facilities", facilities);
         return new ResponseEntity<>(modelMap, HttpStatus.OK);
     }

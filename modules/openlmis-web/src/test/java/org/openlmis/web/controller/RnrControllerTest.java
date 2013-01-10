@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.service.RnrService;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -15,9 +16,11 @@ import org.springframework.mock.web.MockHttpSession;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.openlmis.web.controller.RnrController.RNR;
-
+import static org.powermock.api.mockito.PowerMockito.doThrow;
+import static org.powermock.api.mockito.PowerMockito.when;
 public class RnrControllerTest {
 
   MockHttpServletRequest request;
@@ -80,7 +83,7 @@ public class RnrControllerTest {
 
   @Test
   public void shouldReturnErrorMessageIfRnrNotValidButShouldSaveIt() throws Exception {
-    doThrow(new DataException("some error")).when(rnrService).submit(rnr);
+    doThrow(new DataException(new OpenLmisMessage("some error"))).when(rnrService).submit(rnr);
 
     ResponseEntity<OpenLmisResponse> response = controller.submit(rnr, request);
     verify(rnrService).save(rnr);
@@ -89,12 +92,27 @@ public class RnrControllerTest {
   }
 
   @Test
-  public void shouldAuthorizeRnrAndSetModifiedBy() throws Exception {
+  public void shouldGiveMessageAndAuthorizeRnr() throws Exception {
+    String code = RnrService.RNR_AUTHORIZED_SUCCESSFULLY;
+    String message = "R&R authorized successfully!";
+
+    when(rnrService.authorize(rnr)).thenReturn(new OpenLmisMessage(code));
+
     ResponseEntity<OpenLmisResponse> response = controller.authorize(rnr, request);
+
     verify(rnrService).authorize(rnr);
-    assertThat(rnr.getModifiedBy(), is(USER_ID));
-    assertThat(response.getBody().getSuccessMsg(), is("R&R authorized successfully!"));
+    assertThat(response.getBody().getSuccessMsg(), is(message));
+    assertThat(response.getStatusCode(), is(HttpStatus.OK));
   }
 
+  @Test
+  public void shouldNotAuthorizeRnrAndGiveErrorMessage() throws Exception {
+    String errorMessage = "some error";
+    doThrow(new DataException(new OpenLmisMessage(errorMessage))).when(rnrService).authorize(rnr);
+    ResponseEntity<OpenLmisResponse> response = controller.authorize(rnr, request);
+
+    verify(rnrService).save(rnr);
+    assertThat(response.getBody().getErrorMsg(), is(errorMessage));
+  }
 }
 
