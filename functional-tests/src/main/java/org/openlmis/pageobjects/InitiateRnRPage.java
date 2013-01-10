@@ -23,8 +23,17 @@ public class InitiateRnRPage extends Page {
     @FindBy(how = How.XPATH, using = "//input[@value='Save']")
     private static WebElement saveButton;
 
+    @FindBy(how = How.XPATH, using = "//input[@value='Submit']")
+    private static WebElement submitButton;
+
     @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv' and @ng-model='message']")
     private static WebElement successMessage;
+
+    @FindBy(how = How.XPATH, using = "//div[@id='submitSuccessMsgDiv' and @ng-model='submitMessage']")
+    private static WebElement submitSuccessMessage;
+
+    @FindBy(how = How.XPATH, using = "//div[@id='submitFailMessage' and @ng-model='submitError']")
+    private static WebElement submitErrorMessage;
 
     @FindBy(how = How.ID, using = "A_0")
     private static WebElement beginningBalance;
@@ -121,14 +130,6 @@ public class InitiateRnRPage extends Page {
         String facilityText=testWebDriver.getText(facilityLabel);
         SeleneseTestNgHelper.assertTrue(facilityText.contains(FCode + FCstring + " - " + FName + FCstring));
 
-    }
-
-    public void saveRnR(){
-        saveButton.click();
-        testWebDriver.sleep(1500);
-        String successMessageText=testWebDriver.getText(successMessage);
-        testWebDriver.sleep(1500);
-        SeleneseTestNgHelper.assertEquals(successMessageText.trim(),successText);
     }
 
     public void enterBeginningBalance(String A)
@@ -248,6 +249,24 @@ public class InitiateRnRPage extends Page {
       testWebDriver.sleep(500);
     }
 
+    public void saveRnR(){
+        saveButton.click();
+        testWebDriver.sleep(1500);
+        String successMessageText=testWebDriver.getText(successMessage);
+        testWebDriver.sleep(1500);
+        SeleneseTestNgHelper.assertEquals(successMessageText.trim(),successText);
+    }
 
+    public void submitRnR() {
+        submitButton.click();
+        testWebDriver.sleep(1500);
+    }
 
+    public void verifySubmitRnrSuccessMsg(){
+        SeleneseTestNgHelper.assertTrue("RnR Submit Success message not displayed", submitSuccessMessage.isDisplayed());
+    }
+
+    public void verifySubmitRnrErrorMsg(){
+        SeleneseTestNgHelper.assertTrue("RnR Fail message not displayed", submitErrorMessage.isDisplayed());
+    }
 }
