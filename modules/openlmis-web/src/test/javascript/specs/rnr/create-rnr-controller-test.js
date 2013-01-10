@@ -153,5 +153,65 @@ describe('CreateRnrController', function () {
     expect(scope.rnr.status).toEqual("SUBMITTED");
   });
 
+  it('should return cell error class', function() {
+    var lineItem = new RnrLineItem({ "beginningBalance" : 1, totalLossesAndAdjustments: 1, quantityDispensed: 2,
+      quantityReceived : 1, stockInHand: 1});
+    var programRnrColumnList = [
+      {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidated": true},
+      {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
+      {"indicator":"C", "name":"quantityDispensed", "source":{"name":"CALCULATED"}},
+      {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}},
+      {"indicator":"E", "name":"stockInHand", "source":{"name":"USER_INPUT"}}
+    ];
+    spyOn(lineItem,'getErrorMessage').andReturn("error");
+    var errorMsg = scope.getCellErrorClass(lineItem, programRnrColumnList);
+    expect(errorMsg).toEqual("cell-error-highlight");
+  });
+
+  it('should not return cell error class', function() {
+    var lineItem = new RnrLineItem({ "beginningBalance" : 1, totalLossesAndAdjustments: 1, quantityDispensed: 2,
+      quantityReceived : 1, stockInHand: 1});
+    var programRnrColumnList = [
+      {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidated": true},
+      {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
+      {"indicator":"C", "name":"quantityDispensed", "source":{"name":"CALCULATED"}},
+      {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}},
+      {"indicator":"E", "name":"stockInHand", "source":{"name":"USER_INPUT"}}
+    ];
+    spyOn(lineItem,'getErrorMessage').andReturn("");
+    var errorMsg = scope.getCellErrorClass(lineItem, programRnrColumnList);
+    expect(errorMsg).toEqual("");
+  });
+
+  it('should return row error class', function() {
+    var lineItem = new RnrLineItem({ "beginningBalance" : 1, totalLossesAndAdjustments: 1, quantityDispensed: 2,
+      quantityReceived : 1, stockInHand: 1});
+    var programRnrColumnList = [
+      {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidated": true},
+      {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
+      {"indicator":"C", "name":"quantityDispensed", "source":{"name":"CALCULATED"}},
+      {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}},
+      {"indicator":"E", "name":"stockInHand", "source":{"name":"USER_INPUT"}}
+    ];
+    spyOn(scope, 'getCellErrorClass').andReturn("error");
+    var errorMsg = scope.getRowErrorClass(lineItem, programRnrColumnList);
+    expect(errorMsg).toEqual("row-error-highlight");
+  });
+
+
+  it('should not return row error class', function() {
+    var lineItem = new RnrLineItem({ "beginningBalance" : 1, totalLossesAndAdjustments: 1, quantityDispensed: 2,
+      quantityReceived : 1, stockInHand: 1});
+    var programRnrColumnList = [
+      {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidated": true},
+      {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
+      {"indicator":"C", "name":"quantityDispensed", "source":{"name":"CALCULATED"}},
+      {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}},
+      {"indicator":"E", "name":"stockInHand", "source":{"name":"USER_INPUT"}}
+    ];
+    spyOn(scope, 'getCellErrorClass').andReturn("");
+    var errorMsg = scope.getRowErrorClass(lineItem, programRnrColumnList);
+    expect(errorMsg).toEqual("");
+  });
 });
 

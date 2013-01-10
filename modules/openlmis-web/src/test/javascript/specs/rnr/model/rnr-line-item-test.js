@@ -469,5 +469,42 @@ describe('RnrLineItem', function () {
         });
 
     });
+
+    describe('Error message to be displayed', function () {
+        var programRnrColumnList;
+        beforeEach(function () {
+            programRnrColumnList = [
+                {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidated":true}
+            ];
+        });
+
+
+        it("should give error message for arithmetic validation error ", function () {
+            var lineItem = {"id":"1", "beginningBalance":3, "quantityReceived":3, "quantityDispensed":3, "stockInHand":3};
+            var rnrLineItem = new RnrLineItem(lineItem);
+            spyOn(rnrLineItem,'arithmeticallyInvalid').andReturn("error");
+            var errorMsg = rnrLineItem.getErrorMessage(programRnrColumnList);
+            expect(errorMsg).toEqual("The entries are arithmetically invalid, please recheck");
+        });
+
+        it("should give error message for negative stock in hand", function () {
+            var lineItem = {"id":"1", "beginningBalance":3, "quantityReceived":3, "quantityDispensed":33, "stockInHand":-3};
+            var rnrLineItem = new RnrLineItem(lineItem);
+
+            var errorMsg = rnrLineItem.getErrorMessage(programRnrColumnList);
+
+            expect(errorMsg).toEqual("Stock On Hand is calculated to be negative, please validate entries");
+        });
+
+        it("should give error message for negative quantity dispensed ", function () {
+          programRnrColumnList[0].formulaValidated = false;
+          var lineItem = {"id":"1", "beginningBalance":3, "quantityReceived":3, "quantityDispensed":-3, "stockInHand":3};
+          var rnrLineItem = new RnrLineItem(lineItem);
+          var errorMsg = rnrLineItem.getErrorMessage(programRnrColumnList);
+
+          expect(errorMsg).toEqual("Total Quantity Consumed is calculated to be negative, please validate entries");
+        });
+
+    });
 });
 

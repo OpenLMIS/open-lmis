@@ -2,7 +2,6 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
 
   $scope.disableFormForSubmittedRnr = function () {
     return $scope.rnr != null && $scope.rnr.status == 'SUBMITTED';
-
   };
 
   $scope.lossesAndAdjustmentsModal = [];
@@ -77,7 +76,7 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
   };
 
   function isUndefined(value) {
-    return (value == null || value == undefined || value.trim().length == 0 || value == false);
+    return (value == null || value == undefined || value.length == 0 || value == false);
   }
 
   $scope.highlightRequired = function (value) {
@@ -188,6 +187,14 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
       var rnrLineItem = new RnrLineItem(lineItem);
       $scope.rnrLineItems.push(rnrLineItem);
     });
+  }
+
+  $scope.getCellErrorClass = function(rnrLineItem, programRnRColumnList){
+    return rnrLineItem.getErrorMessage(programRnRColumnList) ? 'cell-error-highlight' : '';
+  }
+
+  $scope.getRowErrorClass = function(rnrLineItem, programRnRColumnList){
+    return $scope.getCellErrorClass(rnrLineItem, programRnRColumnList) ? 'row-error-highlight' : '';
   }
 
 }
