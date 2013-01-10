@@ -43,9 +43,6 @@ public class ManageSchedulePage extends Page {
     @FindBy(how = How.ID, using = "saveSuccessMsgDiv")
     private static WebElement saveSuccessMsgDiv;
 
-    @FindBy(how = How.ID, using = "saveErrorMsgDiv")
-    private static WebElement saveErrorMsgDiv;
-
     @FindBy(how = How.XPATH, using = "//input[@value='Edit']")
     private static WebElement editFirstButton;
 
@@ -90,7 +87,7 @@ public class ManageSchedulePage extends Page {
         descriptionTextField.clear();
         descriptionTextField.sendKeys(desc);
         createButton.click();
-        testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
+        testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
     }
 
     public void editAndVerifySchedule()
@@ -120,7 +117,7 @@ public class ManageSchedulePage extends Page {
         descriptionEditTextField.clear();
         descriptionEditTextField.sendKeys(desc);
         saveButton.click();
-        testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
+        testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
 
     }
 
