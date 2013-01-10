@@ -1,5 +1,7 @@
 package org.openlmis.email.service;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.openlmis.email.domain.EmailMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +14,9 @@ public class EmailService {
 
 
   private MailSender mailSender;
+
+  @Setter
+  private SimpleMailMessage simpleMailMessage;
 
   @Autowired
   public EmailService(MailSender mailSender) {
@@ -30,7 +35,9 @@ public class EmailService {
   }
 
   private SimpleMailMessage copyToSimpleMailMessage(EmailMessage message) {
-    SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+    if (simpleMailMessage == null) {
+      simpleMailMessage = new SimpleMailMessage();
+    }
     simpleMailMessage.setSubject(message.getSubject());
     simpleMailMessage.setText(message.getText());
     simpleMailMessage.setFrom(message.getFrom() == null ? from : message.getFrom());

@@ -24,11 +24,18 @@ public class EmailServiceTest {
   @Test
   public void shouldSendEmailMessage() {
     JavaMailSender mailSender = mock(JavaMailSender.class);
+    SimpleMailMessage mailMessage = mock(SimpleMailMessage.class);
     EmailService service = new EmailService(mailSender);
+    service.setSimpleMailMessage(mailMessage);
     EmailMessage message = make(a(EmailMessageBuilder.defaultEmailMessage,
-      with(EmailMessageBuilder.to, "balvindk@thoughtworks.com"), with(EmailMessageBuilder.from, "shibha@abc.com")));
+      with(EmailMessageBuilder.to, "alert.open.lmis@gmail.com")));
     service.send(message);
     verify(mailSender).send(any(SimpleMailMessage.class));
-
+    verify(mailMessage).setTo(message.getTo());
+    verify(mailMessage).setFrom(message.getFrom());
+    verify(mailMessage).setSubject(message.getSubject());
+    verify(mailMessage).setText(message.getText());
+    verify(mailMessage).setSentDate(message.getSentDate());
+    verify(mailMessage).setReplyTo(message.getReplyTo());
   }
 }
