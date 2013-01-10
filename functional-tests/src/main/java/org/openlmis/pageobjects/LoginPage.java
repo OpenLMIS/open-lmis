@@ -38,7 +38,7 @@ dbPassword = p@ssw0rd
     public LoginPage(TestWebDriver driver) throws  IOException{
         super(driver);
 
-        baseUrl = "http://localhost:9091/";
+        baseUrl = "http://localhost:9090/";
         BASE_URL=baseUrl;
         testWebDriver.setBaseURL(BASE_URL);
         testWebDriver.setErrorMessage(ERROR_MESSAGE_LOGIN);

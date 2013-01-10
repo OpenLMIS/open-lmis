@@ -10,7 +10,7 @@ public class DBWrapper {
 
     public DBWrapper() throws IOException {
 
-        baseUrl = "http://localhost:9091/";
+        baseUrl = "http://localhost:9090/";
         dbUrl = "jdbc:postgresql://localhost:5432/open_lmis";
         dbUser = "postgres";
         dbPassword = "p@ssw0rd";
