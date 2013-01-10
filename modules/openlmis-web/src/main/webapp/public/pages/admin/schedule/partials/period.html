@@ -75,34 +75,29 @@
 
   <div>
     <h2>Periods</h2>
-  <span>
-    <div>
-      <table class="table table-striped table-bordered">
-        <thead>
-        <tr>
-          <th>Name</th>
-          <th>Description</th>
-          <th>Start date</th>
-          <th>End date</th>
-          <th>Total days</th>
-          <th>Number of months</th>
-          <th>&nbsp;</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="period in periodList">
-          <td>{{period.name}}</td>
-          <td>{{period.description}}</td>
-          <td>{{period.startDate | date:'dd/MM/yyyy'}}</td>
-          <td>{{period.endDate | date:'dd/MM/yyyy'}}</td>
-          <td>{{calculateDays(period.startDate, period.endDate)}}</td>
-          <td>{{period.numberOfMonths}}</td>
-          <td class="delete-button"><input ng-show="showDeleteButton($index)" type="button" ng-click="deletePeriod(period.id)" class="btn btn-danger btn btn-mini" value="Delete"/></td>
-        </tr>
-        </tbody>
-      </table>
+    <div class="row-fluid schedule-header">
+      <div class="span1">&nbsp;</div>
+      <div class="span1">Name</div>
+      <div class="span2">Description</div>
+      <div class="span2">Start date</div>
+      <div class="span2">End date</div>
+      <div class="span1">Total days</div>
+      <div class="span2">Number of months</div>
+      <div class="span1">&nbsp;</div>
     </div>
-  </span>
+    <div ng-repeat="period in periodList" class="row-fluid schedule-row">
+      <div class="span1">&nbsp;</div>
+      <div class="span1">{{period.name}}</div>
+      <div class="span2">{{period.description}}</div>
+      <div class="span2">{{period.startDate | date:'dd/MM/yyyy'}}</div>
+      <div class="span2">{{period.endDate | date:'dd/MM/yyyy'}}</div>
+      <div class="span1">{{calculateDays(period.startDate, period.endDate)}}</div>
+      <div class="span2">{{period.numberOfMonths}}</div>
+      <div class="span1">
+        <input ng-show="showDeleteButton($index)" type="button" ng-click="deletePeriod(period.id)" class="btn btn-danger btn btn-mini" value="Delete"/>
+      </div>
+    </div>
+
   </div>
 
 </div>
