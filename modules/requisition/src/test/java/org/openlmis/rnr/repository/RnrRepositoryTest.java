@@ -7,6 +7,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.rnr.domain.LossesAndAdjustments;
 import org.openlmis.rnr.domain.Rnr;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.core.Is.is;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -114,4 +115,21 @@ public class RnrRepositoryTest {
     assertThat(rnr, is(expectedRnr));
   }
 
+  @Test
+  public void shouldGetRnrById() throws Exception {
+    Rnr expectedRnr = new Rnr();
+    Integer rnrId = 1;
+    when(rnrMapper.getById(rnrId)).thenReturn(expectedRnr);
+    Rnr returnedRnr = rnrRepository.getById(rnrId);
+    assertThat(returnedRnr, is(expectedRnr));
+  }
+
+  @Test
+  public void shouldThrowExceptionIfRnrNotFound() throws Exception {
+    Integer rnrId = 1;
+    when(rnrMapper.getById(rnrId)).thenReturn(null);
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("Requisition Not Found");
+    rnrRepository.getById(rnrId);
+  }
 }

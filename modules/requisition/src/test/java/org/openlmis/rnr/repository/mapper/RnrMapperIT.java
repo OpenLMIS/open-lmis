@@ -1,14 +1,13 @@
 package org.openlmis.rnr.repository.mapper;
 
+import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.repository.mapper.FacilityMapper;
-import org.openlmis.core.repository.mapper.ProgramSupportedMapper;
 import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -89,4 +88,14 @@ public class RnrMapperIT {
     assertThat(rnr.getId(), is(requisition.getId()));
   }
 
+  @Test
+  public void shouldGetRnrById() throws Exception {
+    rnrMapper.insert(requisition);
+
+    Rnr returnedRequisition = rnrMapper.getById(requisition.getId());
+
+    assertThat(returnedRequisition.getFacilityId(), CoreMatchers.is(requisition.getFacilityId()));
+    assertThat(returnedRequisition.getStatus(), CoreMatchers.is(requisition.getStatus()));
+    assertThat(returnedRequisition.getId(), CoreMatchers.is(requisition.getId()));
+  }
 }

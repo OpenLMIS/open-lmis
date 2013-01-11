@@ -28,4 +28,7 @@ public interface RnrMapper {
   @Select("Select * from requisition where facilityId = #{facilityId} and programId= #{programId}")
   public Rnr getRequisitionByFacilityAndProgram(@Param("facilityId") Integer facilityId,
                                                 @Param("programId") Integer programId);
+
+  @Select("SELECT * FROM requisition WHERE id = #{rnrId}")
+  Rnr getById(Integer rnrId);
 }

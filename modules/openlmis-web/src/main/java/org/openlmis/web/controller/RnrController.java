@@ -79,7 +79,7 @@ public class RnrController extends BaseController {
   }
 
   @RequestMapping(value = "/requisitions/{id}/authorize", method = RequestMethod.PUT, headers = "Accept=application/json")
-  @PreAuthorize("hasPermission('', 'APPROVE_REQUISITION')")
+  @PreAuthorize("hasPermission('', 'AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> authorize(@RequestBody Rnr rnr, HttpServletRequest request) {
     rnr.setModifiedBy(loggedInUserId(request));
     try {

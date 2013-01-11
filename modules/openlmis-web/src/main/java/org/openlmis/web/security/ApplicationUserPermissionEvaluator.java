@@ -10,8 +10,12 @@ import java.io.Serializable;
 
 public class ApplicationUserPermissionEvaluator implements PermissionEvaluator {
 
-  @Autowired
   private RoleRightsService roleRightService;
+
+  @Autowired
+  public ApplicationUserPermissionEvaluator(RoleRightsService roleRightService) {
+    this.roleRightService = roleRightService;
+  }
 
   @Override
   public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {

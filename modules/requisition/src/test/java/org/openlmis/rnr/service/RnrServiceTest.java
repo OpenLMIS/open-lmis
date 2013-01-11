@@ -16,7 +16,9 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.FacilityApprovedProductService;
 import org.openlmis.core.service.SupervisoryNodeService;
+import org.openlmis.rnr.builder.RnrBuilder;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.RnrStatus;
 import org.openlmis.rnr.repository.RnrRepository;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +26,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.rnr.builder.RnrBuilder.defaultRnr;
+import static org.openlmis.rnr.builder.RnrBuilder.status;
 import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
+import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
+import static org.openlmis.rnr.service.RnrService.RNR_AUTHORIZATION_ERROR;
 import static org.openlmis.rnr.service.RnrService.RNR_AUTHORIZED_SUCCESSFULLY;
 import static org.openlmis.rnr.service.RnrService.RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR;
 
@@ -56,13 +60,16 @@ public class RnrServiceTest {
   private SupervisoryNodeService supervisoryNodeService;
 
   private Rnr rnr;
-
+  private Rnr submittedRnr;
+  private Rnr initiatedRnr;
 
 
   @Before
   public void setup() {
     rnrService = new RnrService(rnrRepository, rnrTemplateRepository, facilityApprovedProductService, supervisoryNodeService);
     rnr = spy(make(a(defaultRnr)));
+    submittedRnr = make(a(RnrBuilder.defaultRnr, with(status, RnrStatus.SUBMITTED)));
+    initiatedRnr = make(a(RnrBuilder.defaultRnr, with(status, INITIATED)));
   }
 
   @Test
@@ -91,6 +98,7 @@ public class RnrServiceTest {
 
   @Test
   public void shouldReturnMessageWhileSubmittingRnrIfSupervisingNodeNotPresent() {
+    when(rnrRepository.getById(rnr.getId())).thenReturn(initiatedRnr);
     doReturn(true).when(rnr).validate(false);
     when(supervisoryNodeService.getFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(null);
 
@@ -102,6 +110,7 @@ public class RnrServiceTest {
 
   @Test
   public void shouldSubmitValidRnrAndSetMessage() {
+    when(rnrRepository.getById(rnr.getId())).thenReturn(initiatedRnr);
     doReturn(true).when(rnr).validate(false);
     when(supervisoryNodeService.getFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(new SupervisoryNode());
     String message = rnrService.submit(rnr);
@@ -113,6 +122,7 @@ public class RnrServiceTest {
 
   @Test
   public void shouldAuthorizeAValidRnr() throws Exception {
+    when(rnrRepository.getById(rnr.getId())).thenReturn(submittedRnr);
     when(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId())).thenReturn(true);
     doReturn(true).when(rnr).validate(true);
     when(supervisoryNodeService.getApproverFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(new User());
@@ -128,6 +138,7 @@ public class RnrServiceTest {
 
   @Test
   public void shouldAuthorizeAValidRnrAndAdviseUserIfRnrDoesNotHaveApprover() throws Exception {
+    when(rnrRepository.getById(rnr.getId())).thenReturn(submittedRnr);
     when(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId())).thenReturn(true);
     when(supervisoryNodeService.getApproverFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(null);
     doReturn(true).when(rnr).validate(true);
@@ -143,11 +154,22 @@ public class RnrServiceTest {
 
   @Test
   public void shouldNotAuthorizeInvalidRnr() throws Exception {
+    when(rnrRepository.getById(rnr.getId())).thenReturn(submittedRnr);
     when(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId())).thenReturn(true);
     doThrow(new DataException("error-message")).when(rnr).validate(true);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error-message");
+    rnrService.authorize(rnr);
+  }
+
+  @Test
+  public void shouldNotAuthorizeRnrIfNotSubmitted() throws Exception {
+    when(rnrRepository.getById(rnr.getId())).thenReturn(initiatedRnr);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage(RNR_AUTHORIZATION_ERROR);
+
     rnrService.authorize(rnr);
   }
 }

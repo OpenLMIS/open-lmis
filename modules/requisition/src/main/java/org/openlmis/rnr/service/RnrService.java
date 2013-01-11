@@ -20,12 +20,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
+import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 
 @Service
 @NoArgsConstructor
 public class RnrService {
 
+  public static final String RNR_AUTHORIZATION_ERROR = "rnr.authorization.error";
+  public static final String RNR_SUBMISSION_ERROR = "rnr.submission.error";
   private RnrRepository rnrRepository;
   private RnrTemplateRepository rnrTemplateRepository;
 
@@ -69,7 +72,7 @@ public class RnrService {
   }
 
   public String submit(Rnr rnr) {
-
+    if(rnrRepository.getById(rnr.getId()).getStatus() != INITIATED) throw new DataException(new OpenLmisMessage(RNR_SUBMISSION_ERROR));
     rnr.validate(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId()));
     rnr.setStatus(SUBMITTED);
     rnrRepository.update(rnr);
@@ -82,6 +85,8 @@ public class RnrService {
   }
 
   public OpenLmisMessage authorize(Rnr rnr) {
+    if(rnrRepository.getById(rnr.getId()).getStatus() != SUBMITTED) throw new DataException(RNR_AUTHORIZATION_ERROR);
+
     rnr.validate(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId()));
     rnr.setStatus(AUTHORIZED);
     rnrRepository.update(rnr);

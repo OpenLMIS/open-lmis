@@ -1,26 +1,24 @@
-function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $location, Requisition, Requisitions, $route, LossesAndAdjustmentsReferenceData, $rootScope) {
+function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $location, Requisition, Requisitions, $route, LossesAndAdjustmentsReferenceData, $rootScope, localStorageService) {
 
-    $scope.disableFormForSubmittedRnr = function () {
-        return $scope.rnr != null && $scope.rnr.status == 'SUBMITTED';
-    };
-
-    $scope.lossesAndAdjustmentsModal = [];
-    $scope.rnrLineItems = [];
-    $rootScope.fixToolBar();
-    if (!$scope.$parent.rnr) {
-        Requisition.get({facilityId: $route.current.params.facility, programId: $route.current.params.program},
-            function (data) {
-                if (data.rnr) {
-                    $scope.rnr = data.rnr;
-                    populateRnrLineItems($scope.rnr);
-                } else {
-                    $scope.$parent.error = "Requisition does not exist. Please initiate.";
-                    $location.path($scope.$parent.sourceUrl);
-                }
-            }, {});
-    } else {
-        populateRnrLineItems($scope.$parent.rnr);
-    }
+  $scope.lossesAndAdjustmentsModal = [];
+  $scope.rnrLineItems = [];
+  $rootScope.fixToolBar();
+  if (!$scope.$parent.rnr) {
+    Requisition.get({facilityId:$route.current.params.facility, programId:$route.current.params.program},
+      function (data) {
+        if (data.rnr) {
+          $scope.rnr = data.rnr;
+          $scope.formDisabled = isFormDisabled();
+          populateRnrLineItems($scope.rnr);
+        } else {
+          $scope.$parent.error = "Requisition does not exist. Please initiate.";
+          $location.path($scope.$parent.sourceUrl);
+        }
+      }, {});
+  } else {
+    $scope.formDisabled = isFormDisabled();
+    populateRnrLineItems($scope.$parent.rnr);
+  }
 
     ReferenceData.get({}, function (data) {
         $scope.currency = data.currency;
@@ -114,38 +112,48 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
         return true;
     }
 
-    $scope.submitRnr = function () {
-        if (!valid()) return;
+  function isFormDisabled() {
+    if ($scope.rnr || $scope.$parent.rnr) {
+      if ($scope.rnr.status == 'AUTHORIZED') return true;
+      if ($scope.rnr.status == 'SUBMITTED' && !$rootScope.hasPermission('AUTHORIZE_REQUISITION')) return true;
+    }
+    return false;
+  }
 
-        Requisitions.update({id: $scope.rnr.id, operation: "submit"},
-            $scope.rnr, function (data) {
-                $scope.rnr.status = "SUBMITTED";
-                $scope.submitMessage = data.success;
-                $scope.submitError = "";
-            }, function (data) {
-                $scope.submitError = data.data.error;
-            });
-    };
+  $scope.submitRnr = function () {
+    if (!valid()) return;
 
-    $scope.authorizeRnr = function () {
-        if (!valid()) return;
+    Requisitions.update({id:$scope.rnr.id, operation:"submit"},
+      $scope.rnr, function (data) {
+        $scope.rnr.status = "SUBMITTED";
+        $scope.formDisabled = !$rootScope.hasPermission('AUTHORIZE_REQUISITION');
+        $scope.submitMessage = data.success;
+        $scope.submitError = "";
+      }, function (data) {
+        $scope.submitError = data.data.error;
+      });
+  };
 
-        Requisitions.update({id: $scope.rnr.id, operation: "authorize"},
-            $scope.rnr, function (data) {
-                $scope.rnr.status = "AUTHORIZE";
-                $scope.submitMessage = data.success;
-                $scope.submitError = "";
-            }, function (data) {
-                $scope.submitError = data.data.error;
-            });
-    };
+  $scope.authorizeRnr = function () {
+    if (!valid()) return;
 
-    $scope.getId = function (prefix, parent, isLossAdjustment) {
-        if (isLossAdjustment != null && isLossAdjustment != isUndefined && isLossAdjustment) {
-            return prefix + "_" + parent.$parent.$parent.$index + "_" + parent.$parent.$parent.$parent.$index;
-        }
-        return prefix + "_" + parent.$parent.$parent.$index;
-    };
+    Requisitions.update({id:$scope.rnr.id, operation:"authorize"},
+      $scope.rnr, function (data) {
+        $scope.rnr.status = "AUTHORIZED";
+        $scope.formDisabled = true;
+        $scope.submitMessage = data.success;
+        $scope.submitError = "";
+      }, function (data) {
+        $scope.submitError = data.data.error;
+      });
+  };
+
+  $scope.getId = function (prefix, parent, isLossAdjustment) {
+    if (isLossAdjustment != null && isLossAdjustment != isUndefined && isLossAdjustment) {
+      return prefix + "_" + parent.$parent.$parent.$index + "_" + parent.$parent.$parent.$parent.$index;
+    }
+    return prefix + "_" + parent.$parent.$parent.$index;
+  };
 
     $scope.hide = function () {
         return "";

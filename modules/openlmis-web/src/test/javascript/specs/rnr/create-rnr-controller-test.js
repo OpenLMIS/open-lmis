@@ -7,6 +7,7 @@ describe('CreateRnrController', function () {
 
     beforeEach(inject(function ($httpBackend, $rootScope, $location, $controller, $route, _localStorageService_) {
         scope = $rootScope.$new();
+        $rootScope.hasPermission = function(){};
         location = $location;
         controller = $controller;
         httpBackend = $httpBackend;

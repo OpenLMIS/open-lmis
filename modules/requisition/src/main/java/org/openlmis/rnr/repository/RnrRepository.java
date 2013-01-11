@@ -1,6 +1,7 @@
 package org.openlmis.rnr.repository;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.LossesAndAdjustments;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.domain.Rnr;
@@ -72,5 +73,10 @@ public class RnrRepository {
     return lossesAndAdjustmentsMapper.getLossesAndAdjustmentsTypes();
   }
 
+  public Rnr getById(Integer rnrId) {
+    Rnr requisition = rnrMapper.getById(rnrId);
+    if(requisition == null) throw new DataException("Requisition Not Found");
+    return requisition;
+  }
 }
 
