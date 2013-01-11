@@ -1,5 +1,6 @@
 package org.openlmis.core.repository.mapper;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.domain.*;
@@ -15,8 +16,11 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
+import static org.openlmis.core.builder.UserBuilder.defaultUser;
+import static org.openlmis.core.builder.UserBuilder.facilityId;
 import static org.openlmis.core.domain.Right.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -35,13 +39,22 @@ public class RoleAssignmentMapperIT {
     RoleRightsMapper roleRightsMapper;
     @Autowired
     RoleAssignmentMapper roleAssignmentMapper;
+    @Autowired
+    FacilityMapper facilityMapper;
+
+    private User user;
+    private Facility facility;
+
+    @Before
+    public void setUp() throws Exception {
+        facility = insertFacility();
+        user = insertUser(facility);
+    }
 
     @Test
     public void shouldReturnProgramAvailableForAFacilityForAUserWithGivenRights() throws Exception {
         Program program1 = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
         Program program2 = insertProgram(make(a(defaultProgram, with(programCode, "p2"))));
-
-        User user = insertUser();
 
         Role r1 = new Role("r1", "random description");
         roleRightsMapper.insertRole(r1);
@@ -75,9 +88,15 @@ public class RoleAssignmentMapperIT {
         return role;
     }
 
-    private User insertUser() {
-        User user = new User("random123123", "pwd");
+    private User insertUser(Facility facility) {
+        User user = make(a(defaultUser, with(facilityId, facility.getId())));
         userMapper.insert(user);
         return user;
+    }
+
+    private Facility insertFacility(){
+        Facility facility = make(a(defaultFacility));
+        facilityMapper.insert(facility);
+        return facility;
     }
 }

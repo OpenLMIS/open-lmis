@@ -1,11 +1,9 @@
 package org.openlmis.core.repository.mapper;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.Right;
-import org.openlmis.core.domain.Role;
-import org.openlmis.core.domain.User;
+import org.openlmis.core.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.ContextConfiguration;
@@ -21,8 +19,11 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
+import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
+import static org.openlmis.core.builder.UserBuilder.defaultUser;
+import static org.openlmis.core.builder.UserBuilder.facilityId;
 import static org.openlmis.core.domain.Right.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -41,21 +42,20 @@ public class RoleRightsMapperIT {
     RoleRightsMapper roleRightsMapper;
     @Autowired
     RoleAssignmentMapper roleAssignmentMapper;
+    @Autowired
+    private FacilityMapper facilityMapper;
 
     @Test
     public void shouldSetupRightsForAdminRole() {
         List<Right> adminRights = roleRightsMapper.getAllRightsForUser("Admin123");
         assertEquals(5, adminRights.size());
-        assertEquals(CONFIGURE_RNR, adminRights.get(0));
-        assertEquals(MANAGE_FACILITY, adminRights.get(1));
-        assertEquals(MANAGE_ROLE, adminRights.get(2));
-        assertEquals(MANAGE_SCHEDULE, adminRights.get(3));
-        assertEquals(UPLOADS, adminRights.get(4));
+        Assert.assertTrue(adminRights.containsAll(asList(CONFIGURE_RNR, MANAGE_FACILITY, MANAGE_ROLE, MANAGE_SCHEDULE, UPLOADS)));
     }
 
     @Test
     public void shouldGetAllRightsForAUser() throws Exception {
-        User user = insertUser();
+        Facility facility = insertFacility();
+        User user = insertUser(facility);
 
         List<Right> allRightsForUser = roleRightsMapper.getAllRightsForUser(user.getUserName());
         assertThat(allRightsForUser.size(), is(0));
@@ -160,9 +160,15 @@ public class RoleRightsMapperIT {
         return role;
     }
 
-    private User insertUser() {
-        User user = new User("random123123", "pwd");
+    private User insertUser(Facility facility) {
+        User user = make(a(defaultUser, with(facilityId, facility.getId())));
         userMapper.insert(user);
         return user;
+    }
+
+    private Facility insertFacility() {
+        Facility facility = make(a(defaultFacility));
+        facilityMapper.insert(facility);
+        return facility;
     }
 }

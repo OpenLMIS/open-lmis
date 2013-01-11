@@ -25,6 +25,8 @@ import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
 import static org.openlmis.core.builder.ProgramBuilder.programStatus;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
+import static org.openlmis.core.builder.UserBuilder.defaultUser;
+import static org.openlmis.core.builder.UserBuilder.facilityId;
 
 @ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
 @Transactional
@@ -123,7 +125,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     Program activeProgramWithConfigureRight = insertProgram(make(a(defaultProgram, with(programCode, "P3"))));
     Program activeProgramForHomeFacility = insertProgram(make(a(defaultProgram, with(programCode, "P4"))));
 
-    User user = insertUser();
+    User user = insertUser(facility);
 
     Role createRnrRole = new Role("R1", "Create Requisition");
     roleRightsMapper.insertRole(createRnrRole);
@@ -146,13 +148,13 @@ public class ProgramMapperIT extends SpringIntegrationTest {
 
   @Test
   public void shouldFetchActiveProgramsSupportedByAFacilityForAUserWithRight() {
-    User user = insertUser();
 
     Program activeProgram = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
     Program anotherActiveProgram = insertProgram(make(a(defaultProgram, with(programCode, "p2"))));
     Program inactiveProgram = insertProgram(make(a(defaultProgram, with(programCode, "p3"), with(programStatus, false))));
 
     Facility facility = insertFacility(make(a(defaultFacility)));
+    User user = insertUser(facility);
 
     Role r1 = new Role("r1", "random description");
     roleRightsMapper.insertRole(r1);
@@ -210,8 +212,8 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     return role;
   }
 
-  private User insertUser() {
-    User user = new User("random123123", "pwd");
+  private User insertUser(Facility facility) {
+    User user = make(a(defaultUser, with(facilityId, facility.getId())));
     userMapper.insert(user);
     return user;
   }

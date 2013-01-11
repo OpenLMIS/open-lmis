@@ -6,22 +6,18 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class User {
-
     private Integer id;
     private String userName;
     private String password;
-    private String role;
+    private String firstName;
+    private String lastName;
+    private String employeeId;
+    private String jobTitle;
+    private String primaryNotificationMethod;
+    private String officePhone;
+    private String cellPhone;
+    private String email;
+    private Integer supervisorId;
+
     private Integer facilityId;
-
-    public User(String userName, String password) {
-        this.userName = userName;
-        this.password = password;
-    }
-
-    @Deprecated
-    public User(String userName, String password, String role) {
-        this.userName = userName;
-        this.role = role;
-        this.password = password;
-    }
 }

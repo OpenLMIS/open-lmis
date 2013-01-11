@@ -1,5 +1,6 @@
 package org.openlmis.core.repository.mapper;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
@@ -18,6 +19,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
+import static org.openlmis.core.builder.UserBuilder.*;
 import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -27,78 +29,85 @@ import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
 public class UserMapperIT {
 
 
-  @Autowired
-  UserMapper userMapper;
-  @Autowired
-  private ProgramMapper programMapper;
-  @Autowired
-  RoleAssignmentMapper roleAssignmentMapper;
-  @Autowired
-  private RoleRightsMapper roleRightsMapper;
-  @Autowired
-  private FacilityMapper facilityMapper;
-  @Autowired
-  private SupervisoryNodeMapper supervisoryNodeMapper;
+    @Autowired
+    UserMapper userMapper;
+    @Autowired
+    private ProgramMapper programMapper;
+    @Autowired
+    RoleAssignmentMapper roleAssignmentMapper;
+    @Autowired
+    private RoleRightsMapper roleRightsMapper;
+    @Autowired
+    private FacilityMapper facilityMapper;
+    @Autowired
+    private SupervisoryNodeMapper supervisoryNodeMapper;
 
+    private Facility facility;
+    private SupervisoryNode supervisoryNode;
 
-  @Test
-  public void shouldGetUserByUserNameAndPassword() throws Exception {
-    User someUser = new User("someUserName", "somePassword");
-    userMapper.insert(someUser);
+    @Before
+    public void setUp() throws Exception {
+        supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
 
-    User user = userMapper.selectUserByUserNameAndPassword("someUserName", "somePassword");
-    assertThat(user, is(notNullValue()));
-    assertThat(user.getUserName(), is("someUserName"));
-    assertThat(user.getId(), is(someUser.getId()));
-    User user1 = userMapper.selectUserByUserNameAndPassword("someUserName", "wrongPassword");
-    assertThat(user1, is(nullValue()));
-    User user2 = userMapper.selectUserByUserNameAndPassword("wrongUserName", "somePassword");
-    assertThat(user2, is(nullValue()));
-  }
+        facility = make(a(FacilityBuilder.defaultFacility));
+        facilityMapper.insert(facility);
+        supervisoryNode.setFacility(facility);
 
-  @Test
-  public void shouldGetUsersWithGivenRightInNodeForProgram() {
-    User someUser = new User("someUserName", "somePassword");
-    userMapper.insert(someUser);
+        supervisoryNodeMapper.insert(supervisoryNode);
+    }
 
-    Program program = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
+    @Test
+    public void shouldGetUserByUserNameAndPassword() throws Exception {
+        User someUser = make(a(defaultUser, with(facilityId, facility.getId())));
+        userMapper.insert(someUser);
 
-    Role role = insertRole();
-    roleRightsMapper.createRoleRight(role.getId(), APPROVE_REQUISITION);
+        User user = userMapper.selectUserByUserNameAndPassword(defaultUserName, defaultPassword);
+        assertThat(user, is(notNullValue()));
+        assertThat(user.getUserName(), is(defaultUserName));
+        assertThat(user.getId(), is(someUser.getId()));
+        User user1 = userMapper.selectUserByUserNameAndPassword(defaultUserName, "wrongPassword");
+        assertThat(user1, is(nullValue()));
+        User user2 = userMapper.selectUserByUserNameAndPassword("wrongUserName", defaultPassword);
+        assertThat(user2, is(nullValue()));
+    }
 
+    @Test
+    public void shouldGetUsersWithGivenRightInNodeForProgram() {
+        User someUser = make(a(defaultUser, with(facilityId, facility.getId())));
+        userMapper.insert(someUser);
 
-    SupervisoryNode supervisoryNode = insertSupervisoryNode();
+        Program program = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
 
-    insertRoleAssignments(program, someUser, role, supervisoryNode);
+        Role role = insertRole();
+        roleRightsMapper.createRoleRight(role.getId(), APPROVE_REQUISITION);
 
-    final List<User> users = userMapper.getUsersWithRightInNodeForProgram(program.getId(), supervisoryNode.getId(), Right.APPROVE_REQUISITION);
-    assertThat(users.contains(someUser), is(true));
-  }
+        insertRoleAssignments(program, someUser, role, supervisoryNode);
 
-  private SupervisoryNode insertSupervisoryNode() {
-    SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
+        final List<User> users = userMapper.getUsersWithRightInNodeForProgram(program.getId(), supervisoryNode.getId(), Right.APPROVE_REQUISITION);
+        assertThat(users.contains(someUser), is(true));
+    }
 
-    Facility facility = make(a(FacilityBuilder.defaultFacility));
-    facilityMapper.insert(facility);
-    supervisoryNode.setFacility(facility);
+    @Test
+    public void shouldInsertAUser() throws Exception {
+        User user = make(a(defaultUser, with(facilityId, facility.getId())));
+        Integer userCount = userMapper.insert(user);
+        assertThat(userCount, is(1));
+        assertThat(user.getId(), is(notNullValue()));
+    }
 
-    supervisoryNodeMapper.insert(supervisoryNode);
-    return supervisoryNode;
-  }
+    private Program insertProgram(Program program) {
+        programMapper.insert(program);
+        return program;
+    }
 
-  private Program insertProgram(Program program) {
-    programMapper.insert(program);
-    return program;
-  }
+    private Role insertRole() {
+        Role r1 = new Role("r1", "random description");
+        roleRightsMapper.insertRole(r1);
+        return r1;
+    }
 
-  private Role insertRole() {
-    Role r1 = new Role("r1", "random description");
-    roleRightsMapper.insertRole(r1);
-    return r1;
-  }
-
-  private Role insertRoleAssignments(Program program, User user, Role role, SupervisoryNode supervisoryNode) {
-    roleAssignmentMapper.createRoleAssignment(user, role, program, supervisoryNode);
-    return role;
-  }
+    private Role insertRoleAssignments(Program program, User user, Role role, SupervisoryNode supervisoryNode) {
+        roleAssignmentMapper.createRoleAssignment(user, role, program, supervisoryNode);
+        return role;
+    }
 }

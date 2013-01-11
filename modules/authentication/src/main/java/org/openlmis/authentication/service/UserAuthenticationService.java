@@ -5,6 +5,7 @@ import org.openlmis.authentication.UserToken;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.repository.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.config.authentication.UserServiceBeanDefinitionParser;
 import org.springframework.stereotype.Service;
 
 import static org.openlmis.authentication.hash.Encoder.hash;

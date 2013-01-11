@@ -11,9 +11,10 @@ INSERT INTO role_rights
   ((select id from roles where name='district pharmacist'), 'MANAGE_FACILITY'),
   ((select id from roles where name='district pharmacist'), 'CONFIGURE_RNR');
 
+
 INSERT INTO users
-  (id, userName, password, facilityId) VALUES
-  (200, 'User123', 'Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==', (SELECT id FROM facilities WHERE code = 'F10'));
+  (id, userName, password, facilityId, firstName, lastName, email) VALUES
+  (200, 'User123', 'Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==', (SELECT id FROM facilities WHERE code = 'F10'), 'Jane', 'Doe', 'Jane_Doe@openlmis.com');
 
 INSERT INTO supervisory_nodes
   (parentId, facilityId, name, code) VALUES

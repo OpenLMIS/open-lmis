@@ -25,6 +25,8 @@ import static org.openlmis.core.builder.ProgramBuilder.programCode;
 import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
 import static org.openlmis.core.builder.SupervisoryNodeBuilder.SUPERVISORY_NODE_CODE;
 import static org.openlmis.core.builder.SupervisoryNodeBuilder.code;
+import static org.openlmis.core.builder.UserBuilder.defaultUser;
+import static org.openlmis.core.builder.UserBuilder.facilityId;
 import static org.openlmis.core.domain.Right.CONFIGURE_RNR;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 
@@ -138,7 +140,7 @@ public class SupervisoryNodeMapperIT {
   }
 
   private User insertUser() {
-    User user = new User("random123123", "pwd");
+    User user = make(a(defaultUser, with(facilityId, facility.getId())));
     userMapper.insert(user);
     return user;
   }
