@@ -28,7 +28,7 @@ public class OpenLmisResponse {
   }
 
   public static ResponseEntity<OpenLmisResponse> success(OpenLmisMessage openLmisMessage) {
-    return new ResponseEntity<>(new OpenLmisResponse(SUCCESS, getDisplayText(openLmisMessage)), HttpStatus.OK);
+    return new ResponseEntity<>(new OpenLmisResponse(SUCCESS, openLmisMessage.resolve(resourceBundle)), HttpStatus.OK);
   }
 
   public static ResponseEntity<OpenLmisResponse> error(String errorMsg, HttpStatus statusCode) {
@@ -36,7 +36,7 @@ public class OpenLmisResponse {
   }
 
   public static ResponseEntity<OpenLmisResponse> error(OpenLmisMessage openLmisMessage, HttpStatus httpStatus) {
-    return new ResponseEntity<>(new OpenLmisResponse(ERROR, getDisplayText(openLmisMessage)), httpStatus);
+    return new ResponseEntity<>(new OpenLmisResponse(ERROR, openLmisMessage.resolve(resourceBundle)), httpStatus);
   }
 
   public static ResponseEntity<OpenLmisResponse> response(String key, Object value) {
@@ -64,12 +64,4 @@ public class OpenLmisResponse {
     return (String) data.get(SUCCESS);
   }
 
-
-  private static String getDisplayText(OpenLmisMessage openLmisMessage) {
-    try {
-      return resourceBundle.getString(openLmisMessage.getCode());
-    } catch (MissingResourceException e) {
-      return openLmisMessage.getCode();
-    }
-  }
 }

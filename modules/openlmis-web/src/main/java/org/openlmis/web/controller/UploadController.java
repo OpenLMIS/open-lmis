@@ -1,6 +1,7 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.upload.exception.UploadException;
 import org.openlmis.upload.model.ModelClass;
 import org.openlmis.upload.parser.CSVParser;
@@ -18,7 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 @Controller
 @NoArgsConstructor
@@ -28,6 +31,9 @@ public class UploadController extends BaseController {
   private CSVParser csvParser;
   @Resource
   private Map<String, UploadBean> uploadBeansMap;
+
+  private static ResourceBundle resourceBundle = ResourceBundle.getBundle("messages", Locale.ENGLISH);
+
 
   String uploadPage = "redirect:/public/pages/admin/upload/index.html#/upload?";
 
@@ -50,13 +56,23 @@ public class UploadController extends BaseController {
 
       String modifiedBy = loggedInUser(request);
       int recordsUploaded = csvParser.process(csvFile.getInputStream(),
-          new ModelClass(uploadBeansMap.get(model).getImportableClass()),
-          uploadBeansMap.get(model).getRecordHandler(), modifiedBy);
+        new ModelClass(uploadBeansMap.get(model).getImportableClass()),
+        uploadBeansMap.get(model).getRecordHandler(), modifiedBy);
       return successPage(recordsUploaded, model);
-    } catch (UploadException | IOException e) {
+    } catch (UploadException uploadException) {
+      String messageForUploadException = getMessageForUploadException(uploadException);
+      return errorPage(messageForUploadException, model);
+    } catch (IOException e) {
       return errorPage(e.getMessage(), model);
     }
   }
+
+  private String getMessageForUploadException(UploadException uploadException) {
+    if(uploadException.getCode() == null) return  uploadException.getMessage();
+    OpenLmisMessage message = new OpenLmisMessage(uploadException.getCode(), uploadException.getParams());
+    return message.resolve(resourceBundle);
+  }
+
 
   @RequestMapping(value = "/supported-uploads", method = RequestMethod.GET, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('','UPLOADS')")

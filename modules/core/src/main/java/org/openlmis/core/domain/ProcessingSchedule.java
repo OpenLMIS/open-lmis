@@ -4,6 +4,7 @@ package org.openlmis.core.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.exception.DataException;
 
 import java.util.Date;
 
@@ -28,8 +29,8 @@ public class ProcessingSchedule {
     }
 
     public void validate() {
-        if (code == null || code.isEmpty()) throw new RuntimeException("Schedule can not be saved without its code.");
+        if (code == null || code.isEmpty()) throw new DataException("Schedule can not be saved without its code.");
         if (name == null || name.isEmpty())
-            throw new RuntimeException("Schedule can not be saved without its name.");
+            throw new DataException("Schedule can not be saved without its name.");
     }
 }

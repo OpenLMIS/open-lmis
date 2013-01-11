@@ -149,6 +149,15 @@
                         <property name="recordHandler" ref="supplyLineHandler"/>
                     </bean>
                 </entry>
+                <entry key="user">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Users"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.User</value>
+                        </property>
+                        <property name="recordHandler" ref="userPersistenceHandler"/>
+                    </bean>
+                </entry>
             </map>
         </constructor-arg>
     </bean>

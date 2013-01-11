@@ -73,7 +73,8 @@ public class UserMapperIT {
 
     @Test
     public void shouldGetUsersWithGivenRightInNodeForProgram() {
-        User someUser = make(a(defaultUser, with(facilityId, facility.getId())));
+        String nullString = null;
+        User someUser = make(a(defaultUser, with(facilityId, facility.getId()), with(supervisorUserName, nullString)));
         userMapper.insert(someUser);
 
         Program program = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
@@ -95,7 +96,16 @@ public class UserMapperIT {
         assertThat(user.getId(), is(notNullValue()));
     }
 
-    private Program insertProgram(Program program) {
+  @Test
+  public void shouldGetUserWithUserName() throws Exception {
+    String nullString = null;
+    User user = make(a(defaultUser, with(facilityId, facility.getId()), with(supervisorUserName, nullString)));
+    userMapper.insert(user);
+    User result = userMapper.get(user.getUserName());
+    assertThat(result, is(user));
+  }
+
+  private Program insertProgram(Program program) {
         programMapper.insert(program);
         return program;
     }
