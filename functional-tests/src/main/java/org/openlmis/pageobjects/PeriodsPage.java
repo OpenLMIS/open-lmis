@@ -10,6 +10,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
@@ -27,14 +28,17 @@ public class PeriodsPage extends Page {
     @FindBy(how = How.ID, using = "endDate")
     private static WebElement endDatePeriod;
 
-    @FindBy(how = How.XPATH, using = "//a[contains(text(),'21')]")
+    @FindBy(how = How.XPATH, using = "//a[contains(text(),'20')]")
     private static WebElement startDateCalender;
 
-    @FindBy(how = How.XPATH, using = "//a[contains(text(),'22')]")
+    @FindBy(how = How.XPATH, using = "//a[contains(text(),'21')]")
     private static WebElement endDateCalender;
 
-    @FindBy(how = How.XPATH, using = "//a[contains(text(),'25')]")
+    @FindBy(how = How.XPATH, using = "//a[contains(text(),'24')]")
     private static WebElement endDateSecondCalender;
+
+    @FindBy(how = How.XPATH, using = "//a[contains(text(),'26')]")
+    private static WebElement endDateThirdCalender;
 
     @FindBy(how = How.XPATH, using = "//span[@ng-show='calculateDays(newPeriod.startDate, newPeriod.endDate)+1']")
     private static WebElement totalDaysPeriods;
@@ -55,6 +59,9 @@ public class PeriodsPage extends Page {
     @FindBy(how = How.XPATH, using = "(//div[@class='row-fluid schedule-row ng-scope']/div[@class='span2 ng-binding'])[2]")
     private static WebElement startDateList;
 
+    @FindBy(how = How.XPATH, using = "(//div[@class='row-fluid schedule-row ng-scope']/div[@class='span2 ng-binding'])[3]")
+    private static WebElement endDateList;
+
 
     public PeriodsPage(TestWebDriver driver) throws IOException {
         super(driver);
@@ -67,7 +74,28 @@ public class PeriodsPage extends Page {
     public void createAndVerifyPeriods() throws IOException {
         testWebDriver.waitForElementToAppear(namePeriod);
         enterAndVerifyPeriodDetails("Period1", "first period", "1", "1", 1);
-        enterAndVerifyPeriodDetails("Period2", "second period", "2", "1", 0);
+        enterAndVerifyPeriodDetails("Period2", "second period", "2", "1", 2);
+        enterAndVerifyPeriodDetails("Period3", "third period", "1", "1", 3);
+    }
+
+    public void deleteAndVerifyPeriods() throws IOException {
+        testWebDriver.waitForElementToAppear(startDateList);
+        String actualStartDateListValue = startDateList.getText().trim();
+
+        int flag = compareDateWithToday(actualStartDateListValue);
+
+        if (flag == 1) {
+            SeleneseTestNgHelper.assertTrue("delete button is not getting displayed", deleteButton.isDisplayed());
+            deleteButton.click();
+            testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
+            SeleneseTestNgHelper.assertTrue("Period deleted successfully message is not getting displayed",saveSuccessMsgDiv.isDisplayed());
+            testWebDriver.waitForElementToAppear(endDateList);
+        }
+        String actualEndDateList=endDateList.getText().trim();
+        String actualStartDateCalender=testWebDriver.getAttribute(startDatePeriod,"value");
+        int diffInDays=compareTwoDates(actualStartDateCalender, actualEndDateList);
+        SeleneseTestNgHelper.assertEquals(String.valueOf(diffInDays),"1");
+
     }
 
 
@@ -84,11 +112,18 @@ public class PeriodsPage extends Page {
             endDatePeriod.click();
             testWebDriver.sleep(250);
             endDateCalender.click();
-        } else {
+        } else if(indicator == 2) {
             testWebDriver.sleep(250);
             endDatePeriod.click();
             testWebDriver.sleep(250);
             endDateSecondCalender.click();
+            testWebDriver.sleep(250);
+        }
+        else {
+            testWebDriver.sleep(250);
+            endDatePeriod.click();
+            testWebDriver.sleep(250);
+            endDateThirdCalender.click();
             testWebDriver.sleep(250);
         }
 
@@ -112,6 +147,27 @@ public class PeriodsPage extends Page {
             SeleneseTestNgHelper.assertTrue("delete button is not getting displayed", deleteButton.isDisplayed());
     }
 
+    public int compareTwoDates(String newerDateString, String olderDateString) {
+        int diffInDays=0;
+        try{
+
+            java.text.SimpleDateFormat sdf=new SimpleDateFormat("dd/MM/yyyy");
+            java.util.Date newerDate = sdf.parse(newerDateString);
+
+            java.util.Date olderDate = sdf.parse(olderDateString);
+
+            diffInDays = (int)( (newerDate.getTime() - olderDate.getTime())
+                    / (1000 * 60 * 60 * 24) );
+
+        }catch(java.text.ParseException e)
+        {
+             e.printStackTrace();
+        }
+        finally
+        {
+            return diffInDays;
+        }
+    }
 
     public int compareDateWithToday(String dateToCompare) {
 

@@ -38,6 +38,7 @@ public class E2EManageSchedule extends TestCaseHelper {
         manageSchedulePage.editAndVerifySchedule();
         PeriodsPage periodsPage=manageSchedulePage.navigatePeriods();
         periodsPage.createAndVerifyPeriods();
+        periodsPage.deleteAndVerifyPeriods();
         homePage.logout();
 
 
