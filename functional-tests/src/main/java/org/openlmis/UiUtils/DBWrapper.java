@@ -60,11 +60,13 @@ public class DBWrapper {
         boolean flag = false;
         DBWrapper dbwrapper = new DBWrapper();
 
-            //dbwrapper.dbConnection("delete from users where userName like('"+userName+"');", "alter");
+            dbwrapper.dbConnection("delete from users where userName like('"+userName+"');", "alter");
 
         dbwrapper.dbConnection("INSERT INTO users\n" +
-                "  (id, userName, password, facilityId) VALUES\n" +
-                "  ('"+userId+"', '"+userName+"', '"+password+"', null);", "alter");
+                "  (id, userName, password, facilityId, firstName, lastName, email) VALUES\n" +
+                "  ('"+userId+"', '"+userName+"', '"+password+"', (SELECT id FROM facilities WHERE code = 'F10'), 'Jane', 'Doe', 'Jane_Doe@openlmis.com');\n", "alter");
+
+
 
     }
 

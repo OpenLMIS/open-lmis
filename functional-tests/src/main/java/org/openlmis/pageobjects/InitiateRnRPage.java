@@ -87,7 +87,7 @@ public class InitiateRnRPage extends Page {
     @FindBy(how = How.XPATH, using = "//a[@class='rnr-adjustment']")
     private static WebElement addDescription;
 
-    @FindBy(how = How.XPATH, using = "//div[@id='lossesAndAdjustments']/div[@class='modal-body']/div[@class='adjustment-field']/select")
+    @FindBy(how = How.XPATH, using = "//div[@class='adjustment-field']/div[@class='row-fluid']/div[@class='span5']/select")
     private static WebElement lossesAndAdjustmentSelect;
 
 
@@ -106,7 +106,7 @@ public class InitiateRnRPage extends Page {
     @FindBy(how = How.XPATH, using = "//div[@class='adjustment-total clearfix alert alert-warning ng-binding']")
     private static WebElement totalAdj;
 
-    @FindBy(how = How.XPATH, using = "//a[contains(text(),'Done')]")
+    @FindBy(how = How.XPATH, using = "//input[@value='Done']")
     private static WebElement doneButton;
 
     @FindBy(how = How.XPATH, using = "//span[@class='alert alert-warning reason-request']")
