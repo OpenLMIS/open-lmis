@@ -84,7 +84,7 @@ public class InitiateRnRPage extends Page {
     private static WebElement totalStockOutDays;
 
 
-    @FindBy(how = How.XPATH, using = "//a[@class='rnr-adjustment']/span[@class='add-adjustment']")
+    @FindBy(how = How.XPATH, using = "//a[@class='rnr-adjustment']")
     private static WebElement addDescription;
 
     @FindBy(how = How.XPATH, using = "//div[@id='lossesAndAdjustments']/div[@class='modal-body']/div[@class='adjustment-field']/select")
