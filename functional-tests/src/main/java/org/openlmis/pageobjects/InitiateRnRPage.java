@@ -269,4 +269,8 @@ public class InitiateRnRPage extends Page {
     public void verifySubmitRnrErrorMsg(){
         SeleneseTestNgHelper.assertTrue("RnR Fail message not displayed", submitErrorMessage.isDisplayed());
     }
+
+    public void verifyBeginningBalanceDisabled(){
+        SeleneseTestNgHelper.assertFalse("BB Not disabled", beginningBalance.isEnabled());
+    }
 }

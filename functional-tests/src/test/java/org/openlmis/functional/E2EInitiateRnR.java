@@ -85,6 +85,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
         initiateRnRPage.submitRnR();
         initiateRnRPage.verifySubmitRnrSuccessMsg();
+        initiateRnRPage.verifyBeginningBalanceDisabled();
         homePageUser.logout();
 
     }
