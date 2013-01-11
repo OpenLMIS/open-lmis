@@ -191,10 +191,7 @@
                                           <div ng-class="highlightNestedFieldsWithError(rnrLineItem.rnrLineItem[column.name], 'quantity')">
                                               <a ng-click="showLossesAndAdjustmentModalForLineItem(rnrLineItem.rnrLineItem)"
                                                  class="rnr-adjustment">
-                                              <span class="add-adjustment"
-                                                    ng-hide="rnrLineItem.rnrLineItem.lossesAndAdjustments.length > 0">Add Adjustments</span>
-                                            <span class="adjustment-value"
-                                                  ng-show="rnrLineItem.rnrLineItem.lossesAndAdjustments.length > 0">
+                                            <span class="adjustment-value">
                                               {{rnrLineItem.rnrLineItem.totalLossesAndAdjustments}}</span>
                                               </a>
                                           </div>
