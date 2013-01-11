@@ -11,13 +11,13 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, $http) {
 
   $scope.createProgramRnrTemplate = function () {
     setRnRTemplateValidateFlag();
-    $http.post('/program/' + $scope.program.id + '/rnr-template.json', $scope.rnrColumns).success(function () {
+    $http.post('/program/' + $scope.program.id + '/rnr-template.json', $scope.rnrColumns).success(function (data) {
       $scope.message = "Template saved successfully!";
       $scope.error = "";
       $scope.errorMap = undefined;
     }).error(function (data) {
-        if (data.errorMap != null) {
-          $scope.errorMap = data.errorMap;
+        if (data != null) {
+          $scope.errorMap = data;
         }
         updateErrorMessage("Save Failed!");
       });

@@ -58,7 +58,7 @@ public class ProcessingScheduleController extends BaseController {
       ProcessingSchedule processingSchedule = processingScheduleService.get(id);
       return OpenLmisResponse.response(SCHEDULE, processingSchedule);
     } catch (DataException e){
-      return OpenLmisResponse.error(e.getMessage(), HttpStatus.NOT_FOUND);
+      return OpenLmisResponse.error(e.getOpenLmisMessage(), HttpStatus.NOT_FOUND);
     }
   }
 
@@ -69,7 +69,7 @@ public class ProcessingScheduleController extends BaseController {
       response.getBody().setData(SCHEDULE, savedSchedule);
       return response;
     } catch (DataException e) {
-      return OpenLmisResponse.error(e.getMessage(), HttpStatus.BAD_REQUEST);
+      return OpenLmisResponse.error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
     }
   }
 }

@@ -73,9 +73,9 @@ public class ProcessingPeriodRepositoryTest {
   @Test
   public void shouldNotInsertAPeriodWhichFailsValidation() throws Exception {
     ProcessingPeriod processingPeriod = mock(ProcessingPeriod.class);
-    doThrow(new RuntimeException("errorMsg")).when(processingPeriod).validate();
+    doThrow(new DataException("errorMsg")).when(processingPeriod).validate();
 
-    exException.expect(RuntimeException.class);
+    exException.expect(DataException.class);
     exException.expectMessage("errorMsg");
 
     repository.insert(processingPeriod);

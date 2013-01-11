@@ -49,7 +49,7 @@ public class RoleRightsController extends BaseController {
             roleRightsService.saveRole(role);
             return success("'" + role.getName() + "' created successfully");
         } catch (DataException e) {
-            return error(e.getMessage(), HttpStatus.CONFLICT);
+            return error(e.getOpenLmisMessage(), HttpStatus.CONFLICT);
         }
     }
 
@@ -76,7 +76,7 @@ public class RoleRightsController extends BaseController {
             role.setId(id);
             roleRightsService.updateRole(role);
         } catch (DataException e) {
-            return error(e.getMessage(), HttpStatus.CONFLICT);
+            return error(e.getOpenLmisMessage(), HttpStatus.CONFLICT);
         }
         return new ResponseEntity<>(new OpenLmisResponse(SUCCESS, "Role updated successfully"), HttpStatus.OK);
     }

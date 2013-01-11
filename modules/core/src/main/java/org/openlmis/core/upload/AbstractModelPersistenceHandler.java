@@ -12,15 +12,15 @@ public abstract class AbstractModelPersistenceHandler implements RecordHandler<I
 
   @Override
   public void execute(Importable importable, int rowNumber, String modifiedBy) {
+    final String rowNumberAsString = Integer.toString(rowNumber- 1);
     try {
       save(importable, modifiedBy);
     } catch (DataIntegrityViolationException dataIntegrityViolationException) {
-      throw new DataException(String.format("%s in Record No. %d", "Incorrect data length", rowNumber - 1));
+      throw new DataException(new OpenLmisMessage("upload.record.error", "Incorrect data length", rowNumberAsString));
     } catch (DataException exception) {
       if(exception.getOpenLmisMessage()!= null){
-        throw new DataException(new OpenLmisMessage("upload.record.error", exception.getOpenLmisMessage().getCode(), Integer.toString(rowNumber -1)));
+        throw new DataException(new OpenLmisMessage("upload.record.error", exception.getOpenLmisMessage().getCode(), rowNumberAsString));
       }
-      throw new DataException(new OpenLmisMessage("upload.record.error", exception.getMessage(), Integer.toString(rowNumber - 1)));
     }
   }
 

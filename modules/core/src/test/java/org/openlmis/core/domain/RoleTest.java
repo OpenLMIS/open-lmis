@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.openlmis.core.exception.DataException;
 
 import java.util.ArrayList;
 
@@ -24,7 +25,7 @@ public class RoleTest {
 
     @Test
     public void shouldGiveErrorIfRoleDoesNotHaveAnyRights() throws Exception {
-        expectedEx.expect(RuntimeException.class);
+        expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Role can not be created without any rights assigned to it.");
         role.validate();
     }
@@ -32,7 +33,7 @@ public class RoleTest {
     @Test
     public void shouldGiveErrorIfRoleHasEmptyRightsList() {
         role.setRights(new ArrayList<Right>());
-        expectedEx.expect(RuntimeException.class);
+        expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Role can not be created without any rights assigned to it.");
         role.validate();
     }
@@ -42,12 +43,12 @@ public class RoleTest {
     public void shouldGiveErrorIfRoleDoesNotHaveAnyName() throws Exception {
         Role role = new Role("", " description");
         role.setRights(asList(CREATE_REQUISITION));
-        expectedEx.expect(RuntimeException.class);
+        expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Role can not be created without name.");
         role.validate();
 
         role.setName(null);
-        expectedEx.expect(RuntimeException.class);
+        expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Role can not be created without name.");
         role.validate();
     }

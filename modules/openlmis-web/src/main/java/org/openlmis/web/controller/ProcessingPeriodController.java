@@ -45,7 +45,7 @@ public class ProcessingPeriodController extends BaseController {
     try {
       processingScheduleService.savePeriod(processingPeriod);
     } catch (DataException e) {
-      return OpenLmisResponse.error(e.getMessage(), HttpStatus.BAD_REQUEST);
+      return OpenLmisResponse.error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
     }
     ResponseEntity<OpenLmisResponse> successResponse =  OpenLmisResponse.success("Period added successfully");
     successResponse.getBody().setData("id", processingPeriod.getId());
@@ -58,7 +58,7 @@ public class ProcessingPeriodController extends BaseController {
     try {
       processingScheduleService.deletePeriod(id);
     } catch (DataException e) {
-      return OpenLmisResponse.error(e.getMessage(), HttpStatus.BAD_REQUEST);
+      return OpenLmisResponse.error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
     }
     return OpenLmisResponse.success("Period deleted successfully");
   }

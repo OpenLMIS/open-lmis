@@ -10,8 +10,8 @@ public class DataException extends RuntimeException {
   private OpenLmisMessage openLmisMessage;
 
 
-  public DataException(String message) {
-    super(message);
+  public DataException(String code) {
+    openLmisMessage = new OpenLmisMessage(code);
   }
 
   public DataException(OpenLmisMessage openLmisMessage) {
@@ -21,7 +21,6 @@ public class DataException extends RuntimeException {
   @Deprecated
   @Override
   public String getMessage() {
-    if (openLmisMessage == null) return super.getMessage();
     return openLmisMessage.toString();
   }
 }

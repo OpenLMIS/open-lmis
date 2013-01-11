@@ -23,16 +23,16 @@ public class OpenLmisResponse {
     setData(key, data);
   }
 
-  public static ResponseEntity<OpenLmisResponse> success(String successMsg) {
-    return new ResponseEntity<>(new OpenLmisResponse(SUCCESS, successMsg), HttpStatus.OK);
+  public static ResponseEntity<OpenLmisResponse> success(String successMsgCode) {
+    return new ResponseEntity<>(new OpenLmisResponse(SUCCESS, new OpenLmisMessage(successMsgCode).resolve(resourceBundle)), HttpStatus.OK);
   }
 
   public static ResponseEntity<OpenLmisResponse> success(OpenLmisMessage openLmisMessage) {
     return new ResponseEntity<>(new OpenLmisResponse(SUCCESS, openLmisMessage.resolve(resourceBundle)), HttpStatus.OK);
   }
 
-  public static ResponseEntity<OpenLmisResponse> error(String errorMsg, HttpStatus statusCode) {
-    return new ResponseEntity<>(new OpenLmisResponse(ERROR, errorMsg), statusCode);
+  public static ResponseEntity<OpenLmisResponse> error(String errorMsgCode, HttpStatus statusCode) {
+    return new ResponseEntity<>(new OpenLmisResponse(ERROR, new OpenLmisMessage(errorMsgCode).resolve(resourceBundle)), statusCode);
   }
 
   public static ResponseEntity<OpenLmisResponse> error(OpenLmisMessage openLmisMessage, HttpStatus httpStatus) {
@@ -41,6 +41,12 @@ public class OpenLmisResponse {
 
   public static ResponseEntity<OpenLmisResponse> response(String key, Object value) {
     return new ResponseEntity<>(new OpenLmisResponse(key, value), HttpStatus.OK);
+  }
+
+  public static ResponseEntity<OpenLmisResponse> error(Map<String, OpenLmisMessage> errors, HttpStatus status) {
+    OpenLmisResponse response = new OpenLmisResponse();
+    response.setErrorMap(errors);
+    return new ResponseEntity<>(response, status);
   }
 
   @JsonAnyGetter
@@ -64,4 +70,9 @@ public class OpenLmisResponse {
     return (String) data.get(SUCCESS);
   }
 
+  private void setErrorMap(Map<String, OpenLmisMessage> errors) {
+    for (String key : errors.keySet()) {
+      setData(key, errors.get(key).resolve(resourceBundle));
+    }
+  }
 }

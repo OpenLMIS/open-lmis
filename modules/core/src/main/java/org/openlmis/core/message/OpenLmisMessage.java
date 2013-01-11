@@ -30,6 +30,8 @@ public class OpenLmisMessage {
 
   @Override
   public String toString(){
+    if(params.length == 0) return code;
+
     StringBuilder messageBuilder = new StringBuilder("code: "+code+ ", params: { ");
     for(String param : params){
       messageBuilder.append("; ").append(param);

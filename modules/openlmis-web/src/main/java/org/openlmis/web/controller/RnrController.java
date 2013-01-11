@@ -41,7 +41,7 @@ public class RnrController extends BaseController {
     try {
       return OpenLmisResponse.response(RNR, rnrService.initRnr(facilityId, programId, loggedInUserId(request)));
     } catch (DataException e) {
-      return OpenLmisResponse.error(e.getMessage(), HttpStatus.BAD_REQUEST);
+      return OpenLmisResponse.error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
     }
   }
 

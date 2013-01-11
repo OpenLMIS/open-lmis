@@ -1,6 +1,7 @@
 package org.openlmis.rnr.service;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.rnr.domain.ProgramRnrTemplate;
 import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
@@ -28,8 +29,8 @@ public class RnrTemplateService {
     }
 
 
-    public Map<String, String> saveRnRTemplateForProgram(ProgramRnrTemplate programTemplate) {
-        Map<String, String> errors =(programTemplate.validate());
+    public Map<String, OpenLmisMessage> saveRnRTemplateForProgram(ProgramRnrTemplate programTemplate) {
+        Map<String, OpenLmisMessage> errors =programTemplate.validateToSave();
 
         if (!(errors.isEmpty())) {
             return errors;

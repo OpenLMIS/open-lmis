@@ -60,7 +60,6 @@ public class UploadController extends BaseController {
         uploadBeansMap.get(model).getRecordHandler(), modifiedBy);
       return successPage(recordsUploaded, model);
     } catch (DataException dataException) {
-      if(dataException.getOpenLmisMessage() == null) return errorPage(dataException.getMessage(), model);
       return errorPage(dataException.getOpenLmisMessage().resolve(resourceBundle), model);
     } catch (UploadException | IOException e) {
       return errorPage(e.getMessage(), model);

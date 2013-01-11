@@ -5,6 +5,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
+import org.openlmis.core.exception.DataException;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -33,7 +34,7 @@ public class ProcessingPeriodTest {
     ProcessingPeriod processingPeriod = make(a(org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod));
     processingPeriod.setName(null);
 
-    exException.expect(RuntimeException.class);
+    exException.expect(DataException.class);
     exException.expectMessage("Period can not be saved without its Name.");
     processingPeriod.validate();
   }
@@ -43,7 +44,7 @@ public class ProcessingPeriodTest {
     ProcessingPeriod processingPeriod = make(a(org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod));
     processingPeriod.setScheduleId(null);
 
-    exException.expect(RuntimeException.class);
+    exException.expect(DataException.class);
     exException.expectMessage("Period can not be saved without its parent Schedule");
     processingPeriod.validate();
   }
@@ -53,7 +54,7 @@ public class ProcessingPeriodTest {
     ProcessingPeriod processingPeriod = make(a(org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod));
     processingPeriod.setStartDate(null);
 
-    exException.expect(RuntimeException.class);
+    exException.expect(DataException.class);
     exException.expectMessage("Period can not be saved without its Start Date.");
     processingPeriod.validate();
   }
@@ -63,7 +64,7 @@ public class ProcessingPeriodTest {
     ProcessingPeriod processingPeriod = make(a(org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod));
     processingPeriod.setEndDate(null);
 
-    exException.expect(RuntimeException.class);
+    exException.expect(DataException.class);
     exException.expectMessage("Period can not be saved without its End Date.");
     processingPeriod.validate();
   }
@@ -73,7 +74,7 @@ public class ProcessingPeriodTest {
     ProcessingPeriod processingPeriod = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod));
     processingPeriod.setStartDate(oneMonthPast(processingPeriod.getEndDate()));
 
-    exException.expect(RuntimeException.class);
+    exException.expect(DataException.class);
     exException.expectMessage("Period End Date can not be earlier than Start Date.");
     processingPeriod.validate();
   }

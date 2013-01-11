@@ -3,6 +3,7 @@ package org.openlmis.core.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.exception.DataException;
 
 import java.util.Date;
 import java.util.List;
@@ -28,8 +29,8 @@ public class
   }
 
   public void validate() {
-    if (name == null || name.isEmpty()) throw new RuntimeException("Role can not be created without name.");
+    if (name == null || name.isEmpty()) throw new DataException("Role can not be created without name.");
     if (rights == null || rights.isEmpty())
-      throw new RuntimeException("Role can not be created without any rights assigned to it.");
+      throw new DataException("Role can not be created without any rights assigned to it.");
   }
 }

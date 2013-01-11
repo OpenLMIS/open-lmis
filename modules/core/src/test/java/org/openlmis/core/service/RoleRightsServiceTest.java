@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.Role;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.RoleAssignmentRepository;
 import org.openlmis.core.repository.RoleRightsRepository;
 
@@ -60,8 +61,8 @@ public class RoleRightsServiceTest {
     @Test
     public void shouldNotSaveRoleWithoutAnyRights() throws Exception {
         Role role = mock(Role.class);
-        doThrow(new RuntimeException("error-message")).when(role).validate();
-        expectedEx.expect(RuntimeException.class);
+        doThrow(new DataException("error-message")).when(role).validate();
+        expectedEx.expect(DataException.class);
         expectedEx.expectMessage("error-message");
         roleRightsService.saveRole(role);
         verify(roleRightsRepository, never()).saveRole(role);

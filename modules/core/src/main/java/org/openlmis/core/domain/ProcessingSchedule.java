@@ -12,25 +12,30 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProcessingSchedule {
-    private Integer id;
+  private Integer id;
 
-    private String code;
-    private String name;
-    private String description;
-    private Integer modifiedBy;
-    private Date modifiedDate;
+  private String code;
+  private String name;
+  private String description;
+  private Integer modifiedBy;
+  private Date modifiedDate;
+  public static final String SCHEDULE_WITHOUT_CODE = "schedule.without.code";
+  public static final String SCHEDULE_WITHOUT_NAME = "schedule.without.name";
 
-    public ProcessingSchedule(String code, String name) {
-        this(code, name, null);
+  public ProcessingSchedule(String code, String name) {
+    this(code, name, null);
+  }
+
+  public ProcessingSchedule(String code, String name, String description) {
+    this(null, code, name, description, null, null);
+  }
+
+  public void validate() {
+    if (code == null || code.isEmpty()) {
+      throw new DataException(SCHEDULE_WITHOUT_CODE);
     }
-
-    public ProcessingSchedule(String code, String name, String description){
-        this(null, code, name, description, null, null);
+    if (name == null || name.isEmpty()) {
+      throw new DataException(SCHEDULE_WITHOUT_NAME);
     }
-
-    public void validate() {
-        if (code == null || code.isEmpty()) throw new DataException("Schedule can not be saved without its code.");
-        if (name == null || name.isEmpty())
-            throw new DataException("Schedule can not be saved without its name.");
-    }
+  }
 }

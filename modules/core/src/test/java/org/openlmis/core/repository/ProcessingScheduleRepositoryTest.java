@@ -58,8 +58,8 @@ public class ProcessingScheduleRepositoryTest {
   @Test
   public void shouldNotSaveScheduleWithoutItsCode() throws Exception {
     ProcessingSchedule processingSchedule = new ProcessingSchedule();
-    expectedEx.expect(RuntimeException.class);
-    expectedEx.expectMessage("Schedule can not be saved without its code.");
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("schedule.without.code");
     repository.create(processingSchedule);
   }
 
@@ -67,8 +67,8 @@ public class ProcessingScheduleRepositoryTest {
   public void shouldNotSaveScheduleWithoutItsName() throws Exception {
     ProcessingSchedule processingSchedule = new ProcessingSchedule();
     processingSchedule.setCode("testCode");
-    expectedEx.expect(RuntimeException.class);
-    expectedEx.expectMessage("Schedule can not be saved without its name.");
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("schedule.without.name");
     repository.create(processingSchedule);
   }
 
@@ -90,8 +90,8 @@ public class ProcessingScheduleRepositoryTest {
   @Test
   public void shouldNotUpdateScheduleWithoutItsCode() throws Exception {
     ProcessingSchedule processingSchedule = new ProcessingSchedule();
-    expectedEx.expect(RuntimeException.class);
-    expectedEx.expectMessage("Schedule can not be saved without its code.");
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("schedule.without.code");
     repository.update(processingSchedule);
   }
 
@@ -99,8 +99,8 @@ public class ProcessingScheduleRepositoryTest {
   public void shouldNotUpdateScheduleWithoutItsName() throws Exception {
     ProcessingSchedule processingSchedule = new ProcessingSchedule();
     processingSchedule.setCode("testCode");
-    expectedEx.expect(RuntimeException.class);
-    expectedEx.expectMessage("Schedule can not be saved without its name.");
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("schedule.without.name");
     repository.update(processingSchedule);
   }
 

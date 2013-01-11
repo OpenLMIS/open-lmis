@@ -100,9 +100,9 @@ public class ProcessingScheduleServiceTest {
   @Test
   public void shouldThrowErrorWhenTryingToSaveAScheduleWithNoCode() {
     ProcessingSchedule processingSchedule = new ProcessingSchedule();
-    doThrow(new RuntimeException("Schedule can not be saved without its code.")).when(repository).create(processingSchedule);
+    doThrow(new DataException("Schedule can not be saved without its code.")).when(repository).create(processingSchedule);
 
-    exException.expect(RuntimeException.class);
+    exException.expect(DataException.class);
     exException.expectMessage("Schedule can not be saved without its code.");
 
     service.save(processingSchedule);
@@ -113,9 +113,9 @@ public class ProcessingScheduleServiceTest {
   public void shouldThrowErrorWhenTryingToSaveAScheduleWithNoName() {
     ProcessingSchedule processingSchedule = new ProcessingSchedule();
     processingSchedule.setCode("testCode");
-    doThrow(new RuntimeException("Schedule can not be saved without its name.")).when(repository).create(processingSchedule);
+    doThrow(new DataException("Schedule can not be saved without its name.")).when(repository).create(processingSchedule);
 
-    exException.expect(RuntimeException.class);
+    exException.expect(DataException.class);
     exException.expectMessage("Schedule can not be saved without its name.");
 
     service.save(processingSchedule);
