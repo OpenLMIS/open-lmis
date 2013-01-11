@@ -17,7 +17,7 @@ var rnrModule = angular.module('rnr', ['openlmis']).config(['$routeProvider', fu
                         return viewValue;
                     } else {
                         ctrl.$setValidity(element.attr('name'), false);
-                        ctrl.$setValidity('rnrError', false);
+                        if(!attrs['preventRnrError']) ctrl.$setValidity('rnrError', false);
                         return undefined;
                     }
                 });

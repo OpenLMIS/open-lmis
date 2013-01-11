@@ -115,7 +115,7 @@
                                                            <input ng-disabled="disableFormForSubmittedRnr()" type="text"
                                                                   name="quantity{{rnrLineItem.rnrLineItem.id}}"
                                                                   ng-model="lossAndAdjustment.quantity"
-                                                                  rnr-validator="positiveInteger" maxlength="8"
+                                                                  rnr-validator="positiveInteger" prevent-rnr-error="true" maxlength="8"
                                                                   placeholder="Quantity"/>
 
                                                            <div class="rnr-form-error"
@@ -148,8 +148,7 @@
                                                         ng-click="removeLossAndAdjustment(rnrLineItem,oneLossAndAdjustment)">&times;</a>
                                                    </span>
                                                    <span class="tpl-adjustment-qty">
-                                                     <input ng-required="true"
-                                                            ng-disabled="disableFormForSubmittedRnr()"
+                                                     <input ng-disabled="disableFormForSubmittedRnr()"
                                                             id="{{getId('D', $parent, true)}}"
                                                             name="{{oneLossAndAdjustment.type.displayOrder}}"
                                                             type="text"
