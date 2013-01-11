@@ -37,7 +37,8 @@
                                      </span>
                            <span class="row-specific-error" ng-show="rnrLineItem.getErrorMessage(programRnRColumnList)" style="background: red;">
                             {{rnrLineItem.getErrorMessage(programRnRColumnList)}}
-                                   </span>
+                            <span class="beak-down"></span>
+                           </span >
                          </span>
 
                          <span ng-switch-when = "quantityReceived" ng-class="getCellErrorClass(rnrLineItem, programRnRColumnList)" >
@@ -53,7 +54,8 @@
                                        </span>
                             <span class="row-specific-error" ng-show="rnrLineItem.getErrorMessage(programRnRColumnList)" style="background: red;">
                             {{rnrLineItem.getErrorMessage(programRnRColumnList)}}
-                                   </span>
+                            <span class="beak-down"></span>
+                           </span >
                          </span >
 
                          <span ng-switch-when = "quantityDispensed" ng-class="getCellErrorClass(rnrLineItem, programRnRColumnList)" >
@@ -70,7 +72,8 @@
                                      </span>
                             <span class="row-specific-error" ng-show="rnrLineItem.getErrorMessage(programRnRColumnList)" style="background: red;">
                             {{rnrLineItem.getErrorMessage(programRnRColumnList)}}
-                                   </span>
+                            <span class="beak-down"></span>
+                           </span >
                          </span >
 
                                    <span ng-switch-when="lossesAndAdjustments">
@@ -125,15 +128,13 @@
                                          <div class="adjustment-total clearfix alert alert-warning" ng-show="rnrLineItem.rnrLineItem.lossesAndAdjustments.length > 0">
                                            <span class="pull-left">Total</span> {{rnrLineItem.rnrLineItem.totalLossesAndAdjustments}}
                                          </div>
-
                                        </div>
                                        <div class="modal-footer">
                                            <a class="btn btn-success save-button" ng-click="rnrLineItem.fill(rnr, programRnRColumnList)" data-dismiss="modal">Done</a>
                                        </div>
                                    </div>
                                       <a ng-click="showLossesAndAdjustmentModalForLineItem(rnrLineItem.rnrLineItem)" class="rnr-adjustment">
-                                        <span class="add-adjustment" ng-hide="rnrLineItem.rnrLineItem.lossesAndAdjustments.length > 0">Add Adjustments</span>
-                                        <span class="adjustment-value" ng-show="rnrLineItem.rnrLineItem.lossesAndAdjustments.length > 0">
+                                        <span class="adjustment-value">
                                           {{rnrLineItem.rnrLineItem.totalLossesAndAdjustments}}</span>
                                       </a>
                                    </span>
@@ -152,7 +153,8 @@
                                      </span>
                             <span class="row-specific-error" ng-show="rnrLineItem.getErrorMessage(programRnRColumnList)" style="background: red;">
                             {{rnrLineItem.getErrorMessage(programRnRColumnList)}}
-                                   </span>
+                            <span class="beak-down"></span>
+                           </span >
                          </span >
 
                                    <span ng-switch-when="newPatientCount">
@@ -228,6 +230,7 @@
                           </span >
                            <span class="row-specific-error" ng-show="rnrLineItem.getErrorMessage(programRnRColumnList)" style="background: red;">
                             {{rnrLineItem.getErrorMessage(programRnRColumnList)}}
+                            <span class="beak-down"></span>
                            </span >
                         </span>
                                    <span ng-switch-when="price">
@@ -253,17 +256,6 @@
                            </span>
                        </ng-switch>
                    </td>
-                   <td>
-                    <span class="alert alert-warning reason-request" ng-show="rnrLineItem.rnrLineItem['stockInHand']<0">
-                                           Stock On Hand is calculated to be negative , Please validate entries
-                                        </span>
-                                        <span class="alert alert-warning reason-request" ng-show="rnrLineItem.rnrLineItem['quantityDispensed']<0">
-                                            Total Quantity Consumed is calculated to be negative , Please validate entries
-                                        </span>
-                       <span class="alert alert-warning reason-request" ng-show="rnrLineItem.arithmeticallyInvalid(programRnRColumnList)">
-                                            The entries are arithmetically invalid , Please recheck
-                                        </span>
-                    </td>
                </tr>
 
                </tbody>

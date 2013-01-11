@@ -577,6 +577,7 @@ h3 {
   padding: 0 6px;
   text-align: right;
   line-height: 28px;
+  background: url(../images/edit-icon.png) no-repeat 8px center;
   .add-adjustment {
     font-size: 0.85em;
   }
@@ -745,3 +746,59 @@ table td.delete-button {
   text-align: center;
 }
 
+.cell-error-highlight {
+  position: relative;
+  display: block;
+  background: #FFEFEF;
+  color: #CF2323;
+  input[type='text'] {
+    background-color: transparent !important;
+    border: 1px solid #E22B2B;
+    color: #CF2323;
+    &:focus {
+      box-shadow: none;
+      border: 1px solid #E22B2B;
+    }
+  }
+  &:hover {
+    .row-specific-error {
+    display: block !important;
+    }
+  }
+}
+
+.row-error-highlight {
+  td {
+    border-top: 2px solid #E28E8E;
+    border-bottom: 2px solid #E28E8E;
+    background-color: #FCDFDF !important;
+  }
+}
+
+.row-specific-error {
+  position: absolute;
+  left: 50%;
+  bottom: 42px;
+  width: 134px;
+  margin-left: -82px;
+  background: #FFF !important;
+  font-size: 0.8em;
+  color: #CF2323;
+  border: 2px solid #E43D3D;
+  padding: 7px 11px;
+  line-height: 13px;
+  border-radius: 6px;
+  z-index: 10;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+  display: none;
+  .beak-down {
+    width: 0; 
+    height: 0;
+    border-left: 8px solid transparent; 
+    border-right: 8px solid transparent;
+    border-top: 8px solid #E22F2F;
+    position: absolute;
+    bottom: -9px;
+    left: 46%;
+  }
+}
