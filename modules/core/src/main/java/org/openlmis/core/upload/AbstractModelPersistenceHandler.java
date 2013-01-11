@@ -4,7 +4,6 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.RecordHandler;
-import org.openlmis.upload.exception.UploadException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
@@ -16,12 +15,12 @@ public abstract class AbstractModelPersistenceHandler implements RecordHandler<I
     try {
       save(importable, modifiedBy);
     } catch (DataIntegrityViolationException dataIntegrityViolationException) {
-      throw new UploadException(String.format("%s in Record No. %d", "Incorrect data length", rowNumber - 1));
+      throw new DataException(String.format("%s in Record No. %d", "Incorrect data length", rowNumber - 1));
     } catch (DataException exception) {
       if(exception.getOpenLmisMessage()!= null){
-        throw new UploadException("upload.record.error", exception.getOpenLmisMessage().getCode(), Integer.toString(rowNumber -1));
+        throw new DataException(new OpenLmisMessage("upload.record.error", exception.getOpenLmisMessage().getCode(), Integer.toString(rowNumber -1)));
       }
-      throw new UploadException("upload.record.error", exception.getMessage(), Integer.toString(rowNumber -1));
+      throw new DataException(new OpenLmisMessage("upload.record.error", exception.getMessage(), Integer.toString(rowNumber - 1)));
     }
   }
 

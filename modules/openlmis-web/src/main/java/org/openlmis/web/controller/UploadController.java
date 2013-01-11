@@ -1,7 +1,7 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.message.OpenLmisMessage;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.exception.UploadException;
 import org.openlmis.upload.model.ModelClass;
 import org.openlmis.upload.parser.CSVParser;
@@ -59,20 +59,13 @@ public class UploadController extends BaseController {
         new ModelClass(uploadBeansMap.get(model).getImportableClass()),
         uploadBeansMap.get(model).getRecordHandler(), modifiedBy);
       return successPage(recordsUploaded, model);
-    } catch (UploadException uploadException) {
-      String messageForUploadException = getMessageForUploadException(uploadException);
-      return errorPage(messageForUploadException, model);
-    } catch (IOException e) {
+    } catch (DataException dataException) {
+      if(dataException.getOpenLmisMessage() == null) return errorPage(dataException.getMessage(), model);
+      return errorPage(dataException.getOpenLmisMessage().resolve(resourceBundle), model);
+    } catch (UploadException | IOException e) {
       return errorPage(e.getMessage(), model);
     }
   }
-
-  private String getMessageForUploadException(UploadException uploadException) {
-    if(uploadException.getCode() == null) return  uploadException.getMessage();
-    OpenLmisMessage message = new OpenLmisMessage(uploadException.getCode(), uploadException.getParams());
-    return message.resolve(resourceBundle);
-  }
-
 
   @RequestMapping(value = "/supported-uploads", method = RequestMethod.GET, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('','UPLOADS')")

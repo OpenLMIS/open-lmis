@@ -11,7 +11,7 @@ import java.util.ResourceBundle;
 public class OpenLmisMessage {
 
   private String code;
-  private Object[] params = new Object[0];
+  private String[] params = new String[0];
 
   public OpenLmisMessage(String code) {
     this.code = code;
@@ -23,29 +23,34 @@ public class OpenLmisMessage {
   }
 
   public String resolve(ResourceBundle bundle) {
-
-    String message = getDisplayText(bundle);
+    String message = getDisplayText(code, bundle);
     List<String> paramList = resolveParams(bundle);
     return String.format(message, paramList.toArray());
   }
 
+  @Override
+  public String toString(){
+    StringBuilder messageBuilder = new StringBuilder("code: "+code+ ", params: { ");
+    for(String param : params){
+      messageBuilder.append("; ").append(param);
+    }
+    messageBuilder.append(" }");
+    return messageBuilder.toString().replaceFirst("; ","");
+  }
+
   private List<String> resolveParams(ResourceBundle bundle) {
     List<String> paramList = new ArrayList<>();
-    for (Object code : params) {
+    for (String code : params) {
       paramList.add(getDisplayText(code, bundle));
     }
     return paramList;
   }
 
-  private String getDisplayText(Object code, ResourceBundle bundle) {
+  private String getDisplayText(String code, ResourceBundle bundle) {
     try {
-      return bundle.getString(code.toString());
+      return bundle.getString(code);
     } catch (MissingResourceException e) {
-      return code.toString();
+      return code;
     }
-  }
-
-  public String getDisplayText(ResourceBundle bundle) {
-   return getDisplayText(code, bundle);
   }
 }

@@ -18,9 +18,10 @@ public class DataException extends RuntimeException {
     this.openLmisMessage = openLmisMessage;
   }
 
+  @Deprecated
   @Override
   public String getMessage() {
-    if (openLmisMessage != null) return openLmisMessage.getCode();
-    return super.getMessage();
+    if (openLmisMessage == null) return super.getMessage();
+    return openLmisMessage.toString();
   }
 }

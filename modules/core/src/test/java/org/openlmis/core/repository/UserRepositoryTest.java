@@ -19,9 +19,7 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.*;
@@ -75,7 +73,7 @@ public class UserRepositoryTest {
   public void shouldThrowExceptionAndNotInsertUserOnDuplicateEmployeeId() throws Exception {
     User user = make(a(UserBuilder.defaultUser));
     when(userMapper.get(user.getSupervisor().getUserName())).thenReturn(mock(User.class));
-    doThrow(new DuplicateKeyException("Column employeeId")).when(userMapper).insert(user);
+    doThrow(new DuplicateKeyException("Key (employeeId)")).when(userMapper).insert(user);
 
     exException.expect(DataException.class);
     exException.expectMessage(DUPLICATE_EMPLOYEE_ID_FOUND);
@@ -87,7 +85,7 @@ public class UserRepositoryTest {
   public void shouldThrowExceptionAndNotInsertUserOnDuplicateEmail() throws Exception {
     User user = make(a(UserBuilder.defaultUser));
     when(userMapper.get(user.getSupervisor().getUserName())).thenReturn(mock(User.class));
-    doThrow(new DuplicateKeyException("Column emailId")).when(userMapper).insert(user);
+    doThrow(new DuplicateKeyException("Key (email) ")).when(userMapper).insert(user);
 
     exException.expect(DataException.class);
     exException.expectMessage(DUPLICATE_EMAIL_FOUND);
@@ -99,7 +97,7 @@ public class UserRepositoryTest {
   public void shouldThrowExceptionAndNotInsertUserOnDuplicateUserName() throws Exception {
     User user = make(a(UserBuilder.defaultUser));
     when(userMapper.get(user.getSupervisor().getUserName())).thenReturn(mock(User.class));
-    doThrow(new DuplicateKeyException("Column userName")).when(userMapper).insert(user);
+    doThrow(new DuplicateKeyException("Key (userName)")).when(userMapper).insert(user);
 
     exException.expect(DataException.class);
     exException.expectMessage(DUPLICATE_USER_NAME_FOUND);

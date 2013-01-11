@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
-import org.openlmis.upload.exception.UploadException;
 
 import static org.mockito.Mockito.mock;
 
@@ -23,7 +22,7 @@ public class AbstractModelPersistenceHandlerTest {
     };
 
     Importable importable = mock(Importable.class);
-    expectedEx.expect(UploadException.class);
+    expectedEx.expect(DataException.class);
     expectedEx.expectMessage("code: upload.record.error, params: { error; 1 }");
 
     handler.execute(importable, 2, "user");

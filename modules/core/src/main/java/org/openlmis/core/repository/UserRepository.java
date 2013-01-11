@@ -38,12 +38,12 @@ public class UserRepository {
     try {
       userMapper.insert(user);
     }catch (DuplicateKeyException e){
-      final String message = e.getMessage();
-      if(message.contains("employeeId"))
+      String message = e.getMessage().toLowerCase();
+      if(message.contains("Key (employeeId)".toLowerCase()))
       throw  new DataException(new OpenLmisMessage(DUPLICATE_EMPLOYEE_ID_FOUND));
-      if(message.contains("email"))
+      if(message.contains("Key (email)".toLowerCase()))
         throw  new DataException(new OpenLmisMessage(DUPLICATE_EMAIL_FOUND));
-      if(message.contains("userName"))
+      if(message.contains("Key (userName)".toLowerCase()))
         throw  new DataException(new OpenLmisMessage(DUPLICATE_USER_NAME_FOUND));
     }
   }
