@@ -100,36 +100,54 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     return valid;
   }
 
-  $scope.submitRnr = function () {
-    if ($scope.saveRnrForm.$error.rnrError) {
-      $scope.submitError = "Please correct the errors on the R&R form before submitting";
-      $scope.submitMessage = "";
-      return;
-    }
+    function valid() {
+            if ($scope.saveRnrForm.$error.rnrError) {
+                $scope.submitError = "Please correct the errors on the R&R form before submitting";
+                $scope.submitMessage = "";
+                return false;
+            }
 
-    if ($scope.saveRnrForm.$error.required) {
-      $scope.saveRnr();
-      $scope.inputClass = "required";
-      $scope.submitMessage = "";
-      $scope.submitError = 'Please complete the highlighted fields on the R&R form before submitting';
-      return;
-    }
-    if (!formulaValid()) {
-      $scope.saveRnr();
-      $scope.submitError = "Please correct the errors on the R&R form before submitting";
-      $scope.submitMessage = "";
-      return;
-    }
+            if ($scope.saveRnrForm.$error.required) {
+                $scope.saveRnr();
+                $scope.inputClass = "required";
+                $scope.submitMessage = "";
+                $scope.submitError = 'Please complete the highlighted fields on the R&R form before submitting';
+                return false;
+            }
+            if (!formulaValid()) {
+                $scope.saveRnr();
+                $scope.submitError = "Please correct the errors on the R&R form before submitting";
+                $scope.submitMessage = "";
+                return false;
+            }
+            return true;
+        }
 
-    Requisitions.update({id:$scope.rnr.id, operation:"submit"},
-      $scope.rnr, function (data) {
-        $scope.rnr.status = "SUBMITTED";
-        $scope.submitMessage = data.success;
-        $scope.submitError = "";
-      }, function (data) {
-        $scope.submitError = data.data.error;
-      });
-  };
+        $scope.submitRnr = function () {
+            if (!valid()) return;
+
+            Requisitions.update({id:$scope.rnr.id, operation:"submit"},
+                $scope.rnr, function (data) {
+                    $scope.rnr.status = "SUBMITTED";
+                    $scope.submitMessage = data.success;
+                    $scope.submitError = "";
+                }, function (data) {
+                    $scope.submitError = data.data.error;
+                });
+        };
+
+        $scope.authorizeRnr = function () {
+            if (!valid()) return;
+
+            Requisitions.update({id:$scope.rnr.id, operation:"authorize"},
+                $scope.rnr, function (data) {
+                    $scope.rnr.status = "AUTHORIZE";
+                    $scope.submitMessage = data.success;
+                    $scope.submitError = "";
+                }, function (data) {
+                    $scope.submitError = data.data.error;
+                });
+        };
 
   $scope.getId = function (prefix, parent, isLossAdjustment) {
     if (isLossAdjustment != null && isLossAdjustment != isUndefined && isLossAdjustment) {

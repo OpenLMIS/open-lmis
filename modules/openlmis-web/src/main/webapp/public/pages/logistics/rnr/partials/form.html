@@ -274,7 +274,8 @@
   <div id="action_buttons" class="action-buttons">
       <div class="form-cell button-row">
         <input ng-disabled="disableFormForSubmittedRnr()" type="button" ng-click="saveRnr()" class="btn btn-primary save-button" value="Save"/>
-        <input ng-disabled="disableFormForSubmittedRnr()" type="submit" class="btn btn-success submit-button" value="Submit"/>
+        <input ng-show="rnr.status == 'INITIATED'" ng-disabled="disableFormForSubmittedRnr()" type="submit" class="btn btn-success submit-button" value="Submit"/>
+        <input type="button" ng-show="rnr.status == 'SUBMITTED'" ng-click="authorizeRnr()" class="btn btn-success submit-button" value="Authorize"/>
       </div>
   <div class="toolbar-error" id="saveFailMessage" ng-model="error" ng-show="error && !submitError && !submitMessage">
     {{error}}

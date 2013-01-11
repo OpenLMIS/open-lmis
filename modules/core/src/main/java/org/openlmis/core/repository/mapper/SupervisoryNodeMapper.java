@@ -29,7 +29,7 @@ public interface SupervisoryNodeMapper {
     "   (" +
     "   SELECT *" +
     "   FROM supervisory_nodes " +
-    "   WHERE id in  (SELECT s.id FROM  " +
+    "   WHERE id in  (SELECT DISTINCT s.id FROM  " +
     "       supervisory_nodes s " +
     "       INNER JOIN role_assignments ra ON s.id = ra.supervisoryNodeId  " +
     "       INNER JOIN role_rights rr ON ra.roleId = rr.roleId  " +

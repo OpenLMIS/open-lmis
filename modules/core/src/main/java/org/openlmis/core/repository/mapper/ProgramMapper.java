@@ -49,7 +49,7 @@ public interface ProgramMapper {
     @Select("SELECT * FROM programs WHERE id = #{id}")
     Program getById(Integer id);
 
-    @Select("SELECT p.* " +
+    @Select("SELECT DISTINCT p.* " +
             "FROM programs p " +
             "INNER JOIN role_assignments ra ON p.id = ra.programId " +
             "INNER JOIN role_rights rr ON ra.roleId = rr.roleId " +
@@ -59,7 +59,7 @@ public interface ProgramMapper {
             "AND p.active = true")
     List<Program> getUserSupervisedActivePrograms(@Param(value = "userId") Integer userId, @Param(value = "commaSeparatedRights") String commaSeparatedRights);
 
-  @Select({"SELECT p.* FROM programs p INNER JOIN programs_supported ps ON p.id = ps.programId",
+  @Select({"SELECT DISTINCT p.* FROM programs p INNER JOIN programs_supported ps ON p.id = ps.programId",
   "INNER JOIN role_assignments ra ON ra.programId = p.id",
   "INNER JOIN role_rights rr ON rr.roleId = ra.roleId",
   "WHERE p.active = true and  ps.active=true and ra.userId = #{userId} and ps.facilityId = #{facilityId} and rr.rightName = ANY(#{commaSeparatedRights}::VARCHAR[])",

@@ -77,7 +77,7 @@ function InitiateRnrController($scope, Requisition, facilities, programs, UserSu
 }
 
 
-InitiateRnrController.resolve = {
+InitiateRnrController.resolveFacility = {
   facilities:function ($q, $timeout, UserFacilityList) {
     var deferred = $q.defer();
     $timeout(function () {
@@ -93,10 +93,7 @@ InitiateRnrController.resolve = {
   }
 }
 
-function InitiateSupervisedRnrController() {
-}
-;
-InitiateSupervisedRnrController.resolve = {
+InitiateRnrController.resolveProgram = {
   programs:function ($q, $timeout, UserSupervisedProgramList) {
     var deferred = $q.defer();
     $timeout(function () {
