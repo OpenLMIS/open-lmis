@@ -9,9 +9,7 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Properties;
 
 
 public class LoginPage extends Page {
@@ -24,16 +22,7 @@ public class LoginPage extends Page {
 
     private String BASE_URL;
 
-    private String ERROR_MESSAGE_LOGIN = "The username or password you entered is incorrect. Please try again.";
-
     private String baseUrl;
-
-    /*
-    baseUrl = http://localhost:9090/
-dbUrl = jdbc:postgresql://localhost:5432/open_lmis
-dbUser = postgres
-dbPassword = p@ssw0rd
-     */
 
     public LoginPage(TestWebDriver driver) throws  IOException{
         super(driver);
@@ -41,7 +30,6 @@ dbPassword = p@ssw0rd
         baseUrl = "http://localhost:9091/";
         BASE_URL=baseUrl;
         testWebDriver.setBaseURL(BASE_URL);
-        testWebDriver.setErrorMessage(ERROR_MESSAGE_LOGIN);
         PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
         testWebDriver.setImplicitWait(25);
         SeleneseTestNgHelper.assertTrue(userNameField.isDisplayed());

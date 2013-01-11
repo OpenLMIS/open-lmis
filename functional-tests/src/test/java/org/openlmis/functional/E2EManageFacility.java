@@ -47,16 +47,14 @@ public class E2EManageFacility extends TestCaseHelper {
         deleteFacilityPage1.searchFacility(date_time);
         deleteFacilityPage1.editAndVerifyFacility("FCname"+date_time);
 
-        homePage.logout();
-
-
     }
     @AfterClass
     public void tearDown() throws Exception
     {
+        HomePage homePage = new HomePage(testWebDriver);
+        homePage.logout();
         DBWrapper dbWrapper = new DBWrapper();
         dbWrapper.deleteData();
-
     }
 
     @DataProvider(name = "Data-Provider-Function-Positive")

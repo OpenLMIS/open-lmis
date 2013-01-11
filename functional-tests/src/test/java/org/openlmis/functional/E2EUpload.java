@@ -94,9 +94,10 @@ public class E2EUpload extends TestCaseHelper {
     @AfterClass
     public void tearDown() throws Exception
     {
+        HomePage homePage = new HomePage(testWebDriver);
+        homePage.logout();
         DBWrapper dbWrapper = new DBWrapper();
         dbWrapper.deleteData();
-
     }
 
     @DataProvider(name = "Data-Provider-Function-Positive")

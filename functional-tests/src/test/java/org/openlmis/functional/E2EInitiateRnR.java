@@ -86,15 +86,15 @@ public class E2EInitiateRnR extends TestCaseHelper {
         initiateRnRPage.submitRnR();
         initiateRnRPage.verifySubmitRnrSuccessMsg();
         initiateRnRPage.verifyBeginningBalanceDisabled();
-        homePageUser.logout();
 
     }
     @AfterClass
     public void tearDown() throws Exception
     {
+        HomePage homePage = new HomePage(testWebDriver);
+        homePage.logout();
         DBWrapper dbWrapper = new DBWrapper();
         dbWrapper.deleteData();
-
     }
 
     @DataProvider(name = "Data-Provider-Function-Positive")
