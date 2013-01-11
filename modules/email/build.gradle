@@ -8,17 +8,17 @@ dependencies {
             'javax.mail:mail:1.4.5'
 
     configurations {
-         testFixtures {
-             extendsFrom testRuntime
-         }
+        testFixtures {
+            extendsFrom testRuntime
+        }
     }
 
     task testJar(type: Jar) {
-         from sourceSets.test.output
-         classifier = 'test'
+        from sourceSets.test.output
+        classifier = 'test'
     }
 
     artifacts {
-         testFixtures testJar
+        testFixtures testJar
     }
 }

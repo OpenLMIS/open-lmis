@@ -11,6 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -20,16 +21,21 @@ import static org.mockito.Mockito.verify;
 public class EmailServiceTest {
 
 
-
   @Test
   public void shouldSendEmailMessage() {
     JavaMailSender mailSender = mock(JavaMailSender.class);
     SimpleMailMessage mailMessage = mock(SimpleMailMessage.class);
     EmailService service = new EmailService(mailSender);
-    service.setSimpleMailMessage(mailMessage);
+   service.setSimpleMailMessage(mailMessage);
     EmailMessage message = make(a(EmailMessageBuilder.defaultEmailMessage,
       with(EmailMessageBuilder.to, "alert.open.lmis@gmail.com")));
-    service.send(message);
+    boolean status = false;
+    try {
+      status = service.send(message).get();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    assertTrue(status);
     verify(mailSender).send(any(SimpleMailMessage.class));
     verify(mailMessage).setTo(message.getTo());
     verify(mailMessage).setFrom(message.getFrom());
