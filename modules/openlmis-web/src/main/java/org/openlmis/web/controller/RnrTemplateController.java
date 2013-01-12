@@ -25,7 +25,7 @@ import java.util.Map;
 
 @Controller
 @NoArgsConstructor
-public class RnrTemplateController {
+public class RnrTemplateController extends BaseController{
 
   private RnrTemplateService rnrTemplateService;
 
