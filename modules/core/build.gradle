@@ -10,6 +10,7 @@ dependencies {
             'org.projectlombok:lombok:0.11.0',
             'org.codehaus.jackson:jackson-mapper-asl:1.9.11',
             'joda-time:joda-time:2.1',
+            'commons-codec:commons-codec:1.7',
             project(':modules:db'),
             project(':modules:upload')
 

@@ -18,6 +18,7 @@ public class UserService {
   }
 
   public void save(User user) {
+    user.validate();
     userRepository.insert(user);
   }
 }

@@ -2,18 +2,24 @@ package org.openlmis.authentication.service;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.openlmis.authentication.UserToken;
 import org.openlmis.core.domain.User;
+import org.openlmis.core.hash.Encoder;
 import org.openlmis.core.repository.mapper.UserMapper;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.openlmis.authentication.hash.Encoder.hash;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(Encoder.class)
 public class UserAuthenticationServiceTest {
   private UserAuthenticationService userAuthenticationService;
 
@@ -29,30 +35,34 @@ public class UserAuthenticationServiceTest {
 
   @Test
   public void shouldAuthenticateAValidUser() {
-    String defaultUserName = "defaultUserName";
-    String defaultPassword = "defaultPassword";
+
+    mockStatic(Encoder.class);
+    when(Encoder.hash("defaultPassword")).thenReturn("hashedPassword");
     User user = new User();
-    user.setUserName(defaultUserName);
+    user.setUserName("defaultUserName");
+    user.setPassword("defaultPassword");
 
-    String hashPassword = hash(defaultPassword);
+    when(mockUserMapper.selectUserByUserNameAndPassword("defaultUserName", "hashedPassword")).thenReturn(user);
 
-    when(mockUserMapper.selectUserByUserNameAndPassword(defaultUserName, hashPassword)).thenReturn(user);
+    UserToken userToken = userAuthenticationService.authorizeUser(user);
+    verify(mockUserMapper).selectUserByUserNameAndPassword("defaultUserName", "hashedPassword");
 
-    UserToken userToken = userAuthenticationService.authorizeUser(defaultUserName, defaultPassword);
-    verify(mockUserMapper).selectUserByUserNameAndPassword(defaultUserName, hashPassword);
     assertThat(userToken.isAuthenticated(), is(true));
   }
 
   @Test
   public void shouldNotAuthenticateAnInvalidUser() {
-    String invalidPassword = "invalidPassword";
-    String hashPassword = hash(invalidPassword);
-    String defaultUserName = "defaultUserName";
-    when(mockUserMapper.selectUserByUserNameAndPassword(defaultUserName, hashPassword)).thenReturn(null);
+    mockStatic(Encoder.class);
+    when(Encoder.hash("defaultPassword")).thenReturn("hashedPassword");
+    User user = new User();
+    user.setUserName("defaultUserName");
+    user.setPassword("defaultPassword");
 
-    UserToken userToken = userAuthenticationService.authorizeUser(defaultUserName, invalidPassword);
+    when(mockUserMapper.selectUserByUserNameAndPassword("defaultUserName", "hashedPassword")).thenReturn(null);
 
-    verify(mockUserMapper).selectUserByUserNameAndPassword(defaultUserName, hashPassword);
+    UserToken userToken = userAuthenticationService.authorizeUser(user);
+
+    verify(mockUserMapper).selectUserByUserNameAndPassword("defaultUserName", "hashedPassword");
     assertThat(userToken.isAuthenticated(), is(false));
   }
 }

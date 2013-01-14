@@ -73,7 +73,7 @@ public class UserRepositoryTest {
   public void shouldThrowExceptionAndNotInsertUserOnDuplicateEmployeeId() throws Exception {
     User user = make(a(UserBuilder.defaultUser));
     when(userMapper.get(user.getSupervisor().getUserName())).thenReturn(mock(User.class));
-    doThrow(new DuplicateKeyException("Key (employeeId)")).when(userMapper).insert(user);
+    doThrow(new DuplicateKeyException("duplicate key value violates unique constraint \"uc_users_employeeId\"")).when(userMapper).insert(user);
 
     exException.expect(DataException.class);
     exException.expectMessage(DUPLICATE_EMPLOYEE_ID_FOUND);
@@ -85,7 +85,7 @@ public class UserRepositoryTest {
   public void shouldThrowExceptionAndNotInsertUserOnDuplicateEmail() throws Exception {
     User user = make(a(UserBuilder.defaultUser));
     when(userMapper.get(user.getSupervisor().getUserName())).thenReturn(mock(User.class));
-    doThrow(new DuplicateKeyException("Key (email) ")).when(userMapper).insert(user);
+    doThrow(new DuplicateKeyException("duplicate key value violates unique constraint \"uc_users_email\"")).when(userMapper).insert(user);
 
     exException.expect(DataException.class);
     exException.expectMessage(DUPLICATE_EMAIL_FOUND);
@@ -97,7 +97,7 @@ public class UserRepositoryTest {
   public void shouldThrowExceptionAndNotInsertUserOnDuplicateUserName() throws Exception {
     User user = make(a(UserBuilder.defaultUser));
     when(userMapper.get(user.getSupervisor().getUserName())).thenReturn(mock(User.class));
-    doThrow(new DuplicateKeyException("Key (userName)")).when(userMapper).insert(user);
+    doThrow(new DuplicateKeyException("duplicate key value violates unique constraint \"uc_users_userName\"")).when(userMapper).insert(user);
 
     exException.expect(DataException.class);
     exException.expectMessage(DUPLICATE_USER_NAME_FOUND);
