@@ -20,7 +20,6 @@ import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
-import static org.openlmis.core.builder.RequisitionGroupBuilder.REQUISITION_GROUP_CODE;
 import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -29,95 +28,81 @@ import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisiti
 @TransactionConfiguration(defaultRollback = true)
 public class RequisitionGroupMemberMapperIT {
 
-    RequisitionGroupMember requisitionGroupMember;
-    RequisitionGroup requisitionGroup;
+  RequisitionGroupMember requisitionGroupMember;
+  RequisitionGroup requisitionGroup;
 
-    @Autowired
-    RequisitionGroupMemberMapper requisitionGroupMemberMapper;
+  @Autowired
+  RequisitionGroupMemberMapper requisitionGroupMemberMapper;
 
-    @Autowired
-    RequisitionGroupMapper requisitionGroupMapper;
+  @Autowired
+  RequisitionGroupMapper requisitionGroupMapper;
 
-    @Autowired
-    FacilityMapper facilityMapper;
+  @Autowired
+  FacilityMapper facilityMapper;
 
-    @Autowired
-    RequisitionGroupProgramScheduleMapper requisitionGroupProgramScheduleMapper;
+  @Autowired
+  RequisitionGroupProgramScheduleMapper requisitionGroupProgramScheduleMapper;
 
-    @Autowired
-    ProgramMapper programMapper;
+  @Autowired
+  ProgramMapper programMapper;
 
-    @Autowired
-    ProcessingScheduleMapper processingScheduleMapper;
+  @Autowired
+  ProcessingScheduleMapper processingScheduleMapper;
 
-    ProcessingSchedule processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
+  ProcessingSchedule processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
 
-    @Before
-    public void setUp() throws Exception {
-        requisitionGroupMember = new RequisitionGroupMember();
+  @Before
+  public void setUp() throws Exception {
+    requisitionGroupMember = new RequisitionGroupMember();
 
-        Facility facility = make(a(FacilityBuilder.defaultFacility));
-        requisitionGroup = make(a(defaultRequisitionGroup));
+    Facility facility = make(a(FacilityBuilder.defaultFacility));
+    requisitionGroup = make(a(defaultRequisitionGroup));
 
-        facilityMapper.insert(facility);
-        requisitionGroupMapper.insert(requisitionGroup);
+    facilityMapper.insert(facility);
+    requisitionGroupMapper.insert(requisitionGroup);
 
-        requisitionGroupMember.setFacility(facility);
-        requisitionGroupMember.setRequisitionGroup(requisitionGroup);
-        requisitionGroupMember.setModifiedBy("User");
+    requisitionGroupMember.setFacility(facility);
+    requisitionGroupMember.setRequisitionGroup(requisitionGroup);
+    requisitionGroupMember.setModifiedBy("User");
 
-        processingScheduleMapper.insert(processingSchedule);
-    }
+    processingScheduleMapper.insert(processingSchedule);
+  }
 
-    @Test
-    public void shouldInsertRequisitionGroupToFacilityMapping() throws Exception {
-        int status = requisitionGroupMemberMapper.insert(requisitionGroupMember);
-        assertThat(status, is(1));
-    }
+  @Test
+  public void shouldInsertRequisitionGroupToFacilityMapping() throws Exception {
+    int status = requisitionGroupMemberMapper.insert(requisitionGroupMember);
+    assertThat(status, is(1));
+  }
 
-    @Test
-    public void shouldGetProgramsMappedToRequisitionGroupByFacilityId() throws Exception {
-        RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
-        requisitionGroupProgramSchedule.setProgram(make(a(defaultProgram)));
-        requisitionGroupProgramSchedule.setRequisitionGroup(requisitionGroup);
-        requisitionGroupProgramSchedule.setSchedule(processingSchedule);
-        programMapper.insert(requisitionGroupProgramSchedule.getProgram());
+  @Test
+  public void shouldGetProgramsMappedToRequisitionGroupByFacilityId() throws Exception {
+    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
+    requisitionGroupProgramSchedule.setProgram(make(a(defaultProgram)));
+    requisitionGroupProgramSchedule.setRequisitionGroup(requisitionGroup);
+    requisitionGroupProgramSchedule.setSchedule(processingSchedule);
+    programMapper.insert(requisitionGroupProgramSchedule.getProgram());
 
-        requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
-        requisitionGroupMemberMapper.insert(requisitionGroupMember);
+    requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
+    requisitionGroupMemberMapper.insert(requisitionGroupMember);
 
-        List<Integer> programIds = requisitionGroupMemberMapper.getRequisitionGroupProgramIdsForId(requisitionGroupMember.getFacility().getId());
+    List<Integer> programIds = requisitionGroupMemberMapper.getRequisitionGroupProgramIdsForId(requisitionGroupMember.getFacility().getId());
 
-        assertThat(programIds.size(), is(1));
-        assertThat(programIds.get(0), is(requisitionGroupProgramSchedule.getProgram().getId()));
-    }
+    assertThat(programIds.size(), is(1));
+    assertThat(programIds.get(0), is(requisitionGroupProgramSchedule.getProgram().getId()));
+  }
 
-    @Test
-    public void shouldReturnOneIfMappingAlreadyExists() throws Exception {
-        RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
-        requisitionGroupProgramSchedule.setProgram(make(a(defaultProgram)));
-        requisitionGroupProgramSchedule.setRequisitionGroup(requisitionGroup);
-        requisitionGroupProgramSchedule.setSchedule(processingSchedule);
-        programMapper.insert(requisitionGroupProgramSchedule.getProgram());
+  @Test
+  public void shouldReturnOneIfMappingAlreadyExists() throws Exception {
+    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
+    requisitionGroupProgramSchedule.setProgram(make(a(defaultProgram)));
+    requisitionGroupProgramSchedule.setRequisitionGroup(requisitionGroup);
+    requisitionGroupProgramSchedule.setSchedule(processingSchedule);
+    programMapper.insert(requisitionGroupProgramSchedule.getProgram());
 
-        requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
-        requisitionGroupMemberMapper.insert(requisitionGroupMember);
+    requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
+    requisitionGroupMemberMapper.insert(requisitionGroupMember);
 
-        assertThat(requisitionGroupMemberMapper.doesMappingExist(requisitionGroupMember.getRequisitionGroup().getId(), requisitionGroupMember.getFacility().getId()), is(1));
+    assertThat(requisitionGroupMemberMapper.doesMappingExist(requisitionGroupMember.getRequisitionGroup().getId(), requisitionGroupMember.getFacility().getId()), is(1));
 
-    }
-
-    @Test
-    public void shouldGetRGCodeByProgramIdAndFacilityId() throws Exception {
-        RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
-        requisitionGroupProgramSchedule.setProgram(make(a(defaultProgram)));
-        requisitionGroupProgramSchedule.setRequisitionGroup(requisitionGroup);
-        requisitionGroupProgramSchedule.setSchedule(processingSchedule);
-        programMapper.insert(requisitionGroupProgramSchedule.getProgram());
-
-        requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
-        requisitionGroupMemberMapper.insert(requisitionGroupMember);
-        assertThat(requisitionGroupMemberMapper.getRGCodeForProgramAndFacility(requisitionGroupProgramSchedule.getProgram().getId(),
-          requisitionGroupMember.getFacility().getId()), is(REQUISITION_GROUP_CODE));
-    }
+  }
 }
