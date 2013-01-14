@@ -1,4 +1,4 @@
-function InitiateRnrController($scope, Requisition, facilities, programs, UserSupportedProgramInFacilityForAnOperation, UserSupervisedFacilitiesForProgram, $location) {
+function InitiateRnrController($scope, Requisition, facilities, programs, UserSupportedProgramInFacilityForAnOperation, UserSupervisedFacilitiesForProgram, $location, $rootScope) {
 
   $scope.programOptionMsg = "--choose program--";
   $scope.facilities = facilities;
@@ -52,6 +52,10 @@ function InitiateRnrController($scope, Requisition, facilities, programs, UserSu
       Requisition.get({facilityId:$scope.facility, programId:$scope.program.id},{},
         function (data) {
           if (data.rnr) {
+            if(data.rnr.status != 'SUBMITTED' && !$rootScope.hasPermission('CREATE_REQUISITION')) {
+                $scope.error = "An R&R has not been submitted yet";
+                return;
+            }
             $scope.$parent.rnr = data.rnr;
             $location.path('/create-rnr/' + $scope.facility + '/' + $scope.program.id);
           }

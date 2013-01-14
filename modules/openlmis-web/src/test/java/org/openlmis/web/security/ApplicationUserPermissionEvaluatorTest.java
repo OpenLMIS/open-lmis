@@ -34,10 +34,12 @@ public class ApplicationUserPermissionEvaluatorTest {
     when(authentication.getName()).thenReturn(USER);
     List<Right> rights = new ArrayList<Right>() {{
       add(Right.CONFIGURE_RNR);
+      add(Right.AUTHORIZE_REQUISITION);
     }};
     when(roleRightsService.getRights(USER)).thenReturn(rights);
     ApplicationUserPermissionEvaluator evaluator = new ApplicationUserPermissionEvaluator(roleRightsService);
-    assertTrue(evaluator.hasPermission(authentication, "", "CONFIGURE_RNR"));
+    assertTrue(evaluator.hasPermission(authentication, "", "AUTHORIZE_REQUISITION, CONFIGURE_RNR"));
+    assertTrue(evaluator.hasPermission(authentication, "", "AUTHORIZE_REQUISITION"));
   }
 
   @Test @Ignore

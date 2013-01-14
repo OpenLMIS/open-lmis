@@ -38,7 +38,7 @@ public class ProgramController extends BaseController {
     }
 
     @RequestMapping(value = "/logistics/facility/{facilityId}/programs.json", method = RequestMethod.GET, headers = "Accept=application/json")
-    @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
+    @PreAuthorize("hasPermission('','CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
     public List<Program> getProgramsForFacility(@PathVariable(value = "facilityId") Integer facilityId) {
         return programService.getByFacility(facilityId);
     }

@@ -1,16 +1,15 @@
 package org.openlmis.web.security;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.service.RoleRightsService;
-import org.openlmis.rnr.domain.Rnr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 
 import java.io.Serializable;
-
-import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
-import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ApplicationUserPermissionEvaluator implements PermissionEvaluator {
 
@@ -22,14 +21,21 @@ public class ApplicationUserPermissionEvaluator implements PermissionEvaluator {
   }
 
   @Override
-  public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {
-    Right requiredRight = Right.valueOf((String) permission);
-    String user = authentication.getName();
-//    if((requiredRight.equals(CREATE_REQUISITION)) || (requiredRight.equals(AUTHORIZE_REQUISITION))){
-//      Rnr requisition = (Rnr) targetDomainObject;
-//      return roleRightService.userHasRightForFacilityProgram(requisition.getFacilityId(), requisition.getProgramId(), user, requiredRight);
-//    }
-    return roleRightService.getRights(user).contains(requiredRight);
+  public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permissions) {
+    final List<Right> rightsToCheck = getRightList((String) permissions);
+
+    String userName = authentication.getName();
+    return CollectionUtils.containsAny(roleRightService.getRights(userName), rightsToCheck);
+  }
+
+  private List<Right> getRightList(String permissionCommaSeparated) {
+    List<Right> rights = new ArrayList<>();
+    String[] permissions = permissionCommaSeparated.split(",");
+    for(String permission: permissions){
+      rights.add(Right.valueOf(permission.trim()));
+    }
+
+    return rights;
   }
 
   @Override

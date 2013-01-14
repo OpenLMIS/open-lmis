@@ -14,13 +14,13 @@ describe("Role", function () {
       });
 
       $httpBackend.expectPOST('/roles.json').respond({"success":"Saved successfully"});
-      scope.roleForm = {invalid:false};
+
+      scope.role.name = "roleName";
+      scope.role.rights= ["right1"];
+
       scope.saveRole();
       $httpBackend.flush();
-      expect(scope.role).toEqual({rights:[]});
-      expect(scope.rights).toEqual("test rights");
     });
-
   });
 
   describe("Edit Role", function () {
@@ -37,11 +37,10 @@ describe("Role", function () {
 
       $httpBackend.expectPUT('/roles/123.json').respond(
         {"success":"success"});
-      scope.roleForm = {invalid:false};
+      scope.role.name = "name";
+      scope.role.rights = ["right1"]
       scope.saveRole();
       $httpBackend.flush();
-      expect(scope.role).toEqual("test role");
-      expect(scope.rights).toEqual("test Rights");
     });
   });
 

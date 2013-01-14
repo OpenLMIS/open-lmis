@@ -34,12 +34,12 @@
 
           <div class="form-field">
             <div id="rights-{{right.right}}" class="checkbox-list clearfix" ng-repeat="right in rights">
-              <input name="rights" id="{{right.rightName}}" ng-required="role.rights.length==0" type="checkbox"
+              <input name="rights" id="{{right.rightName}}"  type="checkbox"
                      ng-model="checked" ng-checked="contains(right.right)"
                      ng-change="updateRights(checked, right)"/>
               <label for="{{right.rightName}}">{{right.rightName}}</label>
             </div>
-          <span class="field-error" ng-show="roleForm.rights.$error.required && showError">
+          <span class="field-error" ng-show="showError">
             Please select at least one right for the role
           </span>
           </div>

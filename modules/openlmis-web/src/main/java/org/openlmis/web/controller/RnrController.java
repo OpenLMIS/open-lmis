@@ -46,14 +46,14 @@ public class RnrController extends BaseController {
   }
 
   @RequestMapping(value = "/requisitions", method = RequestMethod.GET, headers = "Accept=application/json")
-  @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
+  @PreAuthorize("hasPermission('','CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> get(@RequestParam("facilityId") Integer facilityId,
                                               @RequestParam("programId") Integer programId) {
     return OpenLmisResponse.response(RNR, rnrService.get(facilityId, programId));
   }
 
   @RequestMapping(value = "/requisitions/{id}/save", method = RequestMethod.PUT, headers = "Accept=application/json")
-  @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
+  @PreAuthorize("hasPermission('','CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
   public void saveRnr(@RequestBody Rnr rnr, HttpServletRequest request) {
     rnr.setModifiedBy(loggedInUserId(request));
     rnrService.save(rnr);
@@ -72,7 +72,7 @@ public class RnrController extends BaseController {
   }
 
   @RequestMapping(value = "/requisitions/lossAndAdjustments/reference-data", method = RequestMethod.GET, headers = "Accept=application/json")
-  @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
+  @PreAuthorize("hasPermission('','CREATE_REQUISITION, AUTHORIZE_REQUISITION',)")
   public Map getReferenceData() {
     RnrReferenceData referenceData = new RnrReferenceData();
     return referenceData.addLossesAndAdjustmentsTypes(rnrService.getLossesAndAdjustmentsTypes()).get();

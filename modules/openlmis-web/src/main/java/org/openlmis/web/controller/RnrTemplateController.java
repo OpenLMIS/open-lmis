@@ -44,7 +44,7 @@ public class RnrTemplateController extends BaseController{
   }
 
   @RequestMapping(value = "/logistics/rnr/{programId}/columns", method = RequestMethod.GET, headers = "Accept=application/json")
-  @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
+  @PreAuthorize("hasPermission('','CREATE_REQUISITION, APPROVE_REQUISITION')")
   public List<RnrColumn> fetchVisibleProgramRnrColumnList(@PathVariable("programId") Integer programId) {
     return rnrTemplateService.fetchVisibleRnRColumns(programId);
   }

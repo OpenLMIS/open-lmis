@@ -15,6 +15,7 @@ function SaveRoleController($scope, $routeParams, $location, Roles, Role, Rights
 
   $scope.updateRights = function (checked, rightClicked) {
     if (checked == true) {
+      $scope.showError = false;
       $scope.role.rights.push(rightClicked);
     } else {
       $scope.role.rights = $.grep($scope.role.rights, function (rightObj) {
@@ -47,7 +48,7 @@ function SaveRoleController($scope, $routeParams, $location, Roles, Role, Rights
       $location.path('list');
     };
 
-    if ($scope.roleForm.$invalid) {
+    if ($scope.role.name == undefined || $scope.role.rights.length ==0) {
       $scope.showError = true;
     } else {
       var id = $routeParams.id;

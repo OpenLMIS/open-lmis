@@ -2,7 +2,7 @@
     <ul style="display:none">
         <li><a href="/">Home</a></li>
 
-        <li class="has-children" ng-show="hasPermission('CREATE_REQUISITION')"><a href="javascript: void(0)">Requisitions</a>
+        <li class="has-children" ng-show="hasPermission('CREATE_REQUISITION') || hasPermission('AUTHORIZE_REQUISITION')"><a href="javascript: void(0)">Requisitions</a>
             <ul>
                 <li>
                     <a href="javascript: void(0);">Create</a>

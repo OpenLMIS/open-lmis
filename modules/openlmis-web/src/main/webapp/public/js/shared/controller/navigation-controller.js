@@ -1,4 +1,4 @@
-function NavigationController($scope, User, localStorageService, $rootScope) {
+function NavigationController( $scope, User, localStorageService, $rootScope) {
 
 
     $scope.loadRights = function () {
@@ -14,7 +14,7 @@ function NavigationController($scope, User, localStorageService, $rootScope) {
 
         }
 
-        $scope.rights = rights;
+        $rootScope.rights = rights;
 
         $(".navigation > ul").show();
     }();
@@ -26,7 +26,7 @@ function NavigationController($scope, User, localStorageService, $rootScope) {
     }();
 
     $rootScope.hasPermission = function (permission) {
-        return (($scope.rights != undefined) &&  ($scope.rights.indexOf(permission) > -1));
+        return (($rootScope.rights != undefined) &&  ($rootScope.rights.indexOf(permission) > -1));
     };
 
   function getRights(rightList) {
