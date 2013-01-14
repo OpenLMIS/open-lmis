@@ -45,22 +45,63 @@ body {
   form {
     margin: 0;
   }
-}
-.login-form {
-  background: url(../images/login-bg.png) no-repeat 20px top;
-  padding: 0 55px 0 330px;
-  min-height: 320px;
   input {
     &[type='text'], &[type='password'] {
       width: 95%;
       margin-bottom: 20px;
       height: 32px;
     }
-    &[type='submit'] {
+    &.btn {
       padding: 9px 52px;
       font-size: 1.2em;
-      text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
+      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.7);
       margin-bottom: 12px;
+      &.btn-primary {
+        background-color: #0062af;
+        background-image: -moz-linear-gradient(top, #0079d0, #004484);
+        background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0079d0), to(#004484));
+        background-image: -webkit-linear-gradient(top, #0079d0, #004484);
+        background-image: -o-linear-gradient(top, #0079d0, #004484);
+        background-image: linear-gradient(to bottom, #0079d0, #004484);
+        background-repeat: repeat-x;
+        border-color: #0044cc #0044cc #002a80;
+        border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0079d0', endColorstr='#ff004484', GradientType=0);
+        filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+      }
+
+      &.btn-primary:hover,
+      &.btn-primary:active,
+      &.btn-primary.active,
+      &.btn-primary.disabled,
+      &.btn-primary[disabled] {
+        color: #ffffff;
+        background-color: #004484;
+      }
+      &.btn-cancel {
+        color: #FFFFFF;
+        background-color: #666666;
+        background-image: -moz-linear-gradient(top, #c5c5c5, #777777);
+        background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#c5c5c5), to(#777777));
+        background-image: -webkit-linear-gradient(top, #c5c5c5, #777777);
+        background-image: -o-linear-gradient(top, #c5c5c5, #777777);
+        background-image: linear-gradient(to bottom, #c5c5c5, #777777);
+        background-repeat: repeat-x;
+        border-color: #777777 #777777 #444444;
+        border-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffc5c5c5', endColorstr='#ff777777', GradientType=0);
+        filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+      }
+
+      &.btn-cancel:hover,
+      &.btn-cancel:active,
+      &.btn-cancel.active,
+      &.btn-cancel.disabled,
+      &.btn-cancel[disabled] {
+        color: #ffffff;
+        background-color: #777777;
+        border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+      }
     }
   }
   a {
@@ -68,8 +109,34 @@ body {
     text-decoration: underline;
   }
 }
+.login-form {
+  background: url(../images/login-bg.png) no-repeat 20px top;
+  padding: 0 55px 0 330px;
+  min-height: 320px;
+}
+.forgot-password-form {
+  padding: 2px 20px 25px;
+  min-height: 140px;
+  input[type='text'],
+  input[type='password'] {
+    margin-bottom: 15px;
+  }
+  .login-form-row {
+    width: 55%;
+  }
+  input.btn {
+    margin: 8px 10px 0 0;
+    padding: 9px 40px;
+  }
+}
 .forgot-link {
   padding-bottom: 20px;
+}
+.form-desc {
+  padding-bottom: 15px;
+}
+.or-row {
+  padding: 0 0 12px 3px;
 }
 .modal-login {
   width: 692px;
