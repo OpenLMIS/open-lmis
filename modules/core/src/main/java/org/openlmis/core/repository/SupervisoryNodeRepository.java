@@ -1,7 +1,6 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.exception.DataException;
@@ -20,13 +19,13 @@ import static org.openlmis.core.domain.Right.getCommaSeparatedRightNames;
 public class SupervisoryNodeRepository {
   private SupervisoryNodeMapper supervisoryNodeMapper;
   private FacilityRepository facilityRepository;
-  private RequisitionGroupRepository requisitionGroupRepository;
+  private RequisitionGroupMemberRepository requisitionGroupMemberRepository;
 
   @Autowired
-  public SupervisoryNodeRepository(SupervisoryNodeMapper supervisoryNodeMapper, FacilityRepository facilityRepository, RequisitionGroupRepository requisitionGroupRepository) {
+  public SupervisoryNodeRepository(SupervisoryNodeMapper supervisoryNodeMapper, FacilityRepository facilityRepository, RequisitionGroupMemberRepository requisitionGroupMemberRepository) {
     this.supervisoryNodeMapper = supervisoryNodeMapper;
     this.facilityRepository = facilityRepository;
-    this.requisitionGroupRepository = requisitionGroupRepository;
+    this.requisitionGroupMemberRepository = requisitionGroupMemberRepository;
   }
 
   public void save(SupervisoryNode supervisoryNode) {
@@ -69,7 +68,7 @@ public class SupervisoryNodeRepository {
   }
 
   public SupervisoryNode getFor(Integer facilityId, Integer programId) {
-    RequisitionGroup requisitionGroup = requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(programId, facilityId);
-    return supervisoryNodeMapper.getFor(requisitionGroup.getCode());
+    String rgCode = requisitionGroupMemberRepository.getRGCodeForProgramAndFacility(facilityId, programId);
+    return supervisoryNodeMapper.getFor(rgCode);
   }
 }

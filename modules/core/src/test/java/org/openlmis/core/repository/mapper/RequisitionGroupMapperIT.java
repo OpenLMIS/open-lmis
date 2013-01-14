@@ -3,8 +3,9 @@ package org.openlmis.core.repository.mapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openlmis.core.builder.ProcessingScheduleBuilder;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.RequisitionGroup;
+import org.openlmis.core.domain.SupervisoryNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -19,7 +20,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
-import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.RequisitionGroupBuilder.*;
 import static org.openlmis.core.builder.SupervisoryNodeBuilder.defaultSupervisoryNode;
 
@@ -28,84 +28,51 @@ import static org.openlmis.core.builder.SupervisoryNodeBuilder.defaultSupervisor
 @Transactional
 @TransactionConfiguration(defaultRollback = true)
 public class RequisitionGroupMapperIT {
-  @Autowired
-  RequisitionGroupMapper requisitionGroupMapper;
 
-  @Autowired
-  SupervisoryNodeMapper supervisoryNodeMapper;
+    SupervisoryNode supervisoryNode;
 
-  @Autowired
-  FacilityMapper facilityMapper;
+    @Autowired
+    RequisitionGroupMapper requisitionGroupMapper;
 
-  @Autowired
-  ProgramMapper programMapper;
+    @Autowired
+    SupervisoryNodeMapper supervisoryNodeMapper;
 
-  @Autowired
-  RequisitionGroupProgramScheduleMapper requisitionGroupProgramScheduleMapper;
+    @Autowired
+    FacilityMapper facilityMapper;
+    private RequisitionGroup requisitionGroup;
 
-  @Autowired
-  RequisitionGroupMemberMapper requisitionGroupMemberMapper;
+    @Before
+    public void setUp() throws Exception {
+        Facility facility = make(a(defaultFacility));
+        facilityMapper.insert(facility);
+        supervisoryNode = make(a(defaultSupervisoryNode));
+        supervisoryNode.setFacility(facility);
+        supervisoryNodeMapper.insert(supervisoryNode);
+        requisitionGroup = make(a(defaultRequisitionGroup));
+    }
 
-  private RequisitionGroup requisitionGroup;
-  private SupervisoryNode supervisoryNode;
-  private Facility facility;
+    @Test
+    public void shouldInsertRequisitionGroup() throws Exception {
+        requisitionGroup.setSupervisoryNode(supervisoryNode);
 
-  @Before
-  public void setUp() throws Exception {
-    facility = make(a(defaultFacility));
-    facilityMapper.insert(facility);
-    supervisoryNode = make(a(defaultSupervisoryNode));
-    supervisoryNode.setFacility(facility);
-    supervisoryNodeMapper.insert(supervisoryNode);
-    requisitionGroup = make(a(defaultRequisitionGroup));
-  }
+        requisitionGroupMapper.insert(requisitionGroup);
 
-  @Test
-  public void shouldInsertRequisitionGroup() throws Exception {
-    requisitionGroup.setSupervisoryNode(supervisoryNode);
+        RequisitionGroup resultRequisitionGroup = requisitionGroupMapper.getRequisitionGroupById(requisitionGroup.getId());
 
-    requisitionGroupMapper.insert(requisitionGroup);
+        assertThat(resultRequisitionGroup.getCode(), is(REQUISITION_GROUP_CODE));
+        assertThat(requisitionGroup.getId(), is(notNullValue()));
+        assertThat(resultRequisitionGroup.getModifiedDate(), is(requisitionGroup.getModifiedDate()));
+        assertThat(resultRequisitionGroup.getName(), is(REQUISITION_GROUP_NAME));
+        assertThat(resultRequisitionGroup.getSupervisoryNode().getId(), is(supervisoryNode.getId()));
+    }
 
-    RequisitionGroup resultRequisitionGroup = requisitionGroupMapper.getRequisitionGroupById(requisitionGroup.getId());
+    @Test
+    public void shouldGetRequisitionGroupsForSupervisoryNodes(){
+        requisitionGroup.setSupervisoryNode(supervisoryNode);
+        requisitionGroupMapper.insert(requisitionGroup);
 
-    assertThat(resultRequisitionGroup.getCode(), is(REQUISITION_GROUP_CODE));
-    assertThat(requisitionGroup.getId(), is(notNullValue()));
-    assertThat(resultRequisitionGroup.getModifiedDate(), is(requisitionGroup.getModifiedDate()));
-    assertThat(resultRequisitionGroup.getName(), is(REQUISITION_GROUP_NAME));
-    assertThat(resultRequisitionGroup.getSupervisoryNode().getId(), is(supervisoryNode.getId()));
-  }
+        List<RequisitionGroup> requisitionGroups = requisitionGroupMapper.getRequisitionGroupBySupervisoryNodes("{" + supervisoryNode.getId() + "}");
 
-  @Test
-  public void shouldGetRequisitionGroupsForSupervisoryNodes() {
-    requisitionGroup.setSupervisoryNode(supervisoryNode);
-    requisitionGroupMapper.insert(requisitionGroup);
-
-    List<RequisitionGroup> requisitionGroups = requisitionGroupMapper.getRequisitionGroupBySupervisoryNodes("{" + supervisoryNode.getId() + "}");
-
-    assertThat(requisitionGroups.size(), is(1));
-  }
-
-  @Test
-  public void shouldGetRequisitionGroupByProgramIdAndFacilityId() throws Exception {
-    requisitionGroupMapper.insert(requisitionGroup);
-
-    ProcessingSchedule processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
-
-    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
-    requisitionGroupProgramSchedule.setProgram(make(a(defaultProgram)));
-    requisitionGroupProgramSchedule.setRequisitionGroup(requisitionGroup);
-    requisitionGroupProgramSchedule.setSchedule(processingSchedule);
-    programMapper.insert(requisitionGroupProgramSchedule.getProgram());
-
-    requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
-
-    RequisitionGroupMember requisitionGroupMember = new RequisitionGroupMember();
-    requisitionGroupMember.setFacility(facility);
-    requisitionGroupMember.setRequisitionGroup(requisitionGroup);
-    requisitionGroupMember.setModifiedBy("User");
-    requisitionGroupMemberMapper.insert(requisitionGroupMember);
-
-    assertThat(requisitionGroupMapper.getRequisitionGroupForProgramAndFacility(requisitionGroupProgramSchedule.getProgram().getId(),
-        requisitionGroupMember.getFacility().getId()), is(requisitionGroup));
-  }
+        assertThat(requisitionGroups.size(), is(1));
+    }
 }

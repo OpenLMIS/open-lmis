@@ -8,7 +8,6 @@ import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
@@ -17,14 +16,11 @@ import org.springframework.dao.DuplicateKeyException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
-import static org.openlmis.core.builder.RequisitionGroupBuilder.code;
-import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
 import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 
@@ -40,7 +36,7 @@ public class SupervisoryNodeRepositoryTest {
   private FacilityRepository facilityRepository;
 
   @Mock
-  private RequisitionGroupRepository requisitionGroupRepository;
+  private RequisitionGroupMemberRepository requisitionGroupMemberRepository;
 
   private SupervisoryNodeRepository repository;
   private SupervisoryNode supervisoryNodeWithParent;
@@ -54,7 +50,7 @@ public class SupervisoryNodeRepositoryTest {
     parent.setCode("PSN");
     parent.setId(20);
     supervisoryNodeWithParent.setParent(parent);
-    repository = new SupervisoryNodeRepository(supervisoryNodeMapper, facilityRepository, requisitionGroupRepository);
+    repository = new SupervisoryNodeRepository(supervisoryNodeMapper, facilityRepository, requisitionGroupMemberRepository);
   }
 
   @Test
@@ -152,9 +148,9 @@ public class SupervisoryNodeRepositoryTest {
     int facilityId = 1;
     int programId = 1;
     SupervisoryNode expectedSupervisoryNode = new SupervisoryNode();
-    RequisitionGroup requisitionGroup = make(a(defaultRequisitionGroup, with(code, "test code")));
-    when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(facilityId, programId)).thenReturn(requisitionGroup);
-    when(supervisoryNodeMapper.getFor(requisitionGroup.getCode())).thenReturn(expectedSupervisoryNode);
+    String rgCode = "test code";
+    when(requisitionGroupMemberRepository.getRGCodeForProgramAndFacility(facilityId, programId)).thenReturn(rgCode);
+    when(supervisoryNodeMapper.getFor(rgCode)).thenReturn(expectedSupervisoryNode);
 
     SupervisoryNode actualSupervisoryNode = repository.getFor(facilityId, programId);
 
@@ -163,8 +159,8 @@ public class SupervisoryNodeRepositoryTest {
 
   @Test
   public void shouldGetAllSupervisoryNodesInHierarchy() throws Exception {
-    Integer userId = 1;
-    Integer programId = 1;
+    Integer userId =1;
+    Integer programId =1;
     List<SupervisoryNode> expectedList = new ArrayList<>();
     when(supervisoryNodeMapper.getAllSupervisoryNodesInHierarchyBy(userId, programId, "{CREATE_REQUISITION, AUTHORIZE_REQUISITION}")).thenReturn(expectedList);
     List<SupervisoryNode> actualList = repository.getAllSupervisoryNodesInHierarchyBy(userId, programId, CREATE_REQUISITION, AUTHORIZE_REQUISITION);

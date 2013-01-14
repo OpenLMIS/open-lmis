@@ -16,30 +16,32 @@ import java.util.List;
 @NoArgsConstructor
 public class RequisitionGroupRepository {
 
-  private RequisitionGroupMapper mapper;
-  private CommaSeparator commaSeparator;
+    private RequisitionGroupMapper requisitionGroupMapper;
+    private SupervisoryNodeRepository supervisoryNodeRepository;
+    private CommaSeparator commaSeparator;
 
 
-  @Autowired
-  public RequisitionGroupRepository(RequisitionGroupMapper requisitionGroupMapper, CommaSeparator commaSeparator) {
-    this.mapper = requisitionGroupMapper;
-    this.commaSeparator = commaSeparator;
-  }
-
-  public void insert(RequisitionGroup requisitionGroup) {
-    try {
-      mapper.insert(requisitionGroup);
-    } catch (DuplicateKeyException e) {
-      throw new DataException("Duplicate Requisition Group Code found");
+    @Autowired
+    public RequisitionGroupRepository(RequisitionGroupMapper requisitionGroupMapper, SupervisoryNodeRepository supervisoryNodeRepository, CommaSeparator commaSeparator) {
+        this.requisitionGroupMapper = requisitionGroupMapper;
+        this.supervisoryNodeRepository = supervisoryNodeRepository;
+        this.commaSeparator = commaSeparator;
     }
-  }
 
-  public List<RequisitionGroup> getRequisitionGroups(List<SupervisoryNode> supervisoryNodes) {
-    return mapper.getRequisitionGroupBySupervisoryNodes(commaSeparator.commaSeparateIds(supervisoryNodes));
-  }
+    public void insert(RequisitionGroup requisitionGroup) {
+        requisitionGroup.getSupervisoryNode().setId(supervisoryNodeRepository.getIdForCode(requisitionGroup.getSupervisoryNode().getCode()));
+
+        try {
+            requisitionGroupMapper.insert(requisitionGroup);
+        } catch (DuplicateKeyException e) {
+            throw new DataException("Duplicate Requisition Group Code found");
+        }
+    }
+
+    public List<RequisitionGroup> getRequisitionGroups(List<SupervisoryNode> supervisoryNodes) {
+
+        return requisitionGroupMapper.getRequisitionGroupBySupervisoryNodes(commaSeparator.commaSeparateIds(supervisoryNodes));
+    }
 
 
-  public RequisitionGroup getRequisitionGroupForProgramAndFacility(Integer programId, Integer facilityId) {
-    return mapper.getRequisitionGroupForProgramAndFacility(programId, facilityId);
-  }
 }

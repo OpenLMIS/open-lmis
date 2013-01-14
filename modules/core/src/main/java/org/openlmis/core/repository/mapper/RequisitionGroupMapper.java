@@ -27,12 +27,4 @@ public interface RequisitionGroupMapper {
 
     @Select("SELECT id FROM requisition_groups where supervisoryNodeId = ANY(#{supervisoryNodeIdsAsString}::INTEGER[])")
     List<RequisitionGroup> getRequisitionGroupBySupervisoryNodes(String supervisoryNodeIdsAsString);
-
-  @Select("SELECT * " +
-      "FROM requisition_groups rg " +
-      "INNER JOIN requisition_group_program_schedules rgps ON rg.id = rgps.requisitionGroupId " +
-      "INNER JOIN requisition_group_members rgm ON rgps.requisitionGroupId = rgm.requisitionGroupId " +
-      "WHERE rgps.programId = #{programId} " +
-      "AND RGM.facilityId = #{facilityId}")
-  RequisitionGroup getRequisitionGroupForProgramAndFacility(@Param(value = "programId") Integer programId, @Param(value = "facilityId") Integer facilityId);
 }
