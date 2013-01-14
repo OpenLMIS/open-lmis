@@ -15,12 +15,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static org.openlmis.core.builder.ProcessingPeriodBuilder.*;
+import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
+import static org.openlmis.core.builder.ProcessingPeriodBuilder.startDate;
 
 public class ProcessingPeriodRepositoryTest {
 
@@ -30,12 +31,15 @@ public class ProcessingPeriodRepositoryTest {
   private ProcessingPeriodRepository repository;
 
   @Mock
-  ProcessingPeriodMapper mapper;
+  private ProcessingPeriodMapper mapper;
+
+  @Mock
+  private RequisitionGroupProgramScheduleRepository requisitionGroupProgramScheduleRepository;
 
   @Before
   public void setUp() throws Exception {
     initMocks(this);
-    repository = new ProcessingPeriodRepository(mapper);
+    repository = new ProcessingPeriodRepository(mapper, requisitionGroupProgramScheduleRepository);
   }
 
   @Test
@@ -43,6 +47,17 @@ public class ProcessingPeriodRepositoryTest {
     List<ProcessingPeriod> processingPeriodList = new ArrayList<>();
     when(mapper.getAll(123)).thenReturn(processingPeriodList);
     List<ProcessingPeriod> periods = repository.getAll(123);
+
+    verify(mapper).getAll(123);
+    assertThat(periods, is(processingPeriodList));
+  }
+
+  @Test
+  public void shouldGetAllPeriodsForARequisitionGroupAndProgram() throws Exception {
+    List<ProcessingPeriod> processingPeriodList = new ArrayList<>();
+    when(requisitionGroupProgramScheduleRepository.getScheduleIdForRequisitionGroupAndProgram(1, 2)).thenReturn(123);
+    when(mapper.getAll(123)).thenReturn(processingPeriodList);
+    List<ProcessingPeriod> periods = repository.getAllPeriodsForARequisitionGroupAndAProgram(1, 2);
 
     verify(mapper).getAll(123);
     assertThat(periods, is(processingPeriodList));
@@ -58,7 +73,7 @@ public class ProcessingPeriodRepositoryTest {
   }
 
   @Test
-    public void shouldNotInsertAPeriodWithSameNameForASchedule() throws Exception {
+  public void shouldNotInsertAPeriodWithSameNameForASchedule() throws Exception {
     ProcessingPeriod processingPeriod = mock(ProcessingPeriod.class);
     doNothing().when(processingPeriod).validate();
     doThrow(DuplicateKeyException.class).when(mapper).insert(processingPeriod);
@@ -96,9 +111,9 @@ public class ProcessingPeriodRepositoryTest {
   }
 
   @Test
-  public void shouldThrowExceptionIfStartDateLessThanCurrentDateWhenDeletingPeriod(){
+  public void shouldThrowExceptionIfStartDateLessThanCurrentDateWhenDeletingPeriod() {
     Calendar currentDate = Calendar.getInstance();
-    Calendar periodStartDate = (Calendar)currentDate.clone();
+    Calendar periodStartDate = (Calendar) currentDate.clone();
     periodStartDate.add(Calendar.DATE, -1);
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod, with(startDate, periodStartDate.getTime())));
     when(mapper.getById(processingPeriod.getId())).thenReturn(processingPeriod);
@@ -109,7 +124,7 @@ public class ProcessingPeriodRepositoryTest {
   }
 
   @Test
-  public void shouldThrowExceptionIfStartDateEqualToCurrentDateWhenDeletingPeriod(){
+  public void shouldThrowExceptionIfStartDateEqualToCurrentDateWhenDeletingPeriod() {
     Calendar periodStartDate = Calendar.getInstance();
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod, with(startDate, periodStartDate.getTime())));
     when(mapper.getById(processingPeriod.getId())).thenReturn(processingPeriod);
@@ -120,9 +135,9 @@ public class ProcessingPeriodRepositoryTest {
   }
 
   @Test
-  public void shouldDeleteAPeriodIfStartDateGreaterThanCurrentDate(){
+  public void shouldDeleteAPeriodIfStartDateGreaterThanCurrentDate() {
     Calendar currentDate = Calendar.getInstance();
-    Calendar periodStartDate = (Calendar)currentDate.clone();
+    Calendar periodStartDate = (Calendar) currentDate.clone();
     periodStartDate.add(Calendar.DATE, 1);
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod, with(startDate, periodStartDate.getTime())));
     when(mapper.getById(processingPeriod.getId())).thenReturn(processingPeriod);

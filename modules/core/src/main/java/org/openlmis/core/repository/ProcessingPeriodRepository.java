@@ -16,11 +16,13 @@ import java.util.List;
 @NoArgsConstructor
 public class ProcessingPeriodRepository {
 
-  ProcessingPeriodMapper mapper;
+  private ProcessingPeriodMapper mapper;
+  private RequisitionGroupProgramScheduleRepository requisitionGroupProgramScheduleRepository;
 
   @Autowired
-  public ProcessingPeriodRepository(ProcessingPeriodMapper mapper) {
-    this.mapper = mapper;
+  public ProcessingPeriodRepository(ProcessingPeriodMapper processingPeriodMapper, RequisitionGroupProgramScheduleRepository requisitionGroupProgramScheduleRepository) {
+    this.mapper = processingPeriodMapper;
+    this.requisitionGroupProgramScheduleRepository = requisitionGroupProgramScheduleRepository;
   }
 
   public List<ProcessingPeriod> getAll(Integer scheduleId) {
@@ -54,5 +56,10 @@ public class ProcessingPeriodRepository {
     if (processingPeriod.getStartDate().compareTo(new Date()) <= 0) {
       throw new DataException("Period's Start Date is smaller than Current Date");
     }
+  }
+
+  public List<ProcessingPeriod> getAllPeriodsForARequisitionGroupAndAProgram(Integer requisitionGroupId, Integer programId) {
+    Integer scheduleId = requisitionGroupProgramScheduleRepository.getScheduleIdForRequisitionGroupAndProgram(requisitionGroupId, programId);
+    return mapper.getAll(scheduleId);
   }
 }
