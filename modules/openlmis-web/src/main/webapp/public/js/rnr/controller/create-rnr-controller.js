@@ -1,10 +1,10 @@
-function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $location, Requisition, Requisitions, $route, LossesAndAdjustmentsReferenceData, $rootScope, localStorageService) {
+function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $location, Requisition, Requisitions, $routeParams, LossesAndAdjustmentsReferenceData, $rootScope) {
 
   $scope.lossesAndAdjustmentsModal = [];
   $scope.rnrLineItems = [];
   $rootScope.fixToolBar();
   if (!$scope.$parent.rnr) {
-    Requisition.get({facilityId:$route.current.params.facility, programId:$route.current.params.program},
+    Requisition.get({facilityId:$routeParams.facility, programId:$routeParams.program},
       function (data) {
         if (data.rnr) {
           $scope.rnr = data.rnr;
@@ -28,7 +28,7 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
         $scope.allTypes = data.lossAdjustmentTypes;
     }, {});
 
-    ProgramRnRColumnList.get({programId: $route.current.params.program}, function (data) {
+    ProgramRnRColumnList.get({programId: $routeParams.program}, function (data) {
         function resetFullSupplyItemsCostIfNull(rnr) {
             if (rnr == null) return;
             if (rnr.fullSupplyItemsSubmittedCost == null)
@@ -71,7 +71,7 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     };
 
     $scope.highlightRequired = function (value) {
-        if ((isUndefined(value) || value.trim().length == 0 || value == false) && $scope.inputClass == 'required') {
+        if ($scope.inputClass == 'required' && (isUndefined(value) || value.trim().length == 0)) {
             return "required-error";
         }
         return null;
@@ -95,7 +95,6 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
             $scope.submitMessage = "";
             return false;
         }
-
         if ($scope.saveRnrForm.$error.required) {
             $scope.saveRnr();
             $scope.inputClass = "required";
@@ -164,11 +163,11 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
 
         rnrLineItem.fill(rnr, programRnrColumnList);
         $scope.lossesAndAdjustmentsModal[rnrLineItem.rnrLineItem.id] = false;
-    }
+    };
 
     $scope.resetModalError = function () {
         $scope.modalError = '';
-    }
+    };
 
     $scope.showCurrencySymbol = function (value) {
         if (value != 0 && (isUndefined(value) || value.length == 0 || value == false)) {
@@ -240,11 +239,11 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
 
     $scope.getCellErrorClass = function (rnrLineItem, programRnRColumnList) {
         return rnrLineItem.getErrorMessage(programRnRColumnList) ? 'cell-error-highlight' : '';
-    }
+    };
 
     $scope.getRowErrorClass = function (rnrLineItem, programRnRColumnList) {
         return $scope.getCellErrorClass(rnrLineItem, programRnRColumnList) ? 'row-error-highlight' : '';
-    }
+    };
 
     function populateRnrLineItems(rnr) {
         $(rnr.lineItems).each(function (i, lineItem) {

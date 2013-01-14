@@ -1,4 +1,4 @@
-function HeaderController($scope, User, $rootScope, $http, localStorageService) {
+function HeaderController($scope, User, $rootScope, localStorageService) {
   User.get({}, function (data) {
     if (!data.authenticated) {
       $rootScope.modalShown = true;

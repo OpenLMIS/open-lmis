@@ -1,11 +1,11 @@
 describe('CreateRnrController', function () {
 
-    var scope, ctrl, httpBackend, location, route, requisitionHeader, controller, localStorageService;
+    var scope, ctrl, httpBackend, location, routeParams, requisitionHeader, controller, localStorageService;
 
     beforeEach(module('openlmis.services'));
     beforeEach(module('openlmis.localStorage'));
 
-    beforeEach(inject(function ($httpBackend, $rootScope, $location, $controller, $route, _localStorageService_) {
+    beforeEach(inject(function ($httpBackend, $rootScope, $location, $controller, $routeParams, _localStorageService_) {
         scope = $rootScope.$new();
         $rootScope.hasPermission = function(){};
         location = $location;
@@ -15,8 +15,8 @@ describe('CreateRnrController', function () {
         scope.$parent.program = {code: "programCode", "id": 1};
         scope.saveRnrForm = {$error: { rnrError: false }};
         localStorageService = _localStorageService_;
-        route = $route;
-        route.current = {"params": {"facility": "1", "program": "1"}};
+        routeParams = $routeParams;
+        routeParams= {"facility": "1", "program": "1"};
 
         requisitionHeader = {"requisitionHeader": {"facilityName": "National Warehouse",
             "facilityCode": "10134", "facilityType": {"code": "Warehouse"}, "facilityOperatedBy": "MoH", "maximumStockLevel": 3, "emergencyOrderPoint": 0.5,
@@ -33,7 +33,7 @@ describe('CreateRnrController', function () {
         httpBackend.expect('GET', '/requisitions/lossAndAdjustments/reference-data.json').respond({"lossAdjustmentTypes": {}});
         $rootScope.fixToolBar = function () {
         };
-        ctrl = controller(CreateRnrController, {$scope: scope, $location: location, $route: route, localStorageService: localStorageService});
+        ctrl = controller(CreateRnrController, {$scope: scope, $location: location, $routeParams: routeParams, localStorageService: localStorageService});
 
         scope.allTypes = [
             {"name": "some name"},

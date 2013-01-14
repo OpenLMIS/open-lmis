@@ -13,11 +13,15 @@ import org.springframework.security.core.Authentication;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationUserPermissionEvaluatorTest {
+
+  public static final String USER = "user123";
 
   @Mock
   Authentication authentication;
@@ -27,24 +31,30 @@ public class ApplicationUserPermissionEvaluatorTest {
 
   @Test
   public void shouldReturnTrueIfUserHasRequiredPermission() throws Exception {
-    when(authentication.getName()).thenReturn("user123");
-    List<Right> rights = new ArrayList<Right>(){{
+    when(authentication.getName()).thenReturn(USER);
+    List<Right> rights = new ArrayList<Right>() {{
       add(Right.CONFIGURE_RNR);
     }};
-    when(roleRightsService.getRights("user123")).thenReturn(rights);
+    when(roleRightsService.getRights(USER)).thenReturn(rights);
     ApplicationUserPermissionEvaluator evaluator = new ApplicationUserPermissionEvaluator(roleRightsService);
     assertTrue(evaluator.hasPermission(authentication, "", "CONFIGURE_RNR"));
   }
 
-  @Test @Ignore("WIP")
-  public void shouldReturnTrueIfUserHasAuthorizeRightOverRnr() throws Exception {
-    when(authentication.getName()).thenReturn("user123");
-    List<Right> rights = new ArrayList<Right>(){{
-      add(Right.CONFIGURE_RNR);
-    }};
-    when(roleRightsService.getRights("user123")).thenReturn(rights);
+  @Test @Ignore
+  public void shouldReturnFalseIfUserDoesNotHaveCreateRightForRequisition() throws Exception {
+    Integer facilityId = 1;
+    Integer programId = 1;
+    Rnr requisition = new Rnr();
+    requisition.setFacilityId(facilityId);
+    requisition.setProgramId(programId);
+    when(authentication.getName()).thenReturn(USER);
+    when(roleRightsService.userHasRightForFacilityProgram(facilityId, programId, USER, CREATE_REQUISITION)).thenReturn(false);
+
     ApplicationUserPermissionEvaluator evaluator = new ApplicationUserPermissionEvaluator(roleRightsService);
-    Rnr rnr = new Rnr();
-    assertTrue(evaluator.hasPermission(authentication, rnr, "CONFIGURE_RNR"));
+
+    boolean result = evaluator.hasPermission(authentication, requisition, "CREATE_REQUISITION");
+    verify(roleRightsService).userHasRightForFacilityProgram(requisition.getFacilityId(), requisition.getProgramId(), USER,CREATE_REQUISITION);
+    verify(roleRightsService, never()).getRights(USER);
+    assertFalse(result);
   }
 }

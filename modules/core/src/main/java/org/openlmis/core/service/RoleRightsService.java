@@ -63,4 +63,8 @@ public class RoleRightsService {
   public void updateRole(Role role) {
        roleRightsRepository.updateRole(role);
   }
+
+  public boolean userHasRightForFacilityProgram(Integer facilityId, Integer programId, String user, Right right) {
+    return false;
+  }
 }
