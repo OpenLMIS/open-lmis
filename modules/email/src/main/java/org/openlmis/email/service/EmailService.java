@@ -1,6 +1,5 @@
 package org.openlmis.email.service;
 
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openlmis.email.domain.EmailMessage;
@@ -35,7 +34,6 @@ public class EmailService {
   @Async
   public Future<Boolean> send(EmailMessage emailMessage) {
     try {
-      System.out.println(System.getProperties().get("password"));
       mailSender.send(copyToSimpleMailMessage(emailMessage));
     } catch (Exception e) {
       e.printStackTrace();
