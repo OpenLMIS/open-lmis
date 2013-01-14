@@ -19,6 +19,7 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static com.natpryce.makeiteasy.MakeItEasy.with;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.rules.ExpectedException.none;
@@ -103,5 +104,29 @@ public class UserRepositoryTest {
     exException.expectMessage(DUPLICATE_USER_NAME_FOUND);
     userMapper.get(user.getSupervisor().getUserName());
     userRepository.insert(user);
+  }
+
+  @Test
+  public void shouldReturnUserWithValidUsername() {
+    String username = "Admin";
+    User user = make(a(UserBuilder.defaultUser, with(UserBuilder.email, "John_Doe@openlmis.com")));
+    when(userMapper.get(username)).thenReturn(user);
+
+    User returnedUser = userRepository.getByUsername(username);
+
+    assertThat(returnedUser, is(user));
+  }
+
+  @Test
+  public void shouldReturnUserIdWithValidUserEmail() throws Exception {
+
+    String email = "abc@openlmis.org";
+    User expectedUser = new User();
+    when(userMapper.getByEmail(email)).thenReturn(expectedUser);
+
+    User returnedUser = userRepository.getByEmail(email);
+
+    assertThat(expectedUser,is(returnedUser));
+
   }
 }

@@ -5,7 +5,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Right;
+import org.openlmis.core.domain.User;
 import org.openlmis.core.service.RoleRightsService;
+import org.openlmis.core.service.UserService;
 import org.springframework.mock.web.MockHttpSession;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,12 +33,15 @@ public class UserControllerTest {
   @Mock
   private RoleRightsService roleRightService;
 
+  @Mock
+  private UserService userService;
+
   @Before
   public void setUp() {
     initMocks(this);
     session = new MockHttpSession();
     when(httpServletRequest.getSession()).thenReturn(session);
-    userController = new UserController(roleRightService);
+    userController = new UserController(roleRightService, userService);
   }
 
   @Test
@@ -66,5 +71,14 @@ public class UserControllerTest {
     HashMap<String, Object> params = userController.user(httpServletRequest, "true");
     verify(roleRightService).getRights(username);
     assertThat((List<Right>)params.get("rights"), is(listOfRights));
+  }
+
+  @Test
+   public void shouldEmailPasswordTokenForUser() throws Exception {
+    User user = new User();
+    user.setUserName("Manan");
+    user.setEmail("manan@thoughtworks.com");
+    userController.sendPasswordTokenEmail(user);
+    verify(userService).sendForgotPasswordEmail(user);
   }
 }

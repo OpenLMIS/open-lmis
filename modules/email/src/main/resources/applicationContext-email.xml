@@ -14,7 +14,7 @@
 
 
     <context:component-scan base-package="org.openlmis.email"/>
-    <task:annotation-driven/>
+    <!--<task:annotation-driven />-->
 
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
         <property name="host" value="${mail.sender.host}"/>
@@ -30,6 +30,19 @@
         <prop key="mail.smtp.starttls.enable">${mail.smtp.starttls.enable}</prop>
         <prop key="mail.smtp.quitwait">${mail.smtp.quitwait}</prop>
     </util:properties>
-    <context:property-placeholder location="classpath:mailing.properties" system-properties-mode="OVERRIDE"/>
+
+    <bean id="emailProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+
+        <property name="locations">
+            <list>
+                <value>classpath*:/mailing.properties</value>
+            </list>
+        </property>
+        <property name="systemPropertiesModeName">
+            <value>SYSTEM_PROPERTIES_MODE_OVERRIDE</value>
+        </property>
+    </bean>
+
+    <context:property-placeholder location="classpath*:mailing.properties" system-properties-mode="OVERRIDE"/>
 
 </beans>

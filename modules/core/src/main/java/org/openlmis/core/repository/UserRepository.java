@@ -64,4 +64,12 @@ public class UserRepository {
 
     user.setSupervisor(supervisor);
   }
+
+  public User getByEmail(String email) {
+    return userMapper.getByEmail(email);
+  }
+
+  public User getByUsername(String username) {
+    return userMapper.get(username);
+  }
 }
