@@ -7,6 +7,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.builder.RequisitionGroupBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.RequisitionGroupMember;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static com.natpryce.makeiteasy.MakeItEasy.with;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -28,9 +30,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.builder.FacilityBuilder.FACILITY_CODE;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
-import static org.openlmis.core.builder.ProgramBuilder.PROGRAM_CODE;
-import static org.openlmis.core.builder.ProgramBuilder.PROGRAM_ID;
-import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
+import static org.openlmis.core.builder.ProgramBuilder.*;
 import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -59,8 +59,11 @@ public class RequisitionGroupMemberRepositoryTest {
 
   @Mock
   ProgramMapper programMapper;
-  private RequisitionGroupMemberRepository repository;
 
+  @Mock
+  private RequisitionGroupRepository requisitionGroupRepository;
+
+  private RequisitionGroupMemberRepository repository;
 
   @Before
   public void setUp() throws Exception {
@@ -75,9 +78,8 @@ public class RequisitionGroupMemberRepositoryTest {
     programIdList.add(1);
 
     initMocks(this);
-    repository = new RequisitionGroupMemberRepository(requisitionGroupMemberMapper, requisitionGroupProgramScheduleMapper, requisitionGroupMapper, facilityRepository, programMapper);
+    repository = new RequisitionGroupMemberRepository(requisitionGroupMemberMapper, requisitionGroupProgramScheduleMapper, requisitionGroupMapper, facilityRepository, programMapper, requisitionGroupRepository);
   }
-
 
   @Test
   public void shouldGiveErrorIfRGDoesNotExist() throws Exception {
@@ -134,7 +136,8 @@ public class RequisitionGroupMemberRepositoryTest {
 
     when(programMapper.getById(commonProgramId)).thenReturn(make(a(defaultProgram)));
 
-    when(requisitionGroupMemberMapper.getRGCodeForProgramAndFacility(commonProgramId, FACILITY_ID)).thenReturn("DCODE");
+    RequisitionGroup rg = make(a(defaultRequisitionGroup, with(RequisitionGroupBuilder.code, "DCODE")));
+    when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(commonProgramId, FACILITY_ID)).thenReturn(rg);
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Facility " + FACILITY_CODE + " is already assigned to Requisition Group DCODE running same program " + PROGRAM_CODE);
@@ -169,14 +172,5 @@ public class RequisitionGroupMemberRepositoryTest {
     assertThat(requisitionGroupMember.getRequisitionGroup().getId(), is(notNullValue()));
 
   }
-
-  @Test
-  public void shouldReturnRGCodeForFacilityProgram() {
-    String expectedRGCode = "test rg code";
-    when(requisitionGroupMemberMapper.getRGCodeForProgramAndFacility(FACILITY_ID, PROGRAM_ID)).thenReturn(expectedRGCode);
-    String rgCode = repository.getRGCodeForProgramAndFacility(FACILITY_ID, PROGRAM_ID);
-    assertThat(rgCode, is(expectedRGCode));
-  }
-
 }
 
