@@ -39,8 +39,9 @@ public class E2EInitiateRnR extends TestCaseHelper {
         dbWrapper.insertProgramProducts();
         dbWrapper.insertFacilityApprovedProducts();
         dbWrapper.insertRequisitionGroup();
-        dbWrapper.insertRequisitionGroupMembers();
         dbWrapper.insertSchedules();
+        dbWrapper.insertRequisitionGroupProgramSchedule();
+        dbWrapper.insertRequisitionGroupMembers();
         dbWrapper.insertProcessingPeriods();
 
 

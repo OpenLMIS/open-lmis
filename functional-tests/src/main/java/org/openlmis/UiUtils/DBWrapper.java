@@ -96,14 +96,14 @@ public class DBWrapper {
         }
         dbWrapper.dbConnection("INSERT INTO facilities\n" +
                 "(code, name, description, gln, mainPhone, fax, address1, address2, geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById, coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, hasElectricity, online, hasElectronicScc, hasElectronicDar, active, goLiveDate, goDownDate, satellite, comment, dataReportable) values\n" +
-                "('F1756','Village Dispensary','IT department','G7645',9876234981,'fax','A','B',1,1,333,22.1,1.2,3.3,2,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/1887','TRUE','fc','TRUE'),\n" +
-                "('F1757','Central Hospital','IT department','G7646',9876234981,'fax','A','B',1,2,333,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','TRUE','fc','TRUE');\n", "alter");
+                "('F10','Village Dispensary','IT department','G7645',9876234981,'fax','A','B',1,1,333,22.1,1.2,3.3,2,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/1887','TRUE','fc','TRUE'),\n" +
+                "('F11','Central Hospital','IT department','G7646',9876234981,'fax','A','B',1,2,333,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','TRUE','fc','TRUE');\n", "alter");
 
         dbWrapper.dbConnection("insert into programs_supported(facilityId, programId, active, modifiedBy) VALUES\n" +
-            "((SELECT id FROM facilities WHERE code = 'F1756'), 1, true, 'Admin123'),\n" +
-            "((SELECT id FROM facilities WHERE code = 'F1756'), 2, true, 'Admin123'),\n" +
-            "((SELECT id FROM facilities WHERE code = 'F1757'), 1, true, 'Admin123'),\n" +
-            "((SELECT id FROM facilities WHERE code = 'F1757'), 2, true, 'Admin123');","alter");
+            "((SELECT id FROM facilities WHERE code = 'F10'), 1, true, 'Admin123'),\n" +
+            "((SELECT id FROM facilities WHERE code = 'F10'), 2, true, 'Admin123'),\n" +
+            "((SELECT id FROM facilities WHERE code = 'F11'), 1, true, 'Admin123'),\n" +
+            "((SELECT id FROM facilities WHERE code = 'F11'), 2, true, 'Admin123');","alter");
 
     }
 
@@ -191,7 +191,7 @@ public class DBWrapper {
         }
         dbwrapper.dbConnection("INSERT INTO supervisory_nodes\n" +
                 "  (parentId, facilityId, name, code) VALUES\n" +
-                "  (null, (SELECT id FROM facilities WHERE code = 'F1756'), 'Node 1', 'N1');", "alter");
+                "  (null, (SELECT id FROM facilities WHERE code = 'F10'), 'Node 1', 'N1');", "alter");
     }
 
     public void insertSupervisoryNodesSecond() throws SQLException, IOException {
@@ -199,7 +199,7 @@ public class DBWrapper {
 
         dbwrapper.dbConnection("INSERT INTO supervisory_nodes\n" +
                 "  (parentId, facilityId, name, code) VALUES\n" +
-                "  ((select id from  supervisory_nodes where code ='N1'), (SELECT id FROM facilities WHERE code = 'F1757'), 'Node 1', 'N2');", "alter");
+                "  ((select id from  supervisory_nodes where code ='N1'), (SELECT id FROM facilities WHERE code = 'F11'), 'Node 1', 'N2');", "alter");
     }
 
     public void insertRequisitionGroup() throws SQLException, IOException {
@@ -212,8 +212,8 @@ public class DBWrapper {
 
         }
         dbwrapper.dbConnection("INSERT INTO requisition_groups ( code ,name,description,supervisoryNodeId )values\n" +
-                "('RG2','Requistion Group 2','Supports EM(Q1M)',(select id from  supervisory_nodes where code ='N1')),\n" +
-                "('RG1','Requistion Group 1','Supports EM(Q2M)',(select id from  supervisory_nodes where code ='N2'));", "alter");
+                "('RG2','Requistion Group 2','Supports EM(Q1M)',(select id from  supervisory_nodes where code ='N2')),\n" +
+                "('RG1','Requistion Group 1','Supports EM(Q2M)',(select id from  supervisory_nodes where code ='N1'));", "alter");
     }
 
     public void insertRequisitionGroupMembers() throws SQLException, IOException {
@@ -226,8 +226,27 @@ public class DBWrapper {
 
         }
         dbwrapper.dbConnection("INSERT INTO requisition_group_members ( requisitionGroupId ,facilityId )values\n" +
-                "((select id from  requisition_groups where code ='RG1'),(select id from  facilities where code ='F1756')),\n" +
-                "((select id from  requisition_groups where code ='RG2'),(select id from  facilities where code ='F1757'));", "alter");
+                "((select id from  requisition_groups where code ='RG1'),(select id from  facilities where code ='F10')),\n" +
+                "((select id from  requisition_groups where code ='RG2'),(select id from  facilities where code ='F11'));", "alter");
+    }
+
+    public void insertRequisitionGroupProgramSchedule() throws SQLException, IOException {
+        DBWrapper dbwrapper = new DBWrapper();
+        ResultSet rs = dbwrapper.dbConnection("Select requisitiongroupid from requisition_group_members;", "select");
+
+        if (rs.next()) {
+
+            dbwrapper.dbConnection("delete from requisition_group_program_schedules;", "alter");
+
+        }
+        dbwrapper.dbConnection("insert into requisition_group_program_schedules ( requisitiongroupid , programid , scheduleid , directdelivery ) values\n" +
+                "((select id from requisition_groups where code='RG1'),(select id from programs where code='ESS_MEDS'),(select id from processing_schedules where code='Q1stM'),TRUE),\n" +
+                "((select id from requisition_groups where code='RG1'),(select id from programs where code='MALARIA'),(select id from processing_schedules where code='Q1stM'),TRUE),\n" +
+                "((select id from requisition_groups where code='RG1'),(select id from programs where code='HIV'),(select id from processing_schedules where code='M'),TRUE),\n" +
+                "((select id from requisition_groups where code='RG2'),(select id from programs where code='ESS_MEDS'),(select id from processing_schedules where code='Q1stM'),TRUE),\n" +
+                "((select id from requisition_groups where code='RG2'),(select id from programs where code='MALARIA'),(select id from processing_schedules where code='Q1stM'),TRUE),\n" +
+                "((select id from requisition_groups where code='RG2'),(select id from programs where code='HIV'),(select id from processing_schedules where code='M'),TRUE);\n", "alter");
+
     }
 
     public void insertRoleAssignment(String userId) throws SQLException, IOException {

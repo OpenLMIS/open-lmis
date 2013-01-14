@@ -7,3 +7,12 @@ INSERT INTO requisition_group_members ( requisitionGroupId ,facilityId )values
 ((select id from  requisition_groups where code ='RG2'),(select id from  facilities where code ='F11'));
 
 
+insert into requisition_group_program_schedules ( requisitiongroupid , programid , scheduleid , directdelivery ) values
+((select id from requisition_groups where code='RG1'),(select id from programs where code='ESS_MEDS'),(select id from processing_schedules where code='Q1stM'),TRUE),
+((select id from requisition_groups where code='RG1'),(select id from programs where code='MALARIA'),(select id from processing_schedules where code='Q1stM'),TRUE),
+((select id from requisition_groups where code='RG1'),(select id from programs where code='HIV'),(select id from processing_schedules where code='M'),TRUE),
+((select id from requisition_groups where code='RG2'),(select id from programs where code='ESS_MEDS'),(select id from processing_schedules where code='Q1stM'),TRUE),
+((select id from requisition_groups where code='RG2'),(select id from programs where code='MALARIA'),(select id from processing_schedules where code='Q1stM'),TRUE),
+((select id from requisition_groups where code='RG2'),(select id from programs where code='HIV'),(select id from processing_schedules where code='M'),TRUE);
+
+
