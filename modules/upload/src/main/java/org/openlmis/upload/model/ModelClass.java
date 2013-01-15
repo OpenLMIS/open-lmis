@@ -31,7 +31,7 @@ public class ModelClass {
 
   }
 
-  public String[] getFieldMappings(String[] headers) {
+  public String[] getFieldNameMappings(String[] headers) {
     List<String> fieldMappings = new ArrayList<>();
     for (String header : headers) {
       Field importField = findImportFieldWithName(header);

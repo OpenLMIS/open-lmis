@@ -66,7 +66,7 @@ public class CSVParser {
   private void parse(ModelClass modelClass, RecordHandler recordHandler,
                      CsvDozerBeanReader csvBeanReader, String[] userFriendlyHeaders,
                      CellProcessor[] processors, String modifiedBy) throws UploadException {
-    String[] fieldMappings = modelClass.getFieldMappings(userFriendlyHeaders);
+    String[] fieldMappings = modelClass.getFieldNameMappings(userFriendlyHeaders);
     Importable importedModel;
     try {
       csvBeanReader.configureBeanMapping(modelClass.getClazz(), fieldMappings);
