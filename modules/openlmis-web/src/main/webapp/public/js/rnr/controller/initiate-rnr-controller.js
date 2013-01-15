@@ -1,4 +1,4 @@
-function InitiateRnrController($scope, $location, $rootScope, Requisition, facilities, programs, UserSupportedProgramInFacilityForAnOperation, UserSupervisedFacilitiesForProgram, UserFacilityList, UserSupervisedProgramList) {
+function InitiateRnrController($scope, $location, $rootScope, Requisition, UserSupportedProgramInFacilityForAnOperation, UserSupervisedFacilitiesForProgram, UserFacilityList, UserSupervisedProgramList) {
 
   const DEFAULT_FACILITY_MESSAGE = '--choose facility--';
   const DEFAULT_PROGRAM_MESSAGE = '--choose program--';
