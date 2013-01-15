@@ -74,6 +74,7 @@ jettyRunWarLocal.doFirst {
 jettyRun {
     jettyRun.httpPort = 9091
     contextPath = ''
+    System.properties.get('env', 'dev')
 }
 
 task run(dependsOn: jettyRun)

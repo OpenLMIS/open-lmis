@@ -24,6 +24,7 @@ subprojects {
 
     test {
         jvmArgs '-XX:-UseSplitVerifier'
+        System.properties.get('env', 'dev')
         systemProperties System.properties
     }
 

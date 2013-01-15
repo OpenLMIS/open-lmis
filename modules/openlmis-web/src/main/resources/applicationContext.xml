@@ -25,6 +25,8 @@
             <list>
                 <value>classpath:/postgresql.properties</value>
                 <value>classpath*:/countrySpecific.properties</value>
+                <value>classpath:/default.properties</value>
+                <value>classpath:${env}/app.properties</value>
             </list>
         </property>
         <property name="ignoreUnresolvablePlaceholders" value="true"/>
@@ -46,8 +48,8 @@
     <bean id="multipartResolver"
           class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
 
-    <mvc:resources mapping="/public/**" location="/public/"/>
-    <mvc:resources mapping="/error/**" location="/public/"/>
+    <mvc:resources mapping="/public/**" location="/public/" />
+    <mvc:resources mapping="/error/**" location="/public/" />
 
     <mvc:interceptors>
         <bean id="noCacheInterceptor" class="org.springframework.web.servlet.mvc.WebContentInterceptor">
@@ -57,7 +59,7 @@
             <property name="useCacheControlNoStore" value="true"/>
             <property name="cacheMappings">
                 <props>
-                    <prop key="/public/**">31556926</prop>
+                    <prop key="/public/**">${public.pages.cache.duration}</prop>
                 </props>
             </property>
         </bean>
