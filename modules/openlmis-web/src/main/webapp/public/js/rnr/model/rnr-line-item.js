@@ -5,11 +5,11 @@ var RnrLineItem = function (lineItem) {
   this.arithmeticallyInvalid = function (programRnRColumnList) {
 
     if (programRnRColumnList != undefined && programRnRColumnList[0].formulaValidated) {
-      var beginningBalance = parseInt(this.rnrLineItem.beginningBalance);
-      var quantityReceived = parseInt(this.rnrLineItem.quantityReceived);
-      var quantityDispensed = parseInt(this.rnrLineItem.quantityDispensed);
-      var totalLossesAndAdjustments = parseInt(this.rnrLineItem.totalLossesAndAdjustments);
-      var stockInHand = parseInt(this.rnrLineItem.stockInHand);
+      var beginningBalance = parseIntWithBaseTen(this.rnrLineItem.beginningBalance,10);
+      var quantityReceived = parseIntWithBaseTen(this.rnrLineItem.quantityReceived);
+      var quantityDispensed = parseIntWithBaseTen(this.rnrLineItem.quantityDispensed);
+      var totalLossesAndAdjustments = parseIntWithBaseTen(this.rnrLineItem.totalLossesAndAdjustments);
+      var stockInHand = parseIntWithBaseTen(this.rnrLineItem.stockInHand);
       return (isNumber(quantityDispensed) && isNumber(beginningBalance) && isNumber(quantityReceived) &&
               isNumber(totalLossesAndAdjustments) && isNumber(stockInHand)) ?
               quantityDispensed != (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand) : null;
@@ -17,12 +17,16 @@ var RnrLineItem = function (lineItem) {
     return false;
   }
 
+  function parseIntWithBaseTen(number){
+   return parseInt(number, 10);
+  }
+
   this.reEvaluateTotalLossesAndAdjustments = function () {
     var rnrLineItem = this.rnrLineItem;
     rnrLineItem.totalLossesAndAdjustments = 0;
 
     $(rnrLineItem.lossesAndAdjustments).each(function (index, lossAndAdjustmentObject) {
-      var quantity = parseInt(lossAndAdjustmentObject.quantity, 10);
+      var quantity = parseIntWithBaseTen(lossAndAdjustmentObject.quantity, 10);
       updateTotalLossesAndAdjustment(rnrLineItem, quantity, lossAndAdjustmentObject.type.additive);
     });
   }
@@ -31,7 +35,7 @@ var RnrLineItem = function (lineItem) {
     this.rnrLineItem.lossesAndAdjustments = $.grep(this.rnrLineItem.lossesAndAdjustments, function (lossAndAdjustmentObj) {
       return lossAndAdjustmentObj != lossAndAdjustmentToDelete;
     });
-    var quantity = parseInt(lossAndAdjustmentToDelete.quantity, 10);
+    var quantity = parseIntWithBaseTen(lossAndAdjustmentToDelete.quantity, 10);
     updateTotalLossesAndAdjustment(this.rnrLineItem, quantity, !lossAndAdjustmentToDelete.type.additive);
   };
 
@@ -40,7 +44,7 @@ var RnrLineItem = function (lineItem) {
     newLossAndAdjustment.type = undefined;
     newLossAndAdjustment.quantity = undefined;
     this.rnrLineItem.lossesAndAdjustments.push(lossAndAdjustment);
-    var quantity = parseInt(lossAndAdjustment.quantity, 10);
+    var quantity = parseIntWithBaseTen(lossAndAdjustment.quantity, 10);
     updateTotalLossesAndAdjustment(this.rnrLineItem, quantity, lossAndAdjustment.type.additive);
   };
 
@@ -68,8 +72,8 @@ var RnrLineItem = function (lineItem) {
 
     function fillNormalizedConsumption() {
       var m = 3; // will be picked up from the database in future
-      var x = isNumber(rnrLineItem.stockOutDays) ? parseInt(rnrLineItem.stockOutDays) : null;
-      var f = isNumber(rnrLineItem.newPatientCount) ? parseInt(rnrLineItem.newPatientCount) : null;
+      var x = isNumber(rnrLineItem.stockOutDays) ? parseIntWithBaseTen(rnrLineItem.stockOutDays) : null;
+      var f = isNumber(rnrLineItem.newPatientCount) ? parseIntWithBaseTen(rnrLineItem.newPatientCount) : null;
       if (getSource('F') == null) f = 0;
 
       if (!isNumber(quantityDispensed) || !isNumber(x) || !isNumber(f)) {
@@ -77,8 +81,8 @@ var RnrLineItem = function (lineItem) {
         return;
       }
 
-      var dosesPerMonth = parseInt(rnrLineItem.dosesPerMonth);
-      var g = parseInt(rnrLineItem.dosesPerDispensingUnit);
+      var dosesPerMonth = parseIntWithBaseTen(rnrLineItem.dosesPerMonth);
+      var g = parseIntWithBaseTen(rnrLineItem.dosesPerDispensingUnit);
       var consumptionAdjustedWithStockOutDays = ((m * 30) - x) == 0 ? quantityDispensed : (quantityDispensed * ((m * 30) / ((m * 30) - x)));
       var adjustmentForNewPatients = (f * Math.ceil(dosesPerMonth / g) ) * m;
       lineItem.normalizedConsumption = Math.round(consumptionAdjustedWithStockOutDays + adjustmentForNewPatients);
@@ -106,7 +110,7 @@ var RnrLineItem = function (lineItem) {
     }
 
     function applyRoundingRules(orderQuantity) {
-      var remainderQuantity = orderQuantity % parseInt(rnrLineItem.packSize);
+      var remainderQuantity = orderQuantity % parseIntWithBaseTen(rnrLineItem.packSize);
       var packsToShip = rnrLineItem.packsToShip;
       if (remainderQuantity >= rnrLineItem.packRoundingThreshold && packsToShip != 0) {
         packsToShip += 1;
@@ -119,7 +123,7 @@ var RnrLineItem = function (lineItem) {
     }
 
     function fillPacksToShip() {
-      var packSize = parseInt(rnrLineItem.packSize);
+      var packSize = parseIntWithBaseTen(rnrLineItem.packSize);
       var orderQuantity = rnrLineItem.quantityRequested == null ?
           rnrLineItem.calculatedOrderQuantity : rnrLineItem.quantityRequested;
 
@@ -164,11 +168,11 @@ var RnrLineItem = function (lineItem) {
       rnr.totalSubmittedCost = cost;
     }
 
-    var beginningBalance = parseInt(rnrLineItem.beginningBalance);
-    var quantityReceived = parseInt(rnrLineItem.quantityReceived);
-    var quantityDispensed = parseInt(rnrLineItem.quantityDispensed);
-    var totalLossesAndAdjustments = parseInt(rnrLineItem.totalLossesAndAdjustments);
-    var stockInHand = parseInt(rnrLineItem.stockInHand);
+    var beginningBalance = parseIntWithBaseTen(rnrLineItem.beginningBalance);
+    var quantityReceived = parseIntWithBaseTen(rnrLineItem.quantityReceived);
+    var quantityDispensed = parseIntWithBaseTen(rnrLineItem.quantityDispensed);
+    var totalLossesAndAdjustments = parseIntWithBaseTen(rnrLineItem.totalLossesAndAdjustments);
+    var stockInHand = parseIntWithBaseTen(rnrLineItem.stockInHand);
 
     if (getSource('C') == 'CALCULATED') fillConsumption();
     if (getSource('E') == 'CALCULATED') fillStockInHand();
@@ -193,7 +197,7 @@ var RnrLineItem = function (lineItem) {
   }
 
   var isNumber = function (number) {
-    return !isNaN(parseInt(number));
+    return !isNaN(parseIntWithBaseTen(number));
   };
 
   this.getErrorMessage = function(programRnRColumnList){
