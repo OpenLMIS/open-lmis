@@ -125,6 +125,7 @@ public class DBWrapper {
         dbwrapper.dbConnection("DELETE FROM requisition_line_items;", "alter");
         dbwrapper.dbConnection("delete from products;", "alter");
         dbwrapper.dbConnection("delete from users where userName like('User%');", "alter");
+        dbwrapper.dbConnection("delete from users where id=200;", "alter");
         dbwrapper.dbConnection("DELETE FROM requisition_line_item_losses_adjustments;", "alter");
         dbwrapper.dbConnection("DELETE FROM requisition_line_items;", "alter");
         dbwrapper.dbConnection("DELETE FROM requisition;", "alter");
@@ -259,6 +260,16 @@ public class DBWrapper {
                 "            (userId, roleId, programId, supervisoryNodeId) VALUES \n" +
                 "    (200, (SELECT id FROM roles WHERE name = '"+userId+"'), 1, null),\n" +
                 "    (200, (SELECT id FROM roles WHERE name = '"+userId+"'), 1, (SELECT id from supervisory_nodes WHERE code = 'N1'));", "alter");
+    }
+
+
+    public void alterUserID(String userId) throws SQLException, IOException {
+        DBWrapper dbwrapper = new DBWrapper();
+
+
+        dbwrapper.dbConnection("delete from users where id=200;", "alter");
+
+        dbwrapper.dbConnection(" update users set id="+userId+" where username='User123'", "alter");
     }
 
 

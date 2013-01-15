@@ -43,11 +43,14 @@ public class E2EUpload extends TestCaseHelper {
         rolesPage.createRole("User", "User", userRoleList);
 
         DBWrapper dbWrapper = new DBWrapper();
-        dbWrapper.insertUser("200", "User123", "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==");
+
+        UploadPage uploadPage = homePage.navigateUploads();
+        uploadPage.uploadUsers();
+        dbWrapper.alterUserID("200");
 
         dbWrapper.insertRoleAssignment("User");
 
-        UploadPage uploadPage = homePage.navigateUploads();
+
 
         uploadPage.uploadProducts();
         testWebDriver.setImplicitWait(2500);
