@@ -1,5 +1,6 @@
 package org.openlmis.core.service;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -10,6 +11,7 @@ import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.UserRepository;
 import org.openlmis.email.domain.EmailMessage;
+import org.openlmis.email.exception.EmailException;
 import org.openlmis.email.service.EmailService;
 
 import static org.junit.rules.ExpectedException.none;
@@ -27,22 +29,35 @@ public class UserServiceTest {
   @Mock
   private EmailService emailService;
 
-//  @Autowired
-//  private MailSender mailSender;
-//  @Autowired
-//  private UserRepository userRepository;
-
   private UserService userService;
+
+
+  @Before
+  public void setUp() throws Exception {
+    userService = new UserService(userRepository, emailService);
+  }
 
   @Test
   public void shouldValidateUserBeforeInsert() throws Exception {
     User user = mock(User.class);
     doThrow(new DataException("user.email.invalid")).when(user).validate();
-    UserService userService = new UserService(userRepository,null);
     expectedException.expect(DataException.class);
     expectedException.expectMessage("user.email.invalid");
     userService.save(user);
     verify(userRepository, never()).insert(user);
+  }
+
+  @Test
+  public void shouldGiveErrorIfUserDoesNotExist() throws Exception {
+    User user = new User();
+    String email = "some email";
+    user.setEmail(email);
+    when(userRepository.getByEmail(email)).thenReturn(null);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage(UserService.USER_EMAIL_INCORRECT);
+
+    userService.sendForgotPasswordEmail(user);
   }
 
   @Test
@@ -56,14 +71,23 @@ public class UserServiceTest {
       userToBeReturned.setId(1111);
       when(userRepository.getByEmail(user.getEmail())).thenReturn(userToBeReturned);
 
-      //EmailService emailService = new EmailService(mailSender);
-
-      userService  = new UserService(userRepository,emailService);
-
       userService.sendForgotPasswordEmail(user);
 
       verify(emailService).send(any(EmailMessage.class));
       verify(userRepository).getByEmail(user.getEmail());
+  }
 
+  @Test
+  public void shouldGiveErrorIfUserEmailDoesNotExist() throws Exception {
+    User userWithoutEmail = new User();
+    User user = new User();
+    user.setEmail("some email");
+    when(userRepository.getByEmail(user.getEmail())).thenReturn(userWithoutEmail);
+    doThrow(new EmailException("")).when(emailService).send(any(EmailMessage.class));
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage(UserService.USER_EMAIL_NOT_FOUND);
+
+    userService.sendForgotPasswordEmail(user);
   }
 }

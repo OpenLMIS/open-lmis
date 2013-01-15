@@ -2,9 +2,13 @@ package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.User;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.core.service.UserService;
+import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,11 +27,10 @@ import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.U
 @NoArgsConstructor
 public class UserController extends BaseController {
 
-  @Autowired
   private RoleRightsService roleRightService;
-  @Autowired
   private UserService userService;
 
+  @Autowired
   public UserController(RoleRightsService roleRightService, UserService userService) {
     this.roleRightService = roleRightService;
     this.userService = userService;
@@ -49,7 +52,12 @@ public class UserController extends BaseController {
   }
 
   @RequestMapping(value = "/forgot-password", method = RequestMethod.POST, headers = "Accept=application/json")
-  public void sendPasswordTokenEmail(@RequestBody User user) {
+  public ResponseEntity<OpenLmisResponse> sendPasswordTokenEmail(@RequestBody User user) {
+    try {
       userService.sendForgotPasswordEmail(user);
+      return OpenLmisResponse.success("Email sent");
+    } catch (DataException e) {
+      return OpenLmisResponse.error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
+    }
   }
 }

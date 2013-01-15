@@ -1,13 +1,16 @@
 function ForgotPasswordController($scope, ForgotPassword, $location) {
 
-    $scope.sendForgotPasswordEmail = function(){
+  $scope.user = {};
 
-    if (!$scope.user.username && !$scope.user.email) {
-           $scope.error="Username not entered";
+    $scope.sendForgotPasswordEmail = function(){
+    if (!$scope.user.userName && !$scope.user.email) {
+           $scope.error="Please enter either your Email or Username";
     } else {
       ForgotPassword.save({}, $scope.user, function () {
-        $location.path('email-sent.html');
-      }, {})
+        window.location = "email-sent.html";
+      }, function (data) {
+        $scope.error = data.data.error;
+      });
       }
     }
 

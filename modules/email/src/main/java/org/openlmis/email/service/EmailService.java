@@ -3,6 +3,7 @@ package org.openlmis.email.service;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openlmis.email.domain.EmailMessage;
+import org.openlmis.email.exception.EmailException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailSender;
@@ -33,15 +34,13 @@ public class EmailService {
 
   @Async
   public Future<Boolean> send(EmailMessage emailMessage) {
-    try {
       mailSender.send(copyToSimpleMailMessage(emailMessage));
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
     return new AsyncResult(true);
   }
 
   private SimpleMailMessage copyToSimpleMailMessage(EmailMessage message) {
+    if(message.getTo() == null || message.getTo().equals("")) throw new EmailException("Message 'To' not set");
+
     if (simpleMailMessage == null) {
       simpleMailMessage = new SimpleMailMessage();
     }

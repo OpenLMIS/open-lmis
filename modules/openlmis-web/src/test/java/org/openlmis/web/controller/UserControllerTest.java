@@ -6,8 +6,12 @@ import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.User;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.core.service.UserService;
+import org.openlmis.web.response.OpenLmisResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpSession;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +21,7 @@ import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -41,7 +46,7 @@ public class UserControllerTest {
     initMocks(this);
     session = new MockHttpSession();
     when(httpServletRequest.getSession()).thenReturn(session);
-    userController = new UserController(roleRightService,userService);
+    userController = new UserController(roleRightService, userService);
   }
 
   @Test
@@ -59,7 +64,7 @@ public class UserControllerTest {
     session.setAttribute(UserAuthenticationSuccessHandler.USER, null);
     HashMap<String, Object> params = userController.user(httpServletRequest, "true");
     assertThat(params.get("error").toString(), is("true"));
-    assertThat((Boolean)params.get("authenticated"), is(false));
+    assertThat((Boolean) params.get("authenticated"), is(false));
   }
 
   @Test
@@ -70,16 +75,27 @@ public class UserControllerTest {
     when(roleRightService.getRights(username)).thenReturn(listOfRights);
     HashMap<String, Object> params = userController.user(httpServletRequest, "true");
     verify(roleRightService).getRights(username);
-    assertThat((List<Right>)params.get("rights"), is(listOfRights));
+    assertThat((List<Right>) params.get("rights"), is(listOfRights));
   }
 
-    public void shouldEmailPasswordTokenForUser() throws Exception {
-        User user = new User();
-        user.setUserName("Manan");
-        user.setEmail("manan@thoughtworks.com");
-        userController.sendPasswordTokenEmail(user);
-        verify(userService).sendForgotPasswordEmail(user);
-     }
+  @Test
+  public void shouldEmailPasswordTokenForUser() throws Exception {
+    User user = new User();
+    user.setUserName("Manan");
+    user.setEmail("manan@thoughtworks.com");
+    userController.sendPasswordTokenEmail(user);
+    verify(userService).sendForgotPasswordEmail(user);
+  }
 
+  @Test
+  public void shouldReturnErrorIfSendingForgotPasswordEmailFails() throws Exception {
+    User user = new User();
+    doThrow(new DataException("some error")).when(userService).sendForgotPasswordEmail(user);
+
+    ResponseEntity<OpenLmisResponse> response = userController.sendPasswordTokenEmail(user);
+
+    assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+    assertThat(response.getBody().getErrorMsg(), is("some error"));
+  }
 
 }
