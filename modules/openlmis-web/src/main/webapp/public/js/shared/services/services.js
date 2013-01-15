@@ -96,3 +96,7 @@ services.factory('Period', function ($resource) {
 services.factory('SupportedUploads', function ($resource) {
   return $resource('/supported-uploads.json', {}, {});
 });
+
+services.factory('ForgotPassword', function ($resource) {
+  return $resource('/forgot-password.json', {}, {});
+});

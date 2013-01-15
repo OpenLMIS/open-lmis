@@ -48,7 +48,7 @@ public class UserController extends BaseController {
     return params;
   }
 
-  @RequestMapping(value = "/forgotPassword", method = RequestMethod.GET)
+  @RequestMapping(value = "/forgot-password", method = RequestMethod.POST, headers = "Accept=application/json")
   public void sendPasswordTokenEmail(@RequestBody User user) {
       userService.sendForgotPasswordEmail(user);
   }
