@@ -1,8 +1,10 @@
 package org.openlmis.core.domain;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class FacilityType {
     private Integer id;
     private String code;
@@ -13,4 +15,8 @@ public class FacilityType {
     private Double nominalEop;
     private Integer displayOrder;
     private boolean active;
+
+  public FacilityType(String code) {
+    this.code = code;
+  }
 }

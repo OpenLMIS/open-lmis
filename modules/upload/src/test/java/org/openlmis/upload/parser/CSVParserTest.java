@@ -130,4 +130,19 @@ public class CSVParserTest {
         DummyImportable dummyImportable = (DummyImportable) recordHandler.getImportedObjects().get(0);
         assertThat(dummyImportable.getDummyNestedField().getCode(), is("code1"));
     }
+
+  @Test
+      public void shouldSetMultipleNestedValues() throws IOException {
+          String csvInput = "mandatory string field   , mandatoryIntField, entity 1 code, entity 2 code\n" +
+                  " Random1               , 23, code1-1, code1-2\n" +
+                  " Random2                , 25, code2-1, code2-2\n";
+
+          InputStream inputStream = new ByteArrayInputStream(csvInput.getBytes("UTF-8"));
+
+
+          csvParser.process(inputStream, dummyImportableClass, recordHandler, "user");
+          DummyImportable dummyImportable = (DummyImportable) recordHandler.getImportedObjects().get(0);
+          assertThat(dummyImportable.getMultipleNestedFields().getEntityCode1(), is("code1-1"));
+          assertThat(dummyImportable.getMultipleNestedFields().getEntityCode2(), is("code1-2"));
+      }
 }

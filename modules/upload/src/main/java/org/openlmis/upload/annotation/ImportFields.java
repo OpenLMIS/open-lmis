@@ -7,9 +7,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ImportField {
-    boolean mandatory() default false;
-    String type() default "String";
-    String name() default "";
-    String nested() default "";
+public @interface ImportFields {
+  ImportField[] importFields();
 }

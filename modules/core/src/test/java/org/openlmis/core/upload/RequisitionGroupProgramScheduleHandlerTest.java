@@ -5,10 +5,8 @@ import org.junit.Test;
 import org.mockito.MockitoAnnotations.Mock;
 import org.openlmis.core.domain.RequisitionGroupProgramSchedule;
 import org.openlmis.core.service.RequisitionGroupProgramScheduleService;
-import org.openlmis.upload.annotation.ImportField;
+import org.openlmis.upload.model.Field;
 import org.openlmis.upload.model.ModelClass;
-
-import java.lang.reflect.Field;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -43,45 +41,40 @@ public class RequisitionGroupProgramScheduleHandlerTest {
     public void shouldMarkRequisitionGroupFieldAsImportable() {
         Field requisitionGroupField = new ModelClass(RequisitionGroupProgramSchedule.class).findImportFieldWithName("RG Code");
         assertNotNull(requisitionGroupField);
-        ImportField annotation = requisitionGroupField.getAnnotation(ImportField.class);
-        assertTrue(annotation.mandatory());
-        assertEquals("code", annotation.nested());
+        assertTrue(requisitionGroupField.isMandatory());
+        assertEquals("code", requisitionGroupField.getNested());
     }
 
     @Test
     public void shouldMarkProgramFieldAsImportable() {
         Field programField = new ModelClass(RequisitionGroupProgramSchedule.class).findImportFieldWithName("Program");
         assertNotNull(programField);
-        ImportField annotation = programField.getAnnotation(ImportField.class);
-        assertTrue(annotation.mandatory());
-        assertEquals("code", annotation.nested());
+        assertTrue(programField.isMandatory());
+        assertEquals("code", programField.getNested());
     }
 
     @Test
     public void shouldMarkScheduleFieldAsImportable() {
         Field scheduleField = new ModelClass(RequisitionGroupProgramSchedule.class).findImportFieldWithName("Schedule");
         assertNotNull(scheduleField);
-        ImportField annotation = scheduleField.getAnnotation(ImportField.class);
-        assertTrue(annotation.mandatory());
-        assertEquals("code", annotation.nested());
+        assertTrue(scheduleField.isMandatory());
+        assertEquals("code", scheduleField.getNested());
     }
 
     @Test
     public void shouldMarkDirectDeliveryFieldAsImportable() {
         Field directDeliveryField = new ModelClass(RequisitionGroupProgramSchedule.class).findImportFieldWithName("Direct Delivery");
         assertNotNull(directDeliveryField);
-        ImportField annotation = directDeliveryField.getAnnotation(ImportField.class);
-        assertTrue(annotation.mandatory());
-        assertEquals("", annotation.nested());
+        assertTrue(directDeliveryField.isMandatory());
+        assertEquals("", directDeliveryField.getNested());
     }
 
     @Test
     public void shouldMarkDropOffFacilityFieldAsImportable() {
         Field dropOffFacilityField = new ModelClass(RequisitionGroupProgramSchedule.class).findImportFieldWithName("Drop off Facility");
         assertNotNull(dropOffFacilityField);
-        ImportField annotation = dropOffFacilityField.getAnnotation(ImportField.class);
-        assertFalse(annotation.mandatory());
-        assertEquals("code", annotation.nested());
+        assertFalse(dropOffFacilityField.isMandatory());
+        assertEquals("code", dropOffFacilityField.getNested());
     }
 
 }

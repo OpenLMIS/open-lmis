@@ -106,7 +106,7 @@ public class CsvCellProcessorsTest {
     public void shouldBeAbleToPickupOptionalFieldTypes() throws Exception {
         List<String> headers = new ArrayList<String>();
         headers.add("optionalStringField");
-        headers.add("optionalIntField");
+        headers.add("OPTIONAL INT FIELD");
         headers.add("optionalDateField");
 
         Optional optionalForString = mock(Optional.class);

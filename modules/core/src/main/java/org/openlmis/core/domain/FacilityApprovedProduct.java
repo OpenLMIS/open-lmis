@@ -2,31 +2,41 @@ package org.openlmis.core.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.upload.Importable;
+import org.openlmis.upload.annotation.ImportField;
+import org.openlmis.upload.annotation.ImportFields;
 
 import java.util.Date;
 
 @Data
 @NoArgsConstructor
 // TODO : rename to FacilityTypeApprovedProduct
-public class FacilityApprovedProduct {
+public class FacilityApprovedProduct implements Importable {
 
-    private int id;
+  private int id;
 
-    // TODO : change this to id
-    private String facilityTypeCode;
+  @ImportField(mandatory = true, name = "Facility Type Code", nested = "code")
+  private FacilityType facilityType;
 
-    private ProgramProduct programProduct;
 
-    private Integer maxMonthsOfStock;
+  @ImportFields(importFields = {
+      @ImportField(name = "Program Code", nested = "program.code", mandatory = true),
+      @ImportField(name = "Product Code", nested = "product.code", mandatory = true)})
+  private ProgramProduct programProduct;
 
-    private String modifiedBy;
+  private Integer maxMonthsOfStock = 0;
 
-    private Date modifiedDate;
+  private String modifiedBy;
 
-    public FacilityApprovedProduct(String facilityTypeCode, ProgramProduct programProduct, Integer maxMonthsOfStock) {
-        this.facilityTypeCode = facilityTypeCode;
-        this.maxMonthsOfStock = maxMonthsOfStock;
-        this.setProgramProduct(programProduct);
-    }
+  private Date modifiedDate;
 
+  public FacilityApprovedProduct(FacilityType facilityType, ProgramProduct programProduct, Integer maxMonthsOfStock) {
+    this.facilityType = facilityType;
+    this.maxMonthsOfStock = maxMonthsOfStock;
+    this.setProgramProduct(programProduct);
+  }
+
+  public FacilityApprovedProduct(String facilityTypeCode, ProgramProduct product, Integer maxMonthsOfStock) {
+    this(new FacilityType(facilityTypeCode), product, maxMonthsOfStock);
+  }
 }

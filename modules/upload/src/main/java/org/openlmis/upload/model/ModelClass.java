@@ -6,9 +6,9 @@ import org.apache.commons.collections.ListUtils;
 import org.apache.commons.collections.Predicate;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
+import org.openlmis.upload.annotation.ImportFields;
 import org.openlmis.upload.exception.UploadException;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,11 +36,11 @@ public class ModelClass {
     for (String header : headers) {
       Field importField = findImportFieldWithName(header);
       if (importField != null) {
-        String nestedProperty = importField.getAnnotation(ImportField.class).nested();
+        String nestedProperty = importField.getNested();
         if (nestedProperty.isEmpty()) {
-          fieldMappings.add(importField.getName());
+          fieldMappings.add(importField.getField().getName());
         } else {
-          fieldMappings.add(importField.getName()+"."+nestedProperty);
+          fieldMappings.add(importField.getField().getName() + "." + nestedProperty);
         }
       }
     }
@@ -52,7 +52,7 @@ public class ModelClass {
       @Override
       public boolean evaluate(Object object) {
         Field field = (Field) object;
-        if (fieldHasName(field, name)) {
+        if (field.hasName(name)) {
           return true;
         }
         return false;
@@ -62,18 +62,22 @@ public class ModelClass {
   }
 
   private List<Field> fieldsWithImportFieldAnnotation() {
-    List<Field> fieldsList = Arrays.asList(clazz.getDeclaredFields());
-    List result = (List) CollectionUtils.select(fieldsList, new Predicate() {
-      @Override
-      public boolean evaluate(Object object) {
-        Field field = (Field) object;
-        if (field.isAnnotationPresent(ImportField.class)) {
-          return true;
-        }
-        return false;
+    List<java.lang.reflect.Field> fieldsList = Arrays.asList(clazz.getDeclaredFields());
+    List<Field> result = new ArrayList<>();
+    for (java.lang.reflect.Field field : fieldsList) {
+      if (field.isAnnotationPresent(ImportField.class)) {
+        result.add(new Field(field, field.getAnnotation(ImportField.class)));
       }
-    });
-    return (List<Field>) result;
+
+      if (field.isAnnotationPresent(ImportFields.class)) {
+        final ImportFields importFields = field.getAnnotation(ImportFields.class);
+        for (ImportField importField : importFields.importFields()) {
+          result.add(new Field(field, importField));
+        }
+      }
+    }
+
+    return result;
   }
 
   private void validateMandatoryFields(List<String> headers) {
@@ -93,13 +97,12 @@ public class ModelClass {
   }
 
   private List<String> findMissingFields(List<String> headers) {
-    List<String> missingFields = new ArrayList<String>();
+    List<String> missingFields = new ArrayList<>();
     for (Field field : importFields) {
-      if (field.getAnnotation(ImportField.class).mandatory()) {
-        String annotatedName = field.getAnnotation(ImportField.class).name();
-        if (annotatedName.equals("")) annotatedName = field.getName();
-        if (!headers.contains(annotatedName.toLowerCase())) {
-          missingFields.add(annotatedName);
+      if (field.isMandatory()) {
+        String fieldName = field.getName();
+        if (!headers.contains(fieldName.toLowerCase())) {
+          missingFields.add(fieldName);
         }
       }
     }
@@ -107,25 +110,18 @@ public class ModelClass {
   }
 
   private List<String> lowerCase(List<String> headers) {
-    List<String> lowerCaseHeaders = new ArrayList<String>();
+    List<String> lowerCaseHeaders = new ArrayList<>();
     for (String header : headers) {
       lowerCaseHeaders.add(header.toLowerCase());
     }
     return lowerCaseHeaders;
   }
 
-
   private List<String> getAllImportedFieldNames() {
-    List<String> outputCollection = new ArrayList<String>();
+    List<String> outputCollection = new ArrayList<>();
     for (Field field : importFields) {
-      String fieldName = field.getAnnotation(ImportField.class).name();
-      if (fieldName.equals("")) fieldName = field.getName();
-      outputCollection.add(fieldName);
+      outputCollection.add(field.getName());
     }
     return outputCollection;
-  }
-
-  private boolean fieldHasName(Field field, String name) {
-    return name.equalsIgnoreCase(field.getAnnotation(ImportField.class).name()) || name.equalsIgnoreCase(field.getName());
   }
 }
