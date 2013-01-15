@@ -31,11 +31,13 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition) {
                 return;
               }
               $scope.$parent.rnr = data.rnr;
+              $scope.$parent.program = $scope.selectedProgram;
               $location.path('/create-rnr/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id);
             }
             else {
               Requisition.save({facilityId: $scope.selectedFacilityId, programId: $scope.selectedProgram.id}, {}, function (data) {
                 $scope.$parent.rnr = data.rnr;
+                $scope.$parent.program = $scope.selectedProgram;
                 $location.path('/create-rnr/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id);
               }, function () {
                 $scope.error = "Requisition does not exist. Please initiate.";
