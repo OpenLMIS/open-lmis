@@ -117,7 +117,7 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
   function isFormDisabled() {
     if ($scope.rnr || $scope.$parent.rnr) {
       if ($scope.rnr.status == 'AUTHORIZED') return true;
-      if ($scope.rnr.status == 'SUBMITTED' && !$rootScope.hasPermission('AUTHORIZE_REQUISITION')) return true;
+      if (($scope.rnr.status == 'SUBMITTED' && !$rootScope.hasPermission('AUTHORIZE_REQUISITION')) || ($scope.rnr.status == 'INITIATED' && !$rootScope.hasPermission('CREATE_REQUISITION'))) return true;
     }
     return false;
   }

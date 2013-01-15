@@ -56,7 +56,7 @@ describe('CreateRnrController', function () {
 
     it('should save work in progress for rnr', function () {
         scope.rnr = {"id": "rnrId"};
-        httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200);
+        httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond({'success': "R&R saved successfully!"});
         scope.saveRnr();
         httpBackend.flush();
         expect(scope.message).toEqual("R&R saved successfully!");
