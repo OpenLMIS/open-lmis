@@ -4,7 +4,6 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.repository.UserRepository;
 import org.openlmis.email.domain.EmailMessage;
-import org.openlmis.email.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +15,12 @@ public class UserService {
 
   private UserRepository userRepository;
 
-  private EmailService emailService;
+//  private EmailService emailService;
 
   @Autowired
-  public UserService(UserRepository userRepository,EmailService emailService) {
+  public UserService(UserRepository userRepository) {
     this.userRepository = userRepository;
-    this.emailService= emailService;
+//    this.emailService= emailService;
   }
 
   public void save(User user) {
@@ -38,7 +37,7 @@ public class UserService {
       userReturned = userRepository.getByUsername(user.getUserName());
     }
 
-    emailService.send(createEmailMessage(user));
+//    emailService.send(createEmailMessage(user));
 
 
   }
