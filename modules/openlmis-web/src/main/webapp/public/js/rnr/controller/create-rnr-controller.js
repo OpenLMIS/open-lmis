@@ -35,23 +35,16 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
         rnr.fullSupplyItemsSubmittedCost = 0;
     }
 
-    function resetTotalSubmittedCostIfNull(rnr) {
-      if (rnr == null) return;
-      if (rnr.totalSubmittedCost == null)
-        rnr.totalSubmittedCost = 0;
-    }
-
-    if (data.rnrColumnList.length > 0) {
-      $scope.programRnRColumnList = data.rnrColumnList;
-      resetFullSupplyItemsCostIfNull($scope.$parent.rnr);
-      resetTotalSubmittedCostIfNull($scope.$parent.rnr);
-    } else {
-      $scope.$parent.error = "Please contact Admin to define R&R template for this program";
-      $location.path($scope.$parent.sourceUrl);
-    }
-  }, function () {
-    $location.path($scope.$parent.sourceUrl);
-  });
+        if (data.rnrColumnList.length > 0) {
+            $scope.programRnRColumnList = data.rnrColumnList;
+            resetFullSupplyItemsCostIfNull($scope.$parent.rnr);
+        } else {
+            $scope.$parent.error = "Please contact Admin to define R&R template for this program";
+            $location.path($scope.$parent.sourceUrl);
+        }
+    }, function () {
+        $location.path($scope.$parent.sourceUrl);
+    });
 
   $scope.saveRnr = function () {
     $scope.submitError = "";
@@ -248,10 +241,11 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     return $scope.getCellErrorClass(rnrLineItem, programRnRColumnList) ? 'row-error-highlight' : '';
   };
 
-  function populateRnrLineItems(rnr) {
-    $(rnr.lineItems).each(function (i, lineItem) {
-      var rnrLineItem = new RnrLineItem(lineItem);
-      $scope.rnrLineItems.push(rnrLineItem);
-    });
-  }
+    function populateRnrLineItems(rnr) {
+        $(rnr.lineItems).each(function (i, lineItem) {
+            lineItem.cost = parseFloat((lineItem.packsToShip * lineItem.price).toFixed(2));
+            var rnrLineItem = new RnrLineItem(lineItem);
+            $scope.rnrLineItems.push(rnrLineItem);
+        });
+    }
 }

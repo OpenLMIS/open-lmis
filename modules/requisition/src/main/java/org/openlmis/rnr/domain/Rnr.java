@@ -2,8 +2,7 @@ package org.openlmis.rnr.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.exception.DataException;
-import org.openlmis.core.message.OpenLmisMessage;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,6 +10,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Rnr {
 
   private Integer id;
@@ -20,7 +20,6 @@ public class Rnr {
   private RnrStatus status;
   private Float fullSupplyItemsSubmittedCost = 0f;
   private Float nonFullSupplyItemsSubmittedCost = 0f;
-  private Float totalSubmittedCost = 0f;
 
   private List<RnrLineItem> lineItems = new ArrayList<>();
 
@@ -38,26 +37,20 @@ public class Rnr {
     lineItems.add(rnrLineItem);
   }
 
-  public boolean validate(boolean formulaValidated){
-    if(!validateFullSupplyCost() || !validateTotalSubmittedCost()){
-      throw new DataException(new OpenLmisMessage(RNR_VALIDATION_ERROR));
-    }
-    for(RnrLineItem lineItem : lineItems){
+  public boolean validate(boolean formulaValidated) {
+    for (RnrLineItem lineItem : lineItems) {
       lineItem.validate(formulaValidated);
     }
     return true;
   }
 
-  private boolean validateTotalSubmittedCost() {
-    return totalSubmittedCost == fullSupplyItemsSubmittedCost + nonFullSupplyItemsSubmittedCost;
-  }
-
-  private boolean validateFullSupplyCost() {
-    Float cost = 0f;
-    for(RnrLineItem lineItem : lineItems){
-      cost += lineItem.getCost();
+  public void calculate() {
+    Float totalFullSupplyCost = 0f;
+    for (RnrLineItem lineItem : lineItems) {
+      lineItem.calculate();
+      totalFullSupplyCost += lineItem.getPacksToShip() * lineItem.getPrice();
     }
-    return fullSupplyItemsSubmittedCost.equals(cost);
+    this.fullSupplyItemsSubmittedCost = totalFullSupplyCost;
   }
 }
 

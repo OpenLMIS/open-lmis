@@ -50,7 +50,7 @@ public class RnrControllerTest {
   @Test
   public void shouldSaveWIPRnr() throws Exception {
 
-    controller.saveRnr(rnr, request);
+    controller.saveRnr(rnr, rnr.getId(), request);
 
     verify(rnrService).save(rnr);
     assertThat(rnr.getModifiedBy(), is(equalTo(USER_ID)));
@@ -76,7 +76,7 @@ public class RnrControllerTest {
   public void shouldAllowSubmittingOfRnrAndTagWithModifiedBy() throws Exception {
     String testMessage = "test message";
     when(rnrService.submit(rnr)).thenReturn(testMessage);
-    ResponseEntity<OpenLmisResponse> response = controller.submit(rnr, request);
+    ResponseEntity<OpenLmisResponse> response = controller.submit(rnr, rnr.getId(), request);
     assertThat(response.getBody().getSuccessMsg(), is(testMessage));
     verify(rnrService).submit(rnr);
     assertThat(rnr.getModifiedBy(), is(USER_ID));
@@ -86,7 +86,7 @@ public class RnrControllerTest {
   public void shouldReturnErrorMessageIfRnrNotValidButShouldSaveIt() throws Exception {
     doThrow(new DataException(new OpenLmisMessage("some error"))).when(rnrService).submit(rnr);
 
-    ResponseEntity<OpenLmisResponse> response = controller.submit(rnr, request);
+    ResponseEntity<OpenLmisResponse> response = controller.submit(rnr, rnr.getId(), request);
     verify(rnrService).save(rnr);
     assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     assertThat(response.getBody().getErrorMsg(), is("some error"));
@@ -99,7 +99,7 @@ public class RnrControllerTest {
 
     when(rnrService.authorize(rnr)).thenReturn(new OpenLmisMessage(code));
 
-    ResponseEntity<OpenLmisResponse> response = controller.authorize(rnr, request);
+    ResponseEntity<OpenLmisResponse> response = controller.authorize(rnr, rnr.getId(), request);
 
     verify(rnrService).authorize(rnr);
     assertThat(response.getBody().getSuccessMsg(), is(message));
@@ -110,7 +110,7 @@ public class RnrControllerTest {
   public void shouldNotAuthorizeRnrAndGiveErrorMessage() throws Exception {
     String errorMessage = "some error";
     doThrow(new DataException(new OpenLmisMessage(errorMessage))).when(rnrService).authorize(rnr);
-    ResponseEntity<OpenLmisResponse> response = controller.authorize(rnr, request);
+    ResponseEntity<OpenLmisResponse> response = controller.authorize(rnr, rnr.getId(), request);
 
     verify(rnrService).save(rnr);
     assertThat(response.getBody().getErrorMsg(), is(errorMessage));
@@ -120,7 +120,7 @@ public class RnrControllerTest {
   public void shouldGiveErrorResponseIfThereIsAnyExceptionWhileSavingRnr() throws Exception {
     String errorMessage = "some error";
     doThrow(new DataException(new OpenLmisMessage(errorMessage))).when(rnrService).save(rnr);
-    ResponseEntity<OpenLmisResponse> response = controller.saveRnr(rnr, request);
+    ResponseEntity<OpenLmisResponse> response = controller.saveRnr(rnr, rnr.getId(), request);
 
     verify(rnrService).save(rnr);
     assertThat(response.getBody().getErrorMsg(), is(errorMessage));
@@ -128,7 +128,7 @@ public class RnrControllerTest {
 
   @Test
   public void shouldGiveSuccessResponseIfRnrSavedSuccessfully() throws Exception {
-    ResponseEntity<OpenLmisResponse> response = controller.saveRnr(rnr, request);
+    ResponseEntity<OpenLmisResponse> response = controller.saveRnr(rnr, rnr.getId(), request);
     verify(rnrService).save(rnr);
     assertThat(response.getBody().getSuccessMsg(), is("R&R saved successfully!"));
   }

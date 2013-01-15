@@ -88,6 +88,7 @@ public class RnrService {
     if (rnrRepository.getById(rnr.getId()).getStatus() != INITIATED)
       throw new DataException(new OpenLmisMessage(RNR_SUBMISSION_ERROR));
     rnr.validate(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId()));
+    rnr.calculate();
     rnr.setStatus(SUBMITTED);
     rnrRepository.update(rnr);
 
@@ -102,14 +103,13 @@ public class RnrService {
     if (rnrRepository.getById(rnr.getId()).getStatus() != SUBMITTED) throw new DataException(RNR_AUTHORIZATION_ERROR);
 
     rnr.validate(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId()));
+    rnr.calculate();
     rnr.setStatus(AUTHORIZED);
     rnrRepository.update(rnr);
 
     User approver = supervisoryNodeService.getApproverFor(rnr.getFacilityId(), rnr.getProgramId());
-
-    if (approver == null) return new OpenLmisMessage(RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR);
-
-    return new OpenLmisMessage(RNR_AUTHORIZED_SUCCESSFULLY);
+    String msg = (approver == null) ? RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR : RNR_AUTHORIZED_SUCCESSFULLY;
+    return new OpenLmisMessage(msg);
   }
 }
 

@@ -2,6 +2,7 @@ package org.openlmis.rnr.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.openlmis.core.domain.FacilityApprovedProduct;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProgramProduct;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RnrLineItem {
 
   public static final Float MULTIPLIER = 3f;
@@ -51,7 +53,6 @@ public class RnrLineItem {
 
   private Integer quantityApproved;
 
-  private Float cost;
   private Integer packsToShip;
   private String remarks;
 
@@ -97,6 +98,10 @@ public class RnrLineItem {
     return true;
   }
 
+  public void calculate() {
+    packsToShip = calculatePacksToShip();
+  }
+
   private boolean validateMandatoryFields() {
     return !(!isPresent(beginningBalance) || !isPresent(quantityReceived) || !isPresent(quantityDispensed) ||
         !isPresent(newPatientCount) || !isPresent(stockOutDays)) && (quantityRequested == null || isPresent(reasonForRequestedQuantity));
@@ -105,22 +110,17 @@ public class RnrLineItem {
   private boolean validateCalculatedFields(boolean formulaValidated) {
     boolean validQuantityDispensed = true;
     if(formulaValidated) {
-      validQuantityDispensed = quantityDispensed == (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand);
+      validQuantityDispensed = (quantityDispensed == (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand));
     }
     return ((quantityDispensed >= 0) && (stockInHand >= 0)) && validQuantityDispensed &&
         totalLossesAndAdjustments.equals(calculateTotalLossesAndAdjustments()) &&
         (normalizedConsumption.intValue() == (calculateNormalizedConsumption())) &&
         normalizedConsumption.equals(amc) && maxStockQuantity.equals(calculateMaxStockQuantity()) &&
-        calculatedOrderQuantity.equals(calculateOrderQuantity()) &&
-        packsToShip.equals(calculatePacksToShip()) && cost.equals(calculateCost());
+        calculatedOrderQuantity.equals(calculateOrderQuantity());
   }
 
   private boolean isPresent(Object value) {
     return value != null;
-  }
-
-  private Float calculateCost() {
-    return packsToShip * price;
   }
 
   private Integer calculatePacksToShip() {

@@ -8,18 +8,17 @@ import org.springframework.stereotype.Repository;
 public interface RnrMapper {
 
   @Insert("insert into requisition(facilityId, programId, status, modifiedBy) " +
-    "values (#{facilityId}, #{programId}, #{status}, #{modifiedBy})")
+      "values (#{facilityId}, #{programId}, #{status}, #{modifiedBy})")
   @Options(useGeneratedKeys = true)
   public void insert(Rnr requisition);
 
-  @Delete("delete from requisition")
-  public void deleteAll();
-
-  @Update("update requisition set modifiedBy = #{modifiedBy}, status = #{status}, modifiedDate= DEFAULT, " +
-    "fullSupplyItemsSubmittedCost = #{fullSupplyItemsSubmittedCost}, " +
-    "nonFullSupplyItemsSubmittedCost = #{nonFullSupplyItemsSubmittedCost}, " +
-    "totalSubmittedCost = #{totalSubmittedCost} " +
-    "where id = #{id}")
+  @Update({"UPDATE requisition SET",
+      "modifiedBy = #{modifiedBy},",
+      "status = #{status},",
+      "modifiedDate = DEFAULT,",
+      "fullSupplyItemsSubmittedCost = #{fullSupplyItemsSubmittedCost},",
+      "nonFullSupplyItemsSubmittedCost = #{nonFullSupplyItemsSubmittedCost}",
+      "WHERE id = #{id}"})
   public void update(Rnr requisition);
 
   @Select("Select * from requisition where id = #{rnrId}")

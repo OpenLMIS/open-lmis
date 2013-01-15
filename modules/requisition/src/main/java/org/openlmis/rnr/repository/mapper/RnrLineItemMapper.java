@@ -37,7 +37,6 @@ public interface RnrLineItemMapper {
             " amc = #{amc}, "+
             " maxStockQuantity = #{maxStockQuantity}, "+
             " packsToShip = #{packsToShip}, "+
-            " cost = #{cost}, "+
             " remarks = #{remarks}, "+
             " modifiedBy = #{modifiedBy}, "+
             " modifiedDate = DEFAULT " +

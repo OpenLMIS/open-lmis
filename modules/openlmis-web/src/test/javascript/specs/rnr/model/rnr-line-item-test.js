@@ -393,18 +393,6 @@ describe('RnrLineItem', function () {
             expect(320).toEqual(rnr.fullSupplyItemsSubmittedCost);
         });
 
-        it('should set totalSubmittedCost', function () {
-            var rnrLineItem1 = new RnrLineItem(lineItem1);
-            rnrLineItem1.fill(rnr, programRnrColumnList);
-            var rnrLineItem2 = new RnrLineItem(lineItem2);
-            rnrLineItem2.fill(rnr, programRnrColumnList);
-            var rnrLineItem3 = new RnrLineItem(lineItem3);
-            rnrLineItem3.fill(rnr, programRnrColumnList);
-
-            expect(320).toEqual(rnr.totalSubmittedCost);
-        });
-
-
     });
 
     describe('Losses and adjustment for line item', function () {

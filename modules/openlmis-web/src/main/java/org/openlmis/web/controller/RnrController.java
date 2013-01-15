@@ -12,13 +12,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
+
+import static org.openlmis.web.response.OpenLmisResponse.*;
 
 @Controller
 @NoArgsConstructor
@@ -40,9 +39,9 @@ public class RnrController extends BaseController {
                                                       @RequestParam("programId") Integer programId,
                                                       HttpServletRequest request) {
     try {
-      return OpenLmisResponse.response(RNR, rnrService.initRnr(facilityId, programId, loggedInUserId(request)));
+      return response(RNR, rnrService.initRnr(facilityId, programId, loggedInUserId(request)));
     } catch (DataException e) {
-      return OpenLmisResponse.error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
+      return error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -50,14 +49,17 @@ public class RnrController extends BaseController {
   @PreAuthorize("hasPermission('','CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> get(@RequestParam("facilityId") Integer facilityId,
                                               @RequestParam("programId") Integer programId) {
-    return OpenLmisResponse.response(RNR, rnrService.get(facilityId, programId));
+    return response(RNR, rnrService.get(facilityId, programId));
   }
 
   @RequestMapping(value = "/requisitions/{id}/save", method = RequestMethod.PUT, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('','CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> saveRnr(@RequestBody Rnr rnr, HttpServletRequest request) {
-    rnr.setModifiedBy(loggedInUserId(request));
+  public ResponseEntity<OpenLmisResponse> saveRnr(@RequestBody Rnr rnr,
+                                                  @PathVariable("id") Integer id,
+                                                  HttpServletRequest request) {
     try {
+      rnr.setId(id);
+      rnr.setModifiedBy(loggedInUserId(request));
       rnrService.save(rnr);
       return OpenLmisResponse.success(RNR_SAVE_SUCCESS);
     } catch (DataException e) {
@@ -67,13 +69,17 @@ public class RnrController extends BaseController {
 
   @RequestMapping(value = "/requisitions/{id}/submit", method = RequestMethod.PUT, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> submit(@RequestBody Rnr rnr, HttpServletRequest request) {
-    rnr.setModifiedBy(loggedInUserId(request));
+  public ResponseEntity<OpenLmisResponse> submit(@RequestBody Rnr rnr,
+                                                 @PathVariable("id") Integer id,
+                                                 HttpServletRequest request) {
     try {
-      return OpenLmisResponse.success(rnrService.submit(rnr));
+      rnr.setId(id);
+      rnr.setModifiedBy(loggedInUserId(request));
+      return success(rnrService.submit(rnr));
     } catch (DataException e) {
+      //TODO: save R&R in a better way
       rnrService.save(rnr);
-      return OpenLmisResponse.error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
+      return error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -86,14 +92,18 @@ public class RnrController extends BaseController {
 
   @RequestMapping(value = "/requisitions/{id}/authorize", method = RequestMethod.PUT, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('', 'AUTHORIZE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> authorize(@RequestBody Rnr rnr, HttpServletRequest request) {
-    rnr.setModifiedBy(loggedInUserId(request));
+  public ResponseEntity<OpenLmisResponse> authorize(@RequestBody Rnr rnr,
+                                                    @PathVariable("id") Integer id,
+                                                    HttpServletRequest request) {
     try {
+      rnr.setId(id);
+      rnr.setModifiedBy(loggedInUserId(request));
       OpenLmisMessage openLmisMessage = rnrService.authorize(rnr);
-      return OpenLmisResponse.success(openLmisMessage);
+      return success(openLmisMessage);
     } catch (DataException e) {
       rnrService.save(rnr);
-      return OpenLmisResponse.error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
+      //TODO save R&R in a better way
+      return error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
     }
   }
 }

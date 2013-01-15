@@ -15,7 +15,7 @@ var RnrLineItem = function (lineItem) {
               quantityDispensed != (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand) : null;
     }
     return false;
-  }
+  };
 
   function parseIntWithBaseTen(number){
    return parseInt(number, 10);
@@ -29,7 +29,7 @@ var RnrLineItem = function (lineItem) {
       var quantity = parseIntWithBaseTen(lossAndAdjustmentObject.quantity, 10);
       updateTotalLossesAndAdjustment(rnrLineItem, quantity, lossAndAdjustmentObject.type.additive);
     });
-  }
+  };
 
   this.removeLossAndAdjustment = function (lossAndAdjustmentToDelete) {
     this.rnrLineItem.lossesAndAdjustments = $.grep(this.rnrLineItem.lossesAndAdjustments, function (lossAndAdjustmentObj) {
@@ -140,7 +140,7 @@ var RnrLineItem = function (lineItem) {
         rnrLineItem.cost = null;
         return;
       }
-      rnrLineItem.cost = rnrLineItem.packsToShip * rnrLineItem.price;
+      rnrLineItem.cost = parseFloat((rnrLineItem.packsToShip * rnrLineItem.price).toFixed(2));
     }
 
     function fillFullSupplyItemsSubmittedCost() {
@@ -150,22 +150,10 @@ var RnrLineItem = function (lineItem) {
       var lineItems = rnr.lineItems;
       for (var lineItemIndex in lineItems) {
         var lineItem = lineItems[lineItemIndex];
-        if (lineItem == null || lineItem.cost == null || !isNumber(lineItem.cost)) continue;
+        if (!lineItem || lineItem.cost == null || !isNumber(lineItem.cost)) continue;
         cost += lineItem.cost;
       }
       rnr.fullSupplyItemsSubmittedCost = cost;
-    }
-
-    function fillTotalSubmittedCost() {
-      if (rnr == null) return;
-
-      var cost = 0;
-      if (rnr.fullSupplyItemsSubmittedCost != null && isNumber(rnr.fullSupplyItemsSubmittedCost))
-        cost += rnr.fullSupplyItemsSubmittedCost;
-      if (rnr.nonFullSupplyItemsSubmittedCost != null && isNumber(rnr.nonFullSupplyItemsSubmittedCost))
-        cost += rnr.nonFullSupplyItemsSubmittedCost;
-
-      rnr.totalSubmittedCost = cost;
     }
 
     var beginningBalance = parseIntWithBaseTen(rnrLineItem.beginningBalance);
@@ -183,8 +171,7 @@ var RnrLineItem = function (lineItem) {
     fillPacksToShip();
     fillCost();
     fillFullSupplyItemsSubmittedCost();
-    fillTotalSubmittedCost();
-  }
+  };
 
   var updateTotalLossesAndAdjustment = function (rnrLineItem, quantity, additive) {
     if (!isNaN(quantity)) {
@@ -194,7 +181,7 @@ var RnrLineItem = function (lineItem) {
         rnrLineItem.totalLossesAndAdjustments -= quantity;
       }
     }
-  }
+  };
 
   var isNumber = function (number) {
     return !isNaN(parseIntWithBaseTen(number));

@@ -49,9 +49,9 @@ public interface RnrColumnMapper {
     List<RnrColumn> fetchAllMasterRnRColumns();
 
 
-  @Select({"SELECT count(*)=2 as validated FROM program_rnr_columns p INNER JOIN master_rnr_columns m ON",
+  @Select({"SELECT COUNT(*)=2 AS validated FROM program_rnr_columns p INNER JOIN master_rnr_columns m ON",
       "p.masterColumnId = m.id",
       "where p.programId = #{programId} and",
-      "p.formulaValidated = true and m.name IN ('quantityDispensed', 'stockInHand')"})
+      "p.formulaValidated = TRUE AND m.name IN ('quantityDispensed', 'stockInHand')"})
   boolean isFormulaValidated(int programId);
 }

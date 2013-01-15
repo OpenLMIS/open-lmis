@@ -250,31 +250,6 @@ public class RnrLineItemTest {
     lineItem.validate(formulaValidated);
   }
 
-  @Test
-  public void shouldThrowExceptionIfCalculationForPacksToShipNotValid() throws Exception {
-    lineItem.setQuantityRequested(null);
-    lineItem.setCalculatedOrderQuantity(70);
-    lineItem.setPackSize(6);
-    lineItem.setPacksToShip(35);
-    lineItem.setPackRoundingThreshold(3);
-    lineItem.setRoundToZero(true);
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage(Rnr.RNR_VALIDATION_ERROR);
-
-    lineItem.validate(formulaValidated);
-  }
-
-  @Test
-  public void shouldThrowExceptionIfCalculationForCostNotValid() throws Exception {
-    lineItem.setPacksToShip(12);
-    lineItem.setPrice(4f);
-    lineItem.setCost(50f);
-
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage(Rnr.RNR_VALIDATION_ERROR);
-
-    lineItem.validate(formulaValidated);
-  }
 
   @Test
   public void shouldNotThrowErrorIfAllMandatoryFieldsPresent() throws Exception {

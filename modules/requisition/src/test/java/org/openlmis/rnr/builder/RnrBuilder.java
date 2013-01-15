@@ -23,7 +23,6 @@ public class RnrBuilder {
       rnr.setFacilityId(1);
       rnr.setProgramId(1);
       rnr.setStatus(lookup.valueOf(status, RnrStatus.INITIATED));
-      rnr.setFullSupplyItemsSubmittedCost(0f);
       RnrLineItem rnrLineItemCost48 = make(a(RnrLineItemBuilder.defaultRnrLineItem));
       rnr.add(rnrLineItemCost48);
 

@@ -5,8 +5,7 @@
 <span id="totalCostCurrency" class="cell-text">
                                            {{currency}}
                        </span>
-                       <span id="totalCost" ng-bind="rnr.totalSubmittedCost"
-                             class="cell-text">
+                       <span id="totalCost" class="cell-text"> {{rnr.fullSupplyItemsSubmittedCost + rnr.nonFullSupplyItemsSubmittedCost | number:2}}
                        </span>
    </div>
 <div class="rnr-table">
@@ -260,16 +259,16 @@
                            </span>
                            <span ng-switch-default>
                                <ng-switch on="column.name">
-                        <span ng-switch-when = "stockInHand" ng-class="getCellErrorClass(rnrLineItem, programRnRColumnList)">
-                          <span id = "{{column.indicator+'_'+$parent.$parent.$index}}"
-                                ng-bind = "rnrLineItem.rnrLineItem[column.name]"
-                                class = "cell-text" >
-                          </span >
-                           <span class="row-specific-error" ng-show="rnrLineItem.getErrorMessage(programRnRColumnList)" style="background: red;">
-                            {{rnrLineItem.getErrorMessage(programRnRColumnList)}}
-                                <span class="beak-down"></span>
-                           </span >
-                        </span>
+                                   <span ng-switch-when = "stockInHand" ng-class="getCellErrorClass(rnrLineItem, programRnRColumnList)">
+                                     <span id = "{{column.indicator+'_'+$parent.$parent.$index}}"
+                                           ng-bind = "rnrLineItem.rnrLineItem[column.name]"
+                                           class = "cell-text" >
+                                     </span >
+                                      <span class="row-specific-error" ng-show="rnrLineItem.getErrorMessage(programRnRColumnList)" style="background: red;">
+                                       {{rnrLineItem.getErrorMessage(programRnRColumnList)}}
+                                           <span class="beak-down"></span>
+                                      </span >
+                                   </span>
                                    <span ng-switch-when="price">
                                        <span id="{{'priceCurrency_'+$parent.$parent.$index}}" class="cell-text" ng-show="showCurrencySymbol(rnrLineItem.rnrLineItem[column.name])">
                                            {{currency}}

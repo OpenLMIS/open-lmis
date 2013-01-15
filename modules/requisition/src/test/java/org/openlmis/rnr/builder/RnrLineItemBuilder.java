@@ -50,7 +50,6 @@ public class RnrLineItemBuilder {
       rnrLineItem.setPackRoundingThreshold(3);
       rnrLineItem.setRoundToZero(true);
       rnrLineItem.setPrice(4f);
-      rnrLineItem.setCost(lookup.valueOf(cost, 48f));
       return rnrLineItem;
     }
   };
