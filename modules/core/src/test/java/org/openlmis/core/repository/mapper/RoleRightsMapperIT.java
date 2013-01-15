@@ -32,89 +32,109 @@ import static org.openlmis.core.domain.Right.*;
 @Transactional
 public class RoleRightsMapperIT {
 
-    @Autowired
-    UserMapper userMapper;
-    @Autowired
-    ProgramMapper programMapper;
-    @Autowired
-    ProgramSupportedMapper programSupportedMapper;
-    @Autowired
-    RoleRightsMapper roleRightsMapper;
-    @Autowired
-    RoleAssignmentMapper roleAssignmentMapper;
-    @Autowired
-    private FacilityMapper facilityMapper;
+  @Autowired
+  UserMapper userMapper;
+  @Autowired
+  ProgramMapper programMapper;
+  @Autowired
+  ProgramSupportedMapper programSupportedMapper;
+  @Autowired
+  RoleRightsMapper roleRightsMapper;
+  @Autowired
+  RoleAssignmentMapper roleAssignmentMapper;
+  @Autowired
+  private FacilityMapper facilityMapper;
 
-    @Test
-    public void shouldSetupRightsForAdminRole() {
-        List<Right> adminRights = roleRightsMapper.getAllRightsForUser("Admin123");
-        assertEquals(5, adminRights.size());
-        Assert.assertTrue(adminRights.containsAll(asList(CONFIGURE_RNR, MANAGE_FACILITY, MANAGE_ROLE, MANAGE_SCHEDULE, UPLOADS)));
-    }
+  @Test
+  public void shouldSetupRightsForAdminRole() {
+    List<Right> adminRights = roleRightsMapper.getAllRightsForUserByUserName("Admin123");
+    assertEquals(5, adminRights.size());
+    Assert.assertTrue(adminRights.containsAll(asList(CONFIGURE_RNR, MANAGE_FACILITY, MANAGE_ROLE, MANAGE_SCHEDULE, UPLOADS)));
+  }
 
-    @Test
-    public void shouldGetAllRightsForAUser() throws Exception {
-        Facility facility = insertFacility();
-        User user = insertUser(facility);
+  @Test
+  public void shouldGetAllRightsForAUserByUserName() throws Exception {
+    Facility facility = insertFacility();
+    User user = insertUser(facility);
 
-        List<Right> allRightsForUser = roleRightsMapper.getAllRightsForUser(user.getUserName());
-        assertThat(allRightsForUser.size(), is(0));
+    List<Right> allRightsForUser = roleRightsMapper.getAllRightsForUserByUserName(user.getUserName());
+    assertThat(allRightsForUser.size(), is(0));
 
-        Program program = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
-        Role role = insertRole();
+    Program program = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
+    Role role = insertRole();
 
-        insertRoleAssignments(program, user, role);
+    insertRoleAssignments(program, user, role);
 
-        roleRightsMapper.createRoleRight(role.getId(), CREATE_REQUISITION);
-        roleRightsMapper.createRoleRight(role.getId(), CONFIGURE_RNR);
+    roleRightsMapper.createRoleRight(role.getId(), CREATE_REQUISITION);
+    roleRightsMapper.createRoleRight(role.getId(), CONFIGURE_RNR);
 
-        allRightsForUser = roleRightsMapper.getAllRightsForUser(user.getUserName());
-        assertThat(allRightsForUser.size(), is(2));
-    }
+    allRightsForUser = roleRightsMapper.getAllRightsForUserByUserName(user.getUserName());
+    assertThat(allRightsForUser.size(), is(2));
+  }
 
-    @Test
-    public void shouldGetRoleAndRights() throws Exception {
-        Role role = new Role(111, "role name", "description", 123, null, null);
-        roleRightsMapper.insertRole(role);
+  @Test
+  public void shouldGetAllRightsForAUserByUserId() throws Exception {
+    Facility facility = insertFacility();
+    User user = insertUser(facility);
 
-        roleRightsMapper.createRoleRight(role.getId(), CREATE_REQUISITION);
-        roleRightsMapper.createRoleRight(role.getId(), MANAGE_FACILITY);
+    List<Right> allRightsForUser = roleRightsMapper.getAllRightsForUserById(user.getId());
+    assertThat(allRightsForUser.size(), is(0));
 
-        Role resultRole = roleRightsMapper.getRole(role.getId());
+    Program program = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
+    Role role = insertRole();
 
-        assertThat(resultRole.getId(), is(not(111)));
-        assertThat(resultRole.getId(), is(notNullValue()));
-        assertThat(resultRole.getName(), is(role.getName()));
-        assertThat(resultRole.getDescription(), is(role.getDescription()));
-        assertThat(resultRole.getModifiedBy(), is(role.getModifiedBy()));
-        assertTrue(resultRole.getRights().contains(CREATE_REQUISITION));
-        assertTrue(resultRole.getRights().contains(MANAGE_FACILITY));
-    }
+    insertRoleAssignments(program, user, role);
 
-    @Test(expected = DuplicateKeyException.class)
-    public void shouldThrowDuplicateKeyExceptionIfDuplicateRoleName() throws Exception {
-        String duplicateRoleName = "role name";
-        Role role = new Role(duplicateRoleName, "");
-        Role role2 = new Role(duplicateRoleName, "any other description");
-        roleRightsMapper.insertRole(role);
-        roleRightsMapper.insertRole(role2);
-    }
+    roleRightsMapper.createRoleRight(role.getId(), CREATE_REQUISITION);
+    roleRightsMapper.createRoleRight(role.getId(), CONFIGURE_RNR);
 
-    @Test
-    public void shouldReturnAllRolesInSystem() throws Exception {
-        Role role = new Role("role name", "");
-        roleRightsMapper.insertRole(role);
-        roleRightsMapper.createRoleRight(role.getId(), CONFIGURE_RNR);
-        roleRightsMapper.createRoleRight(role.getId(), CREATE_REQUISITION);
+    allRightsForUser = roleRightsMapper.getAllRightsForUserById(user.getId());
+    assertThat(allRightsForUser.size(), is(2));
+  }
 
-        List<Role> roles = roleRightsMapper.getAllRoles();
+  @Test
+  public void shouldGetRoleAndRights() throws Exception {
+    Role role = new Role(111, "role name", "description", 123, null, null);
+    roleRightsMapper.insertRole(role);
 
-        assertThat(roles.get(0).getName(), is("Admin"));
-        Role fetchedRole = roles.get(1);
-        assertThat(fetchedRole.getName(), is("role name"));
-        assertTrue(fetchedRole.getRights().contains(CONFIGURE_RNR));
-        assertTrue(fetchedRole.getRights().contains(CREATE_REQUISITION));
-    }
+    roleRightsMapper.createRoleRight(role.getId(), CREATE_REQUISITION);
+    roleRightsMapper.createRoleRight(role.getId(), MANAGE_FACILITY);
+
+    Role resultRole = roleRightsMapper.getRole(role.getId());
+
+    assertThat(resultRole.getId(), is(not(111)));
+    assertThat(resultRole.getId(), is(notNullValue()));
+    assertThat(resultRole.getName(), is(role.getName()));
+    assertThat(resultRole.getDescription(), is(role.getDescription()));
+    assertThat(resultRole.getModifiedBy(), is(role.getModifiedBy()));
+    assertTrue(resultRole.getRights().contains(CREATE_REQUISITION));
+    assertTrue(resultRole.getRights().contains(MANAGE_FACILITY));
+  }
+
+  @Test(expected = DuplicateKeyException.class)
+  public void shouldThrowDuplicateKeyExceptionIfDuplicateRoleName() throws Exception {
+    String duplicateRoleName = "role name";
+    Role role = new Role(duplicateRoleName, "");
+    Role role2 = new Role(duplicateRoleName, "any other description");
+    roleRightsMapper.insertRole(role);
+    roleRightsMapper.insertRole(role2);
+  }
+
+  @Test
+  public void shouldReturnAllRolesInSystem() throws Exception {
+    Role role = new Role("role name", "");
+    roleRightsMapper.insertRole(role);
+    roleRightsMapper.createRoleRight(role.getId(), CONFIGURE_RNR);
+    roleRightsMapper.createRoleRight(role.getId(), CREATE_REQUISITION);
+
+    List<Role> roles = roleRightsMapper.getAllRoles();
+
+    assertThat(roles.get(0).getName(), is("Admin"));
+    Role fetchedRole = roles.get(1);
+    assertThat(fetchedRole.getName(), is("role name"));
+    assertTrue(fetchedRole.getRights().contains(CONFIGURE_RNR));
+    assertTrue(fetchedRole.getRights().contains(CREATE_REQUISITION));
+  }
 
   @Test
   public void shouldUpdateRole() {
@@ -145,30 +165,30 @@ public class RoleRightsMapperIT {
   }
 
   private Role insertRole() {
-        Role r1 = new Role("r1", "random description");
-        roleRightsMapper.insertRole(r1);
-        return r1;
-    }
+    Role r1 = new Role("r1", "random description");
+    roleRightsMapper.insertRole(r1);
+    return r1;
+  }
 
-    private Program insertProgram(Program program) {
-        programMapper.insert(program);
-        return program;
-    }
+  private Program insertProgram(Program program) {
+    programMapper.insert(program);
+    return program;
+  }
 
-    private Role insertRoleAssignments(Program program, User user, Role role) {
-        roleAssignmentMapper.createRoleAssignment(user, role, program, null);
-        return role;
-    }
+  private Role insertRoleAssignments(Program program, User user, Role role) {
+    roleAssignmentMapper.createRoleAssignment(user, role, program, null);
+    return role;
+  }
 
-    private User insertUser(Facility facility) {
-        User user = make(a(defaultUser, with(facilityId, facility.getId())));
-        userMapper.insert(user);
-        return user;
-    }
+  private User insertUser(Facility facility) {
+    User user = make(a(defaultUser, with(facilityId, facility.getId())));
+    userMapper.insert(user);
+    return user;
+  }
 
-    private Facility insertFacility() {
-        Facility facility = make(a(defaultFacility));
-        facilityMapper.insert(facility);
-        return facility;
-    }
+  private Facility insertFacility() {
+    Facility facility = make(a(defaultFacility));
+    facilityMapper.insert(facility);
+    return facility;
+  }
 }

@@ -23,7 +23,6 @@ public class ApplicationUserPermissionEvaluator implements PermissionEvaluator {
   @Override
   public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permissions) {
     final List<Right> rightsToCheck = getRightList((String) permissions);
-
     String userName = authentication.getName();
     return CollectionUtils.containsAny(roleRightService.getRights(userName), rightsToCheck);
   }

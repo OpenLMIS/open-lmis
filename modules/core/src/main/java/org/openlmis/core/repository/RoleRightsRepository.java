@@ -23,7 +23,7 @@ public class RoleRightsRepository {
   }
 
   public List<Right> getAllRightsForUser(String username) {
-    return roleRightsMapper.getAllRightsForUser(username);
+    return roleRightsMapper.getAllRightsForUserByUserName(username);
   }
 
   public void saveRole(Role role) {
@@ -59,5 +59,9 @@ public class RoleRightsRepository {
     for (Right right : rights) {
       roleRightsMapper.createRoleRight(role.getId(), right);
     }
+  }
+
+  public List<Right> getAllRightsForUser(Integer userId) {
+    return roleRightsMapper.getAllRightsForUserById(userId);
   }
 }

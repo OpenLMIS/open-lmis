@@ -21,6 +21,7 @@ import static org.mockito.Mockito.verify;
 import static org.openlmis.web.controller.RnrController.RNR;
 import static org.powermock.api.mockito.PowerMockito.doThrow;
 import static org.powermock.api.mockito.PowerMockito.when;
+
 public class RnrControllerTest {
 
   MockHttpServletRequest request;
@@ -113,6 +114,23 @@ public class RnrControllerTest {
 
     verify(rnrService).save(rnr);
     assertThat(response.getBody().getErrorMsg(), is(errorMessage));
+  }
+
+  @Test
+  public void shouldGiveErrorResponseIfThereIsAnyExceptionWhileSavingRnr() throws Exception {
+    String errorMessage = "some error";
+    doThrow(new DataException(new OpenLmisMessage(errorMessage))).when(rnrService).save(rnr);
+    ResponseEntity<OpenLmisResponse> response = controller.saveRnr(rnr, request);
+
+    verify(rnrService).save(rnr);
+    assertThat(response.getBody().getErrorMsg(), is(errorMessage));
+  }
+
+  @Test
+  public void shouldGiveSuccessResponseIfRnrSavedSuccessfully() throws Exception {
+    ResponseEntity<OpenLmisResponse> response = controller.saveRnr(rnr, request);
+    verify(rnrService).save(rnr);
+    assertThat(response.getBody().getSuccessMsg(), is("R&R saved successfully!"));
   }
 }
 

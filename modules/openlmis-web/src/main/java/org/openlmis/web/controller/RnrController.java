@@ -25,6 +25,7 @@ import java.util.Map;
 public class RnrController extends BaseController {
 
   public static final String RNR = "rnr";
+  public static final String RNR_SAVE_SUCCESS = "rnr.save.success";
   private RnrService rnrService;
 
 
@@ -54,9 +55,14 @@ public class RnrController extends BaseController {
 
   @RequestMapping(value = "/requisitions/{id}/save", method = RequestMethod.PUT, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('','CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
-  public void saveRnr(@RequestBody Rnr rnr, HttpServletRequest request) {
+  public ResponseEntity<OpenLmisResponse> saveRnr(@RequestBody Rnr rnr, HttpServletRequest request) {
     rnr.setModifiedBy(loggedInUserId(request));
-    rnrService.save(rnr);
+    try {
+      rnrService.save(rnr);
+      return OpenLmisResponse.success(RNR_SAVE_SUCCESS);
+    } catch (DataException e) {
+      return OpenLmisResponse.error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
+    }
   }
 
   @RequestMapping(value = "/requisitions/{id}/submit", method = RequestMethod.PUT, headers = "Accept=application/json")

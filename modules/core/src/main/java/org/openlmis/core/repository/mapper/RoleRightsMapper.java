@@ -19,7 +19,7 @@ public interface RoleRightsMapper {
       "lower(U.userName) = lower(#{userName}) ",
       "AND U.id = RA.userId",
       "AND RA.roleId = RR.roleId"})
-  List<Right> getAllRightsForUser(String username);
+  List<Right> getAllRightsForUserByUserName(String username);
 
   //used below
   @SuppressWarnings("unused")
@@ -53,4 +53,11 @@ public interface RoleRightsMapper {
 
   @Delete("DELETE FROM role_rights WHERE roleId=#{roleId}")
   int deleteAllRightsForRole( int roleId);
+
+  @Select({"SELECT RR.rightName",
+        "FROM users U, role_assignments RA, role_rights RR WHERE",
+        "U.id = #{userId}",
+        "AND U.id = RA.userId",
+        "AND RA.roleId = RR.roleId"})
+  List<Right> getAllRightsForUserById(@Param("userId") Integer userId);
 }

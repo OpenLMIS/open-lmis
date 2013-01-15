@@ -7,6 +7,7 @@ import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.FacilityApprovedProductService;
+import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.core.service.SupervisoryNodeService;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.domain.Rnr;
@@ -19,9 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
-import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
-import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
+import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
+import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.rnr.domain.RnrStatus.*;
 
 @Service
 @NoArgsConstructor
@@ -29,20 +30,24 @@ public class RnrService {
 
   public static final String RNR_AUTHORIZATION_ERROR = "rnr.authorization.error";
   public static final String RNR_SUBMISSION_ERROR = "rnr.submission.error";
-  private RnrRepository rnrRepository;
-  private RnrTemplateRepository rnrTemplateRepository;
-
-  private FacilityApprovedProductService facilityApprovedProductService;
-  private SupervisoryNodeService supervisoryNodeService;
+  public static final String RNR_OPERATION_UNAUTHORIZED = "rnr.operation.unauthorized";
   public static final String RNR_AUTHORIZED_SUCCESSFULLY = "rnr.authorized.success";
   public static final String RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR = "rnr.authorized.success.without.supervisor";
 
+  private RnrRepository rnrRepository;
+
+  private RnrTemplateRepository rnrTemplateRepository;
+  private FacilityApprovedProductService facilityApprovedProductService;
+  private SupervisoryNodeService supervisoryNodeService;
+  private RoleRightsService roleRightsService;
+
   @Autowired
-  public RnrService(RnrRepository rnrRepository, RnrTemplateRepository rnrTemplateRepository, FacilityApprovedProductService facilityApprovedProductService, SupervisoryNodeService supervisoryNodeRepository) {
+  public RnrService(RnrRepository rnrRepository, RnrTemplateRepository rnrTemplateRepository, FacilityApprovedProductService facilityApprovedProductService, SupervisoryNodeService supervisoryNodeRepository, RoleRightsService roleRightsService) {
     this.rnrRepository = rnrRepository;
     this.rnrTemplateRepository = rnrTemplateRepository;
     this.facilityApprovedProductService = facilityApprovedProductService;
     this.supervisoryNodeService = supervisoryNodeRepository;
+    this.roleRightsService = roleRightsService;
   }
 
   @Transactional
@@ -60,7 +65,15 @@ public class RnrService {
   }
 
   public void save(Rnr rnr) {
+    if (!isUserAllowedToSave(rnr))
+      throw new DataException(RNR_OPERATION_UNAUTHORIZED);
+
     rnrRepository.update(rnr);
+  }
+
+  private boolean isUserAllowedToSave(Rnr rnr) {
+    return (rnr.getStatus() == INITIATED && roleRightsService.getRights(rnr.getModifiedBy()).contains(CREATE_REQUISITION))||
+        (rnr.getStatus() == SUBMITTED && roleRightsService.getRights(rnr.getModifiedBy()).contains(AUTHORIZE_REQUISITION));
   }
 
   public Rnr get(Integer facilityId, Integer programId) {
@@ -72,7 +85,8 @@ public class RnrService {
   }
 
   public String submit(Rnr rnr) {
-    if(rnrRepository.getById(rnr.getId()).getStatus() != INITIATED) throw new DataException(new OpenLmisMessage(RNR_SUBMISSION_ERROR));
+    if (rnrRepository.getById(rnr.getId()).getStatus() != INITIATED)
+      throw new DataException(new OpenLmisMessage(RNR_SUBMISSION_ERROR));
     rnr.validate(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId()));
     rnr.setStatus(SUBMITTED);
     rnrRepository.update(rnr);
@@ -85,7 +99,7 @@ public class RnrService {
   }
 
   public OpenLmisMessage authorize(Rnr rnr) {
-    if(rnrRepository.getById(rnr.getId()).getStatus() != SUBMITTED) throw new DataException(RNR_AUTHORIZATION_ERROR);
+    if (rnrRepository.getById(rnr.getId()).getStatus() != SUBMITTED) throw new DataException(RNR_AUTHORIZATION_ERROR);
 
     rnr.validate(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId()));
     rnr.setStatus(AUTHORIZED);
@@ -93,7 +107,7 @@ public class RnrService {
 
     User approver = supervisoryNodeService.getApproverFor(rnr.getFacilityId(), rnr.getProgramId());
 
-    if(approver == null)return new OpenLmisMessage(RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR);
+    if (approver == null) return new OpenLmisMessage(RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR);
 
     return new OpenLmisMessage(RNR_AUTHORIZED_SUCCESSFULLY);
   }

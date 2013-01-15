@@ -8,13 +8,11 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.ProductBuilder;
-import org.openlmis.core.domain.FacilityApprovedProduct;
-import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.domain.SupervisoryNode;
-import org.openlmis.core.domain.User;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.FacilityApprovedProductService;
+import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.core.service.SupervisoryNodeService;
 import org.openlmis.rnr.builder.RnrBuilder;
 import org.openlmis.rnr.domain.Rnr;
@@ -24,20 +22,21 @@ import org.openlmis.rnr.repository.RnrTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
+import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
+import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 import static org.openlmis.rnr.builder.RnrBuilder.defaultRnr;
 import static org.openlmis.rnr.builder.RnrBuilder.status;
 import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
-import static org.openlmis.rnr.service.RnrService.RNR_AUTHORIZATION_ERROR;
-import static org.openlmis.rnr.service.RnrService.RNR_AUTHORIZED_SUCCESSFULLY;
-import static org.openlmis.rnr.service.RnrService.RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR;
+import static org.openlmis.rnr.service.RnrService.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RnrServiceTest {
@@ -58,6 +57,8 @@ public class RnrServiceTest {
   private RnrTemplateRepository rnrTemplateRepository;
   @Mock
   private SupervisoryNodeService supervisoryNodeService;
+  @Mock
+  private RoleRightsService roleRightService;
 
   private Rnr rnr;
   private Rnr submittedRnr;
@@ -66,7 +67,7 @@ public class RnrServiceTest {
 
   @Before
   public void setup() {
-    rnrService = new RnrService(rnrRepository, rnrTemplateRepository, facilityApprovedProductService, supervisoryNodeService);
+    rnrService = new RnrService(rnrRepository, rnrTemplateRepository, facilityApprovedProductService, supervisoryNodeService, roleRightService);
     rnr = spy(make(a(defaultRnr)));
     submittedRnr = make(a(RnrBuilder.defaultRnr, with(status, RnrStatus.SUBMITTED)));
     initiatedRnr = make(a(RnrBuilder.defaultRnr, with(status, INITIATED)));
@@ -171,5 +172,51 @@ public class RnrServiceTest {
     expectedException.expectMessage(RNR_AUTHORIZATION_ERROR);
 
     rnrService.authorize(rnr);
+  }
+
+  @Test
+  public void shouldSaveRnrIfStatusIsSubmittedAndUserHasAuthorizeRight() {
+    Integer userId = 1;
+    rnr.setModifiedBy(userId);
+    rnr.setStatus(SUBMITTED);
+    List<Right> listUserRights = Arrays.asList(AUTHORIZE_REQUISITION);
+    when(roleRightService.getRights(userId)).thenReturn(listUserRights);
+    rnrService.save(rnr);
+    verify(rnrRepository).update(rnr);
+  }
+
+  @Test
+  public void shouldSaveRnrIfStatusIsInitiatedAndUserHasCreateRight() {
+    Integer userId = 1;
+    rnr.setModifiedBy(userId);
+    rnr.setStatus(INITIATED);
+    List<Right> listUserRights = Arrays.asList(CREATE_REQUISITION);
+    when(roleRightService.getRights(userId)).thenReturn(listUserRights);
+    rnrService.save(rnr);
+    verify(rnrRepository).update(rnr);
+  }
+
+  @Test
+  public void shouldNotSaveRnrWithStatusInitiatedIfUserHasOnlyAuthorizeRight() {
+    Integer userId = 1;
+    rnr.setModifiedBy(userId);
+    rnr.setStatus(INITIATED);
+    List<Right> listUserRights = Arrays.asList(AUTHORIZE_REQUISITION);
+    when(roleRightService.getRights(userId)).thenReturn(listUserRights);
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage(RNR_OPERATION_UNAUTHORIZED);
+    rnrService.save(rnr);
+  }
+
+  @Test
+  public void shouldNotSaveAlreadySubmittedRnrIfUserHasOnlyCreateRequisitionRight() {
+    Integer userId = 1;
+    rnr.setModifiedBy(userId);
+    rnr.setStatus(SUBMITTED);
+    List<Right> listUserRights = Arrays.asList(CREATE_REQUISITION);
+    when(roleRightService.getRights(userId)).thenReturn(listUserRights);
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage(RNR_OPERATION_UNAUTHORIZED);
+    rnrService.save(rnr);
   }
 }
