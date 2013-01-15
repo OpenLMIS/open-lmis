@@ -49,7 +49,13 @@ public class UploadPage extends Page {
 
     public void uploadFile(String fileName){
         uploadFilePath = System.getProperty("user.dir") + "/src/main/resources/"+fileName;
-        setCsvPath.sendKeys(uploadFilePath);
+        if(uploadFilePath.contains("functional-tests"))
+            setCsvPath.sendKeys(uploadFilePath);
+        else
+        {
+            uploadFilePath = System.getProperty("user.dir") + "/functional-tests/src/main/resources/"+fileName;
+            setCsvPath.sendKeys(uploadFilePath);
+        }
         uploadButton.click();
     }
 
