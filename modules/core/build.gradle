@@ -12,6 +12,7 @@ dependencies {
             'joda-time:joda-time:2.1',
             'commons-codec:commons-codec:1.7',
             project(':modules:db'),
+            project(':modules:email'),
             project(':modules:upload')
 
     testCompile 'org.springframework:spring-test:3.1.1.RELEASE'

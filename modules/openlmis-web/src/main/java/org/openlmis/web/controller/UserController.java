@@ -1,9 +1,12 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.User;
 import org.openlmis.core.service.RoleRightsService;
+import org.openlmis.core.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,9 +25,12 @@ public class UserController extends BaseController {
 
   @Autowired
   private RoleRightsService roleRightService;
+  @Autowired
+  private UserService userService;
 
-  public UserController(RoleRightsService roleRightService) {
+  public UserController(RoleRightsService roleRightService, UserService userService) {
     this.roleRightService = roleRightService;
+    this.userService = userService;
   }
 
   @RequestMapping(value = "/user", method = RequestMethod.GET)
@@ -40,5 +46,10 @@ public class UserController extends BaseController {
       params.put("error", error);
     }
     return params;
+  }
+
+  @RequestMapping(value = "/forgotPassword", method = RequestMethod.GET)
+  public void sendPasswordTokenEmail(@RequestBody User user) {
+      userService.sendForgotPasswordEmail(user);
   }
 }
