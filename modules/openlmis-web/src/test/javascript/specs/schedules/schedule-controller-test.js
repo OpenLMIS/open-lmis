@@ -24,7 +24,7 @@ describe("Schedule", function () {
       expect(scope.schedules).toEqual([existingSchedule]);
     });
 
-    xit('should create a new schedule', function () {
+    it('should create a new schedule', function () {
       scope.newSchedule = {"code":"newCode", "name":"newName", "description":"newDescription"};
       var newScheduleWithId = {"id":2, "code":"newCode", "name":"newName", "description":"newDescription"};
       var expectedScheduleBackupMap = [];

@@ -1,114 +1,78 @@
-function InitiateRnrController($scope, Requisition, facilities, programs, UserSupportedProgramInFacilityForAnOperation, UserSupervisedFacilitiesForProgram, $location, $rootScope) {
+function InitiateRnrController($scope, $location, $rootScope, Requisition, facilities, programs, UserSupportedProgramInFacilityForAnOperation, UserSupervisedFacilitiesForProgram, UserFacilityList, UserSupervisedProgramList) {
 
-  $scope.programOptionMsg = "--choose program--";
-  $scope.facilities = facilities;
-  $scope.facilityOptionMsg = "--choose facility--";
-  if ($scope.facilities == null || $scope.facilities.length == 0) {
-    $scope.facilityOptionMsg = "--none assigned--";
-  }
+  const DEFAULT_FACILITY_MESSAGE = '--choose facility--';
+  const DEFAULT_PROGRAM_MESSAGE = '--choose program--';
 
-  $scope.programs = programs;
-  if ($scope.programs == null || $scope.programs.length == 0) {
-    $scope.programOptionMsg = "--none assigned--";
-  }
+  UserFacilityList.get({}, function (data) {
+        $scope.facilities = data.facilityList;
+      }, {}
+  );
+
+  UserSupervisedProgramList.get({}, function (data) {
+        $scope.programs = data.programList;
+      }, {}
+  );
+
+  var optionMessage = function (entity, defaultMessage) {
+    return entity == null || entity.length == 0 ? "--none assigned--" : defaultMessage;
+  };
+
+  $scope.facilityOptionMsg = optionMessage($scope.facilities, DEFAULT_FACILITY_MESSAGE);
+  $scope.programOptionMsg = optionMessage($scope.programs, DEFAULT_PROGRAM_MESSAGE);
+
   $scope.$parent.program = null;
   $scope.$parent.facility = null;
 
   $scope.loadPrograms = function () {
     if ($scope.$parent.facility) {
-      UserSupportedProgramInFacilityForAnOperation.get({facilityId:$scope.$parent.facility}, function (data) {
+      UserSupportedProgramInFacilityForAnOperation.get({facilityId: $scope.$parent.facility}, function (data) {
         $scope.programs = data.programList;
-        $scope.programOptionMsg = "--choose program--";
-        if ($scope.programs == null || $scope.programs.length == 0) {
-          $scope.programOptionMsg = "--none assigned--";
-        }
+        $scope.programOptionMsg = optionMessage($scope.programs, DEFAULT_PROGRAM_MESSAGE)
       }, {});
     } else {
       $scope.programs = null;
-      $scope.programOptionMsg = "--choose program--";
+      $scope.programOptionMsg = DEFAULT_PROGRAM_MESSAGE;
     }
   };
 
   $scope.loadFacilities = function () {
     if ($scope.$parent.program) {
-      UserSupervisedFacilitiesForProgram.get({programId:$scope.$parent.program.id}, function (data) {
+      UserSupervisedFacilitiesForProgram.get({programId: $scope.$parent.program.id}, function (data) {
         $scope.facilities = data.facilities;
-        $scope.facilityOptionMsg = "--choose facility--";
-        if ($scope.facilities == null || $scope.facilities.length == 0) {
-          $scope.facilityOptionMsg = "--none assigned--";
-        }
+        $scope.facilityOptionMsg = optionMessage($scope.facilities, DEFAULT_FACILITY_MESSAGE);
       }, {});
     } else {
       $scope.facilities = null;
-      $scope.facilityOptionMsg = "--choose facility--";
+      $scope.facilityOptionMsg = DEFAULT_FACILITY_MESSAGE;
     }
   };
 
   $scope.initRnr = function () {
-    if (validate()) {
+    if ($scope.$parent.program) {
       $scope.error = "";
       $scope.$parent.sourceUrl = $location.$$url;
 
-      Requisition.get({facilityId:$scope.facility, programId:$scope.program.id},{},
-        function (data) {
-          if (data.rnr) {
-            if(data.rnr.status != 'SUBMITTED' && !$rootScope.hasPermission('CREATE_REQUISITION')) {
+      Requisition.get({facilityId: $scope.facility, programId: $scope.program.id}, {},
+          function (data) {
+            if (data.rnr) {
+              if (data.rnr.status != 'SUBMITTED' && !$rootScope.hasPermission('CREATE_REQUISITION')) {
                 $scope.error = "An R&R has not been submitted yet";
                 return;
-            }
-            $scope.$parent.rnr = data.rnr;
-            $location.path('/create-rnr/' + $scope.facility + '/' + $scope.program.id);
-          }
-          else {
-            Requisition.save({facilityId:$scope.facility, programId:$scope.program.id}, {}, function (data) {
+              }
               $scope.$parent.rnr = data.rnr;
               $location.path('/create-rnr/' + $scope.facility + '/' + $scope.program.id);
-            }, function () {
-              $scope.error = "Requisition does not exist. Please initiate.";
-            })
-          }
-        }, {});
-
-
+            }
+            else {
+              Requisition.save({facilityId: $scope.facility, programId: $scope.program.id}, {}, function (data) {
+                $scope.$parent.rnr = data.rnr;
+                $location.path('/create-rnr/' + $scope.facility + '/' + $scope.program.id);
+              }, function () {
+                $scope.error = "Requisition does not exist. Please initiate.";
+              })
+            }
+          }, {});
     } else {
       $scope.error = "Please select Facility and program for facility to proceed";
     }
   };
-
-  var validate = function () {
-    return $scope.$parent.program;
-  };
-}
-
-
-InitiateRnrController.resolveFacility = {
-  facilities:function ($q, $timeout, UserFacilityList) {
-    var deferred = $q.defer();
-    $timeout(function () {
-      UserFacilityList.get({}, function (data) {
-          deferred.resolve(data.facilityList);
-        }, {}
-      );
-    }, 100);
-
-    return deferred.promise;
-  },
-  programs:function () {
-  }
-}
-
-InitiateRnrController.resolveProgram = {
-  programs:function ($q, $timeout, UserSupervisedProgramList) {
-    var deferred = $q.defer();
-    $timeout(function () {
-      UserSupervisedProgramList.get({}, function (data) {
-          deferred.resolve(data.programList);
-        }, {}
-      );
-    }, 100);
-
-    return deferred.promise;
-  },
-  facilities:function () {
-  }
 }
