@@ -1,18 +1,24 @@
-<div>
-    <h2>Initiate Report and Requisition</h2>
-    <label>Facility</label>
-    <select ng-model="$parent.facility" ng-options="i.id as i.code + '-' + i.name for i in facilities"
-            ng-change="loadPrograms()">
-        <option value="">{{facilityOptionMsg}}</option>
-    </select> <br/>
-    <br/>
-    <label>Program</label>
-    <select ng-model="$parent.program" ng-options="i as i.name for i in programs">
-        <option value="">{{programOptionMsg}}</option>
-    </select> <br/>
-    <br/>
+<div ng-controller="InitiateMyFacilityRnrController">
+  <h2>Initiate Report and Requisition</h2>
+  <label>Facility</label>
+  <select ng-model="$parent.selectedFacilityId" ng-options="i.id as i.code + '-' + i.name for i in facilities"
+          ng-change="loadPrograms()">
+    <option value="">{{facilityOptionMessage()}}</option>
+  </select> <br/>
+  <br/>
+  <label>Program</label>
+  <select ng-model="$parent.selectedProgram" ng-options="i as i.name for i in programs">
+    <option value="">{{programOptionMessage()}}</option>
+  </select> <br/>
+  <br/>
+  <!--<label>Period</label>-->
+  <!--<select ng-model="$parent.period" ng-options="i as i.name for i in periods">-->
+    <!--<option value="">{{periodOptionMsg}}</option>-->
+  <!--</select> <br/>-->
+  <!--<br/>-->
+
   <div class="alert alert-error" id="saveSuccessMsgDiv" ng-model="error" ng-show="error">
     {{error}}
   </div>
-    <input type="button" class="btn" ng-click="initRnr()" value="Next"/>
+  <input type="button" class="btn" ng-click="initRnr()" value="Next"/>
 </div>

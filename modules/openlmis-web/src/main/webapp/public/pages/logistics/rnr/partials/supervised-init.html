@@ -1,13 +1,13 @@
-<div>
+<div ng-controller="InitiateMySupervisedFacilitiesRnrController">
     <h2>Initiate Report and Requisition</h2>
     <label>Program</label>
-    <select  ng-change="loadFacilities()" ng-model="$parent.program" ng-options="i as i.name for i in programs">
-        <option value="">{{programOptionMsg}}</option>
+    <select  ng-change="loadFacilities()" ng-model="$parent.selectedProgram" ng-options="i as i.name for i in programs">
+        <option value="">{{programOptionMessage()}}</option>
     </select> <br/>
     <br/>
     <label>Facility</label>
-    <select ng-model="$parent.facility" ng-options="i.id as i.code + '-' + i.name for i in facilities">
-        <option value="">{{facilityOptionMsg}}</option>
+    <select ng-model="$parent.selectedFacilityId" ng-options="i.id as i.code + '-' + i.name for i in facilities">
+        <option value="">{{facilityOptionMessage()}}</option>
     </select> <br/>
     <br/>
     <div class="alert alert-error" id="saveSuccessMsgDiv" ng-model="error" ng-show="error">
