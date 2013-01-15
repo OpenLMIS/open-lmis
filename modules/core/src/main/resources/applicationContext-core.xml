@@ -11,6 +11,4 @@
     <context:component-scan base-package="org.openlmis.core" />
 
     <import resource="classpath*:applicationContext-db.xml" />
-    <!--<import resource="classpath*:applicationContext-email.xml" />-->
-
 </beans>

@@ -11,16 +11,7 @@
     <context:annotation-config/>
     <context:spring-configured/>
 
-    <!--<context:property-placeholder location="classpath*:postgresql.properties"/>-->
-
-    <bean id="dbProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations">
-            <list>
-                <value>classpath*:/postgresql.properties</value>
-            </list>
-        </property>
-        <property name="ignoreUnresolvablePlaceholders" value="true"/>
-    </bean>
+    <context:property-placeholder location="classpath*:postgresql.properties"/>
 
     <tx:annotation-driven transaction-manager="transactionManager"/>
 

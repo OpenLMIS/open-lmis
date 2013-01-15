@@ -29,7 +29,7 @@
                 <value>classpath:${env}/app.properties</value>
             </list>
         </property>
-        <!--<property name="ignoreUnresolvablePlaceholders" value="true"/>-->
+
         <property name="ignoreResourceNotFound" value="false"/>
         <property name="systemPropertiesModeName">
             <value>SYSTEM_PROPERTIES_MODE_OVERRIDE</value>
@@ -48,8 +48,8 @@
     <bean id="multipartResolver"
           class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
 
-    <mvc:resources mapping="/public/**" location="/public/" />
-    <mvc:resources mapping="/error/**" location="/public/" />
+    <mvc:resources mapping="/public/**" location="/public/"/>
+    <mvc:resources mapping="/error/**" location="/public/"/>
 
     <mvc:interceptors>
         <bean id="noCacheInterceptor" class="org.springframework.web.servlet.mvc.WebContentInterceptor">
