@@ -1,17 +1,23 @@
 <div ng-controller="InitiateMySupervisedFacilitiesRnrController">
-    <h2>Initiate Report and Requisition</h2>
-    <label>Program</label>
-    <select  ng-change="loadFacilities()" ng-model="$parent.selectedProgram" ng-options="i as i.name for i in programs">
-        <option value="">{{programOptionMessage()}}</option>
-    </select> <br/>
-    <br/>
-    <label>Facility</label>
-    <select ng-model="$parent.selectedFacilityId" ng-options="i.id as i.code + '-' + i.name for i in facilities">
-        <option value="">{{facilityOptionMessage()}}</option>
-    </select> <br/>
-    <br/>
-    <div class="alert alert-error" id="saveSuccessMsgDiv" ng-model="error" ng-show="error">
-        {{error}}
-    </div>
-    <input type="button" class="btn" ng-click="initRnr()" value="Next"/>
+  <h2>Initiate Report and Requisition</h2>
+  <label>Program</label>
+  <select ng-change="loadFacilities()" ng-model="$parent.selectedProgram" ng-options="i as i.name for i in programs">
+    <option value="">{{programOptionMessage()}}</option>
+  </select> <br/>
+  <br/>
+  <label>Facility</label>
+  <select  ng-change="loadPeriods()" ng-model="$parent.selectedFacilityId" ng-options="i.id as i.code + '-' + i.name for i in facilities">
+    <option value="">{{facilityOptionMessage()}}</option>
+  </select> <br/>
+  <br/>
+  <label>Period</label>
+  <select ng-model="$parent.selectedPeriod" ng-options="i as i.name for i in periods">
+    <option value="">{{periodOptionMessage()}}</option>
+  </select> <br/>
+  <br/>
+
+  <div class="alert alert-error" id="saveSuccessMsgDiv" ng-model="error" ng-show="error">
+    {{error}}
+  </div>
+  <input type="button" class="btn" ng-click="initRnr()" value="Next"/>
 </div>

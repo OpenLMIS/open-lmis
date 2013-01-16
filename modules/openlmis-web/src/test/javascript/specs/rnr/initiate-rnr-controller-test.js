@@ -64,44 +64,60 @@ describe('InitiateRnrController', function () {
     expect(scope.$parent.rnr).toEqual({"id": 1, status: 'INITIATED'});
   });
 
-//  describe('periods', function() {
-//    beforeEach(function() {
-//      scope.$parent.program = {"code": "hiv", "id": 10};
-//      scope.$parent.facility = 20;
-//    });
-//
-//    it('should load periods for selected facility and program', function () {
-//      var periods = [
-//        {"name": "First Month", "description": "First Month Description"}
-//      ];
-//      $httpBackend.expectGET('/logistics/facility/20/program/10/periods.json').respond({"periodList": periods});
-//
-//      expect(scope.periodOptionMsg).toEqual('--none assigned--');
-//
-//      scope.loadPeriods();
-//      $httpBackend.flush();
-//
-//      expect(scope.periods).toEqual(periods);
-//      expect(scope.periodOptionMsg).toEqual('--choose period--');
-//    });
-//
-//    it('should set appropriate message when no periods found for facility and program', function () {
-//      $httpBackend.expectGET('/logistics/facility/20/program/10/periods.json').respond(null);
-//
-//      scope.loadPeriods();
-//      $httpBackend.flush();
-//
-//      expect(scope.periods).toEqual(null);
-//      expect(scope.periodOptionMsg).toEqual('--none assigned--');
-//    });
-//
-//    it('should not load periods if program not selected', function () {
-//      scope.$parent.program = null;
-//
-//      scope.loadPeriods();
-//
-//      expect(scope.periods).toEqual(null);
-//      expect(scope.periodOptionMsg).toEqual('--none assigned--');
-//    });
-//  });
+  it('should set appropriate message for facility', function () {
+    scope.facilities = null;
+    expect(scope.facilityOptionMessage()).toEqual('--none assigned--');
+
+    scope.facilities = facilities;
+    expect(scope.facilityOptionMessage()).toEqual('--choose facility--');
+  });
+
+  describe('periods', function () {
+    beforeEach(function () {
+      scope.selectedProgram = {"code": "hiv", "id": 10};
+      scope.selectedFacilityId = 20;
+    });
+
+    it('should load periods for selected facility and program', function () {
+      var periods = [
+        {"name": "First Month", "description": "First Month Description"}
+      ];
+      $httpBackend.expectGET('/logistics/facility/20/program/10/periods.json').respond({"periods": periods});
+
+      scope.loadPeriods();
+      $httpBackend.flush();
+
+      expect(scope.periods).toEqual(periods);
+    });
+
+    it('should not load periods if facility selected but program not selected', function () {
+      scope.selectedFacilityId = 1;
+      scope.selectedProgram = null;
+
+      scope.loadPeriods();
+
+      expect(scope.periods).toEqual(null);
+      expect(scope.selectedPeriod).toEqual(null);
+    });
+
+    it('should not load periods if program selected but facility not selected', function () {
+      scope.selectedFacilityId = null;
+      scope.selectedProgram = {"id": 1};
+
+      scope.loadPeriods();
+
+      expect(scope.periods).toEqual(null);
+      expect(scope.selectedPeriod).toEqual(null);
+    });
+
+    it('should not load periods if both program and facility not selected', function () {
+      scope.selectedFacilityId = null;
+      scope.selectedProgram = null;
+
+      scope.loadPeriods();
+
+      expect(scope.periods).toEqual(null);
+      expect(scope.selectedPeriod).toEqual(null);
+    });
+  });
 });

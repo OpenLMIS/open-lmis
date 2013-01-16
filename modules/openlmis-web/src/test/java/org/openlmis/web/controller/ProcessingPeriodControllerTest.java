@@ -16,6 +16,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -37,6 +38,8 @@ public class ProcessingPeriodControllerTest {
   private final Integer USER_ID = 5;
   private MockHttpServletRequest request;
   private final int PROCESSING_PERIOD_ID = 1;
+  private final Integer FACILITY_ID = 1;
+  private final Integer PROGRAM_ID = 2;
 
   @Before
   public void setUp() throws Exception {
@@ -105,6 +108,19 @@ public class ProcessingPeriodControllerTest {
     verify(service).deletePeriod(PROCESSING_PERIOD_ID);
     assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
     assertThat(responseEntity.getBody().getSuccessMsg(), is("Period deleted successfully"));
+
+  }
+
+  @Test
+  public void shouldGetAllPeriodsForFacilityAndProgram() throws Exception {
+    List<ProcessingPeriod> mockedList = Arrays.asList(new ProcessingPeriod());
+    when(service.getAllPeriodsForFacilityAndProgram(FACILITY_ID, PROGRAM_ID)).thenReturn(mockedList);
+
+    ResponseEntity<OpenLmisResponse> responseEntity = controller.getAllPeriodsForFacilityAndProgram(FACILITY_ID, PROGRAM_ID);
+
+    List<ProcessingPeriod> periodList = (List<ProcessingPeriod>) responseEntity.getBody().getData().get(ProcessingPeriodController.PERIODS);
+    verify(service).getAllPeriodsForFacilityAndProgram(FACILITY_ID, PROGRAM_ID);
+    assertThat(periodList, is(mockedList));
 
   }
 }
