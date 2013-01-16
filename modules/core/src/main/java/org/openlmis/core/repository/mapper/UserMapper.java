@@ -22,7 +22,7 @@ public interface UserMapper {
   Integer insert(User user);
 
   @Select(value = "SELECT id, userName, facilityId, firstName, lastName, employeeId, jobTitle, primaryNotificationMethod, officePhone, cellPhone, email, supervisorId" +
-      " FROM users where userName = #{userName}")
+      " FROM users where LOWER(userName) = LOWER(#{userName})")
   @Results(@Result(property = "supervisor.id", column = "supervisorId"))
   User get(String userName);
 
