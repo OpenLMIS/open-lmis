@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RnrMapper {
 
-  @Insert("insert into requisition(facilityId, programId, status, modifiedBy) " +
-      "values (#{facilityId}, #{programId}, #{status}, #{modifiedBy})")
+  @Insert("insert into requisition(facilityId, programId, periodId, status, modifiedBy) " +
+      "values (#{facilityId}, #{programId}, #{periodId}, #{status}, #{modifiedBy})")
   @Options(useGeneratedKeys = true)
   public void insert(Rnr requisition);
 

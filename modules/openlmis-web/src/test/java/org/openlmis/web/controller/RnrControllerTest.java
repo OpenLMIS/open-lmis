@@ -59,7 +59,7 @@ public class RnrControllerTest {
   @Test
   public void shouldGiveErrorIfInitiatingFails() throws Exception {
     String errorMessage = "error-message";
-    doThrow(new DataException(errorMessage)).when(rnrService).initRnr(1, 2, USER_ID);
+    doThrow(new DataException(errorMessage)).when(rnrService).initRnr(1, 2, null, USER_ID);
     ResponseEntity<OpenLmisResponse> response = controller.initiateRnr(1, 2, request);
     assertThat(response.getBody().getErrorMsg(), is(equalTo(errorMessage)));
   }

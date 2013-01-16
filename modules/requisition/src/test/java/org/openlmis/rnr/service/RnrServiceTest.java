@@ -44,6 +44,7 @@ public class RnrServiceTest {
   public static final Integer HIV = 1;
   public static final int USER_ID = 1;
   public Integer facilityId = 1;
+  public Integer periodId = 10;
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
@@ -64,7 +65,6 @@ public class RnrServiceTest {
   private Rnr submittedRnr;
   private Rnr initiatedRnr;
 
-
   @Before
   public void setup() {
     rnrService = new RnrService(rnrRepository, rnrTemplateRepository, facilityApprovedProductService, supervisoryNodeService, roleRightService);
@@ -81,7 +81,9 @@ public class RnrServiceTest {
     ProgramProduct programProduct = new ProgramProduct(null, make(a(ProductBuilder.defaultProduct)), 10, true);
     facilityApprovedProducts.add(new FacilityApprovedProduct("warehouse", programProduct, 30));
     when(facilityApprovedProductService.getByFacilityAndProgram(facilityId, HIV)).thenReturn(facilityApprovedProducts);
-    Rnr rnr = rnrService.initRnr(facilityId, HIV, 1);
+
+    Rnr rnr = rnrService.initRnr(facilityId, HIV, periodId, 1);
+
     verify(facilityApprovedProductService).getByFacilityAndProgram(facilityId, HIV);
     verify(rnrRepository).insert(rnr);
     assertThat(rnr.getLineItems().size(), is(USER_ID));
@@ -92,7 +94,7 @@ public class RnrServiceTest {
     when(rnrTemplateRepository.isRnrTemplateDefined(HIV)).thenReturn(false);
     expectedException.expect(DataException.class);
     expectedException.expectMessage("Please contact Admin to define R&R template for this program");
-    Rnr rnr = rnrService.initRnr(facilityId, HIV, 1);
+    Rnr rnr = rnrService.initRnr(facilityId, HIV, null, 1);
     verify(facilityApprovedProductService, never()).getByFacilityAndProgram(facilityId, HIV);
     verify(rnrRepository, never()).insert(rnr);
   }

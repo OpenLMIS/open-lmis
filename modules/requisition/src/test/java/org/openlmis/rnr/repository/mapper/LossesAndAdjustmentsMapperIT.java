@@ -4,14 +4,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
+import org.openlmis.core.builder.ProcessingScheduleBuilder;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.*;
-import org.openlmis.core.repository.mapper.FacilityMapper;
-import org.openlmis.core.repository.mapper.ProductMapper;
-import org.openlmis.core.repository.mapper.ProgramMapper;
-import org.openlmis.core.repository.mapper.ProgramProductMapper;
-import org.openlmis.rnr.domain.*;
+import org.openlmis.core.repository.mapper.*;
+import org.openlmis.rnr.domain.LossesAndAdjustments;
+import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
+import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.RnrLineItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -20,10 +21,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
+import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -31,52 +33,60 @@ import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 @Transactional
 @TransactionConfiguration(defaultRollback = true)
 public class LossesAndAdjustmentsMapperIT {
-
-
   public static final int MODIFIED_BY = 1;
   public static final Integer HIV = 1;
-  @Autowired
-  LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
 
   @Autowired
-  RnrMapper rnrMapper;
+  private LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
+  @Autowired
+  private RnrMapper rnrMapper;
+  @Autowired
+  private RnrLineItemMapper rnrLineItemMapper;
+  @Autowired
+  private FacilityMapper facilityMapper;
+  @Autowired
+  private ProgramMapper programMapper;
+  @Autowired
+  private ProductMapper productMapper;
+  @Autowired
+  private ProgramProductMapper programProductMapper;
+  @Autowired
+  private ProcessingPeriodMapper processingPeriodMapper;
+  @Autowired
+  private ProcessingScheduleMapper processingScheduleMapper;
 
-  @Autowired
-  RnrLineItemMapper rnrLineItemMapper;
-  @Autowired
-  FacilityMapper facilityMapper;
-
-  @Autowired
-  ProgramMapper programMapper;
-  @Autowired
-  ProductMapper productMapper;
-  @Autowired
-  ProgramProductMapper programProductMapper;
-
-  RnrLineItem rnrLineItem;
-  LossesAndAdjustments lossAndAdjustment;
-  LossesAndAdjustmentsType lossesAndAdjustmentsType;
+  private RnrLineItem rnrLineItem;
+  private LossesAndAdjustments lossAndAdjustment;
 
   @Before
   public void setUp() throws Exception {
     Product product = make(a(ProductBuilder.defaultProduct));
+    productMapper.insert(product);
+
     Program program = make(a(ProgramBuilder.defaultProgram));
     programMapper.insert(program);
+
     ProgramProduct programProduct = new ProgramProduct(program, product, 30, true, 12.5F);
-    productMapper.insert(product);
     programProductMapper.insert(programProduct);
+
     FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct("warehouse", programProduct, 3);
     Facility facility = make(a(FacilityBuilder.defaultFacility));
     facilityMapper.insert(facility);
 
-    Rnr requisition = new Rnr(facility.getId(), HIV, MODIFIED_BY);
+    ProcessingSchedule processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
+    processingScheduleMapper.insert(processingSchedule);
+
+    ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod, with(scheduleId, processingSchedule.getId())));
+    processingPeriodMapper.insert(processingPeriod);
+
+    Rnr requisition = new Rnr(facility.getId(), HIV, processingPeriod.getId(), MODIFIED_BY);
     requisition.setStatus(INITIATED);
     rnrMapper.insert(requisition);
 
     rnrLineItem = new RnrLineItem(requisition.getId(), facilityApprovedProduct, MODIFIED_BY);
     rnrLineItemMapper.insert(rnrLineItem);
     lossAndAdjustment = new LossesAndAdjustments();
-    lossesAndAdjustmentsType = new LossesAndAdjustmentsType();
+    LossesAndAdjustmentsType lossesAndAdjustmentsType = new LossesAndAdjustmentsType();
     lossesAndAdjustmentsType.setName("CLINIC_RETURN");
     lossAndAdjustment.setType(lossesAndAdjustmentsType);
     lossAndAdjustment.setQuantity(20);

@@ -97,7 +97,7 @@ public class RnrRepositoryTest {
   @Test
   public void shouldReturnRnrAndItsLineItemsByFacilityAndProgram() {
     int modifiedBy = 1;
-    Rnr initiatedRequisition = new Rnr(facilityId, HIV, modifiedBy);
+    Rnr initiatedRequisition = new Rnr(facilityId, HIV, null, modifiedBy);
     initiatedRequisition.setId(1);
     when(rnrMapper.getRequisitionByFacilityAndProgram(facilityId, HIV)).thenReturn(initiatedRequisition);
     List<RnrLineItem> lineItems = new ArrayList<>();

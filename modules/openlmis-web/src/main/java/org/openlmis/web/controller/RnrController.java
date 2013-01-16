@@ -39,7 +39,7 @@ public class RnrController extends BaseController {
                                                       @RequestParam("programId") Integer programId,
                                                       HttpServletRequest request) {
     try {
-      return response(RNR, rnrService.initRnr(facilityId, programId, loggedInUserId(request)));
+      return response(RNR, rnrService.initRnr(facilityId, programId, null, loggedInUserId(request)));
     } catch (DataException e) {
       return error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
     }

@@ -53,10 +53,10 @@ public class RnrService {
   }
 
   @Transactional
-  public Rnr initRnr(Integer facilityId, Integer programId, Integer modifiedBy) {
+  public Rnr initRnr(Integer facilityId, Integer programId, Integer periodId, Integer modifiedBy) {
     if (!rnrTemplateRepository.isRnrTemplateDefined(programId))
       throw new DataException("Please contact Admin to define R&R template for this program");
-    Rnr requisition = new Rnr(facilityId, programId, modifiedBy);
+    Rnr requisition = new Rnr(facilityId, programId, null, modifiedBy);
     List<FacilityApprovedProduct> facilityApprovedProducts = facilityApprovedProductService.getByFacilityAndProgram(facilityId, programId);
     for (FacilityApprovedProduct programProduct : facilityApprovedProducts) {
       RnrLineItem requisitionLineItem = new RnrLineItem(requisition.getId(), programProduct, modifiedBy);

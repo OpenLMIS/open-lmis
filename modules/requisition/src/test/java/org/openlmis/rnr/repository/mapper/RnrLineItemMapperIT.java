@@ -3,11 +3,15 @@ package org.openlmis.rnr.repository.mapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openlmis.core.builder.ProcessingScheduleBuilder;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.mapper.*;
-import org.openlmis.rnr.domain.*;
+import org.openlmis.rnr.domain.LossesAndAdjustments;
+import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
+import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.RnrLineItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -16,12 +20,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
+import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
+import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
 import static org.openlmis.core.builder.ProgramBuilder.PROGRAM_ID;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 
@@ -30,8 +35,8 @@ import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 @Transactional
 @TransactionConfiguration(defaultRollback = true)
 public class RnrLineItemMapperIT {
-
   public static final int MODIFIED_BY = 1;
+
   @Autowired
   private FacilityMapper facilityMapper;
   @Autowired
@@ -44,30 +49,43 @@ public class RnrLineItemMapperIT {
   private RnrMapper rnrMapper;
   @Autowired
   private RnrLineItemMapper rnrLineItemMapper;
-
   @Autowired
   private ProgramMapper programMapper;
-
   @Autowired
   private LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
+  @Autowired
+  private ProcessingPeriodMapper processingPeriodMapper;
+  @Autowired
+  private ProcessingScheduleMapper processingScheduleMapper;
 
-  FacilityApprovedProduct facilityApprovedProduct;
-  Facility facility;
+  private FacilityApprovedProduct facilityApprovedProduct;
+  private Facility facility;
   private Rnr rnr;
 
   @Before
   public void setUp() {
     Product product = make(a(ProductBuilder.defaultProduct));
+    productMapper.insert(product);
+
     Program program = make(a(ProgramBuilder.defaultProgram));
     programMapper.insert(program);
+
     ProgramProduct programProduct = new ProgramProduct(program, product, 30, true, 12.5F);
+    programProductMapper.insert(programProduct);
+
     facility = make(a(defaultFacility));
     facilityMapper.insert(facility);
-    productMapper.insert(product);
-    programProductMapper.insert(programProduct);
+
     facilityApprovedProduct = new FacilityApprovedProduct("warehouse", programProduct, 3);
     facilityApprovedProductMapper.insert(facilityApprovedProduct);
-    rnr = new Rnr(facility.getId(), PROGRAM_ID, MODIFIED_BY);
+
+    ProcessingSchedule processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
+    processingScheduleMapper.insert(processingSchedule);
+
+    ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod, with(scheduleId, processingSchedule.getId())));
+    processingPeriodMapper.insert(processingPeriod);
+
+    rnr = new Rnr(facility.getId(), PROGRAM_ID, processingPeriod.getId(), MODIFIED_BY);
     rnr.setStatus(INITIATED);
   }
 
