@@ -45,13 +45,11 @@ angular.module('openlmis', ['openlmis.services','openlmis.localStorage','ui.dire
         lists.each(function() {
           var display = false;
 
-          //Check if all the children items are hidden
+          //Check if all the child items are hidden
           $(this).children("li").each(function() {
-            if($(this).css("display") === "none") {
-              display = display || false;
-            }
-            else {
-              display = display || true;
+            if($(this).css('display') != 'none'){
+              display = true;
+              return false;
             }
           });
 
