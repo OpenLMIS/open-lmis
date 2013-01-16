@@ -122,4 +122,21 @@ public class ProductRepositoryTest {
     repository.insert(product);
     assertThat(product.getForm().getId(), is(1L));
   }
+
+  @Test
+  public void shouldGetProductIdForCode() throws Exception {
+    when(mockedMapper.getIdByCode("code")).thenReturn(1);
+    assertThat(repository.getIdByCode("code"), is(1));
+  }
+
+  @Test
+  public void shouldThrowExceptionWhenProductCodeDoesNotExistWhenTryingToFetchProgramCodeById() throws Exception {
+    when(mockedMapper.getIdByCode("code")).thenReturn(null);
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("product.code.invalid");
+
+    repository.getIdByCode("code");
+  }
+
 }

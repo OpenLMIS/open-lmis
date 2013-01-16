@@ -13,7 +13,7 @@ import java.util.Date;
 // TODO : rename to FacilityTypeApprovedProduct
 public class FacilityApprovedProduct implements Importable {
 
-  private int id;
+  private Integer id;
 
   @ImportField(mandatory = true, name = "Facility Type Code", nested = "code")
   private FacilityType facilityType;
@@ -24,6 +24,7 @@ public class FacilityApprovedProduct implements Importable {
       @ImportField(name = "Product Code", nested = "product.code", mandatory = true)})
   private ProgramProduct programProduct;
 
+  @ImportField(name = "Max months of stock", mandatory = true, type = "int")
   private Integer maxMonthsOfStock = 0;
 
   private String modifiedBy;

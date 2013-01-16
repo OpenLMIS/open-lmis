@@ -66,7 +66,7 @@ public class ProgramRepositoryTest {
   public void shouldThrowExceptionWhenCodeDoesNotExist() {
     when(programMapper.getIdForCode("ABC")).thenReturn(null);
     exception.expect(DataException.class);
-    exception.expectMessage("Invalid Program Code");
+    exception.expectMessage("program.code.invalid");
     programRepository.getIdForCode("ABC");
   }
 }

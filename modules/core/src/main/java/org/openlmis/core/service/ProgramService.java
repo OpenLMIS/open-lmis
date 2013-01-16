@@ -39,4 +39,8 @@ public class ProgramService {
     public List<Program> getUserSupervisedActiveProgramsWithRights(Integer userId, Right... rights) {
         return programRepository.getUserSupervisedActiveProgramsWithRights(userId, rights);
     }
+
+    public Integer getIdForCode(String code) {
+      return programRepository.getIdForCode(code);
+    }
 }

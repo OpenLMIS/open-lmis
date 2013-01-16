@@ -11,15 +11,18 @@ import org.springframework.stereotype.Service;
 @NoArgsConstructor
 public class ProductService {
 
-    private ProductRepository repository;
+  private ProductRepository repository;
 
-    @Autowired
-    public ProductService(ProductRepository repository) {
-        this.repository = repository;
-    }
+  @Autowired
+  public ProductService(ProductRepository repository) {
+    this.repository = repository;
+  }
 
-    public void save(Product product) {
-        repository.insert(product);
-    }
+  public void save(Product product) {
+    repository.insert(product);
+  }
 
+  public Integer getIdForCode(String code) {
+    return repository.getIdByCode(code);
+  }
 }

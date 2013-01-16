@@ -2,12 +2,10 @@ package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.FacilityApprovedProduct;
-import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.FacilityApprovedProductMapper;
-import org.openlmis.core.repository.mapper.ProductMapper;
-import org.openlmis.core.repository.mapper.ProgramMapper;
-import org.openlmis.core.repository.mapper.ProgramProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
@@ -17,15 +15,31 @@ import java.util.List;
 @NoArgsConstructor
 public class FacilityApprovedProductRepository {
 
-    private FacilityApprovedProductMapper facilityApprovedProductMapper;
+  public static final String FACILITY_APPROVED_PRODUCT_DUPLICATE = "facilityApprovedProduct.duplicate.found";
+  public static final String FACILITY_TYPE_DOES_NOT_EXIST = "facilityType.invalid";
+  public static final String PROGRAM_PRODUCT_DOES_NOT_EXIST = "programProduct.invalid";
 
-    @Autowired
-    public FacilityApprovedProductRepository(FacilityApprovedProductMapper facilityApprovedProductMapper) {
-        this.facilityApprovedProductMapper = facilityApprovedProductMapper;
+  private FacilityApprovedProductMapper facilityApprovedProductMapper;
+
+  @Autowired
+  public FacilityApprovedProductRepository(FacilityApprovedProductMapper facilityApprovedProductMapper) {
+    this.facilityApprovedProductMapper = facilityApprovedProductMapper;
+  }
+
+  public List<FacilityApprovedProduct> getByFacilityAndProgram(Integer facilityId, Integer programId) {
+    return facilityApprovedProductMapper.getFullSupplyProductsByFacilityAndProgram(facilityId, programId);
+  }
+
+  public void insert(FacilityApprovedProduct facilityApprovedProduct) {
+    try {
+      facilityApprovedProductMapper.insert(facilityApprovedProduct);
+    } catch (DuplicateKeyException e) {
+      throw new DataException(FACILITY_APPROVED_PRODUCT_DUPLICATE);
+    } catch (DataIntegrityViolationException e) {
+      if(e.getMessage().contains("violates foreign key constraint \"facility_approved_products_programproductid_fkey\"")){
+        throw new DataException(PROGRAM_PRODUCT_DOES_NOT_EXIST);
+      }
+      throw new DataException(FACILITY_TYPE_DOES_NOT_EXIST);
     }
-
-    public List<FacilityApprovedProduct> getByFacilityAndProgram(Integer facilityId, Integer programId) {
-        return facilityApprovedProductMapper.getFullSupplyProductsByFacilityAndProgram(facilityId, programId);
-    }
-
+  }
 }

@@ -39,6 +39,15 @@ public class ProductRepository {
     }
   }
 
+  public Integer getIdByCode(String code){
+    Integer productCode =  mapper.getIdByCode(code);
+
+    if(productCode == null)
+      throw new DataException("product.code.invalid");
+
+    return productCode;
+  }
+
   private void validateAndSetProductForm(Product product) {
     ProductForm form = product.getForm();
     if(form == null) return;
