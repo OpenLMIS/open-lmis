@@ -69,7 +69,7 @@ public class LossesAndAdjustmentsMapperIT {
     Facility facility = make(a(FacilityBuilder.defaultFacility));
     facilityMapper.insert(facility);
 
-    Rnr requisition = new Rnr(facility.getId(), HIV, null, MODIFIED_BY);
+    Rnr requisition = new Rnr(facility.getId(), HIV, MODIFIED_BY);
     requisition.setStatus(INITIATED);
     rnrMapper.insert(requisition);
 

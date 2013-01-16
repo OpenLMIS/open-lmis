@@ -15,8 +15,8 @@ public class Rnr {
 
   private Integer id;
   private Integer facilityId;
+
   private Integer programId;
-  private Integer periodId;
   private RnrStatus status;
   private Float fullSupplyItemsSubmittedCost = 0f;
   private Float nonFullSupplyItemsSubmittedCost = 0f;
@@ -27,10 +27,9 @@ public class Rnr {
   private Date modifiedDate;
   public static final String RNR_VALIDATION_ERROR = "rnr.validation.error";
 
-  public Rnr(Integer facilityId, Integer programId, Integer periodId, Integer modifiedBy) {
+  public Rnr(Integer facilityId, Integer programId, Integer modifiedBy) {
     this.facilityId = facilityId;
     this.programId = programId;
-    this.periodId = periodId;
     this.modifiedBy = modifiedBy;
   }
 

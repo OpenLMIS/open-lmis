@@ -67,7 +67,7 @@ public class RnrLineItemMapperIT {
     programProductMapper.insert(programProduct);
     facilityApprovedProduct = new FacilityApprovedProduct("warehouse", programProduct, 3);
     facilityApprovedProductMapper.insert(facilityApprovedProduct);
-    rnr = new Rnr(facility.getId(), PROGRAM_ID, null, MODIFIED_BY);
+    rnr = new Rnr(facility.getId(), PROGRAM_ID, MODIFIED_BY);
     rnr.setStatus(INITIATED);
   }
 

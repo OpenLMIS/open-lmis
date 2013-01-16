@@ -5,13 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
-import org.openlmis.core.builder.ProcessingScheduleBuilder;
 import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.ProcessingSchedule;
 import org.openlmis.core.repository.mapper.FacilityMapper;
-import org.openlmis.core.repository.mapper.ProcessingPeriodMapper;
-import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
 import org.openlmis.rnr.domain.Rnr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -19,13 +14,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static com.natpryce.makeiteasy.MakeItEasy.a;
+import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
-import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -37,33 +31,19 @@ public class RnrMapperIT {
   public static final int MODIFIED_BY = 1;
   public static final Integer HIV = MODIFIED_BY;
   public static final int USER_2 = 2;
-
-  private Facility facility;
-  private ProcessingPeriod processingPeriod;
-  private ProcessingSchedule processingSchedule;
-  private Rnr requisition;
+  Facility facility;
 
   @Autowired
   private FacilityMapper facilityMapper;
   @Autowired
   private RnrMapper rnrMapper;
-  @Autowired
-  private ProcessingPeriodMapper processingPeriodMapper;
-  @Autowired
-  private ProcessingScheduleMapper processingScheduleMapper;
+  private Rnr requisition;
 
   @Before
   public void setUp() {
     facility = make(a(FacilityBuilder.defaultFacility));
     facilityMapper.insert(facility);
-
-    processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
-    processingScheduleMapper.insert(processingSchedule);
-
-    processingPeriod = make(a(defaultProcessingPeriod, with(scheduleId, processingSchedule.getId())));
-    processingPeriodMapper.insert(processingPeriod);
-
-    requisition = new Rnr(facility.getId(), HIV, processingPeriod.getId(), MODIFIED_BY);
+    requisition = new Rnr(facility.getId(), HIV, MODIFIED_BY);
     requisition.setStatus(INITIATED);
   }
 
@@ -80,7 +60,6 @@ public class RnrMapperIT {
     assertThat(fetchedRequisition.getId(), is(requisition.getId()));
     assertThat(fetchedRequisition.getProgramId(), is(equalTo(HIV)));
     assertThat(fetchedRequisition.getFacilityId(), is(equalTo(facility.getId())));
-    assertThat(fetchedRequisition.getPeriodId(), is(equalTo(processingPeriod.getId())));
     assertThat(fetchedRequisition.getModifiedBy(), is(equalTo(MODIFIED_BY)));
     assertThat(fetchedRequisition.getStatus(), is(equalTo(INITIATED)));
   }
