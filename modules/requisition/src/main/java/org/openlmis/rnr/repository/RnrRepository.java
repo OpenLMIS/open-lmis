@@ -59,9 +59,10 @@ public class RnrRepository {
     }
   }
 
-  public Rnr getRequisitionByFacilityAndProgram(Integer facilityId, Integer programId) {
-    Rnr rnr = rnrMapper.getRequisitionByFacilityAndProgram(facilityId, programId);
+  public Rnr getRequisition(Integer facilityId, Integer programId, Integer periodId) {
+    Rnr rnr = rnrMapper.getRequisition(facilityId, programId, periodId);
     if (rnr == null) return null;
+
     rnr.setLineItems(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()));
     for (RnrLineItem rnrLineItem : rnr.getLineItems()) {
       rnrLineItem.setLossesAndAdjustments(lossesAndAdjustmentsMapper.getByRnrLineItem(rnrLineItem.getId()));

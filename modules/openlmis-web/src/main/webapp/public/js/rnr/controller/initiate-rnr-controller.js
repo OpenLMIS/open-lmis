@@ -36,15 +36,15 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
   }
 
   $scope.initRnr = function () {
-    if (!$scope.selectedProgram) {
-      $scope.error = "Please select Facility and program for facility to proceed";
+    if (!($scope.selectedProgram && $scope.selectedPeriod)) {
+      $scope.error = "Please select Facility, Program and Period to proceed";
       return;
     }
 
     $scope.error = "";
     $scope.$parent.sourceUrl = $location.$$url;
 
-    Requisition.get({facilityId: $scope.selectedFacilityId, programId: $scope.selectedProgram.id}, {},
+    Requisition.get({facilityId: $scope.selectedFacilityId, programId: $scope.selectedProgram.id, periodId: $scope.selectedPeriod.id}, {},
         function (data) {
           if (data.rnr) {
             if (data.rnr.status != 'SUBMITTED' && !$rootScope.hasPermission('CREATE_REQUISITION')) {
@@ -53,13 +53,13 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
             }
             $scope.$parent.rnr = data.rnr;
             $scope.$parent.program = $scope.selectedProgram;
-            $location.path('/create-rnr/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id);
+            $location.path('/create-rnr/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + '/' + $scope.selectedPeriod.id);
           }
           else {
-            Requisition.save({facilityId: $scope.selectedFacilityId, programId: $scope.selectedProgram.id}, {}, function (data) {
+            Requisition.save({facilityId: $scope.selectedFacilityId, programId: $scope.selectedProgram.id, periodId: $scope.selectedPeriod.id}, {}, function (data) {
               $scope.$parent.rnr = data.rnr;
               $scope.$parent.program = $scope.selectedProgram;
-              $location.path('/create-rnr/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id);
+              $location.path('/create-rnr/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + '/' + $scope.selectedPeriod.id);
             }, function () {
               $scope.error = "Requisition does not exist. Please initiate.";
             })

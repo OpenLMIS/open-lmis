@@ -25,6 +25,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
+import static org.openlmis.core.builder.ProcessingPeriodBuilder.name;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 
@@ -39,7 +40,8 @@ public class RnrMapperIT {
   public static final int USER_2 = 2;
 
   private Facility facility;
-  private ProcessingPeriod processingPeriod;
+  private ProcessingPeriod processingPeriod1;
+  private ProcessingPeriod processingPeriod2;
   private ProcessingSchedule processingSchedule;
   private Rnr requisition;
 
@@ -60,10 +62,13 @@ public class RnrMapperIT {
     processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
     processingScheduleMapper.insert(processingSchedule);
 
-    processingPeriod = make(a(defaultProcessingPeriod, with(scheduleId, processingSchedule.getId())));
-    processingPeriodMapper.insert(processingPeriod);
+    processingPeriod1 = make(a(defaultProcessingPeriod, with(scheduleId, processingSchedule.getId()), with(name, "Period 1")));
+    processingPeriodMapper.insert(processingPeriod1);
 
-    requisition = new Rnr(facility.getId(), HIV, processingPeriod.getId(), MODIFIED_BY);
+    processingPeriod2 = make(a(defaultProcessingPeriod, with(scheduleId, processingSchedule.getId()), with(name, "Period 2")));
+    processingPeriodMapper.insert(processingPeriod2);
+
+    requisition = new Rnr(facility.getId(), HIV, processingPeriod1.getId(), MODIFIED_BY);
     requisition.setStatus(INITIATED);
   }
 
@@ -80,7 +85,7 @@ public class RnrMapperIT {
     assertThat(fetchedRequisition.getId(), is(requisition.getId()));
     assertThat(fetchedRequisition.getProgramId(), is(equalTo(HIV)));
     assertThat(fetchedRequisition.getFacilityId(), is(equalTo(facility.getId())));
-    assertThat(fetchedRequisition.getPeriodId(), is(equalTo(processingPeriod.getId())));
+    assertThat(fetchedRequisition.getPeriodId(), is(equalTo(processingPeriod1.getId())));
     assertThat(fetchedRequisition.getModifiedBy(), is(equalTo(MODIFIED_BY)));
     assertThat(fetchedRequisition.getStatus(), is(equalTo(INITIATED)));
   }
@@ -103,10 +108,19 @@ public class RnrMapperIT {
   }
 
   @Test
-  public void shouldReturnRequisitionByFacilityAndProgramAndIfExists() {
+  public void shouldReturnRequisitionIfExists() {
     rnrMapper.insert(requisition);
-    Rnr rnr = rnrMapper.getRequisitionByFacilityAndProgram(facility.getId(), HIV);
+
+    Rnr anotherRequisition = new Rnr(facility.getId(), HIV, processingPeriod2.getId(), MODIFIED_BY);
+    anotherRequisition.setStatus(INITIATED);
+    rnrMapper.insert(anotherRequisition);
+
+    Rnr rnr = rnrMapper.getRequisition(facility.getId(), HIV, processingPeriod1.getId());
+
     assertThat(rnr.getId(), is(requisition.getId()));
+    assertThat(rnr.getFacilityId(), is(facility.getId()));
+    assertThat(rnr.getProgramId(), is(HIV));
+    assertThat(rnr.getPeriodId(), is(processingPeriod1.getId()));
   }
 
   @Test

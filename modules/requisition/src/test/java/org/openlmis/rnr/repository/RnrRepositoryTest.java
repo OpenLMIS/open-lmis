@@ -29,12 +29,13 @@ import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 @RunWith(MockitoJUnitRunner.class)
 public class RnrRepositoryTest {
 
-  public static final int FACILITY_ID = 1;
-  public static final int PROGRAM_ID = 1;
+  public static final Integer FACILITY_ID = 1;
+  public static final Integer PROGRAM_ID = 1;
+  public static final Integer PERIOD_ID = 1;
+  public static final Integer HIV = 1;
+
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
-
-  public static final Integer HIV = 1;
 
   @Mock
   RnrMapper rnrMapper;
@@ -46,12 +47,10 @@ public class RnrRepositoryTest {
   SupervisoryNodeRepository supervisoryNodeRepository;
 
   private RnrRepository rnrRepository;
-  public Integer facilityId = 1;
-
   private LossesAndAdjustments lossAndAdjustmentForLineItem = new LossesAndAdjustments();
-  RnrLineItem rnrLineItem1;
-  RnrLineItem rnrLineItem2;
-  Rnr rnr;
+  private RnrLineItem rnrLineItem1;
+  private RnrLineItem rnrLineItem2;
+  private Rnr rnr;
 
   @Before
   public void setUp() throws Exception {
@@ -67,6 +66,7 @@ public class RnrRepositoryTest {
     rnrLineItem2.addLossesAndAdjustments(lossAndAdjustmentForLineItem);
     rnr.setFacilityId(FACILITY_ID);
     rnr.setProgramId(PROGRAM_ID);
+    rnr.setPeriodId(PERIOD_ID);
     rnr.setStatus(INITIATED);
   }
 
@@ -95,14 +95,16 @@ public class RnrRepositoryTest {
   }
 
   @Test
-  public void shouldReturnRnrAndItsLineItemsByFacilityAndProgram() {
+  public void shouldReturnRnrAndItsLineItems() {
     int modifiedBy = 1;
-    Rnr initiatedRequisition = new Rnr(facilityId, HIV, null, modifiedBy);
+    Rnr initiatedRequisition = new Rnr(FACILITY_ID, HIV, PERIOD_ID, modifiedBy);
     initiatedRequisition.setId(1);
-    when(rnrMapper.getRequisitionByFacilityAndProgram(facilityId, HIV)).thenReturn(initiatedRequisition);
+    when(rnrMapper.getRequisition(FACILITY_ID, HIV, PERIOD_ID)).thenReturn(initiatedRequisition);
     List<RnrLineItem> lineItems = new ArrayList<>();
     when(rnrLineItemMapper.getRnrLineItemsByRnrId(1)).thenReturn(lineItems);
-    Rnr rnr = rnrRepository.getRequisitionByFacilityAndProgram(facilityId, HIV);
+
+    Rnr rnr = rnrRepository.getRequisition(FACILITY_ID, HIV, PERIOD_ID);
+
     assertThat(rnr, is(equalTo(initiatedRequisition)));
     assertThat(rnr.getLineItems(), is(equalTo(lineItems)));
   }
@@ -110,8 +112,8 @@ public class RnrRepositoryTest {
   @Test
   public void shouldReturnNullIfRnrNotDefined() {
     Rnr expectedRnr = null;
-    when(rnrMapper.getRequisitionByFacilityAndProgram(facilityId, HIV)).thenReturn(expectedRnr);
-    Rnr rnr = rnrRepository.getRequisitionByFacilityAndProgram(facilityId, HIV);
+    when(rnrMapper.getRequisition(FACILITY_ID, HIV, null)).thenReturn(expectedRnr);
+    Rnr rnr = rnrRepository.getRequisition(FACILITY_ID, HIV, null);
     assertThat(rnr, is(expectedRnr));
   }
 

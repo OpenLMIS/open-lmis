@@ -4,7 +4,7 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
   $scope.rnrLineItems = [];
   $rootScope.fixToolBar();
   if (!$scope.$parent.rnr) {
-    Requisition.get({facilityId:$routeParams.facility, programId:$routeParams.program},
+    Requisition.get({facilityId:$routeParams.facility, programId:$routeParams.program, periodId:$routeParams.period},
       function (data) {
         if (data.rnr) {
           $scope.rnr = data.rnr;

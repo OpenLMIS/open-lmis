@@ -16,7 +16,6 @@ import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.core.service.SupervisoryNodeService;
 import org.openlmis.rnr.builder.RnrBuilder;
 import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrStatus;
 import org.openlmis.rnr.repository.RnrRepository;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,18 +32,15 @@ import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 import static org.openlmis.rnr.builder.RnrBuilder.defaultRnr;
 import static org.openlmis.rnr.builder.RnrBuilder.status;
-import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
-import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
-import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
+import static org.openlmis.rnr.domain.RnrStatus.*;
 import static org.openlmis.rnr.service.RnrService.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RnrServiceTest {
 
-  public static final Integer HIV = 1;
-  public static final int USER_ID = 1;
-  public Integer facilityId = 1;
-  public Integer periodId = 10;
+  private static final Integer HIV = 1;
+  private static final Integer FACILITY_ID = 1;
+  private static final Integer PERIOD_ID = 10;
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
@@ -69,24 +65,32 @@ public class RnrServiceTest {
   public void setup() {
     rnrService = new RnrService(rnrRepository, rnrTemplateRepository, facilityApprovedProductService, supervisoryNodeService, roleRightService);
     rnr = spy(make(a(defaultRnr)));
-    submittedRnr = make(a(RnrBuilder.defaultRnr, with(status, RnrStatus.SUBMITTED)));
+    submittedRnr = make(a(RnrBuilder.defaultRnr, with(status, SUBMITTED)));
     initiatedRnr = make(a(RnrBuilder.defaultRnr, with(status, INITIATED)));
   }
 
   @Test
   public void shouldInitRequisition() {
-    when(rnrRepository.getRequisitionByFacilityAndProgram(facilityId, HIV)).thenReturn(new Rnr());
     when(rnrTemplateRepository.isRnrTemplateDefined(HIV)).thenReturn(true);
     List<FacilityApprovedProduct> facilityApprovedProducts = new ArrayList<>();
     ProgramProduct programProduct = new ProgramProduct(null, make(a(ProductBuilder.defaultProduct)), 10, true);
     facilityApprovedProducts.add(new FacilityApprovedProduct("warehouse", programProduct, 30));
-    when(facilityApprovedProductService.getByFacilityAndProgram(facilityId, HIV)).thenReturn(facilityApprovedProducts);
+    when(facilityApprovedProductService.getByFacilityAndProgram(FACILITY_ID, HIV)).thenReturn(facilityApprovedProducts);
 
-    Rnr rnr = rnrService.initRnr(facilityId, HIV, periodId, 1);
+    Rnr rnr = rnrService.initRnr(FACILITY_ID, HIV, PERIOD_ID, 1);
 
-    verify(facilityApprovedProductService).getByFacilityAndProgram(facilityId, HIV);
+    verify(facilityApprovedProductService).getByFacilityAndProgram(FACILITY_ID, HIV);
     verify(rnrRepository).insert(rnr);
-    assertThat(rnr.getLineItems().size(), is(USER_ID));
+    assertThat(rnr.getLineItems().size(), is(1));
+    assertThat(rnr.getPeriodId(), is(PERIOD_ID));
+  }
+
+  @Test
+  public void shouldGetRequisition() throws Exception {
+    Rnr rnr = new Rnr();
+    when(rnrRepository.getRequisition(FACILITY_ID, HIV, PERIOD_ID)).thenReturn(rnr);
+
+    assertThat(rnrService.get(FACILITY_ID, HIV, PERIOD_ID), is(rnr));
   }
 
   @Test
@@ -94,8 +98,8 @@ public class RnrServiceTest {
     when(rnrTemplateRepository.isRnrTemplateDefined(HIV)).thenReturn(false);
     expectedException.expect(DataException.class);
     expectedException.expectMessage("Please contact Admin to define R&R template for this program");
-    Rnr rnr = rnrService.initRnr(facilityId, HIV, null, 1);
-    verify(facilityApprovedProductService, never()).getByFacilityAndProgram(facilityId, HIV);
+    Rnr rnr = rnrService.initRnr(FACILITY_ID, HIV, null, 1);
+    verify(facilityApprovedProductService, never()).getByFacilityAndProgram(FACILITY_ID, HIV);
     verify(rnrRepository, never()).insert(rnr);
   }
 

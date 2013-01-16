@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RnrMapper {
 
-  @Insert("insert into requisition(facilityId, programId, periodId, status, modifiedBy) " +
-      "values (#{facilityId}, #{programId}, #{periodId}, #{status}, #{modifiedBy})")
+  @Insert("INSERT INTO requisition(facilityId, programId, periodId, status, modifiedBy) " +
+      "VALUES (#{facilityId}, #{programId}, #{periodId}, #{status}, #{modifiedBy})")
   @Options(useGeneratedKeys = true)
   public void insert(Rnr requisition);
 
@@ -21,13 +21,15 @@ public interface RnrMapper {
       "WHERE id = #{id}"})
   public void update(Rnr requisition);
 
-  @Select("Select * from requisition where id = #{rnrId}")
+  @Select("SELECT * FROM requisition WHERE id = #{rnrId}")
   public Rnr getRequisitionById(Integer rnrId);
 
-  @Select("Select * from requisition where facilityId = #{facilityId} and programId= #{programId}")
-  public Rnr getRequisitionByFacilityAndProgram(@Param("facilityId") Integer facilityId,
-                                                @Param("programId") Integer programId);
+  @Select("SELECT * FROM requisition WHERE facilityId = #{facilityId} AND programId= #{programId} AND periodId = #{periodId}")
+  public Rnr getRequisition(@Param("facilityId") Integer facilityId,
+                            @Param("programId") Integer programId,
+                            @Param("periodId") Integer periodId);
 
+  // TODO: Duplicate method
   @Select("SELECT * FROM requisition WHERE id = #{rnrId}")
   Rnr getById(Integer rnrId);
 }

@@ -48,8 +48,23 @@ public class RnrControllerTest {
   }
 
   @Test
-  public void shouldSaveWIPRnr() throws Exception {
+  public void shouldInitiateRnr() throws Exception {
+    ResponseEntity<OpenLmisResponse> response = controller.initiateRnr(1, 2, 3, request);
 
+    verify(rnrService).initRnr(1, 2, 3, USER_ID);
+    assertThat(response.getStatusCode(), is(equalTo(HttpStatus.OK)));
+  }
+
+  @Test
+  public void shouldGetRnrIfExists() throws Exception {
+    ResponseEntity<OpenLmisResponse> response = controller.get(1, 2, 3);
+
+    verify(rnrService).get(1, 2, 3);
+    assertThat(response.getStatusCode(), is(equalTo(HttpStatus.OK)));
+  }
+
+  @Test
+  public void shouldSaveWIPRnr() throws Exception {
     controller.saveRnr(rnr, rnr.getId(), request);
 
     verify(rnrService).save(rnr);
@@ -60,15 +75,15 @@ public class RnrControllerTest {
   public void shouldGiveErrorIfInitiatingFails() throws Exception {
     String errorMessage = "error-message";
     doThrow(new DataException(errorMessage)).when(rnrService).initRnr(1, 2, null, USER_ID);
-    ResponseEntity<OpenLmisResponse> response = controller.initiateRnr(1, 2, request);
+    ResponseEntity<OpenLmisResponse> response = controller.initiateRnr(1, 2, null, request);
     assertThat(response.getBody().getErrorMsg(), is(equalTo(errorMessage)));
   }
 
   @Test
   public void shouldReturnNullIfGettingRequisitionFails() throws Exception {
     Rnr expectedRnr = null;
-    when(rnrService.get(1, 2)).thenReturn(expectedRnr);
-    ResponseEntity<OpenLmisResponse> response = controller.get(1, 2);
+    when(rnrService.get(1, 2, null)).thenReturn(expectedRnr);
+    ResponseEntity<OpenLmisResponse> response = controller.get(1, 2, null);
     assertThat((Rnr) response.getBody().getData().get(RNR), is(expectedRnr));
   }
 

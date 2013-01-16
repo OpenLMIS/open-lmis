@@ -23,42 +23,54 @@ describe('InitiateRnrController', function () {
 
   it('should set error message if program not defined', function () {
     scope.initRnr();
-    expect(scope.error).toEqual("Please select Facility and program for facility to proceed");
+    expect(scope.error).toEqual("Please select Facility, Program and Period to proceed");
+  });
+
+
+  it('should set error message if program not defined', function () {
+    scope.initRnr();
+    expect(scope.error).toEqual("Please select Facility, Program and Period to proceed");
   });
 
   it('should get existing rnr if already initiated', function () {
-    scope.selectedProgram = {"code": "hiv", "id": 1};
+    scope.selectedProgram = {"code": "hiv", "id": 2};
     scope.selectedFacilityId = 1;
-    $httpBackend.expectGET('/requisitions.json?facilityId=1&programId=1').respond({"rnr": {"id": 1, status: "INITIATED"}});
+    scope.selectedPeriod = {"id": 3};
+    $httpBackend.expectGET('/requisitions.json?facilityId=1&periodId=3&programId=2').respond({"rnr": {"id": 1, status: "INITIATED"}});
 
     scope.initRnr();
     $httpBackend.flush();
 
-    expect(location.path()).toEqual("/create-rnr/1/1");
+    expect(location.path()).toEqual("/create-rnr/1/2/3");
     expect(scope.error).toEqual("");
     expect(scope.$parent.program).toEqual(scope.selectedProgram);
     expect(scope.$parent.rnr).toEqual({"id": 1, status: 'INITIATED'});
   });
 
   it('should give error if user has authorize only access and an rnr is not submitted yet', function () {
-    scope.selectedProgram = {"code": "hiv", "id": 1};
+    scope.selectedProgram = {"code": "hiv", "id": 2};
     scope.selectedFacilityId = 1;
+    scope.selectedPeriod = {"id": 3};
     spyOn(rootScope, 'hasPermission').andReturn(false);
-    $httpBackend.expectGET('/requisitions.json?facilityId=1&programId=1').respond({"rnr": {"id": 1, status: "INITIATED"}});
+    $httpBackend.expectGET('/requisitions.json?facilityId=1&periodId=3&programId=2').respond({"rnr": {"id": 1, status: "INITIATED"}});
+
     scope.initRnr();
     $httpBackend.flush();
+
     expect(scope.error).toEqual("An R&R has not been submitted yet");
   });
 
   it('should create a rnr if rnr not already initiated', function () {
-    scope.selectedProgram = {"code": "hiv", "id": 1};
+    scope.selectedProgram = {"code": "hiv", "id": 2};
     scope.selectedFacilityId = 1;
-    $httpBackend.expectGET('/requisitions.json?facilityId=1&programId=1').respond(null);
-    $httpBackend.expectPOST('/requisitions.json?facilityId=1&programId=1').respond({"rnr": {"id": 1, status: "INITIATED"}});
+    scope.selectedPeriod = {"id": 3};
+    $httpBackend.expectGET('/requisitions.json?facilityId=1&periodId=3&programId=2').respond(null);
+    $httpBackend.expectPOST('/requisitions.json?facilityId=1&periodId=3&programId=2').respond({"rnr": {"id": 1, status: "INITIATED"}});
 
     scope.initRnr();
     $httpBackend.flush();
-    expect(location.path()).toEqual("/create-rnr/1/1");
+
+    expect(location.path()).toEqual("/create-rnr/1/2/3");
     expect(scope.$parent.program).toEqual(scope.selectedProgram);
     expect(scope.error).toEqual("");
     expect(scope.$parent.rnr).toEqual({"id": 1, status: 'INITIATED'});

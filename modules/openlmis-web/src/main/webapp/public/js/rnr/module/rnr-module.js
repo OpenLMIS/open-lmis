@@ -2,7 +2,7 @@ var rnrModule = angular.module('rnr', ['openlmis']).config(['$routeProvider', fu
     $routeProvider.
         when('/init-rnr', {controller:InitiateRnrController, templateUrl:'partials/init.html'}).
         when('/supervised/init-rnr', {controller:InitiateRnrController, templateUrl:'partials/supervised-init.html'}).
-        when('/create-rnr/:facility/:program', {templateUrl:'partials/create.html'}).
+        when('/create-rnr/:facility/:program/:period', {templateUrl:'partials/create.html'}).
         otherwise({redirectTo:'/init-rnr'});
 }]).directive('rnrValidator', function () {
         return {

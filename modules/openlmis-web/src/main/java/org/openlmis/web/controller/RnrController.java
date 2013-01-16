@@ -37,9 +37,10 @@ public class RnrController extends BaseController {
   @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> initiateRnr(@RequestParam("facilityId") Integer facilityId,
                                                       @RequestParam("programId") Integer programId,
+                                                      @RequestParam("periodId") Integer periodId,
                                                       HttpServletRequest request) {
     try {
-      return response(RNR, rnrService.initRnr(facilityId, programId, null, loggedInUserId(request)));
+      return response(RNR, rnrService.initRnr(facilityId, programId, periodId, loggedInUserId(request)));
     } catch (DataException e) {
       return error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
     }
@@ -48,8 +49,9 @@ public class RnrController extends BaseController {
   @RequestMapping(value = "/requisitions", method = RequestMethod.GET, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('','CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> get(@RequestParam("facilityId") Integer facilityId,
-                                              @RequestParam("programId") Integer programId) {
-    return response(RNR, rnrService.get(facilityId, programId));
+                                              @RequestParam("programId") Integer programId,
+                                              @RequestParam("periodId") Integer periodId) {
+    return response(RNR, rnrService.get(facilityId, programId, periodId));
   }
 
   @RequestMapping(value = "/requisitions/{id}/save", method = RequestMethod.PUT, headers = "Accept=application/json")
