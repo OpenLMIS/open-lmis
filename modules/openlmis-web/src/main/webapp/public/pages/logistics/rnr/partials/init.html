@@ -7,16 +7,15 @@
   </select> <br/>
   <br/>
   <label>Program</label>
-  <select ng-model="$parent.selectedProgram" ng-options="i as i.name for i in programs"
-          ng-change="loadPeriods()">
+  <select ng-model="$parent.selectedProgram" ng-options="i as i.name for i in programs">
     <option value="">{{programOptionMessage()}}</option>
   </select> <br/>
   <br/>
-  <label>Period</label>
-  <select ng-model="$parent.selectedPeriod" ng-options="i as i.name for i in periods">
-    <option value="">{{periodOptionMessage()}}</option>
-  </select> <br/>
-  <br/>
+  <!--<label>Period</label>-->
+  <!--<select ng-model="$parent.selectedPeriod" ng-options="i as i.name for i in periods">-->
+    <!--<option value="">{{periodOptionMessage()}}</option>-->
+  <!--</select> <br/>-->
+  <!--<br/>-->
 
   <div class="alert alert-error" id="saveSuccessMsgDiv" ng-model="error" ng-show="error">
     {{error}}
