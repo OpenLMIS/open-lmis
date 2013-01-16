@@ -56,7 +56,7 @@ public class DBWrapper {
         }
     }
 
-    public void insertUser(String userId, String userName, String password) throws SQLException, IOException {
+    public void insertUser(String userId, String userName, String password, String facilityCode, String email) throws SQLException, IOException {
         boolean flag = false;
         DBWrapper dbwrapper = new DBWrapper();
 
@@ -64,7 +64,7 @@ public class DBWrapper {
 
         dbwrapper.dbConnection("INSERT INTO users\n" +
                 "  (id, userName, password, facilityId, firstName, lastName, email) VALUES\n" +
-                "  ('"+userId+"', '"+userName+"', '"+password+"', (SELECT id FROM facilities WHERE code = 'F10'), 'Jane', 'Doe', 'Jane_Doe@openlmis.com');\n", "alter");
+                "  ('"+userId+"', '"+userName+"', '"+password+"', (SELECT id FROM facilities WHERE code = '"+facilityCode+"'), 'Jane', 'Doe', '"+email+"');\n", "alter");
 
 
 
@@ -108,9 +108,9 @@ public class DBWrapper {
     }
 
 
-    public void allocateFacilityToUser() throws IOException {
+    public void allocateFacilityToUser(String userID) throws IOException {
         DBWrapper dbwrapper = new DBWrapper();
-        dbwrapper.dbConnection("update users set facilityId = (Select id from facilities order by modifiedDate DESC limit 1) where id=200;", "alter");
+        dbwrapper.dbConnection("update users set facilityId = (Select id from facilities order by modifiedDate DESC limit 1) where id='"+userID+"';", "alter");
 
     }
 
@@ -131,9 +131,9 @@ public class DBWrapper {
         dbwrapper.dbConnection("DELETE FROM requisition;", "alter");
         dbwrapper.dbConnection("delete from supply_lines;", "alter");
         dbwrapper.dbConnection("delete from supervisory_nodes;", "alter");
-        dbwrapper.dbConnection("delete from facilities;", "alter");
         dbwrapper.dbConnection("delete from programs_supported;", "alter");
         dbwrapper.dbConnection("delete from requisition_group_members;", "alter");
+        dbwrapper.dbConnection("delete from facilities;", "alter");
         dbwrapper.dbConnection("delete from programs_supported;", "alter");
         dbwrapper.dbConnection("delete from program_rnr_columns;", "alter");
         dbwrapper.dbConnection("delete from requisition_group_program_schedules ;", "alter");
@@ -181,7 +181,7 @@ public class DBWrapper {
                 "  ((select id from roles where name='district pharmacist'), 'CONFIGURE_RNR');", "alter");
     }
 
-    public void insertSupervisoryNodes() throws SQLException, IOException {
+    public void insertSupervisoryNodes(String facilityCode) throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();
         ResultSet rs = dbwrapper.dbConnection("Select facilityId from supervisory_nodes;", "select");
 
@@ -192,15 +192,15 @@ public class DBWrapper {
         }
         dbwrapper.dbConnection("INSERT INTO supervisory_nodes\n" +
                 "  (parentId, facilityId, name, code) VALUES\n" +
-                "  (null, (SELECT id FROM facilities WHERE code = 'F10'), 'Node 1', 'N1');", "alter");
+                "  (null, (SELECT id FROM facilities WHERE code = '"+facilityCode+"'), 'Node 1', 'N1');", "alter");
     }
 
-    public void insertSupervisoryNodesSecond() throws SQLException, IOException {
+    public void insertSupervisoryNodesSecond(String facilityCode) throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();
 
         dbwrapper.dbConnection("INSERT INTO supervisory_nodes\n" +
                 "  (parentId, facilityId, name, code) VALUES\n" +
-                "  ((select id from  supervisory_nodes where code ='N1'), (SELECT id FROM facilities WHERE code = 'F11'), 'Node 1', 'N2');", "alter");
+                "  ((select id from  supervisory_nodes where code ='N1'), (SELECT id FROM facilities WHERE code = '"+facilityCode+"'), 'Node 1', 'N2');", "alter");
     }
 
     public void insertRequisitionGroup() throws SQLException, IOException {
@@ -217,7 +217,7 @@ public class DBWrapper {
                 "('RG1','Requistion Group 1','Supports EM(Q2M)',(select id from  supervisory_nodes where code ='N1'));", "alter");
     }
 
-    public void insertRequisitionGroupMembers() throws SQLException, IOException {
+    public void insertRequisitionGroupMembers(String RG1facility, String RG2facility) throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();
         ResultSet rs = dbwrapper.dbConnection("Select requisitiongroupid from requisition_group_members;", "select");
 
@@ -227,8 +227,8 @@ public class DBWrapper {
 
         }
         dbwrapper.dbConnection("INSERT INTO requisition_group_members ( requisitionGroupId ,facilityId )values\n" +
-                "((select id from  requisition_groups where code ='RG1'),(select id from  facilities where code ='F10')),\n" +
-                "((select id from  requisition_groups where code ='RG2'),(select id from  facilities where code ='F11'));", "alter");
+                "((select id from  requisition_groups where code ='RG1'),(select id from  facilities where code ='"+RG1facility+"')),\n" +
+                "((select id from  requisition_groups where code ='RG2'),(select id from  facilities where code ='"+RG2facility+"'));", "alter");
     }
 
     public void insertRequisitionGroupProgramSchedule() throws SQLException, IOException {
@@ -250,7 +250,7 @@ public class DBWrapper {
 
     }
 
-    public void insertRoleAssignment(String userId) throws SQLException, IOException {
+    public void insertRoleAssignment(String userID, String userName) throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();
 
 
@@ -258,8 +258,8 @@ public class DBWrapper {
 
         dbwrapper.dbConnection(" INSERT INTO role_assignments\n" +
                 "            (userId, roleId, programId, supervisoryNodeId) VALUES \n" +
-                "    (200, (SELECT id FROM roles WHERE name = '"+userId+"'), 1, null),\n" +
-                "    (200, (SELECT id FROM roles WHERE name = '"+userId+"'), 1, (SELECT id from supervisory_nodes WHERE code = 'N1'));", "alter");
+                "    ('"+userID+"', (SELECT id FROM roles WHERE name = '"+userName+"'), 1, null),\n" +
+                "    ('"+userID+"', (SELECT id FROM roles WHERE name = '"+userName+"'), 1, (SELECT id from supervisory_nodes WHERE code = 'N1'));", "alter");
     }
 
 

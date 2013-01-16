@@ -48,7 +48,7 @@ public class E2EUpload extends TestCaseHelper {
         uploadPage.uploadUsers();
         dbWrapper.alterUserID("200");
 
-        dbWrapper.insertRoleAssignment("User");
+        dbWrapper.insertRoleAssignment("200", "User");
 
 
 
@@ -62,7 +62,7 @@ public class E2EUpload extends TestCaseHelper {
         testWebDriver.setImplicitWait(2500);
 
         dbWrapper.insertFacilityApprovedProducts();
-        dbWrapper.allocateFacilityToUser();
+        dbWrapper.allocateFacilityToUser("200");
 
         uploadPage.uploadProgramSupportedByFacilities();
         testWebDriver.setImplicitWait(2500);

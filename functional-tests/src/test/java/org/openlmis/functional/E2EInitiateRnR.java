@@ -31,17 +31,17 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
         DBWrapper dbWrapper = new DBWrapper();
 
-        dbWrapper.insertUser("200", user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==");
+        dbWrapper.insertUser("200", user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==","F10", "Jane_Doe@openlmis.com");
         dbWrapper.insertFacility();
-        dbWrapper.insertSupervisoryNodes();
-        dbWrapper.insertSupervisoryNodesSecond();
+        dbWrapper.insertSupervisoryNodes("F10");
+        dbWrapper.insertSupervisoryNodesSecond("F11");
         dbWrapper.insertProducts();
         dbWrapper.insertProgramProducts();
         dbWrapper.insertFacilityApprovedProducts();
         dbWrapper.insertRequisitionGroup();
         dbWrapper.insertSchedules();
         dbWrapper.insertRequisitionGroupProgramSchedule();
-        dbWrapper.insertRequisitionGroupMembers();
+        dbWrapper.insertRequisitionGroupMembers("F10", "F11");
         dbWrapper.insertProcessingPeriods();
 
 
@@ -52,7 +52,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
         CreateFacilityPage createFacilityPage = homePage.navigateCreateFacility();
         String date_time=createFacilityPage.enterAndVerifyFacility();
 
-        dbWrapper.allocateFacilityToUser();
+        dbWrapper.allocateFacilityToUser("200");
 
         TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
         templateConfigPage.configureTemplate();
@@ -63,7 +63,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
         rolesPage.createRole("User", "User", userRoleList);
 
-        dbWrapper.insertRoleAssignment("User");
+        dbWrapper.insertRoleAssignment("200", "User");
 
         LoginPage loginPageSecond=homePage.logout();
         HomePage homePageUser = loginPageSecond.loginAs(user, password);
