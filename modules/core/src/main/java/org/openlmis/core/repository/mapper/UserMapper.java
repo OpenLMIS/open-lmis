@@ -26,7 +26,7 @@ public interface UserMapper {
   @Results(@Result(property = "supervisor.id", column = "supervisorId"))
   User get(String userName);
 
-  @Select(value = "SELECT * FROM users where email = #{email}")
+  @Select(value = "SELECT * FROM users where LOWER(email) = LOWER(#{email})")
   @Results( @Result(property = "supervisor.id", column = "supervisorId"))
   User getByEmail(String email);
 
