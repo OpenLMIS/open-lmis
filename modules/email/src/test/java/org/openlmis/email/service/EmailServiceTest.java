@@ -9,6 +9,8 @@ import org.openlmis.email.exception.EmailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
+import java.util.concurrent.ExecutionException;
+
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.junit.Assert.assertTrue;
 import static org.junit.rules.ExpectedException.none;
@@ -45,7 +47,7 @@ public class EmailServiceTest {
   }
 
   @Test
-  public void shouldGiveErrorIfMessageToNotSet() throws Exception {
+  public void shouldGiveErrorIfMessageToNotSet() throws ExecutionException, InterruptedException {
     JavaMailSender mailSender = mock(JavaMailSender.class);
     SimpleMailMessage mailMessage = mock(SimpleMailMessage.class);
     EmailService service = new EmailService(mailSender);

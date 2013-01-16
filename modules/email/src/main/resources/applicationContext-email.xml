@@ -33,7 +33,7 @@
 
         <property name="locations">
             <list>
-                <value>classpath:/mailing.properties</value>
+                <value>classpath:/${env}/mailing.properties</value>
             </list>
         </property>
 

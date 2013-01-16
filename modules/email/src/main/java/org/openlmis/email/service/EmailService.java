@@ -34,12 +34,13 @@ public class EmailService {
 
   @Async
   public Future<Boolean> send(EmailMessage emailMessage) {
-      mailSender.send(copyToSimpleMailMessage(emailMessage));
+
+    mailSender.send(copyToSimpleMailMessage(emailMessage));
     return new AsyncResult(true);
   }
 
   private SimpleMailMessage copyToSimpleMailMessage(EmailMessage message) {
-    if(message.getTo() == null || message.getTo().equals("")) throw new EmailException("Message 'To' not set");
+    if (message.getTo() == null || message.getTo().equals("")) throw new EmailException("Message 'To' not set");
 
     if (simpleMailMessage == null) {
       simpleMailMessage = new SimpleMailMessage();
