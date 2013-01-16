@@ -74,10 +74,9 @@ public class RnrControllerTest {
 
   @Test
   public void shouldAllowSubmittingOfRnrAndTagWithModifiedBy() throws Exception {
-    String testMessage = "test message";
-    when(rnrService.submit(rnr)).thenReturn(testMessage);
+    when(rnrService.submit(rnr)).thenReturn(new OpenLmisMessage("test.msg.key"));
     ResponseEntity<OpenLmisResponse> response = controller.submit(rnr, rnr.getId(), request);
-    assertThat(response.getBody().getSuccessMsg(), is(testMessage));
+    assertThat(response.getBody().getSuccessMsg(), is("test.msg.key"));
     verify(rnrService).submit(rnr);
     assertThat(rnr.getModifiedBy(), is(USER_ID));
   }

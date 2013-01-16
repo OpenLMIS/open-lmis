@@ -103,10 +103,10 @@ public class RnrServiceTest {
     doReturn(true).when(rnr).validate(false);
     when(supervisoryNodeService.getFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(null);
 
-    String message = rnrService.submit(rnr);
+    OpenLmisMessage message = rnrService.submit(rnr);
     verify(rnrRepository).update(rnr);
     assertThat(rnr.getStatus(), is(SUBMITTED));
-    assertThat(message, is("There is no supervisory node to process the R&R further, Please contact the Administrator"));
+    assertThat(message.getCode(), is("rnr.submitted.without.supervisor"));
   }
 
   @Test
@@ -114,11 +114,11 @@ public class RnrServiceTest {
     when(rnrRepository.getById(rnr.getId())).thenReturn(initiatedRnr);
     doReturn(true).when(rnr).validate(false);
     when(supervisoryNodeService.getFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(new SupervisoryNode());
-    String message = rnrService.submit(rnr);
+    OpenLmisMessage message = rnrService.submit(rnr);
     verify(rnrRepository).update(rnr);
 
     assertThat(rnr.getStatus(), is(SUBMITTED));
-    assertThat(message, is("R&R submitted successfully!"));
+    assertThat(message.getCode(), is("rnr.submitted.success"));
   }
 
   @Test

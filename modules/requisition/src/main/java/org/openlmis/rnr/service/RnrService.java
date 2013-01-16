@@ -32,7 +32,9 @@ public class RnrService {
   public static final String RNR_SUBMISSION_ERROR = "rnr.submission.error";
   public static final String RNR_OPERATION_UNAUTHORIZED = "rnr.operation.unauthorized";
   public static final String RNR_AUTHORIZED_SUCCESSFULLY = "rnr.authorized.success";
-  public static final String RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR = "rnr.authorized.success.without.supervisor";
+  public static final String RNR_SUBMITTED_SUCCESSFULLY = "rnr.submitted.success";
+  public static final String RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR = "rnr.authorized.without.supervisor";
+  public static final String NO_SUPERVISORY_NODE_CONTACT_THE_ADMINISTRATOR = "rnr.submitted.without.supervisor";
 
   private RnrRepository rnrRepository;
 
@@ -72,7 +74,7 @@ public class RnrService {
   }
 
   private boolean isUserAllowedToSave(Rnr rnr) {
-    return (rnr.getStatus() == INITIATED && roleRightsService.getRights(rnr.getModifiedBy()).contains(CREATE_REQUISITION))||
+    return (rnr.getStatus() == INITIATED && roleRightsService.getRights(rnr.getModifiedBy()).contains(CREATE_REQUISITION)) ||
         (rnr.getStatus() == SUBMITTED && roleRightsService.getRights(rnr.getModifiedBy()).contains(AUTHORIZE_REQUISITION));
   }
 
@@ -84,19 +86,18 @@ public class RnrService {
     return rnrRepository.getLossesAndAdjustmentsTypes();
   }
 
-  public String submit(Rnr rnr) {
-    if (rnrRepository.getById(rnr.getId()).getStatus() != INITIATED)
+  public OpenLmisMessage submit(Rnr rnr) {
+    if (rnrRepository.getById(rnr.getId()).getStatus() != INITIATED) {
       throw new DataException(new OpenLmisMessage(RNR_SUBMISSION_ERROR));
+    }
     rnr.validate(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId()));
     rnr.calculate();
     rnr.setStatus(SUBMITTED);
     rnrRepository.update(rnr);
 
     SupervisoryNode supervisoryNode = supervisoryNodeService.getFor(rnr.getFacilityId(), rnr.getProgramId());
-    if (supervisoryNode == null) {
-      return "There is no supervisory node to process the R&R further, Please contact the Administrator";
-    }
-    return "R&R submitted successfully!";
+    String msg = (supervisoryNode == null) ? NO_SUPERVISORY_NODE_CONTACT_THE_ADMINISTRATOR : RNR_SUBMITTED_SUCCESSFULLY;
+    return new OpenLmisMessage(msg);
   }
 
   public OpenLmisMessage authorize(Rnr rnr) {
