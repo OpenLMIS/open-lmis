@@ -153,7 +153,7 @@ public class RnrLineItem {
   private Integer calculateNormalizedConsumption() {
     Float consumptionAdjustedWithStockOutDays = ((MULTIPLIER * NUMBER_OF_DAYS) - stockOutDays) == 0 ? quantityDispensed :
         (quantityDispensed * ((MULTIPLIER * NUMBER_OF_DAYS) / ((MULTIPLIER * NUMBER_OF_DAYS) - stockOutDays)));
-    Float adjustmentForNewPatients = (newPatientCount * ((Double) Math.ceil(dosesPerMonth / dosesPerDispensingUnit)).floatValue()) * MULTIPLIER;
+    Float adjustmentForNewPatients = (newPatientCount * ((Double) Math.ceil(dosesPerMonth.doubleValue() / dosesPerDispensingUnit)).floatValue()) * MULTIPLIER;
 
     return Math.round(consumptionAdjustedWithStockOutDays + adjustmentForNewPatients);
   }
