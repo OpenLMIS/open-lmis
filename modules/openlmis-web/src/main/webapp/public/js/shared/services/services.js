@@ -73,6 +73,10 @@ services.factory('Requisition', function($resource) {
   return $resource('/requisitions.json', {}, {});
 });
 
+services.factory('RequisitionForApproval', function($resource) {
+  return $resource('/requisitions/approve.json', {}, {});
+});
+
 services.factory('LossesAndAdjustmentsReferenceData', function($resource) {
   return $resource('/requisitions/lossAndAdjustments/reference-data.json', {}, {})
 });
