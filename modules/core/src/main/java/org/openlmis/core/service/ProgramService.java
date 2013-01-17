@@ -45,6 +45,6 @@ public class ProgramService {
     }
 
   public List<Program> getActiveProgramsForUserWithRights(Integer userId, Right... rights) {
-    return null;  //To change body of created methods use File | Settings | File Templates.
+    return programRepository.getActiveProgramsForUserWithRights(userId, rights);
   }
 }

@@ -7,6 +7,8 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.rnr.domain.LossesAndAdjustments;
@@ -133,5 +135,34 @@ public class RnrRepositoryTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("Requisition Not Found");
     rnrRepository.getById(rnrId);
+  }
+
+  @Test
+  public void shouldGetRequisitionByFacilitiesAndPrograms() throws Exception {
+    List<Rnr> expectedRequisitions = new ArrayList<>();
+    when(rnrMapper.getSubmittedRequisitionsForFacilitiesAndPrograms("{1, 2}", "{1, 2}")).thenReturn(expectedRequisitions);
+
+    List<Facility> facilities = new ArrayList<>();
+    Facility facility1 = new Facility();
+    facility1.setId(1);
+    Facility facility2 = new Facility();
+    facility2.setId(2);
+
+    facilities.add(facility1);
+    facilities.add(facility2);
+
+    List<Program> programs = new ArrayList<>();
+    Program program1 = new Program();
+    program1.setId(1);
+    Program program2 = new Program();
+    program2.setId(2);
+
+    programs.add(program1);
+    programs.add(program2);
+
+    List<Rnr> resultRequisitions = rnrRepository.getSubmittedRequisitionsForFacilitiesAndPrograms(facilities, programs);
+
+    verify(rnrMapper).getSubmittedRequisitionsForFacilitiesAndPrograms("{1, 2}", "{1, 2}");
+    assertThat(resultRequisitions, is(expectedRequisitions));
   }
 }

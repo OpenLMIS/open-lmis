@@ -17,7 +17,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonSerialize(include = Inclusion.NON_NULL)
-public class Facility implements Importable {
+public class Facility implements Importable, BaseModel {
 
     private Integer id;
 

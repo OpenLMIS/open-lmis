@@ -19,15 +19,16 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
-import static org.openlmis.core.builder.ProcessingPeriodBuilder.name;
-import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
+import static org.openlmis.core.builder.ProcessingPeriodBuilder.*;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
+import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext-requisition.xml")
@@ -132,5 +133,29 @@ public class RnrMapperIT {
     assertThat(returnedRequisition.getFacilityId(), CoreMatchers.is(requisition.getFacilityId()));
     assertThat(returnedRequisition.getStatus(), CoreMatchers.is(requisition.getStatus()));
     assertThat(returnedRequisition.getId(), CoreMatchers.is(requisition.getId()));
+  }
+
+  @Test
+  public void shouldNotGetInitiatedRequisitionsForFacilitiesAndPrograms() throws Exception {
+    Integer programId = 1;
+    requisition.setProgramId(programId);
+    rnrMapper.insert(requisition);
+
+    List<Rnr> requisitions = rnrMapper.getSubmittedRequisitionsForFacilitiesAndPrograms("{" + facility.getId() + "}", "{" + programId + "}");
+
+    assertThat(requisitions.size(), is(0));
+  }
+
+  @Test
+  public void shouldGetRequisitionsInSubmittedStateForFacilitiesAndPrograms() throws Exception {
+    Integer programId = 1;
+    requisition.setProgramId(programId);
+    requisition.setStatus(SUBMITTED);
+    rnrMapper.insert(requisition);
+
+    List<Rnr> requisitions = rnrMapper.getSubmittedRequisitionsForFacilitiesAndPrograms("{" + facility.getId() + "}", "{" + programId + "}");
+
+    assertThat(requisitions.size(), is(1));
+    assertThat(requisitions.get(0).getId(), is(requisition.getId()));
   }
 }

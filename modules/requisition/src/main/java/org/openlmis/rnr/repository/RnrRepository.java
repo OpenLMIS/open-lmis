@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.rnr.domain.LossesAndAdjustments;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.domain.Rnr;
@@ -82,8 +83,11 @@ public class RnrRepository {
     return requisition;
   }
 
-  public List<Rnr> getRequisitionsForFacilitiesAndPrograms(List<Facility> facilities, List<Program> programs) {
-    return null;  //To change body of created methods use File | Settings | File Templates.
+  public List<Rnr> getSubmittedRequisitionsForFacilitiesAndPrograms(List<Facility> facilities, List<Program> programs) {
+    CommaSeparator<Facility> facilitySeparator = new CommaSeparator<>();
+    CommaSeparator<Program> programSeparator = new CommaSeparator<>();
+    return rnrMapper.getSubmittedRequisitionsForFacilitiesAndPrograms(facilitySeparator.commaSeparateIds(facilities),
+      programSeparator.commaSeparateIds(programs));
   }
 }
 

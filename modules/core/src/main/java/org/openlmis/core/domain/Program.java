@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Program {
+public class Program implements BaseModel {
 
     private Integer id;
     private String code;

@@ -66,6 +66,12 @@ public interface ProgramMapper {
   ""})
   List<Program> getProgramsSupportedByFacilityForUserWithRight(@Param("facilityId")Integer facilityId, @Param("userId") Integer userId, @Param("commaSeparatedRights") String commaSeparatedRights);
 
-
-
+  @Select("SELECT DISTINCT p.* " +
+    "FROM programs p " +
+    "INNER JOIN role_assignments ra ON p.id = ra.programId " +
+    "INNER JOIN role_rights rr ON ra.roleId = rr.roleId " +
+    "WHERE ra.userId = #{userId} " +
+    "AND rr.rightName = ANY (#{commaSeparatedRights}::VARCHAR[]) " +
+    "AND p.active = true")
+  List<Program> getActiveProgramsForUserWithRights(@Param(value = "userId") Integer userId, @Param(value = "commaSeparatedRights")  String commaSeparatedRights);
 }

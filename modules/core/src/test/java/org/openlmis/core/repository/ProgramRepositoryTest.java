@@ -14,6 +14,7 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
+import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
 import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 
@@ -68,5 +69,15 @@ public class ProgramRepositoryTest {
     exception.expect(DataException.class);
     exception.expectMessage("program.code.invalid");
     programRepository.getIdForCode("ABC");
+  }
+
+  @Test
+  public void shouldReturnActiveProgramsForUserWithGivenRight() throws Exception {
+    List<Program> expectedPrograms = new ArrayList<>();
+    when(programMapper.getActiveProgramsForUserWithRights(1, "{APPROVE_REQUISITION, CREATE_REQUISITION}")).thenReturn(expectedPrograms);
+    List<Program> resultPrograms = programRepository.getActiveProgramsForUserWithRights(1, APPROVE_REQUISITION, CREATE_REQUISITION);
+
+    verify(programMapper).getActiveProgramsForUserWithRights(1, "{APPROVE_REQUISITION, CREATE_REQUISITION}");
+    assertThat(resultPrograms, is(expectedPrograms));
   }
 }

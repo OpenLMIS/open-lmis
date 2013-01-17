@@ -124,7 +124,7 @@ public class RnrService {
     for(Program program : programs){
       facilities.addAll(facilityService.getUserSupervisedFacilities(userId, program.getId(), APPROVE_REQUISITION));
     }
-    return rnrRepository.getRequisitionsForFacilitiesAndPrograms(new ArrayList<>(facilities), programs);
+    return rnrRepository.getSubmittedRequisitionsForFacilitiesAndPrograms(new ArrayList<>(facilities), programs);
   }
 }
 

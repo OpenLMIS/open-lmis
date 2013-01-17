@@ -254,13 +254,13 @@ public class RnrServiceTest {
     when(facilityService.getUserSupervisedFacilities(USER_ID, program1.getId(), APPROVE_REQUISITION)).thenReturn(facilityList1);
     when(facilityService.getUserSupervisedFacilities(USER_ID, program2.getId(), APPROVE_REQUISITION)).thenReturn(facilityList2);
     List<Rnr> expectedRequisitions = new ArrayList<>();
-    when(rnrRepository.getRequisitionsForFacilitiesAndPrograms(facilities, programs)).thenReturn(expectedRequisitions);
+    when(rnrRepository.getSubmittedRequisitionsForFacilitiesAndPrograms(facilities, programs)).thenReturn(expectedRequisitions);
 
     List<Rnr> resultRequisitions = rnrService.fetchUserSupervisedRnrForApproval(USER_ID);
 
 
     assertThat(resultRequisitions, is(expectedRequisitions));
-    verify(rnrRepository).getRequisitionsForFacilitiesAndPrograms(facilities, programs);
+    verify(rnrRepository).getSubmittedRequisitionsForFacilitiesAndPrograms(facilities, programs);
     verify(programService).getActiveProgramsForUserWithRights(USER_ID, APPROVE_REQUISITION);
     verify(facilityService).getUserSupervisedFacilities(USER_ID, program1.getId(), APPROVE_REQUISITION);
     verify(facilityService).getUserSupervisedFacilities(USER_ID, program2.getId(), APPROVE_REQUISITION);
