@@ -43,4 +43,8 @@ public class ProgramService {
     public Integer getIdForCode(String code) {
       return programRepository.getIdForCode(code);
     }
+
+  public List<Program> getActiveProgramsForUserWithRights(Integer userId, Right... rights) {
+    return null;  //To change body of created methods use File | Settings | File Templates.
+  }
 }

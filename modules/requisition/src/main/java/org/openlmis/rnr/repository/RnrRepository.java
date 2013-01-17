@@ -1,6 +1,8 @@
 package org.openlmis.rnr.repository;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.LossesAndAdjustments;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
@@ -78,6 +80,10 @@ public class RnrRepository {
     Rnr requisition = rnrMapper.getById(rnrId);
     if(requisition == null) throw new DataException("Requisition Not Found");
     return requisition;
+  }
+
+  public List<Rnr> getRequisitionsForFacilitiesAndPrograms(List<Facility> facilities, List<Program> programs) {
+    return null;  //To change body of created methods use File | Settings | File Templates.
   }
 }
 

@@ -11,9 +11,7 @@ import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
-import org.openlmis.core.service.FacilityApprovedProductService;
-import org.openlmis.core.service.RoleRightsService;
-import org.openlmis.core.service.SupervisoryNodeService;
+import org.openlmis.core.service.*;
 import org.openlmis.rnr.builder.RnrBuilder;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.repository.RnrRepository;
@@ -28,6 +26,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
+import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
 import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 import static org.openlmis.rnr.builder.RnrBuilder.defaultRnr;
@@ -41,6 +40,7 @@ public class RnrServiceTest {
   private static final Integer HIV = 1;
   private static final Integer FACILITY_ID = 1;
   private static final Integer PERIOD_ID = 10;
+  private static final Integer USER_ID = 1;
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
@@ -57,13 +57,19 @@ public class RnrServiceTest {
   @Mock
   private RoleRightsService roleRightService;
 
+  @Mock
+  ProgramService programService;
+  @Mock
+  FacilityService facilityService;
+
   private Rnr rnr;
   private Rnr submittedRnr;
   private Rnr initiatedRnr;
 
   @Before
   public void setup() {
-    rnrService = new RnrService(rnrRepository, rnrTemplateRepository, facilityApprovedProductService, supervisoryNodeService, roleRightService);
+    rnrService = new RnrService(rnrRepository, rnrTemplateRepository, facilityApprovedProductService,
+      supervisoryNodeService, roleRightService, facilityService, programService);
     rnr = spy(make(a(defaultRnr)));
     submittedRnr = make(a(RnrBuilder.defaultRnr, with(status, SUBMITTED)));
     initiatedRnr = make(a(RnrBuilder.defaultRnr, with(status, INITIATED)));
@@ -225,4 +231,40 @@ public class RnrServiceTest {
     expectedException.expectMessage(RNR_OPERATION_UNAUTHORIZED);
     rnrService.save(rnr);
   }
+  @Test
+  public void shouldFetchAllRequisitionsForFacilitiesAndProgramSupervisedByUserForApproval() throws Exception {
+
+    Program program1 = new Program();
+    program1.setId(1);
+    Program program2 = new Program();
+    program2.setId(2);
+    List<Program> programs = new ArrayList<>();
+    programs.add(program1);
+    programs.add(program2);
+
+    when(programService.getActiveProgramsForUserWithRights(USER_ID, APPROVE_REQUISITION)).thenReturn(programs);
+    final List<Facility> facilityList1 = new ArrayList<>();
+    final List<Facility> facilityList2 = new ArrayList<>();
+
+    List<Facility> facilities = new ArrayList<Facility>() {{
+      addAll(facilityList1);
+      addAll(facilityList2);
+    }};
+
+    when(facilityService.getUserSupervisedFacilities(USER_ID, program1.getId(), APPROVE_REQUISITION)).thenReturn(facilityList1);
+    when(facilityService.getUserSupervisedFacilities(USER_ID, program2.getId(), APPROVE_REQUISITION)).thenReturn(facilityList2);
+    List<Rnr> expectedRequisitions = new ArrayList<>();
+    when(rnrRepository.getRequisitionsForFacilitiesAndPrograms(facilities, programs)).thenReturn(expectedRequisitions);
+
+    List<Rnr> resultRequisitions = rnrService.fetchUserSupervisedRnrForApproval(USER_ID);
+
+
+    assertThat(resultRequisitions, is(expectedRequisitions));
+    verify(rnrRepository).getRequisitionsForFacilitiesAndPrograms(facilities, programs);
+    verify(programService).getActiveProgramsForUserWithRights(USER_ID, APPROVE_REQUISITION);
+    verify(facilityService).getUserSupervisedFacilities(USER_ID, program1.getId(), APPROVE_REQUISITION);
+    verify(facilityService).getUserSupervisedFacilities(USER_ID, program2.getId(), APPROVE_REQUISITION);
+  }
+
+
 }

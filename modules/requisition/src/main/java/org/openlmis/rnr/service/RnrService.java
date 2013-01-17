@@ -1,14 +1,10 @@
 package org.openlmis.rnr.service;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.FacilityApprovedProduct;
-import org.openlmis.core.domain.SupervisoryNode;
-import org.openlmis.core.domain.User;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
-import org.openlmis.core.service.FacilityApprovedProductService;
-import org.openlmis.core.service.RoleRightsService;
-import org.openlmis.core.service.SupervisoryNodeService;
+import org.openlmis.core.service.*;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
@@ -18,8 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
 import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 import static org.openlmis.rnr.domain.RnrStatus.*;
@@ -42,14 +42,19 @@ public class RnrService {
   private FacilityApprovedProductService facilityApprovedProductService;
   private SupervisoryNodeService supervisoryNodeService;
   private RoleRightsService roleRightsService;
+  private FacilityService facilityService;
+  private ProgramService programService;
 
   @Autowired
-  public RnrService(RnrRepository rnrRepository, RnrTemplateRepository rnrTemplateRepository, FacilityApprovedProductService facilityApprovedProductService, SupervisoryNodeService supervisoryNodeRepository, RoleRightsService roleRightsService) {
+  public RnrService(RnrRepository rnrRepository, RnrTemplateRepository rnrTemplateRepository, FacilityApprovedProductService facilityApprovedProductService,
+                    SupervisoryNodeService supervisoryNodeRepository, RoleRightsService roleRightsService, FacilityService facilityService, ProgramService programService) {
     this.rnrRepository = rnrRepository;
     this.rnrTemplateRepository = rnrTemplateRepository;
     this.facilityApprovedProductService = facilityApprovedProductService;
     this.supervisoryNodeService = supervisoryNodeRepository;
     this.roleRightsService = roleRightsService;
+    this.facilityService = facilityService;
+    this.programService = programService;
   }
 
   @Transactional
@@ -111,6 +116,15 @@ public class RnrService {
     User approver = supervisoryNodeService.getApproverFor(rnr.getFacilityId(), rnr.getProgramId());
     String msg = (approver == null) ? RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR : RNR_AUTHORIZED_SUCCESSFULLY;
     return new OpenLmisMessage(msg);
+  }
+
+  public List<Rnr> fetchUserSupervisedRnrForApproval(Integer userId) {
+    List<Program> programs = programService.getActiveProgramsForUserWithRights(userId, APPROVE_REQUISITION);
+    Set<Facility> facilities = new HashSet<>();
+    for(Program program : programs){
+      facilities.addAll(facilityService.getUserSupervisedFacilities(userId, program.getId(), APPROVE_REQUISITION));
+    }
+    return rnrRepository.getRequisitionsForFacilitiesAndPrograms(new ArrayList<>(facilities), programs);
   }
 }
 
