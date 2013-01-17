@@ -37,7 +37,7 @@ public class FacilityApprovedProduct implements Importable {
     this.setProgramProduct(programProduct);
   }
 
-  public FacilityApprovedProduct(String facilityTypeCode, ProgramProduct product, Integer maxMonthsOfStock) {
-    this(new FacilityType(facilityTypeCode), product, maxMonthsOfStock);
+  public FacilityApprovedProduct(String facilityTypeCode, ProgramProduct programProduct, Integer maxMonthsOfStock) {
+    this(new FacilityType(facilityTypeCode), programProduct, maxMonthsOfStock);
   }
 }

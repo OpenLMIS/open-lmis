@@ -13,7 +13,7 @@ CREATE TABLE users (
   supervisorId INTEGER references users(id),
   facilityId INT REFERENCES facilities(id),
   modifiedBy VARCHAR(50),
-  modifiedDate TIMESTAMP DEFAULT  CURRENT_TIMESTAMP
+  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE UNIQUE INDEX uc_users_userName ON users(LOWER(userName));

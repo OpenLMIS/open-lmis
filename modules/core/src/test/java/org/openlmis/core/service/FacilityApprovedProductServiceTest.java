@@ -31,30 +31,41 @@ public class FacilityApprovedProductServiceTest {
   @Mock
   private ProductService productService;
 
+  @Mock
+  private ProgramProductService programProductService;
+
   @Rule
   public ExpectedException expectedException = none();
 
   @Test
   public void shouldSaveFacilityApprovedProduct() throws Exception {
 
-    FacilityApprovedProductService facilityApprovedProductService = new FacilityApprovedProductService(facilityApprovedProductRepository, programService, productService);
+    FacilityApprovedProductService facilityApprovedProductService = new FacilityApprovedProductService(facilityApprovedProductRepository, programService, productService, programProductService);
     FacilityApprovedProduct facilityApprovedProduct = make(a(defaultFacilityApprovedProduct));
 
-    when(programService.getIdForCode(defaultProgramCode)).thenReturn(45);
-    when(productService.getIdForCode(defaultProductCode)).thenReturn(10);
+    Integer programId = 45;
+    Integer productId = 10;
+    Integer programProductId = 100;
+
+    when(programService.getIdForCode(defaultProgramCode)).thenReturn(programId);
+    when(productService.getIdForCode(defaultProductCode)).thenReturn(productId);
+    when(programProductService.getIdByProgramIdAndProductId(programId, productId)).thenReturn(100);
 
     facilityApprovedProductService.save(facilityApprovedProduct);
 
     verify(programService).getIdForCode(defaultProgramCode);
     verify(productService).getIdForCode(defaultProductCode);
+    verify(programProductService).getIdByProgramIdAndProductId(programId, productId);
     verify(facilityApprovedProductRepository).insert(facilityApprovedProduct);
-    assertThat(facilityApprovedProduct.getProgramProduct().getProgram().getId(), is(45));
-    assertThat(facilityApprovedProduct.getProgramProduct().getProduct().getId(), is(10));
+
+    assertThat(facilityApprovedProduct.getProgramProduct().getProgram().getId(), is(programId));
+    assertThat(facilityApprovedProduct.getProgramProduct().getProduct().getId(), is(productId));
+    assertThat(facilityApprovedProduct.getProgramProduct().getId(), is(programProductId));
   }
 
   @Test
   public void shouldNotSaveFacilityApprovedProductAndThrowAnExceptionWhenProgramDoesNotExist() throws Exception {
-    FacilityApprovedProductService facilityApprovedProductService = new FacilityApprovedProductService(facilityApprovedProductRepository, programService, productService);
+    FacilityApprovedProductService facilityApprovedProductService = new FacilityApprovedProductService(facilityApprovedProductRepository, programService, productService, programProductService);
     FacilityApprovedProduct facilityApprovedProduct = make(a(defaultFacilityApprovedProduct));
 
     doThrow(new DataException("abc")).when(programService).getIdForCode(defaultProgramCode);
@@ -70,7 +81,7 @@ public class FacilityApprovedProductServiceTest {
 
   @Test
   public void shouldNotSaveFacilityApprovedProductAndThrowAnExceptionWhenProductDoesNotExist() throws Exception {
-    FacilityApprovedProductService facilityApprovedProductService = new FacilityApprovedProductService(facilityApprovedProductRepository, programService, productService);
+    FacilityApprovedProductService facilityApprovedProductService = new FacilityApprovedProductService(facilityApprovedProductRepository, programService, productService, programProductService);
     FacilityApprovedProduct facilityApprovedProduct = make(a(defaultFacilityApprovedProduct));
 
     doThrow(new DataException("abc")).when(productService).getIdForCode(defaultProductCode);
@@ -79,8 +90,30 @@ public class FacilityApprovedProductServiceTest {
     expectedException.expectMessage("abc");
 
     facilityApprovedProductService.save(facilityApprovedProduct);
-    verify(productService).getIdForCode(defaultProgramCode);
 
+    verify(productService).getIdForCode(defaultProgramCode);
+    verify(facilityApprovedProductRepository, never()).insert(facilityApprovedProduct);
+  }
+
+  @Test
+  public void shouldNotSaveFacilityApprovedProductAndThrowAnExceptionWhenProgramProductDoesNotExist() throws Exception {
+    FacilityApprovedProductService facilityApprovedProductService = new FacilityApprovedProductService(facilityApprovedProductRepository, programService, productService, programProductService);
+    FacilityApprovedProduct facilityApprovedProduct = make(a(defaultFacilityApprovedProduct));
+
+    Integer programId = 1;
+    Integer productId = 2;
+
+    when(programService.getIdForCode(defaultProgramCode)).thenReturn(programId);
+    when(productService.getIdForCode(defaultProductCode)).thenReturn(productId);
+
+    doThrow(new DataException("abc")).when(programProductService).getIdByProgramIdAndProductId(programId, productId);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("abc");
+
+    facilityApprovedProductService.save(facilityApprovedProduct);
+
+    verify(programProductService).getIdByProgramIdAndProductId(programId, productId);
     verify(facilityApprovedProductRepository, never()).insert(facilityApprovedProduct);
   }
 }

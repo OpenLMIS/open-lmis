@@ -13,31 +13,40 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 public class ProgramProductRepository {
 
-    private ProgramRepository programRepository;
-    private ProductMapper productMapper;
-    private ProgramProductMapper programProductMapper;
+  private ProgramRepository programRepository;
+  private ProductMapper productMapper;
+  private ProgramProductMapper programProductMapper;
 
-    @Autowired
-    public ProgramProductRepository(ProgramRepository programRepository, ProductMapper productMapper, ProgramProductMapper programProductMapper) {
-        this.programProductMapper = programProductMapper;
-        this.programRepository = programRepository;
-        this.productMapper = productMapper;
+  @Autowired
+  public ProgramProductRepository(ProgramRepository programRepository, ProductMapper productMapper, ProgramProductMapper programProductMapper) {
+    this.programProductMapper = programProductMapper;
+    this.programRepository = programRepository;
+    this.productMapper = productMapper;
+  }
+
+  public void insert(ProgramProduct programProduct) {
+    programProduct.getProgram().setId(programRepository.getIdForCode(programProduct.getProgram().getCode()));
+    validateProductCode(programProduct.getProduct().getCode());
+
+    try {
+      programProductMapper.insert(programProduct);
+    } catch (DuplicateKeyException duplicateKeyException) {
+      throw new DataException("Duplicate entry for Product Code and Program Code combination found");
     }
+  }
 
-    public void insert(ProgramProduct programProduct) {
-        programProduct.getProgram().setId(programRepository.getIdForCode(programProduct.getProgram().getCode()));
-        validateProductCode(programProduct.getProduct().getCode());
+  public Integer getIdByProgramIdAndProductId(Integer programId, Integer productId){
+    Integer programProductId = programProductMapper.getIdByProgramAndProductId(programId, productId);
 
-        try {
-            programProductMapper.insert(programProduct);
-        } catch (DuplicateKeyException duplicateKeyException) {
-            throw new DataException("Duplicate entry for Product Code and Program Code combination found");
-        }
+    if(programProductId == null)
+      throw new DataException("programProduct.product.program.invalid");
+
+    return programProductId;
+  }
+
+  private void validateProductCode(String code) {
+    if (code == null || code.isEmpty() || productMapper.getIdByCode(code) == null) {
+      throw new DataException("Invalid Product Code");
     }
-
-    private void validateProductCode(String code) {
-        if (code == null || code.isEmpty() || productMapper.getIdByCode(code) == null) {
-            throw new DataException("Invalid Product Code");
-        }
-    }
+  }
 }

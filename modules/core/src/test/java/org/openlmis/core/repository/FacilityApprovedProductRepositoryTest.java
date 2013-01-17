@@ -15,7 +15,8 @@ import org.springframework.dao.DuplicateKeyException;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
-import static org.openlmis.core.repository.FacilityApprovedProductRepository.*;
+import static org.openlmis.core.repository.FacilityApprovedProductRepository.FACILITY_APPROVED_PRODUCT_DUPLICATE;
+import static org.openlmis.core.repository.FacilityApprovedProductRepository.FACILITY_TYPE_DOES_NOT_EXIST;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FacilityApprovedProductRepositoryTest {
@@ -53,25 +54,11 @@ public class FacilityApprovedProductRepositoryTest {
     FacilityApprovedProductRepository facilityApprovedProductRepository = new FacilityApprovedProductRepository(facilityApprovedProductMapper);
     FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct();
 
-    doThrow(new DataIntegrityViolationException("Some message")).when(facilityApprovedProductMapper).insert(facilityApprovedProduct);
+    doThrow(DataIntegrityViolationException.class).when(facilityApprovedProductMapper).insert(facilityApprovedProduct);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage(FACILITY_TYPE_DOES_NOT_EXIST);
 
     facilityApprovedProductRepository.insert(facilityApprovedProduct);
   }
-
-  @Test
-  public void shouldThrowExceptionsWhenProgramProductDoesNotExist() throws Exception {
-    FacilityApprovedProductRepository facilityApprovedProductRepository = new FacilityApprovedProductRepository(facilityApprovedProductMapper);
-    FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct();
-
-    doThrow(new DataIntegrityViolationException("violates foreign key constraint \"facility_approved_products_programproductid_fkey\"")).when(facilityApprovedProductMapper).insert(facilityApprovedProduct);
-
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage(PROGRAM_PRODUCT_DOES_NOT_EXIST);
-
-    facilityApprovedProductRepository.insert(facilityApprovedProduct);
-  }
-
 }

@@ -17,7 +17,6 @@ public class FacilityApprovedProductRepository {
 
   public static final String FACILITY_APPROVED_PRODUCT_DUPLICATE = "facilityApprovedProduct.duplicate.found";
   public static final String FACILITY_TYPE_DOES_NOT_EXIST = "facilityType.invalid";
-  public static final String PROGRAM_PRODUCT_DOES_NOT_EXIST = "programProduct.invalid";
 
   private FacilityApprovedProductMapper facilityApprovedProductMapper;
 
@@ -36,10 +35,7 @@ public class FacilityApprovedProductRepository {
     } catch (DuplicateKeyException e) {
       throw new DataException(FACILITY_APPROVED_PRODUCT_DUPLICATE);
     } catch (DataIntegrityViolationException e) {
-      if(e.getMessage().contains("violates foreign key constraint \"facility_approved_products_programproductid_fkey\"")){
-        throw new DataException(PROGRAM_PRODUCT_DOES_NOT_EXIST);
-      }
-      throw new DataException(FACILITY_TYPE_DOES_NOT_EXIST);
+        throw new DataException(FACILITY_TYPE_DOES_NOT_EXIST);
     }
   }
 }

@@ -11,33 +11,33 @@ import java.util.Date;
 @NoArgsConstructor
 public class ProgramProduct implements Importable {
 
-    @ImportField(name = "Program Code", type = "String", nested = "code", mandatory = true)
-    private Program program;
-    @ImportField(name = "Product Code", type = "String", nested = "code", mandatory = true)
-    private Product product;
-    @ImportField(name = "Doses Per Month", type = "int", mandatory = true)
-    private Integer dosesPerMonth;
-    @ImportField(name = "Is Active", type = "boolean", mandatory = true)
-    private boolean active;
+  @ImportField(name = "Program Code", type = "String", nested = "code", mandatory = true)
+  private Program program;
+  @ImportField(name = "Product Code", type = "String", nested = "code", mandatory = true)
+  private Product product;
+  @ImportField(name = "Doses Per Month", type = "int", mandatory = true)
+  private Integer dosesPerMonth;
+  @ImportField(name = "Is Active", type = "boolean", mandatory = true)
+  private boolean active;
 
-    private Integer id;
-	private Float currentPrice;
-    private String modifiedBy;
-    private Date modifiedDate;
+  private Integer id;
+  private Float currentPrice;
+  private String modifiedBy;
+  private Date modifiedDate;
 
-    public ProgramProduct(Program program, Product product, Integer dosesPerMonth, Boolean active) {
-        this.program = program;
-        this.product = product;
-        this.dosesPerMonth = dosesPerMonth;
-        this.active = active;
-    }
+  public ProgramProduct(Program program, Product product, Integer dosesPerMonth, Boolean active) {
+    this.program = program;
+    this.product = product;
+    this.dosesPerMonth = dosesPerMonth;
+    this.active = active;
+  }
 
-	public ProgramProduct(Program program, Product product, Integer dosesPerMonth, Boolean active, Float currentPrice) {
-		this.program = program;
-		this.product = product;
-		this.dosesPerMonth = dosesPerMonth;
-		this.active = active;
-		this.currentPrice = currentPrice;
-	}
+  public ProgramProduct(Program program, Product product, Integer dosesPerMonth, Boolean active, Float currentPrice) {
+    this.program = program;
+    this.product = product;
+    this.dosesPerMonth = dosesPerMonth;
+    this.active = active;
+    this.currentPrice = currentPrice;
+  }
 
 }

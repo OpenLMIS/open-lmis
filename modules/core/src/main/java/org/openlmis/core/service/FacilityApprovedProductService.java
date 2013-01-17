@@ -16,12 +16,14 @@ public class FacilityApprovedProductService {
   private FacilityApprovedProductRepository repository;
   private ProgramService programService;
   private ProductService productService;
+  private ProgramProductService programProductService;
 
   @Autowired
-  public FacilityApprovedProductService(FacilityApprovedProductRepository repository, ProgramService programService, ProductService productService) {
+  public FacilityApprovedProductService(FacilityApprovedProductRepository repository, ProgramService programService, ProductService productService, ProgramProductService programProductService) {
     this.repository = repository;
     this.programService = programService;
     this.productService = productService;
+    this.programProductService = programProductService;
   }
 
   public List<FacilityApprovedProduct> getByFacilityAndProgram(Integer facilityId, Integer programId) {
@@ -31,9 +33,11 @@ public class FacilityApprovedProductService {
   public void save(FacilityApprovedProduct facilityApprovedProduct) {
     Integer programId = programService.getIdForCode(facilityApprovedProduct.getProgramProduct().getProgram().getCode());
     Integer productId = productService.getIdForCode(facilityApprovedProduct.getProgramProduct().getProduct().getCode());
+    Integer programProductId = programProductService.getIdByProgramIdAndProductId(programId, productId);
 
     facilityApprovedProduct.getProgramProduct().getProgram().setId(programId);
     facilityApprovedProduct.getProgramProduct().getProduct().setId(productId);
+    facilityApprovedProduct.getProgramProduct().setId(programProductId);
 
     repository.insert(facilityApprovedProduct);
   }

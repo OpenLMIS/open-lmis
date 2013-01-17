@@ -160,6 +160,15 @@
                         <property name="recordHandler" ref="userPersistenceHandler"/>
                     </bean>
                 </entry>
+                <entry key="facilityApprovedProduct">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Facility Approved Products"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.FacilityApprovedProduct</value>
+                        </property>
+                        <property name="recordHandler" ref="facilityApprovedProductPersistenceHandler"/>
+                    </bean>
+                </entry>
             </map>
         </constructor-arg>
     </bean>

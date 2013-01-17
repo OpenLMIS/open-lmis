@@ -26,8 +26,8 @@ import static org.openlmis.core.builder.UserBuilder.facilityId;
 
 @ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
-@TransactionConfiguration(defaultRollback = true)
 @Transactional
+@TransactionConfiguration(defaultRollback = true)
 public class FacilityMapperIT {
 
     public static final String OPERATED_BY_MOH = "MoH";

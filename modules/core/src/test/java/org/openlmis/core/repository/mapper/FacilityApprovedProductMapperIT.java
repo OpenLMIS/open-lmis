@@ -15,12 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.FACILITY_TYPE_CODE;
 import static org.openlmis.core.builder.ProductBuilder.*;
@@ -60,9 +59,10 @@ public class FacilityApprovedProductMapperIT {
     FacilityType facilityType = new FacilityType();
     facilityType.setCode(FACILITY_TYPE_CODE);
     FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct(facilityType, programProduct, MAX_MONTHS_OF_STOCK);
-    int status = facilityApprovedProductMapper.insert(facilityApprovedProduct);
+    int insertionCount = facilityApprovedProductMapper.insert(facilityApprovedProduct);
 
-    assertThat(status, is(1));
+    assertThat(facilityApprovedProduct.getId(), is(notNullValue()));
+    assertThat(insertionCount, is(1));
   }
 
   @Test
