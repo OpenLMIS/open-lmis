@@ -121,6 +121,7 @@ public class DBWrapper {
         dbwrapper.dbConnection("delete from roles where name not in ('Admin');", "alter");
         dbwrapper.dbConnection("delete from facility_approved_products;", "alter");
         dbwrapper.dbConnection("delete from program_products;", "alter");
+        dbwrapper.dbConnection("DELETE FROM requisition_line_item_losses_adjustments;", "alter");
         dbwrapper.dbConnection("DELETE FROM requisition_line_items;", "alter");
         dbwrapper.dbConnection("delete from products;", "alter");
         dbwrapper.dbConnection("delete from users where userName like('User%');", "alter");
@@ -343,6 +344,8 @@ public class DBWrapper {
                 "('Period2', 'second period', '2013-01-16', '2013-04-30', (SELECT id FROM processing_schedules WHERE code = 'M'), (SELECT id FROM users LIMIT 1));", "alter");
 
     }
+
+
 
     public void configureTemplate() throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();

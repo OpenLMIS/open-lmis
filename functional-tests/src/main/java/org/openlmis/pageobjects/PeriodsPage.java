@@ -28,16 +28,22 @@ public class PeriodsPage extends Page {
     @FindBy(how = How.ID, using = "endDate")
     private static WebElement endDatePeriod;
 
-    @FindBy(how = How.XPATH, using = "//a[contains(text(),'20')]")
+    @FindBy(how = How.XPATH, using = "//span[contains(text(),'Prev')]")
+    private static WebElement prevCalender;
+
+    @FindBy(how = How.XPATH, using = "//span[contains(text(),'Next')]")
+    private static WebElement nextCalender;
+
+    @FindBy(how = How.XPATH, using = "//a[@class='ui-state-default' and contains(text(),'1')]")
     private static WebElement startDateCalender;
 
-    @FindBy(how = How.XPATH, using = "//a[contains(text(),'21')]")
+    @FindBy(how = How.XPATH, using = "//a[@class='ui-state-default' and contains(text(),'2')]")
     private static WebElement endDateCalender;
 
-    @FindBy(how = How.XPATH, using = "//a[contains(text(),'24')]")
+    @FindBy(how = How.XPATH, using = "//a[@class='ui-state-default' and contains(text(),'26')]")
     private static WebElement endDateSecondCalender;
 
-    @FindBy(how = How.XPATH, using = "//a[contains(text(),'26')]")
+    @FindBy(how = How.XPATH, using = "//a[contains(text(),'28')]")
     private static WebElement endDateThirdCalender;
 
     @FindBy(how = How.XPATH, using = "//span[@ng-show='calculateDays(newPeriod.startDate, newPeriod.endDate)+1']")
@@ -73,9 +79,9 @@ public class PeriodsPage extends Page {
 
     public void createAndVerifyPeriods() throws IOException {
         testWebDriver.waitForElementToAppear(namePeriod);
-        enterAndVerifyPeriodDetails("Period1", "first period", "1", "1", 1);
-        enterAndVerifyPeriodDetails("Period2", "second period", "2", "1", 2);
-        enterAndVerifyPeriodDetails("Period3", "third period", "1", "1", 3);
+        enterAndVerifyPeriodDetails("Period1", "first period", "1", 1);
+        enterAndVerifyPeriodDetails("Period2", "second period", "1", 2);
+        enterAndVerifyPeriodDetails("Period3", "third period", "1", 3);
     }
 
     public void deleteAndVerifyPeriods() throws IOException {
@@ -99,36 +105,42 @@ public class PeriodsPage extends Page {
     }
 
 
-    public void enterAndVerifyPeriodDetails(String name, String desc, String totalDays, String totalMonths, int indicator) {
+    public void enterAndVerifyPeriodDetails(String name, String desc, String totalMonths, int indicator) {
         namePeriod.clear();
         namePeriod.sendKeys(name);
         descriptionPeriod.clear();
         descriptionPeriod.sendKeys(desc);
         if (indicator == 1) {
             startDatePeriod.click();
-            testWebDriver.sleep(250);
+            testWebDriver.sleep(100);
+            prevCalender.click();
+            testWebDriver.sleep(100);
             startDateCalender.click();
-            testWebDriver.sleep(250);
+            testWebDriver.sleep(100);
             endDatePeriod.click();
-            testWebDriver.sleep(250);
+            testWebDriver.sleep(100);
+            nextCalender.click();
+            testWebDriver.sleep(100);
             endDateCalender.click();
         } else if(indicator == 2) {
-            testWebDriver.sleep(250);
+            testWebDriver.sleep(100);
             endDatePeriod.click();
-            testWebDriver.sleep(250);
+            testWebDriver.sleep(100);
+            nextCalender.click();
+            testWebDriver.sleep(100);
             endDateSecondCalender.click();
-            testWebDriver.sleep(250);
+            testWebDriver.sleep(100);
         }
         else {
-            testWebDriver.sleep(250);
+            testWebDriver.sleep(100);
             endDatePeriod.click();
-            testWebDriver.sleep(250);
+            testWebDriver.sleep(100);
+            nextCalender.click();
+            testWebDriver.sleep(100);
             endDateThirdCalender.click();
-            testWebDriver.sleep(250);
+            testWebDriver.sleep(100);
         }
 
-        String actualtotalDaysPeriods = totalDaysPeriods.getText().trim();
-        SeleneseTestNgHelper.assertEquals(actualtotalDaysPeriods, totalDays);
 
         String actualNumberOfMonthsPeriods = numberOfMonthsPeriods.getText().trim();
         SeleneseTestNgHelper.seleniumEquals(actualNumberOfMonthsPeriods, totalMonths);

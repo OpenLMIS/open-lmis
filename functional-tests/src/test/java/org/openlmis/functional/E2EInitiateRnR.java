@@ -39,11 +39,6 @@ public class E2EInitiateRnR extends TestCaseHelper {
         dbWrapper.insertProgramProducts();
         dbWrapper.insertFacilityApprovedProducts();
         dbWrapper.insertRequisitionGroup();
-        dbWrapper.insertSchedules();
-        dbWrapper.insertRequisitionGroupProgramSchedule();
-
-
-
 
         LoginPage loginPage=new LoginPage(testWebDriver);
         HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
@@ -53,17 +48,21 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
         String facility_name="FCcode" + date_time;
         dbWrapper.insertRequisitionGroupMembers("F10", facility_name);
-        dbWrapper.insertProcessingPeriods();
+
+        ManageSchedulePage manageSchedulePage=homePage.navigateToSchedule();
+        manageSchedulePage.createAndVerifySchedule();
+        PeriodsPage periodsPage=manageSchedulePage.navigatePeriods();
+        periodsPage.createAndVerifyPeriods();
+        periodsPage.deleteAndVerifyPeriods();
+
+        dbWrapper.insertRequisitionGroupProgramSchedule();
 
         dbWrapper.allocateFacilityToUser("200");
 
         TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
         templateConfigPage.configureTemplate();
 
-//        ManageSchedulePage manageSchedulePage=homePage.navigateToSchedule();
-//        manageSchedulePage.createAndVerifySchedule();
-//        PeriodsPage periodsPage=manageSchedulePage.navigatePeriods();
-//        periodsPage.createAndVerifyPeriods();
+
 
         RolesPage rolesPage = homePage.navigateRoleAssignments();
         List<String> userRoleList = new ArrayList<>();
