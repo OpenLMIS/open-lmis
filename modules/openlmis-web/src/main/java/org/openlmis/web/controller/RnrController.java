@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.service.RnrService;
 import org.openlmis.web.model.RnrReferenceData;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -112,10 +113,10 @@ public class RnrController extends BaseController {
     }
   }
 
-  @RequestMapping(value = "/requisitions/approve", method = RequestMethod.PUT, headers = "Accept=application/json")
+  @RequestMapping(value = "/requisitions/approve", method = RequestMethod.GET, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('', 'APPROVE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> fetchUserSupervisedRnrForApproval(HttpServletRequest request) {
-    List<Rnr> requisitions = new ArrayList<>();
+    List<RnrDTO> requisitions;
     try {
       requisitions = rnrService.fetchUserSupervisedRnrForApproval(loggedInUserId(request));
     } catch (DataException e) {

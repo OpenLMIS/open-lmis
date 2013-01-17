@@ -2,6 +2,7 @@ package org.openlmis.rnr.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.dto.RnrDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public interface RnrMapper {
     "status = #{status},",
     "modifiedDate = DEFAULT,",
     "fullSupplyItemsSubmittedCost = #{fullSupplyItemsSubmittedCost},",
+    "submittedDate = #{submittedDate},",
     "nonFullSupplyItemsSubmittedCost = #{nonFullSupplyItemsSubmittedCost}",
     "WHERE id = #{id}"})
   public void update(Rnr requisition);
@@ -36,9 +38,16 @@ public interface RnrMapper {
   Rnr getById(Integer rnrId);
 
 
-  @Select({"SELECT * FROM requisition WHERE facilityId = ANY (#{commaSeparatedFacilities}::INTEGER[])",
-    "AND programId =  ANY (#{commaSeparatedPrograms}::INTEGER[])",
-    "AND status = 'SUBMITTED'"})
-  List<Rnr> getSubmittedRequisitionsForFacilitiesAndPrograms(@Param("commaSeparatedFacilities") String commaSeparatedFacilities,
+  @Select({"SELECT R.id AS id, R.submittedDate AS submittedDate, R.modifiedDate AS modifiedDate, P.name AS programName,",
+    "F.code AS facilityCode, F.name AS facilityName, PP.startDate AS periodStartDate, PP.endDate AS periodEndDate",
+    "FROM requisition R",
+    "INNER JOIN facilities F ON R.facilityId = F.id",
+    "INNER JOIN programs P ON R.programId = P.id",
+    "INNER JOIN processing_periods PP ON R.periodId = PP.id",
+    "WHERE R.facilityId = ANY (#{commaSeparatedFacilities}::INTEGER[])",
+    "AND R.programId =  ANY (#{commaSeparatedPrograms}::INTEGER[])",
+    "AND R.status = 'AUTHORIZED'"})
+
+  List<RnrDTO> getSubmittedRequisitionsForFacilitiesAndPrograms(@Param("commaSeparatedFacilities") String commaSeparatedFacilities,
                                                              @Param("commaSeparatedPrograms") String commaSeparatedPrograms);
 }

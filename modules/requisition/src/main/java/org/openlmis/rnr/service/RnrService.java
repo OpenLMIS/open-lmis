@@ -8,16 +8,14 @@ import org.openlmis.core.service.*;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
+import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.repository.RnrRepository;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
 import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
@@ -98,6 +96,7 @@ public class RnrService {
     rnr.validate(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId()));
     rnr.calculate();
     rnr.setStatus(SUBMITTED);
+    rnr.setSubmittedDate(new Date());
     rnrRepository.update(rnr);
 
     SupervisoryNode supervisoryNode = supervisoryNodeService.getFor(rnr.getFacilityId(), rnr.getProgramId());
@@ -118,7 +117,7 @@ public class RnrService {
     return new OpenLmisMessage(msg);
   }
 
-  public List<Rnr> fetchUserSupervisedRnrForApproval(Integer userId) {
+  public List<RnrDTO> fetchUserSupervisedRnrForApproval(Integer userId) {
     List<Program> programs = programService.getActiveProgramsForUserWithRights(userId, APPROVE_REQUISITION);
     Set<Facility> facilities = new HashSet<>();
     for(Program program : programs){
@@ -126,5 +125,5 @@ public class RnrService {
     }
     return rnrRepository.getSubmittedRequisitionsForFacilitiesAndPrograms(new ArrayList<>(facilities), programs);
   }
-}
+  }
 

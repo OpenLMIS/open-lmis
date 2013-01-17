@@ -14,6 +14,7 @@ import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
 import org.openlmis.rnr.builder.RnrBuilder;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.repository.RnrRepository;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static org.hamcrest.core.Is.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
@@ -122,13 +124,14 @@ public class RnrServiceTest {
   }
 
   @Test
-  public void shouldSubmitValidRnrAndSetMessage() {
+  public void shouldSubmitValidRnrWithSubmittedDateAndSetMessage() {
     when(rnrRepository.getById(rnr.getId())).thenReturn(initiatedRnr);
     doReturn(true).when(rnr).validate(false);
     when(supervisoryNodeService.getFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(new SupervisoryNode());
     OpenLmisMessage message = rnrService.submit(rnr);
     verify(rnrRepository).update(rnr);
 
+    assertThat(rnr.getSubmittedDate(), is(notNullValue()));
     assertThat(rnr.getStatus(), is(SUBMITTED));
     assertThat(message.getCode(), is("rnr.submitted.success"));
   }
@@ -253,10 +256,10 @@ public class RnrServiceTest {
 
     when(facilityService.getUserSupervisedFacilities(USER_ID, program1.getId(), APPROVE_REQUISITION)).thenReturn(facilityList1);
     when(facilityService.getUserSupervisedFacilities(USER_ID, program2.getId(), APPROVE_REQUISITION)).thenReturn(facilityList2);
-    List<Rnr> expectedRequisitions = new ArrayList<>();
+    List<RnrDTO> expectedRequisitions = new ArrayList<>();
     when(rnrRepository.getSubmittedRequisitionsForFacilitiesAndPrograms(facilities, programs)).thenReturn(expectedRequisitions);
 
-    List<Rnr> resultRequisitions = rnrService.fetchUserSupervisedRnrForApproval(USER_ID);
+    List<RnrDTO> resultRequisitions = rnrService.fetchUserSupervisedRnrForApproval(USER_ID);
 
 
     assertThat(resultRequisitions, is(expectedRequisitions));

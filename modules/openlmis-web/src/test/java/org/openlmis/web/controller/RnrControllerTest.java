@@ -6,6 +6,7 @@ import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.service.RnrService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.HttpStatus;
@@ -153,10 +154,10 @@ public class RnrControllerTest {
 
   @Test
   public void shouldReturnListOfUserSupervisedRnrForApproval() {
-    List<Rnr> rnrList = new ArrayList<>();
+    List<RnrDTO> rnrList = new ArrayList<>();
     ResponseEntity<OpenLmisResponse> response = controller.fetchUserSupervisedRnrForApproval(request);
     verify(rnrService).fetchUserSupervisedRnrForApproval(USER_ID);
-    assertThat((List<Rnr>) response.getBody().getData().get(RNR_LIST), is(rnrList));
+    assertThat((List<RnrDTO>) response.getBody().getData().get(RNR_LIST), is(rnrList));
   }
 
   @Test

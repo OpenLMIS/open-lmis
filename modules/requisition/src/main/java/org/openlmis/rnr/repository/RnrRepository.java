@@ -9,6 +9,7 @@ import org.openlmis.rnr.domain.LossesAndAdjustments;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
+import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper;
 import org.openlmis.rnr.repository.mapper.RnrLineItemMapper;
 import org.openlmis.rnr.repository.mapper.RnrMapper;
@@ -79,11 +80,11 @@ public class RnrRepository {
 
   public Rnr getById(Integer rnrId) {
     Rnr requisition = rnrMapper.getById(rnrId);
-    if(requisition == null) throw new DataException("Requisition Not Found");
+    if (requisition == null) throw new DataException("Requisition Not Found");
     return requisition;
   }
 
-  public List<Rnr> getSubmittedRequisitionsForFacilitiesAndPrograms(List<Facility> facilities, List<Program> programs) {
+  public List<RnrDTO> getSubmittedRequisitionsForFacilitiesAndPrograms(List<Facility> facilities, List<Program> programs) {
     CommaSeparator<Facility> facilitySeparator = new CommaSeparator<>();
     CommaSeparator<Program> programSeparator = new CommaSeparator<>();
     return rnrMapper.getSubmittedRequisitionsForFacilitiesAndPrograms(facilitySeparator.commaSeparateIds(facilities),

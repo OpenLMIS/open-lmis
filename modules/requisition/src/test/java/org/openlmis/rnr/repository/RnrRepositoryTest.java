@@ -14,6 +14,7 @@ import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.rnr.domain.LossesAndAdjustments;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
+import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper;
 import org.openlmis.rnr.repository.mapper.RnrLineItemMapper;
 import org.openlmis.rnr.repository.mapper.RnrMapper;
@@ -139,7 +140,7 @@ public class RnrRepositoryTest {
 
   @Test
   public void shouldGetRequisitionByFacilitiesAndPrograms() throws Exception {
-    List<Rnr> expectedRequisitions = new ArrayList<>();
+    List<RnrDTO> expectedRequisitions = new ArrayList<>();
     when(rnrMapper.getSubmittedRequisitionsForFacilitiesAndPrograms("{1, 2}", "{1, 2}")).thenReturn(expectedRequisitions);
 
     List<Facility> facilities = new ArrayList<>();
@@ -160,7 +161,7 @@ public class RnrRepositoryTest {
     programs.add(program1);
     programs.add(program2);
 
-    List<Rnr> resultRequisitions = rnrRepository.getSubmittedRequisitionsForFacilitiesAndPrograms(facilities, programs);
+    List<RnrDTO> resultRequisitions = rnrRepository.getSubmittedRequisitionsForFacilitiesAndPrograms(facilities, programs);
 
     verify(rnrMapper).getSubmittedRequisitionsForFacilitiesAndPrograms("{1, 2}", "{1, 2}");
     assertThat(resultRequisitions, is(expectedRequisitions));

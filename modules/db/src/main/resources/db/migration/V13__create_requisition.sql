@@ -8,6 +8,7 @@ CREATE TABLE requisition (
   fullSupplyItemsSubmittedCost    NUMERIC(15, 4),
   nonFullSupplyItemsSubmittedCost NUMERIC(15, 4),
   modifiedBy                      VARCHAR(50),
+  submittedDate                   TIMESTAMP,
   modifiedDate                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   UNIQUE (facilityId, programId, periodId)
 );

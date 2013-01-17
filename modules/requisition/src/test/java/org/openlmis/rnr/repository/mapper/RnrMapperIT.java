@@ -13,12 +13,14 @@ import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProcessingPeriodMapper;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.dto.RnrDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -27,8 +29,8 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.*;
+import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
-import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext-requisition.xml")
@@ -95,6 +97,8 @@ public class RnrMapperIT {
   public void shouldUpdateRequisition() {
     rnrMapper.insert(requisition);
     requisition.setModifiedBy(USER_2);
+    Date submittedDate = new Date();
+    requisition.setSubmittedDate(submittedDate);
 //    requisition.setFullSupplyItemsSubmittedCost(100.5F);
 //    requisition.setTotalSubmittedCost(100.5F);
 
@@ -104,6 +108,7 @@ public class RnrMapperIT {
 
     assertThat(updatedRequisition.getId(), is(requisition.getId()));
     assertThat(updatedRequisition.getModifiedBy(), is(equalTo(USER_2)));
+    assertThat(updatedRequisition.getSubmittedDate(), is(submittedDate));
 //    assertThat(updatedRequisition.getFullSupplyItemsSubmittedCost(), is(100.5F));
 //    assertThat(updatedRequisition.getTotalSubmittedCost(), is(100.5F));
   }
@@ -141,7 +146,7 @@ public class RnrMapperIT {
     requisition.setProgramId(programId);
     rnrMapper.insert(requisition);
 
-    List<Rnr> requisitions = rnrMapper.getSubmittedRequisitionsForFacilitiesAndPrograms("{" + facility.getId() + "}", "{" + programId + "}");
+    List<RnrDTO> requisitions = rnrMapper.getSubmittedRequisitionsForFacilitiesAndPrograms("{" + facility.getId() + "}", "{" + programId + "}");
 
     assertThat(requisitions.size(), is(0));
   }
@@ -150,12 +155,13 @@ public class RnrMapperIT {
   public void shouldGetRequisitionsInSubmittedStateForFacilitiesAndPrograms() throws Exception {
     Integer programId = 1;
     requisition.setProgramId(programId);
-    requisition.setStatus(SUBMITTED);
+    requisition.setStatus(AUTHORIZED);
     rnrMapper.insert(requisition);
 
-    List<Rnr> requisitions = rnrMapper.getSubmittedRequisitionsForFacilitiesAndPrograms("{" + facility.getId() + "}", "{" + programId + "}");
+    List<RnrDTO> requisitions = rnrMapper.getSubmittedRequisitionsForFacilitiesAndPrograms("{" + facility.getId() + "}", "{" + programId + "}");
 
+    RnrDTO rnr = requisitions.get(0);
     assertThat(requisitions.size(), is(1));
-    assertThat(requisitions.get(0).getId(), is(requisition.getId()));
+    assertThat(rnr.getId(), is(requisition.getId()));
   }
 }
