@@ -3,6 +3,7 @@ package org.openlmis.core.repository.mapper;
 import org.junit.Test;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
+import org.openlmis.core.builder.ProgramSupportedBuilder;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.service.SpringIntegrationTest;
@@ -145,7 +146,6 @@ public class ProgramMapperIT extends SpringIntegrationTest {
 
   @Test
   public void shouldFetchActiveProgramsSupportedByAFacilityForAUserWithRight() {
-
     Program activeProgram = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
     Program anotherActiveProgram = insertProgram(make(a(defaultProgram, with(programCode, "p2"))));
     Program inactiveProgram = insertProgram(make(a(defaultProgram, with(programCode, "p3"), with(programStatus, false))));
@@ -219,7 +219,11 @@ public class ProgramMapperIT extends SpringIntegrationTest {
 
 
   private void insertProgramSupportedForFacility(Program program, Facility facility, boolean isActive) {
-    programSupportedMapper.addSupportedProgram(new ProgramSupported(facility.getId(), program.getId(), isActive, null, null));
+    ProgramSupported supportedProgram = make(a(defaultProgramSupported,
+        with(supportedFacilityId, facility.getId()),
+        with(supportedProgramId, program.getId()),
+        with(ProgramSupportedBuilder.isActive, isActive)));
+    programSupportedMapper.addSupportedProgram(supportedProgram);
   }
 
   private Facility insertFacility(Facility facility) {

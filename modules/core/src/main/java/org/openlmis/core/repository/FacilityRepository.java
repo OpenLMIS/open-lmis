@@ -126,7 +126,7 @@ public class FacilityRepository {
         for (Program supportedProgram : facility.getSupportedPrograms()) {
             if (!(previouslySupportedPrograms).contains(supportedProgram)) {
                 ProgramSupported newProgramsSupported = new ProgramSupported(facility.getId(), supportedProgram.getId(),
-                        supportedProgram.getActive(), facility.getModifiedBy(), facility.getModifiedDate());
+                        supportedProgram.getActive(), null, facility.getModifiedDate(), facility.getModifiedBy());
                 insertSupportedProgram(newProgramsSupported);
             }
         }
@@ -135,7 +135,7 @@ public class FacilityRepository {
     private void addListOfSupportedPrograms(Facility facility) {
         List<Program> supportedPrograms = facility.getSupportedPrograms();
         for (Program supportedProgram : supportedPrograms) {
-            ProgramSupported programSupported = new ProgramSupported(facility.getId(), supportedProgram.getId(), supportedProgram.getActive(), facility.getModifiedBy(), facility.getModifiedDate());
+            ProgramSupported programSupported = new ProgramSupported(facility.getId(), supportedProgram.getId(), supportedProgram.getActive(), null, facility.getModifiedDate(), facility.getModifiedBy());
             insertSupportedProgram(programSupported);
         }
     }

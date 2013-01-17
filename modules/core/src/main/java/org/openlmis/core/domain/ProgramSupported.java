@@ -15,6 +15,7 @@ public class ProgramSupported implements Importable {
 
   private Integer facilityId;
   private Integer programId;
+  private Date startDate;
 
   @ImportField(mandatory = true, name = "Facility Code")
   private String facilityCode;
@@ -28,10 +29,11 @@ public class ProgramSupported implements Importable {
   private String modifiedBy;
   private Date modifiedDate;
 
-  public ProgramSupported(Integer facilityId, Integer programId, Boolean active, String modifiedBy, Date modifiedDate) {
+  public ProgramSupported(Integer facilityId, Integer programId, Boolean active, Date startDate, Date modifiedDate, String modifiedBy) {
     this.facilityId = facilityId;
     this.programId = programId;
     this.active = active;
+    this.startDate = startDate;
     this.modifiedBy = modifiedBy;
     this.modifiedDate = modifiedDate;
   }

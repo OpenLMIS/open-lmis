@@ -11,13 +11,10 @@ import java.util.List;
 
 @Repository
 public interface ProgramSupportedMapper {
-  //TODO : Change the OR query.
   @Insert("INSERT INTO programs_supported" +
-      "(facilityId, programId, active, modifiedBy, modifiedDate) VALUES (" +
-      "#{facilityId}, #{programId}, " +
-      "#{active}, #{modifiedBy}, #{modifiedDate})")
+      "(facilityId, programId, active, startDate, modifiedBy, modifiedDate) VALUES (" +
+      "#{facilityId}, #{programId}, #{active}, #{startDate}, #{modifiedBy}, #{modifiedDate})")
   void addSupportedProgram(ProgramSupported programSupported);
-
 
   @Select("SELECT * FROM programs_supported " +
       "WHERE facilityId = #{facilityId} AND programId = #{programId}")
@@ -25,6 +22,4 @@ public interface ProgramSupportedMapper {
 
   @Delete("DELETE FROM programs_supported WHERE facilityId = #{facilityId} AND programId = #{programId}")
   void delete(@Param(value = "facilityId") Integer facilityId, @Param(value = "programId") Integer programId);
-
-
 }

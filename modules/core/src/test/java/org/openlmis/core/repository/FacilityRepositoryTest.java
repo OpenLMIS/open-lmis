@@ -289,7 +289,7 @@ public class FacilityRepositoryTest {
     repository.save(facility);
 
     verify(mockedProgramMapper).getByFacilityId(facility.getId());
-    verify(mockedProgramSupportedMapper).addSupportedProgram(new ProgramSupported(facility.getId(), 1, true, facility.getModifiedBy(), facility.getModifiedDate()));
+    verify(mockedProgramSupportedMapper).addSupportedProgram(new ProgramSupported(facility.getId(), 1, true, null, facility.getModifiedDate(), facility.getModifiedBy()));
     verify(mockedProgramSupportedMapper).delete(facility.getId(), 2);
   }
 
