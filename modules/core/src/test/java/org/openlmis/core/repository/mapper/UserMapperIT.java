@@ -16,6 +16,7 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
@@ -107,6 +108,46 @@ public class UserMapperIT {
     user.setPassword(null);
     assertThat(result, is(user));
   }
+
+  @Test
+  public void shouldGetUsersWithValidSearchedFirstNameValue() throws Exception {
+    String userSearchValue = "xcv";
+    User user = make(a(defaultUser,with(firstName,"xcvf"),with(lastName,"Frank"),with(userName,"JFrank"),with(facilityId, facility.getId())));
+    userMapper.insert(user);
+    List<User> listOfUsers = userMapper.getUserWithSearchedName(userSearchValue);
+
+    User userResult = listOfUsers.get(0);
+
+    assertThat(userResult.getFirstName(),is(user.getFirstName()));
+  }
+
+  @Test
+  public void shouldGetUsersWithValidSearchedLastNameValue() throws Exception {
+    String userSearchValue = "Frank";
+    User user = make(a(defaultUser,with(firstName,"Tom"),with(lastName,"Franks"),with(userName,"JFrancis"),with(facilityId, facility.getId())));
+
+    userMapper.insert(user);
+
+    List<User> listOfUsers = userMapper.getUserWithSearchedName(userSearchValue);
+    User userResult = listOfUsers.get(0);
+
+    assertThat(userResult.getLastName(),is(user.getLastName()));
+  }
+
+  @Test
+  public void shouldNotGetUsersWithInvalidSearchedNameValue() throws Exception {
+    String userSearchValue = "Tom";
+    User user = make(a(defaultUser,with(firstName,"Harry"),with(lastName,"Bett") , with(userName,"HBett"),with(facilityId, facility.getId())));
+
+    userMapper.insert(user);
+
+    List<User> listOfUsers = userMapper.getUserWithSearchedName(userSearchValue);
+
+    assertFalse(listOfUsers.contains(user));
+  }
+
+
+
 
   private Program insertProgram(Program program) {
     programMapper.insert(program);

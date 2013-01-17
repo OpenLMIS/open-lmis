@@ -14,6 +14,10 @@ import org.openlmis.email.domain.EmailMessage;
 import org.openlmis.email.exception.EmailException;
 import org.openlmis.email.service.EmailService;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static junit.framework.Assert.assertTrue;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.*;
 
@@ -89,5 +93,20 @@ public class UserServiceTest {
     expectedException.expectMessage(UserService.USER_EMAIL_NOT_FOUND);
 
     userService.sendForgotPasswordEmail(user);
+  }
+
+  @Test
+  public void shouldReturnSearchResultsWhenUserExists() throws Exception {
+    User user = new User();
+    user.setUserName("ab");;
+    String userSearchParam="abc";
+    List<User> listOfUsers = new ArrayList<User>();
+    listOfUsers.add(user);
+
+    when(userRepository.searchUser(userSearchParam)).thenReturn(listOfUsers);
+
+    List<User> listOfReturnedUsers = userService.searchUser(userSearchParam);
+
+    assertTrue(listOfReturnedUsers.contains(user));
   }
 }

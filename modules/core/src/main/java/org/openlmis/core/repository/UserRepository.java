@@ -72,4 +72,8 @@ public class UserRepository {
   public User getByUsername(String username) {
     return userMapper.get(username);
   }
+
+  public List<User> searchUser(String userSearchParam) {
+     return userMapper.getUserWithSearchedName(userSearchParam);
+  }
 }

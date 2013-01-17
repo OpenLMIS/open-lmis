@@ -8,7 +8,8 @@ INSERT INTO roles
   ((select id from roles where name = 'Admin'), 'MANAGE_FACILITY'),
   ((select id from roles where name = 'Admin'), 'MANAGE_ROLE'),
   ((select id from roles where name = 'Admin'), 'MANAGE_SCHEDULE'),
-  ((select id from roles where name = 'Admin'), 'CONFIGURE_RNR');
+  ((select id from roles where name = 'Admin'), 'CONFIGURE_RNR'),
+  ((select id from roles where name = 'Admin'), 'MANAGE_USERS');
 
 INSERT INTO users
   (userName, password, facilityId, firstName, lastName, email) VALUES

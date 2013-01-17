@@ -7,6 +7,7 @@ import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.hash.Encoder;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -21,9 +22,8 @@ import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class UserControllerTest {
@@ -98,4 +98,40 @@ public class UserControllerTest {
     assertThat(response.getBody().getErrorMsg(), is("some error"));
   }
 
+  @Test
+  public void shouldSaveUser() throws Exception {
+    User user = new User();
+    ResponseEntity<OpenLmisResponse> response = userController.save(user);
+
+    verify(userService).save(user);
+
+    assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    assertThat(response.getBody().getSuccessMsg(), is("User saved successfully"));
+    assertThat(user.getPassword(), is(Encoder.hash("openLmis123")));
+  }
+
+  @Test
+  public void shouldReturnErrorIfSaveUserFails() throws Exception {
+    User user = new User();
+    doThrow(new DataException("Save user failed")).when(userService).save(user);
+
+    ResponseEntity<OpenLmisResponse> response = userController.save(user);
+
+    assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+    assertThat(response.getBody().getErrorMsg(), is("Save user failed"));
+  }
+
+  @Test
+  public void shouldReturnUserDetailsIfUserExists() throws Exception {
+    String userSearchParam = "Admin";
+    List<User> listOfUsers = new ArrayList<User>();
+    User userReturned = new User();
+    listOfUsers.add(userReturned);
+
+    when(userService.searchUser(userSearchParam)).thenReturn(listOfUsers);
+
+    List<User> userList = userController.searchUser(userSearchParam);
+
+    assertTrue(userList.contains(userReturned));
+  }
 }

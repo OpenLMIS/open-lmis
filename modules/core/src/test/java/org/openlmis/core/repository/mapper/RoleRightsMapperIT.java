@@ -48,7 +48,7 @@ public class RoleRightsMapperIT {
   @Test
   public void shouldSetupRightsForAdminRole() {
     List<Right> adminRights = roleRightsMapper.getAllRightsForUserByUserName("Admin123");
-    assertEquals(5, adminRights.size());
+    assertEquals(6, adminRights.size());
     Assert.assertTrue(adminRights.containsAll(asList(CONFIGURE_RNR, MANAGE_FACILITY, MANAGE_ROLE, MANAGE_SCHEDULE, UPLOADS)));
   }
 

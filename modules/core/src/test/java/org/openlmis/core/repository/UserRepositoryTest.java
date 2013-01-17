@@ -20,7 +20,9 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static com.natpryce.makeiteasy.MakeItEasy.with;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.*;
@@ -128,5 +130,29 @@ public class UserRepositoryTest {
 
     assertThat(expectedUser,is(returnedUser));
 
+  }
+
+  @Test
+  public void shouldReturnUserIfUserWithSearchCriteriaExists() throws Exception {
+    String userSearchParam = "abc";
+    User user = new User();
+    List<User> listOfUsers = new ArrayList<User>();
+    listOfUsers.add(user);
+
+    when(userMapper.getUserWithSearchedName(userSearchParam)).thenReturn(listOfUsers);
+
+    List<User> listOfUsersReturned = userRepository.searchUser(userSearchParam);
+
+    assertTrue(listOfUsersReturned.contains(user));
+  }
+
+  @Test
+  public void shouldReturnMessageIfNoUserExistsWithTheSearchCriteria() throws Exception {
+    String userSearchParam = "xyz";
+    when(userRepository.searchUser(userSearchParam)).thenReturn(null);
+
+    List<User> userList = userRepository.searchUser(userSearchParam);
+
+    assertThat(userList,is(nullValue()));
   }
 }

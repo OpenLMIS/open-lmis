@@ -9,6 +9,7 @@ import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -59,5 +61,29 @@ public class UserController extends BaseController {
     } catch (DataException e) {
       return OpenLmisResponse.error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
     }
+  }
+
+  @RequestMapping(value = "/admin/users", method = RequestMethod.POST, headers = "Accept=application/json")
+  @PreAuthorize("hasPermission('','MANAGE_USERS')")
+  public ResponseEntity<OpenLmisResponse> save(@RequestBody User user) {
+    try {
+      user.setPassword("openLmis123");
+
+      userService.save(user);
+
+      ResponseEntity<OpenLmisResponse> successResponse = OpenLmisResponse.success("User saved successfully");
+      successResponse.getBody().setData("user", user);
+      return successResponse;
+    } catch (DataException e) {
+      ResponseEntity<OpenLmisResponse> errorResponse = OpenLmisResponse.error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
+      errorResponse.getBody().setData("user", user);
+      return errorResponse;
+    }
+  }
+
+  @RequestMapping(value = "/admin/search-user",method=RequestMethod.GET)
+  @PreAuthorize("hasPermission('',MANAGE_USERS)")
+  public List<User> searchUser(@RequestParam String userSearchParam) {
+    return userService.searchUser(userSearchParam);
   }
 }

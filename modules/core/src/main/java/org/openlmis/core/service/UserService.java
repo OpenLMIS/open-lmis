@@ -10,6 +10,7 @@ import org.openlmis.email.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -66,4 +67,7 @@ public class UserService {
     return UUID.randomUUID().toString();
   }
 
+  public List<User> searchUser(String userSearchParam) {
+    return userRepository.searchUser(userSearchParam);
+  }
 }

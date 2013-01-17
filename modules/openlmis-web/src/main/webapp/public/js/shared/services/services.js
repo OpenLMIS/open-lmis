@@ -20,6 +20,10 @@ services.factory('Facility', function ($resource) {
     return $resource('/admin/facility/:id.json', {}, {});
 });
 
+services.factory('Users', function ($resource) {
+    return $resource('/admin/users.json', {}, {});
+});
+
 services.factory('UserFacilityList', function ($resource) {
     return $resource('/logistics/user/facilities.json', {}, {});
 });
@@ -107,4 +111,8 @@ services.factory('SupportedUploads', function ($resource) {
 
 services.factory('ForgotPassword', function ($resource) {
   return $resource('/forgot-password.json', {}, {});
+});
+
+services.factory('SearchUserByFirstOrLastName', function ($resource) {
+  return $resource('/admin/search-user.json', {}, {});
 });

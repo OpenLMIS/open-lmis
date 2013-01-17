@@ -6,4 +6,5 @@ INSERT INTO rights(name, description) VALUES
  ('CONFIGURE_RNR','Permission to create and edit r&r template for any program'),
  ('CREATE_REQUISITION', 'Permission to create, edit, submit and recall requisitions'),
  ('APPROVE_REQUISITION','Permission to approve requisitions'),
- ('AUTHORIZE_REQUISITION','Permission to edit, authorize and recall requisitions');
+ ('AUTHORIZE_REQUISITION','Permission to edit, authorize and recall requisitions'),
+ ('MANAGE_USERS','Permission to create and view users');

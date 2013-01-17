@@ -35,4 +35,7 @@ public interface UserMapper {
       "WHERE RA.programId = #{programId} AND RA.supervisoryNodeId = #{supervisoryNodeId} AND RR.rightName = #{right}"})
   @Results(@Result(property = "supervisor.id", column = "supervisorId"))
   List<User> getUsersWithRightInNodeForProgram(@Param("programId") Integer programId, @Param("supervisoryNodeId") Integer supervisoryNodeId, @Param("right") Right right);
+
+  @Select(value="SELECT firstName,lastName FROM users where firstName like '%'|| #{userSearchParam} ||'%' OR lastName like '%'|| #{userSearchParam} ||'%'")
+  List<User> getUserWithSearchedName(String userSearchParam);
 }
