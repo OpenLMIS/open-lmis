@@ -62,15 +62,20 @@ public class HomePage extends Page {
     @FindBy(how = How.XPATH, using = "//a[contains(@href,'/public/pages/logistics/rnr/create.html')]")
     private static WebElement createRnRLink;
 
-    @FindBy(how = How.XPATH, using = "//select[@ng-change='loadPrograms()']")
+    @FindBy(how = How.ID, using = "facilityList")
     private static WebElement facilityDropDown;
 
     @FindBy(how = How.XPATH, using = "//option[@value='0']")
     private static WebElement programDropDown;
 
+    @FindBy(how = How.XPATH, using = "//option[@value='0']")
+    private static WebElement periodDropDown;
+
     @FindBy(how = How.XPATH, using = "//select[2]")
     private static WebElement programDropDownSelect;
 
+    @FindBy(how = How.XPATH, using = "//select[3]")
+    private static WebElement periodDropDownSelect;
 
     @FindBy(how = How.XPATH, using = "//input[@value='Next']")
     private static WebElement nextButton;
@@ -133,7 +138,7 @@ public class HomePage extends Page {
         return new TemplateConfigPage(testWebDriver);
     }
 
-    public InitiateRnRPage navigateAndInitiateRnr(String FCode, String FName, String FCstring, String program) throws IOException {
+    public InitiateRnRPage navigateAndInitiateRnr(String FCode, String FName, String FCstring, String program, String period) throws IOException {
         testWebDriver.waitForElementToAppear(requisitionsLink);
         requisitionsLink.click();
         testWebDriver.waitForElementToAppear(createLink);
@@ -145,6 +150,9 @@ public class HomePage extends Page {
         testWebDriver.waitForElementToAppear(programDropDown);
         programDropDown.click();
         testWebDriver.selectByVisibleText(programDropDownSelect, program);
+        testWebDriver.waitForElementToAppear(periodDropDown);
+        periodDropDown.click();
+        testWebDriver.selectByVisibleText(periodDropDownSelect, period);
         nextButton.click();
         return new InitiateRnRPage(testWebDriver);
     }

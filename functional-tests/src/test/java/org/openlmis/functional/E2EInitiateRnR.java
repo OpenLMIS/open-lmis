@@ -27,7 +27,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     }
 
     @Test(dataProvider = "Data-Provider-Function-Positive")
-    public void testE2EInitiateRnR(String program,String user, String password,String[] credentials) throws Exception {
+    public void testE2EInitiateRnR(String period,String program,String user, String password,String[] credentials) throws Exception {
 
         DBWrapper dbWrapper = new DBWrapper();
 
@@ -41,8 +41,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
         dbWrapper.insertRequisitionGroup();
         dbWrapper.insertSchedules();
         dbWrapper.insertRequisitionGroupProgramSchedule();
-        dbWrapper.insertRequisitionGroupMembers("F10", "F11");
-        dbWrapper.insertProcessingPeriods();
+
 
 
 
@@ -52,10 +51,19 @@ public class E2EInitiateRnR extends TestCaseHelper {
         CreateFacilityPage createFacilityPage = homePage.navigateCreateFacility();
         String date_time=createFacilityPage.enterAndVerifyFacility();
 
+        String facility_name="FCcode" + date_time;
+        dbWrapper.insertRequisitionGroupMembers("F10", facility_name);
+        dbWrapper.insertProcessingPeriods();
+
         dbWrapper.allocateFacilityToUser("200");
 
         TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
         templateConfigPage.configureTemplate();
+
+//        ManageSchedulePage manageSchedulePage=homePage.navigateToSchedule();
+//        manageSchedulePage.createAndVerifySchedule();
+//        PeriodsPage periodsPage=manageSchedulePage.navigatePeriods();
+//        periodsPage.createAndVerifyPeriods();
 
         RolesPage rolesPage = homePage.navigateRoleAssignments();
         List<String> userRoleList = new ArrayList<>();
@@ -68,7 +76,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
         LoginPage loginPageSecond=homePage.logout();
         HomePage homePageUser = loginPageSecond.loginAs(user, password);
 
-        InitiateRnRPage initiateRnRPage = homePageUser.navigateAndInitiateRnr("FCcode", "FCname", date_time, program);
+        InitiateRnRPage initiateRnRPage = homePageUser.navigateAndInitiateRnr("FCcode", "FCname", date_time, program, period);
         initiateRnRPage.verifyRnRHeader("FCcode", "FCname", date_time, program);
 
         initiateRnRPage.calculateAndVerifyStockOnHand(10,10,10,1);
@@ -101,7 +109,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     @DataProvider(name = "Data-Provider-Function-Positive")
     public Object[][] parameterIntTestProviderPositive() {
         return new Object[][]{
-                {"HIV","User123", "User123",new String[]{"Admin123", "Admin123"}}
+                {"Period2","HIV","User123", "User123",new String[]{"Admin123", "Admin123"}}
         };
 
     }

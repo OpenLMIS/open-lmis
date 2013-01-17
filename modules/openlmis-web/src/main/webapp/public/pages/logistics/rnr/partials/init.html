@@ -1,19 +1,19 @@
 <div ng-controller="InitiateMyFacilityRnrController">
   <h2>Initiate Report and Requisition</h2>
   <label>Facility</label>
-  <select ng-model="$parent.selectedFacilityId" ng-options="i.id as i.code + '-' + i.name for i in facilities"
+  <select id="facilityList" ng-model="$parent.selectedFacilityId" ng-options="i.id as i.code + '-' + i.name for i in facilities"
           ng-change="loadPrograms()">
     <option value="">{{facilityOptionMessage()}}</option>
   </select> <br/>
   <br/>
   <label>Program</label>
-  <select ng-model="$parent.selectedProgram" ng-options="i as i.name for i in programs"
+  <select id="programList" ng-model="$parent.selectedProgram" ng-options="i as i.name for i in programs"
           ng-change="loadPeriods()">
     <option value="">{{programOptionMessage()}}</option>
   </select> <br/>
   <br/>
   <label>Period</label>
-  <select ng-model="$parent.selectedPeriod" ng-options="i as i.name for i in periods">
+  <select id="periodList" ng-model="$parent.selectedPeriod" ng-options="i as i.name for i in periods">
     <option value="">{{periodOptionMessage()}}</option>
   </select> <br/>
   <br/>

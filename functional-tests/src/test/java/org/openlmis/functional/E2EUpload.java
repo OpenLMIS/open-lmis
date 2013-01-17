@@ -87,11 +87,11 @@ public class E2EUpload extends TestCaseHelper {
 
 
 
-        LoginPage loginPageSecond=homePage.logout();
-        HomePage homePageUser = loginPageSecond.loginAs("User123", "User123");
-
-        InitiateRnRPage initiateRnRPage = homePageUser.navigateAndInitiateRnr("F11","F11 Village Dispensary", "", "HIV");
-        initiateRnRPage.verifyRnRHeader("F11","F11 Village Dispensary", "", "HIV");
+//        LoginPage loginPageSecond=homePage.logout();
+//        HomePage homePageUser = loginPageSecond.loginAs("User123", "User123");
+//
+//        InitiateRnRPage initiateRnRPage = homePageUser.navigateAndInitiateRnr("F11","F11 Village Dispensary", "", "HIV", "Period2");
+//        initiateRnRPage.verifyRnRHeader("F11","F11 Village Dispensary", "", "HIV");
 
     }
     @AfterClass
