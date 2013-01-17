@@ -13,12 +13,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.openlmis.web.controller.RnrController.RNR;
+import static org.openlmis.web.controller.RnrController.RNR_LIST;
 import static org.powermock.api.mockito.PowerMockito.doThrow;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -145,6 +149,23 @@ public class RnrControllerTest {
     ResponseEntity<OpenLmisResponse> response = controller.saveRnr(rnr, rnr.getId(), request);
     verify(rnrService).save(rnr);
     assertThat(response.getBody().getSuccessMsg(), is("R&R saved successfully!"));
+  }
+
+  @Test
+  public void shouldReturnListOfUserSupervisedRnrForApproval() {
+    List<Rnr> rnrList = new ArrayList<>();
+    ResponseEntity<OpenLmisResponse> response = controller.fetchUserSupervisedRnrForApproval(request);
+    verify(rnrService).fetchUserSupervisedRnrForApproval(USER_ID);
+    assertThat((List<Rnr>) response.getBody().getData().get(RNR_LIST), is(rnrList));
+  }
+
+  @Test
+  public void shouldReturnErrorResponseIfAnyExceptionInFetchingRnrList() {
+    String errorMessage = "some error";
+    doThrow(new DataException(errorMessage)).when(rnrService).fetchUserSupervisedRnrForApproval(USER_ID);
+    ResponseEntity<OpenLmisResponse> response = controller.fetchUserSupervisedRnrForApproval(request);
+    verify(rnrService).fetchUserSupervisedRnrForApproval(USER_ID);
+    assertThat(response.getBody().getErrorMsg(), is(errorMessage));
   }
 }
 

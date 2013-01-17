@@ -15,6 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static org.openlmis.web.response.OpenLmisResponse.*;
@@ -25,6 +27,7 @@ public class RnrController extends BaseController {
 
   public static final String RNR = "rnr";
   public static final String RNR_SAVE_SUCCESS = "rnr.save.success";
+  public static final String RNR_LIST = "rnr_list";
   private RnrService rnrService;
 
 
@@ -108,4 +111,17 @@ public class RnrController extends BaseController {
       return error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
     }
   }
+
+  @RequestMapping(value = "/requisitions/approve", method = RequestMethod.PUT, headers = "Accept=application/json")
+  @PreAuthorize("hasPermission('', 'APPROVE_REQUISITION')")
+  public ResponseEntity<OpenLmisResponse> fetchUserSupervisedRnrForApproval(HttpServletRequest request) {
+    List<Rnr> requisitions = new ArrayList<>();
+    try {
+      requisitions = rnrService.fetchUserSupervisedRnrForApproval(loggedInUserId(request));
+    } catch (DataException e) {
+      return error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
+    }
+    return response(RNR_LIST, requisitions);
+  }
+
 }
