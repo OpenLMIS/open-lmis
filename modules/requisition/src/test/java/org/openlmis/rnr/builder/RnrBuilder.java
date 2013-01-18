@@ -7,6 +7,8 @@ import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.domain.RnrStatus;
 
+import java.util.Date;
+
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static com.natpryce.makeiteasy.Property.newProperty;
@@ -14,6 +16,8 @@ import static com.natpryce.makeiteasy.Property.newProperty;
 public class RnrBuilder {
 
   public static final Property<Rnr, RnrStatus> status = newProperty();
+  public static final Property<Rnr, Date> submittedDate = newProperty();
+
   public static final Instantiator<Rnr> defaultRnr = new Instantiator<Rnr>() {
 
     @Override
@@ -23,6 +27,7 @@ public class RnrBuilder {
       rnr.setFacilityId(1);
       rnr.setProgramId(1);
       rnr.setStatus(lookup.valueOf(status, RnrStatus.INITIATED));
+      rnr.setSubmittedDate(lookup.valueOf(submittedDate, new Date()));
       RnrLineItem rnrLineItemCost48 = make(a(RnrLineItemBuilder.defaultRnrLineItem));
       rnr.add(rnrLineItemCost48);
 

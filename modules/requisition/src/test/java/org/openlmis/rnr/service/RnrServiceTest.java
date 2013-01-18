@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -28,9 +29,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
-import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
-import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
-import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.rnr.builder.RnrBuilder.defaultRnr;
 import static org.openlmis.rnr.builder.RnrBuilder.status;
 import static org.openlmis.rnr.domain.RnrStatus.*;
@@ -64,15 +63,14 @@ public class RnrServiceTest {
   @Mock
   FacilityService facilityService;
 
-  private Rnr rnr;
+
   private Rnr submittedRnr;
   private Rnr initiatedRnr;
 
   @Before
   public void setup() {
     rnrService = new RnrService(rnrRepository, rnrTemplateRepository, facilityApprovedProductService,
-      supervisoryNodeService, roleRightService, facilityService, programService);
-    rnr = spy(make(a(defaultRnr)));
+        supervisoryNodeService, roleRightService, facilityService, programService);
     submittedRnr = make(a(RnrBuilder.defaultRnr, with(status, SUBMITTED)));
     initiatedRnr = make(a(RnrBuilder.defaultRnr, with(status, INITIATED)));
   }
@@ -113,6 +111,8 @@ public class RnrServiceTest {
 
   @Test
   public void shouldReturnMessageWhileSubmittingRnrIfSupervisingNodeNotPresent() {
+    Rnr rnr = spy(make(a(defaultRnr)));
+
     when(rnrRepository.getById(rnr.getId())).thenReturn(initiatedRnr);
     doReturn(true).when(rnr).validate(false);
     when(supervisoryNodeService.getFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(null);
@@ -125,6 +125,7 @@ public class RnrServiceTest {
 
   @Test
   public void shouldSubmitValidRnrWithSubmittedDateAndSetMessage() {
+    Rnr rnr = spy(make(a(defaultRnr)));
     when(rnrRepository.getById(rnr.getId())).thenReturn(initiatedRnr);
     doReturn(true).when(rnr).validate(false);
     when(supervisoryNodeService.getFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(new SupervisoryNode());
@@ -138,6 +139,7 @@ public class RnrServiceTest {
 
   @Test
   public void shouldAuthorizeAValidRnr() throws Exception {
+    Rnr rnr = spy(make(a(defaultRnr)));
     when(rnrRepository.getById(rnr.getId())).thenReturn(submittedRnr);
     when(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId())).thenReturn(true);
     doReturn(true).when(rnr).validate(true);
@@ -153,7 +155,21 @@ public class RnrServiceTest {
   }
 
   @Test
+  public void shouldNotOverwriteSubmittedDateWhenAuthorizing() {
+    Date submittedDate = new Date(1465555522222L);
+    submittedRnr.setSubmittedDate(submittedDate);
+    Rnr rnrForAuthorizing = spy(make(a(defaultRnr)));
+    when(rnrRepository.getById(rnrForAuthorizing.getId())).thenReturn(submittedRnr);
+
+    rnrService.authorize(rnrForAuthorizing);
+
+    verify(rnrRepository).update(rnrForAuthorizing);
+    assertThat(rnrForAuthorizing.getSubmittedDate(), is(submittedDate));
+  }
+
+  @Test
   public void shouldAuthorizeAValidRnrAndAdviseUserIfRnrDoesNotHaveApprover() throws Exception {
+    Rnr rnr = spy(make(a(defaultRnr)));
     when(rnrRepository.getById(rnr.getId())).thenReturn(submittedRnr);
     when(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId())).thenReturn(true);
     when(supervisoryNodeService.getApproverFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(null);
@@ -170,6 +186,7 @@ public class RnrServiceTest {
 
   @Test
   public void shouldNotAuthorizeInvalidRnr() throws Exception {
+    Rnr rnr = spy(make(a(defaultRnr)));
     when(rnrRepository.getById(rnr.getId())).thenReturn(submittedRnr);
     when(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId())).thenReturn(true);
     doThrow(new DataException("error-message")).when(rnr).validate(true);
@@ -181,6 +198,7 @@ public class RnrServiceTest {
 
   @Test
   public void shouldNotAuthorizeRnrIfNotSubmitted() throws Exception {
+    Rnr rnr = spy(make(a(defaultRnr)));
     when(rnrRepository.getById(rnr.getId())).thenReturn(initiatedRnr);
 
     expectedException.expect(DataException.class);
@@ -191,6 +209,7 @@ public class RnrServiceTest {
 
   @Test
   public void shouldSaveRnrIfStatusIsSubmittedAndUserHasAuthorizeRight() {
+    Rnr rnr = spy(make(a(defaultRnr)));
     Integer userId = 1;
     rnr.setModifiedBy(userId);
     rnr.setStatus(SUBMITTED);
@@ -202,6 +221,7 @@ public class RnrServiceTest {
 
   @Test
   public void shouldSaveRnrIfStatusIsInitiatedAndUserHasCreateRight() {
+    Rnr rnr = spy(make(a(defaultRnr)));
     Integer userId = 1;
     rnr.setModifiedBy(userId);
     rnr.setStatus(INITIATED);
@@ -213,6 +233,7 @@ public class RnrServiceTest {
 
   @Test
   public void shouldNotSaveRnrWithStatusInitiatedIfUserHasOnlyAuthorizeRight() {
+    Rnr rnr = spy(make(a(defaultRnr)));
     Integer userId = 1;
     rnr.setModifiedBy(userId);
     rnr.setStatus(INITIATED);
@@ -225,6 +246,7 @@ public class RnrServiceTest {
 
   @Test
   public void shouldNotSaveAlreadySubmittedRnrIfUserHasOnlyCreateRequisitionRight() {
+    Rnr rnr = spy(make(a(defaultRnr)));
     Integer userId = 1;
     rnr.setModifiedBy(userId);
     rnr.setStatus(SUBMITTED);
@@ -234,6 +256,7 @@ public class RnrServiceTest {
     expectedException.expectMessage(RNR_OPERATION_UNAUTHORIZED);
     rnrService.save(rnr);
   }
+
   @Test
   public void shouldFetchAllRequisitionsForFacilitiesAndProgramSupervisedByUserForApproval() throws Exception {
 

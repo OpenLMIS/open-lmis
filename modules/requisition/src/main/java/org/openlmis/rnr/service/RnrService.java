@@ -105,10 +105,12 @@ public class RnrService {
   }
 
   public OpenLmisMessage authorize(Rnr rnr) {
-    if (rnrRepository.getById(rnr.getId()).getStatus() != SUBMITTED) throw new DataException(RNR_AUTHORIZATION_ERROR);
+    Rnr savedRnr = rnrRepository.getById(rnr.getId());
+    if (savedRnr.getStatus() != SUBMITTED) throw new DataException(RNR_AUTHORIZATION_ERROR);
 
     rnr.validate(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId()));
     rnr.calculate();
+    rnr.setSubmittedDate(savedRnr.getSubmittedDate());
     rnr.setStatus(AUTHORIZED);
     rnrRepository.update(rnr);
 
