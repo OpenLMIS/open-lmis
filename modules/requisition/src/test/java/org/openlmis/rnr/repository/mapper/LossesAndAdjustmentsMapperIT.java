@@ -39,7 +39,7 @@ public class LossesAndAdjustmentsMapperIT {
   @Autowired
   private LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
   @Autowired
-  private RnrMapper rnrMapper;
+  private RequisitionMapper requisitionMapper;
   @Autowired
   private RnrLineItemMapper rnrLineItemMapper;
   @Autowired
@@ -81,7 +81,7 @@ public class LossesAndAdjustmentsMapperIT {
 
     Rnr requisition = new Rnr(facility.getId(), HIV, processingPeriod.getId(), MODIFIED_BY);
     requisition.setStatus(INITIATED);
-    rnrMapper.insert(requisition);
+    requisitionMapper.insert(requisition);
 
     rnrLineItem = new RnrLineItem(requisition.getId(), facilityApprovedProduct, MODIFIED_BY);
     rnrLineItemMapper.insert(rnrLineItem);

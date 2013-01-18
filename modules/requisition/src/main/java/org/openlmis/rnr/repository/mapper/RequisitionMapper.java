@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface RnrMapper {
+public interface RequisitionMapper {
 
   @Insert("INSERT INTO requisition(facilityId, programId, periodId, status, modifiedBy) " +
     "VALUES (#{facilityId}, #{programId}, #{periodId}, #{status}, #{modifiedBy})")

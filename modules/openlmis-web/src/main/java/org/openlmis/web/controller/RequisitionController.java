@@ -5,7 +5,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RnrDTO;
-import org.openlmis.rnr.service.RnrService;
+import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.web.model.RnrReferenceData;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,17 +23,17 @@ import static org.openlmis.web.response.OpenLmisResponse.*;
 
 @Controller
 @NoArgsConstructor
-public class RnrController extends BaseController {
+public class RequisitionController extends BaseController {
 
   public static final String RNR = "rnr";
   public static final String RNR_SAVE_SUCCESS = "rnr.save.success";
   public static final String RNR_LIST = "rnr_list";
-  private RnrService rnrService;
+  private RequisitionService rnrService;
 
 
   @Autowired
-  public RnrController(RnrService rnrService) {
-    this.rnrService = rnrService;
+  public RequisitionController(RequisitionService requisitionService) {
+    this.rnrService = requisitionService;
   }
 
   @RequestMapping(value = "/requisitions", method = RequestMethod.POST, headers = "Accept=application/json")

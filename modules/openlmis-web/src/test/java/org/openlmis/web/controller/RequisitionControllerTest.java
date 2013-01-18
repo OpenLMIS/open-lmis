@@ -7,7 +7,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RnrDTO;
-import org.openlmis.rnr.service.RnrService;
+import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,20 +22,20 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.openlmis.web.controller.RnrController.RNR;
-import static org.openlmis.web.controller.RnrController.RNR_LIST;
+import static org.openlmis.web.controller.RequisitionController.RNR;
+import static org.openlmis.web.controller.RequisitionController.RNR_LIST;
 import static org.powermock.api.mockito.PowerMockito.doThrow;
 import static org.powermock.api.mockito.PowerMockito.when;
 
-public class RnrControllerTest {
+public class RequisitionControllerTest {
 
   MockHttpServletRequest request;
   private static final String USER = "user";
   private static final Integer USER_ID = 1;
 
-  RnrService rnrService;
+  RequisitionService requisitionService;
 
-  RnrController controller;
+  RequisitionController controller;
   private Rnr rnr;
 
   @Before
@@ -47,8 +47,8 @@ public class RnrControllerTest {
 
     request.setSession(session);
 
-    rnrService = mock(RnrService.class);
-    controller = new RnrController(rnrService);
+    requisitionService = mock(RequisitionService.class);
+    controller = new RequisitionController(requisitionService);
     rnr = new Rnr();
   }
 
@@ -56,7 +56,7 @@ public class RnrControllerTest {
   public void shouldInitiateRnr() throws Exception {
     ResponseEntity<OpenLmisResponse> response = controller.initiateRnr(1, 2, 3, request);
 
-    verify(rnrService).initRnr(1, 2, 3, USER_ID);
+    verify(requisitionService).initRnr(1, 2, 3, USER_ID);
     assertThat(response.getStatusCode(), is(equalTo(HttpStatus.OK)));
   }
 
@@ -64,7 +64,7 @@ public class RnrControllerTest {
   public void shouldGetRnrIfExists() throws Exception {
     ResponseEntity<OpenLmisResponse> response = controller.get(1, 2, 3);
 
-    verify(rnrService).get(1, 2, 3);
+    verify(requisitionService).get(1, 2, 3);
     assertThat(response.getStatusCode(), is(equalTo(HttpStatus.OK)));
   }
 
@@ -72,14 +72,14 @@ public class RnrControllerTest {
   public void shouldSaveWIPRnr() throws Exception {
     controller.saveRnr(rnr, rnr.getId(), request);
 
-    verify(rnrService).save(rnr);
+    verify(requisitionService).save(rnr);
     assertThat(rnr.getModifiedBy(), is(equalTo(USER_ID)));
   }
 
   @Test
   public void shouldGiveErrorIfInitiatingFails() throws Exception {
     String errorMessage = "error-message";
-    doThrow(new DataException(errorMessage)).when(rnrService).initRnr(1, 2, null, USER_ID);
+    doThrow(new DataException(errorMessage)).when(requisitionService).initRnr(1, 2, null, USER_ID);
     ResponseEntity<OpenLmisResponse> response = controller.initiateRnr(1, 2, null, request);
     assertThat(response.getBody().getErrorMsg(), is(equalTo(errorMessage)));
   }
@@ -87,40 +87,40 @@ public class RnrControllerTest {
   @Test
   public void shouldReturnNullIfGettingRequisitionFails() throws Exception {
     Rnr expectedRnr = null;
-    when(rnrService.get(1, 2, null)).thenReturn(expectedRnr);
+    when(requisitionService.get(1, 2, null)).thenReturn(expectedRnr);
     ResponseEntity<OpenLmisResponse> response = controller.get(1, 2, null);
     assertThat((Rnr) response.getBody().getData().get(RNR), is(expectedRnr));
   }
 
   @Test
   public void shouldAllowSubmittingOfRnrAndTagWithModifiedBy() throws Exception {
-    when(rnrService.submit(rnr)).thenReturn(new OpenLmisMessage("test.msg.key"));
+    when(requisitionService.submit(rnr)).thenReturn(new OpenLmisMessage("test.msg.key"));
     ResponseEntity<OpenLmisResponse> response = controller.submit(rnr, rnr.getId(), request);
     assertThat(response.getBody().getSuccessMsg(), is("test.msg.key"));
-    verify(rnrService).submit(rnr);
+    verify(requisitionService).submit(rnr);
     assertThat(rnr.getModifiedBy(), is(USER_ID));
   }
 
   @Test
   public void shouldReturnErrorMessageIfRnrNotValidButShouldSaveIt() throws Exception {
-    doThrow(new DataException(new OpenLmisMessage("some error"))).when(rnrService).submit(rnr);
+    doThrow(new DataException(new OpenLmisMessage("some error"))).when(requisitionService).submit(rnr);
 
     ResponseEntity<OpenLmisResponse> response = controller.submit(rnr, rnr.getId(), request);
-    verify(rnrService).save(rnr);
+    verify(requisitionService).save(rnr);
     assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     assertThat(response.getBody().getErrorMsg(), is("some error"));
   }
 
   @Test
   public void shouldGiveMessageAndAuthorizeRnr() throws Exception {
-    String code = RnrService.RNR_AUTHORIZED_SUCCESSFULLY;
+    String code = RequisitionService.RNR_AUTHORIZED_SUCCESSFULLY;
     String message = "R&R authorized successfully!";
 
-    when(rnrService.authorize(rnr)).thenReturn(new OpenLmisMessage(code));
+    when(requisitionService.authorize(rnr)).thenReturn(new OpenLmisMessage(code));
 
     ResponseEntity<OpenLmisResponse> response = controller.authorize(rnr, rnr.getId(), request);
 
-    verify(rnrService).authorize(rnr);
+    verify(requisitionService).authorize(rnr);
     assertThat(response.getBody().getSuccessMsg(), is(message));
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
   }
@@ -128,27 +128,27 @@ public class RnrControllerTest {
   @Test
   public void shouldNotAuthorizeRnrAndGiveErrorMessage() throws Exception {
     String errorMessage = "some error";
-    doThrow(new DataException(new OpenLmisMessage(errorMessage))).when(rnrService).authorize(rnr);
+    doThrow(new DataException(new OpenLmisMessage(errorMessage))).when(requisitionService).authorize(rnr);
     ResponseEntity<OpenLmisResponse> response = controller.authorize(rnr, rnr.getId(), request);
 
-    verify(rnrService).save(rnr);
+    verify(requisitionService).save(rnr);
     assertThat(response.getBody().getErrorMsg(), is(errorMessage));
   }
 
   @Test
   public void shouldGiveErrorResponseIfThereIsAnyExceptionWhileSavingRnr() throws Exception {
     String errorMessage = "some error";
-    doThrow(new DataException(new OpenLmisMessage(errorMessage))).when(rnrService).save(rnr);
+    doThrow(new DataException(new OpenLmisMessage(errorMessage))).when(requisitionService).save(rnr);
     ResponseEntity<OpenLmisResponse> response = controller.saveRnr(rnr, rnr.getId(), request);
 
-    verify(rnrService).save(rnr);
+    verify(requisitionService).save(rnr);
     assertThat(response.getBody().getErrorMsg(), is(errorMessage));
   }
 
   @Test
   public void shouldGiveSuccessResponseIfRnrSavedSuccessfully() throws Exception {
     ResponseEntity<OpenLmisResponse> response = controller.saveRnr(rnr, rnr.getId(), request);
-    verify(rnrService).save(rnr);
+    verify(requisitionService).save(rnr);
     assertThat(response.getBody().getSuccessMsg(), is("R&R saved successfully!"));
   }
 
@@ -156,16 +156,16 @@ public class RnrControllerTest {
   public void shouldReturnListOfUserSupervisedRnrForApproval() {
     List<RnrDTO> rnrList = new ArrayList<>();
     ResponseEntity<OpenLmisResponse> response = controller.fetchUserSupervisedRnrForApproval(request);
-    verify(rnrService).fetchUserSupervisedRnrForApproval(USER_ID);
+    verify(requisitionService).fetchUserSupervisedRnrForApproval(USER_ID);
     assertThat((List<RnrDTO>) response.getBody().getData().get(RNR_LIST), is(rnrList));
   }
 
   @Test
   public void shouldReturnErrorResponseIfAnyExceptionInFetchingRnrList() {
     String errorMessage = "some error";
-    doThrow(new DataException(errorMessage)).when(rnrService).fetchUserSupervisedRnrForApproval(USER_ID);
+    doThrow(new DataException(errorMessage)).when(requisitionService).fetchUserSupervisedRnrForApproval(USER_ID);
     ResponseEntity<OpenLmisResponse> response = controller.fetchUserSupervisedRnrForApproval(request);
-    verify(rnrService).fetchUserSupervisedRnrForApproval(USER_ID);
+    verify(requisitionService).fetchUserSupervisedRnrForApproval(USER_ID);
     assertThat(response.getBody().getErrorMsg(), is(errorMessage));
   }
 }

@@ -46,7 +46,7 @@ public class RnrLineItemMapperIT {
   @Autowired
   private FacilityApprovedProductMapper facilityApprovedProductMapper;
   @Autowired
-  private RnrMapper rnrMapper;
+  private RequisitionMapper requisitionMapper;
   @Autowired
   private RnrLineItemMapper rnrLineItemMapper;
   @Autowired
@@ -92,7 +92,7 @@ public class RnrLineItemMapperIT {
   @Test
   public void shouldInsertRequisitionLineItem() {
 
-    rnrMapper.insert(rnr);
+    requisitionMapper.insert(rnr);
     RnrLineItem rnrLineItem = new RnrLineItem(rnr.getId(), facilityApprovedProduct, MODIFIED_BY);
     rnrLineItemMapper.insert(rnrLineItem);
     assertNotNull(rnrLineItem.getId());
@@ -100,7 +100,7 @@ public class RnrLineItemMapperIT {
 
   @Test
   public void shouldReturnRnrLineItemsByRnrId() {
-    rnrMapper.insert(rnr);
+    requisitionMapper.insert(rnr);
     RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityApprovedProduct, MODIFIED_BY);
     lineItem.setPacksToShip(20);
     rnrLineItemMapper.insert(lineItem);
@@ -137,7 +137,7 @@ public class RnrLineItemMapperIT {
 
   @Test
   public void shouldUpdateRnrLineItem() {
-    rnrMapper.insert(rnr);
+    requisitionMapper.insert(rnr);
     RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityApprovedProduct, MODIFIED_BY);
     rnrLineItemMapper.insert(lineItem);
     int anotherModifiedBy = 2;

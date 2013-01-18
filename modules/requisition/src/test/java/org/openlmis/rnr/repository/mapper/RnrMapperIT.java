@@ -51,7 +51,7 @@ public class RnrMapperIT {
   @Autowired
   private FacilityMapper facilityMapper;
   @Autowired
-  private RnrMapper rnrMapper;
+  private RequisitionMapper requisitionMapper;
   @Autowired
   private ProcessingPeriodMapper processingPeriodMapper;
   @Autowired
@@ -77,14 +77,14 @@ public class RnrMapperIT {
 
   @Test
   public void shouldSetRequisitionId() {
-    rnrMapper.insert(requisition);
+    requisitionMapper.insert(requisition);
     assertThat(requisition.getId(), is(notNullValue()));
   }
 
   @Test
   public void shouldReturnRequisitionById() {
-    rnrMapper.insert(requisition);
-    Rnr fetchedRequisition = rnrMapper.getRequisitionById(requisition.getId());
+    requisitionMapper.insert(requisition);
+    Rnr fetchedRequisition = requisitionMapper.getRequisitionById(requisition.getId());
     assertThat(fetchedRequisition.getId(), is(requisition.getId()));
     assertThat(fetchedRequisition.getProgramId(), is(equalTo(HIV)));
     assertThat(fetchedRequisition.getFacilityId(), is(equalTo(facility.getId())));
@@ -95,16 +95,16 @@ public class RnrMapperIT {
 
   @Test
   public void shouldUpdateRequisition() {
-    rnrMapper.insert(requisition);
+    requisitionMapper.insert(requisition);
     requisition.setModifiedBy(USER_2);
     Date submittedDate = new Date();
     requisition.setSubmittedDate(submittedDate);
 //    requisition.setFullSupplyItemsSubmittedCost(100.5F);
 //    requisition.setTotalSubmittedCost(100.5F);
 
-    rnrMapper.update(requisition);
+    requisitionMapper.update(requisition);
 
-    Rnr updatedRequisition = rnrMapper.getRequisitionById(requisition.getId());
+    Rnr updatedRequisition = requisitionMapper.getRequisitionById(requisition.getId());
 
     assertThat(updatedRequisition.getId(), is(requisition.getId()));
     assertThat(updatedRequisition.getModifiedBy(), is(equalTo(USER_2)));
@@ -115,13 +115,13 @@ public class RnrMapperIT {
 
   @Test
   public void shouldReturnRequisitionIfExists() {
-    rnrMapper.insert(requisition);
+    requisitionMapper.insert(requisition);
 
     Rnr anotherRequisition = new Rnr(facility.getId(), HIV, processingPeriod2.getId(), MODIFIED_BY);
     anotherRequisition.setStatus(INITIATED);
-    rnrMapper.insert(anotherRequisition);
+    requisitionMapper.insert(anotherRequisition);
 
-    Rnr rnr = rnrMapper.getRequisition(facility.getId(), HIV, processingPeriod1.getId());
+    Rnr rnr = requisitionMapper.getRequisition(facility.getId(), HIV, processingPeriod1.getId());
 
     assertThat(rnr.getId(), is(requisition.getId()));
     assertThat(rnr.getFacilityId(), is(facility.getId()));
@@ -131,9 +131,9 @@ public class RnrMapperIT {
 
   @Test
   public void shouldGetRnrById() throws Exception {
-    rnrMapper.insert(requisition);
+    requisitionMapper.insert(requisition);
 
-    Rnr returnedRequisition = rnrMapper.getById(requisition.getId());
+    Rnr returnedRequisition = requisitionMapper.getById(requisition.getId());
 
     assertThat(returnedRequisition.getFacilityId(), CoreMatchers.is(requisition.getFacilityId()));
     assertThat(returnedRequisition.getStatus(), CoreMatchers.is(requisition.getStatus()));
@@ -144,9 +144,9 @@ public class RnrMapperIT {
   public void shouldNotGetInitiatedRequisitionsForFacilitiesAndPrograms() throws Exception {
     Integer programId = 1;
     requisition.setProgramId(programId);
-    rnrMapper.insert(requisition);
+    requisitionMapper.insert(requisition);
 
-    List<RnrDTO> requisitions = rnrMapper.getSubmittedRequisitionsForFacilitiesAndPrograms("{" + facility.getId() + "}", "{" + programId + "}");
+    List<RnrDTO> requisitions = requisitionMapper.getSubmittedRequisitionsForFacilitiesAndPrograms("{" + facility.getId() + "}", "{" + programId + "}");
 
     assertThat(requisitions.size(), is(0));
   }
@@ -156,9 +156,9 @@ public class RnrMapperIT {
     Integer programId = 1;
     requisition.setProgramId(programId);
     requisition.setStatus(AUTHORIZED);
-    rnrMapper.insert(requisition);
+    requisitionMapper.insert(requisition);
 
-    List<RnrDTO> requisitions = rnrMapper.getSubmittedRequisitionsForFacilitiesAndPrograms("{" + facility.getId() + "}", "{" + programId + "}");
+    List<RnrDTO> requisitions = requisitionMapper.getSubmittedRequisitionsForFacilitiesAndPrograms("{" + facility.getId() + "}", "{" + programId + "}");
 
     RnrDTO rnr = requisitions.get(0);
     assertThat(requisitions.size(), is(1));

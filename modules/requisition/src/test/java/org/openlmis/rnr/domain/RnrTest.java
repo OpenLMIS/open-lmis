@@ -3,7 +3,7 @@ package org.openlmis.rnr.domain;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.openlmis.rnr.builder.RnrBuilder;
+import org.openlmis.rnr.builder.RequisitionBuilder;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -19,7 +19,7 @@ public class RnrTest {
   public void shouldValidateEachLineItem() throws Exception {
     RnrLineItem rnrLineItem1 = mock(RnrLineItem.class);
     RnrLineItem rnrLineItem2 = mock(RnrLineItem.class);
-    Rnr rnr = make(a(RnrBuilder.defaultRnr));
+    Rnr rnr = make(a(RequisitionBuilder.defaultRnr));
     rnr.add(rnrLineItem1);
     rnr.add(rnrLineItem2);
 

@@ -13,7 +13,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static com.natpryce.makeiteasy.Property.newProperty;
 
-public class RnrBuilder {
+public class RequisitionBuilder {
 
   public static final Property<Rnr, RnrStatus> status = newProperty();
   public static final Property<Rnr, Date> submittedDate = newProperty();

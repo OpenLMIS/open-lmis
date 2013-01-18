@@ -9,7 +9,7 @@ import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.dto.RnrDTO;
-import org.openlmis.rnr.repository.RnrRepository;
+import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ import static org.openlmis.rnr.domain.RnrStatus.*;
 
 @Service
 @NoArgsConstructor
-public class RnrService {
+public class RequisitionService {
 
   public static final String RNR_AUTHORIZATION_ERROR = "rnr.authorization.error";
   public static final String RNR_SUBMISSION_ERROR = "rnr.submission.error";
@@ -34,7 +34,7 @@ public class RnrService {
   public static final String RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR = "rnr.authorized.without.supervisor";
   public static final String NO_SUPERVISORY_NODE_CONTACT_THE_ADMINISTRATOR = "rnr.submitted.without.supervisor";
 
-  private RnrRepository rnrRepository;
+  private RequisitionRepository requisitionRepository;
 
   private RnrTemplateRepository rnrTemplateRepository;
   private FacilityApprovedProductService facilityApprovedProductService;
@@ -44,9 +44,9 @@ public class RnrService {
   private ProgramService programService;
 
   @Autowired
-  public RnrService(RnrRepository rnrRepository, RnrTemplateRepository rnrTemplateRepository, FacilityApprovedProductService facilityApprovedProductService,
-                    SupervisoryNodeService supervisoryNodeRepository, RoleRightsService roleRightsService, FacilityService facilityService, ProgramService programService) {
-    this.rnrRepository = rnrRepository;
+  public RequisitionService(RequisitionRepository requisitionRepository, RnrTemplateRepository rnrTemplateRepository, FacilityApprovedProductService facilityApprovedProductService,
+                            SupervisoryNodeService supervisoryNodeRepository, RoleRightsService roleRightsService, FacilityService facilityService, ProgramService programService) {
+    this.requisitionRepository = requisitionRepository;
     this.rnrTemplateRepository = rnrTemplateRepository;
     this.facilityApprovedProductService = facilityApprovedProductService;
     this.supervisoryNodeService = supervisoryNodeRepository;
@@ -65,7 +65,7 @@ public class RnrService {
       RnrLineItem requisitionLineItem = new RnrLineItem(requisition.getId(), programProduct, modifiedBy);
       requisition.add(requisitionLineItem);
     }
-    rnrRepository.insert(requisition);
+    requisitionRepository.insert(requisition);
     return requisition;
   }
 
@@ -73,7 +73,7 @@ public class RnrService {
     if (!isUserAllowedToSave(rnr))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
-    rnrRepository.update(rnr);
+    requisitionRepository.update(rnr);
   }
 
   private boolean isUserAllowedToSave(Rnr rnr) {
@@ -82,22 +82,22 @@ public class RnrService {
   }
 
   public Rnr get(Integer facilityId, Integer programId, Integer periodId) {
-    return rnrRepository.getRequisition(facilityId, programId, periodId);
+    return requisitionRepository.getRequisition(facilityId, programId, periodId);
   }
 
   public List<LossesAndAdjustmentsType> getLossesAndAdjustmentsTypes() {
-    return rnrRepository.getLossesAndAdjustmentsTypes();
+    return requisitionRepository.getLossesAndAdjustmentsTypes();
   }
 
   public OpenLmisMessage submit(Rnr rnr) {
-    if (rnrRepository.getById(rnr.getId()).getStatus() != INITIATED) {
+    if (requisitionRepository.getById(rnr.getId()).getStatus() != INITIATED) {
       throw new DataException(new OpenLmisMessage(RNR_SUBMISSION_ERROR));
     }
     rnr.validate(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId()));
     rnr.calculate();
     rnr.setStatus(SUBMITTED);
     rnr.setSubmittedDate(new Date());
-    rnrRepository.update(rnr);
+    requisitionRepository.update(rnr);
 
     SupervisoryNode supervisoryNode = supervisoryNodeService.getFor(rnr.getFacilityId(), rnr.getProgramId());
     String msg = (supervisoryNode == null) ? NO_SUPERVISORY_NODE_CONTACT_THE_ADMINISTRATOR : RNR_SUBMITTED_SUCCESSFULLY;
@@ -105,14 +105,14 @@ public class RnrService {
   }
 
   public OpenLmisMessage authorize(Rnr rnr) {
-    Rnr savedRnr = rnrRepository.getById(rnr.getId());
+    Rnr savedRnr = requisitionRepository.getById(rnr.getId());
     if (savedRnr.getStatus() != SUBMITTED) throw new DataException(RNR_AUTHORIZATION_ERROR);
 
     rnr.validate(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId()));
     rnr.calculate();
     rnr.setSubmittedDate(savedRnr.getSubmittedDate());
     rnr.setStatus(AUTHORIZED);
-    rnrRepository.update(rnr);
+    requisitionRepository.update(rnr);
 
     User approver = supervisoryNodeService.getApproverFor(rnr.getFacilityId(), rnr.getProgramId());
     String msg = (approver == null) ? RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR : RNR_AUTHORIZED_SUCCESSFULLY;
@@ -125,7 +125,7 @@ public class RnrService {
     for(Program program : programs){
       facilities.addAll(facilityService.getUserSupervisedFacilities(userId, program.getId(), APPROVE_REQUISITION));
     }
-    return rnrRepository.getSubmittedRequisitionsForFacilitiesAndPrograms(new ArrayList<>(facilities), programs);
+    return requisitionRepository.getSubmittedRequisitionsForFacilitiesAndPrograms(new ArrayList<>(facilities), programs);
   }
   }
 

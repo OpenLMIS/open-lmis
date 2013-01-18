@@ -17,7 +17,7 @@ import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper;
 import org.openlmis.rnr.repository.mapper.RnrLineItemMapper;
-import org.openlmis.rnr.repository.mapper.RnrMapper;
+import org.openlmis.rnr.repository.mapper.RequisitionMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ import static org.mockito.Mockito.*;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 
 @RunWith(MockitoJUnitRunner.class)
-public class RnrRepositoryTest {
+public class RequisitionRepositoryTest {
 
   public static final Integer FACILITY_ID = 1;
   public static final Integer PROGRAM_ID = 1;
@@ -41,7 +41,7 @@ public class RnrRepositoryTest {
   public ExpectedException expectedException = ExpectedException.none();
 
   @Mock
-  RnrMapper rnrMapper;
+  RequisitionMapper requisitionMapper;
   @Mock
   RnrLineItemMapper rnrLineItemMapper;
   @Mock
@@ -49,7 +49,7 @@ public class RnrRepositoryTest {
   @Mock
   SupervisoryNodeRepository supervisoryNodeRepository;
 
-  private RnrRepository rnrRepository;
+  private RequisitionRepository requisitionRepository;
   private LossesAndAdjustments lossAndAdjustmentForLineItem = new LossesAndAdjustments();
   private RnrLineItem rnrLineItem1;
   private RnrLineItem rnrLineItem2;
@@ -57,7 +57,7 @@ public class RnrRepositoryTest {
 
   @Before
   public void setUp() throws Exception {
-    rnrRepository = new RnrRepository(rnrMapper, rnrLineItemMapper, lossesAndAdjustmentsMapper);
+    requisitionRepository = new RequisitionRepository(requisitionMapper, rnrLineItemMapper, lossesAndAdjustmentsMapper);
     rnr = new Rnr();
     rnrLineItem1 = new RnrLineItem();
     rnrLineItem1.setId(1);
@@ -76,9 +76,9 @@ public class RnrRepositoryTest {
   @Test
   public void shouldInsertRnrAndItsLineItems() throws Exception {
     rnr.setId(1);
-    rnrRepository.insert(rnr);
+    requisitionRepository.insert(rnr);
     assertThat(rnr.getStatus(), is(INITIATED));
-    verify(rnrMapper).insert(rnr);
+    verify(requisitionMapper).insert(rnr);
     verify(rnrLineItemMapper, times(2)).insert(any(RnrLineItem.class));
     verify(lossesAndAdjustmentsMapper, never()).insert(any(RnrLineItem.class), any(LossesAndAdjustments.class));
     RnrLineItem rnrLineItem = rnr.getLineItems().get(0);
@@ -87,8 +87,8 @@ public class RnrRepositoryTest {
 
   @Test
   public void shouldUpdateRnrAndItsLineItemsAlongWithLossesAndAdjustments() throws Exception {
-    rnrRepository.update(rnr);
-    verify(rnrMapper).update(rnr);
+    requisitionRepository.update(rnr);
+    verify(requisitionMapper).update(rnr);
     verify(lossesAndAdjustmentsMapper).deleteByLineItemId(rnrLineItem1.getId());
     verify(lossesAndAdjustmentsMapper).deleteByLineItemId(rnrLineItem2.getId());
     verify(lossesAndAdjustmentsMapper).insert(rnrLineItem1, lossAndAdjustmentForLineItem);
@@ -102,11 +102,11 @@ public class RnrRepositoryTest {
     int modifiedBy = 1;
     Rnr initiatedRequisition = new Rnr(FACILITY_ID, HIV, PERIOD_ID, modifiedBy);
     initiatedRequisition.setId(1);
-    when(rnrMapper.getRequisition(FACILITY_ID, HIV, PERIOD_ID)).thenReturn(initiatedRequisition);
+    when(requisitionMapper.getRequisition(FACILITY_ID, HIV, PERIOD_ID)).thenReturn(initiatedRequisition);
     List<RnrLineItem> lineItems = new ArrayList<>();
     when(rnrLineItemMapper.getRnrLineItemsByRnrId(1)).thenReturn(lineItems);
 
-    Rnr rnr = rnrRepository.getRequisition(FACILITY_ID, HIV, PERIOD_ID);
+    Rnr rnr = requisitionRepository.getRequisition(FACILITY_ID, HIV, PERIOD_ID);
 
     assertThat(rnr, is(equalTo(initiatedRequisition)));
     assertThat(rnr.getLineItems(), is(equalTo(lineItems)));
@@ -115,8 +115,8 @@ public class RnrRepositoryTest {
   @Test
   public void shouldReturnNullIfRnrNotDefined() {
     Rnr expectedRnr = null;
-    when(rnrMapper.getRequisition(FACILITY_ID, HIV, null)).thenReturn(expectedRnr);
-    Rnr rnr = rnrRepository.getRequisition(FACILITY_ID, HIV, null);
+    when(requisitionMapper.getRequisition(FACILITY_ID, HIV, null)).thenReturn(expectedRnr);
+    Rnr rnr = requisitionRepository.getRequisition(FACILITY_ID, HIV, null);
     assertThat(rnr, is(expectedRnr));
   }
 
@@ -124,24 +124,24 @@ public class RnrRepositoryTest {
   public void shouldGetRnrById() throws Exception {
     Rnr expectedRnr = new Rnr();
     Integer rnrId = 1;
-    when(rnrMapper.getById(rnrId)).thenReturn(expectedRnr);
-    Rnr returnedRnr = rnrRepository.getById(rnrId);
+    when(requisitionMapper.getById(rnrId)).thenReturn(expectedRnr);
+    Rnr returnedRnr = requisitionRepository.getById(rnrId);
     assertThat(returnedRnr, is(expectedRnr));
   }
 
   @Test
   public void shouldThrowExceptionIfRnrNotFound() throws Exception {
     Integer rnrId = 1;
-    when(rnrMapper.getById(rnrId)).thenReturn(null);
+    when(requisitionMapper.getById(rnrId)).thenReturn(null);
     expectedException.expect(DataException.class);
     expectedException.expectMessage("Requisition Not Found");
-    rnrRepository.getById(rnrId);
+    requisitionRepository.getById(rnrId);
   }
 
   @Test
   public void shouldGetRequisitionByFacilitiesAndPrograms() throws Exception {
     List<RnrDTO> expectedRequisitions = new ArrayList<>();
-    when(rnrMapper.getSubmittedRequisitionsForFacilitiesAndPrograms("{1, 2}", "{1, 2}")).thenReturn(expectedRequisitions);
+    when(requisitionMapper.getSubmittedRequisitionsForFacilitiesAndPrograms("{1, 2}", "{1, 2}")).thenReturn(expectedRequisitions);
 
     List<Facility> facilities = new ArrayList<>();
     Facility facility1 = new Facility();
@@ -161,9 +161,9 @@ public class RnrRepositoryTest {
     programs.add(program1);
     programs.add(program2);
 
-    List<RnrDTO> resultRequisitions = rnrRepository.getSubmittedRequisitionsForFacilitiesAndPrograms(facilities, programs);
+    List<RnrDTO> resultRequisitions = requisitionRepository.getSubmittedRequisitionsForFacilitiesAndPrograms(facilities, programs);
 
-    verify(rnrMapper).getSubmittedRequisitionsForFacilitiesAndPrograms("{1, 2}", "{1, 2}");
+    verify(requisitionMapper).getSubmittedRequisitionsForFacilitiesAndPrograms("{1, 2}", "{1, 2}");
     assertThat(resultRequisitions, is(expectedRequisitions));
   }
 }
