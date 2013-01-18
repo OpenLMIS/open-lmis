@@ -3,7 +3,7 @@
         <a href="#" class="pull-right btn btn-primary">Add new</a>
     </h2>
 
-    <input id="searchUser" class="search-query" type="text" ng-model="query" placeholder="Enter user firstname or lastname" />
+    <input id="searchUser" class="search-query" type="text" ng-model="query" ng-change="showUserSearchResults(query)" placeholder="Enter user firstname or lastname" />
     <div class="form-tip">Minimum 3 characters</div>
     <div class="facility-list" ng-show="query.length > 2">
         <h3>
@@ -16,8 +16,8 @@
         </h3>
         <a class="close-btn" href="javascript:void(0);" ng-click="clearSearch()">Close</a>
         <ul>
-            <li ng-repeat="user in filterUserByName(query)">
-                {{user.firstname}}  {{user.lastname}}
+            <li ng-repeat="user in filteredUsers">
+                <a ng-click="editUser(user.id)">{{user.firstName}} {{user.lastName}} - {{user.email}}</a>
             </li>
         </ul>
     </div>

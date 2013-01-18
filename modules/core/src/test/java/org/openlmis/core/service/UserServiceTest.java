@@ -14,7 +14,7 @@ import org.openlmis.email.domain.EmailMessage;
 import org.openlmis.email.exception.EmailException;
 import org.openlmis.email.service.EmailService;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static junit.framework.Assert.assertTrue;
@@ -98,10 +98,8 @@ public class UserServiceTest {
   @Test
   public void shouldReturnSearchResultsWhenUserExists() throws Exception {
     User user = new User();
-    user.setUserName("ab");;
     String userSearchParam="abc";
-    List<User> listOfUsers = new ArrayList<User>();
-    listOfUsers.add(user);
+    List<User> listOfUsers = Arrays.asList(new User());
 
     when(userRepository.searchUser(userSearchParam)).thenReturn(listOfUsers);
 

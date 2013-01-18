@@ -17,6 +17,7 @@ import org.springframework.mock.web.MockHttpSession;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -101,12 +102,14 @@ public class UserControllerTest {
   @Test
   public void shouldSaveUser() throws Exception {
     User user = new User();
+    user.setFirstName("Shan");
+    user.setLastName("Sharma");
     ResponseEntity<OpenLmisResponse> response = userController.save(user);
 
     verify(userService).save(user);
 
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    assertThat(response.getBody().getSuccessMsg(), is("User saved successfully"));
+    assertThat(response.getBody().getSuccessMsg(), is("User "+user.getFirstName()+" "+user.getLastName()+" has been successfully created, password link sent on registered Email address"));
     assertThat(user.getPassword(), is(Encoder.hash("openLmis123")));
   }
 
@@ -124,9 +127,8 @@ public class UserControllerTest {
   @Test
   public void shouldReturnUserDetailsIfUserExists() throws Exception {
     String userSearchParam = "Admin";
-    List<User> listOfUsers = new ArrayList<User>();
+    List<User> listOfUsers = Arrays.asList(new User());
     User userReturned = new User();
-    listOfUsers.add(userReturned);
 
     when(userService.searchUser(userSearchParam)).thenReturn(listOfUsers);
 

@@ -71,7 +71,7 @@ public class UserController extends BaseController {
 
       userService.save(user);
 
-      ResponseEntity<OpenLmisResponse> successResponse = OpenLmisResponse.success("User saved successfully");
+      ResponseEntity<OpenLmisResponse> successResponse = OpenLmisResponse.success("User " + user.getFirstName() + " " + user.getLastName() + " has been successfully created, password link sent on registered Email address");
       successResponse.getBody().setData("user", user);
       return successResponse;
     } catch (DataException e) {
@@ -81,8 +81,8 @@ public class UserController extends BaseController {
     }
   }
 
-  @RequestMapping(value = "/admin/search-user",method=RequestMethod.GET)
-  @PreAuthorize("hasPermission('',MANAGE_USERS)")
+  @RequestMapping(value = "/admin/search-user", method = RequestMethod.GET)
+  @PreAuthorize("hasPermission('','MANAGE_USERS')")
   public List<User> searchUser(@RequestParam String userSearchParam) {
     return userService.searchUser(userSearchParam);
   }
