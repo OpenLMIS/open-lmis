@@ -282,7 +282,7 @@ public class RequisitionServiceTest {
     List<RnrDTO> expectedRequisitions = new ArrayList<>();
     when(requisitionRepository.getSubmittedRequisitionsForFacilitiesAndPrograms(facilities, programs)).thenReturn(expectedRequisitions);
 
-    List<RnrDTO> resultRequisitions = requisitionService.fetchUserSupervisedRnrForApproval(USER_ID);
+    List<RnrDTO> resultRequisitions = requisitionService.listForApproval(USER_ID);
 
 
     assertThat(resultRequisitions, is(expectedRequisitions));

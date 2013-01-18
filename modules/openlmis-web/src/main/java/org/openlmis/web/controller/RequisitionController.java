@@ -9,7 +9,6 @@ import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.web.model.RnrReferenceData;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -20,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.openlmis.web.response.OpenLmisResponse.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Controller
 @NoArgsConstructor
@@ -28,12 +28,12 @@ public class RequisitionController extends BaseController {
   public static final String RNR = "rnr";
   public static final String RNR_SAVE_SUCCESS = "rnr.save.success";
   public static final String RNR_LIST = "rnr_list";
-  private RequisitionService rnrService;
+  private RequisitionService requisitionService;
 
 
   @Autowired
   public RequisitionController(RequisitionService requisitionService) {
-    this.rnrService = requisitionService;
+    this.requisitionService = requisitionService;
   }
 
   @RequestMapping(value = "/requisitions", method = RequestMethod.POST, headers = "Accept=application/json")
@@ -43,9 +43,9 @@ public class RequisitionController extends BaseController {
                                                       @RequestParam("periodId") Integer periodId,
                                                       HttpServletRequest request) {
     try {
-      return response(RNR, rnrService.initRnr(facilityId, programId, periodId, loggedInUserId(request)));
+      return response(RNR, requisitionService.initRnr(facilityId, programId, periodId, loggedInUserId(request)));
     } catch (DataException e) {
-      return error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
+      return error(e.getOpenLmisMessage(), BAD_REQUEST);
     }
   }
 
@@ -54,7 +54,7 @@ public class RequisitionController extends BaseController {
   public ResponseEntity<OpenLmisResponse> get(@RequestParam("facilityId") Integer facilityId,
                                               @RequestParam("programId") Integer programId,
                                               @RequestParam("periodId") Integer periodId) {
-    return response(RNR, rnrService.get(facilityId, programId, periodId));
+    return response(RNR, requisitionService.get(facilityId, programId, periodId));
   }
 
   @RequestMapping(value = "/requisitions/{id}/save", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -65,10 +65,10 @@ public class RequisitionController extends BaseController {
     try {
       rnr.setId(id);
       rnr.setModifiedBy(loggedInUserId(request));
-      rnrService.save(rnr);
+      requisitionService.save(rnr);
       return OpenLmisResponse.success(RNR_SAVE_SUCCESS);
     } catch (DataException e) {
-      return OpenLmisResponse.error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
+      return OpenLmisResponse.error(e.getOpenLmisMessage(), BAD_REQUEST);
     }
   }
 
@@ -80,11 +80,9 @@ public class RequisitionController extends BaseController {
     try {
       rnr.setId(id);
       rnr.setModifiedBy(loggedInUserId(request));
-      return success(rnrService.submit(rnr));
+      return success(requisitionService.submit(rnr));
     } catch (DataException e) {
-      //TODO: save R&R in a better way
-      rnrService.save(rnr);
-      return error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
+      return error(e.getOpenLmisMessage(), BAD_REQUEST);
     }
   }
 
@@ -92,7 +90,7 @@ public class RequisitionController extends BaseController {
   @PreAuthorize("hasPermission('','CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
   public Map getReferenceData() {
     RnrReferenceData referenceData = new RnrReferenceData();
-    return referenceData.addLossesAndAdjustmentsTypes(rnrService.getLossesAndAdjustmentsTypes()).get();
+    return referenceData.addLossesAndAdjustmentsTypes(requisitionService.getLossesAndAdjustmentsTypes()).get();
   }
 
   @RequestMapping(value = "/requisitions/{id}/authorize", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -103,24 +101,17 @@ public class RequisitionController extends BaseController {
     try {
       rnr.setId(id);
       rnr.setModifiedBy(loggedInUserId(request));
-      OpenLmisMessage openLmisMessage = rnrService.authorize(rnr);
+      OpenLmisMessage openLmisMessage = requisitionService.authorize(rnr);
       return success(openLmisMessage);
     } catch (DataException e) {
-      rnrService.save(rnr);
-      //TODO save R&R in a better way
-      return error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
+      return error(e.getOpenLmisMessage(), BAD_REQUEST);
     }
   }
 
   @RequestMapping(value = "/requisitions-for-approval", method = RequestMethod.GET, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('', 'APPROVE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> fetchUserSupervisedRnrForApproval(HttpServletRequest request) {
-    List<RnrDTO> requisitions;
-    try {
-      requisitions = rnrService.fetchUserSupervisedRnrForApproval(loggedInUserId(request));
-    } catch (DataException e) {
-      return error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
-    }
+    List<RnrDTO> requisitions = requisitionService.listForApproval(loggedInUserId(request));
     return response(RNR_LIST, requisitions);
   }
 

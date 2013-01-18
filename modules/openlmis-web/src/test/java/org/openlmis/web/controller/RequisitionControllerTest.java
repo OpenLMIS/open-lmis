@@ -102,11 +102,10 @@ public class RequisitionControllerTest {
   }
 
   @Test
-  public void shouldReturnErrorMessageIfRnrNotValidButShouldSaveIt() throws Exception {
+  public void shouldReturnErrorMessageIfRnrNotValid() throws Exception {
     doThrow(new DataException(new OpenLmisMessage("some error"))).when(requisitionService).submit(rnr);
 
     ResponseEntity<OpenLmisResponse> response = controller.submit(rnr, rnr.getId(), request);
-    verify(requisitionService).save(rnr);
     assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     assertThat(response.getBody().getErrorMsg(), is("some error"));
   }
@@ -131,7 +130,6 @@ public class RequisitionControllerTest {
     doThrow(new DataException(new OpenLmisMessage(errorMessage))).when(requisitionService).authorize(rnr);
     ResponseEntity<OpenLmisResponse> response = controller.authorize(rnr, rnr.getId(), request);
 
-    verify(requisitionService).save(rnr);
     assertThat(response.getBody().getErrorMsg(), is(errorMessage));
   }
 
@@ -156,17 +154,8 @@ public class RequisitionControllerTest {
   public void shouldReturnListOfUserSupervisedRnrForApproval() {
     List<RnrDTO> rnrList = new ArrayList<>();
     ResponseEntity<OpenLmisResponse> response = controller.fetchUserSupervisedRnrForApproval(request);
-    verify(requisitionService).fetchUserSupervisedRnrForApproval(USER_ID);
+    verify(requisitionService).listForApproval(USER_ID);
     assertThat((List<RnrDTO>) response.getBody().getData().get(RNR_LIST), is(rnrList));
-  }
-
-  @Test
-  public void shouldReturnErrorResponseIfAnyExceptionInFetchingRnrList() {
-    String errorMessage = "some error";
-    doThrow(new DataException(errorMessage)).when(requisitionService).fetchUserSupervisedRnrForApproval(USER_ID);
-    ResponseEntity<OpenLmisResponse> response = controller.fetchUserSupervisedRnrForApproval(request);
-    verify(requisitionService).fetchUserSupervisedRnrForApproval(USER_ID);
-    assertThat(response.getBody().getErrorMsg(), is(errorMessage));
   }
 }
 

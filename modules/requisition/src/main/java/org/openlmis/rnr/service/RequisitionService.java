@@ -119,7 +119,7 @@ public class RequisitionService {
     return new OpenLmisMessage(msg);
   }
 
-  public List<RnrDTO> fetchUserSupervisedRnrForApproval(Integer userId) {
+  public List<RnrDTO> listForApproval(Integer userId) {
     List<Program> programs = programService.getActiveProgramsForUserWithRights(userId, APPROVE_REQUISITION);
     Set<Facility> facilities = new HashSet<>();
     for(Program program : programs){
