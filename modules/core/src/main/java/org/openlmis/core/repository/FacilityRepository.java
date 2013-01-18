@@ -135,7 +135,7 @@ public class FacilityRepository {
     private void addListOfSupportedPrograms(Facility facility) {
         List<Program> supportedPrograms = facility.getSupportedPrograms();
         for (Program supportedProgram : supportedPrograms) {
-            ProgramSupported programSupported = new ProgramSupported(facility.getId(), supportedProgram.getId(), supportedProgram.getActive(), null, facility.getModifiedDate(), facility.getModifiedBy());
+            ProgramSupported programSupported = new ProgramSupported(facility.getId(), supportedProgram.getId(), supportedProgram.getActive(), new DateTime().toDate(), facility.getModifiedDate(), facility.getModifiedBy());
             insertSupportedProgram(programSupported);
         }
     }
