@@ -11,12 +11,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
-import static org.joda.time.DateTime.now;
-import static org.junit.Assert.assertFalse;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
@@ -54,8 +51,7 @@ public class ProgramSupportedMapperIT {
 
     programSupportedMapper.addSupportedProgram(programSupported);
 
-    List<ProgramSupported> programsSupported = programSupportedMapper.getBy(facility.getId(), program.getId());
-    ProgramSupported result = programsSupported.get(0);
+    ProgramSupported result = programSupportedMapper.getBy(facility.getId(), program.getId());
     assertThat(result.getFacilityId(), is(facility.getId()));
     assertThat(result.getProgramId(), is(program.getId()));
     assertThat(result.getStartDate(), is(programSupported.getStartDate()));
@@ -76,7 +72,7 @@ public class ProgramSupportedMapperIT {
 
     programSupportedMapper.delete(facility.getId(), program.getId());
 
-    List<ProgramSupported> programsSupported = programSupportedMapper.getBy(facility.getId(), program.getId());
-    assertFalse(programsSupported.contains(programSupported));
+    ProgramSupported programsSupported = programSupportedMapper.getBy(facility.getId(), program.getId());
+    assertThat(programsSupported, is(nullValue()));
   }
 }

@@ -7,10 +7,12 @@ import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProcessingPeriodRepository;
 import org.openlmis.core.repository.ProcessingScheduleRepository;
+import org.openlmis.core.repository.RequisitionGroupProgramScheduleRepository;
 import org.openlmis.core.repository.RequisitionGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -19,12 +21,15 @@ public class ProcessingScheduleService {
   private ProcessingScheduleRepository repository;
   private ProcessingPeriodRepository periodRepository;
   private RequisitionGroupRepository requisitionGroupRepository;
+  private RequisitionGroupProgramScheduleRepository requisitionGroupProgramScheduleRepository;
 
   @Autowired
-  public ProcessingScheduleService(ProcessingScheduleRepository scheduleRepository, ProcessingPeriodRepository periodRepository, RequisitionGroupRepository requisitionGroupRepository) {
+  public ProcessingScheduleService(ProcessingScheduleRepository scheduleRepository, ProcessingPeriodRepository periodRepository,
+                                   RequisitionGroupRepository requisitionGroupRepository, RequisitionGroupProgramScheduleRepository requisitionGroupProgramScheduleRepository) {
     this.repository = scheduleRepository;
     this.periodRepository = periodRepository;
     this.requisitionGroupRepository = requisitionGroupRepository;
+    this.requisitionGroupProgramScheduleRepository = requisitionGroupProgramScheduleRepository;
   }
 
   public List<ProcessingSchedule> getAll() {
@@ -58,8 +63,9 @@ public class ProcessingScheduleService {
     periodRepository.delete(processingPeriodId);
   }
 
-  public List<ProcessingPeriod> getAllPeriodsForFacilityAndProgram(Integer facilityId, Integer programId) {
+  public List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriod(Integer facilityId, Integer programId, Date programStartDate, Integer startingPeriod) {
     RequisitionGroup requisitionGroup = requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(programId, facilityId);
-    return periodRepository.getAllPeriodsForARequisitionGroupAndAProgram(requisitionGroup.getId(), programId);
+    Integer scheduleId = requisitionGroupProgramScheduleRepository.getScheduleIdForRequisitionGroupAndProgram(requisitionGroup.getId(), programId);
+    return periodRepository.getAllPeriodsAfterDateAndPeriod(scheduleId, programStartDate, startingPeriod);
   }
 }

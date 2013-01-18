@@ -1,6 +1,7 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.rnr.domain.Rnr;
@@ -29,7 +30,7 @@ public class RequisitionController extends BaseController {
   public static final String RNR_SAVE_SUCCESS = "rnr.save.success";
   public static final String RNR_LIST = "rnr_list";
   private RequisitionService requisitionService;
-
+  public static final String PERIODS = "periods";
 
   @Autowired
   public RequisitionController(RequisitionService requisitionService) {
@@ -115,4 +116,10 @@ public class RequisitionController extends BaseController {
     return response(RNR_LIST, requisitions);
   }
 
+  @RequestMapping(value = "/logistics/facility/{facilityId}/program/{programId}/periods", method = RequestMethod.GET, headers = "Accept=application/json")
+  @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
+  public ResponseEntity<OpenLmisResponse> getAllPeriodsForInitiatingRequisition(@PathVariable("facilityId") Integer facilityId, @PathVariable("programId") Integer programId) {
+    List<ProcessingPeriod> periodList = requisitionService.getAllPeriodsForInitiatingRequisition(facilityId, programId);
+    return OpenLmisResponse.response(PERIODS, periodList);
+  }
 }

@@ -1,12 +1,12 @@
 package org.openlmis.core.repository.mapper;
 
-import org.hamcrest.Matchers;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.ProcessingSchedule;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,12 +37,12 @@ public class ProcessingPeriodMapperIT {
   public ExpectedException expectedException = ExpectedException.none();
 
   @Autowired
-  ProcessingPeriodMapper periodMapper;
+  private ProcessingPeriodMapper mapper;
 
   @Autowired
-  ProcessingScheduleMapper scheduleMapper;
-  private ProcessingSchedule schedule;
+  private ProcessingScheduleMapper scheduleMapper;
 
+  private ProcessingSchedule schedule;
 
   @Before
   public void setUp() throws Exception {
@@ -52,28 +52,26 @@ public class ProcessingPeriodMapperIT {
 
   @Test
   public void shouldReturnAllPeriodsForASchedule() throws Exception {
-
     DateTime date1 = new DateTime();
     DateTime date2 = date1.plusMonths(3);
 
-    ProcessingPeriod period1 = make(a(defaultProcessingPeriod, with(startDate, date1.toDate()), with(scheduleId, schedule.getId())));
-    ProcessingPeriod period2 = make(a(defaultProcessingPeriod, with(startDate, date2.toDate() ), with(scheduleId, schedule.getId()), with(name, "Month2")));
+    ProcessingPeriod period1 = make(a(defaultProcessingPeriod, with(ProcessingPeriodBuilder.startDate, date1.toDate()), with(scheduleId, schedule.getId())));
+    ProcessingPeriod period2 = make(a(defaultProcessingPeriod, with(ProcessingPeriodBuilder.startDate, date2.toDate()), with(scheduleId, schedule.getId()), with(name, "Month2")));
 
-    periodMapper.insert(period1);
-    periodMapper.insert(period2);
+    mapper.insert(period1);
+    mapper.insert(period2);
 
-    List<ProcessingPeriod> fetchedPeriods = periodMapper.getAll(schedule.getId());
+    List<ProcessingPeriod> fetchedPeriods = mapper.getAll(schedule.getId());
     assertThat(fetchedPeriods.size(), is(2));
     assertThat(fetchedPeriods.get(0).getId(), is(period2.getId()));
   }
 
   @Test
   public void shouldReturnEmptyListIfNoPeriodFoundForGivenSchedule() throws Exception {
-
     ProcessingPeriod period1 = make(a(defaultProcessingPeriod, with(scheduleId, schedule.getId())));
-    periodMapper.insert(period1);
+    mapper.insert(period1);
 
-    List<ProcessingPeriod> fetchedPeriods = periodMapper.getAll(1233);
+    List<ProcessingPeriod> fetchedPeriods = mapper.getAll(1233);
     assertTrue(fetchedPeriods.isEmpty());
   }
 
@@ -84,12 +82,12 @@ public class ProcessingPeriodMapperIT {
 
     ProcessingPeriod period1 = make(a(defaultProcessingPeriod,
         with(scheduleId, schedule.getId()),
-        with(startDate, date1), with(endDate, date2), with(numberOfMonths, 3)));
+        with(ProcessingPeriodBuilder.startDate, date1), with(endDate, date2), with(numberOfMonths, 3)));
 
-    Integer insertCount = periodMapper.insert(period1);
+    Integer insertCount = mapper.insert(period1);
 
     assertThat(insertCount, is(1));
-    ProcessingPeriod insertedPeriod = periodMapper.getAll(schedule.getId()).get(0);
+    ProcessingPeriod insertedPeriod = mapper.getAll(schedule.getId()).get(0);
     assertThat(insertedPeriod.getName(), is("Month1"));
     assertThat(insertedPeriod.getDescription(), is("first month"));
     assertThat(insertedPeriod.getStartDate(), is(date1));
@@ -109,44 +107,93 @@ public class ProcessingPeriodMapperIT {
     ProcessingPeriod period3 = make(a(defaultProcessingPeriod, with(scheduleId, schedule2.getId()), with(name, "Month1")));
     expectedException.expect(DuplicateKeyException.class);
     expectedException.expectMessage("duplicate key value violates unique constraint");
-    periodMapper.insert(period1);
-    periodMapper.insert(period2);
-    periodMapper.insert(period3);
+    mapper.insert(period1);
+    mapper.insert(period2);
+    mapper.insert(period3);
   }
 
   @Test
   public void shouldReturnLastAddedPeriodForASchedule() throws Exception {
-
     DateTime date1 = new DateTime();
     DateTime date2 = date1.plusMonths(3);
 
-    ProcessingPeriod period1 = make(a(defaultProcessingPeriod, with(startDate, date1.toDate()), with(scheduleId, schedule.getId())));
-    ProcessingPeriod period2 = make(a(defaultProcessingPeriod, with(startDate, date2.toDate() ), with(scheduleId, schedule.getId()), with(name, "Month2")));
+    ProcessingPeriod period1 = make(a(defaultProcessingPeriod, with(ProcessingPeriodBuilder.startDate, date1.toDate()), with(scheduleId, schedule.getId())));
+    ProcessingPeriod period2 = make(a(defaultProcessingPeriod, with(ProcessingPeriodBuilder.startDate, date2.toDate()), with(scheduleId, schedule.getId()), with(name, "Month2")));
 
-    periodMapper.insert(period1);
-    periodMapper.insert(period2);
+    mapper.insert(period1);
+    mapper.insert(period2);
 
-    ProcessingPeriod fetchedPeriod = periodMapper.getLastAddedProcessingPeriod(schedule.getId());
+    ProcessingPeriod fetchedPeriod = mapper.getLastAddedProcessingPeriod(schedule.getId());
     assertThat(fetchedPeriod.getId(), is(period2.getId()));
   }
 
   @Test
-  public void shouldDeleteAPeriod(){
-
+  public void shouldDeleteAPeriod() {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod, with(scheduleId, schedule.getId())));
-    periodMapper.insert(processingPeriod);
+    mapper.insert(processingPeriod);
 
-    periodMapper.delete(processingPeriod.getId());
-    assertThat(periodMapper.getAll(schedule.getId()).size(), is(0));
+    mapper.delete(processingPeriod.getId());
+    assertThat(mapper.getAll(schedule.getId()).size(), is(0));
   }
 
   @Test
-  public void shouldGetPeriodById(){
+  public void shouldGetPeriodById() {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod, with(scheduleId, schedule.getId())));
-    periodMapper.insert(processingPeriod);
+    mapper.insert(processingPeriod);
 
-    ProcessingPeriod period = periodMapper.getById(processingPeriod.getId());
+    ProcessingPeriod period = mapper.getById(processingPeriod.getId());
     assertThat(period.getName(), is(processingPeriod.getName()));
   }
 
+  @Test
+  public void shouldGetAllPeriodsAfterAGivenPeriodAndADate() throws Exception {
+    DateTime date1 = new DateTime();
+    DateTime date2 = date1.plusMonths(1);
+    DateTime date3 = date1.plusMonths(2);
+    DateTime date4 = date1.plusMonths(3);
+    DateTime date5 = date1.plusMonths(4);
+
+    insertProcessingPeriod("Period 1", date1, date2);
+    ProcessingPeriod period2 = insertProcessingPeriod("Period 2", date2.plusDays(1), date3);
+    ProcessingPeriod period3 = insertProcessingPeriod("Period 3", date3.plusDays(1), date4);
+    ProcessingPeriod period4 = insertProcessingPeriod("Period 4", date4.plusDays(1), date5);
+
+    List<ProcessingPeriod> relevantPeriods = mapper.getAllPeriodsAfterDateAndPeriod(schedule.getId(), date3.toDate(), period2.getId());
+
+    assertThat(relevantPeriods.size(), is(2));
+    assertThat(relevantPeriods.get(0).getId(), is(period3.getId()));
+    assertThat(relevantPeriods.get(1).getId(), is(period4.getId()));
+  }
+
+  @Test
+  public void shouldGetAllPeriodsAfterAGivenDate() throws Exception {
+    DateTime date1 = new DateTime();
+    DateTime date2 = date1.plusMonths(1);
+    DateTime date3 = date1.plusMonths(2);
+    DateTime date4 = date1.plusMonths(3);
+    DateTime date5 = date1.plusMonths(4);
+
+    insertProcessingPeriod("Period 1", date1, date2);
+    ProcessingPeriod period2 = insertProcessingPeriod("Period 2", date2.plusDays(1), date3);
+    ProcessingPeriod period3 = insertProcessingPeriod("Period 3", date3.plusDays(1), date4);
+    ProcessingPeriod period4 = insertProcessingPeriod("Period 4", date4.plusDays(1), date5);
+
+    List<ProcessingPeriod> relevantPeriods = mapper.getAllPeriodsAfterDate(schedule.getId(), date3.toDate());
+
+    assertThat(relevantPeriods.size(), is(3));
+    assertThat(relevantPeriods.get(0).getId(), is(period2.getId()));
+    assertThat(relevantPeriods.get(1).getId(), is(period3.getId()));
+    assertThat(relevantPeriods.get(2).getId(), is(period4.getId()));
+  }
+
+  private ProcessingPeriod insertProcessingPeriod(String name, DateTime startDate, DateTime endDate) {
+    ProcessingPeriod period = make(a(defaultProcessingPeriod,
+        with(ProcessingPeriodBuilder.name, name),
+        with(scheduleId, schedule.getId()),
+        with(ProcessingPeriodBuilder.startDate, startDate.toDate()),
+        with(ProcessingPeriodBuilder.endDate, endDate.toDate())));
+
+    mapper.insert(period);
+    return period;
+  }
 }

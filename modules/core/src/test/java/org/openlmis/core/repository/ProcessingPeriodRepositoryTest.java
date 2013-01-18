@@ -11,12 +11,11 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProcessingPeriodMapper;
 import org.springframework.dao.DuplicateKeyException;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
+import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -53,14 +52,28 @@ public class ProcessingPeriodRepositoryTest {
   }
 
   @Test
-  public void shouldGetAllPeriodsForARequisitionGroupAndProgram() throws Exception {
-    List<ProcessingPeriod> processingPeriodList = new ArrayList<>();
-    when(requisitionGroupProgramScheduleRepository.getScheduleIdForRequisitionGroupAndProgram(1, 2)).thenReturn(123);
-    when(mapper.getAll(123)).thenReturn(processingPeriodList);
-    List<ProcessingPeriod> periods = repository.getAllPeriodsForARequisitionGroupAndAProgram(1, 2);
+  public void shouldGetAllPeriodsAfterAGivenDateAndPeriod() throws Exception {
+    int scheduleId = 1;
+    Integer startingPeriodId = 10;
+    Date programStartDate = now().toDate();
+    List<ProcessingPeriod> processingPeriods = Arrays.asList(new ProcessingPeriod());
+    when(mapper.getAllPeriodsAfterDateAndPeriod(scheduleId, programStartDate, startingPeriodId)).thenReturn(processingPeriods);
 
-    verify(mapper).getAll(123);
-    assertThat(periods, is(processingPeriodList));
+    List<ProcessingPeriod> periodList = repository.getAllPeriodsAfterDateAndPeriod(scheduleId, programStartDate, startingPeriodId);
+
+    assertThat(periodList, is(processingPeriods));
+  }
+
+  @Test
+  public void shouldGetAllPeriodsAfterAGivenDate() throws Exception {
+    int scheduleId = 1;
+    Date programStartDate = now().toDate();
+    List<ProcessingPeriod> processingPeriods = Arrays.asList(new ProcessingPeriod());
+    when(mapper.getAllPeriodsAfterDate(scheduleId, programStartDate)).thenReturn(processingPeriods);
+
+    List<ProcessingPeriod> periodList = repository.getAllPeriodsAfterDateAndPeriod(scheduleId, programStartDate, null);
+
+    assertThat(periodList, is(processingPeriods));
   }
 
   @Test

@@ -39,7 +39,6 @@ public class ProcessingPeriodRepository {
     }
   }
 
-
   private void validateStartDateGreaterThanLastPeriodEndDate(ProcessingPeriod processingPeriod) {
     ProcessingPeriod lastAddedProcessingPeriod = mapper.getLastAddedProcessingPeriod(processingPeriod.getScheduleId());
     if (lastAddedProcessingPeriod != null && lastAddedProcessingPeriod.getEndDate().compareTo(processingPeriod.getStartDate()) >= 0)
@@ -58,8 +57,9 @@ public class ProcessingPeriodRepository {
     }
   }
 
-  public List<ProcessingPeriod> getAllPeriodsForARequisitionGroupAndAProgram(Integer requisitionGroupId, Integer programId) {
-    Integer scheduleId = requisitionGroupProgramScheduleRepository.getScheduleIdForRequisitionGroupAndProgram(requisitionGroupId, programId);
-    return mapper.getAll(scheduleId);
+  public List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriod(Integer scheduleId, Date afterDate, Integer startPeriodId) {
+    return startPeriodId == null ?
+        mapper.getAllPeriodsAfterDate(scheduleId, afterDate) :
+        mapper.getAllPeriodsAfterDateAndPeriod(scheduleId, afterDate, startPeriodId);
   }
 }

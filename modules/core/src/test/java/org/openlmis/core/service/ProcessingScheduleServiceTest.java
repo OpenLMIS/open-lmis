@@ -17,12 +17,13 @@ import org.openlmis.core.repository.RequisitionGroupRepository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
 import static org.hamcrest.CoreMatchers.is;
+import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -50,7 +51,7 @@ public class ProcessingScheduleServiceTest {
   @Before
   public void setUp() throws Exception {
     initMocks(this);
-    service = new ProcessingScheduleService(repository, periodRepository, requisitionGroupRepository);
+    service = new ProcessingScheduleService(repository, periodRepository, requisitionGroupRepository, requisitionGroupProgramScheduleRepository);
   }
 
   @Test
@@ -149,7 +150,7 @@ public class ProcessingScheduleServiceTest {
   }
 
   @Test
-  public void shouldDeletePeriodIfStartDateGreaterThanCurrentDate(){
+  public void shouldDeletePeriodIfStartDateGreaterThanCurrentDate() {
     ProcessingPeriod processingPeriod = new ProcessingPeriod();
     processingPeriod.setId(PROCESSING_PERIOD_ID);
     service.deletePeriod(processingPeriod.getId());
@@ -157,32 +158,36 @@ public class ProcessingScheduleServiceTest {
   }
 
   @Test
-  public void shouldThrowExceptionIfStartDateLessThanOrEqualToCurrentDateWhenDeletingPeriod(){
+  public void shouldThrowExceptionIfStartDateLessThanOrEqualToCurrentDateWhenDeletingPeriod() {
     ProcessingPeriod processingPeriod = new ProcessingPeriod();
     processingPeriod.setId(PROCESSING_PERIOD_ID);
     String errorMessage = "some error";
-    doThrow(new DataException( errorMessage)).when(periodRepository).delete(processingPeriod.getId());
+    doThrow(new DataException(errorMessage)).when(periodRepository).delete(processingPeriod.getId());
 
     exException.expect(DataException.class);
-    exException.expectMessage( errorMessage);
+    exException.expectMessage(errorMessage);
 
     service.deletePeriod(processingPeriod.getId());
   }
 
   @Test
-  public void shouldGetAllPeriodsForFacilityAndProgram() throws Exception {
+  public void shouldGetAllRelevantPeriodsAfterAGivenDateAndPeriod() throws Exception {
     Integer requisitionGroupId = 1;
-    Integer facilityId = 10;
     Integer programId = 2;
-
+    Integer facilityId = 3;
+    Integer scheduleId = 4;
+    Integer startingPeriodId = 5;
+    Date programStartDate = now().toDate();
     List<ProcessingPeriod> periodList = Arrays.asList(make(a(defaultProcessingPeriod)));
+
     RequisitionGroup requisitionGroup = make(a(RequisitionGroupBuilder.defaultRequisitionGroup));
     requisitionGroup.setId(requisitionGroupId);
 
     when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(programId, facilityId)).thenReturn(requisitionGroup);
-    when(periodRepository.getAllPeriodsForARequisitionGroupAndAProgram(requisitionGroupId, programId)).thenReturn(periodList);
+    when(requisitionGroupProgramScheduleRepository.getScheduleIdForRequisitionGroupAndProgram(requisitionGroupId, programId)).thenReturn(scheduleId);
+    when(periodRepository.getAllPeriodsAfterDateAndPeriod(scheduleId, programStartDate, startingPeriodId)).thenReturn(periodList);
 
-    List<ProcessingPeriod> periods = service.getAllPeriodsForFacilityAndProgram(facilityId, programId);
+    List<ProcessingPeriod> periods = service.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate, startingPeriodId);
 
     assertThat(periods, is(periodList));
   }

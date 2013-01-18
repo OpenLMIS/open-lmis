@@ -110,17 +110,4 @@ public class ProcessingPeriodControllerTest {
     assertThat(responseEntity.getBody().getSuccessMsg(), is("Period deleted successfully"));
 
   }
-
-  @Test
-  public void shouldGetAllPeriodsForFacilityAndProgram() throws Exception {
-    List<ProcessingPeriod> mockedList = Arrays.asList(new ProcessingPeriod());
-    when(service.getAllPeriodsForFacilityAndProgram(FACILITY_ID, PROGRAM_ID)).thenReturn(mockedList);
-
-    ResponseEntity<OpenLmisResponse> responseEntity = controller.getAllPeriodsForFacilityAndProgram(FACILITY_ID, PROGRAM_ID);
-
-    List<ProcessingPeriod> periodList = (List<ProcessingPeriod>) responseEntity.getBody().getData().get(ProcessingPeriodController.PERIODS);
-    verify(service).getAllPeriodsForFacilityAndProgram(FACILITY_ID, PROGRAM_ID);
-    assertThat(periodList, is(mockedList));
-
-  }
 }

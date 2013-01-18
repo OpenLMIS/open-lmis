@@ -16,8 +16,8 @@ import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper;
-import org.openlmis.rnr.repository.mapper.RnrLineItemMapper;
 import org.openlmis.rnr.repository.mapper.RequisitionMapper;
+import org.openlmis.rnr.repository.mapper.RnrLineItemMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,11 +43,11 @@ public class RequisitionRepositoryTest {
   @Mock
   RequisitionMapper requisitionMapper;
   @Mock
-  RnrLineItemMapper rnrLineItemMapper;
+  private RnrLineItemMapper rnrLineItemMapper;
   @Mock
-  LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
+  private LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
   @Mock
-  SupervisoryNodeRepository supervisoryNodeRepository;
+  private SupervisoryNodeRepository supervisoryNodeRepository;
 
   private RequisitionRepository requisitionRepository;
   private LossesAndAdjustments lossAndAdjustmentForLineItem = new LossesAndAdjustments();
@@ -165,5 +165,13 @@ public class RequisitionRepositoryTest {
 
     verify(requisitionMapper).getSubmittedRequisitionsForFacilitiesAndPrograms("{1, 2}", "{1, 2}");
     assertThat(resultRequisitions, is(expectedRequisitions));
+  }
+
+  @Test
+  public void shouldGetTheLastRequisitionToEnterThePostSubmitFlow() throws Exception {
+    Rnr rnr = new Rnr();
+    when(requisitionMapper.getLastRequisitionToEnterThePostSubmitFlow(FACILITY_ID, PROGRAM_ID)).thenReturn(rnr);
+
+    assertThat(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY_ID, PROGRAM_ID), is(rnr));
   }
 }

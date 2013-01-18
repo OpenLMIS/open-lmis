@@ -26,7 +26,6 @@ public class ProcessingPeriodBuilder {
   public static final Calendar START_DATE;
   public static final Calendar END_DATE;
   public static final Integer NUMBER_OF_MONTHS = 1;
-
   public static final Integer SCHEDULE_ID = 1;
 
   static{

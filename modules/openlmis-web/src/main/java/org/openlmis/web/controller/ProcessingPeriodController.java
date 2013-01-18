@@ -62,11 +62,4 @@ public class ProcessingPeriodController extends BaseController {
     }
     return OpenLmisResponse.success("Period deleted successfully");
   }
-
-  @RequestMapping(value = "/logistics/facility/{facilityId}/program/{programId}/periods", method = RequestMethod.GET, headers = "Accept=application/json")
-  @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> getAllPeriodsForFacilityAndProgram(@PathVariable("facilityId") Integer facilityId, @PathVariable("programId") Integer programId) {
-    List<ProcessingPeriod> periodList = processingScheduleService.getAllPeriodsForFacilityAndProgram(facilityId, programId);
-    return OpenLmisResponse.response(PERIODS, periodList);
-  }
 }

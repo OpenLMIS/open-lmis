@@ -24,21 +24,21 @@ import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 @NoArgsConstructor
 public class RequisitionRepository {
 
-  private RequisitionMapper requisitionMapper;
+  private RequisitionMapper mapper;
   private RnrLineItemMapper rnrLineItemMapper;
   private LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
 
 
   @Autowired
   public RequisitionRepository(RequisitionMapper requisitionMapper, RnrLineItemMapper rnrLineItemMapper, LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper) {
-    this.requisitionMapper = requisitionMapper;
+    this.mapper = requisitionMapper;
     this.rnrLineItemMapper = rnrLineItemMapper;
     this.lossesAndAdjustmentsMapper = lossesAndAdjustmentsMapper;
   }
 
   public void insert(Rnr requisition) {
     requisition.setStatus(INITIATED);
-    requisitionMapper.insert(requisition);
+    mapper.insert(requisition);
     List<RnrLineItem> lineItems = requisition.getLineItems();
     for (RnrLineItem lineItem : lineItems) {
       lineItem.setRnrId(requisition.getId());
@@ -48,7 +48,7 @@ public class RequisitionRepository {
   }
 
   public void update(Rnr rnr) {
-    requisitionMapper.update(rnr);
+    mapper.update(rnr);
     List<RnrLineItem> lineItems = rnr.getLineItems();
     for (RnrLineItem lineItem : lineItems) {
       rnrLineItemMapper.update(lineItem);
@@ -64,7 +64,7 @@ public class RequisitionRepository {
   }
 
   public Rnr getRequisition(Integer facilityId, Integer programId, Integer periodId) {
-    Rnr rnr = requisitionMapper.getRequisition(facilityId, programId, periodId);
+    Rnr rnr = mapper.getRequisition(facilityId, programId, periodId);
     if (rnr == null) return null;
 
     rnr.setLineItems(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()));
@@ -79,7 +79,7 @@ public class RequisitionRepository {
   }
 
   public Rnr getById(Integer rnrId) {
-    Rnr requisition = requisitionMapper.getById(rnrId);
+    Rnr requisition = mapper.getById(rnrId);
     if (requisition == null) throw new DataException("Requisition Not Found");
     return requisition;
   }
@@ -87,8 +87,12 @@ public class RequisitionRepository {
   public List<RnrDTO> getSubmittedRequisitionsForFacilitiesAndPrograms(List<Facility> facilities, List<Program> programs) {
     CommaSeparator<Facility> facilitySeparator = new CommaSeparator<>();
     CommaSeparator<Program> programSeparator = new CommaSeparator<>();
-    return requisitionMapper.getSubmittedRequisitionsForFacilitiesAndPrograms(facilitySeparator.commaSeparateIds(facilities),
+    return mapper.getSubmittedRequisitionsForFacilitiesAndPrograms(facilitySeparator.commaSeparateIds(facilities),
       programSeparator.commaSeparateIds(programs));
+  }
+
+  public Rnr getLastRequisitionToEnterThePostSubmitFlow(Integer facilityId, Integer programId) {
+    return mapper.getLastRequisitionToEnterThePostSubmitFlow(facilityId, programId);
   }
 }
 

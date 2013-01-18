@@ -3,6 +3,7 @@ package org.openlmis.web.controller;
 import org.junit.Before;
 import org.junit.Test;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.rnr.domain.Rnr;
@@ -15,6 +16,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -22,8 +24,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.openlmis.web.controller.RequisitionController.RNR;
-import static org.openlmis.web.controller.RequisitionController.RNR_LIST;
+import static org.openlmis.web.controller.RequisitionController.*;
 import static org.powermock.api.mockito.PowerMockito.doThrow;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -156,6 +157,17 @@ public class RequisitionControllerTest {
     ResponseEntity<OpenLmisResponse> response = controller.fetchUserSupervisedRnrForApproval(request);
     verify(requisitionService).listForApproval(USER_ID);
     assertThat((List<RnrDTO>) response.getBody().getData().get(RNR_LIST), is(rnrList));
+  }
+
+  @Test
+  public void shouldReturnAllPeriodsForInitiatingRequisition() {
+    List<ProcessingPeriod> periodList = Arrays.asList(new ProcessingPeriod());
+    when(requisitionService.getAllPeriodsForInitiatingRequisition(1, 2)).thenReturn(periodList);
+
+    ResponseEntity<OpenLmisResponse> response = controller.getAllPeriodsForInitiatingRequisition(1, 2);
+
+    verify(requisitionService).getAllPeriodsForInitiatingRequisition(1, 2);
+    assertThat((List<ProcessingPeriod>) response.getBody().getData().get(PERIODS), is(periodList));
   }
 }
 

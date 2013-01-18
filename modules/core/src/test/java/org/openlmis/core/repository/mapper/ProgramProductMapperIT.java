@@ -52,7 +52,7 @@ public class ProgramProductMapperIT {
   }
 
   @Test
-  public void shouldGetProgramProductByProgramIdAndProductid() throws Exception {
+  public void shouldGetProgramProductByProgramIdAndProductId() throws Exception {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
     programProductMapper.insert(programProduct);
 

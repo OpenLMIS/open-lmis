@@ -17,9 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
-import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
-import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
 @Service
@@ -35,17 +33,17 @@ public class RequisitionService {
   public static final String NO_SUPERVISORY_NODE_CONTACT_THE_ADMINISTRATOR = "rnr.submitted.without.supervisor";
 
   private RequisitionRepository requisitionRepository;
-
   private RnrTemplateRepository rnrTemplateRepository;
   private FacilityApprovedProductService facilityApprovedProductService;
   private SupervisoryNodeService supervisoryNodeService;
   private RoleRightsService roleRightsService;
   private FacilityService facilityService;
   private ProgramService programService;
+  private ProcessingScheduleService processingScheduleService;
 
   @Autowired
   public RequisitionService(RequisitionRepository requisitionRepository, RnrTemplateRepository rnrTemplateRepository, FacilityApprovedProductService facilityApprovedProductService,
-                            SupervisoryNodeService supervisoryNodeRepository, RoleRightsService roleRightsService, FacilityService facilityService, ProgramService programService) {
+                            SupervisoryNodeService supervisoryNodeRepository, RoleRightsService roleRightsService, FacilityService facilityService, ProgramService programService, ProcessingScheduleService processingScheduleService) {
     this.requisitionRepository = requisitionRepository;
     this.rnrTemplateRepository = rnrTemplateRepository;
     this.facilityApprovedProductService = facilityApprovedProductService;
@@ -53,6 +51,7 @@ public class RequisitionService {
     this.roleRightsService = roleRightsService;
     this.facilityService = facilityService;
     this.programService = programService;
+    this.processingScheduleService = processingScheduleService;
   }
 
   @Transactional
@@ -122,10 +121,18 @@ public class RequisitionService {
   public List<RnrDTO> listForApproval(Integer userId) {
     List<Program> programs = programService.getActiveProgramsForUserWithRights(userId, APPROVE_REQUISITION);
     Set<Facility> facilities = new HashSet<>();
-    for(Program program : programs){
+    for (Program program : programs) {
       facilities.addAll(facilityService.getUserSupervisedFacilities(userId, program.getId(), APPROVE_REQUISITION));
     }
     return requisitionRepository.getSubmittedRequisitionsForFacilitiesAndPrograms(new ArrayList<>(facilities), programs);
   }
+
+  public List<ProcessingPeriod> getAllPeriodsForInitiatingRequisition(Integer facilityId, Integer programId) {
+    Date programStartDate = programService.getProgramStartDate(facilityId, programId);
+    Rnr lastRequisitionToEnterThePostSubmitFlow = requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(facilityId, programId);
+
+    Integer periodIdOfLastRequisitionToEnterPostSubmitFlow = lastRequisitionToEnterThePostSubmitFlow == null ? null : lastRequisitionToEnterThePostSubmitFlow.getPeriodId();
+    return processingScheduleService.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate, periodIdOfLastRequisitionToEnterPostSubmitFlow);
   }
+}
 
