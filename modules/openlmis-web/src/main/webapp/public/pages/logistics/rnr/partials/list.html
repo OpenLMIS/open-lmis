@@ -1,4 +1,6 @@
 <form id="form" name="form" class="css-form">
-  <div class="gridStyle" ng-grid="gridOptions">
-  </div>
+    <div class="alert alert-success" id="NoRequisitionsPendingMessage" ng-hide="requisitions.length">
+        No R&Rs pending for approval
+    </div>
+    <div class="gridStyle" ng-grid="gridOptions"></div>
 </form>

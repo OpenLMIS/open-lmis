@@ -2,9 +2,9 @@
     <ul style="display:none">
         <li><a href="/">Home</a></li>
 
-        <li class="has-children" ng-show="hasPermission('CREATE_REQUISITION') || hasPermission('AUTHORIZE_REQUISITION')"><a href="javascript: void(0)">Requisitions</a>
+        <li class="has-children" ng-show="hasPermission('CREATE_REQUISITION') || hasPermission('AUTHORIZE_REQUISITION') || hasPermission('APPROVE_REQUISITION')"><a href="javascript: void(0)">Requisitions</a>
             <ul>
-                <li>
+                <li ng-show="hasPermission('CREATE_REQUISITION') || hasPermission('AUTHORIZE_REQUISITION')">
                     <a href="javascript: void(0);">Create</a>
                     <ul>
                         <li><a href="/public/pages/logistics/rnr/index.html">My Facility</a></li>
@@ -12,7 +12,7 @@
                             Facility</a></li>
                     </ul>
                 </li>
-                <li>
+                <li ng-show="hasPermission('APPROVE_REQUISITION')">
                     <a href="/public/pages/logistics/rnr/index.html#/rnr-for-approval">Approve</a>
                 </li>
 
