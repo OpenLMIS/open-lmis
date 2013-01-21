@@ -169,6 +169,16 @@
                         <property name="recordHandler" ref="facilityApprovedProductPersistenceHandler"/>
                     </bean>
                 </entry>
+                <entry key="programProductPrice">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Program Product Price"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.ProgramProductPrice</value>
+                        </property>
+                        <property name="recordHandler" ref="programProductPricePersistenceHandler"/>
+                    </bean>
+                </entry>
+
             </map>
         </constructor-arg>
     </bean>

@@ -15,9 +15,9 @@ public class ProgramProductPrice implements Importable {
   private Integer id;
 
   @ImportFields(importFields = {
-      @ImportField(name = "Program Code", type = "String", nested = "code", mandatory = true),
-      @ImportField(name = "Product Code", type = "String", nested = "code", mandatory = true),
-      @ImportField(name = "Price per pack", type = "double", mandatory = true)
+      @ImportField(name = "Program Code", type = "String", nested = "program.code", mandatory = true),
+      @ImportField(name = "Product Code", type = "String", nested = "product.code", mandatory = true),
+      @ImportField(name = "Price per pack", type = "double", nested = "currentPrice", mandatory = true)
   })
   private ProgramProduct programProduct;
 

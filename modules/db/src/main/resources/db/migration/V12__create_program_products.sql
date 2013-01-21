@@ -7,6 +7,6 @@ CREATE TABLE program_products (
     active BOOLEAN NOT NULL,
     currentPrice NUMERIC(20,2) DEFAULT 0,
     modifiedBy VARCHAR(50),
-    modifiedDate TIMESTAMP,
+    modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (productId, programId)
 );

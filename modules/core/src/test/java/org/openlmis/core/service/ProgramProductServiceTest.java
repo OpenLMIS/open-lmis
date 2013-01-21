@@ -24,6 +24,7 @@ public class ProgramProductServiceTest {
   public void shouldUpdateCurrentPriceOfProgramProductCodeCombinationAndUpdatePriceHistory() throws Exception {
     programProductService = new ProgramProductService(programProductRepository);
     ProgramProductPrice programProductPrice = new ProgramProductPrice();
+    programProductPrice.setModifiedBy("User");
     ProgramProduct programProduct = new ProgramProduct();
     programProductPrice.setProgramProduct(programProduct);
     ProgramProduct returnedProgramProduct = new ProgramProduct();
@@ -32,8 +33,9 @@ public class ProgramProductServiceTest {
     programProductService.save(programProductPrice);
 
     assertThat(programProductPrice.getProgramProduct().getId(), is(123));
-    verify(programProductRepository).getProgramProductByProgramAndProductCode(returnedProgramProduct);
-    verify(programProductRepository).updateCurrentPrice(returnedProgramProduct);
+    assertThat(programProductPrice.getProgramProduct().getModifiedBy(), is("User"));
+    verify(programProductRepository).getProgramProductByProgramAndProductCode(programProduct);
+    verify(programProductRepository).updateCurrentPrice(programProduct);
     verify(programProductRepository).updatePriceHistory(programProductPrice);
   }
 }

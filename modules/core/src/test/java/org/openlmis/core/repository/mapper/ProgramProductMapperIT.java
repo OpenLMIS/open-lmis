@@ -18,6 +18,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.ProductBuilder.displayOrder;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
@@ -52,7 +53,7 @@ public class ProgramProductMapperIT {
   }
 
   @Test
-  public void shouldGetProgramProductByProgramIdAndProductId() throws Exception {
+  public void shouldGetProgramProductIdByProgramIdAndProductId() throws Exception {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
     programProductMapper.insert(programProduct);
 
@@ -62,13 +63,28 @@ public class ProgramProductMapperIT {
   }
 
   @Test
+  public void shouldGetProgramProductByProgramIdAndProductId() throws Exception {
+    ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
+    programProductMapper.insert(programProduct);
+
+    ProgramProduct result = programProductMapper.getByProgramAndProductId(program.getId(), product.getId());
+
+    assertThat(result.getId(), is(programProduct.getId()));
+  }
+
+  @Test
   public void shouldUpdateCurrentPriceForProgramProduct() throws Exception {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true, 100.0d);
+    programProduct.setModifiedBy("modifiedBy");
     programProductMapper.insert(programProduct);
     programProduct.setCurrentPrice(200.01);
+
     programProductMapper.updateCurrentPrice(programProduct);
+
     ProgramProduct returnedProgramProduct = programProductMapper.getById(programProduct.getId());
     assertThat(returnedProgramProduct.getCurrentPrice(), is(200.01));
+    assertThat(returnedProgramProduct.getModifiedBy(), is("modifiedBy"));
+    assertThat(returnedProgramProduct.getModifiedDate(), is(notNullValue()));
   }
 
 
