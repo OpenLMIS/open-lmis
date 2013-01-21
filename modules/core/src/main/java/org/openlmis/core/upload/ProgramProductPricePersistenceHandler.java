@@ -4,10 +4,10 @@ import org.openlmis.core.domain.ProgramProductPrice;
 import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.upload.Importable;
 
-public class ProgramProductCostPersistenceHandler extends AbstractModelPersistenceHandler {
+public class ProgramProductPricePersistenceHandler extends AbstractModelPersistenceHandler {
   private ProgramProductService programProductService;
 
-  public ProgramProductCostPersistenceHandler(ProgramProductService service) {
+  public ProgramProductPricePersistenceHandler(ProgramProductService service) {
 
     this.programProductService = service;
   }

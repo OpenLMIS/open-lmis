@@ -29,6 +29,9 @@ public interface ProgramProductMapper {
   @Select(("SELECT id FROM program_products where programId = #{programId} and productId = #{productId}"))
   Integer getIdByProgramAndProductId(@Param("programId") Integer programId, @Param("productId") Integer productId);
 
-  @Update("update program_products set currentPrice = #{currentPrice} where programId = #{program.id} and productId = #{product.id}")
+  @Update("update program_products set currentPrice = #{currentPrice} where id = #{id}")
   void updateCurrentPrice(ProgramProduct programProduct);
+
+  @Select(("SELECT id FROM program_products where programId = #{programId} and productId = #{productId}"))
+  ProgramProduct getByProgramAndProductId(Integer programId, Integer productId);
 }

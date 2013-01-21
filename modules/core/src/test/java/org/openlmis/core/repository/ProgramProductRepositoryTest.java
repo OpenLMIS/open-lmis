@@ -27,6 +27,7 @@ import static org.openlmis.core.builder.ProductBuilder.defaultProduct;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramProductBuilder.PRODUCT_CODE;
 import static org.openlmis.core.builder.ProgramProductBuilder.PROGRAM_CODE;
+import static org.openlmis.core.repository.ProgramProductRepository.PROGRAM_PRODUCT_INVALID;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(org.mockito.runners.MockitoJUnitRunner.class)
@@ -112,28 +113,55 @@ public class ProgramProductRepositoryTest {
   public void shouldThrowExceptionIfNoProgramProductExistForGivenProgramIdAndProductId() {
     when(programProductMapper.getIdByProgramAndProductId(1, 2)).thenReturn(null);
     expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("programProduct.product.program.invalid");
+    expectedEx.expectMessage(PROGRAM_PRODUCT_INVALID);
     programProductRepository.getIdByProgramIdAndProductId(1, 2);
   }
 
 
   @Test
-  public void shouldGetIdForProgramAndProductCodesBeforeUpdatingCurrentPrice() throws Exception {
+  public void shouldGetProgramProductByProgramAndProductCodes() throws Exception {
     ProgramProduct programProduct = make(a(ProgramProductBuilder.defaultProgramProduct));
 
     final int programId = 123;
     when(programRepository.getIdByCode(PROGRAM_CODE)).thenReturn(programId);
     final int productId = 12;
     when(productRepository.getIdByCode(PRODUCT_CODE)).thenReturn(productId);
+    ProgramProduct expectedProgramProduct = new ProgramProduct();
+    when(programProductMapper.getByProgramAndProductId(programId, productId)).thenReturn(expectedProgramProduct);
 
-    programProductRepository.updateCurrentPrice(programProduct);
+    ProgramProduct result = programProductRepository.getProgramProductByProgramAndProductCode(programProduct);
     verify(programRepository).getIdByCode(PROGRAM_CODE);
     verify(productRepository).getIdByCode(PRODUCT_CODE);
+    verify(programProductMapper).getByProgramAndProductId(programId, productId);
 
-    assertThat(programProduct.getProgram().getId(), is(programId));
-    assertThat(programProduct.getProduct().getId(), is(productId));
+    assertThat(result, is(expectedProgramProduct));
+  }
+
+  @Test
+  public void shouldThrowExceptionIfProgramProductByProgramAndProductCodesNotFound() throws Exception {
+    ProgramProduct programProduct = make(a(ProgramProductBuilder.defaultProgramProduct));
+
+    final int programId = 123;
+    when(programRepository.getIdByCode(PROGRAM_CODE)).thenReturn(programId);
+    final int productId = 12;
+    when(productRepository.getIdByCode(PRODUCT_CODE)).thenReturn(productId);
+    when(programProductMapper.getByProgramAndProductId(programId, productId)).thenReturn(null);
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage(PROGRAM_PRODUCT_INVALID);
+    programProductRepository.getProgramProductByProgramAndProductCode(programProduct);
+    verify(programRepository).getIdByCode(PROGRAM_CODE);
+    verify(productRepository).getIdByCode(PRODUCT_CODE);
+    verify(programProductMapper).getByProgramAndProductId(programId, productId);
+
+  }
+
+  @Test
+  public void shouldUpdateCurrentPriceOfProgramProduct() throws Exception {
+    ProgramProduct programProduct = make(a(ProgramProductBuilder.defaultProgramProduct));
+    programProductRepository.updateCurrentPrice(programProduct);
+
     verify(programProductMapper).updateCurrentPrice(programProduct);
-
   }
 
   @Test

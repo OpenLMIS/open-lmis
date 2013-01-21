@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 public class ProgramProductRepository {
 
+  public static final String PROGRAM_PRODUCT_INVALID = "programProduct.product.program.invalid";
   private ProgramRepository programRepository;
   private ProductMapper productMapper;
   private ProductRepository productRepository;
@@ -50,7 +51,7 @@ public class ProgramProductRepository {
     Integer programProductId = programProductMapper.getIdByProgramAndProductId(programId, productId);
 
     if(programProductId == null)
-      throw new DataException("programProduct.product.program.invalid");
+      throw new DataException(PROGRAM_PRODUCT_INVALID);
 
     return programProductId;
   }
@@ -62,9 +63,20 @@ public class ProgramProductRepository {
   }
 
   public void updateCurrentPrice(ProgramProduct programProduct) {
-    programProduct.getProgram().setId(programRepository.getIdByCode(programProduct.getProgram().getCode()));
-    programProduct.getProduct().setId(productRepository.getIdByCode(programProduct.getProduct().getCode()));
     programProductMapper.updateCurrentPrice(programProduct);
+  }
+
+  public ProgramProduct getProgramProductByProgramAndProductCode(ProgramProduct programProduct) {
+    return getByProgramIdAndProductId(programRepository.getIdByCode(programProduct.getProgram().getCode()),
+        productRepository.getIdByCode(programProduct.getProduct().getCode()));
+  }
+
+  private ProgramProduct getByProgramIdAndProductId(Integer programId, Integer productId) {
+    final ProgramProduct programProduct = programProductMapper.getByProgramAndProductId(programId, productId);
+    if(programProduct == null)
+          throw new DataException(PROGRAM_PRODUCT_INVALID);
+
+    return programProduct;
   }
 
   public void updatePriceHistory(ProgramProductPrice programProductPrice) {
