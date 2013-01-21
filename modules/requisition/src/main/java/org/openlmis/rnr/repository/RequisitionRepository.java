@@ -1,18 +1,16 @@
 package org.openlmis.rnr.repository;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.rnr.domain.LossesAndAdjustments;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper;
-import org.openlmis.rnr.repository.mapper.RnrLineItemMapper;
 import org.openlmis.rnr.repository.mapper.RequisitionMapper;
+import org.openlmis.rnr.repository.mapper.RnrLineItemMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -84,11 +82,8 @@ public class RequisitionRepository {
     return requisition;
   }
 
-  public List<RnrDTO> getSubmittedRequisitionsForFacilitiesAndPrograms(List<Facility> facilities, List<Program> programs) {
-    CommaSeparator<Facility> facilitySeparator = new CommaSeparator<>();
-    CommaSeparator<Program> programSeparator = new CommaSeparator<>();
-    return mapper.getSubmittedRequisitionsForFacilitiesAndPrograms(facilitySeparator.commaSeparateIds(facilities),
-      programSeparator.commaSeparateIds(programs));
+  public List<RnrDTO> getAuthorizedRequisitions(RoleAssignment roleAssignment) {
+    return mapper.getAuthorizedRequisitions(roleAssignment);
   }
 
   public Rnr getLastRequisitionToEnterThePostSubmitFlow(Integer facilityId, Integer programId) {

@@ -7,6 +7,7 @@ CREATE TABLE requisition (
   status                          VARCHAR(20) NOT NULL,
   fullSupplyItemsSubmittedCost    NUMERIC(15, 4),
   nonFullSupplyItemsSubmittedCost NUMERIC(15, 4),
+  supervisoryNodeId               INTEGER     REFERENCES supervisory_nodes (id),
   modifiedBy                      VARCHAR(50),
   submittedDate                   TIMESTAMP,
   modifiedDate                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

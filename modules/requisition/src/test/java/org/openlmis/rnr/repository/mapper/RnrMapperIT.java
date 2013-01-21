@@ -8,12 +8,12 @@ import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.builder.ProcessingScheduleBuilder;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.ProcessingSchedule;
+import org.openlmis.core.builder.SupervisoryNodeBuilder;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProcessingPeriodMapper;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
+import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrStatus;
 import org.openlmis.rnr.dto.RnrDTO;
@@ -59,6 +59,9 @@ public class RnrMapperIT {
   @Autowired
   private ProcessingScheduleMapper processingScheduleMapper;
   private ProcessingPeriod processingPeriod3;
+  @Autowired
+  SupervisoryNodeMapper supervisoryNodeMapper;
+  private SupervisoryNode supervisoryNode;
 
   @Before
   public void setUp() {
@@ -71,6 +74,7 @@ public class RnrMapperIT {
     processingPeriod1 = insertPeriod("Period 1");
     processingPeriod2 = insertPeriod("Period 2");
     processingPeriod3 = insertPeriod("Period 3");
+    supervisoryNode = insertSupervisoryNode();
   }
 
   @Test
@@ -82,7 +86,7 @@ public class RnrMapperIT {
   @Test
   public void shouldReturnRequisitionById() {
     Rnr requisition = insertRequisition(processingPeriod1, INITIATED);
-    Rnr fetchedRequisition = mapper.getRequisitionById(requisition.getId());
+    Rnr fetchedRequisition = mapper.getById(requisition.getId());
     assertThat(fetchedRequisition.getId(), is(requisition.getId()));
     assertThat(fetchedRequisition.getProgramId(), is(equalTo(PROGRAM_ID)));
     assertThat(fetchedRequisition.getFacilityId(), is(equalTo(facility.getId())));
@@ -97,14 +101,17 @@ public class RnrMapperIT {
     requisition.setModifiedBy(USER_ID);
     Date submittedDate = new Date();
     requisition.setSubmittedDate(submittedDate);
+    requisition.setSupervisoryNodeId(supervisoryNode.getId());
+
 //    requisition.setFullSupplyItemsSubmittedCost(100.5F);
 //    requisition.setTotalSubmittedCost(100.5F);
 
     mapper.update(requisition);
 
-    Rnr updatedRequisition = mapper.getRequisitionById(requisition.getId());
+    Rnr updatedRequisition = mapper.getById(requisition.getId());
 
     assertThat(updatedRequisition.getId(), is(requisition.getId()));
+    assertThat(updatedRequisition.getSupervisoryNodeId(), is(requisition.getSupervisoryNodeId()));
     assertThat(updatedRequisition.getModifiedBy(), is(equalTo(USER_ID)));
     assertThat(updatedRequisition.getSubmittedDate(), is(submittedDate));
 //    assertThat(updatedRequisition.getFullSupplyItemsSubmittedCost(), is(100.5F));
@@ -137,18 +144,23 @@ public class RnrMapperIT {
 
   @Test
   public void shouldNotGetInitiatedRequisitionsForFacilitiesAndPrograms() throws Exception {
-    insertRequisition(processingPeriod1, INITIATED);
+    Rnr requisition = insertRequisition(processingPeriod1, INITIATED);
+    requisition.setSupervisoryNodeId(supervisoryNode.getId());
+    mapper.update(requisition);
 
-    List<RnrDTO> requisitions = mapper.getSubmittedRequisitionsForFacilitiesAndPrograms("{" + facility.getId() + "}", "{" + PROGRAM_ID + "}");
+    List<RnrDTO> requisitions = mapper.getAuthorizedRequisitions(null);
 
     assertThat(requisitions.size(), is(0));
   }
 
   @Test
-  public void shouldGetRequisitionsInSubmittedStateForFacilitiesAndPrograms() throws Exception {
+  public void shouldGetRequisitionsInSubmittedStateForRoleAssignment() throws Exception {
     Rnr requisition = insertRequisition(processingPeriod1, AUTHORIZED);
+    requisition.setSupervisoryNodeId(supervisoryNode.getId());
+    mapper.update(requisition);
+    RoleAssignment roleAssignment = new RoleAssignment(USER_ID, 1, PROGRAM_ID, supervisoryNode);
 
-    List<RnrDTO> requisitions = mapper.getSubmittedRequisitionsForFacilitiesAndPrograms("{" + facility.getId() + "}", "{" + PROGRAM_ID + "}");
+    List<RnrDTO> requisitions = mapper.getAuthorizedRequisitions(roleAssignment);
 
     RnrDTO rnr = requisitions.get(0);
     assertThat(requisitions.size(), is(1));
@@ -190,5 +202,13 @@ public class RnrMapperIT {
     processingPeriodMapper.insert(processingPeriod);
 
     return processingPeriod;
+  }
+
+  private SupervisoryNode insertSupervisoryNode() {
+    supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
+    supervisoryNode.setFacility(facility);
+
+    supervisoryNodeMapper.insert(supervisoryNode);
+    return supervisoryNode;
   }
 }

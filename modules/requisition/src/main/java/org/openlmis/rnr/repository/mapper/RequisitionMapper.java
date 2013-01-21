@@ -1,6 +1,7 @@
 package org.openlmis.rnr.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.springframework.stereotype.Repository;
@@ -21,14 +22,11 @@ public interface RequisitionMapper {
       "modifiedDate = DEFAULT,",
       "fullSupplyItemsSubmittedCost = #{fullSupplyItemsSubmittedCost},",
       "submittedDate = #{submittedDate},",
-      "nonFullSupplyItemsSubmittedCost = #{nonFullSupplyItemsSubmittedCost}",
+      "nonFullSupplyItemsSubmittedCost = #{nonFullSupplyItemsSubmittedCost},",
+      "supervisoryNodeId = #{supervisoryNodeId}",
       "WHERE id = #{id}"})
   void update(Rnr requisition);
 
-  @Select("SELECT * FROM requisition WHERE id = #{rnrId}")
-  Rnr getRequisitionById(Integer rnrId);
-
-  // TODO: Duplicate method
   @Select("SELECT * FROM requisition WHERE id = #{rnrId}")
   Rnr getById(Integer rnrId);
 
@@ -38,11 +36,11 @@ public interface RequisitionMapper {
       "INNER JOIN facilities F ON R.facilityId = F.id",
       "INNER JOIN programs P ON R.programId = P.id",
       "INNER JOIN processing_periods PP ON R.periodId = PP.id",
-      "WHERE R.facilityId = ANY (#{commaSeparatedFacilities}::INTEGER[])",
-      "AND R.programId =  ANY (#{commaSeparatedPrograms}::INTEGER[])",
+      "AND R.programId =  #{programId}",
+      "AND R.supervisoryNodeId =  #{supervisoryNode.id}",
+      "AND P.active =  'true'",
       "AND R.status = 'AUTHORIZED'"})
-  List<RnrDTO> getSubmittedRequisitionsForFacilitiesAndPrograms(@Param("commaSeparatedFacilities") String commaSeparatedFacilities,
-                                                                @Param("commaSeparatedPrograms") String commaSeparatedPrograms);
+  List<RnrDTO> getAuthorizedRequisitions(RoleAssignment roleAssignment);
 
   @Select("SELECT * FROM requisition WHERE facilityId = #{facilityId} AND programId= #{programId} AND periodId = #{periodId}")
   Rnr getRequisition(@Param("facilityId") Integer facilityId,

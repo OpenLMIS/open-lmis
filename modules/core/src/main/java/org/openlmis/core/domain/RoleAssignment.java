@@ -11,4 +11,5 @@ public class RoleAssignment {
     private Integer userId;
     private Integer roleId;
     private Integer programId;
+    private SupervisoryNode supervisoryNode;
 }

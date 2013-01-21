@@ -28,8 +28,8 @@ public class RoleRightsService {
         this.roleAssignmentRepository = roleAssignmentRepository;
     }
 
-    public List<RoleAssignment> getRoleAssignments(Right right, String userName) {
-        return roleAssignmentRepository.getRoleAssignmentsForUserWithRight(right, userName);
+    public List<RoleAssignment> getRoleAssignments(Right right, int userId) {
+        return roleAssignmentRepository.getRoleAssignmentsForUserWithRight(right, userId);
     }
 
     public List<Right> getRights(String username) {

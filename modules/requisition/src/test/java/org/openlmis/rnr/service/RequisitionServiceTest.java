@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.builder.ProductBuilder;
+import org.openlmis.core.builder.SupervisoryNodeBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
@@ -74,7 +75,7 @@ public class RequisitionServiceTest {
   @Before
   public void setup() {
     requisitionService = new RequisitionService(requisitionRepository, rnrTemplateRepository, facilityApprovedProductService,
-        supervisoryNodeService, roleRightService, facilityService, programService, processingScheduleService);
+      supervisoryNodeService, roleRightService, facilityService, programService, processingScheduleService);
     submittedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, SUBMITTED)));
     initiatedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, INITIATED)));
   }
@@ -122,7 +123,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY_ID, PROGRAM_ID)).thenReturn(date1.toDate());
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY_ID, PROGRAM_ID)).thenReturn(rnr2);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY_ID, PROGRAM_ID, date1.toDate(), processingPeriod2.getId())).
-        thenReturn(Arrays.asList(processingPeriod3, processingPeriod4));
+      thenReturn(Arrays.asList(processingPeriod3, processingPeriod4));
 
     List<ProcessingPeriod> periods = requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY_ID, PROGRAM_ID);
 
@@ -142,7 +143,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY_ID, PROGRAM_ID)).thenReturn(date1.toDate());
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY_ID, PROGRAM_ID)).thenReturn(null);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY_ID, PROGRAM_ID, date1.toDate(), null)).
-        thenReturn(Arrays.asList(processingPeriod1, processingPeriod2));
+      thenReturn(Arrays.asList(processingPeriod1, processingPeriod2));
 
     List<ProcessingPeriod> periods = requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY_ID, PROGRAM_ID);
 
@@ -153,13 +154,13 @@ public class RequisitionServiceTest {
 
   private Rnr createRequisition(int periodId, RnrStatus status) {
     return make(a(RequisitionBuilder.defaultRnr,
-        with(RequisitionBuilder.periodId, periodId),
-        with(RequisitionBuilder.status, status)));
+      with(RequisitionBuilder.periodId, periodId),
+      with(RequisitionBuilder.status, status)));
   }
 
   private ProcessingPeriod createProcessingPeriod(int id, DateTime startDate) {
     ProcessingPeriod processingPeriod = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod,
-        with(ProcessingPeriodBuilder.startDate, startDate.toDate())));
+      with(ProcessingPeriodBuilder.startDate, startDate.toDate())));
     processingPeriod.setId(id);
     return processingPeriod;
   }
@@ -203,12 +204,14 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  public void shouldAuthorizeAValidRnr() throws Exception {
+  public void shouldAuthorizeAValidRnrAndTagWithSupervisoryNode() throws Exception {
     Rnr rnr = spy(make(a(defaultRnr)));
     when(requisitionRepository.getById(rnr.getId())).thenReturn(submittedRnr);
     when(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId())).thenReturn(true);
     doReturn(true).when(rnr).validate(true);
     when(supervisoryNodeService.getApproverFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(new User());
+    SupervisoryNode approverNode = new SupervisoryNode();
+    when(supervisoryNodeService.getFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(approverNode);
 
     OpenLmisMessage authorize = requisitionService.authorize(rnr);
 
@@ -216,7 +219,9 @@ public class RequisitionServiceTest {
     verify(rnr).validate(true);
     verify(requisitionRepository).update(rnr);
     assertThat(rnr.getStatus(), is(AUTHORIZED));
+    assertThat(rnr.getSupervisoryNodeId(), is(approverNode.getId()));
     assertThat(authorize.getCode(), is(RNR_AUTHORIZED_SUCCESSFULLY));
+
   }
 
   @Test
@@ -225,6 +230,8 @@ public class RequisitionServiceTest {
     submittedRnr.setSubmittedDate(submittedDate);
     Rnr rnrForAuthorizing = spy(make(a(defaultRnr)));
     when(requisitionRepository.getById(rnrForAuthorizing.getId())).thenReturn(submittedRnr);
+    SupervisoryNode node = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
+    when(supervisoryNodeService.getFor(rnrForAuthorizing.getFacilityId(), rnrForAuthorizing.getProgramId())).thenReturn(node);
 
     requisitionService.authorize(rnrForAuthorizing);
 
@@ -238,6 +245,8 @@ public class RequisitionServiceTest {
     when(requisitionRepository.getById(rnr.getId())).thenReturn(submittedRnr);
     when(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId())).thenReturn(true);
     when(supervisoryNodeService.getApproverFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(null);
+    SupervisoryNode node = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
+    when(supervisoryNodeService.getFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(node);
     doReturn(true).when(rnr).validate(true);
 
     OpenLmisMessage openLmisMessage = requisitionService.authorize(rnr);
@@ -280,6 +289,8 @@ public class RequisitionServiceTest {
     rnr.setStatus(SUBMITTED);
     List<Right> listUserRights = Arrays.asList(AUTHORIZE_REQUISITION);
     when(roleRightService.getRights(userId)).thenReturn(listUserRights);
+
+
     requisitionService.save(rnr);
     verify(requisitionRepository).update(rnr);
   }
@@ -324,70 +335,26 @@ public class RequisitionServiceTest {
 
   @Test
   public void shouldFetchAllRequisitionsForFacilitiesAndProgramSupervisedByUserForApproval() throws Exception {
+    final RoleAssignment firstAssignment = new RoleAssignment(1,1,1,new SupervisoryNode());
+    final RoleAssignment secondAssignment = new RoleAssignment(2,2,2, new SupervisoryNode());
+    final List<RnrDTO> requisitionsForFirstAssignment = new ArrayList<>();
+    final List<RnrDTO> requisitionsForSecondAssignment = new ArrayList<>();
+    List<RoleAssignment> roleAssignments = new ArrayList<RoleAssignment>()
+    {{add(firstAssignment);
+      add(secondAssignment);}};
+    when(roleRightService.getRoleAssignments(APPROVE_REQUISITION, USER_ID)).thenReturn(roleAssignments);
+    when(requisitionRepository.getAuthorizedRequisitions(firstAssignment)).thenReturn(requisitionsForFirstAssignment);
+    when(requisitionRepository.getAuthorizedRequisitions(secondAssignment)).thenReturn(requisitionsForSecondAssignment);
 
-    Program program1 = new Program();
-    program1.setId(1);
-    Program program2 = new Program();
-    program2.setId(2);
-    List<Program> programs = new ArrayList<>();
-    programs.add(program1);
-    programs.add(program2);
+    List<RnrDTO> requisitions = requisitionService.listForApproval(USER_ID);
 
-    when(programService.getActiveProgramsForUserWithRights(USER_ID, APPROVE_REQUISITION)).thenReturn(programs);
-    final List<Facility> facilityList1 = new ArrayList<>();
-    final List<Facility> facilityList2 = new ArrayList<>();
+    List<RnrDTO> expectedRequisitions = new ArrayList<RnrDTO>()
+    {{addAll(requisitionsForFirstAssignment);
+    addAll(requisitionsForSecondAssignment);}};
 
-    List<Facility> facilities = new ArrayList<Facility>() {{
-      addAll(facilityList1);
-      addAll(facilityList2);
-    }};
-
-    when(facilityService.getUserSupervisedFacilities(USER_ID, program1.getId(), APPROVE_REQUISITION)).thenReturn(facilityList1);
-    when(facilityService.getUserSupervisedFacilities(USER_ID, program2.getId(), APPROVE_REQUISITION)).thenReturn(facilityList2);
-    List<RnrDTO> expectedRequisitions = new ArrayList<>();
-    when(requisitionRepository.getSubmittedRequisitionsForFacilitiesAndPrograms(facilities, programs)).thenReturn(expectedRequisitions);
-
-    List<RnrDTO> resultRequisitions = requisitionService.listForApproval(USER_ID);
-
-    assertThat(resultRequisitions, is(expectedRequisitions));
-    verify(requisitionRepository).getSubmittedRequisitionsForFacilitiesAndPrograms(facilities, programs);
-    verify(programService).getActiveProgramsForUserWithRights(USER_ID, APPROVE_REQUISITION);
-    verify(facilityService).getUserSupervisedFacilities(USER_ID, program1.getId(), APPROVE_REQUISITION);
-    verify(facilityService).getUserSupervisedFacilities(USER_ID, program2.getId(), APPROVE_REQUISITION);
+    assertThat(requisitions, is(expectedRequisitions));
+    verify(requisitionRepository, times(1)).getAuthorizedRequisitions(firstAssignment);
+    verify(requisitionRepository, times(1)).getAuthorizedRequisitions(secondAssignment);
   }
 
-  @Test
-  public void shouldGetRequisitionsForAllHomeFacilities() throws Exception {
-    Program program1 = new Program();
-    program1.setId(1);
-    Program program2 = new Program();
-    program2.setId(2);
-    List<Program> programs = new ArrayList<>();
-    programs.add(program1);
-    programs.add(program2);
-
-    when(programService.getActiveProgramsForUserWithRights(USER_ID, APPROVE_REQUISITION)).thenReturn(programs);
-    final List<Facility> facilityList1 = new ArrayList<>();
-    final List<Facility> facilityList2 = new ArrayList<>();
-
-    List<Facility> facilities = new ArrayList<Facility>() {{
-      addAll(facilityList1);
-      addAll(facilityList2);
-    }};
-
-    when(facilityService.getUserSupervisedFacilities(USER_ID, program1.getId(), APPROVE_REQUISITION)).thenReturn(facilityList1);
-    when(facilityService.getAllForUser(USER_ID)).thenReturn(facilityList2);
-
-    List<RnrDTO> expectedRequisitions = new ArrayList<>();
-    when(requisitionRepository.getSubmittedRequisitionsForFacilitiesAndPrograms(facilities, programs)).thenReturn(expectedRequisitions);
-
-    List<RnrDTO> resultRequisitions = requisitionService.listForApproval(USER_ID);
-
-    assertThat(resultRequisitions, is(expectedRequisitions));
-    verify(requisitionRepository).getSubmittedRequisitionsForFacilitiesAndPrograms(facilities, programs);
-    verify(programService).getActiveProgramsForUserWithRights(USER_ID, APPROVE_REQUISITION);
-    verify(facilityService).getUserSupervisedFacilities(USER_ID, program1.getId(), APPROVE_REQUISITION);
-    verify(facilityService).getAllForUser(USER_ID);
-
-  }
 }

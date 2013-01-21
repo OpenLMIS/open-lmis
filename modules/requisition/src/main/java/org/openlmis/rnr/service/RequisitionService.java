@@ -111,6 +111,7 @@ public class RequisitionService {
     rnr.calculate();
     rnr.setSubmittedDate(savedRnr.getSubmittedDate());
     rnr.setStatus(AUTHORIZED);
+    rnr.setSupervisoryNodeId(supervisoryNodeService.getFor(rnr.getFacilityId(), rnr.getProgramId()).getId());
     requisitionRepository.update(rnr);
 
     User approver = supervisoryNodeService.getApproverFor(rnr.getFacilityId(), rnr.getProgramId());
@@ -119,13 +120,12 @@ public class RequisitionService {
   }
 
   public List<RnrDTO> listForApproval(Integer userId) {
-    List<Program> programs = programService.getActiveProgramsForUserWithRights(userId, APPROVE_REQUISITION);
-    Set<Facility> facilities = new HashSet<>();
-    for (Program program : programs) {
-      facilities.addAll(facilityService.getUserSupervisedFacilities(userId, program.getId(), APPROVE_REQUISITION));
+    List<RoleAssignment> assignments = roleRightsService.getRoleAssignments(APPROVE_REQUISITION, userId);
+    List<RnrDTO> requisitionsForApproval = new ArrayList<>();
+    for(RoleAssignment assignment : assignments){
+      requisitionsForApproval.addAll(requisitionRepository.getAuthorizedRequisitions(assignment));
     }
-    facilities.addAll(facilityService.getAllForUser(userId));
-    return requisitionRepository.getSubmittedRequisitionsForFacilitiesAndPrograms(new ArrayList<>(facilities), programs);
+    return requisitionsForApproval;
   }
 
   public List<ProcessingPeriod> getAllPeriodsForInitiatingRequisition(Integer facilityId, Integer programId) {

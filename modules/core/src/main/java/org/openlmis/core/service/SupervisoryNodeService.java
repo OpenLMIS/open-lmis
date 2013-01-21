@@ -51,4 +51,8 @@ public class SupervisoryNodeService {
 
     return users.get(0);
   }
+
+  public List<SupervisoryNode> getForUserWithRight(Integer userId, Right... rights) {
+    return null;  //To change body of created methods use File | Settings | File Templates.
+  }
 }

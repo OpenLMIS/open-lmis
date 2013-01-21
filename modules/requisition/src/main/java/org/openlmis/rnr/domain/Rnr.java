@@ -3,8 +3,6 @@ package org.openlmis.rnr.domain;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.Program;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,8 +14,6 @@ import java.util.List;
 public class Rnr {
 
   private Integer id;
-  private Facility facility;
-  private Program program;
   private Integer facilityId;
   private Integer programId;
   private Integer periodId;
@@ -30,6 +26,7 @@ public class Rnr {
   private Integer modifiedBy;
   private Date modifiedDate;
   private Date submittedDate;
+  private Integer supervisoryNodeId;
   public static final String RNR_VALIDATION_ERROR = "rnr.validation.error";
 
   public Rnr(Integer facilityId, Integer programId, Integer periodId, Integer modifiedBy) {
