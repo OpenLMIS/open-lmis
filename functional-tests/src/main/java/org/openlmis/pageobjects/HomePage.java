@@ -71,6 +71,8 @@ public class HomePage extends Page {
     @FindBy(how = How.XPATH, using = "//option[@value='0']")
     private static WebElement periodDropDown;
 
+
+
     @FindBy(how = How.XPATH, using = "//select[2]")
     private static WebElement programDropDownSelect;
 
@@ -152,7 +154,8 @@ public class HomePage extends Page {
         testWebDriver.selectByVisibleText(programDropDownSelect, program);
         testWebDriver.waitForElementToAppear(periodDropDown);
         periodDropDown.click();
-        testWebDriver.selectByVisibleText(periodDropDownSelect, period);
+        testWebDriver.waitForElementToAppear(periodDropDownSelect);
+        testWebDriver.selectByIndex(periodDropDownSelect, 1);
         nextButton.click();
         return new InitiateRnRPage(testWebDriver);
     }
