@@ -41,7 +41,7 @@ public class ProgramService {
     }
 
     public Integer getIdForCode(String code) {
-      return programRepository.getIdForCode(code);
+      return programRepository.getIdByCode(code);
     }
 
   public List<Program> getActiveProgramsForUserWithRights(Integer userId, Right... rights) {

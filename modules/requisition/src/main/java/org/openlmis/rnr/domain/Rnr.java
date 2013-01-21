@@ -22,8 +22,8 @@ public class Rnr {
   private Integer programId;
   private Integer periodId;
   private RnrStatus status;
-  private Float fullSupplyItemsSubmittedCost = 0f;
-  private Float nonFullSupplyItemsSubmittedCost = 0f;
+  private Double fullSupplyItemsSubmittedCost = 0d;
+  private Double nonFullSupplyItemsSubmittedCost = 0d;
 
   private List<RnrLineItem> lineItems = new ArrayList<>();
 
@@ -51,7 +51,7 @@ public class Rnr {
   }
 
   public void calculate() {
-    Float totalFullSupplyCost = 0f;
+    Double totalFullSupplyCost = 0d;
     for (RnrLineItem lineItem : lineItems) {
       lineItem.calculate();
       totalFullSupplyCost += lineItem.getPacksToShip() * lineItem.getPrice();

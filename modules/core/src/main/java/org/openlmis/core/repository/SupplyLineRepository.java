@@ -26,7 +26,7 @@ public class SupplyLineRepository {
     }
 
     public void insert(SupplyLine supplyLine) {
-        supplyLine.getProgram().setId(programRepository.getIdForCode(supplyLine.getProgram().getCode()));
+        supplyLine.getProgram().setId(programRepository.getIdByCode(supplyLine.getProgram().getCode()));
         supplyLine.getSupplyingFacility().setId(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode()));
         supplyLine.getSupervisoryNode().setId(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode()));
 

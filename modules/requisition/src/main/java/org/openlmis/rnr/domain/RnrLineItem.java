@@ -58,7 +58,7 @@ public class RnrLineItem {
 
   private Integer modifiedBy;
   private Date modifiedDate;
-  private Float price;
+  private Double price;
 
   public RnrLineItem(Integer rnrId, FacilityApprovedProduct facilityApprovedProduct, Integer modifiedBy) {
     this.rnrId = rnrId;

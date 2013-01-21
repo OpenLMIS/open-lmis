@@ -2,6 +2,7 @@ package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.ProgramProductCost;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProductMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
@@ -15,17 +16,23 @@ public class ProgramProductRepository {
 
   private ProgramRepository programRepository;
   private ProductMapper productMapper;
+  private ProductRepository productRepository;
   private ProgramProductMapper programProductMapper;
 
+
   @Autowired
-  public ProgramProductRepository(ProgramRepository programRepository, ProductMapper productMapper, ProgramProductMapper programProductMapper) {
+  public ProgramProductRepository(ProgramRepository programRepository, ProductMapper productMapper, ProgramProductMapper programProductMapper, ProductRepository productRepository) {
     this.programProductMapper = programProductMapper;
     this.programRepository = programRepository;
     this.productMapper = productMapper;
+    this.productRepository = productRepository;
   }
 
+
+
   public void insert(ProgramProduct programProduct) {
-    programProduct.getProgram().setId(programRepository.getIdForCode(programProduct.getProgram().getCode()));
+    programProduct.getProgram().setId(programRepository.getIdByCode(programProduct.getProgram().getCode()));
+
     validateProductCode(programProduct.getProduct().getCode());
 
     try {
@@ -48,5 +55,16 @@ public class ProgramProductRepository {
     if (code == null || code.isEmpty() || productMapper.getIdByCode(code) == null) {
       throw new DataException("Invalid Product Code");
     }
+  }
+
+  public void updateCurrentPrice(ProgramProduct programProduct) {
+    programProduct.getProgram().setId(programRepository.getIdByCode(programProduct.getProgram().getCode()));
+    programProduct.getProduct().setId(productRepository.getIdByCode(programProduct.getProduct().getCode()));
+    programProductMapper.updateCurrentPrice(programProduct);
+  }
+
+  public void updateCostHistory(ProgramProductCost programProductCost) {
+    programProductMapper.closeLastActivePrice(programProductCost);
+    programProductMapper.insertNewCurrentPrice(programProductCost);
   }
 }

@@ -74,7 +74,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
   @Test
   public void shouldGiveErrorIfProgramCodeDoesNotExist() throws Exception {
     when(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode())).thenReturn(1);
-    when(programRepository.getIdForCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenThrow(new DataException("Invalid Program Code"));
+    when(programRepository.getIdByCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenThrow(new DataException("Invalid Program Code"));
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Invalid Program Code");
@@ -84,7 +84,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
   @Test
   public void shouldGiveErrorIfScheduleCodeDoesNotExist() throws Exception {
     when(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode())).thenReturn(1);
-    when(programRepository.getIdForCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1);
+    when(programRepository.getIdByCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1);
     when(processingScheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode())).thenReturn(null);
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Schedule Code Does Not Exist");
@@ -107,7 +107,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
 
     requisitionGroupProgramSchedule.setDropOffFacility(facility(dropOffFacility.getCode()));
     when(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode())).thenReturn(1);
-    when(programRepository.getIdForCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1);
+    when(programRepository.getIdByCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1);
     when(processingScheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode())).thenReturn(1);
     when(facilityMapper.getIdForCode(dropOffFacility.getCode())).thenReturn(facilityId);
 
@@ -115,7 +115,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
 
     verify(requisitionGroupProgramScheduleMapper).insert(requisitionGroupProgramSchedule);
     verify(requisitionGroupMapper).getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode());
-    verify(programRepository).getIdForCode(requisitionGroupProgramSchedule.getProgram().getCode());
+    verify(programRepository).getIdByCode(requisitionGroupProgramSchedule.getProgram().getCode());
     verify(processingScheduleMapper).getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode());
     verify(facilityMapper).getIdForCode(dropOffFacility.getCode());
 
@@ -148,7 +148,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
   @Test
   public void shouldGiveErrorIfFacilityCodeDoesNotExist() {
     when(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode())).thenReturn(1);
-    when(programRepository.getIdForCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1);
+    when(programRepository.getIdByCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1);
     when(processingScheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode())).thenReturn(1);
     requisitionGroupProgramSchedule.setDropOffFacility(dropOffFacility);
     when(facilityMapper.getIdForCode(requisitionGroupProgramSchedule.getDropOffFacility().getCode())).thenReturn(null);

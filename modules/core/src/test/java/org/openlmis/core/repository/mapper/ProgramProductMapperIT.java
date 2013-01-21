@@ -60,4 +60,16 @@ public class ProgramProductMapperIT {
 
     assertThat(id, is(programProduct.getId()));
   }
+
+  @Test
+  public void shouldUpdateCurrentPriceForProgramProduct() throws Exception {
+    ProgramProduct programProduct = new ProgramProduct(program, product, 10, true, 100.0d);
+    programProductMapper.insert(programProduct);
+    programProduct.setCurrentPrice(200.01);
+    programProductMapper.updateCurrentPrice(programProduct);
+    ProgramProduct returnedProgramProduct = programProductMapper.getById(programProduct.getId());
+    assertThat(returnedProgramProduct.getCurrentPrice(), is(200.01));
+
+
+  }
 }

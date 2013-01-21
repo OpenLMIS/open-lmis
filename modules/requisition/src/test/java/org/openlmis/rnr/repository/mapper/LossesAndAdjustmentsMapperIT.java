@@ -66,7 +66,7 @@ public class LossesAndAdjustmentsMapperIT {
     Program program = make(a(ProgramBuilder.defaultProgram));
     programMapper.insert(program);
 
-    ProgramProduct programProduct = new ProgramProduct(program, product, 30, true, 12.5F);
+    ProgramProduct programProduct = new ProgramProduct(program, product, 30, true, 12.5d);
     programProductMapper.insert(programProduct);
 
     FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct("warehouse", programProduct, 3);

@@ -21,7 +21,7 @@ public class ProgramProduct implements Importable {
   private boolean active;
 
   private Integer id;
-  private Float currentPrice;
+  private Double currentPrice;
   private String modifiedBy;
   private Date modifiedDate;
 
@@ -32,7 +32,7 @@ public class ProgramProduct implements Importable {
     this.active = active;
   }
 
-  public ProgramProduct(Program program, Product product, Integer dosesPerMonth, Boolean active, Float currentPrice) {
+  public ProgramProduct(Program program, Product product, Integer dosesPerMonth, Boolean active, Double currentPrice) {
     this.program = program;
     this.product = product;
     this.dosesPerMonth = dosesPerMonth;

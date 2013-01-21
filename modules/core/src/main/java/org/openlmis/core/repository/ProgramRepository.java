@@ -52,7 +52,7 @@ public class ProgramRepository {
     return programMapper.getProgramsSupportedByFacilityForUserWithRight(facilityId, userId, getCommaSeparatedRightNames(rights));
   }
 
-  public Integer getIdForCode(String code) {
+  public Integer getIdByCode(String code) {
     Integer programId = programMapper.getIdForCode(code);
 
     if (programId == null) {

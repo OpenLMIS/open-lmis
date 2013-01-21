@@ -3,6 +3,7 @@ package org.openlmis.core.repository.mapper;
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.ProgramProductCost;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -29,4 +30,10 @@ public interface ProgramProductMapper {
   @Select(("SELECT id FROM program_products where programId = #{programId} and productId = #{productId}"))
   Integer getIdByProgramAndProductId(@Param("programId") Integer programId, @Param("productId") Integer productId);
 
+  @Update("update program_products set currentPrice = #{currentPrice} where programId = #{program.id} and productId = #{product.id}")
+  void updateCurrentPrice(ProgramProduct programProduct);
+
+  void closeLastActivePrice(ProgramProductCost programProductCost);
+
+  void insertNewCurrentPrice(ProgramProductCost programProductCost);
 }

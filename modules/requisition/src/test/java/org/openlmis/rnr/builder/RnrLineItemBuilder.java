@@ -32,7 +32,7 @@ public class RnrLineItemBuilder {
 
       rnrLineItem.setDispensingUnit("tablet");
       rnrLineItem.setMaxMonthsOfStock(1);
-      rnrLineItem.setPrice(2f);
+      rnrLineItem.setPrice(2d);
       rnrLineItem.setQuantityApproved(2);
 
       rnrLineItem.setStockOutDays(3);
@@ -49,7 +49,7 @@ public class RnrLineItemBuilder {
       rnrLineItem.setPacksToShip(12);
       rnrLineItem.setPackRoundingThreshold(3);
       rnrLineItem.setRoundToZero(true);
-      rnrLineItem.setPrice(4f);
+      rnrLineItem.setPrice(4d);
       return rnrLineItem;
     }
   };

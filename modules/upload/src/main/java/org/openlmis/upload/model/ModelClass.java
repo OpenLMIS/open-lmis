@@ -52,11 +52,7 @@ public class ModelClass {
       @Override
       public boolean evaluate(Object object) {
         Field field = (Field) object;
-        if (field.hasName(name)) {
-          return true;
-        }
-        return false;
-      }
+        return field.hasName(name);      }
     });
     return (Field) result;
   }

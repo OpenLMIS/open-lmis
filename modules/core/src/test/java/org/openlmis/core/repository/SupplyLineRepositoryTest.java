@@ -42,7 +42,7 @@ public class SupplyLineRepositoryTest {
     @Test
     public void shouldInsertSupplyLine() {
         when(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenReturn(1);
-        when(programRepository.getIdForCode(supplyLine.getProgram().getCode())).thenReturn(1);
+        when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1);
         when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(1);
         when(supervisoryNodeRepository.getSupervisoryNodeParentId(1)).thenReturn(null);
 
@@ -53,7 +53,7 @@ public class SupplyLineRepositoryTest {
     @Test
     public void shouldThrowExceptionForDuplicateSupplyLines() {
         when(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenReturn(1);
-        when(programRepository.getIdForCode(supplyLine.getProgram().getCode())).thenReturn(1);
+        when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1);
         when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(1);
         when(supervisoryNodeRepository.getSupervisoryNodeParentId(1)).thenReturn(null);
         doThrow(new DuplicateKeyException("Duplicate entry for Supply Line found")).when(supplyLineMapper).insert(supplyLine);
@@ -66,7 +66,7 @@ public class SupplyLineRepositoryTest {
 
     @Test
     public void shouldThrowErrorIfProgramDoesNotExist() {
-        when(programRepository.getIdForCode(supplyLine.getProgram().getCode())).thenThrow(new DataException("Invalid program code"));
+        when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenThrow(new DataException("Invalid program code"));
 
         expectedEx.expect(DataException.class);
         expectedEx.expectMessage("Invalid program code");
@@ -75,7 +75,7 @@ public class SupplyLineRepositoryTest {
 
     @Test
     public void shouldThrowErrorIfFacilityDoesNotExist() {
-        when(programRepository.getIdForCode(supplyLine.getProgram().getCode())).thenReturn(1);
+        when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1);
         when(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenThrow(new DataException("Invalid Facility Code"));
 
         expectedEx.expect(DataException.class);
@@ -85,7 +85,7 @@ public class SupplyLineRepositoryTest {
 
     @Test
     public void shouldThrowErrorIfSupervisoryNodeDoesNotExist() {
-        when(programRepository.getIdForCode(supplyLine.getProgram().getCode())).thenReturn(1);
+        when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1);
         when(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenReturn(1);
         when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenThrow(new DataException("Invalid SupervisoryNode Code"));
 
@@ -96,7 +96,7 @@ public class SupplyLineRepositoryTest {
 
     @Test
     public void shouldThrowErrorIfSupervisoryNodeIsNotTheParentNode() {
-        when(programRepository.getIdForCode(supplyLine.getProgram().getCode())).thenReturn(1);
+        when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1);
         when(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenReturn(1);
         when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(1);
         when(supervisoryNodeRepository.getSupervisoryNodeParentId(supplyLine.getSupervisoryNode().getId())).thenReturn(2);

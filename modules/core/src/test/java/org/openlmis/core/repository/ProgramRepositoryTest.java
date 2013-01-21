@@ -35,7 +35,7 @@ public class ProgramRepositoryTest {
   @Test
   public void shouldReturnIdForTheGivenCode() {
     when(programMapper.getIdForCode("ABC")).thenReturn(10);
-    assertThat(programRepository.getIdForCode("ABC"), is(10));
+    assertThat(programRepository.getIdByCode("ABC"), is(10));
   }
 
   @Test
@@ -68,7 +68,7 @@ public class ProgramRepositoryTest {
     when(programMapper.getIdForCode("ABC")).thenReturn(null);
     exception.expect(DataException.class);
     exception.expectMessage("program.code.invalid");
-    programRepository.getIdForCode("ABC");
+    programRepository.getIdByCode("ABC");
   }
 
   @Test
