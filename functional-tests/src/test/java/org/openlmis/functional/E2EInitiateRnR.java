@@ -109,7 +109,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     @DataProvider(name = "Data-Provider-Function-Positive")
     public Object[][] parameterIntTestProviderPositive() {
         return new Object[][]{
-                {"Period2","HIV","User123", "User123",new String[]{"Admin123", "Admin123"}}
+                {"Period1","HIV","User123", "User123",new String[]{"Admin123", "Admin123"}}
         };
 
     }
