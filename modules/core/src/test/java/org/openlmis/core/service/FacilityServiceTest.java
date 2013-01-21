@@ -49,8 +49,8 @@ public class FacilityServiceTest {
 
     @Test
         public void shouldReturnEmptyListIfUserIsNotAssignedAFacility() {
-        when(facilityRepository.getHomeFacility("abcd")).thenReturn(null);
-        assertTrue(facilityService.getAllForUser("abcd").isEmpty());
+        when(facilityRepository.getHomeFacility(1)).thenReturn(null);
+        assertTrue(facilityService.getAllForUser(1).isEmpty());
     }
 
     @Test

@@ -55,8 +55,8 @@ public class FacilityService {
         return facilityRepository.getAllGeographicZones();
     }
 
-    public List<Facility> getAllForUser(String user) {
-        Facility homeFacility = facilityRepository.getHomeFacility(user);
+    public List<Facility> getAllForUser(Integer userId) {
+        Facility homeFacility = facilityRepository.getHomeFacility(userId);
         return homeFacility == null ? Collections.<Facility>emptyList() : Arrays.asList(homeFacility);
     }
 

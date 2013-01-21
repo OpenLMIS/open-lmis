@@ -29,9 +29,9 @@ public interface FacilityMapper {
     List<Facility> getAll();
 
     @Select("SELECT * FROM users U, facilities F " +
-            "WHERE U.facilityId = F.id AND U.userName = #{userName} AND f.active = true")
+            "WHERE U.facilityId = F.id AND U.id = #{userId} AND f.active = true")
     @Results(value = {@Result(property = "id", column = "facilityId")})
-    Facility getHomeFacility(String userName);
+    Facility getHomeFacility(Integer userId);
 
     @Select("SELECT F.name as facilityName,  F.code as facilityCode, F.operatedById, " +
             "FT.name as facilityType, FT.nominalMaxMonth, " +

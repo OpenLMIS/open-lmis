@@ -27,18 +27,19 @@ function ApproveRnrController($scope, requisitionList) {
     var searchField = $scope.searchField;
 
     $scope.filteredRequisitions = $.grep($scope.requisitions, function (rnr) {
-      if (searchField) {
-        return rnr[searchField].toLowerCase().indexOf(query.toLowerCase()) != -1;
-      } else {
-        return matchesAnyField(query, rnr);
-      }
+      return (searchField) ? contains(rnr[searchField], query) : matchesAnyField(query, rnr);
     });
+
     $scope.resultCount = $scope.filteredRequisitions.length;
   };
 
+  function contains(string, query) {
+    return string.toLowerCase().indexOf(query.toLowerCase()) != -1;
+  }
+
   function matchesAnyField(query, rnr) {
     var rnrString = "|" + rnr.programName + "|" + rnr.facilityName + "|" + rnr.facilityCode + "|";
-    return rnrString.toLowerCase().indexOf(query.toLowerCase()) != -1;
+    return contains(rnrString, query);
   }
 }
 

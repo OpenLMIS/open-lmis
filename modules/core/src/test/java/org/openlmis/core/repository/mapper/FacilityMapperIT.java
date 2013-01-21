@@ -142,7 +142,7 @@ public class FacilityMapperIT {
         User user = make(a(defaultUser, with(facilityId, facility.getId())));
         userMapper.insert(user);
 
-        Facility userFacility = facilityMapper.getHomeFacility(user.getUserName());
+        Facility userFacility = facilityMapper.getHomeFacility(user.getId());
 
         assertEquals(facility.getCode(), userFacility.getCode());
         assertEquals(facility.getName(), userFacility.getName());

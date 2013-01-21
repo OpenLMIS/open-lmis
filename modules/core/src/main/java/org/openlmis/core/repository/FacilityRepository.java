@@ -169,8 +169,8 @@ public class FacilityRepository {
         return facilityMapper.getAllGeographicZones();
     }
 
-    public Facility getHomeFacility(String user) {
-        return facilityMapper.getHomeFacility(user);
+    public Facility getHomeFacility(Integer userId) {
+        return facilityMapper.getHomeFacility(userId);
     }
 
     public Facility getFacility(Integer id) {

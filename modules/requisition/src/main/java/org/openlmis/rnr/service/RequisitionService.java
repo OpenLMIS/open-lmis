@@ -124,6 +124,7 @@ public class RequisitionService {
     for (Program program : programs) {
       facilities.addAll(facilityService.getUserSupervisedFacilities(userId, program.getId(), APPROVE_REQUISITION));
     }
+    facilities.addAll(facilityService.getAllForUser(userId));
     return requisitionRepository.getSubmittedRequisitionsForFacilitiesAndPrograms(new ArrayList<>(facilities), programs);
   }
 

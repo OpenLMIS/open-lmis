@@ -356,5 +356,38 @@ public class RequisitionServiceTest {
     verify(facilityService).getUserSupervisedFacilities(USER_ID, program2.getId(), APPROVE_REQUISITION);
   }
 
+  @Test
+  public void shouldGetRequisitionsForAllHomeFacilities() throws Exception {
+    Program program1 = new Program();
+    program1.setId(1);
+    Program program2 = new Program();
+    program2.setId(2);
+    List<Program> programs = new ArrayList<>();
+    programs.add(program1);
+    programs.add(program2);
 
+    when(programService.getActiveProgramsForUserWithRights(USER_ID, APPROVE_REQUISITION)).thenReturn(programs);
+    final List<Facility> facilityList1 = new ArrayList<>();
+    final List<Facility> facilityList2 = new ArrayList<>();
+
+    List<Facility> facilities = new ArrayList<Facility>() {{
+      addAll(facilityList1);
+      addAll(facilityList2);
+    }};
+
+    when(facilityService.getUserSupervisedFacilities(USER_ID, program1.getId(), APPROVE_REQUISITION)).thenReturn(facilityList1);
+    when(facilityService.getAllForUser(USER_ID)).thenReturn(facilityList2);
+
+    List<RnrDTO> expectedRequisitions = new ArrayList<>();
+    when(requisitionRepository.getSubmittedRequisitionsForFacilitiesAndPrograms(facilities, programs)).thenReturn(expectedRequisitions);
+
+    List<RnrDTO> resultRequisitions = requisitionService.listForApproval(USER_ID);
+
+    assertThat(resultRequisitions, is(expectedRequisitions));
+    verify(requisitionRepository).getSubmittedRequisitionsForFacilitiesAndPrograms(facilities, programs);
+    verify(programService).getActiveProgramsForUserWithRights(USER_ID, APPROVE_REQUISITION);
+    verify(facilityService).getUserSupervisedFacilities(USER_ID, program1.getId(), APPROVE_REQUISITION);
+    verify(facilityService).getAllForUser(USER_ID);
+
+  }
 }

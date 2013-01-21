@@ -50,7 +50,7 @@ public class FacilityController extends BaseController {
 
   @RequestMapping(value = "logistics/user/facilities", method = RequestMethod.GET, headers = "Accept=application/json")
   public List<Facility> getAllByUser(HttpServletRequest httpServletRequest) {
-    return facilityService.getAllForUser(loggedInUser(httpServletRequest));
+    return facilityService.getAllForUser(loggedInUserId(httpServletRequest));
   }
 
   @RequestMapping(value = "logistics/facility/{facilityId}/requisition-header", method = RequestMethod.GET, headers = "Accept=application/json")

@@ -101,8 +101,7 @@ public class FacilityControllerTest {
   @Test
   public void shouldReturnAllFacilitiesForTheUser() {
     Facility facility = mock(Facility.class);
-    MockHttpServletRequest httpServletRequest = httpRequest();
-    when(facilityService.getAllForUser(USER)).thenReturn(Arrays.asList(facility));
+    when(facilityService.getAllForUser(userId)).thenReturn(Arrays.asList(facility));
 
     List<Facility> facilities = facilityController.getAllByUser(httpServletRequest);
     assertTrue(facilities.contains(facility));
