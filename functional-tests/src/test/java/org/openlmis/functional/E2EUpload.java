@@ -28,7 +28,7 @@ public class E2EUpload extends TestCaseHelper {
     }
 
     @Test(dataProvider = "Data-Provider-Function-Positive")
-    public void uploadCSVFiles(String user, String[] credentials) throws Exception {
+    public void uploadCSVFiles(String[] credentials) throws Exception {
 
         LoginPage loginPage=new LoginPage(testWebDriver);
 
@@ -107,7 +107,7 @@ public class E2EUpload extends TestCaseHelper {
     @DataProvider(name = "Data-Provider-Function-Positive")
     public Object[][] parameterIntTestProviderPositive() {
         return new Object[][]{
-                {"User123", new String[]{"Admin123", "Admin123"}}
+                {new String[]{"Admin123", "Admin123"}}
         };
     }
 }

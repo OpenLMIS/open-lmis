@@ -51,6 +51,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
         ManageSchedulePage manageSchedulePage=homePage.navigateToSchedule();
         manageSchedulePage.createAndVerifySchedule();
+        manageSchedulePage.editAndVerifySchedule();
         PeriodsPage periodsPage=manageSchedulePage.navigatePeriods();
         periodsPage.createAndVerifyPeriods();
         periodsPage.deleteAndVerifyPeriods();
