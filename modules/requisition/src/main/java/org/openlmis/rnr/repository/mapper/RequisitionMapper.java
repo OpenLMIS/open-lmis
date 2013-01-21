@@ -55,5 +55,6 @@ public interface RequisitionMapper {
       "AND status NOT IN ('INITIATED', 'SUBMITTED') " +
       "ORDER BY submittedDate DESC " +
       "LIMIT 1")
-  Rnr getLastRequisitionToEnterThePostSubmitFlow(@Param(value = "facilityId") Integer facilityId, @Param(value = "programId") Integer programId);
+  Rnr getLastRequisitionToEnterThePostSubmitFlow(@Param(value = "facilityId") Integer facilityId,
+                                                 @Param(value = "programId") Integer programId);
 }

@@ -26,9 +26,14 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
 
   $scope.loadPeriods = function () {
     if ($scope.selectedProgram && $scope.selectedFacilityId) {
-      PeriodsForFacilityAndProgram.get({facilityId: $scope.selectedFacilityId, programId: $scope.selectedProgram.id}, function (data) {
-        $scope.periods = data.periods;
-      });
+      PeriodsForFacilityAndProgram.get({facilityId:$scope.selectedFacilityId, programId:$scope.selectedProgram.id},
+          function (data) {
+            $scope.periods = data.periods;
+            $scope.error = "";
+          },
+          function (data) {
+            $scope.error = data.data.error;
+          });
     } else {
       $scope.periods = null;
       $scope.selectedPeriod = null;
@@ -44,7 +49,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
     $scope.error = "";
     $scope.$parent.sourceUrl = $location.$$url;
 
-    Requisition.get({facilityId: $scope.selectedFacilityId, programId: $scope.selectedProgram.id, periodId: $scope.selectedPeriod.id}, {},
+    Requisition.get({facilityId:$scope.selectedFacilityId, programId:$scope.selectedProgram.id, periodId:$scope.selectedPeriod.id}, {},
         function (data) {
           if (data.rnr) {
             if (data.rnr.status != 'SUBMITTED' && !$rootScope.hasPermission('CREATE_REQUISITION')) {
@@ -56,7 +61,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
             $location.path('/create-rnr/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + '/' + $scope.selectedPeriod.id);
           }
           else {
-            Requisition.save({facilityId: $scope.selectedFacilityId, programId: $scope.selectedProgram.id, periodId: $scope.selectedPeriod.id}, {}, function (data) {
+            Requisition.save({facilityId:$scope.selectedFacilityId, programId:$scope.selectedProgram.id, periodId:$scope.selectedPeriod.id}, {}, function (data) {
               $scope.$parent.rnr = data.rnr;
               $scope.$parent.program = $scope.selectedProgram;
               $location.path('/create-rnr/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + '/' + $scope.selectedPeriod.id);
@@ -67,7 +72,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
         }, {});
   };
 
-  $scope.periodDisplayName = function(period) {
+  $scope.periodDisplayName = function (period) {
     var startDate = utils.getFormattedDate(new Date(period.startDate));
     var endDate = utils.getFormattedDate(new Date(period.endDate));
 

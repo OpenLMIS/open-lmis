@@ -18,6 +18,8 @@ import java.util.List;
 @Service
 @NoArgsConstructor
 public class ProcessingScheduleService {
+  public static final String NO_REQUISITION_GROUP_ERROR = "no.requisition.group.error";
+
   private ProcessingScheduleRepository repository;
   private ProcessingPeriodRepository periodRepository;
   private RequisitionGroupRepository requisitionGroupRepository;
@@ -65,6 +67,9 @@ public class ProcessingScheduleService {
 
   public List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriod(Integer facilityId, Integer programId, Date programStartDate, Integer startingPeriod) {
     RequisitionGroup requisitionGroup = requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(programId, facilityId);
+    if (requisitionGroup == null)
+      throw new DataException(NO_REQUISITION_GROUP_ERROR);
+
     Integer scheduleId = requisitionGroupProgramScheduleRepository.getScheduleIdForRequisitionGroupAndProgram(requisitionGroup.getId(), programId);
     return periodRepository.getAllPeriodsAfterDateAndPeriod(scheduleId, startingPeriod, programStartDate, new Date());
   }

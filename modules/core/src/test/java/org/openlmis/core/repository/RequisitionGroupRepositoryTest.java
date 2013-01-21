@@ -25,22 +25,21 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class RequisitionGroupRepositoryTest {
 
-  RequisitionGroupRepository requisitionGroupRepository;
+  RequisitionGroupRepository repository;
   RequisitionGroup requisitionGroup;
 
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();
 
   @Mock
-  RequisitionGroupMapper mapper;
-
+  private RequisitionGroupMapper mapper;
   @Mock
   private CommaSeparator commaSeparator;
 
   @Before
   public void setUp() throws Exception {
     initMocks(this);
-    requisitionGroupRepository = new RequisitionGroupRepository(mapper, commaSeparator);
+    repository = new RequisitionGroupRepository(mapper, commaSeparator);
     requisitionGroup = make(a(RequisitionGroupBuilder.defaultRequisitionGroup));
     requisitionGroup.setSupervisoryNode(new SupervisoryNode());
   }
@@ -51,13 +50,13 @@ public class RequisitionGroupRepositoryTest {
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Duplicate Requisition Group Code found");
 
-    requisitionGroupRepository.insert(requisitionGroup);
+    repository.insert(requisitionGroup);
     verify(mapper).insert(requisitionGroup);
   }
 
   @Test
   public void shouldSaveRequisitionGroup() throws Exception {
-    requisitionGroupRepository.insert(requisitionGroup);
+    repository.insert(requisitionGroup);
     verify(mapper).insert(requisitionGroup);
   }
 
@@ -67,14 +66,14 @@ public class RequisitionGroupRepositoryTest {
     when(commaSeparator.commaSeparateIds(supervisoryNodes)).thenReturn("{1, 2}");
     List<RequisitionGroup> requisitionGroups = new ArrayList<>();
     when(mapper.getRequisitionGroupBySupervisoryNodes("{1, 2}")).thenReturn(requisitionGroups);
-    List<RequisitionGroup> result = requisitionGroupRepository.getRequisitionGroups(supervisoryNodes);
+    List<RequisitionGroup> result = repository.getRequisitionGroups(supervisoryNodes);
     verify(mapper).getRequisitionGroupBySupervisoryNodes("{1, 2}");
     assertThat(result, is(requisitionGroups));
   }
 
   @Test
   public void shouldGetRequisitionGroupForFacilityAndProgram() throws Exception {
-    requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(1, 1);
+    repository.getRequisitionGroupForProgramAndFacility(1, 1);
     verify(mapper).getRequisitionGroupForProgramAndFacility(1, 1);
   }
 }

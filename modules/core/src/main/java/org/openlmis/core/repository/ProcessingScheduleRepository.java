@@ -26,9 +26,9 @@ public class ProcessingScheduleRepository {
 
   public void create(ProcessingSchedule processingSchedule) {
     processingSchedule.validate();
-    try{
+    try {
       processingScheduleMapper.insert(processingSchedule);
-    }catch(DuplicateKeyException duplicateKeyException){
+    } catch (DuplicateKeyException duplicateKeyException) {
       throw new DataException("A Schedule with this code already exists");
     }
   }

@@ -21,6 +21,7 @@ import java.util.Map;
 
 import static org.openlmis.web.response.OpenLmisResponse.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.CONFLICT;
 
 @Controller
 @NoArgsConstructor
@@ -119,7 +120,11 @@ public class RequisitionController extends BaseController {
   @RequestMapping(value = "/logistics/facility/{facilityId}/program/{programId}/periods", method = RequestMethod.GET, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getAllPeriodsForInitiatingRequisition(@PathVariable("facilityId") Integer facilityId, @PathVariable("programId") Integer programId) {
-    List<ProcessingPeriod> periodList = requisitionService.getAllPeriodsForInitiatingRequisition(facilityId, programId);
-    return OpenLmisResponse.response(PERIODS, periodList);
+    try {
+      List<ProcessingPeriod> periodList = requisitionService.getAllPeriodsForInitiatingRequisition(facilityId, programId);
+      return OpenLmisResponse.response(PERIODS, periodList);
+    } catch (DataException e) {
+      return error(e.getOpenLmisMessage(), CONFLICT);
+    }
   }
 }

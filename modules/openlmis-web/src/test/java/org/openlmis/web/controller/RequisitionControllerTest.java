@@ -169,5 +169,15 @@ public class RequisitionControllerTest {
     verify(requisitionService).getAllPeriodsForInitiatingRequisition(1, 2);
     assertThat((List<ProcessingPeriod>) response.getBody().getData().get(PERIODS), is(periodList));
   }
+
+  @Test
+  public void shouldReturnErrorResponseIfNoPeriodsFoundForInitiatingRequisition() throws Exception {
+    String errorMessage = "some error";
+    doThrow(new DataException(errorMessage)).when(requisitionService).getAllPeriodsForInitiatingRequisition(1, 2);
+
+    ResponseEntity<OpenLmisResponse> response = controller.getAllPeriodsForInitiatingRequisition(1, 2);
+
+    assertThat(response.getBody().getErrorMsg(), is(errorMessage));
+  }
 }
 

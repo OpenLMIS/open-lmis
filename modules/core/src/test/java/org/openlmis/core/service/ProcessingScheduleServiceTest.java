@@ -31,17 +31,14 @@ import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessin
 
 public class ProcessingScheduleServiceTest {
   @Rule
-  public ExpectedException exException = ExpectedException.none();
+  public ExpectedException expectedException = ExpectedException.none();
 
   @Mock
-  private ProcessingScheduleRepository repository;
-
+  private ProcessingScheduleRepository processingScheduleRepository;
   @Mock
   private ProcessingPeriodRepository periodRepository;
-
   @Mock
   private RequisitionGroupRepository requisitionGroupRepository;
-
   @Mock
   private RequisitionGroupProgramScheduleRepository requisitionGroupProgramScheduleRepository;
 
@@ -51,14 +48,14 @@ public class ProcessingScheduleServiceTest {
   @Before
   public void setUp() throws Exception {
     initMocks(this);
-    service = new ProcessingScheduleService(repository, periodRepository, requisitionGroupRepository, requisitionGroupProgramScheduleRepository);
+    service = new ProcessingScheduleService(processingScheduleRepository, periodRepository, requisitionGroupRepository, requisitionGroupProgramScheduleRepository);
   }
 
   @Test
   public void shouldGetAllSchedules() throws Exception {
     List<ProcessingSchedule> processingScheduleList = new ArrayList<>();
     processingScheduleList.add(new ProcessingSchedule());
-    when(repository.getAll()).thenReturn(processingScheduleList);
+    when(processingScheduleRepository.getAll()).thenReturn(processingScheduleList);
 
     List<ProcessingSchedule> processingSchedules = service.getAll();
 
@@ -68,7 +65,7 @@ public class ProcessingScheduleServiceTest {
   @Test
   public void shouldGetASchedule() throws Exception {
     ProcessingSchedule processingSchedule = new ProcessingSchedule();
-    when(repository.get(1)).thenReturn(processingSchedule);
+    when(processingScheduleRepository.get(1)).thenReturn(processingSchedule);
 
     ProcessingSchedule expectedProcessingSchedule = service.get(1);
 
@@ -77,9 +74,9 @@ public class ProcessingScheduleServiceTest {
 
   @Test
   public void shouldThrowExceptionIfScheduleNotFound() throws Exception {
-    doThrow(new DataException("Schedule not found")).when(repository).get(1);
-    exException.expect(DataException.class);
-    exException.expectMessage("Schedule not found");
+    doThrow(new DataException("Schedule not found")).when(processingScheduleRepository).get(1);
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("Schedule not found");
     service.get(1);
   }
 
@@ -87,11 +84,11 @@ public class ProcessingScheduleServiceTest {
   public void shouldInsertAndReturnInsertedSchedule() throws Exception {
     ProcessingSchedule processingSchedule = new ProcessingSchedule("testCode", "testName");
     ProcessingSchedule mockedSchedule = mock(ProcessingSchedule.class);
-    when(repository.get(processingSchedule.getId())).thenReturn(mockedSchedule);
+    when(processingScheduleRepository.get(processingSchedule.getId())).thenReturn(mockedSchedule);
 
     ProcessingSchedule returnedSchedule = service.save(processingSchedule);
 
-    verify(repository).create(processingSchedule);
+    verify(processingScheduleRepository).create(processingSchedule);
     assertThat(returnedSchedule, is(mockedSchedule));
   }
 
@@ -100,37 +97,37 @@ public class ProcessingScheduleServiceTest {
     ProcessingSchedule processingSchedule = new ProcessingSchedule();
     processingSchedule.setId(1);
     ProcessingSchedule mockedSchedule = mock(ProcessingSchedule.class);
-    when(repository.get(processingSchedule.getId())).thenReturn(mockedSchedule);
+    when(processingScheduleRepository.get(processingSchedule.getId())).thenReturn(mockedSchedule);
 
     ProcessingSchedule returnedSchedule = service.save(processingSchedule);
 
-    verify(repository).update(processingSchedule);
+    verify(processingScheduleRepository).update(processingSchedule);
     assertThat(returnedSchedule, is(mockedSchedule));
   }
 
   @Test
   public void shouldThrowErrorWhenTryingToSaveAScheduleWithNoCode() {
     ProcessingSchedule processingSchedule = new ProcessingSchedule();
-    doThrow(new DataException("Schedule can not be saved without its code.")).when(repository).create(processingSchedule);
+    doThrow(new DataException("Schedule can not be saved without its code.")).when(processingScheduleRepository).create(processingSchedule);
 
-    exException.expect(DataException.class);
-    exException.expectMessage("Schedule can not be saved without its code.");
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("Schedule can not be saved without its code.");
 
     service.save(processingSchedule);
-    verify(repository).create(processingSchedule);
+    verify(processingScheduleRepository).create(processingSchedule);
   }
 
   @Test
   public void shouldThrowErrorWhenTryingToSaveAScheduleWithNoName() {
     ProcessingSchedule processingSchedule = new ProcessingSchedule();
     processingSchedule.setCode("testCode");
-    doThrow(new DataException("Schedule can not be saved without its name.")).when(repository).create(processingSchedule);
+    doThrow(new DataException("Schedule can not be saved without its name.")).when(processingScheduleRepository).create(processingSchedule);
 
-    exException.expect(DataException.class);
-    exException.expectMessage("Schedule can not be saved without its name.");
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("Schedule can not be saved without its name.");
 
     service.save(processingSchedule);
-    verify(repository).create(processingSchedule);
+    verify(processingScheduleRepository).create(processingSchedule);
   }
 
   @Test
@@ -164,8 +161,8 @@ public class ProcessingScheduleServiceTest {
     String errorMessage = "some error";
     doThrow(new DataException(errorMessage)).when(periodRepository).delete(processingPeriod.getId());
 
-    exException.expect(DataException.class);
-    exException.expectMessage(errorMessage);
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage(errorMessage);
 
     service.deletePeriod(processingPeriod.getId());
   }
@@ -190,5 +187,14 @@ public class ProcessingScheduleServiceTest {
     List<ProcessingPeriod> periods = service.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate, startingPeriodId);
 
     assertThat(periods, is(periodList));
+  }
+
+  @Test
+  public void shouldThrowExceptionWhenNoRequisitionGroupExistsForAFacilityAndProgram() throws Exception {
+    when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(1, 2)).thenReturn(null);
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage(ProcessingScheduleService.NO_REQUISITION_GROUP_ERROR);
+
+    service.getAllPeriodsAfterDateAndPeriod(1, 2, null, null);
   }
 }
