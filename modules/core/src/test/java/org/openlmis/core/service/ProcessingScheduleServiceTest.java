@@ -1,5 +1,6 @@
 package org.openlmis.core.service;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -23,7 +24,6 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
-import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -177,7 +177,7 @@ public class ProcessingScheduleServiceTest {
     Integer facilityId = 3;
     Integer scheduleId = 4;
     Integer startingPeriodId = 5;
-    Date programStartDate = now().toDate();
+    Date programStartDate = new DateTime().toDate();
     List<ProcessingPeriod> periodList = Arrays.asList(make(a(defaultProcessingPeriod)));
 
     RequisitionGroup requisitionGroup = make(a(RequisitionGroupBuilder.defaultRequisitionGroup));
@@ -185,7 +185,7 @@ public class ProcessingScheduleServiceTest {
 
     when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(programId, facilityId)).thenReturn(requisitionGroup);
     when(requisitionGroupProgramScheduleRepository.getScheduleIdForRequisitionGroupAndProgram(requisitionGroupId, programId)).thenReturn(scheduleId);
-    when(periodRepository.getAllPeriodsAfterDateAndPeriod(scheduleId, programStartDate, startingPeriodId)).thenReturn(periodList);
+    when(periodRepository.getAllPeriodsAfterDateAndPeriod(any(Integer.class), any(Integer.class), any(Date.class), any(Date.class))).thenReturn(periodList);
 
     List<ProcessingPeriod> periods = service.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate, startingPeriodId);
 

@@ -148,17 +148,19 @@ public class ProcessingPeriodMapperIT {
   @Test
   public void shouldGetAllPeriodsAfterAGivenPeriodAndADate() throws Exception {
     DateTime date1 = new DateTime();
-    DateTime date2 = date1.plusMonths(1);
-    DateTime date3 = date1.plusMonths(2);
-    DateTime date4 = date1.plusMonths(3);
-    DateTime date5 = date1.plusMonths(4);
+    DateTime date2 = date1.minusMonths(1);
+    DateTime date3 = date1.minusMonths(2);
+    DateTime date4 = date1.minusMonths(3);
+    DateTime date5 = date1.minusMonths(4);
+    DateTime futureDate = date1.plusMonths(1);
 
-    insertProcessingPeriod("Period 1", date1, date2);
-    ProcessingPeriod period2 = insertProcessingPeriod("Period 2", date2.plusDays(1), date3);
-    ProcessingPeriod period3 = insertProcessingPeriod("Period 3", date3.plusDays(1), date4);
-    ProcessingPeriod period4 = insertProcessingPeriod("Period 4", date4.plusDays(1), date5);
+    insertProcessingPeriod("Period 1", date5, date4);
+    ProcessingPeriod period2 = insertProcessingPeriod("Period 2", date4.plusDays(1), date3);
+    ProcessingPeriod period3 = insertProcessingPeriod("Period 3", date3.plusDays(1), date2);
+    ProcessingPeriod period4 = insertProcessingPeriod("Period 4", date2.plusDays(1), date1);
+    insertProcessingPeriod("Period 5", date1.plusDays(1), futureDate);
 
-    List<ProcessingPeriod> relevantPeriods = mapper.getAllPeriodsAfterDateAndPeriod(schedule.getId(), date3.toDate(), period2.getId());
+    List<ProcessingPeriod> relevantPeriods = mapper.getAllPeriodsAfterDateAndPeriod(schedule.getId(), period2.getId(), date3.toDate(), date1.toDate());
 
     assertThat(relevantPeriods.size(), is(2));
     assertThat(relevantPeriods.get(0).getId(), is(period3.getId()));
@@ -168,17 +170,19 @@ public class ProcessingPeriodMapperIT {
   @Test
   public void shouldGetAllPeriodsAfterAGivenDate() throws Exception {
     DateTime date1 = new DateTime();
-    DateTime date2 = date1.plusMonths(1);
-    DateTime date3 = date1.plusMonths(2);
-    DateTime date4 = date1.plusMonths(3);
-    DateTime date5 = date1.plusMonths(4);
+    DateTime date2 = date1.minusMonths(1);
+    DateTime date3 = date1.minusMonths(2);
+    DateTime date4 = date1.minusMonths(3);
+    DateTime date5 = date1.minusMonths(4);
+    DateTime futureDate = date1.plusMonths(1);
 
-    insertProcessingPeriod("Period 1", date1, date2);
-    ProcessingPeriod period2 = insertProcessingPeriod("Period 2", date2.plusDays(1), date3);
-    ProcessingPeriod period3 = insertProcessingPeriod("Period 3", date3.plusDays(1), date4);
-    ProcessingPeriod period4 = insertProcessingPeriod("Period 4", date4.plusDays(1), date5);
+    insertProcessingPeriod("Period 1", date5, date4);
+    ProcessingPeriod period2 = insertProcessingPeriod("Period 2", date4.plusDays(1), date3);
+    ProcessingPeriod period3 = insertProcessingPeriod("Period 3", date3.plusDays(1), date2);
+    ProcessingPeriod period4 = insertProcessingPeriod("Period 4", date2.plusDays(1), date1);
+    insertProcessingPeriod("Period 5", date1.plusDays(1), futureDate);
 
-    List<ProcessingPeriod> relevantPeriods = mapper.getAllPeriodsAfterDate(schedule.getId(), date3.toDate());
+    List<ProcessingPeriod> relevantPeriods = mapper.getAllPeriodsAfterDate(schedule.getId(), date3.toDate(), date1.toDate());
 
     assertThat(relevantPeriods.size(), is(3));
     assertThat(relevantPeriods.get(0).getId(), is(period2.getId()));

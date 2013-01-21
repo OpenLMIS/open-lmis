@@ -31,15 +31,22 @@ public interface ProcessingPeriodMapper {
   @Select("SELECT * FROM processing_periods " +
       "WHERE scheduleId = #{scheduleId} " +
       "AND startDate > (SELECT pp.endDate FROM processing_periods pp WHERE pp.id = #{startingPeriodId}) " +
+      "AND startDate <= #{beforeDate} " +
       "AND endDate >= #{afterDate} " +
       "ORDER BY startDate")
-  List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriod(@Param(value = "scheduleId") Integer scheduleId, @Param(value = "afterDate") Date afterDate, @Param(value = "startingPeriodId") Integer startingPeriodId);
+  List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriod(@Param(value = "scheduleId") Integer scheduleId,
+                                                         @Param(value = "startingPeriodId") Integer startingPeriodId,
+                                                         @Param(value = "afterDate") Date afterDate,
+                                                         @Param(value = "beforeDate") Date beforeDate);
 
   @Select("SELECT * FROM processing_periods " +
       "WHERE scheduleId = #{scheduleId} " +
       "AND endDate >= #{afterDate} " +
+      "AND startDate <= #{beforeDate} " +
       "ORDER BY startDate")
-  List<ProcessingPeriod> getAllPeriodsAfterDate(@Param(value = "scheduleId") Integer scheduleId, @Param(value = "afterDate") Date afterDate);
+  List<ProcessingPeriod> getAllPeriodsAfterDate(@Param(value = "scheduleId") Integer scheduleId,
+                                                @Param(value = "afterDate") Date afterDate,
+                                                @Param(value = "beforeDate") Date beforeDate);
 
 
 }

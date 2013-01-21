@@ -66,6 +66,6 @@ public class ProcessingScheduleService {
   public List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriod(Integer facilityId, Integer programId, Date programStartDate, Integer startingPeriod) {
     RequisitionGroup requisitionGroup = requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(programId, facilityId);
     Integer scheduleId = requisitionGroupProgramScheduleRepository.getScheduleIdForRequisitionGroupAndProgram(requisitionGroup.getId(), programId);
-    return periodRepository.getAllPeriodsAfterDateAndPeriod(scheduleId, programStartDate, startingPeriod);
+    return periodRepository.getAllPeriodsAfterDateAndPeriod(scheduleId, startingPeriod, programStartDate, new Date());
   }
 }
