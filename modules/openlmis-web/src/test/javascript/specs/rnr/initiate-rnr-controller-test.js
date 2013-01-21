@@ -12,13 +12,13 @@ describe('InitiateRnrController', function () {
     $httpBackend = _$httpBackend_;
     location = $location;
     facilities = [
-      {"id": "10134", "name": "National Warehouse", "description": null}
+      {"id":"10134", "name":"National Warehouse", "description":null}
     ];
     programs = [
-      {"code": "HIV", "id": 1}
+      {"code":"HIV", "id":1}
     ];
 
-    ctrl = $controller(InitiateRnrController, {$scope: scope, $rootScope: rootScope});
+    ctrl = $controller(InitiateRnrController, {$scope:scope, $rootScope:rootScope});
   }));
 
   it('should set error message if program not defined', function () {
@@ -33,10 +33,10 @@ describe('InitiateRnrController', function () {
   });
 
   it('should get existing rnr if already initiated', function () {
-    scope.selectedProgram = {"code": "hiv", "id": 2};
+    scope.selectedProgram = {"code":"hiv", "id":2};
     scope.selectedFacilityId = 1;
-    scope.selectedPeriod = {"id": 3};
-    $httpBackend.expectGET('/requisitions.json?facilityId=1&periodId=3&programId=2').respond({"rnr": {"id": 1, status: "INITIATED"}});
+    scope.selectedPeriod = {"id":3};
+    $httpBackend.expectGET('/requisitions.json?facilityId=1&periodId=3&programId=2').respond({"rnr":{"id":1, status:"INITIATED"}});
 
     scope.initRnr();
     $httpBackend.flush();
@@ -44,15 +44,15 @@ describe('InitiateRnrController', function () {
     expect(location.path()).toEqual("/create-rnr/1/2/3");
     expect(scope.error).toEqual("");
     expect(scope.$parent.program).toEqual(scope.selectedProgram);
-    expect(scope.$parent.rnr).toEqual({"id": 1, status: 'INITIATED'});
+    expect(scope.$parent.rnr).toEqual({"id":1, status:'INITIATED'});
   });
 
   it('should give error if user has authorize only access and an rnr is not submitted yet', function () {
-    scope.selectedProgram = {"code": "hiv", "id": 2};
+    scope.selectedProgram = {"code":"hiv", "id":2};
     scope.selectedFacilityId = 1;
-    scope.selectedPeriod = {"id": 3};
+    scope.selectedPeriod = {"id":3};
     spyOn(rootScope, 'hasPermission').andReturn(false);
-    $httpBackend.expectGET('/requisitions.json?facilityId=1&periodId=3&programId=2').respond({"rnr": {"id": 1, status: "INITIATED"}});
+    $httpBackend.expectGET('/requisitions.json?facilityId=1&periodId=3&programId=2').respond({"rnr":{"id":1, status:"INITIATED"}});
 
     scope.initRnr();
     $httpBackend.flush();
@@ -61,11 +61,11 @@ describe('InitiateRnrController', function () {
   });
 
   it('should create a rnr if rnr not already initiated', function () {
-    scope.selectedProgram = {"code": "hiv", "id": 2};
+    scope.selectedProgram = {"code":"hiv", "id":2};
     scope.selectedFacilityId = 1;
-    scope.selectedPeriod = {"id": 3};
+    scope.selectedPeriod = {"id":3};
     $httpBackend.expectGET('/requisitions.json?facilityId=1&periodId=3&programId=2').respond(null);
-    $httpBackend.expectPOST('/requisitions.json?facilityId=1&periodId=3&programId=2').respond({"rnr": {"id": 1, status: "INITIATED"}});
+    $httpBackend.expectPOST('/requisitions.json?facilityId=1&periodId=3&programId=2').respond({"rnr":{"id":1, status:"INITIATED"}});
 
     scope.initRnr();
     $httpBackend.flush();
@@ -73,7 +73,7 @@ describe('InitiateRnrController', function () {
     expect(location.path()).toEqual("/create-rnr/1/2/3");
     expect(scope.$parent.program).toEqual(scope.selectedProgram);
     expect(scope.error).toEqual("");
-    expect(scope.$parent.rnr).toEqual({"id": 1, status: 'INITIATED'});
+    expect(scope.$parent.rnr).toEqual({"id":1, status:'INITIATED'});
   });
 
   it('should set appropriate message for facility', function () {
@@ -86,15 +86,15 @@ describe('InitiateRnrController', function () {
 
   describe('periods', function () {
     beforeEach(function () {
-      scope.selectedProgram = {"code": "hiv", "id": 10};
+      scope.selectedProgram = {"code":"hiv", "id":10};
       scope.selectedFacilityId = 20;
     });
 
     it('should load periods for selected facility and program', function () {
       var periods = [
-        {"name": "First Month", "description": "First Month Description"}
+        {"name":"First Month", "description":"First Month Description"}
       ];
-      $httpBackend.expectGET('/logistics/facility/20/program/10/periods.json').respond({"periods": periods});
+      $httpBackend.expectGET('/logistics/facility/20/program/10/periods.json').respond({"periods":periods});
 
       scope.loadPeriods();
       $httpBackend.flush();
@@ -114,7 +114,7 @@ describe('InitiateRnrController', function () {
 
     it('should not load periods if program selected but facility not selected', function () {
       scope.selectedFacilityId = null;
-      scope.selectedProgram = {"id": 1};
+      scope.selectedProgram = {"id":1};
 
       scope.loadPeriods();
 
@@ -130,6 +130,11 @@ describe('InitiateRnrController', function () {
 
       expect(scope.periods).toEqual(null);
       expect(scope.selectedPeriod).toEqual(null);
+    });
+
+    it('should prepare period display name', function () {
+      var periodDisplayName = scope.periodDisplayName({"name":"Period 1", "startDate":1358274600000, "endDate":1367260200000});
+      expect(periodDisplayName).toEqual('Period 1 (16/01/2013 - 30/04/2013)');
     });
   });
 });

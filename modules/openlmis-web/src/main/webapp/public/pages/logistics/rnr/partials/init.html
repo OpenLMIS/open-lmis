@@ -13,7 +13,7 @@
   </select> <br/>
   <br/>
   <label>Period</label>
-  <select id="periodList" ng-model="$parent.selectedPeriod" ng-options="i as i.name for i in periods">
+  <select id="periodList" ng-model="$parent.selectedPeriod" ng-options="i as periodDisplayName(i) for i in periods">
     <option value="">{{periodOptionMessage()}}</option>
   </select> <br/>
   <br/>

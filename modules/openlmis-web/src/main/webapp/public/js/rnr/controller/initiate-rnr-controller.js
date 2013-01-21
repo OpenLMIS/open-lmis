@@ -66,4 +66,11 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
           }
         }, {});
   };
+
+  $scope.periodDisplayName = function(period) {
+    var startDate = utils.getFormattedDate(new Date(period.startDate));
+    var endDate = utils.getFormattedDate(new Date(period.endDate));
+
+    return period.name + ' (' + startDate + ' - ' + endDate + ')';
+  };
 }
