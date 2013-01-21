@@ -1,27 +1,45 @@
 function ApproveRnrController($scope, requisitionList) {
   $scope.requisitions = requisitionList;
+  $scope.filteredRequisitions = $scope.requisitions;
 
-  function dateTemplate(model) {
-    var divElement = '<div>{{' + model + "| date:'dd/MM/yyyy'" + '}}</div>';
-    return divElement;
-  }
-
-  $scope.gridOptions = { data:'requisitions',
+  $scope.gridOptions = { data:'filteredRequisitions',
     canSelectRows:false,
     displayFooter:false,
     displaySelectionCheckbox:false,
     showColumnMenu:false,
     sortInfo:{ field:'submittedDate', direction:'ASC'},
+    showFilter:false,
     columnDefs:[
       {field:'programName', displayName:'Program' },
       {field:'facilityCode', displayName:'Facility Code'},
       {field:'facilityName', displayName:"Facility Name"},
-      {field:'periodStartDate', displayName:"Period Start Date", cellFilter:"date", cellTemplate:dateTemplate('COL_FIELD')},
-      {field:'periodEndDate', displayName:"Period End Date", cellFilter:"date", cellTemplate:dateTemplate('COL_FIELD')},
-      {field:'submittedDate', displayName:"Date Submitted", cellFilter:"date", cellTemplate:dateTemplate('COL_FIELD')},
-      {field:'modifiedDate', displayName:"Date Modified", cellFilter:"date", cellTemplate:dateTemplate('COL_FIELD')}
+      {field:'periodStartDate', displayName:"Period Start Date", cellFilter:"date:'dd/MM/yyyy'"},
+      {field:'periodEndDate', displayName:"Period End Date", cellFilter:"date:'dd/MM/yyyy'"},
+      {field:'submittedDate', displayName:"Date Submitted", cellFilter:"date:'dd/MM/yyyy'"},
+      {field:'modifiedDate', displayName:"Date Modified", cellFilter:"date:'dd/MM/yyyy'"}
     ]
   };
+
+
+  $scope.filterRequisitions = function () {
+    $scope.filteredRequisitions = [];
+    var query = $scope.query || "";
+    var searchField = $scope.searchField;
+
+    $scope.filteredRequisitions = $.grep($scope.requisitions, function (rnr) {
+      if (searchField) {
+        return rnr[searchField].toLowerCase().indexOf(query.toLowerCase()) != -1;
+      } else {
+        return matchesAnyField(query, rnr);
+      }
+    });
+    $scope.resultCount = $scope.filteredRequisitions.length;
+  };
+
+  function matchesAnyField(query, rnr) {
+    var rnrString = "|" + rnr.programName + "|" + rnr.facilityName + "|" + rnr.facilityCode + "|";
+    return rnrString.toLowerCase().indexOf(query.toLowerCase()) != -1;
+  }
 }
 
 ApproveRnrController.resolve = {

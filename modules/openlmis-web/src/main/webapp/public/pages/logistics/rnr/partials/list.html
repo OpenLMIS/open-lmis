@@ -1,6 +1,20 @@
-<form id="form" name="form" class="css-form">
-    <div class="alert alert-success" id="NoRequisitionsPendingMessage" ng-hide="requisitions.length">
-        No R&Rs pending for approval
+<h2>Approve Requisitions</h2>
+<div class="alert alert-success" id="NoRequisitionsPendingMessage" ng-hide="requisitions.length">
+  No R&Rs pending for approval
+</div>
+<div ng-show="requisitions.length">
+  <div class="row-fluid">
+    <div class="span4 offset8 grid-filters">
+      <input id="searchRequisition" class="search-query" ng-change="filterRequisitions()" type="text"
+             ng-model="query" placeholder="Search..."/>
+      in
+      <select ng-model="searchField" ng-change="filterRequisitions()">
+        <option value="">All</option>
+        <option value="programName">Program</option>
+        <option value="facilityCode">Facility Code</option>
+        <option value="facilityName">Facility Name</option>
+      </select>
     </div>
-    <div class="gridStyle" ng-grid="gridOptions"></div>
-</form>
+  </div>
+  <div class="gridStyle" ng-grid="gridOptions" ng-show="requisitions.length"></div>
+</div>
