@@ -58,12 +58,14 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
             }
             $scope.$parent.rnr = data.rnr;
             $scope.$parent.program = $scope.selectedProgram;
+            $scope.$parent.period = $scope.selectedPeriod;
             $location.path('/create-rnr/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + '/' + $scope.selectedPeriod.id);
           }
           else {
             Requisition.save({facilityId:$scope.selectedFacilityId, programId:$scope.selectedProgram.id, periodId:$scope.selectedPeriod.id}, {}, function (data) {
               $scope.$parent.rnr = data.rnr;
               $scope.$parent.program = $scope.selectedProgram;
+              $scope.$parent.period = $scope.selectedPeriod;
               $location.path('/create-rnr/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + '/' + $scope.selectedPeriod.id);
             }, function () {
               $scope.error = "Requisition does not exist. Please initiate.";

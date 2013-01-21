@@ -1,10 +1,12 @@
 <div id="requisition-header" ng-controller="RequisitionHeaderController">
   <h2>Report and Requisition for {{$parent.program.name}} ({{header.facilityType}}) </h2>
+
   <div class="info-box">
     <table>
       <tr>
         <td><strong>Facility:</strong> {{header.facilityCode}} - {{header.facilityName}}</td>
         <td><strong>Operated By:</strong> {{header.facilityOperatedBy}}</td>
+        <td><strong>Reporting Period:</strong> {{periodDisplayName()}}</td>
       </tr>
       <tr>
         <td><strong>{{header.zone.label}}:</strong> {{header.zone.value}}</td>
