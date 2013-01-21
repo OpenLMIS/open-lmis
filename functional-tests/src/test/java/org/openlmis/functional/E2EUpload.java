@@ -61,7 +61,8 @@ public class E2EUpload extends TestCaseHelper {
         uploadPage.uploadFacilities();
         testWebDriver.setImplicitWait(2500);
 
-        dbWrapper.insertFacilityApprovedProducts();
+        //dbWrapper.insertFacilityApprovedProducts();
+        uploadPage.uploadFacilityTypeToProductMapping();
         dbWrapper.allocateFacilityToUser("200");
 
         uploadPage.uploadProgramSupportedByFacilities();
