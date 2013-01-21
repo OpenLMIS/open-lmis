@@ -1,6 +1,6 @@
 package org.openlmis.core.upload;
 
-import org.openlmis.core.domain.ProgramProductCost;
+import org.openlmis.core.domain.ProgramProductPrice;
 import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.upload.Importable;
 
@@ -14,8 +14,8 @@ public class ProgramProductCostPersistenceHandler extends AbstractModelPersisten
 
   @Override
   protected void save(Importable modelClass, String modifiedBy) {
-    ProgramProductCost programProductCost = (ProgramProductCost) modelClass;
-    programProductCost.setModifiedBy(modifiedBy);
-    programProductService.save(programProductCost);
+    ProgramProductPrice programProductPrice = (ProgramProductPrice) modelClass;
+    programProductPrice.setModifiedBy(modifiedBy);
+    programProductService.save(programProductPrice);
   }
 }

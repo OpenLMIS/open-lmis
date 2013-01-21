@@ -10,10 +10,11 @@ import org.openlmis.core.builder.ProgramProductBuilder;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.domain.ProgramProductCost;
+import org.openlmis.core.domain.ProgramProductPrice;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProductMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
+import org.openlmis.core.repository.mapper.ProgramProductPriceMapper;
 import org.springframework.dao.DuplicateKeyException;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
@@ -43,10 +44,12 @@ public class ProgramProductRepositoryTest {
   private ProductMapper productMapper;
   @Mock
   private ProductRepository productRepository;
+  @Mock
+  private ProgramProductPriceMapper programProductPriceMapper;
 
   @Before
   public void setUp() throws Exception {
-    programProductRepository = new ProgramProductRepository(programRepository, productMapper, programProductMapper, productRepository);
+    programProductRepository = new ProgramProductRepository(programRepository, productMapper, programProductMapper, productRepository, programProductPriceMapper);
   }
 
   @Test
@@ -135,10 +138,10 @@ public class ProgramProductRepositoryTest {
 
   @Test
   public void shouldInsertNewCostWithStartDateAsCurrentAndCloseLastPeriodsCostWithEndDateAsCurrent() throws Exception {
-    ProgramProductCost programProductCost = new ProgramProductCost();
-    programProductRepository.updateCostHistory(programProductCost);
+    ProgramProductPrice programProductPrice = new ProgramProductPrice();
+    programProductRepository.updatePriceHistory(programProductPrice);
 
-    verify(programProductMapper).closeLastActivePrice(programProductCost);
-    verify(programProductMapper).insertNewCurrentPrice(programProductCost);
+    verify(programProductPriceMapper).closeLastActivePrice(programProductPrice);
+    verify(programProductPriceMapper).insertNewCurrentPrice(programProductPrice);
   }
 }

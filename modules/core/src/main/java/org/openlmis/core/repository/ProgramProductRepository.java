@@ -2,10 +2,11 @@ package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.domain.ProgramProductCost;
+import org.openlmis.core.domain.ProgramProductPrice;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProductMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
+import org.openlmis.core.repository.mapper.ProgramProductPriceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
@@ -18,14 +19,17 @@ public class ProgramProductRepository {
   private ProductMapper productMapper;
   private ProductRepository productRepository;
   private ProgramProductMapper programProductMapper;
+  private ProgramProductPriceMapper programProductPriceMapper;
 
 
   @Autowired
-  public ProgramProductRepository(ProgramRepository programRepository, ProductMapper productMapper, ProgramProductMapper programProductMapper, ProductRepository productRepository) {
+  public ProgramProductRepository(ProgramRepository programRepository, ProductMapper productMapper, ProgramProductMapper programProductMapper,
+                                  ProductRepository productRepository, ProgramProductPriceMapper programProductPriceMapper) {
     this.programProductMapper = programProductMapper;
     this.programRepository = programRepository;
     this.productMapper = productMapper;
     this.productRepository = productRepository;
+    this.programProductPriceMapper = programProductPriceMapper;
   }
 
 
@@ -63,8 +67,8 @@ public class ProgramProductRepository {
     programProductMapper.updateCurrentPrice(programProduct);
   }
 
-  public void updateCostHistory(ProgramProductCost programProductCost) {
-    programProductMapper.closeLastActivePrice(programProductCost);
-    programProductMapper.insertNewCurrentPrice(programProductCost);
+  public void updatePriceHistory(ProgramProductPrice programProductPrice) {
+    programProductPriceMapper.closeLastActivePrice(programProductPrice);
+    programProductPriceMapper.insertNewCurrentPrice(programProductPrice);
   }
 }

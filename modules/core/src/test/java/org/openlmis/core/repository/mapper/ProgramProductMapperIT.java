@@ -69,7 +69,7 @@ public class ProgramProductMapperIT {
     programProductMapper.updateCurrentPrice(programProduct);
     ProgramProduct returnedProgramProduct = programProductMapper.getById(programProduct.getId());
     assertThat(returnedProgramProduct.getCurrentPrice(), is(200.01));
-
-
   }
+
+
 }

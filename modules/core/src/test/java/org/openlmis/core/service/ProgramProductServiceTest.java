@@ -5,7 +5,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.domain.ProgramProductCost;
+import org.openlmis.core.domain.ProgramProductPrice;
 import org.openlmis.core.repository.ProgramProductRepository;
 
 import static org.mockito.Mockito.verify;
@@ -20,11 +20,11 @@ public class ProgramProductServiceTest {
   @Test
   public void shouldUpdateCurrentPriceOfProgramProductAndUpdateCostHistory() throws Exception {
     programProductService = new ProgramProductService(programProductRepository);
-    ProgramProductCost programProductCost = new ProgramProductCost();
+    ProgramProductPrice programProductPrice = new ProgramProductPrice();
     ProgramProduct programProduct = new ProgramProduct();
-    programProductCost.setProgramProduct(programProduct);
-    programProductService.save(programProductCost);
+    programProductPrice.setProgramProduct(programProduct);
+    programProductService.save(programProductPrice);
     verify(programProductRepository).updateCurrentPrice(programProduct);
-    verify(programProductRepository).updateCostHistory(programProductCost);
+    verify(programProductRepository).updatePriceHistory(programProductPrice);
   }
 }

@@ -3,7 +3,7 @@ package org.openlmis.core.upload;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.openlmis.core.domain.ProgramProductCost;
+import org.openlmis.core.domain.ProgramProductPrice;
 import org.openlmis.core.service.ProgramProductService;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -25,7 +25,7 @@ public class ProgramProductCostPersistenceHandlerTest {
 
   @Test
   public void shouldSaveProgramSupported() {
-    ProgramProductCost programSupported = new ProgramProductCost();
+    ProgramProductPrice programSupported = new ProgramProductPrice();
     programProductCostPersistenceHandler.save(programSupported, "user");
     verify(programProductService).save(programSupported);
     assertThat(programSupported.getModifiedBy(), is("user"));
