@@ -26,7 +26,7 @@ public interface FacilityApprovedProductMapper {
     "AND p.id = pp.productId " +
     "AND pf.id = p.formId " +
     "AND du.id = p.dosageUnitId " +
-    "AND p.fullSupply = 'TRUE' " +
+    "AND p.fullSupply = #{fullSupply} " +
     "AND p.active = true " +
     "AND pp.active = true " +
     "ORDER BY p.displayOrder NULLS LAST, p.code")
@@ -34,7 +34,8 @@ public interface FacilityApprovedProductMapper {
     @Result(property = "programProduct", column = "programProductID", javaType = ProgramProduct.class,
       one = @One(select = "org.openlmis.core.repository.mapper.ProgramProductMapper.getById")),
     @Result(property = "facilityType.id", column = "facilityTypeId")})
-  List<FacilityApprovedProduct> getFullSupplyProductsByFacilityAndProgram(@Param("facilityId") Integer facilityId,
-                                                                          @Param("programId") Integer programId);
+  List<FacilityApprovedProduct> getProductsByFacilityAndProgram(@Param("facilityId") Integer facilityId,
+                                                                @Param("programId") Integer programId,
+                                                                @Param("fullSupply") Boolean fullSupply);
 
 }

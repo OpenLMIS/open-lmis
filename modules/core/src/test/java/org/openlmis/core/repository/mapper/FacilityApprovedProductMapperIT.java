@@ -66,7 +66,7 @@ public class FacilityApprovedProductMapperIT {
   }
 
   @Test
-  public void shouldGetFullSupplyAndActiveProductsByFacilityAndProgramInOrderOfDisplayAndProductCode() {
+  public void shouldGetActiveProductsByFacilityAndProgramInOrderOfDisplayAndProductCode() {
     Facility facility = make(a(FacilityBuilder.defaultFacility));
     facilityMapper.insert(facility);
     Program yellowFeverProgram = make(a(defaultProgram));
@@ -98,8 +98,9 @@ public class FacilityApprovedProductMapperIT {
     addToFacilityType("warehouse", programProduct6);
     addToFacilityType("warehouse", programProduct7);
 
-    List<FacilityApprovedProduct> facilityApprovedProducts = facilityApprovedProductMapper.getFullSupplyProductsByFacilityAndProgram(
-        facility.getId(), yellowFeverProgram.getId());
+    // Get full supply products
+    List<FacilityApprovedProduct> facilityApprovedProducts = facilityApprovedProductMapper.getProductsByFacilityAndProgram(
+      facility.getId(), yellowFeverProgram.getId(), Boolean.TRUE);
     assertEquals(3, facilityApprovedProducts.size());
 
     FacilityApprovedProduct facilityApprovedProduct = facilityApprovedProducts.get(0);
@@ -121,6 +122,13 @@ public class FacilityApprovedProductMapperIT {
 
     assertEquals("PRO06", facilityApprovedProducts.get(1).getProgramProduct().getProduct().getCode());
     assertEquals("PRO01", facilityApprovedProducts.get(2).getProgramProduct().getProduct().getCode());
+
+    // Non-full supply products
+    List<FacilityApprovedProduct> nonFullSupplyfacilityApprovedProducts = facilityApprovedProductMapper.getProductsByFacilityAndProgram(
+      facility.getId(), yellowFeverProgram.getId(), Boolean.FALSE);
+
+    assertThat(nonFullSupplyfacilityApprovedProducts.size(), is(1));
+    assertThat(nonFullSupplyfacilityApprovedProducts.get(0).getProgramProduct().getProduct().getCode(), is("PRO03"));
   }
 
 

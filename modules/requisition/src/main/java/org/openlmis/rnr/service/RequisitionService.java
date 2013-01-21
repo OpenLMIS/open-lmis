@@ -59,7 +59,7 @@ public class RequisitionService {
     if (!rnrTemplateRepository.isRnrTemplateDefined(programId))
       throw new DataException("Please contact Admin to define R&R template for this program");
     Rnr requisition = new Rnr(facilityId, programId, periodId, modifiedBy);
-    List<FacilityApprovedProduct> facilityApprovedProducts = facilityApprovedProductService.getByFacilityAndProgram(facilityId, programId);
+    List<FacilityApprovedProduct> facilityApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(facilityId, programId);
     for (FacilityApprovedProduct programProduct : facilityApprovedProducts) {
       RnrLineItem requisitionLineItem = new RnrLineItem(requisition.getId(), programProduct, modifiedBy);
       requisition.add(requisitionLineItem);

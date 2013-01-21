@@ -33,6 +33,7 @@ public class RnrLineItem {
   private Integer dosesPerDispensingUnit;
   private String dispensingUnit;
   private Integer maxMonthsOfStock;
+  private Boolean fullSupply;
 
   private Integer quantityReceived;
   private Integer quantityDispensed;
@@ -65,18 +66,21 @@ public class RnrLineItem {
 
     this.maxMonthsOfStock = facilityApprovedProduct.getMaxMonthsOfStock();
     ProgramProduct programProduct = facilityApprovedProduct.getProgramProduct();
-    // TODO : ugly
-    Product product = programProduct.getProduct();
+    populateFromProduct(programProduct.getProduct());
+    this.dosesPerMonth = programProduct.getDosesPerMonth();
+    this.price = facilityApprovedProduct.getProgramProduct().getCurrentPrice();
+    this.modifiedBy = modifiedBy;
+  }
+
+  private void populateFromProduct(Product product) {
     this.productCode = product.getCode();
     this.dispensingUnit = product.getDispensingUnit();
     this.dosesPerDispensingUnit = product.getDosesPerDispensingUnit();
-    this.dosesPerMonth = programProduct.getDosesPerMonth();
     this.packSize = product.getPackSize();
     this.roundToZero = product.getRoundToZero();
     this.packRoundingThreshold = product.getPackRoundingThreshold();
     this.product = productName(product);
-    this.price = facilityApprovedProduct.getProgramProduct().getCurrentPrice();
-    this.modifiedBy = modifiedBy;
+    this.fullSupply = product.getFullSupply();
   }
 
   private String productName(Product product) {

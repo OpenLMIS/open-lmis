@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static java.lang.Boolean.*;
+
 @Component
 @NoArgsConstructor
 public class FacilityApprovedProductRepository {
@@ -25,8 +27,12 @@ public class FacilityApprovedProductRepository {
     this.facilityApprovedProductMapper = facilityApprovedProductMapper;
   }
 
-  public List<FacilityApprovedProduct> getByFacilityAndProgram(Integer facilityId, Integer programId) {
-    return facilityApprovedProductMapper.getFullSupplyProductsByFacilityAndProgram(facilityId, programId);
+  public List<FacilityApprovedProduct> getFullSupplyProductsByFacilityAndProgram(Integer facilityId, Integer programId) {
+    return facilityApprovedProductMapper.getProductsByFacilityAndProgram(facilityId, programId, TRUE);
+  }
+
+  public List<FacilityApprovedProduct> getNonFullSupplyProductsByFacilityAndProgram(Integer facilityId, Integer programId) {
+    return facilityApprovedProductMapper.getProductsByFacilityAndProgram(facilityId, programId, FALSE);
   }
 
   public void insert(FacilityApprovedProduct facilityApprovedProduct) {

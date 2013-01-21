@@ -41,6 +41,7 @@ import static org.openlmis.rnr.service.RequisitionService.*;
 @RunWith(MockitoJUnitRunner.class)
 public class RequisitionServiceTest {
 
+  private static final Integer HIV = 1;
   private static final Integer FACILITY_ID = 1;
   private static final Integer PROGRAM_ID = 2;
   private static final Integer PERIOD_ID = 10;
@@ -84,11 +85,11 @@ public class RequisitionServiceTest {
     List<FacilityApprovedProduct> facilityApprovedProducts = new ArrayList<>();
     ProgramProduct programProduct = new ProgramProduct(null, make(a(ProductBuilder.defaultProduct)), 10, true);
     facilityApprovedProducts.add(new FacilityApprovedProduct("warehouse", programProduct, 30));
-    when(facilityApprovedProductService.getByFacilityAndProgram(FACILITY_ID, PROGRAM_ID)).thenReturn(facilityApprovedProducts);
+    when(facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY_ID, PROGRAM_ID)).thenReturn(facilityApprovedProducts);
 
     Rnr rnr = requisitionService.initRnr(FACILITY_ID, PROGRAM_ID, PERIOD_ID, 1);
 
-    verify(facilityApprovedProductService).getByFacilityAndProgram(FACILITY_ID, PROGRAM_ID);
+    verify(facilityApprovedProductService).getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY_ID, PROGRAM_ID);
     verify(requisitionRepository).insert(rnr);
     assertThat(rnr.getLineItems().size(), is(1));
     assertThat(rnr.getPeriodId(), is(PERIOD_ID));
@@ -168,8 +169,8 @@ public class RequisitionServiceTest {
     when(rnrTemplateRepository.isRnrTemplateDefined(PROGRAM_ID)).thenReturn(false);
     expectedException.expect(DataException.class);
     expectedException.expectMessage("Please contact Admin to define R&R template for this program");
-    Rnr rnr = requisitionService.initRnr(FACILITY_ID, PROGRAM_ID, null, 1);
-    verify(facilityApprovedProductService, never()).getByFacilityAndProgram(FACILITY_ID, PROGRAM_ID);
+    Rnr rnr = requisitionService.initRnr(FACILITY_ID, HIV, null, 1);
+    verify(facilityApprovedProductService, never()).getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY_ID, HIV);
     verify(requisitionRepository, never()).insert(rnr);
   }
 

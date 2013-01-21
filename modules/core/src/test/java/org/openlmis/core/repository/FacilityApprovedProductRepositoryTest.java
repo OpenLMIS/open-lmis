@@ -61,4 +61,18 @@ public class FacilityApprovedProductRepositoryTest {
 
     facilityApprovedProductRepository.insert(facilityApprovedProduct);
   }
+
+  @Test
+  public void shouldGetFullSupplyFacilityApprovedProducts(){
+    FacilityApprovedProductRepository facilityApprovedProductRepository = new FacilityApprovedProductRepository(facilityApprovedProductMapper);
+    facilityApprovedProductRepository.getFullSupplyProductsByFacilityAndProgram(5,8);
+    verify(facilityApprovedProductMapper).getProductsByFacilityAndProgram(5, 8, true);
+  }
+
+  @Test
+  public void shouldGetNonFullSupplyFacilityApprovedProducts(){
+    FacilityApprovedProductRepository facilityApprovedProductRepository = new FacilityApprovedProductRepository(facilityApprovedProductMapper);
+    facilityApprovedProductRepository.getNonFullSupplyProductsByFacilityAndProgram(5,8);
+    verify(facilityApprovedProductMapper).getProductsByFacilityAndProgram(5, 8, false);
+  }
 }

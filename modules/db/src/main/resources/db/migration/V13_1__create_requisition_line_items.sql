@@ -29,6 +29,7 @@ dosesPerDispensingUnit integer not null,
 packSize smallint not null,
 roundToZero BOOLEAN,
 packRoundingThreshold integer,
+fullSupply BOOLEAN NOT NULL,
 modifiedBy VARCHAR(50),
 modifiedDate TIMESTAMP  DEFAULT  CURRENT_TIMESTAMP
 );

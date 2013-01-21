@@ -26,8 +26,12 @@ public class FacilityApprovedProductService {
     this.programProductService = programProductService;
   }
 
-  public List<FacilityApprovedProduct> getByFacilityAndProgram(Integer facilityId, Integer programId) {
-    return repository.getByFacilityAndProgram(facilityId, programId);
+  public List<FacilityApprovedProduct> getFullSupplyFacilityApprovedProductByFacilityAndProgram(Integer facilityId, Integer programId) {
+    return repository.getFullSupplyProductsByFacilityAndProgram(facilityId, programId);
+  }
+
+  public List<FacilityApprovedProduct> getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(Integer facilityId, Integer programId){
+    return repository.getNonFullSupplyProductsByFacilityAndProgram(facilityId, programId);
   }
 
   public void save(FacilityApprovedProduct facilityApprovedProduct) {

@@ -16,7 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.ProductBuilder.code;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
@@ -42,13 +43,15 @@ public class RnrLineItemTest {
 
     ProgramProduct programProduct = new ProgramProduct(program, product, 30, true);
     RnrLineItem rnrLineItem = new RnrLineItem(1, new FacilityApprovedProduct("warehouse", programProduct, 3), 1);
-    assertEquals(3, rnrLineItem.getMaxMonthsOfStock().intValue());
-    assertEquals(1, rnrLineItem.getRnrId().intValue());
-    assertEquals("Strip", rnrLineItem.getDispensingUnit());
-    assertEquals("ASPIRIN", rnrLineItem.getProductCode());
-    assertEquals(30, rnrLineItem.getDosesPerMonth().intValue());
-    assertEquals(1, rnrLineItem.getModifiedBy().intValue());
-    assertEquals(10, rnrLineItem.getDosesPerDispensingUnit().intValue());
+
+    assertThat(rnrLineItem.getFullSupply(), is(product.getFullSupply()));
+    assertThat(rnrLineItem.getMaxMonthsOfStock().intValue(), is(3));
+    assertThat(rnrLineItem.getRnrId().intValue(), is(1));
+    assertThat(rnrLineItem.getDispensingUnit(), is("Strip"));
+    assertThat(rnrLineItem.getProductCode(), is("ASPIRIN"));
+    assertThat(rnrLineItem.getDosesPerMonth().intValue(), is(30));
+    assertThat(rnrLineItem.getModifiedBy().intValue(), is(1));
+    assertThat(rnrLineItem.getDosesPerDispensingUnit().intValue(), is(10));
   }
 
   @Test
