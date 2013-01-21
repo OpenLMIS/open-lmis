@@ -23,6 +23,7 @@ import java.util.List;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
+import static org.openlmis.web.response.OpenLmisResponse.error;
 
 
 @Controller
@@ -59,7 +60,7 @@ public class UserController extends BaseController {
       userService.sendForgotPasswordEmail(user);
       return OpenLmisResponse.success("Email sent");
     } catch (DataException e) {
-      return OpenLmisResponse.error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
+      return error(e, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -75,7 +76,7 @@ public class UserController extends BaseController {
       successResponse.getBody().setData("user", user);
       return successResponse;
     } catch (DataException e) {
-      ResponseEntity<OpenLmisResponse> errorResponse = OpenLmisResponse.error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
+      ResponseEntity<OpenLmisResponse> errorResponse = error(e, HttpStatus.BAD_REQUEST);
       errorResponse.getBody().setData("user", user);
       return errorResponse;
     }

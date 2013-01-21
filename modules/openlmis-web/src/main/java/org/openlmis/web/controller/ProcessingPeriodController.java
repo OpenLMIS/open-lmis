@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+import static org.openlmis.web.response.OpenLmisResponse.error;
+
 @Controller
 @NoArgsConstructor
 public class ProcessingPeriodController extends BaseController {
@@ -45,7 +47,7 @@ public class ProcessingPeriodController extends BaseController {
     try {
       processingScheduleService.savePeriod(processingPeriod);
     } catch (DataException e) {
-      return OpenLmisResponse.error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
+      return error(e, HttpStatus.BAD_REQUEST);
     }
     ResponseEntity<OpenLmisResponse> successResponse = OpenLmisResponse.success("Period added successfully");
     successResponse.getBody().setData("id", processingPeriod.getId());
@@ -58,7 +60,7 @@ public class ProcessingPeriodController extends BaseController {
     try {
       processingScheduleService.deletePeriod(id);
     } catch (DataException e) {
-      return OpenLmisResponse.error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
+      return error(e, HttpStatus.BAD_REQUEST);
     }
     return OpenLmisResponse.success("Period deleted successfully");
   }

@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonAnyGetter;
 import org.codehaus.jackson.annotate.JsonAnySetter;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,8 +36,8 @@ public class OpenLmisResponse {
     return new ResponseEntity<>(new OpenLmisResponse(ERROR, new OpenLmisMessage(errorMsgCode).resolve(resourceBundle)), statusCode);
   }
 
-  public static ResponseEntity<OpenLmisResponse> error(OpenLmisMessage openLmisMessage, HttpStatus httpStatus) {
-    return new ResponseEntity<>(new OpenLmisResponse(ERROR, openLmisMessage.resolve(resourceBundle)), httpStatus);
+  public static ResponseEntity<OpenLmisResponse> error(DataException exception, HttpStatus httpStatus) {
+    return new ResponseEntity<>(new OpenLmisResponse(ERROR, exception.getOpenLmisMessage().resolve(resourceBundle)), httpStatus);
   }
 
   public static ResponseEntity<OpenLmisResponse> response(String key, Object value) {

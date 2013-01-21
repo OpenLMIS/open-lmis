@@ -47,7 +47,7 @@ public class RequisitionController extends BaseController {
     try {
       return response(RNR, requisitionService.initRnr(facilityId, programId, periodId, loggedInUserId(request)));
     } catch (DataException e) {
-      return error(e.getOpenLmisMessage(), BAD_REQUEST);
+      return error(e, BAD_REQUEST);
     }
   }
 
@@ -70,7 +70,7 @@ public class RequisitionController extends BaseController {
       requisitionService.save(rnr);
       return OpenLmisResponse.success(RNR_SAVE_SUCCESS);
     } catch (DataException e) {
-      return OpenLmisResponse.error(e.getOpenLmisMessage(), BAD_REQUEST);
+      return OpenLmisResponse.error(e, BAD_REQUEST);
     }
   }
 
@@ -84,7 +84,7 @@ public class RequisitionController extends BaseController {
       rnr.setModifiedBy(loggedInUserId(request));
       return success(requisitionService.submit(rnr));
     } catch (DataException e) {
-      return error(e.getOpenLmisMessage(), BAD_REQUEST);
+      return error(e, BAD_REQUEST);
     }
   }
 
@@ -106,7 +106,7 @@ public class RequisitionController extends BaseController {
       OpenLmisMessage openLmisMessage = requisitionService.authorize(rnr);
       return success(openLmisMessage);
     } catch (DataException e) {
-      return error(e.getOpenLmisMessage(), BAD_REQUEST);
+      return error(e, BAD_REQUEST);
     }
   }
 
@@ -124,7 +124,7 @@ public class RequisitionController extends BaseController {
       List<ProcessingPeriod> periodList = requisitionService.getAllPeriodsForInitiatingRequisition(facilityId, programId);
       return OpenLmisResponse.response(PERIODS, periodList);
     } catch (DataException e) {
-      return error(e.getOpenLmisMessage(), CONFLICT);
+      return error(e, CONFLICT);
     }
   }
 }

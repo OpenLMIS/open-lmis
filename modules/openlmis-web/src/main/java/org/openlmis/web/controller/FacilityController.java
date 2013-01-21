@@ -27,6 +27,7 @@ import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.U
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.web.response.OpenLmisResponse.error;
 
 @Controller
 @NoArgsConstructor
@@ -77,7 +78,7 @@ public class FacilityController extends BaseController {
     try {
       facilityService.save(facility);
     } catch (DataException exception) {
-      final ResponseEntity<OpenLmisResponse> errorResponse = OpenLmisResponse.error(exception.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
+      final ResponseEntity<OpenLmisResponse> errorResponse = error(exception, HttpStatus.BAD_REQUEST);
       errorResponse.getBody().setData("facility", facility);
       return errorResponse;
     }
@@ -118,7 +119,7 @@ public class FacilityController extends BaseController {
       facilityService.updateDataReportableAndActiveFor(facility);
       facility = facilityService.getFacility(facility.getId());
     } catch (DataException exception) {
-      ResponseEntity<OpenLmisResponse> errorResponse = OpenLmisResponse.error(exception.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
+      ResponseEntity<OpenLmisResponse> errorResponse = error(exception, HttpStatus.BAD_REQUEST);
       errorResponse.getBody().setData("facility", facility);
       return errorResponse;
     }

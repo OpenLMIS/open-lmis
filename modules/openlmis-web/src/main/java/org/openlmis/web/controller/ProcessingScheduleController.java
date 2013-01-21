@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static org.openlmis.web.response.OpenLmisResponse.error;
+
 @Controller
 @NoArgsConstructor
 public class ProcessingScheduleController extends BaseController {
@@ -58,7 +60,7 @@ public class ProcessingScheduleController extends BaseController {
       ProcessingSchedule processingSchedule = processingScheduleService.get(id);
       return OpenLmisResponse.response(SCHEDULE, processingSchedule);
     } catch (DataException e){
-      return OpenLmisResponse.error(e.getOpenLmisMessage(), HttpStatus.NOT_FOUND);
+      return error(e, HttpStatus.NOT_FOUND);
     }
   }
 
@@ -69,7 +71,7 @@ public class ProcessingScheduleController extends BaseController {
       response.getBody().setData(SCHEDULE, savedSchedule);
       return response;
     } catch (DataException e) {
-      return OpenLmisResponse.error(e.getOpenLmisMessage(), HttpStatus.BAD_REQUEST);
+      return error(e, HttpStatus.BAD_REQUEST);
     }
   }
 }
