@@ -1,25 +1,28 @@
 <div ng-show="modalShown" id="myModal">
-    <div class="modal-backdrop"></div>
-    <div class="modal modal-login fade in">
-        <ng-include src="'/public/pages/login-form.html'"/>
-    </div>
+  <div class="modal-backdrop"></div>
+  <div class="modal modal-login fade in">
+    <ng-include src="'/public/pages/login-form.html'"/>
+  </div>
 </div>
 <div ng-controller="HeaderController">
-    <div class="header">
-        <div class="header-top">
-            <div class="logo">
-                <img src="/public/images/logo.png"/>
+  <div class="header row-fluid">
 
-                <h1>Logistics Management Information Systems</h1>
-            </div>
-            <div ng-switch on="user">
-                <div ng-switch-when="true">
-                </div>
-                <div ng-switch-default>
-                    <ng-include src="'/public/pages/user.html'"/>
-                </div>
-            </div>
-        </div>
-        <div class="header-bottom-border"></div>
+    <div class="span6">
+      <div class="logo clearfix">
+        <img src="/public/images/logo.png"/>
+        <h1>Logistics Management Information Systems</h1>
+      </div>
     </div>
+
+    <div class="span6">
+      <div ng-switch on="user">
+        <div ng-switch-when="true">
+        </div>
+        <div ng-switch-default>
+          <ng-include src="'/public/pages/user.html'"/>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>

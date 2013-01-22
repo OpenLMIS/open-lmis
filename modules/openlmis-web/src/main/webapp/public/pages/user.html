@@ -1,14 +1,3 @@
 <div class="user-info" >
-    <ul>
-        <li ng-click="showUserMenu($event)">
-            <a href="javascript:void(0);" id="username">{{user}}</a>
-            <ul class="user-menu">
-                <li><a href="javascript:void(0);">Profile</a></li>
-                <li ng-click="logout()">
-                    <a href="javascript:void(0);">Logout</a>
-                </li>
-            </ul>
-        </li>
-    </ul>
+  Logged in as <strong>{{user}}</strong> | <a ng-click="logout()" href="javascript:void(0);">Logout</a>
 </div>
-

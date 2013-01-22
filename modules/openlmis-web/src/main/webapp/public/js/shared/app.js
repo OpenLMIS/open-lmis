@@ -40,23 +40,25 @@ angular.module('openlmis', ['openlmis.services','openlmis.localStorage','ui.dire
         return $(b).parents("ul").length - $(a).parents("ul").length;
       });
 
+
+
       setTimeout(function() {
 
         lists.each(function() {
           var display = false;
 
           //Check if all the child items are hidden
-          $(this).children("li").each(function() {
+          $(this).children("li:not(.beak)").each(function() {
             if($(this).css('display') != 'none'){
               display = true;
               return false;
             }
           });
-
+          console.log(display);
           //Hide the list and its containing li in case all the children are hidden
           if(!display) {
-            $(this).hide();
             $(this).parent().hide();
+            $(this).parent().parent().hide();
           }
         });
       });

@@ -7,18 +7,10 @@ function HeaderController($scope, User, $rootScope, localStorageService) {
 
   }, {});
 
-  $scope.showUserMenu = function (e) {
-    $(e.currentTarget).find("ul").show();
-  };
-
   $rootScope.fixToolBar = function () {
-    var toolbarWidth = window.innerWidth - 279;
+    var toolbarWidth = window.innerWidth - 26;
     angular.element("#action_buttons").css("width", toolbarWidth + "px");
   };
-
-  $scope.fixHeight = function () {
-    $(".navigation").height(window.innerHeight - 57);
-  }();
 
   $scope.showSubmenu = function () {
     $(".navigation > ul > li").on("click", function () {

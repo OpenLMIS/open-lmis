@@ -1,58 +1,75 @@
 <div class="navigation" ng-controller="NavigationController" ui-nav>
-    <ul style="display:none">
+    <ul class="clearfix" style="display:none">
         <li><a href="/">Home</a></li>
 
-        <li class="has-children" ng-show="hasPermission('CREATE_REQUISITION') || hasPermission('AUTHORIZE_REQUISITION') || hasPermission('APPROVE_REQUISITION')"><a href="javascript: void(0)">Requisitions</a>
-            <ul>
-                <li ng-show="hasPermission('CREATE_REQUISITION') || hasPermission('AUTHORIZE_REQUISITION')">
-                    <a href="javascript: void(0);">Create</a>
-                    <ul>
-                        <li><a href="/public/pages/logistics/rnr/index.html">My Facility</a></li>
-                        <li><a href="/public/pages/logistics/rnr/index.html#/supervised/init-rnr">My Supervised
-                            Facility</a></li>
-                    </ul>
-                </li>
-                <li ng-show="hasPermission('APPROVE_REQUISITION')">
-                    <a href="/public/pages/logistics/rnr/index.html#/rnr-for-approval">Approve</a>
-                </li>
-
-            </ul>
+        <li ng-show="hasPermission('CREATE_REQUISITION') || hasPermission('AUTHORIZE_REQUISITION') || hasPermission('APPROVE_REQUISITION')">
+            <a href="javascript: void(0)">Requisitions</a>
+            <div class="submenu">
+              <ul>
+                  <li ng-show="hasPermission('CREATE_REQUISITION') || hasPermission('AUTHORIZE_REQUISITION')">
+                      <a href="javascript: void(0);">Create</a>
+                      <div class="submenu">
+                        <ul>
+                            <li><a href="/public/pages/logistics/rnr/index.html">My Facility</a></li>
+                            <li><a href="/public/pages/logistics/rnr/index.html#/supervised/init-rnr">My Supervised
+                                Facility</a></li>
+                            <li class="beak"></li>
+                        </ul>
+                      </div>
+                  </li>
+                  <li ng-show="hasPermission('APPROVE_REQUISITION')">
+                      <a href="/public/pages/logistics/rnr/index.html#/rnr-for-approval">Approve</a>
+                  </li>
+                  <li class="beak"></li>
+              </ul>
+            </div>
+            
         </li>
 
-        <li class="has-children navgroup">
+        <li>
             <a href="javascript: void(0)">Administration</a>
-            <ul>
-                <li ng-show="hasPermission('UPLOADS')">
-                    <a href="/public/pages/admin/upload/index.html">Upload</a>
-                </li>
+            <div class="submenu">
+              <ul>
+                  <li ng-show="hasPermission('UPLOADS')">
+                      <a href="/public/pages/admin/upload/index.html">Upload</a>
+                  </li>
 
-                <li class="has-children">
-                    <a href="javascript: void(0);">Configure</a>
-                    <ul>
-                        <li ng-show="hasPermission('CONFIGURE_RNR')">
-                            <a href="/public/pages/admin/rnr-template/create.html">R &amp; R Template</a>
-                        </li>
-                    </ul>
-                </li>
+                  <li>
+                      <a href="javascript: void(0);">Configure</a>
+                      <div class="submenu">
+                        <ul>
+                            <li ng-show="hasPermission('CONFIGURE_RNR')">
+                                <a href="/public/pages/admin/rnr-template/create.html">R &amp; R Template</a>
+                            </li>
+                            <li class="beak"></li>
+                        </ul>
+                      </div>
+                  </li>
 
-                <li class="has-children">
-                    <a href="javascript: void(0);">Manage</a>
-                    <ul>
-                        <li ng-show="hasPermission('MANAGE_FACILITY')">
-                            <a href="/public/pages/admin/facility/index.html#/search">Facilities</a>
-                        </li>
-                        <li ng-show="hasPermission('MANAGE_ROLE')">
-                            <a href="/public/pages/admin/role/index.html">Roles</a>
-                        </li>
-                        <li ng-show="hasPermission('MANAGE_SCHEDULE')">
-                            <a href="/public/pages/admin/schedule/index.html">Schedules</a>
-                        </li>
-                        <li ng-show="hasPermission('MANAGE_USERS')">
-                            <a href="/public/pages/admin/user/index.html#/search">Users</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
+                  <li>
+                      <a href="javascript: void(0);">Manage</a>
+                      <div class="submenu">
+                        <ul>
+                            <li ng-show="hasPermission('MANAGE_FACILITY')">
+                                <a href="/public/pages/admin/facility/index.html#/search">Facilities</a>
+                            </li>
+                            <li ng-show="hasPermission('MANAGE_ROLE')">
+                                <a href="/public/pages/admin/role/index.html">Roles</a>
+                            </li>
+                            <li ng-show="hasPermission('MANAGE_SCHEDULE')">
+                                <a href="/public/pages/admin/schedule/index.html">Schedules</a>
+                            </li>
+                            <li ng-show="hasPermission('MANAGE_USERS')">
+                                <a href="/public/pages/admin/user/index.html#/search">Users</a>
+                            </li>
+                            <li class="beak"></li>
+                        </ul>
+                      </div>
+                  </li>
+                  <li class="beak"></li>
+              </ul>
+          </div>
+
         </li>
 
     </ul>
