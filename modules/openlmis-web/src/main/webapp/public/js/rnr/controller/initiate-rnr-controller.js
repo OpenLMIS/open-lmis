@@ -29,7 +29,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
       PeriodsForFacilityAndProgram.get({facilityId:$scope.selectedFacilityId, programId:$scope.selectedProgram.id},
           function (data) {
             $scope.periods = data.periods;
-            $scope.error = "";
+            $scope.error = $scope.periods.length == 0 ? "No pending R&Rs for the selected facility and program" : "";
           },
           function (data) {
             $scope.error = data.data.error;

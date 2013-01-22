@@ -102,6 +102,17 @@ describe('InitiateRnrController', function () {
       $httpBackend.flush();
 
       expect(scope.periods).toEqual(periods);
+      expect(scope.error).toEqual('');
+    });
+
+    it('should display error if no periods found for selected facility and program', function () {
+      $httpBackend.expectGET('/logistics/facility/20/program/10/periods.json').respond({"periods":[]});
+
+      scope.loadPeriods();
+      $httpBackend.flush();
+
+      expect(scope.periods).toEqual([]);
+      expect(scope.error).toEqual('No pending R&Rs for the selected facility and program');
     });
 
     it('should not load periods if facility selected but program not selected', function () {
