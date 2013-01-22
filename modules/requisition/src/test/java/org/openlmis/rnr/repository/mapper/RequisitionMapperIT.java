@@ -40,7 +40,7 @@ import static org.openlmis.rnr.domain.RnrStatus.*;
 @ContextConfiguration(locations = "classpath*:applicationContext-requisition.xml")
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
-public class RnrMapperIT {
+public class RequisitionMapperIT {
   public static final int MODIFIED_BY = 1;
   public static final Integer PROGRAM_ID = 1;
   public static final int USER_ID = 2;

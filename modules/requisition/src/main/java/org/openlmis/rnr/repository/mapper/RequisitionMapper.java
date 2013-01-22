@@ -12,34 +12,34 @@ import java.util.List;
 public interface RequisitionMapper {
 
   @Insert("INSERT INTO requisition(facilityId, programId, periodId, status, modifiedBy) " +
-      "VALUES (#{facilityId}, #{programId}, #{periodId}, #{status}, #{modifiedBy})")
+    "VALUES (#{facilityId}, #{programId}, #{periodId}, #{status}, #{modifiedBy})")
   @Options(useGeneratedKeys = true)
   void insert(Rnr requisition);
 
   @Update({"UPDATE requisition SET",
-      "modifiedBy = #{modifiedBy},",
-      "status = #{status},",
-      "modifiedDate = DEFAULT,",
-      "fullSupplyItemsSubmittedCost = #{fullSupplyItemsSubmittedCost},",
-      "submittedDate = #{submittedDate},",
-      "nonFullSupplyItemsSubmittedCost = #{nonFullSupplyItemsSubmittedCost},",
-      "supervisoryNodeId = #{supervisoryNodeId}",
-      "WHERE id = #{id}"})
+    "modifiedBy = #{modifiedBy},",
+    "status = #{status},",
+    "modifiedDate = DEFAULT,",
+    "fullSupplyItemsSubmittedCost = #{fullSupplyItemsSubmittedCost},",
+    "submittedDate = #{submittedDate},",
+    "nonFullSupplyItemsSubmittedCost = #{nonFullSupplyItemsSubmittedCost},",
+    "supervisoryNodeId = #{supervisoryNodeId}",
+    "WHERE id = #{id}"})
   void update(Rnr requisition);
 
   @Select("SELECT * FROM requisition WHERE id = #{rnrId}")
   Rnr getById(Integer rnrId);
 
   @Select({"SELECT R.id AS id, R.submittedDate AS submittedDate, R.modifiedDate AS modifiedDate, P.name AS programName,",
-      "F.code AS facilityCode, F.name AS facilityName, PP.startDate AS periodStartDate, PP.endDate AS periodEndDate",
-      "FROM requisition R",
-      "INNER JOIN facilities F ON R.facilityId = F.id",
-      "INNER JOIN programs P ON R.programId = P.id",
-      "INNER JOIN processing_periods PP ON R.periodId = PP.id",
-      "AND R.programId =  #{programId}",
-      "AND R.supervisoryNodeId =  #{supervisoryNode.id}",
-      "AND P.active =  'true'",
-      "AND R.status = 'AUTHORIZED'"})
+    "F.code AS facilityCode, F.name AS facilityName, PP.startDate AS periodStartDate, PP.endDate AS periodEndDate",
+    "FROM requisition R",
+    "INNER JOIN facilities F ON R.facilityId = F.id",
+    "INNER JOIN programs P ON R.programId = P.id",
+    "INNER JOIN processing_periods PP ON R.periodId = PP.id",
+    "AND R.programId =  #{programId}",
+    "AND R.supervisoryNodeId =  #{supervisoryNode.id}",
+    "AND P.active =  'true'",
+    "AND R.status = 'AUTHORIZED'"})
   List<RnrDTO> getAuthorizedRequisitions(RoleAssignment roleAssignment);
 
   @Select("SELECT * FROM requisition WHERE facilityId = #{facilityId} AND programId= #{programId} AND periodId = #{periodId}")
@@ -48,11 +48,11 @@ public interface RequisitionMapper {
                      @Param("periodId") Integer periodId);
 
   @Select("SELECT * FROM requisition " +
-      "WHERE facilityId = #{facilityId} " +
-      "AND programId = #{programId} " +
-      "AND status NOT IN ('INITIATED', 'SUBMITTED') " +
-      "ORDER BY submittedDate DESC " +
-      "LIMIT 1")
+    "WHERE facilityId = #{facilityId} " +
+    "AND programId = #{programId} " +
+    "AND status NOT IN ('INITIATED', 'SUBMITTED') " +
+    "ORDER BY submittedDate DESC " +
+    "LIMIT 1")
   Rnr getLastRequisitionToEnterThePostSubmitFlow(@Param(value = "facilityId") Integer facilityId,
                                                  @Param(value = "programId") Integer programId);
 }

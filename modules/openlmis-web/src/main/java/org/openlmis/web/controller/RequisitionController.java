@@ -119,12 +119,21 @@ public class RequisitionController extends BaseController {
 
   @RequestMapping(value = "/logistics/facility/{facilityId}/program/{programId}/periods", method = RequestMethod.GET, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> getAllPeriodsForInitiatingRequisition(@PathVariable("facilityId") Integer facilityId, @PathVariable("programId") Integer programId) {
+  public ResponseEntity<OpenLmisResponse> getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(@PathVariable("facilityId") Integer facilityId, @PathVariable("programId") Integer programId) {
     try {
       List<ProcessingPeriod> periodList = requisitionService.getAllPeriodsForInitiatingRequisition(facilityId, programId);
-      return OpenLmisResponse.response(PERIODS, periodList);
+      Rnr currentRequisition = getRequisitionForCurrentPeriod(facilityId, programId, periodList);
+      ResponseEntity<OpenLmisResponse> responseEntity = OpenLmisResponse.response(PERIODS, periodList);
+      responseEntity.getBody().setData(RNR, currentRequisition);
+      return  responseEntity;
     } catch (DataException e) {
       return error(e, CONFLICT);
     }
+  }
+
+  private Rnr getRequisitionForCurrentPeriod(Integer facilityId, Integer programId, List<ProcessingPeriod> periodList) {
+    if(periodList == null || periodList.isEmpty()) return null;
+
+    return requisitionService.get(facilityId, programId, periodList.get(0).getId());
   }
 }

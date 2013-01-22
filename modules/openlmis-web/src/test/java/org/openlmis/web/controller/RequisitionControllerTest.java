@@ -161,13 +161,19 @@ public class RequisitionControllerTest {
 
   @Test
   public void shouldReturnAllPeriodsForInitiatingRequisition() {
-    List<ProcessingPeriod> periodList = Arrays.asList(new ProcessingPeriod());
-    when(requisitionService.getAllPeriodsForInitiatingRequisition(1, 2)).thenReturn(periodList);
+    ProcessingPeriod processingPeriod = new ProcessingPeriod();
+    processingPeriod.setId(6);
+    List<ProcessingPeriod> periodList = Arrays.asList(processingPeriod);
+    Rnr rnr = new Rnr();
 
-    ResponseEntity<OpenLmisResponse> response = controller.getAllPeriodsForInitiatingRequisition(1, 2);
+    when(requisitionService.getAllPeriodsForInitiatingRequisition(1, 2)).thenReturn(periodList);
+    when(requisitionService.get(1, 2, 6)).thenReturn(rnr);
+
+    ResponseEntity<OpenLmisResponse> response = controller.getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(1, 2);
 
     verify(requisitionService).getAllPeriodsForInitiatingRequisition(1, 2);
     assertThat((List<ProcessingPeriod>) response.getBody().getData().get(PERIODS), is(periodList));
+    assertThat((Rnr) response.getBody().getData().get(RNR), is(rnr));
   }
 
   @Test
@@ -175,7 +181,7 @@ public class RequisitionControllerTest {
     String errorMessage = "some error";
     doThrow(new DataException(errorMessage)).when(requisitionService).getAllPeriodsForInitiatingRequisition(1, 2);
 
-    ResponseEntity<OpenLmisResponse> response = controller.getAllPeriodsForInitiatingRequisition(1, 2);
+    ResponseEntity<OpenLmisResponse> response = controller.getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(1, 2);
 
     assertThat(response.getBody().getErrorMsg(), is(errorMessage));
   }
