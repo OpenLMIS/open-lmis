@@ -7,6 +7,6 @@ CREATE TABLE program_rnr_columns(
     visible BOOLEAN NOT NULL,
     position int NOT NULL,
     source VARCHAR(1),
-    formulaValidated BOOLEAN,
+    formulaValidationRequired BOOLEAN,
     UNIQUE (programId, masterColumnId)
 );

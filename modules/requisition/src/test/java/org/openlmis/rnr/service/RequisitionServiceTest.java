@@ -88,7 +88,7 @@ public class RequisitionServiceTest {
     facilityApprovedProducts.add(new FacilityApprovedProduct("warehouse", programProduct, 30));
     when(facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY_ID, PROGRAM_ID)).thenReturn(facilityApprovedProducts);
 
-    Rnr rnr = requisitionService.initRnr(FACILITY_ID, PROGRAM_ID, PERIOD_ID, 1);
+    Rnr rnr = requisitionService.initiate(FACILITY_ID, PROGRAM_ID, PERIOD_ID, 1);
 
     verify(facilityApprovedProductService).getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY_ID, PROGRAM_ID);
     verify(requisitionRepository).insert(rnr);
@@ -170,7 +170,7 @@ public class RequisitionServiceTest {
     when(rnrTemplateRepository.isRnrTemplateDefined(PROGRAM_ID)).thenReturn(false);
     expectedException.expect(DataException.class);
     expectedException.expectMessage("Please contact Admin to define R&R template for this program");
-    Rnr rnr = requisitionService.initRnr(FACILITY_ID, HIV, null, 1);
+    Rnr rnr = requisitionService.initiate(FACILITY_ID, HIV, null, 1);
     verify(facilityApprovedProductService, never()).getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY_ID, HIV);
     verify(requisitionRepository, never()).insert(rnr);
   }
@@ -207,7 +207,7 @@ public class RequisitionServiceTest {
   public void shouldAuthorizeAValidRnrAndTagWithSupervisoryNode() throws Exception {
     Rnr rnr = spy(make(a(defaultRnr)));
     when(requisitionRepository.getById(rnr.getId())).thenReturn(submittedRnr);
-    when(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId())).thenReturn(true);
+    when(rnrTemplateRepository.isFormulaValidationRequired(rnr.getProgramId())).thenReturn(true);
     doReturn(true).when(rnr).validate(true);
     when(supervisoryNodeService.getApproverFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(new User());
     SupervisoryNode approverNode = new SupervisoryNode();
@@ -215,7 +215,7 @@ public class RequisitionServiceTest {
 
     OpenLmisMessage authorize = requisitionService.authorize(rnr);
 
-    verify(rnrTemplateRepository).isFormulaValidated(rnr.getProgramId());
+    verify(rnrTemplateRepository).isFormulaValidationRequired(rnr.getProgramId());
     verify(rnr).validate(true);
     verify(requisitionRepository).update(rnr);
     assertThat(rnr.getStatus(), is(AUTHORIZED));
@@ -243,7 +243,7 @@ public class RequisitionServiceTest {
   public void shouldAuthorizeAValidRnrAndAdviseUserIfRnrDoesNotHaveApprover() throws Exception {
     Rnr rnr = spy(make(a(defaultRnr)));
     when(requisitionRepository.getById(rnr.getId())).thenReturn(submittedRnr);
-    when(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId())).thenReturn(true);
+    when(rnrTemplateRepository.isFormulaValidationRequired(rnr.getProgramId())).thenReturn(true);
     when(supervisoryNodeService.getApproverFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(null);
     SupervisoryNode node = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
     when(supervisoryNodeService.getFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(node);
@@ -251,7 +251,7 @@ public class RequisitionServiceTest {
 
     OpenLmisMessage openLmisMessage = requisitionService.authorize(rnr);
 
-    verify(rnrTemplateRepository).isFormulaValidated(rnr.getProgramId());
+    verify(rnrTemplateRepository).isFormulaValidationRequired(rnr.getProgramId());
     verify(rnr).validate(true);
     verify(requisitionRepository).update(rnr);
     assertThat(rnr.getStatus(), is(AUTHORIZED));
@@ -262,7 +262,7 @@ public class RequisitionServiceTest {
   public void shouldNotAuthorizeInvalidRnr() throws Exception {
     Rnr rnr = spy(make(a(defaultRnr)));
     when(requisitionRepository.getById(rnr.getId())).thenReturn(submittedRnr);
-    when(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId())).thenReturn(true);
+    when(rnrTemplateRepository.isFormulaValidationRequired(rnr.getProgramId())).thenReturn(true);
     doThrow(new DataException("error-message")).when(rnr).validate(true);
 
     expectedException.expect(DataException.class);

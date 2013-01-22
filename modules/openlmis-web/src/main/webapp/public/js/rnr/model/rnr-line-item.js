@@ -4,7 +4,7 @@ var RnrLineItem = function (lineItem) {
 
   this.arithmeticallyInvalid = function (programRnRColumnList) {
 
-    if (programRnRColumnList != undefined && programRnRColumnList[0].formulaValidated) {
+    if (programRnRColumnList != undefined && programRnRColumnList[0].formulaValidationRequired) {
       var beginningBalance = parseIntWithBaseTen(this.rnrLineItem.beginningBalance,10);
       var quantityReceived = parseIntWithBaseTen(this.rnrLineItem.quantityReceived);
       var quantityDispensed = parseIntWithBaseTen(this.rnrLineItem.quantityDispensed);

@@ -10,20 +10,20 @@ import java.util.List;
 public interface RnrColumnMapper {
 
     @Insert("INSERT INTO program_rnr_columns " +
-            "(programId,    masterColumnId,          visible,           label,              position,              source,            formulaValidated) " +
+            "(programId,    masterColumnId,          visible,           label,              position,              source,            formulaValidationRequired) " +
             "VALUES " +
-            "(#{programId}, #{rnrColumn.id},  #{rnrColumn.visible}, #{rnrColumn.label}, #{rnrColumn.position}, #{rnrColumn.source.code}, #{rnrColumn.formulaValidated})")
+            "(#{programId}, #{rnrColumn.id},  #{rnrColumn.visible}, #{rnrColumn.label}, #{rnrColumn.position}, #{rnrColumn.source.code}, #{rnrColumn.formulaValidationRequired})")
     int     insert(@Param("programId") Integer programId, @Param("rnrColumn") RnrColumn rnrColumn);
 
     @Select("select 0<(select count(id) as count from program_rnr_columns where programId = #{programId})")
     boolean isRnrTemplateDefined(@Param("programId") Integer programId);
 
-    @Select("select m.id, m.name, m.description, m.formula, m.indicator, m.used, m.mandatory, m.sourceConfigurable, " +
-            " p.position, p.label, p.visible, p.source as sourceString, p.formulaValidated as formulaValidated" +
-            " FROM program_rnr_columns p INNER JOIN master_rnr_columns m " +
-            " ON p.masterColumnId = m.id " +
-            " WHERE p.programId = #{programId} " +
-            " ORDER BY visible DESC, position")
+    @Select({"SELECT m.id, m.name, m.description, m.formula, m.indicator, m.used, m.mandatory, m.sourceConfigurable,",
+            "p.position, p.label, p.visible, p.source as sourceString, p.formulaValidationRequired",
+            "FROM program_rnr_columns p INNER JOIN master_rnr_columns m",
+            "ON p.masterColumnId = m.id",
+            "WHERE p.programId = #{programId}",
+            "ORDER BY visible DESC, position"})
     List<RnrColumn> fetchDefinedRnrColumnsForProgram(Integer programId);
 
     @Update("UPDATE program_rnr_columns SET " +
@@ -31,16 +31,16 @@ public interface RnrColumnMapper {
             "label = #{rnrColumn.label}, " +
             "position = #{rnrColumn.position}, " +
             "source = #{rnrColumn.source.code}, " +
-            "formulaValidated = #{rnrColumn.formulaValidated} " +
+            "formulaValidationRequired = #{rnrColumn.formulaValidationRequired} " +
             "WHERE programId = #{programId} AND masterColumnId = #{rnrColumn.id}")
     void update(@Param("programId") Integer programId, @Param("rnrColumn") RnrColumn rnrColumn);
 
-    @Select("SELECT m.id, m.name, m.description, m.used, m.mandatory, m.formula, m.indicator, " +
-            " p.position, p.label, p.visible , p.source as sourceString, p.formulaValidated as formulaValidated" +
-            " FROM program_rnr_columns p INNER JOIN master_rnr_columns m" +
-            " ON p.masterColumnId = m.id" +
-            " WHERE p.programId = #{programId} AND p.visible = 'true'" +
-            " ORDER BY visible desc, position")
+    @Select({"SELECT m.id, m.name, m.description, m.used, m.mandatory, m.formula, m.indicator,",
+            "p.position, p.label, p.visible , p.source as sourceString, p.formulaValidationRequired",
+            "FROM program_rnr_columns p INNER JOIN master_rnr_columns m",
+            "ON p.masterColumnId = m.id",
+            "WHERE p.programId = #{programId} AND p.visible = 'true'",
+            "ORDER BY visible desc, position"})
     List<RnrColumn> getVisibleProgramRnrColumns(Integer programId);
 
 
@@ -49,9 +49,6 @@ public interface RnrColumnMapper {
     List<RnrColumn> fetchAllMasterRnRColumns();
 
 
-  @Select({"SELECT COUNT(*)=2 AS validated FROM program_rnr_columns p INNER JOIN master_rnr_columns m ON",
-      "p.masterColumnId = m.id",
-      "where p.programId = #{programId} and",
-      "p.formulaValidated = TRUE AND m.name IN ('quantityDispensed', 'stockInHand')"})
-  boolean isFormulaValidated(int programId);
+  @Select({"SELECT COUNT(DISTINCT(true)) = 1 FROM program_rnr_columns WHERE formulaValidationRequired = TRUE AND programId = #{programId}"})
+  boolean isFormulaValidationRequired(int programId);
 }

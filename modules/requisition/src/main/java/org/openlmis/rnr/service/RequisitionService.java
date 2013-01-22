@@ -55,13 +55,13 @@ public class RequisitionService {
   }
 
   @Transactional
-  public Rnr initRnr(Integer facilityId, Integer programId, Integer periodId, Integer modifiedBy) {
+  public Rnr initiate(Integer facilityId, Integer programId, Integer periodId, Integer modifiedBy) {
     if (!rnrTemplateRepository.isRnrTemplateDefined(programId))
       throw new DataException("Please contact Admin to define R&R template for this program");
     Rnr requisition = new Rnr(facilityId, programId, periodId, modifiedBy);
     List<FacilityApprovedProduct> facilityApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(facilityId, programId);
     for (FacilityApprovedProduct programProduct : facilityApprovedProducts) {
-      RnrLineItem requisitionLineItem = new RnrLineItem(requisition.getId(), programProduct, modifiedBy);
+      RnrLineItem requisitionLineItem = new RnrLineItem(null, programProduct, modifiedBy);
       requisition.add(requisitionLineItem);
     }
     requisitionRepository.insert(requisition);
@@ -92,7 +92,7 @@ public class RequisitionService {
     if (requisitionRepository.getById(rnr.getId()).getStatus() != INITIATED) {
       throw new DataException(new OpenLmisMessage(RNR_SUBMISSION_ERROR));
     }
-    rnr.validate(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId()));
+    rnr.validate(rnrTemplateRepository.isFormulaValidationRequired(rnr.getProgramId()));
     rnr.calculate();
     rnr.setStatus(SUBMITTED);
     rnr.setSubmittedDate(new Date());
@@ -107,7 +107,7 @@ public class RequisitionService {
     Rnr savedRnr = requisitionRepository.getById(rnr.getId());
     if (savedRnr.getStatus() != SUBMITTED) throw new DataException(RNR_AUTHORIZATION_ERROR);
 
-    rnr.validate(rnrTemplateRepository.isFormulaValidated(rnr.getProgramId()));
+    rnr.validate(rnrTemplateRepository.isFormulaValidationRequired(rnr.getProgramId()));
     rnr.calculate();
     rnr.setSubmittedDate(savedRnr.getSubmittedDate());
     rnr.setStatus(AUTHORIZED);

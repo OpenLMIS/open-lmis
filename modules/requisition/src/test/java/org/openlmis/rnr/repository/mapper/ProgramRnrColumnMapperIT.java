@@ -43,7 +43,7 @@ public class ProgramRnrColumnMapperIT {
     assertThat(rnrColumn1.isVisible(), is(false));
     assertThat(rnrColumn1.getPosition(), is(5));
     assertThat(rnrColumn1.getSource(), is(USER_INPUT));
-    assertThat(rnrColumn1.isFormulaValidated(), is(true));
+    assertThat(rnrColumn1.isFormulaValidationRequired(), is(true));
   }
 
   @Test
@@ -59,7 +59,7 @@ public class ProgramRnrColumnMapperIT {
     assertThat(updatedRnrColumn.getPosition(), is(5));
     assertThat(updatedRnrColumn.getLabel(), is("Some Random Label"));
     assertThat(updatedRnrColumn.getSource(), is(RnRColumnSource.CALCULATED));
-    assertThat(updatedRnrColumn.isFormulaValidated(), is(true));
+    assertThat(updatedRnrColumn.isFormulaValidationRequired(), is(true));
   }
 
   @Test
@@ -92,7 +92,7 @@ public class ProgramRnrColumnMapperIT {
     assertThat(rnrColumns.size(), is(1));
     assertThat(rnrColumns.get(0).getSource(), is(USER_INPUT));
     assertThat(rnrColumns.get(0).isVisible(), is(true));
-    assertThat(rnrColumns.get(0).isFormulaValidated(), is(true));
+    assertThat(rnrColumns.get(0).isFormulaValidationRequired(), is(true));
   }
 
   @Test
@@ -103,7 +103,7 @@ public class ProgramRnrColumnMapperIT {
     addProgramRnrColumn(quantityDispensed, 1, true, "Col1", USER_INPUT, true);
     addProgramRnrColumn(stockInHand, 2, true, "Col2", CALCULATED, true);
 
-    assertThat(rnrColumnMapper.isFormulaValidated(PROGRAM_ID), is(true));
+    assertThat(rnrColumnMapper.isFormulaValidationRequired(PROGRAM_ID), is(true));
 
   }
 
@@ -115,7 +115,7 @@ public class ProgramRnrColumnMapperIT {
     addProgramRnrColumn(quantityDispensed, 1, true, "Col1", USER_INPUT, false);
     addProgramRnrColumn(stockInHand, 2, true, "Col2", CALCULATED, false);
 
-    assertThat(rnrColumnMapper.isFormulaValidated(PROGRAM_ID), is(false));
+    assertThat(rnrColumnMapper.isFormulaValidationRequired(PROGRAM_ID), is(false));
 
   }
 
@@ -124,7 +124,7 @@ public class ProgramRnrColumnMapperIT {
     rnrColumn.setVisible(visible);
     rnrColumn.setPosition(position);
     rnrColumn.setSource(columnSource);
-    rnrColumn.setFormulaValidated(validated);
+    rnrColumn.setFormulaValidationRequired(validated);
     return rnrColumnMapper.insert(PROGRAM_ID, rnrColumn);
   }
 
@@ -135,7 +135,7 @@ public class ProgramRnrColumnMapperIT {
     rnrColumn.setVisible(visible);
     rnrColumn.setPosition(position);
     rnrColumn.setSource(columnSource);
-    rnrColumn.setFormulaValidated(validated);
+    rnrColumn.setFormulaValidationRequired(validated);
     rnrColumnMapper.update(PROGRAM_ID, rnrColumn);
   }
 

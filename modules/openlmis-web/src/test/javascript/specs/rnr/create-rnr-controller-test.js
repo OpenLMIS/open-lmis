@@ -131,7 +131,7 @@ describe('CreateRnrController', function () {
     scope.rnrLineItems.push(new RnrLineItem(lineItem));
     scope.rnr = {"id":1};
     scope.programRnRColumnList = [
-      {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidated":true},
+      {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidationRequired":true},
       {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
       {"indicator":"C", "name":"quantityDispensed", "source":{"name":"CALCULATED"}},
       {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}},
@@ -149,7 +149,7 @@ describe('CreateRnrController', function () {
 
     scope.rnr = {"id":"rnrId", lineItems:[lineItem]};
     scope.programRnrColumnList = [
-      {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidated":true},
+      {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidationRequired":true},
       {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
       {"indicator":"C", "name":"quantityDispensed", "source":{"name":"CALCULATED"}},
       {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}},
@@ -166,7 +166,7 @@ describe('CreateRnrController', function () {
     var lineItem = new RnrLineItem({ "beginningBalance":1, totalLossesAndAdjustments:1, quantityDispensed:2,
       quantityReceived:1, stockInHand:1});
     var programRnrColumnList = [
-      {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidated":true},
+      {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidationRequired":true},
       {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
       {"indicator":"C", "name":"quantityDispensed", "source":{"name":"CALCULATED"}},
       {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}},
@@ -181,7 +181,7 @@ describe('CreateRnrController', function () {
     var lineItem = new RnrLineItem({ "beginningBalance":1, totalLossesAndAdjustments:1, quantityDispensed:2,
       quantityReceived:1, stockInHand:1});
     var programRnrColumnList = [
-      {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidated":true},
+      {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidationRequired":true},
       {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
       {"indicator":"C", "name":"quantityDispensed", "source":{"name":"CALCULATED"}},
       {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}},
@@ -196,7 +196,7 @@ describe('CreateRnrController', function () {
     var lineItem = new RnrLineItem({ "beginningBalance":1, totalLossesAndAdjustments:1, quantityDispensed:2,
       quantityReceived:1, stockInHand:1});
     var programRnrColumnList = [
-      {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidated":true},
+      {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidationRequired":true},
       {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
       {"indicator":"C", "name":"quantityDispensed", "source":{"name":"CALCULATED"}},
       {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}},
@@ -212,7 +212,7 @@ describe('CreateRnrController', function () {
     var lineItem = new RnrLineItem({ "beginningBalance":1, totalLossesAndAdjustments:1, quantityDispensed:2,
       quantityReceived:1, stockInHand:1});
     var programRnrColumnList = [
-      {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidated":true},
+      {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidationRequired":true},
       {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
       {"indicator":"C", "name":"quantityDispensed", "source":{"name":"CALCULATED"}},
       {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}},

@@ -46,9 +46,9 @@ public class Rnr {
     lineItems.add(rnrLineItem);
   }
 
-  public boolean validate(boolean formulaValidated) {
+  public boolean validate(boolean formulaValidationRequired) {
     for (RnrLineItem lineItem : lineItems) {
-      lineItem.validate(formulaValidated);
+      lineItem.validate(formulaValidationRequired);
     }
     return true;
   }

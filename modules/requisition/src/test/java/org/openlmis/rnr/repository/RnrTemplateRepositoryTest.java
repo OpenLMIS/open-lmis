@@ -78,9 +78,9 @@ public class RnrTemplateRepositoryTest {
   public void shouldReturnFormulaValidatedFlag() throws Exception {
     boolean expectedFormulaValidated = true;
     Integer programId = 1;
-    when(rnrColumnMapper.isFormulaValidated(programId)).thenReturn(expectedFormulaValidated);
+    when(rnrColumnMapper.isFormulaValidationRequired(programId)).thenReturn(expectedFormulaValidated);
 
-    boolean formulaValidatedResult = rnrRepository.isFormulaValidated(programId);
+    boolean formulaValidatedResult = rnrRepository.isFormulaValidationRequired(programId);
 
     assertThat(formulaValidatedResult, is(expectedFormulaValidated));
   }

@@ -155,7 +155,7 @@ public class ProgramRnrTemplateTest {
         rnrColumn.setVisible(visible);
         rnrColumn.setName(columnName);
         rnrColumn.setLabel(label);
-        rnrColumn.setFormulaValidated(true);
+        rnrColumn.setFormulaValidationRequired(true);
         return rnrColumn;
     }
 

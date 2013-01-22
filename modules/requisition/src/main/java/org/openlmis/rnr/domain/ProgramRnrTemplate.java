@@ -80,7 +80,7 @@ public class ProgramRnrTemplate {
   }
 
   private void validateDependentFieldsAreSelected() {
-    if ((columnsVisible(STOCK_IN_HAND, QUANTITY_DISPENSED)) && (!columnsCalculated(STOCK_IN_HAND, QUANTITY_DISPENSED)) && rnrColumnsMap.get(STOCK_IN_HAND).isFormulaValidated()) {
+    if ((columnsVisible(STOCK_IN_HAND, QUANTITY_DISPENSED)) && (!columnsCalculated(STOCK_IN_HAND, QUANTITY_DISPENSED)) && rnrColumnsMap.get(STOCK_IN_HAND).isFormulaValidationRequired()) {
       if (!columnsVisible(BEGINNING_BALANCE, QUANTITY_RECEIVED, LOSSES_AND_ADJUSTMENTS)) {
         errorMap.put(STOCK_IN_HAND,new OpenLmisMessage(NOT_ALL_DEPENDENT_FIELDS_SELECTED_TO_ARITHMETICALLY_VALIDATE,
             getRnrColumnLabelFor(BEGINNING_BALANCE), getRnrColumnLabelFor(QUANTITY_RECEIVED), getRnrColumnLabelFor(LOSSES_AND_ADJUSTMENTS), getRnrColumnLabelFor(QUANTITY_DISPENSED), getRnrColumnLabelFor(STOCK_IN_HAND)));

@@ -66,10 +66,10 @@ public class RnrLineItem {
     this.rnrId = rnrId;
 
     this.maxMonthsOfStock = facilityApprovedProduct.getMaxMonthsOfStock();
+    this.price = facilityApprovedProduct.getProgramProduct().getCurrentPrice();
     ProgramProduct programProduct = facilityApprovedProduct.getProgramProduct();
     populateFromProduct(programProduct.getProduct());
     this.dosesPerMonth = programProduct.getDosesPerMonth();
-    this.price = facilityApprovedProduct.getProgramProduct().getCurrentPrice();
     this.modifiedBy = modifiedBy;
   }
 
@@ -96,8 +96,8 @@ public class RnrLineItem {
     this.lossesAndAdjustments.add(lossesAndAdjustments);
   }
 
-  public boolean validate(boolean formulaValidated) {
-    if (!validateMandatoryFields() || !validateCalculatedFields(formulaValidated)) {
+  public boolean validate(boolean formulaValidationRequired) {
+    if (!validateMandatoryFields() || !validateCalculatedFields(formulaValidationRequired)) {
       throw  new DataException(new OpenLmisMessage(Rnr.RNR_VALIDATION_ERROR));
     }
     return true;
@@ -112,9 +112,9 @@ public class RnrLineItem {
         !isPresent(newPatientCount) || !isPresent(stockOutDays)) && (quantityRequested == null || isPresent(reasonForRequestedQuantity));
   }
 
-  private boolean validateCalculatedFields(boolean formulaValidated) {
+  private boolean validateCalculatedFields(boolean formulaValidationRequired) {
     boolean validQuantityDispensed = true;
-    if(formulaValidated) {
+    if(formulaValidationRequired) {
       validQuantityDispensed = (quantityDispensed == (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand));
     }
     return ((quantityDispensed >= 0) && (stockInHand >= 0)) && validQuantityDispensed &&

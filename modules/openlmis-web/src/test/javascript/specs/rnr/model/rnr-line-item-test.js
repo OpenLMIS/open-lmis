@@ -430,7 +430,7 @@ describe('RnrLineItem', function () {
         var programRnrColumnList;
         beforeEach(function () {
             programRnrColumnList = [
-                {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidated":true}
+                {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidationRequired":true}
             ];
         });
 
@@ -450,7 +450,7 @@ describe('RnrLineItem', function () {
         });
 
         it("should return false arithmetic validations if off ", function () {
-            programRnrColumnList[0].formulaValidated=false;
+            programRnrColumnList[0].formulaValidationRequired=false;
             var lineItem = {"id":"1", "beginningBalance":3, "quantityReceived":3, "quantityDispensed":3, "totalLossesAndAdjustments":-3, "stockInHand":3};
             var rnrLineItem = new RnrLineItem(lineItem);
             expect(rnrLineItem.arithmeticallyInvalid(programRnrColumnList)).toEqual(false);
@@ -462,7 +462,7 @@ describe('RnrLineItem', function () {
         var programRnrColumnList;
         beforeEach(function () {
             programRnrColumnList = [
-                {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidated":true}
+                {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidationRequired":true}
             ];
         });
 
@@ -485,7 +485,7 @@ describe('RnrLineItem', function () {
         });
 
         it("should give error message for negative quantity dispensed ", function () {
-          programRnrColumnList[0].formulaValidated = false;
+          programRnrColumnList[0].formulaValidationRequired = false;
           var lineItem = {"id":"1", "beginningBalance":3, "quantityReceived":3, "quantityDispensed":-3, "stockInHand":3};
           var rnrLineItem = new RnrLineItem(lineItem);
           var errorMsg = rnrLineItem.getErrorMessage(programRnrColumnList);

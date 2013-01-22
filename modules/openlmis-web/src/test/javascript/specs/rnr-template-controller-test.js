@@ -12,8 +12,8 @@ describe('Rnr Template controllers', function () {
       scope.program = {code:"programCode"};
 
       rnrColumnList = [
-        {"id":1, "name":"product_code", "sourceConfigurable":true, "source": {'code' : "U"}, "formulaValidated": true, "visible" : true},
-        {"id":2, "name":"product", "sourceConfigurable":true, "source": {'code' : "U"}, "formulaValidated": true, "visible" : true}
+        {"id":1, "name":"product_code", "sourceConfigurable":true, "source": {'code' : "U"}, "formulaValidationRequired": true, "visible" : true},
+        {"id":2, "name":"product", "sourceConfigurable":true, "source": {'code' : "U"}, "formulaValidationRequired": true, "visible" : true}
       ];
 
       sources = [

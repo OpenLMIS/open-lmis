@@ -45,7 +45,7 @@ public class RequisitionController extends BaseController {
                                                       @RequestParam("periodId") Integer periodId,
                                                       HttpServletRequest request) {
     try {
-      return response(RNR, requisitionService.initRnr(facilityId, programId, periodId, loggedInUserId(request)));
+      return response(RNR, requisitionService.initiate(facilityId, programId, periodId, loggedInUserId(request)));
     } catch (DataException e) {
       return error(e, BAD_REQUEST);
     }

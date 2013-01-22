@@ -1,11 +1,11 @@
 function SaveRnrTemplateController($scope, rnrTemplateForm, $http) {
   $scope.rnrColumns = rnrTemplateForm.rnrColumns;
   $scope.sources = rnrTemplateForm.sources;
-  $scope.validateFormula = $scope.rnrColumns[0].formulaValidated;
+  $scope.validateFormula = $scope.rnrColumns[0].formulaValidationRequired;
 
   var setRnRTemplateValidateFlag = function() {
     $.each($scope.rnrColumns, function (index, column) {
-      column.formulaValidated = $scope.validateFormula;
+      column.formulaValidationRequired = $scope.validateFormula;
     });
   };
 
