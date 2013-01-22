@@ -1,7 +1,7 @@
 drop table if exists requisition_line_items;
 create table requisition_line_items (
 id serial primary key,
-rnrId int not null references requisition(id),
+rnrId int not null references requisitions(id),
 productCode varchar(50) not null references products(code),
 product varchar(250) ,
 dispensingUnit VARCHAR(20) not null,

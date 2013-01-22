@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS requisition;
-CREATE TABLE requisition (
+DROP TABLE IF EXISTS requisitions;
+CREATE TABLE requisitions (
   id                              SERIAL PRIMARY KEY,
   facilityId                      INTEGER     NOT NULL REFERENCES facilities (id),
   programId                       INTEGER     NOT NULL REFERENCES programs (id),

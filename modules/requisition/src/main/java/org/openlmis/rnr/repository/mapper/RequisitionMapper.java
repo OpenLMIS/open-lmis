@@ -11,12 +11,12 @@ import java.util.List;
 @Repository
 public interface RequisitionMapper {
 
-  @Insert("INSERT INTO requisition(facilityId, programId, periodId, status, modifiedBy) " +
+  @Insert("INSERT INTO requisitions(facilityId, programId, periodId, status, modifiedBy) " +
     "VALUES (#{facilityId}, #{programId}, #{periodId}, #{status}, #{modifiedBy})")
   @Options(useGeneratedKeys = true)
   void insert(Rnr requisition);
 
-  @Update({"UPDATE requisition SET",
+  @Update({"UPDATE requisitions SET",
     "modifiedBy = #{modifiedBy},",
     "status = #{status},",
     "modifiedDate = DEFAULT,",
@@ -27,12 +27,12 @@ public interface RequisitionMapper {
     "WHERE id = #{id}"})
   void update(Rnr requisition);
 
-  @Select("SELECT * FROM requisition WHERE id = #{rnrId}")
+  @Select("SELECT * FROM requisitions WHERE id = #{rnrId}")
   Rnr getById(Integer rnrId);
 
   @Select({"SELECT R.id AS id, R.submittedDate AS submittedDate, R.modifiedDate AS modifiedDate, P.name AS programName,",
     "F.code AS facilityCode, F.name AS facilityName, PP.startDate AS periodStartDate, PP.endDate AS periodEndDate",
-    "FROM requisition R",
+    "FROM requisitions R",
     "INNER JOIN facilities F ON R.facilityId = F.id",
     "INNER JOIN programs P ON R.programId = P.id",
     "INNER JOIN processing_periods PP ON R.periodId = PP.id",
@@ -42,12 +42,12 @@ public interface RequisitionMapper {
     "AND R.status = 'AUTHORIZED'"})
   List<RnrDTO> getAuthorizedRequisitions(RoleAssignment roleAssignment);
 
-  @Select("SELECT * FROM requisition WHERE facilityId = #{facilityId} AND programId= #{programId} AND periodId = #{periodId}")
+  @Select("SELECT * FROM requisitions WHERE facilityId = #{facilityId} AND programId= #{programId} AND periodId = #{periodId}")
   Rnr getRequisition(@Param("facilityId") Integer facilityId,
                      @Param("programId") Integer programId,
                      @Param("periodId") Integer periodId);
 
-  @Select("SELECT * FROM requisition " +
+  @Select("SELECT * FROM requisitions " +
     "WHERE facilityId = #{facilityId} " +
     "AND programId = #{programId} " +
     "AND status NOT IN ('INITIATED', 'SUBMITTED') " +

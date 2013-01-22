@@ -76,7 +76,7 @@ public class DBWrapper {
 
             dbWrapper.dbConnection("DELETE FROM requisition_line_item_losses_adjustments;", "alter");
             dbWrapper.dbConnection("DELETE FROM requisition_line_items;", "alter");
-            dbWrapper.dbConnection("DELETE FROM requisition;", "alter");
+            dbWrapper.dbConnection("DELETE FROM requisitions;", "alter");
             dbWrapper.dbConnection("delete from facilities;", "alter");
 
         }
@@ -128,7 +128,7 @@ public class DBWrapper {
         dbwrapper.dbConnection("delete from users where id=200;", "alter");
         dbwrapper.dbConnection("DELETE FROM requisition_line_item_losses_adjustments;", "alter");
         dbwrapper.dbConnection("DELETE FROM requisition_line_items;", "alter");
-        dbwrapper.dbConnection("DELETE FROM requisition;", "alter");
+        dbwrapper.dbConnection("DELETE FROM requisitions;", "alter");
         dbwrapper.dbConnection("delete from supply_lines;", "alter");
         dbwrapper.dbConnection("delete from supervisory_nodes;", "alter");
         dbwrapper.dbConnection("delete from programs_supported;", "alter");
