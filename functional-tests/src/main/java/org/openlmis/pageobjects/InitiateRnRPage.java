@@ -254,9 +254,7 @@ public class InitiateRnRPage extends Page {
         testWebDriver.sleep(1500);
         String successMessageText=testWebDriver.getText(successMessage);
         testWebDriver.sleep(1500);
-        //SeleneseTestNgHelper.assertEquals(successMessageText.trim(),successText);
         SeleneseTestNgHelper.assertTrue("R&R saved successfully! message not displayed", successMessage.isDisplayed());
-        //successMessage
     }
 
     public void submitRnR() {

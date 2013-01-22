@@ -14,11 +14,16 @@ import java.io.IOException;
 
 public class HomePage extends Page {
 
-    @FindBy(how = How.XPATH, using = "//a[@id=\"username\"]")
+    @FindBy(how = How.XPATH, using = "//strong[@class='ng-binding']")
     private static WebElement usernameDisplay;
 
     @FindBy(how = How.LINK_TEXT, using = "Logout")
     private static WebElement logoutLink;
+
+
+
+    @FindBy(how = How.XPATH, using = "//a[contains(text(),'Administration')]")
+    private static WebElement AdministrationMenuItem;
 
     @FindBy(how = How.XPATH, using = "//a[contains(text(),'Manage')]")
     private static WebElement manageFacilityMenuItem;
@@ -102,9 +107,7 @@ public class HomePage extends Page {
     }
 
     public LoginPage logout() throws IOException{
-        testWebDriver.waitForElementToAppear(usernameDisplay);
-        testWebDriver.mouseOver(usernameDisplay);
-        usernameDisplay.click();
+
         testWebDriver.waitForElementToAppear(logoutLink);
         logoutLink.click();
         return new LoginPage(testWebDriver);
@@ -116,7 +119,9 @@ public class HomePage extends Page {
     }
 
     public CreateFacilityPage navigateCreateFacility() throws IOException {
-        SeleneseTestNgHelper.assertTrue(manageFacilityMenuItem.isDisplayed());
+        SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
+        testWebDriver.waitForElementToAppear(AdministrationMenuItem);
+        testWebDriver.click(AdministrationMenuItem);
         testWebDriver.waitForElementToAppear(manageFacilityMenuItem);
         testWebDriver.click(manageFacilityMenuItem);
         manageFacilityMenuItem.click();
@@ -130,6 +135,9 @@ public class HomePage extends Page {
     }
 
     public TemplateConfigPage selectProgramToConfigTemplate(String programme) {
+        SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
+        testWebDriver.waitForElementToAppear(AdministrationMenuItem);
+        testWebDriver.click(AdministrationMenuItem);
         testWebDriver.waitForElementToAppear(TemplateConfigTab);
         testWebDriver.mouseOver(TemplateConfigTab);
         TemplateConfigTab.click();
@@ -161,6 +169,9 @@ public class HomePage extends Page {
     }
 
     public DeleteFacilityPage navigateSearchFacility() throws IOException {
+        SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
+        testWebDriver.waitForElementToAppear(AdministrationMenuItem);
+        testWebDriver.click(AdministrationMenuItem);
         testWebDriver.waitForElementToAppear(manageLink);
         manageLink.click();
         testWebDriver.waitForElementToAppear(facilityMenuItem);
@@ -169,6 +180,9 @@ public class HomePage extends Page {
     }
 
     public RolesPage navigateRoleAssignments() throws IOException {
+        SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
+        testWebDriver.waitForElementToAppear(AdministrationMenuItem);
+        testWebDriver.click(AdministrationMenuItem);
         testWebDriver.waitForElementToAppear(manageLink);
         manageLink.click();
         testWebDriver.waitForElementToAppear(manageRoleAssignmentLink);
@@ -177,12 +191,18 @@ public class HomePage extends Page {
     }
 
     public UploadPage navigateUploads() throws IOException {
+        SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
+        testWebDriver.waitForElementToAppear(AdministrationMenuItem);
+        testWebDriver.click(AdministrationMenuItem);
         testWebDriver.waitForElementToAppear(uploadLink);
         uploadLink.click();
         return new UploadPage(testWebDriver);
     }
 
     public ManageSchedulePage navigateToSchedule() throws IOException{
+        SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
+        testWebDriver.waitForElementToAppear(AdministrationMenuItem);
+        testWebDriver.click(AdministrationMenuItem);
         testWebDriver.waitForElementToAppear(manageLink);
         manageLink.click();
         testWebDriver.waitForElementToAppear(schedulesLink);
