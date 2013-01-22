@@ -23,10 +23,13 @@ public class ProgramProductService {
   }
 
   public void save(ProgramProductPrice programProductPrice) {
+    programProductPrice.validate();
+
     ProgramProduct programProduct = programProductPrice.getProgramProduct();
     ProgramProduct programProductWithId = programProductRepository.getProgramProductByProgramAndProductCode(programProduct);
     programProduct.setId(programProductWithId.getId());
     programProduct.setModifiedBy(programProductPrice.getModifiedBy());
+
     programProductRepository.updateCurrentPrice(programProduct);
     programProductRepository.updatePriceHistory(programProductPrice);
   }

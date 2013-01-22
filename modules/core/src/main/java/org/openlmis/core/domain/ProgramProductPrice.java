@@ -2,6 +2,7 @@ package org.openlmis.core.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 import org.openlmis.upload.annotation.ImportFields;
@@ -11,6 +12,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 public class ProgramProductPrice implements Importable {
+  public static final String PROGRAM_PRODUCT_PRICE_INVALID_PRICE_PER_DOSAGE = "programProductPrice.invalid.price.per.dosage";
 
   private Integer id;
 
@@ -35,5 +37,10 @@ public class ProgramProductPrice implements Importable {
     this.programProduct = programProduct;
     this.pricePerDosage = pricePerDosage;
     this.source = source;
+  }
+
+  public void validate() {
+    programProduct.validate();
+    if(pricePerDosage.isNegative()) throw new DataException(PROGRAM_PRODUCT_PRICE_INVALID_PRICE_PER_DOSAGE);
   }
 }

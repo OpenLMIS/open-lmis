@@ -2,6 +2,7 @@ package org.openlmis.core.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
@@ -24,6 +25,7 @@ public class ProgramProduct implements Importable {
   private Money currentPrice;
   private String modifiedBy;
   private Date modifiedDate;
+  public static final String PROGRAM_PRODUCT_INVALID_CURRENT_PRICE = "programProduct.invalid.current.price";
 
   public ProgramProduct(Program program, Product product, Integer dosesPerMonth, Boolean active) {
     this.program = program;
@@ -40,4 +42,7 @@ public class ProgramProduct implements Importable {
     this.currentPrice = currentPrice;
   }
 
+  public void validate() {
+    if(currentPrice.isNegative()) throw new DataException(PROGRAM_PRODUCT_INVALID_CURRENT_PRICE);
+  }
 }

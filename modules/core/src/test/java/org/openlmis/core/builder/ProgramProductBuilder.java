@@ -3,6 +3,7 @@ package org.openlmis.core.builder;
 import com.natpryce.makeiteasy.Instantiator;
 import com.natpryce.makeiteasy.Property;
 import com.natpryce.makeiteasy.PropertyLookup;
+import org.openlmis.core.domain.Money;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
@@ -29,7 +30,7 @@ public class ProgramProductBuilder {
       Program program = new Program();
       program.setId(lookup.valueOf(programId, 1));
       program.setCode(lookup.valueOf(programCode, PROGRAM_CODE));
-      return new ProgramProduct(program, product, lookup.valueOf(dosagePerMonth, 1), true);
+      return new ProgramProduct(program, product, lookup.valueOf(dosagePerMonth, 1), true, new Money("100"));
     }
   };
 }
