@@ -18,6 +18,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static junit.framework.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.*;
 
@@ -106,5 +108,25 @@ public class UserServiceTest {
     List<User> listOfReturnedUsers = userService.searchUser(userSearchParam);
 
     assertTrue(listOfReturnedUsers.contains(user));
+  }
+
+  @Test
+  public void shouldReturnUserIfIdExists() throws Exception {
+    User user = new User();
+
+    when(userRepository.getById(1)).thenReturn(user);
+
+    User returnedUser = userService.getById(1);
+
+    assertThat(returnedUser,is(user));
+  }
+
+  @Test
+  public void shouldSendPasswordEmailWhenUserCreated() throws Exception {
+    User user = new User();
+
+    userService.save(user);
+
+    verify(emailService).send(any(EmailMessage.class));
   }
 }

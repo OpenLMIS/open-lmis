@@ -120,3 +120,7 @@ services.factory('SearchUserByFirstOrLastName', function ($resource) {
 services.factory('FacilityApprovedProducts', function ($resource) {
   return $resource('/facilityApprovedProducts/facility/:facilityId/program/:programId/nonFullSupply.json', {}, {});
 });
+
+services.factory('UserById', function ($resource) {
+  return $resource('/admin/user/:id.json', {}, {});
+});

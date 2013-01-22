@@ -26,8 +26,12 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
+import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 
 public class UserControllerTest {
+
+  public static final Integer userId = 1;
 
   private MockHttpSession session;
 
@@ -104,13 +108,35 @@ public class UserControllerTest {
     User user = new User();
     user.setFirstName("Shan");
     user.setLastName("Sharma");
-    ResponseEntity<OpenLmisResponse> response = userController.save(user);
+    httpServletRequest.getSession().setAttribute(USER_ID,userId);
+    httpServletRequest.getSession().setAttribute(USER,USER);
+    ResponseEntity<OpenLmisResponse> response = userController.save(user, httpServletRequest);
 
     verify(userService).save(user);
 
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
     assertThat(response.getBody().getSuccessMsg(), is("User "+user.getFirstName()+" "+user.getLastName()+" has been successfully created, password link sent on registered Email address"));
     assertThat(user.getPassword(), is(Encoder.hash("openLmis123")));
+    assertThat(user.getModifiedBy(), is(USER));
+  }
+
+  @Test
+  public void shouldUpdateUser() throws Exception {
+    User user = new User();
+    user.setId(1);
+    user.setFirstName("Shan");
+    user.setLastName("Sharma");
+    user.setPassword("password");
+    httpServletRequest.getSession().setAttribute(USER_ID,userId);
+    httpServletRequest.getSession().setAttribute(USER,USER);
+    ResponseEntity<OpenLmisResponse> response = userController.save(user, httpServletRequest);
+
+    verify(userService).save(user);
+
+    assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    assertThat(response.getBody().getSuccessMsg(), is("User "+user.getFirstName()+" "+user.getLastName()+" has been successfully updated"));
+    assertThat(user.getPassword(), is(Encoder.hash("password")));
+    assertThat(user.getModifiedBy(), is(USER));
   }
 
   @Test
@@ -118,7 +144,7 @@ public class UserControllerTest {
     User user = new User();
     doThrow(new DataException("Save user failed")).when(userService).save(user);
 
-    ResponseEntity<OpenLmisResponse> response = userController.save(user);
+    ResponseEntity<OpenLmisResponse> response = userController.save(user, httpServletRequest);
 
     assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     assertThat(response.getBody().getErrorMsg(), is("Save user failed"));
@@ -135,5 +161,16 @@ public class UserControllerTest {
     List<User> userList = userController.searchUser(userSearchParam);
 
     assertTrue(userList.contains(userReturned));
+  }
+
+  @Test
+  public void shouldReturnUserIfIdExists() throws Exception {
+    User user = new User();
+    when(userService.getById(1)).thenReturn(user);
+
+    User returnedUser = userController.getById(1);
+
+    assertThat(returnedUser, is(user));
+
   }
 }

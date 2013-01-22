@@ -38,7 +38,11 @@ public class UserRepository {
   public void insert(User user) {
     validateAndSetSupervisor(user);
     try {
-      userMapper.insert(user);
+      if (user.getId() != null) {
+        userMapper.update(user);
+      } else {
+        userMapper.insert(user);
+      }
     } catch (DuplicateKeyException e) {
       String message = e.getMessage().toLowerCase();
       if (message.contains("duplicate key value violates unique constraint \"uc_users_employeeId\"".toLowerCase()))
@@ -56,7 +60,7 @@ public class UserRepository {
     User supervisor = null;
 
     if (user.getSupervisor() != null && user.getSupervisor().getUserName() != null
-        && !user.getSupervisor().getUserName().isEmpty()) {
+      && !user.getSupervisor().getUserName().isEmpty()) {
 
       supervisor = userMapper.get(user.getSupervisor().getUserName());
       if (supervisor == null) throw new DataException(new OpenLmisMessage(SUPERVISOR_USER_NOT_FOUND));
@@ -74,6 +78,11 @@ public class UserRepository {
   }
 
   public List<User> searchUser(String userSearchParam) {
-     return userMapper.getUserWithSearchedName(userSearchParam);
+    return userMapper.getUserWithSearchedName(userSearchParam);
   }
+
+  public User getById(Integer id) {
+    return userMapper.getById(id);
+  }
+
 }

@@ -3,7 +3,7 @@
         <a href="#" class="pull-right btn btn-primary">Add new</a>
     </h2>
 
-    <input id="searchUser" class="search-query" type="text" ng-model="query" ng-change="showUserSearchResults(query)" placeholder="Enter user firstname or lastname" />
+    <input id="searchUser" class="search-query input-xlarge" type="text" ng-model="query" ng-change="showUserSearchResults(query)" placeholder="Enter user firstname, lastname or email" />
     <div class="form-tip">Minimum 3 characters</div>
     <div class="facility-list" ng-show="query.length > 2">
         <h3>

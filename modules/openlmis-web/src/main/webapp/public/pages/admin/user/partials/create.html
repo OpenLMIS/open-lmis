@@ -15,6 +15,10 @@
               <span class="field-error" ng-show="userForm.username.$error.required && showError">
                 Please Fill In this value
               </span>
+
+              <span class="field-error" ng-show="validateUserName()">
+                Invalid format, spaces not allowed in username
+              </span>
             </div>
         </div>
 
@@ -74,7 +78,7 @@
         <div class="form-cell">
             <label for="officePhone">Office Phone </label>
             <div class="form-field">
-                <input ng-model="user.officePhone" id="officePhone" type="text" maxlength="50" />
+                <input ng-model="user.officePhone" id="officePhone" type="text" maxlength="30" />
             </div>
         </div>
 
@@ -82,7 +86,7 @@
         <div class="form-cell">
             <label for="cellPhone">Cell Phone </label>
             <div class="form-field">
-                <input ng-model="user.cellPhone" id="cellPhone" type="text" maxlength="50" />
+                <input ng-model="user.cellPhone" id="cellPhone" type="text" maxlength="30" />
             </div>
         </div>
     </div>

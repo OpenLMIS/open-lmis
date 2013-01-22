@@ -1,4 +1,4 @@
-function UserSearchController($scope, SearchUserByFirstOrLastName) {
+function UserSearchController($scope, $location, SearchUserByFirstOrLastName) {
 
   $scope.showUserSearchResults = function (query) {
     var len = (query == undefined) ? 0 : query.length;

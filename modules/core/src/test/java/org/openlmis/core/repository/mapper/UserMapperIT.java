@@ -119,7 +119,7 @@ public class UserMapperIT {
     User userResult = listOfUsers.get(0);
 
     assertThat(userResult.getFirstName(), is(user.getFirstName()));
-    assertThat(listOfUsers.size(),is(1));
+    assertThat(listOfUsers.size(), is(1));
   }
 
   @Test
@@ -133,7 +133,7 @@ public class UserMapperIT {
     User userResult = listOfUsers.get(0);
 
     assertThat(userResult.getLastName(), is(user.getLastName()));
-    assertThat(listOfUsers.size(),is(1));
+    assertThat(listOfUsers.size(), is(1));
   }
 
   @Test
@@ -146,7 +146,7 @@ public class UserMapperIT {
     List<User> listOfUsers = userMapper.getUserWithSearchedName(userSearchValue);
 
     assertFalse(listOfUsers.contains(user));
-    assertThat(listOfUsers.size(),is(0));
+    assertThat(listOfUsers.size(), is(0));
   }
 
   @Test
@@ -160,7 +160,33 @@ public class UserMapperIT {
     User userResult = listOfUsers.get(0);
 
     assertThat(userResult.getEmail(), is(user.getEmail()));
-    assertThat(listOfUsers.size(),is(1));
+    assertThat(listOfUsers.size(), is(1));
+  }
+
+  @Test
+  public void shouldUpdateUserIfUserExist() throws Exception {
+    User user = make(a(defaultUser, with(facilityId, facility.getId())));
+    userMapper.insert(user);
+
+    user.setUserName("New Name");
+
+    userMapper.update(user);
+
+    User fetchedUser = userMapper.get("New Name");
+
+    assertThat(fetchedUser.getFirstName(), is(user.getFirstName()));
+    assertThat(fetchedUser.getLastName(), is(user.getLastName()));
+  }
+
+  @Test
+  public void shouldGetUserIfUserIdExists() throws Exception {
+    User user = make(a(defaultUser, with(facilityId, facility.getId())));
+
+    userMapper.insert(user);
+
+    User returnedUser = userMapper.getById(user.getId());
+
+    assertThat(user.getUserName(), is(returnedUser.getUserName()));
   }
 
   private Program insertProgram(Program program) {

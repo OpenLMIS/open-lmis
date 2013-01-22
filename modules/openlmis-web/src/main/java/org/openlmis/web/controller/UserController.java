@@ -11,10 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -66,25 +63,40 @@ public class UserController extends BaseController {
 
   @RequestMapping(value = "/admin/users", method = RequestMethod.POST, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('','MANAGE_USERS')")
-  public ResponseEntity<OpenLmisResponse> save(@RequestBody User user) {
+  public ResponseEntity<OpenLmisResponse> save(@RequestBody User user, HttpServletRequest request) {
+    ResponseEntity<OpenLmisResponse> successResponse;
+    String modifiedBy = (String) request.getSession().getAttribute(USER);
+    user.setModifiedBy(modifiedBy);
+    boolean createFlag = user.getId() == null;
     try {
-      user.setPassword("openLmis123");
-
+      if(createFlag) {
+        user.setPassword("openLmis123");
+      }
       userService.save(user);
-
-      ResponseEntity<OpenLmisResponse> successResponse = OpenLmisResponse.success("User " + user.getFirstName() + " " + user.getLastName() + " has been successfully created, password link sent on registered Email address");
-      successResponse.getBody().setData("user", user);
-      return successResponse;
     } catch (DataException e) {
       ResponseEntity<OpenLmisResponse> errorResponse = error(e, HttpStatus.BAD_REQUEST);
       errorResponse.getBody().setData("user", user);
       return errorResponse;
     }
+    if(createFlag) {
+      successResponse = OpenLmisResponse.success("User " + user.getFirstName() + " " + user.getLastName() + " has been successfully created, password link sent on registered Email address");
+    }
+    else {
+      successResponse = OpenLmisResponse.success("User " + user.getFirstName() + " " + user.getLastName() + " has been successfully updated");
+    }
+    successResponse.getBody().setData("user", user);
+    return successResponse;
   }
 
   @RequestMapping(value = "/admin/search-user", method = RequestMethod.GET)
   @PreAuthorize("hasPermission('','MANAGE_USERS')")
   public List<User> searchUser(@RequestParam String userSearchParam) {
     return userService.searchUser(userSearchParam);
+  }
+
+  @RequestMapping(value = "/admin/user/{id}", method = RequestMethod.GET)
+  @PreAuthorize("hasPermission('','MANAGE_USERS')")
+  public User getById(@PathVariable(value = "id") Integer id) {
+    return userService.getById(id);
   }
 }

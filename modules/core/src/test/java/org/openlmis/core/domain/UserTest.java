@@ -26,9 +26,12 @@ public class UserTest {
   @Test
   public void shouldThrowErrorOnInvalidEmail() {
     User user = make(a(defaultUser));
+    user.setUserName("mohan");
     user.setEmail("invalidEmail@asda121");
+
     expectedException.expect(DataException.class);
     expectedException.expectMessage("user.email.invalid");
+
     user.validate();
   }
 
@@ -41,5 +44,17 @@ public class UserTest {
     user.setPassword("password");
 
     assertThat(user.getPassword(), is("hashedPassword"));
+  }
+
+  @Test
+  public void shouldThrowErrorOnInvalidUsername() throws Exception {
+    User user = make(a(defaultUser));
+    user.setUserName("Mohan Das");
+    user.setEmail("abc@gmail.com");
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("user.userName.invalid");
+
+    user.validate();
   }
 }

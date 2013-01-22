@@ -10,6 +10,20 @@
 
     <context:component-scan base-package="org.openlmis.core" />
 
+    <bean id="coreProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+
+        <property name="locations">
+            <list>
+                <value>classpath:/default.properties</value>
+            </list>
+        </property>
+
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <property name="systemPropertiesModeName">
+            <value>SYSTEM_PROPERTIES_MODE_OVERRIDE</value>
+        </property>
+    </bean>
+
     <import resource="classpath*:applicationContext-db.xml" />
     <import resource="classpath*:applicationContext-email.xml" />
 </beans>

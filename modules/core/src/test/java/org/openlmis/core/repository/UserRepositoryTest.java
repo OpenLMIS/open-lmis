@@ -128,12 +128,12 @@ public class UserRepositoryTest {
 
     User returnedUser = userRepository.getByEmail(email);
 
-    assertThat(expectedUser,is(returnedUser));
+    assertThat(expectedUser, is(returnedUser));
 
   }
 
   @Test
-  public void shouldReturnUserIfUserWithSearchCriteriaExists() throws Exception {
+  public void shouldReturnUserIfUserExistsWithSearchCriteria() throws Exception {
     String userSearchParam = "abc";
     User user = new User();
     List<User> listOfUsers = new ArrayList<User>();
@@ -149,10 +149,29 @@ public class UserRepositoryTest {
   @Test
   public void shouldReturnMessageIfNoUserExistsWithTheSearchCriteria() throws Exception {
     String userSearchParam = "xyz";
-    when(userRepository.searchUser(userSearchParam)).thenReturn(null);
+    when(userMapper.getUserWithSearchedName(userSearchParam)).thenReturn(null);
 
     List<User> userList = userRepository.searchUser(userSearchParam);
 
-    assertThat(userList,is(nullValue()));
+    assertThat(userList, is(nullValue()));
+  }
+
+  @Test
+  public void shouldUpdateUserIfUserDataIsValid() throws Exception {
+    User user = new User();
+    user.setId(1);
+    userRepository.insert(user);
+    verify(userMapper).update(user);
+  }
+
+  @Test
+  public void shouldReturnUserIfIdIsValid() throws Exception {
+    User user = new User();
+
+    when(userMapper.getById(1)).thenReturn(user);
+
+    User userReturned = userRepository.getById(1);
+
+    assertThat(userReturned, is(user));
   }
 }
