@@ -75,7 +75,7 @@ public class RequisitionServiceTest {
   @Before
   public void setup() {
     requisitionService = new RequisitionService(requisitionRepository, rnrTemplateRepository, facilityApprovedProductService,
-      supervisoryNodeService, roleRightService, facilityService, programService, processingScheduleService);
+      supervisoryNodeService, roleRightService, programService, processingScheduleService);
     submittedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, SUBMITTED)));
     initiatedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, INITIATED)));
   }

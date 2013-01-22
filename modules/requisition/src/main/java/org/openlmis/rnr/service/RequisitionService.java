@@ -40,19 +40,17 @@ public class RequisitionService {
   private FacilityApprovedProductService facilityApprovedProductService;
   private SupervisoryNodeService supervisoryNodeService;
   private RoleRightsService roleRightsService;
-  private FacilityService facilityService;
   private ProgramService programService;
   private ProcessingScheduleService processingScheduleService;
 
   @Autowired
   public RequisitionService(RequisitionRepository requisitionRepository, RnrTemplateRepository rnrTemplateRepository, FacilityApprovedProductService facilityApprovedProductService,
-                            SupervisoryNodeService supervisoryNodeRepository, RoleRightsService roleRightsService, FacilityService facilityService, ProgramService programService, ProcessingScheduleService processingScheduleService) {
+                            SupervisoryNodeService supervisoryNodeRepository, RoleRightsService roleRightsService, ProgramService programService, ProcessingScheduleService processingScheduleService) {
     this.requisitionRepository = requisitionRepository;
     this.rnrTemplateRepository = rnrTemplateRepository;
     this.facilityApprovedProductService = facilityApprovedProductService;
     this.supervisoryNodeService = supervisoryNodeRepository;
     this.roleRightsService = roleRightsService;
-    this.facilityService = facilityService;
     this.programService = programService;
     this.processingScheduleService = processingScheduleService;
   }
@@ -85,7 +83,7 @@ public class RequisitionService {
 
   private boolean isUserAllowedToSave(Rnr rnr) {
     return (rnr.getStatus() == INITIATED && roleRightsService.getRights(rnr.getModifiedBy()).contains(CREATE_REQUISITION)) ||
-      (rnr.getStatus() == SUBMITTED && roleRightsService.getRights(rnr.getModifiedBy()).contains(AUTHORIZE_REQUISITION));
+        (rnr.getStatus() == SUBMITTED && roleRightsService.getRights(rnr.getModifiedBy()).contains(AUTHORIZE_REQUISITION));
   }
 
   public Rnr get(Integer facilityId, Integer programId, Integer periodId) {
