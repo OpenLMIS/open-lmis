@@ -241,11 +241,19 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     return $scope.getCellErrorClass(rnrLineItem, programRnRColumnList) ? 'row-error-highlight' : '';
   };
 
-    function populateRnrLineItems(rnr) {
-        $(rnr.lineItems).each(function (i, lineItem) {
-            lineItem.cost = parseFloat((lineItem.packsToShip * lineItem.price).toFixed(2));
-            var rnrLineItem = new RnrLineItem(lineItem);
-            $scope.rnrLineItems.push(rnrLineItem);
-        });
-    }
+  $scope.isFullSupply = function(rnrLineItemPrototype){
+    return rnrLineItemPrototype.rnrLineItem.fullSupply;
+  }
+
+  $scope.isNonFullSupply = function(rnrLineItemPrototype){
+    return !rnrLineItemPrototype.rnrLineItem.fullSupply;
+  }
+
+  function populateRnrLineItems(rnr) {
+    $(rnr.lineItems).each(function (i, lineItem) {
+      lineItem.cost = parseFloat((lineItem.packsToShip * lineItem.price).toFixed(2));
+      var rnrLineItem = new RnrLineItem(lineItem);
+      $scope.rnrLineItems.push(rnrLineItem);
+    });
+  }
 }
