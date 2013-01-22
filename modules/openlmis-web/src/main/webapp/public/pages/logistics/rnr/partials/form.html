@@ -298,6 +298,27 @@
    </div>
    <br />
 
+    <input type="button"  ng-click="nonFullSupplyProductsModal=true" value = "Add Non-Full Supply" ng-show = "nonFullSupplyProducts.length > 0"/>
+    <!--start-->
+    <div id="nonFullSupplyProductsModal"
+         ng-model="nonFullSupplyProductsModal"
+         class = "fade ng-pristine ng-valid modal hide "
+         ui-modal
+         data-backdrop = "static" data-keyboard = "false">
+        <div class = "modal-header"><h3>Add Non-Full Supply Products</h3></div>
+        <div class = "modal-body">
+            <select id = "nonFullSupplyProducts">
+                <option ng-repeat = "product in nonFullSupplyProducts">{{product.programProduct.product.code}}
+                </option>
+            </select>
+        </div>
+        <div class = "modal-footer">
+            <a href="" class="btn btn-primary" ng-click="activeConfirmModal=true" data-dismiss="modal">Add</a>
+            <a href="" class="btn" data-dismiss="modal">Cancel</a>
+        </div>
+    </div>
+    <!--end-->
+
   <div id="action_buttons" class="action-buttons">
       <div class="form-cell button-row">
         <input ng-disabled="formDisabled" type="button" ng-click="saveRnr()" class="btn btn-primary save-button" value="Save"/>

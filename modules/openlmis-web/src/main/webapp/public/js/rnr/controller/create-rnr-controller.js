@@ -1,4 +1,4 @@
-function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $location, Requisition, Requisitions, $routeParams, LossesAndAdjustmentsReferenceData, $rootScope) {
+function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $location, FacilityApprovedProducts, Requisition, Requisitions, $routeParams, LossesAndAdjustmentsReferenceData, $rootScope) {
 
   $scope.lossesAndAdjustmentsModal = [];
   $scope.rnrLineItems = [];
@@ -19,6 +19,14 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     $scope.formDisabled = isFormDisabled();
     populateRnrLineItems($scope.$parent.rnr);
   }
+
+  FacilityApprovedProducts.get({facilityId :$routeParams.facility , programId:$routeParams.program},
+    function(data){
+   $scope.nonFullSupplyProducts = data.nonFullSupplyProducts;
+      //alert($scope.nonFullSupplyProducts)         ;
+  },  function (data) {
+      //alert(data);
+    });
 
   ReferenceData.get({}, function (data) {
     $scope.currency = data.currency;

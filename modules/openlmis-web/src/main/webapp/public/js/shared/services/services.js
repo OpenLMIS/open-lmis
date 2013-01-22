@@ -116,3 +116,7 @@ services.factory('ForgotPassword', function ($resource) {
 services.factory('SearchUserByFirstOrLastName', function ($resource) {
   return $resource('/admin/search-user.json', {}, {});
 });
+
+services.factory('FacilityApprovedProducts', function ($resource) {
+  return $resource('/facilityApprovedProducts/facility/:facilityId/program/:programId/nonFullSupply.json', {}, {});
+});
