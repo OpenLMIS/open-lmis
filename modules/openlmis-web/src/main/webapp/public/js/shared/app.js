@@ -54,12 +54,15 @@ angular.module('openlmis', ['openlmis.services','openlmis.localStorage','ui.dire
               return false;
             }
           });
-          console.log(display);
           //Hide the list and its containing li in case all the children are hidden
           if(!display) {
             $(this).parent().hide();
             $(this).parent().parent().hide();
           }
+        });
+
+        $(".navigation li > a").on("click", function () {
+          $(this).next(".submenu").show();
         });
       });
     }

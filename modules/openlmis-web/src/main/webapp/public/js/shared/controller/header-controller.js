@@ -12,12 +12,6 @@ function HeaderController($scope, User, $rootScope, localStorageService) {
     angular.element("#action_buttons").css("width", toolbarWidth + "px");
   };
 
-  $scope.showSubmenu = function () {
-    $(".navigation > ul > li").on("click", function () {
-      $(this).find("ul").show();
-    });
-  }();
-
   $scope.logout = function () {
     localStorageService.clearAll();
     window.location = "/j_spring_security_logout";
