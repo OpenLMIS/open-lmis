@@ -6,9 +6,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class UploadException extends RuntimeException {
-
   public UploadException(String message) {
-        super(message);
-    }
-
+    super(message);
+  }
 }

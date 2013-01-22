@@ -45,5 +45,4 @@ public class ProcessingScheduleRepository {
       throw new DataException("A Schedule with this code already exists");
     }
   }
-
 }

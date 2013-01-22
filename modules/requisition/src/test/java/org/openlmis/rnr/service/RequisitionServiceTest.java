@@ -81,8 +81,13 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  public void shouldInitRequisition() {
+  public void shouldInitRequisition() throws Exception{
+    Date date = new Date();
+    Rnr requisition = createRequisition(PERIOD_ID, null);
+    ProcessingPeriod validPeriod = setupForInitRnr(date, requisition, PERIOD_ID);
+
     when(rnrTemplateRepository.isRnrTemplateDefined(PROGRAM_ID)).thenReturn(true);
+
     List<FacilityApprovedProduct> facilityApprovedProducts = new ArrayList<>();
     ProgramProduct programProduct = new ProgramProduct(null, make(a(ProductBuilder.defaultProduct)), 10, true);
     facilityApprovedProducts.add(new FacilityApprovedProduct("warehouse", programProduct, 30));
@@ -93,7 +98,7 @@ public class RequisitionServiceTest {
     verify(facilityApprovedProductService).getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY_ID, PROGRAM_ID);
     verify(requisitionRepository).insert(rnr);
     assertThat(rnr.getLineItems().size(), is(1));
-    assertThat(rnr.getPeriodId(), is(PERIOD_ID));
+    assertThat(rnr.getPeriodId(), is(validPeriod.getId()));
   }
 
   @Test
@@ -173,6 +178,34 @@ public class RequisitionServiceTest {
     Rnr rnr = requisitionService.initiate(FACILITY_ID, HIV, null, 1);
     verify(facilityApprovedProductService, never()).getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY_ID, HIV);
     verify(requisitionRepository, never()).insert(rnr);
+  }
+
+  @Test
+  public void shouldNotInitRequisitionIfPeriodDoesNotAllowInitiation() throws Exception {
+    Date date = new Date();
+    Rnr requisition = createRequisition(PERIOD_ID, null);
+    ProcessingPeriod validPeriod = setupForInitRnr(date, requisition, 1);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage(RNR_PREVIOUS_NOT_FILLED_ERROR);
+
+    requisitionService.initiate(FACILITY_ID, PROGRAM_ID, PERIOD_ID, USER_ID);
+
+    verify(programService).getProgramStartDate(FACILITY_ID, PROGRAM_ID);
+    verify(requisitionRepository).getLastRequisitionToEnterThePostSubmitFlow(FACILITY_ID, PROGRAM_ID);
+    verify(processingScheduleService).getAllPeriodsAfterDateAndPeriod(FACILITY_ID, PROGRAM_ID, date, validPeriod.getId());
+  }
+
+  private ProcessingPeriod setupForInitRnr(Date date, Rnr requisition, Integer validPeriodId) {
+    final ProcessingPeriod validPeriod = new ProcessingPeriod();
+    validPeriod.setId(validPeriodId);
+
+    when(programService.getProgramStartDate(FACILITY_ID, PROGRAM_ID)).thenReturn(date);
+    when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY_ID, PROGRAM_ID)).thenReturn(requisition);
+    when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY_ID, PROGRAM_ID, date, PERIOD_ID)).
+      thenReturn(Arrays.asList(validPeriod));
+    when(rnrTemplateRepository.isRnrTemplateDefined(PROGRAM_ID)).thenReturn(true);
+    return validPeriod;
   }
 
   @Test

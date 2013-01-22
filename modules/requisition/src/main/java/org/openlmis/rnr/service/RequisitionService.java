@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
@@ -31,6 +33,7 @@ public class RequisitionService {
   public static final String RNR_SUBMITTED_SUCCESSFULLY = "rnr.submitted.success";
   public static final String RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR = "rnr.authorized.without.supervisor";
   public static final String NO_SUPERVISORY_NODE_CONTACT_THE_ADMINISTRATOR = "rnr.submitted.without.supervisor";
+  public static final String RNR_PREVIOUS_NOT_FILLED_ERROR = "rnr.previous.not.filled.error";
 
   private RequisitionRepository requisitionRepository;
   private RnrTemplateRepository rnrTemplateRepository;
@@ -58,6 +61,11 @@ public class RequisitionService {
   public Rnr initiate(Integer facilityId, Integer programId, Integer periodId, Integer modifiedBy) {
     if (!rnrTemplateRepository.isRnrTemplateDefined(programId))
       throw new DataException("Please contact Admin to define R&R template for this program");
+
+    List<ProcessingPeriod> validPeriods = getAllPeriodsForInitiatingRequisition(facilityId, programId);
+    if (validPeriods.size() == 0 || !validPeriods.get(0).getId().equals(periodId))
+      throw new DataException(RNR_PREVIOUS_NOT_FILLED_ERROR);
+
     Rnr requisition = new Rnr(facilityId, programId, periodId, modifiedBy);
     List<FacilityApprovedProduct> facilityApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(facilityId, programId);
     for (FacilityApprovedProduct programProduct : facilityApprovedProducts) {
@@ -77,7 +85,7 @@ public class RequisitionService {
 
   private boolean isUserAllowedToSave(Rnr rnr) {
     return (rnr.getStatus() == INITIATED && roleRightsService.getRights(rnr.getModifiedBy()).contains(CREATE_REQUISITION)) ||
-        (rnr.getStatus() == SUBMITTED && roleRightsService.getRights(rnr.getModifiedBy()).contains(AUTHORIZE_REQUISITION));
+      (rnr.getStatus() == SUBMITTED && roleRightsService.getRights(rnr.getModifiedBy()).contains(AUTHORIZE_REQUISITION));
   }
 
   public Rnr get(Integer facilityId, Integer programId, Integer periodId) {
@@ -122,7 +130,7 @@ public class RequisitionService {
   public List<RnrDTO> listForApproval(Integer userId) {
     List<RoleAssignment> assignments = roleRightsService.getRoleAssignments(APPROVE_REQUISITION, userId);
     List<RnrDTO> requisitionsForApproval = new ArrayList<>();
-    for(RoleAssignment assignment : assignments){
+    for (RoleAssignment assignment : assignments) {
       requisitionsForApproval.addAll(requisitionRepository.getAuthorizedRequisitions(assignment));
     }
     return requisitionsForApproval;

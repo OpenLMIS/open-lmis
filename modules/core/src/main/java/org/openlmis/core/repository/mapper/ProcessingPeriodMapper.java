@@ -14,8 +14,8 @@ public interface ProcessingPeriodMapper {
   List<ProcessingPeriod> getAll(Integer scheduleId);
 
   @Insert({"INSERT INTO processing_periods",
-      "(name, description, startDate, endDate, scheduleId, numberOfMonths, modifiedBy, modifiedDate) VALUES(",
-      "#{name}, #{description}, #{startDate}, #{endDate}, #{scheduleId}, #{numberOfMonths}, #{modifiedBy}, DEFAULT)"})
+    "(name, description, startDate, endDate, scheduleId, numberOfMonths, modifiedBy, modifiedDate) VALUES(",
+    "#{name}, #{description}, #{startDate}, #{endDate}, #{scheduleId}, #{numberOfMonths}, #{modifiedBy}, DEFAULT)"})
   @Options(useGeneratedKeys = true)
   Integer insert(ProcessingPeriod period);
 
@@ -29,21 +29,21 @@ public interface ProcessingPeriodMapper {
   ProcessingPeriod getById(Integer id);
 
   @Select("SELECT * FROM processing_periods " +
-      "WHERE scheduleId = #{scheduleId} " +
-      "AND startDate > (SELECT pp.endDate FROM processing_periods pp WHERE pp.id = #{startingPeriodId}) " +
-      "AND startDate <= #{beforeDate} " +
-      "AND endDate >= #{afterDate} " +
-      "ORDER BY startDate")
+    "WHERE scheduleId = #{scheduleId} " +
+    "AND startDate > (SELECT pp.endDate FROM processing_periods pp WHERE pp.id = #{startingPeriodId}) " +
+    "AND startDate <= #{beforeDate} " +
+    "AND endDate >= #{afterDate} " +
+    "ORDER BY startDate")
   List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriod(@Param(value = "scheduleId") Integer scheduleId,
                                                          @Param(value = "startingPeriodId") Integer startingPeriodId,
                                                          @Param(value = "afterDate") Date afterDate,
                                                          @Param(value = "beforeDate") Date beforeDate);
 
-  @Select("SELECT * FROM processing_periods " +
-      "WHERE scheduleId = #{scheduleId} " +
-      "AND endDate >= #{afterDate} " +
-      "AND startDate <= #{beforeDate} " +
-      "ORDER BY startDate")
+  @Select({"SELECT * FROM processing_periods",
+    "WHERE scheduleId = #{scheduleId}",
+    "AND endDate >= #{afterDate}",
+    "AND startDate <= #{beforeDate}",
+    "ORDER BY startDate"})
   List<ProcessingPeriod> getAllPeriodsAfterDate(@Param(value = "scheduleId") Integer scheduleId,
                                                 @Param(value = "afterDate") Date afterDate,
                                                 @Param(value = "beforeDate") Date beforeDate);
