@@ -244,8 +244,8 @@ public class InitiateRnRPage extends Page {
       String actualPacksToShip=testWebDriver.getText(packsToShip);
       testWebDriver.waitForElementToAppear(pricePerPack);
       String actualPricePerPack=testWebDriver.getText(pricePerPack);
-      Integer actualTotalCost=Integer.parseInt(actualPacksToShip)*Integer.parseInt(actualPricePerPack);
-      SeleneseTestNgHelper.assertEquals(actualTotalCost.toString(), totalCost.getText());
+      Float actualTotalCost=Float.parseFloat(actualPacksToShip)*Float.parseFloat(actualPricePerPack);
+      SeleneseTestNgHelper.assertEquals(actualTotalCost.toString().substring(0,actualTotalCost.toString().indexOf(".")), totalCost.getText());
       testWebDriver.sleep(500);
     }
 
@@ -254,7 +254,9 @@ public class InitiateRnRPage extends Page {
         testWebDriver.sleep(1500);
         String successMessageText=testWebDriver.getText(successMessage);
         testWebDriver.sleep(1500);
-        SeleneseTestNgHelper.assertEquals(successMessageText.trim(),successText);
+        //SeleneseTestNgHelper.assertEquals(successMessageText.trim(),successText);
+        SeleneseTestNgHelper.assertTrue("R&R saved successfully! message not displayed", successMessage.isDisplayed());
+        //successMessage
     }
 
     public void submitRnR() {
