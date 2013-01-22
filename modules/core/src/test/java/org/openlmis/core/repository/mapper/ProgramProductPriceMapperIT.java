@@ -4,22 +4,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProductBuilder;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.domain.ProgramProductPrice;
+import org.openlmis.core.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.ProductBuilder.displayOrder;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
@@ -28,7 +21,7 @@ import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 @ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
 @Transactional
 @TransactionConfiguration(defaultRollback = true)
-public class ProgramProductPriceMapperTest {
+public class ProgramProductPriceMapperIT {
 
   @Autowired
   ProgramMapper programMapper;
@@ -49,14 +42,15 @@ public class ProgramProductPriceMapperTest {
     productMapper.insert(product);
     program = make(a(defaultProgram));
     programMapper.insert(program);
-    programProduct = new ProgramProduct(program, product, 10, true, 105.6d);
+    Money price = new Money("105.60");
+    programProduct = new ProgramProduct(program, product, 10, true, price);
     programProductMapper.insert(programProduct);
   }
 
   @Test
   public void shouldCloseLastActivePriceWithEndDateAsCurrentDate() throws Exception {
     String source = "MoH";
-    double pricePerDosage = 100.50d;
+    Money pricePerDosage = new Money("1.50");
     ProgramProductPrice programProductPrice = new ProgramProductPrice(programProduct, pricePerDosage, source);
     programProductPrice.setModifiedBy("User");
 
@@ -71,7 +65,7 @@ public class ProgramProductPriceMapperTest {
   @Test
   public void shouldInsertNewActivePriceWithStartDateAsCurrentDate() throws Exception {
     String source = "MoH";
-    double pricePerDosage = 100.50d;
+    Money pricePerDosage = new Money("1.50");
     ProgramProductPrice programProductPrice = new ProgramProductPrice(programProduct, pricePerDosage, source);
     programProductPrice.setModifiedBy("User");
     programProductPriceMapper.insertNewCurrentPrice(programProductPrice);

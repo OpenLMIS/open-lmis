@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.openlmis.core.domain.FacilityApprovedProduct;
+import org.openlmis.core.domain.Money;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.exception.DataException;
@@ -59,7 +60,7 @@ public class RnrLineItem {
 
   private Integer modifiedBy;
   private Date modifiedDate;
-  private Double price;
+  private Money price;
 
   public RnrLineItem(Integer rnrId, FacilityApprovedProduct facilityApprovedProduct, Integer modifiedBy) {
     this.rnrId = rnrId;

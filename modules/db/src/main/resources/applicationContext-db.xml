@@ -42,6 +42,7 @@
 
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
+        <property name="typeHandlersPackage" value="org.openlmis.core.repository.typehandler"/>
     </bean>
 
     <bean id="myBatisMapperScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer">

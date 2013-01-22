@@ -3,6 +3,7 @@ package org.openlmis.rnr.builder;
 import com.natpryce.makeiteasy.Instantiator;
 import com.natpryce.makeiteasy.Property;
 import com.natpryce.makeiteasy.PropertyLookup;
+import org.openlmis.core.domain.Money;
 import org.openlmis.rnr.domain.LossesAndAdjustments;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.domain.RnrLineItem;
@@ -32,7 +33,7 @@ public class RnrLineItemBuilder {
 
       rnrLineItem.setDispensingUnit("tablet");
       rnrLineItem.setMaxMonthsOfStock(1);
-      rnrLineItem.setPrice(2d);
+      rnrLineItem.setPrice(new Money("2"));
       rnrLineItem.setQuantityApproved(2);
 
       rnrLineItem.setStockOutDays(3);
@@ -49,7 +50,7 @@ public class RnrLineItemBuilder {
       rnrLineItem.setPacksToShip(12);
       rnrLineItem.setPackRoundingThreshold(3);
       rnrLineItem.setRoundToZero(true);
-      rnrLineItem.setPrice(4d);
+      rnrLineItem.setPrice(new Money("4"));
       return rnrLineItem;
     }
   };

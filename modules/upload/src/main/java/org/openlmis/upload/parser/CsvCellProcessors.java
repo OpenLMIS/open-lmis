@@ -22,10 +22,11 @@ public class CsvCellProcessors {
         typeMappings.put("double", new ParseDouble());
         typeMappings.put("Date", new ParseDate(format));
         typeMappings.put("String", new Trim());
+        typeMappings.put("BigDecimal", new ParseBigDecimal());
     }
 
     protected static List<CellProcessor> getProcessors(ModelClass modelClass, List<String> headers) {
-        List<CellProcessor> processors = new ArrayList<CellProcessor>();
+        List<CellProcessor> processors = new ArrayList<>();
         for (String header : headers) {
             org.openlmis.upload.model.Field field =  modelClass.findImportFieldWithName(header);
             CellProcessor processor = null;

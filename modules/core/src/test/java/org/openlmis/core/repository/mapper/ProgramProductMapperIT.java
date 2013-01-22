@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProductBuilder;
+import org.openlmis.core.domain.Money;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
@@ -74,15 +75,16 @@ public class ProgramProductMapperIT {
 
   @Test
   public void shouldUpdateCurrentPriceForProgramProduct() throws Exception {
-    ProgramProduct programProduct = new ProgramProduct(program, product, 10, true, 100.0d);
+    ProgramProduct programProduct = new ProgramProduct(program, product, 10, true, new Money("100.0"));
     programProduct.setModifiedBy("modifiedBy");
     programProductMapper.insert(programProduct);
-    programProduct.setCurrentPrice(200.01);
+     Money price = new Money("200.01");
+    programProduct.setCurrentPrice(price);
 
     programProductMapper.updateCurrentPrice(programProduct);
 
     ProgramProduct returnedProgramProduct = programProductMapper.getById(programProduct.getId());
-    assertThat(returnedProgramProduct.getCurrentPrice(), is(200.01));
+    assertThat(returnedProgramProduct.getCurrentPrice(), is(price));
     assertThat(returnedProgramProduct.getModifiedBy(), is("modifiedBy"));
     assertThat(returnedProgramProduct.getModifiedDate(), is(notNullValue()));
   }
