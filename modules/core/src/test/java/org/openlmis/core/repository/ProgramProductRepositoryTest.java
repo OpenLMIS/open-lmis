@@ -50,7 +50,7 @@ public class ProgramProductRepositoryTest {
 
   @Before
   public void setUp() throws Exception {
-    programProductRepository = new ProgramProductRepository(programRepository, productMapper, programProductMapper, productRepository, programProductPriceMapper);
+    programProductRepository = new ProgramProductRepository(programRepository, programProductMapper, productRepository, programProductPriceMapper);
   }
 
   @Test

@@ -4,7 +4,6 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.domain.ProgramProductPrice;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.repository.mapper.ProductMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
 import org.openlmis.core.repository.mapper.ProgramProductPriceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,23 +15,20 @@ import org.springframework.stereotype.Component;
 public class ProgramProductRepository {
 
   public static final String PROGRAM_PRODUCT_INVALID = "programProduct.product.program.invalid";
+  private ProgramProductMapper mapper;
   private ProgramRepository programRepository;
-  private ProductMapper productMapper;
   private ProductRepository productRepository;
-  private ProgramProductMapper programProductMapper;
   private ProgramProductPriceMapper programProductPriceMapper;
 
 
   @Autowired
-  public ProgramProductRepository(ProgramRepository programRepository, ProductMapper productMapper, ProgramProductMapper programProductMapper,
+  public ProgramProductRepository(ProgramRepository programRepository, ProgramProductMapper programProductMapper,
                                   ProductRepository productRepository, ProgramProductPriceMapper programProductPriceMapper) {
-    this.programProductMapper = programProductMapper;
+    this.mapper = programProductMapper;
     this.programRepository = programRepository;
-    this.productMapper = productMapper;
     this.productRepository = productRepository;
     this.programProductPriceMapper = programProductPriceMapper;
   }
-
 
 
   public void insert(ProgramProduct programProduct) {
@@ -41,29 +37,29 @@ public class ProgramProductRepository {
     validateProductCode(programProduct.getProduct().getCode());
 
     try {
-      programProductMapper.insert(programProduct);
+      mapper.insert(programProduct);
     } catch (DuplicateKeyException duplicateKeyException) {
       throw new DataException("Duplicate entry for Product Code and Program Code combination found");
     }
   }
 
-  public Integer getIdByProgramIdAndProductId(Integer programId, Integer productId){
-    Integer programProductId = programProductMapper.getIdByProgramAndProductId(programId, productId);
+  public Integer getIdByProgramIdAndProductId(Integer programId, Integer productId) {
+    Integer programProductId = mapper.getIdByProgramAndProductId(programId, productId);
 
-    if(programProductId == null)
+    if (programProductId == null)
       throw new DataException(PROGRAM_PRODUCT_INVALID);
 
     return programProductId;
   }
 
   private void validateProductCode(String code) {
-    if (code == null || code.isEmpty() || productMapper.getIdByCode(code) == null) {
+    if (code == null || code.isEmpty() || productRepository.getIdByCode(code) == null) {
       throw new DataException("Invalid Product Code");
     }
   }
 
   public void updateCurrentPrice(ProgramProduct programProduct) {
-    programProductMapper.updateCurrentPrice(programProduct);
+    mapper.updateCurrentPrice(programProduct);
   }
 
   public ProgramProduct getProgramProductByProgramAndProductCode(ProgramProduct programProduct) {
@@ -72,9 +68,9 @@ public class ProgramProductRepository {
   }
 
   private ProgramProduct getByProgramIdAndProductId(Integer programId, Integer productId) {
-    final ProgramProduct programProduct = programProductMapper.getByProgramAndProductId(programId, productId);
-    if(programProduct == null)
-          throw new DataException(PROGRAM_PRODUCT_INVALID);
+    final ProgramProduct programProduct = mapper.getByProgramAndProductId(programId, productId);
+    if (programProduct == null)
+      throw new DataException(PROGRAM_PRODUCT_INVALID);
 
     return programProduct;
   }
