@@ -77,6 +77,10 @@ services.factory('Requisition', function($resource) {
   return $resource('/requisitions.json', {}, {});
 });
 
+services.factory('RequisitionById', function ($resource) {
+  return $resource('/requisitions/:id.json', {}, {});
+});
+
 services.factory('RequisitionForApproval', function($resource) {
   return $resource('/requisitions-for-approval.json', {}, {});
 });

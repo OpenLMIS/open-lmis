@@ -197,4 +197,15 @@ public class ProcessingScheduleServiceTest {
 
     service.getAllPeriodsAfterDateAndPeriod(1, 2, null, null);
   }
+
+  @Test
+  public void shouldGetPeriodById() throws Exception {
+    final ProcessingPeriod expectedPeriod = new ProcessingPeriod();
+    when(periodRepository.getById(1)).thenReturn(expectedPeriod);
+
+    final ProcessingPeriod actual = service.getPeriodById(1);
+
+    verify(periodRepository).getById(1);
+    assertThat(actual, is(expectedPeriod));
+  }
 }

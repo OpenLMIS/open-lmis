@@ -7,7 +7,6 @@ import org.openlmis.rnr.domain.LossesAndAdjustments;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
-import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper;
 import org.openlmis.rnr.repository.mapper.RequisitionMapper;
 import org.openlmis.rnr.repository.mapper.RnrLineItemMapper;
@@ -82,7 +81,7 @@ public class RequisitionRepository {
     return requisition;
   }
 
-  public List<RnrDTO> getAuthorizedRequisitions(RoleAssignment roleAssignment) {
+  public List<Rnr> getAuthorizedRequisitions(RoleAssignment roleAssignment) {
     return mapper.getAuthorizedRequisitions(roleAssignment);
   }
 

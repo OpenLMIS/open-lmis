@@ -13,7 +13,6 @@ import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.rnr.domain.LossesAndAdjustments;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
-import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper;
 import org.openlmis.rnr.repository.mapper.RequisitionMapper;
 import org.openlmis.rnr.repository.mapper.RnrLineItemMapper;
@@ -139,11 +138,11 @@ public class RequisitionRepositoryTest {
 
   @Test
   public void shouldGetRequisitionByRoleAssignment() throws Exception {
-    List<RnrDTO> requisitions = new ArrayList<>();
+    List<Rnr> requisitions = new ArrayList<>();
     RoleAssignment roleAssignment = new RoleAssignment();
     when(requisitionMapper.getAuthorizedRequisitions(roleAssignment)).thenReturn(requisitions);
 
-    List<RnrDTO> actualRequisitions = requisitionRepository.getAuthorizedRequisitions(roleAssignment);
+    List<Rnr> actualRequisitions = requisitionRepository.getAuthorizedRequisitions(roleAssignment);
 
     assertThat(actualRequisitions, is(requisitions));
   }

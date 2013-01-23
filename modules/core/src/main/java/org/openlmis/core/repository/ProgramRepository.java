@@ -65,4 +65,8 @@ public class ProgramRepository {
   public List<Program> getActiveProgramsForUserWithRights(Integer userId, Right... rights) {
     return programMapper.getActiveProgramsForUserWithRights(userId, getCommaSeparatedRightNames(rights));
   }
+
+  public Program getById(Integer id) {
+    return programMapper.getById(id);
+  }
 }

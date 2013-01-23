@@ -173,8 +173,8 @@ public class FacilityRepository {
         return facilityMapper.getHomeFacility(userId);
     }
 
-    public Facility getFacility(Integer id) {
-        Facility facility = facilityMapper.get(id);
+    public Facility getById(Integer id) {
+        Facility facility = facilityMapper.getById(id);
         facility.setSupportedPrograms(programMapper.getByFacilityId(facility.getId()));
         return facility;
     }

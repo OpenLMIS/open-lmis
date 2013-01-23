@@ -153,7 +153,7 @@ public class FacilityMapperIT {
     public void shouldGetFacilityById() throws Exception {
         Facility facility = make(a(defaultFacility));
         facilityMapper.insert(facility);
-        Facility resultFacility = facilityMapper.get(facility.getId());
+        Facility resultFacility = facilityMapper.getById(facility.getId());
         assertThat(resultFacility.getCode(), is("F10010"));
         assertThat(resultFacility.getId(), is(facility.getId()));
         assertThat(resultFacility.getName(), is("Apollo Hospital"));
@@ -167,7 +167,7 @@ public class FacilityMapperIT {
 
         facilityMapper.update(facility);
 
-        Facility updatedFacility = facilityMapper.get(facility.getId());
+        Facility updatedFacility = facilityMapper.getById(facility.getId());
         assertThat(updatedFacility.getCode(), is(facility.getCode()));
     }
 
@@ -217,7 +217,7 @@ public class FacilityMapperIT {
         facility.setModifiedBy("user1");
         facilityMapper.updateDataReportableAndActiveFor(facility);
 
-        Facility updatedFacility = facilityMapper.get(facility.getId());
+        Facility updatedFacility = facilityMapper.getById(facility.getId());
 
         assertThat(updatedFacility.getDataReportable(), is(false));
         assertThat(updatedFacility.getActive(), is(false));

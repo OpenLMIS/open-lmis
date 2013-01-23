@@ -112,9 +112,9 @@ public class RequisitionController extends BaseController {
 
   @RequestMapping(value = "/requisitions-for-approval", method = RequestMethod.GET, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('', 'APPROVE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> fetchUserSupervisedRnrForApproval(HttpServletRequest request) {
-    List<RnrDTO> requisitions = requisitionService.listForApproval(loggedInUserId(request));
-    return response(RNR_LIST, requisitions);
+  public ResponseEntity<OpenLmisResponse> listForApproval(HttpServletRequest request) {
+    List<Rnr> requisitions = requisitionService.listForApproval(loggedInUserId(request));
+    return response(RNR_LIST, RnrDTO.prepareForListApproval(requisitions));
   }
 
   @RequestMapping(value = "/logistics/facility/{facilityId}/program/{programId}/periods", method = RequestMethod.GET, headers = "Accept=application/json")

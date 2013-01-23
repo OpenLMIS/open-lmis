@@ -1,4 +1,4 @@
-describe('ApproveRnrController', function () {
+describe('ApproveRnrListController', function () {
 
   var scope, ctrl, httpBackend, controller;
   var requisitionList;
@@ -12,7 +12,7 @@ describe('ApproveRnrController', function () {
       {"facilityName":"first facility", "programName":"first program", "facilityCode":"first code"},
       {"facilityName":"second facility", "programName":"second program", "facilityCode":"second code"}
     ];
-    ctrl = controller(ApproveRnrController, {$scope:scope, requisitionList:requisitionList});
+    ctrl = controller(ApproveRnrListController, {$scope:scope, requisitionList:requisitionList});
   }));
 
   it('should show all requisitions if filter is not applied', function () {

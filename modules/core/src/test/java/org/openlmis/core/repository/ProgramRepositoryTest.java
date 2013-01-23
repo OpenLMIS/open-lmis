@@ -80,4 +80,14 @@ public class ProgramRepositoryTest {
     verify(programMapper).getActiveProgramsForUserWithRights(1, "{APPROVE_REQUISITION, CREATE_REQUISITION}");
     assertThat(resultPrograms, is(expectedPrograms));
   }
+
+  @Test
+  public void shouldGetProgramById() throws Exception {
+    final Program expectedProgram = new Program();
+    when(programMapper.getById(1)).thenReturn(expectedProgram);
+    final Program actualProgram = programRepository.getById(1);
+
+    verify(programMapper).getById(1);
+    assertThat(actualProgram, is(expectedProgram));
+  }
 }

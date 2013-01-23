@@ -3,7 +3,8 @@ var rnrModule = angular.module('rnr', ['openlmis', 'ngGrid']).config(['$routePro
         when('/init-rnr', {controller:InitiateRnrController, templateUrl:'partials/init.html'}).
         when('/supervised/init-rnr', {controller:InitiateRnrController, templateUrl:'partials/supervised-init.html'}).
         when('/create-rnr/:facility/:program/:period', {templateUrl:'partials/create.html'}).
-        when('/rnr-for-approval', {controller: ApproveRnrController, templateUrl:'partials/list.html', resolve: ApproveRnrController.resolve}).
+        when('/rnr-for-approval', {controller: ApproveRnrListController, templateUrl:'partials/list.html', resolve: ApproveRnrListController.resolve}).
+        when('/rnr-for-approval/:id', {templateUrl:'partials/approve.html'}).
         otherwise({redirectTo:'/init-rnr'});
 }]).directive('rnrValidator', function () {
         return {

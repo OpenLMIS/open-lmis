@@ -111,7 +111,7 @@ public class FacilityControllerTest {
   public void shouldGetFacilityById() throws Exception {
     Integer Id = 1;
     facilityController.getFacility(Id);
-    verify(facilityService).getFacility(Id);
+    verify(facilityService).getById(Id);
   }
 
   @Test
@@ -121,7 +121,7 @@ public class FacilityControllerTest {
     facility.setId(123);
     facility.setName("Test Facility");
     facility.setCode("Test Code");
-    when(facilityService.getFacility(123)).thenReturn(facility);
+    when(facilityService.getById(123)).thenReturn(facility);
 
     ResponseEntity responseEntity = facilityController.updateDataReportableAndActive(facility, "delete", httpServletRequest);
     OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
@@ -141,7 +141,7 @@ public class FacilityControllerTest {
     facility.setId(123);
     facility.setName("Test Facility");
     facility.setCode("Test Code");
-    when(facilityService.getFacility(123)).thenReturn(facility);
+    when(facilityService.getById(123)).thenReturn(facility);
 
     ResponseEntity responseEntity = facilityController.updateDataReportableAndActive(facility, "restore", httpServletRequest);
     OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();

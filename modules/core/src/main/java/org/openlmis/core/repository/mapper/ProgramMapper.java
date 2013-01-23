@@ -74,4 +74,5 @@ public interface ProgramMapper {
     "AND rr.rightName = ANY (#{commaSeparatedRights}::VARCHAR[]) " +
     "AND p.active = true")
   List<Program> getActiveProgramsForUserWithRights(@Param(value = "userId") Integer userId, @Param(value = "commaSeparatedRights")  String commaSeparatedRights);
+
 }

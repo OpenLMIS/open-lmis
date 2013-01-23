@@ -60,8 +60,8 @@ public class FacilityService {
         return homeFacility == null ? Collections.<Facility>emptyList() : Arrays.asList(homeFacility);
     }
 
-    public Facility getFacility(Integer id) {
-        return facilityRepository.getFacility(id);
+    public Facility getById(Integer id) {
+        return facilityRepository.getById(id);
     }
 
     public void updateDataReportableAndActiveFor(Facility facility) {

@@ -1,6 +1,5 @@
 package org.openlmis.rnr.repository.mapper;
 
-import org.hamcrest.CoreMatchers;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +15,6 @@ import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
 import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrStatus;
-import org.openlmis.rnr.dto.RnrDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -27,9 +25,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.core.Is.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
@@ -103,9 +99,6 @@ public class RequisitionMapperIT {
     requisition.setSubmittedDate(submittedDate);
     requisition.setSupervisoryNodeId(supervisoryNode.getId());
 
-//    requisition.setFullSupplyItemsSubmittedCost(100.5F);
-//    requisition.setTotalSubmittedCost(100.5F);
-
     mapper.update(requisition);
 
     Rnr updatedRequisition = mapper.getById(requisition.getId());
@@ -114,8 +107,6 @@ public class RequisitionMapperIT {
     assertThat(updatedRequisition.getSupervisoryNodeId(), is(requisition.getSupervisoryNodeId()));
     assertThat(updatedRequisition.getModifiedBy(), is(equalTo(USER_ID)));
     assertThat(updatedRequisition.getSubmittedDate(), is(submittedDate));
-//    assertThat(updatedRequisition.getFullSupplyItemsSubmittedCost(), is(100.5F));
-//    assertThat(updatedRequisition.getTotalSubmittedCost(), is(100.5F));
   }
 
   @Test
@@ -137,9 +128,9 @@ public class RequisitionMapperIT {
 
     Rnr returnedRequisition = mapper.getById(requisition.getId());
 
-    assertThat(returnedRequisition.getFacilityId(), CoreMatchers.is(requisition.getFacilityId()));
-    assertThat(returnedRequisition.getStatus(), CoreMatchers.is(requisition.getStatus()));
-    assertThat(returnedRequisition.getId(), CoreMatchers.is(requisition.getId()));
+    assertThat(returnedRequisition.getFacilityId(),is(requisition.getFacilityId()));
+    assertThat(returnedRequisition.getStatus(),is(requisition.getStatus()));
+    assertThat(returnedRequisition.getId(),is(requisition.getId()));
   }
 
   @Test
@@ -148,7 +139,7 @@ public class RequisitionMapperIT {
     requisition.setSupervisoryNodeId(supervisoryNode.getId());
     mapper.update(requisition);
 
-    List<RnrDTO> requisitions = mapper.getAuthorizedRequisitions(null);
+    List<Rnr> requisitions = mapper.getAuthorizedRequisitions(null);
 
     assertThat(requisitions.size(), is(0));
   }
@@ -160,11 +151,16 @@ public class RequisitionMapperIT {
     mapper.update(requisition);
     RoleAssignment roleAssignment = new RoleAssignment(USER_ID, 1, PROGRAM_ID, supervisoryNode);
 
-    List<RnrDTO> requisitions = mapper.getAuthorizedRequisitions(roleAssignment);
+    List<Rnr> requisitions = mapper.getAuthorizedRequisitions(roleAssignment);
 
-    RnrDTO rnr = requisitions.get(0);
+    Rnr rnr = requisitions.get(0);
     assertThat(requisitions.size(), is(1));
+    assertThat(rnr.getFacility().getId(), is(facility.getId()));
+    assertThat(rnr.getProgram().getId(), is(PROGRAM_ID));
+    assertThat(rnr.getPeriod().getId(), is(processingPeriod1.getId()));
     assertThat(rnr.getId(), is(requisition.getId()));
+    assertThat(rnr.getModifiedDate(), is(notNullValue()));
+    assertThat(rnr.getSubmittedDate(), is(requisition.getSubmittedDate()));
   }
 
   @Test
@@ -190,6 +186,8 @@ public class RequisitionMapperIT {
   private Rnr insertRequisition(ProcessingPeriod period, RnrStatus status) {
     Rnr rnr = new Rnr(facility.getId(), PROGRAM_ID, period.getId(), MODIFIED_BY);
     rnr.setStatus(status);
+    rnr.setModifiedDate(new Date());
+    rnr.setSubmittedDate(new Date(111111L));
     mapper.insert(rnr);
     return rnr;
   }

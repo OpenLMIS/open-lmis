@@ -85,7 +85,7 @@ public interface FacilityMapper {
             @Result(property = "facilityType", column = "typeId", javaType = Integer.class, one = @One(select = "getFacilityTypeById")),
             @Result(property = "operatedBy", column = "operatedById", javaType = Integer.class, one = @One(select = "getFacilityOperatorById")),
     })
-    Facility get(Integer id);
+    Facility getById(Integer id);
 
     @Update("UPDATE facilities SET code = #{code}, name = #{name}, description = #{description}, gln = #{gln}," +
             "mainPhone = #{mainPhone}, fax = #{fax}, address1 = #{address1}," +

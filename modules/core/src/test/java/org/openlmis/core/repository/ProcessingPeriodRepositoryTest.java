@@ -161,4 +161,13 @@ public class ProcessingPeriodRepositoryTest {
 
     verify(mapper).delete(processingPeriod.getId());
   }
+
+  @Test
+  public void shouldGetPeriodById() throws Exception {
+    final ProcessingPeriod expected = new ProcessingPeriod();
+    when(mapper.getById(1)).thenReturn(expected);
+    final ProcessingPeriod actual = repository.getById(1);
+    verify(mapper).getById(1);
+    assertThat(actual, is(expected));
+  }
 }

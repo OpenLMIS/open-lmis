@@ -62,4 +62,8 @@ public class ProcessingPeriodRepository {
         mapper.getAllPeriodsAfterDate(scheduleId, afterDate, beforeDate) :
         mapper.getAllPeriodsAfterDateAndPeriod(scheduleId, startPeriodId, afterDate, beforeDate);
   }
+
+  public ProcessingPeriod getById(Integer id) {
+    return mapper.getById(id);
+  }
 }

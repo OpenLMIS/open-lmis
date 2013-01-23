@@ -73,4 +73,8 @@ public class ProcessingScheduleService {
     Integer scheduleId = requisitionGroupProgramScheduleRepository.getScheduleIdForRequisitionGroupAndProgram(requisitionGroup.getId(), programId);
     return periodRepository.getAllPeriodsAfterDateAndPeriod(scheduleId, startingPeriod, programStartDate, new Date());
   }
+
+  public ProcessingPeriod getPeriodById(Integer periodId){
+    return periodRepository.getById(periodId);
+  }
 }

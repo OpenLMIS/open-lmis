@@ -3,7 +3,9 @@ package org.openlmis.web.controller;
 import org.junit.Before;
 import org.junit.Test;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.rnr.domain.Rnr;
@@ -17,6 +19,7 @@ import org.springframework.mock.web.MockHttpSession;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -30,6 +33,9 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 public class RequisitionControllerTest {
 
+  public static final String FACILITY_CODE = "F14";
+  public static final String FACILITY_NAME = "Facility";
+  public static final String PROGRAM_NAME = "HIV";
   MockHttpServletRequest request;
   private static final String USER = "user";
   private static final Integer USER_ID = 1;
@@ -153,10 +159,32 @@ public class RequisitionControllerTest {
 
   @Test
   public void shouldReturnListOfUserSupervisedRnrForApproval() {
-    List<RnrDTO> rnrList = new ArrayList<>();
-    ResponseEntity<OpenLmisResponse> response = controller.fetchUserSupervisedRnrForApproval(request);
+    final Rnr requisition = createRequisition();
+    final List<Rnr> requisitions = new ArrayList<Rnr>(){{add(requisition);}};
+    when(requisitionService.listForApproval(USER_ID)).thenReturn(requisitions);
+    final ResponseEntity<OpenLmisResponse> response = controller.listForApproval(request);
+    assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    final List<RnrDTO> requisitionsList = (List<RnrDTO>)response.getBody().getData().get(RNR_LIST);
+    assertThat(requisitionsList.get(0).getFacilityName(), is(FACILITY_NAME));
+    assertThat(requisitionsList.get(0).getFacilityCode(), is(FACILITY_CODE));
+    assertThat(requisitionsList.get(0).getProgramName(), is(PROGRAM_NAME));
     verify(requisitionService).listForApproval(USER_ID);
-    assertThat((List<RnrDTO>) response.getBody().getData().get(RNR_LIST), is(rnrList));
+  }
+
+  private Rnr createRequisition() {
+    Rnr requisition = new Rnr();
+    final Facility facility = new Facility();
+    facility.setCode(FACILITY_CODE);
+    facility.setName(FACILITY_NAME);
+    final Program program = new Program();
+    program.setName(PROGRAM_NAME);
+    final ProcessingPeriod period = new ProcessingPeriod();
+    period.setStartDate(new Date());
+    period.setEndDate(new Date(1111232323L));
+    requisition.setFacility(facility);
+    requisition.setProgram(program);
+    requisition.setPeriod(period);
+    return requisition;
   }
 
   @Test

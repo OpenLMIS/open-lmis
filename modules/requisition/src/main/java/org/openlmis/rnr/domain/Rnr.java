@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Money;
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 
 import java.math.BigDecimal;
@@ -20,6 +21,7 @@ public class Rnr {
   private Integer id;
   private Facility facility;
   private Program program;
+  private ProcessingPeriod period;
   private Integer facilityId;
   private Integer programId;
   private Integer periodId;

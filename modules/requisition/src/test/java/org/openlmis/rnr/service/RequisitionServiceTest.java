@@ -18,7 +18,6 @@ import org.openlmis.core.service.*;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrStatus;
-import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +74,7 @@ public class RequisitionServiceTest {
   @Before
   public void setup() {
     requisitionService = new RequisitionService(requisitionRepository, rnrTemplateRepository, facilityApprovedProductService,
-      supervisoryNodeService, roleRightService, programService, processingScheduleService);
+      supervisoryNodeService, roleRightService, programService, processingScheduleService, facilityService);
     submittedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, SUBMITTED)));
     initiatedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, INITIATED)));
   }
@@ -370,22 +369,33 @@ public class RequisitionServiceTest {
   public void shouldFetchAllRequisitionsForFacilitiesAndProgramSupervisedByUserForApproval() throws Exception {
     final RoleAssignment firstAssignment = new RoleAssignment(1,1,1,new SupervisoryNode());
     final RoleAssignment secondAssignment = new RoleAssignment(2,2,2, new SupervisoryNode());
-    final List<RnrDTO> requisitionsForFirstAssignment = new ArrayList<>();
-    final List<RnrDTO> requisitionsForSecondAssignment = new ArrayList<>();
+    final Rnr requisition = make(a(RequisitionBuilder.defaultRnr));
+    final List<Rnr> requisitionsForFirstAssignment = new ArrayList<Rnr>(){{
+      add(requisition);}};
+    final List<Rnr> requisitionsForSecondAssignment = new ArrayList<>();
     List<RoleAssignment> roleAssignments = new ArrayList<RoleAssignment>()
     {{add(firstAssignment);
       add(secondAssignment);}};
     when(roleRightService.getRoleAssignments(APPROVE_REQUISITION, USER_ID)).thenReturn(roleAssignments);
     when(requisitionRepository.getAuthorizedRequisitions(firstAssignment)).thenReturn(requisitionsForFirstAssignment);
     when(requisitionRepository.getAuthorizedRequisitions(secondAssignment)).thenReturn(requisitionsForSecondAssignment);
+    Program expectedProgram = new Program();
+    Facility expectedFacility = new Facility();
+    ProcessingPeriod expectedPeriod = new ProcessingPeriod();
+    when(programService.getById(3)).thenReturn(expectedProgram);
+    when(facilityService.getById(3)).thenReturn(expectedFacility);
+    when(processingScheduleService.getPeriodById(3)).thenReturn(expectedPeriod);
 
-    List<RnrDTO> requisitions = requisitionService.listForApproval(USER_ID);
+    List<Rnr> requisitions = requisitionService.listForApproval(USER_ID);
 
-    List<RnrDTO> expectedRequisitions = new ArrayList<RnrDTO>()
+    List<Rnr> expectedRequisitions = new ArrayList<Rnr>()
     {{addAll(requisitionsForFirstAssignment);
     addAll(requisitionsForSecondAssignment);}};
 
     assertThat(requisitions, is(expectedRequisitions));
+    assertThat(requisition.getProgram(), is(expectedProgram));
+    assertThat(requisition.getFacility(), is(expectedFacility));
+    assertThat(requisition.getPeriod(), is(expectedPeriod));
     verify(requisitionRepository, times(1)).getAuthorizedRequisitions(firstAssignment);
     verify(requisitionRepository, times(1)).getAuthorizedRequisitions(secondAssignment);
   }

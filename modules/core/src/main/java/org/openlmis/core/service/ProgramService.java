@@ -54,4 +54,8 @@ public class ProgramService {
   public Date getProgramStartDate(Integer facilityId, Integer programId) {
     return programSupportedRepository.getProgramStartDate(facilityId, programId);
   }
+
+  public Program getById(Integer id) {
+    return programRepository.getById(id);
+  }
 }

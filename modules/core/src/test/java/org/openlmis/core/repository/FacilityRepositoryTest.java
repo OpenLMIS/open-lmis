@@ -236,15 +236,15 @@ public class FacilityRepositoryTest {
   @Test
   public void shouldGetFacilityById() throws Exception {
     Facility facility = new Facility();
-    when(mockedFacilityMapper.get(1)).thenReturn(facility);
+    when(mockedFacilityMapper.getById(1)).thenReturn(facility);
     Integer id = 1;
     facility.setId(id);
     List<Program> programs = new ArrayList<>();
     when(mockedProgramMapper.getByFacilityId(1)).thenReturn(programs);
-    Facility facility1 = repository.getFacility(1);
+    Facility facility1 = repository.getById(1);
 
     assertThat(facility1.getSupportedPrograms(), is(programs));
-    verify(mockedFacilityMapper).get(1);
+    verify(mockedFacilityMapper).getById(1);
     verify(mockedProgramMapper).getByFacilityId(1);
 
   }

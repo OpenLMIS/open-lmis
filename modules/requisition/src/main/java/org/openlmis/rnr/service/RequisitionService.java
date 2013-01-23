@@ -8,7 +8,6 @@ import org.openlmis.core.service.*;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
-import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,10 +41,13 @@ public class RequisitionService {
   private RoleRightsService roleRightsService;
   private ProgramService programService;
   private ProcessingScheduleService processingScheduleService;
+  private FacilityService facilityService;
 
   @Autowired
-  public RequisitionService(RequisitionRepository requisitionRepository, RnrTemplateRepository rnrTemplateRepository, FacilityApprovedProductService facilityApprovedProductService,
-                            SupervisoryNodeService supervisoryNodeRepository, RoleRightsService roleRightsService, ProgramService programService, ProcessingScheduleService processingScheduleService) {
+  public RequisitionService(RequisitionRepository requisitionRepository, RnrTemplateRepository rnrTemplateRepository,
+                            FacilityApprovedProductService facilityApprovedProductService, SupervisoryNodeService supervisoryNodeRepository,
+                            RoleRightsService roleRightsService, ProgramService programService,
+                            ProcessingScheduleService processingScheduleService, FacilityService facilityService) {
     this.requisitionRepository = requisitionRepository;
     this.rnrTemplateRepository = rnrTemplateRepository;
     this.facilityApprovedProductService = facilityApprovedProductService;
@@ -53,6 +55,7 @@ public class RequisitionService {
     this.roleRightsService = roleRightsService;
     this.programService = programService;
     this.processingScheduleService = processingScheduleService;
+    this.facilityService = facilityService;
   }
 
   @Transactional
@@ -125,13 +128,23 @@ public class RequisitionService {
     return new OpenLmisMessage(msg);
   }
 
-  public List<RnrDTO> listForApproval(Integer userId) {
+  public List<Rnr> listForApproval(Integer userId) {
     List<RoleAssignment> assignments = roleRightsService.getRoleAssignments(APPROVE_REQUISITION, userId);
-    List<RnrDTO> requisitionsForApproval = new ArrayList<>();
+    List<Rnr> requisitionsForApproval = new ArrayList<>();
     for (RoleAssignment assignment : assignments) {
-      requisitionsForApproval.addAll(requisitionRepository.getAuthorizedRequisitions(assignment));
+      final List<Rnr> requisitions = requisitionRepository.getAuthorizedRequisitions(assignment);
+      requisitionsForApproval.addAll(requisitions);
     }
+    fillProgramFacilityPeriod(requisitionsForApproval);
     return requisitionsForApproval;
+  }
+
+  private void fillProgramFacilityPeriod(List<Rnr> requisitionsForApproval) {
+    for(Rnr requisition : requisitionsForApproval){
+      requisition.setProgram(programService.getById(requisition.getProgram().getId()));
+      requisition.setFacility(facilityService.getById(requisition.getFacility().getId()));
+      requisition.setPeriod(processingScheduleService.getPeriodById(requisition.getPeriod().getId()));
+    }
   }
 
   public List<ProcessingPeriod> getAllPeriodsForInitiatingRequisition(Integer facilityId, Integer programId) {

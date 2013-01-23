@@ -96,7 +96,7 @@ public class FacilityController extends BaseController {
   @PreAuthorize("hasPermission('','MANAGE_FACILITY')")
   public ResponseEntity<ModelMap> getFacility(@PathVariable(value = "id") Integer id) {
     ModelMap modelMap = new ModelMap();
-    modelMap.put("facility", facilityService.getFacility(id));
+    modelMap.put("facility", facilityService.getById(id));
     return new ResponseEntity<>(modelMap, HttpStatus.OK);
   }
 
@@ -117,7 +117,7 @@ public class FacilityController extends BaseController {
     }
     try {
       facilityService.updateDataReportableAndActiveFor(facility);
-      facility = facilityService.getFacility(facility.getId());
+      facility = facilityService.getById(facility.getId());
     } catch (DataException exception) {
       ResponseEntity<OpenLmisResponse> errorResponse = error(exception, HttpStatus.BAD_REQUEST);
       errorResponse.getBody().setData("facility", facility);

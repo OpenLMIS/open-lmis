@@ -9,8 +9,8 @@ public class RnrColumnTest {
 //        RnrColumn rnrColumn = new RnrColumn();
 //        List<RnRColumnSource> availableColumnTypes = rnrColumn.getAvailableColumnTypes();
 //        assertEquals(2, availableColumnTypes.size());
-//        assertEquals(RnRColumnSource.USER_INPUT, availableColumnTypes.get(0));
-//        assertEquals(RnRColumnSource.CALCULATED, availableColumnTypes.get(1));
+//        assertEquals(RnRColumnSource.USER_INPUT, availableColumnTypes.getById(0));
+//        assertEquals(RnRColumnSource.CALCULATED, availableColumnTypes.getById(1));
     }
 
 
