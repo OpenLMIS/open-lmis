@@ -15,7 +15,6 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.FacilityMapper;
-import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -41,15 +40,11 @@ public class FacilityRepositoryTest {
   public ExpectedException expectedEx = ExpectedException.none();
 
   @Mock
-  @SuppressWarnings("unused")
   private FacilityMapper mockedFacilityMapper;
-
   @Mock
   private ProgramSupportedRepository programSupportedRepository;
-
   @Mock
-  @SuppressWarnings("unused")
-  private ProgramMapper mockedProgramMapper;
+  private ProgramRepository programRepository;
 
   private FacilityRepository repository;
   private DateTime now;
@@ -60,7 +55,7 @@ public class FacilityRepositoryTest {
     now = new DateTime(2012, 10, 10, 8, 0);
     when(DateTime.now()).thenReturn(now);
     when(mockedFacilityMapper.isGeographicZonePresent(FacilityBuilder.GEOGRAPHIC_ZONE_ID)).thenReturn(Boolean.TRUE);
-    repository = new FacilityRepository(mockedFacilityMapper, programSupportedRepository, mockedProgramMapper, null);
+    repository = new FacilityRepository(mockedFacilityMapper, programSupportedRepository, programRepository, null);
   }
 
   @Test
@@ -82,7 +77,7 @@ public class FacilityRepositoryTest {
     int facilityId = 222;
     int programId = 111;
     when(mockedFacilityMapper.getIdForCode("facility code")).thenReturn(facilityId);
-    when(mockedProgramMapper.getIdForCode("program code")).thenReturn(programId);
+    when(programRepository.getIdByCode("program code")).thenReturn(programId);
 
     repository.addSupportedProgram(programSupported);
 
@@ -238,12 +233,12 @@ public class FacilityRepositoryTest {
     Integer id = 1;
     facility.setId(id);
     List<Program> programs = new ArrayList<>();
-    when(mockedProgramMapper.getByFacilityId(1)).thenReturn(programs);
+    when(programRepository.getByFacility(1)).thenReturn(programs);
     Facility facility1 = repository.getById(1);
 
     assertThat(facility1.getSupportedPrograms(), is(programs));
     verify(mockedFacilityMapper).getById(1);
-    verify(mockedProgramMapper).getByFacilityId(1);
+    verify(programRepository).getByFacility(1);
 
   }
 
@@ -282,11 +277,11 @@ public class FacilityRepositoryTest {
       add(make(a(ProgramBuilder.defaultProgram, with(programCode, "ARV"), with(programId, 2))));
     }};
 
-    when(mockedProgramMapper.getByFacilityId(facility.getId())).thenReturn(programsForFacility);
+    when(programRepository.getByFacility(facility.getId())).thenReturn(programsForFacility);
 
     repository.save(facility);
 
-    verify(mockedProgramMapper).getByFacilityId(facility.getId());
+    verify(programRepository).getByFacility(facility.getId());
     verify(programSupportedRepository).addSupportedProgram(new ProgramSupported(facility.getId(), 1, true, null, facility.getModifiedDate(), facility.getModifiedBy()));
     verify(programSupportedRepository).deleteSupportedPrograms(facility.getId(), 2);
   }

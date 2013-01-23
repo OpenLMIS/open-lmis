@@ -6,7 +6,6 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.repository.mapper.FacilityMapper;
-import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
@@ -21,15 +20,15 @@ public class FacilityRepository {
 
   private FacilityMapper facilityMapper;
   private ProgramSupportedRepository programSupportedRepository;
-  private ProgramMapper programMapper;
+  private ProgramRepository programRepository;
   private CommaSeparator commaSeparator;
 
   @Autowired
   public FacilityRepository(FacilityMapper facilityMapper, ProgramSupportedRepository programSupportedRepository,
-                            ProgramMapper programMapper, CommaSeparator commaSeparator) {
+                            ProgramRepository programRepository, CommaSeparator commaSeparator) {
     this.facilityMapper = facilityMapper;
     this.programSupportedRepository = programSupportedRepository;
-    this.programMapper = programMapper;
+    this.programRepository = programRepository;
     this.commaSeparator = commaSeparator;
   }
 
@@ -106,7 +105,7 @@ public class FacilityRepository {
   }
 
   private void updateFacility(Facility facility) {
-    List<Program> previouslySupportedPrograms = programMapper.getByFacilityId(facility.getId());
+    List<Program> previouslySupportedPrograms = programRepository.getByFacility(facility.getId());
     facilityMapper.update(facility);
     deleteObsoleteProgramMappings(facility, previouslySupportedPrograms);
     addUpdatableProgramMappings(facility, previouslySupportedPrograms);
@@ -152,7 +151,7 @@ public class FacilityRepository {
 
   public void addSupportedProgram(ProgramSupported programSupported) {
     programSupported.setFacilityId(facilityMapper.getIdForCode(programSupported.getFacilityCode()));
-    programSupported.setProgramId(programMapper.getIdForCode(programSupported.getProgramCode()));
+    programSupported.setProgramId(programRepository.getIdByCode(programSupported.getProgramCode()));
     insertSupportedProgram(programSupported);
   }
 
@@ -174,7 +173,7 @@ public class FacilityRepository {
 
   public Facility getById(Integer id) {
     Facility facility = facilityMapper.getById(id);
-    facility.setSupportedPrograms(programMapper.getByFacilityId(facility.getId()));
+    facility.setSupportedPrograms(programRepository.getByFacility(facility.getId()));
     return facility;
   }
 
