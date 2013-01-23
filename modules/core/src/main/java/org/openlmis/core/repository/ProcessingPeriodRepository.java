@@ -17,12 +17,10 @@ import java.util.List;
 public class ProcessingPeriodRepository {
 
   private ProcessingPeriodMapper mapper;
-  private RequisitionGroupProgramScheduleRepository requisitionGroupProgramScheduleRepository;
 
   @Autowired
-  public ProcessingPeriodRepository(ProcessingPeriodMapper processingPeriodMapper, RequisitionGroupProgramScheduleRepository requisitionGroupProgramScheduleRepository) {
+  public ProcessingPeriodRepository(ProcessingPeriodMapper processingPeriodMapper) {
     this.mapper = processingPeriodMapper;
-    this.requisitionGroupProgramScheduleRepository = requisitionGroupProgramScheduleRepository;
   }
 
   public List<ProcessingPeriod> getAll(Integer scheduleId) {

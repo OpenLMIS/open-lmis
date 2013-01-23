@@ -5,7 +5,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.exception.DataException;
@@ -22,23 +24,19 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.startDate;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ProcessingPeriodRepositoryTest {
-
   @Rule
   public ExpectedException exException = ExpectedException.none();
-
-  private ProcessingPeriodRepository repository;
 
   @Mock
   private ProcessingPeriodMapper mapper;
 
-  @Mock
-  private RequisitionGroupProgramScheduleRepository requisitionGroupProgramScheduleRepository;
+  private ProcessingPeriodRepository repository;
 
   @Before
   public void setUp() throws Exception {
-    initMocks(this);
-    repository = new ProcessingPeriodRepository(mapper, requisitionGroupProgramScheduleRepository);
+    repository = new ProcessingPeriodRepository(mapper);
   }
 
   @Test
