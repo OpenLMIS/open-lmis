@@ -1,4 +1,39 @@
 @import url("calendar.less");
+.home-background {
+  /* fallback */
+  background: url(../images/home-glow.png) no-repeat center top, #d6d6d6 url(../images/home-bg.png) no-repeat right 530px;
+}
+.home-content {
+  color: #a0a0a0;
+  font-family: 'HelveticaNeue-CondensedBold', Arial, sans-serif;
+  padding: 50px;
+  h2 {
+    font-size: 3em;
+    font-weight: normal;
+  }
+  h3 {
+    font-size: 4.2em;
+    line-height: 65px;
+    font-weight: normal;
+  }
+}
+.innershadow {
+  position: relative;
+  &:before, &:after {
+    content: attr(title);
+    color: rgba(255,255,255,1);
+    position: absolute;
+    opacity: 0.2;
+  }
+  &:before {
+    top: 1px;
+    left: -1px;
+  }
+  &:after {
+    top: 2px;
+    left: 0;
+  }
+}
 .content {
   min-height: 200px;
   background: white;
