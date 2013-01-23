@@ -73,4 +73,8 @@ public class FacilityService {
         List<RequisitionGroup> requisitionGroups = requisitionGroupService.getRequisitionGroupsBy(supervisoryNodes);
         return facilityRepository.getFacilitiesBy(programId, requisitionGroups);
     }
+
+  public List<Facility> searchFacilitiesByCodeOrName(String searchParam) {
+    return facilityRepository.searchFacilitiesByCodeOrName(searchParam);
+  }
 }

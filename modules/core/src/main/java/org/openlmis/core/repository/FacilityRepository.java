@@ -18,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 public class FacilityRepository {
 
-  private FacilityMapper facilityMapper;
+  private FacilityMapper mapper;
   private ProgramSupportedRepository programSupportedRepository;
   private ProgramRepository programRepository;
   private CommaSeparator commaSeparator;
@@ -26,18 +26,18 @@ public class FacilityRepository {
   @Autowired
   public FacilityRepository(FacilityMapper facilityMapper, ProgramSupportedRepository programSupportedRepository,
                             ProgramRepository programRepository, CommaSeparator commaSeparator) {
-    this.facilityMapper = facilityMapper;
+    this.mapper = facilityMapper;
     this.programSupportedRepository = programSupportedRepository;
     this.programRepository = programRepository;
     this.commaSeparator = commaSeparator;
   }
 
   public List<Facility> getAll() {
-    return facilityMapper.getAll();
+    return mapper.getAll();
   }
 
   public RequisitionHeader getHeader(Integer facilityId) {
-    return facilityMapper.getRequisitionHeaderData(facilityId);
+    return mapper.getRequisitionHeaderData(facilityId);
   }
 
   @Transactional
@@ -48,7 +48,7 @@ public class FacilityRepository {
       validateAndSetFacilityType(facility);
       validateGeographicZone(facility);
       if (facility.getId() == null) {
-        facilityMapper.insert(facility);
+        mapper.insert(facility);
         addListOfSupportedPrograms(facility);
       } else {
         updateFacility(facility);
@@ -71,7 +71,7 @@ public class FacilityRepository {
       throw new DataException("Missing mandatory reference data 'Geographic Zone Id'");
 
     Integer geographicZoneId = geographicZone.getId();
-    Boolean geographicZonePresent = facilityMapper.isGeographicZonePresent(geographicZoneId);
+    Boolean geographicZonePresent = mapper.isGeographicZonePresent(geographicZoneId);
 
     if (!geographicZonePresent)
       throw new DataException("Invalid reference data 'Geographic Zone Id'");
@@ -83,7 +83,7 @@ public class FacilityRepository {
       throw new DataException("Missing mandatory reference data 'Facility Type'");
 
     String facilityTypeCode = facilityType.getCode();
-    Integer facilityTypeId = facilityMapper.getFacilityTypeIdForCode(facilityTypeCode);
+    Integer facilityTypeId = mapper.getFacilityTypeIdForCode(facilityTypeCode);
 
     if (facilityTypeId == null)
       throw new DataException("Invalid reference data 'Facility Type'");
@@ -98,7 +98,7 @@ public class FacilityRepository {
     String operatedByCode = facility.getOperatedBy().getCode();
     if (operatedByCode == null || operatedByCode.isEmpty()) return;
 
-    Integer operatedById = facilityMapper.getOperatedByIdForCode(operatedByCode);
+    Integer operatedById = mapper.getOperatedByIdForCode(operatedByCode);
     if (operatedById == null) throw new DataException("Invalid reference data 'Operated By'");
 
     facility.getOperatedBy().setId(operatedById);
@@ -106,7 +106,7 @@ public class FacilityRepository {
 
   private void updateFacility(Facility facility) {
     List<Program> previouslySupportedPrograms = programRepository.getByFacility(facility.getId());
-    facilityMapper.update(facility);
+    mapper.update(facility);
     deleteObsoleteProgramMappings(facility, previouslySupportedPrograms);
     addUpdatableProgramMappings(facility, previouslySupportedPrograms);
   }
@@ -124,7 +124,7 @@ public class FacilityRepository {
     for (Program supportedProgram : facility.getSupportedPrograms()) {
       if (!(previouslySupportedPrograms).contains(supportedProgram)) {
         ProgramSupported newProgramsSupported = new ProgramSupported(facility.getId(), supportedProgram.getId(),
-            supportedProgram.getActive(), null, facility.getModifiedDate(), facility.getModifiedBy());
+          supportedProgram.getActive(), null, facility.getModifiedDate(), facility.getModifiedBy());
         insertSupportedProgram(newProgramsSupported);
       }
     }
@@ -150,49 +150,53 @@ public class FacilityRepository {
   }
 
   public void addSupportedProgram(ProgramSupported programSupported) {
-    programSupported.setFacilityId(facilityMapper.getIdForCode(programSupported.getFacilityCode()));
+    programSupported.setFacilityId(mapper.getIdForCode(programSupported.getFacilityCode()));
     programSupported.setProgramId(programRepository.getIdByCode(programSupported.getProgramCode()));
     insertSupportedProgram(programSupported);
   }
 
   public List<FacilityType> getAllTypes() {
-    return facilityMapper.getAllTypes();
+    return mapper.getAllTypes();
   }
 
   public List<FacilityOperator> getAllOperators() {
-    return facilityMapper.getAllOperators();
+    return mapper.getAllOperators();
   }
 
   public List<GeographicZone> getAllGeographicZones() {
-    return facilityMapper.getAllGeographicZones();
+    return mapper.getAllGeographicZones();
   }
 
   public Facility getHomeFacility(Integer userId) {
-    return facilityMapper.getHomeFacility(userId);
+    return mapper.getHomeFacility(userId);
   }
 
   public Facility getById(Integer id) {
-    Facility facility = facilityMapper.getById(id);
+    Facility facility = mapper.getById(id);
     facility.setSupportedPrograms(programRepository.getByFacility(facility.getId()));
     return facility;
   }
 
   public void updateDataReportableAndActiveFor(Facility facility) {
-    facilityMapper.updateDataReportableAndActiveFor(facility);
+    mapper.updateDataReportableAndActiveFor(facility);
 
   }
 
 
   public List<Facility> getFacilitiesBy(Integer programId, List<RequisitionGroup> requisitionGroups) {
-    return facilityMapper.getFacilitiesBy(programId, commaSeparator.commaSeparateIds(requisitionGroups));
+    return mapper.getFacilitiesBy(programId, commaSeparator.commaSeparateIds(requisitionGroups));
   }
 
   public Integer getIdForCode(String code) {
-    Integer facilityId = facilityMapper.getIdForCode(code);
+    Integer facilityId = mapper.getIdForCode(code);
 
     if (facilityId == null)
       throw new DataException("Invalid Facility Code");
 
     return facilityId;
+  }
+
+  public List<Facility> searchFacilitiesByCodeOrName(String searchParam) {
+    return mapper.searchFacilitiesByCodeOrName(searchParam);
   }
 }

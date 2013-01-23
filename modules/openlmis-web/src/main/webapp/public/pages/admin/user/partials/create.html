@@ -99,8 +99,25 @@
             </div>
         </div>
     </div>
+    <div class="form-row clearfix">
+      <div class="form-cell">
+        <div class="autosuggest-input">
+          <input id="searchFacility" type="text" ng-change="showFacilitySearchResults()" ng-model="query" placeholder="Enter facility code or name" />
 
-</div><!-- /form-group -->
+          <div class="form-tip">Minimum 3 characters</div>
+
+          <div class="facility-list" ng-show="query.length > 2">
+            <ul>
+              <li ng-repeat="facility in filteredFacilities">
+                <a href="#">{{facility.code}} - {{facility.name}}</a>
+              </li>
+            </ul>
+          </div>
+        </div><!-- autosuggest-input -->
+      </div>
+    </div>
+
+  </div><!-- /form-group -->
     <div id="action_buttons" class="action-buttons">
         <div class="form-cell button-row">
             <input type="submit" class="btn btn-success save-button" value="Save"/>

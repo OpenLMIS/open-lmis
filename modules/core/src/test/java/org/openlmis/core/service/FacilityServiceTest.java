@@ -10,6 +10,7 @@ import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.repository.FacilityRepository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
@@ -27,7 +28,7 @@ public class FacilityServiceTest {
     @Mock
     FacilityRepository facilityRepository;
 
-    FacilityService facilityService;
+    FacilityService service;
 
     @Mock
     private SupervisoryNodeService supervisoryNodeService;
@@ -37,34 +38,34 @@ public class FacilityServiceTest {
     @Before
     public void setUp() throws Exception {
         initMocks(this);
-        facilityService = new FacilityService(facilityRepository, supervisoryNodeService, requisitionGroupService);
+        service = new FacilityService(facilityRepository, supervisoryNodeService, requisitionGroupService);
     }
 
     @Test
     public void shouldStoreFacility() throws Exception {
         Facility facility = make(a(defaultFacility));
-        facilityService.save(facility);
+        service.save(facility);
         verify(facilityRepository).save(facility);
     }
 
     @Test
         public void shouldReturnEmptyListIfUserIsNotAssignedAFacility() {
         when(facilityRepository.getHomeFacility(1)).thenReturn(null);
-        assertTrue(facilityService.getAllForUser(1).isEmpty());
+        assertTrue(service.getAllForUser(1).isEmpty());
     }
 
     @Test
     public void shouldGetFacilityById() throws Exception {
         Integer id = 1;
         when(facilityRepository.getById(id)).thenReturn(new Facility());
-        Facility facility = facilityService.getById(id);
+        Facility facility = service.getById(id);
         assertThat(facility, is(new Facility()));
     }
 
     @Test
     public void shouldUpdateDataReportableAndActiveFor(){
         Facility facility = make(a(defaultFacility));
-        facilityService.updateDataReportableAndActiveFor(facility);
+        service.updateDataReportableAndActiveFor(facility);
         verify(facilityRepository).updateDataReportableAndActiveFor(facility);
 
 
@@ -81,11 +82,21 @@ public class FacilityServiceTest {
         when(supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(userId, programId, CREATE_REQUISITION)).thenReturn(supervisoryNodes);
         when(requisitionGroupService.getRequisitionGroupsBy(supervisoryNodes)).thenReturn(requisitionGroups);
 
-        List<Facility> result = facilityService.getUserSupervisedFacilities(userId, programId, CREATE_REQUISITION);
+        List<Facility> result = service.getUserSupervisedFacilities(userId, programId, CREATE_REQUISITION);
 
         verify(facilityRepository).getFacilitiesBy(programId, requisitionGroups);
         verify(supervisoryNodeService).getAllSupervisoryNodesInHierarchyBy(userId, programId, CREATE_REQUISITION);
         verify(requisitionGroupService).getRequisitionGroupsBy(supervisoryNodes);
         assertThat(result, is(facilities));
     }
+
+  @Test
+  public void shouldSearchFacilitiesByCodeOrName() throws Exception {
+    List<Facility> facilities = Arrays.asList(new Facility());
+    when(facilityRepository.searchFacilitiesByCodeOrName("searchParam")).thenReturn(facilities);
+
+    List<Facility> returnedFacilities = service.searchFacilitiesByCodeOrName("searchParam");
+
+    assertThat(returnedFacilities,is(facilities));
+  }
 }

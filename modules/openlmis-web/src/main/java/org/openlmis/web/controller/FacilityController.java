@@ -14,10 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -64,9 +61,9 @@ public class FacilityController extends BaseController {
   public Map getReferenceData() {
     FacilityReferenceData facilityReferenceData = new FacilityReferenceData();
     return facilityReferenceData.addFacilityTypes(facilityService.getAllTypes()).
-        addFacilityOperators(facilityService.getAllOperators()).
-        addGeographicZones(facilityService.getAllZones()).
-        addPrograms(programService.getAll()).get();
+      addFacilityOperators(facilityService.getAllOperators()).
+      addGeographicZones(facilityService.getAllZones()).
+      addPrograms(programService.getAll()).get();
   }
 
   @RequestMapping(value = "admin/facility", method = RequestMethod.POST, headers = "Accept=application/json")
@@ -137,4 +134,9 @@ public class FacilityController extends BaseController {
     return new ResponseEntity<>(modelMap, HttpStatus.OK);
   }
 
+  @RequestMapping(value = "/facilitiesByCodeOrName.json", method = RequestMethod.GET)
+  @PreAuthorize("hasPermission('','MANAGE_USERS')")
+  public List<Facility> searchFacilitiesByCodeOrName(@RequestParam(value = "searchParam") String searchParam) {
+    return facilityService.searchFacilitiesByCodeOrName(searchParam);
+  }
 }

@@ -834,6 +834,33 @@ table td.delete-button {
   }
 }
 
+.autosuggest-input {
+  position: relative;
+  .facility-list {
+    position: absolute;
+    background: white;
+    left: 0;
+    top: 19px;
+    font-size: 0.9em;
+    width: 501px;
+    box-shadow: 1px 2px 3px rgba(0,0,0,0.1);
+    border-radius: 0 0 3px 3px;
+    li {
+      border: 0;
+      &:hover {
+        a {
+          text-decoration: none;
+          background-color: rgb(218, 218, 218);
+        }
+      }
+      a {
+        padding: 6px 10px;
+        color: #444;
+      }
+    }
+  }
+}
+
 .editBtn {
   position: relative ;
   left: 700px;

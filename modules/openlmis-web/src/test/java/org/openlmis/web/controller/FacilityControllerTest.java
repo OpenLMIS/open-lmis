@@ -164,6 +164,16 @@ public class FacilityControllerTest {
 
   }
 
+  @Test
+  public void shouldSearchFacilitiesByCodeOrName() throws Exception {
+    List<Facility> facilities = Arrays.asList(new Facility());
+    when(facilityService.searchFacilitiesByCodeOrName("searchParam")).thenReturn(facilities);
+
+    List<Facility> returnedFacilities = facilityController.searchFacilitiesByCodeOrName("searchParam");
+
+    assertThat(returnedFacilities,is(facilities));
+  }
+
   private MockHttpServletRequest httpRequest() {
     MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
     MockHttpSession mockHttpSession = new MockHttpSession();

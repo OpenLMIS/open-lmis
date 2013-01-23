@@ -31,10 +31,39 @@ describe("User", function () {
       expect(scope.showError).toBeTruthy();
     });
 
-    it("should throw error when username contains space", function() {
+    it("should throw error when username contains space", function () {
       scope.user = {"userName":"User 420"};
       expect(scope.validateUserName()).toBeTruthy();
     });
+
+    it("should get facilities when user enters 3 characters in search", function () {
+      var facilityResponse = {"facilityList":[
+        {"code":"F101"}
+      ]};
+      $httpBackend.expectGET('/facilitiesByCodeOrName.json?searchParam=F10').respond(facilityResponse);
+
+      scope.query = "F10";
+      scope.showFacilitySearchResults();
+
+      $httpBackend.flush();
+      expect(scope.filteredFacilities).toEqual([
+        {"code":"F101"}
+      ]);
+    })
+
+    it("should filter facilities when more than 3 characters are entered for search", function () {
+      scope.facilityList = [
+        {"code":"F10111"},
+        {"code":"F10200"}
+      ];
+
+      scope.query = "F101";
+      scope.showFacilitySearchResults();
+
+      expect(scope.filteredFacilities).toEqual([
+        {"code":"F10111"}
+      ]);
+    })
 
   });
 

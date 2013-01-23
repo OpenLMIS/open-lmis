@@ -21,6 +21,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -40,7 +41,7 @@ public class FacilityRepositoryTest {
   public ExpectedException expectedEx = ExpectedException.none();
 
   @Mock
-  private FacilityMapper mockedFacilityMapper;
+  private FacilityMapper mapper;
   @Mock
   private ProgramSupportedRepository programSupportedRepository;
   @Mock
@@ -54,18 +55,18 @@ public class FacilityRepositoryTest {
     mockStatic(DateTime.class);
     now = new DateTime(2012, 10, 10, 8, 0);
     when(DateTime.now()).thenReturn(now);
-    when(mockedFacilityMapper.isGeographicZonePresent(FacilityBuilder.GEOGRAPHIC_ZONE_ID)).thenReturn(Boolean.TRUE);
-    repository = new FacilityRepository(mockedFacilityMapper, programSupportedRepository, programRepository, null);
+    when(mapper.isGeographicZonePresent(FacilityBuilder.GEOGRAPHIC_ZONE_ID)).thenReturn(Boolean.TRUE);
+    repository = new FacilityRepository(mapper, programSupportedRepository, programRepository, null);
   }
 
   @Test
   public void shouldInsertFacility() throws Exception {
     Facility facility = make(a(defaultFacility));
 
-    when(mockedFacilityMapper.insert(facility)).thenReturn(1);
+    when(mapper.insert(facility)).thenReturn(1);
     repository.save(facility);
     assertThat(facility.getModifiedDate(), is(now.toDate()));
-    verify(mockedFacilityMapper).insert(facility);
+    verify(mapper).insert(facility);
   }
 
   @Test
@@ -76,7 +77,7 @@ public class FacilityRepositoryTest {
 
     int facilityId = 222;
     int programId = 111;
-    when(mockedFacilityMapper.getIdForCode("facility code")).thenReturn(facilityId);
+    when(mapper.getIdForCode("facility code")).thenReturn(facilityId);
     when(programRepository.getIdByCode("program code")).thenReturn(programId);
 
     repository.addSupportedProgram(programSupported);
@@ -106,7 +107,7 @@ public class FacilityRepositoryTest {
     Facility facility = make(a(defaultFacility));
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Duplicate Facility Code found");
-    doThrow(new DuplicateKeyException("")).when(mockedFacilityMapper).insert(facility);
+    doThrow(new DuplicateKeyException("")).when(mapper).insert(facility);
     repository.save(facility);
   }
 
@@ -115,7 +116,7 @@ public class FacilityRepositoryTest {
     Facility facility = make(a(defaultFacility));
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Missing/Invalid Reference data");
-    doThrow(new DataIntegrityViolationException("foreign key")).when(mockedFacilityMapper).insert(facility);
+    doThrow(new DataIntegrityViolationException("foreign key")).when(mapper).insert(facility);
     repository.save(facility);
   }
 
@@ -124,7 +125,7 @@ public class FacilityRepositoryTest {
     Facility facility = make(a(defaultFacility));
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Missing/Invalid Reference data");
-    doThrow(new DataIntegrityViolationException("violates not-null constraint")).when(mockedFacilityMapper).insert(facility);
+    doThrow(new DataIntegrityViolationException("violates not-null constraint")).when(mapper).insert(facility);
     repository.save(facility);
   }
 
@@ -134,7 +135,7 @@ public class FacilityRepositoryTest {
     programSupported.setFacilityCode("facility code");
     programSupported.setProgramCode("program code");
 
-    when(mockedFacilityMapper.getFacilityTypeIdForCode("facility code")).thenReturn(1);
+    when(mapper.getFacilityTypeIdForCode("facility code")).thenReturn(1);
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Facility has already been mapped to the program");
@@ -147,7 +148,7 @@ public class FacilityRepositoryTest {
     Facility facility = make(a(defaultFacility));
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Incorrect data length");
-    doThrow(new DataIntegrityViolationException("value too long")).when(mockedFacilityMapper).insert(facility);
+    doThrow(new DataIntegrityViolationException("value too long")).when(mapper).insert(facility);
     repository.save(facility);
   }
 
@@ -155,7 +156,7 @@ public class FacilityRepositoryTest {
   public void shouldRaiseInvalidReferenceDataOperatedByError() throws Exception {
     Facility facility = make(a(defaultFacility));
     facility.getOperatedBy().setCode("invalid code");
-    when(mockedFacilityMapper.getOperatedByIdForCode("invalid code")).thenReturn(null);
+    when(mapper.getOperatedByIdForCode("invalid code")).thenReturn(null);
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Invalid reference data 'Operated By'");
@@ -166,7 +167,7 @@ public class FacilityRepositoryTest {
   public void shouldSetFacilityOperatorIdWhenCodeIsValid() throws Exception {
     Facility facility = make(a(defaultFacility));
     facility.getOperatedBy().setCode("valid code");
-    when(mockedFacilityMapper.getOperatedByIdForCode("valid code")).thenReturn(1);
+    when(mapper.getOperatedByIdForCode("valid code")).thenReturn(1);
 
     repository.save(facility);
     assertThat(facility.getOperatedBy().getId(), is(1));
@@ -176,7 +177,7 @@ public class FacilityRepositoryTest {
   public void shouldRaiseInvalidReferenceDataFacilityTypeError() throws Exception {
     Facility facility = make(a(defaultFacility));
     facility.getFacilityType().setCode("invalid code");
-    when(mockedFacilityMapper.getFacilityTypeIdForCode("invalid code")).thenReturn(null);
+    when(mapper.getFacilityTypeIdForCode("invalid code")).thenReturn(null);
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Invalid reference data 'Facility Type'");
@@ -187,7 +188,7 @@ public class FacilityRepositoryTest {
   public void shouldRaiseInvalidReferenceGeographicZoneIdError() throws Exception {
     Facility facility = make(a(defaultFacility));
     facility.getGeographicZone().setId(999);
-    when(mockedFacilityMapper.isGeographicZonePresent(999)).thenReturn(Boolean.FALSE);
+    when(mapper.isGeographicZonePresent(999)).thenReturn(Boolean.FALSE);
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Invalid reference data 'Geographic Zone Id'");
@@ -208,7 +209,7 @@ public class FacilityRepositoryTest {
   public void shouldSetFacilityTypeIdWhenCodeIsValid() throws Exception {
     Facility facility = make(a(defaultFacility));
     facility.getFacilityType().setCode("valid code");
-    when(mockedFacilityMapper.getFacilityTypeIdForCode("valid code")).thenReturn(1);
+    when(mapper.getFacilityTypeIdForCode("valid code")).thenReturn(1);
 
     repository.save(facility);
     assertThat(facility.getFacilityType().getId(), is(1));
@@ -220,7 +221,7 @@ public class FacilityRepositoryTest {
     programSupported.setFacilityCode("invalid Code");
     programSupported.setProgramCode("valid Code");
 
-    when(mockedFacilityMapper.getIdForCode("invalid Code")).thenThrow(new DataException("Invalid Facility Code"));
+    when(mapper.getIdForCode("invalid Code")).thenThrow(new DataException("Invalid Facility Code"));
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Invalid Facility Code");
     repository.addSupportedProgram(programSupported);
@@ -229,7 +230,7 @@ public class FacilityRepositoryTest {
   @Test
   public void shouldGetFacilityById() throws Exception {
     Facility facility = new Facility();
-    when(mockedFacilityMapper.getById(1)).thenReturn(facility);
+    when(mapper.getById(1)).thenReturn(facility);
     Integer id = 1;
     facility.setId(id);
     List<Program> programs = new ArrayList<>();
@@ -237,9 +238,8 @@ public class FacilityRepositoryTest {
     Facility facility1 = repository.getById(1);
 
     assertThat(facility1.getSupportedPrograms(), is(programs));
-    verify(mockedFacilityMapper).getById(1);
+    verify(mapper).getById(1);
     verify(programRepository).getByFacility(1);
-
   }
 
   @Test
@@ -248,8 +248,8 @@ public class FacilityRepositoryTest {
     facility.setId(1);
 
     repository.save(facility);
-    verify(mockedFacilityMapper).update(facility);
-    verify(mockedFacilityMapper, never()).insert(facility);
+    verify(mapper).update(facility);
+    verify(mapper, never()).insert(facility);
   }
 
   @Test
@@ -257,7 +257,7 @@ public class FacilityRepositoryTest {
     Facility facility = make(a(defaultFacility));
     facility.setId(null);
     repository.save(facility);
-    verify(mockedFacilityMapper, never()).update(facility);
+    verify(mapper, never()).update(facility);
   }
 
   @Test
@@ -291,20 +291,30 @@ public class FacilityRepositoryTest {
 
     Facility facility = make(a(defaultFacility));
     repository.updateDataReportableAndActiveFor(facility);
-    verify(mockedFacilityMapper).updateDataReportableAndActiveFor(facility);
+    verify(mapper).updateDataReportableAndActiveFor(facility);
   }
 
   @Test
   public void shouldReturnIdForTheGivenCode() {
-    when(mockedFacilityMapper.getIdForCode("ABC")).thenReturn(10);
+    when(mapper.getIdForCode("ABC")).thenReturn(10);
     assertThat(repository.getIdForCode("ABC"), is(10));
   }
 
   @Test
   public void shouldThrowExceptionWhenCodeDoesNotExist() {
-    Mockito.when(mockedFacilityMapper.getIdForCode("ABC")).thenReturn(null);
+    Mockito.when(mapper.getIdForCode("ABC")).thenReturn(null);
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Invalid Facility Code");
     repository.getIdForCode("ABC");
+  }
+
+  @Test
+  public void shouldSearchFacilitiesByCodeOrName() throws Exception {
+    List<Facility> facilityList = Arrays.asList(new Facility());
+    when(mapper.searchFacilitiesByCodeOrName("query")).thenReturn(facilityList);
+
+    List<Facility> returnedFacilities = repository.searchFacilitiesByCodeOrName("query");
+
+    assertThat(returnedFacilities, is(facilityList));
   }
 }

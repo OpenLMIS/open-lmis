@@ -128,3 +128,7 @@ services.factory('FacilityApprovedProducts', function ($resource) {
 services.factory('UserById', function ($resource) {
   return $resource('/admin/user/:id.json', {}, {});
 });
+
+services.factory('SearchFacilitiesByCodeOrName', function ($resource) {
+  return $resource('/facilitiesByCodeOrName.json', {}, {});
+});
