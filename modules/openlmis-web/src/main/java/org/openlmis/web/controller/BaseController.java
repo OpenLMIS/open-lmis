@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +17,7 @@ import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.U
 public class BaseController {
   private static Logger logger = LoggerFactory.getLogger(ApplicationLogger.class);
   public static final String UNEXPECTED_EXCEPTION = "unexpected.exception";
+  public static final String FORBIDDEN_EXCEPTION = "forbidden.exception";
 
   protected String loggedInUser(HttpServletRequest request) {
     return (String) request.getSession().getAttribute(USER);
@@ -29,9 +31,13 @@ public class BaseController {
     return "redirect:/public/pages/index.html";
   }
 
+
   @ExceptionHandler(Exception.class)
   public ResponseEntity<OpenLmisResponse> handleException(Exception ex) {
-    logger.error("something broke with following exception... ",ex);
+    logger.error("something broke with following exception... ", ex);
+    if (ex instanceof AccessDeniedException) {
+      return OpenLmisResponse.error(FORBIDDEN_EXCEPTION, HttpStatus.FORBIDDEN);
+    }
     return OpenLmisResponse.error(UNEXPECTED_EXCEPTION, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }
