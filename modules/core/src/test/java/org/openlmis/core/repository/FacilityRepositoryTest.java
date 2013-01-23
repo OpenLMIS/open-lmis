@@ -16,7 +16,6 @@ import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProgramMapper;
-import org.openlmis.core.repository.mapper.ProgramSupportedMapper;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -46,8 +45,7 @@ public class FacilityRepositoryTest {
   private FacilityMapper mockedFacilityMapper;
 
   @Mock
-  @SuppressWarnings("unused")
-  private ProgramSupportedMapper mockedProgramSupportedMapper;
+  private ProgramSupportedRepository programSupportedRepository;
 
   @Mock
   @SuppressWarnings("unused")
@@ -62,7 +60,7 @@ public class FacilityRepositoryTest {
     now = new DateTime(2012, 10, 10, 8, 0);
     when(DateTime.now()).thenReturn(now);
     when(mockedFacilityMapper.isGeographicZonePresent(FacilityBuilder.GEOGRAPHIC_ZONE_ID)).thenReturn(Boolean.TRUE);
-    repository = new FacilityRepository(mockedFacilityMapper, mockedProgramSupportedMapper, mockedProgramMapper, null);
+    repository = new FacilityRepository(mockedFacilityMapper, programSupportedRepository, mockedProgramMapper, null);
   }
 
   @Test
@@ -92,7 +90,7 @@ public class FacilityRepositoryTest {
     assertThat(programSupported.getFacilityId(), is(facilityId));
     assertThat(programSupported.getProgramId(), is(programId));
 
-    verify(mockedProgramSupportedMapper).addSupportedProgram(programSupported);
+    verify(programSupportedRepository).addSupportedProgram(programSupported);
   }
 
   @Test
@@ -105,7 +103,7 @@ public class FacilityRepositoryTest {
     }};
     facility.setSupportedPrograms(programs);
     repository.save(facility);
-    verify(mockedProgramSupportedMapper, times(2)).addSupportedProgram(any(ProgramSupported.class));
+    verify(programSupportedRepository, times(2)).addSupportedProgram(any(ProgramSupported.class));
   }
 
   @Test
@@ -145,7 +143,7 @@ public class FacilityRepositoryTest {
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Facility has already been mapped to the program");
-    doThrow(new DuplicateKeyException("Facility has already been mapped to the program")).when(mockedProgramSupportedMapper).addSupportedProgram(programSupported);
+    doThrow(new DuplicateKeyException("Facility has already been mapped to the program")).when(programSupportedRepository).addSupportedProgram(programSupported);
     repository.addSupportedProgram(programSupported);
   }
 
@@ -289,8 +287,8 @@ public class FacilityRepositoryTest {
     repository.save(facility);
 
     verify(mockedProgramMapper).getByFacilityId(facility.getId());
-    verify(mockedProgramSupportedMapper).addSupportedProgram(new ProgramSupported(facility.getId(), 1, true, null, facility.getModifiedDate(), facility.getModifiedBy()));
-    verify(mockedProgramSupportedMapper).delete(facility.getId(), 2);
+    verify(programSupportedRepository).addSupportedProgram(new ProgramSupported(facility.getId(), 1, true, null, facility.getModifiedDate(), facility.getModifiedBy()));
+    verify(programSupportedRepository).deleteSupportedPrograms(facility.getId(), 2);
   }
 
   @Test
