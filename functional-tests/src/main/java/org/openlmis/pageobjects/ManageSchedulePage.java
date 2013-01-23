@@ -75,10 +75,10 @@ public class ManageSchedulePage extends Page {
         testWebDriver.waitForElementToAppear(addScheduleButton);
         enterCreateScheduleDetails("Q1stM","QuarterMonthly","QuarterMonth" );
         SeleneseTestNgHelper.assertTrue("'QuarterMonthly' created successfully message not showing up", saveSuccessMsgDiv.isDisplayed());
-        verifyMessage("'QuarterMonthly' created successfully");
+        //verifyMessage("'QuarterMonthly' created successfully");
         enterCreateScheduleDetails("M","Monthly","Month" );
         SeleneseTestNgHelper.assertTrue("'Monthly' created successfully message not showing up", saveSuccessMsgDiv.isDisplayed());
-        verifyMessage("'Monthly' created successfully");
+        //verifyMessage("'Monthly' created successfully");
         SeleneseTestNgHelper.assertTrue("First edit button is not showing up", editFirstButton.isDisplayed());
         SeleneseTestNgHelper.assertTrue("Second edit button is not showing up", editSecondButton.isDisplayed());
     }
@@ -101,13 +101,13 @@ public class ManageSchedulePage extends Page {
     {
        testWebDriver.waitForElementToAppear(editFirstButton);
         enterEditScheduleDetails("M1","Monthly1","Month" );
-        SeleneseTestNgHelper.assertTrue("'Monthly1' created successfully message not showing up", saveSuccessMsgDiv.isDisplayed());
-        verifyMessage("'Monthly1' updated successfully");
+        SeleneseTestNgHelper.assertTrue("'Monthly1' updated successfully message not showing up", saveSuccessMsgDiv.isDisplayed());
+        //verifyMessage("'Monthly1' updated successfully");
         SeleneseTestNgHelper.assertEquals(codeFirstNonEditableField.getText().trim(), "M1");
 
         enterEditScheduleDetails("M","Monthly","Month" );
-        SeleneseTestNgHelper.assertTrue("'Monthly' created successfully message not showing up", saveSuccessMsgDiv.isDisplayed());
-        verifyMessage("'Monthly' updated successfully");
+        SeleneseTestNgHelper.assertTrue("'Monthly' updated successfully message not showing up", saveSuccessMsgDiv.isDisplayed());
+        //verifyMessage("'Monthly' updated successfully");
         SeleneseTestNgHelper.assertEquals(codeFirstNonEditableField.getText().trim(), "M");
 
 
