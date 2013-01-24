@@ -5,6 +5,63 @@ describe('CreateRnrController', function () {
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
 
+  describe("initialization", function () {
+
+    beforeEach(inject(function ($httpBackend, $rootScope, $location, $controller) {
+      controller = $controller;
+      scope = $rootScope.$new();
+      scope.$parent.facility = "10134";
+      scope.$parent.program = {code:"programCode", "id":1};
+      scope.saveRnrForm = {$error:{ rnrError:false }};
+      routeParams = {"facility":"1", "program":"1", "period":2};
+      httpBackend.expect('GET', '/requisitions/lossAndAdjustments/reference-data.json').respond({"lossAdjustmentTypes":{}});
+
+    }));
+
+    it('should set rnr in scope after successful initialization', function () {
+      var mockedRequisition = {'status':"INITIATED"};
+      httpBackend.when('GET', '/requisitions.json?facilityId=1&periodId=2&programId=1').respond({'rnr':mockedRequisition});
+
+      controller(CreateRnrController, {$scope:scope, $routeParams:routeParams});
+
+      httpBackend.flush();
+
+      expect(scope.rnr).toEqual(mockedRequisition);
+    });
+
+    it('should calculated and set 2 decimal rounded cost in rnrLineItem', function () {
+      var mockedRequisition = {'status':"INITIATED", 'lineItems':[
+        {'id':456, 'product':'Name', 'lossesAndAdjustments':[], 'packsToShip':10.333, 'price':2 }
+      ]};
+      httpBackend.when('GET', '/requisitions.json?facilityId=1&periodId=2&programId=1').respond({'rnr':mockedRequisition});
+      controller(CreateRnrController, {$scope:scope, $routeParams:routeParams});
+      httpBackend.flush();
+
+      mockedRequisition.lineItems[0].cost = 20.67;
+      expect(scope.rnrLineItems[0].rnrLineItem).toEqual(mockedRequisition.lineItems[0]);
+    });
+
+    it('should initialize losses and adjustments, if not present in R&R', function () {
+      var mockedRequisition = {'status':"INITIATED",
+        'lineItems':[
+          {'id':123, 'product':'Commodity Name' },
+          {'id':456, 'product':'2nd Commodity', 'lossesAndAdjustments':[
+            {'quantity':33}
+          ] }
+        ]
+      };
+      httpBackend.when('GET', '/requisitions.json?facilityId=1&periodId=2&programId=1').respond({'rnr':mockedRequisition});
+      controller(CreateRnrController, {$scope:scope, $routeParams:routeParams});
+      httpBackend.flush();
+
+      expect(scope.rnrLineItems[0].rnrLineItem.lossesAndAdjustments).toEqual([]);
+      expect(scope.rnrLineItems[1].rnrLineItem.lossesAndAdjustments).toEqual([
+        {'quantity':33}
+      ]);
+    });
+  });
+
+
   beforeEach(inject(function ($httpBackend, $rootScope, $location, $controller, $routeParams, _localStorageService_) {
     scope = $rootScope.$new();
     $rootScope.hasPermission = function () {
@@ -41,11 +98,6 @@ describe('CreateRnrController', function () {
       {"name":"some other name"}
     ];
   }));
-
-  it('should set rnr in scope after successful initialization', function () {
-    httpBackend.flush();
-    expect(scope.rnr).toEqual({"status":"CREATED"});
-  });
 
   it('should get list of Rnr Columns for program', function () {
     httpBackend.flush();
@@ -272,15 +324,15 @@ describe('CreateRnrController', function () {
   });
 
   it('should return if the rnrLineItem is fullSupply', function () {
-    var rnrLineItemFullSupply = new RnrLineItem({fullSupply:true}) ;
-    var rnrLineItemNonFullSupply= new RnrLineItem({fullSupply:false});
+    var rnrLineItemFullSupply = new RnrLineItem({fullSupply:true});
+    var rnrLineItemNonFullSupply = new RnrLineItem({fullSupply:false});
 
     expect(scope.isFullSupply(rnrLineItemFullSupply)).toEqual(true);
     expect(scope.isFullSupply(rnrLineItemNonFullSupply)).toEqual(false);
   });
   it('should return if the rnrLineItem is nonFullSupply', function () {
-    var rnrLineItemFullSupply = new RnrLineItem({fullSupply:true}) ;
-    var rnrLineItemNonFullSupply= new RnrLineItem({fullSupply:false});
+    var rnrLineItemFullSupply = new RnrLineItem({fullSupply:true});
+    var rnrLineItemNonFullSupply = new RnrLineItem({fullSupply:false});
 
     expect(scope.isNonFullSupply(rnrLineItemFullSupply)).toEqual(false);
     expect(scope.isNonFullSupply(rnrLineItemNonFullSupply)).toEqual(true);

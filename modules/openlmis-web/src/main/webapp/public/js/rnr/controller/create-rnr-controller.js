@@ -20,12 +20,19 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     populateRnrLineItems($scope.$parent.rnr);
   }
 
-  FacilityApprovedProducts.get({facilityId :$routeParams.facility , programId:$routeParams.program},
-    function(data){
-   $scope.nonFullSupplyProducts = data.nonFullSupplyProducts;
-      //alert($scope.nonFullSupplyProducts)         ;
-  },  function (data) {
-      //alert(data);
+  function populateRnrLineItems(rnr) {
+      $(rnr.lineItems).each(function (i, lineItem) {
+        lineItem.cost = parseFloat((lineItem.packsToShip * lineItem.price).toFixed(2));
+        if(lineItem.lossesAndAdjustments == undefined) lineItem.lossesAndAdjustments = [];
+        var rnrLineItem = new RnrLineItem(lineItem);
+        $scope.rnrLineItems.push(rnrLineItem);
+      });
+    }
+
+  FacilityApprovedProducts.get({facilityId:$routeParams.facility, programId:$routeParams.program},
+    function (data) {
+      $scope.nonFullSupplyProducts = data.nonFullSupplyProducts;
+    }, function (data) {
     });
 
   ReferenceData.get({}, function (data) {
@@ -251,17 +258,9 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
 
   $scope.isFullSupply = function(rnrLineItemPrototype){
     return rnrLineItemPrototype.rnrLineItem.fullSupply;
-  }
+  };
 
   $scope.isNonFullSupply = function(rnrLineItemPrototype){
     return !rnrLineItemPrototype.rnrLineItem.fullSupply;
-  }
-
-  function populateRnrLineItems(rnr) {
-    $(rnr.lineItems).each(function (i, lineItem) {
-      lineItem.cost = parseFloat((lineItem.packsToShip * lineItem.price).toFixed(2));
-      var rnrLineItem = new RnrLineItem(lineItem);
-      $scope.rnrLineItems.push(rnrLineItem);
-    });
   }
 }

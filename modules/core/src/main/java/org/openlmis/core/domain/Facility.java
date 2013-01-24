@@ -11,12 +11,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonSerialize(include = Inclusion.NON_NULL)
+@JsonSerialize(include = NON_EMPTY)
 public class Facility implements Importable, BaseModel {
 
     private Integer id;
