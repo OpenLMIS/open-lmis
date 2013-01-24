@@ -31,7 +31,7 @@ public class RequisitionService {
   public static final String RNR_AUTHORIZED_SUCCESSFULLY = "rnr.authorized.success";
   public static final String RNR_SUBMITTED_SUCCESSFULLY = "rnr.submitted.success";
   public static final String RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR = "rnr.authorized.without.supervisor";
-  public static final String NO_SUPERVISORY_NODE_CONTACT_ADMIN = "rnr.submitted.without.supervisor";
+  public static final String NO_SUPERVISORY_NODE_CONTACT_THE_ADMINISTRATOR = "rnr.submitted.without.supervisor";
   public static final String RNR_PREVIOUS_NOT_FILLED_ERROR = "rnr.previous.not.filled.error";
 
   private RequisitionRepository requisitionRepository;
@@ -108,7 +108,7 @@ public class RequisitionService {
     requisitionRepository.update(rnr);
 
     SupervisoryNode supervisoryNode = supervisoryNodeService.getFor(rnr.getFacilityId(), rnr.getProgramId());
-    String msg = (supervisoryNode == null) ? NO_SUPERVISORY_NODE_CONTACT_ADMIN : RNR_SUBMITTED_SUCCESSFULLY;
+    String msg = (supervisoryNode == null) ? NO_SUPERVISORY_NODE_CONTACT_THE_ADMINISTRATOR : RNR_SUBMITTED_SUCCESSFULLY;
     return new OpenLmisMessage(msg);
   }
 

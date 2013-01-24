@@ -2,9 +2,7 @@ package org.openlmis.rnr.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.FacilityApprovedProduct;
 import org.openlmis.core.domain.Money;
 import org.openlmis.core.domain.Product;
@@ -16,19 +14,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
-
 @Data
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonSerialize(include = NON_EMPTY)
 public class RnrLineItem {
 
   public static final Float MULTIPLIER = 3f;
   public static final Float NUMBER_OF_DAYS = 30f;
   private Integer id;
-
-  @JsonIgnore
   private Integer rnrId;
 
   //todo hack to display it on UI. This is concatenated string of Product properties like name, strength, form and dosage unit
@@ -65,12 +58,8 @@ public class RnrLineItem {
   private Integer packsToShip;
   private String remarks;
 
-  @JsonIgnore
   private Integer modifiedBy;
-
-  @JsonIgnore
   private Date modifiedDate;
-
   private Money price;
 
   public RnrLineItem(Integer rnrId, FacilityApprovedProduct facilityApprovedProduct, Integer modifiedBy) {
@@ -109,7 +98,7 @@ public class RnrLineItem {
 
   public boolean validate(boolean formulaValidationRequired) {
     if (!validateMandatoryFields() || !validateCalculatedFields(formulaValidationRequired)) {
-      throw new DataException(new OpenLmisMessage(Rnr.RNR_VALIDATION_ERROR));
+      throw  new DataException(new OpenLmisMessage(Rnr.RNR_VALIDATION_ERROR));
     }
     return true;
   }
@@ -125,7 +114,7 @@ public class RnrLineItem {
 
   private boolean validateCalculatedFields(boolean formulaValidationRequired) {
     boolean validQuantityDispensed = true;
-    if (formulaValidationRequired) {
+    if(formulaValidationRequired) {
       validQuantityDispensed = (quantityDispensed == (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand));
     }
     return ((quantityDispensed >= 0) && (stockInHand >= 0)) && validQuantityDispensed &&

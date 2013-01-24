@@ -2,13 +2,9 @@ package org.openlmis.core.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
 @NoArgsConstructor
-@JsonSerialize(include = NON_EMPTY)
 public class FacilityType {
     private Integer id;
     private String code;
