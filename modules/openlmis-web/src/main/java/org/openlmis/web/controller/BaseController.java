@@ -13,11 +13,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
+import static org.openlmis.web.response.OpenLmisResponse.error;
 
 public class BaseController {
   private static Logger logger = LoggerFactory.getLogger(ApplicationLogger.class);
   public static final String UNEXPECTED_EXCEPTION = "unexpected.exception";
   public static final String FORBIDDEN_EXCEPTION = "forbidden.exception";
+  public static final String ACCEPT_JSON = "Accept=application/json";
 
   protected String loggedInUser(HttpServletRequest request) {
     return (String) request.getSession().getAttribute(USER);
@@ -36,8 +38,8 @@ public class BaseController {
   public ResponseEntity<OpenLmisResponse> handleException(Exception ex) {
     logger.error("something broke with following exception... ", ex);
     if (ex instanceof AccessDeniedException) {
-      return OpenLmisResponse.error(FORBIDDEN_EXCEPTION, HttpStatus.FORBIDDEN);
+      return error(FORBIDDEN_EXCEPTION, HttpStatus.FORBIDDEN);
     }
-    return OpenLmisResponse.error(UNEXPECTED_EXCEPTION, HttpStatus.INTERNAL_SERVER_ERROR);
+    return error(UNEXPECTED_EXCEPTION, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }

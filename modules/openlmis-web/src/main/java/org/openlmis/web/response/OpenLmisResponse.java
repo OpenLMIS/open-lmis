@@ -21,7 +21,7 @@ public class OpenLmisResponse {
   private Map<String, Object> data = new HashMap<>();
 
   public OpenLmisResponse(String key, Object data) {
-    setData(key, data);
+    this.data.put(key, data);
   }
 
   public static ResponseEntity<OpenLmisResponse> success(String successMsgCode) {
