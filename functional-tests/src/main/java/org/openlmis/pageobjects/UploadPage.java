@@ -91,6 +91,14 @@ public class UploadPage extends Page {
         SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
     }
 
+    public void uploadProgramProductPrice() throws FileNotFoundException {
+        selectUploadType("Program Product Price");
+        uploadFile("Product_Cost.csv");
+        testWebDriver.sleep(250);
+        testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
+        SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
+    }
+
     public void uploadProgramSupportedByFacilities() throws FileNotFoundException {
         selectUploadType("Programs supported by facilities");
         uploadFile("program_supported.csv");

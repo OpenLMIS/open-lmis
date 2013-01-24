@@ -120,6 +120,7 @@ public class DBWrapper {
         dbwrapper.dbConnection("delete from role_assignments where userid not in (1);", "alter");
         dbwrapper.dbConnection("delete from roles where name not in ('Admin');", "alter");
         dbwrapper.dbConnection("delete from facility_approved_products;", "alter");
+        dbwrapper.dbConnection("delete from program_product_price_history;", "alter");
         dbwrapper.dbConnection("delete from program_products;", "alter");
         dbwrapper.dbConnection("DELETE FROM requisition_line_item_losses_adjustments;", "alter");
         dbwrapper.dbConnection("DELETE FROM requisition_line_items;", "alter");
