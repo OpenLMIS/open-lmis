@@ -6,6 +6,7 @@ function RequisitionHeaderController($scope, RequisitionHeader, $location, $rout
   });
 
   $scope.periodDisplayName = function () {
+    if($scope.$parent.period == undefined) return "";
     var startDate = new Date($scope.$parent.period.startDate);
     var endDate = new Date($scope.$parent.period.endDate);
 
