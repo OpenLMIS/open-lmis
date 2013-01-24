@@ -124,8 +124,8 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
               $scope.$parent.program = $scope.selectedProgram;
               $scope.$parent.period = $scope.selectedPeriod;
               $location.path('/create-rnr/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + '/' + $scope.selectedPeriod.id);
-            }, function () {
-              $scope.error = "Requisition does not exist. Please initiate.";
+            }, function (data) {
+              $scope.error = data.data.error ? data.data.error : "Requisition does not exist. Please initiate.";
             })
           }
         }, {});

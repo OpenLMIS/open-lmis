@@ -27,7 +27,7 @@ describe('InitiateRnrController', function () {
   });
 
 
-  it('should set error message if program not defined', function () {
+  it('should set error message if facility not defined', function () {
     scope.initRnr();
     expect(scope.error).toEqual("Please select Facility, Program and Period to proceed");
   });
@@ -59,6 +59,20 @@ describe('InitiateRnrController', function () {
     $httpBackend.flush();
 
     expect(scope.error).toEqual("An R&R has not been submitted yet");
+  });
+
+  it('should give error if rnr template has not been defined yet', function () {
+    scope.selectedProgram = {"code":"hiv", "id":2};
+    scope.selectedFacilityId = 1;
+    scope.selectedPeriod = {"id":3};
+    spyOn(rootScope, 'hasPermission').andReturn(true);
+    $httpBackend.expectGET('/requisitions.json?facilityId=1&periodId=3&programId=2').respond(null);
+    $httpBackend.expectPOST('/requisitions.json?facilityId=1&periodId=3&programId=2').respond(400, {"error":"errorMessage"});
+
+    scope.initRnr();
+    $httpBackend.flush();
+
+    expect(scope.error).toEqual("errorMessage");
   });
 
   it('should create a rnr if rnr not already initiated', function () {
