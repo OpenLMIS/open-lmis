@@ -99,6 +99,10 @@ public class HomePage extends Page {
     @FindBy(how = How.XPATH, using = "//a[contains(text(),'Upload')]")
     private static WebElement uploadLink;
 
+    @FindBy(how = How.XPATH, using = "//input[@ng-click='initRnr()']")
+    private static WebElement proceedButton;
+
+
     public HomePage(TestWebDriver driver) throws  IOException {
         super(driver);
         PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
@@ -160,11 +164,9 @@ public class HomePage extends Page {
         testWebDriver.waitForElementToAppear(programDropDown);
         programDropDown.click();
         testWebDriver.selectByVisibleText(programDropDownSelect, program);
-        testWebDriver.waitForElementToAppear(periodDropDown);
-        periodDropDown.click();
-        testWebDriver.waitForElementToAppear(periodDropDownSelect);
-        testWebDriver.selectByIndex(periodDropDownSelect, 1);
-        nextButton.click();
+        testWebDriver.waitForElementToAppear(proceedButton);
+        proceedButton.click();
+
         return new InitiateRnRPage(testWebDriver);
     }
 
