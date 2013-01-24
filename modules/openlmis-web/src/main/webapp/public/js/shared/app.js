@@ -61,19 +61,8 @@ angular.module('openlmis', ['openlmis.services','openlmis.localStorage','ui.dire
           }
         });
 
-        $(".navigation li").on("mouseover", function () {
-          $(this).children('.submenu').show();
-        });
-        $(".navigation li").on("mouseout", function () {
-          $(this).children('.submenu').hide();
-        });
         $(".navigation li > a").on("click", function () {
-          if($(this).next(".submenu").length) {
-            $(this).next(".submenu").show();
-          }
-          else {
-            $(".submenu").hide();
-          }
+          $(this).next(".submenu").show();
         });
       });
     }
