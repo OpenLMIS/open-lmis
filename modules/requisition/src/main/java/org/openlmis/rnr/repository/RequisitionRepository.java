@@ -61,14 +61,7 @@ public class RequisitionRepository {
   }
 
   public Rnr getRequisition(Integer facilityId, Integer programId, Integer periodId) {
-    Rnr rnr = mapper.getRequisition(facilityId, programId, periodId);
-    if (rnr == null) return null;
-
-    rnr.setLineItems(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()));
-    for (RnrLineItem rnrLineItem : rnr.getLineItems()) {
-      rnrLineItem.setLossesAndAdjustments(lossesAndAdjustmentsMapper.getByRnrLineItem(rnrLineItem.getId()));
-    }
-    return rnr;
+    return mapper.getRequisition(facilityId, programId, periodId);
   }
 
   public List<LossesAndAdjustmentsType> getLossesAndAdjustmentsTypes() {

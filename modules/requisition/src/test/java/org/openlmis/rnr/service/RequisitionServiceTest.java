@@ -74,13 +74,13 @@ public class RequisitionServiceTest {
   @Before
   public void setup() {
     requisitionService = new RequisitionService(requisitionRepository, rnrTemplateRepository, facilityApprovedProductService,
-      supervisoryNodeService, roleRightService, programService, processingScheduleService, facilityService);
+        supervisoryNodeService, roleRightService, programService, processingScheduleService, facilityService);
     submittedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, SUBMITTED)));
     initiatedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, INITIATED)));
   }
 
   @Test
-  public void shouldInitRequisition() throws Exception{
+  public void shouldInitRequisition() throws Exception {
     Date date = new Date();
     Rnr requisition = createRequisition(PERIOD_ID, null);
     ProcessingPeriod validPeriod = setupForInitRnr(date, requisition, PERIOD_ID);
@@ -127,7 +127,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY_ID, PROGRAM_ID)).thenReturn(date1.toDate());
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY_ID, PROGRAM_ID)).thenReturn(rnr2);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY_ID, PROGRAM_ID, date1.toDate(), processingPeriod2.getId())).
-      thenReturn(Arrays.asList(processingPeriod3, processingPeriod4));
+        thenReturn(Arrays.asList(processingPeriod3, processingPeriod4));
 
     List<ProcessingPeriod> periods = requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY_ID, PROGRAM_ID);
 
@@ -147,7 +147,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY_ID, PROGRAM_ID)).thenReturn(date1.toDate());
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY_ID, PROGRAM_ID)).thenReturn(null);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY_ID, PROGRAM_ID, date1.toDate(), null)).
-      thenReturn(Arrays.asList(processingPeriod1, processingPeriod2));
+        thenReturn(Arrays.asList(processingPeriod1, processingPeriod2));
 
     List<ProcessingPeriod> periods = requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY_ID, PROGRAM_ID);
 
@@ -158,13 +158,13 @@ public class RequisitionServiceTest {
 
   private Rnr createRequisition(int periodId, RnrStatus status) {
     return make(a(RequisitionBuilder.defaultRnr,
-      with(RequisitionBuilder.periodId, periodId),
-      with(RequisitionBuilder.status, status)));
+        with(RequisitionBuilder.periodId, periodId),
+        with(RequisitionBuilder.status, status)));
   }
 
   private ProcessingPeriod createProcessingPeriod(int id, DateTime startDate) {
     ProcessingPeriod processingPeriod = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod,
-      with(ProcessingPeriodBuilder.startDate, startDate.toDate())));
+        with(ProcessingPeriodBuilder.startDate, startDate.toDate())));
     processingPeriod.setId(id);
     return processingPeriod;
   }
@@ -202,7 +202,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY_ID, PROGRAM_ID)).thenReturn(date);
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY_ID, PROGRAM_ID)).thenReturn(requisition);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY_ID, PROGRAM_ID, date, PERIOD_ID)).
-      thenReturn(Arrays.asList(validPeriod));
+        thenReturn(Arrays.asList(validPeriod));
     when(rnrTemplateRepository.isRnrTemplateDefined(PROGRAM_ID)).thenReturn(true);
     return validPeriod;
   }
@@ -367,15 +367,17 @@ public class RequisitionServiceTest {
 
   @Test
   public void shouldFetchAllRequisitionsForFacilitiesAndProgramSupervisedByUserForApproval() throws Exception {
-    final RoleAssignment firstAssignment = new RoleAssignment(1,1,1,new SupervisoryNode());
-    final RoleAssignment secondAssignment = new RoleAssignment(2,2,2, new SupervisoryNode());
+    final RoleAssignment firstAssignment = new RoleAssignment(1, 1, 1, new SupervisoryNode());
+    final RoleAssignment secondAssignment = new RoleAssignment(2, 2, 2, new SupervisoryNode());
     final Rnr requisition = make(a(RequisitionBuilder.defaultRnr));
-    final List<Rnr> requisitionsForFirstAssignment = new ArrayList<Rnr>(){{
-      add(requisition);}};
+    final List<Rnr> requisitionsForFirstAssignment = new ArrayList<Rnr>() {{
+      add(requisition);
+    }};
     final List<Rnr> requisitionsForSecondAssignment = new ArrayList<>();
-    List<RoleAssignment> roleAssignments = new ArrayList<RoleAssignment>()
-    {{add(firstAssignment);
-      add(secondAssignment);}};
+    List<RoleAssignment> roleAssignments = new ArrayList<RoleAssignment>() {{
+      add(firstAssignment);
+      add(secondAssignment);
+    }};
     when(roleRightService.getRoleAssignments(APPROVE_REQUISITION, USER_ID)).thenReturn(roleAssignments);
     when(requisitionRepository.getAuthorizedRequisitions(firstAssignment)).thenReturn(requisitionsForFirstAssignment);
     when(requisitionRepository.getAuthorizedRequisitions(secondAssignment)).thenReturn(requisitionsForSecondAssignment);
@@ -388,9 +390,10 @@ public class RequisitionServiceTest {
 
     List<Rnr> requisitions = requisitionService.listForApproval(USER_ID);
 
-    List<Rnr> expectedRequisitions = new ArrayList<Rnr>()
-    {{addAll(requisitionsForFirstAssignment);
-    addAll(requisitionsForSecondAssignment);}};
+    List<Rnr> expectedRequisitions = new ArrayList<Rnr>() {{
+      addAll(requisitionsForFirstAssignment);
+      addAll(requisitionsForSecondAssignment);
+    }};
 
     assertThat(requisitions, is(expectedRequisitions));
     assertThat(requisition.getProgram(), is(expectedProgram));
@@ -400,4 +403,11 @@ public class RequisitionServiceTest {
     verify(requisitionRepository, times(1)).getAuthorizedRequisitions(secondAssignment);
   }
 
+  @Test
+  public void shouldGetRequisitionById() throws Exception {
+    Rnr rnr = new Rnr();
+    when(requisitionRepository.getById(1)).thenReturn(rnr);
+
+    assertThat(requisitionService.getById(1), is(rnr));
+  }
 }

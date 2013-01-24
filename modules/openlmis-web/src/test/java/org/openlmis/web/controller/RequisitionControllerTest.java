@@ -1,5 +1,6 @@
 package org.openlmis.web.controller;
 
+import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
@@ -23,7 +24,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.core.Is.is;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -68,11 +69,27 @@ public class RequisitionControllerTest {
   }
 
   @Test
-  public void shouldGetRnrIfExists() throws Exception {
+  public void shouldGetRnrByFacilityProgramAndPeriodIfExists() throws Exception {
     ResponseEntity<OpenLmisResponse> response = controller.get(1, 2, 3);
 
     verify(requisitionService).get(1, 2, 3);
     assertThat(response.getStatusCode(), is(equalTo(HttpStatus.OK)));
+  }
+
+  @Test
+  public void shouldGetRnrByIdIfExists() throws Exception {
+    ResponseEntity<OpenLmisResponse> response = controller.getById(1);
+
+    verify(requisitionService).getById(1);
+    assertThat(response.getStatusCode(), is(equalTo(HttpStatus.OK)));
+  }
+
+  @Test
+  public void shouldReturnErrorResponseIfServiceThrowsException() throws Exception {
+    String errorMessage = "error-message";
+    doThrow(new DataException(errorMessage)).when(requisitionService).getById(1);
+    ResponseEntity<OpenLmisResponse> response = controller.getById(1);
+    assertThat(response.getBody().getErrorMsg(), is(equalTo(errorMessage)));
   }
 
   @Test
@@ -160,31 +177,27 @@ public class RequisitionControllerTest {
   @Test
   public void shouldReturnListOfUserSupervisedRnrForApproval() {
     final Rnr requisition = createRequisition();
-    final List<Rnr> requisitions = new ArrayList<Rnr>(){{add(requisition);}};
+    final List<Rnr> requisitions = new ArrayList<Rnr>() {{
+      add(requisition);
+    }};
     when(requisitionService.listForApproval(USER_ID)).thenReturn(requisitions);
     final ResponseEntity<OpenLmisResponse> response = controller.listForApproval(request);
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    final List<RnrDTO> requisitionsList = (List<RnrDTO>)response.getBody().getData().get(RNR_LIST);
+    final List<RnrDTO> requisitionsList = (List<RnrDTO>) response.getBody().getData().get(RNR_LIST);
     assertThat(requisitionsList.get(0).getFacilityName(), is(FACILITY_NAME));
     assertThat(requisitionsList.get(0).getFacilityCode(), is(FACILITY_CODE));
     assertThat(requisitionsList.get(0).getProgramName(), is(PROGRAM_NAME));
     verify(requisitionService).listForApproval(USER_ID);
   }
 
-  private Rnr createRequisition() {
-    Rnr requisition = new Rnr();
-    final Facility facility = new Facility();
-    facility.setCode(FACILITY_CODE);
-    facility.setName(FACILITY_NAME);
-    final Program program = new Program();
-    program.setName(PROGRAM_NAME);
-    final ProcessingPeriod period = new ProcessingPeriod();
-    period.setStartDate(new Date());
-    period.setEndDate(new Date(1111232323L));
-    requisition.setFacility(facility);
-    requisition.setProgram(program);
-    requisition.setPeriod(period);
-    return requisition;
+  @Test
+  public void shouldApproveRequisitionAndTagWithModifiedBy() throws Exception {
+    when(requisitionService.approve(rnr)).thenReturn(new OpenLmisMessage("some message"));
+    final ResponseEntity<OpenLmisResponse> response = controller.approve(rnr, request);
+    verify(requisitionService).approve(rnr);
+    assertThat(rnr.getModifiedBy(), CoreMatchers.is(USER_ID));
+    assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    assertThat(response.getBody().getSuccessMsg(), is("some message"));
   }
 
   @Test
@@ -212,6 +225,22 @@ public class RequisitionControllerTest {
     ResponseEntity<OpenLmisResponse> response = controller.getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(1, 2);
 
     assertThat(response.getBody().getErrorMsg(), is(errorMessage));
+  }
+
+  private Rnr createRequisition() {
+    Rnr requisition = new Rnr();
+    final Facility facility = new Facility();
+    facility.setCode(FACILITY_CODE);
+    facility.setName(FACILITY_NAME);
+    final Program program = new Program();
+    program.setName(PROGRAM_NAME);
+    final ProcessingPeriod period = new ProcessingPeriod();
+    period.setStartDate(new Date());
+    period.setEndDate(new Date(1111232323L));
+    requisition.setFacility(facility);
+    requisition.setProgram(program);
+    requisition.setPeriod(period);
+    return requisition;
   }
 }
 

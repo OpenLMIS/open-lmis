@@ -93,6 +93,8 @@ public class RequisitionService {
     return requisitionRepository.getRequisition(facilityId, programId, periodId);
   }
 
+
+
   public List<LossesAndAdjustmentsType> getLossesAndAdjustmentsTypes() {
     return requisitionRepository.getLossesAndAdjustmentsTypes();
   }
@@ -153,6 +155,15 @@ public class RequisitionService {
 
     Integer periodIdOfLastRequisitionToEnterPostSubmitFlow = lastRequisitionToEnterThePostSubmitFlow == null ? null : lastRequisitionToEnterThePostSubmitFlow.getPeriodId();
     return processingScheduleService.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate, periodIdOfLastRequisitionToEnterPostSubmitFlow);
+  }
+
+  public OpenLmisMessage approve(Rnr rnr) {
+    return null;  //To change body of created methods use File | Settings | File Templates.
+  }
+
+  public Rnr getById(Integer id) {
+    return requisitionRepository.getById(id);
+
   }
 }
 

@@ -1,9 +1,12 @@
 function ApproveRnrListController($scope, requisitionList, $location) {
   $scope.requisitions = requisitionList;
   $scope.filteredRequisitions = $scope.requisitions;
+  $scope.selectedItems = [];
 
   $scope.gridOptions = { data:'filteredRequisitions',
-    canSelectRows:false,
+    multiSelect:false,
+    selectedItems: $scope.selectedItems,
+    afterSelectionChange: function(rowItem, event){$scope.openRnr()},
     displayFooter:false,
     displaySelectionCheckbox:false,
     showColumnMenu:false,
@@ -16,18 +19,12 @@ function ApproveRnrListController($scope, requisitionList, $location) {
       {field:'periodStartDate', displayName:"Period Start Date", cellFilter:"date:'dd/MM/yyyy'"},
       {field:'periodEndDate', displayName:"Period End Date", cellFilter:"date:'dd/MM/yyyy'"},
       {field:'submittedDate', displayName:"Date Submitted", cellFilter:"date:'dd/MM/yyyy'"},
-      {field:'modifiedDate', displayName:"Date Modified", cellFilter:"date:'dd/MM/yyyy'"},
-      {displayName:"View", cellTemplate:linkCellTemplate()}
+      {field:'modifiedDate', displayName:"Date Modified", cellFilter:"date:'dd/MM/yyyy'"}
     ]
   };
 
-  function linkCellTemplate( ) {
-    var divElement = '<button ng-click="openRnr(row.entity.id, row.entity.)">View</button>';
-    return divElement;
-  };
-
-  $scope.openRnr = function (id) {
-    $location.path('/rnr-for-approval/'+id);
+  $scope.openRnr = function () {
+    $location.path("rnr-for-approval/"+$scope.selectedItems[0].id+'/'+$scope.selectedItems[0].programId);
   };
 
   $scope.filterRequisitions = function () {

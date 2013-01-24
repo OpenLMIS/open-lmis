@@ -124,6 +124,9 @@ public class RnrLineItemMapperIT {
 
     assertThat(rnrLineItems.size(), is(1));
     RnrLineItem rnrLineItem = rnrLineItems.get(0);
+
+    assertThat(rnrLineItem.getId(), is(lineItem.getId()));
+    assertThat(rnrLineItem.getLossesAndAdjustments().size(), is(2));
     assertThat(rnrLineItem.getRnrId(), is(rnr.getId()));
     assertThat(rnrLineItem.getDosesPerMonth(), is(30));
     assertThat(rnrLineItem.getDosesPerDispensingUnit(), is(10));

@@ -12,21 +12,26 @@ import static com.natpryce.makeiteasy.Property.newProperty;
 
 public class RnrLineItemBuilder {
 
-  public static final Property<RnrLineItem,Float> cost = newProperty();
+
+  public static final Property<RnrLineItem, Float> cost = newProperty();
+  public static final Property<RnrLineItem, LossesAndAdjustments> lossesAndAdjustments = newProperty();
+  public static final LossesAndAdjustments ONE_LOSS = new LossesAndAdjustments() {{
+    setQuantity(1);
+    LossesAndAdjustmentsType type = new LossesAndAdjustmentsType();
+    type.setAdditive(true);
+    type.setName("TRANSFER_IN");
+    setType(type);
+  }};
   public static final Instantiator<RnrLineItem> defaultRnrLineItem = new Instantiator<RnrLineItem>() {
 
     @Override
     public RnrLineItem instantiate(PropertyLookup<RnrLineItem> lookup) {
       RnrLineItem rnrLineItem = new RnrLineItem();
-
+      rnrLineItem.setProductCode("some random code");
       rnrLineItem.setBeginningBalance(10);
       rnrLineItem.setQuantityReceived(3);
-      LossesAndAdjustments oneLoss = new LossesAndAdjustments();
-      oneLoss.setQuantity(1);
-      LossesAndAdjustmentsType type = new LossesAndAdjustmentsType();
-      type.setAdditive(true);
-      oneLoss.setType(type);
-      rnrLineItem.addLossesAndAdjustments(oneLoss);
+
+      rnrLineItem.addLossesAndAdjustments(lookup.valueOf(lossesAndAdjustments, ONE_LOSS));
       rnrLineItem.setTotalLossesAndAdjustments(1);
       rnrLineItem.setStockInHand(4);
       rnrLineItem.setQuantityDispensed(10);
@@ -42,7 +47,7 @@ public class RnrLineItemBuilder {
       rnrLineItem.setDosesPerDispensingUnit(10);
       rnrLineItem.setNormalizedConsumption(37F);
       rnrLineItem.setAmc(37f);
-
+      rnrLineItem.setFullSupply(true);
       rnrLineItem.setMaxMonthsOfStock(2);
       rnrLineItem.setMaxStockQuantity(74);
       rnrLineItem.setCalculatedOrderQuantity(70);

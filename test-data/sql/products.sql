@@ -16,4 +16,7 @@ INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, 
 INSERT INTO facility_approved_products(facilityTypeId, programProductId, maxMonthsOfStock) VALUES
 (1, (SELECT id FROM program_products WHERE programId=1 AND productId=(SELECT id FROM products WHERE  code='P10')), 3),
 (1, (SELECT id FROM program_products WHERE programId=1 AND productId=(SELECT id FROM products WHERE  code='P11')), 3),
-(1, (SELECT id FROM program_products WHERE programId=1 AND productId=(SELECT id FROM products WHERE  code='P12')), 3);
+(1, (SELECT id FROM program_products WHERE programId=1 AND productId=(SELECT id FROM products WHERE  code='P12')), 3),
+(2, (SELECT id FROM program_products WHERE programId=1 AND productId=(SELECT id FROM products WHERE  code='P10')), 3),
+(2, (SELECT id FROM program_products WHERE programId=1 AND productId=(SELECT id FROM products WHERE  code='P11')), 3),
+(2, (SELECT id FROM program_products WHERE programId=1 AND productId=(SELECT id FROM products WHERE  code='P12')), 3);

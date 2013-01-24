@@ -19,6 +19,7 @@ public class RnrDTO {
 
   private Integer id;
   private String programName;
+  private Integer programId;
   private String facilityName;
   private String facilityCode;
   private Date submittedDate;
@@ -37,6 +38,7 @@ public class RnrDTO {
   private static RnrDTO prepareForListApproval(Rnr requisition) {
     RnrDTO rnrDTO = new RnrDTO();
     rnrDTO.id = requisition.getId();
+    rnrDTO.programId = requisition.getProgram().getId();
     rnrDTO.programName = requisition.getProgram().getName();
     rnrDTO.facilityCode = requisition.getFacility().getCode();
     rnrDTO.facilityName = requisition.getFacility().getName();

@@ -1,9 +1,6 @@
 package org.openlmis.rnr.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.springframework.stereotype.Repository;
 
@@ -25,7 +22,11 @@ public interface RnrLineItemMapper {
   public Integer insert(RnrLineItem rnrLineItem);
 
   @Select("SELECT * FROM requisition_line_items WHERE rnrId = #{rnrId}")
-  public List<RnrLineItem> getRnrLineItemsByRnrId(Integer rnrId);
+  @Results(value = {
+      @Result(property = "id", column = "id"),
+      @Result(property = "lossesAndAdjustments", javaType =List.class, column = "id", many = @Many(select = "org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper.getByRnrLineItem"))
+  })
+    public List<RnrLineItem> getRnrLineItemsByRnrId(Integer rnrId);
 
   @Update("UPDATE requisition_line_items " +
     "SET quantityReceived = #{quantityReceived}, " +

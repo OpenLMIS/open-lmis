@@ -4,16 +4,12 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openlmis.core.builder.FacilityBuilder;
-import org.openlmis.core.builder.ProcessingPeriodBuilder;
-import org.openlmis.core.builder.ProcessingScheduleBuilder;
-import org.openlmis.core.builder.SupervisoryNodeBuilder;
+import org.openlmis.core.builder.*;
 import org.openlmis.core.domain.*;
-import org.openlmis.core.repository.mapper.FacilityMapper;
-import org.openlmis.core.repository.mapper.ProcessingPeriodMapper;
-import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
-import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
+import org.openlmis.core.repository.mapper.*;
+import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.domain.RnrStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -51,12 +47,26 @@ public class RequisitionMapperIT {
   @Autowired
   private RequisitionMapper mapper;
   @Autowired
+  RnrLineItemMapper lineItemMapper;
+  @Autowired
+  LossesAndAdjustmentsMapper lossMapper;
+  @Autowired
   private ProcessingPeriodMapper processingPeriodMapper;
   @Autowired
   private ProcessingScheduleMapper processingScheduleMapper;
   private ProcessingPeriod processingPeriod3;
   @Autowired
   SupervisoryNodeMapper supervisoryNodeMapper;
+  @Autowired
+  private ProductMapper productMapper;
+  @Autowired
+  private ProgramProductMapper programProductMapper;
+  @Autowired
+  private FacilityApprovedProductMapper facilityApprovedProductMapper;
+  @Autowired
+  private ProgramMapper programMapper;
+
+
   private SupervisoryNode supervisoryNode;
 
   @Before
@@ -125,12 +135,15 @@ public class RequisitionMapperIT {
   @Test
   public void shouldGetRnrById() throws Exception {
     Rnr requisition = insertRequisition(processingPeriod1, INITIATED);
-
+    setupLineItem(requisition);
     Rnr returnedRequisition = mapper.getById(requisition.getId());
 
-    assertThat(returnedRequisition.getFacilityId(),is(requisition.getFacilityId()));
-    assertThat(returnedRequisition.getStatus(),is(requisition.getStatus()));
-    assertThat(returnedRequisition.getId(),is(requisition.getId()));
+    assertThat(returnedRequisition.getLineItems().size(), is(1));
+    final RnrLineItem item = returnedRequisition.getLineItems().get(0);
+    assertThat(item.getLossesAndAdjustments().size(), is(1));
+    assertThat(returnedRequisition.getFacilityId(), is(requisition.getFacilityId()));
+    assertThat(returnedRequisition.getStatus(), is(requisition.getStatus()));
+    assertThat(returnedRequisition.getId(), is(requisition.getId()));
   }
 
   @Test
@@ -192,6 +205,25 @@ public class RequisitionMapperIT {
     return rnr;
   }
 
+  private void setupLineItem(Rnr rnr) {
+    Product product = make(a(ProductBuilder.defaultProduct));
+    productMapper.insert(product);
+
+    Program program = make(a(ProgramBuilder.defaultProgram));
+    programMapper.insert(program);
+
+    ProgramProduct programProduct = new ProgramProduct(program, product, 30, true, new Money("12.5000"));
+    programProductMapper.insert(programProduct);
+
+    FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct("warehouse", programProduct, 3);
+    facilityApprovedProductMapper.insert(facilityApprovedProduct);
+
+
+    RnrLineItem item = new RnrLineItem(rnr.getId(), facilityApprovedProduct, 1);
+    lineItemMapper.insert(item);
+    lossMapper.insert(item, RnrLineItemBuilder.ONE_LOSS);
+  }
+
   private ProcessingPeriod insertPeriod(String name) {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod,
         with(scheduleId, processingSchedule.getId()),
@@ -209,4 +241,6 @@ public class RequisitionMapperIT {
     supervisoryNodeMapper.insert(supervisoryNode);
     return supervisoryNode;
   }
+
+
 }
