@@ -61,6 +61,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
     enableColumnResize:true,
     enableColumnReordering:true,
     showColumnMenu:false,
+    showFilter:false,
     columnDefs:[
       {field:'name', displayName:'Period(s)'},
       {field:'startDate', displayName:'Start Date', cellFilter:"date:'dd/MM/yyyy'" },
