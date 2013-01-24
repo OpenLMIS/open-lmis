@@ -12,7 +12,7 @@ public interface ProgramProductPriceMapper {
   @Options(useGeneratedKeys = true)
   void insertNewCurrentPrice(ProgramProductPrice programProductPrice);
 
-  @Update({"UPDATE program_product_price_history SET endDate = DEFAULT, modifiedBy = #{modifiedBy} where programProductId = #{programProduct.id} AND endDate IS NULL"})
+  @Update({"UPDATE program_product_price_history SET endDate = DEFAULT, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT where programProductId = #{programProduct.id} AND endDate IS NULL"})
   void closeLastActivePrice(ProgramProductPrice programProductPrice);
 
   @Select({"SELECT * FROM program_product_price_history where id = #{id}"})
