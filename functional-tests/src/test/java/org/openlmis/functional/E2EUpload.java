@@ -58,6 +58,9 @@ public class E2EUpload extends TestCaseHelper {
         uploadPage.uploadProgramProductMapping();
         testWebDriver.setImplicitWait(2500);
 
+        uploadPage.uploadProgramProductPrice();
+        testWebDriver.setImplicitWait(2500);
+
         uploadPage.uploadFacilities();
         testWebDriver.setImplicitWait(2500);
 
