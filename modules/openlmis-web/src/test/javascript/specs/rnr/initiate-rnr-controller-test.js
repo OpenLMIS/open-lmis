@@ -94,25 +94,36 @@ describe('InitiateRnrController', function () {
 
     it('should load periods for selected facility and program', function () {
       var periods = [
-        {"name":"First Month", "description":"First Month Description"}
+        {"id":1, "name":"First Month", "description":"First Month Description"},
+        {"id":2, "name":"Second Month", "description":"Second Month Description"},
+        {"id":3, "name":"Third Month", "description":"Third Month Description"}
       ];
-      $httpBackend.expectGET('/logistics/facility/20/program/10/periods.json').respond({"periods":periods});
+      var rnr = {"id":1, "status":"INITIATED", "periodId":1};
+      $httpBackend.expectGET('/logistics/facility/20/program/10/periods.json').respond({"periods":periods, "rnr":rnr});
 
       scope.loadPeriods();
       $httpBackend.flush();
 
-      expect(scope.periods).toEqual(periods);
+      expect(scope.periodGridData).toEqual([
+        {"id":1, "name":"First Month", "description":"First Month Description", "rnrId":1, "rnrStatus":"INITIATED", "activeForRnr":true},
+        {"id":2, "name":"Second Month", "description":"Second Month Description", "rnrStatus":"Previous R&R pending"},
+        {"id":3, "name":"Third Month", "description":"Third Month Description", "rnrStatus":"Previous R&R pending"}
+      ]);
+      expect(scope.selectedPeriod).toEqual(periods[0]);
       expect(scope.error).toEqual('');
     });
 
-    it('should display error if no periods found for selected facility and program', function () {
-      $httpBackend.expectGET('/logistics/facility/20/program/10/periods.json').respond({"periods":[]});
+    it('should display appropriate message if no periods found for selected facility and program', function () {
+      $httpBackend.expectGET('/logistics/facility/20/program/10/periods.json').respond({"periods":[], "rnr":undefined});
 
       scope.loadPeriods();
       $httpBackend.flush();
 
-      expect(scope.periods).toEqual([]);
-      expect(scope.error).toEqual('No pending R&Rs for the selected facility and program');
+      expect(scope.periodGridData).toEqual([
+        {"name":"No period(s) available"}
+      ]);
+      expect(scope.selectedPeriod).toEqual(null);
+      expect(scope.error).toEqual('');
     });
 
     it('should not load periods if facility selected but program not selected', function () {
@@ -121,7 +132,7 @@ describe('InitiateRnrController', function () {
 
       scope.loadPeriods();
 
-      expect(scope.periods).toEqual(null);
+      expect(scope.periodGridData).toEqual([]);
       expect(scope.selectedPeriod).toEqual(null);
     });
 
@@ -131,7 +142,7 @@ describe('InitiateRnrController', function () {
 
       scope.loadPeriods();
 
-      expect(scope.periods).toEqual(null);
+      expect(scope.periodGridData).toEqual([]);
       expect(scope.selectedPeriod).toEqual(null);
     });
 
@@ -141,13 +152,8 @@ describe('InitiateRnrController', function () {
 
       scope.loadPeriods();
 
-      expect(scope.periods).toEqual(null);
+      expect(scope.periodGridData).toEqual([]);
       expect(scope.selectedPeriod).toEqual(null);
-    });
-
-    it('should prepare period display name', function () {
-      var periodDisplayName = scope.periodDisplayName({"name":"Period 1", "startDate":1358274600000, "endDate":1367260200000});
-      expect(periodDisplayName).toEqual('Period 1 (16/01/2013 - 30/04/2013)');
     });
   });
 });

@@ -2,43 +2,99 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
 
   var DEFAULT_FACILITY_MESSAGE = '--choose facility--';
   var DEFAULT_PROGRAM_MESSAGE = '--choose program--';
-  var DEFAULT_PERIOD_MESSAGE = '--choose period--';
+  var PREVIOUS_RNR_PENDING_STATUS = "Previous R&R pending";
+  var RNR_NOT_YET_STARTED_STATUS = "Not yet started";
+
+
+  $scope.periodGridData = [];
+  $scope.selectedProgram = null;
+  $scope.selectedFacilityId = null;
+  $scope.selectedPeriod = null;
+
+  var getPeriodSpecificButton = function (activeForRnr) {
+    return '<input type="button" ng-click="initRnr()" value="Proceed" class="btn btn-primary" ng-show="' + activeForRnr + '"/>';
+  };
 
   var optionMessage = function (entity, defaultMessage) {
     return entity == null || entity.length == 0 ? "--none assigned--" : defaultMessage;
   };
 
+  var resetValuesForFirstPeriod = function (periodGridData) {
+    var firstPeriodWithRnrStatus = periodGridData[0];
+    firstPeriodWithRnrStatus.activeForRnr = true;
+    if (!firstPeriodWithRnrStatus.rnrId) {
+      firstPeriodWithRnrStatus.rnrStatus = RNR_NOT_YET_STARTED_STATUS;
+    }
+  };
+
+  var createPeriodWithRnrStatus = function (periods, rnr) {
+    $scope.periodGridData = [];
+    $scope.selectedPeriod = null;
+
+    var periodWithRnrStatus;
+    if (periods == null || periods.length == 0) {
+      periodWithRnrStatus = new Object();
+      periodWithRnrStatus.name = "No period(s) available";
+      $scope.selectedPeriod = null;
+      $scope.periodGridData.push(periodWithRnrStatus);
+      return;
+    }
+
+    $scope.selectedPeriod = periods[0];
+    periods.forEach(function (period) {
+      periodWithRnrStatus = angular.copy(period);
+      periodWithRnrStatus.rnrStatus = PREVIOUS_RNR_PENDING_STATUS;
+      if (rnr != null && periodWithRnrStatus.id == rnr.periodId) {
+        periodWithRnrStatus.rnrId = rnr.id;
+        periodWithRnrStatus.rnrStatus = rnr.status;
+      }
+      $scope.periodGridData.push(periodWithRnrStatus);
+    });
+
+    resetValuesForFirstPeriod($scope.periodGridData);
+  };
+
+  $scope.periodGridOptions = { data:'periodGridData',
+    canSelectRows:false,
+    displayFooter:false,
+    displaySelectionCheckbox:false,
+    enableColumnResize:true,
+    enableColumnReordering:true,
+    showColumnMenu:false,
+    columnDefs:[
+      {field:'name', displayName:'Period(s)'},
+      {field:'startDate', displayName:'Start Date', cellFilter:"date:'dd/MM/yyyy'" },
+      {field:'endDate', displayName:'End Date', cellFilter:"date:'dd/MM/yyyy'" },
+      {field:'rnrStatus', displayName:'R&R Status' },
+      {cellTemplate:getPeriodSpecificButton('row.entity.activeForRnr')}
+    ]
+  };
+
   $scope.facilityOptionMessage = function () {
     return optionMessage($scope.facilities, DEFAULT_FACILITY_MESSAGE);
-  }
+  };
 
   $scope.programOptionMessage = function () {
     return optionMessage($scope.programs, DEFAULT_PROGRAM_MESSAGE);
-  }
-
-  $scope.periodOptionMessage = function () {
-    return optionMessage($scope.periods, DEFAULT_PERIOD_MESSAGE);
-  }
-
-  $scope.selectedProgram = null;
-  $scope.selectedFacilityId = null;
-  $scope.selectedPeriod = null;
+  };
 
   $scope.loadPeriods = function () {
     if ($scope.selectedProgram && $scope.selectedFacilityId) {
       PeriodsForFacilityAndProgram.get({facilityId:$scope.selectedFacilityId, programId:$scope.selectedProgram.id},
           function (data) {
-            $scope.periods = data.periods;
-            $scope.error = $scope.periods.length == 0 ? "No pending R&Rs for the selected facility and program" : "";
+            $scope.error = "";
+            createPeriodWithRnrStatus(data.periods, data.rnr);
           },
           function (data) {
             $scope.error = data.data.error;
+            $scope.selectedPeriod = null;
+            $scope.periodGridData = [];
           });
     } else {
-      $scope.periods = null;
       $scope.selectedPeriod = null;
+      $scope.periodGridData = [];
     }
-  }
+  };
 
   $scope.initRnr = function () {
     if (!($scope.selectedProgram && $scope.selectedPeriod)) {
@@ -72,12 +128,5 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
             })
           }
         }, {});
-  };
-
-  $scope.periodDisplayName = function (period) {
-    var startDate = utils.getFormattedDate(new Date(period.startDate));
-    var endDate = utils.getFormattedDate(new Date(period.endDate));
-
-    return period.name + ' (' + startDate + ' - ' + endDate + ')';
   };
 }
