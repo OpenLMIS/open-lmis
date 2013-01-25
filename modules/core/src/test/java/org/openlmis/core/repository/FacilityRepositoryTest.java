@@ -282,7 +282,7 @@ public class FacilityRepositoryTest {
     repository.save(facility);
 
     verify(programRepository).getByFacility(facility.getId());
-    verify(programSupportedRepository).addSupportedProgram(new ProgramSupported(facility.getId(), 1, true, null, facility.getModifiedDate(), facility.getModifiedBy()));
+    verify(programSupportedRepository).addSupportedProgram(new ProgramSupported(facility.getId(), 1, true, now.toDate(), facility.getModifiedDate(), facility.getModifiedBy()));
     verify(programSupportedRepository).deleteSupportedPrograms(facility.getId(), 2);
   }
 

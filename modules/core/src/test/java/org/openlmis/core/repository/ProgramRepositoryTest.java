@@ -14,9 +14,7 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
-import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
-import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
-import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.domain.Right.*;
 
 public class ProgramRepositoryTest {
 
@@ -89,5 +87,16 @@ public class ProgramRepositoryTest {
 
     verify(programMapper).getById(1);
     assertThat(actualProgram, is(expectedProgram));
+  }
+
+  @Test
+  public void shouldGetAllSupportedProgramsForFacility() throws Exception {
+    List<Program> expectedPrograms = new ArrayList<>();
+    when(programMapper.getByFacilityId(1)).thenReturn(expectedPrograms);
+
+    List<Program> programs = programRepository.getByFacility(1);
+
+    assertThat(programs, is(expectedPrograms));
+    verify(programMapper, times(1)).getByFacilityId(1);
   }
 }

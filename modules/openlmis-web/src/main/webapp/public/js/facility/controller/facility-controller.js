@@ -1,31 +1,34 @@
 function FacilityController($scope, facilityReferenceData, $routeParams, $http, facility, $rootScope) {
 
-    $scope.facilityTypes = facilityReferenceData.facilityTypes;
-    $scope.geographicZones = facilityReferenceData.geographicZones;
-    $scope.facilityOperators = facilityReferenceData.facilityOperators;
-    $scope.programs = facilityReferenceData.programs;
+  $scope.facilityTypes = facilityReferenceData.facilityTypes;
+  $scope.geographicZones = facilityReferenceData.geographicZones;
+  $scope.facilityOperators = facilityReferenceData.facilityOperators;
+  $scope.programs = facilityReferenceData.programs;
+
+  function getSupportedPrograms(programsSupported) {
+    var foo = [];
+    $.each(programsSupported, function (index, supportedProgram) {
+      $.each($scope.programs, function (index, program) {
+        if (supportedProgram.code == program.code) {
+          program.active = supportedProgram.active;
+          foo.push(program);
+        }
+      })
+    });
+    return foo;
+  }
 
 //TODO Need a more elegant solution
-        if ($routeParams.facilityId) {
-                $scope.facility = facility;
-                $scope.originalFacilityCode = facility.code;
-                $scope.originalFacilityName = facility.name;
-                populateFlags($scope);
-                //TODO Need a more elegant solution
-                var foo = [];
-                $.each($scope.facility.supportedPrograms, function (index, supportedProgram) {
-                    $.each($scope.programs, function (index, program) {
-                        if (supportedProgram.code == program.code) {
-                            program.active = supportedProgram.active;
-                            foo.push(program);
-                        }
-                    })
-                });
-                $scope.facility.supportedPrograms = foo;
-        } else {
-            $scope.facility = {};
-            $scope.facility.dataReportable = "true";
-        }
+  if ($routeParams.facilityId) {
+    $scope.facility = facility;
+    $scope.originalFacilityCode = facility.code;
+    $scope.originalFacilityName = facility.name;
+    populateFlags($scope);
+    $scope.facility.supportedPrograms = getSupportedPrograms($scope.facility.supportedPrograms);
+  } else {
+    $scope.facility = {};
+    $scope.facility.dataReportable = "true";
+  }
 
 
   $scope.saveFacility = function () {
@@ -43,13 +46,15 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
         $scope.originalFacilityCode = data.facility.code;
         $scope.originalFacilityName = data.facility.name;
         populateFlags($scope);
+        $scope.facility.supportedPrograms = getSupportedPrograms($scope.facility.supportedPrograms);
       }).error(function (data) {
-          $scope.showError = "true";
-          $scope.message = "";
-          $scope.error = data.error;
-        });
+            $scope.showError = "true";
+            $scope.message = "";
+            $scope.error = data.error;
+          });
     }
   };
+
   var postFacilityRequest = function (requestUrl) {
 
     $http.post(requestUrl, $scope.facility).success(function (data) {
@@ -61,14 +66,14 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
       $scope.originalFacilityName = data.facility.name;
       populateFlags($scope);
     }).error(function (data) {
-        $scope.showError = "true";
-        $scope.message = "";
-        $scope.error = data.error;
-        $scope.facility = facility;
-        $scope.originalFacilityCode = data.facility.code;
-        $scope.originalFacilityName = data.facility.name;
-        populateFlags($scope);
-      });
+          $scope.showError = "true";
+          $scope.message = "";
+          $scope.error = data.error;
+          $scope.facility = facility;
+          $scope.originalFacilityCode = data.facility.code;
+          $scope.originalFacilityName = data.facility.name;
+          populateFlags($scope);
+        });
   };
   $scope.deleteFacility = function () {
     postFacilityRequest('/admin/facility/update/delete.json');
@@ -79,7 +84,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
     postFacilityRequest('/admin/facility/update/restore.json');
   };
 
-  $scope.blurDateFields = function() {
+  $scope.blurDateFields = function () {
     angular.element("input[ui-date]").blur();
   };
 
@@ -95,7 +100,7 @@ var populateFlags = function ($scope) {
 
 FacilityController.resolve = {
 
-  facilityReferenceData :function ($q, $timeout, FacilityReferenceData) {
+  facilityReferenceData:function ($q, $timeout, FacilityReferenceData) {
     var deferred = $q.defer();
     $timeout(function () {
       FacilityReferenceData.get({}, function (data) {
@@ -105,14 +110,14 @@ FacilityController.resolve = {
     return deferred.promise;
   },
 
-  facility : function ($q, $timeout, Facility, $route) {
-    if($route.current.params.facilityId == undefined) return undefined;
+  facility:function ($q, $timeout, Facility, $route) {
+    if ($route.current.params.facilityId == undefined) return undefined;
 
     var deferred = $q.defer();
     var facilityId = $route.current.params.facilityId;
 
     $timeout(function () {
-      Facility.get({id : facilityId}, function(data) {
+      Facility.get({id:facilityId}, function (data) {
         deferred.resolve(data.facility);
       }, {});
     }, 100);

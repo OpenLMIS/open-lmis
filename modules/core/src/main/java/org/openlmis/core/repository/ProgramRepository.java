@@ -37,7 +37,7 @@ public class ProgramRepository {
   }
 
   public List<Program> getByFacility(Integer facilityId) {
-    return programMapper.getActiveByFacility(facilityId);
+    return programMapper.getByFacilityId(facilityId);
   }
 
   public List<Program> getAll() {
