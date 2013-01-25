@@ -51,19 +51,51 @@ describe("User", function () {
       ]);
     })
 
-    it("should filter facilities when more than 3 characters are entered for search", function () {
+    it("should filter facilities by facility code when more than 3 characters are entered for search", function () {
       scope.facilityList = [
-        {"code":"F10111"},
-        {"code":"F10200"}
+        {"name":"Village1","code":"F10111"},
+        {"name":"Village2", "code":"F10200"}
       ];
 
       scope.query = "F101";
       scope.showFacilitySearchResults();
 
       expect(scope.filteredFacilities).toEqual([
-        {"code":"F10111"}
+        {"name":"Village1","code":"F10111"}
       ]);
     })
+
+    it("should filter facilities by facility name when more than 3 characters are entered for search", function () {
+      scope.facilityList = [
+        {"name":"Village Dispensary", "code":"F10111"},
+        {"name":"Facility2", "code":"F10200"}
+      ];
+
+      scope.query = "Vill";
+      scope.showFacilitySearchResults();
+
+      expect(scope.filteredFacilities).toEqual([
+        {"name":"Village Dispensary", "code":"F10111"}
+      ]);
+    })
+
+   it("should get supported programs for the facility selected and all the roles when user tries to add program role mapping", function(){
+     scope.programAndRoleList = [];
+     var facility = {"id":1, "code":"F1756", "name":"Village Dispensary", "supportedPrograms":[
+       {"code":"ARV", "name":"ARV", "description":"ARV", "active":true},
+       {"code":"HIV", "name":"HIV", "description":"HIV", "active":true}
+     ]};
+     scope.facilitySelected = facility;
+
+     $httpBackend.expectGET('/admin/facility/1.json').respond({"facility":facility});
+     $httpBackend.expectGET('/roles.json').respond({"roles":{"id":1, "name":"Admin"}});
+
+     scope.displayProgramRoleMapping();
+     $httpBackend.flush();
+     expect(scope.programAndRoleList[0].supportedPrograms).toEqual(facility.supportedPrograms);
+     expect(scope.programAndRoleList[0].roles).toEqual({"id":1, "name":"Admin"});
+
+   })
 
   });
 

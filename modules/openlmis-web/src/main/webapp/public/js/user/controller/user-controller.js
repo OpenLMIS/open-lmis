@@ -1,4 +1,4 @@
-function UserController($scope, $routeParams, Users, UserById, SearchFacilitiesByCodeOrName) {
+function UserController($scope, $routeParams, Users, UserById, SearchFacilitiesByCodeOrName, Facility, Roles) {
 
   if ($routeParams.userId) {
     var id = $routeParams.userId;
@@ -7,6 +7,8 @@ function UserController($scope, $routeParams, Users, UserById, SearchFacilitiesB
     });
   } else {
     $scope.user = {};
+    $scope.programAndRoleList = [];
+    $scope.assignedProgramRolesMapped=[{assignedProgram:"",rolesMapped:[]}];
   }
 
   $scope.saveUser = function () {
@@ -40,7 +42,7 @@ function UserController($scope, $routeParams, Users, UserById, SearchFacilitiesB
           $scope.facilityList = data.facilityList;
           $scope.filteredFacilities = $scope.facilityList;
           $scope.resultCount = $scope.filteredFacilities.length;
-        },{});
+        }, {});
       }
       else {
         filterFacilitiesByCodeOrName();
@@ -48,11 +50,37 @@ function UserController($scope, $routeParams, Users, UserById, SearchFacilitiesB
     }
   };
 
+  $scope.setSelectedFacility = function (facility) {
+    $scope.facilitySelected = facility;
+    $scope.query = null;
+  };
+
+  $scope.clearSelectedFacility = function () {
+  };
+
+  $scope.displayProgramRoleMapping = function () {
+
+    if ($scope.facilitySelected != null) {
+      var programRoleGridRow = { supportedPrograms:[],
+        roles:[]};
+
+      Facility.get({id:$scope.facilitySelected.id}, function (data) {
+        programRoleGridRow.supportedPrograms = data.facility.supportedPrograms;
+      });
+
+      Roles.get({}, function (data) {
+        programRoleGridRow.roles = data.roles;
+      });
+
+      $scope.programAndRoleList = $scope.programAndRoleList.concat(programRoleGridRow);
+    }
+  }
+
   var filterFacilitiesByCodeOrName = function () {
     $scope.filteredFacilities = [];
 
     angular.forEach($scope.facilityList, function (facility) {
-      if (facility.code.indexOf($scope.query) >= 0) {
+      if (facility.code.indexOf($scope.query) >= 0 || facility.name.indexOf($scope.query) >= 0) {
         $scope.filteredFacilities.push(facility);
       }
       $scope.resultCount = $scope.filteredFacilities.length;
