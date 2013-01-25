@@ -1,4 +1,4 @@
-package org.openlmis.functional;
+package org.openlmis.service;
 
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
