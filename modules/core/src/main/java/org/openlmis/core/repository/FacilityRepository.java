@@ -141,6 +141,7 @@ public class FacilityRepository {
   private void insertSupportedProgram(ProgramSupported programSupported) {
     try {
       programSupported.setModifiedDate(DateTime.now().toDate());
+      programSupported.setStartDate(DateTime.now().toDate());
       programSupportedRepository.addSupportedProgram(programSupported);
     } catch (DuplicateKeyException duplicateKeyException) {
       throw new DataException("Facility has already been mapped to the program");
