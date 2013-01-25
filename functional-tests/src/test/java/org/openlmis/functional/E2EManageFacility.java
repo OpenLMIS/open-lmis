@@ -45,7 +45,13 @@ public class E2EManageFacility extends TestCaseHelper {
 
         DeleteFacilityPage deleteFacilityPage1=homePage1.navigateSearchFacility();
         deleteFacilityPage1.searchFacility(date_time);
-        deleteFacilityPage1.editAndVerifyFacility("FCname"+date_time);
+        HomePage homePage2=deleteFacilityPage1.editAndVerifyFacility("FCname"+date_time);
+
+        DeleteFacilityPage deleteFacilityPage2=homePage2.navigateSearchFacility();
+        deleteFacilityPage2.searchFacility(date_time);
+        deleteFacilityPage2.verifyProgramSupported();
+
+
 
     }
     @AfterClass

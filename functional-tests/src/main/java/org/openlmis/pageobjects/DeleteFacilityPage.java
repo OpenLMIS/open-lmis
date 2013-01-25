@@ -36,6 +36,10 @@ public class DeleteFacilityPage extends Page {
     @FindBy(how = How.ID, using = "saveSuccessMsgDiv")
     private static WebElement messageDiv;
 
+    @FindBy(how = How.ID, using = "saveErrorMsgDiv")
+    private static WebElement saveErrorMsgDiv;
+
+
     @FindBy(how = How.XPATH, using = "//ng-switch/span")
     private static WebElement dataReportable;
 
@@ -81,6 +85,35 @@ public class DeleteFacilityPage extends Page {
 
     @FindBy(how = How.XPATH, using = "//div[@class='ng-scope']/div[@ng-show='facility.id']/h2")
     private static WebElement facilityHeader;
+
+    @FindBy(how = How.ID, using = "programs-supported")
+    private static WebElement programsSupported;
+
+    @FindBy(how = How.XPATH, using = "//table[@ng-show='facility.supportedPrograms']/tbody/tr[1]/td[1]")
+    private static WebElement HIVprogramsSupported;
+
+    @FindBy(how = How.XPATH, using = "//table[@ng-show='facility.supportedPrograms']/tbody/tr[2]/td[1]")
+    private static WebElement ARVprogramsSupported;
+
+    @FindBy(how = How.XPATH, using = "//table[@ng-show='facility.supportedPrograms']/tbody/tr[3]/td[1]")
+    private static WebElement ESSENTIALMEDICINESprogramsSupported;
+
+    @FindBy(how = How.XPATH, using = "//table[@ng-show='facility.supportedPrograms']/tbody/tr[4]/td[1]")
+    private static WebElement VACCINESprogramsSupported;
+
+    @FindBy(how = How.XPATH, using = "//table[@ng-show='facility.supportedPrograms']/tbody/tr[5]/td[1]")
+    private static WebElement TBprogramsSupported;
+
+    @FindBy(how = How.XPATH, using = "//table[@ng-show='facility.supportedPrograms']/tbody/tr[6]/td[1]")
+    private static WebElement MALARIAprogramsSupported;
+
+    @FindBy(how = How.XPATH, using = "//table[@ng-show='facility.supportedPrograms']/tbody/tr[7]/td[1]")
+    private static WebElement SMALLPOXprogramsSupported;
+
+    @FindBy(how = How.XPATH, using = "//table[@ng-show='facility.supportedPrograms']/tbody/tr[6]/td[2]/input")
+    private static WebElement MALARIAradioprogramsSupported;
+
+
 
 
     public DeleteFacilityPage(TestWebDriver driver) throws  IOException {
@@ -159,7 +192,7 @@ public class DeleteFacilityPage extends Page {
         return new HomePage(testWebDriver);
     }
 
-    public void editAndVerifyFacility(String facilityNameValue) {
+    public HomePage editAndVerifyFacility(String facilityNameValue) throws IOException {
         String catchmentPopulationValue="600000";
         String  latitudeValue="6555.5555";
         String longitudeValue="6444.4444";
@@ -182,6 +215,15 @@ public class DeleteFacilityPage extends Page {
         longitude.sendKeys(longitudeValue);
         altitude.clear();
         altitude.sendKeys(altitudeValue);
+        testWebDriver.selectByIndex(programsSupported,0);
+        testWebDriver.selectByIndex(programsSupported,1);
+        testWebDriver.selectByIndex(programsSupported,2);
+        testWebDriver.selectByIndex(programsSupported,3);
+        testWebDriver.selectByIndex(programsSupported,4);
+        testWebDriver.selectByIndex(programsSupported,5);
+        testWebDriver.selectByIndex(programsSupported,6);
+
+        MALARIAradioprogramsSupported.click();
         SaveButton.click();
 
         SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(catchmentPopulation,"value"), catchmentPopulationValue);
@@ -189,11 +231,59 @@ public class DeleteFacilityPage extends Page {
         SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(longitude,"value"), longitudeValue);
         SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(altitude,"value"), altitudeValue);
 
+        SeleneseTestNgHelper.assertTrue(testWebDriver.getText(HIVprogramsSupported).contains("HIV"));
+        SeleneseTestNgHelper.assertTrue(testWebDriver.getText(ARVprogramsSupported).contains("ARV"));
+        SeleneseTestNgHelper.assertTrue(testWebDriver.getText(ESSENTIALMEDICINESprogramsSupported).contains("ESSENTIAL MEDICINES"));
+        SeleneseTestNgHelper.assertTrue(testWebDriver.getText(VACCINESprogramsSupported).contains("VACCINES"));
+        SeleneseTestNgHelper.assertTrue(testWebDriver.getText(TBprogramsSupported).contains("TB"));
+        SeleneseTestNgHelper.assertTrue(testWebDriver.getText(MALARIAprogramsSupported).contains("MALARIA"));
+        SeleneseTestNgHelper.assertTrue(testWebDriver.getText(SMALLPOXprogramsSupported).contains("SMALL POX"));
+
         testWebDriver.sleep(1000);
-        testWebDriver.waitForElementToAppear(messageDiv);
-        String updateMessage=messageDiv.getText();
+        testWebDriver.waitForElementsToAppear(messageDiv, saveErrorMsgDiv);
+        String updateMessage=getMessage();
         SeleneseTestNgHelper.assertEquals(updateMessage, facilityNameValue+" updated successfully");
 
+        return new HomePage(testWebDriver);
+    }
+
+    public HomePage verifyProgramSupported() throws IOException {
+
+
+        testWebDriver.waitForElementToAppear(facilityList);
+        facilityList.click();
+
+        testWebDriver.waitForElementToAppear(facilityHeader);
+        SeleneseTestNgHelper.assertEquals(facilityHeader.getText().trim(), "Edit facility");
+
+        testWebDriver.waitForElementToAppear(deleteButton);
+        testWebDriver.sleep(1500);
+
+        SeleneseTestNgHelper.assertTrue(testWebDriver.getText(HIVprogramsSupported).contains("HIV"));
+        SeleneseTestNgHelper.assertTrue(testWebDriver.getText(ARVprogramsSupported).contains("ARV"));
+        SeleneseTestNgHelper.assertTrue(testWebDriver.getText(ESSENTIALMEDICINESprogramsSupported).contains("ESSENTIAL MEDICINES"));
+        SeleneseTestNgHelper.assertTrue(testWebDriver.getText(VACCINESprogramsSupported).contains("VACCINES"));
+        SeleneseTestNgHelper.assertTrue(testWebDriver.getText(TBprogramsSupported).contains("TB"));
+        SeleneseTestNgHelper.assertTrue(testWebDriver.getText(MALARIAprogramsSupported).contains("MALARIA"));
+        SeleneseTestNgHelper.assertTrue(testWebDriver.getText(SMALLPOXprogramsSupported).contains("SMALL POX"));
+
+        SeleneseTestNgHelper.assertFalse(MALARIAradioprogramsSupported.isSelected());
+
+        return new HomePage(testWebDriver);
+    }
+
+    public String getMessage()
+    {
+        String updateMessage;
+        if(messageDiv.isDisplayed())
+        {
+            updateMessage=messageDiv.getText();
+        }
+        else
+        {
+            updateMessage=saveErrorMsgDiv.getText();
+        }
+        return updateMessage;
     }
 
 
