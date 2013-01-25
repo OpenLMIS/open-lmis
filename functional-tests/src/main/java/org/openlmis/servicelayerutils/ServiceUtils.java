@@ -10,22 +10,33 @@ import java.util.*;
 import net.sf.json.*;
 
 public class ServiceUtils {
+    HttpURLConnection conn ;
+
 
 
     @SuppressWarnings("finally")
     public String postJSON(String json, String endPoint) {
         String output, outputFinal = "";
+
         try {
+
+            java.net.CookieHandler.setDefault(new java.net.CookieManager(null, java.net.CookiePolicy.ACCEPT_ALL));
             URL url = new URL(endPoint);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn = (HttpURLConnection) url.openConnection();
+
             conn.setDoOutput(true);
             conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Accept", "application/json, text/plain, */*");
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+            conn.setRequestProperty("X-Requested-With", "XMLHttpRequest");
+
+
+
             String input = json;
+
             OutputStream os = conn.getOutputStream();
             os.write(input.getBytes());
             os.flush();
-            System.out.println(conn.getResponseMessage());
 
             if (conn.getResponseCode() != 200) {
                 throw new RuntimeException("Failed : HTTP error code : "
@@ -33,10 +44,12 @@ public class ServiceUtils {
             }
             BufferedReader br = new BufferedReader(new InputStreamReader(
                     (conn.getInputStream())));
-            System.out.println("Output .... \n");
+
             while ((output = br.readLine()) != null) {
                 outputFinal = outputFinal + output;
             }
+
+            br.close();
             conn.disconnect();
 
         } catch (MalformedURLException e) {
@@ -47,8 +60,11 @@ public class ServiceUtils {
             e.printStackTrace();
         } finally {
             return outputFinal;
+
+
         }
     }
+
 
 
     @SuppressWarnings("finally")
@@ -57,22 +73,21 @@ public class ServiceUtils {
         try {
 
             URL url = new URL(endPoint);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
-            System.out.println(conn.getResponseMessage());
             if (conn.getResponseCode() != 200) {
                 throw new RuntimeException("Failed : HTTP error code : "
                         + conn.getResponseCode());
             }
-
             BufferedReader br = new BufferedReader(new InputStreamReader(
                     (conn.getInputStream())));
 
-            System.out.println("Output  .... \n");
+
             while ((output = br.readLine()) != null) {
                 outputFinal = outputFinal + output;
             }
+            br.close();
             conn.disconnect();
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -149,19 +164,6 @@ public class ServiceUtils {
 //               " \"pilot\":{\"firstName\":\"Manjyot\",\"lastName\":\"Singh\"},\n" +
 //               " \"mission\":\"apollo 11\",\n" +
 //               " \"Dummy\":{\"DAR\":\"Lock\",\"SCC\":\"Locked\",\"New Req\":[\"Accept\",\"Reject\"]}}");
-
-
-//
-//        String responseJson=
-//                new ServiceUtils().postJSON("{\"account\":\"dummy\",\"password\":\"pass\"}","http://www.f-list.net/json/getApiTicket.php");
-//        System.out.println(responseJson);
-
-
-
-//         String responseJson=
-//                 new ServiceUtils().getJSON("http://www.f-list.net/json/getApiTicket.php");
-//        System.out.println(responseJson);
-
 
 
 //        new ServiceUtils().createJson();
