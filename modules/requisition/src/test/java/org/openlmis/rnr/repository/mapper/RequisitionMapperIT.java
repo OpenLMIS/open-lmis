@@ -120,20 +120,23 @@ public class RequisitionMapperIT {
   }
 
   @Test
-  public void shouldReturnRequisitionIfExists() {
+  public void shouldReturnRequisitionIfExistsByFacilityProgramAndPeriod() {
     Rnr requisition = insertRequisition(processingPeriod1, INITIATED);
     insertRequisition(processingPeriod2, INITIATED);
+    setupLineItem(requisition);
 
-    Rnr rnr = mapper.getRequisition(facility.getId(), PROGRAM_ID, processingPeriod1.getId());
+    Rnr returnedRequisition = mapper.getRequisition(facility.getId(), PROGRAM_ID, processingPeriod1.getId());
 
-    assertThat(rnr.getId(), is(requisition.getId()));
-    assertThat(rnr.getFacilityId(), is(facility.getId()));
-    assertThat(rnr.getProgramId(), is(PROGRAM_ID));
-    assertThat(rnr.getPeriodId(), is(processingPeriod1.getId()));
+    assertThat(returnedRequisition.getLineItems().size(), is(1));
+
+    assertThat(returnedRequisition.getId(), is(requisition.getId()));
+    assertThat(returnedRequisition.getFacilityId(), is(facility.getId()));
+    assertThat(returnedRequisition.getProgramId(), is(PROGRAM_ID));
+    assertThat(returnedRequisition.getPeriodId(), is(processingPeriod1.getId()));
   }
 
   @Test
-  public void shouldGetRnrById() throws Exception {
+  public void shouldPopulateLineItemsWhenGettingRnrById() throws Exception {
     Rnr requisition = insertRequisition(processingPeriod1, INITIATED);
     setupLineItem(requisition);
     Rnr returnedRequisition = mapper.getById(requisition.getId());

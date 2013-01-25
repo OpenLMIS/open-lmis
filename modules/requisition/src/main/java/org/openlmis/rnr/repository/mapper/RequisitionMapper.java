@@ -31,7 +31,7 @@ public interface RequisitionMapper {
       @Result(property = "id", column = "id"),
       @Result(property = "lineItems", javaType = List.class, column = "id",
           many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsByRnrId"))
-    })
+  })
   Rnr getById(Integer rnrId);
 
   @Select({"SELECT id, programId, facilityId, periodId, submittedDate, modifiedDate",
@@ -44,8 +44,11 @@ public interface RequisitionMapper {
   List<Rnr> getAuthorizedRequisitions(RoleAssignment roleAssignment);
 
   @Select("SELECT * FROM requisitions WHERE facilityId = #{facilityId} AND programId= #{programId} AND periodId = #{periodId}")
-  @Result(property = "lineItems", javaType = List.class, column = "id",
-      many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsByRnrId"))
+  @Results(value = {
+      @Result(property = "id", column = "id"),
+      @Result(property = "lineItems", javaType = List.class, column = "id",
+          many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsByRnrId"))
+  })
   Rnr getRequisition(@Param("facilityId") Integer facilityId,
                      @Param("programId") Integer programId,
                      @Param("periodId") Integer periodId);
