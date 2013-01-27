@@ -1,8 +1,9 @@
 <div>
+  <h2>Upload</h2>
   <form id="uploadForm" name="uploadForm" action="/upload" method="POST" enctype="multipart/form-data" novalidate>
     <div>
       <fieldset>
-        <label style="padding-top: 10" for="model">Model:</label>
+        <label style="padding-top: 10" for="model">Upload type:</label>
 
         <select name="model" id="model" ng-model="model"
                 ng-options="k as v.displayName for (k,v) in supportedUploads" required></select>
@@ -17,7 +18,8 @@
         <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="successMsg">
           {{successMsg}}
         </div>
-        <input type="submit" value="Upload" class="btn">
+        <br><br>
+        <input type="submit" value="Upload" class="btn btn-primary">
       </fieldset>
 
     </div>
