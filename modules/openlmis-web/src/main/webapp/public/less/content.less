@@ -43,7 +43,7 @@
     font-size: 1.4em;
     font-weight: normal;
     margin-top: 0;
-    color: #464646;
+    color: #17888F;
     border-bottom: 1px solid #d6d6d6;
   }
 }
@@ -130,7 +130,8 @@
     background: #F8F8F8;
     display: inline-block;
     position: absolute;
-    top: -30px;
+    top: -23px;
+    line-height: 24px;
     padding: 0 10px;
     left: 10px;
     font-size: 1.2em;
@@ -327,22 +328,24 @@ span[class^="tpl-"] {
 .rnr-table {
   overflow: auto;
   width: 100%;
-}
-.rnr-table th {
-  background: #EEE;
-  font-weight: bold;
-  color: #444;
-  min-width: 93px;
-  text-shadow: 0 1px 0 #FFF;
-  font-size: 0.9em;
-  background: #f9f9f9; /* Old browsers */
-  background: -moz-linear-gradient(top, #f9f9f9 0%, #e0e0e0 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f9f9f9), color-stop(100%,#e0e0e0)); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top, #f9f9f9 0%,#e0e0e0 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top, #f9f9f9 0%,#e0e0e0 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top, #f9f9f9 0%,#e0e0e0 100%); /* IE10+ */
-  background: linear-gradient(to bottom, #f9f9f9 0%,#e0e0e0 100%); /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f9f9f9', endColorstr='#e0e0e0',GradientType=0 ); /* IE6-9 */
+  th {
+    background: #EEE;
+    font-weight: bold;
+    color: #444;
+    min-width: 93px;
+    line-height: 14px;
+    padding: 3px 6px;
+    text-shadow: 0 1px 0 #FFF;
+    font-size: 0.8em;
+    background: #f9f9f9; /* Old browsers */
+    background: -moz-linear-gradient(top, #f9f9f9 0%, #e0e0e0 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f9f9f9), color-stop(100%,#e0e0e0)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #f9f9f9 0%,#e0e0e0 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #f9f9f9 0%,#e0e0e0 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #f9f9f9 0%,#e0e0e0 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #f9f9f9 0%,#e0e0e0 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f9f9f9', endColorstr='#e0e0e0',GradientType=0 ); /* IE6-9 */
+  }
 }
 
 input[ui-date] {
@@ -428,9 +431,9 @@ table td.cell-input {
   background-color: #f9f9f9;
 }
 table td.cell-input .cell-text {
-  padding: 4px 8px;
+  padding: 2px 6px;
   display: inline-block;
-  font-size: 0.9em;
+  font-size: 0.8em;
 }
 .cell-input input[type="text"] {
   margin: 0;
@@ -901,6 +904,10 @@ table td.delete-button {
   top: 4px;
 }
 
+.init-rnr-grid {
+  margin: 20px 0;
+}
+
 //grid styles
 
 .ngGrid {
@@ -911,6 +918,10 @@ table td.delete-button {
 
 .ngTopPanel {
   background-color: transparent;
+}
+
+.ngHeaderContainer {
+  background-color: #f8f8f8
 }
 
 .ngHeaderSortColumn {
@@ -930,5 +941,8 @@ table td.delete-button {
 }
 .ngSortButtonUp{
   background: url(../images/sort-up.png) no-repeat left top;
+}
+.grid-btn {
+  margin: 2px 10px;
 }
 

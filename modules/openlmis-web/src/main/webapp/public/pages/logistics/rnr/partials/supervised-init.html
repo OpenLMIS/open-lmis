@@ -8,10 +8,13 @@
   <label>Facility</label>
   <select  id="facilityList" ng-change="loadPeriods()" ng-model="$parent.selectedFacilityId" ng-options="i.id as i.code + '-' + i.name for i in facilities">
     <option value="">{{facilityOptionMessage()}}</option>
-  </select> <br/>
-  <br/>
+  </select>
 
-  <div class="gridStyle small" ng-grid="periodGridOptions" ng-show="$parent.selectedProgram && $parent.selectedFacilityId"></div>
+  <div class="row-fluid init-rnr-grid">
+    <div class="span6">
+      <div class="gridStyle small" ng-grid="periodGridOptions" ng-show="$parent.selectedProgram && $parent.selectedFacilityId"></div>
+    </div>
+  </div>
 
   <div class="alert alert-error" id="saveSuccessMsgDiv" ng-model="error" ng-show="error">
     {{error}}

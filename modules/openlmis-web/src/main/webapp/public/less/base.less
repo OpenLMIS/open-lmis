@@ -9,3 +9,29 @@ body {
 #wrap {
   min-width: 960px;
 }
+
+input {
+  &.btn-primary {
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.7);
+    background-color: #356b6f;
+    background-image: -moz-linear-gradient(top, #42a7ad, #356b6f);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#42a7ad), to(#356b6f));
+    background-image: -webkit-linear-gradient(top, #42a7ad, #356b6f);
+    background-image: -o-linear-gradient(top, #42a7ad, #356b6f);
+    background-image: linear-gradient(to bottom, #42a7ad, #356b6f);
+    background-repeat: repeat-x;
+    border-color: #42a7ad #42a7ad #356b6f;
+    border-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff42a7ad', endColorstr='#ff004484', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  }
+
+  &.btn-primary:hover,
+  &.btn-primary:active,
+  &.btn-primary.active,
+  &.btn-primary.disabled,
+  &.btn-primary[disabled] {
+    color: #ffffff;
+    background-color: #356b6f;
+  }
+}

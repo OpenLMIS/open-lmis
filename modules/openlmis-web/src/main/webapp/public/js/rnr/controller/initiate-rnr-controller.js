@@ -12,7 +12,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
   $scope.selectedPeriod = null;
 
   var getPeriodSpecificButton = function (activeForRnr) {
-    return '<input type="button" ng-click="initRnr()" value="Proceed" class="btn btn-primary" ng-show="' + activeForRnr + '"/>';
+    return '<input type="button" ng-click="initRnr()" value="Proceed" class="btn btn-primary btn-small grid-btn" ng-show="' + activeForRnr + '"/>';
   };
 
   var optionMessage = function (entity, defaultMessage) {
