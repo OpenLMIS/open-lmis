@@ -2,7 +2,7 @@ package org.openlmis.core.upload;
 
 import org.joda.time.DateTime;
 import org.openlmis.core.domain.ProgramSupported;
-import org.openlmis.core.repository.FacilityRepository;
+import org.openlmis.core.service.FacilityService;
 import org.openlmis.upload.Importable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component;
 @Component("programSupportedPersistenceHandler")
 public class ProgramSupportedPersistenceHandler extends AbstractModelPersistenceHandler {
 
-  private FacilityRepository facilityRepository;
+  private FacilityService facilityService;
 
   @Autowired
-  public ProgramSupportedPersistenceHandler(FacilityRepository facilityRepository) {
-    this.facilityRepository = facilityRepository;
+  public ProgramSupportedPersistenceHandler(FacilityService facilityService) {
+    this.facilityService = facilityService;
   }
 
   @Override
@@ -22,6 +22,6 @@ public class ProgramSupportedPersistenceHandler extends AbstractModelPersistence
     ProgramSupported programSupported = (ProgramSupported) importable;
     programSupported.setModifiedBy(modifiedBy);
     programSupported.setStartDate(new DateTime().toDate());
-    facilityRepository.addSupportedProgram(programSupported);
+    facilityService.uploadSupportedProgram(programSupported);
   }
 }

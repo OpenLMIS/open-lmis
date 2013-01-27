@@ -19,16 +19,11 @@ import java.util.List;
 public class FacilityRepository {
 
   private FacilityMapper mapper;
-  private ProgramSupportedRepository programSupportedRepository;
-  private ProgramRepository programRepository;
   private CommaSeparator commaSeparator;
 
   @Autowired
-  public FacilityRepository(FacilityMapper facilityMapper, ProgramSupportedRepository programSupportedRepository,
-                            ProgramRepository programRepository, CommaSeparator commaSeparator) {
+  public FacilityRepository(FacilityMapper facilityMapper, CommaSeparator commaSeparator) {
     this.mapper = facilityMapper;
-    this.programSupportedRepository = programSupportedRepository;
-    this.programRepository = programRepository;
     this.commaSeparator = commaSeparator;
   }
 
@@ -49,9 +44,8 @@ public class FacilityRepository {
       validateGeographicZone(facility);
       if (facility.getId() == null) {
         mapper.insert(facility);
-        addListOfSupportedPrograms(facility);
       } else {
-        updateFacility(facility);
+        mapper.update(facility);
       }
     } catch (DuplicateKeyException duplicateKeyException) {
       throw new DataException("Duplicate Facility Code found");
@@ -104,58 +98,6 @@ public class FacilityRepository {
     facility.getOperatedBy().setId(operatedById);
   }
 
-  private void updateFacility(Facility facility) {
-    List<Program> previouslySupportedPrograms = programRepository.getByFacility(facility.getId());
-    mapper.update(facility);
-    deleteObsoleteProgramMappings(facility, previouslySupportedPrograms);
-    addUpdatableProgramMappings(facility, previouslySupportedPrograms);
-  }
-
-  private void deleteObsoleteProgramMappings(Facility facility, List<Program> previouslySupportedPrograms) {
-    List<Program> supportedPrograms = facility.getSupportedPrograms();
-    for (Program previouslySupportedProgram : previouslySupportedPrograms) {
-      if (!(supportedPrograms).contains(previouslySupportedProgram)) {
-        programSupportedRepository.deleteSupportedPrograms(facility.getId(), previouslySupportedProgram.getId());
-      }
-    }
-  }
-
-  private void addUpdatableProgramMappings(Facility facility, List<Program> previouslySupportedPrograms) {
-    for (Program supportedProgram : facility.getSupportedPrograms()) {
-      if (!(previouslySupportedPrograms).contains(supportedProgram)) {
-        ProgramSupported newProgramsSupported = new ProgramSupported(facility.getId(), supportedProgram.getId(),
-          supportedProgram.getActive(), null, facility.getModifiedDate(), facility.getModifiedBy());
-        insertSupportedProgram(newProgramsSupported);
-      }
-    }
-  }
-
-  private void addListOfSupportedPrograms(Facility facility) {
-    List<Program> supportedPrograms = facility.getSupportedPrograms();
-    for (Program supportedProgram : supportedPrograms) {
-      ProgramSupported programSupported = new ProgramSupported(facility.getId(), supportedProgram.getId(), supportedProgram.getActive(), new DateTime().toDate(), facility.getModifiedDate(), facility.getModifiedBy());
-      insertSupportedProgram(programSupported);
-    }
-  }
-
-  private void insertSupportedProgram(ProgramSupported programSupported) {
-    try {
-      programSupported.setModifiedDate(DateTime.now().toDate());
-      programSupported.setStartDate(DateTime.now().toDate());
-      programSupportedRepository.addSupportedProgram(programSupported);
-    } catch (DuplicateKeyException duplicateKeyException) {
-      throw new DataException("Facility has already been mapped to the program");
-    } catch (DataIntegrityViolationException integrityViolationException) {
-      throw new DataException("Invalid reference data 'Program Code'");
-    }
-  }
-
-  public void addSupportedProgram(ProgramSupported programSupported) {
-    programSupported.setFacilityId(mapper.getIdForCode(programSupported.getFacilityCode()));
-    programSupported.setProgramId(programRepository.getIdByCode(programSupported.getProgramCode()));
-    insertSupportedProgram(programSupported);
-  }
-
   public List<FacilityType> getAllTypes() {
     return mapper.getAllTypes();
   }
@@ -173,16 +115,13 @@ public class FacilityRepository {
   }
 
   public Facility getById(Integer id) {
-    Facility facility = mapper.getById(id);
-    facility.setSupportedPrograms(programRepository.getByFacility(facility.getId()));
-    return facility;
+    return mapper.getById(id);
   }
 
   public void updateDataReportableAndActiveFor(Facility facility) {
     mapper.updateDataReportableAndActiveFor(facility);
 
   }
-
 
   public List<Facility> getFacilitiesBy(Integer programId, List<RequisitionGroup> requisitionGroups) {
     return mapper.getFacilitiesBy(programId, commaSeparator.commaSeparateIds(requisitionGroups));
