@@ -1,6 +1,9 @@
 function UserSearchController($scope, $location, SearchUserByFirstOrLastName) {
 
-  $scope.showUserSearchResults = function (query) {
+  $scope.showUserSearchResults = function (id) {
+    var query = document.getElementById(id).value;
+    $scope.query = query;
+
     var len = (query == undefined) ? 0 : query.length;
 
     if (len >= 3) {

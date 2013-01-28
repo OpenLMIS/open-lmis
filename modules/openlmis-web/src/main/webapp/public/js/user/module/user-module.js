@@ -6,5 +6,12 @@ angular.module('user', ['openlmis','ngGrid']).
     when('/create-user', {controller:UserController, templateUrl:'partials/create.html'}).
     when('/edit/:userId', {controller:UserController, templateUrl:'partials/create.html'}).
     otherwise({redirectTo:'/create-user'});
-}]);
+}]).directive('onKeyup', function() {
+    return function(scope, elm, attrs) {
+      elm.bind("keyup", function() {
+        scope.$apply(attrs.onKeyup);
+      });
+    };
+  });
+
 
