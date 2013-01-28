@@ -77,4 +77,8 @@ public class ProcessingScheduleService {
   public ProcessingPeriod getPeriodById(Integer periodId){
     return periodRepository.getById(periodId);
   }
+
+  public ProcessingPeriod getImmediatePreviousPeriod(Integer periodId) {
+    return periodRepository.getImmediatePreviousPeriod(periodId);
+  }
 }

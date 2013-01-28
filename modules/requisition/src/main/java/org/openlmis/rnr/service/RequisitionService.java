@@ -8,8 +8,8 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
+import org.openlmis.rnr.domain.ProgramRnrTemplate;
 import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class RequisitionService {
   public static final String NO_SUPERVISORY_NODE_CONTACT_ADMIN = "rnr.submitted.without.supervisor";
   public static final String RNR_PREVIOUS_NOT_FILLED_ERROR = "rnr.previous.not.filled.error";
   public static final String RNR_APPROVED_SUCCESSFULLY = "rnr.approved.success";
-
+  public static final String RNR_TEMPLATE_NOT_INITIATED_ERROR = "rnr.template.not.defined.error";
 
   private RequisitionRepository requisitionRepository;
   private RnrTemplateRepository rnrTemplateRepository;
@@ -65,21 +65,37 @@ public class RequisitionService {
 
   @Transactional
   public Rnr initiate(Integer facilityId, Integer programId, Integer periodId, Integer modifiedBy) {
-    if (!rnrTemplateRepository.isRnrTemplateDefined(programId))
-      throw new DataException("Please contact Admin to define R&R template for this program");
+    ProgramRnrTemplate rnrTemplate = new ProgramRnrTemplate(programId, rnrTemplateRepository.fetchRnrTemplateColumns(programId));
+    if (rnrTemplate.getRnrColumns().size() == 0) throw new DataException(RNR_TEMPLATE_NOT_INITIATED_ERROR);
 
+    validateIfRnrCanBeInitiatedFor(facilityId, programId, periodId);
+
+    List<FacilityApprovedProduct> facilityApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(facilityId, programId);
+
+    Rnr requisition = new Rnr(facilityId, programId, periodId, facilityApprovedProducts, modifiedBy);
+
+    fillBeginningBalanceFromPreviousRnrIfStockInHandVisible(rnrTemplate, requisition);
+
+    requisitionRepository.insert(requisition);
+
+    return requisition;
+  }
+
+  private void fillBeginningBalanceFromPreviousRnrIfStockInHandVisible(ProgramRnrTemplate rnrTemplate, Rnr requisition) {
+    if (rnrTemplate.columnsVisible("stockInHand")) {
+      ProcessingPeriod immediatePreviousPeriod = processingScheduleService.getImmediatePreviousPeriod(requisition.getPeriodId());
+      Rnr previousRequisition = null;
+      if (immediatePreviousPeriod != null)
+        previousRequisition = requisitionRepository.getRequisition(requisition.getFacilityId(), requisition.getProgramId(), immediatePreviousPeriod.getId());
+
+      requisition.setBeginningBalanceForEachLineItem(previousRequisition);
+    }
+  }
+
+  private void validateIfRnrCanBeInitiatedFor(Integer facilityId, Integer programId, Integer periodId) {
     List<ProcessingPeriod> validPeriods = getAllPeriodsForInitiatingRequisition(facilityId, programId);
     if (validPeriods.size() == 0 || !validPeriods.get(0).getId().equals(periodId))
       throw new DataException(RNR_PREVIOUS_NOT_FILLED_ERROR);
-
-    Rnr requisition = new Rnr(facilityId, programId, periodId, modifiedBy);
-    List<FacilityApprovedProduct> facilityApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(facilityId, programId);
-    for (FacilityApprovedProduct programProduct : facilityApprovedProducts) {
-      RnrLineItem requisitionLineItem = new RnrLineItem(null, programProduct, modifiedBy);
-      requisition.add(requisitionLineItem);
-    }
-    requisitionRepository.insert(requisition);
-    return requisition;
   }
 
   public void save(Rnr rnr) {
@@ -90,9 +106,10 @@ public class RequisitionService {
   }
 
   private boolean isUserAllowedToSave(Rnr rnr) {
-    return (rnr.getStatus() == INITIATED && roleRightsService.getRights(rnr.getModifiedBy()).contains(CREATE_REQUISITION)) ||
-        (rnr.getStatus() == SUBMITTED && roleRightsService.getRights(rnr.getModifiedBy()).contains(AUTHORIZE_REQUISITION)) ||
-        (rnr.getStatus() == AUTHORIZED && roleRightsService.getRights(rnr.getModifiedBy()).contains(APPROVE_REQUISITION));
+    List<Right> userRights = roleRightsService.getRights(rnr.getModifiedBy());
+    return (rnr.getStatus() == INITIATED && userRights.contains(CREATE_REQUISITION)) ||
+      (rnr.getStatus() == SUBMITTED && userRights.contains(AUTHORIZE_REQUISITION)) ||
+      (rnr.getStatus() == AUTHORIZED && userRights.contains(APPROVE_REQUISITION));
   }
 
   public Rnr get(Integer facilityId, Integer programId, Integer periodId) {

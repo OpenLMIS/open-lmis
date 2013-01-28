@@ -57,11 +57,15 @@ public class ProcessingPeriodRepository {
 
   public List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriod(Integer scheduleId, Integer startPeriodId, Date afterDate, Date beforeDate) {
     return startPeriodId == null ?
-        mapper.getAllPeriodsAfterDate(scheduleId, afterDate, beforeDate) :
-        mapper.getAllPeriodsAfterDateAndPeriod(scheduleId, startPeriodId, afterDate, beforeDate);
+      mapper.getAllPeriodsAfterDate(scheduleId, afterDate, beforeDate) :
+      mapper.getAllPeriodsAfterDateAndPeriod(scheduleId, startPeriodId, afterDate, beforeDate);
   }
 
   public ProcessingPeriod getById(Integer id) {
     return mapper.getById(id);
+  }
+
+  public ProcessingPeriod getImmediatePreviousPeriod(Integer periodId) {
+    return mapper.getImmediatePreviousPeriodFor(periodId);
   }
 }

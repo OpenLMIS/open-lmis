@@ -20,7 +20,6 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
-import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.startDate;
 
@@ -167,5 +166,14 @@ public class ProcessingPeriodRepositoryTest {
     final ProcessingPeriod actual = repository.getById(1);
     verify(mapper).getById(1);
     assertThat(actual, is(expected));
+  }
+
+  @Test
+  public void shouldGetImmediatePreviousPeriod() throws Exception {
+    ProcessingPeriod previousPeriod = new ProcessingPeriod();
+
+    when(mapper.getImmediatePreviousPeriodFor(1)).thenReturn(previousPeriod);
+
+    assertThat(repository.getImmediatePreviousPeriod(1), is(previousPeriod));
   }
 }

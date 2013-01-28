@@ -4,10 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.Money;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -48,6 +45,11 @@ public class Rnr {
     this.modifiedBy = modifiedBy;
   }
 
+  public Rnr(Integer facilityId, Integer programId, Integer periodId, List<FacilityApprovedProduct> facilityApprovedProducts, Integer modifiedBy) {
+    this(facilityId, programId, periodId, modifiedBy);
+    fillLineItems(facilityApprovedProducts);
+  }
+
   public void add(RnrLineItem rnrLineItem) {
     lineItems.add(rnrLineItem);
   }
@@ -68,6 +70,26 @@ public class Rnr {
 
     }
     this.fullSupplyItemsSubmittedCost = totalFullSupplyCost;
+  }
+
+  public void fillLineItems(List<FacilityApprovedProduct> facilityApprovedProducts) {
+    for (FacilityApprovedProduct programProduct : facilityApprovedProducts) {
+      RnrLineItem requisitionLineItem = new RnrLineItem(null, programProduct, modifiedBy);
+      add(requisitionLineItem);
+    }
+  }
+
+  public void setBeginningBalanceForEachLineItem(Rnr previousRequisition) {
+    if (previousRequisition == null) return;
+    for (RnrLineItem previousLineItem : previousRequisition.getLineItems()) {
+      for (RnrLineItem currentLineItem : this.lineItems) {
+        if (currentLineItem.getProductCode().equals(previousLineItem.getProductCode())) {
+          currentLineItem.setBeginningBalanceWhenPreviousStockInHandAvailable(previousLineItem.getStockInHand());
+          currentLineItem.setPreviousStockInHandAvailable(Boolean.TRUE);
+          break;
+        }
+      }
+    }
   }
 }
 

@@ -30,6 +30,7 @@ packSize smallint not null,
 roundToZero BOOLEAN,
 packRoundingThreshold integer,
 fullSupply BOOLEAN NOT NULL,
+previousStockInHandAvailable BOOLEAN NOT NULL DEFAULT FALSE,
 modifiedBy VARCHAR(50),
 modifiedDate TIMESTAMP  DEFAULT  CURRENT_TIMESTAMP
 );

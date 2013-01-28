@@ -65,6 +65,7 @@ public class RnrLineItem {
   private Integer packsToShip;
   private String remarks;
 
+  private Boolean previousStockInHandAvailable = false;
   @JsonIgnore
   private Integer modifiedBy;
 
@@ -191,5 +192,10 @@ public class RnrLineItem {
       return quantityApproved;
 
     return fullSupply ? calculatedOrderQuantity : quantityRequested;
+  }
+
+  public void setBeginningBalanceWhenPreviousStockInHandAvailable(Integer beginningBalance){
+    this.beginningBalance = beginningBalance;
+    this.previousStockInHandAvailable = Boolean.TRUE;
   }
 }

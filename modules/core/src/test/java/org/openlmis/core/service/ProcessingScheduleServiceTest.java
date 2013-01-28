@@ -208,4 +208,15 @@ public class ProcessingScheduleServiceTest {
     verify(periodRepository).getById(1);
     assertThat(actual, is(expectedPeriod));
   }
+
+  @Test
+  public void shouldGetImmediatePreviousPeriod() throws Exception {
+    ProcessingPeriod expected = new ProcessingPeriod();
+    when(periodRepository.getImmediatePreviousPeriod(1)).thenReturn(expected);
+
+    ProcessingPeriod immediatePreviousPeriod = service.getImmediatePreviousPeriod(1);
+
+    verify(periodRepository).getImmediatePreviousPeriod(1);
+    assertThat(immediatePreviousPeriod, is(expected));
+  }
 }

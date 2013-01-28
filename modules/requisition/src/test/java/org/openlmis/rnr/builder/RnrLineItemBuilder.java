@@ -14,6 +14,7 @@ public class RnrLineItemBuilder {
 
 
   public static final Property<RnrLineItem, Float> cost = newProperty();
+  public static final Property<RnrLineItem, Integer> stockInHand = newProperty();
   public static final Property<RnrLineItem, LossesAndAdjustments> lossesAndAdjustments = newProperty();
   public static final LossesAndAdjustments ONE_LOSS = new LossesAndAdjustments() {{
     setQuantity(1);
@@ -22,18 +23,19 @@ public class RnrLineItemBuilder {
     type.setName("TRANSFER_IN");
     setType(type);
   }};
+  public static final int STOCK_IN_HAND = 4;
   public static final Instantiator<RnrLineItem> defaultRnrLineItem = new Instantiator<RnrLineItem>() {
 
     @Override
     public RnrLineItem instantiate(PropertyLookup<RnrLineItem> lookup) {
       RnrLineItem rnrLineItem = new RnrLineItem();
-      rnrLineItem.setProductCode("some random code");
+      rnrLineItem.setProductCode("P999");
       rnrLineItem.setBeginningBalance(10);
       rnrLineItem.setQuantityReceived(3);
 
       rnrLineItem.addLossesAndAdjustments(lookup.valueOf(lossesAndAdjustments, ONE_LOSS));
       rnrLineItem.setTotalLossesAndAdjustments(1);
-      rnrLineItem.setStockInHand(4);
+      rnrLineItem.setStockInHand(lookup.valueOf(stockInHand, STOCK_IN_HAND));
       rnrLineItem.setQuantityDispensed(10);
 
       rnrLineItem.setDispensingUnit("tablet");
