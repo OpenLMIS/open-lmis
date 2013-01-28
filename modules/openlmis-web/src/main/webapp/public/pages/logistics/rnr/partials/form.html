@@ -30,7 +30,7 @@
                           ng-class = "getCellErrorClass(rnrLineItem, programRnRColumnList)" >
                       <ng-switch on = "rnrLineItem.rnrLineItem['previousStockInHandAvailable']" >
                         <span ng-switch-when = 'false' >
-                          <input id = "{{getId('A', $parent)}}" type = "text"
+                          <input id = "{{getId('A', $parent.$parent)}}" type = "text"
                                  ng-required = "true" ng-disabled = "formDisabled"
                                  name = "beginningBalance{{rnrLineItem.rnrLineItem['id']}}"
                                  ng-model = "rnrLineItem.rnrLineItem[column.name]"
