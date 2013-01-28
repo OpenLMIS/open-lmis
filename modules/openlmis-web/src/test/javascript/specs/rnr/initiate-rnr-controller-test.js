@@ -61,7 +61,7 @@ describe('InitiateRnrController', function () {
     expect(scope.error).toEqual("An R&R has not been submitted yet");
   });
 
-  it('should give error if rnr template has not been defined yet', function () {
+  it('should give error if rnr template has not been defined yet and user has create requisition permission', function () {
     scope.selectedProgram = {"code":"hiv", "id":2};
     scope.selectedFacilityId = 1;
     scope.selectedPeriod = {"id":3};
@@ -90,6 +90,19 @@ describe('InitiateRnrController', function () {
     expect(scope.$parent.period).toEqual(scope.selectedPeriod);
     expect(scope.error).toEqual("");
     expect(scope.$parent.rnr).toEqual({"id":1, status:'INITIATED'});
+  });
+
+  it('should not create a rnr if rnr not already initiated and user does not have create requisition permission', function () {
+    scope.selectedProgram = {"code":"hiv", "id":2};
+    scope.selectedFacilityId = 1;
+    scope.selectedPeriod = {"id":3};
+    $httpBackend.expectGET('/requisitions.json?facilityId=1&periodId=3&programId=2').respond(null);
+    spyOn(rootScope, 'hasPermission').andReturn(false);
+
+    scope.initRnr();
+    $httpBackend.flush();
+
+    expect(scope.error).toEqual("An R&R has not been initiated yet");
   });
 
   it('should set appropriate message for facility', function () {

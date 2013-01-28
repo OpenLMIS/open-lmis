@@ -92,6 +92,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
             $scope.periodGridData = [];
           });
     } else {
+      $scope.error = "";
       $scope.selectedPeriod = null;
       $scope.periodGridData = [];
     }
@@ -108,6 +109,11 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
 
     Requisition.get({facilityId:$scope.selectedFacilityId, programId:$scope.selectedProgram.id, periodId:$scope.selectedPeriod.id}, {},
         function (data) {
+          if((data.rnr == null || data.rnr == undefined) && !$rootScope.hasPermission('CREATE_REQUISITION')){
+            $scope.error = "An R&R has not been initiated yet";
+            return;
+          }
+
           if (data.rnr) {
             if (data.rnr.status != 'SUBMITTED' && !$rootScope.hasPermission('CREATE_REQUISITION')) {
               $scope.error = "An R&R has not been submitted yet";

@@ -2,7 +2,7 @@
   <h2>Initiate Report and Requisition</h2>
   <label>Facility</label>
   <select id="facilityList" ng-model="$parent.selectedFacilityId" ng-options="i.id as i.code + '-' + i.name for i in facilities"
-          ng-change="loadPrograms()">
+          ng-change="loadPrograms(); loadPeriods()">
     <option value="">{{facilityOptionMessage()}}</option>
   </select> <br/>
   <br/>
