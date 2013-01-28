@@ -10,7 +10,9 @@
         </div>
       </div>
       <div class="form-row button-row">
-          <div class="alert alert-error"  ng-bind="error" ng-show="error"></div>
+          <div class="alert alert-error"  ng-model="error" ng-show="error">
+              {{error}}
+          </div>
         <a ng-click="createRnrTemplate()" href="javascript:void(0);" class="btn">Next</a>
       </div>
     </div>

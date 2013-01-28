@@ -375,8 +375,12 @@
           <a href="" class="btn btn-success save-button" ng-show="facility.id!=null" ng-click="restoreConfirmModal=true">Restore</a>
         </div>
 
-        <div class="toolbar-error" id="saveErrorMsgDiv" ng-bind="error" ng-show="error"></div>
-        <div class="toolbar-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"></div>
+        <div class="toolbar-error" id="saveErrorMsgDiv" ng-model="error" ng-show="error">
+          {{error}}
+        </div>
+        <div class="toolbar-success" id="saveSuccessMsgDiv" ng-model="message" ng-show="message">
+          {{message}}
+        </div>
         
       </div>
 
