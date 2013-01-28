@@ -10,7 +10,7 @@
         <div class="login-form-row">
           <input ng-model="password" type="password" id="password" placeholder="Password" required/>
         </div>
-        <div class="alert alert-error" ng-model="error" ng-show="error">{{ error }}</div>
+        <div class="alert alert-error" ng-bind="error" ng-show="error"></div>
         <div class="login-form-row">
           <input class="btn btn-primary" type="submit" value="Sign in"/>
         </div>
