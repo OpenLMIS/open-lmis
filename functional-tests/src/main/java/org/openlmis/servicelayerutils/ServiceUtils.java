@@ -15,7 +15,7 @@ public class ServiceUtils {
 
 
     @SuppressWarnings("finally")
-    public String postJSON(String json, String endPoint) {
+    public String postNONJSON(String json, String endPoint) {
         String output, outputFinal = "";
 
         try {
@@ -27,6 +27,8 @@ public class ServiceUtils {
             conn.setDoOutput(true);
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Accept", "application/json, text/plain, */*");
+            conn.setRequestProperty("Connection", "keep-alive");
+
             conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
             conn.setRequestProperty("X-Requested-With", "XMLHttpRequest");
 
@@ -56,6 +58,58 @@ public class ServiceUtils {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        } finally {
+            return outputFinal;
+
+
+        }
+    }
+
+    @SuppressWarnings("finally")
+    public String postJSON(String json, String endPoint) {
+        String output, outputFinal = "";
+
+        try {
+
+            URL url = new URL(endPoint);
+            conn = (HttpURLConnection) url.openConnection();
+
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Accept", "application/json, text/plain, */*");
+            conn.setRequestProperty("Connection", "keep-alive");
+            conn.setRequestProperty("Content-Type", "application/json;charset=utf-8");
+            conn.setRequestProperty("X-Requested-With", "XMLHttpRequest");
+
+
+
+            String input = json;
+
+            OutputStream os = conn.getOutputStream();
+            os.write(input.getBytes());
+            os.flush();
+
+            if (conn.getResponseCode() != 200 && conn.getResponseCode() != 401) {
+                throw new RuntimeException("Failed : HTTP error code : "
+                        + conn.getResponseCode());
+            }
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    (conn.getInputStream())));
+
+            while ((output = br.readLine()) != null) {
+                outputFinal = outputFinal + output;
+            }
+
+            br.close();
+            conn.disconnect();
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+           // e.printStackTrace();
         } catch (RuntimeException e) {
             e.printStackTrace();
         } finally {
@@ -113,6 +167,29 @@ public class ServiceUtils {
         obj.put("Requisition", llObj);
         System.out.println(obj);
     }
+
+
+    public String getFacilityFieldJSON(String jsonString, String field) {
+        String id=null;
+        try {
+            InputStream isObj = new ByteArrayInputStream(jsonString.getBytes("UTF-8"));
+
+            String jsonTxt = IOUtils.toString(isObj);
+
+            JSONObject json = (JSONObject) JSONSerializer.toJSON(jsonTxt);
+            JSONObject facility = json.getJSONObject("facility");
+             id = facility.getString(field);
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally
+        {
+            return id;
+        }
+    }
+
 
 
 

@@ -16,11 +16,12 @@ dependencies {
             'org.seleniumhq.selenium:selenium-firefox-driver:2.25.0 ',
             'net.sf.json-lib:json-lib:0.9',
             'postgresql:postgresql:9.0-801.jdbc4',
-    project(':modules:db')
+            project(':modules:db')
 }
 
 test {
     exclude '**/org/openlmis/functional/*.*'
+    exclude '**/org/openlmis/service/*.*'
 }
 
 task buildOpenLmis(type: GradleBuild) {
@@ -33,6 +34,14 @@ task functionalTest(type: Test) {
     useTestNG()
 }
 
+task serviceTest(type: Test) {
+    include '**/org/openlmis/service/*.*'
+    useTestNG()
+}
+
+serviceTest.doFirst() {
+    buildOpenLmis.execute()
+}
 functionalTest.doFirst() {
     buildOpenLmis.execute()
 }

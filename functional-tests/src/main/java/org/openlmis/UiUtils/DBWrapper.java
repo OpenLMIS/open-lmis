@@ -38,9 +38,6 @@ public class DBWrapper {
             if (indicator.equalsIgnoreCase("select")) {
                 rs = st.executeQuery(Query);
 
-                if (rs.next()) {
-                    System.out.println(rs.getString(1));
-                }
             } else {
                 st.executeUpdate(Query);
             }
@@ -77,6 +74,8 @@ public class DBWrapper {
             dbWrapper.dbConnection("DELETE FROM requisition_line_item_losses_adjustments;", "alter");
             dbWrapper.dbConnection("DELETE FROM requisition_line_items;", "alter");
             dbWrapper.dbConnection("DELETE FROM requisitions;", "alter");
+        dbWrapper.dbConnection("DELETE FROM programs_supported;", "alter");
+
             dbWrapper.dbConnection("delete from facilities;", "alter");
 
         }
@@ -374,6 +373,34 @@ public class DBWrapper {
         "(19, (select id from programs where code = 'HIV'), true, 'R', 19, 'Price per pack'),\n" +
         "(20, (select id from programs where code = 'HIV'), true, 'C', 20, 'Total cost'),\n" +
         "(21, (select id from programs where code = 'HIV'), true, 'U', 21, 'Remarks');", "alter");
+    }
+
+    public String getFacilityIDDB() throws IOException , SQLException
+    {
+
+        DBWrapper dbWrapper=new DBWrapper();
+         String id=null;
+        ResultSet rs=dbWrapper.dbConnection("select id from facilities order by modifiedDate DESC limit 1", "select");
+
+        if (rs.next()) {
+         id=rs.getString("id");
+        }
+        return id;
+
+    }
+
+    public String getFacilityFieldBYID(String field, String id) throws IOException , SQLException
+    {
+
+        DBWrapper dbWrapper=new DBWrapper();
+        String facilityField=null;
+        ResultSet rs=dbWrapper.dbConnection("select "+field+" from facilities where id="+id+";", "select");
+
+        if (rs.next()) {
+            facilityField=rs.getString(1);
+        }
+        return facilityField;
+
     }
 
 }
