@@ -47,8 +47,8 @@ public class RnrLineItemBuilder {
       rnrLineItem.setNewPatientCount(3);
       rnrLineItem.setDosesPerMonth(30);
       rnrLineItem.setDosesPerDispensingUnit(10);
-      rnrLineItem.setNormalizedConsumption(37F);
-      rnrLineItem.setAmc(37f);
+      rnrLineItem.setNormalizedConsumption(37);
+      rnrLineItem.setAmc(37);
       rnrLineItem.setFullSupply(true);
       rnrLineItem.setMaxMonthsOfStock(2);
       rnrLineItem.setMaxStockQuantity(74);

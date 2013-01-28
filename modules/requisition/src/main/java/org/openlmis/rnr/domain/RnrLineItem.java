@@ -55,8 +55,8 @@ public class RnrLineItem {
   private Integer quantityRequested;
   private String reasonForRequestedQuantity;
 
-  private Float amc;
-  private Float normalizedConsumption;
+  private Integer amc;
+  private Integer normalizedConsumption;
   private Integer calculatedOrderQuantity;
   private Integer maxStockQuantity;
 
@@ -108,8 +108,8 @@ public class RnrLineItem {
     this.lossesAndAdjustments.add(lossesAndAdjustments);
   }
 
-  public boolean validate(boolean formulaValidationRequired) {
-    if (!validateMandatoryFields() || !validateCalculatedFields(formulaValidationRequired)) {
+  public boolean validate(boolean arithmeticValidationRequired) {
+    if (!validateMandatoryFields() || !validateCalculatedFields(arithmeticValidationRequired)) {
       throw new DataException(new OpenLmisMessage(Rnr.RNR_VALIDATION_ERROR));
     }
     return true;
@@ -117,6 +117,10 @@ public class RnrLineItem {
 
   public void calculate() {
     packsToShip = calculatePacksToShip();
+    amc = normalizedConsumption = calculateNormalizedConsumption();
+    totalLossesAndAdjustments = calculateTotalLossesAndAdjustments();
+    maxStockQuantity = calculateMaxStockQuantity();
+    calculatedOrderQuantity = calculateOrderQuantity();
   }
 
   private boolean validateMandatoryFields() {
@@ -124,16 +128,12 @@ public class RnrLineItem {
         !isPresent(newPatientCount) || !isPresent(stockOutDays)) && (quantityRequested == null || isPresent(reasonForRequestedQuantity));
   }
 
-  private boolean validateCalculatedFields(boolean formulaValidationRequired) {
+  private boolean validateCalculatedFields(boolean arithmeticValidationRequired) {
     boolean validQuantityDispensed = true;
-    if (formulaValidationRequired) {
+    if (arithmeticValidationRequired) {
       validQuantityDispensed = (quantityDispensed == (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand));
     }
-    return ((quantityDispensed >= 0) && (stockInHand >= 0)) && validQuantityDispensed &&
-        totalLossesAndAdjustments.equals(calculateTotalLossesAndAdjustments()) &&
-        (normalizedConsumption.intValue() == (calculateNormalizedConsumption())) &&
-        normalizedConsumption.equals(amc) && maxStockQuantity.equals(calculateMaxStockQuantity()) &&
-        calculatedOrderQuantity.equals(calculateOrderQuantity());
+    return (quantityDispensed >= 0 && stockInHand >= 0 && validQuantityDispensed);
   }
 
   private boolean isPresent(Object value) {
@@ -164,7 +164,7 @@ public class RnrLineItem {
   }
 
   private Integer calculateMaxStockQuantity() {
-    return maxMonthsOfStock * amc.intValue();
+    return maxMonthsOfStock * amc;
   }
 
   private Integer calculateNormalizedConsumption() {

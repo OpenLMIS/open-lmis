@@ -12,25 +12,24 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.exception.DataException;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.ProductBuilder.code;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
+import static org.openlmis.rnr.builder.RnrLineItemBuilder.lossesAndAdjustments;
 
 public class RnrLineItemTest {
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
   private RnrLineItem lineItem;
-  private boolean formulaValidated = false;
+  private boolean formulaValidated;
 
   @Before
   public void setUp() throws Exception {
+    formulaValidated = false;
     lineItem = make(a(defaultRnrLineItem));
   }
 
@@ -138,8 +137,7 @@ public class RnrLineItemTest {
     lineItem.setTotalLossesAndAdjustments(1);
     lineItem.setStockInHand(4);
     lineItem.setQuantityDispensed(9);
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage(Rnr.RNR_VALIDATION_ERROR);
+
     lineItem.validate(formulaValidated);
   }
 
@@ -156,7 +154,7 @@ public class RnrLineItemTest {
   }
 
   @Test
-  public void shouldThrowExceptionIfCalculationForTotalLossesAndAdjustmentsNotValid() throws Exception {
+  public void shouldRecalculateTotalLossesAndAdjustments() throws Exception {
     LossesAndAdjustmentsType additive = new LossesAndAdjustmentsType();
     LossesAndAdjustmentsType subtractive = new LossesAndAdjustmentsType();
     additive.setAdditive(true);
@@ -164,93 +162,73 @@ public class RnrLineItemTest {
     LossesAndAdjustments add10 = new LossesAndAdjustments(1, additive, 10);
     LossesAndAdjustments sub5 = new LossesAndAdjustments(1, subtractive, 5);
     LossesAndAdjustments add20 = new LossesAndAdjustments(1, additive, 20);
-    lineItem.addLossesAndAdjustments(add10);
+    RnrLineItem lineItem = make(a(defaultRnrLineItem, with(lossesAndAdjustments, add10)));
     lineItem.addLossesAndAdjustments(sub5);
     lineItem.addLossesAndAdjustments(add20);
     lineItem.setTotalLossesAndAdjustments(20);
     lineItem.setQuantityDispensed(29);
 
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage(Rnr.RNR_VALIDATION_ERROR);
 
-    lineItem.validate(formulaValidated);
+    lineItem.calculate();
+
+    assertThat(lineItem.getTotalLossesAndAdjustments(), is(25));
   }
 
 
   @Test
-  public void shouldNotThrowExceptionIfCalculationForTotalLossesAndAdjustmentsValid() throws Exception {
-    LossesAndAdjustmentsType additive = new LossesAndAdjustmentsType();
-    LossesAndAdjustmentsType subtractive = new LossesAndAdjustmentsType();
-    additive.setAdditive(true);
-    subtractive.setAdditive(false);
-    LossesAndAdjustments add10 = new LossesAndAdjustments(1, additive, 10);
-    LossesAndAdjustments sub10 = new LossesAndAdjustments(1, subtractive, 10);
-    LossesAndAdjustments add1 = new LossesAndAdjustments(1, additive, 1);
-    List<LossesAndAdjustments> lossesAndAdjustmentsList = new ArrayList<>();
-    lossesAndAdjustmentsList.add(add10);
-    lossesAndAdjustmentsList.add(add1);
-    lossesAndAdjustmentsList.add(sub10);
-    lineItem.setLossesAndAdjustments(lossesAndAdjustmentsList);
-    lineItem.setTotalLossesAndAdjustments(1);
-
-    assertTrue(lineItem.validate(formulaValidated));
-  }
-
-  @Test
-  public void shouldThrowExceptionIfCalculationForNormalizedConsumptionNotValid() throws Exception {
-    lineItem.setStockOutDays(2);
-    lineItem.setNewPatientCount(5);
-    lineItem.setDosesPerMonth(30);
-    lineItem.setDosesPerDispensingUnit(10);
-    lineItem.setNormalizedConsumption(5F);
-
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage(Rnr.RNR_VALIDATION_ERROR);
-    assertTrue(lineItem.validate(formulaValidated));
-  }
-
-  @Test
-  public void shouldNotThrowExceptionIfCalculationForNormalizedConsumptionValid() throws Exception {
+  public void shouldRecalculateNormalizedConsumption() throws Exception {
     lineItem.setStockOutDays(3);
     lineItem.setNewPatientCount(3);
     lineItem.setDosesPerMonth(30);
     lineItem.setDosesPerDispensingUnit(10);
-    lineItem.setNormalizedConsumption(37F);
-    assertTrue(lineItem.validate(formulaValidated));
+    lineItem.setNormalizedConsumption(37345);
+
+    lineItem.calculate();
+
+    assertThat(lineItem.getNormalizedConsumption(), is(37));
   }
 
   @Test
-  public void shouldThrowExceptionIfAMCNotEqualToNormalizedConsumption() throws Exception {
-    lineItem.setNormalizedConsumption(22f);
-    lineItem.setAmc(10f);
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage(Rnr.RNR_VALIDATION_ERROR);
-    lineItem.validate(formulaValidated);
+  public void shouldSetAMCSameAsCalculatedNormalizedConsumption() throws Exception {
+    lineItem.setStockOutDays(3);
+    lineItem.setNewPatientCount(3);
+    lineItem.setDosesPerMonth(30);
+    lineItem.setDosesPerDispensingUnit(10);
+    lineItem.setNormalizedConsumption(37345);
 
+    lineItem.calculate();
+
+    assertThat(lineItem.getAmc(), is(37));
   }
 
   @Test
-  public void shouldThrowExceptionIfCalculationForMaxStockQuantityNotValid() throws Exception {
-    lineItem.setAmc(37F);
-    lineItem.setMaxMonthsOfStock(2);
-    lineItem.setMaxStockQuantity(56);
+  public void shouldRecalculateMaxStockQuantityBasedOnCalculatedAMC() throws Exception {
+    lineItem.setStockOutDays(3);
+    lineItem.setNewPatientCount(3);
+    lineItem.setDosesPerMonth(30);
+    lineItem.setDosesPerDispensingUnit(10);
+    lineItem.setNormalizedConsumption(37345);
+    lineItem.setMaxMonthsOfStock(10);
 
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage(Rnr.RNR_VALIDATION_ERROR);
+    lineItem.calculate();
 
-    lineItem.validate(formulaValidated);
+    assertThat(lineItem.getMaxStockQuantity(), is(370));
   }
 
   @Test
-  public void shouldThrowExceptionIfCalculatedOrderQuantityNotValid() throws Exception {
-    lineItem.setMaxStockQuantity(74);
-    lineItem.setStockInHand(4);
-    lineItem.setCalculatedOrderQuantity(65);
+  public void shouldRecalculatedOrderQuantityBasedOnCalculatedMaxStockQuantityAndStockInHand() throws Exception {
+    lineItem.setStockOutDays(3);
+    lineItem.setNewPatientCount(3);
+    lineItem.setDosesPerMonth(30);
+    lineItem.setDosesPerDispensingUnit(10);
+    lineItem.setNormalizedConsumption(37345);
+    lineItem.setMaxMonthsOfStock(10);
+    lineItem.setMaxStockQuantity(370);
+    lineItem.setStockInHand(300);
 
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage(Rnr.RNR_VALIDATION_ERROR);
+    lineItem.calculate();
 
-    lineItem.validate(formulaValidated);
+    assertThat(lineItem.getCalculatedOrderQuantity(), is(70));
   }
 
 
