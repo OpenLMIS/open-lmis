@@ -182,4 +182,13 @@ public class SupervisoryNodeRepositoryTest {
     verify(supervisoryNodeMapper).getAllSupervisoryNodesInHierarchyBy(userId, programId, "{CREATE_REQUISITION, AUTHORIZE_REQUISITION}");
     assertThat(actualList, is(expectedList));
   }
+
+  @Test
+  public void shouldGetParentNodeForAGiveSupervisoryNode() throws Exception {
+    SupervisoryNode expected = new SupervisoryNode();
+    when(supervisoryNodeMapper.getParent(1)).thenReturn(expected);
+    final SupervisoryNode actual = repository.getParent(1);
+    verify(supervisoryNodeMapper).getParent(1);
+    assertThat(actual, is(expected));
+  }
 }

@@ -23,14 +23,14 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnRColum
 
   function positiveIntegerCellTemplate(field, value) {
     return '<div><ng-form name="positiveIntegerForm"  > <input ui-event="{blur : \'row.entity.updateCostWithApprovedQuantity(row.entity)\'}" ng-class="{red: approvedQuantityRequiredFlag && positiveIntegerForm.' + field + '.$error.required}" ' +
-      '  ng-required="true" maxlength="8" minLengh="1" name=' + field + ' ng-model=' + value + '  ng-change="patternValidate(positiveIntegerForm.' + field + '.$error,'+value+')" />' +
+      '  ng-required="true" maxlength="8" minLengh="1" name=' + field + ' ng-model=' + value + '  ng-change="validatePositiveInteger(positiveIntegerForm.' + field + '.$error,'+value+')" />' +
       '<span class="field-error" id=' + field + ' ng-show="positiveIntegerForm.' + field + '.$error.pattern" ng-class="{red: approvedQuantityNumberFlag && positiveIntegerForm.' + field + '.$error.pattern}">Please Enter Numeric value</span></ng-form></div>';
   }
 
-  $scope.patternValidate = function(error, value){
+  $scope.validatePositiveInteger = function(error, value){
     if(value == undefined){ error.pattern=false;  return};
 
-    error.pattern = isNotAPositiveNumber(value);
+    error.pattern = !isPositiveNumber(value);
   }
 
   $scope.gridOptions = { data:'lineItems',
@@ -45,7 +45,7 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnRColum
   $scope.saveRnr = function () {
     $scope.approvedQuantityNumberFlag = false;
     $($scope.lineItems).each(function (i, lineItem) {
-      if (lineItem.quantityApproved != undefined && isNotAPositiveNumber(lineItem.quantityApproved)) {
+      if (lineItem.quantityApproved != undefined && !isPositiveNumber(lineItem.quantityApproved)) {
         $scope.approvedQuantityNumberFlag = true;
         return false;
       }
@@ -69,11 +69,10 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnRColum
   $scope.approveRnr = function () {
     $scope.approvedQuantityRequiredFlag = false;
     $($scope.lineItems).each(function (i, lineItem) {
-      if (lineItem.quantityApproved == undefined || lineItem.quantityApproved == "") {
+      if (lineItem.quantityApproved == undefined || lineItem.quantityApproved == "" || !isPositiveNumber(lineItem.quantityApproved)) {
         $scope.approvedQuantityRequiredFlag = true;
         return false;
-      }
-      ;
+      };
     })
     if ($scope.approvedQuantityRequiredFlag) {
       $scope.error = "Please complete the highlighted fields on the R&R form before approving";
@@ -90,9 +89,9 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnRColum
       });
   }
 
-  function isNotAPositiveNumber(value) {
+  function isPositiveNumber(value) {
     var INTEGER_REGEXP = /^\d*$/;
-    return !INTEGER_REGEXP.test(value);
+    return INTEGER_REGEXP.test(value);
 
   }
 

@@ -52,7 +52,15 @@ public class SupervisoryNodeService {
     return users.get(0);
   }
 
-  public List<SupervisoryNode> getForUserWithRight(Integer userId, Right... rights) {
-    return null;  //To change body of created methods use File | Settings | File Templates.
+
+
+  public SupervisoryNode getParent(Integer id) {
+    return supervisoryNodeRepository.getParent(id);
+  }
+
+  public User getApproverForGivenSupervisoryNodeAndProgram(Integer supervisoryNodeId, Integer programId) {
+    List<User> users = userRepository.getUsersWithRightInNodeForProgram(supervisoryNodeId, programId, APPROVE_REQUISITION);
+    if(users.size() ==0 ) return null;
+    return users.get(0);
   }
 }

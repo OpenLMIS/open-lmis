@@ -124,6 +124,34 @@ public class SupervisoryNodeMapperIT {
     assertTrue(userSupervisoryNodes.contains(childNode));
   }
 
+  @Test
+  public void shouldGetSupervisoryNodeForRG() {
+    supervisoryNodeMapper.insert(supervisoryNode);
+    RequisitionGroup requisitionGroup = make(a(defaultRequisitionGroup));
+    requisitionGroup.setSupervisoryNode(supervisoryNode);
+    requisitionGroupMapper.insert(requisitionGroup);
+
+    SupervisoryNode actualSupervisoryNode = supervisoryNodeMapper.getFor(requisitionGroup.getCode());
+
+    assertThat(actualSupervisoryNode, is(supervisoryNode));
+  }
+
+  @Test
+  public void shouldGetParentForAGiveSupervisoryNode() throws Exception {
+    SupervisoryNode parentNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN1")));
+    parentNode.setFacility(facility);
+    insertSupervisoryNode(parentNode);
+
+    SupervisoryNode childNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "CN1")));
+    childNode.setFacility(facility);
+    childNode.setParent(parentNode);
+    insertSupervisoryNode(childNode);
+
+    final SupervisoryNode parent = supervisoryNodeMapper.getParent(childNode.getId());
+
+    assertThat(parent, is(parentNode));
+  }
+
   private SupervisoryNode insertSupervisoryNode(SupervisoryNode supervisoryNode) {
     supervisoryNodeMapper.insert(supervisoryNode);
     return supervisoryNode;
@@ -143,17 +171,5 @@ public class SupervisoryNodeMapperIT {
     User user = make(a(defaultUser, with(facilityId, facility.getId())));
     userMapper.insert(user);
     return user;
-  }
-
-  @Test
-  public void shouldGetSupervisoryNodeForRG() {
-    supervisoryNodeMapper.insert(supervisoryNode);
-    RequisitionGroup requisitionGroup = make(a(defaultRequisitionGroup));
-    requisitionGroup.setSupervisoryNode(supervisoryNode);
-    requisitionGroupMapper.insert(requisitionGroup);
-
-    SupervisoryNode actualSupervisoryNode = supervisoryNodeMapper.getFor(requisitionGroup.getCode());
-
-    assertThat(actualSupervisoryNode, is(supervisoryNode));
   }
 }

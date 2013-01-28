@@ -116,6 +116,18 @@ public class RequisitionController extends BaseController {
     }
   }
 
+  @RequestMapping(value = "/requisitions/{id}/approve", method = PUT, headers = ACCEPT_JSON)
+  @PreAuthorize("hasPermission('', 'APPROVE_REQUISITION')")
+  public ResponseEntity<OpenLmisResponse> approve(Rnr rnr, HttpServletRequest request) {
+    rnr.setModifiedBy(loggedInUserId(request));
+    try{
+    return OpenLmisResponse.success(requisitionService.approve(rnr));
+    }catch (DataException dataException){
+      return OpenLmisResponse.error(dataException, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+
   @RequestMapping(value = "/requisitions-for-approval", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("hasPermission('', 'APPROVE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> listForApproval(HttpServletRequest request) {
@@ -140,25 +152,18 @@ public class RequisitionController extends BaseController {
   }
 
 
-
   private Rnr getRequisitionForCurrentPeriod(Integer facilityId, Integer programId, List<ProcessingPeriod> periodList) {
     if (periodList == null || periodList.isEmpty()) return null;
 
     return requisitionService.get(facilityId, programId, periodList.get(0).getId());
   }
 
-  public ResponseEntity<OpenLmisResponse> approve(Rnr rnr, HttpServletRequest request) {
-    rnr.setModifiedBy(loggedInUserId(request));
-    return OpenLmisResponse.success(requisitionService.approve(rnr));
-  }
-
-
-  @RequestMapping(value = "/requisitions/{id}", method = GET,headers = ACCEPT_JSON)
+  @RequestMapping(value = "/requisitions/{id}", method = GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getById(@PathVariable Integer id) {
-   try {
-    return response(RNR, requisitionService.getById(id));
-   }catch (DataException dataException){
-     return error(dataException, HttpStatus.NOT_FOUND);
-   }
+    try {
+      return response(RNR, requisitionService.getById(id));
+    } catch (DataException dataException) {
+      return error(dataException, HttpStatus.NOT_FOUND);
+    }
   }
 }

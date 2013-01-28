@@ -30,6 +30,7 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.domain.Right.*;
@@ -70,6 +71,7 @@ public class RequisitionServiceTest {
 
   private Rnr submittedRnr;
   private Rnr initiatedRnr;
+  private Rnr authorizedRnr;
 
   @Before
   public void setup() {
@@ -77,6 +79,7 @@ public class RequisitionServiceTest {
         supervisoryNodeService, roleRightService, programService, processingScheduleService, facilityService);
     submittedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, SUBMITTED)));
     initiatedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, INITIATED)));
+    authorizedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, AUTHORIZED)));
   }
 
   @Test
@@ -415,6 +418,66 @@ public class RequisitionServiceTest {
     assertThat(requisition.getPeriod(), is(expectedPeriod));
     verify(requisitionRepository, times(1)).getAuthorizedRequisitions(firstAssignment);
     verify(requisitionRepository, times(1)).getAuthorizedRequisitions(secondAssignment);
+  }
+
+  @Test
+  public void shouldNotApproveAnRnrIfStatusIsNotAuthorized() throws Exception {
+    when(requisitionRepository.getById(submittedRnr.getId())).thenReturn(submittedRnr);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage(RNR_OPERATION_UNAUTHORIZED);
+
+    requisitionService.approve(submittedRnr);
+  }
+
+  @Test
+  public void shouldApproveAnRnrAndChangeStatusToApprovedIfThereIsNoFurtherApprovalNeeded() throws Exception {
+    authorizedRnr.setSupervisoryNodeId(1);
+    when(requisitionRepository.getById(authorizedRnr.getId())).thenReturn(authorizedRnr);
+
+    OpenLmisMessage message = requisitionService.approve(authorizedRnr);
+    verify(requisitionRepository).update(authorizedRnr);
+    assertThat(authorizedRnr.getStatus(), is(APPROVED));
+    assertThat(authorizedRnr.getSupervisoryNodeId(), is(nullValue()));
+    assertThat(message.getCode(), is(RNR_APPROVED_SUCCESSFULLY));
+  }
+
+  @Test
+  public void shouldApproveAnRnrAndKeepStatusInApprovalIfFurtherApprovalNeeded() throws Exception {
+    authorizedRnr.setSupervisoryNodeId(1);
+    when(requisitionRepository.getById(authorizedRnr.getId())).thenReturn(authorizedRnr);
+
+    SupervisoryNode parentNode = new SupervisoryNode() {{
+      setId(2);
+    }};
+    when(supervisoryNodeService.getParent(1)).thenReturn(parentNode);
+    when(supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(parentNode.getId(), authorizedRnr.getProgramId())).thenReturn(new User());
+
+    OpenLmisMessage message = requisitionService.approve(authorizedRnr);
+
+    verify(requisitionRepository).update(authorizedRnr);
+    assertThat(authorizedRnr.getStatus(), is(IN_APPROVAL));
+    assertThat(authorizedRnr.getSupervisoryNodeId(), is(2));
+    assertThat(message.getCode(), is(RNR_APPROVED_SUCCESSFULLY));
+  }
+
+  @Test
+  public void shouldApproveAnRnrAndKeepStatusInApprovalIfFurtherApprovalNeededAndShouldGiveMessageIfThereIsNoSupervisorAssigned() throws Exception {
+    authorizedRnr.setSupervisoryNodeId(1);
+    when(requisitionRepository.getById(authorizedRnr.getId())).thenReturn(authorizedRnr);
+
+    SupervisoryNode parentNode = new SupervisoryNode() {{
+      setId(2);
+    }};
+    when(supervisoryNodeService.getParent(1)).thenReturn(parentNode);
+
+    when(supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(parentNode.getId(), authorizedRnr.getProgramId())).thenReturn(null);
+    OpenLmisMessage message = requisitionService.approve(authorizedRnr);
+
+    verify(requisitionRepository).update(authorizedRnr);
+    assertThat(authorizedRnr.getStatus(), is(IN_APPROVAL));
+    assertThat(authorizedRnr.getSupervisoryNodeId(), is(2));
+    assertThat(message.getCode(), is(RNR_APPROVED_SUCCESSFULLY_WITHOUT_SUPERVISOR));
   }
 
   @Test

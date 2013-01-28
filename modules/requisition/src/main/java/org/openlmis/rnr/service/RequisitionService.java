@@ -31,8 +31,11 @@ public class RequisitionService {
   public static final String RNR_AUTHORIZED_SUCCESSFULLY = "rnr.authorized.success";
   public static final String RNR_SUBMITTED_SUCCESSFULLY = "rnr.submitted.success";
   public static final String RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR = "rnr.authorized.without.supervisor";
+  public static final String RNR_APPROVED_SUCCESSFULLY_WITHOUT_SUPERVISOR = "rnr.approved.without.supervisor";
   public static final String NO_SUPERVISORY_NODE_CONTACT_ADMIN = "rnr.submitted.without.supervisor";
   public static final String RNR_PREVIOUS_NOT_FILLED_ERROR = "rnr.previous.not.filled.error";
+  public static final String RNR_APPROVED_SUCCESSFULLY = "rnr.approved.success";
+
 
   private RequisitionRepository requisitionRepository;
   private RnrTemplateRepository rnrTemplateRepository;
@@ -95,7 +98,6 @@ public class RequisitionService {
   }
 
 
-
   public List<LossesAndAdjustmentsType> getLossesAndAdjustmentsTypes() {
     return requisitionRepository.getLossesAndAdjustmentsTypes();
   }
@@ -131,6 +133,37 @@ public class RequisitionService {
     return new OpenLmisMessage(msg);
   }
 
+  public OpenLmisMessage approve(Rnr rnr) {
+    Rnr savedRnr = requisitionRepository.getById(rnr.getId());
+    if (!(savedRnr.getStatus() == AUTHORIZED || savedRnr.getStatus() == IN_APPROVAL))
+      throw new DataException(RNR_OPERATION_UNAUTHORIZED);
+
+    final SupervisoryNode parent = supervisoryNodeService.getParent(rnr.getSupervisoryNodeId());
+    if (parent == null) {
+      return doFinalApproval(rnr);
+    } else {
+      return approveAndAssignToNextSupervisoryNode(rnr, parent);
+    }
+  }
+
+  private OpenLmisMessage approveAndAssignToNextSupervisoryNode(Rnr rnr, SupervisoryNode parent) {
+    final User nextApprover = supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(parent.getId(), rnr.getProgramId());
+    rnr.setStatus(IN_APPROVAL);
+    rnr.setSupervisoryNodeId(parent.getId());
+    requisitionRepository.update(rnr);
+    if (nextApprover == null) {
+      return new OpenLmisMessage(RNR_APPROVED_SUCCESSFULLY_WITHOUT_SUPERVISOR);
+    }
+    return new OpenLmisMessage(RNR_APPROVED_SUCCESSFULLY);
+  }
+
+  private OpenLmisMessage doFinalApproval(Rnr rnr) {
+    rnr.setStatus(APPROVED);
+    rnr.setSupervisoryNodeId(null);
+    requisitionRepository.update(rnr);
+    return new OpenLmisMessage(RNR_APPROVED_SUCCESSFULLY);
+  }
+
   public List<Rnr> listForApproval(Integer userId) {
     List<RoleAssignment> assignments = roleRightsService.getRoleAssignments(APPROVE_REQUISITION, userId);
     List<Rnr> requisitionsForApproval = new ArrayList<>();
@@ -143,7 +176,7 @@ public class RequisitionService {
   }
 
   private void fillProgramFacilityPeriod(Rnr... requisitionsForApproval) {
-    for(Rnr requisition : requisitionsForApproval){
+    for (Rnr requisition : requisitionsForApproval) {
       requisition.setProgram(programService.getById(requisition.getProgram().getId()));
       requisition.setFacility(facilityService.getById(requisition.getFacility().getId()));
       requisition.setPeriod(processingScheduleService.getPeriodById(requisition.getPeriod().getId()));
@@ -158,9 +191,6 @@ public class RequisitionService {
     return processingScheduleService.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate, periodIdOfLastRequisitionToEnterPostSubmitFlow);
   }
 
-  public OpenLmisMessage approve(Rnr rnr) {
-    return null;  //To change body of created methods use File | Settings | File Templates.
-  }
 
   public Rnr getById(Integer id) {
     final Rnr rnr = requisitionRepository.getById(id);

@@ -72,4 +72,8 @@ public class SupervisoryNodeRepository {
     RequisitionGroup requisitionGroup = requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(programId, facilityId);
     return (requisitionGroup == null) ? null : supervisoryNodeMapper.getFor(requisitionGroup.getCode());
   }
+
+  public SupervisoryNode getParent(Integer id) {
+    return supervisoryNodeMapper.getParent(id);
+  }
 }

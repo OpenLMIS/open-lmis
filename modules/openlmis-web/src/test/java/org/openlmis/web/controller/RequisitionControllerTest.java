@@ -201,6 +201,17 @@ public class RequisitionControllerTest {
   }
 
   @Test
+  public void shouldGiveErrorMessageWhenServiceThrowsSomeExceptionWhileApprovingAnRnr() throws Exception {
+    doThrow(new DataException("some-error")).when(requisitionService).approve(rnr);
+
+    ResponseEntity<OpenLmisResponse> response = controller.approve(rnr, request);
+
+    verify(requisitionService).approve(rnr);
+    assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+    assertThat(response.getBody().getErrorMsg(), is("some-error"));
+  }
+
+  @Test
   public void shouldReturnAllPeriodsForInitiatingRequisition() {
     ProcessingPeriod processingPeriod = new ProcessingPeriod();
     processingPeriod.setId(6);
