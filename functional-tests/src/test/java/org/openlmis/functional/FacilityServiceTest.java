@@ -1,15 +1,13 @@
-package org.openlmis.service;
+package org.openlmis.functional;
 
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
-
 import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.servicelayerutils.ServiceUtils;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.testng.annotations.*;
-
+import org.testng.annotations.Test;
 
 
 @TransactionConfiguration(defaultRollback = true)
@@ -84,7 +82,7 @@ public class FacilityServiceTest extends TestCaseHelper {
             SeleneseTestNgHelper.assertEquals(dbWrapper.getFacilityFieldBYID("active", facilityID),"t");
             SeleneseTestNgHelper.assertEquals(dbWrapper.getFacilityFieldBYID("datareportable", facilityID),"t");
 
-            serviceUtils.getJSON(BASE_URL+"//j_spring_security_logout");
+            serviceUtils.getJSON(BASE_URL + "//j_spring_security_logout");
 
 
             serviceUtils.getJSON(BASE_URL+"//j_spring_security_logout");

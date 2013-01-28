@@ -21,7 +21,6 @@ dependencies {
 
 test {
     exclude '**/org/openlmis/functional/*.*'
-    exclude '**/org/openlmis/service/*.*'
 }
 
 task buildOpenLmis(type: GradleBuild) {
@@ -34,14 +33,6 @@ task functionalTest(type: Test) {
     useTestNG()
 }
 
-task serviceTest(type: Test) {
-    include '**/org/openlmis/service/*.*'
-    useTestNG()
-}
-
-serviceTest.doFirst() {
-    buildOpenLmis.execute()
-}
 functionalTest.doFirst() {
     buildOpenLmis.execute()
 }
