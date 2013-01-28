@@ -1,4 +1,12 @@
-function ApproveRnrController($scope, requisition, Requisitions, programRnRColumnList, $location) {
+function ApproveRnrController($scope, requisition, Requisitions, programRnRColumnList, $location, LossesAndAdjustmentsReferenceData) {
+  $scope.error = "";
+  $scope.message = "";
+
+  $scope.lossesAndAdjustmentsModal = [];
+  LossesAndAdjustmentsReferenceData.get({}, function (data) {
+    $scope.allTypes = data.lossAdjustmentTypes;
+  }, {});
+
   var columnDefinitions = [];
   $scope.requisition = requisition;
   $scope.lineItems = [];
@@ -6,30 +14,42 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnRColum
   if (programRnRColumnList.length > 0) {
     $scope.programRnRColumnList = programRnRColumnList;
     $($scope.programRnRColumnList).each(function (i, column) {
-      if (column.name == "quantityApproved") {
-        columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:positiveIntegerCellTemplate(column.name, 'row.entity.quantityApproved')})
-      } else if (column.name == "remarks") {
-        columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:freeTextCellTemplate(column.name, 'row.entity.remarks')})
-      } else {
-        columnDefinitions.push({field:column.name, displayName:column.label});
+      if (column.name == "lossesAndAdjustments") {
+        columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:lossesAndAdjustmentsTemplate()})
+        return;
       }
+      if (column.name == "quantityApproved") {
+        columnDefinitions.push({field:column.name, displayName:column.label, width:140, cellTemplate:positiveIntegerCellTemplate(column.name, 'row.entity.quantityApproved')})
+        return;
+      }
+      if (column.name == "remarks") {
+        columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:freeTextCellTemplate(column.name, 'row.entity.remarks')})
+        return;
+      }
+
+      columnDefinitions.push({field:column.name, displayName:column.label});
     });
   } else {
     $scope.$parent.error = "Please contact Admin to define R&R template for this program";
   }
+
+  function lossesAndAdjustmentsTemplate() {
+    return '/public/pages/logistics/rnr/partials/lossesAndAdjustments.html';
+  }
+
   function freeTextCellTemplate(field, value) {
     return '<div><input maxlength="250" name="' + field + '" ng-model="' + value + '"/></div>';
   }
 
   function positiveIntegerCellTemplate(field, value) {
-    return '<div><ng-form name="positiveIntegerForm"  > <input ui-event="{blur : \'row.entity.updateCostWithApprovedQuantity(row.entity)\'}" ng-class="{red: approvedQuantityRequiredFlag && positiveIntegerForm.' + field + '.$error.required}" ' +
-      '  ng-required="true" maxlength="8" minLengh="1" name=' + field + ' ng-model=' + value + '  ng-change="validatePositiveInteger(positiveIntegerForm.' + field + '.$error,' + value + ')" />' +
-      '<span class="field-error" id=' + field + ' ng-show="positiveIntegerForm.' + field + '.$error.pattern" ng-class="{red: approvedQuantityNumberFlag && positiveIntegerForm.' + field + '.$error.pattern}">Please Enter Numeric value</span></ng-form></div>';
+    return '<div><ng-form name="positiveIntegerForm"  > <input ui-event="{blur : \'row.entity.updateCostWithApprovedQuantity(requisition, row.entity)\'}" ng-class="{\'required-error\': approvedQuantityRequiredFlag && positiveIntegerForm.' + field + '.$error.required}" ' +
+      '  ng-required="true" maxlength="8"  name=' + field + ' ng-model=' + value + '  ng-change="validatePositiveInteger(positiveIntegerForm.' + field + '.$error,' + value + ')" />' +
+      '<span class="rnr-form-error" id=' + field + ' ng-show="positiveIntegerForm.' + field + '.$error.pattern" ng-class="{\'required-error\': approvedQuantityInvalidFlag && positiveIntegerForm.' + field + '.$error.positiveInteger}">Please Enter Numeric value</span></ng-form></div>';
   }
 
   $scope.validatePositiveInteger = function (error, value) {
     if (value == undefined) {
-      error.pattern = false;
+      error.positiveInteger = false;
       return
     }
     ;
@@ -43,19 +63,20 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnRColum
     displaySelectionCheckbox:false,
     showColumnMenu:false,
     showFilter:false,
+    rowHeight:44,
     columnDefs:columnDefinitions
   };
 
   $scope.saveRnr = function () {
-    $scope.approvedQuantityNumberFlag = false;
+    $scope.approvedQuantityInvalidFlag = false;
     $($scope.lineItems).each(function (i, lineItem) {
       if (lineItem.quantityApproved != undefined && !isPositiveNumber(lineItem.quantityApproved)) {
-        $scope.approvedQuantityNumberFlag = true;
+        $scope.approvedQuantityInvalidFlag = true;
         return false;
       }
       ;
     })
-    if ($scope.approvedQuantityNumberFlag) {
+    if ($scope.approvedQuantityInvalidFlag) {
       $scope.error = "Please correct errors before saving.";
       $scope.message = "";
       return;
@@ -88,11 +109,31 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnRColum
       $scope.requisition, function (data) {
         $scope.$parent.message = data.success;
         $scope.error = "";
-        $location.path("rnr-for-approval/");
+        $location.path("rnr-for-approval");
       }, function (data) {
         $scope.error = data.error;
         $scope.message = "";
       });
+  }
+
+  $scope.closeLossesAndAdjustmentsForRnRLineItem = function (rnrLineItem) {
+    $scope.lossesAndAdjustmentsModal[rnrLineItem.id] = false;
+  };
+
+  $scope.showLossesAndAdjustmentModalForLineItem = function (lineItem) {
+    updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem);
+    $scope.lossesAndAdjustmentsModal[lineItem.id] = true;
+  };
+
+  function updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem) {
+    var lossesAndAdjustmentTypesForLineItem = [];
+    $(lineItem.lossesAndAdjustments).each(function (index, lineItemLossAndAdjustment) {
+      lossesAndAdjustmentTypesForLineItem.push(lineItemLossAndAdjustment.type.name);
+    });
+    var allTypes = $scope.allTypes;
+    $scope.lossesAndAdjustmentTypesToDisplay = $.grep(allTypes, function (lAndATypeObject) {
+      return $.inArray(lAndATypeObject.name, lossesAndAdjustmentTypesForLineItem) == -1;
+    });
   }
 
   function isPositiveNumber(value) {
@@ -105,12 +146,11 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnRColum
     $(rnr.lineItems).each(function (i, lineItem) {
       var rnrLineItem = new RnrLineItem(lineItem);
       jQuery.extend(true, lineItem, rnrLineItem);
-      lineItem.updateCostWithApprovedQuantity(lineItem);
+      lineItem.updateCostWithApprovedQuantity(requisition, lineItem);
       $scope.lineItems.push(lineItem);
     });
   }
 
-  ;
 
 }
 

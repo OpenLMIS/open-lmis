@@ -1,7 +1,7 @@
 describe('Approve Requisition controller', function () {
 
   var scope, ctrl, httpBackend, location, routeParams, requisitionHeader, controller, requisition,
-    programRnRColumnList, lineItems, columnDefinitions;
+    programRnRColumnList, lineItems, columnDefinitions, lossesAndAdjustmentsReferenceData;
 
   beforeEach(module('openlmis.services'));
 
@@ -18,12 +18,18 @@ describe('Approve Requisition controller', function () {
       {'name':'quantityApproved', 'label':'quantity approved'},
       {'name':'remarks', 'label':'remarks'}
     ];
+    httpBackend.expect('GET', '/requisitions/lossAndAdjustments/reference-data.json').respond({"lossAdjustmentTypes":{}});
     ctrl = controller(ApproveRnrController, {$scope:scope, requisition:requisition, programRnRColumnList:programRnRColumnList, $location:location, $routeParams:routeParams});
   }));
 
   it('should set rnr in scope', function () {
     expect(scope.requisition).toEqual(requisition);
   });
+
+  it('should set losses and adjustment types', function () {
+      expect(scope.requisition).toEqual(requisition);
+    });
+
 
   it('should set line-items in scope', function () {
     expect(scope.lineItems).toEqual(lineItems);
@@ -82,7 +88,7 @@ describe('Approve Requisition controller', function () {
     scope.approveRnr();
     httpBackend.flush();
 
-    expect(scope.message).toEqual("R&R approved successfully!");
+    expect(scope.$parent.message).toEqual("R&R approved successfully!");
   });
 
 })

@@ -96,9 +96,10 @@ var RnrLineItem = function (lineItem) {
     calculatePacksToShip(rnrLineItem, rnrLineItem.quantityApproved);
   }
 
-  this.updateCostWithApprovedQuantity = function (rnrLineItem) {
+  this.updateCostWithApprovedQuantity = function (rnr, rnrLineItem) {
     fillPacksToShipBasedOnApprovedQuantity(rnrLineItem);
     fillCost(rnrLineItem);
+    fillFullSupplyItemsSubmittedCost(rnr);
   }
 
   this.fill = function (rnr, programRnRColumnList) {
@@ -162,20 +163,6 @@ var RnrLineItem = function (lineItem) {
       rnrLineItem.calculatedOrderQuantity < 0 ? (rnrLineItem.calculatedOrderQuantity = 0) : 0;
     }
 
-
-    function fillFullSupplyItemsSubmittedCost() {
-      if (rnr == null || rnr.lineItems == null) return;
-
-      var cost = 0;
-      var lineItems = rnr.lineItems;
-      for (var lineItemIndex in lineItems) {
-        var lineItem = lineItems[lineItemIndex];
-        if (!lineItem || lineItem.cost == null || !isNumber(lineItem.cost)) continue;
-        cost += lineItem.cost;
-      }
-      rnr.fullSupplyItemsSubmittedCost = cost;
-    }
-
     var beginningBalance = parseIntWithBaseTen(rnrLineItem.beginningBalance);
     var quantityReceived = parseIntWithBaseTen(rnrLineItem.quantityReceived);
     var quantityDispensed = parseIntWithBaseTen(rnrLineItem.quantityDispensed);
@@ -190,8 +177,21 @@ var RnrLineItem = function (lineItem) {
     fillCalculatedOrderQuantity();
     fillPacksToShipBasedOnCalculatedOrderQuantityOrQuantityRequested(rnrLineItem);
     fillCost(rnrLineItem);
-    fillFullSupplyItemsSubmittedCost();
+    fillFullSupplyItemsSubmittedCost(rnr);
   };
+
+  function fillFullSupplyItemsSubmittedCost(rnr) {
+    if (rnr == null || rnr.lineItems == null) return;
+
+    var cost = 0;
+    var lineItems = rnr.lineItems;
+    for (var lineItemIndex in lineItems) {
+      var lineItem = lineItems[lineItemIndex];
+      if (!lineItem || lineItem.cost == null || !isNumber(lineItem.cost)) continue;
+      cost += lineItem.cost;
+    }
+    rnr.fullSupplyItemsSubmittedCost = cost;
+  }
 
   var updateTotalLossesAndAdjustment = function (rnrLineItem, quantity, additive) {
     if (!isNaN(quantity)) {
@@ -214,5 +214,6 @@ var RnrLineItem = function (lineItem) {
 
     return "";
   }
+
 };
 

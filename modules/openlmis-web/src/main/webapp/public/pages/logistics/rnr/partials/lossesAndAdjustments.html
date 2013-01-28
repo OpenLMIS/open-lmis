@@ -1,0 +1,39 @@
+<div id="lossesAndAdjustments"
+     class="fade ng-pristine ng-valid modal hide adjustments-modal" ui-modal
+     ng-model="lossesAndAdjustmentsModal[row.entity.id]"
+     data-backdrop="static" data-keyboard="false">
+  <div class="modal-header"><h3>Losses And Adjustments</h3></div>
+  <div class="modal-body">
+    <hr ng-show="row.entity.lossesAndAdjustments.length > 0"/>
+    <div class="adjustment-list" ng-show="row.entity.lossesAndAdjustments.length > 0">
+      <ul>
+        <li ng-repeat="oneLossAndAdjustment in row.entity.lossesAndAdjustments" class="clearfix">
+                                               <span class="tpl-adjustment-type">
+                                                 {{oneLossAndAdjustment.type.description}}
+                                               </span>
+                                               <span class="tpl-adjustment-qty">
+                                                     {{oneLossAndAdjustment.quantity}}
+                                               </span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="adjustment-total clearfix alert alert-warning" ng-show="row.entity.lossesAndAdjustments.length > 0">
+      <span class="pull-left">Total</span> {{row.entity.totalLossesAndAdjustments}}
+    </div>
+
+  </div>
+  <div class="modal-footer">
+
+    <input type="button" class="btn btn-success save-button"
+           ng-click="closeLossesAndAdjustmentsForRnRLineItem(row.entity)"
+           value="Close"/>
+  </div>
+</div>
+<div ng-class="highlightNestedFieldsWithError(row.entity[column.name], 'quantity')">
+  <a ng-click="showLossesAndAdjustmentModalForLineItem(row.entity)"
+     class="rnr-adjustment">
+                                            <span class="adjustment-value">
+                                          {{row.entity.totalLossesAndAdjustments}}</span>
+  </a>
+</div>
