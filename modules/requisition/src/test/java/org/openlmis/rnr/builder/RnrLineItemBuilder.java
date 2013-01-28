@@ -24,13 +24,14 @@ public class RnrLineItemBuilder {
     setType(type);
   }};
   public static final int STOCK_IN_HAND = 4;
+  public static final int BEGINNING_BALANCE = 10;
   public static final Instantiator<RnrLineItem> defaultRnrLineItem = new Instantiator<RnrLineItem>() {
 
     @Override
     public RnrLineItem instantiate(PropertyLookup<RnrLineItem> lookup) {
       RnrLineItem rnrLineItem = new RnrLineItem();
       rnrLineItem.setProductCode("P999");
-      rnrLineItem.setBeginningBalance(10);
+      rnrLineItem.setBeginningBalance(BEGINNING_BALANCE);
       rnrLineItem.setQuantityReceived(3);
 
       rnrLineItem.addLossesAndAdjustments(lookup.valueOf(lossesAndAdjustments, ONE_LOSS));

@@ -329,7 +329,7 @@ public class RequisitionServiceTest {
     rnr.setStatus(SUBMITTED);
     List<Right> listUserRights = Arrays.asList(AUTHORIZE_REQUISITION);
     when(roleRightService.getRights(userId)).thenReturn(listUserRights);
-
+    when(requisitionRepository.getRequisition(rnr.getFacilityId(), rnr.getProgramId(), rnr.getPeriodId())).thenReturn(make(a(defaultRnr)));
 
     requisitionService.save(rnr);
     verify(requisitionRepository).update(rnr);
@@ -343,6 +343,7 @@ public class RequisitionServiceTest {
     rnr.setStatus(AUTHORIZED);
     List<Right> listUserRights = Arrays.asList(APPROVE_REQUISITION);
     when(roleRightService.getRights(userId)).thenReturn(listUserRights);
+    when(requisitionRepository.getRequisition(rnr.getFacilityId(), rnr.getProgramId(), rnr.getPeriodId())).thenReturn(make(a(defaultRnr)));
 
 
     requisitionService.save(rnr);
@@ -357,6 +358,7 @@ public class RequisitionServiceTest {
     rnr.setStatus(INITIATED);
     List<Right> listUserRights = Arrays.asList(CREATE_REQUISITION);
     when(roleRightService.getRights(userId)).thenReturn(listUserRights);
+    when(requisitionRepository.getRequisition(rnr.getFacilityId(), rnr.getProgramId(), rnr.getPeriodId())).thenReturn(make(a(defaultRnr)));
     requisitionService.save(rnr);
     verify(requisitionRepository).update(rnr);
   }
@@ -610,5 +612,24 @@ public class RequisitionServiceTest {
     assertThat(requisition.getLineItems().get(0).getBeginningBalance(), is(nullValue()));
     verify(processingScheduleService).getImmediatePreviousPeriod(PERIOD_ID);
     verify(requisitionRepository).getRequisition(FACILITY_ID, PROGRAM_ID, previousPeriodId);
+  }
+
+  @Test
+  public void shouldNotAlterBeginningBalanceIfPreviousStockInHandAvailableFlagIsSet() throws Exception {
+    Rnr savedRequisition = make(a(defaultRnr));
+    Rnr requisition = createRequisition(PERIOD_ID, SUBMITTED);
+    requisition.setModifiedBy(USER_ID);
+    requisition.getLineItems().get(0).setBeginningBalance(3);
+    savedRequisition.getLineItems().get(0).setPreviousStockInHandAvailable(true);
+    List<Right> listUserRights = Arrays.asList(AUTHORIZE_REQUISITION);
+    when(roleRightService.getRights(USER_ID)).thenReturn(listUserRights);
+    when(requisitionRepository.getRequisition(requisition.getFacilityId(), requisition.getProgramId(), requisition.getPeriodId()))
+      .thenReturn(savedRequisition);
+
+    requisitionService.save(requisition);
+
+    verify(requisitionRepository).getRequisition(requisition.getFacilityId(), requisition.getProgramId(), requisition.getPeriodId());
+    verify(requisitionRepository).update(requisition);
+    assertThat(requisition.getLineItems().get(0).getBeginningBalance(), is(RnrLineItemBuilder.BEGINNING_BALANCE));
   }
 }

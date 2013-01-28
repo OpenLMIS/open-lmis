@@ -10,6 +10,7 @@ import org.openlmis.core.service.*;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.domain.ProgramRnrTemplate;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,6 +102,17 @@ public class RequisitionService {
   public void save(Rnr rnr) {
     if (!isUserAllowedToSave(rnr))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
+
+    Rnr savedRequisition = requisitionRepository.getRequisition(rnr.getFacilityId(), rnr.getProgramId(), rnr.getPeriodId());
+
+    for (RnrLineItem lineItem : rnr.getLineItems()) {
+      for (RnrLineItem savedLineItem : savedRequisition.getLineItems()) {
+        if (savedLineItem.getPreviousStockInHandAvailable() && lineItem.getProductCode().equals(savedLineItem.getProductCode())){
+          lineItem.setBeginningBalance(savedLineItem.getBeginningBalance());
+          break;
+        }
+      }
+    }
 
     requisitionRepository.update(rnr);
   }
@@ -215,17 +227,17 @@ public class RequisitionService {
     final Rnr rnr = requisitionRepository.getById(id);
     List<RoleAssignment> assignments = roleRightsService.getRoleAssignments(APPROVE_REQUISITION, userId);
 
-    if(!userCanApprove(rnr, assignments)) throw new DataException(RNR_OPERATION_UNAUTHORIZED);
+    if (!userCanApprove(rnr, assignments)) throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
     return rnr;
   }
 
   private boolean userCanApprove(final Rnr rnr, List<RoleAssignment> assignments) {
-    return  CollectionUtils.exists(assignments, new Predicate() {
+    return CollectionUtils.exists(assignments, new Predicate() {
       @Override
       public boolean evaluate(Object o) {
         final RoleAssignment o1 = (RoleAssignment) o;
-        return (o1.getSupervisoryNode().getId()==rnr.getSupervisoryNodeId());
+        return (o1.getSupervisoryNode().getId() == rnr.getSupervisoryNodeId());
       }
     });
   }
