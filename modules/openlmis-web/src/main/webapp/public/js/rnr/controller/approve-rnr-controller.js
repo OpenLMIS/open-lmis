@@ -1,4 +1,4 @@
-function ApproveRnrController($scope, requisition, Requisitions, programRnRColumnList) {
+function ApproveRnrController($scope, requisition, Requisitions, programRnRColumnList, $location) {
   var columnDefinitions = [];
   $scope.requisition = requisition;
   $scope.lineItems = [];
@@ -18,17 +18,21 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnRColum
     $scope.$parent.error = "Please contact Admin to define R&R template for this program";
   }
   function freeTextCellTemplate(field, value) {
-    return '<div><input maxlength="250" name="' + field + '" ng-model=" + value + "/></div>';
+    return '<div><input maxlength="250" name="' + field + '" ng-model="' + value + '"/></div>';
   }
 
   function positiveIntegerCellTemplate(field, value) {
     return '<div><ng-form name="positiveIntegerForm"  > <input ui-event="{blur : \'row.entity.updateCostWithApprovedQuantity(row.entity)\'}" ng-class="{red: approvedQuantityRequiredFlag && positiveIntegerForm.' + field + '.$error.required}" ' +
-      '  ng-required="true" maxlength="8" minLengh="1" name=' + field + ' ng-model=' + value + '  ng-change="validatePositiveInteger(positiveIntegerForm.' + field + '.$error,'+value+')" />' +
+      '  ng-required="true" maxlength="8" minLengh="1" name=' + field + ' ng-model=' + value + '  ng-change="validatePositiveInteger(positiveIntegerForm.' + field + '.$error,' + value + ')" />' +
       '<span class="field-error" id=' + field + ' ng-show="positiveIntegerForm.' + field + '.$error.pattern" ng-class="{red: approvedQuantityNumberFlag && positiveIntegerForm.' + field + '.$error.pattern}">Please Enter Numeric value</span></ng-form></div>';
   }
 
-  $scope.validatePositiveInteger = function(error, value){
-    if(value == undefined){ error.pattern=false;  return};
+  $scope.validatePositiveInteger = function (error, value) {
+    if (value == undefined) {
+      error.pattern = false;
+      return
+    }
+    ;
 
     error.pattern = !isPositiveNumber(value);
   }
@@ -72,7 +76,8 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnRColum
       if (lineItem.quantityApproved == undefined || lineItem.quantityApproved == "" || !isPositiveNumber(lineItem.quantityApproved)) {
         $scope.approvedQuantityRequiredFlag = true;
         return false;
-      };
+      }
+      ;
     })
     if ($scope.approvedQuantityRequiredFlag) {
       $scope.error = "Please complete the highlighted fields on the R&R form before approving";
@@ -81,8 +86,9 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnRColum
     }
     Requisitions.update({id:$scope.requisition.id, operation:"approve"},
       $scope.requisition, function (data) {
-        $scope.message = data.success;
+        $scope.$parent.message = data.success;
         $scope.error = "";
+        $location.path("rnr-for-approval/");
       }, function (data) {
         $scope.error = data.error;
         $scope.message = "";
@@ -97,10 +103,9 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnRColum
 
   function populateRnrLineItems(rnr) {
     $(rnr.lineItems).each(function (i, lineItem) {
-      lineItem.cost = parseFloat((lineItem.packsToShip * lineItem.price).toFixed(2));
-      if (lineItem.lossesAndAdjustments == undefined) lineItem.lossesAndAdjustments = [];
       var rnrLineItem = new RnrLineItem(lineItem);
       jQuery.extend(true, lineItem, rnrLineItem);
+      lineItem.updateCostWithApprovedQuantity(lineItem);
       $scope.lineItems.push(lineItem);
     });
   }
@@ -110,10 +115,10 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnRColum
 }
 
 ApproveRnrController.resolve = {
-  requisition:function ($q, $timeout, RequisitionById, $route) {
+  requisition:function ($q, $timeout, RequisitionForApprovalById, $route) {
     var deferred = $q.defer();
     $timeout(function () {
-      RequisitionById.get({id:$route.current.params.rnr},
+      RequisitionForApprovalById.get({id:$route.current.params.rnr},
         function (data) {
           deferred.resolve(data.rnr);
         }, function () {

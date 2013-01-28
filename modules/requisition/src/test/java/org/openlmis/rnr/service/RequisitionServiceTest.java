@@ -481,10 +481,50 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  public void shouldGetRequisitionById() throws Exception {
-    Rnr rnr = new Rnr();
-    when(requisitionRepository.getById(1)).thenReturn(rnr);
+  public void shouldGetRequisitionForApprovalById() throws Exception {
+    Rnr expected = new Rnr();
+    final int supervisoryNodeId = 1;
+    expected.setSupervisoryNodeId(supervisoryNodeId);
+    final int rnrId = 1;
+    when(requisitionRepository.getById(rnrId)).thenReturn(expected);
 
-    assertThat(requisitionService.getById(1), is(rnr));
+    final RoleAssignment assignment = roleAssignmentWithSupervisoryNodeId(supervisoryNodeId);
+    List<RoleAssignment> roleAssignments = new ArrayList<RoleAssignment>() {{
+      add(assignment);
+    }};
+
+    final int userId = 1;
+    when(roleRightService.getRoleAssignments(APPROVE_REQUISITION, userId)).thenReturn(roleAssignments);
+    Rnr actual = requisitionService.getRnrForApprovalById(rnrId, userId);
+
+    assertThat(actual, is(expected));
+  }
+
+  @Test
+  public void shouldThrowExceptionIfUserDoesNotHaveAccessToRequestedRequisition() throws Exception {
+    Rnr expected = new Rnr();
+    final int supervisoryNodeId = 1;
+    expected.setSupervisoryNodeId(supervisoryNodeId);
+    final int rnrId = 1;
+    when(requisitionRepository.getById(rnrId)).thenReturn(expected);
+
+    List<RoleAssignment> roleAssignments = new ArrayList<RoleAssignment>() {{
+    }};
+
+    final int userId = 1;
+    when(roleRightService.getRoleAssignments(APPROVE_REQUISITION, userId)).thenReturn(roleAssignments);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage(RNR_OPERATION_UNAUTHORIZED);
+    requisitionService.getRnrForApprovalById(rnrId, userId);
+
+  }
+
+  private RoleAssignment roleAssignmentWithSupervisoryNodeId(int supervisoryNodeId) {
+    final RoleAssignment assignment = new RoleAssignment();
+    final SupervisoryNode node = new SupervisoryNode();
+    node.setId(supervisoryNodeId);
+    assignment.setSupervisoryNode(node);
+    return assignment;
   }
 }

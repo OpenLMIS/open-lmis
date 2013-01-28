@@ -96,7 +96,7 @@ var RnrLineItem = function (lineItem) {
     calculatePacksToShip(rnrLineItem, rnrLineItem.quantityApproved);
   }
 
-  this.updateCostWithApprovedQuantity = function(rnrLineItem) {
+  this.updateCostWithApprovedQuantity = function (rnrLineItem) {
     fillPacksToShipBasedOnApprovedQuantity(rnrLineItem);
     fillCost(rnrLineItem);
   }

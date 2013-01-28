@@ -1,6 +1,8 @@
 package org.openlmis.rnr.service;
 
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
@@ -192,10 +194,23 @@ public class RequisitionService {
   }
 
 
-  public Rnr getById(Integer id) {
+  public Rnr getRnrForApprovalById(Integer id, Integer userId) {
     final Rnr rnr = requisitionRepository.getById(id);
-    return rnr;
+    List<RoleAssignment> assignments = roleRightsService.getRoleAssignments(APPROVE_REQUISITION, userId);
 
+    if(!userCanApprove(rnr, assignments)) throw new DataException(RNR_OPERATION_UNAUTHORIZED);
+
+    return rnr;
+  }
+
+  private boolean userCanApprove(final Rnr rnr, List<RoleAssignment> assignments) {
+    return  CollectionUtils.exists(assignments, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        final RoleAssignment o1 = (RoleAssignment) o;
+        return (o1.getSupervisoryNode().getId()==rnr.getSupervisoryNodeId());
+      }
+    });
   }
 }
 

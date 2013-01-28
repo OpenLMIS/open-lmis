@@ -158,12 +158,15 @@ public class RequisitionController extends BaseController {
     return requisitionService.get(facilityId, programId, periodList.get(0).getId());
   }
 
-  @RequestMapping(value = "/requisitions/{id}", method = GET, headers = ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> getById(@PathVariable Integer id) {
+  @RequestMapping(value = "/requisitions-for-approval/{id}", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("hasPermission('','APPROVE_REQUISITION')")
+  public ResponseEntity<OpenLmisResponse> getRnrForApprovalById(@PathVariable Integer id, HttpServletRequest request) {
     try {
-      return response(RNR, requisitionService.getById(id));
+      return response(RNR, requisitionService.getRnrForApprovalById(id, loggedInUserId(request)));
     } catch (DataException dataException) {
       return error(dataException, HttpStatus.NOT_FOUND);
     }
   }
+
+
 }

@@ -22,4 +22,10 @@
       <div class="gridStyle" ng-grid="gridOptions" ng-show="requisitions.length"></div>
     </div>
   </div>
+  <div class="toolbar-error" id="saveFailMessage" ng-model="error" ng-show="error">
+      {{error}}
+    </div>
+    <div class="toolbar-success" id="saveSuccessMsgDiv"  ng-model="message" ng-show="message">
+      {{message}}
+    </div>
 </div>
