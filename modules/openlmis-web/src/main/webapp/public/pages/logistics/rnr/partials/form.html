@@ -1,6 +1,6 @@
 <div ng-controller="CreateRnrController" >
 <div ng-hide="programRnRColumnList">Loading...</div>
-<form name="saveRnrForm" ng-submit="submitRnr()" id="rnr-form" novalidate >
+<form name="saveRnrForm" action="#" id="rnr-form" novalidate >
 <div class="total-cost alert alert-info">Total R&amp;R Cost:
 <span id="totalCostCurrency" class="cell-text">
                                            {{currency}}
@@ -320,24 +320,22 @@
     <!--end-->
 
   <div id="action_buttons" class="action-buttons">
-      <div class="form-cell button-row">
-        <input ng-disabled="formDisabled" type="button" ng-click="saveRnr()" class="btn btn-primary save-button" value="Save"/>
-        <input ng-show="rnr.status == 'INITIATED' && hasPermission('CREATE_REQUISITION')" ng-disabled="formDisabled" type="submit" class="btn btn-success submit-button" value="Submit"/>
-        <input type="button" ng-show="(rnr.status == 'SUBMITTED' || rnr.status == 'AUTHORIZED') && hasPermission('AUTHORIZE_REQUISITION')"
-               ng-disabled="rnr.status == 'AUTHORIZED'" ng-click="authorizeRnr()" class="btn btn-success submit-button" value="Authorize"/>
-      </div>
-  <div class="toolbar-error" id="saveFailMessage" ng-model="error" ng-show="error && !submitError && !submitMessage">
-    {{error}}
-  </div>
-    <div class="toolbar-error" id="submitFailMessage" ng-model="submitError" ng-show="submitError">
-      {{submitError}}
+    <div class="form-cell button-row">
+      <input ng-disabled="formDisabled" type="button" ng-click="saveRnr()" class="btn btn-primary save-button"
+             value="Save"/>
+      <input ng-show="rnr.status == 'INITIATED' && hasPermission('CREATE_REQUISITION')" ng-disabled="formDisabled"
+             type="button" ng-click="submitRnr()" class="btn btn-success submit-button" value="Submit"/>
+      <input type="button"
+             ng-show="(rnr.status == 'SUBMITTED' || rnr.status == 'AUTHORIZED') && hasPermission('AUTHORIZE_REQUISITION')"
+             ng-disabled="rnr.status == 'AUTHORIZED'" ng-click="authorizeRnr()" class="btn btn-success submit-button"
+             value="Authorize"/>
     </div>
-  <div class="toolbar-success" id="saveSuccessMsgDiv" ng-model="message" ng-show="!submitMessage && !submitError && message">
-    {{message}}
+    <div class="toolbar-error" id="saveFailMessage" ng-bind="error"
+         ng-show="error && !submitError && !submitMessage"></div>
+    <div class="toolbar-error" id="submitFailMessage" ng-bind="submitError" ng-show="submitError"></div>
+    <div class="toolbar-success" id="saveSuccessMsgDiv" ng-bind="message"
+         ng-show="!submitMessage && !submitError && message"></div>
+    <div class="toolbar-success" id="submitSuccessMsgDiv" ng-bind="submitMessage" ng-show="submitMessage"></div>
   </div>
-    <div class="toolbar-success" id="submitSuccessMsgDiv" ng-model="submitMessage" ng-show="submitMessage">
-      {{submitMessage}}
-    </div>
-   </div>
 </form>
  </div>

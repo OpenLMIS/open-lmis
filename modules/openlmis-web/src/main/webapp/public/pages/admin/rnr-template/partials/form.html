@@ -19,14 +19,12 @@
             <input type="checkbox" ng-model="rnrColumn.visible" ng-click="update()" ng-disabled="rnrColumn.mandatory"/>
         </span>
         <span class="tpl-indicator">
-          <div class="indicator">{{ rnrColumn.indicator }}</div>
+          <div class="indicator" ng-bind="rnrColumn.indicator"></div>
         </span>
           <input type="hidden" ng-model="rnrColumn.id" value="{{ rnrColumn.id }}"/>
         <span class="tpl-label">
-            <input name="label" type="text" ng-model="rnrColumn.label" value="{{ rnrColumn.label }}" required/>
-          <span class="col-desc">
-            {{ rnrColumn.description }}
-          </span>
+          <input name="label" type="text" ng-model="rnrColumn.label" required/>
+          <span class="col-desc" ng-bind="rnrColumn.description"></span>
         </span>
         <input type="hidden" class="rnr-column-position" ng-model="rnrColumn.position" value="{{ rnrColumn.position }}"/>
         <span class="tpl-source">
@@ -34,16 +32,12 @@
                 <select ng-model="rnrColumn.source.code" ng-options="c.code as c.description for c in sources" ng-change= "setArithmeticValidationMessageShown()">
                 </select>
             </span>
-            <span ng-hide="rnrColumn.sourceConfigurable">
-                {{ rnrColumn.source.description}}
-            </span>
+            <span ng-hide="rnrColumn.sourceConfigurable" ng-bind="rnrColumn.source.description"></span>
             <br/>
-            <a href="javascript:void(0);">{{ rnrColumn.formula }}</a>
+            <a href="javascript:void(0);" ng-bind="rnrColumn.formula" ></a>
         </span>
         <span class="tpl-error" ng-show="errorMap[rnrColumn.name]">
-            <div class="alert alert-error">
-            {{errorMap[rnrColumn.name]}}
-            </div>
+            <div class="alert alert-error" ng-bind="errorMap[rnrColumn.name]"></div>
         </span>
         </li>
       </ul>
@@ -54,12 +48,8 @@
       <a href="javascript:void(0);" class="btn btn-primary btn-mini pull-right" ng-click= "toggleValidateFormulaFlag()">Turn {{arithmeticValidationToggleLabel}}</a>
     </div>
 
-    <div class="alert alert-error" id="saveErrorMsgDiv" ng-model="error" ng-show="error">
-      {{error}}
-    </div>
-    <div class="alert alert-success" id="saveSuccessMsgDiv" ng-model="message" ng-show="message">
-      {{message}}
-    </div>
+    <div class="alert alert-error" id="saveErrorMsgDiv" ng-bind="error" ng-show="error"></div>
+    <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"></div>
 
     <input type="submit" class="btn" value="Save" />
   </form>
