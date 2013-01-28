@@ -37,8 +37,8 @@ describe('CreateRnrController', function () {
       controller(CreateRnrController, {$scope:scope, $routeParams:routeParams});
       httpBackend.flush();
 
-      mockedRequisition.lineItems[0].cost = 20.67;
-      expect(scope.rnrLineItems[0].rnrLineItem).toEqual(mockedRequisition.lineItems[0]);
+      expect(scope.rnrLineItems[0].id).toEqual(mockedRequisition.lineItems[0].id);
+      expect(scope.rnrLineItems[0].cost).toEqual(20.67);
     });
 
     it('should initialize losses and adjustments, if not present in R&R', function () {
@@ -54,8 +54,8 @@ describe('CreateRnrController', function () {
       controller(CreateRnrController, {$scope:scope, $routeParams:routeParams});
       httpBackend.flush();
 
-      expect(scope.rnrLineItems[0].rnrLineItem.lossesAndAdjustments).toEqual([]);
-      expect(scope.rnrLineItems[1].rnrLineItem.lossesAndAdjustments).toEqual([
+      expect(scope.rnrLineItems[0].lossesAndAdjustments).toEqual([]);
+      expect(scope.rnrLineItems[1].lossesAndAdjustments).toEqual([
         {'quantity':33}
       ]);
     });
@@ -180,7 +180,9 @@ describe('CreateRnrController', function () {
   it('should not submit rnr with formula validation error but should save', function () {
     var lineItem = { "beginningBalance":1, totalLossesAndAdjustments:1, quantityDispensed:1,
       quantityReceived:1, stockInHand:1};
-    scope.rnrLineItems.push(new RnrLineItem(lineItem));
+
+    jQuery.extend(true, lineItem, new RnrLineItem());
+    scope.rnrLineItems.push(lineItem);
     scope.rnr = {"id":1};
     scope.programRnRColumnList = [
       {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidationRequired":true},
@@ -197,7 +199,8 @@ describe('CreateRnrController', function () {
   it('should submit valid rnr', function () {
     var lineItem = { "beginningBalance":1, totalLossesAndAdjustments:1, quantityDispensed:2,
       quantityReceived:1, stockInHand:1};
-    scope.rnrLineItems.push(new RnrLineItem(lineItem));
+    jQuery.extend(true, lineItem, new RnrLineItem());
+    scope.rnrLineItems.push(lineItem);
 
     scope.rnr = {"id":"rnrId", lineItems:[lineItem]};
     scope.programRnrColumnList = [
@@ -215,8 +218,10 @@ describe('CreateRnrController', function () {
   });
 
   it('should return cell error class', function () {
-    var lineItem = new RnrLineItem({ "beginningBalance":1, totalLossesAndAdjustments:1, quantityDispensed:2,
-      quantityReceived:1, stockInHand:1});
+    var lineItem = { "beginningBalance":1, totalLossesAndAdjustments:1, quantityDispensed:2,
+      quantityReceived:1, stockInHand:1};
+    jQuery.extend(true, lineItem, new RnrLineItem());
+
     var programRnrColumnList = [
       {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidationRequired":true},
       {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
@@ -230,8 +235,10 @@ describe('CreateRnrController', function () {
   });
 
   it('should not return cell error class', function () {
-    var lineItem = new RnrLineItem({ "beginningBalance":1, totalLossesAndAdjustments:1, quantityDispensed:2,
-      quantityReceived:1, stockInHand:1});
+    var lineItem = { "beginningBalance":1, totalLossesAndAdjustments:1, quantityDispensed:2,
+      quantityReceived:1, stockInHand:1};
+    jQuery.extend(true, lineItem, new RnrLineItem());
+
     var programRnrColumnList = [
       {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidationRequired":true},
       {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
@@ -245,8 +252,10 @@ describe('CreateRnrController', function () {
   });
 
   it('should return row error class', function () {
-    var lineItem = new RnrLineItem({ "beginningBalance":1, totalLossesAndAdjustments:1, quantityDispensed:2,
-      quantityReceived:1, stockInHand:1});
+    var lineItem = { "beginningBalance":1, totalLossesAndAdjustments:1, quantityDispensed:2,
+      quantityReceived:1, stockInHand:1};
+    jQuery.extend(true, lineItem, new RnrLineItem());
+
     var programRnrColumnList = [
       {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidationRequired":true},
       {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
@@ -261,8 +270,10 @@ describe('CreateRnrController', function () {
 
 
   it('should not return row error class', function () {
-    var lineItem = new RnrLineItem({ "beginningBalance":1, totalLossesAndAdjustments:1, quantityDispensed:2,
-      quantityReceived:1, stockInHand:1});
+    var lineItem = { "beginningBalance":1, totalLossesAndAdjustments:1, quantityDispensed:2,
+      quantityReceived:1, stockInHand:1};
+    jQuery.extend(true, lineItem, new RnrLineItem());
+
     var programRnrColumnList = [
       {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidationRequired":true},
       {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
@@ -279,9 +290,10 @@ describe('CreateRnrController', function () {
     var lineItem = { "id":"1", "beginningBalance":1, lossesAndAdjustments:[
       {"type":{"name":"some name"}, "quantity":"4"}
     ]};
-    var rnrLineItem = new RnrLineItem(lineItem);
-    scope.rnrLineItems.push(rnrLineItem);
-    spyOn(rnrLineItem, 'fill');
+    jQuery.extend(true, lineItem, new RnrLineItem());
+
+    scope.rnrLineItems.push(lineItem);
+    spyOn(lineItem, 'fill');
 
     scope.rnr = {"id":"rnrId", lineItems:[lineItem]};
     scope.programRnrColumnList = [
@@ -291,7 +303,7 @@ describe('CreateRnrController', function () {
     scope.lossesAndAdjustmentsModal[1] = true;
     scope.saveLossesAndAdjustmentsForRnRLineItem(scope.rnrLineItems[0], scope.rnr, scope.programRnrColumnList);
 
-    expect(rnrLineItem.fill).toHaveBeenCalledWith(scope.rnr, scope.programRnrColumnList);
+    expect(lineItem.fill).toHaveBeenCalledWith(scope.rnr, scope.programRnrColumnList);
     expect(scope.lossesAndAdjustmentsModal[1]).toBeFalsy();
     expect(scope.modalError).toEqual('');
   });
@@ -300,9 +312,10 @@ describe('CreateRnrController', function () {
     var lineItem = { "id":"1", "beginningBalance":1, lossesAndAdjustments:[
       {"type":{"name":"some name"}, "quantity":null}
     ]};
-    var rnrLineItem = new RnrLineItem(lineItem);
-    scope.rnrLineItems.push(rnrLineItem);
-    spyOn(rnrLineItem, 'fill');
+    jQuery.extend(true, lineItem, new RnrLineItem());
+
+    scope.rnrLineItems.push(lineItem);
+    spyOn(lineItem, 'fill');
 
     scope.rnr = {"id":"rnrId", lineItems:[lineItem]};
     scope.programRnrColumnList = [
@@ -311,7 +324,7 @@ describe('CreateRnrController', function () {
     scope.lossesAndAdjustmentsModal[1] = true;
     scope.saveLossesAndAdjustmentsForRnRLineItem(scope.rnrLineItems[0], scope.rnr, scope.programRnRColumnList);
 
-    expect(rnrLineItem.fill).not.toHaveBeenCalledWith(scope.rnr, scope.programRnrColumnList);
+    expect(lineItem.fill).not.toHaveBeenCalledWith(scope.rnr, scope.programRnrColumnList);
     expect(scope.lossesAndAdjustmentsModal[1]).toBeTruthy();
     expect(scope.modalError).toEqual('Please correct the highlighted fields before submitting');
   });
@@ -324,15 +337,15 @@ describe('CreateRnrController', function () {
   });
 
   it('should return if the rnrLineItem is fullSupply', function () {
-    var rnrLineItemFullSupply = new RnrLineItem({fullSupply:true});
-    var rnrLineItemNonFullSupply = new RnrLineItem({fullSupply:false});
+    var rnrLineItemFullSupply = jQuery.extend(true, {fullSupply:true}, new RnrLineItem());
+    var rnrLineItemNonFullSupply = jQuery.extend(true, {fullSupply:false}, new RnrLineItem());
 
     expect(scope.isFullSupply(rnrLineItemFullSupply)).toEqual(true);
     expect(scope.isFullSupply(rnrLineItemNonFullSupply)).toEqual(false);
   });
   it('should return if the rnrLineItem is nonFullSupply', function () {
-    var rnrLineItemFullSupply = new RnrLineItem({fullSupply:true});
-    var rnrLineItemNonFullSupply = new RnrLineItem({fullSupply:false});
+    var rnrLineItemFullSupply = jQuery.extend(true, {fullSupply:true}, new RnrLineItem());
+    var rnrLineItemNonFullSupply = jQuery.extend(true, {fullSupply:false}, new RnrLineItem());
 
     expect(scope.isNonFullSupply(rnrLineItemFullSupply)).toEqual(false);
     expect(scope.isNonFullSupply(rnrLineItemNonFullSupply)).toEqual(true);

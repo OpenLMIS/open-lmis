@@ -25,7 +25,8 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
         lineItem.cost = parseFloat((lineItem.packsToShip * lineItem.price).toFixed(2));
         if(lineItem.lossesAndAdjustments == undefined) lineItem.lossesAndAdjustments = [];
         var rnrLineItem = new RnrLineItem(lineItem);
-        $scope.rnrLineItems.push(rnrLineItem);
+        jQuery.extend(true, lineItem, rnrLineItem);
+        $scope.rnrLineItems.push(lineItem);
       });
     }
 
@@ -94,7 +95,7 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
   };
 
   $scope.highlightWarning = function (value, index) {
-    if ((isUndefined(value) || value.trim().length == 0 || value == false) && $scope.inputClass == 'required' && $scope.rnrLineItems[index].rnrLineItem.quantityRequested) {
+    if ((isUndefined(value) || value.trim().length == 0 || value == false) && $scope.inputClass == 'required' && $scope.rnrLineItems[index].quantityRequested) {
       return "warning-error";
     }
     return null;
@@ -173,7 +174,7 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     if (!isValidLossesAndAdjustments(rnrLineItem)) return;
 
     rnrLineItem.fill(rnr, programRnrColumnList);
-    $scope.lossesAndAdjustmentsModal[rnrLineItem.rnrLineItem.id] = false;
+    $scope.lossesAndAdjustmentsModal[rnrLineItem.id] = false;
   };
 
   $scope.resetModalError = function () {
@@ -200,13 +201,13 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
 
   $scope.removeLossAndAdjustment = function (lineItem, lossAndAdjustmentToDelete) {
     lineItem.removeLossAndAdjustment(lossAndAdjustmentToDelete);
-    updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem.rnrLineItem);
+    updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem);
     $scope.resetModalError();
   };
 
   $scope.addLossAndAdjustment = function (lineItem, newLossAndAdjustment) {
     lineItem.addLossAndAdjustment(newLossAndAdjustment);
-    updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem.rnrLineItem);
+    updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem);
   };
 
   function isUndefined(value) {
@@ -216,7 +217,7 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
   function formulaValid() {
     var valid = true;
     $scope.rnrLineItems.forEach(function (lineItem) {
-      if (lineItem.arithmeticallyInvalid($scope.programRnRColumnList) || lineItem.rnrLineItem.stockInHand < 0 || lineItem.rnrLineItem.quantityDispensed < 0) {
+      if (lineItem.arithmeticallyInvalid($scope.programRnRColumnList) || lineItem.stockInHand < 0 || lineItem.quantityDispensed < 0) {
         valid = false;
       }
     });
@@ -224,9 +225,9 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
   }
 
   function isValidLossesAndAdjustments(rnrLineItem) {
-    if (!isUndefined(rnrLineItem.rnrLineItem.lossesAndAdjustments)) {
-      for (var index in rnrLineItem.rnrLineItem.lossesAndAdjustments) {
-        if (isUndefined(rnrLineItem.rnrLineItem.lossesAndAdjustments[index].quantity)) {
+    if (!isUndefined(rnrLineItem.lossesAndAdjustments)) {
+      for (var index in rnrLineItem.lossesAndAdjustments) {
+        if (isUndefined(rnrLineItem.lossesAndAdjustments[index].quantity)) {
           $scope.modalError = 'Please correct the highlighted fields before submitting';
           return false;
         }
@@ -257,10 +258,10 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
   };
 
   $scope.isFullSupply = function(rnrLineItemPrototype){
-    return rnrLineItemPrototype.rnrLineItem.fullSupply;
+    return rnrLineItemPrototype.fullSupply;
   };
 
   $scope.isNonFullSupply = function(rnrLineItemPrototype){
-    return !rnrLineItemPrototype.rnrLineItem.fullSupply;
+    return !rnrLineItemPrototype.fullSupply;
   }
 }

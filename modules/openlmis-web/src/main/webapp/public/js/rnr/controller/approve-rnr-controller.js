@@ -144,9 +144,9 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnRColum
 
   function populateRnrLineItems(rnr) {
     $(rnr.lineItems).each(function (i, lineItem) {
-      var rnrLineItem = new RnrLineItem(lineItem);
+      var rnrLineItem = new RnrLineItem();
       jQuery.extend(true, lineItem, rnrLineItem);
-      lineItem.updateCostWithApprovedQuantity(requisition, lineItem);
+      lineItem.updateCostWithApprovedQuantity(requisition);
       $scope.lineItems.push(lineItem);
     });
   }
