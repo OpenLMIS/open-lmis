@@ -66,7 +66,7 @@ public class RequisitionController extends BaseController {
   }
 
   @RequestMapping(value = "/requisitions/{id}/save", method = PUT, headers = ACCEPT_JSON)
-  @PreAuthorize("hasPermission('','CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
+  @PreAuthorize("hasPermission('','CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> saveRnr(@RequestBody Rnr rnr,
                                                   @PathVariable("id") Integer id,
                                                   HttpServletRequest request) {

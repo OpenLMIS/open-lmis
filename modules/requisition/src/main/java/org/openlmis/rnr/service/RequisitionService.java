@@ -86,7 +86,8 @@ public class RequisitionService {
 
   private boolean isUserAllowedToSave(Rnr rnr) {
     return (rnr.getStatus() == INITIATED && roleRightsService.getRights(rnr.getModifiedBy()).contains(CREATE_REQUISITION)) ||
-        (rnr.getStatus() == SUBMITTED && roleRightsService.getRights(rnr.getModifiedBy()).contains(AUTHORIZE_REQUISITION));
+        (rnr.getStatus() == SUBMITTED && roleRightsService.getRights(rnr.getModifiedBy()).contains(AUTHORIZE_REQUISITION)) ||
+        (rnr.getStatus() == AUTHORIZED && roleRightsService.getRights(rnr.getModifiedBy()).contains(APPROVE_REQUISITION));
   }
 
   public Rnr get(Integer facilityId, Integer programId, Integer periodId) {
@@ -137,11 +138,11 @@ public class RequisitionService {
       final List<Rnr> requisitions = requisitionRepository.getAuthorizedRequisitions(assignment);
       requisitionsForApproval.addAll(requisitions);
     }
-    fillProgramFacilityPeriod(requisitionsForApproval);
+    fillProgramFacilityPeriod(requisitionsForApproval.toArray(new Rnr[requisitionsForApproval.size()]));
     return requisitionsForApproval;
   }
 
-  private void fillProgramFacilityPeriod(List<Rnr> requisitionsForApproval) {
+  private void fillProgramFacilityPeriod(Rnr... requisitionsForApproval) {
     for(Rnr requisition : requisitionsForApproval){
       requisition.setProgram(programService.getById(requisition.getProgram().getId()));
       requisition.setFacility(facilityService.getById(requisition.getFacility().getId()));
@@ -162,7 +163,8 @@ public class RequisitionService {
   }
 
   public Rnr getById(Integer id) {
-    return requisitionRepository.getById(id);
+    final Rnr rnr = requisitionRepository.getById(id);
+    return rnr;
 
   }
 }

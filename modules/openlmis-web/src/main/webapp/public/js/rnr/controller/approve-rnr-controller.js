@@ -1,12 +1,15 @@
-function ApproveRnrController($scope, requisition, programRnRColumnList) {
+function ApproveRnrController($scope, requisition, Requisitions, programRnRColumnList) {
   var columnDefinitions = [];
-  $scope.lineItems = angular.copy(requisition.lineItems);
-  populateRnrLineItemsCost();
+  $scope.requisition = requisition;
+  $scope.lineItems = [];
+  populateRnrLineItems(requisition);
   if (programRnRColumnList.length > 0) {
     $scope.programRnRColumnList = programRnRColumnList;
     $($scope.programRnRColumnList).each(function (i, column) {
       if (column.name == "quantityApproved") {
-        columnDefinitions.push({field:"quantityApproved", displayName:column.label, cellTemplate:editableCellTemplate( 'row.entity.quantityApproved', 'row.entity.id')})
+        columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:positiveIntegerCellTemplate(column.name, 'row.entity.quantityApproved')})
+      } else if (column.name == "remarks") {
+        columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:freeTextCellTemplate(column.name, 'row.entity.remarks')})
       } else {
         columnDefinitions.push({field:column.name, displayName:column.label});
       }
@@ -14,12 +17,20 @@ function ApproveRnrController($scope, requisition, programRnRColumnList) {
   } else {
     $scope.$parent.error = "Please contact Admin to define R&R template for this program";
   }
+  function freeTextCellTemplate(field, value) {
+    return '<div><input maxlength="250" name="' + field + '" ng-model=" + value + "/></div>';
+  }
 
-  function editableCellTemplate(value, id) {
-    var editableElement = "<div><form name='approvalForm'><input type='number' maxlength='8' min='0' ng-required='true' name='quantityApproved' ng-model="+ value +" /> " +
-      "<span class='field-error' ng-show='approvalForm.quantityApproved.$error.number'>Please Enter Numeric value</span></form></div>";
+  function positiveIntegerCellTemplate(field, value) {
+    return '<div><ng-form name="positiveIntegerForm"  > <input ui-event="{blur : \'row.entity.updateCostWithApprovedQuantity(row.entity)\'}" ng-class="{red: approvedQuantityRequiredFlag && positiveIntegerForm.' + field + '.$error.required}" ' +
+      '  ng-required="true" maxlength="8" minLengh="1" name=' + field + ' ng-model=' + value + '  ng-change="patternValidate(positiveIntegerForm.' + field + '.$error,'+value+')" />' +
+      '<span class="field-error" id=' + field + ' ng-show="positiveIntegerForm.' + field + '.$error.pattern" ng-class="{red: approvedQuantityNumberFlag && positiveIntegerForm.' + field + '.$error.pattern}">Please Enter Numeric value</span></ng-form></div>';
+  }
 
-    return editableElement;
+  $scope.patternValidate = function(error, value){
+    if(value == undefined){ error.pattern=false;  return};
+
+    error.pattern = isNotAPositiveNumber(value);
   }
 
   $scope.gridOptions = { data:'lineItems',
@@ -31,18 +42,79 @@ function ApproveRnrController($scope, requisition, programRnRColumnList) {
     columnDefs:columnDefinitions
   };
 
-  function populateRnrLineItemsCost() {
+  $scope.saveRnr = function () {
+    $scope.approvedQuantityNumberFlag = false;
     $($scope.lineItems).each(function (i, lineItem) {
+      if (lineItem.quantityApproved != undefined && isNotAPositiveNumber(lineItem.quantityApproved)) {
+        $scope.approvedQuantityNumberFlag = true;
+        return false;
+      }
+      ;
+    })
+    if ($scope.approvedQuantityNumberFlag) {
+      $scope.error = "Please correct errors before saving.";
+      $scope.message = "";
+      return;
+    }
+    Requisitions.update({id:$scope.requisition.id, operation:"save"},
+      $scope.requisition, function (data) {
+        $scope.message = data.success;
+        $scope.error = "";
+      }, function (data) {
+        $scope.error = data.error;
+        $scope.message = "";
+      });
+  }
+
+  $scope.approveRnr = function () {
+    $scope.approvedQuantityRequiredFlag = false;
+    $($scope.lineItems).each(function (i, lineItem) {
+      if (lineItem.quantityApproved == undefined || lineItem.quantityApproved == "") {
+        $scope.approvedQuantityRequiredFlag = true;
+        return false;
+      }
+      ;
+    })
+    if ($scope.approvedQuantityRequiredFlag) {
+      $scope.error = "Please complete the highlighted fields on the R&R form before approving";
+      $scope.message = "";
+      return;
+    }
+    Requisitions.update({id:$scope.requisition.id, operation:"approve"},
+      $scope.requisition, function (data) {
+        $scope.message = data.success;
+        $scope.error = "";
+      }, function (data) {
+        $scope.error = data.error;
+        $scope.message = "";
+      });
+  }
+
+  function isNotAPositiveNumber(value) {
+    var INTEGER_REGEXP = /^\d*$/;
+    return !INTEGER_REGEXP.test(value);
+
+  }
+
+  function populateRnrLineItems(rnr) {
+    $(rnr.lineItems).each(function (i, lineItem) {
       lineItem.cost = parseFloat((lineItem.packsToShip * lineItem.price).toFixed(2));
+      if (lineItem.lossesAndAdjustments == undefined) lineItem.lossesAndAdjustments = [];
+      var rnrLineItem = new RnrLineItem(lineItem);
+      jQuery.extend(true, lineItem, rnrLineItem);
+      $scope.lineItems.push(lineItem);
     });
   }
+
+  ;
+
 }
 
 ApproveRnrController.resolve = {
   requisition:function ($q, $timeout, RequisitionById, $route) {
     var deferred = $q.defer();
     $timeout(function () {
-      RequisitionById.get({id:$route.current.params.id},
+      RequisitionById.get({id:$route.current.params.rnr},
         function (data) {
           deferred.resolve(data.rnr);
         }, function () {
@@ -54,7 +126,7 @@ ApproveRnrController.resolve = {
   programRnRColumnList:function ($q, $timeout, ProgramRnRColumnList, $route) {
     var deferred = $q.defer();
     $timeout(function () {
-      ProgramRnRColumnList.get({programId:$route.current.params.programId}, function (data) {
+      ProgramRnRColumnList.get({programId:$route.current.params.program}, function (data) {
         deferred.resolve(data.rnrColumnList);
       }, {});
     }, 100);

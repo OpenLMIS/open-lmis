@@ -328,6 +328,20 @@ public class RequisitionServiceTest {
   }
 
   @Test
+  public void shouldSaveRnrIfStatusIsAuthorizedAndUserHasApproveRight() {
+    Rnr rnr = spy(make(a(defaultRnr)));
+    Integer userId = 1;
+    rnr.setModifiedBy(userId);
+    rnr.setStatus(AUTHORIZED);
+    List<Right> listUserRights = Arrays.asList(APPROVE_REQUISITION);
+    when(roleRightService.getRights(userId)).thenReturn(listUserRights);
+
+
+    requisitionService.save(rnr);
+    verify(requisitionRepository).update(rnr);
+  }
+
+  @Test
   public void shouldSaveRnrIfStatusIsInitiatedAndUserHasCreateRight() {
     Rnr rnr = spy(make(a(defaultRnr)));
     Integer userId = 1;

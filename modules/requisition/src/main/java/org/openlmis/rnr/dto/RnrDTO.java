@@ -26,6 +26,7 @@ public class RnrDTO {
   private Date modifiedDate;
   private Date periodStartDate;
   private Date periodEndDate;
+  private Integer facilityId;
 
   public static List<RnrDTO> prepareForListApproval(List<Rnr> requisitions) {
     List<RnrDTO> result = new ArrayList<>();
@@ -39,6 +40,7 @@ public class RnrDTO {
     RnrDTO rnrDTO = new RnrDTO();
     rnrDTO.id = requisition.getId();
     rnrDTO.programId = requisition.getProgram().getId();
+    rnrDTO.facilityId = requisition.getFacility().getId();
     rnrDTO.programName = requisition.getProgram().getName();
     rnrDTO.facilityCode = requisition.getFacility().getCode();
     rnrDTO.facilityName = requisition.getFacility().getName();

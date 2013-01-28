@@ -1,24 +1,31 @@
 var RnrLineItem = function (lineItem) {
 
+//  function copyPropertiesToThis(lineItem) {
+//      for (var key in lineItem) {
+//          this[key] = lineItem[key];
+//      }
+//  }
+//  copyPropertiesToThis(lineItem);
+
   this.rnrLineItem = lineItem;
 
   this.arithmeticallyInvalid = function (programRnRColumnList) {
 
     if (programRnRColumnList != undefined && programRnRColumnList[0].formulaValidationRequired) {
-      var beginningBalance = parseIntWithBaseTen(this.rnrLineItem.beginningBalance,10);
+      var beginningBalance = parseIntWithBaseTen(this.rnrLineItem.beginningBalance);
       var quantityReceived = parseIntWithBaseTen(this.rnrLineItem.quantityReceived);
       var quantityDispensed = parseIntWithBaseTen(this.rnrLineItem.quantityDispensed);
       var totalLossesAndAdjustments = parseIntWithBaseTen(this.rnrLineItem.totalLossesAndAdjustments);
       var stockInHand = parseIntWithBaseTen(this.rnrLineItem.stockInHand);
       return (isNumber(quantityDispensed) && isNumber(beginningBalance) && isNumber(quantityReceived) &&
-              isNumber(totalLossesAndAdjustments) && isNumber(stockInHand)) ?
-              quantityDispensed != (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand) : null;
+        isNumber(totalLossesAndAdjustments) && isNumber(stockInHand)) ?
+        quantityDispensed != (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand) : null;
     }
     return false;
   };
 
-  function parseIntWithBaseTen(number){
-   return parseInt(number, 10);
+  function parseIntWithBaseTen(number) {
+    return parseInt(number, 10);
   }
 
   this.reEvaluateTotalLossesAndAdjustments = function () {
@@ -26,7 +33,7 @@ var RnrLineItem = function (lineItem) {
     rnrLineItem.totalLossesAndAdjustments = 0;
 
     $(rnrLineItem.lossesAndAdjustments).each(function (index, lossAndAdjustmentObject) {
-      var quantity = parseIntWithBaseTen(lossAndAdjustmentObject.quantity, 10);
+      var quantity = parseIntWithBaseTen(lossAndAdjustmentObject.quantity);
       updateTotalLossesAndAdjustment(rnrLineItem, quantity, lossAndAdjustmentObject.type.additive);
     });
   };
@@ -35,7 +42,7 @@ var RnrLineItem = function (lineItem) {
     this.rnrLineItem.lossesAndAdjustments = $.grep(this.rnrLineItem.lossesAndAdjustments, function (lossAndAdjustmentObj) {
       return lossAndAdjustmentObj != lossAndAdjustmentToDelete;
     });
-    var quantity = parseIntWithBaseTen(lossAndAdjustmentToDelete.quantity, 10);
+    var quantity = parseIntWithBaseTen(lossAndAdjustmentToDelete.quantity);
     updateTotalLossesAndAdjustment(this.rnrLineItem, quantity, !lossAndAdjustmentToDelete.type.additive);
   };
 
@@ -44,9 +51,55 @@ var RnrLineItem = function (lineItem) {
     newLossAndAdjustment.type = undefined;
     newLossAndAdjustment.quantity = undefined;
     this.rnrLineItem.lossesAndAdjustments.push(lossAndAdjustment);
-    var quantity = parseIntWithBaseTen(lossAndAdjustment.quantity, 10);
+    var quantity = parseIntWithBaseTen(lossAndAdjustment.quantity);
     updateTotalLossesAndAdjustment(this.rnrLineItem, quantity, lossAndAdjustment.type.additive);
   };
+
+  function fillPacksToShipBasedOnCalculatedOrderQuantityOrQuantityRequested(rnrLineItem) {
+    var orderQuantity = rnrLineItem.quantityRequested == null ?
+      rnrLineItem.calculatedOrderQuantity : rnrLineItem.quantityRequested;
+    calculatePacksToShip(rnrLineItem, orderQuantity);
+  }
+
+  function calculatePacksToShip(rnrLineItem, quantity) {
+    var packSize = parseIntWithBaseTen(rnrLineItem.packSize);
+    if (quantity == null || !isNumber(quantity)) {
+      rnrLineItem.packsToShip = null;
+      return;
+    }
+    rnrLineItem.packsToShip = Math.floor(quantity / packSize);
+    applyRoundingRules(rnrLineItem, quantity);
+  }
+
+  function applyRoundingRules(rnrLineItem, orderQuantity) {
+    var remainderQuantity = orderQuantity % parseIntWithBaseTen(rnrLineItem.packSize);
+    var packsToShip = rnrLineItem.packsToShip;
+    if (remainderQuantity >= rnrLineItem.packRoundingThreshold && packsToShip != 0) {
+      packsToShip += 1;
+    }
+
+    if (packsToShip == 0 && rnrLineItem.roundToZero == false) {
+      packsToShip = 1;
+    }
+    rnrLineItem.packsToShip = packsToShip;
+  }
+
+  function fillCost(rnrLineItem) {
+    if (!isNumber(rnrLineItem.packsToShip)) {
+      rnrLineItem.cost = null;
+      return;
+    }
+    rnrLineItem.cost = parseFloat((rnrLineItem.packsToShip * rnrLineItem.price).toFixed(2));
+  }
+
+  function fillPacksToShipBasedOnApprovedQuantity(rnrLineItem) {
+    calculatePacksToShip(rnrLineItem, rnrLineItem.quantityApproved);
+  }
+
+  this.updateCostWithApprovedQuantity = function(rnrLineItem) {
+    fillPacksToShipBasedOnApprovedQuantity(rnrLineItem);
+    fillCost(rnrLineItem);
+  }
 
   this.fill = function (rnr, programRnRColumnList) {
     var rnrLineItem = this.rnrLineItem;
@@ -109,39 +162,6 @@ var RnrLineItem = function (lineItem) {
       rnrLineItem.calculatedOrderQuantity < 0 ? (rnrLineItem.calculatedOrderQuantity = 0) : 0;
     }
 
-    function applyRoundingRules(orderQuantity) {
-      var remainderQuantity = orderQuantity % parseIntWithBaseTen(rnrLineItem.packSize);
-      var packsToShip = rnrLineItem.packsToShip;
-      if (remainderQuantity >= rnrLineItem.packRoundingThreshold && packsToShip != 0) {
-        packsToShip += 1;
-      }
-
-      if (packsToShip == 0 && rnrLineItem.roundToZero == false) {
-        packsToShip = 1;
-      }
-      rnrLineItem.packsToShip = packsToShip;
-    }
-
-    function fillPacksToShip() {
-      var packSize = parseIntWithBaseTen(rnrLineItem.packSize);
-      var orderQuantity = rnrLineItem.quantityRequested == null ?
-          rnrLineItem.calculatedOrderQuantity : rnrLineItem.quantityRequested;
-
-      if (orderQuantity == null || !isNumber(orderQuantity)) {
-        rnrLineItem.packsToShip = null;
-        return;
-      }
-      rnrLineItem.packsToShip = Math.floor(orderQuantity / packSize);
-      applyRoundingRules(orderQuantity);
-    }
-
-    function fillCost() {
-      if (!isNumber(rnrLineItem.packsToShip)) {
-        rnrLineItem.cost = null;
-        return;
-      }
-      rnrLineItem.cost = parseFloat((rnrLineItem.packsToShip * rnrLineItem.price).toFixed(2));
-    }
 
     function fillFullSupplyItemsSubmittedCost() {
       if (rnr == null || rnr.lineItems == null) return;
@@ -168,8 +188,8 @@ var RnrLineItem = function (lineItem) {
     fillAMC();
     fillMaxStockQuantity();
     fillCalculatedOrderQuantity();
-    fillPacksToShip();
-    fillCost();
+    fillPacksToShipBasedOnCalculatedOrderQuantityOrQuantityRequested(rnrLineItem);
+    fillCost(rnrLineItem);
     fillFullSupplyItemsSubmittedCost();
   };
 
@@ -187,10 +207,10 @@ var RnrLineItem = function (lineItem) {
     return !isNaN(parseIntWithBaseTen(number));
   };
 
-  this.getErrorMessage = function(programRnRColumnList){
-    if(this.rnrLineItem.stockInHand < 0) return 'Stock On Hand is calculated to be negative, please validate entries';
-    if(this.rnrLineItem.quantityDispensed < 0) return 'Total Quantity Consumed is calculated to be negative, please validate entries';
-    if(this.arithmeticallyInvalid(programRnRColumnList)) return 'The entries are arithmetically invalid, please recheck';
+  this.getErrorMessage = function (programRnRColumnList) {
+    if (this.rnrLineItem.stockInHand < 0) return 'Stock On Hand is calculated to be negative, please validate entries';
+    if (this.rnrLineItem.quantityDispensed < 0) return 'Total Quantity Consumed is calculated to be negative, please validate entries';
+    if (this.arithmeticallyInvalid(programRnRColumnList)) return 'The entries are arithmetically invalid, please recheck';
 
     return "";
   }

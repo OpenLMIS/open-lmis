@@ -258,4 +258,23 @@ public class RnrLineItemTest {
   public void shouldNotThrowErrorIfAllMandatoryFieldsPresent() throws Exception {
     assertTrue(lineItem.validate(formulaValidated));
   }
+
+  @Test
+  public void shouldGetCalculatedOrderQuantityIfApprovedQuantityIsNullForFullSupplyItems() throws Exception {
+    lineItem.setQuantityApproved(null);
+    final int expected = 1;
+    lineItem.setCalculatedOrderQuantity(expected);
+    final Integer actual = lineItem.getQuantityApproved();
+    assertThat(actual, is(expected));
+  }
+
+  @Test
+  public void shouldGetRequestedQuantityIfApprovedQuantityIsNullForNonFullSupplyItems() throws Exception {
+    lineItem.setQuantityApproved(null);
+    lineItem.setFullSupply(false);
+    final int expected = 1;
+    lineItem.setQuantityRequested(expected);
+    final Integer actual = lineItem.getQuantityApproved();
+    assertThat(actual, is(expected));
+  }
 }
