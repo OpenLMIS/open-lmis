@@ -26,13 +26,13 @@ public class InitiateRnRPage extends Page {
     @FindBy(how = How.XPATH, using = "//input[@value='Submit']")
     private static WebElement submitButton;
 
-    @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv' and @ng-model='message']")
+    @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv' and @ng-bind='message']")
     private static WebElement successMessage;
 
-    @FindBy(how = How.XPATH, using = "//div[@id='submitSuccessMsgDiv' and @ng-model='submitMessage']")
+    @FindBy(how = How.XPATH, using = "//div[@id='submitSuccessMsgDiv' and @ng-bind='submitMessage']")
     private static WebElement submitSuccessMessage;
 
-    @FindBy(how = How.XPATH, using = "//div[@id='submitFailMessage' and @ng-model='submitError']")
+    @FindBy(how = How.XPATH, using = "//div[@id='submitFailMessage' and @ng-bind='submitError']")
     private static WebElement submitErrorMessage;
 
     @FindBy(how = How.ID, using = "A_0")
