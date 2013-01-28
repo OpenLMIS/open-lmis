@@ -8,10 +8,8 @@ import org.openlmis.core.domain.User;
 import org.openlmis.core.service.UserService;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserPersistenceHandlerTest {

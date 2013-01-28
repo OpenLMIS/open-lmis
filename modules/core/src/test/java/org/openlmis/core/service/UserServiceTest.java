@@ -7,6 +7,9 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.ProgramToRoleMapping;
+import org.openlmis.core.domain.Role;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.UserRepository;
@@ -14,6 +17,7 @@ import org.openlmis.email.domain.EmailMessage;
 import org.openlmis.email.exception.EmailException;
 import org.openlmis.email.service.EmailService;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,12 +39,15 @@ public class UserServiceTest {
   @Mock
   private EmailService emailService;
 
+  @Mock
+  private RoleAssignmentService roleAssignmentService;
+
   private UserService userService;
 
 
   @Before
   public void setUp() throws Exception {
-    userService = new UserService(userRepository, emailService);
+    userService = new UserService(userRepository, roleAssignmentService, emailService);
   }
 
   @Test
@@ -113,12 +120,15 @@ public class UserServiceTest {
   @Test
   public void shouldReturnUserIfIdExists() throws Exception {
     User user = new User();
+    List<ProgramToRoleMapping> programToRoleMappings = Arrays.asList(new ProgramToRoleMapping());
 
     when(userRepository.getById(1)).thenReturn(user);
+    when(roleAssignmentService.getListOfProgramToRoleMappingForAUser(1)).thenReturn(programToRoleMappings);
 
     User returnedUser = userService.getById(1);
 
     assertThat(returnedUser,is(user));
+    assertThat(returnedUser.getProgramToRoleMappingList(), is(programToRoleMappings));
   }
 
   @Test
@@ -128,5 +138,31 @@ public class UserServiceTest {
     userService.save(user);
 
     verify(emailService).send(any(EmailMessage.class));
+  }
+
+  @Test
+  public void shouldSaveUserWithProgramRoleMapping() throws Exception {
+    User user = new User();
+
+    ProgramToRoleMapping programToRoleMapping = new ProgramToRoleMapping();
+    Program program1 = new Program();
+    programToRoleMapping.setProgram(program1);
+    Role role1 = new Role();
+    Role[] roles = {role1};
+    programToRoleMapping.setRoles(Arrays.asList(roles));
+
+    List<ProgramToRoleMapping> listOfProgramToToRoleMapping = new ArrayList<>();
+    listOfProgramToToRoleMapping.add(programToRoleMapping);
+    user.setProgramToRoleMappingList(listOfProgramToToRoleMapping);
+
+    userService.save(user);
+
+    verify(userRepository).insert(user);
+    verify(roleAssignmentService).insertUserProgramRoleMapping(user, listOfProgramToToRoleMapping);
+
+    user.setId(1);
+    userService.save(user);
+
+    verify(roleAssignmentService).deleteAllRoleAssignmentsForUser(1);
   }
 }

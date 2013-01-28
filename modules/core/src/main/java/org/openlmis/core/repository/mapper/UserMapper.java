@@ -39,10 +39,10 @@ public interface UserMapper {
   @Select(value = "SELECT id,firstName,lastName,email FROM users where LOWER(firstName) like '%'|| LOWER(#{userSearchParam}) ||'%' OR LOWER(lastName) like '%'|| LOWER(#{userSearchParam}) ||'%' OR LOWER(email) like '%'|| LOWER(#{userSearchParam}) ||'%'")
   List<User> getUserWithSearchedName(String userSearchParam);
 
-  @Update("UPDATE users SET userName = #{userName}, firstName = #{firstName}, lastName = #{lastName}, employeeId = #{employeeId}, jobTitle = #{jobTitle}, " +
+  @Update("UPDATE users SET userName = #{userName}, firstName = #{firstName}, lastName = #{lastName}, employeeId = #{employeeId},facilityId=#{facilityId}, jobTitle = #{jobTitle}, " +
     "primaryNotificationMethod = #{primaryNotificationMethod}, officePhone = #{officePhone}, cellPhone = #{cellPhone}, email = #{email}, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT where id=#{id}")
   void update(User user);
 
-  @Select("SELECT id, userName, firstName, lastName , employeeId, jobTitle, officePhone, primaryNotificationMethod, cellPhone, email FROM users WHERE id=#{id}")
+  @Select("SELECT id, userName, firstName, lastName, employeeId, facilityId, jobTitle, officePhone, primaryNotificationMethod, cellPhone, email FROM users WHERE id=#{id}")
   User getById(Integer id);
 }

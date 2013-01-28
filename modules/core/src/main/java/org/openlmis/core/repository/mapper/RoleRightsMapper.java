@@ -60,4 +60,7 @@ public interface RoleRightsMapper {
         "AND U.id = RA.userId",
         "AND RA.roleId = RR.roleId"})
   List<Right> getAllRightsForUserById(@Param("userId") Integer userId);
+
+
+
 }
