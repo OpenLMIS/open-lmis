@@ -60,6 +60,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
     displaySelectionCheckbox:false,
     enableColumnResize:true,
     enableColumnReordering:true,
+    enableSorting: false,
     showColumnMenu:false,
     showFilter:false,
     columnDefs:[
