@@ -56,6 +56,13 @@ function UserController($scope, $routeParams, Users, UserById, SearchFacilitiesB
   };
 
   $scope.clearSelectedFacility = function () {
+    $scope.facilitySelected = null;
+    $scope.programAndRoleList = [];
+
+    setTimeout(function() {
+      angular.element("#searchFacility").focus();
+    });
+    
   };
 
   $scope.displayProgramRoleMapping = function () {
