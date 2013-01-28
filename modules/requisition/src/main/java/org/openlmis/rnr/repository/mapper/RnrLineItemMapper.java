@@ -10,14 +10,14 @@ import java.util.List;
 public interface RnrLineItemMapper {
 
   @Insert({"INSERT INTO requisition_line_items",
-    "(rnrId, productCode, product, dispensingUnit, dosesPerMonth, dosesPerDispensingUnit,",
+    "(rnrId, productCode, product, beginningBalance, dispensingUnit, dosesPerMonth, dosesPerDispensingUnit,",
     "maxMonthsOfStock, packsToShip, packSize, price, roundToZero, packRoundingThreshold,",
-    "fullSupply, modifiedBy, modifiedDate)",
+    "fullSupply, previousStockInHandAvailable, modifiedBy, modifiedDate)",
     "VALUES (" +
-      "#{rnrId}, #{productCode}, #{product}, #{dispensingUnit}, #{dosesPerMonth},",
+      "#{rnrId}, #{productCode}, #{product}, #{beginningBalance}, #{dispensingUnit}, #{dosesPerMonth},",
       "#{dosesPerDispensingUnit}, #{maxMonthsOfStock}, #{packsToShip},",
       "#{packSize}, #{price}, #{roundToZero}, #{packRoundingThreshold},",
-      "#{fullSupply}, #{modifiedBy}, #{modifiedDate})"})
+      "#{fullSupply}, #{previousStockInHandAvailable}, #{modifiedBy}, #{modifiedDate})"})
   @Options(useGeneratedKeys = true)
   public Integer insert(RnrLineItem rnrLineItem);
 

@@ -22,7 +22,6 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
@@ -90,19 +89,12 @@ public class RnrLineItemMapperIT {
   }
 
   @Test
-  public void shouldInsertRequisitionLineItem() {
-
-    requisitionMapper.insert(rnr);
-    RnrLineItem rnrLineItem = new RnrLineItem(rnr.getId(), facilityApprovedProduct, MODIFIED_BY);
-    rnrLineItemMapper.insert(rnrLineItem);
-    assertNotNull(rnrLineItem.getId());
-  }
-
-  @Test
   public void shouldReturnRnrLineItemsByRnrId() {
     requisitionMapper.insert(rnr);
     RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityApprovedProduct, MODIFIED_BY);
     lineItem.setPacksToShip(20);
+    lineItem.setPreviousStockInHandAvailable(true);
+    lineItem.setBeginningBalance(5);
     rnrLineItemMapper.insert(lineItem);
 
     LossesAndAdjustments lossesAndAdjustmentsClinicReturn = new LossesAndAdjustments();
@@ -136,6 +128,8 @@ public class RnrLineItemMapperIT {
     assertThat(rnrLineItem.getRoundToZero(), is(true));
     assertThat(rnrLineItem.getPackSize(), is(10));
     assertThat(rnrLineItem.getPrice().compareTo(new Money("12.5")), is(0));
+    assertThat(rnrLineItem.getPreviousStockInHandAvailable(), is(true));
+    assertThat(rnrLineItem.getBeginningBalance(), is(5));
   }
 
   @Test
