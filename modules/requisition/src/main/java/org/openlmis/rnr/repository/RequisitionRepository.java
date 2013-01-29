@@ -36,7 +36,11 @@ public class RequisitionRepository {
   public void insert(Rnr requisition) {
     requisition.setStatus(INITIATED);
     mapper.insert(requisition);
-    List<RnrLineItem> lineItems = requisition.getLineItems();
+    insertLineItems(requisition, requisition.getLineItems());
+    insertLineItems(requisition, requisition.getNonFullSupplyLineItems());
+  }
+
+  private void insertLineItems(Rnr requisition, List<RnrLineItem> lineItems) {
     for (RnrLineItem lineItem : lineItems) {
       lineItem.setRnrId(requisition.getId());
       lineItem.setModifiedBy(requisition.getModifiedBy());
@@ -46,7 +50,11 @@ public class RequisitionRepository {
 
   public void update(Rnr rnr) {
     mapper.update(rnr);
-    List<RnrLineItem> lineItems = rnr.getLineItems();
+    updateLineItems(rnr.getLineItems());
+    updateLineItems(rnr.getNonFullSupplyLineItems());
+  }
+
+  private void updateLineItems(List<RnrLineItem> lineItems) {
     for (RnrLineItem lineItem : lineItems) {
       rnrLineItemMapper.update(lineItem);
       lossesAndAdjustmentsMapper.deleteByLineItemId(lineItem.getId());

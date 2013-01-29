@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.ALWAYS;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
@@ -31,6 +32,8 @@ public class Rnr {
   private Money nonFullSupplyItemsSubmittedCost = new Money("0");
 
   private List<RnrLineItem> lineItems = new ArrayList<>();
+  @JsonSerialize(include = ALWAYS)
+  private List<RnrLineItem> nonFullSupplyLineItems = new ArrayList<>();
 
   private Integer modifiedBy;
   private Date modifiedDate;
@@ -50,8 +53,12 @@ public class Rnr {
     fillLineItems(facilityApprovedProducts);
   }
 
-  public void add(RnrLineItem rnrLineItem) {
-    lineItems.add(rnrLineItem);
+  public void add(RnrLineItem rnrLineItem, Boolean fullSupply) {
+    if (fullSupply) {
+      lineItems.add(rnrLineItem);
+    } else {
+      nonFullSupplyLineItems.add(rnrLineItem);
+    }
   }
 
   public boolean validate(List<RnrColumn> templateColumns) {
@@ -75,7 +82,7 @@ public class Rnr {
   public void fillLineItems(List<FacilityApprovedProduct> facilityApprovedProducts) {
     for (FacilityApprovedProduct programProduct : facilityApprovedProducts) {
       RnrLineItem requisitionLineItem = new RnrLineItem(null, programProduct, modifiedBy);
-      add(requisitionLineItem);
+      add(requisitionLineItem, true);
     }
   }
 

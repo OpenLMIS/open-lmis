@@ -96,6 +96,7 @@ public class RnrLineItemMapperIT {
     lineItem.setPacksToShip(20);
     lineItem.setPreviousStockInHandAvailable(true);
     lineItem.setBeginningBalance(5);
+    lineItem.setFullSupply(true);
     rnrLineItemMapper.insert(lineItem);
 
     LossesAndAdjustments lossesAndAdjustmentsClinicReturn = new LossesAndAdjustments();
@@ -131,6 +132,22 @@ public class RnrLineItemMapperIT {
     assertThat(rnrLineItem.getPrice().compareTo(new Money("12.5")), is(0));
     assertThat(rnrLineItem.getPreviousStockInHandAvailable(), is(true));
     assertThat(rnrLineItem.getBeginningBalance(), is(5));
+  }
+
+  @Test
+  public void shouldReturnNonFullSupplyLineItemsByRnrId() throws Exception {
+    requisitionMapper.insert(rnr);
+    RnrLineItem nonFullSupplyLineItem = new RnrLineItem(rnr.getId(), facilityApprovedProduct, MODIFIED_BY);
+    nonFullSupplyLineItem.setQuantityRequested(20);
+    nonFullSupplyLineItem.setReasonForRequestedQuantity("More patients");
+    nonFullSupplyLineItem.setFullSupply(false);
+    rnrLineItemMapper.insertNonFullSupply(nonFullSupplyLineItem);
+
+    List<RnrLineItem> fetchedNonSupplyLineItems = rnrLineItemMapper.getNonFullSupplyRnrLineItemsByRnrId(rnr.getId());
+
+    assertThat(fetchedNonSupplyLineItems.size(), is(1));
+    assertThat(fetchedNonSupplyLineItems.get(0).getQuantityRequested(), is(20));
+    assertThat(fetchedNonSupplyLineItems.get(0).getReasonForRequestedQuantity(), is("More patients"));
   }
 
   @Test

@@ -3,16 +3,13 @@ package org.openlmis.rnr.domain;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.openlmis.rnr.builder.RequisitionBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
 
 public class RnrTest {
@@ -38,6 +35,7 @@ public class RnrTest {
 
     verify(rnrLineItem1).validate(templateColumns);
     verify(rnrLineItem2).validate(templateColumns);
+
   }
 
 }

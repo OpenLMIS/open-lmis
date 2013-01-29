@@ -5,7 +5,7 @@
       <span id = "totalCostCurrency" class = "cell-text" >
         {{currency}}
       </span >
-      <span id = "totalCost" class = "cell-text" > {{rnr.fullSupplyItemsSubmittedCost}}
+      <span id = "totalCost" class = "cell-text" > {{rnr.fullSupplyItemsSubmittedCost + rnr.nonFullSupplyItemsSubmittedCost}}
       </span >
     </div >
     <div class = "rnr-table" >
@@ -31,7 +31,7 @@
                       <ng-switch on = "rnrLineItem['previousStockInHandAvailable']" >
                         <span ng-switch-when = 'false' >
                           <input id = "{{getId('A', $parent.$parent)}}" type = "text"
-                                 ng-required = "true" ng-disabled = "formDisabled || isNonFullSupply(rnrLineItem)"
+                                 ng-required = "true" ng-disabled = "formDisabled"
                                  name = "beginningBalance{{rnrLineItem['id']}}"
                                  ng-model = "rnrLineItem[column.name]"
                                  rnr-validator = "positiveInteger" maxlength = "8"
@@ -53,7 +53,7 @@
 
                     <span ng-switch-when = "quantityReceived"
                           ng-class = "getCellErrorClass(rnrLineItem, programRnRColumnList)" >
-                      <input ng-required = "true" ng-disabled = "formDisabled || isNonFullSupply(rnrLineItem)"
+                      <input ng-required = "true" ng-disabled = "formDisabled"
                              id = "{{getId('B', $parent)}}" type = "text"
                              name = "quantityReceived{{rnrLineItem['id']}}"
                              ng-model = "rnrLineItem[column.name]"
@@ -73,7 +73,7 @@
 
                     <span ng-switch-when = "quantityDispensed"
                           ng-class = "getCellErrorClass(rnrLineItem, programRnRColumnList)" >
-                      <input ng-required = "true" ng-disabled = "formDisabled || isNonFullSupply(rnrLineItem)"
+                      <input ng-required = "true" ng-disabled = "formDisabled"
                              id = "{{getId('C', $parent)}}" type = "text"
                              name = "quantityDispensed{{rnrLineItem['id']}}"
                              ng-model = "rnrLineItem[column.name]"
@@ -190,7 +190,7 @@
                       </div >
                       <div
                         ng-class = "highlightNestedFieldsWithError(rnrLineItem[column.name], 'quantity')" >
-                        <a ng-click = "showLossesAndAdjustmentModalForLineItem(rnrLineItem, isNonFullSupply(rnrLineItem))"
+                        <a ng-click = "showLossesAndAdjustmentModalForLineItem(rnrLineItem)"
                            class = "rnr-adjustment" >
                           <span class = "adjustment-value" >
                             {{rnrLineItem.totalLossesAndAdjustments}}</span >
@@ -201,7 +201,7 @@
 
                     <span ng-switch-when = "stockInHand"
                           ng-class = "getCellErrorClass(rnrLineItem, programRnRColumnList)" >
-                      <input ng-required = "true" ng-disabled = "formDisabled || isNonFullSupply(rnrLineItem)"
+                      <input ng-required = "true" ng-disabled = "formDisabled"
                              id = "{{getId('E', $parent)}}" type = "text"
                              name = "stockInHand{{rnrLineItem['id']}}"
                              ng-model = "rnrLineItem[column.name]"
@@ -220,7 +220,7 @@
                     </span >
 
                     <span ng-switch-when = "newPatientCount" >
-                      <input ng-required = "true" ng-disabled = "formDisabled || isNonFullSupply(rnrLineItem)" id = "{{getId('F', $parent)}}"
+                      <input ng-required = "true" ng-disabled = "formDisabled" id = "{{getId('F', $parent)}}"
                              type = "text"
                              name = "newPatientCount{{rnrLineItem['id']}}"
                              ng-model = "rnrLineItem[column.name]"
@@ -278,7 +278,7 @@
                     </span >
 
                     <span ng-switch-when = "stockOutDays" >
-                      <input ng-required = "true" ng-disabled = "formDisabled || isNonFullSupply(rnrLineItem)" id = "{{getId('X', $parent)}}"
+                      <input ng-required = "true" ng-disabled = "formDisabled" id = "{{getId('X', $parent)}}"
                              type = "text" name = "stockOutDays{{rnrLineItem['id']}}"
                              ng-model = "rnrLineItem[column.name]"
                              rnr-validator = "positiveInteger" maxlength = "8"
@@ -318,6 +318,59 @@
               </ng-switch >
             </td >
           </tr >
+          <tr ng-show="nonFullSupplyLineItems.length > 0" ><td colspan={{programRnRColumnList.length}}>Non Full Supply Products</td></tr>
+          <tr ng-repeat = "rnrLineItem in nonFullSupplyLineItems  ">
+            <td class = "cell-input" ng-repeat = "column in programRnRColumnList"
+                ng-hide = "column.name == 'quantityApproved'" >
+              <ng-switch on = "column.name" >
+               <span ng-switch-when = "remarks" >
+                      <input ng-disabled = "formDisabled" id = "{{getId('L', $parent)}}" type = "text"
+                             name = "remarks{{rnrLineItem['id']}}"
+                             ng-model = "rnrLineItem[column.name]"
+                             maxlength = "250" />
+                    </span >
+
+                    <span ng-switch-when = "quantityRequested" >
+                          <input ng-disabled = "formDisabled" id = "{{getId('J', $parent)}}" type = "text"
+                                 name = "quantityRequested{{rnrLineItem['id']}}"
+                                 ng-model = "rnrLineItem[column.name]"
+                                 rnr-validator = "positiveInteger" maxlength = "8"
+                                 ng-change = "rnrLineItem.fill(rnr, programRnRColumnList)" />
+                          <span class = "rnr-form-error" id = "quantityRequested{{rnrLineItem['id']}}"
+                                style = "display:none;" >
+                            Enter Numeric Data
+                          </span >
+                    </span >
+
+                    <span ng-switch-when = "reasonForRequestedQuantity" >
+                      <input ng-disabled = "formDisabled" id = "{{getId('W', $parent)}}" type = "text"
+                             name = "reasonForRequestedQuantity{{rnrLineItem['id']}}"
+                             ng-model = "rnrLineItem[column.name]"
+                             ng-required = "rnrLineItem.quantityRequested"
+                             ng-class = "highlightWarning(rnrLineItem[column.name],$parent.$parent.$parent.$index )"
+                             maxlength = "250" />
+                      <span class = "alert alert-warning reason-request"
+                            ng-show = "rnrLineItem.quantityRequested && !rnrLineItem.reasonForRequestedQuantity" >
+                        Please enter a reason
+                      </span >
+                    </span >
+
+                <span ng-switch-when = "price">
+                      <span ng-bind="currency" class = "cell-text"></span>
+                      <span ng-bind = "rnrLineItem[column.name] | number:'2'" class = "cell-text" ></span>
+                    </span>
+                    <span ng-switch-when = "cost">
+                      <span ng-bind="currency" class = "cell-text"></span>
+                      <span ng-bind = "rnrLineItem[column.name] | number:'2'" class = "cell-text"></span>
+                    </span>
+
+                <span ng-switch-default ng-bind = "rnrLineItem[column.name]" class = "cell-text" ></span>
+
+              </ng-switch >
+            </td>
+
+
+          </tr>
         </tbody >
       </table >
     </div >

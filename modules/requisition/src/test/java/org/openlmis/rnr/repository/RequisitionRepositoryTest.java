@@ -61,8 +61,8 @@ public class RequisitionRepositoryTest {
     rnrLineItem1.setId(1);
     rnrLineItem2 = new RnrLineItem();
     rnrLineItem2.setId(2);
-    rnr.add(rnrLineItem1);
-    rnr.add(rnrLineItem2);
+    rnr.add(rnrLineItem1, true);
+    rnr.add(rnrLineItem2, true);
     rnrLineItem1.addLossesAndAdjustments(lossAndAdjustmentForLineItem);
     rnrLineItem2.addLossesAndAdjustments(lossAndAdjustmentForLineItem);
     rnr.setFacilityId(FACILITY_ID);

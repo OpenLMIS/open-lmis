@@ -15,18 +15,18 @@ public interface RnrLineItemMapper {
     "fullSupply, previousStockInHandAvailable, modifiedBy, modifiedDate)",
     "VALUES (" +
       "#{rnrId}, #{productCode}, #{product}, #{beginningBalance}, #{dispensingUnit}, #{dosesPerMonth},",
-      "#{dosesPerDispensingUnit}, #{maxMonthsOfStock}, #{packsToShip},",
-      "#{packSize}, #{price}, #{roundToZero}, #{packRoundingThreshold},",
-      "#{fullSupply}, #{previousStockInHandAvailable}, #{modifiedBy}, #{modifiedDate})"})
+    "#{dosesPerDispensingUnit}, #{maxMonthsOfStock}, #{packsToShip},",
+    "#{packSize}, #{price}, #{roundToZero}, #{packRoundingThreshold},",
+    "#{fullSupply}, #{previousStockInHandAvailable}, #{modifiedBy}, #{modifiedDate})"})
   @Options(useGeneratedKeys = true)
   public Integer insert(RnrLineItem rnrLineItem);
 
-  @Select("SELECT * FROM requisition_line_items WHERE rnrId = #{rnrId}")
+  @Select("SELECT * FROM requisition_line_items WHERE rnrId = #{rnrId} and fullSupply = true")
   @Results(value = {
-      @Result(property = "id", column = "id"),
-      @Result(property = "lossesAndAdjustments", javaType =List.class, column = "id", many = @Many(select = "org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper.getByRnrLineItem"))
+    @Result(property = "id", column = "id"),
+    @Result(property = "lossesAndAdjustments", javaType = List.class, column = "id", many = @Many(select = "org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper.getByRnrLineItem"))
   })
-    public List<RnrLineItem> getRnrLineItemsByRnrId(Integer rnrId);
+  public List<RnrLineItem> getRnrLineItemsByRnrId(Integer rnrId);
 
   @Update("UPDATE requisition_line_items " +
     "SET quantityReceived = #{quantityReceived}, " +
@@ -54,16 +54,19 @@ public interface RnrLineItemMapper {
   @Insert({"INSERT INTO requisition_line_items",
     "(rnrId, productCode, product, dispensingUnit, dosesPerMonth, dosesPerDispensingUnit,",
     "maxMonthsOfStock, packsToShip, packSize, price, roundToZero, packRoundingThreshold,",
-    "fullSupply, modifiedBy, modifiedDate, quantityReceived, quantityDispensed, beginningBalance," ,
-      "stockInHand, totalLossesAndAdjustments, calculatedOrderQuantity, quantityApproved," ,
-      "newPatientCount, stockOutDays, normalizedConsumption, amc, maxStockQuantity, remarks, quantityRequested, reasonForRequestedQuantity)",
+    "fullSupply, modifiedBy, modifiedDate, quantityReceived, quantityDispensed, beginningBalance,",
+    "stockInHand, totalLossesAndAdjustments, calculatedOrderQuantity, quantityApproved,",
+    "newPatientCount, stockOutDays, normalizedConsumption, amc, maxStockQuantity, remarks, quantityRequested, reasonForRequestedQuantity)",
     "VALUES ( #{rnrId}, #{productCode}, #{product}, #{dispensingUnit}, #{dosesPerMonth},",
     "#{dosesPerDispensingUnit}, #{maxMonthsOfStock}, #{packsToShip},",
     "#{packSize}, #{price}, #{roundToZero}, #{packRoundingThreshold},",
     "#{fullSupply}, #{modifiedBy}, #{modifiedDate}, #{quantityReceived}, #{quantityDispensed}, #{beginningBalance},",
-      "#{stockInHand}, #{totalLossesAndAdjustments}, #{calculatedOrderQuantity}, #{quantityApproved},",
-      "#{newPatientCount}, #{stockOutDays}, #{normalizedConsumption}, #{amc}, #{maxStockQuantity}," ,
-        " #{remarks}, #{quantityRequested}, #{reasonForRequestedQuantity})"})
+    "#{stockInHand}, #{totalLossesAndAdjustments}, #{calculatedOrderQuantity}, #{quantityApproved},",
+    "#{newPatientCount}, #{stockOutDays}, #{normalizedConsumption}, #{amc}, #{maxStockQuantity},",
+    " #{remarks}, #{quantityRequested}, #{reasonForRequestedQuantity})"})
   @Options(useGeneratedKeys = true)
   void insertNonFullSupply(RnrLineItem requisitionLineItem);
+
+  @Select("SELECT * FROM requisition_line_items WHERE rnrId = #{rnrId} and fullSupply = false")
+  public List<RnrLineItem> getNonFullSupplyRnrLineItemsByRnrId(Integer rnrId);
 }

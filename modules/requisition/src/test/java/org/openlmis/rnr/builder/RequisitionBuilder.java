@@ -42,7 +42,7 @@ public class RequisitionBuilder {
       rnr.setStatus(lookup.valueOf(status, RnrStatus.INITIATED));
       rnr.setSubmittedDate(lookup.valueOf(submittedDate, new Date()));
       RnrLineItem rnrLineItemCost48 = make(a(defaultRnrLineItem));
-      rnr.add(rnrLineItemCost48);
+      rnr.add(rnrLineItemCost48, true);
 
       return rnr;
     }

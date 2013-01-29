@@ -47,13 +47,13 @@ var RnrLineItem = function () {
     rnrLineItem.updateTotalLossesAndAdjustment(quantity, lossAndAdjustment.type.additive);
   };
 
-  RnrLineItem.prototype.fillPacksToShipBasedOnCalculatedOrderQuantityOrQuantityRequested = function(){
+  RnrLineItem.prototype.fillPacksToShipBasedOnCalculatedOrderQuantityOrQuantityRequested = function () {
     var orderQuantity = this.quantityRequested == null ?
       this.calculatedOrderQuantity : this.quantityRequested;
     this.calculatePacksToShip(orderQuantity);
   };
 
-  RnrLineItem.prototype.calculatePacksToShip = function(quantity) {
+  RnrLineItem.prototype.calculatePacksToShip = function (quantity) {
     var packSize = parseIntWithBaseTen(this.packSize);
     if (quantity == null || !isNumber(quantity)) {
       this.packsToShip = null;
@@ -63,7 +63,7 @@ var RnrLineItem = function () {
     this.applyRoundingRules(quantity);
   };
 
-  RnrLineItem.prototype.applyRoundingRules= function (orderQuantity) {
+  RnrLineItem.prototype.applyRoundingRules = function (orderQuantity) {
     var remainderQuantity = orderQuantity % parseIntWithBaseTen(this.packSize);
     var packsToShip = this.packsToShip;
     if (remainderQuantity >= this.packRoundingThreshold && packsToShip != 0) {
@@ -87,7 +87,7 @@ var RnrLineItem = function () {
   RnrLineItem.prototype.updateCostWithApprovedQuantity = function (rnr) {
     this.fillPacksToShipBasedOnApprovedQuantity();
     this.fillCost();
-    fillFullSupplyItemsSubmittedCost(rnr);
+    rnr.fullSupplyItemsSubmittedCost = getTotalLineItemCost(rnr.lineItems);
   };
 
   RnrLineItem.prototype.fill = function (rnr, programRnRColumnList) {
@@ -165,20 +165,23 @@ var RnrLineItem = function () {
     fillCalculatedOrderQuantity();
     this.fillPacksToShipBasedOnCalculatedOrderQuantityOrQuantityRequested();
     this.fillCost();
-    fillFullSupplyItemsSubmittedCost(rnr);
+    if (rnr != null) {
+      rnr.fullSupplyItemsSubmittedCost = getTotalLineItemCost(rnr.lineItems);
+      rnr.nonFullSupplyItemsSubmittedCost = getTotalLineItemCost(rnr.nonFullSupplyLineItems);
+    }
   };
 
-  function fillFullSupplyItemsSubmittedCost(rnr) {
-    if (rnr == null || rnr.lineItems == null) return;
+  function getTotalLineItemCost(rnrLineItems) {
+    if (rnrLineItems == null) return;
 
     var cost = 0;
-    var lineItems = rnr.lineItems;
+    var lineItems = rnrLineItems;
     for (var lineItemIndex in lineItems) {
       var lineItem = lineItems[lineItemIndex];
       if (!lineItem || lineItem.cost == null || !isNumber(lineItem.cost)) continue;
       cost += lineItem.cost;
     }
-    rnr.fullSupplyItemsSubmittedCost = cost;
+    return cost;
   }
 
   RnrLineItem.prototype.updateTotalLossesAndAdjustment = function (quantity, additive) {

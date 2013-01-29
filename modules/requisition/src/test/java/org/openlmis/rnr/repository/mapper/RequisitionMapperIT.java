@@ -17,6 +17,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +27,9 @@ import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
+import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
+import static org.openlmis.rnr.builder.RnrLineItemBuilder.fullSupply;
+import static org.openlmis.rnr.builder.RnrLineItemBuilder.productCode;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -92,6 +96,14 @@ public class RequisitionMapperIT {
   @Test
   public void shouldReturnRequisitionById() {
     Rnr requisition = insertRequisition(processingPeriod1, INITIATED);
+    Product product = make(a(ProductBuilder.defaultProduct));
+    productMapper.insert(product);
+    RnrLineItem fullSupplyLineItem = make(a(defaultRnrLineItem, with(fullSupply, true), with(productCode, product.getCode())));
+    RnrLineItem nonFullSupplyLineItem = make(a(defaultRnrLineItem, with(fullSupply, false), with(productCode, product.getCode())));
+    fullSupplyLineItem.setRnrId(requisition.getId());
+    nonFullSupplyLineItem.setRnrId(requisition.getId());
+    lineItemMapper.insert(fullSupplyLineItem);
+    lineItemMapper.insert(nonFullSupplyLineItem);
     Rnr fetchedRequisition = mapper.getById(requisition.getId());
     assertThat(fetchedRequisition.getId(), is(requisition.getId()));
     assertThat(fetchedRequisition.getProgramId(), is(equalTo(PROGRAM_ID)));
@@ -99,6 +111,8 @@ public class RequisitionMapperIT {
     assertThat(fetchedRequisition.getPeriodId(), is(equalTo(processingPeriod1.getId())));
     assertThat(fetchedRequisition.getModifiedBy(), is(equalTo(MODIFIED_BY)));
     assertThat(fetchedRequisition.getStatus(), is(equalTo(INITIATED)));
+    assertThat(fetchedRequisition.getLineItems().size(), is(1));
+    assertThat(fetchedRequisition.getNonFullSupplyLineItems().size(), is(1));
   }
 
   @Test

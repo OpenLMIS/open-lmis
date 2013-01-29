@@ -16,6 +16,8 @@ public class RnrLineItemBuilder {
   public static final Property<RnrLineItem, Float> cost = newProperty();
   public static final Property<RnrLineItem, Integer> stockInHand = newProperty();
   public static final Property<RnrLineItem, LossesAndAdjustments> lossesAndAdjustments = newProperty();
+  public static final Property<RnrLineItem, Boolean> fullSupply = newProperty();
+  public static final Property<RnrLineItem, String> productCode = newProperty();
   public static final LossesAndAdjustments ONE_LOSS = new LossesAndAdjustments() {{
     setQuantity(1);
     LossesAndAdjustmentsType type = new LossesAndAdjustmentsType();
@@ -30,7 +32,7 @@ public class RnrLineItemBuilder {
     @Override
     public RnrLineItem instantiate(PropertyLookup<RnrLineItem> lookup) {
       RnrLineItem rnrLineItem = new RnrLineItem();
-      rnrLineItem.setProductCode("P999");
+      rnrLineItem.setProductCode(lookup.valueOf(productCode, "P999"));
       rnrLineItem.setBeginningBalance(BEGINNING_BALANCE);
       rnrLineItem.setQuantityReceived(3);
 
@@ -44,13 +46,13 @@ public class RnrLineItemBuilder {
       rnrLineItem.setPrice(new Money("2"));
       rnrLineItem.setQuantityApproved(2);
 
+      rnrLineItem.setFullSupply(lookup.valueOf(fullSupply, true));
       rnrLineItem.setStockOutDays(3);
       rnrLineItem.setNewPatientCount(3);
       rnrLineItem.setDosesPerMonth(30);
       rnrLineItem.setDosesPerDispensingUnit(10);
       rnrLineItem.setNormalizedConsumption(37);
       rnrLineItem.setAmc(37);
-      rnrLineItem.setFullSupply(true);
       rnrLineItem.setMaxMonthsOfStock(2);
       rnrLineItem.setMaxStockQuantity(74);
       rnrLineItem.setCalculatedOrderQuantity(70);
