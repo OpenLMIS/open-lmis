@@ -41,7 +41,7 @@ import static org.openlmis.core.builder.ProductBuilder.defaultProduct;
 import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
 import static org.openlmis.rnr.builder.RequisitionBuilder.status;
-import static org.openlmis.rnr.builder.RnrColumnBuilder.defaultRnrColumn;
+import static org.openlmis.rnr.builder.RnrColumnBuilder.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 import static org.openlmis.rnr.service.RequisitionService.*;
 
@@ -211,7 +211,6 @@ public class RequisitionServiceTest {
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY_ID, PROGRAM_ID)).thenReturn(requisition);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY_ID, PROGRAM_ID, date, PERIOD_ID)).
       thenReturn(Arrays.asList(validPeriod));
-    when(rnrTemplateRepository.isRnrTemplateDefined(PROGRAM_ID)).thenReturn(true);
     return validPeriod;
   }
 
@@ -612,6 +611,23 @@ public class RequisitionServiceTest {
     assertThat(requisition.getLineItems().get(0).getBeginningBalance(), is(nullValue()));
     verify(processingScheduleService).getImmediatePreviousPeriod(PERIOD_ID);
     verify(requisitionRepository).getRequisition(FACILITY_ID, PROGRAM_ID, previousPeriodId);
+  }
+
+  @Test
+  public void shouldFillNullInBeginningBalanceIfStockInHandIsNotDisplayed() throws Exception {
+    Date date = new Date();
+    Rnr someRequisition = createRequisition(PERIOD_ID, null);
+    ProcessingPeriod validPeriod = setupForInitRnr(date, someRequisition, PERIOD_ID);
+
+    List<FacilityApprovedProduct> facilityApprovedProducts = new ArrayList<>();
+    ProgramProduct programProduct = new ProgramProduct(null, make(a(defaultProduct)), 10, true);
+    facilityApprovedProducts.add(new FacilityApprovedProduct("warehouse", programProduct, 30));
+    when(facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY_ID, PROGRAM_ID)).thenReturn(facilityApprovedProducts);
+    when(rnrTemplateRepository.fetchRnrTemplateColumns(PROGRAM_ID)).thenReturn(Arrays.asList(make(a(defaultRnrColumn, with(columnName, "stockInHand"), with(visible, false)))));
+
+    Rnr requisition = requisitionService.initiate(FACILITY_ID, PROGRAM_ID, validPeriod.getId(), USER_ID);
+
+    assertThat(requisition.getLineItems().get(0).getBeginningBalance(), is(nullValue()));
   }
 
   @Test

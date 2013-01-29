@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.openlmis.core.domain.Right.*;
+import static org.openlmis.rnr.domain.ProgramRnrTemplate.STOCK_IN_HAND;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
 @Service
@@ -83,7 +84,7 @@ public class RequisitionService {
   }
 
   private void fillBeginningBalanceFromPreviousRnrIfStockInHandVisible(ProgramRnrTemplate rnrTemplate, Rnr requisition) {
-    if (rnrTemplate.columnsVisible("stockInHand")) {
+    if (rnrTemplate.columnsVisible(STOCK_IN_HAND)) {
       ProcessingPeriod immediatePreviousPeriod = processingScheduleService.getImmediatePreviousPeriod(requisition.getPeriodId());
       Rnr previousRequisition = null;
       if (immediatePreviousPeriod != null)
