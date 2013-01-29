@@ -71,7 +71,7 @@ public class RoleAssignmentMapperIT {
     roleRightsMapper.createRoleRight(r2.getId(), CONFIGURE_RNR);
 
     SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
-    supervisoryNode.setFacility(facility );
+    supervisoryNode.setFacility(facility);
     supervisoryNodeMapper.insert(supervisoryNode);
 
     insertRoleAssignments(program1, user, r1, supervisoryNode);
@@ -106,5 +106,54 @@ public class RoleAssignmentMapperIT {
     Facility facility = make(a(defaultFacility));
     facilityMapper.insert(facility);
     return facility;
+  }
+
+  @Test
+  public void shouldDeleteAllRoleAssignmentsForAUser() throws Exception {
+    roleAssignmentMapper.deleteAllRoleAssignmentsForUser(1);
+
+    assertThat(roleAssignmentMapper.getRoleAssignmentForAUser(1).size(), is(0));
+  }
+
+  @Test
+  public void shouldGetRolesForAUserAndProgram() throws Exception {
+    Program program = new Program();
+    program.setId(1);
+    Role role1 = new Role();
+    role1.setId(1);
+    User user = new User();
+    user.setId(1);
+    roleAssignmentMapper.createRoleAssignment(user, role1, program, null);
+
+    List<Role> roles = roleAssignmentMapper.getRoleAssignmentForAUserIdAndProgramId(1, 1);
+
+    for (Role role : roles) {
+      assertThat(role.getId().equals(role1.getId()), is(true));
+    }
+    assertThat(roles.size(), is(1));
+  }
+
+  @Test
+  public void shouldGetProgramsForWhichUserHasRoleAssignments() throws Exception {
+    User user = new User();
+    user.setId(1);
+    Program program1 = new Program();
+    program1.setId(1);
+    Program program2 = new Program();
+    program2.setId(2);
+    Role role1 = new Role();
+    role1.setId(1);
+
+    roleAssignmentMapper.deleteAllRoleAssignmentsForUser(1);
+    roleAssignmentMapper.createRoleAssignment(user, role1, program1, null);
+    roleAssignmentMapper.createRoleAssignment(user, role1, program2, null);
+
+    List<Integer> listOfProgramIdsForTheUser = roleAssignmentMapper.getProgramsForWhichHasRoleAssignments(1);
+
+    assertThat(listOfProgramIdsForTheUser.size(), is(2));
+
+    for (Integer programId : listOfProgramIdsForTheUser) {
+      assertThat(programId.equals(program1.getId())|| programId.equals(program2.getId()),is(true));
+    }
   }
 }

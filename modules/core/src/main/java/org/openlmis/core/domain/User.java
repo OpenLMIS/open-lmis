@@ -8,6 +8,7 @@ import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Pattern;
 
 @Data
@@ -44,6 +45,8 @@ public class User implements Importable {
   private static final String INVALID_EMAIL_ERROR_CODE = "user.email.invalid";
 
   private static final String INVALID_USER_NAME_ERROR_CODE = "user.userName.invalid";
+
+  private List<ProgramToRoleMapping> programToRoleMappingList;
 
   public void validate() {
     validateEmail();

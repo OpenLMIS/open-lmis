@@ -4,10 +4,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
-import org.openlmis.core.domain.Right;
-import org.openlmis.core.domain.User;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.hash.Encoder;
+import org.openlmis.core.service.RoleAssignmentService;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -16,10 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpSession;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -45,6 +42,9 @@ public class UserControllerTest {
 
   @Mock
   private UserService userService;
+
+  @Mock
+  private RoleAssignmentService roleAssignmentService;
 
   @Before
   public void setUp() {
@@ -108,9 +108,21 @@ public class UserControllerTest {
     User user = new User();
     user.setFirstName("Shan");
     user.setLastName("Sharma");
+
+    ProgramToRoleMapping programToRoleMapping = new ProgramToRoleMapping();
+    Program program1 = new Program();
+    programToRoleMapping.setProgram(program1);
+    Role role1 = new Role();
+    Role[] roles = {role1};
+    programToRoleMapping.setRoles(Arrays.asList(roles));
+
+    List<ProgramToRoleMapping> listOfProgramToToRoleMapping = new ArrayList<>();
+    listOfProgramToToRoleMapping.add(programToRoleMapping);
+    user.setProgramToRoleMappingList(listOfProgramToToRoleMapping);
+
     httpServletRequest.getSession().setAttribute(USER_ID,userId);
     httpServletRequest.getSession().setAttribute(USER,USER);
-    ResponseEntity<OpenLmisResponse> response = userController.save(user, httpServletRequest);
+    ResponseEntity<OpenLmisResponse> response = userController.save(user,httpServletRequest);
 
     verify(userService).save(user);
 
@@ -129,7 +141,19 @@ public class UserControllerTest {
     user.setPassword("password");
     httpServletRequest.getSession().setAttribute(USER_ID,userId);
     httpServletRequest.getSession().setAttribute(USER,USER);
-    ResponseEntity<OpenLmisResponse> response = userController.save(user, httpServletRequest);
+
+    ProgramToRoleMapping programToRoleMapping = new ProgramToRoleMapping();
+    Program program1 = new Program();
+    programToRoleMapping.setProgram(program1);
+    Role role1 = new Role();
+    Role[] roles = {role1};
+    programToRoleMapping.setRoles(Arrays.asList(roles));
+
+    List<ProgramToRoleMapping> listOfProgramToToRoleMapping = new ArrayList<>();
+    listOfProgramToToRoleMapping.add(programToRoleMapping);
+    user.setProgramToRoleMappingList(listOfProgramToToRoleMapping);
+
+    ResponseEntity<OpenLmisResponse> response = userController.save(user,httpServletRequest );
 
     verify(userService).save(user);
 
@@ -144,7 +168,7 @@ public class UserControllerTest {
     User user = new User();
     doThrow(new DataException("Save user failed")).when(userService).save(user);
 
-    ResponseEntity<OpenLmisResponse> response = userController.save(user, httpServletRequest);
+    ResponseEntity<OpenLmisResponse> response = userController.save(user,httpServletRequest);
 
     assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     assertThat(response.getBody().getErrorMsg(), is("Save user failed"));

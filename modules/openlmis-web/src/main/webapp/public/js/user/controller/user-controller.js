@@ -4,14 +4,21 @@ function UserController($scope, $routeParams, Users, UserById, SearchFacilitiesB
     var id = $routeParams.userId;
     UserById.get({id:id}, function (data) {
       $scope.user = data.user;
+      //$scope.facilitySelected = {name:"Village-Reach"};
+      //$scope.programAndRoleList = {supportedPrograms:programs, roles:roles }
+     // $scope.programToRoleMappingList = getProgramToRoleMappingList($scope.user.programToRoleMappingList);
     });
   } else {
     $scope.user = {};
     $scope.programAndRoleList = [];
-    $scope.assignedProgramRolesMapped=[{assignedProgram:"",rolesMapped:[]}];
+    $scope.programToRoleMappingList = [
+      {program:{}, roles:[]}
+    ];
   }
 
   $scope.saveUser = function () {
+
+    $scope.user.programToRoleMappingList = $scope.programToRoleMappingList;
 
     Users.save({}, $scope.user, function (data) {
       $scope.user = data.user;
@@ -51,6 +58,7 @@ function UserController($scope, $routeParams, Users, UserById, SearchFacilitiesB
   };
 
   $scope.setSelectedFacility = function (facility) {
+    $scope.user.facilityId = facility.id;
     $scope.facilitySelected = facility;
     $scope.query = null;
   };
@@ -71,7 +79,9 @@ function UserController($scope, $routeParams, Users, UserById, SearchFacilitiesB
       var programRoleGridRow = { supportedPrograms:[],
         roles:[]};
 
-      Facility.get({id:$scope.facilitySelected.id}, function (data) {
+      $scope.programToRoleMappingList = $scope.programToRoleMappingList.concat({program:{}, roles:[]});
+
+      Facility.get({id:$scope.user.facilityId}, function (data) {
         programRoleGridRow.supportedPrograms = data.facility.supportedPrograms;
       });
 
@@ -87,10 +97,28 @@ function UserController($scope, $routeParams, Users, UserById, SearchFacilitiesB
     $scope.filteredFacilities = [];
 
     angular.forEach($scope.facilityList, function (facility) {
-      if (facility.code.indexOf($scope.query) >= 0 || facility.name.indexOf($scope.query) >= 0) {
+      if (facility.code.toLowerCase().indexOf($scope.query.toLowerCase()) >= 0 || facility.name.toLowerCase().indexOf($scope.query.toLowerCase()) >= 0) {
         $scope.filteredFacilities.push(facility);
       }
       $scope.resultCount = $scope.filteredFacilities.length;
     })
   };
+
+  var getProgramToRoleMappingList = function (userProgramToRoleMappingList) {
+    var programToRoleMappingList = [];
+
+    $.each(userProgramToRoleMappingList, function (index, programToRoleMapping) {
+      $.each($scope.programAndRoleList, function (index, programToRole) {
+        $.each(programToRole.supportedPrograms, function (index, program) {
+          if (programToRoleMapping.program.id == program.id) {
+            programToRoleMappingList.push(programToRole);
+          }
+        });
+      });
+    });
+
+    return programToRoleMappingList;
+  };
 }
+
+
