@@ -122,7 +122,8 @@ public class RequisitionService {
     List<Right> userRights = roleRightsService.getRights(rnr.getModifiedBy());
     return (rnr.getStatus() == INITIATED && userRights.contains(CREATE_REQUISITION)) ||
       (rnr.getStatus() == SUBMITTED && userRights.contains(AUTHORIZE_REQUISITION)) ||
-      (rnr.getStatus() == AUTHORIZED && userRights.contains(APPROVE_REQUISITION));
+      (rnr.getStatus() == AUTHORIZED && userRights.contains(APPROVE_REQUISITION))||
+      (rnr.getStatus() == IN_APPROVAL && userRights.contains(APPROVE_REQUISITION));
   }
 
   public Rnr get(Integer facilityId, Integer programId, Integer periodId) {
@@ -230,7 +231,17 @@ public class RequisitionService {
 
     if (!userCanApprove(rnr, assignments)) throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
+    setStatusToInApprovalIfCurrentStatusIsAuthorized(rnr);
+
     return rnr;
+  }
+
+  private void setStatusToInApprovalIfCurrentStatusIsAuthorized(Rnr rnr) {
+    if(rnr.getStatus()==AUTHORIZED){
+      rnr.setStatus(IN_APPROVAL);
+      requisitionRepository.update(rnr);
+      rnr.setStatus(AUTHORIZED);
+    }
   }
 
   public void insertLineItem(RnrLineItem rnrLineItem) {

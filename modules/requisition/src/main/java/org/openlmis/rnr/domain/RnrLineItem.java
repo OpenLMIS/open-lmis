@@ -205,13 +205,6 @@ public class RnrLineItem {
     return total;
   }
 
-  public Integer getQuantityApproved() {
-    if (quantityApproved != null)
-      return quantityApproved;
-
-    return fullSupply ? calculatedOrderQuantity : quantityRequested;
-  }
-
   public void setBeginningBalanceWhenPreviousStockInHandAvailable(Integer beginningBalance){
     this.beginningBalance = beginningBalance;
     this.previousStockInHandAvailable = Boolean.TRUE;
