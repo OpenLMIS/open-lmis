@@ -7,9 +7,6 @@ function UserProgramRoleListController($scope) {
     showColumnMenu:false,
     displaySelectionCheckbox:false,
     showFilter:false,
-    footerVisible : false,
-    enableSorting:false,
-    canSelectRows:false,
     columnDefs:[
       { field:'supportedPrograms', displayName:'Programs(s)', cellTemplate:dropDownProgramCellTemplate() },
       { field:'roles', displayName:'Role', cellTemplate:multipleSelectCellTemplate() }
@@ -17,17 +14,17 @@ function UserProgramRoleListController($scope) {
   };
 
   function dropDownProgramCellTemplate() {
-      var divElement = '<select id="programList" ng-value="program.id" ng-model="programToRoleMappingList[$parent.$index].program"' +
-      'ng-options="program as program.name for program in programAndRoleList[$parent.$index].supportedPrograms">' +
-      ' <option value="">--Select Program-</option>' +
+      var divElement = '<select id="programList" ng-model="assignedProgramRolesMapped[$parent.$index].assignedProgram"' +
+      'ng-options="program.name as program.name for program in programAndRoleList[$parent.$index].supportedPrograms">' +
+      ' <option value="">--Select Facility--</option>' +
       '</select>';
 
     return divElement;
   };
 
   function multipleSelectCellTemplate() {
-    var divElement = '<select id="roleList" ng-model="programToRoleMappingList[$parent.$index].roles"' +
-      'ng-options="role as role.name for role in programAndRoleList[$parent.$index].roles" multiple> ' +
+    var divElement = '<select id="roleList" ng-model="assignedProgramRolesMapped[$parent.$index].rolesMapped"' +
+      'ng-options="role.name as role.name for role in programAndRoleList[$parent.$index].roles" multiple="multiple"> ' +
       '<option value="">--Select Role--</option>' +
       '</select>';
     return divElement;

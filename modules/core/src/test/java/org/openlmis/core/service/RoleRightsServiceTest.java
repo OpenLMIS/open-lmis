@@ -94,5 +94,6 @@ public class RoleRightsServiceTest {
      role.setRights(asList(CREATE_REQUISITION));
      roleRightsService.updateRole(role);
      verify(roleRightsRepository).updateRole(role);
+
   }
 }

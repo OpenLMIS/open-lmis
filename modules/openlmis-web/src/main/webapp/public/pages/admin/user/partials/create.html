@@ -113,36 +113,39 @@
           </div>
         </div>
 
+      </div>
+
+      <div class="form-group">
+        <h3>My facility</h3>
+
         <div class="form-row clearfix">
           <div class="form-cell">
-            <div class="autosuggest-input" ng-hide="facilitySelected">
-              <input id="searchFacility" type="text" ng-change="showFacilitySearchResults()" ng-model="query"
-                     placeholder="Enter facility code or name"/>
+            <label for="myFacility">My facility <span class="label-required">*</span></label>
 
-              <div class="form-tip">Minimum 3 characters</div>
-
-              <span class="field-error" ng-show="facilitySelected==null">
-                Please search a facility before adding role
-              </span>
-
-              <div class="facility-list" ng-show="query.length > 2">
-                <ul>
-                  <li ng-repeat="facility in filteredFacilities">
-                    <a ng-click="setSelectedFacility(facility)">{{facility.code}} - {{facility.name}}</a>
-                  </li>
-                </ul>
+            <div class="form-field autosuggest-input">
+              <div class="suggest-field">
+                <input id="searchFacility" type="text" ng-change="showFacilitySearchResults()" ng-model="query"
+                     placeholder="Enter facility code or name" ng-hide="facilitySelected" />
+                <div class="facility-list" ng-show="query.length > 2">
+                  <ul>
+                    <li ng-repeat="facility in filteredFacilities">
+                      <a ng-click="setSelectedFacility(facility)">{{facility.code}} - {{facility.name}}</a>
+                    </li>
+                  </ul>
+                </div>
+                <div ng-show="facilitySelected" ng-model="facilitySelected">
+                  <span ng-model="facilitySelected">{{facilitySelected.name}}</span>
+                  <a ng-click="clearSelectedFacility()">clear</a>
+                </div>
               </div>
+              <div class="form-tip">Minimum 3 characters</div>
             </div>
-            <!-- autosuggest-input -->
-            <div ng-show="facilitySelected">
-              <span ng-model="user.facilityId">{{facilitySelected.name}}</span>
-              <a ng-click="clearSelectedFacility()">clear</a>
-            </div>
-          </div>
-          <div>
-            <a ng-click=displayProgramRoleMapping() class="pull-right btn btn-primary">Add Role</a>
           </div>
         </div>
+        <div class="form-row clearfix" ng-hide="facilitySelected==null">
+          <a ng-click=displayProgramRoleMapping() class="pull-right btn btn-primary">Add Role</a>
+        </div>
+
       </div>
       <ng-include src="'/public/pages/admin/user/partials/program-role-mapping-list.html'"></ng-include>
       <!-- /form-group -->

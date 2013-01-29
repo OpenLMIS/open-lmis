@@ -35,26 +35,16 @@ public class UserService {
 
   private EmailService emailService;
 
-  private RoleAssignmentService roleAssignmentService;
-
   @Autowired
-  public UserService(UserRepository userRepository, RoleAssignmentService roleAssignmentService, EmailService emailService) {
+  public UserService(UserRepository userRepository, EmailService emailService) {
     this.userRepository = userRepository;
     this.emailService = emailService;
-    this.roleAssignmentService = roleAssignmentService;
   }
 
   public void save(User user) {
     user.validate();
-    Boolean createFlag = user.getId() == null;
+    Boolean createFlag = user.getId()==null;
     userRepository.insert(user);
-
-    if (!createFlag) {
-      roleAssignmentService.deleteAllRoleAssignmentsForUser(user.getId());
-    }
-
-    roleAssignmentService.insertUserProgramRoleMapping(user, user.getProgramToRoleMappingList());
-
     if (createFlag) {
       EmailMessage emailMessage = accountCreatedEmailMessage(user.getEmail());
       sendEmail(emailMessage);
@@ -115,8 +105,6 @@ public class UserService {
   }
 
   public User getById(Integer id) {
-    User user = userRepository.getById(id);
-    user.setProgramToRoleMappingList(roleAssignmentService.getListOfProgramToRoleMappingForAUser(id));
-    return user;
+    return userRepository.getById(id);
   }
 }

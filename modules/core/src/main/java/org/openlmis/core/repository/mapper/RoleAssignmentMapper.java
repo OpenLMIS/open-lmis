@@ -27,20 +27,4 @@ public interface RoleAssignmentMapper {
                            @Param(value = "role") Role role,
                            @Param(value = "program") Program program,
                            @Param(value = "supervisoryNode") SupervisoryNode supervisoryNode);
-
-  @Delete("DELETE FROM role_assignments WHERE userid=#{id}")
-  void deleteAllRoleAssignmentsForUser(int id);
-
-  @Select("SELECT * from role_assignments where userid=#{id}")
-  List<RoleAssignment> getRoleAssignmentForAUser(int id);
-
-  @Select("SELECT roleid from role_assignments where userid=#{id} AND programid=#{programId}")
-  @Results(value = {
-    @Result(property = "id", column = "roleid")
-  })
-  List<Role> getRoleAssignmentForAUserIdAndProgramId(@Param(value = "id")int id,@Param(value = "programId") int programId);
-
-  @Select("SELECT distinct(programId) FROM role_assignments WHERE userId=#{userId}")
-  List<Integer> getProgramsForWhichHasRoleAssignments(int userId);
-
 }
