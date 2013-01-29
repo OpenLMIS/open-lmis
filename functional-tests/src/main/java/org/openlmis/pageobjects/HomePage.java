@@ -102,6 +102,19 @@ public class HomePage extends Page {
     @FindBy(how = How.XPATH, using = "//input[@ng-click='initRnr()']")
     private static WebElement proceedButton;
 
+    @FindBy(how = How.XPATH, using = "//ul[@class='clearfix']/li/a[contains(text(),'Facilities')]")
+    private static WebElement facilitiesTab;
+
+    @FindBy(how = How.XPATH, using = "//ul[@class='clearfix']/li/a[contains(text(),'Roles')]")
+    private static WebElement rolesTab;
+
+    @FindBy(how = How.XPATH, using = "//ul[@class='clearfix']/li/a[contains(text(),'Schedules')]")
+    private static WebElement schedulesTab;
+
+    @FindBy(how = How.XPATH, using = "//ul[@class='clearfix']/li/a[contains(text(),'Users')]")
+    private static WebElement usersTab;
+
+
 
     public HomePage(TestWebDriver driver) throws  IOException {
         super(driver);
@@ -127,10 +140,12 @@ public class HomePage extends Page {
         testWebDriver.waitForElementToAppear(AdministrationMenuItem);
         testWebDriver.click(AdministrationMenuItem);
         testWebDriver.waitForElementToAppear(manageFacilityMenuItem);
-        testWebDriver.click(manageFacilityMenuItem);
         manageFacilityMenuItem.click();
-        testWebDriver.waitForElementToAppear(facilityMenuItem);
-        facilityMenuItem.click();
+        testWebDriver.waitForElementToAppear(facilitiesTab);
+        SeleneseTestNgHelper.assertTrue(facilitiesTab.isDisplayed());
+        SeleneseTestNgHelper.assertTrue(rolesTab.isDisplayed());
+        SeleneseTestNgHelper.assertTrue(schedulesTab.isDisplayed());
+        SeleneseTestNgHelper.assertTrue(usersTab.isDisplayed());
         testWebDriver.waitForElementToAppear(createFacility);
         createFacility.click();
         testWebDriver.waitForElementToAppear(facilityHeader);
@@ -176,8 +191,8 @@ public class HomePage extends Page {
         testWebDriver.click(AdministrationMenuItem);
         testWebDriver.waitForElementToAppear(manageLink);
         manageLink.click();
-        testWebDriver.waitForElementToAppear(facilityMenuItem);
-        facilityMenuItem.click();
+        testWebDriver.waitForElementToAppear(facilitiesTab);
+        facilitiesTab.click();
         return new DeleteFacilityPage(testWebDriver);
     }
 
@@ -187,8 +202,8 @@ public class HomePage extends Page {
         testWebDriver.click(AdministrationMenuItem);
         testWebDriver.waitForElementToAppear(manageLink);
         manageLink.click();
-        testWebDriver.waitForElementToAppear(manageRoleAssignmentLink);
-        manageRoleAssignmentLink.click();
+        testWebDriver.waitForElementToAppear(rolesTab);
+        rolesTab.click();
         return new RolesPage(testWebDriver);
     }
 
@@ -207,8 +222,8 @@ public class HomePage extends Page {
         testWebDriver.click(AdministrationMenuItem);
         testWebDriver.waitForElementToAppear(manageLink);
         manageLink.click();
-        testWebDriver.waitForElementToAppear(schedulesLink);
-        schedulesLink.click();
+        testWebDriver.waitForElementToAppear(schedulesTab);
+        schedulesTab.click();
         return new ManageSchedulePage(testWebDriver);
 
     }
