@@ -22,7 +22,7 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
 
   function populateRnrLineItems(rnr) {
       $(rnr.lineItems).each(function (i, lineItem) {
-        lineItem.cost = parseFloat((lineItem.packsToShip * lineItem.price).toFixed(2));
+        lineItem.cost = parseFloat((lineItem.packsToShip * lineItem.price).toFixed(2)) || 0;
         if(lineItem.lossesAndAdjustments == undefined) lineItem.lossesAndAdjustments = [];
         var rnrLineItem = new RnrLineItem(lineItem);
         jQuery.extend(true, lineItem, rnrLineItem);
@@ -181,19 +181,6 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     $scope.modalError = '';
   };
 
-  $scope.showCurrencySymbol = function (value) {
-    if (value != 0 && (isUndefined(value) || value.length == 0 || value == false)) {
-      return "";
-    }
-    return "defined";
-  };
-
-  $scope.showSelectedColumn = function (columnName) {
-    if (($scope.rnr.status == "INITIATED" || $scope.rnr.status == "SUBMITTED") && columnName == "quantityApproved")
-      return undefined;
-    return "defined";
-  };
-
   $scope.showLossesAndAdjustmentModalForLineItem = function (lineItem, isNonFullSupply) {
     if(isNonFullSupply) {
       return;
@@ -280,7 +267,7 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
       }
     });
     return label;
-  }
+  };
 
   function populateProductInformation() {
     var product = $scope.facilityApprovedProduct.programProduct.product;
@@ -310,7 +297,7 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
       $scope.newNonFullSupply.fill($scope.rnr, $scope.programRnRColumnList);
       saveRnrLineItem();
     }
-  }
+  };
 
   function saveRnrLineItem() {
 

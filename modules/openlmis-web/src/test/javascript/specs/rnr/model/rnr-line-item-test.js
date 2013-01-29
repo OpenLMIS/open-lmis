@@ -25,7 +25,9 @@ describe('RnrLineItem', function () {
       var lineItem = {"id":1, "beginningBalance":5, "quantityReceived":20, "quantityDispensed":null, "totalLossesAndAdjustments":5, "stockInHand":10};
       var rnrLineItem = new RnrLineItem();
       jQuery.extend(true, lineItem, rnrLineItem);
+
       lineItem.fill(null, programRnrColumnList);
+
       expect(20).toEqual(lineItem.quantityDispensed);
     });
   });
@@ -370,7 +372,7 @@ describe('RnrLineItem', function () {
       var rnrLineItem = new RnrLineItem();
       jQuery.extend(true, lineItem, rnrLineItem);
       lineItem.fill(null, programRnrColumnList);
-      expect(800).toEqual(lineItem.cost);
+      expect(lineItem.cost).toEqual(800);
     });
 
     it('should un-set cost when packsToShip is not available', function () {
@@ -379,7 +381,7 @@ describe('RnrLineItem', function () {
       var rnrLineItem = new RnrLineItem();
       jQuery.extend(true, lineItem, rnrLineItem);
       lineItem.fill(null, programRnrColumnList);
-      expect(null).toEqual(lineItem.cost);
+      expect(lineItem.cost).toEqual(0);
     });
 
     it('should un-set cost when price is not available', function () {
@@ -388,7 +390,7 @@ describe('RnrLineItem', function () {
       var rnrLineItem = new RnrLineItem();
       jQuery.extend(true, lineItem, rnrLineItem);
       lineItem.fill(null, programRnrColumnList);
-      expect(null).toEqual(lineItem.cost);
+      expect(lineItem.cost).toEqual(0);
     });
   });
 

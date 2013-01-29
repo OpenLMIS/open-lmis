@@ -76,12 +76,8 @@ var RnrLineItem = function () {
     this.packsToShip = packsToShip;
   };
 
-  RnrLineItem.prototype.fillCost= function () {
-    if (!isNumber(this.packsToShip)) {
-      this.cost = null;
-      return;
-    }
-    this.cost = parseFloat((this.packsToShip * this.price).toFixed(2));
+  RnrLineItem.prototype.fillCost = function () {
+    this.cost = !isNumber(this.packsToShip) ? 0 : parseFloat(this.packsToShip * this.price);
   };
 
   RnrLineItem.prototype.fillPacksToShipBasedOnApprovedQuantity = function () {

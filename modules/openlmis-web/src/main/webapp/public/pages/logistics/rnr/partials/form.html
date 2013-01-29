@@ -300,35 +300,19 @@
                             class = "cell-text" >
                       </span >
                       <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage(programRnRColumnList)"
-                            style = "background: red;" >
-                        {{rnrLineItem.getErrorMessage(programRnRColumnList)}}
+                            style = "background: red;" ng-bind="rnrLineItem.getErrorMessage(programRnRColumnList)">
                         <span class = "beak-down" ></span >
-                      </span >
-                    </span >
-                    <span ng-switch-when = "price" >
-                      <span id = "{{'priceCurrency_'+$parent.$parent.$index}}" class = "cell-text"
-                            ng-show = "showCurrencySymbol(rnrLineItem[column.name])" >
-                        {{currency}}
-                      </span >
-                      <span id = "{{column.indicator+'_'+$parent.$parent.$index}}"
-                            ng-bind = "rnrLineItem[column.name]"
-                            class = "cell-text" >
-                      </span >
-                    </span >
-                    <span ng-switch-when = "cost" >
-                      <span id = "{{'costCurrency_'+$parent.$parent.$index}}" class = "cell-text"
-                            ng-show = "showCurrencySymbol(rnrLineItem[column.name])" >
-                        {{currency}}
-                      </span >
-                      <span id = "{{column.indicator+'_'+$parent.$parent.$index}}"
-                            ng-bind = "rnrLineItem[column.name]"
-                            class = "cell-text" >
-                      </span >
-                    </span >
-                    <span id = "{{column.indicator+'_'+$parent.$parent.$index}}"
-                          ng-bind = "rnrLineItem[column.name]"
-                          class = "cell-text" ng-switch-default >
-                    </span >
+                      </span>
+                    </span>
+                    <span ng-switch-when = "price">
+                      <span ng-bind="currency" class = "cell-text"></span>
+                      <span ng-bind = "rnrLineItem[column.name] | number:'2'" class = "cell-text" ></span>
+                    </span>
+                    <span ng-switch-when = "cost">
+                      <span ng-bind="currency" class = "cell-text"></span>
+                      <span ng-bind = "rnrLineItem[column.name] | number:'2'" class = "cell-text"></span>
+                    </span>
+                    <span ng-switch-default ng-bind = "rnrLineItem[column.name]" class = "cell-text" ></span>
                   </ng-switch >
                 </span >
               </ng-switch >

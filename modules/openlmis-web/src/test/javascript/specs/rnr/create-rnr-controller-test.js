@@ -41,6 +41,22 @@ describe('CreateRnrController', function () {
       expect(scope.rnrLineItems[0].cost).toEqual(20.67);
     });
 
+    it('should set cost to zero if dependent fields are not present', function () {
+      var mockedRequisition = {'status':"INITIATED", 'lineItems':[
+        {'id':400, 'product':'Name', 'lossesAndAdjustments':[], 'price':2 },
+        {'id':500, 'product':'Name', 'lossesAndAdjustments':[], 'packsToShip':10.333 }
+      ]};
+      httpBackend.when('GET', '/requisitions.json?facilityId=1&periodId=2&programId=1').respond({'rnr':mockedRequisition});
+      controller(CreateRnrController, {$scope:scope, $routeParams:routeParams});
+      httpBackend.flush();
+
+      expect(scope.rnrLineItems[0].id).toEqual(mockedRequisition.lineItems[0].id);
+      expect(scope.rnrLineItems[0].cost).toEqual(0);
+      expect(scope.rnrLineItems[1].id).toEqual(mockedRequisition.lineItems[1].id);
+      expect(scope.rnrLineItems[1].cost).toEqual(0);
+    });
+
+
     it('should initialize losses and adjustments, if not present in R&R', function () {
       var mockedRequisition = {'status':"INITIATED",
         'lineItems':[
@@ -125,30 +141,7 @@ describe('CreateRnrController', function () {
     expect(scope.currency).toEqual("$");
   });
 
-  it("should get undefined when the column name is quantityApproved and status is INITIATED", function () {
-    scope.rnr = {"status":"INITIATED"};
-    var isShown = scope.showSelectedColumn("quantityApproved");
-    expect(isShown).toEqual(undefined);
-  });
 
-
-  it("should get 'defined' when the column name is not quantityApproved", function () {
-    scope.rnr = {"status":"whatever"};
-    var isShown = scope.showSelectedColumn("anyOtherColumn");
-    expect(isShown).toEqual("defined");
-  });
-
-  it("should get 'defined' when the column name is quantityApproved and status is SUBMITTED", function () {
-    scope.rnr = {"status":"SUBMITTED"};
-    var isShown = scope.showSelectedColumn("quantityApproved");
-    expect(isShown).toEqual(undefined);
-  });
-
-  it("should get 'undefined' when the column name is quantityApproved and status is APPROVED", function () {
-    scope.rnr = {"status":"APPROVED"};
-    var isShown = scope.showSelectedColumn("quantityApproved");
-    expect(isShown).toEqual("defined");
-  });
 
   it("should display modal window with appropriate type options to add losses and adjustments", function () {
     var lineItem = { "id":"1", lossesAndAdjustments:[
