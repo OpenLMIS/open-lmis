@@ -1,7 +1,6 @@
 package org.openlmis.rnr.domain;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -279,21 +278,21 @@ public class RnrLineItemTest {
     assertTrue(lineItem.validate(templateColumns));
   }
 
-  @Test @Ignore
-  public void shouldGetCalculatedOrderQuantityIfApprovedQuantityIsNullForFullSupplyItems() throws Exception {
-    lineItem.setQuantityApproved(null);
+  @Test
+  public void shouldSetCalculatedOrderQuantityAsDefaultApprovedQuantityForFullSupplyItems() throws Exception {
     final int expected = 1;
     lineItem.setCalculatedOrderQuantity(expected);
+    lineItem.setDefaultApprovedQuantity();
     final Integer actual = lineItem.getQuantityApproved();
     assertThat(actual, is(expected));
   }
 
-  @Test @Ignore
-  public void shouldGetRequestedQuantityIfApprovedQuantityIsNullForNonFullSupplyItems() throws Exception {
-    lineItem.setQuantityApproved(null);
+  @Test
+  public void shouldSetRequestedQuantityAsApprovedQuantityForNonFullSupplyItems() throws Exception {
     lineItem.setFullSupply(false);
     final int expected = 1;
     lineItem.setQuantityRequested(expected);
+    lineItem.setDefaultApprovedQuantity();
     final Integer actual = lineItem.getQuantityApproved();
     assertThat(actual, is(expected));
   }

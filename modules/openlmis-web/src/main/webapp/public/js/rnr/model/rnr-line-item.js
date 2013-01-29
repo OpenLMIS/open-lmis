@@ -194,12 +194,6 @@ var RnrLineItem = function () {
     }
   };
 
-  RnrLineItem.prototype.fillQuantityApproved = function (rnrStatus) {
-    if(this.quantityApproved == null && rnrStatus=='AUTHORIZED'){
-      this.quantityApproved = this.fullSupply ? this.calculatedOrderQuantity : this.quantityRequested;
-    }
-  };
-
   var isNumber = function (number) {
     return !isNaN(parseIntWithBaseTen(number));
   };

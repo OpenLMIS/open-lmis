@@ -108,7 +108,7 @@ public class RequisitionService {
 
     for (RnrLineItem lineItem : rnr.getLineItems()) {
       for (RnrLineItem savedLineItem : savedRequisition.getLineItems()) {
-        if (savedLineItem.getPreviousStockInHandAvailable() && lineItem.getProductCode().equals(savedLineItem.getProductCode())){
+        if (savedLineItem.getPreviousStockInHandAvailable() && lineItem.getProductCode().equals(savedLineItem.getProductCode())) {
           lineItem.setBeginningBalance(savedLineItem.getBeginningBalance());
           break;
         }
@@ -121,9 +121,9 @@ public class RequisitionService {
   private boolean isUserAllowedToSave(Rnr rnr) {
     List<Right> userRights = roleRightsService.getRights(rnr.getModifiedBy());
     return (rnr.getStatus() == INITIATED && userRights.contains(CREATE_REQUISITION)) ||
-      (rnr.getStatus() == SUBMITTED && userRights.contains(AUTHORIZE_REQUISITION)) ||
-      (rnr.getStatus() == AUTHORIZED && userRights.contains(APPROVE_REQUISITION))||
-      (rnr.getStatus() == IN_APPROVAL && userRights.contains(APPROVE_REQUISITION));
+        (rnr.getStatus() == SUBMITTED && userRights.contains(AUTHORIZE_REQUISITION)) ||
+        (rnr.getStatus() == AUTHORIZED && userRights.contains(APPROVE_REQUISITION)) ||
+        (rnr.getStatus() == IN_APPROVAL && userRights.contains(APPROVE_REQUISITION));
   }
 
   public Rnr get(Integer facilityId, Integer programId, Integer periodId) {
@@ -231,17 +231,12 @@ public class RequisitionService {
 
     if (!userCanApprove(rnr, assignments)) throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
-    setStatusToInApprovalIfCurrentStatusIsAuthorized(rnr);
+    if (rnr.getStatus() == AUTHORIZED) {
+      rnr.prepareForApproval();
+      requisitionRepository.update(rnr);
+    }
 
     return rnr;
-  }
-
-  private void setStatusToInApprovalIfCurrentStatusIsAuthorized(Rnr rnr) {
-    if(rnr.getStatus()==AUTHORIZED){
-      rnr.setStatus(IN_APPROVAL);
-      requisitionRepository.update(rnr);
-      rnr.setStatus(AUTHORIZED);
-    }
   }
 
   public void insertLineItem(RnrLineItem rnrLineItem) {

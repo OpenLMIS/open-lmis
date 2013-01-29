@@ -13,6 +13,7 @@ import java.util.List;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.ALWAYS;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+import static org.openlmis.rnr.domain.RnrStatus.IN_APPROVAL;
 
 @Data
 @NoArgsConstructor
@@ -96,6 +97,13 @@ public class Rnr {
           break;
         }
       }
+    }
+  }
+
+  public void prepareForApproval() {
+    status = IN_APPROVAL;
+    for (RnrLineItem item : lineItems) {
+      item.setDefaultApprovedQuantity();
     }
   }
 }

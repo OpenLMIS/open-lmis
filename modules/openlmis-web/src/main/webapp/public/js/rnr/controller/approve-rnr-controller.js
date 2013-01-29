@@ -168,7 +168,6 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnRColum
       var rnrLineItem = new RnrLineItem();
       jQuery.extend(true, lineItem, rnrLineItem);
 
-      lineItem.fillQuantityApproved(rnr.status);
       lineItem.updateCostWithApprovedQuantity(requisition);
       $scope.lineItems.push(lineItem);
     });

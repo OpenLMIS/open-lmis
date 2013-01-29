@@ -209,4 +209,8 @@ public class RnrLineItem {
     this.beginningBalance = beginningBalance;
     this.previousStockInHandAvailable = Boolean.TRUE;
   }
+
+  public void setDefaultApprovedQuantity() {
+    quantityApproved = fullSupply ? calculatedOrderQuantity : quantityRequested;
+  }
 }
