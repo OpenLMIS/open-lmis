@@ -53,28 +53,28 @@ public class InitiateRnRPage extends Page {
     @FindBy(how = How.ID, using = "F_0")
     private static WebElement newPatient;
 
-    @FindBy(how = How.ID, using = "H_12")
+    @FindBy(how = How.XPATH, using = "//table[@class='table table-striped table-bordered']/tbody/tr[1]/td[13]/ng-switch/span/ng-switch/span")
     private static WebElement maximumStockQuantity;
 
-    @FindBy(how = How.ID, using = "I_13")
+    @FindBy(how = How.XPATH, using = "//table[@class='table table-striped table-bordered']/tbody/tr[1]/td[14]/ng-switch/span/ng-switch/span")
     private static WebElement caculatedOrderQuantity;
 
     @FindBy(how = How.ID, using = "J_0")
     private static WebElement requestedQuantity;
 
-    @FindBy(how = How.ID, using = "N_10")
+    @FindBy(how = How.XPATH, using = "//table[@class='table table-striped table-bordered']/tbody/tr[1]/td[11]/ng-switch/span/ng-switch/span")
     private static WebElement adjustedTotalConsumption;
 
-    @FindBy(how = How.ID, using = "P_11")
+    @FindBy(how = How.XPATH, using = "//table[@class='table table-striped table-bordered']/tbody/tr[1]/td[12]/ng-switch/span/ng-switch/span")
     private static WebElement amc;
 
-    @FindBy(how = How.ID, using = "Q_19")
+    @FindBy(how = How.XPATH, using = "//table[@class='table table-striped table-bordered']/tbody/tr[1]/td[20]/ng-switch/span/ng-switch/span/span[2]")
     private static WebElement totalCost;
 
-    @FindBy(how = How.ID, using = "T_18")
+    @FindBy(how = How.XPATH, using = "//table[@class='table table-striped table-bordered']/tbody/tr[1]/td[19]/ng-switch/span/ng-switch/span/span[2]")
     private static WebElement pricePerPack;
 
-    @FindBy(how = How.ID, using = "V_17")
+    @FindBy(how = How.XPATH, using = "//table[@class='table table-striped table-bordered']/tbody/tr[1]/td[18]/ng-switch/span/ng-switch/span")
     private static WebElement packsToShip;
 
     @FindBy(how = How.ID, using = "W_0")
@@ -245,7 +245,7 @@ public class InitiateRnRPage extends Page {
       testWebDriver.waitForElementToAppear(pricePerPack);
       String actualPricePerPack=testWebDriver.getText(pricePerPack);
       Float actualTotalCost=Float.parseFloat(actualPacksToShip)*Float.parseFloat(actualPricePerPack);
-      SeleneseTestNgHelper.assertEquals(actualTotalCost.toString().substring(0,actualTotalCost.toString().indexOf(".")), totalCost.getText());
+      SeleneseTestNgHelper.assertEquals(actualTotalCost.toString()+"0", totalCost.getText());
       testWebDriver.sleep(500);
     }
 
