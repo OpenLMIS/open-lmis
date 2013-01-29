@@ -8,7 +8,7 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnRColum
   }, {});
 
   ReferenceData.get({}, function (data) {
-      $scope.currency = data.currency;
+    $scope.currency = data.currency;
   }, {});
 
   var columnDefinitions = [];
@@ -18,6 +18,10 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnRColum
   if (programRnRColumnList.length > 0) {
     $scope.programRnRColumnList = programRnRColumnList;
     $($scope.programRnRColumnList).each(function (i, column) {
+      if (column.name == "cost" || column.name == "price") {
+        columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:currencyTemplate('row.entity.'+column.name)})
+        return;
+      }
       if (column.name == "lossesAndAdjustments") {
         columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:lossesAndAdjustmentsTemplate()})
         return;
@@ -40,6 +44,11 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnRColum
   function lossesAndAdjustmentsTemplate() {
     return '/public/pages/logistics/rnr/partials/lossesAndAdjustments.html';
   }
+
+  function currencyTemplate(value) {
+    return '<span  class = "cell-text" ng-show = "showCurrencySymbol('+value+')"  ng-bind="currency"></span >&nbsp; &nbsp;<span ng-bind = "'+value+'" class = "cell-text" ></span >'
+  }
+
 
   function freeTextCellTemplate(field, value) {
     return '<div><input maxlength="250" name="' + field + '" ng-model="' + value + '"/></div>';
@@ -139,6 +148,13 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnRColum
       return $.inArray(lAndATypeObject.name, lossesAndAdjustmentTypesForLineItem) == -1;
     });
   }
+
+  $scope.showCurrencySymbol = function (value) {
+    if (value != 0 && (isUndefined(value) || value.length == 0 || value == false)) {
+      return "";
+    }
+    return "defined";
+  };
 
   function isPositiveNumber(value) {
     var INTEGER_REGEXP = /^\d*$/;
