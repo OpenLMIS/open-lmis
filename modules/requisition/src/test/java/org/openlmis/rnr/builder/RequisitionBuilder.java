@@ -15,6 +15,8 @@ import java.util.Date;
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static com.natpryce.makeiteasy.Property.newProperty;
+import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
+import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
 
 public class RequisitionBuilder {
 
@@ -33,13 +35,13 @@ public class RequisitionBuilder {
       rnr.setProgram(make(a(ProgramBuilder.defaultProgram)));
       rnr.setProgramId(1);
       rnr.setPeriodId(lookup.valueOf(periodId, 1));
-      rnr.setPeriod(make(a(ProcessingPeriodBuilder.defaultProcessingPeriod)));
+      rnr.setPeriod(make(a(defaultProcessingPeriod)));
       rnr.getProgram().setId(3);
       rnr.getFacility().setId(3);
       rnr.getPeriod().setId(3);
       rnr.setStatus(lookup.valueOf(status, RnrStatus.INITIATED));
       rnr.setSubmittedDate(lookup.valueOf(submittedDate, new Date()));
-      RnrLineItem rnrLineItemCost48 = make(a(RnrLineItemBuilder.defaultRnrLineItem));
+      RnrLineItem rnrLineItemCost48 = make(a(defaultRnrLineItem));
       rnr.add(rnrLineItemCost48);
 
       return rnr;

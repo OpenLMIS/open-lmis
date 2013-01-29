@@ -54,9 +54,9 @@ public class Rnr {
     lineItems.add(rnrLineItem);
   }
 
-  public boolean validate(boolean formulaValidationRequired) {
+  public boolean validate(List<RnrColumn> templateColumns) {
     for (RnrLineItem lineItem : lineItems) {
-      lineItem.validate(formulaValidationRequired);
+      lineItem.validate(templateColumns);
     }
     return true;
   }

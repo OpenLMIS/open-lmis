@@ -20,6 +20,7 @@ public class ProgramRnrTemplate {
   public static final String NORMALIZED_CONSUMPTION = "normalizedConsumption";
   public static final String QUANTITY_REQUESTED = "quantityRequested";
   public static final String REASON_FOR_REQUESTED_QUANTITY = "reasonForRequestedQuantity";
+  public static final String NEW_PATIENT_COUNT = "newPatientCount";
 
   private Map<String, RnrColumn> rnrColumnsMap = new HashMap<>();
   private Map<String, OpenLmisMessage> errorMap = new HashMap<>();

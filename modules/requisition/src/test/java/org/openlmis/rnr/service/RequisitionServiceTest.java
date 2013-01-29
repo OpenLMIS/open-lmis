@@ -8,6 +8,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.OngoingStubbing;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
@@ -78,6 +79,7 @@ public class RequisitionServiceTest {
   private Rnr submittedRnr;
   private Rnr initiatedRnr;
   private Rnr authorizedRnr;
+  ArrayList<RnrColumn> rnrColumns;
 
   @Before
   public void setup() {
@@ -86,6 +88,7 @@ public class RequisitionServiceTest {
     submittedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, SUBMITTED)));
     initiatedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, INITIATED)));
     authorizedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, AUTHORIZED)));
+    rnrColumns = new ArrayList<RnrColumn>() {{add(new RnrColumn());}};
   }
 
   @Test
@@ -219,7 +222,8 @@ public class RequisitionServiceTest {
     Rnr rnr = spy(make(a(defaultRnr)));
 
     when(requisitionRepository.getById(rnr.getId())).thenReturn(initiatedRnr);
-    doReturn(true).when(rnr).validate(false);
+    when(rnrTemplateRepository.fetchRnrTemplateColumns(rnr.getProgramId())).thenReturn(rnrColumns);
+    doReturn(true).when(rnr).validate(rnrColumns);
     when(supervisoryNodeService.getFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(null);
 
     OpenLmisMessage message = requisitionService.submit(rnr);
@@ -232,11 +236,14 @@ public class RequisitionServiceTest {
   public void shouldSubmitValidRnrWithSubmittedDateAndSetMessage() {
     Rnr rnr = spy(make(a(defaultRnr)));
     when(requisitionRepository.getById(rnr.getId())).thenReturn(initiatedRnr);
-    doReturn(true).when(rnr).validate(false);
+    doReturn(true).when(rnr).validate(rnrColumns);
     when(supervisoryNodeService.getFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(new SupervisoryNode());
-    OpenLmisMessage message = requisitionService.submit(rnr);
-    verify(requisitionRepository).update(rnr);
+    when(rnrTemplateRepository.fetchRnrTemplateColumns(rnr.getProgramId())).thenReturn(rnrColumns);
 
+    OpenLmisMessage message = requisitionService.submit(rnr);
+
+    verify(requisitionRepository).update(rnr);
+    verify(rnr).validate(rnrColumns);
     assertThat(rnr.getSubmittedDate(), is(notNullValue()));
     assertThat(rnr.getStatus(), is(SUBMITTED));
     assertThat(message.getCode(), is("rnr.submitted.success"));
@@ -246,16 +253,16 @@ public class RequisitionServiceTest {
   public void shouldAuthorizeAValidRnrAndTagWithSupervisoryNode() throws Exception {
     Rnr rnr = spy(make(a(defaultRnr)));
     when(requisitionRepository.getById(rnr.getId())).thenReturn(submittedRnr);
-    when(rnrTemplateRepository.isFormulaValidationRequired(rnr.getProgramId())).thenReturn(true);
-    doReturn(true).when(rnr).validate(true);
+    doReturn(true).when(rnr).validate(rnrColumns);
+    when(rnrTemplateRepository.fetchRnrTemplateColumns(rnr.getProgramId())).thenReturn(rnrColumns);
     when(supervisoryNodeService.getApproverFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(new User());
     SupervisoryNode approverNode = new SupervisoryNode();
     when(supervisoryNodeService.getFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(approverNode);
 
     OpenLmisMessage authorize = requisitionService.authorize(rnr);
 
-    verify(rnrTemplateRepository).isFormulaValidationRequired(rnr.getProgramId());
-    verify(rnr).validate(true);
+    verify(rnr).validate(rnrColumns);
+    verify(rnrTemplateRepository).fetchRnrTemplateColumns(rnr.getProgramId());
     verify(requisitionRepository).update(rnr);
     assertThat(rnr.getStatus(), is(AUTHORIZED));
     assertThat(rnr.getSupervisoryNodeId(), is(approverNode.getId()));
@@ -266,14 +273,19 @@ public class RequisitionServiceTest {
   @Test
   public void shouldNotOverwriteSubmittedDateWhenAuthorizing() {
     Date submittedDate = new Date(1465555522222L);
-    submittedRnr.setSubmittedDate(submittedDate);
+    ArrayList<RnrColumn> columns = new ArrayList<>();
     Rnr rnrForAuthorizing = spy(make(a(defaultRnr)));
+
+    submittedRnr.setSubmittedDate(submittedDate);
+    doReturn(true).when(rnrForAuthorizing).validate(columns);
     when(requisitionRepository.getById(rnrForAuthorizing.getId())).thenReturn(submittedRnr);
     SupervisoryNode node = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
     when(supervisoryNodeService.getFor(rnrForAuthorizing.getFacilityId(), rnrForAuthorizing.getProgramId())).thenReturn(node);
+    when(rnrTemplateRepository.fetchRnrTemplateColumns(rnrForAuthorizing.getProgramId())).thenReturn(columns);
 
     requisitionService.authorize(rnrForAuthorizing);
 
+    verify(rnrTemplateRepository).fetchRnrTemplateColumns(rnrForAuthorizing.getProgramId());
     verify(requisitionRepository).update(rnrForAuthorizing);
     assertThat(rnrForAuthorizing.getSubmittedDate(), is(submittedDate));
   }
@@ -282,16 +294,16 @@ public class RequisitionServiceTest {
   public void shouldAuthorizeAValidRnrAndAdviseUserIfRnrDoesNotHaveApprover() throws Exception {
     Rnr rnr = spy(make(a(defaultRnr)));
     when(requisitionRepository.getById(rnr.getId())).thenReturn(submittedRnr);
-    when(rnrTemplateRepository.isFormulaValidationRequired(rnr.getProgramId())).thenReturn(true);
+    when(rnrTemplateRepository.fetchRnrTemplateColumns(rnr.getProgramId())).thenReturn(rnrColumns);
     when(supervisoryNodeService.getApproverFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(null);
     SupervisoryNode node = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
     when(supervisoryNodeService.getFor(rnr.getFacilityId(), rnr.getProgramId())).thenReturn(node);
-    doReturn(true).when(rnr).validate(true);
+    doReturn(true).when(rnr).validate(rnrColumns);
 
     OpenLmisMessage openLmisMessage = requisitionService.authorize(rnr);
 
-    verify(rnrTemplateRepository).isFormulaValidationRequired(rnr.getProgramId());
-    verify(rnr).validate(true);
+    verify(rnrTemplateRepository).fetchRnrTemplateColumns(rnr.getProgramId());
+    verify(rnr).validate(rnrColumns);
     verify(requisitionRepository).update(rnr);
     assertThat(rnr.getStatus(), is(AUTHORIZED));
     assertThat(openLmisMessage.getCode(), is(RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR));
@@ -301,11 +313,12 @@ public class RequisitionServiceTest {
   public void shouldNotAuthorizeInvalidRnr() throws Exception {
     Rnr rnr = spy(make(a(defaultRnr)));
     when(requisitionRepository.getById(rnr.getId())).thenReturn(submittedRnr);
-    when(rnrTemplateRepository.isFormulaValidationRequired(rnr.getProgramId())).thenReturn(true);
-    doThrow(new DataException("error-message")).when(rnr).validate(true);
+    when(rnrTemplateRepository.fetchRnrTemplateColumns(rnr.getProgramId())).thenReturn(rnrColumns);
+    doThrow(new DataException("error-message")).when(rnr).validate(rnrColumns);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error-message");
+
     requisitionService.authorize(rnr);
   }
 
@@ -331,6 +344,7 @@ public class RequisitionServiceTest {
     when(requisitionRepository.getRequisition(rnr.getFacilityId(), rnr.getProgramId(), rnr.getPeriodId())).thenReturn(make(a(defaultRnr)));
 
     requisitionService.save(rnr);
+
     verify(requisitionRepository).update(rnr);
   }
 
@@ -344,8 +358,8 @@ public class RequisitionServiceTest {
     when(roleRightService.getRights(userId)).thenReturn(listUserRights);
     when(requisitionRepository.getRequisition(rnr.getFacilityId(), rnr.getProgramId(), rnr.getPeriodId())).thenReturn(make(a(defaultRnr)));
 
-
     requisitionService.save(rnr);
+
     verify(requisitionRepository).update(rnr);
   }
 
@@ -358,7 +372,9 @@ public class RequisitionServiceTest {
     List<Right> listUserRights = Arrays.asList(CREATE_REQUISITION);
     when(roleRightService.getRights(userId)).thenReturn(listUserRights);
     when(requisitionRepository.getRequisition(rnr.getFacilityId(), rnr.getProgramId(), rnr.getPeriodId())).thenReturn(make(a(defaultRnr)));
+
     requisitionService.save(rnr);
+
     verify(requisitionRepository).update(rnr);
   }
 
@@ -370,8 +386,10 @@ public class RequisitionServiceTest {
     rnr.setStatus(INITIATED);
     List<Right> listUserRights = Arrays.asList(AUTHORIZE_REQUISITION);
     when(roleRightService.getRights(userId)).thenReturn(listUserRights);
+
     expectedException.expect(DataException.class);
     expectedException.expectMessage(RNR_OPERATION_UNAUTHORIZED);
+
     requisitionService.save(rnr);
   }
 
@@ -383,8 +401,10 @@ public class RequisitionServiceTest {
     rnr.setStatus(SUBMITTED);
     List<Right> listUserRights = Arrays.asList(CREATE_REQUISITION);
     when(roleRightService.getRights(userId)).thenReturn(listUserRights);
+
     expectedException.expect(DataException.class);
     expectedException.expectMessage(RNR_OPERATION_UNAUTHORIZED);
+
     requisitionService.save(rnr);
   }
 

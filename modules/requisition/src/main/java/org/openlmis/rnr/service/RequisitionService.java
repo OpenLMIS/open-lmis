@@ -138,7 +138,7 @@ public class RequisitionService {
     if (requisitionRepository.getById(rnr.getId()).getStatus() != INITIATED) {
       throw new DataException(new OpenLmisMessage(RNR_SUBMISSION_ERROR));
     }
-    rnr.validate(rnrTemplateRepository.isFormulaValidationRequired(rnr.getProgramId()));
+    rnr.validate(rnrTemplateRepository.fetchRnrTemplateColumns(rnr.getProgramId()));
     rnr.calculate();
     rnr.setStatus(SUBMITTED);
     rnr.setSubmittedDate(new Date());
@@ -153,7 +153,7 @@ public class RequisitionService {
     Rnr savedRnr = requisitionRepository.getById(rnr.getId());
     if (savedRnr.getStatus() != SUBMITTED) throw new DataException(RNR_AUTHORIZATION_ERROR);
 
-    rnr.validate(rnrTemplateRepository.isFormulaValidationRequired(rnr.getProgramId()));
+    rnr.validate(rnrTemplateRepository.fetchRnrTemplateColumns(rnr.getProgramId()));
     rnr.calculate();
     rnr.setSubmittedDate(savedRnr.getSubmittedDate());
     rnr.setStatus(AUTHORIZED);

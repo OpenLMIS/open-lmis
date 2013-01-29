@@ -5,10 +5,15 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
 
 public class RnrTest {
 
@@ -16,18 +21,23 @@ public class RnrTest {
   public ExpectedException exception = ExpectedException.none();
 
   @Test
-  public void shouldValidateEachLineItem() throws Exception {
-    RnrLineItem rnrLineItem1 = mock(RnrLineItem.class);
-    RnrLineItem rnrLineItem2 = mock(RnrLineItem.class);
-    Rnr rnr = make(a(RequisitionBuilder.defaultRnr));
-    rnr.add(rnrLineItem1);
-    rnr.add(rnrLineItem2);
+  public void shouldCallValidateOnEachLineItem() throws Exception {
+    List<RnrColumn> templateColumns = new ArrayList<>();
+    final RnrLineItem rnrLineItem1 = mock(RnrLineItem.class);
+    final RnrLineItem rnrLineItem2 = mock(RnrLineItem.class);
+    ArrayList<RnrLineItem> lineItems = new ArrayList<RnrLineItem>() {{
+      add(rnrLineItem1);
+      add(rnrLineItem2);
+    }};
+    Rnr rnr = make(a(defaultRnr));
+    rnr.setLineItems(lineItems);
+    when(rnrLineItem1.validate(templateColumns)).thenReturn(true);
+    when(rnrLineItem2.validate(templateColumns)).thenReturn(true);
 
-    boolean formulaValidated = true;
-    rnr.validate(formulaValidated);
+    rnr.validate(templateColumns);
 
-    verify(rnrLineItem1).validate(formulaValidated);
-    verify(rnrLineItem2).validate(formulaValidated);
+    verify(rnrLineItem1).validate(templateColumns);
+    verify(rnrLineItem2).validate(templateColumns);
   }
 
 }

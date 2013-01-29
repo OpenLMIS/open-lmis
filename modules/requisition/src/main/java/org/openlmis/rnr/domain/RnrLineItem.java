@@ -15,8 +15,10 @@ import org.openlmis.core.message.OpenLmisMessage;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
 
 @Data
 @NoArgsConstructor
@@ -107,8 +109,9 @@ public class RnrLineItem {
     this.lossesAndAdjustments.add(lossesAndAdjustments);
   }
 
-  public boolean validate(boolean arithmeticValidationRequired) {
-    if (!validateMandatoryFields() || !validateCalculatedFields(arithmeticValidationRequired)) {
+  public boolean validate(List<RnrColumn> templateColumns) {
+    RnrColumn column = templateColumns.get(0);
+    if (!validateMandatoryFields(templateColumns) || !validateCalculatedFields(column.isFormulaValidationRequired())) {
       throw new DataException(new OpenLmisMessage(Rnr.RNR_VALIDATION_ERROR));
     }
     return true;
@@ -122,9 +125,19 @@ public class RnrLineItem {
     calculatedOrderQuantity = calculateOrderQuantity();
   }
 
-  private boolean validateMandatoryFields() {
-    return !(!isPresent(beginningBalance) || !isPresent(quantityReceived) || !isPresent(quantityDispensed) ||
-        !isPresent(newPatientCount) || !isPresent(stockOutDays)) && (quantityRequested == null || isPresent(reasonForRequestedQuantity));
+  private boolean validateMandatoryFields(List<RnrColumn> templateColumns) {
+    ProgramRnrTemplate template = new ProgramRnrTemplate(1, templateColumns);
+    return
+      !(
+      (template.columnsVisible(BEGINNING_BALANCE) && !isPresent(beginningBalance)) ||
+      (template.columnsVisible(QUANTITY_RECEIVED) && !isPresent(quantityReceived)) ||
+      (template.columnsVisible(QUANTITY_DISPENSED) && !isPresent(quantityDispensed)) ||
+      (template.columnsVisible(NEW_PATIENT_COUNT) && !isPresent(newPatientCount)) ||
+      (template.columnsVisible(STOCK_OUT_DAYS) && !isPresent(stockOutDays))
+      )
+        &&
+      (template.columnsVisible(QUANTITY_REQUESTED, REASON_FOR_REQUESTED_QUANTITY) && (quantityRequested == null || isPresent(reasonForRequestedQuantity))
+      );
   }
 
   private boolean validateCalculatedFields(boolean arithmeticValidationRequired) {

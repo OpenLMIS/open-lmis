@@ -12,6 +12,9 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.exception.DataException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -19,18 +22,59 @@ import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.ProductBuilder.code;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.lossesAndAdjustments;
+import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
+import static org.openlmis.rnr.domain.ProgramRnrTemplate.STOCK_OUT_DAYS;
 
 public class RnrLineItemTest {
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
   private RnrLineItem lineItem;
-  private boolean formulaValidated;
+  private List<RnrColumn> templateColumns;
 
   @Before
   public void setUp() throws Exception {
-    formulaValidated = false;
+    templateColumns = new ArrayList<>();
+    addVisibleColumns(templateColumns);
     lineItem = make(a(defaultRnrLineItem));
+  }
+
+  private void addVisibleColumns(List<RnrColumn> templateColumns) {
+    RnrColumn beginningBalanceColumn = new RnrColumn();
+    beginningBalanceColumn.setName(BEGINNING_BALANCE);
+    beginningBalanceColumn.setVisible(true);
+    beginningBalanceColumn.setFormulaValidationRequired(true);
+    templateColumns.add(beginningBalanceColumn);
+
+    RnrColumn quantityReceivedColumn = new RnrColumn();
+    quantityReceivedColumn.setName(QUANTITY_RECEIVED);
+    quantityReceivedColumn.setVisible(true);
+    templateColumns.add(quantityReceivedColumn);
+
+    RnrColumn quantityDispensedColumn = new RnrColumn();
+    quantityDispensedColumn.setName(QUANTITY_DISPENSED);
+    quantityDispensedColumn.setVisible(true);
+    templateColumns.add(quantityDispensedColumn);
+
+    RnrColumn newPatientCountColumn = new RnrColumn();
+    newPatientCountColumn.setName(NEW_PATIENT_COUNT);
+    newPatientCountColumn.setVisible(true);
+    templateColumns.add(newPatientCountColumn);
+
+    RnrColumn stockOutOfDaysColumn = new RnrColumn();
+    stockOutOfDaysColumn.setName(STOCK_OUT_DAYS);
+    stockOutOfDaysColumn.setVisible(true);
+    templateColumns.add(stockOutOfDaysColumn);
+
+    RnrColumn quantityRequestedColumn = new RnrColumn();
+    quantityRequestedColumn.setName(QUANTITY_REQUESTED);
+    quantityRequestedColumn.setVisible(true);
+    templateColumns.add(quantityRequestedColumn);
+
+    RnrColumn reasonForRequestedQuantityColumn = new RnrColumn();
+    reasonForRequestedQuantityColumn.setName(REASON_FOR_REQUESTED_QUANTITY);
+    reasonForRequestedQuantityColumn.setVisible(true);
+    templateColumns.add(reasonForRequestedQuantityColumn);
   }
 
   @Test
@@ -58,7 +102,7 @@ public class RnrLineItemTest {
     lineItem.setBeginningBalance(null);
     expectedException.expect(DataException.class);
     expectedException.expectMessage(Rnr.RNR_VALIDATION_ERROR);
-    lineItem.validate(formulaValidated);
+    lineItem.validate(templateColumns);
   }
 
   @Test
@@ -66,7 +110,7 @@ public class RnrLineItemTest {
     lineItem.setQuantityReceived(null);
     expectedException.expect(DataException.class);
     expectedException.expectMessage(Rnr.RNR_VALIDATION_ERROR);
-    lineItem.validate(formulaValidated);
+    lineItem.validate(templateColumns);
   }
 
   @Test
@@ -74,7 +118,7 @@ public class RnrLineItemTest {
     lineItem.setQuantityDispensed(null);
     expectedException.expect(DataException.class);
     expectedException.expectMessage(Rnr.RNR_VALIDATION_ERROR);
-    lineItem.validate(formulaValidated);
+    lineItem.validate(templateColumns);
   }
 
   @Test
@@ -82,7 +126,7 @@ public class RnrLineItemTest {
     lineItem.setNewPatientCount(null);
     expectedException.expect(DataException.class);
     expectedException.expectMessage(Rnr.RNR_VALIDATION_ERROR);
-    lineItem.validate(formulaValidated);
+    lineItem.validate(templateColumns);
   }
 
   @Test
@@ -90,7 +134,7 @@ public class RnrLineItemTest {
     lineItem.setStockOutDays(null);
     expectedException.expect(DataException.class);
     expectedException.expectMessage(Rnr.RNR_VALIDATION_ERROR);
-    lineItem.validate(formulaValidated);
+    lineItem.validate(templateColumns);
   }
 
   @Test
@@ -98,17 +142,16 @@ public class RnrLineItemTest {
     lineItem.setQuantityRequested(70);
     expectedException.expect(DataException.class);
     expectedException.expectMessage(Rnr.RNR_VALIDATION_ERROR);
-    lineItem.validate(formulaValidated);
+    lineItem.validate(templateColumns);
   }
 
   @Test
   public void shouldNotThrowErrorForExplanationNotPresentIfRequestedQuantityNotSet() throws Exception {
-    assertTrue(lineItem.validate(formulaValidated));
+    assertTrue(lineItem.validate(templateColumns));
   }
 
   @Test
   public void shouldThrowExceptionIfCalculationForQuantityDispensedAndStockInHandNotValidAndFormulaValidatedTrue() throws Exception {
-    formulaValidated = true;
     lineItem.setBeginningBalance(10);
     lineItem.setQuantityReceived(3);
     lineItem.setTotalLossesAndAdjustments(1);
@@ -116,18 +159,17 @@ public class RnrLineItemTest {
     lineItem.setQuantityDispensed(9);
     expectedException.expect(DataException.class);
     expectedException.expectMessage(Rnr.RNR_VALIDATION_ERROR);
-    lineItem.validate(formulaValidated);
+    lineItem.validate(templateColumns);
   }
 
   @Test
   public void shouldNotThrowExceptionIfCalculationForQuantityDispensedAndStockInHandValidAndFormulaValidatedTrue() throws Exception {
-    formulaValidated = true;
     lineItem.setBeginningBalance(10);
     lineItem.setQuantityReceived(3);
     lineItem.setTotalLossesAndAdjustments(1);
     lineItem.setStockInHand(4);
     lineItem.setQuantityDispensed(10);
-    assertTrue(lineItem.validate(formulaValidated));
+    assertTrue(lineItem.validate(templateColumns));
   }
 
   @Test
@@ -137,20 +179,20 @@ public class RnrLineItemTest {
     lineItem.setTotalLossesAndAdjustments(1);
     lineItem.setStockInHand(4);
     lineItem.setQuantityDispensed(9);
+    templateColumns.get(0).setFormulaValidationRequired(false);
 
-    lineItem.validate(formulaValidated);
+    lineItem.validate(templateColumns);
   }
 
 
   @Test
   public void shouldNotThrowExceptionIfCalculationForQuantityDispensedAndStockInHandValidAndFormulaValidatedFalse() throws Exception {
-    formulaValidated = true;
     lineItem.setBeginningBalance(10);
     lineItem.setQuantityReceived(3);
     lineItem.setTotalLossesAndAdjustments(1);
     lineItem.setStockInHand(4);
     lineItem.setQuantityDispensed(10);
-    assertTrue(lineItem.validate(formulaValidated));
+    assertTrue(lineItem.validate(templateColumns));
   }
 
   @Test
@@ -234,7 +276,7 @@ public class RnrLineItemTest {
 
   @Test
   public void shouldNotThrowErrorIfAllMandatoryFieldsPresent() throws Exception {
-    assertTrue(lineItem.validate(formulaValidated));
+    assertTrue(lineItem.validate(templateColumns));
   }
 
   @Test
