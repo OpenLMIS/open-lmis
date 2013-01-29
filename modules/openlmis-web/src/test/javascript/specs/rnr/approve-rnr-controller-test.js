@@ -19,6 +19,7 @@ describe('Approve Requisition controller', function () {
       {'name':'remarks', 'label':'remarks'}
     ];
     httpBackend.expect('GET', '/requisitions/lossAndAdjustments/reference-data.json').respond({"lossAdjustmentTypes":{}});
+    httpBackend.expect('GET', '/reference-data/currency.json').respond({"currency":'$'});
     ctrl = controller(ApproveRnrController, {$scope:scope, requisition:requisition, programRnRColumnList:programRnRColumnList, $location:location, $routeParams:routeParams});
   }));
 
@@ -27,8 +28,14 @@ describe('Approve Requisition controller', function () {
   });
 
   it('should set losses and adjustment types', function () {
-      expect(scope.requisition).toEqual(requisition);
-    });
+    httpBackend.flush();
+    expect(scope.allTypes).toEqual({});
+  });
+
+  it('should set currency in scope', function () {
+    httpBackend.flush();
+    expect(scope.currency).toEqual('$');
+  });
 
 
   it('should set line-items in scope', function () {

@@ -1,25 +1,64 @@
-function ApproveRnrController($scope, requisition, programRnRColumnList) {
+function ApproveRnrController($scope, requisition, Requisitions, programRnRColumnList, $location, LossesAndAdjustmentsReferenceData, ReferenceData) {
+  $scope.error = "";
+  $scope.message = "";
+
+  $scope.lossesAndAdjustmentsModal = [];
+  LossesAndAdjustmentsReferenceData.get({}, function (data) {
+    $scope.allTypes = data.lossAdjustmentTypes;
+  }, {});
+
+  ReferenceData.get({}, function (data) {
+      $scope.currency = data.currency;
+  }, {});
+
   var columnDefinitions = [];
-  $scope.lineItems = angular.copy(requisition.lineItems);
-  populateRnrLineItemsCost();
+  $scope.requisition = requisition;
+  $scope.lineItems = [];
+  populateRnrLineItems(requisition);
   if (programRnRColumnList.length > 0) {
     $scope.programRnRColumnList = programRnRColumnList;
     $($scope.programRnRColumnList).each(function (i, column) {
-      if (column.name == "quantityApproved") {
-        columnDefinitions.push({field:"quantityApproved", displayName:column.label, cellTemplate:editableCellTemplate( 'row.entity.quantityApproved', 'row.entity.id')})
-      } else {
-        columnDefinitions.push({field:column.name, displayName:column.label});
+      if (column.name == "lossesAndAdjustments") {
+        columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:lossesAndAdjustmentsTemplate()})
+        return;
       }
+      if (column.name == "quantityApproved") {
+        columnDefinitions.push({field:column.name, displayName:column.label, width:140, cellTemplate:positiveIntegerCellTemplate(column.name, 'row.entity.quantityApproved')})
+        return;
+      }
+      if (column.name == "remarks") {
+        columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:freeTextCellTemplate(column.name, 'row.entity.remarks')})
+        return;
+      }
+
+      columnDefinitions.push({field:column.name, displayName:column.label});
     });
   } else {
     $scope.$parent.error = "Please contact Admin to define R&R template for this program";
   }
 
-  function editableCellTemplate(value, id) {
-    var editableElement = "<div><form name='approvalForm'><input type='number' maxlength='8' min='0' ng-required='true' name='quantityApproved' ng-model="+ value +" /> " +
-      "<span class='field-error' ng-show='approvalForm.quantityApproved.$error.number'>Please Enter Numeric value</span></form></div>";
+  function lossesAndAdjustmentsTemplate() {
+    return '/public/pages/logistics/rnr/partials/lossesAndAdjustments.html';
+  }
 
-    return editableElement;
+  function freeTextCellTemplate(field, value) {
+    return '<div><input maxlength="250" name="' + field + '" ng-model="' + value + '"/></div>';
+  }
+
+  function positiveIntegerCellTemplate(field, value) {
+    return '<div><ng-form name="positiveIntegerForm"  > <input ui-event="{blur : \'row.entity.updateCostWithApprovedQuantity(requisition, row.entity)\'}" ng-class="{\'required-error\': approvedQuantityRequiredFlag && positiveIntegerForm.' + field + '.$error.required}" ' +
+      '  ng-required="true" maxlength="8"  name=' + field + ' ng-model=' + value + '  ng-change="validatePositiveInteger(positiveIntegerForm.' + field + '.$error,' + value + ')" />' +
+      '<span class="rnr-form-error" id=' + field + ' ng-show="positiveIntegerForm.' + field + '.$error.pattern" ng-class="{\'required-error\': approvedQuantityInvalidFlag && positiveIntegerForm.' + field + '.$error.positiveInteger}">Please Enter Numeric value</span></ng-form></div>';
+  }
+
+  $scope.validatePositiveInteger = function (error, value) {
+    if (value == undefined) {
+      error.positiveInteger = false;
+      return
+    }
+    ;
+
+    error.pattern = !isPositiveNumber(value);
   }
 
   $scope.gridOptions = { data:'lineItems',
@@ -28,22 +67,102 @@ function ApproveRnrController($scope, requisition, programRnRColumnList) {
     displaySelectionCheckbox:false,
     showColumnMenu:false,
     showFilter:false,
-    enableSorting: false,
+    rowHeight:44,
     columnDefs:columnDefinitions
   };
 
-  function populateRnrLineItemsCost() {
+  $scope.saveRnr = function () {
+    $scope.approvedQuantityInvalidFlag = false;
     $($scope.lineItems).each(function (i, lineItem) {
-      lineItem.cost = parseFloat((lineItem.packsToShip * lineItem.price).toFixed(2));
+      if (lineItem.quantityApproved != undefined && !isPositiveNumber(lineItem.quantityApproved)) {
+        $scope.approvedQuantityInvalidFlag = true;
+        return false;
+      }
+      ;
+    })
+    if ($scope.approvedQuantityInvalidFlag) {
+      $scope.error = "Please correct errors before saving.";
+      $scope.message = "";
+      return;
+    }
+    Requisitions.update({id:$scope.requisition.id, operation:"save"},
+      $scope.requisition, function (data) {
+        $scope.message = data.success;
+        $scope.error = "";
+      }, function (data) {
+        $scope.error = data.error;
+        $scope.message = "";
+      });
+  }
+
+  $scope.approveRnr = function () {
+    $scope.approvedQuantityRequiredFlag = false;
+    $($scope.lineItems).each(function (i, lineItem) {
+      if (lineItem.quantityApproved == undefined || lineItem.quantityApproved == "" || !isPositiveNumber(lineItem.quantityApproved)) {
+        $scope.approvedQuantityRequiredFlag = true;
+        return false;
+      }
+      ;
+    })
+    if ($scope.approvedQuantityRequiredFlag) {
+      $scope.error = "Please complete the highlighted fields on the R&R form before approving";
+      $scope.message = "";
+      return;
+    }
+    Requisitions.update({id:$scope.requisition.id, operation:"approve"},
+      $scope.requisition, function (data) {
+        $scope.$parent.message = data.success;
+        $scope.error = "";
+        $location.path("rnr-for-approval");
+      }, function (data) {
+        $scope.error = data.error;
+        $scope.message = "";
+      });
+  }
+
+  $scope.closeLossesAndAdjustmentsForRnRLineItem = function (rnrLineItem) {
+    $scope.lossesAndAdjustmentsModal[rnrLineItem.id] = false;
+  };
+
+  $scope.showLossesAndAdjustmentModalForLineItem = function (lineItem) {
+    updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem);
+    $scope.lossesAndAdjustmentsModal[lineItem.id] = true;
+  };
+
+  function updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem) {
+    var lossesAndAdjustmentTypesForLineItem = [];
+    $(lineItem.lossesAndAdjustments).each(function (index, lineItemLossAndAdjustment) {
+      lossesAndAdjustmentTypesForLineItem.push(lineItemLossAndAdjustment.type.name);
+    });
+    var allTypes = $scope.allTypes;
+    $scope.lossesAndAdjustmentTypesToDisplay = $.grep(allTypes, function (lAndATypeObject) {
+      return $.inArray(lAndATypeObject.name, lossesAndAdjustmentTypesForLineItem) == -1;
     });
   }
+
+  function isPositiveNumber(value) {
+    var INTEGER_REGEXP = /^\d*$/;
+    return INTEGER_REGEXP.test(value);
+
+  }
+
+  function populateRnrLineItems(rnr) {
+    $(rnr.lineItems).each(function (i, lineItem) {
+      var rnrLineItem = new RnrLineItem();
+      jQuery.extend(true, lineItem, rnrLineItem);
+      lineItem.updateCostWithApprovedQuantity(requisition);
+      $scope.lineItems.push(lineItem);
+    });
+  }
+
+
 }
 
 ApproveRnrController.resolve = {
-  requisition:function ($q, $timeout, RequisitionById, $route) {
+  requisition:function ($q, $timeout, RequisitionForApprovalById, $route) {
     var deferred = $q.defer();
     $timeout(function () {
-      RequisitionById.get({id:$route.current.params.id},
+      RequisitionForApprovalById.get({id:$route.current.params.rnr},
         function (data) {
           deferred.resolve(data.rnr);
         }, function () {
@@ -55,7 +174,7 @@ ApproveRnrController.resolve = {
   programRnRColumnList:function ($q, $timeout, ProgramRnRColumnList, $route) {
     var deferred = $q.defer();
     $timeout(function () {
-      ProgramRnRColumnList.get({programId:$route.current.params.programId}, function (data) {
+      ProgramRnRColumnList.get({programId:$route.current.params.program}, function (data) {
         deferred.resolve(data.rnrColumnList);
       }, {});
     }, 100);
