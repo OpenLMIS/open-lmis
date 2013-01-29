@@ -17,7 +17,7 @@ public class InitiateRnRPage extends Page {
     @FindBy(how = How.XPATH, using = "//div[@id='requisition-header']/h2")
     private static WebElement requisitionHeader;
 
-    @FindBy(how = How.XPATH, using = "//div[@id='requisition-header']/div/table/tbody/tr/td")
+    @FindBy(how = How.XPATH, using = "//div[@id='requisition-header']/div[@class='info-box']/div[@class='row-fluid'][1]/div[1]")
     private static WebElement facilityLabel;
 
     @FindBy(how = How.XPATH, using = "//input[@value='Save']")
