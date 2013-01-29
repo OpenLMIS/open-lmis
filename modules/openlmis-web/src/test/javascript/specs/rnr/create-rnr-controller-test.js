@@ -340,8 +340,8 @@ describe('CreateRnrController', function () {
     var rnrLineItemFullSupply = jQuery.extend(true, {fullSupply:true}, new RnrLineItem());
     var rnrLineItemNonFullSupply = jQuery.extend(true, {fullSupply:false}, new RnrLineItem());
 
-    expect(scope.isFullSupply(rnrLineItemFullSupply)).toEqual(true);
-    expect(scope.isFullSupply(rnrLineItemNonFullSupply)).toEqual(false);
+    expect(scope.isNonFullSupply(rnrLineItemFullSupply)).toEqual(false);
+    expect(scope.isNonFullSupply(rnrLineItemNonFullSupply)).toEqual(true);
   });
   it('should return if the rnrLineItem is nonFullSupply', function () {
     var rnrLineItemFullSupply = jQuery.extend(true, {fullSupply:true}, new RnrLineItem());

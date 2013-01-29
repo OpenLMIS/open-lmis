@@ -233,6 +233,10 @@ public class RequisitionService {
     return rnr;
   }
 
+  public void insertLineItem(RnrLineItem rnrLineItem) {
+    requisitionRepository.insertNonFullSupply(rnrLineItem);
+  }
+
   private boolean userCanApprove(final Rnr rnr, List<RoleAssignment> assignments) {
     return CollectionUtils.exists(assignments, new Predicate() {
       @Override

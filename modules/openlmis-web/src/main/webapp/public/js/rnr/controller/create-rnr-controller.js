@@ -1,4 +1,4 @@
-function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $location, FacilityApprovedProducts, Requisition, Requisitions, $routeParams, LossesAndAdjustmentsReferenceData, $rootScope) {
+function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $location, FacilityApprovedProducts, Requisition, Requisitions, RequisitionLineItem, $routeParams, LossesAndAdjustmentsReferenceData, $rootScope) {
 
   $scope.lossesAndAdjustmentsModal = [];
   $scope.rnrLineItems = [];
@@ -194,9 +194,18 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     return "defined";
   };
 
-  $scope.showLossesAndAdjustmentModalForLineItem = function (lineItem) {
+  $scope.showLossesAndAdjustmentModalForLineItem = function (lineItem, isNonFullSupply) {
+    if(isNonFullSupply) {
+      return;
+    }
     updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem);
     $scope.lossesAndAdjustmentsModal[lineItem.id] = true;
+  };
+
+  $scope.showAddNonFullSupplyModal= function () {
+    $scope.nonFullSupplyProductsModal = true;
+    $scope.newNonFullSupply.quantityRequested.required = true;
+    $scope.newNonFullSupply.reasonForRequestedQuantity = true;
   };
 
   $scope.removeLossAndAdjustment = function (lineItem, lossAndAdjustmentToDelete) {
@@ -257,11 +266,62 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     return $scope.getCellErrorClass(rnrLineItem, programRnRColumnList) ? 'row-error-highlight' : '';
   };
 
-  $scope.isFullSupply = function(rnrLineItemPrototype){
-    return rnrLineItemPrototype.fullSupply;
-  };
 
-  $scope.isNonFullSupply = function(rnrLineItemPrototype){
-    return !rnrLineItemPrototype.fullSupply;
+  $scope.isNonFullSupply = function(rnrLineItem){
+    return !rnrLineItem.fullSupply;
+  }
+
+  $scope.labelForRnrColumn = function (columnName) {
+    var label = "";
+    $($scope.programRnRColumnList).each(function (index, column) {
+      if (column.name == columnName) {
+        label = column.label;
+        return false;
+      }
+    });
+    return label;
+  }
+
+  function populateProductInformation() {
+    var product = $scope.facilityApprovedProduct.programProduct.product;
+    $scope.newNonFullSupply.productCode = product.code;
+    $scope.newNonFullSupply.product = (product.primaryName == null ? "" : (product.primaryName + " ")) +
+      (product.form.code == null ? "" : (product.form.code + " ")) +
+      (product.strength == null ? "" : (product.strength + " ")) +
+      (product.dosageUnit.code == null ? "" : product.dosageUnit.code);
+    $scope.newNonFullSupply.dosesPerDispensingUnit = product.dosesPerDispensingUnit;
+    $scope.newNonFullSupply.packSize = product.packSize;
+    $scope.newNonFullSupply.roundToZero = product.roundToZero;
+    $scope.newNonFullSupply.packRoundingThreshold = product.packRoundingThreshold;
+    $scope.newNonFullSupply.dispensingUnit = product.dispensingUnit;
+    $scope.newNonFullSupply.fullSupply = product.fullSupply;
+    $scope.newNonFullSupply.maxMonthsOfStock = $scope.facilityApprovedProduct.maxMonthsOfStock;
+    $scope.newNonFullSupply.dosesPerMonth = $scope.facilityApprovedProduct.programProduct.dosesPerMonth;
+    $scope.newNonFullSupply.price = $scope.facilityApprovedProduct.programProduct.currentPrice;
+  }
+
+  $scope.addNonFullSupplyLineItem = function () {
+
+    if ($scope.saveRnrForm.$error.required.indexOf('newNonFullSupply.quantityRequested') > 0 || $scope.saveRnrForm.$error.required.indexOf('newNonFullSupply.reasonForRequestedQuantity') > 0) {
+
+    } else {
+      populateProductInformation();
+      jQuery.extend(true, $scope.newNonFullSupply, new RnrLineItem());
+      $scope.newNonFullSupply.fill($scope.rnr, $scope.programRnRColumnList);
+      saveRnrLineItem();
+    }
+  }
+
+  function saveRnrLineItem() {
+
+    $scope.newNonFullSupply.rnrId = $scope.rnr.id;
+    RequisitionLineItem.save({}, $scope.newNonFullSupply, function (data) {
+      $scope.newNonFullSupply = data.newNonFullSupply;
+      $scope.rnr.lineItems[$scope.rnr.lineItems.length] = $scope.newNonFullSupply
+      jQuery.extend(true, $scope.newNonFullSupply, new RnrLineItem());
+      $scope.rnrLineItems.push($scope.newNonFullSupply);
+      $scope.nonFullSupplyProducts.splice($scope.nonFullSupplyProducts.indexOf($scope.facilityApprovedProduct), 1);
+      $scope.newNonFullSupply = {};
+    }, {});
   }
 }

@@ -5,6 +5,7 @@ import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.web.model.RnrReferenceData;
@@ -36,6 +37,7 @@ public class RequisitionController extends BaseController {
   public static final String RNR_SAVE_SUCCESS = "rnr.save.success";
   public static final String RNR_LIST = "rnr_list";
   public static final String PERIODS = "periods";
+  public static final String NON_FULL_SUPPLY_LINE_ITEM = "newNonFullSupply";
 
   private RequisitionService requisitionService;
 
@@ -168,5 +170,16 @@ public class RequisitionController extends BaseController {
     }
   }
 
+  @RequestMapping(value = "/logistics/requisition/lineItem", method = POST, headers = ACCEPT_JSON)
+  @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
+  public ResponseEntity<OpenLmisResponse> insertRequisitionLineItem(@RequestBody RnrLineItem rnrLineItem, HttpServletRequest request) {
+    if (rnrLineItem.getRnrId() == null) {
+      return error("Error in inserting Rnr line item", HttpStatus.BAD_REQUEST);
+    }
+    rnrLineItem.setModifiedBy(loggedInUserId(request));
+    requisitionService.insertLineItem(rnrLineItem);
+
+    return response(NON_FULL_SUPPLY_LINE_ITEM, rnrLineItem);
+  }
 
 }

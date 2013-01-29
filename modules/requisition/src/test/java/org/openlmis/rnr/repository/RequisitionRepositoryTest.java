@@ -154,4 +154,23 @@ public class RequisitionRepositoryTest {
 
     assertThat(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY_ID, PROGRAM_ID), is(rnr));
   }
+
+
+  @Test
+  public void shouldSetAllFieldsExceptNonFullSupplyRnrFieldsToZeroAndInsertRequisitionLineItem(){
+    RnrLineItem rnrLineItem = new RnrLineItem();
+    requisitionRepository.insertNonFullSupply(rnrLineItem);
+    verify(rnrLineItemMapper).insertNonFullSupply(rnrLineItem);
+    assertThat(rnrLineItem.getQuantityReceived(), is(0));
+    assertThat(rnrLineItem.getQuantityDispensed(), is(0));
+    assertThat(rnrLineItem.getBeginningBalance(), is(0));
+    assertThat(rnrLineItem.getStockInHand(), is(0));
+    assertThat(rnrLineItem.getTotalLossesAndAdjustments(), is(0));
+    assertThat(rnrLineItem.getCalculatedOrderQuantity(), is(0));
+    assertThat(rnrLineItem.getNewPatientCount(), is(0));
+    assertThat(rnrLineItem.getStockOutDays(), is(0));
+    assertThat(rnrLineItem.getNormalizedConsumption(), is(0));
+    assertThat(rnrLineItem.getAmc(), is(0));
+    assertThat(rnrLineItem.getMaxStockQuantity(), is(0));
+  }
 }

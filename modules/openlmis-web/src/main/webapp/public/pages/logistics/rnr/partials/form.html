@@ -31,7 +31,7 @@
                       <ng-switch on = "rnrLineItem['previousStockInHandAvailable']" >
                         <span ng-switch-when = 'false' >
                           <input id = "{{getId('A', $parent.$parent)}}" type = "text"
-                                 ng-required = "true" ng-disabled = "formDisabled"
+                                 ng-required = "true" ng-disabled = "formDisabled || isNonFullSupply(rnrLineItem)"
                                  name = "beginningBalance{{rnrLineItem['id']}}"
                                  ng-model = "rnrLineItem[column.name]"
                                  rnr-validator = "positiveInteger" maxlength = "8"
@@ -53,7 +53,7 @@
 
                     <span ng-switch-when = "quantityReceived"
                           ng-class = "getCellErrorClass(rnrLineItem, programRnRColumnList)" >
-                      <input ng-required = "true" ng-disabled = "formDisabled"
+                      <input ng-required = "true" ng-disabled = "formDisabled || isNonFullSupply(rnrLineItem)"
                              id = "{{getId('B', $parent)}}" type = "text"
                              name = "quantityReceived{{rnrLineItem['id']}}"
                              ng-model = "rnrLineItem[column.name]"
@@ -73,7 +73,7 @@
 
                     <span ng-switch-when = "quantityDispensed"
                           ng-class = "getCellErrorClass(rnrLineItem, programRnRColumnList)" >
-                      <input ng-required = "true" ng-disabled = "formDisabled"
+                      <input ng-required = "true" ng-disabled = "formDisabled || isNonFullSupply(rnrLineItem)"
                              id = "{{getId('C', $parent)}}" type = "text"
                              name = "quantityDispensed{{rnrLineItem['id']}}"
                              ng-model = "rnrLineItem[column.name]"
@@ -190,7 +190,7 @@
                       </div >
                       <div
                         ng-class = "highlightNestedFieldsWithError(rnrLineItem[column.name], 'quantity')" >
-                        <a ng-click = "showLossesAndAdjustmentModalForLineItem(rnrLineItem)"
+                        <a ng-click = "showLossesAndAdjustmentModalForLineItem(rnrLineItem, isNonFullSupply(rnrLineItem))"
                            class = "rnr-adjustment" >
                           <span class = "adjustment-value" >
                             {{rnrLineItem.totalLossesAndAdjustments}}</span >
@@ -201,7 +201,7 @@
 
                     <span ng-switch-when = "stockInHand"
                           ng-class = "getCellErrorClass(rnrLineItem, programRnRColumnList)" >
-                      <input ng-required = "true" ng-disabled = "formDisabled"
+                      <input ng-required = "true" ng-disabled = "formDisabled || isNonFullSupply(rnrLineItem)"
                              id = "{{getId('E', $parent)}}" type = "text"
                              name = "stockInHand{{rnrLineItem['id']}}"
                              ng-model = "rnrLineItem[column.name]"
@@ -220,7 +220,7 @@
                     </span >
 
                     <span ng-switch-when = "newPatientCount" >
-                      <input ng-required = "true" ng-disabled = "formDisabled" id = "{{getId('F', $parent)}}"
+                      <input ng-required = "true" ng-disabled = "formDisabled || isNonFullSupply(rnrLineItem)" id = "{{getId('F', $parent)}}"
                              type = "text"
                              name = "newPatientCount{{rnrLineItem['id']}}"
                              ng-model = "rnrLineItem[column.name]"
@@ -278,7 +278,7 @@
                     </span >
 
                     <span ng-switch-when = "stockOutDays" >
-                      <input ng-required = "true" ng-disabled = "formDisabled" id = "{{getId('X', $parent)}}"
+                      <input ng-required = "true" ng-disabled = "formDisabled || isNonFullSupply(rnrLineItem)" id = "{{getId('X', $parent)}}"
                              type = "text" name = "stockOutDays{{rnrLineItem['id']}}"
                              ng-model = "rnrLineItem[column.name]"
                              rnr-validator = "positiveInteger" maxlength = "8"
@@ -339,27 +339,49 @@
     </div >
     <br />
 
-    <input type = "button" ng-click = "nonFullSupplyProductsModal=true" value = "Add Non-Full Supply"
-           ng-show = "nonFullSupplyProducts.length > 0" />
-    <!--start-->
-    <div id = "nonFullSupplyProductsModal"
-         ng-model = "nonFullSupplyProductsModal"
-         class = "fade ng-pristine ng-valid modal hide "
-         ui-modal
-         data-backdrop = "static" data-keyboard = "false" >
-      <div class = "modal-header" ><h3 >Add Non-Full Supply Products</h3 ></div >
-      <div class = "modal-body" >
-        <select id = "nonFullSupplyProducts" >
-          <option ng-repeat = "product in nonFullSupplyProducts" >{{product.programProduct.product.code}}
-          </option >
-        </select >
-      </div >
-      <div class = "modal-footer" >
-        <a href = "" class = "btn btn-primary" ng-click = "activeConfirmModal=true" data-dismiss = "modal" >Add</a >
-        <a href = "" class = "btn" data-dismiss = "modal" >Cancel</a >
-      </div >
-    </div >
-    <!--end-->
+
+
+
+  <input type="button"  ng-click="showAddNonFullSupplyModal()" value = "Add Non-Full Supply" ng-show = "nonFullSupplyProducts.length > 0"/>
+  <div id="nonFullSupplyProductsModal"
+       ng-model="nonFullSupplyProductsModal"
+       class = "fade ng-pristine ng-valid modal hide "
+       ui-modal
+       data-backdrop = "static" data-keyboard = "false" >
+      <div class = "modal-header"><h3>Add Non-Full Supply Products</h3></div>
+      <div class = "modal-body">
+        <select id = "nonFullSupplyProductsName" ng-model="facilityApprovedProduct" name="productName"
+                ng-options = "facilityApprovedProduct.programProduct.product.primaryName for facilityApprovedProduct in nonFullSupplyProducts" ng-change="updateProductCode()"
+          />
+        <select id = "nonFullSupplyProductsCode" ng-model="facilityApprovedProduct" name="productCode"
+                ng-options = "facilityApprovedProduct.programProduct.product.code for facilityApprovedProduct in nonFullSupplyProducts" ng-change="updateProductName"/>
+        <span>
+          <label> {{labelForRnrColumn('quantityRequested')}}</label>
+          <input name="newNonFullSupply.quantityRequested" ng-model="newNonFullSupply.quantityRequested" id="quantityRequested" rnr-validator="positiveInteger" maxlength="8"/><br>
+          <span class="rnr-form-error" style="display:none;" id="newNonFullSupply.quantityRequested">
+           Enter Numeric Data
+          </span>
+        </span>
+
+        <label> {{labelForRnrColumn('reasonForRequestedQuantity')}}</label>
+        <input  ng-model="newNonFullSupply.reasonForRequestedQuantity" id="reasonForRequestedQuantity"/><br>
+         <span class="alert alert-warning reason-request" ng-show="newNonFullSupply.quantityRequested && !newNonFullSupply.reasonForRequestedQuantity">
+                                              Please enter a reason
+                                            </span>
+
+        <label> {{labelForRnrColumn('remarks')}}</label>
+        <input ng-model="newNonFullSupply.remarks" id="remarks"/>
+        <a href="" class="btn btn-primary" ng-click="addNonFullSupplyLineItem()">Add</a>
+
+
+        <div class = "modal-footer">
+          <input type="button" class="btn btn-success save-button"
+                 ng-click=""
+                 data-dismiss="modal"
+                 value="Done"/>
+        </div>
+      </div>
+  </div>
 
     <div id = "action_buttons" class = "action-buttons" >
       <div class = "form-cell button-row" >

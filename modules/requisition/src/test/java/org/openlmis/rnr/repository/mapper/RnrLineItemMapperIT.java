@@ -22,6 +22,7 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
@@ -150,5 +151,16 @@ public class RnrLineItemMapperIT {
     assertThat(rnrLineItems.get(0).getTotalLossesAndAdjustments(), is(20));
     assertThat(rnrLineItems.get(0).getProduct(), is("Primary Name Tablet strength mg"));
     assertThat(rnrLineItems.get(0).getReasonForRequestedQuantity(), is("Quantity Requested more in liu of coming rains"));
+  }
+
+
+  @Test
+  public void shouldInsertNonFullSupplyLineItem() {
+    requisitionMapper.insert(rnr);
+    RnrLineItem requisitionLineItem = new RnrLineItem(rnr.getId(), facilityApprovedProduct, MODIFIED_BY);
+
+    rnrLineItemMapper.insertNonFullSupply(requisitionLineItem);
+    assertNotNull(requisitionLineItem.getId());
+
   }
 }

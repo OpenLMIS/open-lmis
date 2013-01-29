@@ -130,6 +130,11 @@ services.factory('FacilityApprovedProducts', function ($resource) {
   return $resource('/facilityApprovedProducts/facility/:facilityId/program/:programId/nonFullSupply.json', {}, {});
 });
 
+
+services.factory('RequisitionLineItem', function ($resource) {
+  return $resource('/logistics/requisition/lineItem.json', {}, {});
+});
+
 services.factory('UserById', function ($resource) {
   return $resource('/admin/user/:id.json', {}, {});
 });

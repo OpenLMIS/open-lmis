@@ -10,6 +10,7 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -23,10 +24,10 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.openlmis.web.controller.RequisitionController.*;
 import static org.powermock.api.mockito.PowerMockito.doThrow;
@@ -236,6 +237,29 @@ public class RequisitionControllerTest {
     ResponseEntity<OpenLmisResponse> response = controller.getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(1, 2);
 
     assertThat(response.getBody().getErrorMsg(), is(errorMessage));
+  }
+
+
+  @Test
+  public void shouldNotInsertRequisitionLineItemAndReturnErrorResponseIfRnrIdIsNotPresent() {
+    RnrLineItem rnrLineItem = new RnrLineItem();
+
+    ResponseEntity<OpenLmisResponse> response = controller.insertRequisitionLineItem(rnrLineItem, request);
+    verify(requisitionService, times(0)).insertLineItem(rnrLineItem);
+    assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+    assertThat(rnrLineItem.getModifiedBy(), is(nullValue()));
+    assertThat(response.getBody().getErrorMsg(), is("Error in inserting Rnr line item"));
+  }
+
+  @Test
+  public void shouldInsertRequisitionLineItemAndReturnCorrectResponseIfRnrIdIsPresent() {
+    RnrLineItem rnrLineItem = new RnrLineItem();
+    rnrLineItem.setRnrId(1);
+    ResponseEntity<OpenLmisResponse> response = controller.insertRequisitionLineItem(rnrLineItem, request);
+    verify(requisitionService).insertLineItem(rnrLineItem);
+    assertThat(rnrLineItem.getModifiedBy(), is(USER_ID));
+    assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    assertThat(response.getBody().getData().get(RequisitionController.NON_FULL_SUPPLY_LINE_ITEM), is(notNullValue()));
   }
 
   private Rnr createRequisition() {

@@ -28,7 +28,6 @@ public class RnrLineItem {
   public static final Float NUMBER_OF_DAYS = 30f;
   private Integer id;
 
-  @JsonIgnore
   private Integer rnrId;
 
   //todo hack to display it on UI. This is concatenated string of Product properties like name, strength, form and dosage unit

@@ -50,4 +50,20 @@ public interface RnrLineItemMapper {
     "WHERE id = #{id}"
   )
   int update(RnrLineItem rnrLineItem);
+
+  @Insert({"INSERT INTO requisition_line_items",
+    "(rnrId, productCode, product, dispensingUnit, dosesPerMonth, dosesPerDispensingUnit,",
+    "maxMonthsOfStock, packsToShip, packSize, price, roundToZero, packRoundingThreshold,",
+    "fullSupply, modifiedBy, modifiedDate, quantityReceived, quantityDispensed, beginningBalance," ,
+      "stockInHand, totalLossesAndAdjustments, calculatedOrderQuantity, quantityApproved," ,
+      "newPatientCount, stockOutDays, normalizedConsumption, amc, maxStockQuantity, remarks, quantityRequested, reasonForRequestedQuantity)",
+    "VALUES ( #{rnrId}, #{productCode}, #{product}, #{dispensingUnit}, #{dosesPerMonth},",
+    "#{dosesPerDispensingUnit}, #{maxMonthsOfStock}, #{packsToShip},",
+    "#{packSize}, #{price}, #{roundToZero}, #{packRoundingThreshold},",
+    "#{fullSupply}, #{modifiedBy}, #{modifiedDate}, #{quantityReceived}, #{quantityDispensed}, #{beginningBalance},",
+      "#{stockInHand}, #{totalLossesAndAdjustments}, #{calculatedOrderQuantity}, #{quantityApproved},",
+      "#{newPatientCount}, #{stockOutDays}, #{normalizedConsumption}, #{amc}, #{maxStockQuantity}," ,
+        " #{remarks}, #{quantityRequested}, #{reasonForRequestedQuantity})"})
+  @Options(useGeneratedKeys = true)
+  void insertNonFullSupply(RnrLineItem requisitionLineItem);
 }
