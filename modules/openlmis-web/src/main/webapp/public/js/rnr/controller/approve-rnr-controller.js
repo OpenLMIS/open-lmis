@@ -77,6 +77,7 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnRColum
     showColumnMenu:false,
     showFilter:false,
     rowHeight:44,
+    enableSorting: false,
     columnDefs:columnDefinitions
   };
 
