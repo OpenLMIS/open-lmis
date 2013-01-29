@@ -15,7 +15,6 @@ import org.openlmis.core.message.OpenLmisMessage;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
@@ -104,7 +103,6 @@ public class RnrLineItem {
         (product.getDosageUnit().getCode() == null ? "" : product.getDosageUnit().getCode());
 
   }
-
   public void addLossesAndAdjustments(LossesAndAdjustments lossesAndAdjustments) {
     this.lossesAndAdjustments.add(lossesAndAdjustments);
   }
@@ -136,16 +134,24 @@ public class RnrLineItem {
       (template.columnsVisible(STOCK_OUT_DAYS) && !isPresent(stockOutDays))
       )
         &&
-      (template.columnsVisible(QUANTITY_REQUESTED, REASON_FOR_REQUESTED_QUANTITY) && (quantityRequested == null || isPresent(reasonForRequestedQuantity))
+      (!template.columnsVisible(QUANTITY_REQUESTED, REASON_FOR_REQUESTED_QUANTITY) || (quantityRequested == null || isPresent(reasonForRequestedQuantity))
       );
   }
 
   private boolean validateCalculatedFields(boolean arithmeticValidationRequired) {
     boolean validQuantityDispensed = true;
+    stockInHand = setToZeroIfNotPresent(stockInHand);
+    beginningBalance = setToZeroIfNotPresent(beginningBalance);
+    quantityReceived = setToZeroIfNotPresent(quantityReceived);
+    totalLossesAndAdjustments = setToZeroIfNotPresent(totalLossesAndAdjustments);
     if (arithmeticValidationRequired) {
       validQuantityDispensed = (quantityDispensed == (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand));
     }
     return (quantityDispensed >= 0 && stockInHand >= 0 && validQuantityDispensed);
+  }
+
+  private Integer setToZeroIfNotPresent(Integer field) {
+    return isPresent(field) ? field : 0;
   }
 
   private boolean isPresent(Object value) {

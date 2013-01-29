@@ -143,11 +143,11 @@ var RnrLineItem = function () {
     }
 
     function fillCalculatedOrderQuantity() {
-      if (!isNumber(rnrLineItem.maxStockQuantity) || !isNumber(rnrLineItem.stockInHand)) {
+      if (!isNumber(rnrLineItem.maxStockQuantity)) {
         rnrLineItem.calculatedOrderQuantity = null;
         return;
       }
-      rnrLineItem.calculatedOrderQuantity = rnrLineItem.maxStockQuantity - rnrLineItem.stockInHand;
+      rnrLineItem.calculatedOrderQuantity = rnrLineItem.maxStockQuantity - (!isNumber(rnrLineItem.stockInHand) ? 0 : rnrLineItem.stockInHand);
       rnrLineItem.calculatedOrderQuantity < 0 ? (rnrLineItem.calculatedOrderQuantity = 0) : 0;
     }
 
