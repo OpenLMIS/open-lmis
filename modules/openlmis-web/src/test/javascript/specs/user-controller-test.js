@@ -79,23 +79,23 @@ describe("User", function () {
       ]);
     })
 
-   it("should get supported programs for the facility selected and all the roles when user tries to add program role mapping", function(){
-     scope.programAndRoleList = [];
-     var facility = {"id":1, "code":"F1756", "name":"Village Dispensary", "supportedPrograms":[
-       {"code":"ARV", "name":"ARV", "description":"ARV", "active":true},
-       {"code":"HIV", "name":"HIV", "description":"HIV", "active":true}
-     ]};
-     scope.facilitySelected = facility;
-
-     $httpBackend.expectGET('/admin/facility/1.json').respond({"facility":facility});
-     $httpBackend.expectGET('/roles.json').respond({"roles":{"id":1, "name":"Admin"}});
-
-     scope.displayProgramRoleMapping();
-     $httpBackend.flush();
-     expect(scope.programAndRoleList[0].supportedPrograms).toEqual(facility.supportedPrograms);
-     expect(scope.programAndRoleList[0].roles).toEqual({"id":1, "name":"Admin"});
-
-   })
+//   it("should get supported programs for the facility selected and all the roles when user tries to add program role mapping", function(){
+//     scope.programAndRoleList = [];
+//     var facility = {"id":1, "code":"F1756", "name":"Village Dispensary", "supportedPrograms":[
+//       {"code":"ARV", "name":"ARV", "description":"ARV", "active":true},
+//       {"code":"HIV", "name":"HIV", "description":"HIV", "active":true}
+//     ]};
+//     scope.facilitySelected = facility;
+//
+//     $httpBackend.expectGET('/admin/facility/1.json').respond({"facility":facility});
+//     $httpBackend.expectGET('/roles.json').respond({"roles":{"id":1, "name":"Admin"}});
+//
+//     scope.displayProgramRoleMapping();
+//     $httpBackend.flush();
+//     expect(scope.programAndRoleList[0].supportedPrograms).toEqual(facility.supportedPrograms);
+//     expect(scope.programAndRoleList[0].roles).toEqual({"id":1, "name":"Admin"});
+//
+//   })
 
   });
 
