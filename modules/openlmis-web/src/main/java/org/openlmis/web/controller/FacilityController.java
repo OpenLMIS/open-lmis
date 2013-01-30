@@ -51,7 +51,7 @@ public class FacilityController extends BaseController {
   }
 
   @RequestMapping(value = "logistics/facility/{facilityId}/requisition-header", method = RequestMethod.GET, headers = "Accept=application/json")
-  @PreAuthorize("hasPermission('','CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
+  @PreAuthorize("hasPermission('','CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION')")
   public RequisitionHeader getRequisitionHeader(@PathVariable(value = "facilityId") Integer facilityId) {
     return facilityService.getRequisitionHeader(facilityId);
   }

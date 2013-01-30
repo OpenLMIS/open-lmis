@@ -74,6 +74,11 @@ public interface RequisitionMapper {
       "AND status NOT IN ('INITIATED', 'SUBMITTED') " +
       "ORDER BY submittedDate DESC " +
       "LIMIT 1")
+  @Results(value = {
+    @Result(property = "facility.id", column = "facilityId"),
+    @Result(property = "program.id", column = "programId"),
+    @Result(property = "period.id", column = "periodId"),
+  })
   Rnr getLastRequisitionToEnterThePostSubmitFlow(@Param(value = "facilityId") Integer facilityId,
                                                  @Param(value = "programId") Integer programId);
 }

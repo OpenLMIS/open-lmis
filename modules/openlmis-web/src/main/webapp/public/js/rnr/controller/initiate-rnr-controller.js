@@ -44,7 +44,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
     periods.forEach(function (period) {
       periodWithRnrStatus = angular.copy(period);
       periodWithRnrStatus.rnrStatus = PREVIOUS_RNR_PENDING_STATUS;
-      if (rnr != null && periodWithRnrStatus.id == rnr.periodId) {
+      if (rnr != null && periodWithRnrStatus.id == rnr.period.id) {
         periodWithRnrStatus.rnrId = rnr.id;
         periodWithRnrStatus.rnrStatus = rnr.status;
       }
