@@ -200,7 +200,7 @@ public class ProcessingPeriodMapperIT {
     mapper.insert(period1);
     mapper.insert(period2);
 
-    ProcessingPeriod immediatePreviousPeriod = mapper.getImmediatePreviousPeriodFor(period2.getId());
+    ProcessingPeriod immediatePreviousPeriod = mapper.getImmediatePreviousPeriodFor(period2);
 
     assertThat(immediatePreviousPeriod, is(nullValue()));
   }
@@ -215,7 +215,7 @@ public class ProcessingPeriodMapperIT {
     mapper.insert(period1);
     mapper.insert(period2);
 
-    ProcessingPeriod immediatePreviousPeriod = mapper.getImmediatePreviousPeriodFor(period2.getId());
+    ProcessingPeriod immediatePreviousPeriod = mapper.getImmediatePreviousPeriodFor(period2);
 
     assertThat(immediatePreviousPeriod.getId(), is(period1.getId()));
   }

@@ -9,10 +9,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Program implements BaseModel {
 
-    private Integer id;
-    private String code;
-    private String name;
-    private String description;
-    private Boolean active;
+  private Integer id;
+  private String code;
+  private String name;
+  private String description;
+  private Boolean active;
 
+  public Program(Integer id) {
+    this.id = id;
+  }
 }

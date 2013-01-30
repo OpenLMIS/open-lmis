@@ -2,6 +2,8 @@ package org.openlmis.rnr.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.*;
@@ -25,9 +27,6 @@ public class Rnr {
   private Facility facility;
   private Program program;
   private ProcessingPeriod period;
-  private Integer facilityId;
-  private Integer programId;
-  private Integer periodId;
   private RnrStatus status;
   private Money fullSupplyItemsSubmittedCost = new Money("0");
   private Money nonFullSupplyItemsSubmittedCost = new Money("0");
@@ -43,15 +42,24 @@ public class Rnr {
   public static final String RNR_VALIDATION_ERROR = "rnr.validation.error";
 
   public Rnr(Integer facilityId, Integer programId, Integer periodId, Integer modifiedBy) {
-    this.facilityId = facilityId;
-    this.programId = programId;
-    this.periodId = periodId;
+    facility = new Facility();
+    facility.setId(facilityId);
+    program = new Program();
+    program.setId(programId);
+    period = new ProcessingPeriod();
+    period.setId(periodId);
     this.modifiedBy = modifiedBy;
   }
 
   public Rnr(Integer facilityId, Integer programId, Integer periodId, List<FacilityApprovedProduct> facilityApprovedProducts, Integer modifiedBy) {
     this(facilityId, programId, periodId, modifiedBy);
     fillLineItems(facilityApprovedProducts);
+  }
+
+  public Rnr(Facility facility, Program program, ProcessingPeriod period) {
+    this.facility = facility;
+    this.program = program;
+    this.period = period;
   }
 
   public void add(RnrLineItem rnrLineItem, Boolean fullSupply) {
@@ -89,15 +97,36 @@ public class Rnr {
 
   public void setBeginningBalanceForEachLineItem(Rnr previousRequisition) {
     if (previousRequisition == null) return;
-    for (RnrLineItem previousLineItem : previousRequisition.getLineItems()) {
-      for (RnrLineItem currentLineItem : this.lineItems) {
-        if (currentLineItem.getProductCode().equals(previousLineItem.getProductCode())) {
-          currentLineItem.setBeginningBalanceWhenPreviousStockInHandAvailable(previousLineItem.getStockInHand());
-          currentLineItem.setPreviousStockInHandAvailable(Boolean.TRUE);
-          break;
-        }
-      }
+    for (RnrLineItem currentLineItem : this.lineItems) {
+      RnrLineItem previousLineItem = findCorrespondingLineItem(previousRequisition.getLineItems(), currentLineItem);
+      if (previousLineItem != null)
+        currentLineItem.setBeginningBalanceWhenPreviousStockInHandAvailable(previousLineItem.getStockInHand());
+
     }
+  }
+
+  public void fillLastTwoPeriodsNormalizedConsumptions(Rnr lastPeriodsRnr, Rnr secondLastPeriodsRnr) {
+    addNormalizedConsumptionFrom(lastPeriodsRnr);
+    addNormalizedConsumptionFrom(secondLastPeriodsRnr);
+  }
+
+  private void addNormalizedConsumptionFrom(Rnr rnr) {
+    if (rnr == null) return;
+
+    for (RnrLineItem currentLineItem : lineItems) {
+      RnrLineItem previousLineItem = findCorrespondingLineItem(rnr.getLineItems(), currentLineItem);
+      if (previousLineItem != null) currentLineItem.addPreviousNormalizedConsumption(previousLineItem);
+    }
+  }
+
+  private RnrLineItem findCorrespondingLineItem(List<RnrLineItem> items, final RnrLineItem item) {
+    return (RnrLineItem) CollectionUtils.find(items, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        RnrLineItem lineItem = (RnrLineItem) o;
+        return lineItem.getProductCode().equalsIgnoreCase(item.getProductCode());
+      }
+    });
   }
 
   public void prepareForApproval() {

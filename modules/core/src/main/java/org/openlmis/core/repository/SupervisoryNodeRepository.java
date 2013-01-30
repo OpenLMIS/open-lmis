@@ -1,9 +1,7 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.RequisitionGroup;
-import org.openlmis.core.domain.Right;
-import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,8 +66,8 @@ public class SupervisoryNodeRepository {
     }
   }
 
-  public SupervisoryNode getFor(Integer facilityId, Integer programId) {
-    RequisitionGroup requisitionGroup = requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(programId, facilityId);
+  public SupervisoryNode getFor(Facility facility, Program program) {
+    RequisitionGroup requisitionGroup = requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(program, facility);
     return (requisitionGroup == null) ? null : supervisoryNodeMapper.getFor(requisitionGroup.getCode());
   }
 

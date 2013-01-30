@@ -1,6 +1,8 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.exception.DataException;
@@ -39,7 +41,7 @@ public class RequisitionGroupRepository {
   }
 
 
-  public RequisitionGroup getRequisitionGroupForProgramAndFacility(Integer programId, Integer facilityId) {
-    return mapper.getRequisitionGroupForProgramAndFacility(programId, facilityId);
+  public RequisitionGroup getRequisitionGroupForProgramAndFacility(Program program, Facility facility) {
+    return mapper.getRequisitionGroupForProgramAndFacility(program, facility);
   }
 }

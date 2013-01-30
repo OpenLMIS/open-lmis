@@ -3,13 +3,15 @@ package org.openlmis.core.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations.Mock;
-import org.openlmis.core.domain.Right;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.core.repository.UserRepository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -56,85 +58,80 @@ public class SupervisoryNodeServiceTest {
   @Test
   public void shouldGetSupervisoryNodeForProgramAndFacility() throws Exception {
     SupervisoryNode expectedNode = new SupervisoryNode();
-    when(supervisoryNodeRepository.getFor(1, 1)).thenReturn(expectedNode);
-    final SupervisoryNode result = supervisoryNodeService.getFor(1, 1);
-    verify(supervisoryNodeRepository).getFor(1, 1);
+    Facility facility = new Facility(1);
+    Program program = new Program(1);
+    when(supervisoryNodeRepository.getFor(facility, program)).thenReturn(expectedNode);
+    final SupervisoryNode result = supervisoryNodeService.getFor(facility, program);
+    verify(supervisoryNodeRepository).getFor(facility, program);
     assertThat(result, is(expectedNode));
   }
 
   @Test
   public void shouldGetApproverForProgramAndFacility() throws Exception {
-    final Integer supervisoryNodeId = 1;
-    final Integer facilityId = 1;
-    final Integer programId = 1;
-    final User user = new User();
+    Integer supervisoryNodeId = 1;
+    Facility facility = new Facility(1);
+    Program program = new Program(1);
+    User user = new User();
 
     SupervisoryNode supervisoryNode = new SupervisoryNode();
     supervisoryNode.setId(supervisoryNodeId);
 
-    when(supervisoryNodeRepository.getFor(facilityId, programId)).thenReturn(supervisoryNode);
-    List<User> roleAssignments = new ArrayList<User>() {{
-      add(user);
-    }};
-    when(userRepository.getUsersWithRightInNodeForProgram(programId, supervisoryNodeId, Right.APPROVE_REQUISITION)).thenReturn(roleAssignments);
+    when(supervisoryNodeRepository.getFor(facility, program)).thenReturn(supervisoryNode);
+    List<User> roleAssignments = Arrays.asList(user);
+    when(userRepository.getUsersWithRightInNodeForProgram(program, supervisoryNode, APPROVE_REQUISITION)).thenReturn(roleAssignments);
 
+    User result = supervisoryNodeService.getApproverFor(facility, program);
 
-    User result = supervisoryNodeService.getApproverFor(facilityId, programId);
-
-    verify(supervisoryNodeRepository).getFor(facilityId, programId);
+    verify(supervisoryNodeRepository).getFor(facility, program);
     assertThat(result, is(user));
   }
 
   @Test
   public void shouldGetApproverFromParentSupervisoryNodeIfNotFoundInImmediateSupervisoryNode() throws Exception {
-    int facilityId = 1;
-    final int programId = 2;
-    int parentNodeId = 4;
+    Facility facility = new Facility(1);
+    Program program = new Program(2);
+    SupervisoryNode parentNode = new SupervisoryNode(4);
     int nodeId = 1;
     final User approver = new User();
-    List<User> users = new ArrayList<User>() {{
-      add(approver);
-    }};
-    SupervisoryNode node = new SupervisoryNode();
-    node.setId(nodeId);
-    when(supervisoryNodeRepository.getFor(facilityId, programId)).thenReturn(node);
-    when(userRepository.getUsersWithRightInNodeForProgram(programId, nodeId, APPROVE_REQUISITION)).thenReturn(new ArrayList<User>());
-    when(supervisoryNodeRepository.getSupervisoryNodeParentId(nodeId)).thenReturn(parentNodeId);
-    when(userRepository.getUsersWithRightInNodeForProgram(programId, parentNodeId, APPROVE_REQUISITION)).thenReturn(users);
+    List<User> users = Arrays.asList(approver);
+    SupervisoryNode node = new SupervisoryNode(nodeId);
+    when(supervisoryNodeRepository.getFor(facility, program)).thenReturn(node);
+    when(userRepository.getUsersWithRightInNodeForProgram(program, node, APPROVE_REQUISITION)).thenReturn(new ArrayList<User>());
+    when(supervisoryNodeRepository.getSupervisoryNodeParentId(node.getId())).thenReturn(parentNode.getId());
+    when(userRepository.getUsersWithRightInNodeForProgram(program, parentNode, APPROVE_REQUISITION)).thenReturn(users);
 
-    User user = supervisoryNodeService.getApproverFor(facilityId, programId);
+    User user = supervisoryNodeService.getApproverFor(facility, program);
 
-    verify(supervisoryNodeRepository).getFor(facilityId, programId);
+    verify(supervisoryNodeRepository).getFor(facility, program);
     verify(supervisoryNodeRepository).getSupervisoryNodeParentId(nodeId);
     assertThat(user, is(approver));
   }
 
   @Test
   public void shouldReturnNullIfNoApproverFound() throws Exception {
-    int facilityId = 1;
-    final int programId = 2;
+    Facility facility = new Facility(1);
+    Program program = new Program(2);
     int nodeId = 1;
-    SupervisoryNode node = new SupervisoryNode();
-    node.setId(nodeId);
-    when(supervisoryNodeRepository.getFor(facilityId, programId)).thenReturn(node);
-    when(userRepository.getUsersWithRightInNodeForProgram(programId, nodeId, APPROVE_REQUISITION)).thenReturn(new ArrayList<User>());
+    SupervisoryNode node = new SupervisoryNode(nodeId);
+    when(supervisoryNodeRepository.getFor(facility, program)).thenReturn(node);
+    when(userRepository.getUsersWithRightInNodeForProgram(program, node, APPROVE_REQUISITION)).thenReturn(new ArrayList<User>());
     when(supervisoryNodeRepository.getSupervisoryNodeParentId(nodeId)).thenReturn(null);
 
-    User user = supervisoryNodeService.getApproverFor(facilityId, programId);
+    User user = supervisoryNodeService.getApproverFor(facility, program);
 
-    verify(supervisoryNodeRepository).getFor(facilityId, programId);
+    verify(supervisoryNodeRepository).getFor(facility, program);
     verify(supervisoryNodeRepository).getSupervisoryNodeParentId(nodeId);
     assertThat(user, is(nullValue()));
   }
 
   @Test
   public void shouldReturnNullIfNoSupervisoryNodeFoundForFacilityAndProgram() throws Exception {
-    int facilityId = 1;
-    final int programId = 2;
-    when(supervisoryNodeRepository.getFor(facilityId, programId)).thenReturn(null);
-    User user = supervisoryNodeService.getApproverFor(facilityId, programId);
+    Facility facility = new Facility(1);
+    Program program = new Program(2);
+    when(supervisoryNodeRepository.getFor(facility, program)).thenReturn(null);
+    User user = supervisoryNodeService.getApproverFor(facility, program);
 
-    verify(supervisoryNodeRepository).getFor(facilityId, programId);
+    verify(supervisoryNodeRepository).getFor(facility, program);
     assertThat(user, is(nullValue()));
   }
 
@@ -149,32 +146,31 @@ public class SupervisoryNodeServiceTest {
 
   @Test
   public void shouldGetSupervisorForGivenSupervisoryNodeAndProgram() throws Exception {
-    Integer supervisoryNodeId =1;
-    Integer programId =1;
+    SupervisoryNode supervisoryNode = new SupervisoryNode(1);
+    Program program = new Program(2);
     final User approver = new User();
-    List<User> listOfUsers = new ArrayList<User>() {{
-      add(approver);
-    }};
-    when(userRepository.getUsersWithRightInNodeForProgram(supervisoryNodeId, programId, APPROVE_REQUISITION)).thenReturn(listOfUsers);
+    List<User> listOfUsers = Arrays.asList(approver);
+    when(userRepository.getUsersWithRightInNodeForProgram(program, supervisoryNode, APPROVE_REQUISITION)).thenReturn(listOfUsers);
 
-    User actual = supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(supervisoryNodeId, programId);
+    User actual = supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(supervisoryNode, program);
 
-    verify(userRepository).getUsersWithRightInNodeForProgram(supervisoryNodeId, programId, APPROVE_REQUISITION);
+    verify(userRepository).getUsersWithRightInNodeForProgram(program, supervisoryNode, APPROVE_REQUISITION);
     assertThat(actual, is(approver));
 
   }
 
   @Test
-    public void shouldReturnNullIfNoSupervisorIsAssignedToGivenSupervisoryNodeAndProgram() throws Exception {
-      Integer supervisoryNodeId =1;
-      Integer programId =1;
-      List<User> listOfUsers = new ArrayList<>() ;
-      when(userRepository.getUsersWithRightInNodeForProgram(supervisoryNodeId, programId, APPROVE_REQUISITION)).thenReturn(listOfUsers);
+  public void shouldReturnNullIfNoSupervisorIsAssignedToGivenSupervisoryNodeAndProgram() throws Exception {
+    SupervisoryNode supervisoryNode = new SupervisoryNode(1);
+    Program program = new Program(1);
 
-      User actual = supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(supervisoryNodeId, programId);
+    List<User> listOfUsers = new ArrayList<>();
+    when(userRepository.getUsersWithRightInNodeForProgram(program, supervisoryNode, APPROVE_REQUISITION)).thenReturn(listOfUsers);
 
-      verify(userRepository).getUsersWithRightInNodeForProgram(supervisoryNodeId, programId, APPROVE_REQUISITION);
-      assertThat(actual, is(nullValue()));
+    User actual = supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(supervisoryNode, program);
 
-    }
+    verify(userRepository).getUsersWithRightInNodeForProgram(program, supervisoryNode, APPROVE_REQUISITION);
+    assertThat(actual, is(nullValue()));
+
+  }
 }

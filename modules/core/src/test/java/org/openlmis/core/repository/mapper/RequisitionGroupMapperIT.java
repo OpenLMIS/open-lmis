@@ -105,7 +105,7 @@ public class RequisitionGroupMapperIT {
     requisitionGroupMember.setModifiedBy("User");
     requisitionGroupMemberMapper.insert(requisitionGroupMember);
 
-    assertThat(requisitionGroupMapper.getRequisitionGroupForProgramAndFacility(requisitionGroupProgramSchedule.getProgram().getId(),
-        requisitionGroupMember.getFacility().getId()), is(requisitionGroup));
+    assertThat(requisitionGroupMapper.getRequisitionGroupForProgramAndFacility(requisitionGroupProgramSchedule.getProgram(),
+        requisitionGroupMember.getFacility()), is(requisitionGroup));
   }
 }

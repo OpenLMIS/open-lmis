@@ -7,9 +7,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.openlmis.core.builder.RequisitionGroupBuilder;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.ProcessingSchedule;
-import org.openlmis.core.domain.RequisitionGroup;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProcessingPeriodRepository;
 import org.openlmis.core.repository.ProcessingScheduleRepository;
@@ -180,7 +178,7 @@ public class ProcessingScheduleServiceTest {
     RequisitionGroup requisitionGroup = make(a(RequisitionGroupBuilder.defaultRequisitionGroup));
     requisitionGroup.setId(requisitionGroupId);
 
-    when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(programId, facilityId)).thenReturn(requisitionGroup);
+    when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(new Program(programId), new Facility(facilityId))).thenReturn(requisitionGroup);
     when(requisitionGroupProgramScheduleRepository.getScheduleIdForRequisitionGroupAndProgram(requisitionGroupId, programId)).thenReturn(scheduleId);
     when(periodRepository.getAllPeriodsAfterDateAndPeriod(any(Integer.class), any(Integer.class), any(Date.class), any(Date.class))).thenReturn(periodList);
 
@@ -191,7 +189,7 @@ public class ProcessingScheduleServiceTest {
 
   @Test
   public void shouldThrowExceptionWhenNoRequisitionGroupExistsForAFacilityAndProgram() throws Exception {
-    when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(1, 2)).thenReturn(null);
+    when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(new Program(1), new Facility(2))).thenReturn(null);
     expectedException.expect(DataException.class);
     expectedException.expectMessage(ProcessingScheduleService.NO_REQUISITION_GROUP_ERROR);
 
@@ -212,11 +210,12 @@ public class ProcessingScheduleServiceTest {
   @Test
   public void shouldGetImmediatePreviousPeriod() throws Exception {
     ProcessingPeriod expected = new ProcessingPeriod();
-    when(periodRepository.getImmediatePreviousPeriod(1)).thenReturn(expected);
+    ProcessingPeriod period = new ProcessingPeriod(1);
+    when(periodRepository.getImmediatePreviousPeriod(period)).thenReturn(expected);
 
-    ProcessingPeriod immediatePreviousPeriod = service.getImmediatePreviousPeriod(1);
+    ProcessingPeriod immediatePreviousPeriod = service.getImmediatePreviousPeriod(period);
 
-    verify(periodRepository).getImmediatePreviousPeriod(1);
+    verify(periodRepository).getImmediatePreviousPeriod(period);
     assertThat(immediatePreviousPeriod, is(expected));
   }
 }

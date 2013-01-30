@@ -17,7 +17,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,9 +26,7 @@ import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
-import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
-import static org.openlmis.rnr.builder.RnrLineItemBuilder.fullSupply;
-import static org.openlmis.rnr.builder.RnrLineItemBuilder.productCode;
+import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -106,9 +103,9 @@ public class RequisitionMapperIT {
     lineItemMapper.insert(nonFullSupplyLineItem);
     Rnr fetchedRequisition = mapper.getById(requisition.getId());
     assertThat(fetchedRequisition.getId(), is(requisition.getId()));
-    assertThat(fetchedRequisition.getProgramId(), is(equalTo(PROGRAM_ID)));
-    assertThat(fetchedRequisition.getFacilityId(), is(equalTo(facility.getId())));
-    assertThat(fetchedRequisition.getPeriodId(), is(equalTo(processingPeriod1.getId())));
+    assertThat(fetchedRequisition.getProgram().getId(), is(equalTo(PROGRAM_ID)));
+    assertThat(fetchedRequisition.getFacility().getId(), is(equalTo(facility.getId())));
+    assertThat(fetchedRequisition.getPeriod().getId(), is(equalTo(processingPeriod1.getId())));
     assertThat(fetchedRequisition.getModifiedBy(), is(equalTo(MODIFIED_BY)));
     assertThat(fetchedRequisition.getStatus(), is(equalTo(INITIATED)));
     assertThat(fetchedRequisition.getLineItems().size(), is(1));
@@ -139,14 +136,15 @@ public class RequisitionMapperIT {
     insertRequisition(processingPeriod2, INITIATED);
     setupLineItem(requisition);
 
-    Rnr returnedRequisition = mapper.getRequisition(facility.getId(), PROGRAM_ID, processingPeriod1.getId());
+    Program program = new Program(PROGRAM_ID);
+    Rnr returnedRequisition = mapper.getRequisition(facility, program, processingPeriod1);
 
     assertThat(returnedRequisition.getLineItems().size(), is(1));
 
     assertThat(returnedRequisition.getId(), is(requisition.getId()));
-    assertThat(returnedRequisition.getFacilityId(), is(facility.getId()));
-    assertThat(returnedRequisition.getProgramId(), is(PROGRAM_ID));
-    assertThat(returnedRequisition.getPeriodId(), is(processingPeriod1.getId()));
+    assertThat(returnedRequisition.getFacility().getId(), is(facility.getId()));
+    assertThat(returnedRequisition.getProgram().getId(), is(PROGRAM_ID));
+    assertThat(returnedRequisition.getPeriod().getId(), is(processingPeriod1.getId()));
   }
 
   @Test
@@ -158,7 +156,7 @@ public class RequisitionMapperIT {
     assertThat(returnedRequisition.getLineItems().size(), is(1));
     final RnrLineItem item = returnedRequisition.getLineItems().get(0);
     assertThat(item.getLossesAndAdjustments().size(), is(1));
-    assertThat(returnedRequisition.getFacilityId(), is(requisition.getFacilityId()));
+    assertThat(returnedRequisition.getFacility().getId(), is(requisition.getFacility().getId()));
     assertThat(returnedRequisition.getStatus(), is(requisition.getStatus()));
     assertThat(returnedRequisition.getId(), is(requisition.getId()));
   }

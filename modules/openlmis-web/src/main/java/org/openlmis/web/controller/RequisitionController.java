@@ -1,7 +1,9 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.rnr.domain.Rnr;
@@ -64,7 +66,7 @@ public class RequisitionController extends BaseController {
   public ResponseEntity<OpenLmisResponse> get(@RequestParam("facilityId") Integer facilityId,
                                               @RequestParam("programId") Integer programId,
                                               @RequestParam("periodId") Integer periodId) {
-    return response(RNR, requisitionService.get(facilityId, programId, periodId));
+    return response(RNR, requisitionService.get(new Facility(facilityId), new Program(programId), new ProcessingPeriod(periodId)));
   }
 
   @RequestMapping(value = "/requisitions/{id}/save", method = PUT, headers = ACCEPT_JSON)
@@ -157,7 +159,7 @@ public class RequisitionController extends BaseController {
   private Rnr getRequisitionForCurrentPeriod(Integer facilityId, Integer programId, List<ProcessingPeriod> periodList) {
     if (periodList == null || periodList.isEmpty()) return null;
 
-    return requisitionService.get(facilityId, programId, periodList.get(0).getId());
+    return requisitionService.get(new Facility(facilityId), new Program(programId) , periodList.get(0));
   }
 
   @RequestMapping(value = "/requisitions-for-approval/{id}", method = GET, headers = ACCEPT_JSON)

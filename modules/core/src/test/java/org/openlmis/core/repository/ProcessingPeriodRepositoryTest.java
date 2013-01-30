@@ -172,8 +172,9 @@ public class ProcessingPeriodRepositoryTest {
   public void shouldGetImmediatePreviousPeriod() throws Exception {
     ProcessingPeriod previousPeriod = new ProcessingPeriod();
 
-    when(mapper.getImmediatePreviousPeriodFor(1)).thenReturn(previousPeriod);
+    ProcessingPeriod period = new ProcessingPeriod(1);
+    when(mapper.getImmediatePreviousPeriodFor(period)).thenReturn(previousPeriod);
 
-    assertThat(repository.getImmediatePreviousPeriod(1), is(previousPeriod));
+    assertThat(repository.getImmediatePreviousPeriod(period), is(previousPeriod));
   }
 }

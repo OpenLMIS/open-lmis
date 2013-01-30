@@ -1,9 +1,7 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.Right;
-import org.openlmis.core.domain.SupervisoryNode;
-import org.openlmis.core.domain.User;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.core.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,19 +32,19 @@ public class SupervisoryNodeService {
     return supervisoryNodeRepository.getAllSupervisoryNodesInHierarchyBy(userId, programId, rights);
   }
 
-  public SupervisoryNode getFor(int facilityId, int programId) {
-    return supervisoryNodeRepository.getFor(facilityId, programId);
+  public SupervisoryNode getFor(Facility facility, Program program) {
+    return supervisoryNodeRepository.getFor(facility, program);
   }
 
-  public User getApproverFor(Integer facilityId, Integer programId) {
-    SupervisoryNode supervisoryNode = supervisoryNodeRepository.getFor(facilityId, programId);
+  public User getApproverFor(Facility facility, Program program) {
+    SupervisoryNode supervisoryNode = supervisoryNodeRepository.getFor(facility, program);
     if(supervisoryNode == null ) return  null;
-    Integer supervisoryNodeId = supervisoryNode.getId();
 
     List<User> users;
-    while ((users = userRepository.getUsersWithRightInNodeForProgram(programId, supervisoryNodeId, APPROVE_REQUISITION)).size() == 0) {
-      supervisoryNodeId = supervisoryNodeRepository.getSupervisoryNodeParentId(supervisoryNodeId);
+    while ((users = userRepository.getUsersWithRightInNodeForProgram(program, supervisoryNode, APPROVE_REQUISITION)).size() == 0) {
+      Integer supervisoryNodeId = supervisoryNodeRepository.getSupervisoryNodeParentId(supervisoryNode.getId());
       if(supervisoryNodeId == null) return null;
+      supervisoryNode= new SupervisoryNode(supervisoryNodeId);
     }
 
     return users.get(0);
@@ -58,8 +56,8 @@ public class SupervisoryNodeService {
     return supervisoryNodeRepository.getParent(id);
   }
 
-  public User getApproverForGivenSupervisoryNodeAndProgram(Integer supervisoryNodeId, Integer programId) {
-    List<User> users = userRepository.getUsersWithRightInNodeForProgram(supervisoryNodeId, programId, APPROVE_REQUISITION);
+  public User getApproverForGivenSupervisoryNodeAndProgram(SupervisoryNode supervisoryNode, Program program) {
+    List<User> users = userRepository.getUsersWithRightInNodeForProgram(program, supervisoryNode, APPROVE_REQUISITION);
     if(users.size() ==0 ) return null;
     return users.get(0);
   }

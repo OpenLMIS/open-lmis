@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.RequisitionGroupBuilder;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.RequisitionGroupMember;
 import org.openlmis.core.exception.DataException;
@@ -19,9 +20,7 @@ import org.openlmis.core.repository.mapper.RequisitionGroupProgramScheduleMapper
 
 import java.util.ArrayList;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -30,7 +29,8 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.builder.FacilityBuilder.FACILITY_CODE;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
-import static org.openlmis.core.builder.ProgramBuilder.*;
+import static org.openlmis.core.builder.ProgramBuilder.PROGRAM_CODE;
+import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -134,10 +134,11 @@ public class RequisitionGroupMemberRepositoryTest {
 
     when(requisitionGroupMemberMapper.getRequisitionGroupProgramIdsForId(FACILITY_ID)).thenReturn(requisitionGroupProgramIdsForFacility);
 
-    when(programMapper.getById(commonProgramId)).thenReturn(make(a(defaultProgram)));
+    Program commonProgram = make(a(defaultProgram));
+    when(programMapper.getById(commonProgramId)).thenReturn(commonProgram);
 
     RequisitionGroup rg = make(a(defaultRequisitionGroup, with(RequisitionGroupBuilder.code, "DCODE")));
-    when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(commonProgramId, FACILITY_ID)).thenReturn(rg);
+    when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(commonProgram, requisitionGroupMember.getFacility())).thenReturn(rg);
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Facility " + FACILITY_CODE + " is already assigned to Requisition Group DCODE running same program " + PROGRAM_CODE);

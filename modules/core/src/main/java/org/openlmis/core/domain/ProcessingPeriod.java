@@ -1,11 +1,13 @@
 package org.openlmis.core.domain;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
 
 import java.util.Date;
 
 @Data
+@NoArgsConstructor
 public class ProcessingPeriod {
 
   private Integer id;
@@ -18,6 +20,10 @@ public class ProcessingPeriod {
   private Date endDate;
   private Integer numberOfMonths;
   private Date modifiedDate;
+
+  public ProcessingPeriod(Integer id) {
+    this.id = id;
+  }
 
   public void validate() {
     if (scheduleId == null || scheduleId == 0)

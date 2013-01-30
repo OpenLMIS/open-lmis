@@ -3,12 +3,15 @@ package org.openlmis.rnr.domain;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.openlmis.rnr.builder.RequisitionBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
 
@@ -38,4 +41,18 @@ public class RnrTest {
 
   }
 
+  @Test
+  public void shouldFillNormalizedConsumptionsFromPreviousTwoPeriodsRnr() throws Exception {
+    Rnr rnr = make(a(RequisitionBuilder.defaultRnr));
+
+    final Rnr lastPeriodsRnr = make(a(RequisitionBuilder.defaultRnr));
+    lastPeriodsRnr.getLineItems().get(0).setNormalizedConsumption(1);
+
+    final Rnr secondLastPeriodsRnr = make(a(RequisitionBuilder.defaultRnr));
+    secondLastPeriodsRnr.getLineItems().get(0).setNormalizedConsumption(2);
+
+    rnr.fillLastTwoPeriodsNormalizedConsumptions(lastPeriodsRnr, secondLastPeriodsRnr);
+
+    assertThat(rnr.getLineItems().get(0).getPreviousNormalizedConsumptions().size(),is(2));
+  }
 }

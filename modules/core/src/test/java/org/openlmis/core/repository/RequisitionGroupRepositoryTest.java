@@ -6,6 +6,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.MockitoAnnotations.Mock;
 import org.openlmis.core.builder.RequisitionGroupBuilder;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.exception.DataException;
@@ -73,7 +75,9 @@ public class RequisitionGroupRepositoryTest {
 
   @Test
   public void shouldGetRequisitionGroupForFacilityAndProgram() throws Exception {
-    repository.getRequisitionGroupForProgramAndFacility(1, 1);
-    verify(mapper).getRequisitionGroupForProgramAndFacility(1, 1);
+    Facility facility = new Facility(1);
+    Program program = new Program(1);
+    repository.getRequisitionGroupForProgramAndFacility(program, facility);
+    verify(mapper).getRequisitionGroupForProgramAndFacility(program, facility);
   }
 }

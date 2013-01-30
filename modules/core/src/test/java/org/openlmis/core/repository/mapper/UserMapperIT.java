@@ -86,7 +86,7 @@ public class UserMapperIT {
 
     insertRoleAssignments(program, someUser, role, supervisoryNode);
 
-    final List<User> users = userMapper.getUsersWithRightInNodeForProgram(program.getId(), supervisoryNode.getId(), Right.APPROVE_REQUISITION);
+    final List<User> users = userMapper.getUsersWithRightInNodeForProgram(program, supervisoryNode, Right.APPROVE_REQUISITION);
     someUser.setPassword(null);
     assertThat(users, hasItem(someUser));
   }

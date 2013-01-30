@@ -65,7 +65,7 @@ public class ProcessingPeriodRepository {
     return mapper.getById(id);
   }
 
-  public ProcessingPeriod getImmediatePreviousPeriod(Integer periodId) {
-    return mapper.getImmediatePreviousPeriodFor(periodId);
+  public ProcessingPeriod getImmediatePreviousPeriod(ProcessingPeriod period) {
+    return mapper.getImmediatePreviousPeriodFor(period);
   }
 }

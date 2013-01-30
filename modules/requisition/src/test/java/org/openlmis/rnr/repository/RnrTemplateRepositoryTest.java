@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.Program;
 import org.openlmis.rnr.domain.ProgramRnrTemplate;
 import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.repository.mapper.RnrColumnMapper;
@@ -78,9 +79,10 @@ public class RnrTemplateRepositoryTest {
   public void shouldReturnFormulaValidatedFlag() throws Exception {
     boolean expectedFormulaValidated = true;
     Integer programId = 1;
-    when(rnrColumnMapper.isFormulaValidationRequired(programId)).thenReturn(expectedFormulaValidated);
+    Program program = new Program(programId);
+    when(rnrColumnMapper.isFormulaValidationRequired(program)).thenReturn(expectedFormulaValidated);
 
-    boolean formulaValidatedResult = rnrRepository.isFormulaValidationRequired(programId);
+    boolean formulaValidatedResult = rnrRepository.isFormulaValidationRequired(program);
 
     assertThat(formulaValidatedResult, is(expectedFormulaValidated));
   }

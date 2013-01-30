@@ -1,7 +1,9 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.Right;
+import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
 import org.springframework.stereotype.Repository;
 
@@ -32,9 +34,9 @@ public interface UserMapper {
 
   @Select({"SELECT id, userName, facilityId, firstName, lastName, employeeId, jobTitle, primaryNotificationMethod, officePhone, cellPhone, email, supervisorId " +
     "FROM users U INNER JOIN role_assignments RA ON U.id = RA.userId INNER JOIN role_rights RR ON RA.roleId = RR.roleId ",
-    "WHERE RA.programId = #{programId} AND RA.supervisoryNodeId = #{supervisoryNodeId} AND RR.rightName = #{right}"})
+    "WHERE RA.programId = #{program.id} AND RA.supervisoryNodeId = #{supervisoryNode.id} AND RR.rightName = #{right}"})
   @Results(@Result(property = "supervisor.id", column = "supervisorId"))
-  List<User> getUsersWithRightInNodeForProgram(@Param("programId") Integer programId, @Param("supervisoryNodeId") Integer supervisoryNodeId, @Param("right") Right right);
+  List<User> getUsersWithRightInNodeForProgram(@Param("program") Program program, @Param("supervisoryNode") SupervisoryNode supervisoryNode, @Param("right") Right right);
 
   @Select(value = "SELECT id,firstName,lastName,email FROM users where LOWER(firstName) like '%'|| LOWER(#{userSearchParam}) ||'%' OR LOWER(lastName) like '%'|| LOWER(#{userSearchParam}) ||'%' OR LOWER(email) like '%'|| LOWER(#{userSearchParam}) ||'%'")
   List<User> getUserWithSearchedName(String userSearchParam);

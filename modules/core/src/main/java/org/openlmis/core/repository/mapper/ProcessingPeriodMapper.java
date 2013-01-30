@@ -52,7 +52,7 @@ public interface ProcessingPeriodMapper {
   @Select({"SELECT * FROM processing_periods pp INNER JOIN processing_periods cp",
     "ON DATE(pp.endDate) =  (DATE(cp.startDate)-1)",
     "WHERE pp.scheduleId = cp.scheduleId",
-    "AND cp.id = #{periodId}",
+    "AND cp.id = #{id}",
     "AND pp.id <> cp.id"})
-  ProcessingPeriod getImmediatePreviousPeriodFor(Integer periodId);
+  ProcessingPeriod getImmediatePreviousPeriodFor(ProcessingPeriod period);
 }

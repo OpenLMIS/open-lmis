@@ -2,6 +2,7 @@ package org.openlmis.rnr.repository.mapper;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openlmis.core.domain.Program;
 import org.openlmis.rnr.domain.RnRColumnSource;
 import org.openlmis.rnr.domain.RnrColumn;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,7 +104,7 @@ public class ProgramRnrColumnMapperIT {
     addProgramRnrColumn(quantityDispensed, 1, true, "Col1", USER_INPUT, true);
     addProgramRnrColumn(stockInHand, 2, true, "Col2", CALCULATED, true);
 
-    assertThat(rnrColumnMapper.isFormulaValidationRequired(PROGRAM_ID), is(true));
+    assertThat(rnrColumnMapper.isFormulaValidationRequired(new Program(PROGRAM_ID)), is(true));
 
   }
 
@@ -115,7 +116,7 @@ public class ProgramRnrColumnMapperIT {
     addProgramRnrColumn(quantityDispensed, 1, true, "Col1", USER_INPUT, false);
     addProgramRnrColumn(stockInHand, 2, true, "Col2", CALCULATED, false);
 
-    assertThat(rnrColumnMapper.isFormulaValidationRequired(PROGRAM_ID), is(false));
+    assertThat(rnrColumnMapper.isFormulaValidationRequired(new Program(PROGRAM_ID)), is(false));
 
   }
 

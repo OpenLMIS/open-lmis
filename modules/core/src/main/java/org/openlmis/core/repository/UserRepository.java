@@ -1,7 +1,9 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.Right;
+import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
@@ -31,8 +33,8 @@ public class UserRepository {
     this.userMapper = userMapper;
   }
 
-  public List<User> getUsersWithRightInNodeForProgram(Integer programId, Integer nodeId, Right right) {
-    return userMapper.getUsersWithRightInNodeForProgram(programId, nodeId, right);
+  public List<User> getUsersWithRightInNodeForProgram(Program program, SupervisoryNode node, Right right) {
+    return userMapper.getUsersWithRightInNodeForProgram(program, node, right);
   }
 
   public void insert(User user) {

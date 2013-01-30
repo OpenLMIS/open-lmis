@@ -1,9 +1,7 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.ProcessingSchedule;
-import org.openlmis.core.domain.RequisitionGroup;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProcessingPeriodRepository;
 import org.openlmis.core.repository.ProcessingScheduleRepository;
@@ -66,7 +64,7 @@ public class ProcessingScheduleService {
   }
 
   public List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriod(Integer facilityId, Integer programId, Date programStartDate, Integer startingPeriod) {
-    RequisitionGroup requisitionGroup = requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(programId, facilityId);
+    RequisitionGroup requisitionGroup = requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(new Program(programId), new Facility(facilityId));
     if (requisitionGroup == null)
       throw new DataException(NO_REQUISITION_GROUP_ERROR);
 
@@ -74,11 +72,11 @@ public class ProcessingScheduleService {
     return periodRepository.getAllPeriodsAfterDateAndPeriod(scheduleId, startingPeriod, programStartDate, new Date());
   }
 
-  public ProcessingPeriod getPeriodById(Integer periodId){
+  public ProcessingPeriod getPeriodById(Integer periodId) {
     return periodRepository.getById(periodId);
   }
 
-  public ProcessingPeriod getImmediatePreviousPeriod(Integer periodId) {
-    return periodRepository.getImmediatePreviousPeriod(periodId);
+  public ProcessingPeriod getImmediatePreviousPeriod(ProcessingPeriod period) {
+    return periodRepository.getImmediatePreviousPeriod(period);
   }
 }

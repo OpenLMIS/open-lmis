@@ -1,6 +1,7 @@
 package org.openlmis.rnr.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.Program;
 import org.openlmis.rnr.domain.RnrColumn;
 import org.springframework.stereotype.Repository;
 
@@ -49,6 +50,6 @@ public interface RnrColumnMapper {
     List<RnrColumn> fetchAllMasterRnRColumns();
 
 
-  @Select({"SELECT COUNT(DISTINCT(true)) = 1 FROM program_rnr_columns WHERE formulaValidationRequired = TRUE AND programId = #{programId}"})
-  boolean isFormulaValidationRequired(int programId);
+  @Select({"SELECT COUNT(DISTINCT(true)) = 1 FROM program_rnr_columns WHERE formulaValidationRequired = TRUE AND programId = #{id}"})
+  boolean isFormulaValidationRequired(Program program);
 }

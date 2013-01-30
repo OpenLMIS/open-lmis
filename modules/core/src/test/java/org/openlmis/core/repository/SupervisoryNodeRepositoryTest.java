@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.exception.DataException;
@@ -149,25 +150,25 @@ public class SupervisoryNodeRepositoryTest {
 
   @Test
   public void shouldGetSupervisoryNodeForFacilityProgram() throws Exception {
-    int facilityId = 1;
-    int programId = 1;
+    Facility facility = new Facility(1);
+    Program program = new Program(1);
     SupervisoryNode expectedSupervisoryNode = new SupervisoryNode();
     RequisitionGroup requisitionGroup = make(a(defaultRequisitionGroup, with(code, "test code")));
-    when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(facilityId, programId)).thenReturn(requisitionGroup);
+    when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(program, facility)).thenReturn(requisitionGroup);
     when(supervisoryNodeMapper.getFor(requisitionGroup.getCode())).thenReturn(expectedSupervisoryNode);
 
-    SupervisoryNode actualSupervisoryNode = repository.getFor(facilityId, programId);
+    SupervisoryNode actualSupervisoryNode = repository.getFor(facility, program);
 
     assertThat(actualSupervisoryNode, is(expectedSupervisoryNode));
   }
 
   @Test
   public void shouldReturnSupervisoryNodeAsNullWhenThereIsNoScheduleForAGivenRequisitionGroupAndProgram() throws Exception {
-    int facilityId = 1;
-    int programId = 1;
-    when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(facilityId, programId)).thenReturn(null);
+    Facility facility = new Facility(1);
+    Program program = new Program(1);
+    when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(program, facility)).thenReturn(null);
 
-    SupervisoryNode actualSupervisoryNode = repository.getFor(facilityId, programId);
+    SupervisoryNode actualSupervisoryNode = repository.getFor(facility, program);
 
     assertThat(actualSupervisoryNode, is(nullValue()));
   }

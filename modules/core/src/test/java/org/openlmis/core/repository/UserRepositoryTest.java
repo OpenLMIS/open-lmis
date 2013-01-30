@@ -9,6 +9,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.UserBuilder;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.UserMapper;
@@ -17,9 +19,7 @@ import org.springframework.dao.DuplicateKeyException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -48,11 +48,13 @@ public class UserRepositoryTest {
   @Test
   public void shouldGetUsersWithRightInNodeForProgram() throws Exception {
     List<User> users = new ArrayList<>();
-    when(userMapper.getUsersWithRightInNodeForProgram(1, 1, APPROVE_REQUISITION)).thenReturn(users);
+    SupervisoryNode node = new SupervisoryNode(1);
+    Program program = new Program(1);
+    when(userMapper.getUsersWithRightInNodeForProgram(program, node, APPROVE_REQUISITION)).thenReturn(users);
 
-    List<User> result = userRepository.getUsersWithRightInNodeForProgram(1, 1, APPROVE_REQUISITION);
+    List<User> result = userRepository.getUsersWithRightInNodeForProgram(program, node, APPROVE_REQUISITION);
 
-    verify(userMapper).getUsersWithRightInNodeForProgram(1, 1, APPROVE_REQUISITION);
+    verify(userMapper).getUsersWithRightInNodeForProgram(program, node, APPROVE_REQUISITION);
     assertThat(result, is(users));
   }
 

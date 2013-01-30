@@ -1,6 +1,8 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.springframework.stereotype.Repository;
 
@@ -32,7 +34,7 @@ public interface RequisitionGroupMapper {
       "FROM requisition_groups rg " +
       "INNER JOIN requisition_group_program_schedules rgps ON rg.id = rgps.requisitionGroupId " +
       "INNER JOIN requisition_group_members rgm ON rgps.requisitionGroupId = rgm.requisitionGroupId " +
-      "WHERE rgps.programId = #{programId} " +
-      "AND RGM.facilityId = #{facilityId}")
-  RequisitionGroup getRequisitionGroupForProgramAndFacility(@Param(value = "programId") Integer programId, @Param(value = "facilityId") Integer facilityId);
+      "WHERE rgps.programId = #{program.id} " +
+      "AND RGM.facilityId = #{facility.id}")
+  RequisitionGroup getRequisitionGroupForProgramAndFacility(@Param(value = "program") Program program, @Param(value = "facility") Facility facility);
 }

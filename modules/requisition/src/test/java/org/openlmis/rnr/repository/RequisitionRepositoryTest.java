@@ -7,6 +7,9 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
@@ -65,9 +68,10 @@ public class RequisitionRepositoryTest {
     rnr.add(rnrLineItem2, true);
     rnrLineItem1.addLossesAndAdjustments(lossAndAdjustmentForLineItem);
     rnrLineItem2.addLossesAndAdjustments(lossAndAdjustmentForLineItem);
-    rnr.setFacilityId(FACILITY_ID);
-    rnr.setProgramId(PROGRAM_ID);
-    rnr.setPeriodId(PERIOD_ID);
+
+    rnr.setFacility(new Facility(FACILITY_ID));
+    rnr.setProgram(new Program(PROGRAM_ID));
+    rnr.setPeriod(new ProcessingPeriod(PERIOD_ID));
     rnr.setStatus(INITIATED);
   }
 
@@ -97,14 +101,16 @@ public class RequisitionRepositoryTest {
 
   @Test
   public void shouldReturnRnrAndItsLineItems() {
-    int modifiedBy = 1;
-    Rnr initiatedRequisition = new Rnr(FACILITY_ID, HIV, PERIOD_ID, modifiedBy);
+    Facility facility = new Facility(FACILITY_ID);
+    Program hivProgram = new Program(HIV);
+    ProcessingPeriod period = new ProcessingPeriod(PERIOD_ID);
+    Rnr initiatedRequisition = new Rnr(facility, hivProgram, period);
     initiatedRequisition.setId(1);
-    when(requisitionMapper.getRequisition(FACILITY_ID, HIV, PERIOD_ID)).thenReturn(initiatedRequisition);
+    when(requisitionMapper.getRequisition(facility, hivProgram, period)).thenReturn(initiatedRequisition);
     List<RnrLineItem> lineItems = new ArrayList<>();
     when(rnrLineItemMapper.getRnrLineItemsByRnrId(1)).thenReturn(lineItems);
 
-    Rnr rnr = requisitionRepository.getRequisition(FACILITY_ID, HIV, PERIOD_ID);
+    Rnr rnr = requisitionRepository.getRequisition(facility, hivProgram, period);
 
     assertThat(rnr, is(equalTo(initiatedRequisition)));
     assertThat(rnr.getLineItems(), is(equalTo(lineItems)));
@@ -113,8 +119,10 @@ public class RequisitionRepositoryTest {
   @Test
   public void shouldReturnNullIfRnrNotDefined() {
     Rnr expectedRnr = null;
-    when(requisitionMapper.getRequisition(FACILITY_ID, HIV, null)).thenReturn(expectedRnr);
-    Rnr rnr = requisitionRepository.getRequisition(FACILITY_ID, HIV, null);
+    Facility facility = new Facility(FACILITY_ID);
+    Program program = new Program(HIV);
+    when(requisitionMapper.getRequisition(facility, program, null)).thenReturn(expectedRnr);
+    Rnr rnr = requisitionRepository.getRequisition(facility, program, null);
     assertThat(rnr, is(expectedRnr));
   }
 

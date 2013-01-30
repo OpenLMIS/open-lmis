@@ -63,7 +63,7 @@ public class RequisitionGroupMemberRepository {
     if (commonProgramsId.size() > 0) {
       Program duplicateProgram = programMapper.getById(commonProgramsId.get(0));
       duplicateProgram.setId(commonProgramsId.get(0));
-      RequisitionGroup requisitionGroup = requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(duplicateProgram.getId(), requisitionGroupMember.getFacility().getId());
+      RequisitionGroup requisitionGroup = requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(duplicateProgram, requisitionGroupMember.getFacility());
       throw new DataException(String.format("Facility %s is already assigned to Requisition Group %s running same program %s",
           requisitionGroupMember.getFacility().getCode(), requisitionGroup.getCode(), duplicateProgram.getCode()));
     }

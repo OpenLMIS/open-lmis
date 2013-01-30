@@ -1,6 +1,7 @@
 package org.openlmis.rnr.repository;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Program;
 import org.openlmis.rnr.domain.ProgramRnrTemplate;
 import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.repository.mapper.RnrColumnMapper;
@@ -60,7 +61,7 @@ public class RnrTemplateRepository {
     return rnrColumnMapper.isRnrTemplateDefined(programId);
   }
 
-  public boolean isFormulaValidationRequired(Integer programId) {
-    return rnrColumnMapper.isFormulaValidationRequired(programId);
+  public boolean isFormulaValidationRequired(Program program) {
+    return rnrColumnMapper.isFormulaValidationRequired(program);
   }
 }

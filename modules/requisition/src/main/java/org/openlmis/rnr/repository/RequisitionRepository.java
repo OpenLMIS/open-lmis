@@ -1,6 +1,9 @@
 package org.openlmis.rnr.repository;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.LossesAndAdjustments;
@@ -68,8 +71,8 @@ public class RequisitionRepository {
     }
   }
 
-  public Rnr getRequisition(Integer facilityId, Integer programId, Integer periodId) {
-    return mapper.getRequisition(facilityId, programId, periodId);
+  public Rnr getRequisition(Facility facility, Program program, ProcessingPeriod period) {
+    return mapper.getRequisition(facility, program, period);
   }
 
   public List<LossesAndAdjustmentsType> getLossesAndAdjustmentsTypes() {
