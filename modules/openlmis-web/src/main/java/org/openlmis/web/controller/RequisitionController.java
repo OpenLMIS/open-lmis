@@ -124,9 +124,9 @@ public class RequisitionController extends BaseController {
   @PreAuthorize("hasPermission('', 'APPROVE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> approve(@RequestBody Rnr rnr, HttpServletRequest request) {
     rnr.setModifiedBy(loggedInUserId(request));
-    try{
-    return OpenLmisResponse.success(requisitionService.approve(rnr));
-    }catch (DataException dataException){
+    try {
+      return OpenLmisResponse.success(requisitionService.approve(rnr));
+    } catch (DataException dataException) {
       return OpenLmisResponse.error(dataException, HttpStatus.BAD_REQUEST);
     }
   }
@@ -142,8 +142,8 @@ public class RequisitionController extends BaseController {
   @RequestMapping(value = "/logistics/facility/{facilityId}/program/{programId}/periods", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("hasPermission('','CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(
-      @PathVariable("facilityId") Integer facilityId,
-      @PathVariable("programId") Integer programId) {
+    @PathVariable("facilityId") Integer facilityId,
+    @PathVariable("programId") Integer programId) {
     try {
       List<ProcessingPeriod> periodList = requisitionService.getAllPeriodsForInitiatingRequisition(facilityId, programId);
       Rnr currentRequisition = getRequisitionForCurrentPeriod(facilityId, programId, periodList);
@@ -155,11 +155,9 @@ public class RequisitionController extends BaseController {
     }
   }
 
-
   private Rnr getRequisitionForCurrentPeriod(Integer facilityId, Integer programId, List<ProcessingPeriod> periodList) {
     if (periodList == null || periodList.isEmpty()) return null;
-
-    return requisitionService.get(new Facility(facilityId), new Program(programId) , periodList.get(0));
+    return requisitionService.get(new Facility(facilityId), new Program(programId), periodList.get(0));
   }
 
   @RequestMapping(value = "/requisitions-for-approval/{id}", method = GET, headers = ACCEPT_JSON)

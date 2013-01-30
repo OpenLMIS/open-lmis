@@ -121,23 +121,23 @@ public class RequisitionService {
   private boolean isUserAllowedToSave(Rnr rnr) {
     List<Right> userRights = roleRightsService.getRights(rnr.getModifiedBy());
     return (rnr.getStatus() == INITIATED && userRights.contains(CREATE_REQUISITION)) ||
-        (rnr.getStatus() == SUBMITTED && userRights.contains(AUTHORIZE_REQUISITION)) ||
-        (rnr.getStatus() == AUTHORIZED && userRights.contains(APPROVE_REQUISITION)) ||
-        (rnr.getStatus() == IN_APPROVAL && userRights.contains(APPROVE_REQUISITION));
+      (rnr.getStatus() == SUBMITTED && userRights.contains(AUTHORIZE_REQUISITION)) ||
+      (rnr.getStatus() == AUTHORIZED && userRights.contains(APPROVE_REQUISITION)) ||
+      (rnr.getStatus() == IN_APPROVAL && userRights.contains(APPROVE_REQUISITION));
   }
 
   public Rnr get(Facility facility, Program program, ProcessingPeriod period) {
-
     Rnr requisition = requisitionRepository.getRequisition(facility, program, period);
     fillPreviousTwoPeriodsNormalizedConsumptions(requisition);
+
     return requisition;
   }
 
   private void fillPreviousTwoPeriodsNormalizedConsumptions(Rnr requisition) {
+    if (requisition == null) return;
+
     Rnr lastPeriodsRnr = getLastPeriodsRnr(requisition);
-
     Rnr secondLastPeriodsRnr = getLastPeriodsRnr(lastPeriodsRnr);
-
     requisition.fillLastTwoPeriodsNormalizedConsumptions(lastPeriodsRnr, secondLastPeriodsRnr);
   }
 
