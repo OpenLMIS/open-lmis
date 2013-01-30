@@ -108,7 +108,7 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnRColum
   $scope.approveRnr = function () {
     $scope.approvedQuantityRequiredFlag = false;
     $($scope.lineItems).each(function (i, lineItem) {
-      if (lineItem.quantityApproved == undefined || lineItem.quantityApproved == "" || !isPositiveNumber(lineItem.quantityApproved)) {
+      if (lineItem.quantityApproved == undefined || !isPositiveNumber(lineItem.quantityApproved)) {
         $scope.approvedQuantityRequiredFlag = true;
         return false;
       }

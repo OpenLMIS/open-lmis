@@ -70,7 +70,7 @@ describe('Approve Requisition controller', function () {
 
   it('should not approve if any line item has empty approved quantity', function () {
     var lineItems = [
-      {'quantityApproved':''}
+      {'quantityApproved':undefined}
     ];
     scope.lineItems = lineItems;
     scope.requisition = {"id":"rnrId", 'lineItems':lineItems};
