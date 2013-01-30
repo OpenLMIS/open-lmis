@@ -33,7 +33,8 @@ describe("User", function () {
 
     it("should throw error when username contains space", function () {
       scope.user = {"userName":"User 420"};
-      expect(scope.validateUserName()).toBeTruthy();
+      scope.validateUserName();
+      expect(scope.userNameInvalid).toBeTruthy();
     });
 
     it("should get facilities when user enters 3 characters in search", function () {

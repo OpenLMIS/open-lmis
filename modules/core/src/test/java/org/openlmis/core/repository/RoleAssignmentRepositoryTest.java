@@ -5,9 +5,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.Role;
-import org.openlmis.core.domain.User;
 import org.openlmis.core.repository.mapper.RoleAssignmentMapper;
 
 import java.util.Arrays;
@@ -34,13 +31,9 @@ public class RoleAssignmentRepositoryTest {
 
   @Test
   public void shouldInsertUserProgramRoleMapping() throws Exception {
-    User user = new User();
-    Program program = new Program();
-    Role role = new Role();
+    repository.createUserProgramRoleAssignment(1, 2, 3);
 
-    repository.createUserProgramRoleAssignment(user, role, program, null);
-
-    verify(mapper).createRoleAssignment(user, role, program, null);
+    verify(mapper).createRoleAssignment(1, 2, 3, null);
   }
 
   @Test

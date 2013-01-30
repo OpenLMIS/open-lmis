@@ -53,7 +53,7 @@ public class UserService {
       roleAssignmentService.deleteAllRoleAssignmentsForUser(user.getId());
     }
 
-    roleAssignmentService.insertUserProgramRoleMapping(user, user.getProgramToRoleMappingList());
+    roleAssignmentService.insertUserProgramRoleMapping(user);
 
     if (createFlag) {
       EmailMessage emailMessage = accountCreatedEmailMessage(user.getEmail());
@@ -116,7 +116,7 @@ public class UserService {
 
   public User getById(Integer id) {
     User user = userRepository.getById(id);
-    user.setProgramToRoleMappingList(roleAssignmentService.getListOfProgramToRoleMappingForAUser(id));
+    user.setRoleAssignments(roleAssignmentService.getListOfProgramToRoleMappingForAUser(id));
     return user;
   }
 }

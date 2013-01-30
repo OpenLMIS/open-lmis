@@ -109,16 +109,10 @@ public class UserControllerTest {
     user.setFirstName("Shan");
     user.setLastName("Sharma");
 
-    ProgramToRoleMapping programToRoleMapping = new ProgramToRoleMapping();
-    Program program1 = new Program();
-    programToRoleMapping.setProgram(program1);
-    Role role1 = new Role();
-    Role[] roles = {role1};
-    programToRoleMapping.setRoles(Arrays.asList(roles));
-
-    List<ProgramToRoleMapping> listOfProgramToToRoleMapping = new ArrayList<>();
-    listOfProgramToToRoleMapping.add(programToRoleMapping);
-    user.setProgramToRoleMappingList(listOfProgramToToRoleMapping);
+    List<UserRoleAssignment> userRoleAssignments = new ArrayList<>();
+    UserRoleAssignment roleAssignment = new UserRoleAssignment(2, Arrays.asList(1, 2));
+    userRoleAssignments.add(roleAssignment);
+    user.setRoleAssignments(userRoleAssignments);
 
     httpServletRequest.getSession().setAttribute(USER_ID,userId);
     httpServletRequest.getSession().setAttribute(USER,USER);
@@ -142,16 +136,12 @@ public class UserControllerTest {
     httpServletRequest.getSession().setAttribute(USER_ID,userId);
     httpServletRequest.getSession().setAttribute(USER,USER);
 
-    ProgramToRoleMapping programToRoleMapping = new ProgramToRoleMapping();
-    Program program1 = new Program();
-    programToRoleMapping.setProgram(program1);
-    Role role1 = new Role();
-    Role[] roles = {role1};
-    programToRoleMapping.setRoles(Arrays.asList(roles));
+    List<UserRoleAssignment> userRoleAssignments = new ArrayList<>();
+    UserRoleAssignment roleAssignment = new UserRoleAssignment(2, Arrays.asList(1, 2));
+    userRoleAssignments.add(roleAssignment);
+    user.setRoleAssignments(userRoleAssignments);
 
-    List<ProgramToRoleMapping> listOfProgramToToRoleMapping = new ArrayList<>();
-    listOfProgramToToRoleMapping.add(programToRoleMapping);
-    user.setProgramToRoleMappingList(listOfProgramToToRoleMapping);
+    user.setRoleAssignments(userRoleAssignments);
 
     ResponseEntity<OpenLmisResponse> response = userController.save(user,httpServletRequest );
 

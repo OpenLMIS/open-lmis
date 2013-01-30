@@ -163,7 +163,8 @@ public class SupervisoryNodeMapperIT {
   }
 
   private Role insertRoleAssignments(Program program, User user, Role role, SupervisoryNode supervisoryNode) {
-    roleAssignmentMapper.createRoleAssignment(user, role, program, supervisoryNode);
+    Integer supervisoryNodeId = supervisoryNode == null ? null : supervisoryNode.getId();
+    roleAssignmentMapper.createRoleAssignment(user.getId(), role.getId(), program.getId(), supervisoryNodeId);
     return role;
   }
 

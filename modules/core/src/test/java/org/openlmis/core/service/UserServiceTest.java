@@ -7,10 +7,8 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramToRoleMapping;
-import org.openlmis.core.domain.Role;
 import org.openlmis.core.domain.User;
+import org.openlmis.core.domain.UserRoleAssignment;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.UserRepository;
 import org.openlmis.email.domain.EmailMessage;
@@ -75,19 +73,19 @@ public class UserServiceTest {
 
   @Test
   public void shouldSendForgotPasswordEmailIfUserEmailExists() throws Exception {
-      User user = new User();
-      user.setEmail("shibhama@thoughtworks.com");
+    User user = new User();
+    user.setEmail("shibhama@thoughtworks.com");
 
-      User userToBeReturned = new User();
-      userToBeReturned.setUserName("Admin");
-      userToBeReturned.setEmail("shibhama@thoughtworks.com");
-      userToBeReturned.setId(1111);
-      when(userRepository.getByEmail(user.getEmail())).thenReturn(userToBeReturned);
+    User userToBeReturned = new User();
+    userToBeReturned.setUserName("Admin");
+    userToBeReturned.setEmail("shibhama@thoughtworks.com");
+    userToBeReturned.setId(1111);
+    when(userRepository.getByEmail(user.getEmail())).thenReturn(userToBeReturned);
 
-      userService.sendForgotPasswordEmail(user);
+    userService.sendForgotPasswordEmail(user);
 
-      verify(emailService).send(any(EmailMessage.class));
-      verify(userRepository).getByEmail(user.getEmail());
+    verify(emailService).send(any(EmailMessage.class));
+    verify(userRepository).getByEmail(user.getEmail());
   }
 
   @Test
@@ -107,7 +105,7 @@ public class UserServiceTest {
   @Test
   public void shouldReturnSearchResultsWhenUserExists() throws Exception {
     User user = new User();
-    String userSearchParam="abc";
+    String userSearchParam = "abc";
     List<User> listOfUsers = Arrays.asList(new User());
 
     when(userRepository.searchUser(userSearchParam)).thenReturn(listOfUsers);
@@ -120,15 +118,15 @@ public class UserServiceTest {
   @Test
   public void shouldReturnUserIfIdExists() throws Exception {
     User user = new User();
-    List<ProgramToRoleMapping> programToRoleMappings = Arrays.asList(new ProgramToRoleMapping());
+    List<UserRoleAssignment> userRoleAssignments = Arrays.asList(new UserRoleAssignment());
 
     when(userRepository.getById(1)).thenReturn(user);
-    when(roleAssignmentService.getListOfProgramToRoleMappingForAUser(1)).thenReturn(programToRoleMappings);
+    when(roleAssignmentService.getListOfProgramToRoleMappingForAUser(1)).thenReturn(userRoleAssignments);
 
     User returnedUser = userService.getById(1);
 
-    assertThat(returnedUser,is(user));
-    assertThat(returnedUser.getProgramToRoleMappingList(), is(programToRoleMappings));
+    assertThat(returnedUser, is(user));
+    assertThat(returnedUser.getRoleAssignments(), is(userRoleAssignments));
   }
 
   @Test
@@ -143,22 +141,15 @@ public class UserServiceTest {
   @Test
   public void shouldSaveUserWithProgramRoleMapping() throws Exception {
     User user = new User();
-
-    ProgramToRoleMapping programToRoleMapping = new ProgramToRoleMapping();
-    Program program1 = new Program();
-    programToRoleMapping.setProgram(program1);
-    Role role1 = new Role();
-    Role[] roles = {role1};
-    programToRoleMapping.setRoles(Arrays.asList(roles));
-
-    List<ProgramToRoleMapping> listOfProgramToToRoleMapping = new ArrayList<>();
-    listOfProgramToToRoleMapping.add(programToRoleMapping);
-    user.setProgramToRoleMappingList(listOfProgramToToRoleMapping);
+    UserRoleAssignment userRoleAssignment = new UserRoleAssignment(1, Arrays.asList(2, 3));
+    List<UserRoleAssignment> userRoleAssignments = new ArrayList<>();
+    userRoleAssignments.add(userRoleAssignment);
+    user.setRoleAssignments(userRoleAssignments);
 
     userService.save(user);
 
     verify(userRepository).insert(user);
-    verify(roleAssignmentService).insertUserProgramRoleMapping(user, listOfProgramToToRoleMapping);
+    verify(roleAssignmentService).insertUserProgramRoleMapping(user);
 
     user.setId(1);
     userService.save(user);

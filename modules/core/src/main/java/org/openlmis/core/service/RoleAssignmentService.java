@@ -8,7 +8,8 @@ import org.openlmis.core.repository.RoleRightsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @NoArgsConstructor
@@ -28,14 +29,14 @@ public class RoleAssignmentService {
     this.programRepository = programRepository;
   }
 
-  private void createUserProgramRoleAssignment(User user, Role role, Program program, SupervisoryNode supervisoryNode) {
-    roleAssignmentRepository.createUserProgramRoleAssignment(user, role, program, supervisoryNode);
+  private void createUserProgramRoleAssignment(Integer userId, Integer roleId, Integer programId, Integer supervisoryNodeId) {
+    roleAssignmentRepository.createUserProgramRoleAssignment(userId, roleId, programId);
   }
 
-  public void insertUserProgramRoleMapping(User user, List<ProgramToRoleMapping> listOfProgramToToRoleMapping) {
-    for (ProgramToRoleMapping programRoleMapping : listOfProgramToToRoleMapping) {
-      for (Role role : programRoleMapping.getRoles()) {
-        createUserProgramRoleAssignment(user, role, programRoleMapping.getProgram(), null);//To-Do : This will be modified once supervisory node is added to create user screen
+  public void insertUserProgramRoleMapping(User user) {
+    for (UserRoleAssignment userRoleAssignment : user.getRoleAssignments()) {
+      for (Integer role : userRoleAssignment.getRoleIds()) {
+        createUserProgramRoleAssignment(user.getId(), role, userRoleAssignment.getProgramId(), null);//To-Do : This will be modified once supervisory node is added to create user screen
       }
     }
   }
@@ -44,19 +45,17 @@ public class RoleAssignmentService {
     roleAssignmentRepository.deleteAllRoleAssignmentsForUser(id);
   }
 
-  public List<ProgramToRoleMapping> getListOfProgramToRoleMappingForAUser(Integer userId) {
+  public List<UserRoleAssignment> getListOfProgramToRoleMappingForAUser(Integer userId) {
     List<Integer> listOfProgramIds = roleAssignmentRepository.getProgramsForWhichHasRoleAssignments(userId);
 
-    List<ProgramToRoleMapping> listOfProgramToRoleMapping = new ArrayList<>();
+    List<UserRoleAssignment> roleAssignmentsList = new ArrayList<>();
 
-
-    for(Integer programId:listOfProgramIds) {
-      ProgramToRoleMapping programToRoleMapping = new ProgramToRoleMapping();
-      programToRoleMapping.setProgram(programRepository.getById(programId));
-      programToRoleMapping.setRoles(roleAssignmentRepository.getRoleAssignmentsForAUserAndProgram(userId, programId));
-      listOfProgramToRoleMapping.add(programToRoleMapping);
+    for (Integer programId : listOfProgramIds) {
+      List<Integer> roleIds = roleAssignmentRepository.getRoleAssignmentsForAUserAndProgram(userId, programId);
+      UserRoleAssignment roleAssignments = new UserRoleAssignment(programId, roleIds);
+      roleAssignmentsList.add(roleAssignments);
     }
 
-    return listOfProgramToRoleMapping;
+    return roleAssignmentsList;
   }
 }

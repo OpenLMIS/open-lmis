@@ -1,17 +1,17 @@
 'use strict';
-angular.module('user', ['openlmis','ngGrid']).
-  config(['$routeProvider', function ($routeProvider) {
+angular.module('user', ['openlmis', 'ngGrid']).
+    config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
-    when('/search', {controller:UserSearchController, templateUrl:'partials/search.html'}).
-    when('/create-user', {controller:UserController, templateUrl:'partials/create.html'}).
-    when('/edit/:userId', {controller:UserController, templateUrl:'partials/create.html',resolve:UserController.resolve}).
-    otherwise({redirectTo:'/create-user'});
-}]).directive('onKeyup', function() {
-    return function(scope, elm, attrs) {
-      elm.bind("keyup", function() {
-        scope.$apply(attrs.onKeyup);
-      });
-    };
-  });
+      when('/search', {controller:UserSearchController, templateUrl:'partials/search.html'}).
+      when('/create-user', {controller:UserController, templateUrl:'partials/create.html'}).
+      when('/edit/:userId', {controller:UserController, templateUrl:'partials/create.html'}).
+      otherwise({redirectTo:'/create-user'});
+}]).directive('onKeyup', function () {
+      return function (scope, elm, attrs) {
+        elm.bind("keyup", function () {
+          scope.$apply(attrs.onKeyup);
+        });
+      };
+    });
 
 

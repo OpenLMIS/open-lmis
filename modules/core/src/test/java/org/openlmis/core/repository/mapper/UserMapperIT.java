@@ -84,7 +84,7 @@ public class UserMapperIT {
     Role role = insertRole();
     roleRightsMapper.createRoleRight(role.getId(), APPROVE_REQUISITION);
 
-    insertRoleAssignments(program, someUser, role, supervisoryNode);
+    roleAssignmentMapper.createRoleAssignment(someUser.getId(), role.getId(), program.getId(), supervisoryNode.getId());
 
     final List<User> users = userMapper.getUsersWithRightInNodeForProgram(program, supervisoryNode, Right.APPROVE_REQUISITION);
     someUser.setPassword(null);
@@ -200,8 +200,4 @@ public class UserMapperIT {
     return r1;
   }
 
-  private Role insertRoleAssignments(Program program, User user, Role role, SupervisoryNode supervisoryNode) {
-    roleAssignmentMapper.createRoleAssignment(user, role, program, supervisoryNode);
-    return role;
-  }
 }

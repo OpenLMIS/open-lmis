@@ -13,12 +13,12 @@
 
             <div class="form-field">
               <input ng-model="user.userName" name="userName" id="userName" type="text" maxlength="50"
-                     ng-required="true"/>
+                     ng-required="true" ng-change="validateUserName()"/>
               <span class="field-error" ng-show="userForm.username.$error.required && showError">
                 Please Fill In this value
               </span>
 
-              <span class="field-error" ng-show="validateUserName()">
+              <span class="field-error" ng-show="userNameInvalid">
                 Invalid format, spaces not allowed in username
               </span>
             </div>
@@ -140,7 +140,7 @@
             </div>
           </div>
           <div>
-            <a ng-click=displayProgramRoleMapping() class="pull-right btn btn-primary">Add Role</a>
+            <a ng-click="addRole()" class="pull-right btn btn-primary">Add Role</a>
           </div>
         </div>
       </div>

@@ -1,25 +1,17 @@
-function UserController($scope, $routeParams, Users, UserById, SearchFacilitiesByCodeOrName, Facility, Roles) {
+function UserController($scope, $routeParams, Users, SearchFacilitiesByCodeOrName, Facility, Roles, UserById) {
+  $scope.programAndRoleList = [];
+  $scope.userNameInvalid = false;
 
   if ($routeParams.userId) {
-    var id = $routeParams.userId;
-    UserById.get({id:id}, function (data) {
+    UserById.get({id:$routeParams.userId}, function (data) {
       $scope.user = data.user;
-      //$scope.facilitySelected = {name:"Village-Reach"};
-      //$scope.programAndRoleList = {supportedPrograms:programs, roles:roles }
-     // $scope.programToRoleMappingList = getProgramToRoleMappingList($scope.user.programToRoleMappingList);
-    });
+      displayRoleAssignments();
+    }, {});
   } else {
-    $scope.user = {};
-    $scope.programAndRoleList = [];
-    $scope.programToRoleMappingList = [
-      {program:{}, roles:[]}
-    ];
+    $scope.user = {roleAssignments:[]};
   }
 
   $scope.saveUser = function () {
-
-    $scope.user.programToRoleMappingList = $scope.programToRoleMappingList;
-
     Users.save({}, $scope.user, function (data) {
       $scope.user = data.user;
       $scope.showError = false;
@@ -34,9 +26,10 @@ function UserController($scope, $routeParams, Users, UserById, SearchFacilitiesB
 
   $scope.validateUserName = function () {
     if ($scope.user.userName != null && $scope.user.userName.trim().indexOf(' ') >= 0) {
-      return true;
+      $scope.userNameInvalid = true;
+    } else {
+      $scope.userNameInvalid = false;
     }
-    return false;
   };
 
   $scope.showFacilitySearchResults = function () {
@@ -67,31 +60,51 @@ function UserController($scope, $routeParams, Users, UserById, SearchFacilitiesB
     $scope.facilitySelected = null;
     $scope.programAndRoleList = [];
 
-    setTimeout(function() {
+    setTimeout(function () {
       angular.element("#searchFacility").focus();
     });
-    
   };
 
-  $scope.displayProgramRoleMapping = function () {
+  $scope.createGridRow = function (programRoleGridRow) {
+    programRoleGridRow.supportedPrograms = $scope.allSupportedPrograms;
+    programRoleGridRow.roles = $scope.allRoles;
+    $scope.programAndRoleList = $scope.programAndRoleList.concat(programRoleGridRow);
+  };
 
-    if ($scope.facilitySelected != null) {
-      var programRoleGridRow = { supportedPrograms:[],
-        roles:[]};
+  $scope.addRole = function () {
+    var programRoleGridRow = { supportedPrograms:[], roles:[]};
+    loadRoleAssignments(programRoleGridRow);
+    $scope.createGridRow(programRoleGridRow);
+    $scope.user.roleAssignments = $scope.user.roleAssignments.concat({programId:{}, roleIds:[]});
+  };
 
-      $scope.programToRoleMappingList = $scope.programToRoleMappingList.concat({program:{}, roles:[]});
+  var loadRoleAssignments = function (programRoleGridRow) {
+    if (!isNullOrUndefined($scope.user.facilityId)) {
+      if (isNullOrUndefined($scope.allSupportedPrograms)) {
+        Facility.get({id:$scope.user.facilityId}, function (data) {
+          $scope.allSupportedPrograms = data.facility.supportedPrograms;
+          programRoleGridRow.supportedPrograms = $scope.allSupportedPrograms;
+        });
+      }
 
-      Facility.get({id:$scope.user.facilityId}, function (data) {
-        programRoleGridRow.supportedPrograms = data.facility.supportedPrograms;
-      });
-
-      Roles.get({}, function (data) {
-        programRoleGridRow.roles = data.roles;
-      });
-
-      $scope.programAndRoleList = $scope.programAndRoleList.concat(programRoleGridRow);
+      if (isNullOrUndefined($scope.allRoles)) {
+        Roles.get({}, function (data) {
+          $scope.allRoles = data.roles;
+          programRoleGridRow.roles = $scope.allRoles;
+        });
+      }
     }
-  }
+  };
+
+  var displayRoleAssignments = function () {
+    var programRoleGridRow = { supportedPrograms:[], roles:[]};
+    loadRoleAssignments(programRoleGridRow);
+
+    $.each($scope.user.roleAssignments, function () {
+      $scope.createGridRow(programRoleGridRow);
+    })
+
+  };
 
   var filterFacilitiesByCodeOrName = function () {
     $scope.filteredFacilities = [];
@@ -104,21 +117,8 @@ function UserController($scope, $routeParams, Users, UserById, SearchFacilitiesB
     })
   };
 
-  var getProgramToRoleMappingList = function (userProgramToRoleMappingList) {
-    var programToRoleMappingList = [];
-
-    $.each(userProgramToRoleMappingList, function (index, programToRoleMapping) {
-      $.each($scope.programAndRoleList, function (index, programToRole) {
-        $.each(programToRole.supportedPrograms, function (index, program) {
-          if (programToRoleMapping.program.id == program.id) {
-            programToRoleMappingList.push(programToRole);
-          }
-        });
-      });
-    });
-
-    return programToRoleMappingList;
-  };
+  var isNullOrUndefined = function (obj) {
+    return obj == undefined || obj == null;
+  }
 }
-
 

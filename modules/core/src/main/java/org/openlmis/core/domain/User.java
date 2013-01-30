@@ -41,31 +41,30 @@ public class User implements Importable {
   private Integer facilityId;
   private String modifiedBy;
   private Date modifiedDate;
+  private List<UserRoleAssignment> roleAssignments;
 
   private static final String INVALID_EMAIL_ERROR_CODE = "user.email.invalid";
 
   private static final String INVALID_USER_NAME_ERROR_CODE = "user.userName.invalid";
-
-  private List<ProgramToRoleMapping> programToRoleMappingList;
 
   public void validate() {
     validateEmail();
     validateUserName();
   }
 
-  public void setPassword(String password){
+  public void setPassword(String password) {
     this.password = Encoder.hash(password);
   }
 
   private void validateEmail() {
     final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     Pattern pattern = Pattern.compile(EMAIL_PATTERN);
-    if (email!=null && !pattern.matcher(email).matches())
+    if (email != null && !pattern.matcher(email).matches())
       throw new DataException(INVALID_EMAIL_ERROR_CODE);
   }
 
   private void validateUserName() {
-    if(userName!=null && userName.trim().contains(" "))
+    if (userName != null && userName.trim().contains(" "))
       throw new DataException(INVALID_USER_NAME_ERROR_CODE);
   }
 }

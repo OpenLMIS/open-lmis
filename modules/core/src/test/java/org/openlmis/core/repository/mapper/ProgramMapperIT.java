@@ -161,9 +161,9 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     roleRightsMapper.insertRole(r2);
     roleRightsMapper.createRoleRight(r2.getId(), Right.AUTHORIZE_REQUISITION);
 
-    insertRoleAssignments(activeProgram, user, r1);
-    insertRoleAssignments(anotherActiveProgram, user, r2);
-    insertRoleAssignments(inactiveProgram, user, r1);
+    insertRoleAssignments(activeProgram, user, r1, null);
+    insertRoleAssignments(anotherActiveProgram, user, r2, null);
+    insertRoleAssignments(inactiveProgram, user, r1, null);
 
 
     insertProgramSupportedForFacility(activeProgram, facility, true);
@@ -191,8 +191,8 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     roleRightsMapper.insertRole(r1);
     roleRightsMapper.createRoleRight(r1.getId(), Right.APPROVE_REQUISITION);
 
-    insertRoleAssignments(activeProgram, user, r1);
-    insertRoleAssignments(inactiveProgram, user, r1);
+    insertRoleAssignments(activeProgram, user, r1, null);
+    insertRoleAssignments(inactiveProgram, user, r1, null);
 
 
     final String rights = "{APPROVE_REQUISITION}";
@@ -212,12 +212,6 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     return program;
   }
 
-  private Role insertRoleAssignments(Program program, User user, Role role, SupervisoryNode supervisoryNode) {
-    roleAssignmentMapper.createRoleAssignment(user, role, program, supervisoryNode);
-    return role;
-  }
-
-
   private void insertProgramSupportedForFacility(Program program, Facility facility, boolean isActive) {
     ProgramSupported supportedProgram = make(a(defaultProgramSupported,
         with(supportedFacilityId, facility.getId()),
@@ -231,8 +225,9 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     return facility;
   }
 
-  private Role insertRoleAssignments(Program program, User user, Role role) {
-    roleAssignmentMapper.createRoleAssignment(user, role, program, null);
+  private Role insertRoleAssignments(Program program, User user, Role role, SupervisoryNode supervisoryNode) {
+    Integer supervisoryNodeId = supervisoryNode == null ? null : supervisoryNode.getId();
+    roleAssignmentMapper.createRoleAssignment(user.getId(), role.getId(), program.getId(), supervisoryNodeId);
     return role;
   }
 
