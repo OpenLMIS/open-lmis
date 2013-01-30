@@ -176,7 +176,7 @@ public class RoleRightsMapperIT {
   }
 
   private Role insertRoleAssignments(Program program, User user, Role role) {
-    roleAssignmentMapper.createRoleAssignment(user.getId(), role.getId(), program.getId(), null);
+    roleAssignmentMapper.createRoleAssignment(user.getId(), program.getId(), role.getId(), null);
     return role;
   }
 

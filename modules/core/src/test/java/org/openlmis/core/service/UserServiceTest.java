@@ -121,7 +121,7 @@ public class UserServiceTest {
     List<UserRoleAssignment> userRoleAssignments = Arrays.asList(new UserRoleAssignment());
 
     when(userRepository.getById(1)).thenReturn(user);
-    when(roleAssignmentService.getListOfProgramToRoleMappingForAUser(1)).thenReturn(userRoleAssignments);
+    when(roleAssignmentService.getRoleAssignments(1)).thenReturn(userRoleAssignments);
 
     User returnedUser = userService.getById(1);
 

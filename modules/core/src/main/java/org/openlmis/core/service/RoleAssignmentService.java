@@ -47,13 +47,13 @@ public class RoleAssignmentService {
     roleAssignmentRepository.deleteAllRoleAssignmentsForUser(id);
   }
 
-  public List<UserRoleAssignment> getListOfProgramToRoleMappingForAUser(Integer userId) {
-    List<Integer> listOfProgramIds = roleAssignmentRepository.getProgramsForWhichHasRoleAssignments(userId);
+  public List<UserRoleAssignment> getRoleAssignments(Integer userId) {
+    List<Integer> listOfProgramIds = roleAssignmentRepository.getProgramsForWhichUserHasRoleAssignments(userId);
 
     List<UserRoleAssignment> roleAssignmentsList = new ArrayList<>();
 
     for (Integer programId : listOfProgramIds) {
-      List<Integer> roleIds = roleAssignmentRepository.getRoleAssignmentsForAUserAndProgram(userId, programId);
+      List<Integer> roleIds = roleAssignmentRepository.getRoleAssignmentsForUserAndProgram(userId, programId);
       UserRoleAssignment roleAssignments = new UserRoleAssignment(programId, roleIds);
       roleAssignmentsList.add(roleAssignments);
     }

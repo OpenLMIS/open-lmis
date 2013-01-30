@@ -227,7 +227,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
 
   private Role insertRoleAssignments(Program program, User user, Role role, SupervisoryNode supervisoryNode) {
     Integer supervisoryNodeId = supervisoryNode == null ? null : supervisoryNode.getId();
-    roleAssignmentMapper.createRoleAssignment(user.getId(), role.getId(), program.getId(), supervisoryNodeId);
+    roleAssignmentMapper.createRoleAssignment(user.getId(), program.getId(), role.getId(), supervisoryNodeId);
     return role;
   }
 

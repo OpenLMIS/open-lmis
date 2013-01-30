@@ -116,7 +116,7 @@ public class UserService {
 
   public User getById(Integer id) {
     User user = userRepository.getById(id);
-    user.setRoleAssignments(roleAssignmentService.getListOfProgramToRoleMappingForAUser(id));
+    user.setRoleAssignments(roleAssignmentService.getRoleAssignments(id));
     return user;
   }
 }

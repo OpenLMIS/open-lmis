@@ -40,7 +40,7 @@ public class RoleAssignmentMapperIT {
   @Autowired
   RoleRightsMapper roleRightsMapper;
   @Autowired
-  RoleAssignmentMapper roleAssignmentMapper;
+  RoleAssignmentMapper mapper;
   @Autowired
   FacilityMapper facilityMapper;
   @Autowired
@@ -74,27 +74,58 @@ public class RoleAssignmentMapperIT {
     supervisoryNode.setFacility(facility);
     supervisoryNodeMapper.insert(supervisoryNode);
 
-    insertRoleAssignments(program1, user, r1, supervisoryNode);
-    insertRoleAssignments(program1, user, r2, null);
-    insertRoleAssignments(program2, user, r2, null);
+    mapper.createRoleAssignment(user.getId(), program1.getId(), r1.getId(), supervisoryNode.getId());
+    mapper.createRoleAssignment(user.getId(), program1.getId(), r2.getId(), null);
+    mapper.createRoleAssignment(user.getId(), program2.getId(), r2.getId(), null);
 
     List<RoleAssignment> roleAssignments =
-        roleAssignmentMapper.getRoleAssignmentsWithGivenRightForAUser(CREATE_REQUISITION, user.getId());
+        mapper.getRoleAssignmentsWithGivenRightForAUser(CREATE_REQUISITION, user.getId());
 
     assertEquals(1, roleAssignments.size());
     RoleAssignment expectedRoleAssignment = new RoleAssignment(user.getId(), r1.getId(), program1.getId(), supervisoryNode);
     assertThat(roleAssignments.get(0), is(expectedRoleAssignment));
   }
 
+  @Test
+  public void shouldGetRolesForAUserAndProgram() throws Exception {
+    mapper.createRoleAssignment(user.getId(), 1, 1, null);
+    mapper.createRoleAssignment(user.getId(), 2, 1, null);
+
+    List<Integer> roleIds = mapper.getRoleAssignmentsForUserAndProgram(user.getId(), 1);
+
+    assertThat(roleIds.size(), is(1));
+    assertThat(roleIds.get(0).equals(1), is(true));
+  }
+
+  @Test
+  public void shouldGetProgramsForWhichUserHasRoleAssignments() throws Exception {
+    mapper.deleteAllRoleAssignmentsForUser(1);
+    mapper.createRoleAssignment(1, 1, 1, null);
+    mapper.createRoleAssignment(1, 2, 1, null);
+    mapper.createRoleAssignment(1, null, 1, null);
+
+    List<Integer> listOfProgramIdsForTheUser = mapper.getProgramsForWhichUserHasRoleAssignments(1);
+
+    assertThat(listOfProgramIdsForTheUser.size(), is(2));
+
+    for (Integer programId : listOfProgramIdsForTheUser) {
+      assertThat(programId.equals(1) || programId.equals(2), is(true));
+    }
+  }
+
+  @Test
+  public void shouldDeleteRoleAssignmentsForAUser() throws Exception {
+    Integer userId = user.getId();
+    mapper.createRoleAssignment(userId, 2, 1, null);
+
+    mapper.deleteAllRoleAssignmentsForUser(userId);
+
+    assertThat(mapper.getRoleAssignmentsForUserAndProgram(userId, 2).size(), is(0));
+  }
+
   private Program insertProgram(Program program) {
     programMapper.insert(program);
     return program;
-  }
-
-  private Role insertRoleAssignments(Program program, User user, Role role, SupervisoryNode supervisoryNode) {
-    Integer supervisoryNodeId = supervisoryNode == null ? null : supervisoryNode.getId();
-    roleAssignmentMapper.createRoleAssignment(user.getId(), role.getId(), program.getId(), supervisoryNodeId);
-    return role;
   }
 
   private User insertUser(Facility facility) {
@@ -107,32 +138,5 @@ public class RoleAssignmentMapperIT {
     Facility facility = make(a(defaultFacility));
     facilityMapper.insert(facility);
     return facility;
-  }
-
-  @Test
-  public void shouldGetRolesForAUserAndProgram() throws Exception {
-    roleAssignmentMapper.createRoleAssignment(1, 1, 1, null);
-
-    List<Integer> roleIds = roleAssignmentMapper.getRoleAssignmentForAUserIdAndProgramId(1, 1);
-
-    for (Integer roleId : roleIds) {
-      assertThat(roleId.equals(1), is(true));
-    }
-    assertThat(roleIds.size(), is(1));
-  }
-
-  @Test
-  public void shouldGetProgramsForWhichUserHasRoleAssignments() throws Exception {
-    roleAssignmentMapper.deleteAllRoleAssignmentsForUser(1);
-    roleAssignmentMapper.createRoleAssignment(1, 1, 1, null);
-    roleAssignmentMapper.createRoleAssignment(1, 1, 2, null);
-
-    List<Integer> listOfProgramIdsForTheUser = roleAssignmentMapper.getProgramsForWhichHasRoleAssignments(1);
-
-    assertThat(listOfProgramIdsForTheUser.size(), is(2));
-
-    for (Integer programId : listOfProgramIdsForTheUser) {
-      assertThat(programId.equals(1) || programId.equals(2), is(true));
-    }
   }
 }

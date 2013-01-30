@@ -163,7 +163,6 @@ public class RequisitionRepositoryTest {
     assertThat(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY_ID, PROGRAM_ID), is(rnr));
   }
 
-
   @Test
   public void shouldSetAllFieldsExceptNonFullSupplyRnrFieldsToZeroAndInsertRequisitionLineItem(){
     RnrLineItem rnrLineItem = new RnrLineItem();

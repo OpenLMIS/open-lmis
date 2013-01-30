@@ -1,7 +1,9 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.Right;
+import org.openlmis.core.domain.RoleAssignment;
+import org.openlmis.core.domain.SupervisoryNode;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,20 +23,19 @@ public interface RoleAssignmentMapper {
                                                                 @Param(value = "userId") int userId);
 
   @Insert("INSERT INTO role_assignments" +
-    "(userId, roleId, programId, supervisoryNodeId) VALUES " +
-    "(#{userId}, #{roleId}, #{programId}, #{supervisoryNodeId})")
+      "(userId, roleId, programId, supervisoryNodeId) VALUES " +
+      "(#{userId}, #{roleId}, #{programId}, #{supervisoryNodeId})")
   int createRoleAssignment(@Param(value = "userId") Integer userId,
-                           @Param(value = "roleId") Integer roleId,
-                           @Param(value = "programId") Integer programId,
+                           @Param(value = "programId") Integer programId, @Param(value = "roleId") Integer roleId,
                            @Param(value = "supervisoryNodeId") Integer supervisoryNodeId);
 
   @Delete("DELETE FROM role_assignments WHERE userId=#{id}")
-  void deleteAllRoleAssignmentsForUser(int id);
+  void deleteAllRoleAssignmentsForUser(int userId);
 
   @Select("SELECT roleId from role_assignments where userId=#{id} AND programId=#{programId}")
-  List<Integer> getRoleAssignmentForAUserIdAndProgramId(@Param(value = "id") int id, @Param(value = "programId") int programId);
+  List<Integer> getRoleAssignmentsForUserAndProgram(@Param(value = "id") int userId, @Param(value = "programId") int programId);
 
-  @Select("SELECT distinct(programId) FROM role_assignments WHERE userId=#{userId}")
-  List<Integer> getProgramsForWhichHasRoleAssignments(int userId);
+  @Select("SELECT distinct(programId) FROM role_assignments WHERE userId=#{userId} AND programId IS NOT NULL")
+  List<Integer> getProgramsForWhichUserHasRoleAssignments(int userId);
 
 }

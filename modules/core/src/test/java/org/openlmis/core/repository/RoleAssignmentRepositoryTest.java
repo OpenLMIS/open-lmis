@@ -17,12 +17,10 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RoleAssignmentRepositoryTest {
-
-
-  RoleAssignmentRepository repository;
+  private RoleAssignmentRepository repository;
 
   @Mock
-  RoleAssignmentMapper mapper;
+  private RoleAssignmentMapper mapper;
 
   @Before
   public void setUp() throws Exception {
@@ -33,7 +31,7 @@ public class RoleAssignmentRepositoryTest {
   public void shouldInsertUserProgramRoleMapping() throws Exception {
     repository.createUserProgramRoleAssignment(1, 2, 3);
 
-    verify(mapper).createRoleAssignment(1, 2, 3, null);
+    verify(mapper).createRoleAssignment(1, 3, 2, null);
   }
 
   @Test
@@ -44,17 +42,18 @@ public class RoleAssignmentRepositoryTest {
   }
 
   @Test
-  public void shouldReturnRolesForAUserIdAndProgramID() throws Exception {
-    repository.getRoleAssignmentsForAUserAndProgram(1, 1);
+  public void shouldReturnRolesForUserAndProgram() throws Exception {
+    List<Integer> roleIds = Arrays.asList(10, 20);
+    when(mapper.getRoleAssignmentsForUserAndProgram(1, 2)).thenReturn(roleIds);
 
-    verify(mapper).getRoleAssignmentForAUserIdAndProgramId(1, 1);
+    assertThat(repository.getRoleAssignmentsForUserAndProgram(1, 2), is(roleIds));
   }
 
   @Test
-  public void shouldGetListOfProgramIdsForTheUserWhichHasRoleMapping() throws Exception {
+  public void shouldGetListOfProgramIdsForWhichUserHasRoleAssignments() throws Exception {
     List<Integer> programIdList = Arrays.asList(10, 20);
-    when(mapper.getProgramsForWhichHasRoleAssignments(1)).thenReturn(programIdList);
+    when(mapper.getProgramsForWhichUserHasRoleAssignments(1)).thenReturn(programIdList);
 
-    assertThat(repository.getProgramsForWhichHasRoleAssignments(1), is(programIdList));
+    assertThat(repository.getProgramsForWhichUserHasRoleAssignments(1), is(programIdList));
   }
 }
