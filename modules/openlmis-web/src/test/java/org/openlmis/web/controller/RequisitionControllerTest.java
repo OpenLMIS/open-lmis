@@ -3,7 +3,6 @@ package org.openlmis.web.controller;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
@@ -29,10 +28,12 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.*;
 import static org.openlmis.web.controller.RequisitionController.*;
 import static org.powermock.api.mockito.PowerMockito.doThrow;
 import static org.powermock.api.mockito.PowerMockito.when;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 public class RequisitionControllerTest {
 
@@ -74,7 +75,7 @@ public class RequisitionControllerTest {
   public void shouldGetRnrByFacilityProgramAndPeriodIfExists() throws Exception {
     ResponseEntity<OpenLmisResponse> response = controller.get(1, 2, 3);
 
-//    verify(requisitionService).get(1, 2, 3);
+    verify(requisitionService).get(argThat(facilityMatcher(1)), argThat(programMatcher(2)), argThat(periodMatcher(3)));
     assertThat(response.getStatusCode(), is(equalTo(HttpStatus.OK)));
   }
 
@@ -113,9 +114,14 @@ public class RequisitionControllerTest {
   @Test
   public void shouldReturnNullIfGettingRequisitionFails() throws Exception {
     Rnr expectedRnr = null;
-//    when(requisitionService.get(1, 2, null)).thenReturn(expectedRnr);
+    Facility facility = new Facility(1);
+    whenNew(Facility.class).withArguments(1).thenReturn(facility);
+    Program program = new Program(2);
+    whenNew(Program.class).withArguments(2).thenReturn(program);
+
+    when(requisitionService.get(facility, program, null)).thenReturn(expectedRnr);
     ResponseEntity<OpenLmisResponse> response = controller.get(1, 2, null);
-//    assertThat((Rnr) response.getBody().getData().get(RNR), is(expectedRnr));
+    assertThat((Rnr) response.getBody().getData().get(RNR), is(expectedRnr));
   }
 
   @Test
@@ -213,37 +219,19 @@ public class RequisitionControllerTest {
     assertThat(response.getBody().getErrorMsg(), is("some-error"));
   }
 
-  @Ignore
   @Test
-  public void shouldReturnAllPeriodsForInitiatingRequisition() {
-    ProcessingPeriod processingPeriod = new ProcessingPeriod();
-    processingPeriod.setId(6);
+  public void shouldReturnAllPeriodsForInitiatingRequisition() throws Exception {
+    ProcessingPeriod processingPeriod = new ProcessingPeriod(6);
     List<ProcessingPeriod> periodList = Arrays.asList(processingPeriod);
     Rnr rnr = new Rnr();
 
+    Facility facility = new Facility(1);
+    whenNew(Facility.class).withArguments(1).thenReturn(facility);
+    Program program = new Program(2);
+    whenNew(Program.class).withArguments(2).thenReturn(program);
+    when(requisitionService.get(facility, program, processingPeriod)).thenReturn(rnr);
+
     when(requisitionService.getAllPeriodsForInitiatingRequisition(1, 2)).thenReturn(periodList);
-    Matcher<Object> facilityMatcher = new ArgumentMatcher<Object>() {
-      @Override
-      public boolean matches(Object item) {
-        Facility facility = (Facility) item;
-        return facility.getId() == 1;
-      }
-    };
-    Matcher<Object> programMatcher = new ArgumentMatcher<Object>() {
-          @Override
-          public boolean matches(Object item) {
-            Facility facility = (Facility) item;
-            return facility.getId() == 1;
-          }
-        };
-    Matcher<Object> periodMatcher = new ArgumentMatcher<Object>() {
-          @Override
-          public boolean matches(Object item) {
-            Facility facility = (Facility) item;
-            return facility.getId() == 1;
-          }
-        };
-//    when(requisitionService.get(argThat(facilityMatcher), argThat(programMatcher), argThat(periodMatcher))).thenReturn(rnr);
 
     ResponseEntity<OpenLmisResponse> response = controller.getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(1, 2);
 
@@ -300,5 +288,36 @@ public class RequisitionControllerTest {
     requisition.setPeriod(period);
     return requisition;
   }
+
+  private Matcher<Program> programMatcher(final int id) {
+    return new ArgumentMatcher<Program>() {
+      @Override
+      public boolean matches(Object argument) {
+        Program program = (Program) argument;
+        return program.getId().equals(id);
+      }
+    };
+  }
+
+  private Matcher<ProcessingPeriod> periodMatcher(final int id) {
+    return new ArgumentMatcher<ProcessingPeriod>() {
+      @Override
+      public boolean matches(Object argument) {
+        ProcessingPeriod period = (ProcessingPeriod) argument;
+        return period.getId().equals(id);
+      }
+    };
+  }
+
+  private Matcher<Facility> facilityMatcher(final int id) {
+    return new ArgumentMatcher<Facility>() {
+      @Override
+      public boolean matches(Object argument) {
+        Facility facility = (Facility) argument;
+        return facility.getId().equals(id);
+      }
+    };
+  }
+
 }
 
