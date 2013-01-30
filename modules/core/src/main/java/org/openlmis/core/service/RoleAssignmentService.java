@@ -34,7 +34,9 @@ public class RoleAssignmentService {
   }
 
   public void insertUserProgramRoleMapping(User user) {
-    for (UserRoleAssignment userRoleAssignment : user.getRoleAssignments()) {
+    List<UserRoleAssignment> roleAssignments = user.getRoleAssignments();
+    if(roleAssignments==null) return;
+    for (UserRoleAssignment userRoleAssignment : roleAssignments) {
       for (Integer role : userRoleAssignment.getRoleIds()) {
         createUserProgramRoleAssignment(user.getId(), role, userRoleAssignment.getProgramId(), null);//To-Do : This will be modified once supervisory node is added to create user screen
       }
