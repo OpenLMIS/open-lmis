@@ -26,6 +26,10 @@ public class InitiateRnRPage extends Page {
     @FindBy(how = How.XPATH, using = "//input[@value='Submit']")
     private static WebElement submitButton;
 
+    @FindBy(how = How.XPATH, using = "//input[@value='Authorize']")
+    private static WebElement authorizeButton;
+
+
     @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv' and @ng-bind='message']")
     private static WebElement successMessage;
 
@@ -262,8 +266,19 @@ public class InitiateRnRPage extends Page {
         testWebDriver.sleep(1500);
     }
 
+    public void authorizeRnR() {
+        authorizeButton.click();
+        testWebDriver.sleep(1500);
+    }
+
+
+
     public void verifySubmitRnrSuccessMsg(){
         SeleneseTestNgHelper.assertTrue("RnR Submit Success message not displayed", submitSuccessMessage.isDisplayed());
+    }
+
+    public void verifyAuthorizeRnrSuccessMsg(){
+        SeleneseTestNgHelper.assertTrue("RnR authorize Success message not displayed", submitSuccessMessage.isDisplayed());
     }
 
     public void verifySubmitRnrErrorMsg(){

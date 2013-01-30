@@ -68,6 +68,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
         RolesPage rolesPage = homePage.navigateRoleAssignments();
         List<String> userRoleList = new ArrayList<>();
         userRoleList.add("Create Requisition");
+        userRoleList.add("Authorize Requisition");
+        userRoleList.add("Approve Requisition");
 
         rolesPage.createRole("User", "User", userRoleList);
 
@@ -94,6 +96,9 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
         initiateRnRPage.submitRnR();
         initiateRnRPage.verifySubmitRnrSuccessMsg();
+
+        initiateRnRPage.authorizeRnR();
+        initiateRnRPage.verifyAuthorizeRnrSuccessMsg();
         initiateRnRPage.verifyBeginningBalanceDisabled();
 
     }

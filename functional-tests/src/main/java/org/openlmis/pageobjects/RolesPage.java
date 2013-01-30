@@ -45,6 +45,12 @@ public class RolesPage extends Page {
     @FindBy(how = How.ID, using = "Requisition - Create")
     private static WebElement rightCreateRequisition;
 
+    @FindBy(how = How.ID, using = "Requisition - Authorize")
+    private static WebElement rightAuthorizeRequisition;
+
+    @FindBy(how = How.ID, using = "Requisition - Approve")
+    private static WebElement rightApproveRequisition;
+
     @FindBy(how = How.XPATH, using = "//input[@value='Save']")
     private static WebElement saveButton;
 
@@ -62,6 +68,7 @@ public class RolesPage extends Page {
         SeleneseTestNgHelper.assertTrue(createNewRoleButton.isDisplayed());
     }
 
+
     public void createRole(String roleName, String roleDesc, List<String> rights) {
         webElementMap.put("Configure Template", rightConfigureTemplate);
         webElementMap.put("Manage Facilities", rightManageFacilities);
@@ -69,6 +76,9 @@ public class RolesPage extends Page {
         webElementMap.put("Manage Schedules", rightManageSchedules);
         webElementMap.put("Uploads", rightUploads);
         webElementMap.put("Create Requisition", rightCreateRequisition);
+        webElementMap.put("Authorize Requisition", rightAuthorizeRequisition);
+        webElementMap.put("Approve Requisition", rightApproveRequisition);
+
         testWebDriver.waitForElementToAppear(createNewRoleButton);
         createNewRoleButton.click();
         for (String right : rights) {
