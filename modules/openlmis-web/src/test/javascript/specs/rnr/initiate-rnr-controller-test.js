@@ -125,7 +125,7 @@ describe('InitiateRnrController', function () {
         {"id":2, "name":"Second Month", "description":"Second Month Description"},
         {"id":3, "name":"Third Month", "description":"Third Month Description"}
       ];
-      var rnr = {"id":1, "status":"INITIATED", "periodId":1};
+      var rnr = {"id":1, "status":"INITIATED", "period":{"id" : 1}};
       $httpBackend.expectGET('/logistics/facility/20/program/10/periods.json').respond({"periods":periods, "rnr":rnr});
 
       scope.loadPeriods();
