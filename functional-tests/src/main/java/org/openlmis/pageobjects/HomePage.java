@@ -20,7 +20,11 @@ public class HomePage extends Page {
     @FindBy(how = How.LINK_TEXT, using = "Logout")
     private static WebElement logoutLink;
 
+    @FindBy(how = How.XPATH, using = "//a[contains(text(),'Requisitions')]")
+    private static WebElement requisitionMenuItem;
 
+    @FindBy(how = How.XPATH, using = "//a[contains(text(),'Approve')]")
+    private static WebElement approveLink;
 
     @FindBy(how = How.XPATH, using = "//a[contains(text(),'Administration')]")
     private static WebElement AdministrationMenuItem;
@@ -225,6 +229,15 @@ public class HomePage extends Page {
         testWebDriver.waitForElementToAppear(schedulesTab);
         schedulesTab.click();
         return new ManageSchedulePage(testWebDriver);
+
+    }
+
+    public ApprovePage navigateToApprove() throws IOException{
+        SeleneseTestNgHelper.assertTrue(requisitionMenuItem.isDisplayed());
+        requisitionMenuItem.click();
+        testWebDriver.waitForElementToAppear(approveLink);
+        approveLink.click();
+        return new ApprovePage(testWebDriver);
 
     }
 

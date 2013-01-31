@@ -254,7 +254,7 @@ public class DBWrapper {
         DBWrapper dbwrapper = new DBWrapper();
 
 
-        dbwrapper.dbConnection("delete from role_assignments where userId=200;", "alter");
+        dbwrapper.dbConnection("delete from role_assignments where userId='"+userID+"';", "alter");
 
         dbwrapper.dbConnection(" INSERT INTO role_assignments\n" +
                 "            (userId, roleId, programId, supervisoryNodeId) VALUES \n" +
@@ -262,6 +262,21 @@ public class DBWrapper {
                 "    ('"+userID+"', (SELECT id FROM roles WHERE name = '"+userName+"'), 1, (SELECT id from supervisory_nodes WHERE code = 'N1'));", "alter");
     }
 
+    public void updateRoleAssignment(String userID) throws SQLException, IOException {
+        DBWrapper dbwrapper = new DBWrapper();
+
+
+        dbwrapper.dbConnection("delete from role_assignments where userid='"+userID+"' and supervisorynodeid is null;", "alter");
+
+        dbwrapper.dbConnection("update role_assignments set supervisorynodeid=(select id from supervisory_nodes where code='N2') where userid='"+userID+"';", "alter");
+    }
+
+    public void updateRoleGroupMember(String facilityCode) throws SQLException, IOException {
+        DBWrapper dbwrapper = new DBWrapper();
+
+        dbwrapper.dbConnection("update requisition_group_members set facilityid=(select id from facilities where code ='"+facilityCode+"') where requisitiongroupid=(select id from requisition_groups where code='RG2');", "alter");
+        dbwrapper.dbConnection("update requisition_group_members set facilityid=(select id from facilities where code ='F11') where requisitiongroupid=(select id from requisition_groups where code='RG1');", "alter");
+    }
 
     public void alterUserID(String userId) throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();

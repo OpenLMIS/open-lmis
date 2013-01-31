@@ -27,11 +27,12 @@ public class E2EInitiateRnR extends TestCaseHelper {
     }
 
     @Test(dataProvider = "Data-Provider-Function-Positive")
-    public void testE2EInitiateRnR(String period,String program,String user, String password,String[] credentials) throws Exception {
+    public void testE2EInitiateRnR(String period,String program,String userSIC, String userMO, String password,String[] credentials) throws Exception {
 
         DBWrapper dbWrapper = new DBWrapper();
 
-        dbWrapper.insertUser("200", user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==","F10", "Jane_Doe@openlmis.com");
+        dbWrapper.insertUser("200", userSIC, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==","F10", "manjyots@thoughtworks.com");
+        dbWrapper.insertUser("300", userMO, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==","F10", "lokeshag@thoughtworks.com");
         dbWrapper.insertFacility();
         dbWrapper.insertSupervisoryNodes("F10");
         dbWrapper.insertSupervisoryNodesSecond("F11");
@@ -63,20 +64,24 @@ public class E2EInitiateRnR extends TestCaseHelper {
         TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
         templateConfigPage.configureTemplate();
 
-
-
         RolesPage rolesPage = homePage.navigateRoleAssignments();
-        List<String> userRoleList = new ArrayList<>();
-        userRoleList.add("Create Requisition");
-        userRoleList.add("Authorize Requisition");
-        userRoleList.add("Approve Requisition");
+        List<String> userRoleListStoreincharge = new ArrayList<>();
+        userRoleListStoreincharge.add("Create Requisition");
+        userRoleListStoreincharge.add("Authorize Requisition");
+        userRoleListStoreincharge.add("Approve Requisition");
 
-        rolesPage.createRole("User", "User", userRoleList);
+        rolesPage.createRole("Store-in-charge", "Store-in-charge", userRoleListStoreincharge);
+        dbWrapper.insertRoleAssignment("200", "Store-in-charge");
 
-        dbWrapper.insertRoleAssignment("200", "User");
+        List<String> userRoleListMedicalofficer = new ArrayList<>();
+        userRoleListMedicalofficer.add("Approve Requisition");
+        rolesPage.createRole("Medical-officer", "Medical-officer", userRoleListMedicalofficer);
+        dbWrapper.insertRoleAssignment("300", "Medical-officer");
+        dbWrapper.updateRoleAssignment("300");
+        dbWrapper.updateRoleGroupMember("FCcode"+date_time);
 
         LoginPage loginPageSecond=homePage.logout();
-        HomePage homePageUser = loginPageSecond.loginAs(user, password);
+        HomePage homePageUser = loginPageSecond.loginAs(userSIC, password);
 
         InitiateRnRPage initiateRnRPage = homePageUser.navigateAndInitiateRnr("FCcode", "FCname", date_time, program, period);
         initiateRnRPage.verifyRnRHeader("FCcode", "FCname", date_time, program);
@@ -101,6 +106,29 @@ public class E2EInitiateRnR extends TestCaseHelper {
         initiateRnRPage.verifyAuthorizeRnrSuccessMsg();
         initiateRnRPage.verifyBeginningBalanceDisabled();
 
+        ApprovePage approvePage=homePage.navigateToApprove();
+        approvePage.verifyNoRequisitionPendingMessage();
+        LoginPage loginPagethird=homePage.logout();
+
+        HomePage homePageLowerSNUser=loginPagethird.loginAs(userMO,password);
+        ApprovePage approvePageLowerSNUser=homePageLowerSNUser.navigateToApprove();
+        approvePageLowerSNUser.verifyandclickRequisitionPresentForApproval();
+        approvePageLowerSNUser.verifyRnRHeader("FCcode", "FCname", date_time, program);
+        approvePageLowerSNUser.verifyApprovedQuantity();
+        approvePageLowerSNUser.editApproveQuantityAndVerifyTotalCost("290");
+        approvePageLowerSNUser.approveRequisition();
+        approvePageLowerSNUser.verifyNoRequisitionPendingMessage();
+        LoginPage loginPageTopSNUser=homePageLowerSNUser.logout();
+
+        HomePage homePageTopSNUser=loginPageTopSNUser.loginAs(userSIC, password);
+        ApprovePage approvePageTopSNUser=homePageTopSNUser.navigateToApprove();
+        approvePageTopSNUser.verifyandclickRequisitionPresentForApproval();
+        approvePageTopSNUser.verifyRnRHeader("FCcode", "FCname", date_time, program);
+        approvePageTopSNUser.verifyApprovedQuantityApprovedFromLowerHierarchy("290");
+        approvePageTopSNUser.editApproveQuantityAndVerifyTotalCost("2900");
+        approvePageTopSNUser.approveRequisition();
+        approvePageTopSNUser.verifyNoRequisitionPendingMessage();
+
     }
     @AfterClass
     public void tearDown() throws Exception
@@ -114,7 +142,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     @DataProvider(name = "Data-Provider-Function-Positive")
     public Object[][] parameterIntTestProviderPositive() {
         return new Object[][]{
-                {"Period1","HIV","User123", "User123",new String[]{"Admin123", "Admin123"}}
+                {"Period1","HIV","User123", "User234", "User123",new String[]{"Admin123", "Admin123"}}
         };
 
     }

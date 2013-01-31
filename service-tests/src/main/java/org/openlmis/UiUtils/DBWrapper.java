@@ -56,7 +56,7 @@ public class DBWrapper {
         boolean flag = false;
         DBWrapper dbwrapper = new DBWrapper();
 
-            dbwrapper.dbConnection("delete from users where userName like('"+userName+"');", "alter");
+        dbwrapper.dbConnection("delete from users where userName like('"+userName+"');", "alter");
 
         dbwrapper.dbConnection("INSERT INTO users\n" +
                 "  (id, userName, password, facilityId, firstName, lastName, email) VALUES\n" +
@@ -71,14 +71,14 @@ public class DBWrapper {
 
         DBWrapper dbWrapper=new DBWrapper();
 
-            dbWrapper.dbConnection("DELETE FROM requisition_line_item_losses_adjustments;", "alter");
-            dbWrapper.dbConnection("DELETE FROM requisition_line_items;", "alter");
-            dbWrapper.dbConnection("DELETE FROM requisitions;", "alter");
+        dbWrapper.dbConnection("DELETE FROM requisition_line_item_losses_adjustments;", "alter");
+        dbWrapper.dbConnection("DELETE FROM requisition_line_items;", "alter");
+        dbWrapper.dbConnection("DELETE FROM requisitions;", "alter");
         dbWrapper.dbConnection("DELETE FROM programs_supported;", "alter");
 
-            dbWrapper.dbConnection("delete from facilities;", "alter");
+        dbWrapper.dbConnection("delete from facilities;", "alter");
 
-        }
+    }
 
     public void insertFacility() throws IOException , SQLException
     {
@@ -98,10 +98,10 @@ public class DBWrapper {
                 "('F11','Central Hospital','IT department','G7646',9876234981,'fax','A','B',1,2,333,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','TRUE','fc','TRUE');\n", "alter");
 
         dbWrapper.dbConnection("insert into programs_supported(facilityId, programId, startDate, active, modifiedBy) VALUES\n" +
-            "((SELECT id FROM facilities WHERE code = 'F10'), 1, '11/11/12', true, 'Admin123'),\n" +
-            "((SELECT id FROM facilities WHERE code = 'F10'), 2, '11/11/12', true, 'Admin123'),\n" +
-            "((SELECT id FROM facilities WHERE code = 'F11'), 1, '11/11/12', true, 'Admin123'),\n" +
-            "((SELECT id FROM facilities WHERE code = 'F11'), 2, '11/11/12', true, 'Admin123');","alter");
+                "((SELECT id FROM facilities WHERE code = 'F10'), 1, '11/11/12', true, 'Admin123'),\n" +
+                "((SELECT id FROM facilities WHERE code = 'F10'), 2, '11/11/12', true, 'Admin123'),\n" +
+                "((SELECT id FROM facilities WHERE code = 'F11'), 1, '11/11/12', true, 'Admin123'),\n" +
+                "((SELECT id FROM facilities WHERE code = 'F11'), 2, '11/11/12', true, 'Admin123');","alter");
 
     }
 
@@ -254,7 +254,7 @@ public class DBWrapper {
         DBWrapper dbwrapper = new DBWrapper();
 
 
-        dbwrapper.dbConnection("delete from role_assignments where userId=200;", "alter");
+        dbwrapper.dbConnection("delete from role_assignments where userId='"+userID+"';", "alter");
 
         dbwrapper.dbConnection(" INSERT INTO role_assignments\n" +
                 "            (userId, roleId, programId, supervisoryNodeId) VALUES \n" +
@@ -262,6 +262,21 @@ public class DBWrapper {
                 "    ('"+userID+"', (SELECT id FROM roles WHERE name = '"+userName+"'), 1, (SELECT id from supervisory_nodes WHERE code = 'N1'));", "alter");
     }
 
+    public void updateRoleAssignment(String userID) throws SQLException, IOException {
+        DBWrapper dbwrapper = new DBWrapper();
+
+
+        dbwrapper.dbConnection("delete from role_assignments where userid='"+userID+"' and supervisorynodeid is null;", "alter");
+
+        dbwrapper.dbConnection("update role_assignments set supervisorynodeid=(select id from supervisory_nodes where code='N2') where userid='"+userID+"';", "alter");
+    }
+
+    public void updateRoleGroupMember(String facilityCode) throws SQLException, IOException {
+        DBWrapper dbwrapper = new DBWrapper();
+
+        dbwrapper.dbConnection("update requisition_group_members set facilityid=(select id from facilities where code ='"+facilityCode+"') where requisitiongroupid=(select id from requisition_groups where code='RG2');", "alter");
+        dbwrapper.dbConnection("update requisition_group_members set facilityid=(select id from facilities where code ='F11') where requisitiongroupid=(select id from requisition_groups where code='RG1');", "alter");
+    }
 
     public void alterUserID(String userId) throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();
@@ -309,7 +324,7 @@ public class DBWrapper {
     public void insertFacilityApprovedProducts() throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();
 
-            dbwrapper.dbConnection("delete from facility_approved_products;", "alter");
+        dbwrapper.dbConnection("delete from facility_approved_products;", "alter");
 
         dbwrapper.dbConnection("insert into facility_approved_products(facilityTypeId, programProductId, maxMonthsOfStock) values\n" +
                 "((select id from facility_types where name='Lvl3 Hospital'), (select id from program_products where programId=(Select id from programs order by modifiedDate DESC limit 1) and productId=(Select id from products order by modifiedDate DESC limit 1)), 3);", "alter");
@@ -353,37 +368,37 @@ public class DBWrapper {
         dbwrapper.dbConnection("INSERT INTO program_rnr_columns\n" +
                 "(masterColumnId, programId, visible, source, position, label) VALUES\n" +
                 "(1, (select id from programs where code = 'HIV'),  true, 'R', 1,  'Product Code'),\n" +
-        "(2, (select id from programs where code = 'HIV'),  true, 'R', 2,  'Product'),\n" +
-        "(3, (select id from programs where code = 'HIV'),  true, 'R', 3,  'Unit/Unit of Issue'),\n" +
-        "(4, (select id from programs where code = 'HIV'),  true, 'U', 4,  'Beginning Balance'),\n" +
-        "(5, (select id from programs where code = 'HIV'),  true, 'U', 5,  'Total Received Quantity'),\n" +
-        "(6, (select id from programs where code = 'HIV'),  true, 'U', 6,  'Total Consumed Quantity'),\n" +
-        "(7, (select id from programs where code = 'HIV'),  true, 'U', 7,  'Total Losses / Adjustments'),\n" +
-        "(8, (select id from programs where code = 'HIV'),  true, 'C', 8,  'Stock on Hand'),\n" +
-        "(9, (select id from programs where code = 'HIV'),  true, 'U', 9, 'New Patients'),\n" +
-        "(10, (select id from programs where code = 'HIV'), true, 'U', 10, 'Total Stockout days'),\n" +
-        "(11, (select id from programs where code = 'HIV'), true, 'C', 11, 'Adjusted Total Consumption'),\n" +
-        "(12, (select id from programs where code = 'HIV'), true, 'C', 12, 'Average Monthly Consumption(AMC)'),\n" +
-        "(13, (select id from programs where code = 'HIV'), true, 'C', 13, 'Maximum Stock Quantity'),\n" +
-        "(14, (select id from programs where code = 'HIV'), true, 'C', 14, 'Calculated Order Quantity'),\n" +
-        "(15, (select id from programs where code = 'HIV'), true, 'U', 15, 'Requested Quantity'),\n" +
-        "(16, (select id from programs where code = 'HIV'), true, 'U', 16, 'Requested Quantity Explanation'),\n" +
-        "(17, (select id from programs where code = 'HIV'), true, 'U', 17, 'Approved Quantity'),\n" +
-        "(18, (select id from programs where code = 'HIV'), true, 'C', 18, 'Packs to Ship'),\n" +
-        "(19, (select id from programs where code = 'HIV'), true, 'R', 19, 'Price per pack'),\n" +
-        "(20, (select id from programs where code = 'HIV'), true, 'C', 20, 'Total cost'),\n" +
-        "(21, (select id from programs where code = 'HIV'), true, 'U', 21, 'Remarks');", "alter");
+                "(2, (select id from programs where code = 'HIV'),  true, 'R', 2,  'Product'),\n" +
+                "(3, (select id from programs where code = 'HIV'),  true, 'R', 3,  'Unit/Unit of Issue'),\n" +
+                "(4, (select id from programs where code = 'HIV'),  true, 'U', 4,  'Beginning Balance'),\n" +
+                "(5, (select id from programs where code = 'HIV'),  true, 'U', 5,  'Total Received Quantity'),\n" +
+                "(6, (select id from programs where code = 'HIV'),  true, 'U', 6,  'Total Consumed Quantity'),\n" +
+                "(7, (select id from programs where code = 'HIV'),  true, 'U', 7,  'Total Losses / Adjustments'),\n" +
+                "(8, (select id from programs where code = 'HIV'),  true, 'C', 8,  'Stock on Hand'),\n" +
+                "(9, (select id from programs where code = 'HIV'),  true, 'U', 9, 'New Patients'),\n" +
+                "(10, (select id from programs where code = 'HIV'), true, 'U', 10, 'Total Stockout days'),\n" +
+                "(11, (select id from programs where code = 'HIV'), true, 'C', 11, 'Adjusted Total Consumption'),\n" +
+                "(12, (select id from programs where code = 'HIV'), true, 'C', 12, 'Average Monthly Consumption(AMC)'),\n" +
+                "(13, (select id from programs where code = 'HIV'), true, 'C', 13, 'Maximum Stock Quantity'),\n" +
+                "(14, (select id from programs where code = 'HIV'), true, 'C', 14, 'Calculated Order Quantity'),\n" +
+                "(15, (select id from programs where code = 'HIV'), true, 'U', 15, 'Requested Quantity'),\n" +
+                "(16, (select id from programs where code = 'HIV'), true, 'U', 16, 'Requested Quantity Explanation'),\n" +
+                "(17, (select id from programs where code = 'HIV'), true, 'U', 17, 'Approved Quantity'),\n" +
+                "(18, (select id from programs where code = 'HIV'), true, 'C', 18, 'Packs to Ship'),\n" +
+                "(19, (select id from programs where code = 'HIV'), true, 'R', 19, 'Price per pack'),\n" +
+                "(20, (select id from programs where code = 'HIV'), true, 'C', 20, 'Total cost'),\n" +
+                "(21, (select id from programs where code = 'HIV'), true, 'U', 21, 'Remarks');", "alter");
     }
 
     public String getFacilityIDDB() throws IOException , SQLException
     {
 
         DBWrapper dbWrapper=new DBWrapper();
-         String id=null;
+        String id=null;
         ResultSet rs=dbWrapper.dbConnection("select id from facilities order by modifiedDate DESC limit 1", "select");
 
         if (rs.next()) {
-         id=rs.getString("id");
+            id=rs.getString("id");
         }
         return id;
 
