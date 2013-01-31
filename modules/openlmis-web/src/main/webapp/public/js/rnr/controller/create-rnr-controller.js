@@ -45,6 +45,7 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     }, function (data) {
     });
 
+  
   ReferenceData.get({}, function (data) {
     $scope.currency = data.currency;
   }, {});
