@@ -10,9 +10,6 @@ function UserController($scope, $routeParams, Users, SearchFacilitiesByCodeOrNam
     }, {});
   } else {
     $scope.user={};
-    $scope.$parent.user.roleAssignments = [
-      {programId:"", roleIds:[]}
-    ];
   }
 
   $scope.saveUser = function () {
