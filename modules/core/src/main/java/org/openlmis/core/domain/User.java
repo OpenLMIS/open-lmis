@@ -2,6 +2,7 @@ package org.openlmis.core.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.hash.Encoder;
 import org.openlmis.upload.Importable;
@@ -11,8 +12,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+
 @Data
 @NoArgsConstructor
+@JsonSerialize(include = NON_EMPTY)
 public class User implements Importable {
   private Integer id;
   @ImportField(mandatory = true, name = "User Name")
