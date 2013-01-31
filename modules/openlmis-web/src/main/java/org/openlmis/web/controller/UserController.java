@@ -23,6 +23,7 @@ import static java.lang.Boolean.TRUE;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 import static org.openlmis.core.service.UserService.USER_REQUEST_URL;
 import static org.openlmis.web.response.OpenLmisResponse.error;
+import static org.openlmis.web.response.OpenLmisResponse.response;
 
 
 @Controller
@@ -31,6 +32,8 @@ public class UserController extends BaseController {
 
   private RoleRightsService roleRightService;
   private UserService userService;
+  public static final String USER_ID = "userId";
+  private static final String PASSWORD_RESET_REQUEST_MAPPING = "/user/resetPassword/";
 
   @Autowired
   public UserController(RoleRightsService roleRightService, UserService userService) {
@@ -56,7 +59,7 @@ public class UserController extends BaseController {
   @RequestMapping(value = "/forgot-password", method = RequestMethod.POST, headers = "Accept=application/json")
   public ResponseEntity<OpenLmisResponse> sendPasswordTokenEmail(@RequestBody User user, HttpServletRequest request) {
     try {
-      String requestUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+"/";
+      String requestUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+PASSWORD_RESET_REQUEST_MAPPING;
       Map<String,Object> args = new HashMap<>();
       args.put(USER_REQUEST_URL, requestUrl);
       userService.sendForgotPasswordEmail(user, args);
@@ -106,5 +109,16 @@ public class UserController extends BaseController {
   @PreAuthorize("hasPermission('','MANAGE_USERS')")
   public User getById(@PathVariable(value = "id") Integer id) {
     return userService.getById(id);
+  }
+
+  @RequestMapping(value = PASSWORD_RESET_REQUEST_MAPPING +"{token}", method = RequestMethod.GET)
+  public ResponseEntity<OpenLmisResponse> resetPassword(@PathVariable(value = "token") String token) {
+    Integer userId;
+    try {
+      userId = userService.getUserIdForPasswordResetToken(token);
+    } catch (DataException e) {
+      return error(e, HttpStatus.BAD_REQUEST);
+    }
+    return response(USER_ID, userId);
   }
 }

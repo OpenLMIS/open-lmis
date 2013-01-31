@@ -99,4 +99,8 @@ public class UserRepository {
     userMapper.deletePasswordResetTokenForUserId(user);
   }
 
+  public void updateUserPassword(User user) {
+    userMapper.updateUserPassword(user);
+  }
+
 }

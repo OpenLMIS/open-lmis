@@ -140,4 +140,8 @@ public class UserService {
     return userId;
   }
 
+  public void updateUserPassword(User user){
+    userRepository.updateUserPassword(user);
+  }
+
 }

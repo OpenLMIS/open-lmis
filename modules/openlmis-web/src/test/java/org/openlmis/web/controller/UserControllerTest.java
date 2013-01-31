@@ -187,4 +187,25 @@ public class UserControllerTest {
     assertThat(returnedUser, is(user));
 
   }
+
+  @Test
+  public void shouldReturnErrorResponseIfTokenIsNotValid(){
+    String invalidToken = "invalidToken";
+    doThrow(new DataException("some error")).when(userService).getUserIdForPasswordResetToken(invalidToken);
+
+    ResponseEntity<OpenLmisResponse> responseEntity = userController.resetPassword(invalidToken);
+
+    assertThat(responseEntity.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+  }
+
+  @Test
+  public void shouldReturnUserIdForValidPasswordResetToken() throws Exception {
+
+    String validToken = "validToken";
+    when(userService.getUserIdForPasswordResetToken(validToken)).thenReturn(1);
+
+    ResponseEntity<OpenLmisResponse> responseEntity = userController.resetPassword(validToken);
+
+    assertThat(responseEntity.getBody().getData().get(UserController.USER_ID).toString(), is("1"));
+  }
 }
