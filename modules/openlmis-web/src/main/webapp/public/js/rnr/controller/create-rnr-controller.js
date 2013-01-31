@@ -78,7 +78,6 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     $scope.submitError = "";
     $scope.inputClass = "";
     $scope.submitMessage = "";
-    $scope.rnr.nonFullSupplyLineItems = $scope.nonFullSupplyLineItems;
     if ($scope.saveRnrForm.$error.rnrError) {
       $scope.error = "Please correct errors before saving.";
       $scope.message = "";
@@ -258,10 +257,6 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
   };
 
 
-  $scope.isNonFullSupply = function (rnrLineItem) {
-    return !rnrLineItem.fullSupply;
-  };
-
   $scope.labelForRnrColumn = function (columnName) {
     var label = "";
     $($scope.programRnRColumnList).each(function (index, column) {
@@ -316,17 +311,17 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
   $scope.addNonFullSupplyLineItem = function () {
     populateProductInformation();
     jQuery.extend(true, $scope.newNonFullSupply, new RnrLineItem());
-    $scope.newNonFullSupply.fill($scope.rnr, $scope.programRnRColumnList);
     prepareNFSLineItemFields();
     $scope.nonFullSupplyLineItems.push($scope.newNonFullSupply);
+    $scope.rnr.nonFullSupplyLineItems = $scope.nonFullSupplyLineItems;
+    $scope.newNonFullSupply.fill($scope.rnr, $scope.programRnRColumnList);
     $scope.facilityApprovedProduct = undefined;
-    $scope.newNonFullSupply = {};
+    $scope.newNonFullSupply = undefined;
     updateNonFullSupplyProductsToDisplay();
   };
 
   $scope.showAddNonFullSupplyModal = function () {
     updateNonFullSupplyProductsToDisplay();
     $scope.nonFullSupplyProductsModal = true;
-    $scope.newNonFullSupply.quantityRequested.required = true;
   };
 }

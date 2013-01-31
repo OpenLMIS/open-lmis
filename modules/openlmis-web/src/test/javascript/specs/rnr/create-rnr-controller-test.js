@@ -134,7 +134,7 @@ describe('CreateRnrController', function () {
   it('should not save work in progress when invalid form', function () {
     scope.saveRnrForm.$error.rnrError = true;
     scope.nonFullSupplyLineItems = [];
-    scope.rnr = {nonFullSupplyLineItems : []};
+    scope.rnr = {nonFullSupplyLineItems:[]};
     scope.saveRnr();
     expect(scope.error).toEqual("Please correct errors before saving.");
   });
@@ -330,20 +330,28 @@ describe('CreateRnrController', function () {
     expect(scope.highlightRequiredFieldInModal(3)).toEqual(null);
   });
 
-  it('should return if the rnrLineItem is fullSupply', function () {
-    var rnrLineItemFullSupply = jQuery.extend(true, {fullSupply:true}, new RnrLineItem());
-    var rnrLineItemNonFullSupply = jQuery.extend(true, {fullSupply:false}, new RnrLineItem());
-
-    expect(scope.isNonFullSupply(rnrLineItemFullSupply)).toEqual(false);
-    expect(scope.isNonFullSupply(rnrLineItemNonFullSupply)).toEqual(true);
+  it('should display non full supply addition modal window', function () {
+    scope.nonFullSupplyLineItems = [];
+    scope.nonFullSupplyProducts = [];
+    scope.showAddNonFullSupplyModal();
+    expect(scope.nonFullSupplyProductsModal).toBeTruthy();
+    expect(scope.newNonFullSupply).toBeUndefined();
   });
 
-  it('should return if the rnrLineItem is nonFullSupply', function () {
-    var rnrLineItemFullSupply = jQuery.extend(true, {fullSupply:true}, new RnrLineItem());
-    var rnrLineItemNonFullSupply = jQuery.extend(true, {fullSupply:false}, new RnrLineItem());
+  it('should add non full supply line item to the list', function () {
+    scope.rnr = {"id":1};
+    scope.nonFullSupplyLineItems = [];
+    scope.nonFullSupplyProducts = [];
+    scope.facilityApprovedProduct = {"programProduct": {"dosesPerMonth":5, "currentPrice":10, "product":{"form":{"code":"Tablet"}, "dosageUnit":{"code":"mg"}, "strength":"600", "code":"P999", "primaryName":"Antibiotics", "dosesPerDispensingUnit": 3, "packSize": 10, "roundToZero": "false", "packRoundingThreshold":"true", "dispensingUnit":"Strip", "fullSupply":"true"}}, "maxMonthsOfStock":3};
+    scope.newNonFullSupply = {"quantityRequested":20, "reasonForRequestedQuantity":"Bad Weather"};
+    scope.addNonFullSupplyLineItem();
 
-    expect(scope.isNonFullSupply(rnrLineItemFullSupply)).toEqual(false);
-    expect(scope.isNonFullSupply(rnrLineItemNonFullSupply)).toEqual(true);
+    expect(scope.nonFullSupplyLineItems[0].quantityRequested).toEqual(20);
+    expect(scope.nonFullSupplyLineItems[0].reasonForRequestedQuantity).toEqual("Bad Weather");
+    expect(scope.nonFullSupplyLineItems[0].cost).toEqual(20);
+    expect(scope.nonFullSupplyProductsToDisplay).toEqual([]);
+    expect(scope.rnr.nonFullSupplyItemsSubmittedCost).toEqual(20);
   });
+
 });
 
