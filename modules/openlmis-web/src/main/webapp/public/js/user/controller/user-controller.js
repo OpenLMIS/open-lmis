@@ -65,17 +65,21 @@ function UserController($scope, $routeParams, Users, SearchFacilitiesByCodeOrNam
     });
   };
 
-  $scope.createGridRow = function (programRoleGridRow) {
-    programRoleGridRow.supportedPrograms = $scope.allSupportedPrograms;
-    programRoleGridRow.roles = $scope.allRoles;
-    $scope.programAndRoleList = $scope.programAndRoleList.concat(programRoleGridRow);
+  $scope.showRoleAssignmentOptions = function () {
+    return $scope.facilitySelected && $scope.programAndRoleList.length > 0;
   };
 
   $scope.addRole = function () {
     var programRoleGridRow = { supportedPrograms:[], roles:[]};
     loadRoleAssignments(programRoleGridRow);
-    $scope.createGridRow(programRoleGridRow);
+    createGridRow(programRoleGridRow);
     $scope.user.roleAssignments = $scope.user.roleAssignments.concat({programId:{}, roleIds:[]});
+  };
+
+  var createGridRow = function (programRoleGridRow) {
+    programRoleGridRow.supportedPrograms = $scope.allSupportedPrograms;
+    programRoleGridRow.roles = $scope.allRoles;
+    $scope.programAndRoleList = $scope.programAndRoleList.concat(programRoleGridRow);
   };
 
   var loadRoleAssignments = function (programRoleGridRow) {
@@ -101,7 +105,7 @@ function UserController($scope, $routeParams, Users, SearchFacilitiesByCodeOrNam
     loadRoleAssignments(programRoleGridRow);
 
     $.each($scope.user.roleAssignments, function () {
-      $scope.createGridRow(programRoleGridRow);
+      createGridRow(programRoleGridRow);
     })
 
   };
