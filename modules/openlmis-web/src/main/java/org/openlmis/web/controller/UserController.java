@@ -16,10 +16,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
+import static org.openlmis.core.service.UserService.USER_REQUEST_URL;
 import static org.openlmis.web.response.OpenLmisResponse.error;
 
 
@@ -52,9 +54,12 @@ public class UserController extends BaseController {
   }
 
   @RequestMapping(value = "/forgot-password", method = RequestMethod.POST, headers = "Accept=application/json")
-  public ResponseEntity<OpenLmisResponse> sendPasswordTokenEmail(@RequestBody User user) {
+  public ResponseEntity<OpenLmisResponse> sendPasswordTokenEmail(@RequestBody User user, HttpServletRequest request) {
     try {
-      userService.sendForgotPasswordEmail(user);
+      String requestUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+"/";
+      Map<String,Object> args = new HashMap<>();
+      args.put(USER_REQUEST_URL, requestUrl);
+      userService.sendForgotPasswordEmail(user, args);
       return OpenLmisResponse.success("Email sent");
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);

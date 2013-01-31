@@ -12,14 +12,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
 @NoArgsConstructor
 public class UserService {
 
+  public static final String USER_REQUEST_URL = "user.request.url";
+
   public static final String USER_EMAIL_NOT_FOUND = "user.email.not.found";
   public static final String USER_EMAIL_INCORRECT = "user.email.incorrect";
+  public static final String PASSWORD_RESET_TOKEN_INVALID = "user.password.reset.token.invalid";
   private static final String USER_USERNAME_INCORRECT = "user.username.incorrect";
 
   @Value("${accountcreated.email.subject}")
@@ -56,7 +60,7 @@ public class UserService {
     roleAssignmentService.insertUserProgramRoleMapping(user);
 
     if (createFlag) {
-      EmailMessage emailMessage = accountCreatedEmailMessage(user.getEmail());
+      EmailMessage emailMessage = accountCreatedEmailMessage(user, null);
       sendEmail(emailMessage);
     }
   }
@@ -69,9 +73,9 @@ public class UserService {
     }
   }
 
-  public void sendForgotPasswordEmail(User user) {
+  public void sendForgotPasswordEmail(User user, Map<String, Object> args) {
     user = getValidatedUser(user);
-    EmailMessage emailMessage = forgotPasswordEmailMessage(user.getEmail());
+    EmailMessage emailMessage = forgotPasswordEmailMessage(user, args);
     emailMessage.setTo(user.getEmail());
     sendEmail(emailMessage);
   }
@@ -87,21 +91,29 @@ public class UserService {
     return user;
   }
 
-  private EmailMessage createEmailMessage(String email) {
+  private EmailMessage createEmailMessage(User user, Map<String, Object> args) {
     EmailMessage emailMessage = new EmailMessage();
-    emailMessage.setTo(email);
-    emailMessage.setText(PASSWORD_RESET_CREATED_EMAIL_BODY + generateUUID());
+    emailMessage.setTo(user.getEmail());
+    String mailBody = null;
+    if (PASSWORD_RESET_CREATED_EMAIL_BODY != null) {
+      mailBody = PASSWORD_RESET_CREATED_EMAIL_BODY.replace("{0}", args.get(USER_REQUEST_URL).toString());
+    }
+
+    String passwordResetToken = generateUUID();
+    userRepository.insertPasswordResetToken(user, passwordResetToken);
+
+    emailMessage.setText(mailBody + passwordResetToken);
     return emailMessage;
   }
 
-  private EmailMessage accountCreatedEmailMessage(String email) {
-    EmailMessage emailMessage = createEmailMessage(email);
+  private EmailMessage accountCreatedEmailMessage(User user,  Map<String, Object> args) {
+    EmailMessage emailMessage = createEmailMessage(user, args);
     emailMessage.setSubject(ACCOUNT_CREATED_EMAIL_SUBJECT);
     return emailMessage;
   }
 
-  private EmailMessage forgotPasswordEmailMessage(String email) {
-    EmailMessage emailMessage = createEmailMessage(email);
+  private EmailMessage forgotPasswordEmailMessage(User user, Map<String, Object> args) {
+    EmailMessage emailMessage = createEmailMessage(user, args);
     emailMessage.setSubject(FORGOT_PASSWORD_EMAIL_SUBJECT);
     return emailMessage;
   }
@@ -119,4 +131,13 @@ public class UserService {
     user.setRoleAssignments(roleAssignmentService.getRoleAssignments(id));
     return user;
   }
+
+  public Integer getUserIdForPasswordResetToken(String token) {
+    Integer userId = userRepository.getUserIdForPasswordResetToken(token);
+    if(userId == null) {
+      throw new DataException(PASSWORD_RESET_TOKEN_INVALID);
+    }
+    return userId;
+  }
+
 }

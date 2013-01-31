@@ -189,6 +189,49 @@ public class UserMapperIT {
     assertThat(user.getUserName(), is(returnedUser.getUserName()));
   }
 
+
+  @Test
+  public void shouldInsertPasswordResetToken() throws Exception {
+    User user = make(a(defaultUser, with(facilityId, facility.getId())));
+    userMapper.insert(user);
+    String passwordResetToken = "passwordResetToken";
+    userMapper.insertPasswordResetToken(user, passwordResetToken);
+
+    assertThat(userMapper.getUserIdForPasswordResetToken(passwordResetToken), is(user.getId()));
+  }
+
+  @Test
+  public void shouldDeletePasswordResetToken() throws Exception {
+    User user = make(a(defaultUser, with(facilityId, facility.getId())));
+    userMapper.insert(user);
+    String passwordResetToken = "passwordResetToken";
+    userMapper.insertPasswordResetToken(user, passwordResetToken);
+
+    userMapper.deletePasswordResetTokenForUserId(user);
+
+    assertThat(userMapper.getUserIdForPasswordResetToken(passwordResetToken), is(nullValue()));
+  }
+
+  @Test
+  public void shouldGetUserIdForPasswordResetToken() throws Exception {
+    User user = make(a(defaultUser, with(facilityId, facility.getId())));
+    userMapper.insert(user);
+    String passwordResetToken = "passwordResetToken";
+    userMapper.insertPasswordResetToken(user, passwordResetToken);
+    assertThat(userMapper.getUserIdForPasswordResetToken(passwordResetToken), is(user.getId()));
+  }
+
+  @Test
+  public void shouldUpdateUserPassword() throws Exception {
+    User user = make(a(defaultUser, with(facilityId, facility.getId())));
+    userMapper.insert(user);
+    String newPassword = "newPassword";
+    user.setPassword(newPassword);
+    userMapper.updateUserPassword(user);
+    User returnedUser = userMapper.selectUserByUserNameAndPassword(user.getUserName(), user.getPassword());
+    assertThat(returnedUser, is(notNullValue()) );
+  }
+
   private Program insertProgram(Program program) {
     programMapper.insert(program);
     return program;

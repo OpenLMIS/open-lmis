@@ -47,4 +47,16 @@ public interface UserMapper {
 
   @Select("SELECT id, userName, firstName, lastName, employeeId, facilityId, jobTitle, officePhone, primaryNotificationMethod, cellPhone, email FROM users WHERE id=#{id}")
   User getById(Integer id);
+
+  @Insert("INSERT INTO user_password_reset_tokens (userId, token) VALUES (#{user.id}, #{token})")
+  void insertPasswordResetToken(@Param(value = "user")User user, @Param(value = "token")String token);
+
+  @Select("SELECT userId FROM user_password_reset_tokens WHERE token = #{token}")
+  Integer getUserIdForPasswordResetToken(String token);
+
+  @Delete("DELETE FROM user_password_reset_tokens WHERE userId = #{id}")
+  void deletePasswordResetTokenForUserId(User user);
+
+  @Update("UPDATE users SET password = #{password} WHERE id = #{id}")
+  void updateUserPassword(User user);
 }

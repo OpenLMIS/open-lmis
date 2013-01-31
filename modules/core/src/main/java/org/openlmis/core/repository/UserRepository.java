@@ -87,4 +87,16 @@ public class UserRepository {
     return userMapper.getById(id);
   }
 
+  public void insertPasswordResetToken(User user, String passwordResetToken) {
+    userMapper.insertPasswordResetToken(user, passwordResetToken);
+  }
+
+  public Integer getUserIdForPasswordResetToken(String token) {
+    return userMapper.getUserIdForPasswordResetToken(token);
+  }
+
+  public void deletePasswordResetTokenForUserId(User user) {
+    userMapper.deletePasswordResetTokenForUserId(user);
+  }
+
 }

@@ -71,4 +71,5 @@ public class User implements Importable {
     if (userName != null && userName.trim().contains(" "))
       throw new DataException(INVALID_USER_NAME_ERROR_CODE);
   }
+
 }

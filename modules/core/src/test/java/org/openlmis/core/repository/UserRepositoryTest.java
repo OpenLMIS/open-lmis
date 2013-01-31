@@ -176,4 +176,13 @@ public class UserRepositoryTest {
 
     assertThat(userReturned, is(user));
   }
+
+  @Test
+  public void shouldReturnUserIdForPasswordResetTokens() throws Exception {
+    String passwordResetToken = "test";
+    when(userMapper.getUserIdForPasswordResetToken(passwordResetToken)).thenReturn(1);
+
+    assertThat(userRepository.getUserIdForPasswordResetToken(passwordResetToken), is(1));
+  }
+
 }

@@ -19,5 +19,4 @@ function ForgotPasswordController($scope, ForgotPassword) {
       }
     }
 
-
 }

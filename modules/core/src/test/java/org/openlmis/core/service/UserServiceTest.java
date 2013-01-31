@@ -17,13 +17,17 @@ import org.openlmis.email.service.EmailService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.*;
+import static org.openlmis.core.service.UserService.PASSWORD_RESET_TOKEN_INVALID;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
@@ -42,10 +46,14 @@ public class UserServiceTest {
 
   private UserService userService;
 
+  private final Map<String,Object> args = new HashMap<>();
+
+
 
   @Before
   public void setUp() throws Exception {
     userService = new UserService(userRepository, roleAssignmentService, emailService);
+    args.put(UserService.USER_REQUEST_URL, "https://localhost:9091");
   }
 
   @Test
@@ -68,7 +76,7 @@ public class UserServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage(UserService.USER_EMAIL_INCORRECT);
 
-    userService.sendForgotPasswordEmail(user);
+    userService.sendForgotPasswordEmail(user, args);
   }
 
   @Test
@@ -82,10 +90,11 @@ public class UserServiceTest {
     userToBeReturned.setId(1111);
     when(userRepository.getByEmail(user.getEmail())).thenReturn(userToBeReturned);
 
-    userService.sendForgotPasswordEmail(user);
+    userService.sendForgotPasswordEmail(user, args);
 
     verify(emailService).send(any(EmailMessage.class));
     verify(userRepository).getByEmail(user.getEmail());
+    verify(userRepository).insertPasswordResetToken(eq(userToBeReturned), anyString());
   }
 
   @Test
@@ -99,7 +108,7 @@ public class UserServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage(UserService.USER_EMAIL_NOT_FOUND);
 
-    userService.sendForgotPasswordEmail(user);
+    userService.sendForgotPasswordEmail(user, args);
   }
 
   @Test
@@ -155,5 +164,27 @@ public class UserServiceTest {
     userService.save(user);
 
     verify(roleAssignmentService).deleteAllRoleAssignmentsForUser(1);
+  }
+
+  @Test
+  public void shouldThrowErrorIfPasswordResetTokenIsInValidWhileGettingUserId() throws Exception {
+
+    String invalidToken = "invalidToken";
+    when(userRepository.getUserIdForPasswordResetToken(invalidToken)).thenReturn(null);
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage(PASSWORD_RESET_TOKEN_INVALID);
+
+    userService.getUserIdForPasswordResetToken(invalidToken);
+  }
+
+  @Test
+  public void shouldReturnUserIdIfPasswordResetTokenIsValid() throws Exception {
+    String validToken = "validToken";
+    Integer expectedUserId = 1;
+    when(userRepository.getUserIdForPasswordResetToken(validToken)).thenReturn(expectedUserId);
+    Integer userId = userService.getUserIdForPasswordResetToken(validToken);
+
+    verify(userRepository).getUserIdForPasswordResetToken(validToken);
+    assertThat(userId, is(expectedUserId));
   }
 }

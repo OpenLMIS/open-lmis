@@ -88,16 +88,16 @@ public class UserControllerTest {
     User user = new User();
     user.setUserName("Manan");
     user.setEmail("manan@thoughtworks.com");
-    userController.sendPasswordTokenEmail(user);
-    verify(userService).sendForgotPasswordEmail(user);
+    userController.sendPasswordTokenEmail(user, httpServletRequest);
+    verify(userService).sendForgotPasswordEmail(eq(user), anyMap());
   }
 
   @Test
   public void shouldReturnErrorIfSendingForgotPasswordEmailFails() throws Exception {
     User user = new User();
-    doThrow(new DataException("some error")).when(userService).sendForgotPasswordEmail(user);
+    doThrow(new DataException("some error")).when(userService).sendForgotPasswordEmail(eq(user), any(Map.class));
 
-    ResponseEntity<OpenLmisResponse> response = userController.sendPasswordTokenEmail(user);
+    ResponseEntity<OpenLmisResponse> response = userController.sendPasswordTokenEmail(user, httpServletRequest);
 
     assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     assertThat(response.getBody().getErrorMsg(), is("some error"));
