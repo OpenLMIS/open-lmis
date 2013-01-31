@@ -5,7 +5,7 @@
       <span id = "totalCostCurrency" class = "cell-text" >
         {{currency}}
       </span >
-        <span id = "totalCost" class = "cell-text" ng-bind="rnr.fullSupplyItemsSubmittedCost + rnr.nonFullSupplyItemsSubmittedCost">
+        <span id = "totalCost" class = "cell-text" ng-bind="totalCost()">
       </span >
     </div >
     <div class = "rnr-table" >
@@ -331,7 +331,7 @@
                     <span ng-switch-when = "quantityRequested" >
                           <input ng-disabled = "formDisabled" id = "{{getId('J', $parent)}}" type = "text"
                                  name = "quantityRequested{{rnrLineItem['id']}}"
-                                 ng-model = "rnrLineItem[column.name]"
+                                 ng-model = "rnrLineItem.quantityRequested"
                                  ng-required = "true"
                                  ng-class = "highlightRequired(rnrLineItem[column.name])"
                                  rnr-validator = "positiveInteger" maxlength = "8"
@@ -424,8 +424,9 @@
         <div class = "modal-footer">
           <span class="span3">
           <span>
-        <a href="" class="btn btn-primary" ng-click="addNonFullSupplyLineItem()"
-           ng-disabled="!(newNonFullSupply.quantityRequested && newNonFullSupply.reasonForRequestedQuantity && facilityApprovedProduct)">Add</a>
+        <input type="button" href="" class="btn btn-primary" ng-click="addNonFullSupplyLineItem()"
+           ng-disabled="!(newNonFullSupply.quantityRequested && newNonFullSupply.reasonForRequestedQuantity
+           && facilityApprovedProduct)" value="Add" />
         </span>
           <span>
           <input type="button" class="btn btn-success save-button"

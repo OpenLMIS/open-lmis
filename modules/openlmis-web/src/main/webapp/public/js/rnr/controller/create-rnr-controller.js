@@ -45,6 +45,10 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     }, function (data) {
     });
 
+  $scope.totalCost = function() {
+    if(!$scope.rnr) return;
+    return parseFloat(parseFloat($scope.rnr.fullSupplyItemsSubmittedCost) + parseFloat($scope.rnr.nonFullSupplyItemsSubmittedCost)).toFixed(2);
+  };
 
   ReferenceData.get({}, function (data) {
     $scope.currency = data.currency;
