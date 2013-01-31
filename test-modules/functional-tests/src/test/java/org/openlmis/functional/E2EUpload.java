@@ -37,7 +37,7 @@ public class E2EUpload extends TestCaseHelper {
         templateConfigPage.configureTemplate();
 
         RolesPage rolesPage = homePage.navigateRoleAssignments();
-        List<String> userRoleList = new ArrayList<>();
+        List<String> userRoleList = new ArrayList<String>();
         userRoleList.add("Create Requisition");
 
         rolesPage.createRole("User", "User", userRoleList);

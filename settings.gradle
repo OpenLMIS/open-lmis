@@ -1,3 +1,5 @@
 include "modules:core", "modules:authentication",
-        "modules:openlmis-web", "functional-tests","service-tests","modules:db","modules:upload","modules:requisition","modules:email"
+        "modules:openlmis-web", "modules:db","modules:upload",
+        "modules:requisition","modules:email","test-modules:functional-tests","test-modules:service-tests",
+        "test-modules:test-core"
 

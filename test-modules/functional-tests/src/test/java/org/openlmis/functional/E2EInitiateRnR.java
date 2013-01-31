@@ -65,7 +65,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
         templateConfigPage.configureTemplate();
 
         RolesPage rolesPage = homePage.navigateRoleAssignments();
-        List<String> userRoleListStoreincharge = new ArrayList<>();
+        List<String> userRoleListStoreincharge = new ArrayList<String>();
         userRoleListStoreincharge.add("Create Requisition");
         userRoleListStoreincharge.add("Authorize Requisition");
         userRoleListStoreincharge.add("Approve Requisition");
@@ -73,7 +73,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
         rolesPage.createRole("Store-in-charge", "Store-in-charge", userRoleListStoreincharge);
         dbWrapper.insertRoleAssignment("200", "Store-in-charge");
 
-        List<String> userRoleListMedicalofficer = new ArrayList<>();
+        List<String> userRoleListMedicalofficer = new ArrayList<String>();
         userRoleListMedicalofficer.add("Approve Requisition");
         rolesPage.createRole("Medical-officer", "Medical-officer", userRoleListMedicalofficer);
         dbWrapper.insertRoleAssignment("300", "Medical-officer");

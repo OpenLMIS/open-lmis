@@ -7,7 +7,7 @@ dependencies {
             'org.seleniumhq.selenium:selenium-firefox-driver:2.25.0',
             'net.sf.json-lib:json-lib:0.9',
             'postgresql:postgresql:9.0-801.jdbc4',
-            project(':modules:db')
+            project(':test-modules:test-core')
 
 
     testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
@@ -16,7 +16,7 @@ dependencies {
             'org.seleniumhq.selenium:selenium-firefox-driver:2.25.0 ',
             'net.sf.json-lib:json-lib:0.9',
             'postgresql:postgresql:9.0-801.jdbc4',
-            project(':modules:db')
+            project(':test-modules:test-core')
 }
 
 test {
@@ -24,7 +24,7 @@ test {
 }
 
 task buildOpenLmis(type: GradleBuild) {
-    buildFile = '../modules/openlmis-web/build.gradle'
+    buildFile = '../../modules/openlmis-web/build.gradle'
     tasks = ['jettyRunWarDaemon']
 }
 

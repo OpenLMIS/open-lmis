@@ -19,21 +19,5 @@ dependencies {
             project(':modules:db')
 }
 
-test {
-    exclude '**/org/openlmis/service/*.*'
-}
 
-task buildOpenLmis(type: GradleBuild) {
-    buildFile = '../modules/openlmis-web/build.gradle'
-    tasks = ['jettyRunWarDaemon']
-}
-
-task serviceTest(type: Test) {
-    include '**/org/openlmis/service/*.*'
-    useTestNG()
-}
-
-serviceTest.doFirst() {
-    buildOpenLmis.execute()
-}
 
