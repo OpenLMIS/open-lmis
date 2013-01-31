@@ -62,7 +62,7 @@ public class UserServiceTest {
     doThrow(new DataException("user.email.invalid")).when(user).validate();
     expectedException.expect(DataException.class);
     expectedException.expectMessage("user.email.invalid");
-    userService.save(user);
+    userService.save(user, args);
     verify(userRepository, never()).insert(user);
   }
 
@@ -142,7 +142,7 @@ public class UserServiceTest {
   public void shouldSendPasswordEmailWhenUserCreated() throws Exception {
     User user = new User();
 
-    userService.save(user);
+    userService.save(user, args);
 
     verify(emailService).send(any(EmailMessage.class));
   }
@@ -155,13 +155,13 @@ public class UserServiceTest {
     userRoleAssignments.add(userRoleAssignment);
     user.setRoleAssignments(userRoleAssignments);
 
-    userService.save(user);
+    userService.save(user, args);
 
     verify(userRepository).insert(user);
     verify(roleAssignmentService).insertUserProgramRoleMapping(user);
 
     user.setId(1);
-    userService.save(user);
+    userService.save(user, args);
 
     verify(roleAssignmentService).deleteAllRoleAssignmentsForUser(1);
   }

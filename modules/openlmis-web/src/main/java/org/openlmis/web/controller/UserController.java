@@ -77,7 +77,10 @@ public class UserController extends BaseController {
       if(createFlag) {
         user.setPassword("openLmis123");
       }
-      userService.save(user);
+      String requestUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+"/";
+      Map<String,Object> args = new HashMap<>();
+      args.put(USER_REQUEST_URL, requestUrl);
+      userService.save(user, args);
     } catch (DataException e) {
       ResponseEntity<OpenLmisResponse> errorResponse = error(e, HttpStatus.BAD_REQUEST);
       errorResponse.getBody().setData("user", user);

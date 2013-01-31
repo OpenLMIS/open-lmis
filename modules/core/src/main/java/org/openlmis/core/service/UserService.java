@@ -48,7 +48,7 @@ public class UserService {
     this.roleAssignmentService = roleAssignmentService;
   }
 
-  public void save(User user) {
+  public void save(User user, Map args) {
     user.validate();
     Boolean createFlag = user.getId() == null;
     userRepository.insert(user);
@@ -60,7 +60,7 @@ public class UserService {
     roleAssignmentService.insertUserProgramRoleMapping(user);
 
     if (createFlag) {
-      EmailMessage emailMessage = accountCreatedEmailMessage(user, null);
+      EmailMessage emailMessage = accountCreatedEmailMessage(user, args);
       sendEmail(emailMessage);
     }
   }
@@ -95,7 +95,7 @@ public class UserService {
     EmailMessage emailMessage = new EmailMessage();
     emailMessage.setTo(user.getEmail());
     String mailBody = null;
-    if (PASSWORD_RESET_CREATED_EMAIL_BODY != null) {
+    if (PASSWORD_RESET_CREATED_EMAIL_BODY != null && args.get(USER_REQUEST_URL) != null) {
       mailBody = PASSWORD_RESET_CREATED_EMAIL_BODY.replace("{0}", args.get(USER_REQUEST_URL).toString());
     }
 

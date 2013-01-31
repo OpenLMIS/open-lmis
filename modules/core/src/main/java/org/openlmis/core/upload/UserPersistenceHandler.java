@@ -7,6 +7,8 @@ import org.openlmis.upload.Importable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+
 @Component
 @NoArgsConstructor
 public class UserPersistenceHandler extends AbstractModelPersistenceHandler {
@@ -23,6 +25,6 @@ public class UserPersistenceHandler extends AbstractModelPersistenceHandler {
   protected void save(Importable modelClass, String modifiedBy) {
     final User user = (User) modelClass;
     user.setModifiedBy(modifiedBy);
-    userService.save(user);
+    userService.save(user, new HashMap());
   }
 }

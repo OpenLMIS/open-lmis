@@ -118,7 +118,7 @@ public class UserControllerTest {
     httpServletRequest.getSession().setAttribute(USER,USER);
     ResponseEntity<OpenLmisResponse> response = userController.save(user,httpServletRequest);
 
-    verify(userService).save(user);
+    verify(userService).save(eq(user), anyMap());
 
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
     assertThat(response.getBody().getSuccessMsg(), is("User "+user.getFirstName()+" "+user.getLastName()+" has been successfully created, password link sent on registered Email address"));
@@ -145,7 +145,7 @@ public class UserControllerTest {
 
     ResponseEntity<OpenLmisResponse> response = userController.save(user,httpServletRequest );
 
-    verify(userService).save(user);
+    verify(userService).save(eq(user), anyMap());
 
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
     assertThat(response.getBody().getSuccessMsg(), is("User "+user.getFirstName()+" "+user.getLastName()+" has been successfully updated"));
@@ -156,7 +156,7 @@ public class UserControllerTest {
   @Test
   public void shouldReturnErrorIfSaveUserFails() throws Exception {
     User user = new User();
-    doThrow(new DataException("Save user failed")).when(userService).save(user);
+    doThrow(new DataException("Save user failed")).when(userService).save(eq(user), anyMap());
 
     ResponseEntity<OpenLmisResponse> response = userController.save(user,httpServletRequest);
 
