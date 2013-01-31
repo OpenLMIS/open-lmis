@@ -105,15 +105,7 @@ public class RequisitionService {
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
     Rnr savedRequisition = requisitionRepository.getRequisition(rnr.getFacility(), rnr.getProgram(), rnr.getPeriod());
-
-    for (RnrLineItem lineItem : rnr.getLineItems()) {
-      for (RnrLineItem savedLineItem : savedRequisition.getLineItems()) {
-        if (savedLineItem.getPreviousStockInHandAvailable() && lineItem.getProductCode().equals(savedLineItem.getProductCode())) {
-          lineItem.setBeginningBalance(savedLineItem.getBeginningBalance());
-          break;
-        }
-      }
-    }
+    rnr.resetBeginningBalancesFromRequisition(savedRequisition);
 
     requisitionRepository.update(rnr);
   }

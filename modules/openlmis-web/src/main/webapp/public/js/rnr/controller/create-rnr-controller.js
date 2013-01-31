@@ -1,4 +1,4 @@
-function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $location, FacilityApprovedProducts, Requisition, Requisitions, RequisitionLineItem, $routeParams, LossesAndAdjustmentsReferenceData, $rootScope) {
+function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $location, FacilityApprovedProducts, Requisition, Requisitions, $routeParams, LossesAndAdjustmentsReferenceData, $rootScope) {
 
   $scope.lossesAndAdjustmentsModal = [];
   $scope.rnrLineItems = [];
@@ -15,7 +15,8 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
           $scope.$parent.error = "Requisition does not exist. Please initiate.";
           $location.path($scope.$parent.sourceUrl);
         }
-      }, {});
+      }, function () {
+      });
   } else {
     $scope.formDisabled = isFormDisabled();
     populateRnrLineItems($scope.$parent.rnr);
@@ -53,15 +54,17 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
   }, {});
 
   ProgramRnRColumnList.get({programId:$routeParams.program}, function (data) {
-    function resetFullSupplyItemsCostIfNull(rnr) {
+    function resetCostsIfNull(rnr) {
       if (rnr == null) return;
       if (rnr.fullSupplyItemsSubmittedCost == null)
         rnr.fullSupplyItemsSubmittedCost = 0;
+      if (rnr.nonFullSupplyItemsSubmittedCost == null)
+        rnr.nonFullSupplyItemsSubmittedCost = 0;
     }
 
-    if (data.rnrColumnList.length > 0) {
+    if (data.rnrColumnList && data.rnrColumnList.length > 0) {
       $scope.programRnRColumnList = data.rnrColumnList;
-      resetFullSupplyItemsCostIfNull($scope.$parent.rnr);
+      resetCostsIfNull($scope.$parent.rnr);
     } else {
       $scope.$parent.error = "Please contact Admin to define R&R template for this program";
       $location.path($scope.$parent.sourceUrl);
@@ -74,6 +77,7 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     $scope.submitError = "";
     $scope.inputClass = "";
     $scope.submitMessage = "";
+    $scope.rnr.nonFullSupplyLineItems = $scope.nonFullSupplyLineItems;
     if ($scope.saveRnrForm.$error.rnrError) {
       $scope.error = "Please correct errors before saving.";
       $scope.message = "";
@@ -102,8 +106,8 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     return null;
   };
 
-  $scope.highlightWarning = function (value, index) {
-    if ((isUndefined(value) || value.trim().length == 0 || value == false) && $scope.inputClass == 'required' && $scope.rnrLineItems[index].quantityRequested) {
+  $scope.highlightWarning = function (value, field) {
+    if ((isUndefined(value) || value.trim().length == 0 || value == false) && $scope.inputClass == 'required' && field) {
       return "warning-error";
     }
     return null;
@@ -141,7 +145,7 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
 
   $scope.submitRnr = function () {
     if (!valid()) return;
-
+    $scope.rnr.nonFullSupplyLineItems = $scope.nonFullSupplyLineItems;
     Requisitions.update({id:$scope.rnr.id, operation:"submit"},
       $scope.rnr, function (data) {
         $scope.rnr.status = "SUBMITTED";
@@ -155,7 +159,6 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
 
   $scope.authorizeRnr = function () {
     if (!valid()) return;
-
     Requisitions.update({id:$scope.rnr.id, operation:"authorize"},
       $scope.rnr, function (data) {
         $scope.rnr.status = "AUTHORIZED";
@@ -194,11 +197,6 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     $scope.lossesAndAdjustmentsModal[lineItem.id] = true;
   };
 
-  $scope.showAddNonFullSupplyModal = function () {
-    $scope.nonFullSupplyProductsModal = true;
-    $scope.newNonFullSupply.quantityRequested.required = true;
-    $scope.newNonFullSupply.reasonForRequestedQuantity = true;
-  };
 
   $scope.removeLossAndAdjustment = function (lineItem, lossAndAdjustmentToDelete) {
     lineItem.removeLossAndAdjustment(lossAndAdjustmentToDelete);
@@ -261,7 +259,7 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
 
   $scope.isNonFullSupply = function (rnrLineItem) {
     return !rnrLineItem.fullSupply;
-  }
+  };
 
   $scope.labelForRnrColumn = function (columnName) {
     var label = "";
@@ -274,8 +272,10 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     return label;
   };
 
+
   function populateProductInformation() {
-    var product = $scope.facilityApprovedProduct.programProduct.product;
+    var product = {};
+    angular.copy($scope.facilityApprovedProduct.programProduct.product, product);
     $scope.newNonFullSupply.productCode = product.code;
     $scope.newNonFullSupply.product = (product.primaryName == null ? "" : (product.primaryName + " ")) +
       (product.form.code == null ? "" : (product.form.code + " ")) +
@@ -292,29 +292,40 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     $scope.newNonFullSupply.price = $scope.facilityApprovedProduct.programProduct.currentPrice;
   }
 
+  function prepareNFSLineItemFields() {
+    $(['quantityReceived', 'quantityDispensed', 'beginningBalance', 'stockInHand', 'totalLossesAndAdjustments', 'calculatedOrderQuantity', 'newPatientCount',
+      'stockOutDays', 'normalizedConsumption', 'amc', 'maxStockQuantity']).each(function (index, field) {
+        $scope.newNonFullSupply[field] = 0;
+      });
+    $scope.newNonFullSupply.rnrId = $scope.rnr.id;
+  }
+
+  function updateNonFullSupplyProductsToDisplay() {
+    var usedNonFullSupplyProducts = [];
+    $($scope.nonFullSupplyLineItems).each(function (index, nonFullSupplyLineItem) {
+      usedNonFullSupplyProducts.push(nonFullSupplyLineItem.productCode);
+    });
+
+    var allNonFullSupplyProducts = $scope.nonFullSupplyProducts;
+    $scope.nonFullSupplyProductsToDisplay = $.grep(allNonFullSupplyProducts, function (facilityApprovedProduct) {
+      return $.inArray(facilityApprovedProduct.programProduct.product.code, usedNonFullSupplyProducts) == -1;
+    });
+  }
+
   $scope.addNonFullSupplyLineItem = function () {
-
-    if ($scope.saveRnrForm.$error.required.indexOf('newNonFullSupply.quantityRequested') > 0 || $scope.saveRnrForm.$error.required.indexOf('newNonFullSupply.reasonForRequestedQuantity') > 0) {
-
-    } else {
-      populateProductInformation();
-      jQuery.extend(true, $scope.newNonFullSupply, new RnrLineItem());
-      $scope.newNonFullSupply.fill($scope.rnr, $scope.programRnRColumnList);
-      saveRnrLineItem();
-    }
+    populateProductInformation();
+    jQuery.extend(true, $scope.newNonFullSupply, new RnrLineItem());
+    $scope.newNonFullSupply.fill($scope.rnr, $scope.programRnRColumnList);
+    prepareNFSLineItemFields();
+    $scope.nonFullSupplyLineItems.push($scope.newNonFullSupply);
+    $scope.facilityApprovedProduct = undefined;
+    $scope.newNonFullSupply = {};
+    updateNonFullSupplyProductsToDisplay();
   };
 
-  function saveRnrLineItem() {
-
-    $scope.newNonFullSupply.rnrId = $scope.rnr.id;
-    RequisitionLineItem.save({}, $scope.newNonFullSupply, function (data) {
-      $scope.newNonFullSupply = data.newNonFullSupply;
-      $scope.rnr.nonFullSupplyLineItems[$scope.rnr.nonFullSupplyLineItems.length] = $scope.newNonFullSupply
-      jQuery.extend(true, $scope.newNonFullSupply, new RnrLineItem());
-      $scope.newNonFullSupply.fill($scope.rnr, $scope.programRnRColumnList);
-      $scope.nonFullSupplyLineItems.push($scope.newNonFullSupply);
-      $scope.nonFullSupplyProducts.splice($scope.nonFullSupplyProducts.indexOf($scope.facilityApprovedProduct), 1);
-      $scope.newNonFullSupply = {};
-    }, {});
-  }
+  $scope.showAddNonFullSupplyModal = function () {
+    updateNonFullSupplyProductsToDisplay();
+    $scope.nonFullSupplyProductsModal = true;
+    $scope.newNonFullSupply.quantityRequested.required = true;
+  };
 }

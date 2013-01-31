@@ -80,6 +80,7 @@ public class RequisitionServiceTest {
   private Rnr authorizedRnr;
   ArrayList<RnrColumn> rnrColumns;
 
+
   @Before
   public void setup() {
     requisitionService = new RequisitionService(requisitionRepository, rnrTemplateRepository, facilityApprovedProductService,
@@ -674,7 +675,7 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  public void shouldNotAlterBeginningBalanceIfPreviousStockInHandAvailableFlagIsSet() throws Exception {
+  public void shouldNotOverwriteBeginningBalanceIfPreviousStockInHandAvailableFlagIsSet() throws Exception {
     Rnr savedRequisition = make(a(defaultRnr));
     Rnr requisition = createRequisition(PERIOD.getId(), SUBMITTED);
     requisition.setModifiedBy(USER_ID);
@@ -689,6 +690,6 @@ public class RequisitionServiceTest {
 
     verify(requisitionRepository).getRequisition(requisition.getFacility(), requisition.getProgram(), requisition.getPeriod());
     verify(requisitionRepository).update(requisition);
-    assertThat(requisition.getLineItems().get(0).getBeginningBalance(), is(RnrLineItemBuilder.BEGINNING_BALANCE));
+    assertThat(requisition.getLineItems().get(0).getBeginningBalance(), is(RnrLineItemBuilder.STOCK_IN_HAND));
   }
 }

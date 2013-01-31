@@ -60,13 +60,17 @@ public interface RnrLineItemMapper {
     "VALUES ( #{rnrId}, #{productCode}, #{product}, #{dispensingUnit}, #{dosesPerMonth},",
     "#{dosesPerDispensingUnit}, #{maxMonthsOfStock}, #{packsToShip},",
     "#{packSize}, #{price}, #{roundToZero}, #{packRoundingThreshold},",
-    "#{fullSupply}, #{modifiedBy}, #{modifiedDate}, #{quantityReceived}, #{quantityDispensed}, #{beginningBalance},",
-    "#{stockInHand}, #{totalLossesAndAdjustments}, #{calculatedOrderQuantity}, #{quantityApproved},",
-    "#{newPatientCount}, #{stockOutDays}, #{normalizedConsumption}, #{amc}, #{maxStockQuantity},",
+    "#{fullSupply}, #{modifiedBy}, #{modifiedDate}, 0, 0, 0,",
+    "0, 0, 0, #{quantityApproved},",
+    "0, 0, 0, 0, 0,",
     " #{remarks}, #{quantityRequested}, #{reasonForRequestedQuantity})"})
   @Options(useGeneratedKeys = true)
   void insertNonFullSupply(RnrLineItem requisitionLineItem);
 
-  @Select("SELECT * FROM requisition_line_items WHERE rnrId = #{rnrId} and fullSupply = false")
+  @Select("SELECT * FROM requisition_line_items WHERE rnrId = #{rnrId} AND fullSupply = false")
   public List<RnrLineItem> getNonFullSupplyRnrLineItemsByRnrId(Integer rnrId);
+
+
+  @Delete("DELETE FROM requisition_line_items WHERE rnrId = #{rnrId} AND fullSupply = false")
+  void deleteAllNonFullSupplyForRequisition(Integer rnrId);
 }

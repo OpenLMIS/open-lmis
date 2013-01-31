@@ -87,6 +87,7 @@ describe('CreateRnrController', function () {
     httpBackend = $httpBackend;
     scope.$parent.facility = "10134";
     scope.$parent.program = {code:"programCode", "id":1};
+
     scope.saveRnrForm = {$error:{ rnrError:false }};
     localStorageService = _localStorageService_;
     routeParams = {"facility":"1", "program":"1", "period":2};
@@ -132,6 +133,8 @@ describe('CreateRnrController', function () {
 
   it('should not save work in progress when invalid form', function () {
     scope.saveRnrForm.$error.rnrError = true;
+    scope.nonFullSupplyLineItems = [];
+    scope.rnr = {nonFullSupplyLineItems : []};
     scope.saveRnr();
     expect(scope.error).toEqual("Please correct errors before saving.");
   });
@@ -140,8 +143,6 @@ describe('CreateRnrController', function () {
     httpBackend.flush();
     expect(scope.currency).toEqual("$");
   });
-
-
 
   it("should display modal window with appropriate type options to add losses and adjustments", function () {
     var lineItem = { "id":"1", lossesAndAdjustments:[
@@ -336,6 +337,7 @@ describe('CreateRnrController', function () {
     expect(scope.isNonFullSupply(rnrLineItemFullSupply)).toEqual(false);
     expect(scope.isNonFullSupply(rnrLineItemNonFullSupply)).toEqual(true);
   });
+
   it('should return if the rnrLineItem is nonFullSupply', function () {
     var rnrLineItemFullSupply = jQuery.extend(true, {fullSupply:true}, new RnrLineItem());
     var rnrLineItemNonFullSupply = jQuery.extend(true, {fullSupply:false}, new RnrLineItem());

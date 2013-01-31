@@ -21,13 +21,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static org.hamcrest.core.Is.is;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
 import static org.openlmis.core.builder.ProgramBuilder.PROGRAM_ID;
+import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
+import static org.openlmis.rnr.builder.RnrLineItemBuilder.fullSupply;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 
 @ContextConfiguration(locations = "classpath*:applicationContext-requisition.xml")
@@ -175,9 +177,39 @@ public class RnrLineItemMapperIT {
   public void shouldInsertNonFullSupplyLineItem() {
     requisitionMapper.insert(rnr);
     RnrLineItem requisitionLineItem = new RnrLineItem(rnr.getId(), facilityApprovedProduct, MODIFIED_BY);
-
+    requisitionLineItem.setFullSupply(false);
     rnrLineItemMapper.insertNonFullSupply(requisitionLineItem);
     assertNotNull(requisitionLineItem.getId());
+    List<RnrLineItem> nonFullSupplyLineItems = rnrLineItemMapper.getNonFullSupplyRnrLineItemsByRnrId(rnr.getId());
+    RnrLineItem nonFullSupply = nonFullSupplyLineItems.get(0);
+    assertThat(nonFullSupply.getQuantityReceived(), is(0));
+    assertThat(nonFullSupply.getQuantityDispensed(), is(0));
+    assertThat(nonFullSupply.getBeginningBalance(), is(0));
+    assertThat(nonFullSupply.getStockInHand(), is(0));
+    assertThat(nonFullSupply.getTotalLossesAndAdjustments(), is(0));
+    assertThat(nonFullSupply.getCalculatedOrderQuantity(), is(0));
+    assertThat(nonFullSupply.getNewPatientCount(), is(0));
+    assertThat(nonFullSupply.getStockOutDays(), is(0));
+    assertThat(nonFullSupply.getNormalizedConsumption(), is(0));
+    assertThat(nonFullSupply.getAmc(), is(0));
+    assertThat(nonFullSupply.getMaxStockQuantity(), is(0));
 
+  }
+
+  @Test
+  public void shouldDeleteAllNonFullSupplyLineItemsForRnr() throws Exception {
+    requisitionMapper.insert(rnr);
+    RnrLineItem lineItem = make(a(defaultRnrLineItem, with(fullSupply, false)));
+    lineItem.setRnrId(rnr.getId());
+    rnrLineItemMapper.insert(lineItem);
+
+    RnrLineItem lineItem2 = make(a(defaultRnrLineItem, with(fullSupply, true)));
+    lineItem2.setRnrId(rnr.getId());
+    rnrLineItemMapper.insert(lineItem2);
+
+    rnrLineItemMapper.deleteAllNonFullSupplyForRequisition(rnr.getId());
+
+    assertThat(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()).size(), is(1));
+    assertThat(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()).get(0).getProductCode(), is(lineItem2.getProductCode()));
   }
 }

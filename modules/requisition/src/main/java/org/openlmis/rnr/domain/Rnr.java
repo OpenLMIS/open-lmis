@@ -13,14 +13,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.ALWAYS;
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+import static org.apache.commons.collections.CollectionUtils.find;
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
 import static org.openlmis.rnr.domain.RnrStatus.IN_APPROVAL;
 
 @Data
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonSerialize(include = NON_EMPTY)
+@JsonSerialize(include = NON_NULL)
 public class Rnr {
 
   private Integer id;
@@ -32,7 +32,6 @@ public class Rnr {
   private Money nonFullSupplyItemsSubmittedCost = new Money("0");
 
   private List<RnrLineItem> lineItems = new ArrayList<>();
-  @JsonSerialize(include = ALWAYS)
   private List<RnrLineItem> nonFullSupplyLineItems = new ArrayList<>();
 
   private Integer modifiedBy;
@@ -83,7 +82,6 @@ public class Rnr {
         lineItem.calculate(status);
       Money costPerItem = lineItem.getPrice().multiply(BigDecimal.valueOf(lineItem.getPacksToShip()));
       totalFullSupplyCost = totalFullSupplyCost.add(costPerItem);
-
     }
     this.fullSupplyItemsSubmittedCost = totalFullSupplyCost;
   }
@@ -120,7 +118,7 @@ public class Rnr {
   }
 
   private RnrLineItem findCorrespondingLineItem(List<RnrLineItem> items, final RnrLineItem item) {
-    return (RnrLineItem) CollectionUtils.find(items, new Predicate() {
+    return (RnrLineItem) find(items, new Predicate() {
       @Override
       public boolean evaluate(Object o) {
         RnrLineItem lineItem = (RnrLineItem) o;
@@ -141,6 +139,25 @@ public class Rnr {
       RnrLineItem otherLineItem = findCorrespondingLineItem(rnr.lineItems, thisLineItem);
       thisLineItem.copyApproverEditableFields(otherLineItem);
     }
+  }
+
+  public void resetBeginningBalancesFromRequisition(Rnr savedRequisition) {
+    for (RnrLineItem lineItem : getLineItems()) {
+      RnrLineItem savedLineItem = getPreviouslyStoredLineItemForProduct(savedRequisition.getLineItems(), lineItem);
+
+      if (savedLineItem.getPreviousStockInHandAvailable())
+        lineItem.setBeginningBalance(savedLineItem.getStockInHand());
+    }
+  }
+
+  private RnrLineItem getPreviouslyStoredLineItemForProduct(List<RnrLineItem> items, final RnrLineItem lineItem) {
+    return (RnrLineItem) find(items, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        RnrLineItem savedLineItem = (RnrLineItem) o;
+        return savedLineItem.getProductCode().equalsIgnoreCase(lineItem.getProductCode());
+      }
+    });
   }
 }
 

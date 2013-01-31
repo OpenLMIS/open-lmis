@@ -180,4 +180,24 @@ public class RequisitionRepositoryTest {
     assertThat(rnrLineItem.getAmc(), is(0));
     assertThat(rnrLineItem.getMaxStockQuantity(), is(0));
   }
+
+  @Test
+  public void shouldUpdateAllNonFullSupplyLineItems() throws Exception {
+    RnrLineItem rnrLineItem = new RnrLineItem();
+    rnrLineItem.setBeginningBalance(2);
+    RnrLineItem rnrLineItem2 = new RnrLineItem();
+    rnr.add(rnrLineItem, false);
+    rnr.add(rnrLineItem2, false);
+    RnrLineItem fullSupply = new RnrLineItem();
+    fullSupply.setFullSupply(true);
+
+    requisitionRepository.update(rnr);
+
+    verify(rnrLineItemMapper).deleteAllNonFullSupplyForRequisition(rnr.getId());
+    verify(rnrLineItemMapper).insertNonFullSupply(rnrLineItem);
+    verify(rnrLineItemMapper).insertNonFullSupply(rnrLineItem2);
+    verify(rnrLineItemMapper, never()).insertNonFullSupply(fullSupply);
+  }
+
+
 }
