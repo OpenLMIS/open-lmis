@@ -1,5 +1,5 @@
 function UserProgramRoleListController($scope) {
-  $scope.$parent.gridOptions = { data:'programAndRoleList',
+  $scope.$parent.gridOptions = { data:'user.roleAssignments',
     headerRowHeight:50,
     rowHeight:50,
     sortable:false,
@@ -15,19 +15,40 @@ function UserProgramRoleListController($scope) {
     ]
   };
 
+  $scope.availablePrograms = function () {
+    return $scope.$parent.allSupportedPrograms;
+  }
+
+  $scope.showRoleAssignmentOptions = function () {
+    return $scope.user.facilityId != null;
+  };
+
+//  $scope.addRole = function () {
+//        var user = $scope.user;
+//  };
+
+  $scope.getProgramName = function (programId) {
+    if (!$scope.$parent.allSupportedPrograms) return;
+    var programName = null;
+    $.each($scope.$parent.allSupportedPrograms, function (index, supportedProgram) {
+      if (supportedProgram.id == programId) {
+        programName = supportedProgram.name;
+        return false;
+      }
+    });
+    return programName;
+  };
+
+
   function program() {
-    var divElement = '<select id="programList" ng-model="user.roleAssignments[$parent.$index].programId"' +
-        'ng-options="program.id as program.name for program in programAndRoleList[$parent.$index].supportedPrograms">' +
-        ' <option value="">--Select Program-</option>' +
-        '</select>';
-    return divElement;
+    return '<label ng-bind="getProgramName(user.roleAssignments[$parent.$index].programId)"></label>';
   }
 
   function selectRole() {
     var select2Div =
-      '<select ui-select2 ng-model="user.roleAssignments[$parent.$index].roleIds" placeholder="+ Add Role"  multiple="multiple"  style="width:400px">'+
-        '<option ng-repeat="role in programAndRoleList[$parent.$index].roles" value="{{role.id}}">{{role.name}}</option>'+
-      '</select>';
+      '<select ui-select2 ng-model="user.roleAssignments[$parent.$index].roleIds" placeholder="+ Add Role"  multiple="multiple"  style="width:400px">' +
+        '<option ng-repeat="role in allRoles" value="{{role.id}}">{{role.name}}</option>' +
+        '</select>';
     return select2Div;
   }
 }
