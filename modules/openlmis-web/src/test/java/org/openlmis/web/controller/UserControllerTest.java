@@ -4,7 +4,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.Right;
+import org.openlmis.core.domain.User;
+import org.openlmis.core.domain.UserRoleAssignment;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.hash.Encoder;
 import org.openlmis.core.service.RoleAssignmentService;
@@ -13,9 +15,18 @@ import org.openlmis.core.service.UserService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.mock.web.MockRequestDispatcher;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.*;
 
 import static org.hamcrest.core.Is.is;
@@ -32,8 +43,11 @@ public class UserControllerTest {
 
   private MockHttpSession session;
 
-  @Mock
-  private HttpServletRequest httpServletRequest;
+  private MockHttpServletRequest httpServletRequest;
+
+  private MockHttpServletResponse httpServletResponse;
+
+  private MockRequestDispatcher requestDispatcher;
 
   private UserController userController;
 
@@ -42,15 +56,17 @@ public class UserControllerTest {
 
   @Mock
   private UserService userService;
-
   @Mock
   private RoleAssignmentService roleAssignmentService;
 
   @Before
   public void setUp() {
     initMocks(this);
+    httpServletRequest = new MockHttpServletRequest();
+    httpServletResponse = new MockHttpServletResponse();
     session = new MockHttpSession();
-    when(httpServletRequest.getSession()).thenReturn(session);
+    httpServletRequest.setSession(session);
+
     userController = new UserController(roleRightService, userService);
   }
 
@@ -114,14 +130,14 @@ public class UserControllerTest {
     userRoleAssignments.add(roleAssignment);
     user.setRoleAssignments(userRoleAssignments);
 
-    httpServletRequest.getSession().setAttribute(USER_ID,userId);
-    httpServletRequest.getSession().setAttribute(USER,USER);
-    ResponseEntity<OpenLmisResponse> response = userController.save(user,httpServletRequest);
+    httpServletRequest.getSession().setAttribute(USER_ID, userId);
+    httpServletRequest.getSession().setAttribute(USER, USER);
+    ResponseEntity<OpenLmisResponse> response = userController.save(user, httpServletRequest);
 
     verify(userService).save(eq(user), anyMap());
 
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    assertThat(response.getBody().getSuccessMsg(), is("User "+user.getFirstName()+" "+user.getLastName()+" has been successfully created, password link sent on registered Email address"));
+    assertThat(response.getBody().getSuccessMsg(), is("User " + user.getFirstName() + " " + user.getLastName() + " has been successfully created, password link sent on registered Email address"));
     assertThat(user.getPassword(), is(Encoder.hash("openLmis123")));
     assertThat(user.getModifiedBy(), is(USER));
   }
@@ -133,8 +149,8 @@ public class UserControllerTest {
     user.setFirstName("Shan");
     user.setLastName("Sharma");
     user.setPassword("password");
-    httpServletRequest.getSession().setAttribute(USER_ID,userId);
-    httpServletRequest.getSession().setAttribute(USER,USER);
+    httpServletRequest.getSession().setAttribute(USER_ID, userId);
+    httpServletRequest.getSession().setAttribute(USER, USER);
 
     List<UserRoleAssignment> userRoleAssignments = new ArrayList<>();
     UserRoleAssignment roleAssignment = new UserRoleAssignment(2, Arrays.asList(1, 2));
@@ -143,12 +159,12 @@ public class UserControllerTest {
 
     user.setRoleAssignments(userRoleAssignments);
 
-    ResponseEntity<OpenLmisResponse> response = userController.save(user,httpServletRequest );
+    ResponseEntity<OpenLmisResponse> response = userController.save(user, httpServletRequest);
 
     verify(userService).save(eq(user), anyMap());
 
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    assertThat(response.getBody().getSuccessMsg(), is("User "+user.getFirstName()+" "+user.getLastName()+" has been successfully updated"));
+    assertThat(response.getBody().getSuccessMsg(), is("User " + user.getFirstName() + " " + user.getLastName() + " has been successfully updated"));
     assertThat(user.getPassword(), is(Encoder.hash("password")));
     assertThat(user.getModifiedBy(), is(USER));
   }
@@ -158,7 +174,7 @@ public class UserControllerTest {
     User user = new User();
     doThrow(new DataException("Save user failed")).when(userService).save(eq(user), anyMap());
 
-    ResponseEntity<OpenLmisResponse> response = userController.save(user,httpServletRequest);
+    ResponseEntity<OpenLmisResponse> response = userController.save(user, httpServletRequest);
 
     assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     assertThat(response.getBody().getErrorMsg(), is("Save user failed"));
@@ -189,23 +205,12 @@ public class UserControllerTest {
   }
 
   @Test
-  public void shouldReturnErrorResponseIfTokenIsNotValid(){
+  public void shouldReturnErrorResponseIfTokenIsNotValid() throws IOException, ServletException {
     String invalidToken = "invalidToken";
-    doThrow(new DataException("some error")).when(userService).getUserIdForPasswordResetToken(invalidToken);
 
-    ResponseEntity<OpenLmisResponse> responseEntity = userController.resetPassword(invalidToken);
+    userController.resetPassword(invalidToken, httpServletRequest, httpServletResponse);
 
-    assertThat(responseEntity.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+    verify(userService).getUserIdForPasswordResetToken(invalidToken);
   }
 
-  @Test
-  public void shouldReturnUserIdForValidPasswordResetToken() throws Exception {
-
-    String validToken = "validToken";
-    when(userService.getUserIdForPasswordResetToken(validToken)).thenReturn(1);
-
-    ResponseEntity<OpenLmisResponse> responseEntity = userController.resetPassword(validToken);
-
-    assertThat(responseEntity.getBody().getData().get(UserController.USER_ID).toString(), is("1"));
-  }
 }

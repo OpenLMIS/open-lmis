@@ -142,6 +142,7 @@ public class UserService {
 
   public void updateUserPassword(User user){
     userRepository.updateUserPassword(user);
+    userRepository.deletePasswordResetTokenForUser(user);
   }
 
 }

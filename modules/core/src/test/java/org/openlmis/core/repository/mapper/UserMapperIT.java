@@ -207,7 +207,7 @@ public class UserMapperIT {
     String passwordResetToken = "passwordResetToken";
     userMapper.insertPasswordResetToken(user, passwordResetToken);
 
-    userMapper.deletePasswordResetTokenForUserId(user);
+    userMapper.deletePasswordResetTokenForUser(user);
 
     assertThat(userMapper.getUserIdForPasswordResetToken(passwordResetToken), is(nullValue()));
   }

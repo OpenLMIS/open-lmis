@@ -13,7 +13,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,8 +62,8 @@ public class UserController extends BaseController {
   @RequestMapping(value = "/forgot-password", method = RequestMethod.POST, headers = "Accept=application/json")
   public ResponseEntity<OpenLmisResponse> sendPasswordTokenEmail(@RequestBody User user, HttpServletRequest request) {
     try {
-      String requestUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+PASSWORD_RESET_REQUEST_MAPPING;
-      Map<String,Object> args = new HashMap<>();
+      String requestUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + PASSWORD_RESET_REQUEST_MAPPING;
+      Map<String, Object> args = new HashMap<>();
       args.put(USER_REQUEST_URL, requestUrl);
       userService.sendForgotPasswordEmail(user, args);
       return OpenLmisResponse.success("Email sent");
@@ -77,11 +80,11 @@ public class UserController extends BaseController {
     user.setModifiedBy(modifiedBy);
     boolean createFlag = user.getId() == null;
     try {
-      if(createFlag) {
+      if (createFlag) {
         user.setPassword("openLmis123");
       }
-      String requestUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+"/";
-      Map<String,Object> args = new HashMap<>();
+      String requestUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/";
+      Map<String, Object> args = new HashMap<>();
       args.put(USER_REQUEST_URL, requestUrl);
       userService.save(user, args);
     } catch (DataException e) {
@@ -89,10 +92,9 @@ public class UserController extends BaseController {
       errorResponse.getBody().setData("user", user);
       return errorResponse;
     }
-    if(createFlag) {
+    if (createFlag) {
       successResponse = OpenLmisResponse.success("User " + user.getFirstName() + " " + user.getLastName() + " has been successfully created, password link sent on registered Email address");
-    }
-    else {
+    } else {
       successResponse = OpenLmisResponse.success("User " + user.getFirstName() + " " + user.getLastName() + " has been successfully updated");
     }
     successResponse.getBody().setData("user", user);
@@ -111,14 +113,20 @@ public class UserController extends BaseController {
     return userService.getById(id);
   }
 
-  @RequestMapping(value = PASSWORD_RESET_REQUEST_MAPPING +"{token}", method = RequestMethod.GET)
-  public ResponseEntity<OpenLmisResponse> resetPassword(@PathVariable(value = "token") String token) {
+  @RequestMapping(value = PASSWORD_RESET_REQUEST_MAPPING + "{token}", method = RequestMethod.GET)
+  public void resetPassword(@PathVariable(value = "token") String token, HttpServletRequest request, HttpServletResponse servletResponse) throws IOException, ServletException {
     Integer userId;
     try {
       userId = userService.getUserIdForPasswordResetToken(token);
     } catch (DataException e) {
-      return error(e, HttpStatus.BAD_REQUEST);
+      request.getRequestDispatcher("/public/pages/access-denied.html").forward(request, servletResponse);
     }
-    return response(USER_ID, userId);
+    request.getRequestDispatcher("/public/pages/admin/user/reset-password.html").forward(request, servletResponse);
   }
+
+  @RequestMapping(value = "/user/updatePassword" , method = RequestMethod.PUT)
+  public void updateUserPassword(@RequestBody User user) {
+    userService.updateUserPassword(user);
+  }
+
 }

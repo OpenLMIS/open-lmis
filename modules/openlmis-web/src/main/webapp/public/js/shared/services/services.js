@@ -142,3 +142,10 @@ services.factory('UserById', function ($resource) {
 services.factory('SearchFacilitiesByCodeOrName', function ($resource) {
   return $resource('/facilitiesByCodeOrName.json', {}, {});
 });
+
+services.factory('UpdateUserPassword', function ($resource) {
+  return $resource('/user/updatePassword.json', {}, {});
+});
+
+
+

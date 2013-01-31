@@ -55,7 +55,7 @@ public interface UserMapper {
   Integer getUserIdForPasswordResetToken(String token);
 
   @Delete("DELETE FROM user_password_reset_tokens WHERE userId = #{id}")
-  void deletePasswordResetTokenForUserId(User user);
+  void deletePasswordResetTokenForUser(User user);
 
   @Update("UPDATE users SET password = #{password} WHERE id = #{id}")
   void updateUserPassword(User user);
