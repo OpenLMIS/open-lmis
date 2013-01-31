@@ -9,13 +9,15 @@ import org.openlmis.core.message.OpenLmisMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 @NoArgsConstructor
 public class OpenLmisResponse {
   public static final String ERROR = "error";
   public static final String SUCCESS = "success";
-  private static ResourceBundle resourceBundle = ResourceBundle.getBundle("messages", Locale.ENGLISH);
+  private static ResourceBundle resourceBundle = ResourceBundle.getBundle("messages");
 
 
   private Map<String, Object> data = new HashMap<>();

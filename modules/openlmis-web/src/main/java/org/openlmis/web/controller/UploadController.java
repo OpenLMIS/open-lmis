@@ -19,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -32,7 +31,7 @@ public class UploadController extends BaseController {
   @Resource
   private Map<String, UploadBean> uploadBeansMap;
 
-  private static ResourceBundle resourceBundle = ResourceBundle.getBundle("messages", Locale.ENGLISH);
+  private static ResourceBundle resourceBundle = ResourceBundle.getBundle("messages");
 
 
   String uploadPage = "redirect:/public/pages/admin/upload/index.html#/upload?";
@@ -56,8 +55,8 @@ public class UploadController extends BaseController {
 
       String modifiedBy = loggedInUser(request);
       int recordsUploaded = csvParser.process(csvFile.getInputStream(),
-        new ModelClass(uploadBeansMap.get(model).getImportableClass()),
-        uploadBeansMap.get(model).getRecordHandler(), modifiedBy);
+          new ModelClass(uploadBeansMap.get(model).getImportableClass()),
+          uploadBeansMap.get(model).getRecordHandler(), modifiedBy);
       return successPage(recordsUploaded, model);
     } catch (DataException dataException) {
       return errorPage(dataException.getOpenLmisMessage().resolve(resourceBundle), model);
