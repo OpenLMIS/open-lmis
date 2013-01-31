@@ -55,4 +55,16 @@ public class RnrTest {
 
     assertThat(rnr.getLineItems().get(0).getPreviousNormalizedConsumptions().size(),is(2));
   }
+
+
+  @Test
+  public void shouldCopyApproverEditableFields() throws Exception {
+    Rnr rnr = make(a(defaultRnr));
+    Rnr savedRnr = make(a(defaultRnr));
+    RnrLineItem savedLineItem = savedRnr.getLineItems().get(0);
+    RnrLineItem savedLineItemSpy  = spy(savedLineItem);
+    savedRnr.getLineItems().set(0, savedLineItemSpy);
+    savedRnr.copyApproverEditableFields(rnr);
+    verify(savedLineItemSpy).copyApproverEditableFields(rnr.getLineItems().get(0));
+  }
 }

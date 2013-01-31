@@ -80,7 +80,7 @@ public class Rnr {
   public void calculate() {
     Money totalFullSupplyCost = new Money("0");
     for (RnrLineItem lineItem : lineItems) {
-      lineItem.calculate();
+        lineItem.calculate(status);
       Money costPerItem = lineItem.getPrice().multiply(BigDecimal.valueOf(lineItem.getPacksToShip()));
       totalFullSupplyCost = totalFullSupplyCost.add(costPerItem);
 
@@ -133,6 +133,13 @@ public class Rnr {
     status = IN_APPROVAL;
     for (RnrLineItem item : lineItems) {
       item.setDefaultApprovedQuantity();
+    }
+  }
+
+  public void copyApproverEditableFields(Rnr rnr) {
+    for (RnrLineItem thisLineItem : this.lineItems) {
+      RnrLineItem otherLineItem = findCorrespondingLineItem(rnr.lineItems, thisLineItem);
+      thisLineItem.copyApproverEditableFields(otherLineItem);
     }
   }
 }

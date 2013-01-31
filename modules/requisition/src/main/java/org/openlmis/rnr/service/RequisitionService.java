@@ -188,14 +188,16 @@ public class RequisitionService {
 
   public OpenLmisMessage approve(Rnr rnr) {
     Rnr savedRnr = requisitionRepository.getById(rnr.getId());
+    savedRnr.copyApproverEditableFields(rnr);
     if (!(savedRnr.getStatus() == AUTHORIZED || savedRnr.getStatus() == IN_APPROVAL))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
-    final SupervisoryNode parent = supervisoryNodeService.getParent(rnr.getSupervisoryNodeId());
+    savedRnr.calculate();
+    final SupervisoryNode parent = supervisoryNodeService.getParent(savedRnr.getSupervisoryNodeId());
     if (parent == null) {
-      return doFinalApproval(rnr);
+      return doFinalApproval(savedRnr);
     } else {
-      return approveAndAssignToNextSupervisoryNode(rnr, parent);
+      return approveAndAssignToNextSupervisoryNode(savedRnr, parent);
     }
   }
 

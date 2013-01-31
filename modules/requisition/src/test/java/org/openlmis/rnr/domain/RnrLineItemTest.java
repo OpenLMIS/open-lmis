@@ -20,9 +20,11 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.ProductBuilder.code;
+import static org.openlmis.rnr.builder.RnrLineItemBuilder.STOCK_IN_HAND;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.lossesAndAdjustments;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
+import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 
 public class RnrLineItemTest {
 
@@ -210,11 +212,10 @@ public class RnrLineItemTest {
     lineItem.setQuantityDispensed(29);
 
 
-    lineItem.calculate();
+    lineItem.calculate(INITIATED);
 
     assertThat(lineItem.getTotalLossesAndAdjustments(), is(25));
   }
-
 
   @Test
   public void shouldRecalculateNormalizedConsumption() throws Exception {
@@ -224,7 +225,7 @@ public class RnrLineItemTest {
     lineItem.setDosesPerDispensingUnit(10);
     lineItem.setNormalizedConsumption(37345);
 
-    lineItem.calculate();
+    lineItem.calculate(INITIATED);
 
     assertThat(lineItem.getNormalizedConsumption(), is(37));
   }
@@ -237,7 +238,7 @@ public class RnrLineItemTest {
     lineItem.setDosesPerDispensingUnit(10);
     lineItem.setNormalizedConsumption(37345);
 
-    lineItem.calculate();
+    lineItem.calculate(INITIATED);
 
     assertThat(lineItem.getAmc(), is(37));
   }
@@ -251,7 +252,7 @@ public class RnrLineItemTest {
     lineItem.setNormalizedConsumption(37345);
     lineItem.setMaxMonthsOfStock(10);
 
-    lineItem.calculate();
+    lineItem.calculate(INITIATED);
 
     assertThat(lineItem.getMaxStockQuantity(), is(370));
   }
@@ -267,7 +268,7 @@ public class RnrLineItemTest {
     lineItem.setMaxStockQuantity(370);
     lineItem.setStockInHand(300);
 
-    lineItem.calculate();
+    lineItem.calculate(INITIATED);
 
     assertThat(lineItem.getCalculatedOrderQuantity(), is(70));
   }
@@ -295,5 +296,20 @@ public class RnrLineItemTest {
     lineItem.setDefaultApprovedQuantity();
     final Integer actual = lineItem.getQuantityApproved();
     assertThat(actual, is(expected));
+  }
+
+  @Test
+  public void shouldCopyApproverEditableFields() throws Exception {
+    RnrLineItem editedLineItem = make(a(defaultRnrLineItem));
+    editedLineItem.setQuantityApproved(1872);
+    editedLineItem.setRemarks("Approved");
+    editedLineItem.setStockInHand(1946);
+
+    lineItem.copyApproverEditableFields(editedLineItem);
+
+    assertThat(lineItem.getQuantityApproved(), is(1872));
+    assertThat(lineItem.getRemarks(), is("Approved"));
+    assertThat(lineItem.getStockInHand(), is(STOCK_IN_HAND));
+
   }
 }
