@@ -110,8 +110,15 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     return null;
   };
 
-  $scope.highlightWarning = function (value, field) {
+  $scope.highlightWarningBasedOnField = function (value, field) {
     if ((isUndefined(value) || value.trim().length == 0 || value == false) && $scope.inputClass == 'required' && field) {
+      return "warning-error";
+    }
+    return null;
+  };
+
+  $scope.highlightWarning = function (value) {
+    if ((isUndefined(value) || value.trim().length == 0 || value == false) && $scope.inputClass == 'required') {
       return "warning-error";
     }
     return null;
@@ -269,7 +276,7 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
         return false;
       }
     });
-    return label;
+    return label + ":";
   };
 
 

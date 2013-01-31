@@ -1,12 +1,19 @@
-<div ng-controller = "CreateRnrController" >
+<div ng-controller="CreateRnrController" xmlns="http://www.w3.org/1999/html">
   <div ng-hide = "programRnRColumnList" >Loading...</div >
   <form name = "saveRnrForm" action = "#" id = "rnr-form" novalidate >
-    <div class = "total-cost alert alert-info" >Total R&amp;R Cost:
+    <div class = "total-cost alert alert-info" >Total Cost For Full Supply Items:
+      <span id = "fullSupplyItemsCostCurrency" class = "cell-text" >
+        {{currency}}
+      </span >
+        <span id = "fullSupplyItemsCost" class = "cell-text" ng-bind="rnr.fullSupplyItemsSubmittedCost"></span >&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;Total Cost For Non Full Supply Items:
+      <span id = "nonFullSupplyItemsCostCurrency" class = "cell-text" >
+        {{currency}}
+      </span >
+        <span id = "nonFullSupplyItemsCost" class = "cell-text" ng-bind="rnr.nonFullSupplyItemsSubmittedCost"></span >&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;Total R&amp;R Cost:
       <span id = "totalCostCurrency" class = "cell-text" >
         {{currency}}
       </span >
-        <span id = "totalCost" class = "cell-text" ng-bind="totalCost()">
-      </span >
+      <span id = "totalCost" class = "cell-text" ng-bind="totalCost()"></span >
     </div >
     <div class = "rnr-table" >
       <table class = "table table-striped table-bordered" >
@@ -269,7 +276,7 @@
                              name = "reasonForRequestedQuantity{{rnrLineItem['id']}}"
                              ng-model = "rnrLineItem[column.name]"
                              ng-required = "rnrLineItem.quantityRequested"
-                             ng-class = "highlightWarning(rnrLineItem[column.name],rnrLineItem.quantityRequested)"
+                             ng-class = "highlightWarningBasedOnField(rnrLineItem[column.name],rnrLineItem.quantityRequested)"
                              maxlength = "250" />
                       <span class = "alert alert-warning reason-request"
                             ng-show = "rnrLineItem.quantityRequested && !rnrLineItem.reasonForRequestedQuantity" >
@@ -347,7 +354,7 @@
                              name = "reasonForRequestedQuantity{{rnrLineItem['id']}}"
                              ng-model = "rnrLineItem[column.name]"
                              ng-required = "true"
-                             ng-class = "highlightRequired(rnrLineItem.reasonForRequestedQuantity)"
+                             ng-class = "highlightWarning(rnrLineItem.reasonForRequestedQuantity)"
                              maxlength = "250" />
                       <span class = "alert alert-warning reason-request"
                             ng-show = "rnrLineItem.quantityRequested && !rnrLineItem.reasonForRequestedQuantity" >
@@ -379,8 +386,8 @@
     <br />
 
 
-
   <input type="button"  ng-click="showAddNonFullSupplyModal()" value = "Add Non-Full Supply" ng-show = "nonFullSupplyProducts.length > 0"/>
+<form name="nonFullSupplyForm">
   <div id="nonFullSupplyProductsModal"
        ng-model="nonFullSupplyProductsModal"
        class = "fade ng-pristine ng-valid modal hide "
@@ -403,41 +410,43 @@
           </select>
          </span>
         <span class="span3">
+        <span >
           <label for="quantityRequested"><span ng-bind="labelForRnrColumn('quantityRequested')"></span></label>
-          <input name="newNonFullSupply.quantityRequested" ng-model="newNonFullSupply.quantityRequested" id="quantityRequested" rnr-validator="positiveInteger" maxlength="8"/><br>
+          <input name="newNonFullSupply.quantityRequested" ng-model="newNonFullSupply.quantityRequested" id="quantityRequested"
+                 rnr-validator="positiveInteger" prevent-rnr-error = "true" maxlength="8"/><br>
           <span class="rnr-form-error" style="display:none;" id="newNonFullSupply.quantityRequested">
            Enter Numeric Data
           </span>
         </span>
+        <span>
+        <label for="remarks"><span ng-bind="labelForRnrColumn('remarks')"></span></label>
+        <input ng-model="newNonFullSupply.remarks" id="remarks"/>
+        </span>
+          </span>
         <span class="span3">
         <label for="reasonForRequestedQuantity"><span ng-bind="labelForRnrColumn('reasonForRequestedQuantity')"></span></label>
-        <input  ng-model="newNonFullSupply.reasonForRequestedQuantity" id="reasonForRequestedQuantity"/><br>
+        <textarea maxlength="250" rows="4" ng-model="newNonFullSupply.reasonForRequestedQuantity" id="reasonForRequestedQuantity"></textarea><br>
          <span class="alert alert-warning reason-request" ng-show="newNonFullSupply.quantityRequested && !newNonFullSupply.reasonForRequestedQuantity">
                                               Please enter a reason
                                             </span>
         </span>
-        <span class ="span3">
-        <label for="remarks"><span ng-bind="labelForRnrColumn('remarks')"></span></label>
-        <input ng-model="newNonFullSupply.remarks" id="remarks"/>
-        </span>
+      </div>
 
         <div class = "modal-footer">
-          <span class="span3">
-          <span>
-        <input type="button" href="" class="btn btn-primary" ng-click="addNonFullSupplyLineItem()"
-           ng-disabled="!(newNonFullSupply.quantityRequested && newNonFullSupply.reasonForRequestedQuantity
-           && facilityApprovedProduct)" value="Add" />
-        </span>
-          <span>
-          <input type="button" class="btn btn-success save-button"
-                 ng-click=""
-                 data-dismiss="modal"
-                 value="Close"/>
-           </span>
+          <span class="pull-left span1">
+            <input type="button" href="" class="btn btn-primary" ng-click="addNonFullSupplyLineItem()"
+            ng-disabled="!(newNonFullSupply.quantityRequested && newNonFullSupply.reasonForRequestedQuantity
+             && facilityApprovedProduct)" value="Add" />
+          </span>
+
+          <span class="pull-left span1">
+            <input type="reset" data-dismiss="modal" class="btn btn-success save-button"
+             value="Close"/>
           </span>
         </div>
-      </div>
+
   </div>
+  </form>
 
     <div form-toolbar id="action_buttons" class = "action-buttons" >
       <div class = "form-cell button-row" >
