@@ -2,7 +2,6 @@ package org.openlmis.rnr.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -79,7 +78,7 @@ public class Rnr {
   public void calculate() {
     Money totalFullSupplyCost = new Money("0");
     for (RnrLineItem lineItem : lineItems) {
-        lineItem.calculate(status);
+      lineItem.calculate(status);
       Money costPerItem = lineItem.getPrice().multiply(BigDecimal.valueOf(lineItem.getPacksToShip()));
       totalFullSupplyCost = totalFullSupplyCost.add(costPerItem);
     }
@@ -142,21 +141,12 @@ public class Rnr {
 
   public void resetBeginningBalancesFromRequisition(Rnr savedRequisition) {
     for (RnrLineItem lineItem : getLineItems()) {
-      RnrLineItem savedLineItem = getPreviouslyStoredLineItemForProduct(savedRequisition.getLineItems(), lineItem);
+      RnrLineItem savedLineItem = findCorrespondingLineItem(savedRequisition.getLineItems(), lineItem);
 
       if (savedLineItem.getPreviousStockInHandAvailable())
         lineItem.setBeginningBalance(savedLineItem.getStockInHand());
     }
   }
 
-  private RnrLineItem getPreviouslyStoredLineItemForProduct(List<RnrLineItem> items, final RnrLineItem lineItem) {
-    return (RnrLineItem) find(items, new Predicate() {
-      @Override
-      public boolean evaluate(Object o) {
-        RnrLineItem savedLineItem = (RnrLineItem) o;
-        return savedLineItem.getProductCode().equalsIgnoreCase(lineItem.getProductCode());
-      }
-    });
-  }
 }
 
