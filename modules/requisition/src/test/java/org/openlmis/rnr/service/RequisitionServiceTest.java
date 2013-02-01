@@ -163,9 +163,10 @@ public class RequisitionServiceTest {
     final Rnr spyRnr = Mockito.spy(rnr);
 
     when(requisitionRepository.getRequisition(FACILITY, PROGRAM, PERIOD)).thenReturn(spyRnr);
-    when(processingScheduleService.getPeriodById(10)).thenReturn(PERIOD);
+    ProcessingPeriod period = new ProcessingPeriod(PERIOD.getId(), PERIOD.getStartDate(), PERIOD.getEndDate(), PERIOD.getNumberOfMonths());
+    when(processingScheduleService.getPeriodById(10)).thenReturn(period);
 
-    when(processingScheduleService.getImmediatePreviousPeriod(PERIOD)).thenReturn(lastPeriod);
+    when(processingScheduleService.getImmediatePreviousPeriod(period)).thenReturn(lastPeriod);
 
     ProcessingPeriod secondLastPeriod = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod, with(id, secondLastPeriodsId)));
     when(processingScheduleService.getImmediatePreviousPeriod(lastPeriod)).thenReturn(secondLastPeriod);

@@ -1,4 +1,4 @@
-describe('RequisitionHeaderController', function () {
+describe('RequisitionController', function () {
 
   var scope, ctrl, httpBackend, location, routeParams, requisitionHeader, controller;
 
@@ -20,7 +20,7 @@ describe('RequisitionHeaderController', function () {
 
     httpBackend.when('GET', '/logistics/facility/1/requisition-header.json').respond(requisitionHeader);
 
-    ctrl = controller(RequisitionHeaderController, {$scope:scope, $location:location, $routeParams:routeParams});
+    ctrl = controller(RequisitionController, {$scope:scope, $location:location, $routeParams:routeParams});
   }));
 
   it('should get header data', function () {

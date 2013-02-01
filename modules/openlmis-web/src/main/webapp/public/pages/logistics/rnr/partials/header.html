@@ -1,27 +1,27 @@
-<div id="requisition-header" ng-controller="RequisitionHeaderController">
-  <h2>Report and Requisition for {{$parent.program.name}} ({{header.facilityType}}) </h2>
+<div id="requisition-header">
+  <h2>Report and Requisition for {{rnr.program.name}} ({{rnr.facilityType.name}}) </h2>
 
   <div class="info-box">
     <div class="row-fluid">
       <div class="span3">
-        <strong>Facility:</strong> {{header.facilityCode}} - {{header.facilityName}}
+        <strong>Facility:</strong> {{rnr.facility.code}} - {{rnr.facility.name}}
       </div>
       <div class="span3">
-        <strong>Operated By:</strong> {{header.facilityOperatedBy}}
+        <strong>Operated By:</strong> {{rnr.facility.operatedBy}}
       </div>
       <div class="span3">
-        <strong>Maximum Stock level:</strong> {{header.maximumStockLevel}}
+        <strong>Maximum Stock level:</strong> {{rnr.facilityType.nominalMaxMonth}}
       </div>
       <div class="span3">
-        <strong>Emergency Order Point:</strong> {{header.emergencyOrderPoint}}
+        <strong>Emergency Order Point:</strong> {{rnr.facilityType.nominalEop}}
       </div>
     </div>
     <div class="row-fluid">
       <div class="span3">
-        <strong>{{header.zone.label}}:</strong> {{header.zone.value}}
+        <strong>{{rnr.facility.geographicZone.level.name}}:</strong> {{rnr.facility.geographicZone.name}}
       </div>
       <div class="span3">
-        <strong>{{header.parentZone.label}}:</strong> {{header.parentZone.value}}
+        <strong>{{rnr.facility.geographicZone.parent.level.name}}:</strong> {{rnr.facility.geographicZone.parent.name}}
       </div>
       <div class="span3">
         <strong>Reporting Period:</strong> {{periodDisplayName()}}
