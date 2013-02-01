@@ -10,7 +10,6 @@ import org.openlmis.core.service.*;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.domain.ProgramRnrTemplate;
 import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -259,10 +258,6 @@ public class RequisitionService {
     }
 
     return rnr;
-  }
-
-  public void insertLineItem(RnrLineItem rnrLineItem) {
-    requisitionRepository.insertNonFullSupply(rnrLineItem);
   }
 
   private boolean userCanApprove(final Rnr rnr, List<RoleAssignment> assignments) {

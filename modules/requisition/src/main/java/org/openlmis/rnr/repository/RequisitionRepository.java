@@ -101,19 +101,5 @@ public class RequisitionRepository {
     return mapper.getLastRequisitionToEnterThePostSubmitFlow(facilityId, programId);
   }
 
-  public void insertNonFullSupply(RnrLineItem rnrLineItem) {
-    rnrLineItem.setQuantityReceived(0);
-    rnrLineItem.setQuantityDispensed(0);
-    rnrLineItem.setBeginningBalance(0);
-    rnrLineItem.setStockInHand(0);
-    rnrLineItem.setTotalLossesAndAdjustments(0);
-    rnrLineItem.setCalculatedOrderQuantity(0);
-    rnrLineItem.setNewPatientCount(0);
-    rnrLineItem.setStockOutDays(0);
-    rnrLineItem.setNormalizedConsumption(0);
-    rnrLineItem.setAmc(0);
-    rnrLineItem.setMaxStockQuantity(0);
-    rnrLineItemMapper.insertNonFullSupply(rnrLineItem);
-  }
 }
 

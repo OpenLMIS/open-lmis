@@ -76,14 +76,17 @@ public interface FacilityMapper {
   Integer getOperatedByIdForCode(String code);
 
 
-  @Select("SELECT GZ.id as id, GZ.name as value, GL.name as label FROM geographic_zones GZ, geopolitical_levels GL where GZ.level = GL.id")
+  @Select("SELECT GZ.id as id, GZ.name as name, GL.name as level FROM geographic_zones GZ, geopolitical_levels GL where GZ.level = GL.id")
+  @Results(value = {
+    @Result(property = "level.name", column = "level")
+  })
   List<GeographicZone> getAllGeographicZones();
 
   @Select("SELECT * FROM facilities WHERE id = #{id}")
   @Results(value = {
-    @Result(property = "geographicZone.id", column = "geographicZoneId"),
+    @Result(property = "geographicZone", column = "geographicZoneId", javaType = Integer.class, one = @One(select = "getGeographicZoneById")),
     @Result(property = "facilityType", column = "typeId", javaType = Integer.class, one = @One(select = "getFacilityTypeById")),
-    @Result(property = "operatedBy", column = "operatedById", javaType = Integer.class, one = @One(select = "getFacilityOperatorById")),
+    @Result(property = "operatedBy", column = "operatedById", javaType = Integer.class, one = @One(select = "getFacilityOperatorById"))
   })
   Facility getById(Integer id);
 
@@ -123,7 +126,7 @@ public interface FacilityMapper {
   @Results(value = {
     @Result(property = "geographicZone.id", column = "geographicZoneId"),
     @Result(property = "facilityType", column = "typeId", javaType = Integer.class, one = @One(select = "getFacilityTypeById")),
-    @Result(property = "operatedBy", column = "operatedById", javaType = Integer.class, one = @One(select = "getFacilityOperatorById")),
+    @Result(property = "operatedBy", column = "operatedById", javaType = Integer.class, one = @One(select = "getFacilityOperatorById"))
   })
   List<Facility> getFacilitiesBy(@Param(value = "programId") Integer programId, @Param(value = "requisitionGroupIds") String requisitionGroupIds);
 
@@ -132,4 +135,15 @@ public interface FacilityMapper {
     "OR LOWER(name) LIKE '%' || LOWER(#{searchParam}) || '%'")
   List<Facility> searchFacilitiesByCodeOrName(String searchParam);
 
+  @Select({"SELECT GZ.id AS id, GZ.name AS name, GL.name AS level, GZP.name AS parentZone, GLP.name AS parentLevel",
+    "FROM geographic_zones GZ INNER JOIN geographic_zones GZP ON GZ.parent = GZP.id",
+    "INNER JOIN geopolitical_levels GL ON GZ.level = GL.id",
+    "INNER JOIN geopolitical_levels GLP ON GZP.level = GLP.id",
+    "WHERE GZ.id = #{geographicZoneId}"})
+  @Results(value = {
+    @Result(property = "level.name", column = "level"),
+    @Result(property = "parent.name", column = "parentZone"),
+    @Result(property = "parent.level.name", column = "parentLevel")
+  })
+  GeographicZone getGeographicZoneById(Integer geographicZoneId);
 }

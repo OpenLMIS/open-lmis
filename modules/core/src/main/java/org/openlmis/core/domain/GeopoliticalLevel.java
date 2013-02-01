@@ -7,9 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GeographicZone {
+public class GeopoliticalLevel {
   Integer id;
   String name;
-  GeopoliticalLevel level;
-  GeographicZone parent;
 }
+

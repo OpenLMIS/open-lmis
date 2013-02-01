@@ -251,28 +251,6 @@ public class RequisitionControllerTest {
   }
 
 
-  @Test
-  public void shouldNotInsertRequisitionLineItemAndReturnErrorResponseIfRnrIdIsNotPresent() {
-    RnrLineItem rnrLineItem = new RnrLineItem();
-
-    ResponseEntity<OpenLmisResponse> response = controller.insertRequisitionLineItem(rnrLineItem, request);
-    verify(requisitionService, times(0)).insertLineItem(rnrLineItem);
-    assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
-    assertThat(rnrLineItem.getModifiedBy(), is(nullValue()));
-    assertThat(response.getBody().getErrorMsg(), is("Error in inserting Rnr line item"));
-  }
-
-  @Test
-  public void shouldInsertRequisitionLineItemAndReturnCorrectResponseIfRnrIdIsPresent() {
-    RnrLineItem rnrLineItem = new RnrLineItem();
-    rnrLineItem.setRnrId(1);
-    ResponseEntity<OpenLmisResponse> response = controller.insertRequisitionLineItem(rnrLineItem, request);
-    verify(requisitionService).insertLineItem(rnrLineItem);
-    assertThat(rnrLineItem.getModifiedBy(), is(USER_ID));
-    assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    assertThat(response.getBody().getData().get(RequisitionController.NON_FULL_SUPPLY_LINE_ITEM), is(notNullValue()));
-  }
-
   private Rnr createRequisition() {
     Rnr requisition = new Rnr();
     final Facility facility = new Facility();

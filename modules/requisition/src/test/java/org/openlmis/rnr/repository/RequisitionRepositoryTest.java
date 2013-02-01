@@ -164,24 +164,6 @@ public class RequisitionRepositoryTest {
   }
 
   @Test
-  public void shouldSetAllFieldsExceptNonFullSupplyRnrFieldsToZeroAndInsertRequisitionLineItem(){
-    RnrLineItem rnrLineItem = new RnrLineItem();
-    requisitionRepository.insertNonFullSupply(rnrLineItem);
-    verify(rnrLineItemMapper).insertNonFullSupply(rnrLineItem);
-    assertThat(rnrLineItem.getQuantityReceived(), is(0));
-    assertThat(rnrLineItem.getQuantityDispensed(), is(0));
-    assertThat(rnrLineItem.getBeginningBalance(), is(0));
-    assertThat(rnrLineItem.getStockInHand(), is(0));
-    assertThat(rnrLineItem.getTotalLossesAndAdjustments(), is(0));
-    assertThat(rnrLineItem.getCalculatedOrderQuantity(), is(0));
-    assertThat(rnrLineItem.getNewPatientCount(), is(0));
-    assertThat(rnrLineItem.getStockOutDays(), is(0));
-    assertThat(rnrLineItem.getNormalizedConsumption(), is(0));
-    assertThat(rnrLineItem.getAmc(), is(0));
-    assertThat(rnrLineItem.getMaxStockQuantity(), is(0));
-  }
-
-  @Test
   public void shouldUpdateAllNonFullSupplyLineItems() throws Exception {
     RnrLineItem rnrLineItem = new RnrLineItem();
     rnrLineItem.setBeginningBalance(2);

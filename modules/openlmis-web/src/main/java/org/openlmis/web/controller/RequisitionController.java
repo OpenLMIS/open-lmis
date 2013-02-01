@@ -169,17 +169,4 @@ public class RequisitionController extends BaseController {
       return error(dataException, HttpStatus.NOT_FOUND);
     }
   }
-
-  @RequestMapping(value = "/logistics/requisition/lineItem", method = POST, headers = ACCEPT_JSON)
-  @PreAuthorize("hasPermission('','CREATE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> insertRequisitionLineItem(@RequestBody RnrLineItem rnrLineItem, HttpServletRequest request) {
-    if (rnrLineItem.getRnrId() == null) {
-      return error("Error in inserting Rnr line item", HttpStatus.BAD_REQUEST);
-    }
-    rnrLineItem.setModifiedBy(loggedInUserId(request));
-    requisitionService.insertLineItem(rnrLineItem);
-
-    return response(NON_FULL_SUPPLY_LINE_ITEM, rnrLineItem);
-  }
-
 }
