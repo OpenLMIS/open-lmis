@@ -153,11 +153,5 @@ public class Rnr {
     this.facility = facility.basicInformation();
     this.period = period.basicInformation();
   }
-
-  public void fillCompleteInformation(Program program, ProcessingPeriod period, Facility facility) {
-    this.program = program;
-    this.facility = facility;
-    this.period = period;
-  }
 }
 

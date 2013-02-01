@@ -13,6 +13,7 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnRColum
 
   var columnDefinitions = [];
   $scope.requisition = requisition;
+  $scope.rnr = requisition;
   $scope.lineItems = [];
   populateRnrLineItems(requisition);
   if (programRnRColumnList.length > 0) {
@@ -177,6 +178,14 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnRColum
     return (value == null || value == undefined);
   }
 
+  $scope.periodDisplayName = function () {
+    if(!$scope.rnr) return;
+
+    var startDate = new Date($scope.rnr.period.startDate);
+    var endDate = new Date($scope.rnr.period.endDate);
+
+    return utils.getFormattedDate(startDate) + ' - ' + utils.getFormattedDate(endDate);
+  };
 
 }
 

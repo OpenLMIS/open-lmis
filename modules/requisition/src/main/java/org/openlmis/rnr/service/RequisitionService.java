@@ -116,9 +116,9 @@ public class RequisitionService {
       (rnr.getStatus() == IN_APPROVAL && userRights.contains(APPROVE_REQUISITION));
   }
 
-  public Rnr get(Facility facility, Program program, ProcessingPeriod period){
+  public Rnr get(Facility facility, Program program, ProcessingPeriod period) {
     Rnr requisition = requisitionRepository.getRequisition(facility, program, period);
-    if(requisition == null) return null;
+    if (requisition == null) return null;
 
     fillFacilityPeriodProgram(requisition);
     fillPreviousRequisitionsForAmc(requisition);
@@ -139,12 +139,14 @@ public class RequisitionService {
     requisition.fillLastTwoPeriodsNormalizedConsumptions(lastPeriodsRnr, secondLastPeriodsRnr);
   }
 
-  private void fillFacilityPeriodProgram(Rnr requisition) {
-    Facility facility = facilityService.getById(requisition.getFacility().getId());
-    ProcessingPeriod period = processingScheduleService.getPeriodById(requisition.getPeriod().getId());
-    Program program = programService.getById(requisition.getProgram().getId());
+  private void fillFacilityPeriodProgram(Rnr... requisitions) {
+    for (Rnr requisition : requisitions) {
+      Facility facility = facilityService.getById(requisition.getFacility().getId());
+      ProcessingPeriod period = processingScheduleService.getPeriodById(requisition.getPeriod().getId());
+      Program program = programService.getById(requisition.getProgram().getId());
 
-    requisition.fillBasicInformation(facility, program, period);
+      requisition.fillBasicInformation(facility, program, period);
+    }
   }
 
   private Rnr getLastPeriodsRnr(Rnr requisition) {
@@ -232,17 +234,8 @@ public class RequisitionService {
       final List<Rnr> requisitions = requisitionRepository.getAuthorizedRequisitions(assignment);
       requisitionsForApproval.addAll(requisitions);
     }
-    fillProgramFacilityPeriod(requisitionsForApproval.toArray(new Rnr[requisitionsForApproval.size()]));
+    fillFacilityPeriodProgram(requisitionsForApproval.toArray(new Rnr[requisitionsForApproval.size()]));
     return requisitionsForApproval;
-  }
-
-  private void fillProgramFacilityPeriod(Rnr... requisitionsForApproval) {
-    for (Rnr requisition : requisitionsForApproval) {
-      Program program = programService.getById(requisition.getProgram().getId());
-      ProcessingPeriod period = processingScheduleService.getPeriodById(requisition.getPeriod().getId());
-      Facility facility = facilityService.getById(requisition.getFacility().getId());
-      requisition.fillCompleteInformation(program, period, facility);
-    }
   }
 
   public List<ProcessingPeriod> getAllPeriodsForInitiatingRequisition(Integer facilityId, Integer programId) {
@@ -256,6 +249,7 @@ public class RequisitionService {
 
   public Rnr getRnrForApprovalById(Integer id, Integer userId) {
     final Rnr rnr = requisitionRepository.getById(id);
+    fillFacilityPeriodProgram(rnr);
     List<RoleAssignment> assignments = roleRightsService.getRoleAssignments(APPROVE_REQUISITION, userId);
 
     if (!userCanApprove(rnr, assignments)) throw new DataException(RNR_OPERATION_UNAUTHORIZED);

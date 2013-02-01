@@ -573,7 +573,13 @@ public class RequisitionServiceTest {
 
   @Test
   public void shouldGetRequisitionForApprovalById() throws Exception {
+    when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
+    when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
+    when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
     Rnr expected = new Rnr();
+    expected.setFacility(FACILITY);
+    expected.setProgram(PROGRAM);
+    expected.setPeriod(PERIOD);
     final int supervisoryNodeId = 1;
     expected.setSupervisoryNodeId(supervisoryNodeId);
     final int rnrId = 1;
@@ -593,7 +599,13 @@ public class RequisitionServiceTest {
 
   @Test
   public void shouldThrowExceptionIfUserDoesNotHaveAccessToRequestedRequisition() throws Exception {
+    when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
+    when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
+    when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
     Rnr expected = new Rnr();
+    expected.setFacility(FACILITY);
+    expected.setProgram(PROGRAM);
+    expected.setPeriod(PERIOD);
     final int supervisoryNodeId = 1;
     expected.setSupervisoryNodeId(supervisoryNodeId);
     final int rnrId = 1;
