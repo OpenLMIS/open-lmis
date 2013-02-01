@@ -117,6 +117,10 @@ public class InitiateRnRPage extends Page {
     @FindBy(how = How.XPATH, using = "//span[@class='alert alert-warning reason-request']")
     private static WebElement requestedQtyWarningMessage;
 
+    @FindBy(how = How.XPATH, using = "//div[@class='info-box']/div[2]/div[3]")
+    private static WebElement reportingPeriodInitRnRScreen;
+
+
 
     String successText="R&R saved successfully!";
 
@@ -127,13 +131,16 @@ public class InitiateRnRPage extends Page {
         testWebDriver.setImplicitWait(25);
     }
 
-    public void verifyRnRHeader(String FCode, String FName, String FCstring, String program, List<String> periodDetails)
+    public void verifyRnRHeader(String FCode, String FName, String FCstring, String program, String periodDetails)
     {
+
        testWebDriver.waitForElementToAppear(requisitionHeader);
         String headerText=testWebDriver.getText(requisitionHeader);
         SeleneseTestNgHelper.assertTrue(headerText.contains("Report and Requisition for "+program));
         String facilityText=testWebDriver.getText(facilityLabel);
         SeleneseTestNgHelper.assertTrue(facilityText.contains(FCode + FCstring + " - " + FName + FCstring));
+
+        SeleneseTestNgHelper.assertEquals(reportingPeriodInitRnRScreen.getText().trim().substring("Reporting Period: ".length()), periodDetails.trim());
 
     }
 

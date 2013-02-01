@@ -83,7 +83,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
         LoginPage loginPageSecond=homePage.logout();
         HomePage homePageUser = loginPageSecond.loginAs(userSIC, password);
 
-        List<String> periodDetails=homePageUser.navigateAndInitiateRnr("FCcode", "FCname", date_time, program, period);
+        String periodDetails=homePageUser.navigateAndInitiateRnr("FCcode", "FCname", date_time, program, period);
         InitiateRnRPage initiateRnRPage =  homePageUser.clickProceed();
         initiateRnRPage.verifyRnRHeader("FCcode", "FCname", date_time, program, periodDetails);
 
@@ -113,8 +113,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
         HomePage homePageLowerSNUser=loginPagethird.loginAs(userMO,password);
         ApprovePage approvePageLowerSNUser=homePageLowerSNUser.navigateToApprove();
-        approvePageLowerSNUser.verifyandclickRequisitionPresentForApproval();
-        approvePageLowerSNUser.verifyRnRHeader("FCcode", "FCname", date_time, program);
+        String periodLowerSNUser=approvePageLowerSNUser.verifyandclickRequisitionPresentForApproval();
+        approvePageLowerSNUser.verifyRnRHeader("FCcode", "FCname", date_time, program, periodLowerSNUser);
         approvePageLowerSNUser.verifyApprovedQuantity();
         approvePageLowerSNUser.editApproveQuantityAndVerifyTotalCost("290");
         approvePageLowerSNUser.approveRequisition();
@@ -123,8 +123,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
         HomePage homePageTopSNUser=loginPageTopSNUser.loginAs(userSIC, password);
         ApprovePage approvePageTopSNUser=homePageTopSNUser.navigateToApprove();
-        approvePageTopSNUser.verifyandclickRequisitionPresentForApproval();
-        approvePageTopSNUser.verifyRnRHeader("FCcode", "FCname", date_time, program);
+        String periodTopSNUser=approvePageTopSNUser.verifyandclickRequisitionPresentForApproval();
+        approvePageTopSNUser.verifyRnRHeader("FCcode", "FCname", date_time, program, periodTopSNUser);
         approvePageTopSNUser.verifyApprovedQuantityApprovedFromLowerHierarchy("290");
         approvePageTopSNUser.editApproveQuantityAndVerifyTotalCost("2900");
         approvePageTopSNUser.approveRequisition();

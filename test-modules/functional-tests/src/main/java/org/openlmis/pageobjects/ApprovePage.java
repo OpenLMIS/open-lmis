@@ -23,6 +23,12 @@ public class ApprovePage extends Page {
     @FindBy(how = How.XPATH, using = "//div[@class='ngCellText colt0']")
     private static WebElement firstRow;
 
+    @FindBy(how = How.XPATH, using = "//div[@class='ngCellText colt3']/span")
+    private static WebElement periodStartDate;
+
+    @FindBy(how = How.XPATH, using = "//div[@class='ngCellText colt4']/span")
+    private static WebElement periodEndDate;
+
     @FindBy(how = How.XPATH, using = "//div[@id='requisition-header']/h2")
     private static WebElement requisitionHeader;
 
@@ -59,6 +65,10 @@ public class ApprovePage extends Page {
     @FindBy(how = How.ID, using = "saveSuccessMsgDiv")
     private static WebElement saveSuccessMsgDiv;
 
+    @FindBy(how = How.XPATH, using = "//div[@class='info-box']/div[2]/div[3]")
+    private static WebElement reportingPeriodInitRnRScreen;
+
+
     public ApprovePage(TestWebDriver driver) throws  IOException {
         super(driver);
         PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
@@ -72,20 +82,26 @@ public class ApprovePage extends Page {
         SeleneseTestNgHelper.assertTrue("NoRequisitionsPendingMessage is not displayed",NoRequisitionsPendingMessage.isDisplayed());
     }
 
-    public void verifyandclickRequisitionPresentForApproval()
+    public String verifyandclickRequisitionPresentForApproval()
     {
+
+        String period=null;
         testWebDriver.waitForElementToAppear(requisitionListHeader);
         SeleneseTestNgHelper.assertTrue("No row of requisition is there for approval",firstRow.isDisplayed());
+        period=periodStartDate.getText().trim()+" - "+periodEndDate.getText().trim();
         firstRow.click();
+        return period;
     }
 
-    public void verifyRnRHeader(String FCode, String FName, String FCstring, String program)
+    public void verifyRnRHeader(String FCode, String FName, String FCstring, String program, String periodDetails)
     {
         testWebDriver.waitForElementToAppear(requisitionHeader);
         String headerText=testWebDriver.getText(requisitionHeader);
         //SeleneseTestNgHelper.assertTrue(headerText.contains("Report and Requisition for "+program));
         String facilityText=testWebDriver.getText(facilityLabel);
         SeleneseTestNgHelper.assertTrue(facilityText.contains(FCode + FCstring + " - " + FName + FCstring));
+
+        SeleneseTestNgHelper.assertEquals(reportingPeriodInitRnRScreen.getText().trim().substring("Reporting Period: ".length()), periodDetails.trim());
 
     }
 
