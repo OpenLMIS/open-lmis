@@ -207,7 +207,7 @@ public class UserMapperIT {
     String passwordResetToken = "passwordResetToken";
     userMapper.insertPasswordResetToken(user, passwordResetToken);
 
-    userMapper.deletePasswordResetTokenForUser(user);
+    userMapper.deletePasswordResetTokenForUser(user.getId());
 
     assertThat(userMapper.getUserIdForPasswordResetToken(passwordResetToken), is(nullValue()));
   }
@@ -226,9 +226,8 @@ public class UserMapperIT {
     User user = make(a(defaultUser, with(facilityId, facility.getId())));
     userMapper.insert(user);
     String newPassword = "newPassword";
-    user.setPassword(newPassword);
-    userMapper.updateUserPassword(user);
-    User returnedUser = userMapper.selectUserByUserNameAndPassword(user.getUserName(), user.getPassword());
+    userMapper.updateUserPassword(user.getId(), newPassword);
+    User returnedUser = userMapper.selectUserByUserNameAndPassword(user.getUserName(), newPassword);
     assertThat(returnedUser, is(notNullValue()) );
   }
 

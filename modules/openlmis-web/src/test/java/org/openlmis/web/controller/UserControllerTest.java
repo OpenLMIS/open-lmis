@@ -202,7 +202,7 @@ public class UserControllerTest {
 
     userController.validatePasswordResetToken(invalidToken);
 
-    verify(userService).getUserIdForPasswordResetToken(invalidToken);
+    verify(userService).getUserIdByPasswordResetToken(invalidToken);
   }
 
 }

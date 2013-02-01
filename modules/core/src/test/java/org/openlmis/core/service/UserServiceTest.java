@@ -170,7 +170,7 @@ public class UserServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage(PASSWORD_RESET_TOKEN_INVALID);
 
-    userService.getUserIdForPasswordResetToken(invalidToken);
+    userService.getUserIdByPasswordResetToken(invalidToken);
   }
 
   @Test
@@ -178,7 +178,7 @@ public class UserServiceTest {
     String validToken = "validToken";
     Integer expectedUserId = 1;
     when(userRepository.getUserIdForPasswordResetToken(validToken)).thenReturn(expectedUserId);
-    Integer userId = userService.getUserIdForPasswordResetToken(validToken);
+    Integer userId = userService.getUserIdByPasswordResetToken(validToken);
 
     verify(userRepository).getUserIdForPasswordResetToken(validToken);
     assertThat(userId, is(expectedUserId));

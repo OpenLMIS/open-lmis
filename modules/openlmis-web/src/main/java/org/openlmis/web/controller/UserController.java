@@ -18,11 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -123,18 +121,22 @@ public class UserController extends BaseController {
 
   @RequestMapping(value = "/user/validatePasswordResetToken/{token}", method = GET)
   public ResponseEntity<OpenLmisResponse> validatePasswordResetToken(@PathVariable(value = "token") String token) throws IOException, ServletException {
-    Integer userId = null;
     try {
-      userService.getUserIdForPasswordResetToken(token);
+     userService.getUserIdByPasswordResetToken(token);
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);
     }
-    return response(USER_ID, userId);
+    return success("Token Validated");
   }
 
-  @RequestMapping(value = "/user/resetPassword" , method = PUT)
-  public void resetPassword(@RequestBody User user) {
-    userService.updateUserPassword(user);
+  @RequestMapping(value = "/user/resetPassword/{token}" , method = PUT)
+  public ResponseEntity<OpenLmisResponse> resetPassword(@PathVariable(value = "token") String token, @RequestBody String password) {
+    try {
+      userService.updateUserPassword(token, password);
+    } catch (DataException e) {
+      return error(e, HttpStatus.BAD_REQUEST);
+    }
+    return success("Password Reset");
   }
 
 }

@@ -37,8 +37,10 @@
         <intercept-url pattern="/public/**" access="permitAll" requires-channel="http"/>
         <intercept-url pattern="/user*" access="permitAll" requires-channel="http"/>
         <intercept-url pattern="/forgot-password*" access="permitAll" requires-channel="http"/>
+        <intercept-url pattern="/user/validatePasswordResetToken/*" access="permitAll" requires-channel="http"/>
         <intercept-url pattern="/user/resetPassword/*" access="permitAll" requires-channel="http"/>
-        <intercept-url pattern="/pages/admin/user/reset-password.html" access="permitAll" requires-channel="http"/>
+        <intercept-url pattern="/public/pages/reset-password.html" access="permitAll" requires-channel="http"/>
+        <intercept-url pattern="/public/pages/reset-password-complete.html" access="permitAll" requires-channel="http"/>
         <intercept-url pattern="/**" access="isAuthenticated()" requires-channel="http"/>
 
         <form-login authentication-success-handler-ref="authenticationSuccessHandler"

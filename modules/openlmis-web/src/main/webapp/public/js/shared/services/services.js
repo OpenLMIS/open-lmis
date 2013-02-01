@@ -32,10 +32,10 @@ services.factory('User', function($resource) {
   return $resource('/users/:id.json', {}, {update: {method:'PUT'}});
 });
 
-services.factory('UpdateUserPassword', function ($resource) {
-  return $resource('/user/updatePassword.json', {}, {});
-});
 
+services.factory('UserById', function ($resource) {
+  return $resource('/admin/user/:id.json', {}, {});
+});
 
 services.factory('UserFacilityList', function ($resource) {
     return $resource('/logistics/user/facilities.json', {}, {});
@@ -150,7 +150,7 @@ services.factory('SearchFacilitiesByCodeOrName', function ($resource) {
 
 
 services.factory('UpdateUserPassword', function ($resource) {
-  return $resource('/user/resetPassword.json', {}, {update: {method:'PUT'}});
+  return $resource('/user/resetPassword/:token.json', {}, {update: {method:'PUT'}});
 });
 
 services.factory('ValidatePasswordToken', function ($resource) {

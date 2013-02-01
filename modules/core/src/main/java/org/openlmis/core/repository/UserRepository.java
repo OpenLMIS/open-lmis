@@ -106,12 +106,12 @@ public class UserRepository {
     return userMapper.getUserIdForPasswordResetToken(token);
   }
 
-  public void deletePasswordResetTokenForUser(User user) {
-    userMapper.deletePasswordResetTokenForUser(user);
+  public void deletePasswordResetTokenForUser(Integer userId) {
+    userMapper.deletePasswordResetTokenForUser(userId);
   }
 
-  public void updateUserPassword(User user) {
-    userMapper.updateUserPassword(user);
+public void updateUserPassword(Integer userId, String password) {
+    userMapper.updateUserPassword(userId, password);
   }
 
 }

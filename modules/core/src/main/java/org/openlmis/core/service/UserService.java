@@ -3,6 +3,7 @@ package org.openlmis.core.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.hash.Encoder;
 import org.openlmis.core.repository.UserRepository;
 import org.openlmis.email.domain.EmailMessage;
 import org.openlmis.email.exception.EmailException;
@@ -82,6 +83,7 @@ public class UserService {
 
   public void sendForgotPasswordEmail(User user, String resetPasswordLink) {
     user = getValidatedUser(user);
+    userRepository.deletePasswordResetTokenForUser(user.getId());
     EmailMessage emailMessage = forgotPasswordEmailMessage(user, resetPasswordLink);
     sendEmail(emailMessage);
   }
@@ -126,7 +128,7 @@ public class UserService {
   }
 
   private String generateUUID() {
-    return UUID.randomUUID().toString();
+    return Encoder.hash(UUID.randomUUID().toString());
   }
 
   public List<User> searchUser(String userSearchParam) {
@@ -139,7 +141,7 @@ public class UserService {
     return user;
   }
 
-  public Integer getUserIdForPasswordResetToken(String token) {
+  public Integer getUserIdByPasswordResetToken(String token) {
     Integer userId = userRepository.getUserIdForPasswordResetToken(token);
     if (userId == null) {
       throw new DataException(PASSWORD_RESET_TOKEN_INVALID);
@@ -147,9 +149,10 @@ public class UserService {
     return userId;
   }
 
-  public void updateUserPassword(User user) {
-    userRepository.updateUserPassword(user);
-    userRepository.deletePasswordResetTokenForUser(user);
+  public void updateUserPassword(String token, String password) {
+    Integer userId = getUserIdByPasswordResetToken(token);
+    userRepository.updateUserPassword(userId, Encoder.hash(password));
+    userRepository.deletePasswordResetTokenForUser(userId);
   }
 
 }
