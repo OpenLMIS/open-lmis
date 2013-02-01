@@ -4,80 +4,6 @@ describe('CreateRnrController', function () {
 
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
-
-  describe("initialization", function () {
-
-    beforeEach(inject(function ($httpBackend, $rootScope, $location, $controller) {
-      controller = $controller;
-      scope = $rootScope.$new();
-      scope.$parent.facility = "10134";
-      scope.$parent.program = {code:"programCode", "id":1};
-      scope.saveRnrForm = {$error:{ rnrError:false }};
-      routeParams = {"facility":"1", "program":"1", "period":2};
-      httpBackend.expect('GET', '/requisitions/lossAndAdjustments/reference-data.json').respond({"lossAdjustmentTypes":{}});
-
-    }));
-
-    it('should set rnr in scope after successful initialization', function () {
-      var mockedRequisition = {'status':"INITIATED"};
-      httpBackend.when('GET', '/requisitions.json?facilityId=1&periodId=2&programId=1').respond({'rnr':mockedRequisition});
-
-      controller(CreateRnrController, {$scope:scope, $routeParams:routeParams});
-
-      httpBackend.flush();
-
-      expect(scope.rnr).toEqual(mockedRequisition);
-    });
-
-    it('should calculated and set 2 decimal rounded cost in rnrLineItem', function () {
-      var mockedRequisition = {'status':"INITIATED", 'lineItems':[
-        {'id':456, 'product':'Name', 'lossesAndAdjustments':[], 'packsToShip':10.333, 'price':2 }
-      ]};
-      httpBackend.when('GET', '/requisitions.json?facilityId=1&periodId=2&programId=1').respond({'rnr':mockedRequisition});
-      controller(CreateRnrController, {$scope:scope, $routeParams:routeParams});
-      httpBackend.flush();
-
-      expect(scope.rnrLineItems[0].id).toEqual(mockedRequisition.lineItems[0].id);
-      expect(scope.rnrLineItems[0].cost).toEqual(20.67);
-    });
-
-    it('should set cost to zero if dependent fields are not present', function () {
-      var mockedRequisition = {'status':"INITIATED", 'lineItems':[
-        {'id':400, 'product':'Name', 'lossesAndAdjustments':[], 'price':2 },
-        {'id':500, 'product':'Name', 'lossesAndAdjustments':[], 'packsToShip':10.333 }
-      ]};
-      httpBackend.when('GET', '/requisitions.json?facilityId=1&periodId=2&programId=1').respond({'rnr':mockedRequisition});
-      controller(CreateRnrController, {$scope:scope, $routeParams:routeParams});
-      httpBackend.flush();
-
-      expect(scope.rnrLineItems[0].id).toEqual(mockedRequisition.lineItems[0].id);
-      expect(scope.rnrLineItems[0].cost).toEqual(0);
-      expect(scope.rnrLineItems[1].id).toEqual(mockedRequisition.lineItems[1].id);
-      expect(scope.rnrLineItems[1].cost).toEqual(0);
-    });
-
-
-    it('should initialize losses and adjustments, if not present in R&R', function () {
-      var mockedRequisition = {'status':"INITIATED",
-        'lineItems':[
-          {'id':123, 'product':'Commodity Name' },
-          {'id':456, 'product':'2nd Commodity', 'lossesAndAdjustments':[
-            {'quantity':33}
-          ] }
-        ]
-      };
-      httpBackend.when('GET', '/requisitions.json?facilityId=1&periodId=2&programId=1').respond({'rnr':mockedRequisition});
-      controller(CreateRnrController, {$scope:scope, $routeParams:routeParams});
-      httpBackend.flush();
-
-      expect(scope.rnrLineItems[0].lossesAndAdjustments).toEqual([]);
-      expect(scope.rnrLineItems[1].lossesAndAdjustments).toEqual([
-        {'quantity':33}
-      ]);
-    });
-  });
-
-
   beforeEach(inject(function ($httpBackend, $rootScope, $location, $controller, $routeParams, _localStorageService_) {
     scope = $rootScope.$new();
     $rootScope.hasPermission = function () {
@@ -92,19 +18,14 @@ describe('CreateRnrController', function () {
     localStorageService = _localStorageService_;
     routeParams = {"facility":"1", "program":"1", "period":2};
 
-    requisitionHeader = {"requisitionHeader":{"facilityName":"National Warehouse",
-      "facilityCode":"10134", "facilityType":{"code":"Warehouse"}, "facilityOperatedBy":"MoH", "maximumStockLevel":3, "emergencyOrderPoint":0.5,
-      "zone":{"label":"state", "value":"Arusha"}, "parentZone":{"label":"state", "value":"Arusha"}}};
+    scope.rnrLineItems = [];
 
-
-    httpBackend.when('GET', '/logistics/facility/1/requisition-header.json').respond(requisitionHeader);
     httpBackend.when('GET', '/facilityApprovedProducts/facility/1/program/1/nonFullSupply.json').respond(200);
     httpBackend.when('POST', '/requisitions.json?facilityId=1&periodId=2&programId=1').respond({"rnr":{"status":"CREATED"}});
     httpBackend.when('GET', '/logistics/rnr/1/columns.json').respond({"rnrColumnList":[
       {"testField":"test"}
     ]});
     httpBackend.when('GET', '/reference-data/currency.json').respond({"currency":"$"});
-    httpBackend.expect('GET', '/requisitions.json?facilityId=1&periodId=2&programId=1').respond({"rnr":{"status":"CREATED"}});
     httpBackend.expect('GET', '/requisitions/lossAndAdjustments/reference-data.json').respond({"lossAdjustmentTypes":{}});
     $rootScope.fixToolBar = function () {
     };
