@@ -1,5 +1,8 @@
 function RequisitionController($scope, Requisition, $location, $routeParams, $rootScope) {
 
+  $scope.rnrLineItems = [];
+  $scope.nonFullSupplyLineItems = [];
+
   if (!$scope.$parent.rnr) {
     Requisition.get({facilityId:$routeParams.facility, programId:$routeParams.program, periodId:$routeParams.period},
       function (data) {
@@ -45,6 +48,8 @@ function RequisitionController($scope, Requisition, $location, $routeParams, $ro
 
 
   $scope.periodDisplayName = function () {
+    if(!$scope.rnr) return;
+
     var startDate = new Date($scope.rnr.period.startDate);
     var endDate = new Date($scope.rnr.period.endDate);
 

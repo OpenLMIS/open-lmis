@@ -1,5 +1,5 @@
 <div id="requisition-header">
-  <h2>Report and Requisition for {{rnr.program.name}} ({{rnr.facilityType.name}}) </h2>
+  <h2>Report and Requisition for {{rnr.program.name}} ({{rnr.facility.facilityType.name}}) </h2>
 
   <div class="info-box">
     <div class="row-fluid">
@@ -7,13 +7,13 @@
         <strong>Facility:</strong> {{rnr.facility.code}} - {{rnr.facility.name}}
       </div>
       <div class="span3">
-        <strong>Operated By:</strong> {{rnr.facility.operatedBy}}
+        <strong>Operated By:</strong> {{rnr.facility.operatedBy.text}}
       </div>
       <div class="span3">
-        <strong>Maximum Stock level:</strong> {{rnr.facilityType.nominalMaxMonth}}
+        <strong>Maximum Stock level:</strong> {{rnr.facility.facilityType.nominalMaxMonth}}
       </div>
       <div class="span3">
-        <strong>Emergency Order Point:</strong> {{rnr.facilityType.nominalEop}}
+        <strong>Emergency Order Point:</strong> {{rnr.facility.facilityType.nominalEop}}
       </div>
     </div>
     <div class="row-fluid">
