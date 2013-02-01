@@ -17,7 +17,7 @@ function UserProgramRoleListController($scope) {
 
   $scope.availablePrograms = function () {
     return $scope.$parent.allSupportedPrograms;
-  }
+  };
 
   $scope.showRoleAssignmentOptions = function () {
     return $scope.user.facilityId != null;
@@ -45,8 +45,7 @@ function UserProgramRoleListController($scope) {
   }
 
   function selectRole() {
-    var select2Div =
-      '<select ui-select2 ng-model="user.roleAssignments[$parent.$index].roleIds" placeholder="+ Add Role"  multiple="multiple"  style="width:400px">' +
+    var select2Div = '<select ui-select2 ng-model="user.roleAssignments[$parent.$index].roleIds" placeholder="+ Add Role"  multiple="multiple"  style="width:400px">' +
         '<option ng-repeat="role in allRoles" value="{{role.id}}">{{role.name}}</option>' +
         '</select>';
     return select2Div;

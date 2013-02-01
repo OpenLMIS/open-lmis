@@ -107,10 +107,10 @@ public class UserController extends BaseController {
     return successResponse;
   }
 
-  @RequestMapping(value = "/admin/search-user", method = GET)
+  @RequestMapping(value = "/users", method = GET)
   @PreAuthorize("hasPermission('','MANAGE_USERS')")
-  public List<User> searchUser(@RequestParam String userSearchParam) {
-    return userService.searchUser(userSearchParam);
+  public List<User> searchUser(@RequestParam(required = true) String param) {
+    return userService.searchUser(param);
   }
 
   @RequestMapping(value = "/admin/user/{id}", method = GET)

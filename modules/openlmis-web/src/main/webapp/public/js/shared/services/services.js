@@ -1,9 +1,5 @@
 var services = angular.module('openlmis.services', ['ngResource']);
 
-services.factory('User', function ($resource) {
-    return $resource('/user.json', {}, {});
-});
-
 services.factory('Program', function ($resource) {
     return $resource('/admin/programs.json', {}, {});
 });
@@ -20,6 +16,14 @@ services.factory('Facility', function ($resource) {
     return $resource('/admin/facility/:id.json', {}, {});
 });
 
+services.factory('User', function ($resource) {
+    return $resource('/user.json', {}, {});
+});
+
+services.factory('SearchUser', function ($resource) {
+  return $resource('/users.json?param=:param', {}, {});
+});
+
 services.factory('Users', function ($resource) {
   return $resource('/users.json', {}, {});
 });
@@ -27,6 +31,15 @@ services.factory('Users', function ($resource) {
 services.factory('User', function($resource) {
   return $resource('/users/:id.json', {}, {update: {method:'PUT'}});
 });
+
+services.factory('UserById', function ($resource) {
+  return $resource('/admin/user/:id.json', {}, {});
+});
+
+services.factory('UpdateUserPassword', function ($resource) {
+  return $resource('/user/updatePassword.json', {}, {});
+});
+
 
 services.factory('UserFacilityList', function ($resource) {
     return $resource('/logistics/user/facilities.json', {}, {});
@@ -126,10 +139,6 @@ services.factory('ForgotPassword', function ($resource) {
   return $resource('/forgot-password.json', {}, {});
 });
 
-services.factory('SearchUserByFirstOrLastName', function ($resource) {
-  return $resource('/admin/search-user.json', {}, {});
-});
-
 services.factory('FacilityApprovedProducts', function ($resource) {
   return $resource('/facilityApprovedProducts/facility/:facilityId/program/:programId/nonFullSupply.json', {}, {});
 });
@@ -139,16 +148,8 @@ services.factory('RequisitionLineItem', function ($resource) {
   return $resource('/logistics/requisition/lineItem.json', {}, {});
 });
 
-services.factory('UserById', function ($resource) {
-  return $resource('/admin/user/:id.json', {}, {});
-});
-
 services.factory('SearchFacilitiesByCodeOrName', function ($resource) {
   return $resource('/facilitiesByCodeOrName.json', {}, {});
-});
-
-services.factory('UpdateUserPassword', function ($resource) {
-  return $resource('/user/updatePassword.json', {}, {});
 });
 
 

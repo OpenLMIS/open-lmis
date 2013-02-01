@@ -15,7 +15,7 @@ describe("User Search Controller", function () {
 
   it('should get all users depending on search criteria when three characters are entered in search', function () {
     var userResponse = {"userList":[{"id":1,"firstName":"john","lastName":"Doe","email":"john_doe@gmail.com"}]};
-    $httpBackend.when('GET', '/admin/search-user.json?userSearchParam=' + scope.query).respond(userResponse);
+    $httpBackend.when('GET', '/users.json?param=' + scope.query).respond(userResponse);
     spyOn(document, 'getElementById').andReturn({value : scope.query});
     scope.showUserSearchResults(searchTextId);
     $httpBackend.flush();
