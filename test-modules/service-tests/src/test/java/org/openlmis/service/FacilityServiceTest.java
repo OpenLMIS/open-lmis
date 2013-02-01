@@ -20,15 +20,21 @@ public class FacilityServiceTest extends TestCaseHelper {
         try {
 
             String BASE_URL="http://localhost:9091";
+            String CREATE_FACILITY_ENDPOINT="/admin/facility.json";
+            String DELETE_FACILITY_ENDPOINT="/admin/facility/update/delete.json";
+            String RESTORE_FACILITY_ENDPOINT="/admin/facility/update/restore.json";
+
+            String CREATE_FACILITY_JSON="{\"dataReportable\":\"true\",\"code\":\"facilitycode\",\"gln\":\"fac\"," +
+                    "\"name\":\"facilityname\",\"facilityType\":{\"code\":\"lvl3_hospital\"},\"sdp\":\"true\",\"active\":\"true\"," +
+                    "\"goLiveDate\":\"2013-01-10T18:30:00.000Z\",\"supportedPrograms\":[{\"id\":1,\"code\":\"HIV\",\"name\":\"HIV\"," +
+                    "\"description\":\"HIV\",\"active\":true}],\"geographicZone\":{\"id\":1}}";
+
             DBWrapper dbWrapper = new DBWrapper();
             dbWrapper.deleteFacilities();
 
             ServiceUtils serviceUtils = new ServiceUtils();
 
-            String newFacilityCreatedPreLogin = serviceUtils.postJSON("{\"dataReportable\":\"true\",\"code\":\"facilitycode\",\"gln\":\"fac\"," +
-                    "\"name\":\"facilityname\",\"facilityType\":{\"code\":\"lvl3_hospital\"},\"sdp\":\"true\",\"active\":\"true\"," +
-                    "\"goLiveDate\":\"2013-01-10T18:30:00.000Z\",\"supportedPrograms\":[{\"id\":1,\"code\":\"HIV\",\"name\":\"HIV\"," +
-                    "\"description\":\"HIV\",\"active\":true}],\"geographicZone\":{\"id\":1}}", BASE_URL+"/admin/facility.json");
+            String newFacilityCreatedPreLogin = serviceUtils.postJSON(CREATE_FACILITY_JSON, BASE_URL+CREATE_FACILITY_ENDPOINT);
 
             String facilityIDPreLogin = serviceUtils.getFacilityFieldJSON(newFacilityCreatedPreLogin,"id");
             /*
@@ -42,14 +48,28 @@ public class FacilityServiceTest extends TestCaseHelper {
             serviceUtils.postNONJSON("j_username=Admin123&j_password=Admin123", BASE_URL+"/j_spring_security_check");
 
 
-            String newFacilityCreatedPostLogin = serviceUtils.postJSON("{\"dataReportable\":\"true\",\"code\":\"facilitycode\",\"gln\":\"fac\"," +
-                    "\"name\":\"facilityname\",\"facilityType\":{\"code\":\"lvl3_hospital\"},\"sdp\":\"true\",\"active\":\"true\"," +
-                    "\"goLiveDate\":\"2013-01-10T18:30:00.000Z\",\"supportedPrograms\":[{\"id\":1,\"code\":\"HIV\",\"name\":\"HIV\"," +
-                    "\"description\":\"HIV\",\"active\":true}],\"geographicZone\":{\"id\":1}}", BASE_URL+"/admin/facility.json");
+            String newFacilityCreatedPostLogin = serviceUtils.postJSON(CREATE_FACILITY_JSON, BASE_URL+CREATE_FACILITY_ENDPOINT);
             serviceUtils.getJSON("http://localhost:9091/admin/facilities.json");
 
 
             String facilityID = serviceUtils.getFacilityFieldJSON(newFacilityCreatedPostLogin,"id");
+
+            String DELETE_FACILITY_JSON="{\"id\":" + facilityID + ",\"code\":\"facilitycode\",\"name\":\"facilityname\",\"gln\":\"fac\"," +
+                    "\"geographicZone\":{\"id\":1,\"label\":null,\"value\":null},\"facilityType\":{\"id\":2,\"code\":\"lvl3_hospital\"," +
+                    "\"name\":\"Lvl3 Hospital\",\"description\":\"State Hospital\",\"nominalMaxMonth\":3,\"nominalEop\":0.5,\"displayOrder\":1," +
+                    "\"active\":true},\"sdp\":\"true\",\"active\":\"true\",\"goLiveDate\":1357842600000,\"dataReportable\":\"true\"," +
+                    "\"supportedPrograms\":[{\"id\":1,\"code\":\"HIV\",\"name\":\"HIV\",\"description\":\"HIV\",\"active\":true}],\"modifiedBy\":" +
+                    "\"Admin123\",\"modifiedDate\":1359279527557,\"suppliesOthers\":\"\",\"hasElectricity\":\"\",\"online\":\"\"," +
+                    "\"hasElectronicScc\":\"\",\"hasElectronicDar\":\"\"}";
+
+            String RESTORE_FACILITY_JSON="{\"id\":" + facilityID + ",\"code\":\"facilitycode\",\"name\":\"facilityname\",\"gln\":\"fac\"," +
+                    "\"geographicZone\":{\"id\":1,\"label\":null,\"value\":null},\"facilityType\":{\"id\":2,\"code\":\"lvl3_hospital\"," +
+                    "\"name\":\"Lvl3 Hospital\",\"description\":\"State Hospital\",\"nominalMaxMonth\":3,\"nominalEop\":0.5,\"displayOrder\":1," +
+                    "\"active\":true},\"sdp\":\"true\",\"active\":\"true\",\"goLiveDate\":1357842600000,\"dataReportable\":\"false\"," +
+                    "\"supportedPrograms\":[{\"id\":1,\"code\":\"HIV\",\"name\":\"HIV\",\"description\":\"HIV\",\"active\":true}]," +
+                    "\"modifiedBy\":\"Admin123\",\"modifiedDate\":1359279527557,\"suppliesOthers\":\"\",\"hasElectricity\":\"\"," +
+                    "\"online\":\"\",\"hasElectronicScc\":\"\",\"hasElectronicDar\":\"\"}";
+
             SeleneseTestNgHelper.assertEquals(dbWrapper.getFacilityFieldBYID("active", facilityID),"t");
             SeleneseTestNgHelper.assertEquals(dbWrapper.getFacilityFieldBYID("datareportable", facilityID),"t");
             /*
@@ -57,27 +77,14 @@ public class FacilityServiceTest extends TestCaseHelper {
              */
             SeleneseTestNgHelper.assertEquals(facilityID, dbWrapper.getFacilityIDDB());
 
-            serviceUtils.postJSON("{\"id\":" + facilityID + ",\"code\":\"facilitycode\",\"name\":\"facilityname\",\"gln\":\"fac\"," +
-                    "\"geographicZone\":{\"id\":1,\"label\":null,\"value\":null},\"facilityType\":{\"id\":2,\"code\":\"lvl3_hospital\"," +
-                    "\"name\":\"Lvl3 Hospital\",\"description\":\"State Hospital\",\"nominalMaxMonth\":3,\"nominalEop\":0.5,\"displayOrder\":1," +
-                    "\"active\":true},\"sdp\":\"true\",\"active\":\"true\",\"goLiveDate\":1357842600000,\"dataReportable\":\"true\"," +
-                    "\"supportedPrograms\":[{\"id\":1,\"code\":\"HIV\",\"name\":\"HIV\",\"description\":\"HIV\",\"active\":true}],\"modifiedBy\":" +
-                    "\"Admin123\",\"modifiedDate\":1359279527557,\"suppliesOthers\":\"\",\"hasElectricity\":\"\",\"online\":\"\"," +
-                    "\"hasElectronicScc\":\"\",\"hasElectronicDar\":\"\"}", BASE_URL+"/admin/facility/update/delete.json");
+            serviceUtils.postJSON(DELETE_FACILITY_JSON, BASE_URL+DELETE_FACILITY_ENDPOINT);
 
 
             SeleneseTestNgHelper.assertEquals(dbWrapper.getFacilityFieldBYID("active", facilityID),"f");
             SeleneseTestNgHelper.assertEquals(dbWrapper.getFacilityFieldBYID("datareportable", facilityID),"f");
 
 
-            serviceUtils.postJSON("{\"id\":" + facilityID + ",\"code\":\"facilitycode\",\"name\":\"facilityname\",\"gln\":\"fac\"," +
-                    "\"geographicZone\":{\"id\":1,\"label\":null,\"value\":null},\"facilityType\":{\"id\":2,\"code\":\"lvl3_hospital\"," +
-                    "\"name\":\"Lvl3 Hospital\",\"description\":\"State Hospital\",\"nominalMaxMonth\":3,\"nominalEop\":0.5,\"displayOrder\":1," +
-                    "\"active\":true},\"sdp\":\"true\",\"active\":\"true\",\"goLiveDate\":1357842600000,\"dataReportable\":\"false\"," +
-                    "\"supportedPrograms\":[{\"id\":1,\"code\":\"HIV\",\"name\":\"HIV\",\"description\":\"HIV\",\"active\":true}]," +
-                    "\"modifiedBy\":\"Admin123\",\"modifiedDate\":1359279527557,\"suppliesOthers\":\"\",\"hasElectricity\":\"\"," +
-                    "\"online\":\"\",\"hasElectronicScc\":\"\",\"hasElectronicDar\":\"\"}",
-                    BASE_URL+"/admin/facility/update/restore.json");
+            serviceUtils.postJSON(RESTORE_FACILITY_JSON,BASE_URL+RESTORE_FACILITY_ENDPOINT);
 
             SeleneseTestNgHelper.assertEquals(dbWrapper.getFacilityFieldBYID("active", facilityID),"t");
             SeleneseTestNgHelper.assertEquals(dbWrapper.getFacilityFieldBYID("datareportable", facilityID),"t");
