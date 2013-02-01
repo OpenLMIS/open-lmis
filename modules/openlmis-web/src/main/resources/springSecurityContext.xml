@@ -44,13 +44,13 @@
         <form-login authentication-success-handler-ref="authenticationSuccessHandler"
                     login-processing-url="/j_spring_security_check"
                     login-page="/public/pages/login.html"
-                    authentication-failure-url="/user.json?error=true"/>
+                    authentication-failure-url="/user-context.json?error=true"/>
         <logout logout-success-url="/" invalidate-session="true" delete-cookies="true"/>
         <access-denied-handler ref="openLmisAccessDeniedHandler"/>
     </http>
 
     <beans:bean id="authenticationSuccessHandler" class="org.openlmis.authentication.web.UserAuthenticationSuccessHandler">
-        <beans:property name="defaultTargetUrl" value="/user.json"/>
+        <beans:property name="defaultTargetUrl" value="/user-context.json"/>
     </beans:bean>
 
     <beans:bean id="expressionHandler"
