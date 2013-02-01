@@ -99,7 +99,6 @@ public class Rnr {
       RnrLineItem previousLineItem = findCorrespondingLineItem(previousRequisition.getLineItems(), currentLineItem);
       if (previousLineItem != null)
         currentLineItem.setBeginningBalanceWhenPreviousStockInHandAvailable(previousLineItem.getStockInHand());
-
     }
   }
 
@@ -113,7 +112,7 @@ public class Rnr {
 
     for (RnrLineItem currentLineItem : lineItems) {
       RnrLineItem previousLineItem = findCorrespondingLineItem(rnr.getLineItems(), currentLineItem);
-      if (previousLineItem != null) currentLineItem.addPreviousNormalizedConsumption(previousLineItem);
+      currentLineItem.addPreviousNormalizedConsumption(previousLineItem);
     }
   }
 

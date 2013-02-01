@@ -79,8 +79,7 @@ public class RequisitionService {
     fillBeginningBalanceFromPreviousRnrIfStockInHandVisible(rnrTemplate, requisition);
 
     requisitionRepository.insert(requisition);
-
-    return requisition;
+    return get(new Facility(facilityId), new Program(programId), new ProcessingPeriod(periodId));
   }
 
   private void fillBeginningBalanceFromPreviousRnrIfStockInHandVisible(ProgramRnrTemplate rnrTemplate, Rnr requisition) {
@@ -120,16 +119,25 @@ public class RequisitionService {
 
   public Rnr get(Facility facility, Program program, ProcessingPeriod period) {
     Rnr requisition = requisitionRepository.getRequisition(facility, program, period);
-    fillPreviousTwoPeriodsNormalizedConsumptions(requisition);
+    if(requisition == null) return null;
+
+    requisition.setPeriod(processingScheduleService.getPeriodById(period.getId()));
+    fillPreviousRequisitionsForAmc(requisition);
 
     return requisition;
   }
 
-  private void fillPreviousTwoPeriodsNormalizedConsumptions(Rnr requisition) {
+  private void fillPreviousRequisitionsForAmc(Rnr requisition) {
     if (requisition == null) return;
 
-    Rnr lastPeriodsRnr = getLastPeriodsRnr(requisition);
-    Rnr secondLastPeriodsRnr = getLastPeriodsRnr(lastPeriodsRnr);
+    Rnr lastPeriodsRnr = null;
+    Rnr secondLastPeriodsRnr = null;
+
+    if (requisition.getPeriod().getNumberOfMonths() <= 2) {
+      lastPeriodsRnr = getLastPeriodsRnr(requisition);
+      if (requisition.getPeriod().getNumberOfMonths() == 1)
+        secondLastPeriodsRnr = getLastPeriodsRnr(lastPeriodsRnr);
+    }
     requisition.fillLastTwoPeriodsNormalizedConsumptions(lastPeriodsRnr, secondLastPeriodsRnr);
   }
 

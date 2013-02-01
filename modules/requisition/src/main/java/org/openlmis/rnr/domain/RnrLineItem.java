@@ -66,6 +66,7 @@ public class RnrLineItem {
 
   private Integer packsToShip;
   private String remarks;
+
   private List<Integer> previousNormalizedConsumptions = new ArrayList<>();
 
   private Boolean previousStockInHandAvailable = false;
@@ -222,7 +223,7 @@ public class RnrLineItem {
   }
 
   public void addPreviousNormalizedConsumption(RnrLineItem rnrLineItem) {
-    this.previousNormalizedConsumptions.add(rnrLineItem.normalizedConsumption);
+    if (rnrLineItem != null) this.previousNormalizedConsumptions.add(rnrLineItem.normalizedConsumption);
   }
 
   public void setDefaultApprovedQuantity() {

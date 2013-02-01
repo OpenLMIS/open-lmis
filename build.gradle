@@ -14,11 +14,10 @@ subprojects {
                 'commons-io:commons-io:2.4'
 
         testCompile 'junit:junit:4.8.2',
-                'org.mockito:mockito-all:1.8.4',
+                'org.mockito:mockito-all:1.9.5',
                 'org.hamcrest:hamcrest-all:1.3',
                 'cglib:cglib:2.2.2',
-                'org.powermock:powermock-api-mockito:1.4.12',
-                'org.powermock:powermock-module-junit4:1.4.12',
+                'org.powermock:powermock-mockito-release-full:1.5',
                 'com.natpryce:make-it-easy:3.1.0'
     }
 

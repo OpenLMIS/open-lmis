@@ -1,3 +1,4 @@
+
 package org.openlmis.core.domain;
 
 import lombok.AllArgsConstructor;
