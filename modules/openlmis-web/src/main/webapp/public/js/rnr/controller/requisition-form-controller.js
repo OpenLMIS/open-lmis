@@ -1,4 +1,4 @@
-function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $location, FacilityApprovedProducts, Requisitions, $routeParams, LossesAndAdjustmentsReferenceData, $rootScope) {
+function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, $location, FacilityApprovedProducts, Requisitions, $routeParams, LossesAndAdjustmentsReferenceData, $rootScope) {
 
   $scope.lossesAndAdjustmentsModal = [];
 
@@ -21,7 +21,7 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
   ProgramRnRColumnList.get({programId:$routeParams.program}, function (data) {
     if (data.rnrColumnList && data.rnrColumnList.length > 0) {
       $scope.programRnRColumnList = data.rnrColumnList;
-//      $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnRColumnList, {'name':'quantityRequested'});
+      $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnRColumnList, {'name':'quantityRequested'});
     } else {
       $scope.$parent.error = "Please contact Admin to define R&R template for this program";
       $location.path("/init-rnr");
@@ -169,43 +169,28 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem);
   };
 
-  function isUndefined(value) {
-    return (value == null || value == undefined);
-  }
-
   function formulaValid() {
     var valid = true;
-    $scope.rnrLineItems.forEach(function (lineItem) {
+    $($scope.rnrLineItems).each(function (index, lineItem) {
       if (lineItem.arithmeticallyInvalid($scope.programRnRColumnList) || lineItem.stockInHand < 0 || lineItem.quantityDispensed < 0) {
-        valid = false;
+        valid =  false;
+        return false;
       }
     });
     return valid;
   }
 
   function isValidLossesAndAdjustments(rnrLineItem) {
-    if (!isUndefined(rnrLineItem.lossesAndAdjustments)) {
-      for (var index in rnrLineItem.lossesAndAdjustments) {
-        if (isUndefined(rnrLineItem.lossesAndAdjustments[index].quantity)) {
-          $scope.modalError = 'Please correct the highlighted fields before submitting';
-          return false;
-        }
+    $scope.modalError = '';
+    if (isUndefined(rnrLineItem.lossesAndAdjustments)) return true;
+
+    for (var index in rnrLineItem.lossesAndAdjustments) {
+      if (isUndefined(rnrLineItem.lossesAndAdjustments[index].quantity)) {
+        $scope.modalError = 'Please correct the highlighted fields before submitting';
+        return false;
       }
     }
-    $scope.modalError = '';
     return true;
-  }
-
-  function updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem) {
-    var lossesAndAdjustmentTypesForLineItem = [];
-    $(lineItem.lossesAndAdjustments).each(function (index, lineItemLossAndAdjustment) {
-      lossesAndAdjustmentTypesForLineItem.push(lineItemLossAndAdjustment.type.name);
-    });
-
-    var allTypes = $scope.allTypes;
-    $scope.lossesAndAdjustmentTypesToDisplay = $.grep(allTypes, function (lAndATypeObject) {
-      return $.inArray(lAndATypeObject.name, lossesAndAdjustmentTypesForLineItem) == -1;
-    });
   }
 
   $scope.getCellErrorClass = function (rnrLineItem, programRnRColumnList) {
@@ -216,57 +201,10 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     return $scope.getCellErrorClass(rnrLineItem, programRnRColumnList) ? 'row-error-highlight' : '';
   };
 
-
   $scope.labelForRnrColumn = function (columnName) {
-    var label = "";
-    $($scope.programRnRColumnList).each(function (index, column) {
-      if (column.name == columnName) {
-        label = column.label;
-        return false;
-      }
-    });
-    return label + ":";
+    if ($scope.programRnRColumnList) return _.findWhere($scope.programRnRColumnList, {'name':columnName}).label + ":";
   };
 
-  function populateProductInformation() {
-    var product = {};
-    angular.copy($scope.facilityApprovedProduct.programProduct.product, product);
-    $scope.newNonFullSupply.productCode = product.code;
-    $scope.newNonFullSupply.product = (product.primaryName == null ? "" : (product.primaryName + " ")) +
-      (product.form.code == null ? "" : (product.form.code + " ")) +
-      (product.strength == null ? "" : (product.strength + " ")) +
-      (product.dosageUnit.code == null ? "" : product.dosageUnit.code);
-    $scope.newNonFullSupply.dosesPerDispensingUnit = product.dosesPerDispensingUnit;
-    $scope.newNonFullSupply.packSize = product.packSize;
-    $scope.newNonFullSupply.roundToZero = product.roundToZero;
-    $scope.newNonFullSupply.packRoundingThreshold = product.packRoundingThreshold;
-    $scope.newNonFullSupply.dispensingUnit = product.dispensingUnit;
-    $scope.newNonFullSupply.fullSupply = product.fullSupply;
-    $scope.newNonFullSupply.maxMonthsOfStock = $scope.facilityApprovedProduct.maxMonthsOfStock;
-    $scope.newNonFullSupply.dosesPerMonth = $scope.facilityApprovedProduct.programProduct.dosesPerMonth;
-    $scope.newNonFullSupply.price = $scope.facilityApprovedProduct.programProduct.currentPrice;
-  }
-
-  function prepareNFSLineItemFields() {
-    populateProductInformation();
-    $(['quantityReceived', 'quantityDispensed', 'beginningBalance', 'stockInHand', 'totalLossesAndAdjustments', 'calculatedOrderQuantity', 'newPatientCount',
-      'stockOutDays', 'normalizedConsumption', 'amc', 'maxStockQuantity']).each(function (index, field) {
-        $scope.newNonFullSupply[field] = 0;
-      });
-    $scope.newNonFullSupply.rnrId = $scope.rnr.id;
-  }
-
-  function updateNonFullSupplyProductsToDisplay() {
-    var usedNonFullSupplyProducts = [];
-    $($scope.nonFullSupplyLineItems).each(function (index, nonFullSupplyLineItem) {
-      usedNonFullSupplyProducts.push(nonFullSupplyLineItem.productCode);
-    });
-
-    var allNonFullSupplyProducts = $scope.nonFullSupplyProducts;
-    $scope.nonFullSupplyProductsToDisplay = $.grep(allNonFullSupplyProducts, function (facilityApprovedProduct) {
-      return $.inArray(facilityApprovedProduct.programProduct.product.code, usedNonFullSupplyProducts) == -1;
-    });
-  }
 
   $scope.addNonFullSupplyLineItem = function () {
     jQuery.extend(true, $scope.newNonFullSupply, new RnrLineItem());
@@ -284,16 +222,43 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     $scope.nonFullSupplyProductsModal = true;
   };
 
-    $scope.showNonFullSupplyAddButton = function () {
-    if (!$scope.rnr || !$scope.programRnRColumnList || !$scope.nonFullSupplyProducts) return false;
-    var show = false;
-    $($scope.programRnRColumnList).each(function (index, column) {
-      if (column.name == 'quantityRequested') {
-        show = true;
-        return;
-      }
+  function updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem) {
+    var lossesAndAdjustmentTypesForLineItem = _.pluck(_.pluck(lineItem.lossesAndAdjustments, 'type'), 'name');
+
+    $scope.lossesAndAdjustmentTypesToDisplay = $.grep($scope.allTypes, function (lAndATypeObject) {
+      return $.inArray(lAndATypeObject.name, lossesAndAdjustmentTypesForLineItem) == -1;
     });
-    if ($scope.nonFullSupplyProducts.length > 0 && show) return true;
-    return false;
-  };
+  }
+
+  function populateProductInformation() {
+    var product = {};
+    angular.copy($scope.facilityApprovedProduct.programProduct.product, product);
+    $scope.newNonFullSupply.productCode = product.code;
+    $scope.newNonFullSupply.product = (product.primaryName == null ? "" : (product.primaryName + " ")) +
+      (product.form.code == null ? "" : (product.form.code + " ")) +
+      (product.strength == null ? "" : (product.strength + " ")) +
+      (product.dosageUnit.code == null ? "" : product.dosageUnit.code);
+    $(['dosesPerDispensingUnit', 'packSize', 'roundToZero', 'packRoundingThreshold', 'dispensingUnit', 'fullSupply']).each(function (index, field) {
+      $scope.newNonFullSupply[field] = product[field];
+    });
+    $scope.newNonFullSupply.maxMonthsOfStock = $scope.facilityApprovedProduct.maxMonthsOfStock;
+    $scope.newNonFullSupply.dosesPerMonth = $scope.facilityApprovedProduct.programProduct.dosesPerMonth;
+    $scope.newNonFullSupply.price = $scope.facilityApprovedProduct.programProduct.currentPrice;
+  }
+
+  function prepareNFSLineItemFields() {
+    populateProductInformation();
+    $(['quantityReceived', 'quantityDispensed', 'beginningBalance', 'stockInHand', 'totalLossesAndAdjustments', 'calculatedOrderQuantity', 'newPatientCount',
+      'stockOutDays', 'normalizedConsumption', 'amc', 'maxStockQuantity']).each(function (index, field) {
+        $scope.newNonFullSupply[field] = 0;
+      });
+    $scope.newNonFullSupply.rnrId = $scope.rnr.id;
+  }
+
+  function updateNonFullSupplyProductsToDisplay() {
+    var usedNonFullSupplyProducts = _.pluck($scope.nonFullSupplyLineItems, 'productCode');
+    $scope.nonFullSupplyProductsToDisplay = $.grep($scope.nonFullSupplyProducts, function (facilityApprovedProduct) {
+      return $.inArray(facilityApprovedProduct.programProduct.product.code, usedNonFullSupplyProducts) == -1;
+    });
+  }
 }

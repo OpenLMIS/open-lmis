@@ -17,7 +17,7 @@ describe('RequisitionController', function () {
   }));
 
   it('should set rnr in scope after successful initialization', function () {
-    var mockedRequisition = {'status':"INITIATED"};
+    var mockedRequisition = {'status':"INITIATED", fullSupplyItemsSubmittedCost : 100, nonFullSupplyItemsSubmittedCost: 14};
     httpBackend.when('GET', '/requisitions.json?facilityId=1&periodId=2&programId=1').respond({'rnr':mockedRequisition});
 
     controller(RequisitionController, {$scope:scope, $routeParams:routeParams});
@@ -27,7 +27,7 @@ describe('RequisitionController', function () {
     expect(scope.rnr).toEqual(mockedRequisition);
   });
 
-  it('should calculated and set 2 decimal rounded cost in rnrLineItem', function () {
+  it('should calculate and set 2 decimal rounded cost in rnrLineItem', function () {
     var mockedRequisition = {'status':"INITIATED", 'lineItems':[
       {'id':456, 'product':'Name', 'lossesAndAdjustments':[], 'packsToShip':10.333, 'price':2 }
     ]};

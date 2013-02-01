@@ -20,7 +20,7 @@ function RequisitionController($scope, Requisition, $location, $routeParams, $ro
   } else {
     $scope.formDisabled = isFormDisabled();
     resetCostsIfNull($scope.rnr);
-    populateRnrLineItems($scope.$parent.rnr);
+    populateRnrLineItems($scope.rnr);
   }
 
   function populateRnrLineItems(rnr) {
@@ -50,9 +50,9 @@ function RequisitionController($scope, Requisition, $location, $routeParams, $ro
 
   function resetCostsIfNull(rnr) {
     if (rnr == null) return;
-    if (rnr.fullSupplyItemsSubmittedCost == null)
+    if (!rnr.fullSupplyItemsSubmittedCost)
       rnr.fullSupplyItemsSubmittedCost = 0;
-    if (rnr.nonFullSupplyItemsSubmittedCost == null)
+    if (!rnr.nonFullSupplyItemsSubmittedCost)
       rnr.nonFullSupplyItemsSubmittedCost = 0;
   }
 

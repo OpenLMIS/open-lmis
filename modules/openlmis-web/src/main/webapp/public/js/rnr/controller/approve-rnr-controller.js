@@ -66,10 +66,8 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnRColum
       error.positiveInteger = false;
       return
     }
-    ;
-
     error.pattern = !isPositiveNumber(value);
-  }
+  };
 
   $scope.gridOptions = { data:'lineItems',
     canSelectRows:false,
@@ -89,8 +87,7 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnRColum
         $scope.approvedQuantityInvalidFlag = true;
         return false;
       }
-      ;
-    })
+    });
     if ($scope.approvedQuantityInvalidFlag) {
       $scope.error = "Please correct errors before saving.";
       $scope.message = "";
@@ -104,7 +101,7 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnRColum
         $scope.error = data.error;
         $scope.message = "";
       });
-  }
+  };
 
   $scope.approveRnr = function () {
     $scope.approvedQuantityRequiredFlag = false;
@@ -113,8 +110,7 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnRColum
         $scope.approvedQuantityRequiredFlag = true;
         return false;
       }
-      ;
-    })
+    });
     if ($scope.approvedQuantityRequiredFlag) {
       $scope.error = "Please complete the highlighted fields on the R&R form before approving";
       $scope.message = "";

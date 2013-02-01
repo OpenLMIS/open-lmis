@@ -1,4 +1,4 @@
-<div ng-controller="CreateRnrController" xmlns="http://www.w3.org/1999/html">
+<div ng-controller="RequisitionFormController" xmlns="http://www.w3.org/1999/html">
   <div ng-hide = "programRnRColumnList" >Loading...</div >
   <form name = "saveRnrForm" action = "#" id = "rnr-form" novalidate >
     <div class = "total-cost alert alert-info" >Total Cost For Full Supply Items:
@@ -386,7 +386,7 @@
     <br />
 
 
-  <input type="button"  ng-click="showAddNonFullSupplyModal()" value = "Add Non-Full Supply" ng-show = "showNonFullSupplyAddButton()"/>
+  <input type="button"  ng-click="showAddNonFullSupplyModal()" value = "Add Non-Full Supply" ng-show = "addNonFullSupplyLineItemButtonShown"/>
 <form name="nonFullSupplyForm">
   <div id="nonFullSupplyProductsModal"
        ng-model="nonFullSupplyProductsModal"

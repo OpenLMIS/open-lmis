@@ -1,4 +1,4 @@
-describe('CreateRnrController', function () {
+describe('RequisitionFormController', function () {
 
   var scope, ctrl, httpBackend, location, routeParams, requisitionHeader, controller, localStorageService;
 
@@ -29,7 +29,7 @@ describe('CreateRnrController', function () {
     httpBackend.expect('GET', '/requisitions/lossAndAdjustments/reference-data.json').respond({"lossAdjustmentTypes":{}});
     $rootScope.fixToolBar = function () {
     };
-    ctrl = controller(CreateRnrController, {$scope:scope, $location:location, $routeParams:routeParams, localStorageService:localStorageService});
+    ctrl = controller(RequisitionFormController, {$scope:scope, $location:location, $routeParams:routeParams, localStorageService:localStorageService});
 
     scope.allTypes = [
       {"name":"some name"},
