@@ -17,13 +17,10 @@ import org.openlmis.email.service.EmailService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.*;
@@ -32,28 +29,28 @@ import static org.openlmis.core.service.UserService.PASSWORD_RESET_TOKEN_INVALID
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
 
+  public static final String FORGET_PASSWORD_LINK = "http://openLMIS.org";
   @Rule
   public ExpectedException expectedException = none();
 
   @Mock
+  @SuppressWarnings("unused")
   private UserRepository userRepository;
 
   @Mock
+  @SuppressWarnings("unused")
   private EmailService emailService;
 
   @Mock
+  @SuppressWarnings("unused")
   private RoleAssignmentService roleAssignmentService;
 
   private UserService userService;
-
-  private final Map<String,Object> args = new HashMap<>();
-
 
 
   @Before
   public void setUp() throws Exception {
     userService = new UserService(userRepository, roleAssignmentService, emailService);
-    args.put(UserService.USER_REQUEST_URL, "https://localhost:9091");
   }
 
   @Test
@@ -62,7 +59,7 @@ public class UserServiceTest {
     doThrow(new DataException("user.email.invalid")).when(user).validate();
     expectedException.expect(DataException.class);
     expectedException.expectMessage("user.email.invalid");
-    userService.save(user, args);
+    userService.create(user, "http://openLMIS.org");
     verify(userRepository, never()).insert(user);
   }
 
@@ -76,7 +73,8 @@ public class UserServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage(UserService.USER_EMAIL_INCORRECT);
 
-    userService.sendForgotPasswordEmail(user, args);
+    userService.sendForgotPasswordEmail(user, FORGET_PASSWORD_LINK);
+
   }
 
   @Test
@@ -90,7 +88,7 @@ public class UserServiceTest {
     userToBeReturned.setId(1111);
     when(userRepository.getByEmail(user.getEmail())).thenReturn(userToBeReturned);
 
-    userService.sendForgotPasswordEmail(user, args);
+    userService.sendForgotPasswordEmail(user, FORGET_PASSWORD_LINK);
 
     verify(emailService).send(any(EmailMessage.class));
     verify(userRepository).getByEmail(user.getEmail());
@@ -108,7 +106,7 @@ public class UserServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage(UserService.USER_EMAIL_NOT_FOUND);
 
-    userService.sendForgotPasswordEmail(user, args);
+    userService.sendForgotPasswordEmail(user, FORGET_PASSWORD_LINK);
   }
 
   @Test
@@ -142,7 +140,7 @@ public class UserServiceTest {
   public void shouldSendPasswordEmailWhenUserCreated() throws Exception {
     User user = new User();
 
-    userService.save(user, args);
+    userService.create(user, FORGET_PASSWORD_LINK);
 
     verify(emailService).send(any(EmailMessage.class));
   }
@@ -155,13 +153,13 @@ public class UserServiceTest {
     userRoleAssignments.add(userRoleAssignment);
     user.setRoleAssignments(userRoleAssignments);
 
-    userService.save(user, args);
+    userService.create(user, FORGET_PASSWORD_LINK);
 
     verify(userRepository).insert(user);
     verify(roleAssignmentService).insertUserProgramRoleMapping(user);
 
     user.setId(1);
-    userService.save(user, args);
+    userService.create(user, FORGET_PASSWORD_LINK);
 
     verify(roleAssignmentService).deleteAllRoleAssignmentsForUser(1);
   }

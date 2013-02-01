@@ -11,7 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -19,17 +22,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
-import static org.openlmis.core.service.UserService.USER_REQUEST_URL;
 import static org.openlmis.web.response.OpenLmisResponse.error;
 import static org.openlmis.web.response.OpenLmisResponse.success;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 
 @Controller
@@ -64,10 +63,8 @@ public class UserController extends BaseController {
   @RequestMapping(value = "/forgot-password", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> sendPasswordTokenEmail(@RequestBody User user, HttpServletRequest request) {
     try {
-      String requestUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/user/resetPassword/";
-      Map<String, Object> args = new HashMap<>();
-      args.put(USER_REQUEST_URL, requestUrl);
-      userService.sendForgotPasswordEmail(user, args);
+      String resetPasswordLink = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/user/resetPassword/";
+      userService.sendForgotPasswordEmail(user, resetPasswordLink);
       return success("Email sent");
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);
@@ -82,10 +79,8 @@ public class UserController extends BaseController {
     user.setModifiedBy(modifiedBy);
     try {
       user.setPassword("openLmis123");
-      String requestUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/";
-      Map<String, Object> args = new HashMap<>();
-      args.put(USER_REQUEST_URL, requestUrl);
-      userService.save(user, args);
+      String resetPasswordBaseLink = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/";
+      userService.create(user, resetPasswordBaseLink);
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);
     }
@@ -103,7 +98,7 @@ public class UserController extends BaseController {
     user.setModifiedBy(loggedInUser(request));
     user.setId(id);
     try {
-      userService.save(user, null);
+      userService.update(user);
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);
     }

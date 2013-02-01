@@ -97,13 +97,13 @@ public class UserControllerTest {
     user.setUserName("Manan");
     user.setEmail("manan@thoughtworks.com");
     userController.sendPasswordTokenEmail(user, httpServletRequest);
-    verify(userService).sendForgotPasswordEmail(eq(user), anyMap());
+    verify(userService).sendForgotPasswordEmail(eq(user), anyString());
   }
 
   @Test
   public void shouldReturnErrorIfSendingForgotPasswordEmailFails() throws Exception {
     User user = new User();
-    doThrow(new DataException("some error")).when(userService).sendForgotPasswordEmail(eq(user), any(Map.class));
+    doThrow(new DataException("some error")).when(userService).sendForgotPasswordEmail(eq(user), anyString());
 
     ResponseEntity<OpenLmisResponse> response = userController.sendPasswordTokenEmail(user, httpServletRequest);
 
@@ -126,7 +126,7 @@ public class UserControllerTest {
     httpServletRequest.getSession().setAttribute(USER, USER);
     ResponseEntity<OpenLmisResponse> response = userController.create(user, httpServletRequest);
 
-    verify(userService).save(eq(user), anyMap());
+    verify(userService).create(eq(user), anyString());
 
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
     assertThat(response.getBody().getSuccessMsg(), is("User " + user.getFirstName() + " " + user.getLastName() + " has been successfully created, password link sent on registered Email address"));
@@ -153,7 +153,7 @@ public class UserControllerTest {
 
     ResponseEntity<OpenLmisResponse> response = userController.update(user, 1, httpServletRequest);
 
-    verify(userService).save(user, null);
+    verify(userService).update(user);
 
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
     assertThat(response.getBody().getSuccessMsg(), is("User " + user.getFirstName() + " " + user.getLastName() + " has been successfully updated"));
@@ -164,7 +164,7 @@ public class UserControllerTest {
   @Test
   public void shouldReturnErrorIfSaveUserFails() throws Exception {
     User user = new User();
-    doThrow(new DataException("Save user failed")).when(userService).save(eq(user), anyMap());
+    doThrow(new DataException("Save user failed")).when(userService).create(eq(user), anyString());
 
     ResponseEntity<OpenLmisResponse> response = userController.create(user, httpServletRequest);
 

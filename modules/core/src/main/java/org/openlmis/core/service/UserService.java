@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -48,21 +47,22 @@ public class UserService {
     this.roleAssignmentService = roleAssignmentService;
   }
 
-  public void save(User user, Map args) {
+
+  public void create(User user, String resetPasswordLink) {
     user.validate();
-    Boolean createFlag = user.getId() == null;
     userRepository.insert(user);
-
-    if (!createFlag) {
-      roleAssignmentService.deleteAllRoleAssignmentsForUser(user.getId());
-    }
-
     roleAssignmentService.insertUserProgramRoleMapping(user);
 
-    if (createFlag) {
-      EmailMessage emailMessage = accountCreatedEmailMessage(user, args);
-      sendEmail(emailMessage);
-    }
+    EmailMessage emailMessage = accountCreatedEmailMessage(user, resetPasswordLink);
+    sendEmail(emailMessage);
+  }
+
+  public void update(User user) {
+    user.validate();
+    userRepository.insert(user);
+
+    roleAssignmentService.deleteAllRoleAssignmentsForUser(user.getId());
+    roleAssignmentService.insertUserProgramRoleMapping(user);
   }
 
   private void sendEmail(EmailMessage emailMessage) {
@@ -73,9 +73,9 @@ public class UserService {
     }
   }
 
-  public void sendForgotPasswordEmail(User user, Map<String, Object> args) {
+  public void sendForgotPasswordEmail(User user, String resetPasswordLink) {
     user = getValidatedUser(user);
-    EmailMessage emailMessage = forgotPasswordEmailMessage(user, args);
+    EmailMessage emailMessage = forgotPasswordEmailMessage(user, resetPasswordLink);
     sendEmail(emailMessage);
   }
 
@@ -90,12 +90,12 @@ public class UserService {
     return user;
   }
 
-  private EmailMessage createEmailMessage(User user, Map<String, Object> args) {
+  private EmailMessage createEmailMessage(User user, String resetPasswordLink) {
     EmailMessage emailMessage = new EmailMessage();
     emailMessage.setTo(user.getEmail());
     String mailBody = null;
-    if (PASSWORD_RESET_CREATED_EMAIL_BODY != null && args.get(USER_REQUEST_URL) != null) {
-      mailBody = PASSWORD_RESET_CREATED_EMAIL_BODY.replace("{0}", args.get(USER_REQUEST_URL).toString());
+    if (PASSWORD_RESET_CREATED_EMAIL_BODY != null && resetPasswordLink != null) {
+      mailBody = PASSWORD_RESET_CREATED_EMAIL_BODY.replace("{0}", resetPasswordLink);
     }
 
     String passwordResetToken = generateUUID();
@@ -105,14 +105,14 @@ public class UserService {
     return emailMessage;
   }
 
-  private EmailMessage accountCreatedEmailMessage(User user, Map<String, Object> args) {
-    EmailMessage emailMessage = createEmailMessage(user, args);
+  private EmailMessage accountCreatedEmailMessage(User user, String resetPasswordLink) {
+    EmailMessage emailMessage = createEmailMessage(user, resetPasswordLink);
     emailMessage.setSubject(ACCOUNT_CREATED_EMAIL_SUBJECT);
     return emailMessage;
   }
 
-  private EmailMessage forgotPasswordEmailMessage(User user, Map<String, Object> args) {
-    EmailMessage emailMessage = createEmailMessage(user, args);
+  private EmailMessage forgotPasswordEmailMessage(User user, String requestUrl) {
+    EmailMessage emailMessage = createEmailMessage(user, requestUrl);
     emailMessage.setSubject(FORGOT_PASSWORD_EMAIL_SUBJECT);
     emailMessage.setTo(user.getEmail());
     return emailMessage;
