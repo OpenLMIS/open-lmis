@@ -153,4 +153,12 @@ services.factory('SearchFacilitiesByCodeOrName', function ($resource) {
 });
 
 
+services.factory('UpdateUserPassword', function ($resource) {
+  return $resource('/user/resetPassword.json', {}, {update: {method:'PUT'}});
+});
+
+services.factory('ValidatePasswordToken', function ($resource) {
+  return $resource('/user/validatePasswordResetToken/:token.json', {}, {});
+});
+
 

@@ -100,15 +100,15 @@ public class UserService {
   private EmailMessage createEmailMessage(User user, String resetPasswordLink) {
     EmailMessage emailMessage = new EmailMessage();
     emailMessage.setTo(user.getEmail());
+    String passwordResetToken = generateUUID();
     String mailBody = null;
     if (PASSWORD_RESET_CREATED_EMAIL_BODY != null && resetPasswordLink != null) {
-      mailBody = PASSWORD_RESET_CREATED_EMAIL_BODY.replace("{0}", resetPasswordLink);
+      mailBody = PASSWORD_RESET_CREATED_EMAIL_BODY.replace("{0}", resetPasswordLink) + passwordResetToken;
     }
+    emailMessage.setText(mailBody);
 
-    String passwordResetToken = generateUUID();
     userRepository.insertPasswordResetToken(user, passwordResetToken);
 
-    emailMessage.setText(mailBody + passwordResetToken);
     return emailMessage;
   }
 
@@ -118,8 +118,8 @@ public class UserService {
     return emailMessage;
   }
 
-  private EmailMessage forgotPasswordEmailMessage(User user, String requestUrl) {
-    EmailMessage emailMessage = createEmailMessage(user, requestUrl);
+  private EmailMessage forgotPasswordEmailMessage(User user, String resetPasswordLink) {
+    EmailMessage emailMessage = createEmailMessage(user, resetPasswordLink);
     emailMessage.setSubject(FORGOT_PASSWORD_EMAIL_SUBJECT);
     emailMessage.setTo(user.getEmail());
     return emailMessage;

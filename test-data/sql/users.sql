@@ -17,7 +17,7 @@ INSERT INTO role_rights
 INSERT INTO users
   (id, userName, password, facilityId, firstName, lastName, email) VALUES
   (200, 'User123', 'Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==', (SELECT id FROM facilities WHERE code = 'F10'), 'Jane', 'Doe', 'Jane_Doe@openlmis.com'),
-  (300, 'User234', 'Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==', (SELECT id FROM facilities WHERE code = 'F10'), 'Lokesh', 'Agrawal', 'lokeshag@thoughtworks.com');
+  (300, 'User234', 'Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==', (SELECT id FROM facilities WHERE code = 'F10'), 'Lokesh', 'Agrawal', 'balvindk@thoughtworks.com');
 
 INSERT INTO supervisory_nodes
   (parentId, facilityId, name, code) VALUES

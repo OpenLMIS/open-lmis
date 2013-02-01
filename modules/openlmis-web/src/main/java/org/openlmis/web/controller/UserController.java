@@ -22,11 +22,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 import static org.openlmis.web.response.OpenLmisResponse.error;
+import static org.openlmis.web.response.OpenLmisResponse.response;
 import static org.openlmis.web.response.OpenLmisResponse.success;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
@@ -63,7 +65,7 @@ public class UserController extends BaseController {
   @RequestMapping(value = "/forgot-password", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> sendPasswordTokenEmail(@RequestBody User user, HttpServletRequest request) {
     try {
-      String resetPasswordLink = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/user/resetPassword/";
+      String resetPasswordLink = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/public/pages/reset-password.html#/token/";
       userService.sendForgotPasswordEmail(user, resetPasswordLink);
       return success("Email sent");
     } catch (DataException e) {
@@ -119,18 +121,19 @@ public class UserController extends BaseController {
     return userService.getById(id);
   }
 
-  @RequestMapping(value = "/user/resetPassword/" + "{token}", method = GET)
-  public void resetPassword(@PathVariable(value = "token") String token, HttpServletRequest request, HttpServletResponse servletResponse) throws IOException, ServletException {
+  @RequestMapping(value = "/user/validatePasswordResetToken/{token}", method = GET)
+  public ResponseEntity<OpenLmisResponse> validatePasswordResetToken(@PathVariable(value = "token") String token) throws IOException, ServletException {
+    Integer userId = null;
     try {
       userService.getUserIdForPasswordResetToken(token);
     } catch (DataException e) {
-      request.getRequestDispatcher("/public/pages/access-denied.html").forward(request, servletResponse);
+      return error(e, HttpStatus.BAD_REQUEST);
     }
-    request.getRequestDispatcher("/public/pages/admin/user/reset-password.html").forward(request, servletResponse);
+    return response(USER_ID, userId);
   }
 
-  @RequestMapping(value = "/user/updatePassword", method = PUT)
-  public void updateUserPassword(@RequestBody User user) {
+  @RequestMapping(value = "/user/resetPassword" , method = PUT)
+  public void resetPassword(@RequestBody User user) {
     userService.updateUserPassword(user);
   }
 

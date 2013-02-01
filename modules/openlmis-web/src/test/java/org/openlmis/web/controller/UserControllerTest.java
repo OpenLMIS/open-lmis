@@ -200,7 +200,7 @@ public class UserControllerTest {
   public void shouldReturnErrorResponseIfTokenIsNotValid() throws IOException, ServletException {
     String invalidToken = "invalidToken";
 
-    userController.resetPassword(invalidToken, httpServletRequest, httpServletResponse);
+    userController.validatePasswordResetToken(invalidToken);
 
     verify(userService).getUserIdForPasswordResetToken(invalidToken);
   }
