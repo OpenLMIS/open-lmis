@@ -9,6 +9,8 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.Test;
 
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+
 
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
@@ -40,7 +42,7 @@ public class FacilityServiceTest extends TestCaseHelper {
             /*
             Checking for unauthorized creation of facility : Pre login
              */
-            SeleneseTestNgHelper.assertEquals(facilityIDPreLogin, dbWrapper.getFacilityIDDB());
+            assertEquals(facilityIDPreLogin, dbWrapper.getFacilityIDDB());
 
             /*
             Hitting Login endpoint with required credentials
@@ -55,39 +57,41 @@ public class FacilityServiceTest extends TestCaseHelper {
             String facilityID = serviceUtils.getFacilityFieldJSON(newFacilityCreatedPostLogin,"id");
 
             String DELETE_FACILITY_JSON="{\"id\":" + facilityID + ",\"code\":\"facilitycode\",\"name\":\"facilityname\",\"gln\":\"fac\"," +
-                    "\"geographicZone\":{\"id\":1,\"label\":null,\"value\":null},\"facilityType\":{\"id\":2,\"code\":\"lvl3_hospital\"," +
-                    "\"name\":\"Lvl3 Hospital\",\"description\":\"State Hospital\",\"nominalMaxMonth\":3,\"nominalEop\":0.5,\"displayOrder\":1," +
-                    "\"active\":true},\"sdp\":\"true\",\"active\":\"true\",\"goLiveDate\":1357842600000,\"dataReportable\":\"true\"," +
-                    "\"supportedPrograms\":[{\"id\":1,\"code\":\"HIV\",\"name\":\"HIV\",\"description\":\"HIV\",\"active\":true}],\"modifiedBy\":" +
-                    "\"Admin123\",\"modifiedDate\":1359279527557,\"suppliesOthers\":\"\",\"hasElectricity\":\"\",\"online\":\"\"," +
-                    "\"hasElectronicScc\":\"\",\"hasElectronicDar\":\"\"}";
+                    "\"geographicZone\":{\"id\":1,\"name\":\"Arusha\",\"level\":{\"id\":null,\"name\":\"state\"}," +
+                    "\"parent\":{\"id\":null,\"name\":\"Arusha\",\"level\":{\"id\":null,\"name\":\"state\"},\"parent\":null}}," +
+                    "\"facilityType\":{\"id\":2,\"code\":\"lvl3_hospital\",\"name\":\"Lvl3 Hospital\",\"description\":\"State Hospital\"," +
+                    "\"nominalMaxMonth\":3,\"nominalEop\":0.5,\"displayOrder\":1,\"active\":true},\"sdp\":\"true\",\"active\":\"true\"," +
+                    "\"goLiveDate\":1357842600000,\"dataReportable\":\"true\",\"supportedPrograms\":[{\"id\":1,\"code\":\"HIV\"," +
+                    "\"name\":\"HIV\",\"description\":\"HIV\",\"active\":true}],\"modifiedBy\":\"Admin123\",\"modifiedDate\":1359717489605," +
+                    "\"suppliesOthers\":\"\",\"hasElectricity\":\"\",\"online\":\"\",\"hasElectronicScc\":\"\",\"hasElectronicDar\":\"\"}";
 
-            String RESTORE_FACILITY_JSON="{\"id\":" + facilityID + ",\"code\":\"facilitycode\",\"name\":\"facilityname\",\"gln\":\"fac\"," +
-                    "\"geographicZone\":{\"id\":1,\"label\":null,\"value\":null},\"facilityType\":{\"id\":2,\"code\":\"lvl3_hospital\"," +
+            String RESTORE_FACILITY_JSON="{\"id\":" + facilityID + ",\"code\":\"facilitycode\",\"name\":\"facilityname\",\"gln\":\"fac\",\"geographicZone\":{\"id\":1," +
+                    "\"name\":\"Arusha\",\"level\":{\"id\":null,\"name\":\"state\"},\"parent\":{\"id\":null,\"name\":\"Arusha\"," +
+                    "\"level\":{\"id\":null,\"name\":\"state\"},\"parent\":null}},\"facilityType\":{\"id\":2,\"code\":\"lvl3_hospital\"," +
                     "\"name\":\"Lvl3 Hospital\",\"description\":\"State Hospital\",\"nominalMaxMonth\":3,\"nominalEop\":0.5,\"displayOrder\":1," +
-                    "\"active\":true},\"sdp\":\"true\",\"active\":\"true\",\"goLiveDate\":1357842600000,\"dataReportable\":\"false\"," +
+                    "\"active\":true},\"sdp\":\"true\",\"active\":true,\"goLiveDate\":1357842600000,\"dataReportable\":\"false\"," +
                     "\"supportedPrograms\":[{\"id\":1,\"code\":\"HIV\",\"name\":\"HIV\",\"description\":\"HIV\",\"active\":true}]," +
-                    "\"modifiedBy\":\"Admin123\",\"modifiedDate\":1359279527557,\"suppliesOthers\":\"\",\"hasElectricity\":\"\"," +
+                    "\"modifiedBy\":\"Admin123\",\"modifiedDate\":1359718495531,\"suppliesOthers\":\"\",\"hasElectricity\":\"\"," +
                     "\"online\":\"\",\"hasElectronicScc\":\"\",\"hasElectronicDar\":\"\"}";
 
-            SeleneseTestNgHelper.assertEquals(dbWrapper.getFacilityFieldBYID("active", facilityID),"t");
-            SeleneseTestNgHelper.assertEquals(dbWrapper.getFacilityFieldBYID("datareportable", facilityID),"t");
+            assertEquals(dbWrapper.getFacilityFieldBYID("active", facilityID), "t");
+            assertEquals(dbWrapper.getFacilityFieldBYID("datareportable", facilityID), "t");
             /*
             Checking for authorized creation of facility : post login
              */
-            SeleneseTestNgHelper.assertEquals(facilityID, dbWrapper.getFacilityIDDB());
+            assertEquals(facilityID, dbWrapper.getFacilityIDDB());
 
             serviceUtils.postJSON(DELETE_FACILITY_JSON, BASE_URL+DELETE_FACILITY_ENDPOINT);
 
 
-            SeleneseTestNgHelper.assertEquals(dbWrapper.getFacilityFieldBYID("active", facilityID),"f");
-            SeleneseTestNgHelper.assertEquals(dbWrapper.getFacilityFieldBYID("datareportable", facilityID),"f");
+            assertEquals(dbWrapper.getFacilityFieldBYID("active", facilityID), "f");
+            assertEquals(dbWrapper.getFacilityFieldBYID("datareportable", facilityID), "f");
 
 
             serviceUtils.postJSON(RESTORE_FACILITY_JSON,BASE_URL+RESTORE_FACILITY_ENDPOINT);
 
-            SeleneseTestNgHelper.assertEquals(dbWrapper.getFacilityFieldBYID("active", facilityID),"t");
-            SeleneseTestNgHelper.assertEquals(dbWrapper.getFacilityFieldBYID("datareportable", facilityID),"t");
+            assertEquals(dbWrapper.getFacilityFieldBYID("active", facilityID), "t");
+            assertEquals(dbWrapper.getFacilityFieldBYID("datareportable", facilityID), "t");
 
             serviceUtils.getJSON(BASE_URL + "//j_spring_security_logout");
 

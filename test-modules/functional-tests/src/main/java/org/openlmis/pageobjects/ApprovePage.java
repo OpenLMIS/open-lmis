@@ -97,7 +97,7 @@ public class ApprovePage extends Page {
     {
         testWebDriver.waitForElementToAppear(requisitionHeader);
         String headerText=testWebDriver.getText(requisitionHeader);
-        //SeleneseTestNgHelper.assertTrue(headerText.contains("Report and Requisition for "+program));
+        SeleneseTestNgHelper.assertTrue(headerText.contains("Report and Requisition for "+program));
         String facilityText=testWebDriver.getText(facilityLabel);
         SeleneseTestNgHelper.assertTrue(facilityText.contains(FCode + FCstring + " - " + FName + FCstring));
 
