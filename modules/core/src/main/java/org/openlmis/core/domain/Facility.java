@@ -3,6 +3,7 @@ package org.openlmis.core.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
@@ -17,6 +18,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonSerialize(include = NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Facility implements Importable, BaseModel {
 
   private Integer id;
