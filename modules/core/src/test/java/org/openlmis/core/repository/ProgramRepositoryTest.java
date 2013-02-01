@@ -27,7 +27,7 @@ public class ProgramRepositoryTest {
   @Before
   public void setUp() {
     programMapper = mock(ProgramMapper.class);
-    programRepository = new ProgramRepository(programMapper, null, null);
+    programRepository = new ProgramRepository(programMapper);
   }
 
   @Test
