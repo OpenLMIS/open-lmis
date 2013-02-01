@@ -1,5 +1,5 @@
-function HeaderController($scope, User, $rootScope, localStorageService) {
-  User.get({}, function (data) {
+function HeaderController($scope, UserContext, $rootScope, localStorageService) {
+  UserContext.get({}, function (data) {
     if (!data.authenticated) {
       $rootScope.modalShown = true;
     }

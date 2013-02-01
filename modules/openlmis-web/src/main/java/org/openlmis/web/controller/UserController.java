@@ -47,7 +47,7 @@ public class UserController extends BaseController {
     this.userService = userService;
   }
 
-  @RequestMapping(value = "/user", method = GET)
+  @RequestMapping(value = "/user-context", method = GET)
   public HashMap<String, Object> user(HttpServletRequest httpServletRequest, @RequestParam(required = false) String error) {
     String userName = (String) httpServletRequest.getSession().getAttribute(USER);
     HashMap<String, Object> params = new HashMap<>();
@@ -115,9 +115,9 @@ public class UserController extends BaseController {
     return userService.searchUser(param);
   }
 
-  @RequestMapping(value = "/admin/user/{id}", method = GET)
+  @RequestMapping(value = "/users/{id}", method = GET)
   @PreAuthorize("hasPermission('','MANAGE_USERS')")
-  public User getById(@PathVariable(value = "id") Integer id) {
+  public User get(@PathVariable(value = "id") Integer id) {
     return userService.getById(id);
   }
 

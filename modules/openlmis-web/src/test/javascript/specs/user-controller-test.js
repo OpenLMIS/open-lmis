@@ -110,7 +110,7 @@ describe("User", function () {
       routeParams.userId = 1;
       var user = {"id":1};
       $httpBackend = _$httpBackend_;
-      $httpBackend.when('GET', '/admin/user/1.json').respond({"userName":"User420"});
+      $httpBackend.when('GET', '/users/1.json').respond({"userName":"User420"});
       ctrl = $controller(UserController, {$scope:scope, $routeParams:routeParams, user:user});
     }));
 

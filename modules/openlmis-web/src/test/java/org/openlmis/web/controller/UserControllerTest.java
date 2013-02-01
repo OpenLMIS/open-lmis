@@ -190,7 +190,7 @@ public class UserControllerTest {
     User user = new User();
     when(userService.getById(1)).thenReturn(user);
 
-    User returnedUser = userController.getById(1);
+    User returnedUser = userController.get(1);
 
     assertThat(returnedUser, is(user));
 

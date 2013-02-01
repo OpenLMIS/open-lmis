@@ -16,8 +16,8 @@ services.factory('Facility', function ($resource) {
     return $resource('/admin/facility/:id.json', {}, {});
 });
 
-services.factory('User', function ($resource) {
-    return $resource('/user.json', {}, {});
+services.factory('UserContext', function ($resource) {
+    return $resource('/user-context.json', {}, {});
 });
 
 services.factory('SearchUser', function ($resource) {
@@ -30,10 +30,6 @@ services.factory('Users', function ($resource) {
 
 services.factory('User', function($resource) {
   return $resource('/users/:id.json', {}, {update: {method:'PUT'}});
-});
-
-services.factory('UserById', function ($resource) {
-  return $resource('/admin/user/:id.json', {}, {});
 });
 
 services.factory('UpdateUserPassword', function ($resource) {

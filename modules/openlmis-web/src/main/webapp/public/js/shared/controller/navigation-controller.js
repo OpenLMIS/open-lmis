@@ -1,11 +1,10 @@
-function NavigationController( $scope, User, localStorageService, $rootScope) {
-
+function NavigationController( $scope, UserContext, localStorageService, $rootScope) {
 
     $scope.loadRights = function () {
         var rights = localStorageService.get(localStorageKeys.RIGHT);
 
         if(rights == undefined){
-            User.get({}, function (data) {
+            UserContext.get({}, function (data) {
               if(data.authenticated) {
                   rights = getRights(data.rights);
                   localStorageService.add(localStorageKeys.RIGHT, rights);

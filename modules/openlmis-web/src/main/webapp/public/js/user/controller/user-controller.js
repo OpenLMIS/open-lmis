@@ -1,10 +1,9 @@
-function UserController($scope, $routeParams, Users, User, SearchFacilitiesByCodeOrName, Facility, Roles, UserById) {
+function UserController($scope, $routeParams, Users, User,  SearchFacilitiesByCodeOrName, Facility, Roles) {
   $scope.programAndRoleList = [];
   $scope.userNameInvalid = false;
 
-
   if ($routeParams.userId) {
-    UserById.get({id:$routeParams.userId}, function (data) {
+    User.get({id:$routeParams.userId}, function (data) {
       $scope.user = data.user;
       loadRoleAssignments();
     }, {});

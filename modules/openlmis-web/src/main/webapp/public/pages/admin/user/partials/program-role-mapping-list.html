@@ -2,8 +2,8 @@
   <div class="gridStyle" ng-grid="gridOptions"></div>
   <div>
    <span>
-     <select ng-options="program.id as program.name for program in availablePrograms()" ng-model="ddd8888"></select>
-     <select ui-select2  placeholder="+ Add Role" multiple="multiple" style="width:400px">
+     <select ng-options="program.id as program.name for program in availablePrograms()" ng-model="programSelected"></select>
+     <select ui-select2 ng-model="selectedRoleIds"  placeholder="+ Add Role" multiple="multiple" style="width:400px">
        <option ng-repeat="role in $parent.allRoles" value="{{role.id}}">{{role.name}}</option>
      </select>
      <a ng-click="addRole()" class="pull-right btn btn-primary">Add Role</a>
