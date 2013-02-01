@@ -24,7 +24,7 @@ public class UserPersistenceHandlerTest {
     userPersistenceHandler = new UserPersistenceHandler(userService);
     User user = new User();
     userPersistenceHandler.save(user, "userName");
-    verify(userService).create(user, null);
+    verify(userService).create(user);
     assertThat(user.getModifiedBy(), is("userName"));
   }
 }

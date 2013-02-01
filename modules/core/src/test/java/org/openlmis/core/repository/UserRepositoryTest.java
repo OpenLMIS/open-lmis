@@ -61,7 +61,7 @@ public class UserRepositoryTest {
   @Test
   public void shouldInsertAUser() throws Exception {
     User user = new User();
-    userRepository.insert(user);
+    userRepository.create(user);
     verify(userMapper).insert(user);
   }
 
@@ -71,7 +71,7 @@ public class UserRepositoryTest {
     when(userMapper.get(UserBuilder.defaultSupervisorUserName)).thenReturn(null);
     exException.expect(DataException.class);
     exException.expectMessage(SUPERVISOR_USER_NOT_FOUND);
-    userRepository.insert(user);
+    userRepository.create(user);
   }
 
   @Test
@@ -83,7 +83,7 @@ public class UserRepositoryTest {
     exException.expect(DataException.class);
     exException.expectMessage(DUPLICATE_EMPLOYEE_ID_FOUND);
     userMapper.get(user.getSupervisor().getUserName());
-    userRepository.insert(user);
+    userRepository.create(user);
   }
 
   @Test
@@ -95,7 +95,7 @@ public class UserRepositoryTest {
     exException.expect(DataException.class);
     exException.expectMessage(DUPLICATE_EMAIL_FOUND);
     userMapper.get(user.getSupervisor().getUserName());
-    userRepository.insert(user);
+    userRepository.create(user);
   }
 
   @Test
@@ -107,7 +107,7 @@ public class UserRepositoryTest {
     exException.expect(DataException.class);
     exException.expectMessage(DUPLICATE_USER_NAME_FOUND);
     userMapper.get(user.getSupervisor().getUserName());
-    userRepository.insert(user);
+    userRepository.create(user);
   }
 
   @Test
@@ -162,7 +162,7 @@ public class UserRepositoryTest {
   public void shouldUpdateUserIfUserDataIsValid() throws Exception {
     User user = new User();
     user.setId(1);
-    userRepository.insert(user);
+    userRepository.update(user);
     verify(userMapper).update(user);
   }
 

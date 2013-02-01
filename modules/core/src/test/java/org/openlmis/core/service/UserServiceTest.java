@@ -60,7 +60,7 @@ public class UserServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("user.email.invalid");
     userService.create(user, "http://openLMIS.org");
-    verify(userRepository, never()).insert(user);
+    verify(userRepository, never()).create(user);
   }
 
   @Test
@@ -155,13 +155,11 @@ public class UserServiceTest {
 
     userService.create(user, FORGET_PASSWORD_LINK);
 
-    verify(userRepository).insert(user);
+    verify(userRepository).create(user);
     verify(roleAssignmentService).insertUserProgramRoleMapping(user);
 
     user.setId(1);
     userService.create(user, FORGET_PASSWORD_LINK);
-
-    verify(roleAssignmentService).deleteAllRoleAssignmentsForUser(1);
   }
 
   @Test

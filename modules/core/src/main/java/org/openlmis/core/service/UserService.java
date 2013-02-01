@@ -49,17 +49,24 @@ public class UserService {
 
 
   public void create(User user, String resetPasswordLink) {
-    user.validate();
-    userRepository.insert(user);
-    roleAssignmentService.insertUserProgramRoleMapping(user);
-
+    validateAndSave(user);
     EmailMessage emailMessage = accountCreatedEmailMessage(user, resetPasswordLink);
     sendEmail(emailMessage);
   }
 
+  public void create(User user) {
+    validateAndSave(user);
+  }
+
+  private void validateAndSave(User user) {
+    user.validate();
+    userRepository.create(user);
+    roleAssignmentService.insertUserProgramRoleMapping(user);
+  }
+
   public void update(User user) {
     user.validate();
-    userRepository.insert(user);
+    userRepository.update(user);
 
     roleAssignmentService.deleteAllRoleAssignmentsForUser(user.getId());
     roleAssignmentService.insertUserProgramRoleMapping(user);

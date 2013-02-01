@@ -37,32 +37,43 @@ public class UserRepository {
     return userMapper.getUsersWithRightInNodeForProgram(program, node, right);
   }
 
-  public void insert(User user) {
+  public void create(User user) {
     validateAndSetSupervisor(user);
     try {
-      if (user.getId() != null) {
-        userMapper.update(user);
-      } else {
-        userMapper.insert(user);
-      }
+      userMapper.insert(user);
     } catch (DuplicateKeyException e) {
-      String message = e.getMessage().toLowerCase();
-      if (message.contains("duplicate key value violates unique constraint \"uc_users_employeeId\"".toLowerCase()))
-        throw new DataException(new OpenLmisMessage(DUPLICATE_EMPLOYEE_ID_FOUND));
-      if (message.contains("duplicate key value violates unique constraint \"uc_users_email\"".toLowerCase()))
-        throw new DataException(new OpenLmisMessage(DUPLICATE_EMAIL_FOUND));
-      if (message.contains("duplicate key value violates unique constraint \"uc_users_userName\"".toLowerCase()))
-        throw new DataException(new OpenLmisMessage(DUPLICATE_USER_NAME_FOUND));
+      handleException(e);
     } catch (DataIntegrityViolationException e) {
       throw new DataException(USER_DATA_LENGTH_INCORRECT);
     }
+  }
+
+  public void update(User user) {
+    validateAndSetSupervisor(user);
+    try {
+      userMapper.update(user);
+    } catch (DuplicateKeyException e) {
+      handleException(e);
+    } catch (DataIntegrityViolationException e) {
+      throw new DataException(USER_DATA_LENGTH_INCORRECT);
+    }
+  }
+
+  private void handleException(DuplicateKeyException e) {
+    String message = e.getMessage().toLowerCase();
+    if (message.contains("duplicate key value violates unique constraint \"uc_users_employeeId\"".toLowerCase()))
+      throw new DataException(new OpenLmisMessage(DUPLICATE_EMPLOYEE_ID_FOUND));
+    if (message.contains("duplicate key value violates unique constraint \"uc_users_email\"".toLowerCase()))
+      throw new DataException(new OpenLmisMessage(DUPLICATE_EMAIL_FOUND));
+    if (message.contains("duplicate key value violates unique constraint \"uc_users_userName\"".toLowerCase()))
+      throw new DataException(new OpenLmisMessage(DUPLICATE_USER_NAME_FOUND));
   }
 
   private void validateAndSetSupervisor(User user) {
     User supervisor = null;
 
     if (user.getSupervisor() != null && user.getSupervisor().getUserName() != null
-      && !user.getSupervisor().getUserName().isEmpty()) {
+        && !user.getSupervisor().getUserName().isEmpty()) {
 
       supervisor = userMapper.get(user.getSupervisor().getUserName());
       if (supervisor == null) throw new DataException(new OpenLmisMessage(SUPERVISOR_USER_NOT_FOUND));
