@@ -120,14 +120,36 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  public void shouldGetRequisitionWithPeriod() throws Exception {
-    Rnr rnr = new Rnr();
-    when(requisitionRepository.getRequisition(FACILITY, PROGRAM, PERIOD)).thenReturn(rnr);
-    when(processingScheduleService.getPeriodById(10)).thenReturn(PERIOD);
+  public void shouldGetRequisition() throws Exception {
+    Rnr expectedRequisition = new Rnr();
+    when(requisitionRepository.getRequisition(FACILITY, PROGRAM, PERIOD)).thenReturn(expectedRequisition);
 
-    assertThat(requisitionService.get(FACILITY, PROGRAM, PERIOD), is(rnr));
-    assertThat(rnr.getPeriod(), is(PERIOD));
-    verify(processingScheduleService).getPeriodById(10);
+    Facility facility = new Facility();
+    facility.setId(FACILITY.getId());
+    facility.setName("test Facility"); facility.setOperatedBy(new FacilityOperator()); facility.setFacilityType(new FacilityType());
+    facility.setCode("test code"); facility.setGeographicZone(new GeographicZone());
+
+    ProcessingPeriod period = new ProcessingPeriod();
+    Date startDate = new Date();
+    Date endDate = new Date(123456789L);
+    period.setId(PERIOD.getId());
+    period.setStartDate(startDate);
+    period.setEndDate(endDate);
+    period.setNumberOfMonths(3);
+
+    Program program = new Program();
+    program.setId(PROGRAM.getId());
+    program.setName("test name");
+
+
+    when(programService.getById(PROGRAM.getId())).thenReturn(program);
+    when(facilityService.getById(FACILITY.getId())).thenReturn(facility);
+    when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(period);
+
+    expectedRequisition.setFacility(facility); expectedRequisition.setPeriod(period); expectedRequisition.setProgram(program);
+
+    Rnr actualRequisition = requisitionService.get(FACILITY, PROGRAM, PERIOD);
+    assertThat(actualRequisition, is(expectedRequisition));
   }
 
   @Test
@@ -153,6 +175,10 @@ public class RequisitionServiceTest {
 
     Rnr secondLastPeriodsRrn = new Rnr(FACILITY, PROGRAM, secondLastPeriod);
     when(requisitionRepository.getRequisition(FACILITY, PROGRAM, secondLastPeriod)).thenReturn(secondLastPeriodsRrn);
+
+    when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
+    when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
+    when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
 
     final Rnr actual = requisitionService.get(FACILITY, PROGRAM, PERIOD);
     assertThat(actual, is(spyRnr));

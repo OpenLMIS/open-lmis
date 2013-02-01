@@ -18,4 +18,14 @@ public class Program implements BaseModel {
   public Program(Integer id) {
     this.id = id;
   }
+
+  public Program(Integer id, String name) {
+    this.id = id;
+    this.name = name;
+  }
+
+  public Program basicInformation() {
+    return new Program(id, name);
+  }
+
 }

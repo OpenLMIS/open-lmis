@@ -116,13 +116,12 @@ public class RequisitionService {
       (rnr.getStatus() == IN_APPROVAL && userRights.contains(APPROVE_REQUISITION));
   }
 
-  public Rnr get(Facility facility, Program program, ProcessingPeriod period) {
+  public Rnr get(Facility facility, Program program, ProcessingPeriod period){
     Rnr requisition = requisitionRepository.getRequisition(facility, program, period);
     if(requisition == null) return null;
 
-    requisition.setPeriod(processingScheduleService.getPeriodById(period.getId()));
+    fillFacilityPeriodProgram(requisition);
     fillPreviousRequisitionsForAmc(requisition);
-
     return requisition;
   }
 
@@ -138,6 +137,14 @@ public class RequisitionService {
         secondLastPeriodsRnr = getLastPeriodsRnr(lastPeriodsRnr);
     }
     requisition.fillLastTwoPeriodsNormalizedConsumptions(lastPeriodsRnr, secondLastPeriodsRnr);
+  }
+
+  private void fillFacilityPeriodProgram(Rnr requisition) {
+    Facility facility = facilityService.getById(requisition.getFacility().getId());
+    ProcessingPeriod period = processingScheduleService.getPeriodById(requisition.getPeriod().getId());
+    Program program = programService.getById(requisition.getProgram().getId());
+
+    requisition.fillBasicInformation(facility, program, period);
   }
 
   private Rnr getLastPeriodsRnr(Rnr requisition) {
@@ -231,9 +238,10 @@ public class RequisitionService {
 
   private void fillProgramFacilityPeriod(Rnr... requisitionsForApproval) {
     for (Rnr requisition : requisitionsForApproval) {
-      requisition.setProgram(programService.getById(requisition.getProgram().getId()));
-      requisition.setFacility(facilityService.getById(requisition.getFacility().getId()));
-      requisition.setPeriod(processingScheduleService.getPeriodById(requisition.getPeriod().getId()));
+      Program program = programService.getById(requisition.getProgram().getId());
+      ProcessingPeriod period = processingScheduleService.getPeriodById(requisition.getPeriod().getId());
+      Facility facility = facilityService.getById(requisition.getFacility().getId());
+      requisition.fillCompleteInformation(program, period, facility);
     }
   }
 

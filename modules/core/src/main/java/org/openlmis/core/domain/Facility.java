@@ -120,4 +120,17 @@ public class Facility implements Importable, BaseModel {
   public Facility(Integer id) {
     this.id = id;
   }
+
+  public Facility(Integer id, String code, String name, FacilityOperator operatedBy, GeographicZone geographicZone, FacilityType facilityType) {
+    this.id = id;
+    this.code = code;
+    this.name = name;
+    this.operatedBy = operatedBy;
+    this.geographicZone = geographicZone;
+    this.facilityType = facilityType;
+  }
+
+  public Facility basicInformation() {
+    return new Facility(id, code, name, operatedBy, geographicZone, facilityType);
+  }
 }

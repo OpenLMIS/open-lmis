@@ -25,6 +25,13 @@ public class ProcessingPeriod {
     this.id = id;
   }
 
+  public ProcessingPeriod(Integer id, Date startDate, Date endDate, Integer numberOfMonths) {
+    this.id = id;
+    this.startDate = startDate;
+    this.endDate = endDate;
+    this.numberOfMonths = numberOfMonths;
+  }
+
   public void validate() {
     if (scheduleId == null || scheduleId == 0)
       throw new DataException("Period can not be saved without its parent Schedule.");
@@ -39,4 +46,7 @@ public class ProcessingPeriod {
     }
   }
 
+  public ProcessingPeriod basicInformation() {
+    return new ProcessingPeriod(id, startDate, endDate, numberOfMonths);
+  }
 }

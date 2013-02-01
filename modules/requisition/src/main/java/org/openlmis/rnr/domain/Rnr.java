@@ -148,5 +148,16 @@ public class Rnr {
     }
   }
 
+  public void fillBasicInformation(Facility facility, Program program, ProcessingPeriod period) {
+    this.program = program.basicInformation();
+    this.facility = facility.basicInformation();
+    this.period = period.basicInformation();
+  }
+
+  public void fillCompleteInformation(Program program, ProcessingPeriod period, Facility facility) {
+    this.program = program;
+    this.facility = facility;
+    this.period = period;
+  }
 }
 

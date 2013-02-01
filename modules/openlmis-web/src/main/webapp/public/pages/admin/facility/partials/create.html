@@ -203,7 +203,7 @@
             <label for="geographic-zone">Geographic Zone <span class="label-required">*</span></label>
             <div class="form-field">
               <select id="geographic-zone" name="geographicZone" ng-model="facility.geographicZone.id"
-                      ng-options="i.id as i.value for i in geographicZones" ng:required="true" ng-disabled="facility.dataReportable == 'false'">
+                      ng-options="i.id as i.name for i in geographicZones" ng-required="true" ng-disabled="facility.dataReportable == 'false'">
                 <option value="">-- Select Geographic Zone --</option>
               </select>
               <span class="field-error" ng-show="facilityForm.geographicZone.$error.required && showError">
