@@ -386,7 +386,7 @@
     <br />
 
 
-  <input type="button"  ng-click="showAddNonFullSupplyModal()" value = "Add Non-Full Supply" ng-show = "nonFullSupplyProducts.length > 0"/>
+  <input type="button"  ng-click="showAddNonFullSupplyModal()" value = "Add Non-Full Supply" ng-show = "showNonFullSupplyAddButton()"/>
 <form name="nonFullSupplyForm">
   <div id="nonFullSupplyProductsModal"
        ng-model="nonFullSupplyProductsModal"
@@ -417,10 +417,6 @@
           <span class="rnr-form-error" style="display:none;" id="newNonFullSupply.quantityRequested">
            Enter Numeric Data
           </span>
-        </span>
-        <span>
-        <label for="remarks"><span ng-bind="labelForRnrColumn('remarks')"></span></label>
-        <input ng-model="newNonFullSupply.remarks" maxlength="250" id="remarks"/>
         </span>
           </span>
         <span class="span3">

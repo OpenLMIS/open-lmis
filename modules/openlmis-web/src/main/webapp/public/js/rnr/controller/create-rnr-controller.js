@@ -1,92 +1,34 @@
 function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $location, FacilityApprovedProducts, Requisitions, $routeParams, LossesAndAdjustmentsReferenceData, $rootScope) {
 
   $scope.lossesAndAdjustmentsModal = [];
-  $rootScope.fixToolBar();
 
   FacilityApprovedProducts.get({facilityId:$routeParams.facility, programId:$routeParams.program},
     function (data) {
       $scope.nonFullSupplyProducts = data.nonFullSupplyProducts;
-    }, function (data) {
+    }, function () {
     });
-
-  $scope.totalCost = function() {
-    if(!$scope.rnr) return;
-    return parseFloat(parseFloat($scope.rnr.fullSupplyItemsSubmittedCost) + parseFloat($scope.rnr.nonFullSupplyItemsSubmittedCost)).toFixed(2);
-  };
 
   ReferenceData.get({}, function (data) {
     $scope.currency = data.currency;
-  }, function() {});
+  }, function () {
+  });
 
   LossesAndAdjustmentsReferenceData.get({}, function (data) {
     $scope.allTypes = data.lossAdjustmentTypes;
-  }, function() {});
-
-  ProgramRnRColumnList.get({programId:$routeParams.program}, function (data) {
-    function resetCostsIfNull(rnr) {
-      if (rnr == null) return;
-      if (rnr.fullSupplyItemsSubmittedCost == null)
-        rnr.fullSupplyItemsSubmittedCost = 0;
-      if (rnr.nonFullSupplyItemsSubmittedCost == null)
-        rnr.nonFullSupplyItemsSubmittedCost = 0;
-    }
-
-    if (data.rnrColumnList && data.rnrColumnList.length > 0) {
-      $scope.programRnRColumnList = data.rnrColumnList;
-      resetCostsIfNull($scope.$parent.rnr);
-    } else {
-      $scope.$parent.error = "Please contact Admin to define R&R template for this program";
-      $location.path($scope.$parent.sourceUrl);
-    }
   }, function () {
-    $location.path($scope.$parent.sourceUrl);
   });
 
-  $scope.saveRnr = function () {
-    $scope.submitError = "";
-    $scope.inputClass = "";
-    $scope.submitMessage = "";
-    if ($scope.saveRnrForm.$error.rnrError) {
-      $scope.error = "Please correct errors before saving.";
-      $scope.message = "";
-      return;
+  ProgramRnRColumnList.get({programId:$routeParams.program}, function (data) {
+    if (data.rnrColumnList && data.rnrColumnList.length > 0) {
+      $scope.programRnRColumnList = data.rnrColumnList;
+//      $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnRColumnList, {'name':'quantityRequested'});
+    } else {
+      $scope.$parent.error = "Please contact Admin to define R&R template for this program";
+      $location.path("/init-rnr");
     }
-
-    Requisitions.update({id:$scope.rnr.id, operation:"save"},
-      $scope.rnr, function (data) {
-        $scope.message = data.success;
-        $scope.error = "";
-      }, function (data) {
-        $scope.error = data.error;
-        $scope.message = "";
-      });
-  };
-
-  $scope.highlightRequired = function (value) {
-    if ($scope.inputClass == 'required' && (isUndefined(value) || value.trim().length == 0)) {
-      return "required-error";
-    }
-    return null;
-  };
-
-  $scope.highlightRequiredFieldInModal = function (value) {
-    if (isUndefined(value)) return "required-error";
-    return null;
-  };
-
-  $scope.highlightWarningBasedOnField = function (value, field) {
-    if ((isUndefined(value) || value.trim().length == 0 || value == false) && $scope.inputClass == 'required' && field) {
-      return "warning-error";
-    }
-    return null;
-  };
-
-  $scope.highlightWarning = function (value) {
-    if ((isUndefined(value) || value.trim().length == 0 || value == false) && $scope.inputClass == 'required') {
-      return "warning-error";
-    }
-    return null;
-  };
+  }, function () {
+    $location.path("/init-rnr");
+  });
 
   function valid() {
     if ($scope.saveRnrForm.$error.rnrError) {
@@ -110,6 +52,25 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     return true;
   }
 
+  $scope.saveRnr = function () {
+    $scope.submitError = "";
+    $scope.inputClass = "";
+    $scope.submitMessage = "";
+    if ($scope.saveRnrForm.$error.rnrError) {
+      $scope.error = "Please correct errors before saving.";
+      $scope.message = "";
+      return;
+    }
+
+    Requisitions.update({id:$scope.rnr.id, operation:"save"},
+      $scope.rnr, function (data) {
+        $scope.message = data.success;
+        $scope.error = "";
+      }, function (data) {
+        $scope.error = data.error;
+        $scope.message = "";
+      });
+  };
 
   $scope.submitRnr = function () {
     if (!valid()) return;
@@ -147,6 +108,37 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
 
   $scope.hide = function () {
     return "";
+  };
+
+  $scope.highlightRequired = function (value) {
+    if ($scope.inputClass == 'required' && (isUndefined(value) || value.trim().length == 0)) {
+      return "required-error";
+    }
+    return null;
+  };
+
+  $scope.highlightRequiredFieldInModal = function (value) {
+    if (isUndefined(value)) return "required-error";
+    return null;
+  };
+
+  $scope.highlightWarningBasedOnField = function (value, field) {
+    if ((isUndefined(value) || value.trim().length == 0 || value == false) && $scope.inputClass == 'required' && field) {
+      return "warning-error";
+    }
+    return null;
+  };
+
+  $scope.highlightWarning = function (value) {
+    if ((isUndefined(value) || value.trim().length == 0 || value == false) && $scope.inputClass == 'required') {
+      return "warning-error";
+    }
+    return null;
+  };
+
+  $scope.totalCost = function () {
+    if (!$scope.rnr) return;
+    return parseFloat(parseFloat($scope.rnr.fullSupplyItemsSubmittedCost) + parseFloat($scope.rnr.nonFullSupplyItemsSubmittedCost)).toFixed(2);
   };
 
   $scope.saveLossesAndAdjustmentsForRnRLineItem = function (rnrLineItem, rnr, programRnrColumnList) {
@@ -236,7 +228,6 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
     return label + ":";
   };
 
-
   function populateProductInformation() {
     var product = {};
     angular.copy($scope.facilityApprovedProduct.programProduct.product, product);
@@ -257,6 +248,7 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
   }
 
   function prepareNFSLineItemFields() {
+    populateProductInformation();
     $(['quantityReceived', 'quantityDispensed', 'beginningBalance', 'stockInHand', 'totalLossesAndAdjustments', 'calculatedOrderQuantity', 'newPatientCount',
       'stockOutDays', 'normalizedConsumption', 'amc', 'maxStockQuantity']).each(function (index, field) {
         $scope.newNonFullSupply[field] = 0;
@@ -277,7 +269,6 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
   }
 
   $scope.addNonFullSupplyLineItem = function () {
-    populateProductInformation();
     jQuery.extend(true, $scope.newNonFullSupply, new RnrLineItem());
     prepareNFSLineItemFields();
     $scope.nonFullSupplyLineItems.push($scope.newNonFullSupply);
@@ -291,5 +282,18 @@ function CreateRnrController($scope, ReferenceData, ProgramRnRColumnList, $locat
   $scope.showAddNonFullSupplyModal = function () {
     updateNonFullSupplyProductsToDisplay();
     $scope.nonFullSupplyProductsModal = true;
+  };
+
+    $scope.showNonFullSupplyAddButton = function () {
+    if (!$scope.rnr || !$scope.programRnRColumnList || !$scope.nonFullSupplyProducts) return false;
+    var show = false;
+    $($scope.programRnRColumnList).each(function (index, column) {
+      if (column.name == 'quantityRequested') {
+        show = true;
+        return;
+      }
+    });
+    if ($scope.nonFullSupplyProducts.length > 0 && show) return true;
+    return false;
   };
 }

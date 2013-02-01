@@ -9,6 +9,7 @@ function RequisitionController($scope, Requisition, $location, $routeParams, $ro
         if (data.rnr) {
           $scope.rnr = data.rnr;
           $scope.formDisabled = isFormDisabled();
+          resetCostsIfNull($scope.rnr);
           populateRnrLineItems($scope.rnr);
         } else {
           $scope.$parent.error = "Requisition does not exist. Please initiate.";
@@ -18,6 +19,7 @@ function RequisitionController($scope, Requisition, $location, $routeParams, $ro
       });
   } else {
     $scope.formDisabled = isFormDisabled();
+    resetCostsIfNull($scope.rnr);
     populateRnrLineItems($scope.$parent.rnr);
   }
 
@@ -46,6 +48,13 @@ function RequisitionController($scope, Requisition, $location, $routeParams, $ro
     return false;
   }
 
+  function resetCostsIfNull(rnr) {
+    if (rnr == null) return;
+    if (rnr.fullSupplyItemsSubmittedCost == null)
+      rnr.fullSupplyItemsSubmittedCost = 0;
+    if (rnr.nonFullSupplyItemsSubmittedCost == null)
+      rnr.nonFullSupplyItemsSubmittedCost = 0;
+  }
 
   $scope.periodDisplayName = function () {
     if(!$scope.rnr) return;
