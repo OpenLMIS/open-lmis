@@ -1,6 +1,6 @@
 function UserProgramRoleListController($scope) {
   $scope.$parent.gridOptions = { data:'user.roleAssignments',
-    headerRowHeight:50,
+    headerRowHeight:30,
     rowHeight:50,
     sortable:false,
     showColumnMenu:false,
@@ -21,19 +21,22 @@ function UserProgramRoleListController($scope) {
   }
 
   function program() {
-      return '<label ng-bind="getProgramName(user.roleAssignments[$parent.$index].programId)"></label>';
-    }
+    return '<label ng-bind="getProgramName(user.roleAssignments[$parent.$index].programId)"></label>';
+  }
 
   function selectRole() {
-    var select2Div = '<select ui-select2 ng-model="user.roleAssignments[$parent.$index].roleIds" placeholder="+ Add Role"  multiple="multiple"  style="width:400px">' +
-      '<option ng-repeat="role in allRoles" value="{{role.id}}">{{role.name}}</option>' +
-      '</select>';
+    var select2Div = '<select ui-select2 ng-model="user.roleAssignments[$parent.$index].roleIds" placeholder="+ Add Role"' +
+      ' multiple="multiple" style="width:400px" name="roles" id="roles"> ' +
+      ' <option ng-repeat="role in allRoles" value="{{role.id}}">{{role.name}}</option>' +
+      '</select>' +
+      '<span ng-show="user.roleAssignments[$parent.$index].roleIds.length == 0" class="field-error">' +
+      'Please Fill In this value' +
+      '</span>';
     return select2Div;
   }
 
   $scope.deleteCurrentRow = function (rowNum) {
-    $scope.user.roleAssignments[rowNum] = [];
-    $scope.user.roleAssignments.length = $scope.user.roleAssignments.length - 1;
+    $scope.user.roleAssignments.splice(rowNum, 1);
   };
 
   $scope.availablePrograms = function () {
@@ -45,9 +48,26 @@ function UserProgramRoleListController($scope) {
   };
 
   $scope.addRole = function () {
-    if ($scope.programSelected && $scope.selectedRoleIds) {
-      setRoleAssignments();
+    if (isPresent($scope.programSelected) && isPresent($scope.selectedRoleIds)) {
+      var newRoleAssignment = {programId:$scope.programSelected, roleIds:$scope.selectedRoleIds};
+      addRoleAssignment(newRoleAssignment);
       clearCurrentSelection();
+    }
+
+    function clearCurrentSelection() {
+      $scope.programSelected = null;
+      $scope.selectedRoleIds = null;
+    }
+
+    function addRoleAssignment(newRoleAssignment) {
+      if (!$scope.user.roleAssignments) {
+        $scope.user.roleAssignments = [];
+      }
+      $scope.user.roleAssignments.push(newRoleAssignment);
+    }
+
+    function isPresent(obj) {
+      return obj != undefined && obj != null;
     }
   };
 
@@ -62,15 +82,4 @@ function UserProgramRoleListController($scope) {
     });
     return programName;
   };
-
-  function setRoleAssignments() {
-    $scope.user.roleAssignments = $scope.user.roleAssignments.concat({programId:"", roleIds:[]});
-    $scope.user.roleAssignments[$scope.user.roleAssignments.length - 1].programId = $scope.programSelected;
-    $scope.user.roleAssignments[$scope.user.roleAssignments.length - 1].roleIds = $scope.selectedRoleIds;
-  }
-
-  function clearCurrentSelection() {
-    $scope.programSelected = null;
-    $scope.selectedRoleIds = null;
-  }
 }

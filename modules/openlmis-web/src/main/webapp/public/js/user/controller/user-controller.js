@@ -1,4 +1,4 @@
-function UserController($scope, $routeParams, Users, User,  SearchFacilitiesByCodeOrName, Facility, Roles) {
+function UserController($scope, $routeParams, Users, User, SearchFacilitiesByCodeOrName, Facility, Roles) {
   $scope.programAndRoleList = [];
   $scope.userNameInvalid = false;
 
@@ -24,6 +24,21 @@ function UserController($scope, $routeParams, Users, User,  SearchFacilitiesByCo
       $scope.message = "";
       $scope.error = response.data.error;
     };
+
+    function validate(user) {
+      if ($scope.userForm.$error.required) {
+        $scope.error = "Please correct errors before saving.";
+        $scope.message = "";
+        $scope.showError = true;
+        return false;
+      }else {
+        return true;
+      }
+    }
+
+    if (!validate($scope.user)) {
+      return false;
+    }
 
     if ($scope.user.id) {
       User.update({id:$scope.user.id}, $scope.user, successHandler, errorHandler);

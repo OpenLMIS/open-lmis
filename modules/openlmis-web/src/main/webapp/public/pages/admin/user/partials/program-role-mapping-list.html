@@ -1,5 +1,5 @@
 <div ng-controller="UserProgramRoleListController" ng-show="showRoleAssignmentOptions()">
-  <div class="gridStyle" ng-grid="gridOptions"></div>
+  <div class="roleGrid" ng-grid="gridOptions"></div>
   <div>
    <span>
      <select ng-options="program.id as program.name for program in availablePrograms()" ng-model="programSelected"></select>

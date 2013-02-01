@@ -1,7 +1,7 @@
 <div xmlns="http://www.w3.org/1999/html">
   <div ng-hide="user.id"><h2>Add User</h2></div>
 
-  <form ng-submit="saveUser()" id="create-user" name="userForm">
+  <form ng-submit="saveUser()" id="create-user" name="userForm" novalidate>
     <div class="app-form">
 
       <div class="form-group">
@@ -14,7 +14,7 @@
             <div class="form-field">
               <input ng-model="user.userName" name="userName" id="userName" type="text" maxlength="50"
                      ng-required="true" ng-change="validateUserName()"/>
-              <span class="field-error" ng-show="userForm.username.$error.required && showError">
+              <span class="field-error" ng-show="userForm.userName.$error.required && showError">
                 Please Fill In this value
               </span>
 
