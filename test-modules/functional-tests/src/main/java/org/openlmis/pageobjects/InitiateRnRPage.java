@@ -10,6 +10,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
+import java.util.*;
 
 
 public class InitiateRnRPage extends Page {
@@ -126,7 +127,7 @@ public class InitiateRnRPage extends Page {
         testWebDriver.setImplicitWait(25);
     }
 
-    public void verifyRnRHeader(String FCode, String FName, String FCstring, String program)
+    public void verifyRnRHeader(String FCode, String FName, String FCstring, String program, List<String> periodDetails)
     {
        testWebDriver.waitForElementToAppear(requisitionHeader);
         String headerText=testWebDriver.getText(requisitionHeader);

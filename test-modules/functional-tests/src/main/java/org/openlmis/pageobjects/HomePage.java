@@ -8,6 +8,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
+import java.util.*;
 
 import java.io.IOException;
 
@@ -118,7 +119,17 @@ public class HomePage extends Page {
     @FindBy(how = How.XPATH, using = "//ul[@class='clearfix']/li/a[contains(text(),'Users')]")
     private static WebElement usersTab;
 
+    @FindBy(how = How.XPATH, using = "//div[@class='ngCellText colt0']/span")
+    private static WebElement periodName;
 
+    @FindBy(how = How.XPATH, using = "//div[@class='ngCellText colt1']/span")
+    private static WebElement startDate;
+
+    @FindBy(how = How.XPATH, using = "//div[@class='ngCellText colt2']/span")
+    private static WebElement endDate;
+
+    @FindBy(how = How.XPATH, using = "//div[@class='ngCellText colt3']/span")
+    private static WebElement rnrStatus;
 
     public HomePage(TestWebDriver driver) throws  IOException {
         super(driver);
@@ -171,7 +182,8 @@ public class HomePage extends Page {
         return new TemplateConfigPage(testWebDriver);
     }
 
-    public InitiateRnRPage navigateAndInitiateRnr(String FCode, String FName, String FCstring, String program, String period) throws IOException {
+    public List navigateAndInitiateRnr(String FCode, String FName, String FCstring, String program, String period) throws IOException {
+        List<String> periodDetails = new ArrayList<String>();
         testWebDriver.waitForElementToAppear(requisitionsLink);
         requisitionsLink.click();
         testWebDriver.waitForElementToAppear(createLink);
@@ -183,6 +195,16 @@ public class HomePage extends Page {
         testWebDriver.waitForElementToAppear(programDropDown);
         programDropDown.click();
         testWebDriver.selectByVisibleText(programDropDownSelect, program);
+        periodDetails.add(periodName.getText().trim());
+        periodDetails.add(startDate.getText().trim());
+        periodDetails.add(endDate.getText().trim());
+        periodDetails.add(rnrStatus.getText().trim());
+
+        return periodDetails;
+    }
+
+    public InitiateRnRPage clickProceed() throws IOException
+    {
         testWebDriver.waitForElementToAppear(proceedButton);
         proceedButton.click();
 

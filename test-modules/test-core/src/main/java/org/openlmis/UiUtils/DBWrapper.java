@@ -333,26 +333,19 @@ public class DBWrapper {
 
     public void insertSchedules() throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();
-        ResultSet rs = dbwrapper.dbConnection("Select id from processing_schedules;", "select");
 
-        if (rs.next()) {
             dbwrapper.dbConnection("delete from processing_periods;", "alter");
             dbwrapper.dbConnection("delete from processing_schedules;", "alter");
 
-        }
         dbwrapper.dbConnection("INSERT INTO processing_schedules(code, name, description) values('Q1stM', 'QuarterMonthly', 'QuarterMonth');", "alter");
         dbwrapper.dbConnection("INSERT INTO processing_schedules(code, name, description) values('M', 'Monthly', 'Month');", "alter");
     }
 
     public void insertProcessingPeriods() throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();
-        ResultSet rs = dbwrapper.dbConnection("Select id from processing_periods;", "select");
-
-        if (rs.next()) {
 
             dbwrapper.dbConnection("delete from processing_periods;", "alter");
 
-        }
         dbwrapper.dbConnection("INSERT INTO processing_periods\n" +
                 "(name, description, startDate, endDate, scheduleId, modifiedBy) VALUES\n" +
                 "('Period1', 'first period',  '2012-12-01', '2013-01-15', (SELECT id FROM processing_schedules WHERE code = 'Q1stM'), (SELECT id FROM users LIMIT 1)),\n" +
