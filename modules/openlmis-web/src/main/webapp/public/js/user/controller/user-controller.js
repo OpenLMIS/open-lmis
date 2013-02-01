@@ -1,4 +1,4 @@
-function UserController($scope, $routeParams, Users, SearchFacilitiesByCodeOrName, Facility, Roles, UserById) {
+function UserController($scope, $routeParams, Users, User, SearchFacilitiesByCodeOrName, Facility, Roles, UserById) {
   $scope.programAndRoleList = [];
   $scope.userNameInvalid = false;
 
@@ -9,28 +9,32 @@ function UserController($scope, $routeParams, Users, SearchFacilitiesByCodeOrNam
       loadRoleAssignments();
     }, {});
   } else {
-    $scope.user={};
+    $scope.user = {};
   }
 
   $scope.saveUser = function () {
-    Users.save({}, $scope.user, function (data) {
-      $scope.user = data.user;
+    var successHandler = function (response) {
+      $scope.user = response.user;
       $scope.showError = false;
       $scope.error = "";
-      $scope.message = data.success;
-    }, function (data) {
+      $scope.message = response.success;
+    };
+
+    var errorHandler = function (response) {
       $scope.showError = true;
       $scope.message = "";
-      $scope.error = data.data.error;
-    });
+      $scope.error = response.data.error;
+    };
+
+    if ($scope.user.id) {
+      User.update({id:$scope.user.id}, $scope.user, successHandler, errorHandler);
+    } else {
+      Users.save({}, $scope.user, successHandler, errorHandler);
+    }
   };
 
   $scope.validateUserName = function () {
-    if ($scope.user.userName != null && $scope.user.userName.trim().indexOf(' ') >= 0) {
-      $scope.userNameInvalid = true;
-    } else {
-      $scope.userNameInvalid = false;
-    }
+    $scope.userNameInvalid = $scope.user.userName != null && $scope.user.userName.trim().indexOf(' ') >= 0;
   };
 
   $scope.showFacilitySearchResults = function () {
@@ -61,7 +65,7 @@ function UserController($scope, $routeParams, Users, SearchFacilitiesByCodeOrNam
   $scope.clearSelectedFacility = function () {
     $scope.facilitySelected = null;
     $scope.programAndRoleList = [];
-    $scope.user.roleAssignments=[];
+    $scope.user.roleAssignments = [];
 
     setTimeout(function () {
       angular.element("#searchFacility").focus();

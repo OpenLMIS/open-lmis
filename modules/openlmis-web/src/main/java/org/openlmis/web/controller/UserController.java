@@ -26,7 +26,10 @@ import static java.lang.Boolean.TRUE;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 import static org.openlmis.core.service.UserService.USER_REQUEST_URL;
 import static org.openlmis.web.response.OpenLmisResponse.error;
-import static org.openlmis.web.response.OpenLmisResponse.response;
+import static org.openlmis.web.response.OpenLmisResponse.success;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 
 @Controller
@@ -36,7 +39,6 @@ public class UserController extends BaseController {
   private RoleRightsService roleRightService;
   private UserService userService;
   public static final String USER_ID = "userId";
-  private static final String PASSWORD_RESET_REQUEST_MAPPING = "/user/resetPassword/";
 
   @Autowired
   public UserController(RoleRightsService roleRightService, UserService userService) {
@@ -44,7 +46,7 @@ public class UserController extends BaseController {
     this.userService = userService;
   }
 
-  @RequestMapping(value = "/user", method = RequestMethod.GET)
+  @RequestMapping(value = "/user", method = GET)
   public HashMap<String, Object> user(HttpServletRequest httpServletRequest, @RequestParam(required = false) String error) {
     String userName = (String) httpServletRequest.getSession().getAttribute(USER);
     HashMap<String, Object> params = new HashMap<>();
@@ -59,72 +61,80 @@ public class UserController extends BaseController {
     return params;
   }
 
-  @RequestMapping(value = "/forgot-password", method = RequestMethod.POST, headers = "Accept=application/json")
+  @RequestMapping(value = "/forgot-password", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> sendPasswordTokenEmail(@RequestBody User user, HttpServletRequest request) {
     try {
-      String requestUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + PASSWORD_RESET_REQUEST_MAPPING;
+      String requestUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/user/resetPassword/";
       Map<String, Object> args = new HashMap<>();
       args.put(USER_REQUEST_URL, requestUrl);
       userService.sendForgotPasswordEmail(user, args);
-      return OpenLmisResponse.success("Email sent");
+      return success("Email sent");
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);
     }
   }
 
-  @RequestMapping(value = "/admin/users", method = RequestMethod.POST, headers = "Accept=application/json")
+  @RequestMapping(value = "/users", method = POST, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('','MANAGE_USERS')")
-  public ResponseEntity<OpenLmisResponse> save(@RequestBody User user, HttpServletRequest request) {
+  public ResponseEntity<OpenLmisResponse> create(@RequestBody User user, HttpServletRequest request) {
     ResponseEntity<OpenLmisResponse> successResponse;
     String modifiedBy = (String) request.getSession().getAttribute(USER);
     user.setModifiedBy(modifiedBy);
-    boolean createFlag = user.getId() == null;
     try {
-      if (createFlag) {
-        user.setPassword("openLmis123");
-      }
+      user.setPassword("openLmis123");
       String requestUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/";
       Map<String, Object> args = new HashMap<>();
       args.put(USER_REQUEST_URL, requestUrl);
       userService.save(user, args);
     } catch (DataException e) {
-      ResponseEntity<OpenLmisResponse> errorResponse = error(e, HttpStatus.BAD_REQUEST);
-      errorResponse.getBody().setData("user", user);
-      return errorResponse;
+      return error(e, HttpStatus.BAD_REQUEST);
     }
-    if (createFlag) {
-      successResponse = OpenLmisResponse.success("User " + user.getFirstName() + " " + user.getLastName() + " has been successfully created, password link sent on registered Email address");
-    } else {
-      successResponse = OpenLmisResponse.success("User " + user.getFirstName() + " " + user.getLastName() + " has been successfully updated");
-    }
+    successResponse = success("User " + user.getFirstName() + " " + user.getLastName() + " has been successfully created, password link sent on registered Email address");
     successResponse.getBody().setData("user", user);
     return successResponse;
   }
 
-  @RequestMapping(value = "/admin/search-user", method = RequestMethod.GET)
+  @RequestMapping(value = "/users/{id}", method = PUT, headers = ACCEPT_JSON)
+  @PreAuthorize("hasPermission('','MANAGE_USERS')")
+  public ResponseEntity<OpenLmisResponse> update(@RequestBody User user,
+                                                 @PathVariable("id") Integer id,
+                                                 HttpServletRequest request) {
+    ResponseEntity<OpenLmisResponse> successResponse;
+    user.setModifiedBy(loggedInUser(request));
+    user.setId(id);
+    try {
+      userService.save(user, null);
+    } catch (DataException e) {
+      return error(e, HttpStatus.BAD_REQUEST);
+    }
+    successResponse = success("User " + user.getFirstName() + " " + user.getLastName() + " has been successfully updated");
+    successResponse.getBody().setData("user", user);
+    return successResponse;
+  }
+
+  @RequestMapping(value = "/admin/search-user", method = GET)
   @PreAuthorize("hasPermission('','MANAGE_USERS')")
   public List<User> searchUser(@RequestParam String userSearchParam) {
     return userService.searchUser(userSearchParam);
   }
 
-  @RequestMapping(value = "/admin/user/{id}", method = RequestMethod.GET)
+  @RequestMapping(value = "/admin/user/{id}", method = GET)
   @PreAuthorize("hasPermission('','MANAGE_USERS')")
   public User getById(@PathVariable(value = "id") Integer id) {
     return userService.getById(id);
   }
 
-  @RequestMapping(value = PASSWORD_RESET_REQUEST_MAPPING + "{token}", method = RequestMethod.GET)
+  @RequestMapping(value = "/user/resetPassword/" + "{token}", method = GET)
   public void resetPassword(@PathVariable(value = "token") String token, HttpServletRequest request, HttpServletResponse servletResponse) throws IOException, ServletException {
-    Integer userId;
     try {
-      userId = userService.getUserIdForPasswordResetToken(token);
+      userService.getUserIdForPasswordResetToken(token);
     } catch (DataException e) {
       request.getRequestDispatcher("/public/pages/access-denied.html").forward(request, servletResponse);
     }
     request.getRequestDispatcher("/public/pages/admin/user/reset-password.html").forward(request, servletResponse);
   }
 
-  @RequestMapping(value = "/user/updatePassword" , method = RequestMethod.PUT)
+  @RequestMapping(value = "/user/updatePassword", method = PUT)
   public void updateUserPassword(@RequestBody User user) {
     userService.updateUserPassword(user);
   }

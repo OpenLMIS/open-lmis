@@ -13,22 +13,40 @@ describe("User", function () {
       scope.userForm = {$error:{ pattern:"" }};
     }));
 
-    it('should give success message if save successful', function () {
-      scope.user = {"userName":"User420"};
-      $httpBackend.expectPOST('/admin/users.json').respond(200, {"success":"Saved successfully"});
+    it('should update user successful', function () {
+      scope.user = {"id": 123, "userName":"User420"};
+      $httpBackend.expectPUT('/users/123.json', scope.user).respond(200, {"success":"Saved successfully", "user":{id:123}});
+
       scope.saveUser();
       $httpBackend.flush();
-      expect("Saved successfully").toEqual(scope.message);
+
+      expect(scope.message).toEqual("Saved successfully");
+      expect(scope.user).toEqual({id:123});
       expect(scope.showError).toBeFalsy();
+      expect(scope.error).toEqual("");
+    });
+
+    it('should create new user successful', function () {
+      scope.user = {"userName":"User420"};
+      $httpBackend.expectPOST('/users.json', scope.user).respond(200, {"success":"Saved successfully", user: {id:500}});
+
+      scope.saveUser();
+      $httpBackend.flush();
+
+      expect(scope.message).toEqual("Saved successfully");
+      expect(scope.user).toEqual({id:500});
+      expect(scope.showError).toBeFalsy();
+      expect(scope.error).toEqual("");
     });
 
     it('should give error message if save not successful', function () {
       scope.user = {"userName":"User420"};
-      $httpBackend.expectPOST('/admin/users.json').respond(400, {"error":"errorMsg"});
+      $httpBackend.expectPOST('/users.json').respond(400, {"error":"errorMsg"});
       scope.saveUser();
       $httpBackend.flush();
       expect("errorMsg").toEqual(scope.error);
       expect(scope.showError).toBeTruthy();
+      expect(scope.message).toEqual("");
     });
 
     it("should throw error when username contains space", function () {

@@ -9,7 +9,6 @@ import org.openlmis.core.domain.User;
 import org.openlmis.core.domain.UserRoleAssignment;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.hash.Encoder;
-import org.openlmis.core.service.RoleAssignmentService;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -18,14 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
-import org.springframework.mock.web.MockRequestDispatcher;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 
@@ -47,17 +40,16 @@ public class UserControllerTest {
 
   private MockHttpServletResponse httpServletResponse;
 
-  private MockRequestDispatcher requestDispatcher;
 
   private UserController userController;
 
   @Mock
+  @SuppressWarnings("unused")
   private RoleRightsService roleRightService;
 
   @Mock
+  @SuppressWarnings("unused")
   private UserService userService;
-  @Mock
-  private RoleAssignmentService roleAssignmentService;
 
   @Before
   public void setUp() {
@@ -132,7 +124,7 @@ public class UserControllerTest {
 
     httpServletRequest.getSession().setAttribute(USER_ID, userId);
     httpServletRequest.getSession().setAttribute(USER, USER);
-    ResponseEntity<OpenLmisResponse> response = userController.save(user, httpServletRequest);
+    ResponseEntity<OpenLmisResponse> response = userController.create(user, httpServletRequest);
 
     verify(userService).save(eq(user), anyMap());
 
@@ -159,9 +151,9 @@ public class UserControllerTest {
 
     user.setRoleAssignments(userRoleAssignments);
 
-    ResponseEntity<OpenLmisResponse> response = userController.save(user, httpServletRequest);
+    ResponseEntity<OpenLmisResponse> response = userController.update(user, 1, httpServletRequest);
 
-    verify(userService).save(eq(user), anyMap());
+    verify(userService).save(user, null);
 
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
     assertThat(response.getBody().getSuccessMsg(), is("User " + user.getFirstName() + " " + user.getLastName() + " has been successfully updated"));
@@ -174,7 +166,7 @@ public class UserControllerTest {
     User user = new User();
     doThrow(new DataException("Save user failed")).when(userService).save(eq(user), anyMap());
 
-    ResponseEntity<OpenLmisResponse> response = userController.save(user, httpServletRequest);
+    ResponseEntity<OpenLmisResponse> response = userController.create(user, httpServletRequest);
 
     assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     assertThat(response.getBody().getErrorMsg(), is("Save user failed"));

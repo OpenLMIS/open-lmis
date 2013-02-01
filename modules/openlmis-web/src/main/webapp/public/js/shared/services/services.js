@@ -21,7 +21,11 @@ services.factory('Facility', function ($resource) {
 });
 
 services.factory('Users', function ($resource) {
-    return $resource('/admin/users.json', {}, {});
+  return $resource('/users.json', {}, {});
+});
+
+services.factory('User', function($resource) {
+  return $resource('/users/:id.json', {}, {update: {method:'PUT'}});
 });
 
 services.factory('UserFacilityList', function ($resource) {

@@ -2,6 +2,7 @@ package org.openlmis.core.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.hash.Encoder;
@@ -21,7 +22,9 @@ public class User implements Importable {
   private Integer id;
   @ImportField(mandatory = true, name = "User Name")
   private String userName;
+
   @ImportField(mandatory = true, name = "Password")
+  @JsonIgnore
   private String password;
   @ImportField(mandatory = true, name = "First Name")
   private String firstName;

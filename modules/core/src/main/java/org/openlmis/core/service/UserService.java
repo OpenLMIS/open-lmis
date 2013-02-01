@@ -76,7 +76,6 @@ public class UserService {
   public void sendForgotPasswordEmail(User user, Map<String, Object> args) {
     user = getValidatedUser(user);
     EmailMessage emailMessage = forgotPasswordEmailMessage(user, args);
-    emailMessage.setTo(user.getEmail());
     sendEmail(emailMessage);
   }
 
@@ -106,7 +105,7 @@ public class UserService {
     return emailMessage;
   }
 
-  private EmailMessage accountCreatedEmailMessage(User user,  Map<String, Object> args) {
+  private EmailMessage accountCreatedEmailMessage(User user, Map<String, Object> args) {
     EmailMessage emailMessage = createEmailMessage(user, args);
     emailMessage.setSubject(ACCOUNT_CREATED_EMAIL_SUBJECT);
     return emailMessage;
@@ -115,6 +114,7 @@ public class UserService {
   private EmailMessage forgotPasswordEmailMessage(User user, Map<String, Object> args) {
     EmailMessage emailMessage = createEmailMessage(user, args);
     emailMessage.setSubject(FORGOT_PASSWORD_EMAIL_SUBJECT);
+    emailMessage.setTo(user.getEmail());
     return emailMessage;
   }
 
@@ -134,13 +134,13 @@ public class UserService {
 
   public Integer getUserIdForPasswordResetToken(String token) {
     Integer userId = userRepository.getUserIdForPasswordResetToken(token);
-    if(userId == null) {
+    if (userId == null) {
       throw new DataException(PASSWORD_RESET_TOKEN_INVALID);
     }
     return userId;
   }
 
-  public void updateUserPassword(User user){
+  public void updateUserPassword(User user) {
     userRepository.updateUserPassword(user);
     userRepository.deletePasswordResetTokenForUser(user);
   }
