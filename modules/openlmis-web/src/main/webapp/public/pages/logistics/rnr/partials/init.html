@@ -3,13 +3,13 @@
   <label>Facility</label>
   <select id="facilityList" ng-model="$parent.selectedFacilityId" ng-options="i.id as i.code + '-' + i.name for i in facilities"
           ng-change="loadPrograms(); loadPeriods()">
-    <option value="">{{facilityOptionMessage()}}</option>
+    <option value="" ng-bind="facilityOptionMessage()"></option>
   </select> <br/>
   <br/>
   <label>Program</label>
   <select id="programList" ng-model="$parent.selectedProgram" ng-options="i as i.name for i in programs"
           ng-change="loadPeriods()">
-    <option value="">{{programOptionMessage()}}</option>
+    <option value="" ng-bind="programOptionMessage()"></option>
   </select>
 
   <div class="row-fluid init-rnr-grid">

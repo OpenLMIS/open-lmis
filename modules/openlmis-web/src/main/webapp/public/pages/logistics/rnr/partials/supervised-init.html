@@ -2,12 +2,12 @@
   <h2>Initiate Report and Requisition</h2>
   <label>Program</label>
   <select id="programList" ng-change="loadFacilities(); loadPeriods()" ng-model="$parent.selectedProgram" ng-options="i as i.name for i in programs">
-    <option value="">{{programOptionMessage()}}</option>
+    <option value="" ng-bind="programOptionMessage()"></option>
   </select> <br/>
   <br/>
   <label>Facility</label>
   <select  id="facilityList" ng-change="loadPeriods()" ng-model="$parent.selectedFacilityId" ng-options="i.id as i.code + '-' + i.name for i in facilities">
-    <option value="">{{facilityOptionMessage()}}</option>
+    <option value="" ng-bind="facilityOptionMessage()"></option>
   </select>
 
   <div class="row-fluid init-rnr-grid">

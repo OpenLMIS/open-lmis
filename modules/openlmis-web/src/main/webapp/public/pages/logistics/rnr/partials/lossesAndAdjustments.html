@@ -8,18 +8,14 @@
     <div class="adjustment-list" ng-show="row.entity.lossesAndAdjustments.length > 0">
       <ul>
         <li ng-repeat="oneLossAndAdjustment in row.entity.lossesAndAdjustments" class="clearfix">
-                                               <span class="tpl-adjustment-type">
-                                                 {{oneLossAndAdjustment.type.description}}
-                                               </span>
-                                               <span class="tpl-adjustment-qty">
-                                                     {{oneLossAndAdjustment.quantity}}
-                                               </span>
+                                               <span class="tpl-adjustment-type" ng-bind="oneLossAndAdjustment.type.description"></span>
+                                               <span class="tpl-adjustment-qty" ng-bind="oneLossAndAdjustment.quantity"></span>
         </li>
       </ul>
     </div>
 
     <div class="adjustment-total clearfix alert alert-warning" ng-show="row.entity.lossesAndAdjustments.length > 0">
-      <span class="pull-left">Total</span> {{row.entity.totalLossesAndAdjustments}}
+      <span class="pull-left">Total</span> <span ng-bind="row.entity.totalLossesAndAdjustments"></span>
     </div>
 
   </div>
@@ -33,7 +29,6 @@
 <div ng-class="highlightNestedFieldsWithError(row.entity[column.name], 'quantity')">
   <a ng-click="showLossesAndAdjustmentModalForLineItem(row.entity)"
      class="rnr-adjustment">
-                                            <span class="adjustment-value">
-                                          {{row.entity.totalLossesAndAdjustments}}</span>
+  <span class="adjustment-value" ng-bind="row.entity.totalLossesAndAdjustments"></span>
   </a>
 </div>
