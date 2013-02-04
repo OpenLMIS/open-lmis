@@ -37,10 +37,14 @@ rnrModule.positiveInteger = function (value, errorHolder) {
     };
 
     var INTEGER_REGEXP = /^\d*$/;
-    var valid = INTEGER_REGEXP.test(value);
+    var valid = (value == undefined) ? true : INTEGER_REGEXP.test(value);
 
-    if (errorHolder != undefined) toggleErrorMessageDisplay(valid, errorHolder)
+    if (errorHolder != undefined) toggleErrorMessageDisplay(valid, errorHolder);
 
     return valid;
 };
+
+function parseIntWithBaseTen(number) {
+  return parseInt(number, 10);
+}
 
