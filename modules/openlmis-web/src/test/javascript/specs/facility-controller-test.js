@@ -110,7 +110,6 @@ describe("Facility", function () {
     }));
 
     it('should get facility if defined', function () {
-      console.log(scope.facility);
       expect(scope.facility.supportedPrograms).toEqual([
         {"code":"ARV", "name":"ARV", "description":"ARV", "active":true},
         {"code":"HIV", "name":"HIV", "description":"HIV", "active":true}
