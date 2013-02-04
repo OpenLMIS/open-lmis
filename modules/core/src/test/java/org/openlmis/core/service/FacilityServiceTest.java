@@ -16,12 +16,12 @@ import org.powermock.api.mockito.PowerMockito;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertTrue;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -89,10 +89,8 @@ public class FacilityServiceTest {
   }
 
   @Test
-  public void shouldAddSupportedProgram() throws Exception {
-    ProgramSupported programSupported = new ProgramSupported();
-    programSupported.setFacilityCode("facility code");
-    programSupported.setProgramCode("program code");
+  public void shouldNotGiveErrorIfSupportedProgramWithActiveFalseAndDateNotProvided() throws Exception {
+    ProgramSupported programSupported = createSupportedProgram("facility code", "program code", false, null);
 
     int facilityId = 222;
     int programId = 111;
@@ -101,11 +99,43 @@ public class FacilityServiceTest {
 
     service.uploadSupportedProgram(programSupported);
 
-    assertThat(programSupported.getModifiedDate(), is(notNullValue()));
     assertThat(programSupported.getFacilityId(), is(facilityId));
     assertThat(programSupported.getProgramId(), is(programId));
+    assertThat(programSupported.getActive(), is(false));
+    assertThat(programSupported.getStartDate(), is(nullValue()));
 
     verify(programSupportedRepository).addSupportedProgram(programSupported);
+  }
+
+
+  @Test
+  public void shouldGiveErrorIfSupportedProgramWithActiveTrueAndStartDateNotProvided() throws Exception {
+    ProgramSupported program = createSupportedProgram("facility code", "program code", true, null);
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("Start date is a must for Active program");
+
+    service.uploadSupportedProgram(program);
+  }
+
+  @Test
+  public void shouldNotGiveErrorIfProgramSupportedIsActiveAndDateProvided() throws Exception {
+    String facilityCode = "some facility";
+    String programCode = "some program";
+    Date startDate = new Date();
+    ProgramSupported program = createSupportedProgram(facilityCode, programCode, true, startDate);
+    int facilityId = 222;
+    int programId = 111;
+    when(facilityRepository.getIdForCode(facilityCode)).thenReturn(facilityId);
+    when(programRepository.getIdByCode(programCode)).thenReturn(programId);
+
+    service.uploadSupportedProgram(program);
+
+    assertThat(program.getFacilityId(), is(facilityId));
+    assertThat(program.getProgramId(), is(programId));
+    assertThat(program.getActive(), is(true));
+    assertThat(program.getStartDate(), is(startDate));
+
+    verify(programSupportedRepository).addSupportedProgram(program);
   }
 
   @Test
@@ -139,9 +169,7 @@ public class FacilityServiceTest {
 
   @Test
   public void shouldRaiseErrorWhenFacilityWithGivenCodeDoesNotExistWhileSavingProgramSupported() throws Exception {
-    ProgramSupported programSupported = new ProgramSupported();
-    programSupported.setFacilityCode("invalid Code");
-    programSupported.setProgramCode("valid Code");
+    ProgramSupported programSupported = createSupportedProgram("invalid Code", "valid Code", true, new Date());
 
     PowerMockito.when(facilityRepository.getIdForCode("invalid Code")).thenThrow(new DataException("Invalid Facility Code"));
     expectedEx.expect(DataException.class);
@@ -189,5 +217,14 @@ public class FacilityServiceTest {
 
     verify(programRepository).getByFacility(facility.getId());
     verify(programSupportedRepository).updateSupportedPrograms(facility, programsForFacility);
+  }
+
+  private ProgramSupported createSupportedProgram(String facilityCode, String programCode, boolean active, Date startDate) {
+    ProgramSupported programSupported = new ProgramSupported();
+    programSupported.setFacilityCode(facilityCode);
+    programSupported.setProgramCode(programCode);
+    programSupported.setActive(active);
+    programSupported.setStartDate(startDate);
+    return programSupported;
   }
 }

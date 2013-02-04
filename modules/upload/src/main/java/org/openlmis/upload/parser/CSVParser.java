@@ -74,6 +74,9 @@ public class CSVParser {
         recordHandler.execute(importedModel, csvBeanReader.getRowNumber(), modifiedBy);
       }
     } catch (SuperCsvConstraintViolationException constraintException) {
+      if(constraintException.getMessage().contains("^\\d{1,2}/\\d{1,2}/\\d{4}$")){
+        createHeaderException("Incorrect date format in field :", userFriendlyHeaders, constraintException);
+      }
       createHeaderException("Missing Mandatory data in field :", userFriendlyHeaders, constraintException);
     } catch (SuperCsvCellProcessorException processorException) {
       createHeaderException("Incorrect Data type in field :", userFriendlyHeaders, processorException);
@@ -89,6 +92,8 @@ public class CSVParser {
 
   private void createHeaderException(String error, String[] headers, SuperCsvException exception) {
     CsvContext csvContext = exception.getCsvContext();
+    if(exception instanceof SuperCsvConstraintViolationException){
+    }
     String header = headers[csvContext.getColumnNumber() - 1];
     throw new UploadException(String.format("%s '%s' of Record No. %d", error, header, csvContext.getRowNumber() - 1));
   }

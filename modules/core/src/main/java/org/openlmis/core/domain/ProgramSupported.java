@@ -16,7 +16,6 @@ public class ProgramSupported implements Importable {
 
   private Integer facilityId;
   private Integer programId;
-  private Date startDate;
 
   @ImportField(mandatory = true, name = "Facility Code")
   private String facilityCode;
@@ -26,6 +25,9 @@ public class ProgramSupported implements Importable {
 
   @ImportField(mandatory = true, name = "Program Is Active", type = "boolean")
   private Boolean active;
+
+  @ImportField(name = "Program Start Date", type = "Date")
+  private Date startDate;
 
   private String modifiedBy;
   private Date modifiedDate;

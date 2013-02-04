@@ -42,7 +42,7 @@ public class CsvCellProcessorsTest {
         headers.add("mandatory string field");
         headers.add("mandatoryIntField");
         headers.add("optionalStringField");
-        headers.add("optionalDateField");
+        headers.add("optional date field");
         List<CellProcessor> cellProcessors = CsvCellProcessors.getProcessors(dummyImportableClass, headers);
 
         assertEquals(4, cellProcessors.size());
@@ -107,7 +107,7 @@ public class CsvCellProcessorsTest {
         List<String> headers = new ArrayList<String>();
         headers.add("optionalStringField");
         headers.add("OPTIONAL INT FIELD");
-        headers.add("optionalDateField");
+        headers.add("optional date field");
 
         Optional optionalForString = mock(Optional.class);
         Optional optionalForInt = mock(Optional.class);

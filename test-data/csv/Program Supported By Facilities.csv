@@ -1,4 +1,1 @@
-Facility Code,Program Code,Program Is Active
-F1756,MALARIA,TRUE
-F1756,VACCINES,TRUE
-
+Facility Code,Program Code,Program Is Active,Program Start DateF12,TB,FALSE,F13,TB,TRUE,2/2/2022

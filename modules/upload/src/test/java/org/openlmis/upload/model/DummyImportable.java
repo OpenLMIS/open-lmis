@@ -22,7 +22,7 @@ public class DummyImportable implements Importable {
   @ImportField(type = "int", name = "OPTIONAL INT FIELD")
   int optionalIntField;
 
-  @ImportField(type = "Date")
+  @ImportField(type = "Date", name = "OPTIONAL DATE FIELD")
   Date optionalDateField;
 
   @ImportField(type = "String", name = "OPTIONAL NESTED FIELD", nested = "code")

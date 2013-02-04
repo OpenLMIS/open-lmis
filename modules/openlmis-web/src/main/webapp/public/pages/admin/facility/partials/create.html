@@ -106,7 +106,7 @@
             <label for="go-down-date">Go Down Date</label>
             <div class="form-field">
               <input ng-model="facility.goDownDate" id="go-down-date" type="text"
-                    value="{{facility.goDownDate | date:'dd/MM/yyyy'}}" ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}" ng-change="blurDateFields()" ng-disabled="facility.dataReportable == 'false'"/>
+                    value="{{facility.goDownDate | date:'dd/MM/yyyy'}}" ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}" readonly ng-change="blurDateFields()" ng-disabled="facility.dataReportable == 'false'"/>
             </div>
           </div>
         </div>

@@ -1,6 +1,5 @@
 package org.openlmis.core.upload;
 
-import org.joda.time.DateTime;
 import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.upload.Importable;
@@ -21,7 +20,6 @@ public class ProgramSupportedPersistenceHandler extends AbstractModelPersistence
   protected void save(Importable importable, String modifiedBy) {
     ProgramSupported programSupported = (ProgramSupported) importable;
     programSupported.setModifiedBy(modifiedBy);
-    programSupported.setStartDate(new DateTime().toDate());
     facilityService.uploadSupportedProgram(programSupported);
   }
 }

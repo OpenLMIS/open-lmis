@@ -2,8 +2,8 @@ package org.openlmis.core.service;
 
 
 import lombok.NoArgsConstructor;
-import org.joda.time.DateTime;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.ProgramRepository;
 import org.openlmis.core.repository.ProgramSupportedRepository;
@@ -57,10 +57,11 @@ public class FacilityService {
   }
 
   public void uploadSupportedProgram(ProgramSupported programSupported) {
+    if (programSupported.getActive() && programSupported.getStartDate() == null)
+      throw new DataException("Start date is a must for Active program");
+
     programSupported.setFacilityId(facilityRepository.getIdForCode(programSupported.getFacilityCode()));
     programSupported.setProgramId(programRepository.getIdByCode(programSupported.getProgramCode()));
-    programSupported.setModifiedDate(DateTime.now().toDate());
-    programSupported.setStartDate(DateTime.now().toDate());
     programSupportedRepository.addSupportedProgram(programSupported);
   }
 
