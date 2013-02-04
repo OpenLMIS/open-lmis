@@ -108,7 +108,7 @@ public class InitiateRnRPage extends Page {
     @FindBy(how = How.XPATH, using = "//input[@id='D_6_0']")
     private static WebElement adjListValue;
 
-    @FindBy(how = How.XPATH, using = "//div[@class='adjustment-total clearfix alert alert-warning ng-binding']")
+    @FindBy(how = How.XPATH, using = "//div[@class='adjustment-total clearfix alert alert-warning']")
     private static WebElement totalAdj;
 
     @FindBy(how = How.XPATH, using = "//input[@value='Done']")
