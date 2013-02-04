@@ -2,17 +2,13 @@
   <div ng-hide = "programRnRColumnList" >Loading...</div >
   <form name = "saveRnrForm" action = "#" id = "rnr-form" novalidate >
     <div class = "total-cost alert alert-info" >Total Cost For Full Supply Items:
-      <span id = "fullSupplyItemsCostCurrency" class = "cell-text" >
-        {{currency}}
-      </span >
-        <span id = "fullSupplyItemsCost" class = "cell-text" ng-bind="rnr.fullSupplyItemsSubmittedCost"></span >&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;Total Cost For Non Full Supply Items:
-      <span id = "nonFullSupplyItemsCostCurrency" class = "cell-text" >
-        {{currency}}
-      </span >
-        <span id = "nonFullSupplyItemsCost" class = "cell-text" ng-bind="rnr.nonFullSupplyItemsSubmittedCost"></span >&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;Total R&amp;R Cost:
-      <span id = "totalCostCurrency" class = "cell-text" >
-        {{currency}}
-      </span >
+      <span id = "fullSupplyItemsCostCurrency" class = "cell-text" ng-bind="currency"></span >
+        <span id = "fullSupplyItemsCost" class = "cell-text" ng-bind="rnr.fullSupplyItemsSubmittedCost"></span >
+      &nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;Total Cost For Non Full Supply Items:
+      <span id = "nonFullSupplyItemsCostCurrency" class = "cell-text" ng-bind="currency"></span>
+        <span id = "nonFullSupplyItemsCost" class = "cell-text" ng-bind="rnr.nonFullSupplyItemsSubmittedCost"></span >
+      &nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;Total R&amp;R Cost:
+      <span id = "totalCostCurrency" class = "cell-text" ng-bind="currency"></span>
       <span id = "totalCost" class = "cell-text" ng-bind="totalCost()"></span >
     </div >
     <div class = "rnr-table" >
@@ -20,9 +16,7 @@
         <thead >
           <tr >
             <th class = "col-{{programRnrColumn.name}}" ng-repeat = "programRnrColumn in programRnRColumnList"
-                ng-hide = "programRnrColumn.name == 'quantityApproved'" >
-              {{programRnrColumn.label}}
-            </th >
+                ng-hide = "programRnrColumn.name == 'quantityApproved'" ng-bind="programRnrColumn.label"></th>
           </tr >
         </thead >
         <tbody ng-show = "programRnRColumnList && (rnr.lineItems.length > 0)" >
@@ -52,11 +46,10 @@
                         Enter Numeric Data
                       </span >
                       <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage(programRnRColumnList)"
-                            style = "background: red;" >
-                        {{rnrLineItem.getErrorMessage(programRnRColumnList)}}
-                        <span class = "beak-down" ></span >
-                      </span >
-                    </span >
+                            style = "background: red;" ng-bind="rnrLineItem.getErrorMessage(programRnRColumnList)">
+                        <span class = "beak-down"></span >
+                      </span>
+                    </span>
 
                     <span ng-switch-when = "quantityReceived"
                           ng-class = "getCellErrorClass(rnrLineItem, programRnRColumnList)" >
@@ -72,8 +65,7 @@
                         Enter Numeric Data
                       </span >
                       <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage(programRnRColumnList)"
-                            style = "background: red;" >
-                        {{rnrLineItem.getErrorMessage(programRnRColumnList)}}
+                            style = "background: red;" ng-bind="rnrLineItem.getErrorMessage(programRnRColumnList)">
                         <span class = "beak-down" ></span >
                       </span >
                     </span >
@@ -93,8 +85,7 @@
                         Enter Numeric Data
                       </span >
                       <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage(programRnRColumnList)"
-                            style = "background: red;" >
-                        {{rnrLineItem.getErrorMessage(programRnRColumnList)}}
+                            style = "background: red;" ng-bind="rnrLineItem.getErrorMessage(programRnRColumnList)">
                         <span class = "beak-down" ></span >
                       </span >
                     </span >
@@ -146,9 +137,7 @@
                             <ul >
                               <li ng-repeat = "oneLossAndAdjustment in rnrLineItem.lossesAndAdjustments"
                                   class = "clearfix" >
-                                <span class = "tpl-adjustment-type" >
-                                  {{oneLossAndAdjustment.type.description}}
-                                </span >
+                                <span class = "tpl-adjustment-type" ng-bind="oneLossAndAdjustment.type.description"></span >
                                 <span class = "tpl-adjustment-delete" >
                                   <a class = "close" ng-show = "!formDisabled"
                                      ng-click = "removeLossAndAdjustment(rnrLineItem,oneLossAndAdjustment)" >&times;</a >
@@ -179,14 +168,10 @@
 
                           <div class = "adjustment-total clearfix alert alert-warning"
                                ng-show = "rnrLineItem.lossesAndAdjustments.length > 0" >
-                            <span
-                              class = "pull-left" >Total</span > {{rnrLineItem.totalLossesAndAdjustments}}
+                            <span class = "pull-left" >Total</span ><span ng-bind="rnrLineItem.totalLossesAndAdjustments"></span>
                           </div >
                           <div class = "alert alert-danger" id = "modalErrorMessage"
-                               ng-model = "modalError"
-                               ng-show = "rnrLineItem.lossesAndAdjustments.length > 0 && modalError" >
-                            {{modalError}}
-                          </div >
+                               ng-show = "rnrLineItem.lossesAndAdjustments.length > 0 && modalError" ng-bind="modalError"></div >
                         </div >
                         <div class = "modal-footer" >
 
@@ -199,8 +184,7 @@
                         ng-class = "highlightNestedFieldsWithError(rnrLineItem[column.name], 'quantity')" >
                         <a ng-click = "showLossesAndAdjustmentModalForLineItem(rnrLineItem)"
                            class = "rnr-adjustment" >
-                          <span class = "adjustment-value" >
-                            {{rnrLineItem.totalLossesAndAdjustments}}</span >
+                          <span class = "adjustment-value" ng-bind="rnrLineItem.totalLossesAndAdjustments"></span >
                         </a >
                       </div >
                     </span >
@@ -220,8 +204,7 @@
                         Enter Numeric Data
                       </span >
                       <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage(programRnRColumnList)"
-                            style = "background: red;" >
-                        {{rnrLineItem.getErrorMessage(programRnRColumnList)}}
+                            style = "background: red;" ng-bind="rnrLineItem.getErrorMessage(programRnRColumnList)" >
                         <span class = "beak-down" ></span >
                       </span >
                     </span >
