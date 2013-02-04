@@ -16,7 +16,6 @@ import static org.mockito.Mockito.*;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
 
 public class RnrTest {
-
   @Rule
   public ExpectedException exception = ExpectedException.none();
 
@@ -38,7 +37,6 @@ public class RnrTest {
 
     verify(rnrLineItem1).validate(templateColumns);
     verify(rnrLineItem2).validate(templateColumns);
-
   }
 
   @Test
@@ -53,9 +51,27 @@ public class RnrTest {
 
     rnr.fillLastTwoPeriodsNormalizedConsumptions(lastPeriodsRnr, secondLastPeriodsRnr);
 
-    assertThat(rnr.getLineItems().get(0).getPreviousNormalizedConsumptions().size(),is(2));
+    List<Integer> previousNormalizedConsumptions = rnr.getLineItems().get(0).getPreviousNormalizedConsumptions();
+    assertThat(previousNormalizedConsumptions.size(),is(2));
+    assertThat(previousNormalizedConsumptions.get(0), is(1));
+    assertThat(previousNormalizedConsumptions.get(1), is(2));
   }
 
+  @Test
+  public void shouldFillNormalizedConsumptionsFromOnlyNonNullPreviousTwoPeriodsRnr() throws Exception {
+    Rnr rnr = make(a(RequisitionBuilder.defaultRnr));
+
+    final Rnr lastPeriodsRnr = null;
+
+    final Rnr secondLastPeriodsRnr = make(a(RequisitionBuilder.defaultRnr));
+    secondLastPeriodsRnr.getLineItems().get(0).setNormalizedConsumption(2);
+
+    rnr.fillLastTwoPeriodsNormalizedConsumptions(lastPeriodsRnr, secondLastPeriodsRnr);
+
+    List<Integer> previousNormalizedConsumptions = rnr.getLineItems().get(0).getPreviousNormalizedConsumptions();
+    assertThat(previousNormalizedConsumptions.size(),is(1));
+    assertThat(previousNormalizedConsumptions.get(0), is(2));
+  }
 
   @Test
   public void shouldCopyApproverEditableFields() throws Exception {

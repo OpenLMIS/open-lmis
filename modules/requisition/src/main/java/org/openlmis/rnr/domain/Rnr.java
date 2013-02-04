@@ -103,27 +103,8 @@ public class Rnr {
   }
 
   public void fillLastTwoPeriodsNormalizedConsumptions(Rnr lastPeriodsRnr, Rnr secondLastPeriodsRnr) {
-    addNormalizedConsumptionFrom(lastPeriodsRnr);
-    addNormalizedConsumptionFrom(secondLastPeriodsRnr);
-  }
-
-  private void addNormalizedConsumptionFrom(Rnr rnr) {
-    if (rnr == null) return;
-
-    for (RnrLineItem currentLineItem : lineItems) {
-      RnrLineItem previousLineItem = findCorrespondingLineItem(rnr.getLineItems(), currentLineItem);
-      currentLineItem.addPreviousNormalizedConsumption(previousLineItem);
-    }
-  }
-
-  private RnrLineItem findCorrespondingLineItem(List<RnrLineItem> items, final RnrLineItem item) {
-    return (RnrLineItem) find(items, new Predicate() {
-      @Override
-      public boolean evaluate(Object o) {
-        RnrLineItem lineItem = (RnrLineItem) o;
-        return lineItem.getProductCode().equalsIgnoreCase(item.getProductCode());
-      }
-    });
+    addPreviousNormalizedConsumptionFrom(lastPeriodsRnr);
+    addPreviousNormalizedConsumptionFrom(secondLastPeriodsRnr);
   }
 
   public void prepareForApproval() {
@@ -153,6 +134,35 @@ public class Rnr {
     this.program = program.basicInformation();
     this.facility = facility.basicInformation();
     this.period = period.basicInformation();
+  }
+
+  private void addPreviousNormalizedConsumptionFrom(Rnr rnr) {
+    if (rnr == null) return;
+
+    for (RnrLineItem currentLineItem : lineItems) {
+      RnrLineItem previousLineItem = findCorrespondingLineItem(rnr.getLineItems(), currentLineItem);
+      currentLineItem.addPreviousNormalizedConsumptionFrom(previousLineItem);
+    }
+  }
+
+  private RnrLineItem findCorrespondingLineItem(List<RnrLineItem> items, final RnrLineItem item) {
+    return (RnrLineItem) find(items, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        RnrLineItem lineItem = (RnrLineItem) o;
+        return lineItem.getProductCode().equalsIgnoreCase(item.getProductCode());
+      }
+    });
+  }
+
+  private RnrLineItem getPreviouslyStoredLineItemForProduct(List<RnrLineItem> items, final RnrLineItem lineItem) {
+    return (RnrLineItem) find(items, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        RnrLineItem savedLineItem = (RnrLineItem) o;
+        return savedLineItem.getProductCode().equalsIgnoreCase(lineItem.getProductCode());
+      }
+    });
   }
 }
 

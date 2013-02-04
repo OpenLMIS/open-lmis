@@ -222,7 +222,7 @@ public class RnrLineItem {
     this.previousStockInHandAvailable = Boolean.TRUE;
   }
 
-  public void addPreviousNormalizedConsumption(RnrLineItem rnrLineItem) {
+  public void addPreviousNormalizedConsumptionFrom(RnrLineItem rnrLineItem) {
     if (rnrLineItem != null) this.previousNormalizedConsumptions.add(rnrLineItem.normalizedConsumption);
   }
 
