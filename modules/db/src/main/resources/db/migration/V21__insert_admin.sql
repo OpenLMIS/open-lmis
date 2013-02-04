@@ -13,7 +13,7 @@ INSERT INTO roles
 
 INSERT INTO users
   (userName, password, facilityId, firstName, lastName, email) VALUES
-  ('Admin123', 'TQskzK3iLfbRVHeM1muvBCiKribfl6lh8+o91hb74G3OvsybvkzpPI4S3KIeWTXAiwlUU0iSxWi4wSuS8mokSA==', null, 'John', 'Doe', 'John_Doe@openlmis.com');
+  ('Admin123', 'TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie', null, 'John', 'Doe', 'John_Doe@openlmis.com');
 
 INSERT INTO role_assignments
   (userId, roleId) VALUES

@@ -31,8 +31,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
         DBWrapper dbWrapper = new DBWrapper();
 
-        dbWrapper.insertUser("200", userSIC, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==","F10", "manjyots@thoughtworks.com");
-        dbWrapper.insertUser("300", userMO, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==","F10", "lokeshag@thoughtworks.com");
+        dbWrapper.insertUser("200", userSIC, "Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie","F10", "manjyots@thoughtworks.com");
+        dbWrapper.insertUser("300", userMO, "Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie","F10", "lokeshag@thoughtworks.com");
         dbWrapper.insertFacility();
         dbWrapper.insertSupervisoryNodes("F10");
         dbWrapper.insertSupervisoryNodesSecond("F11");

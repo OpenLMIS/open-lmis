@@ -20,7 +20,11 @@ function ResetPasswordController($scope, UpdateUserPassword, $location, $route) 
 function ValidateTokenController() {
 }
 
-function ResetCompleteController() {
+function ResetCompleteController($scope) {
+
+  $scope.goToLoginPage = function() {
+    window.location = 'login.html'
+  }
 
 }
 
@@ -32,7 +36,7 @@ ValidateTokenController.resolve = {
       ValidatePasswordToken.get({token:$route.current.params.token }, function (data) {
         $location.path('/reset/' + $route.current.params.token);
       }, function (data) {
-        window.location.href = '/public/pages/access-denied.html';
+        window.location = 'access-denied.html';
       });
     }, 100);
     return deferred.promise;
