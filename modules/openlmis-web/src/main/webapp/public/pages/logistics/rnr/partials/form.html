@@ -1,16 +1,6 @@
 <div ng-controller="RequisitionFormController" xmlns="http://www.w3.org/1999/html">
   <div ng-hide = "programRnRColumnList" >Loading...</div >
-  <form name = "saveRnrForm" action = "#" id = "rnr-form" novalidate >
-    <div class = "total-cost alert alert-info" >Total Cost For Full Supply Items:
-      <span id = "fullSupplyItemsCostCurrency" class = "cell-text" ng-bind="currency"></span >
-        <span id = "fullSupplyItemsCost" class = "cell-text" ng-bind="rnr.fullSupplyItemsSubmittedCost"></span >
-      &nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;Total Cost For Non Full Supply Items:
-      <span id = "nonFullSupplyItemsCostCurrency" class = "cell-text" ng-bind="currency"></span>
-        <span id = "nonFullSupplyItemsCost" class = "cell-text" ng-bind="rnr.nonFullSupplyItemsSubmittedCost"></span >
-      &nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;Total R&amp;R Cost:
-      <span id = "totalCostCurrency" class = "cell-text" ng-bind="currency"></span>
-      <span id = "totalCost" class = "cell-text" ng-bind="totalCost()"></span >
-    </div >
+  <form name = "saveRnrForm" action = "#" id = "rnr-form" novalidate>
     <div class = "rnr-table" >
       <table class = "table table-striped table-bordered" >
         <thead >
@@ -427,7 +417,29 @@
   </div>
   </form>
 
-    <div form-toolbar id="action_buttons" class = "action-buttons" >
+
+    <div form-toolbar id="action_buttons" class = "action-buttons">
+      <div class="total-cost-container">
+        <div class="cost-values">
+          <small>
+            Total Cost For Full Supply Items:
+            <strong>
+              <span id = "fullSupplyItemsCostCurrency" class = "cell-text" ng-bind="currency"></span><span id = "fullSupplyItemsCost" class = "cell-text" ng-bind="rnr.fullSupplyItemsSubmittedCost"></span>
+            </strong>
+             &nbsp;|&nbsp;
+            Total Cost For Non Full Supply Items:
+            <strong>
+              <span id = "nonFullSupplyItemsCostCurrency" class = "cell-text" ng-bind="currency"></span><span id = "nonFullSupplyItemsCost" class = "cell-text" ng-bind="rnr.nonFullSupplyItemsSubmittedCost"></span>
+            </strong>
+          </small>
+           &nbsp;|&nbsp;
+          <strong>
+            Total R&amp;R Cost:
+            <span id = "totalCostCurrency" class = "cell-text" ng-bind="currency"></span>
+            <span id = "totalCost" class = "cell-text" ng-bind="totalCost()"></span>
+          </strong>
+        </div>
+      </div>
       <div class = "form-cell button-row" >
         <input ng-disabled = "formDisabled" type = "button" ng-click = "saveRnr()" class = "btn btn-primary save-button"
                value = "Save" />
