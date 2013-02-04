@@ -1,5 +1,6 @@
 package org.openlmis.rnr.domain;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.openlmis.core.message.OpenLmisMessage;
 
@@ -7,156 +8,163 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
+import static org.openlmis.rnr.domain.RnRColumnSource.CALCULATED;
+import static org.openlmis.rnr.domain.RnRColumnSource.USER_INPUT;
 
 public class ProgramRnrTemplateTest {
 
 
-    @Test
-    public void shouldGiveErrorIfDependentsAreMissing() throws Exception {
-        Map<String,OpenLmisMessage> errors = new ProgramRnrTemplate(1, asList(
-                rnrColumn(QUANTITY_REQUESTED, false, null, "Requested Quantity"),
-                rnrColumn(REASON_FOR_REQUESTED_QUANTITY, false, null, "Requested Quantity Reason"),
-                rnrColumn(STOCK_OUT_DAYS, false, RnRColumnSource.CALCULATED, "stockOutDays"),
-                rnrColumn(NORMALIZED_CONSUMPTION, false, RnRColumnSource.USER_INPUT, "normalizedConsumption"),
-                rnrColumn(STOCK_IN_HAND, true, RnRColumnSource.USER_INPUT, "stock in hand"),
-                rnrColumn(QUANTITY_DISPENSED, true, RnRColumnSource.USER_INPUT, "quantity dispensed"),
-                rnrColumn(QUANTITY_RECEIVED, true, RnRColumnSource.USER_INPUT, "quantity received"),
-                rnrColumn(BEGINNING_BALANCE, false, RnRColumnSource.USER_INPUT, "beginning balance"),
-                rnrColumn(LOSSES_AND_ADJUSTMENTS, true, RnRColumnSource.USER_INPUT, "losses and adjustment")
-        )).validateToSave();
+  private ProgramRnrTemplate template;
 
-        assertThat(errors.get(STOCK_IN_HAND).getCode(), is("not.all.dependent.fields.for.arithmetical.validation"));
-    }
+  @Before
+  public void setup() {
+    template = new ProgramRnrTemplate(1, asList(
+        rnrColumn(QUANTITY_REQUESTED, false, null, "Requested Quantity"),
+        rnrColumn(REASON_FOR_REQUESTED_QUANTITY, false, null, "Requested Quantity Reason"),
+        rnrColumn(STOCK_OUT_DAYS, false, CALCULATED, "stockOutDays"),
+        rnrColumn(NORMALIZED_CONSUMPTION, false, USER_INPUT, "normalizedConsumption"),
+        rnrColumn(STOCK_IN_HAND, true, USER_INPUT, "stock in hand"),
+        rnrColumn(QUANTITY_DISPENSED, true, CALCULATED, "quantity dispensed"),
+        rnrColumn(QUANTITY_RECEIVED, true, USER_INPUT, "quantity received"),
+        rnrColumn(BEGINNING_BALANCE, false, USER_INPUT, "beginning balance"),
+        rnrColumn(LOSSES_AND_ADJUSTMENTS, true, USER_INPUT, "losses and adjustment")
+    ));
+  }
 
-    @Test
-    public void shouldNotGiveErrorIfDependentsAreNotMissing() throws Exception {
-        Map<String,OpenLmisMessage> errors = new ProgramRnrTemplate(1, asList(
-                rnrColumn(QUANTITY_REQUESTED, false, null, "Requested Quantity"),
-                rnrColumn(REASON_FOR_REQUESTED_QUANTITY, false, null, "Requested Quantity Reason"),
-                rnrColumn(STOCK_OUT_DAYS, false, RnRColumnSource.CALCULATED, "stockOutDays"),
-                rnrColumn(NORMALIZED_CONSUMPTION, false, RnRColumnSource.USER_INPUT, "normalizedConsumption"),
-                rnrColumn(STOCK_IN_HAND, true, RnRColumnSource.USER_INPUT, "stock in hand"),
-                rnrColumn(QUANTITY_DISPENSED, true, RnRColumnSource.USER_INPUT, "quantity dispensed"),
-                rnrColumn(QUANTITY_RECEIVED, true, RnRColumnSource.USER_INPUT, "quantity received"),
-                rnrColumn(BEGINNING_BALANCE, true, RnRColumnSource.USER_INPUT, "beginning balance"),
-                rnrColumn(LOSSES_AND_ADJUSTMENTS, true, RnRColumnSource.USER_INPUT, "losses and adjustment")
-        )).validateToSave();
+  @Test
+  public void shouldGiveErrorIfDependentsAreMissing() throws Exception {
+    Map<String, OpenLmisMessage> errors = new ProgramRnrTemplate(1, asList(
+        rnrColumn(QUANTITY_REQUESTED, false, null, "Requested Quantity"),
+        rnrColumn(REASON_FOR_REQUESTED_QUANTITY, false, null, "Requested Quantity Reason"),
+        rnrColumn(STOCK_OUT_DAYS, false, CALCULATED, "stockOutDays"),
+        rnrColumn(NORMALIZED_CONSUMPTION, false, USER_INPUT, "normalizedConsumption"),
+        rnrColumn(STOCK_IN_HAND, true, USER_INPUT, "stock in hand"),
+        rnrColumn(QUANTITY_DISPENSED, true, USER_INPUT, "quantity dispensed"),
+        rnrColumn(QUANTITY_RECEIVED, true, USER_INPUT, "quantity received"),
+        rnrColumn(BEGINNING_BALANCE, false, USER_INPUT, "beginning balance"),
+        rnrColumn(LOSSES_AND_ADJUSTMENTS, true, USER_INPUT, "losses and adjustment")
+    )).validateToSave();
 
-        assertThat(errors.size(), is(0));
-    }
+    assertThat(errors.get(STOCK_IN_HAND).getCode(), is("not.all.dependent.fields.for.arithmetical.validation"));
+  }
 
-    @Test
-    public void shouldReturnValidationErrorWhenDependantColumnsForQuantityDispensedIsNotVisible() {
-        Map<String,OpenLmisMessage> errors = new ProgramRnrTemplate(1, asList(
-                rnrColumn(QUANTITY_REQUESTED, false, null, "Requested Quantity"),
-                rnrColumn(REASON_FOR_REQUESTED_QUANTITY, false, null, "Requested Quantity Reason"),
-                rnrColumn(STOCK_OUT_DAYS, false, RnRColumnSource.CALCULATED, "stockOutDays"),
-                rnrColumn(NORMALIZED_CONSUMPTION, false, RnRColumnSource.USER_INPUT, "normalizedConsumption"),
-                rnrColumn(STOCK_IN_HAND, true, RnRColumnSource.USER_INPUT, "stock in hand"),
-                rnrColumn(QUANTITY_DISPENSED, true, RnRColumnSource.CALCULATED, "quantity dispensed"),
-                rnrColumn(QUANTITY_RECEIVED, true, RnRColumnSource.USER_INPUT, "quantity received"),
-                rnrColumn(BEGINNING_BALANCE, false, RnRColumnSource.USER_INPUT, "beginning balance"),
-                rnrColumn(LOSSES_AND_ADJUSTMENTS, true, RnRColumnSource.USER_INPUT, "losses and adjustment")
-        )).validateToSave();
-        assertEquals("User needs to enter 'beginning balance', 'quantity received', 'losses and adjustment', 'stock in hand' to calculate 'quantity dispensed'"
-                , errors.get("quantityDispensed").getCode());
-    }
+  @Test
+  public void shouldNotGiveErrorIfDependentsAreNotMissing() throws Exception {
+    Map<String, OpenLmisMessage> errors = new ProgramRnrTemplate(1, asList(
+        rnrColumn(QUANTITY_REQUESTED, false, null, "Requested Quantity"),
+        rnrColumn(REASON_FOR_REQUESTED_QUANTITY, false, null, "Requested Quantity Reason"),
+        rnrColumn(STOCK_OUT_DAYS, false, CALCULATED, "stockOutDays"),
+        rnrColumn(NORMALIZED_CONSUMPTION, false, USER_INPUT, "normalizedConsumption"),
+        rnrColumn(STOCK_IN_HAND, true, USER_INPUT, "stock in hand"),
+        rnrColumn(QUANTITY_DISPENSED, true, USER_INPUT, "quantity dispensed"),
+        rnrColumn(QUANTITY_RECEIVED, true, USER_INPUT, "quantity received"),
+        rnrColumn(BEGINNING_BALANCE, true, USER_INPUT, "beginning balance"),
+        rnrColumn(LOSSES_AND_ADJUSTMENTS, true, USER_INPUT, "losses and adjustment")
+    )).validateToSave();
 
-    @Test
-    public void shouldReturnValidationErrorWhenDependantColumnsForStockInHandIsNotVisible() {
-        Map<String, OpenLmisMessage> errors = new ProgramRnrTemplate(1, asList(
-                rnrColumn(QUANTITY_REQUESTED, false, null, "Requested Quantity"),
-                rnrColumn(REASON_FOR_REQUESTED_QUANTITY, false, null, "Requested Quantity Reason"),
-                rnrColumn(STOCK_OUT_DAYS, false, RnRColumnSource.CALCULATED, "stockOutDays"),
-                rnrColumn(NORMALIZED_CONSUMPTION, false, RnRColumnSource.USER_INPUT, "normalizedConsumption"),
-                rnrColumn(STOCK_IN_HAND, true, RnRColumnSource.CALCULATED, "stock in hand"),
-                rnrColumn(QUANTITY_DISPENSED, true, RnRColumnSource.USER_INPUT, "quantity dispensed"),
-                rnrColumn(QUANTITY_RECEIVED, true, RnRColumnSource.USER_INPUT, "quantity received"),
-                rnrColumn(BEGINNING_BALANCE, false, RnRColumnSource.USER_INPUT, "beginning balance"),
-                rnrColumn(LOSSES_AND_ADJUSTMENTS, true, RnRColumnSource.USER_INPUT, "losses and adjustment")
-        )).validateToSave();
-        assertEquals("User needs to enter 'beginning balance', 'quantity received', 'losses and adjustment', 'quantity dispensed' to calculate 'stock in hand'"
-                , errors.get("stockInHand").getCode());
-    }
+    assertThat(errors.size(), is(0));
+  }
+
+  @Test
+  public void shouldReturnValidationErrorWhenDependantColumnsForQuantityDispensedIsNotVisible() {
+    Map<String, RnrColumn> rnrColumnsMap = template.getRnrColumnsMap();
+    rnrColumnsMap.put(QUANTITY_DISPENSED, rnrColumn(QUANTITY_DISPENSED, true, CALCULATED, "quantity dispensed"));
+    rnrColumnsMap.put(STOCK_IN_HAND, rnrColumn(STOCK_IN_HAND, false, USER_INPUT, "stock in hand"));
+
+    Map<String, OpenLmisMessage> errors = template.validateToSave();
+    OpenLmisMessage openLmisMessage = errors.get("quantityDispensed");
+
+    assertThat(openLmisMessage.getCode(), is("user.needs.to.enter.dependent.field"));
+    assertThat(openLmisMessage.getParams(), is(new String[]{"stock in hand", "quantity dispensed"}));
+
+  }
+
+  @Test
+  public void shouldReturnValidationErrorWhenDependantColumnsForStockInHandIsNotVisible() {
+    Map<String, RnrColumn> rnrColumnsMap = template.getRnrColumnsMap();
+
+    rnrColumnsMap.put(QUANTITY_DISPENSED, rnrColumn(QUANTITY_DISPENSED, false, USER_INPUT, "quantity dispensed"));
+    rnrColumnsMap.put(STOCK_IN_HAND, rnrColumn(STOCK_IN_HAND, true, CALCULATED, "stock in hand"));
+
+    Map<String, OpenLmisMessage> errors = template.validateToSave();
+    OpenLmisMessage openLmisMessage = errors.get("stockInHand");
+
+    assertThat(openLmisMessage.getCode(), is("user.needs.to.enter.dependent.field"));
+    assertThat(openLmisMessage.getParams(), is(new String[]{"quantity dispensed", "stock in hand"}));
+  }
 
 
-    @Test
-    public void shouldReturnValidationErrorWhenStockInHandAndQuantityDispensedBothAreCalculated() {
-        Map<String, OpenLmisMessage> errors = new ProgramRnrTemplate(1, asList(
-                rnrColumn(QUANTITY_REQUESTED, false, null, "Requested Quantity"),
-                rnrColumn(REASON_FOR_REQUESTED_QUANTITY, false, null, "Requested Quantity Reason"),
-                rnrColumn(STOCK_OUT_DAYS, false, RnRColumnSource.CALCULATED, "stockOutDays"),
-                rnrColumn(NORMALIZED_CONSUMPTION, false, RnRColumnSource.USER_INPUT, "normalizedConsumption"),
-                rnrColumn(STOCK_IN_HAND, true, RnRColumnSource.CALCULATED, "stock in hand"),
-                rnrColumn(QUANTITY_DISPENSED, true, RnRColumnSource.CALCULATED, "quantity dispensed"),
-                rnrColumn(QUANTITY_RECEIVED, true, RnRColumnSource.USER_INPUT, "quantity received"),
-                rnrColumn(BEGINNING_BALANCE, true, RnRColumnSource.USER_INPUT, "beginning balance"),
-                rnrColumn(LOSSES_AND_ADJUSTMENTS, true, RnRColumnSource.USER_INPUT, "losses and adjustment")
-        )).validateToSave();
-        assertEquals("Interdependent fields ('quantity dispensed', 'stock in hand') cannot be of type Calculated at the same time"
-                , errors.get("stockInHand").getCode());
-        assertEquals("Interdependent fields ('quantity dispensed', 'stock in hand') cannot be of type Calculated at the same time"
-                , errors.get("quantityDispensed").getCode());
+  @Test
+  public void shouldReturnValidationErrorWhenStockInHandAndQuantityDispensedBothAreCalculated() {
+    Map<String, RnrColumn> rnrColumnsMap = template.getRnrColumnsMap();
 
-    }
+    rnrColumnsMap.put(QUANTITY_DISPENSED, rnrColumn(QUANTITY_DISPENSED, false, CALCULATED, "quantity dispensed"));
+    rnrColumnsMap.put(STOCK_IN_HAND, rnrColumn(STOCK_IN_HAND, false, CALCULATED, "stock in hand"));
 
-    @Test
-    public void shouldReturnValidationErrorWhenOnlyTheNumberOfStockOutDaysIsSelectedButNotNormalizedConsumption() {
-        Map<String, OpenLmisMessage> errors = new ProgramRnrTemplate(1, asList(
-                rnrColumn(STOCK_OUT_DAYS, true, RnRColumnSource.CALCULATED, "stockOutDays"),
-                rnrColumn(NORMALIZED_CONSUMPTION, false, RnRColumnSource.USER_INPUT, "normalizedConsumption"),
-                rnrColumn(STOCK_IN_HAND, false, RnRColumnSource.CALCULATED, "stockInHand"),
-                rnrColumn(BEGINNING_BALANCE, true, RnRColumnSource.USER_INPUT, "beginningBalance"),
-                rnrColumn(QUANTITY_RECEIVED, true, RnRColumnSource.USER_INPUT, "quantityReceived"),
-                rnrColumn(LOSSES_AND_ADJUSTMENTS, true, RnRColumnSource.USER_INPUT, "lossesAndAdjustments"),
-                rnrColumn(QUANTITY_REQUESTED, false, null, "Requested Quantity"),
-                rnrColumn(REASON_FOR_REQUESTED_QUANTITY, false, null, "Requested Quantity Reason"),
-                rnrColumn(QUANTITY_DISPENSED, false, RnRColumnSource.CALCULATED, "quantityDispensed"))).validateToSave();
-        assertEquals("'normalizedConsumption' is needed if you report 'stockOutDays'", errors.get("stockOutDays").getCode());
-    }
+    Map<String, OpenLmisMessage> errors = template.validateToSave();
 
-    @Test
-    public void shouldReturnValidationErrorWhenOnlyNormalizedConsumptionIsSelectedButNotNumberOfStockOutDays() {
-        Map<String, OpenLmisMessage> errors = new ProgramRnrTemplate(1, asList(
-                rnrColumn(STOCK_OUT_DAYS, false, RnRColumnSource.CALCULATED, "Number of Stock out days"),
-                rnrColumn(NORMALIZED_CONSUMPTION, true, RnRColumnSource.USER_INPUT, "Normalized Consumption"),
-                rnrColumn(STOCK_IN_HAND, false, RnRColumnSource.CALCULATED, "stockInHand"),
-                rnrColumn(BEGINNING_BALANCE, true, RnRColumnSource.USER_INPUT, "beginningBalance"),
-                rnrColumn(QUANTITY_RECEIVED, true, RnRColumnSource.USER_INPUT, "quantityReceived"),
-                rnrColumn(LOSSES_AND_ADJUSTMENTS, true, RnRColumnSource.USER_INPUT, "lossesAndAdjustments"),
-                rnrColumn(QUANTITY_REQUESTED, false, null, "Requested Quantity"),
-                rnrColumn(REASON_FOR_REQUESTED_QUANTITY, false, null, "Requested Quantity Reason"),
-                rnrColumn(QUANTITY_DISPENSED, false, RnRColumnSource.CALCULATED, "quantityDispensed"))).validateToSave();
-        assertEquals("User needs to enter 'Number of Stock out days' to calculate 'Normalized Consumption'", errors.get("normalizedConsumption").getCode());
-    }
+    assertThat(errors.get(QUANTITY_DISPENSED).getCode(), is("interdependent.fields.can.not.be.calculated"));
+    assertThat(errors.get(QUANTITY_DISPENSED).getParams(), is(new String[]{"quantity dispensed", "stock in hand"}));
 
-    @Test
-    public void shouldReturnValidationErrorWhenOnlyRequestedAmountIsSelectedButNotReasonForRequestedAmount() {
+    assertThat(errors.get(STOCK_IN_HAND).getCode(), is("interdependent.fields.can.not.be.calculated"));
+    assertThat(errors.get(STOCK_IN_HAND).getParams(), is(new String[]{"quantity dispensed", "stock in hand"}));
 
-        Map<String, OpenLmisMessage> errors = new ProgramRnrTemplate(1, asList(
-                rnrColumn(STOCK_OUT_DAYS, false, RnRColumnSource.CALCULATED, "Number of Stock out days"),
-                rnrColumn(NORMALIZED_CONSUMPTION, true, RnRColumnSource.USER_INPUT, "Normalized Consumption"),
-                rnrColumn(STOCK_IN_HAND, false, RnRColumnSource.CALCULATED, "stockInHand"),
-                rnrColumn(BEGINNING_BALANCE, true, RnRColumnSource.USER_INPUT, "beginningBalance"),
-                rnrColumn(QUANTITY_RECEIVED, true, RnRColumnSource.USER_INPUT, "quantityReceived"),
-                rnrColumn(LOSSES_AND_ADJUSTMENTS, true, RnRColumnSource.USER_INPUT, "lossesAndAdjustments"),
-                rnrColumn(QUANTITY_DISPENSED, false, RnRColumnSource.CALCULATED, "quantityDispensed"),
-                rnrColumn(QUANTITY_REQUESTED, true, null, "Requested Quantity"),
-                rnrColumn(REASON_FOR_REQUESTED_QUANTITY, false, null, "Requested Quantity Reason"))).validateToSave();
-        assertEquals("'Requested Quantity' must include an 'Requested Quantity Reason' from the user", errors.get("quantityRequested").getCode());
-    }
+  }
 
-    private RnrColumn rnrColumn(String columnName, boolean visible, RnRColumnSource selectedColumnSource, String label) {
-        RnrColumn rnrColumn = new RnrColumn();
-        rnrColumn.setSource(selectedColumnSource);
-        rnrColumn.setVisible(visible);
-        rnrColumn.setName(columnName);
-        rnrColumn.setLabel(label);
-        rnrColumn.setFormulaValidationRequired(true);
-        return rnrColumn;
-    }
+  @Test
+  public void shouldReturnValidationErrorColumnIsUserInputAndNotVisible() throws Exception {
+    Map<String, RnrColumn> rnrColumnsMap = template.getRnrColumnsMap();
+
+    rnrColumnsMap.put(QUANTITY_DISPENSED, rnrColumn(QUANTITY_DISPENSED, false, USER_INPUT, "quantity dispensed"));
+    rnrColumnsMap.put(STOCK_IN_HAND, rnrColumn(STOCK_IN_HAND, false, USER_INPUT, "stock in hand"));
+
+    Map<String, OpenLmisMessage> errorMap = template.validateToSave();
+
+    OpenLmisMessage errorMessageForQuantityDispensed = errorMap.get(QUANTITY_DISPENSED);
+    assertThat(errorMessageForQuantityDispensed.getCode(),is(COLUMN_SHOULD_BE_VISIBLE_IF_USER_INPUT));
+    assertThat(errorMessageForQuantityDispensed.getParams(),is(new String[]{"quantity dispensed"}));
+
+    OpenLmisMessage errorMessageForStockInHand = errorMap.get(STOCK_IN_HAND);
+    assertThat(errorMessageForStockInHand.getCode(),is(COLUMN_SHOULD_BE_VISIBLE_IF_USER_INPUT));
+    assertThat(errorMessageForStockInHand.getParams(),is(new String[]{"stock in hand"}));
+
+  }
+
+  @Test
+  public void shouldReturnValidationErrorWhenOnlyNormalizedConsumptionIsSelectedButNotNumberOfStockOutDays() {
+    Map<String, RnrColumn> rnrColumnsMap = template.getRnrColumnsMap();
+
+    rnrColumnsMap.put(NORMALIZED_CONSUMPTION, rnrColumn(NORMALIZED_CONSUMPTION, true, CALCULATED, "Normalized Consumption"));
+    rnrColumnsMap.put(STOCK_OUT_DAYS, rnrColumn(STOCK_OUT_DAYS, false, USER_INPUT, "stock out days"));
+
+    Map<String, OpenLmisMessage> errors = template.validateToSave();
+
+    OpenLmisMessage openLmisMessage = errors.get("normalizedConsumption");
+
+    assertThat(openLmisMessage.getCode(), is("user.needs.to.enter.dependent.field"));
+    assertThat(openLmisMessage.getParams(), is(new String[]{"stock out days", "Normalized Consumption"}));
+  }
+
+  @Test
+  public void shouldReturnValidationErrorWhenOnlyRequestedAmountIsSelectedButNotReasonForRequestedAmount() {
+    template.getRnrColumnsMap().put(QUANTITY_REQUESTED, rnrColumn(QUANTITY_REQUESTED, true, USER_INPUT, "Requested Quantity"));
+    template.getRnrColumnsMap().put(REASON_FOR_REQUESTED_QUANTITY, rnrColumn(REASON_FOR_REQUESTED_QUANTITY, false, USER_INPUT, "Requested Quantity Reason"));
+
+    Map<String, OpenLmisMessage> errors = template.validateToSave();
+    assertThat(errors.get(QUANTITY_REQUESTED).getCode(), is("user.needs.to.enter.requested.quantity.reason"));
+    assertThat(errors.get(QUANTITY_REQUESTED).getParams(), is(new String[]{"Requested Quantity Reason", "Requested Quantity"}));
+  }
+
+  private RnrColumn rnrColumn(String columnName, boolean visible, RnRColumnSource selectedColumnSource, String label) {
+    RnrColumn rnrColumn = new RnrColumn();
+    rnrColumn.setSource(selectedColumnSource);
+    rnrColumn.setVisible(visible);
+    rnrColumn.setName(columnName);
+    rnrColumn.setLabel(label);
+    rnrColumn.setFormulaValidationRequired(true);
+    return rnrColumn;
+  }
 
 }

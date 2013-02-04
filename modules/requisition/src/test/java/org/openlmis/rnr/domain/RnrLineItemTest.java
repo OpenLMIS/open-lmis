@@ -89,13 +89,13 @@ public class RnrLineItemTest {
     RnrLineItem rnrLineItem = new RnrLineItem(1, new FacilityApprovedProduct("warehouse", programProduct, 3), 1);
 
     assertThat(rnrLineItem.getFullSupply(), is(product.getFullSupply()));
-    assertThat(rnrLineItem.getMaxMonthsOfStock().intValue(), is(3));
-    assertThat(rnrLineItem.getRnrId().intValue(), is(1));
+    assertThat(rnrLineItem.getMaxMonthsOfStock(), is(3));
+    assertThat(rnrLineItem.getRnrId(), is(1));
     assertThat(rnrLineItem.getDispensingUnit(), is("Strip"));
     assertThat(rnrLineItem.getProductCode(), is("ASPIRIN"));
-    assertThat(rnrLineItem.getDosesPerMonth().intValue(), is(30));
-    assertThat(rnrLineItem.getModifiedBy().intValue(), is(1));
-    assertThat(rnrLineItem.getDosesPerDispensingUnit().intValue(), is(10));
+    assertThat(rnrLineItem.getDosesPerMonth(), is(30));
+    assertThat(rnrLineItem.getModifiedBy(), is(1));
+    assertThat(rnrLineItem.getDosesPerDispensingUnit(), is(10));
   }
 
   @Test
