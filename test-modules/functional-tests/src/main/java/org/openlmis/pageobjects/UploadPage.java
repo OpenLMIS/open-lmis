@@ -53,7 +53,7 @@ public class UploadPage extends Page {
             setCsvPath.sendKeys(uploadFilePath);
         else
         {
-            uploadFilePath = System.getProperty("user.dir") + "/functional-tests/src/main/resources/"+fileName;
+            uploadFilePath = System.getProperty("user.dir") + "/test-modules/functional-tests/src/main/resources/"+fileName;
             setCsvPath.sendKeys(uploadFilePath);
         }
         uploadButton.click();
