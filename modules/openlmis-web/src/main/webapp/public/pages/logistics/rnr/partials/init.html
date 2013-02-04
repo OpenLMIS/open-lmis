@@ -1,20 +1,84 @@
-<div ng-controller="InitiateMyFacilityRnrController">
+<div class="init-rnr">
   <h2>Initiate Report and Requisition</h2>
-  <label>Facility</label>
-  <select id="facilityList" ng-model="$parent.selectedFacilityId" ng-options="i.id as i.code + '-' + i.name for i in facilities"
-          ng-change="loadPrograms(); loadPeriods()">
-    <option value="" ng-bind="facilityOptionMessage()"></option>
-  </select> <br/>
-  <br/>
-  <label>Program</label>
-  <select id="programList" ng-model="$parent.selectedProgram" ng-options="i as i.name for i in programs"
+
+  <br>
+  <div class="row-fluid">
+    <div class="span12">
+      <label>Facility type:</label>
+    </div>
+  </div>
+
+  <div class="row-fluid">
+    <div class="span2 form-inline">
+      <input id="myFacilityRnr" type="radio" ng-model="selectedType" value="0" ng-change="loadFacilityData(selectedType);" />
+      &nbsp;<label for="myFacilityRnr"><strong>My facility</strong></label>
+    </div>
+    <div class="span4 form-inline">
+      <input id="supervisedFacilityRnr" type="radio" ng-model="selectedType" value="1" ng-change="loadFacilityData(selectedType);" />
+      &nbsp;<label for="supervisedFacilityRnr"><strong>My supervised facilities</strong></label>
+    </div>
+  </div>
+
+<br>
+
+<div ng-show="selectedType == 0">
+  <div class="row-fluid">
+    <div class="span12">
+      <label>Facility name</label>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <input type="text" class="span3" ng-model="myFacility.name" readonly="readonly"  />
+  </div>
+
+  <br />
+
+  <div class="row-fluid">
+    <div class="span12">
+      <label>Program</label>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <select id="programListMyFacility" class="span3" ng-model="selectedProgram" ng-options="i as i.name for i in programs"
           ng-change="loadPeriods()">
-    <option value="" ng-bind="programOptionMessage()"></option>
-  </select>
+      <option value="" ng-bind="programOptionMessage()"></option>
+    </select>
+  </div>
+
+</div>
+
+
+
+<div ng-show="selectedType == 1">
+  <div class="row-fluid">
+    <div class="span12">
+      <label>Program</label>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <select class="span3" id="programListSupervisedFacility" ng-change="loadFacilitiesForProgram();" ng-model="selectedProgram" ng-options="i as i.name for i in programs">
+      <option value="" ng-bind="programOptionMessage()"></option>
+    </select>
+  </div>
+
+  <br />
+
+  <div class="row-fluid">
+    <div class="span12">
+      <label>Facility name</label>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <select class="span3" id="facilityList" ng-change="loadPeriods()" ng-model="selectedFacilityId" ng-options="i.id as i.code + '-' + i.name for i in facilities">
+      <option value="" ng-bind="facilityOptionMessage()"></option>
+    </select>
+  </div>
+
+</div>
 
   <div class="row-fluid init-rnr-grid">
     <div class="span6">
-      <div class="gridStyle small" ng-grid="periodGridOptions" ng-show="$parent.selectedProgram && $parent.selectedFacilityId"></div>
+      <div class="gridStyle small" ng-grid="periodGridOptions" ng-show="selectedProgram && selectedFacilityId"></div>
     </div>
   </div>
 

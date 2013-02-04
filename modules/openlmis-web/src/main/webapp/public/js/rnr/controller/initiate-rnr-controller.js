@@ -1,15 +1,58 @@
-function InitiateRnrController($scope, $location, $rootScope, Requisition, PeriodsForFacilityAndProgram) {
+function InitiateRnrController($scope, $location, $rootScope, Requisition, PeriodsForFacilityAndProgram, UserFacilityList, UserSupportedProgramInFacilityForAnOperation, UserSupervisedProgramList, UserSupervisedFacilitiesForProgram) {
 
   var DEFAULT_FACILITY_MESSAGE = '--choose facility--';
   var DEFAULT_PROGRAM_MESSAGE = '--choose program--';
   var PREVIOUS_RNR_PENDING_STATUS = "Previous R&R pending";
   var RNR_NOT_YET_STARTED_STATUS = "Not yet started";
 
+  //$scope.selectedType = null;
 
-  $scope.periodGridData = [];
-  $scope.selectedProgram = null;
-  $scope.selectedFacilityId = null;
-  $scope.selectedPeriod = null;
+  var resetRnrData = function() {
+    $scope.periodGridData = [];
+    $scope.selectedProgram = null;
+    $scope.selectedFacilityId = null;
+    $scope.selectedPeriod = null;
+    $scope.myFacility = null;
+    $scope.programs = null;
+    $scope.facilities = null;
+  };
+
+  $scope.loadFacilityData = function(selectedType) {
+    resetRnrData();
+
+    if (selectedType == 0) { //My facility
+      UserFacilityList.get({}, function (data) {
+        $scope.facilities = data.facilityList;
+        $scope.myFacility = data.facilityList[0];
+
+        if($scope.myFacility) {
+          $scope.selectedFacilityId = $scope.myFacility.id;
+
+          UserSupportedProgramInFacilityForAnOperation.get({facilityId: $scope.selectedFacilityId}, function (data) {
+            $scope.programs = data.programList;
+          }, {});
+        } else {
+          $scope.programs = null;
+          $scope.selectedProgram = null;
+        }
+      }, {});
+    } else if (selectedType == 1) { // Supervised facility
+      UserSupervisedProgramList.get({}, function (data) {
+        $scope.programs = data.programList;
+      }, {});
+    }
+  };
+
+  $scope.loadFacilitiesForProgram = function () {
+    if ($scope.selectedProgram) {
+      UserSupervisedFacilitiesForProgram.get({programId: $scope.selectedProgram.id}, function (data) {
+        $scope.facilities = data.facilities;
+      }, {});
+    } else {
+      $scope.facilities = null;
+      $scope.selectedFacilityId = null;
+    }
+  };
 
   var getPeriodSpecificButton = function (activeForRnr) {
     return '<input type="button" ng-click="initRnr()" value="Proceed" class="btn btn-primary btn-small grid-btn" ng-show="' + activeForRnr + '"/>';
@@ -106,7 +149,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
     }
 
     $scope.error = "";
-    $scope.$parent.sourceUrl = $location.$$url;
+    $scope.sourceUrl = $location.$$url;
 
     Requisition.get({facilityId:$scope.selectedFacilityId, programId:$scope.selectedProgram.id, periodId:$scope.selectedPeriod.id}, {},
         function (data) {
@@ -121,15 +164,11 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
               return;
             }
             $scope.$parent.rnr = data.rnr;
-            $scope.$parent.program = $scope.selectedProgram;
-            $scope.$parent.period = $scope.selectedPeriod;
             $location.path('/create-rnr/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + '/' + $scope.selectedPeriod.id);
           }
           else {
             Requisition.save({facilityId:$scope.selectedFacilityId, programId:$scope.selectedProgram.id, periodId:$scope.selectedPeriod.id}, {}, function (data) {
               $scope.$parent.rnr = data.rnr;
-              $scope.$parent.program = $scope.selectedProgram;
-              $scope.$parent.period = $scope.selectedPeriod;
               $location.path('/create-rnr/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + '/' + $scope.selectedPeriod.id);
             }, function (data) {
               $scope.error = data.data.error ? data.data.error : "Requisition does not exist. Please initiate.";

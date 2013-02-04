@@ -16,13 +16,13 @@ describe('InitiateMyFacilityRnrController', function () {
     ctrl = $controller(InitiateMyFacilityRnrController, {$scope: scope});
   }));
 
-  it('should set facilities in scope', function () {
+  xit('should set facilities in scope', function () {
     $httpBackend.flush();
 
     expect(scope.$parent.facilities).toEqual(facilities);
   });
 
-  it('should load user supported programs for selected facility for create R&R', function () {
+  xit('should load user supported programs for selected facility for create R&R', function () {
     scope.$parent.selectedFacilityId = facilities[0].id;
     $httpBackend.expectGET('/logistics/facility/10134/user/programs.json').respond({"programList": programs});
 
@@ -32,7 +32,7 @@ describe('InitiateMyFacilityRnrController', function () {
     expect(scope.$parent.programs).toEqual(programs);
   });
 
-  it('should not load user supported programs if there is no selected facility for create R&R', function () {
+  xit('should not load user supported programs if there is no selected facility for create R&R', function () {
     scope.$parent.selectedFacilityId = null;
 
     scope.loadPrograms();

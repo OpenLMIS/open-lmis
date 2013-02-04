@@ -6,21 +6,13 @@
             <a href="javascript: void(0)">Requisitions</a>
             <div class="submenu">
               <ul>
-                  <li ng-show="hasPermission('CREATE_REQUISITION') || hasPermission('AUTHORIZE_REQUISITION')">
-                      <a href="javascript: void(0);">Create</a>
-                      <div class="submenu">
-                        <ul>
-                            <li><a href="/public/pages/logistics/rnr/index.html">My Facility</a></li>
-                            <li><a href="/public/pages/logistics/rnr/index.html#/supervised/init-rnr">My Supervised
-                                Facility</a></li>
-                            <li class="beak"></li>
-                        </ul>
-                      </div>
-                  </li>
-                  <li ng-show="hasPermission('APPROVE_REQUISITION')">
-                      <a href="/public/pages/logistics/rnr/index.html#/rnr-for-approval">Approve</a>
-                  </li>
-                  <li class="beak"></li>
+                <li ng-show="hasPermission('CREATE_REQUISITION') || hasPermission('AUTHORIZE_REQUISITION')">
+                  <a href="/public/pages/logistics/rnr/index.html">Create</a>
+                </li>
+                <li ng-show="hasPermission('APPROVE_REQUISITION')">
+                  <a href="/public/pages/logistics/rnr/index.html#/rnr-for-approval">Approve</a>
+                </li>
+                <li class="beak"></li>
               </ul>
             </div>
             
