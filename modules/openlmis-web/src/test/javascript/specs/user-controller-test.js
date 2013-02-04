@@ -14,7 +14,7 @@ describe("User", function () {
     }));
 
     it('should update user successful', function () {
-      scope.user = {"id": 123, "userName":"User420"};
+      scope.user = {"id":123, "userName":"User420"};
       $httpBackend.expectPUT('/users/123.json', scope.user).respond(200, {"success":"Saved successfully", "user":{id:123}});
 
       scope.saveUser();
@@ -28,7 +28,7 @@ describe("User", function () {
 
     it('should create new user successful', function () {
       scope.user = {"userName":"User420"};
-      $httpBackend.expectPOST('/users.json', scope.user).respond(200, {"success":"Saved successfully", user: {id:500}});
+      $httpBackend.expectPOST('/users.json', scope.user).respond(200, {"success":"Saved successfully", user:{id:500}});
 
       scope.saveUser();
       $httpBackend.flush();
@@ -68,11 +68,11 @@ describe("User", function () {
       expect(scope.filteredFacilities).toEqual([
         {"code":"F101"}
       ]);
-    })
+    });
 
     it("should filter facilities by facility code when more than 3 characters are entered for search", function () {
       scope.facilityList = [
-        {"name":"Village1","code":"F10111"},
+        {"name":"Village1", "code":"F10111"},
         {"name":"Village2", "code":"F10200"}
       ];
 
@@ -80,9 +80,9 @@ describe("User", function () {
       scope.showFacilitySearchResults();
 
       expect(scope.filteredFacilities).toEqual([
-        {"name":"Village1","code":"F10111"}
+        {"name":"Village1", "code":"F10111"}
       ]);
-    })
+    });
 
     it("should filter facilities by facility name when more than 3 characters are entered for search", function () {
       scope.facilityList = [
@@ -96,7 +96,18 @@ describe("User", function () {
       expect(scope.filteredFacilities).toEqual([
         {"name":"Village Dispensary", "code":"F10111"}
       ]);
-    })
+    });
+
+    it("should not create a user with empty role", function () {
+      var userWithoutRole = {userName:"User 123", roleAssignments:[
+        {programId:111, roleIds:[1]},
+        {programId:222}
+      ]};
+      scope.userForm = {$error:{ required:false}};
+      scope.user = userWithoutRole;
+
+      expect(scope.saveUser()).toEqual(false);
+    });
 
   });
 

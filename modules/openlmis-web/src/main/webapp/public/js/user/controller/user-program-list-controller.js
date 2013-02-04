@@ -10,9 +10,9 @@ function UserProgramRoleListController($scope) {
     enableSorting:false,
     canSelectRows:false,
     columnDefs:[
-      { field:'supportedPrograms', displayName:'Programs(s)', cellTemplate:program() },
-      { field:'roles', displayName:'Role', cellTemplate:selectRole() },
-      { field:'', displayName:'', cellTemplate:deleteRow()}
+      { field:'supportedPrograms', displayName:'Programs(s)', cellTemplate:program(), width:'30%' },
+      { field:'roles', displayName:'Role', cellTemplate:selectRole(), width:'60%' },
+      { field:'', displayName:'', cellTemplate:deleteRow(), width:'10%'}
     ]
   };
 
@@ -25,14 +25,13 @@ function UserProgramRoleListController($scope) {
   }
 
   function selectRole() {
-    var select2Div = '<select ui-select2 ng-model="user.roleAssignments[$parent.$index].roleIds" placeholder="+ Add Role"' +
+    return '<select ui-select2 ng-model="user.roleAssignments[$parent.$index].roleIds" placeholder="+ Add Role"' +
       ' multiple="multiple" style="width:400px" name="roles" id="roles"> ' +
       ' <option ng-repeat="role in allRoles" value="{{role.id}}">{{role.name}}</option>' +
       '</select>' +
       '<span ng-show="user.roleAssignments[$parent.$index].roleIds.length == 0" class="field-error">' +
-      'Please Fill In this value' +
+      ' Please Fill In this value' +
       '</span>';
-    return select2Div;
   }
 
   $scope.deleteCurrentRow = function (rowNum) {

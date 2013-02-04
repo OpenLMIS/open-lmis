@@ -25,9 +25,7 @@ import java.util.List;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
-import static org.openlmis.web.response.OpenLmisResponse.error;
-import static org.openlmis.web.response.OpenLmisResponse.response;
-import static org.openlmis.web.response.OpenLmisResponse.success;
+import static org.openlmis.web.response.OpenLmisResponse.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 
@@ -78,6 +76,7 @@ public class UserController extends BaseController {
     String modifiedBy = (String) request.getSession().getAttribute(USER);
     user.setModifiedBy(modifiedBy);
     try {
+      //TODO: remove default password
       user.setPassword("openLmis123");
       String resetPasswordBaseLink = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/";
       userService.create(user, resetPasswordBaseLink);

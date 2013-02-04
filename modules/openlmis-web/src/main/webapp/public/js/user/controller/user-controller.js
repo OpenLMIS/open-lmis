@@ -25,20 +25,33 @@ function UserController($scope, $routeParams, Users, User, SearchFacilitiesByCod
       $scope.error = response.data.error;
     };
 
-    function validate(user) {
-      if ($scope.userForm.$error.required) {
+    var invalidRoleAssignment = function (user) {
+      if (!user.roleAssignments) {
+        return false;
+      }
+
+      var valid = true;
+      $.each(user.roleAssignments, function (index, roleAssignment) {
+        if (!roleAssignment.programId || !roleAssignment.roleIds || roleAssignment.roleIds.length == 0) {
+          valid = false;
+          return false;
+        }
+      });
+      return !valid;
+    };
+
+    var requiredFieldsPresent = function (user) {
+      if ($scope.userForm.$error.required || invalidRoleAssignment(user)) {
         $scope.error = "Please correct errors before saving.";
         $scope.message = "";
         $scope.showError = true;
         return false;
-      }else {
+      } else {
         return true;
       }
-    }
+    };
 
-    if (!validate($scope.user)) {
-      return false;
-    }
+    if (!requiredFieldsPresent($scope.user))  return false;
 
     if ($scope.user.id) {
       User.update({id:$scope.user.id}, $scope.user, successHandler, errorHandler);
