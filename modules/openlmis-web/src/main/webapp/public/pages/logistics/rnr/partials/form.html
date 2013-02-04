@@ -386,7 +386,7 @@
     <br />
 
 
-  <input type="button"  ng-click="showAddNonFullSupplyModal()" value = "Add Non-Full Supply" ng-show = "addNonFullSupplyLineItemButtonShown"/>
+  <input type="button"  ng-click="showAddNonFullSupplyModal()" value = "Add Non-Full Supply" ng-disabled = "!addNonFullSupplyLineItemButtonShown"/>
 <form name="nonFullSupplyForm">
   <div id="nonFullSupplyProductsModal"
        ng-model="nonFullSupplyProductsModal"
