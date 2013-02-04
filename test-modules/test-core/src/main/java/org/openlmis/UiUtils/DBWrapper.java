@@ -66,6 +66,16 @@ public class DBWrapper {
 
     }
 
+    public void updateUser(String userId, String facilityCode, String email) throws SQLException, IOException {
+        boolean flag = false;
+        DBWrapper dbwrapper = new DBWrapper();
+
+        dbwrapper.dbConnection("DELETE FROM user_password_reset_tokens;", "alter");
+        dbwrapper.dbConnection("update users set id='"+userId+"'  where email='"+email+"';","alter");
+        dbwrapper.dbConnection("update users set facilityid=(SELECT id FROM facilities WHERE code = '"+facilityCode+"') where email='"+email+"';","alter");
+
+    }
+
     public void deleteFacilities() throws IOException , SQLException
     {
 
@@ -84,14 +94,7 @@ public class DBWrapper {
     {
 
         DBWrapper dbWrapper=new DBWrapper();
-        ResultSet rs = dbWrapper.dbConnection("Select code from facilities;", "select");
 
-        if (rs.next()) {
-
-            dbWrapper.dbConnection("delete from facilities;", "alter");
-
-
-        }
         dbWrapper.dbConnection("INSERT INTO facilities\n" +
                 "(code, name, description, gln, mainPhone, fax, address1, address2, geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById, coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, hasElectricity, online, hasElectronicScc, hasElectronicDar, active, goLiveDate, goDownDate, satellite, comment, dataReportable) values\n" +
                 "('F10','Village Dispensary','IT department','G7645',9876234981,'fax','A','B',1,1,333,22.1,1.2,3.3,2,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/1887','TRUE','fc','TRUE'),\n" +
@@ -108,7 +111,7 @@ public class DBWrapper {
 
     public void allocateFacilityToUser(String userID) throws IOException {
         DBWrapper dbwrapper = new DBWrapper();
-        dbwrapper.dbConnection("update users set facilityId = (Select id from facilities order by modifiedDate DESC limit 1) where id='"+userID+"';", "alter");
+        dbwrapper.dbConnection("update users set facilityId = (Select id from facilities where code like('FCcode%')) where id='"+userID+"';", "alter");
 
     }
 
@@ -124,7 +127,8 @@ public class DBWrapper {
         dbwrapper.dbConnection("DELETE FROM requisition_line_item_losses_adjustments;", "alter");
         dbwrapper.dbConnection("DELETE FROM requisition_line_items;", "alter");
         dbwrapper.dbConnection("delete from products;", "alter");
-        dbwrapper.dbConnection("delete from users where userName like('User%');", "alter");
+        dbwrapper.dbConnection("delete from user_password_reset_tokens ;", "alter");
+        dbwrapper.dbConnection("delete from users where userName not like('Admin%');", "alter");
         dbwrapper.dbConnection("delete from users where id=200;", "alter");
         dbwrapper.dbConnection("DELETE FROM requisition_line_item_losses_adjustments;", "alter");
         dbwrapper.dbConnection("DELETE FROM requisition_line_items;", "alter");

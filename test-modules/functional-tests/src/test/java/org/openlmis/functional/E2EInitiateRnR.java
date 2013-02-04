@@ -29,23 +29,31 @@ public class E2EInitiateRnR extends TestCaseHelper {
     @Test(dataProvider = "Data-Provider-Function-Positive")
     public void testE2EInitiateRnR(String period,String program,String userSIC, String userMO, String password,String[] credentials) throws Exception {
 
+        LoginPage loginPage=new LoginPage(testWebDriver);
+        HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+
+        CreateFacilityPage createFacilityPage = homePage.navigateCreateFacility();
+        String date_time=createFacilityPage.enterAndVerifyFacility();
+
         DBWrapper dbWrapper = new DBWrapper();
 
-        dbWrapper.insertUser("200", userSIC, "Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie","F10", "manjyots@thoughtworks.com");
-        dbWrapper.insertUser("300", userMO, "Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie","F10", "lokeshag@thoughtworks.com");
+        UserPage userPageSIC=homePage.navigateToUser();
+        userPageSIC.enterAndverifyUserDetails("User123","manjyots@thoughtworks.com","Manjyot", "Singh");
+
+        UserPage userPageMO=homePage.navigateToUser();
+        userPageMO.enterAndverifyUserDetails("User234","lokeshag@thoughtworks.com","Lokesh", "Agarwal");
+
         dbWrapper.insertFacility();
+
+        dbWrapper.updateUser("200","F10","manjyots@thoughtworks.com");
+        dbWrapper.updateUser("300","F10","lokeshag@thoughtworks.com");
+
         dbWrapper.insertSupervisoryNodes("F10");
         dbWrapper.insertSupervisoryNodesSecond("F11");
         dbWrapper.insertProducts();
         dbWrapper.insertProgramProducts();
         dbWrapper.insertFacilityApprovedProducts();
         dbWrapper.insertRequisitionGroup();
-
-        LoginPage loginPage=new LoginPage(testWebDriver);
-        HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
-
-        CreateFacilityPage createFacilityPage = homePage.navigateCreateFacility();
-        String date_time=createFacilityPage.enterAndVerifyFacility();
 
         String facility_name="FCcode" + date_time;
         dbWrapper.insertRequisitionGroupMembers("F10", facility_name);
@@ -83,7 +91,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
         LoginPage loginPageSecond=homePage.logout();
         HomePage homePageUser = loginPageSecond.loginAs(userSIC, password);
 
-        String periodDetails=homePageUser.navigateAndInitiateRnr("FCcode", "FCname", date_time, program, period);
+        String periodDetails=homePageUser.navigateAndInitiateRnr(program);
         InitiateRnRPage initiateRnRPage =  homePageUser.clickProceed();
         initiateRnRPage.verifyRnRHeader("FCcode", "FCname", date_time, program, periodDetails);
 
@@ -143,8 +151,9 @@ public class E2EInitiateRnR extends TestCaseHelper {
     @DataProvider(name = "Data-Provider-Function-Positive")
     public Object[][] parameterIntTestProviderPositive() {
         return new Object[][]{
-                {"Period1","HIV","User123", "User234", "User123",new String[]{"Admin123", "Admin123"}}
+                {"Period1","HIV","User123", "User234", "openLmis123",new String[]{"Admin123", "Admin123"}}
         };
 
     }
 }
+

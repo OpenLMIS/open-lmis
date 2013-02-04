@@ -66,6 +66,9 @@ public class HomePage extends Page {
     @FindBy(how = How.LINK_TEXT, using = "Create")
     private static WebElement createLink;
 
+    @FindBy(how = How.XPATH, using = "//input[@id='myFacilityRnr']")
+    private static WebElement myFacilityRadioButton;
+
     @FindBy(how = How.LINK_TEXT, using = "My Facility")
     private static WebElement myFacilityLink;
 
@@ -75,7 +78,7 @@ public class HomePage extends Page {
     @FindBy(how = How.ID, using = "facilityList")
     private static WebElement facilityDropDown;
 
-    @FindBy(how = How.XPATH, using = "//option[@value='0']")
+    @FindBy(how = How.XPATH, using = "//select[@id='programListMyFacility']")
     private static WebElement programDropDown;
 
     @FindBy(how = How.XPATH, using = "//option[@value='0']")
@@ -83,7 +86,7 @@ public class HomePage extends Page {
 
 
 
-    @FindBy(how = How.XPATH, using = "//select[2]")
+    @FindBy(how = How.XPATH, using = "//select[1]")
     private static WebElement programDropDownSelect;
 
     @FindBy(how = How.XPATH, using = "//select[3]")
@@ -115,6 +118,7 @@ public class HomePage extends Page {
 
     @FindBy(how = How.XPATH, using = "//ul[@class='clearfix']/li/a[contains(text(),'Schedules')]")
     private static WebElement schedulesTab;
+
 
     @FindBy(how = How.XPATH, using = "//ul[@class='clearfix']/li/a[contains(text(),'Users')]")
     private static WebElement usersTab;
@@ -178,23 +182,23 @@ public class HomePage extends Page {
         return new TemplateConfigPage(testWebDriver);
     }
 
-    public String navigateAndInitiateRnr(String FCode, String FName, String FCstring, String program, String period) throws IOException {
+    public String navigateAndInitiateRnr(String program) throws IOException {
         String periodDetails = null;
         testWebDriver.waitForElementToAppear(requisitionsLink);
         requisitionsLink.click();
         testWebDriver.waitForElementToAppear(createLink);
         createLink.click();
-        testWebDriver.waitForElementToAppear(myFacilityLink);
-        myFacilityLink.click();
-        testWebDriver.waitForElementToAppear(facilityDropDown);
-        testWebDriver.selectByVisibleText(facilityDropDown, FCode + FCstring + "-" + FName + FCstring);
+        testWebDriver.waitForElementToAppear(myFacilityRadioButton);
+        myFacilityRadioButton.click();
         testWebDriver.waitForElementToAppear(programDropDown);
-        programDropDown.click();
-        testWebDriver.selectByVisibleText(programDropDownSelect, program);
+        testWebDriver.selectByVisibleText(programDropDown, program);
+        testWebDriver.waitForElementToAppear(startDate);
         periodDetails= startDate.getText().trim()+" - "+endDate.getText().trim();
 
         return periodDetails;
+
     }
+
 
     public InitiateRnRPage clickProceed() throws IOException
     {
@@ -244,6 +248,18 @@ public class HomePage extends Page {
         testWebDriver.waitForElementToAppear(schedulesTab);
         schedulesTab.click();
         return new ManageSchedulePage(testWebDriver);
+
+    }
+
+    public UserPage navigateToUser() throws IOException{
+        SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
+        testWebDriver.waitForElementToAppear(AdministrationMenuItem);
+        testWebDriver.click(AdministrationMenuItem);
+        testWebDriver.waitForElementToAppear(manageLink);
+        manageLink.click();
+        testWebDriver.waitForElementToAppear(usersTab);
+        usersTab.click();
+        return new UserPage(testWebDriver);
 
     }
 
