@@ -113,7 +113,7 @@ public class Facility implements Importable, BaseModel {
   @ImportField(type = "boolean", mandatory = true, name = "Data Reportable")
   private Boolean dataReportable;
 
-  List<ProgramSupported> supportedPrograms = new ArrayList<>();
+  List<Program> supportedPrograms = new ArrayList<>();
 
   private String modifiedBy;
 

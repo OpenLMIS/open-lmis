@@ -6,10 +6,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.ProgramSupported;
-import org.openlmis.core.domain.RequisitionGroup;
-import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.builder.ProgramBuilder;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.ProgramRepository;
@@ -23,14 +21,13 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertTrue;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
-import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
+import static org.openlmis.core.builder.ProgramBuilder.*;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 
 public class FacilityServiceTest {
@@ -72,10 +69,10 @@ public class FacilityServiceTest {
   @Test
   public void shouldGetFacilityById() throws Exception {
     Integer facilityId = 1;
-    List<ProgramSupported> supportedPrograms = Arrays.asList(new ProgramSupported());
+    List<Program> supportedPrograms = Arrays.asList(new Program());
     Facility facility = new Facility();
 
-    when(programSupportedRepository.getAllByFacilityId(facilityId)).thenReturn(supportedPrograms);
+    when(programRepository.getByFacility(facilityId)).thenReturn(supportedPrograms);
     when(facilityRepository.getById(facilityId)).thenReturn(facility);
 
     Facility returnedFacility = facilityService.getById(facilityId);
@@ -185,9 +182,9 @@ public class FacilityServiceTest {
   public void shouldAddProgramsSupportedByAFacility() throws Exception {
     Facility facility = make(a(defaultFacility));
     facility.setId(null);
-    List<ProgramSupported> programs = new ArrayList<ProgramSupported>() {{
-      add(make(a(defaultProgramSupported)));
-      add(make(a(defaultProgramSupported)));
+    List<Program> programs = new ArrayList<Program>() {{
+      add(make(a(defaultProgram)));
+      add(make(a(defaultProgram)));
     }};
     facility.setSupportedPrograms(programs);
 
@@ -202,23 +199,23 @@ public class FacilityServiceTest {
     Facility facility = make(a(defaultFacility));
     facility.setId(1);
 
-    List<ProgramSupported> programs = new ArrayList<ProgramSupported>() {{
-      add(make(a(defaultProgramSupported)));
-      add(make(a(defaultProgramSupported, with(supportedProgramCode, "HIV"), with(supportedProgramId, 1))));
+    List<Program> programs = new ArrayList<Program>() {{
+      add(make(a(ProgramBuilder.defaultProgram)));
+      add(make(a(ProgramBuilder.defaultProgram, with(programCode, "HIV"), with(programId, 1))));
     }};
 
     facility.setSupportedPrograms(programs);
 
-    List<ProgramSupported> programsForFacility = new ArrayList<ProgramSupported>() {{
-      add(make(a(defaultProgramSupported)));
-      add(make(a(defaultProgramSupported, with(supportedProgramCode, "ARV"), with(supportedProgramId, 2))));
+    List<Program> programsForFacility = new ArrayList<Program>() {{
+      add(make(a(ProgramBuilder.defaultProgram)));
+      add(make(a(ProgramBuilder.defaultProgram, with(programCode, "ARV"), with(programId, 2))));
     }};
 
-    when(programSupportedRepository.getAllByFacilityId(facility.getId())).thenReturn(programsForFacility);
+    when(programRepository.getByFacility(facility.getId())).thenReturn(programsForFacility);
 
     facilityService.save(facility);
 
-    verify(programSupportedRepository).getAllByFacilityId(facility.getId());
+    verify(programRepository).getByFacility(facility.getId());
     verify(programSupportedRepository).updateSupportedPrograms(facility, programsForFacility);
   }
 
@@ -229,7 +226,6 @@ public class FacilityServiceTest {
     facilityService.insert(facility);
 
     verify(facilityRepository).insert(facility);
-    verify(programSupportedRepository).addSupportedProgramsFor(facility);
   }
 
   @Test
