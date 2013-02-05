@@ -1,13 +1,17 @@
 package org.openlmis.servicelayerutils;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import net.sf.json.JSONSerializer;
 import org.apache.commons.io.IOUtils;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
-
-import net.sf.json.*;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 
 public class ServiceUtils {
     HttpURLConnection conn ;
@@ -119,7 +123,56 @@ public class ServiceUtils {
         }
     }
 
+    public String putJSON(String json, String endPoint) {
+        String output, outputFinal = "";
 
+        try {
+
+            URL url = new URL(endPoint);
+            conn = (HttpURLConnection) url.openConnection();
+
+            conn.setDoOutput(true);
+            conn.setRequestMethod("PUT");
+            conn.setRequestProperty("Accept", "application/json, text/plain, */*");
+            conn.setRequestProperty("Connection", "keep-alive");
+            conn.setRequestProperty("Content-Type", "application/json;charset=utf-8");
+            conn.setRequestProperty("X-Requested-With", "XMLHttpRequest");
+
+
+
+            String input = json;
+
+            OutputStream os = conn.getOutputStream();
+            os.write(input.getBytes());
+            os.flush();
+
+            if (conn.getResponseCode() != 200 && conn.getResponseCode() != 401) {
+                throw new RuntimeException("Failed : HTTP error code : "
+                        + conn.getResponseCode());
+            }
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    (conn.getInputStream())));
+
+            while ((output = br.readLine()) != null) {
+                outputFinal = outputFinal + output;
+            }
+
+            br.close();
+            conn.disconnect();
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            // e.printStackTrace();
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        } finally {
+            return outputFinal;
+
+
+        }
+    }
 
     @SuppressWarnings("finally")
     public String getJSON(String endPoint) {

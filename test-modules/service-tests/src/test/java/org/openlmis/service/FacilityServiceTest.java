@@ -1,7 +1,6 @@
 package org.openlmis.service;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.servicelayerutils.ServiceUtils;
@@ -32,7 +31,7 @@ public class FacilityServiceTest extends TestCaseHelper {
                     "\"description\":\"HIV\",\"active\":true}],\"geographicZone\":{\"id\":1}}";
 
             DBWrapper dbWrapper = new DBWrapper();
-            dbWrapper.deleteFacilities();
+            dbWrapper.deleteData();
 
             ServiceUtils serviceUtils = new ServiceUtils();
 
