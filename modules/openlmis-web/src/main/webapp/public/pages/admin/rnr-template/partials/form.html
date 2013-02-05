@@ -5,7 +5,7 @@
   </div>
 
   <div class="rnr-template-head">
-    <span class="tpl-visible">Show</span>
+    <span class="tpl-visible">Display</span>
     <span class="tpl-indicator">&nbsp;</span>
     <span class="tpl-label">Label</span>
     <span class="tpl-source">Source</span>
@@ -45,6 +45,7 @@
 
     <div class="alert alert-info arithmetic-valid-msg" ng-show="arithmeticValidationMessageShown">
       Total Quantity Consumed (C) and Stock On Hand (E) are configured as user inputs. Validation of inputs (C = A + B +/- D -E) is <strong>{{arithmeticValidationStatusLabel}}</strong>.
+      {{arithmeticValidationMessage}}
       <a href="javascript:void(0);" class="btn btn-primary btn-mini pull-right" ng-click= "toggleValidateFormulaFlag()">Turn {{arithmeticValidationToggleLabel}}</a>
     </div>
 

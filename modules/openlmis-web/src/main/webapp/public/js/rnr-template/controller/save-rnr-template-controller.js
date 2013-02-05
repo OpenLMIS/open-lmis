@@ -1,4 +1,4 @@
-function SaveRnrTemplateController($scope, rnrTemplateForm, $http) {
+function SaveRnrTemplateController($scope, rnrTemplateForm, messageService, $http ) {
   $scope.rnrColumns = rnrTemplateForm.rnrColumns;
   $scope.sources = rnrTemplateForm.sources;
   $scope.validateFormula = $scope.rnrColumns[0].formulaValidationRequired;
@@ -49,7 +49,6 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, $http) {
         }
         else{
           $scope.arithmeticValidationMessageShown = false;
-          $scope.validateFormula = true ;
           return false;
         }
       }
@@ -61,9 +60,11 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, $http) {
     if($scope.validateFormula){
       $scope.arithmeticValidationStatusLabel = 'ON';
       $scope.arithmeticValidationToggleLabel = 'OFF';
+      $scope.arithmeticValidationMessage = messageService.get("rnr.arithmeticValidation.turnedOn")
     }else{
       $scope.arithmeticValidationStatusLabel = 'OFF';
       $scope.arithmeticValidationToggleLabel = 'ON';
+      $scope.arithmeticValidationMessage = '';
     }
   };
   setArithmeticValidationLabel();

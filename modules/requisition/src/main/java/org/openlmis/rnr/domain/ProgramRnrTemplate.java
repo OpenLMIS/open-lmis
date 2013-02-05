@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.Arrays.asList;
-
 public class ProgramRnrTemplate {
 
   public static final String STOCK_IN_HAND = "stockInHand";
@@ -30,7 +28,6 @@ public class ProgramRnrTemplate {
   private Integer programId;
   @Getter
   private List<RnrColumn> rnrColumns;
-  private static final String NOT_ALL_DEPENDENT_FIELDS_SELECTED_TO_ARITHMETICALLY_VALIDATE = "not.all.dependent.fields.for.arithmetical.validation";
   private static final String USER_NEEDS_TO_ENTER_DEPENDENT_FIELD = "user.needs.to.enter.dependent.field";
   private static final String INTERDEPENDENT_FIELDS_CAN_NOT_BE_CALCULATED = "interdependent.fields.can.not.be.calculated";
   public static final String COLUMN_SHOULD_BE_VISIBLE_IF_USER_INPUT = "column.should.be.visible.if.user.input";
@@ -76,12 +73,10 @@ public class ProgramRnrTemplate {
 
 
   public Map<String, OpenLmisMessage> validateToSave() {
-    validateDependentFieldsAreSelected();
     validateColumnsTobeCheckedIfUserInput();
     validateCalculatedColumnHasDependentChecked(STOCK_IN_HAND, QUANTITY_DISPENSED);
     validateCalculatedColumnHasDependentChecked(QUANTITY_DISPENSED, STOCK_IN_HAND);
     validateQuantityDispensedAndStockInHandCannotBeCalculatedAtSameTime();
-    validateNormalizedConsumptionHasDependentFieldStockOutDaysChecked();
     quantityRequestedAndReasonForRequestedQuantityBothShouldBeVisibleTogether();
     return errorMap;
   }
@@ -101,15 +96,6 @@ public class ProgramRnrTemplate {
     return !columnsCalculated(column);
   }
 
-  private void validateDependentFieldsAreSelected() {
-    if ((columnsVisible(STOCK_IN_HAND, QUANTITY_DISPENSED)) && (!columnsCalculated(STOCK_IN_HAND, QUANTITY_DISPENSED)) && rnrColumnsMap.get(STOCK_IN_HAND).isFormulaValidationRequired()) {
-      if (!columnsVisible(BEGINNING_BALANCE, QUANTITY_RECEIVED, LOSSES_AND_ADJUSTMENTS)) {
-        errorMap.put(STOCK_IN_HAND, new OpenLmisMessage(NOT_ALL_DEPENDENT_FIELDS_SELECTED_TO_ARITHMETICALLY_VALIDATE,
-            getRnrColumnLabelFor(BEGINNING_BALANCE), getRnrColumnLabelFor(QUANTITY_RECEIVED), getRnrColumnLabelFor(LOSSES_AND_ADJUSTMENTS), getRnrColumnLabelFor(QUANTITY_DISPENSED), getRnrColumnLabelFor(STOCK_IN_HAND)));
-      }
-    }
-  }
-
   private void validateQuantityDispensedAndStockInHandCannotBeCalculatedAtSameTime() {
     if (columnsCalculated(QUANTITY_DISPENSED) && columnsCalculated(STOCK_IN_HAND)) {
       OpenLmisMessage errorMessage = new OpenLmisMessage(INTERDEPENDENT_FIELDS_CAN_NOT_BE_CALCULATED, getRnrColumnLabelFor(QUANTITY_DISPENSED), getRnrColumnLabelFor(STOCK_IN_HAND));
@@ -124,19 +110,12 @@ public class ProgramRnrTemplate {
     }
   }
 
-  private void validateNormalizedConsumptionHasDependentFieldStockOutDaysChecked() {
-    if (!validateDependentsVisible(NORMALIZED_CONSUMPTION, asList(STOCK_OUT_DAYS))) {
-      errorMap.put(NORMALIZED_CONSUMPTION, new OpenLmisMessage(USER_NEEDS_TO_ENTER_DEPENDENT_FIELD, getRnrColumnLabelFor(STOCK_OUT_DAYS), getRnrColumnLabelFor(NORMALIZED_CONSUMPTION)));
-    }
-  }
-
   private void quantityRequestedAndReasonForRequestedQuantityBothShouldBeVisibleTogether() {
 
     if (!areSelectedTogether(QUANTITY_REQUESTED, REASON_FOR_REQUESTED_QUANTITY)) {
-      OpenLmisMessage errorMessageForRequestedQuantityReason = new OpenLmisMessage(USER_NEED_TO_ENTER_REQUESTED_QUANTITY_REASON, getRnrColumnLabelFor(REASON_FOR_REQUESTED_QUANTITY), getRnrColumnLabelFor(QUANTITY_REQUESTED));
 
-      if (columnsVisible(QUANTITY_REQUESTED)) errorMap.put(QUANTITY_REQUESTED, errorMessageForRequestedQuantityReason);
-      else errorMap.put(REASON_FOR_REQUESTED_QUANTITY, errorMessageForRequestedQuantityReason);
+      if (columnsVisible(QUANTITY_REQUESTED)) errorMap.put(QUANTITY_REQUESTED, new OpenLmisMessage(USER_NEED_TO_ENTER_REQUESTED_QUANTITY_REASON,getRnrColumnLabelFor(QUANTITY_REQUESTED), getRnrColumnLabelFor(REASON_FOR_REQUESTED_QUANTITY) ));
+      else errorMap.put(REASON_FOR_REQUESTED_QUANTITY, new OpenLmisMessage(USER_NEED_TO_ENTER_REQUESTED_QUANTITY_REASON, getRnrColumnLabelFor(REASON_FOR_REQUESTED_QUANTITY), getRnrColumnLabelFor(QUANTITY_REQUESTED)));
     }
   }
 
