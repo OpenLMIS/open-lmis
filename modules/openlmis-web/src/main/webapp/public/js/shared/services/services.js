@@ -20,10 +20,6 @@ services.factory('UserContext', function ($resource) {
     return $resource('/user-context.json', {}, {});
 });
 
-services.factory('SearchUser', function ($resource) {
-  return $resource('/users.json?param=:param', {}, {});
-});
-
 services.factory('Users', function ($resource) {
   return $resource('/users.json', {}, {});
 });

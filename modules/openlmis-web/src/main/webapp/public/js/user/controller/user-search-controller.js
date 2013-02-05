@@ -1,4 +1,4 @@
-function UserSearchController($scope, $location, SearchUser) {
+function UserSearchController($scope, $location, Users) {
 
   $scope.showUserSearchResults = function (id) {
     var query = document.getElementById(id).value;
@@ -8,7 +8,7 @@ function UserSearchController($scope, $location, SearchUser) {
 
     if (len >= 3) {
       if (len == 3) {
-        SearchUser.get({param:$scope.query}, function (data) {
+        Users.get({param:$scope.query}, function (data) {
           $scope.userList = data.userList;
           $scope.resultCount = $scope.userList.length;
           $scope.filteredUsers = $scope.userList;
