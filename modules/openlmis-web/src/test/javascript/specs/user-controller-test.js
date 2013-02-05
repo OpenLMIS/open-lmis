@@ -128,12 +128,12 @@ describe("User", function () {
     });
 
     it('should set facilitySelected in scope, whenever user selects a facility as "My Facility" when supported programs are not populated', function () {
-      var facility = {id : 74, code:'F10', name : 'facilityName'};
+      var facility = {id:74, code:'F10', name:'facilityName'};
       scope.allSupportedPrograms = undefined;
 
       var data = {};
       data.facility = facility;
-      $httpBackend.expectGET('/admin/facility/'+facility.id+'.json').respond(data);
+      $httpBackend.expectGET('/admin/facility/' + facility.id + '.json').respond(data);
       $httpBackend.expectGET('/roles.json').respond(200);
 
       scope.setSelectedFacility(facility);
@@ -144,8 +144,11 @@ describe("User", function () {
     });
 
     it('should set facilitySelected in scope, whenever user selects a facility as "My Facility" when supported programs are populated', function () {
-      var facility = {id : 74, code:'F10', name : 'facilityName'};
-      scope.allSupportedPrograms = [{id : 1, code : 'HIV'}, {id : 2, code : 'ARV'}];
+      var facility = {id:74, code:'F10', name:'facilityName'};
+      scope.allSupportedPrograms = [
+        {id:1, code:'HIV'},
+        {id:2, code:'ARV'}
+      ];
 
       var data = {};
       data.facility = facility;

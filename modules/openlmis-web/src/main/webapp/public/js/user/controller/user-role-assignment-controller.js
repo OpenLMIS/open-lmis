@@ -1,4 +1,4 @@
-function UserProgramRoleListController($scope) {
+function UserRoleAssignmentController($scope) {
 
   $scope.deleteCurrentRow = function (rowNum) {
     $scope.user.roleAssignments.splice(rowNum, 1);
