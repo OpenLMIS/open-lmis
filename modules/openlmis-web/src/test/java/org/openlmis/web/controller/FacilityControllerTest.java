@@ -194,7 +194,7 @@ public class FacilityControllerTest {
     List<Facility> facilities = Arrays.asList(new Facility());
     when(facilityService.searchFacilitiesByCodeOrName("searchParam")).thenReturn(facilities);
 
-    List<Facility> returnedFacilities = facilityController.searchFacilitiesByCodeOrName("searchParam");
+    List<Facility> returnedFacilities = facilityController.get("searchParam");
 
     assertThat(returnedFacilities,is(facilities));
   }

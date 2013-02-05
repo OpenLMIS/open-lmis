@@ -55,7 +55,7 @@ services.factory('FacilityReferenceData', function ($resource) {
 });
 
 services.factory('AllFacilities', function ($resource) {
-    return $resource('/admin/facilities.json', {}, {});
+    return $resource('/facilities.json', {}, {});
 });
 
 services.factory('Rights', function ($resource) {
@@ -143,11 +143,6 @@ services.factory('FacilityApprovedProducts', function ($resource) {
 services.factory('RequisitionLineItem', function ($resource) {
   return $resource('/logistics/requisition/lineItem.json', {}, {});
 });
-
-services.factory('SearchFacilitiesByCodeOrName', function ($resource) {
-  return $resource('/facilitiesByCodeOrName.json', {}, {});
-});
-
 
 services.factory('UpdateUserPassword', function ($resource) {
   return $resource('/user/resetPassword/:token.json', {}, {update: {method:'PUT'}});

@@ -7,7 +7,7 @@ describe("Facility Search Controller", function () {
     scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     var facilityResponse = {"facilityList":[{"id":1}]};
-    $httpBackend.when('GET', '/admin/facilities.json').respond(facilityResponse);
+    $httpBackend.when('GET', '/facilities.json').respond(facilityResponse);
 
     ctrl = $controller('FacilitySearchController',{$scope:scope});
   }));

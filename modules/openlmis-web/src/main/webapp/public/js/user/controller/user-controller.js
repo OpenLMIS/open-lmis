@@ -1,14 +1,13 @@
-function UserController($scope, $routeParams, Users, User, SearchFacilitiesByCodeOrName, Facility, Roles) {
+function UserController($scope, $routeParams, Users, User, AllFacilities, Facility, Roles) {
   $scope.programAndRoleList = [];
   $scope.userNameInvalid = false;
+  $scope.user = {};
 
   if ($routeParams.userId) {
     User.get({id:$routeParams.userId}, function (data) {
       $scope.user = data.user;
       loadRoleAssignments();
     }, {});
-  } else {
-    $scope.user = {};
   }
 
   $scope.saveUser = function () {
@@ -71,7 +70,7 @@ function UserController($scope, $routeParams, Users, User, SearchFacilitiesByCod
 
     if (len >= 3) {
       if (len == 3) {
-        SearchFacilitiesByCodeOrName.get({searchParam:query}, function (data) {
+        AllFacilities.get({searchParam:query}, function (data) {
           $scope.facilityList = data.facilityList;
           $scope.filteredFacilities = $scope.facilityList;
           $scope.resultCount = $scope.filteredFacilities.length;
@@ -92,6 +91,7 @@ function UserController($scope, $routeParams, Users, User, SearchFacilitiesByCod
 
   $scope.clearSelectedFacility = function () {
     $scope.facilitySelected = null;
+    $scope.allSupportedPrograms = [];
     $scope.programAndRoleList = [];
     $scope.user.roleAssignments = [];
 

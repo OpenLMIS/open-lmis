@@ -50,7 +50,7 @@ public class FacilityServiceTest extends TestCaseHelper {
 
 
             String newFacilityCreatedPostLogin = serviceUtils.postJSON(CREATE_FACILITY_JSON, BASE_URL+CREATE_FACILITY_ENDPOINT);
-            serviceUtils.getJSON("http://localhost:9091/admin/facilities.json");
+            serviceUtils.getJSON("http://localhost:9091/facilities.json");
 
 
             String facilityID = serviceUtils.getFacilityFieldJSON(newFacilityCreatedPostLogin,"id");
