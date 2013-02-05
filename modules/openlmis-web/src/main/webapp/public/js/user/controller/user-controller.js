@@ -58,6 +58,7 @@ function UserController($scope, $routeParams, Users, User, SearchFacilitiesByCod
     } else {
       Users.save({}, $scope.user, successHandler, errorHandler);
     }
+    return true;
   };
 
   $scope.validateUserName = function () {
@@ -105,7 +106,8 @@ function UserController($scope, $routeParams, Users, User, SearchFacilitiesByCod
       if (isNullOrUndefined($scope.allSupportedPrograms)) {
         Facility.get({id:$scope.user.facilityId}, function (data) {
           $scope.allSupportedPrograms = data.facility.supportedPrograms;
-        });
+          $scope.facilitySelected = data.facility;
+        }, {});
       }
 
       if (isNullOrUndefined($scope.allRoles)) {

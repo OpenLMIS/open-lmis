@@ -136,7 +136,7 @@
             </div>
             <!-- autosuggest-input -->
             <div ng-show="facilitySelected">
-              <span ng-model="user.facilityId">{{facilitySelected.name}}</span>
+              <span ng-bind="facilitySelected.name"></span>
               <a ng-click="clearSelectedFacility()">clear</a>
             </div>
           </div>
