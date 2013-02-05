@@ -97,14 +97,14 @@ public class DBWrapper {
 
         dbWrapper.dbConnection("INSERT INTO facilities\n" +
                 "(code, name, description, gln, mainPhone, fax, address1, address2, geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById, coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, hasElectricity, online, hasElectronicScc, hasElectronicDar, active, goLiveDate, goDownDate, satellite, comment, dataReportable) values\n" +
-                "('F12','Village Dispensary','IT department','G7645',9876234981,'fax','A','B',1,1,333,22.1,1.2,3.3,2,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/1887','TRUE','fc','TRUE'),\n" +
-                "('F13','Central Hospital','IT department','G7646',9876234981,'fax','A','B',1,2,333,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','TRUE','fc','TRUE');\n", "alter");
+                "('F10','Village Dispensary','IT department','G7645',9876234981,'fax','A','B',1,1,333,22.1,1.2,3.3,2,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/1887','TRUE','fc','TRUE'),\n" +
+                "('F11','Central Hospital','IT department','G7646',9876234981,'fax','A','B',1,2,333,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','TRUE','fc','TRUE');\n", "alter");
 
         dbWrapper.dbConnection("insert into programs_supported(facilityId, programId, startDate, active, modifiedBy) VALUES\n" +
-            "((SELECT id FROM facilities WHERE code = 'F12'), 1, '11/11/12', true, 'Admin123'),\n" +
-            "((SELECT id FROM facilities WHERE code = 'F12'), 2, '11/11/12', true, 'Admin123'),\n" +
-            "((SELECT id FROM facilities WHERE code = 'F13'), 1, '11/11/12', true, 'Admin123'),\n" +
-            "((SELECT id FROM facilities WHERE code = 'F13'), 2, '11/11/12', true, 'Admin123');","alter");
+            "((SELECT id FROM facilities WHERE code = 'F10'), 1, '11/11/12', true, 'Admin123'),\n" +
+            "((SELECT id FROM facilities WHERE code = 'F10'), 2, '11/11/12', true, 'Admin123'),\n" +
+            "((SELECT id FROM facilities WHERE code = 'F11'), 1, '11/11/12', true, 'Admin123'),\n" +
+            "((SELECT id FROM facilities WHERE code = 'F11'), 2, '11/11/12', true, 'Admin123');","alter");
 
     }
 
@@ -351,9 +351,9 @@ public class DBWrapper {
             dbwrapper.dbConnection("delete from processing_periods;", "alter");
 
         dbwrapper.dbConnection("INSERT INTO processing_periods\n" +
-                "(name, description, startDate, endDate, numberOfMonths, scheduleId, modifiedBy) VALUES\n" +
-                "('Period1', 'first period',  '2012-12-01', '2013-01-15', 2, (SELECT id FROM processing_schedules WHERE code = 'Q1stM'), (SELECT id FROM users LIMIT 1)),\n" +
-                "('Period2', 'second period', '2012-11-01', '2012-12-01', 3, (SELECT id FROM processing_schedules WHERE code = 'M'), (SELECT id FROM users LIMIT 1));", "alter");
+                "(name, description, startDate, endDate, scheduleId, modifiedBy) VALUES\n" +
+                "('Period1', 'first period',  '2012-12-01', '2013-01-15', (SELECT id FROM processing_schedules WHERE code = 'Q1stM'), (SELECT id FROM users LIMIT 1)),\n" +
+                "('Period2', 'second period', '2013-01-16', '2013-04-30', (SELECT id FROM processing_schedules WHERE code = 'M'), (SELECT id FROM users LIMIT 1));", "alter");
 
     }
 

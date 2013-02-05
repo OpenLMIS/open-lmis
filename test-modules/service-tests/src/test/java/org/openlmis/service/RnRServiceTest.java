@@ -35,13 +35,13 @@ public class RnRServiceTest extends TestCaseHelper {
             dbWrapper.insertRoles();
             dbWrapper.insertRoleRights();
             dbWrapper.insertUser("200", "User123", "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==", "F12", "manjyots@thoughtworks.com");
-            dbWrapper.insertSupervisoryNodes("F12");
-            dbWrapper.insertSupervisoryNodesSecond("F13");
+            dbWrapper.insertSupervisoryNodes("F10");
+            dbWrapper.insertSupervisoryNodesSecond("F11");
             dbWrapper.insertRoleAssignment("200", "store in-charge");
             dbWrapper.insertSchedules();
             dbWrapper.insertProcessingPeriods();
             dbWrapper.insertRequisitionGroup();
-            dbWrapper.insertRequisitionGroupMembers("F12","F13");
+            dbWrapper.insertRequisitionGroupMembers("F10","F11");
             dbWrapper.insertRequisitionGroupProgramSchedule();
 
             String BASE_URL="http://localhost:9091";
@@ -50,7 +50,7 @@ public class RnRServiceTest extends TestCaseHelper {
             String INITIATE_RNR_JSON="{}";
 
             String SUBMIT_RNR_JSON="{\"id\":1," +
-                    "\"facility\":{\"id\":1,\"code\":\"F12\",\"name\":\"Village Dispensary\"," +
+                    "\"facility\":{\"id\":1,\"code\":\"F10\",\"name\":\"Village Dispensary\"," +
                     "\"geographicZone\":{\"id\":1,\"name\":\"Arusha\"," +
                     "\"level\":{\"id\":null,\"name\":\"state\"}," +
                     "\"parent\":{\"id\":null,\"name\":\"Arusha\"," +
