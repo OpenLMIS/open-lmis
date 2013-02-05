@@ -71,32 +71,6 @@ public class FacilityMapperIT {
     assertEquals(facilities.get(1).getCode(), trz002.getCode());
   }
 
-//  @Test
-//  public void shouldFetchFacilityAndFacilityTypeDataForRequisitionHeader() {
-//    Facility facility = make(a(defaultFacility,
-//      with(code, "TRZ001"),
-//      with(name, "Ngorongoro Hospital"),
-//      with(typeId, 2),
-//      with(type, "lvl3_hospital")));
-//
-//    mapper.insert(facility);
-//
-//    RequisitionHeader requisitionHeader = mapper.getRequisitionHeaderData(facility.getId());
-//
-//    assertEquals("TRZ001", requisitionHeader.getFacilityCode());
-//    assertEquals("Ngorongoro Hospital", requisitionHeader.getFacilityName());
-//    assertEquals("Lvl3 Hospital", requisitionHeader.getFacilityType());
-//    assertEquals(.5, requisitionHeader.getEmergencyOrderPoint(), 0.0);
-//    assertEquals(3, requisitionHeader.getMaximumStockLevel());
-//    assertEquals("MoH", requisitionHeader.getFacilityOperatedBy());
-//
-//    assertEquals("Dodoma", requisitionHeader.getZone().getValue());
-//    assertEquals("Arusha", requisitionHeader.getParentZone().getValue());
-//
-//    assertEquals("city", requisitionHeader.getZone().getName());
-//    assertEquals("state", requisitionHeader.getParentZone().getName());
-//  }
-
   @Test
   public void shouldGetAllFacilityTypes() throws Exception {
     List<FacilityType> facilityTypes = mapper.getAllTypes();

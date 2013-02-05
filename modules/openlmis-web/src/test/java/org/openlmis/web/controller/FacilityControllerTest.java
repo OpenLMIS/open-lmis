@@ -74,28 +74,53 @@ public class FacilityControllerTest {
   }
 
   @Test
-  public void shouldSaveFacility() throws Exception {
+  public void shouldInsertFacilityAndTagWithModifiedBy() throws Exception {
     Facility facility = new Facility();
     facility.setName("test facility");
-    ResponseEntity responseEntity = facilityController.addOrUpdate(facility, httpServletRequest);
+    ResponseEntity responseEntity = facilityController.insert(facility, httpServletRequest);
     assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
     OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
     assertThat(response.getSuccessMsg(), is("test facility created successfully"));
-    verify(facilityService).save(facility);
+    verify(facilityService).insert(facility);
     assertThat(facility.getModifiedBy(), is(USER));
   }
 
   @Test
-  public void shouldReturnErrorMessageIfSaveFails() throws Exception {
+  public void shouldUpdateFacilityAndTagWithModifiedBy() throws Exception {
     Facility facility = new Facility();
-    doThrow(new DataException("error message")).when(facilityService).save(facility);
-    ResponseEntity responseEntity = facilityController.addOrUpdate(facility, httpServletRequest);
+    facility.setName("test facility");
+    ResponseEntity responseEntity = facilityController.update(facility, httpServletRequest);
+    assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
+    OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
+    assertThat(response.getSuccessMsg(), is("test facility updated successfully"));
+    verify(facilityService).update(facility);
+    assertThat(facility.getModifiedBy(), is(USER));
+  }
+
+  @Test
+  public void shouldReturnErrorMessageIfInsertFails() throws Exception {
+    Facility facility = new Facility();
+    doThrow(new DataException("error message")).when(facilityService).insert(facility);
+    ResponseEntity responseEntity = facilityController.insert(facility, httpServletRequest);
     assertThat(responseEntity.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
     assertThat(response.getErrorMsg(), is("error message"));
     MockHttpServletRequest httpServletRequest = httpRequest();
 
-    facilityController.addOrUpdate(facility, httpServletRequest);
+    facilityController.insert(facility, httpServletRequest);
+  }
+
+  @Test
+  public void shouldReturnErrorMessageIfUpdateFails() throws Exception {
+    Facility facility = new Facility();
+    doThrow(new DataException("error message")).when(facilityService).update(facility);
+    ResponseEntity responseEntity = facilityController.update(facility, httpServletRequest);
+    assertThat(responseEntity.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+    OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
+    assertThat(response.getErrorMsg(), is("error message"));
+    MockHttpServletRequest httpServletRequest = httpRequest();
+
+    facilityController.update(facility, httpServletRequest);
   }
 
   @Test

@@ -31,10 +31,6 @@ public class FacilityRepository {
     return mapper.getAll();
   }
 
-  public RequisitionHeader getHeader(Integer facilityId) {
-    return mapper.getRequisitionHeaderData(facilityId);
-  }
-
   @Transactional
   public void save(Facility facility) {
     facility.setModifiedDate(DateTime.now().toDate());
@@ -138,5 +134,14 @@ public class FacilityRepository {
 
   public List<Facility> searchFacilitiesByCodeOrName(String searchParam) {
     return mapper.searchFacilitiesByCodeOrName(searchParam);
+  }
+
+  public void insert(Facility facility) {
+
+
+  }
+
+  public void update(Facility facility) {
+    //To change body of created methods use File | Settings | File Templates.
   }
 }

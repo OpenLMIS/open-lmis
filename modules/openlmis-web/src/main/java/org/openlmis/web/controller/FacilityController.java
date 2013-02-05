@@ -2,7 +2,6 @@ package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.RequisitionHeader;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
@@ -25,6 +24,7 @@ import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.U
 import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 import static org.openlmis.web.response.OpenLmisResponse.error;
+import static org.openlmis.web.response.OpenLmisResponse.success;
 
 @Controller
 @NoArgsConstructor
@@ -48,12 +48,6 @@ public class FacilityController extends BaseController {
   @RequestMapping(value = "logistics/user/facilities", method = RequestMethod.GET, headers = "Accept=application/json")
   public List<Facility> getAllByUser(HttpServletRequest httpServletRequest) {
     return facilityService.getAllForUser(loggedInUserId(httpServletRequest));
-  }
-
-  @RequestMapping(value = "logistics/facility/{facilityId}/requisition-header", method = RequestMethod.GET, headers = "Accept=application/json")
-  @PreAuthorize("hasPermission('','CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION')")
-  public RequisitionHeader getRequisitionHeader(@PathVariable(value = "facilityId") Integer facilityId) {
-    return facilityService.getRequisitionHeader(facilityId);
   }
 
   @RequestMapping(value = "admin/facility/reference-data", method = RequestMethod.GET, headers = "Accept=application/json")
@@ -81,9 +75,9 @@ public class FacilityController extends BaseController {
     }
     ResponseEntity<OpenLmisResponse> successResponse;
     if (createFlag) {
-      successResponse = OpenLmisResponse.success(facility.getName() + " created successfully");
+      successResponse = success(facility.getName() + " created successfully");
     } else {
-      successResponse = OpenLmisResponse.success(facility.getName() + " updated successfully");
+      successResponse = success(facility.getName() + " updated successfully");
     }
     successResponse.getBody().setData("facility", facility);
     return successResponse;
@@ -120,7 +114,7 @@ public class FacilityController extends BaseController {
       errorResponse.getBody().setData("facility", facility);
       return errorResponse;
     }
-    final ResponseEntity<OpenLmisResponse> successResponse = OpenLmisResponse.success("\"" + facility.getName() + "\" / \"" + facility.getCode() + "\" " + message + " successfully");
+    final ResponseEntity<OpenLmisResponse> successResponse = success("\"" + facility.getName() + "\" / \"" + facility.getCode() + "\" " + message + " successfully");
     successResponse.getBody().setData("facility", facility);
     return successResponse;
   }
@@ -138,5 +132,44 @@ public class FacilityController extends BaseController {
   @PreAuthorize("hasPermission('','MANAGE_USERS')")
   public List<Facility> searchFacilitiesByCodeOrName(@RequestParam(value = "searchParam") String searchParam) {
     return facilityService.searchFacilitiesByCodeOrName(searchParam);
+  }
+
+  @RequestMapping(value = "/facilities", method = RequestMethod.POST, headers = "Accept=application/json")
+  @PreAuthorize("hasPermission('','MANAGE_FACILITY')")
+  public ResponseEntity insert(@RequestBody Facility facility, HttpServletRequest request) {
+    String modifiedBy = (String) request.getSession().getAttribute(USER);
+    facility.setModifiedBy(modifiedBy);
+    ResponseEntity<OpenLmisResponse> response;
+    try {
+      facilityService.insert(facility);
+    } catch (DataException exception) {
+      return createErrorResponse(facility, exception);
+    }
+    response = success(facility.getName() + " created successfully");
+    response.getBody().setData("facility", facility);
+    return response;
+  }
+
+  @RequestMapping(value = "/facilities/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
+  @PreAuthorize("hasPermission('','MANAGE_FACILITY')")
+  public ResponseEntity update(@RequestBody Facility facility, HttpServletRequest request) {
+    String modifiedBy = (String) request.getSession().getAttribute(USER);
+    facility.setModifiedBy(modifiedBy);
+    ResponseEntity<OpenLmisResponse> response;
+    try {
+      facilityService.update(facility);
+    } catch (DataException exception) {
+      return createErrorResponse(facility, exception);
+    }
+    response = success(facility.getName() + " updated successfully");
+    response.getBody().setData("facility", facility);
+    return response;
+  }
+
+  private ResponseEntity<OpenLmisResponse> createErrorResponse(Facility facility, DataException exception) {
+    ResponseEntity<OpenLmisResponse> response;
+    response = error(exception, HttpStatus.BAD_REQUEST);
+    response.getBody().setData("facility", facility);
+    return response;
   }
 }

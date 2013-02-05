@@ -33,29 +33,6 @@ public interface FacilityMapper {
   @Results(value = {@Result(property = "id", column = "facilityId")})
   Facility getHomeFacility(Integer userId);
 
-  @Select("SELECT F.name as facilityName,  F.code as facilityCode, F.operatedById, " +
-    "FT.name as facilityType, FT.nominalMaxMonth, " +
-    "FT.nominalEop, GZ.name as zone, GL.name as label, GZP.name as parent_zone, GLP.name as parent_label " +
-    "FROM facilities F, facility_types FT, geographic_zones GZ, geographic_zones GZP, geopolitical_levels GL, geopolitical_levels GLP " +
-    "WHERE F.id = #{facilityId} AND " +
-    "F.typeId = FT.id AND " +
-    "F.geographicZoneId = GZ.id AND " +
-    "GZ.parent = GZP.id AND " +
-    "GZ.level = GL.id AND " +
-    "GZP.level = GLP.id")
-  @Results(value = {
-    @Result(property = "facilityOperatedBy", column = "operatedById", javaType = String.class,
-      one = @One(select = "getFacilityOperatorCodeFor")),
-    @Result(property = "maximumStockLevel", column = "nominalMaxMonth"),
-    @Result(property = "emergencyOrderPoint", column = "nominalEop"),
-    @Result(property = "zone.value", column = "zone"),
-    @Result(property = "zone.label", column = "label"),
-    @Result(property = "parentZone.value", column = "parent_zone"),
-    @Result(property = "parentZone.label", column = "parent_label")
-  })
-  RequisitionHeader getRequisitionHeaderData(Integer facilityId);
-
-
   @Select("SELECT * FROM facility_types ORDER BY displayOrder")
   List<FacilityType> getAllTypes();
 

@@ -45,25 +45,25 @@ public class FacilityServiceTest {
   @Mock
   private RequisitionGroupService requisitionGroupService;
 
-  private FacilityService service;
+  private FacilityService facilityService;
 
   @Before
   public void setUp() throws Exception {
     initMocks(this);
-    service = new FacilityService(facilityRepository, programSupportedRepository, programRepository, supervisoryNodeService, requisitionGroupService);
+    facilityService = new FacilityService(facilityRepository, programSupportedRepository, programRepository, supervisoryNodeService, requisitionGroupService);
   }
 
   @Test
   public void shouldStoreFacility() throws Exception {
     Facility facility = make(a(defaultFacility));
-    service.save(facility);
+    facilityService.save(facility);
     verify(facilityRepository).save(facility);
   }
 
   @Test
   public void shouldReturnEmptyListIfUserIsNotAssignedAFacility() {
     when(facilityRepository.getHomeFacility(1)).thenReturn(null);
-    assertTrue(service.getAllForUser(1).isEmpty());
+    assertTrue(facilityService.getAllForUser(1).isEmpty());
   }
 
   @Test
@@ -75,7 +75,7 @@ public class FacilityServiceTest {
     when(programRepository.getByFacility(facilityId)).thenReturn(supportedPrograms);
     when(facilityRepository.getById(facilityId)).thenReturn(facility);
 
-    Facility returnedFacility = service.getById(facilityId);
+    Facility returnedFacility = facilityService.getById(facilityId);
 
     assertThat(returnedFacility, is(facility));
     assertThat(returnedFacility.getSupportedPrograms(), is(supportedPrograms));
@@ -84,7 +84,7 @@ public class FacilityServiceTest {
   @Test
   public void shouldUpdateDataReportableAndActiveFor() {
     Facility facility = make(a(defaultFacility));
-    service.updateDataReportableAndActiveFor(facility);
+    facilityService.updateDataReportableAndActiveFor(facility);
     verify(facilityRepository).updateDataReportableAndActiveFor(facility);
   }
 
@@ -97,7 +97,7 @@ public class FacilityServiceTest {
     when(facilityRepository.getIdForCode("facility code")).thenReturn(facilityId);
     when(programRepository.getIdByCode("program code")).thenReturn(programId);
 
-    service.uploadSupportedProgram(programSupported);
+    facilityService.uploadSupportedProgram(programSupported);
 
     assertThat(programSupported.getFacilityId(), is(facilityId));
     assertThat(programSupported.getProgramId(), is(programId));
@@ -114,7 +114,7 @@ public class FacilityServiceTest {
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Start date is a must for Active program");
 
-    service.uploadSupportedProgram(program);
+    facilityService.uploadSupportedProgram(program);
   }
 
   @Test
@@ -128,7 +128,7 @@ public class FacilityServiceTest {
     when(facilityRepository.getIdForCode(facilityCode)).thenReturn(facilityId);
     when(programRepository.getIdByCode(programCode)).thenReturn(programId);
 
-    service.uploadSupportedProgram(program);
+    facilityService.uploadSupportedProgram(program);
 
     assertThat(program.getFacilityId(), is(facilityId));
     assertThat(program.getProgramId(), is(programId));
@@ -149,7 +149,7 @@ public class FacilityServiceTest {
     when(supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(userId, programId, CREATE_REQUISITION)).thenReturn(supervisoryNodes);
     when(requisitionGroupService.getRequisitionGroupsBy(supervisoryNodes)).thenReturn(requisitionGroups);
 
-    List<Facility> result = service.getUserSupervisedFacilities(userId, programId, CREATE_REQUISITION);
+    List<Facility> result = facilityService.getUserSupervisedFacilities(userId, programId, CREATE_REQUISITION);
 
     verify(facilityRepository).getFacilitiesBy(programId, requisitionGroups);
     verify(supervisoryNodeService).getAllSupervisoryNodesInHierarchyBy(userId, programId, CREATE_REQUISITION);
@@ -162,7 +162,7 @@ public class FacilityServiceTest {
     List<Facility> facilities = Arrays.asList(new Facility());
     when(facilityRepository.searchFacilitiesByCodeOrName("searchParam")).thenReturn(facilities);
 
-    List<Facility> returnedFacilities = service.searchFacilitiesByCodeOrName("searchParam");
+    List<Facility> returnedFacilities = facilityService.searchFacilitiesByCodeOrName("searchParam");
 
     assertThat(returnedFacilities, is(facilities));
   }
@@ -175,7 +175,7 @@ public class FacilityServiceTest {
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Invalid Facility Code");
 
-    service.uploadSupportedProgram(programSupported);
+    facilityService.uploadSupportedProgram(programSupported);
   }
 
   @Test
@@ -188,7 +188,7 @@ public class FacilityServiceTest {
     }};
     facility.setSupportedPrograms(programs);
 
-    service.save(facility);
+    facilityService.save(facility);
 
     verify(facilityRepository).save(facility);
     verify(programSupportedRepository).addSupportedProgramsFor(facility);
@@ -213,10 +213,28 @@ public class FacilityServiceTest {
 
     when(programRepository.getByFacility(facility.getId())).thenReturn(programsForFacility);
 
-    service.save(facility);
+    facilityService.save(facility);
 
     verify(programRepository).getByFacility(facility.getId());
     verify(programSupportedRepository).updateSupportedPrograms(facility, programsForFacility);
+  }
+
+  @Test
+  public void shouldInsertFacility() throws Exception {
+    Facility facility = new Facility();
+
+    facilityService.insert(facility);
+
+    verify(facilityRepository).insert(facility);
+  }
+
+  @Test
+  public void shouldUpdateFacility() throws Exception {
+    Facility facility = new Facility();
+
+    facilityService.update(facility);
+
+    verify(facilityRepository).update(facility);
   }
 
   private ProgramSupported createSupportedProgram(String facilityCode, String programCode, boolean active, Date startDate) {

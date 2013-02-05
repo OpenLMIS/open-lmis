@@ -39,10 +39,6 @@ public class FacilityService {
     return facilityRepository.getAll();
   }
 
-  public RequisitionHeader getRequisitionHeader(Integer facilityId) {
-    return facilityRepository.getHeader(facilityId);
-  }
-
   public void save(Facility facility) {
     facilityRepository.save(facility);
     saveSupportedPrograms(facility);
@@ -100,5 +96,13 @@ public class FacilityService {
 
   public List<Facility> searchFacilitiesByCodeOrName(String searchParam) {
     return facilityRepository.searchFacilitiesByCodeOrName(searchParam);
+  }
+
+  public void insert(Facility facility) {
+    facilityRepository.insert(facility);
+  }
+
+  public void update(Facility facility) {
+    facilityRepository.update(facility);
   }
 }
