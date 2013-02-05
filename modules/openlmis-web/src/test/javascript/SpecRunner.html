@@ -2,100 +2,105 @@
 
 <html>
 <head>
-    <title>Jasmine Spec Runner</title>
-    <!-- Jasmine boilerplate -->
-    <link rel="stylesheet" type="text/css" href="../javascript/lib/jasmine.css">
-    <link rel="stylesheet" type="text/css" href="../javascript/lib/jasmine-gradle.css">
-    <script type="text/javascript" src="../../main/webapp/public/lib/jquery/jquery-1.8.2.min.js"></script>
-    <script type="text/javascript" src="../../main/webapp/public/lib/angular/angular.js"></script>
-    <script type="text/javascript" src="../../main/webapp/public/lib/angular/angular-resource.js"></script>
-    <script type="text/javascript" src="../../main/webapp/public/lib/angular-ui/angular-ui.js"></script>
-    <script type="text/javascript" src="../../main/webapp/public/lib/underscore/underscore-min.js"></script>
-    <script type="text/javascript" language="javascript" src="../javascript/lib/jasmine.js"></script>
-    <script type="text/javascript" language="javascript" src="../javascript/lib/jasmine-html.js"></script>
-    <script type="text/javascript" src="../javascript/lib/angular-mocks.js"></script>
-    <script type="text/javascript" src="../../main/webapp/public/js/shared/services/services.js"></script>
-    <script type="text/javascript" src="../../main/webapp/public/js/shared/app.js"></script>
-    <script type="text/javascript" src="../../main/webapp/public/js/rnr/module/rnr-module.js"></script>
-    <script type="text/javascript" src="../../main/webapp/public/js/facility/module/facility-module.js"></script>
-    <script type="text/javascript" src="../../main/webapp/public/lib/localstorage/localStorage.js"></script>
-    <script type="text/javascript" src="../../main/webapp/public/js/shared/localStorageKeys.js"></script>
-    <script type="text/javascript" src="../../main/webapp/public/js/shared/util.js"></script>
+  <title>Jasmine Spec Runner</title>
+  <!-- Jasmine boilerplate -->
+  <link rel="stylesheet" type="text/css" href="../javascript/lib/jasmine.css">
+  <link rel="stylesheet" type="text/css" href="../javascript/lib/jasmine-gradle.css">
+  <script type="text/javascript" src="../../main/webapp/public/lib/jquery/jquery-1.8.2.min.js"></script>
+  <script type="text/javascript" src="../../main/webapp/public/lib/angular/angular.js"></script>
+  <script type="text/javascript" src="../../main/webapp/public/lib/angular/angular-resource.js"></script>
+  <script type="text/javascript" src="../../main/webapp/public/lib/angular-ui/angular-ui.js"></script>
+  <script type="text/javascript" src="../../main/webapp/public/lib/underscore/underscore-min.js"></script>
+  <script type="text/javascript" language="javascript" src="../javascript/lib/jasmine.js"></script>
+  <script type="text/javascript" language="javascript" src="../javascript/lib/jasmine-html.js"></script>
+  <script type="text/javascript" src="../javascript/lib/angular-mocks.js"></script>
+  <script type="text/javascript" src="../../main/webapp/public/js/shared/services/services.js"></script>
+  <script type="text/javascript" src="../../main/webapp/public/js/shared/app.js"></script>
+  <script type="text/javascript" src="../../main/webapp/public/js/rnr/module/rnr-module.js"></script>
+  <script type="text/javascript" src="../../main/webapp/public/js/facility/module/facility-module.js"></script>
+  <script type="text/javascript" src="../../main/webapp/public/lib/localstorage/localStorage.js"></script>
+  <script type="text/javascript" src="../../main/webapp/public/js/shared/localStorageKeys.js"></script>
+  <script type="text/javascript" src="../../main/webapp/public/js/shared/util.js"></script>
 
-    <!-- We use jquery in noConflict mode. JSLINT is global... -->
-    <script type="text/javascript" language="javascript" src="../javascript/lib/jquery-1.6.1.min.js"></script>
-    <script type="text/javascript" language="javascript" src="../javascript/lib/webjslint.js"></script>
-    <script type="text/javascript" language="javascript" src="../javascript/lib/jasmine-reporters.js"></script>
+  <!-- We use jquery in noConflict mode. JSLINT is global... -->
+  <script type="text/javascript" language="javascript" src="../javascript/lib/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" language="javascript" src="../javascript/lib/webjslint.js"></script>
+  <script type="text/javascript" language="javascript" src="../javascript/lib/jasmine-reporters.js"></script>
 
-    <!-- include your source files and libraries here... -->
-    <script type="text/javascript" src="../../main/webapp/public/js/rnr/controller/initiate-rnr-controller.js"></script>
-    <script type="text/javascript"
-            src="../../main/webapp/public/js/rnr/controller/initiate-my-facility-rnr-controller.js"></script>
-    <script type="text/javascript"
-            src="../../main/webapp/public/js/rnr/controller/initiate-my-supervised-facilities-rnr-controller.js"></script>
-    <script type="text/javascript" src="../../main/webapp/public/js/rnr/controller/requisition-controller.js"></script>
-    <script type="text/javascript" src="../../main/webapp/public/js/rnr/controller/requisition-form-controller.js"></script>
-    <script type="text/javascript" src="../../main/webapp/public/js/rnr/controller/approve-rnr-list-controller.js"></script>
-    <script type="text/javascript" src="../../main/webapp/public/js/rnr/controller/approve-rnr-controller.js"></script>
-    <script type="text/javascript"
-            src="../../main/webapp/public/js/facility/controller/facility-controller.js"></script>
-    <script type="text/javascript"
-            src="../../main/webapp/public/js/rnr-template/controller/configure-rnr-template-controller.js"></script>
-    <script type="text/javascript"
-            src="../../main/webapp/public/js/rnr-template/controller/save-rnr-template-controller.js"></script>
-    <script type="text/javascript"
-            src="../../main/webapp/public/js/facility/controller/facility-search-controller.js"></script>
-    <script type="text/javascript"
-            src="../../main/webapp/public/js/shared/controller/forgot-password-controller.js"></script>
-    <script type="text/javascript"
-            src="../../main/webapp/public/js/shared/controller/navigation-controller.js"></script>
-    <script type="text/javascript"
-            src="../../main/webapp/public/js/role/controller/save-role-controller.js"></script>
-    <script type="text/javascript"
-            src="../../main/webapp/public/js/schedule/controller/schedule-controller.js"></script>
-    <script type="text/javascript"
-            src="../../main/webapp/public/js/schedule/controller/schedule-period-controller.js"></script>
-    <script type="text/javascript"
-            src="../../main/webapp/public/js/upload/controller/upload-controller.js"></script>
-    <script type="text/javascript"
-            src="../../main/webapp/public/js/user/controller/user-controller.js"></script>
-    <script type="text/javascript"
-            src="../../main/webapp/public/js/user/controller/user-search-controller.js"></script>
+  <!-- include your source files and libraries here... -->
+  <script type="text/javascript" src="../../main/webapp/public/js/rnr/controller/initiate-rnr-controller.js"></script>
+  <script type="text/javascript"
+          src="../../main/webapp/public/js/rnr/controller/initiate-my-facility-rnr-controller.js"></script>
+  <script type="text/javascript"
+          src="../../main/webapp/public/js/rnr/controller/initiate-my-supervised-facilities-rnr-controller.js"></script>
+  <script type="text/javascript" src="../../main/webapp/public/js/rnr/controller/requisition-controller.js"></script>
+  <script type="text/javascript"
+          src="../../main/webapp/public/js/rnr/controller/requisition-form-controller.js"></script>
+  <script type="text/javascript"
+          src="../../main/webapp/public/js/rnr/controller/approve-rnr-list-controller.js"></script>
+  <script type="text/javascript" src="../../main/webapp/public/js/rnr/controller/approve-rnr-controller.js"></script>
+  <script type="text/javascript"
+          src="../../main/webapp/public/js/facility/controller/facility-controller.js"></script>
+  <script type="text/javascript"
+          src="../../main/webapp/public/js/rnr-template/controller/configure-rnr-template-controller.js"></script>
+  <script type="text/javascript"
+          src="../../main/webapp/public/js/rnr-template/controller/save-rnr-template-controller.js"></script>
+  <script type="text/javascript"
+          src="../../main/webapp/public/js/facility/controller/facility-search-controller.js"></script>
+  <script type="text/javascript"
+          src="../../main/webapp/public/js/shared/controller/forgot-password-controller.js"></script>
+  <script type="text/javascript"
+          src="../../main/webapp/public/js/shared/controller/reset-password-controller.js"></script>
+  <script type="text/javascript"
+          src="../../main/webapp/public/js/shared/controller/navigation-controller.js"></script>
+  <script type="text/javascript"
+          src="../../main/webapp/public/js/role/controller/save-role-controller.js"></script>
+  <script type="text/javascript"
+          src="../../main/webapp/public/js/schedule/controller/schedule-controller.js"></script>
+  <script type="text/javascript"
+          src="../../main/webapp/public/js/schedule/controller/schedule-period-controller.js"></script>
+  <script type="text/javascript"
+          src="../../main/webapp/public/js/upload/controller/upload-controller.js"></script>
+  <script type="text/javascript"
+          src="../../main/webapp/public/js/user/controller/user-controller.js"></script>
+  <script type="text/javascript"
+          src="../../main/webapp/public/js/user/controller/user-search-controller.js"></script>
 
-    <script type="text/javascript"
-            src="../../main/webapp/public/js/rnr/model/rnr-line-item.js"></script>
-    <!-- Then include your spec files here; that's all! If you want the
-   results of JSLINT to be included, include "lintable" in the class
-   attribute. -->
+  <script type="text/javascript"
+          src="../../main/webapp/public/js/rnr/model/rnr-line-item.js"></script>
+  <!-- Then include your spec files here; that's all! If you want the
+ results of JSLINT to be included, include "lintable" in the class
+ attribute. -->
 
-    <script type="text/javascript" src="specs/rnr/initiate-rnr-controller-test.js"></script>
-    <script type="text/javascript" src="specs/rnr/initiate-my-facility-rnr-controller-test.js"></script>
-    <script type="text/javascript" src="specs/rnr/initiate-my-supervised-facilities-rnr-controller-test.js"></script>
-    <script type="text/javascript" src="specs/rnr/create-rnr-controller-test.js"></script>
-    <script type="text/javascript" src="specs/rnr/approve-rnr-list-controller-test.js"></script>
-    <script type="text/javascript" src="specs/rnr/approve-rnr-controller-test.js"></script>
-    <script type="text/javascript" src="specs/rnr-template-controller-test.js"></script>
-    <script type="text/javascript" src="specs/facility-controller-test.js"></script>
-    <script type="text/javascript" src="specs/facility-search-controller-test.js"></script>
-    <script type="text/javascript" src="specs/shared/navigation-controller-test.js"></script>
-    <script type="text/javascript" src="specs/shared/services-test.js"></script>
-    <script type="text/javascript" src="specs/shared/forgot-password-controller-test.js"></script>
-    <script type="text/javascript" src="specs/shared/util-test.js"></script>
-    <script type="text/javascript" src="specs/rnr/rnr-module-test.js"></script>
-    <script type="text/javascript" src="specs/role/role-controller-test.js"></script>
-    <script type="text/javascript" src="specs/rnr/requisition-header-controller-test.js"></script>
-    <script type="text/javascript" src="specs/schedules/schedule-controller-test.js"></script>
-    <script type="text/javascript" src="specs/schedules/schedule-period-controller-test.js"></script>
-    <script type="text/javascript" src="specs/rnr/model/rnr-line-item-test.js"></script>
-    <script type="text/javascript" src="specs/upload/controller/upload-controller-test.js"></script>
-    <script type="text/javascript" src="specs/user-controller-test.js"></script>
-    <script type="text/javascript" src="specs/user-search-controller-test.js"></script>
+  <script type="text/javascript" src="specs/rnr/initiate-rnr-controller-test.js"></script>
+  <script type="text/javascript" src="specs/rnr/initiate-my-facility-rnr-controller-test.js"></script>
+  <script type="text/javascript" src="specs/rnr/initiate-my-supervised-facilities-rnr-controller-test.js"></script>
+  <script type="text/javascript" src="specs/rnr/create-rnr-controller-test.js"></script>
+  <script type="text/javascript" src="specs/rnr/approve-rnr-list-controller-test.js"></script>
+  <script type="text/javascript" src="specs/rnr/approve-rnr-controller-test.js"></script>
+  <script type="text/javascript" src="specs/rnr-template-controller-test.js"></script>
+  <script type="text/javascript" src="specs/facility-controller-test.js"></script>
+  <script type="text/javascript" src="specs/facility-search-controller-test.js"></script>
+  <script type="text/javascript" src="specs/shared/navigation-controller-test.js"></script>
+  <script type="text/javascript" src="specs/shared/services-test.js"></script>
+  <script type="text/javascript" src="specs/shared/forgot-password-controller-test.js"></script>
+  <script type="text/javascript" src="specs/shared/reset-password-controller-test.js"></script>
+  <script type="text/javascript" src="specs/shared/util-test.js"></script>
+  <script type="text/javascript" src="specs/rnr/rnr-module-test.js"></script>
+  <script type="text/javascript" src="specs/role/role-controller-test.js"></script>
+  <script type="text/javascript" src="specs/rnr/requisition-header-controller-test.js"></script>
+  <script type="text/javascript" src="specs/schedules/schedule-controller-test.js"></script>
+  <script type="text/javascript" src="specs/schedules/schedule-period-controller-test.js"></script>
+  <script type="text/javascript" src="specs/rnr/model/rnr-line-item-test.js"></script>
+  <script type="text/javascript" src="specs/upload/controller/upload-controller-test.js"></script>
+  <script type="text/javascript" src="specs/user-controller-test.js"></script>
+  <script type="text/javascript" src="specs/user-search-controller-test.js"></script>
 
 </head>
 <body>
 
 <script type="text/javascript" language="javascript">
-    jasmine.getEnv().execute();
+  jasmine.getEnv().execute();
 </script>
 
 
