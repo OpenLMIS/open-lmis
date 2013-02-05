@@ -1,4 +1,5 @@
-function HeaderController($scope, UserContext, $rootScope, localStorageService) {
+function HeaderController($scope, UserContext, $rootScope, localStorageService, messageService) {
+
   UserContext.get({}, function (data) {
     if (!data.authenticated) {
       $rootScope.modalShown = true;
@@ -6,6 +7,8 @@ function HeaderController($scope, UserContext, $rootScope, localStorageService) 
     $scope.user = data.name;
 
   }, {});
+
+  messageService.populate();
 
   $rootScope.fixToolBar = function () {
 

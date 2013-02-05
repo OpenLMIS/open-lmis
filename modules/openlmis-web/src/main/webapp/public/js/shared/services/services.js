@@ -157,4 +157,9 @@ services.factory('ValidatePasswordToken', function ($resource) {
   return $resource('/user/validatePasswordResetToken/:token.json', {}, {});
 });
 
+services.factory('Messages', function ($resource) {
+  return $resource('/messages.json', {}, {});
+});
+
+
 
