@@ -1,4 +1,4 @@
-function SaveRnrTemplateController($scope, rnrTemplateForm, messageService, $http ) {
+function SaveRnrTemplateController($scope, rnrTemplateForm, messageService,$routeParams, $http ) {
   $scope.rnrColumns = rnrTemplateForm.rnrColumns;
   $scope.sources = rnrTemplateForm.sources;
   $scope.validateFormula = $scope.rnrColumns[0].formulaValidationRequired;
@@ -11,7 +11,7 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, messageService, $htt
 
   $scope.createProgramRnrTemplate = function () {
     setRnRTemplateValidateFlag();
-    $http.post('/program/' + $scope.program.id + '/rnr-template.json', $scope.rnrColumns).success(function (data) {
+    $http.post('/program/' + $routeParams.programId + '/rnr-template.json', $scope.rnrColumns).success(function (data) {
       $scope.message = "Template saved successfully!";
       $scope.error = "";
       $scope.errorMap = undefined;

@@ -11,7 +11,6 @@ describe('Rnr Template controllers', function () {
       scope = $rootScope.$new();
       $httpBackend = _$httpBackend_;
       location = $location;
-      scope.program = {code:"programCode"};
 
       rnrColumnList = [
         {"id":1, "name":"product_code", "sourceConfigurable":true, "source": {'code' : "U"}, "formulaValidationRequired": true, "visible" : true},
