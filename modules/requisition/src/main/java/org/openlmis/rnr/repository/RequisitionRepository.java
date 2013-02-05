@@ -101,5 +101,9 @@ public class RequisitionRepository {
     return mapper.getLastRequisitionToEnterThePostSubmitFlow(facilityId, programId);
   }
 
+  public List<Rnr> getApprovedRequisitions() {
+    return mapper.getApprovedRequisitions();
+  }
+
 }
 

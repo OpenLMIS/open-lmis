@@ -21,7 +21,8 @@ public enum Right {
   CREATE_REQUISITION("Requisition - Create", "Permission to create, edit, submit and recall requisitions"),
   AUTHORIZE_REQUISITION("Requisition - Authorize", "Permission to edit, authorize and recall requisitions"),
   MANAGE_USERS("Admin - Manage Roles", "Permission to manage users(crud)"),
-  APPROVE_REQUISITION("Requisition - Approve", "Permission to approve requisitions");
+  APPROVE_REQUISITION("Requisition - Approve", "Permission to approve requisitions"),
+  CONVERT_TO_ORDER("Requisition - Convert to Order", "Permission to convert requisitions to order");
 
   @Getter
   private final String rightName;

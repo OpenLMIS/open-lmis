@@ -139,6 +139,13 @@ public class RequisitionController extends BaseController {
     return response(RNR_LIST, RnrDTO.prepareForListApproval(requisitions));
   }
 
+  @RequestMapping(value = "/requisitions-for-convert-to-order", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("hasPermission('', 'CONVERT_TO_ORDER')")
+  public ResponseEntity<OpenLmisResponse> listForConvertToOrder() {
+    List<Rnr> approvedRequisitions = requisitionService.getApprovedRequisitions();
+    return response(RNR_LIST, RnrDTO.prepareForListApproval(approvedRequisitions));
+  }
+
   @RequestMapping(value = "/logistics/facility/{facilityId}/program/{programId}/periods", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("hasPermission('','CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(

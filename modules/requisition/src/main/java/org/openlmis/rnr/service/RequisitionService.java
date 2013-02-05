@@ -246,6 +246,10 @@ public class RequisitionService {
     return requisitionsForApproval;
   }
 
+  public List<Rnr> getApprovedRequisitions() {
+    return requisitionRepository.getApprovedRequisitions();
+  }
+
   public List<ProcessingPeriod> getAllPeriodsForInitiatingRequisition(Integer facilityId, Integer programId) {
     Date programStartDate = programService.getProgramStartDate(facilityId, programId);
     Rnr lastRequisitionToEnterThePostSubmitFlow = requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(facilityId, programId);

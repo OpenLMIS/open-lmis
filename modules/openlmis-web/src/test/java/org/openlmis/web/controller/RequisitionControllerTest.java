@@ -4,6 +4,7 @@ import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Facility;
@@ -16,6 +17,9 @@ import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.web.response.OpenLmisResponse;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -26,15 +30,19 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.*;
-import static org.openlmis.web.controller.RequisitionController.*;
-import static org.powermock.api.mockito.PowerMockito.doThrow;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.mockito.Mockito.verify;
+import static org.openlmis.web.controller.RequisitionController.PERIODS;
+import static org.openlmis.web.controller.RequisitionController.RNR;
+import static org.openlmis.web.controller.RequisitionController.RNR_LIST;
 import static org.powermock.api.mockito.PowerMockito.*;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(RnrDTO.class)
 public class RequisitionControllerTest {
 
   public static final String FACILITY_CODE = "F14";
@@ -248,6 +256,20 @@ public class RequisitionControllerTest {
     ResponseEntity<OpenLmisResponse> response = controller.getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(1, 2);
 
     assertThat(response.getBody().getErrorMsg(), is(errorMessage));
+  }
+
+  @Test
+  public void shouldReturnListOfApprovedRequisitionsForConvertingToOrder(){
+    ArrayList<Rnr> expectedRequisitions = new ArrayList<>();
+    mockStatic(RnrDTO.class);
+    when(requisitionService.getApprovedRequisitions()).thenReturn(expectedRequisitions);
+    ArrayList<RnrDTO> expectedRnrList = new ArrayList<>();
+    when(RnrDTO.prepareForListApproval(expectedRequisitions)).thenReturn(expectedRnrList);
+    ResponseEntity<OpenLmisResponse> responseEntity = controller.listForConvertToOrder();
+
+    verify(requisitionService).getApprovedRequisitions();
+    assertThat((ArrayList<RnrDTO>) responseEntity.getBody().getData().get(RNR_LIST), is(expectedRnrList));
+
   }
 
 
