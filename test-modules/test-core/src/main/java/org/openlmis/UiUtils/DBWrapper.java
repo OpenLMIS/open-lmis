@@ -56,7 +56,7 @@ public class DBWrapper {
         boolean flag = false;
         DBWrapper dbwrapper = new DBWrapper();
 
-            dbwrapper.dbConnection("delete from users where userName like('"+userName+"');", "alter");
+        dbwrapper.dbConnection("delete from users where userName like('"+userName+"');", "alter");
 
         dbwrapper.dbConnection("INSERT INTO users\n" +
                 "  (id, userName, password, facilityId, firstName, lastName, email) VALUES\n" +
@@ -81,14 +81,14 @@ public class DBWrapper {
 
         DBWrapper dbWrapper=new DBWrapper();
 
-            dbWrapper.dbConnection("DELETE FROM requisition_line_item_losses_adjustments;", "alter");
-            dbWrapper.dbConnection("DELETE FROM requisition_line_items;", "alter");
-            dbWrapper.dbConnection("DELETE FROM requisitions;", "alter");
+        dbWrapper.dbConnection("DELETE FROM requisition_line_item_losses_adjustments;", "alter");
+        dbWrapper.dbConnection("DELETE FROM requisition_line_items;", "alter");
+        dbWrapper.dbConnection("DELETE FROM requisitions;", "alter");
         dbWrapper.dbConnection("DELETE FROM programs_supported;", "alter");
 
-            dbWrapper.dbConnection("delete from facilities;", "alter");
+        dbWrapper.dbConnection("delete from facilities;", "alter");
 
-        }
+    }
 
     public void insertFacility() throws IOException , SQLException
     {
@@ -101,10 +101,10 @@ public class DBWrapper {
                 "('F11','Central Hospital','IT department','G7646',9876234981,'fax','A','B',1,2,333,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','TRUE','fc','TRUE');\n", "alter");
 
         dbWrapper.dbConnection("insert into programs_supported(facilityId, programId, startDate, active, modifiedBy) VALUES\n" +
-            "((SELECT id FROM facilities WHERE code = 'F10'), 1, '11/11/12', true, 'Admin123'),\n" +
-            "((SELECT id FROM facilities WHERE code = 'F10'), 2, '11/11/12', true, 'Admin123'),\n" +
-            "((SELECT id FROM facilities WHERE code = 'F11'), 1, '11/11/12', true, 'Admin123'),\n" +
-            "((SELECT id FROM facilities WHERE code = 'F11'), 2, '11/11/12', true, 'Admin123');","alter");
+                "((SELECT id FROM facilities WHERE code = 'F10'), 1, '11/11/12', true, 'Admin123'),\n" +
+                "((SELECT id FROM facilities WHERE code = 'F10'), 2, '11/11/12', true, 'Admin123'),\n" +
+                "((SELECT id FROM facilities WHERE code = 'F11'), 1, '11/11/12', true, 'Admin123'),\n" +
+                "((SELECT id FROM facilities WHERE code = 'F11'), 2, '11/11/12', true, 'Admin123');","alter");
 
     }
 
@@ -254,7 +254,7 @@ public class DBWrapper {
 
     }
 
-    public void insertRoleAssignment(String userID, String roleName) throws SQLException, IOException {
+    public void insertRoleAssignment(String userID, String userName) throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();
 
 
@@ -262,8 +262,8 @@ public class DBWrapper {
 
         dbwrapper.dbConnection(" INSERT INTO role_assignments\n" +
                 "            (userId, roleId, programId, supervisoryNodeId) VALUES \n" +
-                "    ('"+userID+"', (SELECT id FROM roles WHERE name = '"+roleName+"'), 1, null),\n" +
-                "    ('"+userID+"', (SELECT id FROM roles WHERE name = '"+roleName+"'), 1, (SELECT id from supervisory_nodes WHERE code = 'N1'));", "alter");
+                "    ('"+userID+"', (SELECT id FROM roles WHERE name = '"+userName+"'), 1, null),\n" +
+                "    ('"+userID+"', (SELECT id FROM roles WHERE name = '"+userName+"'), 1, (SELECT id from supervisory_nodes WHERE code = 'N1'));", "alter");
     }
 
     public void updateRoleAssignment(String userID) throws SQLException, IOException {
@@ -303,11 +303,14 @@ public class DBWrapper {
             dbwrapper.dbConnection("delete from products;", "alter");
 
         }
-        dbwrapper.dbConnection("insert into products\n" +
-                "(code,    alternateItemCode,  manufacturer,       manufacturerCode,  manufacturerBarcode,   mohBarcode,   gtin,   type,         primaryName,    fullName,       genericName,    alternateName,    description,      strength,    formId,  dosageUnitId, dispensingUnit,  dosesPerDispensingUnit,  packSize,  alternatePackSize,  storeRefrigerated,   storeRoomTemperature,   hazardous,  flammable,   controlledSubstance,  lightSensitive,  approvedByWho,  contraceptiveCyp,  packLength,  packWidth, packHeight,  packWeight,  packsPerCarton, cartonLength,  cartonWidth,   cartonHeight, cartonsPerPallet,  expectedShelfLife,  specialStorageInstructions, specialTransportInstructions, active,  fullSupply, tracer,   packRoundingThreshold,  roundToZero,  archived) values\n" +
-                "('P10',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     TRUE,       TRUE,         1,                    FALSE,      TRUE),\n" +
-                "('P11',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     TRUE,       TRUE,         1,                    FALSE,      TRUE),\n" +
-                "('P12',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     TRUE,       TRUE,         1,                    TRUE,      TRUE);\n","alter");
+        dbwrapper.dbConnection("INSERT INTO products\n" +
+                "(code,    alternateItemCode,  manufacturer,       manufacturerCode,  manufacturerBarcode,   mohBarcode,   gtin,   type,         primaryName,    fullName,       genericName,    alternateName,    description,      strength,    formId,  dosageUnitId, dispensingUnit,  dosesPerDispensingUnit,  packSize,  alternatePackSize,  storeRefrigerated,   storeRoomTemperature,   hazardous,  flammable,   controlledSubstance,  lightSensitive,  approvedByWho,  contraceptiveCyp,  packLength,  packWidth, packHeight,  packWeight,  packsPerCarton, cartonLength,  cartonWidth,   cartonHeight, cartonsPerPallet,  expectedShelfLife,  specialStorageInstructions, specialTransportInstructions, active,  fullSupply, tracer,   packRoundingThreshold,  roundToZero,  archived, displayOrder) values\n" +
+                "('P100',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     TRUE,       TRUE,         1,                    FALSE,      TRUE,    1),\n" +
+                "('P101',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,       TRUE,         1,                    FALSE,      TRUE,   2),\n" +
+                "('P103',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'manjyot',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,       TRUE,         1,                    FALSE,      TRUE,      3),\n" +
+                "('P104',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'bijesh',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,       TRUE,         1,                    FALSE,      TRUE,       4),\n" +
+                "('P102',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,       TRUE,         1,                    TRUE,      TRUE,     5),\n" +
+                "('P105',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'testing',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,       TRUE,         1,                    FALSE,      TRUE,   5);\n","alter");
     }
 
     public void insertProgramProducts() throws SQLException, IOException {
@@ -319,27 +322,53 @@ public class DBWrapper {
             dbwrapper.dbConnection("delete from program_products;", "alter");
 
         }
+
         dbwrapper.dbConnection("INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active) VALUES\n" +
-                "(1, (SELECT id from products WHERE code = 'P10'), 30, 12, true),\n" +
-                "(1, (SELECT id from products WHERE code = 'P11'), 30, 50, true),\n" +
-                "(1, (SELECT id from products WHERE code = 'P12'), 30, 0, true);", "alter");
+                "(1, (SELECT id from products WHERE code = 'P100'), 30, 12.5, true),\n" +
+                "(1, (SELECT id from products WHERE code = 'P103'), 30, 50, true),\n" +
+                "(1, (SELECT id from products WHERE code = 'P104'), 30, 50, true),\n" +
+                "(1, (SELECT id from products WHERE code = 'P101'), 30, 50, true),\n" +
+                "(1, (SELECT id from products WHERE code = 'P102'), 30, 0, true),\n" +
+                "(1, (SELECT id from products WHERE code = 'P105'), 30, 0, true);", "alter");
     }
 
     public void insertFacilityApprovedProducts() throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();
 
-            dbwrapper.dbConnection("delete from facility_approved_products;", "alter");
+        dbwrapper.dbConnection("delete from facility_approved_products;", "alter");
 
-        dbwrapper.dbConnection("insert into facility_approved_products(facilityTypeId, programProductId, maxMonthsOfStock) values\n" +
-                "((select id from facility_types where name='Lvl3 Hospital'), (select id from program_products where programId=(Select id from programs order by modifiedDate DESC limit 1) and productId=(Select id from products order by modifiedDate DESC limit 1)), 3);", "alter");
+        dbwrapper.dbConnection("INSERT INTO facility_approved_products(facilityTypeId, programProductId, maxMonthsOfStock) VALUES\n" +
+                "((select id from facility_types where name='Lvl3 Hospital'), (SELECT id FROM program_products WHERE programId=1 AND productId=(SELECT id FROM products WHERE  code='P103')), 3),\n" +
+                "((select id from facility_types where name='Lvl3 Hospital'), (SELECT id FROM program_products WHERE programId=1 AND productId=(SELECT id FROM products WHERE  code='P104')), 3),\n" +
+                "((select id from facility_types where name='Lvl3 Hospital'), (SELECT id FROM program_products WHERE programId=1 AND productId=(SELECT id FROM products WHERE  code='P100')), 3),\n" +
+                "((select id from facility_types where name='Lvl3 Hospital'), (SELECT id FROM program_products WHERE programId=1 AND productId=(SELECT id FROM products WHERE  code='P101')), 3),\n" +
+                "((select id from facility_types where name='Lvl3 Hospital'), (SELECT id FROM program_products WHERE programId=1 AND productId=(SELECT id FROM products WHERE  code='P102')), 3),\n" +
+                "((select id from facility_types where name='Lvl3 Hospital'), (SELECT id FROM program_products WHERE programId=1 AND productId=(SELECT id FROM products WHERE  code='P105')), 3);","alter");
 
+    }
+
+    public String fetchNonFullSupplyData(String productCode, String facilityTypeID, String programID) throws SQLException, IOException {
+        DBWrapper dbwrapper = new DBWrapper();
+        String nonFullSupplyvalues=null;
+        ResultSet rs=dbwrapper.dbConnection("Select p.code, p. displayorder, p.primaryName, pf.code as Productform," +
+                "p.strength as Strength, du.code as DosageUnit from facility_approved_products fap, " +
+                "program_products pp, products p, product_forms pf , dosage_units du where fap. facilitytypeid='"+facilityTypeID+"' " +
+                "and p. fullsupply=false and p.active=true and pp.programId='"+programID+"' and p. code='"+productCode+"' " +
+                "and pp.productId=p.id and fap. Programproductid=pp.id and pp.active=true and pf.id=p.formid " +
+                "and du.id=p.dosageunitid order by p. displayorder asc;","select");
+
+        if(rs.next())
+        {
+            nonFullSupplyvalues=rs.getString("primaryname")+" "+rs.getString("productform")+" "+rs.getString("strength")+" "+rs.getString("dosageunit");
+        }
+        return nonFullSupplyvalues;
     }
 
     public void insertSchedules() throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();
 
-            dbwrapper.dbConnection("delete from processing_periods;", "alter");
-            dbwrapper.dbConnection("delete from processing_schedules;", "alter");
+        dbwrapper.dbConnection("delete from processing_periods;", "alter");
+        dbwrapper.dbConnection("delete from processing_schedules;", "alter");
 
         dbwrapper.dbConnection("INSERT INTO processing_schedules(code, name, description) values('Q1stM', 'QuarterMonthly', 'QuarterMonth');", "alter");
         dbwrapper.dbConnection("INSERT INTO processing_schedules(code, name, description) values('M', 'Monthly', 'Month');", "alter");
@@ -348,7 +377,7 @@ public class DBWrapper {
     public void insertProcessingPeriods() throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();
 
-            dbwrapper.dbConnection("delete from processing_periods;", "alter");
+        dbwrapper.dbConnection("delete from processing_periods;", "alter");
 
         dbwrapper.dbConnection("INSERT INTO processing_periods\n" +
                 "(name, description, startDate, endDate, scheduleId, modifiedBy) VALUES\n" +
@@ -365,37 +394,37 @@ public class DBWrapper {
         dbwrapper.dbConnection("INSERT INTO program_rnr_columns\n" +
                 "(masterColumnId, programId, visible, source, position, label) VALUES\n" +
                 "(1, (select id from programs where code = 'HIV'),  true, 'R', 1,  'Product Code'),\n" +
-        "(2, (select id from programs where code = 'HIV'),  true, 'R', 2,  'Product'),\n" +
-        "(3, (select id from programs where code = 'HIV'),  true, 'R', 3,  'Unit/Unit of Issue'),\n" +
-        "(4, (select id from programs where code = 'HIV'),  true, 'U', 4,  'Beginning Balance'),\n" +
-        "(5, (select id from programs where code = 'HIV'),  true, 'U', 5,  'Total Received Quantity'),\n" +
-        "(6, (select id from programs where code = 'HIV'),  true, 'U', 6,  'Total Consumed Quantity'),\n" +
-        "(7, (select id from programs where code = 'HIV'),  true, 'U', 7,  'Total Losses / Adjustments'),\n" +
-        "(8, (select id from programs where code = 'HIV'),  true, 'C', 8,  'Stock on Hand'),\n" +
-        "(9, (select id from programs where code = 'HIV'),  true, 'U', 9, 'New Patients'),\n" +
-        "(10, (select id from programs where code = 'HIV'), true, 'U', 10, 'Total Stockout days'),\n" +
-        "(11, (select id from programs where code = 'HIV'), true, 'C', 11, 'Adjusted Total Consumption'),\n" +
-        "(12, (select id from programs where code = 'HIV'), true, 'C', 12, 'Average Monthly Consumption(AMC)'),\n" +
-        "(13, (select id from programs where code = 'HIV'), true, 'C', 13, 'Maximum Stock Quantity'),\n" +
-        "(14, (select id from programs where code = 'HIV'), true, 'C', 14, 'Calculated Order Quantity'),\n" +
-        "(15, (select id from programs where code = 'HIV'), true, 'U', 15, 'Requested Quantity'),\n" +
-        "(16, (select id from programs where code = 'HIV'), true, 'U', 16, 'Requested Quantity Explanation'),\n" +
-        "(17, (select id from programs where code = 'HIV'), true, 'U', 17, 'Approved Quantity'),\n" +
-        "(18, (select id from programs where code = 'HIV'), true, 'C', 18, 'Packs to Ship'),\n" +
-        "(19, (select id from programs where code = 'HIV'), true, 'R', 19, 'Price per pack'),\n" +
-        "(20, (select id from programs where code = 'HIV'), true, 'C', 20, 'Total cost'),\n" +
-        "(21, (select id from programs where code = 'HIV'), true, 'U', 21, 'Remarks');", "alter");
+                "(2, (select id from programs where code = 'HIV'),  true, 'R', 2,  'Product'),\n" +
+                "(3, (select id from programs where code = 'HIV'),  true, 'R', 3,  'Unit/Unit of Issue'),\n" +
+                "(4, (select id from programs where code = 'HIV'),  true, 'U', 4,  'Beginning Balance'),\n" +
+                "(5, (select id from programs where code = 'HIV'),  true, 'U', 5,  'Total Received Quantity'),\n" +
+                "(6, (select id from programs where code = 'HIV'),  true, 'U', 6,  'Total Consumed Quantity'),\n" +
+                "(7, (select id from programs where code = 'HIV'),  true, 'U', 7,  'Total Losses / Adjustments'),\n" +
+                "(8, (select id from programs where code = 'HIV'),  true, 'C', 8,  'Stock on Hand'),\n" +
+                "(9, (select id from programs where code = 'HIV'),  true, 'U', 9, 'New Patients'),\n" +
+                "(10, (select id from programs where code = 'HIV'), true, 'U', 10, 'Total Stockout days'),\n" +
+                "(11, (select id from programs where code = 'HIV'), true, 'C', 11, 'Adjusted Total Consumption'),\n" +
+                "(12, (select id from programs where code = 'HIV'), true, 'C', 12, 'Average Monthly Consumption(AMC)'),\n" +
+                "(13, (select id from programs where code = 'HIV'), true, 'C', 13, 'Maximum Stock Quantity'),\n" +
+                "(14, (select id from programs where code = 'HIV'), true, 'C', 14, 'Calculated Order Quantity'),\n" +
+                "(15, (select id from programs where code = 'HIV'), true, 'U', 15, 'Requested Quantity'),\n" +
+                "(16, (select id from programs where code = 'HIV'), true, 'U', 16, 'Requested Quantity Explanation'),\n" +
+                "(17, (select id from programs where code = 'HIV'), true, 'U', 17, 'Approved Quantity'),\n" +
+                "(18, (select id from programs where code = 'HIV'), true, 'C', 18, 'Packs to Ship'),\n" +
+                "(19, (select id from programs where code = 'HIV'), true, 'R', 19, 'Price per pack'),\n" +
+                "(20, (select id from programs where code = 'HIV'), true, 'C', 20, 'Total cost'),\n" +
+                "(21, (select id from programs where code = 'HIV'), true, 'U', 21, 'Remarks');", "alter");
     }
 
     public String getFacilityIDDB() throws IOException , SQLException
     {
 
         DBWrapper dbWrapper=new DBWrapper();
-         String id=null;
+        String id=null;
         ResultSet rs=dbWrapper.dbConnection("select id from facilities order by modifiedDate DESC limit 1", "select");
 
         if (rs.next()) {
-         id=rs.getString("id");
+            id=rs.getString("id");
         }
         return id;
 
@@ -416,3 +445,4 @@ public class DBWrapper {
     }
 
 }
+

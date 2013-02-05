@@ -132,6 +132,9 @@ public class ApprovePage extends Page {
         quantityApproved.sendKeys(approvedQuantity);
         remarks.click();
         SeleneseTestNgHelper.assertEquals(packsToShip.getText().trim(),Integer.parseInt(approvedQuantity)/10);
+        if(totalCost.getText().contains("."))
+            SeleneseTestNgHelper.assertEquals(String.valueOf(Float.parseFloat(packsToShip.getText().trim())*Float.parseFloat(pricePerPack.getText().trim())),totalCost.getText().trim());
+        else
         SeleneseTestNgHelper.assertEquals(String.valueOf(Float.parseFloat(packsToShip.getText().trim())*Float.parseFloat(pricePerPack.getText().trim())),totalCost.getText().trim()+".0");
         SeleneseTestNgHelper.assertEquals(overalltotalCost.getText().trim(),totalCost.getText().trim());
     }
