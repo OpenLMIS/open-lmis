@@ -228,7 +228,7 @@ public class RequisitionService {
     supervisoryNode.setId(rnr.getSupervisoryNodeId());
     SupplyLine supplyLine = supplyLineService.getSupplyLineBy(supervisoryNode, rnr.getProgram());
     if (supplyLine != null) {
-      rnr.setSupplyingFacilityId(supplyLine.getSupplyingFacility().getId());
+      rnr.setSupplyingFacility(supplyLine.getSupplyingFacility());
     }
     rnr.setSupervisoryNodeId(null);
     requisitionRepository.update(rnr);

@@ -33,7 +33,7 @@ public class Rnr {
   private List<RnrLineItem> lineItems = new ArrayList<>();
   private List<RnrLineItem> nonFullSupplyLineItems = new ArrayList<>();
 
-  private Integer supplyingFacilityId;
+  private Facility supplyingFacility;
   private Integer supervisoryNodeId;
   private Integer modifiedBy;
   private Date modifiedDate;
