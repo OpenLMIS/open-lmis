@@ -11,6 +11,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -74,5 +76,26 @@ public class ProgramSupportedMapperIT {
 
     ProgramSupported programsSupported = programSupportedMapper.getBy(facility.getId(), program.getId());
     assertThat(programsSupported, is(nullValue()));
+  }
+
+  @Test
+  public void shouldGetAllProgramsSupportedForFacility() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    facilityMapper.insert(facility);
+
+    Program program = make(a(defaultProgram, with(programCode, YELLOW_FEVER)));
+    programMapper.insert(program);
+
+    ProgramSupported programSupported = make(a(defaultProgramSupported,
+      with(supportedFacilityId, facility.getId()),
+      with(supportedProgramId, program.getId())));
+    programSupportedMapper.addSupportedProgram(programSupported);
+
+    List<ProgramSupported> programsSupported = programSupportedMapper.getAllByFacilityId(facility.getId());
+    assertThat(programsSupported.size(), is(1));
+    assertThat(programsSupported.get(0).getFacilityId(), is(programSupported.getFacilityId()));
+    assertThat(programsSupported.get(0).getProgramId(), is(programSupported.getProgramId()));
+    assertThat(programsSupported.get(0).getStartDate(), is(programSupported.getStartDate()));
+    assertThat(programsSupported.get(0).getActive(), is(programSupported.getActive()));
   }
 }

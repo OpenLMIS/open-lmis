@@ -48,7 +48,7 @@ public class FacilityService {
     if (facility.getId() == null) {
       programSupportedRepository.addSupportedProgramsFor(facility);
     } else {
-      programSupportedRepository.updateSupportedPrograms(facility, programRepository.getByFacility(facility.getId()));
+      programSupportedRepository.updateSupportedPrograms(facility, programSupportedRepository.getAllByFacilityId(facility.getId()));
     }
   }
 
@@ -80,7 +80,7 @@ public class FacilityService {
 
   public Facility getById(Integer id) {
     Facility facility = facilityRepository.getById(id);
-    facility.setSupportedPrograms(programRepository.getByFacility(id));
+    facility.setSupportedPrograms(programSupportedRepository.getAllByFacilityId(id));
     return facility;
   }
 
@@ -100,6 +100,7 @@ public class FacilityService {
 
   public void insert(Facility facility) {
     facilityRepository.insert(facility);
+    programSupportedRepository.addSupportedProgramsFor(facility);
   }
 
   public void update(Facility facility) {
