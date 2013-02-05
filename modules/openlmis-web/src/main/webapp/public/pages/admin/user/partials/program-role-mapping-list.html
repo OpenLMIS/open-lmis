@@ -1,12 +1,40 @@
 <div ng-controller="UserProgramRoleListController" ng-show="showRoleAssignmentOptions()">
-  <div class="roleGrid" ng-grid="gridOptions"></div>
-  <div>
-   <span>
-     <select ng-options="program.id as program.name for program in availablePrograms()" ng-model="programSelected"></select>
-     <select ui-select2 ng-model="selectedRoleIds"  placeholder="+ Add Role" multiple="multiple" style="width:400px">
-       <option ng-repeat="role in $parent.allRoles" value="{{role.id}}">{{role.name}}</option>
-     </select>
-     <a ng-click="addRole()" class="pull-right btn btn-primary">Add Role</a>
-   </span>
+  <div class="row-fluid fluid-grid-header">
+    <div class="span3">Program</div>
+    <div class="span6">Roles</div>
+    <div class="span3"></div>
+  </div>
+
+  <div class="row-fluid" ng-repeat="roleAssignment in user.roleAssignments">
+    <div class="span3">
+      <label class="user-program" ng-bind="getProgramName(roleAssignment.programId)"></label>
+    </div>
+    <div class="span6">
+      <select ui-select2 ng-model="roleAssignment.roleIds" placeholder="+ Add Role"
+              multiple="multiple" style="width:400px" name="roles" id="roles">
+        <option ng-repeat="role in allRoles" value="{{role.id}}" ng-bind="role.name"></option>
+      </select>
+      <span ng-show="roleAssignment.roleIds.length == 0" class="field-error">
+       Please Fill In this value
+      </span>
+    </div>
+    <div class="span3">
+      <a class="delete-role" value="delete" ng-click="deleteCurrentRow($parent.$index)">&times;</a>
+    </div>
+  </div>
+
+  <div class="row-fluid">
+    <div class="span3">
+      <select ng-options="program.id as program.name for program in availablePrograms()"
+              ng-model="programSelected"></select>
+    </div>
+    <div class="span6">
+      <select ui-select2 ng-model="selectedRoleIds" placeholder="+ Add Role" multiple="multiple" style="width:400px">
+        <option ng-repeat="role in $parent.allRoles" value="{{role.id}}">{{role.name}}</option>
+      </select>
+    </div>
+    <div class="span3">
+      <a ng-click="addRole()" class="btn btn-primary">Add Role</a>
+    </div>
   </div>
 </div>
