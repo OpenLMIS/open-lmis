@@ -33,10 +33,11 @@ public class Rnr {
   private List<RnrLineItem> lineItems = new ArrayList<>();
   private List<RnrLineItem> nonFullSupplyLineItems = new ArrayList<>();
 
+  private Integer supplyingFacilityId;
+  private Integer supervisoryNodeId;
   private Integer modifiedBy;
   private Date modifiedDate;
   private Date submittedDate;
-  private Integer supervisoryNodeId;
   public static final String RNR_VALIDATION_ERROR = "rnr.validation.error";
 
   public Rnr(Integer facilityId, Integer programId, Integer periodId, Integer modifiedBy) {

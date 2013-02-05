@@ -1,5 +1,6 @@
 package org.openlmis.rnr.repository.mapper;
 
+import org.hamcrest.Matcher;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -115,10 +116,13 @@ public class RequisitionMapperIT {
   @Test
   public void shouldUpdateRequisition() {
     Rnr requisition = insertRequisition(processingPeriod1, INITIATED);
+    Facility supplyingFacility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.code, "SF")));
+    facilityMapper.insert(supplyingFacility);
     requisition.setModifiedBy(USER_ID);
     Date submittedDate = new Date();
     requisition.setSubmittedDate(submittedDate);
     requisition.setSupervisoryNodeId(supervisoryNode.getId());
+    requisition.setSupplyingFacilityId(supplyingFacility.getId());
 
     mapper.update(requisition);
 
@@ -128,6 +132,7 @@ public class RequisitionMapperIT {
     assertThat(updatedRequisition.getSupervisoryNodeId(), is(requisition.getSupervisoryNodeId()));
     assertThat(updatedRequisition.getModifiedBy(), is(equalTo(USER_ID)));
     assertThat(updatedRequisition.getSubmittedDate(), is(submittedDate));
+    assertThat(updatedRequisition.getSupplyingFacilityId(), is(supplyingFacility.getId()));
   }
 
   @Test

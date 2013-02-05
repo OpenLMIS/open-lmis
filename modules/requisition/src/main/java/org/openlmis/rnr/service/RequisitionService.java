@@ -48,12 +48,13 @@ public class RequisitionService {
   private ProgramService programService;
   private ProcessingScheduleService processingScheduleService;
   private FacilityService facilityService;
+  private SupplyLineService supplyLineService;
 
   @Autowired
   public RequisitionService(RequisitionRepository requisitionRepository, RnrTemplateRepository rnrTemplateRepository,
                             FacilityApprovedProductService facilityApprovedProductService, SupervisoryNodeService supervisoryNodeRepository,
                             RoleRightsService roleRightsService, ProgramService programService,
-                            ProcessingScheduleService processingScheduleService, FacilityService facilityService) {
+                            ProcessingScheduleService processingScheduleService, FacilityService facilityService, SupplyLineService supplyLineService) {
     this.requisitionRepository = requisitionRepository;
     this.rnrTemplateRepository = rnrTemplateRepository;
     this.facilityApprovedProductService = facilityApprovedProductService;
@@ -62,6 +63,7 @@ public class RequisitionService {
     this.programService = programService;
     this.processingScheduleService = processingScheduleService;
     this.facilityService = facilityService;
+    this.supplyLineService = supplyLineService;
   }
 
   @Transactional
@@ -222,6 +224,12 @@ public class RequisitionService {
 
   private OpenLmisMessage doFinalApproval(Rnr rnr) {
     rnr.setStatus(APPROVED);
+    SupervisoryNode supervisoryNode = new SupervisoryNode();
+    supervisoryNode.setId(rnr.getSupervisoryNodeId());
+    SupplyLine supplyLine = supplyLineService.getSupplyLineBy(supervisoryNode, rnr.getProgram());
+    if (supplyLine != null) {
+      rnr.setSupplyingFacilityId(supplyLine.getSupplyingFacility().getId());
+    }
     rnr.setSupervisoryNodeId(null);
     requisitionRepository.update(rnr);
     return new OpenLmisMessage(RNR_APPROVED_SUCCESSFULLY);

@@ -19,6 +19,8 @@ import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static com.natpryce.makeiteasy.MakeItEasy.with;
 import static junit.framework.Assert.assertNotNull;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
@@ -59,5 +61,27 @@ public class SupplyLineMapperIT {
         assertNotNull(id);
     }
 
+    @Test
+    public void shouldReturnSupplyLineForASupervisoryNodeAndProgram(){
+      Facility facility = make(a(FacilityBuilder.defaultFacility));
+      facilityMapper.insert(facility);
+      Program program = make(a(ProgramBuilder.defaultProgram));
+      programMapper.insert(program);
+      SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
+      supervisoryNode.setFacility(facility);
+      supervisoryNodeMapper.insert(supervisoryNode);
+
+      SupplyLine supplyLine = new SupplyLine();
+      supplyLine.setSupplyingFacility(facility);
+      supplyLine.setProgram(program);
+      supplyLine.setSupervisoryNode(supervisoryNode);
+
+      supplyLineMapper.insert(supplyLine);
+
+      SupplyLine returnedSupplyLine = supplyLineMapper.getSupplyLineBy(supervisoryNode, program);
+
+      assertThat(returnedSupplyLine.getId(), is(supplyLine.getId()));
+
+    }
 
 }

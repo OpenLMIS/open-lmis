@@ -77,6 +77,8 @@ public class RequisitionServiceTest {
   private ProcessingScheduleService processingScheduleService;
   @Mock
   private FacilityService facilityService;
+  @Mock
+  private SupplyLineService supplyLineService;
 
   private Rnr submittedRnr;
   private Rnr initiatedRnr;
@@ -87,7 +89,7 @@ public class RequisitionServiceTest {
   @Before
   public void setup() {
     requisitionService = new RequisitionService(requisitionRepository, rnrTemplateRepository, facilityApprovedProductService,
-      supervisoryNodeService, roleRightService, programService, processingScheduleService, facilityService);
+      supervisoryNodeService, roleRightService, programService, processingScheduleService, facilityService, supplyLineService);
     submittedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, SUBMITTED)));
     initiatedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, INITIATED)));
     authorizedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, AUTHORIZED)));
@@ -523,8 +525,17 @@ public class RequisitionServiceTest {
 
   @Test
   public void shouldApproveAnRnrAndChangeStatusToApprovedIfThereIsNoFurtherApprovalNeeded() throws Exception {
-    authorizedRnr.setSupervisoryNodeId(1);
+    int supervisoryNodeId = 1;
+    int supplyingFacilityId = 2;
+    authorizedRnr.setSupervisoryNodeId(supervisoryNodeId);
     when(requisitionRepository.getById(authorizedRnr.getId())).thenReturn(authorizedRnr);
+    SupervisoryNode supervisoryNode = new SupervisoryNode();
+    supervisoryNode.setId(supervisoryNodeId);
+    SupplyLine supplyLine = new SupplyLine();
+    Facility supplyingFacility = new Facility();
+    supplyingFacility.setId(supplyingFacilityId);
+    supplyLine.setSupplyingFacility(supplyingFacility);
+    when(supplyLineService.getSupplyLineBy(supervisoryNode, authorizedRnr.getProgram())).thenReturn(supplyLine);
 
     OpenLmisMessage message = requisitionService.approve(authorizedRnr);
     verify(requisitionRepository).update(authorizedRnr);

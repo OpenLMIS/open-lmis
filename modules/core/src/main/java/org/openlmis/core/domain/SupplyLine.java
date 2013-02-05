@@ -11,19 +11,21 @@ import java.util.Date;
 @NoArgsConstructor
 public class SupplyLine implements Importable {
 
-    @ImportField (mandatory = true , name = "Supervising Node" , nested = "code")
-    SupervisoryNode supervisoryNode;
+  Integer id;
 
-    @ImportField ( name ="Description" )
-    String description;
+  @ImportField(mandatory = true, name = "Supervising Node", nested = "code")
+  SupervisoryNode supervisoryNode;
 
-    @ImportField ( mandatory = true , name="Program" , nested = "code")
-    Program program;
+  @ImportField(name = "Description")
+  String description;
 
-    @ImportField ( mandatory = true , name="Facility" , nested="code")
-    Facility supplyingFacility;
+  @ImportField(mandatory = true, name = "Program", nested = "code")
+  Program program;
 
-    private Date modifiedDate;
-    private String modifiedBy;
+  @ImportField(mandatory = true, name = "Facility", nested = "code")
+  Facility supplyingFacility;
+
+  private Date modifiedDate;
+  private String modifiedBy;
 
 }

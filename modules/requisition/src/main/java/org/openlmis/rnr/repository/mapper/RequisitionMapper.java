@@ -25,7 +25,8 @@ public interface RequisitionMapper {
       "fullSupplyItemsSubmittedCost = #{fullSupplyItemsSubmittedCost},",
       "submittedDate = #{submittedDate},",
       "nonFullSupplyItemsSubmittedCost = #{nonFullSupplyItemsSubmittedCost},",
-      "supervisoryNodeId = #{supervisoryNodeId}",
+      "supervisoryNodeId = #{supervisoryNodeId},",
+      "supplyingFacilityId = #{supplyingFacilityId}",
       "WHERE id = #{id}"})
   void update(Rnr requisition);
 
