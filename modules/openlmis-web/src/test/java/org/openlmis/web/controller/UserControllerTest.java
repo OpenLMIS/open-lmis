@@ -29,6 +29,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
+import static org.openlmis.web.controller.UserController.TOKEN_VALID;
 
 public class UserControllerTest {
 
@@ -199,10 +200,23 @@ public class UserControllerTest {
   @Test
   public void shouldReturnErrorResponseIfTokenIsNotValid() throws IOException, ServletException {
     String invalidToken = "invalidToken";
-
-    userController.validatePasswordResetToken(invalidToken);
+    String errorMessage = "some error";
+    doThrow(new DataException(errorMessage)).when(userService).getUserIdByPasswordResetToken(invalidToken);
+    ResponseEntity<OpenLmisResponse> response = userController.validatePasswordResetToken(invalidToken);
 
     verify(userService).getUserIdByPasswordResetToken(invalidToken);
+    assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+    assertThat(response.getBody().getErrorMsg(), is(errorMessage));
+  }
+
+  @Test
+  public void shouldReturnSuccessResponseIfTokenIsValid() throws IOException, ServletException {
+    String validToken = "validToken";
+    ResponseEntity<OpenLmisResponse> response = userController.validatePasswordResetToken(validToken);
+
+    verify(userService).getUserIdByPasswordResetToken(validToken);
+    assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    assertThat((Boolean)response.getBody().getData().get(TOKEN_VALID), is(true));
   }
 
 }

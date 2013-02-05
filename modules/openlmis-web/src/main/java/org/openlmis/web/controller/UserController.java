@@ -36,6 +36,7 @@ public class UserController extends BaseController {
   private RoleRightsService roleRightService;
   private UserService userService;
   public static final String USER_ID = "userId";
+  public static final String TOKEN_VALID = "TOKEN_VALID";
 
   @Autowired
   public UserController(RoleRightsService roleRightService, UserService userService) {
@@ -125,7 +126,7 @@ public class UserController extends BaseController {
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);
     }
-    return success("Token Validated");
+    return response(TOKEN_VALID, true);
   }
 
   @RequestMapping(value = "/user/resetPassword/{token}" , method = PUT)

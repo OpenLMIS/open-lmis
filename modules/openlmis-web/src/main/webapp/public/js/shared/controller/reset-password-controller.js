@@ -1,4 +1,7 @@
-function ResetPasswordController($scope, UpdateUserPassword, $location, $route) {
+function ResetPasswordController($scope, UpdateUserPassword, $location, $route, tokenValid) {
+  if(!tokenValid) {
+    window.location = 'access-denied.html';
+  }
 
   $scope.resetPassword = function () {
     var reWhiteSpace = new RegExp("\\s");
@@ -11,9 +14,12 @@ function ResetPasswordController($scope, UpdateUserPassword, $location, $route) 
       $scope.error = "Passwords do not match";
       return;
     }
+
     UpdateUserPassword.update({token:$route.current.params.token}, $scope.password1, function (data) {
       $location.path('/reset/password/complete');
-    },function (data) {});
+    }, function (data) {
+    });
+
   }
 }
 
@@ -22,7 +28,7 @@ function ValidateTokenController() {
 
 function ResetCompleteController($scope) {
 
-  $scope.goToLoginPage = function() {
+  $scope.goToLoginPage = function () {
     window.location = 'login.html'
   }
 
@@ -30,11 +36,27 @@ function ResetCompleteController($scope) {
 
 ValidateTokenController.resolve = {
 
-  userId:function ($q, $timeout, ValidatePasswordToken, $route, $location) {
+  tokenValid:function ($q, $timeout, ValidatePasswordToken, $route, $location) {
     var deferred = $q.defer();
     $timeout(function () {
       ValidatePasswordToken.get({token:$route.current.params.token }, function (data) {
         $location.path('/reset/' + $route.current.params.token);
+      }, function (data) {
+        window.location = 'access-denied.html';
+      });
+    }, 100);
+    return deferred.promise;
+  }
+
+}
+
+ResetPasswordController.resolve = {
+
+  tokenValid:function ($q, $timeout, ValidatePasswordToken, $route, $location) {
+    var deferred = $q.defer();
+    $timeout(function () {
+      ValidatePasswordToken.get({token:$route.current.params.token }, function (data) {
+          deferred.resolve(data.TOKEN_VALID);
       }, function (data) {
         window.location = 'access-denied.html';
       });

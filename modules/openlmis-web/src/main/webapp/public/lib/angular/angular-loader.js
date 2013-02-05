@@ -1,10 +1,12 @@
 /**
- * @license AngularJS v1.0.2
+ * @license AngularJS v1.1.1
  * (c) 2010-2012 Google, Inc. http://angularjs.org
  * License: MIT
  */
 
-(/**
+(
+
+/**
  * @ngdoc interface
  * @name angular.Module
  * @description
@@ -12,13 +14,13 @@
  * Interface for configuring angular {@link angular.module modules}.
  */
 
-  function setupModuleLoader(window) {
+function setupModuleLoader(window) {
 
   function ensure(obj, name, factory) {
     return obj[name] || (obj[name] = factory());
   }
 
-  return ensure(ensure(window, 'angular', Object), 'module', function () {
+  return ensure(ensure(window, 'angular', Object), 'module', function() {
     /** @type {Object.<string, angular.Module>} */
     var modules = {};
 
@@ -34,7 +36,7 @@
      *
      * # Module
      *
-     * A module is a collocation of services, directives, filters, and configure information. Module
+     * A module is a collocation of services, directives, filters, and configuration information. Module
      * is used to configure the {@link AUTO.$injector $injector}.
      *
      * <pre>
@@ -46,7 +48,7 @@
      *
      * // configure existing services inside initialization blocks.
      * myModule.config(function($locationProvider) {
-     'use strict';
+'use strict';
      *   // Configure existing providers
      *   $locationProvider.hashPrefix('!');
      * });
@@ -65,7 +67,7 @@
      * @param {!string} name The name of the module to create or retrieve.
      * @param {Array.<string>=} requires If specified then new module is being created. If unspecified then the
      *        the module is being retrieved for further configuration.
-     * @param {Function} configFn Option configuration function for the module. Same as
+     * @param {Function} configFn Optional configuration function for the module. Same as
      *        {@link angular.Module#config Module#config()}.
      * @returns {module} new module with the {@link angular.Module} api.
      */
@@ -73,7 +75,7 @@
       if (requires && modules.hasOwnProperty(name)) {
         modules[name] = null;
       }
-      return ensure(modules, name, function () {
+      return ensure(modules, name, function() {
         if (!requires) {
           throw Error('No module: ' + name);
         }
@@ -89,8 +91,8 @@
         /** @type {angular.Module} */
         var moduleInstance = {
           // Private state
-          _invokeQueue:invokeQueue,
-          _runBlocks:runBlocks,
+          _invokeQueue: invokeQueue,
+          _runBlocks: runBlocks,
 
           /**
            * @ngdoc property
@@ -100,7 +102,7 @@
            * @description
            * Holds the list of modules which the injector will load before the current module is loaded.
            */
-          requires:requires,
+          requires: requires,
 
           /**
            * @ngdoc property
@@ -109,7 +111,7 @@
            * @returns {string} Name of the module.
            * @description
            */
-          name:name,
+          name: name,
 
 
           /**
@@ -121,7 +123,7 @@
            * @description
            * See {@link AUTO.$provide#provider $provide.provider()}.
            */
-          provider:invokeLater('$provide', 'provider'),
+          provider: invokeLater('$provide', 'provider'),
 
           /**
            * @ngdoc method
@@ -132,7 +134,7 @@
            * @description
            * See {@link AUTO.$provide#factory $provide.factory()}.
            */
-          factory:invokeLater('$provide', 'factory'),
+          factory: invokeLater('$provide', 'factory'),
 
           /**
            * @ngdoc method
@@ -143,7 +145,7 @@
            * @description
            * See {@link AUTO.$provide#service $provide.service()}.
            */
-          service:invokeLater('$provide', 'service'),
+          service: invokeLater('$provide', 'service'),
 
           /**
            * @ngdoc method
@@ -154,7 +156,7 @@
            * @description
            * See {@link AUTO.$provide#value $provide.value()}.
            */
-          value:invokeLater('$provide', 'value'),
+          value: invokeLater('$provide', 'value'),
 
           /**
            * @ngdoc method
@@ -166,7 +168,7 @@
            * Because the constant are fixed, they get applied before other provide methods.
            * See {@link AUTO.$provide#constant $provide.constant()}.
            */
-          constant:invokeLater('$provide', 'constant', 'unshift'),
+          constant: invokeLater('$provide', 'constant', 'unshift'),
 
           /**
            * @ngdoc method
@@ -177,7 +179,7 @@
            * @description
            * See {@link ng.$filterProvider#register $filterProvider.register()}.
            */
-          filter:invokeLater('$filterProvider', 'register'),
+          filter: invokeLater('$filterProvider', 'register'),
 
           /**
            * @ngdoc method
@@ -188,7 +190,7 @@
            * @description
            * See {@link ng.$controllerProvider#register $controllerProvider.register()}.
            */
-          controller:invokeLater('$controllerProvider', 'register'),
+          controller: invokeLater('$controllerProvider', 'register'),
 
           /**
            * @ngdoc method
@@ -200,7 +202,7 @@
            * @description
            * See {@link ng.$compileProvider#directive $compileProvider.directive()}.
            */
-          directive:invokeLater('$compileProvider', 'directive'),
+          directive: invokeLater('$compileProvider', 'directive'),
 
           /**
            * @ngdoc method
@@ -211,7 +213,7 @@
            * @description
            * Use this method to register work which needs to be performed on module loading.
            */
-          config:config,
+          config: config,
 
           /**
            * @ngdoc method
@@ -220,10 +222,10 @@
            * @param {Function} initializationFn Execute this function after injector creation.
            *    Useful for application initialization.
            * @description
-           * Use this method to register work which needs to be performed when the injector with
-           * with the current module is finished loading.
+           * Use this method to register work which should be performed when the injector is done
+           * loading all modules.
            */
-          run:function (block) {
+          run: function(block) {
             runBlocks.push(block);
             return this;
           }
@@ -242,7 +244,7 @@
          * @returns {angular.Module}
          */
         function invokeLater(provider, method, insertMethod) {
-          return function () {
+          return function() {
             invokeQueue[insertMethod || 'push']([provider, method, arguments]);
             return moduleInstance;
           }
@@ -251,7 +253,8 @@
     };
   });
 
-})(window);
+}
+)(window);
 
 /**
  * Closure compiler type information
