@@ -68,6 +68,11 @@ public class ApprovePage extends Page {
     @FindBy(how = How.XPATH, using = "//div[@class='info-box']/div[2]/div[3]")
     private static WebElement reportingPeriodInitRnRScreen;
 
+    @FindBy(how = How.XPATH, using = "//div[contains(text(),'R&R approved successfully!')]")
+    private static WebElement approvedSuccessMessage;
+
+
+
 
     public ApprovePage(TestWebDriver driver) throws  IOException {
         super(driver);
@@ -139,8 +144,8 @@ public class ApprovePage extends Page {
        testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
        SeleneseTestNgHelper.assertTrue("R&R saved successfully message not displayed", saveSuccessMsgDiv.isDisplayed());
        approveButton.click();
-       testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
-       SeleneseTestNgHelper.assertTrue("R&R approved successfully! message not displayed", saveSuccessMsgDiv.isDisplayed());
+       testWebDriver.waitForElementToAppear(approvedSuccessMessage);
+       SeleneseTestNgHelper.assertTrue("R&R approved successfully! message not displayed", approvedSuccessMessage.isDisplayed());
 
    }
 
