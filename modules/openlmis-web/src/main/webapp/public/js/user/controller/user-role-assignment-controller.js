@@ -5,7 +5,13 @@ function UserRoleAssignmentController($scope) {
   };
 
   $scope.availablePrograms = function () {
-    return $scope.$parent.allSupportedPrograms;
+    var assignedProgramIds = _.map($scope.user.roleAssignments, function (roleAssignment) {
+      return roleAssignment.programId;
+    });
+
+    return _.reject($scope.$parent.allSupportedPrograms, function (supportedProgram) {
+      return _.contains(assignedProgramIds, supportedProgram.id);
+    });
   };
 
   $scope.showRoleAssignmentOptions = function () {
