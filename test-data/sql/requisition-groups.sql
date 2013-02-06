@@ -16,3 +16,6 @@ insert into requisition_group_program_schedules ( requisitionGroupId , programId
 ((select id from requisition_groups where code='RG2'),(select id from programs where code='HIV'),(select id from processing_schedules where code='M'),TRUE);
 
 
+insert into supply_lines (description, supervisoryNodeId, programId, supplyingFacilityId) values
+('supplying node for HIV', (select id from supervisory_nodes where code = 'N1'), (select id from programs where code='HIV'),(select id from facilities where code = 'F11'));
+

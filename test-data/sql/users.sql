@@ -31,4 +31,4 @@ INSERT INTO role_assignments
   (userId, roleId, programId, supervisoryNodeId) VALUES
   (200, (SELECT id FROM roles WHERE name = 'store in-charge'), 1, null),
   (200, (SELECT id FROM roles WHERE name = 'store in-charge'), 1, (SELECT id from supervisory_nodes WHERE code = 'N1')),
-  (300, (SELECT id FROM roles WHERE name = 'medical-officer'), 1, (SELECT id from supervisory_nodes WHERE code = 'N1'));
+  (300, (SELECT id FROM roles WHERE name = 'medical-officer'), 1, (SELECT id from supervisory_nodes WHERE code = 'N2'));

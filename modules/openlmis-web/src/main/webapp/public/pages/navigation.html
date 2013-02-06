@@ -2,7 +2,8 @@
     <ul class="clearfix" style="display:none">
         <li><a href="/">Home</a></li>
 
-        <li ng-show="hasPermission('CREATE_REQUISITION') || hasPermission('AUTHORIZE_REQUISITION') || hasPermission('APPROVE_REQUISITION')">
+        <li ng-show="hasPermission('CREATE_REQUISITION') || hasPermission('AUTHORIZE_REQUISITION') || hasPermission('APPROVE_REQUISITION') ||
+       hasPermission('CONVERT_TO_ORDER')  ">
             <a href="javascript: void(0)">Requisitions</a>
             <div class="submenu">
               <ul>

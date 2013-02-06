@@ -1,9 +1,6 @@
 package org.openlmis.core.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.SupplyLine;
@@ -19,5 +16,8 @@ public interface SupplyLineMapper {
   Integer insert(SupplyLine supplyLine);
 
   @Select("SELECT * FROM supply_lines WHERE supervisoryNodeId = #{supervisoryNode.id} AND programId = #{program.id}")
+  @Results(value = {
+    @Result(property = "supplyingFacility.id", column = "supplyingFacilityId")
+  })
   SupplyLine getSupplyLineBy(@Param(value = "supervisoryNode")SupervisoryNode supervisoryNode, @Param(value = "program")Program program);
 }
