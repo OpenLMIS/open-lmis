@@ -15,7 +15,7 @@ var RnrLineItem = function (lineItem) {
 
   RnrLineItem.prototype.fillPacksToShipBasedOnCalculatedOrderQuantityOrQuantityRequested = function (rnr) {
     var orderQuantity = this.quantityRequested == null ?
-        this.calculatedOrderQuantity : this.quantityRequested;
+      this.calculatedOrderQuantity : this.quantityRequested;
     this.calculatePacksToShip(orderQuantity);
     this.fillCost(rnr);
   };
@@ -34,7 +34,7 @@ var RnrLineItem = function (lineItem) {
   };
 
   RnrLineItem.prototype.fillAMC = function (rnr) {
-    this.calculateAMC();
+    this.calculateAMC(rnr);
     this.fillMaxStockQuantity(rnr);
   };
 
@@ -67,8 +67,8 @@ var RnrLineItem = function (lineItem) {
       var totalLossesAndAdjustments = utils.parseIntWithBaseTen(this.totalLossesAndAdjustments);
       var stockInHand = utils.parseIntWithBaseTen(this.stockInHand);
       return (utils.isNumber(quantityDispensed) && utils.isNumber(beginningBalance) && utils.isNumber(quantityReceived) &&
-          utils.isNumber(totalLossesAndAdjustments) && utils.isNumber(stockInHand)) ?
-          quantityDispensed != (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand) : null;
+        utils.isNumber(totalLossesAndAdjustments) && utils.isNumber(stockInHand)) ?
+        quantityDispensed != (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand) : null;
     }
     return false;
   };
@@ -107,7 +107,6 @@ var RnrLineItem = function (lineItem) {
     }
     this.packsToShip = Math.floor(quantity / utils.parseIntWithBaseTen(this.packSize));
     this.applyRoundingRulesToPacksToShip(quantity);
-    console.log("packs to ship "+ this.packsToShip);
   };
 
   RnrLineItem.prototype.applyRoundingRulesToPacksToShip = function (orderQuantity) {
@@ -121,9 +120,7 @@ var RnrLineItem = function (lineItem) {
   };
 
   RnrLineItem.prototype.calculateCost = function () {
-    console.log("price :"+this.price);
     this.cost = !utils.isNumber(this.packsToShip) ? 0 : parseFloat(this.packsToShip * this.price);
-    console.log("cost :"+this.cost);
   };
 
   RnrLineItem.prototype.calculateConsumption = function (programRnrColumnList) {
@@ -160,15 +157,29 @@ var RnrLineItem = function (lineItem) {
     this.dosesPerMonth = utils.parseIntWithBaseTen(this.dosesPerMonth);
     var g = utils.parseIntWithBaseTen(this.dosesPerDispensingUnit);
     var consumptionAdjustedWithStockOutDays = ((numberOfMonthsInPeriod * 30) - this.stockOutDays) == 0 ?
-        this.quantityDispensed :
-        (this.quantityDispensed * ((numberOfMonthsInPeriod * 30) / ((numberOfMonthsInPeriod * 30) - this.stockOutDays)));
+      this.quantityDispensed :
+      (this.quantityDispensed * ((numberOfMonthsInPeriod * 30) / ((numberOfMonthsInPeriod * 30) - this.stockOutDays)));
     var adjustmentForNewPatients = (this.newPatientCount * Math.ceil(this.dosesPerMonth / g) ) * numberOfMonthsInPeriod;
     this.normalizedConsumption = Math.round(consumptionAdjustedWithStockOutDays + adjustmentForNewPatients);
   };
 
-  RnrLineItem.prototype.calculateAMC = function () {
-    this.amc = this.normalizedConsumption;
+  RnrLineItem.prototype.calculateAMC = function (rnr) {
+    if (!utils.isNumber(this.normalizedConsumption)) return;
+
+    var numberOfMonthsInPeriod = rnr.period.numberOfMonths;
+    var divider = numberOfMonthsInPeriod*(1+this.previousNormalizedConsumptions.length);
+
+    this.amc = Math.round((this.normalizedConsumption+this.sumOfPreviousNormalizedConsumptions())/divider);
   };
+
+  RnrLineItem.prototype.sumOfPreviousNormalizedConsumptions = function() {
+    if(this.previousNormalizedConsumptions == null || this.previousNormalizedConsumptions.length == 0) return 0;
+    var total =0;
+    this.previousNormalizedConsumptions.forEach(function(normalizedConsumption){
+      total += normalizedConsumption;
+    })
+    return total;
+  }
 
   RnrLineItem.prototype.calculateMaxStockQuantity = function () {
     if (!utils.isNumber(this.amc)) {

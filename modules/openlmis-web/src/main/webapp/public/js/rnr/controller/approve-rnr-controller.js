@@ -193,7 +193,6 @@ ApproveRnrController.resolve = {
         function (data) {
           deferred.resolve(data.rnr);
         }, function () {
-          console.log("error")
         });
     }, 100);
     return deferred.promise;

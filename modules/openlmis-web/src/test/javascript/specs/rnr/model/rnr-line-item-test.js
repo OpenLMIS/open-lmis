@@ -163,13 +163,57 @@ describe('RnrLineItem', function () {
   });
 
   describe('Calculate AMC', function () {
-    it('should set AMC to be equal to normalized consumption', function () {
-      var lineItem = {"normalizedConsumption":10};
+    it('should calculate AMC when number of months in a period is 3 or more', function () {
+      var lineItem = {"normalizedConsumption":10, "previousNormalizedConsumptions":[]};
       var rnrLineItem = new RnrLineItem(lineItem);
+      var period = {"numberOfMonths":3};
+      var rnr = {"period":period};
 
-      rnrLineItem.calculateAMC();
+      rnrLineItem.calculateAMC(rnr);
 
-      expect(rnrLineItem.amc).toEqual(10);
+      expect(rnrLineItem.amc).toEqual(3);
+    });
+
+    it('should calculate AMC when number of months in a period is 2', function () {
+      var lineItem = {"normalizedConsumption":10, "previousNormalizedConsumptions":[14]};
+      var rnrLineItem = new RnrLineItem(lineItem);
+      var period = {"numberOfMonths":2};
+      var rnr = {"period":period};
+
+      rnrLineItem.calculateAMC(rnr);
+      expect(rnrLineItem.amc).toEqual(6);
+    });
+
+    it('should calculate AMC when number of months in a period is 2 but previous normalized consumption is not available', function () {
+      var lineItem = {"normalizedConsumption":10, "previousNormalizedConsumptions":[]};
+      var rnrLineItem = new RnrLineItem(lineItem);
+      var period = {"numberOfMonths":2};
+      var rnr = {"period":period};
+
+      rnrLineItem.calculateAMC(rnr);
+      expect(rnrLineItem.amc).toEqual(5);
+    });
+
+    it('should calculate AMC when number of months in a period is 1', function () {
+      var lineItem = {"normalizedConsumption":10, "previousNormalizedConsumptions":[14, 12]};
+      var rnrLineItem = new RnrLineItem(lineItem);
+      var period = {"numberOfMonths":1};
+      var rnr = {"period":period};
+
+      rnrLineItem.calculateAMC(rnr);
+
+      expect(rnrLineItem.amc).toEqual(12);
+    });
+
+    it('should calculate AMC when number of months in a period is 1 and only one of the two previous normalized consumption is available', function () {
+      var lineItem = {"normalizedConsumption":10, "previousNormalizedConsumptions":[14]};
+      var rnrLineItem = new RnrLineItem(lineItem);
+      var period = {"numberOfMonths":1};
+      var rnr = {"period":period};
+
+      rnrLineItem.calculateAMC(rnr);
+
+      expect(rnrLineItem.amc).toEqual(12);
     });
 
     it('should not calculate AMC when normalized consumption is not present', function () {
