@@ -27,20 +27,21 @@ public class RnRServiceTest extends TestCaseHelper {
         try {
 
             DBWrapper dbWrapper = new DBWrapper();
-            dbWrapper.insertProducts();
-            dbWrapper.insertProgramProducts();
-            dbWrapper.insertFacilityApprovedProducts();
-            dbWrapper.insertFacilities();
+            dbWrapper.insertFacilities("F10", "F11");
+            dbWrapper.insertProducts("P10", "P11");
+            dbWrapper.insertProgramProducts("P10", "P11", "HIV");
+            dbWrapper.insertFacilityApprovedProducts("P10", "P11", "HIV", "Lvl3 Hospital");
+
             dbWrapper.configureTemplate();
             dbWrapper.insertRoles();
             dbWrapper.insertRoleRights();
             dbWrapper.insertUser("200", "User123", "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==", "F12", "manjyots@thoughtworks.com");
-            dbWrapper.insertSupervisoryNode("F10");
-            dbWrapper.insertSupervisoryNodeSecond("F11");
+            dbWrapper.insertSupervisoryNode("F10", "N1", "null");
+            dbWrapper.insertSupervisoryNodeSecond("F11", "N2", "N1");
             dbWrapper.insertRoleAssignment("200", "store in-charge");
             dbWrapper.insertSchedules();
             dbWrapper.insertProcessingPeriods();
-            dbWrapper.insertRequisitionGroups();
+            dbWrapper.insertRequisitionGroups("RG1","RG2","N1","N2");
             dbWrapper.insertRequisitionGroupMembers("F10","F11");
             dbWrapper.insertRequisitionGroupProgramSchedule();
 
@@ -79,9 +80,6 @@ public class RnRServiceTest extends TestCaseHelper {
                     "\"stockOutDays\":\"10\"}],\"nonFullSupplyLineItems\":[]}";
 
 
-//            DBWrapper dbWrapper = new DBWrapper();
-//            dbWrapper.deleteFacilities();
-
             ServiceUtils serviceUtils = new ServiceUtils();
 
             serviceUtils.postNONJSON("j_username=User123&j_password=User123", BASE_URL+"/j_spring_security_check");
@@ -98,8 +96,8 @@ public class RnRServiceTest extends TestCaseHelper {
             e.printStackTrace();
         } finally {
             try {
-//                DBWrapper dbWrapper = new DBWrapper();
-//                dbWrapper.deleteData();
+                DBWrapper dbWrapper = new DBWrapper();
+                dbWrapper.deleteData();
             } catch (Exception e) {
                 e.printStackTrace();
             }
