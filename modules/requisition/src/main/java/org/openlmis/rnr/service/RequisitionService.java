@@ -109,17 +109,15 @@ public class RequisitionService {
 
   public OpenLmisMessage submit(Rnr rnr) {
 
-    Rnr savedRnr = requisitionRepository.getById(rnr.getId());
+    Rnr savedRnr = getFullRequisitionById(rnr.getId());
     if (savedRnr.getStatus() != INITIATED) {
       throw new DataException(new OpenLmisMessage(RNR_SUBMISSION_ERROR));
     }
 
     savedRnr.copyUserEditableFieldsForSubmitOrAuthorize(rnr);
     savedRnr.validate(rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId()));
-    fillFacilityPeriodProgram(savedRnr);
-    fillPreviousRequisitionsForAmc(savedRnr);
-    savedRnr.prepareForSubmit();
 
+    savedRnr.prepareForSubmit();
 
     requisitionRepository.update(savedRnr);
 
@@ -130,14 +128,13 @@ public class RequisitionService {
   }
 
   public OpenLmisMessage authorize(Rnr rnr) {
-    Rnr savedRnr = requisitionRepository.getById(rnr.getId());
+    Rnr savedRnr = getFullRequisitionById(rnr.getId());
+
     if (savedRnr.getStatus() != SUBMITTED) throw new DataException(RNR_AUTHORIZATION_ERROR);
     savedRnr.copyApproverEditableFields(rnr);
 
     savedRnr.validate(rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId()));
 
-    fillFacilityPeriodProgram(savedRnr);
-    fillPreviousRequisitionsForAmc(savedRnr);
     savedRnr.prepareForAuthorize();
 
     savedRnr.setSupervisoryNodeId(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram()).getId());
@@ -150,7 +147,8 @@ public class RequisitionService {
   }
 
   public OpenLmisMessage approve(Rnr rnr) {
-    Rnr savedRnr = requisitionRepository.getById(rnr.getId());
+    Rnr savedRnr = getFullRequisitionById(rnr.getId());
+
     savedRnr.copyApproverEditableFields(rnr);
     if (!(savedRnr.getStatus() == AUTHORIZED || savedRnr.getStatus() == IN_APPROVAL))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
@@ -162,6 +160,14 @@ public class RequisitionService {
     } else {
       return approveAndAssignToNextSupervisoryNode(savedRnr, parent);
     }
+  }
+
+  private Rnr getFullRequisitionById(Integer id) {
+    Rnr savedRnr = requisitionRepository.getById(id);
+    fillFacilityPeriodProgram(savedRnr);
+    fillPreviousRequisitionsForAmc(savedRnr);
+
+    return savedRnr;
   }
 
   public List<Rnr> getApprovedRequisitions() {
@@ -225,9 +231,9 @@ public class RequisitionService {
   private boolean isUserAllowedToSave(Rnr rnr) {
     List<Right> userRights = roleRightsService.getRights(rnr.getModifiedBy());
     return (rnr.getStatus() == INITIATED && userRights.contains(CREATE_REQUISITION)) ||
-      (rnr.getStatus() == SUBMITTED && userRights.contains(AUTHORIZE_REQUISITION)) ||
-      (rnr.getStatus() == AUTHORIZED && userRights.contains(APPROVE_REQUISITION)) ||
-      (rnr.getStatus() == IN_APPROVAL && userRights.contains(APPROVE_REQUISITION));
+        (rnr.getStatus() == SUBMITTED && userRights.contains(AUTHORIZE_REQUISITION)) ||
+        (rnr.getStatus() == AUTHORIZED && userRights.contains(APPROVE_REQUISITION)) ||
+        (rnr.getStatus() == IN_APPROVAL && userRights.contains(APPROVE_REQUISITION));
   }
 
 

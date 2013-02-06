@@ -411,6 +411,8 @@ public class RequisitionServiceTest {
   public void shouldNotAuthorizeInvalidRnr() throws Exception {
     Rnr rnr = make(a(defaultRnr));
     Rnr savedRnr = spy(submittedRnr);
+    fillFacilityProgramAndPeriod(savedRnr);
+
     when(requisitionRepository.getById(rnr.getId())).thenReturn(savedRnr);
     when(rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId())).thenReturn(rnrColumns);
     doThrow(new DataException("error-message")).when(savedRnr).validate(rnrColumns);
@@ -424,6 +426,7 @@ public class RequisitionServiceTest {
   @Test
   public void shouldNotAuthorizeRnrIfNotSubmitted() throws Exception {
     Rnr rnr = Mockito.spy(make(a(defaultRnr)));
+    fillFacilityProgramAndPeriod(initiatedRnr);
     when(requisitionRepository.getById(rnr.getId())).thenReturn(initiatedRnr);
 
     expectedException.expect(DataException.class);
@@ -547,6 +550,8 @@ public class RequisitionServiceTest {
 
   @Test
   public void shouldNotApproveAnRnrIfStatusIsNotAuthorized() throws Exception {
+    fillFacilityProgramAndPeriod(submittedRnr);
+
     when(requisitionRepository.getById(submittedRnr.getId())).thenReturn(submittedRnr);
 
     expectedException.expect(DataException.class);
@@ -559,6 +564,7 @@ public class RequisitionServiceTest {
   public void shouldApproveAnRnrAndChangeStatusToApprovedIfThereIsNoFurtherApprovalNeeded() throws Exception {
     int supervisoryNodeId = 1;
     int supplyingFacilityId = 2;
+    fillFacilityProgramAndPeriod(authorizedRnr);
     authorizedRnr.setSupervisoryNodeId(supervisoryNodeId);
     when(requisitionRepository.getById(authorizedRnr.getId())).thenReturn(authorizedRnr);
     SupervisoryNode supervisoryNode = new SupervisoryNode();
@@ -579,6 +585,7 @@ public class RequisitionServiceTest {
   @Test
   public void shouldApproveAnRnrAndKeepStatusInApprovalIfFurtherApprovalNeeded() throws Exception {
     authorizedRnr.setSupervisoryNodeId(1);
+    fillFacilityProgramAndPeriod(authorizedRnr);
     when(requisitionRepository.getById(authorizedRnr.getId())).thenReturn(authorizedRnr);
 
     SupervisoryNode parentNode = new SupervisoryNode() {{
@@ -597,6 +604,7 @@ public class RequisitionServiceTest {
 
   @Test
   public void shouldApproveAnRnrAndKeepStatusInApprovalIfFurtherApprovalNeededAndShouldGiveMessageIfThereIsNoSupervisorAssigned() throws Exception {
+    fillFacilityProgramAndPeriod(authorizedRnr);
     authorizedRnr.setSupervisoryNodeId(1);
     when(requisitionRepository.getById(authorizedRnr.getId())).thenReturn(authorizedRnr);
 
