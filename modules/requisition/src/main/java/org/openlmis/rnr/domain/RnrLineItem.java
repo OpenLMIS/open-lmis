@@ -118,11 +118,11 @@ public class RnrLineItem {
   }
 
   public void calculate(ProcessingPeriod period, RnrStatus status) {
-    calculateOrderQuantity();
     calculateNormalizedConsumption();
     calculateAmc(period);
     calculateTotalLossesAndAdjustments();
     calculateMaxStockQuantity();
+    calculateOrderQuantity();
     if (status == IN_APPROVAL) calculatePacksToShipWithQuantityApproved();
     else calculatePacksToShipWithQuantityRequested();
   }
