@@ -1,6 +1,10 @@
 var RnrLineItem = function (lineItem) {
   jQuery.extend(true, this, lineItem);
 
+  if (this.previousNormalizedConsumptions == undefined || this.previousNormalizedConsumptions == null)
+    this.previousNormalizedConsumptions = [];
+
+
   RnrLineItem.prototype.fillConsumptionOrStockInHand = function (rnr, programRnrColumnList) {
     this.beginningBalance = utils.parseIntWithBaseTen(this.beginningBalance);
     this.quantityReceived = utils.parseIntWithBaseTen(this.quantityReceived);
@@ -167,15 +171,15 @@ var RnrLineItem = function (lineItem) {
     if (!utils.isNumber(this.normalizedConsumption)) return;
 
     var numberOfMonthsInPeriod = rnr.period.numberOfMonths;
-    var divider = numberOfMonthsInPeriod*(1+this.previousNormalizedConsumptions.length);
+    var divider = numberOfMonthsInPeriod * (1 + this.previousNormalizedConsumptions.length);
 
-    this.amc = Math.round((this.normalizedConsumption+this.sumOfPreviousNormalizedConsumptions())/divider);
+    this.amc = Math.round((this.normalizedConsumption + this.sumOfPreviousNormalizedConsumptions()) / divider);
   };
 
-  RnrLineItem.prototype.sumOfPreviousNormalizedConsumptions = function() {
-    if(this.previousNormalizedConsumptions == null || this.previousNormalizedConsumptions.length == 0) return 0;
-    var total =0;
-    this.previousNormalizedConsumptions.forEach(function(normalizedConsumption){
+  RnrLineItem.prototype.sumOfPreviousNormalizedConsumptions = function () {
+    if (this.previousNormalizedConsumptions == null || this.previousNormalizedConsumptions.length == 0) return 0;
+    var total = 0;
+    this.previousNormalizedConsumptions.forEach(function (normalizedConsumption) {
       total += normalizedConsumption;
     })
     return total;
