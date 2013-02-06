@@ -133,7 +133,7 @@ describe("User", function () {
 
       var data = {};
       data.facility = facility;
-      $httpBackend.expectGET('/admin/facility/' + facility.id + '.json').respond(data);
+      $httpBackend.expectGET('/facilities/' + facility.id + '.json').respond(data);
       $httpBackend.expectGET('/roles.json').respond(200);
 
       scope.setSelectedFacility(facility);

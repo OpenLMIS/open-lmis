@@ -42,7 +42,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
     var errorFn = function (data) {
       $scope.showError = "true";
       $scope.message = "";
-      $scope.error = data.error;
+      $scope.error = data.data.error;
     };
 
     if(!$scope.isEdit){

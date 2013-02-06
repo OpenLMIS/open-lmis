@@ -42,7 +42,7 @@ describe("Facility", function () {
 
     it('should give success message if save successful', function () {
       facility = {"code":"code", supportedPrograms:[]};
-      $httpBackend.expectPOST('/admin/facility.json').respond(200, {"success":"Saved successfully", "facility":facility});
+      $httpBackend.expectPOST('/facilities.json').respond(200, {"success":"Saved successfully", "facility":facility});
       scope.saveFacility();
       $httpBackend.flush();
       expect("Saved successfully").toEqual(scope.message);
@@ -50,7 +50,7 @@ describe("Facility", function () {
     });
 
     it('should give error if save failed', function () {
-      $httpBackend.expectPOST('/admin/facility.json').respond(404, {"error":"Save failed"});
+      $httpBackend.expectPOST('/facilities.json').respond(404, {"error":"Save failed"});
       scope.saveFacility();
       $httpBackend.flush();
       expect("Save failed").toEqual(scope.error);
