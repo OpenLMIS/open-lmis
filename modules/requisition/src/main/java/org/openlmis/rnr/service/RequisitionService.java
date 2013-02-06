@@ -116,9 +116,10 @@ public class RequisitionService {
 
     savedRnr.copyUserEditableFieldsForSubmitOrAuthorize(rnr);
     savedRnr.validate(rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId()));
-
+    fillFacilityPeriodProgram(savedRnr);
     fillPreviousRequisitionsForAmc(savedRnr);
     savedRnr.prepareForSubmit();
+
 
     requisitionRepository.update(savedRnr);
 
@@ -133,8 +134,10 @@ public class RequisitionService {
     if (savedRnr.getStatus() != SUBMITTED) throw new DataException(RNR_AUTHORIZATION_ERROR);
     savedRnr.copyApproverEditableFields(rnr);
 
-    savedRnr.validate(rnrTemplateRepository.fetchRnrTemplateColumns(rnr.getProgram().getId()));
+    savedRnr.validate(rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId()));
 
+    fillFacilityPeriodProgram(savedRnr);
+    fillPreviousRequisitionsForAmc(savedRnr);
     savedRnr.prepareForAuthorize();
 
     savedRnr.setSupervisoryNodeId(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram()).getId());

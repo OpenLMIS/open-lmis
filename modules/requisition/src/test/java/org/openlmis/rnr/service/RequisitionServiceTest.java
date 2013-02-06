@@ -126,6 +126,13 @@ public class RequisitionServiceTest {
     Rnr expectedRequisition = new Rnr();
     when(requisitionRepository.getRequisition(FACILITY, PROGRAM, PERIOD)).thenReturn(expectedRequisition);
 
+    fillFacilityProgramAndPeriod(expectedRequisition);
+
+    Rnr actualRequisition = requisitionService.get(FACILITY, PROGRAM, PERIOD);
+    assertThat(actualRequisition, is(expectedRequisition));
+  }
+
+  private void fillFacilityProgramAndPeriod(Rnr expectedRequisition) {
     Facility facility = new Facility();
     facility.setId(FACILITY.getId());
     facility.setName("test Facility");
@@ -154,9 +161,6 @@ public class RequisitionServiceTest {
     expectedRequisition.setFacility(facility);
     expectedRequisition.setPeriod(period);
     expectedRequisition.setProgram(program);
-
-    Rnr actualRequisition = requisitionService.get(FACILITY, PROGRAM, PERIOD);
-    assertThat(actualRequisition, is(expectedRequisition));
   }
 
   @Test
@@ -293,25 +297,29 @@ public class RequisitionServiceTest {
   public void shouldUseOnlyUserEditableDataFromUserSubmittedRnr() {
     Rnr rnrToSubmit = make(a(defaultRnr));
     Rnr savedRnr = Mockito.spy(initiatedRnr);
+    fillFacilityProgramAndPeriod(savedRnr);
     when(requisitionRepository.getById(rnrToSubmit.getId())).thenReturn(savedRnr);
-    when(rnrTemplateRepository.fetchRnrTemplateColumns(rnrToSubmit.getProgram().getId())).thenReturn(rnrColumns);
+    when(rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId())).thenReturn(rnrColumns);
     doReturn(true).when(savedRnr).validate(rnrColumns);
-    when(supervisoryNodeService.getFor(rnrToSubmit.getFacility(), rnrToSubmit.getProgram())).thenReturn(null);
+    when(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(null);
 
     requisitionService.submit(rnrToSubmit);
     verify(savedRnr).copyUserEditableFieldsForSubmitOrAuthorize(rnrToSubmit);
   }
 
   @Test
-  public void shouldReturnMessageWhileSubmittingRnrIfSupervisingNodeNotPresent() {
+  public void shouldReturnMessageWhileSubmittingRnrIfSupervisingNodeNotPresent() throws Exception {
     Rnr rnr = make(a(defaultRnr));
     Rnr savedRnr = Mockito.spy(initiatedRnr);
+    fillFacilityProgramAndPeriod(savedRnr);
     when(requisitionRepository.getById(rnr.getId())).thenReturn(savedRnr);
     when(rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId())).thenReturn(rnrColumns);
     doReturn(true).when(savedRnr).validate(rnrColumns);
     when(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(null);
 
-    OpenLmisMessage message = requisitionService.submit(rnr);
+    RequisitionService spyRequisitionService = spy(requisitionService);
+
+    OpenLmisMessage message = spyRequisitionService.submit(rnr);
     verify(requisitionRepository).update(savedRnr);
     assertThat(savedRnr.getStatus(), is(SUBMITTED));
     assertThat(message.getCode(), is("rnr.submitted.without.supervisor"));
@@ -321,6 +329,7 @@ public class RequisitionServiceTest {
   public void shouldSubmitValidRnrWithSubmittedDateAndSetMessage() {
     Rnr rnr = make(a(defaultRnr));
     Rnr savedRnr = Mockito.spy(initiatedRnr);
+    fillFacilityProgramAndPeriod(savedRnr);
     when(requisitionRepository.getById(rnr.getId())).thenReturn(savedRnr);
     doReturn(true).when(savedRnr).validate(rnrColumns);
     when(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(new SupervisoryNode());
@@ -339,6 +348,7 @@ public class RequisitionServiceTest {
   public void shouldAuthorizeAValidRnrAndTagWithSupervisoryNode() throws Exception {
     Rnr rnr = make(a(defaultRnr));
     Rnr savedRnr = Mockito.spy(submittedRnr);
+    fillFacilityProgramAndPeriod(savedRnr);
     when(requisitionRepository.getById(rnr.getId())).thenReturn(savedRnr);
     doReturn(true).when(savedRnr).validate(rnrColumns);
     when(rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId())).thenReturn(rnrColumns);
@@ -359,10 +369,10 @@ public class RequisitionServiceTest {
 
   @Test
   public void shouldUseSavedRnrWithEditableDataFromUserSuppliedRnrToAuthorize() {
-
     ArrayList<RnrColumn> columns = new ArrayList<>();
     Rnr rnrForAuthorizing = make(a(defaultRnr));
     Rnr savedRnr = Mockito.spy(submittedRnr);
+    fillFacilityProgramAndPeriod(savedRnr);
 
     doReturn(true).when(savedRnr).validate(columns);
     when(requisitionRepository.getById(rnrForAuthorizing.getId())).thenReturn(savedRnr);
@@ -380,6 +390,7 @@ public class RequisitionServiceTest {
   public void shouldAuthorizeAValidRnrAndAdviseUserIfRnrDoesNotHaveApprover() throws Exception {
     Rnr rnr = Mockito.spy(make(a(defaultRnr)));
     Rnr savedRnr = spy(submittedRnr);
+    fillFacilityProgramAndPeriod(savedRnr);
     when(requisitionRepository.getById(rnr.getId())).thenReturn(savedRnr);
     when(rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId())).thenReturn(rnrColumns);
     when(supervisoryNodeService.getApproverFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(null);
