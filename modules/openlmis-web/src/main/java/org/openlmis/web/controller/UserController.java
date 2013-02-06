@@ -62,7 +62,7 @@ public class UserController extends BaseController {
   @RequestMapping(value = "/forgot-password", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> sendPasswordTokenEmail(@RequestBody User user, HttpServletRequest request) {
     try {
-      String resetPasswordLink = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/public/pages/reset-password.html#/token/";
+      String resetPasswordLink = request.getScheme() + "://" + request.getHeader("host")+ "/public/pages/reset-password.html#/token/";
       userService.sendForgotPasswordEmail(user, resetPasswordLink);
       return success("Email sent");
     } catch (DataException e) {
