@@ -119,8 +119,10 @@ public class CreateFacilityPage extends Page {
     @FindBy(how = How.XPATH, using = "//input[@value='Save']")
     private static WebElement SaveButton;
 
-        @FindBy(how = How.ID, using = "saveSuccessMsgDiv")
+        @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']/span")
         private static WebElement saveSuccessMsgDiv;
+
+
 
         @FindBy(how = How.ID, using = "saveErrorMsgDiv")
         private static WebElement saveErrorMsgDiv;
@@ -213,8 +215,6 @@ public class CreateFacilityPage extends Page {
         testWebDriver.sleep(500);
         addSupportedProgram.click();
 
-//        testWebDriver.selectByVisibleText(programsSupported,"ARV");
-//        prog
 
         SaveButton.click();
 

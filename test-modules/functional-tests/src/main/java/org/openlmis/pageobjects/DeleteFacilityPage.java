@@ -31,8 +31,11 @@ public class DeleteFacilityPage extends Page {
     @FindBy(how = How.XPATH, using = "//a[@ng-click='deleteFacility()']")
     private static WebElement deteteButtonOnAlert;
 
-    @FindBy(how = How.ID, using = "saveSuccessMsgDiv")
+    @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']/span")
     private static WebElement messageDiv;
+
+    @FindBy(how = How.ID, using = "saveSuccessMsgDiv")
+    private static WebElement successMessageDiv;
 
     @FindBy(how = How.ID, using = "saveErrorMsgDiv")
     private static WebElement saveErrorMsgDiv;
@@ -142,9 +145,9 @@ public class DeleteFacilityPage extends Page {
 
         testWebDriver.sleep(1000);
         deteteButtonOnAlert.click();
-        testWebDriver.waitForElementToAppear(messageDiv);
+        testWebDriver.waitForElementToAppear(successMessageDiv);
 
-        String deleteMessageOnFacilityScreenValue=messageDiv.getText();
+        String deleteMessageOnFacilityScreenValue=successMessageDiv.getText();
         SeleneseTestNgHelper.assertEquals(deleteMessageOnFacilityScreenValue,expectedMessageOnFacilityScreenAfterDelete);
 
         String dataReportableValue=dataReportable.getText();
@@ -217,7 +220,7 @@ public class DeleteFacilityPage extends Page {
         testWebDriver.sleep(500);
         addSupportedProgram.click();
 
-        SaveButton.click();
+
 
         SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(catchmentPopulation,"value"), catchmentPopulationValue);
         SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(latitude,"value"), latitudeValue);
@@ -226,6 +229,7 @@ public class DeleteFacilityPage extends Page {
 
         SeleneseTestNgHelper.assertTrue(removeSupportedProgram.isDisplayed());
 
+        SaveButton.click();
         testWebDriver.sleep(1000);
         testWebDriver.waitForElementsToAppear(messageDiv, saveErrorMsgDiv);
         String updateMessage=getMessage();

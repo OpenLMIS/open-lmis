@@ -1,8 +1,10 @@
 <div xmlns="http://www.w3.org/1999/html">
   <h2>Search facility
-    <a href="#" class="pull-right btn btn-primary">Add new</a>
+    <a href="#/create-facility" class="pull-right btn btn-primary">Add new</a>
   </h2>
-
+  <div class="alert alert-success" id="saveSuccessMsgDiv" ng-model="facilityId" ng-show="facilityId">
+    <span ng-bind="message"></span>.&nbsp;&nbsp;<a ng-href="#/edit/{{facilityId}}">View Here</a>
+  </div>
 
   <input id="searchFacility" class="search-query" type="text" ng-model="query" placeholder="Enter facility code or name" />
   <div class="form-tip">Minimum 3 characters</div>

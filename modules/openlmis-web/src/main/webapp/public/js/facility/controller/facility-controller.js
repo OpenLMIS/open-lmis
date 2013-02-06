@@ -1,6 +1,4 @@
-function FacilityController($scope, facilityReferenceData, $routeParams, $http, facility, Facility, $rootScope) {
-
-  var newStartDate = {}, oldStartDate = {};
+function FacilityController($scope, facilityReferenceData, $routeParams, $http, facility, Facility, $rootScope, $location) {
 
   function initialize() {
     $scope.facilityTypes = facilityReferenceData.facilityTypes;
@@ -32,11 +30,11 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
     var successFn = function (data) {
       $scope.showError = "true";
       $scope.error = "";
-      $scope.message = data.success;
+      $scope.$parent.message = data.success;
       $scope.facility = data.facility;
-      $scope.originalFacilityCode = data.facility.code;
-      $scope.originalFacilityName = data.facility.name;
+      $scope.$parent.facilityId = $scope.facility.id;
       populateFlags($scope);
+      $location.path('');
     };
 
     var errorFn = function (data) {
