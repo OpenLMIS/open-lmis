@@ -133,6 +133,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
     $scope.programsToDisplay = _.reject($scope.programs, function (program) {
       return _.contains(supportedProgramIds, program.id)
     });
+    $scope.programSupportedMessage = ($scope.programsToDisplay.length) ? '--Select Program Supported--' : '--No Program Left--';
   }
 
   initialize();
