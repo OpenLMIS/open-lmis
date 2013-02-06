@@ -38,23 +38,18 @@ public class FacilityService {
 
   @Transactional
   public void insert(Facility facility) {
-    saves(facility);
+    save(facility);
     programSupportedRepository.addSupportedProgramsFor(facility);
   }
 
   @Transactional
   public void update(Facility facility) {
-    saves(facility);
+    save(facility);
     programSupportedRepository.updateSupportedPrograms(facility, programSupportedRepository.getAllByFacilityId(facility.getId()));
   }
 
   public List<Facility> getAll() {
     return facilityRepository.getAll();
-  }
-
-  public void save(Facility facility) {
-    facilityRepository.save(facility);
-    saveSupportedPrograms(facility);
   }
 
   private void saveSupportedPrograms(Facility facility) {
@@ -110,7 +105,7 @@ public class FacilityService {
     return facilityRepository.searchFacilitiesByCodeOrName(searchParam);
   }
 
-  private void saves(Facility facility) {
+  private void save(Facility facility) {
     for(ProgramSupported programSupported : facility.getSupportedPrograms()){
       programSupported.isValid();
     }

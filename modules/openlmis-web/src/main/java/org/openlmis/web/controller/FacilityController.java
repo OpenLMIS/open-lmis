@@ -65,28 +65,6 @@ public class FacilityController extends BaseController {
         addPrograms(programService.getAll()).get();
   }
 
-//  @RequestMapping(value = "admin/facility", method = POST, headers = "Accept=application/json")
-//  @PreAuthorize("hasPermission('','MANAGE_FACILITY')")
-//  public ResponseEntity<OpenLmisResponse> addOrUpdate(@RequestBody Facility facility, HttpServletRequest request) {
-//    facility.setModifiedBy(loggedInUser(request));
-//    boolean createFlag = facility.getId() == null;
-//    try {
-//      facilityService.save(facility);
-//    } catch (DataException exception) {
-//      final ResponseEntity<OpenLmisResponse> errorResponse = error(exception, HttpStatus.BAD_REQUEST);
-//      errorResponse.getBody().setData("facility", facility);
-//      return errorResponse;
-//    }
-//    ResponseEntity<OpenLmisResponse> successResponse;
-//    if (createFlag) {
-//      successResponse = success(facility.getName() + " created successfully");
-//    } else {
-//      successResponse = success(facility.getName() + " updated successfully");
-//    }
-//    successResponse.getBody().setData("facility", facility);
-//    return successResponse;
-//  }
-
   @RequestMapping(value = "/facilities/{id}", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("hasPermission('','MANAGE_FACILITY')")
   public ResponseEntity<ModelMap> getFacility(@PathVariable(value = "id") Integer id) {

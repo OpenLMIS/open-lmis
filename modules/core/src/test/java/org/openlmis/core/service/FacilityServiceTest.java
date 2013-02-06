@@ -58,13 +58,6 @@ public class FacilityServiceTest {
   }
 
   @Test
-  public void shouldStoreFacility() throws Exception {
-    Facility facility = make(a(defaultFacility));
-    facilityService.save(facility);
-    verify(facilityRepository).save(facility);
-  }
-
-  @Test
   public void shouldReturnEmptyListIfUserIsNotAssignedAFacility() {
     when(facilityRepository.getHomeFacility(1)).thenReturn(null);
     assertTrue(facilityService.getAllForUser(1).isEmpty());
@@ -85,12 +78,12 @@ public class FacilityServiceTest {
     assertThat(returnedFacility.getSupportedPrograms(), is(supportedPrograms));
   }
 
-//  @Test
-//  public void shouldUpdateDataReportableAndActiveFor() {
-//    Facility facility = make(a(defaultFacility));
-//    facilityService.updateDataReportableAndActiveFor(facility);
-//    verify(facilityRepository).updateDataReportableAndActiveFor(facility);
-//  }
+  @Test
+  public void shouldUpdateDataReportableAndActiveFor() {
+    Facility facility = make(a(defaultFacility));
+    facilityService.updateDataReportableAndActiveFor(facility);
+    verify(facilityRepository).updateDataReportableAndActiveFor(facility);
+  }
 
   @Test
   public void shouldNotGiveErrorIfSupportedProgramWithActiveFalseAndDateNotProvided() throws Exception {
@@ -180,47 +173,6 @@ public class FacilityServiceTest {
     expectedEx.expectMessage("Invalid Facility Code");
 
     facilityService.uploadSupportedProgram(programSupported);
-  }
-
-  @Test
-  public void shouldAddProgramsSupportedByAFacility() throws Exception {
-    Facility facility = make(a(defaultFacility));
-    facility.setId(null);
-    List<ProgramSupported> programs = new ArrayList<ProgramSupported>() {{
-      add(make(a(defaultProgramSupported)));
-      add(make(a(defaultProgramSupported)));
-    }};
-    facility.setSupportedPrograms(programs);
-
-    facilityService.save(facility);
-
-    verify(facilityRepository).save(facility);
-    verify(programSupportedRepository).addSupportedProgramsFor(facility);
-  }
-
-  @Test
-  public void shouldUpdateSupportedProgramsForFacilityIfIdIsDefined() throws Exception {
-    Facility facility = make(a(defaultFacility));
-    facility.setId(1);
-
-    List<ProgramSupported> programs = new ArrayList<ProgramSupported>() {{
-      add(make(a(defaultProgramSupported)));
-      add(make(a(defaultProgramSupported, with(supportedProgramCode, "HIV"), with(supportedProgramId, 1))));
-    }};
-
-    facility.setSupportedPrograms(programs);
-
-    List<ProgramSupported> programsForFacility = new ArrayList<ProgramSupported>() {{
-      add(make(a(defaultProgramSupported)));
-      add(make(a(defaultProgramSupported, with(supportedProgramCode, "ARV"), with(supportedProgramId, 2))));
-    }};
-
-    when(programSupportedRepository.getAllByFacilityId(facility.getId())).thenReturn(programsForFacility);
-
-    facilityService.save(facility);
-
-    verify(programSupportedRepository).getAllByFacilityId(facility.getId());
-    verify(programSupportedRepository).updateSupportedPrograms(facility, programsForFacility);
   }
 
   @Test

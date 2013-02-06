@@ -73,6 +73,57 @@ describe("Facility", function () {
       expect("true").toEqual(scope.showError);
     });
 
+    it('should not add program supported to facility if active program doesn\'t contain start date', function () {
+      scope.facilityForm.$error.required = "{}";
+      scope.facility.supportedPrograms = [
+        {"code":"ARV", "name":"ARV", "description":"ARV", "active":true, "startDate" : "1/12/12"},
+        {"code":"HIV", "name":"HIV", "description":"HIV", "active":true}
+      ];
+      scope.saveFacility();
+      expect("There are some errors in the form. Please resolve them.").toEqual(scope.error);
+      expect("").toEqual(scope.message);
+      expect("true").toEqual(scope.showError);
+    });
+
+    it('should add program supported to facility', function () {
+      scope.facility.supportedPrograms = [];
+      scope.supportedProgram = {"code":"ARV", "name":"ARV", "description":"ARV", "active":true, "startDate" : "1/12/12"};
+
+      scope.addSupportedProgram();
+
+      expect(scope.facility.supportedPrograms[0].code).toEqual("ARV");
+      expect(scope.facility.supportedPrograms[0].name).toEqual("ARV");
+      expect(scope.facility.supportedPrograms[0].active).toEqual(true);
+
+      expect(scope.supportedProgram).toBeUndefined();
+    });
+
+    it('should add program supported to facility', function () {
+      scope.facility.supportedPrograms = [];
+      var arvProgram = {"code":"ARV", "name":"ARV", "description":"ARV", "active":true, "startDate" : "1/12/12"};
+      scope.facility.supportedPrograms = [
+        arvProgram,
+        {"code":"HIV", "name":"HIV", "description":"HIV", "active":true}
+      ];
+
+      scope.removeSupportedProgram(arvProgram);
+
+      expect(scope.facility.supportedPrograms.length).toEqual(1);
+      expect(scope.facility.supportedPrograms[0].code).toEqual("HIV");
+    });
+
+    it('should edit start date', function () {
+      window.program = {'startDate' : 2, 'editedStartDate' : 7};
+      scope.setNewStartDate();
+      expect(window.program.startDate).toEqual(window.program.editedStartDate);
+    });
+
+    it('should reset old start date', function () {
+      window.program = {'startDate' : 2, 'editedStartDate' : 7};
+      scope.resetOldStartDate();
+      expect(window.program.editedStartDate).toEqual(window.program.startDate);
+    });
+
   });
 
   describe("Facility Edit Controller", function () {
