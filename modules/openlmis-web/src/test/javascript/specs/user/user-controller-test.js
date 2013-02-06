@@ -131,9 +131,12 @@ describe("User", function () {
       var facility = {id:74, code:'F10', name:'facilityName'};
       scope.allSupportedPrograms = undefined;
 
-      var data = {};
-      data.facility = facility;
-      $httpBackend.expectGET('/facilities/' + facility.id + '.json').respond(data);
+      var data = {
+        "programList":[
+          {"id":1, "code":"HIV", "name":"HIV", "description":"HIV", "active":true}
+        ]
+      };
+      $httpBackend.expectGET('/facilities/74/programs.json').respond(data);
       $httpBackend.expectGET('/roles.json').respond(200);
 
       scope.setSelectedFacility(facility);
@@ -161,7 +164,7 @@ describe("User", function () {
       expect(scope.facilitySelected).toEqual(facility);
     });
 
-    it ('should clear everything including role assignments when user clears facility', function(){
+    it('should clear everything including role assignments when user clears facility', function () {
       scope.clearSelectedFacility();
 
       expect(scope.facilitySelected).toEqual(null);

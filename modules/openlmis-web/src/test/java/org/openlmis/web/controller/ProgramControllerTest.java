@@ -33,17 +33,13 @@ public class ProgramControllerTest {
     @SuppressWarnings("unused")
     private ProgramService programService;
 
-    @Mock
-    @SuppressWarnings("unused")
-    private RoleRightsService roleRightsService;
-
     ProgramController controller;
     private MockHttpServletRequest httpServletRequest;
 
     @Before
     public void init() {
         initMocks(this);
-        controller = new ProgramController(programService, roleRightsService);
+        controller = new ProgramController(programService);
         httpServletRequest = new MockHttpServletRequest();
         MockHttpSession mockHttpSession = new MockHttpSession();
         httpServletRequest.setSession(mockHttpSession);

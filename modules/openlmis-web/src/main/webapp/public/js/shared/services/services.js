@@ -50,6 +50,10 @@ services.factory('RequisitionHeader', function ($resource) {
     return $resource('/logistics/facility/:facilityId/requisition-header.json', {}, {});
 });
 
+services.factory('ProgramSupportedByFacility', function($resource) {
+  return $resource('/facilities/:facilityId/programs.json', {}, {});
+});
+
 services.factory('FacilityReferenceData', function ($resource) {
     return $resource('/facilities/reference-data.json', {}, {});
 });
