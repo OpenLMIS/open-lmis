@@ -19,6 +19,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.*;
 
@@ -97,16 +98,20 @@ public class UserControllerTest {
     User user = new User();
     user.setUserName("Manan");
     user.setEmail("manan@thoughtworks.com");
-    userController.sendPasswordTokenEmail(user, httpServletRequest);
+    HttpServletRequest request = mock(HttpServletRequest.class);
+    when(request.getHeader("referer")).thenReturn("http://referrer/");
+    userController.sendPasswordTokenEmail(user, request);
     verify(userService).sendForgotPasswordEmail(eq(user), anyString());
   }
 
   @Test
   public void shouldReturnErrorIfSendingForgotPasswordEmailFails() throws Exception {
     User user = new User();
+    HttpServletRequest request = mock(HttpServletRequest.class);
+    when(request.getHeader("referer")).thenReturn("http://referrer/");
     doThrow(new DataException("some error")).when(userService).sendForgotPasswordEmail(eq(user), anyString());
 
-    ResponseEntity<OpenLmisResponse> response = userController.sendPasswordTokenEmail(user, httpServletRequest);
+    ResponseEntity<OpenLmisResponse> response = userController.sendPasswordTokenEmail(user, request);
 
     assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     assertThat(response.getBody().getErrorMsg(), is("some error"));
