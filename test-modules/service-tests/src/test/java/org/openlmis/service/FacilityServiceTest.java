@@ -20,24 +20,25 @@ public class FacilityServiceTest extends TestCaseHelper {
     public void testFacility() {
         try {
 
-            String BASE_URL="http://localhost:9091";
-            String CREATE_FACILITY_ENDPOINT="/admin/facility.json";
-            String DELETE_FACILITY_ENDPOINT="/admin/facility/update/delete.json";
-            String RESTORE_FACILITY_ENDPOINT="/admin/facility/update/restore.json";
+            String BASE_URL = "http://localhost:9091";
+            String CREATE_FACILITY_ENDPOINT = "/facilities.json";
+            String DELETE_FACILITY_ENDPOINT = "/facility/update/delete.json";
+            String RESTORE_FACILITY_ENDPOINT = "/facility/update/restore.json";
 
-            String CREATE_FACILITY_JSON="{\"dataReportable\":\"true\",\"code\":\"facilitycode\",\"gln\":\"fac\"," +
+            String CREATE_FACILITY_JSON = "{\"dataReportable\":\"true\",\"code\":\"facilitycode\",\"gln\":\"fac\"," +
                     "\"name\":\"facilityname\",\"facilityType\":{\"code\":\"lvl3_hospital\"},\"sdp\":\"true\",\"active\":\"true\"," +
-                    "\"goLiveDate\":\"2013-01-10T18:30:00.000Z\",\"supportedPrograms\":[{\"id\":1,\"code\":\"HIV\",\"name\":\"HIV\"," +
-                    "\"description\":\"HIV\",\"active\":true}],\"geographicZone\":{\"id\":1}}";
+                    "\"goLiveDate\":\"2013-01-10T18:30:00.000Z\",\"supportedPrograms\":[{\"programId\":1," +
+                    "\"active\":true, \"startDate\":\"2013-02-19T18:30:00.000Z\"}],\"geographicZone\":{\"id\":1}}";
+
 
             DBWrapper dbWrapper = new DBWrapper();
             dbWrapper.deleteData();
 
             ServiceUtils serviceUtils = new ServiceUtils();
 
-            String newFacilityCreatedPreLogin = serviceUtils.postJSON(CREATE_FACILITY_JSON, BASE_URL+CREATE_FACILITY_ENDPOINT);
+            String newFacilityCreatedPreLogin = serviceUtils.postJSON(CREATE_FACILITY_JSON, BASE_URL + CREATE_FACILITY_ENDPOINT);
 
-            String facilityIDPreLogin = serviceUtils.getFacilityFieldJSON(newFacilityCreatedPreLogin,"id");
+            String facilityIDPreLogin = serviceUtils.getFacilityFieldJSON(newFacilityCreatedPreLogin, "id");
             /*
             Checking for unauthorized creation of facility : Pre login
              */
@@ -46,19 +47,19 @@ public class FacilityServiceTest extends TestCaseHelper {
             /*
             Hitting Login endpoint with required credentials
              */
-            serviceUtils.postNONJSON("j_username=Admin123&j_password=Admin123", BASE_URL+"/j_spring_security_check");
+            serviceUtils.postNONJSON("j_username=Admin123&j_password=Admin123", BASE_URL + "/j_spring_security_check");
 
 
-            String newFacilityCreatedPostLogin = serviceUtils.postJSON(CREATE_FACILITY_JSON, BASE_URL+CREATE_FACILITY_ENDPOINT);
+            String newFacilityCreatedPostLogin = serviceUtils.postJSON(CREATE_FACILITY_JSON, BASE_URL + CREATE_FACILITY_ENDPOINT);
             serviceUtils.getJSON("http://localhost:9091/facilities.json");
 
 
-            String facilityID = serviceUtils.getFacilityFieldJSON(newFacilityCreatedPostLogin,"id");
+            String facilityID = serviceUtils.getFacilityFieldJSON(newFacilityCreatedPostLogin, "id");
 
-            String DELETE_FACILITY_JSON="{\"id\":" + facilityID + "}";
+            String DELETE_FACILITY_JSON = "{\"id\":" + facilityID + "}";
 
 
-            String RESTORE_FACILITY_JSON="{\"id\":" + facilityID + ",\"active\":true}";
+            String RESTORE_FACILITY_JSON = "{\"id\":" + facilityID + ",\"active\":true}";
 
             assertEquals(dbWrapper.getFacilityFieldBYID("active", facilityID), "t");
             assertEquals(dbWrapper.getFacilityFieldBYID("datareportable", facilityID), "t");
@@ -67,14 +68,14 @@ public class FacilityServiceTest extends TestCaseHelper {
              */
             assertEquals(facilityID, dbWrapper.getFacilityIDDB());
 
-            serviceUtils.postJSON(DELETE_FACILITY_JSON, BASE_URL+DELETE_FACILITY_ENDPOINT);
+            serviceUtils.putJSON(DELETE_FACILITY_JSON, BASE_URL + DELETE_FACILITY_ENDPOINT);
 
 
             assertEquals(dbWrapper.getFacilityFieldBYID("active", facilityID), "f");
             assertEquals(dbWrapper.getFacilityFieldBYID("datareportable", facilityID), "f");
 
 
-            serviceUtils.postJSON(RESTORE_FACILITY_JSON,BASE_URL+RESTORE_FACILITY_ENDPOINT);
+            serviceUtils.putJSON(RESTORE_FACILITY_JSON, BASE_URL + RESTORE_FACILITY_ENDPOINT);
 
             assertEquals(dbWrapper.getFacilityFieldBYID("active", facilityID), "t");
             assertEquals(dbWrapper.getFacilityFieldBYID("datareportable", facilityID), "t");
@@ -82,7 +83,7 @@ public class FacilityServiceTest extends TestCaseHelper {
             serviceUtils.getJSON(BASE_URL + "//j_spring_security_logout");
 
 
-            serviceUtils.getJSON(BASE_URL+"//j_spring_security_logout");
+            serviceUtils.getJSON(BASE_URL + "//j_spring_security_logout");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

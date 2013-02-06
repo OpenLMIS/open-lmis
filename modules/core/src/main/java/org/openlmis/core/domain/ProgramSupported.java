@@ -1,17 +1,21 @@
-
 package org.openlmis.core.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
 import java.util.Date;
 
+import static org.openlmis.core.service.FacilityService.SUPPORTED_PROGRAMS_INVALID;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ProgramSupported implements Importable {
 
   private Integer facilityId;
@@ -24,7 +28,7 @@ public class ProgramSupported implements Importable {
   private String programCode;
 
   @ImportField(mandatory = true, name = "Program Is Active", type = "boolean")
-  private Boolean active;
+  private Boolean active = false;
 
   @ImportField(name = "Program Start Date", type = "Date")
   private Date startDate;
@@ -39,5 +43,10 @@ public class ProgramSupported implements Importable {
     this.startDate = startDate;
     this.modifiedBy = modifiedBy;
     this.modifiedDate = modifiedDate;
+  }
+
+  public void isValid() {
+    if (this.active && this.startDate == null)
+      throw new DataException(SUPPORTED_PROGRAMS_INVALID);
   }
 }

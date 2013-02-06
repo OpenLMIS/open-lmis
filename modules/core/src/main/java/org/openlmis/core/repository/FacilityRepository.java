@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,7 +30,6 @@ public class FacilityRepository {
     return mapper.getAll();
   }
 
-  @Transactional
   public void save(Facility facility) {
     facility.setModifiedDate(DateTime.now().toDate());
     try {
@@ -137,8 +135,7 @@ public class FacilityRepository {
   }
 
   public void insert(Facility facility) {
-
-
+     mapper.insert(facility);
   }
 
   public void update(Facility facility) {

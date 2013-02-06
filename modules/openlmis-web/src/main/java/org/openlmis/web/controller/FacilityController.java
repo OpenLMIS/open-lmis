@@ -13,10 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -58,7 +55,7 @@ public class FacilityController extends BaseController {
     return facilityService.getAllForUser(loggedInUserId(httpServletRequest));
   }
 
-  @RequestMapping(value = "admin/facility/reference-data", method = GET)
+  @RequestMapping(value = "/facilities/reference-data", method = GET)
   @PreAuthorize("hasPermission('','MANAGE_FACILITY')")
   public Map getReferenceData() {
     FacilityReferenceData facilityReferenceData = new FacilityReferenceData();
@@ -68,29 +65,29 @@ public class FacilityController extends BaseController {
         addPrograms(programService.getAll()).get();
   }
 
-  @RequestMapping(value = "admin/facility", method = POST, headers = "Accept=application/json")
-  @PreAuthorize("hasPermission('','MANAGE_FACILITY')")
-  public ResponseEntity<OpenLmisResponse> addOrUpdate(@RequestBody Facility facility, HttpServletRequest request) {
-    facility.setModifiedBy(loggedInUser(request));
-    boolean createFlag = facility.getId() == null;
-    try {
-      facilityService.save(facility);
-    } catch (DataException exception) {
-      final ResponseEntity<OpenLmisResponse> errorResponse = error(exception, HttpStatus.BAD_REQUEST);
-      errorResponse.getBody().setData("facility", facility);
-      return errorResponse;
-    }
-    ResponseEntity<OpenLmisResponse> successResponse;
-    if (createFlag) {
-      successResponse = success(facility.getName() + " created successfully");
-    } else {
-      successResponse = success(facility.getName() + " updated successfully");
-    }
-    successResponse.getBody().setData("facility", facility);
-    return successResponse;
-  }
+//  @RequestMapping(value = "admin/facility", method = POST, headers = "Accept=application/json")
+//  @PreAuthorize("hasPermission('','MANAGE_FACILITY')")
+//  public ResponseEntity<OpenLmisResponse> addOrUpdate(@RequestBody Facility facility, HttpServletRequest request) {
+//    facility.setModifiedBy(loggedInUser(request));
+//    boolean createFlag = facility.getId() == null;
+//    try {
+//      facilityService.save(facility);
+//    } catch (DataException exception) {
+//      final ResponseEntity<OpenLmisResponse> errorResponse = error(exception, HttpStatus.BAD_REQUEST);
+//      errorResponse.getBody().setData("facility", facility);
+//      return errorResponse;
+//    }
+//    ResponseEntity<OpenLmisResponse> successResponse;
+//    if (createFlag) {
+//      successResponse = success(facility.getName() + " created successfully");
+//    } else {
+//      successResponse = success(facility.getName() + " updated successfully");
+//    }
+//    successResponse.getBody().setData("facility", facility);
+//    return successResponse;
+//  }
 
-  @RequestMapping(value = "admin/facility/{id}", method = GET)
+  @RequestMapping(value = "/facilities/{id}", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("hasPermission('','MANAGE_FACILITY')")
   public ResponseEntity<ModelMap> getFacility(@PathVariable(value = "id") Integer id) {
     ModelMap modelMap = new ModelMap();
@@ -98,7 +95,7 @@ public class FacilityController extends BaseController {
     return new ResponseEntity<>(modelMap, HttpStatus.OK);
   }
 
-  @RequestMapping(value = "admin/facility/update/{operation}", method = POST, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/facility/update/{operation}", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("hasPermission('','MANAGE_FACILITY')")
   public ResponseEntity<OpenLmisResponse> updateDataReportableAndActive(@RequestBody Facility facility, @PathVariable(value = "operation") String operation,
                                                                         HttpServletRequest request) {

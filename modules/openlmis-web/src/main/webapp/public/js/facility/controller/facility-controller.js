@@ -1,63 +1,60 @@
-function FacilityController($scope, facilityReferenceData, $routeParams, $http, facility, $rootScope) {
+function FacilityController($scope, facilityReferenceData, $routeParams, $http, facility, Facility, $rootScope) {
 
-  $scope.facilityTypes = facilityReferenceData.facilityTypes;
-  $scope.geographicZones = facilityReferenceData.geographicZones;
-  $scope.facilityOperators = facilityReferenceData.facilityOperators;
-  $scope.programs = facilityReferenceData.programs;
+  var newStartDate = {}, oldStartDate = {};
 
-  function getSupportedPrograms(programsSupported) {
-    var foo = [];
-    $.each(programsSupported, function (index, supportedProgram) {
-      $.each($scope.programs, function (index, program) {
-        if (supportedProgram.code == program.code) {
-          program.active = supportedProgram.active;
-          foo.push(program);
-        }
-      })
-    });
-    return foo;
+  function initialize() {
+    $scope.facilityTypes = facilityReferenceData.facilityTypes;
+    $scope.geographicZones = facilityReferenceData.geographicZones;
+    $scope.facilityOperators = facilityReferenceData.facilityOperators;
+    $scope.programs = facilityReferenceData.programs;
+    if ($routeParams.facilityId) {
+      $scope.facility = facility;
+      $scope.originalFacilityCode = facility.code;
+      $scope.originalFacilityName = facility.name;
+      $scope.isEdit = true;
+      updateProgramsToDisplay();
+      populateFlags($scope);
+    } else {
+      $scope.facility = {};
+      updateProgramsToDisplay();
+      $scope.facility.dataReportable = "true";
+    }
   }
-
-//TODO Need a more elegant solution
-  if ($routeParams.facilityId) {
-    $scope.facility = facility;
-    $scope.originalFacilityCode = facility.code;
-    $scope.originalFacilityName = facility.name;
-    populateFlags($scope);
-    $scope.facility.supportedPrograms = getSupportedPrograms($scope.facility.supportedPrograms);
-  } else {
-    $scope.facility = {};
-    $scope.facility.dataReportable = "true";
-  }
-
 
   $scope.saveFacility = function () {
     if ($scope.facilityForm.$error.pattern || $scope.facilityForm.$error.required) {
       $scope.showError = "true";
       $scope.error = "There are some errors in the form. Please resolve them.";
       $scope.message = "";
+      return;
     }
-    else {
-      $http.post('/admin/facility.json', $scope.facility).success(function (data) {
-        $scope.showError = "true";
-        $scope.error = "";
-        $scope.message = data.success;
-        $scope.facility = data.facility;
-        $scope.originalFacilityCode = data.facility.code;
-        $scope.originalFacilityName = data.facility.name;
-        populateFlags($scope);
-        $scope.facility.supportedPrograms = getSupportedPrograms($scope.facility.supportedPrograms);
-      }).error(function (data) {
-            $scope.showError = "true";
-            $scope.message = "";
-            $scope.error = data.error;
-          });
+
+    var successFn = function (data) {
+      $scope.showError = "true";
+      $scope.error = "";
+      $scope.message = data.success;
+      $scope.facility = data.facility;
+      $scope.originalFacilityCode = data.facility.code;
+      $scope.originalFacilityName = data.facility.name;
+      populateFlags($scope);
+    };
+
+    var errorFn = function (data) {
+      $scope.showError = "true";
+      $scope.message = "";
+      $scope.error = data.error;
+    };
+
+    if(!$scope.isEdit){
+      Facility.save({}, $scope.facility, successFn, errorFn);
+    }else{
+      Facility.update({id: $scope.facility.id}, $scope.facility, successFn, errorFn);
     }
   };
 
-  var postFacilityRequest = function (requestUrl) {
 
-    $http.post(requestUrl, $scope.facility).success(function (data) {
+  var putFacilityRequest = function (requestUrl) {
+    $http.put(requestUrl, $scope.facility).success(function (data) {
       $scope.showError = "true";
       $scope.error = "";
       $scope.message = data.success;
@@ -74,21 +71,73 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
           $scope.originalFacilityName = data.facility.name;
           populateFlags($scope);
         });
+
   };
   $scope.deleteFacility = function () {
-    postFacilityRequest('/admin/facility/update/delete.json');
+    $scope.deleteConfirmModal = false;
+    putFacilityRequest('/facility/update/delete.json');
+
   };
 
   $scope.restoreFacility = function (active) {
+    $scope.activeConfirmModal = false;
     $scope.facility.active = active;
-    postFacilityRequest('/admin/facility/update/restore.json');
+    putFacilityRequest('/facility/update/restore.json');
   };
 
   $scope.blurDateFields = function () {
     angular.element("input[ui-date]").blur();
   };
 
+  $scope.addSupportedProgram = function() {
+    if($scope.supportedProgram.active && !$scope.supportedProgram.startDate) {
+      $scope.showDateNotEnteredError = {};
+      return;
+    }
+    var supportedProgram = {};
+    angular.copy($scope.supportedProgram, supportedProgram);
+    $scope.facility.supportedPrograms.push(supportedProgram);
+    $scope.showDateNotEnteredError = undefined;
+    $scope.supportedProgram = undefined;
+    updateProgramsToDisplay();
+  };
+
+  $scope.editStartDate = function(program) {
+    window.program = program;
+    $scope.dateChangeConfirmModal=true;
+  };
+
+  $scope.setNewStartDate = function() {
+    window.program.startDate = window.program.editedStartDate;
+    $scope.dateChangeConfirmModal = false;
+  };
+
+  $scope.resetOldStartDate = function() {
+    window.program.editedStartDate = window.program.startDate;
+    $scope.dateChangeConfirmModal = false;
+  };
+
+  $scope.removeSupportedProgram = function(supportedProgram) {
+    if($scope.facility.dataReportable == 'false') return;
+    $scope.facility.supportedPrograms = _.without($scope.facility.supportedPrograms, supportedProgram);
+    updateProgramsToDisplay();
+  };
+
+  $scope.getProgramNameById = function(programId) {
+    return (_.findWhere($scope.programs, {'id' : programId})).name;
+  };
+
   $rootScope.fixToolBar();
+
+  function updateProgramsToDisplay() {
+    $scope.facility.supportedPrograms = (!$scope.facility.supportedPrograms) ? [] : $scope.facility.supportedPrograms;
+    var supportedProgramIds = _.pluck($scope.facility.supportedPrograms, 'programId');
+    $scope.programsToDisplay = _.reject($scope.programs, function (program) {
+      return _.contains(supportedProgramIds, program.id)
+    });
+  }
+
+  initialize();
 }
 
 var populateFlags = function ($scope) {

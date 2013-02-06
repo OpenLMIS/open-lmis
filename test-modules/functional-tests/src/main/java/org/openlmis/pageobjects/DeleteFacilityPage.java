@@ -87,30 +87,23 @@ public class DeleteFacilityPage extends Page {
     @FindBy(how = How.ID, using = "programs-supported")
     private static WebElement programsSupported;
 
-    @FindBy(how = How.XPATH, using = "//table[@ng-show='facility.supportedPrograms']/tbody/tr[1]/td[1]")
-    private static WebElement HIVprogramsSupported;
+    @FindBy(how = How.ID, using = "supported-program-active")
+    private static WebElement programsSupportedActiveFlag;
 
-    @FindBy(how = How.XPATH, using = "//table[@ng-show='facility.supportedPrograms']/tbody/tr[2]/td[1]")
-    private static WebElement ARVprogramsSupported;
+    @FindBy(how = How.ID, using = "supported-program-start-date")
+    private static WebElement programsSupportedStartDate;
 
-    @FindBy(how = How.XPATH, using = "//table[@ng-show='facility.supportedPrograms']/tbody/tr[3]/td[1]")
-    private static WebElement ESSENTIALMEDICINESprogramsSupported;
+    @FindBy(how = How.XPATH, using = "//a[contains(text(),'25')]")
+    private static WebElement startDateCalender;
 
-    @FindBy(how = How.XPATH, using = "//table[@ng-show='facility.supportedPrograms']/tbody/tr[4]/td[1]")
-    private static WebElement VACCINESprogramsSupported;
+    @FindBy(how = How.XPATH, using = "//a[@ng-click='setNewStartDate()']")
+    private static WebElement startDateAlert;
 
-    @FindBy(how = How.XPATH, using = "//table[@ng-show='facility.supportedPrograms']/tbody/tr[5]/td[1]")
-    private static WebElement TBprogramsSupported;
+    @FindBy(how = How.ID, using = "supported-program-add")
+    private static WebElement addSupportedProgram;
 
-    @FindBy(how = How.XPATH, using = "//table[@ng-show='facility.supportedPrograms']/tbody/tr[6]/td[1]")
-    private static WebElement MALARIAprogramsSupported;
-
-    @FindBy(how = How.XPATH, using = "//table[@ng-show='facility.supportedPrograms']/tbody/tr[7]/td[1]")
-    private static WebElement SMALLPOXprogramsSupported;
-
-    @FindBy(how = How.XPATH, using = "//table[@ng-show='facility.supportedPrograms']/tbody/tr[6]/td[2]/input")
-    private static WebElement MALARIAradioprogramsSupported;
-
+    @FindBy(how = How.ID, using = "remove0")
+    private static WebElement removeSupportedProgram;
 
 
 
@@ -213,15 +206,17 @@ public class DeleteFacilityPage extends Page {
         longitude.sendKeys(longitudeValue);
         altitude.clear();
         altitude.sendKeys(altitudeValue);
-        testWebDriver.selectByIndex(programsSupported,0);
-        testWebDriver.selectByIndex(programsSupported,1);
-        testWebDriver.selectByIndex(programsSupported,2);
-        testWebDriver.selectByIndex(programsSupported,3);
-        testWebDriver.selectByIndex(programsSupported,4);
-        testWebDriver.selectByIndex(programsSupported,5);
-        testWebDriver.selectByIndex(programsSupported,6);
 
-        MALARIAradioprogramsSupported.click();
+        testWebDriver.selectByVisibleText(programsSupported, "SMALL POX");
+        programsSupportedActiveFlag.click();
+        testWebDriver.sleep(500);
+        programsSupportedStartDate.click();
+        startDateCalender.click();
+        testWebDriver.sleep(500);
+        startDateAlert.click();
+        testWebDriver.sleep(500);
+        addSupportedProgram.click();
+
         SaveButton.click();
 
         SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(catchmentPopulation,"value"), catchmentPopulationValue);
@@ -229,13 +224,7 @@ public class DeleteFacilityPage extends Page {
         SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(longitude,"value"), longitudeValue);
         SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(altitude,"value"), altitudeValue);
 
-        SeleneseTestNgHelper.assertTrue(testWebDriver.getText(HIVprogramsSupported).contains("HIV"));
-        SeleneseTestNgHelper.assertTrue(testWebDriver.getText(ARVprogramsSupported).contains("ARV"));
-        SeleneseTestNgHelper.assertTrue(testWebDriver.getText(ESSENTIALMEDICINESprogramsSupported).contains("ESSENTIAL MEDICINES"));
-        SeleneseTestNgHelper.assertTrue(testWebDriver.getText(VACCINESprogramsSupported).contains("VACCINES"));
-        SeleneseTestNgHelper.assertTrue(testWebDriver.getText(TBprogramsSupported).contains("TB"));
-        SeleneseTestNgHelper.assertTrue(testWebDriver.getText(MALARIAprogramsSupported).contains("MALARIA"));
-        SeleneseTestNgHelper.assertTrue(testWebDriver.getText(SMALLPOXprogramsSupported).contains("SMALL POX"));
+        SeleneseTestNgHelper.assertTrue(removeSupportedProgram.isDisplayed());
 
         testWebDriver.sleep(1000);
         testWebDriver.waitForElementsToAppear(messageDiv, saveErrorMsgDiv);
@@ -257,15 +246,7 @@ public class DeleteFacilityPage extends Page {
         testWebDriver.waitForElementToAppear(deleteButton);
         testWebDriver.sleep(1500);
 
-        SeleneseTestNgHelper.assertTrue(testWebDriver.getText(HIVprogramsSupported).contains("HIV"));
-        SeleneseTestNgHelper.assertTrue(testWebDriver.getText(ARVprogramsSupported).contains("ARV"));
-        SeleneseTestNgHelper.assertTrue(testWebDriver.getText(ESSENTIALMEDICINESprogramsSupported).contains("ESSENTIAL MEDICINES"));
-        SeleneseTestNgHelper.assertTrue(testWebDriver.getText(VACCINESprogramsSupported).contains("VACCINES"));
-        SeleneseTestNgHelper.assertTrue(testWebDriver.getText(TBprogramsSupported).contains("TB"));
-        SeleneseTestNgHelper.assertTrue(testWebDriver.getText(MALARIAprogramsSupported).contains("MALARIA"));
-        SeleneseTestNgHelper.assertTrue(testWebDriver.getText(SMALLPOXprogramsSupported).contains("SMALL POX"));
-
-        SeleneseTestNgHelper.assertFalse(MALARIAradioprogramsSupported.isSelected());
+        SeleneseTestNgHelper.assertTrue(removeSupportedProgram.isDisplayed());
 
         return new HomePage(testWebDriver);
     }

@@ -3,12 +3,12 @@ package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.*;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.ProgramRepository;
 import org.openlmis.core.repository.ProgramSupportedRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,9 +22,10 @@ public class FacilityService {
   private ProgramSupportedRepository programSupportedRepository;
 
   private ProgramRepository programRepository;
-  private SupervisoryNodeService supervisoryNodeService;
   private RequisitionGroupService requisitionGroupService;
+  private SupervisoryNodeService supervisoryNodeService;
 
+  public static final String SUPPORTED_PROGRAMS_INVALID = "supported.programs.invalid";
 
   @Autowired
   public FacilityService(FacilityRepository facilityRepository, ProgramSupportedRepository programSupportedRepository, ProgramRepository programRepository, SupervisoryNodeService supervisoryNodeService, RequisitionGroupService requisitionGroupService) {
@@ -33,6 +34,18 @@ public class FacilityService {
     this.programRepository = programRepository;
     this.supervisoryNodeService = supervisoryNodeService;
     this.requisitionGroupService = requisitionGroupService;
+  }
+
+  @Transactional
+  public void insert(Facility facility) {
+    saves(facility);
+    programSupportedRepository.addSupportedProgramsFor(facility);
+  }
+
+  @Transactional
+  public void update(Facility facility) {
+    saves(facility);
+    programSupportedRepository.updateSupportedPrograms(facility, programSupportedRepository.getAllByFacilityId(facility.getId()));
   }
 
   public List<Facility> getAll() {
@@ -48,13 +61,12 @@ public class FacilityService {
     if (facility.getId() == null) {
       programSupportedRepository.addSupportedProgramsFor(facility);
     } else {
-      programSupportedRepository.updateSupportedPrograms(facility, programRepository.getByFacility(facility.getId()));
+      programSupportedRepository.updateSupportedPrograms(facility, programSupportedRepository.getAllByFacilityId(facility.getId()));
     }
   }
 
   public void uploadSupportedProgram(ProgramSupported programSupported) {
-    if (programSupported.getActive() && programSupported.getStartDate() == null)
-      throw new DataException("Start date is a must for Active program");
+    programSupported.isValid();
 
     programSupported.setFacilityId(facilityRepository.getIdForCode(programSupported.getFacilityCode()));
     programSupported.setProgramId(programRepository.getIdByCode(programSupported.getProgramCode()));
@@ -80,7 +92,7 @@ public class FacilityService {
 
   public Facility getById(Integer id) {
     Facility facility = facilityRepository.getById(id);
-    facility.setSupportedPrograms(programRepository.getByFacility(id));
+    facility.setSupportedPrograms(programSupportedRepository.getAllByFacilityId(id));
     return facility;
   }
 
@@ -98,11 +110,11 @@ public class FacilityService {
     return facilityRepository.searchFacilitiesByCodeOrName(searchParam);
   }
 
-  public void insert(Facility facility) {
-    facilityRepository.insert(facility);
+  private void saves(Facility facility) {
+    for(ProgramSupported programSupported : facility.getSupportedPrograms()){
+      programSupported.isValid();
+    }
+    facilityRepository.save(facility);
   }
 
-  public void update(Facility facility) {
-    facilityRepository.update(facility);
-  }
 }

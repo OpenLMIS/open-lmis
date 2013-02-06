@@ -6,8 +6,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
-import org.openlmis.core.builder.ProgramBuilder;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProgramSupported;
+import org.openlmis.core.domain.RequisitionGroup;
+import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.ProgramRepository;
@@ -21,14 +23,16 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertTrue;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
-import static org.openlmis.core.builder.ProgramBuilder.*;
+import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.service.FacilityService.SUPPORTED_PROGRAMS_INVALID;
 
 public class FacilityServiceTest {
   @Rule
@@ -69,10 +73,10 @@ public class FacilityServiceTest {
   @Test
   public void shouldGetFacilityById() throws Exception {
     Integer facilityId = 1;
-    List<Program> supportedPrograms = Arrays.asList(new Program());
+    List<ProgramSupported> supportedPrograms = Arrays.asList(new ProgramSupported());
     Facility facility = new Facility();
 
-    when(programRepository.getByFacility(facilityId)).thenReturn(supportedPrograms);
+    when(programSupportedRepository.getAllByFacilityId(facilityId)).thenReturn(supportedPrograms);
     when(facilityRepository.getById(facilityId)).thenReturn(facility);
 
     Facility returnedFacility = facilityService.getById(facilityId);
@@ -81,12 +85,12 @@ public class FacilityServiceTest {
     assertThat(returnedFacility.getSupportedPrograms(), is(supportedPrograms));
   }
 
-  @Test
-  public void shouldUpdateDataReportableAndActiveFor() {
-    Facility facility = make(a(defaultFacility));
-    facilityService.updateDataReportableAndActiveFor(facility);
-    verify(facilityRepository).updateDataReportableAndActiveFor(facility);
-  }
+//  @Test
+//  public void shouldUpdateDataReportableAndActiveFor() {
+//    Facility facility = make(a(defaultFacility));
+//    facilityService.updateDataReportableAndActiveFor(facility);
+//    verify(facilityRepository).updateDataReportableAndActiveFor(facility);
+//  }
 
   @Test
   public void shouldNotGiveErrorIfSupportedProgramWithActiveFalseAndDateNotProvided() throws Exception {
@@ -112,7 +116,7 @@ public class FacilityServiceTest {
   public void shouldGiveErrorIfSupportedProgramWithActiveTrueAndStartDateNotProvided() throws Exception {
     ProgramSupported program = createSupportedProgram("facility code", "program code", true, null);
     expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Start date is a must for Active program");
+    expectedEx.expectMessage(SUPPORTED_PROGRAMS_INVALID);
 
     facilityService.uploadSupportedProgram(program);
   }
@@ -182,9 +186,9 @@ public class FacilityServiceTest {
   public void shouldAddProgramsSupportedByAFacility() throws Exception {
     Facility facility = make(a(defaultFacility));
     facility.setId(null);
-    List<Program> programs = new ArrayList<Program>() {{
-      add(make(a(defaultProgram)));
-      add(make(a(defaultProgram)));
+    List<ProgramSupported> programs = new ArrayList<ProgramSupported>() {{
+      add(make(a(defaultProgramSupported)));
+      add(make(a(defaultProgramSupported)));
     }};
     facility.setSupportedPrograms(programs);
 
@@ -199,23 +203,23 @@ public class FacilityServiceTest {
     Facility facility = make(a(defaultFacility));
     facility.setId(1);
 
-    List<Program> programs = new ArrayList<Program>() {{
-      add(make(a(ProgramBuilder.defaultProgram)));
-      add(make(a(ProgramBuilder.defaultProgram, with(programCode, "HIV"), with(programId, 1))));
+    List<ProgramSupported> programs = new ArrayList<ProgramSupported>() {{
+      add(make(a(defaultProgramSupported)));
+      add(make(a(defaultProgramSupported, with(supportedProgramCode, "HIV"), with(supportedProgramId, 1))));
     }};
 
     facility.setSupportedPrograms(programs);
 
-    List<Program> programsForFacility = new ArrayList<Program>() {{
-      add(make(a(ProgramBuilder.defaultProgram)));
-      add(make(a(ProgramBuilder.defaultProgram, with(programCode, "ARV"), with(programId, 2))));
+    List<ProgramSupported> programsForFacility = new ArrayList<ProgramSupported>() {{
+      add(make(a(defaultProgramSupported)));
+      add(make(a(defaultProgramSupported, with(supportedProgramCode, "ARV"), with(supportedProgramId, 2))));
     }};
 
-    when(programRepository.getByFacility(facility.getId())).thenReturn(programsForFacility);
+    when(programSupportedRepository.getAllByFacilityId(facility.getId())).thenReturn(programsForFacility);
 
     facilityService.save(facility);
 
-    verify(programRepository).getByFacility(facility.getId());
+    verify(programSupportedRepository).getAllByFacilityId(facility.getId());
     verify(programSupportedRepository).updateSupportedPrograms(facility, programsForFacility);
   }
 
@@ -225,16 +229,57 @@ public class FacilityServiceTest {
 
     facilityService.insert(facility);
 
-    verify(facilityRepository).insert(facility);
+    verify(facilityRepository).save(facility);
+    verify(programSupportedRepository).addSupportedProgramsFor(facility);
+  }
+
+  @Test
+  public void shouldThrowExceptionIfProgramsSupportedInvalidWhileInserting() throws Exception {
+    Facility facility = new Facility();
+    final Date nullDate = null;
+    List<ProgramSupported> programs = new ArrayList<ProgramSupported>() {{
+      add(make(a(defaultProgramSupported)));
+      add(make(a(defaultProgramSupported, with(supportedProgramCode, "HIV"), with(supportedProgramId, 1), with(isActive, true), with(startDate, nullDate))));
+    }};
+
+    facility.setSupportedPrograms(programs);
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage(SUPPORTED_PROGRAMS_INVALID);
+
+    facilityService.insert(facility);
+  }
+
+  @Test
+  public void shouldThrowExceptionIfProgramsSupportedInvalidWhileUpdating() throws Exception {
+    Facility facility = new Facility();
+    final Date nullDate = null;
+    List<ProgramSupported> programs = new ArrayList<ProgramSupported>() {{
+      add(make(a(defaultProgramSupported)));
+      add(make(a(defaultProgramSupported, with(supportedProgramCode, "HIV"), with(supportedProgramId, 1), with(isActive, true), with(startDate, nullDate))));
+    }};
+
+    facility.setSupportedPrograms(programs);
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage(SUPPORTED_PROGRAMS_INVALID);
+
+    facilityService.update(facility);
   }
 
   @Test
   public void shouldUpdateFacility() throws Exception {
     Facility facility = new Facility();
+    List<ProgramSupported> programsForFacility = new ArrayList<ProgramSupported>() {{
+      add(make(a(defaultProgramSupported)));
+      add(make(a(defaultProgramSupported, with(supportedProgramCode, "ARV"), with(supportedProgramId, 2))));
+    }};
+    when(programSupportedRepository.getAllByFacilityId(facility.getId())).thenReturn(programsForFacility);
 
     facilityService.update(facility);
 
-    verify(facilityRepository).update(facility);
+    verify(facilityRepository).save(facility);
+    verify(programSupportedRepository).updateSupportedPrograms(facility, programsForFacility);
   }
 
   private ProgramSupported createSupportedProgram(String facilityCode, String programCode, boolean active, Date startDate) {

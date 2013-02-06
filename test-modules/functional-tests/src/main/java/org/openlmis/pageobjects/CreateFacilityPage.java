@@ -101,6 +101,21 @@ public class CreateFacilityPage extends Page {
     @FindBy(how = How.ID, using = "programs-supported")
     private static WebElement programsSupported;
 
+    @FindBy(how = How.ID, using = "supported-program-active")
+    private static WebElement programsSupportedActiveFlag;
+
+    @FindBy(how = How.ID, using = "supported-program-start-date")
+    private static WebElement programsSupportedStartDate;
+
+    @FindBy(how = How.XPATH, using = "//a[contains(text(),'25')]")
+    private static WebElement startDateCalender;
+
+    @FindBy(how = How.XPATH, using = "//a[@ng-click='setNewStartDate()']")
+    private static WebElement startDateAlert;
+
+    @FindBy(how = How.ID, using = "supported-program-add")
+    private static WebElement addSupportedProgram;
+
     @FindBy(how = How.XPATH, using = "//input[@value='Save']")
     private static WebElement SaveButton;
 
@@ -188,8 +203,18 @@ public class CreateFacilityPage extends Page {
         comments.sendKeys("Comments");
 
 
-        testWebDriver.selectByIndex(programsSupported,0);
-        testWebDriver.selectByIndex(programsSupported,1);
+        testWebDriver.selectByVisibleText(programsSupported, "HIV");
+        programsSupportedActiveFlag.click();
+        testWebDriver.sleep(500);
+        programsSupportedStartDate.click();
+        startDateCalender.click();
+        testWebDriver.sleep(500);
+        startDateAlert.click();
+        testWebDriver.sleep(500);
+        addSupportedProgram.click();
+
+//        testWebDriver.selectByVisibleText(programsSupported,"ARV");
+//        prog
 
         SaveButton.click();
 

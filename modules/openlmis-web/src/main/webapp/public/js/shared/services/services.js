@@ -12,8 +12,12 @@ services.factory('ProgramRnRColumnList', function ($resource) {
     return $resource('/logistics/rnr/:programId/columns.json', {}, {});
 });
 
+services.factory('Facilities', function ($resource) {
+    return $resource('/facilities.json', {}, {});
+});
+
 services.factory('Facility', function ($resource) {
-    return $resource('/admin/facility/:id.json', {}, {});
+    return $resource('/facilities/:id.json', {}, {update: {method: 'PUT'}});
 });
 
 services.factory('UserContext', function ($resource) {
@@ -47,7 +51,7 @@ services.factory('RequisitionHeader', function ($resource) {
 });
 
 services.factory('FacilityReferenceData', function ($resource) {
-    return $resource('/admin/facility/reference-data.json', {}, {});
+    return $resource('/facilities/reference-data.json', {}, {});
 });
 
 services.factory('AllFacilities', function ($resource) {

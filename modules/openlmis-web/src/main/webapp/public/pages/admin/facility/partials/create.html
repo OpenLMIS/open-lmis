@@ -1,418 +1,515 @@
 <div xmlns="http://www.w3.org/1999/html">
-  <div ng-hide="facility.id"><h2>Add new facility</h2></div>
-  <div ng-show="facility.id"><h2>Edit facility</h2></div>
+<div ng-hide="facility.id"><h2>Add new facility</h2></div>
+<div ng-show="facility.id"><h2>Edit facility</h2></div>
 
-  <form ng-submit="saveFacility()" id="create-facility" name="facilityForm" novalidate ng-disabled="facility.dataReportable == 'false'">
-    <div class="app-form">
+<form ng-submit="saveFacility()" id="create-facility" name="facilityForm" novalidate
+      ng-disabled="facility.dataReportable == 'false'">
+<div class="app-form">
 
-      <div class="form-group">
-        <h3>Basic information</h3>
+<div class="form-group">
+  <h3>Basic information</h3>
 
-        <div class="form-row clearfix">
-          <div class="form-cell">
-            <label for="code">Facility Code <span class="label-required">*</span></label>
-            <div class="form-field">
-              <input ng-model="facility.code" name="code" id="code" type="text" maxlength="50" ng:required="true" ng-disabled="facility.dataReportable == 'false'"/>
+  <div class="form-row clearfix">
+    <div class="form-cell">
+      <label for="code">Facility Code <span class="label-required">*</span></label>
+
+      <div class="form-field">
+        <input ng-model="facility.code" name="code" id="code" type="text" maxlength="50" ng:required="true"
+               ng-disabled="facility.dataReportable == 'false'"/>
               <span class="field-error" ng-show="facilityForm.code.$error.required && showError">
                 Please Fill In this value
               </span>
-            </div>
-          </div>
+      </div>
+    </div>
 
-          <div class="form-cell">
-            <label for="gln">GLN</label>
-            <div class="form-field">
-              <input ng-model="facility.gln" id="gln" type="text" maxlength="30" ng-disabled="facility.dataReportable == 'false'"/>
-            </div>
-          </div>
-        </div>
+    <div class="form-cell">
+      <label for="gln">GLN</label>
 
-        <div class="form-row clearfix">
-          <div class="form-cell">
-            <label for="name">Facility Name <span class="label-required">*</span></label>
-            <div class="form-field">
-              <input ng-model="facility.name" name="name" id="name" type="text" maxlength="50" ng:required="true" ng-disabled="facility.dataReportable == 'false'"/>
+      <div class="form-field">
+        <input ng-model="facility.gln" id="gln" type="text" maxlength="30"
+               ng-disabled="facility.dataReportable == 'false'"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row clearfix">
+    <div class="form-cell">
+      <label for="name">Facility Name <span class="label-required">*</span></label>
+
+      <div class="form-field">
+        <input ng-model="facility.name" name="name" id="name" type="text" maxlength="50" ng:required="true"
+               ng-disabled="facility.dataReportable == 'false'"/>
               <span class="field-error" ng-show="facilityForm.name.$error.required && showError">
                 Please Fill In this value
               </span>
-            </div>
-          </div>
+      </div>
+    </div>
 
-          <div class="form-cell">
-            <label for="facility-type">Facility Type <span class="label-required">*</span></label>
-            <div class="form-field">
-              <select name="facilityType" id="facility-type" ng-model="facility.facilityType.code"
-                      ng-options="i.code as i.name for i in facilityTypes" ng:required="true" ng-disabled="facility.dataReportable == 'false'">
-                  <option value="">--Select Facility Type--</option>
-              </select>
+    <div class="form-cell">
+      <label for="facility-type">Facility Type <span class="label-required">*</span></label>
+
+      <div class="form-field">
+        <select name="facilityType" id="facility-type" ng-model="facility.facilityType.code"
+                ng-options="i.code as i.name for i in facilityTypes" ng:required="true"
+                ng-disabled="facility.dataReportable == 'false'">
+          <option value="">--Select Facility Type--</option>
+        </select>
               <span class="field-error" ng-show="facilityForm.facilityType.$error.required && showError">
                 Please select a value
               </span>
-            </div>
-          </div>
-        </div>
+      </div>
+    </div>
+  </div>
 
-        <div class="form-row clearfix">
-          <div class="form-cell">
-            <label for="operated-by">Operated By</label>
-            <div class="form-field">
-              <select id="operated-by" ng-model="facility.operatedBy.code"
-                      ng-options="i.code as i.text for i in facilityOperators" ng-disabled="facility.dataReportable == 'false'">
-                <option value="">--Select Facility Operated By--</option>
-              </select>
-            </div>
-          </div>
-        </div>
+  <div class="form-row clearfix">
+    <div class="form-cell">
+      <label for="operated-by">Operated By</label>
 
-        <div class="form-row clearfix">
-          <div class="form-cell">
-            <label>Service Delivery Point? <span class="label-required">*</span></label>
-            <div class="form-field radio-group">
-              <input type="radio" name="isSdp" value="true" ng-model="facility.sdp" ng:required="true" ng-disabled="facility.dataReportable == 'false'"/><strong>Yes</strong>
-              &nbsp; &nbsp; &nbsp;
-              <input ng-model="facility.sdp" type="radio" name="isSdp" value="false" ng-disabled="facility.dataReportable == 'false'"/><strong>No</strong>
+      <div class="form-field">
+        <select id="operated-by" ng-model="facility.operatedBy.code"
+                ng-options="i.code as i.text for i in facilityOperators"
+                ng-disabled="facility.dataReportable == 'false'">
+          <option value="">--Select Facility Operated By--</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row clearfix">
+    <div class="form-cell">
+      <label>Service Delivery Point? <span class="label-required">*</span></label>
+
+      <div class="form-field radio-group">
+        <input type="radio" name="isSdp" value="true" ng-model="facility.sdp" ng:required="true"
+               ng-disabled="facility.dataReportable == 'false'"/><strong>Yes</strong>
+        &nbsp; &nbsp; &nbsp;
+        <input ng-model="facility.sdp" type="radio" name="isSdp" value="false"
+               ng-disabled="facility.dataReportable == 'false'"/><strong>No</strong>
               <span class="field-error" ng-show="facilityForm.isSdp.$error.required && showError">
                 Please select a value
               </span>
-            </div>
-          </div>
+      </div>
+    </div>
 
-          <div class="form-cell">
-            <label>Active Facility? <span class="label-required">*</span></label>
-            <div class="form-field radio-group">
-              <input ng-model="facility.active" type="radio" name="isActive" value="true"
-                     ng:required="true" ng-disabled="facility.dataReportable == 'false'"/><strong>Yes</strong> &nbsp; &nbsp; &nbsp;
-              <input ng-model="facility.active" type="radio" name="isActive" value="false" ng-disabled="facility.dataReportable == 'false'"/><strong>No</strong>
+    <div class="form-cell">
+      <label>Active Facility? <span class="label-required">*</span></label>
+
+      <div class="form-field radio-group">
+        <input ng-model="facility.active" type="radio" name="isActive" value="true"
+               ng:required="true" ng-disabled="facility.dataReportable == 'false'"/><strong>Yes</strong> &nbsp; &nbsp;
+        &nbsp;
+        <input ng-model="facility.active" type="radio" name="isActive" value="false"
+               ng-disabled="facility.dataReportable == 'false'"/><strong>No</strong>
                 <span class="field-error" ng-show="facilityForm.isActive.$error.required && showError">
                   Please select a value
                 </span>
-            </div>
-          </div>
-        </div>
+      </div>
+    </div>
+  </div>
 
-        <div class="form-row clearfix">
-          <div class="form-cell">
-            <label for="go-live-date">Go Live Date <span class="label-required">*</span></label>
-            <div class="form-field">
-              <input ng-model="facility.goLiveDate" name="goLiveDate" id="go-live-date" type="text"
-                     value="{{facility.goLiveDate | date:'dd/MM/yyyy'}}" ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}" readonly ng-change="blurDateFields()" ng:required="true" ng-disabled="facility.dataReportable == 'false'"/>
+  <div class="form-row clearfix">
+    <div class="form-cell">
+      <label for="go-live-date">Go Live Date <span class="label-required">*</span></label>
+
+      <div class="form-field">
+        <input ng-model="facility.goLiveDate" name="goLiveDate" id="go-live-date" type="text"
+               value="{{facility.goLiveDate | date:'dd/MM/yyyy'}}" ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
+               readonly ng-change="blurDateFields()" ng:required="true"
+               ng-disabled="facility.dataReportable == 'false'"/>
                 <span class="field-error" ng-show="facilityForm.goLiveDate.$error.required && showError">
                   Please Fill In this value
                 </span>
-            </div>
-          </div>
+      </div>
+    </div>
 
-          <div class="form-cell">
-            <label for="go-down-date">Go Down Date</label>
-            <div class="form-field">
-              <input ng-model="facility.goDownDate" id="go-down-date" type="text"
-                    value="{{facility.goDownDate | date:'dd/MM/yyyy'}}" ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}" readonly ng-change="blurDateFields()" ng-disabled="facility.dataReportable == 'false'"/>
-            </div>
-          </div>
-        </div>
+    <div class="form-cell">
+      <label for="go-down-date">Go Down Date</label>
 
-        <div class="form-row clearfix">
-          <div class="form-cell full-width">
-            <label for="description">Facility Description</label>
-            <div class="form-field">
-              <input ng-model="facility.description" id="description" type="text" maxlength="250" ng-disabled="facility.dataReportable == 'false'"/>
-            </div>
-          </div>
-        </div>
-      </div><!-- /form-group -->
+      <div class="form-field">
+        <input ng-model="facility.goDownDate" id="go-down-date" type="text"
+               value="{{facility.goDownDate | date:'dd/MM/yyyy'}}" ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
+               readonly ng-change="blurDateFields()" ng-disabled="facility.dataReportable == 'false'"/>
+      </div>
+    </div>
+  </div>
 
-      <div class="form-group">
-        <h3>Contact information</h3>
+  <div class="form-row clearfix">
+    <div class="form-cell full-width">
+      <label for="description">Facility Description</label>
 
-        <div class="form-row clearfix">
-          <div class="form-cell">
-            <label for="address-1">Address Line 1</label>
-            <div class="form-field">
-              <input ng-model="facility.address1" id="address-1" type="text" maxlength="50" ng-disabled="facility.dataReportable == 'false'"/>
-            </div>
-          </div>
-        </div>
+      <div class="form-field">
+        <input ng-model="facility.description" id="description" type="text" maxlength="250"
+               ng-disabled="facility.dataReportable == 'false'"/>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /form-group -->
 
-        <div class="form-row clearfix">
-          <div class="form-cell">
-            <label for="address-2">Address Line 2</label>
-            <div class="form-field">
-              <input ng-model="facility.address2" id="address-2" type="text" maxlength="50" ng-disabled="facility.dataReportable == 'false'"/>
-            </div>
-          </div>
-        </div>
+<div class="form-group">
+  <h3>Contact information</h3>
 
-        <div class="form-row clearfix">
-          <div class="form-cell">
-            <label for="main-phone">Phone</label>
-            <div class="form-field">
-              <input ng-model="facility.mainPhone" id="main-phone" type="text" maxlength="20" ng-disabled="facility.dataReportable == 'false'" ng-disabled="facility.dataReportable == 'false'"/>
-            </div>
-          </div>
-        </div>
+  <div class="form-row clearfix">
+    <div class="form-cell">
+      <label for="address-1">Address Line 1</label>
 
-        <div class="form-row clearfix">
-          <div class="form-cell">
-            <label for="fax-phone">Fax</label>
-            <div class="form-field">
-              <input ng-model="facility.fax" id="fax-phone" type="text" maxlength="20" ng-disabled="facility.dataReportable == 'false'"/>
-            </div>
-          </div>
-        </div>
+      <div class="form-field">
+        <input ng-model="facility.address1" id="address-1" type="text" maxlength="50"
+               ng-disabled="facility.dataReportable == 'false'"/>
+      </div>
+    </div>
+  </div>
 
-      </div><!-- /form-group -->
+  <div class="form-row clearfix">
+    <div class="form-cell">
+      <label for="address-2">Address Line 2</label>
 
-      <div class="form-group">
-        <h3>Programs supported</h3>
+      <div class="form-field">
+        <input ng-model="facility.address2" id="address-2" type="text" maxlength="50"
+               ng-disabled="facility.dataReportable == 'false'"/>
+      </div>
+    </div>
+  </div>
 
-        <div class="form-row clearfix">
-          <div class="form-cell">
-            <label for="programs-supported">Programs Supported</label>
-            <div class="form-field">
-              <select id="programs-supported" ng-model="facility.supportedPrograms" ng-options="i as i.name for i in programs"
-                      multiple="multiple" ng-disabled="facility.dataReportable == 'false'">
-                <option value="" >--Select Programs Supported--</option>
-              </select>
-            </div>
-          </div>
+  <div class="form-row clearfix">
+    <div class="form-cell">
+      <label for="main-phone">Phone</label>
 
-          <div class="form-cell">
-            <table class="table table-striped table-bordered" ng-show="facility.supportedPrograms">
-              <thead>
-              <tr>
-                <th>Programs</th>
-                <th>Active ?</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr ng-repeat="program in facility.supportedPrograms">
-                <td>{{program.name}} :</td>
-                <td><input ng-model="program.active" id="" type="checkbox" value="true" ng-disabled="facility.dataReportable == 'false'"/></td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div><!-- /form-group -->
+      <div class="form-field">
+        <input ng-model="facility.mainPhone" id="main-phone" type="text" maxlength="20"
+               ng-disabled="facility.dataReportable == 'false'" ng-disabled="facility.dataReportable == 'false'"/>
+      </div>
+    </div>
+  </div>
 
-      <div class="form-group">
-        <h3>Geographical information</h3>
+  <div class="form-row clearfix">
+    <div class="form-cell">
+      <label for="fax-phone">Fax</label>
 
-        <div class="form-row clearfix">
-          <div class="form-cell">
-            <label for="geographic-zone">Geographic Zone <span class="label-required">*</span></label>
-            <div class="form-field">
-              <select id="geographic-zone" name="geographicZone" ng-model="facility.geographicZone.id"
-                      ng-options="i.id as i.name for i in geographicZones" ng-required="true" ng-disabled="facility.dataReportable == 'false'">
-                <option value="">-- Select Geographic Zone --</option>
-              </select>
+      <div class="form-field">
+        <input ng-model="facility.fax" id="fax-phone" type="text" maxlength="20"
+               ng-disabled="facility.dataReportable == 'false'"/>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- /form-group -->
+
+<div class="form-group">
+  <h3>Programs supported</h3>
+
+  <div class="form-row clearfix">
+    <div class="form-cell">
+      <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+          <th>Programs</th>
+          <th>Active ?</th>
+          <th>Start Date</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="program in facility.supportedPrograms">
+          <td ng-bind="getProgramNameById(program.programId)"></td>
+          <td><input ng-model="program.active" id="" type="checkbox" value="true"
+                     ng-disabled="facility.dataReportable == 'false'"/></td>
+          <td ng-init="program.editedStartDate = program.startDate">
+            <input type="text" value= "{{program.startDate | date: 'dd/MM/yy'}}" ng-model="program.editedStartDate"
+                     readonly ng-disabled="facility.dataReportable == 'false'"
+                     ui-date="{dateFormat:'dd/mm/yy', changeYear: true}" ng-required="program.active == true"
+                     ng-change="editStartDate(program)" />
+          <span class="field-error" ng-show="program.active && !program.startDate && showError">
+                  Please Fill In this value
+                </span>
+          </td>
+          <td><a class="close" id="remove{{$index}}" ng-click="removeSupportedProgram(program)">X</a></td>
+        </tr>
+        <tr>
+          <td>
+            <select id="programs-supported" ng-model="supportedProgram.programId"
+                    ng-options="i.id as i.name for i in programsToDisplay"
+                    ng-disabled="facility.dataReportable == 'false'">
+              <option value="">--Select Programs Supported--</option>
+            </select>
+          </td>
+          <td><input type="checkbox" ng-model="supportedProgram.active" id="supported-program-active" ng-disabled="!supportedProgram.programId"/></td>
+          <td><input type="text" id="supported-program-start-date" name="supportedProgram" ng-model="supportedProgram.editedStartDate" ng-change="editStartDate(supportedProgram)"
+                     value= "{{supportedProgram.startDate | date: 'dd/MM/yy'}}" ui-date="{dateFormat:'dd/mm/yy', changeYear: true}"
+                     ng-disabled="!supportedProgram.programId" />
+          <span class="field-error" ng-show="showDateNotEnteredError">
+                  Start date is mandatory
+                </span>
+          </td>
+          <td><input type="button" class="btn-primary" id="supported-program-add" value="+ Add" ng-disabled="!supportedProgram.programId" ng-click="addSupportedProgram()"></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- /form-group -->
+
+<div class="form-group">
+  <h3>Geographical information</h3>
+
+  <div class="form-row clearfix">
+    <div class="form-cell">
+      <label for="geographic-zone">Geographic Zone <span class="label-required">*</span></label>
+
+      <div class="form-field">
+        <select id="geographic-zone" name="geographicZone" ng-model="facility.geographicZone.id"
+                ng-options="i.id as i.name for i in geographicZones" ng-required="true"
+                ng-disabled="facility.dataReportable == 'false'">
+          <option value="">-- Select Geographic Zone --</option>
+        </select>
               <span class="field-error" ng-show="facilityForm.geographicZone.$error.required && showError">
                 Please select a value
               </span>
-            </div>
-          </div>
+      </div>
+    </div>
 
-          <div class="form-cell">
-            <label for="catchment-population">Catchment Population</label>
-            <div class="form-field">
-              <input ng-model="facility.catchmentPopulation" id="catchment-population" ng-pattern="/^\d{1,9}$/"
-                     name="catchmentPopulation" type="text" maxlength="9" ng-disabled="facility.dataReportable == 'false'"/>
+    <div class="form-cell">
+      <label for="catchment-population">Catchment Population</label>
+
+      <div class="form-field">
+        <input ng-model="facility.catchmentPopulation" id="catchment-population" ng-pattern="/^\d{1,9}$/"
+               name="catchmentPopulation" type="text" maxlength="9" ng-disabled="facility.dataReportable == 'false'"/>
               <span class="field-error" ng-show="facilityForm.catchmentPopulation.$error.pattern">
                 Value should be integer
               </span>
-            </div>
-          </div>
-        </div>
+      </div>
+    </div>
+  </div>
 
-        <div class="form-row clearfix">
-          <div class="form-cell">
-            <label for="latitude">Latitude</label>
-            <div class="form-field">
-              <input ng-model="facility.latitude" ng-pattern="/^\d{1,4}$|^\d{1,4}\.\d{1,4}$/" id="latitude" type="text"
-                     name="latitude" maxlength="9" ng-disabled="facility.dataReportable == 'false'"/>
+  <div class="form-row clearfix">
+    <div class="form-cell">
+      <label for="latitude">Latitude</label>
+
+      <div class="form-field">
+        <input ng-model="facility.latitude" ng-pattern="/^\d{1,4}$|^\d{1,4}\.\d{1,4}$/" id="latitude" type="text"
+               name="latitude" maxlength="9" ng-disabled="facility.dataReportable == 'false'"/>
               <span class="field-error" ng-show="facilityForm.latitude.$error.pattern">
                 Value should be numeric and less than 9999.9999
               </span>
-            </div>
-          </div>
+      </div>
+    </div>
 
-          <div class="form-cell">
-            <label for="longitude">Longitude</label>
-            <div class="form-field">
-              <input ng-model="facility.longitude" ng-pattern="/^\d{1,4}$|^\d{1,4}\.\d{1,4}$/" name="longitude" id="longitude"
-                     type="text" maxlength="9" ng-disabled="facility.dataReportable == 'false'"/>
+    <div class="form-cell">
+      <label for="longitude">Longitude</label>
+
+      <div class="form-field">
+        <input ng-model="facility.longitude" ng-pattern="/^\d{1,4}$|^\d{1,4}\.\d{1,4}$/" name="longitude" id="longitude"
+               type="text" maxlength="9" ng-disabled="facility.dataReportable == 'false'"/>
               <span class="field-error" ng-show="facilityForm.longitude.$error.pattern">
                 Value should be numeric and less than 9999.9999
               </span>
-            </div>
-          </div>
-        </div>
+      </div>
+    </div>
+  </div>
 
-        <div class="form-row clearfix">
-          <div class="form-cell">
-            <label for="altitude">Altitude</label>
-            <div class="form-field">
-              <input ng-model="facility.altitude" ng-pattern="/^\d{1,4}$|^\d{1,4}\.\d{1,4}$/" name="altitude" id="altitude"
-                     type="text" maxlength="9" ng-disabled="facility.dataReportable == 'false'"/>
+  <div class="form-row clearfix">
+    <div class="form-cell">
+      <label for="altitude">Altitude</label>
+
+      <div class="form-field">
+        <input ng-model="facility.altitude" ng-pattern="/^\d{1,4}$|^\d{1,4}\.\d{1,4}$/" name="altitude" id="altitude"
+               type="text" maxlength="9" ng-disabled="facility.dataReportable == 'false'"/>
               <span class="field-error" ng-show="facilityForm.altitude.$error.pattern">
                 Value should be numeric and less than 9999.9999
               </span>
-            </div>
-          </div>
-        </div>
-      </div><!-- /form-group -->
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /form-group -->
 
-      <div class="form-group">
-        <h3>Other information</h3>
+<div class="form-group">
+  <h3>Other information</h3>
 
-        <div class="form-row clearfix">
-          <div class="form-cell">
-            <label for="cold-storage-gross-capacity">Cold Storage Gross Capacity</label>
-            <div class="form-field">
-              <input ng-model="facility.coldStorageGrossCapacity" ng-pattern="/^\d{1,4}$|^\d{1,4}\.\d{1,4}$/"
-                     name="coldStorageGrossCapacity" id="cold-storage-gross-capacity" type="text" maxlength="9" ng-disabled="facility.dataReportable == 'false'"/>
+  <div class="form-row clearfix">
+    <div class="form-cell">
+      <label for="cold-storage-gross-capacity">Cold Storage Gross Capacity</label>
+
+      <div class="form-field">
+        <input ng-model="facility.coldStorageGrossCapacity" ng-pattern="/^\d{1,4}$|^\d{1,4}\.\d{1,4}$/"
+               name="coldStorageGrossCapacity" id="cold-storage-gross-capacity" type="text" maxlength="9"
+               ng-disabled="facility.dataReportable == 'false'"/>
               <span class="field-error" ng-show="facilityForm.coldStorageGrossCapacity.$error.pattern">
                 Value should be numeric and less than 9999.9999
               </span>
-            </div>
-          </div>
-        </div>
+      </div>
+    </div>
+  </div>
 
-        <div class="form-row clearfix">
-          <div class="form-cell">
-            <label for="cold-storage-net-capacity">Cold Storage Net Capacity</label>
-            <div class="form-field">
-              <input ng-model="facility.coldStorageNetCapacity" id="cold-storage-net-capacity"
-                     ng-pattern="/^\d{1,4}$|^\d{1,4}\.\d{1,4}$/" name="coldStorageNetCapacity" maxlength="9" type="text" ng-disabled="facility.dataReportable == 'false'"/>
+  <div class="form-row clearfix">
+    <div class="form-cell">
+      <label for="cold-storage-net-capacity">Cold Storage Net Capacity</label>
+
+      <div class="form-field">
+        <input ng-model="facility.coldStorageNetCapacity" id="cold-storage-net-capacity"
+               ng-pattern="/^\d{1,4}$|^\d{1,4}\.\d{1,4}$/" name="coldStorageNetCapacity" maxlength="9" type="text"
+               ng-disabled="facility.dataReportable == 'false'"/>
               <span class="field-error" ng-show="facilityForm.coldStorageNetCapacity.$error.pattern">
                 Value should be numeric and less than 9999.9999
               </span>
-            </div>
-          </div>
-        </div>
+      </div>
+    </div>
+  </div>
 
-        <div class="form-row clearfix">
-          <div class="form-cell">
-            <label>Electricity Available at Facility?</label>
-            <div class="form-field radio-group">
-              <input ng-model="facility.hasElectricity" type="radio" name="has-electricity" value="true" ng-disabled="facility.dataReportable == 'false'"/><strong>Yes</strong>
-                &nbsp; &nbsp; &nbsp;
-              <input ng-model="facility.hasElectricity" type="radio" name="has-electricity" value="false" ng-disabled="facility.dataReportable == 'false'"/><strong>No</strong>
-            </div>
-          </div>
+  <div class="form-row clearfix">
+    <div class="form-cell">
+      <label>Electricity Available at Facility?</label>
 
-          <div class="form-cell">
-            <label>Facility has Internet Connectivity?</label>
-            <div class="form-field radio-group">
-              <input ng-model="facility.online" type="radio" name="is-online" value="true" ng-disabled="facility.dataReportable == 'false'"/><strong>Yes</strong> &nbsp; &nbsp;
-                &nbsp;
-              <input ng-model="facility.online" type="radio" name="is-online" value="false" ng-disabled="facility.dataReportable == 'false'"/><strong>No</strong>
-            </div>
-          </div>
-        </div>
+      <div class="form-field radio-group">
+        <input ng-model="facility.hasElectricity" type="radio" name="has-electricity" value="true"
+               ng-disabled="facility.dataReportable == 'false'"/><strong>Yes</strong>
+        &nbsp; &nbsp; &nbsp;
+        <input ng-model="facility.hasElectricity" type="radio" name="has-electricity" value="false"
+               ng-disabled="facility.dataReportable == 'false'"/><strong>No</strong>
+      </div>
+    </div>
 
-        <div class="form-row clearfix">
-          <div class="form-cell">
-            <label>Facility has Electronic SCC?</label>
-            <div class="form-field radio-group">
-              <input ng-model="facility.hasElectronicScc" type="radio" name="has-electronic-scc"
-                       value="true" ng-disabled="facility.dataReportable == 'false'"/><strong>Yes</strong> &nbsp; &nbsp; &nbsp;
-              <input ng-model="facility.hasElectronicScc" type="radio" name="has-electronic-scc"
-                       value="false" ng-disabled="facility.dataReportable == 'false'"/><strong>No</strong>
-            </div>
-          </div>
+    <div class="form-cell">
+      <label>Facility has Internet Connectivity?</label>
 
-          <div class="form-cell">
-            <label>Facility has Electronic DAR?</label>
-            <div class="form-field radio-group">
-              <input ng-model="facility.hasElectronicDar" type="radio" name="has-electronic-dar"
-                       value="true" ng-disabled="facility.dataReportable == 'false'"/><strong>Yes</strong> &nbsp; &nbsp; &nbsp;
-              <input ng-model="facility.hasElectronicDar" type="radio" name="has-electronic-dar"
-                       value="false" ng-disabled="facility.dataReportable == 'false'"/><strong>No</strong>
-            </div>
-          </div>
-        </div>
+      <div class="form-field radio-group">
+        <input ng-model="facility.online" type="radio" name="is-online" value="true"
+               ng-disabled="facility.dataReportable == 'false'"/><strong>Yes</strong> &nbsp; &nbsp;
+        &nbsp;
+        <input ng-model="facility.online" type="radio" name="is-online" value="false"
+               ng-disabled="facility.dataReportable == 'false'"/><strong>No</strong>
+      </div>
+    </div>
+  </div>
 
-        <div class="form-row clearfix">
-          <div class="form-cell">
-            <label>Data Reportable for the Facility? </label>
-            <ng-switch on="facility.dataReportable">
+  <div class="form-row clearfix">
+    <div class="form-cell">
+      <label>Facility has Electronic SCC?</label>
+
+      <div class="form-field radio-group">
+        <input ng-model="facility.hasElectronicScc" type="radio" name="has-electronic-scc"
+               value="true" ng-disabled="facility.dataReportable == 'false'"/><strong>Yes</strong> &nbsp; &nbsp; &nbsp;
+        <input ng-model="facility.hasElectronicScc" type="radio" name="has-electronic-scc"
+               value="false" ng-disabled="facility.dataReportable == 'false'"/><strong>No</strong>
+      </div>
+    </div>
+
+    <div class="form-cell">
+      <label>Facility has Electronic DAR?</label>
+
+      <div class="form-field radio-group">
+        <input ng-model="facility.hasElectronicDar" type="radio" name="has-electronic-dar"
+               value="true" ng-disabled="facility.dataReportable == 'false'"/><strong>Yes</strong> &nbsp; &nbsp; &nbsp;
+        <input ng-model="facility.hasElectronicDar" type="radio" name="has-electronic-dar"
+               value="false" ng-disabled="facility.dataReportable == 'false'"/><strong>No</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row clearfix">
+    <div class="form-cell">
+      <label>Data Reportable for the Facility? </label>
+      <ng-switch on="facility.dataReportable">
               <span ng-switch-when="true">
                 Yes
               </span>
               <span ng-switch-when="false">
                 No
               </span>
-            </ng-switch>
-          </div>
-
-          <div class="form-cell">
-              <label>Facility Supplies Others?</label>
-              <div class="form-field radio-group">
-                <input ng-model="facility.suppliesOthers" type="radio" name="supplies-others" value="true" ng-disabled="facility.dataReportable == 'false'"/><strong>Yes</strong>
-                  &nbsp; &nbsp; &nbsp;
-                <input ng-model="facility.suppliesOthers" type="radio" name="supplies-others" value="false" ng-disabled="facility.dataReportable == 'false'"/><strong>No</strong>
-              </div>
-          </div>
-        </div>
-
-        <div class="form-row clearfix">
-          <div class="form-cell full-width">
-            <label for="comments">Comments</label>
-            <div class="form-field">
-              <input ng-model="facility.comment" id="comments" type="text" maxlength="500" ng-disabled="facility.dataReportable == 'false'"/>
-            </div>
-          </div>
-        </div>
-      </div><!-- /form-group -->
-
-      <div id="action_buttons" class="action-buttons">
-        <div class="form-cell button-row" ng-show="facility.dataReportable == 'true'">
-          <input type="submit" class="btn btn-success save-button" value="Save"/>
-          <a href="" class="btn btn-danger delete-button" ng-show="facility.id!=null" ng-click="deleteConfirmModal=true">Delete</a>
-        </div>
-        <div class="form-cell button-row" ng-show="facility.dataReportable == 'false'">
-          <a href="" class="btn btn-success save-button" ng-show="facility.id!=null" ng-click="restoreConfirmModal=true">Restore</a>
-        </div>
-
-        <div class="toolbar-error" id="saveErrorMsgDiv" ng-bind="error" ng-show="error"></div>
-        <div class="toolbar-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"></div>
-        
-      </div>
-
-      <div id="deleteModal" class="fade ng-pristine ng-valid modal hide" ui-modal="" ng-model="deleteConfirmModal">
-          <div class="modal-header"><h3>Delete Facility</h3></div>
-          <div class="modal-body">
-              <p>"{{originalFacilityName}} / "{{originalFacilityCode}}" will be soft-deleted from the system</p>
-          </div>
-          <div class="modal-footer">
-              <a href="" class="btn btn-danger" ng-click="deleteFacility()" data-dismiss="modal">Delete</a>
-              <a href="" class="btn" data-dismiss="modal">Cancel</a>
-          </div>
-      </div>
-      <div id="restoreConfirmModal" class="fade ng-pristine ng-valid modal hide" ui-modal="" ng-model="restoreConfirmModal">
-          <div class="modal-header"><h3>Restore Facility</h3></div>
-          <div class="modal-body">
-              <p>"{{originalFacilityName}}" / "{{originalFacilityCode}}" will be restored in the system</p>
-          </div>
-          <div class="modal-footer">
-              <a href="" class="btn btn-primary" ng-click="activeConfirmModal=true" data-dismiss="modal">OK</a>
-              <a href="" class="btn" data-dismiss="modal">Cancel</a>
-          </div>
-      </div>
-      <div id="activeConfirmModel" class="fade ng-pristine ng-valid modal hide" ui-modal="" ng-model="activeConfirmModal">
-          <div class="modal-header"><h3>Activate Facility</h3></div>
-          <div class="modal-body">
-              <p>Do you want to set facility as active?</p>
-          </div>
-          <div class="modal-footer">
-              <a href="" class="btn btn-primary" ng-click="restoreFacility(true)" data-dismiss="modal">Yes</a>
-              <a href="" class="btn" ng-click="restoreFacility(false)" data-dismiss="modal">No</a>
-          </div>
-      </div>
+      </ng-switch>
     </div>
 
-  </form>
+    <div class="form-cell">
+      <label>Facility Supplies Others?</label>
+
+      <div class="form-field radio-group">
+        <input ng-model="facility.suppliesOthers" type="radio" name="supplies-others" value="true"
+               ng-disabled="facility.dataReportable == 'false'"/><strong>Yes</strong>
+        &nbsp; &nbsp; &nbsp;
+        <input ng-model="facility.suppliesOthers" type="radio" name="supplies-others" value="false"
+               ng-disabled="facility.dataReportable == 'false'"/><strong>No</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row clearfix">
+    <div class="form-cell full-width">
+      <label for="comments">Comments</label>
+
+      <div class="form-field">
+        <input ng-model="facility.comment" id="comments" type="text" maxlength="500"
+               ng-disabled="facility.dataReportable == 'false'"/>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /form-group -->
+
+<div id="action_buttons" class="action-buttons">
+  <div class="form-cell button-row" ng-show="facility.dataReportable == 'true'">
+    <input type="submit" class="btn btn-success save-button" value="Save"/>
+    <a href="" class="btn btn-danger delete-button" ng-show="facility.id!=null" ng-click="deleteConfirmModal=true">Delete</a>
+  </div>
+  <div class="form-cell button-row" ng-show="facility.dataReportable == 'false'">
+    <a href="" class="btn btn-success save-button" ng-show="facility.id!=null" ng-click="restoreConfirmModal=true">Restore</a>
+  </div>
+
+  <div class="toolbar-error" id="saveErrorMsgDiv" ng-bind="error" ng-show="error"></div>
+  <div class="toolbar-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"></div>
+
+</div>
+
+<div id="deleteModal" class="fade ng-pristine ng-valid modal hide" ui-modal="" ng-model="deleteConfirmModal">
+  <div class="modal-header"><h3>Delete Facility</h3></div>
+  <div class="modal-body">
+    <p>"{{originalFacilityName}} / "{{originalFacilityCode}}" will be soft-deleted from the system</p>
+  </div>
+  <div class="modal-footer">
+    <a href="" class="btn btn-danger" ng-click="deleteFacility()">Delete</a>
+    <a href="" class="btn" ng-click="deleteConfirmModal=false">Cancel</a>
+  </div>
+</div>
+
+<div id="restoreConfirmModal" class="fade ng-pristine ng-valid modal hide" ui-modal="" ng-model="restoreConfirmModal">
+  <div class="modal-header"><h3>Restore Facility</h3></div>
+  <div class="modal-body">
+    <p>"{{originalFacilityName}}" / "{{originalFacilityCode}}" will be restored in the system</p>
+  </div>
+  <div class="modal-footer">
+    <a href="" class="btn btn-primary" ng-click=" restoreConfirmModal=false; activeConfirmModal=true;" data-dismiss="modal">OK</a>
+    <a href="" class="btn" ng-click="restoreConfirmModal=false">Cancel</a>
+  </div>
+</div>
+
+<div id="activeConfirmModel" class="fade ng-pristine ng-valid modal hide" ui-modal="" ng-model="activeConfirmModal">
+  <div class="modal-header"><h3>Activate Facility</h3></div>
+  <div class="modal-body">
+    <p>Do you want to set facility as active?</p>
+  </div>
+  <div class="modal-footer">
+    <a href="" class="btn btn-primary" ng-click="restoreFacility(true)">Yes</a>
+    <a href="" class="btn" ng-click="restoreFacility(false)" data-dismiss="modal">No</a>
+  </div>
+</div>
+
+<div id="dateChangeConfirmModal" class="fade ng-pristine ng-valid modal hide" ui-modal="" ng-model="dateChangeConfirmModal">
+  <div class="modal-header"><h3>Set Program Start Date</h3></div>
+  <div class="modal-body">
+    <p>Facility Staff will submit back-due R&Rs for this program, starting from this date.</p>
+  </div>
+  <div class="modal-footer">
+    <a href="" class="btn btn-danger" ng-click="setNewStartDate()">Ok</a>
+    <a href="" class="btn" ng-click="resetOldStartDate()">Cancel</a>
+  </div>
+</div>
+
+
+
+</div>
+
+</form>
 </div>
 
 
