@@ -18,6 +18,7 @@ function ResetPasswordController($scope, UpdateUserPassword, $location, $route, 
     UpdateUserPassword.update({token:$route.current.params.token}, $scope.password1, function (data) {
       $location.path('/reset/password/complete');
     }, function (data) {
+      window.location = 'access-denied.html';
     });
 
   }

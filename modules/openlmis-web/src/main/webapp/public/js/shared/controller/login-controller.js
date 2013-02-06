@@ -23,6 +23,10 @@ function LoginController($scope, $http,localStorageService) {
       });
   };
 
+  $scope.goToForgotPassword = function() {
+    window.location = "forgot-password.html";
+  }
+
   function getRights(rightList) {
     var rights = [];
     $.each(rightList, function (index, right) {
