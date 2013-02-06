@@ -383,7 +383,7 @@ public class RequisitionServiceTest {
 
     requisitionService.authorize(rnrForAuthorizing);
 
-    verify(savedRnr).copyApproverEditableFields(rnrForAuthorizing);
+    verify(savedRnr).copyUserEditableFieldsForSubmitOrAuthorize(rnrForAuthorizing);
   }
 
   @Test

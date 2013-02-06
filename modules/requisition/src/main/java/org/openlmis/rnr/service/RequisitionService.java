@@ -131,7 +131,7 @@ public class RequisitionService {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
 
     if (savedRnr.getStatus() != SUBMITTED) throw new DataException(RNR_AUTHORIZATION_ERROR);
-    savedRnr.copyApproverEditableFields(rnr);
+    savedRnr.copyUserEditableFieldsForSubmitOrAuthorize(rnr);
 
     savedRnr.validate(rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId()));
 
