@@ -100,8 +100,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
         initiateRnRPage.submitRnR();
         initiateRnRPage.verifySubmitRnrErrorMsg();
 
-        initiateRnRPage.enterValuesAndVerifyCalculatedOrderQuantity(10,10,101,101,303,292);
-        initiateRnRPage.verifyPacksToShip(30);
+        initiateRnRPage.enterValuesAndVerifyCalculatedOrderQuantity(10,10,101,51,153,142);
+        initiateRnRPage.verifyPacksToShip(15);
 
         initiateRnRPage.enterAndVerifyRequestedQuantityExplanation(10);
         initiateRnRPage.verifyPacksToShip(1);
