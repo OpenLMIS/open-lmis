@@ -92,9 +92,8 @@ task deployOpenLmis(type: GradleBuild) {
 task compileLess << {
     println "Running lessCompile task..."
     def lessCompiler = new org.lesscss.LessCompiler()
-
-    def files = file('src/main/webapp/public/less').listFiles()
-    files.each { File file ->
+    def tree = fileTree('src/main/webapp/public/less').include('**/*.less')
+    tree.each {File file ->
         def outputCss = new File("${projectDir}/src/main/webapp/public/css/" + file.name.replace(".less", ".css"))
         println "LESS: Compiling ${file} to ${outputCss}..."
         lessCompiler.compile(file, outputCss)
