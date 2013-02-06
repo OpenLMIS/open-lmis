@@ -94,6 +94,10 @@ services.factory('RequisitionForApproval', function($resource) {
   return $resource('/requisitions-for-approval.json', {}, {});
 });
 
+services.factory('RequisitionForConvertToOrder', function($resource) {
+  return $resource('/requisitions-for-convert-to-order.json', {}, {});
+});
+
 services.factory('RequisitionForApprovalById', function($resource) {
   return $resource('/requisitions-for-approval/:id.json', {}, {});
 });

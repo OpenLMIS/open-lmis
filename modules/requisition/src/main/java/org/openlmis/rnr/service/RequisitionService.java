@@ -247,7 +247,9 @@ public class RequisitionService {
   }
 
   public List<Rnr> getApprovedRequisitions() {
-    return requisitionRepository.getApprovedRequisitions();
+    List<Rnr> requisitions = requisitionRepository.getApprovedRequisitions();
+    fillFacilityPeriodProgram(requisitions.toArray(new Rnr[requisitions.size()]));
+    return requisitions;
   }
 
   public List<ProcessingPeriod> getAllPeriodsForInitiatingRequisition(Integer facilityId, Integer programId) {

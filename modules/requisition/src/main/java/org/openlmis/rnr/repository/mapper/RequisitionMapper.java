@@ -84,7 +84,7 @@ public interface RequisitionMapper {
   Rnr getLastRequisitionToEnterThePostSubmitFlow(@Param(value = "facilityId") Integer facilityId,
                                                  @Param(value = "programId") Integer programId);
 
-  @Select("SELECT * FROM requisitions WHERE STATUS='APPROVED' ORDER BY submittedDate")
+  @Select("SELECT id, programId, facilityId, periodId, supplyingFacilityId, submittedDate, modifiedDate FROM requisitions WHERE STATUS='APPROVED' ORDER BY submittedDate")
   @Results(value = {
     @Result(property = "id", column = "id"),
     @Result(property = "facility.id", column = "facilityId"),

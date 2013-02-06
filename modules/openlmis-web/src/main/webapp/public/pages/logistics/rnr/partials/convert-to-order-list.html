@@ -1,0 +1,30 @@
+<h2>Convert to Order Requisitions</h2>
+
+<div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="message" ng-bind="$parent.message"></div>
+
+<div class="app-form">
+  <div class="form-group">
+    <h3>Requisition List</h3>
+
+    <div class="alert alert-success" id="NoRequisitionsPendingMessage" ng-hide="requisitions.length">
+      No R&Rs pending for converting to order
+    </div>
+    <div ng-show="requisitions.length">
+      <div class="row-fluid">
+        <div class="span4 offset8 grid-filters">
+          <input id="searchRequisition" class="search-query" ng-change="filterRequisitions()" type="text"
+                 ng-model="query" placeholder="Search..."/>
+          in
+          <select ng-model="searchField" ng-change="filterRequisitions()">
+            <option value="">All</option>
+            <option value="programName">Program</option>
+            <option value="facilityCode">Facility Code</option>
+            <option value="facilityName">Facility Name</option>
+          </select>
+        </div>
+      </div>
+      <div class="gridStyle" ng-grid="gridOptions" ng-show="requisitions.length"></div>
+    </div>
+  </div>
+</div>
+
