@@ -90,28 +90,28 @@ public class DBWrapper {
 
     }
 
-    public void insertFacility() throws IOException , SQLException
+    public void insertFacilities(String facility1, String facility2) throws IOException , SQLException
     {
 
         DBWrapper dbWrapper=new DBWrapper();
 
         dbWrapper.dbConnection("INSERT INTO facilities\n" +
                 "(code, name, description, gln, mainPhone, fax, address1, address2, geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById, coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, hasElectricity, online, hasElectronicScc, hasElectronicDar, active, goLiveDate, goDownDate, satellite, comment, dataReportable) values\n" +
-                "('F10','Village Dispensary','IT department','G7645',9876234981,'fax','A','B',1,1,333,22.1,1.2,3.3,2,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/1887','TRUE','fc','TRUE'),\n" +
-                "('F11','Central Hospital','IT department','G7646',9876234981,'fax','A','B',1,2,333,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','TRUE','fc','TRUE');\n", "alter");
+                "('"+facility1+"','Village Dispensary','IT department','G7645',9876234981,'fax','A','B',1,1,333,22.1,1.2,3.3,2,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/1887','TRUE','fc','TRUE'),\n" +
+                "('"+facility2+"','Central Hospital','IT department','G7646',9876234981,'fax','A','B',1,2,333,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','TRUE','fc','TRUE');\n", "alter");
 
         dbWrapper.dbConnection("insert into programs_supported(facilityId, programId, startDate, active, modifiedBy) VALUES\n" +
-                "((SELECT id FROM facilities WHERE code = 'F10'), 1, '11/11/12', true, 'Admin123'),\n" +
-                "((SELECT id FROM facilities WHERE code = 'F10'), 2, '11/11/12', true, 'Admin123'),\n" +
-                "((SELECT id FROM facilities WHERE code = 'F11'), 1, '11/11/12', true, 'Admin123'),\n" +
-                "((SELECT id FROM facilities WHERE code = 'F11'), 2, '11/11/12', true, 'Admin123');","alter");
+                "((SELECT id FROM facilities WHERE code = '"+facility1+"'), 1, '11/11/12', true, 'Admin123'),\n" +
+                "((SELECT id FROM facilities WHERE code = '"+facility1+"'), 2, '11/11/12', true, 'Admin123'),\n" +
+                "((SELECT id FROM facilities WHERE code = '"+facility2+"'), 1, '11/11/12', true, 'Admin123'),\n" +
+                "((SELECT id FROM facilities WHERE code = '"+facility2+"'), 2, '11/11/12', true, 'Admin123');","alter");
 
     }
 
 
-    public void allocateFacilityToUser(String userID) throws IOException {
+    public void allocateFacilityToUser(String userID, String facilityCode) throws IOException {
         DBWrapper dbwrapper = new DBWrapper();
-        dbwrapper.dbConnection("update users set facilityId = (Select id from facilities where code like('FCcode%')) where id='"+userID+"';", "alter");
+        dbwrapper.dbConnection("update users set facilityId = (Select id from facilities where code='"+facilityCode+"') where id='"+userID+"';", "alter");
 
     }
 
@@ -185,7 +185,7 @@ public class DBWrapper {
                 "  ((select id from roles where name='district pharmacist'), 'CONFIGURE_RNR');", "alter");
     }
 
-    public void insertSupervisoryNodes(String facilityCode) throws SQLException, IOException {
+    public void insertSupervisoryNode(String facilityCode, String supervisoryNodeCode, String supervisoryNodeParentCode) throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();
         ResultSet rs = dbwrapper.dbConnection("Select facilityId from supervisory_nodes;", "select");
 
@@ -196,18 +196,18 @@ public class DBWrapper {
         }
         dbwrapper.dbConnection("INSERT INTO supervisory_nodes\n" +
                 "  (parentId, facilityId, name, code) VALUES\n" +
-                "  (null, (SELECT id FROM facilities WHERE code = '"+facilityCode+"'), 'Node 1', 'N1');", "alter");
+                "  ("+supervisoryNodeParentCode+", (SELECT id FROM facilities WHERE code = '"+facilityCode+"'), 'Node 1', '"+supervisoryNodeCode+"');", "alter");
     }
 
-    public void insertSupervisoryNodesSecond(String facilityCode) throws SQLException, IOException {
+    public void insertSupervisoryNodeSecond(String facilityCode, String supervisoryNodeCode, String supervisoryNodeParentCode) throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();
 
         dbwrapper.dbConnection("INSERT INTO supervisory_nodes\n" +
                 "  (parentId, facilityId, name, code) VALUES\n" +
-                "  ((select id from  supervisory_nodes where code ='N1'), (SELECT id FROM facilities WHERE code = '"+facilityCode+"'), 'Node 1', 'N2');", "alter");
+                "  ((select id from  supervisory_nodes where code ='"+supervisoryNodeParentCode+"'), (SELECT id FROM facilities WHERE code = '"+facilityCode+"'), 'Node 1', '"+supervisoryNodeCode+"');", "alter");
     }
 
-    public void insertRequisitionGroup() throws SQLException, IOException {
+    public void insertRequisitionGroups(String code1, String code2, String supervisoryNodeCode1, String supervisoryNodeCode2) throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();
         ResultSet rs = dbwrapper.dbConnection("Select id from requisition_groups;", "select");
 
@@ -217,8 +217,8 @@ public class DBWrapper {
 
         }
         dbwrapper.dbConnection("INSERT INTO requisition_groups ( code ,name,description,supervisoryNodeId )values\n" +
-                "('RG2','Requistion Group 2','Supports EM(Q1M)',(select id from  supervisory_nodes where code ='N2')),\n" +
-                "('RG1','Requistion Group 1','Supports EM(Q2M)',(select id from  supervisory_nodes where code ='N1'));", "alter");
+                "('"+code2+"','Requistion Group 2','Supports EM(Q1M)',(select id from  supervisory_nodes where code ='"+supervisoryNodeCode2+"')),\n" +
+                "('"+code1+"','Requistion Group 1','Supports EM(Q2M)',(select id from  supervisory_nodes where code ='"+supervisoryNodeCode1+"'));", "alter");
     }
 
     public void insertRequisitionGroupMembers(String RG1facility, String RG2facility) throws SQLException, IOException {
@@ -293,7 +293,7 @@ public class DBWrapper {
 
 
 
-    public void insertProducts() throws SQLException, IOException {
+    public void insertProducts(String product1, String product2) throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();
         ResultSet rs = dbwrapper.dbConnection("Select id from products;", "select");
 
@@ -305,15 +305,11 @@ public class DBWrapper {
         }
         dbwrapper.dbConnection("INSERT INTO products\n" +
                 "(code,    alternateItemCode,  manufacturer,       manufacturerCode,  manufacturerBarcode,   mohBarcode,   gtin,   type,         primaryName,    fullName,       genericName,    alternateName,    description,      strength,    formId,  dosageUnitId, dispensingUnit,  dosesPerDispensingUnit,  packSize,  alternatePackSize,  storeRefrigerated,   storeRoomTemperature,   hazardous,  flammable,   controlledSubstance,  lightSensitive,  approvedByWho,  contraceptiveCyp,  packLength,  packWidth, packHeight,  packWeight,  packsPerCarton, cartonLength,  cartonWidth,   cartonHeight, cartonsPerPallet,  expectedShelfLife,  specialStorageInstructions, specialTransportInstructions, active,  fullSupply, tracer,   packRoundingThreshold,  roundToZero,  archived, displayOrder) values\n" +
-                "('P100',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     TRUE,       TRUE,         1,                    FALSE,      TRUE,    1),\n" +
-                "('P101',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,       TRUE,         1,                    FALSE,      TRUE,   2),\n" +
-                "('P103',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'manjyot',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,       TRUE,         1,                    FALSE,      TRUE,      3),\n" +
-                "('P104',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'bijesh',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,       TRUE,         1,                    FALSE,      TRUE,       4),\n" +
-                "('P102',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,       TRUE,         1,                    TRUE,      TRUE,     5),\n" +
-                "('P105',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'testing',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,       TRUE,         1,                    FALSE,      TRUE,   5);\n","alter");
+                "('"+product1+"',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     TRUE,       TRUE,         1,                    FALSE,      TRUE,    1),\n" +
+                "('"+product2+"',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,       TRUE,         1,                    FALSE,      TRUE,   5);\n","alter");
     }
 
-    public void insertProgramProducts() throws SQLException, IOException {
+    public void insertProgramProducts(String product1, String product2, String program) throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();
         ResultSet rs = dbwrapper.dbConnection("Select id from program_products;", "select");
 
@@ -324,26 +320,18 @@ public class DBWrapper {
         }
 
         dbwrapper.dbConnection("INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active) VALUES\n" +
-                "(1, (SELECT id from products WHERE code = 'P100'), 30, 12.5, true),\n" +
-                "(1, (SELECT id from products WHERE code = 'P103'), 30, 50, true),\n" +
-                "(1, (SELECT id from products WHERE code = 'P104'), 30, 50, true),\n" +
-                "(1, (SELECT id from products WHERE code = 'P101'), 30, 50, true),\n" +
-                "(1, (SELECT id from products WHERE code = 'P102'), 30, 0, true),\n" +
-                "(1, (SELECT id from products WHERE code = 'P105'), 30, 0, true);", "alter");
+                "((SELECT ID from programs where code='"+program+"'), (SELECT id from products WHERE code = '"+product1+"'), 30, 12.5, true),\n" +
+                "((SELECT ID from programs where code='"+program+"'), (SELECT id from products WHERE code = '"+product2+"'), 30, 0, true);", "alter");
     }
 
-    public void insertFacilityApprovedProducts() throws SQLException, IOException {
+    public void insertFacilityApprovedProducts(String product1, String product2, String program, String facilityType) throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();
 
         dbwrapper.dbConnection("delete from facility_approved_products;", "alter");
 
         dbwrapper.dbConnection("INSERT INTO facility_approved_products(facilityTypeId, programProductId, maxMonthsOfStock) VALUES\n" +
-                "((select id from facility_types where name='Lvl3 Hospital'), (SELECT id FROM program_products WHERE programId=1 AND productId=(SELECT id FROM products WHERE  code='P103')), 3),\n" +
-                "((select id from facility_types where name='Lvl3 Hospital'), (SELECT id FROM program_products WHERE programId=1 AND productId=(SELECT id FROM products WHERE  code='P104')), 3),\n" +
-                "((select id from facility_types where name='Lvl3 Hospital'), (SELECT id FROM program_products WHERE programId=1 AND productId=(SELECT id FROM products WHERE  code='P100')), 3),\n" +
-                "((select id from facility_types where name='Lvl3 Hospital'), (SELECT id FROM program_products WHERE programId=1 AND productId=(SELECT id FROM products WHERE  code='P101')), 3),\n" +
-                "((select id from facility_types where name='Lvl3 Hospital'), (SELECT id FROM program_products WHERE programId=1 AND productId=(SELECT id FROM products WHERE  code='P102')), 3),\n" +
-                "((select id from facility_types where name='Lvl3 Hospital'), (SELECT id FROM program_products WHERE programId=1 AND productId=(SELECT id FROM products WHERE  code='P105')), 3);","alter");
+                "((select id from facility_types where name='"+facilityType+"'), (SELECT id FROM program_products WHERE programId=(SELECT ID from programs where code='"+program+"') AND productId=(SELECT id FROM products WHERE  code='"+product1+"')), 3),\n" +
+                "((select id from facility_types where name='"+facilityType+"'), (SELECT id FROM program_products WHERE programId=(SELECT ID from programs where code='"+program+"') AND productId=(SELECT id FROM products WHERE  code='"+product2+"')), 3);","alter");
 
     }
 

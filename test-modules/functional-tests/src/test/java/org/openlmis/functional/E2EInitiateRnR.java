@@ -34,29 +34,29 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
         CreateFacilityPage createFacilityPage = homePage.navigateCreateFacility();
         String date_time=createFacilityPage.enterAndVerifyFacility();
+        String facility_code="FCcode" + date_time;
 
         DBWrapper dbWrapper = new DBWrapper();
 
         UserPage userPageSIC=homePage.navigateToUser();
-        userPageSIC.enterAndverifyUserDetails("User123","manjyots@thoughtworks.com","Manjyot", "Singh");
+        userPageSIC.enterAndverifyUserDetails("User123", "manjyots@thoughtworks.com", "Manjyot", "Singh");
 
         UserPage userPageMO=homePage.navigateToUser();
-        userPageMO.enterAndverifyUserDetails("User234","lokeshag@thoughtworks.com","Lokesh", "Agarwal");
+        userPageMO.enterAndverifyUserDetails("User234", "lokeshag@thoughtworks.com", "Lokesh", "Agarwal");
 
-        dbWrapper.insertFacility();
+        dbWrapper.insertFacilities("F10", "F11");
 
         dbWrapper.updateUser("200","F10","manjyots@thoughtworks.com");
-        dbWrapper.updateUser("300","F10","lokeshag@thoughtworks.com");
+        dbWrapper.updateUser("300","F11","lokeshag@thoughtworks.com");
 
-        dbWrapper.insertSupervisoryNodes("F10");
-        dbWrapper.insertSupervisoryNodesSecond("F11");
-        dbWrapper.insertProducts();
-        dbWrapper.insertProgramProducts();
-        dbWrapper.insertFacilityApprovedProducts();
-        dbWrapper.insertRequisitionGroup();
+        dbWrapper.insertSupervisoryNode("F10", "N1", "null");
+        dbWrapper.insertSupervisoryNodeSecond("F11", "N2", "N1");
+        dbWrapper.insertProducts("P10", "P11");
+        dbWrapper.insertProgramProducts("P10", "P11", "HIV");
+        dbWrapper.insertFacilityApprovedProducts("P10", "P11", "HIV", "Lvl3 Hospital");
+        dbWrapper.insertRequisitionGroups("RG1","RG2","N1","N2");
 
-        String facility_name="FCcode" + date_time;
-        dbWrapper.insertRequisitionGroupMembers("F10", facility_name);
+        dbWrapper.insertRequisitionGroupMembers("F10", facility_code);
 
         ManageSchedulePage manageSchedulePage=homePage.navigateToSchedule();
         manageSchedulePage.createAndVerifySchedule();
@@ -67,7 +67,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
         dbWrapper.insertRequisitionGroupProgramSchedule();
 
-        dbWrapper.allocateFacilityToUser("200");
+        dbWrapper.allocateFacilityToUser("200", facility_code);
 
         TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
         templateConfigPage.configureTemplate();
@@ -86,7 +86,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
         rolesPage.createRole("Medical-officer", "Medical-officer", userRoleListMedicalofficer);
         dbWrapper.insertRoleAssignment("300", "Medical-officer");
         dbWrapper.updateRoleAssignment("300");
-        dbWrapper.updateRoleGroupMember("FCcode"+date_time);
+        dbWrapper.updateRoleGroupMember(facility_code);
 
         LoginPage loginPageSecond=homePage.logout();
         HomePage homePageUser = loginPageSecond.loginAs(userSIC, password);
@@ -108,7 +108,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
         initiateRnRPage.calculateAndVerifyTotalCost();
         initiateRnRPage.saveRnR();
 
-        initiateRnRPage.addNonFullSupplyLineItems("99","Due to unforeseen event","antibiotic","P101");
+        initiateRnRPage.addNonFullSupplyLineItems("99","Due to unforeseen event","antibiotic","P11");
         initiateRnRPage.calculateAndVerifyTotalCostNonFullSupply();
         initiateRnRPage.verifyCostOnFooter();
         initiateRnRPage.submitRnR();

@@ -30,17 +30,17 @@ public class RnRServiceTest extends TestCaseHelper {
             dbWrapper.insertProducts();
             dbWrapper.insertProgramProducts();
             dbWrapper.insertFacilityApprovedProducts();
-            dbWrapper.insertFacility();
+            dbWrapper.insertFacilities();
             dbWrapper.configureTemplate();
             dbWrapper.insertRoles();
             dbWrapper.insertRoleRights();
             dbWrapper.insertUser("200", "User123", "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==", "F12", "manjyots@thoughtworks.com");
-            dbWrapper.insertSupervisoryNodes("F10");
-            dbWrapper.insertSupervisoryNodesSecond("F11");
+            dbWrapper.insertSupervisoryNode("F10");
+            dbWrapper.insertSupervisoryNodeSecond("F11");
             dbWrapper.insertRoleAssignment("200", "store in-charge");
             dbWrapper.insertSchedules();
             dbWrapper.insertProcessingPeriods();
-            dbWrapper.insertRequisitionGroup();
+            dbWrapper.insertRequisitionGroups();
             dbWrapper.insertRequisitionGroupMembers("F10","F11");
             dbWrapper.insertRequisitionGroupProgramSchedule();
 
