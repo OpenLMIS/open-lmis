@@ -113,9 +113,13 @@
           </div>
         </div>
 
+      </div>
+
+      <div class="form-group">
+        <h3>My facility</h3>
         <div class="form-row clearfix">
           <div class="form-cell">
-            <label for="searchFacility">My facility <span class="label-required">*</span></label>
+            <label for="searchFacility">My facility</label>
 
             <div class="form-field autosuggest-input">
               <div class="suggest-field">
@@ -130,7 +134,7 @@
                 </div>
                 <div ng-show="facilitySelected">
                   <span ng-bind="facilitySelected.name"></span>
-                  <a ng-click="clearSelectedFacility()">clear</a>
+                  <a class="clear-search" ng-click="clearSelectedFacility()">clear</a>
                 </div>
               </div>
               <div class="form-tip">Minimum 3 characters</div>
@@ -138,10 +142,10 @@
           </div>
         </div>
 
-      </div>
+        <div class="prog-role-grid" ng-show="facilitySelected">
+          <ng-include src="'/public/pages/admin/user/partials/user-role-assignment.html'"></ng-include>
+        </div>
 
-      <div ng-show="facilitySelected">
-        <ng-include src="'/public/pages/admin/user/partials/user-role-assignment.html'"></ng-include>
       </div>
 
       <!-- /form-group -->

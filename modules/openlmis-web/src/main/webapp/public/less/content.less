@@ -964,6 +964,7 @@ table td.delete-button {
   height: 20px;
   padding: 4px 6px;
   border-radius: 4px;
+  position: relative;
   input[type="text"] {
     border: 0 none;
     background-color: transparent;
@@ -977,6 +978,20 @@ table td.delete-button {
     &:focus {
       border-color: transparent !important;
       box-shadow: none !important;
+    }
+  }
+  .clear-search {
+    opacity: 0.8;
+    background: url(../images/clear-search-icon.png) no-repeat center center;
+    width: 20px; height: 20px;
+    text-indent: -999em;
+    display: block;
+    position: absolute;
+    top: 4px; right: 4px;
+  }
+  &:hover {
+    .clear-search {
+      opacity: 1;
     }
   }
 }
@@ -1029,11 +1044,34 @@ table td.delete-button {
 .user-program {
   padding: 10px;
 }
-.fluid-grid-header {
-  border: 1px solid #eee;
-}
 td .close {
   float: none;
   display: block;
   text-align: center;
 }
+.prog-role-grid {
+  margin: 10px;
+  .row-fluid {
+    border-top: 1px solid #DDD;
+    &:first-child {
+      border-top: 0 none;
+    }
+  }
+  .field-error {
+    color: #E93434;
+    display: block;
+    font-size: 0.9em;
+    padding-top: 2px;
+  }
+}
+.fluid-grid {
+  border: 1px solid #DDD;
+  border-radius: 3px;
+}
+.fluid-grid-header {
+  font-weight: bold;
+}
+.fluid-grid-cell {
+  padding: 10px;
+}
+
