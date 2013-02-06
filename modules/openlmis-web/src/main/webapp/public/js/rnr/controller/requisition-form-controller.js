@@ -3,10 +3,10 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
   $scope.lossesAndAdjustmentsModal = [];
 
   FacilityApprovedProducts.get({facilityId:$routeParams.facility, programId:$routeParams.program},
-    function (data) {
-      $scope.nonFullSupplyProducts = data.nonFullSupplyProducts;
-    }, function () {
-    });
+      function (data) {
+        $scope.nonFullSupplyProducts = data.nonFullSupplyProducts;
+      }, function () {
+      });
 
   ReferenceData.get({}, function (data) {
     $scope.currency = data.currency;
@@ -63,40 +63,40 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
     }
 
     Requisitions.update({id:$scope.rnr.id, operation:"save"},
-      $scope.rnr, function (data) {
-        $scope.message = data.success;
-        $scope.error = "";
-      }, function (data) {
-        $scope.error = data.error;
-        $scope.message = "";
-      });
+        $scope.rnr, function (data) {
+          $scope.message = data.success;
+          $scope.error = "";
+        }, function (data) {
+          $scope.error = data.error;
+          $scope.message = "";
+        });
   };
 
   $scope.submitRnr = function () {
     if (!valid()) return;
     $scope.rnr.nonFullSupplyLineItems = $scope.nonFullSupplyLineItems;
     Requisitions.update({id:$scope.rnr.id, operation:"submit"},
-      $scope.rnr, function (data) {
-        $scope.rnr.status = "SUBMITTED";
-        $scope.formDisabled = !$rootScope.hasPermission('AUTHORIZE_REQUISITION');
-        $scope.submitMessage = data.success;
-        $scope.submitError = "";
-      }, function (data) {
-        $scope.submitError = data.data.error;
-      });
+        $scope.rnr, function (data) {
+          $scope.rnr.status = "SUBMITTED";
+          $scope.formDisabled = !$rootScope.hasPermission('AUTHORIZE_REQUISITION');
+          $scope.submitMessage = data.success;
+          $scope.submitError = "";
+        }, function (data) {
+          $scope.submitError = data.data.error;
+        });
   };
 
   $scope.authorizeRnr = function () {
     if (!valid()) return;
     Requisitions.update({id:$scope.rnr.id, operation:"authorize"},
-      $scope.rnr, function (data) {
-        $scope.rnr.status = "AUTHORIZED";
-        $scope.formDisabled = true;
-        $scope.submitMessage = data.success;
-        $scope.submitError = "";
-      }, function (data) {
-        $scope.submitError = data.data.error;
-      });
+        $scope.rnr, function (data) {
+          $scope.rnr.status = "AUTHORIZED";
+          $scope.formDisabled = true;
+          $scope.submitMessage = data.success;
+          $scope.submitError = "";
+        }, function (data) {
+          $scope.submitError = data.data.error;
+        });
   };
 
   $scope.getId = function (prefix, parent, isLossAdjustment) {
@@ -141,10 +141,11 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
     return parseFloat(parseFloat($scope.rnr.fullSupplyItemsSubmittedCost) + parseFloat($scope.rnr.nonFullSupplyItemsSubmittedCost)).toFixed(2);
   };
 
+  // TODO: Push this method to rnr-line-item
   $scope.saveLossesAndAdjustmentsForRnRLineItem = function (rnrLineItem, rnr, programRnrColumnList) {
     if (!isValidLossesAndAdjustments(rnrLineItem)) return;
 
-    rnrLineItem.fill(rnr, programRnrColumnList);
+    rnrLineItem.reEvaluateTotalLossesAndAdjustments(rnr, programRnrColumnList);
     $scope.lossesAndAdjustmentsModal[rnrLineItem.id] = false;
   };
 
@@ -158,28 +159,32 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
   };
 
 
-  $scope.removeLossAndAdjustment = function (lineItem, lossAndAdjustmentToDelete) {
-    lineItem.removeLossAndAdjustment(lossAndAdjustmentToDelete);
+  // TODO: Push this method to rnr-line-item
+  $scope.removeLossAndAdjustment = function (lineItem, lossAndAdjustmentToDelete, rnr, programRnrColumnList) {
+    lineItem.removeLossAndAdjustment(lossAndAdjustmentToDelete, rnr, programRnrColumnList);
     updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem);
     $scope.resetModalError();
   };
 
-  $scope.addLossAndAdjustment = function (lineItem, newLossAndAdjustment) {
-    lineItem.addLossAndAdjustment(newLossAndAdjustment);
+  // TODO: Push this method to rnr-line-item
+  $scope.addLossAndAdjustment = function (lineItem, newLossAndAdjustment, rnr, programRnrColumnList) {
+    lineItem.addLossAndAdjustment(newLossAndAdjustment, rnr, programRnrColumnList);
     updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem);
   };
 
+  // TODO: Push this method to rnr-line-item
   function formulaValid() {
     var valid = true;
     $($scope.rnrLineItems).each(function (index, lineItem) {
       if (lineItem.arithmeticallyInvalid($scope.programRnRColumnList) || lineItem.stockInHand < 0 || lineItem.quantityDispensed < 0) {
-        valid =  false;
+        valid = false;
         return false;
       }
     });
     return valid;
   }
 
+  // TODO: Push this method to rnr-line-item
   function isValidLossesAndAdjustments(rnrLineItem) {
     $scope.modalError = '';
     if (isUndefined(rnrLineItem.lossesAndAdjustments)) return true;
@@ -205,13 +210,13 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
     if ($scope.programRnRColumnList) return _.findWhere($scope.programRnRColumnList, {'name':columnName}).label + ":";
   };
 
-
   $scope.addNonFullSupplyLineItem = function () {
-    jQuery.extend(true, $scope.newNonFullSupply, new RnrLineItem());
     prepareNFSLineItemFields();
-    $scope.nonFullSupplyLineItems.push($scope.newNonFullSupply);
+    var lineItem = new RnrLineItem($scope.newNonFullSupply);
+
+    $scope.nonFullSupplyLineItems.push(lineItem);
     $scope.rnr.nonFullSupplyLineItems = $scope.nonFullSupplyLineItems;
-    $scope.newNonFullSupply.fill($scope.rnr, $scope.programRnRColumnList);
+    lineItem.fillPacksToShipBasedOnCalculatedOrderQuantityOrQuantityRequested($scope.rnr);
     $scope.facilityApprovedProduct = undefined;
     $scope.newNonFullSupply = undefined;
     updateNonFullSupplyProductsToDisplay();
@@ -235,9 +240,9 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
     angular.copy($scope.facilityApprovedProduct.programProduct.product, product);
     $scope.newNonFullSupply.productCode = product.code;
     $scope.newNonFullSupply.product = (product.primaryName == null ? "" : (product.primaryName + " ")) +
-      (product.form.code == null ? "" : (product.form.code + " ")) +
-      (product.strength == null ? "" : (product.strength + " ")) +
-      (product.dosageUnit.code == null ? "" : product.dosageUnit.code);
+        (product.form.code == null ? "" : (product.form.code + " ")) +
+        (product.strength == null ? "" : (product.strength + " ")) +
+        (product.dosageUnit.code == null ? "" : product.dosageUnit.code);
     $(['dosesPerDispensingUnit', 'packSize', 'roundToZero', 'packRoundingThreshold', 'dispensingUnit', 'fullSupply']).each(function (index, field) {
       $scope.newNonFullSupply[field] = product[field];
     });
@@ -250,8 +255,8 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
     populateProductInformation();
     $(['quantityReceived', 'quantityDispensed', 'beginningBalance', 'stockInHand', 'totalLossesAndAdjustments', 'calculatedOrderQuantity', 'newPatientCount',
       'stockOutDays', 'normalizedConsumption', 'amc', 'maxStockQuantity']).each(function (index, field) {
-        $scope.newNonFullSupply[field] = 0;
-      });
+          $scope.newNonFullSupply[field] = 0;
+        });
     $scope.newNonFullSupply.rnrId = $scope.rnr.id;
   }
 

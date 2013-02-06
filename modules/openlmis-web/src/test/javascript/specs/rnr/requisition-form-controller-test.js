@@ -205,20 +205,22 @@ describe('RequisitionFormController', function () {
     var lineItem = { "id":"1", "beginningBalance":1, lossesAndAdjustments:[
       {"type":{"name":"some name"}, "quantity":"4"}
     ]};
-    jQuery.extend(true, lineItem, new RnrLineItem());
 
-    scope.rnrLineItems.push(lineItem);
-    spyOn(lineItem, 'fill');
+    var rnrLineItem = new RnrLineItem(lineItem);
 
-    scope.rnr = {"id":"rnrId", lineItems:[lineItem]};
+
+    scope.rnrLineItems.push(rnrLineItem);
+    spyOn(rnrLineItem, 'reEvaluateTotalLossesAndAdjustments');
+
+    scope.rnr = {"id":"rnrId", lineItems:[rnrLineItem]};
     scope.programRnrColumnList = [
       {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}}
     ];
 
     scope.lossesAndAdjustmentsModal[1] = true;
-    scope.saveLossesAndAdjustmentsForRnRLineItem(scope.rnrLineItems[0], scope.rnr, scope.programRnrColumnList);
+    scope.saveLossesAndAdjustmentsForRnRLineItem(rnrLineItem, scope.rnr, scope.programRnrColumnList);
 
-    expect(lineItem.fill).toHaveBeenCalledWith(scope.rnr, scope.programRnrColumnList);
+    expect(rnrLineItem.reEvaluateTotalLossesAndAdjustments).toHaveBeenCalledWith(scope.rnr, scope.programRnrColumnList);
     expect(scope.lossesAndAdjustmentsModal[1]).toBeFalsy();
     expect(scope.modalError).toEqual('');
   });
@@ -227,19 +229,19 @@ describe('RequisitionFormController', function () {
     var lineItem = { "id":"1", "beginningBalance":1, lossesAndAdjustments:[
       {"type":{"name":"some name"}, "quantity":null}
     ]};
-    jQuery.extend(true, lineItem, new RnrLineItem());
+    var rnrLineItem = new RnrLineItem(lineItem);
 
-    scope.rnrLineItems.push(lineItem);
-    spyOn(lineItem, 'fill');
+    scope.rnrLineItems.push(rnrLineItem);
+    spyOn(rnrLineItem, 'reEvaluateTotalLossesAndAdjustments');
 
-    scope.rnr = {"id":"rnrId", lineItems:[lineItem]};
+    scope.rnr = {"id":"rnrId", lineItems:[rnrLineItem]};
     scope.programRnrColumnList = [
       {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}}
     ];
     scope.lossesAndAdjustmentsModal[1] = true;
-    scope.saveLossesAndAdjustmentsForRnRLineItem(scope.rnrLineItems[0], scope.rnr, scope.programRnRColumnList);
+    scope.saveLossesAndAdjustmentsForRnRLineItem(rnrLineItem, scope.rnr, scope.programRnRColumnList);
 
-    expect(lineItem.fill).not.toHaveBeenCalledWith(scope.rnr, scope.programRnrColumnList);
+    expect(rnrLineItem.reEvaluateTotalLossesAndAdjustments).not.toHaveBeenCalledWith(scope.rnr, scope.programRnrColumnList);
     expect(scope.lossesAndAdjustmentsModal[1]).toBeTruthy();
     expect(scope.modalError).toEqual('Please correct the highlighted fields before submitting');
   });
@@ -263,15 +265,26 @@ describe('RequisitionFormController', function () {
     scope.rnr = {"id":1};
     scope.nonFullSupplyLineItems = [];
     scope.nonFullSupplyProducts = [];
-    scope.facilityApprovedProduct = {"programProduct": {"dosesPerMonth":5, "currentPrice":10, "product":{"form":{"code":"Tablet"}, "dosageUnit":{"code":"mg"}, "strength":"600", "code":"P999", "primaryName":"Antibiotics", "dosesPerDispensingUnit": 3, "packSize": 10, "roundToZero": "false", "packRoundingThreshold":"true", "dispensingUnit":"Strip", "fullSupply":"true"}}, "maxMonthsOfStock":3};
+    var product = {
+      "form":{"code":"Tablet"},
+      "dosageUnit":{"code":"mg"},
+      "strength":"600", "code":"P999", "primaryName":"Antibiotics",
+      "dosesPerDispensingUnit":3, "packSize":10, "roundToZero":"false",
+      "packRoundingThreshold":"true", "dispensingUnit":"Strip", "fullSupply":false};
+
+    var programProduct = {"dosesPerMonth":5, "currentPrice":8, "product":product};
+
+    scope.facilityApprovedProduct = {"programProduct":programProduct,"maxMonthsOfStock":3};
+
     scope.newNonFullSupply = {"quantityRequested":20, "reasonForRequestedQuantity":"Bad Weather"};
+
     scope.addNonFullSupplyLineItem();
 
     expect(scope.nonFullSupplyLineItems[0].quantityRequested).toEqual(20);
     expect(scope.nonFullSupplyLineItems[0].reasonForRequestedQuantity).toEqual("Bad Weather");
-    expect(scope.nonFullSupplyLineItems[0].cost).toEqual(20);
+    expect(scope.nonFullSupplyLineItems[0].cost).toEqual(16);
     expect(scope.nonFullSupplyProductsToDisplay).toEqual([]);
-    expect(scope.rnr.nonFullSupplyItemsSubmittedCost).toEqual(20);
+    expect(scope.rnr.nonFullSupplyItemsSubmittedCost).toEqual(16);
   });
 
 });

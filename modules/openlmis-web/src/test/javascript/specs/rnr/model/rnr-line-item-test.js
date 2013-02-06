@@ -1,57 +1,92 @@
 describe('RnrLineItem', function () {
-
   beforeEach(module('rnr'));
 
-  describe('Calculate consumption when it is marked as a computed column', function () {
+  describe('Calculate consumption', function () {
+    var programRnrColumnList;
+
+    beforeEach(function () {
+      programRnrColumnList = [
+        {"indicator":"C", "name":"quantityDispensed", "source":{"name":"CALCULATED"}}
+      ];
+    });
+
+    it('should calculate consumption', function () {
+      var rnrLineItem = new RnrLineItem({"beginningBalance":5, "quantityReceived":20, "quantityDispensed":null, "totalLossesAndAdjustments":5, "stockInHand":10});
+
+      rnrLineItem.calculateConsumption(programRnrColumnList);
+
+      expect(rnrLineItem.quantityDispensed).toEqual(20);
+    });
+
     it('should not calculate consumption when one of the dependant columns is not set', function () {
       var lineItem = {"beginningBalance":1, "quantityReceived":2, "quantityDispensed":null, "totalLossesAndAdjustments":3, "stockInHand":null};
       var rnrLineItem = new RnrLineItem(lineItem);
 
-      rnrLineItem.calculateConsumption();
+      rnrLineItem.calculateConsumption(programRnrColumnList);
 
       expect(rnrLineItem.quantityDispensed).toEqual(null);
     });
 
-    it('should calculate consumption', function () {
-      var lineItem = {"beginningBalance":5, "quantityReceived":20, "quantityDispensed":null, "totalLossesAndAdjustments":5, "stockInHand":10};
-      var rnrLineItem = new RnrLineItem(lineItem);
+    it('should not calculate consumption when it is not a calculated field', function () {
+      programRnrColumnList = [
+        {"indicator":"C", "name":"quantityDispensed", "source":{"name":"USER_INPUT"}}
+      ];
+      var rnrLineItem = new RnrLineItem();
 
-      rnrLineItem.calculateConsumption();
+      rnrLineItem.calculateConsumption(programRnrColumnList);
 
-      expect(rnrLineItem.quantityDispensed).toEqual(20);
+      expect(rnrLineItem.quantityDispensed).toEqual(null);
     });
   });
 
-  describe('Calculate stock in hand when it is marked as a computed column', function () {
-    it('should not calculate stock in hand when one of the dependant columns is not set', function () {
-      var lineItem = {"beginningBalance":1, "quantityReceived":2, "quantityDispensed":1, "totalLossesAndAdjustments":null, "stockInHand":null};
-      var rnrLineItem = new RnrLineItem(lineItem);
-
-      rnrLineItem.calculateStockInHand();
-
-      expect(rnrLineItem.stockInHand).toEqual(null);
+  describe('Calculate stock in hand', function () {
+    var programRnrColumnList;
+    beforeEach(function () {
+      programRnrColumnList = [
+        {"indicator":"E", "name":"stockInHand", "source":{"name":"CALCULATED"}}
+      ];
     });
 
     it('should calculate stock in hand when all values are 0 - NaN check', function () {
-      var lineItem = {"beginningBalance":0, "quantityReceived":0, "quantityDispensed":0, "totalLossesAndAdjustments":0, "stockInHand":null};
-      var rnrLineItem = new RnrLineItem(lineItem);
+      var rnrLineItem = new RnrLineItem({"beginningBalance":0, "quantityReceived":0, "quantityDispensed":0, "totalLossesAndAdjustments":0, "stockInHand":null});
 
-      rnrLineItem.calculateStockInHand();
+      rnrLineItem.calculateStockInHand(programRnrColumnList);
 
       expect(rnrLineItem.stockInHand).toEqual(0);
     });
 
     it('should calculate stock in hand', function () {
-      var lineItem = {"beginningBalance":1, "quantityReceived":10, "quantityDispensed":2, "totalLossesAndAdjustments":4, "stockInHand":null};
-      var rnrLineItem = new RnrLineItem(lineItem);
+      var rnrLineItem = new RnrLineItem({"beginningBalance":10, "quantityReceived":10, "quantityDispensed":10, "totalLossesAndAdjustments":1, "stockInHand":null});
 
-      rnrLineItem.calculateStockInHand();
+      rnrLineItem.calculateStockInHand(programRnrColumnList);
 
-      expect(rnrLineItem.stockInHand).toEqual(13);
+      expect(rnrLineItem.stockInHand).toEqual(11);
     });
+
+    it('should not calculate stock in hand when one of the dependant columns is not set', function () {
+      var rnrLineItem = new RnrLineItem({"beginningBalance":1, "quantityReceived":2, "quantityDispensed":1, "totalLossesAndAdjustments":null, "stockInHand":null});
+
+      rnrLineItem.calculateStockInHand(programRnrColumnList);
+
+      expect(rnrLineItem.stockInHand).toEqual(null);
+    });
+
+    it('should not calculate stock in hand when it is not a calculated field', function () {
+      programRnrColumnList = [
+        {"indicator":"E", "name":"stockInHand", "source":{"name":"USER_INPUT"}}
+      ];
+      var rnrLineItem = new RnrLineItem();
+
+      rnrLineItem.calculateStockInHand(programRnrColumnList);
+
+      expect(rnrLineItem.stockInHand).toEqual(null);
+    });
+
+
   });
 
   describe('Calculate normalized consumption', function () {
+    var programRnrColumnList;
     beforeEach(function () {
       programRnrColumnList = [
         {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}},
@@ -137,7 +172,7 @@ describe('RnrLineItem', function () {
       expect(rnrLineItem.amc).toEqual(10);
     });
 
-    xit('should not calculate AMC when normalized consumption is not present', function () {
+    it('should not calculate AMC when normalized consumption is not present', function () {
       var lineItem = {"normalizedConsumption":null};
       var rnrLineItem = new RnrLineItem(lineItem);
 
@@ -323,7 +358,6 @@ describe('RnrLineItem', function () {
   });
 
   describe('Calculate Full Supply Items Submitted Cost For Rnr', function () {
-
     it('should calculate fullSupplyItemsSubmittedCost', function () {
       var rnrLineItem1 = new RnrLineItem({"cost":100});
       var rnrLineItem2 = new RnrLineItem({"cost":60});
@@ -337,38 +371,75 @@ describe('RnrLineItem', function () {
   });
 
   describe('Losses and adjustment for line item', function () {
-
     it("should re evaluate total losses and adjustments for line item", function () {
+      var rnr = new Object();
+      var programRnrColumnList = new Object();
+
       var lossAndAdjustment = {"type":{"name":"CLINIC_RETURN", "additive":true}, "quantity":45};
       var lineItem = {"id":"1", "totalLossesAndAdjustments":40, lossesAndAdjustments:[lossAndAdjustment]};
       var rnrLineItem = new RnrLineItem(lineItem);
 
-      rnrLineItem.reEvaluateTotalLossesAndAdjustments();
+      spyOn(rnrLineItem, "updateTotalLossesAndAdjustment");
 
-      expect(rnrLineItem.totalLossesAndAdjustments).toEqual(45);
-      expect(rnrLineItem.lossesAndAdjustments).toEqual([lossAndAdjustment]);
+      rnrLineItem.reEvaluateTotalLossesAndAdjustments(rnr, new Object());
+
+      expect(rnrLineItem.updateTotalLossesAndAdjustment).toHaveBeenCalledWith(45, true, rnr, programRnrColumnList);
     });
 
     it("should remove losses and adjustments for line item and update total losses and adjustments", function () {
+      var rnr = new Object();
+      var programRnrColumnList = new Object();
       var lossAndAdjustment = {"type":{"name":"CLINIC_RETURN", "additive":true}, "quantity":45};
       var lineItem = {"id":"1", "totalLossesAndAdjustments":45, lossesAndAdjustments:[lossAndAdjustment]};
       var rnrLineItem = new RnrLineItem(lineItem);
 
-      rnrLineItem.removeLossAndAdjustment(rnrLineItem.lossesAndAdjustments[0]);
+      spyOn(rnrLineItem, "updateTotalLossesAndAdjustment");
 
-      expect(rnrLineItem.totalLossesAndAdjustments).toEqual(0);
+      rnrLineItem.removeLossAndAdjustment(rnrLineItem.lossesAndAdjustments[0], rnr, programRnrColumnList);
+
+      expect(rnrLineItem.updateTotalLossesAndAdjustment).toHaveBeenCalledWith(45, false, rnr, programRnrColumnList);
       expect(rnrLineItem.lossesAndAdjustments).toEqual([]);
     });
 
     it("should add losses and adjustments for line item and update total losses and adjustments", function () {
+      var rnr = new Object();
+      var programRnrColumnList = new Object();
       var lossAndAdjustment = {"type":{"name":"CLINIC_RETURN", "additive":true}, "quantity":45};
       var expectedLossAndAdjustment = {"type":{"name":"CLINIC_RETURN", "additive":true}, "quantity":45};
       var lineItem = {"id":"1", "totalLossesAndAdjustments":0, lossesAndAdjustments:[]};
       var rnrLineItem = new RnrLineItem(lineItem);
 
-      rnrLineItem.addLossAndAdjustment(lossAndAdjustment);
-      expect(rnrLineItem.totalLossesAndAdjustments).toEqual(45);
+      spyOn(rnrLineItem, "updateTotalLossesAndAdjustment");
+      rnrLineItem.addLossAndAdjustment(lossAndAdjustment, rnr, programRnrColumnList);
+
+      expect(rnrLineItem.updateTotalLossesAndAdjustment).toHaveBeenCalledWith(45, true, rnr, programRnrColumnList);
       expect(rnrLineItem.lossesAndAdjustments).toEqual([expectedLossAndAdjustment]);
+    });
+
+    it('should update total losses and adjustments and add additive lossAndAdjustment', function () {
+      var rnrLineItem = new RnrLineItem({"totalLossesAndAdjustments":20});
+      var rnr = {"id":1};
+      var programRnrColumnList = [];
+
+      spyOn(rnrLineItem, "fillConsumptionOrStockInHand");
+
+      rnrLineItem.updateTotalLossesAndAdjustment(15, true, rnr, programRnrColumnList);
+
+      expect(rnrLineItem.fillConsumptionOrStockInHand).toHaveBeenCalledWith(rnr, programRnrColumnList);
+      expect(rnrLineItem.totalLossesAndAdjustments).toEqual(35);
+    });
+
+    it('should update total losses and adjustments and subtract non-additive lossAndAdjustment', function () {
+      var rnrLineItem = new RnrLineItem({"totalLossesAndAdjustments":40});
+      var rnr = {"id":1};
+      var programRnrColumnList = [];
+
+      spyOn(rnrLineItem, "fillConsumptionOrStockInHand");
+
+      rnrLineItem.updateTotalLossesAndAdjustment(15, false, rnr, programRnrColumnList);
+
+      expect(rnrLineItem.fillConsumptionOrStockInHand).toHaveBeenCalledWith(rnr, programRnrColumnList);
+      expect(rnrLineItem.totalLossesAndAdjustments).toEqual(25);
     });
   });
 
@@ -411,7 +482,7 @@ describe('RnrLineItem', function () {
     });
 
 
-    xit("should give error message for arithmetic validation error ", function () {
+    it("should give error message for arithmetic validation error ", function () {
       var lineItem = {"id":"1", "beginningBalance":3, "quantityReceived":3, "quantityDispensed":3, "stockInHand":3};
       var rnrLineItem = new RnrLineItem(lineItem);
 
@@ -420,7 +491,7 @@ describe('RnrLineItem', function () {
       expect(errorMsg).toEqual("The entries are arithmetically invalid, please recheck");
     });
 
-    xit("should give error message for negative stock in hand", function () {
+    it("should give error message for negative stock in hand", function () {
       var lineItem = {"id":"1", "beginningBalance":3, "quantityReceived":3, "quantityDispensed":33, "stockInHand":-3};
       var rnrLineItem = new RnrLineItem(lineItem);
 
@@ -430,7 +501,7 @@ describe('RnrLineItem', function () {
       expect(errorMsg).toEqual("Stock On Hand is calculated to be negative, please validate entries");
     });
 
-    xit("should give error message for negative quantity dispensed ", function () {
+    it("should give error message for negative quantity dispensed ", function () {
       programRnrColumnList[0].formulaValidationRequired = false;
       var lineItem = {"id":"1", "beginningBalance":3, "quantityReceived":3, "quantityDispensed":-3, "stockInHand":3};
       var rnrLineItem = new RnrLineItem(lineItem);
@@ -440,6 +511,168 @@ describe('RnrLineItem', function () {
       expect(errorMsg).toEqual("Total Quantity Consumed is calculated to be negative, please validate entries");
     });
 
+  });
+
+  describe('Get Source name', function () {
+    var programRnrColumnList;
+    beforeEach(function () {
+      programRnrColumnList = [
+        {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidationRequired":true}
+      ];
+    });
+
+    it('should get rnr column source name for the provided indicator', function () {
+      var lineItem = new RnrLineItem({"id":15});
+      expect(lineItem.getSource("A", programRnrColumnList)).toEqual("USER_INPUT");
+    });
+  });
+
+  describe('Execution workflow for calculation', function () {
+    var programRnrColumnList;
+    var rnr;
+    var rnrLineItem;
+
+    beforeEach(function () {
+      programRnrColumnList = [
+        {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidationRequired":true}
+      ];
+      rnr = {"id":1};
+      rnrLineItem = new RnrLineItem({"id":"1", "beginningBalance":3, "quantityReceived":4, "quantityDispensed":-3, "stockInHand":9, "totalLossesAndAdjustments":34});
+    });
+
+    it('should test execution flow when consumption or stock in hand gets filled', function () {
+      spyOn(rnrLineItem, "calculateConsumption");
+      spyOn(rnrLineItem, "calculateStockInHand");
+      spyOn(rnrLineItem, "fillNormalizedConsumption");
+      spyOn(utils, "parseIntWithBaseTen");
+
+      rnrLineItem.fillConsumptionOrStockInHand(rnr, programRnrColumnList);
+
+      expect(utils.parseIntWithBaseTen).toHaveBeenCalledWith(3);
+      expect(utils.parseIntWithBaseTen).toHaveBeenCalledWith(4);
+      expect(utils.parseIntWithBaseTen).toHaveBeenCalledWith(-3);
+      expect(utils.parseIntWithBaseTen).toHaveBeenCalledWith(34);
+      expect(utils.parseIntWithBaseTen).toHaveBeenCalledWith(9);
+
+      expect(rnrLineItem.calculateConsumption).toHaveBeenCalledWith(programRnrColumnList);
+      expect(rnrLineItem.calculateStockInHand).toHaveBeenCalledWith(programRnrColumnList);
+      expect(rnrLineItem.fillNormalizedConsumption).toHaveBeenCalledWith(rnr, programRnrColumnList);
+    });
+
+    it('should test execution flow when packs to ship gets filled and order quantity is quantity requested', function () {
+      rnrLineItem.quantityRequested = 31;
+
+      spyOn(rnrLineItem, "calculatePacksToShip");
+      spyOn(rnrLineItem, "fillCost");
+
+      rnrLineItem.fillPacksToShipBasedOnCalculatedOrderQuantityOrQuantityRequested(rnr);
+
+      expect(rnrLineItem.calculatePacksToShip).toHaveBeenCalledWith(31);
+      expect(rnrLineItem.fillCost).toHaveBeenCalledWith(rnr);
+    });
+
+    it('should test execution flow when packs to ship gets filled and order quantity is not present', function () {
+      rnrLineItem.quantityRequested = null;
+      rnrLineItem.calculatedOrderQuantity = 12;
+
+      spyOn(rnrLineItem, "calculatePacksToShip");
+      spyOn(rnrLineItem, "fillCost");
+
+      rnrLineItem.fillPacksToShipBasedOnCalculatedOrderQuantityOrQuantityRequested(rnr);
+
+      expect(rnrLineItem.calculatePacksToShip).toHaveBeenCalledWith(12);
+      expect(rnrLineItem.fillCost).toHaveBeenCalledWith(rnr);
+    });
+
+    it('should test execution flow when normalized consumption gets filled', function () {
+      spyOn(rnrLineItem, "calculateNormalizedConsumption");
+      spyOn(rnrLineItem, "fillAMC");
+
+      rnrLineItem.fillNormalizedConsumption(rnr, programRnrColumnList);
+
+      expect(rnrLineItem.calculateNormalizedConsumption).toHaveBeenCalledWith(programRnrColumnList);
+      expect(rnrLineItem.fillAMC).toHaveBeenCalledWith(rnr);
+    });
+
+    it('should test execution flow when rnr line item cost gets filled when it is of full supply type', function () {
+      rnrLineItem.fullSupply = true;
+
+      spyOn(rnrLineItem, "calculateCost");
+      spyOn(rnrLineItem, "calculateFullSupplyItemsSubmittedCost");
+
+      rnrLineItem.fillCost(rnr);
+
+      expect(rnrLineItem.calculateCost).toHaveBeenCalled();
+      expect(rnrLineItem.calculateFullSupplyItemsSubmittedCost).toHaveBeenCalledWith(rnr);
+    });
+
+    it('should test execution flow when rnr line item cost gets filled when it is of non-full supply type', function () {
+      rnrLineItem.fullSupply = false;
+
+      spyOn(rnrLineItem, "calculateCost");
+      spyOn(rnrLineItem, "calculateNonFullSupplyItemsSubmittedCost");
+
+      rnrLineItem.fillCost(rnr);
+
+      expect(rnrLineItem.calculateCost).toHaveBeenCalled();
+      expect(rnrLineItem.calculateNonFullSupplyItemsSubmittedCost).toHaveBeenCalledWith(rnr);
+    });
+
+    it('should test execution flow when amc gets filled', function () {
+      spyOn(rnrLineItem, "calculateAMC");
+      spyOn(rnrLineItem, "fillMaxStockQuantity");
+
+      rnrLineItem.fillAMC(rnr);
+
+      expect(rnrLineItem.calculateAMC).toHaveBeenCalled();
+      expect(rnrLineItem.fillMaxStockQuantity).toHaveBeenCalledWith(rnr);
+    });
+
+    it('should test execution flow when max stock quantity gets filled', function () {
+      spyOn(rnrLineItem, "calculateMaxStockQuantity");
+      spyOn(rnrLineItem, "fillCalculatedOrderQuantity");
+
+      rnrLineItem.fillMaxStockQuantity(rnr);
+
+      expect(rnrLineItem.calculateMaxStockQuantity).toHaveBeenCalled();
+      expect(rnrLineItem.fillCalculatedOrderQuantity).toHaveBeenCalledWith(rnr);
+    });
+
+    it('should test execution flow when calculated order quantity gets filled', function () {
+      spyOn(rnrLineItem, "calculateCalculatedOrderQuantity");
+      spyOn(rnrLineItem, "fillPacksToShipBasedOnCalculatedOrderQuantityOrQuantityRequested");
+
+      rnrLineItem.fillCalculatedOrderQuantity(rnr);
+
+      expect(rnrLineItem.calculateCalculatedOrderQuantity).toHaveBeenCalled();
+      expect(rnrLineItem.fillPacksToShipBasedOnCalculatedOrderQuantityOrQuantityRequested).toHaveBeenCalledWith(rnr);
+    });
+
+    it('should test execution flow when packs to ship gets filled based on approved quantity', function () {
+      rnrLineItem.quantityApproved = 30;
+
+      spyOn(rnrLineItem, "calculatePacksToShip");
+      spyOn(rnrLineItem, "fillCost");
+
+      rnrLineItem.fillPacksToShipBasedOnApprovedQuantity(rnr);
+
+      expect(rnrLineItem.calculatePacksToShip).toHaveBeenCalledWith(30);
+      expect(rnrLineItem.fillCost).toHaveBeenCalledWith(rnr);
+    });
+
+    it('should update cost when approved quantity gets filled', function () {
+      spyOn(rnrLineItem, "fillPacksToShipBasedOnApprovedQuantity");
+      spyOn(rnrLineItem, "fillCost");
+
+      rnrLineItem.getTotalLineItemCost = function (param) {
+        return 50;
+      }
+      rnrLineItem.updateCostWithApprovedQuantity(rnr);
+
+      expect(rnr.fullSupplyItemsSubmittedCost).toEqual(50);
+      expect(rnrLineItem.fillPacksToShipBasedOnApprovedQuantity).toHaveBeenCalledWith(rnr);
+      expect(rnrLineItem.fillCost).toHaveBeenCalledWith(rnr);
+    });
   });
 });
 
