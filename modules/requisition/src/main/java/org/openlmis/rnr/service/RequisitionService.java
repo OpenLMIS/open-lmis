@@ -156,7 +156,15 @@ public class RequisitionService {
   public List<Rnr> getApprovedRequisitions() {
     List<Rnr> requisitions = requisitionRepository.getApprovedRequisitions();
     fillFacilityPeriodProgram(requisitions.toArray(new Rnr[requisitions.size()]));
+    fillSupplyingFacility(requisitions.toArray(new Rnr[requisitions.size()]));
     return requisitions;
+  }
+
+  private void fillSupplyingFacility(Rnr... requisitions) {
+    for (Rnr requisition : requisitions) {
+      Facility facility = facilityService.getById(requisition.getSupplyingFacility().getId());
+      requisition.fillBasicInformationForSupplyingFacility(facility);
+    }
   }
 
   public List<ProcessingPeriod> getAllPeriodsForInitiatingRequisition(Integer facilityId, Integer programId) {

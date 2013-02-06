@@ -27,6 +27,7 @@ public class RnrDTO {
   private Date periodStartDate;
   private Date periodEndDate;
   private Integer facilityId;
+  private String supplyingDepot;
 
   public static List<RnrDTO> prepareForListApproval(List<Rnr> requisitions) {
     List<RnrDTO> result = new ArrayList<>();
@@ -48,6 +49,9 @@ public class RnrDTO {
     rnrDTO.modifiedDate = requisition.getModifiedDate();
     rnrDTO.periodStartDate = requisition.getPeriod().getStartDate();
     rnrDTO.periodEndDate = requisition.getPeriod().getEndDate();
+    if(requisition.getSupplyingFacility() != null) {
+      rnrDTO.supplyingDepot = requisition.getSupplyingFacility().getName();
+    }
     return rnrDTO;
   }
 }

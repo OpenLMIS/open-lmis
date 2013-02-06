@@ -1,4 +1,4 @@
-function ConvertToOrderListController($scope, requisitionList, $location) {
+function ConvertToOrderListController($scope, requisitionList) {
   $scope.requisitions = requisitionList;
   $scope.filteredRequisitions = $scope.requisitions;
   $scope.selectedItems = [];
@@ -6,12 +6,11 @@ function ConvertToOrderListController($scope, requisitionList, $location) {
   $scope.gridOptions = { data:'filteredRequisitions',
     multiSelect:false,
     selectedItems: $scope.selectedItems,
-   // afterSelectionChange: function(rowItem, event){$scope.openRnr()},
     displayFooter:false,
     displaySelectionCheckbox:false,
     showColumnMenu:false,
     sortInfo:{ field:'submittedDate', direction:'ASC'},
-    showFilter:false,
+    //showFilter:true,
     columnDefs:[
       {field:'programName', displayName:'Program' },
       {field:'facilityCode', displayName:'Facility Code'},
@@ -19,14 +18,11 @@ function ConvertToOrderListController($scope, requisitionList, $location) {
       {field:'periodStartDate', displayName:"Period Start Date", cellFilter:"date:'dd/MM/yyyy'"},
       {field:'periodEndDate', displayName:"Period End Date", cellFilter:"date:'dd/MM/yyyy'"},
       {field:'submittedDate', displayName:"Date Submitted", cellFilter:"date:'dd/MM/yyyy'"},
-      {field:'modifiedDate', displayName:"Date Modified", cellFilter:"date:'dd/MM/yyyy'"}
+      {field:'modifiedDate', displayName:"Date Modified", cellFilter:"date:'dd/MM/yyyy'"},
+      {field:'supplyingDepot', displayName:"Supplying Depot"}
     ]
   };
 
-  /*$scope.openRnr = function () {
-    $scope.$parent.period = {'startDate':$scope.selectedItems[0].periodStartDate,'endDate':$scope.selectedItems[0].periodEndDate};
-    $location.path("rnr-for-approval/"+$scope.selectedItems[0].id+'/'+$scope.selectedItems[0].facilityId+'/'+$scope.selectedItems[0].programId);
-  };
 
   $scope.filterRequisitions = function () {
     $scope.filteredRequisitions = [];
@@ -45,9 +41,9 @@ function ConvertToOrderListController($scope, requisitionList, $location) {
   }
 
   function matchesAnyField(query, rnr) {
-    var rnrString = "|" + rnr.programName + "|" + rnr.facilityName + "|" + rnr.facilityCode + "|";
+    var rnrString = "|" + rnr.programName + "|" + rnr.facilityCode + "|" + "|" + rnr.facilityName + "|" + "|" + rnr.supplyingDepot + "|";
     return contains(rnrString, query);
-  }*/
+  }
 }
 
 ConvertToOrderListController.resolve = {
