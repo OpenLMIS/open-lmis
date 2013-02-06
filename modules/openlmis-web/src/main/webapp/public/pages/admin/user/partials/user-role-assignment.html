@@ -1,25 +1,37 @@
-<div ng-controller="UserRoleAssignmentController" ng-show="showRoleAssignmentOptions()">
-  <div class="row-fluid">
-    <div class="span3">Program</div>
-    <div class="span6">Roles</div>
-    <div class="span3"></div>
+<div class="fluid-grid" ng-controller="UserRoleAssignmentController" ng-show="showRoleAssignmentOptions()">
+  <div class="row-fluid fluid-grid-header">
+    <div class="span3">
+      <div class="fluid-grid-cell">Program(s)</div>
+    </div>
+    <div class="span6">
+      <div class="fluid-grid-cell">Roles</div>
+    </div>
+    <div class="span3">
+      <div class="fluid-grid-cell">&nbsp;</div>
+    </div>
   </div>
 
   <div class="row-fluid" ng-repeat="roleAssignment in user.roleAssignments">
     <div class="span3">
-      <label class="user-program" ng-bind="getProgramName(roleAssignment.programId)"></label>
+      <div class="fluid-grid-cell">
+        <label ng-bind="getProgramName(roleAssignment.programId)"></label>
+      </div>
     </div>
     <div class="span6">
-      <select ui-select2 ng-model="roleAssignment.roleIds" placeholder="+ Add Role"
+      <div class="fluid-grid-cell">
+        <select ui-select2 ng-model="roleAssignment.roleIds" placeholder="+ Add Role"
               multiple="multiple" style="width:400px" name="roles" id="roles">
-        <option ng-repeat="role in allRoles" value="{{role.id}}" ng-bind="role.name"></option>
-      </select>
-      <span ng-show="roleAssignment.roleIds.length == 0" class="field-error">
-       Please fill in this value
-      </span>
+          <option ng-repeat="role in allRoles" value="{{role.id}}" ng-bind="role.name"></option>
+        </select>
+        <span ng-show="roleAssignment.roleIds.length == 0" class="field-error">
+         Please fill in this value
+        </span>
+      </div>
     </div>
     <div class="span3">
-      <a class="delete-role" value="delete" ng-click="deleteCurrentRow($parent.$index)">&times;</a>
+      <div class="fluid-grid-cell">
+        <a class="delete-role" value="delete" ng-click="deleteCurrentRow($parent.$index)">&times;</a>
+      </div>
     </div>
   </div>
 
