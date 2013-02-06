@@ -15,7 +15,7 @@
         <option ng-repeat="role in allRoles" value="{{role.id}}" ng-bind="role.name"></option>
       </select>
       <span ng-show="roleAssignment.roleIds.length == 0" class="field-error">
-       Please Fill In this value
+       Please fill in this value
       </span>
     </div>
     <div class="span3">
@@ -25,8 +25,9 @@
 
   <div class="row-fluid">
     <div class="span3">
-      <select ng-options="program.id as program.name for program in availablePrograms()"
-              ng-model="programSelected"></select>
+      <select ng-options="program.id as program.name for program in availablePrograms()" ng-model="programSelected">
+        <option value="">Select program</option>
+      </select>
     </div>
     <div class="span6">
       <select ui-select2 ng-model="selectedRoleIds" placeholder="+ Add Role" multiple="multiple" style="width:400px">
@@ -34,7 +35,7 @@
       </select>
     </div>
     <div class="span3">
-      <a ng-click="addRole()" class="btn btn-primary">Add Role</a>
+      <a ng-click="addRole()" class="btn btn-primary">+ Add</a>
     </div>
   </div>
 </div>
