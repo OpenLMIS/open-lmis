@@ -1,5 +1,4 @@
 function UserController($scope, $routeParams, Users, User, AllFacilities, Facility, Roles) {
-  $scope.programAndRoleList = [];
   $scope.userNameInvalid = false;
   $scope.user = {};
 
@@ -91,9 +90,9 @@ function UserController($scope, $routeParams, Users, User, AllFacilities, Facili
 
   $scope.clearSelectedFacility = function () {
     $scope.facilitySelected = null;
-    $scope.allSupportedPrograms = [];
-    $scope.programAndRoleList = [];
-    $scope.user.roleAssignments = [];
+    $scope.allSupportedPrograms = null;
+    $scope.user.roleAssignments = null;
+    $scope.user.facilityId = null;
 
     setTimeout(function () {
       angular.element("#searchFacility").focus();

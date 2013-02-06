@@ -161,6 +161,15 @@ describe("User", function () {
       expect(scope.facilitySelected).toEqual(facility);
     });
 
+    it ('should clear everything including role assignments when user clears facility', function(){
+      scope.clearSelectedFacility();
+
+      expect(scope.facilitySelected).toEqual(null);
+      expect(scope.allSupportedPrograms).toEqual(null);
+      expect(scope.user.roleAssignments).toEqual(null);
+      expect(scope.user.facilityId).toEqual(null);
+    });
+
   });
 
   describe("User Edit Controller", function () {
