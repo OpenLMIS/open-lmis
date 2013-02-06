@@ -5,10 +5,7 @@ import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.openlmis.core.domain.FacilityApprovedProduct;
-import org.openlmis.core.domain.Money;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 
@@ -120,14 +117,27 @@ public class RnrLineItem {
     return true;
   }
 
-  public void calculate(RnrStatus status) {
+  public void calculate(ProcessingPeriod period, RnrStatus status) {
     calculateOrderQuantity();
     calculateNormalizedConsumption();
-    amc = normalizedConsumption;
+    calculateAmc(period);
     calculateTotalLossesAndAdjustments();
     calculateMaxStockQuantity();
     if (status == IN_APPROVAL) calculatePacksToShipWithQuantityApproved();
     else calculatePacksToShipWithQuantityRequested();
+  }
+
+  private void calculateAmc(ProcessingPeriod period) {
+    int denominator = period.getNumberOfMonths() * (1 + previousNormalizedConsumptions.size());
+    amc = Math.round(((float) normalizedConsumption + sumOfPreviousNormalizedConsumptions()) / denominator);
+  }
+
+  private Integer sumOfPreviousNormalizedConsumptions() {
+    Integer total = 0;
+    for (Integer consumption : previousNormalizedConsumptions) {
+      total += consumption;
+    }
+    return total;
   }
 
   private boolean validateMandatoryFields(List<RnrColumn> templateColumns) {
@@ -171,7 +181,7 @@ public class RnrLineItem {
   }
 
   private Integer calculatePacksToShipWithQuantityApproved() {
-    if(quantityApproved == null) throw new DataException(RNR_VALIDATION_ERROR);
+    if (quantityApproved == null) throw new DataException(RNR_VALIDATION_ERROR);
 
     Double packsToShip = Math.floor(quantityApproved / packSize);
     return rounded(packsToShip);
@@ -235,5 +245,19 @@ public class RnrLineItem {
     if (item == null) return;
     this.quantityApproved = item.quantityApproved;
     this.remarks = item.remarks;
+  }
+
+  public void copyUserEditableFieldsForSubmitOrAuthorize(RnrLineItem item) {
+    if (item == null) return;
+    this.remarks = item.remarks;
+    this.beginningBalance = item.beginningBalance;
+    this.quantityReceived = item.quantityReceived;
+    this.quantityDispensed = item.quantityDispensed;
+    this.lossesAndAdjustments = item.lossesAndAdjustments;
+    this.stockInHand = item.stockInHand;
+    this.newPatientCount = item.newPatientCount;
+    this.stockOutDays = item.stockOutDays;
+    this.quantityRequested = item.quantityRequested;
+    this.reasonForRequestedQuantity = item.reasonForRequestedQuantity;
   }
 }

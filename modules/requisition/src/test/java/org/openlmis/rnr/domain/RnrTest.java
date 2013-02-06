@@ -52,7 +52,7 @@ public class RnrTest {
     rnr.fillLastTwoPeriodsNormalizedConsumptions(lastPeriodsRnr, secondLastPeriodsRnr);
 
     List<Integer> previousNormalizedConsumptions = rnr.getLineItems().get(0).getPreviousNormalizedConsumptions();
-    assertThat(previousNormalizedConsumptions.size(),is(2));
+    assertThat(previousNormalizedConsumptions.size(), is(2));
     assertThat(previousNormalizedConsumptions.get(0), is(1));
     assertThat(previousNormalizedConsumptions.get(1), is(2));
   }
@@ -69,7 +69,7 @@ public class RnrTest {
     rnr.fillLastTwoPeriodsNormalizedConsumptions(lastPeriodsRnr, secondLastPeriodsRnr);
 
     List<Integer> previousNormalizedConsumptions = rnr.getLineItems().get(0).getPreviousNormalizedConsumptions();
-    assertThat(previousNormalizedConsumptions.size(),is(1));
+    assertThat(previousNormalizedConsumptions.size(), is(1));
     assertThat(previousNormalizedConsumptions.get(0), is(2));
   }
 
@@ -78,9 +78,20 @@ public class RnrTest {
     Rnr rnr = make(a(defaultRnr));
     Rnr savedRnr = make(a(defaultRnr));
     RnrLineItem savedLineItem = savedRnr.getLineItems().get(0);
-    RnrLineItem savedLineItemSpy  = spy(savedLineItem);
+    RnrLineItem savedLineItemSpy = spy(savedLineItem);
     savedRnr.getLineItems().set(0, savedLineItemSpy);
     savedRnr.copyApproverEditableFields(rnr);
     verify(savedLineItemSpy).copyApproverEditableFields(rnr.getLineItems().get(0));
+  }
+
+  @Test
+  public void shouldCopyUserEditableFields() throws Exception {
+    Rnr rnr = make(a(defaultRnr));
+    Rnr savedRnr = make(a(defaultRnr));
+    RnrLineItem savedLineItem = savedRnr.getLineItems().get(0);
+    RnrLineItem savedLineItemSpy = spy(savedLineItem);
+    savedRnr.getLineItems().set(0, savedLineItemSpy);
+    savedRnr.copyUserEditableFieldsForSubmitOrAuthorize(rnr);
+    verify(savedLineItemSpy).copyUserEditableFieldsForSubmitOrAuthorize(rnr.getLineItems().get(0));
   }
 }

@@ -177,7 +177,6 @@ var RnrLineItem = function (lineItem) {
   };
 
   RnrLineItem.prototype.sumOfPreviousNormalizedConsumptions = function () {
-    if (this.previousNormalizedConsumptions == null || this.previousNormalizedConsumptions.length == 0) return 0;
     var total = 0;
     this.previousNormalizedConsumptions.forEach(function (normalizedConsumption) {
       total += normalizedConsumption;

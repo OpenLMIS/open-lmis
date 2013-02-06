@@ -1,6 +1,13 @@
 describe('RnrLineItem', function () {
   beforeEach(module('rnr'));
 
+  describe('Create RnrLineItem', function () {
+    it('Should create rnr with empty previousNormalizedConsumptions if it is null in json data', function(){
+      var rnrLineItem = new RnrLineItem({});
+      expect(rnrLineItem.previousNormalizedConsumptions).toEqual([]);
+    });
+  });
+
   describe('Calculate consumption', function () {
     var programRnrColumnList;
 

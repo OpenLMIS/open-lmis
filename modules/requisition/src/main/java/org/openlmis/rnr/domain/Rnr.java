@@ -14,7 +14,9 @@ import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
+import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
 import static org.openlmis.rnr.domain.RnrStatus.IN_APPROVAL;
+import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 
 @Data
 @NoArgsConstructor
@@ -79,7 +81,7 @@ public class Rnr {
   public void calculate() {
     Money totalFullSupplyCost = new Money("0");
     for (RnrLineItem lineItem : lineItems) {
-      lineItem.calculate(status);
+      lineItem.calculate(period, status);
       Money costPerItem = lineItem.getPrice().multiply(BigDecimal.valueOf(lineItem.getPacksToShip()));
       totalFullSupplyCost = totalFullSupplyCost.add(costPerItem);
     }
@@ -142,7 +144,6 @@ public class Rnr {
 
   private void addPreviousNormalizedConsumptionFrom(Rnr rnr) {
     if (rnr == null) return;
-
     for (RnrLineItem currentLineItem : lineItems) {
       RnrLineItem previousLineItem = findCorrespondingLineItem(rnr.getLineItems(), currentLineItem);
       currentLineItem.addPreviousNormalizedConsumptionFrom(previousLineItem);
@@ -157,6 +158,24 @@ public class Rnr {
         return lineItem.getProductCode().equalsIgnoreCase(item.getProductCode());
       }
     });
+  }
+
+  public void copyUserEditableFieldsForSubmitOrAuthorize(Rnr rnr) {
+    for (RnrLineItem thisLineItem : this.lineItems) {
+      RnrLineItem otherLineItem = findCorrespondingLineItem(rnr.lineItems, thisLineItem);
+      thisLineItem.copyUserEditableFieldsForSubmitOrAuthorize(otherLineItem);
+    }
+  }
+
+  public void prepareForSubmit() {
+    calculate();
+    status= SUBMITTED;
+    submittedDate =new Date();
+  }
+
+  public void prepareForAuthorize() {
+    calculate();
+    status = AUTHORIZED;
   }
 }
 

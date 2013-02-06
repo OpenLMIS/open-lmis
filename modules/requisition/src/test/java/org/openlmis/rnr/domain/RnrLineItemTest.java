@@ -4,37 +4,46 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
-import org.openlmis.core.domain.FacilityApprovedProduct;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.ProductBuilder.code;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.STOCK_IN_HAND;
-import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
-import static org.openlmis.rnr.builder.RnrLineItemBuilder.lossesAndAdjustments;
+import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
+import static org.openlmis.rnr.domain.ProgramRnrTemplate.BEGINNING_BALANCE;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
+import static org.powermock.api.mockito.PowerMockito.doNothing;
+import static org.powermock.api.mockito.PowerMockito.spy;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(RnrLineItem.class)
 public class RnrLineItemTest {
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
   private RnrLineItem lineItem;
   private List<RnrColumn> templateColumns;
+  private ProcessingPeriod period;
 
   @Before
   public void setUp() throws Exception {
+    period = new ProcessingPeriod() {{
+      setNumberOfMonths(1);
+    }};
     templateColumns = new ArrayList<>();
     addVisibleColumns(templateColumns);
     lineItem = make(a(defaultRnrLineItem));
@@ -212,7 +221,7 @@ public class RnrLineItemTest {
     lineItem.setQuantityDispensed(29);
 
 
-    lineItem.calculate(INITIATED);
+    lineItem.calculate(period, INITIATED);
 
     assertThat(lineItem.getTotalLossesAndAdjustments(), is(25));
   }
@@ -225,22 +234,86 @@ public class RnrLineItemTest {
     lineItem.setDosesPerDispensingUnit(10);
     lineItem.setNormalizedConsumption(37345);
 
-    lineItem.calculate(INITIATED);
+    lineItem.calculate(period, INITIATED);
 
     assertThat(lineItem.getNormalizedConsumption(), is(37));
   }
 
   @Test
-  public void shouldSetAMCSameAsCalculatedNormalizedConsumption() throws Exception {
-    lineItem.setStockOutDays(3);
-    lineItem.setNewPatientCount(3);
-    lineItem.setDosesPerMonth(30);
-    lineItem.setDosesPerDispensingUnit(10);
-    lineItem.setNormalizedConsumption(37345);
+  public void shouldCalculateAmcWhenNumberOfMonthsInPeriodIsThree() throws Exception {
+    lineItem.setNormalizedConsumption(45);
 
-    lineItem.calculate(INITIATED);
+    RnrLineItem spyLineItem = spy(lineItem);
+    doNothing().when(spyLineItem, "calculateNormalizedConsumption");
+    period.setNumberOfMonths(3);
 
-    assertThat(lineItem.getAmc(), is(37));
+    spyLineItem.calculate(period, INITIATED);
+
+    assertThat(spyLineItem.getAmc(), is(15));
+  }
+
+  @Test
+  public void shouldCalculateAmcWhenNumberOfMonthsInPeriodIsTwo() throws Exception {
+    lineItem.setNormalizedConsumption(45);
+    lineItem.setPreviousNormalizedConsumptions(asList(12));
+    RnrLineItem spyLineItem = spy(lineItem);
+    doNothing().when(spyLineItem, "calculateNormalizedConsumption");
+    period.setNumberOfMonths(2);
+
+    spyLineItem.calculate(period, INITIATED);
+
+    assertThat(spyLineItem.getAmc(), is(14));
+  }
+
+  @Test
+  public void shouldCalculateAmcWhenNumberOfMonthsInPeriodIsOne() throws Exception {
+    lineItem.setNormalizedConsumption(45);
+    lineItem.setPreviousNormalizedConsumptions(asList(12, 13));
+    RnrLineItem spyLineItem = spy(lineItem);
+    doNothing().when(spyLineItem, "calculateNormalizedConsumption");
+    period.setNumberOfMonths(1);
+
+    spyLineItem.calculate(period, INITIATED);
+
+    assertThat(spyLineItem.getAmc(), is(23));
+  }
+
+  @Test
+  public void shouldCalculateAmcWhenNumberOfMonthsInPeriodIsOneAndOnlyOnePreviousConsumptionIsAvailable() throws Exception {
+    lineItem.setNormalizedConsumption(45);
+    lineItem.setPreviousNormalizedConsumptions(asList(12));
+    RnrLineItem spyLineItem = spy(lineItem);
+    doNothing().when(spyLineItem, "calculateNormalizedConsumption");
+    period.setNumberOfMonths(1);
+
+    spyLineItem.calculate(period, INITIATED);
+
+    assertThat(spyLineItem.getAmc(), is(29));
+  }
+
+  @Test
+  public void shouldCalculateAmcWhenNumberOfMonthsInPeriodIsOneAndOnlyNoPreviousConsumptionsAreAvailable() throws Exception {
+    lineItem.setNormalizedConsumption(45);
+    RnrLineItem spyLineItem = spy(lineItem);
+    doNothing().when(spyLineItem, "calculateNormalizedConsumption");
+    period.setNumberOfMonths(1);
+
+    spyLineItem.calculate(period, INITIATED);
+
+    assertThat(spyLineItem.getAmc(), is(45));
+  }
+
+  @Test
+  public void shouldCalculateAmcWhenNumberOfMonthsInPeriodIsTwoAndPreviousConsumptionIsNotAvailable() throws Exception {
+    lineItem.setNormalizedConsumption(45);
+
+    RnrLineItem spyLineItem = spy(lineItem);
+    doNothing().when(spyLineItem, "calculateNormalizedConsumption");
+    period.setNumberOfMonths(2);
+
+    spyLineItem.calculate(period, INITIATED);
+
+    assertThat(spyLineItem.getAmc(), is(23));
   }
 
   @Test
@@ -252,7 +325,7 @@ public class RnrLineItemTest {
     lineItem.setNormalizedConsumption(37345);
     lineItem.setMaxMonthsOfStock(10);
 
-    lineItem.calculate(INITIATED);
+    lineItem.calculate(period, INITIATED);
 
     assertThat(lineItem.getMaxStockQuantity(), is(370));
   }
@@ -268,7 +341,7 @@ public class RnrLineItemTest {
     lineItem.setMaxStockQuantity(370);
     lineItem.setStockInHand(300);
 
-    lineItem.calculate(INITIATED);
+    lineItem.calculate(period, INITIATED);
 
     assertThat(lineItem.getCalculatedOrderQuantity(), is(70));
   }
@@ -312,4 +385,35 @@ public class RnrLineItemTest {
     assertThat(lineItem.getStockInHand(), is(STOCK_IN_HAND));
 
   }
+
+  @Test
+  public void shouldCopyUserEditableFields() throws Exception {
+    RnrLineItem editedLineItem = make(a(defaultRnrLineItem));
+    editedLineItem.setRemarks("Submitted");
+    editedLineItem.setBeginningBalance(12);
+    editedLineItem.setQuantityReceived(23);
+    editedLineItem.setQuantityDispensed(32);
+    editedLineItem.setStockInHand(1946);
+    editedLineItem.setNewPatientCount(1);
+    editedLineItem.setStockOutDays(3);
+    editedLineItem.setQuantityRequested(43);
+    editedLineItem.setReasonForRequestedQuantity("Reason");
+    List<LossesAndAdjustments> lossesAndAdjustments = new ArrayList<>();
+    editedLineItem.setLossesAndAdjustments(lossesAndAdjustments);
+
+    lineItem.copyUserEditableFieldsForSubmitOrAuthorize(editedLineItem);
+
+    assertThat(lineItem.getBeginningBalance(), is(12));
+    assertThat(lineItem.getStockInHand(), is(1946));
+    assertThat(lineItem.getLossesAndAdjustments(), is(lossesAndAdjustments));
+    assertThat(lineItem.getRemarks(), is("Submitted"));
+    assertThat(lineItem.getQuantityReceived(), is(23));
+    assertThat(lineItem.getQuantityDispensed(), is(32));
+    assertThat(lineItem.getNewPatientCount(), is(1));
+    assertThat(lineItem.getStockOutDays(), is(3));
+    assertThat(lineItem.getQuantityRequested(), is(43));
+    assertThat(lineItem.getReasonForRequestedQuantity(), is("Reason"));
+  }
+
+
 }
