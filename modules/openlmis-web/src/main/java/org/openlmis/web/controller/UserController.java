@@ -59,10 +59,17 @@ public class UserController extends BaseController {
     return params;
   }
 
+  private static int nthOccurrence(String str, char c, int n) {
+    int pos = str.indexOf(c, 0);
+    while (n-- > 0 && pos != -1)
+      pos = str.indexOf(c, pos+1);
+    return pos;
+  }
   @RequestMapping(value = "/forgot-password", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> sendPasswordTokenEmail(@RequestBody User user, HttpServletRequest request) {
     try {
-      String resetPasswordLink = request.getScheme() + "://" + request.getHeader("host")+ "/public/pages/reset-password.html#/token/";
+      String referrer = request.getHeader("referer");
+      String resetPasswordLink = referrer.substring(0, nthOccurrence(referrer, '/', 3)) + "/public/pages/reset-password.html#/token/";
       userService.sendForgotPasswordEmail(user, resetPasswordLink);
       return success("Email sent");
     } catch (DataException e) {
