@@ -22,7 +22,7 @@ import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.ProcessingScheduleBuilder.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath*:applicationContext-core.xml")
+@ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @Transactional
 @TransactionConfiguration(defaultRollback = true)
 public class ProcessingScheduleMapperIT {

@@ -19,7 +19,7 @@ import static org.openlmis.rnr.domain.RnRColumnSource.CALCULATED;
 import static org.openlmis.rnr.domain.RnRColumnSource.USER_INPUT;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath*:applicationContext-requisition.xml")
+@ContextConfiguration(locations = "classpath:test-applicationContext-requisition.xml")
 @Transactional
 @TransactionConfiguration(defaultRollback = true)
 public class ProgramRnrColumnMapperIT {

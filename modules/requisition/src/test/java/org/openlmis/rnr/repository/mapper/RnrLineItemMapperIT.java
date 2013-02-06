@@ -32,7 +32,7 @@ import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.fullSupply;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 
-@ContextConfiguration(locations = "classpath*:applicationContext-requisition.xml")
+@ContextConfiguration(locations = "classpath:test-applicationContext-requisition.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
 @TransactionConfiguration(defaultRollback = true)

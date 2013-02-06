@@ -29,7 +29,7 @@ import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath*:applicationContext-requisition.xml")
+@ContextConfiguration(locations = "classpath:test-applicationContext-requisition.xml")
 @Transactional
 @TransactionConfiguration(defaultRollback = true)
 public class LossesAndAdjustmentsMapperIT {

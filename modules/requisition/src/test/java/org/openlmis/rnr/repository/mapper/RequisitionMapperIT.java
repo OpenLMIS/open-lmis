@@ -1,6 +1,5 @@
 package org.openlmis.rnr.repository.mapper;
 
-import org.hamcrest.Matcher;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,14 +24,15 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
-import static org.openlmis.core.builder.FacilityBuilder.*;
+import static org.openlmis.core.builder.FacilityBuilder.code;
+import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath*:applicationContext-requisition.xml")
+@ContextConfiguration(locations = "classpath:test-applicationContext-requisition.xml")
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
 public class RequisitionMapperIT {
