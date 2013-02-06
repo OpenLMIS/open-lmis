@@ -23,11 +23,14 @@ function UserRoleAssignmentController($scope) {
       var newRoleAssignment = {programId:$scope.programSelected, roleIds:$scope.selectedRoleIds};
       addRoleAssignment(newRoleAssignment);
       clearCurrentSelection();
+    } else {
+      $scope.showNewMappingError = true;
     }
 
     function clearCurrentSelection() {
       $scope.programSelected = null;
       $scope.selectedRoleIds = null;
+      $scope.showNewMappingError = false;
     }
 
     function addRoleAssignment(newRoleAssignment) {
@@ -35,10 +38,6 @@ function UserRoleAssignmentController($scope) {
         $scope.user.roleAssignments = [];
       }
       $scope.user.roleAssignments.push(newRoleAssignment);
-    }
-
-    function isPresent(obj) {
-      return obj != undefined && obj != null;
     }
   };
 
@@ -52,5 +51,13 @@ function UserRoleAssignmentController($scope) {
       }
     });
     return programName;
+  };
+
+  $scope.hasError = function (field) {
+    return $scope.showNewMappingError && !isPresent(field);
+  };
+
+  var isPresent = function (obj) {
+    return obj != undefined && obj != "" && obj != [] && obj != null;
   };
 }
