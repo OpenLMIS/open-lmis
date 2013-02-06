@@ -154,15 +154,5 @@ public class Rnr {
       }
     });
   }
-
-  private RnrLineItem getPreviouslyStoredLineItemForProduct(List<RnrLineItem> items, final RnrLineItem lineItem) {
-    return (RnrLineItem) find(items, new Predicate() {
-      @Override
-      public boolean evaluate(Object o) {
-        RnrLineItem savedLineItem = (RnrLineItem) o;
-        return savedLineItem.getProductCode().equalsIgnoreCase(lineItem.getProductCode());
-      }
-    });
-  }
 }
 
