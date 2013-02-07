@@ -1,8 +1,8 @@
 var utils = {
   getFormattedDate:function (date) {
     return ('0' + date.getDate()).slice(-2) + '/'
-        + ('0' + (date.getMonth() + 1)).slice(-2) + '/'
-        + date.getFullYear();
+      + ('0' + (date.getMonth() + 1)).slice(-2) + '/'
+      + date.getFullYear();
   },
 
   isNumber:function (number) {
@@ -13,7 +13,9 @@ var utils = {
     return parseInt(number, 10);
   },
 
-  getValueFor:function (number) {
-    return utils.isNumber(number) ? utils.parseIntWithBaseTen(number) : null;
+  getValueFor:function (number, defaultValue) {
+    if (!utils.isNumber(number)) return defaultValue ? defaultValue : null;
+    return utils.parseIntWithBaseTen(number);
+
   }
 };

@@ -17,8 +17,7 @@ describe('RequisitionFormController', function () {
     scope.saveRnrForm = {$error:{ rnrError:false }};
     localStorageService = _localStorageService_;
     routeParams = {"facility":"1", "program":"1", "period":2};
-
-    scope.rnrLineItems = [];
+    scope.rnr = {"id":"rnrId", "lineItems":[]};
 
     httpBackend.when('GET', '/facilityApprovedProducts/facility/1/program/1/nonFullSupply.json').respond(200);
     httpBackend.when('POST', '/requisitions.json?facilityId=1&periodId=2&programId=1').respond({"rnr":{"status":"CREATED"}});
@@ -41,7 +40,7 @@ describe('RequisitionFormController', function () {
     httpBackend.flush();
     expect([
       {"testField":"test"}
-    ]).toEqual(scope.programRnRColumnList);
+    ]).toEqual(scope.programRnrColumnList);
   });
 
   it('should save work in progress for rnr', function () {
@@ -93,19 +92,21 @@ describe('RequisitionFormController', function () {
   });
 
   it('should not submit rnr with formula validation error but should save', function () {
+    scope.rnr = {"id":"1", "lineItems":[]};
     var lineItem = { "beginningBalance":1, totalLossesAndAdjustments:1, quantityDispensed:1,
       quantityReceived:1, stockInHand:1};
 
-    jQuery.extend(true, lineItem, new RnrLineItem());
-    scope.rnrLineItems.push(lineItem);
-    scope.rnr = {"id":1};
-    scope.programRnRColumnList = [
+    scope.programRnrColumnList = [
       {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidationRequired":true},
       {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
       {"indicator":"C", "name":"quantityDispensed", "source":{"name":"CALCULATED"}},
       {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}},
       {"indicator":"E", "name":"stockInHand", "source":{"name":"USER_INPUT"}}
     ];
+    var rnrLineItem = new RnrLineItem({}, scope.rnr, scope.programRnrColumnList);
+    jQuery.extend(rnrLineItem, lineItem);
+    scope.rnr.lineItems.push(rnrLineItem);
+
     httpBackend.expect('PUT', '/requisitions/1/save.json').respond(200);
     scope.submitRnr();
     httpBackend.flush();
@@ -115,7 +116,7 @@ describe('RequisitionFormController', function () {
     var lineItem = { "beginningBalance":1, totalLossesAndAdjustments:1, quantityDispensed:2,
       quantityReceived:1, stockInHand:1};
     jQuery.extend(true, lineItem, new RnrLineItem());
-    scope.rnrLineItems.push(lineItem);
+    scope.rnr.lineItems.push(lineItem);
 
     scope.rnr = {"id":"rnrId", lineItems:[lineItem]};
     scope.programRnrColumnList = [
@@ -205,11 +206,9 @@ describe('RequisitionFormController', function () {
     var lineItem = { "id":"1", "beginningBalance":1, lossesAndAdjustments:[
       {"type":{"name":"some name"}, "quantity":"4"}
     ]};
-
     var rnrLineItem = new RnrLineItem(lineItem);
 
-
-    scope.rnrLineItems.push(rnrLineItem);
+    scope.rnr.lineItems.push(rnrLineItem);
     spyOn(rnrLineItem, 'reEvaluateTotalLossesAndAdjustments');
 
     scope.rnr = {"id":"rnrId", lineItems:[rnrLineItem]};
@@ -218,7 +217,7 @@ describe('RequisitionFormController', function () {
     ];
 
     scope.lossesAndAdjustmentsModal[1] = true;
-    scope.saveLossesAndAdjustmentsForRnRLineItem(rnrLineItem, scope.rnr, scope.programRnrColumnList);
+    scope.saveLossesAndAdjustmentsForRnRLineItem(rnrLineItem);
 
     expect(rnrLineItem.reEvaluateTotalLossesAndAdjustments).toHaveBeenCalledWith(scope.rnr, scope.programRnrColumnList);
     expect(scope.lossesAndAdjustmentsModal[1]).toBeFalsy();
@@ -231,7 +230,7 @@ describe('RequisitionFormController', function () {
     ]};
     var rnrLineItem = new RnrLineItem(lineItem);
 
-    scope.rnrLineItems.push(rnrLineItem);
+    scope.rnr.lineItems.push(rnrLineItem);
     spyOn(rnrLineItem, 'reEvaluateTotalLossesAndAdjustments');
 
     scope.rnr = {"id":"rnrId", lineItems:[rnrLineItem]};
@@ -239,7 +238,7 @@ describe('RequisitionFormController', function () {
       {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}}
     ];
     scope.lossesAndAdjustmentsModal[1] = true;
-    scope.saveLossesAndAdjustmentsForRnRLineItem(rnrLineItem, scope.rnr, scope.programRnRColumnList);
+    scope.saveLossesAndAdjustmentsForRnRLineItem(rnrLineItem);
 
     expect(rnrLineItem.reEvaluateTotalLossesAndAdjustments).not.toHaveBeenCalledWith(scope.rnr, scope.programRnrColumnList);
     expect(scope.lossesAndAdjustmentsModal[1]).toBeTruthy();
@@ -262,8 +261,7 @@ describe('RequisitionFormController', function () {
   });
 
   it('should add non full supply line item to the list', function () {
-    scope.rnr = {"id":1};
-    scope.nonFullSupplyLineItems = [];
+    scope.rnr = {"id":1, "period":{}, "nonFullSupplyLineItems":[]};
     scope.nonFullSupplyProducts = [];
     var product = {
       "form":{"code":"Tablet"},
@@ -274,18 +272,21 @@ describe('RequisitionFormController', function () {
 
     var programProduct = {"dosesPerMonth":5, "currentPrice":8, "product":product};
 
-    scope.facilityApprovedProduct = {"programProduct":programProduct,"maxMonthsOfStock":3};
+    scope.facilityApprovedProduct = {"programProduct":programProduct, "maxMonthsOfStock":3};
 
     scope.newNonFullSupply = {"quantityRequested":20, "reasonForRequestedQuantity":"Bad Weather"};
 
     scope.addNonFullSupplyLineItem();
 
-    expect(scope.nonFullSupplyLineItems[0].quantityRequested).toEqual(20);
-    expect(scope.nonFullSupplyLineItems[0].reasonForRequestedQuantity).toEqual("Bad Weather");
-    expect(scope.nonFullSupplyLineItems[0].cost).toEqual(16);
+    expect(scope.rnr.nonFullSupplyLineItems[0].quantityRequested).toEqual(20);
+    expect(scope.rnr.nonFullSupplyLineItems[0].reasonForRequestedQuantity).toEqual("Bad Weather");
+    expect(scope.rnr.nonFullSupplyLineItems[0].cost).toEqual(16.00.toFixed(2));
     expect(scope.nonFullSupplyProductsToDisplay).toEqual([]);
-    expect(scope.rnr.nonFullSupplyItemsSubmittedCost).toEqual(16);
+    expect(scope.rnr.nonFullSupplyItemsSubmittedCost).toEqual(16.00.toFixed(2));
   });
+
+
+
 
 });
 

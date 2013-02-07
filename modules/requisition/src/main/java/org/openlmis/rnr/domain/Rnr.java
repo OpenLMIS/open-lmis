@@ -105,7 +105,7 @@ public class Rnr {
   public void setBeginningBalanceForEachLineItem(Rnr previousRequisition) {
     if (previousRequisition == null) return;
     for (RnrLineItem currentLineItem : this.lineItems) {
-      RnrLineItem previousLineItem = findCorrespondingLineItem(previousRequisition.getLineItems(), currentLineItem);
+      RnrLineItem previousLineItem = previousRequisition.findCorrespondingLineItem(currentLineItem);
       if (previousLineItem != null)
         currentLineItem.setBeginningBalanceWhenPreviousStockInHandAvailable(previousLineItem.getStockInHand());
     }
@@ -127,19 +127,20 @@ public class Rnr {
   }
 
   public void copyApproverEditableFields(Rnr rnr) {
+    this.modifiedBy = rnr.modifiedBy;
     for (RnrLineItem thisLineItem : this.lineItems) {
-      RnrLineItem otherLineItem = findCorrespondingLineItem(rnr.lineItems, thisLineItem);
+      RnrLineItem otherLineItem = rnr.findCorrespondingLineItem(thisLineItem);
       thisLineItem.copyApproverEditableFields(otherLineItem);
     }
     for (RnrLineItem thisLineItem : this.nonFullSupplyLineItems) {
-      RnrLineItem otherLineItem = findCorrespondingLineItem(rnr.nonFullSupplyLineItems, thisLineItem);
+      RnrLineItem otherLineItem = rnr.findCorrespondingLineItem(thisLineItem);
       thisLineItem.copyApproverEditableFields(otherLineItem);
     }
   }
 
   public void resetBeginningBalancesFromRequisition(Rnr savedRequisition) {
     for (RnrLineItem lineItem : getLineItems()) {
-      RnrLineItem savedLineItem = findCorrespondingLineItem(savedRequisition.getLineItems(), lineItem);
+      RnrLineItem savedLineItem = savedRequisition.findCorrespondingLineItem(lineItem);
 
       if (savedLineItem.getPreviousStockInHandAvailable())
         lineItem.setBeginningBalance(savedLineItem.getStockInHand());
@@ -159,13 +160,13 @@ public class Rnr {
   private void addPreviousNormalizedConsumptionFrom(Rnr rnr) {
     if (rnr == null) return;
     for (RnrLineItem currentLineItem : lineItems) {
-      RnrLineItem previousLineItem = findCorrespondingLineItem(rnr.getLineItems(), currentLineItem);
+      RnrLineItem previousLineItem = rnr.findCorrespondingLineItem(currentLineItem);
       currentLineItem.addPreviousNormalizedConsumptionFrom(previousLineItem);
     }
   }
 
-  private RnrLineItem findCorrespondingLineItem(List<RnrLineItem> items, final RnrLineItem item) {
-    return (RnrLineItem) find(items, new Predicate() {
+  private RnrLineItem findCorrespondingLineItem(final RnrLineItem item) {
+    return (RnrLineItem) find(this.lineItems, new Predicate() {
       @Override
       public boolean evaluate(Object o) {
         RnrLineItem lineItem = (RnrLineItem) o;
@@ -174,11 +175,13 @@ public class Rnr {
     });
   }
 
-  public void copyUserEditableFieldsForSubmitOrAuthorize(Rnr rnr) {
-    for (RnrLineItem thisLineItem : this.lineItems) {
-      RnrLineItem otherLineItem = findCorrespondingLineItem(rnr.lineItems, thisLineItem);
-      thisLineItem.copyUserEditableFieldsForSubmitOrAuthorize(otherLineItem);
+  public void copyUserEditableFieldsForSaveSubmitOrAuthorize(Rnr rnr) {
+    this.modifiedBy = rnr.modifiedBy;
+    for (RnrLineItem thisLineItem : lineItems) {
+      RnrLineItem otherLineItem = rnr.findCorrespondingLineItem(thisLineItem);
+      thisLineItem.copyUserEditableFieldsForSaveSubmitOrAuthorize(otherLineItem);
     }
+    this.nonFullSupplyLineItems = rnr.nonFullSupplyLineItems;
   }
 
   public void prepareForSubmit() {

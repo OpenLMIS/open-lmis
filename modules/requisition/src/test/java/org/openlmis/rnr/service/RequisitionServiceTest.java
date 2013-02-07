@@ -304,7 +304,7 @@ public class RequisitionServiceTest {
     when(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(null);
 
     requisitionService.submit(rnrToSubmit);
-    verify(savedRnr).copyUserEditableFieldsForSubmitOrAuthorize(rnrToSubmit);
+    verify(savedRnr).copyUserEditableFieldsForSaveSubmitOrAuthorize(rnrToSubmit);
   }
 
   @Test
@@ -383,7 +383,7 @@ public class RequisitionServiceTest {
 
     requisitionService.authorize(rnrForAuthorizing);
 
-    verify(savedRnr).copyUserEditableFieldsForSubmitOrAuthorize(rnrForAuthorizing);
+    verify(savedRnr).copyUserEditableFieldsForSaveSubmitOrAuthorize(rnrForAuthorizing);
   }
 
   @Test
@@ -437,56 +437,72 @@ public class RequisitionServiceTest {
 
   @Test
   public void shouldSaveRnrIfStatusIsSubmittedAndUserHasAuthorizeRight() {
-    Rnr rnr = Mockito.spy(make(a(defaultRnr)));
+    Rnr rnr = make(a(defaultRnr));
+    Rnr savedRnr = Mockito.spy(submittedRnr);
+
     Integer userId = 1;
-    rnr.setModifiedBy(userId);
-    rnr.setStatus(SUBMITTED);
+    savedRnr.setModifiedBy(userId);
+
+    fillFacilityProgramAndPeriod(savedRnr);
     List<Right> listUserRights = Arrays.asList(AUTHORIZE_REQUISITION);
     when(roleRightService.getRights(userId)).thenReturn(listUserRights);
-    when(requisitionRepository.getRequisition(rnr.getFacility(), rnr.getProgram(), rnr.getPeriod())).thenReturn(make(a(defaultRnr)));
+    when(requisitionRepository.getById(rnr.getId())).thenReturn(savedRnr);
 
     requisitionService.save(rnr);
 
-    verify(requisitionRepository).update(rnr);
+    verify(requisitionRepository).update(savedRnr);
   }
 
   @Test
   public void shouldSaveRnrIfStatusIsAuthorizedAndUserHasApproveRight() {
-    Rnr rnr = Mockito.spy(make(a(defaultRnr)));
+    Rnr rnr = make(a(defaultRnr));
+    Rnr savedRnr = Mockito.spy(authorizedRnr);
+
     Integer userId = 1;
-    rnr.setModifiedBy(userId);
-    rnr.setStatus(AUTHORIZED);
+    savedRnr.setModifiedBy(userId);
+
+    fillFacilityProgramAndPeriod(savedRnr);
+    when(requisitionRepository.getById(rnr.getId())).thenReturn(savedRnr);
+
     List<Right> listUserRights = Arrays.asList(APPROVE_REQUISITION);
     when(roleRightService.getRights(userId)).thenReturn(listUserRights);
-    when(requisitionRepository.getRequisition(rnr.getFacility(), rnr.getProgram(), rnr.getPeriod())).thenReturn(make(a(defaultRnr)));
 
     requisitionService.save(rnr);
 
-    verify(requisitionRepository).update(rnr);
+    verify(requisitionRepository).update(savedRnr);
   }
 
   @Test
   public void shouldSaveRnrIfStatusIsInitiatedAndUserHasCreateRight() {
-    Rnr rnr = Mockito.spy(make(a(defaultRnr)));
+    Rnr rnr = make(a(defaultRnr));
+    Rnr savedRnr = Mockito.spy(initiatedRnr);
+
     Integer userId = 1;
-    rnr.setModifiedBy(userId);
-    rnr.setStatus(INITIATED);
+    savedRnr.setModifiedBy(userId);
+
+    fillFacilityProgramAndPeriod(savedRnr);
+    when(requisitionRepository.getById(rnr.getId())).thenReturn(savedRnr);
+
     List<Right> listUserRights = Arrays.asList(CREATE_REQUISITION);
     when(roleRightService.getRights(userId)).thenReturn(listUserRights);
-    when(requisitionRepository.getRequisition(rnr.getFacility(), rnr.getProgram(), rnr.getPeriod())).thenReturn(make(a(defaultRnr)));
 
     requisitionService.save(rnr);
 
-    verify(requisitionRepository).update(rnr);
+    verify(savedRnr).copyUserEditableFieldsForSaveSubmitOrAuthorize(rnr);
+    verify(requisitionRepository).update(savedRnr);
   }
 
   @Test
   public void shouldNotSaveRnrWithStatusInitiatedIfUserHasOnlyAuthorizeRight() {
     Rnr rnr = Mockito.spy(make(a(defaultRnr)));
+    Rnr savedRnr = Mockito.spy(initiatedRnr);
+
     Integer userId = 1;
-    rnr.setModifiedBy(userId);
-    rnr.setStatus(INITIATED);
+    savedRnr.setModifiedBy(userId);
+
+    fillFacilityProgramAndPeriod(savedRnr);
     List<Right> listUserRights = Arrays.asList(AUTHORIZE_REQUISITION);
+    when(requisitionRepository.getById(rnr.getId())).thenReturn(savedRnr);
     when(roleRightService.getRights(userId)).thenReturn(listUserRights);
 
     expectedException.expect(DataException.class);
@@ -498,9 +514,13 @@ public class RequisitionServiceTest {
   @Test
   public void shouldNotSaveAlreadySubmittedRnrIfUserHasOnlyCreateRequisitionRight() {
     Rnr rnr = Mockito.spy(make(a(defaultRnr)));
+    Rnr savedRnr = Mockito.spy(submittedRnr);
+
     Integer userId = 1;
-    rnr.setModifiedBy(userId);
-    rnr.setStatus(SUBMITTED);
+    savedRnr.setModifiedBy(userId);
+
+    fillFacilityProgramAndPeriod(savedRnr);
+    when(requisitionRepository.getById(rnr.getId())).thenReturn(savedRnr);
     List<Right> listUserRights = Arrays.asList(CREATE_REQUISITION);
     when(roleRightService.getRights(userId)).thenReturn(listUserRights);
 
@@ -758,22 +778,5 @@ public class RequisitionServiceTest {
     verify(spyRequisition, never()).setBeginningBalanceForEachLineItem(null);
   }
 
-  @Test
-  public void shouldNotOverwriteBeginningBalanceIfPreviousStockInHandAvailableFlagIsSet() throws Exception {
-    Rnr savedRequisition = make(a(defaultRnr));
-    Rnr requisition = createRequisition(PERIOD.getId(), SUBMITTED);
-    requisition.setModifiedBy(USER_ID);
-    requisition.getLineItems().get(0).setBeginningBalance(3);
-    savedRequisition.getLineItems().get(0).setPreviousStockInHandAvailable(true);
-    List<Right> listUserRights = Arrays.asList(AUTHORIZE_REQUISITION);
-    when(roleRightService.getRights(USER_ID)).thenReturn(listUserRights);
-    when(requisitionRepository.getRequisition(requisition.getFacility(), requisition.getProgram(), requisition.getPeriod()))
-        .thenReturn(savedRequisition);
 
-    requisitionService.save(requisition);
-
-    verify(requisitionRepository).getRequisition(requisition.getFacility(), requisition.getProgram(), requisition.getPeriod());
-    verify(requisitionRepository).update(requisition);
-    assertThat(requisition.getLineItems().get(0).getBeginningBalance(), is(RnrLineItemBuilder.STOCK_IN_HAND));
-  }
 }

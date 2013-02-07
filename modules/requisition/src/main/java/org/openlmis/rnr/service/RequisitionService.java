@@ -84,15 +84,14 @@ public class RequisitionService {
   }
 
   public void save(Rnr rnr) {
-    if (!isUserAllowedToSave(rnr))
+    Rnr savedRnr = getFullRequisitionById(rnr.getId());
+
+    if (!isUserAllowedToSave(savedRnr))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
-    Rnr savedRequisition = requisitionRepository.getRequisition(rnr.getFacility(), rnr.getProgram(), rnr.getPeriod());
-    rnr.resetBeginningBalancesFromRequisition(savedRequisition);
-
-    requisitionRepository.update(rnr);
+    savedRnr.copyUserEditableFieldsForSaveSubmitOrAuthorize(rnr);
+    requisitionRepository.update(savedRnr);
   }
-
 
   public Rnr get(Facility facility, Program program, ProcessingPeriod period) {
     Rnr requisition = requisitionRepository.getRequisition(facility, program, period);
@@ -114,10 +113,10 @@ public class RequisitionService {
       throw new DataException(new OpenLmisMessage(RNR_SUBMISSION_ERROR));
     }
 
-    savedRnr.copyUserEditableFieldsForSubmitOrAuthorize(rnr);
-    savedRnr.validate(rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId()));
+    savedRnr.copyUserEditableFieldsForSaveSubmitOrAuthorize(rnr);
 
     savedRnr.prepareForSubmit();
+    savedRnr.validate(rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId()));
 
     requisitionRepository.update(savedRnr);
 
@@ -131,7 +130,7 @@ public class RequisitionService {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
 
     if (savedRnr.getStatus() != SUBMITTED) throw new DataException(RNR_AUTHORIZATION_ERROR);
-    savedRnr.copyUserEditableFieldsForSubmitOrAuthorize(rnr);
+    savedRnr.copyUserEditableFieldsForSaveSubmitOrAuthorize(rnr);
 
     savedRnr.validate(rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId()));
 

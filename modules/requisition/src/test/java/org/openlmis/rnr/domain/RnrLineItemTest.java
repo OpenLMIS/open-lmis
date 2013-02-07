@@ -9,10 +9,12 @@ import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -164,7 +166,10 @@ public class RnrLineItemTest {
   public void shouldThrowExceptionIfCalculationForQuantityDispensedAndStockInHandNotValidAndFormulaValidatedTrue() throws Exception {
     lineItem.setBeginningBalance(10);
     lineItem.setQuantityReceived(3);
-    lineItem.setTotalLossesAndAdjustments(1);
+
+    List<LossesAndAdjustments> list = Arrays.asList(createLossAndAdjustment("CLINIC_RETURN", true, 1));
+
+    lineItem.setLossesAndAdjustments(list);
     lineItem.setStockInHand(4);
     lineItem.setQuantityDispensed(9);
     expectedException.expect(DataException.class);
@@ -172,11 +177,21 @@ public class RnrLineItemTest {
     lineItem.validate(templateColumns);
   }
 
+  private LossesAndAdjustments createLossAndAdjustment(String typeName, boolean additive, int quantity) {
+    LossesAndAdjustments lossAndAdjustment = new LossesAndAdjustments();
+    LossesAndAdjustmentsType lossesAndAdjustmentsType = new LossesAndAdjustmentsType();
+    lossesAndAdjustmentsType.setName(typeName);
+    lossesAndAdjustmentsType.setAdditive(additive);
+    lossAndAdjustment.setType(lossesAndAdjustmentsType);
+    lossAndAdjustment.setQuantity(quantity);
+    return lossAndAdjustment;
+  }
+
   @Test
   public void shouldNotThrowExceptionIfCalculationForQuantityDispensedAndStockInHandValidAndFormulaValidatedTrue() throws Exception {
     lineItem.setBeginningBalance(10);
     lineItem.setQuantityReceived(3);
-    lineItem.setTotalLossesAndAdjustments(1);
+    lineItem.setLossesAndAdjustments(asList(createLossAndAdjustment("", true, 1)));
     lineItem.setStockInHand(4);
     lineItem.setQuantityDispensed(10);
     assertTrue(lineItem.validate(templateColumns));
@@ -401,7 +416,7 @@ public class RnrLineItemTest {
     List<LossesAndAdjustments> lossesAndAdjustments = new ArrayList<>();
     editedLineItem.setLossesAndAdjustments(lossesAndAdjustments);
 
-    lineItem.copyUserEditableFieldsForSubmitOrAuthorize(editedLineItem);
+    lineItem.copyUserEditableFieldsForSaveSubmitOrAuthorize(editedLineItem);
 
     assertThat(lineItem.getBeginningBalance(), is(12));
     assertThat(lineItem.getStockInHand(), is(1946));
@@ -415,5 +430,15 @@ public class RnrLineItemTest {
     assertThat(lineItem.getReasonForRequestedQuantity(), is("Reason"));
   }
 
+  @Test
+  public void shouldNotCopyBeginningBalanceWhenPreviousStockInHandIsAvailable() throws Exception {
+    RnrLineItem editedLineItem = make(a(defaultRnrLineItem));
+    editedLineItem.setBeginningBalance(44);
+    lineItem.setPreviousStockInHandAvailable(true);
+
+    lineItem.copyUserEditableFieldsForSaveSubmitOrAuthorize(editedLineItem);
+
+    assertThat(lineItem.getBeginningBalance(), is(RnrLineItemBuilder.BEGINNING_BALANCE));
+  }
 
 }

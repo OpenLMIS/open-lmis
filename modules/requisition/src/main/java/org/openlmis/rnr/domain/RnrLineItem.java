@@ -160,6 +160,7 @@ public class RnrLineItem {
     stockInHand = setToZeroIfNotPresent(stockInHand);
     beginningBalance = setToZeroIfNotPresent(beginningBalance);
     quantityReceived = setToZeroIfNotPresent(quantityReceived);
+    calculateTotalLossesAndAdjustments();
     totalLossesAndAdjustments = setToZeroIfNotPresent(totalLossesAndAdjustments);
     if (arithmeticValidationRequired) {
       validQuantityDispensed = (quantityDispensed == (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand));
@@ -247,10 +248,11 @@ public class RnrLineItem {
     this.remarks = item.remarks;
   }
 
-  public void copyUserEditableFieldsForSubmitOrAuthorize(RnrLineItem item) {
+  public void copyUserEditableFieldsForSaveSubmitOrAuthorize(RnrLineItem item) {
     if (item == null) return;
     this.remarks = item.remarks;
-    this.beginningBalance = item.beginningBalance;
+    if (!this.previousStockInHandAvailable)
+      this.beginningBalance = item.beginningBalance;
     this.quantityReceived = item.quantityReceived;
     this.quantityDispensed = item.quantityDispensed;
     this.lossesAndAdjustments = item.lossesAndAdjustments;

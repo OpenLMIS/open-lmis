@@ -76,22 +76,31 @@ public class RnrTest {
   @Test
   public void shouldCopyApproverEditableFields() throws Exception {
     Rnr rnr = make(a(defaultRnr));
+    rnr.setModifiedBy(1);
     Rnr savedRnr = make(a(defaultRnr));
     RnrLineItem savedLineItem = savedRnr.getLineItems().get(0);
     RnrLineItem savedLineItemSpy = spy(savedLineItem);
     savedRnr.getLineItems().set(0, savedLineItemSpy);
     savedRnr.copyApproverEditableFields(rnr);
     verify(savedLineItemSpy).copyApproverEditableFields(rnr.getLineItems().get(0));
+    assertThat(savedRnr.getModifiedBy(), is(1));
   }
 
   @Test
   public void shouldCopyUserEditableFields() throws Exception {
     Rnr rnr = make(a(defaultRnr));
+    List<RnrLineItem> nonFullSupplyLineItems = mock(ArrayList.class);
+
+    rnr.setNonFullSupplyLineItems(nonFullSupplyLineItems);
+    rnr.setModifiedBy(1);
     Rnr savedRnr = make(a(defaultRnr));
     RnrLineItem savedLineItem = savedRnr.getLineItems().get(0);
     RnrLineItem savedLineItemSpy = spy(savedLineItem);
     savedRnr.getLineItems().set(0, savedLineItemSpy);
-    savedRnr.copyUserEditableFieldsForSubmitOrAuthorize(rnr);
-    verify(savedLineItemSpy).copyUserEditableFieldsForSubmitOrAuthorize(rnr.getLineItems().get(0));
+    savedRnr.copyUserEditableFieldsForSaveSubmitOrAuthorize(rnr);
+    verify(savedLineItemSpy).copyUserEditableFieldsForSaveSubmitOrAuthorize(rnr.getLineItems().get(0));
+    assertThat(savedRnr.getModifiedBy(), is(1));
+
+    assertThat(savedRnr.getNonFullSupplyLineItems(), is(nonFullSupplyLineItems));
   }
 }
