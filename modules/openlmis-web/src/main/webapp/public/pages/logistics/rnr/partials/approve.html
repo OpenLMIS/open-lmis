@@ -1,9 +1,9 @@
 <ng-include src="'/public/pages/logistics/rnr/partials/header.html'"></ng-include>
 <form name="approvalForm" novalidate>
-  <div class="gridStyle grid-approval" ng-grid="fullSupplyGrid"></div>
+  <div class="approveGrid grid-approval" ng-grid="fullSupplyGrid"></div>
 
-  <div>Non-full Supply Line Items</div>
-  <div class="gridStyle grid-approval" ng-grid="nonFullSupplyGrid"></div>
+  <h4 class="non-full-heading">Non-full Supply Line Items</h4>
+  <div class="approveGrid grid-approval" ng-grid="nonFullSupplyGrid"></div>
   <br><br>
   <div form-toolbar id="action_buttons" class="action-buttons">
     <div class="total-cost-container">

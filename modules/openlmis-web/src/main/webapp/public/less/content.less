@@ -887,9 +887,6 @@ table td.delete-button {
 .approveGrid {
     border: 1px solid rgb(212,212,212);
     width: 100%;
-    height: auto;
-    max-height: 400px;
-  min-height: 150px
 }
 
 .roleGrid {
@@ -1039,6 +1036,9 @@ table td.delete-button {
 }
 .ngViewport {
   outline: 0 none;
+  height: auto !important;
+  max-height: 200px;
+
 }
 .grid-btn {
   margin: 2px 10px;
@@ -1081,4 +1081,9 @@ td .close {
 .fluid-grid-cell {
   padding: 10px;
 }
-
+.non-full-heading {
+  background: #EEE;
+  margin: 0;
+  padding: 4px 7px;
+  font-size: 1em;
+}
