@@ -86,6 +86,13 @@ public class Rnr {
       totalFullSupplyCost = totalFullSupplyCost.add(costPerItem);
     }
     this.fullSupplyItemsSubmittedCost = totalFullSupplyCost;
+    Money totalNonFullSupplyCost = new Money("0");
+    for (RnrLineItem lineItem : nonFullSupplyLineItems) {
+      lineItem.calculate(period, status);
+      Money costPerItem = lineItem.getPrice().multiply(BigDecimal.valueOf(lineItem.getPacksToShip()));
+      totalNonFullSupplyCost = totalNonFullSupplyCost.add(costPerItem);
+    }
+    this.nonFullSupplyItemsSubmittedCost = totalNonFullSupplyCost;
   }
 
   public void fillLineItems(List<FacilityApprovedProduct> facilityApprovedProducts) {
@@ -114,11 +121,18 @@ public class Rnr {
     for (RnrLineItem item : lineItems) {
       item.setDefaultApprovedQuantity();
     }
+    for (RnrLineItem item : nonFullSupplyLineItems) {
+      item.setDefaultApprovedQuantity();
+    }
   }
 
   public void copyApproverEditableFields(Rnr rnr) {
     for (RnrLineItem thisLineItem : this.lineItems) {
       RnrLineItem otherLineItem = findCorrespondingLineItem(rnr.lineItems, thisLineItem);
+      thisLineItem.copyApproverEditableFields(otherLineItem);
+    }
+    for (RnrLineItem thisLineItem : this.nonFullSupplyLineItems) {
+      RnrLineItem otherLineItem = findCorrespondingLineItem(rnr.nonFullSupplyLineItems, thisLineItem);
       thisLineItem.copyApproverEditableFields(otherLineItem);
     }
   }

@@ -1,4 +1,4 @@
-function ApproveRnrController($scope, requisition, Requisitions, programRnRColumnList, $location, LossesAndAdjustmentsReferenceData, ReferenceData) {
+function  ApproveRnrController($scope, requisition, Requisitions, programRnRColumnList, $location, LossesAndAdjustmentsReferenceData, ReferenceData) {
   $scope.error = "";
   $scope.message = "";
 
@@ -15,6 +15,7 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnRColum
   $scope.requisition = requisition;
   $scope.rnr = requisition;
   $scope.lineItems = [];
+  $scope.nonFullSupplyLineItems = [];
   populateRnrLineItems(requisition);
   if (programRnRColumnList.length > 0) {
     $scope.programRnRColumnList = programRnRColumnList;
@@ -69,7 +70,24 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnRColum
     error.pattern = !isPositiveNumber(value);
   };
 
-  $scope.gridOptions = { data:'lineItems',
+
+  $scope.totalCost = function () {
+    if (!$scope.rnr) return;
+    return parseFloat(parseFloat($scope.rnr.fullSupplyItemsSubmittedCost) + parseFloat($scope.rnr.nonFullSupplyItemsSubmittedCost)).toFixed(2);
+  };
+
+  $scope.fullSupplyGrid = { data:'lineItems',
+    canSelectRows:false,
+    displayFooter:false,
+    displaySelectionCheckbox:false,
+    showColumnMenu:false,
+    showFilter:false,
+    rowHeight:44,
+    enableSorting: false,
+    columnDefs:columnDefinitions
+  };
+
+  $scope.nonFullSupplyGrid = { data:'nonFullSupplyLineItems',
     canSelectRows:false,
     displayFooter:false,
     displaySelectionCheckbox:false,
@@ -106,6 +124,12 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnRColum
   $scope.approveRnr = function () {
     $scope.approvedQuantityRequiredFlag = false;
     $($scope.lineItems).each(function (i, lineItem) {
+      if (lineItem.quantityApproved == undefined || !isPositiveNumber(lineItem.quantityApproved)) {
+        $scope.approvedQuantityRequiredFlag = true;
+        return false;
+      }
+    });
+    $($scope.nonFullSupplyLineItems).each(function (i, lineItem) {
       if (lineItem.quantityApproved == undefined || !isPositiveNumber(lineItem.quantityApproved)) {
         $scope.approvedQuantityRequiredFlag = true;
         return false;
@@ -167,6 +191,13 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnRColum
 
       lineItem.updateCostWithApprovedQuantity(requisition);
       $scope.lineItems.push(lineItem);
+    });
+    $(rnr.nonFullSupplyLineItems).each(function (i, lineItem) {
+      var rnrLineItem = new RnrLineItem();
+      jQuery.extend(true, lineItem, rnrLineItem);
+
+      lineItem.updateCostWithApprovedQuantity(requisition);
+      $scope.nonFullSupplyLineItems.push(lineItem);
     });
   }
 
