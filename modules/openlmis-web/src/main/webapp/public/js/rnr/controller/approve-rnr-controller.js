@@ -12,6 +12,7 @@ function  ApproveRnrController($scope, requisition, Requisitions, programRnRColu
   }, {});
 
   var columnDefinitions = [];
+  var nonFullColumnDefinitions = [];
   $scope.requisition = requisition;
   $scope.rnr = requisition;
   $scope.lineItems = [];
@@ -21,23 +22,28 @@ function  ApproveRnrController($scope, requisition, Requisitions, programRnRColu
     $scope.programRnRColumnList = programRnRColumnList;
     $($scope.programRnRColumnList).each(function (i, column) {
       if (column.name == "cost" || column.name == "price") {
-        columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:currencyTemplate('row.entity.'+column.name)})
+        columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:currencyTemplate('row.entity.'+column.name)});
+        nonFullColumnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:currencyTemplate('row.entity.'+column.name)});
         return;
       }
       if (column.name == "lossesAndAdjustments") {
-        columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:lossesAndAdjustmentsTemplate()})
+        columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:lossesAndAdjustmentsTemplate()});
+        nonFullColumnDefinitions.push({field:'totalLossesAndAdjustments', displayName:column.label });
         return;
       }
       if (column.name == "quantityApproved") {
-        columnDefinitions.push({field:column.name, displayName:column.label, width:140, cellTemplate:positiveIntegerCellTemplate(column.name, 'row.entity.quantityApproved')})
+        columnDefinitions.push({field:column.name, displayName:column.label, width:140, cellTemplate:positiveIntegerCellTemplate(column.name, 'row.entity.quantityApproved')});
+        nonFullColumnDefinitions.push({field:column.name, displayName:column.label, width:140, cellTemplate:positiveIntegerCellTemplate(column.name, 'row.entity.quantityApproved')});
         return;
       }
       if (column.name == "remarks") {
-        columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:freeTextCellTemplate(column.name, 'row.entity.remarks')})
+        columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:freeTextCellTemplate(column.name, 'row.entity.remarks')});
+        nonFullColumnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:freeTextCellTemplate(column.name, 'row.entity.remarks')});
         return;
       }
 
       columnDefinitions.push({field:column.name, displayName:column.label});
+      nonFullColumnDefinitions.push({field:column.name, displayName:column.label});
     });
   } else {
     $scope.$parent.error = "Please contact Admin to define R&R template for this program";
@@ -95,7 +101,7 @@ function  ApproveRnrController($scope, requisition, Requisitions, programRnRColu
     showFilter:false,
     rowHeight:44,
     enableSorting: false,
-    columnDefs:columnDefinitions
+    columnDefs:nonFullColumnDefinitions
   };
 
   $scope.saveRnr = function () {
