@@ -37,7 +37,7 @@
 
   <div class="row-fluid">
     <div class="span3">
-      <select ng-options="program.id as program.name for program in availablePrograms()" ng-model="programSelected">
+      <select ng-options="programSupported.program.id as programSupported.program.name for programSupported in availablePrograms()" ng-model="programSelected">
         <option value="">Select program</option>
       </select>
       <span ng-show='hasError(programSelected)' class="field-error">

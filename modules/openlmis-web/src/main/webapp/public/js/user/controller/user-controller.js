@@ -1,4 +1,4 @@
-function UserController($scope, $routeParams, Users, User, AllFacilities, ProgramSupportedByFacility, Roles) {
+function UserController($scope, $routeParams, Users, User, AllFacilities, ProgramSupportedByFacility, Roles,Facility) {
   $scope.userNameInvalid = false;
   $scope.user = {};
 
@@ -103,13 +103,13 @@ function UserController($scope, $routeParams, Users, User, AllFacilities, Progra
   var loadRoleAssignments = function () {
     if (!isNullOrUndefined($scope.user.facilityId)) {
       if (isNullOrUndefined($scope.allSupportedPrograms)) {
-        ProgramSupportedByFacility.get({facilityId:$scope.user.facilityId}, function (data) {
-          $scope.allSupportedPrograms = data.programList;
-        });
-//        Facility.get({id:$scope.user.facilityId}, function (data) {
-//          $scope.allSupportedPrograms = data.facility.supportedPrograms;
-//          $scope.facilitySelected = data.facility;
-//        }, {});
+//        ProgramSupportedByFacility.get({facilityId:$scope.user.facilityId}, function (data) {
+//          $scope.allSupportedPrograms = data.programList;
+//        });
+        Facility.get({id:$scope.user.facilityId}, function (data) {
+          $scope.allSupportedPrograms = data.facility.supportedPrograms;
+          $scope.facilitySelected = data.facility;
+        }, {});
       }
 
       if (isNullOrUndefined($scope.allRoles)) {

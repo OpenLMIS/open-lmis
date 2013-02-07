@@ -10,7 +10,7 @@ function UserRoleAssignmentController($scope) {
     });
 
     return _.reject($scope.$parent.allSupportedPrograms, function (supportedProgram) {
-      return _.contains(assignedProgramIds, supportedProgram.id);
+      return _.contains(assignedProgramIds, supportedProgram.program.id);
     });
   };
 
@@ -45,8 +45,8 @@ function UserRoleAssignmentController($scope) {
     if (!$scope.$parent.allSupportedPrograms) return;
     var programName = null;
     $.each($scope.$parent.allSupportedPrograms, function (index, supportedProgram) {
-      if (supportedProgram.id == programId) {
-        programName = supportedProgram.name;
+      if (supportedProgram.program.id == programId) {
+        programName = supportedProgram.program.name;
         return false;
       }
     });

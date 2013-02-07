@@ -6,10 +6,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.ProgramSupported;
-import org.openlmis.core.domain.RequisitionGroup;
-import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.ProgramRepository;
@@ -191,7 +188,7 @@ public class FacilityServiceTest {
     final Date nullDate = null;
     List<ProgramSupported> programs = new ArrayList<ProgramSupported>() {{
       add(make(a(defaultProgramSupported)));
-      add(make(a(defaultProgramSupported, with(supportedProgramCode, "HIV"), with(supportedProgramId, 1), with(isActive, true), with(startDate, nullDate))));
+      add(make(a(defaultProgramSupported, with(supportedProgram, new Program(1,"HIV")), with(isActive, true), with(startDate, nullDate))));
     }};
 
     facility.setSupportedPrograms(programs);
@@ -208,7 +205,7 @@ public class FacilityServiceTest {
     final Date nullDate = null;
     List<ProgramSupported> programs = new ArrayList<ProgramSupported>() {{
       add(make(a(defaultProgramSupported)));
-      add(make(a(defaultProgramSupported, with(supportedProgramCode, "HIV"), with(supportedProgramId, 1), with(isActive, true), with(startDate, nullDate))));
+      add(make(a(defaultProgramSupported, with(supportedProgram,new Program(1,"HIV")), with(isActive, true), with(startDate, nullDate))));
     }};
 
     facility.setSupportedPrograms(programs);
@@ -224,7 +221,7 @@ public class FacilityServiceTest {
     Facility facility = new Facility();
     List<ProgramSupported> programsForFacility = new ArrayList<ProgramSupported>() {{
       add(make(a(defaultProgramSupported)));
-      add(make(a(defaultProgramSupported, with(supportedProgramCode, "ARV"), with(supportedProgramId, 2))));
+      add(make(a(defaultProgramSupported, with(supportedProgram,new Program(2,"ARV")))));
     }};
     when(programSupportedRepository.getAllByFacilityId(facility.getId())).thenReturn(programsForFacility);
 

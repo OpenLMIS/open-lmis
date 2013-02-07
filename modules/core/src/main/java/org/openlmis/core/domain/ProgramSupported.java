@@ -21,6 +21,9 @@ public class ProgramSupported implements Importable {
   private Integer facilityId;
   private Integer programId;
 
+//  @ImportField(mandatory = true, name = "Program Code")
+  private Program program;
+
   @ImportField(mandatory = true, name = "Facility Code")
   private String facilityCode;
 

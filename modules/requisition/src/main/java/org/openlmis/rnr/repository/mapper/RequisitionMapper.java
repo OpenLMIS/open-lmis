@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface RequisitionMapper {
+public interface  RequisitionMapper {
 
   @Insert("INSERT INTO requisitions(facilityId, programId, periodId, status, modifiedBy) " +
     "VALUES (#{facility.id}, #{program.id}, #{period.id}, #{status}, #{modifiedBy})")

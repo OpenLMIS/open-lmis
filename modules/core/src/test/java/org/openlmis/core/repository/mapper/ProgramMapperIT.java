@@ -66,9 +66,9 @@ public class ProgramMapperIT extends SpringIntegrationTest {
   public void shouldGetProgramsWhichAreActiveByFacilityCode() {
     Facility facility = make(a(FacilityBuilder.defaultFacility));
     facilityMapper.insert(facility);
-    Program program = make(a(defaultProgram));
+    Program program = make(a(defaultProgram,with(programId,1)));
     programMapper.insert(program);
-    ProgramSupported programSupported = make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()), with(supportedProgramId, program.getId())));
+    ProgramSupported programSupported = make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()),with(supportedProgramId,program.getId()), with(supportedProgram, program)));
     programSupportedMapper.addSupportedProgram(programSupported);
 
     List<Program> programs = programMapper.getActiveByFacility(facility.getId());
@@ -87,10 +87,10 @@ public class ProgramMapperIT extends SpringIntegrationTest {
   public void shouldGetProgramsSupportedByFacility() throws Exception {
     Facility facility = make(a(defaultFacility));
     facilityMapper.insert(facility);
-    Program program = make(a(defaultProgram));
+    Program program = make(a(defaultProgram,with(programId,1)));
     programMapper.insert(program);
-    ProgramSupported programSupported = make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()),
-      with(supportedProgramId, program.getId())));
+    ProgramSupported programSupported = make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()),with(supportedProgramId,program.getId()),
+      with(supportedProgram, program)));
     programSupportedMapper.addSupportedProgram(programSupported);
     List<Program> supportedPrograms = programMapper.getByFacilityId(facility.getId());
     assertThat(supportedPrograms.get(0).getCode(), is(ProgramBuilder.PROGRAM_CODE));
@@ -213,11 +213,12 @@ public class ProgramMapperIT extends SpringIntegrationTest {
   }
 
   private void insertProgramSupportedForFacility(Program program, Facility facility, boolean isActive) {
-    ProgramSupported supportedProgram = make(a(defaultProgramSupported,
+    ProgramSupported defaultProgram = make(a(defaultProgramSupported,
         with(supportedFacilityId, facility.getId()),
-        with(supportedProgramId, program.getId()),
+        with(supportedProgram, program),
+        with(supportedProgramId,program.getId()),
         with(ProgramSupportedBuilder.isActive, isActive)));
-    programSupportedMapper.addSupportedProgram(supportedProgram);
+    programSupportedMapper.addSupportedProgram(defaultProgram);
   }
 
   private Facility insertFacility(Facility facility) {

@@ -1,6 +1,7 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
 import org.springframework.stereotype.Repository;
 
@@ -23,5 +24,8 @@ public interface ProgramSupportedMapper {
 
   @Select("SELECT * FROM programs_supported " +
     "WHERE facilityId = #{facilityId}")
+  @Results({
+    @Result(property = "program", javaType = Program.class, column = "programId", one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
+  })
   List<ProgramSupported> getAllByFacilityId(Integer facilityId);
 }

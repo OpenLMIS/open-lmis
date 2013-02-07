@@ -49,7 +49,8 @@ public class ProgramSupportedMapperIT {
 
     ProgramSupported programSupported = make(a(defaultProgramSupported,
         with(supportedFacilityId, facility.getId()),
-        with(supportedProgramId, program.getId())));
+        with(supportedProgramId,program.getId()),
+        with(supportedProgram,program)));
 
     programSupportedMapper.addSupportedProgram(programSupported);
 
@@ -69,7 +70,8 @@ public class ProgramSupportedMapperIT {
 
     ProgramSupported programSupported = make(a(defaultProgramSupported,
         with(supportedFacilityId, facility.getId()),
-        with(supportedProgramId, program.getId())));
+        with(supportedProgram, program),
+          with(supportedProgramId,1)));
     programSupportedMapper.addSupportedProgram(programSupported);
 
     programSupportedMapper.delete(facility.getId(), program.getId());
@@ -88,14 +90,17 @@ public class ProgramSupportedMapperIT {
 
     ProgramSupported programSupported = make(a(defaultProgramSupported,
       with(supportedFacilityId, facility.getId()),
-      with(supportedProgramId, program.getId())));
+      with(supportedProgram, program),
+      with(supportedProgramId,program.getId())));
     programSupportedMapper.addSupportedProgram(programSupported);
 
     List<ProgramSupported> programsSupported = programSupportedMapper.getAllByFacilityId(facility.getId());
     assertThat(programsSupported.size(), is(1));
     assertThat(programsSupported.get(0).getFacilityId(), is(programSupported.getFacilityId()));
-    assertThat(programsSupported.get(0).getProgramId(), is(programSupported.getProgramId()));
     assertThat(programsSupported.get(0).getStartDate(), is(programSupported.getStartDate()));
     assertThat(programsSupported.get(0).getActive(), is(programSupported.getActive()));
+    assertThat(programsSupported.get(0).getProgram().getId(),is(programSupported.getProgram().getId()));
+    assertThat(programsSupported.get(0).getProgram().getCode(),is(programSupported.getProgram().getCode()));
+    assertThat(programsSupported.get(0).getProgram().getName(),is(programSupported.getProgram().getName()));
   }
 }

@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.openlmis.core.builder.ProgramSupportedBuilder;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProgramSupportedMapper;
@@ -106,7 +107,7 @@ public class ProgramSupportedRepositoryTest {
     final Facility facility = make(a(defaultFacility));
     facility.setId(1);
 
-    final ProgramSupported hivProgram = make(a(defaultProgramSupported, with(supportedProgramCode, "HIV"), with(supportedProgramId, 1), with(supportedFacilityId, facility.getId())));
+    final ProgramSupported hivProgram = make(a(defaultProgramSupported, with(supportedProgram, new Program(1,"HIV")), with(supportedFacilityId, facility.getId())));
 
     List<ProgramSupported> programs = new ArrayList<ProgramSupported>() {{
       add(make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()))));
@@ -114,7 +115,7 @@ public class ProgramSupportedRepositoryTest {
     }};
 
     facility.setSupportedPrograms(programs);
-    final ProgramSupported arvProgram = make(a(defaultProgramSupported, with(supportedProgramCode, "ARV"), with(supportedProgramId, 2), with(supportedFacilityId, facility.getId())));
+    final ProgramSupported arvProgram = make(a(defaultProgramSupported, with(supportedProgram, new Program(2,"ARV")), with(supportedFacilityId, facility.getId())));
 
     List<ProgramSupported> previouslySupportedProgramsForFacility = new ArrayList<ProgramSupported>() {{
       add(make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()))));
@@ -123,7 +124,7 @@ public class ProgramSupportedRepositoryTest {
 
     programSupportedRepository.updateSupportedPrograms(facility, previouslySupportedProgramsForFacility);
 
-    verify(programSupportedMapper).delete(facility.getId(), 2);
+    verify(programSupportedMapper).delete(facility.getId(), 101);
     verify(programSupportedMapper).addSupportedProgram(hivProgram);
   }
 
@@ -132,7 +133,7 @@ public class ProgramSupportedRepositoryTest {
     final Facility facility = make(a(defaultFacility));
     facility.setId(1);
 
-    final ProgramSupported hivProgram = make(a(defaultProgramSupported, with(supportedProgramCode, "HIV"), with(supportedProgramId, 1), with(supportedFacilityId, facility.getId())));
+    final ProgramSupported hivProgram = make(a(defaultProgramSupported, with(supportedProgram, new Program(1,"HIV")), with(supportedFacilityId, facility.getId())));
     List<ProgramSupported> programs = new ArrayList<ProgramSupported>() {{
       add(make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()))));
       add(hivProgram);
