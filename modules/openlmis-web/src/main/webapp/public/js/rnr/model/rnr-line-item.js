@@ -57,9 +57,6 @@ var RnrLineItem = function (lineItem, rnr, programRnrColumnList) {
 
   RnrLineItem.prototype.updateCostWithApprovedQuantity = function () {
     this.fillPacksToShipBasedOnApprovedQuantity();
-    this.fillCost();
-    if (!this.rnrExists()) return;
-    this.rnr.fullSupplyItemsSubmittedCost = this.getTotalLineItemCost(this.rnr.lineItems);
   };
 
   RnrLineItem.prototype.arithmeticallyInvalid = function () {

@@ -1,4 +1,4 @@
-function  ApproveRnrController($scope, requisition, Requisitions, programRnRColumnList, $location, LossesAndAdjustmentsReferenceData, ReferenceData) {
+function ApproveRnrController($scope, requisition, Requisitions, programRnrColumnList, $location, LossesAndAdjustmentsReferenceData, ReferenceData) {
   $scope.error = "";
   $scope.message = "";
 
@@ -13,17 +13,14 @@ function  ApproveRnrController($scope, requisition, Requisitions, programRnRColu
 
   var columnDefinitions = [];
   var nonFullColumnDefinitions = [];
-  $scope.requisition = requisition;
   $scope.rnr = requisition;
-  $scope.lineItems = [];
-  $scope.nonFullSupplyLineItems = [];
-  populateRnrLineItems(requisition);
-  if (programRnRColumnList.length > 0) {
-    $scope.programRnRColumnList = programRnRColumnList;
-    $($scope.programRnRColumnList).each(function (i, column) {
+  populateRnrLineItems();
+  if (programRnrColumnList.length > 0) {
+    $scope.programRnrColumnList = programRnrColumnList;
+    $($scope.programRnrColumnList).each(function (i, column) {
       if (column.name == "cost" || column.name == "price") {
-        columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:currencyTemplate('row.entity.'+column.name)});
-        nonFullColumnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:currencyTemplate('row.entity.'+column.name)});
+        columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:currencyTemplate('row.entity.' + column.name)});
+        nonFullColumnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:currencyTemplate('row.entity.' + column.name)});
         return;
       }
       if (column.name == "lossesAndAdjustments") {
@@ -54,7 +51,7 @@ function  ApproveRnrController($scope, requisition, Requisitions, programRnRColu
   }
 
   function currencyTemplate(value) {
-    return '<span  class = "cell-text" ng-show = "showCurrencySymbol('+value+')"  ng-bind="currency"></span >&nbsp; &nbsp;<span ng-bind = "'+value+'" class = "cell-text" ></span >'
+    return '<span  class = "cell-text" ng-show = "showCurrencySymbol(' + value + ')"  ng-bind="currency"></span >&nbsp; &nbsp;<span ng-bind = "' + value + '" class = "cell-text" ></span >'
   }
 
 
@@ -63,7 +60,7 @@ function  ApproveRnrController($scope, requisition, Requisitions, programRnRColu
   }
 
   function positiveIntegerCellTemplate(field, value) {
-    return '<div><ng-form name="positiveIntegerForm"  > <input ui-event="{blur : \'row.entity.updateCostWithApprovedQuantity(requisition, row.entity)\'}" ng-class="{\'required-error\': approvedQuantityRequiredFlag && positiveIntegerForm.' + field + '.$error.required}" ' +
+    return '<div><ng-form name="positiveIntegerForm"  > <input ui-event="{blur : \'row.entity.updateCostWithApprovedQuantity()\'}" ng-class="{\'required-error\': approvedQuantityRequiredFlag && positiveIntegerForm.' + field + '.$error.required}" ' +
       '  ng-required="true" maxlength="8"  name=' + field + ' ng-model=' + value + '  ng-change="validatePositiveInteger(positiveIntegerForm.' + field + '.$error,' + value + ')" />' +
       '<span class="rnr-form-error" id=' + field + ' ng-show="positiveIntegerForm.' + field + '.$error.pattern" ng-class="{\'required-error\': approvedQuantityInvalidFlag && positiveIntegerForm.' + field + '.$error.positiveInteger}">Please Enter Numeric value</span></ng-form></div>';
   }
@@ -82,27 +79,39 @@ function  ApproveRnrController($scope, requisition, Requisitions, programRnRColu
     return parseFloat(parseFloat($scope.rnr.fullSupplyItemsSubmittedCost) + parseFloat($scope.rnr.nonFullSupplyItemsSubmittedCost));
   };
 
-  $scope.fullSupplyGrid = { data:'lineItems',
+  $scope.fullSupplyGrid = { data:'rnr.lineItems',
     canSelectRows:false,
     displayFooter:false,
     displaySelectionCheckbox:false,
     showColumnMenu:false,
     showFilter:false,
     rowHeight:44,
-    enableSorting: false,
+    enableSorting:false,
     columnDefs:columnDefinitions
   };
 
-  $scope.nonFullSupplyGrid = { data:'nonFullSupplyLineItems',
+  $scope.nonFullSupplyGrid = { data:'rnr.nonFullSupplyLineItems',
     canSelectRows:false,
     displayFooter:false,
     displaySelectionCheckbox:false,
     showColumnMenu:false,
     showFilter:false,
     rowHeight:44,
-    enableSorting: false,
+    enableSorting:false,
     columnDefs:nonFullColumnDefinitions
   };
+
+  function removeExtraDataForPostFromRnr() {
+    var rnr = {"id":$scope.rnr.id, "lineItems":[], "nonFullSupplyLineItems":[]};
+
+    _.each($scope.rnr.lineItems, function (lineItem) {
+      rnr.lineItems.push(_.omit(lineItem, ['rnr', 'programRnrColumnList']));
+    });
+    _.each($scope.rnr.nonFullSupplyLineItems, function (lineItem) {
+      rnr.nonFullSupplyLineItems.push(_.omit(lineItem, ['rnr', 'programRnrColumnList']));
+    });
+    return rnr;
+  }
 
   $scope.saveRnr = function () {
     $scope.approvedQuantityInvalidFlag = false;
@@ -117,8 +126,9 @@ function  ApproveRnrController($scope, requisition, Requisitions, programRnRColu
       $scope.message = "";
       return;
     }
-    Requisitions.update({id:$scope.requisition.id, operation:"save"},
-      $scope.requisition, function (data) {
+    var rnr = removeExtraDataForPostFromRnr();
+    Requisitions.update({id:$scope.rnr.id, operation:"save"},
+      rnr, function (data) {
         $scope.message = data.success;
         $scope.error = "";
       }, function (data) {
@@ -129,13 +139,13 @@ function  ApproveRnrController($scope, requisition, Requisitions, programRnRColu
 
   $scope.approveRnr = function () {
     $scope.approvedQuantityRequiredFlag = false;
-    $($scope.lineItems).each(function (i, lineItem) {
+    $($scope.rnr.lineItems).each(function (i, lineItem) {
       if (lineItem.quantityApproved == undefined || !isPositiveNumber(lineItem.quantityApproved)) {
         $scope.approvedQuantityRequiredFlag = true;
         return false;
       }
     });
-    $($scope.nonFullSupplyLineItems).each(function (i, lineItem) {
+    $($scope.rnr.nonFullSupplyLineItems).each(function (i, lineItem) {
       if (lineItem.quantityApproved == undefined || !isPositiveNumber(lineItem.quantityApproved)) {
         $scope.approvedQuantityRequiredFlag = true;
         return false;
@@ -146,8 +156,9 @@ function  ApproveRnrController($scope, requisition, Requisitions, programRnRColu
       $scope.message = "";
       return;
     }
-    Requisitions.update({id:$scope.requisition.id, operation:"approve"},
-      $scope.requisition, function (data) {
+    var rnr = removeExtraDataForPostFromRnr();
+    Requisitions.update({id:$scope.rnr.id, operation:"approve"},
+        rnr, function (data) {
         $scope.$parent.message = data.success;
         $scope.error = "";
         $location.path("rnr-for-approval");
@@ -190,20 +201,23 @@ function  ApproveRnrController($scope, requisition, Requisitions, programRnRColu
 
   }
 
-  function populateRnrLineItems(rnr) {
-    $(rnr.lineItems).each(function (i, lineItem) {
-      var rnrLineItem = new RnrLineItem();
-      jQuery.extend(true, lineItem, rnrLineItem);
+  function populateRnrLineItems() {
+    var lineItemsJson = $scope.rnr.lineItems;
+    $scope.rnr.lineItems = [];
+    $(lineItemsJson).each(function (i, lineItem) {
+      var rnrLineItem = new RnrLineItem(lineItem, $scope.rnr, $scope.programRnrColumnList);
 
-      lineItem.updateCostWithApprovedQuantity(requisition);
-      $scope.lineItems.push(lineItem);
+      rnrLineItem.updateCostWithApprovedQuantity();
+      $scope.rnr.lineItems.push(rnrLineItem);
     });
-    $(rnr.nonFullSupplyLineItems).each(function (i, lineItem) {
-      var rnrLineItem = new RnrLineItem();
-      jQuery.extend(true, lineItem, rnrLineItem);
 
-      lineItem.updateCostWithApprovedQuantity(requisition);
-      $scope.nonFullSupplyLineItems.push(lineItem);
+    var nonFullSupplyLineItemsJson = $scope.rnr.nonFullSupplyLineItems;
+    $scope.rnr.nonFullSupplyLineItems = [];
+    $(nonFullSupplyLineItemsJson).each(function (i, lineItem) {
+      var rnrLineItem = new RnrLineItem(lineItem, $scope.rnr, $scope.programRnrColumnList);
+
+      rnrLineItem.updateCostWithApprovedQuantity();
+      $scope.rnr.nonFullSupplyLineItems.push(rnrLineItem);
     });
   }
 
@@ -212,7 +226,7 @@ function  ApproveRnrController($scope, requisition, Requisitions, programRnRColu
   }
 
   $scope.periodDisplayName = function () {
-    if(!$scope.rnr) return;
+    if (!$scope.rnr) return;
 
     var startDate = new Date($scope.rnr.period.startDate);
     var endDate = new Date($scope.rnr.period.endDate);
@@ -234,7 +248,7 @@ ApproveRnrController.resolve = {
     }, 100);
     return deferred.promise;
   },
-  programRnRColumnList:function ($q, $timeout, ProgramRnRColumnList, $route) {
+  programRnrColumnList:function ($q, $timeout, ProgramRnRColumnList, $route) {
     var deferred = $q.defer();
     $timeout(function () {
       ProgramRnRColumnList.get({programId:$route.current.params.program}, function (data) {

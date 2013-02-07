@@ -1,7 +1,7 @@
 describe('Approve Requisition controller', function () {
 
   var scope, ctrl, httpBackend, location, routeParams, requisitionHeader, controller, requisition,
-    programRnRColumnList, nonFullSupplyLineItems, lineItems, columnDefinitions, lossesAndAdjustmentsReferenceData;
+    programRnrColumnList, nonFullSupplyLineItems, lineItems, columnDefinitions, lossesAndAdjustmentsReferenceData;
 
   beforeEach(module('openlmis.services'));
 
@@ -14,18 +14,18 @@ describe('Approve Requisition controller', function () {
     lineItems = [];
     nonFullSupplyLineItems = [];
     requisition = {'status':"AUTHORIZED", 'lineItems':lineItems, 'nonFullSupplyLineItems' : nonFullSupplyLineItems};
-    programRnRColumnList = [
+    programRnrColumnList = [
       {'name':'ProductCode', 'label':'Product Code'},
       {'name':'quantityApproved', 'label':'quantity approved'},
       {'name':'remarks', 'label':'remarks'}
     ];
     httpBackend.expect('GET', '/requisitions/lossAndAdjustments/reference-data.json').respond({"lossAdjustmentTypes":{}});
     httpBackend.expect('GET', '/reference-data/currency.json').respond({"currency":'$'});
-    ctrl = controller(ApproveRnrController, {$scope:scope, requisition:requisition, programRnRColumnList:programRnRColumnList, $location:location, $routeParams:routeParams});
+    ctrl = controller(ApproveRnrController, {$scope:scope, requisition:requisition, programRnrColumnList:programRnrColumnList, $location:location, $routeParams:routeParams});
   }));
 
   it('should set rnr in scope', function () {
-    expect(scope.requisition).toEqual(requisition);
+    expect(scope.rnr).toEqual(requisition);
   });
 
   it('should set losses and adjustment types', function () {
@@ -44,23 +44,23 @@ describe('Approve Requisition controller', function () {
   });
 
   it('should set non full supply line-items in scope', function () {
-    expect(scope.nonFullSupplyLineItems).toEqual(nonFullSupplyLineItems);
+    expect(scope.rnr.nonFullSupplyLineItems).toEqual(nonFullSupplyLineItems);
   });
 
   it('should set columns list in scope', function () {
-    expect(scope.programRnRColumnList).toEqual(programRnRColumnList);
+    expect(scope.programRnrColumnList).toEqual(programRnrColumnList);
   });
 
-  it('should set line items as  data in full supply grid', function () {
-    expect(scope.fullSupplyGrid.data).toEqual('lineItems');
+  it('should set line items as data in full supply grid', function () {
+    expect(scope.fullSupplyGrid.data).toEqual('rnr.lineItems');
   });
 
   it('should set non full supply line items as  data in non full supply grid', function () {
-    expect(scope.nonFullSupplyGrid.data).toEqual('nonFullSupplyLineItems');
+    expect(scope.nonFullSupplyGrid.data).toEqual('rnr.nonFullSupplyLineItems');
   });
 
   it('should save work in progress for rnr', function () {
-    scope.requisition = {"id":"rnrId"};
+    scope.rnr = {"id":"rnrId"};
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond({'success':"R&R saved successfully!"});
     scope.saveRnr();
     httpBackend.flush();
@@ -81,8 +81,7 @@ describe('Approve Requisition controller', function () {
     var lineItems = [
       {'quantityApproved':undefined}
     ];
-    scope.lineItems = lineItems;
-    scope.requisition = {"id":"rnrId", 'lineItems':lineItems};
+    scope.rnr = {"id":"rnrId", 'lineItems':lineItems};
     scope.approveRnr();
     expect(scope.error).toEqual("Please complete the highlighted fields on the R&R form before approving");
     lineItems = [
@@ -97,8 +96,7 @@ describe('Approve Requisition controller', function () {
     var lineItems = [
       {'quantityApproved':123}
     ];
-    scope.lineItems = lineItems;
-    scope.requisition = {"id":"rnrId", 'lineItems':lineItems};
+    scope.rnr= {"id":"rnrId", 'lineItems':lineItems};
     httpBackend.expect('PUT', '/requisitions/rnrId/approve.json').respond({'success':"R&R approved successfully!"});
 
     scope.approveRnr();

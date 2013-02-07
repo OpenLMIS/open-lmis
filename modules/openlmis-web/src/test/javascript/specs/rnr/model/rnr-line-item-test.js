@@ -773,16 +773,10 @@ describe('RnrLineItem', function () {
 
     it('should update cost when approved quantity gets filled', function () {
       spyOn(rnrLineItem, "fillPacksToShipBasedOnApprovedQuantity");
-      spyOn(rnrLineItem, "fillCost");
 
-      rnrLineItem.getTotalLineItemCost = function (param) {
-        return 50;
-      }
       rnrLineItem.updateCostWithApprovedQuantity();
 
-      expect(rnr.fullSupplyItemsSubmittedCost).toEqual(50);
       expect(rnrLineItem.fillPacksToShipBasedOnApprovedQuantity).toHaveBeenCalled();
-      expect(rnrLineItem.fillCost).toHaveBeenCalled();
     });
   });
 });

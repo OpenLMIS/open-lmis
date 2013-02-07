@@ -261,5 +261,6 @@ public class RnrLineItem {
     this.stockOutDays = item.stockOutDays;
     this.quantityRequested = item.quantityRequested;
     this.reasonForRequestedQuantity = item.reasonForRequestedQuantity;
+    this.copyApproverEditableFields(item);//todo need another method for save approval
   }
 }
