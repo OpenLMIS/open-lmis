@@ -1,7 +1,7 @@
 describe('Approve Requisition controller', function () {
 
   var scope, ctrl, httpBackend, location, routeParams, requisitionHeader, controller, requisition,
-    programRnRColumnList, lineItems, columnDefinitions, lossesAndAdjustmentsReferenceData;
+    programRnRColumnList, nonFullSupplyLineItems, lineItems, columnDefinitions, lossesAndAdjustmentsReferenceData;
 
   beforeEach(module('openlmis.services'));
 
@@ -12,7 +12,8 @@ describe('Approve Requisition controller', function () {
     httpBackend = $httpBackend;
     routeParams = {"rnr":"1", "facility":"1", "program":"1"};
     lineItems = [];
-    requisition = {'status':"AUTHORIZED", 'lineItems':lineItems};
+    nonFullSupplyLineItems = [];
+    requisition = {'status':"AUTHORIZED", 'lineItems':lineItems, 'nonFullSupplyLineItems' : nonFullSupplyLineItems};
     programRnRColumnList = [
       {'name':'ProductCode', 'label':'Product Code'},
       {'name':'quantityApproved', 'label':'quantity approved'},
@@ -42,12 +43,20 @@ describe('Approve Requisition controller', function () {
     expect(scope.lineItems).toEqual(lineItems);
   });
 
+  it('should set non full supply line-items in scope', function () {
+    expect(scope.nonFullSupplyLineItems).toEqual(nonFullSupplyLineItems);
+  });
+
   it('should set columns list in scope', function () {
     expect(scope.programRnRColumnList).toEqual(programRnRColumnList);
   });
 
-  it('should set line items as  data in grid options', function () {
-    expect(scope.gridOptions.data).toEqual('lineItems');
+  it('should set line items as  data in full supply grid', function () {
+    expect(scope.fullSupplyGrid.data).toEqual('lineItems');
+  });
+
+  it('should set non full supply line items as  data in non full supply grid', function () {
+    expect(scope.nonFullSupplyGrid.data).toEqual('nonFullSupplyLineItems');
   });
 
   it('should save work in progress for rnr', function () {
