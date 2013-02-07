@@ -19,16 +19,12 @@ import static org.openlmis.core.service.FacilityService.SUPPORTED_PROGRAMS_INVAL
 public class ProgramSupported implements Importable {
 
   private Integer facilityId;
-  private Integer programId;
 
-//  @ImportField(mandatory = true, name = "Program Code")
+  @ImportField(mandatory = true, name = "Program Code", nested="code")
   private Program program;
 
   @ImportField(mandatory = true, name = "Facility Code")
   private String facilityCode;
-
-  @ImportField(mandatory = true, name = "Program Code")
-  private String programCode;
 
   @ImportField(mandatory = true, name = "Program Is Active", type = "boolean")
   private Boolean active = false;
@@ -39,9 +35,9 @@ public class ProgramSupported implements Importable {
   private String modifiedBy;
   private Date modifiedDate;
 
-  public ProgramSupported(Integer facilityId, Integer programId, Boolean active, Date startDate, Date modifiedDate, String modifiedBy) {
+  public ProgramSupported(Integer facilityId, Program program, Boolean active, Date startDate, Date modifiedDate, String modifiedBy) {
     this.facilityId = facilityId;
-    this.programId = programId;
+    this.program = program;
     this.active = active;
     this.startDate = startDate;
     this.modifiedBy = modifiedBy;

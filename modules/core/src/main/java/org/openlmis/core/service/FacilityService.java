@@ -64,7 +64,7 @@ public class FacilityService {
     programSupported.isValid();
 
     programSupported.setFacilityId(facilityRepository.getIdForCode(programSupported.getFacilityCode()));
-    programSupported.setProgramId(programRepository.getIdByCode(programSupported.getProgramCode()));
+    programSupported.setProgram(new Program(programRepository.getIdByCode(programSupported.getProgram().getCode())));
     programSupportedRepository.addSupportedProgram(programSupported);
   }
 

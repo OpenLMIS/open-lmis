@@ -94,7 +94,7 @@ public class FacilityServiceTest {
     facilityService.uploadSupportedProgram(programSupported);
 
     assertThat(programSupported.getFacilityId(), is(facilityId));
-    assertThat(programSupported.getProgramId(), is(programId));
+    assertThat(programSupported.getProgram().getId(), is(programId));
     assertThat(programSupported.getActive(), is(false));
     assertThat(programSupported.getStartDate(), is(nullValue()));
 
@@ -125,7 +125,7 @@ public class FacilityServiceTest {
     facilityService.uploadSupportedProgram(program);
 
     assertThat(program.getFacilityId(), is(facilityId));
-    assertThat(program.getProgramId(), is(programId));
+    assertThat(program.getProgram().getId(), is(programId));
     assertThat(program.getActive(), is(true));
     assertThat(program.getStartDate(), is(startDate));
 
@@ -234,7 +234,9 @@ public class FacilityServiceTest {
   private ProgramSupported createSupportedProgram(String facilityCode, String programCode, boolean active, Date startDate) {
     ProgramSupported programSupported = new ProgramSupported();
     programSupported.setFacilityCode(facilityCode);
-    programSupported.setProgramCode(programCode);
+    Program program = new Program();
+    program.setCode(programCode);
+    programSupported.setProgram(program);
     programSupported.setActive(active);
     programSupported.setStartDate(startDate);
     return programSupported;

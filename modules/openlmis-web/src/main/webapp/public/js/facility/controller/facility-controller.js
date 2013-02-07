@@ -129,9 +129,9 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
 
   function updateProgramsToDisplay() {
     $scope.facility.supportedPrograms = (!$scope.facility.supportedPrograms) ? [] : $scope.facility.supportedPrograms;
-    var supportedProgramIds = _.pluck($scope.facility.supportedPrograms, 'programId');
-    $scope.programsToDisplay = _.reject($scope.programs, function (program) {
-      return _.contains(supportedProgramIds, program.id)
+    var supportedProgramIds = _.pluck(_.pluck($scope.facility.supportedPrograms, 'program'),"id");
+    $scope.programsToDisplay = _.reject($scope.programs, function (supportedProgram) {
+      return _.contains(supportedProgramIds, supportedProgram.id)
     });
     $scope.programSupportedMessage = ($scope.programsToDisplay.length) ? '--Select Program Supported--' : '--No Program Left--';
   }

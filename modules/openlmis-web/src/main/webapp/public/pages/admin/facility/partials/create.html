@@ -211,38 +211,38 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="program in facility.supportedPrograms">
-          <td ng-bind="getProgramNameById(program.programId)"></td>
-          <td><input ng-model="program.active" id="" type="checkbox" value="true"
+        <tr ng-repeat="supportedProgram in facility.supportedPrograms">
+          <td ng-bind="getProgramNameById(supportedProgram.program.id)"></td>
+          <td><input ng-model="supportedProgram.active" id="" type="checkbox" value="true"
                      ng-disabled="facility.dataReportable == 'false'"/></td>
-          <td ng-init="program.editedStartDate = program.startDate">
-            <input type="text" value= "{{program.startDate | date: 'dd/MM/yy'}}" ng-model="program.editedStartDate"
+          <td ng-init="supportedProgram.editedStartDate = supportedProgram.startDate">
+            <input type="text" value= "{{supportedProgram.startDate | date: 'dd/MM/yy'}}" ng-model="supportedProgram.editedStartDate"
                      readonly ng-disabled="facility.dataReportable == 'false'"
-                     ui-date="{dateFormat:'dd/mm/yy', changeYear: true}" ng-required="program.active == true"
-                     ng-change="editStartDate(program)" />
-          <span class="field-error" ng-show="program.active && !program.startDate && showError">
+                     ui-date="{dateFormat:'dd/mm/yy', changeYear: true}" ng-required="supportedProgram.active == true"
+                     ng-change="editStartDate(supportedProgram.program)" />
+          <span class="field-error" ng-show="supportedProgram.active && !supportedProgram.startDate && showError">
                   Start date is mandatory
                 </span>
           </td>
-          <td><a class="close" id="remove{{$index}}" ng-click="removeSupportedProgram(program)">X</a></td>
+          <td><a class="close" id="remove{{$index}}" ng-click="removeSupportedProgram(supportedProgram)">X</a></td>
         </tr>
         <tr>
           <td>
-            <select id="programs-supported" ng-model="supportedProgram.programId"
+            <select id="programs-supported" ng-model="supportedProgram.program.id"
                     ng-options="i.id as i.name for i in programsToDisplay"
                     ng-disabled="facility.dataReportable == 'false'">
               <option value="" ng-bind="programSupportedMessage"></option>
             </select>
           </td>
-          <td><input type="checkbox" ng-model="supportedProgram.active" id="supported-program-active" ng-disabled="!supportedProgram.programId"/></td>
+          <td><input type="checkbox" ng-model="supportedProgram.active" id="supported-program-active" ng-disabled="!supportedProgram.program.id"/></td>
           <td><input type="text" id="supported-program-start-date" name="supportedProgram" ng-model="supportedProgram.editedStartDate" ng-change="editStartDate(supportedProgram)"
                      value= "{{supportedProgram.startDate | date: 'dd/MM/yy'}}" ui-date="{dateFormat:'dd/mm/yy', changeYear: true}"
-                     ng-disabled="!supportedProgram.programId" />
+                     ng-disabled="!supportedProgram.program.id" />
           <span class="field-error" ng-show="showDateNotEnteredError">
                   Start date is mandatory
                 </span>
           </td>
-          <td><input type="button" class="btn-primary" id="supported-program-add" value="+ Add" ng-disabled="!supportedProgram.programId" ng-click="addSupportedProgram()"></td>
+          <td><input type="button" class="btn-primary" id="supported-program-add" value="+ Add" ng-disabled="!supportedProgram.program.id" ng-click="addSupportedProgram()"></td>
         </tr>
         </tbody>
       </table>

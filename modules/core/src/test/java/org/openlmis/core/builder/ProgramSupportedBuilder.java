@@ -14,7 +14,6 @@ import static org.joda.time.DateTime.now;
 public class ProgramSupportedBuilder {
   public static Property<ProgramSupported, String> supportedFacilityCode = newProperty();
   public static Property<ProgramSupported, Integer> supportedFacilityId = newProperty();
-  public static Property<ProgramSupported, Integer> supportedProgramId = newProperty();
   public static Property<ProgramSupported, Program> supportedProgram = newProperty();
   public static Property<ProgramSupported, Boolean> isActive = newProperty();
   public static Property<ProgramSupported, Date> startDate = newProperty();
@@ -33,7 +32,6 @@ public class ProgramSupportedBuilder {
       ProgramSupported programSupported = new ProgramSupported();
       programSupported.setFacilityCode(lookup.valueOf(supportedFacilityCode, FACILITY_CODE));
       programSupported.setFacilityId(lookup.valueOf(supportedFacilityId, FACILITY_ID));
-      programSupported.setProgramId(lookup.valueOf(supportedProgramId, PROGRAM_ID));
       programSupported.setProgram(lookup.valueOf(supportedProgram, new Program(PROGRAM_ID, PROGRAM_CODE, PROGRAM_NAME, null, null)));
       programSupported.setStartDate(lookup.valueOf(startDate, START_DATE));
       programSupported.setActive(lookup.valueOf(isActive, IS_ACTIVE));

@@ -76,7 +76,9 @@ public class ProgramSupportedRepositoryTest {
   public void shouldRaiseDuplicateProgramSupportedError() throws Exception {
     ProgramSupported programSupported = new ProgramSupported();
     programSupported.setFacilityCode("facility code");
-    programSupported.setProgramCode("program code");
+    Program program = new Program();
+    program.setCode("program code");
+    programSupported.setProgram(program);
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Facility has already been mapped to the program");
@@ -124,7 +126,7 @@ public class ProgramSupportedRepositoryTest {
 
     programSupportedRepository.updateSupportedPrograms(facility, previouslySupportedProgramsForFacility);
 
-    verify(programSupportedMapper).delete(facility.getId(), 101);
+    verify(programSupportedMapper).delete(facility.getId(), 2);
     verify(programSupportedMapper).addSupportedProgram(hivProgram);
   }
 

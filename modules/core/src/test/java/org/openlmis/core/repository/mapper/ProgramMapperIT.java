@@ -68,7 +68,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     facilityMapper.insert(facility);
     Program program = make(a(defaultProgram,with(programId,1)));
     programMapper.insert(program);
-    ProgramSupported programSupported = make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()),with(supportedProgramId,program.getId()), with(supportedProgram, program)));
+    ProgramSupported programSupported = make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()), with(supportedProgram, program)));
     programSupportedMapper.addSupportedProgram(programSupported);
 
     List<Program> programs = programMapper.getActiveByFacility(facility.getId());
@@ -89,7 +89,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     facilityMapper.insert(facility);
     Program program = make(a(defaultProgram,with(programId,1)));
     programMapper.insert(program);
-    ProgramSupported programSupported = make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()),with(supportedProgramId,program.getId()),
+    ProgramSupported programSupported = make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()),
       with(supportedProgram, program)));
     programSupportedMapper.addSupportedProgram(programSupported);
     List<Program> supportedPrograms = programMapper.getByFacilityId(facility.getId());
@@ -216,7 +216,6 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     ProgramSupported defaultProgram = make(a(defaultProgramSupported,
         with(supportedFacilityId, facility.getId()),
         with(supportedProgram, program),
-        with(supportedProgramId,program.getId()),
         with(ProgramSupportedBuilder.isActive, isActive)));
     programSupportedMapper.addSupportedProgram(defaultProgram);
   }

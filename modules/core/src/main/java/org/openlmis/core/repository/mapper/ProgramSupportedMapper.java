@@ -11,12 +11,15 @@ import java.util.List;
 public interface ProgramSupportedMapper {
   @Insert("INSERT INTO programs_supported" +
     "(facilityId, programId, active, startDate, modifiedBy) VALUES (" +
-    "#{facilityId}, #{programId}, #{active}, #{startDate}, #{modifiedBy})")
+    "#{facilityId}, #{program.id}, #{active}, #{startDate}, #{modifiedBy})")
   @Options(flushCache = true)
   void addSupportedProgram(ProgramSupported programSupported);
 
   @Select("SELECT * FROM programs_supported " +
     "WHERE facilityId = #{facilityId} AND programId = #{programId} LIMIT 1")
+  @Results({
+    @Result(property = "program", javaType = Program.class, column = "programId", one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
+  })
   ProgramSupported getBy(@Param("facilityId") Integer facilityId, @Param("programId") Integer programId);
 
   @Delete("DELETE FROM programs_supported WHERE facilityId = #{facilityId} AND programId = #{programId}")

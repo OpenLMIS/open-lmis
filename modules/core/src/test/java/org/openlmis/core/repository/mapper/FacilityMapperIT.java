@@ -237,13 +237,11 @@ public class FacilityMapperIT {
 
     programSupportedMapper.addSupportedProgram(make(a(defaultProgramSupported,
       with(supportedFacilityId, facilitySupportingProgramInRG1.getId()),
-      with(supportedProgram,make(a(defaultProgram, with(programCode, "Random")))),
-      with(supportedProgramId,1))));
+      with(supportedProgram,make(a(defaultProgram, with(programCode, "Random")))))));
 
     programSupportedMapper.addSupportedProgram(make(a(defaultProgramSupported,
       with(supportedFacilityId, facilitySupportingProgramNotInAnyRG.getId()),
-      with(supportedProgram, make(a(defaultProgram, with(programCode, "Random")))),
-      with(supportedProgramId,1))));
+      with(supportedProgram, make(a(defaultProgram, with(programCode, "Random")))))));
 
     List<Facility> facilities = mapper.getFacilitiesBy(make(a(defaultProgram, with(programCode, "Random"))).getId(), "{" + rg1.getId() + "," + rg2.getId() + " }");
 

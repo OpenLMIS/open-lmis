@@ -49,14 +49,13 @@ public class ProgramSupportedMapperIT {
 
     ProgramSupported programSupported = make(a(defaultProgramSupported,
         with(supportedFacilityId, facility.getId()),
-        with(supportedProgramId,program.getId()),
         with(supportedProgram,program)));
 
     programSupportedMapper.addSupportedProgram(programSupported);
 
     ProgramSupported result = programSupportedMapper.getBy(facility.getId(), program.getId());
     assertThat(result.getFacilityId(), is(facility.getId()));
-    assertThat(result.getProgramId(), is(program.getId()));
+    assertThat(result.getProgram().getId(), is(program.getId()));
     assertThat(result.getStartDate(), is(programSupported.getStartDate()));
   }
 
@@ -70,8 +69,7 @@ public class ProgramSupportedMapperIT {
 
     ProgramSupported programSupported = make(a(defaultProgramSupported,
         with(supportedFacilityId, facility.getId()),
-        with(supportedProgram, program),
-          with(supportedProgramId,1)));
+        with(supportedProgram, program)));
     programSupportedMapper.addSupportedProgram(programSupported);
 
     programSupportedMapper.delete(facility.getId(), program.getId());
@@ -90,8 +88,7 @@ public class ProgramSupportedMapperIT {
 
     ProgramSupported programSupported = make(a(defaultProgramSupported,
       with(supportedFacilityId, facility.getId()),
-      with(supportedProgram, program),
-      with(supportedProgramId,program.getId())));
+      with(supportedProgram, program)));
     programSupportedMapper.addSupportedProgram(programSupported);
 
     List<ProgramSupported> programsSupported = programSupportedMapper.getAllByFacilityId(facility.getId());

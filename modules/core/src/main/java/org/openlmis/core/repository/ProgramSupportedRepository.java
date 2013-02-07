@@ -59,7 +59,7 @@ public class ProgramSupportedRepository {
     List<ProgramSupported> supportedPrograms = facility.getSupportedPrograms();
     for (ProgramSupported previouslySupportedProgram : previouslySupportedPrograms) {
       if (!(supportedPrograms.contains(previouslySupportedProgram))) {
-        deleteSupportedPrograms(facility.getId(), previouslySupportedProgram.getProgramId());
+        deleteSupportedPrograms(facility.getId(), previouslySupportedProgram.getProgram().getId());
       }
     }
   }
