@@ -24,7 +24,7 @@ function LoginController($scope, $http,localStorageService) {
   };
 
   $scope.goToForgotPassword = function() {
-    window.location = "forgot-password.html";
+    window.location = "/public/pages/forgot-password.html";
   }
 
   function getRights(rightList) {
