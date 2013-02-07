@@ -14,10 +14,10 @@ describe("User", function () {
 
     it('should display only available programs in add dropdown', function () {
       scope.$parent = {allSupportedPrograms:[
-        {id:1, name:'p1'},
-        {id:2, name:'p2'},
-        {id:3, name:'p3'},
-        {id:4, name:'p4'}
+        {"program":{id:1, name:'p1'}},
+        {"program":{id:2, name:'p2'}},
+        {"program":{id:3, name:'p3'}},
+        {"program":{id:4, name:'p4'}}
       ]};
 
       var existingProgramsMappedForUser = [
@@ -29,8 +29,8 @@ describe("User", function () {
       var availablePrograms = scope.availablePrograms();
 
       expect(availablePrograms).toEqual([
-        {id:1, name:'p1'},
-        {id:4, name:'p4'}
+        {"program":{id:1, name:'p1'}},
+        {"program":{id:4, name:'p4'}}
       ]);
     });
   });
