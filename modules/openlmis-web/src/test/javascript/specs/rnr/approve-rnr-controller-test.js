@@ -40,7 +40,7 @@ describe('Approve Requisition controller', function () {
 
 
   it('should set line-items in scope', function () {
-    expect(scope.lineItems).toEqual(lineItems);
+    expect(scope.rnr.lineItems).toEqual(lineItems);
   });
 
   it('should set non full supply line-items in scope', function () {
