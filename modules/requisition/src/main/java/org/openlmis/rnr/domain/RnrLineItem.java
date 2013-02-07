@@ -247,11 +247,10 @@ public class RnrLineItem {
     this.remarks = item.remarks;
   }
 
-  public void copyUserEditableFieldsForSaveSubmitOrAuthorize(RnrLineItem item) {
+  public void copyUserEditableFieldsForSubmitOrAuthorize(RnrLineItem item) {
     if (item == null) return;
     this.remarks = item.remarks;
-    if (!this.previousStockInHandAvailable)
-      this.beginningBalance = item.beginningBalance;
+    this.beginningBalance = item.beginningBalance;
     this.quantityReceived = item.quantityReceived;
     this.quantityDispensed = item.quantityDispensed;
     this.lossesAndAdjustments = item.lossesAndAdjustments;

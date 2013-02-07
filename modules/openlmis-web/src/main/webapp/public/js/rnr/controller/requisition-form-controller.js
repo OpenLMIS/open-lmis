@@ -20,8 +20,8 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
 
   ProgramRnRColumnList.get({programId:$routeParams.program}, function (data) {
     if (data.rnrColumnList && data.rnrColumnList.length > 0) {
-      $scope.programRnrColumnList = data.rnrColumnList;
-      $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name':'quantityRequested'});
+      $scope.programRnRColumnList = data.rnrColumnList;
+      $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnRColumnList, {'name':'quantityRequested'});
     } else {
       $scope.$parent.error = "Please contact Admin to define R&R template for this program";
       $location.path("/init-rnr");
@@ -142,10 +142,10 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
   };
 
   // TODO: Push this method to rnr-line-item
-  $scope.saveLossesAndAdjustmentsForRnRLineItem = function (rnrLineItem ) {
+  $scope.saveLossesAndAdjustmentsForRnRLineItem = function (rnrLineItem, rnr, programRnrColumnList) {
     if (!isValidLossesAndAdjustments(rnrLineItem)) return;
 
-    rnrLineItem.reEvaluateTotalLossesAndAdjustments($scope.rnr, $scope.programRnrColumnList);
+    rnrLineItem.reEvaluateTotalLossesAndAdjustments(rnr, programRnrColumnList);
     $scope.lossesAndAdjustmentsModal[rnrLineItem.id] = false;
   };
 
@@ -160,15 +160,15 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
 
 
   // TODO: Push this method to rnr-line-item
-  $scope.removeLossAndAdjustment = function (lineItem, lossAndAdjustmentToDelete) {
-    lineItem.removeLossAndAdjustment(lossAndAdjustmentToDelete, $scope.rnr, $scope.programRnrColumnList);
+  $scope.removeLossAndAdjustment = function (lineItem, lossAndAdjustmentToDelete, rnr, programRnrColumnList) {
+    lineItem.removeLossAndAdjustment(lossAndAdjustmentToDelete, rnr, programRnrColumnList);
     updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem);
     $scope.resetModalError();
   };
 
   // TODO: Push this method to rnr-line-item
-  $scope.addLossAndAdjustment = function (lineItem, newLossAndAdjustment) {
-    lineItem.addLossAndAdjustment(newLossAndAdjustment, $scope.rnr, $scope.programRnrColumnList);
+  $scope.addLossAndAdjustment = function (lineItem, newLossAndAdjustment, rnr, programRnrColumnList) {
+    lineItem.addLossAndAdjustment(newLossAndAdjustment, rnr, programRnrColumnList);
     updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem);
   };
 
@@ -176,7 +176,7 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
   function formulaValid() {
     var valid = true;
     $($scope.rnrLineItems).each(function (index, lineItem) {
-      if (lineItem.arithmeticallyInvalid($scope.programRnrColumnList) || lineItem.stockInHand < 0 || lineItem.quantityDispensed < 0) {
+      if (lineItem.arithmeticallyInvalid($scope.programRnRColumnList) || lineItem.stockInHand < 0 || lineItem.quantityDispensed < 0) {
         valid = false;
         return false;
       }
@@ -198,16 +198,16 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
     return true;
   }
 
-  $scope.getCellErrorClass = function (rnrLineItem) {
-    return rnrLineItem.getErrorMessage($scope.programRnrColumnList) ? 'cell-error-highlight' : '';
+  $scope.getCellErrorClass = function (rnrLineItem, programRnRColumnList) {
+    return rnrLineItem.getErrorMessage(programRnRColumnList) ? 'cell-error-highlight' : '';
   };
 
-  $scope.getRowErrorClass = function (rnrLineItem) {
-    return $scope.getCellErrorClass(rnrLineItem) ? 'row-error-highlight' : '';
+  $scope.getRowErrorClass = function (rnrLineItem, programRnRColumnList) {
+    return $scope.getCellErrorClass(rnrLineItem, programRnRColumnList) ? 'row-error-highlight' : '';
   };
 
   $scope.labelForRnrColumn = function (columnName) {
-    if ($scope.programRnrColumnList) return _.findWhere($scope.programRnrColumnList, {'name':columnName}).label + ":";
+    if ($scope.programRnRColumnList) return _.findWhere($scope.programRnRColumnList, {'name':columnName}).label + ":";
   };
 
   $scope.addNonFullSupplyLineItem = function () {

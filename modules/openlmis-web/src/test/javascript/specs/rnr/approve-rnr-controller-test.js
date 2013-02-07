@@ -1,7 +1,7 @@
 describe('Approve Requisition controller', function () {
 
   var scope, ctrl, httpBackend, location, routeParams, requisitionHeader, controller, requisition,
-    programRnrColumnList, lineItems, columnDefinitions, lossesAndAdjustmentsReferenceData;
+    programRnRColumnList, lineItems, columnDefinitions, lossesAndAdjustmentsReferenceData;
 
   beforeEach(module('openlmis.services'));
 
@@ -13,14 +13,14 @@ describe('Approve Requisition controller', function () {
     routeParams = {"rnr":"1", "facility":"1", "program":"1"};
     lineItems = [];
     requisition = {'status':"AUTHORIZED", 'lineItems':lineItems};
-    programRnrColumnList = [
+    programRnRColumnList = [
       {'name':'ProductCode', 'label':'Product Code'},
       {'name':'quantityApproved', 'label':'quantity approved'},
       {'name':'remarks', 'label':'remarks'}
     ];
     httpBackend.expect('GET', '/requisitions/lossAndAdjustments/reference-data.json').respond({"lossAdjustmentTypes":{}});
     httpBackend.expect('GET', '/reference-data/currency.json').respond({"currency":'$'});
-    ctrl = controller(ApproveRnrController, {$scope:scope, requisition:requisition, programRnRColumnList:programRnrColumnList, $location:location, $routeParams:routeParams});
+    ctrl = controller(ApproveRnrController, {$scope:scope, requisition:requisition, programRnRColumnList:programRnRColumnList, $location:location, $routeParams:routeParams});
   }));
 
   it('should set rnr in scope', function () {
@@ -43,7 +43,7 @@ describe('Approve Requisition controller', function () {
   });
 
   it('should set columns list in scope', function () {
-    expect(scope.programRnRColumnList).toEqual(programRnrColumnList);
+    expect(scope.programRnRColumnList).toEqual(programRnRColumnList);
   });
 
   it('should set line items as  data in grid options', function () {

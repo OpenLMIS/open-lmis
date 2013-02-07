@@ -91,7 +91,7 @@ public class RnrTest {
     RnrLineItem savedLineItem = savedRnr.getLineItems().get(0);
     RnrLineItem savedLineItemSpy = spy(savedLineItem);
     savedRnr.getLineItems().set(0, savedLineItemSpy);
-    savedRnr.copyUserEditableFieldsForSaveSubmitOrAuthorize(rnr);
-    verify(savedLineItemSpy).copyUserEditableFieldsForSaveSubmitOrAuthorize(rnr.getLineItems().get(0));
+    savedRnr.copyUserEditableFieldsForSubmitOrAuthorize(rnr);
+    verify(savedLineItemSpy).copyUserEditableFieldsForSubmitOrAuthorize(rnr.getLineItems().get(0));
   }
 }
