@@ -41,7 +41,7 @@ describe('RequisitionFormController', function () {
     httpBackend.flush();
     expect([
       {"testField":"test"}
-    ]).toEqual(scope.programRnRColumnList);
+    ]).toEqual(scope.programRnrColumnList);
   });
 
   it('should save work in progress for rnr', function () {
@@ -99,7 +99,7 @@ describe('RequisitionFormController', function () {
     jQuery.extend(true, lineItem, new RnrLineItem());
     scope.rnrLineItems.push(lineItem);
     scope.rnr = {"id":1};
-    scope.programRnRColumnList = [
+    scope.programRnrColumnList = [
       {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidationRequired":true},
       {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
       {"indicator":"C", "name":"quantityDispensed", "source":{"name":"CALCULATED"}},
@@ -205,9 +205,7 @@ describe('RequisitionFormController', function () {
     var lineItem = { "id":"1", "beginningBalance":1, lossesAndAdjustments:[
       {"type":{"name":"some name"}, "quantity":"4"}
     ]};
-
     var rnrLineItem = new RnrLineItem(lineItem);
-
 
     scope.rnrLineItems.push(rnrLineItem);
     spyOn(rnrLineItem, 'reEvaluateTotalLossesAndAdjustments');
@@ -218,7 +216,7 @@ describe('RequisitionFormController', function () {
     ];
 
     scope.lossesAndAdjustmentsModal[1] = true;
-    scope.saveLossesAndAdjustmentsForRnRLineItem(rnrLineItem, scope.rnr, scope.programRnrColumnList);
+    scope.saveLossesAndAdjustmentsForRnRLineItem(rnrLineItem);
 
     expect(rnrLineItem.reEvaluateTotalLossesAndAdjustments).toHaveBeenCalledWith(scope.rnr, scope.programRnrColumnList);
     expect(scope.lossesAndAdjustmentsModal[1]).toBeFalsy();
@@ -239,7 +237,7 @@ describe('RequisitionFormController', function () {
       {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}}
     ];
     scope.lossesAndAdjustmentsModal[1] = true;
-    scope.saveLossesAndAdjustmentsForRnRLineItem(rnrLineItem, scope.rnr, scope.programRnRColumnList);
+    scope.saveLossesAndAdjustmentsForRnRLineItem(rnrLineItem);
 
     expect(rnrLineItem.reEvaluateTotalLossesAndAdjustments).not.toHaveBeenCalledWith(scope.rnr, scope.programRnrColumnList);
     expect(scope.lossesAndAdjustmentsModal[1]).toBeTruthy();

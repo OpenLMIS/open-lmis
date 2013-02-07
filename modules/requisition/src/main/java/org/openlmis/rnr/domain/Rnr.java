@@ -160,10 +160,10 @@ public class Rnr {
     });
   }
 
-  public void copyUserEditableFieldsForSubmitOrAuthorize(Rnr rnr) {
+  public void copyUserEditableFieldsForSaveSubmitOrAuthorize(Rnr rnr) {
     for (RnrLineItem thisLineItem : this.lineItems) {
       RnrLineItem otherLineItem = findCorrespondingLineItem(rnr.lineItems, thisLineItem);
-      thisLineItem.copyUserEditableFieldsForSubmitOrAuthorize(otherLineItem);
+      thisLineItem.copyUserEditableFieldsForSaveSubmitOrAuthorize(otherLineItem);
     }
   }
 

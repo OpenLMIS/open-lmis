@@ -9,6 +9,7 @@ import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -401,7 +402,7 @@ public class RnrLineItemTest {
     List<LossesAndAdjustments> lossesAndAdjustments = new ArrayList<>();
     editedLineItem.setLossesAndAdjustments(lossesAndAdjustments);
 
-    lineItem.copyUserEditableFieldsForSubmitOrAuthorize(editedLineItem);
+    lineItem.copyUserEditableFieldsForSaveSubmitOrAuthorize(editedLineItem);
 
     assertThat(lineItem.getBeginningBalance(), is(12));
     assertThat(lineItem.getStockInHand(), is(1946));
@@ -415,5 +416,15 @@ public class RnrLineItemTest {
     assertThat(lineItem.getReasonForRequestedQuantity(), is("Reason"));
   }
 
+  @Test
+    public void shouldNotCopyBeginningBalanceWhenPreviousStockInHandIsAvailable() throws Exception {
+      RnrLineItem editedLineItem = make(a(defaultRnrLineItem));
+      editedLineItem.setBeginningBalance(44);
+      lineItem.setPreviousStockInHandAvailable(true);
+
+      lineItem.copyUserEditableFieldsForSaveSubmitOrAuthorize(editedLineItem);
+
+      assertThat(lineItem.getBeginningBalance(), is(RnrLineItemBuilder.BEGINNING_BALANCE));
+    }
 
 }
