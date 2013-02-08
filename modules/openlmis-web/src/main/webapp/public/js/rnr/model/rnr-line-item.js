@@ -268,6 +268,9 @@ var RnrLineItem = function (lineItem, rnr, programRnrColumnList) {
     this.previousNormalizedConsumptions = [];
 
   if (this.lossesAndAdjustments == undefined) this.lossesAndAdjustments = [];
-  this.reEvaluateTotalLossesAndAdjustments();
-  this.fillConsumptionOrStockInHand();
+
+  if (this.rnr && this.rnr.status != 'IN_APPROVAL') {
+    this.reEvaluateTotalLossesAndAdjustments();
+    this.fillConsumptionOrStockInHand();
+  }
 };
