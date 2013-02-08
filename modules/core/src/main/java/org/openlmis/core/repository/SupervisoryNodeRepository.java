@@ -74,4 +74,8 @@ public class SupervisoryNodeRepository {
   public SupervisoryNode getParent(Integer id) {
     return supervisoryNodeMapper.getParent(id);
   }
+
+  public List<SupervisoryNode> getAll() {
+    return supervisoryNodeMapper.getAll();
+  }
 }

@@ -60,4 +60,7 @@ public interface SupervisoryNodeMapper {
       @Result(property = "facility.id", column = "facilityId")
   })
   SupervisoryNode getParent(Integer id);
+
+  @Select("SELECT * FROM supervisory_nodes")
+  List<SupervisoryNode> getAll();
 }

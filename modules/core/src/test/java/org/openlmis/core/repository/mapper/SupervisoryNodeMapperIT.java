@@ -152,6 +152,15 @@ public class SupervisoryNodeMapperIT {
     assertThat(parent, is(parentNode));
   }
 
+  @Test
+  public void shouldGetAllSupervisoryNodes() throws Exception {
+    supervisoryNodeMapper.insert(supervisoryNode);
+    List<SupervisoryNode> fetchedSupervisoryNodes = supervisoryNodeMapper.getAll();
+
+    assertThat(fetchedSupervisoryNodes.size(), is(1));
+    assertThat(fetchedSupervisoryNodes.get(0).getCode(), is("N1"));
+  }
+
   private SupervisoryNode insertSupervisoryNode(SupervisoryNode supervisoryNode) {
     supervisoryNodeMapper.insert(supervisoryNode);
     return supervisoryNode;

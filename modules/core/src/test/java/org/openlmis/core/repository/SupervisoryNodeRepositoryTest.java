@@ -192,4 +192,15 @@ public class SupervisoryNodeRepositoryTest {
     verify(supervisoryNodeMapper).getParent(1);
     assertThat(actual, is(expected));
   }
+
+  @Test
+  public void shouldGetAllSupervisoryNodes() throws Exception {
+    List<SupervisoryNode> expected = new ArrayList<>();
+    when(supervisoryNodeMapper.getAll()).thenReturn(expected);
+
+    List<SupervisoryNode> actual = repository.getAll();
+
+    verify(supervisoryNodeMapper).getAll();
+    assertThat(actual, is(expected));
+  }
 }

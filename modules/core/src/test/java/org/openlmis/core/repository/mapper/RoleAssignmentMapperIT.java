@@ -82,7 +82,7 @@ public class RoleAssignmentMapperIT {
         mapper.getRoleAssignmentsWithGivenRightForAUser(CREATE_REQUISITION, user.getId());
 
     assertEquals(1, roleAssignments.size());
-    RoleAssignment expectedRoleAssignment = new RoleAssignment(user.getId(), r1.getId(), program1.getId(), supervisoryNode);
+    RoleAssignment expectedRoleAssignment = new RoleAssignment(user.getId(),r1.getId() , program1.getId(), supervisoryNode);
     assertThat(roleAssignments.get(0), is(expectedRoleAssignment));
   }
 

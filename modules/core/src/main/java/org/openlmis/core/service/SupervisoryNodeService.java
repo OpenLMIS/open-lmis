@@ -38,18 +38,17 @@ public class SupervisoryNodeService {
 
   public User getApproverFor(Facility facility, Program program) {
     SupervisoryNode supervisoryNode = supervisoryNodeRepository.getFor(facility, program);
-    if(supervisoryNode == null ) return  null;
+    if (supervisoryNode == null) return null;
 
     List<User> users;
     while ((users = userRepository.getUsersWithRightInNodeForProgram(program, supervisoryNode, APPROVE_REQUISITION)).size() == 0) {
       Integer supervisoryNodeId = supervisoryNodeRepository.getSupervisoryNodeParentId(supervisoryNode.getId());
-      if(supervisoryNodeId == null) return null;
-      supervisoryNode= new SupervisoryNode(supervisoryNodeId);
+      if (supervisoryNodeId == null) return null;
+      supervisoryNode = new SupervisoryNode(supervisoryNodeId);
     }
 
     return users.get(0);
   }
-
 
 
   public SupervisoryNode getParent(Integer id) {
@@ -58,7 +57,11 @@ public class SupervisoryNodeService {
 
   public User getApproverForGivenSupervisoryNodeAndProgram(SupervisoryNode supervisoryNode, Program program) {
     List<User> users = userRepository.getUsersWithRightInNodeForProgram(program, supervisoryNode, APPROVE_REQUISITION);
-    if(users.size() ==0 ) return null;
+    if (users.size() == 0) return null;
     return users.get(0);
+  }
+
+  public List<SupervisoryNode> getAll() {
+    return supervisoryNodeRepository.getAll();
   }
 }

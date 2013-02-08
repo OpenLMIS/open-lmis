@@ -173,4 +173,15 @@ public class SupervisoryNodeServiceTest {
     assertThat(actual, is(nullValue()));
 
   }
+
+  @Test
+  public void shouldGetAllSupervisoryNodes() throws Exception {
+    List<SupervisoryNode> expected = new ArrayList<>();
+    when(supervisoryNodeRepository.getAll()).thenReturn(expected);
+
+    List<SupervisoryNode> actual = supervisoryNodeService.getAll();
+
+    verify(supervisoryNodeRepository).getAll();
+    assertThat(actual, is(expected));
+  }
 }
