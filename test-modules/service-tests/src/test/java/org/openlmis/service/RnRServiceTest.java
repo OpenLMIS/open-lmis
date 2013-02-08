@@ -28,65 +28,122 @@ public class RnRServiceTest extends TestCaseHelper {
 
             DBWrapper dbWrapper = new DBWrapper();
             dbWrapper.insertFacilities("F10", "F11");
+            dbWrapper.insertUser("200", "User123", "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie", "F10", "manjyots@thoughtworks.com");
+            dbWrapper.insertSupervisoryNode("F10", "N1", "null");
+            dbWrapper.insertSupervisoryNodeSecond("F11", "N2", "N1");
             dbWrapper.insertProducts("P10", "P11");
             dbWrapper.insertProgramProducts("P10", "P11", "HIV");
             dbWrapper.insertFacilityApprovedProducts("P10", "P11", "HIV", "Lvl3 Hospital");
 
+
+            dbWrapper.insertRequisitionGroups("RG1","RG2","N1","N2");
+            dbWrapper.insertRequisitionGroupMembers("F11","F10");
+
             dbWrapper.configureTemplate();
             dbWrapper.insertRoles();
             dbWrapper.insertRoleRights();
-            dbWrapper.insertUser("200", "User123", "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==", "F12", "manjyots@thoughtworks.com");
-            dbWrapper.insertSupervisoryNode("F10", "N1", "null");
-            dbWrapper.insertSupervisoryNodeSecond("F11", "N2", "N1");
+
+
             dbWrapper.insertRoleAssignment("200", "store in-charge");
             dbWrapper.insertSchedules();
             dbWrapper.insertProcessingPeriods();
-            dbWrapper.insertRequisitionGroups("RG1","RG2","N1","N2");
-            dbWrapper.insertRequisitionGroupMembers("F10","F11");
             dbWrapper.insertRequisitionGroupProgramSchedule();
 
+
+            String facilityId=dbWrapper.getFacilityID("F10");
+            String periodId=dbWrapper.getPeriodID("Period2");
+
             String BASE_URL="http://localhost:9091";
-            String INITIATE_RNR_ENDPOINT="/requisitions/1/submit.json";
 
             String INITIATE_RNR_JSON="{}";
 
-            String SUBMIT_RNR_JSON="{\"id\":1," +
-                    "\"facility\":{\"id\":1,\"code\":\"F10\",\"name\":\"Village Dispensary\"," +
-                    "\"geographicZone\":{\"id\":1,\"name\":\"Arusha\"," +
-                    "\"level\":{\"id\":null,\"name\":\"state\"}," +
-                    "\"parent\":{\"id\":null,\"name\":\"Arusha\"," +
-                    "\"level\":{\"id\":null,\"name\":\"state\"}," +
-                    "\"parent\":null}}," +
-                    "\"facilityType\":{\"id\":1,\"code\":\"warehouse\",\"name\":\"Warehouse\",\"description\":\"Central Supply Depot\"," +
-                    "\"nominalMaxMonth\":3,\"nominalEop\":0.5,\"displayOrder\":11,\"active\":true}," +
-                    "\"operatedBy\":{\"id\":2,\"code\":\"NGO\",\"text\":\"NGO\",\"displayOrder\":2}," +
-                    "\"supportedPrograms\":[]}," +
-                    "\"program\":{\"id\":1,\"code\":null,\"name\":\"HIV\",\"description\":null,\"active\":null}," +
-                    "\"period\":{\"id\":2,\"scheduleId\":null,\"name\":null,\"description\":null,\"modifiedBy\":null," +
-                    "\"startDate\":1351708200000,\"endDate\":1354300200000,\"numberOfMonths\":3,\"modifiedDate\":null}," +
-                    "\"status\":\"INITIATED\",\"fullSupplyItemsSubmittedCost\":375,\"nonFullSupplyItemsSubmittedCost\":0," +
-                    "\"lineItems\":[{\"id\":1,\"rnrId\":1,\"product\":\"antibiotic Capsule 300/200/600 mg\"," +
-                    "\"productCode\":\"P10\",\"roundToZero\":false,\"packRoundingThreshold\":1,\"packSize\":10,\"dosesPerMonth\":30," +
-                    "\"dosesPerDispensingUnit\":10,\"dispensingUnit\":\"Strip\",\"maxMonthsOfStock\":3,\"fullSupply\":true,\"totalLossesAndAdjustments\":0," +
-                    "\"previousStockInHandAvailable\":false,\"price\":\"12.50\",\"cost\":375,\"lossesAndAdjustments\":[]," +
-                    "\"beginningBalance\":\"10\",\"stockInHand\":10,\"normalizedConsumption\":101,\"amc\":101,\"maxStockQuantity\":303," +
-                    "\"calculatedOrderQuantity\":293,\"packsToShip\":30,\"quantityReceived\":\"10\",\"quantityDispensed\":\"10\"," +
-                    "\"newPatientCount\":\"10\",\"stockOutDays\":\"10\"},{\"id\":2,\"rnrId\":1,\"product\":\"antibiotic Capsule 300/200/600 mg\"," +
-                    "\"productCode\":\"P12\",\"roundToZero\":true,\"packRoundingThreshold\":1,\"packSize\":10,\"dosesPerMonth\":30," +
-                    "\"dosesPerDispensingUnit\":10,\"dispensingUnit\":\"Strip\",\"maxMonthsOfStock\":3,\"fullSupply\":true,\"totalLossesAndAdjustments\":0," +
-                    "\"previousStockInHandAvailable\":false,\"price\":\"0.00\",\"cost\":0,\"lossesAndAdjustments\":[]," +
-                    "\"beginningBalance\":\"10\",\"stockInHand\":10,\"normalizedConsumption\":101,\"amc\":101,\"maxStockQuantity\":303," +
-                    "\"calculatedOrderQuantity\":293,\"packsToShip\":30,\"quantityReceived\":\"10\",\"quantityDispensed\":\"10\",\"newPatientCount\":\"10\"," +
-                    "\"stockOutDays\":\"10\"}],\"nonFullSupplyLineItems\":[]}";
-
-
             ServiceUtils serviceUtils = new ServiceUtils();
 
-            serviceUtils.postNONJSON("j_username=User123&j_password=User123", BASE_URL+"/j_spring_security_check");
+            serviceUtils.postNONJSON("j_username=User123&j_password=Admin123", BASE_URL+"/j_spring_security_check");
 
-            serviceUtils.postJSON(INITIATE_RNR_JSON, BASE_URL + "/requisitions.json?facilityId=2&periodId=2&programId=1");
+           serviceUtils.postJSON(INITIATE_RNR_JSON, BASE_URL + "/requisitions.json?facilityId="+facilityId+"&periodId="+periodId+"&programId=1");
+
+            String requisitionId=dbWrapper.getRequisitionId();
+
+            String INITIATE_RNR_ENDPOINT="/requisitions/"+requisitionId+"/submit.json";
+
+            String SUBMIT_RNR_JSON="{\n" +
+                    "    \"id\": "+requisitionId+",\n" +
+                    "    \"lineItems\": [\n" +
+                    "        {\n" +
+                    "            \"id\": 1,\n" +
+                    "            \"rnrId\": 2,\n" +
+                    "            \"product\": \"antibiotic Capsule 300/200/600 mg\",\n" +
+                    "            \"productCode\": \"P10\",\n" +
+                    "            \"roundToZero\": false,\n" +
+                    "            \"packRoundingThreshold\": 1,\n" +
+                    "            \"packSize\": 10,\n" +
+                    "            \"dosesPerMonth\": 30,\n" +
+                    "            \"dosesPerDispensingUnit\": 10,\n" +
+                    "            \"dispensingUnit\": \"Strip\",\n" +
+                    "            \"maxMonthsOfStock\": 3,\n" +
+                    "            \"fullSupply\": true,\n" +
+                    "            \"totalLossesAndAdjustments\": 0,\n" +
+                    "            \"previousStockInHandAvailable\": false,\n" +
+                    "            \"price\": \"12.50\",\n" +
+                    "            \"previousNormalizedConsumptions\": [],\n" +
+                    "            \"lossesAndAdjustments\": [],\n" +
+                    "            \"beginningBalance\": 1,\n" +
+                    "            \"quantityReceived\": 1,\n" +
+                    "            \"quantityDispensed\": 1,\n" +
+                    "            \"stockInHand\": 1,\n" +
+                    "            \"stockOutDays\": 1,\n" +
+                    "            \"newPatientCount\": 1,\n" +
+                    "            \"normalizedConsumption\": 10,\n" +
+                    "            \"maxStockQuantity\": 30,\n" +
+                    "            \"calculatedOrderQuantity\": 29,\n" +
+                    "            \"packsToShip\": 1,\n" +
+                    "            \"cost\": \"12.50\",\n" +
+                    "            \"amc\": 10,\n" +
+                    "            \"quantityRequested\": \"1\",\n" +
+                    "            \"reasonForRequestedQuantity\": \"1\",\n" +
+                    "            \"remarks\": \"1\"\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"id\": 2,\n" +
+                    "            \"rnrId\": 2,\n" +
+                    "            \"product\": \"antibiotic Capsule 300/200/600 mg\",\n" +
+                    "            \"productCode\": \"P11\",\n" +
+                    "            \"roundToZero\": false,\n" +
+                    "            \"packRoundingThreshold\": 1,\n" +
+                    "            \"packSize\": 10,\n" +
+                    "            \"dosesPerMonth\": 30,\n" +
+                    "            \"dosesPerDispensingUnit\": 10,\n" +
+                    "            \"dispensingUnit\": \"Strip\",\n" +
+                    "            \"maxMonthsOfStock\": 3,\n" +
+                    "            \"fullSupply\": true,\n" +
+                    "            \"totalLossesAndAdjustments\": 0,\n" +
+                    "            \"previousStockInHandAvailable\": false,\n" +
+                    "            \"price\": \"0.00\",\n" +
+                    "            \"previousNormalizedConsumptions\": [],\n" +
+                    "            \"lossesAndAdjustments\": [],\n" +
+                    "            \"beginningBalance\": 1,\n" +
+                    "            \"quantityReceived\": 1,\n" +
+                    "            \"quantityDispensed\": 1,\n" +
+                    "            \"stockInHand\": 1,\n" +
+                    "            \"stockOutDays\": 1,\n" +
+                    "            \"newPatientCount\": 1,\n" +
+                    "            \"normalizedConsumption\": 10,\n" +
+                    "            \"maxStockQuantity\": 30,\n" +
+                    "            \"calculatedOrderQuantity\": 29,\n" +
+                    "            \"packsToShip\": 1,\n" +
+                    "            \"cost\": \"0.00\",\n" +
+                    "            \"amc\": 10,\n" +
+                    "            \"quantityRequested\": \"1\",\n" +
+                    "            \"reasonForRequestedQuantity\": \"1\",\n" +
+                    "            \"remarks\": \"1\"\n" +
+                    "        }\n" +
+                    "    ],\n" +
+                    "    \"nonFullSupplyLineItems\": []\n" +
+                    "}";
 
             serviceUtils.putJSON(SUBMIT_RNR_JSON, BASE_URL + INITIATE_RNR_ENDPOINT);
+
 
             serviceUtils.getJSON(BASE_URL + "//j_spring_security_logout");
 
