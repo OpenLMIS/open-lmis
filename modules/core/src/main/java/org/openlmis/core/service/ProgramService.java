@@ -47,10 +47,6 @@ public class ProgramService {
     return programRepository.getIdByCode(code);
   }
 
-  public List<Program> getActiveProgramsForUserWithRights(Integer userId, Right... rights) {
-    return programRepository.getActiveProgramsForUserWithRights(userId, rights);
-  }
-
   public Date getProgramStartDate(Integer facilityId, Integer programId) {
     return programSupportedRepository.getProgramStartDate(facilityId, programId);
   }

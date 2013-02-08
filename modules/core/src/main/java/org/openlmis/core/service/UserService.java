@@ -18,9 +18,6 @@ import java.util.UUID;
 @Service
 @NoArgsConstructor
 public class UserService {
-
-  public static final String USER_REQUEST_URL = "user.request.url";
-
   public static final String USER_EMAIL_NOT_FOUND = "user.email.not.found";
   public static final String USER_EMAIL_INCORRECT = "user.email.incorrect";
   public static final String PASSWORD_RESET_TOKEN_INVALID = "user.password.reset.token.invalid";

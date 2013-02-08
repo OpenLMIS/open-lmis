@@ -133,12 +133,4 @@ public class FacilityRepository {
   public List<Facility> searchFacilitiesByCodeOrName(String searchParam) {
     return mapper.searchFacilitiesByCodeOrName(searchParam);
   }
-
-  public void insert(Facility facility) {
-     mapper.insert(facility);
-  }
-
-  public void update(Facility facility) {
-    //To change body of created methods use File | Settings | File Templates.
-  }
 }

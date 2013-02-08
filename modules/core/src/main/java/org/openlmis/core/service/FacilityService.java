@@ -52,14 +52,6 @@ public class FacilityService {
     return facilityRepository.getAll();
   }
 
-  private void saveSupportedPrograms(Facility facility) {
-    if (facility.getId() == null) {
-      programSupportedRepository.addSupportedProgramsFor(facility);
-    } else {
-      programSupportedRepository.updateSupportedPrograms(facility, programSupportedRepository.getAllByFacilityId(facility.getId()));
-    }
-  }
-
   public void uploadSupportedProgram(ProgramSupported programSupported) {
     programSupported.isValid();
 
