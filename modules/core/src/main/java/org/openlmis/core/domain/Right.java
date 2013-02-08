@@ -20,7 +20,7 @@ public enum Right {
   UPLOADS("Admin - Uploads", "Permission to upload"),
   CREATE_REQUISITION("Requisition - Create", "Permission to create, edit, submit and recall requisitions"),
   AUTHORIZE_REQUISITION("Requisition - Authorize", "Permission to edit, authorize and recall requisitions"),
-  MANAGE_USERS("Admin - Manage Roles", "Permission to manage users(crud)"),
+  MANAGE_USERS("Admin - Manage Users", "Permission to manage users(crud)"),
   APPROVE_REQUISITION("Requisition - Approve", "Permission to approve requisitions"),
   CONVERT_TO_ORDER("Requisition - Convert to Order", "Permission to convert requisitions to order");
 

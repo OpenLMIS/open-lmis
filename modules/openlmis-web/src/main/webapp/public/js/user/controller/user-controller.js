@@ -97,6 +97,7 @@ function UserController($scope, $routeParams, Users, User, AllFacilities, Progra
     setTimeout(function () {
       angular.element("#searchFacility").focus();
     });
+    $scope.deleteFacilityModal = false;
   };
 
 

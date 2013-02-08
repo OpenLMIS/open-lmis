@@ -116,7 +116,7 @@
       </div>
 
       <div class="form-group">
-        <h3>My facility</h3>
+        <h3>User facility</h3>
         <div class="form-row clearfix">
           <div class="form-cell">
             <label for="searchFacility">My facility</label>
@@ -134,7 +134,7 @@
                 </div>
                 <div ng-show="facilitySelected">
                   <span ng-bind="facilitySelected.name"></span>
-                  <a class="clear-search" ng-click="clearSelectedFacility()">clear</a>
+                  <a class="clear-search" ng-click="deleteFacilityModal=true">clear</a>
                 </div>
               </div>
               <div class="form-tip">Minimum 3 characters</div>
@@ -156,6 +156,18 @@
         <div class="toolbar-success" id="saveSuccessMsgDiv" ng-model="message" ng-show="message">{{message}}</div>
         <div class="toolbar-error" id="saveErrorMsgDiv" ng-model="error" ng-show="error">{{error}}</div>
       </div>
+
+      <div tabindex="-1" id="deleteFacilityModal" class="fade ng-pristine ng-valid modal hide" ui-modal="" ng-model="deleteFacilityModal">
+        <div class="modal-header"><h2>Delete facility</h2></div>
+        <div class="modal-body">
+          <p>All programs associated with this facility will be deleted.</p>
+        </div>
+        <div class="modal-footer">
+          <a href="" class="btn btn-primary" ng-click="clearSelectedFacility()">Ok</a>
+          <a href="" class="btn" ng-click="deleteFacilityModal=false">Cancel</a>
+        </div>
+      </div>
+
     </div>
   </form>
 </div>

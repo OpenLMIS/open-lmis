@@ -1,17 +1,29 @@
 function UserRoleAssignmentController($scope) {
 
+
   $scope.deleteCurrentRow = function (rowNum) {
-    $scope.user.roleAssignments.splice(rowNum, 1);
+    $scope.deleteRolesModal = true;
+    $scope.rowNum = rowNum;
   };
+
+  $scope.deleteRow= function(){
+    $scope.user.roleAssignments.splice($scope.rowNum, 1);
+    $scope.deleteRolesModal = false;
+    $scope.rowNum = undefined;
+  }
 
   $scope.availablePrograms = function () {
     var assignedProgramIds = _.map($scope.user.roleAssignments, function (roleAssignment) {
       return roleAssignment.programId;
     });
 
-    return _.reject($scope.$parent.allSupportedPrograms, function (supportedProgram) {
+    var programsToDisplay = _.reject($scope.$parent.allSupportedPrograms, function (supportedProgram) {
       return _.contains(assignedProgramIds, supportedProgram.program.id);
     });
+
+    $scope.selectedProgramMessage = (programsToDisplay.length) ? '--Select Program--' : '--No Program Left--';
+
+    return programsToDisplay;
   };
 
   $scope.showRoleAssignmentOptions = function () {
