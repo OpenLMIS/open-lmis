@@ -3,9 +3,7 @@
   <h2>Roles
     <a ng-href="#/create" class="pull-right btn btn-primary">Create New</a>
   </h2>
-  <div class="alert alert-success" id="saveSuccessMsgDiv" ng-model="message" ng-show="message">
-    {{message}}
-  </div>
+  <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
   <table class="table table-striped table-bordered">
     <thead>
     <tr class="gradient-header">
