@@ -76,7 +76,7 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnrColum
 
   $scope.totalCost = function () {
     if (!$scope.rnr) return;
-    return parseFloat(parseFloat($scope.rnr.fullSupplyItemsSubmittedCost) + parseFloat($scope.rnr.nonFullSupplyItemsSubmittedCost));
+    return parseFloat(parseFloat($scope.rnr.fullSupplyItemsSubmittedCost) + parseFloat($scope.rnr.nonFullSupplyItemsSubmittedCost)).toFixed(2);
   };
 
   $scope.fullSupplyGrid = { data:'rnr.lineItems',
