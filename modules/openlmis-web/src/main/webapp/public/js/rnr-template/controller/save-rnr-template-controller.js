@@ -12,14 +12,14 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, messageService,$rout
   $scope.createProgramRnrTemplate = function () {
     setRnRTemplateValidateFlag();
     $http.post('/program/' + $routeParams.programId + '/rnr-template.json', $scope.rnrColumns).success(function (data) {
-      $scope.message = "Template saved successfully!";
+      $scope.message = messageService.get("rnr.template.saved.successfully");
       $scope.error = "";
       $scope.errorMap = undefined;
     }).error(function (data) {
         if (data != null) {
           $scope.errorMap = data;
         }
-        updateErrorMessage("Save Failed!");
+        updateErrorMessage(messageService.get("rnr.template.save.failed"));
       });
   };
 
