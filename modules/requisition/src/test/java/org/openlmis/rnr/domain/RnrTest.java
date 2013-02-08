@@ -89,11 +89,13 @@ public class RnrTest {
   @Test
   public void shouldCopyUserEditableFields() throws Exception {
     Rnr rnr = make(a(defaultRnr));
-    List<RnrLineItem> nonFullSupplyLineItems = mock(ArrayList.class);
+    List<RnrLineItem> nonFullSupplyLineItems = new ArrayList<>();
+    nonFullSupplyLineItems.add(new RnrLineItem());
 
     rnr.setNonFullSupplyLineItems(nonFullSupplyLineItems);
     rnr.setModifiedBy(1);
     Rnr savedRnr = make(a(defaultRnr));
+    savedRnr.setModifiedBy(1);
     RnrLineItem savedLineItem = savedRnr.getLineItems().get(0);
     RnrLineItem savedLineItemSpy = spy(savedLineItem);
     savedRnr.getLineItems().set(0, savedLineItemSpy);
@@ -102,5 +104,6 @@ public class RnrTest {
     assertThat(savedRnr.getModifiedBy(), is(1));
 
     assertThat(savedRnr.getNonFullSupplyLineItems(), is(nonFullSupplyLineItems));
+    assertThat(savedRnr.getNonFullSupplyLineItems().get(0).getModifiedBy(), is(rnr.getModifiedBy()));
   }
 }

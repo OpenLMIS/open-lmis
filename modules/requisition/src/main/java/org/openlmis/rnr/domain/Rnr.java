@@ -182,8 +182,12 @@ public class Rnr {
     for (RnrLineItem thisLineItem : lineItems) {
       RnrLineItem otherLineItem = rnr.findCorrespondingLineItem(thisLineItem);
       thisLineItem.copyUserEditableFieldsForSaveSubmitOrAuthorize(otherLineItem);
+      thisLineItem.setModifiedBy(rnr.getModifiedBy());
     }
     this.nonFullSupplyLineItems = rnr.nonFullSupplyLineItems;
+    for(RnrLineItem thisLineItem : this.nonFullSupplyLineItems){
+      thisLineItem.setModifiedBy(rnr.getModifiedBy());
+    }
   }
 
   public void prepareForSubmit() {
