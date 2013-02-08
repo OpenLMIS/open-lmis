@@ -28,61 +28,61 @@ import static org.junit.Assert.assertThat;
 @TransactionConfiguration(defaultRollback = true)
 public class ProductMapperIT {
 
-    public static final String PRODUCT_DOSAGE_UNIT_MG = "mg";
-    private static final String PRODUCT_FORM_TABLET = "Tablet";
+  public static final String PRODUCT_DOSAGE_UNIT_MG = "mg";
+  private static final String PRODUCT_FORM_TABLET = "Tablet";
 
-    @Rule
-    public ExpectedException expectedEx = ExpectedException.none();
-    @Autowired
-    ProgramProductMapper programProductMapper;
-    @Autowired
-    FacilityMapper facilityMapper;
-    @Autowired
-    ProgramSupportedMapper programSupportedMapper;
+  @Rule
+  public ExpectedException expectedEx = ExpectedException.none();
+  @Autowired
+  ProgramProductMapper programProductMapper;
+  @Autowired
+  FacilityMapper facilityMapper;
+  @Autowired
+  ProgramSupportedMapper programSupportedMapper;
 
-    @Autowired
-    ProductMapper productMapper;
+  @Autowired
+  ProductMapper productMapper;
 
-    @Test
-    public void shouldNotSaveProductWithoutMandatoryFields() throws Exception {
-        expectedEx.expect(DataIntegrityViolationException.class);
-        expectedEx.expectMessage("null value in column \"primaryname\" violates not-null constraint");
-        Product product = new Product();
-        product.setCode("ABCD123");
-        int status = productMapper.insert(product);
-        assertEquals(0, status);
-    }
+  @Test
+  public void shouldNotSaveProductWithoutMandatoryFields() throws Exception {
+    expectedEx.expect(DataIntegrityViolationException.class);
+    expectedEx.expectMessage("null value in column \"primaryname\" violates not-null constraint");
+    Product product = new Product();
+    product.setCode("ABCD123");
+    int status = productMapper.insert(product);
+    assertEquals(0, status);
+  }
 
-    @Test
-    public void shouldReturnDosageUnitIdForCode() {
-        Integer id = productMapper.getDosageUnitIdForCode(PRODUCT_DOSAGE_UNIT_MG);
-        assertThat(id, CoreMatchers.is(1));
+  @Test
+  public void shouldReturnDosageUnitIdForCode() {
+    Integer id = productMapper.getDosageUnitIdForCode(PRODUCT_DOSAGE_UNIT_MG);
+    assertThat(id, CoreMatchers.is(1));
 
-        id = productMapper.getDosageUnitIdForCode("invalid dosage unit");
-        assertThat(id, CoreMatchers.is(nullValue()));
-    }
+    id = productMapper.getDosageUnitIdForCode("invalid dosage unit");
+    assertThat(id, CoreMatchers.is(nullValue()));
+  }
 
-    @Test
-    public void shouldReturnProductFormIdForCode() {
-        Integer id = productMapper.getProductFormIdForCode(PRODUCT_FORM_TABLET);
-        assertThat(id, CoreMatchers.is(1));
+  @Test
+  public void shouldReturnProductFormIdForCode() {
+    Integer id = productMapper.getProductFormIdForCode(PRODUCT_FORM_TABLET);
+    assertThat(id, CoreMatchers.is(1));
 
-        id = productMapper.getProductFormIdForCode("invalid product form");
-        assertThat(id, CoreMatchers.is(nullValue()));
-    }
+    id = productMapper.getProductFormIdForCode("invalid product form");
+    assertThat(id, CoreMatchers.is(nullValue()));
+  }
 
-    @Test
-    public void shouldReturnNullForInvalidProductCode() {
-        String code = "invalid_code";
-        Integer productId = productMapper.getIdByCode(code);
-        assertThat(productId, is(nullValue()));
-    }
+  @Test
+  public void shouldReturnNullForInvalidProductCode() {
+    String code = "invalid_code";
+    Integer productId = productMapper.getIdByCode(code);
+    assertThat(productId, is(nullValue()));
+  }
 
-    @Test
-    public void shouldReturnProductIdForValidProductCode() {
-        Product product = make(a(ProductBuilder.defaultProduct));
-        productMapper.insert(product);
-        Integer id = productMapper.getIdByCode(product.getCode());
-        assertThat(id, is(product.getId()));
-    }
+  @Test
+  public void shouldReturnProductIdForValidProductCode() {
+    Product product = make(a(ProductBuilder.defaultProduct));
+    productMapper.insert(product);
+    Integer id = productMapper.getIdByCode(product.getCode());
+    assertThat(id, is(product.getId()));
+  }
 }

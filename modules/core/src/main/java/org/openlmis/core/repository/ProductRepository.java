@@ -39,10 +39,10 @@ public class ProductRepository {
     }
   }
 
-  public Integer getIdByCode(String code){
-    Integer productCode =  mapper.getIdByCode(code);
+  public Integer getIdByCode(String code) {
+    Integer productCode = mapper.getIdByCode(code);
 
-    if(productCode == null)
+    if (productCode == null)
       throw new DataException("product.code.invalid");
 
     return productCode;
@@ -50,7 +50,7 @@ public class ProductRepository {
 
   private void validateAndSetProductForm(Product product) {
     ProductForm form = product.getForm();
-    if(form == null) return;
+    if (form == null) return;
 
     String productFormCode = form.getCode();
     if (productFormCode == null || productFormCode.isEmpty()) return;

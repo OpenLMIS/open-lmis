@@ -1,10 +1,7 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.Right;
-import org.openlmis.core.domain.SupervisoryNode;
-import org.openlmis.core.domain.User;
+import org.openlmis.core.domain.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -59,4 +56,5 @@ public interface UserMapper {
 
   @Update("UPDATE users SET password = #{password} WHERE id = #{userId}")
   void updateUserPassword(@Param(value = "userId")Integer userId, @Param(value = "password") String password);
+
 }

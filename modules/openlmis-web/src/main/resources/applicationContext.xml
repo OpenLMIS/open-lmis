@@ -180,6 +180,15 @@
                         <property name="recordHandler" ref="programProductPricePersistenceHandler"/>
                     </bean>
                 </entry>
+                <entry key="productCategory">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Product Category"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.ProductCategory</value>
+                        </property>
+                        <property name="recordHandler" ref="productCategoryPersistenceHandler"/>
+                    </bean>
+                </entry>
 
             </map>
         </constructor-arg>
