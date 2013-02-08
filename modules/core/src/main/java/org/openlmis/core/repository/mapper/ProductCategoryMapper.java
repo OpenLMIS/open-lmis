@@ -24,4 +24,8 @@ public interface ProductCategoryMapper {
 
   @Update("UPDATE product_categories SET name = #{name}, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT where id = #{id}")
   public void update(ProductCategory category);
+
+
+  @Select("SELECT id FROM product_categories WHERE code = #{code}")
+  public Integer getProductCategoryIdByCode(String categoryCode);
 }

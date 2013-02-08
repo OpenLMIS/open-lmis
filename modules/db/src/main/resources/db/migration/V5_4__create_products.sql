@@ -18,6 +18,7 @@ CREATE TABLE products (
   strength VARCHAR(14),
   formId INTEGER REFERENCES product_forms(id),
   dosageUnitId INTEGER REFERENCES dosage_units(id),
+  categoryId INTEGER REFERENCES product_categories(id),
   dispensingUnit VARCHAR(20) NOT NULL,
   dosesPerDispensingUnit SMALLINT NOT NULL,
   packSize SMALLINT NOT NULL,

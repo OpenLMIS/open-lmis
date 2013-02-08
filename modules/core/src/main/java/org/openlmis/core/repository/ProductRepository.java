@@ -3,6 +3,7 @@ package org.openlmis.core.repository;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.DosageUnit;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.core.domain.ProductForm;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProductMapper;

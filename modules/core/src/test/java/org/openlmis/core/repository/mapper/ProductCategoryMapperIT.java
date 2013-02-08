@@ -65,6 +65,18 @@ public class ProductCategoryMapperIT {
     assertThat(returnedProductCategory.getModifiedBy(), is(productCategory.getModifiedBy()));
   }
 
+  @Test
+  public void shouldReturnProductCategoryIdByCode() {
+    ProductCategory productCategory = new ProductCategory();
+    productCategory.setCode("category code");
+    productCategory.setName("category name");
+    productCategoryMapper.insert(productCategory);
+
+    Integer categoryId = productCategoryMapper.getProductCategoryIdByCode(productCategory.getCode());
+
+    assertThat(categoryId, is(productCategory.getId()));
+  }
+
 }
 
 

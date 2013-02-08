@@ -127,14 +127,16 @@ public class Rnr {
   }
 
   public void copyApproverEditableFields(Rnr rnr) {
-    this.modifiedBy = rnr.modifiedBy;
+    this.modifiedBy = rnr.getModifiedBy();
     for (RnrLineItem thisLineItem : this.lineItems) {
       RnrLineItem otherLineItem = rnr.findCorrespondingLineItem(thisLineItem);
       thisLineItem.copyApproverEditableFields(otherLineItem);
+      thisLineItem.setModifiedBy(rnr.getModifiedBy());
     }
     for (RnrLineItem thisLineItem : this.nonFullSupplyLineItems) {
       RnrLineItem otherLineItem = rnr.findCorrespondingLineItem(thisLineItem);
       thisLineItem.copyApproverEditableFields(otherLineItem);
+      thisLineItem.setModifiedBy(rnr.getModifiedBy());
     }
   }
 

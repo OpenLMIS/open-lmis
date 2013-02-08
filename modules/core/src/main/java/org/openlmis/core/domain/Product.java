@@ -15,150 +15,154 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonSerialize(include = NON_EMPTY)
 public class Product implements Importable {
 
-    private Integer id;
+  private Integer id;
 
-    @ImportField(mandatory = true, name = "Product Code")
-    private String code;
+  @ImportField(mandatory = true, name = "Product Code")
+  private String code;
 
-    @ImportField(name = "Alternate Item Code")
-    private String alternateItemCode;
+  @ImportField(name = "Alternate Item Code")
+  private String alternateItemCode;
 
-    @ImportField(name = "Product Manufacturer ID")
-    private String manufacturer;
+  @ImportField(name = "Product Manufacturer ID")
+  private String manufacturer;
 
-    @ImportField(name = "Manufacturer Product Code")
-    private String manufacturerCode;
+  @ImportField(name = "Manufacturer Product Code")
+  private String manufacturerCode;
 
-    @ImportField(name = "Manufacturer Bar Code")
-    private String manufacturerBarCode;
+  @ImportField(name = "Manufacturer Bar Code")
+  private String manufacturerBarCode;
 
-    @ImportField(name = "MoH Bar Code")
-    private String mohBarCode;
+  @ImportField(name = "MoH Bar Code")
+  private String mohBarCode;
 
-    @ImportField(name = "GTIN")
-    private String gtin;
+  @ImportField(name = "GTIN")
+  private String gtin;
 
-    @ImportField(name = "Product Type")
-    private String type;
+  @ImportField(name = "Product Type")
+  private String type;
 
-    @ImportField(name = "Display Order", type = "int")
-    private Integer displayOrder;
+  @ImportField(name = "Display Order", type = "int")
+  private Integer displayOrder;
 
-    @ImportField(mandatory = true, name = "Product Primary Name")
-    private String primaryName;
+  @ImportField(mandatory = true, name = "Product Primary Name")
+  private String primaryName;
 
-    @ImportField(name = "Product Full Name")
-    private String fullName;
+  @ImportField(name = "Product Full Name")
+  private String fullName;
 
-    @ImportField(name = "Generic Name")
-    private String genericName;
+  @ImportField(name = "Generic Name")
+  private String genericName;
 
-    @ImportField(name = "Alternate Name")
-    private String alternateName;
+  @ImportField(name = "Alternate Name")
+  private String alternateName;
 
-    @ImportField(name = "Description")
-    private String description;
+  @ImportField(name = "Description")
+  private String description;
 
-    @ImportField(name = "Product Strength")
-    private String strength;
+  @ImportField(name = "Product Strength")
+  private String strength;
 
-    @ImportField(type = "String", name = "Product Form", nested = "code")
-    private ProductForm form;
+  @ImportField(type = "String", name = "Product Form", nested = "code")
+  private ProductForm form;
 
-    @ImportField(type = "String", name = "Dosage Units", nested = "code")
-    private DosageUnit dosageUnit;
+  @ImportField(mandatory = true, type = "String", name = "Product Category", nested = "code")
+  private ProductCategory category;
 
-    @ImportField(name = "Dispensing Units")
-    private String dispensingUnit;
 
-    @ImportField(type = "int", name = "Doses Per Dispensing Unit")
-    private Integer dosesPerDispensingUnit;
+  @ImportField(type = "String", name = "Dosage Units", nested = "code")
+  private DosageUnit dosageUnit;
 
-    @ImportField(type = "boolean", name = "Store Refrigerated")
-    private Boolean storeRefrigerated;
+  @ImportField(name = "Dispensing Units")
+  private String dispensingUnit;
 
-    @ImportField(type = "boolean", name = "Store Room Temperature")
-    private Boolean storeRoomTemperature;
+  @ImportField(type = "int", name = "Doses Per Dispensing Unit")
+  private Integer dosesPerDispensingUnit;
 
-    @ImportField(type = "boolean", name = "Product Is Hazardous")
-    private Boolean hazardous;
+  @ImportField(type = "boolean", name = "Store Refrigerated")
+  private Boolean storeRefrigerated;
 
-    @ImportField(type = "boolean", name = "Product Is Flammable")
-    private Boolean flammable;
+  @ImportField(type = "boolean", name = "Store Room Temperature")
+  private Boolean storeRoomTemperature;
 
-    @ImportField(type = "boolean", name = "Product Is Controlled Substance")
-    private Boolean controlledSubstance;
+  @ImportField(type = "boolean", name = "Product Is Hazardous")
+  private Boolean hazardous;
 
-    @ImportField(type = "boolean", name = "Product Is Light Sensitive")
-    private Boolean lightSensitive;
+  @ImportField(type = "boolean", name = "Product Is Flammable")
+  private Boolean flammable;
 
-    @ImportField(type = "boolean", name = "Approved By WHO")
-    private Boolean approvedByWHO;
+  @ImportField(type = "boolean", name = "Product Is Controlled Substance")
+  private Boolean controlledSubstance;
 
-    @ImportField(type = "double", name = "Contraceptive CYP")
-    private Double contraceptiveCYP;
+  @ImportField(type = "boolean", name = "Product Is Light Sensitive")
+  private Boolean lightSensitive;
 
-    @ImportField(mandatory = true, type = "int", name = "Pack Size")
-    private Integer packSize;
+  @ImportField(type = "boolean", name = "Approved By WHO")
+  private Boolean approvedByWHO;
 
-    @ImportField(type = "int", name = "Alternate Pack Size")
-    private Integer alternatePackSize;
+  @ImportField(type = "double", name = "Contraceptive CYP")
+  private Double contraceptiveCYP;
 
-    @ImportField(type = "double", name = "Pack Length")
-    private Double packLength;
+  @ImportField(mandatory = true, type = "int", name = "Pack Size")
+  private Integer packSize;
 
-    @ImportField(type = "double", name = "Pack Width")
-    private Double packWidth;
+  @ImportField(type = "int", name = "Alternate Pack Size")
+  private Integer alternatePackSize;
 
-    @ImportField(type = "double", name = "Pack Height")
-    private Double packHeight;
+  @ImportField(type = "double", name = "Pack Length")
+  private Double packLength;
 
-    @ImportField(type = "double", name = "Pack Weight")
-    private Double packWeight;
+  @ImportField(type = "double", name = "Pack Width")
+  private Double packWidth;
 
-    @ImportField(type = "int", name = "Packs Per Carton")
-    private Integer packsPerCarton;
+  @ImportField(type = "double", name = "Pack Height")
+  private Double packHeight;
 
-    @ImportField(type = "double", name = "Carton Length")
-    private Double cartonLength;
+  @ImportField(type = "double", name = "Pack Weight")
+  private Double packWeight;
 
-    @ImportField(type = "double", name = "Carton Width")
-    private Double cartonWidth;
+  @ImportField(type = "int", name = "Packs Per Carton")
+  private Integer packsPerCarton;
 
-    @ImportField(type = "double", name = "Carton Height")
-    private Double cartonHeight;
+  @ImportField(type = "double", name = "Carton Length")
+  private Double cartonLength;
 
-    @ImportField(type = "int", name = "Cartons Per Pallet")
-    private Integer cartonsPerPallet;
+  @ImportField(type = "double", name = "Carton Width")
+  private Double cartonWidth;
 
-    @ImportField(type = "int", name = "Expected Shelf Life")
-    private Integer expectedShelfLife;
+  @ImportField(type = "double", name = "Carton Height")
+  private Double cartonHeight;
 
-    @ImportField(name = "Special Storage Instructions")
-    private String specialStorageInstructions;
+  @ImportField(type = "int", name = "Cartons Per Pallet")
+  private Integer cartonsPerPallet;
 
-    @ImportField(name = "Special Transport Instructions")
-    private String specialTransportInstructions;
+  @ImportField(type = "int", name = "Expected Shelf Life")
+  private Integer expectedShelfLife;
 
-    @ImportField(mandatory = true, type = "boolean", name = "Product Is Active")
-    private Boolean active;
+  @ImportField(name = "Special Storage Instructions")
+  private String specialStorageInstructions;
 
-    @ImportField(mandatory = true, type = "boolean", name = "Product Is Full Supply")
-    private Boolean fullSupply;
+  @ImportField(name = "Special Transport Instructions")
+  private String specialTransportInstructions;
 
-    @ImportField(mandatory = true, type = "boolean", name = "Is A Tracer Product")
-    private Boolean tracer;
+  @ImportField(mandatory = true, type = "boolean", name = "Product Is Active")
+  private Boolean active;
 
-    @ImportField(mandatory = true, type = "int", name = "Pack Rounding Threshold")
-    private Integer packRoundingThreshold;
+  @ImportField(mandatory = true, type = "boolean", name = "Product Is Full Supply")
+  private Boolean fullSupply;
 
-    @ImportField(mandatory = true, type = "boolean", name = "Can Round To Zero")
-    private Boolean roundToZero;
+  @ImportField(mandatory = true, type = "boolean", name = "Is A Tracer Product")
+  private Boolean tracer;
 
-    @ImportField(type = "boolean", name = "Has Been Archived")
-    private Boolean archived;
+  @ImportField(mandatory = true, type = "int", name = "Pack Rounding Threshold")
+  private Integer packRoundingThreshold;
 
-    private Date modifiedDate;
+  @ImportField(mandatory = true, type = "boolean", name = "Can Round To Zero")
+  private Boolean roundToZero;
 
-    private String modifiedBy;
+  @ImportField(type = "boolean", name = "Has Been Archived")
+  private Boolean archived;
+
+  private Date modifiedDate;
+
+  private String modifiedBy;
 }

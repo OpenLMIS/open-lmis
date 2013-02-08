@@ -48,4 +48,8 @@ public class ProductCategoryRepository {
     }
     return false;
   }
+
+  public Integer getProductCategoryIdByCode(String categoryCode){
+    return categoryMapper.getProductCategoryIdByCode(categoryCode);
+  }
 }

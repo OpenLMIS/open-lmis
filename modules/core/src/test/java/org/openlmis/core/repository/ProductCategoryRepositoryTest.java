@@ -16,6 +16,7 @@ import org.springframework.dao.DuplicateKeyException;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
+import static org.openlmis.core.repository.ProductCategoryRepository.DUPLICATE_CATEGORY_NAME;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProductCategoryRepositoryTest {
@@ -38,7 +39,7 @@ public class ProductCategoryRepositoryTest {
     ProductCategory productCategory = new ProductCategory();
     doThrow(new DuplicateKeyException("some exception")).when(productCategoryMapper).insert(productCategory);
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("Duplicate Product Category Name found");
+    expectedException.expectMessage(DUPLICATE_CATEGORY_NAME);
 
     productCategoryRepository.save(productCategory);
 
@@ -84,5 +85,16 @@ public class ProductCategoryRepositoryTest {
     verify(productCategoryMapper).update(categoryByCode);
     assertThat(categoryByCode.getName(), is(productCategory.getName()));
     verify(productCategoryMapper, times(0)).insert(productCategory);
+  }
+
+  @Test
+  public void shouldGetCategoryIdByCode(){
+    String categoryCode = "category code";
+    Integer categoryId = 1;
+    when(productCategoryMapper.getProductCategoryIdByCode(categoryCode)).thenReturn(categoryId);
+    Integer returnedCategoryId = productCategoryRepository.getProductCategoryIdByCode(categoryCode);
+
+    verify(productCategoryMapper).getProductCategoryIdByCode(categoryCode);
+    assertThat(returnedCategoryId, is(categoryId));
   }
 }

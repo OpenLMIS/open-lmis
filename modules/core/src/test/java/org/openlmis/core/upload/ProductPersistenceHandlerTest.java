@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.repository.ProductRepository;
+import org.openlmis.core.service.ProductService;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -20,13 +21,13 @@ public class ProductPersistenceHandlerTest {
 
     @Test
     public void shouldSaveImportedProduct() throws Exception {
-        ProductRepository productRepository = mock(ProductRepository.class);
+        ProductService productService = mock(ProductService.class);
         Product product = new Product();
 
-        new ProductPersistenceHandler(productRepository).execute(product, 0, "user");
+        new ProductPersistenceHandler(productService).execute(product, 0, "user");
         assertThat(product.getModifiedBy(), is("user"));
         assertThat(product.getModifiedDate(), is(notNullValue()));
-        verify(productRepository).insert(product);
+        verify(productService).save(product);
     }
  }
 
