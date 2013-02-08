@@ -147,6 +147,7 @@ public class DeleteFacilityPage extends Page {
         deteteButtonOnAlert.click();
         testWebDriver.waitForElementToAppear(successMessageDiv);
 
+        testWebDriver.sleep(1000);
         String deleteMessageOnFacilityScreenValue=successMessageDiv.getText();
         SeleneseTestNgHelper.assertEquals(deleteMessageOnFacilityScreenValue,expectedMessageOnFacilityScreenAfterDelete);
 

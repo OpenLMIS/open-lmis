@@ -1,6 +1,7 @@
 package org.openlmis.service;
 
 
+import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.servicelayerutils.ServiceUtils;
@@ -108,10 +109,10 @@ public class RnRServiceTest extends TestCaseHelper {
                     "    \"nonFullSupplyLineItems\": []\n" +
                     "}";
 
-            serviceUtils.putJSON(SUBMIT_RNR_JSON, BASE_URL + INITIATE_RNR_ENDPOINT);
+           String rnrStatus = serviceUtils.putJSON(SUBMIT_RNR_JSON, BASE_URL + INITIATE_RNR_ENDPOINT);
 
-
-            serviceUtils.getJSON(BASE_URL + "//j_spring_security_logout");
+           SeleneseTestNgHelper.assertTrue("R&R is not submitted successfully",rnrStatus.contains("R&R submitted successfully!"));
+           serviceUtils.getJSON(BASE_URL + "//j_spring_security_logout");
 
 
             serviceUtils.getJSON(BASE_URL+"//j_spring_security_logout");
