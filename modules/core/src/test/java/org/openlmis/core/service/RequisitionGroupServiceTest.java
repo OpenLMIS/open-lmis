@@ -2,7 +2,7 @@ package org.openlmis.core.service;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.MockitoAnnotations.Mock;
+import org.mockito.Mock;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.repository.RequisitionGroupRepository;

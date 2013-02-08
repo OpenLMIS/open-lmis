@@ -2,7 +2,7 @@ package org.openlmis.core.upload;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.MockitoAnnotations.Mock;
+import org.mockito.Mock;
 import org.openlmis.core.domain.RequisitionGroupProgramSchedule;
 import org.openlmis.core.service.RequisitionGroupProgramScheduleService;
 import org.openlmis.upload.model.Field;
