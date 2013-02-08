@@ -1,4 +1,4 @@
-function ConfigureRnRTemplateController($scope, programs, $location, messageService) {
+function ConfigureRnRTemplateController($scope, programs, $location) {
 
   $scope.programs = programs;
 
@@ -7,7 +7,7 @@ function ConfigureRnRTemplateController($scope, programs, $location, messageServ
       $scope.error = "";
       $location.path('/create-rnr-template/' + $scope.$parent.program.id);
     } else {
-      $scope.error = messageService.get("rnr.template.select.program");
+      $scope.error = "Please select a program";
     }
   };
 };

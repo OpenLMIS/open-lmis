@@ -1,4 +1,4 @@
-function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Period, $location, messageService) {
+function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Period, $location) {
   $scope.newPeriod = {};
   $scope.oneDay = 1000 * 60 * 60 * 24;
   $scope.lastPeriodId = "";
@@ -8,7 +8,7 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Perio
     $scope.error = "";
     $scope.schedule = data.schedule;
   }, function (data) {
-    $scope.$parent.errorInValidSchedule = messageService.get("schedule.error.identify.schedule");
+    $scope.$parent.errorInValidSchedule = "Error Identifying Schedule";
     $location.path("/list");
   });
 
@@ -42,7 +42,7 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Perio
   $scope.createPeriod = function () {
     function validatePeriod() {
       if ($scope.calculateDays($scope.newPeriod.startDate, $scope.newPeriod.endDate) == null) {
-        $scope.error = "schedule.error.endDate.greater.startDate";
+        $scope.error = "End Date must be greater than Start Date";
         $scope.message = "";
         return false;
       }
@@ -105,7 +105,7 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Perio
           });
         } else {
           $scope.message = "";
-          $scope.error = "schedule.error.startDate.smaller.currentDate";
+          $scope.error = "Period's Start Date is smaller than Current Date";
         }
       }
     });

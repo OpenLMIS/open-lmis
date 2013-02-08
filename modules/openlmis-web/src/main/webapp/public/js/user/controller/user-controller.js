@@ -40,7 +40,7 @@ function UserController($scope, $routeParams, Users, User, AllFacilities, Progra
 
     var requiredFieldsPresent = function (user) {
       if ($scope.userForm.$error.required || invalidRoleAssignment(user)) {
-        $scope.error = "user.error.save";
+        $scope.error = "Please correct errors before saving.";
         $scope.message = "";
         $scope.showError = true;
         return false;

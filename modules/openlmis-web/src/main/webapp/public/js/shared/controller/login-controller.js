@@ -15,11 +15,11 @@ function LoginController($scope, $http,localStorageService) {
             location.reload();
           }
         } else if (data.error == "true") {
-          $scope.error = "login.error.userName.password.incorrect";
+          $scope.error = "The username or password you entered is incorrect. Please try again.";
         }
       }).
       error(function (data) {
-        $scope.error = "login.error.server";
+        $scope.error = "Server Error!!";
       });
   };
 

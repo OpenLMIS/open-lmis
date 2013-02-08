@@ -1,19 +1,19 @@
-function ForgotPasswordController($scope, ForgotPassword, messageService) {
+function ForgotPasswordController($scope, ForgotPassword) {
 
   $scope.user = {};
-  $scope.submitButtonLabel = "password.forgot.submit.button";
+  $scope.submitButtonLabel = "Submit";
   $scope.submitDisabled = false;
     $scope.sendForgotPasswordEmail = function(){
     if (!$scope.user.userName && !$scope.user.email) {
-           $scope.error="assword.forgot.enter.email.userName";
+           $scope.error="Please enter either your Email or Username";
     } else {
-      $scope.submitButtonLabel = "password.forgot.sending.email";
+      $scope.submitButtonLabel = "Sending...";
       $scope.submitDisabled = true;
       ForgotPassword.save({}, $scope.user, function () {
         window.location = "email-sent.html";
       }, function (data) {
         $scope.submitDisabled = false;
-        $scope.submitButtonLabel = "password.forgot.submit.button";
+        $scope.submitButtonLabel = "Submit";
         $scope.error = data.data.error;
       });
       }
