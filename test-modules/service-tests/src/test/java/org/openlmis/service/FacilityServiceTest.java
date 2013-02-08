@@ -25,10 +25,11 @@ public class FacilityServiceTest extends TestCaseHelper {
             String DELETE_FACILITY_ENDPOINT = "/facility/update/delete.json";
             String RESTORE_FACILITY_ENDPOINT = "/facility/update/restore.json";
 
-            String CREATE_FACILITY_JSON = "{\"dataReportable\":\"true\",\"code\":\"facilitycode\",\"gln\":\"fac\"," +
+
+            String CREATE_FACILITY_JSON="{\"supportedPrograms\":[{\"program\":{\"id\":1},\"active\":true,\"editedStartDate\":\"2013-02-07T18:30:00.000Z\"," +
+                    "\"startDate\":\"2013-02-07T18:30:00.000Z\"}],\"dataReportable\":\"true\",\"code\":\"facilitycode\",\"gln\":\"fac\"," +
                     "\"name\":\"facilityname\",\"facilityType\":{\"code\":\"lvl3_hospital\"},\"sdp\":\"true\",\"active\":\"true\"," +
-                    "\"goLiveDate\":\"2013-01-10T18:30:00.000Z\",\"supportedPrograms\":[{\"programId\":1," +
-                    "\"active\":true, \"startDate\":\"2013-02-19T18:30:00.000Z\"}],\"geographicZone\":{\"id\":1}}";
+                    "\"goLiveDate\":\"2013-02-07T18:30:00.000Z\",\"geographicZone\":{\"id\":1}}";
 
 
             DBWrapper dbWrapper = new DBWrapper();
