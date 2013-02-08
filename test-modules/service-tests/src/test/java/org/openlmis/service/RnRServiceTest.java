@@ -103,41 +103,7 @@ public class RnRServiceTest extends TestCaseHelper {
                     "            \"quantityRequested\": \"1\",\n" +
                     "            \"reasonForRequestedQuantity\": \"1\",\n" +
                     "            \"remarks\": \"1\"\n" +
-                    "        },\n" +
-                    "        {\n" +
-                    "            \"id\": 2,\n" +
-                    "            \"rnrId\": 2,\n" +
-                    "            \"product\": \"antibiotic Capsule 300/200/600 mg\",\n" +
-                    "            \"productCode\": \"P11\",\n" +
-                    "            \"roundToZero\": false,\n" +
-                    "            \"packRoundingThreshold\": 1,\n" +
-                    "            \"packSize\": 10,\n" +
-                    "            \"dosesPerMonth\": 30,\n" +
-                    "            \"dosesPerDispensingUnit\": 10,\n" +
-                    "            \"dispensingUnit\": \"Strip\",\n" +
-                    "            \"maxMonthsOfStock\": 3,\n" +
-                    "            \"fullSupply\": true,\n" +
-                    "            \"totalLossesAndAdjustments\": 0,\n" +
-                    "            \"previousStockInHandAvailable\": false,\n" +
-                    "            \"price\": \"0.00\",\n" +
-                    "            \"previousNormalizedConsumptions\": [],\n" +
-                    "            \"lossesAndAdjustments\": [],\n" +
-                    "            \"beginningBalance\": 1,\n" +
-                    "            \"quantityReceived\": 1,\n" +
-                    "            \"quantityDispensed\": 1,\n" +
-                    "            \"stockInHand\": 1,\n" +
-                    "            \"stockOutDays\": 1,\n" +
-                    "            \"newPatientCount\": 1,\n" +
-                    "            \"normalizedConsumption\": 10,\n" +
-                    "            \"maxStockQuantity\": 30,\n" +
-                    "            \"calculatedOrderQuantity\": 29,\n" +
-                    "            \"packsToShip\": 1,\n" +
-                    "            \"cost\": \"0.00\",\n" +
-                    "            \"amc\": 10,\n" +
-                    "            \"quantityRequested\": \"1\",\n" +
-                    "            \"reasonForRequestedQuantity\": \"1\",\n" +
-                    "            \"remarks\": \"1\"\n" +
-                    "        }\n" +
+                    "        }" +
                     "    ],\n" +
                     "    \"nonFullSupplyLineItems\": []\n" +
                     "}";
