@@ -24,6 +24,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
       UserFacilityList.get({}, function (data) {
         $scope.facilities = data.facilityList;
         $scope.myFacility = data.facilityList[0];
+          $scope.facilityDisplayName = $scope.myFacility.code + '-' + $scope.myFacility.name;
 
         if($scope.myFacility) {
           $scope.selectedFacilityId = $scope.myFacility.id;
