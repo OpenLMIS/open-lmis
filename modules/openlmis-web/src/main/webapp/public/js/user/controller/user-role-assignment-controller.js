@@ -26,11 +26,11 @@ function UserRoleAssignmentController($scope) {
     return programsToDisplay;
   };
 
-  $scope.showRoleAssignmentOptions = function () {
+  $scope.showHomeFacilityRoleAssignmentOptions = function () {
     return ($scope.user != null && $scope.user.facilityId != null)
   };
 
-  $scope.addRole = function () {
+  $scope.addHomeFacilityRole = function () {
     if (isPresent($scope.programSelected) && isPresent($scope.selectedRoleIds)) {
       var newRoleAssignment = {programId:$scope.programSelected, roleIds:$scope.selectedRoleIds};
       addRoleAssignment(newRoleAssignment);
@@ -78,9 +78,9 @@ function UserRoleAssignmentController($scope) {
   }
 
   $scope.getProgramName = function (programId) {
-    if (!$scope.$parent.programs) return;
+    if (!$scope.programs) return;
     var programName = null;
-    $.each($scope.$parent.programs, function (index, program) {
+    $.each($scope.programs, function (index, program) {
       if (program.id == programId) {
         programName = program.name;
         return false;
@@ -90,9 +90,9 @@ function UserRoleAssignmentController($scope) {
   };
 
   $scope.getSupervisoryNodeName = function (supervisoryNodeId) {
-    if (!$scope.$parent.supervisoryNodes) return;
+    if (!$scope.supervisoryNodes) return;
     var supervisoryNodeName = null;
-    $.each($scope.$parent.supervisoryNodes, function (index, supervisoryNode) {
+    $.each($scope.supervisoryNodes, function (index, supervisoryNode) {
       if (supervisoryNode.id == supervisoryNodeId) {
         supervisoryNodeName = supervisoryNode.name;
         return false;
