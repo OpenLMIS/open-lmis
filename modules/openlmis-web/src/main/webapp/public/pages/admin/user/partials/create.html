@@ -130,6 +130,7 @@
                     <li ng-repeat="facility in filteredFacilities">
                       <a ng-click="setSelectedFacility(facility)">{{facility.code}} - {{facility.name}}</a>
                     </li>
+                    <span ng-show="resultCount == 0">No matches found for {{query}}</span>
                   </ul>
                 </div>
                 <div ng-show="facilitySelected">
@@ -160,7 +161,7 @@
       <div tabindex="-1" id="deleteFacilityModal" class="fade ng-pristine ng-valid modal hide" ui-modal="" ng-model="deleteFacilityModal">
         <div class="modal-header"><h2>Delete facility</h2></div>
         <div class="modal-body">
-          <p>All programs associated with this facility will be deleted.</p>
+          <p>All programs and roles association for this facility will be deleted.</p>
         </div>
         <div class="modal-footer">
           <a href="" class="btn btn-primary" ng-click="clearSelectedFacility()">Ok</a>
