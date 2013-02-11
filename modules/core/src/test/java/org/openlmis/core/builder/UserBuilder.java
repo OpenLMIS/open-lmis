@@ -10,7 +10,6 @@ import static com.natpryce.makeiteasy.Property.newProperty;
 public class UserBuilder {
 
   public static final Property<User, String> userName = newProperty();
-  public static final Property<User, String> password = newProperty();
   public static final Property<User, Integer> facilityId = newProperty();
   public static final Property<User, String> firstName = newProperty();
   public static final Property<User, String> lastName = newProperty();
@@ -24,7 +23,7 @@ public class UserBuilder {
   public static final Property<User, String> supervisorUserName = newProperty();
 
   public static final String defaultUserName = "User123";
-  public static final String defaultPassword = "password";
+  public static final String defaultPassword = "not-in-use";
   public static final String defaultFirstName = "Mizengo";
   public static final String defaultLastName = "Pinda";
   public static final String defaultEmployeeId = "E001_001";
@@ -42,7 +41,6 @@ public class UserBuilder {
     public User instantiate(PropertyLookup<User> lookup) {
       User user = new User();
       user.setUserName(lookup.valueOf(userName, defaultUserName));
-      user.setPassword(lookup.valueOf(password, defaultPassword));
       user.setFacilityId(lookup.valueOf(facilityId, 9999));
       user.setFirstName(lookup.valueOf(firstName, defaultFirstName));
       user.setLastName(lookup.valueOf(lastName, defaultLastName));

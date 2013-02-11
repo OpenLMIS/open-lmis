@@ -8,7 +8,6 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.builder.UserBuilder;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
@@ -26,6 +25,7 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.*;
+import static org.openlmis.core.builder.UserBuilder.*;
 import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
 import static org.openlmis.core.repository.UserRepository.*;
 
@@ -67,8 +67,8 @@ public class UserRepositoryTest {
 
   @Test
   public void shouldThrowExceptionAndNotInsertUserIfSupervisorIdDoesNotExist() throws Exception {
-    User user = make(a(UserBuilder.defaultUser));
-    when(userMapper.get(UserBuilder.defaultSupervisorUserName)).thenReturn(null);
+    User user = make(a(defaultUser));
+    when(userMapper.get(defaultSupervisorUserName)).thenReturn(null);
     exException.expect(DataException.class);
     exException.expectMessage(SUPERVISOR_USER_NOT_FOUND);
     userRepository.create(user);
@@ -76,7 +76,7 @@ public class UserRepositoryTest {
 
   @Test
   public void shouldThrowExceptionAndNotInsertUserOnDuplicateEmployeeId() throws Exception {
-    User user = make(a(UserBuilder.defaultUser));
+    User user = make(a(defaultUser));
     when(userMapper.get(user.getSupervisor().getUserName())).thenReturn(mock(User.class));
     doThrow(new DuplicateKeyException("duplicate key value violates unique constraint \"uc_users_employeeId\"")).when(userMapper).insert(user);
 
@@ -88,7 +88,7 @@ public class UserRepositoryTest {
 
   @Test
   public void shouldThrowExceptionAndNotInsertUserOnDuplicateEmail() throws Exception {
-    User user = make(a(UserBuilder.defaultUser));
+    User user = make(a(defaultUser));
     when(userMapper.get(user.getSupervisor().getUserName())).thenReturn(mock(User.class));
     doThrow(new DuplicateKeyException("duplicate key value violates unique constraint \"uc_users_email\"")).when(userMapper).insert(user);
 
@@ -100,7 +100,7 @@ public class UserRepositoryTest {
 
   @Test
   public void shouldThrowExceptionAndNotInsertUserOnDuplicateUserName() throws Exception {
-    User user = make(a(UserBuilder.defaultUser));
+    User user = make(a(defaultUser));
     when(userMapper.get(user.getSupervisor().getUserName())).thenReturn(mock(User.class));
     doThrow(new DuplicateKeyException("duplicate key value violates unique constraint \"uc_users_userName\"")).when(userMapper).insert(user);
 
@@ -113,7 +113,7 @@ public class UserRepositoryTest {
   @Test
   public void shouldReturnUserWithValidUsername() {
     String username = "Admin";
-    User user = make(a(UserBuilder.defaultUser, with(UserBuilder.email, "John_Doe@openlmis.com")));
+    User user = make(a(defaultUser, with(email, "John_Doe@openlmis.com")));
     when(userMapper.get(username)).thenReturn(user);
 
     User returnedUser = userRepository.getByUsername(username);

@@ -9,14 +9,14 @@ import java.util.List;
 @Repository
 public interface UserMapper {
 
-  @Select(value = "SELECT userName, id FROM users WHERE LOWER(userName)=LOWER(#{userName}) AND password=#{password}")
+  @Select(value = "SELECT userName, id FROM users WHERE LOWER(userName)=LOWER(#{userName}) AND password=#{password} AND active = TRUE")
   User selectUserByUserNameAndPassword(@Param("userName") String userName, @Param("password") String password);
 
   @Insert(value = {"INSERT INTO users",
-    "(userName, password, facilityId, firstName, lastName, employeeId, jobTitle, " +
+    "(userName, facilityId, firstName, lastName, employeeId, jobTitle, " +
       "primaryNotificationMethod, officePhone, cellPhone, email, supervisorId, modifiedBy, modifiedDate) VALUES",
-    "(#{userName}, #{password}, #{facilityId},#{firstName},#{lastName},#{employeeId},#{jobTitle}," +
-      "#{primaryNotificationMethod},#{officePhone},#{cellPhone},#{email},#{supervisor.id}, #{modifiedBy}, DEFAULT)"})
+    "(#{userName}, #{facilityId}, #{firstName}, #{lastName}, #{employeeId}, #{jobTitle}," +
+      "#{primaryNotificationMethod}, #{officePhone}, #{cellPhone}, #{email}, #{supervisor.id}, #{modifiedBy}, DEFAULT)"})
   @Options(useGeneratedKeys = true)
   Integer insert(User user);
 
@@ -54,7 +54,7 @@ public interface UserMapper {
   @Delete("DELETE FROM user_password_reset_tokens WHERE userId = #{userId}")
   void deletePasswordResetTokenForUser(Integer userId);
 
-  @Update("UPDATE users SET password = #{password} WHERE id = #{userId}")
+  @Update("UPDATE users SET password = #{password}, active = TRUE WHERE id = #{userId}")
   void updateUserPassword(@Param(value = "userId")Integer userId, @Param(value = "password") String password);
 
 }

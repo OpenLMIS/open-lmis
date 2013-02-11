@@ -1,7 +1,7 @@
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
   userName VARCHAR(50) NOT NULL,
-  password VARCHAR(128) NOT NULL,
+  password VARCHAR(128) NOT NULL DEFAULT 'not-in-use',
   firstName VARCHAR(50) NOT NULL,
   lastName VARCHAR(50) NOT NULL,
   employeeId VARCHAR(50),
@@ -12,6 +12,7 @@ CREATE TABLE users (
   email VARCHAR(50) NOT NULL,
   supervisorId INTEGER references users(id),
   facilityId INT REFERENCES facilities(id),
+  active BOOLEAN DEFAULT FALSE,
   modifiedBy VARCHAR(50),
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

@@ -123,7 +123,6 @@ public class UserControllerTest {
 
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
     assertThat(response.getBody().getSuccessMsg(), is("User " + user.getFirstName() + " " + user.getLastName() + " has been successfully created, password link has been sent on registered Email address"));
-    assertThat(user.getPassword(), is(Encoder.hash("openLmis123")));
     assertThat(user.getModifiedBy(), is(USER));
   }
 
@@ -198,7 +197,7 @@ public class UserControllerTest {
 
     verify(userService).getUserIdByPasswordResetToken(validToken);
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    assertThat((Boolean)response.getBody().getData().get(TOKEN_VALID), is(true));
+    assertThat((Boolean) response.getBody().getData().get(TOKEN_VALID), is(true));
   }
 
 }

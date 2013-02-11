@@ -62,8 +62,9 @@ public class UserMapperIT {
   public void shouldGetUserByUserNameAndPassword() throws Exception {
     User someUser = make(a(defaultUser, with(facilityId, facility.getId())));
     userMapper.insert(someUser);
+    userMapper.updateUserPassword(someUser.getId(),"random");
 
-    User user = userMapper.selectUserByUserNameAndPassword(defaultUserName, someUser.getPassword());
+    User user = userMapper.selectUserByUserNameAndPassword(defaultUserName, "random");
     assertThat(user, is(notNullValue()));
     assertThat(user.getUserName(), is(defaultUserName));
     assertThat(user.getId(), is(someUser.getId()));

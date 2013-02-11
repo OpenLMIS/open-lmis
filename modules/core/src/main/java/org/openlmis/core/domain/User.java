@@ -26,10 +26,16 @@ public class User implements Importable {
   @ImportField(mandatory = true, name = "Password")
   @JsonIgnore
   private String password;
+
+  @JsonIgnore
+  private Boolean active;
+
   @ImportField(mandatory = true, name = "First Name")
   private String firstName;
+
   @ImportField(mandatory = true, name = "Last Name")
   private String lastName;
+
   @ImportField(name = "Employee Id")
   private String employeeId;
   @ImportField(name = "Job Title")

@@ -84,8 +84,6 @@ public class UserController extends BaseController {
     String modifiedBy = (String) request.getSession().getAttribute(USER);
     user.setModifiedBy(modifiedBy);
     try {
-      //TODO: remove default password
-      user.setPassword("openLmis123");
       String resetPasswordBaseLink = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/";
       userService.create(user, resetPasswordBaseLink);
     } catch (DataException e) {
