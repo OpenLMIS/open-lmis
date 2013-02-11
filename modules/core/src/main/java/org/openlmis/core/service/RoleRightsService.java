@@ -9,59 +9,50 @@ import org.openlmis.core.repository.RoleRightsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.sort;
 
 @Service
 @NoArgsConstructor
 public class RoleRightsService {
 
-    private RoleRightsRepository roleRightsRepository;
-    private RoleAssignmentRepository roleAssignmentRepository;
+  private RoleRightsRepository roleRightsRepository;
+  private RoleAssignmentRepository roleAssignmentRepository;
 
-    @Autowired
-    public RoleRightsService(RoleRightsRepository roleRightsRepository, RoleAssignmentRepository roleAssignmentRepository) {
-        this.roleRightsRepository = roleRightsRepository;
-        this.roleAssignmentRepository = roleAssignmentRepository;
-    }
+  @Autowired
+  public RoleRightsService(RoleRightsRepository roleRightsRepository, RoleAssignmentRepository roleAssignmentRepository) {
+    this.roleRightsRepository = roleRightsRepository;
+    this.roleAssignmentRepository = roleAssignmentRepository;
+  }
 
-    public List<RoleAssignment> getRoleAssignments(Right right, int userId) {
-        return roleAssignmentRepository.getRoleAssignmentsForUserWithRight(right, userId);
-    }
+  public List<RoleAssignment> getRoleAssignments(Right right, int userId) {
+    return roleAssignmentRepository.getRoleAssignmentsForUserWithRight(right, userId);
+  }
 
-    public List<Right> getRights(String username) {
-        return roleRightsRepository.getAllRightsForUser(username);
-    }
+  public List<Right> getRights(String username) {
+    return roleRightsRepository.getAllRightsForUser(username);
+  }
 
-    public List<Right> getAllRights() {
-        List<Right> rights = asList(Right.values());
-        sort(rights, new Comparator<Right>() {
-            @Override
-            public int compare(Right right1, Right right2) {
-                return right1.getRightName().compareTo(right2.getRightName());
-            }
-        });
-        return rights;
-    }
+  public List<Right> getAllRights() {
+    return asList(Right.values());
+  }
 
-    public void saveRole(Role role) {
-        role.validate();
-       roleRightsRepository.saveRole(role);
-    }
+  public void saveRole(Role role) {
+    role.validate();
+    roleRightsRepository.saveRole(role);
+  }
 
-    public List<Role> getAllRoles() {
-        return roleRightsRepository.getAllRoles();
-    }
+  public List<Role> getAllRoles() {
+    return roleRightsRepository.getAllRoles();
+  }
 
   public Role getRole(int id) {
     return roleRightsRepository.getRole(id);
   }
 
   public void updateRole(Role role) {
-       roleRightsRepository.updateRole(role);
+    roleRightsRepository.updateRole(role);
   }
 
   public List<Right> getRights(Integer userId) {

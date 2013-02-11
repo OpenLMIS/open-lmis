@@ -6,7 +6,9 @@ INSERT INTO roles
 
 INSERT INTO role_rights
   (roleId, rightName) VALUES
+  ((select id from roles where name='store in-charge'), 'VIEW_REQUISITION'),
   ((select id from roles where name='store in-charge'), 'CREATE_REQUISITION'),
+  ((select id from roles where name='medical-officer'), 'VIEW_REQUISITION'),
   ((select id from roles where name='medical-officer'), 'AUTHORIZE_REQUISITION'),
   ((select id from roles where name='store in-charge'), 'APPROVE_REQUISITION'),
   ((select id from roles where name='district pharmacist'), 'UPLOADS'),
