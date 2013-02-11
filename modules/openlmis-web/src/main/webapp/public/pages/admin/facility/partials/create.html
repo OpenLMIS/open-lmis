@@ -219,7 +219,7 @@
             <input type="text" value= "{{supportedProgram.startDate | date: 'dd/MM/yy'}}" ng-model="supportedProgram.editedStartDate"
                      readonly ng-disabled="facility.dataReportable == 'false'"
                      ui-date="{dateFormat:'dd/mm/yy', changeYear: true}" ng-required="supportedProgram.active == true"
-                     ng-change="editStartDate(supportedProgram.program)" />
+                     ng-change="editStartDate(supportedProgram)" />
           <span class="field-error" ng-show="supportedProgram.active && !supportedProgram.startDate && showError">
                   Start date is mandatory
                 </span>
