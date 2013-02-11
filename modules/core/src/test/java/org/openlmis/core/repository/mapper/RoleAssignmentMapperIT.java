@@ -82,7 +82,7 @@ public class RoleAssignmentMapperIT {
         mapper.getRoleAssignmentsWithGivenRightForAUser(CREATE_REQUISITION, user.getId());
 
     assertEquals(1, roleAssignments.size());
-    RoleAssignment expectedRoleAssignment = new RoleAssignment(user.getId(),r1.getId() , program1.getId(), supervisoryNode);
+    RoleAssignment expectedRoleAssignment = new RoleAssignment(user.getId(), r1.getId(), program1.getId(), supervisoryNode);
     assertThat(roleAssignments.get(0), is(expectedRoleAssignment));
   }
 
@@ -112,6 +112,21 @@ public class RoleAssignmentMapperIT {
       assertThat(programId.equals(1) || programId.equals(2), is(true));
     }
   }
+
+  @Test
+  public void shouldGetRoleAssignmentsForAUser() throws Exception {
+    mapper.deleteAllRoleAssignmentsForUser(1);
+    mapper.createRoleAssignment(1, 1, 1, null);
+    mapper.createRoleAssignment(1, 1, 1, null);
+    mapper.createRoleAssignment(1, null, 1, null);
+
+    List<RoleAssignment> listOfProgramIdsForTheUser = mapper.getRoleAssignmentsForUser(1);
+
+    assertThat(listOfProgramIdsForTheUser.size(), is(1));
+    assertThat(listOfProgramIdsForTheUser.get(0).getRoleIds().size(), is(2));
+
+  }
+
 
   @Test
   public void shouldDeleteRoleAssignmentsForAUser() throws Exception {

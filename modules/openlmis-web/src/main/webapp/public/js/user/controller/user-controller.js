@@ -1,13 +1,27 @@
-function UserController($scope, $routeParams, Users, User, AllFacilities, ProgramSupportedByFacility, Roles,Facility) {
+function UserController($scope, $routeParams, Users, User, AllFacilities, Roles, Facility, Programs,  SupervisoryNodes) {
   $scope.userNameInvalid = false;
   $scope.user = {};
 
   if ($routeParams.userId) {
     User.get({id:$routeParams.userId}, function (data) {
       $scope.user = data.user;
-      loadRoleAssignments();
+      loadUserFacility();
     }, {});
   }
+
+  if (utils.isNullOrUndefined($scope.allRoles)) {
+    Roles.get({}, function (data) {
+      $scope.allRoles = data.roles;
+    });
+  }
+
+  Programs.get({}, function(data) {
+    $scope.programs = data.programs;
+  });
+
+  SupervisoryNodes.get({},function(data){
+    $scope.supervisoryNodes = data.supervisoryNodes;
+  });
 
   $scope.saveUser = function () {
     var successHandler = function (response) {
@@ -84,7 +98,7 @@ function UserController($scope, $routeParams, Users, User, AllFacilities, Progra
   $scope.setSelectedFacility = function (facility) {
     $scope.user.facilityId = facility.id;
     $scope.facilitySelected = facility;
-    loadRoleAssignments();
+    loadUserFacility();
     $scope.query = null;
   };
 
@@ -101,22 +115,13 @@ function UserController($scope, $routeParams, Users, User, AllFacilities, Progra
   };
 
 
-  var loadRoleAssignments = function () {
-    if (!isNullOrUndefined($scope.user.facilityId)) {
-      if (isNullOrUndefined($scope.allSupportedPrograms)) {
-//        ProgramSupportedByFacility.get({facilityId:$scope.user.facilityId}, function (data) {
-//          $scope.allSupportedPrograms = data.programList;
-//        });
+  var loadUserFacility = function () {
+    if (!utils.isNullOrUndefined($scope.user.facilityId)) {
+      if (utils.isNullOrUndefined($scope.allSupportedPrograms)) {
         Facility.get({id:$scope.user.facilityId}, function (data) {
           $scope.allSupportedPrograms = data.facility.supportedPrograms;
           $scope.facilitySelected = data.facility;
         }, {});
-      }
-
-      if (isNullOrUndefined($scope.allRoles)) {
-        Roles.get({}, function (data) {
-          $scope.allRoles = data.roles;
-        });
       }
     }
   };
@@ -132,8 +137,6 @@ function UserController($scope, $routeParams, Users, User, AllFacilities, Progra
     })
   };
 
-  var isNullOrUndefined = function (obj) {
-    return obj == undefined || obj == null;
-  }
+
 }
 

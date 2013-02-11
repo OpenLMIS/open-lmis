@@ -2,7 +2,7 @@ describe("User", function () {
 
   beforeEach(module('openlmis.services'));
 
-  describe("User  Role Assignment Controller", function () {
+  describe("User Role Assignment Controller", function () {
 
     var scope, $httpBackend, ctrl;
 
@@ -33,5 +33,7 @@ describe("User", function () {
         {"program":{id:4, name:'p4'}}
       ]);
     });
+
+
   });
 });

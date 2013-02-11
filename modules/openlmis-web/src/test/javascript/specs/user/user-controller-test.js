@@ -9,9 +9,27 @@ describe("User", function () {
     beforeEach(inject(function ($rootScope, _$httpBackend_, $controller) {
       scope = $rootScope.$new();
       $httpBackend = _$httpBackend_;
+      $httpBackend.expectGET("/roles.json").respond(200,{"roles":[]});
+      $httpBackend.expectGET("/programs.json").respond(200,{"programs":[{"id":1}]});
+      $httpBackend.expectGET("/supervisory-nodes.json").respond(200,{"supervisoryNodes":[]});
       ctrl = $controller(UserController, {$scope:scope});
       scope.userForm = {$error:{ pattern:"" }};
     }));
+
+    it('should set roles in scope', function () {
+      $httpBackend.flush();
+      expect(scope.allRoles).toEqual([]);
+    });
+
+    it('should set programs in scope', function () {
+      $httpBackend.flush();
+      expect(scope.programs).toEqual([{"id":1}]);
+    });
+
+    it('should set supervisory nodes in scope', function () {
+      $httpBackend.flush();
+      expect(scope.supervisoryNodes).toEqual([]);
+    });
 
     it('should update user successful', function () {
       scope.user = {"id":123, "userName":"User420"};
@@ -134,7 +152,6 @@ describe("User", function () {
       var data = {};
       data.facility = facility;
       $httpBackend.expectGET('/facilities/' + facility.id + '.json').respond(data);
-      $httpBackend.expectGET('/roles.json').respond(200);
 
       scope.setSelectedFacility(facility);
 
@@ -152,7 +169,6 @@ describe("User", function () {
 
       var data = {};
       data.facility = facility;
-      $httpBackend.expectGET('/roles.json').respond(200);
 
       scope.setSelectedFacility(facility);
 

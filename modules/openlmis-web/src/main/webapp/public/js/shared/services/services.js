@@ -1,7 +1,11 @@
 var services = angular.module('openlmis.services', ['ngResource']);
 
-services.factory('Program', function ($resource) {
-    return $resource('/admin/programs.json', {}, {});
+services.factory('ActivePrograms', function ($resource) {
+    return $resource('/active/programs.json', {}, {});
+});
+
+services.factory('Programs', function ($resource) {
+    return $resource('/programs.json', {}, {});
 });
 
 services.factory('RnRColumnList', function ($resource) {
@@ -163,6 +167,11 @@ services.factory('ValidatePasswordToken', function ($resource) {
 services.factory('Messages', function ($resource) {
   return $resource('/messages.json', {}, {});
 });
+
+services.factory('SupervisoryNodes', function ($resource) {
+  return $resource('/supervisory-nodes.json', {}, {});
+});
+
 
 
 

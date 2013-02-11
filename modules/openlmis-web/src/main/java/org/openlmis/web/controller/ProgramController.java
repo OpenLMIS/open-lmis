@@ -31,7 +31,7 @@ public class ProgramController extends BaseController {
     this.programService = programService;
   }
 
-    @RequestMapping(value = "/admin/programs", method = GET)
+    @RequestMapping(value = "/active/programs", method = GET)
   @PreAuthorize("hasPermission('','CONFIGURE_RNR')")
   public List<Program> getAllActivePrograms() {
     return programService.getAllActive();

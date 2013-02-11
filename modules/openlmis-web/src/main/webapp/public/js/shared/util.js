@@ -16,6 +16,9 @@ var utils = {
   getValueFor:function (number, defaultValue) {
     if (!utils.isNumber(number)) return defaultValue ? defaultValue : null;
     return utils.parseIntWithBaseTen(number);
+  },
 
+  isNullOrUndefined:function (obj) {
+    return obj == undefined || obj == null;
   }
 };

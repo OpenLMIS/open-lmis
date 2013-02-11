@@ -48,7 +48,7 @@ public class User implements Importable {
   private Integer facilityId;
   private String modifiedBy;
   private Date modifiedDate;
-  private List<UserRoleAssignment> supervisorRoles;
+  private List<RoleAssignment> supervisorRoles;
   private List<UserRoleAssignment> roleAssignments;
 
   private static final String INVALID_EMAIL_ERROR_CODE = "user.email.invalid";

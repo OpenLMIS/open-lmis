@@ -13,11 +13,11 @@ function ConfigureRnRTemplateController($scope, programs, $location) {
 };
 
 ConfigureRnRTemplateController.resolve = {
-  programs:function ($q, Program, $location, $route, $timeout) {
+  programs:function ($q, ActivePrograms, $location, $route, $timeout) {
     var deferred = $q.defer();
 
     $timeout(function () {
-      Program.get({}, function (data) { //success
+      ActivePrograms.get({}, function (data) { //success
         deferred.resolve(data.programList);
       }, function () {
         location.path('/select-program');
