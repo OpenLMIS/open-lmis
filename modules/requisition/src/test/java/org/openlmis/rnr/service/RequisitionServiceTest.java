@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
@@ -41,6 +42,7 @@ import static org.openlmis.rnr.builder.RnrColumnBuilder.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 import static org.openlmis.rnr.service.RequisitionService.*;
 import static org.powermock.api.mockito.PowerMockito.spy;
+import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
@@ -727,7 +729,7 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  public void shouldNotFillBeginningBalanceIfPreviousRnrNotDefineDuringInitiate() throws Exception {
+  public void shouldNotFillBeginningBalanceIfPreviousRnrNotDefinedDuringInitiate() throws Exception {
     Date date = new Date();
     Rnr someRequisition = createRequisition(PERIOD.getId(), null);
     setupForInitRnr(date, someRequisition, PERIOD);
@@ -753,25 +755,33 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  public void shouldFillNullInBeginningBalanceIfStockInHandIsNotDisplayed() throws Exception {
+  public void shouldFillBeginningBalanceFromPreviousRequisitionEvenIfStockInHandIsNotDisplayed() throws Exception {
     Date date = new Date();
-    Rnr someRequisition = createRequisition(PERIOD.getId(), null);
-    setupForInitRnr(date, someRequisition, PERIOD);
-    someRequisition.setFacility(FACILITY);
-    someRequisition.setProgram(PROGRAM);
+    ProcessingPeriod period = new ProcessingPeriod(10);
+    Rnr someRequisition = createRequisition(period.getId(), null);
+    Rnr previousRnr = make(a(defaultRnr));
+    ProcessingPeriod previousPeriod = make(a(defaultProcessingPeriod, with(id, period.getId() - 1)));
+    setupForInitRnr(date, someRequisition, period);
+    when(rnrTemplateRepository.fetchRnrTemplateColumns(PROGRAM.getId())).thenReturn(asList(make(a(defaultRnrColumn,
+      with(columnName, "stockInHand"), with(visible, false)))));
+
+    Rnr spyRequisition = spy(someRequisition);
 
     List<FacilityApprovedProduct> facilityApprovedProducts = new ArrayList<>();
     ProgramProduct programProduct = new ProgramProduct(null, make(a(defaultProduct)), 10, true);
     facilityApprovedProducts.add(new FacilityApprovedProduct("warehouse", programProduct, 30));
+    ProgramProduct programProduct2 = new ProgramProduct(null, make(a(defaultProduct, with(code, "testCode"))), 10, true);
+    facilityApprovedProducts.add(new FacilityApprovedProduct("warehouse", programProduct2, 30));
+
     when(facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(), PROGRAM.getId())).thenReturn(facilityApprovedProducts);
-    when(rnrTemplateRepository.fetchRnrTemplateColumns(PROGRAM.getId())).thenReturn(Arrays.asList(make(a(defaultRnrColumn, with(columnName, "stockInHand"), with(visible, false)))));
+    when(processingScheduleService.getImmediatePreviousPeriod(spyRequisition.getPeriod())).thenReturn(previousPeriod);
+    when(requisitionRepository.getRequisition(spyRequisition.getFacility(), spyRequisition.getProgram(), previousPeriod)).thenReturn(previousRnr);
 
-    Rnr spyRequisition = spy(someRequisition);
-    whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), facilityApprovedProducts, USER_ID).thenReturn(spyRequisition);
+    whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), period.getId(), facilityApprovedProducts, USER_ID).thenReturn(spyRequisition);
 
-    requisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), USER_ID);
+    requisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), period.getId(), USER_ID);
 
-    verify(spyRequisition, never()).setBeginningBalanceForEachLineItem(null);
+    verify(spyRequisition).setBeginningBalanceForEachLineItem(previousRnr);
   }
 
 

@@ -14,9 +14,7 @@ import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
-import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
-import static org.openlmis.rnr.domain.RnrStatus.IN_APPROVAL;
-import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
+import static org.openlmis.rnr.domain.RnrStatus.*;
 
 @Data
 @NoArgsConstructor
@@ -78,17 +76,17 @@ public class Rnr {
     return true;
   }
 
-  public void calculate() {
+  public void calculate(List<RnrColumn> rnrColumns) {
     Money totalFullSupplyCost = new Money("0");
     for (RnrLineItem lineItem : lineItems) {
-      lineItem.calculate(period, status);
+      lineItem.calculate(period, status, rnrColumns);
       Money costPerItem = lineItem.getPrice().multiply(BigDecimal.valueOf(lineItem.getPacksToShip()));
       totalFullSupplyCost = totalFullSupplyCost.add(costPerItem);
     }
     this.fullSupplyItemsSubmittedCost = totalFullSupplyCost;
     Money totalNonFullSupplyCost = new Money("0");
     for (RnrLineItem lineItem : nonFullSupplyLineItems) {
-      lineItem.calculate(period, status);
+      lineItem.calculate(period, status, rnrColumns);
       Money costPerItem = lineItem.getPrice().multiply(BigDecimal.valueOf(lineItem.getPacksToShip()));
       totalNonFullSupplyCost = totalNonFullSupplyCost.add(costPerItem);
     }
@@ -103,11 +101,19 @@ public class Rnr {
   }
 
   public void setBeginningBalanceForEachLineItem(Rnr previousRequisition) {
-    if (previousRequisition == null) return;
+    if (previousRequisition == null) {
+      resetBeginningBalances();
+      return;
+    }
     for (RnrLineItem currentLineItem : this.lineItems) {
       RnrLineItem previousLineItem = previousRequisition.findCorrespondingLineItem(currentLineItem);
-      if (previousLineItem != null)
-        currentLineItem.setBeginningBalanceWhenPreviousStockInHandAvailable(previousLineItem.getStockInHand());
+      currentLineItem.setBeginningBalanceWhenPreviousStockInHandAvailable(previousLineItem);
+    }
+  }
+
+  private void resetBeginningBalances() {
+    for (RnrLineItem lineItem : lineItems) {
+      lineItem.resetBeginningBalance();
     }
   }
 
@@ -140,15 +146,6 @@ public class Rnr {
     }
   }
 
-  public void resetBeginningBalancesFromRequisition(Rnr savedRequisition) {
-    for (RnrLineItem lineItem : getLineItems()) {
-      RnrLineItem savedLineItem = savedRequisition.findCorrespondingLineItem(lineItem);
-
-      if (savedLineItem.getPreviousStockInHandAvailable())
-        lineItem.setBeginningBalance(savedLineItem.getStockInHand());
-    }
-  }
-
   public void fillBasicInformation(Facility facility, Program program, ProcessingPeriod period) {
     this.program = program.basicInformation();
     this.period = period.basicInformation();
@@ -177,27 +174,27 @@ public class Rnr {
     });
   }
 
-  public void copyUserEditableFieldsForSaveSubmitOrAuthorize(Rnr rnr) {
-    this.modifiedBy = rnr.modifiedBy;
+  public void copyUserEditableFieldsForSaveSubmitOrAuthorize(Rnr otherRequisition) {
+    this.modifiedBy = otherRequisition.modifiedBy;
     for (RnrLineItem thisLineItem : lineItems) {
-      RnrLineItem otherLineItem = rnr.findCorrespondingLineItem(thisLineItem);
+      RnrLineItem otherLineItem = otherRequisition.findCorrespondingLineItem(thisLineItem);
       thisLineItem.copyUserEditableFieldsForSaveSubmitOrAuthorize(otherLineItem);
-      thisLineItem.setModifiedBy(rnr.getModifiedBy());
+      thisLineItem.setModifiedBy(otherRequisition.getModifiedBy());
     }
-    this.nonFullSupplyLineItems = rnr.nonFullSupplyLineItems;
-    for(RnrLineItem thisLineItem : this.nonFullSupplyLineItems){
-      thisLineItem.setModifiedBy(rnr.getModifiedBy());
+    this.nonFullSupplyLineItems = otherRequisition.nonFullSupplyLineItems;
+    for (RnrLineItem thisLineItem : this.nonFullSupplyLineItems) {
+      thisLineItem.setModifiedBy(otherRequisition.getModifiedBy());
     }
   }
 
   public void prepareForSubmit() {
-    calculate();
-    status= SUBMITTED;
-    submittedDate =new Date();
+    calculate(new ArrayList<RnrColumn>());
+    status = SUBMITTED;
+    submittedDate = new Date();
   }
 
   public void prepareForAuthorize() {
-    calculate();
+    calculate(new ArrayList<RnrColumn>());
     status = AUTHORIZED;
   }
 }

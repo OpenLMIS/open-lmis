@@ -236,7 +236,7 @@ public class RnrLineItemTest {
     lineItem.setQuantityDispensed(29);
 
 
-    lineItem.calculate(period, INITIATED);
+    lineItem.calculate(period, INITIATED, new ArrayList<RnrColumn>());
 
     assertThat(lineItem.getTotalLossesAndAdjustments(), is(25));
   }
@@ -249,7 +249,7 @@ public class RnrLineItemTest {
     lineItem.setDosesPerDispensingUnit(10);
     lineItem.setNormalizedConsumption(37345);
 
-    lineItem.calculate(period, INITIATED);
+    lineItem.calculate(period, INITIATED, new ArrayList<RnrColumn>());
 
     assertThat(lineItem.getNormalizedConsumption(), is(37));
   }
@@ -262,7 +262,7 @@ public class RnrLineItemTest {
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
     period.setNumberOfMonths(3);
 
-    spyLineItem.calculate(period, INITIATED);
+    spyLineItem.calculate(period, INITIATED, new ArrayList<RnrColumn>());
 
     assertThat(spyLineItem.getAmc(), is(15));
   }
@@ -275,7 +275,7 @@ public class RnrLineItemTest {
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
     period.setNumberOfMonths(2);
 
-    spyLineItem.calculate(period, INITIATED);
+    spyLineItem.calculate(period, INITIATED, new ArrayList<RnrColumn>());
 
     assertThat(spyLineItem.getAmc(), is(14));
   }
@@ -288,7 +288,7 @@ public class RnrLineItemTest {
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
     period.setNumberOfMonths(1);
 
-    spyLineItem.calculate(period, INITIATED);
+    spyLineItem.calculate(period, INITIATED, new ArrayList<RnrColumn>());
 
     assertThat(spyLineItem.getAmc(), is(23));
   }
@@ -301,7 +301,7 @@ public class RnrLineItemTest {
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
     period.setNumberOfMonths(1);
 
-    spyLineItem.calculate(period, INITIATED);
+    spyLineItem.calculate(period, INITIATED, new ArrayList<RnrColumn>());
 
     assertThat(spyLineItem.getAmc(), is(29));
   }
@@ -313,7 +313,7 @@ public class RnrLineItemTest {
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
     period.setNumberOfMonths(1);
 
-    spyLineItem.calculate(period, INITIATED);
+    spyLineItem.calculate(period, INITIATED, new ArrayList<RnrColumn>());
 
     assertThat(spyLineItem.getAmc(), is(45));
   }
@@ -326,7 +326,7 @@ public class RnrLineItemTest {
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
     period.setNumberOfMonths(2);
 
-    spyLineItem.calculate(period, INITIATED);
+    spyLineItem.calculate(period, INITIATED, new ArrayList<RnrColumn>());
 
     assertThat(spyLineItem.getAmc(), is(23));
   }
@@ -340,7 +340,7 @@ public class RnrLineItemTest {
     lineItem.setNormalizedConsumption(37345);
     lineItem.setMaxMonthsOfStock(10);
 
-    lineItem.calculate(period, INITIATED);
+    lineItem.calculate(period, INITIATED, new ArrayList<RnrColumn>());
 
     assertThat(lineItem.getMaxStockQuantity(), is(370));
   }
@@ -356,7 +356,7 @@ public class RnrLineItemTest {
     lineItem.setMaxStockQuantity(370);
     lineItem.setStockInHand(300);
 
-    lineItem.calculate(period, INITIATED);
+    lineItem.calculate(period, INITIATED, new ArrayList<RnrColumn>());
 
     assertThat(lineItem.getCalculatedOrderQuantity(), is(70));
   }

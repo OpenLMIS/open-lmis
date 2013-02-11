@@ -10,6 +10,7 @@ import org.openlmis.core.service.*;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.domain.ProgramRnrTemplate;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,6 @@ import java.util.List;
 import java.util.Set;
 
 import static org.openlmis.core.domain.Right.*;
-import static org.openlmis.rnr.domain.ProgramRnrTemplate.STOCK_IN_HAND;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
 @Service
@@ -153,7 +153,7 @@ public class RequisitionService {
     if (!(savedRnr.getStatus() == AUTHORIZED || savedRnr.getStatus() == IN_APPROVAL))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
-    savedRnr.calculate();
+    savedRnr.calculate(new ArrayList<RnrColumn>());
     final SupervisoryNode parent = supervisoryNodeService.getParent(savedRnr.getSupervisoryNodeId());
     if (parent == null) {
       return doFinalApproval(savedRnr);
@@ -211,14 +211,12 @@ public class RequisitionService {
   }
 
   private void fillBeginningBalanceFromPreviousRnrIfStockInHandVisible(ProgramRnrTemplate rnrTemplate, Rnr requisition) {
-    if (rnrTemplate.columnsVisible(STOCK_IN_HAND)) {
       ProcessingPeriod immediatePreviousPeriod = processingScheduleService.getImmediatePreviousPeriod(requisition.getPeriod());
       Rnr previousRequisition = null;
       if (immediatePreviousPeriod != null)
         previousRequisition = requisitionRepository.getRequisition(requisition.getFacility(), requisition.getProgram(), immediatePreviousPeriod);
 
       requisition.setBeginningBalanceForEachLineItem(previousRequisition);
-    }
   }
 
   private void validateIfRnrCanBeInitiatedFor(Integer facilityId, Integer programId, Integer periodId) {

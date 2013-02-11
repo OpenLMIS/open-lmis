@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static java.lang.Boolean.TRUE;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
 import static org.openlmis.rnr.domain.Rnr.RNR_VALIDATION_ERROR;
@@ -99,9 +100,9 @@ public class RnrLineItem {
 
   private String productName(Product product) {
     return (product.getPrimaryName() == null ? "" : (product.getPrimaryName() + " ")) +
-        (product.getForm().getCode() == null ? "" : (product.getForm().getCode() + " ")) +
-        (product.getStrength() == null ? "" : (product.getStrength() + " ")) +
-        (product.getDosageUnit().getCode() == null ? "" : product.getDosageUnit().getCode());
+      (product.getForm().getCode() == null ? "" : (product.getForm().getCode() + " ")) +
+      (product.getStrength() == null ? "" : (product.getStrength() + " ")) +
+      (product.getDosageUnit().getCode() == null ? "" : product.getDosageUnit().getCode());
 
   }
 
@@ -117,7 +118,7 @@ public class RnrLineItem {
     return true;
   }
 
-  public void calculate(ProcessingPeriod period, RnrStatus status) {
+  public void calculate(ProcessingPeriod period, RnrStatus status, List<RnrColumn> programRequisitionColumns) {
     calculateNormalizedConsumption();
     calculateAmc(period);
     calculateTotalLossesAndAdjustments();
@@ -143,16 +144,16 @@ public class RnrLineItem {
   private boolean validateMandatoryFields(List<RnrColumn> templateColumns) {
     ProgramRnrTemplate template = new ProgramRnrTemplate(1, templateColumns);
     return
-        !(
-            (template.columnsVisible(BEGINNING_BALANCE) && !isPresent(beginningBalance)) ||
-                (template.columnsVisible(QUANTITY_RECEIVED) && !isPresent(quantityReceived)) ||
-                (template.columnsVisible(QUANTITY_DISPENSED) && !isPresent(quantityDispensed)) ||
-                (template.columnsVisible(NEW_PATIENT_COUNT) && !isPresent(newPatientCount)) ||
-                (template.columnsVisible(STOCK_OUT_DAYS) && !isPresent(stockOutDays))
-        )
-            &&
-            (!template.columnsVisible(QUANTITY_REQUESTED, REASON_FOR_REQUESTED_QUANTITY) || (quantityRequested == null || isPresent(reasonForRequestedQuantity))
-            );
+      !(
+        (template.columnsVisible(BEGINNING_BALANCE) && !isPresent(beginningBalance)) ||
+          (template.columnsVisible(QUANTITY_RECEIVED) && !isPresent(quantityReceived)) ||
+          (template.columnsVisible(QUANTITY_DISPENSED) && !isPresent(quantityDispensed)) ||
+          (template.columnsVisible(NEW_PATIENT_COUNT) && !isPresent(newPatientCount)) ||
+          (template.columnsVisible(STOCK_OUT_DAYS) && !isPresent(stockOutDays))
+      )
+        &&
+        (!template.columnsVisible(QUANTITY_REQUESTED, REASON_FOR_REQUESTED_QUANTITY) || (quantityRequested == null || isPresent(reasonForRequestedQuantity))
+        );
   }
 
   private boolean validateCalculatedFields(boolean arithmeticValidationRequired) {
@@ -211,7 +212,7 @@ public class RnrLineItem {
 
   private void calculateNormalizedConsumption() {
     Float consumptionAdjustedWithStockOutDays = ((MULTIPLIER * NUMBER_OF_DAYS) - stockOutDays) == 0 ? quantityDispensed :
-        (quantityDispensed * ((MULTIPLIER * NUMBER_OF_DAYS) / ((MULTIPLIER * NUMBER_OF_DAYS) - stockOutDays)));
+      (quantityDispensed * ((MULTIPLIER * NUMBER_OF_DAYS) / ((MULTIPLIER * NUMBER_OF_DAYS) - stockOutDays)));
     Float adjustmentForNewPatients = (newPatientCount * ((Double) Math.ceil(dosesPerMonth.doubleValue() / dosesPerDispensingUnit)).floatValue()) * MULTIPLIER;
 
     normalizedConsumption = Math.round(consumptionAdjustedWithStockOutDays + adjustmentForNewPatients);
@@ -226,11 +227,6 @@ public class RnrLineItem {
         totalLossesAndAdjustments -= lossAndAdjustment.getQuantity();
       }
     }
-  }
-
-  public void setBeginningBalanceWhenPreviousStockInHandAvailable(Integer beginningBalance) {
-    this.beginningBalance = beginningBalance;
-    this.previousStockInHandAvailable = Boolean.TRUE;
   }
 
   public void addPreviousNormalizedConsumptionFrom(RnrLineItem rnrLineItem) {
@@ -262,5 +258,18 @@ public class RnrLineItem {
     this.quantityRequested = item.quantityRequested;
     this.reasonForRequestedQuantity = item.reasonForRequestedQuantity;
     this.copyApproverEditableFields(item);//todo need another method for save approval
+  }
+
+  public void setBeginningBalanceWhenPreviousStockInHandAvailable(RnrLineItem lineItem) {
+    if (lineItem == null) {
+      this.beginningBalance = 0;
+      return;
+    }
+    this.beginningBalance = lineItem.getStockInHand();
+    this.setPreviousStockInHandAvailable(TRUE);
+  }
+
+  public void resetBeginningBalance() {
+    beginningBalance = 0;
   }
 }

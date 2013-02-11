@@ -40,7 +40,7 @@ public class FacilityController extends BaseController {
     this.programService = programService;
   }
 
-  @RequestMapping(value = "/facilities", method = GET)
+  @RequestMapping(value = "/facilities", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("hasPermission('','MANAGE_FACILITY')")
   public List<Facility> get(@RequestParam(value = "searchParam", required = false) String searchParam) {
     if (searchParam != null) {
