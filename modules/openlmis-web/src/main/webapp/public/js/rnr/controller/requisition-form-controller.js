@@ -193,7 +193,7 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
   $scope.saveLossesAndAdjustmentsForRnRLineItem = function (rnrLineItem) {
     if (!isValidLossesAndAdjustments(rnrLineItem)) return;
 
-    rnrLineItem.reEvaluateTotalLossesAndAdjustments($scope.rnr, $scope.programRnrColumnList);
+    rnrLineItem.reEvaluateTotalLossesAndAdjustments();
     $scope.lossesAndAdjustmentsModal[rnrLineItem.id] = false;
   };
 

@@ -1,6 +1,4 @@
-function RequisitionController($scope, Requisition, $location, $routeParams, $rootScope) {
-
-
+function RequisitionController($scope, Requisition, $location, $routeParams) {
   if (!$scope.$parent.rnr) {
     Requisition.get({facilityId:$routeParams.facility, programId:$routeParams.program, periodId:$routeParams.period},
       function (data) {
@@ -13,7 +11,6 @@ function RequisitionController($scope, Requisition, $location, $routeParams, $ro
       }, function () {
       });
   }
-
 
   $scope.periodDisplayName = function () {
     if(!$scope.rnr) return;
