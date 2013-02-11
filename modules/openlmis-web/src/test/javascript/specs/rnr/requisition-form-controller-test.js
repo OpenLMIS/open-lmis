@@ -1,6 +1,6 @@
 describe('RequisitionFormController', function () {
 
-  var scope, ctrl, httpBackend, location, routeParams, requisitionHeader, controller, localStorageService;
+  var scope, ctrl, httpBackend, location, routeParams, controller, localStorageService;
 
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
@@ -146,7 +146,7 @@ describe('RequisitionFormController', function () {
       {"indicator":"E", "name":"stockInHand", "source":{"name":"USER_INPUT"}}
     ];
     spyOn(lineItem, 'getErrorMessage').andReturn("error");
-    var errorMsg = scope.getCellErrorClass(lineItem, programRnrColumnList);
+    var errorMsg = scope.getCellErrorClass(lineItem);
     expect(errorMsg).toEqual("cell-error-highlight");
   });
 
@@ -163,7 +163,7 @@ describe('RequisitionFormController', function () {
       {"indicator":"E", "name":"stockInHand", "source":{"name":"USER_INPUT"}}
     ];
     spyOn(lineItem, 'getErrorMessage').andReturn("");
-    var errorMsg = scope.getCellErrorClass(lineItem, programRnrColumnList);
+    var errorMsg = scope.getCellErrorClass(lineItem);
     expect(errorMsg).toEqual("");
   });
 
@@ -172,15 +172,8 @@ describe('RequisitionFormController', function () {
       quantityReceived:1, stockInHand:1};
     jQuery.extend(true, lineItem, new RnrLineItem());
 
-    var programRnrColumnList = [
-      {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidationRequired":true},
-      {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
-      {"indicator":"C", "name":"quantityDispensed", "source":{"name":"CALCULATED"}},
-      {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}},
-      {"indicator":"E", "name":"stockInHand", "source":{"name":"USER_INPUT"}}
-    ];
     spyOn(scope, 'getCellErrorClass').andReturn("error");
-    var errorMsg = scope.getRowErrorClass(lineItem, programRnrColumnList);
+    var errorMsg = scope.getRowErrorClass(lineItem);
     expect(errorMsg).toEqual("row-error-highlight");
   });
 
@@ -190,15 +183,8 @@ describe('RequisitionFormController', function () {
       quantityReceived:1, stockInHand:1};
     jQuery.extend(true, lineItem, new RnrLineItem());
 
-    var programRnrColumnList = [
-      {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidationRequired":true},
-      {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
-      {"indicator":"C", "name":"quantityDispensed", "source":{"name":"CALCULATED"}},
-      {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}},
-      {"indicator":"E", "name":"stockInHand", "source":{"name":"USER_INPUT"}}
-    ];
     spyOn(scope, 'getCellErrorClass').andReturn("");
-    var errorMsg = scope.getRowErrorClass(lineItem, programRnrColumnList);
+    var errorMsg = scope.getRowErrorClass(lineItem);
     expect(errorMsg).toEqual("");
   });
 
@@ -219,7 +205,7 @@ describe('RequisitionFormController', function () {
     scope.lossesAndAdjustmentsModal[1] = true;
     scope.saveLossesAndAdjustmentsForRnRLineItem(rnrLineItem);
 
-    expect(rnrLineItem.reEvaluateTotalLossesAndAdjustments).toHaveBeenCalledWith(scope.rnr, scope.programRnrColumnList);
+    expect(rnrLineItem.reEvaluateTotalLossesAndAdjustments).toHaveBeenCalled();
     expect(scope.lossesAndAdjustmentsModal[1]).toBeFalsy();
     expect(scope.modalError).toEqual('');
   });
@@ -284,9 +270,5 @@ describe('RequisitionFormController', function () {
     expect(scope.nonFullSupplyProductsToDisplay).toEqual([]);
     expect(scope.rnr.nonFullSupplyItemsSubmittedCost).toEqual(16.00.toFixed(2));
   });
-
-
-
-
 });
 
