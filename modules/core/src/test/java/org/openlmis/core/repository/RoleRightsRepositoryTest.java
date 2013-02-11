@@ -20,9 +20,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
-import static org.openlmis.core.domain.Right.CONFIGURE_RNR;
-import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
-import static org.openlmis.core.domain.Right.VIEW_REQUISITION;
+import static org.openlmis.core.domain.Right.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RoleRightsRepositoryTest {
@@ -37,7 +35,6 @@ public class RoleRightsRepositoryTest {
   @Before
   public void setUp() throws Exception {
     role = new Role("role name", "role description");
-
   }
 
   @Test
@@ -114,5 +111,18 @@ public class RoleRightsRepositoryTest {
     verify(roleRightsMapper).updateRole(role);
     verify(roleRightsMapper).deleteAllRightsForRole(100);
     verify(roleRightsMapper).createRoleRight(100, CONFIGURE_RNR);
+  }
+
+  @Test
+  public void shouldUpdateRoleAlongWithDependentRights() {
+    role.setRights(new HashSet<>(asList(CONVERT_TO_ORDER)));
+    role.setId(100);
+
+    new RoleRightsRepository(roleRightsMapper).updateRole(role);
+
+    verify(roleRightsMapper).updateRole(role);
+    verify(roleRightsMapper).deleteAllRightsForRole(100);
+    verify(roleRightsMapper).createRoleRight(100, CONVERT_TO_ORDER);
+    verify(roleRightsMapper).createRoleRight(100, VIEW_REQUISITION);
   }
 }

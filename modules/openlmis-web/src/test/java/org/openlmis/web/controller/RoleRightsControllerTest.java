@@ -108,7 +108,7 @@ public class RoleRightsControllerTest {
 
     OpenLmisResponse response = controller.updateRole(role.getId(), role, httpServletRequest).getBody();
 
-    assertThat(response.getSuccessMsg(), is("Role updated successfully"));
+    assertThat(response.getSuccessMsg(), is("Role Name updated successfully"));
     verify(roleRightsService).updateRole(role);
   }
 

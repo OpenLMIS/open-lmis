@@ -35,9 +35,7 @@ public class RoleRightsRepository {
       throw new DataException("Duplicate Role found");
     }
 
-
-    role.setRights(getRightsWithItsDependents(role.getRights()));
-    assignRightsToRole(role);
+    createRoleRights(role);
   }
 
   public void updateRole(Role role) {
@@ -47,18 +45,17 @@ public class RoleRightsRepository {
       throw new DataException("Duplicate Role found");
     }
     roleRightsMapper.deleteAllRightsForRole(role.getId());
-
-    assignRightsToRole(role);
+    createRoleRights(role);
   }
 
-  private void assignRightsToRole(Role role) {
-    for (Right right : role.getRights()) {
+  private void createRoleRights(Role role) {
+    for (Right right : getRightsWithItsDependents(role.getRights())) {
       roleRightsMapper.createRoleRight(role.getId(), right);
     }
   }
 
   private Set<Right> getRightsWithItsDependents(Set<Right> rightList) {
-    final Set<Right> rights = new HashSet<>();
+    Set<Right> rights = new HashSet<>();
     for (Right right : rightList) {
       rights.add(right);
       rights.addAll(right.getDependentRights());
