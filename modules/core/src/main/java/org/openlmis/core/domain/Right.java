@@ -13,24 +13,29 @@ import java.util.List;
 @JsonDeserialize(using = RightDeSerializer.class)
 public enum Right {
 
-  CONFIGURE_RNR("Admin - Configure Requisition Templates", "Permission to create and edit r&r template for any program"),
-  MANAGE_FACILITY("Admin - Manage Facilities", "Permission to manage facility(crud)"),
-  MANAGE_ROLE("Admin - Manage Roles", "Permission to create and edit roles in the system"),
-  MANAGE_SCHEDULE("Admin - Manage Schedules", "Permission to create and edit schedules in the system"),
-  UPLOADS("Admin - Uploads", "Permission to upload"),
-  CREATE_REQUISITION("Requisition - Create", "Permission to create, edit, submit and recall requisitions"),
-  AUTHORIZE_REQUISITION("Requisition - Authorize", "Permission to edit, authorize and recall requisitions"),
-  MANAGE_USERS("Admin - Manage Users", "Permission to manage users(crud)"),
-  APPROVE_REQUISITION("Requisition - Approve", "Permission to approve requisitions"),
-  CONVERT_TO_ORDER("Requisition - Convert to Order", "Permission to convert requisitions to order");
+  CONFIGURE_RNR("Admin - Configure Requisition Templates", "admin", "Permission to create and edit r&r template for any program"),
+  MANAGE_FACILITY("Admin - Manage Facilities", "admin", "Permission to manage facility(crud)"),
+  MANAGE_ROLE("Admin - Manage Roles", "admin", "Permission to create and edit roles in the system"),
+  MANAGE_SCHEDULE("Admin - Manage Schedules", "admin", "Permission to create and edit schedules in the system"),
+  UPLOADS("Admin - Uploads", "admin", "Permission to upload"),
+  MANAGE_USERS("Admin - Manage Users", "admin", "Permission to manage users(crud)"),
+  CREATE_REQUISITION("Requisition - Create", "requisition", "Permission to create, edit, submit and recall requisitions"),
+  AUTHORIZE_REQUISITION("Requisition - Authorize", "requisition", "Permission to edit, authorize and recall requisitions"),
+  APPROVE_REQUISITION("Requisition - Approve", "requisition", "Permission to approve requisitions"),
+  CONVERT_TO_ORDER("Requisition - Convert to Order", "requisition", "Permission to convert requisitions to order");
 
   @Getter
   private final String rightName;
+
+  @Getter
+  private String category;
+
   @Getter
   private final String description;
 
-  private Right(String rightName, String description) {
+  private Right(String rightName, String category, String description) {
     this.rightName = rightName;
+    this.category = category;
     this.description = description;
   }
 
