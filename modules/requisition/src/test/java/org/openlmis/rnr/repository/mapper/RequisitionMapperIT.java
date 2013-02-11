@@ -160,8 +160,8 @@ public class RequisitionMapperIT {
     assertThat(returnedRequisition.getFacility().getId(), is(facility.getId()));
     assertThat(returnedRequisition.getProgram().getId(), is(PROGRAM_ID));
     assertThat(returnedRequisition.getPeriod().getId(), is(processingPeriod1.getId()));
-    assertThat(returnedRequisition.getLineItems().size(), is(0));
-    assertThat(returnedRequisition.getNonFullSupplyLineItems().size(), is(0));
+    assertThat(returnedRequisition.getLineItems().size(), is(1));
+    assertThat(returnedRequisition.getNonFullSupplyLineItems().size(), is(1));
   }
 
   @Test

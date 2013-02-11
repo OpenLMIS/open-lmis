@@ -59,7 +59,11 @@ public interface RequisitionMapper {
       @Result(property = "id", column = "id"),
       @Result(property = "facility.id", column = "facilityId"),
       @Result(property = "program.id", column = "programId"),
-      @Result(property = "period.id", column = "periodId")
+      @Result(property = "period.id", column = "periodId"),
+      @Result(property = "lineItems", javaType = List.class, column = "id",
+          many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsByRnrId")),
+      @Result(property = "nonFullSupplyLineItems", javaType = List.class, column = "id",
+          many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getNonFullSupplyRnrLineItemsByRnrId"))
   })
   Rnr getRequisition(@Param("facility") Facility facility,
                      @Param("program") Program program,
