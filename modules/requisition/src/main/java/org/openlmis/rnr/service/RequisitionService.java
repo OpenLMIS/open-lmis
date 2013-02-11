@@ -96,6 +96,20 @@ public class RequisitionService {
 
   public Rnr get(Facility facility, Program program, ProcessingPeriod period) {
     Rnr requisition = requisitionRepository.getRequisition(facility, program, period);
+    return fillSupportingInfo(requisition);
+  }
+
+  public Rnr getWithFullSupplyLineItems(Facility facility, Program program, ProcessingPeriod period) {
+    Rnr requisition = requisitionRepository.getRequisitionWithFullSupplyLineItems(facility, program, period);
+    return fillSupportingInfo(requisition);
+  }
+
+  public Rnr getWithNonFullSupplyLineItems(Facility facility, Program program, ProcessingPeriod period) {
+    Rnr requisition = requisitionRepository.getRequisitionWithNonFullSupplyLineItems(facility, program, period);
+    return fillSupportingInfo(requisition);
+  }
+
+  private Rnr fillSupportingInfo(Rnr requisition) {
     if (requisition == null) return null;
 
     fillFacilityPeriodProgram(requisition);
