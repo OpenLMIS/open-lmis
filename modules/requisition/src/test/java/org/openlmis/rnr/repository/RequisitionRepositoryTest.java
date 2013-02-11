@@ -100,17 +100,36 @@ public class RequisitionRepositoryTest {
   }
 
   @Test
-  public void shouldReturnRnrAndItsLineItems() {
+  public void shouldReturnRnrAndItsFullSupplyLineItems() {
     Facility facility = new Facility(FACILITY_ID);
     Program hivProgram = new Program(HIV);
     ProcessingPeriod period = new ProcessingPeriod(PERIOD_ID);
     Rnr initiatedRequisition = new Rnr(facility, hivProgram, period);
     initiatedRequisition.setId(1);
-    when(requisitionMapper.getRequisition(facility, hivProgram, period)).thenReturn(initiatedRequisition);
+
+    when(requisitionMapper.getRequisitionWithFullSupplyLineItems(facility, hivProgram, period)).thenReturn(initiatedRequisition);
     List<RnrLineItem> lineItems = new ArrayList<>();
     when(rnrLineItemMapper.getRnrLineItemsByRnrId(1)).thenReturn(lineItems);
 
-    Rnr rnr = requisitionRepository.getRequisition(facility, hivProgram, period);
+    Rnr rnr = requisitionRepository.getRequisitionWithFullSupplyLineItems(facility, hivProgram, period);
+
+    assertThat(rnr, is(equalTo(initiatedRequisition)));
+    assertThat(rnr.getLineItems(), is(equalTo(lineItems)));
+  }
+
+  @Test
+  public void shouldReturnRnrAndItsNonFullSupplyLineItems() {
+    Facility facility = new Facility(FACILITY_ID);
+    Program hivProgram = new Program(HIV);
+    ProcessingPeriod period = new ProcessingPeriod(PERIOD_ID);
+    Rnr initiatedRequisition = new Rnr(facility, hivProgram, period);
+    initiatedRequisition.setId(1);
+
+    when(requisitionMapper.getRequisitionWithNonFullSupplyLineItems(facility, hivProgram, period)).thenReturn(initiatedRequisition);
+    List<RnrLineItem> lineItems = new ArrayList<>();
+    when(rnrLineItemMapper.getRnrLineItemsByRnrId(1)).thenReturn(lineItems);
+
+    Rnr rnr = requisitionRepository.getRequisitionWithNonFullSupplyLineItems(facility, hivProgram, period);
 
     assertThat(rnr, is(equalTo(initiatedRequisition)));
     assertThat(rnr.getLineItems(), is(equalTo(lineItems)));

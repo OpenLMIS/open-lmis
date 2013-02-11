@@ -81,8 +81,7 @@ public class RequisitionServiceTest {
   private Rnr submittedRnr;
   private Rnr initiatedRnr;
   private Rnr authorizedRnr;
-  ArrayList<RnrColumn> rnrColumns;
-
+  private ArrayList<RnrColumn> rnrColumns;
 
   @Before
   public void setup() {
@@ -150,7 +149,6 @@ public class RequisitionServiceTest {
     Program program = new Program();
     program.setId(PROGRAM.getId());
     program.setName("test name");
-
 
     when(programService.getById(PROGRAM.getId())).thenReturn(program);
     when(facilityService.getById(FACILITY.getId())).thenReturn(facility);

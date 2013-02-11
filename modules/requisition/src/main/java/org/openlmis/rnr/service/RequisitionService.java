@@ -108,7 +108,6 @@ public class RequisitionService {
   }
 
   public OpenLmisMessage submit(Rnr rnr) {
-
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
     if (savedRnr.getStatus() != INITIATED) {
       throw new DataException(new OpenLmisMessage(RNR_SUBMISSION_ERROR));

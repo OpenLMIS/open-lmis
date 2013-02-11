@@ -44,6 +44,7 @@ public class RequisitionMapperIT {
   private ProcessingSchedule processingSchedule;
   private ProcessingPeriod processingPeriod1;
   private ProcessingPeriod processingPeriod2;
+  private ProcessingPeriod processingPeriod3;
 
   @Autowired
   private FacilityMapper facilityMapper;
@@ -52,12 +53,11 @@ public class RequisitionMapperIT {
   @Autowired
   RnrLineItemMapper lineItemMapper;
   @Autowired
-  LossesAndAdjustmentsMapper lossMapper;
+  LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
   @Autowired
   private ProcessingPeriodMapper processingPeriodMapper;
   @Autowired
   private ProcessingScheduleMapper processingScheduleMapper;
-  private ProcessingPeriod processingPeriod3;
   @Autowired
   SupervisoryNodeMapper supervisoryNodeMapper;
   @Autowired
@@ -95,8 +95,7 @@ public class RequisitionMapperIT {
   @Test
   public void shouldReturnRequisitionById() {
     Rnr requisition = insertRequisition(processingPeriod1, INITIATED);
-    Product product = make(a(ProductBuilder.defaultProduct));
-    productMapper.insert(product);
+    Product product = insertProduct(true, "P1");
     RnrLineItem fullSupplyLineItem = make(a(defaultRnrLineItem, with(fullSupply, true), with(productCode, product.getCode())));
     RnrLineItem nonFullSupplyLineItem = make(a(defaultRnrLineItem, with(fullSupply, false), with(productCode, product.getCode())));
     fullSupplyLineItem.setRnrId(requisition.getId());
@@ -137,26 +136,104 @@ public class RequisitionMapperIT {
   }
 
   @Test
-  public void shouldReturnRequisitionIfExistsByFacilityProgramAndPeriod() {
+  public void shouldReturnRequisitionWithoutLineItemsByFacilityProgramAndPeriod() {
+    Program program = insertProgram();
+
+    Product fullSupplyProduct = insertProduct(true, "P1");
+    Product nonFullSupplyProduct = insertProduct(false, "P2");
+
+    ProgramProduct fullSupplyProgramProduct = insertProgramProduct(fullSupplyProduct, program);
+    ProgramProduct nonFullSupplyProgramProduct = insertProgramProduct(nonFullSupplyProduct, program);
+
+    FacilityApprovedProduct fullSupplyFacilityApprovedProduct = insertFacilityApprovedProduct(fullSupplyProgramProduct);
+    FacilityApprovedProduct nonFullSupplyFacilityApprovedProduct = insertFacilityApprovedProduct(nonFullSupplyProgramProduct);
+
     Rnr requisition = insertRequisition(processingPeriod1, INITIATED);
     insertRequisition(processingPeriod2, INITIATED);
-    setupLineItem(requisition);
 
-    Program program = new Program(PROGRAM_ID);
-    Rnr returnedRequisition = mapper.getRequisition(facility, program, processingPeriod1);
+    insertRnrLineItem(requisition, fullSupplyFacilityApprovedProduct);
+    insertRnrLineItem(requisition, nonFullSupplyFacilityApprovedProduct);
 
-    assertThat(returnedRequisition.getLineItems().size(), is(1));
+    Rnr returnedRequisition = mapper.getRequisition(facility, new Program(PROGRAM_ID), processingPeriod1);
 
     assertThat(returnedRequisition.getId(), is(requisition.getId()));
     assertThat(returnedRequisition.getFacility().getId(), is(facility.getId()));
     assertThat(returnedRequisition.getProgram().getId(), is(PROGRAM_ID));
     assertThat(returnedRequisition.getPeriod().getId(), is(processingPeriod1.getId()));
+    assertThat(returnedRequisition.getLineItems().size(), is(0));
+    assertThat(returnedRequisition.getNonFullSupplyLineItems().size(), is(0));
+  }
+
+  @Test
+  public void shouldReturnRequisitionWithFullSupplyItemsByFacilityProgramAndPeriod() {
+    Program program = insertProgram();
+
+    Product fullSupplyProduct = insertProduct(true, "P1");
+    Product nonFullSupplyProduct = insertProduct(false, "P2");
+
+    ProgramProduct fullSupplyProgramProduct = insertProgramProduct(fullSupplyProduct, program);
+    ProgramProduct nonFullSupplyProgramProduct = insertProgramProduct(nonFullSupplyProduct, program);
+
+    FacilityApprovedProduct fullSupplyFacilityApprovedProduct = insertFacilityApprovedProduct(fullSupplyProgramProduct);
+    FacilityApprovedProduct nonFullSupplyFacilityApprovedProduct = insertFacilityApprovedProduct(nonFullSupplyProgramProduct);
+
+    Rnr requisition = insertRequisition(processingPeriod1, INITIATED);
+    insertRequisition(processingPeriod2, INITIATED);
+
+    insertRnrLineItem(requisition, fullSupplyFacilityApprovedProduct);
+    insertRnrLineItem(requisition, nonFullSupplyFacilityApprovedProduct);
+
+    Rnr returnedRequisition = mapper.getRequisitionWithFullSupplyLineItems(facility, new Program(PROGRAM_ID), processingPeriod1);
+
+    assertThat(returnedRequisition.getId(), is(requisition.getId()));
+    assertThat(returnedRequisition.getFacility().getId(), is(facility.getId()));
+    assertThat(returnedRequisition.getProgram().getId(), is(PROGRAM_ID));
+    assertThat(returnedRequisition.getPeriod().getId(), is(processingPeriod1.getId()));
+    assertThat(returnedRequisition.getLineItems().size(), is(1));
+    assertThat(returnedRequisition.getLineItems().get(0).getProductCode(), is(fullSupplyProduct.getCode()));
+    assertThat(returnedRequisition.getNonFullSupplyLineItems().size(), is(0));
+  }
+
+  @Test
+  public void shouldReturnRequisitionWithNonFullSupplyItemsByFacilityProgramAndPeriod() {
+    Program program = insertProgram();
+
+    Product fullSupplyProduct = insertProduct(true, "P1");
+    Product nonFullSupplyProduct = insertProduct(false, "P2");
+
+    ProgramProduct fullSupplyProgramProduct = insertProgramProduct(fullSupplyProduct, program);
+    ProgramProduct nonFullSupplyProgramProduct = insertProgramProduct(nonFullSupplyProduct, program);
+
+    FacilityApprovedProduct fullSupplyFacilityApprovedProduct = insertFacilityApprovedProduct(fullSupplyProgramProduct);
+    FacilityApprovedProduct nonFullSupplyFacilityApprovedProduct = insertFacilityApprovedProduct(nonFullSupplyProgramProduct);
+
+    Rnr requisition = insertRequisition(processingPeriod1, INITIATED);
+    insertRequisition(processingPeriod2, INITIATED);
+
+    insertRnrLineItem(requisition, fullSupplyFacilityApprovedProduct);
+    insertRnrLineItem(requisition, nonFullSupplyFacilityApprovedProduct);
+
+    Rnr returnedRequisition = mapper.getRequisitionWithNonFullSupplyLineItems(facility, new Program(PROGRAM_ID), processingPeriod1);
+
+    assertThat(returnedRequisition.getId(), is(requisition.getId()));
+    assertThat(returnedRequisition.getFacility().getId(), is(facility.getId()));
+    assertThat(returnedRequisition.getProgram().getId(), is(PROGRAM_ID));
+    assertThat(returnedRequisition.getPeriod().getId(), is(processingPeriod1.getId()));
+    assertThat(returnedRequisition.getLineItems().size(), is(0));
+    assertThat(returnedRequisition.getNonFullSupplyLineItems().size(), is(1));
+    assertThat(returnedRequisition.getNonFullSupplyLineItems().get(0).getProductCode(), is(nonFullSupplyProduct.getCode()));
   }
 
   @Test
   public void shouldPopulateLineItemsWhenGettingRnrById() throws Exception {
     Rnr requisition = insertRequisition(processingPeriod1, INITIATED);
-    setupLineItem(requisition);
+    Product product = insertProduct(true, "P1");
+    Program program = insertProgram();
+    ProgramProduct programProduct = insertProgramProduct(product, program);
+    FacilityApprovedProduct facilityApprovedProduct = insertFacilityApprovedProduct(programProduct);
+
+    RnrLineItem item1 = insertRnrLineItem(requisition, facilityApprovedProduct);
+    lossesAndAdjustmentsMapper.insert(item1, RnrLineItemBuilder.ONE_LOSS);
     Rnr returnedRequisition = mapper.getById(requisition.getId());
 
     assertThat(returnedRequisition.getLineItems().size(), is(1));
@@ -218,7 +295,7 @@ public class RequisitionMapperIT {
   }
 
   @Test
-  public void shouldGetAllTheApprovedRequisitions(){
+  public void shouldGetAllTheApprovedRequisitions() {
     Rnr requisition = insertRequisition(processingPeriod1, APPROVED);
     requisition.setSupervisoryNodeId(supervisoryNode.getId());
     Facility supplyingFacility = make(a(defaultFacility, with(code, "SF")));
@@ -248,23 +325,34 @@ public class RequisitionMapperIT {
     return rnr;
   }
 
-  private void setupLineItem(Rnr rnr) {
-    Product product = make(a(ProductBuilder.defaultProduct));
-    productMapper.insert(product);
-
-    Program program = make(a(ProgramBuilder.defaultProgram));
-    programMapper.insert(program);
-
-    ProgramProduct programProduct = new ProgramProduct(program, product, 30, true, new Money("12.5000"));
-    programProductMapper.insert(programProduct);
-
-    FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct("warehouse", programProduct, 3);
-    facilityApprovedProductMapper.insert(facilityApprovedProduct);
-
-
+  private RnrLineItem insertRnrLineItem(Rnr rnr, FacilityApprovedProduct facilityApprovedProduct) {
     RnrLineItem item = new RnrLineItem(rnr.getId(), facilityApprovedProduct, 1);
     lineItemMapper.insert(item);
-    lossMapper.insert(item, RnrLineItemBuilder.ONE_LOSS);
+    return item;
+  }
+
+  private FacilityApprovedProduct insertFacilityApprovedProduct(ProgramProduct programProduct) {
+    FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct("warehouse", programProduct, 3);
+    facilityApprovedProductMapper.insert(facilityApprovedProduct);
+    return facilityApprovedProduct;
+  }
+
+  private ProgramProduct insertProgramProduct(Product product, Program program) {
+    ProgramProduct programProduct = new ProgramProduct(program, product, 30, true, new Money("12.5000"));
+    programProductMapper.insert(programProduct);
+    return programProduct;
+  }
+
+  private Program insertProgram() {
+    Program program = make(a(ProgramBuilder.defaultProgram));
+    programMapper.insert(program);
+    return program;
+  }
+
+  private Product insertProduct(boolean isFullSupply, String productCode) {
+    Product product = make(a(ProductBuilder.defaultProduct, with(ProductBuilder.code, productCode), with(ProductBuilder.fullSupply, isFullSupply)));
+    productMapper.insert(product);
+    return product;
   }
 
   private ProcessingPeriod insertPeriod(String name) {

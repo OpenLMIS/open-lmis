@@ -1,3 +1,4 @@
+// TODO: Remove this controller
 function InitiateMySupervisedFacilitiesRnrController($scope, UserSupervisedProgramList, UserSupervisedFacilitiesForProgram) {
 
   UserSupervisedProgramList.get({}, function (data) {

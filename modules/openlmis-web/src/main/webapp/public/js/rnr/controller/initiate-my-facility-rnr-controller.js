@@ -1,3 +1,4 @@
+// TODO: Remove this controller
 function InitiateMyFacilityRnrController($scope, UserFacilityList, UserSupportedProgramInFacilityForAnOperation, UserSupervisedProgramList, UserSupervisedFacilitiesForProgram) {
 
   $scope.loadFacilityData = function(selectedType) {
