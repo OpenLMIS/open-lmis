@@ -7,6 +7,7 @@ import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,7 @@ public class RnrTemplateService {
         return rnrRepository.fetchRnrTemplateColumns(programId);
     }
 
-
+    @Transactional
     public Map<String, OpenLmisMessage> saveRnRTemplateForProgram(ProgramRnrTemplate programTemplate) {
         Map<String, OpenLmisMessage> errors =programTemplate.validateToSave();
 

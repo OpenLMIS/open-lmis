@@ -7,7 +7,6 @@ import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.repository.mapper.RnrColumnMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,7 +23,7 @@ public class RnrTemplateRepository {
     }
 
 
-    @Transactional
+
     public void saveProgramRnrTemplate(ProgramRnrTemplate programTemplate) {
         if (rnrColumnMapper.isRnrTemplateDefined(programTemplate.getProgramId())) {
             updateAllProgramRnRColumns(programTemplate);
