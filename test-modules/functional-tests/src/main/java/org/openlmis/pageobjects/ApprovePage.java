@@ -41,6 +41,21 @@ public class ApprovePage extends Page {
     @FindBy(how = How.XPATH, using = "//div[@class='ngCellText colt13']/span")
     private static WebElement calculateOrderQuantity;
 
+    @FindBy(how = How.XPATH, using = "//div[@ng-grid='nonFullSupplyGrid']/div[@class='ngViewport ng-scope']/div/div/div[15]/div/span")
+    private static WebElement requestedOrderQuantityNonFullSupply;
+
+    @FindBy(how = How.XPATH, using = "//div[@ng-grid='nonFullSupplyGrid']/div[@class='ngViewport ng-scope']/div/div/div[18]/div/span")
+    private static WebElement packsToShipNonFullSupply;
+
+    @FindBy(how = How.XPATH, using = "//div[@ng-grid='nonFullSupplyGrid']/div[@class='ngViewport ng-scope']/div/div/div[20]/span[@ng-bind='row.entity.cost']")
+    private static WebElement totalCostNonFullSupply;
+
+    @FindBy(how = How.XPATH, using = "//div[@ng-grid='nonFullSupplyGrid']/div[@class='ngViewport ng-scope']/div/div/div[19]/span[@ng-bind='row.entity.price']")
+    private static WebElement pricePerPackNonFullSupply;
+
+    @FindBy(how = How.XPATH, using = "//div[@ng-grid='nonFullSupplyGrid']/div[@class='ngViewport ng-scope']/div/div/div[17]/div/ng-form/input")
+    private static WebElement approvedQuantityNonFullSupply;
+
     @FindBy(how = How.XPATH, using = "//div[@class='ngCellText colt17']/span")
     private static WebElement packsToShip;
 
@@ -119,6 +134,12 @@ public class ApprovePage extends Page {
         String actualCalculatedOrderQuantity=calculateOrderQuantity.getText();
         String actualApproveQuantity=testWebDriver.getAttribute(quantityApproved,"value");
         SeleneseTestNgHelper.assertEquals(actualApproveQuantity, actualCalculatedOrderQuantity);
+
+        testWebDriver.waitForElementToAppear(approvedQuantityNonFullSupply);
+        String actualRequestedOrderQuantity=requestedOrderQuantityNonFullSupply.getText();
+        String actualApproveQuantityNonFullSupply=testWebDriver.getAttribute(approvedQuantityNonFullSupply,"value");
+        SeleneseTestNgHelper.assertEquals(actualApproveQuantityNonFullSupply, actualRequestedOrderQuantity);
+
     }
 
     public void verifyApprovedQuantityApprovedFromLowerHierarchy(String approvedQuantity)
@@ -135,16 +156,24 @@ public class ApprovePage extends Page {
         quantityApproved.sendKeys(approvedQuantity);
         remarks.click();
         SeleneseTestNgHelper.assertEquals(packsToShip.getText().trim(),Integer.parseInt(approvedQuantity)/10);
-        if(totalCost.getText().contains(".")) {
 
           BigDecimal cost = new BigDecimal((Float.parseFloat(packsToShip.getText().trim()) * Float.parseFloat(pricePerPack.getText().trim()))).setScale(2, ROUND_HALF_UP);
-
-
           SeleneseTestNgHelper.assertEquals(String.valueOf(cost), totalCost.getText().trim());
-        }
-        else
-        SeleneseTestNgHelper.assertEquals(String.valueOf(Float.parseFloat(packsToShip.getText().trim())*Float.parseFloat(pricePerPack.getText().trim())),totalCost.getText().trim()+".0");
-        SeleneseTestNgHelper.assertEquals(overalltotalCost.getText().trim(),totalCost.getText().trim());
+
+
+        approvedQuantityNonFullSupply.clear();
+        approvedQuantityNonFullSupply.sendKeys(approvedQuantity);
+        remarks.click();
+        SeleneseTestNgHelper.assertEquals(packsToShipNonFullSupply.getText().trim(),Integer.parseInt(approvedQuantity)/10);
+
+            BigDecimal costNonFullSupply = new BigDecimal((Float.parseFloat(packsToShipNonFullSupply.getText().trim()) * Float.parseFloat(pricePerPackNonFullSupply.getText().trim()))).setScale(2, ROUND_HALF_UP);
+            SeleneseTestNgHelper.assertEquals(String.valueOf(costNonFullSupply), totalCostNonFullSupply.getText().trim());
+
+
+        BigDecimal totalOverAllCost = new BigDecimal((Float.parseFloat(totalCost.getText().trim()) + Float.parseFloat(totalCostNonFullSupply.getText().trim()))).setScale(2, ROUND_HALF_UP);
+        SeleneseTestNgHelper.assertEquals(overalltotalCost.getText().trim(),String.valueOf(totalOverAllCost));
+
+
     }
 
    public void approveRequisition()
