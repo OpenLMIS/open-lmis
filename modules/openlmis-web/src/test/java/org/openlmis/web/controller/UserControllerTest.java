@@ -15,7 +15,6 @@ import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 
 import javax.servlet.ServletException;
@@ -40,9 +39,6 @@ public class UserControllerTest {
 
   private MockHttpServletRequest httpServletRequest;
 
-  private MockHttpServletResponse httpServletResponse;
-
-
   private UserController userController;
 
   @Mock
@@ -57,7 +53,6 @@ public class UserControllerTest {
   public void setUp() {
     initMocks(this);
     httpServletRequest = new MockHttpServletRequest();
-    httpServletResponse = new MockHttpServletResponse();
     session = new MockHttpSession();
     httpServletRequest.setSession(session);
 
@@ -86,11 +81,11 @@ public class UserControllerTest {
   public void shouldGetAllPrivilegesForTheLoggedInUser() throws Exception {
     String username = "Foo";
     session.setAttribute(UserAuthenticationSuccessHandler.USER, username);
-    List<Right> listOfRights = new ArrayList<>();
-    when(roleRightService.getRights(username)).thenReturn(listOfRights);
+    Set<Right> rights = new HashSet<>();
+    when(roleRightService.getRights(username)).thenReturn(rights);
     HashMap<String, Object> params = userController.user(httpServletRequest, "true");
     verify(roleRightService).getRights(username);
-    assertThat((List<Right>) params.get("rights"), is(listOfRights));
+    assertThat((Set<Right>) params.get("rights"), is(rights));
   }
 
   @Test

@@ -17,7 +17,9 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
@@ -31,97 +33,95 @@ import static org.openlmis.web.response.OpenLmisResponse.SUCCESS;
 @RunWith(MockitoJUnitRunner.class)
 public class RoleRightsControllerTest {
 
-    Role role;
+  Role role;
 
-    @Mock
-    RoleRightsService roleRightsService;
+  @Mock
+  RoleRightsService roleRightsService;
 
-    private MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
+  private MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
 
-    RoleRightsController controller;
-    private static final int LOGGED_IN_USERID = 11;
+  RoleRightsController controller;
+  private static final int LOGGED_IN_USERID = 11;
 
-    @Before
-    public void setUp() throws Exception {
-        controller = new RoleRightsController(roleRightsService);
-        MockHttpSession mockHttpSession = new MockHttpSession();
-        httpServletRequest.setSession(mockHttpSession);
-        mockHttpSession.setAttribute(USER_ID, LOGGED_IN_USERID);
-        role = new Role("test role", "test role description");
-    }
+  @Before
+  public void setUp() throws Exception {
+    controller = new RoleRightsController(roleRightsService);
+    MockHttpSession mockHttpSession = new MockHttpSession();
+    httpServletRequest.setSession(mockHttpSession);
+    mockHttpSession.setAttribute(USER_ID, LOGGED_IN_USERID);
+    role = new Role("test role", "test role description");
+  }
 
-    @Test
-    public void shouldFetchAllRightsInSystem() throws Exception {
-        List<Right> rights = new ArrayList<>();
-        when(roleRightsService.getAllRights()).thenReturn(rights);
-        ResponseEntity<OpenLmisResponse> result = controller.getAllRights();
-        assertThat((List<Right>) result.getBody().getData().get(RIGHTS), is(rights));
-        verify(roleRightsService).getAllRights();
-    }
+  @Test
+  public void shouldFetchAllRightsInSystem() throws Exception {
+    Set<Right> rights = new HashSet<>();
+    when(roleRightsService.getAllRights()).thenReturn(rights);
+    ResponseEntity<OpenLmisResponse> result = controller.getAllRights();
+    assertThat((Set<Right>) result.getBody().getData().get(RIGHTS), is(rights));
+    verify(roleRightsService).getAllRights();
+  }
 
-    @Test
-    public void shouldSaveRole() throws Exception {
-        ResponseEntity<OpenLmisResponse> responseEntity = controller.createRole(role, httpServletRequest);
-        verify(roleRightsService).saveRole(role);
-        assertThat(role.getModifiedBy(), is(LOGGED_IN_USERID));
-        String successMsg = (String) responseEntity.getBody().getData().get(SUCCESS);
-        assertThat(successMsg, is("'test role' created successfully"));
-    }
+  @Test
+  public void shouldSaveRole() throws Exception {
+    ResponseEntity<OpenLmisResponse> responseEntity = controller.createRole(role, httpServletRequest);
+    verify(roleRightsService).saveRole(role);
+    assertThat(role.getModifiedBy(), is(LOGGED_IN_USERID));
+    String successMsg = (String) responseEntity.getBody().getData().get(SUCCESS);
+    assertThat(successMsg, is("'test role' created successfully"));
+  }
 
-    @Test
-    public void shouldGiveErrorIfRoleNotSaved() throws Exception {
-        doThrow(new DataException("Error message")).when(roleRightsService).saveRole(role);
+  @Test
+  public void shouldGiveErrorIfRoleNotSaved() throws Exception {
+    doThrow(new DataException("Error message")).when(roleRightsService).saveRole(role);
 
-        ResponseEntity<OpenLmisResponse> responseEntity = controller.createRole(role, httpServletRequest);
+    ResponseEntity<OpenLmisResponse> responseEntity = controller.createRole(role, httpServletRequest);
 
-        verify(roleRightsService).saveRole(role);
-        assertThat(responseEntity.getBody().getErrorMsg(), is("Error message"));
-        assertThat(responseEntity.getStatusCode(), is(HttpStatus.CONFLICT));
-    }
+    verify(roleRightsService).saveRole(role);
+    assertThat(responseEntity.getBody().getErrorMsg(), is("Error message"));
+    assertThat(responseEntity.getStatusCode(), is(HttpStatus.CONFLICT));
+  }
 
-    @Test
-    public void shouldGetAllRolesWithRights() throws Exception {
-        List<Role> roles = new ArrayList<>();
-        when(roleRightsService.getAllRoles()).thenReturn(roles);
-        OpenLmisResponse response = controller.getAll().getBody();
-        assertThat((List<Role>) response.getData().get(ROLES), is(roles));
-        verify(roleRightsService).getAllRoles();
-    }
+  @Test
+  public void shouldGetAllRolesWithRights() throws Exception {
+    List<Role> roles = new ArrayList<>();
+    when(roleRightsService.getAllRoles()).thenReturn(roles);
+    OpenLmisResponse response = controller.getAll().getBody();
+    assertThat((List<Role>) response.getData().get(ROLES), is(roles));
+    verify(roleRightsService).getAllRoles();
+  }
 
-    @Test
-    public void shouldGetRoleById() throws Exception {
-        Role role = new Role();
-        int roleId = 1;
-        when(roleRightsService.getRole(roleId)).thenReturn(role);
+  @Test
+  public void shouldGetRoleById() throws Exception {
+    Role role = new Role();
+    int roleId = 1;
+    when(roleRightsService.getRole(roleId)).thenReturn(role);
 
-        OpenLmisResponse response = controller.get(roleId).getBody();
+    OpenLmisResponse response = controller.get(roleId).getBody();
 
-        assertThat((Role) response.getData().get(ROLE), is(role));
-        verify(roleRightsService).getRole(roleId);
-    }
+    assertThat((Role) response.getData().get(ROLE), is(role));
+    verify(roleRightsService).getRole(roleId);
+  }
 
-    @Test
-    public void shouldUpdateRoleAndRights() throws Exception {
-        Role role = new Role(123, "Role Name", "Desc", null, null, asList(CONFIGURE_RNR));
+  @Test
+  public void shouldUpdateRoleAndRights() throws Exception {
+    Role role = new Role(123, "Role Name", "Desc", null, null, new HashSet<>(asList(CONFIGURE_RNR)));
 
-        OpenLmisResponse response = controller.updateRole(role.getId(), role, httpServletRequest).getBody();
+    OpenLmisResponse response = controller.updateRole(role.getId(), role, httpServletRequest).getBody();
 
-        assertThat(response.getSuccessMsg(), is("Role updated successfully"));
-        verify(roleRightsService).updateRole(role);
-    }
+    assertThat(response.getSuccessMsg(), is("Role updated successfully"));
+    verify(roleRightsService).updateRole(role);
+  }
 
-    @Test
-    public void shouldReturnErrorMsgIfUpdateFails() throws Exception {
+  @Test
+  public void shouldReturnErrorMsgIfUpdateFails() throws Exception {
 
-        Role role = new Role(123, "Role Name", "Desc");
+    Role role = new Role(123, "Role Name", "Desc");
 
-        doThrow(new DataException("Duplicate Role found")).when(roleRightsService).updateRole(role);
+    doThrow(new DataException("Duplicate Role found")).when(roleRightsService).updateRole(role);
 
-        ResponseEntity<OpenLmisResponse> responseEntity = controller.updateRole(role.getId(), role, httpServletRequest);
+    ResponseEntity<OpenLmisResponse> responseEntity = controller.updateRole(role.getId(), role, httpServletRequest);
 
-        assertThat(responseEntity.getStatusCode(), is(HttpStatus.CONFLICT));
-        assertThat(responseEntity.getBody().getErrorMsg(), is("Duplicate Role found"));
-
-
-    }
+    assertThat(responseEntity.getStatusCode(), is(HttpStatus.CONFLICT));
+    assertThat(responseEntity.getBody().getErrorMsg(), is("Duplicate Role found"));
+  }
 }

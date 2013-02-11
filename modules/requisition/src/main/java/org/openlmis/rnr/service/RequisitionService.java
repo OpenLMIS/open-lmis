@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.STOCK_IN_HAND;
@@ -228,7 +229,7 @@ public class RequisitionService {
 
 
   private boolean isUserAllowedToSave(Rnr rnr) {
-    List<Right> userRights = roleRightsService.getRights(rnr.getModifiedBy());
+    Set<Right> userRights = roleRightsService.getRights(rnr.getModifiedBy());
     return (rnr.getStatus() == INITIATED && userRights.contains(CREATE_REQUISITION)) ||
         (rnr.getStatus() == SUBMITTED && userRights.contains(AUTHORIZE_REQUISITION)) ||
         (rnr.getStatus() == AUTHORIZED && userRights.contains(APPROVE_REQUISITION)) ||

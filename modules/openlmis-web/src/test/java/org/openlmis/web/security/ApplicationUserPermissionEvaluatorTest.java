@@ -8,8 +8,8 @@ import org.openlmis.core.domain.Right;
 import org.openlmis.core.service.RoleRightsService;
 import org.springframework.security.core.Authentication;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -28,7 +28,7 @@ public class ApplicationUserPermissionEvaluatorTest {
   @Test
   public void shouldReturnTrueIfUserHasRequiredPermission() throws Exception {
     when(authentication.getName()).thenReturn(USER);
-    List<Right> rights = new ArrayList<Right>() {{
+    Set<Right> rights = new HashSet<Right>() {{
       add(Right.CONFIGURE_RNR);
       add(Right.AUTHORIZE_REQUISITION);
     }};

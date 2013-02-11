@@ -9,7 +9,9 @@ import org.openlmis.core.repository.RoleRightsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
 
@@ -30,17 +32,17 @@ public class RoleRightsService {
     return roleAssignmentRepository.getRoleAssignmentsForUserWithRight(right, userId);
   }
 
-  public List<Right> getRights(String username) {
+  public Set<Right> getRights(String username) {
     return roleRightsRepository.getAllRightsForUser(username);
   }
 
-  public List<Right> getAllRights() {
-    return asList(Right.values());
+  public Set<Right> getAllRights() {
+    return new LinkedHashSet<>(asList(Right.values()));
   }
 
   public void saveRole(Role role) {
     role.validate();
-    roleRightsRepository.saveRole(role);
+    roleRightsRepository.createRole(role);
   }
 
   public List<Role> getAllRoles() {
@@ -55,7 +57,7 @@ public class RoleRightsService {
     roleRightsRepository.updateRole(role);
   }
 
-  public List<Right> getRights(Integer userId) {
+  public Set<Right> getRights(Integer userId) {
     return roleRightsRepository.getAllRightsForUser(userId);
   }
 }

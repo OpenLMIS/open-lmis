@@ -11,7 +11,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
@@ -47,7 +50,7 @@ public class RoleRightsMapperIT {
 
   @Test
   public void shouldSetupRightsForAdminRole() {
-    List<Right> adminRights = roleRightsMapper.getAllRightsForUserByUserName("Admin123");
+    Set<Right> adminRights = roleRightsMapper.getAllRightsForUserByUserName("Admin123");
     assertEquals(6, adminRights.size());
     Assert.assertTrue(adminRights.containsAll(asList(CONFIGURE_RNR, MANAGE_FACILITY, MANAGE_ROLE, MANAGE_SCHEDULE, UPLOADS)));
   }
@@ -57,7 +60,7 @@ public class RoleRightsMapperIT {
     Facility facility = insertFacility();
     User user = insertUser(facility);
 
-    List<Right> allRightsForUser = roleRightsMapper.getAllRightsForUserByUserName(user.getUserName());
+    Set<Right> allRightsForUser = roleRightsMapper.getAllRightsForUserByUserName(user.getUserName());
     assertThat(allRightsForUser.size(), is(0));
 
     Program program = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
@@ -77,7 +80,7 @@ public class RoleRightsMapperIT {
     Facility facility = insertFacility();
     User user = insertUser(facility);
 
-    List<Right> allRightsForUser = roleRightsMapper.getAllRightsForUserById(user.getId());
+    Set<Right> allRightsForUser = roleRightsMapper.getAllRightsForUserById(user.getId());
     assertThat(allRightsForUser.size(), is(0));
 
     Program program = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
@@ -127,7 +130,8 @@ public class RoleRightsMapperIT {
     roleRightsMapper.createRoleRight(role.getId(), CONFIGURE_RNR);
     roleRightsMapper.createRoleRight(role.getId(), CREATE_REQUISITION);
 
-    List<Role> roles = roleRightsMapper.getAllRoles();
+    List<Role> roles = new ArrayList();
+    roles.addAll(roleRightsMapper.getAllRoles());
 
     assertThat(roles.get(0).getName(), is("Admin"));
     Role fetchedRole = roles.get(1);
@@ -142,7 +146,7 @@ public class RoleRightsMapperIT {
     roleRightsMapper.insertRole(role);
 
     role.setName("Right2");
-    role.setRights(asList(CREATE_REQUISITION));
+    role.setRights(new HashSet<>(asList(CREATE_REQUISITION)));
     role.setDescription("Right Description Changed");
     role.setModifiedBy(222);
 

@@ -6,45 +6,46 @@ import org.openlmis.core.domain.Role;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface RoleRightsMapper {
 
   @Insert("INSERT INTO role_rights(roleId, rightName) VALUES " +
-      "(#{roleId}, #{right})")
+    "(#{roleId}, #{right})")
   int createRoleRight(@Param(value = "roleId") Integer roleId, @Param(value = "right") Right right);
 
   @Select({"SELECT RR.rightName",
-      "FROM users U, role_assignments RA, role_rights RR WHERE",
-      "lower(U.userName) = lower(#{userName}) ",
-      "AND U.id = RA.userId",
-      "AND RA.roleId = RR.roleId"})
-  List<Right> getAllRightsForUserByUserName(String username);
+    "FROM users U, role_assignments RA, role_rights RR WHERE",
+    "lower(U.userName) = lower(#{userName}) ",
+    "AND U.id = RA.userId",
+    "AND RA.roleId = RR.roleId"})
+  Set<Right> getAllRightsForUserByUserName(String username);
 
   //used below
   @SuppressWarnings("unused")
   @Select("SELECT rightName FROM role_rights RR WHERE roleId = #{roleId}")
-  List<Right> getAllRightsForRole(Integer roleId);
+  Set<Right> getAllRightsForRole(Integer roleId);
 
   @Insert({"INSERT INTO roles",
-      "(name, description, modifiedBy) VALUES",
-      "(#{name}, #{description}, #{modifiedBy})"})
+    "(name, description, modifiedBy) VALUES",
+    "(#{name}, #{description}, #{modifiedBy})"})
   @Options(useGeneratedKeys = true)
   int insertRole(Role role);
 
   @Select("SELECT * FROM roles WHERE id = #{id}")
   @Results(value = {
-      @Result(property = "id", column = "id"),
-      @Result(property = "rights", javaType = List.class, column = "id",
-          many = @Many(select = "getAllRightsForRole"))
+    @Result(property = "id", column = "id"),
+    @Result(property = "rights", javaType = Set.class, column = "id",
+      many = @Many(select = "getAllRightsForRole"))
   })
   Role getRole(Integer id);
 
   @Select("SELECT * FROM roles ORDER BY id")
   @Results(value = {
-      @Result(property = "id", column = "id"),
-      @Result(property = "rights", javaType = List.class, column = "id",
-          many = @Many(select = "getAllRightsForRole"))
+    @Result(property = "id", column = "id"),
+    @Result(property = "rights", javaType = Set.class, column = "id",
+      many = @Many(select = "getAllRightsForRole"))
   })
   List<Role> getAllRoles();
 
@@ -52,15 +53,12 @@ public interface RoleRightsMapper {
   void updateRole(Role role);
 
   @Delete("DELETE FROM role_rights WHERE roleId=#{roleId}")
-  int deleteAllRightsForRole( int roleId);
+  int deleteAllRightsForRole(int roleId);
 
   @Select({"SELECT RR.rightName",
-        "FROM users U, role_assignments RA, role_rights RR WHERE",
-        "U.id = #{userId}",
-        "AND U.id = RA.userId",
-        "AND RA.roleId = RR.roleId"})
-  List<Right> getAllRightsForUserById(@Param("userId") Integer userId);
-
-
-
+    "FROM users U, role_assignments RA, role_rights RR WHERE",
+    "U.id = #{userId}",
+    "AND U.id = RA.userId",
+    "AND RA.roleId = RR.roleId"})
+  Set<Right> getAllRightsForUserById(@Param("userId") Integer userId);
 }

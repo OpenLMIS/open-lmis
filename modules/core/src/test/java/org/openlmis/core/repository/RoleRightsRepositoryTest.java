@@ -13,6 +13,7 @@ import org.openlmis.core.repository.mapper.RoleRightsMapper;
 import org.springframework.dao.DuplicateKeyException;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -21,6 +22,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.domain.Right.CONFIGURE_RNR;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.domain.Right.VIEW_REQUISITION;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RoleRightsRepositoryTest {
@@ -40,13 +42,25 @@ public class RoleRightsRepositoryTest {
 
   @Test
   public void shouldSaveRoleWithMappings() throws Exception {
-    role.setRights(asList(CONFIGURE_RNR, CREATE_REQUISITION));
+    role.setRights(new HashSet<>(asList(CONFIGURE_RNR, CREATE_REQUISITION)));
     role.setId(1);
-    new RoleRightsRepository(roleRightsMapper).saveRole(role);
+    new RoleRightsRepository(roleRightsMapper).createRole(role);
 
     verify(roleRightsMapper).insertRole(role);
     verify(roleRightsMapper).createRoleRight(1, CONFIGURE_RNR);
     verify(roleRightsMapper).createRoleRight(1, CREATE_REQUISITION);
+  }
+
+  @Test
+  public void shouldSaveRoleWithMappingsAndTheirDependentMappings() throws Exception {
+    role.setRights(new HashSet<>(asList(CONFIGURE_RNR, CREATE_REQUISITION)));
+    role.setId(1);
+    new RoleRightsRepository(roleRightsMapper).createRole(role);
+
+    verify(roleRightsMapper).insertRole(role);
+    verify(roleRightsMapper).createRoleRight(1, CONFIGURE_RNR);
+    verify(roleRightsMapper).createRoleRight(1, CREATE_REQUISITION);
+    verify(roleRightsMapper, times(1)).createRoleRight(1, VIEW_REQUISITION);
   }
 
   @Test
@@ -56,7 +70,7 @@ public class RoleRightsRepositoryTest {
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Duplicate Role found");
 
-    new RoleRightsRepository(roleRightsMapper).saveRole(role);
+    new RoleRightsRepository(roleRightsMapper).createRole(role);
   }
 
   @Test
@@ -94,7 +108,7 @@ public class RoleRightsRepositoryTest {
 
   @Test
   public void shouldUpdateRole() {
-    role.setRights(asList(CONFIGURE_RNR));
+    role.setRights(new HashSet<>(asList(CONFIGURE_RNR)));
     role.setId(100);
     new RoleRightsRepository(roleRightsMapper).updateRole(role);
     verify(roleRightsMapper).updateRole(role);

@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -18,7 +18,7 @@ public class
   private String description;
   private Integer modifiedBy;
   private Date modifiedDate;
-  private List<Right> rights;
+  private Set<Right> rights;
 
   public Role(String name, String description) {
     this(null, name, description);

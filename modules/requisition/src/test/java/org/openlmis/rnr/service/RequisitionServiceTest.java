@@ -24,10 +24,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -88,7 +85,7 @@ public class RequisitionServiceTest {
   @Before
   public void setup() {
     requisitionService = new RequisitionService(requisitionRepository, rnrTemplateRepository, facilityApprovedProductService,
-        supervisoryNodeService, roleRightService, programService, processingScheduleService, facilityService, supplyLineService);
+      supervisoryNodeService, roleRightService, programService, processingScheduleService, facilityService, supplyLineService);
     submittedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, SUBMITTED)));
     initiatedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, INITIATED)));
     authorizedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, AUTHORIZED)));
@@ -215,7 +212,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date1.toDate());
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(rnr2);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date1.toDate(), processingPeriod2.getId())).
-        thenReturn(Arrays.asList(processingPeriod3, processingPeriod4));
+      thenReturn(Arrays.asList(processingPeriod3, processingPeriod4));
 
     List<ProcessingPeriod> periods = requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
 
@@ -235,7 +232,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date1.toDate());
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(null);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date1.toDate(), null)).
-        thenReturn(Arrays.asList(processingPeriod1, processingPeriod2));
+      thenReturn(Arrays.asList(processingPeriod1, processingPeriod2));
 
     List<ProcessingPeriod> periods = requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
 
@@ -246,13 +243,13 @@ public class RequisitionServiceTest {
 
   private Rnr createRequisition(int periodId, RnrStatus status) {
     return make(a(RequisitionBuilder.defaultRnr,
-        with(RequisitionBuilder.periodId, periodId),
-        with(RequisitionBuilder.status, status)));
+      with(RequisitionBuilder.periodId, periodId),
+      with(RequisitionBuilder.status, status)));
   }
 
   private ProcessingPeriod createProcessingPeriod(int id, DateTime startDate) {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod,
-        with(ProcessingPeriodBuilder.startDate, startDate.toDate())));
+      with(ProcessingPeriodBuilder.startDate, startDate.toDate())));
     processingPeriod.setId(id);
     return processingPeriod;
   }
@@ -289,7 +286,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date);
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(requisition);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date, PERIOD.getId())).
-        thenReturn(Arrays.asList(validPeriod));
+      thenReturn(Arrays.asList(validPeriod));
   }
 
   @Test
@@ -443,7 +440,7 @@ public class RequisitionServiceTest {
     savedRnr.setModifiedBy(userId);
 
     fillFacilityProgramAndPeriod(savedRnr);
-    List<Right> listUserRights = Arrays.asList(AUTHORIZE_REQUISITION);
+    Set<Right> listUserRights = new HashSet<>(Arrays.asList(AUTHORIZE_REQUISITION));
     when(roleRightService.getRights(userId)).thenReturn(listUserRights);
     when(requisitionRepository.getById(rnr.getId())).thenReturn(savedRnr);
 
@@ -463,7 +460,7 @@ public class RequisitionServiceTest {
     fillFacilityProgramAndPeriod(savedRnr);
     when(requisitionRepository.getById(rnr.getId())).thenReturn(savedRnr);
 
-    List<Right> listUserRights = Arrays.asList(APPROVE_REQUISITION);
+    Set<Right> listUserRights = new HashSet<>(Arrays.asList(APPROVE_REQUISITION));
     when(roleRightService.getRights(userId)).thenReturn(listUserRights);
 
     requisitionService.save(rnr);
@@ -482,7 +479,7 @@ public class RequisitionServiceTest {
     fillFacilityProgramAndPeriod(savedRnr);
     when(requisitionRepository.getById(rnr.getId())).thenReturn(savedRnr);
 
-    List<Right> listUserRights = Arrays.asList(CREATE_REQUISITION);
+    Set<Right> listUserRights = new HashSet<>(Arrays.asList(CREATE_REQUISITION));
     when(roleRightService.getRights(userId)).thenReturn(listUserRights);
 
     requisitionService.save(rnr);
@@ -500,7 +497,7 @@ public class RequisitionServiceTest {
     savedRnr.setModifiedBy(userId);
 
     fillFacilityProgramAndPeriod(savedRnr);
-    List<Right> listUserRights = Arrays.asList(AUTHORIZE_REQUISITION);
+    Set<Right> listUserRights = new HashSet<>(Arrays.asList(AUTHORIZE_REQUISITION));
     when(requisitionRepository.getById(rnr.getId())).thenReturn(savedRnr);
     when(roleRightService.getRights(userId)).thenReturn(listUserRights);
 
@@ -520,7 +517,7 @@ public class RequisitionServiceTest {
 
     fillFacilityProgramAndPeriod(savedRnr);
     when(requisitionRepository.getById(rnr.getId())).thenReturn(savedRnr);
-    List<Right> listUserRights = Arrays.asList(CREATE_REQUISITION);
+    Set<Right> listUserRights = new HashSet<>(Arrays.asList(CREATE_REQUISITION));
     when(roleRightService.getRights(userId)).thenReturn(listUserRights);
 
     expectedException.expect(DataException.class);

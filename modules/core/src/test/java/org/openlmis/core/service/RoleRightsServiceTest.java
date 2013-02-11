@@ -14,6 +14,7 @@ import org.openlmis.core.repository.RoleAssignmentRepository;
 import org.openlmis.core.repository.RoleRightsRepository;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -47,15 +48,15 @@ public class RoleRightsServiceTest {
 
     @Test
     public void shouldGetAllRightsInAlphabeticalOrder() throws Exception {
-        List<Right> allRights = new RoleRightsService().getAllRights();
+        List<Right> allRights = new ArrayList<>(new RoleRightsService().getAllRights());
         assertThat(allRights.get(0), is(CONFIGURE_RNR));
     }
 
     @Test
     public void shouldSaveRole() throws Exception {
-        role.setRights(asList(CREATE_REQUISITION));
+        role.setRights(new HashSet<>(asList(CREATE_REQUISITION)));
         roleRightsService.saveRole(role);
-        verify(roleRightsRepository).saveRole(role);
+        verify(roleRightsRepository).createRole(role);
     }
 
     @Test
@@ -65,7 +66,7 @@ public class RoleRightsServiceTest {
         expectedEx.expect(DataException.class);
         expectedEx.expectMessage("error-message");
         roleRightsService.saveRole(role);
-        verify(roleRightsRepository, never()).saveRole(role);
+        verify(roleRightsRepository, never()).createRole(role);
     }
 
     @Test
@@ -91,7 +92,7 @@ public class RoleRightsServiceTest {
 
   @Test
   public void shouldUpdateRole(){
-     role.setRights(asList(CREATE_REQUISITION));
+     role.setRights(new HashSet<>(asList(CREATE_REQUISITION)));
      roleRightsService.updateRole(role);
      verify(roleRightsRepository).updateRole(role);
   }
