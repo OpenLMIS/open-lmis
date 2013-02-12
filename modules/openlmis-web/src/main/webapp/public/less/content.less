@@ -1058,10 +1058,16 @@ td .close {
 }
 .prog-role-grid {
   margin: 10px;
+  .fluid-grid {
+    border-radius: 3px 3px 0 0;
+  }
   .row-fluid {
     border-top: 1px solid #DDD;
     &:first-child {
       border-top: 0 none;
+    }
+    .select2-container {
+      width: 100% !important;
     }
   }
   .field-error {
@@ -1069,6 +1075,23 @@ td .close {
     display: block;
     font-size: 0.9em;
     padding-top: 2px;
+  }
+  .add-role-row {
+    border: 1px solid #DDD;
+    border-radius: 0 0 3px 3px;
+    border-top: 0 none;
+    padding: 15px 10px 10px;
+    background-color: #efefef;
+    .fluid-grid-cell {
+      padding: 0;
+    }
+    .span6 {
+      padding: 0 4px;
+    }
+    select {
+      width: 100%;
+      margin-bottom: 0;
+    }
   }
 }
 .fluid-grid {
@@ -1086,4 +1109,25 @@ td .close {
   margin: 0;
   padding: 4px 7px;
   font-size: 1em;
+}
+.delete-role {
+  display: inline-block;
+  margin-top: 2px;
+  font-size: 2em;
+  font-weight: bold;
+  color: #888;
+  &:hover {
+    text-decoration: none;
+    color: #555;
+  }
+}
+.select2-results {
+  .select2-highlighted {
+    background: #61acaf;
+  }
+}
+.select2-container-multi.select2-container-active {
+  .select2-choices {
+    border-color: #17888f;
+  }
 }

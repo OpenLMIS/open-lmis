@@ -1,4 +1,5 @@
 <div ng-controller="UserRoleAssignmentController">
+
   <div class="fluid-grid" ng-show="showHomeFacilityRoleAssignmentOptions()">
     <div class="row-fluid fluid-grid-header">
       <div class="span3">
@@ -21,12 +22,12 @@
       <div class="span6">
         <div class="fluid-grid-cell">
           <select ui-select2 ng-model="roleAssignment.roleIds" placeholder="+ Add Role"
-                  multiple="multiple" style="width:400px" name="roles" id="roles">
+                  multiple="multiple" name="roles" id="roles">
             <option ng-repeat="role in allRoles" value="{{role.id}}" ng-bind="role.name"></option>
           </select>
-        <span ng-show="roleAssignment.roleIds.length == 0" class="field-error">
-         Please fill in this value
-        </span>
+          <span ng-show="roleAssignment.roleIds.length == 0" class="field-error">
+            Please fill in this value
+          </span>
         </div>
       </div>
       <div class="span3">
@@ -35,31 +36,46 @@
         </div>
       </div>
     </div>
+  </div>
 
+  <div class="add-role-row">
     <div class="row-fluid">
+
       <div class="span3">
-        <select
-          ng-options="programSupported.program.id as programSupported.program.name for programSupported in availablePrograms()"
-          ng-model="programSelected">
-          <option value="" ng-bind="selectedProgramMessage"></option>
-        </select>
-      <span ng-show='hasMappingError(showHomeFacilityRoleMappingError, programSelected)' class="field-error">
-        Please select a program
-      </span>
+        <div class="fluid-grid-cell">
+          <select
+              ng-options="programSupported.program.id as programSupported.program.name for programSupported in availablePrograms()"
+              ng-model="programSelected">
+            <option value="" ng-bind="selectedProgramMessage"></option>
+          </select>
+          <span ng-show='hasMappingError(showHomeFacilityRoleMappingError, programSelected)' class="field-error">
+            Please select a program
+          </span>
+        </div>
       </div>
+
       <div class="span6">
-        <select ui-select2 ng-model="selectedRoleIds" placeholder="+ Add Role" multiple="multiple" style="width:400px">
-          <option ng-repeat="role in $parent.allRoles" value="{{role.id}}">{{role.name}}</option>
-        </select>
-      <span ng-show='hasMappingError(showHomeFacilityRoleMappingError,selectedRoleIds)' class="field-error">
-        Please select role(s)
-      </span>
+        <div class="fluid-grid-cell">
+          <select ui-select2 ng-model="selectedRoleIds" placeholder="+ Add Role" multiple="multiple" style="width:400px">
+            <option ng-repeat="role in $parent.allRoles" value="{{role.id}}">{{role.name}}</option>
+          </select>
+          <span ng-show='hasMappingError(showHomeFacilityRoleMappingError,selectedRoleIds)' class="field-error">
+            Please select role(s)
+          </span>
+        </div>
       </div>
+
       <div class="span3">
-        <a ng-click="addHomeFacilityRole()" class="btn btn-primary">+ Add</a>
+        <div class="fluid-grid-cell">
+          <a ng-click="addHomeFacilityRole()" class="btn btn-primary">Add</a>
+        </div>
       </div>
+
     </div>
   </div>
+
+
+
   <div tabindex="-1" id="deleteRolesModal" class="fade ng-pristine ng-valid modal hide" ui-modal="" ng-model="deleteRolesModal">
     <div class="modal-header"><h2>Delete Roles</h2></div>
     <div class="modal-body">
@@ -70,4 +86,5 @@
       <a href="" class="btn" ng-click="deleteRolesModal=false">Cancel</a>
     </div>
   </div>
+
 </div>
