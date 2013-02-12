@@ -46,8 +46,9 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
         dbWrapper.insertFacilities("F10", "F11");
 
-        dbWrapper.updateUser("200","F10","manjyots@thoughtworks.com");
-        dbWrapper.updateUser("300","F11","lokeshag@thoughtworks.com");
+        String passwordUsers="TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
+        dbWrapper.updateUser("200",passwordUsers,"F10","manjyots@thoughtworks.com");
+        dbWrapper.updateUser("300",passwordUsers,"F11","lokeshag@thoughtworks.com");
 
         dbWrapper.insertSupervisoryNode("F10", "N1", "null");
         dbWrapper.insertSupervisoryNodeSecond("F11", "N2", "N1");
@@ -154,7 +155,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     @DataProvider(name = "Data-Provider-Function-Positive")
     public Object[][] parameterIntTestProviderPositive() {
         return new Object[][]{
-                {"Period1","HIV","User123", "User234", "openLmis123",new String[]{"Admin123", "Admin123"}}
+                {"Period1","HIV","User123", "User234", "Admin123",new String[]{"Admin123", "Admin123"}}
         };
 
     }

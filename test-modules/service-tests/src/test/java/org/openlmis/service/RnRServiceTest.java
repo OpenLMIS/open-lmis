@@ -67,7 +67,9 @@ public class RnRServiceTest extends TestCaseHelper {
             String requisitionId=dbWrapper.getRequisitionId();
 
 
-            String INITIATE_RNR_ENDPOINT="/requisitions/"+requisitionId+"/submit.json";
+            String SUBMIT_RNR_ENDPOINT="/requisitions/"+requisitionId+"/submit.json";
+
+            String SAVE_RNR_ENDPOINT="/requisitions/"+requisitionId+"/save.json";
 
             String SUBMIT_RNR_JSON="{\n" +
                     "    \"id\": "+requisitionId+",\n" +
@@ -152,9 +154,12 @@ public class RnRServiceTest extends TestCaseHelper {
                     "    ]\n" +
                     "}";
 
-           String rnrStatus = serviceUtils.putJSON(SUBMIT_RNR_JSON, BASE_URL + INITIATE_RNR_ENDPOINT);
+            String rnrStatusSave = serviceUtils.putJSON(SUBMIT_RNR_JSON, BASE_URL + SAVE_RNR_ENDPOINT);
+            SeleneseTestNgHelper.assertTrue("R&R is not saved successfully",rnrStatusSave.contains("R&R saved successfully!"));
 
-           SeleneseTestNgHelper.assertTrue("R&R is not submitted successfully",rnrStatus.contains("R&R submitted successfully!"));
+           String rnrStatusStatus = serviceUtils.putJSON(SUBMIT_RNR_JSON, BASE_URL + SUBMIT_RNR_ENDPOINT);
+           SeleneseTestNgHelper.assertTrue("R&R is not submitted successfully",rnrStatusStatus.contains("R&R submitted successfully!"));
+
            serviceUtils.getJSON(BASE_URL + "//j_spring_security_logout");
 
 

@@ -66,14 +66,13 @@ public class DBWrapper {
 
     }
 
-    public void updateUser(String userId, String facilityCode, String email) throws SQLException, IOException {
-        boolean flag = false;
+    public void updateUser(String userId, String password, String facilityCode, String email) throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();
 
         dbwrapper.dbConnection("DELETE FROM user_password_reset_tokens;", "alter");
         dbwrapper.dbConnection("update users set id='"+userId+"'  where email='"+email+"';","alter");
         dbwrapper.dbConnection("update users set facilityid=(SELECT id FROM facilities WHERE code = '"+facilityCode+"') where email='"+email+"';","alter");
-
+        dbwrapper.dbConnection("update users set password='"+password+"'  where email='"+email+"';","alter");
     }
 
     public void deleteFacilities() throws IOException , SQLException
