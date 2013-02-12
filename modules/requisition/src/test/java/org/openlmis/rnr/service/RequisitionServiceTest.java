@@ -317,7 +317,7 @@ public class RequisitionServiceTest {
     }};
     Rnr rnrToSubmit = make(a(defaultRnr));
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(rnrToSubmit);
-    Mockito.when(rnrTemplateRepository.fetchRnrTemplateColumns(rnrToSubmit.getProgram().getId())).thenReturn(rnrColumns);
+    Mockito.when(rnrTemplateRepository.fetchRnrTemplateColumns(PROGRAM.getId())).thenReturn(rnrColumns);
     Mockito.doReturn(true).when(savedRnr).validate(rnrColumns);
 
     requisitionService.submit(rnrToSubmit);
@@ -332,7 +332,7 @@ public class RequisitionServiceTest {
   public void shouldReturnMessageWhileSubmittingRnrIfSupervisingNodeNotPresent() throws Exception {
     Rnr rnrToSubmit = make(a(defaultRnr));
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(rnrToSubmit);
-    Mockito.when(rnrTemplateRepository.fetchRnrTemplateColumns(rnrToSubmit.getProgram().getId())).thenReturn(rnrColumns);
+    Mockito.when(rnrTemplateRepository.fetchRnrTemplateColumns(PROGRAM.getId())).thenReturn(rnrColumns);
     Mockito.doReturn(true).when(savedRnr).validate(rnrColumns);
     Mockito.doNothing().when(savedRnr).copyUserEditableFieldsForSaveSubmitOrAuthorize(rnrToSubmit, rnrColumns);
 
