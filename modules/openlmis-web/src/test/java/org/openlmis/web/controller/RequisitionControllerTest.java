@@ -13,11 +13,9 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.web.response.OpenLmisResponse;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.HttpStatus;
@@ -36,25 +34,21 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.openlmis.web.controller.RequisitionController.PERIODS;
-import static org.openlmis.web.controller.RequisitionController.RNR;
-import static org.openlmis.web.controller.RequisitionController.RNR_LIST;
+import static org.openlmis.web.controller.RequisitionController.*;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(RnrDTO.class)
 public class RequisitionControllerTest {
-
   public static final String FACILITY_CODE = "F14";
   public static final String FACILITY_NAME = "Facility";
   public static final String PROGRAM_NAME = "HIV";
-  MockHttpServletRequest request;
   private static final String USER = "user";
   private static final Integer USER_ID = 1;
 
-  RequisitionService requisitionService;
-
-  RequisitionController controller;
+  private RequisitionService requisitionService;
+  private MockHttpServletRequest request;
+  private RequisitionController controller;
   private Rnr rnr;
 
   @Before
@@ -84,6 +78,22 @@ public class RequisitionControllerTest {
     ResponseEntity<OpenLmisResponse> response = controller.get(1, 2, 3);
 
     verify(requisitionService).get(argThat(facilityMatcher(1)), argThat(programMatcher(2)), argThat(periodMatcher(3)));
+    assertThat(response.getStatusCode(), is(equalTo(HttpStatus.OK)));
+  }
+
+  @Test
+  public void shouldGetRnrWithFullSupplyLineItemsByFacilityProgramAndPeriodIfExists() throws Exception {
+    ResponseEntity<OpenLmisResponse> response = controller.getRequisitionWithFullSupplyLineItems(1, 2, 3);
+
+    verify(requisitionService).getWithFullSupplyLineItems(argThat(facilityMatcher(1)), argThat(programMatcher(2)), argThat(periodMatcher(3)));
+    assertThat(response.getStatusCode(), is(equalTo(HttpStatus.OK)));
+  }
+
+  @Test
+  public void shouldGetRnrWithNonFullSupplyLineItemsByFacilityProgramAndPeriodIfExists() throws Exception {
+    ResponseEntity<OpenLmisResponse> response = controller.getRequisitionWithNonFullSupplyLineItems(1, 2, 3);
+
+    verify(requisitionService).getWithNonFullSupplyLineItems(argThat(facilityMatcher(1)), argThat(programMatcher(2)), argThat(periodMatcher(3)));
     assertThat(response.getStatusCode(), is(equalTo(HttpStatus.OK)));
   }
 

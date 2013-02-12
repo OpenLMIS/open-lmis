@@ -78,7 +78,7 @@ public class RequisitionService {
 
     Rnr requisition = new Rnr(facilityId, programId, periodId, facilityApprovedProducts, modifiedBy);
 
-    fillBeginningBalanceFromPreviousRnrIfStockInHandVisible(rnrTemplate, requisition);
+    fillBeginningBalanceFromPreviousRnrIfStockInHandVisible(requisition);
 
     requisitionRepository.insert(requisition);
     return get(new Facility(facilityId), new Program(programId), new ProcessingPeriod(periodId));
@@ -223,7 +223,7 @@ public class RequisitionService {
     return rnr;
   }
 
-  private void fillBeginningBalanceFromPreviousRnrIfStockInHandVisible(ProgramRnrTemplate rnrTemplate, Rnr requisition) {
+  private void fillBeginningBalanceFromPreviousRnrIfStockInHandVisible(Rnr requisition) {
       ProcessingPeriod immediatePreviousPeriod = processingScheduleService.getImmediatePreviousPeriod(requisition.getPeriod());
       Rnr previousRequisition = null;
       if (immediatePreviousPeriod != null)

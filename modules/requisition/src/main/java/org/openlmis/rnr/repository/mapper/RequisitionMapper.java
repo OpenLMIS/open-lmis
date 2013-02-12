@@ -41,7 +41,6 @@ public interface RequisitionMapper {
           many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsByRnrId")),
       @Result(property = "nonFullSupplyLineItems", javaType = List.class, column = "id",
           many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getNonFullSupplyRnrLineItemsByRnrId"))
-
   })
   Rnr getById(Integer rnrId);
 
