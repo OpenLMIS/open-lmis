@@ -42,6 +42,13 @@ public class ProgramRnrTemplate {
     }
   }
 
+  public ProgramRnrTemplate(List<RnrColumn> programRnrColumns) {
+    this.rnrColumns = programRnrColumns;
+    for (RnrColumn rnrColumn : rnrColumns) {
+      rnrColumnsMap.put(rnrColumn.getName(), rnrColumn);
+    }
+  }
+
   public boolean columnsVisible(String... rnrColumnNames) {
     boolean visible = true;
     for (String rnrColumnName : rnrColumnNames) {

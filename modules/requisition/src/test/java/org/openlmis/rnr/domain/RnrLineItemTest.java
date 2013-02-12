@@ -9,6 +9,7 @@ import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.rnr.builder.RnrColumnBuilder;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -18,11 +19,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static com.natpryce.makeiteasy.MakeItEasy.with;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.ProductBuilder.code;
+import static org.openlmis.rnr.builder.RnrColumnBuilder.columnName;
+import static org.openlmis.rnr.builder.RnrColumnBuilder.visible;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.STOCK_IN_HAND;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.BEGINNING_BALANCE;
@@ -402,7 +406,11 @@ public class RnrLineItemTest {
   }
 
   @Test
-  public void shouldCopyUserEditableFields() throws Exception {
+  public void shouldCopyUserEditableFieldsOnlyIfVisible() throws Exception {
+    ArrayList<RnrColumn> programRnrColumns = new ArrayList<>();
+    programRnrColumns.add(make(a(RnrColumnBuilder.defaultRnrColumn, with(columnName, "stockInHand"), with(visible, true))));
+    programRnrColumns.add(make(a(RnrColumnBuilder.defaultRnrColumn, with(columnName, "beginningBalance"), with(visible, false))));
+
     RnrLineItem editedLineItem = make(a(defaultRnrLineItem));
     editedLineItem.setRemarks("Submitted");
     editedLineItem.setBeginningBalance(12);
@@ -416,9 +424,9 @@ public class RnrLineItemTest {
     List<LossesAndAdjustments> lossesAndAdjustments = new ArrayList<>();
     editedLineItem.setLossesAndAdjustments(lossesAndAdjustments);
 
-    lineItem.copyUserEditableFieldsForSaveSubmitOrAuthorize(editedLineItem);
+    lineItem.copyUserEditableFieldsForSaveSubmitOrAuthorize(editedLineItem, programRnrColumns);
 
-    assertThat(lineItem.getBeginningBalance(), is(12));
+    assertThat(lineItem.getBeginningBalance(), is(RnrLineItemBuilder.BEGINNING_BALANCE));
     assertThat(lineItem.getStockInHand(), is(1946));
     assertThat(lineItem.getLossesAndAdjustments(), is(lossesAndAdjustments));
     assertThat(lineItem.getRemarks(), is("Submitted"));
@@ -436,7 +444,7 @@ public class RnrLineItemTest {
     editedLineItem.setBeginningBalance(44);
     lineItem.setPreviousStockInHandAvailable(true);
 
-    lineItem.copyUserEditableFieldsForSaveSubmitOrAuthorize(editedLineItem);
+    lineItem.copyUserEditableFieldsForSaveSubmitOrAuthorize(editedLineItem, new ArrayList<RnrColumn>());
 
     assertThat(lineItem.getBeginningBalance(), is(RnrLineItemBuilder.BEGINNING_BALANCE));
   }

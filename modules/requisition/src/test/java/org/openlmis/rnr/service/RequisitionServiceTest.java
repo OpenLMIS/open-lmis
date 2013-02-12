@@ -32,8 +32,8 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.*;
 import static org.openlmis.core.builder.ProductBuilder.code;
 import static org.openlmis.core.builder.ProductBuilder.defaultProduct;
@@ -43,9 +43,9 @@ import static org.openlmis.rnr.builder.RequisitionBuilder.status;
 import static org.openlmis.rnr.builder.RnrColumnBuilder.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 import static org.openlmis.rnr.service.RequisitionService.*;
+import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.spy;
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(RequisitionService.class)
@@ -310,43 +310,38 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  public void shouldUseOnlyUserEditableDataFromUserSubmittedRnr() {
+  public void shouldUseOnlyUserEditableDataFromUserSubmittedRnr() throws Exception {
+    List<RnrColumn> rnrColumns = new ArrayList<RnrColumn>() {{
+      add(make(a(defaultRnrColumn, with(columnName, "beginningBalance"), with(visible, true))));
+      add(make(a(defaultRnrColumn, with(columnName, "stockInHand"), with(visible, false))));
+    }};
     Rnr rnrToSubmit = make(a(defaultRnr));
-    Rnr savedRnr = spy(initiatedRnr);
-    savedRnr.setFacility(FACILITY);
-    savedRnr.setProgram(PROGRAM);
-    savedRnr.setPeriod(PERIOD);
-
-    when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
-    when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
-    when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
-    when(requisitionRepository.getById(rnrToSubmit.getId())).thenReturn(savedRnr);
-    when(rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId())).thenReturn(rnrColumns);
-    doReturn(true).when(savedRnr).validate(rnrColumns);
-    when(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(null);
+    Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(rnrToSubmit);
+    Mockito.when(rnrTemplateRepository.fetchRnrTemplateColumns(rnrToSubmit.getProgram().getId())).thenReturn(rnrColumns);
+    Mockito.doReturn(true).when(savedRnr).validate(rnrColumns);
 
     requisitionService.submit(rnrToSubmit);
 
-    verify(savedRnr).copyUserEditableFieldsForSaveSubmitOrAuthorize(rnrToSubmit);
+    verify(savedRnr).prepareForSubmit();
+    verify(savedRnr).validate(rnrColumns);
+    verify(requisitionRepository).update(savedRnr);
+    verify(savedRnr).copyUserEditableFieldsForSaveSubmitOrAuthorize(rnrToSubmit, rnrColumns);
   }
 
   @Test
   public void shouldReturnMessageWhileSubmittingRnrIfSupervisingNodeNotPresent() throws Exception {
-    Rnr savedRnr = spy(initiatedRnr);
-    savedRnr.setFacility(FACILITY);
-    savedRnr.setProgram(PROGRAM);
-    savedRnr.setPeriod(PERIOD);
+    Rnr rnrToSubmit = make(a(defaultRnr));
+    Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(rnrToSubmit);
+    Mockito.when(rnrTemplateRepository.fetchRnrTemplateColumns(rnrToSubmit.getProgram().getId())).thenReturn(rnrColumns);
+    Mockito.doReturn(true).when(savedRnr).validate(rnrColumns);
+    Mockito.doNothing().when(savedRnr).copyUserEditableFieldsForSaveSubmitOrAuthorize(rnrToSubmit, rnrColumns);
 
-    when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
-    when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
-    when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
-    when(requisitionRepository.getById(initiatedRnr.getId())).thenReturn(savedRnr);
-    when(rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId())).thenReturn(rnrColumns);
-    doReturn(true).when(savedRnr).validate(rnrColumns);
-    when(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(null);
+    OpenLmisMessage message = requisitionService.submit(rnrToSubmit);
 
-    OpenLmisMessage message = requisitionService.submit(initiatedRnr);
-
+    verify(savedRnr).prepareForSubmit();
+    verify(savedRnr).validate(rnrColumns);
+    verify(requisitionRepository).update(savedRnr);
+    verify(savedRnr).copyUserEditableFieldsForSaveSubmitOrAuthorize(rnrToSubmit, rnrColumns);
     verify(requisitionRepository).update(savedRnr);
     assertThat(savedRnr.getStatus(), is(SUBMITTED));
     assertThat(message.getCode(), is("rnr.submitted.without.supervisor"));
@@ -354,20 +349,15 @@ public class RequisitionServiceTest {
 
   @Test
   public void shouldSubmitValidRnrWithSubmittedDateAndSetMessage() {
-    Rnr savedRnr = spy(initiatedRnr);
-    savedRnr.setFacility(FACILITY);
-    savedRnr.setProgram(PROGRAM);
-    savedRnr.setPeriod(PERIOD);
-
-    when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
-    when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
-    when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
-    when(requisitionRepository.getById(initiatedRnr.getId())).thenReturn(savedRnr);
+    Rnr rnrToSubmit = make(a(defaultRnr));
+    Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(rnrToSubmit);
     doReturn(true).when(savedRnr).validate(rnrColumns);
+    doNothing().when(savedRnr).copyUserEditableFieldsForSaveSubmitOrAuthorize(rnrToSubmit, rnrColumns);
+    doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
     when(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(new SupervisoryNode());
     when(rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId())).thenReturn(rnrColumns);
 
-    OpenLmisMessage message = requisitionService.submit(initiatedRnr);
+    OpenLmisMessage message = requisitionService.submit(rnrToSubmit);
 
     verify(requisitionRepository).update(savedRnr);
     verify(savedRnr).validate(rnrColumns);
@@ -378,16 +368,10 @@ public class RequisitionServiceTest {
 
   @Test
   public void shouldAuthorizeAValidRnrAndTagWithSupervisoryNode() throws Exception {
-    Rnr savedRnr = spy(submittedRnr);
-    savedRnr.setFacility(FACILITY);
-    savedRnr.setProgram(PROGRAM);
-    savedRnr.setPeriod(PERIOD);
-
-    when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
-    when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
-    when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
-    when(requisitionRepository.getById(submittedRnr.getId())).thenReturn(savedRnr);
+    Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr);
     doReturn(true).when(savedRnr).validate(rnrColumns);
+    doNothing().when(savedRnr).copyUserEditableFieldsForSaveSubmitOrAuthorize(submittedRnr, rnrColumns);
+    doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
     when(rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId())).thenReturn(rnrColumns);
     when(supervisoryNodeService.getApproverFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(new User());
     SupervisoryNode approverNode = new SupervisoryNode();
@@ -405,42 +389,32 @@ public class RequisitionServiceTest {
 
   @Test
   public void shouldUseSavedRnrWithEditableDataFromUserSuppliedRnrToAuthorize() {
-    ArrayList<RnrColumn> columns = new ArrayList<>();
-    Rnr savedRnr = spy(submittedRnr);
-    savedRnr.setFacility(FACILITY);
-    savedRnr.setProgram(PROGRAM);
-    savedRnr.setPeriod(PERIOD);
-
-    when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
-    when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
-    when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
-    doReturn(true).when(savedRnr).validate(columns);
-    when(requisitionRepository.getById(submittedRnr.getId())).thenReturn(savedRnr);
+    Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr);
+    doNothing().when(savedRnr).copyUserEditableFieldsForSaveSubmitOrAuthorize(submittedRnr, rnrColumns);
+    doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
+    doReturn(true).when(savedRnr).validate(rnrColumns);
+    
     SupervisoryNode node = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
     when(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(node);
-    when(rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId())).thenReturn(columns);
+    when(rnrTemplateRepository.fetchRnrTemplateColumns(submittedRnr.getProgram().getId())).thenReturn(rnrColumns);
 
     requisitionService.authorize(submittedRnr);
 
-    verify(savedRnr).copyUserEditableFieldsForSaveSubmitOrAuthorize(submittedRnr);
+    verify(savedRnr).copyUserEditableFieldsForSaveSubmitOrAuthorize(submittedRnr, rnrColumns);
   }
 
   @Test
   public void shouldAuthorizeAValidRnrAndAdviseUserIfRnrDoesNotHaveApprover() throws Exception {
-    Rnr savedRnr = spy(submittedRnr);
-    savedRnr.setFacility(FACILITY);
-    savedRnr.setProgram(PROGRAM);
-    savedRnr.setPeriod(PERIOD);
+    Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr);
 
-    when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
-    when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
-    when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
-    when(requisitionRepository.getById(submittedRnr.getId())).thenReturn(savedRnr);
     when(rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId())).thenReturn(rnrColumns);
     when(supervisoryNodeService.getApproverFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(null);
     SupervisoryNode node = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
     when(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(node);
     doReturn(true).when(savedRnr).validate(rnrColumns);
+    doNothing().when(savedRnr).copyUserEditableFieldsForSaveSubmitOrAuthorize(submittedRnr, rnrColumns);
+    doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
+    
 
     OpenLmisMessage openLmisMessage = requisitionService.authorize(submittedRnr);
 
@@ -452,36 +426,9 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  public void shouldNotAuthorizeInvalidRnr() throws Exception {
-    Rnr savedRnr = spy(submittedRnr);
-    savedRnr.setFacility(FACILITY);
-    savedRnr.setProgram(PROGRAM);
-    savedRnr.setPeriod(PERIOD);
-
-    when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
-    when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
-    when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
-    when(requisitionRepository.getById(submittedRnr.getId())).thenReturn(savedRnr);
-    when(rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId())).thenReturn(rnrColumns);
-    doThrow(new DataException("error-message")).when(savedRnr).validate(rnrColumns);
-
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("error-message");
-
-    requisitionService.authorize(submittedRnr);
-  }
-
-  @Test
   public void shouldNotAuthorizeRnrIfNotSubmitted() throws Exception {
-    Rnr savedRnr = spy(initiatedRnr);
-    savedRnr.setFacility(FACILITY);
-    savedRnr.setProgram(PROGRAM);
-    savedRnr.setPeriod(PERIOD);
-
-    when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
-    when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
-    when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
-    when(requisitionRepository.getById(initiatedRnr.getId())).thenReturn(savedRnr);
+    Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr);
+    doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage(RNR_AUTHORIZATION_ERROR);
@@ -492,18 +439,14 @@ public class RequisitionServiceTest {
   @Test
   public void shouldSaveRnrIfStatusIsSubmittedAndUserHasAuthorizeRight() {
     Integer userId = 1;
-    Rnr savedRnr = Mockito.spy(submittedRnr);
+    Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr);
+    doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
+    doNothing().when(savedRnr).copyUserEditableFieldsForSaveSubmitOrAuthorize(submittedRnr, rnrColumns);
+    when(rnrTemplateRepository.fetchRnrTemplateColumns(submittedRnr.getProgram().getId())).thenReturn(rnrColumns);
     savedRnr.setModifiedBy(userId);
-    savedRnr.setFacility(FACILITY);
-    savedRnr.setProgram(PROGRAM);
-    savedRnr.setPeriod(PERIOD);
 
-    when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
-    when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
-    when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
     Set<Right> listUserRights = new HashSet<>(Arrays.asList(AUTHORIZE_REQUISITION));
     when(roleRightService.getRights(userId)).thenReturn(listUserRights);
-    when(requisitionRepository.getById(submittedRnr.getId())).thenReturn(savedRnr);
 
     requisitionService.save(submittedRnr);
 
@@ -513,16 +456,13 @@ public class RequisitionServiceTest {
   @Test
   public void shouldSaveRnrIfStatusIsAuthorizedAndUserHasApproveRight() {
     Integer userId = 1;
-    Rnr savedRnr = spy(authorizedRnr);
+    Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(authorizedRnr);
     savedRnr.setModifiedBy(userId);
-    savedRnr.setFacility(FACILITY);
-    savedRnr.setProgram(PROGRAM);
-    savedRnr.setPeriod(PERIOD);
 
-    when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
-    when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
-    when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
-    when(requisitionRepository.getById(authorizedRnr.getId())).thenReturn(savedRnr);
+    when(rnrTemplateRepository.fetchRnrTemplateColumns(submittedRnr.getProgram().getId())).thenReturn(rnrColumns);
+    doNothing().when(savedRnr).copyUserEditableFieldsForSaveSubmitOrAuthorize(authorizedRnr, rnrColumns);
+    doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
+
     Set<Right> listUserRights = new HashSet<>(Arrays.asList(APPROVE_REQUISITION));
     when(roleRightService.getRights(userId)).thenReturn(listUserRights);
 
@@ -534,22 +474,19 @@ public class RequisitionServiceTest {
   @Test
   public void shouldSaveRnrIfStatusIsInitiatedAndUserHasCreateRight() {
     Integer userId = 1;
-    Rnr savedRnr = spy(initiatedRnr);
+    Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr);
     savedRnr.setModifiedBy(userId);
-    savedRnr.setFacility(FACILITY);
-    savedRnr.setProgram(PROGRAM);
-    savedRnr.setPeriod(PERIOD);
 
-    when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
-    when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
-    when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
-    when(requisitionRepository.getById(initiatedRnr.getId())).thenReturn(savedRnr);
+    when(rnrTemplateRepository.fetchRnrTemplateColumns(initiatedRnr.getProgram().getId())).thenReturn(rnrColumns);
+    doNothing().when(savedRnr).copyUserEditableFieldsForSaveSubmitOrAuthorize(initiatedRnr, rnrColumns);
+    doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
+
     Set<Right> listUserRights = new HashSet<>(Arrays.asList(CREATE_REQUISITION));
     when(roleRightService.getRights(userId)).thenReturn(listUserRights);
 
     requisitionService.save(initiatedRnr);
 
-    verify(savedRnr).copyUserEditableFieldsForSaveSubmitOrAuthorize(initiatedRnr);
+    verify(savedRnr).copyUserEditableFieldsForSaveSubmitOrAuthorize(initiatedRnr, rnrColumns);
     verify(requisitionRepository).update(savedRnr);
   }
 
@@ -878,5 +815,14 @@ public class RequisitionServiceTest {
     node.setId(supervisoryNodeId);
     assignment.setSupervisoryNode(node);
     return assignment;
+  }
+
+  private Rnr getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(Rnr rnr) {
+    Rnr savedRnr = spy(rnr);
+    when(programService.getById(savedRnr.getProgram().getId())).thenReturn(PROGRAM);
+    when(facilityService.getById(savedRnr.getProgram().getId())).thenReturn(FACILITY);
+    when(processingScheduleService.getPeriodById(savedRnr.getProgram().getId())).thenReturn(PERIOD);
+    when(requisitionRepository.getById(rnr.getId())).thenReturn(savedRnr);
+    return savedRnr;
   }
 }

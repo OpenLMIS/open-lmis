@@ -7,6 +7,7 @@ import org.junit.rules.ExpectedException;
 import org.openlmis.core.domain.Money;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.rnr.builder.RequisitionBuilder;
+import org.openlmis.rnr.builder.RnrColumnBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +18,10 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
-import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
-import static org.openlmis.rnr.builder.RnrLineItemBuilder.stockInHand;
+import static org.openlmis.rnr.builder.RequisitionBuilder.status;
+import static org.openlmis.rnr.builder.RnrColumnBuilder.columnName;
+import static org.openlmis.rnr.builder.RnrColumnBuilder.visible;
+import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
 import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 
 public class RnrTest {
@@ -106,10 +109,12 @@ public class RnrTest {
     RnrLineItem savedLineItem = savedRnr.getLineItems().get(0);
     RnrLineItem savedLineItemSpy = spy(savedLineItem);
     savedRnr.getLineItems().set(0, savedLineItemSpy);
-    savedRnr.copyUserEditableFieldsForSaveSubmitOrAuthorize(rnr);
-    verify(savedLineItemSpy).copyUserEditableFieldsForSaveSubmitOrAuthorize(rnr.getLineItems().get(0));
-    assertThat(savedRnr.getModifiedBy(), is(1));
+    ArrayList<RnrColumn> programRnrColumns = setupProgramTemplate();
 
+    savedRnr.copyUserEditableFieldsForSaveSubmitOrAuthorize(rnr, programRnrColumns);
+
+    verify(savedLineItemSpy).copyUserEditableFieldsForSaveSubmitOrAuthorize(rnr.getLineItems().get(0), programRnrColumns);
+    assertThat(savedRnr.getModifiedBy(), is(1));
     assertThat(savedRnr.getNonFullSupplyLineItems(), is(nonFullSupplyLineItems));
     assertThat(savedRnr.getNonFullSupplyLineItems().get(0).getModifiedBy(), is(rnr.getModifiedBy()));
   }
@@ -163,5 +168,26 @@ public class RnrTest {
   public void shouldSetBeginningBalanceToZeroIfPreviousRequisitionDoesNotExist() throws Exception {
     rnr.setBeginningBalanceForEachLineItem(null);
     assertThat(rnr.getLineItems().get(0).getBeginningBalance(), is(0));
+  }
+
+  @Test
+  public void shouldNotCopyInvisibleTemplateFieldsFromRequisition() throws Exception {
+    ArrayList<RnrColumn> programRnrColumns = setupProgramTemplate();
+
+    RnrLineItem newLineItem = make(a(defaultRnrLineItem, with(stockInHand, 2), with(beginningBalance, 7)));
+
+    Rnr requisitionForSaving = make(a(defaultRnr, with(status, SUBMITTED)));
+    requisitionForSaving.setLineItems(asList(newLineItem));
+    rnr.copyUserEditableFieldsForSaveSubmitOrAuthorize(requisitionForSaving, programRnrColumns);
+
+    assertThat(rnr.getLineItems().get(0).getStockInHand(), is(2));
+    assertThat(rnr.getLineItems().get(0).getBeginningBalance(), is(BEGINNING_BALANCE));
+  }
+
+  private ArrayList<RnrColumn> setupProgramTemplate() {
+    ArrayList<RnrColumn> programRnrColumns = new ArrayList<>();
+    programRnrColumns.add(make(a(RnrColumnBuilder.defaultRnrColumn, with(columnName, "stockInHand"), with(visible, true))));
+    programRnrColumns.add(make(a(RnrColumnBuilder.defaultRnrColumn, with(columnName, "beginningBalance"), with(visible, false))));
+    return programRnrColumns;
   }
 }

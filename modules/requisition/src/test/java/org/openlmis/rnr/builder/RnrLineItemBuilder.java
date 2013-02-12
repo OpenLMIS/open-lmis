@@ -18,6 +18,7 @@ public class RnrLineItemBuilder {
   public static final Property<RnrLineItem, LossesAndAdjustments> lossesAndAdjustments = newProperty();
   public static final Property<RnrLineItem, Boolean> fullSupply = newProperty();
   public static final Property<RnrLineItem, String> productCode = newProperty();
+  public static final Property<RnrLineItem, Integer> beginningBalance = newProperty();
   public static final LossesAndAdjustments ONE_LOSS = new LossesAndAdjustments() {{
     setQuantity(1);
     LossesAndAdjustmentsType type = new LossesAndAdjustmentsType();
@@ -33,7 +34,7 @@ public class RnrLineItemBuilder {
     public RnrLineItem instantiate(PropertyLookup<RnrLineItem> lookup) {
       RnrLineItem rnrLineItem = new RnrLineItem();
       rnrLineItem.setProductCode(lookup.valueOf(productCode, "P999"));
-      rnrLineItem.setBeginningBalance(BEGINNING_BALANCE);
+      rnrLineItem.setBeginningBalance(lookup.valueOf(beginningBalance, BEGINNING_BALANCE));
       rnrLineItem.setQuantityReceived(3);
 
       rnrLineItem.addLossesAndAdjustments(lookup.valueOf(lossesAndAdjustments, ONE_LOSS));

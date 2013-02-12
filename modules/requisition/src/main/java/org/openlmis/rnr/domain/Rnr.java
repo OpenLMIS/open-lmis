@@ -174,11 +174,11 @@ public class Rnr {
     });
   }
 
-  public void copyUserEditableFieldsForSaveSubmitOrAuthorize(Rnr otherRequisition) {
+  public void copyUserEditableFieldsForSaveSubmitOrAuthorize(Rnr otherRequisition, List<RnrColumn> programRnrColumns) {
     this.modifiedBy = otherRequisition.modifiedBy;
     for (RnrLineItem thisLineItem : lineItems) {
       RnrLineItem otherLineItem = otherRequisition.findCorrespondingLineItem(thisLineItem);
-      thisLineItem.copyUserEditableFieldsForSaveSubmitOrAuthorize(otherLineItem);
+      thisLineItem.copyUserEditableFieldsForSaveSubmitOrAuthorize(otherLineItem, programRnrColumns);
       thisLineItem.setModifiedBy(otherRequisition.getModifiedBy());
     }
     this.nonFullSupplyLineItems = otherRequisition.nonFullSupplyLineItems;
