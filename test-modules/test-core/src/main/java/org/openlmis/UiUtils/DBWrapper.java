@@ -433,19 +433,6 @@ public class DBWrapper {
 
     }
 
-    public String getrequisition_line_items_id_seq() throws IOException , SQLException
-    {
-
-        DBWrapper dbWrapper=new DBWrapper();
-        String lastvalue=null;
-        ResultSet rs=dbWrapper.dbConnection("select last_value from requisition_line_items_id_seq;", "select");
-
-        if (rs.next()) {
-            lastvalue=rs.getString("last_value");
-        }
-        return lastvalue;
-
-    }
 
     public String getPeriodID(String periodName) throws IOException , SQLException
     {

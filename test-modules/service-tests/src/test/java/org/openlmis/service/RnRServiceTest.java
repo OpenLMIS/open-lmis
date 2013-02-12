@@ -66,6 +66,7 @@ public class RnRServiceTest extends TestCaseHelper {
 
             String requisitionId=dbWrapper.getRequisitionId();
 
+
             String INITIATE_RNR_ENDPOINT="/requisitions/"+requisitionId+"/submit.json";
 
             String SUBMIT_RNR_JSON="{\n" +
@@ -73,7 +74,7 @@ public class RnRServiceTest extends TestCaseHelper {
                     "    \"lineItems\": [\n" +
                     "        {\n" +
                     "            \"id\": 1,\n" +
-                    "            \"rnrId\": 2,\n" +
+                    "            \"rnrId\": "+requisitionId+",\n" +
                     "            \"product\": \"antibiotic Capsule 300/200/600 mg\",\n" +
                     "            \"productCode\": \"P10\",\n" +
                     "            \"roundToZero\": false,\n" +
@@ -84,29 +85,71 @@ public class RnRServiceTest extends TestCaseHelper {
                     "            \"dispensingUnit\": \"Strip\",\n" +
                     "            \"maxMonthsOfStock\": 3,\n" +
                     "            \"fullSupply\": true,\n" +
-                    "            \"totalLossesAndAdjustments\": 0,\n" +
+                    "            \"beginningBalance\": 1,\n" +
+                    "            \"totalLossesAndAdjustments\": 1,\n" +
                     "            \"previousStockInHandAvailable\": false,\n" +
                     "            \"price\": \"12.50\",\n" +
                     "            \"previousNormalizedConsumptions\": [],\n" +
-                    "            \"lossesAndAdjustments\": [],\n" +
-                    "            \"beginningBalance\": 1,\n" +
+                    "            \"lossesAndAdjustments\": [\n" +
+                    "                {\n" +
+                    "                    \"type\": {\n" +
+                    "                        \"name\": \"TRANSFER_IN\",\n" +
+                    "                        \"description\": \"Transfer In\",\n" +
+                    "                        \"additive\": true,\n" +
+                    "                        \"displayOrder\": 2\n" +
+                    "                    },\n" +
+                    "                    \"quantity\": \"1\"\n" +
+                    "                }\n" +
+                    "            ],\n" +
                     "            \"quantityReceived\": 1,\n" +
                     "            \"quantityDispensed\": 1,\n" +
-                    "            \"stockInHand\": 1,\n" +
+                    "            \"stockInHand\": 2,\n" +
                     "            \"stockOutDays\": 1,\n" +
                     "            \"newPatientCount\": 1,\n" +
                     "            \"normalizedConsumption\": 10,\n" +
                     "            \"maxStockQuantity\": 30,\n" +
-                    "            \"calculatedOrderQuantity\": 29,\n" +
+                    "            \"calculatedOrderQuantity\": 28,\n" +
                     "            \"packsToShip\": 1,\n" +
                     "            \"cost\": \"12.50\",\n" +
                     "            \"amc\": 10,\n" +
                     "            \"quantityRequested\": \"1\",\n" +
                     "            \"reasonForRequestedQuantity\": \"1\",\n" +
                     "            \"remarks\": \"1\"\n" +
-                    "        }" +
+                    "        }\n" +
                     "    ],\n" +
-                    "    \"nonFullSupplyLineItems\": []\n" +
+                    "    \"nonFullSupplyLineItems\": [\n" +
+                    "        {\n" +
+                    "            \"quantityRequested\": \"11\",\n" +
+                    "            \"reasonForRequestedQuantity\": \"test\",\n" +
+                    "            \"productCode\": \"P11\",\n" +
+                    "            \"product\": \"antibiotic Capsule 300/200/600 mg\",\n" +
+                    "            \"dosesPerDispensingUnit\": 10,\n" +
+                    "            \"packSize\": 10,\n" +
+                    "            \"roundToZero\": false,\n" +
+                    "            \"packRoundingThreshold\": 1,\n" +
+                    "            \"dispensingUnit\": \"Strip\",\n" +
+                    "            \"fullSupply\": false,\n" +
+                    "            \"maxMonthsOfStock\": 3,\n" +
+                    "            \"dosesPerMonth\": 30,\n" +
+                    "            \"price\": \"0.00\",\n" +
+                    "            \"quantityReceived\": 0,\n" +
+                    "            \"quantityDispensed\": 0,\n" +
+                    "            \"beginningBalance\": 0,\n" +
+                    "            \"stockInHand\": 0,\n" +
+                    "            \"totalLossesAndAdjustments\": 0,\n" +
+                    "            \"calculatedOrderQuantity\": 0,\n" +
+                    "            \"newPatientCount\": 0,\n" +
+                    "            \"stockOutDays\": 0,\n" +
+                    "            \"normalizedConsumption\": 0,\n" +
+                    "            \"amc\": 0,\n" +
+                    "            \"maxStockQuantity\": 0,\n" +
+                    "            \"rnrId\": "+requisitionId+",\n" +
+                    "            \"previousNormalizedConsumptions\": [],\n" +
+                    "            \"lossesAndAdjustments\": [],\n" +
+                    "            \"packsToShip\": 2,\n" +
+                    "            \"cost\": \"0.00\"\n" +
+                    "        }\n" +
+                    "    ]\n" +
                     "}";
 
            String rnrStatus = serviceUtils.putJSON(SUBMIT_RNR_JSON, BASE_URL + INITIATE_RNR_ENDPOINT);
