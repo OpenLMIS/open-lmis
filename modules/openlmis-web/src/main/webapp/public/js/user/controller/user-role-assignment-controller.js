@@ -2,13 +2,20 @@ function UserRoleAssignmentController($scope) {
 
   $scope.selectSuperviseProgramMessage = '--Select Program--';
   $scope.selectSupervisoryNodeMessage = '--Select Node--';
+
   $scope.deleteCurrentRow = function (rowNum) {
     $scope.deleteRolesModal = true;
     $scope.rowNum = rowNum;
   };
 
-  $scope.deleteRow = function () {
+  $scope.deleteHomeFacilityRole = function () {
     $scope.user.homeFacilityRoles.splice($scope.rowNum, 1);
+    $scope.deleteRolesModal = false;
+    $scope.rowNum = undefined;
+  }
+
+  $scope.deleteSupervisorRole = function () {
+    $scope.user.supervisorRoles.splice($scope.rowNum, 1);
     $scope.deleteRolesModal = false;
     $scope.rowNum = undefined;
   }
@@ -34,7 +41,7 @@ function UserRoleAssignmentController($scope) {
   $scope.addHomeFacilityRole = function () {
     if (isPresent($scope.programSelected) && isPresent($scope.selectedRoleIds)) {
       var newRoleAssignment = {programId:$scope.programSelected, roleIds:$scope.selectedRoleIds};
-      addRoleAssignment(newRoleAssignment);
+      addHomeFacilityRole(newRoleAssignment);
       clearCurrentSelection();
     } else {
       $scope.$parent.showHomeFacilityRoleMappingError = true;
@@ -46,7 +53,7 @@ function UserRoleAssignmentController($scope) {
       $scope.$parent.showHomeFacilityRoleMappingError = false;
     }
 
-    function addRoleAssignment(newRoleAssignment) {
+    function addHomeFacilityRole(newRoleAssignment) {
       if (!$scope.user.homeFacilityRoles) {
         $scope.user.homeFacilityRoles = [];
       }
@@ -57,6 +64,10 @@ function UserRoleAssignmentController($scope) {
   $scope.addSupervisoryRole = function () {
     if (isPresent($scope.selectedProgramIdToSupervise) && isPresent($scope.selectedSupervisoryNodeIdToSupervise) && isPresent($scope.selectedRoleIdsToSupervise)) {
       var newRoleAssignment = {programId:$scope.selectedProgramIdToSupervise, supervisoryNode:{id:$scope.selectedSupervisoryNodeIdToSupervise}, roleIds:$scope.selectedRoleIdsToSupervise};
+      if (isDuplicateSupervisoryRole(newRoleAssignment)){
+        $scope.duplicateSupervisorRoleError="Program and node combination is already selected";
+        return;
+      }
       addSupervisoryRole(newRoleAssignment);
       clearCurrentSelection();
     } else {
@@ -68,6 +79,16 @@ function UserRoleAssignmentController($scope) {
       $scope.selectedSupervisoryNodeIdToSupervise = null;
       $scope.selectedRoleIdsToSupervise = null;
       $scope.$parent.showSupervisorRoleMappingError = false;
+    }
+
+    function isDuplicateSupervisoryRole(newRoleAssignment) {
+      var result = _.find($scope.user.supervisorRoles, function (roleAssignment) {
+        return (roleAssignment.programId == newRoleAssignment.programId && roleAssignment.supervisoryNode.id == newRoleAssignment.supervisoryNode.id)
+      });
+
+      if (result)return true;
+
+      return false;
     }
 
     function addSupervisoryRole(newRoleAssignment) {

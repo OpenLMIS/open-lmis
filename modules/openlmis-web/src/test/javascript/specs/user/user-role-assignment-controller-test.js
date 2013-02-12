@@ -113,6 +113,21 @@ describe("User", function () {
       expect(scope.getSupervisoryNodeName(1)).toEqual("SN1");
     });
 
+    it("should delete home facility roles from the list", function () {
+      scope.rowNum = 1;
+      scope.user = {"homeFacilityRoles": [{"roleIds":[1]},{"roleIds":[1,2]},{"roleIds":[3]}]};
+      scope.deleteHomeFacilityRole();
+      expect(scope.user.homeFacilityRoles).toEqual([{"roleIds":[1]},{"roleIds":[3]}])
+    });
+
+    it("should delete supervisory roles from the list", function () {
+      scope.rowNum = 1;
+      scope.user = {"supervisorRoles": [{"roleIds":[1]},{"roleIds":[1,2]},{"roleIds":[3]}]};
+      scope.deleteSupervisorRole();
+      expect(scope.user.supervisorRoles).toEqual([{"roleIds":[1]},{"roleIds":[3]}])
+    });
+
+
 
   });
 

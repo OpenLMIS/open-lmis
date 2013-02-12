@@ -54,6 +54,7 @@
       <span ng-show='hasMappingError(showSupervisorRoleMappingError,selectedProgramIdToSupervise)' class="field-error">
         Please select a program
       </span>
+        <span ng-show='duplicateSupervisorRoleError' ng-bind="duplicateSupervisorRoleError" class="field-error"></span>
       </div>
       <div class="span3">
         <select
@@ -81,10 +82,10 @@
   <div tabindex="-1" id="deleteRolesModal" class="fade ng-pristine ng-valid modal hide" ui-modal="" ng-model="deleteRolesModal">
     <div class="modal-header"><h2>Delete Roles</h2></div>
     <div class="modal-body">
-      <p>All Roles assigned to this Program for the user will be deleted</p>
+      <p>All Roles assigned to this Program and Node for the user will be deleted</p>
     </div>
     <div class="modal-footer">
-      <a href="" class="btn btn-primary" ng-click="deleteRow()">Ok</a>
+      <a href="" class="btn btn-primary" ng-click="deleteSupervisorRole()">Ok</a>
       <a href="" class="btn" ng-click="deleteRolesModal=false">Cancel</a>
     </div>
   </div>
