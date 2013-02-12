@@ -59,37 +59,37 @@ public class InitiateRnRPage extends Page {
   @FindBy(how = How.ID, using = "F_0")
   private static WebElement newPatient;
 
-  @FindBy(how = How.XPATH, using = "//table[@class='table table-striped table-bordered']/tbody/tr[1]/td[13]/ng-switch/span/ng-switch/span")
+  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[1]/td[13]/ng-switch/span/ng-switch/span")
   private static WebElement maximumStockQuantity;
 
-  @FindBy(how = How.XPATH, using = "//table[@class='table table-striped table-bordered']/tbody/tr[1]/td[14]/ng-switch/span/ng-switch/span")
+  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[1]/td[14]/ng-switch/span/ng-switch/span")
   private static WebElement caculatedOrderQuantity;
 
   @FindBy(how = How.ID, using = "J_0")
   private static WebElement requestedQuantity;
 
-  @FindBy(how = How.XPATH, using = "//table[@class='table table-striped table-bordered']/tbody/tr[1]/td[11]/ng-switch/span/ng-switch/span")
+  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[1]/td[11]/ng-switch/span/ng-switch/span")
   private static WebElement adjustedTotalConsumption;
 
-  @FindBy(how = How.XPATH, using = "//table[@class='table table-striped table-bordered']/tbody/tr[1]/td[12]/ng-switch/span/ng-switch/span")
+  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[1]/td[12]/ng-switch/span/ng-switch/span")
   private static WebElement amc;
 
-  @FindBy(how = How.XPATH, using = "//table[@class='table table-striped table-bordered']/tbody/tr[1]/td[20]/ng-switch/span/ng-switch/span")
+  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[1]/td[20]/ng-switch/span/ng-switch/span")
   private static WebElement totalCost;
 
-  @FindBy(how = How.XPATH, using = "//table[@class='table table-striped table-bordered']/tbody/tr[1]/td[19]/ng-switch/span/ng-switch/span")
+  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[1]/td[19]/ng-switch/span/ng-switch/span")
   private static WebElement pricePerPack;
 
-  @FindBy(how = How.XPATH, using = "//table[@class='table table-striped table-bordered']/tbody/tr[1]/td[18]/ng-switch/span/ng-switch/span")
+  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[1]/td[18]/ng-switch/span/ng-switch/span")
   private static WebElement packsToShip;
 
-  @FindBy(how = How.XPATH, using = "//table[@class='table table-striped table-bordered']/tbody/tr[3]/td[18]/ng-switch/span")
+  @FindBy(how = How.XPATH, using = "//table[@id='nonFullSupplyTable']/tbody/tr/td[18]/ng-switch/span")
   private static WebElement packsToShipNonFullSupply;
 
-  @FindBy(how = How.XPATH, using = "//table[@class='table table-striped table-bordered']/tbody/tr[3]/td[19]/ng-switch/span/span[2]")
+  @FindBy(how = How.XPATH, using = "//table[@id='nonFullSupplyTable']/tbody/tr/td[19]/ng-switch/span/span[2]")
   private static WebElement pricePerPackNonFullSupply;
 
-  @FindBy(how = How.XPATH, using = "//table[@class='table table-striped table-bordered']/tbody/tr[3]/td[20]/ng-switch/span/span[2]")
+  @FindBy(how = How.XPATH, using = "//table[@id='nonFullSupplyTable']/tbody/tr/td[20]/ng-switch/span/span[2]")
   private static WebElement totalCostNonFullSupply;
 
   @FindBy(how = How.XPATH, using = "//span[@id='fullSupplyItemsCost']")
@@ -121,10 +121,10 @@ public class InitiateRnRPage extends Page {
   @FindBy(how = How.XPATH, using = "//input[@value='Add']")
   private static WebElement addButtonNonFullSupply;
 
-  @FindBy(how = How.XPATH, using = "//form[@id='rnr-form']/div/table/tbody/tr[3]/td[2]/ng-switch/span")
+  @FindBy(how = How.XPATH, using = "//form[@id='rnr-form']/div[1]/ng-include[2]/table/tbody/tr/td[2]/ng-switch/span")
   private static WebElement productDescriptionNonFullSupply;
 
-  @FindBy(how = How.XPATH, using = "//form[@id='rnr-form']/div/table/tbody/tr[3]/td/ng-switch/span")
+  @FindBy(how = How.XPATH, using = "//form[@id='rnr-form']/div[1]/ng-include[2]/table/tbody/tr/td[1]/ng-switch/span")
   private static WebElement productCodeNonFullSupply;
 
   @FindBy(how = How.XPATH, using = "//div[@class='adjustment-list']/ul/li/span[@class='tpl-adjustment-type ng-binding']")
