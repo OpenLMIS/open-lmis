@@ -30,15 +30,26 @@ public class RoleAssignmentService {
   }
 
   private void createUserProgramRoleAssignment(Integer userId, Integer roleId, Integer programId, Integer supervisoryNodeId) {
-    roleAssignmentRepository.createUserProgramRoleAssignment(userId, roleId, programId);
+    roleAssignmentRepository.createUserProgramRoleAssignment(userId, roleId, programId, supervisoryNodeId);
   }
 
-  public void insertUserProgramRoleMapping(User user) {
+  public void saveRoles(User user) {
+    roleAssignmentRepository.deleteAllRoleAssignmentsForUser(user.getId());
+
     List<UserRoleAssignment> roleAssignments = user.getRoleAssignments();
-    if(roleAssignments==null) return;
+    if (roleAssignments == null) return;
     for (UserRoleAssignment userRoleAssignment : roleAssignments) {
       for (Integer role : userRoleAssignment.getRoleIds()) {
         createUserProgramRoleAssignment(user.getId(), role, userRoleAssignment.getProgramId(), null);//To-Do : This will be modified once supervisory node is added to create user screen
+      }
+    }
+  }
+
+  public void saveSupervisoryRoles(User user) {
+    if (user.getSupervisorRoles() == null) return;
+    for (RoleAssignment userRoleAssignment : user.getSupervisorRoles()) {
+      for (Integer role : userRoleAssignment.getRoleIds()) {
+        createUserProgramRoleAssignment(user.getId(), role, userRoleAssignment.getProgramId(), userRoleAssignment.getSupervisoryNode().getId());
       }
     }
   }
@@ -59,5 +70,9 @@ public class RoleAssignmentService {
     }
 
     return roleAssignmentsList;
+  }
+
+  public List<RoleAssignment> getSupervisorRoles(Integer userId) {
+    return roleAssignmentRepository.getSupervisorRoles(userId);
   }
 }

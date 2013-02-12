@@ -24,8 +24,8 @@ public class RoleAssignmentRepository {
     return mapper.getRoleAssignmentsWithGivenRightForAUser(right, userId);
   }
 
-  public void createUserProgramRoleAssignment(Integer userId, Integer roleId, Integer programId) {
-    mapper.createRoleAssignment(userId, programId, roleId, null);
+  public void createUserProgramRoleAssignment(Integer userId, Integer roleId, Integer programId, Integer supervisoryNodeId) {
+    mapper.createRoleAssignment(userId, programId, roleId, supervisoryNodeId);
   }
 
   public void deleteAllRoleAssignmentsForUser(Integer id) {
@@ -38,5 +38,9 @@ public class RoleAssignmentRepository {
 
   public List<Integer> getProgramsForWhichUserHasRoleAssignments(Integer userId) {
     return mapper.getProgramsForWhichUserHasRoleAssignments(userId);
+  }
+
+  public List<RoleAssignment> getSupervisorRoles(Integer userId) {
+    return mapper.getSupervisorRoles(userId);
   }
 }

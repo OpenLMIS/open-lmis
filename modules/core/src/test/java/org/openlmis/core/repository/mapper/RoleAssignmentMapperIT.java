@@ -114,16 +114,27 @@ public class RoleAssignmentMapperIT {
   }
 
   @Test
-  public void shouldGetRoleAssignmentsForAUser() throws Exception {
-    mapper.deleteAllRoleAssignmentsForUser(1);
-    mapper.createRoleAssignment(1, 1, 1, null);
-    mapper.createRoleAssignment(1, 1, 1, null);
-    mapper.createRoleAssignment(1, null, 1, null);
+  public void shouldGetSupervisorRolesForAUser() throws Exception {
+    Role r1 = new Role("r1", "random description");
+    roleRightsMapper.insertRole(r1);
 
-    List<RoleAssignment> listOfProgramIdsForTheUser = mapper.getRoleAssignmentsForUser(1);
+    Role r2 = new Role("r2", "random description");
+    roleRightsMapper.insertRole(r2);
 
-    assertThat(listOfProgramIdsForTheUser.size(), is(1));
-    assertThat(listOfProgramIdsForTheUser.get(0).getRoleIds().size(), is(2));
+    SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
+    supervisoryNode.setFacility(facility);
+    supervisoryNodeMapper.insert(supervisoryNode);
+
+
+    mapper.createRoleAssignment(user.getId(), 1, r1.getId(), supervisoryNode.getId());
+    mapper.createRoleAssignment(user.getId(), 1, r2.getId(), supervisoryNode.getId());
+    mapper.createRoleAssignment(user.getId(), 2, r1.getId(), supervisoryNode.getId());
+    mapper.createRoleAssignment(user.getId(), 1, r1.getId(), null);
+
+    List<RoleAssignment> roleAssignments = mapper.getSupervisorRoles(user.getId());
+
+    assertThat(roleAssignments.size(), is(2));
+    assertThat(roleAssignments.get(0).getRoleIds().size(), is(2));
 
   }
 

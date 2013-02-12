@@ -7,6 +7,8 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.RoleAssignment;
+import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.domain.UserRoleAssignment;
 import org.openlmis.core.exception.DataException;
@@ -126,14 +128,17 @@ public class UserServiceTest {
   public void shouldReturnUserIfIdExists() throws Exception {
     User user = new User();
     List<UserRoleAssignment> userRoleAssignments = Arrays.asList(new UserRoleAssignment());
+    List<RoleAssignment> supervisorRoles = Arrays.asList(new RoleAssignment());
 
     when(userRepository.getById(1)).thenReturn(user);
     when(roleAssignmentService.getRoleAssignments(1)).thenReturn(userRoleAssignments);
+    when(roleAssignmentService.getSupervisorRoles(1)).thenReturn(supervisorRoles);
 
     User returnedUser = userService.getById(1);
 
     assertThat(returnedUser, is(user));
     assertThat(returnedUser.getRoleAssignments(), is(userRoleAssignments));
+    assertThat(returnedUser.getSupervisorRoles(), is(supervisorRoles));
   }
 
   @Test
@@ -156,10 +161,36 @@ public class UserServiceTest {
     userService.create(user, FORGET_PASSWORD_LINK);
 
     verify(userRepository).create(user);
-    verify(roleAssignmentService).insertUserProgramRoleMapping(user);
+    verify(roleAssignmentService).saveRoles(user);
+  }
 
-    user.setId(1);
+  @Test
+  public void shouldSaveUsersSupervisoryRoles() throws Exception {
+    User user = new User();
+    final RoleAssignment roleAssignment = new RoleAssignment(1, 1, 1, new SupervisoryNode(1));
+    List<RoleAssignment> supervisorRoles = Arrays.asList(roleAssignment);
+    user.setSupervisorRoles(supervisorRoles);
+
     userService.create(user, FORGET_PASSWORD_LINK);
+
+    verify(userRepository).create(user);
+    verify(roleAssignmentService).saveRoles(user);
+    verify(roleAssignmentService).saveSupervisoryRoles(user);
+  }
+
+  @Test
+  public void shouldUpdateUser() throws Exception {
+    User user = new User();
+    final RoleAssignment roleAssignment = new RoleAssignment(1, 1, 1, new SupervisoryNode(1));
+    List<RoleAssignment> supervisorRoles = Arrays.asList(roleAssignment);
+    user.setSupervisorRoles(supervisorRoles);
+
+    userService.update(user);
+
+    verify(userRepository).update(user);
+    verify(roleAssignmentService).deleteAllRoleAssignmentsForUser(user.getId());
+    verify(roleAssignmentService).saveRoles(user);
+    verify(roleAssignmentService).saveSupervisoryRoles(user);
   }
 
   @Test

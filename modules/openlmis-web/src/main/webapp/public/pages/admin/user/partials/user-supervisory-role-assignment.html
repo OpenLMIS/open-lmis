@@ -23,7 +23,7 @@
       </div>
       <div class="span3">
         <div class="fluid-grid-cell">
-          <label ng-bind="getSupervisoryNodeName(roleAssignment.supervisoryNodeId)"></label>
+          <label ng-bind="getSupervisoryNodeName(roleAssignment.supervisoryNode.id)"></label>
         </div>
       </div>
       <div class="span3">
@@ -49,7 +49,7 @@
         <select
           ng-options="program.id as program.name for program in programs"
           ng-model="selectedProgramIdToSupervise">
-          <option value="" ng-bind="selectedProgramMessage"></option>
+          <option value="" ng-bind="selectSuperviseProgramMessage"></option>
         </select>
       <span ng-show='hasMappingError(showSupervisorRoleMappingError,selectedProgramIdToSupervise)' class="field-error">
         Please select a program
@@ -59,7 +59,7 @@
         <select
           ng-options="supervisoryNode.id as supervisoryNode.name for supervisoryNode in supervisoryNodes"
           ng-model="selectedSupervisoryNodeIdToSupervise">
-          <option value="" ng-bind="selectedSupervisoryNodeMessage"></option>
+          <option value="" ng-bind="selectSupervisoryNodeMessage"></option>
         </select>
               <span ng-show='hasMappingError(showSupervisorRoleMappingError,selectedSupervisoryNodeIdToSupervise)' class="field-error">
                 Please select a Supervisory Node

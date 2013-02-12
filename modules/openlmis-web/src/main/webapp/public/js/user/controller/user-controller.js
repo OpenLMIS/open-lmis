@@ -1,5 +1,7 @@
-function UserController($scope, $routeParams, Users, User, AllFacilities, Roles, Facility, Programs,  SupervisoryNodes) {
+function UserController($scope, $routeParams, Users, User, AllFacilities, Roles, Facility, Programs, SupervisoryNodes) {
   $scope.userNameInvalid = false;
+  $scope.showHomeFacilityRoleMappingError = false;
+  $scope.showSupervisorRoleMappingError = false;
   $scope.user = {};
 
   if ($routeParams.userId) {
@@ -15,13 +17,46 @@ function UserController($scope, $routeParams, Users, User, AllFacilities, Roles,
     });
   }
 
-  Programs.get({}, function(data) {
+  Programs.get({}, function (data) {
     $scope.programs = data.programs;
   });
 
-  SupervisoryNodes.get({},function(data){
+  SupervisoryNodes.get({}, function (data) {
     $scope.supervisoryNodes = data.supervisoryNodes;
   });
+
+  function validateHomeFacilityRoles(user) {
+    if (!user.roleAssignments) {
+      return true;
+    }
+    var valid = true;
+    $.each(user.roleAssignments, function (index, roleAssignment) {
+      if (!roleAssignment.programId || !roleAssignment.roleIds || roleAssignment.roleIds.length == 0) {
+        valid = false;
+        return false;
+      }
+    });
+    return valid;
+  }
+
+  function validateSupervisorRoles(user) {
+    if (!user.supervisorRoles) {
+      return true;
+    }
+
+    var valid = true;
+    $.each(user.supervisorRoles, function (index, roleAssignment) {
+      if (!roleAssignment.programId || !roleAssignment.supervisoryNode || !roleAssignment.supervisoryNode.id || !roleAssignment.roleIds || roleAssignment.roleIds.length == 0) {
+        valid = false;
+        return false;
+      }
+    });
+    return valid;
+  }
+
+  var validateRoleAssignment = function (user) {
+    return validateHomeFacilityRoles(user) && validateSupervisorRoles(user);
+  };
 
   $scope.saveUser = function () {
     var successHandler = function (response) {
@@ -37,23 +72,8 @@ function UserController($scope, $routeParams, Users, User, AllFacilities, Roles,
       $scope.error = response.data.error;
     };
 
-    var invalidRoleAssignment = function (user) {
-      if (!user.roleAssignments) {
-        return false;
-      }
-
-      var valid = true;
-      $.each(user.roleAssignments, function (index, roleAssignment) {
-        if (!roleAssignment.programId || !roleAssignment.roleIds || roleAssignment.roleIds.length == 0) {
-          valid = false;
-          return false;
-        }
-      });
-      return !valid;
-    };
-
     var requiredFieldsPresent = function (user) {
-      if ($scope.userForm.$error.required || invalidRoleAssignment(user)) {
+      if ($scope.userForm.$error.required || !validateRoleAssignment(user)) {
         $scope.error = "Please correct errors before saving.";
         $scope.message = "";
         $scope.showError = true;

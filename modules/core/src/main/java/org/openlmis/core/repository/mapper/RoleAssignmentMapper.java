@@ -38,8 +38,10 @@ public interface RoleAssignmentMapper {
   @Select("SELECT distinct(programId) FROM role_assignments WHERE userId=#{userId} AND programId IS NOT NULL")
   List<Integer> getProgramsForWhichUserHasRoleAssignments(int userId);
 
-  @Select("SELECT userId, programId, array_agg(roleId) as roleIdsAsString FROM role_assignments WHERE userId=#{userId} AND programId in (select programId from role_assignments where userId=#{userId} ) group by userId, programId ")
+  @Select("SELECT userId, programId, supervisoryNodeId, array_agg(roleId) as roleIdsAsString " +
+      "FROM role_assignments " +
+      "WHERE userId=#{userId} AND programId IS NOT NULL AND supervisoryNodeId IS NOT NULL " +
+      "GROUP BY userId, programId, supervisoryNodeId ")
   @Results(value = {@Result(property = "supervisoryNode.id", column = "supervisoryNodeId")})
-  List<RoleAssignment> getRoleAssignmentsForUser(int userId);
-
+  List<RoleAssignment> getSupervisorRoles(Integer userId);
 }
