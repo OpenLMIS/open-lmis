@@ -138,9 +138,6 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
         HomePage homePageTopSNUser=loginPageTopSNUser.loginAs(userSIC, password);
 
-        OrderPage orderPageNoOrdersPending=homePageTopSNUser.navigateConvertToOrder();
-        orderPageNoOrdersPending.verifyNoPendingOrdersMessage();
-
         ApprovePage approvePageTopSNUser=homePageTopSNUser.navigateToApprove();
         String periodTopSNUser=approvePageTopSNUser.verifyandclickRequisitionPresentForApproval();
         approvePageTopSNUser.verifyRnRHeader("FCcode", "FCname", date_time, program, periodTopSNUser);

@@ -105,11 +105,6 @@ public class ApprovePage extends Page {
         SeleneseTestNgHelper.assertTrue("NoRequisitionsPendingMessage is not displayed",NoRequisitionsPendingMessage.isDisplayed());
     }
 
-    public void verifyConvertToOrderRequisition()
-    {
-        testWebDriver.waitForElementToAppear(requisitionListHeader);
-        SeleneseTestNgHelper.assertTrue("NoRequisitionsPendingMessage is not displayed",NoRequisitionsPendingMessage.isDisplayed());
-    }
 
     public String verifyandclickRequisitionPresentForApproval()
     {

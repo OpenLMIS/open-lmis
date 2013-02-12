@@ -49,11 +49,6 @@ public class OrderPage extends Page {
 
     }
 
-    public void verifyNoPendingOrdersMessage() throws IOException {
-        testWebDriver.waitForElementToAppear(NoRequisitionsPendingMessage);
-        SeleneseTestNgHelper.assertTrue("'No R&Rs are pending to be released as Orders' Message not displayed",NoRequisitionsPendingMessage.isDisplayed());
-
-    }
 
     public void verifyOrderListElements(String program, String facilityCode, String facilityName, String periodStartDate, String periodEndDate, String supplyFacilityName ) throws IOException {
         testWebDriver.waitForElementToAppear(programOnOrderScreen);
