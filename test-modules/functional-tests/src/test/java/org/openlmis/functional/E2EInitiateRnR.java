@@ -27,7 +27,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     }
 
     @Test(dataProvider = "Data-Provider-Function-Positive")
-    public void testE2EInitiateRnR(String period,String program,String userSIC, String userMO, String password,String[] credentials) throws Exception {
+    public void testE2EInitiateRnR(String program,String userSIC, String userMO, String password,String[] credentials) throws Exception {
 
         LoginPage loginPage=new LoginPage(testWebDriver);
         HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
@@ -53,8 +53,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
         dbWrapper.insertSupervisoryNode("F10", "N1", "null");
         dbWrapper.insertSupervisoryNodeSecond("F11", "N2", "N1");
         dbWrapper.insertProducts("P10", "P11");
-        dbWrapper.insertProgramProducts("P10", "P11", "HIV");
-        dbWrapper.insertFacilityApprovedProducts("P10", "P11", "HIV", "Lvl3 Hospital");
+        dbWrapper.insertProgramProducts("P10", "P11", program);
+        dbWrapper.insertFacilityApprovedProducts("P10", "P11", program, "Lvl3 Hospital");
         dbWrapper.insertRequisitionGroups("RG1","RG2","N1","N2");
 
         dbWrapper.insertRequisitionGroupMembers("F10", facility_code);
@@ -78,6 +78,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
         userRoleListStoreincharge.add("Create Requisition");
         userRoleListStoreincharge.add("Authorize Requisition");
         userRoleListStoreincharge.add("Approve Requisition");
+        userRoleListStoreincharge.add("Convert To Order Requisition");
 
         rolesPage.createRole("Store-in-charge", "Store-in-charge", userRoleListStoreincharge);
         dbWrapper.insertRoleAssignment("200", "Store-in-charge");
@@ -88,6 +89,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
         dbWrapper.insertRoleAssignment("300", "Medical-officer");
         dbWrapper.updateRoleAssignment("300");
         dbWrapper.updateRoleGroupMember(facility_code);
+
+        dbWrapper.insertSupplyLines("N1","HIV","FCcode"+date_time);
 
         LoginPage loginPageSecond=homePage.logout();
         HomePage homePageUser = loginPageSecond.loginAs(userSIC, password);
@@ -134,6 +137,10 @@ public class E2EInitiateRnR extends TestCaseHelper {
         LoginPage loginPageTopSNUser=homePageLowerSNUser.logout();
 
         HomePage homePageTopSNUser=loginPageTopSNUser.loginAs(userSIC, password);
+
+        OrderPage orderPageNoOrdersPending=homePageTopSNUser.navigateConvertToOrder();
+        orderPageNoOrdersPending.verifyNoPendingOrdersMessage();
+
         ApprovePage approvePageTopSNUser=homePageTopSNUser.navigateToApprove();
         String periodTopSNUser=approvePageTopSNUser.verifyandclickRequisitionPresentForApproval();
         approvePageTopSNUser.verifyRnRHeader("FCcode", "FCname", date_time, program, periodTopSNUser);
@@ -141,6 +148,13 @@ public class E2EInitiateRnR extends TestCaseHelper {
         approvePageTopSNUser.editApproveQuantityAndVerifyTotalCost("2900");
         approvePageTopSNUser.approveRequisition();
         approvePageTopSNUser.verifyNoRequisitionPendingMessage();
+
+        OrderPage orderPageOrdersPending=homePageTopSNUser.navigateConvertToOrder();
+        String[] periods=periodTopSNUser.split("-");
+        String supplyFacilityName=dbWrapper.getSupplyFacilityName("N1", "HIV");
+        orderPageOrdersPending.verifyOrderListElements(program, "FCcode"+date_time, "FCname"+date_time, periods[0].trim(), periods[1].trim(), supplyFacilityName );
+
+
 
     }
     @AfterClass
@@ -155,7 +169,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     @DataProvider(name = "Data-Provider-Function-Positive")
     public Object[][] parameterIntTestProviderPositive() {
         return new Object[][]{
-                {"Period1","HIV","User123", "User234", "Admin123",new String[]{"Admin123", "Admin123"}}
+                {"HIV","User123", "User234", "Admin123",new String[]{"Admin123", "Admin123"}}
         };
 
     }

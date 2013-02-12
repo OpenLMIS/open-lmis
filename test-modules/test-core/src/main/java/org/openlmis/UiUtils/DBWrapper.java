@@ -475,5 +475,30 @@ public class DBWrapper {
 
     }
 
+    public void insertSupplyLines(String supervisoryNode, String programCode, String facilityCode) throws IOException , SQLException
+    {
+
+        DBWrapper dbWrapper=new DBWrapper();
+        dbWrapper.dbConnection("insert into supply_lines (description, supervisoryNodeId, programId, supplyingFacilityId) values\n" +
+                "('supplying node for HIV', (select id from supervisory_nodes where code = '"+supervisoryNode+"'), (select id from programs where code='"+programCode+"'),(select id from facilities where code = '"+facilityCode+"'));\n", "alter");
+
+    }
+
+    public String getSupplyFacilityName(String supervisoryNode, String programCode) throws IOException , SQLException
+    {
+
+        DBWrapper dbWrapper=new DBWrapper();
+        String facilityName=null;
+        ResultSet rs=dbWrapper.dbConnection("select name from facilities where id=" +
+                "(select supplyingfacilityid from supply_lines where supervisorynodeid=" +
+                "(select id from supervisory_nodes where code='"+supervisoryNode+"') and programid=(select id from programs where code='"+programCode+"'));", "select");
+
+        if (rs.next()) {
+            facilityName=rs.getString("name");
+        }
+        return facilityName;
+
+    }
+
 }
 

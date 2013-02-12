@@ -39,6 +39,12 @@ public class HomePage extends Page {
     @FindBy(how = How.XPATH, using = "//a[contains(text(),'Roles')]")
     private static WebElement manageRoleAssignmentLink;
 
+    @FindBy(how = How.XPATH, using = "//a[contains(text(),'Convert to Order')]")
+    private static WebElement convertToOrderMenuItem;
+
+    @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Convert to Order Requisitions')]")
+    private static WebElement convertToOrderHeader;
+
     @FindBy(how = How.LINK_TEXT, using = "Add new")
     private static WebElement createFacility;
 
@@ -219,6 +225,8 @@ public class HomePage extends Page {
         return new DeleteFacilityPage(testWebDriver);
     }
 
+
+
     public RolesPage navigateRoleAssignments() throws IOException {
         SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
         testWebDriver.waitForElementToAppear(AdministrationMenuItem);
@@ -270,6 +278,16 @@ public class HomePage extends Page {
         approveLink.click();
         return new ApprovePage(testWebDriver);
 
+    }
+
+    public OrderPage navigateConvertToOrder() throws IOException {
+        SeleneseTestNgHelper.assertTrue(requisitionMenuItem.isDisplayed());
+        testWebDriver.waitForElementToAppear(requisitionMenuItem);
+        testWebDriver.click(requisitionMenuItem);
+        testWebDriver.waitForElementToAppear(convertToOrderMenuItem);
+        convertToOrderMenuItem.click();
+        testWebDriver.waitForElementToAppear(convertToOrderHeader);
+        return new OrderPage(testWebDriver);
     }
 
 }

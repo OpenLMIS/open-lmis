@@ -51,6 +51,9 @@ public class RolesPage extends Page {
     @FindBy(how = How.ID, using = "Requisition - Approve")
     private static WebElement rightApproveRequisition;
 
+    @FindBy(how = How.ID, using = "Requisition - Convert to Order")
+    private static WebElement rightConvertToOrderRequisition;
+
     @FindBy(how = How.XPATH, using = "//input[@value='Save']")
     private static WebElement saveButton;
 
@@ -78,6 +81,7 @@ public class RolesPage extends Page {
         webElementMap.put("Create Requisition", rightCreateRequisition);
         webElementMap.put("Authorize Requisition", rightAuthorizeRequisition);
         webElementMap.put("Approve Requisition", rightApproveRequisition);
+        webElementMap.put("Convert To Order Requisition", rightConvertToOrderRequisition);
 
         testWebDriver.waitForElementToAppear(createNewRoleButton);
         createNewRoleButton.click();

@@ -50,8 +50,8 @@ public class E2EUpload extends TestCaseHelper {
 
         dbWrapper.insertRoleAssignment("200", "User");
 
-uploadPage.uploadProductCategory();
-      testWebDriver.setImplicitWait(2500);
+        uploadPage.uploadProductCategory();
+        testWebDriver.setImplicitWait(2500);
 
         uploadPage.uploadProducts();
         testWebDriver.setImplicitWait(2500);
