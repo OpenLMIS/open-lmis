@@ -47,7 +47,7 @@
     <div class="row-fluid">
       <div class="span3">
         <select
-          ng-options="program.id as program.name for program in programs"
+          ng-options="program.id as program.name group by program.status for program in programsWithStatus()"
           ng-model="selectedProgramIdToSupervise">
           <option value="" ng-bind="selectSuperviseProgramMessage"></option>
         </select>

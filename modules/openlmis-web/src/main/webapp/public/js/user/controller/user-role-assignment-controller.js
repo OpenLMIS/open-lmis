@@ -3,6 +3,13 @@ function UserRoleAssignmentController($scope) {
   $scope.selectSuperviseProgramMessage = '--Select Program--';
   $scope.selectSupervisoryNodeMessage = '--Select Node--';
 
+  $scope.programsWithStatus = function () {
+    $.each($scope.programs, function (index, program) {
+      program.status = program.active ? 'Active' : 'Inactive';
+    });
+    return $scope.programs;
+  };
+
   $scope.deleteCurrentRow = function (rowNum) {
     $scope.deleteRolesModal = true;
     $scope.rowNum = rowNum;
@@ -64,8 +71,8 @@ function UserRoleAssignmentController($scope) {
   $scope.addSupervisoryRole = function () {
     if (isPresent($scope.selectedProgramIdToSupervise) && isPresent($scope.selectedSupervisoryNodeIdToSupervise) && isPresent($scope.selectedRoleIdsToSupervise)) {
       var newRoleAssignment = {programId:$scope.selectedProgramIdToSupervise, supervisoryNode:{id:$scope.selectedSupervisoryNodeIdToSupervise}, roleIds:$scope.selectedRoleIdsToSupervise};
-      if (isDuplicateSupervisoryRole(newRoleAssignment)){
-        $scope.duplicateSupervisorRoleError="Program and node combination is already selected";
+      if (isDuplicateSupervisoryRole(newRoleAssignment)) {
+        $scope.duplicateSupervisorRoleError = "Program and node combination is already selected";
         return;
       }
       addSupervisoryRole(newRoleAssignment);
@@ -79,6 +86,7 @@ function UserRoleAssignmentController($scope) {
       $scope.selectedSupervisoryNodeIdToSupervise = null;
       $scope.selectedRoleIdsToSupervise = null;
       $scope.$parent.showSupervisorRoleMappingError = false;
+      $scope.duplicateSupervisorRoleError = undefined;
     }
 
     function isDuplicateSupervisoryRole(newRoleAssignment) {

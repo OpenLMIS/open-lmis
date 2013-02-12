@@ -27,7 +27,7 @@ INSERT INTO supervisory_nodes
 
  INSERT INTO supervisory_nodes
   (parentId, facilityId, name, code) VALUES
-  ((select id from  supervisory_nodes where code ='N1'), (SELECT id FROM facilities WHERE code = 'F11'), 'Node 1', 'N2');
+  ((select id from  supervisory_nodes where code ='N1'), (SELECT id FROM facilities WHERE code = 'F11'), 'Node 2', 'N2');
 
 INSERT INTO role_assignments
   (userId, roleId, programId, supervisoryNodeId) VALUES
