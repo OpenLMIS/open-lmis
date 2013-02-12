@@ -126,7 +126,7 @@ public class RnrTest {
     RnrLineItem correspondingLineItemInPreviousRequisition = make(a(defaultRnrLineItem, with(stockInHand, 76)));
     previousRequisition.setLineItems(asList(correspondingLineItemInPreviousRequisition));
 
-    rnr.setBeginningBalanceForEachLineItem(previousRequisition);
+    rnr.setBeginningBalanceForEachLineItem(previousRequisition, true);
 
     assertThat(rnr.getLineItems().get(0).getBeginningBalance(), is(correspondingLineItemInPreviousRequisition.getStockInHand()));
     assertThat(rnr.getLineItems().get(0).getPreviousStockInHandAvailable(), is(Boolean.TRUE));
@@ -136,7 +136,7 @@ public class RnrTest {
   public void shouldSetBeginningBalanceToZeroIfLineItemDoesNotExistInPreviousRequisition() throws Exception {
     Rnr rnr = make(a(defaultRnr));
 
-    rnr.setBeginningBalanceForEachLineItem(new Rnr());
+    rnr.setBeginningBalanceForEachLineItem(new Rnr(), true);
     assertThat(rnr.getLineItems().get(0).getBeginningBalance(),is(0));
   }
 
@@ -166,7 +166,7 @@ public class RnrTest {
 
   @Test
   public void shouldSetBeginningBalanceToZeroIfPreviousRequisitionDoesNotExist() throws Exception {
-    rnr.setBeginningBalanceForEachLineItem(null);
+    rnr.setBeginningBalanceForEachLineItem(null, false);
     assertThat(rnr.getLineItems().get(0).getBeginningBalance(), is(0));
   }
 

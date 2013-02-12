@@ -83,16 +83,8 @@ public class RequisitionService {
   }
 
   private void fillFieldsForInitiatedRequisitionAccordingToTemplate(Rnr requisition, ProgramRnrTemplate template) {
-    fillBeginningBalanceFromPreviousRnrIfStockInHandVisible(requisition);
-
-    for(RnrLineItem lineItem : requisition.getLineItems()){
-      if(!template.columnsVisible(QUANTITY_RECEIVED)) lineItem.setQuantityReceived(0);
-      if(!template.columnsVisible(QUANTITY_DISPENSED)) lineItem.setQuantityDispensed(0);
-      if(!template.columnsVisible(LOSSES_AND_ADJUSTMENTS)) lineItem.setTotalLossesAndAdjustments(0);
-      lineItem.setNewPatientCount(0);
-      lineItem.setStockOutDays(0);
-    }
-
+    fillBeginningBalanceFromPreviousRnrIfStockInHandVisible(requisition, template.columnsVisible(BEGINNING_BALANCE));
+    requisition.setFieldsAccordingToTemplate(template);
   }
 
   public void save(Rnr rnr) {
@@ -238,13 +230,13 @@ public class RequisitionService {
     return rnr;
   }
 
-  private void fillBeginningBalanceFromPreviousRnrIfStockInHandVisible(Rnr requisition) {
+  private void fillBeginningBalanceFromPreviousRnrIfStockInHandVisible(Rnr requisition, boolean beginningBalanceVisible) {
       ProcessingPeriod immediatePreviousPeriod = processingScheduleService.getImmediatePreviousPeriod(requisition.getPeriod());
       Rnr previousRequisition = null;
       if (immediatePreviousPeriod != null)
         previousRequisition = requisitionRepository.getRequisition(requisition.getFacility(), requisition.getProgram(), immediatePreviousPeriod);
 
-      requisition.setBeginningBalanceForEachLineItem(previousRequisition);
+      requisition.setBeginningBalanceForEachLineItem(previousRequisition, beginningBalanceVisible);
   }
 
   private void validateIfRnrCanBeInitiatedFor(Integer facilityId, Integer programId, Integer periodId) {

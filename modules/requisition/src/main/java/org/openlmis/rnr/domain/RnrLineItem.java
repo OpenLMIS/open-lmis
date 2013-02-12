@@ -275,4 +275,12 @@ public class RnrLineItem {
   public void resetBeginningBalance() {
     beginningBalance = 0;
   }
+
+  void setLineItemFieldsAccordingToTemplate(ProgramRnrTemplate template) {
+    if(!template.columnsVisible(QUANTITY_RECEIVED)) quantityReceived = 0;
+    if(!template.columnsVisible(QUANTITY_DISPENSED)) quantityDispensed = 0;
+    if(!template.columnsVisible(LOSSES_AND_ADJUSTMENTS)) totalLossesAndAdjustments = 0;
+    newPatientCount = 0;
+    stockOutDays = 0;
+  }
 }

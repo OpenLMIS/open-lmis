@@ -128,6 +128,51 @@ public class RequisitionServiceTest {
     assertThat(requisition.getLineItems().get(0).getStockOutDays(), is(0));
   }
 
+  @Test
+  public void shouldInitRequisitionAndSetBeginningBalanceToZeroIfNotVisibleAndPreviousStockInHandNotAvailable() throws Exception {
+    Date date = new Date();
+    Rnr requisition = createRequisition(PERIOD.getId(), null);
+    setupForInitRnr(date, requisition, PERIOD);
+
+    List<FacilityApprovedProduct> facilityApprovedProducts = new ArrayList<>();
+    ProgramProduct programProduct = new ProgramProduct(null, make(a(defaultProduct)), 10, true);
+    facilityApprovedProducts.add(new FacilityApprovedProduct("warehouse", programProduct, 30));
+    when(facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(), PROGRAM.getId())).thenReturn(facilityApprovedProducts);
+
+    ArrayList<RnrColumn> rnrColumns = getRnrColumns();
+    rnrColumns.add(make(a(defaultRnrColumn, with(columnName, BEGINNING_BALANCE), with(visible, false))));
+    when(rnrTemplateRepository.fetchRnrTemplateColumns(PROGRAM.getId())).thenReturn(rnrColumns);
+
+    whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), facilityApprovedProducts, USER_ID).thenReturn(requisition);
+
+    requisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), 1);
+
+    assertThat(requisition.getLineItems().get(0).getBeginningBalance(), is(0));
+  }
+
+  @Test
+  public void shouldInitRequisitionAndNotSetBeginningBalanceToZeroIfVisibleAndPreviousStockInHandNotAvailable() throws Exception {
+    Date date = new Date();
+    Rnr requisition = createRequisition(PERIOD.getId(), null);
+    requisition.getLineItems().get(0).setBeginningBalance(null);
+    setupForInitRnr(date, requisition, PERIOD);
+
+    List<FacilityApprovedProduct> facilityApprovedProducts = new ArrayList<>();
+    ProgramProduct programProduct = new ProgramProduct(null, make(a(defaultProduct)), 10, true);
+    facilityApprovedProducts.add(new FacilityApprovedProduct("warehouse", programProduct, 30));
+    when(facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(), PROGRAM.getId())).thenReturn(facilityApprovedProducts);
+
+    ArrayList<RnrColumn> rnrColumns = getRnrColumns();
+    rnrColumns.add(make(a(defaultRnrColumn, with(columnName, BEGINNING_BALANCE), with(visible, true))));
+    when(rnrTemplateRepository.fetchRnrTemplateColumns(PROGRAM.getId())).thenReturn(rnrColumns);
+
+    whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), facilityApprovedProducts, USER_ID).thenReturn(requisition);
+
+    requisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), 1);
+
+    assertThat(requisition.getLineItems().get(0).getBeginningBalance(), is(nullValue()));
+  }
+
   private ArrayList<RnrColumn> getRnrColumns() {
     return new ArrayList<RnrColumn>() {{
       add(make(a(defaultRnrColumn, with(columnName, QUANTITY_RECEIVED), with(visible, false))));
@@ -136,6 +181,7 @@ public class RequisitionServiceTest {
       add(make(a(defaultRnrColumn, with(columnName, NEW_PATIENT_COUNT), with(visible, true))));
       add(make(a(defaultRnrColumn, with(columnName, STOCK_OUT_DAYS), with(visible, true))));
       add(make(a(defaultRnrColumn, with(columnName, STOCK_IN_HAND), with(visible, false))));
+      add(make(a(defaultRnrColumn, with(columnName, BEGINNING_BALANCE), with(visible, true))));
     }};
   }
 
@@ -768,7 +814,7 @@ public class RequisitionServiceTest {
 
     requisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), period.getId(), USER_ID);
 
-    verify(spyRequisition).setBeginningBalanceForEachLineItem(previousRnr);
+    verify(spyRequisition).setBeginningBalanceForEachLineItem(previousRnr, true);
   }
 
   @Test
@@ -794,7 +840,7 @@ public class RequisitionServiceTest {
 
     requisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), USER_ID);
 
-    verify(spyRequisition).setBeginningBalanceForEachLineItem(null);
+    verify(spyRequisition).setBeginningBalanceForEachLineItem(null, true);
   }
 
   @Test
@@ -823,7 +869,7 @@ public class RequisitionServiceTest {
 
     requisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), period.getId(), USER_ID);
 
-    verify(spyRequisition).setBeginningBalanceForEachLineItem(previousRnr);
+    verify(spyRequisition).setBeginningBalanceForEachLineItem(previousRnr, true);
   }
 
   private RoleAssignment roleAssignmentWithSupervisoryNodeId(int supervisoryNodeId) {

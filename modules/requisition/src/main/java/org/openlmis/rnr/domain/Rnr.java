@@ -14,7 +14,8 @@ import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
-import static org.openlmis.rnr.domain.RnrStatus.*;
+import static org.openlmis.rnr.domain.RnrStatus.IN_APPROVAL;
+import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 
 @Data
 @NoArgsConstructor
@@ -100,9 +101,9 @@ public class Rnr {
     }
   }
 
-  public void setBeginningBalanceForEachLineItem(Rnr previousRequisition) {
+  public void setBeginningBalanceForEachLineItem(Rnr previousRequisition, boolean beginningBalanceVisible) {
     if (previousRequisition == null) {
-      resetBeginningBalances();
+      if (!beginningBalanceVisible) resetBeginningBalances();
       return;
     }
     for (RnrLineItem currentLineItem : this.lineItems) {
@@ -190,7 +191,14 @@ public class Rnr {
   public void prepareFor(RnrStatus status) {
     calculate();
     this.status = status;
-    submittedDate = new Date();
+    if(status.equals(SUBMITTED)) submittedDate = new Date();
   }
+
+  public void setFieldsAccordingToTemplate(ProgramRnrTemplate template) {
+    for(RnrLineItem lineItem : lineItems){
+      lineItem.setLineItemFieldsAccordingToTemplate(template);
+    }
+  }
+
 }
 
