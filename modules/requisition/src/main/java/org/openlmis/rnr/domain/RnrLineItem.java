@@ -118,7 +118,7 @@ public class RnrLineItem {
     return true;
   }
 
-  public void calculate(ProcessingPeriod period, RnrStatus status, List<RnrColumn> programRequisitionColumns) {
+  public void calculate(ProcessingPeriod period, RnrStatus status) {
     calculateNormalizedConsumption();
     calculateAmc(period);
     calculateTotalLossesAndAdjustments();

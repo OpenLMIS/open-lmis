@@ -7,10 +7,7 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
-import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
-import org.openlmis.rnr.domain.ProgramRnrTemplate;
-import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrColumn;
+import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.openlmis.core.domain.Right.*;
+import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
 @Service
@@ -78,10 +76,23 @@ public class RequisitionService {
 
     Rnr requisition = new Rnr(facilityId, programId, periodId, facilityApprovedProducts, modifiedBy);
 
-    fillBeginningBalanceFromPreviousRnrIfStockInHandVisible(requisition);
+    fillFieldsForInitiatedRequisitionAccordingToTemplate(requisition, rnrTemplate);
 
     requisitionRepository.insert(requisition);
     return get(new Facility(facilityId), new Program(programId), new ProcessingPeriod(periodId));
+  }
+
+  private void fillFieldsForInitiatedRequisitionAccordingToTemplate(Rnr requisition, ProgramRnrTemplate template) {
+    fillBeginningBalanceFromPreviousRnrIfStockInHandVisible(requisition);
+
+    for(RnrLineItem lineItem : requisition.getLineItems()){
+      if(!template.columnsVisible(QUANTITY_RECEIVED)) lineItem.setQuantityReceived(0);
+      if(!template.columnsVisible(QUANTITY_DISPENSED)) lineItem.setQuantityDispensed(0);
+      if(!template.columnsVisible(LOSSES_AND_ADJUSTMENTS)) lineItem.setTotalLossesAndAdjustments(0);
+      lineItem.setNewPatientCount(0);
+      lineItem.setStockOutDays(0);
+    }
+
   }
 
   public void save(Rnr rnr) {
@@ -132,7 +143,7 @@ public class RequisitionService {
 
     savedRnr.copyUserEditableFieldsForSaveSubmitOrAuthorize(rnr, rnrColumns);
 
-    savedRnr.prepareForSubmit();
+    savedRnr.prepareFor(SUBMITTED);
     savedRnr.validate(rnrColumns);
 
     requisitionRepository.update(savedRnr);
@@ -152,7 +163,7 @@ public class RequisitionService {
 
     savedRnr.validate(rnrColumns);
 
-    savedRnr.prepareForAuthorize();
+    savedRnr.prepareFor(AUTHORIZED);
 
     savedRnr.setSupervisoryNodeId(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram()).getId());
 
@@ -170,7 +181,7 @@ public class RequisitionService {
     if (!(savedRnr.getStatus() == AUTHORIZED || savedRnr.getStatus() == IN_APPROVAL))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
-    savedRnr.calculate(new ArrayList<RnrColumn>());
+    savedRnr.calculate();
     final SupervisoryNode parent = supervisoryNodeService.getParent(savedRnr.getSupervisoryNodeId());
     if (parent == null) {
       return doFinalApproval(savedRnr);

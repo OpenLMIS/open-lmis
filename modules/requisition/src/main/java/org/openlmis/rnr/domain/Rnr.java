@@ -76,17 +76,17 @@ public class Rnr {
     return true;
   }
 
-  public void calculate(List<RnrColumn> rnrColumns) {
+  public void calculate() {
     Money totalFullSupplyCost = new Money("0");
     for (RnrLineItem lineItem : lineItems) {
-      lineItem.calculate(period, status, rnrColumns);
+      lineItem.calculate(period, status);
       Money costPerItem = lineItem.getPrice().multiply(BigDecimal.valueOf(lineItem.getPacksToShip()));
       totalFullSupplyCost = totalFullSupplyCost.add(costPerItem);
     }
     this.fullSupplyItemsSubmittedCost = totalFullSupplyCost;
     Money totalNonFullSupplyCost = new Money("0");
     for (RnrLineItem lineItem : nonFullSupplyLineItems) {
-      lineItem.calculate(period, status, rnrColumns);
+      lineItem.calculate(period, status);
       Money costPerItem = lineItem.getPrice().multiply(BigDecimal.valueOf(lineItem.getPacksToShip()));
       totalNonFullSupplyCost = totalNonFullSupplyCost.add(costPerItem);
     }
@@ -187,15 +187,10 @@ public class Rnr {
     }
   }
 
-  public void prepareForSubmit() {
-    calculate(new ArrayList<RnrColumn>());
-    status = SUBMITTED;
+  public void prepareFor(RnrStatus status) {
+    calculate();
+    this.status = status;
     submittedDate = new Date();
-  }
-
-  public void prepareForAuthorize() {
-    calculate(new ArrayList<RnrColumn>());
-    status = AUTHORIZED;
   }
 }
 

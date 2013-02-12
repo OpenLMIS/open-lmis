@@ -158,10 +158,10 @@ public class RnrTest {
     rnr.setPeriod(period);
     rnr.setStatus(SUBMITTED);
 
-    rnr.calculate(programRequisitionColumns);
+    rnr.calculate();
 
-    verify(firstLineItem).calculate(period, SUBMITTED, programRequisitionColumns);
-    verify(secondLineItem).calculate(period, SUBMITTED, programRequisitionColumns);
+    verify(firstLineItem).calculate(period, SUBMITTED);
+    verify(secondLineItem).calculate(period, SUBMITTED);
   }
 
   @Test
