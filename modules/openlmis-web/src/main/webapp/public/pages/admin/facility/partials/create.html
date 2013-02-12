@@ -226,7 +226,7 @@
           </td>
           <td><a class="close" id="remove{{$index}}" ng-click="removeSupportedProgram(supportedProgram)">X</a></td>
         </tr>
-        <tr>
+        <tr class="add-supported-program-row">
           <td>
             <select id="programs-supported" ng-model="supportedProgram.program.id"
                     ng-options="i.id as i.name for i in programsToDisplay"
@@ -242,7 +242,7 @@
                   Start date is mandatory
                 </span>
           </td>
-          <td><input type="button" class="btn-primary" id="supported-program-add" value="+ Add" ng-disabled="!supportedProgram.program.id" ng-click="addSupportedProgram()"></td>
+          <td><input type="button" class="btn btn-primary" id="supported-program-add" value="Add" ng-disabled="!supportedProgram.program.id" ng-click="addSupportedProgram()"></td>
         </tr>
         </tbody>
       </table>
@@ -447,7 +447,7 @@
 </div>
 <!-- /form-group -->
 
-<div id="action_buttons" class="action-buttons">
+<div form-toolbar id="action_buttons" class="action-buttons">
   <div class="form-cell button-row" ng-show="facility.dataReportable == 'true'">
     <input type="submit" class="btn btn-success save-button" value="Save"/>
     <a href="" class="btn btn-danger delete-button" ng-show="facility.id!=null" ng-click="deleteConfirmModal=true">Delete</a>

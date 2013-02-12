@@ -125,8 +125,6 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
     return (_.findWhere($scope.programs, {'id' : programId})).name;
   };
 
-  $rootScope.fixToolBar();
-
   function updateProgramsToDisplay() {
     $scope.facility.supportedPrograms = (!$scope.facility.supportedPrograms) ? [] : $scope.facility.supportedPrograms;
     var supportedProgramIds = _.pluck(_.pluck($scope.facility.supportedPrograms, 'program'),"id");
