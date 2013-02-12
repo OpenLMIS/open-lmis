@@ -65,7 +65,6 @@ uploadPage.uploadProductCategory();
         uploadPage.uploadFacilities();
         testWebDriver.setImplicitWait(2500);
 
-        //dbWrapper.insertFacilityApprovedProducts();
         uploadPage.uploadFacilityTypeToProductMapping();
         dbWrapper.allocateFacilityToUser("200","F10");
 

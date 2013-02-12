@@ -309,6 +309,7 @@ public class DBWrapper {
                 "('"+product2+"',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,       TRUE,         1,                    FALSE,      TRUE,   5);\n","alter");
     }
 
+
     public void insertProgramProducts(String product1, String product2, String program) throws SQLException, IOException {
         DBWrapper dbwrapper = new DBWrapper();
         ResultSet rs = dbwrapper.dbConnection("Select id from program_products;", "select");
@@ -429,6 +430,20 @@ public class DBWrapper {
             id=rs.getString("id");
         }
         return id;
+
+    }
+
+    public String getrequisition_line_items_id_seq() throws IOException , SQLException
+    {
+
+        DBWrapper dbWrapper=new DBWrapper();
+        String lastvalue=null;
+        ResultSet rs=dbWrapper.dbConnection("select last_value from requisition_line_items_id_seq;", "select");
+
+        if (rs.next()) {
+            lastvalue=rs.getString("last_value");
+        }
+        return lastvalue;
 
     }
 

@@ -118,9 +118,9 @@ public class E2EInitiateRnR extends TestCaseHelper {
         initiateRnRPage.verifyAuthorizeRnrSuccessMsg();
         initiateRnRPage.verifyBeginningBalanceDisabled();
 
-        ApprovePage approvePage=homePage.navigateToApprove();
+        ApprovePage approvePage=homePageUser.navigateToApprove();
         approvePage.verifyNoRequisitionPendingMessage();
-        LoginPage loginPagethird=homePage.logout();
+        LoginPage loginPagethird=homePageUser.logout();
 
         HomePage homePageLowerSNUser=loginPagethird.loginAs(userMO,password);
         ApprovePage approvePageLowerSNUser=homePageLowerSNUser.navigateToApprove();

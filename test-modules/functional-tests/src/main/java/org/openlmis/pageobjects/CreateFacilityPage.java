@@ -215,11 +215,8 @@ public class CreateFacilityPage extends Page {
         testWebDriver.sleep(500);
         addSupportedProgram.click();
 
-
         SaveButton.click();
-
-
-        testWebDriver.sleep(2500);
+        testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
         if(saveSuccessMsgDiv.isDisplayed())
         {
             message= testWebDriver.getText(saveSuccessMsgDiv);
@@ -229,7 +226,7 @@ public class CreateFacilityPage extends Page {
             message= testWebDriver.getText(saveErrorMsgDiv);
         }
         SeleneseTestNgHelper.assertEquals(message,facilityNameText + " created successfully");
-        testWebDriver.sleep(2000);
+        testWebDriver.sleep(500);
 
         return date_time;
     }
