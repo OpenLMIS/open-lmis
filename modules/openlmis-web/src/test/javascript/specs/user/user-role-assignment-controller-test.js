@@ -24,7 +24,7 @@ describe("User", function () {
         {programId:2},
         {programId:3}
       ];
-      scope.user = {roleAssignments:existingProgramsMappedForUser};
+      scope.user = {homeFacilityRoles:existingProgramsMappedForUser};
 
       var availablePrograms = scope.availablePrograms();
 
@@ -44,7 +44,7 @@ describe("User", function () {
       scope.programSelected = 1;
       scope.selectedRoleIds = [1, 2];
       scope.addHomeFacilityRole();
-      expect(scope.user.roleAssignments).toEqual([
+      expect(scope.user.homeFacilityRoles).toEqual([
         {"roleIds":[1, 2], "programId":1}
       ]);
       expect(scope.showHomeFacilityRoleMappingError).toEqual(false);
@@ -55,7 +55,7 @@ describe("User", function () {
       scope.programSelected = null;
       scope.selectedRoleIds = [1, 2];
       scope.addHomeFacilityRole();
-      expect(scope.user.roleAssignments).toEqual(undefined);
+      expect(scope.user.homeFacilityRoles).toEqual(undefined);
       expect(scope.showHomeFacilityRoleMappingError).toEqual(true);
     });
 

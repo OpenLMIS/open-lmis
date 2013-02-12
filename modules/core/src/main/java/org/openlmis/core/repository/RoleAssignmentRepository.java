@@ -24,23 +24,19 @@ public class RoleAssignmentRepository {
     return mapper.getRoleAssignmentsWithGivenRightForAUser(right, userId);
   }
 
-  public void createUserProgramRoleAssignment(Integer userId, Integer roleId, Integer programId, Integer supervisoryNodeId) {
-    mapper.createRoleAssignment(userId, programId, roleId, supervisoryNodeId);
+  public void insertRoleAssignment(Integer userId, Integer programId, Integer supervisoryNodeId, Integer roleId) {
+    mapper.insertRoleAssignment(userId, programId, supervisoryNodeId, roleId);
   }
 
   public void deleteAllRoleAssignmentsForUser(Integer id) {
     mapper.deleteAllRoleAssignmentsForUser(id);
   }
 
-  public List<Integer> getRoleAssignmentsForUserAndProgram(Integer id, Integer programId) {
-    return mapper.getRoleAssignmentsForUserAndProgram(id, programId);
-  }
-
-  public List<Integer> getProgramsForWhichUserHasRoleAssignments(Integer userId) {
-    return mapper.getProgramsForWhichUserHasRoleAssignments(userId);
-  }
-
   public List<RoleAssignment> getSupervisorRoles(Integer userId) {
     return mapper.getSupervisorRoles(userId);
+  }
+
+  public List<RoleAssignment> getHomeFacilityRoles(Integer userId) {
+    return mapper.getHomeFacilityRoles(userId);
   }
 }

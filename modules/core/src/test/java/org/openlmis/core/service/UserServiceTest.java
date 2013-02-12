@@ -10,7 +10,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
-import org.openlmis.core.domain.UserRoleAssignment;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.UserRepository;
 import org.openlmis.email.domain.EmailMessage;
@@ -127,17 +126,17 @@ public class UserServiceTest {
   @Test
   public void shouldReturnUserIfIdExists() throws Exception {
     User user = new User();
-    List<UserRoleAssignment> userRoleAssignments = Arrays.asList(new UserRoleAssignment());
+    List<RoleAssignment> homeFacilityRoles = Arrays.asList(new RoleAssignment());
     List<RoleAssignment> supervisorRoles = Arrays.asList(new RoleAssignment());
 
     when(userRepository.getById(1)).thenReturn(user);
-    when(roleAssignmentService.getRoleAssignments(1)).thenReturn(userRoleAssignments);
+    when(roleAssignmentService.getHomeFacilityRoles(1)).thenReturn(homeFacilityRoles);
     when(roleAssignmentService.getSupervisorRoles(1)).thenReturn(supervisorRoles);
 
     User returnedUser = userService.getById(1);
 
     assertThat(returnedUser, is(user));
-    assertThat(returnedUser.getRoleAssignments(), is(userRoleAssignments));
+    assertThat(returnedUser.getHomeFacilityRoles(), is(homeFacilityRoles));
     assertThat(returnedUser.getSupervisorRoles(), is(supervisorRoles));
   }
 
@@ -153,15 +152,15 @@ public class UserServiceTest {
   @Test
   public void shouldSaveUserWithProgramRoleMapping() throws Exception {
     User user = new User();
-    UserRoleAssignment userRoleAssignment = new UserRoleAssignment(1, Arrays.asList(2, 3));
-    List<UserRoleAssignment> userRoleAssignments = new ArrayList<>();
-    userRoleAssignments.add(userRoleAssignment);
-    user.setRoleAssignments(userRoleAssignments);
+    RoleAssignment userRoleAssignment = new RoleAssignment(1, 2, 3, null);
+    List<RoleAssignment> homeFacilityRoles = new ArrayList<>();
+    homeFacilityRoles.add(userRoleAssignment);
+    user.setHomeFacilityRoles(homeFacilityRoles);
 
     userService.create(user, FORGET_PASSWORD_LINK);
 
     verify(userRepository).create(user);
-    verify(roleAssignmentService).saveRoles(user);
+    verify(roleAssignmentService).saveHomeFacilityRoles(user);
   }
 
   @Test
@@ -174,7 +173,7 @@ public class UserServiceTest {
     userService.create(user, FORGET_PASSWORD_LINK);
 
     verify(userRepository).create(user);
-    verify(roleAssignmentService).saveRoles(user);
+    verify(roleAssignmentService).saveHomeFacilityRoles(user);
     verify(roleAssignmentService).saveSupervisoryRoles(user);
   }
 
@@ -189,7 +188,7 @@ public class UserServiceTest {
 
     verify(userRepository).update(user);
     verify(roleAssignmentService).deleteAllRoleAssignmentsForUser(user.getId());
-    verify(roleAssignmentService).saveRoles(user);
+    verify(roleAssignmentService).saveHomeFacilityRoles(user);
     verify(roleAssignmentService).saveSupervisoryRoles(user);
   }
 

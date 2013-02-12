@@ -2,12 +2,18 @@ package org.openlmis.core.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
+
 @Data
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonSerialize(include = NON_NULL)
 public class RoleAssignment {
   private Integer userId;
   private List<Integer> roleIds = new ArrayList<>();
@@ -17,7 +23,14 @@ public class RoleAssignment {
 
   public RoleAssignment(Integer userId, Integer roleId, Integer programId, SupervisoryNode supervisoryNode) {
     this.userId = userId;
-    this.setRoleId(roleId);
+    this.roleIds.add(roleId);
+    this.programId = programId;
+    this.supervisoryNode = supervisoryNode;
+  }
+
+  public RoleAssignment(Integer userId, List<Integer> roleIds, Integer programId, SupervisoryNode supervisoryNode) {
+    this.userId = userId;
+    this.roleIds = roleIds;
     this.programId = programId;
     this.supervisoryNode = supervisoryNode;
   }

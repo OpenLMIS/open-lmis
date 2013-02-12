@@ -49,7 +49,7 @@ public class User implements Importable {
   private String modifiedBy;
   private Date modifiedDate;
   private List<RoleAssignment> supervisorRoles;
-  private List<UserRoleAssignment> roleAssignments;
+  private List<RoleAssignment> homeFacilityRoles;
 
   private static final String INVALID_EMAIL_ERROR_CODE = "user.email.invalid";
 

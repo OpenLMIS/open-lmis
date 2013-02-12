@@ -74,9 +74,9 @@ public class RoleAssignmentMapperIT {
     supervisoryNode.setFacility(facility);
     supervisoryNodeMapper.insert(supervisoryNode);
 
-    mapper.createRoleAssignment(user.getId(), program1.getId(), r1.getId(), supervisoryNode.getId());
-    mapper.createRoleAssignment(user.getId(), program1.getId(), r2.getId(), null);
-    mapper.createRoleAssignment(user.getId(), program2.getId(), r2.getId(), null);
+    mapper.insertRoleAssignment(user.getId(), program1.getId(), supervisoryNode.getId(), r1.getId());
+    mapper.insertRoleAssignment(user.getId(), program1.getId(), null, r2.getId());
+    mapper.insertRoleAssignment(user.getId(), program2.getId(), null, r2.getId());
 
     List<RoleAssignment> roleAssignments =
         mapper.getRoleAssignmentsWithGivenRightForAUser(CREATE_REQUISITION, user.getId());
@@ -84,33 +84,6 @@ public class RoleAssignmentMapperIT {
     assertEquals(1, roleAssignments.size());
     RoleAssignment expectedRoleAssignment = new RoleAssignment(user.getId(), r1.getId(), program1.getId(), supervisoryNode);
     assertThat(roleAssignments.get(0), is(expectedRoleAssignment));
-  }
-
-  @Test
-  public void shouldGetRolesForAUserAndProgram() throws Exception {
-    mapper.createRoleAssignment(user.getId(), 1, 1, null);
-    mapper.createRoleAssignment(user.getId(), 2, 1, null);
-
-    List<Integer> roleIds = mapper.getRoleAssignmentsForUserAndProgram(user.getId(), 1);
-
-    assertThat(roleIds.size(), is(1));
-    assertThat(roleIds.get(0).equals(1), is(true));
-  }
-
-  @Test
-  public void shouldGetProgramsForWhichUserHasRoleAssignments() throws Exception {
-    mapper.deleteAllRoleAssignmentsForUser(1);
-    mapper.createRoleAssignment(1, 1, 1, null);
-    mapper.createRoleAssignment(1, 2, 1, null);
-    mapper.createRoleAssignment(1, null, 1, null);
-
-    List<Integer> listOfProgramIdsForTheUser = mapper.getProgramsForWhichUserHasRoleAssignments(1);
-
-    assertThat(listOfProgramIdsForTheUser.size(), is(2));
-
-    for (Integer programId : listOfProgramIdsForTheUser) {
-      assertThat(programId.equals(1) || programId.equals(2), is(true));
-    }
   }
 
   @Test
@@ -126,14 +99,36 @@ public class RoleAssignmentMapperIT {
     supervisoryNodeMapper.insert(supervisoryNode);
 
 
-    mapper.createRoleAssignment(user.getId(), 1, r1.getId(), supervisoryNode.getId());
-    mapper.createRoleAssignment(user.getId(), 1, r2.getId(), supervisoryNode.getId());
-    mapper.createRoleAssignment(user.getId(), 2, r1.getId(), supervisoryNode.getId());
-    mapper.createRoleAssignment(user.getId(), 1, r1.getId(), null);
+    mapper.insertRoleAssignment(user.getId(), 1, supervisoryNode.getId(), r1.getId());
+    mapper.insertRoleAssignment(user.getId(), 1, supervisoryNode.getId(), r2.getId());
+    mapper.insertRoleAssignment(user.getId(), 1, null, r1.getId());
 
     List<RoleAssignment> roleAssignments = mapper.getSupervisorRoles(user.getId());
 
-    assertThat(roleAssignments.size(), is(2));
+    assertThat(roleAssignments.size(), is(1));
+    assertThat(roleAssignments.get(0).getRoleIds().size(), is(2));
+
+  }
+
+  @Test
+  public void shouldGetHomeFacilityRolesForAUser() throws Exception {
+    Role r1 = new Role("r1", "random description");
+    roleRightsMapper.insertRole(r1);
+
+    Role r2 = new Role("r2", "random description");
+    roleRightsMapper.insertRole(r2);
+
+    SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
+    supervisoryNode.setFacility(facility);
+    supervisoryNodeMapper.insert(supervisoryNode);
+
+
+    mapper.insertRoleAssignment(user.getId(), 1, null, r2.getId());
+    mapper.insertRoleAssignment(user.getId(), 1, null, r1.getId());
+
+    List<RoleAssignment> roleAssignments = mapper.getHomeFacilityRoles(user.getId());
+
+    assertThat(roleAssignments.size(), is(1));
     assertThat(roleAssignments.get(0).getRoleIds().size(), is(2));
 
   }
@@ -142,11 +137,12 @@ public class RoleAssignmentMapperIT {
   @Test
   public void shouldDeleteRoleAssignmentsForAUser() throws Exception {
     Integer userId = user.getId();
-    mapper.createRoleAssignment(userId, 2, 1, null);
+    mapper.insertRoleAssignment(userId, 2, null, 1);
 
     mapper.deleteAllRoleAssignmentsForUser(userId);
 
-    assertThat(mapper.getRoleAssignmentsForUserAndProgram(userId, 2).size(), is(0));
+    assertThat(mapper.getHomeFacilityRoles(userId).size(), is(0));
+    assertThat(mapper.getSupervisorRoles(userId).size(), is(0));
   }
 
   private Program insertProgram(Program program) {

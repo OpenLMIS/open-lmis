@@ -26,11 +26,11 @@ function UserController($scope, $routeParams, Users, User, AllFacilities, Roles,
   });
 
   function validateHomeFacilityRoles(user) {
-    if (!user.roleAssignments) {
+    if (!user.homeFacilityRoles) {
       return true;
     }
     var valid = true;
-    $.each(user.roleAssignments, function (index, roleAssignment) {
+    $.each(user.homeFacilityRoles, function (index, roleAssignment) {
       if (!roleAssignment.programId || !roleAssignment.roleIds || roleAssignment.roleIds.length == 0) {
         valid = false;
         return false;
@@ -125,7 +125,7 @@ function UserController($scope, $routeParams, Users, User, AllFacilities, Roles,
   $scope.clearSelectedFacility = function () {
     $scope.facilitySelected = null;
     $scope.allSupportedPrograms = null;
-    $scope.user.roleAssignments = null;
+    $scope.user.homeFacilityRoles = null;
     $scope.user.facilityId = null;
 
     setTimeout(function () {

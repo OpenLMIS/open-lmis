@@ -104,7 +104,7 @@ describe("User", function () {
     });
 
     it("should not create a user with empty role", function () {
-      var userWithoutRole = {userName:"User 123", roleAssignments:[
+      var userWithoutRole = {userName:"User 123", homeFacilityRoles:[
         {programId:111, roleIds:[1]},
         {programId:222}
       ]};
@@ -115,7 +115,7 @@ describe("User", function () {
     });
 
     it("should create a user with role assignments, if all required fields are present", function () {
-      var userWithRoleAssignments = {userName:"User 123", roleAssignments:[
+      var userWithRoleAssignments = {userName:"User 123", homeFacilityRoles:[
         {programId:111, roleIds:[1, 2, 3]},
         {programId:222, roleIds:[1]}
       ]};
@@ -182,7 +182,7 @@ describe("User", function () {
 
       expect(scope.facilitySelected).toEqual(null);
       expect(scope.allSupportedPrograms).toEqual(null);
-      expect(scope.user.roleAssignments).toEqual(null);
+      expect(scope.user.homeFacilityRoles).toEqual(null);
       expect(scope.user.facilityId).toEqual(null);
     });
 

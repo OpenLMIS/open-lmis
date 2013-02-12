@@ -6,7 +6,6 @@ import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.User;
-import org.openlmis.core.domain.UserRoleAssignment;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.hash.Encoder;
 import org.openlmis.core.service.RoleRightsService;
@@ -115,13 +114,6 @@ public class UserControllerTest {
   @Test
   public void shouldSaveUser() throws Exception {
     User user = new User();
-    user.setFirstName("Shan");
-    user.setLastName("Sharma");
-
-    List<UserRoleAssignment> userRoleAssignments = new ArrayList<>();
-    UserRoleAssignment roleAssignment = new UserRoleAssignment(2, Arrays.asList(1, 2));
-    userRoleAssignments.add(roleAssignment);
-    user.setRoleAssignments(userRoleAssignments);
 
     httpServletRequest.getSession().setAttribute(USER_ID, userId);
     httpServletRequest.getSession().setAttribute(USER, USER);
@@ -139,23 +131,13 @@ public class UserControllerTest {
   public void shouldUpdateUser() throws Exception {
     User user = new User();
     user.setId(1);
-    user.setFirstName("Shan");
-    user.setLastName("Sharma");
     user.setPassword("password");
     httpServletRequest.getSession().setAttribute(USER_ID, userId);
     httpServletRequest.getSession().setAttribute(USER, USER);
 
-    List<UserRoleAssignment> userRoleAssignments = new ArrayList<>();
-    UserRoleAssignment roleAssignment = new UserRoleAssignment(2, Arrays.asList(1, 2));
-    userRoleAssignments.add(roleAssignment);
-    user.setRoleAssignments(userRoleAssignments);
-
-    user.setRoleAssignments(userRoleAssignments);
-
     ResponseEntity<OpenLmisResponse> response = userController.update(user, 1, httpServletRequest);
 
     verify(userService).update(user);
-
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
     assertThat(response.getBody().getSuccessMsg(), is("User " + user.getFirstName() + " " + user.getLastName() + " has been successfully updated"));
     assertThat(user.getPassword(), is(Encoder.hash("password")));

@@ -8,13 +8,13 @@ function UserRoleAssignmentController($scope) {
   };
 
   $scope.deleteRow = function () {
-    $scope.user.roleAssignments.splice($scope.rowNum, 1);
+    $scope.user.homeFacilityRoles.splice($scope.rowNum, 1);
     $scope.deleteRolesModal = false;
     $scope.rowNum = undefined;
   }
 
   $scope.availablePrograms = function () {
-    var assignedProgramIds = _.map($scope.user.roleAssignments, function (roleAssignment) {
+    var assignedProgramIds = _.map($scope.user.homeFacilityRoles, function (roleAssignment) {
       return roleAssignment.programId;
     });
 
@@ -47,10 +47,10 @@ function UserRoleAssignmentController($scope) {
     }
 
     function addRoleAssignment(newRoleAssignment) {
-      if (!$scope.user.roleAssignments) {
-        $scope.user.roleAssignments = [];
+      if (!$scope.user.homeFacilityRoles) {
+        $scope.user.homeFacilityRoles = [];
       }
-      $scope.user.roleAssignments.push(newRoleAssignment);
+      $scope.user.homeFacilityRoles.push(newRoleAssignment);
     }
   };
 

@@ -9,7 +9,6 @@ import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.repository.mapper.RoleAssignmentMapper;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -31,9 +30,9 @@ public class RoleAssignmentRepositoryTest {
 
   @Test
   public void shouldInsertUserProgramRoleMapping() throws Exception {
-    repository.createUserProgramRoleAssignment(1, 2, 3, 1);
+    repository.insertRoleAssignment(1, 3, 1, 2);
 
-    verify(mapper).createRoleAssignment(1, 3, 2, 1);
+    verify(mapper).insertRoleAssignment(1, 3, 1, 2);
   }
 
   @Test
@@ -44,26 +43,18 @@ public class RoleAssignmentRepositoryTest {
   }
 
   @Test
-  public void shouldReturnRolesForUserAndProgram() throws Exception {
-    List<Integer> roleIds = Arrays.asList(10, 20);
-    when(mapper.getRoleAssignmentsForUserAndProgram(1, 2)).thenReturn(roleIds);
-
-    assertThat(repository.getRoleAssignmentsForUserAndProgram(1, 2), is(roleIds));
-  }
-
-  @Test
-  public void shouldGetListOfProgramIdsForWhichUserHasRoleAssignments() throws Exception {
-    List<Integer> programIdList = Arrays.asList(10, 20);
-    when(mapper.getProgramsForWhichUserHasRoleAssignments(1)).thenReturn(programIdList);
-
-    assertThat(repository.getProgramsForWhichUserHasRoleAssignments(1), is(programIdList));
-  }
-
-  @Test
   public void shouldGetSupervisorRoles() throws Exception {
     List<RoleAssignment> expected = new ArrayList<>();
     when(mapper.getSupervisorRoles(1)).thenReturn(expected);
     List<RoleAssignment> actual = repository.getSupervisorRoles(1);
+    assertThat(actual, is(expected));
+  }
+
+  @Test
+  public void shouldGetHomeFacilityRoles() throws Exception {
+    List<RoleAssignment> expected = new ArrayList<>();
+    when(mapper.getHomeFacilityRoles(1)).thenReturn(expected);
+    List<RoleAssignment> actual = repository.getHomeFacilityRoles(1);
     assertThat(actual, is(expected));
   }
 }

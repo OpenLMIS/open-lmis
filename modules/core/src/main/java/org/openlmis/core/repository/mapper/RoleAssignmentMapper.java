@@ -25,18 +25,11 @@ public interface RoleAssignmentMapper {
   @Insert("INSERT INTO role_assignments" +
       "(userId, roleId, programId, supervisoryNodeId) VALUES " +
       "(#{userId}, #{roleId}, #{programId}, #{supervisoryNodeId})")
-  int createRoleAssignment(@Param(value = "userId") Integer userId,
-                           @Param(value = "programId") Integer programId, @Param(value = "roleId") Integer roleId,
-                           @Param(value = "supervisoryNodeId") Integer supervisoryNodeId);
+  int insertRoleAssignment(@Param(value = "userId") Integer userId,
+                           @Param(value = "programId") Integer programId, @Param(value = "supervisoryNodeId") Integer supervisoryNodeId, @Param(value = "roleId") Integer roleId);
 
   @Delete("DELETE FROM role_assignments WHERE userId=#{id}")
   void deleteAllRoleAssignmentsForUser(int userId);
-
-  @Select("SELECT roleId from role_assignments where userId=#{id} AND programId=#{programId}")
-  List<Integer> getRoleAssignmentsForUserAndProgram(@Param(value = "id") int userId, @Param(value = "programId") int programId);
-
-  @Select("SELECT distinct(programId) FROM role_assignments WHERE userId=#{userId} AND programId IS NOT NULL")
-  List<Integer> getProgramsForWhichUserHasRoleAssignments(int userId);
 
   @Select("SELECT userId, programId, supervisoryNodeId, array_agg(roleId) as roleIdsAsString " +
       "FROM role_assignments " +
@@ -44,4 +37,10 @@ public interface RoleAssignmentMapper {
       "GROUP BY userId, programId, supervisoryNodeId ")
   @Results(value = {@Result(property = "supervisoryNode.id", column = "supervisoryNodeId")})
   List<RoleAssignment> getSupervisorRoles(Integer userId);
+
+  @Select("SELECT userId, programId, array_agg(roleId) as roleIdsAsString " +
+      "FROM role_assignments " +
+      "WHERE userId=#{userId} AND programId IS NOT NULL AND supervisoryNodeId IS NULL " +
+      "GROUP BY userId, programId")
+  List<RoleAssignment> getHomeFacilityRoles(Integer userId);
 }

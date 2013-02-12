@@ -59,7 +59,7 @@ public class UserService {
   private void validateAndSave(User user) {
     user.validate();
     userRepository.create(user);
-    roleAssignmentService.saveRoles(user);
+    roleAssignmentService.saveHomeFacilityRoles(user);
     roleAssignmentService.saveSupervisoryRoles(user);
   }
 
@@ -67,7 +67,7 @@ public class UserService {
     user.validate();
     userRepository.update(user);
     roleAssignmentService.deleteAllRoleAssignmentsForUser(user.getId());
-    roleAssignmentService.saveRoles(user);
+    roleAssignmentService.saveHomeFacilityRoles(user);
     roleAssignmentService.saveSupervisoryRoles(user);
   }
 
@@ -135,7 +135,7 @@ public class UserService {
 
   public User getById(Integer id) {
     User user = userRepository.getById(id);
-    user.setRoleAssignments(roleAssignmentService.getRoleAssignments(id));
+    user.setHomeFacilityRoles(roleAssignmentService.getHomeFacilityRoles(id));
     user.setSupervisorRoles(roleAssignmentService.getSupervisorRoles(id));
     return user;
   }
