@@ -51,7 +51,7 @@ public class RolesPage extends Page {
     @FindBy(how = How.ID, using = "APPROVE_REQUISITION")
     private static WebElement rightApproveRequisition;
 
-    @FindBy(how = How.ID, using = "Requisition - Convert to Order")
+    @FindBy(how = How.ID, using = "CONVERT_TO_ORDER")
     private static WebElement rightConvertToOrderRequisition;
 
     @FindBy(how = How.XPATH, using = "//input[@value='Save']")
