@@ -164,7 +164,7 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
   };
 
   $scope.highlightRequired = function (value) {
-    if ($scope.inputClass == 'required' && (isUndefined(value) || value.trim().length == 0)) {
+    if ($scope.inputClass == 'required' && (isUndefined(value) || value.toString().trim().length == 0)) {
       return "required-error";
     }
     return null;
