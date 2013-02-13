@@ -113,7 +113,7 @@
           </div>
         </div>
 
-      </div>
+      </div><!-- /form-group -->
 
       <div class="form-group">
         <h3>User facility</h3>
@@ -132,7 +132,9 @@
                     <li ng-repeat="facility in filteredFacilities">
                       <a ng-click="setSelectedFacility(facility)">{{facility.code}} - {{facility.name}}</a>
                     </li>
-                    <span ng-show="resultCount == 0">No matches found for {{query}}</span>
+                    <li ng-show="resultCount == 0">
+                      <a>No matches found for {{query}}</a>
+                    </li>
                   </ul>
                 </div>
                 <div ng-show="facilitySelected">
@@ -149,18 +151,21 @@
           <ng-include src="'/public/pages/admin/user/partials/user-role-assignment.html'"></ng-include>
         </div>
 
-        <h2>Supervisory Roles</h2>
+      </div><!-- /form-group -->
+
+      <div class="form-group">
+        <h3>Supervisory Roles</h3>
 
         <div class="prog-role-grid" >
           <ng-include src="'/public/pages/admin/user/partials/user-supervisory-role-assignment.html'"></ng-include>
         </div>
+      </div><!-- /form-group -->
 
-      </div>
 
-      <!-- /form-group -->
-      <div id="action_buttons" class="action-buttons">
+
+      <div form-toolbar id="action_buttons" class="action-buttons">
         <div class="form-cell button-row">
-          <input type="submit" class="btn btn-success save-button" value="Save"/>
+          <input type="submit" class="btn btn-primary save-button" value="Save"/>
         </div>
         <div class="toolbar-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
         <div class="toolbar-error" id="saveErrorMsgDiv" ng-bind="error" ng-show="error"/>

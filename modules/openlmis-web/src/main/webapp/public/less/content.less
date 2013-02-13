@@ -1081,12 +1081,21 @@ td .close {
     border-radius: 0 0 3px 3px;
     border-top: 0 none;
     padding: 15px 10px 10px;
-    background-color: #efefef;
+    background-color: #e0e0e0;
     .fluid-grid-cell {
       padding: 0;
     }
-    .span6 {
-      padding: 0 4px;
+    .select2-roles {
+      .fluid-grid-cell {
+        padding: 0 4px;
+      }
+    }
+    &.supervisory-roles {
+      .select2-roles {
+        .fluid-grid-cell {
+          padding: 0 5px 0 9px;
+        }
+      }
     }
     select {
       width: 100%;
