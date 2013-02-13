@@ -75,6 +75,10 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
         angular.element("#action_buttons").css("width", toolbarWidth + "px");
       }
     };
+  }).run(function($rootScope) {
+      $rootScope.$on('$routeChangeStart', function() {
+        angular.element('body > .modal-backdrop').remove();
+      });
   });
 
 function isUndefined(value) {
