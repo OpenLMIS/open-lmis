@@ -9,8 +9,8 @@
                 ng-hide = "programRnrColumn.name == 'quantityApproved'" ng-bind = "programRnrColumn.label" ></th >
           </tr >
         </thead >
-        <tbody ng-show = "programRnrColumnList && (preparedRnr.lineItems.length > 0)" >
-          <tr ng-repeat = "rnrLineItem in preparedRnr.lineItems"
+        <tbody ng-show = "programRnrColumnList && (rnr.lineItems.length > 0)" >
+          <tr ng-repeat = "rnrLineItem in rnr.lineItems"
               ng-class = "getRowErrorClass(rnrLineItem)" >
             <td class = "cell-input" ng-repeat = "column in programRnrColumnList"
                 ng-hide = "column.name == 'quantityApproved'" >
@@ -26,7 +26,7 @@
                                  name = "beginningBalance{{rnrLineItem['id']}}"
                                  ng-model = "rnrLineItem[column.name]"
                                  rnr-validator = "positiveInteger" maxlength = "8"
-                                 ng-change = "rnrLineItem.fillConsumptionOrStockInHand()"
+                                 ng-change = "rnrLineItem.fillConsumptionOrStockInHand(rnr, programRnrColumnList)"
                                  ng-class = "highlightRequired(rnrLineItem[column.name])" /></span >
                         <span ng-switch-default >
                           <span class = "cell-text" ng-bind = "rnrLineItem[column.name]" ></span ></span >
@@ -35,8 +35,8 @@
                             style = "display:none;" >
                         Enter Numeric Data
                       </span >
-                      <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage()"
-                            style = "background: red;" ng-bind = "rnrLineItem.getErrorMessage()" >
+                      <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage(programRnrColumnList)"
+                            style = "background: red;" ng-bind = "rnrLineItem.getErrorMessage(programRnrColumnList)" >
                         <span class = "beak-down" ></span >
                       </span >
                     </span >
@@ -48,34 +48,34 @@
                              name = "quantityReceived{{rnrLineItem['id']}}"
                              ng-model = "rnrLineItem[column.name]"
                              rnr-validator = "positiveInteger" maxlength = "8"
-                             ng-change = "rnrLineItem.fillConsumptionOrStockInHand()"
+                             ng-change = "rnrLineItem.fillConsumptionOrStockInHand(rnr, programRnrColumnList)"
                              ng-class = "highlightRequired(rnrLineItem[column.name])" />
                       <span class = "rnr-form-error" id = "quantityReceived{{rnrLineItem['id']}}"
                             style = "display:none;" >
                         Enter Numeric Data
                       </span >
-                      <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage()"
-                            style = "background: red;" ng-bind = "rnrLineItem.getErrorMessage()" >
+                      <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage(programRnrColumnList)"
+                            style = "background: red;" ng-bind = "rnrLineItem.getErrorMessage(programRnrColumnList)" >
                         <span class = "beak-down" ></span >
                       </span >
                     </span >
 
                     <span ng-switch-when = "quantityDispensed"
-                          ng-class = "getCellErrorClass(rnrLineItem)" >
+                          ng-class = "getCellErrorClass(rnrLineItem, programRnrColumnList)" >
                       <input ng-required = "true" ng-disabled = "formDisabled"
                              id = "{{getId('C', $parent)}}" type = "text"
                              name = "quantityDispensed{{rnrLineItem['id']}}"
                              ng-model = "rnrLineItem[column.name]"
                              rnr-validator = "positiveInteger"
-                             ng-change = "rnrLineItem.fillConsumptionOrStockInHand()"
+                             ng-change = "rnrLineItem.fillConsumptionOrStockInHand(rnr, programRnrColumnList)"
                              maxlength = "8"
                              ng-class = "highlightRequired(rnrLineItem[column.name])" />
                       <span class = "rnr-form-error" id = "quantityDispensed{{rnrLineItem['id']}}"
                             style = "display:none;" >
                         Enter Numeric Data
                       </span >
-                      <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage()"
-                            style = "background: red;" ng-bind = "rnrLineItem.getErrorMessage()" >
+                      <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage(programRnrColumnList)"
+                            style = "background: red;" ng-bind = "rnrLineItem.getErrorMessage(programRnrColumnList)" >
                         <span class = "beak-down" ></span >
                       </span >
                     </span >
@@ -140,7 +140,7 @@
                                          name = "{{oneLossAndAdjustment.type.displayOrder}}"
                                          type = "text"
                                          ng-model = "oneLossAndAdjustment.quantity"
-                                         ng-change = "rnrLineItem.reEvaluateTotalLossesAndAdjustments(); resetModalError()"
+                                         ng-change = "rnrLineItem.reEvaluateTotalLossesAndAdjustments(rnr, programRnrColumnList); resetModalError()"
                                          rnr-validator = "positiveInteger"
                                          maxlength = "8"
                                          ng-class = "highlightRequiredFieldInModal(oneLossAndAdjustment.quantity)"
@@ -190,15 +190,15 @@
                              name = "stockInHand{{rnrLineItem['id']}}"
                              ng-model = "rnrLineItem[column.name]"
                              rnr-validator = "positiveInteger"
-                             ng-change = "rnrLineItem.fillConsumptionOrStockInHand()"
+                             ng-change = "rnrLineItem.fillConsumptionOrStockInHand(rnr, programRnrColumnList)"
                              maxlength = "8"
                              ng-class = "highlightRequired(rnrLineItem[column.name])" />
                       <span class = "rnr-form-error" id = "stockInHand{{rnrLineItem['id']}}"
                             style = "display:none;" >
                         Enter Numeric Data
                       </span >
-                      <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage()"
-                            style = "background: red;" ng-bind = "rnrLineItem.getErrorMessage()" >
+                      <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage(programRnrColumnList)"
+                            style = "background: red;" ng-bind = "rnrLineItem.getErrorMessage(programRnrColumnList)" >
                         <span class = "beak-down" ></span >
                       </span >
                     </span >
@@ -209,7 +209,7 @@
                              name = "newPatientCount{{rnrLineItem['id']}}"
                              ng-model = "rnrLineItem[column.name]"
                              rnr-validator = "positiveInteger" maxlength = "8"
-                             ng-change = "rnrLineItem.fillNormalizedConsumption()"
+                             ng-change = "rnrLineItem.fillNormalizedConsumption(rnr, programRnrColumnList)"
                              ng-class = "highlightRequired(rnrLineItem[column.name])" />
                       <span class = "rnr-form-error" id = "newPatientCount{{rnrLineItem['id']}}"
                             style = "display:none;" >
@@ -254,7 +254,7 @@
                              type = "text" name = "stockOutDays{{rnrLineItem['id']}}"
                              ng-model = "rnrLineItem[column.name]"
                              rnr-validator = "positiveInteger" maxlength = "8"
-                             ng-change = "rnrLineItem.fillNormalizedConsumption()"
+                             ng-change = "rnrLineItem.fillNormalizedConsumption(rnr, programRnrColumnList)"
                              ng-class = "highlightRequired(rnrLineItem[column.name])" />
                       <span class = "rnr-form-error" id = "stockOutDays{{rnrLineItem['id']}}"
                             style = "display:none;" >
@@ -271,8 +271,8 @@
                             ng-bind = "rnrLineItem[column.name]"
                             class = "cell-text" >
                       </span >
-                      <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage()"
-                            style = "background: red;" ng-bind = "rnrLineItem.getErrorMessage()" >
+                      <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage(programRnrColumnList)"
+                            style = "background: red;" ng-bind = "rnrLineItem.getErrorMessage(programRnrColumnList)" >
                         <span class = "beak-down" ></span >
                       </span >
                     </span >
