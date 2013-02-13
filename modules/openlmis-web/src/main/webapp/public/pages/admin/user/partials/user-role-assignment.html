@@ -44,7 +44,7 @@
       <div class="span3">
         <div class="fluid-grid-cell">
           <select
-              ng-options="programSupported.program.id as programSupported.program.name for programSupported in availablePrograms()"
+              ng-options="programSupported.program.id as programSupported.program.name group by programSupported.program.status for programSupported in availableSupportedProgramsWithStatus()"
               ng-model="programSelected">
             <option value="" ng-bind="selectedProgramMessage"></option>
           </select>

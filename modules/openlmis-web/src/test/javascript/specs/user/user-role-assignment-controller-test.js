@@ -14,10 +14,10 @@ describe("User", function () {
 
     it('should display only available programs in add dropdown', function () {
       scope.$parent = {allSupportedPrograms:[
-        {"program":{id:1, name:'p1'}},
-        {"program":{id:2, name:'p2'}},
-        {"program":{id:3, name:'p3'}},
-        {"program":{id:4, name:'p4'}}
+        {"program":{id:1, name:'p1', active:true}},
+        {"program":{id:2, name:'p2', active:true}},
+        {"program":{id:3, name:'p3', active:true}},
+        {"program":{id:4, name:'p4', active:false}}
       ]};
 
       var existingProgramsMappedForUser = [
@@ -26,11 +26,11 @@ describe("User", function () {
       ];
       scope.user = {homeFacilityRoles:existingProgramsMappedForUser};
 
-      var availablePrograms = scope.availablePrograms();
+      var availablePrograms = scope.availableSupportedProgramsWithStatus();
 
       expect(availablePrograms).toEqual([
-        {"program":{id:1, name:'p1'}},
-        {"program":{id:4, name:'p4'}}
+        {"program":{id:1, name:'p1', status:"Active", active:true}},
+        {"program":{id:4, name:'p4', status:"Inactive", active:false}}
       ]);
     });
 
@@ -127,7 +127,11 @@ describe("User", function () {
       expect(scope.user.supervisorRoles).toEqual([{"roleIds":[1]},{"roleIds":[3]}])
     });
 
-
+    it("should get programs with status based on active flag", function () {
+      scope.programs= [{active:false},{active:true}];
+      var programsWithStatus = scope.programsWithStatus();
+      expect(programsWithStatus).toEqual([{active:false, status:'Inactive'},{active:true, status:'Active'}])
+    });
 
   });
 

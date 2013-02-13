@@ -27,13 +27,17 @@ function UserRoleAssignmentController($scope) {
     $scope.rowNum = undefined;
   }
 
-  $scope.availablePrograms = function () {
+  $scope.availableSupportedProgramsWithStatus = function () {
     var assignedProgramIds = _.map($scope.user.homeFacilityRoles, function (roleAssignment) {
       return roleAssignment.programId;
     });
 
     var programsToDisplay = _.reject($scope.$parent.allSupportedPrograms, function (supportedProgram) {
       return _.contains(assignedProgramIds, supportedProgram.program.id);
+    });
+
+    $.each(programsToDisplay, function (index, program) {
+      program.program.status = program.program.active ? 'Active' : 'Inactive';
     });
 
     $scope.selectedProgramMessage = (programsToDisplay.length) ? '--Select Program--' : '--No Program Left--';
