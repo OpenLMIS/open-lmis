@@ -64,6 +64,7 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
 
     resetCostsIfNull();
     $scope.formDisabled = isFormDisabled();
+    $scope.preparedRnr = rnr;
   }
 
 
