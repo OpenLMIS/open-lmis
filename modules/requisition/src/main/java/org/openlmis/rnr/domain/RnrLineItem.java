@@ -17,11 +17,11 @@ import java.util.Date;
 import java.util.List;
 
 import static java.lang.Boolean.TRUE;
+import static java.lang.Math.floor;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
 import static org.openlmis.rnr.domain.RnRColumnSource.USER_INPUT;
 import static org.openlmis.rnr.domain.Rnr.RNR_VALIDATION_ERROR;
-import static org.openlmis.rnr.domain.RnrStatus.IN_APPROVAL;
 
 @Data
 @NoArgsConstructor
@@ -124,14 +124,17 @@ public class RnrLineItem {
     return true;
   }
 
-  public void calculate(ProcessingPeriod period, RnrStatus status) {
+  public void calculate(ProcessingPeriod period, RnrStatus status, List<RnrColumn> rnrColumns) {
+    ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
     calculateNormalizedConsumption();
     calculateAmc(period);
     calculateTotalLossesAndAdjustments();
     calculateMaxStockQuantity();
+    if(template.columnsCalculated(STOCK_IN_HAND)) calculateStockInHand();
+    if(template.columnsCalculated(QUANTITY_DISPENSED)) calculateQuantityDispensed();
     calculateOrderQuantity();
-    if (status == IN_APPROVAL) calculatePacksToShipWithQuantityApproved();
-    else calculatePacksToShipWithQuantityRequested();
+
+    calculatePacksToShipWithQuantityRequested();
   }
 
   private void calculateAmc(ProcessingPeriod period) {
@@ -170,11 +173,6 @@ public class RnrLineItem {
 
   private boolean validateCalculatedFields(boolean arithmeticValidationRequired) {
     boolean validQuantityDispensed = true;
-    stockInHand = setToZeroIfNotPresent(stockInHand);
-    beginningBalance = setToZeroIfNotPresent(beginningBalance);
-    quantityReceived = setToZeroIfNotPresent(quantityReceived);
-    calculateTotalLossesAndAdjustments();
-    totalLossesAndAdjustments = setToZeroIfNotPresent(totalLossesAndAdjustments);
     if (arithmeticValidationRequired) {
       validQuantityDispensed = (quantityDispensed == (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand));
     }
@@ -191,18 +189,16 @@ public class RnrLineItem {
 
   private void calculatePacksToShipWithQuantityRequested() {
     Integer orderQuantity = quantityRequested == null ? calculatedOrderQuantity : quantityRequested;
-    packsToShip = rounded(Math.floor(orderQuantity / packSize));
+    packsToShip = round(floor(orderQuantity / packSize), orderQuantity);
   }
 
-  private Integer calculatePacksToShipWithQuantityApproved() {
+  public void calculatePacksToShipWithQuantityApproved() {
     if (quantityApproved == null) throw new DataException(RNR_VALIDATION_ERROR);
 
-    Double packsToShip = Math.floor(quantityApproved / packSize);
-    return rounded(packsToShip);
+    packsToShip = round(floor(quantityApproved / packSize), quantityApproved);
   }
 
-  private Integer rounded(Double packsToShip) {
-    Integer orderQuantity = quantityRequested == null ? calculatedOrderQuantity : quantityRequested;
+  private Integer round(Double packsToShip, Integer orderQuantity) {
     Integer remainderQuantity = orderQuantity % packSize;
     if (remainderQuantity >= packRoundingThreshold && packsToShip != 0) {
       packsToShip += 1;
@@ -299,5 +295,13 @@ public class RnrLineItem {
     if (!template.columnsVisible(LOSSES_AND_ADJUSTMENTS)) totalLossesAndAdjustments = 0;
     newPatientCount = 0;
     stockOutDays = 0;
+  }
+
+  private void calculateStockInHand() {
+    this.stockInHand = this.beginningBalance + this.quantityReceived + this.totalLossesAndAdjustments - this.quantityDispensed;
+  }
+
+  private void calculateQuantityDispensed() {
+    this.quantityDispensed = this.beginningBalance + this.quantityReceived + this.totalLossesAndAdjustments - this.stockInHand;
   }
 }

@@ -8,6 +8,7 @@ import org.openlmis.core.domain.Money;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.builder.RnrColumnBuilder;
+import org.openlmis.rnr.builder.RnrLineItemBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ import static org.openlmis.rnr.builder.RequisitionBuilder.status;
 import static org.openlmis.rnr.builder.RnrColumnBuilder.columnName;
 import static org.openlmis.rnr.builder.RnrColumnBuilder.visible;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
+import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 
 public class RnrTest {
@@ -137,7 +139,7 @@ public class RnrTest {
     Rnr rnr = make(a(defaultRnr));
 
     rnr.setBeginningBalanceForEachLineItem(new Rnr(), true);
-    assertThat(rnr.getLineItems().get(0).getBeginningBalance(),is(0));
+    assertThat(rnr.getLineItems().get(0).getBeginningBalance(), is(0));
   }
 
   @Test
@@ -151,17 +153,19 @@ public class RnrTest {
     lineItems.add(firstLineItem);
     nonFullSupplyLineItems.add(secondLineItem);
     when(firstLineItem.getPrice()).thenReturn(new Money("1"));
+    when(firstLineItem.getPacksToShip()).thenReturn(1);
     when(secondLineItem.getPrice()).thenReturn(new Money("1"));
+    when(secondLineItem.getPacksToShip()).thenReturn(1);
 
     rnr.setLineItems(lineItems);
     rnr.setNonFullSupplyLineItems(nonFullSupplyLineItems);
     rnr.setPeriod(period);
     rnr.setStatus(SUBMITTED);
 
-    rnr.calculate();
+    rnr.calculate(programRequisitionColumns);
 
-    verify(firstLineItem).calculate(period, SUBMITTED);
-    verify(secondLineItem).calculate(period, SUBMITTED);
+    verify(firstLineItem).calculate(period, SUBMITTED, programRequisitionColumns);
+    verify(secondLineItem).calculate(period, SUBMITTED, programRequisitionColumns);
   }
 
   @Test
@@ -182,6 +186,36 @@ public class RnrTest {
 
     assertThat(rnr.getLineItems().get(0).getStockInHand(), is(2));
     assertThat(rnr.getLineItems().get(0).getBeginningBalance(), is(BEGINNING_BALANCE));
+  }
+
+  @Test
+  public void shouldPrepareRequisitionAndCalculate() throws Exception {
+    rnr.setStatus(INITIATED);
+    Rnr rnrSpy = spy(rnr);
+    ArrayList<RnrColumn> programRnrColumns = new ArrayList<>();
+    doNothing().when(rnrSpy).calculate(programRnrColumns);
+
+    rnrSpy.prepareFor(SUBMITTED, programRnrColumns);
+
+    verify(rnrSpy).calculate(programRnrColumns);
+    assertThat(rnrSpy.getStatus(), is(SUBMITTED));
+  }
+
+  @Test
+  public void testCalculatePacksToShip() throws Exception {
+    RnrLineItem lineItem = make(a(RnrLineItemBuilder.defaultRnrLineItem,
+      with(roundToZero, true),
+      with(packRoundingThreshold, 6),
+      with(quantityApproved, 66),
+      with(packSize, 10),
+      with(roundToZero, false)));
+    rnr.setLineItems(asList(lineItem));
+
+    rnr.calculateForApproval();
+
+    assertThat(rnr.getLineItems().get(0).getPacksToShip(), is(7));
+    assertThat(rnr.getFullSupplyItemsSubmittedCost(), is(new Money("28")));
+    assertThat(rnr.getNonFullSupplyItemsSubmittedCost(), is(new Money("0")));
   }
 
   private ArrayList<RnrColumn> setupProgramTemplate() {

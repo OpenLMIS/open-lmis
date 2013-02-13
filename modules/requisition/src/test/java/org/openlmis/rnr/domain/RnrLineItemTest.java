@@ -24,10 +24,11 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.ProductBuilder.code;
 import static org.openlmis.rnr.builder.RnrColumnBuilder.*;
-import static org.openlmis.rnr.builder.RnrLineItemBuilder.STOCK_IN_HAND;
-import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
+import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.lossesAndAdjustments;
-import static org.openlmis.rnr.domain.ProgramRnrTemplate.BEGINNING_BALANCE;
+import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
+import static org.openlmis.rnr.domain.RnRColumnSource.CALCULATED;
+import static org.openlmis.rnr.domain.RnRColumnSource.USER_INPUT;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.spy;
@@ -238,7 +239,7 @@ public class RnrLineItemTest {
     lineItem.setQuantityDispensed(29);
 
 
-    lineItem.calculate(period, INITIATED);
+    lineItem.calculate(period, INITIATED, getRnrColumns());
 
     assertThat(lineItem.getTotalLossesAndAdjustments(), is(25));
   }
@@ -251,7 +252,7 @@ public class RnrLineItemTest {
     lineItem.setDosesPerDispensingUnit(10);
     lineItem.setNormalizedConsumption(37345);
 
-    lineItem.calculate(period, INITIATED);
+    lineItem.calculate(period, INITIATED, getRnrColumns());
 
     assertThat(lineItem.getNormalizedConsumption(), is(37));
   }
@@ -264,7 +265,7 @@ public class RnrLineItemTest {
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
     period.setNumberOfMonths(3);
 
-    spyLineItem.calculate(period, INITIATED);
+    spyLineItem.calculate(period, INITIATED, getRnrColumns());
 
     assertThat(spyLineItem.getAmc(), is(15));
   }
@@ -277,7 +278,7 @@ public class RnrLineItemTest {
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
     period.setNumberOfMonths(2);
 
-    spyLineItem.calculate(period, INITIATED);
+    spyLineItem.calculate(period, INITIATED, getRnrColumns());
 
     assertThat(spyLineItem.getAmc(), is(14));
   }
@@ -290,7 +291,7 @@ public class RnrLineItemTest {
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
     period.setNumberOfMonths(1);
 
-    spyLineItem.calculate(period, INITIATED);
+    spyLineItem.calculate(period, INITIATED, getRnrColumns());
 
     assertThat(spyLineItem.getAmc(), is(23));
   }
@@ -303,7 +304,7 @@ public class RnrLineItemTest {
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
     period.setNumberOfMonths(1);
 
-    spyLineItem.calculate(period, INITIATED);
+    spyLineItem.calculate(period, INITIATED, getRnrColumns());
 
     assertThat(spyLineItem.getAmc(), is(29));
   }
@@ -315,7 +316,7 @@ public class RnrLineItemTest {
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
     period.setNumberOfMonths(1);
 
-    spyLineItem.calculate(period, INITIATED);
+    spyLineItem.calculate(period, INITIATED, getRnrColumns());
 
     assertThat(spyLineItem.getAmc(), is(45));
   }
@@ -328,7 +329,7 @@ public class RnrLineItemTest {
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
     period.setNumberOfMonths(2);
 
-    spyLineItem.calculate(period, INITIATED);
+    spyLineItem.calculate(period, INITIATED, getRnrColumns());
 
     assertThat(spyLineItem.getAmc(), is(23));
   }
@@ -342,7 +343,7 @@ public class RnrLineItemTest {
     lineItem.setNormalizedConsumption(37345);
     lineItem.setMaxMonthsOfStock(10);
 
-    lineItem.calculate(period, INITIATED);
+    lineItem.calculate(period, INITIATED, getRnrColumns());
 
     assertThat(lineItem.getMaxStockQuantity(), is(370));
   }
@@ -358,9 +359,9 @@ public class RnrLineItemTest {
     lineItem.setMaxStockQuantity(370);
     lineItem.setStockInHand(300);
 
-    lineItem.calculate(period, INITIATED);
+    lineItem.calculate(period, INITIATED, getRnrColumns());
 
-    assertThat(lineItem.getCalculatedOrderQuantity(), is(70));
+    assertThat(lineItem.getCalculatedOrderQuantity(), is(366));
   }
 
 
@@ -399,18 +400,18 @@ public class RnrLineItemTest {
 
     assertThat(lineItem.getQuantityApproved(), is(1872));
     assertThat(lineItem.getRemarks(), is("Approved"));
-    assertThat(lineItem.getStockInHand(), is(STOCK_IN_HAND));
+    assertThat(lineItem.getStockInHand(), is(RnrLineItemBuilder.STOCK_IN_HAND));
 
   }
 
   private ArrayList<RnrColumn> getRnrColumns() {
     return new ArrayList<RnrColumn>() {{
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.QUANTITY_RECEIVED), with(visible, false))));
-      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.QUANTITY_DISPENSED), with(visible, false))));
+      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.QUANTITY_DISPENSED), with(visible, false), with(source, CALCULATED))));
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.LOSSES_AND_ADJUSTMENTS), with(visible, false))));
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.NEW_PATIENT_COUNT), with(visible, false))));
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.STOCK_OUT_DAYS), with(visible, false))));
-      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.STOCK_IN_HAND), with(visible, false))));
+      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.STOCK_IN_HAND), with(visible, false), with(source, CALCULATED))));
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.BEGINNING_BALANCE), with(visible, false))));
     }};
   }
@@ -437,6 +438,56 @@ public class RnrLineItemTest {
   }
 
   @Test
+  public void shouldCalculateStockInHandIfCalculated() throws Exception {
+    ArrayList<RnrColumn> columns = new ArrayList<RnrColumn>() {{
+      add(make(a(defaultRnrColumn, with(source, CALCULATED), with(columnName, STOCK_IN_HAND))));
+      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, QUANTITY_DISPENSED))));
+    }};
+    lineItem.setStockInHand(99);
+    lineItem.calculate(period, INITIATED, columns);
+
+    assertThat(lineItem.getStockInHand(), is(4));
+  }
+
+  @Test
+  public void shouldNotCalculateStockInHandIfUserInput() throws Exception {
+    ArrayList<RnrColumn> columns = new ArrayList<RnrColumn>() {{
+      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, STOCK_IN_HAND))));
+      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, QUANTITY_DISPENSED))));
+    }};
+    lineItem.setStockInHand(66);
+    lineItem.calculate(period, INITIATED, columns);
+
+    assertThat(lineItem.getStockInHand(), is(66));
+  }
+
+  @Test
+  public void shouldCalculateQuantityDispensedIfCalculated() throws Exception {
+    ArrayList<RnrColumn> columns = new ArrayList<RnrColumn>() {{
+      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, STOCK_IN_HAND))));
+      add(make(a(defaultRnrColumn, with(source, CALCULATED), with(columnName, QUANTITY_DISPENSED))));
+    }};
+
+    lineItem.setQuantityDispensed(4);
+    lineItem.calculate(period, INITIATED, columns);
+
+    assertThat(lineItem.getQuantityDispensed(), is(10));
+  }
+
+  @Test
+  public void shouldNotCalculateQuantityDispensedIfUserInput() throws Exception {
+    ArrayList<RnrColumn> columns = new ArrayList<RnrColumn>() {{
+      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, STOCK_IN_HAND))));
+      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, QUANTITY_DISPENSED))));
+    }};
+
+    lineItem.setQuantityDispensed(0);
+    lineItem.calculate(period, INITIATED, columns);
+
+    assertThat(lineItem.getQuantityDispensed(), is(0));
+  }
+
+  @Test
   public void shouldNotCopyBeginningBalanceWhenPreviousStockInHandIsAvailable() throws Exception {
     RnrLineItem editedLineItem = make(a(defaultRnrLineItem));
     editedLineItem.setBeginningBalance(44);
@@ -446,5 +497,4 @@ public class RnrLineItemTest {
 
     assertThat(lineItem.getBeginningBalance(), is(RnrLineItemBuilder.BEGINNING_BALANCE));
   }
-
 }

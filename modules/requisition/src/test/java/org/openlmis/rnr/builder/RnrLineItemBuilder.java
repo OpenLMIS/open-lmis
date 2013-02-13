@@ -24,6 +24,10 @@ public class RnrLineItemBuilder {
   public static final Property<RnrLineItem, Integer> quantityDispensed = newProperty();
   public static final Property<RnrLineItem, Integer> newPatientCount = newProperty();
   public static final Property<RnrLineItem, Integer> stockOutDays = newProperty();
+  public static final Property<RnrLineItem, Boolean> roundToZero = newProperty();
+  public static final Property<RnrLineItem, Integer> packRoundingThreshold = newProperty();
+  public static final Property<RnrLineItem, Integer> packSize = newProperty();
+  public static final Property<RnrLineItem, Integer> quantityApproved = newProperty();
 
   public static final LossesAndAdjustments ONE_LOSS = new LossesAndAdjustments() {{
     setQuantity(1);
@@ -41,10 +45,10 @@ public class RnrLineItemBuilder {
   public static final int STOCK_OUT_DAYS = 3;
   public static final int QUANTITY_REQUESTED = 6;
   public static final String REASON_FOR_REQUESTED_QUANTITY = "More patients";
-  public static final int QUANTITY_APPROVED = 6;
   public static final String REMARKS = "Remarks";
+  public static final boolean ROUND_To_ZERO = true;
+  public static final int QUANTITY_APPROVED = 2;
   public static final Instantiator<RnrLineItem> defaultRnrLineItem = new Instantiator<RnrLineItem>() {
-
 
 
     @Override
@@ -62,7 +66,7 @@ public class RnrLineItemBuilder {
       rnrLineItem.setDispensingUnit("tablet");
       rnrLineItem.setMaxMonthsOfStock(1);
       rnrLineItem.setPrice(new Money("2"));
-      rnrLineItem.setQuantityApproved(2);
+      rnrLineItem.setQuantityApproved(lookup.valueOf(quantityApproved, QUANTITY_APPROVED));
 
       rnrLineItem.setFullSupply(lookup.valueOf(fullSupply, true));
       rnrLineItem.setStockOutDays(lookup.valueOf(stockOutDays, STOCK_OUT_DAYS));
@@ -74,10 +78,10 @@ public class RnrLineItemBuilder {
       rnrLineItem.setMaxMonthsOfStock(2);
       rnrLineItem.setMaxStockQuantity(74);
       rnrLineItem.setCalculatedOrderQuantity(70);
-      rnrLineItem.setPackSize(6);
+      rnrLineItem.setPackSize(lookup.valueOf(packSize, 6));
       rnrLineItem.setPacksToShip(12);
-      rnrLineItem.setPackRoundingThreshold(3);
-      rnrLineItem.setRoundToZero(true);
+      rnrLineItem.setPackRoundingThreshold(lookup.valueOf(packRoundingThreshold, 3));
+      rnrLineItem.setRoundToZero(lookup.valueOf(roundToZero, ROUND_To_ZERO));
       rnrLineItem.setPrice(new Money("4"));
       rnrLineItem.setQuantityRequested(QUANTITY_REQUESTED);
       rnrLineItem.setReasonForRequestedQuantity(REASON_FOR_REQUESTED_QUANTITY);

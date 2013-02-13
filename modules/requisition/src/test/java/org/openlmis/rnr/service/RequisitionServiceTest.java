@@ -383,10 +383,12 @@ public class RequisitionServiceTest {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(rnrToSubmit);
     Mockito.when(rnrTemplateRepository.fetchRnrTemplateColumns(PROGRAM.getId())).thenReturn(rnrColumns);
     Mockito.doReturn(true).when(savedRnr).validate(rnrColumns);
+    doNothing().when(savedRnr).copyApproverEditableFields(rnrToSubmit);
+    doNothing().when(savedRnr).prepareFor(SUBMITTED, rnrColumns);
 
     requisitionService.submit(rnrToSubmit);
 
-    verify(savedRnr).prepareFor(SUBMITTED);
+    verify(savedRnr).prepareFor(SUBMITTED, rnrColumns);
     verify(savedRnr).validate(rnrColumns);
     verify(requisitionRepository).update(savedRnr);
     verify(savedRnr).copyUserEditableFields(rnrToSubmit, rnrColumns);
@@ -397,17 +399,17 @@ public class RequisitionServiceTest {
     Rnr rnrToSubmit = make(a(defaultRnr));
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(rnrToSubmit);
     Mockito.when(rnrTemplateRepository.fetchRnrTemplateColumns(PROGRAM.getId())).thenReturn(rnrColumns);
-    Mockito.doReturn(true).when(savedRnr).validate(rnrColumns);
-    Mockito.doNothing().when(savedRnr).copyUserEditableFields(rnrToSubmit, rnrColumns);
+    doReturn(true).when(savedRnr).validate(rnrColumns);
+    doNothing().when(savedRnr).copyUserEditableFields(rnrToSubmit, rnrColumns);
+    doNothing().when(savedRnr).calculate(rnrColumns);
 
     OpenLmisMessage message = requisitionService.submit(rnrToSubmit);
 
-    verify(savedRnr).prepareFor(SUBMITTED);
+    verify(savedRnr).prepareFor(SUBMITTED, rnrColumns);
     verify(savedRnr).validate(rnrColumns);
     verify(requisitionRepository).update(savedRnr);
     verify(savedRnr).copyUserEditableFields(rnrToSubmit, rnrColumns);
     verify(requisitionRepository).update(savedRnr);
-    assertThat(savedRnr.getStatus(), is(SUBMITTED));
     assertThat(message.getCode(), is("rnr.submitted.without.supervisor"));
   }
 
@@ -418,6 +420,7 @@ public class RequisitionServiceTest {
     doReturn(true).when(savedRnr).validate(rnrColumns);
     doNothing().when(savedRnr).copyUserEditableFields(rnrToSubmit, rnrColumns);
     doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
+    doNothing().when(savedRnr).calculate(rnrColumns);
     when(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(new SupervisoryNode());
     when(rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId())).thenReturn(rnrColumns);
 
@@ -436,6 +439,7 @@ public class RequisitionServiceTest {
     doReturn(true).when(savedRnr).validate(rnrColumns);
     doNothing().when(savedRnr).copyUserEditableFields(submittedRnr, rnrColumns);
     doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
+    doNothing().when(savedRnr).calculate(rnrColumns);
     when(rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId())).thenReturn(rnrColumns);
     when(supervisoryNodeService.getApproverFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(new User());
     SupervisoryNode approverNode = new SupervisoryNode();
@@ -457,6 +461,7 @@ public class RequisitionServiceTest {
     doNothing().when(savedRnr).copyUserEditableFields(submittedRnr, rnrColumns);
     doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
     doReturn(true).when(savedRnr).validate(rnrColumns);
+    doNothing().when(savedRnr).calculate(rnrColumns);
 
     SupervisoryNode node = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
     when(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(node);
@@ -478,7 +483,7 @@ public class RequisitionServiceTest {
     doReturn(true).when(savedRnr).validate(rnrColumns);
     doNothing().when(savedRnr).copyUserEditableFields(submittedRnr, rnrColumns);
     doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
-
+    doNothing().when(savedRnr).calculate(rnrColumns);
 
     OpenLmisMessage openLmisMessage = requisitionService.authorize(submittedRnr);
 
@@ -872,6 +877,17 @@ public class RequisitionServiceTest {
     verify(spyRequisition).setBeginningBalanceForEachLineItem(previousRnr, true);
   }
 
+  @Test
+  public void shouldCalculatePacksToShipAndCostOnApprove() throws Exception {
+    Rnr spyRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(make(a(defaultRnr, with(status, AUTHORIZED))));
+
+    doNothing().when(spyRnr).calculateForApproval();
+
+    requisitionService.approve(spyRnr);
+
+    verify(spyRnr).calculateForApproval();
+  }
+
   private RoleAssignment roleAssignmentWithSupervisoryNodeId(int supervisoryNodeId) {
     final RoleAssignment assignment = new RoleAssignment();
     final SupervisoryNode node = new SupervisoryNode();
@@ -888,4 +904,6 @@ public class RequisitionServiceTest {
     when(requisitionRepository.getById(rnr.getId())).thenReturn(savedRnr);
     return savedRnr;
   }
+
+
 }

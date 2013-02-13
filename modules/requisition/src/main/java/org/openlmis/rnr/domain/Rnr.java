@@ -31,6 +31,9 @@ public class Rnr {
   private Money fullSupplyItemsSubmittedCost = new Money("0");
   private Money nonFullSupplyItemsSubmittedCost = new Money("0");
 
+  /**
+   * TODO: rename lineItems to fullSupplyLineItems
+   */
   private List<RnrLineItem> lineItems = new ArrayList<>();
   private List<RnrLineItem> nonFullSupplyLineItems = new ArrayList<>();
 
@@ -77,21 +80,26 @@ public class Rnr {
     return true;
   }
 
-  public void calculate() {
+  public void calculate(List<RnrColumn> programRnrColumns) {
+    for(RnrLineItem lineItem : lineItems){
+      lineItem.calculate(period, status, programRnrColumns);
+    }
+
+    for(RnrLineItem lineItem : nonFullSupplyLineItems) {
+      lineItem.calculate(period, status, programRnrColumns);
+    }
+
+    this.fullSupplyItemsSubmittedCost = calculateCost(lineItems);
+    this.nonFullSupplyItemsSubmittedCost = calculateCost(nonFullSupplyLineItems);
+  }
+
+  private Money calculateCost(List<RnrLineItem> lineItems) {
     Money totalFullSupplyCost = new Money("0");
     for (RnrLineItem lineItem : lineItems) {
-      lineItem.calculate(period, status);
       Money costPerItem = lineItem.getPrice().multiply(BigDecimal.valueOf(lineItem.getPacksToShip()));
       totalFullSupplyCost = totalFullSupplyCost.add(costPerItem);
     }
-    this.fullSupplyItemsSubmittedCost = totalFullSupplyCost;
-    Money totalNonFullSupplyCost = new Money("0");
-    for (RnrLineItem lineItem : nonFullSupplyLineItems) {
-      lineItem.calculate(period, status);
-      Money costPerItem = lineItem.getPrice().multiply(BigDecimal.valueOf(lineItem.getPacksToShip()));
-      totalNonFullSupplyCost = totalNonFullSupplyCost.add(costPerItem);
-    }
-    this.nonFullSupplyItemsSubmittedCost = totalNonFullSupplyCost;
+    return totalFullSupplyCost;
   }
 
   public void fillLineItems(List<FacilityApprovedProduct> facilityApprovedProducts) {
@@ -188,8 +196,8 @@ public class Rnr {
     }
   }
 
-  public void prepareFor(RnrStatus status) {
-    calculate();
+  public void prepareFor(RnrStatus status, List<RnrColumn> programRnrColumns) {
+    calculate(programRnrColumns);
     this.status = status;
     if(status.equals(SUBMITTED)) submittedDate = new Date();
   }
@@ -200,5 +208,12 @@ public class Rnr {
     }
   }
 
+  public void calculateForApproval() {
+    for(RnrLineItem lineItem:lineItems) {
+      lineItem.calculatePacksToShipWithQuantityApproved();
+    }
+    this.fullSupplyItemsSubmittedCost = calculateCost(lineItems);
+    this.nonFullSupplyItemsSubmittedCost = calculateCost(nonFullSupplyLineItems);
+  }
 }
 

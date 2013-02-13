@@ -135,9 +135,9 @@ public class RequisitionService {
 
     savedRnr.copyUserEditableFields(rnr, rnrColumns);
 
-    savedRnr.validate(rnrColumns);
+    savedRnr.prepareFor(SUBMITTED, rnrColumns);
 
-    savedRnr.prepareFor(SUBMITTED);
+    savedRnr.validate(rnrColumns);
 
     requisitionRepository.update(savedRnr);
 
@@ -155,9 +155,9 @@ public class RequisitionService {
 
     savedRnr.copyUserEditableFields(rnr, rnrColumns);
 
-    savedRnr.validate(rnrColumns);
+    savedRnr.prepareFor(AUTHORIZED, rnrColumns);
 
-    savedRnr.prepareFor(AUTHORIZED);
+    savedRnr.validate(rnrColumns);
 
     savedRnr.setSupervisoryNodeId(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram()).getId());
 
@@ -175,7 +175,7 @@ public class RequisitionService {
     if (!(savedRnr.getStatus() == AUTHORIZED || savedRnr.getStatus() == IN_APPROVAL))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
-    savedRnr.calculate();
+    savedRnr.calculateForApproval();
     final SupervisoryNode parent = supervisoryNodeService.getParent(savedRnr.getSupervisoryNodeId());
     if (parent == null) {
       return doFinalApproval(savedRnr);
