@@ -1,4 +1,5 @@
 function UserSearchController($scope, $location, Users) {
+  $scope.previousQuery = '';
 
   $scope.showUserSearchResults = function (id) {
     var query = document.getElementById(id).value;
@@ -7,15 +8,17 @@ function UserSearchController($scope, $location, Users) {
     var len = (query == undefined) ? 0 : query.length;
 
     if (len >= 3) {
-      if (len == 3) {
-        Users.get({param:$scope.query}, function (data) {
-          $scope.userList = data.userList;
-          $scope.resultCount = $scope.userList.length;
-          $scope.filteredUsers = $scope.userList;
-        }, {});
-      } else {
+      if ($scope.previousQuery.substr(0, 3) == query.substr(0, 3)) {
+        $scope.previousQuery = query;
         filterUserByName(query);
+        return true;
       }
+      $scope.previousQuery = query;
+      Users.get({param:$scope.query.substr(0, 3)}, function (data) {
+        $scope.userList = data.userList;
+        filterUserByName(query);
+      }, {});
+
       return true;
     } else {
       return false;
@@ -41,10 +44,10 @@ function UserSearchController($scope, $location, Users) {
       var fullName = user.firstName.toLowerCase() + ' ' + user.lastName.toLowerCase();
 
       if (user.firstName.toLowerCase().indexOf() >= 0 ||
-        user.lastName.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0 ||
-        fullName.indexOf(query.trim().toLowerCase()) >= 0 ||
-        user.email.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0
-        ) {
+          user.lastName.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0 ||
+          fullName.indexOf(query.trim().toLowerCase()) >= 0 ||
+          user.email.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0
+          ) {
         $scope.filteredUsers.push(user);
       }
     });
