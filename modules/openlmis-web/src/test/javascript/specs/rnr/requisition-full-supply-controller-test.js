@@ -25,9 +25,6 @@ describe('RequisitionFullSupplyController', function () {
 
     httpBackend.when('GET', '/facilityApprovedProducts/facility/1/program/1/nonFullSupply.json').respond(200);
     httpBackend.when('POST', '/requisitions.json?facilityId=1&periodId=2&programId=1').respond({"rnr":{"status":"CREATED"}});
-    httpBackend.when('GET', '/logistics/rnr/1/columns.json').respond({"rnrColumnList":[
-      {"testField":"test"}
-    ]});
     httpBackend.when('GET', '/reference-data/currency.json').respond({"currency":"$"});
     httpBackend.expect('GET', '/requisitions/lossAndAdjustments/reference-data.json').respond({"lossAdjustmentTypes":{}});
     $rootScope.fixToolBar = function () {
@@ -39,13 +36,6 @@ describe('RequisitionFullSupplyController', function () {
       {"name":"some other name"}
     ];
   }));
-
-  it('should get list of Rnr Columns for program', function () {
-    httpBackend.flush();
-    expect(scope.programRnrColumnList).toEqual([
-      {"testField":"test"}
-    ]);
-  });
 
   it("should display modal window with appropriate type options to add losses and adjustments", function () {
     var lineItem = { "id":"1", lossesAndAdjustments:[

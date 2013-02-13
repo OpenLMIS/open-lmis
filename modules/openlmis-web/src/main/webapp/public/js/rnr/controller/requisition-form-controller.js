@@ -13,7 +13,7 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
     if (data.rnrColumnList && data.rnrColumnList.length > 0) {
       $scope.programRnrColumnList = data.rnrColumnList;
       $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name':'quantityRequested'});
-      prepareRnr();
+      $scope.prepareRnr();
     } else {
       $scope.$parent.error = "Please contact Admin to define R&R template for this program";
       $location.path("/init-rnr");
@@ -39,14 +39,14 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
       rnr.nonFullSupplyItemsSubmittedCost = 0;
   }
 
-  function prepareRnr() {
+  $scope.prepareRnr = function() {
     var rnr = $scope.rnr;
 
-//    var lineItemsJson = rnr.lineItems;
-//    rnr.lineItems = [];
-//    $(lineItemsJson).each(function (i, lineItem) {
-//      rnr.lineItems.push(new RnrLineItem(lineItem, $scope.rnr, $scope.programRnrColumnList));
-//    });
+    var lineItemsJson = rnr.lineItems;
+    rnr.lineItems = [];
+    $(lineItemsJson).each(function (i, lineItem) {
+      rnr.lineItems.push(new RnrLineItem(lineItem, $scope.rnr, $scope.programRnrColumnList));
+    });
 
     var nonFullSupplyLineItemsJson = rnr.nonFullSupplyLineItems;
     rnr.nonFullSupplyLineItems = [];
@@ -224,14 +224,6 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
     updateNonFullSupplyProductsToDisplay();
     $scope.nonFullSupplyProductsModal = true;
   };
-
-  function updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem) {
-    var lossesAndAdjustmentTypesForLineItem = _.pluck(_.pluck(lineItem.lossesAndAdjustments, 'type'), 'name');
-
-    $scope.lossesAndAdjustmentTypesToDisplay = $.grep($scope.allTypes, function (lAndATypeObject) {
-      return $.inArray(lAndATypeObject.name, lossesAndAdjustmentTypesForLineItem) == -1;
-    });
-  }
 
   function populateProductInformation() {
     var product = {};

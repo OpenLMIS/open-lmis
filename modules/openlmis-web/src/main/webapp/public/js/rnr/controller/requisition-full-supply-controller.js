@@ -1,42 +1,10 @@
-function RequisitionFullSupplyController($scope, ProgramRnRColumnList, $location, Requisitions, $routeParams, LossesAndAdjustmentsReferenceData, $rootScope) {
+function RequisitionFullSupplyController($scope, LossesAndAdjustmentsReferenceData) {
   $scope.lossesAndAdjustmentsModal = [];
 
   LossesAndAdjustmentsReferenceData.get({}, function (data) {
     $scope.allTypes = data.lossAdjustmentTypes;
   }, function () {
   });
-
-  ProgramRnRColumnList.get({programId:$routeParams.program}, function (data) {
-    if (data.rnrColumnList && data.rnrColumnList.length > 0) {
-      $scope.programRnrColumnList = data.rnrColumnList;
-      prepareRnr();
-    } else {
-      $scope.$parent.error = "Please contact Admin to define R&R template for this program";
-      $location.path("/init-rnr");
-    }
-  }, function () {
-    $location.path("/init-rnr");
-  });
-
-  function resetCostsIfNull() {
-    var rnr = $scope.$parent.rnr;
-    if (rnr == null) return;
-    if (!rnr.fullSupplyItemsSubmittedCost)
-      rnr.fullSupplyItemsSubmittedCost = 0;
-  }
-
-  function prepareRnr() {
-    var rnr = $scope.$parent.rnr;
-
-    var lineItemsJson = rnr.lineItems;
-    rnr.lineItems = [];
-    $(lineItemsJson).each(function (i, lineItem) {
-      rnr.lineItems.push(new RnrLineItem(lineItem, $scope.$parent.rnr, $scope.programRnrColumnList));
-    });
-
-    resetCostsIfNull();
-//    $scope.$parent.formDisabled = $scope.$parent.isFormDisabled();
-  }
 
   $scope.getId = function (prefix, parent, isLossAdjustment) {
     if (isLossAdjustment != null && isLossAdjustment != isUndefined && isLossAdjustment) {
