@@ -2,6 +2,7 @@ function SaveRoleController($scope, $routeParams, $location, Roles, Role, Rights
   $scope.$parent.error = "";
   $scope.$parent.message = "";
   $scope.role = {rights:[]};
+  $scope.rightValue = [];
 
   if ($routeParams.id) {
     Role.get({id:$routeParams.id}, function (data) {
@@ -13,17 +14,37 @@ function SaveRoleController($scope, $routeParams, $location, Roles, Role, Rights
     $scope.rights = data.rights;
   }, {});
 
-  $scope.updateRights = function (checked, rightClicked) {
-    if (checked == true) {
-      $scope.showError = false;
-      $scope.role.rights.push(rightClicked);
+
+  $scope.updateRights = function (checked, right) {
+    if (checked) {
+      if ($scope.contains(right.right))
+        return;
+
+      $scope.role.rights.push(right);
+      if (right.right == 'CREATE_REQUISITION' || right.right == 'AUTHORIZE_REQUISITION' ||
+          right.right == 'APPROVE_REQUISITION' || right.right == 'CONVERT_TO_ORDER') {
+        $scope.updateRights(true, $scope.getRightFromRightList("VIEW_REQUISITION"));
+      }
     } else {
       $scope.role.rights = $.grep($scope.role.rights, function (rightObj) {
-        return (rightObj.right != rightClicked.right);
+        return (rightObj.right != right.right);
       });
     }
-  };
+  }
 
+  $scope.getRightFromRightList = function (rightName) {
+    return _.find($scope.rights, function (right) {
+      return right.right == rightName;
+    });
+  }
+
+  $scope.areRelatedFieldsSelected = function (right) {
+    if (right.right != 'VIEW_REQUISITION') return false;
+    return ($scope.contains('CREATE_REQUISITION') ||
+        $scope.contains('AUTHORIZE_REQUISITION') ||
+        $scope.contains('APPROVE_REQUISITION') ||
+        $scope.contains('CONVERT_TO_ORDER'));
+  }
 
   $scope.contains = function (right) {
     var containFlag = false;
@@ -48,7 +69,7 @@ function SaveRoleController($scope, $routeParams, $location, Roles, Role, Rights
       $location.path('list');
     };
 
-    if ($scope.role.name == undefined || $scope.role.rights.length ==0) {
+    if ($scope.role.name == undefined || $scope.role.rights.length == 0) {
       $scope.showError = true;
     } else {
       var id = $routeParams.id;

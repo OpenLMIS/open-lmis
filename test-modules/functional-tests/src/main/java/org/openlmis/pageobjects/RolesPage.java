@@ -27,28 +27,28 @@ public class RolesPage extends Page {
     @FindBy(how = How.ID, using = "description")
     private static WebElement roleDescription;
 
-    @FindBy(how = How.ID, using = "Admin - Configure Requisition Templates")
+    @FindBy(how = How.ID, using = "CONFIGURE_RNR")
     private static WebElement rightConfigureTemplate;
 
-    @FindBy(how = How.ID, using = "Admin - Manage Facilities")
+    @FindBy(how = How.ID, using = "MANAGE_FACILITY")
     private static WebElement rightManageFacilities;
 
-    @FindBy(how = How.ID, using = "Admin - Manage Roles")
+    @FindBy(how = How.ID, using = "MANAGE_ROLE")
     private static WebElement rightManageRoles;
 
-    @FindBy(how = How.ID, using = "Admin - Manage Schedules")
+    @FindBy(how = How.ID, using = "MANAGE_SCHEDULE")
     private static WebElement rightManageSchedules;
 
-    @FindBy(how = How.ID, using = "Admin - Uploads")
+    @FindBy(how = How.ID, using = "UPLOADS")
     private static WebElement rightUploads;
 
-    @FindBy(how = How.ID, using = "Requisition - Create")
+    @FindBy(how = How.ID, using = "CREATE_REQUISITION")
     private static WebElement rightCreateRequisition;
 
-    @FindBy(how = How.ID, using = "Requisition - Authorize")
+    @FindBy(how = How.ID, using = "AUTHORIZE_REQUISITION")
     private static WebElement rightAuthorizeRequisition;
 
-    @FindBy(how = How.ID, using = "Requisition - Approve")
+    @FindBy(how = How.ID, using = "APPROVE_REQUISITION")
     private static WebElement rightApproveRequisition;
 
     @FindBy(how = How.ID, using = "Requisition - Convert to Order")
