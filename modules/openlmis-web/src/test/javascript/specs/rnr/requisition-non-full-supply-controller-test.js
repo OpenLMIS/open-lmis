@@ -28,7 +28,7 @@ describe('RequisitionNonFullSupplyController', function () {
     httpBackend.expect('GET', '/requisitions/lossAndAdjustments/reference-data.json').respond({"lossAdjustmentTypes":{}});
     $rootScope.fixToolBar = function () {
     };
-    ctrl = controller(RequisitionFormController, {$scope:scope, $location:location, $routeParams:routeParams, localStorageService:localStorageService});
+    ctrl = controller(RequisitionNonFullSupplyController, {$scope:scope, $location:location, $routeParams:routeParams, localStorageService:localStorageService});
 
     scope.allTypes = [
       {"name":"some name"},

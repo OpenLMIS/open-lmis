@@ -1,7 +1,4 @@
 function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, $location, FacilityApprovedProducts, Requisitions, $routeParams, LossesAndAdjustmentsReferenceData, $rootScope) {
-
-  $scope.lossesAndAdjustmentsModal = [];
-
   FacilityApprovedProducts.get({facilityId:$routeParams.facility, programId:$routeParams.program}, function (data) {
     $scope.nonFullSupplyProducts = data.nonFullSupplyProducts;
   }, function () {
@@ -9,11 +6,6 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
 
   ReferenceData.get({}, function (data) {
     $scope.currency = data.currency;
-  }, function () {
-  });
-
-  LossesAndAdjustmentsReferenceData.get({}, function (data) {
-    $scope.allTypes = data.lossAdjustmentTypes;
   }, function () {
   });
 
@@ -30,13 +22,13 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
     $location.path("/init-rnr");
   });
 
-  function isFormDisabled() {
+  $scope.isFormDisabled = function() {
     if ($scope.rnr || $scope.$parent.rnr) {
       if ($scope.rnr.status == 'AUTHORIZED') return true;
       if (($scope.rnr.status == 'SUBMITTED' && !$rootScope.hasPermission('AUTHORIZE_REQUISITION')) || ($scope.rnr.status == 'INITIATED' && !$rootScope.hasPermission('CREATE_REQUISITION'))) return true;
     }
     return false;
-  }
+  };
 
   function resetCostsIfNull() {
     var rnr = $scope.rnr;
@@ -50,11 +42,11 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
   function prepareRnr() {
     var rnr = $scope.rnr;
 
-    var lineItemsJson = rnr.lineItems;
-    rnr.lineItems = [];
-    $(lineItemsJson).each(function (i, lineItem) {
-      rnr.lineItems.push(new RnrLineItem(lineItem, $scope.rnr, $scope.programRnrColumnList));
-    });
+//    var lineItemsJson = rnr.lineItems;
+//    rnr.lineItems = [];
+//    $(lineItemsJson).each(function (i, lineItem) {
+//      rnr.lineItems.push(new RnrLineItem(lineItem, $scope.rnr, $scope.programRnrColumnList));
+//    });
 
     var nonFullSupplyLineItemsJson = rnr.nonFullSupplyLineItems;
     rnr.nonFullSupplyLineItems = [];
@@ -63,9 +55,8 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
     });
 
     resetCostsIfNull();
-    $scope.formDisabled = isFormDisabled();
+    $scope.formDisabled = $scope.isFormDisabled();
   }
-
 
   function valid() {
     if ($scope.saveRnrForm.$error.rnrError) {
@@ -195,37 +186,6 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
   };
 
   // TODO: Push this method to rnr-line-item
-  $scope.saveLossesAndAdjustmentsForRnRLineItem = function (rnrLineItem) {
-    if (!isValidLossesAndAdjustments(rnrLineItem)) return;
-
-    rnrLineItem.reEvaluateTotalLossesAndAdjustments();
-    $scope.lossesAndAdjustmentsModal[rnrLineItem.id] = false;
-  };
-
-  $scope.resetModalError = function () {
-    $scope.modalError = '';
-  };
-
-  $scope.showLossesAndAdjustmentModalForLineItem = function (lineItem) {
-    updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem);
-    $scope.lossesAndAdjustmentsModal[lineItem.id] = true;
-  };
-
-
-  // TODO: Push this method to rnr-line-item
-  $scope.removeLossAndAdjustment = function (lineItem, lossAndAdjustmentToDelete) {
-    lineItem.removeLossAndAdjustment(lossAndAdjustmentToDelete);
-    updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem);
-    $scope.resetModalError();
-  };
-
-  // TODO: Push this method to rnr-line-item
-  $scope.addLossAndAdjustment = function (lineItem, newLossAndAdjustment) {
-    lineItem.addLossAndAdjustment(newLossAndAdjustment);
-    updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem);
-  };
-
-  // TODO: Push this method to rnr-line-item
   function formulaValid() {
     var valid = true;
     $($scope.rnr.lineItems).each(function (index, lineItem) {
@@ -235,20 +195,6 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
       }
     });
     return valid;
-  }
-
-  // TODO: Push this method to rnr-line-item
-  function isValidLossesAndAdjustments(rnrLineItem) {
-    $scope.modalError = '';
-    if (isUndefined(rnrLineItem.lossesAndAdjustments)) return true;
-
-    for (var index in rnrLineItem.lossesAndAdjustments) {
-      if (isUndefined(rnrLineItem.lossesAndAdjustments[index].quantity)) {
-        $scope.modalError = 'Please correct the highlighted fields before submitting';
-        return false;
-      }
-    }
-    return true;
   }
 
   $scope.getCellErrorClass = function (rnrLineItem) {

@@ -25,7 +25,6 @@ describe('RequisitionFormController', function () {
       {"testField":"test"}
     ]});
     httpBackend.when('GET', '/reference-data/currency.json').respond({"currency":"$"});
-    httpBackend.expect('GET', '/requisitions/lossAndAdjustments/reference-data.json').respond({"lossAdjustmentTypes":{}});
     $rootScope.fixToolBar = function () {
     };
     ctrl = controller(RequisitionFormController, {$scope:scope, $location:location, $routeParams:routeParams, localStorageService:localStorageService});
@@ -62,17 +61,6 @@ describe('RequisitionFormController', function () {
   it('should get Currency from service', function () {
     httpBackend.flush();
     expect(scope.currency).toEqual("$");
-  });
-
-  it("should display modal window with appropriate type options to add losses and adjustments", function () {
-    var lineItem = { "id":"1", lossesAndAdjustments:[
-      {"type":{"name":"some name"}, "quantity":"4"}
-    ]};
-    scope.showLossesAndAdjustmentModalForLineItem(lineItem);
-    expect(scope.lossesAndAdjustmentsModal[1]).toBeTruthy();
-    expect(scope.lossesAndAdjustmentTypesToDisplay).toEqual([
-      {"name":"some other name"}
-    ]);
   });
 
   it('should not submit rnr with required fields missing', function () {
@@ -186,49 +174,6 @@ describe('RequisitionFormController', function () {
     spyOn(scope, 'getCellErrorClass').andReturn("");
     var errorMsg = scope.getRowErrorClass(lineItem);
     expect(errorMsg).toEqual("");
-  });
-
-  it('should save Losses and Adjustments and close modal if valid', function () {
-    var lineItem = { "id":"1", "beginningBalance":1, lossesAndAdjustments:[
-      {"type":{"name":"some name"}, "quantity":"4"}
-    ]};
-    var rnrLineItem = new RnrLineItem(lineItem);
-
-    scope.rnr.lineItems.push(rnrLineItem);
-    spyOn(rnrLineItem, 'reEvaluateTotalLossesAndAdjustments');
-
-    scope.rnr = {"id":"rnrId", lineItems:[rnrLineItem]};
-    scope.programRnrColumnList = [
-      {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}}
-    ];
-
-    scope.lossesAndAdjustmentsModal[1] = true;
-    scope.saveLossesAndAdjustmentsForRnRLineItem(rnrLineItem);
-
-    expect(rnrLineItem.reEvaluateTotalLossesAndAdjustments).toHaveBeenCalled();
-    expect(scope.lossesAndAdjustmentsModal[1]).toBeFalsy();
-    expect(scope.modalError).toEqual('');
-  });
-
-  it('should not save Losses and Adjustments and close modal if not valid', function () {
-    var lineItem = { "id":"1", "beginningBalance":1, lossesAndAdjustments:[
-      {"type":{"name":"some name"}, "quantity":null}
-    ]};
-    var rnrLineItem = new RnrLineItem(lineItem);
-
-    scope.rnr.lineItems.push(rnrLineItem);
-    spyOn(rnrLineItem, 'reEvaluateTotalLossesAndAdjustments');
-
-    scope.rnr = {"id":"rnrId", lineItems:[rnrLineItem]};
-    scope.programRnrColumnList = [
-      {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}}
-    ];
-    scope.lossesAndAdjustmentsModal[1] = true;
-    scope.saveLossesAndAdjustmentsForRnRLineItem(rnrLineItem);
-
-    expect(rnrLineItem.reEvaluateTotalLossesAndAdjustments).not.toHaveBeenCalledWith(scope.rnr, scope.programRnrColumnList);
-    expect(scope.lossesAndAdjustmentsModal[1]).toBeTruthy();
-    expect(scope.modalError).toEqual('Please correct the highlighted fields before submitting');
   });
 
   it('should highlight required field for modal dialog', function () {
