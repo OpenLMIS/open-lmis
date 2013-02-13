@@ -93,7 +93,7 @@ public class RequisitionService {
     if (!isUserAllowedToSave(savedRnr))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
-    savedRnr.copyUserEditableFieldsForSaveSubmitOrAuthorize(rnr, rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId()));
+    savedRnr.copyUserEditableFields(rnr, rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId()));
     requisitionRepository.update(savedRnr);
   }
 
@@ -133,10 +133,11 @@ public class RequisitionService {
       throw new DataException(new OpenLmisMessage(RNR_SUBMISSION_ERROR));
     }
 
-    savedRnr.copyUserEditableFieldsForSaveSubmitOrAuthorize(rnr, rnrColumns);
+    savedRnr.copyUserEditableFields(rnr, rnrColumns);
+
+    savedRnr.validate(rnrColumns);
 
     savedRnr.prepareFor(SUBMITTED);
-    savedRnr.validate(rnrColumns);
 
     requisitionRepository.update(savedRnr);
 
@@ -151,7 +152,8 @@ public class RequisitionService {
     List<RnrColumn> rnrColumns = rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId());
 
     if (savedRnr.getStatus() != SUBMITTED) throw new DataException(RNR_AUTHORIZATION_ERROR);
-    savedRnr.copyUserEditableFieldsForSaveSubmitOrAuthorize(rnr, rnrColumns);
+
+    savedRnr.copyUserEditableFields(rnr, rnrColumns);
 
     savedRnr.validate(rnrColumns);
 

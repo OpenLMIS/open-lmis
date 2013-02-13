@@ -8,7 +8,10 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,6 +19,7 @@ import java.util.List;
 import static java.lang.Boolean.TRUE;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
+import static org.openlmis.rnr.domain.RnRColumnSource.USER_INPUT;
 import static org.openlmis.rnr.domain.Rnr.RNR_VALIDATION_ERROR;
 import static org.openlmis.rnr.domain.RnrStatus.IN_APPROVAL;
 
@@ -75,6 +79,8 @@ public class RnrLineItem {
   private Date modifiedDate;
 
   private Money price;
+
+  private static Logger logger = LoggerFactory.getLogger(RnrLineItem.class);
 
   public RnrLineItem(Integer rnrId, FacilityApprovedProduct facilityApprovedProduct, Integer modifiedBy) {
     this.rnrId = rnrId;
@@ -142,18 +148,24 @@ public class RnrLineItem {
   }
 
   private boolean validateMandatoryFields(List<RnrColumn> templateColumns) {
-    ProgramRnrTemplate template = new ProgramRnrTemplate(1, templateColumns);
-    return
-      !(
-        (template.columnsVisible(BEGINNING_BALANCE) && !isPresent(beginningBalance)) ||
-          (template.columnsVisible(QUANTITY_RECEIVED) && !isPresent(quantityReceived)) ||
-          (template.columnsVisible(QUANTITY_DISPENSED) && !isPresent(quantityDispensed)) ||
-          (template.columnsVisible(NEW_PATIENT_COUNT) && !isPresent(newPatientCount)) ||
-          (template.columnsVisible(STOCK_OUT_DAYS) && !isPresent(stockOutDays))
-      )
-        &&
-        (!template.columnsVisible(QUANTITY_REQUESTED, REASON_FOR_REQUESTED_QUANTITY) || (quantityRequested == null || isPresent(reasonForRequestedQuantity))
-        );
+    ProgramRnrTemplate template = new ProgramRnrTemplate(templateColumns);
+
+    String[] nonNullableFields = {BEGINNING_BALANCE, QUANTITY_RECEIVED, QUANTITY_DISPENSED, NEW_PATIENT_COUNT, STOCK_OUT_DAYS};
+
+    for (String fieldName : nonNullableFields) {
+      try {
+        Field field = this.getClass().getDeclaredField(fieldName);
+        if (field.get(this) == null) {
+          return false;
+        }
+      } catch (Exception e) {
+        logger.error("Error in reading RnrLineItem's field", e);
+      }
+    }
+
+    return (!template.columnsVisible(QUANTITY_REQUESTED, REASON_FOR_REQUESTED_QUANTITY)
+      || quantityRequested == null
+      || isPresent(reasonForRequestedQuantity));
   }
 
   private boolean validateCalculatedFields(boolean arithmeticValidationRequired) {
@@ -244,23 +256,28 @@ public class RnrLineItem {
     this.remarks = item.remarks;
   }
 
-  public void copyUserEditableFieldsForSaveSubmitOrAuthorize(RnrLineItem item, List<RnrColumn> programRnrColumns) {
+  public void copyUserEditableFields(RnrLineItem item, List<RnrColumn> programRnrColumns) {
     ProgramRnrTemplate template = new ProgramRnrTemplate(programRnrColumns);
-    if (item == null) return;
-    this.remarks = item.remarks;
 
+    copyBeginningBalance(item, template);
+
+    for (RnrColumn column : template.getRnrColumns()) {
+      if (!column.isVisible() || column.getSource() != USER_INPUT) {
+        continue;
+      }
+
+      try {
+        Field field = this.getClass().getDeclaredField(column.getName());
+        field.set(this, field.get(item));
+      } catch (Exception e) {
+        logger.error("Error in reading RnrLineItem's field", e);
+      }
+    }
+  }
+
+  private void copyBeginningBalance(RnrLineItem item, ProgramRnrTemplate template) {
     if (!this.previousStockInHandAvailable && template.columnsVisible(BEGINNING_BALANCE))
       this.beginningBalance = item.beginningBalance;
-
-    this.quantityReceived = item.quantityReceived;
-    this.quantityDispensed = item.quantityDispensed;
-    this.lossesAndAdjustments = item.lossesAndAdjustments;
-    this.stockInHand = item.stockInHand;
-    this.newPatientCount = item.newPatientCount;
-    this.stockOutDays = item.stockOutDays;
-    this.quantityRequested = item.quantityRequested;
-    this.reasonForRequestedQuantity = item.reasonForRequestedQuantity;
-    this.copyApproverEditableFields(item);//todo need another method for save approval
   }
 
   public void setBeginningBalanceWhenPreviousStockInHandAvailable(RnrLineItem lineItem) {
@@ -277,9 +294,9 @@ public class RnrLineItem {
   }
 
   void setLineItemFieldsAccordingToTemplate(ProgramRnrTemplate template) {
-    if(!template.columnsVisible(QUANTITY_RECEIVED)) quantityReceived = 0;
-    if(!template.columnsVisible(QUANTITY_DISPENSED)) quantityDispensed = 0;
-    if(!template.columnsVisible(LOSSES_AND_ADJUSTMENTS)) totalLossesAndAdjustments = 0;
+    if (!template.columnsVisible(QUANTITY_RECEIVED)) quantityReceived = 0;
+    if (!template.columnsVisible(QUANTITY_DISPENSED)) quantityDispensed = 0;
+    if (!template.columnsVisible(LOSSES_AND_ADJUSTMENTS)) totalLossesAndAdjustments = 0;
     newPatientCount = 0;
     stockOutDays = 0;
   }

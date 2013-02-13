@@ -111,9 +111,9 @@ public class RnrTest {
     savedRnr.getLineItems().set(0, savedLineItemSpy);
     ArrayList<RnrColumn> programRnrColumns = setupProgramTemplate();
 
-    savedRnr.copyUserEditableFieldsForSaveSubmitOrAuthorize(rnr, programRnrColumns);
+    savedRnr.copyUserEditableFields(rnr, programRnrColumns);
 
-    verify(savedLineItemSpy).copyUserEditableFieldsForSaveSubmitOrAuthorize(rnr.getLineItems().get(0), programRnrColumns);
+    verify(savedLineItemSpy).copyUserEditableFields(rnr.getLineItems().get(0), programRnrColumns);
     assertThat(savedRnr.getModifiedBy(), is(1));
     assertThat(savedRnr.getNonFullSupplyLineItems(), is(nonFullSupplyLineItems));
     assertThat(savedRnr.getNonFullSupplyLineItems().get(0).getModifiedBy(), is(rnr.getModifiedBy()));
@@ -178,7 +178,7 @@ public class RnrTest {
 
     Rnr requisitionForSaving = make(a(defaultRnr, with(status, SUBMITTED)));
     requisitionForSaving.setLineItems(asList(newLineItem));
-    rnr.copyUserEditableFieldsForSaveSubmitOrAuthorize(requisitionForSaving, programRnrColumns);
+    rnr.copyUserEditableFields(requisitionForSaving, programRnrColumns);
 
     assertThat(rnr.getLineItems().get(0).getStockInHand(), is(2));
     assertThat(rnr.getLineItems().get(0).getBeginningBalance(), is(BEGINNING_BALANCE));

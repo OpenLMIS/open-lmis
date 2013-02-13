@@ -389,7 +389,7 @@ public class RequisitionServiceTest {
     verify(savedRnr).prepareFor(SUBMITTED);
     verify(savedRnr).validate(rnrColumns);
     verify(requisitionRepository).update(savedRnr);
-    verify(savedRnr).copyUserEditableFieldsForSaveSubmitOrAuthorize(rnrToSubmit, rnrColumns);
+    verify(savedRnr).copyUserEditableFields(rnrToSubmit, rnrColumns);
   }
 
   @Test
@@ -398,14 +398,14 @@ public class RequisitionServiceTest {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(rnrToSubmit);
     Mockito.when(rnrTemplateRepository.fetchRnrTemplateColumns(PROGRAM.getId())).thenReturn(rnrColumns);
     Mockito.doReturn(true).when(savedRnr).validate(rnrColumns);
-    Mockito.doNothing().when(savedRnr).copyUserEditableFieldsForSaveSubmitOrAuthorize(rnrToSubmit, rnrColumns);
+    Mockito.doNothing().when(savedRnr).copyUserEditableFields(rnrToSubmit, rnrColumns);
 
     OpenLmisMessage message = requisitionService.submit(rnrToSubmit);
 
     verify(savedRnr).prepareFor(SUBMITTED);
     verify(savedRnr).validate(rnrColumns);
     verify(requisitionRepository).update(savedRnr);
-    verify(savedRnr).copyUserEditableFieldsForSaveSubmitOrAuthorize(rnrToSubmit, rnrColumns);
+    verify(savedRnr).copyUserEditableFields(rnrToSubmit, rnrColumns);
     verify(requisitionRepository).update(savedRnr);
     assertThat(savedRnr.getStatus(), is(SUBMITTED));
     assertThat(message.getCode(), is("rnr.submitted.without.supervisor"));
@@ -416,7 +416,7 @@ public class RequisitionServiceTest {
     Rnr rnrToSubmit = make(a(defaultRnr));
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(rnrToSubmit);
     doReturn(true).when(savedRnr).validate(rnrColumns);
-    doNothing().when(savedRnr).copyUserEditableFieldsForSaveSubmitOrAuthorize(rnrToSubmit, rnrColumns);
+    doNothing().when(savedRnr).copyUserEditableFields(rnrToSubmit, rnrColumns);
     doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
     when(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(new SupervisoryNode());
     when(rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId())).thenReturn(rnrColumns);
@@ -434,7 +434,7 @@ public class RequisitionServiceTest {
   public void shouldAuthorizeAValidRnrAndTagWithSupervisoryNode() throws Exception {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr);
     doReturn(true).when(savedRnr).validate(rnrColumns);
-    doNothing().when(savedRnr).copyUserEditableFieldsForSaveSubmitOrAuthorize(submittedRnr, rnrColumns);
+    doNothing().when(savedRnr).copyUserEditableFields(submittedRnr, rnrColumns);
     doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
     when(rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId())).thenReturn(rnrColumns);
     when(supervisoryNodeService.getApproverFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(new User());
@@ -454,7 +454,7 @@ public class RequisitionServiceTest {
   @Test
   public void shouldUseSavedRnrWithEditableDataFromUserSuppliedRnrToAuthorize() {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr);
-    doNothing().when(savedRnr).copyUserEditableFieldsForSaveSubmitOrAuthorize(submittedRnr, rnrColumns);
+    doNothing().when(savedRnr).copyUserEditableFields(submittedRnr, rnrColumns);
     doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
     doReturn(true).when(savedRnr).validate(rnrColumns);
 
@@ -464,7 +464,7 @@ public class RequisitionServiceTest {
 
     requisitionService.authorize(submittedRnr);
 
-    verify(savedRnr).copyUserEditableFieldsForSaveSubmitOrAuthorize(submittedRnr, rnrColumns);
+    verify(savedRnr).copyUserEditableFields(submittedRnr, rnrColumns);
   }
 
   @Test
@@ -476,7 +476,7 @@ public class RequisitionServiceTest {
     SupervisoryNode node = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
     when(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(node);
     doReturn(true).when(savedRnr).validate(rnrColumns);
-    doNothing().when(savedRnr).copyUserEditableFieldsForSaveSubmitOrAuthorize(submittedRnr, rnrColumns);
+    doNothing().when(savedRnr).copyUserEditableFields(submittedRnr, rnrColumns);
     doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
 
 
@@ -505,7 +505,7 @@ public class RequisitionServiceTest {
     Integer userId = 1;
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr);
     doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
-    doNothing().when(savedRnr).copyUserEditableFieldsForSaveSubmitOrAuthorize(submittedRnr, rnrColumns);
+    doNothing().when(savedRnr).copyUserEditableFields(submittedRnr, rnrColumns);
     when(rnrTemplateRepository.fetchRnrTemplateColumns(submittedRnr.getProgram().getId())).thenReturn(rnrColumns);
     savedRnr.setModifiedBy(userId);
 
@@ -524,7 +524,7 @@ public class RequisitionServiceTest {
     savedRnr.setModifiedBy(userId);
 
     when(rnrTemplateRepository.fetchRnrTemplateColumns(submittedRnr.getProgram().getId())).thenReturn(rnrColumns);
-    doNothing().when(savedRnr).copyUserEditableFieldsForSaveSubmitOrAuthorize(authorizedRnr, rnrColumns);
+    doNothing().when(savedRnr).copyUserEditableFields(authorizedRnr, rnrColumns);
     doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
 
     Set<Right> listUserRights = new HashSet<>(Arrays.asList(APPROVE_REQUISITION));
@@ -542,7 +542,7 @@ public class RequisitionServiceTest {
     savedRnr.setModifiedBy(userId);
 
     when(rnrTemplateRepository.fetchRnrTemplateColumns(initiatedRnr.getProgram().getId())).thenReturn(rnrColumns);
-    doNothing().when(savedRnr).copyUserEditableFieldsForSaveSubmitOrAuthorize(initiatedRnr, rnrColumns);
+    doNothing().when(savedRnr).copyUserEditableFields(initiatedRnr, rnrColumns);
     doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
 
     Set<Right> listUserRights = new HashSet<>(Arrays.asList(CREATE_REQUISITION));
@@ -550,7 +550,7 @@ public class RequisitionServiceTest {
 
     requisitionService.save(initiatedRnr);
 
-    verify(savedRnr).copyUserEditableFieldsForSaveSubmitOrAuthorize(initiatedRnr, rnrColumns);
+    verify(savedRnr).copyUserEditableFields(initiatedRnr, rnrColumns);
     verify(requisitionRepository).update(savedRnr);
   }
 

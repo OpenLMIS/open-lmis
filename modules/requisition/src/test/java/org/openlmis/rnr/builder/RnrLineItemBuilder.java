@@ -19,6 +19,12 @@ public class RnrLineItemBuilder {
   public static final Property<RnrLineItem, Boolean> fullSupply = newProperty();
   public static final Property<RnrLineItem, String> productCode = newProperty();
   public static final Property<RnrLineItem, Integer> beginningBalance = newProperty();
+  public static final Property<RnrLineItem, Integer> quantityReceived = newProperty();
+  public static final Property<RnrLineItem, Integer> totalLossesAndAdjustments = newProperty();
+  public static final Property<RnrLineItem, Integer> quantityDispensed = newProperty();
+  public static final Property<RnrLineItem, Integer> newPatientCount = newProperty();
+  public static final Property<RnrLineItem, Integer> stockOutDays = newProperty();
+
   public static final LossesAndAdjustments ONE_LOSS = new LossesAndAdjustments() {{
     setQuantity(1);
     LossesAndAdjustmentsType type = new LossesAndAdjustmentsType();
@@ -28,19 +34,30 @@ public class RnrLineItemBuilder {
   }};
   public static final int STOCK_IN_HAND = 4;
   public static final int BEGINNING_BALANCE = 10;
+  public static final int QUANTITY_RECEIVED = 3;
+  public static final int TOTAL_LOSSES_AND_ADJUSTMENTS = 1;
+  public static final int QUANTITY_DISPENSED = 10;
+  public static final int NEW_PATIENT_COUNT = 3;
+  public static final int STOCK_OUT_DAYS = 3;
+  public static final int QUANTITY_REQUESTED = 6;
+  public static final String REASON_FOR_REQUESTED_QUANTITY = "More patients";
+  public static final int QUANTITY_APPROVED = 6;
+  public static final String REMARKS = "Remarks";
   public static final Instantiator<RnrLineItem> defaultRnrLineItem = new Instantiator<RnrLineItem>() {
+
+
 
     @Override
     public RnrLineItem instantiate(PropertyLookup<RnrLineItem> lookup) {
       RnrLineItem rnrLineItem = new RnrLineItem();
       rnrLineItem.setProductCode(lookup.valueOf(productCode, "P999"));
       rnrLineItem.setBeginningBalance(lookup.valueOf(beginningBalance, BEGINNING_BALANCE));
-      rnrLineItem.setQuantityReceived(3);
+      rnrLineItem.setQuantityReceived(lookup.valueOf(quantityReceived, QUANTITY_RECEIVED));
 
       rnrLineItem.addLossesAndAdjustments(lookup.valueOf(lossesAndAdjustments, ONE_LOSS));
-      rnrLineItem.setTotalLossesAndAdjustments(1);
+      rnrLineItem.setTotalLossesAndAdjustments(lookup.valueOf(totalLossesAndAdjustments, TOTAL_LOSSES_AND_ADJUSTMENTS));
       rnrLineItem.setStockInHand(lookup.valueOf(stockInHand, STOCK_IN_HAND));
-      rnrLineItem.setQuantityDispensed(10);
+      rnrLineItem.setQuantityDispensed(lookup.valueOf(quantityDispensed, QUANTITY_DISPENSED));
 
       rnrLineItem.setDispensingUnit("tablet");
       rnrLineItem.setMaxMonthsOfStock(1);
@@ -48,8 +65,8 @@ public class RnrLineItemBuilder {
       rnrLineItem.setQuantityApproved(2);
 
       rnrLineItem.setFullSupply(lookup.valueOf(fullSupply, true));
-      rnrLineItem.setStockOutDays(3);
-      rnrLineItem.setNewPatientCount(3);
+      rnrLineItem.setStockOutDays(lookup.valueOf(stockOutDays, STOCK_OUT_DAYS));
+      rnrLineItem.setNewPatientCount(lookup.valueOf(newPatientCount, NEW_PATIENT_COUNT));
       rnrLineItem.setDosesPerMonth(30);
       rnrLineItem.setDosesPerDispensingUnit(10);
       rnrLineItem.setNormalizedConsumption(37);
@@ -62,6 +79,9 @@ public class RnrLineItemBuilder {
       rnrLineItem.setPackRoundingThreshold(3);
       rnrLineItem.setRoundToZero(true);
       rnrLineItem.setPrice(new Money("4"));
+      rnrLineItem.setQuantityRequested(QUANTITY_REQUESTED);
+      rnrLineItem.setReasonForRequestedQuantity(REASON_FOR_REQUESTED_QUANTITY);
+      rnrLineItem.setRemarks(REMARKS);
       return rnrLineItem;
     }
   };

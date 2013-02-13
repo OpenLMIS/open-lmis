@@ -13,6 +13,7 @@ public class ProgramRnrTemplate {
   public static final String QUANTITY_DISPENSED = "quantityDispensed";
   public static final String BEGINNING_BALANCE = "beginningBalance";
   public static final String QUANTITY_RECEIVED = "quantityReceived";
+  public static final String QUANTITY_APPROVED = "quantityApproved";
   public static final String LOSSES_AND_ADJUSTMENTS = "lossesAndAdjustments";
   public static final String STOCK_OUT_DAYS = "stockOutDays";
   public static final String NORMALIZED_CONSUMPTION = "normalizedConsumption";

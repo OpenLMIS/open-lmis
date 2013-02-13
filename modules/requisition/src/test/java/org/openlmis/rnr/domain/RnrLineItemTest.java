@@ -9,7 +9,6 @@ import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.rnr.builder.RnrColumnBuilder;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -19,18 +18,16 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.ProductBuilder.code;
-import static org.openlmis.rnr.builder.RnrColumnBuilder.columnName;
-import static org.openlmis.rnr.builder.RnrColumnBuilder.visible;
+import static org.openlmis.rnr.builder.RnrColumnBuilder.*;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.STOCK_IN_HAND;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
+import static org.openlmis.rnr.builder.RnrLineItemBuilder.lossesAndAdjustments;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.BEGINNING_BALANCE;
-import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.spy;
@@ -63,32 +60,32 @@ public class RnrLineItemTest {
     templateColumns.add(beginningBalanceColumn);
 
     RnrColumn quantityReceivedColumn = new RnrColumn();
-    quantityReceivedColumn.setName(QUANTITY_RECEIVED);
+    quantityReceivedColumn.setName(ProgramRnrTemplate.QUANTITY_RECEIVED);
     quantityReceivedColumn.setVisible(true);
     templateColumns.add(quantityReceivedColumn);
 
     RnrColumn quantityDispensedColumn = new RnrColumn();
-    quantityDispensedColumn.setName(QUANTITY_DISPENSED);
+    quantityDispensedColumn.setName(ProgramRnrTemplate.QUANTITY_DISPENSED);
     quantityDispensedColumn.setVisible(true);
     templateColumns.add(quantityDispensedColumn);
 
     RnrColumn newPatientCountColumn = new RnrColumn();
-    newPatientCountColumn.setName(NEW_PATIENT_COUNT);
+    newPatientCountColumn.setName(ProgramRnrTemplate.NEW_PATIENT_COUNT);
     newPatientCountColumn.setVisible(true);
     templateColumns.add(newPatientCountColumn);
 
     RnrColumn stockOutOfDaysColumn = new RnrColumn();
-    stockOutOfDaysColumn.setName(STOCK_OUT_DAYS);
+    stockOutOfDaysColumn.setName(ProgramRnrTemplate.STOCK_OUT_DAYS);
     stockOutOfDaysColumn.setVisible(true);
     templateColumns.add(stockOutOfDaysColumn);
 
     RnrColumn quantityRequestedColumn = new RnrColumn();
-    quantityRequestedColumn.setName(QUANTITY_REQUESTED);
+    quantityRequestedColumn.setName(ProgramRnrTemplate.QUANTITY_REQUESTED);
     quantityRequestedColumn.setVisible(true);
     templateColumns.add(quantityRequestedColumn);
 
     RnrColumn reasonForRequestedQuantityColumn = new RnrColumn();
-    reasonForRequestedQuantityColumn.setName(REASON_FOR_REQUESTED_QUANTITY);
+    reasonForRequestedQuantityColumn.setName(ProgramRnrTemplate.REASON_FOR_REQUESTED_QUANTITY);
     reasonForRequestedQuantityColumn.setVisible(true);
     templateColumns.add(reasonForRequestedQuantityColumn);
   }
@@ -156,6 +153,7 @@ public class RnrLineItemTest {
   @Test
   public void shouldThrowErrorIfExplanationForRequestedQuantityNotPresent() throws Exception {
     lineItem.setQuantityRequested(70);
+    lineItem.setReasonForRequestedQuantity(null);
     expectedException.expect(DataException.class);
     expectedException.expectMessage(Rnr.RNR_VALIDATION_ERROR);
     lineItem.validate(templateColumns);
@@ -405,12 +403,20 @@ public class RnrLineItemTest {
 
   }
 
+  private ArrayList<RnrColumn> getRnrColumns() {
+    return new ArrayList<RnrColumn>() {{
+      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.QUANTITY_RECEIVED), with(visible, false))));
+      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.QUANTITY_DISPENSED), with(visible, false))));
+      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.LOSSES_AND_ADJUSTMENTS), with(visible, false))));
+      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.NEW_PATIENT_COUNT), with(visible, false))));
+      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.STOCK_OUT_DAYS), with(visible, false))));
+      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.STOCK_IN_HAND), with(visible, false))));
+      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.BEGINNING_BALANCE), with(visible, false))));
+    }};
+  }
+
   @Test
   public void shouldCopyUserEditableFieldsOnlyIfVisible() throws Exception {
-    ArrayList<RnrColumn> programRnrColumns = new ArrayList<>();
-    programRnrColumns.add(make(a(RnrColumnBuilder.defaultRnrColumn, with(columnName, "stockInHand"), with(visible, true))));
-    programRnrColumns.add(make(a(RnrColumnBuilder.defaultRnrColumn, with(columnName, "beginningBalance"), with(visible, false))));
-
     RnrLineItem editedLineItem = make(a(defaultRnrLineItem));
     editedLineItem.setRemarks("Submitted");
     editedLineItem.setBeginningBalance(12);
@@ -418,24 +424,16 @@ public class RnrLineItemTest {
     editedLineItem.setQuantityDispensed(32);
     editedLineItem.setStockInHand(1946);
     editedLineItem.setNewPatientCount(1);
-    editedLineItem.setStockOutDays(3);
+    editedLineItem.setStockOutDays(7);
     editedLineItem.setQuantityRequested(43);
     editedLineItem.setReasonForRequestedQuantity("Reason");
     List<LossesAndAdjustments> lossesAndAdjustments = new ArrayList<>();
     editedLineItem.setLossesAndAdjustments(lossesAndAdjustments);
 
-    lineItem.copyUserEditableFieldsForSaveSubmitOrAuthorize(editedLineItem, programRnrColumns);
+    lineItem.copyUserEditableFields(editedLineItem, getRnrColumns());
 
     assertThat(lineItem.getBeginningBalance(), is(RnrLineItemBuilder.BEGINNING_BALANCE));
-    assertThat(lineItem.getStockInHand(), is(1946));
-    assertThat(lineItem.getLossesAndAdjustments(), is(lossesAndAdjustments));
-    assertThat(lineItem.getRemarks(), is("Submitted"));
-    assertThat(lineItem.getQuantityReceived(), is(23));
-    assertThat(lineItem.getQuantityDispensed(), is(32));
-    assertThat(lineItem.getNewPatientCount(), is(1));
-    assertThat(lineItem.getStockOutDays(), is(3));
-    assertThat(lineItem.getQuantityRequested(), is(43));
-    assertThat(lineItem.getReasonForRequestedQuantity(), is("Reason"));
+    assertThat(lineItem.getStockOutDays(), is(RnrLineItemBuilder.STOCK_OUT_DAYS));
   }
 
   @Test
@@ -444,7 +442,7 @@ public class RnrLineItemTest {
     editedLineItem.setBeginningBalance(44);
     lineItem.setPreviousStockInHandAvailable(true);
 
-    lineItem.copyUserEditableFieldsForSaveSubmitOrAuthorize(editedLineItem, new ArrayList<RnrColumn>());
+    lineItem.copyUserEditableFields(editedLineItem, new ArrayList<RnrColumn>());
 
     assertThat(lineItem.getBeginningBalance(), is(RnrLineItemBuilder.BEGINNING_BALANCE));
   }
