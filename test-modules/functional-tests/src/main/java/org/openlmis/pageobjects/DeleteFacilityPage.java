@@ -234,7 +234,7 @@ public class DeleteFacilityPage extends Page {
         testWebDriver.sleep(1000);
         testWebDriver.waitForElementsToAppear(messageDiv, saveErrorMsgDiv);
         String updateMessage=getMessage();
-        SeleneseTestNgHelper.assertEquals(updateMessage, facilityNameValue+" updated successfully");
+        SeleneseTestNgHelper.assertEquals(updateMessage, "Facility '"+facilityNameValue+"' updated successfully");
 
         return new HomePage(testWebDriver);
     }
