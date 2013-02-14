@@ -168,12 +168,14 @@ public class RequisitionService {
     return new OpenLmisMessage(msg);
   }
 
-  public OpenLmisMessage approve(Rnr rnr) {
-    Rnr savedRnr = getFullRequisitionById(rnr.getId());
+  public OpenLmisMessage approve(Rnr requisition) {
+    Rnr savedRnr = getFullRequisitionById(requisition.getId());
 
-    savedRnr.copyApproverEditableFields(rnr);
-    if (!(savedRnr.getStatus() == AUTHORIZED || savedRnr.getStatus() == IN_APPROVAL))
+    if (!(savedRnr.getStatus() == AUTHORIZED || savedRnr.getStatus() == IN_APPROVAL)) {
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
+    }
+
+    savedRnr.copyApproverEditableFields(requisition);
 
     savedRnr.calculateForApproval();
     final SupervisoryNode parent = supervisoryNodeService.getParent(savedRnr.getSupervisoryNodeId());
@@ -291,11 +293,11 @@ public class RequisitionService {
   }
 
 
-  private OpenLmisMessage approveAndAssignToNextSupervisoryNode(Rnr rnr, SupervisoryNode parent) {
-    final User nextApprover = supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(parent, rnr.getProgram());
-    rnr.setStatus(IN_APPROVAL);
-    rnr.setSupervisoryNodeId(parent.getId());
-    requisitionRepository.update(rnr);
+  private OpenLmisMessage approveAndAssignToNextSupervisoryNode(Rnr requisition, SupervisoryNode parent) {
+    final User nextApprover = supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(parent, requisition.getProgram());
+    requisition.setStatus(IN_APPROVAL);
+    requisition.setSupervisoryNodeId(parent.getId());
+    requisitionRepository.update(requisition);
     if (nextApprover == null) {
       return new OpenLmisMessage(RNR_APPROVED_SUCCESSFULLY_WITHOUT_SUPERVISOR);
     }
