@@ -28,7 +28,7 @@ public class RnRServiceTest extends TestCaseHelper {
 
       DBWrapper dbWrapper = new DBWrapper();
       dbWrapper.insertFacilities("F10", "F11");
-      dbWrapper.insertUser("200", "User123", "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie", "F10", "manjyots@thoughtworks.com");
+      dbWrapper.insertUser("200", "User123", "Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie", "F10", "manjyots@thoughtworks.com");
       dbWrapper.insertSupervisoryNode("F10", "N1", "null");
       dbWrapper.insertSupervisoryNodeSecond("F11", "N2", "N1");
       dbWrapper.insertProducts("P10", "P11");
@@ -59,7 +59,7 @@ public class RnRServiceTest extends TestCaseHelper {
 
       ServiceUtils serviceUtils = new ServiceUtils();
 
-      serviceUtils.postNONJSON("j_username=User123&j_password=Admin123", BASE_URL + "/j_spring_security_check");
+      serviceUtils.postNONJSON("j_username=User123&j_password=User123", BASE_URL + "/j_spring_security_check");
 
       serviceUtils.postJSON(INITIATE_RNR_JSON, BASE_URL + "/requisitions.json?facilityId=" + facilityId + "&periodId=" + periodId + "&programId=1");
 
