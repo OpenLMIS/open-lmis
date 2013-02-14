@@ -384,6 +384,12 @@ public class InitiateRnRPage extends Page {
     SeleneseTestNgHelper.assertTrue("RnR Fail message not displayed", submitErrorMessage.isDisplayed());
   }
 
+    public void clearNewPatientField() {
+        newPatient.clear();
+        newPatient.sendKeys("");
+        testWebDriver.sleep(1500);
+    }
+
   public void verifyBeginningBalanceDisabled() {
     SeleneseTestNgHelper.assertFalse("BB Not disabled", beginningBalance.isEnabled());
   }
