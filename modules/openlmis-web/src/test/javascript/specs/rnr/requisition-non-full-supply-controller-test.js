@@ -17,7 +17,7 @@ describe('RequisitionNonFullSupplyController', function () {
     scope.saveRnrForm = {$error:{ rnrError:false }};
     localStorageService = _localStorageService_;
     routeParams = {"facility":"1", "program":"1", "period":2};
-    scope.rnr = {"id":"rnrId", "lineItems":[]};
+    scope.$parent.rnr = {"id":"rnrId", "lineItems":[]};
 
     httpBackend.expect('GET', '/facilityApprovedProducts/facility/1/program/1/nonFullSupply.json').respond(200);
     $rootScope.fixToolBar = function () {
@@ -39,7 +39,7 @@ describe('RequisitionNonFullSupplyController', function () {
   });
 
   it('should add non full supply line item to the list', function () {
-    scope.rnr = {"id":1, "period":{}, "nonFullSupplyLineItems":[]};
+    scope.$parent.rnr = {"id":1, "period":{}, "nonFullSupplyLineItems":[]};
     scope.nonFullSupplyProducts = [];
     var product = {
       "form":{"code":"Tablet"},
@@ -54,11 +54,28 @@ describe('RequisitionNonFullSupplyController', function () {
     scope.newNonFullSupply = {"quantityRequested":20, "reasonForRequestedQuantity":"Bad Weather"};
     scope.addNonFullSupplyLineItem();
 
-    expect(scope.rnr.nonFullSupplyLineItems[0].quantityRequested).toEqual(20);
-    expect(scope.rnr.nonFullSupplyLineItems[0].reasonForRequestedQuantity).toEqual("Bad Weather");
-    expect(scope.rnr.nonFullSupplyLineItems[0].cost).toEqual(16.00.toFixed(2));
+    expect(scope.$parent.rnr.nonFullSupplyLineItems[0].quantityRequested).toEqual(20);
+    expect(scope.$parent.rnr.nonFullSupplyLineItems[0].reasonForRequestedQuantity).toEqual("Bad Weather");
+    expect(scope.$parent.rnr.nonFullSupplyLineItems[0].cost).toEqual(16.00.toFixed(2));
     expect(scope.nonFullSupplyProductsToDisplay).toEqual([]);
-    expect(scope.rnr.nonFullSupplyItemsSubmittedCost).toEqual(16.00.toFixed(2));
+    expect(scope.$parent.rnr.nonFullSupplyItemsSubmittedCost).toEqual(16.00.toFixed(2));
+  });
+
+  it('should disable add button if any of the required fields have not been set or have errors', function () {
+    expect(scope.shouldDisableAddButton()).toEqual(true);
+
+    scope.newNonFullSupply = {};
+    expect(scope.shouldDisableAddButton()).toEqual(true);
+
+    scope.newNonFullSupply = {"quantityRequested":10};
+    expect(scope.shouldDisableAddButton()).toEqual(true);
+
+    scope.newNonFullSupply = {"quantityRequested":10, "reasonForRequestedQuantity":"test"};
+    expect(scope.shouldDisableAddButton()).toEqual(true);
+
+    scope.newNonFullSupply = {"quantityRequested":10, "reasonForRequestedQuantity":"test"};
+    scope.facilityApprovedProduct = {};
+    expect(scope.shouldDisableAddButton()).toEqual(false);
   });
 });
 

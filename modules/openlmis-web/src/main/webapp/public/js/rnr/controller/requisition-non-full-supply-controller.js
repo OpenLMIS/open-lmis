@@ -11,15 +11,11 @@ function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $r
     return prefix + "_" + parent.$parent.$parent.$index;
   };
 
-  $scope.hide = function () {
-    return "";
-  };
-
   $scope.addNonFullSupplyLineItem = function () {
     prepareNFSLineItemFields();
-    var lineItem = new RnrLineItem($scope.newNonFullSupply, $scope.rnr, $scope.programRnrColumnList);
+    var lineItem = new RnrLineItem($scope.newNonFullSupply, $scope.$parent.rnr, $scope.$parent.programRnrColumnList);
 
-    $scope.rnr.nonFullSupplyLineItems.push(lineItem);
+    $scope.$parent.rnr.nonFullSupplyLineItems.push(lineItem);
     lineItem.fillPacksToShipBasedOnCalculatedOrderQuantityOrQuantityRequested();
     $scope.facilityApprovedProduct = undefined;
     $scope.newNonFullSupply = undefined;
@@ -30,6 +26,15 @@ function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $r
     updateNonFullSupplyProductsToDisplay();
     $scope.nonFullSupplyProductsModal = true;
   };
+
+  $scope.labelForRnrColumn = function (columnName) {
+    if ($scope.$parent.programRnrColumnList) return _.findWhere($scope.$parent.programRnrColumnList, {'name':columnName}).label + ":";
+  };
+
+  $scope.shouldDisableAddButton = function () {
+    return !($scope.newNonFullSupply && $scope.newNonFullSupply.quantityRequested && $scope.newNonFullSupply.reasonForRequestedQuantity
+        && $scope.facilityApprovedProduct);
+  }
 
   function populateProductInformation() {
     var product = {};
@@ -53,11 +58,11 @@ function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $r
       'stockOutDays', 'normalizedConsumption', 'amc', 'maxStockQuantity']).each(function (index, field) {
           $scope.newNonFullSupply[field] = 0;
         });
-    $scope.newNonFullSupply.rnrId = $scope.rnr.id;
+    $scope.newNonFullSupply.rnrId = $scope.$parent.rnr.id;
   }
 
   function updateNonFullSupplyProductsToDisplay() {
-    var usedNonFullSupplyProducts = _.pluck($scope.rnr.nonFullSupplyLineItems, 'productCode');
+    var usedNonFullSupplyProducts = _.pluck($scope.$parent.rnr.nonFullSupplyLineItems, 'productCode');
     $scope.nonFullSupplyProductsToDisplay = $.grep($scope.nonFullSupplyProducts, function (facilityApprovedProduct) {
       return $.inArray(facilityApprovedProduct.programProduct.product.code, usedNonFullSupplyProducts) == -1;
     });

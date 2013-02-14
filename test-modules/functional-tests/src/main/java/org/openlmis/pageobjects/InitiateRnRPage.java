@@ -121,10 +121,10 @@ public class InitiateRnRPage extends Page {
   @FindBy(how = How.XPATH, using = "//input[@value='Add']")
   private static WebElement addButtonNonFullSupply;
 
-  @FindBy(how = How.XPATH, using = "//form[@id='rnr-form']/div[1]/ng-include[2]/table/tbody/tr/td[2]/ng-switch/span")
+  @FindBy(how = How.XPATH, using = "//table[@id='nonFullSupplyTable']/tbody/tr/td[2]/ng-switch/span")
   private static WebElement productDescriptionNonFullSupply;
 
-  @FindBy(how = How.XPATH, using = "//form[@id='rnr-form']/div[1]/ng-include[2]/table/tbody/tr/td[1]/ng-switch/span")
+  @FindBy(how = How.XPATH, using = "//table[@id='nonFullSupplyTable']/tbody/tr/td[1]/ng-switch/span")
   private static WebElement productCodeNonFullSupply;
 
   @FindBy(how = How.XPATH, using = "//div[@class='adjustment-list']/ul/li/span[@class='tpl-adjustment-type ng-binding']")
@@ -157,7 +157,6 @@ public class InitiateRnRPage extends Page {
   @FindBy(how = How.XPATH, using = "//select[@id='nonFullSupplyProductsName']")
   private static WebElement productDropDown;
 
-
   @FindBy(how = How.XPATH, using = "//select[@id='nonFullSupplyProductsCode']")
   private static WebElement productCodeDropDown;
 
@@ -176,9 +175,7 @@ public class InitiateRnRPage extends Page {
   @FindBy(how = How.XPATH, using = "//input[@value='Close']")
   private static WebElement closeButton;
 
-
   String successText = "R&R saved successfully!";
-
 
   public InitiateRnRPage(TestWebDriver driver) throws IOException {
     super(driver);

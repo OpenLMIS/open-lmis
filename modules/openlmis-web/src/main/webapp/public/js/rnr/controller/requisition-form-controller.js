@@ -1,9 +1,4 @@
-function RequisitionFormController($scope, ReferenceData, RnRColumnList, $location, FacilityApprovedProducts, Requisitions, $routeParams, $rootScope) {
-  FacilityApprovedProducts.get({facilityId:$routeParams.facility, programId:$routeParams.program}, function (data) {
-    $scope.nonFullSupplyProducts = data.nonFullSupplyProducts;
-  }, function () {
-  });
-
+function RequisitionFormController($scope, ReferenceData, RnRColumnList, $location, Requisitions, $routeParams, $rootScope) {
   ReferenceData.get({}, function (data) {
     $scope.currency = data.currency;
   }, function () {
@@ -11,7 +6,7 @@ function RequisitionFormController($scope, ReferenceData, RnRColumnList, $locati
 
   RnRColumnList.get({programId:$routeParams.program}, function (data) {
     if (data.rnrTemplateForm.rnrColumns && data.rnrTemplateForm.rnrColumns.length > 0) {
-      $scope.visibleColumns = _.where(data.rnrTemplateForm.rnrColumns, {'visible': true});
+      $scope.visibleColumns = _.where(data.rnrTemplateForm.rnrColumns, {'visible':true});
       $scope.programRnrColumnList = data.rnrTemplateForm.rnrColumns;
       $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name':'quantityRequested'});
       prepareRnr();
@@ -125,58 +120,6 @@ function RequisitionFormController($scope, ReferenceData, RnRColumnList, $locati
   $scope.getRowErrorClass = function (rnrLineItem) {
     return $scope.getCellErrorClass(rnrLineItem) ? 'row-error-highlight' : '';
   };
-
-  $scope.labelForRnrColumn = function (columnName) {
-    if ($scope.programRnrColumnList) return _.findWhere($scope.programRnrColumnList, {'name':columnName}).label + ":";
-  };
-
-  $scope.addNonFullSupplyLineItem = function () {
-    prepareNFSLineItemFields();
-    var lineItem = new RnrLineItem($scope.newNonFullSupply, $scope.rnr, $scope.programRnrColumnList);
-
-    $scope.rnr.nonFullSupplyLineItems.push(lineItem);
-    lineItem.fillPacksToShipBasedOnCalculatedOrderQuantityOrQuantityRequested();
-    $scope.facilityApprovedProduct = undefined;
-    $scope.newNonFullSupply = undefined;
-    updateNonFullSupplyProductsToDisplay();
-  };
-
-  $scope.showAddNonFullSupplyModal = function () {
-    updateNonFullSupplyProductsToDisplay();
-    $scope.nonFullSupplyProductsModal = true;
-  };
-
-  function populateProductInformation() {
-    var product = {};
-    angular.copy($scope.facilityApprovedProduct.programProduct.product, product);
-    $scope.newNonFullSupply.productCode = product.code;
-    $scope.newNonFullSupply.product = (product.primaryName == null ? "" : (product.primaryName + " ")) +
-        (product.form.code == null ? "" : (product.form.code + " ")) +
-        (product.strength == null ? "" : (product.strength + " ")) +
-        (product.dosageUnit.code == null ? "" : product.dosageUnit.code);
-    $(['dosesPerDispensingUnit', 'packSize', 'roundToZero', 'packRoundingThreshold', 'dispensingUnit', 'fullSupply']).each(function (index, field) {
-      $scope.newNonFullSupply[field] = product[field];
-    });
-    $scope.newNonFullSupply.maxMonthsOfStock = $scope.facilityApprovedProduct.maxMonthsOfStock;
-    $scope.newNonFullSupply.dosesPerMonth = $scope.facilityApprovedProduct.programProduct.dosesPerMonth;
-    $scope.newNonFullSupply.price = $scope.facilityApprovedProduct.programProduct.currentPrice;
-  }
-
-  function prepareNFSLineItemFields() {
-    populateProductInformation();
-    $(['quantityReceived', 'quantityDispensed', 'beginningBalance', 'stockInHand', 'totalLossesAndAdjustments', 'calculatedOrderQuantity', 'newPatientCount',
-      'stockOutDays', 'normalizedConsumption', 'amc', 'maxStockQuantity']).each(function (index, field) {
-          $scope.newNonFullSupply[field] = 0;
-        });
-    $scope.newNonFullSupply.rnrId = $scope.rnr.id;
-  }
-
-  function updateNonFullSupplyProductsToDisplay() {
-    var usedNonFullSupplyProducts = _.pluck($scope.rnr.nonFullSupplyLineItems, 'productCode');
-    $scope.nonFullSupplyProductsToDisplay = $.grep($scope.nonFullSupplyProducts, function (facilityApprovedProduct) {
-      return $.inArray(facilityApprovedProduct.programProduct.product.code, usedNonFullSupplyProducts) == -1;
-    });
-  }
 
   function resetCostsIfNull() {
     var rnr = $scope.rnr;

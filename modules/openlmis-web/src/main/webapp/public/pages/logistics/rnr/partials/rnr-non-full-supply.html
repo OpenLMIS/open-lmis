@@ -1,16 +1,17 @@
 <h4>Non Full Supply Products</h4>
-<table id="nonFullSupplyTable" class="table table-striped table-bordered" ng-controller="RequisitionNonFullSupplyController">
-  <thead>
-  <tr>
-    <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in visibleColumns"
-        ng-hide="programRnrColumn.name == 'quantityApproved'" ng-bind="programRnrColumn.label"></th>
-  </tr>
-  </thead>
-  <tbody ng-show="visibleColumns && (rnr.lineItems.length > 0)">
-  <tr ng-repeat="rnrLineItem in rnr.nonFullSupplyLineItems  ">
-    <td class="cell-input" ng-repeat="column in visibleColumns"
-        ng-hide="column.name == 'quantityApproved'">
-      <ng-switch on="column.name">
+<div ng-controller="RequisitionNonFullSupplyController">
+  <table id="nonFullSupplyTable" class="table table-striped table-bordered">
+    <thead>
+    <tr>
+      <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in visibleColumns"
+          ng-hide="programRnrColumn.name == 'quantityApproved'" ng-bind="programRnrColumn.label"></th>
+    </tr>
+    </thead>
+    <tbody ng-show="visibleColumns && (rnr.lineItems.length > 0)">
+    <tr ng-repeat="rnrLineItem in rnr.nonFullSupplyLineItems  ">
+      <td class="cell-input" ng-repeat="column in visibleColumns"
+          ng-hide="column.name == 'quantityApproved'">
+        <ng-switch on="column.name">
                 <span ng-switch-when="remarks">
                   <input ng-disabled="formDisabled" id="{{getId('L', $parent)}}" type="text"
                          name="remarks{{rnrLineItem['id']}}"
@@ -56,35 +57,35 @@
                 <span ng-switch-when="lossesAndAdjustments">
                   <span ng-bind="rnrLineItem['totalLossesAndAdjustments']" class="cell-text"></span>
                 </span>
-        <span ng-switch-default ng-bind="rnrLineItem[column.name]" class="cell-text"></span>
+          <span ng-switch-default ng-bind="rnrLineItem[column.name]" class="cell-text"></span>
 
-      </ng-switch>
-    </td>
-  </tr>
-  </tbody>
-</table>
+        </ng-switch>
+      </td>
+    </tr>
+    </tbody>
+  </table>
 
-<input type="button" ng-click="showAddNonFullSupplyModal()" value="Add Non-Full Supply"
-       ng-disabled="!addNonFullSupplyLineItemButtonShown"/>
+  <input type="button" ng-click="showAddNonFullSupplyModal()" value="Add Non-Full Supply"
+         ng-disabled="!addNonFullSupplyLineItemButtonShown"/>
 
-<form name="nonFullSupplyForm">
-  <div id="nonFullSupplyProductsModal"
-       ng-model="nonFullSupplyProductsModal"
-       class="fade ng-pristine ng-valid modal hide "
-       ui-modal
-       data-backdrop="static" data-keyboard="false">
-    <div class="modal-header"><h3>Add Non-Full Supply Products</h3></div>
-    <div class="modal-body">
+  <form name="nonFullSupplyForm">
+    <div id="nonFullSupplyProductsModal"
+         ng-model="nonFullSupplyProductsModal"
+         class="fade ng-pristine ng-valid modal hide "
+         ui-modal
+         data-backdrop="static" data-keyboard="false">
+      <div class="modal-header"><h3>Add Non-Full Supply Products</h3></div>
+      <div class="modal-body">
           <span class="span3">
             <label for="nonFullSupplyProductsName">Product:</label>
-            <select id="nonFullSupplyProductsName" ng-model="$parent.facilityApprovedProduct" name="productName"
+            <select id="nonFullSupplyProductsName" ng-model="facilityApprovedProduct" name="productName"
                     ng-options="facilityApprovedProduct.programProduct.product.primaryName for facilityApprovedProduct in nonFullSupplyProductsToDisplay">
               <option value="">--select product--</option>
             </select>
           </span>
           <span class="span3">
             <label for="nonFullSupplyProductsCode">Product Code:</label>
-            <select id="nonFullSupplyProductsCode" ng-model="$parent.facilityApprovedProduct" name="productCode"
+            <select id="nonFullSupplyProductsCode" ng-model="facilityApprovedProduct" name="productCode"
                     ng-options="facilityApprovedProduct.programProduct.product.code for facilityApprovedProduct in nonFullSupplyProductsToDisplay">
               <option value="">--select product code--</option>
             </select>
@@ -93,7 +94,7 @@
             <span>
               <label for="quantityRequested"><span
                   ng-bind="labelForRnrColumn('quantityRequested')"></span></label>
-              <input name="newNonFullSupply.quantityRequested" ng-model="$parent.newNonFullSupply.quantityRequested"
+              <input name="newNonFullSupply.quantityRequested" ng-model="newNonFullSupply.quantityRequested"
                      id="quantityRequested"
                      rnr-validator="positiveInteger" prevent-rnr-error="true" maxlength="8"/><br>
               <span class="rnr-form-error" style="display:none;" id="newNonFullSupply.quantityRequested">
@@ -104,27 +105,27 @@
           <span class="span3">
             <label for="reasonForRequestedQuantity"><span
                 ng-bind="labelForRnrColumn('reasonForRequestedQuantity')"></span></label>
-            <textarea maxlength="250" rows="4" ng-model="$parent.newNonFullSupply.reasonForRequestedQuantity"
+            <textarea maxlength="250" rows="4" ng-model="newNonFullSupply.reasonForRequestedQuantity"
                       id="reasonForRequestedQuantity"></textarea><br>
             <span class="alert alert-warning reason-request"
-                  ng-show="$parent.newNonFullSupply.quantityRequested && !$parent.newNonFullSupply.reasonForRequestedQuantity">
+                  ng-show="newNonFullSupply.quantityRequested && !newNonFullSupply.reasonForRequestedQuantity">
               Please enter a reason
             </span>
           </span>
-    </div>
+      </div>
 
-    <div class="modal-footer">
+      <div class="modal-footer">
           <span class="pull-left span1">
             <input type="button" href="" class="btn btn-primary" ng-click="addNonFullSupplyLineItem()"
-                   ng-disabled="!($parent.newNonFullSupply.quantityRequested && $parent.newNonFullSupply.reasonForRequestedQuantity
-             && $parent.facilityApprovedProduct)" value="Add"/>
+                   ng-disabled="shouldDisableAddButton()" value="Add"/>
           </span>
 
           <span class="pull-left span1">
             <input type="reset" data-dismiss="modal" class="btn btn-success save-button"
                    value="Close"/>
           </span>
-    </div>
+      </div>
 
-  </div>
-</form>
+    </div>
+  </form>
+</div>

@@ -20,7 +20,7 @@ var rnrModule = angular.module('rnr', ['openlmis', 'ngGrid']).config(['$routePro
                     } else {
                         ctrl.$setValidity(element.attr('name'), false);
                         if(!attrs['preventRnrError']) ctrl.$setValidity('rnrError', false);
-                        return viewValue;
+                        return undefined;
                     }
                 });
             }

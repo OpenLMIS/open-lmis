@@ -1,5 +1,4 @@
 describe('RequisitionFormController', function () {
-
   var scope, ctrl, httpBackend, location, routeParams, controller, localStorageService;
 
   beforeEach(module('openlmis.services'));
@@ -126,13 +125,6 @@ describe('RequisitionFormController', function () {
       quantityReceived:1, stockInHand:1};
     jQuery.extend(true, lineItem, new RnrLineItem());
 
-    var programRnrColumnList = [
-      {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidationRequired":true},
-      {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
-      {"indicator":"C", "name":"quantityDispensed", "source":{"name":"CALCULATED"}},
-      {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}},
-      {"indicator":"E", "name":"stockInHand", "source":{"name":"USER_INPUT"}}
-    ];
     spyOn(lineItem, 'getErrorMessage').andReturn("error");
     var errorMsg = scope.getCellErrorClass(lineItem);
     expect(errorMsg).toEqual("cell-error-highlight");
@@ -143,13 +135,6 @@ describe('RequisitionFormController', function () {
       quantityReceived:1, stockInHand:1};
     jQuery.extend(true, lineItem, new RnrLineItem());
 
-    var programRnrColumnList = [
-      {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidationRequired":true},
-      {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
-      {"indicator":"C", "name":"quantityDispensed", "source":{"name":"CALCULATED"}},
-      {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}},
-      {"indicator":"E", "name":"stockInHand", "source":{"name":"USER_INPUT"}}
-    ];
     spyOn(lineItem, 'getErrorMessage').andReturn("");
     var errorMsg = scope.getCellErrorClass(lineItem);
     expect(errorMsg).toEqual("");
@@ -164,7 +149,6 @@ describe('RequisitionFormController', function () {
     var errorMsg = scope.getRowErrorClass(lineItem);
     expect(errorMsg).toEqual("row-error-highlight");
   });
-
 
   it('should not return row error class', function () {
     var lineItem = { "beginningBalance":1, totalLossesAndAdjustments:1, quantityDispensed:2,
@@ -181,39 +165,6 @@ describe('RequisitionFormController', function () {
     expect(scope.highlightRequiredFieldInModal(undefined)).toEqual("required-error");
     expect(scope.highlightRequiredFieldInModal('')).toEqual(null);
     expect(scope.highlightRequiredFieldInModal(3)).toEqual(null);
-  });
-
-  it('should display non full supply addition modal window', function () {
-    scope.nonFullSupplyLineItems = [];
-    scope.nonFullSupplyProducts = [];
-    scope.showAddNonFullSupplyModal();
-    expect(scope.nonFullSupplyProductsModal).toBeTruthy();
-    expect(scope.newNonFullSupply).toBeUndefined();
-  });
-
-  it('should add non full supply line item to the list', function () {
-    scope.rnr = {"id":1, "period":{}, "nonFullSupplyLineItems":[]};
-    scope.nonFullSupplyProducts = [];
-    var product = {
-      "form":{"code":"Tablet"},
-      "dosageUnit":{"code":"mg"},
-      "strength":"600", "code":"P999", "primaryName":"Antibiotics",
-      "dosesPerDispensingUnit":3, "packSize":10, "roundToZero":"false",
-      "packRoundingThreshold":"true", "dispensingUnit":"Strip", "fullSupply":false};
-
-    var programProduct = {"dosesPerMonth":5, "currentPrice":8, "product":product};
-
-    scope.facilityApprovedProduct = {"programProduct":programProduct, "maxMonthsOfStock":3};
-
-    scope.newNonFullSupply = {"quantityRequested":20, "reasonForRequestedQuantity":"Bad Weather"};
-
-    scope.addNonFullSupplyLineItem();
-
-    expect(scope.rnr.nonFullSupplyLineItems[0].quantityRequested).toEqual(20);
-    expect(scope.rnr.nonFullSupplyLineItems[0].reasonForRequestedQuantity).toEqual("Bad Weather");
-    expect(scope.rnr.nonFullSupplyLineItems[0].cost).toEqual(16.00.toFixed(2));
-    expect(scope.nonFullSupplyProductsToDisplay).toEqual([]);
-    expect(scope.rnr.nonFullSupplyItemsSubmittedCost).toEqual(16.00.toFixed(2));
   });
 });
 
