@@ -6,7 +6,7 @@
     <span ng-bind="message"></span>.&nbsp;&nbsp;<a ng-href="#/edit/{{facilityId}}">View Here</a>
   </div>
 
-  <input id="searchFacility" class="search-query" type="text" ng-model="query" placeholder="Enter facility code or name" />
+  <input id="searchFacility" class="search-query" type="text" ng-model="query" ng-change="updateFilteredQueryList()" placeholder="Enter facility code or name" />
   <div class="form-tip">Minimum 3 characters</div>
 
   <div class="facility-list" ng-show="query.length > 2">
@@ -20,7 +20,7 @@
     </h3>
     <a class="close-btn" href="javascript:void(0);" ng-click="clearSearch()">Close</a>
     <ul>
-      <li ng-repeat="facility in filterFacilitiesByNameOrCode(query)">
+      <li ng-repeat="facility in facilityList">
         <a ng-click="editFacility(facility.id)">{{facility.code}} - {{facility.name}}</a>
       </li>
     </ul>
