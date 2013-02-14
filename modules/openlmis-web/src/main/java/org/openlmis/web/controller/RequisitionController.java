@@ -135,7 +135,7 @@ public class RequisitionController extends BaseController {
 
   @RequestMapping(value = "/requisitions/{id}/approve", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("hasPermission('', 'APPROVE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> approve(@RequestBody Rnr rnr, HttpServletRequest request, @PathVariable("id") Integer id) {
+  public ResponseEntity<OpenLmisResponse> approve(@RequestBody Rnr rnr, @PathVariable("id") Integer id, HttpServletRequest request) {
     rnr.setModifiedBy(loggedInUserId(request));
     rnr.setId(id);
     try {
