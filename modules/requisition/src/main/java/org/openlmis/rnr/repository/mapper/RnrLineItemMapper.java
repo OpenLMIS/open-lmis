@@ -10,14 +10,15 @@ import java.util.List;
 public interface RnrLineItemMapper {
 
   @Insert({"INSERT INTO requisition_line_items",
-    "(rnrId, productCode, product, beginningBalance, dispensingUnit, dosesPerMonth, dosesPerDispensingUnit,",
-    "maxMonthsOfStock, packsToShip, packSize, price, roundToZero, packRoundingThreshold,",
-    "fullSupply, previousStockInHandAvailable, modifiedBy, modifiedDate)",
+    "(rnrId, productCode, product, beginningBalance, quantityReceived, quantityDispensed, dispensingUnit, dosesPerMonth, ",
+    "dosesPerDispensingUnit, maxMonthsOfStock, totalLossesAndAdjustments, packsToShip, ",
+    "packSize, price, roundToZero, packRoundingThreshold,",
+    "fullSupply, previousStockInHandAvailable, newPatientCount, stockOutDays, modifiedBy, modifiedDate)",
     "VALUES (" +
-      "#{rnrId}, #{productCode}, #{product}, #{beginningBalance}, #{dispensingUnit}, #{dosesPerMonth},",
-    "#{dosesPerDispensingUnit}, #{maxMonthsOfStock}, #{packsToShip},",
+      "#{rnrId}, #{productCode}, #{product}, #{beginningBalance}, #{quantityReceived}, #{quantityDispensed}, #{dispensingUnit}, #{dosesPerMonth},",
+    "#{dosesPerDispensingUnit}, #{maxMonthsOfStock},#{totalLossesAndAdjustments}, #{packsToShip},",
     "#{packSize}, #{price}, #{roundToZero}, #{packRoundingThreshold},",
-    "#{fullSupply}, #{previousStockInHandAvailable}, #{modifiedBy}, #{modifiedDate})"})
+    "#{fullSupply}, #{previousStockInHandAvailable}, #{newPatientCount}, #{stockOutDays}, #{modifiedBy}, #{modifiedDate})"})
   @Options(useGeneratedKeys = true)
   public Integer insert(RnrLineItem rnrLineItem);
 

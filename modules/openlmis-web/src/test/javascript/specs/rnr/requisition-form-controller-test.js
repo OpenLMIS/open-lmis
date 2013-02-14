@@ -21,9 +21,9 @@ describe('RequisitionFormController', function () {
 
     httpBackend.when('GET', '/facilityApprovedProducts/facility/1/program/1/nonFullSupply.json').respond(200);
     httpBackend.when('POST', '/requisitions.json?facilityId=1&periodId=2&programId=1').respond({"rnr":{"status":"CREATED"}});
-    httpBackend.when('GET', '/logistics/rnr/1/columns.json').respond({"rnrColumnList":[
+    httpBackend.when('GET', '/program/1/rnr-template.json').respond({'rnrTemplateForm': {"rnrColumns":[
       {"testField":"test"}
-    ]});
+    ]}});
     httpBackend.when('GET', '/reference-data/currency.json').respond({"currency":"$"});
     $rootScope.fixToolBar = function () {
     };

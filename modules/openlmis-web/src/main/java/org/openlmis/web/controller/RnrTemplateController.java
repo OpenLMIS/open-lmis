@@ -35,7 +35,6 @@ public class RnrTemplateController extends BaseController{
   }
 
   @RequestMapping(value = "/program/{programId}/rnr-template", method = RequestMethod.GET, headers = "Accept=application/json")
-  @PreAuthorize("hasPermission('','CONFIGURE_RNR')")
   public RnrTemplateForm fetchAllProgramRnrColumnList(@PathVariable("programId") Integer programId) {
     List<RnRColumnSource> sources = new ArrayList<>();
     sources.add(RnRColumnSource.USER_INPUT);

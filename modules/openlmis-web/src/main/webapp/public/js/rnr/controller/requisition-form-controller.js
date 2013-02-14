@@ -1,4 +1,4 @@
-function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, $location, FacilityApprovedProducts, Requisitions, $routeParams, $rootScope) {
+function RequisitionFormController($scope, ReferenceData, RnRColumnList, $location, FacilityApprovedProducts, Requisitions, $routeParams, $rootScope) {
   FacilityApprovedProducts.get({facilityId:$routeParams.facility, programId:$routeParams.program}, function (data) {
     $scope.nonFullSupplyProducts = data.nonFullSupplyProducts;
   }, function () {
@@ -9,9 +9,10 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
   }, function () {
   });
 
-  ProgramRnRColumnList.get({programId:$routeParams.program}, function (data) {
-    if (data.rnrColumnList && data.rnrColumnList.length > 0) {
-      $scope.programRnrColumnList = data.rnrColumnList;
+  RnRColumnList.get({programId:$routeParams.program}, function (data) {
+    if (data.rnrTemplateForm.rnrColumns && data.rnrTemplateForm.rnrColumns.length > 0) {
+      $scope.visibleColumns = _.where(data.rnrTemplateForm.rnrColumns, {'visible': true});
+      $scope.programRnrColumnList = data.rnrTemplateForm.rnrColumns;
       $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name':'quantityRequested'});
       prepareRnr();
     } else {

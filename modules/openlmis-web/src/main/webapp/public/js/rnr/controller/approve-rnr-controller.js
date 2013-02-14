@@ -1,4 +1,5 @@
 function ApproveRnrController($scope, requisition, Requisitions, programRnrColumnList, $location, LossesAndAdjustmentsReferenceData, ReferenceData) {
+  var visibleColumns = _.where(programRnrColumnList, {'visible' : true});
   $scope.error = "";
   $scope.message = "";
 
@@ -14,10 +15,9 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnrColum
   var columnDefinitions = [];
   var nonFullColumnDefinitions = [];
   $scope.rnr = requisition;
-  populateRnrLineItems();
-  if (programRnrColumnList.length > 0) {
-    $scope.programRnrColumnList = programRnrColumnList;
-    $($scope.programRnrColumnList).each(function (i, column) {
+  populateRnrLineItems(visibleColumns);
+  if (visibleColumns.length > 0) {
+    $(visibleColumns).each(function (i, column) {
       if (column.name == "cost" || column.name == "price") {
         columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:currencyTemplate('row.entity.' + column.name)});
         nonFullColumnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:currencyTemplate('row.entity.' + column.name)});
@@ -201,11 +201,11 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnrColum
 
   }
 
-  function populateRnrLineItems() {
+  function populateRnrLineItems(programRnrColumnList) {
     var lineItemsJson = $scope.rnr.lineItems;
     $scope.rnr.lineItems = [];
     $(lineItemsJson).each(function (i, lineItem) {
-      var rnrLineItem = new RnrLineItem(lineItem, $scope.rnr, $scope.programRnrColumnList);
+      var rnrLineItem = new RnrLineItem(lineItem, $scope.rnr, programRnrColumnList);
 
       rnrLineItem.updateCostWithApprovedQuantity();
       $scope.rnr.lineItems.push(rnrLineItem);
@@ -214,7 +214,7 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnrColum
     var nonFullSupplyLineItemsJson = $scope.rnr.nonFullSupplyLineItems;
     $scope.rnr.nonFullSupplyLineItems = [];
     $(nonFullSupplyLineItemsJson).each(function (i, lineItem) {
-      var rnrLineItem = new RnrLineItem(lineItem, $scope.rnr, $scope.programRnrColumnList);
+      var rnrLineItem = new RnrLineItem(lineItem, $scope.rnr, programRnrColumnList);
 
       rnrLineItem.updateCostWithApprovedQuantity();
       $scope.rnr.nonFullSupplyLineItems.push(rnrLineItem);
@@ -248,11 +248,11 @@ ApproveRnrController.resolve = {
     }, 100);
     return deferred.promise;
   },
-  programRnrColumnList:function ($q, $timeout, ProgramRnRColumnList, $route) {
+  programRnrColumnList:function ($q, $timeout, RnRColumnList, $route) {
     var deferred = $q.defer();
     $timeout(function () {
-      ProgramRnRColumnList.get({programId:$route.current.params.program}, function (data) {
-        deferred.resolve(data.rnrColumnList);
+      RnRColumnList.get({programId:$route.current.params.program}, function (data) {
+        deferred.resolve(data.rnrTemplateForm.rnrColumns);
       }, {});
     }, 100);
     return deferred.promise;

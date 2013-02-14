@@ -15,9 +15,9 @@ describe('Approve Requisition controller', function () {
     nonFullSupplyLineItems = [];
     requisition = {'status':"AUTHORIZED", 'lineItems':lineItems, 'nonFullSupplyLineItems' : nonFullSupplyLineItems};
     programRnrColumnList = [
-      {'name':'ProductCode', 'label':'Product Code'},
-      {'name':'quantityApproved', 'label':'quantity approved'},
-      {'name':'remarks', 'label':'remarks'}
+      {'name':'ProductCode', 'label':'Product Code', 'visible':true},
+      {'name':'quantityApproved', 'label':'quantity approved', 'visible':true},
+      {'name':'remarks', 'label':'remarks', 'visible':true}
     ];
     httpBackend.expect('GET', '/requisitions/lossAndAdjustments/reference-data.json').respond({"lossAdjustmentTypes":{}});
     httpBackend.expect('GET', '/reference-data/currency.json').respond({"currency":'$'});
@@ -47,16 +47,16 @@ describe('Approve Requisition controller', function () {
     expect(scope.rnr.nonFullSupplyLineItems).toEqual(nonFullSupplyLineItems);
   });
 
-  it('should set columns list in scope', function () {
-    expect(scope.programRnrColumnList).toEqual(programRnrColumnList);
-  });
-
   it('should set line items as data in full supply grid', function () {
     expect(scope.fullSupplyGrid.data).toEqual('rnr.lineItems');
   });
 
   it('should set non full supply line items as  data in non full supply grid', function () {
     expect(scope.nonFullSupplyGrid.data).toEqual('rnr.nonFullSupplyLineItems');
+  });
+
+  it('should set columns as columnDefs in non full supply grid', function () {
+    expect(scope.nonFullSupplyGrid.columnDefs.length).toEqual(3);
   });
 
   it('should save work in progress for rnr', function () {
@@ -105,5 +105,4 @@ describe('Approve Requisition controller', function () {
     expect(scope.$parent.message).toEqual("R&R approved successfully!");
   });
 
-})
-;
+});
