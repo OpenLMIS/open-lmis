@@ -141,7 +141,7 @@ public class HomePage extends Page {
         super(driver);
         PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
         testWebDriver.setImplicitWait(25);
-        SeleneseTestNgHelper.assertTrue(usernameDisplay.isDisplayed());
+        //SeleneseTestNgHelper.assertTrue(usernameDisplay.isDisplayed());
     }
 
     public LoginPage logout() throws IOException{
