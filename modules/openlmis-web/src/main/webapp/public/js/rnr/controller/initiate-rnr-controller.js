@@ -15,6 +15,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
     $scope.myFacility = null;
     $scope.programs = null;
     $scope.facilities = null;
+    $scope.error = null;
   };
 
   $scope.loadFacilityData = function(selectedType) {
@@ -48,6 +49,8 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
     if ($scope.selectedProgram) {
       UserSupervisedFacilitiesForProgram.get({programId: $scope.selectedProgram.id}, function (data) {
         $scope.facilities = data.facilities;
+        $scope.selectedFacilityId = null;
+        $scope.error = null;
       }, {});
     } else {
       $scope.facilities = null;
