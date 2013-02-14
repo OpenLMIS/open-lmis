@@ -80,7 +80,7 @@ public class FacilityControllerTest {
     ResponseEntity responseEntity = facilityController.insert(facility, httpServletRequest);
     assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
     OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
-    assertThat(response.getSuccessMsg(), is("test facility created successfully"));
+    assertThat(response.getSuccessMsg(), is("Facility 'test facility' created successfully"));
     verify(facilityService).insert(facility);
     assertThat(facility.getModifiedBy(), is(USER));
   }
@@ -92,7 +92,7 @@ public class FacilityControllerTest {
     ResponseEntity responseEntity = facilityController.update(facility, httpServletRequest);
     assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
     OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
-    assertThat(response.getSuccessMsg(), is("test facility updated successfully"));
+    assertThat(response.getSuccessMsg(), is("Facility 'test facility' updated successfully"));
     verify(facilityService).update(facility);
     assertThat(facility.getModifiedBy(), is(USER));
   }

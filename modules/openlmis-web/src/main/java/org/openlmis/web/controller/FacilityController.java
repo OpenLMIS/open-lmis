@@ -119,7 +119,7 @@ public class FacilityController extends BaseController {
     } catch (DataException exception) {
       return createErrorResponse(facility, exception);
     }
-    response = success(facility.getName() + " created successfully");
+    response = success("Facility '" + facility.getName() + "' created successfully");
     response.getBody().setData("facility", facility);
     return response;
   }
@@ -135,7 +135,7 @@ public class FacilityController extends BaseController {
     } catch (DataException exception) {
       return createErrorResponse(facility, exception);
     }
-    response = success(facility.getName() + " updated successfully");
+    response = success("Facility '" + facility.getName() + "' updated successfully");
     response.getBody().setData("facility", facility);
     return response;
   }

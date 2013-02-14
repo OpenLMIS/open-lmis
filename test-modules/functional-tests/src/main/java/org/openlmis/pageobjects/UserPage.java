@@ -57,7 +57,7 @@ public class UserPage extends Page {
         lastNameField.sendKeys(lastName);
         saveButton.click();
         testWebDriver.sleep(1000);
-        SeleneseTestNgHelper.assertTrue("User "+firstName+" "+lastName+" has been successfully created, password link sent on registered Email address message is not getting displayed",successMessage.isDisplayed());
+        SeleneseTestNgHelper.assertTrue("User '"+firstName+" "+lastName+"' has been successfully created, password link sent on registered Email address message is not getting displayed",successMessage.isDisplayed());
 
     }
 

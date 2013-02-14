@@ -1,4 +1,4 @@
-function UserController($scope, $routeParams, Users, User, AllFacilities, Roles, Facility, Programs, SupervisoryNodes) {
+function UserController($scope, $routeParams, $location, Users, User, AllFacilities, Roles, Facility, Programs, SupervisoryNodes) {
   $scope.userNameInvalid = false;
   $scope.showHomeFacilityRoleMappingError = false;
   $scope.showSupervisorRoleMappingError = false;
@@ -63,19 +63,19 @@ function UserController($scope, $routeParams, Users, User, AllFacilities, Roles,
       $scope.user = response.user;
       $scope.showError = false;
       $scope.error = "";
-      $scope.message = response.success;
+      $scope.$parent.message = response.success;
+      $scope.$parent.userId = $scope.user.id;
+      $location.path('');
     };
 
     var errorHandler = function (response) {
       $scope.showError = true;
-      $scope.message = "";
       $scope.error = response.data.error;
     };
 
     var requiredFieldsPresent = function (user) {
       if ($scope.userForm.$error.required || !validateRoleAssignment(user)) {
         $scope.error = "Please correct errors before saving.";
-        $scope.message = "";
         $scope.showError = true;
         return false;
       } else {

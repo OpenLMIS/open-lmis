@@ -225,7 +225,7 @@ public class CreateFacilityPage extends Page {
         {
             message= testWebDriver.getText(saveErrorMsgDiv);
         }
-        SeleneseTestNgHelper.assertEquals(message,facilityNameText + " created successfully");
+        SeleneseTestNgHelper.assertEquals(message,"Facility '"+facilityNameText + "' created successfully");
         testWebDriver.sleep(500);
 
         return date_time;

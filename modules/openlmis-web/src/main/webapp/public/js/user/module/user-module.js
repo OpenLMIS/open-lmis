@@ -5,7 +5,7 @@ angular.module('user', ['openlmis', 'ngGrid']).
       when('/search', {controller:UserSearchController, templateUrl:'partials/search.html'}).
       when('/create-user', {controller:UserController, templateUrl:'partials/create.html'}).
       when('/edit/:userId', {controller:UserController, templateUrl:'partials/create.html'}).
-    otherwise({redirectTo:'/create-user'});
+    otherwise({redirectTo:'/search'});
 }]).directive('onKeyup', function () {
       return function (scope, elm, attrs) {
         elm.bind("keyup", function () {

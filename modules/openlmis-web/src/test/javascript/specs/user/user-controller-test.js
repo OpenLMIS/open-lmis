@@ -4,15 +4,16 @@ describe("User", function () {
 
   describe("User Controller", function () {
 
-    var scope, $httpBackend, ctrl, routeParams, user;
+    var scope, $httpBackend, ctrl, routeParams, user, location;
 
-    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller) {
+    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location) {
       scope = $rootScope.$new();
       $httpBackend = _$httpBackend_;
+      location = $location;
       $httpBackend.expectGET("/roles.json").respond(200,{"roles":[]});
       $httpBackend.expectGET("/programs.json").respond(200,{"programs":[{"id":1}]});
       $httpBackend.expectGET("/supervisory-nodes.json").respond(200,{"supervisoryNodes":[]});
-      ctrl = $controller(UserController, {$scope:scope});
+      ctrl = $controller(UserController, {$scope:scope}, $location );
       scope.userForm = {$error:{ pattern:"" }};
     }));
 
@@ -42,16 +43,19 @@ describe("User", function () {
       expect(scope.user).toEqual({id:123});
       expect(scope.showError).toBeFalsy();
       expect(scope.error).toEqual("");
+      expect(location.path()).toBe('/');
     });
 
-    it('should give error message if save not successful', function () {
+    it('should give error message if save not successful and not redirect the user', function () {
       scope.user = {"userName":"User420"};
       $httpBackend.expectPOST('/users.json').respond(400, {"error":"errorMsg"});
+      var path = '/create';
+      location.path(path);
       scope.saveUser();
       $httpBackend.flush();
       expect("errorMsg").toEqual(scope.error);
       expect(scope.showError).toBeTruthy();
-      expect(scope.message).toEqual("");
+      expect(location.path()).toBe(path);
     });
 
     it("should throw error when username contains space", function () {
@@ -114,13 +118,14 @@ describe("User", function () {
       expect(scope.saveUser()).toEqual(false);
     });
 
-    it("should create a user with role assignments, if all required fields are present", function () {
+    it("should create a user with role assignments, if all required fields are present, and jump to search user page", function () {
       var userWithRoleAssignments = {userName:"User 123", homeFacilityRoles:[
         {programId:111, roleIds:[1, 2, 3]},
         {programId:222, roleIds:[1]}
       ]};
       scope.userForm = {$error:{ required:false}};
       scope.user = userWithRoleAssignments;
+      location.path("create");
       $httpBackend.expectPOST('/users.json', userWithRoleAssignments).respond(200, {"success":"Saved successfully", user:{id:500}});
 
       expect(scope.saveUser()).toEqual(true);
@@ -129,6 +134,7 @@ describe("User", function () {
       expect(scope.user).toEqual({id:500});
       expect(scope.showError).toBeFalsy();
       expect(scope.error).toEqual("");
+      expect(location.path()).toBe('/');
     });
 
     it("should create a user without role assignment, if all required fields are present", function () {
@@ -136,13 +142,14 @@ describe("User", function () {
       scope.userForm = {$error:{ required:false}};
       scope.user = userWithoutRoleAssignment;
       $httpBackend.expectPOST('/users.json', userWithoutRoleAssignment).respond(200, {"success":"Saved successfully", user:{id:500}});
-
+      location.path('/create');
       expect(scope.saveUser()).toEqual(true);
       $httpBackend.flush();
       expect(scope.message).toEqual("Saved successfully");
       expect(scope.user).toEqual({id:500});
       expect(scope.showError).toBeFalsy();
       expect(scope.error).toEqual("");
+      expect(location.path()).toBe('/');
     });
 
     it('should set facilitySelected in scope, whenever user selects a facility as "My Facility" when supported programs are not populated', function () {
@@ -154,7 +161,6 @@ describe("User", function () {
       $httpBackend.expectGET('/facilities/' + facility.id + '.json').respond(data);
 
       scope.setSelectedFacility(facility);
-
       $httpBackend.flush();
 
       expect(scope.facilitySelected).toEqual(facility);

@@ -89,7 +89,7 @@ public class UserController extends BaseController {
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);
     }
-    successResponse = success("User " + user.getFirstName() + " " + user.getLastName() + " has been successfully created, password link has been sent on registered Email address");
+    successResponse = success("User '" + user.getFirstName() + " " + user.getLastName() + "' has been successfully created, password link has been sent on registered Email address");
     successResponse.getBody().setData("user", user);
     return successResponse;
   }
@@ -107,7 +107,7 @@ public class UserController extends BaseController {
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);
     }
-    successResponse = success("User " + user.getFirstName() + " " + user.getLastName() + " has been successfully updated");
+    successResponse = success("User '" + user.getFirstName() + " " + user.getLastName() + "' has been successfully updated");
     successResponse.getBody().setData("user", user);
     return successResponse;
   }

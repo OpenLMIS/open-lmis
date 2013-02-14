@@ -122,7 +122,7 @@ public class UserControllerTest {
     verify(userService).create(eq(user), anyString());
 
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    assertThat(response.getBody().getSuccessMsg(), is("User " + user.getFirstName() + " " + user.getLastName() + " has been successfully created, password link has been sent on registered Email address"));
+    assertThat(response.getBody().getSuccessMsg(), is("User '" + user.getFirstName() + " " + user.getLastName() + "' has been successfully created, password link has been sent on registered Email address"));
     assertThat(user.getModifiedBy(), is(USER));
   }
 
@@ -138,7 +138,7 @@ public class UserControllerTest {
 
     verify(userService).update(user);
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    assertThat(response.getBody().getSuccessMsg(), is("User " + user.getFirstName() + " " + user.getLastName() + " has been successfully updated"));
+    assertThat(response.getBody().getSuccessMsg(), is("User '" + user.getFirstName() + " " + user.getLastName() + "' has been successfully updated"));
     assertThat(user.getPassword(), is(Encoder.hash("password")));
     assertThat(user.getModifiedBy(), is(USER));
   }
