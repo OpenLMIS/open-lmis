@@ -23,9 +23,6 @@ describe('RequisitionFullSupplyController', function () {
     routeParams = {"facility":"1", "program":"1", "period":2};
     scope.$parent.rnr = {"id":"rnrId", "lineItems":[]};
 
-    httpBackend.when('GET', '/facilityApprovedProducts/facility/1/program/1/nonFullSupply.json').respond(200);
-    httpBackend.when('POST', '/requisitions.json?facilityId=1&periodId=2&programId=1').respond({"rnr":{"status":"CREATED"}});
-    httpBackend.when('GET', '/reference-data/currency.json').respond({"currency":"$"});
     httpBackend.expect('GET', '/requisitions/lossAndAdjustments/reference-data.json').respond({"lossAdjustmentTypes":{}});
     $rootScope.fixToolBar = function () {
     };
