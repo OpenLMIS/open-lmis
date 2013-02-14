@@ -6,6 +6,8 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.servicelayerutils.ServiceUtils;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
@@ -15,6 +17,13 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 @Transactional
 
 public class FacilityServiceTest extends TestCaseHelper {
+
+  DBWrapper dbWrapper;
+
+  @BeforeClass
+  public void setUp() throws Exception {
+    dbWrapper = new DBWrapper();
+  }
 
   @Test
   public void testFacility() {
@@ -32,7 +41,6 @@ public class FacilityServiceTest extends TestCaseHelper {
           "\"goLiveDate\":\"2013-02-07T18:30:00.000Z\",\"geographicZone\":{\"id\":1}}";
 
 
-      DBWrapper dbWrapper = new DBWrapper();
       dbWrapper.deleteData();
 
       ServiceUtils serviceUtils = new ServiceUtils();
@@ -89,8 +97,8 @@ public class FacilityServiceTest extends TestCaseHelper {
       e.printStackTrace();
     } finally {
       try {
-        DBWrapper dbWrapper = new DBWrapper();
         dbWrapper.deleteFacilities();
+
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -98,6 +106,10 @@ public class FacilityServiceTest extends TestCaseHelper {
 
   }
 
+  @AfterClass
+  public void tearDown() throws Exception {
+    dbWrapper.closeConnection();
+  }
 
 }
 

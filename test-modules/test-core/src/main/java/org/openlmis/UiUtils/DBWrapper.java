@@ -9,15 +9,19 @@ import java.sql.SQLException;
 public class DBWrapper {
 
   String baseUrl, dbUrl, dbUser, dbPassword;
+  Connection connection;
 
-  public DBWrapper() throws IOException {
-
+  public DBWrapper() throws IOException, SQLException {
     baseUrl = "http://localhost:9091/";
     dbUrl = "jdbc:postgresql://localhost:5432/open_lmis";
     dbUser = "postgres";
     dbPassword = "p@ssw0rd";
-
+    connection = getConnection();
     loadDriver();
+  }
+
+  public void closeConnection() throws SQLException {
+    if (connection != null) connection.close();
   }
 
   private Connection getConnection() throws SQLException {
@@ -34,9 +38,7 @@ public class DBWrapper {
   }
 
   private void update(String sql) throws SQLException {
-    try (Connection con = getConnection()) {
-      con.createStatement().executeUpdate(sql);
-    }
+    connection.createStatement().executeUpdate(sql);
   }
 
   private ResultSet query(String sql) throws SQLException {

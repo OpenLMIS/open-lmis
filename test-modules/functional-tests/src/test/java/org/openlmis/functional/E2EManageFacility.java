@@ -19,9 +19,11 @@ import org.testng.annotations.*;
 
 public class E2EManageFacility extends TestCaseHelper {
 
+  DBWrapper dbWrapper;
+
   @BeforeClass
   public void setUp() throws Exception {
-    DBWrapper dbWrapper = new DBWrapper();
+    dbWrapper = new DBWrapper();
     dbWrapper.deleteData();
   }
 
@@ -29,7 +31,6 @@ public class E2EManageFacility extends TestCaseHelper {
   public void testE2EManageFacility(String user, String[] credentials) throws Exception {
 
     LoginPage loginPage = new LoginPage(testWebDriver);
-    DBWrapper dbWrapper = new DBWrapper();
 
     dbWrapper.insertUser("200", user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==", "F10", "Jane_Doe@openlmis.com");
 
@@ -58,8 +59,8 @@ public class E2EManageFacility extends TestCaseHelper {
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout();
-    DBWrapper dbWrapper = new DBWrapper();
     dbWrapper.deleteData();
+    dbWrapper.closeConnection();
   }
 
   @DataProvider(name = "Data-Provider-Function-Positive")

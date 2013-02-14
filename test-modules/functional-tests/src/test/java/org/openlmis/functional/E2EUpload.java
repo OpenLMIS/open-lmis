@@ -19,9 +19,11 @@ import java.util.List;
 
 public class E2EUpload extends TestCaseHelper {
 
+  DBWrapper dbWrapper;
+
   @BeforeClass
   public void setUp() throws Exception {
-    DBWrapper dbWrapper = new DBWrapper();
+    dbWrapper = new DBWrapper();
     dbWrapper.deleteData();
     dbWrapper.deleteFacilities();
   }
@@ -40,8 +42,6 @@ public class E2EUpload extends TestCaseHelper {
     userRoleList.add("Create Requisition");
 
     rolesPage.createRole("User", "User", userRoleList);
-
-    DBWrapper dbWrapper = new DBWrapper();
 
     UploadPage uploadPage = homePage.navigateUploads();
     uploadPage.uploadUsers();
@@ -101,8 +101,8 @@ public class E2EUpload extends TestCaseHelper {
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout();
-    DBWrapper dbWrapper = new DBWrapper();
     dbWrapper.deleteData();
+    dbWrapper.closeConnection();
   }
 
   @DataProvider(name = "Data-Provider-Function-Positive")

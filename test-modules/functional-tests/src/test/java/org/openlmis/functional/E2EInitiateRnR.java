@@ -19,9 +19,11 @@ import java.util.List;
 
 public class E2EInitiateRnR extends TestCaseHelper {
 
+  DBWrapper dbWrapper;
+
   @BeforeClass
   public void setUp() throws Exception {
-    DBWrapper dbWrapper = new DBWrapper();
+    dbWrapper = new DBWrapper();
     dbWrapper.deleteData();
   }
 
@@ -34,8 +36,6 @@ public class E2EInitiateRnR extends TestCaseHelper {
     CreateFacilityPage createFacilityPage = homePage.navigateCreateFacility();
     String date_time = createFacilityPage.enterAndVerifyFacility();
     String facility_code = "FCcode" + date_time;
-
-    DBWrapper dbWrapper = new DBWrapper();
 
     UserPage userPageSIC = homePage.navigateToUser();
     userPageSIC.enterAndverifyUserDetails("User123", "manjyots@thoughtworks.com", "Manjyot", "Singh");
@@ -157,8 +157,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout();
-    DBWrapper dbWrapper = new DBWrapper();
     dbWrapper.deleteData();
+    dbWrapper.closeConnection();
   }
 
   @DataProvider(name = "Data-Provider-Function-Positive")
