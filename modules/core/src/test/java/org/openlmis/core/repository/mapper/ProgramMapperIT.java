@@ -172,7 +172,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
 
     final String rights = "{CREATE_REQUISITION, AUTHORIZE_REQUISITION}";
 
-    List<Program> programs = programMapper.getProgramsSupportedByFacilityForUserWithRight(facility.getId(), user.getId(), rights);
+    List<Program> programs = programMapper.getProgramsSupportedByFacilityForUserWithRights(facility.getId(), user.getId(), rights);
     assertThat(programs.size(), is(2));
     assertTrue(programs.contains(activeProgram));
     assertTrue(programs.contains(anotherActiveProgram));

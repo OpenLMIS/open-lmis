@@ -24,7 +24,7 @@ describe('InitiateMyFacilityRnrController', function () {
 
   xit('should load user supported programs for selected facility for create R&R', function () {
     scope.$parent.selectedFacilityId = facilities[0].id;
-    $httpBackend.expectGET('/logistics/facility/10134/user/programs.json').respond({"programList": programs});
+    $httpBackend.expectGET('/facility/10134/user/programs.json').respond({"programList": programs});
 
     scope.loadPrograms();
     $httpBackend.flush();

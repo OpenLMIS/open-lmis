@@ -19,7 +19,7 @@ function InitiateMyFacilityRnrController($scope, UserFacilityList, UserSupported
         if($scope.$parent.myFacility) {
           $scope.$parent.selectedFacilityId = $scope.$parent.myFacility.id;
           
-          UserSupportedProgramInFacilityForAnOperation.get({facilityId: $scope.$parent.selectedFacilityId}, function (data) {
+          UserSupportedProgramInFacilityForAnOperation.get({facilityId: $scope.$parent.selectedFacilityId, rights:['CREATE_REQUISITION', 'AUTHORIZE_REQUISITION']}, function (data) {
             $scope.$parent.programs = data.programList;
           }, {});
         } else {

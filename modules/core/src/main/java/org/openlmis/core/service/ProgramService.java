@@ -35,8 +35,8 @@ public class ProgramService {
     return programRepository.getAll();
   }
 
-  public List<Program> getProgramsSupportedByFacilityForUserWithRight(Integer facilityId, Integer userId, Right... rights) {
-    return programRepository.getProgramsSupportedByFacilityForUserWithRight(facilityId, userId, rights);
+  public List<Program> getProgramsSupportedByFacilityForUserWithRights(Integer facilityId, Integer userId, Right... rights) {
+    return programRepository.getProgramsSupportedByFacilityForUserWithRights(facilityId, userId, rights);
   }
 
   public List<Program> getUserSupervisedActiveProgramsWithRights(Integer userId, Right... rights) {

@@ -42,8 +42,8 @@ public class ProgramRepository {
     return mapper.getUserSupervisedActivePrograms(userId, getCommaSeparatedRightNames(rights));
   }
 
-  public List<Program> getProgramsSupportedByFacilityForUserWithRight(Integer facilityId, Integer userId, Right... rights) {
-    return mapper.getProgramsSupportedByFacilityForUserWithRight(facilityId, userId, getCommaSeparatedRightNames(rights));
+  public List<Program> getProgramsSupportedByFacilityForUserWithRights(Integer facilityId, Integer userId, Right... rights) {
+    return mapper.getProgramsSupportedByFacilityForUserWithRights(facilityId, userId, getCommaSeparatedRightNames(rights));
   }
 
   public Integer getIdByCode(String code) {

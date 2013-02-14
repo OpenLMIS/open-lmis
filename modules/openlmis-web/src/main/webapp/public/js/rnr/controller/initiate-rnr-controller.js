@@ -29,7 +29,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
         if($scope.myFacility) {
           $scope.selectedFacilityId = $scope.myFacility.id;
 
-          UserSupportedProgramInFacilityForAnOperation.get({facilityId: $scope.selectedFacilityId}, function (data) {
+          UserSupportedProgramInFacilityForAnOperation.get({facilityId: $scope.selectedFacilityId, rights:['CREATE_REQUISITION', 'AUTHORIZE_REQUISITION']}, function (data) {
             $scope.programs = data.programList;
           }, {});
         } else {

@@ -2,6 +2,7 @@ package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.Right;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +11,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Set;
 
-import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
-import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.domain.Right.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
@@ -37,23 +39,24 @@ public class ProgramController extends BaseController {
     return programService.getAllActive();
   }
 
-  @RequestMapping(value = "/facilities/{facilityId}/programs.json", method = GET)
+  @RequestMapping(value = "/facilities/{facilityId}/programs", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("hasPermission('','CREATE_REQUISITION, AUTHORIZE_REQUISITION, MANAGE_USERS')")
   public List<Program> getProgramsForFacility(@PathVariable(value = "facilityId") Integer facilityId) {
     return programService.getByFacility(facilityId);
   }
 
-  @RequestMapping(value = "/logistics/facility/{facilityId}/user/programs.json", method = GET)
-  public List<Program> getUserSupportedProgramsToCreateOrAuthorizeRequisition(@PathVariable(value = "facilityId") Integer facilityId, HttpServletRequest request) {
-    return programService.getProgramsSupportedByFacilityForUserWithRight(facilityId, loggedInUserId(request), CREATE_REQUISITION, AUTHORIZE_REQUISITION);
+  @RequestMapping(value = "/facility/{facilityId}/user/programs", method = GET, headers = ACCEPT_JSON)
+  public List<Program> getProgramsSupportedByFacilityForUserWithRights(@PathVariable(value = "facilityId") Integer facilityId, @RequestParam("rights") Set<Right> rights, HttpServletRequest request) {
+    return programService.getProgramsSupportedByFacilityForUserWithRights(facilityId, loggedInUserId(request), rights.toArray(new Right[rights.size()]));
   }
 
-  @RequestMapping(value = "/create/requisition/supervised/programs.json", method = GET)
+
+  @RequestMapping(value = "/create/requisition/supervised/programs", method = GET, headers = ACCEPT_JSON)
   public List<Program> getUserSupervisedActiveProgramsForCreateAndAuthorizeRequisition(HttpServletRequest request) {
     return programService.getUserSupervisedActiveProgramsWithRights(loggedInUserId(request), CREATE_REQUISITION, AUTHORIZE_REQUISITION);
   }
 
-  @RequestMapping(value = "/programs", method = GET)
+  @RequestMapping(value = "/programs", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("hasPermission('','MANAGE_USERS')")
   public ResponseEntity<OpenLmisResponse> getAllPrograms() {
     return OpenLmisResponse.response(PROGRAMS, programService.getAll());

@@ -12,9 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
@@ -24,8 +22,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
-import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
-import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.web.controller.ProgramController.PROGRAMS;
 
 public class ProgramControllerTest {
@@ -63,14 +60,17 @@ public class ProgramControllerTest {
   }
 
   @Test
-  public void shouldGetListOfUserSupportedProgramsForAFacilityForCreateRequisitionsOperation() {
+  public void shouldGetListOfUserSupportedProgramsForAFacilityForGivenRights() {
     Program program = new Program();
     List<Program> programs = new ArrayList<>(Arrays.asList(program));
 
     Integer facilityId = 12345;
-    when(programService.getProgramsSupportedByFacilityForUserWithRight(facilityId, USER_ID, Right.CREATE_REQUISITION, Right.AUTHORIZE_REQUISITION)).thenReturn(programs);
 
-    assertEquals(programs, controller.getUserSupportedProgramsToCreateOrAuthorizeRequisition(facilityId, httpServletRequest));
+    Set<Right> rights = new LinkedHashSet<Right>() {{ add(Right.CREATE_REQUISITION); add(Right.AUTHORIZE_REQUISITION);}};
+
+    when(programService.getProgramsSupportedByFacilityForUserWithRights(facilityId, USER_ID, Right.CREATE_REQUISITION, Right.AUTHORIZE_REQUISITION)).thenReturn(programs);
+
+    assertEquals(programs, controller.getProgramsSupportedByFacilityForUserWithRights(facilityId, rights, httpServletRequest));
 
   }
 

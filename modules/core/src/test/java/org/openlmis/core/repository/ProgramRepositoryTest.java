@@ -41,11 +41,11 @@ public class ProgramRepositoryTest {
     Integer facilityId = 1;
     Integer userId = 1;
     List<Program> programs = new ArrayList<>();
-    when(programMapper.getProgramsSupportedByFacilityForUserWithRight(facilityId, userId, "{AUTHORIZE_REQUISITION, CREATE_REQUISITION}")).thenReturn(programs);
+    when(programMapper.getProgramsSupportedByFacilityForUserWithRights(facilityId, userId, "{AUTHORIZE_REQUISITION, CREATE_REQUISITION}")).thenReturn(programs);
 
-    List<Program> result = programRepository.getProgramsSupportedByFacilityForUserWithRight(facilityId, userId, AUTHORIZE_REQUISITION, CREATE_REQUISITION);
+    List<Program> result = programRepository.getProgramsSupportedByFacilityForUserWithRights(facilityId, userId, AUTHORIZE_REQUISITION, CREATE_REQUISITION);
 
-    verify(programMapper).getProgramsSupportedByFacilityForUserWithRight(facilityId, userId, "{AUTHORIZE_REQUISITION, CREATE_REQUISITION}");
+    verify(programMapper).getProgramsSupportedByFacilityForUserWithRights(facilityId, userId, "{AUTHORIZE_REQUISITION, CREATE_REQUISITION}");
     assertThat(result, is(programs));
   }
 

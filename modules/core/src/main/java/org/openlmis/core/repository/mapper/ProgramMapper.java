@@ -64,7 +64,7 @@ public interface ProgramMapper {
   "INNER JOIN role_rights rr ON rr.roleId = ra.roleId",
   "WHERE ra.supervisoryNodeId IS NULL and p.active = true and  ps.active=true and ra.userId = #{userId} and ps.facilityId = #{facilityId} and rr.rightName = ANY(#{commaSeparatedRights}::VARCHAR[])",
   ""})
-  List<Program> getProgramsSupportedByFacilityForUserWithRight(@Param("facilityId")Integer facilityId, @Param("userId") Integer userId, @Param("commaSeparatedRights") String commaSeparatedRights);
+  List<Program> getProgramsSupportedByFacilityForUserWithRights(@Param("facilityId") Integer facilityId, @Param("userId") Integer userId, @Param("commaSeparatedRights") String commaSeparatedRights);
 
   @Select("SELECT DISTINCT p.* " +
     "FROM programs p " +

@@ -47,7 +47,7 @@ services.factory('UserFacilityList', function ($resource) {
 
 //todo add right/operation code as param
 services.factory('UserSupportedProgramInFacilityForAnOperation', function ($resource) {
-    return $resource('/logistics/facility/:facilityId/user/programs.json', {}, {});
+    return $resource('/facility/:facilityId/user/programs.json', {}, {});
 });
 
 services.factory('RequisitionHeader', function ($resource) {
