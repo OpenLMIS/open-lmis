@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
@@ -89,7 +90,7 @@ public class RequisitionServiceTest {
   @Before
   public void setup() {
     requisitionService = new RequisitionService(requisitionRepository, rnrTemplateRepository, facilityApprovedProductService,
-      supervisoryNodeService, roleRightService, programService, processingScheduleService, facilityService, supplyLineService);
+        supervisoryNodeService, roleRightService, programService, processingScheduleService, facilityService, supplyLineService);
     submittedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, SUBMITTED)));
     initiatedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, INITIATED)));
     authorizedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, AUTHORIZED)));
@@ -294,7 +295,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date1.toDate());
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(rnr2);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date1.toDate(), processingPeriod2.getId())).
-      thenReturn(Arrays.asList(processingPeriod3, processingPeriod4));
+        thenReturn(Arrays.asList(processingPeriod3, processingPeriod4));
 
     List<ProcessingPeriod> periods = requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
 
@@ -314,7 +315,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date1.toDate());
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(null);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date1.toDate(), null)).
-      thenReturn(Arrays.asList(processingPeriod1, processingPeriod2));
+        thenReturn(Arrays.asList(processingPeriod1, processingPeriod2));
 
     List<ProcessingPeriod> periods = requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
 
@@ -325,13 +326,13 @@ public class RequisitionServiceTest {
 
   private Rnr createRequisition(int periodId, RnrStatus status) {
     return make(a(RequisitionBuilder.defaultRnr,
-      with(RequisitionBuilder.periodId, periodId),
-      with(RequisitionBuilder.status, status)));
+        with(RequisitionBuilder.periodId, periodId),
+        with(RequisitionBuilder.status, status)));
   }
 
   private ProcessingPeriod createProcessingPeriod(int id, DateTime startDate) {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod,
-      with(ProcessingPeriodBuilder.startDate, startDate.toDate())));
+        with(ProcessingPeriodBuilder.startDate, startDate.toDate())));
     processingPeriod.setId(id);
     return processingPeriod;
   }
@@ -370,7 +371,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date);
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(requisition);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date, PERIOD.getId())).
-      thenReturn(Arrays.asList(validPeriod));
+        thenReturn(Arrays.asList(validPeriod));
   }
 
   @Test
@@ -886,6 +887,38 @@ public class RequisitionServiceTest {
     requisitionService.approve(spyRnr);
 
     verify(spyRnr).calculateForApproval();
+  }
+
+  @Test
+  public void shouldGetRequisitionsForViewForGivenFacilityProgramsAndPeriodRange() throws Exception {
+    final Rnr requisition = make(a(RequisitionBuilder.defaultRnr));
+    final List<Rnr> expected = new ArrayList<Rnr>() {{
+      add(requisition);
+    }};
+    Program expectedProgram = new Program();
+    Facility expectedFacility = new Facility();
+    ProcessingPeriod expectedPeriod = new ProcessingPeriod();
+    when(programService.getById(3)).thenReturn(expectedProgram);
+    when(facilityService.getById(3)).thenReturn(expectedFacility);
+    when(processingScheduleService.getPeriodById(3)).thenReturn(expectedPeriod);
+
+    Facility facility = new Facility(1);
+    Program program = new Program(2);
+    List<ProcessingPeriod> periods = asList(expectedPeriod);
+
+    Date periodStartDate = DateTime.parse("2013-02-01").toDate();
+    Date periodEndDate = DateTime.parse("2013-02-14").toDate();
+    when(processingScheduleService.getAllPeriodsForDateRange(facility, program, periodStartDate, periodEndDate)).thenReturn(periods);
+    when(requisitionRepository.get(facility, program, periods)).thenReturn(expected);
+
+    List<Rnr> actual = requisitionService.get(facility, program, periodStartDate, periodEndDate);
+
+    verify(requisitionRepository).get(facility, program, periods);
+    assertThat(requisition.getProgram(), is(expectedProgram));
+    assertThat(requisition.getFacility(), is(expectedFacility));
+    assertThat(requisition.getPeriod(), is(expectedPeriod));
+
+    assertThat(actual, is(expected));
   }
 
   private RoleAssignment roleAssignmentWithSupervisoryNodeId(int supervisoryNodeId) {

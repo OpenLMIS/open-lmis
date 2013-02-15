@@ -316,6 +316,18 @@ public class RequisitionMapperIT {
     assertThat(rnr.getSubmittedDate(), is(requisition.getSubmittedDate()));
   }
 
+  @Test
+  public void shouldGetRequisitionsForViewByFacilityProgramAndPeriodIds() throws Exception {
+    Program program = new Program(PROGRAM_ID);
+
+    String commaSeparatedPeriodIds = "{"+processingPeriod1.getId()+","+processingPeriod2.getId()+","+processingPeriod3.getId()+"}";
+    insertRequisition(processingPeriod1, AUTHORIZED);
+    insertRequisition(processingPeriod2, APPROVED);
+    insertRequisition(processingPeriod3, SUBMITTED);
+    List<Rnr> result = mapper.get(facility, program, commaSeparatedPeriodIds);
+    assertThat(result.size(), is(2));
+  }
+
   private Rnr insertRequisition(ProcessingPeriod period, RnrStatus status) {
     Rnr rnr = new Rnr(facility.getId(), PROGRAM_ID, period.getId(), MODIFIED_BY);
     rnr.setStatus(status);

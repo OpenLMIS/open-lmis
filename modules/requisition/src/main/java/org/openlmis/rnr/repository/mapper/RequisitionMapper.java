@@ -117,4 +117,8 @@ public interface RequisitionMapper {
       @Result(property = "supplyingFacility.id", column = "supplyingFacilityId")
   })
   List<Rnr> getApprovedRequisitions();
+
+@Select({"SELECT * FROM requisitions " +
+    "WHERE facilityId = #{facility.id} AND programId = #{program.id} AND periodId = ANY (#{periods}::INTEGER[]) AND status NOT IN ('INITIATED', 'SUBMITTED')"})
+  List<Rnr> get(@Param("facility") Facility facility, @Param("program") Program program, @Param("periods") String periodIds);
 }

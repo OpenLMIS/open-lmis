@@ -6,6 +6,7 @@ import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.rnr.domain.LossesAndAdjustments;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.domain.Rnr;
@@ -24,21 +25,23 @@ import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 @NoArgsConstructor
 public class RequisitionRepository {
 
-  private RequisitionMapper mapper;
+  private RequisitionMapper requisitionMapper;
   private RnrLineItemMapper rnrLineItemMapper;
   private LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
+  private CommaSeparator commaSeparator;
 
 
   @Autowired
-  public RequisitionRepository(RequisitionMapper requisitionMapper, RnrLineItemMapper rnrLineItemMapper, LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper) {
-    this.mapper = requisitionMapper;
+  public RequisitionRepository(RequisitionMapper requisitionMapper, RnrLineItemMapper rnrLineItemMapper, LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper, CommaSeparator separator) {
+    this.requisitionMapper = requisitionMapper;
     this.rnrLineItemMapper = rnrLineItemMapper;
     this.lossesAndAdjustmentsMapper = lossesAndAdjustmentsMapper;
+    commaSeparator = separator;
   }
 
   public void insert(Rnr requisition) {
     requisition.setStatus(INITIATED);
-    mapper.insert(requisition);
+    requisitionMapper.insert(requisition);
     insertLineItems(requisition, requisition.getLineItems());
     insertLineItems(requisition, requisition.getNonFullSupplyLineItems());
   }
@@ -52,7 +55,7 @@ public class RequisitionRepository {
   }
 
   public void update(Rnr rnr) {
-    mapper.update(rnr);
+    requisitionMapper.update(rnr);
     updateFullSupplyLineItems(rnr);
     updateNonFullSupplyLineItems(rnr);
   }
@@ -80,15 +83,15 @@ public class RequisitionRepository {
   }
 
   public Rnr getRequisition(Facility facility, Program program, ProcessingPeriod period) {
-    return mapper.getRequisition(facility, program, period);
+    return requisitionMapper.getRequisition(facility, program, period);
   }
 
   public Rnr getRequisitionWithFullSupplyLineItems(Facility facility, Program program, ProcessingPeriod period) {
-    return mapper.getRequisitionWithFullSupplyLineItems(facility, program, period);
+    return requisitionMapper.getRequisitionWithFullSupplyLineItems(facility, program, period);
   }
 
   public Rnr getRequisitionWithNonFullSupplyLineItems(Facility facility, Program program, ProcessingPeriod period) {
-    return mapper.getRequisitionWithNonFullSupplyLineItems(facility, program, period);
+    return requisitionMapper.getRequisitionWithNonFullSupplyLineItems(facility, program, period);
   }
 
   public List<LossesAndAdjustmentsType> getLossesAndAdjustmentsTypes() {
@@ -96,22 +99,25 @@ public class RequisitionRepository {
   }
 
   public Rnr getById(Integer rnrId) {
-    Rnr requisition = mapper.getById(rnrId);
+    Rnr requisition = requisitionMapper.getById(rnrId);
     if (requisition == null) throw new DataException("Requisition Not Found");
     return requisition;
   }
 
   public List<Rnr> getAuthorizedRequisitions(RoleAssignment roleAssignment) {
-    return mapper.getAuthorizedRequisitions(roleAssignment);
+    return requisitionMapper.getAuthorizedRequisitions(roleAssignment);
   }
 
   public Rnr getLastRequisitionToEnterThePostSubmitFlow(Integer facilityId, Integer programId) {
-    return mapper.getLastRequisitionToEnterThePostSubmitFlow(facilityId, programId);
+    return requisitionMapper.getLastRequisitionToEnterThePostSubmitFlow(facilityId, programId);
   }
 
   public List<Rnr> getApprovedRequisitions() {
-    return mapper.getApprovedRequisitions();
+    return requisitionMapper.getApprovedRequisitions();
   }
 
+  public List<Rnr> get(Facility facility, Program program, List<ProcessingPeriod> periods) {
+    return requisitionMapper.get(facility, program, commaSeparator.commaSeparateIds(periods));
+  }
 }
 

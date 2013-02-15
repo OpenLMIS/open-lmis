@@ -13,6 +13,7 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
+import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.rnr.domain.LossesAndAdjustments;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
@@ -23,6 +24,7 @@ import org.openlmis.rnr.repository.mapper.RnrLineItemMapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -49,6 +51,8 @@ public class RequisitionRepositoryTest {
   private LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
   @Mock
   private SupervisoryNodeRepository supervisoryNodeRepository;
+  @Mock
+  private CommaSeparator separator;
 
   private RequisitionRepository requisitionRepository;
   private LossesAndAdjustments lossAndAdjustmentForLineItem = new LossesAndAdjustments();
@@ -58,7 +62,7 @@ public class RequisitionRepositoryTest {
 
   @Before
   public void setUp() throws Exception {
-    requisitionRepository = new RequisitionRepository(requisitionMapper, rnrLineItemMapper, lossesAndAdjustmentsMapper);
+    requisitionRepository = new RequisitionRepository(requisitionMapper, rnrLineItemMapper, lossesAndAdjustmentsMapper, separator);
     rnr = new Rnr();
     rnrLineItem1 = new RnrLineItem();
     rnrLineItem1.setId(1);
@@ -200,5 +204,18 @@ public class RequisitionRepositoryTest {
     verify(rnrLineItemMapper, never()).insertNonFullSupply(fullSupply);
   }
 
+  @Test
+  public void shouldGetRequisitionsForFacilityProgramAndPeriods() throws Exception {
+    Facility facility = new Facility(1);
+    Program program = new Program(1);
+    List<ProcessingPeriod> periods = asList(new ProcessingPeriod(1), new ProcessingPeriod(2)) ;
+    when(separator.commaSeparateIds(periods)).thenReturn("{1, 2}");
+    List<Rnr> expected = new ArrayList<>();
+    when(requisitionMapper.get(facility, program, "{1, 2}")).thenReturn(expected);
 
+    List<Rnr> actual = requisitionRepository.get(facility, program, periods);
+
+    assertThat(actual, is(expected));
+    verify(requisitionMapper).get(facility, program, "{1, 2}");
+  }
 }

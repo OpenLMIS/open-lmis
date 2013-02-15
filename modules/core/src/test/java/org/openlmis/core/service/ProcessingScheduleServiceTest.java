@@ -218,4 +218,26 @@ public class ProcessingScheduleServiceTest {
     verify(periodRepository).getImmediatePreviousPeriod(period);
     assertThat(immediatePreviousPeriod, is(expected));
   }
+
+  @Test
+  public void shouldGetAllPeriodsInDateRange() throws Exception {
+    Date startDate = DateTime.now().toDate();
+    Date endDate = DateTime.now().toDate();
+    List<ProcessingPeriod> expected = new ArrayList<>();
+
+    Integer scheduleId = 1;
+    Facility facility  = new Facility(1);
+    Program program  = new Program(2);
+    RequisitionGroup requisitionGroup = new RequisitionGroup();
+    requisitionGroup.setId(1);
+
+    when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(program, facility)).thenReturn(requisitionGroup);
+    when(requisitionGroupProgramScheduleRepository.getScheduleIdForRequisitionGroupAndProgram(requisitionGroup.getId(), program.getId())).thenReturn(scheduleId);
+    when(periodRepository.getAllPeriodsForDateRange(scheduleId, startDate, endDate)).thenReturn(expected);
+
+    List<ProcessingPeriod> actual = service.getAllPeriodsForDateRange(facility, program, startDate, endDate);
+
+    verify(periodRepository).getAllPeriodsForDateRange(scheduleId, startDate, endDate);
+    assertThat(actual, is(expected));
+  }
 }

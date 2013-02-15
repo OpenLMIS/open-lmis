@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -189,5 +190,15 @@ public class RequisitionController extends BaseController {
     } catch (DataException dataException) {
       return error(dataException, HttpStatus.NOT_FOUND);
     }
+  }
+
+  @RequestMapping(value = "/facility/{facilityId}/program/{programId}/requisitions", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("hasPermission('','VIEW_REQUISITION')")
+  public ResponseEntity<OpenLmisResponse> getRequisitionsForView(@PathVariable("facilityId") Integer  facilityId
+                                                              ,@PathVariable("programId") Integer programId
+                                                              ,@RequestParam("periodStartDate") Date periodStartDate
+                                                              ,@RequestParam("periodEndDate") Date periodEndDate) {
+
+    return response(RNR_LIST, RnrDTO.prepareForView(requisitionService.get(new Facility(facilityId), new Program(programId), periodStartDate, periodEndDate)));
   }
 }

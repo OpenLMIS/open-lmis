@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Data
 @NoArgsConstructor
-public class ProcessingPeriod {
+public class ProcessingPeriod implements BaseModel{
 
   private Integer id;
   private Integer scheduleId;

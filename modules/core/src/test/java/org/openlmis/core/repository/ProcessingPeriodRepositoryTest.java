@@ -177,4 +177,18 @@ public class ProcessingPeriodRepositoryTest {
 
     assertThat(repository.getImmediatePreviousPeriod(period), is(previousPeriod));
   }
+
+  @Test
+  public void shouldGetAllPeriodsInDateRange() throws Exception {
+    Date startDate = DateTime.now().toDate();
+    Date endDate = DateTime.now().toDate();
+    List<ProcessingPeriod> expected = new ArrayList<>();
+    Integer scheduleId = 1;
+    when(mapper.getAllPeriodsForDateRange(scheduleId, startDate, endDate)).thenReturn(expected);
+
+    List<ProcessingPeriod> actual = repository.getAllPeriodsForDateRange(scheduleId, startDate, endDate);
+    verify(mapper).getAllPeriodsForDateRange(scheduleId, startDate, endDate);
+    assertThat(actual, is(expected));
+  }
+
 }

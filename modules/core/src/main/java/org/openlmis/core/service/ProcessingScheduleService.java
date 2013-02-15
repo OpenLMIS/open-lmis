@@ -64,12 +64,16 @@ public class ProcessingScheduleService {
   }
 
   public List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriod(Integer facilityId, Integer programId, Date programStartDate, Integer startingPeriod) {
-    RequisitionGroup requisitionGroup = requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(new Program(programId), new Facility(facilityId));
+    Integer scheduleId = getScheduleId(new Facility(facilityId), new Program(programId));
+    return periodRepository.getAllPeriodsAfterDateAndPeriod(scheduleId, startingPeriod, programStartDate, new Date());
+  }
+
+  private Integer getScheduleId(Facility facility, Program program) {
+    RequisitionGroup requisitionGroup = requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(program, facility);
     if (requisitionGroup == null)
       throw new DataException(NO_REQUISITION_GROUP_ERROR);
 
-    Integer scheduleId = requisitionGroupProgramScheduleRepository.getScheduleIdForRequisitionGroupAndProgram(requisitionGroup.getId(), programId);
-    return periodRepository.getAllPeriodsAfterDateAndPeriod(scheduleId, startingPeriod, programStartDate, new Date());
+    return requisitionGroupProgramScheduleRepository.getScheduleIdForRequisitionGroupAndProgram(requisitionGroup.getId(), program.getId());
   }
 
   public ProcessingPeriod getPeriodById(Integer periodId) {
@@ -78,5 +82,10 @@ public class ProcessingScheduleService {
 
   public ProcessingPeriod getImmediatePreviousPeriod(ProcessingPeriod period) {
     return periodRepository.getImmediatePreviousPeriod(period);
+  }
+
+  public List<ProcessingPeriod> getAllPeriodsForDateRange(Facility facility, Program program, Date startDate, Date endDate) {
+    Integer scheduleId = getScheduleId(facility, program);
+    return periodRepository.getAllPeriodsForDateRange(scheduleId, startDate, endDate);
   }
 }

@@ -55,4 +55,8 @@ public interface ProcessingPeriodMapper {
     "AND cp.id = #{id}",
     "AND pp.id <> cp.id"})
   ProcessingPeriod getImmediatePreviousPeriodFor(ProcessingPeriod period);
+
+
+  @Select({"SELECT * FROM processing_periods WHERE scheduleId = #{scheduleId} AND (( startDate<=#{startDate} AND endDate>=#{startDate}) OR (startDate<=#{endDate} AND endDate>=#{endDate}))"})
+  List<ProcessingPeriod> getAllPeriodsForDateRange(@Param("scheduleId") Integer scheduleId,@Param("startDate") Date startDate,@Param("endDate") Date endDate);
 }

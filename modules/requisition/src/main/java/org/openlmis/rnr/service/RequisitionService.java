@@ -338,5 +338,13 @@ public class RequisitionService {
       }
     });
   }
+
+  public List<Rnr> get(Facility facility, Program program, Date periodStartDate, Date periodEndDate) {
+    List<ProcessingPeriod> periods = processingScheduleService.getAllPeriodsForDateRange(facility, program, periodStartDate, periodEndDate);
+    List<Rnr> requisitions = requisitionRepository.get(facility, program, periods);
+    fillFacilityPeriodProgram(requisitions.toArray(new Rnr[requisitions.size()]));
+    return requisitions;
+  }
+
 }
 

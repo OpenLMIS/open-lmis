@@ -68,4 +68,8 @@ public class ProcessingPeriodRepository {
   public ProcessingPeriod getImmediatePreviousPeriod(ProcessingPeriod period) {
     return mapper.getImmediatePreviousPeriodFor(period);
   }
+
+  public List<ProcessingPeriod> getAllPeriodsForDateRange(Integer scheduleId, Date startDate, Date endDate) {
+      return mapper.getAllPeriodsForDateRange(scheduleId, startDate, endDate);
+  }
 }

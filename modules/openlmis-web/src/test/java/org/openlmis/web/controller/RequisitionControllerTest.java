@@ -2,6 +2,7 @@ package org.openlmis.web.controller;
 
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,12 +29,14 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.openlmis.web.controller.RequisitionController.*;
 import static org.powermock.api.mockito.PowerMockito.*;
 
@@ -273,15 +276,38 @@ public class RequisitionControllerTest {
     ArrayList<Rnr> expectedRequisitions = new ArrayList<>();
     mockStatic(RnrDTO.class);
     when(requisitionService.getApprovedRequisitions()).thenReturn(expectedRequisitions);
-    ArrayList<RnrDTO> expectedRnrList = new ArrayList<>();
+    List<RnrDTO> expectedRnrList = new ArrayList<>();
     when(RnrDTO.prepareForListApproval(expectedRequisitions)).thenReturn(expectedRnrList);
+  
     ResponseEntity<OpenLmisResponse> responseEntity = controller.listForConvertToOrder();
 
     verify(requisitionService).getApprovedRequisitions();
-    assertThat((ArrayList<RnrDTO>) responseEntity.getBody().getData().get(RNR_LIST), is(expectedRnrList));
-
+    assertThat((List<RnrDTO>) responseEntity.getBody().getData().get(RNR_LIST), is(expectedRnrList));
   }
 
+  @Test
+  public void shouldGetRequisitionsForViewWithGivenFacilityIdProgramIdAndPeriodRange() throws Exception {
+    Integer facilityId = 1;
+    List<Integer> programIds = asList(1, 2);
+    Date periodStartDate = DateTime.parse("2013-02-01").toDate();
+    Date periodEndDate = DateTime.parse("2013-02-14").toDate();
+    List<Rnr> requisitionsReturnedByService = new ArrayList<>();
+    Facility facility = new Facility(1);
+    whenNew(Facility.class).withArguments(1).thenReturn(facility);
+    Program program = new Program(2);
+    whenNew(Program.class).withArguments(2).thenReturn(program);
+
+    when(requisitionService.get(facility, program, periodStartDate, periodEndDate)).thenReturn(requisitionsReturnedByService);
+    mockStatic(RnrDTO.class);
+    List<RnrDTO> expectedRnrList = mock(List.class);
+    when(RnrDTO.prepareForView(requisitionsReturnedByService)).thenReturn(expectedRnrList);
+
+    ResponseEntity<OpenLmisResponse> response = controller.getRequisitionsForView(facility.getId(), program.getId(), periodStartDate, periodEndDate);
+
+    verify(requisitionService).get(facility, program, periodStartDate, periodEndDate);
+    List<RnrDTO> actual = (List<RnrDTO>) response.getBody().getData().get(RNR_LIST);
+    assertThat(actual, is(expectedRnrList));
+  }
 
   private Rnr createRequisition() {
     Rnr requisition = new Rnr();
