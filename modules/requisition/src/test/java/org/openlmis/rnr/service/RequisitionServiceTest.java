@@ -820,7 +820,7 @@ public class RequisitionServiceTest {
 
     requisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), period.getId(), USER_ID);
 
-    verify(spyRequisition).setBeginningBalanceForEachLineItem(previousRnr, true);
+    verify(spyRequisition).setBeginningBalances(previousRnr, true);
   }
 
   @Test
@@ -846,7 +846,7 @@ public class RequisitionServiceTest {
 
     requisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), USER_ID);
 
-    verify(spyRequisition).setBeginningBalanceForEachLineItem(null, true);
+    verify(spyRequisition).setBeginningBalances(null, true);
   }
 
   @Test
@@ -875,7 +875,7 @@ public class RequisitionServiceTest {
 
     requisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), period.getId(), USER_ID);
 
-    verify(spyRequisition).setBeginningBalanceForEachLineItem(previousRnr, true);
+    verify(spyRequisition).setBeginningBalances(previousRnr, true);
   }
 
   @Test

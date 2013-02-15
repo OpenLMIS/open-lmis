@@ -109,7 +109,7 @@ public class Rnr {
     }
   }
 
-  public void setBeginningBalanceForEachLineItem(Rnr previousRequisition, boolean beginningBalanceVisible) {
+  public void setBeginningBalances(Rnr previousRequisition, boolean beginningBalanceVisible) {
     if (previousRequisition == null) {
       if (!beginningBalanceVisible) resetBeginningBalances();
       return;

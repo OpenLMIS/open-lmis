@@ -83,7 +83,7 @@ public class RequisitionService {
   }
 
   private void fillFieldsForInitiatedRequisitionAccordingToTemplate(Rnr requisition, ProgramRnrTemplate template) {
-    fillBeginningBalanceFromPreviousRnrIfStockInHandVisible(requisition, template.columnsVisible(BEGINNING_BALANCE));
+    requisition.setBeginningBalances(getPreviousRequisition(requisition), template.columnsVisible(BEGINNING_BALANCE));
     requisition.setFieldsAccordingToTemplate(template);
   }
 
@@ -234,13 +234,12 @@ public class RequisitionService {
     return rnr;
   }
 
-  private void fillBeginningBalanceFromPreviousRnrIfStockInHandVisible(Rnr requisition, boolean beginningBalanceVisible) {
-      ProcessingPeriod immediatePreviousPeriod = processingScheduleService.getImmediatePreviousPeriod(requisition.getPeriod());
-      Rnr previousRequisition = null;
-      if (immediatePreviousPeriod != null)
-        previousRequisition = requisitionRepository.getRequisition(requisition.getFacility(), requisition.getProgram(), immediatePreviousPeriod);
-
-      requisition.setBeginningBalanceForEachLineItem(previousRequisition, beginningBalanceVisible);
+  private Rnr getPreviousRequisition(Rnr requisition) {
+    ProcessingPeriod immediatePreviousPeriod = processingScheduleService.getImmediatePreviousPeriod(requisition.getPeriod());
+    Rnr previousRequisition = null;
+    if (immediatePreviousPeriod != null)
+      previousRequisition = requisitionRepository.getRequisition(requisition.getFacility(), requisition.getProgram(), immediatePreviousPeriod);
+    return previousRequisition;
   }
 
   private void validateIfRnrCanBeInitiatedFor(Integer facilityId, Integer programId, Integer periodId) {
