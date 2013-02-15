@@ -19,7 +19,7 @@ public class DeleteFacilityPage extends Page {
     @FindBy(how = How.ID, using = "searchFacility")
     private static WebElement searchFacilityTextField;
 
-    @FindBy(how = How.XPATH, using = "//div[@class='facility-list']/ul/li[1]/a")
+    @FindBy(how = How.XPATH, using = "//div[@class='facility-list']/ul/li/a")
     private static WebElement facilityList;
 
     @FindBy(how = How.LINK_TEXT, using = "Delete")
@@ -123,7 +123,7 @@ public class DeleteFacilityPage extends Page {
 
         testWebDriver.waitForElementToAppear(searchFacilityTextField);
         searchFacilityTextField.sendKeys(facilityCodeValue);
-         testWebDriver.waitForElementToAppear(facilityList);
+           testWebDriver.sleep(2000);
     }
 
     public void deleteAndVerifyFacility(String facilityCodeValue, String facilityNameValue) {
