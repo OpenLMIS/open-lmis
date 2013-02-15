@@ -26,7 +26,7 @@ import static org.openlmis.core.builder.ProductBuilder.code;
 import static org.openlmis.rnr.builder.RnrColumnBuilder.*;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.lossesAndAdjustments;
-import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
+import static org.openlmis.rnr.builder.RnrLineItemBuilder.quantityApproved;
 import static org.openlmis.rnr.domain.RnRColumnSource.CALCULATED;
 import static org.openlmis.rnr.domain.RnRColumnSource.USER_INPUT;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
@@ -55,7 +55,7 @@ public class RnrLineItemTest {
 
   private void addVisibleColumns(List<RnrColumn> templateColumns) {
     RnrColumn beginningBalanceColumn = new RnrColumn();
-    beginningBalanceColumn.setName(BEGINNING_BALANCE);
+    beginningBalanceColumn.setName(ProgramRnrTemplate.BEGINNING_BALANCE);
     beginningBalanceColumn.setVisible(true);
     beginningBalanceColumn.setFormulaValidationRequired(true);
     templateColumns.add(beginningBalanceColumn);
@@ -413,6 +413,7 @@ public class RnrLineItemTest {
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.STOCK_OUT_DAYS), with(visible, false))));
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.STOCK_IN_HAND), with(visible, false), with(source, CALCULATED))));
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.BEGINNING_BALANCE), with(visible, false))));
+      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.QUANTITY_APPROVED), with(visible, true), with(source, USER_INPUT))));
     }};
   }
 
@@ -440,8 +441,8 @@ public class RnrLineItemTest {
   @Test
   public void shouldCalculateStockInHandIfCalculated() throws Exception {
     ArrayList<RnrColumn> columns = new ArrayList<RnrColumn>() {{
-      add(make(a(defaultRnrColumn, with(source, CALCULATED), with(columnName, STOCK_IN_HAND))));
-      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, QUANTITY_DISPENSED))));
+      add(make(a(defaultRnrColumn, with(source, CALCULATED), with(columnName, ProgramRnrTemplate.STOCK_IN_HAND))));
+      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, ProgramRnrTemplate.QUANTITY_DISPENSED))));
     }};
     lineItem.setStockInHand(99);
     lineItem.calculate(period, INITIATED, columns);
@@ -452,8 +453,8 @@ public class RnrLineItemTest {
   @Test
   public void shouldNotCalculateStockInHandIfUserInput() throws Exception {
     ArrayList<RnrColumn> columns = new ArrayList<RnrColumn>() {{
-      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, STOCK_IN_HAND))));
-      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, QUANTITY_DISPENSED))));
+      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, ProgramRnrTemplate.STOCK_IN_HAND))));
+      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, ProgramRnrTemplate.QUANTITY_DISPENSED))));
     }};
     lineItem.setStockInHand(66);
     lineItem.calculate(period, INITIATED, columns);
@@ -464,8 +465,8 @@ public class RnrLineItemTest {
   @Test
   public void shouldCalculateQuantityDispensedIfCalculated() throws Exception {
     ArrayList<RnrColumn> columns = new ArrayList<RnrColumn>() {{
-      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, STOCK_IN_HAND))));
-      add(make(a(defaultRnrColumn, with(source, CALCULATED), with(columnName, QUANTITY_DISPENSED))));
+      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, ProgramRnrTemplate.STOCK_IN_HAND))));
+      add(make(a(defaultRnrColumn, with(source, CALCULATED), with(columnName, ProgramRnrTemplate.QUANTITY_DISPENSED))));
     }};
 
     lineItem.setQuantityDispensed(4);
@@ -477,8 +478,8 @@ public class RnrLineItemTest {
   @Test
   public void shouldNotCalculateQuantityDispensedIfUserInput() throws Exception {
     ArrayList<RnrColumn> columns = new ArrayList<RnrColumn>() {{
-      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, STOCK_IN_HAND))));
-      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, QUANTITY_DISPENSED))));
+      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, ProgramRnrTemplate.STOCK_IN_HAND))));
+      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, ProgramRnrTemplate.QUANTITY_DISPENSED))));
     }};
 
     lineItem.setQuantityDispensed(0);
@@ -496,5 +497,13 @@ public class RnrLineItemTest {
     lineItem.copyUserEditableFields(editedLineItem, new ArrayList<RnrColumn>());
 
     assertThat(lineItem.getBeginningBalance(), is(RnrLineItemBuilder.BEGINNING_BALANCE));
+  }
+
+  @Test
+  public void shouldNotCopyQuantityApprovedWhileCopyingNonApproverEditableFields() throws Exception {
+    RnrLineItem editedLineItem = make(a(defaultRnrLineItem, with(quantityApproved, 89)));
+    lineItem.copyUserEditableFields(editedLineItem, getRnrColumns());
+
+    assertThat(lineItem.getQuantityApproved(), is(RnrLineItemBuilder.QUANTITY_APPROVED));
   }
 }

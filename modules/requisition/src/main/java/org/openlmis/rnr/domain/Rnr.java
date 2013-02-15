@@ -122,7 +122,7 @@ public class Rnr {
 
   private void resetBeginningBalances() {
     for (RnrLineItem lineItem : lineItems) {
-      lineItem.resetBeginningBalance();
+      lineItem.setBeginningBalance(0);
     }
   }
 
@@ -210,7 +210,7 @@ public class Rnr {
 
   public void calculateForApproval() {
     for(RnrLineItem lineItem:lineItems) {
-      lineItem.calculatePacksToShipWithQuantityApproved();
+      lineItem.calculatePacksToShip();
     }
     this.fullSupplyItemsSubmittedCost = calculateCost(lineItems);
     this.nonFullSupplyItemsSubmittedCost = calculateCost(nonFullSupplyLineItems);

@@ -134,7 +134,7 @@ public class RnrLineItem {
     if(template.columnsCalculated(QUANTITY_DISPENSED)) calculateQuantityDispensed();
     calculateOrderQuantity();
 
-    calculatePacksToShipWithQuantityRequested();
+    calculatePacksToShip();
   }
 
   private void calculateAmc(ProcessingPeriod period) {
@@ -183,15 +183,15 @@ public class RnrLineItem {
     return value != null;
   }
 
-  private void calculatePacksToShipWithQuantityRequested() {
-    Integer orderQuantity = quantityRequested == null ? calculatedOrderQuantity : quantityRequested;
+  public void calculatePacksToShip() {
+    Integer orderQuantity = getOrderQuantity();
     packsToShip = round(floor(orderQuantity / packSize), orderQuantity);
   }
 
-  public void calculatePacksToShipWithQuantityApproved() {
-    if (quantityApproved == null) throw new DataException(RNR_VALIDATION_ERROR);
-
-    packsToShip = round(floor(quantityApproved / packSize), quantityApproved);
+  private Integer getOrderQuantity() {
+    if(quantityApproved != null) return quantityApproved;
+    if(quantityRequested != null) return quantityRequested;
+    else return calculatedOrderQuantity;
   }
 
   private Integer round(Double packsToShip, Integer orderQuantity) {
@@ -254,7 +254,7 @@ public class RnrLineItem {
     copyBeginningBalance(item, template);
 
     for (RnrColumn column : template.getRnrColumns()) {
-      if (!column.isVisible() || column.getSource() != USER_INPUT) {
+      if (!column.isVisible() || column.getSource() != USER_INPUT || column.getName().equals(QUANTITY_APPROVED)) {
         continue;
       }
 
@@ -279,10 +279,6 @@ public class RnrLineItem {
     }
     this.beginningBalance = lineItem.getStockInHand();
     this.setPreviousStockInHandAvailable(TRUE);
-  }
-
-  public void resetBeginningBalance() {
-    beginningBalance = 0;
   }
 
   void setLineItemFieldsAccordingToTemplate(ProgramRnrTemplate template) {
