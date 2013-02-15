@@ -84,7 +84,8 @@ public class UserController extends BaseController {
     String modifiedBy = (String) request.getSession().getAttribute(USER);
     user.setModifiedBy(modifiedBy);
     try {
-      String resetPasswordBaseLink = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/";
+      String referrer = request.getHeader("referer");
+      String resetPasswordBaseLink = referrer.substring(0, nthOccurrence(referrer, '/', 3)) + "/";
       userService.create(user, resetPasswordBaseLink);
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);

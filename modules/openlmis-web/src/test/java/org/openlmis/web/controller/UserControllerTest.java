@@ -92,10 +92,9 @@ public class UserControllerTest {
     User user = new User();
     user.setUserName("Manan");
     user.setEmail("manan@thoughtworks.com");
-    HttpServletRequest request = mock(HttpServletRequest.class);
-    when(request.getHeader("referer")).thenReturn("http://referrer/");
-    userController.sendPasswordTokenEmail(user, request);
-    verify(userService).sendForgotPasswordEmail(eq(user), anyString());
+    httpServletRequest.addHeader("referer", "http://openlmis:9091/public/pages/admin/user/index.html");
+    userController.sendPasswordTokenEmail(user, httpServletRequest);
+    verify(userService).sendForgotPasswordEmail(eq(user),eq("http://openlmis:9091/public/pages/reset-password.html#/token/"));
   }
 
   @Test
@@ -117,9 +116,10 @@ public class UserControllerTest {
 
     httpServletRequest.getSession().setAttribute(USER_ID, userId);
     httpServletRequest.getSession().setAttribute(USER, USER);
+    httpServletRequest.addHeader("referer", "http://openlmis:9091/public/pages/admin/user/index.html");
     ResponseEntity<OpenLmisResponse> response = userController.create(user, httpServletRequest);
 
-    verify(userService).create(eq(user), anyString());
+    verify(userService).create(eq(user),eq("http://openlmis:9091/"));
 
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
     assertThat(response.getBody().getSuccessMsg(), is("User '" + user.getFirstName() + " " + user.getLastName() + "' has been successfully created, password link has been sent on registered Email address"));
@@ -147,7 +147,7 @@ public class UserControllerTest {
   public void shouldReturnErrorIfSaveUserFails() throws Exception {
     User user = new User();
     doThrow(new DataException("Save user failed")).when(userService).create(eq(user), anyString());
-
+    httpServletRequest.addHeader("referer","http://openlmis:8080/index.html");
     ResponseEntity<OpenLmisResponse> response = userController.create(user, httpServletRequest);
 
     assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
