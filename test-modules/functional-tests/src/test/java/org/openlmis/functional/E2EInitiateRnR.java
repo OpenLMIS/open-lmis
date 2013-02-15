@@ -100,10 +100,10 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
     initiateRnRPage.calculateAndVerifyStockOnHand(10, 10, 10, 1);
 
-//    initiateRnRPage.clearNewPatientField();
+    initiateRnRPage.clearNewPatientField();
 
-//    initiateRnRPage.submitRnR();
-//    initiateRnRPage.verifySubmitRnrErrorMsg();
+    initiateRnRPage.submitRnR();
+    initiateRnRPage.verifySubmitRnrErrorMsg();
 
     initiateRnRPage.enterValuesAndVerifyCalculatedOrderQuantity(10, 10, 101, 51, 153, 142);
     initiateRnRPage.verifyPacksToShip(15);

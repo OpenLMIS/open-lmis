@@ -382,9 +382,8 @@ public class InitiateRnRPage extends Page {
   }
 
     public void clearNewPatientField() {
-        newPatient.clear();
-        newPatient.sendKeys("");
-        testWebDriver.sleep(1500);
+        newPatient.sendKeys("\u0008");
+        testWebDriver.sleep(500);
     }
 
   public void verifyBeginningBalanceDisabled() {
