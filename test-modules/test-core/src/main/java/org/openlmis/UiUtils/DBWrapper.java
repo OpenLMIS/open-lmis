@@ -153,6 +153,7 @@ public class DBWrapper {
     update("INSERT INTO role_rights\n" +
         "  (roleId, rightName) VALUES\n" +
         "  ((select id from roles where name='store in-charge'), 'CREATE_REQUISITION'),\n" +
+        "  ((select id from roles where name='store in-charge'), 'AUTHORIZE_REQUISITION'),\n" +
         "  ((select id from roles where name='district pharmacist'), 'UPLOADS'),\n" +
         "  ((select id from roles where name='district pharmacist'), 'MANAGE_FACILITY'),\n" +
         "  ((select id from roles where name='district pharmacist'), 'CONFIGURE_RNR');");

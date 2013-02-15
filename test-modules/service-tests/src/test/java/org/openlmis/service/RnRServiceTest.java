@@ -70,6 +70,8 @@ public class RnRServiceTest extends TestCaseHelper {
 
       String SAVE_RNR_ENDPOINT = "/requisitions/" + requisitionId + "/save.json";
 
+      String AUTHORIZE_RNR_ENDPOINT = "/requisitions/" + requisitionId + "/authorize.json";
+
       String SUBMIT_RNR_JSON = "{\n" +
           "    \"id\": " + requisitionId + ",\n" +
           "    \"lineItems\": [\n" +
@@ -156,8 +158,13 @@ public class RnRServiceTest extends TestCaseHelper {
       String rnrStatusSave = serviceUtils.putJSON(SUBMIT_RNR_JSON, BASE_URL + SAVE_RNR_ENDPOINT);
       SeleneseTestNgHelper.assertTrue("R&R is not saved successfully", rnrStatusSave.contains("R&R saved successfully!"));
 
-      String rnrStatusStatus = serviceUtils.putJSON(SUBMIT_RNR_JSON, BASE_URL + SUBMIT_RNR_ENDPOINT);
-      SeleneseTestNgHelper.assertTrue("R&R is not submitted successfully", rnrStatusStatus.contains("R&R submitted successfully!"));
+      String rnrStatusSubmit = serviceUtils.putJSON(SUBMIT_RNR_JSON, BASE_URL + SUBMIT_RNR_ENDPOINT);
+      SeleneseTestNgHelper.assertTrue("R&R is not submitted successfully", rnrStatusSubmit.contains("R&R submitted successfully!"));
+
+      String rnrStatusAuthorize = serviceUtils.putJSON(SUBMIT_RNR_JSON, BASE_URL + AUTHORIZE_RNR_ENDPOINT);
+      SeleneseTestNgHelper.assertTrue("R&R is not authorized successfully", rnrStatusAuthorize.contains("There is no supervisor assigned to review and approve this R&R, Please contact the Administrator"));
+
+
 
       serviceUtils.getJSON(BASE_URL + "//j_spring_security_logout");
 
