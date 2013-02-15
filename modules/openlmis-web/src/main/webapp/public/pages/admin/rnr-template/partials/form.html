@@ -49,9 +49,13 @@
       <a href="javascript:void(0);" class="btn btn-primary btn-mini pull-right" ng-click= "toggleValidateFormulaFlag()">Turn {{arithmeticValidationToggleLabel}}</a>
     </div>
 
-    <div class="alert alert-error" id="saveErrorMsgDiv" ng-bind="error" ng-show="error"></div>
-    <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"></div>
 
-    <input type="submit" class="btn" value="Save" />
+    <div form-toolbar class="action-buttons">
+      <div class="form-cell button-row">
+        <input type="submit" class="btn btn-primary save-button" value="Save" />
+      </div>
+      <div class="toolbar-error" id="saveErrorMsgDiv" ng-bind="error" ng-show="error"></div>
+      <div class="toolbar-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"></div>
+    </div>
   </form>
 </div>

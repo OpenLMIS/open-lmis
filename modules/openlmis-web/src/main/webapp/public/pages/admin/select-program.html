@@ -1,17 +1,17 @@
 <div>
-    <h2>Configure R &amp; R Template</h2>
-    <div class="app-form">
-      <div class="form-row">
-        <label>Program</label>
-        <div class="form-field">
-          <select id="selectProgram" ng-model="$parent.program" ng-options="i as i.name for i in programs">
-            <option value="">--Choose program--</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-row button-row">
-          <div class="alert alert-error"  ng-bind="error" ng-show="error"></div>
-        <a ng-click="createRnrTemplate()" href="javascript:void(0);" class="btn">Next</a>
+  <h2>Configure R &amp; R Template</h2>
+  <div class="app-form">
+    <div class="form-row">
+      <label>Program</label>
+      <div class="form-field">
+        <select id="selectProgram" ng-model="$parent.program" ng-options="i as i.name for i in programs">
+          <option value="">--Choose program--</option>
+        </select>
       </div>
     </div>
+    <div class="form-row">
+      <div class="alert alert-error" ng-bind="error" ng-show="error"></div>
+      <a ng-click="createRnrTemplate()" href="javascript:void(0);" class="btn btn-primary">Next</a>
+    </div>
+  </div>
 </div>
