@@ -66,6 +66,13 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
         });
       }
     };
+  }).directive('openlmisMessage', function (localStorageService) {
+    return {
+      restrict:'A',
+      link: function(scope, element, attrs) {
+        element.html(localStorageService.get("message."+attrs.openlmisMessage));
+      }
+    }
   })
   .directive('formToolbar', function () {
     return {
