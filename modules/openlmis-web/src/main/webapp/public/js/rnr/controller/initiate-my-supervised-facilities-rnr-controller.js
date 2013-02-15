@@ -7,12 +7,12 @@ function InitiateMySupervisedFacilitiesRnrController($scope, UserSupervisedProgr
   );
 
   $scope.loadFacilities = function () {
+    $scope.$parent.facilities = null;
     if ($scope.$parent.selectedProgram) {
       UserSupervisedFacilitiesForProgram.get({programId: $scope.$parent.selectedProgram.id}, function (data) {
         $scope.$parent.facilities = data.facilities;
       }, {});
     } else {
-      $scope.$parent.facilities = null;
       $scope.$parent.selectedFacilityId = null;
     }
   };

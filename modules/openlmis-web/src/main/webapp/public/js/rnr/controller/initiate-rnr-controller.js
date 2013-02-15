@@ -5,8 +5,6 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
   var PREVIOUS_RNR_PENDING_STATUS = "Previous R&R pending";
   var RNR_NOT_YET_STARTED_STATUS = "Not yet started";
 
-  //$scope.selectedType = null;
-
   var resetRnrData = function() {
     $scope.periodGridData = [];
     $scope.selectedProgram = null;
@@ -128,6 +126,8 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
   };
 
   $scope.loadPeriods = function () {
+    $scope.selectedPeriod = null;
+    $scope.periodGridData = [];
     if ($scope.selectedProgram && $scope.selectedFacilityId) {
       PeriodsForFacilityAndProgram.get({facilityId:$scope.selectedFacilityId, programId:$scope.selectedProgram.id},
           function (data) {
@@ -136,13 +136,9 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
           },
           function (data) {
             $scope.error = data.data.error;
-            $scope.selectedPeriod = null;
-            $scope.periodGridData = [];
           });
     } else {
       $scope.error = "";
-      $scope.selectedPeriod = null;
-      $scope.periodGridData = [];
     }
   };
 
