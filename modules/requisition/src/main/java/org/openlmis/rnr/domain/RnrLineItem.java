@@ -179,10 +179,6 @@ public class RnrLineItem {
     return (quantityDispensed >= 0 && stockInHand >= 0 && validQuantityDispensed);
   }
 
-  private Integer setToZeroIfNotPresent(Integer field) {
-    return isPresent(field) ? field : 0;
-  }
-
   private boolean isPresent(Object value) {
     return value != null;
   }
