@@ -82,11 +82,11 @@ public class Rnr {
 
   public void calculate(List<RnrColumn> programRnrColumns) {
     for(RnrLineItem lineItem : lineItems){
-      lineItem.calculate(period, status, programRnrColumns);
+      lineItem.calculate(period, programRnrColumns);
     }
 
     for(RnrLineItem lineItem : nonFullSupplyLineItems) {
-      lineItem.calculate(period, status, programRnrColumns);
+      lineItem.calculate(period, programRnrColumns);
     }
 
     this.fullSupplyItemsSubmittedCost = calculateCost(lineItems);

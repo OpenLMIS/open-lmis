@@ -124,7 +124,7 @@ public class RnrLineItem {
     return true;
   }
 
-  public void calculate(ProcessingPeriod period, RnrStatus status, List<RnrColumn> rnrColumns) {
+  public void calculate(ProcessingPeriod period, List<RnrColumn> rnrColumns) {
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
     calculateNormalizedConsumption();
     calculateAmc(period);

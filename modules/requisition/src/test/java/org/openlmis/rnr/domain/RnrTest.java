@@ -164,8 +164,8 @@ public class RnrTest {
 
     rnr.calculate(programRequisitionColumns);
 
-    verify(firstLineItem).calculate(period, SUBMITTED, programRequisitionColumns);
-    verify(secondLineItem).calculate(period, SUBMITTED, programRequisitionColumns);
+    verify(firstLineItem).calculate(period, programRequisitionColumns);
+    verify(secondLineItem).calculate(period, programRequisitionColumns);
   }
 
   @Test

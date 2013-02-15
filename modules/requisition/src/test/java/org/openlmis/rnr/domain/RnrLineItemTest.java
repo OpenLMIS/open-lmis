@@ -29,7 +29,6 @@ import static org.openlmis.rnr.builder.RnrLineItemBuilder.lossesAndAdjustments;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.quantityApproved;
 import static org.openlmis.rnr.domain.RnRColumnSource.CALCULATED;
 import static org.openlmis.rnr.domain.RnRColumnSource.USER_INPUT;
-import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.spy;
 
@@ -239,7 +238,7 @@ public class RnrLineItemTest {
     lineItem.setQuantityDispensed(29);
 
 
-    lineItem.calculate(period, INITIATED, getRnrColumns());
+    lineItem.calculate(period, getRnrColumns());
 
     assertThat(lineItem.getTotalLossesAndAdjustments(), is(25));
   }
@@ -252,7 +251,7 @@ public class RnrLineItemTest {
     lineItem.setDosesPerDispensingUnit(10);
     lineItem.setNormalizedConsumption(37345);
 
-    lineItem.calculate(period, INITIATED, getRnrColumns());
+    lineItem.calculate(period, getRnrColumns());
 
     assertThat(lineItem.getNormalizedConsumption(), is(37));
   }
@@ -265,7 +264,7 @@ public class RnrLineItemTest {
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
     period.setNumberOfMonths(3);
 
-    spyLineItem.calculate(period, INITIATED, getRnrColumns());
+    spyLineItem.calculate(period, getRnrColumns());
 
     assertThat(spyLineItem.getAmc(), is(15));
   }
@@ -278,7 +277,7 @@ public class RnrLineItemTest {
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
     period.setNumberOfMonths(2);
 
-    spyLineItem.calculate(period, INITIATED, getRnrColumns());
+    spyLineItem.calculate(period, getRnrColumns());
 
     assertThat(spyLineItem.getAmc(), is(14));
   }
@@ -291,7 +290,7 @@ public class RnrLineItemTest {
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
     period.setNumberOfMonths(1);
 
-    spyLineItem.calculate(period, INITIATED, getRnrColumns());
+    spyLineItem.calculate(period, getRnrColumns());
 
     assertThat(spyLineItem.getAmc(), is(23));
   }
@@ -304,7 +303,7 @@ public class RnrLineItemTest {
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
     period.setNumberOfMonths(1);
 
-    spyLineItem.calculate(period, INITIATED, getRnrColumns());
+    spyLineItem.calculate(period, getRnrColumns());
 
     assertThat(spyLineItem.getAmc(), is(29));
   }
@@ -316,7 +315,7 @@ public class RnrLineItemTest {
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
     period.setNumberOfMonths(1);
 
-    spyLineItem.calculate(period, INITIATED, getRnrColumns());
+    spyLineItem.calculate(period, getRnrColumns());
 
     assertThat(spyLineItem.getAmc(), is(45));
   }
@@ -329,7 +328,7 @@ public class RnrLineItemTest {
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
     period.setNumberOfMonths(2);
 
-    spyLineItem.calculate(period, INITIATED, getRnrColumns());
+    spyLineItem.calculate(period, getRnrColumns());
 
     assertThat(spyLineItem.getAmc(), is(23));
   }
@@ -343,7 +342,7 @@ public class RnrLineItemTest {
     lineItem.setNormalizedConsumption(37345);
     lineItem.setMaxMonthsOfStock(10);
 
-    lineItem.calculate(period, INITIATED, getRnrColumns());
+    lineItem.calculate(period, getRnrColumns());
 
     assertThat(lineItem.getMaxStockQuantity(), is(370));
   }
@@ -359,7 +358,7 @@ public class RnrLineItemTest {
     lineItem.setMaxStockQuantity(370);
     lineItem.setStockInHand(300);
 
-    lineItem.calculate(period, INITIATED, getRnrColumns());
+    lineItem.calculate(period, getRnrColumns());
 
     assertThat(lineItem.getCalculatedOrderQuantity(), is(366));
   }
@@ -445,7 +444,7 @@ public class RnrLineItemTest {
       add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, ProgramRnrTemplate.QUANTITY_DISPENSED))));
     }};
     lineItem.setStockInHand(99);
-    lineItem.calculate(period, INITIATED, columns);
+    lineItem.calculate(period, columns);
 
     assertThat(lineItem.getStockInHand(), is(4));
   }
@@ -457,7 +456,7 @@ public class RnrLineItemTest {
       add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, ProgramRnrTemplate.QUANTITY_DISPENSED))));
     }};
     lineItem.setStockInHand(66);
-    lineItem.calculate(period, INITIATED, columns);
+    lineItem.calculate(period, columns);
 
     assertThat(lineItem.getStockInHand(), is(66));
   }
@@ -470,7 +469,7 @@ public class RnrLineItemTest {
     }};
 
     lineItem.setQuantityDispensed(4);
-    lineItem.calculate(period, INITIATED, columns);
+    lineItem.calculate(period, columns);
 
     assertThat(lineItem.getQuantityDispensed(), is(10));
   }
@@ -483,7 +482,7 @@ public class RnrLineItemTest {
     }};
 
     lineItem.setQuantityDispensed(0);
-    lineItem.calculate(period, INITIATED, columns);
+    lineItem.calculate(period, columns);
 
     assertThat(lineItem.getQuantityDispensed(), is(0));
   }
