@@ -42,7 +42,7 @@ public class RnrTemplateService {
     }
 
 
-    public List<RnrColumn> fetchVisibleRnRColumns(Integer programId) {
-        return rnrRepository.fetchVisibleProgramRnRColumns(programId);
+    public List<RnrColumn> fetchColumnsForRequisition(Integer programId) {
+        return rnrRepository.fetchColumnsForRequisition(programId);
     }
 }

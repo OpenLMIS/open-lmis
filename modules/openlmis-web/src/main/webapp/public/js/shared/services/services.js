@@ -13,7 +13,7 @@ services.factory('RnRColumnList', function ($resource) {
 });
 
 services.factory('ProgramRnRColumnList', function ($resource) {
-    return $resource('/logistics/rnr/:programId/columns.json', {}, {});
+    return $resource('/rnr/:programId/columns.json', {}, {});
 });
 
 services.factory('Facilities', function ($resource) {

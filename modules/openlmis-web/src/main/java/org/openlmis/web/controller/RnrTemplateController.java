@@ -42,10 +42,10 @@ public class RnrTemplateController extends BaseController{
     return new RnrTemplateForm(rnrTemplateService.fetchAllRnRColumns(programId), sources);
   }
 
-  @RequestMapping(value = "/logistics/rnr/{programId}/columns", method = RequestMethod.GET, headers = "Accept=application/json")
+  @RequestMapping(value = "/rnr/{programId}/columns", method = RequestMethod.GET, headers = "Accept=application/json")
   @PreAuthorize("hasPermission('','CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION')")
-  public List<RnrColumn> fetchVisibleProgramRnrColumnList(@PathVariable("programId") Integer programId) {
-    return rnrTemplateService.fetchVisibleRnRColumns(programId);
+  public List<RnrColumn> fetchColumnsForRequisition(@PathVariable("programId") Integer programId) {
+    return rnrTemplateService.fetchColumnsForRequisition(programId);
   }
 
   @RequestMapping(value = "/program/{programId}/rnr-template", method = RequestMethod.POST, headers = "Accept=application/json")

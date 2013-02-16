@@ -248,11 +248,11 @@ ApproveRnrController.resolve = {
     }, 100);
     return deferred.promise;
   },
-  programRnrColumnList:function ($q, $timeout, RnRColumnList, $route) {
+  programRnrColumnList:function ($q, $timeout, ProgramRnRColumnList, $route) {
     var deferred = $q.defer();
     $timeout(function () {
-      RnRColumnList.get({programId:$route.current.params.program}, function (data) {
-        deferred.resolve(data.rnrTemplateForm.rnrColumns);
+      ProgramRnRColumnList.get({programId:$route.current.params.program}, function (data) {
+        deferred.resolve(data.rnrColumnList);
       }, {});
     }, 100);
     return deferred.promise;

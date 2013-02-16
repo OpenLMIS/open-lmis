@@ -44,8 +44,8 @@ public class RnrTemplateRepository {
         }
     }
 
-    public List<RnrColumn> fetchVisibleProgramRnRColumns(Integer programId) {
-        return rnrColumnMapper.getVisibleProgramRnrColumns(programId);
+    public List<RnrColumn> fetchColumnsForRequisition(Integer programId) {
+        return rnrColumnMapper.fetchDefinedRnrColumnsForProgram(programId);
     }
 
     public List<RnrColumn> fetchRnrTemplateColumns(Integer programId) {
@@ -55,10 +55,6 @@ public class RnrTemplateRepository {
             return rnrColumnMapper.fetchAllMasterRnRColumns();
         }
     }
-
-  public boolean isRnrTemplateDefined(Integer programId) {
-    return rnrColumnMapper.isRnrTemplateDefined(programId);
-  }
 
   public boolean isFormulaValidationRequired(Program program) {
     return rnrColumnMapper.isFormulaValidationRequired(program);

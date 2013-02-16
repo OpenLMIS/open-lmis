@@ -6,7 +6,7 @@ function RequisitionController($scope, Requisition, $location, $routeParams) {
           $scope.rnr = data.rnr;
         } else {
           $scope.$parent.error = "Requisition does not exist. Please initiate.";
-          $location.path($scope.$parent.sourceUrl);
+          $location.path('/init-rnr');
         }
       }, function () {
       });

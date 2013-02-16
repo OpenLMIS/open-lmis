@@ -1,18 +1,17 @@
-function RequisitionFormController($scope, ReferenceData, RnRColumnList, $location, Requisitions, $routeParams, $rootScope) {
+function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, $location, Requisitions, $routeParams, $rootScope) {
   ReferenceData.get({}, function (data) {
     $scope.currency = data.currency;
   }, function () {
   });
 
-  RnRColumnList.get({programId:$routeParams.program}, function (data) {
-    if (data.rnrTemplateForm.rnrColumns && data.rnrTemplateForm.rnrColumns.length > 0) {
-      $scope.visibleColumns = _.where(data.rnrTemplateForm.rnrColumns, {'visible':true});
-      $scope.programRnrColumnList = data.rnrTemplateForm.rnrColumns;
+  ProgramRnRColumnList.get({programId:$routeParams.program}, function (data) {
+    if (data.rnrColumnList && data.rnrColumnList.length > 0) {
+      $scope.visibleColumns = _.where(data.rnrColumnList, {'visible':true});
+      $scope.programRnrColumnList = data.rnrColumnList;
       $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name':'quantityRequested'});
       prepareRnr();
     } else {
-      $scope.$parent.error = "rnr.template.not.defined.error";
-      $location.path("/init-rnr");
+      $scope.error = "rnr.template.not.defined.error";
     }
   }, function () {
     $location.path("/init-rnr");
