@@ -27,7 +27,7 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
   }];
   $httpProvider.responseInterceptors.push(interceptor);
 })
-  .directive('uiNav', function () {
+  .directive('uiNav',function () {
     return {
       restrict:'A',
 
@@ -69,12 +69,18 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
   }).directive('openlmisMessage', function (localStorageService) {
     return {
       restrict:'A',
-      link: function(scope, element, attrs) {
-        element.html(localStorageService.get("message."+attrs.openlmisMessage));
+      link:function (scope, element, attrs) {
+        scope.$watch(attrs.openlmisMessage, function () {
+          var displayMessage = localStorageService.get("message." + scope[attrs.openlmisMessage]);
+          if(displayMessage)
+            element.html(displayMessage);
+          else
+            element.html(scope[attrs.openlmisMessage]);
+        });
       }
     }
   })
-  .directive('formToolbar', function () {
+  .directive('formToolbar',function () {
     return {
       restrict:'A',
       link:function (scope, element, attrs) {
@@ -82,10 +88,10 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
         angular.element("#action_buttons").css("width", toolbarWidth + "px");
       }
     };
-  }).run(function($rootScope) {
-      $rootScope.$on('$routeChangeStart', function() {
-        angular.element('body > .modal-backdrop').remove();
-      });
+  }).run(function ($rootScope) {
+    $rootScope.$on('$routeChangeStart', function () {
+      angular.element('body > .modal-backdrop').remove();
+    });
   });
 
 function isUndefined(value) {

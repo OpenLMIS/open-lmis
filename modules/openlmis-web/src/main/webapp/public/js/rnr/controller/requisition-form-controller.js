@@ -11,7 +11,7 @@ function RequisitionFormController($scope, ReferenceData, RnRColumnList, $locati
       $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name':'quantityRequested'});
       prepareRnr();
     } else {
-      $scope.$parent.error = "Please contact Admin to define R&R template for this program";
+      $scope.$parent.error = "rnr.template.not.defined.error";
       $location.path("/init-rnr");
     }
   }, function () {

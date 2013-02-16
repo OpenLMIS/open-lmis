@@ -43,13 +43,12 @@
                class="btn btn-success submit-button"
                value="Authorize"/>
       </div>
-      <div class="toolbar-error" id="saveFailMessage" ng-bind="error"
+      <div class="toolbar-error" id="saveFailMessage" openlmis-message="error"
            ng-show="error && !submitError && !submitMessage"></div>
-      <div class="toolbar-error" id="submitFailMessage" ng-bind="submitError" ng-show="submitError"></div>
-      <div class="toolbar-success" id="saveSuccessMsgDiv" ng-bind="message"
+      <div class="toolbar-error" id="submitFailMessage" openlmis-message="submitError"></div>
+      <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message"
            ng-show="!submitMessage && !submitError && message"></div>
-      <div class="toolbar-success" id="submitSuccessMsgDiv" ng-bind="submitMessage"
-           ng-show="submitMessage"></div>
+      <div class="toolbar-success" id="submitSuccessMsgDiv" openlmis-message="submitMessage"></div>
     </div>
   </form>
 </div>
