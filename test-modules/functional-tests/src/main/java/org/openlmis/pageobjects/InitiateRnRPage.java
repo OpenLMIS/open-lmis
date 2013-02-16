@@ -32,13 +32,13 @@ public class InitiateRnRPage extends Page {
   private static WebElement authorizeButton;
 
 
-  @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv' and @ng-bind='message']")
+  @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv' and @openlmis-message='message']")
   private static WebElement successMessage;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='submitSuccessMsgDiv' and @ng-bind='submitMessage']")
+  @FindBy(how = How.XPATH, using = "//div[@id='submitSuccessMsgDiv' and @openlmis-message='submitMessage']")
   private static WebElement submitSuccessMessage;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='submitFailMessage' and @ng-bind='submitError']")
+  @FindBy(how = How.XPATH, using = "//div[@id='submitFailMessage' and @openlmis-message='submitError']")
   private static WebElement submitErrorMessage;
 
   @FindBy(how = How.ID, using = "A_0")
