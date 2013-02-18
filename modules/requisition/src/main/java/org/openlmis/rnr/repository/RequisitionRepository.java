@@ -1,10 +1,7 @@
 package org.openlmis.rnr.repository;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.RoleAssignment;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.rnr.domain.LossesAndAdjustments;
@@ -62,7 +59,7 @@ public class RequisitionRepository {
 
   private void updateNonFullSupplyLineItems(Rnr rnr) {
     rnrLineItemMapper.deleteAllNonFullSupplyForRequisition(rnr.getId());
-    for(RnrLineItem lineItem : rnr.getNonFullSupplyLineItems()) {
+    for (RnrLineItem lineItem : rnr.getNonFullSupplyLineItems()) {
       rnrLineItemMapper.insertNonFullSupply(lineItem);
     }
   }
@@ -111,6 +108,14 @@ public class RequisitionRepository {
 
   public List<Rnr> get(Facility facility, Program program, List<ProcessingPeriod> periods) {
     return requisitionMapper.get(facility, program, commaSeparator.commaSeparateIds(periods));
+  }
+
+  public void createOrder(Order order) {
+    requisitionMapper.createOrder(order);
+  }
+
+  public void updateOrderId(Rnr rnr) {
+    requisitionMapper.updateOrderId(rnr);
   }
 }
 

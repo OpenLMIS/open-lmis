@@ -2,6 +2,7 @@ package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Order;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
@@ -185,5 +186,9 @@ public class RequisitionController extends BaseController {
                                                               ,@RequestParam("periodEndDate") Date periodEndDate) {
 
     return response(RNR_LIST, RnrDTO.prepareForView(requisitionService.get(new Facility(facilityId), new Program(programId), periodStartDate, periodEndDate)));
+  }
+
+  public void insertOrder(Order order) {
+    requisitionService.createOrder(order);
   }
 }

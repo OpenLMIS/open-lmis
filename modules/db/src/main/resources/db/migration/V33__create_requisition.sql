@@ -9,6 +9,7 @@ CREATE TABLE requisitions (
   nonFullSupplyItemsSubmittedCost NUMERIC(15, 4),
   supervisoryNodeId               INTEGER     REFERENCES supervisory_nodes (id),
   supplyingFacilityId             INTEGER REFERENCES facilities(id),
+  orderId                         INTEGER REFERENCES orders(id),
   modifiedBy                      VARCHAR(50),
   submittedDate                   TIMESTAMP,
   modifiedDate                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

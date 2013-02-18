@@ -7,10 +7,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.RoleAssignment;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.core.repository.helper.CommaSeparator;
@@ -25,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
@@ -173,7 +169,7 @@ public class RequisitionRepositoryTest {
   public void shouldGetRequisitionsForFacilityProgramAndPeriods() throws Exception {
     Facility facility = new Facility(1);
     Program program = new Program(1);
-    List<ProcessingPeriod> periods = asList(new ProcessingPeriod(1), new ProcessingPeriod(2)) ;
+    List<ProcessingPeriod> periods = asList(new ProcessingPeriod(1), new ProcessingPeriod(2));
     when(separator.commaSeparateIds(periods)).thenReturn("{1, 2}");
     List<Rnr> expected = new ArrayList<>();
     when(requisitionMapper.get(facility, program, "{1, 2}")).thenReturn(expected);
@@ -182,5 +178,25 @@ public class RequisitionRepositoryTest {
 
     assertThat(actual, is(expected));
     verify(requisitionMapper).get(facility, program, "{1, 2}");
+  }
+
+  @Test
+  public void shouldCreateOrder() throws Exception {
+    Order order = new Order();
+    requisitionRepository.createOrder(order);
+    verify(requisitionMapper).createOrder(order);
+  }
+
+  @Test
+  public void shouldUpdateOrderIdForARequisition() throws Exception {
+    rnr.setId(1);
+    requisitionRepository.insert(rnr);
+    rnr.setOrderId(100);
+    requisitionRepository.updateOrderId(rnr);
+
+    verify(requisitionMapper).updateOrderId(rnr);
+    when(requisitionMapper.getById(1)).thenReturn(rnr);
+    Rnr rnrFromDatabase = requisitionMapper.getById(rnr.getId());
+    assertThat(rnrFromDatabase.getOrderId(),is(100));
   }
 }

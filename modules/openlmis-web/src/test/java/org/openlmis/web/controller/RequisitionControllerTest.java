@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Order;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
@@ -35,9 +36,10 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
 import static org.openlmis.web.controller.RequisitionController.*;
+import static org.powermock.api.mockito.PowerMockito.doThrow;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 @RunWith(PowerMockRunner.class)
@@ -295,6 +297,13 @@ public class RequisitionControllerTest {
     verify(requisitionService).get(facility, program, periodStartDate, periodEndDate);
     List<RnrDTO> actual = (List<RnrDTO>) response.getBody().getData().get(RNR_LIST);
     assertThat(actual, is(expectedRnrList));
+  }
+
+  @Test
+  public void shouldInsertOrder() throws Exception {
+    Order order = new Order();
+    controller.insertOrder(order);
+    verify(requisitionService).createOrder(order);
   }
 
   private Rnr createRequisition() {

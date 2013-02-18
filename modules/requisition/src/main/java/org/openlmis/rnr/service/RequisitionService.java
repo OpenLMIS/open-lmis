@@ -336,5 +336,8 @@ public class RequisitionService {
     return requisitions;
   }
 
+  public void createOrder(Order order) {
+    requisitionRepository.createOrder(order);
+  }
 }
 

@@ -268,6 +268,27 @@ public class RequisitionMapperIT {
     assertThat(result.size(), is(2));
   }
 
+  @Test
+  public void shouldCreateAnOrder() throws Exception {
+     Order order = new Order();
+     order.setOrderedBy("User");
+     mapper.createOrder(order);
+
+    Order orderFromDatabase = mapper.getOrderById(order.getId());
+    assertThat(orderFromDatabase.getOrderedBy(),is("User"));
+  }
+
+  @Test
+  public void shouldUpdateOrderIdForARequisition() throws Exception {
+    Rnr requisition = insertRequisition(processingPeriod1, APPROVED);
+    Order order = new Order();
+    mapper.createOrder(order);
+    Integer orderId = order.getId();
+    requisition.setOrderId(orderId);
+    mapper.updateOrderId(requisition);
+    assertThat(mapper.getById(requisition.getId()).getOrderId(),is(orderId));
+  }
+
   private Rnr insertRequisition(ProcessingPeriod period, RnrStatus status) {
     Rnr rnr = new Rnr(facility.getId(), PROGRAM_ID, period.getId(), MODIFIED_BY);
     rnr.setStatus(status);

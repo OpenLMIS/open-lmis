@@ -884,6 +884,13 @@ public class RequisitionServiceTest {
     assertThat(actual, is(expected));
   }
 
+  @Test
+  public void shouldInsertOrder() throws Exception {
+    Order order = new Order();
+    requisitionService.createOrder(order);
+    verify(requisitionRepository).createOrder(order);
+  }
+
   private RoleAssignment roleAssignmentWithSupervisoryNodeId(int supervisoryNodeId) {
     final RoleAssignment assignment = new RoleAssignment();
     final SupervisoryNode node = new SupervisoryNode();

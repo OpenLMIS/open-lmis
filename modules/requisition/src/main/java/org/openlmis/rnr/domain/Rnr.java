@@ -39,6 +39,7 @@ public class Rnr {
 
   private Facility supplyingFacility;
   private Integer supervisoryNodeId;
+  private Integer orderId;
   private Integer modifiedBy;
   private Date modifiedDate;
   private Date submittedDate;
