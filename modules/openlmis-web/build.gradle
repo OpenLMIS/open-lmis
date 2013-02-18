@@ -109,4 +109,5 @@ compileJava.dependsOn compileLess
 
 task runJsCover(type: Exec) {
     commandLine 'sh', "${projectDir}/src/test/javascript/runJsCover.sh"
+    commandLine 'cp', "${projectDir}/src/test/javascript/jenkins-jscover-report.html", "${projectDir}/build/reports/jscover"
 }
