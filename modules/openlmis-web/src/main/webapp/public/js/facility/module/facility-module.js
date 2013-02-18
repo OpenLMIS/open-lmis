@@ -6,5 +6,7 @@ angular.module('facility', ['openlmis']).
     when('/create-facility', {controller:FacilityController, templateUrl:'partials/create.html', resolve: FacilityController.resolve}).
     when('/edit/:facilityId', {controller:FacilityController, templateUrl:'partials/create.html', resolve: FacilityController.resolve}).
     otherwise({redirectTo:'/search'});
-}]);
+}]).run(function($rootScope) {
+  $rootScope.facilitySelected = "selected";
+});
 

@@ -12,6 +12,8 @@ angular.module('user', ['openlmis', 'ngGrid']).
           scope.$apply(attrs.onKeyup);
         });
       };
-    });
+    }).run(function($rootScope) {
+    $rootScope.userSelected = "selected";
+  });
 
 

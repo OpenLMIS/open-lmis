@@ -5,4 +5,6 @@ angular.module('role', ['openlmis']).config(['$routeProvider', function ($routeP
     when('/list', {controller:ListRoleController, templateUrl:'partials/list.html'}).
     when('/edit/:id', {controller:SaveRoleController, templateUrl:'partials/create.html'}).
     otherwise({redirectTo:'/list'});
-}]);
+}]).run(function($rootScope) {
+    $rootScope.roleSelected = "selected";
+  });;
