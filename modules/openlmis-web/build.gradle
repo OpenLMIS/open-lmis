@@ -107,6 +107,6 @@ task JasmineRun(type: Test) {
 
 compileJava.dependsOn compileLess
 
-task startJsCover(type: Exec) {
-    commandLine 'sh', "${projectDir}/src/test/javascript/start_jscover.sh"
+task runJsCover(type: Exec) {
+    commandLine 'sh', "${projectDir}/src/test/javascript/runJsCover.sh"
 }
