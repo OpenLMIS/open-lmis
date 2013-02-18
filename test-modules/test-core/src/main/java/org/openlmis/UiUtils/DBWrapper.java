@@ -62,10 +62,6 @@ public class DBWrapper {
     update("update users set password='" + password + "', active=TRUE  where email='" + email + "';");
   }
 
-  public void updateRoleAssignment(String userId, String email) throws SQLException, IOException {
-    update("DELETE FROM user_password_reset_tokens;");
-    update("update role_assignments set userid='" + userId + "'  where userid=(select id from users where email='" + email + "');");
-  }
 
 
   public void deleteFacilities() throws IOException, SQLException {

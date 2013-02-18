@@ -72,8 +72,6 @@ public class E2EInitiateRnR extends TestCaseHelper {
     dbWrapper.updateUser(passwordUsers, userMOEmail);
     userPageMO.enterMyFacilityAndMySupervisedFacilityData(userMOFirstName, userMOLastName, "F11", "HIV", "Node 1", "Medical-Officer");
 
-    dbWrapper.updateRoleAssignment(userIDSIC, userSICEmail);
-    dbWrapper.updateRoleAssignment(userIDMO, userMOEmail);
     dbWrapper.updateRoleAssignment(userIDMO);
     dbWrapper.updateRoleGroupMember(facility_code);
 
