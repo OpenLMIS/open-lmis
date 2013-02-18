@@ -46,14 +46,14 @@
         </div >
       </div >
 
-
-      <div class = "alert alert-error" id = "saveFailMessage" ng-bind = "error" ng-show = "error" />
-      <div class = "form-cell button-row" >
-        <input type = "submit" class = "btn btn-success save-button" value = "Save" />
-        <a ng-href = "#list" class = "btn btn-cancel" >Cancel</a >
-      </div >
-
     </div >
+
+    <div form-toolbar id="action_buttons" class="action-buttons">
+      <div class="form-cell button-row">
+        <input type="submit" class="btn btn-primary save-button" value="Save" />
+      </div>
+      <div class="toolbar-error" id="saveFailMessage" ng-bind="error" ng-show="error"></div>
+    </div>
   </form >
 </div >
 
