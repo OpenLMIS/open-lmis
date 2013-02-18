@@ -4,7 +4,7 @@ apply plugin: 'war'
 buildscript {
     repositories {
         mavenCentral();
-         add(new org.apache.ivy.plugins.resolver.URLResolver()) {
+        add(new org.apache.ivy.plugins.resolver.URLResolver()) {
             name = 'GitHub'
             addArtifactPattern 'http://cloud.github.com/downloads/[organisation]/[module]/[module]-[revision].[ext]'
         }
@@ -106,3 +106,7 @@ task JasmineRun(type: Test) {
 }
 
 compileJava.dependsOn compileLess
+
+task startJsCover(type: Exec) {
+    commandLine 'sh', "${projectDir}/src/test/javascript/start_jscover.sh"
+}

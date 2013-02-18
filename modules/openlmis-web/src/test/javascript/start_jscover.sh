@@ -1,0 +1,1 @@
+java -jar src/test/javascript/lib/JSCover-all.jar -ws --branch --document-root=src/ --report-dir=. --port=9876 --no-instrument=test --no-instrument=main/webapp/public/lib/
