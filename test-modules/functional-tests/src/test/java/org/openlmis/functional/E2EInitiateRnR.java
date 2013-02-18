@@ -37,17 +37,18 @@ public class E2EInitiateRnR extends TestCaseHelper {
     String date_time = createFacilityPage.enterAndVerifyFacility();
     String facility_code = "FCcode" + date_time;
 
-    UserPage userPageSIC = homePage.navigateToUser();
-    userPageSIC.enterAndverifyUserDetails("User123", "manjyots@thoughtworks.com", "Manjyot", "Singh");
-
-    UserPage userPageMO = homePage.navigateToUser();
-    userPageMO.enterAndverifyUserDetails("User234", "lokeshag@thoughtworks.com", "Lokesh", "Agarwal");
-
     dbWrapper.insertFacilities("F10", "F11");
 
+    UserPage userPageSIC = homePage.navigateToUser();
+    userPageSIC.enterAndverifyUserDetails("User123", "manjyots@thoughtworks.com", "Manjyot", "Singh","F10");
+
+    UserPage userPageMO = homePage.navigateToUser();
+    userPageMO.enterAndverifyUserDetails("User234", "lokeshag@thoughtworks.com", "Lokesh", "Agarwal","F11");
+
+
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-    dbWrapper.updateUser("200", passwordUsers, "F10", "manjyots@thoughtworks.com");
-    dbWrapper.updateUser("300", passwordUsers, "F11", "lokeshag@thoughtworks.com");
+    dbWrapper.updateUser("200", passwordUsers,"manjyots@thoughtworks.com");
+    dbWrapper.updateUser("300", passwordUsers,"lokeshag@thoughtworks.com");
 
     dbWrapper.insertSupervisoryNode("F10", "N1", "null");
     dbWrapper.insertSupervisoryNodeSecond("F11", "N2", "N1");

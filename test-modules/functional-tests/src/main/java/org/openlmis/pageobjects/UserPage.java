@@ -35,6 +35,12 @@ public class UserPage extends Page {
     @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']/span")
     private static WebElement successMessage;
 
+  @FindBy(how = How.ID, using = "searchFacility")
+  private static WebElement searchFacility;
+
+  @FindBy(how = How.XPATH, using = "//a[@ng-click='setSelectedFacility(facility)']")
+  private static WebElement selectFacility;
+
 
     public UserPage(TestWebDriver driver) throws  IOException {
         super(driver);
@@ -43,7 +49,7 @@ public class UserPage extends Page {
 
     }
 
-    public void enterAndverifyUserDetails(String userName, String email, String firstName, String lastName) throws IOException {
+    public void enterAndverifyUserDetails(String userName, String email, String firstName, String lastName, String facilityCode) throws IOException {
         testWebDriver.waitForElementToAppear(addNewButton);
         addNewButton.click();
         testWebDriver.waitForElementToAppear(userNameField);
@@ -55,8 +61,13 @@ public class UserPage extends Page {
         firstNameField.sendKeys(firstName);
         lastNameField.clear();
         lastNameField.sendKeys(lastName);
+        testWebDriver.waitForElementToAppear(searchFacility);
+        searchFacility.clear();
+        searchFacility.sendKeys(facilityCode);
+        selectFacility.click();
         saveButton.click();
         testWebDriver.sleep(1000);
+
         SeleneseTestNgHelper.assertTrue("User '"+firstName+" "+lastName+"' has been successfully created, password link sent on registered Email address message is not getting displayed",successMessage.isDisplayed());
 
     }
