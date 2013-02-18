@@ -1,1 +1,1 @@
-java -jar src/test/javascript/lib/JSCover-all.jar -ws --branch --document-root=src/ --report-dir=. --port=9876 --no-instrument=test --no-instrument=main/webapp/public/lib/
+java -jar src/test/javascript/lib/JSCover-all.jar -fs --branch --no-instrument=test --no-instrument=main/webapp/public/lib/ src/ build/reports/jscover
