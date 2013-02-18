@@ -322,6 +322,41 @@ span[class^="tpl-"] {
   display: block;
 }
 
+.rnr-tabs {
+  font-size: 0.9em;
+  margin: 5px 0 10px;
+  font-weight: bold;
+  ul {
+    margin: 0;
+    list-style: none;
+    border-bottom: 2px solid #307579;
+  }
+  li {
+    float: left;
+    margin: 0 3px;
+    border-radius: 4px 4px 0 0;
+    background: #45a7ad;
+    &:first-child {
+      margin-left: 7px;
+    }
+    &:hover {
+      background: #33969b;
+    }
+    &.selected {
+      background: #307579;
+    }
+  }
+  a {
+    display: block;
+    color: #FFF;
+    padding: 8px 16px 6px;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
+
 #sortable .ui-sortable-helper {
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
   border: 1px solid rgba(82, 168, 236, 0.8);
@@ -355,6 +390,7 @@ span[class^="tpl-"] {
 .rnr-table {
   overflow: auto;
   width: 100%;
+  padding-top: 10px;
   th {
     background: #EEE;
     font-weight: bold;

@@ -1,10 +1,10 @@
 function RequisitionController($scope, Requisition, $location, $routeParams) {
 
-  $scope.activeTab = $routeParams.activeTab;
+  $scope.showNonFullSupply = !!$routeParams.showNonFullSupply;
 
-  var baseLink = "#/create-rnr/" + $routeParams.facility + "/" + $routeParams.program + "/" + $routeParams.period;
-  $scope.nonFullSupplyLink = baseLink + "?activeTab=nonFullSupply";
-  $scope.fullSupplyLink = baseLink;
+  $scope.fullSupplyLink = "#" + $location.path();
+
+  $scope.nonFullSupplyLink = $scope.fullSupplyLink + "?showNonFullSupply=true";
 
   if (!$scope.$parent.rnr) {
     Requisition.get({facilityId:$routeParams.facility, programId:$routeParams.program, periodId:$routeParams.period},

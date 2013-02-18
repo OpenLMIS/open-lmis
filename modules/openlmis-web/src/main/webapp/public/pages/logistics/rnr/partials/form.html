@@ -1,17 +1,20 @@
 <div ng-controller="RequisitionFormController" xmlns="http://www.w3.org/1999/html">
+  <div class="rnr-tabs">
+    <ul class="clearfix">
+      <li ng-class="{'selected': !showNonFullSupply}" ><a ng-href="{{fullSupplyLink}}" id="fullSupplyTab">Full Supply</a></li>
+      <li ng-class="{'selected': showNonFullSupply}" ><a ng-href="{{nonFullSupplyLink}}" id="nonFullSupplyTab">Non Full Supply</a></li>
+    </ul>
+  </div>
   <div ng-hide="programRnrColumnList">Loading...</div>
   <form name="saveRnrForm" action="#" id="rnr-form" novalidate>
-    <div class="rnr-table">
-      <ng-switch on="activeTab">
-        <span ng-switch-when="nonFullSupply">
-          <ng-include src="'/public/pages/logistics/rnr/partials/rnr-non-full-supply.html'"></ng-include>
-        </span>
-        <span ng-switch-default>
-          <ng-include src="'/public/pages/logistics/rnr/partials/rnr-full-supply.html'"></ng-include>
-        </span>
-      </ng-switch>
-    </div>
-    <br/>
+    <ng-switch on="showNonFullSupply">
+      <span ng-switch-when="true">
+        <ng-include src="'/public/pages/logistics/rnr/partials/rnr-non-full-supply.html'"></ng-include>
+      </span>
+      <span ng-switch-default>
+        <ng-include src="'/public/pages/logistics/rnr/partials/rnr-full-supply.html'"></ng-include>
+      </span>
+    </ng-switch>
 
     <div form-toolbar id="action_buttons" class="action-buttons">
       <div class="total-cost-container">

@@ -118,7 +118,7 @@ public class InitiateRnRPage extends Page {
   @FindBy(how = How.XPATH, using = "//input[@ng-model='lossAndAdjustment.quantity']")
   private static WebElement quantityAdj;
 
-  @FindBy(how = How.XPATH, using = "//input[@value='Add']")
+  @FindBy(how = How.ID, using = "addNonFullSupply")
   private static WebElement addButtonNonFullSupply;
 
   @FindBy(how = How.XPATH, using = "//table[@id='nonFullSupplyTable']/tbody/tr/td[2]/ng-switch/span")
@@ -145,7 +145,7 @@ public class InitiateRnRPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@class='info-box']/div[2]/div[3]")
   private static WebElement reportingPeriodInitRnRScreen;
 
-  @FindBy(how = How.XPATH, using = "//input[@value='Add Non-Full Supply']")
+  @FindBy(how = How.XPATH, using = "//input[@value='Add']")
   private static WebElement addNonFullSupplyButton;
 
   @FindBy(how = How.ID, using = "nonFullSupplyTab")
