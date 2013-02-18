@@ -23,6 +23,7 @@ import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.U
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.domain.Right.VIEW_REQUISITION;
 import static org.openlmis.web.response.OpenLmisResponse.error;
 import static org.openlmis.web.response.OpenLmisResponse.success;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -138,6 +139,11 @@ public class FacilityController extends BaseController {
     response = success("Facility '" + facility.getName() + "' updated successfully");
     response.getBody().setData("facility", facility);
     return response;
+  }
+
+  @RequestMapping(value = "/user/facilities/view", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> listForViewing(HttpServletRequest request) {
+    return OpenLmisResponse.response("facilities", facilityService.getForUserAndRights(loggedInUserId(request), VIEW_REQUISITION));
   }
 
   private ResponseEntity<OpenLmisResponse> createErrorResponse(Facility facility, DataException exception) {

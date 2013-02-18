@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Right;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -17,6 +18,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -220,5 +222,16 @@ public class FacilityRepositoryTest {
     List<Facility> returnedFacilities = repository.searchFacilitiesByCodeOrName("query");
 
     assertThat(returnedFacilities, is(facilityList));
+  }
+
+  @Test
+  public void shouldGetFacilitiesForUserAndRights() throws Exception {
+    List<Facility> expectedFacilities = new ArrayList<>();
+    String commaSeparatedRights = "{CONFIGURE_RNR, VIEW_REQUISITION}";
+    when(mapper.getForUserAndRights(1, commaSeparatedRights)).thenReturn(expectedFacilities);
+    List<Facility> actualFacilities = repository.getForUserAndRights(1, Right.CONFIGURE_RNR, Right.VIEW_REQUISITION);
+
+    assertThat(actualFacilities, is(expectedFacilities));
+    verify(mapper).getForUserAndRights(1, commaSeparatedRights);
   }
 }

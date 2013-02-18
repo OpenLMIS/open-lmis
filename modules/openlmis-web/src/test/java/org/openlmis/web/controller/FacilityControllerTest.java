@@ -28,6 +28,7 @@ import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.U
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.domain.Right.VIEW_REQUISITION;
 
 public class FacilityControllerTest {
 
@@ -197,6 +198,17 @@ public class FacilityControllerTest {
     List<Facility> returnedFacilities = facilityController.get("searchParam");
 
     assertThat(returnedFacilities,is(facilities));
+  }
+
+  @Test
+  public void shouldGetListOfFacilityForUserForViewing() throws Exception {
+    List<Facility> facilities = new ArrayList<>();
+    when(facilityService.getForUserAndRights(userId, VIEW_REQUISITION)).thenReturn(facilities);
+
+    ResponseEntity<OpenLmisResponse> response = facilityController.listForViewing(httpServletRequest);
+
+    assertThat((List<Facility>) response.getBody().getData().get("facilities"), is(facilities));
+    verify(facilityService).getForUserAndRights(userId, VIEW_REQUISITION);
   }
 
   private MockHttpServletRequest httpRequest() {

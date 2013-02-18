@@ -104,4 +104,7 @@ public class FacilityService {
     facilityRepository.save(facility);
   }
 
+  public List<Facility> getForUserAndRights(Integer userId, Right... rights) {
+    return facilityRepository.getForUserAndRights(userId, rights);
+  }
 }

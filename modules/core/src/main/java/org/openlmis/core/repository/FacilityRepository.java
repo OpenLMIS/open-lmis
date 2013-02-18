@@ -133,4 +133,8 @@ public class FacilityRepository {
   public List<Facility> searchFacilitiesByCodeOrName(String searchParam) {
     return mapper.searchFacilitiesByCodeOrName(searchParam);
   }
+
+  public List<Facility> getForUserAndRights(Integer userId, Right... rights) {
+    return mapper.getForUserAndRights(userId, Right.getCommaSeparatedRightNames(rights));
+  }
 }

@@ -45,6 +45,10 @@ services.factory('UserFacilityList', function ($resource) {
     return $resource('/logistics/user/facilities.json', {}, {});
 });
 
+services.factory('UserFacilityWithViewRequisition', function ($resource) {
+    return $resource('/user/facilities/view.json', {}, {});
+});
+
 //todo add right/operation code as param
 services.factory('UserSupportedProgramInFacilityForAnOperation', function ($resource) {
     return $resource('/facility/:facilityId/user/programs.json', {}, {});
@@ -104,6 +108,10 @@ services.factory('RequisitionById', function ($resource) {
 
 services.factory('RequisitionForApproval', function($resource) {
   return $resource('/requisitions-for-approval.json', {}, {});
+});
+
+services.factory('RequisitionsForViewing', function($resource) {
+  return $resource('/facility/:facilityId/program/:programId/requisitions.json', {}, {});
 });
 
 services.factory('RequisitionForConvertToOrder', function($resource) {

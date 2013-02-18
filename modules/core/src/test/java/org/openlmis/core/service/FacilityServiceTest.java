@@ -231,6 +231,16 @@ public class FacilityServiceTest {
     verify(programSupportedRepository).updateSupportedPrograms(facility, programsForFacility);
   }
 
+  @Test
+  public void shouldGetAllFacilitiesForUserAndRights() throws Exception {
+    List<Facility> expectedFacilities = new ArrayList<>();
+    when(facilityRepository.getForUserAndRights(1, Right.VIEW_REQUISITION, Right.APPROVE_REQUISITION)).thenReturn(expectedFacilities);
+    List<Facility> actualFacilities = facilityService.getForUserAndRights(1, Right.VIEW_REQUISITION, Right.APPROVE_REQUISITION);
+
+    assertThat(actualFacilities, is(expectedFacilities));
+    verify(facilityRepository).getForUserAndRights(1, Right.VIEW_REQUISITION, Right.APPROVE_REQUISITION);
+  }
+
   private ProgramSupported createSupportedProgram(String facilityCode, String programCode, boolean active, Date startDate) {
     ProgramSupported programSupported = new ProgramSupported();
     programSupported.setFacilityCode(facilityCode);

@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.RequisitionGroupBuilder;
+import org.openlmis.core.builder.SupervisoryNodeBuilder;
 import org.openlmis.core.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
@@ -23,6 +25,8 @@ import static org.openlmis.core.builder.ProgramBuilder.programCode;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.core.builder.UserBuilder.facilityId;
+import static org.openlmis.core.domain.Right.CONFIGURE_RNR;
+import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -46,9 +50,17 @@ public class FacilityMapperIT {
   @Autowired
   ProgramMapper programMapper;
 
+  @Autowired
+  RoleAssignmentMapper roleAssignmentMapper;
 
   @Autowired
   RequisitionGroupMemberMapper requisitionGroupMemberMapper;
+
+  @Autowired
+  RoleRightsMapper roleRightsMapper;
+
+  @Autowired
+  SupervisoryNodeMapper supervisoryNodeMapper;
 
   @Test
   public void shouldFetchAllFacilitiesAvailable() throws Exception {
@@ -278,5 +290,41 @@ public class FacilityMapperIT {
     GeographicZone zone = mapper.getGeographicZoneById(3);
 
     assertThat(zone, is(expectedZone));
+  }
+
+  @Test
+  public void shouldGetFacilitiesWithRightsForUser() throws Exception {
+    //Arrange
+    Facility homeFacility = make(a(defaultFacility));
+    mapper.insert(homeFacility);
+    Facility supervisedFacility = make(a(defaultFacility, with(code, "supervised"), with(name, "supervised facility")));
+    mapper.insert(supervisedFacility);
+
+    SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(SupervisoryNodeBuilder.facility, supervisedFacility)));
+    supervisoryNodeMapper.insert(supervisoryNode);
+
+    Role r1 = new Role("r1", "random description");
+    roleRightsMapper.insertRole(r1);
+
+    Role r2 = new Role("r2", "random description");
+    roleRightsMapper.insertRole(r2);
+
+    roleRightsMapper.createRoleRight(r1.getId(), CREATE_REQUISITION);
+    roleRightsMapper.createRoleRight(r1.getId(), CONFIGURE_RNR);
+    roleRightsMapper.createRoleRight(r2.getId(), CONFIGURE_RNR);
+
+    User user = make(a(defaultUser, with(facilityId, homeFacility.getId())));
+
+    userMapper.insert(user);
+    roleAssignmentMapper.insertRoleAssignment(user.getId(), 1, null, r2.getId());
+    roleAssignmentMapper.insertRoleAssignment(user.getId(), 1, supervisoryNode.getId(), r1.getId());
+
+    //Act
+    List<Facility> userFacilities = mapper.getForUserAndRights(user.getId(), "{CREATE_REQUISITION,CONFIGURE_RNR}");
+
+    //Assert
+    assertThat(userFacilities.size(), is(2));
+    assertThat(userFacilities.get(0).getId(), is(homeFacility.getId()));
+    assertThat(userFacilities.get(1).getId(), is(supervisedFacility.getId()));
   }
 }
