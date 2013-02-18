@@ -205,43 +205,6 @@ public class RequisitionServiceTest {
     verify(requisition).fillLastTwoPeriodsNormalizedConsumptions(null, null);
   }
 
-  @Test
-  public void shouldGetRequisitionWithFullSupplyLineItems() throws Exception {
-    Rnr requisition = spy(new Rnr());
-    requisition.setFacility(FACILITY);
-    requisition.setProgram(PROGRAM);
-    requisition.setPeriod(PERIOD);
-
-    when(requisitionRepository.getRequisitionWithFullSupplyLineItems(FACILITY, PROGRAM, PERIOD)).thenReturn(requisition);
-    when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
-    when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
-    when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
-
-    Rnr returnedRequisition = requisitionService.getWithFullSupplyLineItems(FACILITY, PROGRAM, PERIOD);
-
-    assertThat(returnedRequisition, is(requisition));
-    verify(requisition).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
-    verify(requisition).fillLastTwoPeriodsNormalizedConsumptions(null, null);
-  }
-
-  @Test
-  public void shouldGetRequisitionWithNonFullSupplyLineItems() throws Exception {
-    Rnr requisition = spy(new Rnr());
-    requisition.setFacility(FACILITY);
-    requisition.setProgram(PROGRAM);
-    requisition.setPeriod(PERIOD);
-
-    when(requisitionRepository.getRequisitionWithNonFullSupplyLineItems(FACILITY, PROGRAM, PERIOD)).thenReturn(requisition);
-    when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
-    when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
-    when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
-
-    Rnr returnedRequisition = requisitionService.getWithNonFullSupplyLineItems(FACILITY, PROGRAM, PERIOD);
-
-    assertThat(returnedRequisition, is(requisition));
-    verify(requisition).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
-    verify(requisition).fillLastTwoPeriodsNormalizedConsumptions(null, null);
-  }
 
   @Test
   public void shouldGetPreviousTwoRequisitionsNormalizedConsumptionsWhileGettingRequisition() throws Exception {

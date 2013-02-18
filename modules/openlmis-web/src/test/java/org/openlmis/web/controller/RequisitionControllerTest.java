@@ -84,21 +84,9 @@ public class RequisitionControllerTest {
     assertThat(response.getStatusCode(), is(equalTo(HttpStatus.OK)));
   }
 
-  @Test
-  public void shouldGetRnrWithFullSupplyLineItemsByFacilityProgramAndPeriodIfExists() throws Exception {
-    ResponseEntity<OpenLmisResponse> response = controller.getRequisitionWithFullSupplyLineItems(1, 2, 3);
 
-    verify(requisitionService).getWithFullSupplyLineItems(argThat(facilityMatcher(1)), argThat(programMatcher(2)), argThat(periodMatcher(3)));
-    assertThat(response.getStatusCode(), is(equalTo(HttpStatus.OK)));
-  }
 
-  @Test
-  public void shouldGetRnrWithNonFullSupplyLineItemsByFacilityProgramAndPeriodIfExists() throws Exception {
-    ResponseEntity<OpenLmisResponse> response = controller.getRequisitionWithNonFullSupplyLineItems(1, 2, 3);
 
-    verify(requisitionService).getWithNonFullSupplyLineItems(argThat(facilityMatcher(1)), argThat(programMatcher(2)), argThat(periodMatcher(3)));
-    assertThat(response.getStatusCode(), is(equalTo(HttpStatus.OK)));
-  }
 
   @Test
   public void shouldGetRnrByIdIfExists() throws Exception {

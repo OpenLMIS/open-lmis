@@ -6,8 +6,7 @@
 </tr>
 </thead>
 <tbody ng-show="visibleColumns && (rnr.lineItems.length > 0)">
-<tr ng-repeat="rnrLineItem in rnr.lineItems"
-    ng-class="getRowErrorClass(rnrLineItem)">
+<tr ng-repeat="rnrLineItem in rnr.lineItems" ng-class="getRowErrorClass(rnrLineItem)">
 <td class="cell-input" ng-repeat="column in visibleColumns"
     ng-hide="column.name == 'quantityApproved'">
 <ng-switch on="column.source.name">

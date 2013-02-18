@@ -113,7 +113,7 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
   };
 
   $scope.getCellErrorClass = function (rnrLineItem) {
-    return rnrLineItem.getErrorMessage() ? 'cell-error-highlight' : '';
+    return (typeof(rnrLineItem.getErrorMessage) != "undefined" && rnrLineItem.getErrorMessage()) ? 'cell-error-highlight' : '';
   };
 
   $scope.getRowErrorClass = function (rnrLineItem) {

@@ -86,13 +86,6 @@ public class RequisitionRepository {
     return requisitionMapper.getRequisition(facility, program, period);
   }
 
-  public Rnr getRequisitionWithFullSupplyLineItems(Facility facility, Program program, ProcessingPeriod period) {
-    return requisitionMapper.getRequisitionWithFullSupplyLineItems(facility, program, period);
-  }
-
-  public Rnr getRequisitionWithNonFullSupplyLineItems(Facility facility, Program program, ProcessingPeriod period) {
-    return requisitionMapper.getRequisitionWithNonFullSupplyLineItems(facility, program, period);
-  }
 
   public List<LossesAndAdjustmentsType> getLossesAndAdjustmentsTypes() {
     return lossesAndAdjustmentsMapper.getLossesAndAdjustmentsTypes();

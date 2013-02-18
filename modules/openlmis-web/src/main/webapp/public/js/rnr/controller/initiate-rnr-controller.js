@@ -113,7 +113,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
       {field:'startDate', displayName:'Start Date', cellFilter:"date:'dd/MM/yyyy'" },
       {field:'endDate', displayName:'End Date', cellFilter:"date:'dd/MM/yyyy'" },
       {field:'rnrStatus', displayName:'R&R Status' },
-      {cellTemplate:getPeriodSpecificButton('row.entity.activeForRnr')}
+      {field :'', displayName : '', cellTemplate:getPeriodSpecificButton('row.entity.activeForRnr')}
     ]
   };
 

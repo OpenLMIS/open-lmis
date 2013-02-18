@@ -59,7 +59,7 @@ public class RequisitionController extends BaseController {
     }
   }
 
-  @RequestMapping(value = "/requisitions", method = GET, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/requisitions", method = GET)
   @PreAuthorize("hasPermission('','CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> get(@RequestParam("facilityId") Integer facilityId,
                                               @RequestParam("programId") Integer programId,
@@ -67,21 +67,6 @@ public class RequisitionController extends BaseController {
     return response(RNR, requisitionService.get(new Facility(facilityId), new Program(programId), new ProcessingPeriod(periodId)));
   }
 
-  @RequestMapping(value = "/requisitions/fullSupply", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("hasPermission('','CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> getRequisitionWithFullSupplyLineItems(@RequestParam("facilityId") Integer facilityId,
-                                                                                @RequestParam("programId") Integer programId,
-                                                                                @RequestParam("periodId") Integer periodId) {
-    return response(RNR, requisitionService.getWithFullSupplyLineItems(new Facility(facilityId), new Program(programId), new ProcessingPeriod(periodId)));
-  }
-
-  @RequestMapping(value = "/requisitions/nonFullSupply", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("hasPermission('','CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> getRequisitionWithNonFullSupplyLineItems(@RequestParam("facilityId") Integer facilityId,
-                                                                                   @RequestParam("programId") Integer programId,
-                                                                                   @RequestParam("periodId") Integer periodId) {
-    return response(RNR, requisitionService.getWithNonFullSupplyLineItems(new Facility(facilityId), new Program(programId), new ProcessingPeriod(periodId)));
-  }
 
   @RequestMapping(value = "/requisitions/{id}/save", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("hasPermission('','CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION')")
@@ -164,8 +149,8 @@ public class RequisitionController extends BaseController {
   @RequestMapping(value = "/logistics/facility/{facilityId}/program/{programId}/periods", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("hasPermission('','CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(
-      @PathVariable("facilityId") Integer facilityId,
-      @PathVariable("programId") Integer programId) {
+    @PathVariable("facilityId") Integer facilityId,
+    @PathVariable("programId") Integer programId) {
     try {
       List<ProcessingPeriod> periodList = requisitionService.getAllPeriodsForInitiatingRequisition(facilityId, programId);
       Rnr currentRequisition = getRequisitionForCurrentPeriod(facilityId, programId, periodList);

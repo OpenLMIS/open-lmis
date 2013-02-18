@@ -2,8 +2,14 @@
   <div ng-hide="programRnrColumnList">Loading...</div>
   <form name="saveRnrForm" action="#" id="rnr-form" novalidate>
     <div class="rnr-table">
-        <ng-include src="'/public/pages/logistics/rnr/partials/rnr-full-supply.html'"></ng-include>
-        <ng-include src="'/public/pages/logistics/rnr/partials/rnr-non-full-supply.html'"></ng-include>
+      <ng-switch on="activeTab">
+        <span ng-switch-when="nonFullSupply">
+          <ng-include src="'/public/pages/logistics/rnr/partials/rnr-non-full-supply.html'"></ng-include>
+        </span>
+        <span ng-switch-default>
+          <ng-include src="'/public/pages/logistics/rnr/partials/rnr-full-supply.html'"></ng-include>
+        </span>
+      </ng-switch>
     </div>
     <br/>
 

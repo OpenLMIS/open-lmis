@@ -148,6 +148,12 @@ public class InitiateRnRPage extends Page {
   @FindBy(how = How.XPATH, using = "//input[@value='Add Non-Full Supply']")
   private static WebElement addNonFullSupplyButton;
 
+  @FindBy(how = How.ID, using = "nonFullSupplyTab")
+  private static WebElement nonFullSupplyTab;
+
+  @FindBy(how = How.ID, using = "fullSupplyTab")
+  private static WebElement fullSupplyTab;
+
   @FindBy(how = How.XPATH, using = "//input[@id='J_undefined']")
   private static WebElement requestedQuantityNonFullSupply;
 
@@ -325,6 +331,8 @@ public class InitiateRnRPage extends Page {
   }
 
   public void addNonFullSupplyLineItems(String requestedQuantityValue, String requestedQuantityExplanationValue, String productPrimaryName, String productCode) throws IOException, SQLException {
+    testWebDriver.waitForElementToAppear(nonFullSupplyTab);
+    nonFullSupplyTab.click();
     DBWrapper dbWrapper = new DBWrapper();
     String nonFullSupplyItems = dbWrapper.fetchNonFullSupplyData(productCode, "2", "1");
     testWebDriver.waitForElementToAppear(addNonFullSupplyButton);
@@ -387,6 +395,9 @@ public class InitiateRnRPage extends Page {
     }
 
   public void verifyBeginningBalanceDisabled() {
+    testWebDriver.waitForElementToAppear(fullSupplyTab);
+    fullSupplyTab.click();
+    testWebDriver.waitForElementToAppear(beginningBalance);
     SeleneseTestNgHelper.assertFalse("BB Not disabled", beginningBalance.isEnabled());
   }
 }

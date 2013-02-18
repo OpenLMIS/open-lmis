@@ -68,31 +68,6 @@ public interface RequisitionMapper {
                      @Param("program") Program program,
                      @Param("period") ProcessingPeriod period);
 
-  @Select("SELECT * FROM requisitions WHERE facilityId = #{facility.id} AND programId= #{program.id} AND periodId = #{period.id}")
-  @Results(value = {
-      @Result(property = "id", column = "id"),
-      @Result(property = "facility.id", column = "facilityId"),
-      @Result(property = "program.id", column = "programId"),
-      @Result(property = "period.id", column = "periodId"),
-      @Result(property = "lineItems", javaType = List.class, column = "id",
-          many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsByRnrId"))
-  })
-  Rnr getRequisitionWithFullSupplyLineItems(@Param("facility") Facility facility,
-                                            @Param("program") Program program,
-                                            @Param("period") ProcessingPeriod period);
-
-  @Select("SELECT * FROM requisitions WHERE facilityId = #{facility.id} AND programId= #{program.id} AND periodId = #{period.id}")
-  @Results(value = {
-      @Result(property = "id", column = "id"),
-      @Result(property = "facility.id", column = "facilityId"),
-      @Result(property = "program.id", column = "programId"),
-      @Result(property = "period.id", column = "periodId"),
-      @Result(property = "nonFullSupplyLineItems", javaType = List.class, column = "id",
-          many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getNonFullSupplyRnrLineItemsByRnrId"))
-  })
-  Rnr getRequisitionWithNonFullSupplyLineItems(@Param("facility") Facility facility,
-                                               @Param("program") Program program,
-                                               @Param("period") ProcessingPeriod period);
 
   @Select("SELECT * FROM requisitions " +
       "WHERE facilityId = #{facilityId} " +
