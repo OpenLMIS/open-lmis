@@ -2,6 +2,7 @@ INSERT INTO roles
  (name, description) VALUES
  ('Store In-Charge', ''),
  ('District Pharmacist', ''),
+ ('FacilityHead', ''),
  ('Medical-Officer', '');
 
 INSERT INTO role_rights

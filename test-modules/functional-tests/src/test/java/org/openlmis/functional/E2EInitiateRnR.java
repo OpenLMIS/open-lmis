@@ -39,19 +39,44 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
     dbWrapper.insertFacilities("F10", "F11");
 
-    UserPage userPageSIC = homePage.navigateToUser();
-    userPageSIC.enterAndverifyUserDetails("User123", "manjyots@thoughtworks.com", "Manjyot", "Singh","F10");
+    RolesPage rolesPage = homePage.navigateRoleAssignments();
+    List<String> userRoleListStoreincharge = new ArrayList<String>();
+    userRoleListStoreincharge.add("Create Requisition");
+    userRoleListStoreincharge.add("Authorize Requisition");
+    userRoleListStoreincharge.add("Approve Requisition");
+    userRoleListStoreincharge.add("Convert To Order Requisition");
 
-    UserPage userPageMO = homePage.navigateToUser();
-    userPageMO.enterAndverifyUserDetails("User234", "lokeshag@thoughtworks.com", "Lokesh", "Agarwal","F11");
+    rolesPage.createRole("Store-in-charge", "Store-in-charge", userRoleListStoreincharge);
 
-
-    String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-    dbWrapper.updateUser("200", passwordUsers,"manjyots@thoughtworks.com");
-    dbWrapper.updateUser("300", passwordUsers,"lokeshag@thoughtworks.com");
+    List<String> userRoleListMedicalofficer = new ArrayList<String>();
+    userRoleListMedicalofficer.add("Approve Requisition");
+    rolesPage.createRole("Medical-officer", "Medical-officer", userRoleListMedicalofficer);
 
     dbWrapper.insertSupervisoryNode("F10", "N1", "null");
     dbWrapper.insertSupervisoryNodeSecond("F11", "N2", "N1");
+
+    String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
+    UserPage userPageSIC = homePage.navigateToUser();
+    String userSICEmail="Fatima_Doe@openlmis.com";
+    String userSICFirstName="Fatima";
+    String userSICLastName="Doe";
+    String userIDSIC = userPageSIC.enterAndverifyUserDetails("User123", userSICEmail, userSICFirstName, userSICLastName);
+    dbWrapper.updateUser(passwordUsers, userSICEmail);
+    userPageSIC.enterMyFacilityAndMySupervisedFacilityData(userSICFirstName, userSICLastName, "F10", "HIV", "Node 1", "Store-in-charge");
+
+    UserPage userPageMO = homePage.navigateToUser();
+    String userMOEmail="Jane_Doe@openlmis.com";
+    String userMOFirstName="Jane";
+    String userMOLastName="Doe";
+    String userIDMO = userPageMO.enterAndverifyUserDetails("User234", userMOEmail, userMOFirstName, userMOLastName);
+    dbWrapper.updateUser(passwordUsers, userMOEmail);
+    userPageMO.enterMyFacilityAndMySupervisedFacilityData(userMOFirstName, userMOLastName, "F11", "HIV", "Node 1", "Medical-Officer");
+
+    dbWrapper.updateRoleAssignment(userIDSIC, userSICEmail);
+    dbWrapper.updateRoleAssignment(userIDMO, userMOEmail);
+    dbWrapper.updateRoleAssignment(userIDMO);
+    dbWrapper.updateRoleGroupMember(facility_code);
+
     dbWrapper.insertProducts("P10", "P11");
     dbWrapper.insertProgramProducts("P10", "P11", program);
     dbWrapper.insertFacilityApprovedProducts("P10", "P11", program, "Lvl3 Hospital");
@@ -68,27 +93,11 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
     dbWrapper.insertRequisitionGroupProgramSchedule();
 
-    dbWrapper.allocateFacilityToUser("200", facility_code);
+    dbWrapper.allocateFacilityToUser(userIDSIC, facility_code);
 
     TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
     templateConfigPage.configureTemplate();
 
-    RolesPage rolesPage = homePage.navigateRoleAssignments();
-    List<String> userRoleListStoreincharge = new ArrayList<String>();
-    userRoleListStoreincharge.add("Create Requisition");
-    userRoleListStoreincharge.add("Authorize Requisition");
-    userRoleListStoreincharge.add("Approve Requisition");
-    userRoleListStoreincharge.add("Convert To Order Requisition");
-
-    rolesPage.createRole("Store-in-charge", "Store-in-charge", userRoleListStoreincharge);
-    dbWrapper.insertRoleAssignment("200", "Store-in-charge");
-
-    List<String> userRoleListMedicalofficer = new ArrayList<String>();
-    userRoleListMedicalofficer.add("Approve Requisition");
-    rolesPage.createRole("Medical-officer", "Medical-officer", userRoleListMedicalofficer);
-    dbWrapper.insertRoleAssignment("300", "Medical-officer");
-    dbWrapper.updateRoleAssignment("300");
-    dbWrapper.updateRoleGroupMember(facility_code);
 
     dbWrapper.insertSupplyLines("N1", "HIV", "FCcode" + date_time);
 
@@ -167,7 +176,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-        {"HIV", "User123", "User234", "Admin123", new String[]{"Admin123", "Admin123"}}
+      {"HIV", "User123", "User234", "Admin123", new String[]{"Admin123", "Admin123"}}
     };
 
   }
