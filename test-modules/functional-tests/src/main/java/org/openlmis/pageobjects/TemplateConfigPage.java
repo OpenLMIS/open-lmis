@@ -45,13 +45,6 @@ public class TemplateConfigPage extends Page {
         testWebDriver.setImplicitWait(25);
     }
 
-    public void editProductCode(String productCode){
-
-    }
-
-    public void excludeBeginningBalance(){
-        checkboxBeginningBalance.click();
-    }
 
     public void verifySourceForTotalConsumedQuantity(){
         Select select = new Select(dropDownTotalConsumedQuantity);
