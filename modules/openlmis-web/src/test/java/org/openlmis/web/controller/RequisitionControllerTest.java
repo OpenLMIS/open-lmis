@@ -300,9 +300,9 @@ public class RequisitionControllerTest {
   }
 
   @Test
-  public void shouldInsertOrder() throws Exception {
+  public void shouldCreateOrder() throws Exception {
     Order order = new Order();
-    controller.insertOrder(order);
+    controller.createOrder(order, request);
     verify(requisitionService).createOrder(order);
   }
 

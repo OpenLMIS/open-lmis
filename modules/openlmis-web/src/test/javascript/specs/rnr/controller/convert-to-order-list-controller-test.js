@@ -3,14 +3,16 @@ describe('ConvertToOrderListController', function () {
   var scope, ctrl, httpBackend, controller;
   var requisitionList;
 
+  beforeEach(module('openlmis.services'));
+
   beforeEach(inject(function ($httpBackend, $rootScope, $controller) {
     scope = $rootScope.$new();
     controller = $controller;
     httpBackend = $httpBackend;
 
     requisitionList = [
-      {"facilityName":"first facility", "programName":"first program", "facilityCode":"first code", supplyingDepot: "supplying depot first "},
-      {"facilityName":"second facility", "programName":"second program", "facilityCode":"second code", supplyingDepot: "supplying depot second"}
+      {"facilityName":"first facility", "programName":"first program", "facilityCode":"first code", supplyingDepot:"supplying depot first "},
+      {"facilityName":"second facility", "programName":"second program", "facilityCode":"second code", supplyingDepot:"supplying depot second"}
     ];
     ctrl = controller(ConvertToOrderListController, {$scope:scope, requisitionList:requisitionList});
   }));
@@ -59,7 +61,7 @@ describe('ConvertToOrderListController', function () {
     expect(scope.filteredRequisitions[0]).toEqual(requisitionList[0]);
   });
 
-  it('should be able to Filter requisitions against all fields also', function() {
+  it('should be able to Filter requisitions against all fields also', function () {
     scope.query = "second";
     scope.searchField = "";
 
@@ -69,7 +71,7 @@ describe('ConvertToOrderListController', function () {
     expect(scope.filteredRequisitions[0]).toEqual(requisitionList[1]);
   });
 
-  it('should be able to case-insensitively Filter requisitions', function() {
+  it('should be able to case-insensitively Filter requisitions', function () {
     scope.query = "seCOnD";
     scope.searchField = "";
 
@@ -78,7 +80,13 @@ describe('ConvertToOrderListController', function () {
     expect(scope.filteredRequisitions.length).toEqual(1);
     expect(scope.filteredRequisitions[0]).toEqual(requisitionList[1]);
   });
-
+  it("should convert the selected requisitions to order", function () {
+    scope.order = {"rnrList":requisitionList};
+    httpBackend.expectPOST('/order.json', scope.order).respond(200, {"success":"Created successfully"});
+    scope.convertToOrder();
+    httpBackend.flush();
+    expect(scope.message).toEqual("Created successfully");
+  });
 
 
 });

@@ -180,15 +180,19 @@ public class RequisitionController extends BaseController {
 
   @RequestMapping(value = "/facility/{facilityId}/program/{programId}/requisitions", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("hasPermission('','VIEW_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> getRequisitionsForView(@PathVariable("facilityId") Integer  facilityId
-                                                              ,@PathVariable("programId") Integer programId
-                                                              ,@RequestParam("periodStartDate") Date periodStartDate
-                                                              ,@RequestParam("periodEndDate") Date periodEndDate) {
+  public ResponseEntity<OpenLmisResponse> getRequisitionsForView(@PathVariable("facilityId") Integer facilityId
+    , @PathVariable("programId") Integer programId
+    , @RequestParam("periodStartDate") Date periodStartDate
+    , @RequestParam("periodEndDate") Date periodEndDate) {
 
     return response(RNR_LIST, RnrDTO.prepareForView(requisitionService.get(new Facility(facilityId), new Program(programId), periodStartDate, periodEndDate)));
   }
 
-  public void insertOrder(Order order) {
+  @RequestMapping(value = "/order", method = POST, headers = ACCEPT_JSON)
+  @PreAuthorize("hasPermission('','CONVERT_TO_ORDER')")
+  public void createOrder(@RequestBody Order order, HttpServletRequest request) {
+    order.setOrderedBy(loggedInUserId(request));
+    order.setOrderedDate(new Date());
     requisitionService.createOrder(order);
   }
 }

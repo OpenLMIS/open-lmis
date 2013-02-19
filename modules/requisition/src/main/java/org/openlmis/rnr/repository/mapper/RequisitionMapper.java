@@ -102,6 +102,6 @@ public interface RequisitionMapper {
   @Select("SELECT * from orders  WHERE id=#{id}")
   Order getOrderById(Integer id);
 
-  @Update("UPDATE requisitions SET orderid=#{orderId} WHERE id=#{id}")
-  void updateOrderId(Rnr requisition);
+  @Update("UPDATE requisitions SET orderid=#{orderId},status=#{status} WHERE id=#{id}")
+  void updateOrderIdAndStatus(Rnr requisition);
 }

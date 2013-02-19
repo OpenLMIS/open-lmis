@@ -5,5 +5,6 @@ public enum RnrStatus {
   SUBMITTED,
   AUTHORIZED,
   IN_APPROVAL,
-  APPROVED
+  APPROVED,
+  ORDERED
 }

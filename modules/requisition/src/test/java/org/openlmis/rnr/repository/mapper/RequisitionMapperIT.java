@@ -261,7 +261,7 @@ public class RequisitionMapperIT {
   public void shouldGetRequisitionsForViewByFacilityProgramAndPeriodIds() throws Exception {
     Program program = new Program(PROGRAM_ID);
 
-    String commaSeparatedPeriodIds = "{"+processingPeriod1.getId()+","+processingPeriod2.getId()+","+processingPeriod3.getId()+"}";
+    String commaSeparatedPeriodIds = "{" + processingPeriod1.getId() + "," + processingPeriod2.getId() + "," + processingPeriod3.getId() + "}";
     insertRequisition(processingPeriod1, AUTHORIZED);
     insertRequisition(processingPeriod2, APPROVED);
     insertRequisition(processingPeriod3, SUBMITTED);
@@ -271,32 +271,39 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldCreateAnOrder() throws Exception {
-     Order order = new Order();
-     order.setOrderedBy("User");
-     mapper.createOrder(order);
+    Order order = new Order();
+    order.setOrderedBy(1);
+    mapper.createOrder(order);
 
     Order orderFromDatabase = mapper.getOrderById(order.getId());
-    assertThat(orderFromDatabase.getOrderedBy(),is("User"));
+    assertThat(orderFromDatabase.getOrderedBy(), is(1));
   }
 
   @Test
-  public void shouldUpdateOrderIdForARequisition() throws Exception {
+  public void shouldUpdateOrderIdAndStatusForARequisition() throws Exception {
     Rnr requisition = insertRequisition(processingPeriod1, APPROVED);
     Order order = new Order();
+
     mapper.createOrder(order);
+
     Integer orderId = order.getId();
     requisition.setOrderId(orderId);
-    mapper.updateOrderId(requisition);
-    assertThat(mapper.getById(requisition.getId()).getOrderId(),is(orderId));
+    requisition.setStatus(RnrStatus.ORDERED);
+
+    mapper.updateOrderIdAndStatus(requisition);
+
+    Rnr requisitionFromDatabase = mapper.getById(requisition.getId());
+    assertThat(requisitionFromDatabase.getOrderId(), is(orderId));
+    assertThat(requisitionFromDatabase.getStatus().toString().equals("ORDERED"), is(true));
   }
 
   @Test
   public void shouldGetOrderById() throws Exception {
-       Order order = new Order();
-       order.setOrderedBy("User");
-       mapper.createOrder(order);
-       Order orderFromDb = mapper.getOrderById(order.getId());
-       assertThat(orderFromDb.getOrderedBy(),is("User"));
+    Order order = new Order();
+    order.setOrderedBy(1);
+    mapper.createOrder(order);
+    Order orderFromDb = mapper.getOrderById(order.getId());
+    assertThat(orderFromDb.getOrderedBy(), is(1));
   }
 
   private Rnr insertRequisition(ProcessingPeriod period, RnrStatus status) {
@@ -340,8 +347,8 @@ public class RequisitionMapperIT {
 
   private ProcessingPeriod insertPeriod(String name) {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod,
-        with(scheduleId, processingSchedule.getId()),
-        with(ProcessingPeriodBuilder.name, name)));
+      with(scheduleId, processingSchedule.getId()),
+      with(ProcessingPeriodBuilder.name, name)));
 
     processingPeriodMapper.insert(processingPeriod);
 

@@ -20,22 +20,22 @@ public class OrderPage extends Page {
     @FindBy(how = How.ID, using = "NoRequisitionsPendingMessage")
     private static WebElement NoRequisitionsPendingMessage;
 
-    @FindBy(how = How.XPATH, using = "//div[@class='ngViewport ng-scope']/div/div/div[@class='ngCell col0 ']/div/span")
+    @FindBy(how = How.XPATH, using = "//div[@class='ngViewport ng-scope']/div/div/div[@class='ngCell col1 ']/div/span")
     private static WebElement programOnOrderScreen;
 
-    @FindBy(how = How.XPATH, using = "//div[@class='ngViewport ng-scope']/div/div/div[@class='ngCell col1 ']/div/span")
+    @FindBy(how = How.XPATH, using = "//div[@class='ngViewport ng-scope']/div/div/div[@class='ngCell col2 ']/div/span")
     private static WebElement facilityCodeOnOrderScreen;
 
-    @FindBy(how = How.XPATH, using = "//div[@class='ngViewport ng-scope']/div/div/div[@class='ngCell col2 ']/div/span")
+    @FindBy(how = How.XPATH, using = "//div[@class='ngViewport ng-scope']/div/div/div[@class='ngCell col3 ']/div/span")
     private static WebElement facilityNameOnOrderScreen;
 
-    @FindBy(how = How.XPATH, using = "//div[@class='ngViewport ng-scope']/div/div/div[@class='ngCell col3 ']/div/span")
+    @FindBy(how = How.XPATH, using = "//div[@class='ngViewport ng-scope']/div/div/div[@class='ngCell col4 ']/div/span")
     private static WebElement periodStartDateOnOrderScreen;
 
-    @FindBy(how = How.XPATH, using = "//div[@class='ngViewport ng-scope']/div/div/div[@class='ngCell col4 ']/div/span")
+    @FindBy(how = How.XPATH, using = "//div[@class='ngViewport ng-scope']/div/div/div[@class='ngCell col5 ']/div/span")
     private static WebElement periodEndDateOnOrderScreen;
 
-    @FindBy(how = How.XPATH, using = "//div[@class='ngViewport ng-scope']/div/div/div[@class='ngCell col7 ']/div/span")
+    @FindBy(how = How.XPATH, using = "//div[@class='ngViewport ng-scope']/div/div/div[@class='ngCell col8 ']/div/span")
     private static WebElement supplyDepotOnOrderScreen;
 
 

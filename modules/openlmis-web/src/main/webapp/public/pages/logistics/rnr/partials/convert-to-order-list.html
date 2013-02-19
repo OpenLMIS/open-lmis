@@ -25,6 +25,11 @@
         </div>
       </div>
       <div class="gridStyle" ng-grid="gridOptions" ng-show="requisitions.length"></div>
+        <div form-toolbar id="action_buttons" class="action-buttons">
+            <div class="form-cell button-row">
+                <input type="submit" ng-click="convertToOrder()" class="btn btn-primary save-button" value="Convert To Order"/>
+            </div>
+        </div>
     </div>
   </div>
 </div>

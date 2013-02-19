@@ -886,7 +886,7 @@ public class RequisitionServiceTest {
     when(requisitionRepository.getOrderById(1)).thenReturn(order);
     requisitionService.createOrder(order);
     verify(requisitionRepository).createOrder(order);
-    verify(requisitionRepository).updateOrderId(rnr);
+    verify(requisitionRepository).updateOrderIdAndStatus(rnr);
   }
 
   private RoleAssignment roleAssignmentWithSupervisoryNodeId(int supervisoryNodeId) {

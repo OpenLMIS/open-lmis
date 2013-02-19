@@ -1,13 +1,13 @@
-function ConvertToOrderListController($scope, requisitionList) {
+function ConvertToOrderListController($scope, requisitionList,Order) {
   $scope.requisitions = requisitionList;
   $scope.filteredRequisitions = $scope.requisitions;
   $scope.selectedItems = [];
 
   $scope.gridOptions = { data:'filteredRequisitions',
     multiSelect:false,
-    selectedItems: $scope.selectedItems,
+    selectedItems:$scope.selectedItems,
     displayFooter:false,
-    displaySelectionCheckbox:false,
+    displaySelectionCheckbox:true,
     showColumnMenu:false,
     sortInfo:{ field:'submittedDate', direction:'ASC'},
     showFilter:false,
@@ -35,6 +35,18 @@ function ConvertToOrderListController($scope, requisitionList) {
 
     $scope.resultCount = $scope.filteredRequisitions.length;
   };
+
+  $scope.convertToOrder = function () {
+    var successHandler = function () {
+      $scope.message = "Created successfully";
+      $scope.error = "";
+    }
+    var errorHandler = function () {
+      $scope.error = "Error Occurred";
+    }
+    $scope.order={"rnrList":$scope.requisitions};
+    Order.save({}, $scope.order, successHandler, errorHandler);
+  }
 
   function contains(string, query) {
     return string.toLowerCase().indexOf(query.toLowerCase()) != -1;

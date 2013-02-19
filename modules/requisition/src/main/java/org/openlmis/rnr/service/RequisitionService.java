@@ -338,7 +338,7 @@ public class RequisitionService {
     Order orderReturned = requisitionRepository.getOrderById(order.getId());
     for (Rnr rnr : order.getRnrList()) {
       rnr.setOrderId(orderReturned.getId());
-      requisitionRepository.updateOrderId(rnr);
+      requisitionRepository.updateOrderIdAndStatus(rnr);
     }
   }
 }

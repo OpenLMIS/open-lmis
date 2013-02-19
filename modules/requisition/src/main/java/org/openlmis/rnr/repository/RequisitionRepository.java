@@ -111,8 +111,8 @@ public class RequisitionRepository {
     requisitionMapper.createOrder(order);
   }
 
-  public void updateOrderId(Rnr rnr) {
-    requisitionMapper.updateOrderId(rnr);
+  public void updateOrderIdAndStatus(Rnr rnr) {
+    requisitionMapper.updateOrderIdAndStatus(rnr);
   }
   public Order getOrderById(Integer id){
     return requisitionMapper.getOrderById(id);
