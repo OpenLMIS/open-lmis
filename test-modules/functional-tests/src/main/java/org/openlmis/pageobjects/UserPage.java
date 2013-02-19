@@ -67,7 +67,10 @@ public class UserPage extends Page {
   private static WebElement rolesInputFieldMyFacility;
 
 
-  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[14]")
+  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[13]")
+  private static WebElement rolesInputFieldSecondMyFacility;
+
+  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[15]")
   private static WebElement rolesInputField;
 
 
@@ -117,12 +120,12 @@ public class UserPage extends Page {
 
   }
 
-  public void enterMyFacilityAndMySupervisedFacilityData(String firstName, String lastName, String facilityCode, String program, String node, String role) {
+  public void enterMyFacilityAndMySupervisedFacilityData(String firstName, String lastName, String facilityCode, String program1, String program2, String node, String role) {
     testWebDriver.waitForElementToAppear(searchFacility);
     searchFacility.clear();
     searchFacility.sendKeys(facilityCode);
     selectFacility.click();
-    testWebDriver.selectByVisibleText(programsMyFacility, program);
+    testWebDriver.selectByVisibleText(programsMyFacility, program1);
     rolesInputFieldMyFacility.click();
     rolesInputFieldMyFacility.clear();
     rolesInputFieldMyFacility.sendKeys(role);
@@ -131,7 +134,17 @@ public class UserPage extends Page {
     addButtonMyFacility.click();
     testWebDriver.sleep(1000);
 
-    testWebDriver.selectByVisibleText(programsToSupervise, program);
+    testWebDriver.selectByVisibleText(programsMyFacility, program2);
+    rolesInputFieldSecondMyFacility.click();
+    rolesInputFieldSecondMyFacility.clear();
+    rolesInputFieldSecondMyFacility.sendKeys(role);
+    testWebDriver.waitForElementToAppear(rolesSelectFieldMyFacility);
+    rolesSelectFieldMyFacility.click();
+    addButtonMyFacility.click();
+    testWebDriver.sleep(1000);
+
+
+    testWebDriver.selectByVisibleText(programsToSupervise, program1);
     testWebDriver.selectByVisibleText(supervisoryNodeToSupervise, node);
     rolesInputField.click();
     rolesInputField.clear();
