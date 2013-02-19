@@ -2,6 +2,7 @@ package org.openlmis.rnr.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.*;
+import org.openlmis.rnr.domain.Order;
 import org.openlmis.rnr.domain.Rnr;
 import org.springframework.stereotype.Repository;
 

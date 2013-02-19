@@ -4,10 +4,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.helper.CommaSeparator;
-import org.openlmis.rnr.domain.LossesAndAdjustments;
-import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
-import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrLineItem;
+import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper;
 import org.openlmis.rnr.repository.mapper.RequisitionMapper;
 import org.openlmis.rnr.repository.mapper.RnrLineItemMapper;
@@ -116,6 +113,9 @@ public class RequisitionRepository {
 
   public void updateOrderId(Rnr rnr) {
     requisitionMapper.updateOrderId(rnr);
+  }
+  public Order getOrderById(Integer id){
+    return requisitionMapper.getOrderById(id);
   }
 }
 

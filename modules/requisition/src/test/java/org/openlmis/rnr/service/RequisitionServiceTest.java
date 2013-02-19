@@ -15,6 +15,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
 import org.openlmis.rnr.builder.RequisitionBuilder;
+import org.openlmis.rnr.domain.Order;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.domain.RnrStatus;
@@ -885,10 +886,18 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  public void shouldInsertOrder() throws Exception {
+  public void shouldCreateOrder() throws Exception {
     Order order = new Order();
+    order.setId(1);
+    List<Rnr> rnrList = new ArrayList();
+    Rnr rnr = new Rnr();
+    rnrList.add(rnr);
+    order.setRnrList(rnrList);
+
+    when(requisitionRepository.getOrderById(1)).thenReturn(order);
     requisitionService.createOrder(order);
     verify(requisitionRepository).createOrder(order);
+    verify(requisitionRepository).updateOrderId(rnr);
   }
 
   private RoleAssignment roleAssignmentWithSupervisoryNodeId(int supervisoryNodeId) {

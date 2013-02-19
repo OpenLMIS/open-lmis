@@ -8,6 +8,7 @@ import org.openlmis.core.builder.*;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.mapper.*;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
+import org.openlmis.rnr.domain.Order;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.domain.RnrStatus;
@@ -287,6 +288,15 @@ public class RequisitionMapperIT {
     requisition.setOrderId(orderId);
     mapper.updateOrderId(requisition);
     assertThat(mapper.getById(requisition.getId()).getOrderId(),is(orderId));
+  }
+
+  @Test
+  public void shouldGetOrderById() throws Exception {
+       Order order = new Order();
+       order.setOrderedBy("User");
+       mapper.createOrder(order);
+       Order orderFromDb = mapper.getOrderById(order.getId());
+       assertThat(orderFromDb.getOrderedBy(),is("User"));
   }
 
   private Rnr insertRequisition(ProcessingPeriod period, RnrStatus status) {

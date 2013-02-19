@@ -2,7 +2,7 @@ package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.Order;
+import org.openlmis.rnr.domain.Order;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;

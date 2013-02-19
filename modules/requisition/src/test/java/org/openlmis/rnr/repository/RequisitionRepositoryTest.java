@@ -12,6 +12,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.rnr.domain.LossesAndAdjustments;
+import org.openlmis.rnr.domain.Order;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper;
@@ -198,5 +199,15 @@ public class RequisitionRepositoryTest {
     when(requisitionMapper.getById(1)).thenReturn(rnr);
     Rnr rnrFromDatabase = requisitionMapper.getById(rnr.getId());
     assertThat(rnrFromDatabase.getOrderId(),is(100));
+  }
+
+  @Test
+  public void shouldGetOrderById() throws Exception {
+    Order order = new Order();
+    order.setOrderedBy("User");
+    when(requisitionMapper.getOrderById(1)).thenReturn(order);
+    Order orderReturned = requisitionRepository.getOrderById(1);
+    verify(requisitionMapper).getOrderById(1);
+    assertThat(orderReturned,is(order));
   }
 }
