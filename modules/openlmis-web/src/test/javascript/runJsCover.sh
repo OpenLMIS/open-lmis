@@ -1,2 +1,2 @@
-java -jar src/test/javascript/lib/JSCover-all.jar -fs --branch --no-instrument=main/webapp/public/lib/ src/ build/reports/jscover/
+java -jar src/test/javascript/lib/JSCover-all.jar -fs --branch --no-instrument=test/javascript/lib --no-instrument=main/webapp/public/lib/ src/ build/reports/jscover/
 cp build/reports/jscover/test/javascript/jenkins-jscover-report.html build/reports/jscover
