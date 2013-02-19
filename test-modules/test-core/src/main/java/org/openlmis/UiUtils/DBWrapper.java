@@ -158,7 +158,7 @@ public class DBWrapper {
       "  ((select id from roles where name='district pharmacist'), 'CONFIGURE_RNR');");
   }
 
-  public void insertSupervisoryNode(String facilityCode, String supervisoryNodeCode, String supervisoryNodeParentCode) throws SQLException, IOException {
+  public void insertSupervisoryNode(String facilityCode, String supervisoryNodeCode,String supervisoryNodeName, String supervisoryNodeParentCode) throws SQLException, IOException {
     ResultSet rs = query("Select facilityId from supervisory_nodes;");
 
     if (rs.next()) {
@@ -166,13 +166,13 @@ public class DBWrapper {
     }
     update("INSERT INTO supervisory_nodes\n" +
       "  (parentId, facilityId, name, code) VALUES\n" +
-      "  (" + supervisoryNodeParentCode + ", (SELECT id FROM facilities WHERE code = '" + facilityCode + "'), 'Node 1', '" + supervisoryNodeCode + "');");
+      "  (" + supervisoryNodeParentCode + ", (SELECT id FROM facilities WHERE code = '" + facilityCode + "'), '"+supervisoryNodeName+"', '" + supervisoryNodeCode + "');");
   }
 
-  public void insertSupervisoryNodeSecond(String facilityCode, String supervisoryNodeCode, String supervisoryNodeParentCode) throws SQLException, IOException {
+  public void insertSupervisoryNodeSecond(String facilityCode, String supervisoryNodeCode,String supervisoryNodeName, String supervisoryNodeParentCode) throws SQLException, IOException {
     update("INSERT INTO supervisory_nodes\n" +
       "  (parentId, facilityId, name, code) VALUES\n" +
-      "  ((select id from  supervisory_nodes where code ='" + supervisoryNodeParentCode + "'), (SELECT id FROM facilities WHERE code = '" + facilityCode + "'), 'Node 1', '" + supervisoryNodeCode + "');");
+      "  ((select id from  supervisory_nodes where code ='" + supervisoryNodeParentCode + "'), (SELECT id FROM facilities WHERE code = '" + facilityCode + "'), '"+supervisoryNodeName+"', '" + supervisoryNodeCode + "');");
   }
 
   public void insertRequisitionGroups(String code1, String code2, String supervisoryNodeCode1, String supervisoryNodeCode2) throws SQLException, IOException {

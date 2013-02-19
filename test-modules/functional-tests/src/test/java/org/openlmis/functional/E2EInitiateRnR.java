@@ -36,7 +36,6 @@ public class E2EInitiateRnR extends TestCaseHelper {
     CreateFacilityPage createFacilityPage = homePage.navigateCreateFacility();
     String date_time = createFacilityPage.enterAndVerifyFacility();
     String facility_code = "FCcode" + date_time;
-
     dbWrapper.insertFacilities("F10", "F11");
 
     RolesPage rolesPage = homePage.navigateRoleAssignments();
@@ -52,15 +51,16 @@ public class E2EInitiateRnR extends TestCaseHelper {
     userRoleListMedicalofficer.add("Approve Requisition");
     rolesPage.createRole("Medical-officer", "Medical-officer", userRoleListMedicalofficer);
 
-    dbWrapper.insertSupervisoryNode("F10", "N1", "null");
-    dbWrapper.insertSupervisoryNodeSecond("F11", "N2", "N1");
+    dbWrapper.insertSupervisoryNode("F10", "N1","Node 1", "null");
+    dbWrapper.insertSupervisoryNodeSecond("F11", "N2","Node 2", "N1");
 
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
     UserPage userPageSIC = homePage.navigateToUser();
     String userSICEmail="Fatima_Doe@openlmis.com";
     String userSICFirstName="Fatima";
     String userSICLastName="Doe";
-    String userIDSIC = userPageSIC.enterAndverifyUserDetails("User123", userSICEmail, userSICFirstName, userSICLastName);
+    String userSICUserName="storeincharge";
+    String userIDSIC = userPageSIC.enterAndverifyUserDetails(userSICUserName, userSICEmail, userSICFirstName, userSICLastName);
     dbWrapper.updateUser(passwordUsers, userSICEmail);
     userPageSIC.enterMyFacilityAndMySupervisedFacilityData(userSICFirstName, userSICLastName, "F10", "HIV", "Node 1", "Store-in-charge");
 
@@ -68,13 +68,12 @@ public class E2EInitiateRnR extends TestCaseHelper {
     String userMOEmail="Jane_Doe@openlmis.com";
     String userMOFirstName="Jane";
     String userMOLastName="Doe";
-    String userIDMO = userPageMO.enterAndverifyUserDetails("User234", userMOEmail, userMOFirstName, userMOLastName);
+    String userMOUserName="medicalofficer";
+    String userIDMO = userPageMO.enterAndverifyUserDetails(userMOUserName, userMOEmail, userMOFirstName, userMOLastName);
     dbWrapper.updateUser(passwordUsers, userMOEmail);
-    userPageMO.enterMyFacilityAndMySupervisedFacilityData(userMOFirstName, userMOLastName, "F11", "HIV", "Node 1", "Medical-Officer");
+    userPageMO.enterMyFacilityAndMySupervisedFacilityData(userMOFirstName, userMOLastName, "F11", "HIV", "Node 2", "Medical-Officer");
 
-    dbWrapper.updateRoleAssignment(userIDMO);
     dbWrapper.updateRoleGroupMember(facility_code);
-
     dbWrapper.insertProducts("P10", "P11");
     dbWrapper.insertProgramProducts("P10", "P11", program);
     dbWrapper.insertFacilityApprovedProducts("P10", "P11", program, "Lvl3 Hospital");
@@ -174,7 +173,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-      {"HIV", "User123", "User234", "Admin123", new String[]{"Admin123", "Admin123"}}
+      {"HIV", "storeincharge", "medicalofficer", "Admin123", new String[]{"Admin123", "Admin123"}}
     };
 
   }
