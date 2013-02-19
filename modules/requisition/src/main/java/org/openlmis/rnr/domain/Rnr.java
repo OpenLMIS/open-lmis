@@ -7,7 +7,6 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.*;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -43,7 +42,7 @@ public class Rnr {
   private Integer modifiedBy;
   private Date modifiedDate;
   private Date submittedDate;
-  public static final String RNR_VALIDATION_ERROR = "rnr.validation.error";
+
 
   public Rnr(Integer facilityId, Integer programId, Integer periodId, Integer modifiedBy) {
     facility = new Facility();
@@ -74,20 +73,15 @@ public class Rnr {
     }
   }
 
-  public boolean validate(List<RnrColumn> templateColumns) {
-    for (RnrLineItem lineItem : lineItems) {
-      lineItem.validate(templateColumns);
-    }
-    return true;
-  }
-
   public void calculate(List<RnrColumn> programRnrColumns) {
     for(RnrLineItem lineItem : lineItems){
+      lineItem.validateMandatoryFields(programRnrColumns);
       lineItem.calculate(period, programRnrColumns);
+      lineItem.validateCalculatedFields(programRnrColumns);
     }
 
-    for(RnrLineItem lineItem : nonFullSupplyLineItems) {
-      lineItem.calculate(period, programRnrColumns);
+    for(RnrLineItem lineItem : nonFullSupplyLineItems){
+      lineItem.validateNonFullSupply();
     }
 
     this.fullSupplyItemsSubmittedCost = calculateCost(lineItems);
@@ -97,7 +91,7 @@ public class Rnr {
   private Money calculateCost(List<RnrLineItem> lineItems) {
     Money totalFullSupplyCost = new Money("0");
     for (RnrLineItem lineItem : lineItems) {
-      Money costPerItem = lineItem.getPrice().multiply(BigDecimal.valueOf(lineItem.getPacksToShip()));
+      Money costPerItem = lineItem.calculateCost();
       totalFullSupplyCost = totalFullSupplyCost.add(costPerItem);
     }
     return totalFullSupplyCost;

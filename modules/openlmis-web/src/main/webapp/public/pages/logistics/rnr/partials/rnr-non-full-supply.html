@@ -1,6 +1,6 @@
 <div ng-controller="RequisitionNonFullSupplyController">
   <div class="clearfix">
-    <input type="button" ng-click="showAddNonFullSupplyModal()"  class = "pull-right btn btn-primary" value="Add"
+    <input type="button" ng-click="showAddNonFullSupplyModal()"  class = "pull-right btn btn-primary" ng-disabled="formDisabled" value="Add"
            ng-disabled="!addNonFullSupplyLineItemButtonShown.visible"/>
   </div>
 
@@ -99,7 +99,7 @@
                   ng-bind="labelForRnrColumn('quantityRequested')"></span></label>
               <input name="newNonFullSupply.quantityRequested" ng-model="newNonFullSupply.quantityRequested"
                      id="quantityRequested"
-                     rnr-validator="positiveInteger" prevent-rnr-error="true" maxlength="8"/><br>
+                     rnr-validator="positiveInteger" maxlength="8"/><br>
               <span class="rnr-form-error" style="display:none;" id="newNonFullSupply.quantityRequested">
                 Enter Numeric Data
               </span>

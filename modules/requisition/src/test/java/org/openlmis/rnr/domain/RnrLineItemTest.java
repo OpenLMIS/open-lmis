@@ -1,5 +1,6 @@
 package org.openlmis.rnr.domain;
 
+import com.natpryce.makeiteasy.Donor;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -29,6 +30,7 @@ import static org.openlmis.rnr.builder.RnrLineItemBuilder.lossesAndAdjustments;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.quantityApproved;
 import static org.openlmis.rnr.domain.RnRColumnSource.CALCULATED;
 import static org.openlmis.rnr.domain.RnRColumnSource.USER_INPUT;
+import static org.openlmis.rnr.domain.RnrLineItem.RNR_VALIDATION_ERROR;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.spy;
 
@@ -114,40 +116,40 @@ public class RnrLineItemTest {
   public void shouldThrowErrorIfBeginningBalanceNotPresent() throws Exception {
     lineItem.setBeginningBalance(null);
     expectedException.expect(DataException.class);
-    expectedException.expectMessage(Rnr.RNR_VALIDATION_ERROR);
-    lineItem.validate(templateColumns);
+    expectedException.expectMessage(RNR_VALIDATION_ERROR);
+    lineItem.validateMandatoryFields(templateColumns);
   }
 
   @Test
   public void shouldThrowErrorIfQuantityReceivedNotPresent() throws Exception {
     lineItem.setQuantityReceived(null);
     expectedException.expect(DataException.class);
-    expectedException.expectMessage(Rnr.RNR_VALIDATION_ERROR);
-    lineItem.validate(templateColumns);
+    expectedException.expectMessage(RNR_VALIDATION_ERROR);
+    lineItem.validateMandatoryFields(templateColumns);
   }
 
   @Test
   public void shouldThrowErrorIfQuantityConsumedNotPresent() throws Exception {
     lineItem.setQuantityDispensed(null);
     expectedException.expect(DataException.class);
-    expectedException.expectMessage(Rnr.RNR_VALIDATION_ERROR);
-    lineItem.validate(templateColumns);
+    expectedException.expectMessage(RNR_VALIDATION_ERROR);
+    lineItem.validateMandatoryFields(templateColumns);
   }
 
   @Test
   public void shouldThrowErrorIfNewPatientsNotPresent() throws Exception {
     lineItem.setNewPatientCount(null);
     expectedException.expect(DataException.class);
-    expectedException.expectMessage(Rnr.RNR_VALIDATION_ERROR);
-    lineItem.validate(templateColumns);
+    expectedException.expectMessage(RNR_VALIDATION_ERROR);
+    lineItem.validateMandatoryFields(templateColumns);
   }
 
   @Test
   public void shouldThrowErrorIfStockOutDaysNotPresent() throws Exception {
     lineItem.setStockOutDays(null);
     expectedException.expect(DataException.class);
-    expectedException.expectMessage(Rnr.RNR_VALIDATION_ERROR);
-    lineItem.validate(templateColumns);
+    expectedException.expectMessage(RNR_VALIDATION_ERROR);
+    lineItem.validateMandatoryFields(templateColumns);
   }
 
   @Test
@@ -155,13 +157,13 @@ public class RnrLineItemTest {
     lineItem.setQuantityRequested(70);
     lineItem.setReasonForRequestedQuantity(null);
     expectedException.expect(DataException.class);
-    expectedException.expectMessage(Rnr.RNR_VALIDATION_ERROR);
-    lineItem.validate(templateColumns);
+    expectedException.expectMessage(RNR_VALIDATION_ERROR);
+    lineItem.validateMandatoryFields(templateColumns);
   }
 
   @Test
   public void shouldNotThrowErrorForExplanationNotPresentIfRequestedQuantityNotSet() throws Exception {
-    assertTrue(lineItem.validate(templateColumns));
+    lineItem.validateMandatoryFields(templateColumns);
   }
 
   @Test
@@ -175,8 +177,8 @@ public class RnrLineItemTest {
     lineItem.setStockInHand(4);
     lineItem.setQuantityDispensed(9);
     expectedException.expect(DataException.class);
-    expectedException.expectMessage(Rnr.RNR_VALIDATION_ERROR);
-    lineItem.validate(templateColumns);
+    expectedException.expectMessage(RNR_VALIDATION_ERROR);
+    lineItem.validateCalculatedFields(templateColumns);
   }
 
   private LossesAndAdjustments createLossAndAdjustment(String typeName, boolean additive, int quantity) {
@@ -196,7 +198,7 @@ public class RnrLineItemTest {
     lineItem.setLossesAndAdjustments(asList(createLossAndAdjustment("", true, 1)));
     lineItem.setStockInHand(4);
     lineItem.setQuantityDispensed(10);
-    assertTrue(lineItem.validate(templateColumns));
+    lineItem.validateMandatoryFields(templateColumns);
   }
 
   @Test
@@ -208,7 +210,7 @@ public class RnrLineItemTest {
     lineItem.setQuantityDispensed(9);
     templateColumns.get(0).setFormulaValidationRequired(false);
 
-    lineItem.validate(templateColumns);
+    lineItem.validateMandatoryFields(templateColumns);
   }
 
 
@@ -219,7 +221,7 @@ public class RnrLineItemTest {
     lineItem.setTotalLossesAndAdjustments(1);
     lineItem.setStockInHand(4);
     lineItem.setQuantityDispensed(10);
-    assertTrue(lineItem.validate(templateColumns));
+    lineItem.validateMandatoryFields(templateColumns);
   }
 
   @Test
@@ -366,7 +368,7 @@ public class RnrLineItemTest {
 
   @Test
   public void shouldNotThrowErrorIfAllMandatoryFieldsPresent() throws Exception {
-    assertTrue(lineItem.validate(templateColumns));
+    lineItem.validateMandatoryFields(templateColumns);
   }
 
   @Test
@@ -505,4 +507,31 @@ public class RnrLineItemTest {
 
     assertThat(lineItem.getQuantityApproved(), is(RnrLineItemBuilder.QUANTITY_APPROVED));
   }
+
+   @Test
+   public void shouldThrowExceptionIfNonFullSupplyLineItemHasRequestedQuantityAsNull(){
+     Integer nullInteger = null;
+     RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(RnrLineItemBuilder.quantityRequested, nullInteger)));
+     expectedException.expect(DataException.class);
+     expectedException.expectMessage(RNR_VALIDATION_ERROR);
+     rnrLineItem.validateNonFullSupply();
+   }
+
+  @Test
+  public void shouldThrowExceptionIfNonFullSupplyLineItemHasRequestedQuantityIsNegative(){
+    RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(RnrLineItemBuilder.quantityRequested, -10)));
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage(RNR_VALIDATION_ERROR);
+    rnrLineItem.validateNonFullSupply();
+  }
+
+  @Test
+  public void shouldThrowExceptionIfNonFullSupplyLineItemHasReasonForRequestedQuantityNull(){
+    String nullString  = null;
+    RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(RnrLineItemBuilder.reasonForRequestedQuantity, nullString)));
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage(RNR_VALIDATION_ERROR);
+    rnrLineItem.validateNonFullSupply();
+  }
+
 }

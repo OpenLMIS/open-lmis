@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,13 +22,14 @@ import static java.lang.Math.floor;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
 import static org.openlmis.rnr.domain.RnRColumnSource.USER_INPUT;
-import static org.openlmis.rnr.domain.Rnr.RNR_VALIDATION_ERROR;
 
 @Data
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = NON_EMPTY)
 public class RnrLineItem {
+
+  public static final String RNR_VALIDATION_ERROR = "rnr.validation.error";
 
   public static final Float MULTIPLIER = 3f;
   public static final Float NUMBER_OF_DAYS = 30f;
@@ -116,13 +118,6 @@ public class RnrLineItem {
     this.lossesAndAdjustments.add(lossesAndAdjustments);
   }
 
-  public boolean validate(List<RnrColumn> templateColumns) {
-    RnrColumn column = templateColumns.get(0);
-    if (!validateMandatoryFields(templateColumns) || !validateCalculatedFields(column.isFormulaValidationRequired())) {
-      throw new DataException(new OpenLmisMessage(RNR_VALIDATION_ERROR));
-    }
-    return true;
-  }
 
   public void calculate(ProcessingPeriod period, List<RnrColumn> rnrColumns) {
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
@@ -130,8 +125,8 @@ public class RnrLineItem {
     calculateAmc(period);
     calculateTotalLossesAndAdjustments();
     calculateMaxStockQuantity();
-    if(template.columnsCalculated(STOCK_IN_HAND)) calculateStockInHand();
-    if(template.columnsCalculated(QUANTITY_DISPENSED)) calculateQuantityDispensed();
+    if (template.columnsCalculated(STOCK_IN_HAND)) calculateStockInHand();
+    if (template.columnsCalculated(QUANTITY_DISPENSED)) calculateQuantityDispensed();
     calculateOrderQuantity();
 
     calculatePacksToShip();
@@ -150,33 +145,46 @@ public class RnrLineItem {
     return total;
   }
 
-  private boolean validateMandatoryFields(List<RnrColumn> templateColumns) {
+  public void validateMandatoryFields(List<RnrColumn> templateColumns) {
     ProgramRnrTemplate template = new ProgramRnrTemplate(templateColumns);
 
     String[] nonNullableFields = {BEGINNING_BALANCE, QUANTITY_RECEIVED, QUANTITY_DISPENSED, NEW_PATIENT_COUNT, STOCK_OUT_DAYS};
-
+    boolean valid = true;
     for (String fieldName : nonNullableFields) {
-      try {
-        Field field = this.getClass().getDeclaredField(fieldName);
-        if (field.get(this) == null) {
-          return false;
+      if (template.columnsVisible(fieldName) && !template.columnsCalculated(fieldName)) {
+        try {
+          Field field = this.getClass().getDeclaredField(fieldName);
+          if (field.get(this) == null) {
+            valid = false;
+            break;
+          }
+        } catch (Exception e) {
+          logger.error("Error in reading RnrLineItem's field", e);
         }
-      } catch (Exception e) {
-        logger.error("Error in reading RnrLineItem's field", e);
       }
     }
 
-    return (!template.columnsVisible(QUANTITY_REQUESTED, REASON_FOR_REQUESTED_QUANTITY)
+    valid = valid && (!template.columnsVisible(QUANTITY_REQUESTED, REASON_FOR_REQUESTED_QUANTITY)
       || quantityRequested == null
       || isPresent(reasonForRequestedQuantity));
+
+    if (!valid)
+      throw new DataException(new OpenLmisMessage(RNR_VALIDATION_ERROR));
+
   }
 
-  private boolean validateCalculatedFields(boolean arithmeticValidationRequired) {
+  public void validateNonFullSupply() {
+    if (!(quantityRequested != null && quantityRequested >= 0 && isPresent(reasonForRequestedQuantity)))
+      throw new DataException(RNR_VALIDATION_ERROR);
+  }
+
+  public void validateCalculatedFields(List<RnrColumn> rnrColumns) {
     boolean validQuantityDispensed = true;
-    if (arithmeticValidationRequired) {
+    if (rnrColumns.get(0).isFormulaValidationRequired()) {
       validQuantityDispensed = (quantityDispensed == (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand));
     }
-    return (quantityDispensed >= 0 && stockInHand >= 0 && validQuantityDispensed);
+    boolean valid = quantityDispensed >= 0 && stockInHand >= 0 && validQuantityDispensed;
+    if (!valid) throw new DataException(RNR_VALIDATION_ERROR);
   }
 
   private boolean isPresent(Object value) {
@@ -189,8 +197,8 @@ public class RnrLineItem {
   }
 
   private Integer getOrderQuantity() {
-    if(quantityApproved != null) return quantityApproved;
-    if(quantityRequested != null) return quantityRequested;
+    if (quantityApproved != null) return quantityApproved;
+    if (quantityRequested != null) return quantityRequested;
     else return calculatedOrderQuantity;
   }
 
@@ -295,5 +303,9 @@ public class RnrLineItem {
 
   private void calculateQuantityDispensed() {
     this.quantityDispensed = this.beginningBalance + this.quantityReceived + this.totalLossesAndAdjustments - this.stockInHand;
+  }
+
+  public Money calculateCost() {
+    return price.multiply(BigDecimal.valueOf(packsToShip));
   }
 }

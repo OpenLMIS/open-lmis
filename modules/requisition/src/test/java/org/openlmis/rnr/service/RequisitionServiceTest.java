@@ -347,14 +347,12 @@ public class RequisitionServiceTest {
     Rnr rnrToSubmit = make(a(defaultRnr));
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(rnrToSubmit);
     Mockito.when(rnrTemplateRepository.fetchRnrTemplateColumns(PROGRAM.getId())).thenReturn(rnrColumns);
-    Mockito.doReturn(true).when(savedRnr).validate(rnrColumns);
     doNothing().when(savedRnr).copyApproverEditableFields(rnrToSubmit);
     doNothing().when(savedRnr).prepareFor(SUBMITTED, rnrColumns);
 
     requisitionService.submit(rnrToSubmit);
 
     verify(savedRnr).prepareFor(SUBMITTED, rnrColumns);
-    verify(savedRnr).validate(rnrColumns);
     verify(requisitionRepository).update(savedRnr);
     verify(savedRnr).copyUserEditableFields(rnrToSubmit, rnrColumns);
   }
@@ -364,14 +362,12 @@ public class RequisitionServiceTest {
     Rnr rnrToSubmit = make(a(defaultRnr));
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(rnrToSubmit);
     Mockito.when(rnrTemplateRepository.fetchRnrTemplateColumns(PROGRAM.getId())).thenReturn(rnrColumns);
-    doReturn(true).when(savedRnr).validate(rnrColumns);
     doNothing().when(savedRnr).copyUserEditableFields(rnrToSubmit, rnrColumns);
     doNothing().when(savedRnr).calculate(rnrColumns);
 
     OpenLmisMessage message = requisitionService.submit(rnrToSubmit);
 
     verify(savedRnr).prepareFor(SUBMITTED, rnrColumns);
-    verify(savedRnr).validate(rnrColumns);
     verify(requisitionRepository).update(savedRnr);
     verify(savedRnr).copyUserEditableFields(rnrToSubmit, rnrColumns);
     verify(requisitionRepository).update(savedRnr);
@@ -382,7 +378,6 @@ public class RequisitionServiceTest {
   public void shouldSubmitValidRnrWithSubmittedDateAndSetMessage() {
     Rnr rnrToSubmit = make(a(defaultRnr));
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(rnrToSubmit);
-    doReturn(true).when(savedRnr).validate(rnrColumns);
     doNothing().when(savedRnr).copyUserEditableFields(rnrToSubmit, rnrColumns);
     doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
     doNothing().when(savedRnr).calculate(rnrColumns);
@@ -392,7 +387,6 @@ public class RequisitionServiceTest {
     OpenLmisMessage message = requisitionService.submit(rnrToSubmit);
 
     verify(requisitionRepository).update(savedRnr);
-    verify(savedRnr).validate(rnrColumns);
     assertThat(savedRnr.getSubmittedDate(), is(notNullValue()));
     assertThat(savedRnr.getStatus(), is(SUBMITTED));
     assertThat(message.getCode(), is("rnr.submitted.success"));
@@ -401,7 +395,6 @@ public class RequisitionServiceTest {
   @Test
   public void shouldAuthorizeAValidRnrAndTagWithSupervisoryNode() throws Exception {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr);
-    doReturn(true).when(savedRnr).validate(rnrColumns);
     doNothing().when(savedRnr).copyUserEditableFields(submittedRnr, rnrColumns);
     doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
     doNothing().when(savedRnr).calculate(rnrColumns);
@@ -412,7 +405,6 @@ public class RequisitionServiceTest {
 
     OpenLmisMessage authorize = requisitionService.authorize(submittedRnr);
 
-    verify(savedRnr).validate(rnrColumns);
     verify(rnrTemplateRepository).fetchRnrTemplateColumns(savedRnr.getProgram().getId());
     verify(requisitionRepository).update(savedRnr);
     assertThat(savedRnr.getStatus(), is(AUTHORIZED));
@@ -425,7 +417,6 @@ public class RequisitionServiceTest {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr);
     doNothing().when(savedRnr).copyUserEditableFields(submittedRnr, rnrColumns);
     doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
-    doReturn(true).when(savedRnr).validate(rnrColumns);
     doNothing().when(savedRnr).calculate(rnrColumns);
 
     SupervisoryNode node = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
@@ -445,7 +436,6 @@ public class RequisitionServiceTest {
     when(supervisoryNodeService.getApproverFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(null);
     SupervisoryNode node = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
     when(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(node);
-    doReturn(true).when(savedRnr).validate(rnrColumns);
     doNothing().when(savedRnr).copyUserEditableFields(submittedRnr, rnrColumns);
     doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
     doNothing().when(savedRnr).calculate(rnrColumns);
@@ -453,7 +443,6 @@ public class RequisitionServiceTest {
     OpenLmisMessage openLmisMessage = requisitionService.authorize(submittedRnr);
 
     verify(rnrTemplateRepository).fetchRnrTemplateColumns(savedRnr.getProgram().getId());
-    verify(savedRnr).validate(rnrColumns);
     verify(requisitionRepository).update(savedRnr);
     assertThat(savedRnr.getStatus(), is(AUTHORIZED));
     assertThat(openLmisMessage.getCode(), is(RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR));

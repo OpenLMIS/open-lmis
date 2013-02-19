@@ -38,21 +38,22 @@ public class RnrTest {
 
   @Test
   public void shouldCallValidateOnEachLineItem() throws Exception {
-    List<RnrColumn> templateColumns = new ArrayList<>();
     final RnrLineItem rnrLineItem1 = mock(RnrLineItem.class);
     final RnrLineItem rnrLineItem2 = mock(RnrLineItem.class);
-    ArrayList<RnrLineItem> lineItems = new ArrayList<RnrLineItem>() {{
-      add(rnrLineItem1);
-      add(rnrLineItem2);
-    }};
-    rnr.setLineItems(lineItems);
-    when(rnrLineItem1.validate(templateColumns)).thenReturn(true);
-    when(rnrLineItem2.validate(templateColumns)).thenReturn(true);
 
-    rnr.validate(templateColumns);
 
-    verify(rnrLineItem1).validate(templateColumns);
-    verify(rnrLineItem2).validate(templateColumns);
+    when(rnrLineItem1.calculateCost()).thenReturn(new Money("10"));
+    when(rnrLineItem2.calculateCost()).thenReturn(new Money("10"));
+    rnr.setLineItems(asList(rnrLineItem1));
+    rnr.setNonFullSupplyLineItems(asList(rnrLineItem2));
+
+    List<RnrColumn> programRnrColumns = new ArrayList<>();
+    rnr.calculate(programRnrColumns);
+
+    verify(rnrLineItem1).validateMandatoryFields(programRnrColumns);
+    verify(rnrLineItem1).validateCalculatedFields(programRnrColumns);
+
+    verify(rnrLineItem2).validateNonFullSupply();
   }
 
   @Test
@@ -152,20 +153,21 @@ public class RnrTest {
     RnrLineItem secondLineItem = mock(RnrLineItem.class);
     lineItems.add(firstLineItem);
     nonFullSupplyLineItems.add(secondLineItem);
-    when(firstLineItem.getPrice()).thenReturn(new Money("1"));
-    when(firstLineItem.getPacksToShip()).thenReturn(1);
-    when(secondLineItem.getPrice()).thenReturn(new Money("1"));
-    when(secondLineItem.getPacksToShip()).thenReturn(1);
+
 
     rnr.setLineItems(lineItems);
     rnr.setNonFullSupplyLineItems(nonFullSupplyLineItems);
     rnr.setPeriod(period);
     rnr.setStatus(SUBMITTED);
-
+    Money fullSupplyItemSubmittedCost = new Money("10");
+    Money nonFullSupplyItemSubmittedCost = new Money("20");
+    when(firstLineItem.calculateCost()).thenReturn(fullSupplyItemSubmittedCost);
+    when(secondLineItem.calculateCost()).thenReturn(nonFullSupplyItemSubmittedCost);
     rnr.calculate(programRequisitionColumns);
 
     verify(firstLineItem).calculate(period, programRequisitionColumns);
-    verify(secondLineItem).calculate(period, programRequisitionColumns);
+    assertThat(rnr.getFullSupplyItemsSubmittedCost(), is(fullSupplyItemSubmittedCost));
+    assertThat(rnr.getNonFullSupplyItemsSubmittedCost(), is(nonFullSupplyItemSubmittedCost));
   }
 
   @Test

@@ -28,7 +28,9 @@ public class RnrLineItemBuilder {
   public static final Property<RnrLineItem, Integer> packRoundingThreshold = newProperty();
   public static final Property<RnrLineItem, Integer> packSize = newProperty();
   public static final Property<RnrLineItem, Integer> quantityApproved = newProperty();
+  public static final Property<RnrLineItem,String> reasonForRequestedQuantity = newProperty();
 
+  public static final Property<RnrLineItem, Integer> quantityRequested = newProperty();
   public static final LossesAndAdjustments ONE_LOSS = new LossesAndAdjustments() {{
     setQuantity(1);
     LossesAndAdjustmentsType type = new LossesAndAdjustmentsType();
@@ -48,6 +50,7 @@ public class RnrLineItemBuilder {
   public static final String REMARKS = "Remarks";
   public static final boolean ROUND_To_ZERO = true;
   public static final int QUANTITY_APPROVED = 2;
+
   public static final Instantiator<RnrLineItem> defaultRnrLineItem = new Instantiator<RnrLineItem>() {
 
 
@@ -83,8 +86,8 @@ public class RnrLineItemBuilder {
       rnrLineItem.setPackRoundingThreshold(lookup.valueOf(packRoundingThreshold, 3));
       rnrLineItem.setRoundToZero(lookup.valueOf(roundToZero, ROUND_To_ZERO));
       rnrLineItem.setPrice(new Money("4"));
-      rnrLineItem.setQuantityRequested(QUANTITY_REQUESTED);
-      rnrLineItem.setReasonForRequestedQuantity(REASON_FOR_REQUESTED_QUANTITY);
+      rnrLineItem.setQuantityRequested(lookup.valueOf(quantityRequested, QUANTITY_REQUESTED));
+      rnrLineItem.setReasonForRequestedQuantity(lookup.valueOf(reasonForRequestedQuantity, REASON_FOR_REQUESTED_QUANTITY));
       rnrLineItem.setRemarks(REMARKS);
       return rnrLineItem;
     }

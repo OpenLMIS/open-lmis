@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.openlmis.core.domain.Right.*;
-import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
+import static org.openlmis.rnr.domain.ProgramRnrTemplate.BEGINNING_BALANCE;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
 @Service
@@ -38,6 +38,7 @@ public class RequisitionService {
   public static final String RNR_PREVIOUS_NOT_FILLED_ERROR = "rnr.previous.not.filled.error";
   public static final String RNR_APPROVED_SUCCESSFULLY = "rnr.approved.success";
   public static final String RNR_TEMPLATE_NOT_INITIATED_ERROR = "rnr.template.not.defined.error";
+
 
   private RequisitionRepository requisitionRepository;
   private RnrTemplateRepository rnrTemplateRepository;
@@ -128,8 +129,6 @@ public class RequisitionService {
 
     savedRnr.prepareFor(SUBMITTED, rnrColumns);
 
-    savedRnr.validate(rnrColumns);
-
     requisitionRepository.update(savedRnr);
 
     SupervisoryNode supervisoryNode = supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram());
@@ -147,8 +146,6 @@ public class RequisitionService {
     savedRnr.copyUserEditableFields(rnr, rnrColumns);
 
     savedRnr.prepareFor(AUTHORIZED, rnrColumns);
-
-    savedRnr.validate(rnrColumns);
 
     savedRnr.setSupervisoryNodeId(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram()).getId());
 

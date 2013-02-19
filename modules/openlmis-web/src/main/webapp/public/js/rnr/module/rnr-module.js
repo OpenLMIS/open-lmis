@@ -1,48 +1,51 @@
 var rnrModule = angular.module('rnr', ['openlmis', 'ngGrid']).config(['$routeProvider', function ($routeProvider) {
-    $routeProvider.
-        when('/init-rnr', {controller:InitiateRnrController, templateUrl:'partials/init.html'}).
-        when('/create-rnr/:facility/:program/:period', {controller: RequisitionController, templateUrl:'partials/create.html'}).
-        when('/rnr-for-approval', {controller: ApproveRnrListController, templateUrl:'partials/list.html', resolve: ApproveRnrListController.resolve}).
-        when('/requisitions-for-convert-to-order', {controller: ConvertToOrderListController, templateUrl:'partials/convert-to-order-list.html', resolve: ConvertToOrderListController.resolve}).
-        when('/view-requisitions', {controller: ViewRnrController, templateUrl:'partials/view-rnr.html'}).
-        when('/rnr-for-approval/:rnr/:facility/:program', {controller:ApproveRnrController, templateUrl:'partials/approve.html', resolve: ApproveRnrController.resolve}).
-        otherwise({redirectTo:'/init-rnr'});
-}]).directive('rnrValidator', function () {
-        return {
-            require:'?ngModel',
-            link:function (scope, element, attrs, ctrl) {
-                var validationFunction = rnrModule[attrs.rnrValidator];
-                ctrl.$parsers.unshift(function (viewValue) {
-                    if (validationFunction(viewValue, element.attr('name'))) {
-                        ctrl.$setValidity(element.attr('name'), true);
-                        ctrl.$setValidity('rnrError', true);
-                        if (viewValue == "") viewValue = undefined;
-                        return viewValue;
-                    } else {
-                        ctrl.$setValidity(element.attr('name'), false);
-                        if(!attrs['preventRnrError']) ctrl.$setValidity('rnrError', false);
-                        return undefined;
-                    }
-                });
-            }
-        };
-    });
+  $routeProvider.
+    when('/init-rnr', {controller:InitiateRnrController, templateUrl:'partials/init.html'}).
+    when('/create-rnr/:facility/:program/:period', {controller:RequisitionController, templateUrl:'partials/create.html'}).
+    when('/rnr-for-approval', {controller:ApproveRnrListController, templateUrl:'partials/list.html', resolve:ApproveRnrListController.resolve}).
+    when('/requisitions-for-convert-to-order', {controller:ConvertToOrderListController, templateUrl:'partials/convert-to-order-list.html', resolve:ConvertToOrderListController.resolve}).
+    when('/view-requisitions', {controller:ViewRnrController, templateUrl:'partials/view-rnr.html'}).
+    when('/rnr-for-approval/:rnr/:facility/:program', {controller:ApproveRnrController, templateUrl:'partials/approve.html', resolve:ApproveRnrController.resolve}).
+    otherwise({redirectTo:'/init-rnr'});
+}]).directive('rnrValidator',function () {
+    return {
+      require:'?ngModel',
+      link:function (scope, element, attrs, ctrl) {
+        var validationFunction = rnrModule[attrs.rnrValidator];
+
+        element.bind('blur', function() {
+          var viewValue = ctrl.$viewValue;
+          validationFunction(viewValue, element.attr('name'));
+        });
+        ctrl.$parsers.unshift(function (viewValue) {
+          if (validationFunction(viewValue, element.attr('name'))) {
+            if (viewValue == "")  viewValue = undefined;
+            return viewValue;
+          } else {
+            ctrl.$viewValue = undefined;
+            ctrl.$render();
+            return undefined;
+          }
+        });
+      }
+    };
+  });
 
 rnrModule.positiveInteger = function (value, errorHolder) {
-    var toggleErrorMessageDisplay = function (valid, errorHolder) {
-        if (valid) {
-            document.getElementById(errorHolder).style.display = 'none';
-        } else {
-            document.getElementById(errorHolder).style.display = 'block';
-        }
-    };
+  var toggleErrorMessageDisplay = function (valid, errorHolder) {
+    if (valid) {
+      document.getElementById(errorHolder).style.display = 'none';
+    } else {
+      document.getElementById(errorHolder).style.display = 'block';
+    }
+  };
 
-    var INTEGER_REGEXP = /^\d*$/;
-    var valid = (value == undefined) ? true : INTEGER_REGEXP.test(value);
+  var INTEGER_REGEXP = /^\d*$/;
+  var valid = (value == undefined) ? true : INTEGER_REGEXP.test(value);
 
-    if (errorHolder != undefined) toggleErrorMessageDisplay(valid, errorHolder);
+  if (errorHolder != undefined) toggleErrorMessageDisplay(valid, errorHolder);
 
-    return valid;
+  return valid;
 };
 
 function parseIntWithBaseTen(number) {
