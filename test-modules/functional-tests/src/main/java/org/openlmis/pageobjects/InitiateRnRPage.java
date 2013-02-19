@@ -336,7 +336,9 @@ public class InitiateRnRPage extends Page {
     DBWrapper dbWrapper = new DBWrapper();
     String nonFullSupplyItems = dbWrapper.fetchNonFullSupplyData(productCode, "2", "1");
     testWebDriver.waitForElementToAppear(addNonFullSupplyButton);
+    testWebDriver.sleep(1000);
     addNonFullSupplyButton.click();
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(productDropDown);
     SeleneseTestNgHelper.assertFalse("Add button not enabled", addButtonNonFullSupply.isEnabled());
     SeleneseTestNgHelper.assertTrue("Close button not displayed", closeButton.isDisplayed());
