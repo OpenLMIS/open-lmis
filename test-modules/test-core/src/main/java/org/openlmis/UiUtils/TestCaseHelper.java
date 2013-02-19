@@ -12,8 +12,8 @@ public class TestCaseHelper {
     protected static DriverFactory driverFactory = new DriverFactory();
 
 
-    @BeforeClass
-    public static void setupSuite() throws ClassNotFoundException {
+
+    public  void setupSuite() throws ClassNotFoundException {
         try {
             if (!isSeleniumStarted) {
                 loadDriver();
@@ -26,7 +26,7 @@ public class TestCaseHelper {
     }
 
 
-    protected static void addTearDownShutDownHook() {
+    protected  void addTearDownShutDownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
                 if (testWebDriver != null) {
@@ -37,7 +37,7 @@ public class TestCaseHelper {
     }
 
 
-    protected static void loadDriver() {
+    protected  void loadDriver() {
         testWebDriver = new TestWebDriver(driverFactory.loadDriver());
     }
 

@@ -21,15 +21,15 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   DBWrapper dbWrapper;
 
-  @BeforeClass
+  @BeforeMethod(groups = {"smoke"})
   public void setUp() throws Exception {
+    super.setupSuite();
     dbWrapper = new DBWrapper();
     dbWrapper.deleteData();
   }
 
-  @Test(dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"smoke"},dataProvider = "Data-Provider-Function-Positive")
   public void testE2EInitiateRnR(String program, String userSIC, String userMO, String password, String[] credentials) throws Exception {
-
     LoginPage loginPage = new LoginPage(testWebDriver);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
@@ -161,7 +161,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   }
 
-  @AfterClass
+  @AfterMethod(groups = {"smoke"})
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout();

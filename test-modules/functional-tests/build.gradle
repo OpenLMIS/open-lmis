@@ -28,12 +28,13 @@ task buildOpenLmis(type: GradleBuild) {
     tasks = ['jettyRunWarDaemon']
 }
 
-task functionalTest(type: Test) {
-    include '**/org/openlmis/functional/*.*'
-    useTestNG()
+task smokeTest(type: Test) {
+    useTestNG() {
+        suites 'src/test/java/org/openlmis/functional/testng-smoke.xml'
+    }
 }
 
-functionalTest.doFirst() {
+smokeTest.doFirst() {
     buildOpenLmis.execute()
 }
 
