@@ -1,7 +1,6 @@
 <div ng-controller="RequisitionNonFullSupplyController">
   <div class="clearfix">
-    <input type="button" ng-click="showAddNonFullSupplyModal()"  class = "pull-right btn btn-primary" ng-disabled="formDisabled" value="Add"
-           ng-disabled="!addNonFullSupplyLineItemButtonShown.visible"/>
+    <input type="button" ng-click="showAddNonFullSupplyModal()"  class = "pull-right btn btn-primary" ng-disabled="formDisabled || !(addNonFullSupplyLineItemButtonShown.visible)" value="Add"/>
   </div>
 
   <div class="rnr-table">
