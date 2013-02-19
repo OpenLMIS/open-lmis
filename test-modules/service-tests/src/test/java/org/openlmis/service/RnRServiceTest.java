@@ -29,8 +29,8 @@ public class RnRServiceTest extends TestCaseHelper {
       DBWrapper dbWrapper = new DBWrapper();
       dbWrapper.insertFacilities("F10", "F11");
       dbWrapper.insertUser("200", "User123", "Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie", "F10", "manjyots@thoughtworks.com");
-      dbWrapper.insertSupervisoryNode("F10", "N1", "null");
-      dbWrapper.insertSupervisoryNodeSecond("F11", "N2", "N1");
+      dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
+      dbWrapper.insertSupervisoryNodeSecond("F11", "N2", "Node 2", "N1");
       dbWrapper.insertProducts("P10", "P11");
       dbWrapper.insertProgramProducts("P10", "P11", "HIV");
       dbWrapper.insertFacilityApprovedProducts("P10", "P11", "HIV", "Lvl3 Hospital");
