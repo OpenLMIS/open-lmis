@@ -87,9 +87,9 @@ describe("Facility", function () {
 
     it('should add program supported to facility', function () {
       scope.facility.supportedPrograms = [];
-      scope.supportedProgram = {"code":"ARV", "name":"ARV", "description":"ARV", "active":true, "startDate" : "1/12/12","program":{"id":1}};
+      var supportedProgram = {"code":"ARV", "name":"ARV", "description":"ARV", "active":true, "editedStartDate" : "1/12/12","program":{"id":1}};
 
-      scope.addSupportedProgram();
+      scope.addSupportedProgram(supportedProgram);
 
       expect(scope.facility.supportedPrograms[0].code).toEqual("ARV");
       expect(scope.facility.supportedPrograms[0].name).toEqual("ARV");
