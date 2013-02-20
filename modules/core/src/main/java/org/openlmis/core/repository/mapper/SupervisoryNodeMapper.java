@@ -63,4 +63,23 @@ public interface SupervisoryNodeMapper {
 
   @Select("SELECT * FROM supervisory_nodes")
   List<SupervisoryNode> getAll();
+
+  @Select({"WITH  recursive  supervisoryNodesRec AS ",
+    "   (",
+    "   SELECT *",
+    "   FROM supervisory_nodes ",
+    "   WHERE id in  (SELECT DISTINCT s.id FROM  ",
+    "       supervisory_nodes s ",
+    "       INNER JOIN role_assignments ra ON s.id = ra.supervisoryNodeId  ",
+    "       INNER JOIN role_rights rr ON ra.roleId = rr.roleId  ",
+    "       WHERE rr.rightName = ANY (#{commaSeparatedRights}::VARCHAR[])  ",
+    "       AND ra.userId = #{userId} ) ",
+    "   UNION ",
+    "   SELECT sn.* ",
+    "   FROM supervisory_nodes sn ",
+    "   JOIN supervisoryNodesRec ",
+    "   ON sn.parentId = supervisoryNodesRec.id ",
+    "   )",
+    "SELECT * FROM supervisoryNodesRec"})
+  List<SupervisoryNode> getAllSupervisoryNodesInHierarchyByUserAndRights(@Param("userId") Integer userId, @Param("commaSeparatedRights") String commaSeparatedRights);
 }

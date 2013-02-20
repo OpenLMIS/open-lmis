@@ -57,7 +57,7 @@ public class FacilityServiceTest {
   @Test
   public void shouldReturnEmptyListIfUserIsNotAssignedAFacility() {
     when(facilityRepository.getHomeFacility(1)).thenReturn(null);
-    assertTrue(facilityService.getAllForUser(1).isEmpty());
+    assertTrue(facilityService.getHomeFacility(1).isEmpty());
   }
 
   @Test
@@ -233,12 +233,28 @@ public class FacilityServiceTest {
 
   @Test
   public void shouldGetAllFacilitiesForUserAndRights() throws Exception {
-    List<Facility> expectedFacilities = new ArrayList<>();
-    when(facilityRepository.getForUserAndRights(1, Right.VIEW_REQUISITION, Right.APPROVE_REQUISITION)).thenReturn(expectedFacilities);
-    List<Facility> actualFacilities = facilityService.getForUserAndRights(1, Right.VIEW_REQUISITION, Right.APPROVE_REQUISITION);
+    //Arrange
+    Right[] rights = {Right.VIEW_REQUISITION, Right.APPROVE_REQUISITION};
+    Facility homeFacility = new Facility();
+    List<Facility> supervisedFacilities = new ArrayList<>();
+    supervisedFacilities.add(homeFacility);
+    List<SupervisoryNode> supervisoryNodes = new ArrayList<>();
+    List<RequisitionGroup> requisitionGroups = new ArrayList<>();
+    when(facilityRepository.getHomeFacilityForRights(1, rights)).thenReturn(homeFacility);
+    when(supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(1, rights)).thenReturn(supervisoryNodes);
+    when(requisitionGroupService.getRequisitionGroupsBy(supervisoryNodes)).thenReturn(requisitionGroups);
+    when(facilityRepository.getAllInRequisitionGroups(requisitionGroups)).thenReturn(supervisedFacilities);
 
-    assertThat(actualFacilities, is(expectedFacilities));
-    verify(facilityRepository).getForUserAndRights(1, Right.VIEW_REQUISITION, Right.APPROVE_REQUISITION);
+    //Act
+    List<Facility> actualFacilities = facilityService.getForUserAndRights(1, rights);
+
+    //Assert
+    assertThat(actualFacilities, is(supervisedFacilities));
+    assertThat(actualFacilities.contains(homeFacility), is(true));
+    verify(facilityRepository).getHomeFacilityForRights(1, rights);
+    verify(supervisoryNodeService).getAllSupervisoryNodesInHierarchyBy(1, rights);
+    verify(requisitionGroupService).getRequisitionGroupsBy(supervisoryNodes);
+    verify(facilityRepository).getAllInRequisitionGroups(requisitionGroups);
   }
 
   private ProgramSupported createSupportedProgram(String facilityCode, String programCode, boolean active, Date startDate) {

@@ -8,16 +8,16 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
 import org.openlmis.rnr.domain.*;
+import org.openlmis.rnr.factory.RequisitionFactory;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
+import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
+import org.openlmis.rnr.strategy.RequisitionSearchStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.BEGINNING_BALANCE;
@@ -49,12 +49,14 @@ public class RequisitionService {
   private ProcessingScheduleService processingScheduleService;
   private FacilityService facilityService;
   private SupplyLineService supplyLineService;
+  private RequisitionFactory requisitionFactory;
 
   @Autowired
   public RequisitionService(RequisitionRepository requisitionRepository, RnrTemplateRepository rnrTemplateRepository,
                             FacilityApprovedProductService facilityApprovedProductService, SupervisoryNodeService supervisoryNodeRepository,
                             RoleRightsService roleRightsService, ProgramService programService,
-                            ProcessingScheduleService processingScheduleService, FacilityService facilityService, SupplyLineService supplyLineService) {
+                            ProcessingScheduleService processingScheduleService, FacilityService facilityService, SupplyLineService supplyLineService,
+                            RequisitionFactory requisitionFactory) {
     this.requisitionRepository = requisitionRepository;
     this.rnrTemplateRepository = rnrTemplateRepository;
     this.facilityApprovedProductService = facilityApprovedProductService;
@@ -64,6 +66,7 @@ public class RequisitionService {
     this.processingScheduleService = processingScheduleService;
     this.facilityService = facilityService;
     this.supplyLineService = supplyLineService;
+    this.requisitionFactory = requisitionFactory;
   }
 
   @Transactional
@@ -328,13 +331,6 @@ public class RequisitionService {
     });
   }
 
-  public List<Rnr> get(Facility facility, Program program, Date periodStartDate, Date periodEndDate) {
-    List<ProcessingPeriod> periods = processingScheduleService.getAllPeriodsForDateRange(facility, program, periodStartDate, periodEndDate);
-    List<Rnr> requisitions = requisitionRepository.get(facility, program, periods);
-    fillFacilityPeriodProgram(requisitions.toArray(new Rnr[requisitions.size()]));
-    return requisitions;
-  }
-
   public void createOrder(Order order) {
     requisitionRepository.createOrder(order);
 
@@ -344,6 +340,13 @@ public class RequisitionService {
       rnr.setStatus(RnrStatus.ORDERED);
       requisitionRepository.updateOrderIdAndStatus(rnr);
     }
+  }
+
+  public List<Rnr> get(RequisitionSearchCriteria criteria) {
+    RequisitionSearchStrategy strategy = requisitionFactory.getSearchStrategy(criteria);
+    List<Rnr> requisitions = strategy.search(criteria);
+    fillFacilityPeriodProgram(requisitions.toArray(new Rnr[requisitions.size()]));
+    return requisitions;
   }
 }
 

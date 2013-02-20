@@ -1,10 +1,11 @@
 package org.openlmis.core.repository.mapper;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.RequisitionGroupBuilder;
-import org.openlmis.core.builder.SupervisoryNodeBuilder;
 import org.openlmis.core.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -15,10 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.FacilityBuilder.*;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
@@ -293,38 +294,66 @@ public class FacilityMapperIT {
   }
 
   @Test
-  public void shouldGetFacilitiesWithRightsForUser() throws Exception {
+  public void shouldGetHomeFacilityIfUserHasRight() throws Exception {
     //Arrange
     Facility homeFacility = make(a(defaultFacility));
     mapper.insert(homeFacility);
-    Facility supervisedFacility = make(a(defaultFacility, with(code, "supervised"), with(name, "supervised facility")));
-    mapper.insert(supervisedFacility);
-
-    SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(SupervisoryNodeBuilder.facility, supervisedFacility)));
-    supervisoryNodeMapper.insert(supervisoryNode);
 
     Role r1 = new Role("r1", "random description");
     roleRightsMapper.insertRole(r1);
 
-    Role r2 = new Role("r2", "random description");
-    roleRightsMapper.insertRole(r2);
-
     roleRightsMapper.createRoleRight(r1.getId(), CREATE_REQUISITION);
     roleRightsMapper.createRoleRight(r1.getId(), CONFIGURE_RNR);
-    roleRightsMapper.createRoleRight(r2.getId(), CONFIGURE_RNR);
 
     User user = make(a(defaultUser, with(facilityId, homeFacility.getId())));
 
     userMapper.insert(user);
-    roleAssignmentMapper.insertRoleAssignment(user.getId(), 1, null, r2.getId());
-    roleAssignmentMapper.insertRoleAssignment(user.getId(), 1, supervisoryNode.getId(), r1.getId());
+    roleAssignmentMapper.insertRoleAssignment(user.getId(), 1, null, r1.getId());
 
     //Act
-    List<Facility> userFacilities = mapper.getForUserAndRights(user.getId(), "{CREATE_REQUISITION,CONFIGURE_RNR}");
+    Facility returnedFacility = mapper.getHomeFacilityWithRights(user.getId(), "{CONFIGURE_RNR}");
 
     //Assert
-    assertThat(userFacilities.size(), is(2));
-    assertThat(userFacilities.get(0).getId(), is(homeFacility.getId()));
-    assertThat(userFacilities.get(1).getId(), is(supervisedFacility.getId()));
+    assertThat(returnedFacility.getId(), is(homeFacility.getId()));
+  }
+
+  @Test
+  public void shouldGetDistinctFacilitiesInARequisitionGroup() throws Exception {
+    //Arrange
+    final RequisitionGroup rg1 = make(a(RequisitionGroupBuilder.defaultRequisitionGroup, with(RequisitionGroupBuilder.code, "RG1")));
+    final RequisitionGroup rg2 = make(a(RequisitionGroupBuilder.defaultRequisitionGroup, with(RequisitionGroupBuilder.code, "RG2")));
+    requisitionGroupMapper.insert(rg1);
+    requisitionGroupMapper.insert(rg2);
+
+    final Facility facilityInBothRG1AndRG2 = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.code, "F1")));
+    final Facility facilityInRG2 = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.code, "F2")));
+    Facility facilityNotInAny = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.code, "F3")));
+    mapper.insert(facilityInBothRG1AndRG2);
+    mapper.insert(facilityInRG2);
+    mapper.insert(facilityNotInAny);
+
+    requisitionGroupMemberMapper.insert(new RequisitionGroupMember(rg1, facilityInBothRG1AndRG2));
+    requisitionGroupMemberMapper.insert(new RequisitionGroupMember(rg2, facilityInBothRG1AndRG2));
+    requisitionGroupMemberMapper.insert(new RequisitionGroupMember(rg2, facilityInRG2));
+
+    //Act
+    List<Facility> facilities = mapper.getAllInRequisitionGroups("{" + rg1.getId() + "," + rg2.getId() + " }");
+
+    //Assert
+    assertThat(facilities.size(), is(2));
+    assertTrue(CollectionUtils.exists(facilities, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        Facility facility = (Facility) o;
+        return facility.getCode().equals(facilityInBothRG1AndRG2.getCode());
+      }
+    }));
+    assertTrue(CollectionUtils.exists(facilities, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        Facility facility = (Facility) o;
+        return facility.getCode().equals(facilityInRG2.getCode());
+      }
+    }));
   }
 }

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static org.openlmis.core.domain.Right.getCommaSeparatedRightNames;
+import static org.openlmis.core.domain.Right.commaSeparateRightNames;
 
 
 @Component
@@ -39,7 +39,7 @@ public class SupervisoryNodeRepository {
   }
 
   public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Integer userId, Integer programId, Right... rights) {
-    return supervisoryNodeMapper.getAllSupervisoryNodesInHierarchyBy(userId, programId, getCommaSeparatedRightNames(rights));
+    return supervisoryNodeMapper.getAllSupervisoryNodesInHierarchyBy(userId, programId, commaSeparateRightNames(rights));
   }
 
   public Integer getIdForCode(String code) {
@@ -77,5 +77,9 @@ public class SupervisoryNodeRepository {
 
   public List<SupervisoryNode> getAll() {
     return supervisoryNodeMapper.getAll();
+  }
+
+  public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Integer userId, Right... rights) {
+    return supervisoryNodeMapper.getAllSupervisoryNodesInHierarchyByUserAndRights(userId, commaSeparateRightNames(rights));
   }
 }

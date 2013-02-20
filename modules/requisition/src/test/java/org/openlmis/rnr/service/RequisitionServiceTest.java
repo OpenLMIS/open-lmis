@@ -19,22 +19,23 @@ import org.openlmis.rnr.domain.Order;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.domain.RnrStatus;
+import org.openlmis.rnr.factory.RequisitionFactory;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
+import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
+import org.openlmis.rnr.strategy.RequisitionSearchStrategy;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.*;
 import static org.openlmis.core.builder.ProductBuilder.code;
 import static org.openlmis.core.builder.ProductBuilder.defaultProduct;
@@ -45,8 +46,6 @@ import static org.openlmis.rnr.builder.RnrColumnBuilder.*;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 import static org.openlmis.rnr.service.RequisitionService.*;
-import static org.powermock.api.mockito.PowerMockito.doNothing;
-import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 @RunWith(PowerMockRunner.class)
@@ -62,8 +61,8 @@ public class RequisitionServiceTest {
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
 
-  @Autowired
   private RequisitionService requisitionService;
+
   @Mock
   private FacilityApprovedProductService facilityApprovedProductService;
   @Mock
@@ -82,6 +81,8 @@ public class RequisitionServiceTest {
   private FacilityService facilityService;
   @Mock
   private SupplyLineService supplyLineService;
+  @Mock
+  private RequisitionFactory requisitionFactory;
 
   private Rnr submittedRnr;
   private Rnr initiatedRnr;
@@ -91,7 +92,7 @@ public class RequisitionServiceTest {
   @Before
   public void setup() {
     requisitionService = new RequisitionService(requisitionRepository, rnrTemplateRepository, facilityApprovedProductService,
-        supervisoryNodeService, roleRightService, programService, processingScheduleService, facilityService, supplyLineService);
+        supervisoryNodeService, roleRightService, programService, processingScheduleService, facilityService, supplyLineService, requisitionFactory);
     submittedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, SUBMITTED)));
     initiatedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, INITIATED)));
     authorizedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, AUTHORIZED)));
@@ -214,7 +215,7 @@ public class RequisitionServiceTest {
     ProcessingPeriod lastPeriod = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod, with(id, lastPeriodId)));
 
     Rnr rnr = new Rnr(FACILITY, PROGRAM, PERIOD);
-    final Rnr spyRnr = Mockito.spy(rnr);
+    final Rnr spyRnr = spy(rnr);
 
     when(requisitionRepository.getRequisition(FACILITY, PROGRAM, PERIOD)).thenReturn(spyRnr);
     ProcessingPeriod period = new ProcessingPeriod(PERIOD.getId(), PERIOD.getStartDate(), PERIOD.getEndDate(), PERIOD.getNumberOfMonths());
@@ -787,7 +788,7 @@ public class RequisitionServiceTest {
     facilityApprovedProducts.add(new FacilityApprovedProduct("warehouse", programProduct, 30));
     when(facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(), PROGRAM.getId())).thenReturn(facilityApprovedProducts);
 
-    Rnr spyRequisition = Mockito.spy(someRequisition);
+    Rnr spyRequisition = spy(someRequisition);
     whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), facilityApprovedProducts, USER_ID).thenReturn(spyRequisition);
 
     int previousPeriodId = PERIOD.getId() - 1;
@@ -857,21 +858,21 @@ public class RequisitionServiceTest {
 
     Facility facility = new Facility(1);
     Program program = new Program(2);
-    List<ProcessingPeriod> periods = asList(expectedPeriod);
 
-    Date periodStartDate = DateTime.parse("2013-02-01").toDate();
-    Date periodEndDate = DateTime.parse("2013-02-14").toDate();
-    when(processingScheduleService.getAllPeriodsForDateRange(facility, program, periodStartDate, periodEndDate)).thenReturn(periods);
-    when(requisitionRepository.get(facility, program, periods)).thenReturn(expected);
+    Date dateRangeStart = DateTime.parse("2013-02-01").toDate();
+    Date dateRangeEnd = DateTime.parse("2013-02-14").toDate();
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facility.getId(), program.getId(), dateRangeStart, dateRangeEnd);
+    RequisitionSearchStrategy searchStrategy = mock(RequisitionSearchStrategy.class);
+    when(requisitionFactory.getSearchStrategy(criteria)).thenReturn(searchStrategy);
+    when(searchStrategy.search(criteria)).thenReturn(expected);
 
-    List<Rnr> actual = requisitionService.get(facility, program, periodStartDate, periodEndDate);
-
-    verify(requisitionRepository).get(facility, program, periods);
-    assertThat(requisition.getProgram(), is(expectedProgram));
-    assertThat(requisition.getFacility(), is(expectedFacility));
-    assertThat(requisition.getPeriod(), is(expectedPeriod));
+    List<Rnr> actual = requisitionService.get(criteria);
 
     assertThat(actual, is(expected));
+    verify(requisitionFactory).getSearchStrategy(criteria);
+    verify(programService).getById(3);
+    verify(facilityService).getById(3);
+    verify(processingScheduleService).getPeriodById(3);
   }
 
   @Test

@@ -41,7 +41,7 @@ public enum Right {
     this.description = description;
   }
 
-  public static String getCommaSeparatedRightNames(Right... rights) {
+  public static String commaSeparateRightNames(Right... rights) {
     List<String> rightNames = new ArrayList<>();
     for (Right right : rights) {
       rightNames.add(right.name());

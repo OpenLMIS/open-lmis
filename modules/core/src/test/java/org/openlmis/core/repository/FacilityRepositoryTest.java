@@ -18,7 +18,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -225,13 +224,12 @@ public class FacilityRepositoryTest {
   }
 
   @Test
-  public void shouldGetFacilitiesForUserAndRights() throws Exception {
-    List<Facility> expectedFacilities = new ArrayList<>();
-    String commaSeparatedRights = "{CONFIGURE_RNR, VIEW_REQUISITION}";
-    when(mapper.getForUserAndRights(1, commaSeparatedRights)).thenReturn(expectedFacilities);
-    List<Facility> actualFacilities = repository.getForUserAndRights(1, Right.CONFIGURE_RNR, Right.VIEW_REQUISITION);
+  public void shouldGetHomeFacilityForUserWithRight() throws Exception {
+    Facility expectedFacility = new Facility();
+    when(mapper.getHomeFacilityWithRights(1, "{APPROVE_REQUISITION, CREATE_REQUISITION}")).thenReturn(expectedFacility);
+    Facility userHomeFacility = repository.getHomeFacilityForRights(1, Right.APPROVE_REQUISITION, Right.CREATE_REQUISITION);
 
-    assertThat(actualFacilities, is(expectedFacilities));
-    verify(mapper).getForUserAndRights(1, commaSeparatedRights);
+    assertThat(userHomeFacility, is(expectedFacility));
+    verify(mapper).getHomeFacilityWithRights(1, "{APPROVE_REQUISITION, CREATE_REQUISITION}");
   }
 }

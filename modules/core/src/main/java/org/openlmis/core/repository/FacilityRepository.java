@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static org.openlmis.core.domain.Right.commaSeparateRightNames;
+
 @Component
 @NoArgsConstructor
 public class FacilityRepository {
@@ -121,6 +123,10 @@ public class FacilityRepository {
     return mapper.getFacilitiesBy(programId, commaSeparator.commaSeparateIds(requisitionGroups));
   }
 
+  public List<Facility> getAllInRequisitionGroups(List<RequisitionGroup> requisitionGroups) {
+    return mapper.getAllInRequisitionGroups(commaSeparator.commaSeparateIds(requisitionGroups));
+  }
+
   public Integer getIdForCode(String code) {
     Integer facilityId = mapper.getIdForCode(code);
 
@@ -134,7 +140,7 @@ public class FacilityRepository {
     return mapper.searchFacilitiesByCodeOrName(searchParam);
   }
 
-  public List<Facility> getForUserAndRights(Integer userId, Right... rights) {
-    return mapper.getForUserAndRights(userId, Right.getCommaSeparatedRightNames(rights));
+  public Facility getHomeFacilityForRights(Integer userId, Right... rights) {
+    return mapper.getHomeFacilityWithRights(userId, commaSeparateRightNames(rights));
   }
 }

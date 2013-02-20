@@ -125,6 +125,45 @@ public class SupervisoryNodeMapperIT {
   }
 
   @Test
+  public void shouldGetAllSupervisoryNodesInTheHierarchyForAUserWithAppropriateRight() {
+    Program program1 = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
+    Program program2 = insertProgram(make(a(defaultProgram, with(programCode, "p2"))));
+
+    User user = insertUser();
+
+    Role createRole = new Role("create role", "random description");
+    roleRightsMapper.insertRole(createRole);
+
+    Role configureRnrRole = new Role("configure rnr", "random description");
+    roleRightsMapper.insertRole(configureRnrRole);
+
+    roleRightsMapper.createRoleRight(createRole.getId(), CREATE_REQUISITION);
+    roleRightsMapper.createRoleRight(configureRnrRole.getId(), CONFIGURE_RNR);
+
+    supervisoryNodeMapper.insert(supervisoryNode);
+
+    SupervisoryNode supervisoryNode1 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN1")));
+    supervisoryNode1.setFacility(facility);
+    supervisoryNode1 = insertSupervisoryNode(supervisoryNode1);
+
+    SupervisoryNode childNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "CN1")));
+    childNode.setFacility(facility);
+    childNode.setParent(supervisoryNode);
+    childNode = insertSupervisoryNode(childNode);
+
+    insertRoleAssignments(program1, user, createRole, supervisoryNode);
+    insertRoleAssignments(program1, user, configureRnrRole, supervisoryNode1);
+    insertRoleAssignments(program2, user, createRole, supervisoryNode);
+    insertRoleAssignments(program1, user, createRole, null);
+
+    List<SupervisoryNode> userSupervisoryNodes = supervisoryNodeMapper.getAllSupervisoryNodesInHierarchyByUserAndRights(user.getId(), "{CREATE_REQUISITION}");
+
+    assertThat(userSupervisoryNodes.size(), is(2));
+    assertTrue(userSupervisoryNodes.contains(supervisoryNode));
+    assertTrue(userSupervisoryNodes.contains(childNode));
+  }
+
+  @Test
   public void shouldGetSupervisoryNodeForRG() {
     supervisoryNodeMapper.insert(supervisoryNode);
     RequisitionGroup requisitionGroup = make(a(defaultRequisitionGroup));

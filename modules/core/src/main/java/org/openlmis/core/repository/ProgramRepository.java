@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static org.openlmis.core.domain.Right.getCommaSeparatedRightNames;
+import static org.openlmis.core.domain.Right.commaSeparateRightNames;
 
 @Component
 @NoArgsConstructor
@@ -39,11 +39,11 @@ public class ProgramRepository {
   }
 
   public List<Program> getUserSupervisedActiveProgramsWithRights(Integer userId, Right... rights) {
-    return mapper.getUserSupervisedActivePrograms(userId, getCommaSeparatedRightNames(rights));
+    return mapper.getUserSupervisedActivePrograms(userId, commaSeparateRightNames(rights));
   }
 
   public List<Program> getProgramsSupportedByFacilityForUserWithRights(Integer facilityId, Integer userId, Right... rights) {
-    return mapper.getProgramsSupportedByFacilityForUserWithRights(facilityId, userId, getCommaSeparatedRightNames(rights));
+    return mapper.getProgramsSupportedByFacilityForUserWithRights(facilityId, userId, commaSeparateRightNames(rights));
   }
 
   public Integer getIdByCode(String code) {
@@ -57,7 +57,7 @@ public class ProgramRepository {
   }
 
   public List<Program> getActiveProgramsForUserWithRights(Integer userId, Right... rights) {
-    return mapper.getActiveProgramsForUserWithRights(userId, getCommaSeparatedRightNames(rights));
+    return mapper.getActiveProgramsForUserWithRights(userId, commaSeparateRightNames(rights));
   }
 
   public Program getById(Integer id) {

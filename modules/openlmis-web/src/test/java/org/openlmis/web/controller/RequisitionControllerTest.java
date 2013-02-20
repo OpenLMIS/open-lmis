@@ -2,7 +2,6 @@ package org.openlmis.web.controller;
 
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,6 +13,7 @@ import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
+import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.service.RequisitionService;
@@ -30,7 +30,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -277,24 +276,18 @@ public class RequisitionControllerTest {
 
   @Test
   public void shouldGetRequisitionsForViewWithGivenFacilityIdProgramIdAndPeriodRange() throws Exception {
-    Integer facilityId = 1;
-    List<Integer> programIds = asList(1, 2);
-    Date periodStartDate = DateTime.parse("2013-02-01").toDate();
-    Date periodEndDate = DateTime.parse("2013-02-14").toDate();
+    Date dateRangeStart = new Date();
+    Date dateRangeEnd = new Date();
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(1, 1, dateRangeStart, dateRangeEnd);
     List<Rnr> requisitionsReturnedByService = new ArrayList<>();
-    Facility facility = new Facility(1);
-    whenNew(Facility.class).withArguments(1).thenReturn(facility);
-    Program program = new Program(2);
-    whenNew(Program.class).withArguments(2).thenReturn(program);
-
-    when(requisitionService.get(facility, program, periodStartDate, periodEndDate)).thenReturn(requisitionsReturnedByService);
+    when(requisitionService.get(criteria)).thenReturn(requisitionsReturnedByService);
     mockStatic(RnrDTO.class);
-    List<RnrDTO> expectedRnrList = mock(List.class);
+    List<RnrDTO> expectedRnrList = new ArrayList<>();
     when(RnrDTO.prepareForView(requisitionsReturnedByService)).thenReturn(expectedRnrList);
 
-    ResponseEntity<OpenLmisResponse> response = controller.getRequisitionsForView(facility.getId(), program.getId(), periodStartDate, periodEndDate);
+    ResponseEntity<OpenLmisResponse> response = controller.getRequisitionsForView(criteria);
 
-    verify(requisitionService).get(facility, program, periodStartDate, periodEndDate);
+    verify(requisitionService).get(criteria);
     List<RnrDTO> actual = (List<RnrDTO>) response.getBody().getData().get(RNR_LIST);
     assertThat(actual, is(expectedRnrList));
   }

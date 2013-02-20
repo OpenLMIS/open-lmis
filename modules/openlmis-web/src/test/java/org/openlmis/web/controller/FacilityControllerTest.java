@@ -125,11 +125,11 @@ public class FacilityControllerTest {
   }
 
   @Test
-  public void shouldReturnAllFacilitiesForTheUser() {
+  public void shouldReturnHomeFacilityForTheUser() {
     Facility facility = mock(Facility.class);
-    when(facilityService.getAllForUser(userId)).thenReturn(Arrays.asList(facility));
+    when(facilityService.getHomeFacility(userId)).thenReturn(Arrays.asList(facility));
 
-    List<Facility> facilities = facilityController.getAllByUser(httpServletRequest);
+    List<Facility> facilities = facilityController.getHomeFacility(httpServletRequest);
     assertTrue(facilities.contains(facility));
   }
 

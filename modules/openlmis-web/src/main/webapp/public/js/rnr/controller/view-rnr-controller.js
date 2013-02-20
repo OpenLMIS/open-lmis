@@ -1,4 +1,5 @@
-function ViewRnrController($scope, RequisitionsForViewing) {
+function ViewRnrController($scope, facilities, RequisitionsForViewing, UserSupportedProgramInFacilityForAnOperation) {
+  $scope.facilities = facilities;
   $scope.selectedItems = [];
 
   $scope.rnrListGrid = { data:'rnr',
@@ -21,8 +22,33 @@ function ViewRnrController($scope, RequisitionsForViewing) {
     ]
   };
 
-  $scope.filterRequisitions = function () {
-
+  $scope.loadProgramsForFacility = function () {
+    UserSupportedProgramInFacilityForAnOperation.get({facilityId: $scope.selectedFacilityId, rights: "VIEW_REQUISITION"},
+      function(data) {
+      $scope.programs = data.programList;
+    }, function(){})
   };
 
+  $scope.loadRequisitions = function(){
+    if($scope.viewRequisitionForm.$invalid){
+      $scope.errorShown = true;
+      return;
+    }
+    RequisitionsForViewing.get({facilityId:$scope.selectedFacilityId, programId:$scope.selectedProgramId,
+      periodStartDate: $scope.startDate, periodEndDate: $scope.endDate}, function (data) {
+      $scope.rnr = data.rnr_list;
+    }, function() {})
+  }
 }
+
+ViewRnrController.resolve = {
+  facilities:function ($q, $timeout, UserFacilityWithViewRequisition) {
+    var deferred = $q.defer();
+    $timeout(function () {
+      UserFacilityWithViewRequisition.get({}, function (data) {
+        deferred.resolve(data.facilities);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  }
+};

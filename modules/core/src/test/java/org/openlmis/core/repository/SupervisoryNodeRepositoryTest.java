@@ -7,10 +7,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.RequisitionGroup;
-import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
 import org.springframework.dao.DuplicateKeyException;
@@ -202,5 +199,16 @@ public class SupervisoryNodeRepositoryTest {
 
     verify(supervisoryNodeMapper).getAll();
     assertThat(actual, is(expected));
+  }
+
+  @Test
+  public void shouldGetSupervisoryNodesWithRightsForUser() throws Exception {
+    List<SupervisoryNode> expected = new ArrayList<>();
+    when(supervisoryNodeMapper.getAllSupervisoryNodesInHierarchyByUserAndRights(1, "{CREATE_REQUISITION, AUTHORIZE_REQUISITION}")).thenReturn(expected);
+
+    List<SupervisoryNode> actual = repository.getAllSupervisoryNodesInHierarchyBy(1, CREATE_REQUISITION, AUTHORIZE_REQUISITION);
+
+    assertThat(actual, is(expected));
+    verify(supervisoryNodeMapper).getAllSupervisoryNodesInHierarchyByUserAndRights(1, "{CREATE_REQUISITION, AUTHORIZE_REQUISITION}");
   }
 }

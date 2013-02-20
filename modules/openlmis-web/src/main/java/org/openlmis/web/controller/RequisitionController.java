@@ -7,6 +7,7 @@ import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
+import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.service.RequisitionService;
@@ -178,14 +179,10 @@ public class RequisitionController extends BaseController {
     }
   }
 
-  @RequestMapping(value = "/facility/{facilityId}/program/{programId}/requisitions", method = GET, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/requisitions-list", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("hasPermission('','VIEW_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> getRequisitionsForView(@PathVariable("facilityId") Integer facilityId
-    , @PathVariable("programId") Integer programId
-    , @RequestParam("periodStartDate") Date periodStartDate
-    , @RequestParam("periodEndDate") Date periodEndDate) {
-
-    return response(RNR_LIST, RnrDTO.prepareForView(requisitionService.get(new Facility(facilityId), new Program(programId), periodStartDate, periodEndDate)));
+  public ResponseEntity<OpenLmisResponse> getRequisitionsForView(RequisitionSearchCriteria criteria) {
+    return response(RNR_LIST, RnrDTO.prepareForView(requisitionService.get(criteria)));
   }
 
   @RequestMapping(value = "/order", method = POST, headers = ACCEPT_JSON)
@@ -195,4 +192,5 @@ public class RequisitionController extends BaseController {
     order.setOrderedDate(new Date());
     requisitionService.createOrder(order);
   }
+
 }

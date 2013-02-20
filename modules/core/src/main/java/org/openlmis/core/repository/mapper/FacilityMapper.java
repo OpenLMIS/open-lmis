@@ -124,14 +124,19 @@ public interface FacilityMapper {
   })
   GeographicZone getGeographicZoneById(Integer geographicZoneId);
 
-  //TODO can be done better??
-  @Select({"SELECT * FROM facilities WHERE id IN (",
-    "(SELECT facilityId FROM users U INNER JOIN role_assignments RA ON U.id = RA.userId INNER JOIN role_rights RR ON RA.roleId = RR.roleId",
-      "WHERE RA.supervisoryNodeId IS NULL AND RA.userId = #{userId} AND RR.rightName = ANY(#{commaSeparatedRights}::VARCHAR[]))",
-    "UNION",
-    "(SELECT facilityId FROM supervisory_nodes SN INNER JOIN role_assignments RA ON SN.id = RA.supervisoryNodeId INNER JOIN role_rights RR ON RA.roleId = RR.roleId",
-      "WHERE RA.supervisoryNodeId IS NOT NULL AND RA.userId = #{userId} AND RR.rightName = ANY(#{commaSeparatedRights}::VARCHAR[]))",
-    ")"})
-  List<Facility> getForUserAndRights(@Param(value = "userId") Integer userId, @Param(value = "commaSeparatedRights") String commaSeparatedRights);
+  @Select({"SELECT * FROM facilities F INNER JOIN users U ON U.facilityId = F.id",
+    "INNER JOIN role_assignments RA ON RA.userId = U.id INNER JOIN role_rights RR ON RR.roleId = RA.roleId",
+      "WHERE U.id = #{userId} AND RR.rightName = ANY(#{commaSeparatedRights}::VARCHAR[])"})
+  Facility getHomeFacilityWithRights(@Param("userId") Integer userId, @Param("commaSeparatedRights") String commaSeparatedRights);
 
+  @Select({"SELECT DISTINCT f.* FROM facilities f",
+    "INNER JOIN requisition_group_members rgm ON f.id= rgm.facilityId",
+    "WHERE rgm.requisitionGroupId = ANY(#{requisitionGroupIds}::INTEGER[])",
+    "AND f.active = true"})
+  @Results(value = {
+    @Result(property = "geographicZone.id", column = "geographicZoneId"),
+    @Result(property = "facilityType", column = "typeId", javaType = Integer.class, one = @One(select = "getFacilityTypeById")),
+    @Result(property = "operatedBy", column = "operatedById", javaType = Integer.class, one = @One(select = "getFacilityOperatorById"))
+  })
+  List<Facility> getAllInRequisitionGroups(@Param("requisitionGroupIds") String requisitionGroupIds);
 }
