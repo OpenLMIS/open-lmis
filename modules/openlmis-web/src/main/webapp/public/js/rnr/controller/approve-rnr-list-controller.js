@@ -1,4 +1,4 @@
-function ApproveRnrListController($scope, requisitionList, $location) {
+function ApproveRnrListController($scope, $rootScope, requisitionList, $location) {
   $scope.requisitions = requisitionList;
   $scope.filteredRequisitions = $scope.requisitions;
   $scope.selectedItems = [];

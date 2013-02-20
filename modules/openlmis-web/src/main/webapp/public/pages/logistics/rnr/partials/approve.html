@@ -1,8 +1,8 @@
 <ng-include src="'/public/pages/logistics/rnr/partials/header.html'"></ng-include>
 <div class="rnr-tabs">
     <ul class="clearfix">
-      <li ng-class="{'selected': !showNonFullSupply}" ><a ng-href="{{fullSupplyLink}}" id="fullSupplyTab">Full Supply</a></li>
-      <li ng-class="{'selected': showNonFullSupply}" ><a ng-href="{{nonFullSupplyLink}}" id="nonFullSupplyTab">Non Full Supply</a></li>
+      <li ng-class="{'selected': !showNonFullSupply}" ><a ng-click="toggleFullSupplyTab(false)" id="fullSupplyTab">Full Supply</a></li>
+      <li ng-class="{'selected': showNonFullSupply}" ><a ng-click="toggleFullSupplyTab(true)" id="nonFullSupplyTab">Non Full Supply</a></li>
     </ul>
   </div>
 <form name="approvalForm" novalidate>

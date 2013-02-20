@@ -1,13 +1,17 @@
-function ApproveRnrController($scope, requisition, Requisitions, programRnrColumnList, $location, LossesAndAdjustmentsReferenceData, ReferenceData, $routeParams) {
-  var visibleColumns = _.where(programRnrColumnList, {'visible' : true});
+function ApproveRnrController($scope, $rootScope, requisition, Requisitions, programRnrColumnList, $location, LossesAndAdjustmentsReferenceData, ReferenceData, $routeParams) {
+  var visibleColumns = _.where(programRnrColumnList, {'visible':true});
   $scope.error = "";
   $scope.message = "";
 
-  $scope.showNonFullSupply = !!$routeParams.showNonFullSupply;
+  $scope.showNonFullSupply = false;
 
-   $scope.fullSupplyLink = "#" + $location.path();
+  $scope.toggleFullSupplyTab = function (flag) {
+    $scope.showNonFullSupply = flag;
+  }
 
-   $scope.nonFullSupplyLink = $scope.fullSupplyLink + "?showNonFullSupply=true";
+  $scope.fullSupplyLink = "#" + $location.path();
+
+  $scope.nonFullSupplyLink = $scope.fullSupplyLink + "?showNonFullSupply=true";
 
   $scope.lossesAndAdjustmentsModal = [];
   LossesAndAdjustmentsReferenceData.get({}, function (data) {
@@ -164,7 +168,7 @@ function ApproveRnrController($scope, requisition, Requisitions, programRnrColum
     }
     var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id:$scope.rnr.id, operation:"approve"},
-        rnr, function (data) {
+      rnr, function (data) {
         $scope.$parent.message = data.success;
         $scope.error = "";
         $location.path("rnr-for-approval");
