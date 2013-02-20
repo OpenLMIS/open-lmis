@@ -73,7 +73,10 @@ public class UploadController extends BaseController {
 
   private String validateFile(String model, MultipartFile csvFile) {
     String error = null;
-    if (!uploadBeansMap.containsKey(model)) {
+    if(model.isEmpty()) {
+      error = "Please select the Upload type";
+    }
+    else if (!uploadBeansMap.containsKey(model)) {
       error = "Incorrect file";
     } else if (csvFile.isEmpty()) {
       error = "File is empty";
