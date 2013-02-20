@@ -4,7 +4,7 @@ function ConvertToOrderListController($scope, requisitionList, Order, Requisitio
   $scope.selectedItems = [];
 
   $scope.gridOptions = { data:'filteredRequisitions',
-    multiSelect:false,
+    multiSelect:true,
     selectedItems:$scope.selectedItems,
     displayFooter:false,
     displaySelectionCheckbox:true,
@@ -39,6 +39,7 @@ function ConvertToOrderListController($scope, requisitionList, Order, Requisitio
     var successHandler = function () {
       RequisitionForConvertToOrder.get({}, function(data) {
         $scope.requisitions = data.rnr_list;
+        $scope.filteredRequisitions();
       });
 
       $scope.message = "Created successfully";
