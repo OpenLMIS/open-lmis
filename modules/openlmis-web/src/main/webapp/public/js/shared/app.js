@@ -90,7 +90,7 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
     };
   }).run(function ($rootScope) {
     $rootScope.$on('$routeChangeStart', function () {
-      angular.element('body > .modal-backdrop').remove();
+      angular.element('body > .modal-backdrop').hide();
     });
   });
 

@@ -1,4 +1,4 @@
-var rnrModule = angular.module('rnr', ['openlmis', 'ngGrid']).config(['$routeProvider', function ($routeProvider) {
+var rnrModule = angular.module('rnr', ['openlmis', 'ngGrid', 'ui.bootstrap.modal']).config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
     when('/init-rnr', {controller:InitiateRnrController, templateUrl:'partials/init.html'}).
     when('/create-rnr/:facility/:program/:period', {controller:RequisitionController, templateUrl:'partials/create.html'}).

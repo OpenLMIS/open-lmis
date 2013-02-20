@@ -87,15 +87,13 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
     angular.element("input[ui-date]").blur();
   };
 
-  $scope.addSupportedProgram = function() {
-    if($scope.supportedProgram.active && !$scope.supportedProgram.startDate) {
-      $scope.showDateNotEnteredError = {};
+  $scope.addSupportedProgram = function(supportedProgram) {
+    if(supportedProgram.active && !supportedProgram.editedStartDate) {
+      $scope.showDateNotEnteredError = true;
       return;
     }
-    var supportedProgram = {};
-    angular.copy($scope.supportedProgram, supportedProgram);
     $scope.facility.supportedPrograms.push(supportedProgram);
-    $scope.showDateNotEnteredError = undefined;
+    $scope.showDateNotEnteredError = false;
     $scope.supportedProgram = undefined;
     updateProgramsToDisplay();
   };
@@ -126,7 +124,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
   };
 
   function updateProgramsToDisplay() {
-    $scope.facility.supportedPrograms = (!$scope.facility.supportedPrograms) ? [] : $scope.facility.supportedPrograms;
+    $scope.facility.supportedPrograms = $scope.facility.supportedPrograms || [];
     var supportedProgramIds = _.pluck(_.pluck($scope.facility.supportedPrograms, 'program'),"id");
     $scope.programsToDisplay = _.reject($scope.programs, function (supportedProgram) {
       return _.contains(supportedProgramIds, supportedProgram.id)

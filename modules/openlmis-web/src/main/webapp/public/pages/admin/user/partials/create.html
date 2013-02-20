@@ -170,7 +170,7 @@
         <div class="toolbar-error" id="saveErrorMsgDiv" ng-bind="error" ng-show="error"/>
       </div>
 
-      <div tabindex="-1" id="deleteFacilityModal" class="fade ng-pristine ng-valid modal hide" ui-modal="" ng-model="deleteFacilityModal">
+      <div tabindex="-1" id="deleteFacilityModal" modal="deleteFacilityModal" close="deleteFacilityModal=false">
         <div class="modal-header"><h2>Delete facility</h2></div>
         <div class="modal-body">
           <p>All programs and roles association for this facility will be deleted.</p>

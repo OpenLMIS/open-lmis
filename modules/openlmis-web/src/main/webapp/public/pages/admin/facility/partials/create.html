@@ -116,9 +116,9 @@
                value="{{facility.goLiveDate | date:'dd/MM/yyyy'}}" ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
                readonly ng-change="blurDateFields()" ng:required="true"
                ng-disabled="facility.dataReportable == 'false'"/>
-                <span class="field-error" ng-show="facilityForm.goLiveDate.$error.required && showError">
-                  Please Fill In this value
-                </span>
+        <span class="field-error" ng-show="facilityForm.goLiveDate.$error.required && showError">
+          Please Fill In this value
+        </span>
       </div>
     </div>
 
@@ -242,7 +242,7 @@
                   Start date is mandatory
                 </span>
           </td>
-          <td><input type="button" class="btn btn-primary" id="supported-program-add" value="Add" ng-disabled="!supportedProgram.program.id" ng-click="addSupportedProgram()"></td>
+          <td><input type="button" class="btn btn-primary" id="supported-program-add" value="Add" ng-disabled="!supportedProgram.program.id" ng-click="addSupportedProgram(supportedProgram)"></td>
         </tr>
         </tbody>
       </table>
@@ -461,7 +461,7 @@
 
 </div>
 
-<div id="deleteModal" class="fade ng-pristine ng-valid modal hide" ui-modal="" ng-model="deleteConfirmModal">
+<div id="deleteModal" modal="deleteConfirmModal">
   <div class="modal-header"><h3>Delete Facility</h3></div>
   <div class="modal-body">
     <p>"{{originalFacilityName}} / "{{originalFacilityCode}}" will be soft-deleted from the system</p>
@@ -472,18 +472,18 @@
   </div>
 </div>
 
-<div id="restoreConfirmModal" class="fade ng-pristine ng-valid modal hide" ui-modal="" ng-model="restoreConfirmModal">
+<div id="restoreConfirmModal" modal="restoreConfirmModal">
   <div class="modal-header"><h3>Restore Facility</h3></div>
   <div class="modal-body">
     <p>"{{originalFacilityName}}" / "{{originalFacilityCode}}" will be restored in the system</p>
   </div>
   <div class="modal-footer">
-    <a href="" class="btn btn-primary" ng-click=" restoreConfirmModal=false; activeConfirmModal=true;" data-dismiss="modal">OK</a>
+    <a href="" class="btn btn-primary" ng-click="restoreConfirmModal=false; activeConfirmModal=true;" data-dismiss="modal">OK</a>
     <a href="" class="btn" ng-click="restoreConfirmModal=false">Cancel</a>
   </div>
 </div>
 
-<div id="activeConfirmModel" class="fade ng-pristine ng-valid modal hide" ui-modal="" ng-model="activeConfirmModal">
+<div id="activeConfirmModel" modal="activeConfirmModal">
   <div class="modal-header"><h3>Activate Facility</h3></div>
   <div class="modal-body">
     <p>Do you want to set facility as active?</p>
@@ -494,7 +494,7 @@
   </div>
 </div>
 
-<div id="dateChangeConfirmModal" class="fade ng-pristine ng-valid modal hide" ui-modal="" ng-model="dateChangeConfirmModal">
+<div id="dateChangeConfirmModal" modal="dateChangeConfirmModal" close="resetOldStartDate()" >
   <div class="modal-header"><h3>Set Program Start Date</h3></div>
   <div class="modal-body">
     <p>Facility Staff will submit back-due R&Rs for this program, starting from this date.</p>

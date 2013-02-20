@@ -77,10 +77,7 @@
                       </span>
 
                       <span ng-switch-when="lossesAndAdjustments">
-                        <div id="lossesAndAdjustments"
-                             class="fade ng-pristine ng-valid modal hide adjustments-modal" ui-modal
-                             ng-model="lossesAndAdjustmentsModal[rnrLineItem.id]"
-                             data-backdrop="static" data-keyboard="false">
+                        <div id="lossesAndAdjustments" modal="lossesAndAdjustmentsModal[rnrLineItem.id] ">
                           <div class="modal-header"><h3>Losses And Adjustments</h3></div>
                           <div class="modal-body">
                             <div class="adjustment-field">
