@@ -1,7 +1,13 @@
-function ApproveRnrController($scope, requisition, Requisitions, programRnrColumnList, $location, LossesAndAdjustmentsReferenceData, ReferenceData) {
+function ApproveRnrController($scope, requisition, Requisitions, programRnrColumnList, $location, LossesAndAdjustmentsReferenceData, ReferenceData, $routeParams) {
   var visibleColumns = _.where(programRnrColumnList, {'visible' : true});
   $scope.error = "";
   $scope.message = "";
+
+  $scope.showNonFullSupply = !!$routeParams.showNonFullSupply;
+
+   $scope.fullSupplyLink = "#" + $location.path();
+
+   $scope.nonFullSupplyLink = $scope.fullSupplyLink + "?showNonFullSupply=true";
 
   $scope.lossesAndAdjustmentsModal = [];
   LossesAndAdjustmentsReferenceData.get({}, function (data) {

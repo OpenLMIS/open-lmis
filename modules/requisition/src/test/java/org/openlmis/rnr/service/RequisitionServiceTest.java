@@ -466,11 +466,11 @@ public class RequisitionServiceTest {
     doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
     doNothing().when(savedRnr).copyUserEditableFields(submittedRnr, rnrColumns);
     when(rnrTemplateRepository.fetchRnrTemplateColumns(submittedRnr.getProgram().getId())).thenReturn(rnrColumns);
-    savedRnr.setModifiedBy(userId);
 
     Set<Right> listUserRights = new HashSet<>(Arrays.asList(AUTHORIZE_REQUISITION));
     when(roleRightService.getRights(userId)).thenReturn(listUserRights);
 
+    submittedRnr.setModifiedBy(userId);
     requisitionService.save(submittedRnr);
 
     verify(requisitionRepository).update(savedRnr);
@@ -480,7 +480,6 @@ public class RequisitionServiceTest {
   public void shouldSaveRnrIfStatusIsAuthorizedAndUserHasApproveRight() {
     Integer userId = 1;
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(authorizedRnr);
-    savedRnr.setModifiedBy(userId);
 
     when(rnrTemplateRepository.fetchRnrTemplateColumns(submittedRnr.getProgram().getId())).thenReturn(rnrColumns);
     doNothing().when(savedRnr).copyUserEditableFields(authorizedRnr, rnrColumns);
@@ -489,6 +488,7 @@ public class RequisitionServiceTest {
     Set<Right> listUserRights = new HashSet<>(Arrays.asList(APPROVE_REQUISITION));
     when(roleRightService.getRights(userId)).thenReturn(listUserRights);
 
+    authorizedRnr.setModifiedBy(userId);
     requisitionService.save(authorizedRnr);
 
     verify(requisitionRepository).update(savedRnr);
@@ -498,7 +498,6 @@ public class RequisitionServiceTest {
   public void shouldSaveRnrIfStatusIsInitiatedAndUserHasCreateRight() {
     Integer userId = 1;
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr);
-    savedRnr.setModifiedBy(userId);
 
     when(rnrTemplateRepository.fetchRnrTemplateColumns(initiatedRnr.getProgram().getId())).thenReturn(rnrColumns);
     doNothing().when(savedRnr).copyUserEditableFields(initiatedRnr, rnrColumns);
@@ -507,9 +506,10 @@ public class RequisitionServiceTest {
     Set<Right> listUserRights = new HashSet<>(Arrays.asList(CREATE_REQUISITION));
     when(roleRightService.getRights(userId)).thenReturn(listUserRights);
 
+    initiatedRnr.setModifiedBy(userId);
     requisitionService.save(initiatedRnr);
 
-    verify(savedRnr).copyUserEditableFields(initiatedRnr, rnrColumns);
+    verify(savedRnr).copyEditableFields(initiatedRnr, rnrColumns);
     verify(requisitionRepository).update(savedRnr);
   }
 

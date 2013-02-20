@@ -169,7 +169,10 @@ public class Rnr {
   }
 
   private RnrLineItem findCorrespondingLineItem(final RnrLineItem item) {
-    return (RnrLineItem) find(this.lineItems, new Predicate() {
+    List<RnrLineItem> allLineItems = new ArrayList<>();
+    allLineItems.addAll(lineItems);
+    allLineItems.addAll(nonFullSupplyLineItems);
+    return (RnrLineItem) find(allLineItems, new Predicate() {
       @Override
       public boolean evaluate(Object o) {
         RnrLineItem lineItem = (RnrLineItem) o;
@@ -209,6 +212,13 @@ public class Rnr {
     }
     this.fullSupplyItemsSubmittedCost = calculateCost(lineItems);
     this.nonFullSupplyItemsSubmittedCost = calculateCost(nonFullSupplyLineItems);
+  }
+
+  public void copyEditableFields(Rnr otherRnr, List<RnrColumn> programRnrColumns) {
+    if(status == IN_APPROVAL)
+      copyApproverEditableFields(otherRnr);
+    else
+      copyUserEditableFields(otherRnr, programRnrColumns);
   }
 }
 

@@ -91,10 +91,13 @@ public class RequisitionService {
   public void save(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
 
-    if (!isUserAllowedToSave(savedRnr))
+    Set<Right> userRights = roleRightsService.getRights(rnr.getModifiedBy());
+
+    if (!isUserAllowedToSave(savedRnr, userRights))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
-    savedRnr.copyUserEditableFields(rnr, rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId()));
+    savedRnr.copyEditableFields(rnr, rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId()));
+
     requisitionRepository.update(savedRnr);
   }
 
@@ -237,12 +240,11 @@ public class RequisitionService {
   }
 
 
-  private boolean isUserAllowedToSave(Rnr rnr) {
-    Set<Right> userRights = roleRightsService.getRights(rnr.getModifiedBy());
+  private boolean isUserAllowedToSave(Rnr rnr, Set<Right> userRights) {
     return (rnr.getStatus() == INITIATED && userRights.contains(CREATE_REQUISITION)) ||
-      (rnr.getStatus() == SUBMITTED && userRights.contains(AUTHORIZE_REQUISITION)) ||
-      (rnr.getStatus() == AUTHORIZED && userRights.contains(APPROVE_REQUISITION)) ||
-      (rnr.getStatus() == IN_APPROVAL && userRights.contains(APPROVE_REQUISITION));
+        (rnr.getStatus() == SUBMITTED && userRights.contains(AUTHORIZE_REQUISITION)) ||
+        (rnr.getStatus() == AUTHORIZED && userRights.contains(APPROVE_REQUISITION)) ||
+        (rnr.getStatus() == IN_APPROVAL && userRights.contains(APPROVE_REQUISITION));
   }
 
 

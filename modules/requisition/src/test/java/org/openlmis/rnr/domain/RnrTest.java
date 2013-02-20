@@ -24,6 +24,7 @@ import static org.openlmis.rnr.builder.RnrColumnBuilder.columnName;
 import static org.openlmis.rnr.builder.RnrColumnBuilder.visible;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
+import static org.openlmis.rnr.domain.RnrStatus.IN_APPROVAL;
 import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 
 public class RnrTest {
@@ -218,6 +219,20 @@ public class RnrTest {
     assertThat(rnr.getLineItems().get(0).getPacksToShip(), is(7));
     assertThat(rnr.getFullSupplyItemsSubmittedCost(), is(new Money("28")));
     assertThat(rnr.getNonFullSupplyItemsSubmittedCost(), is(new Money("0")));
+  }
+
+  @Test
+  public void shouldCopyUserEditableFieldsIdAccordingToStatus() throws Exception {
+    Rnr rnr = spy(new Rnr());
+    rnr.setStatus(INITIATED);
+    Rnr otherRnr = new Rnr();
+    List<RnrColumn> programRnrColumns = new ArrayList<>();
+    rnr.copyEditableFields(otherRnr, programRnrColumns);
+    verify(rnr).copyUserEditableFields(otherRnr, programRnrColumns);
+
+    rnr.setStatus(IN_APPROVAL);
+    rnr.copyEditableFields(otherRnr, programRnrColumns);
+    verify(rnr).copyApproverEditableFields(otherRnr);
   }
 
   private ArrayList<RnrColumn> setupProgramTemplate() {
