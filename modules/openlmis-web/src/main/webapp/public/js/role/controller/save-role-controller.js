@@ -22,7 +22,7 @@ function SaveRoleController($scope, $routeParams, $location, Roles, Role, Rights
 
       $scope.role.rights.push(right);
       if (right.right == 'CREATE_REQUISITION' || right.right == 'AUTHORIZE_REQUISITION' ||
-          right.right == 'APPROVE_REQUISITION' || right.right == 'CONVERT_TO_ORDER') {
+        right.right == 'APPROVE_REQUISITION' || right.right == 'CONVERT_TO_ORDER') {
         $scope.updateRights(true, $scope.getRightFromRightList("VIEW_REQUISITION"));
       }
     } else {
@@ -41,9 +41,9 @@ function SaveRoleController($scope, $routeParams, $location, Roles, Role, Rights
   $scope.areRelatedFieldsSelected = function (right) {
     if (right.right != 'VIEW_REQUISITION') return false;
     return ($scope.contains('CREATE_REQUISITION') ||
-        $scope.contains('AUTHORIZE_REQUISITION') ||
-        $scope.contains('APPROVE_REQUISITION') ||
-        $scope.contains('CONVERT_TO_ORDER'));
+      $scope.contains('AUTHORIZE_REQUISITION') ||
+      $scope.contains('APPROVE_REQUISITION') ||
+      $scope.contains('CONVERT_TO_ORDER'));
   }
 
   $scope.contains = function (right) {
@@ -57,6 +57,8 @@ function SaveRoleController($scope, $routeParams, $location, Roles, Role, Rights
     return containFlag;
   };
 
+
+
   $scope.saveRole = function () {
     var errorHandler = function (data) {
       $scope.error = data.data.error;
@@ -69,9 +71,7 @@ function SaveRoleController($scope, $routeParams, $location, Roles, Role, Rights
       $location.path('list');
     };
 
-    if ($scope.role.name == undefined || $scope.role.rights.length == 0) {
-      $scope.showError = true;
-    } else {
+    if (validRole()) {
       var id = $routeParams.id;
       if (id) {
         Role.update({id:id}, $scope.role, successHandler, errorHandler);
@@ -79,5 +79,20 @@ function SaveRoleController($scope, $routeParams, $location, Roles, Role, Rights
         Roles.save({}, $scope.role, successHandler, errorHandler);
       }
     }
+
+  }
+  var validRole = function () {
+    var valid = true;
+    $scope.showError = false;
+    $scope.showRightError = false;
+    if ($scope.role.name == undefined) {
+      $scope.showError = true;
+      valid = false;
+    }
+    if ($scope.role.rights.length == 0) {
+      $scope.showRightError = true;
+      valid = false;
+    }
+    return valid;
   }
 }
