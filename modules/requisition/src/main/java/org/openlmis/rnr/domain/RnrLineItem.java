@@ -193,7 +193,7 @@ public class RnrLineItem {
 
   public void calculatePacksToShip() {
     Integer orderQuantity = getOrderQuantity();
-    packsToShip = round(floor(orderQuantity / packSize), orderQuantity);
+    packsToShip = orderQuantity == 0 ? 0 : round(floor(orderQuantity / packSize), orderQuantity);
   }
 
   private Integer getOrderQuantity() {

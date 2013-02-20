@@ -75,8 +75,7 @@ public class UploadController extends BaseController {
     String error = null;
     if(model.isEmpty()) {
       error = "Please select the Upload type";
-    }
-    else if (!uploadBeansMap.containsKey(model)) {
+    } else if (!uploadBeansMap.containsKey(model)) {
       error = "Incorrect file";
     } else if (csvFile.isEmpty()) {
       error = "File is empty";

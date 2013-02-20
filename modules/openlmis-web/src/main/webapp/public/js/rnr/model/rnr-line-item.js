@@ -105,6 +105,10 @@ var RnrLineItem = function (lineItem, rnr, programRnrColumnList) {
       this.packsToShip = null;
       return;
     }
+    if (quantity == 0 ) {
+      this.packsToShip = 0;
+      return;
+    }
     this.packsToShip = Math.floor(quantity / utils.parseIntWithBaseTen(this.packSize));
     this.applyRoundingRulesToPacksToShip(quantity);
   };
