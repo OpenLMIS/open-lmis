@@ -12,6 +12,7 @@ INSERT INTO role_rights
   ((select id from roles where name='Medical-Officer'), 'VIEW_REQUISITION'),
   ((select id from roles where name='Medical-Officer'), 'AUTHORIZE_REQUISITION'),
   ((select id from roles where name='Medical-Officer'), 'APPROVE_REQUISITION'),
+  ((select id from roles where name='FacilityHead'), 'APPROVE_REQUISITION'),
   ((select id from roles where name='District Pharmacist'), 'VIEW_REQUISITION'),
   ((select id from roles where name='District Pharmacist'), 'AUTHORIZE_REQUISITION'),
   ((select id from roles where name='District Pharmacist'), 'APPROVE_REQUISITION');
