@@ -1,4 +1,4 @@
-function ConvertToOrderListController($scope, requisitionList,Order) {
+function ConvertToOrderListController($scope, requisitionList, Order, RequisitionForConvertToOrder) {
   $scope.requisitions = requisitionList;
   $scope.filteredRequisitions = $scope.requisitions;
   $scope.selectedItems = [];
@@ -23,7 +23,6 @@ function ConvertToOrderListController($scope, requisitionList,Order) {
     ]
   };
 
-
   $scope.filterRequisitions = function () {
     $scope.filteredRequisitions = [];
     var query = $scope.query || "";
@@ -38,6 +37,10 @@ function ConvertToOrderListController($scope, requisitionList,Order) {
 
   $scope.convertToOrder = function () {
     var successHandler = function () {
+      RequisitionForConvertToOrder.get({}, function(data) {
+        $scope.requisitions = data.rnr_list;
+      });
+
       $scope.message = "Created successfully";
       $scope.error = "";
     };
