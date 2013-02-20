@@ -3,13 +3,6 @@ function UserRoleAssignmentController($scope) {
   $scope.selectSuperviseProgramMessage = '--Select Program--';
   $scope.selectSupervisoryNodeMessage = '--Select Node--';
 
-  $scope.programsWithStatus = function () {
-    $.each($scope.programs, function (index, program) {
-      program.status = program.active ? 'Active' : 'Inactive';
-    });
-    return $scope.programs;
-  };
-
   $scope.deleteCurrentRow = function (rowNum) {
     $scope.deleteRolesModal = true;
     $scope.rowNum = rowNum;
@@ -19,13 +12,13 @@ function UserRoleAssignmentController($scope) {
     $scope.user.homeFacilityRoles.splice($scope.rowNum, 1);
     $scope.deleteRolesModal = false;
     $scope.rowNum = undefined;
-  }
+  };
 
   $scope.deleteSupervisorRole = function () {
     $scope.user.supervisorRoles.splice($scope.rowNum, 1);
     $scope.deleteRolesModal = false;
     $scope.rowNum = undefined;
-  }
+  };
 
   $scope.availableSupportedProgramsWithStatus = function () {
     var assignedProgramIds = _.map($scope.user.homeFacilityRoles, function (roleAssignment) {

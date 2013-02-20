@@ -127,12 +127,6 @@ describe("User", function () {
       expect(scope.user.supervisorRoles).toEqual([{"roleIds":[1]},{"roleIds":[3]}])
     });
 
-    it("should get programs with status based on active flag", function () {
-      scope.programs= [{active:false},{active:true}];
-      var programsWithStatus = scope.programsWithStatus();
-      expect(programsWithStatus).toEqual([{active:false, status:'Inactive'},{active:true, status:'Active'}])
-    });
-
   });
 
 });

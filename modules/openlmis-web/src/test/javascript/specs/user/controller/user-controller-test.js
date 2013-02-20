@@ -10,10 +10,13 @@ describe("User", function () {
       scope = $rootScope.$new();
       $httpBackend = _$httpBackend_;
       location = $location;
-      $httpBackend.expectGET("/roles.json").respond(200,{"roles":[]});
-      $httpBackend.expectGET("/programs.json").respond(200,{"programs":[{"id":1}]});
-      $httpBackend.expectGET("/supervisory-nodes.json").respond(200,{"supervisoryNodes":[]});
-      ctrl = $controller(UserController, {$scope:scope}, $location );
+      $httpBackend.expectGET("/roles.json").respond(200, {"roles":[]});
+      $httpBackend.expectGET("/programs.json").respond(200, {"programs":[
+        {"id":1, active:false},
+        {id:2, active:true}
+      ]});
+      $httpBackend.expectGET("/supervisory-nodes.json").respond(200, {"supervisoryNodes":[]});
+      ctrl = $controller(UserController, {$scope:scope}, $location);
       scope.userForm = {$error:{ pattern:"" }};
     }));
 
@@ -22,9 +25,12 @@ describe("User", function () {
       expect(scope.allRoles).toEqual([]);
     });
 
-    it('should set programs in scope', function () {
+    it('should set programs in scope with added status', function () {
       $httpBackend.flush();
-      expect(scope.programs).toEqual([{"id":1}]);
+      expect(scope.programs).toEqual([
+        {"id":1, active:false, status:'Inactive'},
+        {id:2, active:true, status:'Active'}
+      ]);
     });
 
     it('should set supervisory nodes in scope', function () {

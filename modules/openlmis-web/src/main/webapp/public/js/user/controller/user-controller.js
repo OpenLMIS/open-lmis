@@ -18,6 +18,9 @@ function UserController($scope, $routeParams, $location, Users, User, AllFacilit
   }
 
   Programs.get({}, function (data) {
+    $.each(data.programs, function (index, program) {
+      program.status = program.active ? 'Active' : 'Inactive';
+    });
     $scope.programs = data.programs;
   });
 
