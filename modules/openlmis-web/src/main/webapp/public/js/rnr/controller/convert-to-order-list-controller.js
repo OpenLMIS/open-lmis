@@ -39,7 +39,7 @@ function ConvertToOrderListController($scope, requisitionList, Order, Requisitio
     var successHandler = function () {
       RequisitionForConvertToOrder.get({}, function(data) {
         $scope.requisitions = data.rnr_list;
-        $scope.filteredRequisitions();
+        $scope.filterRequisitions();
       });
 
       $scope.message = "Created successfully";
