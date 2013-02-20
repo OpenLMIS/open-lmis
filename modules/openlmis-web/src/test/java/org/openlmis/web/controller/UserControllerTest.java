@@ -119,7 +119,7 @@ public class UserControllerTest {
     httpServletRequest.addHeader("referer", "http://openlmis:9091/public/pages/admin/user/index.html");
     ResponseEntity<OpenLmisResponse> response = userController.create(user, httpServletRequest);
 
-    verify(userService).create(eq(user),eq("http://openlmis:9091/"));
+    verify(userService).create(eq(user),eq("http://openlmis:9091/public/pages/reset-password.html#/token/"));
 
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
     assertThat(response.getBody().getSuccessMsg(), is("User '" + user.getFirstName() + " " + user.getLastName() + "' has been successfully created, password link has been sent on registered Email address"));
