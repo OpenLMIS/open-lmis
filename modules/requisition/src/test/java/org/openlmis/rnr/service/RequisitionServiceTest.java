@@ -878,13 +878,16 @@ public class RequisitionServiceTest {
   public void shouldCreateOrder() throws Exception {
     Order order = new Order();
     order.setId(1);
-    List<Rnr> rnrList = new ArrayList();
     Rnr rnr = new Rnr();
-    rnrList.add(rnr);
+    List<Rnr> rnrList = Arrays.asList(rnr);
     order.setRnrList(rnrList);
 
     when(requisitionRepository.getOrderById(1)).thenReturn(order);
+
     requisitionService.createOrder(order);
+
+    assertThat(rnr.getOrderId(), is(1));
+    assertThat(rnr.getStatus(), is(RnrStatus.ORDERED));
     verify(requisitionRepository).createOrder(order);
     verify(requisitionRepository).updateOrderIdAndStatus(rnr);
   }

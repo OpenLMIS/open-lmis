@@ -40,13 +40,15 @@ function ConvertToOrderListController($scope, requisitionList,Order) {
     var successHandler = function () {
       $scope.message = "Created successfully";
       $scope.error = "";
-    }
+    };
+
     var errorHandler = function () {
       $scope.error = "Error Occurred";
-    }
-    $scope.order={"rnrList":$scope.requisitions};
+    };
+
+    $scope.order={"rnrList":$scope.gridOptions.selectedItems};
     Order.save({}, $scope.order, successHandler, errorHandler);
-  }
+  };
 
   function contains(string, query) {
     return string.toLowerCase().indexOf(query.toLowerCase()) != -1;

@@ -80,10 +80,13 @@ describe('ConvertToOrderListController', function () {
     expect(scope.filteredRequisitions.length).toEqual(1);
     expect(scope.filteredRequisitions[0]).toEqual(requisitionList[1]);
   });
+
   it("should convert the selected requisitions to order", function () {
-    scope.order = {"rnrList":requisitionList};
-    httpBackend.expectPOST('/order.json', scope.order).respond(200, {"success":"Created successfully"});
+    scope.gridOptions.selectedItems = [requisitionList[0]];
+    httpBackend.expectPOST('/order.json', {"rnrList":scope.gridOptions.selectedItems}).respond(200, {"success":"Created successfully"});
+
     scope.convertToOrder();
+
     httpBackend.flush();
     expect(scope.message).toEqual("Created successfully");
   });

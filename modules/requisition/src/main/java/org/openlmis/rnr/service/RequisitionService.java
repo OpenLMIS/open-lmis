@@ -335,9 +335,11 @@ public class RequisitionService {
 
   public void createOrder(Order order) {
     requisitionRepository.createOrder(order);
+
     Order orderReturned = requisitionRepository.getOrderById(order.getId());
     for (Rnr rnr : order.getRnrList()) {
       rnr.setOrderId(orderReturned.getId());
+      rnr.setStatus(RnrStatus.ORDERED);
       requisitionRepository.updateOrderIdAndStatus(rnr);
     }
   }
