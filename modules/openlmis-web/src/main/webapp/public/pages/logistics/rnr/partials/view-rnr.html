@@ -15,8 +15,8 @@
           <div class="span4">
             <label>Program:</label>
             <select name="selectProgram" ng-options = "program.id as program.name for program in programs"
-                    ng-model = "selectedProgramId" ng-required="true">
-              <option value = "">--choose program--</option>
+                    ng-model = "selectedProgramId">
+              <option value = "">All</option>
             </select>
             <span class = "field-error" ng-show = "viewRequisitionForm.selectProgram.$error.required && errorShown">Please
               fill this value</span>
@@ -55,4 +55,5 @@
         </div>
   </div>
 </form>
-<div class = "gridStyle" ng-grid = "rnrListGrid"></div>
+<div class = "gridStyle" ng-grid = "rnrListGrid" ng-show="rnr.length"></div>
+<div ng-bind="requisitionFoundMessage"></div>

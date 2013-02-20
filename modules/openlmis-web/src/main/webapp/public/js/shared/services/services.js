@@ -111,7 +111,7 @@ services.factory('RequisitionForApproval', function($resource) {
 });
 
 services.factory('RequisitionsForViewing', function($resource) {
-  return $resource('/facility/:facilityId/program/:programId/requisitions.json', {}, {});
+  return $resource('/requisitions-list.json', {}, {});
 });
 
 services.factory('RequisitionForConvertToOrder', function($resource) {

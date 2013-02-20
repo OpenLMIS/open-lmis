@@ -126,7 +126,12 @@ public interface FacilityMapper {
 
   @Select({"SELECT * FROM facilities F INNER JOIN users U ON U.facilityId = F.id",
     "INNER JOIN role_assignments RA ON RA.userId = U.id INNER JOIN role_rights RR ON RR.roleId = RA.roleId",
-      "WHERE U.id = #{userId} AND RR.rightName = ANY(#{commaSeparatedRights}::VARCHAR[])"})
+      "WHERE U.id = #{userId} AND RR.rightName = ANY(#{commaSeparatedRights}::VARCHAR[]) AND RA.supervisoryNodeId IS NULL"})
+  @Results(value = {
+    @Result(property = "geographicZone.id", column = "geographicZoneId"),
+    @Result(property = "facilityType", column = "typeId", javaType = Integer.class, one = @One(select = "getFacilityTypeById")),
+    @Result(property = "operatedBy", column = "operatedById", javaType = Integer.class, one = @One(select = "getFacilityOperatorById"))
+  })
   Facility getHomeFacilityWithRights(@Param("userId") Integer userId, @Param("commaSeparatedRights") String commaSeparatedRights);
 
   @Select({"SELECT DISTINCT f.* FROM facilities f",

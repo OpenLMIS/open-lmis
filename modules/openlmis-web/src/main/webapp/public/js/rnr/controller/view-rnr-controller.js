@@ -10,6 +10,7 @@ function ViewRnrController($scope, facilities, RequisitionsForViewing, UserSuppo
     showFilter:false,
     rowHeight:44,
     enableSorting:true,
+    sortInfo:{ field:'submittedDate', direction:'ASC'},
     columnDefs:[
       {field:'programName', displayName:'Program' },
       {field:'facilityCode', displayName:'Facility Code'},
@@ -23,21 +24,28 @@ function ViewRnrController($scope, facilities, RequisitionsForViewing, UserSuppo
   };
 
   $scope.loadProgramsForFacility = function () {
-    UserSupportedProgramInFacilityForAnOperation.get({facilityId: $scope.selectedFacilityId, rights: "VIEW_REQUISITION"},
-      function(data) {
-      $scope.programs = data.programList;
-    }, function(){})
+    UserSupportedProgramInFacilityForAnOperation.get({facilityId:$scope.selectedFacilityId, rights:"VIEW_REQUISITION"},
+      function (data) {
+        $scope.programs = data.programList;
+      }, function () {
+      })
   };
 
-  $scope.loadRequisitions = function(){
-    if($scope.viewRequisitionForm.$invalid){
+  function setRequisitionsFoundMessage() {
+    $scope.requisitionFoundMessage = ($scope.rnr.length) ? "" : "No R&Rs found";
+  }
+
+  $scope.loadRequisitions = function () {
+    if ($scope.viewRequisitionForm.$invalid) {
       $scope.errorShown = true;
       return;
     }
     RequisitionsForViewing.get({facilityId:$scope.selectedFacilityId, programId:$scope.selectedProgramId,
-      periodStartDate: $scope.startDate, periodEndDate: $scope.endDate}, function (data) {
+      periodStartDate:$scope.startDate, periodEndDate:$scope.endDate}, function (data) {
       $scope.rnr = data.rnr_list;
-    }, function() {})
+      setRequisitionsFoundMessage();
+    }, function () {
+    })
   }
 }
 
