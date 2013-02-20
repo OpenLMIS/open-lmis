@@ -23,6 +23,7 @@ public class E2EUpload extends TestCaseHelper {
 
   @BeforeClass
   public void setUp() throws Exception {
+    super.setupSuite();
     dbWrapper = new DBWrapper();
     dbWrapper.deleteData();
     dbWrapper.deleteFacilities();

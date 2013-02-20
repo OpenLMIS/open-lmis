@@ -23,6 +23,7 @@ public class E2EManageFacility extends TestCaseHelper {
 
   @BeforeClass
   public void setUp() throws Exception {
+    super.setupSuite();
     dbWrapper = new DBWrapper();
     dbWrapper.deleteData();
   }
