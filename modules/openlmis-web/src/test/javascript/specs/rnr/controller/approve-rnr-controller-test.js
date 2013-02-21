@@ -13,18 +13,21 @@ describe('Approve Requisition controller', function () {
     routeParams = {"rnr":"1", "facility":"1", "program":"1"};
     lineItems = [];
     nonFullSupplyLineItems = [];
-    requisition = {'status':"AUTHORIZED", 'lineItems':lineItems, 'nonFullSupplyLineItems' : nonFullSupplyLineItems};
+    requisition = {'status':"AUTHORIZED", 'lineItems':lineItems, 'nonFullSupplyLineItems':nonFullSupplyLineItems};
     programRnrColumnList = [
       {'name':'ProductCode', 'label':'Product Code', 'visible':true},
       {'name':'quantityApproved', 'label':'quantity approved', 'visible':true},
       {'name':'remarks', 'label':'remarks', 'visible':true}
     ];
     httpBackend.expect('GET', '/requisitions/lossAndAdjustments/reference-data.json').respond({"lossAdjustmentTypes":{}});
+    httpBackend.expect('GET', '/requisitions-for-approval/1.json').respond({"rnr":requisition});
+    httpBackend.expect('GET', '/rnr/1/columns.json').respond({"rnrColumnList":programRnrColumnList});
     httpBackend.expect('GET', '/reference-data/currency.json').respond({"currency":'$'});
-    ctrl = controller(ApproveRnrController, {$scope:scope, requisition:requisition, programRnrColumnList:programRnrColumnList, $location:location, $routeParams:routeParams});
+    ctrl = controller(ApproveRnrController, {$scope:scope, $location:location, $routeParams:routeParams});
   }));
 
   it('should set rnr in scope', function () {
+    httpBackend.flush();
     expect(scope.rnr).toEqual(requisition);
   });
 
@@ -40,10 +43,12 @@ describe('Approve Requisition controller', function () {
 
 
   it('should set line-items in scope', function () {
+    httpBackend.flush();
     expect(scope.rnr.lineItems).toEqual(lineItems);
   });
 
   it('should set non full supply line-items in scope', function () {
+    httpBackend.flush();
     expect(scope.rnr.nonFullSupplyLineItems).toEqual(nonFullSupplyLineItems);
   });
 
@@ -56,7 +61,8 @@ describe('Approve Requisition controller', function () {
   });
 
   it('should set columns as columnDefs in non full supply grid', function () {
-    expect(scope.nonFullSupplyGrid.columnDefs.length).toEqual(3);
+    httpBackend.flush();
+    expect(scope.nonFullSupplyGrid.columnDefs).toEqual('columnDefinitions');
   });
 
   it('should save work in progress for rnr', function () {
@@ -96,7 +102,7 @@ describe('Approve Requisition controller', function () {
     var lineItems = [
       {'quantityApproved':123}
     ];
-    scope.rnr= {"id":"rnrId", 'lineItems':lineItems};
+    scope.rnr = {"id":"rnrId", 'lineItems':lineItems};
     httpBackend.expect('PUT', '/requisitions/rnrId/approve.json').respond({'success':"R&R approved successfully!"});
 
     scope.approveRnr();
