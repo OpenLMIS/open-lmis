@@ -61,7 +61,7 @@ function ViewRnrController($scope, facilities, RequisitionsForViewing, UserSuppo
     var requisitionQueryParameters = {facilityId:$scope.selectedFacilityId,
       dateRangeStart:$scope.startDate, dateRangeEnd:$scope.endDate};
 
-    if ($scope.selectedProgramId) requisitionQueryParameters.push('programId', $scope.selectedProgramId);
+    if ($scope.selectedProgramId) requisitionQueryParameters.programId = $scope.selectedProgramId;
 
     RequisitionsForViewing.get(requisitionQueryParameters, function (data) {
 
