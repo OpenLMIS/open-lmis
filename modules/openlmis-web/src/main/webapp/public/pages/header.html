@@ -4,6 +4,7 @@
     <ng-include src="'/public/pages/login-form.html'"/>
   </div>
 </div>
+
 <div ng-controller="HeaderController">
   <div class="header row-fluid">
 
@@ -13,7 +14,7 @@
         <h1>Logistics Management Information Systems</h1>
       </div>
     </div>
-
+    <div id="loader" class="loader-bar"></div>
     <div class="span5">
       <div ng-switch on="user">
         <div ng-switch-when="true">

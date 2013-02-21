@@ -4,10 +4,12 @@
 angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.directives'], function ($routeProvider, $locationProvider, $httpProvider) {
   var interceptor = ['$rootScope', '$q', function (scope, $q) {
     function success(response) {
+      angular.element('#loader').hide();
       return response;
     }
 
     function error(response) {
+      angular.element('#loader').hide();
       switch (response.status) {
         case 403:
           window.location = "/public/pages/access-denied.html";
@@ -26,7 +28,13 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
     };
   }];
   $httpProvider.responseInterceptors.push(interceptor);
-})
+}).config(function($httpProvider) {
+    var spinnerFunction = function (data) {
+      angular.element('#loader').show();
+      return data;
+    };
+    $httpProvider.defaults.transformRequest.push(spinnerFunction);
+  })
   .directive('uiNav',function () {
     return {
       restrict:'A',
@@ -39,7 +47,6 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
         lists.sort(function (a, b) {
           return $(b).parents("ul").length - $(a).parents("ul").length;
         });
-
 
         setTimeout(function () {
 
