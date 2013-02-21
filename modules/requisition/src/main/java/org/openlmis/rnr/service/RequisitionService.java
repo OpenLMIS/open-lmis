@@ -336,7 +336,7 @@ public class RequisitionService {
 
     OrderBatch orderReturned = requisitionRepository.getOrderById(orderBatch.getId());
     for (Rnr rnr : orderBatch.getRnrList()) {
-      rnr.setOrderId(orderReturned.getId());
+      rnr.setOrderBatchId(orderReturned.getId());
       rnr.setStatus(RnrStatus.ORDERED);
       requisitionRepository.updateOrderIdAndStatus(rnr);
     }

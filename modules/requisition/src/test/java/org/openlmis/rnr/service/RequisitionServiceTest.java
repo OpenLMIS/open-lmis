@@ -890,7 +890,7 @@ public class RequisitionServiceTest {
 
     requisitionService.createOrder(orderBatch);
 
-    assertThat(rnr.getOrderId(), is(1));
+    assertThat(rnr.getOrderBatchId(), is(1));
     assertThat(rnr.getStatus(), is(RnrStatus.ORDERED));
     verify(requisitionRepository).createOrder(orderBatch);
     verify(requisitionRepository).updateOrderIdAndStatus(rnr);

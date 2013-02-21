@@ -108,14 +108,14 @@ public class RequisitionRepository {
   }
 
   public void createOrder(OrderBatch orderBatch) {
-    requisitionMapper.createOrder(orderBatch);
+    requisitionMapper.createOrderBatch(orderBatch);
   }
 
   public void updateOrderIdAndStatus(Rnr rnr) {
     requisitionMapper.updateOrderIdAndStatus(rnr);
   }
   public OrderBatch getOrderById(Integer id){
-    return requisitionMapper.getOrderById(id);
+    return requisitionMapper.getOrderBatchById(id);
   }
 }
 

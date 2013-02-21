@@ -94,23 +94,23 @@ public interface RequisitionMapper {
   })
   List<Rnr> getApprovedRequisitions();
 
-@Select({"SELECT * FROM requisitions " +
-    "WHERE facilityId = #{facility.id} AND programId = #{program.id} AND periodId = ANY (#{periods}::INTEGER[]) AND status NOT IN ('INITIATED', 'SUBMITTED')"})
+  @Select({"SELECT * FROM requisitions " +
+      "WHERE facilityId = #{facility.id} AND programId = #{program.id} AND periodId = ANY (#{periods}::INTEGER[]) AND status NOT IN ('INITIATED', 'SUBMITTED')"})
   @Results(value = {
-    @Result(property = "id", column = "id"),
-    @Result(property = "facility.id", column = "facilityId"),
-    @Result(property = "program.id", column = "programId"),
-    @Result(property = "period.id", column = "periodId")
+      @Result(property = "id", column = "id"),
+      @Result(property = "facility.id", column = "facilityId"),
+      @Result(property = "program.id", column = "programId"),
+      @Result(property = "period.id", column = "periodId")
   })
   List<Rnr> get(@Param("facility") Facility facility, @Param("program") Program program, @Param("periods") String periodIds);
 
-  @Insert("INSERT INTO orders(orderedBy,orderedDate) VALUES (#{orderedBy},#{orderedDate})")
+  @Insert("INSERT INTO order_batches(orderedBy, orderedDate) VALUES (#{orderedBy}, #{orderedDate})")
   @Options(useGeneratedKeys = true)
-  void createOrder(OrderBatch orderBatch);
+  void createOrderBatch(OrderBatch orderBatch);
 
-  @Select("SELECT * from orders  WHERE id=#{id}")
-  OrderBatch getOrderById(Integer id);
+  @Select("SELECT * from order_batches WHERE id = #{id}")
+  OrderBatch getOrderBatchById(Integer id);
 
-  @Update("UPDATE requisitions SET orderId=#{orderId},status=#{status} WHERE id=#{id}")
+  @Update("UPDATE requisitions SET orderBatchId = #{orderBatchId}, status = #{status} WHERE id = #{id}")
   void updateOrderIdAndStatus(Rnr requisition);
 }

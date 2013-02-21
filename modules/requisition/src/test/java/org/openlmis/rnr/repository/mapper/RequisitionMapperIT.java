@@ -273,9 +273,9 @@ public class RequisitionMapperIT {
   public void shouldCreateAnOrder() throws Exception {
     OrderBatch orderBatch = new OrderBatch();
     orderBatch.setOrderedBy(1);
-    mapper.createOrder(orderBatch);
+    mapper.createOrderBatch(orderBatch);
 
-    OrderBatch orderFromDatabase = mapper.getOrderById(orderBatch.getId());
+    OrderBatch orderFromDatabase = mapper.getOrderBatchById(orderBatch.getId());
     assertThat(orderFromDatabase.getOrderedBy(), is(1));
   }
 
@@ -284,16 +284,16 @@ public class RequisitionMapperIT {
     Rnr requisition = insertRequisition(processingPeriod1, APPROVED);
     OrderBatch orderBatch = new OrderBatch();
 
-    mapper.createOrder(orderBatch);
+    mapper.createOrderBatch(orderBatch);
 
     Integer orderId = orderBatch.getId();
-    requisition.setOrderId(orderId);
+    requisition.setOrderBatchId(orderId);
     requisition.setStatus(RnrStatus.ORDERED);
 
     mapper.updateOrderIdAndStatus(requisition);
 
     Rnr requisitionFromDatabase = mapper.getById(requisition.getId());
-    assertThat(requisitionFromDatabase.getOrderId(), is(orderId));
+    assertThat(requisitionFromDatabase.getOrderBatchId(), is(orderId));
     assertThat(requisitionFromDatabase.getStatus().toString().equals("ORDERED"), is(true));
   }
 
@@ -301,8 +301,8 @@ public class RequisitionMapperIT {
   public void shouldGetOrderById() throws Exception {
     OrderBatch orderBatch = new OrderBatch();
     orderBatch.setOrderedBy(1);
-    mapper.createOrder(orderBatch);
-    OrderBatch orderFromDb = mapper.getOrderById(orderBatch.getId());
+    mapper.createOrderBatch(orderBatch);
+    OrderBatch orderFromDb = mapper.getOrderBatchById(orderBatch.getId());
     assertThat(orderFromDb.getOrderedBy(), is(1));
   }
 
