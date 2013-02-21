@@ -1,8 +1,11 @@
 package org.openlmis.rnr.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.core.domain.*;
-import org.openlmis.rnr.domain.Order;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.RoleAssignment;
+import org.openlmis.rnr.domain.OrderBatch;
 import org.openlmis.rnr.domain.Rnr;
 import org.springframework.stereotype.Repository;
 
@@ -103,10 +106,10 @@ public interface RequisitionMapper {
 
   @Insert("INSERT INTO orders(orderedBy,orderedDate) VALUES (#{orderedBy},#{orderedDate})")
   @Options(useGeneratedKeys = true)
-  void createOrder(Order order);
+  void createOrder(OrderBatch orderBatch);
 
   @Select("SELECT * from orders  WHERE id=#{id}")
-  Order getOrderById(Integer id);
+  OrderBatch getOrderById(Integer id);
 
   @Update("UPDATE requisitions SET orderId=#{orderId},status=#{status} WHERE id=#{id}")
   void updateOrderIdAndStatus(Rnr requisition);

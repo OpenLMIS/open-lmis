@@ -2,11 +2,11 @@ package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
-import org.openlmis.rnr.domain.Order;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
+import org.openlmis.rnr.domain.OrderBatch;
 import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RnrDTO;
@@ -187,10 +187,10 @@ public class RequisitionController extends BaseController {
 
   @RequestMapping(value = "/order", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("hasPermission('','CONVERT_TO_ORDER')")
-  public void createOrder(@RequestBody Order order, HttpServletRequest request) {
-    order.setOrderedBy(loggedInUserId(request));
-    order.setOrderedDate(new Date());
-    requisitionService.createOrder(order);
+  public void createOrder(@RequestBody OrderBatch orderBatch, HttpServletRequest request) {
+    orderBatch.setOrderedBy(loggedInUserId(request));
+    orderBatch.setOrderedDate(new Date());
+    requisitionService.createOrder(orderBatch);
   }
 
 }

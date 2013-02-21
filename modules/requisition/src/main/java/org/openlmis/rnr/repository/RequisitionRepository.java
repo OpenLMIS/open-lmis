@@ -107,14 +107,14 @@ public class RequisitionRepository {
     return requisitionMapper.get(facility, program, commaSeparator.commaSeparateIds(periods));
   }
 
-  public void createOrder(Order order) {
-    requisitionMapper.createOrder(order);
+  public void createOrder(OrderBatch orderBatch) {
+    requisitionMapper.createOrder(orderBatch);
   }
 
   public void updateOrderIdAndStatus(Rnr rnr) {
     requisitionMapper.updateOrderIdAndStatus(rnr);
   }
-  public Order getOrderById(Integer id){
+  public OrderBatch getOrderById(Integer id){
     return requisitionMapper.getOrderById(id);
   }
 }

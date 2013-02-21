@@ -180,9 +180,9 @@ public class RequisitionRepositoryTest {
 
   @Test
   public void shouldCreateOrder() throws Exception {
-    Order order = new Order();
-    requisitionRepository.createOrder(order);
-    verify(requisitionMapper).createOrder(order);
+    OrderBatch orderBatch = new OrderBatch();
+    requisitionRepository.createOrder(orderBatch);
+    verify(requisitionMapper).createOrder(orderBatch);
   }
 
   @Test
@@ -203,11 +203,11 @@ public class RequisitionRepositoryTest {
 
   @Test
   public void shouldGetOrderById() throws Exception {
-    Order order = new Order();
-    order.setOrderedBy(1);
-    when(requisitionMapper.getOrderById(1)).thenReturn(order);
-    Order orderReturned = requisitionRepository.getOrderById(1);
+    OrderBatch orderBatch = new OrderBatch();
+    orderBatch.setOrderedBy(1);
+    when(requisitionMapper.getOrderById(1)).thenReturn(orderBatch);
+    OrderBatch orderBatchReturned = requisitionRepository.getOrderById(1);
     verify(requisitionMapper).getOrderById(1);
-    assertThat(orderReturned,is(order));
+    assertThat(orderBatchReturned,is(orderBatch));
   }
 }

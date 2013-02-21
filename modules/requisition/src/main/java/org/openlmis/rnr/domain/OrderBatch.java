@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Order {
+public class OrderBatch {
 
   private Integer id;
   private Date orderedDate;

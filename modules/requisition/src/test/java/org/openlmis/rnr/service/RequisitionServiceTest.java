@@ -15,7 +15,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
 import org.openlmis.rnr.builder.RequisitionBuilder;
-import org.openlmis.rnr.domain.Order;
+import org.openlmis.rnr.domain.OrderBatch;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.domain.RnrStatus;
@@ -33,9 +33,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.*;
 import static org.openlmis.core.builder.ProductBuilder.code;
 import static org.openlmis.core.builder.ProductBuilder.defaultProduct;
@@ -46,6 +44,11 @@ import static org.openlmis.rnr.builder.RnrColumnBuilder.*;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 import static org.openlmis.rnr.service.RequisitionService.*;
+import static org.powermock.api.mockito.PowerMockito.doNothing;
+import static org.powermock.api.mockito.PowerMockito.doReturn;
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.spy;
+import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 @RunWith(PowerMockRunner.class)
@@ -877,19 +880,19 @@ public class RequisitionServiceTest {
 
   @Test
   public void shouldCreateOrder() throws Exception {
-    Order order = new Order();
-    order.setId(1);
+    OrderBatch orderBatch = new OrderBatch();
+    orderBatch.setId(1);
     Rnr rnr = new Rnr();
     List<Rnr> rnrList = Arrays.asList(rnr);
-    order.setRnrList(rnrList);
+    orderBatch.setRnrList(rnrList);
 
-    when(requisitionRepository.getOrderById(1)).thenReturn(order);
+    when(requisitionRepository.getOrderById(1)).thenReturn(orderBatch);
 
-    requisitionService.createOrder(order);
+    requisitionService.createOrder(orderBatch);
 
     assertThat(rnr.getOrderId(), is(1));
     assertThat(rnr.getStatus(), is(RnrStatus.ORDERED));
-    verify(requisitionRepository).createOrder(order);
+    verify(requisitionRepository).createOrder(orderBatch);
     verify(requisitionRepository).updateOrderIdAndStatus(rnr);
   }
 

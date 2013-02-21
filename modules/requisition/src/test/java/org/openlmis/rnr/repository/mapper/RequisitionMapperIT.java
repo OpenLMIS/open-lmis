@@ -8,7 +8,7 @@ import org.openlmis.core.builder.*;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.mapper.*;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
-import org.openlmis.rnr.domain.Order;
+import org.openlmis.rnr.domain.OrderBatch;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.domain.RnrStatus;
@@ -271,22 +271,22 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldCreateAnOrder() throws Exception {
-    Order order = new Order();
-    order.setOrderedBy(1);
-    mapper.createOrder(order);
+    OrderBatch orderBatch = new OrderBatch();
+    orderBatch.setOrderedBy(1);
+    mapper.createOrder(orderBatch);
 
-    Order orderFromDatabase = mapper.getOrderById(order.getId());
+    OrderBatch orderFromDatabase = mapper.getOrderById(orderBatch.getId());
     assertThat(orderFromDatabase.getOrderedBy(), is(1));
   }
 
   @Test
   public void shouldUpdateOrderIdAndStatusForARequisition() throws Exception {
     Rnr requisition = insertRequisition(processingPeriod1, APPROVED);
-    Order order = new Order();
+    OrderBatch orderBatch = new OrderBatch();
 
-    mapper.createOrder(order);
+    mapper.createOrder(orderBatch);
 
-    Integer orderId = order.getId();
+    Integer orderId = orderBatch.getId();
     requisition.setOrderId(orderId);
     requisition.setStatus(RnrStatus.ORDERED);
 
@@ -299,10 +299,10 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldGetOrderById() throws Exception {
-    Order order = new Order();
-    order.setOrderedBy(1);
-    mapper.createOrder(order);
-    Order orderFromDb = mapper.getOrderById(order.getId());
+    OrderBatch orderBatch = new OrderBatch();
+    orderBatch.setOrderedBy(1);
+    mapper.createOrder(orderBatch);
+    OrderBatch orderFromDb = mapper.getOrderById(orderBatch.getId());
     assertThat(orderFromDb.getOrderedBy(), is(1));
   }
 
