@@ -1,8 +1,10 @@
 function ViewRnrController($scope, facilities, RequisitionsForViewing, UserSupportedProgramInFacilityForAnOperation) {
   $scope.facilities = facilities;
+  $scope.facilityLabel = (!$scope.facilities.length) ? "--none assigned--" : "--select facility--";
+  $scope.programLabel = "--select program--";
   $scope.selectedItems = [];
 
-  $scope.rnrListGrid = { data:'rnr',
+  $scope.rnrListGrid = { data:'filteredRequisitions',
     canSelectRows:false,
     displayFooter:false,
     displaySelectionCheckbox:false,
@@ -27,12 +29,28 @@ function ViewRnrController($scope, facilities, RequisitionsForViewing, UserSuppo
     UserSupportedProgramInFacilityForAnOperation.get({facilityId:$scope.selectedFacilityId, rights:"VIEW_REQUISITION"},
       function (data) {
         $scope.programs = data.programList;
+        $scope.programLabel = (!$scope.programs.length) ? "--none assigned--" : "All";
       }, function () {
       })
   };
 
   function setRequisitionsFoundMessage() {
-    $scope.requisitionFoundMessage = ($scope.rnr.length) ? "" : "No R&Rs found";
+    $scope.requisitionFoundMessage = ($scope.requisitions.length) ? "" : "No R&Rs found";
+  }
+
+  $scope.filterRequisitions = function () {
+    $scope.filteredRequisitions = [];
+    var query = $scope.query || "";
+
+    $scope.filteredRequisitions = $.grep($scope.requisitions, function (rnr) {
+      return contains(rnr.status, query);
+    });
+
+    $scope.resultCount = $scope.filteredRequisitions.length;
+  };
+
+  function contains(string, query) {
+    return string.toLowerCase().indexOf(query.toLowerCase()) != -1;
   }
 
   $scope.loadRequisitions = function () {
@@ -40,14 +58,25 @@ function ViewRnrController($scope, facilities, RequisitionsForViewing, UserSuppo
       $scope.errorShown = true;
       return;
     }
-    RequisitionsForViewing.get({facilityId:$scope.selectedFacilityId, programId:$scope.selectedProgramId,
-      periodStartDate:$scope.startDate, periodEndDate:$scope.endDate}, function (data) {
-      $scope.rnr = data.rnr_list;
+    var requisitionQueryParameters = {facilityId:$scope.selectedFacilityId,
+      dateRangeStart:$scope.startDate, dateRangeEnd:$scope.endDate};
+
+    if ($scope.selectedProgramId) requisitionQueryParameters.push('programId', $scope.selectedProgramId);
+
+    RequisitionsForViewing.get(requisitionQueryParameters, function (data) {
+
+      $scope.requisitions = $scope.filteredRequisitions = data.rnr_list;
+
       setRequisitionsFoundMessage();
     }, function () {
     })
-  }
+  };
+  $scope.setEndDateOffset = function () {
+    $scope.endDateOffset = Math.ceil(($scope.startDate.getTime() + oneDay - Date.now()) / oneDay);
+  };
 }
+
+var oneDay = 1000 * 60 * 60 * 24;
 
 ViewRnrController.resolve = {
   facilities:function ($q, $timeout, UserFacilityWithViewRequisition) {

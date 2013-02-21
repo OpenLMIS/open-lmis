@@ -57,6 +57,10 @@ public interface ProcessingPeriodMapper {
   ProcessingPeriod getImmediatePreviousPeriodFor(ProcessingPeriod period);
 
 
-  @Select({"SELECT * FROM processing_periods WHERE scheduleId = #{scheduleId} AND (( startDate<=#{startDate} AND endDate>=#{startDate}) OR (startDate<=#{endDate} AND endDate>=#{endDate}))"})
-  List<ProcessingPeriod> getAllPeriodsForDateRange(@Param("scheduleId") Integer scheduleId,@Param("startDate") Date startDate,@Param("endDate") Date endDate);
+  @Select({"SELECT * FROM processing_periods WHERE scheduleId = #{scheduleId} ",
+    "AND (( startDate<=#{startDate} AND endDate>=#{startDate}) OR (startDate<=#{endDate} AND endDate>=#{endDate})",
+    "OR (startDate>=#{startDate} AND endDate<=#{endDate}))"})
+  List<ProcessingPeriod> getAllPeriodsForDateRange(@Param("scheduleId") Integer scheduleId,
+                                                   @Param("startDate") Date startDate,
+                                                   @Param("endDate") Date endDate);
 }

@@ -29,7 +29,7 @@ public class FacilityProgramDateRangeSearch implements RequisitionSearchStrategy
     Facility facility = new Facility(criteria.getFacilityId());
     Program program = new Program(criteria.getProgramId());
     List<ProcessingPeriod> periods = processingScheduleService.getAllPeriodsForDateRange(facility, program,
-      criteria.getPeriodStartDate(), criteria.getPeriodEndDate());
+      criteria.getDateRangeStart(), criteria.getDateRangeEnd());
 
     return requisitionRepository.get(facility, program, periods);
   }

@@ -181,7 +181,8 @@ public class RequisitionController extends BaseController {
 
   @RequestMapping(value = "/requisitions-list", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("hasPermission('','VIEW_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> getRequisitionsForView(RequisitionSearchCriteria criteria) {
+  public ResponseEntity<OpenLmisResponse> getRequisitionsForView(RequisitionSearchCriteria criteria, HttpServletRequest request) {
+    criteria.setUserId(loggedInUserId(request));
     return response(RNR_LIST, RnrDTO.prepareForView(requisitionService.get(criteria)));
   }
 

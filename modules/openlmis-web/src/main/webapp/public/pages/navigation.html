@@ -3,7 +3,7 @@
         <li><a href="/">Home</a></li>
 
         <li ng-show="hasPermission('CREATE_REQUISITION') || hasPermission('AUTHORIZE_REQUISITION') || hasPermission('APPROVE_REQUISITION') ||
-       hasPermission('CONVERT_TO_ORDER')  ">
+       hasPermission('CONVERT_TO_ORDER') || hasPermission('VIEW_REQUISITION')  ">
             <a href="javascript: void(0)">Requisitions</a>
             <div class="submenu">
               <ul>
@@ -17,7 +17,7 @@
                   <a href="/public/pages/logistics/rnr/index.html#/requisitions-for-convert-to-order">Convert to Order</a>
                 </li>
                 <li ng-show="hasPermission('VIEW_REQUISITION')">
-                  <a href="/public/pages/logistics/rnr/index.html#/view-requisitions">View Requisitions</a>
+                  <a href="/public/pages/logistics/rnr/index.html#/view-requisitions">View</a>
                 </li>
                 <li class="beak"></li>
               </ul>

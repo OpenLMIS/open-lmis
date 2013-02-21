@@ -11,16 +11,25 @@ import java.util.Date;
 @NoArgsConstructor
 public class RequisitionSearchCriteria {
 
+  Integer userId;
   Integer facilityId;
   Integer programId;
   Integer periodId;
-  Date periodStartDate;
-  Date periodEndDate;
+  Date dateRangeStart;
+  Date dateRangeEnd;
 
   public RequisitionSearchCriteria(Integer facilityId, Integer programId, Date periodStartDate, Date periodEndDate) {
     this.facilityId = facilityId;
     this.programId = programId;
-    this.periodStartDate = periodStartDate;
-    this.periodEndDate = periodEndDate;
+    this.dateRangeStart = periodStartDate;
+    this.dateRangeEnd = periodEndDate;
+  }
+
+  public RequisitionSearchCriteria(Integer facilityId, Integer programId, Integer userId, Date dateRangeStart, Date dateRangeEnd) {
+    this.facilityId = facilityId;
+    this.programId = programId;
+    this.userId = userId;
+    this.dateRangeStart = dateRangeStart;
+    this.dateRangeEnd = dateRangeEnd;
   }
 }

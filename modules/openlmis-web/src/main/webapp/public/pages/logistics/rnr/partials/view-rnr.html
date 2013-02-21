@@ -1,59 +1,69 @@
 <h2>View Requisitions</h2>
-
-<form name = "viewRequisitionForm" id = "viewRequisitionForm" ng-submit = "loadRequisitions()" novalidate>
-  <div class = "app-form view-req-form">
-        <div class = "row-fluid">
-          <div class="span4">
-            <label>Facility name:</label>
-            <select name="selectFacility" ng-options = "facility.id as facility.code +'-'+ facility.name for facility in facilities"
-                    ng-model = "selectedFacilityId" ng-required="true" ng-change = "loadProgramsForFacility()">
-              <option value = "">--choose facility--</option>
-            </select>
-            <span class = "field-error" ng-show = "viewRequisitionForm.selectFacility.$error.required && errorShown">Please
+<form name="viewRequisitionForm" id="viewRequisitionForm" ng-submit="loadRequisitions()" novalidate>
+  <div class="app-form view-req-form">
+    <div class="row-fluid">
+      <div class="span4">
+        <label>Facility name:</label>
+        <select name="selectFacility"
+                ng-options="facility.id as facility.code +'-'+ facility.name for facility in facilities"
+                ng-model="selectedFacilityId" ng-required="true" ng-change="loadProgramsForFacility()">
+          <option value="" ng-bind="facilityLabel"></option>
+        </select>
+            <span class="field-error" ng-show="viewRequisitionForm.selectFacility.$error.required && errorShown">Please
               fill this value</span>
-          </div>
-          <div class="span4">
-            <label>Program:</label>
-            <select name="selectProgram" ng-options = "program.id as program.name for program in programs"
-                    ng-model = "selectedProgramId">
-              <option value = "">All</option>
-            </select>
-            <span class = "field-error" ng-show = "viewRequisitionForm.selectProgram.$error.required && errorShown">Please
+      </div>
+      <div class="span4">
+        <label>Program:</label>
+        <select name="selectProgram" ng-options="program.id as program.name for program in programs"
+                ng-model="selectedProgramId">
+          <option ng-bind="programLabel"></option>
+        </select>
+            <span class="field-error" ng-show="viewRequisitionForm.selectProgram.$error.required && errorShown">Please
               fill this value</span>
-          </div>
-        </div>
-        <div class = "row-fluid">
-          <div class = "span4">
-            <label>Date range:</label>
-            <div class="row-fluid">
-              <div class="span6">
-                From:
-                <input name = "startDate" id = "startDate" type = "text"
-                       ui-date = "{dateFormat: 'dd/mm/yy', changeYear: true}" readonly ng-model = "startDate"
-                       ng-required = "true"/>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span4">
+        <label>Date range:</label>
 
-                <span class = "field-error"
-                      ng-show = "viewRequisitionForm.startDate.$error.required && errorShown">Please
-                  fill this value</span>
-              </div>
-              <div class="span6">
-                To: <span class = "label-required">*</span>
-                <input name = "endDate" id = "endDate" type = "text"
-                       ui-date = "{dateFormat: 'dd/mm/yy', changeYear: true}" readonly ng-model = "endDate"
-                       ng-required = "true"/>
-
-                <span class = "field-error" ng-show = "viewRequisitionForm.endDate.$error.required && errorShown">Please
-                  fill this value</span>
-              </div>
-            </div>
-          </div>
-        </div>
         <div class="row-fluid">
-          <div class="span12">
-            <input type = "submit" class = "btn btn-primary" value = "View Requisition(s)"/>
+          <div class="span6">
+            From:
+            <input name="startDate" id="startDate" type="text"
+                   ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}" readonly ng-model="startDate"
+                   ng-change="setEndDateOffset()" ng-required="true"/>
+
+                <span class="field-error"
+                      ng-show="viewRequisitionForm.startDate.$error.required && errorShown">Please
+                  fill this value</span>
+          </div>
+          <div class="span6">
+            To: <span class="label-required">*</span>
+            <input name="endDate" id="endDate" type="text"
+                   ui-date="{minDate:endDateOffset, dateFormat: 'dd/mm/yy', changeYear: true}" readonly
+                   ng-model="endDate"
+                   ng-required="true"/>
+
+                <span class="field-error" ng-show="viewRequisitionForm.endDate.$error.required && errorShown">Please
+                  fill this value</span>
           </div>
         </div>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span12">
+        <input type="submit" class="btn btn-primary" value="Search"/>
+      </div>
+    </div>
   </div>
 </form>
-<div class = "gridStyle" ng-grid = "rnrListGrid" ng-show="rnr.length"></div>
 <div ng-bind="requisitionFoundMessage"></div>
+<div ng-show="requisitions.length">
+  <div class="row-fluid">
+    <div class="span4 offset8 grid-filters">
+      <input id="searchRequisition" class="search-query" ng-change="filterRequisitions()" type="text"
+             ng-model="query" placeholder="Search by status..."/>
+    </div>
+  </div>
+  <div class="gridStyle" ng-grid="rnrListGrid" ng-show="requisitions.length"></div>
+</div>

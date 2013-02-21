@@ -34,7 +34,7 @@ public class RnrTemplateController extends BaseController{
     this.rnrTemplateService = rnrTemplateService;
   }
 
-  @RequestMapping(value = "/program/{programId}/rnr-template", method = RequestMethod.GET, headers = "Accept=application/json")
+  @RequestMapping(value = "/program/{programId}/rnr-template", method = RequestMethod.GET)
   public RnrTemplateForm fetchAllProgramRnrColumnList(@PathVariable("programId") Integer programId) {
     List<RnRColumnSource> sources = new ArrayList<>();
     sources.add(RnRColumnSource.USER_INPUT);
@@ -42,7 +42,7 @@ public class RnrTemplateController extends BaseController{
     return new RnrTemplateForm(rnrTemplateService.fetchAllRnRColumns(programId), sources);
   }
 
-  @RequestMapping(value = "/rnr/{programId}/columns", method = RequestMethod.GET, headers = "Accept=application/json")
+  @RequestMapping(value = "/rnr/{programId}/columns", method = RequestMethod.GET)
   @PreAuthorize("hasPermission('','CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION')")
   public List<RnrColumn> fetchColumnsForRequisition(@PathVariable("programId") Integer programId) {
     return rnrTemplateService.fetchColumnsForRequisition(programId);

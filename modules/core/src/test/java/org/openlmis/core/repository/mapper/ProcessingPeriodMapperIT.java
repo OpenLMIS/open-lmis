@@ -227,17 +227,21 @@ public class ProcessingPeriodMapperIT {
     ProcessingPeriod period1 = make(a(defaultProcessingPeriod, with(ProcessingPeriodBuilder.startDate, currentDate.toDate()), with(ProcessingPeriodBuilder.endDate, currentDate.plusMonths(1).toDate()), with(scheduleId, schedule.getId()), with(name, "Month1")));
     ProcessingPeriod period2 = make(a(defaultProcessingPeriod, with(ProcessingPeriodBuilder.startDate, currentDate.plusMonths(1).toDate()), with(ProcessingPeriodBuilder.endDate, currentDate.plusMonths(2).toDate()), with(scheduleId, schedule.getId()), with(name, "Month2")));
     ProcessingPeriod period3 = make(a(defaultProcessingPeriod, with(ProcessingPeriodBuilder.startDate, currentDate.plusMonths(2).toDate()), with(ProcessingPeriodBuilder.endDate, currentDate.plusMonths(3).toDate()),  with(scheduleId, schedule.getId()), with(name, "Month3")));
+    ProcessingPeriod period4 = make(a(defaultProcessingPeriod, with(ProcessingPeriodBuilder.startDate, currentDate.plusDays(2).toDate()), with(ProcessingPeriodBuilder.endDate, currentDate.plusMonths(1).toDate()),  with(scheduleId, schedule.getId()), with(name, "Month4")));
+    ProcessingPeriod period5 = make(a(defaultProcessingPeriod, with(ProcessingPeriodBuilder.startDate, currentDate.minusDays(2).toDate()), with(ProcessingPeriodBuilder.endDate, currentDate.plusMonths(3).toDate()),  with(scheduleId, schedule.getId()), with(name, "Month5")));
 
     mapper.insert(period1);
     mapper.insert(period2);
     mapper.insert(period3);
+    mapper.insert(period4);
+    mapper.insert(period5);
     DateTime searchStartDate = currentDate;
     DateTime searchEndDate = searchStartDate.plusDays(45);
     List<ProcessingPeriod> searchResults = mapper.getAllPeriodsForDateRange(schedule.getId(), searchStartDate.toDate(), searchEndDate.toDate());
     for (ProcessingPeriod period : searchResults) {
       period.setModifiedDate(null);
     }
-    assertThat(searchResults, is(Arrays.asList(period1, period2)));
+    assertThat(searchResults, is(Arrays.asList(period1, period2, period4, period5)));
   }
 
 

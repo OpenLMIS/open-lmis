@@ -275,7 +275,7 @@ public class RequisitionControllerTest {
   }
 
   @Test
-  public void shouldGetRequisitionsForViewWithGivenFacilityIdProgramIdAndPeriodRange() throws Exception {
+  public void shouldGetRequisitionsForViewWithGivenFacilityIdProgramIdAndPeriodRangeAndSetUserIdInSearchCriteria() throws Exception {
     Date dateRangeStart = new Date();
     Date dateRangeEnd = new Date();
     RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(1, 1, dateRangeStart, dateRangeEnd);
@@ -285,9 +285,10 @@ public class RequisitionControllerTest {
     List<RnrDTO> expectedRnrList = new ArrayList<>();
     when(RnrDTO.prepareForView(requisitionsReturnedByService)).thenReturn(expectedRnrList);
 
-    ResponseEntity<OpenLmisResponse> response = controller.getRequisitionsForView(criteria);
+    ResponseEntity<OpenLmisResponse> response = controller.getRequisitionsForView(criteria, request);
 
     verify(requisitionService).get(criteria);
+    assertThat(criteria.getUserId(), is(USER_ID));
     List<RnrDTO> actual = (List<RnrDTO>) response.getBody().getData().get(RNR_LIST);
     assertThat(actual, is(expectedRnrList));
   }
