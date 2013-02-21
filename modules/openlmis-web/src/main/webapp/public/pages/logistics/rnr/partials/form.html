@@ -1,8 +1,8 @@
 <div ng-controller="RequisitionFormController" xmlns="http://www.w3.org/1999/html">
   <div class="rnr-tabs">
     <ul class="clearfix">
-      <li ng-class="{'selected': !showNonFullSupply}" ><a ng-href="{{fullSupplyLink}}" id="fullSupplyTab">Full Supply</a></li>
-      <li ng-class="{'selected': showNonFullSupply}" ><a ng-href="{{nonFullSupplyLink}}" id="nonFullSupplyTab">Non Full Supply</a></li>
+      <li ng-class="{'selected': !showNonFullSupply}" ><a ng-href="{{fullSupplyLink}}" id="fullSupplyTab">Full Supply Product(s)</a></li>
+      <li ng-class="{'selected': showNonFullSupply}" ><a ng-href="{{nonFullSupplyLink}}" id="nonFullSupplyTab">Non Full Supply Product(s)</a></li>
     </ul>
   </div>
   <div ng-hide="programRnrColumnList">Loading...</div>
