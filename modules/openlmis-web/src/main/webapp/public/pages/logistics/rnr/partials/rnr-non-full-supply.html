@@ -71,7 +71,7 @@
   </div>
 
   <form name="nonFullSupplyForm">
-    <div id="nonFullSupplyProductsModal" modal="nonFullSupplyProductsModal" data-backdrop="static" data-keyboard="false">
+    <div id="nonFullSupplyProductsModal" modal="nonFullSupplyProductsModal">
       <div class="modal-header"><h3>Add Non-Full Supply Products</h3></div>
       <div class="modal-body">
           <span class="span3">
@@ -119,8 +119,7 @@
           </span>
 
           <span class="pull-left span1">
-            <input type="reset" data-dismiss="modal" class="btn btn-success save-button"
-                   value="Close"/>
+            <input type="reset" class="btn btn-success save-button" value="Close" ng-click="nonFullSupplyProductsModal=false" />
           </span>
       </div>
 
