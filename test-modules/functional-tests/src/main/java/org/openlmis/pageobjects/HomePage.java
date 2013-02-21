@@ -69,7 +69,7 @@ public class HomePage extends Page {
     @FindBy(how = How.LINK_TEXT, using = "Requisitions")
     private static WebElement requisitionsLink;
 
-    @FindBy(how = How.LINK_TEXT, using = "Create")
+    @FindBy(how = How.LINK_TEXT, using = "Create / Authorize")
     private static WebElement createLink;
 
     @FindBy(how = How.XPATH, using = "//input[@id='myFacilityRnr']")
