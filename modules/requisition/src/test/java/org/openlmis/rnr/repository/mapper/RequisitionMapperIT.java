@@ -275,10 +275,10 @@ public class RequisitionMapperIT {
   public void shouldCreateAnOrder() throws Exception {
     OrderBatch orderBatch = new OrderBatch();
     orderBatch.setOrderedBy(1);
-    mapper.createOrderBatch(orderBatch);
 
-    OrderBatch orderFromDatabase = mapper.getOrderBatchById(orderBatch.getId());
-    assertThat(orderFromDatabase.getOrderedBy(), is(1));
+    assertThat(orderBatch.getId(), is(nullValue()));
+    mapper.createOrderBatch(orderBatch);
+    assertThat(orderBatch.getId(), is(notNullValue()));
   }
 
   @Test

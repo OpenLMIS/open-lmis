@@ -14,6 +14,7 @@ import java.util.List;
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
 import static org.openlmis.rnr.domain.RnrStatus.IN_APPROVAL;
+import static org.openlmis.rnr.domain.RnrStatus.ORDERED;
 import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 
 @Data
@@ -21,7 +22,6 @@ import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = NON_NULL)
 public class Rnr {
-
   private Integer id;
   private Facility facility;
   private Program program;
@@ -42,7 +42,6 @@ public class Rnr {
   private Integer modifiedBy;
   private Date modifiedDate;
   private Date submittedDate;
-
 
   public Rnr(Integer facilityId, Integer programId, Integer periodId, Integer modifiedBy) {
     facility = new Facility();
@@ -219,6 +218,10 @@ public class Rnr {
       copyApproverEditableFields(otherRnr);
     else
       copyUserEditableFields(otherRnr, programRnrColumns);
+  }
+
+  public void releaseAsOrder() {
+    this.status = ORDERED;
   }
 }
 

@@ -193,7 +193,7 @@ public class RequisitionRepositoryTest {
     rnr.setOrderBatch(orderBatch);
     rnr.setStatus(RnrStatus.ORDERED);
 
-    requisitionRepository.updateOrderIdAndStatus(rnr);
+    requisitionRepository.updateOrderBatchIdAndStatus(rnr);
 
     verify(requisitionMapper).updateOrderIdAndStatus(rnr);
     when(requisitionMapper.getById(1)).thenReturn(rnr);
@@ -207,7 +207,7 @@ public class RequisitionRepositoryTest {
     OrderBatch orderBatch = new OrderBatch();
     orderBatch.setOrderedBy(1);
     when(requisitionMapper.getOrderBatchById(1)).thenReturn(orderBatch);
-    OrderBatch orderBatchReturned = requisitionRepository.getOrderById(1);
+    OrderBatch orderBatchReturned = requisitionRepository.getOrderBatchById(1);
     verify(requisitionMapper).getOrderBatchById(1);
     assertThat(orderBatchReturned,is(orderBatch));
   }

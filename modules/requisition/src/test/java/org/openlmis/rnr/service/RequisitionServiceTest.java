@@ -15,10 +15,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
 import org.openlmis.rnr.builder.RequisitionBuilder;
-import org.openlmis.rnr.domain.OrderBatch;
-import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrColumn;
-import org.openlmis.rnr.domain.RnrStatus;
+import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.factory.RequisitionFactory;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
@@ -881,19 +878,16 @@ public class RequisitionServiceTest {
   @Test
   public void shouldCreateOrderBatch() throws Exception {
     OrderBatch orderBatch = new OrderBatch();
-    orderBatch.setId(1);
     Rnr rnr = spy(new Rnr());
     List<Rnr> rnrList = Arrays.asList(rnr);
     orderBatch.setRnrList(rnrList);
 
-    when(requisitionRepository.getOrderById(1)).thenReturn(orderBatch);
-
     requisitionService.createOrderBatch(orderBatch);
 
-    assertThat(rnr.getOrderBatch().getId(), is(1));
-    assertThat(rnr.getStatus(), is(RnrStatus.ORDERED));
+    assertThat(rnr.getOrderBatch(), is(orderBatch));
+    verify(rnr).releaseAsOrder();
     verify(requisitionRepository).createOrderBatch(orderBatch);
-    verify(requisitionRepository).updateOrderIdAndStatus(rnr);
+    verify(requisitionRepository).updateOrderBatchIdAndStatus(rnr);
   }
 
   private RoleAssignment roleAssignmentWithSupervisoryNodeId(int supervisoryNodeId) {

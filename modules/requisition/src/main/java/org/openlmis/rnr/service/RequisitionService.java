@@ -17,7 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.BEGINNING_BALANCE;
@@ -331,14 +334,14 @@ public class RequisitionService {
     });
   }
 
+  @Transactional
   public void createOrderBatch(OrderBatch orderBatch) {
     requisitionRepository.createOrderBatch(orderBatch);
 
-    OrderBatch orderBatchReturned = requisitionRepository.getOrderById(orderBatch.getId());
     for (Rnr rnr : orderBatch.getRnrList()) {
-      rnr.setOrderBatch(orderBatchReturned);
-      rnr.setStatus(RnrStatus.ORDERED);
-      requisitionRepository.updateOrderIdAndStatus(rnr);
+      rnr.releaseAsOrder();
+      rnr.setOrderBatch(orderBatch);
+      requisitionRepository.updateOrderBatchIdAndStatus(rnr);
     }
   }
 

@@ -23,9 +23,7 @@ import static org.openlmis.rnr.builder.RequisitionBuilder.status;
 import static org.openlmis.rnr.builder.RnrColumnBuilder.columnName;
 import static org.openlmis.rnr.builder.RnrColumnBuilder.visible;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
-import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
-import static org.openlmis.rnr.domain.RnrStatus.IN_APPROVAL;
-import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
+import static org.openlmis.rnr.domain.RnrStatus.*;
 
 public class RnrTest {
   @Rule
@@ -233,6 +231,12 @@ public class RnrTest {
     rnr.setStatus(IN_APPROVAL);
     rnr.copyEditableFields(otherRnr, programRnrColumns);
     verify(rnr).copyApproverEditableFields(otherRnr);
+  }
+
+  @Test
+  public void shouldReleaseARequisitionAsAnOrder() throws Exception {
+    rnr.releaseAsOrder();
+    assertThat(rnr.getStatus(), is(ORDERED));
   }
 
   private ArrayList<RnrColumn> setupProgramTemplate() {

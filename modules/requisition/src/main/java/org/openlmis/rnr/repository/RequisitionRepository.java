@@ -111,10 +111,10 @@ public class RequisitionRepository {
     requisitionMapper.createOrderBatch(orderBatch);
   }
 
-  public void updateOrderIdAndStatus(Rnr rnr) {
+  public void updateOrderBatchIdAndStatus(Rnr rnr) {
     requisitionMapper.updateOrderIdAndStatus(rnr);
   }
-  public OrderBatch getOrderById(Integer id){
+  public OrderBatch getOrderBatchById(Integer id){
     return requisitionMapper.getOrderBatchById(id);
   }
 }
