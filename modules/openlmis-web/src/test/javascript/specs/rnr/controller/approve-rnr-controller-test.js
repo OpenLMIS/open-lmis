@@ -89,12 +89,12 @@ describe('Approve Requisition controller', function () {
     ];
     scope.rnr = {"id":"rnrId", 'lineItems':lineItems};
     scope.approveRnr();
-    expect(scope.error).toEqual("Please complete the highlighted fields on the R&R form before approving");
+    expect(scope.error).toEqual("Please complete the R&R form before approving");
     lineItems = [
       {'quantityApproved':null}
     ];
     scope.approveRnr();
-    expect(scope.error).toEqual("Please complete the highlighted fields on the R&R form before approving");
+    expect(scope.error).toEqual("Please complete the R&R form before approving");
 
   });
 
