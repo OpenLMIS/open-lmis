@@ -38,6 +38,24 @@ public class RnrDTO {
     return result;
   }
 
+  public static List<RnrDTO> prepareForView(List<Rnr> requisitions) {
+    List<RnrDTO>  result= new ArrayList<>();
+    for (Rnr requisition : requisitions) {
+      RnrDTO rnrDTO = populateDTOWithRequisition(requisition);
+      rnrDTO.status = requisition.getStatus().name();
+      result.add(rnrDTO);
+    }
+    return result;
+  }
+
+  private static RnrDTO prepareForListApproval(Rnr requisition) {
+    RnrDTO rnrDTO = populateDTOWithRequisition(requisition);
+    if(requisition.getSupplyingFacility() != null) {
+      rnrDTO.supplyingDepot = requisition.getSupplyingFacility().getName();
+    }
+    return rnrDTO;
+  }
+
   private static RnrDTO populateDTOWithRequisition(Rnr requisition) {
     RnrDTO rnrDTO = new RnrDTO();
     rnrDTO.id = requisition.getId();
@@ -51,23 +69,5 @@ public class RnrDTO {
     rnrDTO.periodStartDate = requisition.getPeriod().getStartDate();
     rnrDTO.periodEndDate = requisition.getPeriod().getEndDate();
     return rnrDTO;
-  }
-
-  private static RnrDTO prepareForListApproval(Rnr requisition) {
-    RnrDTO rnrDTO = populateDTOWithRequisition(requisition);
-    if(requisition.getSupplyingFacility() != null) {
-      rnrDTO.supplyingDepot = requisition.getSupplyingFacility().getName();
-    }
-    return rnrDTO;
-  }
-
-  public static List<RnrDTO> prepareForView(List<Rnr> requisitions) {
-    List<RnrDTO>  result= new ArrayList<>();
-    for (Rnr requisition : requisitions) {
-      RnrDTO rnrDTO = populateDTOWithRequisition(requisition);
-      rnrDTO.status = requisition.getStatus().name();
-      result.add(rnrDTO);
-    }
-    return result;
   }
 }
