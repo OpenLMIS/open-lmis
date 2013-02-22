@@ -77,8 +77,7 @@ describe('Approve Requisition controller', function () {
     var lineItems = [
       {'quantityApproved':'aaas'}
     ];
-    scope.lineItems = lineItems;
-    scope.requisition = {"id":"rnrId", 'lineItems':lineItems};
+    scope.rnr = {"id":"rnrId", 'lineItems':lineItems};
     scope.saveRnr();
     expect(scope.error).toEqual("Please correct errors before saving.");
   });

@@ -55,31 +55,31 @@ function ApproveRnrController($scope, RequisitionForApprovalById, Requisitions, 
 
   function lossesAndAdjustmentsTemplate() {
     return '<div id="lossesAndAdjustments" modal="lossesAndAdjustmentsModal[row.entity.id]">' +
-              '<div class="modal-header"><h3>Losses And Adjustments</h3></div>' +
-              '<div class="modal-body">' +
-                '<hr ng-show="row.entity.lossesAndAdjustments.length > 0"/>' +
-                '<div class="adjustment-list" ng-show="row.entity.lossesAndAdjustments.length > 0">' +
-                  '<ul>' +
-                    '<li ng-repeat="oneLossAndAdjustment in row.entity.lossesAndAdjustments" class="clearfix">' +
-                      '<span class="tpl-adjustment-type" ng-bind="oneLossAndAdjustment.type.description"></span>' +
-                      '<span class="tpl-adjustment-qty" ng-bind="oneLossAndAdjustment.quantity"></span>' +
-                    '</li>' +
-                  '</ul>' +
-                '</div>' +
-                '<div class="adjustment-total clearfix alert alert-warning" ng-show="row.entity.lossesAndAdjustments.length > 0">' +
-                  '<span class="pull-left">Total</span> ' +
-                  '<span ng-bind="row.entity.totalLossesAndAdjustments"></span>' +
-                '</div>' +
-              '</div>' +
-              '<div class="modal-footer">' +
-                '<input type="button" class="btn btn-success save-button" ng-click="closeLossesAndAdjustmentsForRnRLineItem(row.entity)" value="Close"/>' +
-              '</div>' +
-           '</div>' +
-           '<div ng-class="highlightNestedFieldsWithError(row.entity[column.name], \'quantity\')">' +
-              '<a ng-click="showLossesAndAdjustmentModalForLineItem(row.entity)" class="rnr-adjustment">' +
-               '<span class="adjustment-value" ng-bind="row.entity.totalLossesAndAdjustments"></span>' +
-              '</a>' +
-           '</div>';
+      '<div class="modal-header"><h3>Losses And Adjustments</h3></div>' +
+      '<div class="modal-body">' +
+      '<hr ng-show="row.entity.lossesAndAdjustments.length > 0"/>' +
+      '<div class="adjustment-list" ng-show="row.entity.lossesAndAdjustments.length > 0">' +
+      '<ul>' +
+      '<li ng-repeat="oneLossAndAdjustment in row.entity.lossesAndAdjustments" class="clearfix">' +
+      '<span class="tpl-adjustment-type" ng-bind="oneLossAndAdjustment.type.description"></span>' +
+      '<span class="tpl-adjustment-qty" ng-bind="oneLossAndAdjustment.quantity"></span>' +
+      '</li>' +
+      '</ul>' +
+      '</div>' +
+      '<div class="adjustment-total clearfix alert alert-warning" ng-show="row.entity.lossesAndAdjustments.length > 0">' +
+      '<span class="pull-left">Total</span> ' +
+      '<span ng-bind="row.entity.totalLossesAndAdjustments"></span>' +
+      '</div>' +
+      '</div>' +
+      '<div class="modal-footer">' +
+      '<input type="button" class="btn btn-success save-button" style="width: 75px" ng-click="closeLossesAndAdjustmentsForRnRLineItem(row.entity)" value="Close"/>' +
+      '</div>' +
+      '</div>' +
+      '<div ng-class="highlightNestedFieldsWithError(row.entity[column.name], \'quantity\')">' +
+      '<a ng-click="showLossesAndAdjustmentModalForLineItem(row.entity)" class="rnr-adjustment">' +
+      '<span class="adjustment-value" ng-bind="row.entity.totalLossesAndAdjustments"></span>' +
+      '</a>' +
+      '</div>';
   }
 
   function currencyTemplate(value) {
@@ -91,9 +91,9 @@ function ApproveRnrController($scope, RequisitionForApprovalById, Requisitions, 
   }
 
   function positiveIntegerCellTemplate(field, value) {
-    return '<div><ng-form name="positiveIntegerForm"  > <input ui-event="{blur : \'row.entity.updateCostWithApprovedQuantity()\'}" ng-class="{\'required-error\': approvedQuantityRequiredFlag && positiveIntegerForm.' + field + '.$error.required}" ' +
-      '  ng-required="true" maxlength="8"  name=' + field + ' ng-model=' + value + '  ng-change="validatePositiveInteger(positiveIntegerForm.' + field + '.$error,' + value + ')" />' +
-      '<span class="rnr-form-error" id=' + field + ' ng-show="positiveIntegerForm.' + field + '.$error.pattern" ng-class="{\'required-error\': approvedQuantityInvalidFlag && positiveIntegerForm.' + field + '.$error.positiveInteger}">Please Enter Numeric value</span></ng-form></div>';
+    return '<div><ng-form name="positiveIntegerForm"> <input ui-event="{blur : \'row.entity.updateCostWithApprovedQuantity()\'}" ng-class="{\'required-error\': approvedQuantityRequiredFlag && positiveIntegerForm.' + field + '.$error.required}" ' +
+      '  ng-required="true" maxlength="8"  name=' + field + ' ng-model=' + value + ' />' +
+      '<span class="rnr-form-error" id=' + field + ' ng-show="validatePositiveInteger(positiveIntegerForm.' + field + '.$error,' + value + ')" >Please Enter Numeric value</span></ng-form></div>';
   }
 
   function isPositiveNumber(value) {
@@ -150,26 +150,26 @@ function ApproveRnrController($scope, RequisitionForApprovalById, Requisitions, 
     }, {});
 
     $scope.$parent.fullSupplyGrid = { data:'rnr.lineItems',
-        canSelectRows:false,
-        displayFooter:false,
-        displaySelectionCheckbox:false,
-        showColumnMenu:false,
-        showFilter:false,
-        rowHeight:44,
-        enableSorting:false,
-        columnDefs:'columnDefinitions'
-      };
+      canSelectRows:false,
+      displayFooter:false,
+      displaySelectionCheckbox:false,
+      showColumnMenu:false,
+      showFilter:false,
+      rowHeight:44,
+      enableSorting:false,
+      columnDefs:'columnDefinitions'
+    };
 
-      $scope.$parent.nonFullSupplyGrid = { data:'rnr.nonFullSupplyLineItems',
-        canSelectRows:false,
-        displayFooter:false,
-        displaySelectionCheckbox:false,
-        showColumnMenu:false,
-        showFilter:false,
-        rowHeight:44,
-        enableSorting:false,
-        columnDefs:'columnDefinitions'
-      };
+    $scope.$parent.nonFullSupplyGrid = { data:'rnr.nonFullSupplyLineItems',
+      canSelectRows:false,
+      displayFooter:false,
+      displaySelectionCheckbox:false,
+      showColumnMenu:false,
+      showFilter:false,
+      rowHeight:44,
+      enableSorting:false,
+      columnDefs:'columnDefinitions'
+    };
 
   }
 
@@ -179,10 +179,16 @@ function ApproveRnrController($scope, RequisitionForApprovalById, Requisitions, 
 
   $scope.validatePositiveInteger = function (error, value) {
     if (value == undefined) {
-      error.positiveInteger = false;
-      return
+      error.pattern = false;
+      return false;
     }
-    error.pattern = !isPositiveNumber(value);
+    if (!isPositiveNumber(value)) {
+      error.pattern = true;
+      return true;
+    } else {
+      error.pattern = false;
+      return false;
+    }
   };
 
 
@@ -203,14 +209,26 @@ function ApproveRnrController($scope, RequisitionForApprovalById, Requisitions, 
     return rnr;
   }
 
-  $scope.saveRnr = function () {
-    $scope.approvedQuantityInvalidFlag = false;
-    $($scope.lineItems).each(function (i, lineItem) {
+  function validateForSave() {
+    var valid = true;
+    $($scope.rnr.lineItems).each(function (i, lineItem) {
       if (lineItem.quantityApproved != undefined && !isPositiveNumber(lineItem.quantityApproved)) {
-        $scope.approvedQuantityInvalidFlag = true;
+        valid = false;
         return false;
       }
     });
+    $($scope.rnr.nonFullSupplyLineItems).each(function (i, lineItem) {
+      if (lineItem.quantityApproved != undefined && !isPositiveNumber(lineItem.quantityApproved)) {
+        valid = false;
+        return false;
+      }
+    });
+    return valid;
+  }
+
+  $scope.saveRnr = function () {
+    $scope.approvedQuantityInvalidFlag = false;
+    $scope.approvedQuantityInvalidFlag = !validateForSave();
     if ($scope.approvedQuantityInvalidFlag) {
       $scope.error = "Please correct errors before saving.";
       $scope.message = "";
@@ -227,20 +245,26 @@ function ApproveRnrController($scope, RequisitionForApprovalById, Requisitions, 
       });
   };
 
-  $scope.approveRnr = function () {
-    $scope.approvedQuantityRequiredFlag = false;
+
+  function validateForApprove() {
+    var valid = true;
     $($scope.rnr.lineItems).each(function (i, lineItem) {
       if (lineItem.quantityApproved == undefined || !isPositiveNumber(lineItem.quantityApproved)) {
-        $scope.approvedQuantityRequiredFlag = true;
+        valid = false;
         return false;
       }
     });
     $($scope.rnr.nonFullSupplyLineItems).each(function (i, lineItem) {
       if (lineItem.quantityApproved == undefined || !isPositiveNumber(lineItem.quantityApproved)) {
-        $scope.approvedQuantityRequiredFlag = true;
+        valid = false;
         return false;
       }
     });
+    return valid;
+  }
+
+  $scope.approveRnr = function () {
+    $scope.approvedQuantityRequiredFlag = !validateForApprove();
     if ($scope.approvedQuantityRequiredFlag) {
       $scope.error = "Please complete the R&R form before approving";
       $scope.message = "";

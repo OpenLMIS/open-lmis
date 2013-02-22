@@ -51,7 +51,11 @@ var RnrLineItem = function (lineItem, rnr, programRnrColumnList) {
   };
 
   RnrLineItem.prototype.fillPacksToShipBasedOnApprovedQuantity = function () {
-    this.calculatePacksToShip(this.quantityApproved);
+    var quantityApproved = 0;
+
+    if(this.quantityApproved != undefined && this.quantityApproved>=0) quantityApproved = this.quantityApproved;
+
+    this.calculatePacksToShip(quantityApproved);
     this.fillCost();
   };
 

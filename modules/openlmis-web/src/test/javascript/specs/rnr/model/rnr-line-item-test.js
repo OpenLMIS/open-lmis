@@ -86,9 +86,9 @@ describe('RnrLineItem', function () {
     });
 
     it('should calculate stock in hand', function () {
-      var lineItem = {"beginningBalance":10, "quantityReceived":10, "quantityDispensed":10,"stockInHand":null};
+      var lineItem = {"beginningBalance":10, "quantityReceived":10, "quantityDispensed":10, "stockInHand":null};
       var rnrLineItem = new RnrLineItem(lineItem, rnr, programRnrColumnList);
-      rnrLineItem.totalLossesAndAdjustments=1;
+      rnrLineItem.totalLossesAndAdjustments = 1;
 
       rnrLineItem.calculateStockInHand();
 
@@ -459,11 +459,11 @@ describe('RnrLineItem', function () {
     it('should calculate fullSupplyItemsSubmittedCost', function () {
       var rnr = new Object();
 
-      var rnrLineItem1 = new RnrLineItem({"productCode" :"p1"}, rnr, null);
+      var rnrLineItem1 = new RnrLineItem({"productCode":"p1"}, rnr, null);
       rnrLineItem1.cost = 100;
-      var rnrLineItem2 = new RnrLineItem({"productCode" :"p2"}, rnr, null);
+      var rnrLineItem2 = new RnrLineItem({"productCode":"p2"}, rnr, null);
       rnrLineItem2.cost = 60;
-      var rnrLineItem3 = new RnrLineItem({"productCode" :"p3"}, rnr, null);
+      var rnrLineItem3 = new RnrLineItem({"productCode":"p3"}, rnr, null);
       rnrLineItem3.cost = 160;
       rnr.lineItems = new Array(rnrLineItem1, rnrLineItem2, rnrLineItem3);
       rnrLineItem1.calculateFullSupplyItemsSubmittedCost();
@@ -768,6 +768,18 @@ describe('RnrLineItem', function () {
       rnrLineItem.fillPacksToShipBasedOnApprovedQuantity();
 
       expect(rnrLineItem.calculatePacksToShip).toHaveBeenCalledWith(30);
+      expect(rnrLineItem.fillCost).toHaveBeenCalled();
+    });
+
+    it('should consider approved quantity as zero when negative or not defined', function () {
+      rnrLineItem.quantityApproved = -30;
+
+      spyOn(rnrLineItem, "calculatePacksToShip");
+      spyOn(rnrLineItem, "fillCost");
+
+      rnrLineItem.fillPacksToShipBasedOnApprovedQuantity();
+
+      expect(rnrLineItem.calculatePacksToShip).toHaveBeenCalledWith(0);
       expect(rnrLineItem.fillCost).toHaveBeenCalled();
     });
 
