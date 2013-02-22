@@ -16,4 +16,8 @@ public class OrderBatch {
   private Date orderedDate;
   private Integer orderedBy;
   private List<Rnr> rnrList;
+
+  public OrderBatch(Integer id) {
+    this.id = id;
+  }
 }

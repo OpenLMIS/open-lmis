@@ -297,7 +297,7 @@ public class RequisitionControllerTest {
   public void shouldCreateOrder() throws Exception {
     OrderBatch orderBatch = new OrderBatch();
     controller.createOrder(orderBatch, request);
-    verify(requisitionService).createOrder(orderBatch);
+    verify(requisitionService).createOrderBatch(orderBatch);
   }
 
   private Rnr createRequisition() {

@@ -37,6 +37,7 @@ public interface RequisitionMapper {
       @Result(property = "program.id", column = "programId"),
       @Result(property = "facility.id", column = "facilityId"),
       @Result(property = "period.id", column = "periodId"),
+      @Result(property = "orderBatch.id", column = "orderBatchId"),
       @Result(property = "supplyingFacility.id", column = "supplyingFacilityId"),
       @Result(property = "lineItems", javaType = List.class, column = "id",
           many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsByRnrId")),
@@ -111,6 +112,6 @@ public interface RequisitionMapper {
   @Select("SELECT * from order_batches WHERE id = #{id}")
   OrderBatch getOrderBatchById(Integer id);
 
-  @Update("UPDATE requisitions SET orderBatchId = #{orderBatchId}, status = #{status} WHERE id = #{id}")
+  @Update("UPDATE requisitions SET orderBatchId = #{orderBatch.id}, status = #{status} WHERE id = #{id}")
   void updateOrderIdAndStatus(Rnr requisition);
 }

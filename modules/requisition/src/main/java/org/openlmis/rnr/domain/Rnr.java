@@ -38,7 +38,7 @@ public class Rnr {
 
   private Facility supplyingFacility;
   private Integer supervisoryNodeId;
-  private Integer orderBatchId;
+  private OrderBatch orderBatch;
   private Integer modifiedBy;
   private Date modifiedDate;
   private Date submittedDate;

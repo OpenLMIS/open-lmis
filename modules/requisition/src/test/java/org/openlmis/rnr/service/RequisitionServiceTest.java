@@ -879,20 +879,20 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  public void shouldCreateOrder() throws Exception {
+  public void shouldCreateOrderBatch() throws Exception {
     OrderBatch orderBatch = new OrderBatch();
     orderBatch.setId(1);
-    Rnr rnr = new Rnr();
+    Rnr rnr = spy(new Rnr());
     List<Rnr> rnrList = Arrays.asList(rnr);
     orderBatch.setRnrList(rnrList);
 
     when(requisitionRepository.getOrderById(1)).thenReturn(orderBatch);
 
-    requisitionService.createOrder(orderBatch);
+    requisitionService.createOrderBatch(orderBatch);
 
-    assertThat(rnr.getOrderBatchId(), is(1));
+    assertThat(rnr.getOrderBatch().getId(), is(1));
     assertThat(rnr.getStatus(), is(RnrStatus.ORDERED));
-    verify(requisitionRepository).createOrder(orderBatch);
+    verify(requisitionRepository).createOrderBatch(orderBatch);
     verify(requisitionRepository).updateOrderIdAndStatus(rnr);
   }
 

@@ -103,7 +103,9 @@ public class RequisitionMapperIT {
     nonFullSupplyLineItem.setRnrId(requisition.getId());
     lineItemMapper.insert(fullSupplyLineItem);
     lineItemMapper.insert(nonFullSupplyLineItem);
+
     Rnr fetchedRequisition = mapper.getById(requisition.getId());
+
     assertThat(fetchedRequisition.getId(), is(requisition.getId()));
     assertThat(fetchedRequisition.getProgram().getId(), is(equalTo(PROGRAM_ID)));
     assertThat(fetchedRequisition.getFacility().getId(), is(equalTo(facility.getId())));
@@ -286,14 +288,13 @@ public class RequisitionMapperIT {
 
     mapper.createOrderBatch(orderBatch);
 
-    Integer orderId = orderBatch.getId();
-    requisition.setOrderBatchId(orderId);
+    requisition.setOrderBatch(orderBatch);
     requisition.setStatus(RnrStatus.ORDERED);
 
     mapper.updateOrderIdAndStatus(requisition);
 
     Rnr requisitionFromDatabase = mapper.getById(requisition.getId());
-    assertThat(requisitionFromDatabase.getOrderBatchId(), is(orderId));
+    assertThat(requisitionFromDatabase.getOrderBatch(), is(orderBatch));
     assertThat(requisitionFromDatabase.getStatus().toString().equals("ORDERED"), is(true));
   }
 
@@ -347,8 +348,8 @@ public class RequisitionMapperIT {
 
   private ProcessingPeriod insertPeriod(String name) {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod,
-      with(scheduleId, processingSchedule.getId()),
-      with(ProcessingPeriodBuilder.name, name)));
+        with(scheduleId, processingSchedule.getId()),
+        with(ProcessingPeriodBuilder.name, name)));
 
     processingPeriodMapper.insert(processingPeriod);
 

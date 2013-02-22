@@ -191,7 +191,7 @@ public class RequisitionController extends BaseController {
   public void createOrder(@RequestBody OrderBatch orderBatch, HttpServletRequest request) {
     orderBatch.setOrderedBy(loggedInUserId(request));
     orderBatch.setOrderedDate(new Date());
-    requisitionService.createOrder(orderBatch);
+    requisitionService.createOrderBatch(orderBatch);
   }
 
 }

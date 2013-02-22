@@ -181,7 +181,7 @@ public class RequisitionRepositoryTest {
   @Test
   public void shouldCreateOrder() throws Exception {
     OrderBatch orderBatch = new OrderBatch();
-    requisitionRepository.createOrder(orderBatch);
+    requisitionRepository.createOrderBatch(orderBatch);
     verify(requisitionMapper).createOrderBatch(orderBatch);
   }
 
@@ -189,7 +189,8 @@ public class RequisitionRepositoryTest {
   public void shouldUpdateOrderIdForARequisition() throws Exception {
     rnr.setId(1);
     requisitionRepository.insert(rnr);
-    rnr.setOrderBatchId(100);
+    OrderBatch orderBatch = new OrderBatch(100);
+    rnr.setOrderBatch(orderBatch);
     rnr.setStatus(RnrStatus.ORDERED);
 
     requisitionRepository.updateOrderIdAndStatus(rnr);
@@ -197,7 +198,7 @@ public class RequisitionRepositoryTest {
     verify(requisitionMapper).updateOrderIdAndStatus(rnr);
     when(requisitionMapper.getById(1)).thenReturn(rnr);
     Rnr rnrFromDatabase = requisitionMapper.getById(rnr.getId());
-    assertThat(rnrFromDatabase.getOrderBatchId(),is(100));
+    assertThat(rnrFromDatabase.getOrderBatch(),is(orderBatch));
     assertThat(rnrFromDatabase.getStatus().equals(RnrStatus.ORDERED),is(true));
   }
 

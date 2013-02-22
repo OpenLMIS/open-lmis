@@ -331,12 +331,12 @@ public class RequisitionService {
     });
   }
 
-  public void createOrder(OrderBatch orderBatch) {
-    requisitionRepository.createOrder(orderBatch);
+  public void createOrderBatch(OrderBatch orderBatch) {
+    requisitionRepository.createOrderBatch(orderBatch);
 
-    OrderBatch orderReturned = requisitionRepository.getOrderById(orderBatch.getId());
+    OrderBatch orderBatchReturned = requisitionRepository.getOrderById(orderBatch.getId());
     for (Rnr rnr : orderBatch.getRnrList()) {
-      rnr.setOrderBatchId(orderReturned.getId());
+      rnr.setOrderBatch(orderBatchReturned);
       rnr.setStatus(RnrStatus.ORDERED);
       requisitionRepository.updateOrderIdAndStatus(rnr);
     }
