@@ -178,8 +178,8 @@ services.factory('Messages', function ($resource) {
 services.factory('SupervisoryNodes', function ($resource) {
   return $resource('/supervisory-nodes.json', {}, {});
 });
-services.factory('Order', function ($resource) {
-  return $resource('/order.json', {}, {});
+services.factory('RequisitionOrder', function ($resource) {
+  return $resource('/requisitionOrder.json', {}, {});
 });
 
 

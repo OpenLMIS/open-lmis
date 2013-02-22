@@ -6,6 +6,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
@@ -876,18 +877,39 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  public void shouldCreateOrderBatch() throws Exception {
-    OrderBatch orderBatch = new OrderBatch();
-    Rnr rnr = spy(new Rnr());
-    List<Rnr> rnrList = Arrays.asList(rnr);
-    orderBatch.setRnrList(rnrList);
+  public void shouldCreateOrderBatchesBasedOnSupplyingFacilitiesOfRequisitions() throws Exception {
+    Facility facility1 = new Facility(1);
+    Facility facility2 = new Facility(2);
 
-    requisitionService.createOrderBatch(orderBatch);
+    Rnr rnr1 = new Rnr();
+    rnr1.setSupplyingFacility(facility1);
 
-    assertThat(rnr.getOrderBatch(), is(orderBatch));
-    verify(rnr).releaseAsOrder();
-    verify(requisitionRepository).createOrderBatch(orderBatch);
-    verify(requisitionRepository).updateOrderBatchIdAndStatus(rnr);
+    Rnr rnr2 = new Rnr();
+    rnr2.setSupplyingFacility(facility2);
+
+    Rnr rnr3 = new Rnr();
+    rnr3.setSupplyingFacility(facility1);
+
+    List<Rnr> rnrList = Arrays.asList(rnr1, rnr2, rnr3);
+
+    OrderBatch orderBatch1 = new OrderBatch(facility1, 1);
+    OrderBatch orderBatch2 = new OrderBatch(facility2, 1);
+
+    requisitionService.releaseRequisitionsAsOrder(rnrList, 1);
+
+    verify(requisitionRepository).createOrderBatch(orderBatch1);
+    verify(requisitionRepository).createOrderBatch(orderBatch2);
+
+    ArgumentCaptor<Order> orderArgumentCaptor = ArgumentCaptor.forClass(Order.class);
+    verify(requisitionRepository, times(3)).saveOrder(orderArgumentCaptor.capture());
+
+    List<Order> orderList = orderArgumentCaptor.getAllValues();
+    assertThat(orderList.get(0).getRequisition(), is(rnr1));
+    assertThat(orderList.get(0).getOrderBatch(), is(orderBatch1));
+    assertThat(orderList.get(1).getRequisition(), is(rnr2));
+    assertThat(orderList.get(1).getOrderBatch(), is(orderBatch2));
+    assertThat(orderList.get(2).getRequisition(), is(rnr3));
+    assertThat(orderList.get(2).getOrderBatch(), is(orderBatch1));
   }
 
   private RoleAssignment roleAssignmentWithSupervisoryNodeId(int supervisoryNodeId) {

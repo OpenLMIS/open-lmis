@@ -7,7 +7,10 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.core.repository.helper.CommaSeparator;
@@ -179,27 +182,17 @@ public class RequisitionRepositoryTest {
   }
 
   @Test
-  public void shouldCreateOrder() throws Exception {
+  public void shouldCreateOrderBatch() throws Exception {
     OrderBatch orderBatch = new OrderBatch();
     requisitionRepository.createOrderBatch(orderBatch);
     verify(requisitionMapper).createOrderBatch(orderBatch);
   }
 
   @Test
-  public void shouldUpdateOrderIdForARequisition() throws Exception {
-    rnr.setId(1);
-    requisitionRepository.insert(rnr);
-    OrderBatch orderBatch = new OrderBatch(100);
-    rnr.setOrderBatch(orderBatch);
-    rnr.setStatus(RnrStatus.ORDERED);
-
-    requisitionRepository.updateOrderBatchIdAndStatus(rnr);
-
-    verify(requisitionMapper).updateOrderIdAndStatus(rnr);
-    when(requisitionMapper.getById(1)).thenReturn(rnr);
-    Rnr rnrFromDatabase = requisitionMapper.getById(rnr.getId());
-    assertThat(rnrFromDatabase.getOrderBatch(),is(orderBatch));
-    assertThat(rnrFromDatabase.getStatus().equals(RnrStatus.ORDERED),is(true));
+  public void shouldUpdateOrderBatchIdForARequisitionDuringSaveOrder() throws Exception {
+    Order order = new Order(rnr);
+    requisitionRepository.saveOrder(order);
+    verify(requisitionMapper).updateOrderForRequisition(order);
   }
 
   @Test

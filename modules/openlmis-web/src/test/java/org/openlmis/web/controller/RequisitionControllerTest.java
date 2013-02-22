@@ -12,10 +12,9 @@ import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
-import org.openlmis.rnr.domain.OrderBatch;
-import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RnrDTO;
+import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -295,9 +294,11 @@ public class RequisitionControllerTest {
 
   @Test
   public void shouldCreateOrder() throws Exception {
-    OrderBatch orderBatch = new OrderBatch();
-    controller.createOrder(orderBatch, request);
-    verify(requisitionService).createOrderBatch(orderBatch);
+    List<Rnr> rnrList = Arrays.asList(new Rnr());
+
+    controller.releaseAsOrder(rnrList, request);
+
+    verify(requisitionService).releaseRequisitionsAsOrder(rnrList, USER_ID);
   }
 
   private Rnr createRequisition() {

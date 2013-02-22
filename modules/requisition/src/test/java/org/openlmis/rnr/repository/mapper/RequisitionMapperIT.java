@@ -8,10 +8,7 @@ import org.openlmis.core.builder.*;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.mapper.*;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
-import org.openlmis.rnr.domain.OrderBatch;
-import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrLineItem;
-import org.openlmis.rnr.domain.RnrStatus;
+import org.openlmis.rnr.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -285,17 +282,16 @@ public class RequisitionMapperIT {
   public void shouldUpdateOrderIdAndStatusForARequisition() throws Exception {
     Rnr requisition = insertRequisition(processingPeriod1, APPROVED);
     OrderBatch orderBatch = new OrderBatch();
-
     mapper.createOrderBatch(orderBatch);
 
-    requisition.setOrderBatch(orderBatch);
-    requisition.setStatus(RnrStatus.ORDERED);
+    requisition.setStatus(ORDERED);
+    Order order = new Order(requisition, orderBatch);
 
-    mapper.updateOrderIdAndStatus(requisition);
+    mapper.updateOrderForRequisition(order);
 
     Rnr requisitionFromDatabase = mapper.getById(requisition.getId());
-    assertThat(requisitionFromDatabase.getOrderBatch(), is(orderBatch));
-    assertThat(requisitionFromDatabase.getStatus().toString().equals("ORDERED"), is(true));
+    assertThat(requisitionFromDatabase.getOrder().getOrderBatch().getId(), is(orderBatch.getId()));
+    assertThat(requisitionFromDatabase.getStatus(), is(ORDERED));
   }
 
   @Test

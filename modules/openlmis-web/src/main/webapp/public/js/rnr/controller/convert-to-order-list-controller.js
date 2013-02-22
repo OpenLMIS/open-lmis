@@ -1,4 +1,4 @@
-function ConvertToOrderListController($scope, requisitionList, Order, RequisitionForConvertToOrder) {
+function ConvertToOrderListController($scope, requisitionList, RequisitionOrder, RequisitionForConvertToOrder) {
   $scope.requisitions = requisitionList;
   $scope.filteredRequisitions = $scope.requisitions;
   $scope.selectedItems = [];
@@ -37,7 +37,7 @@ function ConvertToOrderListController($scope, requisitionList, Order, Requisitio
 
   $scope.convertToOrder = function () {
     var successHandler = function () {
-      RequisitionForConvertToOrder.get({}, function(data) {
+      RequisitionForConvertToOrder.get({}, function (data) {
         $scope.requisitions = data.rnr_list;
         $scope.filterRequisitions();
       });
@@ -50,8 +50,7 @@ function ConvertToOrderListController($scope, requisitionList, Order, Requisitio
       $scope.error = "Error Occurred";
     };
 
-    $scope.order={"rnrList":$scope.gridOptions.selectedItems};
-    Order.save({}, $scope.order, successHandler, errorHandler);
+    RequistionOrder.save({}, $scope.gridOptions.selectedItems, successHandler, errorHandler);
   };
 
   function contains(string, query) {

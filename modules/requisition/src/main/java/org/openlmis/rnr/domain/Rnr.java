@@ -13,9 +13,7 @@ import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
-import static org.openlmis.rnr.domain.RnrStatus.IN_APPROVAL;
-import static org.openlmis.rnr.domain.RnrStatus.ORDERED;
-import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
+import static org.openlmis.rnr.domain.RnrStatus.*;
 
 @Data
 @NoArgsConstructor
@@ -29,6 +27,7 @@ public class Rnr {
   private RnrStatus status;
   private Money fullSupplyItemsSubmittedCost = new Money("0");
   private Money nonFullSupplyItemsSubmittedCost = new Money("0");
+  private Order order;
 
   /**
    * TODO: rename lineItems to fullSupplyLineItems
@@ -38,7 +37,6 @@ public class Rnr {
 
   private Facility supplyingFacility;
   private Integer supervisoryNodeId;
-  private OrderBatch orderBatch;
   private Integer modifiedBy;
   private Date modifiedDate;
   private Date submittedDate;
@@ -220,8 +218,9 @@ public class Rnr {
       copyUserEditableFields(otherRnr, programRnrColumns);
   }
 
-  public void releaseAsOrder() {
+  public Order releaseAsOrder() {
     this.status = ORDERED;
+    return new Order(this);
   }
 }
 

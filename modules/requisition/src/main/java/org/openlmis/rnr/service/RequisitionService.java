@@ -17,10 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.BEGINNING_BALANCE;
@@ -335,13 +332,18 @@ public class RequisitionService {
   }
 
   @Transactional
-  public void createOrderBatch(OrderBatch orderBatch) {
-    requisitionRepository.createOrderBatch(orderBatch);
+  public void releaseRequisitionsAsOrder(List<Rnr> requisitions, Integer userId) {
+    Map<Integer, OrderBatch> orderBatchBySupplyingFacility = new HashMap<>();
+    for (Rnr requisition : requisitions) {
+      OrderBatch orderBatch = orderBatchBySupplyingFacility.get(requisition.getSupplyingFacility().getId());
+      if (orderBatch == null) {
+        orderBatch = createOrderBatch(requisition, userId);
+        orderBatchBySupplyingFacility.put(requisition.getSupplyingFacility().getId(), orderBatch);
+      }
 
-    for (Rnr rnr : orderBatch.getRnrList()) {
-      rnr.releaseAsOrder();
-      rnr.setOrderBatch(orderBatch);
-      requisitionRepository.updateOrderBatchIdAndStatus(rnr);
+      Order order = requisition.releaseAsOrder();
+      order.setOrderBatch(orderBatch);
+      requisitionRepository.saveOrder(order);
     }
   }
 
@@ -350,6 +352,12 @@ public class RequisitionService {
     List<Rnr> requisitions = strategy.search(criteria);
     fillFacilityPeriodProgram(requisitions.toArray(new Rnr[requisitions.size()]));
     return requisitions;
+  }
+
+  private OrderBatch createOrderBatch(Rnr requisition, Integer userId) {
+    OrderBatch orderBatch = new OrderBatch(requisition.getSupplyingFacility(), userId);
+    requisitionRepository.createOrderBatch(orderBatch);
+    return orderBatch;
   }
 }
 

@@ -6,7 +6,6 @@ import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
-import org.openlmis.rnr.domain.OrderBatch;
 import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RnrDTO;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -186,12 +184,10 @@ public class RequisitionController extends BaseController {
     return response(RNR_LIST, RnrDTO.prepareForView(requisitionService.get(criteria)));
   }
 
-  @RequestMapping(value = "/order", method = POST, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/requisitionOrder", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("hasPermission('','CONVERT_TO_ORDER')")
-  public void createOrder(@RequestBody OrderBatch orderBatch, HttpServletRequest request) {
-    orderBatch.setOrderedBy(loggedInUserId(request));
-    orderBatch.setOrderedDate(new Date());
-    requisitionService.createOrderBatch(orderBatch);
+  public void releaseAsOrder(@RequestBody List<Rnr> rnrList, HttpServletRequest request) {
+    requisitionService.releaseRequisitionsAsOrder(rnrList, loggedInUserId(request));
   }
 
 }
