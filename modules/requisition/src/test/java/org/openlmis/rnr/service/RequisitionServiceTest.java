@@ -882,18 +882,25 @@ public class RequisitionServiceTest {
     Facility facility2 = new Facility(2);
 
     Rnr rnr1 = new Rnr();
+    rnr1.setId(10);
     rnr1.setSupplyingFacility(facility1);
 
     Rnr rnr2 = new Rnr();
+    rnr2.setId(20);
     rnr2.setSupplyingFacility(facility2);
 
     Rnr rnr3 = new Rnr();
+    rnr3.setId(30);
     rnr3.setSupplyingFacility(facility1);
 
     List<Rnr> rnrList = Arrays.asList(rnr1, rnr2, rnr3);
 
     OrderBatch orderBatch1 = new OrderBatch(facility1, 1);
     OrderBatch orderBatch2 = new OrderBatch(facility2, 1);
+
+    when(requisitionRepository.getById(rnr1.getId())).thenReturn(rnr1);
+    when(requisitionRepository.getById(rnr2.getId())).thenReturn(rnr2);
+    when(requisitionRepository.getById(rnr3.getId())).thenReturn(rnr3);
 
     requisitionService.releaseRequisitionsAsOrder(rnrList, 1);
 

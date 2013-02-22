@@ -335,13 +335,14 @@ public class RequisitionService {
   public void releaseRequisitionsAsOrder(List<Rnr> requisitions, Integer userId) {
     Map<Integer, OrderBatch> orderBatchBySupplyingFacility = new HashMap<>();
     for (Rnr requisition : requisitions) {
-      OrderBatch orderBatch = orderBatchBySupplyingFacility.get(requisition.getSupplyingFacility().getId());
+      Rnr loadedRequisition = requisitionRepository.getById(requisition.getId());
+      OrderBatch orderBatch = orderBatchBySupplyingFacility.get(loadedRequisition.getSupplyingFacility().getId());
       if (orderBatch == null) {
-        orderBatch = createOrderBatch(requisition, userId);
-        orderBatchBySupplyingFacility.put(requisition.getSupplyingFacility().getId(), orderBatch);
+        orderBatch = createOrderBatch(loadedRequisition, userId);
+        orderBatchBySupplyingFacility.put(loadedRequisition.getSupplyingFacility().getId(), orderBatch);
       }
 
-      Order order = requisition.releaseAsOrder();
+      Order order = loadedRequisition.releaseAsOrder();
       order.setOrderBatch(orderBatch);
       requisitionRepository.saveOrder(order);
     }
