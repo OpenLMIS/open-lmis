@@ -46,7 +46,6 @@ function ViewRnrController($scope, facilities, RequisitionsForViewing, UserSuppo
       return contains(rnr.status, query);
     });
 
-    $scope.resultCount = $scope.filteredRequisitions.length;
   };
 
   function contains(string, query) {
