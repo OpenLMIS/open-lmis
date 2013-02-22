@@ -136,6 +136,7 @@ public class ApprovePage extends Page {
     testWebDriver.waitForElementToAppear(fullSupplyTab);
     testWebDriver.waitForElementToAppear(nonFullSupplyTab);
     testWebDriver.waitForElementToAppear(quantityApproved);
+    testWebDriver.sleep(1500);
     testWebDriver.waitForElementToAppear(calculateOrderQuantity);
     String actualCalculatedOrderQuantity = calculateOrderQuantity.getText();
     String actualApproveQuantity = testWebDriver.getAttribute(quantityApproved, "value");
