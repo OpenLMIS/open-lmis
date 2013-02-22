@@ -6,7 +6,7 @@
         <label style="padding-top: 10" for="model">Upload type:</label>
 
         <select name="model" id="model" ng-model="model"
-                ng-options="k as v.displayName for (k,v) in supportedUploads" required>
+                ng-options="k as v.displayName for (k,v) in supportedUploads" >
           <option value="">-- Select --</option>
                 </select>
         <br/>
