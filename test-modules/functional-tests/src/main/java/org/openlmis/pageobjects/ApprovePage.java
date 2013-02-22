@@ -136,6 +136,7 @@ public class ApprovePage extends Page {
     testWebDriver.waitForElementToAppear(fullSupplyTab);
     testWebDriver.waitForElementToAppear(nonFullSupplyTab);
     testWebDriver.waitForElementToAppear(quantityApproved);
+    testWebDriver.waitForElementToAppear(calculateOrderQuantity);
     String actualCalculatedOrderQuantity = calculateOrderQuantity.getText();
     String actualApproveQuantity = testWebDriver.getAttribute(quantityApproved, "value");
     SeleneseTestNgHelper.assertEquals(actualApproveQuantity, actualCalculatedOrderQuantity);
