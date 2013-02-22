@@ -2,16 +2,26 @@
 <div class="rnr-tabs">
   <ul class="clearfix">
     <li ng-class="{'selected': !showNonFullSupply}">
-      <a ng-href="{{fullSupplyLink}}" id="fullSupplyTab">Full Supply</a></li>
+      <a ng-href="{{fullSupplyLink}}" id="fullSupplyTab">Full Supply Product(s)</a></li>
     <li ng-class="{'selected': showNonFullSupply}">
-      <a ng-href="{{nonFullSupplyLink}}" id="nonFullSupplyTab">Non Full Supply</a></li>
+      <a ng-href="{{nonFullSupplyLink}}" id="nonFullSupplyTab">Non Full Supply Product(s)</a></li>
   </ul>
 </div>
-<form name="approvalForm"  novalidate>
-    <div class="approveGrid grid-approval" ng-grid="nonFullSupplyGrid" ui-if="showNonFullSupply" ></div>
-    <div class="approveGrid grid-approval" ng-grid="fullSupplyGrid" ui-if="!showNonFullSupply"></div>
+<form name="approvalForm" novalidate>
+  <div ui-if="showNonFullSupply">
+    <div class="approveGrid grid-approval" ng-grid="nonFullSupplyGrid" ng-show="rnr.nonFullSupplyLineItems.length>0"></div>
+    <div class="alert alert-success" id="noNonFullSupplyProductsMessage" ng-hide="rnr.nonFullSupplyLineItems.length>0">
+      No products to approve.
+    </div>
+  </div>
+  <div ui-if="!showNonFullSupply">
+    <div class="approveGrid grid-approval" ng-grid="fullSupplyGrid" ng-show="rnr.lineItems.length>0"></div>
+    <div class="alert alert-success" id="noFullSupplyProductsMessage" ng-hide="rnr.lineItems.length>0">
+      No products to approve.
+    </div>
+  </div>
 
- <br><br>
+  <br><br>
 
   <div form-toolbar id="action_buttons" class="action-buttons">
     <div class="total-cost-container">
