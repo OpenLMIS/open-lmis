@@ -39,8 +39,7 @@
             <label for="endDate" >To<span class="label-required">*</span>: </label>
             <input name="endDate" id="endDate" type="text"
                    ui-date="{minDate:endDateOffset, dateFormat: 'dd/mm/yy', changeYear: true}" readonly
-                   ng-model="endDate"
-                   ng-required="true"/>
+                   ng-model="endDate" ng-required="true" ng-disabled="!startDate"/>
 
                 <span class="field-error" ng-show="viewRequisitionForm.endDate.$error.required && errorShown">Please
                   select this value</span>

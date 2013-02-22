@@ -105,13 +105,12 @@ public class FacilityService {
   public List<Facility> getForUserAndRights(Integer userId, Right... rights) {
     List<SupervisoryNode> supervisoryNodesInHierarchy = supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(userId, rights);
     List<RequisitionGroup> requisitionGroups = requisitionGroupService.getRequisitionGroupsBy(supervisoryNodesInHierarchy);
-    final List<Facility> supervisedFacilities = facilityRepository.getAllInRequisitionGroups(requisitionGroups);
+    final Set<Facility> userFacilities = new HashSet<>(facilityRepository.getAllInRequisitionGroups(requisitionGroups));
     final Facility homeFacility = facilityRepository.getHomeFacilityForRights(userId, rights);
 
-    return new ArrayList<>(new HashSet<Facility>() {{
-      addAll(supervisedFacilities);
-      add(homeFacility);
-    }});
+    if(homeFacility!=null) userFacilities.add(homeFacility);
+
+    return new ArrayList<>(userFacilities);
 
   }
 }

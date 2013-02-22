@@ -257,6 +257,32 @@ public class FacilityServiceTest {
     verify(facilityRepository).getAllInRequisitionGroups(requisitionGroups);
   }
 
+  @Test
+  public void shouldNotGetHomeFacilityWhenItIsNull() throws Exception {
+    //Arrange
+    Right[] rights = {Right.VIEW_REQUISITION, Right.APPROVE_REQUISITION};
+    Facility supervisedFacility = new Facility();
+    List<Facility> supervisedFacilities = new ArrayList<>();
+    supervisedFacilities.add(supervisedFacility);
+    List<SupervisoryNode> supervisoryNodes = new ArrayList<>();
+    List<RequisitionGroup> requisitionGroups = new ArrayList<>();
+    when(facilityRepository.getHomeFacilityForRights(1, rights)).thenReturn(null);
+    when(supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(1, rights)).thenReturn(supervisoryNodes);
+    when(requisitionGroupService.getRequisitionGroupsBy(supervisoryNodes)).thenReturn(requisitionGroups);
+    when(facilityRepository.getAllInRequisitionGroups(requisitionGroups)).thenReturn(supervisedFacilities);
+
+    //Act
+    List<Facility> actualFacilities = facilityService.getForUserAndRights(1, rights);
+
+    //Assert
+    assertThat(actualFacilities, is(supervisedFacilities));
+    assertThat(actualFacilities.size(), is(1));
+    verify(facilityRepository).getHomeFacilityForRights(1, rights);
+    verify(supervisoryNodeService).getAllSupervisoryNodesInHierarchyBy(1, rights);
+    verify(requisitionGroupService).getRequisitionGroupsBy(supervisoryNodes);
+    verify(facilityRepository).getAllInRequisitionGroups(requisitionGroups);
+  }
+
   private ProgramSupported createSupportedProgram(String facilityCode, String programCode, boolean active, Date startDate) {
     ProgramSupported programSupported = new ProgramSupported();
     programSupported.setFacilityCode(facilityCode);

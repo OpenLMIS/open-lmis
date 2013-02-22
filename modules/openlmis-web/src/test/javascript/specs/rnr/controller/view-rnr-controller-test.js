@@ -115,6 +115,19 @@ describe('ViewRnrController', function () {
     expect(scope.endDateOffset).toBeGreaterThan(0);
   });
 
+
+  it('', function() {
+    scope.startDate = new Date();
+
+    scope.endDate = new Date(scope.startDate);
+    scope.endDate.setDate(scope.startDate.getDate() - 1);
+
+    scope.setEndDateOffset();
+
+    expect(scope.endDateOffset).toBeGreaterThan(0);
+    expect(scope.endDate).toBeUndefined();
+  });
+
   it('should create grid with filtered requisitions', function () {
     expect('filteredRequisitions').toEqual(scope.rnrListGrid.data);
   });

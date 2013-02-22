@@ -71,6 +71,10 @@ function ViewRnrController($scope, facilities, RequisitionsForViewing, UserSuppo
     })
   };
   $scope.setEndDateOffset = function () {
+    if($scope.endDate < $scope.startDate )
+    {
+      $scope.endDate = undefined;
+    }
     $scope.endDateOffset = Math.ceil(($scope.startDate.getTime() + oneDay - Date.now()) / oneDay);
   };
 }
