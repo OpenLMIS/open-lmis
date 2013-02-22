@@ -6,10 +6,11 @@ import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
-import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RnrDTO;
+import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
+import org.openlmis.web.form.RnrList;
 import org.openlmis.web.model.RnrReferenceData;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -186,8 +187,8 @@ public class RequisitionController extends BaseController {
 
   @RequestMapping(value = "/requisitionOrder", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("hasPermission('','CONVERT_TO_ORDER')")
-  public void releaseAsOrder(@RequestBody List<Rnr> rnrList, HttpServletRequest request) {
-    requisitionService.releaseRequisitionsAsOrder(rnrList, loggedInUserId(request));
+  public void releaseAsOrder(@RequestBody RnrList rnrList, HttpServletRequest request) {
+    requisitionService.releaseRequisitionsAsOrder(rnrList.getRnrList(), loggedInUserId(request));
   }
 
 }

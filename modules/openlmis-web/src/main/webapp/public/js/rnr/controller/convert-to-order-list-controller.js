@@ -50,7 +50,8 @@ function ConvertToOrderListController($scope, requisitionList, RequisitionOrder,
       $scope.error = "Error Occurred";
     };
 
-    RequistionOrder.save({}, $scope.gridOptions.selectedItems, successHandler, errorHandler);
+    var rnrList = {"rnrList":$scope.gridOptions.selectedItems};
+    RequisitionOrder.save({}, rnrList, successHandler, errorHandler);
   };
 
   function contains(string, query) {
