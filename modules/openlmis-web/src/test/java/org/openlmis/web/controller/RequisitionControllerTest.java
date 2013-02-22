@@ -16,6 +16,7 @@ import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
+import org.openlmis.web.form.RnrList;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -293,12 +294,13 @@ public class RequisitionControllerTest {
   }
 
   @Test
-  public void shouldCreateOrder() throws Exception {
-    List<Rnr> rnrList = Arrays.asList(new Rnr());
+  public void shouldReleaseRequisitionsAsOrder() throws Exception {
+    RnrList rnrList = new RnrList();
+    rnrList.setRnrList(Arrays.asList(new Rnr()));
 
     controller.releaseAsOrder(rnrList, request);
 
-    verify(requisitionService).releaseRequisitionsAsOrder(rnrList, USER_ID);
+    verify(requisitionService).releaseRequisitionsAsOrder(rnrList.getRnrList(), USER_ID);
   }
 
   private Rnr createRequisition() {

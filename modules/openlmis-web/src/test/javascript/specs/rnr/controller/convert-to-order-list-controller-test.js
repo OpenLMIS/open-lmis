@@ -83,7 +83,7 @@ describe('ConvertToOrderListController', function () {
 
   it("should convert the selected requisitions to order", function () {
     scope.gridOptions.selectedItems = [requisitionList[0]];
-    httpBackend.expectPOST('/order.json', {"rnrList":scope.gridOptions.selectedItems}).respond(200, {"success":"Created successfully"});
+    httpBackend.expectPOST('/requisitionOrder.json', {"rnrList":scope.gridOptions.selectedItems}).respond(200, {"success":"Created successfully"});
     httpBackend.expectGET('/requisitions-for-convert-to-order.json').respond({"rnr_list":[requisitionList[1]]});
 
     scope.convertToOrder();
