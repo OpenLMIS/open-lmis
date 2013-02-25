@@ -2,9 +2,8 @@ function RequisitionFullSupplyController($scope, $routeParams, $location, Losses
   $scope.lossesAndAdjustmentsModal = [];
   $scope.pageSize = 2;
   $scope.currentPage = $routeParams.page ? parseInt($routeParams.page): 1;
-  groupToPages();
 
-  $scope.$watch("currentPage", function (newVal, oldVal) {
+  $scope.$watch("currentPage", function () {
     $scope.$parent.saveRnr();
     $location.url( $location.path()+ "?page=" + $scope.currentPage);
   });
