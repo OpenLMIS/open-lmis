@@ -8,7 +8,7 @@ function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $r
   $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) : 1;
   groupToPages();
 
-  $scope.$watch("currentPage", function () {
+  $scope.$watch("currentPage", function (newVal, oldVal) {
     $scope.$parent.saveRnr();
     $location.url($location.path() + "?showNonFullSupply=true&page=" + $scope.currentPage);
   });
