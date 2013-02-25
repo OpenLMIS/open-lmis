@@ -1,8 +1,10 @@
 <div ng-controller="RequisitionFormController" xmlns="http://www.w3.org/1999/html">
   <div class="rnr-tabs">
     <ul class="clearfix">
-      <li ng-class="{'selected': !showNonFullSupply}" ><a ng-href="{{fullSupplyLink}}" id="fullSupplyTab">Full Supply Product(s)</a></li>
-      <li ng-class="{'selected': showNonFullSupply}" ><a ng-href="{{nonFullSupplyLink}}" id="nonFullSupplyTab">Non Full Supply Product(s)</a></li>
+      <li ng-class="{'selected': !showNonFullSupply}">
+        <a ng-href="{{fullSupplyLink}}" id="fullSupplyTab">Full Supply Product(s)</a></li>
+      <li ng-class="{'selected': showNonFullSupply}">
+        <a ng-href="{{nonFullSupplyLink}}" id="nonFullSupplyTab">Non Full Supply Product(s)</a></li>
     </ul>
   </div>
   <div ng-hide="programRnrColumnList">Loading...</div>
@@ -17,30 +19,7 @@
     </ng-switch>
 
     <div form-toolbar id="action_buttons" class="action-buttons">
-      <div class="total-cost-container">
-        <div class="cost-values">
-          <small>
-            Total Cost For Full Supply Items:
-            <strong>
-              <span id="fullSupplyItemsCostCurrency" class="cell-text" ng-bind="currency"></span><span
-                id="fullSupplyItemsCost" class="cell-text" ng-bind="rnr.fullSupplyItemsSubmittedCost"></span>
-            </strong>
-            &nbsp;|&nbsp;
-            Total Cost For Non Full Supply Items:
-            <strong>
-              <span id="nonFullSupplyItemsCostCurrency" class="cell-text" ng-bind="currency"></span><span
-                id="nonFullSupplyItemsCost" class="cell-text"
-                ng-bind="rnr.nonFullSupplyItemsSubmittedCost"></span>
-            </strong>
-          </small>
-          &nbsp;|&nbsp;
-          <strong>
-            Total R&amp;R Cost:
-            <span id="totalCostCurrency" class="cell-text" ng-bind="currency"></span>
-            <span id="totalCost" class="cell-text" ng-bind="totalCost()"></span>
-          </strong>
-        </div>
-      </div>
+      <ng-include src="'/public/pages/logistics/rnr/partials/total-cost.html'"></ng-include>
       <div class="form-cell button-row">
         <input ng-disabled="formDisabled" type="button" ng-click="saveRnr()" class="btn btn-primary save-button"
                value="Save"/>
