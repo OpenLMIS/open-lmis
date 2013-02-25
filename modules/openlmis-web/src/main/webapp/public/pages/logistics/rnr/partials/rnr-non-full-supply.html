@@ -4,15 +4,15 @@
   </div>
 
   <div class="rnr-table">
-    <table id="nonFullSupplyTable" class="table table-striped table-bordered" ng-show="(rnr.nonFullSupplyLineItems.length > 0)">
+    <table id="nonFullSupplyTable" class="table table-striped table-bordered" ng-show="pagedRnrNonFullSupplyLineItems[currentPage].length > 0">
       <thead>
       <tr>
         <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in visibleColumns"
             ng-hide="programRnrColumn.name == 'quantityApproved'" ng-bind="programRnrColumn.label"></th>
       </tr>
       </thead>
-      <tbody ng-show="visibleColumns && (rnr.lineItems.length > 0)">
-      <tr ng-repeat="rnrLineItem in rnr.nonFullSupplyLineItems  ">
+      <tbody ng-show="visibleColumns && pagedRnrNonFullSupplyLineItems[currentPage].length > 0">
+      <tr ng-repeat="rnrLineItem in pagedRnrNonFullSupplyLineItems[currentPage]">
         <td class="cell-input" ng-repeat="column in visibleColumns"
             ng-hide="column.name == 'quantityApproved'">
           <ng-switch on="column.name">
@@ -69,7 +69,9 @@
       </tbody>
     </table>
   </div>
-
+  <div>
+    <pagination  num-pages="noOfPages" current-page="currentPage" max-size="10"></pagination>
+  </div>
   <form name="nonFullSupplyForm">
     <div id="nonFullSupplyProductsModal" modal="nonFullSupplyProductsModal">
       <div class="modal-header"><h3>Add Non-Full Supply Products</h3></div>

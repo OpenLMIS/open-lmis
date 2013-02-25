@@ -4,18 +4,20 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
   }, function () {
   });
 
-  ProgramRnRColumnList.get({programId:$routeParams.program}, function (data) {
+    ProgramRnRColumnList.get({programId:$routeParams.program}, function (data) {
     if (data.rnrColumnList && data.rnrColumnList.length > 0) {
       $scope.visibleColumns = _.where(data.rnrColumnList, {'visible':true});
       $scope.programRnrColumnList = data.rnrColumnList;
       $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name':'quantityRequested'});
       prepareRnr();
+      $scope.$broadcast("rnrPrepared");
     } else {
       $scope.error = "rnr.template.not.defined.error";
     }
   }, function () {
     $location.path("/init-rnr");
   });
+
 
   $scope.isFormDisabled = function () {
     if ($scope.rnr || $scope.$parent.rnr) {

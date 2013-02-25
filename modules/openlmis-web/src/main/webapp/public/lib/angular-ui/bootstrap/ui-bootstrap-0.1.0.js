@@ -798,7 +798,7 @@ angular.module('ui.bootstrap.pagination', [])
       nextText: '@',
       previousText: '@'
     },
-    templateUrl: 'template/pagination/pagination.html',
+    templateUrl: '/public/pages/template/pagination/pagination.html',
     replace: true,
     link: function(scope) {
       scope.$watch('numPages + currentPage + maxSize', function() {

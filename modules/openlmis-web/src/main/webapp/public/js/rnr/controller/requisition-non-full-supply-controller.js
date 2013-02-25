@@ -1,8 +1,38 @@
-function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $routeParams) {
+function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $routeParams, $location) {
   FacilityApprovedProducts.get({facilityId:$routeParams.facility, programId:$routeParams.program}, function (data) {
     $scope.nonFullSupplyProducts = data.nonFullSupplyProducts;
   }, function () {
   });
+
+  $scope.pageSize = 2;
+  $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) : 1;
+  groupToPages();
+
+  $scope.$watch("currentPage", function () {
+    $scope.$parent.saveRnr();
+    $location.url($location.path() + "?showNonFullSupply=true&page=" + $scope.currentPage);
+  });
+
+  function groupToPages() {
+    $scope.pagedRnrNonFullSupplyLineItems = [];
+    var pageEndIndex;
+    var pageStartIndex = 0;
+    var sortedRnrLineItems = _.sortBy($scope.$parent.rnr.nonFullSupplyLineItems, function (rnrLineItem) {
+      return rnrLineItem.productCode;
+    });
+    var sortedRnrListLength = sortedRnrLineItems.length;
+    var pageNumber;
+    for (pageNumber = 1; pageStartIndex < sortedRnrListLength; pageNumber++) {
+      if (pageStartIndex + $scope.pageSize > sortedRnrListLength) {
+        pageEndIndex = sortedRnrListLength;
+      } else {
+        pageEndIndex = pageStartIndex + $scope.pageSize;
+      }
+      $scope.pagedRnrNonFullSupplyLineItems[pageNumber] = sortedRnrLineItems.slice(pageStartIndex, pageEndIndex);
+      pageStartIndex = pageStartIndex + $scope.pageSize;
+    }
+    $scope.noOfPages = ($scope.pagedRnrNonFullSupplyLineItems.length > 0) ? ($scope.pagedRnrNonFullSupplyLineItems.length - 1) : 1;
+  }
 
   $scope.getId = function (prefix, parent, isLossAdjustment) {
     if (isLossAdjustment != null && isLossAdjustment != isUndefined && isLossAdjustment) {
@@ -20,6 +50,7 @@ function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $r
     $scope.facilityApprovedProduct = undefined;
     $scope.newNonFullSupply = undefined;
     updateNonFullSupplyProductsToDisplay();
+    groupToPages();
   };
 
   $scope.showAddNonFullSupplyModal = function () {
@@ -33,7 +64,7 @@ function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $r
 
   $scope.shouldDisableAddButton = function () {
     return !($scope.newNonFullSupply && $scope.newNonFullSupply.quantityRequested && $scope.newNonFullSupply.reasonForRequestedQuantity
-        && $scope.facilityApprovedProduct);
+      && $scope.facilityApprovedProduct);
   }
 
   function populateProductInformation() {
@@ -41,9 +72,9 @@ function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $r
     angular.copy($scope.facilityApprovedProduct.programProduct.product, product);
     $scope.newNonFullSupply.productCode = product.code;
     $scope.newNonFullSupply.product = (product.primaryName == null ? "" : (product.primaryName + " ")) +
-        (product.form.code == null ? "" : (product.form.code + " ")) +
-        (product.strength == null ? "" : (product.strength + " ")) +
-        (product.dosageUnit.code == null ? "" : product.dosageUnit.code);
+      (product.form.code == null ? "" : (product.form.code + " ")) +
+      (product.strength == null ? "" : (product.strength + " ")) +
+      (product.dosageUnit.code == null ? "" : product.dosageUnit.code);
     $(['dosesPerDispensingUnit', 'packSize', 'roundToZero', 'packRoundingThreshold', 'dispensingUnit', 'fullSupply']).each(function (index, field) {
       $scope.newNonFullSupply[field] = product[field];
     });
@@ -56,8 +87,8 @@ function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $r
     populateProductInformation();
     $(['quantityReceived', 'quantityDispensed', 'beginningBalance', 'stockInHand', 'totalLossesAndAdjustments', 'calculatedOrderQuantity', 'newPatientCount',
       'stockOutDays', 'normalizedConsumption', 'amc', 'maxStockQuantity']).each(function (index, field) {
-          $scope.newNonFullSupply[field] = 0;
-        });
+        $scope.newNonFullSupply[field] = 0;
+      });
     $scope.newNonFullSupply.rnrId = $scope.$parent.rnr.id;
   }
 
