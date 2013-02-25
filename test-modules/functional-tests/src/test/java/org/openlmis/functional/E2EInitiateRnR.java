@@ -34,7 +34,10 @@ public class E2EInitiateRnR extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
     CreateFacilityPage createFacilityPage = homePage.navigateCreateFacility();
-    String date_time = createFacilityPage.enterAndVerifyFacility();
+    String geoZone= "Arusha";
+    String facilityType= "Lvl3 Hospital";
+    String operatedBy= "MoH";
+    String date_time = createFacilityPage.enterAndVerifyFacility(geoZone,facilityType,operatedBy);
     String facility_code = "FCcode" + date_time;
     dbWrapper.insertFacilities("F10", "F11");
 
@@ -102,7 +105,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
     String periodDetails = homePageUser.navigateAndInitiateRnr(program);
     InitiateRnRPage initiateRnRPage = homePageUser.clickProceed();
-    initiateRnRPage.verifyRnRHeader("FCcode", "FCname", date_time, program, periodDetails);
+    initiateRnRPage.verifyRnRHeader("FCcode", "FCname", date_time, program, periodDetails, geoZone, operatedBy, facilityType);
 
     initiateRnRPage.calculateAndVerifyStockOnHand(10, 10, 10, 1);
 

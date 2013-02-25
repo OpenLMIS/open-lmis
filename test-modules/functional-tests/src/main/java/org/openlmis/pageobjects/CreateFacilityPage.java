@@ -148,7 +148,7 @@ public class CreateFacilityPage extends Page {
     }
 
 
-    public String enterAndVerifyFacility() {
+    public String enterAndVerifyFacility(String geoZone, String facilityTypeValue, String operatedByValue) {
         String message=null;
         Date dObj=new Date();
         SimpleDateFormat formatter_date_time = new SimpleDateFormat(
@@ -173,15 +173,15 @@ public class CreateFacilityPage extends Page {
         address1.sendKeys("Address1");
         address2.sendKeys("Address2");
 
-        testWebDriver.selectByIndex(geographicZone,1);
-        testWebDriver.selectByVisibleText(facilityType,"Lvl3 Hospital");
+        testWebDriver.selectByVisibleText(geographicZone,geoZone);
+        testWebDriver.selectByVisibleText(facilityType,facilityTypeValue);
 
         catchmentPopulation.sendKeys("500000");
         latitude.sendKeys("5555.5555");
         longitude.sendKeys("4444.4444");
         altitude.sendKeys("4545.4545");
 
-        testWebDriver.selectByIndex(operatedBy,1);
+        testWebDriver.selectByVisibleText(operatedBy,operatedByValue);
         coldStorageGrossCapacity.sendKeys("3434.3434");
         coldStorageNetCapacity.sendKeys("3535.3535");
 
