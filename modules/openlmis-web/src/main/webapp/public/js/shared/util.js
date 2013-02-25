@@ -20,5 +20,12 @@ var utils = {
 
   isNullOrUndefined:function (obj) {
     return obj == undefined || obj == null;
+  },
+
+  isPositiveNumber:function (value) {
+    var INTEGER_REGEXP = /^\d*$/;
+    return INTEGER_REGEXP.test(value);
   }
+
+
 };

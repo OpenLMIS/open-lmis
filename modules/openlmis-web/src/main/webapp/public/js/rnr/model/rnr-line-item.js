@@ -53,7 +53,7 @@ var RnrLineItem = function (lineItem, rnr, programRnrColumnList) {
   RnrLineItem.prototype.fillPacksToShipBasedOnApprovedQuantity = function () {
     var quantityApproved = 0;
 
-    if(this.quantityApproved != undefined && this.quantityApproved>=0) quantityApproved = this.quantityApproved;
+    if(this.quantityApproved != undefined && utils.isPositiveNumber(this.quantityApproved)) quantityApproved = this.quantityApproved;
 
     this.calculatePacksToShip(quantityApproved);
     this.fillCost();

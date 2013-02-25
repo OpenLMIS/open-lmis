@@ -54,36 +54,37 @@ function ApproveRnrController($scope, RequisitionForApprovalById, Requisitions, 
   }
 
   function lossesAndAdjustmentsTemplate() {
-    return '<div id="lossesAndAdjustments" modal="lossesAndAdjustmentsModal[row.entity.id]">' +
-      '<div class="modal-header"><h3>Losses And Adjustments</h3></div>' +
-      '<div class="modal-body">' +
-      '<hr ng-show="row.entity.lossesAndAdjustments.length > 0"/>' +
-      '<div class="adjustment-list" ng-show="row.entity.lossesAndAdjustments.length > 0">' +
-      '<ul>' +
-      '<li ng-repeat="oneLossAndAdjustment in row.entity.lossesAndAdjustments" class="clearfix">' +
-      '<span class="tpl-adjustment-type" ng-bind="oneLossAndAdjustment.type.description"></span>' +
-      '<span class="tpl-adjustment-qty" ng-bind="oneLossAndAdjustment.quantity"></span>' +
-      '</li>' +
-      '</ul>' +
-      '</div>' +
-      '<div class="adjustment-total clearfix alert alert-warning" ng-show="row.entity.lossesAndAdjustments.length > 0">' +
-      '<span class="pull-left">Total</span> ' +
-      '<span ng-bind="row.entity.totalLossesAndAdjustments"></span>' +
-      '</div>' +
-      '</div>' +
-      '<div class="modal-footer">' +
-      '<input type="button" class="btn btn-success save-button" style="width: 75px" ng-click="closeLossesAndAdjustmentsForRnRLineItem(row.entity)" value="Close"/>' +
-      '</div>' +
-      '</div>' +
-      '<div ng-class="highlightNestedFieldsWithError(row.entity[column.name], \'quantity\')">' +
-      '<a ng-click="showLossesAndAdjustmentModalForLineItem(row.entity)" class="rnr-adjustment">' +
-      '<span class="adjustment-value" ng-bind="row.entity.totalLossesAndAdjustments"></span>' +
-      '</a>' +
-      '</div>';
+      return '<div class="ngCellText" ng-hide="row.entity.fullSupply"><span ng-bind="row.entity.totalLossesAndAdjustments" ></span></div>' +
+        '<div id="lossesAndAdjustments" modal="lossesAndAdjustmentsModal[row.entity.id]">' +
+        '<div class="modal-header"><h3>Losses And Adjustments</h3></div>' +
+        '<div class="modal-body">' +
+        '<hr ng-show="row.entity.lossesAndAdjustments.length > 0"/>' +
+        '<div class="adjustment-list" ng-show="row.entity.lossesAndAdjustments.length > 0">' +
+        '<ul>' +
+        '<li ng-repeat="oneLossAndAdjustment in row.entity.lossesAndAdjustments" class="clearfix">' +
+        '<span class="tpl-adjustment-type" ng-bind="oneLossAndAdjustment.type.description"></span>' +
+        '<span class="tpl-adjustment-qty" ng-bind="oneLossAndAdjustment.quantity"></span>' +
+        '</li>' +
+        '</ul>' +
+        '</div>' +
+        '<div class="adjustment-total clearfix alert alert-warning" ng-show="row.entity.lossesAndAdjustments.length > 0">' +
+        '<span class="pull-left">Total</span> ' +
+        '<span ng-bind="row.entity.totalLossesAndAdjustments"></span>' +
+        '</div>' +
+        '</div>' +
+        '<div class="modal-footer">' +
+        '<input type="button" class="btn btn-success save-button" style="width: 75px" ng-click="closeLossesAndAdjustmentsForRnRLineItem(row.entity)" value="Close"/>' +
+        '</div>' +
+        '</div>' +
+        '<div ng-class="highlightNestedFieldsWithError(row.entity[column.name], \'quantity\')">' +
+        '<a ng-click="showLossesAndAdjustmentModalForLineItem(row.entity)" class="rnr-adjustment" ng-show="row.entity.fullSupply">' +
+        '<span class="adjustment-value" ng-bind="row.entity.totalLossesAndAdjustments"></span>' +
+        '</a>' +
+        '</div>';
   }
 
   function currencyTemplate(value) {
-    return '<span  class = "cell-text" ng-show = "showCurrencySymbol(' + value + ')"  ng-bind="currency"></span >&nbsp; &nbsp;<span ng-bind = "' + value + '" class = "cell-text" ></span >'
+    return '<div class="ngCellText"><span  class = "cell-text" ng-show = "showCurrencySymbol(' + value + ')"  ng-bind="currency"></span >&nbsp; &nbsp;<span ng-bind = "' + value + '" class = "cell-text" ></span ></div>'
   }
 
   function freeTextCellTemplate(field, value) {
@@ -93,13 +94,7 @@ function ApproveRnrController($scope, RequisitionForApprovalById, Requisitions, 
   function positiveIntegerCellTemplate(field, value) {
     return '<div><ng-form name="positiveIntegerForm"> <input ui-event="{blur : \'row.entity.updateCostWithApprovedQuantity()\'}" ng-class="{\'required-error\': approvedQuantityRequiredFlag && positiveIntegerForm.' + field + '.$error.required}" ' +
       '  ng-required="true" maxlength="8"  name=' + field + ' ng-model=' + value + ' />' +
-      '<span class="rnr-form-error" id=' + field + ' ng-show="validatePositiveInteger(positiveIntegerForm.' + field + '.$error,' + value + ')" >Please Enter Numeric value</span></ng-form></div>';
-  }
-
-  function isPositiveNumber(value) {
-    var INTEGER_REGEXP = /^\d*$/;
-    return INTEGER_REGEXP.test(value);
-
+      '<span class="rnr-form-error" id=' + field + ' ng-show="validatePositiveInteger(' + value + ')" >Please Enter Numeric value</span></ng-form></div>';
   }
 
   function isUndefined(value) {
@@ -177,18 +172,11 @@ function ApproveRnrController($scope, RequisitionForApprovalById, Requisitions, 
     $scope.currency = data.currency;
   }, {});
 
-  $scope.validatePositiveInteger = function (error, value) {
+  $scope.validatePositiveInteger = function (value) {
     if (value == undefined) {
-      error.pattern = false;
       return false;
     }
-    if (!isPositiveNumber(value)) {
-      error.pattern = true;
-      return true;
-    } else {
-      error.pattern = false;
-      return false;
-    }
+    return !utils.isPositiveNumber(value);
   };
 
 
@@ -212,13 +200,13 @@ function ApproveRnrController($scope, RequisitionForApprovalById, Requisitions, 
   function validateForSave() {
     var valid = true;
     $($scope.rnr.lineItems).each(function (i, lineItem) {
-      if (lineItem.quantityApproved != undefined && !isPositiveNumber(lineItem.quantityApproved)) {
+      if (lineItem.quantityApproved != undefined && !utils.isPositiveNumber(lineItem.quantityApproved)) {
         valid = false;
         return false;
       }
     });
     $($scope.rnr.nonFullSupplyLineItems).each(function (i, lineItem) {
-      if (lineItem.quantityApproved != undefined && !isPositiveNumber(lineItem.quantityApproved)) {
+      if (lineItem.quantityApproved != undefined && !utils.isPositiveNumber(lineItem.quantityApproved)) {
         valid = false;
         return false;
       }
@@ -249,13 +237,13 @@ function ApproveRnrController($scope, RequisitionForApprovalById, Requisitions, 
   function validateForApprove() {
     var valid = true;
     $($scope.rnr.lineItems).each(function (i, lineItem) {
-      if (lineItem.quantityApproved == undefined || !isPositiveNumber(lineItem.quantityApproved)) {
+      if (lineItem.quantityApproved == undefined || !utils.isPositiveNumber(lineItem.quantityApproved)) {
         valid = false;
         return false;
       }
     });
     $($scope.rnr.nonFullSupplyLineItems).each(function (i, lineItem) {
-      if (lineItem.quantityApproved == undefined || !isPositiveNumber(lineItem.quantityApproved)) {
+      if (lineItem.quantityApproved == undefined || !utils.isPositiveNumber(lineItem.quantityApproved)) {
         valid = false;
         return false;
       }
