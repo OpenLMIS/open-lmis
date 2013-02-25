@@ -12,12 +12,12 @@ import java.util.Date;
 @NoArgsConstructor
 public class OrderBatch {
   private Integer id;
-  private Date orderedDate;
-  private Integer orderedBy;
+  private Date createTimeStamp;
+  private Integer createdByUserId;
   private Facility supplyingFacility;
 
   public OrderBatch(Facility supplyingFacility, Integer orderedBy) {
     this.supplyingFacility = supplyingFacility;
-    this.orderedBy = orderedBy;
+    this.createdByUserId = orderedBy;
   }
 }

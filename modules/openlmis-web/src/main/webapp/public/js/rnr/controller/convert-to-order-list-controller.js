@@ -3,23 +3,23 @@ function ConvertToOrderListController($scope, requisitionList, RequisitionOrder,
   $scope.filteredRequisitions = $scope.requisitions;
   $scope.selectedItems = [];
 
-  $scope.gridOptions = { data:'filteredRequisitions',
-    multiSelect:true,
-    selectedItems:$scope.selectedItems,
-    displayFooter:false,
-    displaySelectionCheckbox:true,
-    showColumnMenu:false,
-    sortInfo:{ field:'submittedDate', direction:'ASC'},
-    showFilter:false,
-    columnDefs:[
-      {field:'programName', displayName:'Program' },
-      {field:'facilityCode', displayName:'Facility Code'},
-      {field:'facilityName', displayName:"Facility Name"},
-      {field:'periodStartDate', displayName:"Period Start Date", cellFilter:"date:'dd/MM/yyyy'"},
-      {field:'periodEndDate', displayName:"Period End Date", cellFilter:"date:'dd/MM/yyyy'"},
-      {field:'submittedDate', displayName:"Date Submitted", cellFilter:"date:'dd/MM/yyyy'"},
-      {field:'modifiedDate', displayName:"Date Modified", cellFilter:"date:'dd/MM/yyyy'"},
-      {field:'supplyingDepot', displayName:"Supplying Depot"}
+  $scope.gridOptions = { data: 'filteredRequisitions',
+    multiSelect: true,
+    selectedItems: $scope.selectedItems,
+    displayFooter: false,
+    displaySelectionCheckbox: true,
+    showColumnMenu: false,
+    sortInfo: { field: 'submittedDate', direction: 'ASC'},
+    showFilter: false,
+    columnDefs: [
+      {field: 'programName', displayName: 'Program' },
+      {field: 'facilityCode', displayName: 'Facility Code'},
+      {field: 'facilityName', displayName: "Facility Name"},
+      {field: 'periodStartDate', displayName: "Period Start Date", cellFilter: "date:'dd/MM/yyyy'"},
+      {field: 'periodEndDate', displayName: "Period End Date", cellFilter: "date:'dd/MM/yyyy'"},
+      {field: 'submittedDate', displayName: "Date Submitted", cellFilter: "date:'dd/MM/yyyy'"},
+      {field: 'modifiedDate', displayName: "Date Modified", cellFilter: "date:'dd/MM/yyyy'"},
+      {field: 'supplyingDepot', displayName: "Supplying Depot"}
     ]
   };
 
@@ -42,7 +42,7 @@ function ConvertToOrderListController($scope, requisitionList, RequisitionOrder,
         $scope.filterRequisitions();
       });
 
-      $scope.message = "Created successfully";
+      $scope.message = "The requisition(s) have been successfully converted to Orders";
       $scope.error = "";
     };
 
@@ -50,7 +50,11 @@ function ConvertToOrderListController($scope, requisitionList, RequisitionOrder,
       $scope.error = "Error Occurred";
     };
 
-    var rnrList = {"rnrList":$scope.gridOptions.selectedItems};
+    if ($scope.gridOptions.selectedItems.length == 0) {
+      $scope.message = "Please select atleast one Requisition for Converting to Order.";
+      return;
+    }
+    var rnrList = {"rnrList": $scope.gridOptions.selectedItems};
     RequisitionOrder.save({}, rnrList, successHandler, errorHandler);
   };
 
@@ -65,7 +69,7 @@ function ConvertToOrderListController($scope, requisitionList, RequisitionOrder,
 }
 
 ConvertToOrderListController.resolve = {
-  requisitionList:function ($q, $timeout, RequisitionForConvertToOrder) {
+  requisitionList: function ($q, $timeout, RequisitionForConvertToOrder) {
     var deferred = $q.defer();
     $timeout(function () {
       RequisitionForConvertToOrder.get({}, function (data) {

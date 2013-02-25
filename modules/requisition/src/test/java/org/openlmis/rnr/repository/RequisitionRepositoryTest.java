@@ -198,7 +198,7 @@ public class RequisitionRepositoryTest {
   @Test
   public void shouldGetOrderById() throws Exception {
     OrderBatch orderBatch = new OrderBatch();
-    orderBatch.setOrderedBy(1);
+    orderBatch.setCreatedByUserId(1);
     when(requisitionMapper.getOrderBatchById(1)).thenReturn(orderBatch);
     OrderBatch orderBatchReturned = requisitionRepository.getOrderBatchById(1);
     verify(requisitionMapper).getOrderBatchById(1);

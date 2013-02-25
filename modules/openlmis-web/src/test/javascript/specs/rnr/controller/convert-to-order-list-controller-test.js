@@ -83,15 +83,23 @@ describe('ConvertToOrderListController', function () {
 
   it("should convert the selected requisitions to order", function () {
     scope.gridOptions.selectedItems = [requisitionList[0]];
-    httpBackend.expectPOST('/requisitionOrder.json', {"rnrList":scope.gridOptions.selectedItems}).respond(200, {"success":"Created successfully"});
+    httpBackend.expectPOST('/requisitionOrder.json', {"rnrList":scope.gridOptions.selectedItems}).respond(200);
     httpBackend.expectGET('/requisitions-for-convert-to-order.json').respond({"rnr_list":[requisitionList[1]]});
 
     scope.convertToOrder();
 
     httpBackend.flush();
-    expect(scope.message).toEqual("Created successfully");
+    expect(scope.message).toEqual("The requisition(s) have been successfully converted to Orders");
     expect(scope.error).toEqual("");
     expect(scope.requisitions).toEqual([requisitionList[1]]);
+  });
+
+  it('should give message if no requisition selected', function() {
+    scope.gridOptions.selectedItems = [];
+
+    scope.convertToOrder();
+
+    expect(scope.message).toEqual("Please select atleast one Requisition for Converting to Order.");
   });
 });
 

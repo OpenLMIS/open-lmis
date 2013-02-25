@@ -271,7 +271,7 @@ public class RequisitionMapperIT {
   @Test
   public void shouldCreateAnOrder() throws Exception {
     OrderBatch orderBatch = new OrderBatch();
-    orderBatch.setOrderedBy(1);
+    orderBatch.setCreatedByUserId(1);
 
     assertThat(orderBatch.getId(), is(nullValue()));
     mapper.createOrderBatch(orderBatch);
@@ -297,10 +297,12 @@ public class RequisitionMapperIT {
   @Test
   public void shouldGetOrderById() throws Exception {
     OrderBatch orderBatch = new OrderBatch();
-    orderBatch.setOrderedBy(1);
+    orderBatch.setCreatedByUserId(1);
+
     mapper.createOrderBatch(orderBatch);
+
     OrderBatch orderFromDb = mapper.getOrderBatchById(orderBatch.getId());
-    assertThat(orderFromDb.getOrderedBy(), is(1));
+    assertThat(orderFromDb.getCreatedByUserId(), is(1));
   }
 
   private Rnr insertRequisition(ProcessingPeriod period, RnrStatus status) {
