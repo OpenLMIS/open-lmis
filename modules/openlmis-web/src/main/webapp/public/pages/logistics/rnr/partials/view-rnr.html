@@ -54,7 +54,12 @@
     </div>
   </div>
 </form>
+<div class="facility-list" ng-show="requisitionFoundMessage">
+<h3>
 <div ng-bind="requisitionFoundMessage"></div>
+</h3>
+</div>
+
 <div ng-show="requisitions.length">
   <div class="row-fluid">
     <div class="span4 offset8 grid-filters">

@@ -55,7 +55,7 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, UserS
   };
 
   function setRequisitionsFoundMessage() {
-    $scope.requisitionFoundMessage = ($scope.requisitions.length) ? "" : "No R&Rs found";
+    $scope.requisitionFoundMessage = ($scope.requisitions.length) ? "" : "No Requisitions found";
   }
 
   $scope.filterRequisitions = function () {
