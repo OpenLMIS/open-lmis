@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openlmis.upload.Importable;
+
+import java.util.Date;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -11,10 +14,11 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
-public class GeographicZone {
-  Integer id;
-  String code;
-  String name;
-  GeographicLevel level;
-  GeographicZone parent;
+public class GeographicZone implements Importable {
+  private Integer id;
+  private String code;
+  private String name;
+  private GeographicLevel level;
+  private GeographicZone parent;
+  private String modifiedBy;
 }

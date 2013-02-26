@@ -285,8 +285,8 @@ public class FacilityMapperIT {
 
   @Test
   public void shouldGetGeographicZoneWithParent() throws Exception {
-    GeographicZone parent = new GeographicZone(null, "Dodoma", "Dodoma", new GeographicLevel(null, "city", "city"), null);
-    GeographicZone expectedZone = new GeographicZone(3, "Ngorongoro", "Ngorongoro", new GeographicLevel(null, "district", "district"), parent);
+    GeographicZone parent = new GeographicZone(null, "Dodoma", "Dodoma", new GeographicLevel(null, "city", "city"), null, null);
+    GeographicZone expectedZone = new GeographicZone(3, "Ngorongoro", "Ngorongoro", new GeographicLevel(null, "district", "district"), parent, null);
 
     GeographicZone zone = mapper.getGeographicZoneById(3);
 
