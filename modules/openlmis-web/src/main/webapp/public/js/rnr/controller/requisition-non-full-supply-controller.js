@@ -4,7 +4,7 @@ function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $r
   }, function () {
   });
 
-  $scope.pageSize = 2;
+  $scope.pageSize = 5;
   $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) : 1;
   groupToPages();
 

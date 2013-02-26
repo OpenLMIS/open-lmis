@@ -1,6 +1,6 @@
 function RequisitionFullSupplyController($scope, $routeParams, $location, LossesAndAdjustmentsReferenceData) {
   $scope.lossesAndAdjustmentsModal = [];
-  $scope.pageSize = 2;
+  $scope.pageSize = 5;
   $scope.currentPage = $routeParams.page ? parseInt($routeParams.page): 1;
 
   $scope.$watch("currentPage", function () {
