@@ -16,7 +16,10 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
 import org.openlmis.rnr.builder.RequisitionBuilder;
-import org.openlmis.rnr.domain.*;
+import org.openlmis.rnr.domain.OrderBatch;
+import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.RnrColumn;
+import org.openlmis.rnr.domain.RnrStatus;
 import org.openlmis.rnr.factory.RequisitionFactory;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
@@ -93,7 +96,7 @@ public class RequisitionServiceTest {
   @Before
   public void setup() {
     requisitionService = new RequisitionService(requisitionRepository, rnrTemplateRepository, facilityApprovedProductService,
-        supervisoryNodeService, roleRightService, programService, processingScheduleService, facilityService, supplyLineService, requisitionFactory);
+      supervisoryNodeService, roleRightService, programService, processingScheduleService, facilityService, supplyLineService, requisitionFactory);
     submittedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, SUBMITTED)));
     initiatedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, INITIATED)));
     authorizedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, AUTHORIZED)));
@@ -261,7 +264,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date1.toDate());
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(rnr2);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date1.toDate(), processingPeriod2.getId())).
-        thenReturn(Arrays.asList(processingPeriod3, processingPeriod4));
+      thenReturn(Arrays.asList(processingPeriod3, processingPeriod4));
 
     List<ProcessingPeriod> periods = requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
 
@@ -281,7 +284,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date1.toDate());
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(null);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date1.toDate(), null)).
-        thenReturn(Arrays.asList(processingPeriod1, processingPeriod2));
+      thenReturn(Arrays.asList(processingPeriod1, processingPeriod2));
 
     List<ProcessingPeriod> periods = requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
 
@@ -292,13 +295,13 @@ public class RequisitionServiceTest {
 
   private Rnr createRequisition(int periodId, RnrStatus status) {
     return make(a(RequisitionBuilder.defaultRnr,
-        with(RequisitionBuilder.periodId, periodId),
-        with(RequisitionBuilder.status, status)));
+      with(RequisitionBuilder.periodId, periodId),
+      with(RequisitionBuilder.status, status)));
   }
 
   private ProcessingPeriod createProcessingPeriod(int id, DateTime startDate) {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod,
-        with(ProcessingPeriodBuilder.startDate, startDate.toDate())));
+      with(ProcessingPeriodBuilder.startDate, startDate.toDate())));
     processingPeriod.setId(id);
     return processingPeriod;
   }
@@ -337,7 +340,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date);
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(requisition);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date, PERIOD.getId())).
-        thenReturn(Arrays.asList(validPeriod));
+      thenReturn(Arrays.asList(validPeriod));
   }
 
   @Test
@@ -917,6 +920,27 @@ public class RequisitionServiceTest {
     assertThat(orderList.get(1).getOrderBatch(), is(orderBatch2));
     assertThat(orderList.get(2).getRequisition(), is(rnr3));
     assertThat(orderList.get(2).getOrderBatch(), is(orderBatch1));
+  }
+
+  @Test
+  public void shouldGetFullRequisitionById() {
+    Integer requisitionId = 1;
+    Rnr requisition = spy(new Rnr());
+    requisition.setFacility(FACILITY);
+    requisition.setProgram(PROGRAM);
+    requisition.setPeriod(PERIOD);
+    requisition.setId(requisitionId);
+    when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
+    when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
+    when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
+    when(requisitionRepository.getById(requisitionId)).thenReturn(requisition);
+
+    requisitionService.getFullRequisitionById(requisitionId);
+
+    verify(requisitionRepository).getById(requisitionId);
+    verify(facilityService).getById(FACILITY.getId());
+    verify(programService).getById(PROGRAM.getId());
+    verify(processingScheduleService).getPeriodById(PERIOD.getId());
   }
 
   private RoleAssignment roleAssignmentWithSupervisoryNodeId(int supervisoryNodeId) {

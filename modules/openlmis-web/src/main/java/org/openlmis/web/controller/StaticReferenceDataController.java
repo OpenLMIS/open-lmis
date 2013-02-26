@@ -26,6 +26,6 @@ public class StaticReferenceDataController extends BaseController {
 	@RequestMapping(value = "/reference-data/currency", method = RequestMethod.GET)
 	public ResponseEntity<OpenLmisResponse> getCurrency() {
 		OpenLmisResponse response = new OpenLmisResponse(CURRENCY, staticReferenceDataReader.getCurrency());
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		return new ResponseEntity(response, HttpStatus.OK);
 	}
 }

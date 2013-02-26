@@ -102,6 +102,9 @@ function ApproveRnrController($scope, RequisitionForApprovalById, Requisitions, 
   }
 
   function prepareColumnDefinitions() {
+   /* if(sction = view and status = approved) {
+      programRnrColumnList.remove
+    }*/
     var columnDefinitions = [];
     var visibleColumns = _.where($scope.programRnrColumnList, {'visible':true});
     if (visibleColumns.length > 0) {

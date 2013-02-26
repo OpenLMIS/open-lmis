@@ -191,4 +191,13 @@ public class RequisitionController extends BaseController {
     requisitionService.releaseRequisitionsAsOrder(rnrList.getRnrList(), loggedInUserId(request));
   }
 
+  @RequestMapping(value = "/requisitions/{id}", method = GET)
+  @PreAuthorize("hasPermission('','VIEW_REQUISITION')")
+  public ResponseEntity<OpenLmisResponse> getById(@PathVariable Integer id) {
+    try {
+      return response(RNR, requisitionService.getFullRequisitionById(id));
+    } catch (DataException dataException) {
+      return error(dataException, HttpStatus.NOT_FOUND);
+    }
+  }
 }

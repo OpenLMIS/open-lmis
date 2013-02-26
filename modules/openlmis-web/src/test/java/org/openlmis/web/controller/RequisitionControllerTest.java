@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
+import org.mockito.Mockito;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
@@ -18,6 +19,7 @@ import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.web.form.RnrList;
 import org.openlmis.web.response.OpenLmisResponse;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.HttpStatus;
@@ -86,8 +88,15 @@ public class RequisitionControllerTest {
   }
 
 
+  @Test
+  public void shouldGetRequisitionById() throws Exception {
+    Rnr expectedRequisition = new Rnr();
+    Mockito.when(requisitionService.getFullRequisitionById(1)).thenReturn(expectedRequisition);
+    ResponseEntity<OpenLmisResponse> response = controller.getById(1);
 
-
+    assertThat((Rnr)response.getBody().getData().get(RequisitionController.RNR), is(expectedRequisition));
+    verify(requisitionService).getFullRequisitionById(1);
+  }
 
   @Test
   public void shouldGetRnrByIdIfExists() throws Exception {
