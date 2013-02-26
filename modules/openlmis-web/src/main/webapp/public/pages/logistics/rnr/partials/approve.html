@@ -9,14 +9,14 @@
 </div>
 <form name="approvalForm" novalidate>
   <div ui-if="showNonFullSupply">
-    <div class="approveGrid grid-approval" ng-grid="nonFullSupplyGrid" ng-show="rnr.nonFullSupplyLineItems.length>0"></div>
-    <div class="alert alert-success" id="noNonFullSupplyProductsMessage" ng-hide="rnr.nonFullSupplyLineItems.length>0">
+    <div class="approveGrid grid-approval" ng-grid="nonFullSupplyGrid" ng-hide="rnr.nonFullSupplyLineItems.length==0"></div>
+    <div class="alert alert-success" id="noNonFullSupplyProductsMessage" ng-show="rnr.nonFullSupplyLineItems.length==0">
       No products to approve.
     </div>
   </div>
   <div ui-if="!showNonFullSupply">
-    <div class="approveGrid grid-approval" ng-grid="fullSupplyGrid" ng-show="rnr.lineItems.length>0"></div>
-    <div class="alert alert-success" id="noFullSupplyProductsMessage" ng-hide="rnr.lineItems.length>0">
+    <div class="approveGrid grid-approval" ng-grid="fullSupplyGrid" ng-hide="rnr.lineItems.length==0"></div>
+    <div class="alert alert-success" id="noFullSupplyProductsMessage" ng-show="rnr.lineItems.length==0">
       No products to approve.
     </div>
   </div>
