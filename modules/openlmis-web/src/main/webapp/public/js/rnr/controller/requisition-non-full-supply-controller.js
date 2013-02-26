@@ -9,7 +9,7 @@ function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $r
   groupToPages();
 
   $scope.$watch("currentPage", function () {
-    $scope.$parent.saveRnr();
+//    $scope.$parent.saveRnr();
     $location.url($location.path() + "?showNonFullSupply=true&page=" + $scope.currentPage);
   });
 

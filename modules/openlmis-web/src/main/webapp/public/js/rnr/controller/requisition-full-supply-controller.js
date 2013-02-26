@@ -4,7 +4,7 @@ function RequisitionFullSupplyController($scope, $routeParams, $location, Losses
   $scope.currentPage = $routeParams.page ? parseInt($routeParams.page): 1;
 
   $scope.$watch("currentPage", function () {
-    $scope.$parent.saveRnr();
+//    $scope.$parent.saveRnr();
     $location.url( $location.path()+ "?page=" + $scope.currentPage);
   });
 
