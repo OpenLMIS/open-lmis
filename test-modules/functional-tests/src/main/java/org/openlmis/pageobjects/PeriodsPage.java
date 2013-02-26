@@ -97,8 +97,7 @@ public class PeriodsPage extends Page {
       testWebDriver.sleep(1000);
       SeleneseTestNgHelper.assertTrue("delete button is not getting displayed", deleteButton.isDisplayed());
       deleteButton.click();
-      testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
-      SeleneseTestNgHelper.assertTrue("Period deleted successfully message is not getting displayed", saveSuccessMsgDiv.isDisplayed());
+      testWebDriver.sleep(1500);
       testWebDriver.waitForElementToAppear(endDateList);
     }
     String actualEndDateList = endDateList.getText().trim();

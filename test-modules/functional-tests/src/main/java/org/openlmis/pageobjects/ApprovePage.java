@@ -122,7 +122,10 @@ public class ApprovePage extends Page {
   }
 
   public void verifyRnRHeader(String FCode, String FName, String FCstring, String program, String periodDetails) {
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(requisitionHeader);
+    testWebDriver.waitForElementToAppear(facilityLabel);
+    testWebDriver.waitForElementToAppear(reportingPeriodInitRnRScreen);
     String headerText = testWebDriver.getText(requisitionHeader);
     SeleneseTestNgHelper.assertTrue(headerText.contains("Report and Requisition for " + program));
     String facilityText = testWebDriver.getText(facilityLabel);
