@@ -79,8 +79,11 @@ public class PeriodsPage extends Page {
 
   public void createAndVerifyPeriods() throws IOException {
     testWebDriver.waitForElementToAppear(namePeriod);
+    testWebDriver.sleep(1000);
     enterAndVerifyPeriodDetails("Period1", "first period", "1", 1);
+    testWebDriver.sleep(1000);
     enterAndVerifyPeriodDetails("Period2", "second period", "1", 2);
+    testWebDriver.sleep(1000);
     enterAndVerifyPeriodDetails("Period3", "third period", "1", 3);
   }
 
@@ -91,9 +94,9 @@ public class PeriodsPage extends Page {
     int flag = compareDateWithToday(actualStartDateListValue);
 
     if (flag == 1) {
+      testWebDriver.sleep(1000);
       SeleneseTestNgHelper.assertTrue("delete button is not getting displayed", deleteButton.isDisplayed());
       deleteButton.click();
-      testWebDriver.sleep(1000);
       testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
       SeleneseTestNgHelper.assertTrue("Period deleted successfully message is not getting displayed", saveSuccessMsgDiv.isDisplayed());
       testWebDriver.waitForElementToAppear(endDateList);
