@@ -38,6 +38,7 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
     Requisitions.update({id:$scope.rnr.id, operation:"save"}, rnr, function (data) {
       $scope.message = data.success;
       $scope.error = "";
+      $('#saveSuccessMsgDiv').delay(5000).fadeOut();
     }, function (data) {
       $scope.error = data.error;
       $scope.message = "";
