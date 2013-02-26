@@ -7,8 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GeopoliticalLevel {
+public class GeographicLevel {
   Integer id;
+  String code;
   String name;
 }
 

@@ -1,6 +1,6 @@
-delete from geopolitical_levels;
-INSERT INTO geopolitical_levels
-(id, name) VALUES
-(1, 'state'),
-(2, 'city'),
-(3, 'district');
+delete from geographic_levels;
+INSERT INTO geographic_levels
+(id, code, name) VALUES
+(1, 'state', 'state'),
+(2, 'city', 'city'),
+(3, 'district', 'district');

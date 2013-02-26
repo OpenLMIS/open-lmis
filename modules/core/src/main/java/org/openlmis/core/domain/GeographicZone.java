@@ -13,7 +13,8 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonSerialize(include = NON_EMPTY)
 public class GeographicZone {
   Integer id;
+  String code;
   String name;
-  GeopoliticalLevel level;
+  GeographicLevel level;
   GeographicZone parent;
 }

@@ -53,7 +53,7 @@ public interface FacilityMapper {
   Integer getOperatedByIdForCode(String code);
 
 
-  @Select("SELECT GZ.id as id, GZ.name as name, GL.name as level FROM geographic_zones GZ, geopolitical_levels GL where GZ.level = GL.id")
+  @Select("SELECT GZ.id as id, GZ.name as name, GL.name as level FROM geographic_zones GZ, geographic_levels GL where GZ.level = GL.id")
   @Results(value = {
     @Result(property = "level.name", column = "level")
   })
@@ -112,14 +112,17 @@ public interface FacilityMapper {
     "OR LOWER(name) LIKE '%' || LOWER(#{searchParam}) || '%'")
   List<Facility> searchFacilitiesByCodeOrName(String searchParam);
 
-  @Select({"SELECT GZ.id AS id, GZ.name AS name, GL.name AS level, GZP.name AS parentZone, GLP.name AS parentLevel",
+  @Select({"SELECT GZ.id AS id, GZ.code AS code, GZ.name AS name, GL.code AS levelCode, GL.name AS level, GZP.code AS parentCode, GZP.name AS parentZone, GLP.code AS parentLevelCode, GLP.name AS parentLevel",
     "FROM geographic_zones GZ INNER JOIN geographic_zones GZP ON GZ.parent = GZP.id",
-    "INNER JOIN geopolitical_levels GL ON GZ.level = GL.id",
-    "INNER JOIN geopolitical_levels GLP ON GZP.level = GLP.id",
+    "INNER JOIN geographic_levels GL ON GZ.level = GL.id",
+    "INNER JOIN geographic_levels GLP ON GZP.level = GLP.id",
     "WHERE GZ.id = #{geographicZoneId}"})
   @Results(value = {
+    @Result(property = "level.code", column = "levelCode"),
     @Result(property = "level.name", column = "level"),
     @Result(property = "parent.name", column = "parentZone"),
+    @Result(property = "parent.code", column = "parentCode"),
+    @Result(property = "parent.level.code", column = "parentLevelCode"),
     @Result(property = "parent.level.name", column = "parentLevel")
   })
   GeographicZone getGeographicZoneById(Integer geographicZoneId);
