@@ -11,7 +11,7 @@ describe('ViewRnrListController', function () {
       {"id":1}
     ];
     rnrList = {'rnr_list':[]};
-    controller(ViewRnrListController, {$scope:scope, facilities:facilities, $location: location});
+    controller(ViewRnrListController, {$scope:scope, facilities:facilities, $location:location});
   }));
 
   it('should initialize facilities', function () {
@@ -20,11 +20,7 @@ describe('ViewRnrListController', function () {
 
   it('should set facility label', function () {
     controller(ViewRnrListController, {$scope:scope, facilities:[]});
-    expect("--none assigned--").toEqual(scope.facilityLabel);
-  });
-
-  it('should set program label', function () {
-    expect("--select program--").toEqual(scope.programLabel);
+    expect("--None Assigned--").toEqual(scope.facilityLabel);
   });
 
   it('should load should raise error and return if if form invalid', function () {
@@ -117,7 +113,7 @@ describe('ViewRnrListController', function () {
   });
 
 
-  it('should clear end date if less than start date', function() {
+  it('should clear end date if less than start date', function () {
     scope.startDate = new Date();
 
     scope.endDate = new Date(scope.startDate);
@@ -133,8 +129,10 @@ describe('ViewRnrListController', function () {
     expect('filteredRequisitions').toEqual(scope.rnrListGrid.data);
   });
 
-  it('should open a requisition with id 1 and for program 2 and full-supply', function() {
-    scope.selectedItems = [{'id': 1, 'programId' : 2}];
+  it('should open a requisition with id 1 and for program 2 and full-supply', function () {
+    scope.selectedItems = [
+      {'id':1, 'programId':2}
+    ];
     scope.openRequisition();
     expect(location.path()).toEqual("/requisition/1/program/2/full-supply");
   });
