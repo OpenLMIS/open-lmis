@@ -2,6 +2,7 @@ function ConvertToOrderListController($scope, requisitionList, RequisitionOrder,
   $scope.requisitions = requisitionList;
   $scope.filteredRequisitions = $scope.requisitions;
   $scope.selectedItems = [];
+  $scope.message = "";
 
   $scope.gridOptions = { data: 'filteredRequisitions',
     multiSelect: true,

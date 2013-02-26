@@ -106,7 +106,7 @@ public interface RequisitionMapper {
   })
   List<Rnr> get(@Param("facility") Facility facility, @Param("program") Program program, @Param("periods") String periodIds);
 
-  @Insert("INSERT INTO order_batches(createdByUserId, createTimeStamp) VALUES (#{createdByUserId}, #{createTimeStamp})")
+  @Insert("INSERT INTO order_batches(createdByUserId, createTimeStamp) VALUES (#{createdByUserId}, DEFAULT)")
   @Options(useGeneratedKeys = true)
   void createOrderBatch(OrderBatch orderBatch);
 
