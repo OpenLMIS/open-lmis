@@ -1,48 +1,50 @@
 <!doctype html>
 <html lang="en" ng-app="rnr">
 <head>
-    <meta charset="utf-8">
-    <title>Open-LMIS</title>
-    <script src="/public/lib/jquery/jquery-1.8.2.min.js"></script>
-    <script src="/public/lib/jquery/jquery-ui-1.9.2.custom.min.js"></script>
-    <script src="/public/lib/underscore/underscore-min.js"></script>
-    <script src="/public/lib/angular/angular.js"></script>
-    <script src="/public/lib/angular/angular-resource.js"></script>
-    <script src="/public/lib/bootstrap/js/bootstrap.min.js"></script>
-    <script src="/public/lib/angular-ui/bootstrap/ui-bootstrap-0.1.0.min.js"></script>
-    <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
-    <script src="/public/lib/angular-ui/angular-ui.min.js"></script>
-    <script src="/public/lib/angular-ui/ng-grid-1.6.3.js"></script>
-    <link rel="stylesheet" href="/public/lib/angular-ui/angular-ui.min.css">
+  <meta charset="utf-8">
+  <title>Open-LMIS</title>
+  <script src="/public/lib/jquery/jquery-1.8.2.min.js"></script>
+  <script src="/public/lib/jquery/jquery-ui-1.9.2.custom.min.js"></script>
+  <script src="/public/lib/underscore/underscore-min.js"></script>
+  <script src="/public/lib/angular/angular.js"></script>
+  <script src="/public/lib/angular/angular-resource.js"></script>
+  <script src="/public/lib/bootstrap/js/bootstrap.min.js"></script>
+  <script src="/public/lib/angular-ui/bootstrap/ui-bootstrap-0.1.0.min.js"></script>
+  <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
+  <script src="/public/lib/angular-ui/angular-ui.min.js"></script>
+  <script src="/public/lib/angular-ui/ng-grid-1.6.3.js"></script>
+  <link rel="stylesheet" href="/public/lib/angular-ui/angular-ui.min.css">
+  <script src="/public/lib/plugins/ie_placeholder.js"></script>
 
-    <script src="/public/js/shared/util.js"></script>
-    <script src="/public/js/shared/services/services.js"></script>
-    <script type="text/javascript" src="/public/js/shared/services/message-service.js"></script>
-    <script src="/public/js/shared/controller/header-controller.js"></script>
-    <script src="/public/js/shared/controller/login-controller.js"></script>
-    <script src="/public/js/shared/app.js"></script>
-    <script src="/public/js/rnr/module/rnr-module.js"></script>
-    <script src="/public/js/rnr/controller/initiate-rnr-controller.js"></script>
-    <script src="/public/js/rnr/controller/initiate-my-facility-rnr-controller.js"></script>
-    <script src="/public/js/rnr/controller/initiate-my-supervised-facilities-rnr-controller.js"></script>
-    <script src="/public/js/rnr/controller/requisition-form-controller.js"></script>
-    <script src="/public/js/rnr/controller/requisition-full-supply-controller.js"></script>
-    <script src="/public/js/rnr/controller/requisition-non-full-supply-controller.js"></script>
-    <script src="/public/js/rnr/controller/approve-rnr-list-controller.js"></script>
-    <script src="/public/js/rnr/controller/approve-rnr-controller.js"></script>
-    <script src="/public/js/rnr/controller/convert-to-order-list-controller.js"></script>
-    <script src="/public/js/rnr/controller/view-rnr-list-controller.js"></script>
-    <script src="/public/js/rnr/controller/view-rnr-controller.js"></script>
-    <script src="/public/js/rnr/controller/requisition-controller.js"></script>
-    <script src="/public/js/shared/controller/navigation-controller.js"></script>
-    <script src="/public/lib/localstorage/localStorage.js"></script>
-    <script src="/public/js/shared/localStorageKeys.js"></script>
-    <script src="/public/js/rnr/model/rnr-line-item.js"></script>
-    <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/ng-grid.css">
-    <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/app.css">
+
+  <script src="/public/js/shared/util.js"></script>
+  <script src="/public/js/shared/services/services.js"></script>
+  <script type="text/javascript" src="/public/js/shared/services/message-service.js"></script>
+  <script src="/public/js/shared/controller/header-controller.js"></script>
+  <script src="/public/js/shared/controller/login-controller.js"></script>
+  <script src="/public/js/shared/app.js"></script>
+  <script src="/public/js/rnr/module/rnr-module.js"></script>
+  <script src="/public/js/rnr/controller/initiate-rnr-controller.js"></script>
+  <script src="/public/js/rnr/controller/initiate-my-facility-rnr-controller.js"></script>
+  <script src="/public/js/rnr/controller/initiate-my-supervised-facilities-rnr-controller.js"></script>
+  <script src="/public/js/rnr/controller/requisition-form-controller.js"></script>
+  <script src="/public/js/rnr/controller/requisition-full-supply-controller.js"></script>
+  <script src="/public/js/rnr/controller/requisition-non-full-supply-controller.js"></script>
+  <script src="/public/js/rnr/controller/approve-rnr-list-controller.js"></script>
+  <script src="/public/js/rnr/controller/approve-rnr-controller.js"></script>
+  <script src="/public/js/rnr/controller/convert-to-order-list-controller.js"></script>
+  <script src="/public/js/rnr/controller/view-rnr-list-controller.js"></script>
+  <script src="/public/js/rnr/controller/view-rnr-controller.js"></script>
+  <script src="/public/js/rnr/controller/requisition-controller.js"></script>
+  <script src="/public/js/shared/controller/navigation-controller.js"></script>
+  <script src="/public/lib/localstorage/localStorage.js"></script>
+  <script src="/public/js/shared/localStorageKeys.js"></script>
+  <script src="/public/js/rnr/model/rnr-line-item.js"></script>
+  <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/ng-grid.css">
+  <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/app.css">
 
   <!--[if IE 9]>
-    <link rel="stylesheet" href="/public/css/ie9.css" />
+  <link rel="stylesheet" href="/public/css/ie9.css"/>
   <![endif]-->
 
 </head>
@@ -52,7 +54,7 @@
 <ng-include src="'/public/pages/navigation.html'"></ng-include>
 
 <div class="content rnr-content">
-    <div ng-view></div>
+  <div ng-view></div>
 </div>
 </body>
 </html>

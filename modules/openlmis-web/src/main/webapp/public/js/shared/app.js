@@ -99,11 +99,11 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
     return {
       restrict:'A',
       link:function (scope, element, attrs, ctrl) {
-        if (!jQuery.support.placeholder) {
-          setTimeout(function () {
+        setTimeout(function () {
+          if(!!$.fn.placeholder){
             element.placeholder();
-          }, 0)
-        }
+          }
+        }, 0)
       }
     };
   }).run(function ($rootScope) {
@@ -116,6 +116,3 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
 function isUndefined(value) {
   return (value == null || value == undefined);
 }
-jQuery.support.placeholder = !!function () {
-  return "placeholder" in document.createElement("input");
-}();
