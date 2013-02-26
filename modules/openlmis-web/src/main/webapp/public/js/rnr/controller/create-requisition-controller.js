@@ -1,4 +1,4 @@
-function RequisitionController($scope, Requisition, $location, $routeParams) {
+function CreateRequisitionController($scope, Requisition, $location, $routeParams) {
 
   $scope.showNonFullSupply = !!$routeParams.showNonFullSupply;
 

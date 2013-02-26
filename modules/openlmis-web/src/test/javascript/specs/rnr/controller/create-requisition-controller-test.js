@@ -1,4 +1,4 @@
-describe('RequisitionController', function () {
+describe('CreateRequisitionController', function () {
 
   var scope, ctrl, httpBackend, location, routeParams, requisitionHeader, controller;
 
@@ -20,7 +20,7 @@ describe('RequisitionController', function () {
     var mockedRequisition = {'status':"INITIATED", fullSupplyItemsSubmittedCost : 100, nonFullSupplyItemsSubmittedCost: 14};
     httpBackend.when('GET', '/requisitions.json?facilityId=1&periodId=2&programId=1').respond({'rnr':mockedRequisition});
 
-    controller(RequisitionController, {$scope:scope, $routeParams:routeParams});
+    controller(CreateRequisitionController, {$scope:scope, $routeParams:routeParams});
 
     httpBackend.flush();
 
@@ -32,7 +32,7 @@ describe('RequisitionController', function () {
     scope.rnr = {'status':"INITIATED"};
     scope.rnr.period = {"name":"Period 1", "startDate":1358274600000, "endDate":1367260200000};
     httpBackend.when('GET', '/requisitions.json?facilityId=1&periodId=2&programId=1').respond({'rnr':scope.rnr});
-    controller(RequisitionController, {$scope:scope, $routeParams:routeParams});
+    controller(CreateRequisitionController, {$scope:scope, $routeParams:routeParams});
     expect(scope.periodDisplayName()).toEqual('16/01/2013 - 30/04/2013');
   });
 });
