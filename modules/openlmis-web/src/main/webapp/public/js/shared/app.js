@@ -1,7 +1,7 @@
 'use strict';
 
 /* App Module */
-angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.directives'], function ($routeProvider, $locationProvider, $httpProvider) {
+angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.directives'],function ($routeProvider, $locationProvider, $httpProvider) {
   var interceptor = ['$rootScope', '$q', function (scope, $q) {
     function success(response) {
       angular.element('#loader').hide();
@@ -28,7 +28,7 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
     };
   }];
   $httpProvider.responseInterceptors.push(interceptor);
-}).config(function($httpProvider) {
+}).config(function ($httpProvider) {
     var spinnerFunction = function (data) {
       angular.element('#loader').show();
       return data;
@@ -79,7 +79,7 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
       link:function (scope, element, attrs) {
         scope.$watch(attrs.openlmisMessage, function () {
           var displayMessage = localStorageService.get("message." + scope[attrs.openlmisMessage]);
-          if(displayMessage)
+          if (displayMessage)
             element.html(displayMessage);
           else
             element.html(scope[attrs.openlmisMessage]);
@@ -95,6 +95,17 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
         angular.element("#action_buttons").css("width", toolbarWidth + "px");
       }
     };
+  }).directive('placeholder',function () {
+    return {
+      restrict:'A',
+      link:function (scope, element, attrs, ctrl) {
+        if (!jQuery.support.placeholder) {
+          setTimeout(function () {
+            element.placeholder();
+          }, 0)
+        }
+      }
+    };
   }).run(function ($rootScope) {
     $rootScope.$on('$routeChangeStart', function () {
       angular.element('#ui-datepicker-div').hide();
@@ -105,3 +116,6 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
 function isUndefined(value) {
   return (value == null || value == undefined);
 }
+jQuery.support.placeholder = !!function () {
+  return "placeholder" in document.createElement("input");
+}();
