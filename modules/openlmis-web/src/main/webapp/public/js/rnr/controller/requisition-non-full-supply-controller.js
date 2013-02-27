@@ -8,9 +8,9 @@ function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $r
   groupToPages();
 
   $scope.$watch("currentPage", function () {
-    if ($routeParams.page && $routeParams.page!=$scope.currentPage ) {
-      var location = $location.path() + "?showNonFullSupply=true&page=" + $scope.currentPage;
-      $scope.$parent.saveRnr(location);
+    if ($routeParams.page && $routeParams.page != $scope.currentPage) {
+      var location= $location.path() + "?page=" + $scope.currentPage;
+      $scope.checkDirtyAndSaveForm(location);
     }
   });
   $scope.$parent.$on("rnrPrepared", function () {

@@ -133,9 +133,9 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
 
   $scope.saveRnrOnTabChange = function (gotoFullSupply) {
     if (gotoFullSupply) {
-      if($routeParams.showNonFullSupply) $scope.checkDirtyAndSaveForm($scope.fullSupplyLink);
+      if($routeParams.supplyType == 'non-full-supply') $scope.checkDirtyAndSaveForm($scope.fullSupplyLink);
     } else {
-      if(!$routeParams.showNonFullSupply) $scope.checkDirtyAndSaveForm($scope.nonFullSupplyLink);
+      if($routeParams.supplyType == 'full-supply') $scope.checkDirtyAndSaveForm($scope.nonFullSupplyLink);
     }
   };
 
@@ -174,14 +174,14 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
       return false;
     }
     if ($scope.saveRnrForm.$error.required) {
-      $scope.saveRnr();
+      $scope.saveRnr(null);
       $scope.inputClass = "required";
       $scope.submitMessage = "";
       $scope.submitError = 'Please complete the highlighted fields on the R&R form before submitting';
       return false;
     }
     if (!formulaValid()) {
-      $scope.saveRnr();
+      $scope.saveRnr(null);
       $scope.submitError = "Please correct the errors on the R&R form before submitting";
       $scope.submitMessage = "";
       return false;

@@ -1,11 +1,10 @@
 function CreateRequisitionController($scope, Requisition, $location, $routeParams) {
 
-  $scope.showNonFullSupply = !!$routeParams.showNonFullSupply;
+  $scope.showNonFullSupply = $routeParams.supplyType == 'non-full-supply';
 
-  $scope.fullSupplyLink = $location.path()+"?page=1";
-
-  $scope.nonFullSupplyLink = $scope.fullSupplyLink + "&showNonFullSupply=true";
-
+  $scope.baseUrl = "/create-rnr/" + $routeParams.facility + '/' + $routeParams.program +'/' + $routeParams.period;
+  $scope.fullSupplyLink = $scope.baseUrl + "/full-supply?page=1";
+  $scope.nonFullSupplyLink = $scope.baseUrl + "/non-full-supply?page=1";
   $scope.pageSize = 1;
 
   if (!$scope.$parent.rnr) {

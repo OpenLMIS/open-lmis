@@ -41,7 +41,7 @@ describe('InitiateRnrController', function () {
     scope.initRnr();
     $httpBackend.flush();
 
-    expect(location.path()).toEqual("/create-rnr/1/2/3");
+    expect(location.path()).toEqual("/create-rnr/1/2/3/full-supply");
     expect(scope.error).toEqual("");
     expect(scope.$parent.rnr).toEqual({"id":1, status:'INITIATED'});
   });
@@ -83,7 +83,7 @@ describe('InitiateRnrController', function () {
     scope.initRnr();
     $httpBackend.flush();
 
-    expect(location.path()).toEqual("/create-rnr/1/2/3");
+    expect(location.path()).toEqual("/create-rnr/1/2/3/full-supply");
     expect(scope.error).toEqual("");
     expect(scope.$parent.rnr).toEqual({"id":1, status:'INITIATED'});
   });
