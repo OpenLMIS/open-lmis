@@ -38,11 +38,19 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
     Requisitions.update({id:$scope.rnr.id, operation:"save"}, rnr, function (data) {
       $rootScope.message = data.success;
       $scope.error = "";
-      if(location) $location.url(location);
+      if (location) $location.url(location);
     }, function (data) {
       $scope.error = data.error;
       $scope.message = "";
     });
+  };
+
+  $scope.checkDirtyAndSaveForm = function (location) {
+    if (!$scope.saveRnrForm.$dirty) {
+      if (location) $location.url(location);
+      return true;
+    }
+    $scope.saveRnr(location);
   };
 
   $scope.submitRnr = function () {
@@ -54,7 +62,7 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
         $scope.rnr.status = "SUBMITTED";
         $scope.formDisabled = !$rootScope.hasPermission('AUTHORIZE_REQUISITION');
         $rootScope.submitMessage = data.success;
-          $scope.submitError = "";
+        $scope.submitError = "";
       }, function (data) {
         $scope.submitError = data.data.error;
       });
@@ -121,6 +129,14 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
 
   $scope.getRowErrorClass = function (rnrLineItem) {
     return $scope.getCellErrorClass(rnrLineItem) ? 'row-error-highlight' : '';
+  };
+
+  $scope.saveRnrOnTabChange = function (gotoFullSupply) {
+    if (gotoFullSupply) {
+      if($routeParams.showNonFullSupply) $scope.checkDirtyAndSaveForm($scope.fullSupplyLink);
+    } else {
+      if(!$routeParams.showNonFullSupply) $scope.checkDirtyAndSaveForm($scope.nonFullSupplyLink);
+    }
   };
 
   function resetCostsIfNull() {

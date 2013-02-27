@@ -2,9 +2,9 @@ function CreateRequisitionController($scope, Requisition, $location, $routeParam
 
   $scope.showNonFullSupply = !!$routeParams.showNonFullSupply;
 
-  $scope.fullSupplyLink = "#" + $location.path();
+  $scope.fullSupplyLink = $location.path()+"?page=1";
 
-  $scope.nonFullSupplyLink = $scope.fullSupplyLink + "?showNonFullSupply=true";
+  $scope.nonFullSupplyLink = $scope.fullSupplyLink + "&showNonFullSupply=true";
 
   $scope.pageSize = 1;
 

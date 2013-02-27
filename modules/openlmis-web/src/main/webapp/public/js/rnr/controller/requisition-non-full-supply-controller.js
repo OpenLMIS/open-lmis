@@ -8,7 +8,7 @@ function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $r
   groupToPages();
 
   $scope.$watch("currentPage", function () {
-    if ($scope.currentPage != $routeParams.page) {
+    if ($routeParams.page && $routeParams.page!=$scope.currentPage ) {
       var location = $location.path() + "?showNonFullSupply=true&page=" + $scope.currentPage;
       $scope.$parent.saveRnr(location);
     }

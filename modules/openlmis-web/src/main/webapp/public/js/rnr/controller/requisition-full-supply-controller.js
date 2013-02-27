@@ -5,9 +5,9 @@ function RequisitionFullSupplyController($scope, $routeParams, $location, Losses
   groupToPages();
 
   $scope.$watch("currentPage", function () {
-    if ($scope.currentPage != $routeParams.page) {
+    if ($routeParams.page && $routeParams.page != $scope.currentPage) {
       var location= $location.path() + "?page=" + $scope.currentPage;
-      $scope.$parent.saveRnr(location);
+      $scope.$parent.checkDirtyAndSaveForm(location);
     }
   });
 

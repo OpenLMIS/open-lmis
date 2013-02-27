@@ -2,9 +2,9 @@
   <div class="rnr-tabs">
     <ul class="clearfix">
       <li ng-class="{'selected': !showNonFullSupply}">
-        <a ng-href="{{fullSupplyLink}}" id="fullSupplyTab">Full Supply Product(s)</a></li>
+        <a ng-click="saveRnrOnTabChange(true)" id="fullSupplyTab">Full Supply Product(s)</a></li>
       <li ng-class="{'selected': showNonFullSupply}">
-        <a ng-href="{{nonFullSupplyLink}}" id="nonFullSupplyTab">Non Full Supply Product(s)</a></li>
+        <a ng-click="saveRnrOnTabChange(false)" id="nonFullSupplyTab">Non Full Supply Product(s)</a></li>
     </ul>
   </div>
   <div ng-hide="programRnrColumnList">Loading...</div>
@@ -34,7 +34,7 @@
       <div class="toolbar-error" id="saveFailMessage" openlmis-message="error"
            ng-show="error && !submitError && !submitMessage"></div>
       <div class="toolbar-error" id="submitFailMessage" openlmis-message="submitError"></div>
-      <div class="toolbar-success fade5000" id="saveSuccessMsgDiv" openlmis-message="message"
+      <div class="toolbar-success {{(message) && 'fade5000' || ''}}" id="saveSuccessMsgDiv" openlmis-message="message"
            ng-show="!submitMessage && !submitError && message"></div>
       <div class="toolbar-success" id="submitSuccessMsgDiv" openlmis-message="submitMessage"></div>
     </div>
