@@ -73,12 +73,12 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
         });
       }
     };
-  }).directive('openlmisMessage', function (localStorageService) {
+  }).directive('openlmisMessage', function (messageService) {
     return {
       restrict:'A',
       link:function (scope, element, attrs) {
         scope.$watch(attrs.openlmisMessage, function () {
-          var displayMessage = localStorageService.get("message." + scope[attrs.openlmisMessage]);
+          var displayMessage = messageService.get(scope[attrs.openlmisMessage]);
           if (displayMessage)
             element.html(displayMessage);
           else
@@ -98,7 +98,7 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
   }).directive('placeholder',function () {
     return {
       restrict:'A',
-      link:function (scope, element, attrs, ctrl) {
+      link:function (scope, element) {
         setTimeout(function () {
           if(!!$.fn.placeholder){
             element.placeholder();
