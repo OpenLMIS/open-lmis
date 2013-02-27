@@ -4,34 +4,25 @@ function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $r
   }, function () {
   });
 
-  $scope.pageSize = 5;
   $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) : 1;
   groupToPages();
 
   $scope.$watch("currentPage", function () {
-//    $scope.$parent.saveRnr();
-    $location.url($location.path() + "?showNonFullSupply=true&page=" + $scope.currentPage);
+    if ($scope.currentPage != $routeParams.page) {
+      var location = $location.path() + "?showNonFullSupply=true&page=" + $scope.currentPage;
+      $scope.$parent.saveRnr(location);
+    }
+  });
+  $scope.$parent.$on("rnrPrepared", function () {
+    groupToPages();
   });
 
   function groupToPages() {
-    $scope.pagedRnrNonFullSupplyLineItems = [];
-    var pageEndIndex;
-    var pageStartIndex = 0;
-    var sortedRnrLineItems = _.sortBy($scope.$parent.rnr.nonFullSupplyLineItems, function (rnrLineItem) {
+    var sortedRnrLineItems = _.sortBy($scope.rnr.nonFullSupplyLineItems, function (rnrLineItem) {
       return rnrLineItem.productCode;
     });
-    var sortedRnrListLength = sortedRnrLineItems.length;
-    var pageNumber;
-    for (pageNumber = 1; pageStartIndex < sortedRnrListLength; pageNumber++) {
-      if (pageStartIndex + $scope.pageSize > sortedRnrListLength) {
-        pageEndIndex = sortedRnrListLength;
-      } else {
-        pageEndIndex = pageStartIndex + $scope.pageSize;
-      }
-      $scope.pagedRnrNonFullSupplyLineItems[pageNumber] = sortedRnrLineItems.slice(pageStartIndex, pageEndIndex);
-      pageStartIndex = pageStartIndex + $scope.pageSize;
-    }
-    $scope.noOfPages = ($scope.pagedRnrNonFullSupplyLineItems.length > 0) ? ($scope.pagedRnrNonFullSupplyLineItems.length - 1) : 1;
+    $scope.$parent.pagedRnrNonFullSupplyLineItems = sortedRnrLineItems.slice(($scope.currentPage - 1) * $scope.pageSize, $scope.currentPage * $scope.pageSize);
+    $scope.noOfPages = ($scope.rnr.nonFullSupplyLineItems && $scope.rnr.nonFullSupplyLineItems.length > 0) ? Math.ceil($scope.rnr.nonFullSupplyLineItems.length / $scope.pageSize) : 1;
   }
 
   $scope.getId = function (prefix, parent, isLossAdjustment) {
@@ -65,7 +56,7 @@ function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $r
   $scope.shouldDisableAddButton = function () {
     return !($scope.newNonFullSupply && $scope.newNonFullSupply.quantityRequested && $scope.newNonFullSupply.reasonForRequestedQuantity
       && $scope.facilityApprovedProduct);
-  }
+  };
 
   function populateProductInformation() {
     var product = {};

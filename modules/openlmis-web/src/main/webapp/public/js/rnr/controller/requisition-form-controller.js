@@ -4,7 +4,7 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
   }, function () {
   });
 
-    ProgramRnRColumnList.get({programId:$routeParams.program}, function (data) {
+  ProgramRnRColumnList.get({programId:$routeParams.program}, function (data) {
     if (data.rnrColumnList && data.rnrColumnList.length > 0) {
       $scope.visibleColumns = _.where(data.rnrColumnList, {'visible':true});
       $scope.programRnrColumnList = data.rnrColumnList;
@@ -27,17 +27,18 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
     return false;
   };
 
-  $scope.saveRnr = function () {
+  $scope.saveRnr = function (location) {
     resetFlags();
     if ($scope.saveRnrForm.$error.rnrError) {
       $scope.error = "Please correct errors before saving.";
       $scope.message = "";
-      return;
+      return false;
     }
     var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id:$scope.rnr.id, operation:"save"}, rnr, function (data) {
-      $scope.message = data.success;
+      $rootScope.message = data.success;
       $scope.error = "";
+      if(location) $location.url(location);
     }, function (data) {
       $scope.error = data.error;
       $scope.message = "";
@@ -49,14 +50,14 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
     if (!valid()) return;
     var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id:$scope.rnr.id, operation:"submit"},
-        rnr, function (data) {
-          $scope.rnr.status = "SUBMITTED";
-          $scope.formDisabled = !$rootScope.hasPermission('AUTHORIZE_REQUISITION');
-          $scope.submitMessage = data.success;
+      rnr, function (data) {
+        $scope.rnr.status = "SUBMITTED";
+        $scope.formDisabled = !$rootScope.hasPermission('AUTHORIZE_REQUISITION');
+        $rootScope.submitMessage = data.success;
           $scope.submitError = "";
-        }, function (data) {
-          $scope.submitError = data.data.error;
-        });
+      }, function (data) {
+        $scope.submitError = data.data.error;
+      });
   };
 
   $scope.authorizeRnr = function () {
@@ -65,7 +66,7 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
     Requisitions.update({id:$scope.rnr.id, operation:"authorize"}, rnr, function (data) {
       $scope.rnr.status = "AUTHORIZED";
       $scope.formDisabled = true;
-      $scope.submitMessage = data.success;
+      $rootScope.submitMessage = data.success;
       $scope.submitError = "";
     }, function (data) {
       $scope.submitError = data.data.error;
@@ -175,7 +176,7 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
   function resetFlags() {
     $scope.submitError = "";
     $scope.inputClass = "";
-    $scope.submitMessage = "";
+    $rootScope.submitMessage = "";
   }
 
   // TODO: Push this method to rnr-line-item

@@ -6,6 +6,8 @@ function CreateRequisitionController($scope, Requisition, $location, $routeParam
 
   $scope.nonFullSupplyLink = $scope.fullSupplyLink + "?showNonFullSupply=true";
 
+  $scope.pageSize = 1;
+
   if (!$scope.$parent.rnr) {
     Requisition.get({facilityId:$routeParams.facility, programId:$routeParams.program, periodId:$routeParams.period},
       function (data) {
