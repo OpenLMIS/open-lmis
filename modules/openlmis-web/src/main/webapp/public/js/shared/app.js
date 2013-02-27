@@ -107,10 +107,11 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
             ctrl.$modelValue = undefined;
             ctrl.$viewValue = attr.placeholder;
             ctrl.$render();
-
+            element.css("color", "#a2a2a2");
           };
           var unPlaceholder = function () {
             ctrl.$viewValue = undefined;
+            element.css("color", "");
             ctrl.$render();
           };
 
