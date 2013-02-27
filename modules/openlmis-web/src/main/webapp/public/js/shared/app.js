@@ -98,12 +98,46 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
   }).directive('placeholder',function () {
     return {
       restrict:'A',
-      link:function (scope, element) {
-        setTimeout(function () {
-          if(!!$.fn.placeholder){
-            element.placeholder();
-          }
-        }, 0)
+      require:'ngModel',
+      link:function (scope, element, attr, ctrl) {
+        var value;
+
+        if (!jQuery.support.placeholder) {
+          var placeholder = function () {
+            ctrl.$modelValue = undefined;
+            ctrl.$viewValue = attr.placeholder;
+            ctrl.$render();
+
+          };
+          var unPlaceholder = function () {
+            ctrl.$viewValue = undefined;
+            ctrl.$render();
+          };
+
+          scope.$watch(attr.ngModel, function (val) {
+            if (val == attr.placeholder)   val = '';
+            value = val || '';
+          });
+
+          element.bind('focus', function () {
+            if (value == '') unPlaceholder();
+          });
+
+          element.bind('blur', function () {
+            if (element.val() == '') {
+              placeholder();
+            }
+          });
+
+          ctrl.$formatters.unshift(function (val) {
+            if (!val || (val == attr.placeholder)) {
+              placeholder();
+              value = '';
+              return attr.placeholder;
+            }
+            return val;
+          });
+        }
       }
     };
   }).run(function ($rootScope) {
