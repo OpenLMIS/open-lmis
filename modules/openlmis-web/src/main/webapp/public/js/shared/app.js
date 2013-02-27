@@ -150,3 +150,6 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
 function isUndefined(value) {
   return (value == null || value == undefined);
 }
+jQuery.support.placeholder = !!function () {
+  return "placeholder" in document.createElement("input");
+}();
