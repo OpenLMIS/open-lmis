@@ -189,7 +189,15 @@
                         <property name="recordHandler" ref="productCategoryPersistenceHandler"/>
                     </bean>
                 </entry>
-
+                <entry key="GeographicZone">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Geographic Zones"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.GeographicZone</value>
+                        </property>
+                        <property name="recordHandler" ref="geographicZonePersistenceHandler"/>
+                    </bean>
+                </entry>
             </map>
         </constructor-arg>
     </bean>

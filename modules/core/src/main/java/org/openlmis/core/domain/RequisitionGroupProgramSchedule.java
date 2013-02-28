@@ -11,21 +11,21 @@ import java.util.Date;
 @NoArgsConstructor
 public class RequisitionGroupProgramSchedule implements Importable {
 
-    @ImportField(mandatory = true, name = "RG Code", nested = "code")
-    private RequisitionGroup requisitionGroup;
+  @ImportField(mandatory = true, name = "RG Code", nested = "code")
+  private RequisitionGroup requisitionGroup;
 
-    @ImportField(mandatory = true, name = "Program", nested = "code")
-    private Program program;
+  @ImportField(mandatory = true, name = "Program", nested = "code")
+  private Program program;
 
-    @ImportField(mandatory = true, name = "Schedule", nested = "code")
-    private ProcessingSchedule schedule;
+  @ImportField(mandatory = true, name = "Schedule", nested = "code")
+  private ProcessingSchedule schedule;
 
-    @ImportField(mandatory = true, name = "Direct Delivery")
-    private boolean directDelivery;
+  @ImportField(mandatory = true, name = "Direct Delivery")
+  private boolean directDelivery;
 
-    @ImportField(name = "Drop off Facility", nested = "code")
-    private Facility dropOffFacility;
+  @ImportField(name = "Drop off Facility", nested = "code")
+  private Facility dropOffFacility;
 
-    String modifiedBy;
-    Date modifiedDate;
+  Integer modifiedBy;
+  Date modifiedDate;
 }

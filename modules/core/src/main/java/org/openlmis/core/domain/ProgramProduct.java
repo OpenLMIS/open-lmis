@@ -23,7 +23,7 @@ public class ProgramProduct implements Importable {
 
   private Integer id;
   private Money currentPrice;
-  private String modifiedBy;
+  private Integer modifiedBy;
   private Date modifiedDate;
   public static final String PROGRAM_PRODUCT_INVALID_CURRENT_PRICE = "programProduct.invalid.current.price";
 

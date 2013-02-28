@@ -17,7 +17,7 @@ public class ProgramSupportedPersistenceHandler extends AbstractModelPersistence
   }
 
   @Override
-  protected void save(Importable importable, String modifiedBy) {
+  protected void save(Importable importable, Integer modifiedBy) {
     ProgramSupported programSupported = (ProgramSupported) importable;
     programSupported.setModifiedBy(modifiedBy);
     facilityService.uploadSupportedProgram(programSupported);

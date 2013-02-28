@@ -29,8 +29,8 @@ public class SupplyLineHandlerTest {
     @Test
     public void shouldSaveSupplyLine() {
         SupplyLine supplyLine = make(a(SupplyLineBuilder.defaultSupplyLine));
-        supplyLineHandler.save(supplyLine, "user");
-        assertThat(supplyLine.getModifiedBy(), is("user"));
+        supplyLineHandler.save(supplyLine, 1);
+        assertThat(supplyLine.getModifiedBy(), is(1));
         assertThat(supplyLine.getModifiedDate(), is(notNullValue()));
         verify(supplyLineRepository).insert(supplyLine);
 

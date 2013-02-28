@@ -47,7 +47,7 @@ public class CSVParserTest {
     InputStream inputStream = new ByteArrayInputStream(csvInput.getBytes("UTF-8"));
 
 
-    csvParser.process(inputStream, dummyImportableClass, recordHandler, "user");
+    csvParser.process(inputStream, dummyImportableClass, recordHandler, 1);
 
     List<Importable> importedObjects = recordHandler.getImportedObjects();
     assertEquals(23, ((DummyImportable) importedObjects.get(0)).getMandatoryIntField());
@@ -70,7 +70,7 @@ public class CSVParserTest {
     expectedEx.expect(UploadException.class);
     expectedEx.expectMessage("Missing Mandatory data in field : 'Mandatory String Field' of Record No. 2");
 
-    csvParser.process(inputStream, dummyImportableClass, recordHandler, "user");
+    csvParser.process(inputStream, dummyImportableClass, recordHandler, 1);
   }
 
   @Test
@@ -85,7 +85,7 @@ public class CSVParserTest {
     expectedEx.expect(UploadException.class);
     expectedEx.expectMessage("Incorrect Data type in field : 'OPTIONAL INT FIELD' of Record No. 2");
 
-    csvParser.process(inputStream, dummyImportableClass, recordHandler, "user");
+    csvParser.process(inputStream, dummyImportableClass, recordHandler, 1);
   }
 
   @Test
@@ -100,7 +100,7 @@ public class CSVParserTest {
     expectedEx.expect(UploadException.class);
     expectedEx.expectMessage("Header for column 2 is missing.");
 
-    csvParser.process(inputStream, dummyImportableClass, recordHandler, "user");
+    csvParser.process(inputStream, dummyImportableClass, recordHandler, 1);
   }
 
   @Test
@@ -114,7 +114,7 @@ public class CSVParserTest {
     expectedEx.expect(UploadException.class);
     expectedEx.expectMessage("Incorrect file format, Column name missing");
 
-    csvParser.process(inputStream, dummyImportableClass, recordHandler, "user");
+    csvParser.process(inputStream, dummyImportableClass, recordHandler, 1);
   }
 
   @Test
@@ -128,7 +128,7 @@ public class CSVParserTest {
     expectedEx.expect(UploadException.class);
     expectedEx.expectMessage("Incorrect date format in field : 'OPTIONAL DATE FIELD' of Record No. 1");
 
-    csvParser.process(inputStream, dummyImportableClass, recordHandler, "user");
+    csvParser.process(inputStream, dummyImportableClass, recordHandler, 1);
   }
 
   @Test
@@ -140,7 +140,7 @@ public class CSVParserTest {
     InputStream inputStream = new ByteArrayInputStream(csvInput.getBytes("UTF-8"));
 
 
-    csvParser.process(inputStream, dummyImportableClass, recordHandler, "user");
+    csvParser.process(inputStream, dummyImportableClass, recordHandler, 1);
     DummyImportable dummyImportable = (DummyImportable) recordHandler.getImportedObjects().get(0);
     assertThat(dummyImportable.getDummyNestedField().getCode(), is("code1"));
   }
@@ -154,7 +154,7 @@ public class CSVParserTest {
     InputStream inputStream = new ByteArrayInputStream(csvInput.getBytes("UTF-8"));
 
 
-    csvParser.process(inputStream, dummyImportableClass, recordHandler, "user");
+    csvParser.process(inputStream, dummyImportableClass, recordHandler, 1);
     DummyImportable dummyImportable = (DummyImportable) recordHandler.getImportedObjects().get(0);
     assertThat(dummyImportable.getMultipleNestedFields().getEntityCode1(), is("code1-1"));
     assertThat(dummyImportable.getMultipleNestedFields().getEntityCode2(), is("code1-2"));

@@ -14,7 +14,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class SupervisoryNodeHandlerTest {
 
-    public static final String USER = "USER";
+    public static final Integer USER = 1;
     @Mock
     SupervisoryNodeService supervisoryNodeService;
 

@@ -26,6 +26,6 @@ public class SupplyLine implements Importable {
   Facility supplyingFacility;
 
   private Date modifiedDate;
-  private String modifiedBy;
+  private Integer modifiedBy;
 
 }

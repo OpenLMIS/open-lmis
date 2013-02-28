@@ -78,7 +78,7 @@ public class FacilityController extends BaseController {
   @PreAuthorize("hasPermission('','MANAGE_FACILITY')")
   public ResponseEntity<OpenLmisResponse> updateDataReportableAndActive(@RequestBody Facility facility, @PathVariable(value = "operation") String operation,
                                                                         HttpServletRequest request) {
-    facility.setModifiedBy(loggedInUser(request));
+    facility.setModifiedBy(loggedInUserId(request));
     String message;
     if ("delete".equalsIgnoreCase(operation)) {
       facility.setDataReportable(false);
@@ -113,7 +113,7 @@ public class FacilityController extends BaseController {
   @RequestMapping(value = "/facilities", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("hasPermission('','MANAGE_FACILITY')")
   public ResponseEntity insert(@RequestBody Facility facility, HttpServletRequest request) {
-    facility.setModifiedBy(loggedInUser(request));
+    facility.setModifiedBy(loggedInUserId(request));
     ResponseEntity<OpenLmisResponse> response;
     try {
       facilityService.insert(facility);
@@ -128,8 +128,7 @@ public class FacilityController extends BaseController {
   @RequestMapping(value = "/facilities/{id}", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("hasPermission('','MANAGE_FACILITY')")
   public ResponseEntity update(@RequestBody Facility facility, HttpServletRequest request) {
-    String modifiedBy = (String) request.getSession().getAttribute(USER);
-    facility.setModifiedBy(modifiedBy);
+    facility.setModifiedBy(loggedInUserId(request));
     ResponseEntity<OpenLmisResponse> response;
     try {
       facilityService.update(facility);

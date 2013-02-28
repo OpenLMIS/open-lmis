@@ -16,7 +16,7 @@ public class AbstractModelPersistenceHandlerTest {
   public void shouldAppendRowNumberToExceptionMessage() throws Exception {
     AbstractModelPersistenceHandler handler = new AbstractModelPersistenceHandler() {
       @Override
-      protected void save(Importable modelClass, String modifiedBy) {
+      protected void save(Importable modelClass, Integer modifiedBy) {
         throw new DataException("error");
       }
     };
@@ -25,6 +25,6 @@ public class AbstractModelPersistenceHandlerTest {
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("code: upload.record.error, params: { error; 1 }");
 
-    handler.execute(importable, 2, "user");
+    handler.execute(importable, 2, 1);
   }
 }

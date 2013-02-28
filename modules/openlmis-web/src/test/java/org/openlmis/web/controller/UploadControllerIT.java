@@ -33,7 +33,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 @ContextConfiguration(locations = "classpath*:applicationContext.xml")
 public class UploadControllerIT {
 
-  public static final String USER = "user";
+  public static final Integer USER = 1;
 
   @Autowired
   CSVParser csvParser;
@@ -54,7 +54,7 @@ public class UploadControllerIT {
     }};
     request = new MockHttpServletRequest();
     MockHttpSession session = new MockHttpSession();
-    session.setAttribute(UserAuthenticationSuccessHandler.USER, USER);
+    session.setAttribute(UserAuthenticationSuccessHandler.USER_ID, USER);
     request.setSession(session);
     controller = new UploadController(csvParser, uploadBeansMap);
   }
@@ -71,7 +71,7 @@ public class UploadControllerIT {
         "&success=File uploaded successfully. Total records uploaded: 2"));
 
     ArgumentCaptor<MandatoryFields> validUploadTypeArgumentCaptor = ArgumentCaptor.forClass(MandatoryFields.class);
-    verify(handler).execute(validUploadTypeArgumentCaptor.capture(), eq(2), eq("user"));
+    verify(handler).execute(validUploadTypeArgumentCaptor.capture(), eq(2), eq(1));
 
     assertThat(validUploadTypeArgumentCaptor.getValue().getFieldA(), is("Val11"));
     assertThat(validUploadTypeArgumentCaptor.getValue().getFieldB(), is("Val12"));
@@ -91,7 +91,7 @@ public class UploadControllerIT {
         "&success=File uploaded successfully. Total records uploaded: 3"));
 
     ArgumentCaptor<NonMandatoryFields> nonMandatoryFieldsArgumentCaptor = ArgumentCaptor.forClass(NonMandatoryFields.class);
-    verify(handler).execute(nonMandatoryFieldsArgumentCaptor.capture(), eq(4), eq("user"));
+    verify(handler).execute(nonMandatoryFieldsArgumentCaptor.capture(), eq(4), eq(1));
 
   }
 

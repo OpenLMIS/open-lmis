@@ -21,7 +21,7 @@ public class RequisitionGroupHandler extends AbstractModelPersistenceHandler {
   }
 
   @Override
-  protected void save(Importable importable, String userName) {
+  protected void save(Importable importable, Integer userName) {
     RequisitionGroup requisitionGroup = (RequisitionGroup) importable;
     requisitionGroup.setModifiedBy(userName);
     requisitionGroup.setModifiedDate(new Date());

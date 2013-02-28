@@ -20,7 +20,7 @@ public class UserPersistenceHandler extends AbstractModelPersistenceHandler {
   }
 
   @Override
-  protected void save(Importable modelClass, String modifiedBy) {
+  protected void save(Importable modelClass, Integer modifiedBy) {
     final User user = (User) modelClass;
     user.setModifiedBy(modifiedBy);
     userService.create(user);

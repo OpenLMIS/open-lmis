@@ -22,7 +22,7 @@ public class RequisitionGroupMemberHandler extends AbstractModelPersistenceHandl
     }
 
     @Override
-    protected void save(Importable modelClass, String modifiedBy) {
+    protected void save(Importable modelClass, Integer modifiedBy) {
         RequisitionGroupMember requisitionGroupMember = (RequisitionGroupMember) modelClass;
         requisitionGroupMember.setModifiedBy(modifiedBy);
         requisitionGroupMember.setModifiedDate(new Date());

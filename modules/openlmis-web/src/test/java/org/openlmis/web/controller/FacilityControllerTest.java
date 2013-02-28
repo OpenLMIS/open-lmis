@@ -83,7 +83,7 @@ public class FacilityControllerTest {
     OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
     assertThat(response.getSuccessMsg(), is("Facility 'test facility' created successfully"));
     verify(facilityService).insert(facility);
-    assertThat(facility.getModifiedBy(), is(USER));
+    assertThat(facility.getModifiedBy(), is(userId));
   }
 
   @Test
@@ -95,7 +95,7 @@ public class FacilityControllerTest {
     OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
     assertThat(response.getSuccessMsg(), is("Facility 'test facility' updated successfully"));
     verify(facilityService).update(facility);
-    assertThat(facility.getModifiedBy(), is(USER));
+    assertThat(facility.getModifiedBy(), is(userId));
   }
 
   @Test
@@ -142,7 +142,6 @@ public class FacilityControllerTest {
 
   @Test
   public void shouldUpdateDataReportableAndActiveForFacilityDelete() throws Exception {
-    MockHttpServletRequest httpServletRequest = httpRequest();
     Facility facility = new Facility();
     facility.setId(123);
     facility.setName("Test Facility");
@@ -155,7 +154,7 @@ public class FacilityControllerTest {
     assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
     assertThat(response.getSuccessMsg(), is("\"Test Facility\" / \"Test Code\" deleted successfully"));
     verify(facilityService).updateDataReportableAndActiveFor(facility);
-    assertThat(facility.getModifiedBy(), is(USER));
+    assertThat(facility.getModifiedBy(), is(userId));
     assertThat(facility.getDataReportable(), is(false));
     assertThat(facility.getActive(), is(false));
   }

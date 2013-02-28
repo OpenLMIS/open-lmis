@@ -53,7 +53,7 @@ public class UploadController extends BaseController {
         return errorPage(error, model);
       }
 
-      String modifiedBy = loggedInUser(request);
+      Integer modifiedBy = loggedInUserId(request);
       int recordsUploaded = csvParser.process(csvFile.getInputStream(),
           new ModelClass(uploadBeansMap.get(model).getImportableClass()),
           uploadBeansMap.get(model).getRecordHandler(), modifiedBy);

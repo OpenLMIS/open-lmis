@@ -13,17 +13,17 @@ import java.util.Date;
 public class RequisitionGroup implements Importable, BaseModel {
 
 
-    Integer id;
-    @ImportField(mandatory = true, name = "RG Code")
-    String code;
-    @ImportField(mandatory = true, name = "Name of RG")
-    String name;
-    @ImportField(name = "Description")
-    String description;
-    @ImportField(mandatory = true, nested = "code", name = "Supervisory Node")
-    SupervisoryNode supervisoryNode;
+  Integer id;
+  @ImportField(mandatory = true, name = "RG Code")
+  String code;
+  @ImportField(mandatory = true, name = "Name of RG")
+  String name;
+  @ImportField(name = "Description")
+  String description;
+  @ImportField(mandatory = true, nested = "code", name = "Supervisory Node")
+  SupervisoryNode supervisoryNode;
 
-    String modifiedBy;
-    Date modifiedDate;
+  Integer modifiedBy;
+  Date modifiedDate;
 
 }

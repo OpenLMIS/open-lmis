@@ -26,8 +26,8 @@ public class ProgramProductPricePersistenceHandlerTest {
   @Test
   public void shouldSaveProgramProductPrice() {
     ProgramProductPrice programProductPrice = new ProgramProductPrice();
-    programProductCostPersistenceHandler.save(programProductPrice, "user");
+    programProductCostPersistenceHandler.save(programProductPrice, 1);
     verify(programProductService).save(programProductPrice);
-    assertThat(programProductPrice.getModifiedBy(), is("user"));
+    assertThat(programProductPrice.getModifiedBy(), is(1));
   }
 }

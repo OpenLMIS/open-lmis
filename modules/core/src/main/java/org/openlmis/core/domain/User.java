@@ -52,7 +52,7 @@ public class User implements Importable {
   private User supervisor;
 
   private Integer facilityId;
-  private String modifiedBy;
+  private Integer modifiedBy;
   private Date modifiedDate;
   private List<RoleAssignment> supervisorRoles;
   private List<RoleAssignment> homeFacilityRoles;

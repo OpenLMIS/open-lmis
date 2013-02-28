@@ -32,10 +32,10 @@ public class ProgramSupported implements Importable {
   @ImportField(name = "Program Start Date", type = "Date")
   private Date startDate;
 
-  private String modifiedBy;
+  private Integer modifiedBy;
   private Date modifiedDate;
 
-  public ProgramSupported(Integer facilityId, Program program, Boolean active, Date startDate, Date modifiedDate, String modifiedBy) {
+  public ProgramSupported(Integer facilityId, Program program, Boolean active, Date startDate, Date modifiedDate, Integer modifiedBy) {
     this.facilityId = facilityId;
     this.program = program;
     this.active = active;

@@ -53,11 +53,11 @@ public class ProductCategoryMapperIT {
     ProductCategory productCategory = new ProductCategory();
     productCategory.setCode("category code");
     productCategory.setName("category name");
-    productCategory.setModifiedBy("user1");
+    productCategory.setModifiedBy(1);
     productCategoryMapper.insert(productCategory);
 
     productCategory.setName("updated category name");
-    productCategory.setModifiedBy("user2");
+    productCategory.setModifiedBy(2);
     productCategoryMapper.update(productCategory);
     ProductCategory returnedProductCategory = productCategoryMapper.getProductCategoryByCode(productCategory.getCode());
 

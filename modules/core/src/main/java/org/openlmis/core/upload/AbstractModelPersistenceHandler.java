@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public abstract class AbstractModelPersistenceHandler implements RecordHandler<Importable> {
 
   @Override
-  public void execute(Importable importable, int rowNumber, String modifiedBy) {
+  public void execute(Importable importable, int rowNumber, Integer modifiedBy) {
     final String rowNumberAsString = Integer.toString(rowNumber- 1);
     try {
       save(importable, modifiedBy);
@@ -24,5 +24,5 @@ public abstract class AbstractModelPersistenceHandler implements RecordHandler<I
     }
   }
 
-  protected abstract void save(Importable modelClass, String modifiedBy);
+  protected abstract void save(Importable modelClass, Integer modifiedBy);
 }

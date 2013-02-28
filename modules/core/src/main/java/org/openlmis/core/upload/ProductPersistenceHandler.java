@@ -19,7 +19,7 @@ public class ProductPersistenceHandler extends AbstractModelPersistenceHandler {
     }
 
     @Override
-    protected void save(Importable importable, String modifiedBy) {
+    protected void save(Importable importable, Integer modifiedBy) {
         Product product = (Product) importable;
         product.setModifiedBy(modifiedBy);
         product.setModifiedDate(new Date());

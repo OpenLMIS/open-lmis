@@ -117,6 +117,7 @@ public class FacilityMapperIT {
     GeographicZone geographicZone = allGeographicZones.get(0);
 
     assertThat(geographicZone.getId(), is(1));
+    assertThat(geographicZone.getCode(), is("Arusha"));
     assertThat(geographicZone.getName(), is("Arusha"));
     assertThat(geographicZone.getLevel().getName(), is("state"));
   }
@@ -203,14 +204,14 @@ public class FacilityMapperIT {
     mapper.insert(facility);
     facility.setDataReportable(false);
     facility.setActive(false);
-    facility.setModifiedBy("user1");
+    facility.setModifiedBy(1);
     mapper.updateDataReportableAndActiveFor(facility);
 
     Facility updatedFacility = mapper.getById(facility.getId());
 
     assertThat(updatedFacility.getDataReportable(), is(false));
     assertThat(updatedFacility.getActive(), is(false));
-    assertThat(updatedFacility.getModifiedBy(), is("user1"));
+    assertThat(updatedFacility.getModifiedBy(), is(1));
   }
 
   @Test

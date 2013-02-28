@@ -19,8 +19,8 @@ public class GeographicZonePersistenceHandlerTest {
     GeographicZonePersistenceHandler geographicZonePersistenceHandler = new GeographicZonePersistenceHandler(repository);
     GeographicZone geographicZone = new GeographicZone();
 
-    geographicZonePersistenceHandler.save(geographicZone, "user");
-    assertThat(geographicZone.getModifiedBy(), is("user"));
+    geographicZonePersistenceHandler.save(geographicZone, 1);
+    assertThat(geographicZone.getModifiedBy(), is(1));
     verify(repository).save(geographicZone);
 
   }

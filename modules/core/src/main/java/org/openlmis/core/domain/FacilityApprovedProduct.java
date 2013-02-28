@@ -31,7 +31,7 @@ public class FacilityApprovedProduct implements Importable {
   @ImportField(name = "Max months of stock", mandatory = true, type = "int")
   private Integer maxMonthsOfStock = 0;
 
-  private String modifiedBy;
+  private Integer modifiedBy;
 
   private Date modifiedDate;
 

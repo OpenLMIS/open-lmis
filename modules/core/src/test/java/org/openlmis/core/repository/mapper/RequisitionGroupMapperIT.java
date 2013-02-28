@@ -102,7 +102,7 @@ public class RequisitionGroupMapperIT {
     RequisitionGroupMember requisitionGroupMember = new RequisitionGroupMember();
     requisitionGroupMember.setFacility(facility);
     requisitionGroupMember.setRequisitionGroup(requisitionGroup);
-    requisitionGroupMember.setModifiedBy("User");
+    requisitionGroupMember.setModifiedBy(1);
     requisitionGroupMemberMapper.insert(requisitionGroupMember);
 
     assertThat(requisitionGroupMapper.getRequisitionGroupForProgramAndFacility(requisitionGroupProgramSchedule.getProgram(),

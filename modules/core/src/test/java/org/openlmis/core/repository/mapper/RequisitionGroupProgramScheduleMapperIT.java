@@ -48,7 +48,7 @@ public class RequisitionGroupProgramScheduleMapperIT {
   @Before
   public void setUp() throws Exception {
     requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
-    requisitionGroupProgramSchedule.setModifiedBy("User");
+    requisitionGroupProgramSchedule.setModifiedBy(1);
     requisitionGroupProgramSchedule.setModifiedDate(new Date(0));
     requisitionGroupProgramSchedule.setProgram(make(a(defaultProgram)));
     requisitionGroupProgramSchedule.setRequisitionGroup(make(a(defaultRequisitionGroup)));

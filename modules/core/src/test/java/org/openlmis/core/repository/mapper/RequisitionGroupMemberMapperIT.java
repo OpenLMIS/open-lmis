@@ -63,7 +63,7 @@ public class RequisitionGroupMemberMapperIT {
 
     requisitionGroupMember.setFacility(facility);
     requisitionGroupMember.setRequisitionGroup(requisitionGroup);
-    requisitionGroupMember.setModifiedBy("User");
+    requisitionGroupMember.setModifiedBy(1);
 
     processingScheduleMapper.insert(processingSchedule);
   }

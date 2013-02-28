@@ -16,7 +16,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class RequisitionGroupProgramScheduleHandlerTest {
 
-    public static final String USER = "User";
+    public static final Integer USER = 1;
     @Mock
     RequisitionGroupProgramScheduleService requisitionGroupProgramScheduleService;
 

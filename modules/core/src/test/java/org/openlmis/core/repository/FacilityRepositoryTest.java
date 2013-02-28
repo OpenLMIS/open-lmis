@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.FacilityMapper;
@@ -26,9 +27,9 @@ import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
+import static org.openlmis.core.builder.FacilityBuilder.GEOGRAPHIC_ZONE_CODE;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({DateTime.class})
@@ -39,6 +40,9 @@ public class FacilityRepositoryTest {
   @Mock
   private FacilityMapper mapper;
 
+  @Mock
+  private GeographicZoneRepository geographicZoneRepository;
+
   private FacilityRepository repository;
   private DateTime now;
 
@@ -47,8 +51,8 @@ public class FacilityRepositoryTest {
     mockStatic(DateTime.class);
     now = new DateTime(2012, 10, 10, 8, 0);
     when(DateTime.now()).thenReturn(now);
-    when(mapper.isGeographicZonePresent(FacilityBuilder.GEOGRAPHIC_ZONE_ID)).thenReturn(Boolean.TRUE);
-    repository = new FacilityRepository(mapper, null);
+    when(geographicZoneRepository.getByCode(GEOGRAPHIC_ZONE_CODE)).thenReturn(new GeographicZone());
+    repository = new FacilityRepository(mapper, null, geographicZoneRepository);
   }
 
   @Test
@@ -126,17 +130,6 @@ public class FacilityRepositoryTest {
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Invalid reference data 'Facility Type'");
-    repository.save(facility);
-  }
-
-  @Test
-  public void shouldRaiseInvalidReferenceGeographicZoneIdError() throws Exception {
-    Facility facility = make(a(defaultFacility));
-    facility.getGeographicZone().setId(999);
-    when(mapper.isGeographicZonePresent(999)).thenReturn(Boolean.FALSE);
-
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Invalid reference data 'Geographic Zone Id'");
     repository.save(facility);
   }
 
@@ -221,6 +214,31 @@ public class FacilityRepositoryTest {
     List<Facility> returnedFacilities = repository.searchFacilitiesByCodeOrName("query");
 
     assertThat(returnedFacilities, is(facilityList));
+  }
+
+  @Test
+  public void shouldSetGeographicZoneFromCodeAfterValidation() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    GeographicZone existingZone = new GeographicZone();
+    int existingId = 1;
+    existingZone.setId(existingId);
+    when(geographicZoneRepository.getByCode(facility.getGeographicZone().getCode())).thenReturn(existingZone);
+
+    repository.save(facility);
+
+    assertThat(facility.getGeographicZone(), is(existingZone));
+    verify(geographicZoneRepository).getByCode(GEOGRAPHIC_ZONE_CODE);
+  }
+
+  @Test
+  public void shouldGiveErrorIfGeographicZoneDoesNotExist() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    Mockito.when(geographicZoneRepository.getByCode(facility.getGeographicZone().getCode())).thenReturn(null);
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("Invalid reference data 'Geographic Zone Code'");
+
+    repository.save(facility);
   }
 
   @Test

@@ -21,11 +21,13 @@ public class FacilityRepository {
 
   private FacilityMapper mapper;
   private CommaSeparator commaSeparator;
+  private GeographicZoneRepository geographicZoneRepository;
 
   @Autowired
-  public FacilityRepository(FacilityMapper facilityMapper, CommaSeparator commaSeparator) {
+  public FacilityRepository(FacilityMapper facilityMapper, CommaSeparator commaSeparator, GeographicZoneRepository geographicZoneRepository) {
     this.mapper = facilityMapper;
     this.commaSeparator = commaSeparator;
+    this.geographicZoneRepository = geographicZoneRepository;
   }
 
   public List<Facility> getAll() {
@@ -55,16 +57,12 @@ public class FacilityRepository {
   }
 
   private void validateGeographicZone(Facility facility) {
-    GeographicZone geographicZone = facility.getGeographicZone();
+    GeographicZone geographicZone = geographicZoneRepository.getByCode(facility.getGeographicZone().getCode());
+    facility.setGeographicZone(geographicZone);
 
-    if (geographicZone == null || geographicZone.getId() == null)
-      throw new DataException("Missing mandatory reference data 'Geographic Zone Id'");
-
-    Integer geographicZoneId = geographicZone.getId();
-    Boolean geographicZonePresent = mapper.isGeographicZonePresent(geographicZoneId);
-
-    if (!geographicZonePresent)
-      throw new DataException("Invalid reference data 'Geographic Zone Id'");
+    if(facility.getGeographicZone() == null){
+      throw new DataException("Invalid reference data 'Geographic Zone Code'");
+    }
   }
 
   private void validateAndSetFacilityType(Facility facility) {

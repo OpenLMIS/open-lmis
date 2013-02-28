@@ -19,7 +19,7 @@ public class FacilityPersistenceHandler extends AbstractModelPersistenceHandler 
     }
 
     @Override
-    protected void save(Importable importable, String modifiedBy) {
+    protected void save(Importable importable, Integer modifiedBy) {
         Facility facility = (Facility) importable;
         facility.setModifiedBy(modifiedBy);
         facilityRepository.save(facility);

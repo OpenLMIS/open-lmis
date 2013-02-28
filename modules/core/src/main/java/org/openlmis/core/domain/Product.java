@@ -164,5 +164,5 @@ public class Product implements Importable {
 
   private Date modifiedDate;
 
-  private String modifiedBy;
+  private Integer modifiedBy;
 }

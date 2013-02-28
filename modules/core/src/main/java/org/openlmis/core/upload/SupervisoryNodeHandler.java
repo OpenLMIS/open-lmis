@@ -21,7 +21,7 @@ public class SupervisoryNodeHandler extends AbstractModelPersistenceHandler {
     }
 
     @Override
-    protected void save(Importable modelClass, String modifiedBy) {
+    protected void save(Importable modelClass, Integer modifiedBy) {
         SupervisoryNode supervisoryNode = (SupervisoryNode) modelClass;
         supervisoryNode.setModifiedBy(modifiedBy);
         supervisoryNode.setModifiedDate(new Date());

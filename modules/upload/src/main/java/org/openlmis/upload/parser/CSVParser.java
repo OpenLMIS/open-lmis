@@ -28,7 +28,7 @@ import static java.util.Arrays.asList;
 public class CSVParser {
 
   @Transactional
-  public int process(InputStream inputStream, ModelClass modelClass, RecordHandler recordHandler, String modifiedBy)
+  public int process(InputStream inputStream, ModelClass modelClass, RecordHandler recordHandler, Integer modifiedBy)
     throws UploadException {
     CsvPreference csvPreference = new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE)
       .surroundingSpacesNeedQuotes(true).build();
@@ -65,7 +65,7 @@ public class CSVParser {
 
   private void parse(ModelClass modelClass, RecordHandler recordHandler,
                      CsvDozerBeanReader csvBeanReader, String[] userFriendlyHeaders,
-                     CellProcessor[] processors, String modifiedBy) throws UploadException {
+                     CellProcessor[] processors, Integer modifiedBy) throws UploadException {
     String[] fieldMappings = modelClass.getFieldNameMappings(userFriendlyHeaders);
     Importable importedModel;
     try {

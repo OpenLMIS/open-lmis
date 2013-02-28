@@ -17,7 +17,7 @@ public class ProgramProductPricePersistenceHandler extends AbstractModelPersiste
   }
 
   @Override
-  protected void save(Importable modelClass, String modifiedBy) {
+  protected void save(Importable modelClass, Integer modifiedBy) {
     ProgramProductPrice programProductPrice = (ProgramProductPrice) modelClass;
     programProductPrice.setModifiedBy(modifiedBy);
     programProductService.save(programProductPrice);

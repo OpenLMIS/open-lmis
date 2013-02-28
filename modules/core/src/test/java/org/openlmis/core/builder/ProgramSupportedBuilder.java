@@ -35,7 +35,7 @@ public class ProgramSupportedBuilder {
       programSupported.setProgram(lookup.valueOf(supportedProgram, new Program(PROGRAM_ID, PROGRAM_CODE, PROGRAM_NAME, null, null)));
       programSupported.setStartDate(lookup.valueOf(startDate, START_DATE));
       programSupported.setActive(lookup.valueOf(isActive, IS_ACTIVE));
-      programSupported.setModifiedBy("user");
+      programSupported.setModifiedBy(1);
       programSupported.setModifiedDate(now().toDate());
       return programSupported;
     }

@@ -31,7 +31,7 @@ public class ProgramProductPrice implements Importable {
 
   private Date startDate;
   private Date endDate;
-  private String modifiedBy;
+  private Integer modifiedBy;
 
   public ProgramProductPrice(ProgramProduct programProduct, Money pricePerDosage, String source) {
     this.programProduct = programProduct;

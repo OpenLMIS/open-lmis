@@ -24,8 +24,8 @@ public class ProductPersistenceHandlerTest {
         ProductService productService = mock(ProductService.class);
         Product product = new Product();
 
-        new ProductPersistenceHandler(productService).execute(product, 0, "user");
-        assertThat(product.getModifiedBy(), is("user"));
+        new ProductPersistenceHandler(productService).execute(product, 0, 1);
+        assertThat(product.getModifiedBy(), is(1));
         assertThat(product.getModifiedDate(), is(notNullValue()));
         verify(productService).save(product);
     }

@@ -15,7 +15,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class RequisitionGroupHandlerTest {
 
-    public static final String USER = "USER";
+    public static final Integer USER = 1;
     RequisitionGroupHandler requisitionGroupHandler;
 
     @Mock
@@ -32,7 +32,7 @@ public class RequisitionGroupHandlerTest {
         RequisitionGroup requisitionGroup = new RequisitionGroup();
         requisitionGroup.setModifiedBy(USER);
 
-        requisitionGroupHandler.save(requisitionGroup, "USER");
+        requisitionGroupHandler.save(requisitionGroup, 1);
 
         assertThat(requisitionGroup.getModifiedBy(), is(USER));
         assertThat(requisitionGroup.getModifiedDate(), is(notNullValue()));

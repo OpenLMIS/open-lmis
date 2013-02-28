@@ -53,7 +53,7 @@ public interface FacilityMapper {
   Integer getOperatedByIdForCode(String code);
 
 
-  @Select("SELECT GZ.id as id, GZ.name as name, GL.name as level FROM geographic_zones GZ, geographic_levels GL where GZ.level = GL.id")
+  @Select("SELECT GZ.id as id, GZ.code as code, GZ.name as name, GL.name as level FROM geographic_zones GZ, geographic_levels GL where GZ.level = GL.id")
   @Results(value = {
     @Result(property = "level.name", column = "level")
   })

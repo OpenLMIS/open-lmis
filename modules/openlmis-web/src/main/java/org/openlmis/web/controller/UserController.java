@@ -81,8 +81,7 @@ public class UserController extends BaseController {
   @PreAuthorize("hasPermission('','MANAGE_USERS')")
   public ResponseEntity<OpenLmisResponse> create(@RequestBody User user, HttpServletRequest request) {
     ResponseEntity<OpenLmisResponse> successResponse;
-    String modifiedBy = (String) request.getSession().getAttribute(USER);
-    user.setModifiedBy(modifiedBy);
+    user.setModifiedBy(loggedInUserId(request));
     try {
       String referrer = request.getHeader("referer");
       String resetPasswordBaseLink = referrer.substring(0, nthOccurrence(referrer, '/', 3)) + "/public/pages/reset-password.html#/token/";
@@ -101,7 +100,7 @@ public class UserController extends BaseController {
                                                  @PathVariable("id") Integer id,
                                                  HttpServletRequest request) {
     ResponseEntity<OpenLmisResponse> successResponse;
-    user.setModifiedBy(loggedInUser(request));
+    user.setModifiedBy(loggedInUserId(request));
     user.setId(id);
     try {
       userService.update(user);

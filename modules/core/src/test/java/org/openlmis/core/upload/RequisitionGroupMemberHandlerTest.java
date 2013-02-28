@@ -14,7 +14,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class RequisitionGroupMemberHandlerTest {
 
-    public static final String USER = "user";
+    public static final Integer USER = 1;
 
   @Mock
     RequisitionGroupMemberService requisitionGroupMemberService;

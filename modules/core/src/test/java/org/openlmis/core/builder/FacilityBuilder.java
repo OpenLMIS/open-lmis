@@ -19,6 +19,7 @@ public class FacilityBuilder {
   public static final Property<Facility, String> name = newProperty();
   public static final Property<Facility, String> type = newProperty();
   public static final Property<Facility, Integer> geographicZoneId = newProperty();
+  public static final Property<Facility, String> geographicZoneCode = newProperty();
   public static final Property<Facility, Boolean> sdp = newProperty();
   public static final Property<Facility, Boolean> active = newProperty();
   public static final Property<Facility, Date> goLiveDate = newProperty();
@@ -33,6 +34,7 @@ public class FacilityBuilder {
   public static final Integer FACILITY_TYPE_ID = 1;
   public static final Integer GEOGRAPHIC_ZONE_ID = 2;
 
+  public static final String GEOGRAPHIC_ZONE_CODE = "GEOGRAPHIC_ZONE_CODE";
   public static final Instantiator<Facility> defaultFacility = new Instantiator<Facility>() {
 
     @Override
@@ -46,6 +48,7 @@ public class FacilityBuilder {
       facility.setName(lookup.valueOf(name, "Apollo Hospital"));
       GeographicZone geographicZoneValue = new GeographicZone();
       geographicZoneValue.setId(lookup.valueOf(geographicZoneId, GEOGRAPHIC_ZONE_ID));
+      geographicZoneValue.setCode(lookup.valueOf(geographicZoneCode, GEOGRAPHIC_ZONE_CODE));
       facility.setGeographicZone(lookup.valueOf(geographicZone, geographicZoneValue));
       facility.setSdp(lookup.valueOf(sdp, true));
       facility.setActive(lookup.valueOf(active, true));
@@ -55,7 +58,7 @@ public class FacilityBuilder {
       operatedBy.setId(lookup.valueOf(operatedById, 1));
       facility.setOperatedBy(operatedBy);
       facility.setGoLiveDate(lookup.valueOf(goLiveDate, new LocalDate(2013, 10, 10).toDate()));
-      facility.setModifiedBy("user");
+      facility.setModifiedBy(1);
       return facility;
     }
   };

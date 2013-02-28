@@ -27,9 +27,9 @@ public class ProgramSupportedPersistenceHandlerTest {
   @Test
   public void shouldSaveProgramSupported() {
     ProgramSupported programSupported = new ProgramSupported();
-    programSupportedPersistenceHandler.save(programSupported, "user");
+    programSupportedPersistenceHandler.save(programSupported, 1);
     verify(facilityService).uploadSupportedProgram(programSupported);
-    assertThat(programSupported.getModifiedBy(), is("user"));
+    assertThat(programSupported.getModifiedBy(), is(1));
   }
 
 }

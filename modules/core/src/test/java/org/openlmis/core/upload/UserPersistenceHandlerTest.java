@@ -23,8 +23,8 @@ public class UserPersistenceHandlerTest {
   public void shouldSaveAUser() throws Exception {
     userPersistenceHandler = new UserPersistenceHandler(userService);
     User user = new User();
-    userPersistenceHandler.save(user, "userName");
+    userPersistenceHandler.save(user, 1);
     verify(userService).create(user);
-    assertThat(user.getModifiedBy(), is("userName"));
+    assertThat(user.getModifiedBy(), is(1));
   }
 }

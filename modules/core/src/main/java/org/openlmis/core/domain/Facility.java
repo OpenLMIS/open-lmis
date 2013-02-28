@@ -47,7 +47,7 @@ public class Facility implements Importable, BaseModel {
   @ImportField(name = "Facility Address2")
   private String address2;
 
-  @ImportField(mandatory = true, type = "long", name = "Geographic Zone ID", nested = "id")
+  @ImportField(mandatory = true, name = "Geographic Zone Code", nested = "code")
   private GeographicZone geographicZone;
 
   @ImportField(mandatory = true, name = "Facility Type Code", nested = "code")
@@ -115,7 +115,7 @@ public class Facility implements Importable, BaseModel {
 
   List<ProgramSupported> supportedPrograms = new ArrayList<>();
 
-  private String modifiedBy;
+  private Integer modifiedBy;
 
   private Date modifiedDate;
 

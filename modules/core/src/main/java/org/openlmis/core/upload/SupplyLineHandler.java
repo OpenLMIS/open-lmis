@@ -21,7 +21,7 @@ public class SupplyLineHandler extends AbstractModelPersistenceHandler {
     }
 
     @Override
-    protected void save(Importable modelClass, String modifiedBy) {
+    protected void save(Importable modelClass, Integer modifiedBy) {
         SupplyLine supplyLine = (SupplyLine) modelClass;
         supplyLine.setModifiedBy(modifiedBy);
         supplyLine.setModifiedDate(new Date());

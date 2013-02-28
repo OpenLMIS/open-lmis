@@ -20,7 +20,7 @@ public class ProductCategoryPersistenceHandler  extends AbstractModelPersistence
   }
 
   @Override
-  protected void save(Importable importable, String modifiedBy) {
+  protected void save(Importable importable, Integer modifiedBy) {
     ProductCategory productCategory = (ProductCategory) importable;
     productCategory.setModifiedBy(modifiedBy);
     productCategory.setModifiedDate(new Date());

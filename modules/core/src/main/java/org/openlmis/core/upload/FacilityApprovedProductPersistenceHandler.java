@@ -19,7 +19,7 @@ public class FacilityApprovedProductPersistenceHandler extends AbstractModelPers
   }
 
   @Override
-  protected void save(Importable modelClass, String modifiedBy) {
+  protected void save(Importable modelClass, Integer modifiedBy) {
     FacilityApprovedProduct facilityApprovedProduct = (FacilityApprovedProduct) modelClass;
     facilityApprovedProduct.setModifiedBy(modifiedBy);
     facilityApprovedProductService.save(facilityApprovedProduct);

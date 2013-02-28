@@ -29,7 +29,7 @@ public class SupervisoryNode implements Importable, BaseModel {
     private Facility facility;
 
     private Date modifiedDate;
-    private String modifiedBy;
+    private Integer modifiedBy;
 
   public SupervisoryNode(Integer id) {
     this.id = id;

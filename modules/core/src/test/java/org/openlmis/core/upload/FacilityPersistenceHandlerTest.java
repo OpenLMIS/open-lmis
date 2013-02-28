@@ -19,8 +19,8 @@ public class FacilityPersistenceHandlerTest {
         FacilityRepository facilityRepository = mock(FacilityRepository.class);
         FacilityPersistenceHandler facilityPersistenceHandler = new FacilityPersistenceHandler(facilityRepository);
         Facility facility = make(a(FacilityBuilder.defaultFacility));
-        facilityPersistenceHandler.save(facility, "user");
-        assertThat(facility.getModifiedBy(), is("user"));
+        facilityPersistenceHandler.save(facility, 1);
+        assertThat(facility.getModifiedBy(), is(1));
         verify(facilityRepository).save(facility);
     }
 

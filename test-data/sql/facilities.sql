@@ -7,7 +7,7 @@ INSERT INTO facilities
 ('F11','Central Hospital','IT department','G7646',9876234981,'fax','A','B',1,2,333,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','TRUE','fc','TRUE');
 
 INSERT INTO programs_supported(facilityId, programId, startDate, active, modifiedBy) VALUES
-((SELECT id FROM facilities WHERE code = 'F10'), 1, '11/11/12', true, 'Admin123'),
-((SELECT id FROM facilities WHERE code = 'F10'), 2, '11/11/12', true, 'Admin123'),
-((SELECT id FROM facilities WHERE code = 'F11'), 1, '11/11/12', true, 'Admin123'),
-((SELECT id FROM facilities WHERE code = 'F11'), 2, '11/11/12', true, 'Admin123');
+((SELECT id FROM facilities WHERE code = 'F10'), 1, '11/11/12', true, 1),
+((SELECT id FROM facilities WHERE code = 'F10'), 2, '11/11/12', true, 1),
+((SELECT id FROM facilities WHERE code = 'F11'), 1, '11/11/12', true, 1),
+((SELECT id FROM facilities WHERE code = 'F11'), 2, '11/11/12', true, 1);

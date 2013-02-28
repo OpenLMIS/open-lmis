@@ -19,7 +19,7 @@ public class ProgramProductPersistenceHandler extends AbstractModelPersistenceHa
     }
 
     @Override
-    protected void save(Importable importable, String modifiedBy) {
+    protected void save(Importable importable, Integer modifiedBy) {
         ProgramProduct programProduct = (ProgramProduct) importable;
         programProduct.setModifiedBy(modifiedBy);
         programProduct.setModifiedDate(new Date());

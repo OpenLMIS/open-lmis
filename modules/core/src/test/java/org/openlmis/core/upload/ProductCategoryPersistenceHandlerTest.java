@@ -19,8 +19,8 @@ public class ProductCategoryPersistenceHandlerTest {
     ProductCategoryRepository productCategoryRepository = mock(ProductCategoryRepository.class);
     ProductCategory productCategory = new ProductCategory();
 
-    new ProductCategoryPersistenceHandler(productCategoryRepository).execute(productCategory, 0, "user");
-    assertThat(productCategory.getModifiedBy(), is("user"));
+    new ProductCategoryPersistenceHandler(productCategoryRepository).execute(productCategory, 0, 1);
+    assertThat(productCategory.getModifiedBy(), is(1));
     assertThat(productCategory.getModifiedDate(), is(notNullValue()));
     verify(productCategoryRepository).save(productCategory);
   }

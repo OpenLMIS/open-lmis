@@ -23,7 +23,7 @@ public class RequisitionGroupProgramScheduleHandler extends AbstractModelPersist
     }
 
     @Override
-    protected void save(Importable modelClass, String modifiedBy) {
+    protected void save(Importable modelClass, Integer modifiedBy) {
         RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = (RequisitionGroupProgramSchedule) modelClass;
         requisitionGroupProgramSchedule.setModifiedBy(modifiedBy);
         requisitionGroupProgramSchedule.setModifiedDate(new Date());

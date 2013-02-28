@@ -39,7 +39,7 @@ public class ProgramProductServiceTest {
   public void shouldUpdateCurrentPriceOfProgramProductCodeCombinationAndUpdatePriceHistory() throws Exception {
     ProgramProduct programProduct = make(a(defaultProgramProduct));
     ProgramProductPrice programProductPrice = new ProgramProductPrice(programProduct, new Money("1"), "source");
-    programProductPrice.setModifiedBy("User");
+    programProductPrice.setModifiedBy(1);
 
     ProgramProduct returnedProgramProduct = new ProgramProduct();
     returnedProgramProduct.setId(123);
@@ -48,7 +48,7 @@ public class ProgramProductServiceTest {
     programProductService.save(programProductPrice);
 
     assertThat(programProductPrice.getProgramProduct().getId(), is(123));
-    assertThat(programProductPrice.getProgramProduct().getModifiedBy(), is("User"));
+    assertThat(programProductPrice.getProgramProduct().getModifiedBy(), is(1));
     verify(programProductRepository).getProgramProductByProgramAndProductCode(programProduct);
     verify(programProductRepository).updateCurrentPrice(programProduct);
     verify(programProductRepository).updatePriceHistory(programProductPrice);

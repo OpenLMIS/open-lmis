@@ -76,7 +76,7 @@ public class ProgramProductMapperIT {
   @Test
   public void shouldUpdateCurrentPriceForProgramProduct() throws Exception {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true, new Money("100.0"));
-    programProduct.setModifiedBy("modifiedBy");
+    programProduct.setModifiedBy(1);
     programProductMapper.insert(programProduct);
      Money price = new Money("200.01");
     programProduct.setCurrentPrice(price);
@@ -85,7 +85,7 @@ public class ProgramProductMapperIT {
 
     ProgramProduct returnedProgramProduct = programProductMapper.getById(programProduct.getId());
     assertThat(returnedProgramProduct.getCurrentPrice(), is(price));
-    assertThat(returnedProgramProduct.getModifiedBy(), is("modifiedBy"));
+    assertThat(returnedProgramProduct.getModifiedBy(), is(1));
     assertThat(returnedProgramProduct.getModifiedDate(), is(notNullValue()));
   }
 

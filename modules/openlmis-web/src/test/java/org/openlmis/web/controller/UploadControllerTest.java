@@ -31,7 +31,7 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class UploadControllerTest {
 
-  public static final String USER = "user";
+  public static final Integer USER = 1;
   @Mock
   CSVParser csvParser;
 
@@ -54,7 +54,7 @@ public class UploadControllerTest {
     }};
     request = new MockHttpServletRequest();
     MockHttpSession session = new MockHttpSession();
-    session.setAttribute(UserAuthenticationSuccessHandler.USER, USER);
+    session.setAttribute(UserAuthenticationSuccessHandler.USER_ID, USER);
     request.setSession(session);
     controller = new UploadController(csvParser, uploadBeansMap);
   }

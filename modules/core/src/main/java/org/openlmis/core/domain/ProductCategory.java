@@ -20,7 +20,7 @@ public class ProductCategory implements Importable {
   @ImportField(mandatory = true, name = "Category Name")
   private String name;
 
-  private String modifiedBy;
+  private Integer modifiedBy;
 
   private Date modifiedDate;
 

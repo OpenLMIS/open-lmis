@@ -17,7 +17,7 @@ public class   RequisitionGroupMember implements Importable {
     @ImportField(mandatory = true, name = "Member Facility", nested = "code")
     private Facility facility;
 
-    private String modifiedBy;
+    private Integer modifiedBy;
     private Date modifiedDate;
 
     public RequisitionGroupMember(RequisitionGroup requisitionGroup, Facility facility) {
