@@ -37,6 +37,13 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
     var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id:$scope.rnr.id, operation:"save"}, rnr, function (data) {
       $rootScope.message = data.success;
+      setTimeout(function() {
+        $scope.$apply(function() {
+          angular.element("#saveSuccessMsgDiv").fadeOut('slow', function() {
+            $rootScope.message = '';
+          });
+        });
+      }, 3000);
       $scope.error = "";
       if (location) $location.url(location);
     }, function (data) {

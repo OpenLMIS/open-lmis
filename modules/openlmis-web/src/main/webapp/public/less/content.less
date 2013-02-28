@@ -1242,14 +1242,25 @@ input[placeholder].placeholder{
   li{
     a{
       margin-right: 5px;
-      border-radius: 10px;
+      border-radius: 5px;
+      color: #777;
+      border: 1px solid #b9b9b9;
+      background: #e7e7e7;
+      box-shadow: inset 0 0 2px white;
+      padding: 3px 9px;
     }
-    &.active a{
+    &.active a {
       background-color: #60ACAF;
       color: #E1EDED;
+      border-color: #419EA2;
     }
-    &.disabled a{
-
+    &.disabled {
+      a {
+        color: #CCC;
+        &:hover {
+          background-color: #e7e7e7;
+        }
+      }
     }
   }
 }
