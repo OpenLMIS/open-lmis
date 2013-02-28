@@ -4,7 +4,6 @@ function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $r
   }, function () {
   });
 
-  $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) : 1;
   groupToPages();
 
   $scope.$watch("currentPage", function () {
@@ -13,6 +12,7 @@ function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $r
       $scope.checkDirtyAndSaveForm(location);
     }
   });
+
   $scope.$parent.$on("rnrPrepared", function () {
     groupToPages();
   });

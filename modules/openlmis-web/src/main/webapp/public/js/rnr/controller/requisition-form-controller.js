@@ -18,6 +18,7 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
     $location.path("/init-rnr");
   });
 
+  $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
 
   $scope.isFormDisabled = function () {
     if ($scope.rnr || $scope.$parent.rnr) {
