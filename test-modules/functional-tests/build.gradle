@@ -38,3 +38,13 @@ smokeTest.doFirst() {
     buildOpenLmis.execute()
 }
 
+task functionalTest(type: Test) {
+    useTestNG() {
+        suites 'src/test/java/org/openlmis/functional/testng-functional.xml'
+    }
+}
+
+functionalTest.doFirst() {
+    buildOpenLmis.execute()
+}
+
