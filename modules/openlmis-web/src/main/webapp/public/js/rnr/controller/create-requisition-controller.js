@@ -5,7 +5,7 @@ function CreateRequisitionController($scope, Requisition, $location, $routeParam
   $scope.baseUrl = "/create-rnr/" + $routeParams.facility + '/' + $routeParams.program +'/' + $routeParams.period;
   $scope.fullSupplyLink = $scope.baseUrl + "/full-supply?page=1";
   $scope.nonFullSupplyLink = $scope.baseUrl + "/non-full-supply?page=1";
-  $scope.pageSize = 1;
+  $scope.pageSize = 2;
 
   if (!$scope.$parent.rnr) {
     Requisition.get({facilityId:$routeParams.facility, programId:$routeParams.program, periodId:$routeParams.period},
