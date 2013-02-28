@@ -112,7 +112,7 @@ public class RequisitionServiceTest {
     ProgramProduct programProduct = new ProgramProduct(null, make(a(defaultProduct)), 10, true);
     facilityApprovedProducts.add(new FacilityApprovedProduct("warehouse", programProduct, 30));
     when(facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(), PROGRAM.getId())).thenReturn(facilityApprovedProducts);
-    when(rnrTemplateRepository.fetchRnrTemplateColumns(PROGRAM.getId())).thenReturn(getRnrColumns());
+    when(rnrTemplateRepository.fetchColumnsForRequisition(PROGRAM.getId())).thenReturn(getRnrColumns());
 
     whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), facilityApprovedProducts, USER_ID).thenReturn(requisition);
 
@@ -145,7 +145,7 @@ public class RequisitionServiceTest {
 
     ArrayList<RnrColumn> rnrColumns = getRnrColumns();
     rnrColumns.add(make(a(defaultRnrColumn, with(columnName, BEGINNING_BALANCE), with(visible, false))));
-    when(rnrTemplateRepository.fetchRnrTemplateColumns(PROGRAM.getId())).thenReturn(rnrColumns);
+    when(rnrTemplateRepository.fetchColumnsForRequisition(PROGRAM.getId())).thenReturn(rnrColumns);
 
     whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), facilityApprovedProducts, USER_ID).thenReturn(requisition);
 
@@ -168,7 +168,7 @@ public class RequisitionServiceTest {
 
     ArrayList<RnrColumn> rnrColumns = getRnrColumns();
     rnrColumns.add(make(a(defaultRnrColumn, with(columnName, BEGINNING_BALANCE), with(visible, true))));
-    when(rnrTemplateRepository.fetchRnrTemplateColumns(PROGRAM.getId())).thenReturn(rnrColumns);
+    when(rnrTemplateRepository.fetchColumnsForRequisition(PROGRAM.getId())).thenReturn(rnrColumns);
 
     whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), facilityApprovedProducts, USER_ID).thenReturn(requisition);
 
@@ -305,7 +305,7 @@ public class RequisitionServiceTest {
 
   @Test
   public void shouldNotInitRequisitionIfTemplateNotDefined() {
-    when(rnrTemplateRepository.fetchRnrTemplateColumns(PROGRAM.getId())).thenReturn(new ArrayList<RnrColumn>());
+    when(rnrTemplateRepository.fetchColumnsForRequisition(PROGRAM.getId())).thenReturn(new ArrayList<RnrColumn>());
     expectedException.expect(DataException.class);
     expectedException.expectMessage(RNR_TEMPLATE_NOT_INITIATED_ERROR);
 
@@ -333,7 +333,7 @@ public class RequisitionServiceTest {
   }
 
   private void setupForInitRnr(Date date, Rnr requisition, ProcessingPeriod validPeriod) {
-    when(rnrTemplateRepository.fetchRnrTemplateColumns(PROGRAM.getId())).thenReturn(getRnrColumns());
+    when(rnrTemplateRepository.fetchColumnsForRequisition(PROGRAM.getId())).thenReturn(getRnrColumns());
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date);
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(requisition);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date, PERIOD.getId())).
@@ -348,7 +348,7 @@ public class RequisitionServiceTest {
     }};
     Rnr rnrToSubmit = make(a(defaultRnr));
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(rnrToSubmit);
-    Mockito.when(rnrTemplateRepository.fetchRnrTemplateColumns(PROGRAM.getId())).thenReturn(rnrColumns);
+    Mockito.when(rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(PROGRAM.getId())).thenReturn(rnrColumns);
     doNothing().when(savedRnr).copyApproverEditableFields(rnrToSubmit);
     doNothing().when(savedRnr).prepareFor(SUBMITTED, rnrColumns);
 
@@ -363,7 +363,7 @@ public class RequisitionServiceTest {
   public void shouldReturnMessageWhileSubmittingRnrIfSupervisingNodeNotPresent() throws Exception {
     Rnr rnrToSubmit = make(a(defaultRnr));
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(rnrToSubmit);
-    Mockito.when(rnrTemplateRepository.fetchRnrTemplateColumns(PROGRAM.getId())).thenReturn(rnrColumns);
+    Mockito.when(rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(PROGRAM.getId())).thenReturn(rnrColumns);
     doNothing().when(savedRnr).copyUserEditableFields(rnrToSubmit, rnrColumns);
     doNothing().when(savedRnr).calculate(rnrColumns);
 
@@ -384,7 +384,7 @@ public class RequisitionServiceTest {
     doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
     doNothing().when(savedRnr).calculate(rnrColumns);
     when(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(new SupervisoryNode());
-    when(rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId())).thenReturn(rnrColumns);
+    when(rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(savedRnr.getProgram().getId())).thenReturn(rnrColumns);
 
     OpenLmisMessage message = requisitionService.submit(rnrToSubmit);
 
@@ -400,14 +400,14 @@ public class RequisitionServiceTest {
     doNothing().when(savedRnr).copyUserEditableFields(submittedRnr, rnrColumns);
     doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
     doNothing().when(savedRnr).calculate(rnrColumns);
-    when(rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId())).thenReturn(rnrColumns);
+    when(rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(savedRnr.getProgram().getId())).thenReturn(rnrColumns);
     when(supervisoryNodeService.getApproverFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(new User());
     SupervisoryNode approverNode = new SupervisoryNode();
     when(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(approverNode);
 
     OpenLmisMessage authorize = requisitionService.authorize(submittedRnr);
 
-    verify(rnrTemplateRepository).fetchRnrTemplateColumns(savedRnr.getProgram().getId());
+    verify(rnrTemplateRepository).fetchRnrTemplateColumnsOrMasterColumns(savedRnr.getProgram().getId());
     verify(requisitionRepository).update(savedRnr);
     assertThat(savedRnr.getStatus(), is(AUTHORIZED));
     assertThat(savedRnr.getSupervisoryNodeId(), is(approverNode.getId()));
@@ -423,7 +423,7 @@ public class RequisitionServiceTest {
 
     SupervisoryNode node = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
     when(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(node);
-    when(rnrTemplateRepository.fetchRnrTemplateColumns(submittedRnr.getProgram().getId())).thenReturn(rnrColumns);
+    when(rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(submittedRnr.getProgram().getId())).thenReturn(rnrColumns);
 
     requisitionService.authorize(submittedRnr);
 
@@ -434,7 +434,7 @@ public class RequisitionServiceTest {
   public void shouldAuthorizeAValidRnrAndAdviseUserIfRnrDoesNotHaveApprover() throws Exception {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr);
 
-    when(rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId())).thenReturn(rnrColumns);
+    when(rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(savedRnr.getProgram().getId())).thenReturn(rnrColumns);
     when(supervisoryNodeService.getApproverFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(null);
     SupervisoryNode node = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
     when(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(node);
@@ -444,7 +444,7 @@ public class RequisitionServiceTest {
 
     OpenLmisMessage openLmisMessage = requisitionService.authorize(submittedRnr);
 
-    verify(rnrTemplateRepository).fetchRnrTemplateColumns(savedRnr.getProgram().getId());
+    verify(rnrTemplateRepository).fetchRnrTemplateColumnsOrMasterColumns(savedRnr.getProgram().getId());
     verify(requisitionRepository).update(savedRnr);
     assertThat(savedRnr.getStatus(), is(AUTHORIZED));
     assertThat(openLmisMessage.getCode(), is(RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR));
@@ -467,7 +467,7 @@ public class RequisitionServiceTest {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr);
     doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
     doNothing().when(savedRnr).copyUserEditableFields(submittedRnr, rnrColumns);
-    when(rnrTemplateRepository.fetchRnrTemplateColumns(submittedRnr.getProgram().getId())).thenReturn(rnrColumns);
+    when(rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(submittedRnr.getProgram().getId())).thenReturn(rnrColumns);
 
     Set<Right> listUserRights = new HashSet<>(Arrays.asList(AUTHORIZE_REQUISITION));
     when(roleRightService.getRights(userId)).thenReturn(listUserRights);
@@ -483,7 +483,7 @@ public class RequisitionServiceTest {
     Integer userId = 1;
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(authorizedRnr);
 
-    when(rnrTemplateRepository.fetchRnrTemplateColumns(submittedRnr.getProgram().getId())).thenReturn(rnrColumns);
+    when(rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(submittedRnr.getProgram().getId())).thenReturn(rnrColumns);
     doNothing().when(savedRnr).copyUserEditableFields(authorizedRnr, rnrColumns);
     doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
 
@@ -501,7 +501,7 @@ public class RequisitionServiceTest {
     Integer userId = 1;
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr);
 
-    when(rnrTemplateRepository.fetchRnrTemplateColumns(initiatedRnr.getProgram().getId())).thenReturn(rnrColumns);
+    when(rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(initiatedRnr.getProgram().getId())).thenReturn(rnrColumns);
     doNothing().when(savedRnr).copyUserEditableFields(initiatedRnr, rnrColumns);
     doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
 
@@ -812,7 +812,7 @@ public class RequisitionServiceTest {
     Rnr previousRnr = make(a(defaultRnr));
     ProcessingPeriod previousPeriod = make(a(defaultProcessingPeriod, with(id, period.getId() - 1)));
     setupForInitRnr(date, someRequisition, period);
-    when(rnrTemplateRepository.fetchRnrTemplateColumns(PROGRAM.getId())).thenReturn(getRnrColumns());
+    when(rnrTemplateRepository.fetchColumnsForRequisition(PROGRAM.getId())).thenReturn(getRnrColumns());
 
     Rnr spyRequisition = spy(someRequisition);
 

@@ -41,7 +41,7 @@ public class RnrTemplateRepositoryTest {
   public void shouldRetrieveAllColumnsFromMasterTable() throws Exception {
     when(rnrColumnMapper.isRnrTemplateDefined(EXISTING_PROGRAM_ID)).thenReturn(false);
     when(rnrColumnMapper.fetchAllMasterRnRColumns()).thenReturn(rnrColumns);
-    List<RnrColumn> result = rnrRepository.fetchRnrTemplateColumns(EXISTING_PROGRAM_ID);
+    List<RnrColumn> result = rnrRepository.fetchRnrTemplateColumnsOrMasterColumns(EXISTING_PROGRAM_ID);
 
     assertThat(result, is(rnrColumns));
     verify(rnrColumnMapper).fetchAllMasterRnRColumns();
@@ -51,7 +51,7 @@ public class RnrTemplateRepositoryTest {
   public void shouldRetrieveAlreadyDefinedRnrColumnsForAProgram() throws Exception {
     when(rnrColumnMapper.isRnrTemplateDefined(EXISTING_PROGRAM_ID)).thenReturn(true);
     when(rnrColumnMapper.fetchDefinedRnrColumnsForProgram(EXISTING_PROGRAM_ID)).thenReturn(rnrColumns);
-    List<RnrColumn> result = rnrRepository.fetchRnrTemplateColumns(EXISTING_PROGRAM_ID);
+    List<RnrColumn> result = rnrRepository.fetchRnrTemplateColumnsOrMasterColumns(EXISTING_PROGRAM_ID);
     assertThat(result, is(rnrColumns));
     verify(rnrColumnMapper, never()).fetchAllMasterRnRColumns();
     verify(rnrColumnMapper).fetchDefinedRnrColumnsForProgram(EXISTING_PROGRAM_ID);

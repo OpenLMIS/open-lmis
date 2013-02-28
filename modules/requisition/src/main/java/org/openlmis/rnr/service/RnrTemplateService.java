@@ -26,7 +26,7 @@ public class RnrTemplateService {
     }
 
     public List<RnrColumn> fetchAllRnRColumns(Integer programId) {
-        return rnrRepository.fetchRnrTemplateColumns(programId);
+        return rnrRepository.fetchRnrTemplateColumnsOrMasterColumns(programId);
     }
 
     @Transactional

@@ -71,7 +71,7 @@ public class RequisitionService {
 
   @Transactional
   public Rnr initiate(Integer facilityId, Integer programId, Integer periodId, Integer modifiedBy) {
-    ProgramRnrTemplate rnrTemplate = new ProgramRnrTemplate(programId, rnrTemplateRepository.fetchRnrTemplateColumns(programId));
+    ProgramRnrTemplate rnrTemplate = new ProgramRnrTemplate(programId, rnrTemplateRepository.fetchColumnsForRequisition(programId));
     if (rnrTemplate.getRnrColumns().size() == 0) throw new DataException(RNR_TEMPLATE_NOT_INITIATED_ERROR);
 
     validateIfRnrCanBeInitiatedFor(facilityId, programId, periodId);
@@ -99,7 +99,7 @@ public class RequisitionService {
     if (!isUserAllowedToSave(savedRnr, userRights))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
-    savedRnr.copyEditableFields(rnr, rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId()));
+    savedRnr.copyEditableFields(rnr, rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(savedRnr.getProgram().getId()));
 
     requisitionRepository.update(savedRnr);
   }
@@ -125,7 +125,7 @@ public class RequisitionService {
   public OpenLmisMessage submit(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
 
-    List<RnrColumn> rnrColumns = rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId());
+    List<RnrColumn> rnrColumns = rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(savedRnr.getProgram().getId());
 
     if (savedRnr.getStatus() != INITIATED) {
       throw new DataException(new OpenLmisMessage(RNR_SUBMISSION_ERROR));
@@ -145,7 +145,7 @@ public class RequisitionService {
 
   public OpenLmisMessage authorize(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
-    List<RnrColumn> rnrColumns = rnrTemplateRepository.fetchRnrTemplateColumns(savedRnr.getProgram().getId());
+    List<RnrColumn> rnrColumns = rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(savedRnr.getProgram().getId());
 
     if (savedRnr.getStatus() != SUBMITTED) throw new DataException(RNR_AUTHORIZATION_ERROR);
 

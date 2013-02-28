@@ -34,7 +34,7 @@ public class RnrTemplateServiceTest {
     @Test
     public void shouldFetchAllRnRColumns() throws Exception {
         service.fetchAllRnRColumns(EXISTING_PROGRAM_ID);
-        verify(repository).fetchRnrTemplateColumns(EXISTING_PROGRAM_ID);
+        verify(repository).fetchRnrTemplateColumnsOrMasterColumns(EXISTING_PROGRAM_ID);
     }
 
     @Test

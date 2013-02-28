@@ -48,7 +48,7 @@ public class RnrTemplateRepository {
         return rnrColumnMapper.fetchDefinedRnrColumnsForProgram(programId);
     }
 
-    public List<RnrColumn> fetchRnrTemplateColumns(Integer programId) {
+    public List<RnrColumn> fetchRnrTemplateColumnsOrMasterColumns(Integer programId) {
         if (rnrColumnMapper.isRnrTemplateDefined(programId)) {
             return rnrColumnMapper.fetchDefinedRnrColumnsForProgram(programId);
         } else {
