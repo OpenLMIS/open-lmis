@@ -1,4 +1,4 @@
-function ApproveRnrListController($scope, $rootScope, requisitionList, $location) {
+function ApproveRnrListController($scope, requisitionList, $location) {
   $scope.requisitions = requisitionList;
   $scope.filteredRequisitions = $scope.requisitions;
   $scope.selectedItems = [];
@@ -25,7 +25,7 @@ function ApproveRnrListController($scope, $rootScope, requisitionList, $location
 
   $scope.openRnr = function () {
     $scope.$parent.period = {'startDate':$scope.selectedItems[0].periodStartDate,'endDate':$scope.selectedItems[0].periodEndDate};
-    $location.path("rnr-for-approval/"+$scope.selectedItems[0].id+'/'+$scope.selectedItems[0].facilityId+'/'+$scope.selectedItems[0].programId+'/full-supply');
+    $location.path("rnr-for-approval/"+$scope.selectedItems[0].id+'/'+$scope.selectedItems[0].programId);
   };
 
   $scope.filterRequisitions = function () {

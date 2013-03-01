@@ -2,9 +2,9 @@
 <div class="rnr-tabs">
     <ul class="clearfix">
         <li ng-class="{'selected': !showNonFullSupply}">
-            <a ng-href="{{fullSupplyLink}}" id="fullSupplyTab">Full Supply Product(s)</a></li>
+            <a ng-click="switchSupplyType('full-supply')" id="fullSupplyTab">Full Supply Product(s)</a></li>
         <li ng-class="{'selected': showNonFullSupply}">
-            <a ng-href="{{nonFullSupplyLink}}" id="nonFullSupplyTab">Non Full Supply Product(s)</a></li>
+            <a ng-click="switchSupplyType('non-full-supply')" id="nonFullSupplyTab">Non Full Supply Product(s)</a></li>
     </ul>
 </div>
 <form name="approvalForm" novalidate>
@@ -24,7 +24,7 @@
             <input type="button" value="Save" ng-click="saveRnr()" class="btn btn-primary save-button"/>
             <input type="button" ng-click="approveRnr()" class="btn btn-success submit-button" value="Approve"/>
         </div>
-        <div class="toolbar-error" id="saveFailMessage" ng-bind="error" ng-show="error"/>
-        <div class="toolbar-success" id="saveSuccessMsgDiv" ng-show="message" ng-bind="message"/>
+        <div class="toolbar-error" id="saveFailMessage" ng-bind="error" ng-show="error"></div>
+        <div class="toolbar-success" id="saveSuccessMsgDiv" ng-show="message" ng-bind="message"></div>
     </div>
 </form>
