@@ -42,7 +42,7 @@ public class HomePage extends Page {
     @FindBy(how = How.XPATH, using = "//a[contains(text(),'Convert to Order')]")
     private static WebElement convertToOrderMenuItem;
 
-    @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Convert to Order Requisitions')]")
+    @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Convert Requisitions to Order')]")
     private static WebElement convertToOrderHeader;
 
     @FindBy(how = How.LINK_TEXT, using = "Add new")
