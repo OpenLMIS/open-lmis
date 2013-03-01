@@ -7,6 +7,6 @@ CREATE TABLE program_product_price_history (
     source VARCHAR(50),
     startDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     endDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    modifiedBy VARCHAR(50),
+    modifiedBy INTEGER,
     modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

@@ -13,7 +13,7 @@ CREATE TABLE users (
   supervisorId INTEGER references users(id),
   facilityId INT REFERENCES facilities(id),
   active BOOLEAN DEFAULT FALSE,
-  modifiedBy VARCHAR(50),
+  modifiedBy INTEGER,
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

@@ -30,7 +30,7 @@ CREATE TABLE facilities (
     goDownDate DATE,
     comment  TEXT,
     dataReportable BOOLEAN,
-    modifiedBy VARCHAR(50),
+    modifiedBy INTEGER,
     modifiedDate TIMESTAMP DEFAULT  CURRENT_TIMESTAMP
 );
 

@@ -50,6 +50,6 @@ CREATE TABLE products (
   archived BOOLEAN,
   packRoundingThreshold SMALLINT NOT NULL,
   modifiedDate TIMESTAMP DEFAULT  CURRENT_TIMESTAMP,
-  modifiedBy VARCHAR(50)
+  modifiedBy INTEGER
 );
 CREATE UNIQUE INDEX uc_product_code ON products(LOWER(code));

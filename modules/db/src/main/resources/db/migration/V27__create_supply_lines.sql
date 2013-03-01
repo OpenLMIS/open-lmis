@@ -5,7 +5,7 @@ CREATE TABLE supply_lines (
   supervisoryNodeId INTEGER REFERENCES supervisory_nodes(id),
   programId INTEGER REFERENCES programs(id),
   supplyingFacilityId INTEGER REFERENCES facilities(id),
-  modifiedBy VARCHAR(50),
+  modifiedBy INTEGER,
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
   CONSTRAINT unique_supply_line UNIQUE ( supervisoryNodeId , programId , supplyingFacilityId)

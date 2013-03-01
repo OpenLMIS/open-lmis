@@ -5,7 +5,7 @@ CREATE TABLE supervisory_nodes (
   name VARCHAR(50) NOT NULL,
   code VARCHAR(50) UNIQUE NOT NULL,
   description VARCHAR(250),
-  modifiedBy VARCHAR(50),
+  modifiedBy INTEGER,
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

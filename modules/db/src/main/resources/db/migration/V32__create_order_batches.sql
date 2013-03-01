@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS order_batches;
 CREATE TABLE order_batches (
   id                             SERIAL PRIMARY KEY,
-  createdByUserId                VARCHAR(50),
+  createdByUserId                INTEGER,
   createTimeStamp                TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

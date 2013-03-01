@@ -21,10 +21,6 @@ public class BaseController {
   public static final String FORBIDDEN_EXCEPTION = "forbidden.exception";
   public static final String ACCEPT_JSON = "Accept=application/json";
 
-  protected String loggedInUser(HttpServletRequest request) {
-    return (String) request.getSession().getAttribute(USER);
-  }
-
   protected Integer loggedInUserId(HttpServletRequest request) {
     return (Integer) request.getSession().getAttribute(USER_ID);
   }

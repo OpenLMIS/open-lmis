@@ -4,5 +4,5 @@ CREATE TABLE product_categories (
   code VARCHAR(50) NOT NULL UNIQUE ,
   name VARCHAR(100) NOT NULL UNIQUE,
   modifiedDate TIMESTAMP DEFAULT  CURRENT_TIMESTAMP,
-  modifiedBy VARCHAR(50)
+  modifiedBy INTEGER
 );

@@ -4,7 +4,7 @@ CREATE TABLE requisition_group_program_schedules (
   scheduleId INTEGER REFERENCES processing_schedules(id),
   directDelivery BOOLEAN NOT NULL,
   dropOffFacilityId INTEGER REFERENCES facilities(id),
-  modifiedBy VARCHAR(50),
+  modifiedBy INTEGER,
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (requisitionGroupId, programId)
 );

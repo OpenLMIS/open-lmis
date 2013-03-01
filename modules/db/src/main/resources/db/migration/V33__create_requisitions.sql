@@ -10,7 +10,7 @@ CREATE TABLE requisitions (
   supervisoryNodeId               INTEGER     REFERENCES supervisory_nodes (id),
   supplyingFacilityId             INTEGER REFERENCES facilities(id),
   orderBatchId                    INTEGER REFERENCES order_batches(id),
-  modifiedBy                      VARCHAR(50),
+  modifiedBy                      INTEGER,
   submittedDate                   TIMESTAMP,
   modifiedDate                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   UNIQUE (facilityId, programId, periodId)

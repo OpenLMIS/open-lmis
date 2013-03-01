@@ -4,7 +4,7 @@ CREATE TABLE requisition_groups (
   name VARCHAR(50) NOT NULL,
   description VARCHAR(250),
   supervisoryNodeId INTEGER,
-  modifiedBy VARCHAR(50),
+  modifiedBy INTEGER,
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
