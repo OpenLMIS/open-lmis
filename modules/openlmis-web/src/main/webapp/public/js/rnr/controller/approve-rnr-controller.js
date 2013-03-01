@@ -2,22 +2,98 @@ function ApproveRnrController($scope, RequisitionForApprovalById, Requisitions, 
   $scope.error = "";
   $scope.message = "";
 
-  $scope.fullSupplyLink = "#rnr-for-approval/" + $routeParams.rnr + '/' + $routeParams.facility + '/' + $routeParams.program + '/' + 'full-supply';
+  $scope.fullSupplyLink = "#/rnr-for-approval/" + $routeParams.rnr + '/' + $routeParams.facility + '/' + $routeParams.program + '/' + 'full-supply';
 
-  $scope.nonFullSupplyLink = "#rnr-for-approval/" + $routeParams.rnr + '/' + $routeParams.facility + '/' + $routeParams.program + '/' + 'non-full-supply';
+  $scope.nonFullSupplyLink = "#/rnr-for-approval/" + $routeParams.rnr + '/' + $routeParams.facility + '/' + $routeParams.program + '/' + 'non-full-supply';
 
   $scope.showNonFullSupply = ($routeParams.supplyType == 'non-full-supply');
+
+  $scope.lossesAndAdjustmentsModal = [];
+
+  $scope.gridLineItems = [];
+  $scope.columnDefinitions = [];
+
+  if ($scope.rnr == undefined || $scope.rnr.id != $routeParams.rnr) {
+    RequisitionForApprovalById.get({id:$routeParams.rnr}, function (data) {
+      $scope.$parent.rnr = data.rnr;
+      populateRnrLineItems();
+      fillGridData();
+      getTemplate();
+    });
+  } else {
+    populateRnrLineItems();
+    fillGridData();
+    getTemplate();
+  }
+
+  ReferenceData.get({}, function (data) {
+    $scope.currency = data.currency;
+  }, {});
+
+
+  $scope.closeLossesAndAdjustmentsForRnRLineItem = function (rnrLineItem) {
+    $scope.lossesAndAdjustmentsModal[rnrLineItem.id] = false;
+  };
+
+  function getTemplate() {
+    if (!$scope.rnrColumns) {
+      $scope.$parent.rnrColumns = [];
+      ProgramRnRColumnList.get({programId:$routeParams.program}, function (data) {
+        $scope.$parent.rnrColumns = data.rnrColumnList;
+        prepareColumnDefinitions();
+      });
+    } else {
+      prepareColumnDefinitions();
+    }
+  }
+
+  function prepareColumnDefinitions() {
+    var columnDefinitions = [];
+    var visibleColumns = _.where($scope.rnrColumns, {'visible':true});
+    if (visibleColumns.length > 0) {
+      $(visibleColumns).each(function (i, column) {
+        if (column.name == "cost" || column.name == "price") {
+          columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:currencyTemplate('row.entity.' + column.name)});
+          return;
+        }
+        if (column.name == "lossesAndAdjustments") {
+          columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:lossesAndAdjustmentsTemplate()});
+          return;
+        }
+        if (column.name == "quantityApproved") {
+          columnDefinitions.push({field:column.name, displayName:column.label, width:140, cellTemplate:positiveIntegerCellTemplate(column.name, 'row.entity.quantityApproved')});
+          return;
+        }
+        if (column.name == "remarks") {
+          columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:freeTextCellTemplate(column.name, 'row.entity.remarks')});
+          return;
+        }
+        columnDefinitions.push({field:column.name, displayName:column.label});
+      });
+      $scope.columnDefinitions = columnDefinitions;
+    } else {
+      $scope.$parent.error = "Please contact Admin to define R&R template for this program";
+    }
+  }
+
+  function fillGridData() {
+    $scope.gridLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.lineItems;
+  }
+
+  $scope.showLossesAndAdjustmentModalForLineItem = function (lineItem) {
+    $scope.lossesAndAdjustmentsModal[lineItem.id] = true;
+  };
 
   function populateRnrLineItems() {
     var lineItemsJson = $scope.rnr.lineItems;
     $scope.rnr.lineItems = [];
+
     $(lineItemsJson).each(function (i, lineItem) {
       var rnrLineItem = new RnrLineItem(lineItem, $scope.rnr, $scope.$parent.programRnrColumnList);
 
       rnrLineItem.updateCostWithApprovedQuantity();
       $scope.rnr.lineItems.push(rnrLineItem);
     });
-
     var nonFullSupplyLineItemsJson = $scope.rnr.nonFullSupplyLineItems;
     $scope.rnr.nonFullSupplyLineItems = [];
     $(nonFullSupplyLineItemsJson).each(function (i, lineItem) {
@@ -28,33 +104,8 @@ function ApproveRnrController($scope, RequisitionForApprovalById, Requisitions, 
     });
   }
 
-  $scope.lossesAndAdjustmentsModal = [];
-  LossesAndAdjustmentsReferenceData.get({}, function (data) {
-    $scope.allTypes = data.lossAdjustmentTypes;
-  }, {});
-
-  $scope.closeLossesAndAdjustmentsForRnRLineItem = function (rnrLineItem) {
-    $scope.lossesAndAdjustmentsModal[rnrLineItem.id] = false;
-  };
-
-  $scope.showLossesAndAdjustmentModalForLineItem = function (lineItem) {
-    updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem);
-    $scope.lossesAndAdjustmentsModal[lineItem.id] = true;
-  };
-
-  function updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem) {
-    var lossesAndAdjustmentTypesForLineItem = [];
-    $(lineItem.lossesAndAdjustments).each(function (index, lineItemLossAndAdjustment) {
-      lossesAndAdjustmentTypesForLineItem.push(lineItemLossAndAdjustment.type.name);
-    });
-    var allTypes = $scope.allTypes;
-    $scope.lossesAndAdjustmentTypesToDisplay = $.grep(allTypes, function (lAndATypeObject) {
-      return $.inArray(lAndATypeObject.name, lossesAndAdjustmentTypesForLineItem) == -1;
-    });
-  }
-
   function lossesAndAdjustmentsTemplate() {
-      return '<div class="ngCellText" ng-hide="row.entity.fullSupply"><span ng-bind="row.entity.totalLossesAndAdjustments" ></span></div>' +
+    return '<div class="ngCellText" ng-hide="row.entity.fullSupply"><span ng-bind="row.entity.totalLossesAndAdjustments" ></span></div>' +
         '<div id="lossesAndAdjustments" modal="lossesAndAdjustmentsModal[row.entity.id]">' +
         '<div class="modal-header"><h3>Losses And Adjustments</h3></div>' +
         '<div class="modal-body">' +
@@ -76,11 +127,9 @@ function ApproveRnrController($scope, RequisitionForApprovalById, Requisitions, 
         '<input type="button" class="btn btn-success save-button" style="width: 75px" ng-click="closeLossesAndAdjustmentsForRnRLineItem(row.entity)" value="Close"/>' +
         '</div>' +
         '</div>' +
-        '<div ng-class="highlightNestedFieldsWithError(row.entity[column.name], \'quantity\')">' +
         '<a ng-click="showLossesAndAdjustmentModalForLineItem(row.entity)" class="rnr-adjustment" ng-show="row.entity.fullSupply">' +
         '<span class="adjustment-value" ng-bind="row.entity.totalLossesAndAdjustments"></span>' +
-        '</a>' +
-        '</div>';
+        '</a>';
   }
 
   function currencyTemplate(value) {
@@ -101,53 +150,8 @@ function ApproveRnrController($scope, RequisitionForApprovalById, Requisitions, 
     return (value == null || value == undefined);
   }
 
-  function prepareColumnDefinitions() {
-   /* if(sction = view and status = approved) {
-      programRnrColumnList.remove
-    }*/
-    var columnDefinitions = [];
-    var visibleColumns = _.where($scope.programRnrColumnList, {'visible':true});
-    if (visibleColumns.length > 0) {
-      $(visibleColumns).each(function (i, column) {
-        if (column.name == "cost" || column.name == "price") {
-          columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:currencyTemplate('row.entity.' + column.name)});
-          return;
-        }
-        if (column.name == "lossesAndAdjustments") {
-          columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:lossesAndAdjustmentsTemplate()});
-          return;
-        }
-        if (column.name == "quantityApproved") {
-          columnDefinitions.push({field:column.name, displayName:column.label, width:140, cellTemplate:positiveIntegerCellTemplate(column.name, 'row.entity.quantityApproved')});
-          return;
-        }
-        if (column.name == "remarks") {
-          columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:freeTextCellTemplate(column.name, 'row.entity.remarks')});
-          return;
-        }
-        columnDefinitions.push({field:column.name, displayName:column.label});
-      });
-      $scope.$parent.columnDefinitions = columnDefinitions;
-    } else {
-      $scope.$parent.error = "Please contact Admin to define R&R template for this program";
-    }
-  }
-
-  if ($scope.$parent.rnr == undefined || $scope.$parent.rnr.id != $routeParams.rnr) {
-    $scope.$parent.programRnrColumnList = [];
-    $scope.$parent.columnDefinitions = [];
-    RequisitionForApprovalById.get({id:$routeParams.rnr},
-      function (data) {
-        $scope.$parent.rnr = data.rnr;
-        populateRnrLineItems();
-      }, {}
-    );
-    ProgramRnRColumnList.get({programId:$routeParams.program}, function (data) {
-      $scope.$parent.programRnrColumnList = data.rnrColumnList;
-      prepareColumnDefinitions();
-    }, {});
-
-    $scope.$parent.fullSupplyGrid = { data:'rnr.lineItems',
+    $scope.rnrGrid = {
+      data:'gridLineItems',
       canSelectRows:false,
       displayFooter:false,
       displaySelectionCheckbox:false,
@@ -157,23 +161,6 @@ function ApproveRnrController($scope, RequisitionForApprovalById, Requisitions, 
       enableSorting:false,
       columnDefs:'columnDefinitions'
     };
-
-    $scope.$parent.nonFullSupplyGrid = { data:'rnr.nonFullSupplyLineItems',
-      canSelectRows:false,
-      displayFooter:false,
-      displaySelectionCheckbox:false,
-      showColumnMenu:false,
-      showFilter:false,
-      rowHeight:44,
-      enableSorting:false,
-      columnDefs:'columnDefinitions'
-    };
-
-  }
-
-  ReferenceData.get({}, function (data) {
-    $scope.currency = data.currency;
-  }, {});
 
   $scope.validatePositiveInteger = function (value) {
     if (value == undefined) {

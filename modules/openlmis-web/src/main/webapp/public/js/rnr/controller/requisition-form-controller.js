@@ -30,11 +30,6 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
 
   $scope.saveRnr = function (location) {
     resetFlags();
-    if ($scope.saveRnrForm.$error.rnrError) {
-      $scope.error = "Please correct errors before saving.";
-      $scope.message = "";
-      return false;
-    }
     var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id:$scope.rnr.id, operation:"save"}, rnr, function (data) {
       $rootScope.message = data.success;
@@ -176,11 +171,6 @@ function RequisitionFormController($scope, ReferenceData, ProgramRnRColumnList, 
   }
 
   function valid() {
-    if ($scope.saveRnrForm.$error.rnrError) {
-      $scope.submitError = "Please correct the errors on the R&R form before submitting";
-      $scope.submitMessage = "";
-      return false;
-    }
     if ($scope.saveRnrForm.$error.required) {
       $scope.saveRnr(null);
       $scope.inputClass = "required";

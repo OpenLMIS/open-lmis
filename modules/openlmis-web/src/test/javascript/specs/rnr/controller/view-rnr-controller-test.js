@@ -56,7 +56,7 @@ describe('ViewRnrController', function () {
       {field:'productCode', displayName:'Product Code'},
       {field:'product', displayName:'Product'},
       {field:'dispensingUnit', displayName:'Unit/Unit of Issue'},
-      {field:'lossesAndAdjustments', displayName:'Total Losses / Adjustments', cellTemplate:lossesAndAdjustmentsTemplate},
+      {field:'lossesAndAdjustments', displayName:'Total Losses / Adjustments', cellTemplate:lossesAndAdjustmentsTemplate}
     ];
 
     expect(scope.columnDefs).toEqual(expectedDefinitions);

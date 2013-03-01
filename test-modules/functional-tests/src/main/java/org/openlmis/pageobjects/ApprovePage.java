@@ -41,19 +41,19 @@ public class ApprovePage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText colt13']/span")
   private static WebElement calculateOrderQuantity;
 
-  @FindBy(how = How.XPATH, using = "//div[@ng-grid='nonFullSupplyGrid']/div[@class='ngViewport ng-scope']/div/div/div[15]/div/span")
+  @FindBy(how = How.XPATH, using = "//div[@ng-grid='rnrGrid']/div[@class='ngViewport ng-scope']/div/div/div[15]/div/span")
   private static WebElement requestedOrderQuantityNonFullSupply;
 
-  @FindBy(how = How.XPATH, using = "//div[@ng-grid='nonFullSupplyGrid']/div[@class='ngViewport ng-scope']/div/div/div[18]/div/span")
+  @FindBy(how = How.XPATH, using = "//div[@ng-grid='rnrGrid']/div[@class='ngViewport ng-scope']/div/div/div[18]/div/span")
   private static WebElement packsToShipNonFullSupply;
 
-  @FindBy(how = How.XPATH, using = "//div[@ng-grid='nonFullSupplyGrid']/div[@class='ngViewport ng-scope']/div/div/div[20]/div/span[@ng-bind='row.entity.cost']")
+  @FindBy(how = How.XPATH, using = "//div[@ng-grid='rnrGrid']/div[@class='ngViewport ng-scope']/div/div/div[20]/div/span[@ng-bind='row.entity.cost']")
   private static WebElement totalCostNonFullSupply;
 
-  @FindBy(how = How.XPATH, using = "//div[@ng-grid='nonFullSupplyGrid']/div[@class='ngViewport ng-scope']/div/div/div[19]/div/span[@ng-bind='row.entity.price']")
+  @FindBy(how = How.XPATH, using = "//div[@ng-grid='rnrGrid']/div[@class='ngViewport ng-scope']/div/div/div[19]/div/span[@ng-bind='row.entity.price']")
   private static WebElement pricePerPackNonFullSupply;
 
-  @FindBy(how = How.XPATH, using = "//div[@ng-grid='nonFullSupplyGrid']/div[@class='ngViewport ng-scope']/div/div/div[17]/div/ng-form/input")
+  @FindBy(how = How.XPATH, using = "//div[@ng-grid='rnrGrid']/div[@class='ngViewport ng-scope']/div/div/div[17]/div/ng-form/input")
   private static WebElement approvedQuantityNonFullSupply;
 
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText colt17']/span")

@@ -49,13 +49,6 @@ describe('RequisitionFormController', function () {
     expect(scope.message).toEqual("R&R saved successfully!");
   });
 
-  it('should not save work in progress when invalid form', function () {
-    scope.saveRnrForm.$error.rnrError = true;
-    scope.nonFullSupplyLineItems = [];
-    scope.rnr = {nonFullSupplyLineItems:[]};
-    scope.saveRnr();
-    expect(scope.error).toEqual("Please correct errors before saving.");
-  });
 
   it('should get Currency from service', function () {
     httpBackend.flush();
@@ -69,13 +62,6 @@ describe('RequisitionFormController', function () {
     scope.submitRnr();
     httpBackend.flush();
     expect(scope.submitError).toEqual("Please complete the highlighted fields on the R&R form before submitting");
-  });
-
-  it('should not submit rnr with error in the form', function () {
-    scope.rnr = {"id":"rnrId"};
-    scope.saveRnrForm = {$error:{rnrError:true}};
-    scope.submitRnr();
-    expect(scope.submitError).toEqual("Please correct the errors on the R&R form before submitting");
   });
 
   it('should not submit rnr with formula validation error but should save', function () {
