@@ -59,6 +59,31 @@ public class UploadPage extends Page {
         uploadButton.click();
     }
 
+  public void uploadGeographicZone() throws FileNotFoundException {
+    selectUploadType("Geographic Zones");
+    uploadFile("Geographic_Data.csv");
+    testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
+    SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
+  }
+
+  public void uploadGeographicZoneInvalid() throws FileNotFoundException {
+    selectUploadType("Geographic Zones");
+    uploadFile("Geographic_Data_Invalid.csv");
+    testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
+    SeleneseTestNgHelper.assertTrue("Error Message Not Displayed", saveErrorMsgDiv.isDisplayed());
+    testWebDriver.sleep(500);
+    selectUploadType("Geographic Zones");
+    uploadFile("Geographic_Data_Invalid.csv");
+    testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
+    SeleneseTestNgHelper.assertTrue("Error Message Not Displayed", saveErrorMsgDiv.isDisplayed());
+    testWebDriver.sleep(500);
+    selectUploadType("Geographic Zones");
+    uploadFile("Geographic_Data_Invalid_Code.csv");
+    testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
+    SeleneseTestNgHelper.assertTrue("Error Message Not Displayed", saveErrorMsgDiv.isDisplayed());
+    testWebDriver.sleep(500);
+  }
+
     public void uploadFacilities() throws FileNotFoundException {
         selectUploadType("Facilities");
         uploadFile("facilities.csv");

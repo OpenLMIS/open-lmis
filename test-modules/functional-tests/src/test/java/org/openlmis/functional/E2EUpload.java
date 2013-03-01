@@ -63,6 +63,12 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadProgramProductPrice();
     testWebDriver.setImplicitWait(2500);
 
+    uploadPage.uploadGeographicZoneInvalid();
+    testWebDriver.setImplicitWait(2500);
+
+    uploadPage.uploadGeographicZone();
+    testWebDriver.setImplicitWait(2500);
+
     uploadPage.uploadFacilities();
     testWebDriver.setImplicitWait(2500);
 
