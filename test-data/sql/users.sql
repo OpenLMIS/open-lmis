@@ -10,14 +10,11 @@ INSERT INTO role_rights
   ((select id from roles where name='Store In-Charge'), 'VIEW_REQUISITION'),
   ((select id from roles where name='Store In-Charge'), 'CREATE_REQUISITION'),
   ((select id from roles where name='Store In-Charge'), 'AUTHORIZE_REQUISITION'),
+  ((select id from roles where name='Store In-Charge'), 'APPROVE_REQUISITION'),
   ((select id from roles where name='Medical-Officer'), 'VIEW_REQUISITION'),
-  ((select id from roles where name='Medical-Officer'), 'AUTHORIZE_REQUISITION'),
-  ((select id from roles where name='Medical-Officer'), 'APPROVE_REQUISITION'),
   ((select id from roles where name='Medical-Officer'), 'CONVERT_TO_ORDER'),
   ((select id from roles where name='FacilityHead'), 'APPROVE_REQUISITION'),
-  ((select id from roles where name='District Pharmacist'), 'VIEW_REQUISITION'),
-  ((select id from roles where name='District Pharmacist'), 'AUTHORIZE_REQUISITION'),
-  ((select id from roles where name='District Pharmacist'), 'APPROVE_REQUISITION');
+  ((select id from roles where name='District Pharmacist'), 'VIEW_REQUISITION');
 
 
 INSERT INTO users
@@ -37,6 +34,10 @@ INSERT INTO supervisory_nodes
 INSERT INTO role_assignments
   (userId, roleId, programId, supervisoryNodeId) VALUES
   (200, (SELECT id FROM roles WHERE name = 'Store In-Charge'), 1, null),
+  (200, (SELECT id FROM roles WHERE name = 'Store In-Charge'), 2, null),
   (200, (SELECT id FROM roles WHERE name = 'Store In-Charge'), 1, (SELECT id from supervisory_nodes WHERE code = 'N1')),
+  (200, (SELECT id FROM roles WHERE name = 'Store In-Charge'), 2, (SELECT id from supervisory_nodes WHERE code = 'N1')),
   (300, (SELECT id FROM roles WHERE name = 'FacilityHead'), 1, (SELECT id from supervisory_nodes WHERE code = 'N2')),
-  (400, (SELECT id FROM roles WHERE name = 'Medical-Officer'), 1, (SELECT id from supervisory_nodes WHERE code = 'N1'));
+  (300, (SELECT id FROM roles WHERE name = 'FacilityHead'), 2, (SELECT id from supervisory_nodes WHERE code = 'N2')),
+  (400, (SELECT id FROM roles WHERE name = 'Medical-Officer'), 1, (SELECT id from supervisory_nodes WHERE code = 'N1')),
+  (400, (SELECT id FROM roles WHERE name = 'Medical-Officer'), 2, (SELECT id from supervisory_nodes WHERE code = 'N1'));
