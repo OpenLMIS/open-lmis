@@ -1,5 +1,6 @@
 package org.openlmis.UiUtils;
 
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -227,12 +228,26 @@ public class TestWebDriver {
         if (element!=null) {
             Actions builder = new Actions(driver);
             builder.moveToElement(element).perform();
+            builder.moveByOffset(1000,200);
+
             flag = true;
             return flag;
         } else
             flag = false;
             return flag;
     }
+
+    public void keyPress(final WebElement element) {
+        waitForElementToAppear(element);
+        if (element!=null) {
+            for(int i=0;i<15;i++){
+                element.sendKeys(Keys.TAB);
+                if (driver.switchTo().activeElement().getText().equalsIgnoreCase(element.getText()));
+                   break;
+                }
+            element.sendKeys(Keys.RETURN);
+            }
+        }
 
 
 

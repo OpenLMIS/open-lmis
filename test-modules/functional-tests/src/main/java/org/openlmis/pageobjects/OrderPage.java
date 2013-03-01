@@ -45,7 +45,7 @@ public class OrderPage extends Page {
     public OrderPage(TestWebDriver driver) throws  IOException {
         super(driver);
         PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
-        testWebDriver.setImplicitWait(25);
+        testWebDriver.setImplicitWait(10);
 
     }
 

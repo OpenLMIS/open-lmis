@@ -13,10 +13,10 @@ public class TestCaseHelper {
 
 
 
-    public  void setupSuite() throws ClassNotFoundException {
+    public  void setupSuite(String browser) throws ClassNotFoundException {
         try {
             if (!isSeleniumStarted) {
-                loadDriver();
+                loadDriver(browser);
                 addTearDownShutDownHook();
                 isSeleniumStarted = true;
             }
@@ -37,8 +37,8 @@ public class TestCaseHelper {
     }
 
 
-    protected  void loadDriver() {
-        testWebDriver = new TestWebDriver(driverFactory.loadDriver());
+    protected  void loadDriver(String browser) {
+        testWebDriver = new TestWebDriver(driverFactory.loadDriver(browser));
     }
 
 

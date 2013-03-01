@@ -143,7 +143,7 @@ public class CreateFacilityPage extends Page {
     public CreateFacilityPage(TestWebDriver driver) throws  IOException {
         super(driver);
         PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
-        testWebDriver.setImplicitWait(25);
+        testWebDriver.setImplicitWait(10);
 
     }
 

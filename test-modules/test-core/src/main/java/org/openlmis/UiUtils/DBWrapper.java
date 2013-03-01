@@ -222,9 +222,9 @@ public class DBWrapper {
       "    ('" + userID + "', (SELECT id FROM roles WHERE name = '" + userName + "'), 1, (SELECT id from supervisory_nodes WHERE code = 'N1'));");
   }
 
-  public void updateRoleAssignment(String userID) throws SQLException, IOException {
-    update("delete from role_assignments where userid='" + userID + "' and supervisorynodeid is null;");
-    update("update role_assignments set supervisorynodeid=(select id from supervisory_nodes where code='N2') where userid='" + userID + "';");
+  public void updateRoleAssignment(String userID, String supervisoryNode) throws SQLException, IOException {
+    //update("delete from role_assignments where userid='" + userID + "' and supervisorynodeid is null;");
+    update("update role_assignments set supervisorynodeid=(select id from supervisory_nodes where code='"+supervisoryNode+"') where userid='" + userID + "';");
   }
 
   public void updateRoleGroupMember(String facilityCode) throws SQLException, IOException {

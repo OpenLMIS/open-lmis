@@ -22,8 +22,9 @@ public class E2EInitiateRnR extends TestCaseHelper {
   DBWrapper dbWrapper;
 
   @BeforeMethod(groups = {"smoke"})
-  public void setUp() throws Exception {
-    super.setupSuite();
+  @Parameters({ "browser"})
+  public void setUp(String browser) throws Exception {
+    super.setupSuite(browser);
     dbWrapper = new DBWrapper();
     dbWrapper.deleteData();
   }
@@ -106,13 +107,13 @@ public class E2EInitiateRnR extends TestCaseHelper {
     String periodDetails = homePageUser.navigateAndInitiateRnr(program);
     InitiateRnRPage initiateRnRPage = homePageUser.clickProceed();
     initiateRnRPage.verifyRnRHeader("FCcode", "FCname", date_time, program, periodDetails, geoZone, operatedBy, facilityType);
-
+    testWebDriver.sleep(2000);
+    initiateRnRPage.submitRnR();
+    testWebDriver.sleep(1000);
+    initiateRnRPage.verifySubmitRnrErrorMsg();
     initiateRnRPage.calculateAndVerifyStockOnHand(10, 10, 10, 1);
 
-    initiateRnRPage.clearNewPatientField();
-
     initiateRnRPage.submitRnR();
-    initiateRnRPage.verifySubmitRnrErrorMsg();
 
     initiateRnRPage.enterValuesAndVerifyCalculatedOrderQuantity(10, 10, 101, 51, 153, 142);
     initiateRnRPage.verifyPacksToShip(15);
@@ -125,8 +126,6 @@ public class E2EInitiateRnR extends TestCaseHelper {
     initiateRnRPage.addNonFullSupplyLineItems("99", "Due to unforeseen event", "antibiotic", "P11");
     initiateRnRPage.calculateAndVerifyTotalCostNonFullSupply();
     initiateRnRPage.verifyCostOnFooter();
-    initiateRnRPage.submitRnR();
-    initiateRnRPage.verifySubmitRnrSuccessMsg();
 
     initiateRnRPage.authorizeRnR();
     initiateRnRPage.verifyAuthorizeRnrSuccessMsg();

@@ -14,38 +14,38 @@ public class DriverFactory {
 
     private String driverType;
 
-    public WebDriver loadDriver() {
-        return loadDriver(true);
+    public WebDriver loadDriver(String browser) {
+        return loadDriver(true, browser);
     }
 
-    public WebDriver loadDriverWithJavascriptDisabledIfPossible() {
-        return loadDriver(false);
+    public WebDriver loadDriverWithJavascriptDisabledIfPossible(String browser) {
+        return loadDriver(false, browser);
     }
 
-    private WebDriver loadDriver(boolean enableJavascript) {
-        /*
-        For Firefox
-         */
-        driverType = System.getProperty("web.driver", "Firefox");
-        /*
-        For Chrome
-         */
-        //driverType=System.setProperty("webdriver.chrome.driver", "<path_to_chromedriver i.e.> /Users/Manjot/Downloads/chromedriver");
-        //driverType = System.getProperty("webdriver.chrome.driver");
+    private WebDriver loadDriver(boolean enableJavascript, String browser) {
 
-        if (driverType.equalsIgnoreCase("Firefox")) {
-            return createFirefoxDriver(enableJavascript);
-        }
-//        else if (driverType.equals("<path_to_chromedriver> /Users/Manjot/Downloads/chromedriver"))
-//        {
-//                return new ChromeDriver();
-//        }
-      else if (driverType.equalsIgnoreCase("HTMLUnit")) {
-            if (!enableJavascript) {
-            }
-            return new HtmlUnitDriver(BrowserVersion.INTERNET_EXPLORER_8);
-        } else {
-            throw new RuntimeException(String.format("Driver %sNot Supported", driverType));
+        switch (browser) {
+            case "firefox":
+                driverType = System.getProperty("web.driver", "Firefox");
+                return createFirefoxDriver(enableJavascript);
+            case "ie":
+                driverType = System.setProperty("webdriver.ie.driver", "C:/Program Files (x86)/IEDriver/IEDriverServer.exe");
+                driverType = System.getProperty("webdriver.ie.driver");
+                return new InternetExplorerDriver();
+
+
+            case "Chrome":
+
+                driverType = System.setProperty("webdriver.chrome.driver", "<path_to_chromedriver i.e.> /Users/Manjot/Downloads/chromedriver");
+                driverType = System.getProperty("webdriver.chrome.driver");
+
+
+            case "HTMLUnit":
+
+                return new HtmlUnitDriver(BrowserVersion.INTERNET_EXPLORER_8);
+
+            default:
+                throw new RuntimeException(String.format("Driver %sNot Supported", driverType));
         }
     }
 

@@ -64,7 +64,7 @@ public class ManageSchedulePage extends Page {
     public ManageSchedulePage(TestWebDriver driver) throws  IOException {
         super(driver);
         PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
-        testWebDriver.setImplicitWait(25);
+        testWebDriver.setImplicitWait(10);
 
     }
 
@@ -113,6 +113,7 @@ public class ManageSchedulePage extends Page {
     {
         testWebDriver.waitForElementToAppear(addPeriodButton);
         addPeriodButton.click();
+        testWebDriver.sleep(1500);
         testWebDriver.waitForElementToAppear(namePeriod);
         return new PeriodsPage(testWebDriver);
     }

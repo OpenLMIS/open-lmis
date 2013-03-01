@@ -90,7 +90,8 @@ public class UserPage extends Page {
   public UserPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
-    testWebDriver.setImplicitWait(25);
+    testWebDriver.setImplicitWait(10
+    );
 
   }
 
@@ -124,6 +125,7 @@ public class UserPage extends Page {
     testWebDriver.waitForElementToAppear(searchFacility);
     searchFacility.clear();
     searchFacility.sendKeys(facilityCode);
+    testWebDriver.sleep(1000);
     selectFacility.click();
     testWebDriver.selectByVisibleText(programsMyFacility, program1);
     rolesInputFieldMyFacility.click();
@@ -143,8 +145,9 @@ public class UserPage extends Page {
     addButtonMyFacility.click();
     testWebDriver.sleep(1000);
 
-
+    testWebDriver.sleep(1500);
     testWebDriver.selectByVisibleText(programsToSupervise, program1);
+    testWebDriver.sleep(1500);
     testWebDriver.selectByVisibleText(supervisoryNodeToSupervise, node);
     rolesInputField.click();
     rolesInputField.clear();

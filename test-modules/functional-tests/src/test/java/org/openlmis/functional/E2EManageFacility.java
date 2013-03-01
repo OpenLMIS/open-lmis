@@ -22,8 +22,9 @@ public class E2EManageFacility extends TestCaseHelper {
   DBWrapper dbWrapper;
 
   @BeforeMethod(groups = {"functional"})
-  public void setUp() throws Exception {
-    super.setupSuite();
+  @Parameters({ "browser"})
+  public void setUp(String browser) throws Exception {
+    super.setupSuite(browser);
     dbWrapper = new DBWrapper();
     dbWrapper.deleteData();
   }
