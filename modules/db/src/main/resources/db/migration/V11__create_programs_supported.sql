@@ -3,7 +3,7 @@ CREATE TABLE programs_supported (
   programId    INTEGER REFERENCES programs (id),
   startDate    TIMESTAMP,
   active       BOOLEAN NOT NULL,
-  modifiedBy   VARCHAR(50),
+  modifiedBy   INTEGER,
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (facilityId, programId)
 );

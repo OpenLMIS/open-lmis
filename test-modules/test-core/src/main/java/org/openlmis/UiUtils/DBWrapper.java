@@ -79,10 +79,10 @@ public class DBWrapper {
       "('" + facility2 + "','Central Hospital','IT department','G7646',9876234981,'fax','A','B',1,2,333,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','TRUE','fc','TRUE');\n");
 
     update("insert into programs_supported(facilityId, programId, startDate, active, modifiedBy) VALUES\n" +
-      "((SELECT id FROM facilities WHERE code = '" + facility1 + "'), 1, '11/11/12', true, 'Admin123'),\n" +
-      "((SELECT id FROM facilities WHERE code = '" + facility1 + "'), 2, '11/11/12', true, 'Admin123'),\n" +
-      "((SELECT id FROM facilities WHERE code = '" + facility2 + "'), 1, '11/11/12', true, 'Admin123'),\n" +
-      "((SELECT id FROM facilities WHERE code = '" + facility2 + "'), 2, '11/11/12', true, 'Admin123');");
+      "((SELECT id FROM facilities WHERE code = '" + facility1 + "'), 1, '11/11/12', true, 1),\n" +
+      "((SELECT id FROM facilities WHERE code = '" + facility1 + "'), 2, '11/11/12', true, 1),\n" +
+      "((SELECT id FROM facilities WHERE code = '" + facility2 + "'), 1, '11/11/12', true, 1),\n" +
+      "((SELECT id FROM facilities WHERE code = '" + facility2 + "'), 2, '11/11/12', true, 1);");
 
   }
 
