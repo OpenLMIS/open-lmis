@@ -18,30 +18,15 @@ describe('Approve Requisition controller', function () {
       {'name': 'quantityApproved', 'label': 'quantity approved', 'visible': true},
       {'name': 'remarks', 'label': 'remarks', 'visible': true}
     ];
-    httpBackend.expect('GET', '/requisitions-for-approval/1.json').respond({"rnr": requisition});
-    httpBackend.expect('GET', '/reference-data/currency.json').respond({"currency": '$'});
-    httpBackend.expect('GET', '/rnr/1/columns.json').respond({"rnrColumnList": programRnrColumnList});
-    ctrl = controller(ApproveRnrController, {$scope: scope, $location: location, $routeParams: routeParams});
+    ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList, currency: '$',$location: location, $routeParams: routeParams});
   }));
 
   it('should set rnr in scope', function () {
-    httpBackend.flush();
     expect(scope.rnr).toEqual(requisition);
   });
 
   it('should set currency in scope', function () {
-    httpBackend.flush();
     expect(scope.currency).toEqual('$');
-  });
-
-  it('should set line-items in scope', function () {
-    httpBackend.flush();
-    expect(scope.rnr.lineItems).toEqual(lineItems);
-  });
-
-  it('should set non full supply line-items in scope', function () {
-    httpBackend.flush();
-    expect(scope.rnr.nonFullSupplyLineItems).toEqual(nonFullSupplyLineItems);
   });
 
   it('should set line items as data in full supply grid', function () {
@@ -49,13 +34,11 @@ describe('Approve Requisition controller', function () {
   });
 
   it('should set columns as columnDefs in non full supply grid', function () {
-    httpBackend.flush();
     expect(scope.rnrGrid.columnDefs).toEqual('columnDefinitions');
   });
 
   it('should save work in progress for rnr', function () {
     scope.rnr = {"id": "rnrId"};
-    httpBackend.flush();
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {'success': "R&R saved successfully!"});
     scope.saveRnr();
     httpBackend.flush();
@@ -83,8 +66,26 @@ describe('Approve Requisition controller', function () {
 
   });
 
+  it('should set full supply line items as gridData if supply type is not specified', function() {
+    expect(scope.showNonFullSupply).toBeFalsy();
+    expect(scope.gridLineItems).toEqual(requisition.lineItems);
+  });
+
+  it('should set full supply line items as gridData if supply type is full-supply', function() {
+    routeParams.supplyType = 'full-supply';
+    scope.$broadcast("$routeUpdate");
+    expect(scope.showNonFullSupply).toBeFalsy();
+    expect(scope.gridLineItems).toEqual(requisition.lineItems);
+  });
+
+  it('should set non full supply line items as gridData if supply type is non-full-supply', function() {
+    routeParams.supplyType = 'non-full-supply';
+    scope.$broadcast("$routeUpdate");
+    expect(scope.showNonFullSupply).toBeTruthy();
+    expect(scope.gridLineItems).toEqual(requisition.nonFullSupplyLineItems);
+  });
+
   it('should approve a valid rnr', function () {
-    httpBackend.flush();
     var lineItems = [
       {'quantityApproved': 123}
     ];

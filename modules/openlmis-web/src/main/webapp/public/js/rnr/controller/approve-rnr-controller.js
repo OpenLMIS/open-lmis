@@ -17,30 +17,29 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     var visibleColumns = _.where($scope.rnrColumns, {'visible':true});
     if (visibleColumns.length > 0) {
       $(visibleColumns).each(function (i, column) {
-        if (column.name == "cost" || column.name == "price") {
-          columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:currencyTemplate('row.entity.' + column.name)});
-          return;
+        switch (column.name) {
+          case 'price':
+          case 'cost' :
+            columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:currencyTemplate('row.entity.' + column.name)});
+            break;
+          case 'lossesAndAdjustments' :
+            columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:lossesAndAdjustmentsTemplate()});
+            break;
+          case 'quantityApproved' :
+            columnDefinitions.push({field:column.name, displayName:column.label, width:140, cellTemplate:positiveIntegerCellTemplate(column.name, 'row.entity.quantityApproved')});
+            break;
+          case 'remarks' :
+            columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:freeTextCellTemplate(column.name, 'row.entity.remarks')});
+            break;
+          default :
+            columnDefinitions.push({field:column.name, displayName:column.label});
         }
-        if (column.name == "lossesAndAdjustments") {
-          columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:lossesAndAdjustmentsTemplate()});
-          return;
-        }
-        if (column.name == "quantityApproved") {
-          columnDefinitions.push({field:column.name, displayName:column.label, width:140, cellTemplate:positiveIntegerCellTemplate(column.name, 'row.entity.quantityApproved')});
-          return;
-        }
-        if (column.name == "remarks") {
-          columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:freeTextCellTemplate(column.name, 'row.entity.remarks')});
-          return;
-        }
-        columnDefinitions.push({field:column.name, displayName:column.label});
       });
       $scope.columnDefinitions = columnDefinitions;
     } else {
       $scope.$parent.error = "Please contact Admin to define R&R template for this program";
     }
   }
-
 
   function fillGridData() {
     $scope.gridLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.lineItems;
