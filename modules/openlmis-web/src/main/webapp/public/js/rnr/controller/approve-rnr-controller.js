@@ -2,11 +2,12 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   $scope.error = "";
   $scope.message = "";
   $scope.lossesAndAdjustmentsModal = [];
-  $scope.gridLineItems = [];
+  $scope.pageLineItems = [];
   $scope.columnDefinitions = [];
   $scope.rnr = requisition;
   $scope.rnrColumns = rnrColumns;
   $scope.currency = currency;
+  $scope.pageSize = 2;
 
   function updateSupplyTypeForGrid() {
     $scope.showNonFullSupply = !!($routeParams.supplyType == 'non-full-supply');
@@ -41,8 +42,16 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     }
   }
 
-  function fillGridData() {
-    $scope.gridLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.lineItems;
+  function isValidPage(page) {
+    page = parseInt(page, 10);
+    return !!page && page > 0 && page <= $scope.numberOfPages;
+  }
+
+  function fillPagedGridData() {
+    var gridLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.lineItems;
+    $scope.numberOfPages = Math.ceil(gridLineItems.length / $scope.pageSize);
+    $scope.currentPage = (isValidPage($routeParams.page)) ? parseInt($routeParams.page, 10) : 1;
+    $scope.pageLineItems = gridLineItems.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);
   }
 
   function populateRnrLineItems() {
@@ -64,11 +73,14 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
       $scope.rnr.nonFullSupplyLineItems.push(rnrLineItem);
     });
   }
-
   updateSupplyTypeForGrid();
   populateRnrLineItems();
-  fillGridData();
+  fillPagedGridData();
   prepareColumnDefinitions();
+
+  $scope.$watch("currentPage", function() {
+    $location.search("page", $scope.currentPage);
+  });
 
   $scope.closeLossesAndAdjustmentsForRnRLineItem = function (rnrLineItem) {
     $scope.lossesAndAdjustmentsModal[rnrLineItem.id] = false;
@@ -79,8 +91,12 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   };
 
   $scope.$on('$routeUpdate', function () {
+    if(!isValidPage($routeParams.page)) {
+      $location.search('page', 1);
+      return;
+    }
     updateSupplyTypeForGrid();
-    fillGridData();
+    fillPagedGridData();
   });
 
   $scope.showLossesAndAdjustmentModalForLineItem = function (lineItem) {
@@ -130,7 +146,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   }
 
   $scope.rnrGrid = {
-    data:'gridLineItems',
+    data:'pageLineItems',
     canSelectRows:false,
     displayFooter:false,
     displaySelectionCheckbox:false,

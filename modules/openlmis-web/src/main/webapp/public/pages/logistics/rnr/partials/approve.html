@@ -9,9 +9,9 @@
 </div>
 <form name="approvalForm" novalidate>
     <div style='width: 100%'>
-        <div class="approveGrid grid-approval" ng-grid="rnrGrid" ng-hide="!gridLineItems.length"></div>
+        <div class="approveGrid grid-approval" ng-grid="rnrGrid" ng-hide="!pageLineItems.length"></div>
     </div>
-    <div class="alert alert-success" id="noProductMessage" ng-show="!gridLineItems.length">
+    <div class="alert alert-success" id="noProductMessage" ng-show="!pageLineItems.length">
         No products.
     </div>
 
@@ -28,3 +28,7 @@
         <div class="toolbar-success" id="saveSuccessMsgDiv" ng-show="message" ng-bind="message"></div>
     </div>
 </form>
+
+<div>
+  <pagination num-pages="numberOfPages" current-page="currentPage" max-size="10"></pagination>
+</div>

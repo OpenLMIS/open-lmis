@@ -9,7 +9,7 @@ describe('Approve Requisition controller', function () {
     location = $location;
     controller = $controller;
     httpBackend = $httpBackend;
-    routeParams = {"rnr": "1", "facility": "1", "program": "1"};
+    routeParams = {"rnr": "1", "program": "1"};
     lineItems = [];
     nonFullSupplyLineItems = [];
     requisition = {'status': "AUTHORIZED", 'lineItems': lineItems, 'nonFullSupplyLineItems': nonFullSupplyLineItems};
@@ -18,7 +18,8 @@ describe('Approve Requisition controller', function () {
       {'name': 'quantityApproved', 'label': 'quantity approved', 'visible': true},
       {'name': 'remarks', 'label': 'remarks', 'visible': true}
     ];
-    ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList, currency: '$',$location: location, $routeParams: routeParams});
+    ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList,
+      currency: '$', $location: location, $routeParams: routeParams});
   }));
 
   it('should set rnr in scope', function () {
@@ -29,8 +30,8 @@ describe('Approve Requisition controller', function () {
     expect(scope.currency).toEqual('$');
   });
 
-  it('should set line items as data in full supply grid', function () {
-    expect(scope.rnrGrid.data).toEqual('gridLineItems');
+  it('should set paged line items as data in full supply grid', function () {
+    expect(scope.rnrGrid.data).toEqual('pageLineItems');
   });
 
   it('should set columns as columnDefs in non full supply grid', function () {
@@ -66,23 +67,22 @@ describe('Approve Requisition controller', function () {
 
   });
 
-  it('should set full supply line items as gridData if supply type is not specified', function() {
+  it('should reset showNonFullSupply flag if supply type is not specified', function() {
     expect(scope.showNonFullSupply).toBeFalsy();
-    expect(scope.gridLineItems).toEqual(requisition.lineItems);
   });
 
-  it('should set full supply line items as gridData if supply type is full-supply', function() {
+  it('should reset showNonFullSupply flag if supply type is full-supply', function() {
     routeParams.supplyType = 'full-supply';
     scope.$broadcast("$routeUpdate");
     expect(scope.showNonFullSupply).toBeFalsy();
-    expect(scope.gridLineItems).toEqual(requisition.lineItems);
   });
 
-  it('should set non full supply line items as gridData if supply type is non-full-supply', function() {
+  it('should set showNonFullSupply flag if supply type is non-full-supply', function() {
+    scope.numberOfPages = 5;
+    routeParams.page = 1;
     routeParams.supplyType = 'non-full-supply';
     scope.$broadcast("$routeUpdate");
     expect(scope.showNonFullSupply).toBeTruthy();
-    expect(scope.gridLineItems).toEqual(requisition.nonFullSupplyLineItems);
   });
 
   it('should approve a valid rnr', function () {
@@ -96,6 +96,51 @@ describe('Approve Requisition controller', function () {
     httpBackend.flush();
 
     expect(scope.$parent.message).toEqual("R&R approved successfully!");
+  });
+
+  it('should calculate number of pages for a pageSize of 2 and 4 lineItems', function() {
+    requisition.lineItems = [{'id': 1}, {'id': 2}, {'id': 3}, {'id': 4}];
+    ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList, currency: '$',$location: location, $routeParams: routeParams});
+
+    expect(2).toEqual(scope.numberOfPages);
+  });
+
+  it('should calculate number of pages for a pageSize of 2 and 4 nonFullSupplyLineItems', function() {
+    routeParams.supplyType = 'non-full-supply';
+    requisition.nonFullSupplyLineItems = [{'id': 1}, {'id': 2}, {'id': 3}, {'id': 4}];
+    ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList, currency: '$',$location: location, $routeParams: routeParams});
+
+    expect(2).toEqual(scope.numberOfPages);
+  });
+
+  it('should determine lineItems to be displayed on page 1 for page size 2', function() {
+    requisition.lineItems = [{'id':1}, {'id': 2}, {'id':3}, {'id':4}];
+    ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList, currency: '$',$location: location, $routeParams: routeParams});
+
+    expect(scope.pageLineItems[0].id).toEqual(1);
+    expect(scope.pageLineItems[1].id).toEqual(2);
+    expect(scope.pageLineItems.length).toEqual(2);
+  });
+
+  it('should determine lineItems to be displayed on page 2 for page size 2', function() {
+    routeParams.page = 2;
+    requisition.lineItems = [{'id':1}, {'id': 2}, {'id':3}, {'id':4}];
+    ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList, currency: '$',$location: location, $routeParams: routeParams});
+
+    expect(scope.pageLineItems[0].id).toEqual(3);
+    expect(scope.pageLineItems[1].id).toEqual(4);
+    expect(scope.pageLineItems.length).toEqual(2);
+  });
+
+  it('should set current page 1 if page not defined', function() {
+    expect(scope.currentPage).toEqual(1);
+  });
+
+  it('should set current page to 1 if page not within valid range', function() {
+    routeParams.page = -95;
+    ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList, currency: '$',$location: location, $routeParams: routeParams});
+
+    expect(scope.currentPage).toEqual(1);
   });
 
 });
