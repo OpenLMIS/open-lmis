@@ -2,6 +2,7 @@ package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.core.domain.ProductForm;
 import org.springframework.stereotype.Repository;
 
@@ -28,7 +29,7 @@ public interface ProductMapper {
             "expectedShelfLife," +
             "specialStorageInstructions," + "specialTransportInstructions," +
             "active," + "fullSupply," + "tracer," + "roundToZero," + "archived," +
-            "packRoundingThreshold," +
+            "packRoundingThreshold, categoryId," +
             "modifiedBy, modifiedDate)" +
             "VALUES(" +
             "#{code}," +
@@ -51,7 +52,7 @@ public interface ProductMapper {
             "#{expectedShelfLife}," +
             "#{specialStorageInstructions}," + "#{specialTransportInstructions}," +
             "#{active}," + "#{fullSupply}," + "#{tracer}," + "#{roundToZero}," + "#{archived}," +
-            "#{packRoundingThreshold}," +
+            "#{packRoundingThreshold}, #{category.id},  " +
             "#{modifiedBy}, #{modifiedDate})")
     @Options(useGeneratedKeys = true)
     Integer insert(Product product);
@@ -66,6 +67,7 @@ public interface ProductMapper {
     @Select("SELECT * FROM products WHERE id = #{id}")
     @Results(value = {
             @Result(property = "form", column = "formId", javaType = ProductForm.class, one = @One(select = "org.openlmis.core.repository.mapper.ProductFormMapper.getById")),
+            @Result(property = "category", column = "categoryId", javaType = ProductCategory.class, one = @One(select = "org.openlmis.core.repository.mapper.ProductCategoryMapper.getProductCategoryById")),
             @Result(property = "dosageUnit", column = "dosageUnitId", javaType = ProductForm.class, one = @One(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById"))
     })
     Product getById(Integer id);

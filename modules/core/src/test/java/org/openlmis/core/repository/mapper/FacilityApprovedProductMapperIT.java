@@ -45,6 +45,8 @@ public class FacilityApprovedProductMapperIT {
   FacilityApprovedProductMapper facilityApprovedProductMapper;
   @Autowired
   private ProgramMapper programMapper;
+  @Autowired
+  private ProductCategoryMapper productCategoryMapper;
 
   @Test
   public void shouldInsertFacilityApprovedProduct() throws Exception {
@@ -75,13 +77,21 @@ public class FacilityApprovedProductMapperIT {
     programMapper.insert(bpProgram);
     programMapper.insert(yellowFeverProgram);
 
-    Product pro01 = product("PRO01", true, 6);
-    Product pro02 = product("PRO02", true, 4);
-    Product pro03 = product("PRO03", false, 1);
-    Product pro04 = product("PRO04", true, 2);
-    Product pro05 = product("PRO05", true, 5);
-    Product pro06 = product("PRO06", true, 5);
-    Product pro07 = product("PRO07", true, null);
+    ProductCategory category1 = category("C1", "Category 1", 2);
+    ProductCategory category2 = category("C2", "Category 2", 7);
+    ProductCategory category3 = category("C3", "Category 3", 4);
+    ProductCategory category4 = category("C4", "Category 4", 5);
+    ProductCategory category6 = category("C6", "Category 6", 1);
+
+
+
+    Product pro01 = product("PRO01", true, 6, category1);   //
+    Product pro02 = product("PRO02", true, 4, category2);
+    Product pro03 = product("PRO03", false, 1, category3);
+    Product pro04 = product("PRO04", true, 2, category4);
+    Product pro05 = product("PRO05", true, 5, category1); //
+    Product pro06 = product("PRO06", true, 5, category6); //
+    Product pro07 = product("PRO07", true, null, category2);
 
     ProgramProduct programProduct1 = addToProgramProduct(yellowFeverProgram, pro01, true);
     ProgramProduct programProduct2 = addToProgramProduct(yellowFeverProgram, pro02, true);
@@ -105,10 +115,10 @@ public class FacilityApprovedProductMapperIT {
 
     FacilityApprovedProduct facilityApprovedProduct = facilityApprovedProducts.get(0);
 
-    assertEquals(programProduct5.getId(), facilityApprovedProduct.getProgramProduct().getId());
+    assertEquals(programProduct6.getId(), facilityApprovedProduct.getProgramProduct().getId());
     assertEquals(30, facilityApprovedProduct.getProgramProduct().getDosesPerMonth().intValue());
     Product product = facilityApprovedProduct.getProgramProduct().getProduct();
-    assertEquals("PRO05", product.getCode());
+    assertEquals("PRO06", product.getCode());
     assertEquals("Primary Name", product.getPrimaryName());
     assertEquals("strength", product.getStrength());
     assertThat(product.getForm().getCode(), Is.is("Tablet"));
@@ -117,10 +127,11 @@ public class FacilityApprovedProductMapperIT {
     assertNotNull(product.getForm());
     assertEquals("Tablet", product.getForm().getCode());
     assertNotNull(product.getDosageUnit());
+    assertThat(product.getCategory().getName() , is("Category 6") );
     assertEquals("mg", product.getDosageUnit().getCode());
     assertEquals(10, product.getDosesPerDispensingUnit().intValue());
 
-    assertEquals("PRO06", facilityApprovedProducts.get(1).getProgramProduct().getProduct().getCode());
+    assertEquals("PRO05", facilityApprovedProducts.get(1).getProgramProduct().getProduct().getCode());
     assertEquals("PRO01", facilityApprovedProducts.get(2).getProgramProduct().getProduct().getCode());
 
     // Non-full supply products
@@ -131,6 +142,15 @@ public class FacilityApprovedProductMapperIT {
     assertThat(nonFullSupplyfacilityApprovedProducts.get(0).getProgramProduct().getProduct().getCode(), is("PRO03"));
   }
 
+  private ProductCategory category(String categoryCode, String categoryName, int categoryDisplayOrder) {
+    ProductCategory productCategory = new ProductCategory();
+    productCategory.setCode(categoryCode);
+    productCategory.setDisplayOrder(categoryDisplayOrder);
+    productCategory.setName(categoryName);
+    productCategoryMapper.insert(productCategory);
+    return productCategory;
+  }
+
 
   private void addToFacilityType(String facilityTypeCode, ProgramProduct programProduct) {
     FacilityType facilityType = new FacilityType();
@@ -139,8 +159,9 @@ public class FacilityApprovedProductMapperIT {
     facilityApprovedProductMapper.insert(new FacilityApprovedProduct(facilityType, programProduct, MAX_MONTHS_OF_STOCK));
   }
 
-  private Product product(String productCode, boolean isFullSupply, Integer order) {
+  private Product product(String productCode, boolean isFullSupply, Integer order, ProductCategory productCategory) {
     Product product = make(a(ProductBuilder.defaultProduct, with(code, productCode), with(fullSupply, isFullSupply), with(displayOrder, order)));
+    product.setCategory(productCategory);
     productMapper.insert(product);
     return product;
   }
