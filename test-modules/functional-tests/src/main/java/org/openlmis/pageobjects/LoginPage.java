@@ -14,36 +14,36 @@ import java.io.IOException;
 
 public class LoginPage extends Page {
 
-    @FindBy(how = How.ID, using = "username")
-    private static WebElement userNameField;
+  @FindBy(how = How.ID, using = "username")
+  private static WebElement userNameField;
 
-    @FindBy(how = How.ID, using = "password")
-    private static WebElement passwordField;
+  @FindBy(how = How.ID, using = "password")
+  private static WebElement passwordField;
 
-    private String BASE_URL;
+  private String BASE_URL;
 
-    private String baseUrl;
+  private String baseUrl;
 
-    public LoginPage(TestWebDriver driver) throws  IOException{
-        super(driver);
+  public LoginPage(TestWebDriver driver) throws IOException {
+    super(driver);
 
-        baseUrl = "http://localhost:9091/";
-        BASE_URL=baseUrl;
-        testWebDriver.setBaseURL(BASE_URL);
-        PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
-        testWebDriver.setImplicitWait(10);
-      testWebDriver.waitForElementToAppear(userNameField);
-        SeleneseTestNgHelper.assertTrue(userNameField.isDisplayed());
-    }
+    baseUrl = "http://localhost:9091/";
+    BASE_URL = baseUrl;
+    testWebDriver.setBaseURL(BASE_URL);
+    PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
+    testWebDriver.setImplicitWait(10);
+    testWebDriver.waitForElementToAppear(userNameField);
+    SeleneseTestNgHelper.assertTrue(userNameField.isDisplayed());
+  }
 
 
-    public HomePage loginAs(String username, String password) throws IOException {
-        testWebDriver.waitForElementToAppear(userNameField);
-        testWebDriver.waitForElementToAppear(passwordField);
-        userNameField.sendKeys(username);
-        passwordField.sendKeys(password);
-        userNameField.submit();
-        return new HomePage(testWebDriver);
-    }
+  public HomePage loginAs(String username, String password) throws IOException {
+    testWebDriver.waitForElementToAppear(userNameField);
+    testWebDriver.waitForElementToAppear(passwordField);
+    userNameField.sendKeys(username);
+    passwordField.sendKeys(password);
+    userNameField.submit();
+    return new HomePage(testWebDriver);
+  }
 
 }

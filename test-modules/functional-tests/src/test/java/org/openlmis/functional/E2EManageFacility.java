@@ -22,14 +22,14 @@ public class E2EManageFacility extends TestCaseHelper {
   DBWrapper dbWrapper;
 
   @BeforeMethod(groups = {"functional"})
-  @Parameters({ "browser"})
+  @Parameters({"browser"})
   public void setUp(String browser) throws Exception {
     super.setupSuite(browser);
     dbWrapper = new DBWrapper();
     dbWrapper.deleteData();
   }
 
-  @Test(groups = {"functional"},dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
   public void testE2EManageFacility(String user, String[] credentials) throws Exception {
 
     LoginPage loginPage = new LoginPage(testWebDriver);
@@ -39,10 +39,10 @@ public class E2EManageFacility extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
     CreateFacilityPage createFacilityPage = homePage.navigateCreateFacility();
-    String geoZone= "Arusha";
-    String facilityType= "Lvl3 Hospital";
-    String operatedBy= "MoH";
-    String date_time = createFacilityPage.enterAndVerifyFacility(geoZone,facilityType,operatedBy);
+    String geoZone = "Arusha";
+    String facilityType = "Lvl3 Hospital";
+    String operatedBy = "MoH";
+    String date_time = createFacilityPage.enterAndVerifyFacility(geoZone, facilityType, operatedBy);
 
     DeleteFacilityPage deleteFacilityPage = homePage.navigateSearchFacility();
     deleteFacilityPage.searchFacility(date_time);
@@ -71,7 +71,7 @@ public class E2EManageFacility extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-        {"User123", new String[]{"Admin123", "Admin123"}}
+      {"User123", new String[]{"Admin123", "Admin123"}}
     };
   }
 }

@@ -22,7 +22,7 @@ public class E2EUpload extends TestCaseHelper {
   DBWrapper dbWrapper;
 
   @BeforeMethod(groups = {"functional"})
-  @Parameters({ "browser"})
+  @Parameters({"browser"})
   public void setUp(String browser) throws Exception {
     super.setupSuite(browser);
     dbWrapper = new DBWrapper();
@@ -30,7 +30,7 @@ public class E2EUpload extends TestCaseHelper {
     dbWrapper.deleteFacilities();
   }
 
-  @Test(groups = {"functional"},dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
   public void uploadCSVFiles(String[] credentials) throws Exception {
 
     LoginPage loginPage = new LoginPage(testWebDriver);
@@ -116,7 +116,7 @@ public class E2EUpload extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-        {new String[]{"Admin123", "Admin123"}}
+      {new String[]{"Admin123", "Admin123"}}
     };
   }
 }

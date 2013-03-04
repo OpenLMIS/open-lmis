@@ -201,13 +201,13 @@ public class InitiateRnRPage extends Page {
     testWebDriver.sleep(1500);
     testWebDriver.waitForElementToAppear(requisitionHeader);
     String headerText = testWebDriver.getText(requisitionHeader);
-    SeleneseTestNgHelper.assertTrue(headerText.contains("Report and Requisition for "+program+" ("+facilityType+")"));
+    SeleneseTestNgHelper.assertTrue(headerText.contains("Report and Requisition for " + program + " (" + facilityType + ")"));
     String facilityText = testWebDriver.getText(facilityLabel);
     SeleneseTestNgHelper.assertTrue(facilityText.contains(FCode + FCstring + " - " + FName + FCstring));
 
     SeleneseTestNgHelper.assertEquals(reportingPeriodInitRnRScreen.getText().trim().substring("Reporting Period: ".length()), periodDetails.trim());
-     SeleneseTestNgHelper.assertEquals(geoZone, geoZoneInitRnRScreen.getText().trim());
-    SeleneseTestNgHelper.assertEquals(operatedBy,operatedByInitRnRScreen.getText().trim());
+    SeleneseTestNgHelper.assertEquals(geoZone, geoZoneInitRnRScreen.getText().trim());
+    SeleneseTestNgHelper.assertEquals(operatedBy, operatedByInitRnRScreen.getText().trim());
 
 
   }
@@ -247,12 +247,12 @@ public class InitiateRnRPage extends Page {
     String labelAdj = testWebDriver.getText(adjList);
     SeleneseTestNgHelper.assertEquals(labelAdj.trim(), "Transfer In");
     String adjValue = testWebDriver.getAttribute(adjListValue, "value");
-   // SeleneseTestNgHelper.assertEquals(adjValue, adj);
+    // SeleneseTestNgHelper.assertEquals(adjValue, adj);
     //testWebDriver.waitForElementToAppear(totalAdj);
     //String totalAdjValue = testWebDriver.getText(totalAdj);
-      testWebDriver.sleep(1000);
+    testWebDriver.sleep(1000);
     //SeleneseTestNgHelper.assertEquals(totalAdjValue.substring("Total ".length()), adj);
-      testWebDriver.sleep(1000);
+    testWebDriver.sleep(1000);
     doneButton.click();
     testWebDriver.sleep(1000);
 
@@ -293,8 +293,8 @@ public class InitiateRnRPage extends Page {
     totalStockOutDays.sendKeys(Keys.DELETE);
     totalStockOutDays.sendKeys(X.toString());
     testWebDriver.waitForElementToAppear(adjustedTotalConsumption);
-      testWebDriver.sleep(1500);
-      adjustedTotalConsumption.click();
+    testWebDriver.sleep(1500);
+    adjustedTotalConsumption.click();
     String actualAdjustedTotalConsumption = testWebDriver.getText(adjustedTotalConsumption);
     SeleneseTestNgHelper.assertEquals(actualAdjustedTotalConsumption, N.toString());
     String actualAmc = testWebDriver.getText(amc);
@@ -409,10 +409,10 @@ public class InitiateRnRPage extends Page {
     SeleneseTestNgHelper.assertTrue("RnR Fail message not displayed", submitErrorMessage.isDisplayed());
   }
 
-    public void clearNewPatientField() {
-        newPatient.sendKeys("\u0008");
-        testWebDriver.sleep(500);
-    }
+  public void clearNewPatientField() {
+    newPatient.sendKeys("\u0008");
+    testWebDriver.sleep(500);
+  }
 
   public void verifyBeginningBalanceDisabled() {
     testWebDriver.waitForElementToAppear(fullSupplyTab);

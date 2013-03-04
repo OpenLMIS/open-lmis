@@ -12,61 +12,47 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class CaptureScreenshotOnFailureListener extends TestListenerAdapter
-{
+public class CaptureScreenshotOnFailureListener extends TestListenerAdapter {
 
-    Date dObjnew = new Date();
-    SimpleDateFormat formatternew = new SimpleDateFormat("yyyyMMdd");
-    String dateFolder = formatternew.format(dObjnew);
-    String screenShotsFolder=null;
+  Date dObjnew = new Date();
+  SimpleDateFormat formatternew = new SimpleDateFormat("yyyyMMdd");
+  String dateFolder = formatternew.format(dObjnew);
+  String screenShotsFolder = null;
 
-    private void createDirectory()
-    {
-        screenShotsFolder = System.getProperty("user.dir") + "/src/main/resources/"+dateFolder+"/";
-        if(!screenShotsFolder.contains("functional-tests"))
-            screenShotsFolder = System.getProperty("user.dir") + "/test-modules/functional-tests/src/main/resources/"+dateFolder+"/";
-        if(!new File(screenShotsFolder).exists()) {
-            (new File(screenShotsFolder)).mkdir(); }
-
+  private void createDirectory() {
+    String Separator = System.getProperty("file.separator");
+    screenShotsFolder = System.getProperty("user.dir") + Separator+"src"+Separator+"main"+Separator+"resources"+Separator + dateFolder + Separator;
+    if (!screenShotsFolder.contains("functional-tests"))
+      screenShotsFolder = System.getProperty("user.dir") + Separator+"test-modules"+Separator+"functional-tests"+Separator+"src"+Separator+"main"+Separator+"resources"+Separator + dateFolder + Separator;
+    if (!new File(screenShotsFolder).exists()) {
+      (new File(screenShotsFolder)).mkdir();
     }
 
-    @Override
-    public void onTestFailure (ITestResult testResult)
-    {
-        // call the superclass
-        super.onTestFailure(testResult);
+  }
 
-        WebDriver driver = TestWebDriver.getDriver();
-        createDirectory();
-        // Create a calendar object so we can create a date and time for the screenshot
-        Date dObj = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd-hhmmss");
-        String time = formatter.format(dObj);
+  @Override
+  public void onTestFailure(ITestResult testResult) {
+    super.onTestFailure(testResult);
 
-        // The file includes the the test method and the test class
-        String testMethodAndTestClass = testResult.getMethod().getMethodName() + "(" + testResult.getTestClass().getName() + ")";
+    WebDriver driver = TestWebDriver.getDriver();
+    createDirectory();
+    Date dObj = new Date();
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd-hhmmss");
+    String time = formatter.format(dObj);
+    String testMethodAndTestClass = testResult.getMethod().getMethodName() + "(" + testResult.getTestClass().getName() + ")";
+    String filename = screenShotsFolder
+      + testMethodAndTestClass + "-"
+      + time + "-screenshot"
+      + ".png";
 
-        System.out.println(" *** This is where the capture file is created for the Test \n" + testMethodAndTestClass );
+    File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 
-        // Create the filename for the screen shots
-        String filename = screenShotsFolder
-                + testMethodAndTestClass + "-"
-                +time+"-screenshot"
-                + ".png";
+    try {
+      FileUtils.copyFile(scrFile, new File(filename));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
+  }
 
-
-        // Take the screen shot and then copy the file to the screen shot folder
-        File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-
-        try  {
-            FileUtils.copyFile(scrFile, new File(filename));
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
-    } // end of onTestFailure
-
-} // enf of class
+}

@@ -5,11 +5,10 @@ import org.openqa.selenium.WebDriver;
 
 public abstract class Page {
 
-    public TestWebDriver testWebDriver;
+  public TestWebDriver testWebDriver;
 
-    protected Page(TestWebDriver driver)
-    {
-        this.testWebDriver=driver;
-    }
+  protected Page(TestWebDriver driver) {
+    this.testWebDriver = driver;
+  }
 
 }

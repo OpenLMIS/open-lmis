@@ -22,23 +22,23 @@ public class E2EInitiateRnR extends TestCaseHelper {
   DBWrapper dbWrapper;
 
   @BeforeMethod(groups = {"smoke"})
-  @Parameters({ "browser"})
+  @Parameters({"browser"})
   public void setUp(String browser) throws Exception {
     super.setupSuite(browser);
     dbWrapper = new DBWrapper();
     dbWrapper.deleteData();
   }
 
-  @Test(groups = {"smoke"},dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function-Positive")
   public void testE2EInitiateRnR(String program, String userSIC, String userMO, String password, String[] credentials) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
     CreateFacilityPage createFacilityPage = homePage.navigateCreateFacility();
-    String geoZone= "Arusha";
-    String facilityType= "Lvl3 Hospital";
-    String operatedBy= "MoH";
-    String date_time = createFacilityPage.enterAndVerifyFacility(geoZone,facilityType,operatedBy);
+    String geoZone = "Arusha";
+    String facilityType = "Lvl3 Hospital";
+    String operatedBy = "MoH";
+    String date_time = createFacilityPage.enterAndVerifyFacility(geoZone, facilityType, operatedBy);
     String facility_code = "FCcode" + date_time;
     dbWrapper.insertFacilities("F10", "F11");
 
@@ -54,27 +54,27 @@ public class E2EInitiateRnR extends TestCaseHelper {
     userRoleListMedicalofficer.add("Approve Requisition");
     rolesPage.createRole("Medical-officer", "Medical-officer", userRoleListMedicalofficer);
 
-    dbWrapper.insertSupervisoryNode("F10", "N1","Node 1", "null");
-    dbWrapper.insertSupervisoryNodeSecond("F11", "N2","Node 2", "N1");
+    dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
+    dbWrapper.insertSupervisoryNodeSecond("F11", "N2", "Node 2", "N1");
 
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
     UserPage userPageSIC = homePage.navigateToUser();
-    String userSICEmail="Fatima_Doe@openlmis.com";
-    String userSICFirstName="Fatima";
-    String userSICLastName="Doe";
-    String userSICUserName="storeincharge";
+    String userSICEmail = "Fatima_Doe@openlmis.com";
+    String userSICFirstName = "Fatima";
+    String userSICLastName = "Doe";
+    String userSICUserName = "storeincharge";
     String userIDSIC = userPageSIC.enterAndverifyUserDetails(userSICUserName, userSICEmail, userSICFirstName, userSICLastName);
     dbWrapper.updateUser(passwordUsers, userSICEmail);
-    userPageSIC.enterMyFacilityAndMySupervisedFacilityData(userSICFirstName, userSICLastName, "F10", "HIV","ARV", "Node 1", "Store-in-charge");
+    userPageSIC.enterMyFacilityAndMySupervisedFacilityData(userSICFirstName, userSICLastName, "F10", "HIV", "ARV", "Node 1", "Store-in-charge");
 
     UserPage userPageMO = homePage.navigateToUser();
-    String userMOEmail="Jane_Doe@openlmis.com";
-    String userMOFirstName="Jane";
-    String userMOLastName="Doe";
-    String userMOUserName="medicalofficer";
+    String userMOEmail = "Jane_Doe@openlmis.com";
+    String userMOFirstName = "Jane";
+    String userMOLastName = "Doe";
+    String userMOUserName = "medicalofficer";
     String userIDMO = userPageMO.enterAndverifyUserDetails(userMOUserName, userMOEmail, userMOFirstName, userMOLastName);
     dbWrapper.updateUser(passwordUsers, userMOEmail);
-    userPageMO.enterMyFacilityAndMySupervisedFacilityData(userMOFirstName, userMOLastName, "F11", "HIV","ARV", "Node 2", "Medical-Officer");
+    userPageMO.enterMyFacilityAndMySupervisedFacilityData(userMOFirstName, userMOLastName, "F11", "HIV", "ARV", "Node 2", "Medical-Officer");
 
     dbWrapper.updateRoleGroupMember(facility_code);
     dbWrapper.insertProducts("P10", "P11");

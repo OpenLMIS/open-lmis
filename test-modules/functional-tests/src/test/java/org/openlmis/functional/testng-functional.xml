@@ -1,5 +1,5 @@
 <suite name="Openlmis Funtional Test" verbose="10" allow-return-values="true">
-    <parameter name="browser" value="firefox" />
+  <parameter name="browser" value="firefox"/>
   <test name="Openlmis functional test">
     <groups>
       <run>

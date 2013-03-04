@@ -171,7 +171,7 @@ public class ApprovePage extends Page {
 
     BigDecimal cost = new BigDecimal((Float.parseFloat(packsToShip.getText().trim()) * Float.parseFloat(pricePerPack.getText().trim()))).setScale(2, ROUND_HALF_UP);
     SeleneseTestNgHelper.assertEquals(String.valueOf(cost), totalCost.getText().trim());
-    String totalCostFullSupplyLineItem=totalCost.getText().trim();
+    String totalCostFullSupplyLineItem = totalCost.getText().trim();
     testWebDriver.sleep(1000);
     nonFullSupplyTab.click();
 
@@ -187,7 +187,6 @@ public class ApprovePage extends Page {
 
     BigDecimal totalOverAllCost = new BigDecimal((Float.parseFloat(totalCostFullSupplyLineItem) + Float.parseFloat(totalCostNonFullSupply.getText().trim()))).setScale(2, ROUND_HALF_UP);
     SeleneseTestNgHelper.assertEquals(overalltotalCost.getText().trim(), String.valueOf(totalOverAllCost));
-
 
 
   }
