@@ -2,7 +2,7 @@ System Requirement
 ---------------------------
 
 - JDK 7
-- Gradle 1.2
+- Gradle 1.4
 
   ### For Linux users
    Download the source binary directly from the gradle website.
