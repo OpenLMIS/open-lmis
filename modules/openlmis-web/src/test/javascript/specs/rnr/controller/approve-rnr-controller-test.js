@@ -70,9 +70,13 @@ describe('Approve Requisition controller', function () {
 
   it('should set showNonFullSupply flag if supply type is non-full-supply', function() {
     scope.numberOfPages = 5;
+    scope.isDirty = true;
+    scope.rnr.id = "rnrId";
     routeParams.page = 1;
     routeParams.supplyType = 'non-full-supply';
+    httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {"success": "saved successfully"});
     scope.$broadcast("$routeUpdate");
+    httpBackend.flush();
     expect(scope.showNonFullSupply).toBeTruthy();
   });
 
@@ -132,6 +136,17 @@ describe('Approve Requisition controller', function () {
     ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList, currency: '$',$location: location, $routeParams: routeParams});
 
     expect(scope.currentPage).toEqual(1);
+  });
+
+  it('should save rnr on page change only if dirty', function() {
+    scope.numberOfPages = 5;
+    scope.isDirty = true;
+    routeParams.page = 2;
+    scope.rnr.id = "rnrId";
+    httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {'success': "success message"});
+    scope.$broadcast('$routeUpdate');
+    httpBackend.flush();
+    expect(scope.message).toEqual('success message');
   });
 
 });

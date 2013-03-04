@@ -1,14 +1,19 @@
 function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $location, currency, $routeParams) {
-  $scope.error = "";
-  $scope.message = "";
-  $scope.lossesAndAdjustmentsModal = [];
-  $scope.pageLineItems = [];
-  $scope.columnDefinitions = [];
+
   $scope.rnr = requisition;
   $scope.rnrColumns = rnrColumns;
   $scope.currency = currency;
   $scope.pageSize = 2;
+
+  $scope.error = "";
+  $scope.message = "";
+
+  $scope.lossesAndAdjustmentsModal = [];
+  $scope.pageLineItems = [];
+  $scope.columnDefinitions = [];
   $scope.showPositiveIntegerError = [];
+
+  $scope.isDirty = false;
 
   function updateSupplyTypeForGrid() {
     $scope.showNonFullSupply = !!($routeParams.supplyType == 'non-full-supply');
@@ -81,6 +86,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   prepareColumnDefinitions();
 
   $scope.$watch("currentPage", function () {
+    if(!$routeParams.supplyType) $location.search('supplyType', 'full-supply');
     $location.search("page", $scope.currentPage);
   });
 
@@ -89,6 +95,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   };
 
   $scope.switchSupplyType = function (supplyType) {
+    $location.search('page', 1);
     $location.search('supplyType', supplyType);
   };
 
@@ -97,6 +104,8 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
       $location.search('page', 1);
       return;
     }
+    if($scope.isDirty)
+      $scope.saveRnr();
     updateSupplyTypeForGrid();
     fillPagedGridData();
   });
@@ -138,7 +147,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   }
 
   function freeTextCellTemplate(field, value) {
-    return '<div><input maxlength="250" name="' + field + '" ng-model="' + value + '"/></div>';
+    return '<div><input maxlength="250" ng-change = \'setDirty()\' name="' + field + '" ng-model="' + value + '"/></div>';
   }
 
   function positiveIntegerCellTemplate(field, value) {
@@ -161,7 +170,12 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     columnDefs:'columnDefinitions'
   };
 
+  $scope.setDirty = function () {
+    $scope.isDirty = true;
+  };
+
   $scope.validatePositiveInteger = function (lineItem) {
+    $scope.setDirty();
     if (!isUndefined(lineItem.quantityApproved)) {
       $scope.showPositiveIntegerError[lineItem.id] = !utils.isPositiveNumber(lineItem.quantityApproved);
     }
@@ -187,16 +201,26 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     return rnr;
   }
 
+  var fadeSaveMessage = function () {
+    $scope.$apply(function () {
+      angular.element("#saveSuccessMsgDiv").fadeOut('slow', function () {
+        $scope.message = '';
+      });
+    });
+  };
+
   $scope.saveRnr = function () {
     var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id:$scope.rnr.id, operation:"save"},
       rnr, function (data) {
         $scope.message = data.success;
         $scope.error = "";
+        setTimeout(fadeSaveMessage, 3000);
       }, function (data) {
         $scope.error = data.error;
         $scope.message = "";
       });
+    $scope.isDirty = false;
   };
 
 
