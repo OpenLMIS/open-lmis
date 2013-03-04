@@ -79,7 +79,6 @@ public class OrderPage extends Page {
     convertToOrderButton.click();
     testWebDriver.sleep(250);
     SeleneseTestNgHelper.assertTrue("Message 'No R&Rs are pending to be Converted as Orders' is not displayed", noRequisitionPendingMessage.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("Message 'The requisition(s) have been successfully converted to Orders' is not displayed", successMessageDiv.isDisplayed());
   }
 
 
