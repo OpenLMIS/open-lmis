@@ -46,15 +46,6 @@ describe('Approve Requisition controller', function () {
     expect(scope.message).toEqual("R&R saved successfully!");
   });
 
-  it('should not save work in progress if any line item has invalid approved quantity', function () {
-    var lineItems = [
-      {'quantityApproved': 'aaas'}
-    ];
-    scope.rnr = {"id": "rnrId", 'lineItems': lineItems};
-    scope.saveRnr();
-    expect(scope.error).toEqual("Please correct errors before saving.");
-  });
-
   it('should not approve if any line item has empty approved quantity', function () {
     var lineItems = [
       {'quantityApproved': undefined}

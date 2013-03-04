@@ -8,6 +8,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   $scope.rnrColumns = rnrColumns;
   $scope.currency = currency;
   $scope.pageSize = 2;
+  $scope.showPositiveIntegerError = [];
 
   function updateSupplyTypeForGrid() {
     $scope.showNonFullSupply = !!($routeParams.supplyType == 'non-full-supply');
@@ -73,12 +74,13 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
       $scope.rnr.nonFullSupplyLineItems.push(rnrLineItem);
     });
   }
+
   updateSupplyTypeForGrid();
   populateRnrLineItems();
   fillPagedGridData();
   prepareColumnDefinitions();
 
-  $scope.$watch("currentPage", function() {
+  $scope.$watch("currentPage", function () {
     $location.search("page", $scope.currentPage);
   });
 
@@ -91,7 +93,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   };
 
   $scope.$on('$routeUpdate', function () {
-    if(!isValidPage($routeParams.page)) {
+    if (!isValidPage($routeParams.page)) {
       $location.search('page', 1);
       return;
     }
@@ -140,9 +142,11 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   }
 
   function positiveIntegerCellTemplate(field, value) {
-    return '<div><ng-form name="positiveIntegerForm"> <input ui-event="{blur : \'row.entity.updateCostWithApprovedQuantity()\'}" ng-class="{\'required-error\': approvedQuantityRequiredFlag && positiveIntegerForm.' + field + '.$error.required}" ' +
+    return '<div><ng-form name="positiveIntegerForm"> <input ng-change = \'validatePositiveInteger(row.entity)\' ' +
+      'ui-event="{blur : \'showPositiveIntegerError[row.entity.id] = false\'}"' +
+      'ng-class="{\'required-error\': approvedQuantityRequiredFlag && positiveIntegerForm.' + field + '.$error.required}" ' +
       '  ng-required="true" maxlength="8"  name=' + field + ' ng-model=' + value + ' />' +
-      '<span class="rnr-form-error" id=' + field + ' ng-show="validatePositiveInteger(' + value + ')" >Please Enter Numeric value</span></ng-form></div>';
+      '<span class="rnr-form-error" id=' + field + ' ng-show="showPositiveIntegerError[row.entity.id]" >Please Enter Numeric value</span></ng-form></div>';
   }
 
   $scope.rnrGrid = {
@@ -157,11 +161,12 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     columnDefs:'columnDefinitions'
   };
 
-  $scope.validatePositiveInteger = function (value) {
-    if (value == undefined) {
-      return false;
+  $scope.validatePositiveInteger = function (lineItem) {
+    if (!isUndefined(lineItem.quantityApproved)) {
+      $scope.showPositiveIntegerError[lineItem.id] = !utils.isPositiveNumber(lineItem.quantityApproved);
     }
-    return !utils.isPositiveNumber(value);
+
+    lineItem.updateCostWithApprovedQuantity();
   };
 
 
@@ -182,31 +187,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     return rnr;
   }
 
-  function validateForSave() {
-    var valid = true;
-    $($scope.rnr.lineItems).each(function (i, lineItem) {
-      if (lineItem.quantityApproved != undefined && !utils.isPositiveNumber(lineItem.quantityApproved)) {
-        valid = false;
-        return false;
-      }
-    });
-    $($scope.rnr.nonFullSupplyLineItems).each(function (i, lineItem) {
-      if (lineItem.quantityApproved != undefined && !utils.isPositiveNumber(lineItem.quantityApproved)) {
-        valid = false;
-        return false;
-      }
-    });
-    return valid;
-  }
-
   $scope.saveRnr = function () {
-    $scope.approvedQuantityInvalidFlag = false;
-    $scope.approvedQuantityInvalidFlag = !validateForSave();
-    if ($scope.approvedQuantityInvalidFlag) {
-      $scope.error = "Please correct errors before saving.";
-      $scope.message = "";
-      return;
-    }
     var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id:$scope.rnr.id, operation:"save"},
       rnr, function (data) {

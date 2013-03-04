@@ -51,15 +51,14 @@ var RnrLineItem = function (lineItem, rnr, programRnrColumnList) {
   };
 
   RnrLineItem.prototype.fillPacksToShipBasedOnApprovedQuantity = function () {
-    var quantityApproved = 0;
-
-    if(this.quantityApproved != undefined && utils.isPositiveNumber(this.quantityApproved)) quantityApproved = this.quantityApproved;
+    var quantityApproved = !isUndefined(this.quantityApproved) && utils.isPositiveNumber(this.quantityApproved) ? this.quantityApproved : 0;
 
     this.calculatePacksToShip(quantityApproved);
     this.fillCost();
   };
 
   RnrLineItem.prototype.updateCostWithApprovedQuantity = function () {
+    this.quantityApproved = utils.getValueFor(this.quantityApproved);
     this.fillPacksToShipBasedOnApprovedQuantity();
   };
 
