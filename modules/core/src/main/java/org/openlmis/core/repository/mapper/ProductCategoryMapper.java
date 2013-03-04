@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 public interface ProductCategoryMapper {
 
 
-  @Insert("INSERT INTO product_categories (code, name, modifiedBy) VALUES (#{code}, #{name}, #{modifiedBy})")
+  @Insert("INSERT INTO product_categories (code, name, displayOrder, modifiedBy) VALUES (#{code}, #{name}, #{displayOrder}, #{modifiedBy})")
   @Options(useGeneratedKeys = true)
   public void insert(ProductCategory productCategory);
 
@@ -22,7 +22,7 @@ public interface ProductCategoryMapper {
   @Select("SELECT * FROM product_categories WHERE code = #{code}")
   public ProductCategory getProductCategoryByCode(String code);
 
-  @Update("UPDATE product_categories SET name = #{name}, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT where id = #{id}")
+  @Update("UPDATE product_categories SET name = #{name}, modifiedBy = #{modifiedBy}, displayOrder = #{displayOrder}, modifiedDate = DEFAULT where id = #{id}")
   public void update(ProductCategory category);
 
 

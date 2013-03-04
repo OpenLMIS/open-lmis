@@ -26,6 +26,7 @@ public class ProductCategoryMapperIT {
     ProductCategory productCategory = new ProductCategory();
     productCategory.setCode("category code");
     productCategory.setName("category name");
+    productCategory.setDisplayOrder(1);
     productCategoryMapper.insert(productCategory);
 
     ProductCategory returnedProductCategory = productCategoryMapper.getProductCategoryById(productCategory.getId());
@@ -33,6 +34,7 @@ public class ProductCategoryMapperIT {
     assertThat(returnedProductCategory.getId(), is(productCategory.getId()));
     assertThat(returnedProductCategory.getCode(), is(productCategory.getCode()));
     assertThat(returnedProductCategory.getName(), is(productCategory.getName()));
+    assertThat(returnedProductCategory.getDisplayOrder(), is(productCategory.getDisplayOrder()));
   }
 
   @Test
@@ -40,12 +42,14 @@ public class ProductCategoryMapperIT {
     ProductCategory productCategory = new ProductCategory();
     productCategory.setCode("category code");
     productCategory.setName("category name");
+    productCategory.setDisplayOrder(1);
     productCategoryMapper.insert(productCategory);
 
     ProductCategory returnedProductCategory = productCategoryMapper.getProductCategoryByCode(productCategory.getCode());
 
     assertThat(returnedProductCategory.getId(), is(productCategory.getId()));
     assertThat(returnedProductCategory.getName(), is(productCategory.getName()));
+    assertThat(returnedProductCategory.getDisplayOrder(), is(productCategory.getDisplayOrder()));
   }
 
   @Test
@@ -54,15 +58,19 @@ public class ProductCategoryMapperIT {
     productCategory.setCode("category code");
     productCategory.setName("category name");
     productCategory.setModifiedBy(1);
+    productCategory.setDisplayOrder(1);
     productCategoryMapper.insert(productCategory);
 
     productCategory.setName("updated category name");
     productCategory.setModifiedBy(2);
+    productCategory.setDisplayOrder(2);
     productCategoryMapper.update(productCategory);
+
     ProductCategory returnedProductCategory = productCategoryMapper.getProductCategoryByCode(productCategory.getCode());
 
     assertThat(returnedProductCategory.getName(), is(productCategory.getName()));
     assertThat(returnedProductCategory.getModifiedBy(), is(productCategory.getModifiedBy()));
+    assertThat(returnedProductCategory.getDisplayOrder(), is(productCategory.getDisplayOrder()));
   }
 
   @Test
@@ -70,6 +78,7 @@ public class ProductCategoryMapperIT {
     ProductCategory productCategory = new ProductCategory();
     productCategory.setCode("category code");
     productCategory.setName("category name");
+    productCategory.setDisplayOrder(1);
     productCategoryMapper.insert(productCategory);
 
     Integer categoryId = productCategoryMapper.getProductCategoryIdByCode(productCategory.getCode());

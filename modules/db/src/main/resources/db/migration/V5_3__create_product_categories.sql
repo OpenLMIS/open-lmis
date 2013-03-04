@@ -3,6 +3,7 @@ CREATE TABLE product_categories (
   id SERIAL PRIMARY KEY,
   code VARCHAR(50) NOT NULL UNIQUE ,
   name VARCHAR(100) NOT NULL UNIQUE,
+  displayOrder INTEGER NOT NULL,
   modifiedDate TIMESTAMP DEFAULT  CURRENT_TIMESTAMP,
   modifiedBy INTEGER
 );

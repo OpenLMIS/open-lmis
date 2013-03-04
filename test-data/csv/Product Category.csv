@@ -1,11 +1,11 @@
-Category Code, Category Name
-1,Antibiotics
-2,Analgesics
-3,Inhalers
-4,Injections
-5,Drops
-6,Buccal
-7,Anabolics
-8,Vitamin Supplements
-9,Anesthetics
-10,Sedative
+Category Code, Category Name, Display Order
+1,Antibiotics,1
+2,Analgesics,2
+3,Inhalers,3
+4,Injections,4
+5,Drops,5
+6,Buccal,6
+7,Anabolics,7
+8,Vitamin Supplements,8
+9,Anesthetics,9
+10,Sedative,10
