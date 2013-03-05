@@ -25,7 +25,7 @@ function ApproveRnrListController($scope, requisitionList, $location) {
 
   $scope.openRnr = function () {
     $scope.$parent.period = {'startDate':$scope.selectedItems[0].periodStartDate,'endDate':$scope.selectedItems[0].periodEndDate};
-    $location.path("rnr-for-approval/"+$scope.selectedItems[0].id+'/'+$scope.selectedItems[0].programId);
+    $location.url("rnr-for-approval/"+$scope.selectedItems[0].id+'/'+$scope.selectedItems[0].programId+'?supplyType=full-supply&page=1');
   };
 
   $scope.filterRequisitions = function () {
