@@ -3,6 +3,10 @@ function RequisitionFullSupplyController($scope, $routeParams, $location, Losses
 
   groupToPages();
 
+
+  $scope.showCategory = function (index) {
+    return !((index > 0 ) && ($scope.pagedRnrFullSupplyLineItems[index].productCategory == $scope.pagedRnrFullSupplyLineItems[index-1].productCategory));
+  }
   $scope.$watch("currentPage", function () {
     if ($routeParams.page && $routeParams.page != $scope.currentPage) {
       var location= $location.path() + "?page=" + $scope.currentPage;

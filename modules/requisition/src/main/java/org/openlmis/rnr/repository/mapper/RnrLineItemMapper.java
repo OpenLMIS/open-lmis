@@ -10,12 +10,12 @@ import java.util.List;
 public interface RnrLineItemMapper {
 
   @Insert({"INSERT INTO requisition_line_items",
-    "(rnrId, productCode, product, beginningBalance, quantityReceived, quantityDispensed, dispensingUnit, dosesPerMonth, ",
+    "(rnrId, productCode, product, productCategory, beginningBalance, quantityReceived, quantityDispensed, dispensingUnit, dosesPerMonth, ",
     "dosesPerDispensingUnit, maxMonthsOfStock, totalLossesAndAdjustments, packsToShip, ",
     "packSize, price, roundToZero, packRoundingThreshold,",
     "fullSupply, previousStockInHandAvailable, newPatientCount, stockOutDays, modifiedBy, modifiedDate)",
     "VALUES (" +
-      "#{rnrId}, #{productCode}, #{product}, #{beginningBalance}, #{quantityReceived}, #{quantityDispensed}, #{dispensingUnit}, #{dosesPerMonth},",
+      "#{rnrId}, #{productCode}, #{product}, #{productCategory}, #{beginningBalance}, #{quantityReceived}, #{quantityDispensed}, #{dispensingUnit}, #{dosesPerMonth},",
     "#{dosesPerDispensingUnit}, #{maxMonthsOfStock},#{totalLossesAndAdjustments}, #{packsToShip},",
     "#{packSize}, #{price}, #{roundToZero}, #{packRoundingThreshold},",
     "#{fullSupply}, #{previousStockInHandAvailable}, #{newPatientCount}, #{stockOutDays}, #{modifiedBy}, #{modifiedDate})"})
@@ -53,12 +53,12 @@ public interface RnrLineItemMapper {
   int update(RnrLineItem rnrLineItem);
 
   @Insert({"INSERT INTO requisition_line_items",
-    "(rnrId, productCode, product, dispensingUnit, dosesPerMonth, dosesPerDispensingUnit,",
+    "(rnrId, productCode, product, productCategory, dispensingUnit, dosesPerMonth, dosesPerDispensingUnit,",
     "maxMonthsOfStock, packsToShip, packSize, price, roundToZero, packRoundingThreshold,",
     "fullSupply, modifiedBy, quantityReceived, quantityDispensed, beginningBalance,",
     "stockInHand, totalLossesAndAdjustments, calculatedOrderQuantity, quantityApproved,",
     "newPatientCount, stockOutDays, normalizedConsumption, amc, maxStockQuantity, remarks, quantityRequested, reasonForRequestedQuantity)",
-    "VALUES ( #{rnrId}, #{productCode}, #{product}, #{dispensingUnit}, #{dosesPerMonth},",
+    "VALUES ( #{rnrId}, #{productCode}, #{product}, #{productCategory}, #{dispensingUnit}, #{dosesPerMonth},",
     "#{dosesPerDispensingUnit}, #{maxMonthsOfStock}, #{packsToShip},",
     "#{packSize}, #{price}, #{roundToZero}, #{packRoundingThreshold},",
     "#{fullSupply}, #{modifiedBy}, 0, 0, 0,",

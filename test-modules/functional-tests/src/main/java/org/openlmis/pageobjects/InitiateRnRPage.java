@@ -60,28 +60,28 @@ public class InitiateRnRPage extends Page {
   @FindBy(how = How.ID, using = "F_0")
   private static WebElement newPatient;
 
-  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[1]/td[13]/ng-switch/span/ng-switch/span")
+  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[2]/td[13]/ng-switch/span/ng-switch/span")
   private static WebElement maximumStockQuantity;
 
-  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[1]/td[14]/ng-switch/span/ng-switch/span")
+  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[2]/td[14]/ng-switch/span/ng-switch/span")
   private static WebElement caculatedOrderQuantity;
 
   @FindBy(how = How.ID, using = "J_0")
   private static WebElement requestedQuantity;
 
-  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[1]/td[11]/ng-switch/span/ng-switch/span")
+  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[2]/td[11]/ng-switch/span/ng-switch/span")
   private static WebElement adjustedTotalConsumption;
 
-  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[1]/td[12]/ng-switch/span/ng-switch/span")
+  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[2]/td[12]/ng-switch/span/ng-switch/span")
   private static WebElement amc;
 
-  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[1]/td[20]/ng-switch/span/ng-switch/span")
+  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[2]/td[20]/ng-switch/span/ng-switch/span")
   private static WebElement totalCost;
 
-  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[1]/td[19]/ng-switch/span/ng-switch/span")
+  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[2]/td[19]/ng-switch/span/ng-switch/span")
   private static WebElement pricePerPack;
 
-  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[1]/td[18]/ng-switch/span/ng-switch/span")
+  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[2]/td[18]/ng-switch/span/ng-switch/span")
   private static WebElement packsToShip;
 
   @FindBy(how = How.XPATH, using = "//table[@id='nonFullSupplyTable']/tbody/tr/td[18]/ng-switch/span")

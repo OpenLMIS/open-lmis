@@ -40,6 +40,7 @@ public class RnrLineItem {
   //todo hack to display it on UI. This is concatenated string of Product properties like name, strength, form and dosage unit
   private String product;
   private String productCode;
+  private String productCategory;
   private Boolean roundToZero;
   private Integer packRoundingThreshold;
   private Integer packSize;
@@ -88,8 +89,9 @@ public class RnrLineItem {
     this.rnrId = rnrId;
 
     this.maxMonthsOfStock = facilityApprovedProduct.getMaxMonthsOfStock();
-    this.price = facilityApprovedProduct.getProgramProduct().getCurrentPrice();
     ProgramProduct programProduct = facilityApprovedProduct.getProgramProduct();
+    this.price = programProduct.getCurrentPrice();
+    this.productCategory = programProduct.getProduct().getCategory().getName();
     populateFromProduct(programProduct.getProduct());
     this.dosesPerMonth = programProduct.getDosesPerMonth();
     this.modifiedBy = modifiedBy;
