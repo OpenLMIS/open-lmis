@@ -50,7 +50,7 @@ describe('Approve Requisition controller', function () {
     var lineItems = [
       {'quantityApproved': undefined}
     ];
-    scope.rnr = {"id": "rnrId", 'lineItems': lineItems};
+    scope.rnr = {"id": "rnrId", 'fullSupplyLineItems': lineItems};
     scope.approveRnr();
     expect(scope.error).toEqual("Please complete the R&R form before approving");
     scope.approveRnr();
@@ -94,7 +94,7 @@ describe('Approve Requisition controller', function () {
   });
 
   it('should calculate number of pages for a pageSize of 2 and 4 lineItems', function() {
-    requisition.lineItems = [{'id': 1}, {'id': 2}, {'id': 3}, {'id': 4}];
+    requisition.fullSupplyLineItems = [{'id': 1}, {'id': 2}, {'id': 3}, {'id': 4}];
     ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList, currency: '$',$location: location, $routeParams: routeParams});
 
     expect(2).toEqual(scope.numberOfPages);
@@ -109,7 +109,7 @@ describe('Approve Requisition controller', function () {
   });
 
   it('should determine lineItems to be displayed on page 1 for page size 2', function() {
-    requisition.lineItems = [{'id':1}, {'id': 2}, {'id':3}, {'id':4}];
+    requisition.fullSupplyLineItems = [{'id':1}, {'id': 2}, {'id':3}, {'id':4}];
     ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList, currency: '$',$location: location, $routeParams: routeParams});
 
     expect(scope.pageLineItems[0].id).toEqual(1);
@@ -119,7 +119,7 @@ describe('Approve Requisition controller', function () {
 
   it('should determine lineItems to be displayed on page 2 for page size 2', function() {
     routeParams.page = 2;
-    requisition.lineItems = [{'id':1}, {'id': 2}, {'id':3}, {'id':4}];
+    requisition.fullSupplyLineItems = [{'id':1}, {'id': 2}, {'id':3}, {'id':4}];
     ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList, currency: '$',$location: location, $routeParams: routeParams});
 
     expect(scope.pageLineItems[0].id).toEqual(3);

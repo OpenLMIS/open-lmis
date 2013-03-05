@@ -84,7 +84,7 @@ public class RequisitionRepositoryTest {
     verify(requisitionMapper).insert(rnr);
     verify(rnrLineItemMapper, times(2)).insert(any(RnrLineItem.class));
     verify(lossesAndAdjustmentsMapper, never()).insert(any(RnrLineItem.class), any(LossesAndAdjustments.class));
-    RnrLineItem rnrLineItem = rnr.getLineItems().get(0);
+    RnrLineItem rnrLineItem = rnr.getFullSupplyLineItems().get(0);
     assertThat(rnrLineItem.getRnrId(), is(1));
   }
 

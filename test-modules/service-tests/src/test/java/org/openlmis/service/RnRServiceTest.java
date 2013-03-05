@@ -74,7 +74,7 @@ public class RnRServiceTest extends TestCaseHelper {
 
       String SUBMIT_RNR_JSON = "{\n" +
           "    \"id\": " + requisitionId + ",\n" +
-          "    \"lineItems\": [\n" +
+          "    \"fullSupplyLineItems\": [\n" +
           "        {\n" +
           "            \"id\": 1,\n" +
           "            \"rnrId\": " + requisitionId + ",\n" +

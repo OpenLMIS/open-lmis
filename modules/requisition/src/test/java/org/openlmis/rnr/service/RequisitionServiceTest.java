@@ -125,11 +125,11 @@ public class RequisitionServiceTest {
     verify(requisitionRepository).insert(any(Rnr.class));
 
     assertThat(rnr, is(requisition));
-    assertThat(requisition.getLineItems().get(0).getQuantityReceived(), is(0));
-    assertThat(requisition.getLineItems().get(0).getQuantityDispensed(), is(0));
-    assertThat(requisition.getLineItems().get(0).getTotalLossesAndAdjustments(), is(0));
-    assertThat(requisition.getLineItems().get(0).getNewPatientCount(), is(0));
-    assertThat(requisition.getLineItems().get(0).getStockOutDays(), is(0));
+    assertThat(requisition.getFullSupplyLineItems().get(0).getQuantityReceived(), is(0));
+    assertThat(requisition.getFullSupplyLineItems().get(0).getQuantityDispensed(), is(0));
+    assertThat(requisition.getFullSupplyLineItems().get(0).getTotalLossesAndAdjustments(), is(0));
+    assertThat(requisition.getFullSupplyLineItems().get(0).getNewPatientCount(), is(0));
+    assertThat(requisition.getFullSupplyLineItems().get(0).getStockOutDays(), is(0));
   }
 
   @Test
@@ -151,14 +151,14 @@ public class RequisitionServiceTest {
 
     requisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), 1);
 
-    assertThat(requisition.getLineItems().get(0).getBeginningBalance(), is(0));
+    assertThat(requisition.getFullSupplyLineItems().get(0).getBeginningBalance(), is(0));
   }
 
   @Test
   public void shouldInitRequisitionAndNotSetBeginningBalanceToZeroIfVisibleAndPreviousStockInHandNotAvailable() throws Exception {
     Date date = new Date();
     Rnr requisition = createRequisition(PERIOD.getId(), null);
-    requisition.getLineItems().get(0).setBeginningBalance(null);
+    requisition.getFullSupplyLineItems().get(0).setBeginningBalance(null);
     setupForInitRnr(date, requisition, PERIOD);
 
     List<FacilityApprovedProduct> facilityApprovedProducts = new ArrayList<>();
@@ -174,7 +174,7 @@ public class RequisitionServiceTest {
 
     requisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), 1);
 
-    assertThat(requisition.getLineItems().get(0).getBeginningBalance(), is(nullValue()));
+    assertThat(requisition.getFullSupplyLineItems().get(0).getBeginningBalance(), is(nullValue()));
   }
 
   private ArrayList<RnrColumn> getRnrColumns() {

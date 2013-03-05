@@ -32,7 +32,7 @@ public class Rnr {
   /**
    * TODO: rename lineItems to fullSupplyLineItems
    */
-  private List<RnrLineItem> lineItems = new ArrayList<>();
+  private List<RnrLineItem> fullSupplyLineItems = new ArrayList<>();
   private List<RnrLineItem> nonFullSupplyLineItems = new ArrayList<>();
 
   private Facility supplyingFacility;
@@ -64,14 +64,14 @@ public class Rnr {
 
   public void add(RnrLineItem rnrLineItem, Boolean fullSupply) {
     if (fullSupply) {
-      lineItems.add(rnrLineItem);
+      fullSupplyLineItems.add(rnrLineItem);
     } else {
       nonFullSupplyLineItems.add(rnrLineItem);
     }
   }
 
   public void calculate(List<RnrColumn> programRnrColumns) {
-    for(RnrLineItem lineItem : lineItems){
+    for(RnrLineItem lineItem : fullSupplyLineItems){
       lineItem.validateMandatoryFields(programRnrColumns);
       lineItem.calculate(period, programRnrColumns);
       lineItem.validateCalculatedFields(programRnrColumns);
@@ -81,7 +81,7 @@ public class Rnr {
       lineItem.validateNonFullSupply();
     }
 
-    this.fullSupplyItemsSubmittedCost = calculateCost(lineItems);
+    this.fullSupplyItemsSubmittedCost = calculateCost(fullSupplyLineItems);
     this.nonFullSupplyItemsSubmittedCost = calculateCost(nonFullSupplyLineItems);
   }
 
@@ -106,14 +106,14 @@ public class Rnr {
       if (!beginningBalanceVisible) resetBeginningBalances();
       return;
     }
-    for (RnrLineItem currentLineItem : this.lineItems) {
+    for (RnrLineItem currentLineItem : this.fullSupplyLineItems) {
       RnrLineItem previousLineItem = previousRequisition.findCorrespondingLineItem(currentLineItem);
       currentLineItem.setBeginningBalanceWhenPreviousStockInHandAvailable(previousLineItem);
     }
   }
 
   private void resetBeginningBalances() {
-    for (RnrLineItem lineItem : lineItems) {
+    for (RnrLineItem lineItem : fullSupplyLineItems) {
       lineItem.setBeginningBalance(0);
     }
   }
@@ -125,7 +125,7 @@ public class Rnr {
 
   public void prepareForApproval() {
     status = IN_APPROVAL;
-    for (RnrLineItem item : lineItems) {
+    for (RnrLineItem item : fullSupplyLineItems) {
       item.setDefaultApprovedQuantity();
     }
     for (RnrLineItem item : nonFullSupplyLineItems) {
@@ -135,7 +135,7 @@ public class Rnr {
 
   public void copyApproverEditableFields(Rnr rnr) {
     this.modifiedBy = rnr.getModifiedBy();
-    for (RnrLineItem thisLineItem : this.lineItems) {
+    for (RnrLineItem thisLineItem : this.fullSupplyLineItems) {
       RnrLineItem otherLineItem = rnr.findCorrespondingLineItem(thisLineItem);
       thisLineItem.copyApproverEditableFields(otherLineItem);
       thisLineItem.setModifiedBy(rnr.getModifiedBy());
@@ -159,7 +159,7 @@ public class Rnr {
 
   private void addPreviousNormalizedConsumptionFrom(Rnr rnr) {
     if (rnr == null) return;
-    for (RnrLineItem currentLineItem : lineItems) {
+    for (RnrLineItem currentLineItem : fullSupplyLineItems) {
       RnrLineItem previousLineItem = rnr.findCorrespondingLineItem(currentLineItem);
       currentLineItem.addPreviousNormalizedConsumptionFrom(previousLineItem);
     }
@@ -167,7 +167,7 @@ public class Rnr {
 
   private RnrLineItem findCorrespondingLineItem(final RnrLineItem item) {
     List<RnrLineItem> allLineItems = new ArrayList<>();
-    allLineItems.addAll(lineItems);
+    allLineItems.addAll(fullSupplyLineItems);
     allLineItems.addAll(nonFullSupplyLineItems);
     return (RnrLineItem) find(allLineItems, new Predicate() {
       @Override
@@ -180,7 +180,7 @@ public class Rnr {
 
   public void copyUserEditableFields(Rnr otherRequisition, List<RnrColumn> programRnrColumns) {
     this.modifiedBy = otherRequisition.modifiedBy;
-    for (RnrLineItem thisLineItem : lineItems) {
+    for (RnrLineItem thisLineItem : fullSupplyLineItems) {
       RnrLineItem otherLineItem = otherRequisition.findCorrespondingLineItem(thisLineItem);
       thisLineItem.copyUserEditableFields(otherLineItem, programRnrColumns);
       thisLineItem.setModifiedBy(otherRequisition.getModifiedBy());
@@ -198,16 +198,16 @@ public class Rnr {
   }
 
   public void setFieldsAccordingToTemplate(ProgramRnrTemplate template) {
-    for(RnrLineItem lineItem : lineItems){
+    for(RnrLineItem lineItem : fullSupplyLineItems){
       lineItem.setLineItemFieldsAccordingToTemplate(template);
     }
   }
 
   public void calculateForApproval() {
-    for(RnrLineItem lineItem:lineItems) {
+    for(RnrLineItem lineItem: fullSupplyLineItems) {
       lineItem.calculatePacksToShip();
     }
-    this.fullSupplyItemsSubmittedCost = calculateCost(lineItems);
+    this.fullSupplyItemsSubmittedCost = calculateCost(fullSupplyLineItems);
     this.nonFullSupplyItemsSubmittedCost = calculateCost(nonFullSupplyLineItems);
   }
 

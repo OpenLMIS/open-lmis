@@ -5,9 +5,8 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   $scope.fullSupplyLink = $scope.baseUrl + "?supplyType=full-supply&page=1";
   $scope.nonFullSupplyLink = $scope.baseUrl + "?supplyTpe=non-full-supply&page=1";
   $scope.pageSize = 10;
-
   $scope.fillPagedGridData = function () {
-    var gridLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.lineItems;
+    var gridLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.fullSupplyLineItems;
     $scope.numberOfPages = Math.ceil(gridLineItems.length / $scope.pageSize)? Math.ceil(gridLineItems.length / $scope.pageSize): 1;
     $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
     $scope.pageLineItems = gridLineItems.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);
@@ -155,10 +154,10 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   function prepareRnr() {
     var rnr = $scope.rnr;
 
-    var lineItemsJson = rnr.lineItems;
-    rnr.lineItems = [];
+    var lineItemsJson = rnr.fullSupplyLineItems;
+    rnr.fullSupplyLineItems = [];
     $(lineItemsJson).each(function (i, lineItem) {
-      rnr.lineItems.push(new RnrLineItem(lineItem, $scope.rnr, $scope.programRnrColumnList));
+      rnr.fullSupplyLineItems.push(new RnrLineItem(lineItem, $scope.rnr, $scope.programRnrColumnList));
     });
 
     var nonFullSupplyLineItemsJson = rnr.nonFullSupplyLineItems;
@@ -207,7 +206,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   // TODO: Push this method to rnr-line-item
   function formulaValid() {
     var valid = true;
-    $($scope.rnr.lineItems).each(function (index, lineItem) {
+    $($scope.rnr.fullSupplyLineItems).each(function (index, lineItem) {
       if (lineItem.arithmeticallyInvalid() || lineItem.stockInHand < 0 || lineItem.quantityDispensed < 0) {
         valid = false;
         return false;
@@ -217,10 +216,10 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   }
 
   function removeExtraDataForPostFromRnr() {
-    var rnr = {"id":$scope.rnr.id, "lineItems":[], "nonFullSupplyLineItems":[]};
+    var rnr = {"id":$scope.rnr.id, "fullSupplyLineItems":[], "nonFullSupplyLineItems":[]};
 
-    _.each($scope.rnr.lineItems, function (lineItem) {
-      rnr.lineItems.push(_.omit(lineItem, ['rnr', 'programRnrColumnList']));
+    _.each($scope.rnr.fullSupplyLineItems, function (lineItem) {
+      rnr.fullSupplyLineItems.push(_.omit(lineItem, ['rnr', 'programRnrColumnList']));
     });
     _.each($scope.rnr.nonFullSupplyLineItems, function (lineItem) {
       rnr.nonFullSupplyLineItems.push(_.omit(lineItem, ['rnr', 'programRnrColumnList']));

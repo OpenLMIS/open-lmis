@@ -222,7 +222,7 @@ var RnrLineItem = function (lineItem, rnr, programRnrColumnList) {
 
   RnrLineItem.prototype.calculateFullSupplyItemsSubmittedCost = function () {
     if (!this.rnrExists()) return;
-    this.rnr.fullSupplyItemsSubmittedCost = this.addFloats(this.getTotalLineItemCost(this.rnr.lineItems), this.cost);
+    this.rnr.fullSupplyItemsSubmittedCost = this.addFloats(this.getTotalLineItemCost(this.rnr.fullSupplyLineItems), this.cost);
   };
 
   RnrLineItem.prototype.getTotalLineItemCost = function (rnrLineItems) {

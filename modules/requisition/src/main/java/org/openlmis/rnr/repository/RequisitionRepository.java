@@ -36,7 +36,7 @@ public class RequisitionRepository {
   public void insert(Rnr requisition) {
     requisition.setStatus(INITIATED);
     requisitionMapper.insert(requisition);
-    insertLineItems(requisition, requisition.getLineItems());
+    insertLineItems(requisition, requisition.getFullSupplyLineItems());
     insertLineItems(requisition, requisition.getNonFullSupplyLineItems());
   }
 
@@ -63,7 +63,7 @@ public class RequisitionRepository {
 
 
   private void updateFullSupplyLineItems(Rnr requisition) {
-    for (RnrLineItem lineItem : requisition.getLineItems()) {
+    for (RnrLineItem lineItem : requisition.getFullSupplyLineItems()) {
       rnrLineItemMapper.update(lineItem);
       lossesAndAdjustmentsMapper.deleteByLineItemId(lineItem.getId());
       insertLossesAndAdjustmentsForLineItem(lineItem);

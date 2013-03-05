@@ -21,7 +21,7 @@ describe('RequisitionFullSupplyController', function () {
     scope.saveRnrForm = {$error:{ rnrError:false }};
     localStorageService = _localStorageService_;
     routeParams = {"facility":"1", "program":"1", "period":2};
-    scope.$parent.rnr = {"id":"rnrId", "lineItems":[]};
+    scope.$parent.rnr = {"id":"rnrId", "fullSupplyLineItems":[]};
 
     httpBackend.expect('GET', '/requisitions/lossAndAdjustments/reference-data.json').respond({"lossAdjustmentTypes":{}});
     $rootScope.fixToolBar = function () {
@@ -51,10 +51,10 @@ describe('RequisitionFullSupplyController', function () {
     ]};
     var rnrLineItem = new RnrLineItem(lineItem);
 
-    scope.$parent.rnr.lineItems.push(rnrLineItem);
+    scope.$parent.rnr.fullSupplyLineItems.push(rnrLineItem);
     spyOn(rnrLineItem, 'reEvaluateTotalLossesAndAdjustments');
 
-    scope.$parent.rnr = {"id":"rnrId", lineItems:[rnrLineItem]};
+    scope.$parent.rnr = {"id":"rnrId", fullSupplyLineItems:[rnrLineItem]};
     scope.programRnrColumnList = [
       {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}}
     ];
@@ -73,10 +73,10 @@ describe('RequisitionFullSupplyController', function () {
     ]};
     var rnrLineItem = new RnrLineItem(lineItem);
 
-    scope.$parent.rnr.lineItems.push(rnrLineItem);
+    scope.$parent.rnr.fullSupplyLineItems.push(rnrLineItem);
     spyOn(rnrLineItem, 'reEvaluateTotalLossesAndAdjustments');
 
-    scope.$parent.rnr = {"id":"rnrId", lineItems:[rnrLineItem]};
+    scope.$parent.rnr = {"id":"rnrId", fullSupplyLineItems:[rnrLineItem]};
     scope.programRnrColumnList = [
       {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}}
     ];

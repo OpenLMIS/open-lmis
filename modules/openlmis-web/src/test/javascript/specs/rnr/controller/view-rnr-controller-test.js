@@ -64,19 +64,20 @@ describe('ViewRnrController', function () {
 
   it('should assign  line items based on supply type', function() {
     routeParams.supplyType = 'full-supply';
-    var rnr = {'rnr': {lineItems: [{'id' : 1}], nonFullSupplyLineItems: [], status:'INITIATED'}};
+    var rnr = {'rnr': {fullSupplyLineItems: [{'id' : 1}], nonFullSupplyLineItems: [], status:'INITIATED'}};
     httpBackend.expect('GET', "/requisitions/1.json").respond(200, rnr);
     httpBackend.expect('GET', "/reference-data/currency.json").respond(200, {'currency': {}});
     httpBackend.expect('GET', "/rnr/2/columns.json").respond(200, {'rnrColumnList': columns});
     controller(ViewRnrController, {$scope:scope, $routeParams: routeParams});
     httpBackend.flush();
 
-    expect(rnr.rnr.lineItems.length).toEqual(scope.gridLineItems.length);
+    expect(rnr.rnr.fullSupplyLineItems.length).toEqual(scope.gridLineItems.length);
+    expect(rnr.rnr.fullSupplyLineItems.length).toEqual(scope.gridLineItems.length);
   });
 
   it('should assign non full supply line items based on supply type', function() {
     routeParams.supplyType = 'non-full-supply';
-    var rnr = {'rnr': {lineItems: [], nonFullSupplyLineItems: [{'id' : 1}], status:'INITIATED'}};
+    var rnr = {'rnr': {fullSupplyLineItems: [], nonFullSupplyLineItems: [{'id' : 1}], status:'INITIATED'}};
     httpBackend.expect('GET', "/requisitions/1.json").respond(200, rnr);
     httpBackend.expect('GET', "/reference-data/currency.json").respond(200, {'currency': {}});
     httpBackend.expect('GET', "/rnr/2/columns.json").respond(200, {'rnrColumnList': columns});

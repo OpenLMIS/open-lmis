@@ -49,21 +49,21 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   }
 
   function fillPagedGridData() {
-    var gridLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.lineItems;
+    var gridLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.fullSupplyLineItems;
     $scope.numberOfPages = Math.ceil(gridLineItems.length / $scope.pageSize)? Math.ceil(gridLineItems.length / $scope.pageSize):1;
     $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
     $scope.pageLineItems = gridLineItems.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);
   }
 
   function populateRnrLineItems() {
-    var lineItemsJson = $scope.rnr.lineItems;
-    $scope.rnr.lineItems = [];
+    var lineItemsJson = $scope.rnr.fullSupplyLineItems;
+    $scope.rnr.fullSupplyLineItems = [];
 
     $(lineItemsJson).each(function (i, lineItem) {
       var rnrLineItem = new RnrLineItem(lineItem, $scope.rnr, $scope.programRnrColumnList);
 
       rnrLineItem.updateCostWithApprovedQuantity();
-      $scope.rnr.lineItems.push(rnrLineItem);
+      $scope.rnr.fullSupplyLineItems.push(rnrLineItem);
     });
     var nonFullSupplyLineItemsJson = $scope.rnr.nonFullSupplyLineItems;
     $scope.rnr.nonFullSupplyLineItems = [];
@@ -185,10 +185,10 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   };
 
   function removeExtraDataForPostFromRnr() {
-    var rnr = {"id":$scope.rnr.id, "lineItems":[], "nonFullSupplyLineItems":[]};
+    var rnr = {"id":$scope.rnr.id, "fullSupplyLineItems":[], "nonFullSupplyLineItems":[]};
 
-    _.each($scope.rnr.lineItems, function (lineItem) {
-      rnr.lineItems.push(_.omit(lineItem, ['rnr', 'programRnrColumnList']));
+    _.each($scope.rnr.fullSupplyLineItems, function (lineItem) {
+      rnr.fullSupplyLineItems.push(_.omit(lineItem, ['rnr', 'programRnrColumnList']));
     });
     _.each($scope.rnr.nonFullSupplyLineItems, function (lineItem) {
       rnr.nonFullSupplyLineItems.push(_.omit(lineItem, ['rnr', 'programRnrColumnList']));
@@ -221,7 +221,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
 
   function validateForApprove() {
     var valid = true;
-    $($scope.rnr.lineItems).each(function (i, lineItem) {
+    $($scope.rnr.fullSupplyLineItems).each(function (i, lineItem) {
       if (lineItem.quantityApproved == undefined || !utils.isPositiveNumber(lineItem.quantityApproved)) {
         valid = false;
         return false;

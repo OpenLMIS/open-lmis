@@ -17,7 +17,7 @@ describe('CreateRequisitionController', function () {
     scope.saveRnrForm = {$error:{ rnrError:false }};
     localStorageService = _localStorageService_;
     routeParams = {"facility":"1", "program":"1", "period":2};
-    scope.rnr = {"id":"rnrId", "lineItems":[]};
+    scope.rnr = {"id":"rnrId", "fullSupplyLineItems":[]};
     mockedRequisition = {'status':"INITIATED",
       fullSupplyItemsSubmittedCost:100,
       nonFullSupplyItemsSubmittedCost:14,
@@ -75,7 +75,7 @@ describe('CreateRequisitionController', function () {
   });
 
   it('should not submit rnr with formula validation error but should save', function () {
-    scope.rnr = {"id":"1", "lineItems":[]};
+    scope.rnr = {"id":"1", "fullSupplyLineItems":[]};
     var lineItem = { "beginningBalance":1, totalLossesAndAdjustments:1, quantityDispensed:1,
       quantityReceived:1, stockInHand:1};
 
@@ -88,7 +88,7 @@ describe('CreateRequisitionController', function () {
     ];
     var rnrLineItem = new RnrLineItem({}, scope.rnr, scope.programRnrColumnList);
     jQuery.extend(rnrLineItem, lineItem);
-    scope.rnr.lineItems.push(rnrLineItem);
+    scope.rnr.fullSupplyLineItems.push(rnrLineItem);
 
     httpBackend.expect('PUT', '/requisitions/1/save.json').respond(200);
     scope.submitRnr();
@@ -99,9 +99,9 @@ describe('CreateRequisitionController', function () {
     var lineItem = { "beginningBalance":1, totalLossesAndAdjustments:1, quantityDispensed:2,
       quantityReceived:1, stockInHand:1};
     jQuery.extend(true, lineItem, new RnrLineItem());
-    scope.rnr.lineItems.push(lineItem);
+    scope.rnr.fullSupplyLineItems.push(lineItem);
 
-    scope.rnr = {"id":"rnrId", lineItems:[lineItem]};
+    scope.rnr = {"id":"rnrId", fullSupplyLineItems:[lineItem]};
     scope.programRnrColumnList = [
       {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidationRequired":true},
       {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
@@ -165,7 +165,7 @@ describe('CreateRequisitionController', function () {
 
   it('should not set disable flag if rnr is initiated and user has create right', function () {
 
-    var rnr = {id:"rnrId", lineItems:[], status:"INITIATED"};
+    var rnr = {id:"rnrId", fullSupplyLineItems:[], status:"INITIATED"};
     spyOn(rootScope, 'hasPermission').andReturn(true);
 
     ctrl = controller(CreateRequisitionController, {$scope:scope, $location:location, requisition:rnr , rnrColumns:[],

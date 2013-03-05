@@ -40,7 +40,7 @@ public interface RequisitionMapper {
     @Result(property = "period.id", column = "periodId"),
     @Result(property = "supplyingFacility.id", column = "supplyingFacilityId"),
     @Result(property = "order.orderBatch.id", column = "orderBatchId"),
-    @Result(property = "lineItems", javaType = List.class, column = "id",
+    @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
       many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsByRnrId")),
     @Result(property = "nonFullSupplyLineItems", javaType = List.class, column = "id",
       many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getNonFullSupplyRnrLineItemsByRnrId"))
@@ -62,7 +62,7 @@ public interface RequisitionMapper {
     @Result(property = "facility.id", column = "facilityId"),
     @Result(property = "program.id", column = "programId"),
     @Result(property = "period.id", column = "periodId"),
-    @Result(property = "lineItems", javaType = List.class, column = "id",
+    @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
       many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsByRnrId")),
     @Result(property = "nonFullSupplyLineItems", javaType = List.class, column = "id",
       many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getNonFullSupplyRnrLineItemsByRnrId"))

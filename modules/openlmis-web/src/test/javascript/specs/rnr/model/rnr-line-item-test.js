@@ -465,7 +465,7 @@ describe('RnrLineItem', function () {
       rnrLineItem2.cost = 60;
       var rnrLineItem3 = new RnrLineItem({"productCode":"p3"}, rnr, null);
       rnrLineItem3.cost = 160;
-      rnr.lineItems = new Array(rnrLineItem1, rnrLineItem2, rnrLineItem3);
+      rnr.fullSupplyLineItems = new Array(rnrLineItem1, rnrLineItem2, rnrLineItem3);
       rnrLineItem1.calculateFullSupplyItemsSubmittedCost();
       expect(rnr.fullSupplyItemsSubmittedCost).toEqual(320.00.toFixed(2));
     });

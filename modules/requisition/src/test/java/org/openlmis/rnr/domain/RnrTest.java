@@ -43,7 +43,7 @@ public class RnrTest {
 
     when(rnrLineItem1.calculateCost()).thenReturn(new Money("10"));
     when(rnrLineItem2.calculateCost()).thenReturn(new Money("10"));
-    rnr.setLineItems(asList(rnrLineItem1));
+    rnr.setFullSupplyLineItems(asList(rnrLineItem1));
     rnr.setNonFullSupplyLineItems(asList(rnrLineItem2));
 
     List<RnrColumn> programRnrColumns = new ArrayList<>();
@@ -59,14 +59,14 @@ public class RnrTest {
   public void shouldFillNormalizedConsumptionsFromPreviousTwoPeriodsRnr() throws Exception {
 
     final Rnr lastPeriodsRnr = make(a(RequisitionBuilder.defaultRnr));
-    lastPeriodsRnr.getLineItems().get(0).setNormalizedConsumption(1);
+    lastPeriodsRnr.getFullSupplyLineItems().get(0).setNormalizedConsumption(1);
 
     final Rnr secondLastPeriodsRnr = make(a(RequisitionBuilder.defaultRnr));
-    secondLastPeriodsRnr.getLineItems().get(0).setNormalizedConsumption(2);
+    secondLastPeriodsRnr.getFullSupplyLineItems().get(0).setNormalizedConsumption(2);
 
     rnr.fillLastTwoPeriodsNormalizedConsumptions(lastPeriodsRnr, secondLastPeriodsRnr);
 
-    List<Integer> previousNormalizedConsumptions = rnr.getLineItems().get(0).getPreviousNormalizedConsumptions();
+    List<Integer> previousNormalizedConsumptions = rnr.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions();
     assertThat(previousNormalizedConsumptions.size(), is(2));
     assertThat(previousNormalizedConsumptions.get(0), is(1));
     assertThat(previousNormalizedConsumptions.get(1), is(2));
@@ -78,11 +78,11 @@ public class RnrTest {
     final Rnr lastPeriodsRnr = null;
 
     final Rnr secondLastPeriodsRnr = make(a(RequisitionBuilder.defaultRnr));
-    secondLastPeriodsRnr.getLineItems().get(0).setNormalizedConsumption(2);
+    secondLastPeriodsRnr.getFullSupplyLineItems().get(0).setNormalizedConsumption(2);
 
     rnr.fillLastTwoPeriodsNormalizedConsumptions(lastPeriodsRnr, secondLastPeriodsRnr);
 
-    List<Integer> previousNormalizedConsumptions = rnr.getLineItems().get(0).getPreviousNormalizedConsumptions();
+    List<Integer> previousNormalizedConsumptions = rnr.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions();
     assertThat(previousNormalizedConsumptions.size(), is(1));
     assertThat(previousNormalizedConsumptions.get(0), is(2));
   }
@@ -91,11 +91,11 @@ public class RnrTest {
   public void shouldCopyApproverEditableFields() throws Exception {
     rnr.setModifiedBy(1);
     Rnr savedRnr = make(a(defaultRnr));
-    RnrLineItem savedLineItem = savedRnr.getLineItems().get(0);
+    RnrLineItem savedLineItem = savedRnr.getFullSupplyLineItems().get(0);
     RnrLineItem savedLineItemSpy = spy(savedLineItem);
-    savedRnr.getLineItems().set(0, savedLineItemSpy);
+    savedRnr.getFullSupplyLineItems().set(0, savedLineItemSpy);
     savedRnr.copyApproverEditableFields(rnr);
-    verify(savedLineItemSpy).copyApproverEditableFields(rnr.getLineItems().get(0));
+    verify(savedLineItemSpy).copyApproverEditableFields(rnr.getFullSupplyLineItems().get(0));
     assertThat(savedRnr.getModifiedBy(), is(1));
   }
 
@@ -108,14 +108,14 @@ public class RnrTest {
     rnr.setModifiedBy(1);
     Rnr savedRnr = make(a(defaultRnr));
     savedRnr.setModifiedBy(1);
-    RnrLineItem savedLineItem = savedRnr.getLineItems().get(0);
+    RnrLineItem savedLineItem = savedRnr.getFullSupplyLineItems().get(0);
     RnrLineItem savedLineItemSpy = spy(savedLineItem);
-    savedRnr.getLineItems().set(0, savedLineItemSpy);
+    savedRnr.getFullSupplyLineItems().set(0, savedLineItemSpy);
     ArrayList<RnrColumn> programRnrColumns = setupProgramTemplate();
 
     savedRnr.copyUserEditableFields(rnr, programRnrColumns);
 
-    verify(savedLineItemSpy).copyUserEditableFields(rnr.getLineItems().get(0), programRnrColumns);
+    verify(savedLineItemSpy).copyUserEditableFields(rnr.getFullSupplyLineItems().get(0), programRnrColumns);
     assertThat(savedRnr.getModifiedBy(), is(1));
     assertThat(savedRnr.getNonFullSupplyLineItems(), is(nonFullSupplyLineItems));
     assertThat(savedRnr.getNonFullSupplyLineItems().get(0).getModifiedBy(), is(rnr.getModifiedBy()));
@@ -126,12 +126,12 @@ public class RnrTest {
     Rnr rnr = make(a(defaultRnr));
     Rnr previousRequisition = new Rnr();
     RnrLineItem correspondingLineItemInPreviousRequisition = make(a(defaultRnrLineItem, with(stockInHand, 76)));
-    previousRequisition.setLineItems(asList(correspondingLineItemInPreviousRequisition));
+    previousRequisition.setFullSupplyLineItems(asList(correspondingLineItemInPreviousRequisition));
 
     rnr.setBeginningBalances(previousRequisition, true);
 
-    assertThat(rnr.getLineItems().get(0).getBeginningBalance(), is(correspondingLineItemInPreviousRequisition.getStockInHand()));
-    assertThat(rnr.getLineItems().get(0).getPreviousStockInHandAvailable(), is(Boolean.TRUE));
+    assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(correspondingLineItemInPreviousRequisition.getStockInHand()));
+    assertThat(rnr.getFullSupplyLineItems().get(0).getPreviousStockInHandAvailable(), is(Boolean.TRUE));
   }
 
   @Test
@@ -139,7 +139,7 @@ public class RnrTest {
     Rnr rnr = make(a(defaultRnr));
 
     rnr.setBeginningBalances(new Rnr(), true);
-    assertThat(rnr.getLineItems().get(0).getBeginningBalance(), is(0));
+    assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(0));
   }
 
   @Test
@@ -154,7 +154,7 @@ public class RnrTest {
     nonFullSupplyLineItems.add(secondLineItem);
 
 
-    rnr.setLineItems(lineItems);
+    rnr.setFullSupplyLineItems(lineItems);
     rnr.setNonFullSupplyLineItems(nonFullSupplyLineItems);
     rnr.setPeriod(period);
     rnr.setStatus(SUBMITTED);
@@ -172,7 +172,7 @@ public class RnrTest {
   @Test
   public void shouldSetBeginningBalanceToZeroIfPreviousRequisitionDoesNotExist() throws Exception {
     rnr.setBeginningBalances(null, false);
-    assertThat(rnr.getLineItems().get(0).getBeginningBalance(), is(0));
+    assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(0));
   }
 
   @Test
@@ -182,11 +182,11 @@ public class RnrTest {
     RnrLineItem newLineItem = make(a(defaultRnrLineItem, with(stockInHand, 2), with(beginningBalance, 7)));
 
     Rnr requisitionForSaving = make(a(defaultRnr, with(status, SUBMITTED)));
-    requisitionForSaving.setLineItems(asList(newLineItem));
+    requisitionForSaving.setFullSupplyLineItems(asList(newLineItem));
     rnr.copyUserEditableFields(requisitionForSaving, programRnrColumns);
 
-    assertThat(rnr.getLineItems().get(0).getStockInHand(), is(2));
-    assertThat(rnr.getLineItems().get(0).getBeginningBalance(), is(BEGINNING_BALANCE));
+    assertThat(rnr.getFullSupplyLineItems().get(0).getStockInHand(), is(2));
+    assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(BEGINNING_BALANCE));
   }
 
   @Test
@@ -210,11 +210,11 @@ public class RnrTest {
       with(quantityApproved, 66),
       with(packSize, 10),
       with(roundToZero, false)));
-    rnr.setLineItems(asList(lineItem));
+    rnr.setFullSupplyLineItems(asList(lineItem));
 
     rnr.calculateForApproval();
 
-    assertThat(rnr.getLineItems().get(0).getPacksToShip(), is(7));
+    assertThat(rnr.getFullSupplyLineItems().get(0).getPacksToShip(), is(7));
     assertThat(rnr.getFullSupplyItemsSubmittedCost(), is(new Money("28")));
     assertThat(rnr.getNonFullSupplyItemsSubmittedCost(), is(new Money("0")));
   }

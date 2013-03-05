@@ -109,7 +109,7 @@ public class RequisitionMapperIT {
     assertThat(fetchedRequisition.getPeriod().getId(), is(equalTo(processingPeriod1.getId())));
     assertThat(fetchedRequisition.getModifiedBy(), is(equalTo(MODIFIED_BY)));
     assertThat(fetchedRequisition.getStatus(), is(equalTo(INITIATED)));
-    assertThat(fetchedRequisition.getLineItems().size(), is(1));
+    assertThat(fetchedRequisition.getFullSupplyLineItems().size(), is(1));
     assertThat(fetchedRequisition.getNonFullSupplyLineItems().size(), is(1));
   }
 
@@ -160,7 +160,7 @@ public class RequisitionMapperIT {
     assertThat(returnedRequisition.getFacility().getId(), is(facility.getId()));
     assertThat(returnedRequisition.getProgram().getId(), is(PROGRAM_ID));
     assertThat(returnedRequisition.getPeriod().getId(), is(processingPeriod1.getId()));
-    assertThat(returnedRequisition.getLineItems().size(), is(1));
+    assertThat(returnedRequisition.getFullSupplyLineItems().size(), is(1));
     assertThat(returnedRequisition.getNonFullSupplyLineItems().size(), is(1));
   }
 
@@ -176,8 +176,8 @@ public class RequisitionMapperIT {
     lossesAndAdjustmentsMapper.insert(item1, RnrLineItemBuilder.ONE_LOSS);
     Rnr returnedRequisition = mapper.getById(requisition.getId());
 
-    assertThat(returnedRequisition.getLineItems().size(), is(1));
-    final RnrLineItem item = returnedRequisition.getLineItems().get(0);
+    assertThat(returnedRequisition.getFullSupplyLineItems().size(), is(1));
+    final RnrLineItem item = returnedRequisition.getFullSupplyLineItems().get(0);
     assertThat(item.getLossesAndAdjustments().size(), is(1));
     assertThat(returnedRequisition.getFacility().getId(), is(requisition.getFacility().getId()));
     assertThat(returnedRequisition.getStatus(), is(requisition.getStatus()));

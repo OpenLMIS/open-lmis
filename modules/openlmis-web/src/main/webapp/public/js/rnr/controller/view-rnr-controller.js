@@ -68,7 +68,7 @@ function ViewRnrController($scope, $routeParams, ProgramRnRColumnList, Requisiti
   }
 
   function fillGrid() {
-    $scope.gridLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.lineItems;
+    $scope.gridLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.fullSupplyLineItems;
   }
 
   $scope.rnrGrid = {
@@ -117,13 +117,13 @@ function ViewRnrController($scope, $routeParams, ProgramRnRColumnList, Requisiti
   }
 
   function populateRnrLineItems() {
-    var lineItemsJson = $scope.rnr.lineItems;
-    $scope.rnr.lineItems = [];
+    var lineItemsJson = $scope.rnr.fullSupplyLineItems;
+    $scope.rnr.fullSupplyLineItems = [];
     $(lineItemsJson).each(function (i, lineItem) {
       var rnrLineItem = new RnrLineItem(lineItem, $scope.rnr, $scope.$parent.programRnrColumnList);
 
       rnrLineItem.updateCostWithApprovedQuantity();
-      $scope.rnr.lineItems.push(rnrLineItem);
+      $scope.rnr.fullSupplyLineItems.push(rnrLineItem);
     });
 
     var nonFullSupplyLineItemsJson = $scope.rnr.nonFullSupplyLineItems;
