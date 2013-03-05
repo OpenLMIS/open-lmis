@@ -37,12 +37,12 @@ INSERT INTO supervisory_nodes
 
 INSERT INTO role_assignments
   (userId, roleId, programId, supervisoryNodeId) VALUES
-  (200, (SELECT id FROM roles WHERE name = 'Store In-Charge'), 1, null),
+  (200, (SELECT id FROM roles WHERE name = 'Store In-Charge'), 3, null),
   (200, (SELECT id FROM roles WHERE name = 'Store In-Charge'), 2, null),
-  (300, (SELECT id FROM roles WHERE name = 'FacilityHead'), 1, (SELECT id from supervisory_nodes WHERE code = 'N2')),
+  (300, (SELECT id FROM roles WHERE name = 'FacilityHead'), 3, (SELECT id from supervisory_nodes WHERE code = 'N2')),
   (300, (SELECT id FROM roles WHERE name = 'FacilityHead'), 2, (SELECT id from supervisory_nodes WHERE code = 'N2')),
-  (400, (SELECT id FROM roles WHERE name = 'Medical-Officer'), 1, (SELECT id from supervisory_nodes WHERE code = 'N2')),
+  (400, (SELECT id FROM roles WHERE name = 'Medical-Officer'), 3, (SELECT id from supervisory_nodes WHERE code = 'N2')),
   (400, (SELECT id FROM roles WHERE name = 'Medical-Officer'), 2, (SELECT id from supervisory_nodes WHERE code = 'N2')),
-  (500, (SELECT id FROM roles WHERE name = 'LMU'), 1, (SELECT id from supervisory_nodes WHERE code = 'N1')),
+  (500, (SELECT id FROM roles WHERE name = 'LMU'), 3, (SELECT id from supervisory_nodes WHERE code = 'N1')),
   (500, (SELECT id FROM roles WHERE name = 'LMU'), 2, (SELECT id from supervisory_nodes WHERE code = 'N1'));
 
