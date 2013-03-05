@@ -1,10 +1,11 @@
 describe('RequisitionFormController', function () {
-  var scope, ctrl, httpBackend, location, routeParams, controller, localStorageService;
+  var scope, rootScope, ctrl, httpBackend, location, routeParams, controller, localStorageService;
 
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
   beforeEach(inject(function ($httpBackend, $rootScope, $location, $controller, $routeParams, _localStorageService_) {
     scope = $rootScope.$new();
+    rootScope = $rootScope;
     $rootScope.hasPermission = function () {
     };
     location = $location;
@@ -26,7 +27,7 @@ describe('RequisitionFormController', function () {
     httpBackend.when('GET', '/reference-data/currency.json').respond({"currency":"$"});
     $rootScope.fixToolBar = function () {
     };
-    ctrl = controller(RequisitionFormController, {$scope:scope, $location:location, $routeParams:routeParams, localStorageService:localStorageService});
+    ctrl = controller(RequisitionFormController, {$scope:scope, $location:location, $routeParams:routeParams, $rootScope:rootScope, localStorageService:localStorageService});
 
     scope.allTypes = [
       {"name":"some name"},
@@ -152,5 +153,35 @@ describe('RequisitionFormController', function () {
     expect(scope.highlightRequiredFieldInModal('')).toEqual(null);
     expect(scope.highlightRequiredFieldInModal(3)).toEqual(null);
   });
+
+  it('should not set disable flag if rnr is initiated and user has create right', function () {
+    scope.rnr = {id:"rnrId", lineItems:[], status:"INITIATED"};
+    spyOn(rootScope, 'hasPermission').andReturn(true);
+
+    httpBackend.flush();
+    expect(rootScope.hasPermission).toHaveBeenCalledWith('CREATE_REQUISITION');
+    expect(scope.formDisabled).toEqual(false);
+  });
+
+  it('should not set disable flag if rnr is submitted and user have authorize right', function () {
+    scope.rnr = {id:"rnrId", lineItems:[], status:"SUBMITTED"};
+    spyOn(rootScope, 'hasPermission').andReturn(true);
+
+    httpBackend.flush();
+    expect(rootScope.hasPermission).toHaveBeenCalledWith('AUTHORIZE_REQUISITION');
+    expect(scope.formDisabled).toEqual(false);
+  });
+
+  it('should set disable flag if rnr is not initiated/submitted', function () {
+    scope.rnr = {id:"rnrId", lineItems:[], status:"some random status"};
+    spyOn(rootScope, 'hasPermission');
+    httpBackend.flush();
+    expect(rootScope.hasPermission).not.toHaveBeenCalled();
+    expect(scope.formDisabled).toEqual(true);
+  });
+
+
+
+
 });
 
