@@ -65,7 +65,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     String userSICUserName = "storeincharge";
     String userIDSIC = userPageSIC.enterAndverifyUserDetails(userSICUserName, userSICEmail, userSICFirstName, userSICLastName);
     dbWrapper.updateUser(passwordUsers, userSICEmail);
-    userPageSIC.enterMyFacilityAndMySupervisedFacilityData(userSICFirstName, userSICLastName, "F10", "HIV", "ARV", "Node 1", "Store-in-charge");
+    userPageSIC.enterMyFacilityAndMySupervisedFacilityData(userSICFirstName, userSICLastName, "F10", "HIV", "Node 1", "Store-in-charge");
 
     UserPage userPageMO = homePage.navigateToUser();
     String userMOEmail = "Jane_Doe@openlmis.com";
@@ -74,7 +74,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     String userMOUserName = "medicalofficer";
     String userIDMO = userPageMO.enterAndverifyUserDetails(userMOUserName, userMOEmail, userMOFirstName, userMOLastName);
     dbWrapper.updateUser(passwordUsers, userMOEmail);
-    userPageMO.enterMyFacilityAndMySupervisedFacilityData(userMOFirstName, userMOLastName, "F11", "HIV", "ARV", "Node 2", "Medical-Officer");
+    userPageMO.enterMyFacilityAndMySupervisedFacilityData(userMOFirstName, userMOLastName, "F11", "HIV", "Node 2", "Medical-Officer");
 
     dbWrapper.updateRoleGroupMember(facility_code);
     dbWrapper.insertProducts("P10", "P11");

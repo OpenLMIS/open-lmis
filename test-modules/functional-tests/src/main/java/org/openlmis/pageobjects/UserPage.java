@@ -63,14 +63,14 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@class='select2-result-label']/span")
   private static WebElement rolesSelectField;
 
-  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[12]")
-  private static WebElement rolesInputFieldMyFacility;
+  @FindBy(how = How.XPATH, using = "//div[@id='supervisoryRole']/div/ul/li[1]/div")
+  private static WebElement rolesListFieldMySupervisedFacility;
+
+    @FindBy(how = How.XPATH, using = "(//input[@type='text'])[12]")
+    private static WebElement rolesInputFieldMyFacility;
 
 
-  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[13]")
-  private static WebElement rolesInputFieldSecondMyFacility;
-
-  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[15]")
+  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[14]")
   private static WebElement rolesInputField;
 
 
@@ -121,7 +121,7 @@ public class UserPage extends Page {
 
   }
 
-  public void enterMyFacilityAndMySupervisedFacilityData(String firstName, String lastName, String facilityCode, String program1, String program2, String node, String role) {
+  public void enterMyFacilityAndMySupervisedFacilityData(String firstName, String lastName, String facilityCode, String program1, String node, String role) {
     testWebDriver.waitForElementToAppear(searchFacility);
     searchFacility.clear();
     searchFacility.sendKeys(facilityCode);
@@ -135,31 +135,29 @@ public class UserPage extends Page {
     rolesSelectFieldMyFacility.click();
     addButtonMyFacility.click();
     testWebDriver.sleep(1000);
-
-    testWebDriver.selectByVisibleText(programsMyFacility, program2);
-    rolesInputFieldSecondMyFacility.click();
-    rolesInputFieldSecondMyFacility.clear();
-    rolesInputFieldSecondMyFacility.sendKeys(role);
-    testWebDriver.waitForElementToAppear(rolesSelectFieldMyFacility);
-    rolesSelectFieldMyFacility.click();
-    addButtonMyFacility.click();
+    testWebDriver.selectByVisibleText(programsToSupervise, program1);
+    testWebDriver.sleep(1000);
+    testWebDriver.selectByVisibleText(supervisoryNodeToSupervise, node);
     testWebDriver.sleep(1000);
 
-    testWebDriver.sleep(1500);
-    testWebDriver.selectByVisibleText(programsToSupervise, program1);
-    testWebDriver.sleep(1500);
-    testWebDriver.selectByVisibleText(supervisoryNodeToSupervise, node);
+    testWebDriver.handleScroll();
+    testWebDriver.sleep(500);
     rolesInputField.click();
     rolesInputField.clear();
     rolesInputField.sendKeys(role);
     testWebDriver.waitForElementToAppear(rolesSelectField);
     rolesSelectField.click();
-    addButton.click();
-    testWebDriver.sleep(1000);
-    saveButton.click();
-    testWebDriver.sleep(1000);
 
-    SeleneseTestNgHelper.assertTrue("User '" + firstName + " " + lastName + "' has been successfully updated message is not getting displayed", successMessage.isDisplayed());
+     SeleneseTestNgHelper.assertEquals(testWebDriver.getFirstSelectedOption(supervisoryNodeToSupervise).getText(),node);
+     SeleneseTestNgHelper.assertEquals(testWebDriver.getFirstSelectedOption(programsToSupervise).getText(),program1);
+     SeleneseTestNgHelper.assertEquals(rolesListFieldMySupervisedFacility.getText().trim().toLowerCase(),role.toLowerCase());
+
+      addButton.click();
+      testWebDriver.sleep(1000);
+
+      saveButton.click();
+      testWebDriver.sleep(1000);
+      SeleneseTestNgHelper.assertTrue("User '" + firstName + " " + lastName + "' has been successfully updated message is not getting displayed", successMessage.isDisplayed());
 
   }
 

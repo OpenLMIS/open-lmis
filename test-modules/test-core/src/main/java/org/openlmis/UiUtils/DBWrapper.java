@@ -240,14 +240,12 @@ public class DBWrapper {
 
 
   public void insertProducts(String product1, String product2) throws SQLException, IOException {
-    ResultSet rs = query("Select id from products;");
 
-    if (rs.next()) {
       update("delete from facility_approved_products;");
       update("delete from program_products;");
       update("delete from products;");
       update("delete from product_categories;");
-    }
+
 
     update("INSERT INTO product_categories (code, name, displayOrder) values ('C1', 'Category 1', 1);");
     update("INSERT INTO products\n" +

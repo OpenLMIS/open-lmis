@@ -74,8 +74,8 @@
       </div>
 
       <div class="span3 select2-roles">
-        <div class="fluid-grid-cell">
-          <select ui-select2 ng-model="selectedRoleIdsToSupervise" placeholder="+ Add Role" multiple="multiple" style="width:400px">
+        <div id="supervisoryRole" class="fluid-grid-cell">
+          <select ui-select2  ng-model="selectedRoleIdsToSupervise" placeholder="+ Add Role" multiple="multiple" style="width:400px">
             <option ng-repeat="role in $parent.allRoles" value="{{role.id}}">{{role.name}}</option>
           </select>
           <span ng-show='hasMappingError(showSupervisorRoleMappingError,selectedRoleIdsToSupervise)' class="field-error">
