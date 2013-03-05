@@ -45,7 +45,7 @@ describe("Facility", function () {
       $httpBackend.expectPOST('/facilities.json').respond(200, {"success":"Saved successfully", "facility":facility});
       scope.saveFacility();
       $httpBackend.flush();
-      expect("Saved successfully").toEqual(scope.message);
+      expect("Saved successfully").toEqual(scope.$parent.message);
       expect("").toEqual(scope.error);
     });
 

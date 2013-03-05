@@ -19,6 +19,8 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
     }
   }
 
+  $scope.message = "";
+
   $scope.saveFacility = function () {
     if ($scope.facilityForm.$error.pattern || $scope.facilityForm.$error.required) {
       $scope.showError = "true";
