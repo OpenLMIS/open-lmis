@@ -19,6 +19,9 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class GeographicZoneRepositoryTest {
 
+  public static final String ROOT_GEOGRAPHIC_ZONE_CODE = "Root";
+  public static final String ROOT_GEOGRAPHIC_ZONE_NAME = "Root";
+
   GeographicZoneRepository repository;
 
   @Rule
@@ -108,5 +111,18 @@ public class GeographicZoneRepositoryTest {
 
     assertThat(expected, is(zone));
     verify(mapper).getGeographicZoneByCode("code");
+  }
+
+  @Test
+  public void shouldSetRootAsParentIfParentIsNull() throws Exception {
+    GeographicZone expected = new GeographicZone(1, "Root", "Root", null, null, null);
+    when(mapper.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(new GeographicLevel(1, "abc", "abc"));
+    when(mapper.getGeographicZoneByCode(ROOT_GEOGRAPHIC_ZONE_CODE)).thenReturn(expected);
+    geographicZone.setParent(null);
+
+    repository.save(geographicZone);
+
+    assertThat(geographicZone.getParent().getCode(), is(ROOT_GEOGRAPHIC_ZONE_CODE));
+    assertThat(geographicZone.getParent().getName(), is(ROOT_GEOGRAPHIC_ZONE_NAME));
   }
 }

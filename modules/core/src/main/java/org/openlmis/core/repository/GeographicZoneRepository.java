@@ -36,6 +36,7 @@ public class GeographicZoneRepository {
     if (geographicZone.getLevel() == null)
       throw new DataException("Invalid Geographic Level Code");
     if (geographicZone.getParent() == null) {
+      geographicZone.setParent(mapper.getGeographicZoneByCode("Root"));
       return;
     }
     geographicZone.setParent(mapper.getGeographicZoneByCode(geographicZone.getParent().getCode()));
