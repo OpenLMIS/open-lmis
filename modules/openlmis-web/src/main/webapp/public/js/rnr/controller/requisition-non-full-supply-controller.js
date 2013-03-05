@@ -4,11 +4,8 @@ function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $r
   }, function () {
   });
 
-  $scope.getId = function (prefix, parent, isLossAdjustment) {
-    if (isLossAdjustment != null && isLossAdjustment != isUndefined && isLossAdjustment) {
-      return prefix + "_" + parent.$parent.$parent.$index + "_" + parent.$parent.$parent.$parent.$index;
-    }
-    return prefix + "_" + parent.$parent.$parent.$index;
+  $scope.getId = function (prefix, parent) {
+    return prefix + "_" + parent.$parent.$index;
   };
 
   $scope.addNonFullSupplyLineItem = function () {

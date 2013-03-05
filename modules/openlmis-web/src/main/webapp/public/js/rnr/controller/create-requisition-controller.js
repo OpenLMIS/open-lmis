@@ -20,7 +20,7 @@ function CreateRequisitionController($scope, Requisition, ReferenceData, Program
         $scope.rnr = data.rnr;
         prepareRnr();
       } else {
-        $scope.$parent.error = "Requisition does not exist. Please initiate.";
+        $scope.error = "Requisition does not exist. Please initiate.";
         $location.path('/init-rnr');
       }
     }, function () {
@@ -58,7 +58,7 @@ function CreateRequisitionController($scope, Requisition, ReferenceData, Program
       $location.search('page', 1);
       return;
     }
-    $scope.checkDirtyAndSaveForm();
+    if ($scope.saveRnrForm.$dirty) $scope.saveRnr();
   });
 
   $scope.$watch("currentPage", function () {
@@ -95,13 +95,6 @@ function CreateRequisitionController($scope, Requisition, ReferenceData, Program
     });
   };
 
-  $scope.checkDirtyAndSaveForm = function () {
-    if ($scope.saveRnrForm.$dirty) {
-      $scope.saveRnr();
-    }
-    return true;
-  };
-
   $scope.submitRnr = function () {
     resetFlags();
     if (!valid()) return;
@@ -128,13 +121,6 @@ function CreateRequisitionController($scope, Requisition, ReferenceData, Program
     }, function (data) {
       $scope.submitError = data.data.error;
     });
-  };
-
-  $scope.getId = function (prefix, parent, isLossAdjustment) {
-    if (isLossAdjustment != null && isLossAdjustment != isUndefined && isLossAdjustment) {
-      return prefix + "_" + parent.$parent.$parent.$index + "_" + parent.$parent.$parent.$parent.$index;
-    }
-    return prefix + "_" + parent.$parent.$parent.$index;
   };
 
   $scope.hide = function () {

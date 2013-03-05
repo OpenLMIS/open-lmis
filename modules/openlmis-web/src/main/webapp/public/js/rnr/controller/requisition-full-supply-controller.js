@@ -1,21 +1,19 @@
 function RequisitionFullSupplyController($scope, $routeParams, $location, LossesAndAdjustmentsReferenceData) {
   $scope.lossesAndAdjustmentsModal = [];
 
-  $scope.showCategory = function (index) {
-    return !((index > 0 ) && ($scope.pageLineItems[index].productCategory == $scope.pageLineItems[index-1].productCategory));
-  };
-
   LossesAndAdjustmentsReferenceData.get({}, function (data) {
     $scope.allTypes = data.lossAdjustmentTypes;
   }, function () {
   });
 
-  $scope.getId = function (prefix, parent, isLossAdjustment) {
-    if (isLossAdjustment != null && isLossAdjustment != isUndefined && isLossAdjustment) {
-      return prefix + "_" + parent.$parent.$parent.$index + "_" + parent.$parent.$parent.$parent.$index;
-    }
-    return prefix + "_" + parent.$parent.$parent.$index;
+  $scope.showCategory = function (index) {
+    return !((index > 0 ) && ($scope.pageLineItems[index].productCategory == $scope.pageLineItems[index-1].productCategory));
   };
+
+  $scope.getId = function (prefix, parent) {
+      return prefix + "_" + parent.$parent.$parent.$index;
+    };
+
 
   // TODO: Push this method to rnr-line-item
   $scope.saveLossesAndAdjustmentsForRnRLineItem = function (rnrLineItem) {
