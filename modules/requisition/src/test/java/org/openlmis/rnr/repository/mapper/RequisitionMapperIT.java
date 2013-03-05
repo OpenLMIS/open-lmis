@@ -290,8 +290,11 @@ public class RequisitionMapperIT {
     mapper.updateOrderForRequisition(order);
 
     Rnr requisitionFromDatabase = mapper.getById(requisition.getId());
+    OrderBatch orderBatchFromDatabase = mapper.getOrderBatchById(orderBatch.getId());
     assertThat(requisitionFromDatabase.getOrder().getOrderBatch().getId(), is(orderBatch.getId()));
     assertThat(requisitionFromDatabase.getStatus(), is(ORDERED));
+    assertThat(requisitionFromDatabase.getModifiedBy(),is(orderBatchFromDatabase.getCreatedByUserId()));
+    assertThat(requisitionFromDatabase.getModifiedDate(),is(orderBatchFromDatabase.getCreateTimeStamp()));
   }
 
   @Test
