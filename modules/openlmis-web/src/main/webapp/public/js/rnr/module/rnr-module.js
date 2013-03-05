@@ -23,9 +23,9 @@ var rnrModule = angular.module('rnr', ['openlmis', 'ngGrid', 'ui.bootstrap.modal
             if (viewValue == "")  viewValue = undefined;
             return viewValue;
           } else {
-            ctrl.$viewValue = undefined;
+            ctrl.$viewValue = ctrl.$modelValue;
             ctrl.$render();
-            return undefined;
+            return ctrl.$modelValue;
           }
         });
       }
