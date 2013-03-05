@@ -3,9 +3,9 @@
   <div class="rnr-tabs">
     <ul class="clearfix">
       <li ng-class="{'selected': !showNonFullSupply}">
-        <a ng-click="saveRnrOnTabChange(true)" id="fullSupplyTab">Full Supply Product(s)</a></li>
+        <a ng-click="switchSupplyType('full-supply')" id="fullSupplyTab">Full Supply Product(s)</a></li>
       <li ng-class="{'selected': showNonFullSupply}">
-        <a ng-click="saveRnrOnTabChange(false)" id="nonFullSupplyTab">Non Full Supply Product(s)</a></li>
+        <a ng-click="switchSupplyType('non-full-supply')" id="nonFullSupplyTab">Non Full Supply Product(s)</a></li>
     </ul>
   </div>
   <div ng-hide="programRnrColumnList">Loading...</div>
@@ -18,6 +18,9 @@
         <ng-include src="'/public/pages/logistics/rnr/partials/rnr-full-supply.html'"></ng-include>
       </span>
     </ng-switch>
+    <div>
+      <pagination num-pages="numberOfPages" current-page="currentPage" max-size="10"></pagination>
+    </div>
 
     <div form-toolbar id="action_buttons" class="action-buttons">
       <ng-include src="'/public/pages/logistics/rnr/partials/total-cost.html'"></ng-include>

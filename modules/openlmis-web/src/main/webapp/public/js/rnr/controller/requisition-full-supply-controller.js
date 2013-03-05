@@ -1,33 +1,14 @@
 function RequisitionFullSupplyController($scope, $routeParams, $location, LossesAndAdjustmentsReferenceData) {
   $scope.lossesAndAdjustmentsModal = [];
 
-  groupToPages();
-
-
   $scope.showCategory = function (index) {
-    return !((index > 0 ) && ($scope.pagedRnrFullSupplyLineItems[index].productCategory == $scope.pagedRnrFullSupplyLineItems[index-1].productCategory));
-  }
-  $scope.$watch("currentPage", function () {
-    if ($routeParams.page && $routeParams.page != $scope.currentPage) {
-      var location= $location.path() + "?page=" + $scope.currentPage;
-      $scope.checkDirtyAndSaveForm(location);
-    }
-  });
+    return !((index > 0 ) && ($scope.pageLineItems[index].productCategory == $scope.pageLineItems[index-1].productCategory));
+  };
 
   LossesAndAdjustmentsReferenceData.get({}, function (data) {
     $scope.allTypes = data.lossAdjustmentTypes;
   }, function () {
   });
-
-  $scope.noOfPages = Math.ceil($scope.$parent.rnr.lineItems.length / $scope.pageSize);
-
-  $scope.$parent.$on("rnrPrepared", function () {
-    groupToPages();
-  });
-
-  function groupToPages() {
-    $scope.$parent.pagedRnrFullSupplyLineItems = $scope.rnr.lineItems.slice(($scope.currentPage-1)*$scope.pageSize, $scope.currentPage*$scope.pageSize);
-  }
 
   $scope.getId = function (prefix, parent, isLossAdjustment) {
     if (isLossAdjustment != null && isLossAdjustment != isUndefined && isLossAdjustment) {

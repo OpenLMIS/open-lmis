@@ -3,9 +3,16 @@ function CreateRequisitionController($scope, Requisition, ReferenceData, Program
   $scope.programRnrColumnList = [];
   $scope.showNonFullSupply = $routeParams.supplyType == 'non-full-supply';
   $scope.baseUrl = "/create-rnr/" + $routeParams.facility + '/' + $routeParams.program + '/' + $routeParams.period;
-  $scope.fullSupplyLink = $scope.baseUrl + "/full-supply?page=1";
-  $scope.nonFullSupplyLink = $scope.baseUrl + "/non-full-supply?page=1";
+  $scope.fullSupplyLink = $scope.baseUrl + "?supplyType=full-supply&page=1";
+  $scope.nonFullSupplyLink = $scope.baseUrl + "?supplyTpe=non-full-supply&page=1";
   $scope.pageSize = 10;
+  $scope.fillPagedGridData = function() {
+      var gridLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.lineItems;
+      $scope.numberOfPages = Math.ceil(gridLineItems.length / $scope.pageSize);
+      $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
+      $scope.pageLineItems = gridLineItems.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);
+    };
+
 
   if (!$scope.$parent.rnr) {
     Requisition.get({facilityId:$routeParams.facility, programId:$routeParams.program, periodId:$routeParams.period},
@@ -19,6 +26,8 @@ function CreateRequisitionController($scope, Requisition, ReferenceData, Program
         }
       }, function () {
       });
+  } else {
+    $scope.fillPagedGridData();
   }
 
   ReferenceData.get({}, function (data) {
@@ -41,6 +50,25 @@ function CreateRequisitionController($scope, Requisition, ReferenceData, Program
 
   $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
 
+  $scope.switchSupplyType = function (supplyType) {
+    $scope.showNonFullSupply = supplyType == 'non-full-supply';
+    $location.search('page', 1);
+    $location.search('supplyType', supplyType);
+  };
+
+  $scope.$on('$routeUpdate', function () {
+    $scope.fillPagedGridData();
+    if (!utils.isValidPage($routeParams.page, $scope.numberOfPages)) {
+      $location.search('page', 1);
+      return;
+    }
+    $scope.checkDirtyAndSaveForm();
+  });
+
+  $scope.$watch("currentPage", function () {
+    $location.search("page", $scope.currentPage);
+  });
+
   $scope.periodDisplayName = function () {
     if (!$scope.rnr) return;
 
@@ -51,7 +79,7 @@ function CreateRequisitionController($scope, Requisition, ReferenceData, Program
   };
 
 
-  $scope.saveRnr = function (location) {
+  $scope.saveRnr = function () {
     resetFlags();
     var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id:$scope.rnr.id, operation:"save"}, rnr, function (data) {
@@ -64,19 +92,18 @@ function CreateRequisitionController($scope, Requisition, ReferenceData, Program
         });
       }, 3000);
       $scope.error = "";
-      if (location) $location.url(location);
+      $scope.saveRnrForm.$dirty = false;
     }, function (data) {
       $scope.error = data.error;
       $scope.message = "";
     });
   };
 
-  $scope.checkDirtyAndSaveForm = function (location) {
-    if (!$scope.saveRnrForm.$dirty) {
-      if (location) $location.url(location);
-      return true;
+  $scope.checkDirtyAndSaveForm = function () {
+    if ($scope.saveRnrForm.$dirty) {
+      $scope.saveRnr();
     }
-    $scope.saveRnr(location);
+    return true;
   };
 
   $scope.submitRnr = function () {
@@ -157,19 +184,6 @@ function CreateRequisitionController($scope, Requisition, ReferenceData, Program
     return $scope.getCellErrorClass(rnrLineItem) ? 'row-error-highlight' : '';
   };
 
-  $scope.saveRnrOnTabChange = function (gotoFullSupply) {
-    if (gotoFullSupply) {
-      if ($routeParams.supplyType == 'non-full-supply') $scope.checkDirtyAndSaveForm($scope.fullSupplyLink);
-    } else {
-      if ($routeParams.supplyType == 'full-supply') $scope.checkDirtyAndSaveForm($scope.nonFullSupplyLink);
-    }
-  };
-
-  $scope.switchSupplyType = function (supplyType) {
-    $location.search('page', 1);
-    $location.search('supplyType', supplyType);
-  };
-
   function resetCostsIfNull() {
     var rnr = $scope.rnr;
     if (rnr == null) return;
@@ -195,6 +209,7 @@ function CreateRequisitionController($scope, Requisition, ReferenceData, Program
     });
 
     resetCostsIfNull();
+    $scope.fillPagedGridData();
     $scope.formDisabled = (function () {
       if ($scope.rnr) {
         var status = $scope.rnr.status;
