@@ -6,29 +6,25 @@ function CreateRequisitionController($scope, Requisition, ReferenceData, Program
   $scope.fullSupplyLink = $scope.baseUrl + "?supplyType=full-supply&page=1";
   $scope.nonFullSupplyLink = $scope.baseUrl + "?supplyTpe=non-full-supply&page=1";
   $scope.pageSize = 10;
-  $scope.fillPagedGridData = function() {
-      var gridLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.lineItems;
-      $scope.numberOfPages = Math.ceil(gridLineItems.length / $scope.pageSize);
-      $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
-      $scope.pageLineItems = gridLineItems.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);
-    };
+  $scope.fillPagedGridData = function () {
+    var gridLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.lineItems;
+    $scope.numberOfPages = Math.ceil(gridLineItems.length / $scope.pageSize);
+    $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
+    $scope.pageLineItems = gridLineItems.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);
+  };
 
 
-  if (!$scope.$parent.rnr) {
-    Requisition.get({facilityId:$routeParams.facility, programId:$routeParams.program, periodId:$routeParams.period},
-      function (data) {
-        if (data.rnr) {
-          $scope.$parent.rnr = data.rnr;
-          prepareRnr();
-        } else {
-          $scope.$parent.error = "Requisition does not exist. Please initiate.";
-          $location.path('/init-rnr');
-        }
-      }, function () {
-      });
-  } else {
-    $scope.fillPagedGridData();
-  }
+  Requisition.get({facilityId:$routeParams.facility, programId:$routeParams.program, periodId:$routeParams.period},
+    function (data) {
+      if (data.rnr) {
+        $scope.rnr = data.rnr;
+        prepareRnr();
+      } else {
+        $scope.$parent.error = "Requisition does not exist. Please initiate.";
+        $location.path('/init-rnr');
+      }
+    }, function () {
+    });
 
   ReferenceData.get({}, function (data) {
     $scope.currency = data.currency;
