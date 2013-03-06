@@ -8,21 +8,35 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
-
+import java.io.*;
 
 public class DriverFactory {
 
   private String driverType;
+  private String INPUT_ZIP_FILE = null;
+  private String OUTPUT_FOLDER = null;
+  private  String Separator = null;
+    Unzip unZip;
 
-  public WebDriver loadDriver(String browser) {
+  public WebDriver loadDriver(String browser) throws InterruptedException {
+    Separator = System.getProperty("file.separator");
+    INPUT_ZIP_FILE = System.getProperty("user.dir") +Separator+"test-modules"+Separator+"test-core"+ Separator+"src"+Separator+"main"+Separator+"java"+Separator + "org" + Separator+"openlmis"+Separator+"UiUtils"+Separator+"IEDriverServer_x64_2.31.0.zip";
+    OUTPUT_FOLDER = System.getProperty("user.dir") +Separator+"test-modules"+Separator+"test-core"+ Separator+"src"+Separator+"main"+Separator+"java"+Separator + "org" + Separator+"openlmis"+Separator+"UiUtils"+Separator;
+
     return loadDriver(true, browser);
   }
 
-  public WebDriver loadDriverWithJavascriptDisabledIfPossible(String browser) {
+  public WebDriver loadDriverWithJavascriptDisabledIfPossible(String browser) throws InterruptedException{
     return loadDriver(false, browser);
   }
 
-  private WebDriver loadDriver(boolean enableJavascript, String browser) {
+    public void deleteExeDF() throws InterruptedException, IOException{
+        Runtime.getRuntime().exec("taskkill /F /IM IEDriverServer.exe");
+        unZip = new Unzip();
+        unZip.deleteFile(OUTPUT_FOLDER+ "IEDriverServer.exe");
+    }
+
+  private WebDriver loadDriver(boolean enableJavascript, String browser) throws InterruptedException {
 
     switch (browser) {
       case "firefox":
@@ -30,7 +44,10 @@ public class DriverFactory {
         return createFirefoxDriver(enableJavascript);
 
       case "ie":
-        driverType = System.setProperty("webdriver.ie.driver", "C:/Program Files (x86)/IEDriver/IEDriverServer.exe");
+          unZip=new Unzip();
+          unZip.unZipIt(INPUT_ZIP_FILE,OUTPUT_FOLDER);
+        Thread.sleep(1500);
+        driverType = System.setProperty("webdriver.ie.driver", OUTPUT_FOLDER+"IEDriverServer.exe");
         driverType = System.getProperty("webdriver.ie.driver");
         return new InternetExplorerDriver();
 
