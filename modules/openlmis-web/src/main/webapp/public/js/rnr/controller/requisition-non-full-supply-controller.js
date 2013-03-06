@@ -4,32 +4,8 @@ function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $r
   }, function () {
   });
 
-  groupToPages();
-
-  $scope.$watch("currentPage", function () {
-    if ($routeParams.page && $routeParams.page != $scope.currentPage) {
-      var location= $location.path() + "?page=" + $scope.currentPage;
-      $scope.checkDirtyAndSaveForm(location);
-    }
-  });
-
-  $scope.$parent.$on("rnrPrepared", function () {
-    groupToPages();
-  });
-
-  function groupToPages() {
-    var sortedRnrLineItems = _.sortBy($scope.rnr.nonFullSupplyLineItems, function (rnrLineItem) {
-      return rnrLineItem.productCode;
-    });
-    $scope.$parent.pagedRnrNonFullSupplyLineItems = sortedRnrLineItems.slice(($scope.currentPage - 1) * $scope.pageSize, $scope.currentPage * $scope.pageSize);
-    $scope.noOfPages = ($scope.rnr.nonFullSupplyLineItems && $scope.rnr.nonFullSupplyLineItems.length > 0) ? Math.ceil($scope.rnr.nonFullSupplyLineItems.length / $scope.pageSize) : 1;
-  }
-
-  $scope.getId = function (prefix, parent, isLossAdjustment) {
-    if (isLossAdjustment != null && isLossAdjustment != isUndefined && isLossAdjustment) {
-      return prefix + "_" + parent.$parent.$parent.$index + "_" + parent.$parent.$parent.$parent.$index;
-    }
-    return prefix + "_" + parent.$parent.$parent.$index;
+  $scope.getId = function (prefix, parent) {
+    return prefix + "_" + parent.$parent.$index;
   };
 
   $scope.addNonFullSupplyLineItem = function () {
@@ -41,7 +17,7 @@ function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $r
     $scope.facilityApprovedProduct = undefined;
     $scope.newNonFullSupply = undefined;
     updateNonFullSupplyProductsToDisplay();
-    groupToPages();
+    $scope.fillPagedGridData();
   };
 
   $scope.showAddNonFullSupplyModal = function () {

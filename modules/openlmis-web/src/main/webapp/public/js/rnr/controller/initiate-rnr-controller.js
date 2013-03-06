@@ -151,7 +151,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
     $scope.error = "";
     $scope.sourceUrl = $location.$$url;
 
-    var createRnrPath = '/create-rnr/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + '/' + $scope.selectedPeriod.id+"/full-supply?page=1";
+    var createRnrPath = '/create-rnr/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + '/' + $scope.selectedPeriod.id+"?supplyType=full-supply&page=1";
 
     Requisition.get({facilityId:$scope.selectedFacilityId, programId:$scope.selectedProgram.id, periodId:$scope.selectedPeriod.id}, {},
         function (data) {

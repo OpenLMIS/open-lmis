@@ -48,15 +48,10 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     }
   }
 
-  function isValidPage(page) {
-    page = parseInt(page, 10);
-    return !!page && page > 0 && page <= $scope.numberOfPages;
-  }
-
   function fillPagedGridData() {
     var gridLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.lineItems;
-    $scope.numberOfPages = Math.ceil(gridLineItems.length / $scope.pageSize);
-    $scope.currentPage = (isValidPage($routeParams.page)) ? parseInt($routeParams.page, 10) : 1;
+    $scope.numberOfPages = Math.ceil(gridLineItems.length / $scope.pageSize)? Math.ceil(gridLineItems.length / $scope.pageSize):1;
+    $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
     $scope.pageLineItems = gridLineItems.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);
   }
 
@@ -100,7 +95,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   };
 
   $scope.$on('$routeUpdate', function () {
-    if (!isValidPage($routeParams.page)) {
+    if (!utils.isValidPage($routeParams.page, $scope.numberOfPages)) {
       $location.search('page', 1);
       return;
     }

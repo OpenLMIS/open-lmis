@@ -32,7 +32,7 @@ public class FacilityBuilder {
   public static final String FACILITY_CODE = "F10010";
   public static final String FACILITY_TYPE_CODE = "warehouse";
   public static final Integer FACILITY_TYPE_ID = 1;
-  public static final Integer GEOGRAPHIC_ZONE_ID = 2;
+  public static final Integer GEOGRAPHIC_ZONE_ID = 3;
 
   public static final String GEOGRAPHIC_ZONE_CODE = "GEOGRAPHIC_ZONE_CODE";
   public static final Instantiator<Facility> defaultFacility = new Instantiator<Facility>() {

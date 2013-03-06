@@ -1,36 +1,19 @@
 function RequisitionFullSupplyController($scope, $routeParams, $location, LossesAndAdjustmentsReferenceData) {
   $scope.lossesAndAdjustmentsModal = [];
 
-  groupToPages();
-
-  $scope.$watch("currentPage", function () {
-    if ($routeParams.page && $routeParams.page != $scope.currentPage) {
-      var location= $location.path() + "?page=" + $scope.currentPage;
-      $scope.checkDirtyAndSaveForm(location);
-    }
-  });
-
   LossesAndAdjustmentsReferenceData.get({}, function (data) {
     $scope.allTypes = data.lossAdjustmentTypes;
   }, function () {
   });
 
-  $scope.noOfPages = Math.ceil($scope.$parent.rnr.lineItems.length / $scope.pageSize);
-
-  $scope.$parent.$on("rnrPrepared", function () {
-    groupToPages();
-  });
-
-  function groupToPages() {
-    $scope.$parent.pagedRnrFullSupplyLineItems = $scope.rnr.lineItems.slice(($scope.currentPage-1)*$scope.pageSize, $scope.currentPage*$scope.pageSize);
-  }
-
-  $scope.getId = function (prefix, parent, isLossAdjustment) {
-    if (isLossAdjustment != null && isLossAdjustment != isUndefined && isLossAdjustment) {
-      return prefix + "_" + parent.$parent.$parent.$index + "_" + parent.$parent.$parent.$parent.$index;
-    }
-    return prefix + "_" + parent.$parent.$parent.$index;
+  $scope.showCategory = function (index) {
+    return !((index > 0 ) && ($scope.pageLineItems[index].productCategory == $scope.pageLineItems[index-1].productCategory));
   };
+
+  $scope.getId = function (prefix, parent) {
+      return prefix + "_" + parent.$parent.$parent.$index;
+    };
+
 
   // TODO: Push this method to rnr-line-item
   $scope.saveLossesAndAdjustmentsForRnRLineItem = function (rnrLineItem) {

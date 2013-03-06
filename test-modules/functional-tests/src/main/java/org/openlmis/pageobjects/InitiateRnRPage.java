@@ -60,28 +60,28 @@ public class InitiateRnRPage extends Page {
   @FindBy(how = How.ID, using = "F_0")
   private static WebElement newPatient;
 
-  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[1]/td[13]/ng-switch/span/ng-switch/span")
+  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[2]/td[13]/ng-switch/span/ng-switch/span")
   private static WebElement maximumStockQuantity;
 
-  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[1]/td[14]/ng-switch/span/ng-switch/span")
+  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[2]/td[14]/ng-switch/span/ng-switch/span")
   private static WebElement caculatedOrderQuantity;
 
   @FindBy(how = How.ID, using = "J_0")
   private static WebElement requestedQuantity;
 
-  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[1]/td[11]/ng-switch/span/ng-switch/span")
+  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[2]/td[11]/ng-switch/span/ng-switch/span")
   private static WebElement adjustedTotalConsumption;
 
-  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[1]/td[12]/ng-switch/span/ng-switch/span")
+  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[2]/td[12]/ng-switch/span/ng-switch/span")
   private static WebElement amc;
 
-  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[1]/td[20]/ng-switch/span/ng-switch/span")
+  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[2]/td[20]/ng-switch/span/ng-switch/span")
   private static WebElement totalCost;
 
-  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[1]/td[19]/ng-switch/span/ng-switch/span")
+  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[2]/td[19]/ng-switch/span/ng-switch/span")
   private static WebElement pricePerPack;
 
-  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[1]/td[18]/ng-switch/span/ng-switch/span")
+  @FindBy(how = How.XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[2]/td[18]/ng-switch/span/ng-switch/span")
   private static WebElement packsToShip;
 
   @FindBy(how = How.XPATH, using = "//table[@id='nonFullSupplyTable']/tbody/tr/td[18]/ng-switch/span")
@@ -161,10 +161,10 @@ public class InitiateRnRPage extends Page {
   @FindBy(how = How.ID, using = "fullSupplyTab")
   private static WebElement fullSupplyTab;
 
-  @FindBy(how = How.XPATH, using = "//input[@id='J_undefined']")
+  @FindBy(how = How.XPATH, using = "//input[@id='J_0']")
   private static WebElement requestedQuantityNonFullSupply;
 
-  @FindBy(how = How.XPATH, using = "//input[@id='W_undefined']")
+  @FindBy(how = How.XPATH, using = "//input[@id='W_0']")
   private static WebElement requestedQuantityExplanationNonFullSupply;
 
   @FindBy(how = How.XPATH, using = "//select[@id='nonFullSupplyProductsName']")
@@ -246,7 +246,7 @@ public class InitiateRnRPage extends Page {
     testWebDriver.waitForElementToAppear(adjList);
     String labelAdj = testWebDriver.getText(adjList);
     SeleneseTestNgHelper.assertEquals(labelAdj.trim(), "Transfer In");
-    String adjValue = testWebDriver.getAttribute(adjListValue, "value");
+//    String adjValue = testWebDriver.getAttribute(adjListValue, "value");
     // SeleneseTestNgHelper.assertEquals(adjValue, adj);
     //testWebDriver.waitForElementToAppear(totalAdj);
     //String totalAdjValue = testWebDriver.getText(totalAdj);
@@ -268,7 +268,7 @@ public class InitiateRnRPage extends Page {
     beginningBalance.click();
     testWebDriver.waitForElementToAppear(stockOnHand);
     Integer StockOnHand = A + B - C + D;
-    testWebDriver.sleep(1000);
+    testWebDriver.sleep(2000);
     String stockOnHandValue = stockOnHand.getText();
     String StockOnHandValue = StockOnHand.toString();
     SeleneseTestNgHelper.assertEquals(stockOnHandValue, StockOnHandValue);
@@ -391,7 +391,7 @@ public class InitiateRnRPage extends Page {
   }
 
   public void authorizeRnR() {
-    testWebDriver.sleep(1500);
+    testWebDriver.sleep(5500);
     authorizeButton.click();
     testWebDriver.sleep(1500);
   }
@@ -402,6 +402,7 @@ public class InitiateRnRPage extends Page {
   }
 
   public void verifyAuthorizeRnrSuccessMsg() {
+
     SeleneseTestNgHelper.assertTrue("RnR authorize Success message not displayed", submitSuccessMessage.isDisplayed());
   }
 

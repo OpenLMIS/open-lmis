@@ -1,6 +1,7 @@
 delete from geographic_zones;
 INSERT INTO geographic_zones
 (code, name, level, parent) values
-('Arusha', 'Arusha', 1, 1),
-('Dodoma', 'Dodoma', 2, 1),
-('Ngorongoro', 'Ngorongoro', 3, 2);
+('Root', 'Root', 1, 1),
+('Arusha', 'Arusha', 1, 2),
+('Dodoma', 'Dodoma', 2, 2),
+('Ngorongoro', 'Ngorongoro', 3, 3);

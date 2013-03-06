@@ -41,6 +41,7 @@ describe('RequisitionNonFullSupplyController', function () {
   it('should add non full supply line item to the list', function () {
     scope.$parent.rnr = {"id":1, "period":{}, "nonFullSupplyLineItems":[]};
     scope.nonFullSupplyProducts = [];
+    scope.fillPagedGridData = function(){};
     var product = {
       "form":{"code":"Tablet"},
       "dosageUnit":{"code":"mg"},
@@ -52,6 +53,7 @@ describe('RequisitionNonFullSupplyController', function () {
 
     scope.facilityApprovedProduct = {"programProduct":programProduct, "maxMonthsOfStock":3};
     scope.newNonFullSupply = {"quantityRequested":20, "reasonForRequestedQuantity":"Bad Weather"};
+    spyOn(scope, 'fillPagedGridData');
     scope.addNonFullSupplyLineItem();
 
     expect(scope.$parent.rnr.nonFullSupplyLineItems[0].quantityRequested).toEqual(20);
@@ -59,6 +61,7 @@ describe('RequisitionNonFullSupplyController', function () {
     expect(scope.$parent.rnr.nonFullSupplyLineItems[0].cost).toEqual(16.00.toFixed(2));
     expect(scope.nonFullSupplyProductsToDisplay).toEqual([]);
     expect(scope.$parent.rnr.nonFullSupplyItemsSubmittedCost).toEqual(16.00.toFixed(2));
+    expect(scope.fillPagedGridData).toHaveBeenCalled();
   });
 
   it('should disable add button if any of the required fields have not been set or have errors', function () {

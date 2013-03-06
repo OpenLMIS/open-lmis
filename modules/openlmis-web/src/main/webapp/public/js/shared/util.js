@@ -25,7 +25,11 @@ var utils = {
   isPositiveNumber:function (value) {
     var INTEGER_REGEXP = /^\d*$/;
     return INTEGER_REGEXP.test(value);
-  }
+  },
 
+  isValidPage:function (pageNumber, totalPages) {
+    pageNumber = parseInt(pageNumber, 10);
+    return !!pageNumber && pageNumber > 0 && pageNumber <= totalPages;
+  }
 
 };

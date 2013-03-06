@@ -1,2 +1,46 @@
 <ng-include src="'/public/pages/logistics/rnr/partials/header.html'"></ng-include>
-<ng-include src="'/public/pages/logistics/rnr/partials/form.html'"></ng-include>
+<div xmlns="http://www.w3.org/1999/html">
+  <div class="rnr-tabs">
+    <ul class="clearfix">
+      <li ng-class="{'selected': !showNonFullSupply}">
+        <a ng-click="switchSupplyType('full-supply')" id="fullSupplyTab">Full Supply Product(s)</a></li>
+      <li ng-class="{'selected': showNonFullSupply}">
+        <a ng-click="switchSupplyType('non-full-supply')" id="nonFullSupplyTab">Non Full Supply Product(s)</a></li>
+    </ul>
+  </div>
+  <div ng-hide="programRnrColumnList">Loading...</div>
+  <form name="saveRnrForm" action="#" id="rnr-form" novalidate>
+    <ng-switch on="showNonFullSupply">
+      <span ng-switch-when="true">
+        <ng-include src="'/public/pages/logistics/rnr/partials/rnr-non-full-supply.html'"></ng-include>
+      </span>
+      <span ng-switch-default>
+        <ng-include src="'/public/pages/logistics/rnr/partials/rnr-full-supply.html'"></ng-include>
+      </span>
+    </ng-switch>
+    <div>
+      <pagination num-pages="numberOfPages" current-page="currentPage" max-size="10"></pagination>
+    </div>
+
+    <div form-toolbar id="action_buttons" class="action-buttons">
+      <ng-include src="'/public/pages/logistics/rnr/partials/total-cost.html'"></ng-include>
+      <div class="form-cell button-row">
+        <input ng-disabled="formDisabled" type="button" ng-click="saveRnr(null)" class="btn btn-primary save-button"
+               value="Save"/>
+        <input ng-show="rnr.status == 'INITIATED' && hasPermission('CREATE_REQUISITION')" ng-disabled="formDisabled"
+               type="button" ng-click="submitRnr()" class="btn btn-success submit-button" value="Submit"/>
+        <input type="button"
+               ng-show="(rnr.status == 'SUBMITTED' || rnr.status == 'AUTHORIZED') && hasPermission('AUTHORIZE_REQUISITION')"
+               ng-disabled="rnr.status == 'AUTHORIZED'" ng-click="authorizeRnr()"
+               class="btn btn-success submit-button"
+               value="Authorize"/>
+      </div>
+      <div class="toolbar-error" id="saveFailMessage" openlmis-message="error"
+           ng-show="error"></div>
+      <div class="toolbar-error" id="submitFailMessage" openlmis-message="submitError"></div>
+      <div class="toolbar-success {{(message) && 'fade5000' || ''}}" id="saveSuccessMsgDiv" openlmis-message="message"
+           ng-show="message"></div>
+      <div class="toolbar-success" id="submitSuccessMsgDiv" openlmis-message="submitMessage"></div>
+    </div>
+  </form>
+</div>

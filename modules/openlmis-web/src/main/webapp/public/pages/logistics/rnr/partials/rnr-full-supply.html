@@ -7,8 +7,9 @@
         ng-hide="programRnrColumn.name == 'quantityApproved'" ng-bind="programRnrColumn.label"></th>
   </tr>
   </thead>
-  <tbody ng-show="visibleColumns && (rnr.lineItems.length > 0)">
-  <tr ng-repeat="rnrLineItem in pagedRnrFullSupplyLineItems" ng-class="getRowErrorClass(rnrLineItem)">
+  <tbody ng-show="visibleColumns && (rnr.lineItems.length > 0)" ng-repeat="rnrLineItem in pageLineItems" >
+  <tr><td class="productCategory" colspan="{{visibleColumns.length}}" ng-show="showCategory($index)" ng-bind="rnrLineItem.productCategory"></td></tr>
+  <tr ng-class="getRowErrorClass(rnrLineItem)">
   <td class="cell-input" ng-repeat="column in visibleColumns"
       ng-hide="column.name == 'quantityApproved'">
   <ng-switch on="column.source.name">
@@ -130,7 +131,6 @@
                                   <span class="tpl-adjustment-qty">
                                     <input ng-required="true"
                                            ng-disabled="formDisabled"
-                                           id="{{getId('D', $parent, true)}}"
                                            name="{{oneLossAndAdjustment.type.displayOrder}}"
                                            type="text"
                                            ng-model="oneLossAndAdjustment.quantity"
@@ -285,7 +285,5 @@
   </tbody>
   </table>
 </div>
-<div>
-  <pagination num-pages="noOfPages" current-page="currentPage" max-size="10"></pagination>
-</div>
+
 </div>

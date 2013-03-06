@@ -32,7 +32,6 @@ public class Unzip
       if(new File(zipFile).exists())
       {
 
-
       File folder = new File(outputFolder);
       if(!folder.exists()){
         folder.mkdir();
@@ -66,8 +65,13 @@ public class Unzip
       zis.close();
 
       }
+
     }catch(IOException ex){
       ex.printStackTrace();
     }
   }
+
 }
+
+
+

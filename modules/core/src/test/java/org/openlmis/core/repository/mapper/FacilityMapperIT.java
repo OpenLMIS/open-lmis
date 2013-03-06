@@ -111,12 +111,12 @@ public class FacilityMapperIT {
   }
 
   @Test
-  public void shouldGetAllGeographicZones() throws Exception {
+  public void shouldGetAllGeographicZonesExceptRootGeographicZone() throws Exception {
     List<GeographicZone> allGeographicZones = mapper.getAllGeographicZones();
     assertThat(allGeographicZones.size(), is(3));
     GeographicZone geographicZone = allGeographicZones.get(0);
 
-    assertThat(geographicZone.getId(), is(1));
+    assertThat(geographicZone.getId(), is(2));
     assertThat(geographicZone.getCode(), is("Arusha"));
     assertThat(geographicZone.getName(), is("Arusha"));
     assertThat(geographicZone.getLevel().getName(), is("state"));
@@ -287,9 +287,9 @@ public class FacilityMapperIT {
   @Test
   public void shouldGetGeographicZoneWithParent() throws Exception {
     GeographicZone parent = new GeographicZone(null, "Dodoma", "Dodoma", new GeographicLevel(null, "city", "city"), null, null);
-    GeographicZone expectedZone = new GeographicZone(3, "Ngorongoro", "Ngorongoro", new GeographicLevel(null, "district", "district"), parent, null);
+    GeographicZone expectedZone = new GeographicZone(4, "Ngorongoro", "Ngorongoro", new GeographicLevel(null, "district", "district"), parent, null);
 
-    GeographicZone zone = mapper.getGeographicZoneById(3);
+    GeographicZone zone = mapper.getGeographicZoneById(4);
 
     assertThat(zone, is(expectedZone));
 

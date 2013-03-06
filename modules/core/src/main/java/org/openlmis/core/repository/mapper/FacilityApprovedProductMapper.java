@@ -30,7 +30,7 @@ public interface FacilityApprovedProductMapper {
     "AND p.fullSupply = #{fullSupply} " +
     "AND p.active = true " +
     "AND pp.active = true " +
-    "ORDER BY pc.displayOrder, pc.code, p.displayOrder NULLS LAST, p.code")
+    "ORDER BY pc.displayOrder, pc.name, p.displayOrder NULLS LAST, p.code")
   @Results(value = {
     @Result(property = "programProduct", column = "programProductID", javaType = ProgramProduct.class,
       one = @One(select = "org.openlmis.core.repository.mapper.ProgramProductMapper.getById")),

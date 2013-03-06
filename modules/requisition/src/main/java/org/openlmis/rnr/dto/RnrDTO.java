@@ -29,6 +29,8 @@ public class RnrDTO {
   private Integer facilityId;
   private String supplyingDepot;
   private String status;
+  private Integer orderBatchId;
+  private Date orderDate;
 
   public static List<RnrDTO> prepareForListApproval(List<Rnr> requisitions) {
     List<RnrDTO> result = new ArrayList<>();
@@ -39,7 +41,7 @@ public class RnrDTO {
   }
 
   public static List<RnrDTO> prepareForView(List<Rnr> requisitions) {
-    List<RnrDTO>  result= new ArrayList<>();
+    List<RnrDTO> result = new ArrayList<>();
     for (Rnr requisition : requisitions) {
       RnrDTO rnrDTO = populateDTOWithRequisition(requisition);
       rnrDTO.status = requisition.getStatus().name();
@@ -50,7 +52,7 @@ public class RnrDTO {
 
   private static RnrDTO prepareForListApproval(Rnr requisition) {
     RnrDTO rnrDTO = populateDTOWithRequisition(requisition);
-    if(requisition.getSupplyingFacility() != null) {
+    if (requisition.getSupplyingFacility() != null) {
       rnrDTO.supplyingDepot = requisition.getSupplyingFacility().getName();
     }
     return rnrDTO;
@@ -68,6 +70,21 @@ public class RnrDTO {
     rnrDTO.modifiedDate = requisition.getModifiedDate();
     rnrDTO.periodStartDate = requisition.getPeriod().getStartDate();
     rnrDTO.periodEndDate = requisition.getPeriod().getEndDate();
+    return rnrDTO;
+  }
+
+  public static List<RnrDTO> prepareForOrderBatch(List<Rnr> rnrList) {
+    List<RnrDTO> rnrDTOs = new ArrayList<>();
+    for (Rnr requisition : rnrList) {
+      rnrDTOs.add(prepareForOrderBatch(requisition));
+    }
+    return rnrDTOs;
+  }
+
+  private static RnrDTO prepareForOrderBatch(Rnr requisition) {
+    RnrDTO rnrDTO = populateDTOWithRequisition(requisition);
+    rnrDTO.setOrderBatchId(requisition.getOrder().getOrderBatch().getId());
+    rnrDTO.setOrderDate(requisition.getOrder().getOrderBatch().getCreateTimeStamp());
     return rnrDTO;
   }
 }

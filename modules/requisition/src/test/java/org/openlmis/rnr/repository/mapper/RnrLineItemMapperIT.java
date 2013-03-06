@@ -134,6 +134,7 @@ public class RnrLineItemMapperIT {
     assertThat(rnrLineItem.getPrice().compareTo(new Money("12.5")), is(0));
     assertThat(rnrLineItem.getPreviousStockInHandAvailable(), is(true));
     assertThat(rnrLineItem.getBeginningBalance(), is(5));
+    assertThat(rnrLineItem.getProductCategory(), is("Category 1"));
   }
 
   @Test
@@ -150,6 +151,7 @@ public class RnrLineItemMapperIT {
     assertThat(fetchedNonSupplyLineItems.size(), is(1));
     assertThat(fetchedNonSupplyLineItems.get(0).getQuantityRequested(), is(20));
     assertThat(fetchedNonSupplyLineItems.get(0).getReasonForRequestedQuantity(), is("More patients"));
+    assertThat(fetchedNonSupplyLineItems.get(0).getProductCategory(), is("Category 1"));
   }
 
   @Test
@@ -193,6 +195,7 @@ public class RnrLineItemMapperIT {
     assertThat(nonFullSupply.getNormalizedConsumption(), is(0));
     assertThat(nonFullSupply.getAmc(), is(0));
     assertThat(nonFullSupply.getMaxStockQuantity(), is(0));
+    assertThat(nonFullSupply.getProductCategory(), is("Category 1"));
 
   }
 
@@ -211,5 +214,6 @@ public class RnrLineItemMapperIT {
 
     assertThat(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()).size(), is(1));
     assertThat(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()).get(0).getProductCode(), is(lineItem2.getProductCode()));
+    assertThat(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()).get(0).getProductCategory(), is(lineItem2.getProductCategory()));
   }
 }
