@@ -79,94 +79,6 @@
                       </span>
 
                       <span ng-switch-when="lossesAndAdjustments">
-                        <div id="lossesAndAdjustments" modal="lossesAndAdjustmentsModal[rnrLineItem.id] ">
-                          <div class="modal-header"><h3>Losses And Adjustments</h3></div>
-                          <div class="modal-body">
-                            <div class="adjustment-field">
-                              <h5>Add new Loss/Adjustment</h5>
-
-                              <div class="row-fluid">
-                                <div class="span5">
-                                  <select ng-disabled="formDisabled"
-                                          ng-model="lossAndAdjustment.type"
-                                          ng-options="i as i.description for i in lossesAndAdjustmentTypesToDisplay">
-                                    <option value="">--Select Type--</option>
-                                  </select>
-                                </div>
-                                <div class="span3">
-                                  <input ng-disabled="formDisabled" type="text"
-                                         name="quantity{{rnrLineItem.id}}"
-                                         ng-model="lossAndAdjustment.quantity"
-                                         rnr-validator="positiveInteger" prevent-rnr-error="true" maxlength="8"
-                                         placeholder="Quantity"/>
-
-                                  <div class="rnr-form-error"
-                                       id="quantity{{rnrLineItem.id}}"
-                                       style="display:none;">
-                                    Enter Numeric Data
-                                  </div>
-                                </div>
-                                <div class="span4">
-                                  <input type="button"
-                                         ng-click="addLossAndAdjustment(rnrLineItem,lossAndAdjustment)"
-                                         ng-disabled="!(lossAndAdjustment.type && lossAndAdjustment.quantity)"
-                                         class="btn btn-primary" value="Add"/>
-                                </div>
-                              </div>
-
-
-                            </div>
-                            <hr ng-show="rnrLineItem.lossesAndAdjustments.length > 0"/>
-                            <div class="adjustment-list"
-                                 ng-show="rnrLineItem.lossesAndAdjustments.length > 0">
-                              <ul>
-                                <li ng-repeat="oneLossAndAdjustment in rnrLineItem.lossesAndAdjustments"
-                                    class="clearfix">
-                                  <span class="tpl-adjustment-type"
-                                        ng-bind="oneLossAndAdjustment.type.description"></span>
-                                  <span class="tpl-adjustment-delete">
-                                    <a class="close" ng-show="!formDisabled"
-                                       ng-click="removeLossAndAdjustment(rnrLineItem,oneLossAndAdjustment)">&times;</a>
-                                  </span>
-                                  <span class="tpl-adjustment-qty">
-                                    <input ng-required="true"
-                                           ng-disabled="formDisabled"
-                                           name="{{oneLossAndAdjustment.type.displayOrder}}"
-                                           type="text"
-                                           ng-model="oneLossAndAdjustment.quantity"
-                                           ng-change="rnrLineItem.reEvaluateTotalLossesAndAdjustments(rnr, programRnrColumnList); resetModalError()"
-                                           rnr-validator="positiveInteger"
-                                           maxlength="8"
-                                           ng-class="highlightRequiredFieldInModal(oneLossAndAdjustment.quantity)"
-                                           data-keyboard="false"
-                                        />
-
-                                    <div class="rnr-form-error"
-                                         id="{{oneLossAndAdjustment.type.displayOrder}}"
-                                         style="display:none;">
-                                      Enter Numeric Data
-                                    </div>
-                                  </span>
-                                </li>
-                              </ul>
-                            </div>
-
-                            <div class="adjustment-total clearfix alert alert-warning"
-                                 ng-show="rnrLineItem.lossesAndAdjustments.length > 0">
-                              <span class="pull-left">Total</span><span
-                                ng-bind="rnrLineItem.totalLossesAndAdjustments"></span>
-                            </div>
-                            <div class="alert alert-danger" id="modalErrorMessage"
-                                 ng-show="rnrLineItem.lossesAndAdjustments.length > 0 && modalError"
-                                 ng-bind="modalError"></div>
-                          </div>
-                          <div class="modal-footer">
-
-                            <input type="button" class="btn btn-success save-button"
-                                   ng-click="saveLossesAndAdjustmentsForRnRLineItem(rnrLineItem)"
-                                   value="Done"/>
-                          </div>
-                        </div>
                         <div
                             ng-class="highlightNestedFieldsWithError(rnrLineItem[column.name], 'quantity')">
                           <a ng-click="showLossesAndAdjustmentModalForLineItem(rnrLineItem)"
@@ -285,4 +197,94 @@
   </tbody>
   </table>
 </div>
+
+  <div id = "lossesAndAdjustments" modal = "lossesAndAdjustmentsModal">
+    <div class = "modal-header"><h3>Losses And Adjustments</h3></div>
+    <div class = "modal-body">
+      <div class = "adjustment-field">
+        <h5>Add new Loss/Adjustment</h5>
+
+        <div class = "row-fluid">
+          <div class = "span5">
+            <select ng-disabled = "formDisabled"
+                    ng-model = "lossAndAdjustment.type"
+                    ng-options = "i as i.description for i in lossesAndAdjustmentTypesToDisplay">
+              <option value = "">--Select Type--</option>
+            </select>
+          </div>
+          <div class = "span3">
+            <input ng-disabled = "formDisabled" type = "text"
+                   name = "quantity{{currentRnrLineItem.id}}"
+                   ng-model = "lossAndAdjustment.quantity"
+                   rnr-validator = "positiveInteger" prevent-rnr-error = "true" maxlength = "8"
+                   placeholder = "Quantity"/>
+
+            <div class = "rnr-form-error"
+                 id = "quantity{{currentRnrLineItem.id}}"
+                 style = "display:none;">
+              Enter Numeric Data
+            </div>
+          </div>
+          <div class = "span4">
+            <input type = "button"
+                   ng-click = "addLossAndAdjustment(lossAndAdjustment)"
+                   ng-disabled = "!(lossAndAdjustment.type && lossAndAdjustment.quantity)"
+                   class = "btn btn-primary" value = "Add"/>
+          </div>
+        </div>
+
+
+      </div>
+      <hr ng-show = "currentRnrLineItem.lossesAndAdjustments.length > 0"/>
+      <div class = "adjustment-list"
+           ng-show = "currentRnrLineItem.lossesAndAdjustments.length > 0">
+        <ul>
+          <li ng-repeat = "oneLossAndAdjustment in currentRnrLineItem.lossesAndAdjustments"
+              class = "clearfix">
+            <span class = "tpl-adjustment-type"
+                  ng-bind = "oneLossAndAdjustment.type.description"></span>
+            <span class = "tpl-adjustment-delete">
+              <a class = "close" ng-show = "!formDisabled"
+                 ng-click = "removeLossAndAdjustment(oneLossAndAdjustment)">&times;</a>
+            </span>
+            <span class = "tpl-adjustment-qty">
+              <input ng-required = "true"
+                     ng-disabled = "formDisabled"
+                     name = "{{oneLossAndAdjustment.type.displayOrder}}"
+                     type = "text"
+                     ng-model = "oneLossAndAdjustment.quantity"
+                     ng-change = "currentRnrLineItem.reEvaluateTotalLossesAndAdjustments(rnr, programRnrColumnList); resetModalError()"
+                     rnr-validator = "positiveInteger"
+                     maxlength = "8"
+                     ng-class = "highlightRequiredFieldInModal(oneLossAndAdjustment.quantity)"
+                     data-keyboard = "false"
+                />
+
+              <div class = "rnr-form-error"
+                   id = "{{oneLossAndAdjustment.type.displayOrder}}"
+                   style = "display:none;">
+                Enter Numeric Data
+              </div>
+            </span>
+          </li>
+        </ul>
+      </div>
+
+      <div class = "adjustment-total clearfix alert alert-warning"
+           ng-show = "currentRnrLineItem.lossesAndAdjustments.length > 0">
+        <span class = "pull-left">Total</span><span
+        ng-bind = "currentRnrLineItem.totalLossesAndAdjustments"></span>
+      </div>
+      <div class = "alert alert-danger" id = "modalErrorMessage"
+           ng-show = "currentRnrLineItem.lossesAndAdjustments.length > 0 && modalError"
+           ng-bind = "modalError"></div>
+    </div>
+    <div class = "modal-footer">
+
+      <input type = "button" class = "btn btn-success save-button"
+             ng-click = "saveLossesAndAdjustmentsForRnRLineItem()"
+             value = "Done"/>
+    </div>
+  </div>
+
 </div>
