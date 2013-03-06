@@ -31,7 +31,7 @@ public class DriverFactory {
   }
 
     public void deleteExeDF() throws InterruptedException, IOException{
-        Runtime.getRuntime().exec("taskkill /F /IM IEDriverServer.exe");
+        //Runtime.getRuntime().exec("taskkill /F /IM IEDriverServer.exe");
         unZip = new Unzip();
         unZip.deleteFile(OUTPUT_FOLDER+ "IEDriverServer.exe");
     }
