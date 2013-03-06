@@ -36,6 +36,7 @@ describe('RequisitionNonFullSupplyController', function () {
     scope.showAddNonFullSupplyModal();
     expect(scope.nonFullSupplyProductsModal).toBeTruthy();
     expect(scope.newNonFullSupply).toBeUndefined();
+    expect(scope.facilityApprovedProduct).toBeUndefined();
   });
 
   it('should add non full supply line item to the list', function () {

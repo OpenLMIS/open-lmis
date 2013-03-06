@@ -23,7 +23,14 @@ function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $r
   $scope.showAddNonFullSupplyModal = function () {
     updateNonFullSupplyProductsToDisplay();
     $scope.nonFullSupplyProductsModal = true;
+    $scope.clearNonFullSupplyProductModalData();
+
   };
+
+  $scope.clearNonFullSupplyProductModalData = function() {
+    $scope.facilityApprovedProduct = undefined;
+    $scope.newNonFullSupply = undefined;
+  }
 
   $scope.labelForRnrColumn = function (columnName) {
     if ($scope.$parent.programRnrColumnList) return _.findWhere($scope.$parent.programRnrColumnList, {'name':columnName}).label + ":";
