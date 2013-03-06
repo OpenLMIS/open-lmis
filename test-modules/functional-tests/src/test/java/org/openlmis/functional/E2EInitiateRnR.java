@@ -4,6 +4,7 @@ package org.openlmis.functional;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestCaseHelper;
+import org.openlmis.UiUtils.Unzip;
 import org.openlmis.pageobjects.*;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -121,7 +122,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     initiateRnRPage.enterAndVerifyRequestedQuantityExplanation(10);
     initiateRnRPage.verifyPacksToShip(1);
     initiateRnRPage.calculateAndVerifyTotalCost();
-    initiateRnRPage.saveRnR();
+    //initiateRnRPage.saveRnR();
 
     initiateRnRPage.addNonFullSupplyLineItems("99", "Due to unforeseen event", "antibiotic", "P11");
     initiateRnRPage.calculateAndVerifyTotalCostNonFullSupply();
@@ -171,6 +172,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }
+
 
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
