@@ -148,7 +148,7 @@ public class PeriodsPage extends Page {
     SeleneseTestNgHelper.seleniumEquals(actualNumberOfMonthsPeriods, totalMonths);
 
     addButton.click();
-    testWebDriver.sleep(250);
+    testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
     SeleneseTestNgHelper.assertTrue("Message Period added successfully is not getting displayed", saveSuccessMsgDiv.isDisplayed());
 
