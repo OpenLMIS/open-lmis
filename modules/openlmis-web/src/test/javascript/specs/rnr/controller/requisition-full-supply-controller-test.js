@@ -39,7 +39,7 @@ describe('RequisitionFullSupplyController', function () {
       {"type":{"name":"some name"}, "quantity":"4"}
     ]};
     scope.showLossesAndAdjustmentModalForLineItem(lineItem);
-    expect(scope.lossesAndAdjustmentsModal[1]).toBeTruthy();
+    expect(scope.lossesAndAdjustmentsModal).toBeTruthy();
     expect(scope.lossesAndAdjustmentTypesToDisplay).toEqual([
       {"name":"some other name"}
     ]);
@@ -59,11 +59,12 @@ describe('RequisitionFullSupplyController', function () {
       {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}}
     ];
 
-    scope.lossesAndAdjustmentsModal[1] = true;
-    scope.saveLossesAndAdjustmentsForRnRLineItem(rnrLineItem);
+    scope.lossesAndAdjustmentsModal = true;
+    scope.currentRnrLineItem = rnrLineItem;
+    scope.saveLossesAndAdjustmentsForRnRLineItem();
 
     expect(rnrLineItem.reEvaluateTotalLossesAndAdjustments).toHaveBeenCalled();
-    expect(scope.lossesAndAdjustmentsModal[1]).toBeFalsy();
+    expect(scope.lossesAndAdjustmentsModal).toBeFalsy();
     expect(scope.modalError).toEqual('');
   });
 
@@ -80,11 +81,12 @@ describe('RequisitionFullSupplyController', function () {
     scope.programRnrColumnList = [
       {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}}
     ];
-    scope.lossesAndAdjustmentsModal[1] = true;
-    scope.saveLossesAndAdjustmentsForRnRLineItem(rnrLineItem);
+    scope.lossesAndAdjustmentsModal = true;
+    scope.currentRnrLineItem = rnrLineItem;
+    scope.saveLossesAndAdjustmentsForRnRLineItem();
 
     expect(rnrLineItem.reEvaluateTotalLossesAndAdjustments).not.toHaveBeenCalledWith(scope.$parent.rnr, scope.programRnrColumnList);
-    expect(scope.lossesAndAdjustmentsModal[1]).toBeTruthy();
+    expect(scope.lossesAndAdjustmentsModal).toBeTruthy();
     expect(scope.modalError).toEqual('Please correct the highlighted fields before submitting');
   });
 });
