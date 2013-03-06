@@ -154,6 +154,9 @@ span.field-error {
     border-bottom: 1px solid #FFF;
     input[type="text"] {
       width: 87%;
+      &[ui-date] {
+        width: 200px;
+      }
     }
     select {
       width: 90%;
@@ -422,6 +425,9 @@ span[class^="tpl-"] {
 input[ui-date] {
   background: #FFF url(../images/calendar-icon.png) no-repeat 98% center;
   cursor: default;
+  &[disabled] {
+    background-color: #EEE;
+  }
 }
 
 .info-box {
