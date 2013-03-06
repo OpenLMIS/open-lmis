@@ -22,7 +22,7 @@ public interface RnrLineItemMapper {
   @Options(useGeneratedKeys = true)
   public Integer insert(RnrLineItem rnrLineItem);
 
-  @Select("SELECT * FROM requisition_line_items WHERE rnrId = #{rnrId} and fullSupply = true")
+  @Select("SELECT * FROM requisition_line_items WHERE rnrId = #{rnrId} and fullSupply = true order by id")
   @Results(value = {
     @Result(property = "id", column = "id"),
     @Result(property = "lossesAndAdjustments", javaType = List.class, column = "id", many = @Many(select = "org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper.getByRnrLineItem"))

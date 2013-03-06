@@ -13,5 +13,6 @@ CREATE TABLE requisitions (
   modifiedBy                      INTEGER,
   submittedDate                   TIMESTAMP,
   modifiedDate                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  creationDate                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   UNIQUE (facilityId, programId, periodId)
 );
