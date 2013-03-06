@@ -1,6 +1,5 @@
-function CreateRequisitionController($scope, Requisition, ReferenceData, ProgramRnRColumnList, $location, Requisitions, $routeParams, $rootScope) {
+function CreateRequisitionController($scope, requisition, currency, rnrColumns, $location, Requisitions, $routeParams, $rootScope) {
 
-  $scope.programRnrColumnList = [];
   $scope.showNonFullSupply = $routeParams.supplyType == 'non-full-supply';
   $scope.baseUrl = "/create-rnr/" + $routeParams.facility + '/' + $routeParams.program + '/' + $routeParams.period;
   $scope.fullSupplyLink = $scope.baseUrl + "?supplyType=full-supply&page=1";
@@ -13,36 +12,21 @@ function CreateRequisitionController($scope, Requisition, ReferenceData, Program
     $scope.pageLineItems = gridLineItems.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);
   };
 
+  $scope.rnr = requisition;
+  $scope.visibleColumns = _.where(rnrColumns, {'visible':true});
+  $scope.programRnrColumnList = rnrColumns;
+  $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name':'quantityRequested'});
 
-  Requisition.get({facilityId:$routeParams.facility, programId:$routeParams.program, periodId:$routeParams.period},
-    function (data) {
-      if (data.rnr) {
-        $scope.rnr = data.rnr;
-        prepareRnr();
-      } else {
-        $scope.error = "Requisition does not exist. Please initiate.";
-        $location.path('/init-rnr');
-      }
-    }, function () {
-    });
+  prepareRnr();
 
-  ReferenceData.get({}, function (data) {
-    $scope.currency = data.currency;
-  }, function () {
-  });
+  $scope.currency = currency;
 
-  ProgramRnRColumnList.get({programId:$routeParams.program}, function (data) {
-    if (data.rnrColumnList && data.rnrColumnList.length > 0) {
-      $scope.visibleColumns = _.where(data.rnrColumnList, {'visible':true});
-      $scope.programRnrColumnList = data.rnrColumnList;
-      $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name':'quantityRequested'});
-      $scope.$broadcast("rnrPrepared");
-    } else {
-      $scope.error = "rnr.template.not.defined.error";
-    }
-  }, function () {
+
+  if ($scope.programRnrColumnList && $scope.programRnrColumnList.length > 0) {
+  } else {
+    $scope.error = "rnr.template.not.defined.error";
     $location.path("/init-rnr");
-  });
+  }
 
   $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
 
@@ -249,3 +233,38 @@ function CreateRequisitionController($scope, Requisition, ReferenceData, Program
     return rnr;
   }
 }
+
+CreateRequisitionController.resolve = {
+
+  requisition:function ($q, $timeout, Requisition, $route) {
+    var deferred = $q.defer();
+    $timeout(function () {
+
+      Requisition.get({facilityId:$route.current.params.facility, programId:$route.current.params.program, periodId:$route.current.params.period}, function (data) {
+        deferred.resolve(data.rnr);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  },
+
+  rnrColumns:function ($q, $timeout, ProgramRnRColumnList, $route) {
+    var deferred = $q.defer();
+    $timeout(function () {
+      ProgramRnRColumnList.get({programId:$route.current.params.program}, function (data) {
+        deferred.resolve(data.rnrColumnList);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  },
+
+  currency:function ($q, $timeout, ReferenceData) {
+    var deferred = $q.defer();
+    $timeout(function () {
+      ReferenceData.get({}, function (data) {
+        deferred.resolve(data.currency);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  }
+};
+

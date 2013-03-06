@@ -21,20 +21,24 @@ describe('CreateRequisitionController', function () {
     mockedRequisition = {'status':"INITIATED",
       fullSupplyItemsSubmittedCost:100,
       nonFullSupplyItemsSubmittedCost:14,
-      lineItems:[{id:1}],
-      nonFullSupplyLineItems:[{id:2}]
+      lineItems:[
+        {id:1}
+      ],
+      nonFullSupplyLineItems:[
+        {id:2}
+      ]
     };
 
     httpBackend.when('GET', '/facilityApprovedProducts/facility/1/program/1/nonFullSupply.json').respond(200);
-    httpBackend.when('GET', '/requisitions.json?facilityId=1&periodId=2&programId=1').respond({'rnr':mockedRequisition});
-    httpBackend.when('POST', '/requisitions.json?facilityId=1&periodId=2&programId=1').respond({"rnr":{"status":"CREATED"}});
-    httpBackend.when('GET', '/rnr/1/columns.json').respond({"rnrColumnList":[
+    var rnrColumns = [
       {"testField":"test"}
-    ]});
+    ];
+    httpBackend.when('GET', '/rnr/1/columns.json').respond(rnrColumns);
     httpBackend.when('GET', '/reference-data/currency.json').respond({"currency":"$"});
     $rootScope.fixToolBar = function () {
     };
-    ctrl = controller(CreateRequisitionController, {$scope:scope, $location:location, $routeParams:routeParams, $rootScope:rootScope, localStorageService:localStorageService});
+    ctrl = controller(CreateRequisitionController, {$scope:scope, $location:location, requisition:mockedRequisition, rnrColumns:rnrColumns,
+      currency:'$', $routeParams:routeParams, $rootScope:rootScope, localStorageService:localStorageService});
 
     scope.allTypes = [
       {"name":"some name"},
@@ -43,7 +47,6 @@ describe('CreateRequisitionController', function () {
   }));
 
   it('should get list of Rnr Columns for program', function () {
-    httpBackend.flush();
     expect([
       {"testField":"test"}
     ]).toEqual(scope.programRnrColumnList);
@@ -59,7 +62,6 @@ describe('CreateRequisitionController', function () {
 
 
   it('should get Currency from service', function () {
-    httpBackend.flush();
     expect(scope.currency).toEqual("$");
   });
 
@@ -162,33 +164,38 @@ describe('CreateRequisitionController', function () {
   });
 
   it('should not set disable flag if rnr is initiated and user has create right', function () {
-    scope.rnr = {id:"rnrId", lineItems:[], status:"INITIATED"};
+
+    var rnr = {id:"rnrId", lineItems:[], status:"INITIATED"};
     spyOn(rootScope, 'hasPermission').andReturn(true);
 
-    httpBackend.flush();
+    ctrl = controller(CreateRequisitionController, {$scope:scope, $location:location, requisition:rnr , rnrColumns:[],
+      currency:'$', $routeParams:routeParams, $rootScope:rootScope, localStorageService:localStorageService});
+
     expect(rootScope.hasPermission).toHaveBeenCalledWith('CREATE_REQUISITION');
     expect(scope.formDisabled).toEqual(false);
   });
 
-  xit('should not set disable flag if rnr is submitted and user have authorize right', function () {
-    scope.rnr = {id:"rnrId", lineItems:[], status:"SUBMITTED"};
+  it('should not set disable flag if rnr is submitted and user have authorize right', function () {
+    var rnr = {id:"rnrId", lineItems:[], status:"SUBMITTED"};
     spyOn(rootScope, 'hasPermission').andReturn(true);
 
-    httpBackend.flush();
+    ctrl = controller(CreateRequisitionController, {$scope:scope, $location:location, requisition:rnr , rnrColumns:[],
+          currency:'$', $routeParams:routeParams, $rootScope:rootScope, localStorageService:localStorageService});
+
     expect(rootScope.hasPermission).toHaveBeenCalledWith('AUTHORIZE_REQUISITION');
     expect(scope.formDisabled).toEqual(false);
   });
 
-  xit('should set disable flag if rnr is not initiated/submitted', function () {
-    scope.rnr = {id:"rnrId", lineItems:[], status:"some random status"};
+  it('should set disable flag if rnr is not initiated/submitted', function () {
+    var rnr = {id:"rnrId", lineItems:[], status:"some random status"};
     spyOn(rootScope, 'hasPermission');
-    httpBackend.flush();
+    ctrl = controller(CreateRequisitionController, {$scope:scope, $location:location, requisition:rnr , rnrColumns:[],
+          currency:'$', $routeParams:routeParams, $rootScope:rootScope, localStorageService:localStorageService});
     expect(rootScope.hasPermission).not.toHaveBeenCalled();
     expect(scope.formDisabled).toEqual(true);
   });
 
-  xit('should set rnr in scope after successful initialization', function () {
-    httpBackend.flush();
+  it('should set rnr in scope after successful initialization', function () {
     expect(scope.rnr).toEqual(mockedRequisition);
   });
 
@@ -196,8 +203,7 @@ describe('CreateRequisitionController', function () {
   it('should prepare period display name', function () {
     scope.rnr = {'status':"INITIATED"};
     scope.rnr.period = {"name":"Period 1", "startDate":1358274600000, "endDate":1367260200000};
-    httpBackend.when('GET', '/requisitions.json?facilityId=1&periodId=2&programId=1').respond({'rnr':scope.rnr});
-    controller(CreateRequisitionController, {$scope:scope, $routeParams:routeParams});
+
     expect(scope.periodDisplayName()).toEqual('16/01/2013 - 30/04/2013');
   });
 
