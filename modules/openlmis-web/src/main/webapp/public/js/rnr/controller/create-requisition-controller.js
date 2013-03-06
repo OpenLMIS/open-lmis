@@ -5,6 +5,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   $scope.fullSupplyLink = $scope.baseUrl + "?supplyType=full-supply&page=1";
   $scope.nonFullSupplyLink = $scope.baseUrl + "?supplyTpe=non-full-supply&page=1";
   $scope.pageSize = 10;
+
   $scope.fillPagedGridData = function () {
     var gridLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.lineItems;
     $scope.numberOfPages = Math.ceil(gridLineItems.length / $scope.pageSize);
@@ -38,10 +39,6 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
 
   $scope.$on('$routeUpdate', function () {
     $scope.fillPagedGridData();
-    if (!utils.isValidPage($routeParams.page, $scope.numberOfPages)) {
-      $location.search('page', 1);
-      return;
-    }
     if ($scope.saveRnrForm.$dirty) $scope.saveRnr();
   });
 
@@ -63,11 +60,11 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
     resetFlags();
     var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id:$scope.rnr.id, operation:"save"}, rnr, function (data) {
-      $rootScope.message = data.success;
+      $scope.message = data.success;
       setTimeout(function () {
         $scope.$apply(function () {
           angular.element("#saveSuccessMsgDiv").fadeOut('slow', function () {
-            $rootScope.message = '';
+            $scope.message = '';
           });
         });
       }, 3000);
@@ -87,10 +84,11 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
       rnr, function (data) {
         $scope.rnr.status = "SUBMITTED";
         $scope.formDisabled = !$rootScope.hasPermission('AUTHORIZE_REQUISITION');
-        $rootScope.submitMessage = data.success;
+        $scope.submitMessage = data.success;
         $scope.submitError = "";
       }, function (data) {
         $scope.submitError = data.data.error;
+        $scope.submitMessage ="";
       });
   };
 
@@ -100,10 +98,11 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
     Requisitions.update({id:$scope.rnr.id, operation:"authorize"}, rnr, function (data) {
       $scope.rnr.status = "AUTHORIZED";
       $scope.formDisabled = true;
-      $rootScope.submitMessage = data.success;
+      $scope.submitMessage = data.success;
       $scope.submitError = "";
     }, function (data) {
       $scope.submitError = data.data.error;
+      $scope.submitMessage ="";
     });
   };
 
