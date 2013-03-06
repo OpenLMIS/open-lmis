@@ -167,7 +167,6 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @AfterMethod(groups = {"smoke"})
   public void tearDown() throws Exception {
-    super.tearDownSuite();
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout();
     dbWrapper.deleteData();

@@ -25,9 +25,14 @@ public class TestCaseHelper {
         }
     }
 
-    public void tearDownSuite() throws InterruptedException, IOException
+    public void tearDownSuite()
     {
+      try{
         deleteExe();
+      }catch(Exception e)
+      {
+        e.printStackTrace();
+      }
     }
 
 
@@ -35,7 +40,9 @@ public class TestCaseHelper {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
                 if (testWebDriver != null) {
-                    testWebDriver.close();
+                   // testWebDriver.close();
+                  testWebDriver.quitDriver();
+                  tearDownSuite();
                 }
             }
         });
