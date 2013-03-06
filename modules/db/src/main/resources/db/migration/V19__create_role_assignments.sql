@@ -1,6 +1,6 @@
 CREATE TABLE role_assignments (
-  userId INTEGER REFERENCES users(id),
-  roleId INTEGER REFERENCES roles(id),
+  userId INTEGER REFERENCES users(id) NOT NULL,
+  roleId INTEGER REFERENCES roles(id) NOT NULL,
   programId INTEGER REFERENCES programs(id),
   supervisoryNodeId INTEGER REFERENCES supervisory_nodes(id),
 

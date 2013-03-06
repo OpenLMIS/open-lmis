@@ -1,6 +1,6 @@
 CREATE TABLE requisition_groups (
   id serial PRIMARY KEY,
-  code varchar(50) UNIQUE,
+  code varchar(50) NOT NULL UNIQUE,
   name VARCHAR(50) NOT NULL,
   description VARCHAR(250),
   supervisoryNodeId INTEGER,

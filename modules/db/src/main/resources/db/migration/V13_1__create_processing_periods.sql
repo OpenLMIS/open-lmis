@@ -1,6 +1,6 @@
 CREATE TABLE processing_periods (
   id SERIAL PRIMARY KEY,
-  scheduleId INTEGER REFERENCES processing_schedules(id),
+  scheduleId INTEGER REFERENCES processing_schedules(id) NOT NULL,
   name VARCHAR(50) NOT NULL,
   description VARCHAR(250),
   startDate TIMESTAMP NOT NULL,
