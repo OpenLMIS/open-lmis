@@ -12,7 +12,6 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
     $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
     $scope.pageLineItems = gridLineItems.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);
   };
-
   $scope.rnr = requisition;
   $scope.visibleColumns = _.where(rnrColumns, {'visible':true});
   $scope.programRnrColumnList = rnrColumns;
@@ -232,10 +231,15 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
 
 CreateRequisitionController.resolve = {
 
-  requisition:function ($q, $timeout, Requisition, $route) {
+  requisition:function ($q, $timeout, Requisition, $route, $rootScope) {
     var deferred = $q.defer();
     $timeout(function () {
-
+      var rnr = $rootScope.rnr;
+      if(rnr){
+        deferred.resolve(rnr);
+        $rootScope.rnr=undefined;
+        return;
+      }
       Requisition.get({facilityId:$route.current.params.facility, programId:$route.current.params.program, periodId:$route.current.params.period}, function (data) {
         deferred.resolve(data.rnr);
       }, {});
