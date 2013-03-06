@@ -1,4 +1,13 @@
-function FacilityController($scope, facilityReferenceData, $routeParams, $http, facility, Facility, $rootScope, $location) {
+function FacilityController($scope, facilityReferenceData, $routeParams, $http, facility, Facility, $location) {
+
+  function getFacilityWithDateObjects(facility) {
+    facility.goLiveDate = new Date(facility.goLiveDate);
+    facility.goDownDate = new Date(facility.goDownDate);
+    angular.forEach(facility.supportedPrograms, function (supportedProgram) {
+      supportedProgram.startDate = new Date(supportedProgram.startDate);
+    });
+    return facility;
+  }
 
   function initialize() {
     $scope.facilityTypes = facilityReferenceData.facilityTypes;
@@ -6,7 +15,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
     $scope.facilityOperators = facilityReferenceData.facilityOperators;
     $scope.programs = facilityReferenceData.programs;
     if ($routeParams.facilityId) {
-      $scope.facility = facility;
+      $scope.facility = getFacilityWithDateObjects(facility);
       $scope.originalFacilityCode = facility.code;
       $scope.originalFacilityName = facility.name;
       $scope.isEdit = true;
@@ -33,7 +42,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
       $scope.showError = "true";
       $scope.error = "";
       $scope.$parent.message = data.success;
-      $scope.facility = data.facility;
+      $scope.facility = getFacilityWithDateObjects(data.facility);
       $scope.$parent.facilityId = $scope.facility.id;
       populateFlags($scope);
       $location.path('');
@@ -45,24 +54,25 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
       $scope.error = data.data.error;
     };
 
-    if(!$scope.isEdit){
+    if (!$scope.isEdit) {
       Facility.save({}, $scope.facility, successFn, errorFn);
-    }else{
+    } else {
       Facility.update({id: $scope.facility.id}, $scope.facility, successFn, errorFn);
     }
   };
 
 
   var putFacilityRequest = function (requestUrl) {
-    $http.put(requestUrl, $scope.facility).success(function (data) {
-      $scope.showError = "true";
-      $scope.error = "";
-      $scope.message = data.success;
-      $scope.facility = data.facility;
-      $scope.originalFacilityCode = data.facility.code;
-      $scope.originalFacilityName = data.facility.name;
-      populateFlags($scope);
-    }).error(function (data) {
+    $http.put(requestUrl, $scope.facility)
+        .success(function (data) {
+          $scope.showError = "true";
+          $scope.error = "";
+          $scope.message = data.success;
+          $scope.facility = getFacilityWithDateObjects(data.facility);
+          $scope.originalFacilityCode = data.facility.code;
+          $scope.originalFacilityName = data.facility.name;
+          populateFlags($scope);
+        }).error(function (data) {
           $scope.showError = "true";
           $scope.message = "";
           $scope.error = data.error;
@@ -71,12 +81,11 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
           $scope.originalFacilityName = data.facility.name;
           populateFlags($scope);
         });
-
   };
+
   $scope.deleteFacility = function () {
     $scope.deleteConfirmModal = false;
     putFacilityRequest('/facility/update/delete.json');
-
   };
 
   $scope.restoreFacility = function (active) {
@@ -89,8 +98,8 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
     angular.element("input[ui-date]").blur();
   };
 
-  $scope.addSupportedProgram = function(supportedProgram) {
-    if(supportedProgram.active && !supportedProgram.editedStartDate) {
+  $scope.addSupportedProgram = function (supportedProgram) {
+    if (supportedProgram.active && !supportedProgram.editedStartDate) {
       $scope.showDateNotEnteredError = true;
       return;
     }
@@ -100,34 +109,34 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
     updateProgramsToDisplay();
   };
 
-  $scope.editStartDate = function(program) {
+  $scope.editStartDate = function (program) {
     window.program = program;
-    $scope.dateChangeConfirmModal=true;
+    $scope.dateChangeConfirmModal = true;
   };
 
-  $scope.setNewStartDate = function() {
+  $scope.setNewStartDate = function () {
     window.program.startDate = window.program.editedStartDate;
     $scope.dateChangeConfirmModal = false;
   };
 
-  $scope.resetOldStartDate = function() {
+  $scope.resetOldStartDate = function () {
     window.program.editedStartDate = window.program.startDate;
     $scope.dateChangeConfirmModal = false;
   };
 
-  $scope.removeSupportedProgram = function(supportedProgram) {
-    if($scope.facility.dataReportable == 'false') return;
+  $scope.removeSupportedProgram = function (supportedProgram) {
+    if ($scope.facility.dataReportable == 'false') return;
     $scope.facility.supportedPrograms = _.without($scope.facility.supportedPrograms, supportedProgram);
     updateProgramsToDisplay();
   };
 
-  $scope.getProgramNameById = function(programId) {
-    return (_.findWhere($scope.programs, {'id' : programId})).name;
+  $scope.getProgramNameById = function (programId) {
+    return (_.findWhere($scope.programs, {'id': programId})).name;
   };
 
   function updateProgramsToDisplay() {
     $scope.facility.supportedPrograms = $scope.facility.supportedPrograms || [];
-    var supportedProgramIds = _.pluck(_.pluck($scope.facility.supportedPrograms, 'program'),"id");
+    var supportedProgramIds = _.pluck(_.pluck($scope.facility.supportedPrograms, 'program'), "id");
     $scope.programsToDisplay = _.reject($scope.programs, function (supportedProgram) {
       return _.contains(supportedProgramIds, supportedProgram.id)
     });
@@ -146,7 +155,7 @@ var populateFlags = function ($scope) {
 
 FacilityController.resolve = {
 
-  facilityReferenceData:function ($q, $timeout, FacilityReferenceData) {
+  facilityReferenceData: function ($q, $timeout, FacilityReferenceData) {
     var deferred = $q.defer();
     $timeout(function () {
       FacilityReferenceData.get({}, function (data) {
@@ -156,14 +165,14 @@ FacilityController.resolve = {
     return deferred.promise;
   },
 
-  facility:function ($q, $timeout, Facility, $route) {
+  facility: function ($q, $timeout, Facility, $route) {
     if ($route.current.params.facilityId == undefined) return undefined;
 
     var deferred = $q.defer();
     var facilityId = $route.current.params.facilityId;
 
     $timeout(function () {
-      Facility.get({id:facilityId}, function (data) {
+      Facility.get({id: facilityId}, function (data) {
         deferred.resolve(data.facility);
       }, {});
     }, 100);
