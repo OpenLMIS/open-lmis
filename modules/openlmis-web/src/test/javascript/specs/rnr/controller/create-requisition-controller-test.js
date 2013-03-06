@@ -1,5 +1,5 @@
 describe('CreateRequisitionController', function () {
-  var scope, rootScope, ctrl, httpBackend, location, routeParams, controller, localStorageService, mockedRequisition;
+  var scope, rootScope, ctrl, httpBackend, location, routeParams, controller, localStorageService, mockedRequisition, rnrColumns;
 
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
@@ -30,7 +30,7 @@ describe('CreateRequisitionController', function () {
     };
 
     httpBackend.when('GET', '/facilityApprovedProducts/facility/1/program/1/nonFullSupply.json').respond(200);
-    var rnrColumns = [
+    rnrColumns = [
       {"testField":"test"}
     ];
     httpBackend.when('GET', '/rnr/1/columns.json').respond(rnrColumns);
@@ -159,7 +159,7 @@ describe('CreateRequisitionController', function () {
   it('should highlight required field for modal dialog', function () {
     expect(scope.highlightRequiredFieldInModal(null)).toEqual("required-error");
     expect(scope.highlightRequiredFieldInModal(undefined)).toEqual("required-error");
-    expect(scope.highlightRequiredFieldInModal('')).toEqual(null);
+    expect(scope.highlightRequiredFieldInModal('')).toEqual("required-error");
     expect(scope.highlightRequiredFieldInModal(3)).toEqual(null);
   });
 
@@ -196,7 +196,12 @@ describe('CreateRequisitionController', function () {
   });
 
   it('should set rnr in scope after successful initialization', function () {
-    expect(scope.rnr).toEqual(mockedRequisition);
+    expect(scope.rnr.fullSupplyLineItems).toEqual(mockedRequisition.fullSupplyLineItems);
+    expect(scope.rnr.nonFullSupplyLineItems).toEqual(mockedRequisition.nonFullSupplyLineItems);
+  });
+
+  it('should make rnr in scope as Rnr Instance', function () {
+    expect(scope.rnr instanceof Rnr).toBeTruthy();
   });
 
 

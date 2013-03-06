@@ -104,7 +104,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   };
 
   $scope.highlightRequired = function (value) {
-    if ($scope.inputClass == 'required' && (isUndefined(value) || value.toString().trim().length == 0)) {
+    if ($scope.inputClass == 'required' && (isUndefined(value))) {
       return "required-error";
     }
     return null;
@@ -166,6 +166,8 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
       rnr.nonFullSupplyLineItems.push(new RnrLineItem(lineItem, $scope.rnr, $scope.programRnrColumnList))
     });
 
+    $scope.rnr = new Rnr(rnr, rnrColumns);
+
     resetCostsIfNull();
     $scope.fillPagedGridData();
     $scope.formDisabled = (function () {
@@ -180,14 +182,14 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
 
   function valid() {
     if ($scope.saveRnrForm.$error.required) {
-      $scope.saveRnr(null);
+      $scope.saveRnr();
       $scope.inputClass = "required";
       $scope.submitMessage = "";
       $scope.submitError = 'Please complete the highlighted fields on the R&R form before submitting';
       return false;
     }
     if (!formulaValid()) {
-      $scope.saveRnr(null);
+      $scope.saveRnr();
       $scope.submitError = "Please correct the errors on the R&R form before submitting";
       $scope.submitMessage = "";
       return false;

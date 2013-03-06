@@ -149,7 +149,7 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
   });
 
 function isUndefined(value) {
-  return (value == null || value == undefined);
+  return (value == null || value == undefined || value.toString().trim().length == 0);
 }
 jQuery.support.placeholder = !!function () {
   return "placeholder" in document.createElement("input");

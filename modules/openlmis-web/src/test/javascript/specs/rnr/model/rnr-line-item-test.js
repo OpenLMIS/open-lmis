@@ -790,6 +790,71 @@ describe('RnrLineItem', function () {
 
       expect(rnrLineItem.fillPacksToShipBasedOnApprovedQuantity).toHaveBeenCalled();
     });
+
+    it('should return true if visible user input fields are filled', function () {
+      programRnrColumnList = [
+        {"source":{"name":"USER_INPUT"}, "name":"beginningBalance","visible":true},
+        {"source":{"name":"USER_INPUT"}, "name":"quantityReceived","visible":true},
+        {"source":{"name":"USER_INPUT"}, "name":"quantityDispensed","visible":true},
+        {"source":{"name":"USER_INPUT"}, "visible":true,"name":"newPatientCount"},
+        {"source":{"name":"USER_INPUT"}, "visible":false,"name":"stockOutDays"}
+      ];
+      var rnrLineItem = {'beginningBalance':'45', 'quantityDispensed':'23','quantityReceived':3,'newPatientCount':45,
+        'stockOutDays':''};
+      rnrLineItem = new RnrLineItem(rnrLineItem, null, programRnrColumnList);
+      var isValid = rnrLineItem.validateRequiredFields();
+      expect(isValid).toBeTruthy();
+    });
+
+    it('should return false if visible user input field missing', function () {
+      programRnrColumnList = [
+        {"source":{"name":"USER_INPUT"}, "name":"beginningBalance","visible":true},
+        {"source":{"name":"USER_INPUT"}, "name":"quantityReceived","visible":true},
+        {"source":{"name":"USER_INPUT"}, "name":"quantityDispensed","visible":true},
+        {"source":{"name":"USER_INPUT"}, "visible":true,"name":"newPatientCount"},
+        {"source":{"name":"USER_INPUT"}, "visible":true,"name":"stockOutDays"}
+      ];
+      var rnrLineItem = {'beginningBalance':'', 'quantityDispensed':'23','quantityReceived':3,'newPatientCount':45,
+        'stockOutDays':''};
+      rnrLineItem = new RnrLineItem(rnrLineItem, null, programRnrColumnList);
+      var isValid = rnrLineItem.validateRequiredFields();
+      expect(isValid).toBeFalsy();
+    });
+
+    it('should return false if requested quantity is filled and reason is not filled', function () {
+      programRnrColumnList = [
+        {"source":{"name":"USER_INPUT"}, "name":"beginningBalance","visible":true},
+        {"source":{"name":"USER_INPUT"}, "name":"quantityReceived","visible":true},
+        {"source":{"name":"USER_INPUT"}, "name":"quantityDispensed","visible":true},
+        {"source":{"name":"USER_INPUT"}, "visible":true,"name":"newPatientCount"},
+        {"source":{"name":"USER_INPUT"}, "visible":true,"name":"stockOutDays"},
+        {"source":{"name":"USER_INPUT"}, "visible":true,"name":"quantityRequested"},
+        {"source":{"name":"USER_INPUT"}, "visible":true,"name":"reasonForRequestedQuantity"}
+      ];
+      var rnrLineItem = {'beginningBalance':'45', 'stockOutDays':'23', 'quantityDispensed':'23','quantityReceived':'89','newPatientCount':45,
+        'quantityRequested':'7','reasonForRequestedQuantity':''};
+      rnrLineItem = new RnrLineItem(rnrLineItem, null, programRnrColumnList);
+      var isValid = rnrLineItem.validateRequiredFields();
+      expect(isValid).toBeFalsy();
+    });
+
+    it('should return true if requested quantity is filled and reason is also filled', function () {
+      programRnrColumnList = [
+        {"source":{"name":"USER_INPUT"}, "name":"beginningBalance","visible":true},
+        {"source":{"name":"USER_INPUT"}, "name":"quantityReceived","visible":true},
+        {"source":{"name":"USER_INPUT"}, "name":"quantityDispensed","visible":true},
+        {"source":{"name":"USER_INPUT"}, "visible":true,"name":"newPatientCount"},
+        {"source":{"name":"USER_INPUT"}, "visible":true,"name":"stockOutDays"},
+        {"source":{"name":"USER_INPUT"}, "visible":true,"name":"quantityRequested"},
+        {"source":{"name":"USER_INPUT"}, "visible":true,"name":"reasonForRequestedQuantity"},
+        {"source":{"name":"USER_INPUT"}, "visible":true,"name":"remarks"}
+      ];
+      var rnrLineItem = {'beginningBalance':'45', 'stockOutDays':'23', 'quantityDispensed':'23','quantityReceived':'89','newPatientCount':45,
+        'quantityRequested':'7','reasonForRequestedQuantity':'reason', remarks: ''};
+      rnrLineItem = new RnrLineItem(rnrLineItem, null, programRnrColumnList);
+      var isValid = rnrLineItem.validateRequiredFields();
+      expect(isValid).toBeTruthy();
+    });
   });
 });
 

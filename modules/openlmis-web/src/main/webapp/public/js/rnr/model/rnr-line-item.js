@@ -108,7 +108,7 @@ var RnrLineItem = function (lineItem, rnr, programRnrColumnList) {
       this.packsToShip = null;
       return;
     }
-    if (quantity == 0 ) {
+    if (quantity == 0) {
       this.packsToShip = 0;
       return;
     }
@@ -263,13 +263,33 @@ var RnrLineItem = function (lineItem, rnr, programRnrColumnList) {
     return code;
   };
 
+  RnrLineItem.prototype.validateRequiredFields = function () {
+    var isValid = true;
+    var rnrLineItem = this;
+    var visibleColumns = _.where(programRnrColumnList, {"visible":true});
+    $(visibleColumns).each(function (i, column) {
+      if (column.source.name != 'USER_INPUT') return;
+      switch (column.name) {
+        case 'reasonForRequestedQuantity' :
+        case 'remarks' :
+        case 'quantityRequested' :
+          isValid = isUndefined(rnrLineItem.quantityRequested) || !isUndefined(rnrLineItem.reasonForRequestedQuantity);
+          break;
+        default:
+            isValid = !isUndefined(rnrLineItem[column.name]);
+      }
+      if(!isValid) return false;
+    });
+    return isValid;
+  };
+
   RnrLineItem.prototype.getErrorMessage = function () {
     if (this.stockInHand < 0) return 'Stock On Hand is calculated to be negative, please validate entries';
     if (this.quantityDispensed < 0) return 'Total Quantity Consumed is calculated to be negative, please validate entries';
     if (this.arithmeticallyInvalid()) return 'The entries are arithmetically invalid, please recheck';
 
     return "";
-  }
+  };
 
   if (this.previousNormalizedConsumptions == undefined || this.previousNormalizedConsumptions == null)
     this.previousNormalizedConsumptions = [];
