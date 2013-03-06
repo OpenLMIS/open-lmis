@@ -8,7 +8,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
 
   $scope.fillPagedGridData = function () {
     var gridLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.lineItems;
-    $scope.numberOfPages = Math.ceil(gridLineItems.length / $scope.pageSize);
+    $scope.numberOfPages = Math.ceil(gridLineItems.length / $scope.pageSize)? Math.ceil(gridLineItems.length / $scope.pageSize): 1;
     $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
     $scope.pageLineItems = gridLineItems.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);
   };
@@ -68,11 +68,9 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
           });
         });
       }, 3000);
-      $scope.error = "";
       $scope.saveRnrForm.$dirty = false;
     }, function (data) {
       $scope.error = data.error;
-      $scope.message = "";
     });
   };
 
@@ -85,24 +83,21 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
         $scope.rnr.status = "SUBMITTED";
         $scope.formDisabled = !$rootScope.hasPermission('AUTHORIZE_REQUISITION');
         $scope.submitMessage = data.success;
-        $scope.submitError = "";
       }, function (data) {
         $scope.submitError = data.data.error;
-        $scope.submitMessage ="";
       });
   };
 
   $scope.authorizeRnr = function () {
+    resetFlags();
     if (!valid()) return;
     var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id:$scope.rnr.id, operation:"authorize"}, rnr, function (data) {
       $scope.rnr.status = "AUTHORIZED";
       $scope.formDisabled = true;
       $scope.submitMessage = data.success;
-      $scope.submitError = "";
     }, function (data) {
       $scope.submitError = data.data.error;
-      $scope.submitMessage ="";
     });
   };
 
@@ -203,9 +198,11 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   }
 
   function resetFlags() {
-    $scope.submitError = "";
     $scope.inputClass = "";
+    $scope.submitError = "";
     $rootScope.submitMessage = "";
+    $scope.error = "";
+    $scope.message = "";
   }
 
   // TODO: Push this method to rnr-line-item
