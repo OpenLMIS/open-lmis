@@ -186,8 +186,8 @@ public class DeleteFacilityPage extends Page {
 
   public HomePage editAndVerifyFacility(String facilityNameValue) throws IOException {
     String catchmentPopulationValue = "600000";
-    String latitudeValue = "6555.5555";
-    String longitudeValue = "6444.4444";
+    String latitudeValue = "955.5555";
+    String longitudeValue = "644.4444";
     String altitudeValue = "6545.4545";
 
     testWebDriver.waitForElementToAppear(facilityList);

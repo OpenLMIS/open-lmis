@@ -176,8 +176,8 @@ public class CreateFacilityPage extends Page {
     testWebDriver.selectByVisibleText(facilityType, facilityTypeValue);
 
     catchmentPopulation.sendKeys("500000");
-    latitude.sendKeys("5555.5555");
-    longitude.sendKeys("4444.4444");
+    latitude.sendKeys("-555.5555");
+    longitude.sendKeys("444.4444");
     altitude.sendKeys("4545.4545");
 
     testWebDriver.selectByVisibleText(operatedBy, operatedByValue);
