@@ -87,10 +87,10 @@ public class InitiateRnRPage extends Page {
   @FindBy(how = How.XPATH, using = "//table[@id='nonFullSupplyTable']/tbody/tr/td[18]/ng-switch/span")
   private static WebElement packsToShipNonFullSupply;
 
-  @FindBy(how = How.XPATH, using = "//table[@id='nonFullSupplyTable']/tbody/tr/td[19]/ng-switch/span/span[2]")
+  @FindBy(how = How.XPATH, using = "//table[@id='nonFullSupplyTable']/tbody/tr/td[19]/ng-switch/span")
   private static WebElement pricePerPackNonFullSupply;
 
-  @FindBy(how = How.XPATH, using = "//table[@id='nonFullSupplyTable']/tbody/tr/td[20]/ng-switch/span/span[2]")
+  @FindBy(how = How.XPATH, using = "//table[@id='nonFullSupplyTable']/tbody/tr/td[20]/ng-switch/span")
   private static WebElement totalCostNonFullSupply;
 
   @FindBy(how = How.XPATH, using = "//span[@id='fullSupplyItemsCost']")
@@ -330,9 +330,9 @@ public class InitiateRnRPage extends Page {
     testWebDriver.waitForElementToAppear(packsToShipNonFullSupply);
     String actualPacksToShip = testWebDriver.getText(packsToShipNonFullSupply);
     testWebDriver.waitForElementToAppear(pricePerPackNonFullSupply);
-    String actualPricePerPack = testWebDriver.getText(pricePerPackNonFullSupply);
+    String actualPricePerPack = testWebDriver.getText(pricePerPackNonFullSupply).substring(1);
     Float actualTotalCost = Float.parseFloat(actualPacksToShip.trim()) * Float.parseFloat(actualPricePerPack.trim());
-    SeleneseTestNgHelper.assertEquals(actualTotalCost.toString() + "0", totalCostNonFullSupply.getText().trim());
+    SeleneseTestNgHelper.assertEquals(actualTotalCost.toString() + "0", totalCostNonFullSupply.getText().trim().substring(1));
     testWebDriver.sleep(500);
   }
 
