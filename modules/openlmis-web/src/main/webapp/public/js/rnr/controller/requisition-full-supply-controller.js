@@ -43,12 +43,14 @@ function RequisitionFullSupplyController($scope, $routeParams, $location, Losses
     $scope.currentRnrLineItem.removeLossAndAdjustment(lossAndAdjustmentToDelete);
     updateLossesAndAdjustmentTypesToDisplayForLineItem();
     $scope.resetModalError();
+    $scope.saveRnrForm.$dirty = true;
   };
 
   // TODO: Push this method to rnr-line-item
   $scope.addLossAndAdjustment = function (newLossAndAdjustment) {
     $scope.currentRnrLineItem.addLossAndAdjustment(newLossAndAdjustment);
     updateLossesAndAdjustmentTypesToDisplayForLineItem();
+    $scope.saveRnrForm.$dirty = true;
   };
 
 
