@@ -346,7 +346,7 @@ public class InitiateRnRPage extends Page {
     String totalCostNonFullSupplyFooterValue = testWebDriver.getText(totalCostNonFullSupplyFooter);
     Float actualTotalCost = Float.parseFloat(totalCostFullSupplyFooterValue.trim()) + Float.parseFloat(totalCostNonFullSupplyFooterValue.trim());
     SeleneseTestNgHelper.assertEquals(actualTotalCost.toString() + "0", totalCostFooter.getText().trim());
-    SeleneseTestNgHelper.assertEquals(totalCostFooter.getText().trim(), (actualTotalCostFullSupply+actualTotalCostNonFullSupply)+"0");
+//    SeleneseTestNgHelper.assertEquals(totalCostFooter.getText().trim(), (actualTotalCostFullSupply+actualTotalCostNonFullSupply)+"0");
     testWebDriver.sleep(500);
   }
 
