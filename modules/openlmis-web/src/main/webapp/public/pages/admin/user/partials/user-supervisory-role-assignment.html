@@ -5,7 +5,7 @@
         <div class="fluid-grid-cell">Program(s)</div>
       </div>
       <div class="span3">
-        <div class="fluid-grid-cell">Supervisory Node(s)</div>
+        <div class="fluid-grid-cell">Supervisory node(s)</div>
       </div>
       <div class="span3">
         <div class="fluid-grid-cell">Roles</div>
@@ -68,7 +68,7 @@
             <option value="" ng-bind="selectSupervisoryNodeMessage"></option>
           </select>
           <span ng-show='hasMappingError(showSupervisorRoleMappingError,selectedSupervisoryNodeIdToSupervise)' class="field-error">
-            Please select a Supervisory Node
+            Please select a supervisory node
           </span>
         </div>
       </div>
@@ -94,9 +94,9 @@
   </div>
 
   <div tabindex="-1" id="deleteRolesModal" modal="deleteRolesModal" close="deleteRolesModal=false">
-    <div class="modal-header"><h2>Delete Roles</h2></div>
+    <div class="modal-header"><h2>Delete roles</h2></div>
     <div class="modal-body">
-      <p>All Roles assigned to this Program and Node for the user will be deleted</p>
+      <p>All roles assigned to this program and node for the user will be deleted</p>
     </div>
     <div class="modal-footer">
       <a href="" class="btn btn-primary" ng-click="deleteSupervisorRole()">Ok</a>
