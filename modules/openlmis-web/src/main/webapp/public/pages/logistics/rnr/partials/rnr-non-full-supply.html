@@ -73,6 +73,13 @@
       <div class="modal-header"><h3>Add Non-Full Supply Products</h3></div>
       <div class="modal-body">
           <span class="span3">
+            <label for="nonFullSupplyProductsCategory">Category:</label>
+            <select id="nonFullSupplyProductsCategory" ng-model="nonFullSupplyProductCategory" name="productName"
+                    ng-options="nonFullSupplyProductCategory.name for nonFullSupplyProductCategory in nonFullSupplyProductsCategories">
+              <option value="">--select category--</option>
+            </select>
+          </span>
+          <span class="span3">
             <label for="nonFullSupplyProductsName">Product:</label>
             <select id="nonFullSupplyProductsName" ng-model="facilityApprovedProduct" name="productName"
                     ng-options="facilityApprovedProduct.programProduct.product.primaryName for facilityApprovedProduct in nonFullSupplyProductsToDisplay">

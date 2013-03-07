@@ -1,7 +1,14 @@
 function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $routeParams, $location) {
-  FacilityApprovedProducts.get({facilityId:$routeParams.facility, programId:$routeParams.program}, function (data) {
+  FacilityApprovedProducts.get({facilityId: $routeParams.facility, programId: $routeParams.program}, function (data) {
     $scope.nonFullSupplyProducts = data.nonFullSupplyProducts;
-  }, function () {
+
+    var map = _.map($scope.nonFullSupplyProducts, function (facilitySupportedProduct) {
+          return facilitySupportedProduct.programProduct.product.category;
+        });
+
+    $scope.nonFullSupplyProductsCategories = _.uniq(map, false, function (category) {
+          return category.id;
+        });
   });
 
   $scope.getId = function (prefix, parent) {
@@ -27,18 +34,18 @@ function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $r
 
   };
 
-  $scope.clearNonFullSupplyProductModalData = function() {
+  $scope.clearNonFullSupplyProductModalData = function () {
     $scope.facilityApprovedProduct = undefined;
     $scope.newNonFullSupply = undefined;
   }
 
   $scope.labelForRnrColumn = function (columnName) {
-    if ($scope.$parent.programRnrColumnList) return _.findWhere($scope.$parent.programRnrColumnList, {'name':columnName}).label + ":";
+    if ($scope.$parent.programRnrColumnList) return _.findWhere($scope.$parent.programRnrColumnList, {'name': columnName}).label + ":";
   };
 
   $scope.shouldDisableAddButton = function () {
     return !($scope.newNonFullSupply && $scope.newNonFullSupply.quantityRequested && $scope.newNonFullSupply.reasonForRequestedQuantity
-      && $scope.facilityApprovedProduct);
+        && $scope.facilityApprovedProduct);
   };
 
   function populateProductInformation() {
@@ -46,9 +53,9 @@ function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $r
     angular.copy($scope.facilityApprovedProduct.programProduct.product, product);
     $scope.newNonFullSupply.productCode = product.code;
     $scope.newNonFullSupply.product = (product.primaryName == null ? "" : (product.primaryName + " ")) +
-      (product.form.code == null ? "" : (product.form.code + " ")) +
-      (product.strength == null ? "" : (product.strength + " ")) +
-      (product.dosageUnit.code == null ? "" : product.dosageUnit.code);
+        (product.form.code == null ? "" : (product.form.code + " ")) +
+        (product.strength == null ? "" : (product.strength + " ")) +
+        (product.dosageUnit.code == null ? "" : product.dosageUnit.code);
     $(['dosesPerDispensingUnit', 'packSize', 'roundToZero', 'packRoundingThreshold', 'dispensingUnit', 'fullSupply']).each(function (index, field) {
       $scope.newNonFullSupply[field] = product[field];
     });
@@ -61,8 +68,8 @@ function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $r
     populateProductInformation();
     $(['quantityReceived', 'quantityDispensed', 'beginningBalance', 'stockInHand', 'totalLossesAndAdjustments', 'calculatedOrderQuantity', 'newPatientCount',
       'stockOutDays', 'normalizedConsumption', 'amc', 'maxStockQuantity']).each(function (index, field) {
-        $scope.newNonFullSupply[field] = 0;
-      });
+          $scope.newNonFullSupply[field] = 0;
+        });
     $scope.newNonFullSupply.rnrId = $scope.$parent.rnr.id;
   }
 
