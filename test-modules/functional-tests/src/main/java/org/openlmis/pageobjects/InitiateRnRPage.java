@@ -189,6 +189,8 @@ public class InitiateRnRPage extends Page {
   private static WebElement closeButton;
 
   String successText = "R&R saved successfully!";
+  Float actualTotalCostFullSupply, actualTotalCostNonFullSupply;
+
 
   public InitiateRnRPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -321,8 +323,8 @@ public class InitiateRnRPage extends Page {
     String actualPacksToShip = testWebDriver.getText(packsToShip);
     testWebDriver.waitForElementToAppear(pricePerPack);
     String actualPricePerPack = testWebDriver.getText(pricePerPack).substring(1);
-    Float actualTotalCost = Float.parseFloat(actualPacksToShip) * Float.parseFloat(actualPricePerPack);
-    SeleneseTestNgHelper.assertEquals(actualTotalCost.toString() + "0", totalCost.getText().substring(1));
+    actualTotalCostFullSupply = Float.parseFloat(actualPacksToShip) * Float.parseFloat(actualPricePerPack);
+    SeleneseTestNgHelper.assertEquals(actualTotalCostFullSupply.toString() + "0", totalCost.getText().substring(1));
     testWebDriver.sleep(500);
   }
 
@@ -331,8 +333,8 @@ public class InitiateRnRPage extends Page {
     String actualPacksToShip = testWebDriver.getText(packsToShipNonFullSupply);
     testWebDriver.waitForElementToAppear(pricePerPackNonFullSupply);
     String actualPricePerPack = testWebDriver.getText(pricePerPackNonFullSupply).substring(1);
-    Float actualTotalCost = Float.parseFloat(actualPacksToShip.trim()) * Float.parseFloat(actualPricePerPack.trim());
-    SeleneseTestNgHelper.assertEquals(actualTotalCost.toString() + "0", totalCostNonFullSupply.getText().trim().substring(1));
+    actualTotalCostNonFullSupply = Float.parseFloat(actualPacksToShip.trim()) * Float.parseFloat(actualPricePerPack.trim());
+    SeleneseTestNgHelper.assertEquals(actualTotalCostNonFullSupply.toString() + "0", totalCostNonFullSupply.getText().trim().substring(1));
     testWebDriver.sleep(500);
   }
 
@@ -344,6 +346,7 @@ public class InitiateRnRPage extends Page {
     String totalCostNonFullSupplyFooterValue = testWebDriver.getText(totalCostNonFullSupplyFooter);
     Float actualTotalCost = Float.parseFloat(totalCostFullSupplyFooterValue.trim()) + Float.parseFloat(totalCostNonFullSupplyFooterValue.trim());
     SeleneseTestNgHelper.assertEquals(actualTotalCost.toString() + "0", totalCostFooter.getText().trim());
+    SeleneseTestNgHelper.assertEquals(totalCostFooter.getText().trim(), (actualTotalCostFullSupply+actualTotalCostNonFullSupply)+"0");
     testWebDriver.sleep(500);
   }
 
