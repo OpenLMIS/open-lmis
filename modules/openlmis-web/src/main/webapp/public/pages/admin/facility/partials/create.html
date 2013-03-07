@@ -288,10 +288,10 @@
       <label for="latitude">Latitude</label>
 
       <div class="form-field">
-        <input ng-model="facility.latitude" ng-pattern="/^-{0,1}\d{1,4}$|^-{0,1}\d{1,4}\.\d{1,4}$/" id="latitude" type="text"
-               name="latitude" maxlength="9" ng-disabled="facility.dataReportable == 'false'"/>
+        <input ng-model="facility.latitude" ng-pattern="/^[+-]?0*\d{0,3}(\.\d{1,5}0*)?$/" id="latitude" type="text"
+               name="latitude" ng-disabled="facility.dataReportable == 'false'"/>
               <span class="field-error" ng-show="facilityForm.latitude.$error.pattern">
-                Value should be numeric and less than 9999.9999
+                Value should be numeric and within range -999.99999 to 999.99999(5 decimal points)
               </span>
       </div>
     </div>
@@ -300,10 +300,10 @@
       <label for="longitude">Longitude</label>
 
       <div class="form-field">
-        <input ng-model="facility.longitude" ng-pattern="/^\-{0,1}\d{1,4}$|^-{0,1}\d{1,4}\.\d{1,4}$/" name="longitude" id="longitude"
-               type="text" maxlength="9" ng-disabled="facility.dataReportable == 'false'"/>
+        <input ng-model="facility.longitude" ng-pattern="/^[+-]?0*\d{0,3}(\.\d{1,5}0*)?$/" name="longitude" id="longitude"
+               type="text" ng-disabled="facility.dataReportable == 'false'"/>
               <span class="field-error" ng-show="facilityForm.longitude.$error.pattern">
-                Value should be numeric and less than 9999.9999
+                Value should be numeric and within range -999.99999 to 999.99999(5 decimal points)
               </span>
       </div>
     </div>
@@ -314,10 +314,10 @@
       <label for="altitude">Altitude</label>
 
       <div class="form-field">
-        <input ng-model="facility.altitude" ng-pattern="/^-{0,1}\d{1,4}$|^-{0,1}\d{1,4}\.\d{1,4}$/" name="altitude" id="altitude"
+        <input ng-model="facility.altitude" ng-pattern="/^[+-]?0*\d{0,4}(\.\d{1,4}0*)?$/" name="altitude" id="altitude"
                type="text" maxlength="9" ng-disabled="facility.dataReportable == 'false'"/>
               <span class="field-error" ng-show="facilityForm.altitude.$error.pattern">
-                Value should be numeric and less than 9999.9999
+                Value should be numeric and within range -9999.9999 to 9999.9999(4 decimal points)
               </span>
       </div>
     </div>
