@@ -39,7 +39,7 @@ public class GeographicZoneMapperIT {
   public void shouldGetGeographicLevelByCode() throws Exception {
     String code = "state";
     GeographicLevel geographicLevel = mapper.getGeographicLevelByCode(code);
-    assertThat(geographicLevel.getName(), is("state"));
+    assertThat(geographicLevel.getName(), is("State"));
     assertThat(geographicLevel.getId(), is(1));
   }
 

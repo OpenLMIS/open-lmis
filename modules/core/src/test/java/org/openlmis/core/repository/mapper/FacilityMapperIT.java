@@ -119,7 +119,7 @@ public class FacilityMapperIT {
     assertThat(geographicZone.getId(), is(2));
     assertThat(geographicZone.getCode(), is("Arusha"));
     assertThat(geographicZone.getName(), is("Arusha"));
-    assertThat(geographicZone.getLevel().getName(), is("state"));
+    assertThat(geographicZone.getLevel().getName(), is("State"));
   }
 
   @Test
@@ -286,8 +286,8 @@ public class FacilityMapperIT {
 
   @Test
   public void shouldGetGeographicZoneWithParent() throws Exception {
-    GeographicZone parent = new GeographicZone(null, "Dodoma", "Dodoma", new GeographicLevel(null, "city", "city"), null, null);
-    GeographicZone expectedZone = new GeographicZone(4, "Ngorongoro", "Ngorongoro", new GeographicLevel(null, "district", "district"), parent, null);
+    GeographicZone parent = new GeographicZone(null, "Dodoma", "Dodoma", new GeographicLevel(null, "city", "City"), null, null);
+    GeographicZone expectedZone = new GeographicZone(4, "Ngorongoro", "Ngorongoro", new GeographicLevel(null, "district", "District"), parent, null);
 
     GeographicZone zone = mapper.getGeographicZoneById(4);
 
