@@ -127,7 +127,7 @@ public class FacilityControllerTest {
   @Test
   public void shouldReturnHomeFacilityForTheUser() {
     Facility facility = mock(Facility.class);
-    when(facilityService.getHomeFacility(userId)).thenReturn(Arrays.asList(facility));
+    when(facilityService.getHomeFacility(userId)).thenReturn(facility);
 
     List<Facility> facilities = facilityController.getHomeFacility(httpServletRequest);
     assertTrue(facilities.contains(facility));

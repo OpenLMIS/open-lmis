@@ -70,9 +70,8 @@ public class FacilityService {
     return facilityRepository.getAllGeographicZones();
   }
 
-  public List<Facility> getHomeFacility(Integer userId) {
-    Facility homeFacility = facilityRepository.getHomeFacility(userId);
-    return homeFacility == null ? Collections.<Facility>emptyList() : Arrays.asList(homeFacility);
+  public Facility getHomeFacility(Integer userId) {
+    return facilityRepository.getHomeFacility(userId);
   }
 
   public Facility getById(Integer id) {

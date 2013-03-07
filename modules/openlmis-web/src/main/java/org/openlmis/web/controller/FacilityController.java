@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -53,7 +54,7 @@ public class FacilityController extends BaseController {
 
   @RequestMapping(value = "logistics/user/facilities", method = GET)
   public List<Facility> getHomeFacility(HttpServletRequest httpServletRequest) {
-    return facilityService.getHomeFacility(loggedInUserId(httpServletRequest));
+    return Arrays.asList(facilityService.getHomeFacility(loggedInUserId(httpServletRequest)));
   }
 
   @RequestMapping(value = "/facilities/reference-data", method = GET)

@@ -19,7 +19,6 @@ import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -55,9 +54,9 @@ public class FacilityServiceTest {
   }
 
   @Test
-  public void shouldReturnEmptyListIfUserIsNotAssignedAFacility() {
+  public void shouldReturnNullIfUserIsNotAssignedAFacility() {
     when(facilityRepository.getHomeFacility(1)).thenReturn(null);
-    assertTrue(facilityService.getHomeFacility(1).isEmpty());
+    assertThat(facilityService.getHomeFacility(1), is(nullValue()) );
   }
 
   @Test
