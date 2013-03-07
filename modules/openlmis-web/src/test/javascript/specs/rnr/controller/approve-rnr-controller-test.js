@@ -13,6 +13,7 @@ describe('Approve Requisition controller', function () {
     lineItems = [];
     nonFullSupplyLineItems = [];
     requisition = {'status': "AUTHORIZED", 'lineItems': lineItems, 'nonFullSupplyLineItems': nonFullSupplyLineItems};
+    $rootScope.pageSize = 2;
     programRnrColumnList = [
       {'name': 'ProductCode', 'label': 'Product Code', 'visible': true},
       {'name': 'quantityApproved', 'label': 'quantity approved', 'visible': true},

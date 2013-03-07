@@ -3,7 +3,6 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   $scope.rnr = requisition;
   $scope.rnrColumns = rnrColumns;
   $scope.currency = currency;
-  $scope.pageSize = 2;
 
   $scope.error = "";
   $scope.message = "";

@@ -1,11 +1,11 @@
-var rnrModule = angular.module('rnr', ['openlmis', 'ngGrid', 'ui.bootstrap.modal','ui.bootstrap.pagination']).config(['$routeProvider', function ($routeProvider) {
+var rnrModule = angular.module('rnr', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.pagination']).config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
     when('/init-rnr', {controller:InitiateRnrController, templateUrl:'partials/init.html'}).
-    when('/create-rnr/:facility/:program/:period', {controller:CreateRequisitionController, templateUrl:'partials/create.html', resolve:CreateRequisitionController.resolve, reloadOnSearch: false}).
+    when('/create-rnr/:facility/:program/:period', {controller:CreateRequisitionController, templateUrl:'partials/create.html', resolve:CreateRequisitionController.resolve, reloadOnSearch:false}).
     when('/rnr-for-approval', {controller:ApproveRnrListController, templateUrl:'partials/list.html', resolve:ApproveRnrListController.resolve}).
     when('/requisitions-for-convert-to-order', {controller:ConvertToOrderListController, templateUrl:'partials/convert-to-order-list.html', resolve:ConvertToOrderListController.resolve}).
-    when('/view-requisitions', {controller:ViewRnrListController, templateUrl:'partials/view-rnr.html', resolve: ViewRnrListController.resolve}).
-    when('/rnr-for-approval/:rnr/:program', {controller:ApproveRnrController, templateUrl:'partials/approve.html', resolve: ApproveRnrController.resolve , reloadOnSearch: false}).
+    when('/view-requisitions', {controller:ViewRnrListController, templateUrl:'partials/view-rnr.html', resolve:ViewRnrListController.resolve}).
+    when('/rnr-for-approval/:rnr/:program', {controller:ApproveRnrController, templateUrl:'partials/approve.html', resolve:ApproveRnrController.resolve, reloadOnSearch:false}).
     when('/requisition/:id/program/:programId/:supplyType', {controller:ViewRnrController, templateUrl:'partials/view.html'}).
     otherwise({redirectTo:'/init-rnr'});
 }]).directive('rnrValidator',function () {
@@ -14,7 +14,7 @@ var rnrModule = angular.module('rnr', ['openlmis', 'ngGrid', 'ui.bootstrap.modal
       link:function (scope, element, attrs, ctrl) {
         var validationFunction = rnrModule[attrs.rnrValidator];
 
-        element.bind('blur', function() {
+        element.bind('blur', function () {
           var viewValue = ctrl.$viewValue;
           validationFunction(viewValue, element.attr('name'));
         });
@@ -30,6 +30,8 @@ var rnrModule = angular.module('rnr', ['openlmis', 'ngGrid', 'ui.bootstrap.modal
         });
       }
     };
+  }).run(function ($rootScope) {
+    $rootScope.pageSize = 30;
   });
 
 rnrModule.positiveInteger = function (value, errorHolder) {
