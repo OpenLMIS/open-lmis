@@ -50,12 +50,10 @@
                     </span>
                   </span>
                   <span ng-switch-when="price">
-                    <span ng-bind="currency" class="cell-text"></span>
-                    <span ng-bind="rnrLineItem[column.name] | number:'2'" class="cell-text"></span>
+                    <span ng-bind="rnrLineItem[column.name] | currency:currency" class="cell-text"></span>
                   </span>
                   <span ng-switch-when="cost">
-                    <span ng-bind="currency" class="cell-text"></span>
-                    <span ng-bind="rnrLineItem[column.name] | number:'2'" class="cell-text"></span>
+                    <span ng-bind="rnrLineItem[column.name] | currency:currency" class="cell-text"></span>
                   </span>
                   <span ng-switch-when="lossesAndAdjustments">
                     <span ng-bind="rnrLineItem['totalLossesAndAdjustments']" class="cell-text"></span>
