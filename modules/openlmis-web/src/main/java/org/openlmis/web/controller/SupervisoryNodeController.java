@@ -23,7 +23,7 @@ public class SupervisoryNodeController {
   }
 
   @RequestMapping(value = "/supervisory-nodes", method = RequestMethod.GET)
-  @PreAuthorize("hasPermission('','MANAGE_USERS')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USERS')")
   public ResponseEntity<OpenLmisResponse> getAll() {
     return OpenLmisResponse.response(SUPERVISORY_NODES, supervisoryNodeService.getAll());
   }

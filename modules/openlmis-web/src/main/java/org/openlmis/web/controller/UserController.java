@@ -78,7 +78,7 @@ public class UserController extends BaseController {
   }
 
   @RequestMapping(value = "/users", method = POST, headers = "Accept=application/json")
-  @PreAuthorize("hasPermission('','MANAGE_USERS')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USERS')")
   public ResponseEntity<OpenLmisResponse> create(@RequestBody User user, HttpServletRequest request) {
     ResponseEntity<OpenLmisResponse> successResponse;
     user.setModifiedBy(loggedInUserId(request));
@@ -95,7 +95,7 @@ public class UserController extends BaseController {
   }
 
   @RequestMapping(value = "/users/{id}", method = PUT, headers = ACCEPT_JSON)
-  @PreAuthorize("hasPermission('','MANAGE_USERS')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USERS')")
   public ResponseEntity<OpenLmisResponse> update(@RequestBody User user,
                                                  @PathVariable("id") Integer id,
                                                  HttpServletRequest request) {
@@ -113,13 +113,13 @@ public class UserController extends BaseController {
   }
 
   @RequestMapping(value = "/users", method = GET)
-  @PreAuthorize("hasPermission('','MANAGE_USERS')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USERS')")
   public List<User> searchUser(@RequestParam(required = true) String param) {
     return userService.searchUser(param);
   }
 
   @RequestMapping(value = "/users/{id}", method = GET)
-  @PreAuthorize("hasPermission('','MANAGE_USERS')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USERS')")
   public User get(@PathVariable(value = "id") Integer id) {
     return userService.getById(id);
   }

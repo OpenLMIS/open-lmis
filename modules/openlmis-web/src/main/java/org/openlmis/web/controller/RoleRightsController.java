@@ -39,13 +39,13 @@ public class RoleRightsController extends BaseController {
     }
 
     @RequestMapping(value = "/rights", method = GET)
-    @PreAuthorize("hasPermission('','MANAGE_ROLE')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_ROLE')")
     public ResponseEntity<OpenLmisResponse> getAllRights() {
         return OpenLmisResponse.response(RIGHTS, roleRightsService.getAllRights());
     }
 
     @RequestMapping(value = "/roles", method = POST, headers = ACCEPT_JSON)
-    @PreAuthorize("hasPermission('','MANAGE_ROLE')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_ROLE')")
     public ResponseEntity<OpenLmisResponse> createRole(@RequestBody Role role, HttpServletRequest request) {
         role.setModifiedBy(loggedInUserId(request));
         try {
@@ -57,7 +57,7 @@ public class RoleRightsController extends BaseController {
     }
 
     @RequestMapping(value = "/roles", method = GET)
-    @PreAuthorize("hasPermission('','MANAGE_ROLE')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_ROLE')")
     public ResponseEntity<OpenLmisResponse> getAll() {
         OpenLmisResponse response = new OpenLmisResponse(ROLES, roleRightsService.getAllRoles());
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -65,14 +65,14 @@ public class RoleRightsController extends BaseController {
 
 
     @RequestMapping(value = "/roles/{id}", method = GET)
-    @PreAuthorize("hasPermission('','MANAGE_ROLE')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_ROLE')")
     public ResponseEntity<OpenLmisResponse> get(@PathVariable("id") Integer id) {
         Role role = roleRightsService.getRole(id);
         return response(ROLE, role);
     }
 
     @RequestMapping(value = "/roles/{id}", method = PUT, headers = ACCEPT_JSON)
-    @PreAuthorize("hasPermission('','MANAGE_ROLE')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_ROLE')")
     public ResponseEntity<OpenLmisResponse> updateRole(@PathVariable("id") Integer id, @RequestBody Role role, HttpServletRequest request) {
         role.setModifiedBy(loggedInUserId(request));
         try {

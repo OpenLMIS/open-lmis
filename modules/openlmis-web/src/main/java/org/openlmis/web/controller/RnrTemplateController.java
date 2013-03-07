@@ -35,7 +35,7 @@ public class RnrTemplateController extends BaseController{
   }
 
   @RequestMapping(value = "/program/{programId}/rnr-template", method = RequestMethod.GET)
-  @PreAuthorize("hasPermission('','CONFIGURE_RNR')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_RNR')")
   public RnrTemplateForm fetchAllProgramRnrColumnList(@PathVariable("programId") Integer programId) {
     List<RnRColumnSource> sources = new ArrayList<>();
     sources.add(RnRColumnSource.USER_INPUT);
@@ -44,13 +44,13 @@ public class RnrTemplateController extends BaseController{
   }
 
   @RequestMapping(value = "/rnr/{programId}/columns", method = RequestMethod.GET)
-  @PreAuthorize("hasPermission('','CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION')")
   public List<RnrColumn> fetchColumnsForRequisition(@PathVariable("programId") Integer programId) {
     return rnrTemplateService.fetchColumnsForRequisition(programId);
   }
 
   @RequestMapping(value = "/program/{programId}/rnr-template", method = RequestMethod.POST, headers = "Accept=application/json")
-  @PreAuthorize("hasPermission('','CONFIGURE_RNR')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_RNR')")
   public ResponseEntity saveRnRTemplateForProgram(@PathVariable("programId") Integer programId,
                                                   @RequestBody RnrColumnList rnrColumnList) {
       ProgramRnrTemplate programRnrTemplate = new ProgramRnrTemplate(programId, rnrColumnList);

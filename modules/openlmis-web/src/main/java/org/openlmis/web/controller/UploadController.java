@@ -43,7 +43,7 @@ public class UploadController extends BaseController {
   }
 
   @RequestMapping(value = "/upload", method = RequestMethod.POST)
-  @PreAuthorize("hasPermission('','UPLOADS')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'UPLOADS')")
   public String upload(@RequestParam(value = "csvFile", required = true) MultipartFile csvFile,
                        @RequestParam(value = "model", required = true) String model,
                        HttpServletRequest request) {
@@ -66,7 +66,7 @@ public class UploadController extends BaseController {
   }
 
   @RequestMapping(value = "/supported-uploads", method = RequestMethod.GET, headers = "Accept=application/json")
-  @PreAuthorize("hasPermission('','UPLOADS')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'UPLOADS')")
   public ResponseEntity<OpenLmisResponse> getSupportedUploads() {
     return OpenLmisResponse.response("supportedUploads", uploadBeansMap);
   }

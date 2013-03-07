@@ -33,20 +33,20 @@ public class ProcessingScheduleController extends BaseController {
   }
 
   @RequestMapping(value = "/schedules", method = RequestMethod.GET, headers = "Accept=application/json")
-  @PreAuthorize("hasPermission('','MANAGE_SCHEDULE')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SCHEDULE')")
   public ResponseEntity<OpenLmisResponse> getAll() {
     return OpenLmisResponse.response(SCHEDULES, processingScheduleService.getAll());
   }
 
   @RequestMapping(value = "/schedules", method = RequestMethod.POST, headers = "Accept=application/json")
-  @PreAuthorize("hasPermission('','MANAGE_SCHEDULE')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SCHEDULE')")
   public ResponseEntity<OpenLmisResponse> create(@RequestBody ProcessingSchedule processingSchedule, HttpServletRequest request) {
     processingSchedule.setModifiedBy(loggedInUserId(request));
     return saveSchedule(processingSchedule, true);
   }
 
   @RequestMapping(value = "/schedules/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
-  @PreAuthorize("hasPermission('','MANAGE_SCHEDULE')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SCHEDULE')")
   public ResponseEntity<OpenLmisResponse> update(@RequestBody ProcessingSchedule processingSchedule, @PathVariable("id") Integer id, HttpServletRequest request) {
     processingSchedule.setId(id);
     processingSchedule.setModifiedBy(loggedInUserId(request));
@@ -54,7 +54,7 @@ public class ProcessingScheduleController extends BaseController {
   }
 
   @RequestMapping(value = "/schedules/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-  @PreAuthorize("hasPermission('','MANAGE_SCHEDULE')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SCHEDULE')")
   public ResponseEntity<OpenLmisResponse> get(@PathVariable("id") Integer id) {
     try{
       ProcessingSchedule processingSchedule = processingScheduleService.get(id);

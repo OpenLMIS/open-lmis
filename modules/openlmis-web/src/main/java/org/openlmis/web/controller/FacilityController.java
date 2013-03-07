@@ -13,17 +13,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
-import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
-import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
-import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
-import static org.openlmis.core.domain.Right.VIEW_REQUISITION;
+import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.web.response.OpenLmisResponse.error;
 import static org.openlmis.web.response.OpenLmisResponse.success;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -42,7 +42,7 @@ public class FacilityController extends BaseController {
   }
 
   @RequestMapping(value = "/facilities", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("hasPermission('','MANAGE_FACILITY')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
   public List<Facility> get(@RequestParam(value = "searchParam", required = false) String searchParam) {
     if (searchParam != null) {
       return facilityService.searchFacilitiesByCodeOrName(searchParam);
@@ -57,7 +57,7 @@ public class FacilityController extends BaseController {
   }
 
   @RequestMapping(value = "/facilities/reference-data", method = GET)
-  @PreAuthorize("hasPermission('','MANAGE_FACILITY')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
   public Map getReferenceData() {
     FacilityReferenceData facilityReferenceData = new FacilityReferenceData();
     return facilityReferenceData.addFacilityTypes(facilityService.getAllTypes()).
@@ -67,7 +67,7 @@ public class FacilityController extends BaseController {
   }
 
   @RequestMapping(value = "/facilities/{id}", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("hasPermission('','MANAGE_FACILITY')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
   public ResponseEntity<ModelMap> getFacility(@PathVariable(value = "id") Integer id) {
     ModelMap modelMap = new ModelMap();
     modelMap.put("facility", facilityService.getById(id));
@@ -75,7 +75,7 @@ public class FacilityController extends BaseController {
   }
 
   @RequestMapping(value = "/facility/update/{operation}", method = PUT, headers = ACCEPT_JSON)
-  @PreAuthorize("hasPermission('','MANAGE_FACILITY')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
   public ResponseEntity<OpenLmisResponse> updateDataReportableAndActive(@RequestBody Facility facility, @PathVariable(value = "operation") String operation,
                                                                         HttpServletRequest request) {
     facility.setModifiedBy(loggedInUserId(request));
@@ -111,7 +111,7 @@ public class FacilityController extends BaseController {
   }
 
   @RequestMapping(value = "/facilities", method = POST, headers = ACCEPT_JSON)
-  @PreAuthorize("hasPermission('','MANAGE_FACILITY')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
   public ResponseEntity insert(@RequestBody Facility facility, HttpServletRequest request) {
     facility.setModifiedBy(loggedInUserId(request));
     ResponseEntity<OpenLmisResponse> response;
@@ -126,7 +126,7 @@ public class FacilityController extends BaseController {
   }
 
   @RequestMapping(value = "/facilities/{id}", method = PUT, headers = ACCEPT_JSON)
-  @PreAuthorize("hasPermission('','MANAGE_FACILITY')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
   public ResponseEntity update(@RequestBody Facility facility, HttpServletRequest request) {
     facility.setModifiedBy(loggedInUserId(request));
     ResponseEntity<OpenLmisResponse> response;

@@ -34,13 +34,13 @@ public class ProgramController extends BaseController {
   }
 
     @RequestMapping(value = "/active/programs", method = GET)
-  @PreAuthorize("hasPermission('','CONFIGURE_RNR')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_RNR')")
   public List<Program> getAllActivePrograms() {
     return programService.getAllActive();
   }
 
   @RequestMapping(value = "/facilities/{facilityId}/programs", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("hasPermission('','CREATE_REQUISITION, AUTHORIZE_REQUISITION, MANAGE_USERS')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION, MANAGE_USERS')")
   public List<Program> getProgramsForFacility(@PathVariable(value = "facilityId") Integer facilityId) {
     return programService.getByFacility(facilityId);
   }
@@ -57,7 +57,7 @@ public class ProgramController extends BaseController {
   }
 
   @RequestMapping(value = "/programs", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("hasPermission('','MANAGE_USERS')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USERS')")
   public ResponseEntity<OpenLmisResponse> getAllPrograms() {
     return OpenLmisResponse.response(PROGRAMS, programService.getAll());
   }
