@@ -34,7 +34,7 @@
             </span>
             <span ng-hide="rnrColumn.sourceConfigurable" ng-bind="rnrColumn.source.description"></span>
             <br/>
-            <a href="javascript:void(0);" ng-bind="rnrColumn.formula" ></a>
+            <a class="rnr-column-formula" href="javascript:void(0);" ng-bind="rnrColumn.formula" ></a>
         </span>
         <span class="tpl-error" ng-show="errorMap[rnrColumn.name]">
             <div class="alert alert-error" ng-bind="errorMap[rnrColumn.name]"></div>
