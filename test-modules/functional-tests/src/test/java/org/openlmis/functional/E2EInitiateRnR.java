@@ -108,9 +108,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     String periodDetails = homePageUser.navigateAndInitiateRnr(program);
     InitiateRnRPage initiateRnRPage = homePageUser.clickProceed();
     initiateRnRPage.verifyRnRHeader("FCcode", "FCname", date_time, program, periodDetails, geoZone, operatedBy, facilityType);
-    testWebDriver.sleep(2000);
     initiateRnRPage.submitRnR();
-    testWebDriver.sleep(1000);
     initiateRnRPage.verifySubmitRnrErrorMsg();
     initiateRnRPage.calculateAndVerifyStockOnHand(10, 10, 10, 1);
 
@@ -122,7 +120,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     initiateRnRPage.enterAndVerifyRequestedQuantityExplanation(10);
     initiateRnRPage.verifyPacksToShip(1);
     initiateRnRPage.calculateAndVerifyTotalCost();
-    //initiateRnRPage.saveRnR();
+    initiateRnRPage.saveRnR();
 
     initiateRnRPage.addNonFullSupplyLineItems("99", "Due to unforeseen event", "antibiotic", "P11");
     initiateRnRPage.calculateAndVerifyTotalCostNonFullSupply();

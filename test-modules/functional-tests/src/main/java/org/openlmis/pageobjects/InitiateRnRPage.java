@@ -391,7 +391,6 @@ public class InitiateRnRPage extends Page {
   }
 
   public void authorizeRnR() {
-    testWebDriver.sleep(5500);
     authorizeButton.click();
     testWebDriver.sleep(1500);
   }
@@ -407,6 +406,7 @@ public class InitiateRnRPage extends Page {
   }
 
   public void verifySubmitRnrErrorMsg() {
+    testWebDriver.sleep(1000);
     SeleneseTestNgHelper.assertTrue("RnR Fail message not displayed", submitErrorMessage.isDisplayed());
   }
 
