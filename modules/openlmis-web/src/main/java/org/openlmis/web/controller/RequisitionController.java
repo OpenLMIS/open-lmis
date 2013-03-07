@@ -48,7 +48,7 @@ public class RequisitionController extends BaseController {
   }
 
   @RequestMapping(value = "/requisitions", method = POST, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, #facilityId, #programId, 'CREATE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> initiateRnr(@RequestParam("facilityId") Integer facilityId,
                                                       @RequestParam("programId") Integer programId,
                                                       @RequestParam("periodId") Integer periodId,

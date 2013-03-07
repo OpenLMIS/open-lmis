@@ -43,4 +43,11 @@ public interface RoleAssignmentMapper {
       "WHERE userId=#{userId} AND programId IS NOT NULL AND supervisoryNodeId IS NULL " +
       "GROUP BY userId, programId")
   List<RoleAssignment> getHomeFacilityRoles(Integer userId);
+
+  @Select("SELECT RA.userId, RA.programId, array_agg(RA.roleId) as roleIdsAsString " +
+        "FROM role_assignments RA INNER JOIN role_rights RR ON RA.roleId = RR.roleId " +
+        "WHERE RA.userId=#{userId} AND RA.programId=#{programId} AND RR.rightName = ANY (#{commaSeparatedRights}::VARCHAR[])  AND  supervisoryNodeId IS NULL " +
+        "GROUP BY userId, programId")
+
+  List<RoleAssignment> getHomeFacilityRolesForUserOnGivenProgramWithRights(@Param("userId") Integer userId, @Param("programId") Integer programId,@Param("commaSeparatedRights") String commaSeparatedRights);
 }

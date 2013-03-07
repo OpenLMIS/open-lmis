@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static org.openlmis.core.domain.Right.commaSeparateRightNames;
+
 @Repository
 @NoArgsConstructor
 public class RoleAssignmentRepository {
@@ -38,5 +40,9 @@ public class RoleAssignmentRepository {
 
   public List<RoleAssignment> getHomeFacilityRoles(Integer userId) {
     return mapper.getHomeFacilityRoles(userId);
+  }
+
+  public List<RoleAssignment> getHomeFacilityRolesForUserOnGivenProgramWithRights(Integer userId, Integer programId, Right... rights) {
+    return mapper.getHomeFacilityRolesForUserOnGivenProgramWithRights(userId, programId, commaSeparateRightNames(rights));
   }
 }

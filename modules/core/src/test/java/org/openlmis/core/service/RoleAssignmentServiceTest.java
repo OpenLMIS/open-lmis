@@ -18,6 +18,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
+import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RoleAssignmentServiceTest {
@@ -65,6 +67,17 @@ public class RoleAssignmentServiceTest {
     List<RoleAssignment> expected = new ArrayList<>();
     when(roleAssignmentRepository.getHomeFacilityRoles(1)).thenReturn(expected);
     List<RoleAssignment> actual = service.getHomeFacilityRoles(1);
+
+    assertThat(actual, is(expected));
+  }
+
+  @Test
+  public void shouldGetRoleAssignmentsForAGivenUserOnAGivenProgramWithRights() throws Exception {
+    Integer userId =1;
+    Integer programId =2;
+    List<RoleAssignment> expected = new ArrayList<>();
+    when(roleAssignmentRepository.getHomeFacilityRolesForUserOnGivenProgramWithRights(userId, programId, CREATE_REQUISITION, AUTHORIZE_REQUISITION)).thenReturn(expected);
+    List<RoleAssignment> actual = service.getHomeFacilityRolesForUserOnGivenProgramWithRights(userId, programId, CREATE_REQUISITION, AUTHORIZE_REQUISITION);
 
     assertThat(actual, is(expected));
   }

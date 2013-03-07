@@ -1,6 +1,7 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
@@ -62,5 +63,9 @@ public class RoleAssignmentService {
         roleAssignmentRepository.insertRoleAssignment(user.getId(), roleAssignment.getProgramId(), supervisoryNodeId, role);
       }
     }
+  }
+
+  public List<RoleAssignment> getHomeFacilityRolesForUserOnGivenProgramWithRights(Integer userId, Integer programId, Right... rights) {
+    return roleAssignmentRepository.getHomeFacilityRolesForUserOnGivenProgramWithRights(userId, programId, rights);
   }
 }

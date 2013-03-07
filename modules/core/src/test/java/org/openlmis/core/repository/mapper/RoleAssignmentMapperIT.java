@@ -133,6 +133,29 @@ public class RoleAssignmentMapperIT {
 
   }
 
+  @Test
+  public void shouldGetHomeFacilityRolesForAUserOnAGivenProgramWithRights() throws Exception {
+    int programId = 1;
+    Role r1 = new Role("r1", "random description");
+    roleRightsMapper.insertRole(r1);
+    Role r2 = new Role("r2", "random description");
+    roleRightsMapper.insertRole(r2);
+    roleRightsMapper.createRoleRight(r2.getId(), Right.CREATE_REQUISITION);
+
+    SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
+    supervisoryNode.setFacility(facility);
+    supervisoryNodeMapper.insert(supervisoryNode);
+
+
+    mapper.insertRoleAssignment(user.getId(), programId, null, r2.getId());
+    mapper.insertRoleAssignment(user.getId(), programId, null, r1.getId());
+    mapper.insertRoleAssignment(user.getId(), programId, supervisoryNode.getId(), r2.getId());
+
+    List<RoleAssignment> roleAssignments = mapper.getHomeFacilityRolesForUserOnGivenProgramWithRights(user.getId(), programId, "{CREATE_REQUISITION}");
+
+    assertThat(roleAssignments.size(), is(1));
+    assertThat(roleAssignments.get(0).getRoleIds().size(), is(1));
+  }
 
   @Test
   public void shouldDeleteRoleAssignmentsForAUser() throws Exception {
