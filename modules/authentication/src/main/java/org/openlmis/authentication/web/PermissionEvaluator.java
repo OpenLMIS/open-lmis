@@ -21,9 +21,9 @@ public class PermissionEvaluator {
     this.roleRightService = roleRightService;
   }
 
-  public Boolean hasPermission(String userName, String commaSeparatedRights) {
+  public Boolean hasPermission(Integer userId, String commaSeparatedRights) {
 
-    return CollectionUtils.containsAny(roleRightService.getRights(userName), getRightList(commaSeparatedRights));
+    return CollectionUtils.containsAny(roleRightService.getRights(userId), getRightList(commaSeparatedRights));
   }
 
   private List<Right> getRightList(String commaSeparatedRights) {
@@ -36,4 +36,7 @@ public class PermissionEvaluator {
     return rights;
   }
 
+  public Boolean hasPermission(String userName, Integer facilityId, Integer programId, String commaSeparatedRights) {
+    return null;  //To change body of created methods use File | Settings | File Templates.
+  }
 }

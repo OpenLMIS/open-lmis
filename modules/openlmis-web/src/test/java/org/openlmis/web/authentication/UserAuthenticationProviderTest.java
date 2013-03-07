@@ -42,8 +42,8 @@ public class UserAuthenticationProviderTest {
 
 
     assertThat(authenticate, instanceOf(UsernamePasswordAuthenticationToken.class));
-    assertThat(authenticate.getPrincipal().toString(), is(equalTo(validUser)));
-    assertThat(authenticate.getCredentials().toString(), is(equalTo(password)));
+    assertThat((Integer)authenticate.getPrincipal(), is(equalTo(1)));
+    assertThat(authenticate.getCredentials(), is(equalTo(null)));
     assertThat(authenticate.isAuthenticated(), is(true));
   }
 

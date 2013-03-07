@@ -7,7 +7,6 @@ import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.TestingAuthenticationToken;
-import org.springframework.security.core.Authentication;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
@@ -52,7 +51,7 @@ public class UserAuthenticationSuccessHandlerTest {
         when(request.getSession(anyBoolean())).thenReturn(session);
         when(request.getContextPath()).thenReturn(CONTEXT_PATH);
         userDetails = new HashMap();
-        userDetails.put(USER_ID, userId);
+        userDetails.put(USER, USERNAME);
         response = new MockHttpServletResponse();
     }
 
@@ -60,7 +59,7 @@ public class UserAuthenticationSuccessHandlerTest {
     public void shouldRedirectUserToHome() throws IOException, ServletException {
         String defaultTargetUrl = "/";
 
-        TestingAuthenticationToken authentication = new TestingAuthenticationToken(USERNAME, "password", "USER");
+        TestingAuthenticationToken authentication = new TestingAuthenticationToken(userId, "password", "USER");
         authentication.setDetails(userDetails);
         userAuthenticationSuccessHandler.onAuthenticationSuccess(request, response, authentication);
         assertEquals(CONTEXT_PATH + defaultTargetUrl, response.getRedirectedUrl());
@@ -68,7 +67,7 @@ public class UserAuthenticationSuccessHandlerTest {
 
     @Test
     public void shouldSaveUsernameInSession() throws IOException, ServletException {
-        TestingAuthenticationToken authentication = new TestingAuthenticationToken(USERNAME, "password", "USER");
+        TestingAuthenticationToken authentication = new TestingAuthenticationToken(userId, "password", "USER");
         authentication.setDetails(userDetails);
         userAuthenticationSuccessHandler.onAuthenticationSuccess(request, response, authentication);
 
@@ -77,7 +76,7 @@ public class UserAuthenticationSuccessHandlerTest {
 
     @Test
     public void shouldSaveUserIdInSession() throws IOException, ServletException {
-        TestingAuthenticationToken authentication = new TestingAuthenticationToken(USERNAME, "password", "USER");
+        TestingAuthenticationToken authentication = new TestingAuthenticationToken(userId, "password", "USER");
         authentication.setDetails(userDetails);
         userAuthenticationSuccessHandler.onAuthenticationSuccess(request, response, authentication);
 

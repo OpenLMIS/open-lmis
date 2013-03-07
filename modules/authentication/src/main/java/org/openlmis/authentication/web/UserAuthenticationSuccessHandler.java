@@ -18,9 +18,9 @@ public class UserAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
-        request.getSession().setAttribute(USER, authentication.getPrincipal());
+        request.getSession().setAttribute(USER_ID, authentication.getPrincipal());
         Map userDetails = (Map) authentication.getDetails();
-        request.getSession().setAttribute(USER_ID, userDetails.get(USER_ID));
+        request.getSession().setAttribute(USER, userDetails.get(USER));
         super.onAuthenticationSuccess(request, response, authentication);
     }
 }
