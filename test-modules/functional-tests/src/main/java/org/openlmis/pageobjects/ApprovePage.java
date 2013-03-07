@@ -195,7 +195,7 @@ public class ApprovePage extends Page {
     testWebDriver.waitForElementToAppear(approveButton);
     testWebDriver.waitForElementToAppear(saveButton);
     saveButton.click();
-    testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
+    testWebDriver.sleep(250);
     SeleneseTestNgHelper.assertTrue("R&R saved successfully message not displayed", saveSuccessMsgDiv.isDisplayed());
     approveButton.click();
     testWebDriver.waitForElementToAppear(approvedSuccessMessage);
