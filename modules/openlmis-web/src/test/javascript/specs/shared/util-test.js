@@ -14,8 +14,12 @@ describe("Util", function () {
 
   it('should determine if it is a number', function () {
     expect(utils.isNumber('09')).toEqual(true);
+    expect(utils.isNumber(09)).toEqual(true);
+    expect(utils.isNumber(null)).toEqual(false);
+    expect(utils.isNumber(undefined)).toEqual(false);
+    expect(utils.isNumber("9a")).toEqual(false);
     expect(utils.isNumber('abc')).toEqual(false);
-    expect(utils.isNumber(' ')).toEqual(false);
+    expect(utils.isNumber('  ')).toEqual(false);
   });
 
   it('should get number with base 10 equivalent', function () {

@@ -140,6 +140,8 @@ public class FacilityMapperIT {
   @Test
   public void shouldGetFacilityById() throws Exception {
     Facility facility = make(a(defaultFacility));
+    facility.setLatitude(123.45678);
+    facility.setLongitude(-321.87654);
     mapper.insert(facility);
     Facility resultFacility = mapper.getById(facility.getId());
     assertThat(resultFacility.getCode(), is("F10010"));
@@ -147,6 +149,8 @@ public class FacilityMapperIT {
     assertThat(resultFacility.getName(), is("Apollo Hospital"));
     assertThat(resultFacility.getGeographicZone().getName(), is("Dodoma"));
     assertThat(resultFacility.getGeographicZone().getParent().getName(), is("Arusha"));
+    assertThat(resultFacility.getLatitude(), is(123.45678));
+    assertThat(resultFacility.getLongitude(), is(-321.87654));
   }
 
   @Test
@@ -222,7 +226,7 @@ public class FacilityMapperIT {
   }
 
   @Test
-  public void shouldTellIfGeographicZoneIdExists() throws Exception {
+  public void shouldDetermineIfGeographicZoneIdExists() throws Exception {
     assertThat(mapper.isGeographicZonePresent(1), is(true));
     assertThat(mapper.isGeographicZonePresent(9999), is(false));
   }
