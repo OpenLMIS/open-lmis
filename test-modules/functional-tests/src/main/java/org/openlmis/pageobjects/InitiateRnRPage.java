@@ -368,6 +368,24 @@ public class InitiateRnRPage extends Page {
     requestedQuantityExplanationField.clear();
     requestedQuantityExplanationField.sendKeys(requestedQuantityExplanationValue);
     testWebDriver.waitForElementToAppear(closeButton);
+    closeButton.click();
+    testWebDriver.waitForElementToAppear(addNonFullSupplyButton);
+    addNonFullSupplyButton.click();
+    testWebDriver.waitForElementToAppear(productDropDown);
+    SeleneseTestNgHelper.assertEquals(testWebDriver.getFirstSelectedOption(productDropDown).getText(), "--select product--");
+    SeleneseTestNgHelper.assertEquals(testWebDriver.getFirstSelectedOption(productCodeDropDown).getText(), "--select product code--");
+    SeleneseTestNgHelper.assertEquals(requestedQuantityField.getAttribute("value").trim(),"");
+    SeleneseTestNgHelper.assertEquals(requestedQuantityExplanationField.getAttribute("value").trim(),"");
+
+    testWebDriver.waitForElementToAppear(productDropDown);
+    testWebDriver.selectByVisibleText(productDropDown, productPrimaryName);
+    testWebDriver.waitForElementToAppear(productCodeDropDown);
+    testWebDriver.selectByVisibleText(productCodeDropDown, productCode);
+    requestedQuantityField.clear();
+    requestedQuantityField.sendKeys(requestedQuantityValue);
+    requestedQuantityExplanationField.clear();
+    requestedQuantityExplanationField.sendKeys(requestedQuantityExplanationValue);
+    testWebDriver.waitForElementToAppear(closeButton);
     testWebDriver.sleep(1000);
     addButtonEnabled.click();
     closeButton.click();
