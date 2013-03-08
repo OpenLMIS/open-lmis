@@ -87,8 +87,14 @@ public class RolesPage extends Page {
     testWebDriver.waitForElementToAppear(createNewRoleButton);
     createNewRoleButton.click();
     for (String right : rights) {
-      webElementMap.get(right).click();
-    }
+          testWebDriver.sleep(1000);
+          webElementMap.get(right).click();
+      }
+
+      for (String right : rights) {
+          if(!webElementMap.get(right).isSelected())
+          testWebDriver.click(webElementMap.get(right));
+      }
     roleNameField.sendKeys(roleName);
     roleDescription.sendKeys(roleDesc);
     saveButton.click();

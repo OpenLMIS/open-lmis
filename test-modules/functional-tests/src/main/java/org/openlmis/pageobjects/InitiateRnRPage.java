@@ -375,8 +375,8 @@ public class InitiateRnRPage extends Page {
     testWebDriver.waitForElementToAppear(addNonFullSupplyButton);
     addNonFullSupplyButton.click();
     testWebDriver.waitForElementToAppear(productDropDown);
-    SeleneseTestNgHelper.assertEquals(testWebDriver.getFirstSelectedOption(productDropDown).getText(), "--select product--");
-    SeleneseTestNgHelper.assertEquals(testWebDriver.getFirstSelectedOption(productCodeDropDown).getText(), "--select product code--");
+    SeleneseTestNgHelper.assertEquals(testWebDriver.getSelectedOptionDefault(productDropDown).trim(), "");
+    SeleneseTestNgHelper.assertEquals(testWebDriver.getSelectedOptionDefault(productCodeDropDown).trim(), "");
     SeleneseTestNgHelper.assertEquals(requestedQuantityField.getAttribute("value").trim(),"");
     SeleneseTestNgHelper.assertEquals(requestedQuantityExplanationField.getAttribute("value").trim(),"");
 

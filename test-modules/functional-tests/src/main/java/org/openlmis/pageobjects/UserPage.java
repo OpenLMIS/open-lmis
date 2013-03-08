@@ -4,6 +4,7 @@ package org.openlmis.pageobjects;
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
@@ -125,8 +126,14 @@ public class UserPage extends Page {
     testWebDriver.waitForElementToAppear(searchFacility);
     searchFacility.clear();
     searchFacility.sendKeys(facilityCode);
+      for (int i=0;i<facilityCode.length();i++){
+       searchFacility.sendKeys(Keys.ARROW_LEFT);
+          searchFacility.sendKeys(Keys.DELETE);
+      }
+      searchFacility.sendKeys(facilityCode);
     testWebDriver.sleep(1000);
     selectFacility.click();
+
     testWebDriver.selectByVisibleText(programsMyFacility, program1);
     rolesInputFieldMyFacility.click();
     rolesInputFieldMyFacility.clear();

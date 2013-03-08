@@ -160,11 +160,16 @@ public class TestWebDriver {
         return  new Select(element).getFirstSelectedOption();
     }
 
+    public String getSelectedOptionDefault(WebElement element) {
+        return  element.getAttribute("value");
+    }
+
     public List<WebElement> getAllSelectedOptions(WebElement element) {
         return new Select(element).getAllSelectedOptions();
     }
 
     public List<WebElement> getOptions(WebElement element) {
+
         return  new Select(element).getOptions();
     }
 
