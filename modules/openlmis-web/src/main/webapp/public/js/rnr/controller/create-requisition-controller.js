@@ -6,7 +6,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   $scope.nonFullSupplyLink = $scope.baseUrl + "?supplyTpe=non-full-supply&page=1";
   $scope.fillPagedGridData = function () {
     var gridLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.fullSupplyLineItems;
-    $scope.numberOfPages = Math.ceil(gridLineItems.length / $scope.pageSize)? Math.ceil(gridLineItems.length / $scope.pageSize): 1;
+    $scope.numberOfPages = Math.ceil(gridLineItems.length / $scope.pageSize) ? Math.ceil(gridLineItems.length / $scope.pageSize) : 1;
     $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
     $scope.pageLineItems = gridLineItems.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);
   };
@@ -71,9 +71,23 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
     });
   };
 
+  function validateAndSetErrorClass() {
+    var fullSupplyError = $scope.rnr.validateFullSupply();
+    var nonFullSupplyError = $scope.rnr.validateNonFullSupply();
+    $scope.fullSupplyTabError = !!fullSupplyError;
+    $scope.nonFullSupplyTabError = !!nonFullSupplyError;
+
+    return fullSupplyError || nonFullSupplyError;
+  }
+
   $scope.submitRnr = function () {
     resetFlags();
-    if (!valid()) return;
+    var errorMessage = validateAndSetErrorClass();
+    if (errorMessage) {
+      $scope.saveRnr();
+      $scope.submitError = errorMessage;
+      return;
+    }
     var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id:$scope.rnr.id, operation:"submit"},
       rnr, function (data) {
@@ -83,11 +97,17 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
       }, function (data) {
         $scope.submitError = data.data.error;
       });
-  };
+  }
+  ;
 
   $scope.authorizeRnr = function () {
     resetFlags();
-    if (!valid()) return;
+    var errorMessage = validateAndSetErrorClass();
+    if (errorMessage) {
+      $scope.saveRnr();
+      $scope.submitError = errorMessage;
+      return;
+    }
     var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id:$scope.rnr.id, operation:"authorize"}, rnr, function (data) {
       $scope.rnr.status = "AUTHORIZED";
@@ -103,7 +123,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   };
 
   $scope.highlightRequired = function (value) {
-    if ($scope.inputClass == 'required' && (isUndefined(value))) {
+    if ($scope.inputClass && (isUndefined(value))) {
       return "required-error";
     }
     return null;
@@ -115,14 +135,14 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   };
 
   $scope.highlightWarningBasedOnField = function (value, field) {
-    if ((isUndefined(value) || value.trim().length == 0 || value == false) && $scope.inputClass == 'required' && field) {
+    if ($scope.inputClass && (isUndefined(value) || value == false) && field) {
       return "warning-error";
     }
     return null;
   };
 
   $scope.highlightWarning = function (value) {
-    if ((isUndefined(value) || value.trim().length == 0 || value == false) && $scope.inputClass == 'required') {
+    if ($scope.inputClass && (isUndefined(value) || value == false)) {
       return "warning-error";
     }
     return null;
@@ -152,19 +172,6 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
 
   function prepareRnr() {
     var rnr = $scope.rnr;
-
-    var lineItemsJson = rnr.fullSupplyLineItems;
-    rnr.fullSupplyLineItems = [];
-    $(lineItemsJson).each(function (i, lineItem) {
-      rnr.fullSupplyLineItems.push(new RnrLineItem(lineItem, $scope.rnr, $scope.programRnrColumnList));
-    });
-
-    var nonFullSupplyLineItemsJson = rnr.nonFullSupplyLineItems;
-    rnr.nonFullSupplyLineItems = [];
-    $(nonFullSupplyLineItemsJson).each(function (i, lineItem) {
-      rnr.nonFullSupplyLineItems.push(new RnrLineItem(lineItem, $scope.rnr, $scope.programRnrColumnList))
-    });
-
     $scope.rnr = new Rnr(rnr, rnrColumns);
 
     resetCostsIfNull();
@@ -180,40 +187,28 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   }
 
   function valid() {
-    if ($scope.saveRnrForm.$error.required) {
-      $scope.saveRnr();
-      $scope.inputClass = "required";
-      $scope.submitMessage = "";
-      $scope.submitError = 'Please complete the highlighted fields on the R&R form before submitting';
-      return false;
-    }
-    if (!formulaValid()) {
-      $scope.saveRnr();
-      $scope.submitError = "Please correct the errors on the R&R form before submitting";
-      $scope.submitMessage = "";
-      return false;
-    }
-    return true;
+//    if ($scope.saveRnrForm.$error.required) {
+//      $scope.saveRnr();
+//      $scope.inputClass = "required";
+//      $scope.submitMessage = "";
+//      $scope.submitError = 'Please complete the highlighted fields on the R&R form before submitting';
+//      return false;
+//    }
+//    if (!formulaValid()) {
+//      $scope.saveRnr();
+//      $scope.submitError = "Please correct the errors on the R&R form before submitting";
+//      $scope.submitMessage = "";
+//      return false;
+//    }
+//    return true;
   }
 
   function resetFlags() {
-    $scope.inputClass = "";
+    $scope.inputClass = true;
     $scope.submitError = "";
     $rootScope.submitMessage = "";
     $scope.error = "";
     $scope.message = "";
-  }
-
-  // TODO: Push this method to rnr-line-item
-  function formulaValid() {
-    var valid = true;
-    $($scope.rnr.fullSupplyLineItems).each(function (index, lineItem) {
-      if (lineItem.arithmeticallyInvalid() || lineItem.stockInHand < 0 || lineItem.quantityDispensed < 0) {
-        valid = false;
-        return false;
-      }
-    });
-    return valid;
   }
 
   function removeExtraDataForPostFromRnr() {
@@ -235,9 +230,9 @@ CreateRequisitionController.resolve = {
     var deferred = $q.defer();
     $timeout(function () {
       var rnr = $rootScope.rnr;
-      if(rnr){
+      if (rnr) {
         deferred.resolve(rnr);
-        $rootScope.rnr=undefined;
+        $rootScope.rnr = undefined;
         return;
       }
       Requisition.get({facilityId:$route.current.params.facility, programId:$route.current.params.program, periodId:$route.current.params.period}, function (data) {

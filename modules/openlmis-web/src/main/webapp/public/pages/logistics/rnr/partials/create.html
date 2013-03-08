@@ -2,9 +2,9 @@
 <div xmlns="http://www.w3.org/1999/html">
   <div class="rnr-tabs">
     <ul class="clearfix">
-      <li ng-class="{'selected': !showNonFullSupply}">
+      <li ng-class="{'selected': !showNonFullSupply, 'has-error': fullSupplyTabError}">
         <a ng-click="switchSupplyType('full-supply')" id="fullSupplyTab">Full Supply Product(s)</a></li>
-      <li ng-class="{'selected': showNonFullSupply}">
+      <li ng-class="{'selected': showNonFullSupply, 'has-error': nonFullSupplyTabError}">
         <a ng-click="switchSupplyType('non-full-supply')" id="nonFullSupplyTab">Non Full Supply Product(s)</a></li>
     </ul>
   </div>

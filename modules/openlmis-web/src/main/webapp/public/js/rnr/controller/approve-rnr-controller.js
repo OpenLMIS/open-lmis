@@ -59,7 +59,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     $scope.rnr.fullSupplyLineItems = [];
 
     $(lineItemsJson).each(function (i, lineItem) {
-      var rnrLineItem = new RnrLineItem(lineItem, $scope.rnr, $scope.programRnrColumnList);
+      var rnrLineItem = new RnrLineItem(lineItem, $scope.rnr.period.numberOfMonths, $scope.programRnrColumnList, $scope.rnr.status);
 
       rnrLineItem.updateCostWithApprovedQuantity();
       $scope.rnr.fullSupplyLineItems.push(rnrLineItem);
@@ -67,7 +67,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     var nonFullSupplyLineItemsJson = $scope.rnr.nonFullSupplyLineItems;
     $scope.rnr.nonFullSupplyLineItems = [];
     $(nonFullSupplyLineItemsJson).each(function (i, lineItem) {
-      var rnrLineItem = new RnrLineItem(lineItem, $scope.rnr, $scope.programRnrColumnList);
+      var rnrLineItem = new RnrLineItem(lineItem, $scope.rnr.period.numberOfMonths, $scope.programRnrColumnList, $scope.rnr.status);
 
       rnrLineItem.updateCostWithApprovedQuantity();
       $scope.rnr.nonFullSupplyLineItems.push(rnrLineItem);

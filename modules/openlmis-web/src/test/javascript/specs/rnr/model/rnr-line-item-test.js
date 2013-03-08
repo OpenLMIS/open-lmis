@@ -2,17 +2,14 @@ describe('RnrLineItem', function () {
   beforeEach(module('rnr'));
 
   describe('Create RnrLineItem', function () {
-    it('Should create rnr with empty previousNormalizedConsumptions if it is null in json data', function () {
-      var rnr = new Object();
+    it('Should set previousNormalizedConsumptions to [] if it is null in json data', function () {
       var programRnrColumnList = [
         {"column1":"column 1"}
       ];
 
-      var rnrLineItem = new RnrLineItem({}, rnr, programRnrColumnList);
+      var rnrLineItem = new RnrLineItem({}, 5, programRnrColumnList, "INITIATED");
 
       expect(rnrLineItem.previousNormalizedConsumptions).toEqual([]);
-      expect(rnrLineItem.rnr).toEqual(rnr);
-      expect(rnrLineItem.programRnrColumnList).toEqual(programRnrColumnList);
     });
 
     it('should initialize losses and adjustments, if not present in R&R', function () {
@@ -206,11 +203,9 @@ describe('RnrLineItem', function () {
 
   describe('Calculate AMC', function () {
     it('should calculate AMC when number of months in a period is 3 or more', function () {
-      var period = {"numberOfMonths":3};
-      var rnr = {"period":period};
-      var lineItem = {"normalizedConsumption":10, "previousNormalizedConsumptions":[]};
-      var rnrLineItem = new RnrLineItem({}, rnr, null);
-      jQuery.extend(rnrLineItem, lineItem);
+      var rnrLineItem = new RnrLineItem({}, 3, null, 'INITIATED');
+      rnrLineItem.normalizedConsumption = 10;
+      rnrLineItem.previousNormalizedConsumptions = [];
 
       rnrLineItem.calculateAMC();
 
@@ -218,34 +213,29 @@ describe('RnrLineItem', function () {
     });
 
     it('should calculate AMC when number of months in a period is 2', function () {
-      var period = {"numberOfMonths":2};
-      var rnr = {"period":period};
-
-      var lineItem = {"normalizedConsumption":10, "previousNormalizedConsumptions":[14]};
-      var rnrLineItem = new RnrLineItem({}, rnr, null);
-      jQuery.extend(rnrLineItem, lineItem);
+      var rnrLineItem = new RnrLineItem({}, 2, null, 'INITIATED');
+      rnrLineItem.normalizedConsumption = 10;
+      rnrLineItem.previousNormalizedConsumptions = [14];
 
       rnrLineItem.calculateAMC();
+
       expect(rnrLineItem.amc).toEqual(6);
     });
 
     it('should calculate AMC when number of months in a period is 2 but previous normalized consumption is not available', function () {
-      var period = {"numberOfMonths":2};
-      var rnr = {"period":period};
-      var lineItem = {"normalizedConsumption":10, "previousNormalizedConsumptions":[]};
-      var rnrLineItem = new RnrLineItem({}, rnr, null);
-      jQuery.extend(rnrLineItem, lineItem);
+      var rnrLineItem = new RnrLineItem({}, 2, null, 'INITIATED');
+      rnrLineItem.normalizedConsumption = 10;
+      rnrLineItem.previousNormalizedConsumptions = [];
 
       rnrLineItem.calculateAMC();
+
       expect(rnrLineItem.amc).toEqual(5);
     });
 
     it('should calculate AMC when number of months in a period is 1', function () {
-      var period = {"numberOfMonths":1};
-      var rnr = {"period":period};
-      var lineItem = {"normalizedConsumption":10, "previousNormalizedConsumptions":[14, 12]};
-      var rnrLineItem = new RnrLineItem({}, rnr, null);
-      jQuery.extend(rnrLineItem, lineItem);
+      var rnrLineItem = new RnrLineItem({}, 1, null, 'INITIATED');
+      rnrLineItem.normalizedConsumption = 10;
+      rnrLineItem.previousNormalizedConsumptions = [14,12];
 
       rnrLineItem.calculateAMC();
 
@@ -253,11 +243,9 @@ describe('RnrLineItem', function () {
     });
 
     it('should calculate AMC when number of months in a period is 1 and only one of the two previous normalized consumption is available', function () {
-      var period = {"numberOfMonths":1};
-      var rnr = {"period":period};
-      var lineItem = {"normalizedConsumption":10, "previousNormalizedConsumptions":[14]};
-      var rnrLineItem = new RnrLineItem({}, rnr, null);
-      jQuery.extend(rnrLineItem, lineItem);
+      var rnrLineItem = new RnrLineItem({}, 1, null, 'INITIATED');
+      rnrLineItem.normalizedConsumption = 10;
+      rnrLineItem.previousNormalizedConsumptions = [14];
 
       rnrLineItem.calculateAMC();
 
@@ -455,22 +443,6 @@ describe('RnrLineItem', function () {
     });
   });
 
-  describe('Calculate Full Supply Items Submitted Cost For Rnr', function () {
-    it('should calculate fullSupplyItemsSubmittedCost', function () {
-      var rnr = new Object();
-
-      var rnrLineItem1 = new RnrLineItem({"productCode":"p1"}, rnr, null);
-      rnrLineItem1.cost = 100;
-      var rnrLineItem2 = new RnrLineItem({"productCode":"p2"}, rnr, null);
-      rnrLineItem2.cost = 60;
-      var rnrLineItem3 = new RnrLineItem({"productCode":"p3"}, rnr, null);
-      rnrLineItem3.cost = 160;
-      rnr.fullSupplyLineItems = new Array(rnrLineItem1, rnrLineItem2, rnrLineItem3);
-      rnrLineItem1.calculateFullSupplyItemsSubmittedCost();
-      expect(rnr.fullSupplyItemsSubmittedCost).toEqual(320.00.toFixed(2));
-    });
-  });
-
   describe('Losses and adjustment for line item', function () {
     it("should re evaluate total losses and adjustments for line item", function () {
       var rnr = new Object();
@@ -646,9 +618,9 @@ describe('RnrLineItem', function () {
         {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidationRequired":true}
       ];
       rnr = {"id":1};
-      var lineItem = {"id":"1", "beginningBalance":3, "quantityReceived":4, "quantityDispensed":-3, "stockInHand":9, "totalLossesAndAdjustments":34};
-      rnrLineItem = new RnrLineItem({}, rnr, programRnrColumnList);
-      jQuery.extend(rnrLineItem, lineItem);
+      var lineItem = {"id":"1", "beginningBalance":3, "quantityReceived":4, "quantityDispensed":-3, "stockInHand":9};
+      rnrLineItem = new RnrLineItem(lineItem, 1, programRnrColumnList, 'INITIATED');
+      rnrLineItem.totalLossesAndAdjustments = 34;
     });
 
     it('should test execution flow when consumption or stock in hand gets filled', function () {
@@ -674,12 +646,12 @@ describe('RnrLineItem', function () {
       rnrLineItem.quantityRequested = 31;
 
       spyOn(rnrLineItem, "calculatePacksToShip");
-      spyOn(rnrLineItem, "fillCost");
+      spyOn(rnrLineItem, "calculateCost");
 
       rnrLineItem.fillPacksToShipBasedOnCalculatedOrderQuantityOrQuantityRequested();
 
       expect(rnrLineItem.calculatePacksToShip).toHaveBeenCalledWith(31);
-      expect(rnrLineItem.fillCost).toHaveBeenCalled();
+      expect(rnrLineItem.calculateCost).toHaveBeenCalled();
     });
 
     it('should test execution flow when packs to ship gets filled and order quantity is not present', function () {
@@ -687,12 +659,12 @@ describe('RnrLineItem', function () {
       rnrLineItem.calculatedOrderQuantity = 12;
 
       spyOn(rnrLineItem, "calculatePacksToShip");
-      spyOn(rnrLineItem, "fillCost");
+      spyOn(rnrLineItem, "calculateCost");
 
       rnrLineItem.fillPacksToShipBasedOnCalculatedOrderQuantityOrQuantityRequested();
 
       expect(rnrLineItem.calculatePacksToShip).toHaveBeenCalledWith(12);
-      expect(rnrLineItem.fillCost).toHaveBeenCalled();
+      expect(rnrLineItem.calculateCost).toHaveBeenCalled();
     });
 
     it('should test execution flow when normalized consumption gets filled', function () {
@@ -802,7 +774,7 @@ describe('RnrLineItem', function () {
       var rnrLineItem = {'beginningBalance':'45', 'quantityDispensed':'23','quantityReceived':3,'newPatientCount':45,
         'stockOutDays':''};
       rnrLineItem = new RnrLineItem(rnrLineItem, null, programRnrColumnList);
-      var isValid = rnrLineItem.validateRequiredFields();
+      var isValid = rnrLineItem.validateRequiredFieldsForFullSupply();
       expect(isValid).toBeTruthy();
     });
 
@@ -817,7 +789,7 @@ describe('RnrLineItem', function () {
       var rnrLineItem = {'beginningBalance':'', 'quantityDispensed':'23','quantityReceived':3,'newPatientCount':45,
         'stockOutDays':''};
       rnrLineItem = new RnrLineItem(rnrLineItem, null, programRnrColumnList);
-      var isValid = rnrLineItem.validateRequiredFields();
+      var isValid = rnrLineItem.validateRequiredFieldsForFullSupply();
       expect(isValid).toBeFalsy();
     });
 
@@ -834,7 +806,7 @@ describe('RnrLineItem', function () {
       var rnrLineItem = {'beginningBalance':'45', 'stockOutDays':'23', 'quantityDispensed':'23','quantityReceived':'89','newPatientCount':45,
         'quantityRequested':'7','reasonForRequestedQuantity':''};
       rnrLineItem = new RnrLineItem(rnrLineItem, null, programRnrColumnList);
-      var isValid = rnrLineItem.validateRequiredFields();
+      var isValid = rnrLineItem.validateRequiredFieldsForFullSupply();
       expect(isValid).toBeFalsy();
     });
 
@@ -847,12 +819,88 @@ describe('RnrLineItem', function () {
         {"source":{"name":"USER_INPUT"}, "visible":true,"name":"stockOutDays"},
         {"source":{"name":"USER_INPUT"}, "visible":true,"name":"quantityRequested"},
         {"source":{"name":"USER_INPUT"}, "visible":true,"name":"reasonForRequestedQuantity"},
-        {"source":{"name":"USER_INPUT"}, "visible":true,"name":"remarks"}
+        {"source":{"name":"USER_INPUT"}, "visible":true,"name":"remarks"},
+        {"source":{"name":"USER_INPUT"}, "visible":true,"name":"lossesAndAdjustments"},
+        {"source":{"name":"USER_INPUT"}, "visible":true,"name":"quantityApproved"}
       ];
       var rnrLineItem = {'beginningBalance':'45', 'stockOutDays':'23', 'quantityDispensed':'23','quantityReceived':'89','newPatientCount':45,
-        'quantityRequested':'7','reasonForRequestedQuantity':'reason', remarks: ''};
+        'quantityRequested':'7','reasonForRequestedQuantity':'reason', remarks: '', lossesAndAdjustments: '', quantityApproved :''};
       rnrLineItem = new RnrLineItem(rnrLineItem, null, programRnrColumnList);
-      var isValid = rnrLineItem.validateRequiredFields();
+      var isValid = rnrLineItem.validateRequiredFieldsForFullSupply();
+      expect(isValid).toBeTruthy();
+    });
+
+    it('should return true if required fields for non full supply are not filled', function() {
+      programRnrColumnList = [
+        {"source":{"name":"USER_INPUT"}, "visible":true,"name":"quantityRequested"},
+        {"source":{"name":"USER_INPUT"}, "visible":true,"name":"reasonForRequestedQuantity"},
+        {"source":{"name":"USER_INPUT"}, "visible":true,"name":"remarks"}
+      ];
+      var rnrLineItem = {'quantityRequested':'','reasonForRequestedQuantity':'reason', remarks: ''};
+      rnrLineItem = new RnrLineItem(rnrLineItem, null, programRnrColumnList);
+      var isValid = rnrLineItem.validateRequiredFieldsForNonFullSupply();
+      expect(isValid).toBeFalsy();
+    });
+
+    it('should return true if required fields for non full supply are filled', function() {
+      programRnrColumnList = [
+        {"source":{"name":"USER_INPUT"}, "visible":true,"name":"quantityRequested"},
+        {"source":{"name":"USER_INPUT"}, "visible":true,"name":"reasonForRequestedQuantity"},
+        {"source":{"name":"USER_INPUT"}, "visible":true,"name":"remarks"}
+      ];
+      var rnrLineItem = {'quantityRequested':'45','reasonForRequestedQuantity':'reason', remarks: ''};
+      rnrLineItem = new RnrLineItem(rnrLineItem, null, programRnrColumnList);
+      var isValid = rnrLineItem.validateRequiredFieldsForNonFullSupply();
+      expect(isValid).toBeTruthy();
+    });
+
+    it('should validate stock in hand formula and return true if stock in hand positive', function() {
+      var rnrLineItem = {'stockInHand' :90, 'quantityDispensed' :90};
+      rnrLineItem = new RnrLineItem(rnrLineItem, null, programRnrColumnList);
+      var isValid = rnrLineItem.formulaValid();
+      expect(isValid).toBeTruthy();
+    });
+
+    it('should validate stock in hand formula and return false if stock in hand negative', function() {
+      var rnrLineItem = {'stockInHand' :-90, 'quantityDispensed' :90};
+      rnrLineItem = new RnrLineItem(rnrLineItem, null, programRnrColumnList);
+      var isValid = rnrLineItem.formulaValid();
+      expect(isValid).toBeFalsy();
+    });
+
+    it('should validate stock in hand formula and return true if quantity dispensed positive', function() {
+      var rnrLineItem = {'quantityDispensed' :90, 'stockInHand' :90};
+      rnrLineItem = new RnrLineItem(rnrLineItem, null, programRnrColumnList);
+      var isValid = rnrLineItem.formulaValid();
+      expect(isValid).toBeTruthy();
+    });
+
+    it('should validate stock in hand formula and return false if quantity dispensed negative', function() {
+      var rnrLineItem = {'quantityDispensed' :-90, 'stockInHand' :90};
+      rnrLineItem = new RnrLineItem(rnrLineItem, null, programRnrColumnList);
+      var isValid = rnrLineItem.formulaValid();
+      expect(isValid).toBeFalsy();
+    });
+
+    it('should validate stock in hand formula and and return false if arithmetically invalid', function() {
+      var rnrLineItem = {'quantityDispensed' :90, 'stockInHand' :90};
+      rnrLineItem = new RnrLineItem(rnrLineItem, null, programRnrColumnList);
+
+      spyOn(rnrLineItem, 'arithmeticallyInvalid').andReturn(true);
+
+      var isValid = rnrLineItem.formulaValid();
+
+      expect(isValid).toBeFalsy();
+    });
+
+    it('should validate stock in hand formula and and return false if arithmetically valid', function() {
+      var rnrLineItem = {'quantityDispensed' :90, 'stockInHand' :90};
+      rnrLineItem = new RnrLineItem(rnrLineItem, null, programRnrColumnList);
+
+      spyOn(rnrLineItem, 'arithmeticallyInvalid').andReturn(false);
+
+      var isValid = rnrLineItem.formulaValid();
+
       expect(isValid).toBeTruthy();
     });
   });

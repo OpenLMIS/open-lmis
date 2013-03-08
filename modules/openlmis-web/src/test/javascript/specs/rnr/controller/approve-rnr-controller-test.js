@@ -12,7 +12,7 @@ describe('Approve Requisition controller', function () {
     routeParams = {"rnr": "1", "program": "1"};
     lineItems = [];
     nonFullSupplyLineItems = [];
-    requisition = {'status': "AUTHORIZED", 'lineItems': lineItems, 'nonFullSupplyLineItems': nonFullSupplyLineItems};
+    requisition = {'status': "AUTHORIZED", 'lineItems': lineItems, 'nonFullSupplyLineItems': nonFullSupplyLineItems, period: {numberOfMonths: 5}};
     $rootScope.pageSize = 2;
     programRnrColumnList = [
       {'name': 'ProductCode', 'label': 'Product Code', 'visible': true},

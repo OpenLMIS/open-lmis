@@ -21,7 +21,8 @@ describe('CreateRequisitionController', function () {
     mockedRequisition = {'status':"INITIATED",
       fullSupplyItemsSubmittedCost:100,
       nonFullSupplyItemsSubmittedCost:14,
-      lineItems:[
+      period:{numberOfMonths:5},
+      fullSupplyLineItems:[
         {id:1}
       ],
       nonFullSupplyLineItems:[
@@ -65,53 +66,66 @@ describe('CreateRequisitionController', function () {
     expect(scope.currency).toEqual("$");
   });
 
-  it('should not submit rnr with required fields missing', function () {
-    scope.rnr = {"id":"rnrId"};
-    scope.saveRnrForm = {$error:{required:true}};
+  it('should not submit rnr if invalid but should save', function () {
+    scope.rnr = new Rnr({"id":"rnrId"});
+    spyOn(scope.rnr, 'validateFullSupply').andReturn('rnr.required.fields.missing.error');
+    spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
+
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200);
+
     scope.submitRnr();
     httpBackend.flush();
-    expect(scope.submitError).toEqual("Please complete the highlighted fields on the R&R form before submitting");
+
+    expect(scope.rnr.validateFullSupply).toHaveBeenCalled();
+    expect(scope.rnr.validateNonFullSupply.calls.length).toEqual(1);
+    expect(scope.submitError).toEqual("rnr.required.fields.missing.error");
   });
 
-  it('should not submit rnr with formula validation error but should save', function () {
-    scope.rnr = {"id":"1", "fullSupplyLineItems":[]};
-    var lineItem = { "beginningBalance":1, totalLossesAndAdjustments:1, quantityDispensed:1,
-      quantityReceived:1, stockInHand:1};
-
-    scope.programRnrColumnList = [
-      {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidationRequired":true},
-      {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
-      {"indicator":"C", "name":"quantityDispensed", "source":{"name":"CALCULATED"}},
-      {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}},
-      {"indicator":"E", "name":"stockInHand", "source":{"name":"USER_INPUT"}}
-    ];
-    var rnrLineItem = new RnrLineItem({}, scope.rnr, scope.programRnrColumnList);
-    jQuery.extend(rnrLineItem, lineItem);
-    scope.rnr.fullSupplyLineItems.push(rnrLineItem);
-
+  it('should not submit rnr with non full supply required field missing error but should save', function () {
+    scope.rnr = new Rnr({"id":"1", "fullSupplyLineItems":[]});
+    spyOn(scope.rnr, 'validateFullSupply').andReturn('');
+    spyOn(scope.rnr, 'validateNonFullSupply').andReturn('rnr.required.fields.missing.error');
     httpBackend.expect('PUT', '/requisitions/1/save.json').respond(200);
+
     scope.submitRnr();
     httpBackend.flush();
+
+    expect(scope.rnr.validateFullSupply).toHaveBeenCalled();
+    expect(scope.rnr.validateNonFullSupply).toHaveBeenCalled();
+    expect(scope.submitError).toEqual("rnr.required.fields.missing.error");
+  });
+
+  it('should set non full supply tab error class if non full supply line items have error', function () {
+    scope.rnr = new Rnr({"id":"1", "fullSupplyLineItems":[]});
+    spyOn(scope.rnr, 'validateFullSupply').andReturn('');
+    spyOn(scope.rnr, 'validateNonFullSupply').andReturn('rnr.required.fields.missing.error');
+    httpBackend.expect('PUT', '/requisitions/1/save.json').respond(200);
+
+    scope.submitRnr();
+
+    expect(scope.nonFullSupplyTabError).toBeTruthy();
+  });
+
+  it('should set non full supply tab error class if non full supply line items have error', function () {
+    scope.rnr = new Rnr({"id":"1", "fullSupplyLineItems":[]});
+    spyOn(scope.rnr, 'validateFullSupply').andReturn('rnr.required.fields.missing.error');
+    spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
+    httpBackend.expect('PUT', '/requisitions/1/save.json').respond(200);
+
+    scope.submitRnr();
+
+    expect(scope.fullSupplyTabError).toBeTruthy();
   });
 
   it('should submit valid rnr', function () {
-    var lineItem = { "beginningBalance":1, totalLossesAndAdjustments:1, quantityDispensed:2,
-      quantityReceived:1, stockInHand:1};
-    jQuery.extend(true, lineItem, new RnrLineItem());
-    scope.rnr.fullSupplyLineItems.push(lineItem);
-
-    scope.rnr = {"id":"rnrId", fullSupplyLineItems:[lineItem]};
-    scope.programRnrColumnList = [
-      {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidationRequired":true},
-      {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
-      {"indicator":"C", "name":"quantityDispensed", "source":{"name":"CALCULATED"}},
-      {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}},
-      {"indicator":"E", "name":"stockInHand", "source":{"name":"USER_INPUT"}}
-    ];
+    scope.rnr = new Rnr({"id":"rnrId", "fullSupplyLineItems":[]});
+    spyOn(scope.rnr, 'validateFullSupply').andReturn('');
+    spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
     httpBackend.expect('PUT', '/requisitions/rnrId/submit.json').respond(200, {success:"R&R submitted successfully!"});
+
     scope.submitRnr();
     httpBackend.flush();
+
     expect(scope.submitMessage).toEqual("R&R submitted successfully!");
     expect(scope.rnr.status).toEqual("SUBMITTED");
   });
@@ -168,7 +182,7 @@ describe('CreateRequisitionController', function () {
     var rnr = {id:"rnrId", fullSupplyLineItems:[], status:"INITIATED"};
     spyOn(rootScope, 'hasPermission').andReturn(true);
 
-    ctrl = controller(CreateRequisitionController, {$scope:scope, $location:location, requisition:rnr , rnrColumns:[],
+    ctrl = controller(CreateRequisitionController, {$scope:scope, $location:location, requisition:rnr, rnrColumns:[],
       currency:'$', $routeParams:routeParams, $rootScope:rootScope, localStorageService:localStorageService});
 
     expect(rootScope.hasPermission).toHaveBeenCalledWith('CREATE_REQUISITION');
@@ -176,34 +190,33 @@ describe('CreateRequisitionController', function () {
   });
 
   it('should not set disable flag if rnr is submitted and user have authorize right', function () {
-    var rnr = {id:"rnrId", lineItems:[], status:"SUBMITTED"};
+    var rnr = {id:"rnrId", fullSupplyLineItems:[], status:"SUBMITTED"};
     spyOn(rootScope, 'hasPermission').andReturn(true);
 
-    ctrl = controller(CreateRequisitionController, {$scope:scope, $location:location, requisition:rnr , rnrColumns:[],
-          currency:'$', $routeParams:routeParams, $rootScope:rootScope, localStorageService:localStorageService});
+    ctrl = controller(CreateRequisitionController, {$scope:scope, $location:location, requisition:rnr, rnrColumns:[],
+      currency:'$', $routeParams:routeParams, $rootScope:rootScope, localStorageService:localStorageService});
 
     expect(rootScope.hasPermission).toHaveBeenCalledWith('AUTHORIZE_REQUISITION');
     expect(scope.formDisabled).toEqual(false);
   });
 
   it('should set disable flag if rnr is not initiated/submitted', function () {
-    var rnr = {id:"rnrId", lineItems:[], status:"some random status"};
+    var rnr = {id:"rnrId", fullSupplyLineItems:[], status:"some random status"};
     spyOn(rootScope, 'hasPermission');
-    ctrl = controller(CreateRequisitionController, {$scope:scope, $location:location, requisition:rnr , rnrColumns:[],
-          currency:'$', $routeParams:routeParams, $rootScope:rootScope, localStorageService:localStorageService});
+    ctrl = controller(CreateRequisitionController, {$scope:scope, $location:location, requisition:rnr, rnrColumns:[],
+      currency:'$', $routeParams:routeParams, $rootScope:rootScope, localStorageService:localStorageService});
     expect(rootScope.hasPermission).not.toHaveBeenCalled();
     expect(scope.formDisabled).toEqual(true);
   });
 
-  it('should set rnr in scope after successful initialization', function () {
-    expect(scope.rnr.fullSupplyLineItems).toEqual(mockedRequisition.fullSupplyLineItems);
-    expect(scope.rnr.nonFullSupplyLineItems).toEqual(mockedRequisition.nonFullSupplyLineItems);
-  });
-
   it('should make rnr in scope as Rnr Instance', function () {
-    expect(scope.rnr instanceof Rnr).toBeTruthy();
-  });
+    var spyRnr = spyOn(window, 'Rnr').andCallThrough();
+    ctrl = controller(CreateRequisitionController, {$scope:scope, $location:location, requisition:mockedRequisition, rnrColumns:rnrColumns,
+      currency:'$', $routeParams:routeParams, $rootScope:rootScope, localStorageService:localStorageService});
 
+    expect(scope.rnr instanceof Rnr).toBeTruthy();
+    expect(spyRnr).toHaveBeenCalledWith(mockedRequisition, rnrColumns);
+  });
 
   it('should prepare period display name', function () {
     scope.rnr = {'status':"INITIATED"};

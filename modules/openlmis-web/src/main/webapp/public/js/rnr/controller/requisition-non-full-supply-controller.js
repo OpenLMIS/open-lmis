@@ -17,9 +17,10 @@ function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $r
 
   $scope.addNonFullSupplyLineItemToRnr = function () {
     prepareNFSLineItemFields();
-    var lineItem = new RnrLineItem($scope.newNonFullSupply, $scope.$parent.rnr, $scope.$parent.programRnrColumnList);
-    $scope.$parent.rnr.nonFullSupplyLineItems.push(lineItem);
-    lineItem.fillPacksToShipBasedOnCalculatedOrderQuantityOrQuantityRequested();
+    var lineItem = new RnrLineItem($scope.newNonFullSupply, $scope.rnr.period.numberOfMonths, $scope.programRnrColumnList, $scope.rnr.status);
+
+    $scope.rnr.nonFullSupplyLineItems.push(lineItem);
+    $scope.rnr.fillPacksToShipBasedOnCalculatedOrderQuantityOrQuantityRequested(lineItem);
     $scope.facilityApprovedProduct = undefined;
     $scope.newNonFullSupply = undefined;
     $scope.updateNonFullSupplyProductsToDisplay();
@@ -37,7 +38,7 @@ function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $r
   $scope.clearNonFullSupplyProductModalData = function () {
     $scope.facilityApprovedProduct = undefined;
     $scope.newNonFullSupply = undefined;
-  }
+  };
 
   $scope.labelForRnrColumn = function (columnName) {
     if ($scope.$parent.programRnrColumnList) return _.findWhere($scope.$parent.programRnrColumnList, {'name': columnName}).label + ":";
