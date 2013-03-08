@@ -37,14 +37,27 @@ public class RequisitionPermissionService {
   }
 
   public Boolean hasPermission(Integer userId, Integer facilityId, Integer programId, Right... rights) {
+    boolean permitted = hasHomeFacilityPermission(userId, facilityId, programId, rights);
+    if (!permitted) {
+      return hasSupervisoryPermission(userId, facilityId, programId, rights);
+    }
+    return permitted;
+  }
+
+  private boolean hasSupervisoryPermission(Integer userId, Integer facilityId, Integer programId, Right... rights) {
+    List<Facility> supervisedFacilities = facilityService.getUserSupervisedFacilities(userId, programId, rights);
+    return exists(facilityId, supervisedFacilities);
+  }
+
+  private boolean hasHomeFacilityPermission(Integer userId, Integer facilityId, Integer programId, Right... rights) {
+    boolean permitted = false;
     Facility homeFacility = facilityService.getHomeFacility(userId);
 
     if (homeFacility != null && homeFacility.getId().equals(facilityId)) {
       List<RoleAssignment> roleAssignments = roleAssignmentService.getHomeFacilityRolesForUserOnGivenProgramWithRights(userId, programId, rights);
-      return roleAssignments.size() > 0;
+      permitted = roleAssignments.size() > 0;
     }
-    List<Facility> supervisedFacilities = facilityService.getUserSupervisedFacilities(userId, programId, rights);
-    return exists(facilityId, supervisedFacilities);
+    return permitted;
   }
 
   private boolean exists(final Integer facilityId, List<Facility> supervisedFacilities) {

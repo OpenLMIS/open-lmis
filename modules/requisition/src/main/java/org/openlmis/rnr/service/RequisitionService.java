@@ -192,9 +192,7 @@ public class RequisitionService {
 
   public Rnr getFullRequisitionById(Integer id) {
     Rnr savedRnr = requisitionRepository.getById(id);
-    fillFacilityPeriodProgram(savedRnr);
-    fillPreviousRequisitionsForAmc(savedRnr);
-
+    fillSupportingInfo(savedRnr);
     return savedRnr;
   }
 
