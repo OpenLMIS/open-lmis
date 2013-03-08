@@ -31,13 +31,20 @@ public class DriverFactory {
   }
 
     public void deleteExeDF() throws InterruptedException, IOException{
-        if (System.getProperty("os.name").startsWith("Windows")) {
+        if (System.getProperty("os.name").startsWith("Windows") && driverType.trim().startsWith("Firefox")) {
+            Runtime.getRuntime().exec("taskkill /F /IM firefox.exe");
+        }
+        else if (System.getProperty("os.name").startsWith("Windows") && driverType.trim().contains("IEDriverServer")){
             Runtime.getRuntime().exec("taskkill /F /IM IEDriverServer.exe");
+            Runtime.getRuntime().exec("taskkill /F /IM iexplore.exe");
+            unZip = new Unzip();
+            unZip.deleteFile(OUTPUT_FOLDER+ "IEDriverServer.exe");
+        }
+        else {
+            Runtime.getRuntime().exec("killall -9 firefox-bin");
+        }
     }
 
-        unZip = new Unzip();
-        unZip.deleteFile(OUTPUT_FOLDER+ "IEDriverServer.exe");
-    }
 
   private WebDriver loadDriver(boolean enableJavascript, String browser) throws InterruptedException {
 

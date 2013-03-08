@@ -40,8 +40,8 @@ public class TestCaseHelper {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
                 if (testWebDriver != null) {
-                   // testWebDriver.close();
-                  testWebDriver.quitDriver();
+//                  testWebDriver.close();
+                  //testWebDriver.quitDriver();
                   tearDownSuite();
                 }
             }
