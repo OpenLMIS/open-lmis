@@ -1,5 +1,5 @@
 <suite name="Openlmis Smoke" verbose="10" allow-return-values="true">
-  <parameter name="browser" value="ie"/>
+  <parameter name="browser" value="firefox"/>
   <test name="Openlmis test">
     <groups>
       <run>
