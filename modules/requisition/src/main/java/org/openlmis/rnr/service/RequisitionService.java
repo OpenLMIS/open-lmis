@@ -50,13 +50,14 @@ public class RequisitionService {
   private FacilityService facilityService;
   private SupplyLineService supplyLineService;
   private RequisitionFactory requisitionFactory;
+  private RequisitionPermissionService requisitionPermissionService;
 
   @Autowired
   public RequisitionService(RequisitionRepository requisitionRepository, RnrTemplateRepository rnrTemplateRepository,
                             FacilityApprovedProductService facilityApprovedProductService, SupervisoryNodeService supervisoryNodeRepository,
                             RoleRightsService roleRightsService, ProgramService programService,
                             ProcessingScheduleService processingScheduleService, FacilityService facilityService, SupplyLineService supplyLineService,
-                            RequisitionFactory requisitionFactory) {
+                            RequisitionFactory requisitionFactory, RequisitionPermissionService requisitionPermissionService) {
     this.requisitionRepository = requisitionRepository;
     this.rnrTemplateRepository = rnrTemplateRepository;
     this.facilityApprovedProductService = facilityApprovedProductService;
@@ -67,10 +68,13 @@ public class RequisitionService {
     this.facilityService = facilityService;
     this.supplyLineService = supplyLineService;
     this.requisitionFactory = requisitionFactory;
+    this.requisitionPermissionService = requisitionPermissionService;
   }
 
   @Transactional
   public Rnr initiate(Integer facilityId, Integer programId, Integer periodId, Integer modifiedBy) {
+    if(!requisitionPermissionService.hasPermission(modifiedBy, facilityId, programId, CREATE_REQUISITION)) throw new DataException(RNR_OPERATION_UNAUTHORIZED);
+
     ProgramRnrTemplate rnrTemplate = new ProgramRnrTemplate(programId, rnrTemplateRepository.fetchColumnsForRequisition(programId));
     if (rnrTemplate.getRnrColumns().size() == 0) throw new DataException(RNR_TEMPLATE_NOT_INITIATED_ERROR);
 
@@ -94,9 +98,7 @@ public class RequisitionService {
   public void save(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
 
-    Set<Right> userRights = roleRightsService.getRights(rnr.getModifiedBy());
-
-    if (!isUserAllowedToSave(savedRnr, userRights))
+    if (!requisitionPermissionService.hasPermissionToSave(rnr.getModifiedBy(), savedRnr))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
     savedRnr.copyEditableFields(rnr, rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(savedRnr.getProgram().getId()));
@@ -241,15 +243,6 @@ public class RequisitionService {
     if (validPeriods.size() == 0 || !validPeriods.get(0).getId().equals(periodId))
       throw new DataException(RNR_PREVIOUS_NOT_FILLED_ERROR);
   }
-
-
-  private boolean isUserAllowedToSave(Rnr rnr, Set<Right> userRights) {
-    return (rnr.getStatus() == INITIATED && userRights.contains(CREATE_REQUISITION)) ||
-        (rnr.getStatus() == SUBMITTED && userRights.contains(AUTHORIZE_REQUISITION)) ||
-        (rnr.getStatus() == AUTHORIZED && userRights.contains(APPROVE_REQUISITION)) ||
-        (rnr.getStatus() == IN_APPROVAL && userRights.contains(APPROVE_REQUISITION));
-  }
-
 
   private void fillPreviousRequisitionsForAmc(Rnr requisition) {
     if (requisition == null) return;

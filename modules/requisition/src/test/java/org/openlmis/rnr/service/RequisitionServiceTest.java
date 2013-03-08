@@ -84,6 +84,8 @@ public class RequisitionServiceTest {
   private SupplyLineService supplyLineService;
   @Mock
   private RequisitionFactory requisitionFactory;
+  @Mock
+  private RequisitionPermissionService requisitionPermissionService;
 
   private Rnr submittedRnr;
   private Rnr initiatedRnr;
@@ -93,7 +95,8 @@ public class RequisitionServiceTest {
   @Before
   public void setup() {
     requisitionService = new RequisitionService(requisitionRepository, rnrTemplateRepository, facilityApprovedProductService,
-      supervisoryNodeService, roleRightService, programService, processingScheduleService, facilityService, supplyLineService, requisitionFactory);
+        supervisoryNodeService, roleRightService, programService, processingScheduleService, facilityService, supplyLineService,
+        requisitionFactory, requisitionPermissionService);
     submittedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, SUBMITTED)));
     initiatedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, INITIATED)));
     authorizedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, AUTHORIZED)));
@@ -261,7 +264,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date1.toDate());
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(rnr2);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date1.toDate(), processingPeriod2.getId())).
-      thenReturn(Arrays.asList(processingPeriod3, processingPeriod4));
+        thenReturn(Arrays.asList(processingPeriod3, processingPeriod4));
 
     List<ProcessingPeriod> periods = requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
 
@@ -281,7 +284,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date1.toDate());
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(null);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date1.toDate(), null)).
-      thenReturn(Arrays.asList(processingPeriod1, processingPeriod2));
+        thenReturn(Arrays.asList(processingPeriod1, processingPeriod2));
 
     List<ProcessingPeriod> periods = requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
 
@@ -292,24 +295,26 @@ public class RequisitionServiceTest {
 
   private Rnr createRequisition(int periodId, RnrStatus status) {
     return make(a(RequisitionBuilder.defaultRnr,
-      with(RequisitionBuilder.periodId, periodId),
-      with(RequisitionBuilder.status, status)));
+        with(RequisitionBuilder.periodId, periodId),
+        with(RequisitionBuilder.status, status)));
   }
 
   private ProcessingPeriod createProcessingPeriod(int id, DateTime startDate) {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod,
-      with(ProcessingPeriodBuilder.startDate, startDate.toDate())));
+        with(ProcessingPeriodBuilder.startDate, startDate.toDate())));
     processingPeriod.setId(id);
     return processingPeriod;
   }
 
   @Test
   public void shouldNotInitRequisitionIfTemplateNotDefined() {
+    when(requisitionPermissionService.hasPermission(USER_ID, FACILITY.getId(), PROGRAM.getId(), CREATE_REQUISITION)).thenReturn(true);
+
     when(rnrTemplateRepository.fetchColumnsForRequisition(PROGRAM.getId())).thenReturn(new ArrayList<RnrColumn>());
     expectedException.expect(DataException.class);
     expectedException.expectMessage(RNR_TEMPLATE_NOT_INITIATED_ERROR);
 
-    Rnr rnr = requisitionService.initiate(FACILITY.getId(), HIV, null, 1);
+    Rnr rnr = requisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), USER_ID);
 
     verify(facilityApprovedProductService, never()).getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(), HIV);
     verify(requisitionRepository, never()).insert(rnr);
@@ -333,11 +338,12 @@ public class RequisitionServiceTest {
   }
 
   private void setupForInitRnr(Date date, Rnr requisition, ProcessingPeriod validPeriod) {
+    when(requisitionPermissionService.hasPermission(USER_ID, FACILITY.getId(), PROGRAM.getId(), CREATE_REQUISITION)).thenReturn(true);
     when(rnrTemplateRepository.fetchColumnsForRequisition(PROGRAM.getId())).thenReturn(getRnrColumns());
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date);
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(requisition);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date, PERIOD.getId())).
-      thenReturn(Arrays.asList(validPeriod));
+        thenReturn(Arrays.asList(validPeriod));
   }
 
   @Test
@@ -462,53 +468,16 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  public void shouldSaveRnrIfStatusIsSubmittedAndUserHasAuthorizeRight() {
-    Integer userId = 1;
-    Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr);
-    doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
-    doNothing().when(savedRnr).copyUserEditableFields(submittedRnr, rnrColumns);
-    when(rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(submittedRnr.getProgram().getId())).thenReturn(rnrColumns);
-
-    Set<Right> listUserRights = new HashSet<>(Arrays.asList(AUTHORIZE_REQUISITION));
-    when(roleRightService.getRights(userId)).thenReturn(listUserRights);
-
-    submittedRnr.setModifiedBy(userId);
-    requisitionService.save(submittedRnr);
-
-    verify(requisitionRepository).update(savedRnr);
-  }
-
-  @Test
-  public void shouldSaveRnrIfStatusIsAuthorizedAndUserHasApproveRight() {
-    Integer userId = 1;
-    Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(authorizedRnr);
-
-    when(rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(submittedRnr.getProgram().getId())).thenReturn(rnrColumns);
-    doNothing().when(savedRnr).copyUserEditableFields(authorizedRnr, rnrColumns);
-    doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
-
-    Set<Right> listUserRights = new HashSet<>(Arrays.asList(APPROVE_REQUISITION));
-    when(roleRightService.getRights(userId)).thenReturn(listUserRights);
-
-    authorizedRnr.setModifiedBy(userId);
-    requisitionService.save(authorizedRnr);
-
-    verify(requisitionRepository).update(savedRnr);
-  }
-
-  @Test
-  public void shouldSaveRnrIfStatusIsInitiatedAndUserHasCreateRight() {
-    Integer userId = 1;
+  public void shouldSaveRnrIfUserHasAppropriatePermission() {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr);
 
     when(rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(initiatedRnr.getProgram().getId())).thenReturn(rnrColumns);
     doNothing().when(savedRnr).copyUserEditableFields(initiatedRnr, rnrColumns);
     doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
 
-    Set<Right> listUserRights = new HashSet<>(Arrays.asList(CREATE_REQUISITION));
-    when(roleRightService.getRights(userId)).thenReturn(listUserRights);
+    when(requisitionPermissionService.hasPermissionToSave(USER_ID, savedRnr)).thenReturn(true);
 
-    initiatedRnr.setModifiedBy(userId);
+    initiatedRnr.setModifiedBy(USER_ID);
     requisitionService.save(initiatedRnr);
 
     verify(savedRnr).copyEditableFields(initiatedRnr, rnrColumns);
@@ -516,32 +485,9 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  public void shouldNotSaveRnrWithStatusInitiatedIfUserHasOnlyAuthorizeRight() {
-    Integer userId = 1;
-    Rnr savedRnr = spy(initiatedRnr);
-    savedRnr.setModifiedBy(userId);
-    savedRnr.setFacility(FACILITY);
-    savedRnr.setProgram(PROGRAM);
-    savedRnr.setPeriod(PERIOD);
-
-    when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
-    when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
-    when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
-    Set<Right> listUserRights = new HashSet<>(Arrays.asList(AUTHORIZE_REQUISITION));
-    when(requisitionRepository.getById(initiatedRnr.getId())).thenReturn(savedRnr);
-    when(roleRightService.getRights(userId)).thenReturn(listUserRights);
-
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage(RNR_OPERATION_UNAUTHORIZED);
-
-    requisitionService.save(initiatedRnr);
-  }
-
-  @Test
-  public void shouldNotSaveAlreadySubmittedRnrIfUserHasOnlyCreateRequisitionRight() {
-    Integer userId = 1;
+  public void shouldNotSaveUserDoesNotHaveAppropriatePermission() {
     Rnr savedRnr = spy(submittedRnr);
-    savedRnr.setModifiedBy(userId);
+    savedRnr.setModifiedBy(USER_ID);
     savedRnr.setFacility(FACILITY);
     savedRnr.setProgram(PROGRAM);
     savedRnr.setPeriod(PERIOD);
@@ -550,8 +496,8 @@ public class RequisitionServiceTest {
     when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
     when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
     when(requisitionRepository.getById(submittedRnr.getId())).thenReturn(savedRnr);
-    Set<Right> listUserRights = new HashSet<>(Arrays.asList(CREATE_REQUISITION));
-    when(roleRightService.getRights(userId)).thenReturn(listUserRights);
+
+    when(requisitionPermissionService.hasPermissionToSave(USER_ID, savedRnr)).thenReturn(false);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage(RNR_OPERATION_UNAUTHORIZED);
@@ -938,6 +884,18 @@ public class RequisitionServiceTest {
     verify(facilityService).getById(FACILITY.getId());
     verify(programService).getById(PROGRAM.getId());
     verify(processingScheduleService).getPeriodById(PERIOD.getId());
+  }
+
+  @Test
+  public void shouldCheckForPermissionBeforeInitiatingRnr() throws Exception {
+    when(requisitionPermissionService.hasPermission(USER_ID, FACILITY.getId(), PROGRAM.getId(), CREATE_REQUISITION)).thenReturn(false);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage(RNR_OPERATION_UNAUTHORIZED);
+
+    requisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), USER_ID);
+
+    verify(requisitionPermissionService).hasPermission(USER_ID, FACILITY.getId(), PROGRAM.getId(), CREATE_REQUISITION);
   }
 
   private RoleAssignment roleAssignmentWithSupervisoryNodeId(int supervisoryNodeId) {

@@ -48,7 +48,7 @@ public class RequisitionController extends BaseController {
   }
 
   @RequestMapping(value = "/requisitions", method = POST, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, #facilityId, #programId, 'CREATE_REQUISITION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> initiateRnr(@RequestParam("facilityId") Integer facilityId,
                                                       @RequestParam("programId") Integer programId,
                                                       @RequestParam("periodId") Integer periodId,
@@ -61,7 +61,7 @@ public class RequisitionController extends BaseController {
   }
 
   @RequestMapping(value = "/requisitions", method = GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> get(@RequestParam("facilityId") Integer facilityId,
                                               @RequestParam("programId") Integer programId,
                                               @RequestParam("periodId") Integer periodId) {
@@ -70,7 +70,7 @@ public class RequisitionController extends BaseController {
 
 
   @RequestMapping(value = "/requisitions/{id}/save", method = PUT, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> saveRnr(@RequestBody Rnr rnr,
                                                   @PathVariable("id") Integer id,
                                                   HttpServletRequest request) {
@@ -85,7 +85,7 @@ public class RequisitionController extends BaseController {
   }
 
   @RequestMapping(value = "/requisitions/{id}/submit", method = PUT, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> submit(@RequestBody Rnr rnr,
                                                  @PathVariable("id") Integer id,
                                                  HttpServletRequest request) {
@@ -141,7 +141,7 @@ public class RequisitionController extends BaseController {
   }
 
   @RequestMapping(value = "/requisitions-for-convert-to-order", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CONVERT_TO_ORDER')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CONVERT_TO_ORDER')")//todo is it possible for a single user to convert requisitions to order for all facilities
   public ResponseEntity<OpenLmisResponse> listForConvertToOrder() {
     List<Rnr> approvedRequisitions = requisitionService.getApprovedRequisitions();
     return response(RNR_LIST, RnrDTO.prepareForListApproval(approvedRequisitions));
