@@ -31,7 +31,7 @@ var rnrModule = angular.module('rnr', ['openlmis', 'ngGrid', 'ui.bootstrap.modal
       }
     };
   }).run(function ($rootScope) {
-    $rootScope.pageSize = 30;
+    $rootScope.pageSize = 20;
   });
 
 rnrModule.positiveInteger = function (value, errorHolder) {
