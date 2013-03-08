@@ -93,7 +93,7 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
       link:function (scope, element, attrs) {
         
         function fixToolbarWidth() {
-          var toolbarWidth = window.innerWidth - 26;
+          var toolbarWidth = $(document).width() - 26;
           angular.element("#action_buttons").css("width", toolbarWidth + "px");
         };
 
