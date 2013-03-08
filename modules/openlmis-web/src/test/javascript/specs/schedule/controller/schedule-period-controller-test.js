@@ -47,6 +47,7 @@ describe("Period", function () {
       scope.createPeriodForm = {$invalid:false};
       scope.createPeriod();
       $httpBackend.flush();
+
       expect(scope.periodList.length).toEqual(2);
       expect(scope.periodList).toEqual([newPeriod, existingPeriod]);
       expect(scope.message).toEqual("success message");
@@ -112,7 +113,40 @@ describe("Period", function () {
       scope.createPeriod();
       $httpBackend.flush();
 
-      expect(scope.newPeriod.startDate).toEqual(new Date(2011,4,2,0,0).getTime());
+      expect(scope.newPeriod.startDate).toEqual(new Date(2011,4,2,0,0));
+      expect(scope.message).toEqual("success message");
+    });
+  });
+
+  describe('Create First Period', function() {
+
+    var scheduleId = 456;
+    var scope, $httpBackend, ctrl, routeParams;
+    var scheduleWithNoExistingPeriod = {"id":scheduleId, "name":"name", "description":"description"};
+
+    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $routeParams) {
+      scope = $rootScope.$new();
+      routeParams = $routeParams;
+      routeParams.id = scheduleId;
+      $httpBackend = _$httpBackend_;
+
+      $httpBackend.expectGET('/schedules/456.json').respond(200, {"schedule":scheduleWithNoExistingPeriod});
+      $httpBackend.expectGET('/schedules/456/periods.json').respond(200, {"periods":[]});
+      ctrl = $controller(SchedulePeriodController, {$scope:scope, $routeParams:routeParams});
+    }));
+
+    it('should create the first period', function() {
+      $httpBackend.flush();
+      var newPeriod = {"name":"newName", "startDate":new Date(2011, 3, 1, 0, 0), "endDate":new Date(2011, 4, 1, 0, 0), "description":"newDescription"};
+      scope.newPeriod = newPeriod;
+      $httpBackend.expectPOST('/schedules/456/periods.json').respond(200, {"success":"success message"});
+
+      scope.createPeriodForm = {$invalid:false};
+      scope.createPeriod();
+      $httpBackend.flush();
+
+      expect(scope.periodList.length).toEqual(1);
+      expect(scope.periodList).toEqual([newPeriod]);
       expect(scope.message).toEqual("success message");
     });
   });
