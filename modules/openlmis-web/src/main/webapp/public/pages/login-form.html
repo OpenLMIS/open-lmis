@@ -12,7 +12,7 @@
         </div>
         <div class="alert alert-error" ng-bind="loginError" ng-show="loginError"></div>
         <div class="login-form-row">
-          <input class="btn btn-primary" type="submit" value="Sign in"/>
+          <input class="btn btn-primary" type="submit" value="Sign in" ng-disabled="disableSignInButton"/>
         </div>
         <div class="login-form-row forgot-link">
           <a ng-click="goToForgotPassword()">Forgot password?</a>

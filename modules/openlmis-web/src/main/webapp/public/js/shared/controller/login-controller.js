@@ -1,5 +1,7 @@
 function LoginController($scope, $http, localStorageService) {
+  $scope.disableSignInButton = false;
   $scope.doLogin = function () {
+    $scope.disableSignInButton = true;
     var data = $.param({j_username:$scope.username, j_password:$scope.password});
     $http({
       method:'POST',
@@ -7,6 +9,7 @@ function LoginController($scope, $http, localStorageService) {
       data:data,
       headers:{'Content-Type':'application/x-www-form-urlencoded'}
     }).success(function (data) {
+          $scope.disableSignInButton = false;
           if (data.authenticated) {
             localStorageService.add(localStorageKeys.RIGHT, getRights(data.rights));
             if (window.location.href.indexOf("login.html") != -1) {
@@ -19,6 +22,7 @@ function LoginController($scope, $http, localStorageService) {
           }
         }).
         error(function (data) {
+          $scope.disableSignInButton = false;
           $scope.loginError = "Server Error!!";
         });
   };
