@@ -106,7 +106,7 @@ public class RequisitionController extends BaseController {
   }
 
   @RequestMapping(value = "/requisitions/{id}/authorize", method = PUT, headers = ACCEPT_JSON)
-  @PreAuthorize("hasPermission('', 'AUTHORIZE_REQUISITION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> authorize(@RequestBody Rnr rnr,
                                                     @PathVariable("id") Integer id,
                                                     HttpServletRequest request) {
@@ -121,7 +121,7 @@ public class RequisitionController extends BaseController {
   }
 
   @RequestMapping(value = "/requisitions/{id}/approve", method = PUT, headers = ACCEPT_JSON)
-  @PreAuthorize("hasPermission('', 'APPROVE_REQUISITION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'APPROVE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> approve(@RequestBody Rnr rnr, @PathVariable("id") Integer id, HttpServletRequest request) {
     rnr.setModifiedBy(loggedInUserId(request));
     rnr.setId(id);
@@ -134,21 +134,21 @@ public class RequisitionController extends BaseController {
 
 
   @RequestMapping(value = "/requisitions-for-approval", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("hasPermission('', 'APPROVE_REQUISITION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'APPROVE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> listForApproval(HttpServletRequest request) {
     List<Rnr> requisitions = requisitionService.listForApproval(loggedInUserId(request));
     return response(RNR_LIST, RnrDTO.prepareForListApproval(requisitions));
   }
 
   @RequestMapping(value = "/requisitions-for-convert-to-order", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("hasPermission('', 'CONVERT_TO_ORDER')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CONVERT_TO_ORDER')")
   public ResponseEntity<OpenLmisResponse> listForConvertToOrder() {
     List<Rnr> approvedRequisitions = requisitionService.getApprovedRequisitions();
     return response(RNR_LIST, RnrDTO.prepareForListApproval(approvedRequisitions));
   }
 
   @RequestMapping(value = "/logistics/facility/{facilityId}/program/{programId}/periods", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(
     @PathVariable("facilityId") Integer facilityId,
     @PathVariable("programId") Integer programId) {

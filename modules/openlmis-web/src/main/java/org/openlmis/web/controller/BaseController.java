@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 import static org.openlmis.web.response.OpenLmisResponse.error;
 
