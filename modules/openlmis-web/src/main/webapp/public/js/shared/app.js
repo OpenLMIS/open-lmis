@@ -91,8 +91,14 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
     return {
       restrict:'A',
       link:function (scope, element, attrs) {
-        var toolbarWidth = window.innerWidth - 26;
-        angular.element("#action_buttons").css("width", toolbarWidth + "px");
+        
+        function fixToolbarWidth() {
+          var toolbarWidth = window.innerWidth - 26;
+          angular.element("#action_buttons").css("width", toolbarWidth + "px");
+        };
+
+        fixToolbarWidth();
+        $(window).on('resize', fixToolbarWidth);
       }
     };
   }).directive('placeholder',function () {
