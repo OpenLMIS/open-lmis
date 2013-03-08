@@ -118,17 +118,17 @@
 
       <div class="row-fluid" ng-repeat="nonFullSupplyProduct in addedNonFullSupplyProducts">
         <div class="span3">
-          <div class="fluid-grid-cell">
+          <div class="fluid-grid-cell" id= "nonFullSupplyProductCodeAndName">
             <label ng-bind="nonFullSupplyProduct.code+' | '+nonFullSupplyProduct.name"></label>
           </div>
         </div>
         <div class="span3">
-          <div class="fluid-grid-cell">
+          <div class="fluid-grid-cell" id= "nonFullSupplyProductQuantityRequested">
             <input ng-model="nonFullSupplyProduct.quantityRequested"/>
           </div>
         </div>
         <div class="span3">
-          <div class="fluid-grid-cell">
+          <div class="fluid-grid-cell" id= "nonFullSupplyProductReasonForRequestedQuantity">
             <input ng-model="nonFullSupplyProduct.reasonForRequestedQuantity"/>
           </div>
         </div>

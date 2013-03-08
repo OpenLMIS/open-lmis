@@ -152,8 +152,11 @@ public class InitiateRnRPage extends Page {
   @FindBy(how = How.XPATH, using = "//span[@ng-bind='rnr.facility.operatedBy.text']")
   private static WebElement operatedByInitRnRScreen;
 
-  @FindBy(how = How.XPATH, using = "//input[@value='Add']")
+  @FindBy(how = How.XPATH, using = "//input[@id='addNonFullSupply' and @value='Add']")
   private static WebElement addNonFullSupplyButton;
+
+  @FindBy(how = How.XPATH, using = "//input[@value='Add']")
+  private static WebElement addNonFullSupplyButtonScreen;
 
   @FindBy(how = How.ID, using = "nonFullSupplyTab")
   private static WebElement nonFullSupplyTab;
@@ -167,11 +170,23 @@ public class InitiateRnRPage extends Page {
   @FindBy(how = How.XPATH, using = "//input[@id='W_0']")
   private static WebElement requestedQuantityExplanationNonFullSupply;
 
+  @FindBy(how = How.XPATH, using = "//select[@id='nonFullSupplyProductsCategory']")
+  private static WebElement categoryDropDown;
+
   @FindBy(how = How.XPATH, using = "//select[@id='nonFullSupplyProductsCodeAndName']")
   private static WebElement productDropDown;
 
   @FindBy(how = How.XPATH, using = "//select[@id='nonFullSupplyProductsCode']")
   private static WebElement productCodeDropDown;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='nonFullSupplyProductQuantityRequested']/input")
+  private static WebElement nonFullSupplyProductQuantityRequested;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='nonFullSupplyProductCodeAndName']/label")
+  private static WebElement nonFullSupplyProductCodeAndName;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='nonFullSupplyProductReasonForRequestedQuantity']/input")
+  private static WebElement nonFullSupplyProductReasonForRequestedQuantity;
 
   @FindBy(how = How.NAME, using = "newNonFullSupply.quantityRequested")
   private static WebElement requestedQuantityField;
@@ -187,6 +202,9 @@ public class InitiateRnRPage extends Page {
 
   @FindBy(how = How.XPATH, using = "//input[@value='Close']")
   private static WebElement closeButton;
+
+  @FindBy(how = How.XPATH, using = "//input[@id='doneNonFullSupply']")
+  private static WebElement doneButtonNonFullSupply;
 
   String successText = "R&R saved successfully!";
   Float actualTotalCostFullSupply, actualTotalCostNonFullSupply;
@@ -355,42 +373,49 @@ public class InitiateRnRPage extends Page {
     nonFullSupplyTab.click();
     DBWrapper dbWrapper = new DBWrapper();
     String nonFullSupplyItems = dbWrapper.fetchNonFullSupplyData(productCode, "2", "1");
-    testWebDriver.waitForElementToAppear(addNonFullSupplyButton);
+    testWebDriver.waitForElementToAppear(addNonFullSupplyButtonScreen);
     testWebDriver.sleep(1000);
-    addNonFullSupplyButton.click();
+    addButton.click();
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(productDropDown);
     SeleneseTestNgHelper.assertFalse("Add button not enabled", addButtonNonFullSupply.isEnabled());
     SeleneseTestNgHelper.assertTrue("Close button not displayed", closeButton.isDisplayed());
     testWebDriver.waitForElementToAppear(productDropDown);
-    testWebDriver.selectByVisibleText(productDropDown, productPrimaryName);
-    testWebDriver.waitForElementToAppear(productCodeDropDown);
-    testWebDriver.selectByVisibleText(productCodeDropDown, productCode);
+    testWebDriver.waitForElementToAppear(categoryDropDown);
+    testWebDriver.selectByIndex(categoryDropDown,1);
+    testWebDriver.selectByVisibleText(productDropDown, productCode+" | "+productPrimaryName);
     requestedQuantityField.clear();
     requestedQuantityField.sendKeys(requestedQuantityValue);
     requestedQuantityExplanationField.clear();
     requestedQuantityExplanationField.sendKeys(requestedQuantityExplanationValue);
     testWebDriver.waitForElementToAppear(closeButton);
     closeButton.click();
-    testWebDriver.waitForElementToAppear(addNonFullSupplyButton);
-    addNonFullSupplyButton.click();
+    testWebDriver.waitForElementToAppear(addNonFullSupplyButtonScreen);
+    addNonFullSupplyButtonScreen.click();
     testWebDriver.waitForElementToAppear(productDropDown);
+//    SeleneseTestNgHelper.assertEquals(testWebDriver.getSelectedOptionDefault(categoryDropDown).trim(), "");
     SeleneseTestNgHelper.assertEquals(testWebDriver.getSelectedOptionDefault(productDropDown).trim(), "");
-    SeleneseTestNgHelper.assertEquals(testWebDriver.getSelectedOptionDefault(productCodeDropDown).trim(), "");
     SeleneseTestNgHelper.assertEquals(requestedQuantityField.getAttribute("value").trim(),"");
     SeleneseTestNgHelper.assertEquals(requestedQuantityExplanationField.getAttribute("value").trim(),"");
 
     testWebDriver.waitForElementToAppear(productDropDown);
-    testWebDriver.selectByVisibleText(productDropDown, productPrimaryName);
-    testWebDriver.waitForElementToAppear(productCodeDropDown);
-    testWebDriver.selectByVisibleText(productCodeDropDown, productCode);
+    testWebDriver.waitForElementToAppear(categoryDropDown);
+    testWebDriver.selectByIndex(categoryDropDown,1);
+    testWebDriver.selectByVisibleText(productDropDown, productCode+" | "+productPrimaryName);
     requestedQuantityField.clear();
     requestedQuantityField.sendKeys(requestedQuantityValue);
     requestedQuantityExplanationField.clear();
     requestedQuantityExplanationField.sendKeys(requestedQuantityExplanationValue);
-    testWebDriver.waitForElementToAppear(closeButton);
+    testWebDriver.waitForElementToAppear(addNonFullSupplyButton);
     testWebDriver.sleep(1000);
-    addButtonEnabled.click();
+    addNonFullSupplyButton.click();
+    testWebDriver.sleep(500);
+    testWebDriver.waitForElementToAppear(nonFullSupplyProductCodeAndName);
+    SeleneseTestNgHelper.assertEquals(nonFullSupplyProductCodeAndName.getText().trim(), productCode+" | "+productPrimaryName);
+    SeleneseTestNgHelper.assertEquals(nonFullSupplyProductQuantityRequested.getAttribute("value").trim(), requestedQuantityValue);
+    SeleneseTestNgHelper.assertEquals(nonFullSupplyProductReasonForRequestedQuantity.getAttribute("value").trim(), requestedQuantityExplanationValue);
+    doneButtonNonFullSupply.click();
+    testWebDriver.sleep(500);
     closeButton.click();
 
     SeleneseTestNgHelper.assertEquals(productDescriptionNonFullSupply.getText().trim(), nonFullSupplyItems);
