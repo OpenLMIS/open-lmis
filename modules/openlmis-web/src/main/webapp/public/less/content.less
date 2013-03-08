@@ -339,7 +339,7 @@ span[class^="tpl-"] {
 
 .rnr-tabs {
   font-size: 0.9em;
-  margin: 5px 0 10px;
+  margin: 5px 0 0;
   font-weight: bold;
   ul {
     margin: 0;
@@ -405,7 +405,7 @@ span[class^="tpl-"] {
 .rnr-table {
   overflow: auto;
   width: 100%;
-  padding-top: 10px;
+  padding-top: 20px;
   th {
     background: #EEE;
     font-weight: bold;
@@ -915,14 +915,14 @@ table td.delete-button {
 .row-specific-error {
   position: absolute;
   left: 50%;
-  bottom: 42px;
-  width: 134px;
+  bottom: 36px;
+  width: 140px;
   margin-left: -82px;
   background: #FFF !important;
   font-size: 0.8em;
   color: #CF2323;
   border: 2px solid #E43D3D;
-  padding: 7px 11px;
+  padding: 6px;
   line-height: 13px;
   border-radius: 6px;
   z-index: 10;
@@ -940,10 +940,10 @@ table td.delete-button {
   }
 }
 
-  .gridStyle {
-    border: 1px solid rgb(212,212,212);
-    width: 100%;
-    height: 400px
+.gridStyle {
+  border: 1px solid rgb(212,212,212);
+  width: 100%;
+  height: 400px
 }
 
 .approveGrid {
@@ -1265,7 +1265,10 @@ input[placeholder].placeholder{
     cursor: pointer !important;
   }
 }
-.content .pagination{
+.content .pagination {
+  ul {
+    box-shadow: none;
+  }
   li{
     a{
       margin-right: 5px;
