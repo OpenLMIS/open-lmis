@@ -167,7 +167,7 @@ public class InitiateRnRPage extends Page {
   @FindBy(how = How.XPATH, using = "//input[@id='W_0']")
   private static WebElement requestedQuantityExplanationNonFullSupply;
 
-  @FindBy(how = How.XPATH, using = "//select[@id='nonFullSupplyProductsName']")
+  @FindBy(how = How.XPATH, using = "//select[@id='nonFullSupplyProductsCodeAndName']")
   private static WebElement productDropDown;
 
   @FindBy(how = How.XPATH, using = "//select[@id='nonFullSupplyProductsCode']")

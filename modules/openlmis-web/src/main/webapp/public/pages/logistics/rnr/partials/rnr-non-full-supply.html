@@ -119,7 +119,7 @@
       <div class="row-fluid" ng-repeat="nonFullSupplyProduct in addedNonFullSupplyProducts">
         <div class="span3">
           <div class="fluid-grid-cell">
-            <label ng-bind="nonFullSupplyProduct.productCode+' | '+nonFullSupplyProduct.name"></label>
+            <label ng-bind="nonFullSupplyProduct.code+' | '+nonFullSupplyProduct.name"></label>
           </div>
         </div>
         <div class="span3">
@@ -139,6 +139,9 @@
         </div>
       </div>
       <div class="modal-footer">
+        <span class="pull-left span1">
+            <input type="reset" class="btn btn-success save-button" value="Close" ng-click="nonFullSupplyProductsModal=false" />
+          </span>
         <span class="pull-left span1">
             <input type="button" href="" id="doneNonFullSupply" class="btn btn-primary"
                    ng-click="addNonFullSupplyLineItemToRnr()"
