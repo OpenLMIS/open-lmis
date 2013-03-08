@@ -34,14 +34,14 @@ function RequisitionFullSupplyController($scope, $routeParams, $location, Losses
 
   $scope.showLossesAndAdjustmentModalForLineItem = function (lineItem) {
     $scope.currentRnrLineItem = lineItem;
-    updateLossesAndAdjustmentTypesToDisplayForLineItem();
+    updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem);
     $scope.lossesAndAdjustmentsModal = true;
   };
 
   // TODO: Push this method to rnr-line-item
   $scope.removeLossAndAdjustment = function (lossAndAdjustmentToDelete) {
     $scope.currentRnrLineItem.removeLossAndAdjustment(lossAndAdjustmentToDelete);
-    updateLossesAndAdjustmentTypesToDisplayForLineItem();
+    updateLossesAndAdjustmentTypesToDisplayForLineItem($scope.currentRnrLineItem);
     $scope.resetModalError();
     $scope.saveRnrForm.$dirty = true;
   };
@@ -49,7 +49,7 @@ function RequisitionFullSupplyController($scope, $routeParams, $location, Losses
   // TODO: Push this method to rnr-line-item
   $scope.addLossAndAdjustment = function (newLossAndAdjustment) {
     $scope.currentRnrLineItem.addLossAndAdjustment(newLossAndAdjustment);
-    updateLossesAndAdjustmentTypesToDisplayForLineItem();
+    updateLossesAndAdjustmentTypesToDisplayForLineItem($scope.currentRnrLineItem);
     $scope.saveRnrForm.$dirty = true;
   };
 
@@ -68,8 +68,8 @@ function RequisitionFullSupplyController($scope, $routeParams, $location, Losses
     return true;
   }
 
-  function updateLossesAndAdjustmentTypesToDisplayForLineItem() {
-    var lossesAndAdjustmentTypesForLineItem = _.pluck(_.pluck($scope.currentRnrLineItem.lossesAndAdjustments, 'type'), 'name');
+  function updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem) {
+    var lossesAndAdjustmentTypesForLineItem = _.pluck(_.pluck(lineItem.lossesAndAdjustments, 'type'), 'name');
 
     $scope.lossesAndAdjustmentTypesToDisplay = $.grep($scope.allTypes, function (lAndATypeObject) {
       return $.inArray(lAndATypeObject.name, lossesAndAdjustmentTypesForLineItem) == -1;

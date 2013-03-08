@@ -240,29 +240,29 @@
       <div class = "adjustment-list"
            ng-show = "currentRnrLineItem.lossesAndAdjustments.length > 0">
         <ul>
-          <li ng-repeat = "oneLossAndAdjustment in currentRnrLineItem.lossesAndAdjustments"
+          <li ng-repeat = "adjustment in currentRnrLineItem.lossesAndAdjustments"
               class = "clearfix">
             <span class = "tpl-adjustment-type"
-                  ng-bind = "oneLossAndAdjustment.type.description"></span>
+                  ng-bind = "adjustment.type.description"></span>
             <span class = "tpl-adjustment-delete">
               <a class = "close" ng-show = "!formDisabled"
-                 ng-click = "removeLossAndAdjustment(oneLossAndAdjustment)">&times;</a>
+                 ng-click = "removeLossAndAdjustment(adjustment)">&times;</a>
             </span>
             <span class = "tpl-adjustment-qty">
               <input ng-required = "true"
                      ng-disabled = "formDisabled"
-                     name = "{{oneLossAndAdjustment.type.displayOrder}}"
+                     name = "{{adjustment.type.displayOrder}}"
                      type = "text"
-                     ng-model = "oneLossAndAdjustment.quantity"
+                     ng-model = "adjustment.quantity"
                      ng-change = "currentRnrLineItem.reEvaluateTotalLossesAndAdjustments(rnr, programRnrColumnList); resetModalError()"
                      rnr-validator = "positiveInteger"
                      maxlength = "8"
-                     ng-class = "highlightRequiredFieldInModal(oneLossAndAdjustment.quantity)"
+                     ng-class = "highlightRequiredFieldInModal(adjustment.quantity)"
                      data-keyboard = "false"
                 />
 
               <div class = "rnr-form-error"
-                   id = "{{oneLossAndAdjustment.type.displayOrder}}"
+                   id = "{{adjustment.type.displayOrder}}"
                    style = "display:none;">
                 Enter Numeric Data
               </div>
