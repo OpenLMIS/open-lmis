@@ -21,6 +21,7 @@ public class RequisitionBuilder {
   public static final Property<Rnr, RnrStatus> status = newProperty();
   public static final Property<Rnr, Date> submittedDate = newProperty();
   public static final Property<Rnr, Integer> periodId = newProperty();
+  public static final Property<Rnr, Integer> modifiedBy = newProperty();
 
   public static final Instantiator<Rnr> defaultRnr = new Instantiator<Rnr>() {
 
@@ -40,7 +41,7 @@ public class RequisitionBuilder {
       rnr.getSupplyingFacility().setId(5);
       RnrLineItem rnrLineItemCost48 = make(a(RnrLineItemBuilder.defaultRnrLineItem));
       rnr.add(rnrLineItemCost48, true);
-
+      rnr.setModifiedBy(lookup.valueOf(modifiedBy, 1));
       return rnr;
     }
   };

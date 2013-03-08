@@ -1,8 +1,6 @@
 package org.openlmis.rnr.service;
 
 import lombok.NoArgsConstructor;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
@@ -73,7 +71,8 @@ public class RequisitionService {
 
   @Transactional
   public Rnr initiate(Integer facilityId, Integer programId, Integer periodId, Integer modifiedBy) {
-    if(!requisitionPermissionService.hasPermission(modifiedBy, facilityId, programId, CREATE_REQUISITION)) throw new DataException(RNR_OPERATION_UNAUTHORIZED);
+    if (!requisitionPermissionService.hasPermission(modifiedBy, facilityId, programId, CREATE_REQUISITION))
+      throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
     ProgramRnrTemplate rnrTemplate = new ProgramRnrTemplate(programId, rnrTemplateRepository.fetchColumnsForRequisition(programId));
     if (rnrTemplate.getRnrColumns().size() == 0) throw new DataException(RNR_TEMPLATE_NOT_INITIATED_ERROR);
@@ -127,6 +126,9 @@ public class RequisitionService {
   public OpenLmisMessage submit(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
 
+    if (!requisitionPermissionService.hasPermission(rnr.getModifiedBy(), savedRnr, CREATE_REQUISITION))
+      throw new DataException(RNR_OPERATION_UNAUTHORIZED);
+
     List<RnrColumn> rnrColumns = rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(savedRnr.getProgram().getId());
 
     if (savedRnr.getStatus() != INITIATED) {
@@ -147,6 +149,9 @@ public class RequisitionService {
 
   public OpenLmisMessage authorize(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
+    if (!requisitionPermissionService.hasPermission(rnr.getModifiedBy(), savedRnr, AUTHORIZE_REQUISITION))
+      throw new DataException(RNR_OPERATION_UNAUTHORIZED);
+
     List<RnrColumn> rnrColumns = rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(savedRnr.getProgram().getId());
 
     if (savedRnr.getStatus() != SUBMITTED) throw new DataException(RNR_AUTHORIZATION_ERROR);
@@ -166,6 +171,9 @@ public class RequisitionService {
 
   public OpenLmisMessage approve(Rnr requisition) {
     Rnr savedRnr = getFullRequisitionById(requisition.getId());
+
+    if (!requisitionPermissionService.hasPermission(requisition.getModifiedBy(), savedRnr, APPROVE_REQUISITION))
+      throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
     if (!(savedRnr.getStatus() == AUTHORIZED || savedRnr.getStatus() == IN_APPROVAL)) {
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
@@ -216,18 +224,17 @@ public class RequisitionService {
 
 
   public Rnr getRnrForApprovalById(Integer id, Integer userId) {
-    final Rnr rnr = requisitionRepository.getById(id);
-    fillFacilityPeriodProgram(rnr);
-    List<RoleAssignment> assignments = roleRightsService.getRoleAssignments(APPROVE_REQUISITION, userId);
+    Rnr savedRnr = getFullRequisitionById(id);
 
-    if (!userCanApprove(rnr, assignments)) throw new DataException(RNR_OPERATION_UNAUTHORIZED);
+    if (!requisitionPermissionService.hasPermissionToApprove(userId, savedRnr))
+      throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
-    if (rnr.getStatus() == AUTHORIZED) {
-      rnr.prepareForApproval();
-      requisitionRepository.update(rnr);
+    if (savedRnr.getStatus() == AUTHORIZED) {
+      savedRnr.prepareForApproval();
+      requisitionRepository.update(savedRnr);
     }
 
-    return rnr;
+    return savedRnr;
   }
 
   private Rnr getPreviousRequisition(Rnr requisition) {
@@ -311,17 +318,6 @@ public class RequisitionService {
     }
     fillFacilityPeriodProgram(requisitionsForApproval.toArray(new Rnr[requisitionsForApproval.size()]));
     return requisitionsForApproval;
-  }
-
-
-  private boolean userCanApprove(final Rnr rnr, List<RoleAssignment> assignments) {
-    return CollectionUtils.exists(assignments, new Predicate() {
-      @Override
-      public boolean evaluate(Object o) {
-        final RoleAssignment o1 = (RoleAssignment) o;
-        return (o1.getSupervisoryNode().getId() == rnr.getSupervisoryNodeId());
-      }
-    });
   }
 
   @Transactional

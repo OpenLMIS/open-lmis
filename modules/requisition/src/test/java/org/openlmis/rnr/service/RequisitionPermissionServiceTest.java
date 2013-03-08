@@ -8,8 +8,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.RoleAssignment;
+import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.RoleAssignmentService;
+import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.Rnr;
 
@@ -34,7 +36,8 @@ public class RequisitionPermissionServiceTest {
   FacilityService facilityService;
   @Mock
   private RoleAssignmentService roleAssignmentService;
-
+  @Mock
+  private RoleRightsService roleRightsService;
   private RequisitionPermissionService requisitionPermissionService;
   private Integer userId;
   private Integer programId;
@@ -45,7 +48,7 @@ public class RequisitionPermissionServiceTest {
     userId = 1;
     programId = 1;
     facilityId = 1;
-    requisitionPermissionService = new RequisitionPermissionService(facilityService, roleAssignmentService);
+    requisitionPermissionService = new RequisitionPermissionService(facilityService, roleAssignmentService, roleRightsService);
   }
 
   @Test
@@ -119,4 +122,26 @@ public class RequisitionPermissionServiceTest {
     assertThat(requisitionPermissionServiceSpy.hasPermissionToSave(userId, rnr), is(true));
   }
 
+  @Test
+  public void shouldReturnTrueIfUserCanApproveARnr() throws Exception {
+    Integer supervisoryNodeId = 1;
+    Rnr rnr = make(a(RequisitionBuilder.defaultRnr, with(status, AUTHORIZED)));
+    rnr.setSupervisoryNodeId(supervisoryNodeId);
+    final RoleAssignment assignment = roleAssignmentWithSupervisoryNodeId(supervisoryNodeId);
+    List<RoleAssignment> roleAssignments = new ArrayList<RoleAssignment>() {{
+      add(assignment);
+    }};
+
+    when(roleRightsService.getRoleAssignments(APPROVE_REQUISITION, userId)).thenReturn(roleAssignments);
+
+    assertThat(requisitionPermissionService.hasPermissionToApprove(userId, rnr), is(true));
+  }
+
+  private RoleAssignment roleAssignmentWithSupervisoryNodeId(int supervisoryNodeId) {
+    final RoleAssignment assignment = new RoleAssignment();
+    final SupervisoryNode node = new SupervisoryNode();
+    node.setId(supervisoryNodeId);
+    assignment.setSupervisoryNode(node);
+    return assignment;
+  }
 }
