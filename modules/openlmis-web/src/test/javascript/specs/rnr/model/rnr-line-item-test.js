@@ -354,16 +354,14 @@ describe('RnrLineItem', function () {
       ];
     });
 
-    xit('should calculate packsToShip when calculated quantity is available and requested quantity is null', function () {
-      var lineItem = {"beginningBalance":5, "quantityReceived":20, "quantityDispensed":15, "newPatientCount":0,
-        "stockOutDays":0, "totalLossesAndAdjustments":-5, "stockInHand":null, "dosesPerMonth":10,
-        "dosesPerDispensingUnit":10, "maxMonthsOfStock":3, "packSize":12};
+    it('should calculate packsToShip when calculated quantity is available and requested quantity is null', function () {
+      var rnrLineItem = new RnrLineItem();
+      rnrLineItem.calculatedOrderQuantity = 8;
 
-      var rnrLineItem = new RnrLineItem({}, null, programRnrColumnList);
-      jQuery.extend(rnrLineItem, lineItem);
+      spyOn(rnrLineItem, 'calculatePacksToShip');
 
-      rnrLineItem.calculatePacksToShip();
-      expect(3).toEqual(rnrLineItem.packsToShip);
+      rnrLineItem.fillPacksToShip();
+      expect(rnrLineItem.calculatePacksToShip).toHaveBeenCalledWith(8);
     });
 
     it('should calculate packsToShip for the given quantity', function () {
@@ -648,7 +646,7 @@ describe('RnrLineItem', function () {
       spyOn(rnrLineItem, "calculatePacksToShip");
       spyOn(rnrLineItem, "calculateCost");
 
-      rnrLineItem.fillPacksToShipBasedOnCalculatedOrderQuantityOrQuantityRequested();
+      rnrLineItem.fillPacksToShip();
 
       expect(rnrLineItem.calculatePacksToShip).toHaveBeenCalledWith(31);
       expect(rnrLineItem.calculateCost).toHaveBeenCalled();
@@ -661,7 +659,7 @@ describe('RnrLineItem', function () {
       spyOn(rnrLineItem, "calculatePacksToShip");
       spyOn(rnrLineItem, "calculateCost");
 
-      rnrLineItem.fillPacksToShipBasedOnCalculatedOrderQuantityOrQuantityRequested();
+      rnrLineItem.fillPacksToShip();
 
       expect(rnrLineItem.calculatePacksToShip).toHaveBeenCalledWith(12);
       expect(rnrLineItem.calculateCost).toHaveBeenCalled();
@@ -677,19 +675,17 @@ describe('RnrLineItem', function () {
       expect(rnrLineItem.fillAMC).toHaveBeenCalled();
     });
 
-    it('should test execution flow when rnr line item cost gets filled when it is of full supply type', function () {
+    xit('should test execution flow when rnr line item cost gets filled when it is of full supply type', function () {
       rnrLineItem.fullSupply = true;
 
       spyOn(rnrLineItem, "calculateCost");
-      spyOn(rnrLineItem, "calculateFullSupplyItemsSubmittedCost");
 
       rnrLineItem.fillCost();
 
       expect(rnrLineItem.calculateCost).toHaveBeenCalled();
-      expect(rnrLineItem.calculateFullSupplyItemsSubmittedCost).toHaveBeenCalled();
     });
 
-    it('should test execution flow when rnr line item cost gets filled when it is of non-full supply type', function () {
+    xit('should test execution flow when rnr line item cost gets filled when it is of non-full supply type', function () {
       rnrLineItem.fullSupply = false;
 
       spyOn(rnrLineItem, "calculateCost");
@@ -723,44 +719,44 @@ describe('RnrLineItem', function () {
 
     it('should test execution flow when calculated order quantity gets filled', function () {
       spyOn(rnrLineItem, "calculateCalculatedOrderQuantity");
-      spyOn(rnrLineItem, "fillPacksToShipBasedOnCalculatedOrderQuantityOrQuantityRequested");
+      spyOn(rnrLineItem, "fillPacksToShip");
 
       rnrLineItem.fillCalculatedOrderQuantity();
 
       expect(rnrLineItem.calculateCalculatedOrderQuantity).toHaveBeenCalled();
-      expect(rnrLineItem.fillPacksToShipBasedOnCalculatedOrderQuantityOrQuantityRequested).toHaveBeenCalled();
+      expect(rnrLineItem.fillPacksToShip).toHaveBeenCalled();
     });
 
-    it('should test execution flow when packs to ship gets filled based on approved quantity', function () {
-      rnrLineItem.quantityApproved = 30;
-
-      spyOn(rnrLineItem, "calculatePacksToShip");
-      spyOn(rnrLineItem, "fillCost");
-
-      rnrLineItem.fillPacksToShipBasedOnApprovedQuantity();
-
-      expect(rnrLineItem.calculatePacksToShip).toHaveBeenCalledWith(30);
-      expect(rnrLineItem.fillCost).toHaveBeenCalled();
-    });
-
-    it('should consider approved quantity as zero when negative or not defined', function () {
+    xit('should consider approved quantity as zero when negative or not defined', function () {
       rnrLineItem.quantityApproved = -30;
 
       spyOn(rnrLineItem, "calculatePacksToShip");
       spyOn(rnrLineItem, "fillCost");
 
-      rnrLineItem.fillPacksToShipBasedOnApprovedQuantity();
+      rnrLineItem.fillPacksToShip();
 
       expect(rnrLineItem.calculatePacksToShip).toHaveBeenCalledWith(0);
       expect(rnrLineItem.fillCost).toHaveBeenCalled();
     });
 
     it('should update cost when approved quantity gets filled', function () {
-      spyOn(rnrLineItem, "fillPacksToShipBasedOnApprovedQuantity");
+      spyOn(rnrLineItem, "calculateCost");
 
-      rnrLineItem.updateCostWithApprovedQuantity();
+      rnrLineItem.fillPacksToShip();
 
-      expect(rnrLineItem.fillPacksToShipBasedOnApprovedQuantity).toHaveBeenCalled();
+      expect(rnrLineItem.calculateCost).toHaveBeenCalled();
+    });
+
+    it('should consider approved quantity to calculate packs to ship if present', function() {
+      spyOn(rnrLineItem, 'calculatePacksToShip');
+      rnrLineItem.quantityApproved = 7;
+      rnrLineItem.quantityRequested = 78;
+      rnrLineItem.calculatedOrderQuantity = 90;
+
+
+      rnrLineItem.fillPacksToShip();
+
+      expect(rnrLineItem.calculatePacksToShip).toHaveBeenCalledWith(7);
     });
 
     it('should return true if visible user input fields are filled', function () {

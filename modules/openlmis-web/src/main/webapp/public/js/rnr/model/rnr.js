@@ -2,7 +2,7 @@ var Rnr = function (rnr, programRnrColumns) {
   $.extend(true, this, rnr);
   var thisRnr = this;
 
-  Rnr.prototype.init = function() {
+  Rnr.prototype.init = function () {
     function prepareLineItems(lineItems) {
       var lineItemsJson = lineItems;
       lineItems = [];
@@ -96,8 +96,8 @@ var Rnr = function (rnr, programRnrColumns) {
     this.fillCost(rnrLineItem.fullSupply);
   };
 
-  Rnr.prototype.fillPacksToShipBasedOnCalculatedOrderQuantityOrQuantityRequested = function (rnrLineItem) {
-    rnrLineItem.fillPacksToShipBasedOnCalculatedOrderQuantityOrQuantityRequested();
+  Rnr.prototype.fillPacksToShip = function (rnrLineItem) {
+    rnrLineItem.fillPacksToShip();
     this.fillCost(rnrLineItem.fullSupply);
   };
 

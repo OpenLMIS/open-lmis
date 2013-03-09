@@ -117,23 +117,7 @@ function ViewRnrController($scope, $routeParams, ProgramRnRColumnList, Requisiti
   }
 
   function populateRnrLineItems() {
-    var lineItemsJson = $scope.rnr.fullSupplyLineItems;
-    $scope.rnr.fullSupplyLineItems = [];
-    $(lineItemsJson).each(function (i, lineItem) {
-      var rnrLineItem = new RnrLineItem(lineItem, $scope.rnr, $scope.$parent.programRnrColumnList);
-
-      rnrLineItem.updateCostWithApprovedQuantity();
-      $scope.rnr.fullSupplyLineItems.push(rnrLineItem);
-    });
-
-    var nonFullSupplyLineItemsJson = $scope.rnr.nonFullSupplyLineItems;
-    $scope.rnr.nonFullSupplyLineItems = [];
-    $(nonFullSupplyLineItemsJson).each(function (i, lineItem) {
-      var rnrLineItem = new RnrLineItem(lineItem, $scope.rnr, $scope.$parent.programRnrColumnList);
-
-      rnrLineItem.updateCostWithApprovedQuantity();
-      $scope.rnr.nonFullSupplyLineItems.push(rnrLineItem);
-    });
+    $scope.rnr = new Rnr($scope.rnr);
   }
 
   $scope.totalCost = function () {

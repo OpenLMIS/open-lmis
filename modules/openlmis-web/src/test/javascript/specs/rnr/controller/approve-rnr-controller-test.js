@@ -24,7 +24,10 @@ describe('Approve Requisition controller', function () {
   }));
 
   it('should set rnr in scope', function () {
-    expect(scope.rnr).toEqual(requisition);
+    var spyOnRnr = spyOn(window, 'Rnr').andCallThrough();
+    ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList,
+      currency: '$', $location: location, $routeParams: routeParams});
+    expect(spyOnRnr).toHaveBeenCalledWith(requisition, programRnrColumnList);
   });
 
   it('should set currency in scope', function () {

@@ -1,6 +1,6 @@
 function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $location, currency, $routeParams) {
 
-  $scope.rnr = requisition;
+  $scope.rnr = new Rnr(requisition, rnrColumns);
   $scope.rnrColumns = rnrColumns;
   $scope.currency = currency;
 
@@ -61,7 +61,6 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     $(lineItemsJson).each(function (i, lineItem) {
       var rnrLineItem = new RnrLineItem(lineItem, $scope.rnr.period.numberOfMonths, $scope.programRnrColumnList, $scope.rnr.status);
 
-      rnrLineItem.updateCostWithApprovedQuantity();
       $scope.rnr.fullSupplyLineItems.push(rnrLineItem);
     });
     var nonFullSupplyLineItemsJson = $scope.rnr.nonFullSupplyLineItems;
@@ -75,7 +74,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   }
 
   updateSupplyTypeForGrid();
-  populateRnrLineItems();
+//  populateRnrLineItems();
   fillPagedGridData();
   prepareColumnDefinitions();
 
@@ -145,7 +144,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   }
 
   function positiveIntegerCellTemplate(field, value) {
-    return '<div><ng-form name="positiveIntegerForm"> <input ng-change = \'validatePositiveInteger(row.entity)\' ' +
+    return '<div><ng-form name="positiveIntegerForm"> <input ng-change = \'updateCostWithApprovedQuantity(row.entity)\' ' +
       'ui-event="{blur : \'showPositiveIntegerError[row.entity.id] = false\'}"' +
       'ng-class="{\'required-error\': approvedQuantityRequiredFlag && positiveIntegerForm.' + field + '.$error.required}" ' +
       '  ng-required="true" maxlength="8"  name=' + field + ' ng-model=' + value + ' />' +
@@ -168,13 +167,13 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     $scope.isDirty = true;
   };
 
-  $scope.validatePositiveInteger = function (lineItem) {
+  $scope.updateCostWithApprovedQuantity = function (lineItem) {
     $scope.setDirty();
     if (!isUndefined(lineItem.quantityApproved)) {
       $scope.showPositiveIntegerError[lineItem.id] = !utils.isPositiveNumber(lineItem.quantityApproved);
     }
 
-    lineItem.updateCostWithApprovedQuantity();
+    $scope.rnr.fillPacksToShip(lineItem);
   };
 
 

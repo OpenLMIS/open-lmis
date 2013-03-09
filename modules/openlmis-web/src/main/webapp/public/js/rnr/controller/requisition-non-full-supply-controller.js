@@ -20,7 +20,7 @@ function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $r
     var lineItem = new RnrLineItem($scope.newNonFullSupply, $scope.rnr.period.numberOfMonths, $scope.programRnrColumnList, $scope.rnr.status);
 
     $scope.rnr.nonFullSupplyLineItems.push(lineItem);
-    $scope.rnr.fillPacksToShipBasedOnCalculatedOrderQuantityOrQuantityRequested(lineItem);
+    $scope.rnr.fillPacksToShip(lineItem);
     $scope.facilityApprovedProduct = undefined;
     $scope.newNonFullSupply = undefined;
     $scope.updateNonFullSupplyProductsToDisplay();

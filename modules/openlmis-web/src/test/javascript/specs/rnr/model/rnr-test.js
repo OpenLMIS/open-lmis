@@ -193,12 +193,12 @@ describe('R&R test', function () {
   it('should fill packs to ship based on quantity requested or calculated quantity and update cost', function() {
     var rnrLineItem = new RnrLineItem({}, 1, null, 'INITIATED');
     var rnr = new Rnr();
-    spyOn(rnrLineItem, 'fillPacksToShipBasedOnCalculatedOrderQuantityOrQuantityRequested');
+    spyOn(rnrLineItem, 'fillPacksToShip');
     spyOn(rnr, 'fillCost');
 
-    rnr.fillPacksToShipBasedOnCalculatedOrderQuantityOrQuantityRequested(rnrLineItem);
+    rnr.fillPacksToShip(rnrLineItem);
 
-    expect(rnrLineItem.fillPacksToShipBasedOnCalculatedOrderQuantityOrQuantityRequested).toHaveBeenCalled();
+    expect(rnrLineItem.fillPacksToShip).toHaveBeenCalled();
     expect(rnr.fillCost).toHaveBeenCalled();
   });
 

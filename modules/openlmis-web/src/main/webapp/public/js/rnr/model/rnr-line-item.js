@@ -16,9 +16,10 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     this.fillNormalizedConsumption();
   };
 
-  RnrLineItem.prototype.fillPacksToShipBasedOnCalculatedOrderQuantityOrQuantityRequested = function () {
-    var orderQuantity = this.quantityRequested == null ?
-      this.calculatedOrderQuantity : this.quantityRequested;
+  RnrLineItem.prototype.fillPacksToShip = function () {
+    this.quantityApproved = utils.getValueFor(this.quantityApproved);
+    var orderQuantity = isUndefined(this.quantityApproved) ? (isUndefined(this.quantityRequested) ?
+      this.calculatedOrderQuantity : this.quantityRequested) : this.quantityApproved;
     this.calculatePacksToShip(orderQuantity);
     this.calculateCost();
   };
@@ -26,39 +27,6 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
   RnrLineItem.prototype.fillNormalizedConsumption = function () {
     this.calculateNormalizedConsumption();
     this.fillAMC();
-  };
-
-  // TODO: To remove once approve screen starts using Rnr object
-  RnrLineItem.prototype.calculateFullSupplyItemsSubmittedCost = function () {
-    this.fullSupplyItemsSubmittedCost = this.getTotalLineItemsCost(this.fullSupplyLineItems);
-  };
-
-  // TODO: To remove once approve screen starts using Rnr object
-  RnrLineItem.prototype.calculateNonFullSupplyItemsSubmittedCost = function () {
-    this.nonFullSupplyItemsSubmittedCost = this.getTotalLineItemsCost(this.nonFullSupplyLineItems);
-  };
-
-  // TODO: To remove once approve screen starts using Rnr object
-  RnrLineItem.prototype.getTotalLineItemsCost = function (rnrLineItems) {
-    if (rnrLineItems == null) return;
-
-    var cost = 0;
-    for (var lineItemIndex in rnrLineItems) {
-      var lineItem = rnrLineItems[lineItemIndex];
-      if (lineItem.productCode == this.productCode) continue;
-      if (!lineItem || lineItem.cost == null || !utils.isNumber(lineItem.cost)) continue;
-      cost += parseFloat(lineItem.cost);
-    }
-    return cost.toFixed(2);
-  };
-
-  RnrLineItem.prototype.fillCost = function () {
-    this.calculateCost();
-    // TODO: To remove once approve screen starts using Rnr object
-    if (this.fullSupply)
-      this.calculateFullSupplyItemsSubmittedCost();
-    else
-      this.calculateNonFullSupplyItemsSubmittedCost();
   };
 
   RnrLineItem.prototype.fillAMC = function () {
@@ -73,19 +41,7 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
 
   RnrLineItem.prototype.fillCalculatedOrderQuantity = function () {
     this.calculateCalculatedOrderQuantity();
-    this.fillPacksToShipBasedOnCalculatedOrderQuantityOrQuantityRequested();
-  };
-
-  RnrLineItem.prototype.fillPacksToShipBasedOnApprovedQuantity = function () {
-    var quantityApproved = !isUndefined(this.quantityApproved) && utils.isPositiveNumber(this.quantityApproved) ? this.quantityApproved : 0;
-
-    this.calculatePacksToShip(quantityApproved);
-    this.fillCost();
-  };
-
-  RnrLineItem.prototype.updateCostWithApprovedQuantity = function () {
-    this.quantityApproved = utils.getValueFor(this.quantityApproved);
-    this.fillPacksToShipBasedOnApprovedQuantity();
+    this.fillPacksToShip();
   };
 
   RnrLineItem.prototype.arithmeticallyInvalid = function () {
@@ -301,7 +257,7 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
 
   if (this.lossesAndAdjustments == undefined) this.lossesAndAdjustments = [];
 
-  if (this.rnrStatus == 'IN_APPROVAL') return;
+//  if (this.rnrStatus == 'IN_APPROVAL') return;
 
   this.reEvaluateTotalLossesAndAdjustments();
   this.fillConsumptionOrStockInHand();
