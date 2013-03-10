@@ -153,4 +153,27 @@ describe('Approve Requisition controller', function () {
     expect(scope.message).toEqual('success message');
   });
 
+  it('should fill packs to ship based on approved quantity', function () {
+    var lineItem = new RnrLineItem();
+    lineItem.quantityApproved = '67';
+    scope.rnr = new Rnr();
+    scope.rnr.fullSupplyLineItems = [lineItem];
+    spyOn(lineItem, 'fillPacksToShip');
+
+    scope.fillPacksToShip(lineItem);
+
+    expect(lineItem.fillPacksToShip).toHaveBeenCalled();
+  });
+
+  it('should remove non numeric characters from quantity approved before calculations', function () {
+    var lineItem = new RnrLineItem();
+    lineItem.quantityApproved = '67hj';
+    scope.rnr = new Rnr();
+    scope.rnr.fullSupplyLineItems = [lineItem];
+
+    scope.fillPacksToShip(lineItem);
+
+    expect(lineItem.quantityApproved).toEqual(67);
+  });
+
 });

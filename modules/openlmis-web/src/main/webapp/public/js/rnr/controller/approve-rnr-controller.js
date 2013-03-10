@@ -144,7 +144,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   }
 
   function positiveIntegerCellTemplate(field, value) {
-    return '<div><ng-form name="positiveIntegerForm"> <input ng-change = \'updateCostWithApprovedQuantity(row.entity)\' ' +
+    return '<div><ng-form name="positiveIntegerForm"> <input ng-change = \'fillPacksToShip(row.entity)\' ' +
       'ui-event="{blur : \'showPositiveIntegerError[row.entity.id] = false\'}"' +
       'ng-class="{\'required-error\': approvedQuantityRequiredFlag && positiveIntegerForm.' + field + '.$error.required}" ' +
       '  ng-required="true" maxlength="8"  name=' + field + ' ng-model=' + value + ' />' +
@@ -167,10 +167,11 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     $scope.isDirty = true;
   };
 
-  $scope.updateCostWithApprovedQuantity = function (lineItem) {
+  $scope.fillPacksToShip = function (lineItem) {
     $scope.setDirty();
     if (!isUndefined(lineItem.quantityApproved)) {
       $scope.showPositiveIntegerError[lineItem.id] = !utils.isPositiveNumber(lineItem.quantityApproved);
+      lineItem.quantityApproved = utils.parseIntWithBaseTen(lineItem.quantityApproved);
     }
 
     $scope.rnr.fillPacksToShip(lineItem);
