@@ -29,6 +29,7 @@ public class RnrLineItemBuilder {
   public static final Property<RnrLineItem, Integer> packSize = newProperty();
   public static final Property<RnrLineItem, Integer> quantityApproved = newProperty();
   public static final Property<RnrLineItem,String> reasonForRequestedQuantity = newProperty();
+  public static final Property<RnrLineItem, Integer> packsToShip = newProperty();
 
   public static final Property<RnrLineItem, Integer> quantityRequested = newProperty();
   public static final LossesAndAdjustments ONE_LOSS = new LossesAndAdjustments() {{
@@ -50,6 +51,7 @@ public class RnrLineItemBuilder {
   public static final String REMARKS = "Remarks";
   public static final boolean ROUND_To_ZERO = true;
   public static final int QUANTITY_APPROVED = 2;
+  public static final int PACKS_TO_SHIP = 2;
 
   public static final Instantiator<RnrLineItem> defaultRnrLineItem = new Instantiator<RnrLineItem>() {
 
@@ -88,6 +90,7 @@ public class RnrLineItemBuilder {
       rnrLineItem.setPrice(new Money("4"));
       rnrLineItem.setQuantityRequested(lookup.valueOf(quantityRequested, QUANTITY_REQUESTED));
       rnrLineItem.setReasonForRequestedQuantity(lookup.valueOf(reasonForRequestedQuantity, REASON_FOR_REQUESTED_QUANTITY));
+      rnrLineItem.setPacksToShip(lookup.valueOf(packsToShip, PACKS_TO_SHIP));
       rnrLineItem.setRemarks(REMARKS);
       return rnrLineItem;
     }

@@ -308,6 +308,10 @@ public class RnrLineItem {
   }
 
   public Money calculateCost() {
-    return price.multiply(BigDecimal.valueOf(packsToShip));
+    if (packsToShip != null) {
+      return price.multiply(BigDecimal.valueOf(packsToShip));
+    }
+    return new Money("0");
   }
+
 }

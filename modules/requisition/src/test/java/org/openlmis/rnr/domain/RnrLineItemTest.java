@@ -1,6 +1,7 @@
 package org.openlmis.rnr.domain;
 
 import com.natpryce.makeiteasy.Donor;
+import org.hamcrest.core.Is;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -19,10 +20,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static com.natpryce.makeiteasy.MakeItEasy.with;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 import static org.openlmis.core.builder.ProductBuilder.code;
 import static org.openlmis.rnr.builder.RnrColumnBuilder.*;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
@@ -532,6 +535,23 @@ public class RnrLineItemTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage(RNR_VALIDATION_ERROR);
     rnrLineItem.validateNonFullSupply();
+  }
+
+
+  @Test
+  public void shouldCalculateCostAsZeroIfPacksToShipIsNull() {
+    Integer nullInteger = null;
+    RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(RnrLineItemBuilder.packsToShip, nullInteger)));
+    Money money = rnrLineItem.calculateCost();
+    assertThat(money.getValue().intValue(), Is.is(0));
+  }
+
+  @Test
+  public void shouldCalculateCostIfPacksToShipIsNotNull() {
+    Integer nullInteger = null;
+    RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(RnrLineItemBuilder.packsToShip, 5)));
+    Money money = rnrLineItem.calculateCost();
+    assertThat(money.getValue().intValue(), Is.is(20));
   }
 
 }
