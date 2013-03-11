@@ -3,6 +3,7 @@ package org.openlmis.pageobjects;
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
@@ -165,6 +166,12 @@ public class CreateFacilityPage extends Page {
     facilityCode.clear();
     facilityCode.sendKeys(facilityCodeText);
     facilityName.sendKeys(facilityNameText);
+    testWebDriver.selectByVisibleText(operatedBy, operatedByValue);
+
+
+    serviceDeliveryPoint.click();
+    isActive.click();
+
     facilityDescription.sendKeys("Testing description");
     gln.sendKeys("Testing Gln");
     phoneNumber.sendKeys("9711231305");
@@ -175,23 +182,6 @@ public class CreateFacilityPage extends Page {
     testWebDriver.selectByVisibleText(geographicZone, geoZone);
     testWebDriver.selectByVisibleText(facilityType, facilityTypeValue);
 
-    catchmentPopulation.sendKeys("500000");
-    latitude.sendKeys("-555.5555");
-    longitude.sendKeys("444.4444");
-    altitude.sendKeys("4545.4545");
-
-    testWebDriver.selectByVisibleText(operatedBy, operatedByValue);
-    coldStorageGrossCapacity.sendKeys("3434.3434");
-    coldStorageNetCapacity.sendKeys("3535.3535");
-
-    facilitySuppliesOthers.click();
-    serviceDeliveryPoint.click();
-    hasElectricity.click();
-    isOnline.click();
-    hasElectronicScc.click();
-    hasElectronicDar.click();
-    isActive.click();
-
     testWebDriver.sleep(500);
     goLiveDate.click();
     testWebDriver.sleep(500);
@@ -200,9 +190,6 @@ public class CreateFacilityPage extends Page {
     goDownDate.click();
     testWebDriver.sleep(500);
     goDownDateCalender.click();
-
-    comments.sendKeys("Comments");
-
 
     testWebDriver.selectByVisibleText(programsSupported, "HIV");
     programsSupportedActiveFlag.click();
@@ -213,6 +200,24 @@ public class CreateFacilityPage extends Page {
     startDateAlert.click();
     testWebDriver.sleep(500);
     addSupportedProgram.click();
+
+    catchmentPopulation.sendKeys("500000");
+    latitude.sendKeys("-555.5555");
+    longitude.sendKeys("444.4444");
+    altitude.sendKeys("4545.4545");
+
+    coldStorageGrossCapacity.sendKeys("3434.3434");
+    coldStorageNetCapacity.sendKeys("3535.3535");
+    coldStorageNetCapacity.sendKeys(Keys.TAB);
+
+    hasElectricity.click();
+    isOnline.click();
+    testWebDriver.handleScrollByPixels(0,2000);
+
+    hasElectronicScc.click();
+    hasElectronicDar.click();
+    facilitySuppliesOthers.click();
+    comments.sendKeys("Comments");
 
     SaveButton.click();
     testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);

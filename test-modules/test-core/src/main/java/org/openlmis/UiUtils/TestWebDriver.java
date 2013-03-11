@@ -109,6 +109,11 @@ public class TestWebDriver {
         ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("scroll(0,1000);");
     }
 
+    public void handleScrollByPixels(int x, int y)
+    {
+        ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("scroll(" + x + "," + y + ");");
+    }
+
     public void waitForElementToAppear(final WebElement element) {
         (new WebDriverWait(driver, DEFAULT_WAIT_TIME)).until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver d) {
