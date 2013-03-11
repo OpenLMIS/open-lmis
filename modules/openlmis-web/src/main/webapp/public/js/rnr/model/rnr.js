@@ -23,7 +23,7 @@ var Rnr = function (rnr, programRnrColumns) {
 
     function validateRequiredFields(lineItem) {
       if (lineItem.validateRequiredFieldsForFullSupply()) return true;
-      errorMessage = "rnr.required.fields.missing.error";
+      errorMessage = "rnr.validation.error";
 
       return false;
     }
@@ -47,7 +47,7 @@ var Rnr = function (rnr, programRnrColumns) {
 
     var validateRequiredFields = function (lineItem) {
       if (lineItem.validateRequiredFieldsForNonFullSupply()) return true;
-      errorMessage = "rnr.required.fields.missing.error";
+      errorMessage = "rnr.validation.error";
 
       return false;
     };
@@ -62,7 +62,7 @@ var Rnr = function (rnr, programRnrColumns) {
     var error = '';
     $(this.fullSupplyLineItems).each(function (i, lineItem) {
       if (isUndefined(lineItem.quantityApproved)) {
-        error = 'rnr.required.fields.missing.error';
+        error = 'rnr.validation.error';
         return false;
       }
     });
@@ -73,7 +73,7 @@ var Rnr = function (rnr, programRnrColumns) {
     var error = '';
     $(this.nonFullSupplyLineItems).each(function (i, lineItem) {
       if (isUndefined(lineItem.quantityApproved)) {
-        error = 'rnr.required.fields.missing.error';
+        error = 'rnr.validation.error';
         return false;
       }
     });
