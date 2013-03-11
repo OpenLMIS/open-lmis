@@ -1,7 +1,6 @@
 package org.openlmis.rnr.dto;
 
 import org.junit.Test;
-import org.openlmis.rnr.domain.Order;
 import org.openlmis.rnr.domain.OrderBatch;
 import org.openlmis.rnr.domain.Rnr;
 
@@ -64,21 +63,24 @@ public class RnrDTOTest {
   public void shouldPrepareRequisitionsForOrderBatch() throws Exception {
     Rnr rnr = make(a(defaultRnr));
     Date orderDate = new Date();
-    OrderBatch orderBatch = new OrderBatch(1, orderDate, null, null);
-    rnr.setOrder(new Order(null, orderBatch));
+    OrderBatch orderBatch = new OrderBatch(1, orderDate, null, null, null);
+    rnr.setOrderBatch(orderBatch);
     List<Rnr> rnrList = Arrays.asList(rnr);
-    List<RnrDTO> rnrDTOs = RnrDTO.prepareForOrderBatch(rnrList);
+    List<RnrDTO> rnrDTOs = RnrDTO.prepareForOrderView(rnrList);
 
     RnrDTO rnrDTO = rnrDTOs.get(0);
-    assertThat(rnrDTO.getOrderBatchId(),is(rnr.getOrder().getOrderBatch().getId()));
+    assertThat(rnrDTO.getOrderBatchId(),is(rnr.getOrderBatch().getId()));
     assertThat(rnrDTO.getId(), is(rnr.getId()));
     assertThat(rnrDTO.getProgramId(), is(rnr.getProgram().getId()));
     assertThat(rnrDTO.getFacilityId(), is(rnr.getFacility().getId()));
     assertThat(rnrDTO.getProgramName(), is(rnr.getProgram().getName()));
     assertThat(rnrDTO.getFacilityCode(), is(rnr.getFacility().getCode()));
     assertThat(rnrDTO.getFacilityName(), is(rnr.getFacility().getName()));
-    assertThat(rnrDTO.getOrderDate(), is(rnr.getOrder().getOrderBatch().getCreateTimeStamp()));
+    assertThat(rnrDTO.getOrderDate(), is(rnr.getOrderBatch().getCreateTimeStamp()));
+    assertThat(rnrDTO.getOrderBatchId(), is(rnr.getOrderBatch().getId()));
     assertThat(rnrDTO.getPeriodStartDate(), is(rnr.getPeriod().getStartDate()));
     assertThat(rnrDTO.getPeriodEndDate(), is(rnr.getPeriod().getEndDate()));
+    assertThat(rnrDTO.getPeriodName(), is(rnr.getPeriod().getName()));
+    assertThat(rnrDTO.getSupplyingDepot(), is(rnr.getSupplyingFacility().getName()));
   }
 }

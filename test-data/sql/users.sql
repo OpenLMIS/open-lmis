@@ -15,7 +15,8 @@ INSERT INTO role_rights
   ((select id from roles where name='FacilityHead'), 'VIEW_REQUISITION'),
   ((select id from roles where name='LMU'), 'VIEW_REQUISITION'),
   ((select id from roles where name='LMU'), 'APPROVE_REQUISITION'),
-  ((select id from roles where name='LMU'), 'CONVERT_TO_ORDER');
+  ((select id from roles where name='LMU'), 'CONVERT_TO_ORDER'),
+  ((select id from roles where name='LMU'), 'VIEW_ORDER');
 
 
 

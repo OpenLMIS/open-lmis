@@ -8,7 +8,9 @@ import com.lowagie.text.pdf.PdfWriter;
 import org.apache.commons.lang.ArrayUtils;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Money;
-import org.openlmis.rnr.domain.*;
+import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.RnrColumn;
+import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.web.controller.RequisitionController;
 import org.openlmis.web.model.PrintRnrLineItem;
 import org.springframework.web.servlet.view.document.AbstractPdfView;
@@ -22,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.List;
 
 public class RequisitionPDFView extends AbstractPdfView {
 

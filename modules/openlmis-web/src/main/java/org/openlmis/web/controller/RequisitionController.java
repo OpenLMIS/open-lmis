@@ -43,6 +43,7 @@ public class RequisitionController extends BaseController {
   public static final String RNR_TEMPLATE = "rnr_template";
 
   public static final String PERIODS = "periods";
+  public static final String ORDERS = "orders";
   private RequisitionService requisitionService;
   private RnrTemplateService rnrTemplateService;
 
@@ -214,5 +215,11 @@ public class RequisitionController extends BaseController {
     modelAndView.addObject(RNR, requisition);
     modelAndView.addObject(RNR_TEMPLATE, rnrTemplateService.fetchColumnsForRequisition(requisition.getProgram().getId()));
     return  modelAndView;
+  }
+
+  @RequestMapping(value = "/orders", method = GET)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_ORDER, CONVERT_TO_ORDER')")
+  public ResponseEntity<OpenLmisResponse> getOrders() {
+    return OpenLmisResponse.response(ORDERS, RnrDTO.prepareForOrderView(requisitionService.getOrders()));
   }
 }

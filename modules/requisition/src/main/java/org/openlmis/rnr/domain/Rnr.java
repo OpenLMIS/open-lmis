@@ -27,7 +27,6 @@ public class Rnr {
   private RnrStatus status;
   private Money fullSupplyItemsSubmittedCost = new Money("0");
   private Money nonFullSupplyItemsSubmittedCost = new Money("0");
-  private Order order;
 
   /**
    * TODO: rename lineItems to fullSupplyLineItems
@@ -40,6 +39,7 @@ public class Rnr {
   private Integer modifiedBy;
   private Date modifiedDate;
   private Date submittedDate;
+  private OrderBatch orderBatch;
 
   public Rnr(Integer facilityId, Integer programId, Integer periodId, Integer modifiedBy) {
     facility = new Facility();
@@ -218,9 +218,8 @@ public class Rnr {
       copyUserEditableFields(otherRnr, programRnrColumns);
   }
 
-  public Order releaseAsOrder() {
+  public void convertToOrder() {
     this.status = ORDERED;
-    return new Order(this);
   }
 }
 

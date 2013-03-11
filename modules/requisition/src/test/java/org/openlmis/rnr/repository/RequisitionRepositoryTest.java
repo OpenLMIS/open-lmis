@@ -28,6 +28,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
+import static org.openlmis.rnr.domain.RnrStatus.ORDERED;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RequisitionRepositoryTest {
@@ -189,13 +190,6 @@ public class RequisitionRepositoryTest {
   }
 
   @Test
-  public void shouldUpdateOrderBatchIdForARequisitionDuringSaveOrder() throws Exception {
-    Order order = new Order(rnr);
-    requisitionRepository.saveOrder(order);
-    verify(requisitionMapper).updateOrderForRequisition(order);
-  }
-
-  @Test
   public void shouldGetOrderById() throws Exception {
     OrderBatch orderBatch = new OrderBatch();
     orderBatch.setCreatedByUserId(1);
@@ -203,5 +197,16 @@ public class RequisitionRepositoryTest {
     OrderBatch orderBatchReturned = requisitionRepository.getOrderBatchById(1);
     verify(requisitionMapper).getOrderBatchById(1);
     assertThat(orderBatchReturned,is(orderBatch));
+  }
+
+  @Test
+  public void shouldGetOrderBatches() throws Exception {
+    List<Rnr> expectedRequisitions = new ArrayList<>();
+    when(requisitionMapper.getByStatus(ORDERED)).thenReturn(expectedRequisitions);
+
+    List<Rnr> rnrs = requisitionRepository.getByStatus(ORDERED);
+
+    assertThat(rnrs, is(expectedRequisitions));
+    verify(requisitionMapper).getByStatus(ORDERED);
   }
 }

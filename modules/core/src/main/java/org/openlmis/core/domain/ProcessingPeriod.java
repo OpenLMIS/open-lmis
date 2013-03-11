@@ -25,11 +25,12 @@ public class ProcessingPeriod implements BaseModel{
     this.id = id;
   }
 
-  public ProcessingPeriod(Integer id, Date startDate, Date endDate, Integer numberOfMonths) {
+  public ProcessingPeriod(Integer id, Date startDate, Date endDate, Integer numberOfMonths, String name) {
     this.id = id;
     this.startDate = startDate;
     this.endDate = endDate;
     this.numberOfMonths = numberOfMonths;
+    this.name = name;
   }
 
   public void validate() {
@@ -47,6 +48,6 @@ public class ProcessingPeriod implements BaseModel{
   }
 
   public ProcessingPeriod basicInformation() {
-    return new ProcessingPeriod(id, startDate, endDate, numberOfMonths);
+    return new ProcessingPeriod(id, startDate, endDate, numberOfMonths, name);
   }
 }

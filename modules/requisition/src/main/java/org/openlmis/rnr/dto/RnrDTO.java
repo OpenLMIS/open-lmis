@@ -26,6 +26,7 @@ public class RnrDTO {
   private Date modifiedDate;
   private Date periodStartDate;
   private Date periodEndDate;
+  private String periodName;
   private Integer facilityId;
   private String supplyingDepot;
   private String status;
@@ -73,18 +74,20 @@ public class RnrDTO {
     return rnrDTO;
   }
 
-  public static List<RnrDTO> prepareForOrderBatch(List<Rnr> rnrList) {
+  public static List<RnrDTO> prepareForOrderView(List<Rnr> rnrList) {
     List<RnrDTO> rnrDTOs = new ArrayList<>();
     for (Rnr requisition : rnrList) {
-      rnrDTOs.add(prepareForOrderBatch(requisition));
+      rnrDTOs.add(prepareForOrderView(requisition));
     }
     return rnrDTOs;
   }
 
-  private static RnrDTO prepareForOrderBatch(Rnr requisition) {
-    RnrDTO rnrDTO = populateDTOWithRequisition(requisition);
-    rnrDTO.setOrderBatchId(requisition.getOrder().getOrderBatch().getId());
-    rnrDTO.setOrderDate(requisition.getOrder().getOrderBatch().getCreateTimeStamp());
+  private static RnrDTO prepareForOrderView(Rnr requisition) {
+    RnrDTO rnrDTO = prepareForListApproval(requisition);
+    rnrDTO.setOrderBatchId(requisition.getOrderBatch().getId());
+    rnrDTO.setOrderDate(requisition.getOrderBatch().getCreateTimeStamp());
+    rnrDTO.setPeriodName(requisition.getPeriod().getName());
+
     return rnrDTO;
   }
 }

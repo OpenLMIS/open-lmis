@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -15,6 +16,7 @@ public class OrderBatch {
   private Date createTimeStamp;
   private Integer createdByUserId;
   private Facility supplyingFacility;
+  private List<Rnr> requisitions;
 
   public OrderBatch(Facility supplyingFacility, Integer orderedBy) {
     this.supplyingFacility = supplyingFacility;

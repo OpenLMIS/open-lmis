@@ -223,7 +223,7 @@ public class RequisitionServiceTest {
     final Rnr spyRnr = spy(rnr);
 
     when(requisitionRepository.getRequisition(FACILITY, PROGRAM, PERIOD)).thenReturn(spyRnr);
-    ProcessingPeriod period = new ProcessingPeriod(PERIOD.getId(), PERIOD.getStartDate(), PERIOD.getEndDate(), PERIOD.getNumberOfMonths());
+    ProcessingPeriod period = new ProcessingPeriod(PERIOD.getId(), PERIOD.getStartDate(), PERIOD.getEndDate(), PERIOD.getNumberOfMonths(), PERIOD.getName());
     when(processingScheduleService.getPeriodById(10)).thenReturn(period);
 
     when(processingScheduleService.getImmediatePreviousPeriod(period)).thenReturn(lastPeriod);
@@ -812,15 +812,15 @@ public class RequisitionServiceTest {
     verify(requisitionRepository).createOrderBatch(orderBatch1);
     verify(requisitionRepository).createOrderBatch(orderBatch2);
 
-    ArgumentCaptor<Order> orderArgumentCaptor = ArgumentCaptor.forClass(Order.class);
-    verify(requisitionRepository, times(3)).saveOrder(orderArgumentCaptor.capture());
+    ArgumentCaptor<Rnr> requisitionArgumentCaptor = ArgumentCaptor.forClass(Rnr.class);
+    verify(requisitionRepository, times(3)).update(requisitionArgumentCaptor.capture());
 
-    List<Order> orderList = orderArgumentCaptor.getAllValues();
-    assertThat(orderList.get(0).getRequisition(), is(rnr1));
+    List<Rnr> orderList = requisitionArgumentCaptor.getAllValues();
+    assertThat(orderList.get(0), is(rnr1));
     assertThat(orderList.get(0).getOrderBatch(), is(orderBatch1));
-    assertThat(orderList.get(1).getRequisition(), is(rnr2));
+    assertThat(orderList.get(1), is(rnr2));
     assertThat(orderList.get(1).getOrderBatch(), is(orderBatch2));
-    assertThat(orderList.get(2).getRequisition(), is(rnr3));
+    assertThat(orderList.get(2), is(rnr3));
     assertThat(orderList.get(2).getOrderBatch(), is(orderBatch1));
   }
 
@@ -889,6 +889,25 @@ public class RequisitionServiceTest {
     expectedException.expectMessage(RNR_OPERATION_UNAUTHORIZED);
 
     requisitionService.approve(authorizedRnr);
+  }
+
+  @Test
+  public void shouldGetAllFilledOrders() throws Exception {
+    List<Rnr> rnrs = new ArrayList<>();
+    rnrs.add(getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr, AUTHORIZE_REQUISITION));
+    when(requisitionRepository.getByStatus(ORDERED)).thenReturn(rnrs);
+    when(facilityService.getById(submittedRnr.getSupplyingFacility().getId())).thenReturn(FACILITY);
+
+    List<Rnr> actualRnrs = requisitionService.getOrders();
+
+    assertThat(actualRnrs, is(rnrs));
+    assertThat(actualRnrs.get(0).getFacility(), is(FACILITY));
+    assertThat(actualRnrs.get(0).getProgram(), is(PROGRAM));
+    assertThat(actualRnrs.get(0).getPeriod().getName(), is(PERIOD.getName()));
+    assertThat(actualRnrs.get(0).getPeriod().getStartDate(), is(PERIOD.getStartDate()));
+    assertThat(actualRnrs.get(0).getPeriod().getEndDate(), is(PERIOD.getEndDate()));
+    assertThat(actualRnrs.get(0).getSupplyingFacility(), is(FACILITY));
+    verify(requisitionRepository).getByStatus(ORDERED);
   }
 
   private Rnr getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(Rnr rnr, Right right) {

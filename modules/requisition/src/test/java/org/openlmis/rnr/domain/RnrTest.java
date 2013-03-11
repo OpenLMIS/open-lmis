@@ -235,9 +235,8 @@ public class RnrTest {
 
   @Test
   public void shouldReleaseARequisitionAsAnOrder() throws Exception {
-    Order order = rnr.releaseAsOrder();
+    rnr.convertToOrder();
     assertThat(rnr.getStatus(), is(ORDERED));
-    assertThat(order.getRequisition(), is(rnr));
   }
 
   private ArrayList<RnrColumn> setupProgramTemplate() {

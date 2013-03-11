@@ -21,7 +21,6 @@ import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.rnr.service.RnrTemplateService;
 import org.openlmis.web.form.RnrList;
 import org.openlmis.web.response.OpenLmisResponse;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.HttpStatus;
@@ -333,6 +332,20 @@ public class RequisitionControllerTest {
     assertThat((Rnr) modelAndView.getModel().get(RNR), is(rnr));
     assertThat((ArrayList<RnrColumn>) modelAndView.getModel().get(RNR_TEMPLATE), is(rnrTemplate));
 
+  }
+
+  @Test
+  public void shouldReturnAllFilledOrders() throws Exception {
+    ArrayList<Rnr> orderedRequisitions = new ArrayList<>();
+    mockStatic(RnrDTO.class);
+    when(requisitionService.getOrders()).thenReturn(orderedRequisitions);
+    List<RnrDTO> expectedRequisitionList = new ArrayList<>();
+    when(RnrDTO.prepareForOrderView(orderedRequisitions)).thenReturn(expectedRequisitionList);
+
+    ResponseEntity<OpenLmisResponse> fetchedOrders = controller.getOrders();
+
+    verify(requisitionService).getOrders();
+    assertThat((List<RnrDTO>) fetchedOrders.getBody().getData().get(ORDERS), is(expectedRequisitionList));
   }
 
   private Rnr createRequisition() {

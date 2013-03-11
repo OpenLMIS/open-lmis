@@ -1,7 +1,10 @@
 package org.openlmis.rnr.repository;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.rnr.domain.*;
@@ -115,8 +118,8 @@ public class RequisitionRepository {
     return requisitionMapper.getOrderBatchById(id);
   }
 
-  public void saveOrder(Order order) {
-    requisitionMapper.updateOrderForRequisition(order);
+  public List<Rnr> getByStatus(RnrStatus status) {
+    return requisitionMapper.getByStatus(status);
   }
 }
 

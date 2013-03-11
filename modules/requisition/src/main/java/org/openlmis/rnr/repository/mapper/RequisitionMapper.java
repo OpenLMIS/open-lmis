@@ -5,9 +5,9 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.RoleAssignment;
-import org.openlmis.rnr.domain.Order;
 import org.openlmis.rnr.domain.OrderBatch;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.RnrStatus;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -28,7 +28,8 @@ public interface RequisitionMapper {
     "submittedDate = #{submittedDate},",
     "nonFullSupplyItemsSubmittedCost = #{nonFullSupplyItemsSubmittedCost},",
     "supervisoryNodeId = #{supervisoryNodeId},",
-    "supplyingFacilityId = #{supplyingFacility.id}",
+    "supplyingFacilityId = #{supplyingFacility.id},",
+    "orderBatchId = #{orderBatch.id}",
     "WHERE id = #{id}"})
   void update(Rnr requisition);
 
@@ -39,7 +40,8 @@ public interface RequisitionMapper {
     @Result(property = "facility.id", column = "facilityId"),
     @Result(property = "period.id", column = "periodId"),
     @Result(property = "supplyingFacility.id", column = "supplyingFacilityId"),
-    @Result(property = "order.orderBatch.id", column = "orderBatchId"),
+    @Result(property = "orderBatch", javaType = OrderBatch.class, column = "orderBatchId",
+      one = @One(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getOrderBatchById")),
     @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
       many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsByRnrId")),
     @Result(property = "nonFullSupplyLineItems", javaType = List.class, column = "id",
@@ -113,6 +115,15 @@ public interface RequisitionMapper {
   @Select("SELECT * from order_batches WHERE id = #{id}")
   OrderBatch getOrderBatchById(Integer id);
 
-  @Update("UPDATE requisitions SET orderBatchId = #{orderBatch.id}, status = #{requisition.status}, modifiedBy = #{orderBatch.createdByUserId} WHERE id = #{requisition.id}")
-  void updateOrderForRequisition(Order order);
+  @Select("SELECT * FROM requisitions WHERE status = #{status}")
+  @Results(value = {
+    @Result(property = "id", column = "id"),
+    @Result(property = "facility.id", column = "facilityId"),
+    @Result(property = "program.id", column = "programId"),
+    @Result(property = "period.id", column = "periodId"),
+    @Result(property = "supplyingFacility.id", column = "supplyingFacilityId"),
+    @Result(property = "orderBatch", column = "orderBatchId", javaType = OrderBatch.class,
+      one = @One(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getOrderBatchById"))
+  })
+  List<Rnr> getByStatus(RnrStatus status);
 }

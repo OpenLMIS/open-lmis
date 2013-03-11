@@ -24,6 +24,7 @@ public enum Right {
   AUTHORIZE_REQUISITION("Requisition - Authorize", "requisition", "Permission to edit, authorize and recall requisitions"),
   APPROVE_REQUISITION("Requisition - Approve", "requisition", "Permission to approve requisitions"),
   CONVERT_TO_ORDER("Requisition - Convert to Order", "requisition", "Permission to convert requisitions to order"),
+  VIEW_ORDER("Requisition - View Orders", "requisition", "Permission to view orders"),
   VIEW_REQUISITION("Requisition - View", "requisition", "Permission to view requisitions");
 
   @Getter

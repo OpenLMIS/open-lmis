@@ -329,9 +329,9 @@ public class RequisitionService {
         orderBatchBySupplyingFacility.put(loadedRequisition.getSupplyingFacility().getId(), orderBatch);
       }
 
-      Order order = loadedRequisition.releaseAsOrder();
-      order.setOrderBatch(orderBatch);
-      requisitionRepository.saveOrder(order);
+      loadedRequisition.convertToOrder();
+      loadedRequisition.setOrderBatch(orderBatch);
+      requisitionRepository.update(loadedRequisition);
     }
   }
 
@@ -341,6 +341,15 @@ public class RequisitionService {
     fillFacilityPeriodProgram(requisitions.toArray(new Rnr[requisitions.size()]));
     return requisitions;
   }
+
+  public List<Rnr> getOrders() {
+    List<Rnr> requisitions = requisitionRepository.getByStatus(ORDERED);
+    fillFacilityPeriodProgram(requisitions.toArray(new Rnr[requisitions.size()]));
+    fillSupplyingFacility(requisitions.toArray(new Rnr[requisitions.size()]));
+
+    return requisitions;
+  }
+
 
   private OrderBatch createOrderBatch(Rnr requisition, Integer userId) {
     OrderBatch orderBatch = new OrderBatch(requisition.getSupplyingFacility(), userId);

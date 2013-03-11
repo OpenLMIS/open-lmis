@@ -54,27 +54,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     $scope.pageLineItems = gridLineItems.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);
   }
 
-  function populateRnrLineItems() {
-    var lineItemsJson = $scope.rnr.fullSupplyLineItems;
-    $scope.rnr.fullSupplyLineItems = [];
-
-    $(lineItemsJson).each(function (i, lineItem) {
-      var rnrLineItem = new RnrLineItem(lineItem, $scope.rnr.period.numberOfMonths, $scope.programRnrColumnList, $scope.rnr.status);
-
-      $scope.rnr.fullSupplyLineItems.push(rnrLineItem);
-    });
-    var nonFullSupplyLineItemsJson = $scope.rnr.nonFullSupplyLineItems;
-    $scope.rnr.nonFullSupplyLineItems = [];
-    $(nonFullSupplyLineItemsJson).each(function (i, lineItem) {
-      var rnrLineItem = new RnrLineItem(lineItem, $scope.rnr.period.numberOfMonths, $scope.programRnrColumnList, $scope.rnr.status);
-
-      rnrLineItem.updateCostWithApprovedQuantity();
-      $scope.rnr.nonFullSupplyLineItems.push(rnrLineItem);
-    });
-  }
-
   updateSupplyTypeForGrid();
-//  populateRnrLineItems();
   fillPagedGridData();
   prepareColumnDefinitions();
 
