@@ -33,6 +33,7 @@ dependencies {
             'org.testng:testng:6.1.1',
             'org.seleniumhq.selenium:selenium-java:2.25.0',
             'org.seleniumhq.selenium:selenium-firefox-driver:2.25.0 ',
+            'com.lowagie:itext:4.2.0',
             project(':modules:authentication'),
             project(':modules:requisition'),
             project(':modules:core')

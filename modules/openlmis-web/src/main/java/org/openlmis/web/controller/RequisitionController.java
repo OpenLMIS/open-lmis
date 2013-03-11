@@ -10,6 +10,7 @@ import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
+import org.openlmis.rnr.service.RnrTemplateService;
 import org.openlmis.web.form.RnrList;
 import org.openlmis.web.model.RnrReferenceData;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -38,13 +40,16 @@ public class RequisitionController extends BaseController {
   public static final String RNR = "rnr";
   public static final String RNR_SAVE_SUCCESS = "rnr.save.success";
   public static final String RNR_LIST = "rnr_list";
-  public static final String PERIODS = "periods";
+  public static final String RNR_TEMPLATE = "rnr_template";
 
+  public static final String PERIODS = "periods";
   private RequisitionService requisitionService;
+  private RnrTemplateService rnrTemplateService;
 
   @Autowired
-  public RequisitionController(RequisitionService requisitionService) {
+  public RequisitionController(RequisitionService requisitionService, RnrTemplateService rnrTemplateService) {
     this.requisitionService = requisitionService;
+    this.rnrTemplateService = rnrTemplateService;
   }
 
   @RequestMapping(value = "/requisitions", method = POST, headers = ACCEPT_JSON)
@@ -199,5 +204,15 @@ public class RequisitionController extends BaseController {
     } catch (DataException dataException) {
       return error(dataException, HttpStatus.NOT_FOUND);
     }
+  }
+
+  @RequestMapping(value = "/requisitions/{id}/print", method = GET)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REQUISITION')")
+  public ModelAndView printRequisition(@PathVariable Integer id) {
+    ModelAndView modelAndView = new ModelAndView("requisitionPDF");
+    Rnr requisition = requisitionService.getFullRequisitionById(id);
+    modelAndView.addObject(RNR, requisition);
+    modelAndView.addObject(RNR_TEMPLATE, rnrTemplateService.fetchColumnsForRequisition(requisition.getProgram().getId()));
+    return  modelAndView;
   }
 }

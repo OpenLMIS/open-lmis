@@ -14,9 +14,11 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
+import org.openlmis.rnr.service.RnrTemplateService;
 import org.openlmis.web.form.RnrList;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.api.mockito.PowerMockito;
@@ -26,6 +28,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,6 +56,7 @@ public class RequisitionControllerTest {
   private static final Integer USER_ID = 1;
 
   private RequisitionService requisitionService;
+  private RnrTemplateService rnrTemplateService;
   private MockHttpServletRequest request;
   private RequisitionController controller;
   private Rnr rnr;
@@ -67,7 +71,8 @@ public class RequisitionControllerTest {
     request.setSession(session);
 
     requisitionService = mock(RequisitionService.class);
-    controller = new RequisitionController(requisitionService);
+    rnrTemplateService = mock(RnrTemplateService.class);
+    controller = new RequisitionController(requisitionService, rnrTemplateService);
     rnr = new Rnr();
   }
 
@@ -310,6 +315,24 @@ public class RequisitionControllerTest {
     controller.releaseAsOrder(rnrList, request);
 
     verify(requisitionService).releaseRequisitionsAsOrder(rnrList.getRnrList(), USER_ID);
+  }
+
+  @Test
+  public void shouldReturnModelAndViewForPrintingRequisitionAsPdf(){
+    int rnrId = 1;
+    int programId = 2;
+    Program program = new Program();
+    program.setId(programId);
+    rnr.setProgram(program);
+    ArrayList<RnrColumn> rnrTemplate = new ArrayList<>();
+    when(requisitionService.getFullRequisitionById(rnrId)).thenReturn(rnr);
+    when(rnrTemplateService.fetchColumnsForRequisition(programId)).thenReturn(rnrTemplate);
+
+    ModelAndView modelAndView = controller.printRequisition(rnrId);
+
+    assertThat((Rnr) modelAndView.getModel().get(RNR), is(rnr));
+    assertThat((ArrayList<RnrColumn>) modelAndView.getModel().get(RNR_TEMPLATE), is(rnrTemplate));
+
   }
 
   private Rnr createRequisition() {

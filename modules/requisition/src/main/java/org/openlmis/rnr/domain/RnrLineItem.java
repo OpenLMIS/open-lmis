@@ -134,7 +134,7 @@ public class RnrLineItem {
     calculatePacksToShip();
   }
 
-  private void calculateAmc(ProcessingPeriod period) {
+  public void calculateAmc(ProcessingPeriod period) {
     int denominator = period.getNumberOfMonths() * (1 + previousNormalizedConsumptions.size());
     amc = Math.round(((float) normalizedConsumption + sumOfPreviousNormalizedConsumptions()) / denominator);
   }
@@ -216,15 +216,15 @@ public class RnrLineItem {
     return packsToShip.intValue();
   }
 
-  private void calculateOrderQuantity() {
+  public void calculateOrderQuantity() {
     calculatedOrderQuantity = (maxStockQuantity - stockInHand < 0) ? 0 : maxStockQuantity - stockInHand;
   }
 
-  private void calculateMaxStockQuantity() {
+  public void calculateMaxStockQuantity() {
     maxStockQuantity = maxMonthsOfStock * amc;
   }
 
-  private void calculateNormalizedConsumption() {
+  public void calculateNormalizedConsumption() {
     Float consumptionAdjustedWithStockOutDays = ((MULTIPLIER * NUMBER_OF_DAYS) - stockOutDays) == 0 ? quantityDispensed :
       (quantityDispensed * ((MULTIPLIER * NUMBER_OF_DAYS) / ((MULTIPLIER * NUMBER_OF_DAYS) - stockOutDays)));
     Float adjustmentForNewPatients = (newPatientCount * ((Double) Math.ceil(dosesPerMonth.doubleValue() / dosesPerDispensingUnit)).floatValue()) * MULTIPLIER;
@@ -232,7 +232,7 @@ public class RnrLineItem {
     normalizedConsumption = Math.round(consumptionAdjustedWithStockOutDays + adjustmentForNewPatients);
   }
 
-  private void calculateTotalLossesAndAdjustments() {
+  public void calculateTotalLossesAndAdjustments() {
     totalLossesAndAdjustments = 0;
     for (LossesAndAdjustments lossAndAdjustment : lossesAndAdjustments) {
       if (lossAndAdjustment.getType().getAdditive()) {
@@ -299,11 +299,11 @@ public class RnrLineItem {
     stockOutDays = 0;
   }
 
-  private void calculateStockInHand() {
+  public void calculateStockInHand() {
     this.stockInHand = this.beginningBalance + this.quantityReceived + this.totalLossesAndAdjustments - this.quantityDispensed;
   }
 
-  private void calculateQuantityDispensed() {
+  public void calculateQuantityDispensed() {
     this.quantityDispensed = this.beginningBalance + this.quantityReceived + this.totalLossesAndAdjustments - this.stockInHand;
   }
 
