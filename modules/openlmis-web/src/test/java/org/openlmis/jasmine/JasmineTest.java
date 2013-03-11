@@ -28,7 +28,7 @@ public class JasmineTest {
   @SuppressWarnings("unused")
   private static WebElement description;
 
-  private static final int DEFAULT_WAIT_TIME = 10;
+  private static final int DEFAULT_WAIT_TIME = 100;
 
 
   @BeforeClass
