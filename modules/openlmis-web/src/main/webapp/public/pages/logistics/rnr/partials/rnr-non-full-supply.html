@@ -88,7 +88,7 @@
             <label for="nonFullSupplyProductsCodeAndName">Product Code/Name:</label>
             <select class="span12 bottom-spacer" id="nonFullSupplyProductsCodeAndName" ng-model="facilityApprovedProduct" name="productCode"
                     ng-options="facilityApprovedProduct.programProduct.product.code+' | '+facilityApprovedProduct.programProduct.product.primaryName for facilityApprovedProduct in nonFullSupplyProductsToDisplay">
-              <option value="">-- Select product code --</option>
+              <option value="">--select product code--</option>
             </select>
           </div>
         </div>
@@ -129,7 +129,7 @@
 
             <div class="span4">
               <div class="fluid-grid-cell" id= "nonFullSupplyProductCodeAndName">
-                <label ng-bind="nonFullSupplyProduct.code+' | '+nonFullSupplyProduct.name"></label>
+                <label ng-bind="nonFullSupplyProduct.productCode+' | '+nonFullSupplyProduct.productName"></label>
               </div>
             </div>
 
@@ -160,15 +160,12 @@
 
       <div class="modal-footer">
         <span class="pull-left span1">
-            <input type="reset" class="btn btn-success save-button" value="Close" ng-click="nonFullSupplyProductsModal=false" />
-          </span>
-        <span class="pull-left span1">
             <input type="button" href="" id="doneNonFullSupply" class="btn btn-primary"
                    ng-click="addNonFullSupplyLineItemToRnr()"
-                   ng-disabled="shouldDisableAddButton()" value="Done"/>
+                   value="Done"/>
         </span>
         <span class="pull-left span1">
-            <input type="button" href="" id="cancelNonFullSupply" class="btn btn-primary" ng-click="closeModal()"
+            <input type="button" href="" id="cancelNonFullSupply" class="btn btn-primary" ng-click="nonFullSupplyProductsModal=false"
                    value="Cancel"/>
          </span>
       </div>

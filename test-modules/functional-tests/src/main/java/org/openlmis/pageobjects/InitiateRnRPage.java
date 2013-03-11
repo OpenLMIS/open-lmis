@@ -200,8 +200,8 @@ public class InitiateRnRPage extends Page {
   @FindBy(how = How.XPATH, using = "//input[@ng-click='addNonFullSupplyLineItem()']")
   private static WebElement addButtonEnabled;
 
-  @FindBy(how = How.XPATH, using = "//input[@value='Close']")
-  private static WebElement closeButton;
+  @FindBy(how = How.XPATH, using = "//input[@value='Cancel']")
+  private static WebElement cancelButton;
 
   @FindBy(how = How.XPATH, using = "//input[@id='doneNonFullSupply']")
   private static WebElement doneButtonNonFullSupply;
@@ -379,7 +379,7 @@ public class InitiateRnRPage extends Page {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(productDropDown);
     SeleneseTestNgHelper.assertFalse("Add button not enabled", addButtonNonFullSupply.isEnabled());
-    SeleneseTestNgHelper.assertTrue("Close button not displayed", closeButton.isDisplayed());
+    SeleneseTestNgHelper.assertTrue("Close button not displayed", cancelButton.isDisplayed());
     testWebDriver.waitForElementToAppear(productDropDown);
     testWebDriver.waitForElementToAppear(categoryDropDown);
     testWebDriver.selectByIndex(categoryDropDown,1);
@@ -388,8 +388,8 @@ public class InitiateRnRPage extends Page {
     requestedQuantityField.sendKeys(requestedQuantityValue);
     requestedQuantityExplanationField.clear();
     requestedQuantityExplanationField.sendKeys(requestedQuantityExplanationValue);
-    testWebDriver.waitForElementToAppear(closeButton);
-    closeButton.click();
+    testWebDriver.waitForElementToAppear(cancelButton);
+    cancelButton.click();
     testWebDriver.waitForElementToAppear(addNonFullSupplyButtonScreen);
     addNonFullSupplyButtonScreen.click();
     testWebDriver.waitForElementToAppear(productDropDown);
@@ -416,7 +416,7 @@ public class InitiateRnRPage extends Page {
     SeleneseTestNgHelper.assertEquals(nonFullSupplyProductReasonForRequestedQuantity.getAttribute("value").trim(), requestedQuantityExplanationValue);
     doneButtonNonFullSupply.click();
     testWebDriver.sleep(500);
-    closeButton.click();
+//    cancelButton.click();
 
     SeleneseTestNgHelper.assertEquals(productDescriptionNonFullSupply.getText().trim(), nonFullSupplyItems);
     SeleneseTestNgHelper.assertEquals(productCodeNonFullSupply.getText().trim(), productCode);
