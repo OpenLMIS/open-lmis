@@ -225,6 +225,21 @@ describe('CreateRequisitionController', function () {
     expect(scope.periodDisplayName()).toEqual('16/01/2013 - 30/04/2013');
   });
 
+  it('should set message while saving if set message flag true', function() {
+    scope.rnr = {"id": "rnrId"};
+    httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {'success': "success message"});
+    scope.saveRnr(false);
+    httpBackend.flush();
+    expect(scope.message).toEqual('success message');
+  });
+
+  it('should not set message while saving if set message flag false', function() {
+    scope.rnr = {"id": "rnrId"};
+    httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {'success': "success message"});
+    scope.saveRnr(true);
+    httpBackend.flush();
+    expect(scope.message).toEqual('');
+  });
 
 });
 

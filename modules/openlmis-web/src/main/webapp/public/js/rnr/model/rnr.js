@@ -58,6 +58,28 @@ var Rnr = function (rnr, programRnrColumns) {
     return errorMessage;
   };
 
+  Rnr.prototype.validateFullSupplyForApproval = function () {
+    var error = '';
+    $(this.fullSupplyLineItems).each(function (i, lineItem) {
+      if (isUndefined(lineItem.quantityApproved)) {
+        error = 'rnr.required.fields.missing.error';
+        return false;
+      }
+    });
+    return error;
+  };
+
+  Rnr.prototype.validateNonFullSupplyForApproval = function () {
+    var error = '';
+    $(this.nonFullSupplyLineItems).each(function (i, lineItem) {
+      if (isUndefined(lineItem.quantityApproved)) {
+        error = 'rnr.required.fields.missing.error';
+        return false;
+      }
+    });
+    return error;
+  };
+
   Rnr.prototype.calculateFullSupplyItemsSubmittedCost = function () {
     this.fullSupplyItemsSubmittedCost = this.getTotalLineItemsCost(this.fullSupplyLineItems);
   };

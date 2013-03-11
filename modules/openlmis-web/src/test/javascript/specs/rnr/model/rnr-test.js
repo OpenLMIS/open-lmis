@@ -255,5 +255,41 @@ describe('R&R test', function () {
       expect(rnr.calculateNonFullSupplyItemsSubmittedCost).toHaveBeenCalled();
     });
   });
+
+  it('should validate rnr full supply line items for approval', function() {
+    var rnr = new Rnr();
+    rnr.fullSupplyLineItems = [{'quantityApproved' : '', 'reasonForRequestedQuantity' : ''}];
+
+    var error = rnr.validateFullSupplyForApproval();
+
+    expect(error).toEqual('rnr.required.fields.missing.error');
+  });
+
+  it('should validate rnr full supply line items for approval and return true if required fields not missing', function() {
+    var rnr = new Rnr();
+    rnr.fullSupplyLineItems = [{'quantityApproved' : '23', 'reasonForRequestedQuantity' : 'some message'}];
+
+    var error = rnr.validateFullSupplyForApproval();
+
+    expect(error).toEqual('');
+  });
+
+  it('should validate rnr full supply line items for approval', function() {
+    var rnr = new Rnr();
+    rnr.nonFullSupplyLineItems = [{'quantityApproved' : '', 'reasonForRequestedQuantity' : ''}];
+
+    var error = rnr.validateNonFullSupplyForApproval();
+
+    expect(error).toEqual('rnr.required.fields.missing.error');
+  });
+
+  it('should validate rnr full supply line items for approval and return true if required fields not missing', function() {
+    var rnr = new Rnr();
+    rnr.nonFullSupplyLineItems = [{'quantityApproved' : '23', 'reasonForRequestedQuantity' : 'some message'}];
+
+    var error = rnr.validateNonFullSupplyForApproval();
+
+    expect(error).toEqual('');
+  });
 });
 

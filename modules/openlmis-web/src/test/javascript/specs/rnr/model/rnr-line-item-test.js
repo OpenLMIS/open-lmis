@@ -747,12 +747,12 @@ describe('RnrLineItem', function () {
       expect(rnrLineItem.calculateCost).toHaveBeenCalled();
     });
 
-    it('should consider approved quantity to calculate packs to ship if present', function() {
-      spyOn(rnrLineItem, 'calculatePacksToShip');
+    it('should consider approved quantity to calculate packs to ship status is in approval', function() {
+      rnrLineItem = new RnrLineItem({}, 5, [], 'IN_APPROVAL');
       rnrLineItem.quantityApproved = 7;
       rnrLineItem.quantityRequested = 78;
       rnrLineItem.calculatedOrderQuantity = 90;
-
+      spyOn(rnrLineItem, 'calculatePacksToShip');
 
       rnrLineItem.fillPacksToShip();
 

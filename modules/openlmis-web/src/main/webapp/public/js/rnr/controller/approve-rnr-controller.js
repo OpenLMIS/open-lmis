@@ -203,10 +203,11 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     });
   };
 
-  $scope.saveRnr = function () {
+  $scope.saveRnr = function (preventMessage) {
     var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id:$scope.rnr.id, operation:"save"},
       rnr, function (data) {
+        if(preventMessage == true) return;
         $scope.message = data.success;
         $scope.error = "";
         setTimeout(fadeSaveMessage, 3000);
@@ -217,29 +218,22 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     $scope.isDirty = false;
   };
 
+  function validateAndSetErrorClass() {
+    var fullSupplyError = $scope.rnr.validateFullSupplyForApproval();
+    var nonFullSupplyError = $scope.rnr.validateNonFullSupplyForApproval();
+    $scope.fullSupplyTabError = !!fullSupplyError;
+    $scope.nonFullSupplyTabError = !!nonFullSupplyError;
 
-  function validateForApprove() {
-    var valid = true;
-    $($scope.rnr.fullSupplyLineItems).each(function (i, lineItem) {
-      if (lineItem.quantityApproved == undefined || !utils.isPositiveNumber(lineItem.quantityApproved)) {
-        valid = false;
-        return false;
-      }
-    });
-    $($scope.rnr.nonFullSupplyLineItems).each(function (i, lineItem) {
-      if (lineItem.quantityApproved == undefined || !utils.isPositiveNumber(lineItem.quantityApproved)) {
-        valid = false;
-        return false;
-      }
-    });
-    return valid;
+    return fullSupplyError || nonFullSupplyError;
   }
 
   $scope.approveRnr = function () {
-    $scope.approvedQuantityRequiredFlag = !validateForApprove();
-    if ($scope.approvedQuantityRequiredFlag) {
-      $scope.error = "Please complete the R&R form before approving";
-      $scope.message = "";
+    $scope.approvedQuantityRequiredFlag = true;
+    var error = validateAndSetErrorClass();
+    if (error) {
+      $scope.saveRnr(true);
+      $scope.error = error;
+      $scope.message = '';
       return;
     }
     var rnr = removeExtraDataForPostFromRnr();

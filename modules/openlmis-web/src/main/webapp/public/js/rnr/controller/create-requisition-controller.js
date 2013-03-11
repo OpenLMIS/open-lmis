@@ -53,10 +53,11 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   };
 
 
-  $scope.saveRnr = function () {
+  $scope.saveRnr = function (preventMessage) {
     resetFlags();
     var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id:$scope.rnr.id, operation:"save"}, rnr, function (data) {
+      if(preventMessage) return;
       $scope.message = data.success;
       setTimeout(function () {
         $scope.$apply(function () {
@@ -72,6 +73,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   };
 
   function validateAndSetErrorClass() {
+    $scope.inputClass = true;
     var fullSupplyError = $scope.rnr.validateFullSupply();
     var nonFullSupplyError = $scope.rnr.validateNonFullSupply();
     $scope.fullSupplyTabError = !!fullSupplyError;
@@ -84,7 +86,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
     resetFlags();
     var errorMessage = validateAndSetErrorClass();
     if (errorMessage) {
-      $scope.saveRnr();
+      $scope.saveRnr(true);
       $scope.submitError = errorMessage;
       return;
     }
@@ -104,12 +106,13 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
     resetFlags();
     var errorMessage = validateAndSetErrorClass();
     if (errorMessage) {
-      $scope.saveRnr();
+      $scope.saveRnr(true);
       $scope.submitError = errorMessage;
       return;
     }
     var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id:$scope.rnr.id, operation:"authorize"}, rnr, function (data) {
+      resetFlags();
       $scope.rnr.status = "AUTHORIZED";
       $scope.formDisabled = true;
       $scope.submitMessage = data.success;
@@ -186,25 +189,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
     })();
   }
 
-  function valid() {
-//    if ($scope.saveRnrForm.$error.required) {
-//      $scope.saveRnr();
-//      $scope.inputClass = "required";
-//      $scope.submitMessage = "";
-//      $scope.submitError = 'Please complete the highlighted fields on the R&R form before submitting';
-//      return false;
-//    }
-//    if (!formulaValid()) {
-//      $scope.saveRnr();
-//      $scope.submitError = "Please correct the errors on the R&R form before submitting";
-//      $scope.submitMessage = "";
-//      return false;
-//    }
-//    return true;
-  }
-
   function resetFlags() {
-    $scope.inputClass = true;
     $scope.submitError = "";
     $rootScope.submitMessage = "";
     $scope.error = "";

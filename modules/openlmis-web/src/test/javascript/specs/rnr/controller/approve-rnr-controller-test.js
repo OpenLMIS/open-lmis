@@ -50,16 +50,23 @@ describe('Approve Requisition controller', function () {
     expect(scope.message).toEqual("R&R saved successfully!");
   });
 
-  it('should not approve if any line item has empty approved quantity', function () {
-    var lineItems = [
-      {'quantityApproved': undefined}
-    ];
-    scope.rnr = {"id": "rnrId", 'fullSupplyLineItems': lineItems};
+  it('should not approve and set error class if any full supply line item has empty approved quantity but should save', function () {
+    scope.rnr = new Rnr({"id": "rnrId"});
+    spyOn(scope.rnr, 'validateFullSupplyForApproval').andReturn('some error');
+    httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200);
     scope.approveRnr();
-    expect(scope.error).toEqual("Please complete the R&R form before approving");
-    scope.approveRnr();
-    expect(scope.error).toEqual("Please complete the R&R form before approving");
+    expect(scope.fullSupplyTabError).toBeTruthy();
+    expect(scope.error).toEqual("some error");
+  });
 
+  it('should not approve if any non full supply line item has empty approved quantity but should save', function () {
+    scope.rnr = new Rnr({"id": "rnrId"});
+    spyOn(scope.rnr, 'validateFullSupplyForApproval').andReturn('');
+    spyOn(scope.rnr, 'validateNonFullSupplyForApproval').andReturn('some error');
+    httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200);
+    scope.approveRnr();
+    expect(scope.nonFullSupplyTabError).toBeTruthy();
+    expect(scope.error).toEqual("some error");
   });
 
   it('should reset showNonFullSupply flag if supply type is not specified', function() {
@@ -85,10 +92,9 @@ describe('Approve Requisition controller', function () {
   });
 
   it('should approve a valid rnr', function () {
-    var lineItems = [
-      {'quantityApproved': 123}
-    ];
-    scope.rnr = {"id": "rnrId", 'lineItems': lineItems};
+    scope.rnr = new Rnr({"id": "rnrId"}, []);
+    spyOn(scope.rnr, 'validateFullSupplyForApproval').andReturn('');
+    spyOn(scope.rnr, 'validateNonFullSupplyForApproval').andReturn('');
     httpBackend.expect('PUT', '/requisitions/rnrId/approve.json').respond({'success': "R&R approved successfully!"});
 
     scope.approveRnr();
@@ -175,5 +181,23 @@ describe('Approve Requisition controller', function () {
 
     expect(lineItem.quantityApproved).toEqual(67);
   });
+
+  it('should set message while saving if set message flag true', function() {
+    scope.rnr = {"id": "rnrId"};
+    httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {'success': "success message"});
+    scope.saveRnr(false);
+    httpBackend.flush();
+    expect(scope.message).toEqual('success message');
+  });
+
+  it('should not set message while saving if set message flag false', function() {
+    scope.rnr = {"id": "rnrId"};
+    httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {'success': "success message"});
+    scope.saveRnr(true);
+    httpBackend.flush();
+    expect(scope.message).toEqual('');
+  });
+
+
 
 });

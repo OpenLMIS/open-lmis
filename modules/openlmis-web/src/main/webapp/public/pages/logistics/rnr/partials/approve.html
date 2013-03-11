@@ -1,9 +1,9 @@
 <ng-include src="'/public/pages/logistics/rnr/partials/header.html'"></ng-include>
 <div class="rnr-tabs">
     <ul class="clearfix">
-        <li ng-class="{'selected': !showNonFullSupply}">
+        <li ng-class="{'selected': !showNonFullSupply, 'has-error': fullSupplyTabError}">
             <a ng-click="switchSupplyType('full-supply')" id="fullSupplyTab">Full Supply Product(s)</a></li>
-        <li ng-class="{'selected': showNonFullSupply}">
+        <li ng-class="{'selected': showNonFullSupply, 'has-error': nonFullSupplyTabError}">
             <a ng-click="switchSupplyType('non-full-supply')" id="nonFullSupplyTab">Non Full Supply Product(s)</a></li>
     </ul>
 </div>
@@ -24,7 +24,7 @@
             <input type="button" value="Save" ng-click="saveRnr()" class="btn btn-primary save-button"/>
             <input type="button" ng-click="approveRnr()" class="btn btn-success submit-button" value="Approve"/>
         </div>
-        <div class="toolbar-error" id="saveFailMessage" ng-bind="error" ng-show="error"></div>
+        <div class="toolbar-error" id="saveFailMessage" openlmis-message="error"></div>
         <div class="toolbar-success" id="saveSuccessMsgDiv" ng-show="message" ng-bind="message"></div>
     </div>
 </form>

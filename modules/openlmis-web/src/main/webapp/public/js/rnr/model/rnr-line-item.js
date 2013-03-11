@@ -18,7 +18,7 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
 
   RnrLineItem.prototype.fillPacksToShip = function () {
     this.quantityApproved = utils.getValueFor(this.quantityApproved);
-    var orderQuantity = isUndefined(this.quantityApproved) ? (isUndefined(this.quantityRequested) ?
+    var orderQuantity = (rnrStatus != 'IN_APPROVAL') ? (isUndefined(this.quantityRequested) ?
       this.calculatedOrderQuantity : this.quantityRequested) : this.quantityApproved;
     this.calculatePacksToShip(orderQuantity);
     this.calculateCost();
