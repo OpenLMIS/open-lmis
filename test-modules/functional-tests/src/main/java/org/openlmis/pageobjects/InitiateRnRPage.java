@@ -206,6 +206,9 @@ public class InitiateRnRPage extends Page {
   @FindBy(how = How.XPATH, using = "//input[@id='doneNonFullSupply']")
   private static WebElement doneButtonNonFullSupply;
 
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Home')]")
+  private static WebElement homeMenuItem;
+
   String successText = "R&R saved successfully!";
   Float actualTotalCostFullSupply, actualTotalCostNonFullSupply;
 
@@ -230,6 +233,14 @@ public class InitiateRnRPage extends Page {
     SeleneseTestNgHelper.assertEquals(operatedBy, operatedByInitRnRScreen.getText().trim());
 
 
+  }
+
+  public HomePage clickHome() throws IOException {
+    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(homeMenuItem);
+    testWebDriver.keyPress(homeMenuItem);
+
+    return new HomePage(testWebDriver);
   }
 
   public void enterBeginningBalance(String A) {
