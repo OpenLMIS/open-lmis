@@ -68,7 +68,7 @@
     </table>
   </div>
   <form name="nonFullSupplyForm">
-    <div id="nonFullSupplyProductsModal" modal="nonFullSupplyProductsModal">
+    <div id="nonFullSupplyProductsModal" modal="nonFullSupplyProductsModal" options="{ backdrop: 'static', escape: false}">
       <div class="modal-header"><h3>Add Non-Full Supply Products</h3></div>
       <div class="modal-body">
 
@@ -84,14 +84,14 @@
         </div>
 
         <div class="row-fluid">
-          <div class="span6">
-            <label for="nonFullSupplyProductsCodeAndName">Product Code/Name:</label>
-            <select class="span12 bottom-spacer" id="nonFullSupplyProductsCodeAndName" ng-model="facilityApprovedProduct" name="productCode"
-                    ng-options="facilityApprovedProduct.programProduct.product.code+' | '+facilityApprovedProduct.programProduct.product.primaryName for facilityApprovedProduct in nonFullSupplyProductsToDisplay">
-              <option value="">--select product code--</option>
-            </select>
-          </div>
+        <div class="span6">
+          <label for="nonFullSupplyProductsCodeAndName">Product Code/Name:</label>
+          <select ui-select2 class="span12 bottom-spacer" id="nonFullSupplyProductsCodeAndName" ng-model="facilityApprovedProduct" name="productCode"
+                  ng-options="facilityApprovedProduct.programProduct.product.code+' | '+facilityApprovedProduct.programProduct.product.primaryName for facilityApprovedProduct in nonFullSupplyProductsToDisplay">
+            <option value="" selected>-- Select product code --</option>
+          </select>
         </div>
+      </div>
 
         <div class="row-fluid">
           <div class="span3">
@@ -159,15 +159,12 @@
 
 
       <div class="modal-footer">
-        <span class="pull-left span1">
-            <input type="button" href="" id="doneNonFullSupply" class="btn btn-primary"
-                   ng-click="addNonFullSupplyLineItemToRnr()"
-                   value="Done"/>
-        </span>
-        <span class="pull-left span1">
-            <input type="button" href="" id="cancelNonFullSupply" class="btn btn-primary" ng-click="nonFullSupplyProductsModal=false"
-                   value="Cancel"/>
-         </span>
+        <input type="button" href="" id="doneNonFullSupply" class="btn btn-primary"
+               ng-click="addNonFullSupplyLineItemToRnr()"
+               value="Done"/>
+
+        <input type="button" href="" id="cancelNonFullSupply" class="btn" ng-click="nonFullSupplyProductsModal=false"
+               value="Cancel"/>
       </div>
     </div>
   </form>

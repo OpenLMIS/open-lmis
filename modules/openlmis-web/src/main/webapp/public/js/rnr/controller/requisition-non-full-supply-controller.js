@@ -1,4 +1,4 @@
-function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $routeParams, $location) {
+function RequisitionNonFullSupplyController($scope, $rootScope, FacilityApprovedProducts, $routeParams, $location) {
   FacilityApprovedProducts.get({facilityId: $routeParams.facility, programId: $routeParams.program}, function (data) {
     $scope.facilityApprovedProducts = data.nonFullSupplyProducts;
 
@@ -16,6 +16,7 @@ function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $r
   };
 
   $scope.addNonFullSupplyLineItemToRnr = function () {
+    $rootScope.message = "";
     $($scope.addedNonFullSupplyProducts).each(function (i, nonFullSupplyProduct) {
       var lineItem = new RnrLineItem(nonFullSupplyProduct, $scope.rnr.period.numberOfMonths, $scope.programRnrColumnList, $scope.rnr.status);
       $scope.rnr.nonFullSupplyLineItems.push(lineItem);
@@ -26,6 +27,16 @@ function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $r
     $scope.newNonFullSupply = undefined;
     $scope.updateNonFullSupplyProductsToDisplay();
     $scope.fillPagedGridData();
+    if ($scope.addedNonFullSupplyProducts.length > 0) {
+      $rootScope.message = "Products added successfully";
+      setTimeout(function () {
+        $scope.$apply(function () {
+          angular.element("#saveSuccessMsgDiv").fadeOut('slow', function () {
+            $rootScope.message = '';
+          });
+        });
+      }, 3000);
+    }
     $scope.nonFullSupplyProductsModal = false;
   };
 
@@ -64,6 +75,8 @@ function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $r
     $scope.addedNonFullSupplyProducts.push(addedNonFullSupplyProduct);
     $scope.updateNonFullSupplyProductsToDisplay();
     $scope.facilityApprovedProduct = undefined;
+    $scope.newNonFullSupply.reasonForRequestedQuantity = undefined;
+    $scope.newNonFullSupply.quantityRequested = undefined;
   }
 
   function populateProductInformation(nonFullSupplyProduct, newNonFullSupply) {
@@ -81,7 +94,8 @@ function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $r
       newNonFullSupply.maxMonthsOfStock = nonFullSupplyProduct.maxMonthsOfStock;
       newNonFullSupply.dosesPerMonth = nonFullSupplyProduct.programProduct.dosesPerMonth;
       newNonFullSupply.price = nonFullSupplyProduct.programProduct.currentPrice;
-      newNonFullSupply.productName= product.primaryName;
+      newNonFullSupply.productName = product.primaryName;
+      newNonFullSupply.productCategory = nonFullSupplyProduct.programProduct.product.category.code;
     }
   }
 
@@ -97,7 +111,7 @@ function RequisitionNonFullSupplyController($scope, FacilityApprovedProducts, $r
   $scope.updateNonFullSupplyProductsToDisplay = function () {
     $scope.nonFullSupplyProductsToDisplay = undefined;
     var usedNonFullSupplyProducts = _.pluck($scope.addedNonFullSupplyProducts, 'productCode');
-    var usedNonFullSupplyProductsOnRnr=_.pluck($scope.rnr.nonFullSupplyLineItems, 'productCode');
+    var usedNonFullSupplyProductsOnRnr = _.pluck($scope.rnr.nonFullSupplyLineItems, 'productCode');
     var addedNonFullSupplyProductList = usedNonFullSupplyProducts.concat(usedNonFullSupplyProductsOnRnr);
     if ($scope.nonFullSupplyProductCategory != undefined) {
       $scope.nonFullSupplyProductsToDisplay = $.grep($scope.facilityApprovedProducts, function (facilityApprovedProduct) {
