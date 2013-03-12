@@ -34,13 +34,13 @@ function LoginController($scope, $http, localStorageService) {
             } else {
               location.reload();
             }
-          } else if (data.error == "true") {
-            $scope.loginError = "The username or password you entered is incorrect. Please try again.";
+          } else if (data.error) {
+            $scope.loginError = data.error;
           }
         }).
         error(function (data) {
           $scope.disableSignInButton = false;
-          $scope.loginError = "Server Error!!";
+          $scope.loginError = data.error;
         });
   };
 

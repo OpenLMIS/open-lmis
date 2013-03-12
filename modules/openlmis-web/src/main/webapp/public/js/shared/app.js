@@ -34,6 +34,7 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
       return data;
     };
     $httpProvider.defaults.transformRequest.push(spinnerFunction);
+    $httpProvider.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
   })
   .directive('uiNav',function () {
     return {

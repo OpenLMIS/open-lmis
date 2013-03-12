@@ -162,7 +162,7 @@ public class RequisitionController extends BaseController {
       List<ProcessingPeriod> periodList = requisitionService.getAllPeriodsForInitiatingRequisition(facilityId, programId);
       Rnr currentRequisition = getRequisitionForCurrentPeriod(facilityId, programId, periodList);
       OpenLmisResponse response = new OpenLmisResponse(PERIODS, periodList);
-      response.setData(RNR, currentRequisition);
+      response.addData(RNR, currentRequisition);
       return new ResponseEntity<>(response, HttpStatus.OK);
     } catch (DataException e) {
       return error(e, CONFLICT);

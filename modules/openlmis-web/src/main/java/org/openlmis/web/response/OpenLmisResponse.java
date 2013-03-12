@@ -26,6 +26,15 @@ public class OpenLmisResponse {
     this.data.put(key, data);
   }
 
+  @JsonAnySetter
+  public void addData(String key, Object data) {
+    this.data.put(key, data);
+  }
+
+  public ResponseEntity<OpenLmisResponse> response(HttpStatus status) {
+    return new ResponseEntity<>(this, status);
+  }
+
   public static ResponseEntity<OpenLmisResponse> success(String successMsgCode) {
     return new ResponseEntity<>(new OpenLmisResponse(SUCCESS, new OpenLmisMessage(successMsgCode).resolve(resourceBundle)), HttpStatus.OK);
   }
@@ -46,9 +55,9 @@ public class OpenLmisResponse {
     return new ResponseEntity<>(new OpenLmisResponse(key, value), HttpStatus.OK);
   }
 
-  public static ResponseEntity<OpenLmisResponse> error(Map<String, OpenLmisMessage> errors, HttpStatus status) {
+  public static ResponseEntity<OpenLmisResponse> response(Map<String, OpenLmisMessage> messages, HttpStatus status) {
     OpenLmisResponse response = new OpenLmisResponse();
-    response.setErrorMap(errors);
+    response.setData(messages);
     return new ResponseEntity<>(response, status);
   }
 
@@ -58,9 +67,10 @@ public class OpenLmisResponse {
     return data;
   }
 
-  @JsonAnySetter
-  public void setData(String key, Object data) {
-    this.data.put(key, data);
+  private void setData(Map<String, OpenLmisMessage> errors) {
+    for (String key : errors.keySet()) {
+      addData(key, errors.get(key).resolve(resourceBundle));
+    }
   }
 
   @JsonIgnore
@@ -71,11 +81,5 @@ public class OpenLmisResponse {
   @JsonIgnore
   public String getSuccessMsg() {
     return (String) data.get(SUCCESS);
-  }
-
-  private void setErrorMap(Map<String, OpenLmisMessage> errors) {
-    for (String key : errors.keySet()) {
-      setData(key, errors.get(key).resolve(resourceBundle));
-    }
   }
 }

@@ -19,10 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 
-import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 import static org.openlmis.web.response.OpenLmisResponse.*;
@@ -44,27 +42,31 @@ public class UserController extends BaseController {
     this.userService = userService;
   }
 
-  @RequestMapping(value = "/user-context", method = GET)
-  public HashMap<String, Object> user(HttpServletRequest httpServletRequest, @RequestParam(required = false) String error) {
+  @RequestMapping(value = "/user-context", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> user(HttpServletRequest httpServletRequest, @RequestParam(required = false) String error) {
     String userName = (String) httpServletRequest.getSession().getAttribute(USER);
-    HashMap<String, Object> params = new HashMap<>();
     if (userName != null) {
-      params.put("name", userName);
-      params.put("authenticated", TRUE);
-      params.put("rights", roleRightService.getRights(userName));
+      OpenLmisResponse openLmisResponse = new OpenLmisResponse("name", userName);
+      openLmisResponse.addData("authenticated", TRUE);
+      openLmisResponse.addData("rights", roleRightService.getRights(userName));
+      return openLmisResponse.response(HttpStatus.OK);
     } else {
-      params.put("authenticated", FALSE);
-      params.put("error", error);
+      return authenticationError();
     }
-    return params;
+  }
+
+  @RequestMapping(value = "/authentication-error", method = POST, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> authenticationError() {
+    return error("user.login.error", HttpStatus.UNAUTHORIZED);
   }
 
   private static int nthOccurrence(String str, char c, int n) {
     int pos = str.indexOf(c, 0);
     while (n-- > 1 && pos != -1)
-      pos = str.indexOf(c, pos+1);
+      pos = str.indexOf(c, pos + 1);
     return pos;
   }
+
   @RequestMapping(value = "/forgot-password", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> sendPasswordTokenEmail(@RequestBody User user, HttpServletRequest request) {
     try {
@@ -90,7 +92,7 @@ public class UserController extends BaseController {
       return error(e, HttpStatus.BAD_REQUEST);
     }
     successResponse = success("User '" + user.getFirstName() + " " + user.getLastName() + "' has been successfully created, password link has been sent on registered Email address");
-    successResponse.getBody().setData("user", user);
+    successResponse.getBody().addData("user", user);
     return successResponse;
   }
 
@@ -108,7 +110,7 @@ public class UserController extends BaseController {
       return error(e, HttpStatus.BAD_REQUEST);
     }
     successResponse = success("User '" + user.getFirstName() + " " + user.getLastName() + "' has been successfully updated");
-    successResponse.getBody().setData("user", user);
+    successResponse.getBody().addData("user", user);
     return successResponse;
   }
 
@@ -127,14 +129,14 @@ public class UserController extends BaseController {
   @RequestMapping(value = "/user/validatePasswordResetToken/{token}", method = GET)
   public ResponseEntity<OpenLmisResponse> validatePasswordResetToken(@PathVariable(value = "token") String token) throws IOException, ServletException {
     try {
-     userService.getUserIdByPasswordResetToken(token);
+      userService.getUserIdByPasswordResetToken(token);
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);
     }
     return response(TOKEN_VALID, true);
   }
 
-  @RequestMapping(value = "/user/resetPassword/{token}" , method = PUT)
+  @RequestMapping(value = "/user/resetPassword/{token}", method = PUT)
   public ResponseEntity<OpenLmisResponse> resetPassword(@PathVariable(value = "token") String token, @RequestBody String password) {
     try {
       userService.updateUserPassword(token, password);
