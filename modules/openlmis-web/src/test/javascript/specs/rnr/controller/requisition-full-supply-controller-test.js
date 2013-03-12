@@ -66,6 +66,7 @@ describe('RequisitionFullSupplyController', function () {
     expect(rnrLineItem.reEvaluateTotalLossesAndAdjustments).toHaveBeenCalled();
     expect(scope.lossesAndAdjustmentsModal).toBeFalsy();
     expect(scope.modalError).toEqual('');
+    expect(scope.lossAndAdjustment).toBeUndefined();
   });
 
   it('should not save Losses and Adjustments and close modal if not valid', function () {
