@@ -1,0 +1,15 @@
+<suite name="Openlmis Smoke" verbose="10" allow-return-values="true">
+  <parameter name="browser" value="ie"/>
+  <test name="Openlmis test">
+    <groups>
+      <run>
+        <include name="smoke"/>
+      </run>
+    </groups>
+    <classes>
+      <class name="org.openlmis.functional.E2EInitiateRnR">
+      </class>
+    </classes>
+  </test>
+</suite>
+
