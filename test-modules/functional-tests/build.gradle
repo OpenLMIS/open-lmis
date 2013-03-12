@@ -62,3 +62,13 @@ smokeTestIE.doFirst() {
     buildOpenLmis.execute()
 }
 
+task smokeTestChrome(type: Test) {
+    useTestNG() {
+        suites 'src/test/java/org/openlmis/functional/testng-smoke-chrome.xml'
+    }
+}
+
+smokeTestChrome.doFirst() {
+    buildOpenLmis.execute()
+}
+
