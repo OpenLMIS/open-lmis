@@ -252,6 +252,17 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     return "";
   };
 
+  RnrLineItem.prototype.validateLossesAndAdjustments = function() {
+    if (isUndefined(this.lossesAndAdjustments)) return true;
+
+    for (var index in this.lossesAndAdjustments) {
+      if (isUndefined(this.lossesAndAdjustments[index].quantity)) {
+        return false;
+      }
+    }
+    return true;
+  };
+
   if (this.previousNormalizedConsumptions == undefined || this.previousNormalizedConsumptions == null)
     this.previousNormalizedConsumptions = [];
 

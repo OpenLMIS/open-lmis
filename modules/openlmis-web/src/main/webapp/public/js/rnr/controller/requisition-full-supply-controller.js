@@ -18,10 +18,13 @@ function RequisitionFullSupplyController($scope, $routeParams, $location, Losses
       return prefix + "_" + parent.$parent.$parent.$index;
     };
 
-
-  // TODO: Push this method to rnr-line-item
   $scope.saveLossesAndAdjustmentsForRnRLineItem = function () {
-    if (!isValidLossesAndAdjustments($scope.currentRnrLineItem)) return;
+    $scope.modalError = '';
+
+    if(!$scope.currentRnrLineItem.validateLossesAndAdjustments()){
+      $scope.modalError = 'Please correct the highlighted fields before submitting';
+      return;
+    }
 
     $scope.currentRnrLineItem.reEvaluateTotalLossesAndAdjustments();
     $scope.clearAndCloseLossesAndAdjustmentModal();
@@ -42,7 +45,6 @@ function RequisitionFullSupplyController($scope, $routeParams, $location, Losses
     $scope.lossesAndAdjustmentsModal = true;
   };
 
-  // TODO: Push this method to rnr-line-item
   $scope.removeLossAndAdjustment = function (lossAndAdjustmentToDelete) {
     $scope.currentRnrLineItem.removeLossAndAdjustment(lossAndAdjustmentToDelete);
     updateLossesAndAdjustmentTypesToDisplayForLineItem($scope.currentRnrLineItem);
@@ -50,27 +52,11 @@ function RequisitionFullSupplyController($scope, $routeParams, $location, Losses
     $scope.saveRnrForm.$dirty = true;
   };
 
-  // TODO: Push this method to rnr-line-item
   $scope.addLossAndAdjustment = function (newLossAndAdjustment) {
     $scope.currentRnrLineItem.addLossAndAdjustment(newLossAndAdjustment);
     updateLossesAndAdjustmentTypesToDisplayForLineItem($scope.currentRnrLineItem);
     $scope.saveRnrForm.$dirty = true;
   };
-
-
-  // TODO: Push this method to rnr-line-item
-  function isValidLossesAndAdjustments(rnrLineItem) {
-    $scope.modalError = '';
-    if (isUndefined(rnrLineItem.lossesAndAdjustments)) return true;
-
-    for (var index in rnrLineItem.lossesAndAdjustments) {
-      if (isUndefined(rnrLineItem.lossesAndAdjustments[index].quantity)) {
-        $scope.modalError = 'Please correct the highlighted fields before submitting';
-        return false;
-      }
-    }
-    return true;
-  }
 
   function updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem) {
     var lossesAndAdjustmentTypesForLineItem = _.pluck(_.pluck(lineItem.lossesAndAdjustments, 'type'), 'name');

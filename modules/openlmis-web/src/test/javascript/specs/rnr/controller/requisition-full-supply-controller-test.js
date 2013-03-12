@@ -46,10 +46,8 @@ describe('RequisitionFullSupplyController', function () {
   });
 
   it('should save Losses and Adjustments and close modal if valid', function () {
-    var lineItem = { "id":"1", "beginningBalance":1, lossesAndAdjustments:[
-      {"type":{"name":"some name"}, "quantity":"4"}
-    ]};
-    var rnrLineItem = new RnrLineItem(lineItem);
+    var rnrLineItem = new RnrLineItem({});
+    spyOn(rnrLineItem, 'validateLossesAndAdjustments').andReturn(true);
 
     scope.$parent.rnr.fullSupplyLineItems.push(rnrLineItem);
     spyOn(rnrLineItem, 'reEvaluateTotalLossesAndAdjustments');
@@ -69,11 +67,9 @@ describe('RequisitionFullSupplyController', function () {
     expect(scope.lossAndAdjustment).toBeUndefined();
   });
 
-  it('should not save Losses and Adjustments and close modal if not valid', function () {
-    var lineItem = { "id":"1", "beginningBalance":1, lossesAndAdjustments:[
-      {"type":{"name":"some name"}, "quantity":null}
-    ]};
-    var rnrLineItem = new RnrLineItem(lineItem);
+  it('should not save Losses and Adjustments and not close modal if not valid', function () {
+    var rnrLineItem = new RnrLineItem({});
+    spyOn(rnrLineItem, 'validateLossesAndAdjustments').andReturn(false);
 
     scope.$parent.rnr.fullSupplyLineItems.push(rnrLineItem);
     spyOn(rnrLineItem, 'reEvaluateTotalLossesAndAdjustments');

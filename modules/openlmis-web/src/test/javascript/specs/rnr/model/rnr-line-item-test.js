@@ -517,6 +517,39 @@ describe('RnrLineItem', function () {
       expect(rnrLineItem.fillConsumptionOrStockInHand).toHaveBeenCalled();
       expect(rnrLineItem.totalLossesAndAdjustments).toEqual(25);
     });
+
+    it('should return true on validate losses and adjustments if no losses and adjustments present in the rnrLineItem', function () {
+      var rnr = new Object();
+      var programRnrColumnList = new Object();
+      var rnrLineItem = new RnrLineItem({"id":"1"}, rnr, programRnrColumnList);
+
+      expect(rnrLineItem.validateLossesAndAdjustments()).toBeTruthy();
+    });
+
+    it('should return false if any loss and adjustment does not have quantity specified',function(){
+      var rnr = new Object();
+      var programRnrColumnList = new Object();
+      var lossAndAdjustment1 = {"type":{"name":"LOSS1", "additive":true}, "quantity":45};
+      var lossAndAdjustment2 = {"type":{"name":"LOSS2", "additive":true}, "quantity":' '};
+      var lossAndAdjustment3 = {"type":{"name":"LOSS3", "additive":true}, "quantity":45};
+
+      var lineItem = {"id":"1", lossesAndAdjustments:[lossAndAdjustment1, lossAndAdjustment2, lossAndAdjustment3]};
+      var rnrLineItem = new RnrLineItem(lineItem, rnr, programRnrColumnList);
+      expect(rnrLineItem.validateLossesAndAdjustments()).toBeFalsy();
+    });
+
+    it('should return true if all losses and adjustments have quantity specified',function(){
+      var rnr = new Object();
+      var programRnrColumnList = new Object();
+      var lossAndAdjustment1 = {"type":{"name":"LOSS1", "additive":true}, "quantity":45};
+      var lossAndAdjustment2 = {"type":{"name":"LOSS2", "additive":true}, "quantity":200};
+      var lossAndAdjustment3 = {"type":{"name":"LOSS3", "additive":true}, "quantity":45};
+
+      var lineItem = {"id":"1", lossesAndAdjustments:[lossAndAdjustment1, lossAndAdjustment2, lossAndAdjustment3]};
+      var rnrLineItem = new RnrLineItem(lineItem, rnr, programRnrColumnList);
+      expect(rnrLineItem.validateLossesAndAdjustments()).toBeTruthy();
+    });
+
   });
 
   describe('Arithmetic validation', function () {
