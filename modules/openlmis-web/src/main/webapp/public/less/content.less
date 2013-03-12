@@ -1229,6 +1229,12 @@ td .close {
     background: #61acaf;
   }
 }
+.row-fluid [class*="span"].select2-container {
+  margin-left: 0;
+  &.bottom-spacer {
+    margin-bottom: 10px;
+  }
+}
 .select2-container-multi.select2-container-active {
   .select2-choices {
     border-color: #17888f;
@@ -1309,6 +1315,27 @@ input[placeholder].placeholder{
           background-color: #e7e7e7;
         }
       }
+    }
+  }
+}
+
+#nonFullSupplyProductsModal {
+  width: 840px;
+  margin-left: -420px;
+  hr {
+    margin: 3px 0 10px;
+  }
+}
+.non-full-supply-product-list {
+  border: 1px solid #CCC;
+  background: #FAFAFA;
+  max-height: 185px;
+  overflow: auto;
+  > .row-fluid {
+    border-bottom: 1px solid #EEE;
+    input[type='text'] {
+      margin-bottom: 0;
+      width: 100%;
     }
   }
 }

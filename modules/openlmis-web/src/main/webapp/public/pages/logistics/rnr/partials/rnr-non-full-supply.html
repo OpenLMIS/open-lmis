@@ -34,7 +34,7 @@
                            ng-change="rnr.fillPacksToShip(rnrLineItem)"/>
                     <span class="rnr-form-error" id="quantityRequested{{rnrLineItem['id']}}"
                           style="display:none;">
-                      Enter Numeric Data
+                      Enter numeric data
                     </span>
                   </span>
 
@@ -71,73 +71,93 @@
     <div id="nonFullSupplyProductsModal" modal="nonFullSupplyProductsModal">
       <div class="modal-header"><h3>Add Non-Full Supply Products</h3></div>
       <div class="modal-body">
-          <span class="span3">
-            <label for="nonFullSupplyProductsCategory">Category:</label>
-            <select id="nonFullSupplyProductsCategory" ng-model="nonFullSupplyProductCategory" name="productName"
-                    ng-options="nonFullSupplyProductCategory.name for nonFullSupplyProductCategory in nonFullSupplyProductsCategories"
-                    ng-change="updateNonFullSupplyProductsToDisplay()">
-              <option value="">--select category--</option>
-            </select>
-          </span>
-          <span class="span3">
+
+        <div class="row-fluid">
+          <div class="span6">
+           <label for="nonFullSupplyProductsCategory">Category:</label>
+           <select class="span12" id="nonFullSupplyProductsCategory" ng-model="nonFullSupplyProductCategory" name="productName"
+                   ng-options="nonFullSupplyProductCategory.name for nonFullSupplyProductCategory in nonFullSupplyProductsCategories"
+                   ng-change="updateNonFullSupplyProductsToDisplay()">
+             <option value="">-- Select category --</option>
+           </select>
+          </div>
+        </div>
+
+        <div class="row-fluid">
+          <div class="span6">
             <label for="nonFullSupplyProductsCodeAndName">Product Code/Name:</label>
-            <select id="nonFullSupplyProductsCodeAndName" ng-model="facilityApprovedProduct" name="productCode"
+            <select class="span12 bottom-spacer" id="nonFullSupplyProductsCodeAndName" ng-model="facilityApprovedProduct" name="productCode"
                     ng-options="facilityApprovedProduct.programProduct.product.code+' | '+facilityApprovedProduct.programProduct.product.primaryName for facilityApprovedProduct in nonFullSupplyProductsToDisplay">
-              <option value="">--select product code--</option>
+              <option value="">-- Select product code --</option>
             </select>
-          </span>
-          <span class="span3">
-            <span>
-              <label for="quantityRequested"><span
+          </div>
+        </div>
+
+        <div class="row-fluid">
+          <div class="span3">
+            <label for="quantityRequested"><span
                 ng-bind="labelForRnrColumn('quantityRequested')"></span></label>
-              <input name="newNonFullSupply.quantityRequested" ng-model="newNonFullSupply.quantityRequested"
-                     id="quantityRequested"
-                     rnr-validator="positiveInteger" maxlength="8"/><br>
+            <input type="text" class="span12" name="newNonFullSupply.quantityRequested" ng-model="newNonFullSupply.quantityRequested"
+                   id="quantityRequested"
+                   rnr-validator="positiveInteger" maxlength="8"/><br>
               <span class="rnr-form-error" style="display:none;" id="newNonFullSupply.quantityRequested">
-                Enter Numeric Data
+                Enter numeric data
               </span>
-            </span>
-          </span>
-          <span class="span3">
+          </div>
+          <div class="span6">
             <label for="reasonForRequestedQuantity"><span
-              ng-bind="labelForRnrColumn('reasonForRequestedQuantity')"></span></label>
-            <textarea maxlength="250" rows="4" ng-model="newNonFullSupply.reasonForRequestedQuantity"
-                      id="reasonForRequestedQuantity"></textarea><br>
+                ng-bind="labelForRnrColumn('reasonForRequestedQuantity')"></span></label>
+            <input type="text" class="span12" ng-model="newNonFullSupply.reasonForRequestedQuantity"
+                   id="reasonForRequestedQuantity" maxlength="250"/><br>
             <span class="alert alert-warning reason-request"
                   ng-show="newNonFullSupply.quantityRequested && !newNonFullSupply.reasonForRequestedQuantity">
               Please enter a reason
             </span>
-          </span>
-           <span class="pull-left span1">
+          </div>
+          <div class="span3">
+            <label>&nbsp;</label>
             <input type="button" href="" id="addNonFullSupply" class="btn btn-primary"
                    ng-click="addNonFullSupplyProductsByCategory()"
                    ng-disabled="shouldDisableAddButton()" value="Add"/>
-          </span>
+          </div>
+        </div>
+
+        <hr />
+
+        <div class="non-full-supply-product-list" ng-show="addedNonFullSupplyProducts.length">
+          <div class="row-fluid" ng-repeat="nonFullSupplyProduct in addedNonFullSupplyProducts">
+
+            <div class="span4">
+              <div class="fluid-grid-cell" id= "nonFullSupplyProductCodeAndName">
+                <label ng-bind="nonFullSupplyProduct.code+' | '+nonFullSupplyProduct.name"></label>
+              </div>
+            </div>
+
+            <div class="span2">
+              <div class="fluid-grid-cell" id= "nonFullSupplyProductQuantityRequested">
+                <input type="text" ng-model="nonFullSupplyProduct.quantityRequested" placeholder="Quantity" />
+              </div>
+            </div>
+
+            <div class="span5">
+              <div class="fluid-grid-cell" id= "nonFullSupplyProductReasonForRequestedQuantity">
+                <input type="text" ng-model="nonFullSupplyProduct.reasonForRequestedQuantity" placeholder="Explanation" />
+              </div>
+            </div>
+
+            <div class="span1">
+              <div class="fluid-grid-cell">
+                <a class="delete-role" value="delete" ng-click="deleteCurrentNonFullSupplyLineItem($index)">&times;</a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
       </div>
 
 
-      <div class="row-fluid" ng-repeat="nonFullSupplyProduct in addedNonFullSupplyProducts">
-        <div class="span3">
-          <div class="fluid-grid-cell" id= "nonFullSupplyProductCodeAndName">
-            <label ng-bind="nonFullSupplyProduct.code+' | '+nonFullSupplyProduct.name"></label>
-          </div>
-        </div>
-        <div class="span3">
-          <div class="fluid-grid-cell" id= "nonFullSupplyProductQuantityRequested">
-            <input ng-model="nonFullSupplyProduct.quantityRequested"/>
-          </div>
-        </div>
-        <div class="span3">
-          <div class="fluid-grid-cell" id= "nonFullSupplyProductReasonForRequestedQuantity">
-            <input ng-model="nonFullSupplyProduct.reasonForRequestedQuantity"/>
-          </div>
-        </div>
-        <div class="span3">
-          <div class="fluid-grid-cell">
-            <a class="delete-role" value="delete" ng-click="deleteCurrentNonFullSupplyLineItem($index)">&times;</a>
-          </div>
-        </div>
-      </div>
+
       <div class="modal-footer">
         <span class="pull-left span1">
             <input type="reset" class="btn btn-success save-button" value="Close" ng-click="nonFullSupplyProductsModal=false" />
