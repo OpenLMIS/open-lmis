@@ -176,6 +176,17 @@ public class InitiateRnRPage extends Page {
   @FindBy(how = How.XPATH, using = "//select[@id='nonFullSupplyProductsCodeAndName']")
   private static WebElement productDropDown;
 
+
+  @FindBy(how = How.XPATH, using = "//a[@class='select2-choice']")
+  private static WebElement productDropDownLink;
+
+
+  @FindBy(how = How.XPATH, using = "//input[@class='select2-input select2-focused']")
+  private static WebElement productDropDownTextField;
+
+  @FindBy(how = How.XPATH, using = "//div[@class='select2-result-label']")
+  private static WebElement productDropDownValue;
+
   @FindBy(how = How.XPATH, using = "//select[@id='nonFullSupplyProductsCode']")
   private static WebElement productCodeDropDown;
 
@@ -388,13 +399,18 @@ public class InitiateRnRPage extends Page {
     testWebDriver.sleep(1000);
     addButton.click();
     testWebDriver.sleep(1000);
-    testWebDriver.waitForElementToAppear(productDropDown);
+//    testWebDriver.waitForElementToAppear(productDropDown);
     SeleneseTestNgHelper.assertFalse("Add button not enabled", addButtonNonFullSupply.isEnabled());
     SeleneseTestNgHelper.assertTrue("Close button not displayed", cancelButton.isDisplayed());
-    testWebDriver.waitForElementToAppear(productDropDown);
+//    testWebDriver.waitForElementToAppear(productDropDown);
     testWebDriver.waitForElementToAppear(categoryDropDown);
     testWebDriver.selectByIndex(categoryDropDown,1);
-    testWebDriver.selectByVisibleText(productDropDown, productCode+" | "+productPrimaryName);
+    productDropDownLink.click();
+    testWebDriver.waitForElementToAppear(productDropDownTextField);
+    productDropDownTextField.sendKeys(productCode);
+    testWebDriver.waitForElementToAppear(productDropDownValue);
+    productDropDownValue.click();
+//    testWebDriver.selectByVisibleText(productDropDown, productCode+" | "+productPrimaryName);
     requestedQuantityField.clear();
     requestedQuantityField.sendKeys(requestedQuantityValue);
     requestedQuantityExplanationField.clear();
@@ -403,16 +419,21 @@ public class InitiateRnRPage extends Page {
     cancelButton.click();
     testWebDriver.waitForElementToAppear(addNonFullSupplyButtonScreen);
     addNonFullSupplyButtonScreen.click();
-    testWebDriver.waitForElementToAppear(productDropDown);
-//    SeleneseTestNgHelper.assertEquals(testWebDriver.getSelectedOptionDefault(categoryDropDown).trim(), "");
+    testWebDriver.waitForElementToAppear(categoryDropDown);
+    SeleneseTestNgHelper.assertEquals(testWebDriver.getSelectedOptionDefault(categoryDropDown).trim(), "");
     SeleneseTestNgHelper.assertEquals(testWebDriver.getSelectedOptionDefault(productDropDown).trim(), "");
     SeleneseTestNgHelper.assertEquals(requestedQuantityField.getAttribute("value").trim(),"");
     SeleneseTestNgHelper.assertEquals(requestedQuantityExplanationField.getAttribute("value").trim(),"");
 
-    testWebDriver.waitForElementToAppear(productDropDown);
+//    testWebDriver.waitForElementToAppear(productDropDown);
     testWebDriver.waitForElementToAppear(categoryDropDown);
     testWebDriver.selectByIndex(categoryDropDown,1);
-    testWebDriver.selectByVisibleText(productDropDown, productCode+" | "+productPrimaryName);
+    productDropDownLink.click();
+    testWebDriver.waitForElementToAppear(productDropDownTextField);
+    productDropDownTextField.sendKeys(productCode);
+    testWebDriver.waitForElementToAppear(productDropDownValue);
+    productDropDownValue.click();
+//    testWebDriver.selectByVisibleText(productDropDown, productCode+" | "+productPrimaryName);
     requestedQuantityField.clear();
     requestedQuantityField.sendKeys(requestedQuantityValue);
     requestedQuantityExplanationField.clear();
