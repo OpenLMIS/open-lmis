@@ -135,13 +135,18 @@
 
             <div class="span2">
               <div class="fluid-grid-cell" id= "nonFullSupplyProductQuantityRequested">
-                <input type="text" ng-model="nonFullSupplyProduct.quantityRequested" placeholder="Quantity" />
+                <input type="text" rnr-validator="positiveInteger" name="nonFullSupplyProduct.quantityRequested{{$index}}" maxlength="8" ng-model="nonFullSupplyProduct.quantityRequested" placeholder="Quantity" />
+                 <span class="rnr-form-error" style="display:none;" id="nonFullSupplyProduct.quantityRequested{{$index}}">
+                Enter numeric data
+              </span>
+              <span class="field-error"  ng-show="!nonFullSupplyProduct.quantityRequested">Please fill this value</span>
               </div>
             </div>
 
             <div class="span5">
               <div class="fluid-grid-cell" id= "nonFullSupplyProductReasonForRequestedQuantity">
-                <input type="text" ng-model="nonFullSupplyProduct.reasonForRequestedQuantity" placeholder="Explanation" />
+                <input type="text" maxlength="250" ng-model="nonFullSupplyProduct.reasonForRequestedQuantity" placeholder="Explanation" />
+                <span class="field-error" ng-show="!nonFullSupplyProduct.reasonForRequestedQuantity">Please fill this value</span>
               </div>
             </div>
 
