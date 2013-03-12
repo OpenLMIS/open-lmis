@@ -54,4 +54,23 @@ describe("LoginController", function () {
     expect(scope.disableSignInButton).toBeFalsy();
     expect(scope.loginError).toBe('Server Error!!');
   });
+
+  it('should show error when username is missing',function(){
+    scope.username = undefined;
+    scope.doLogin();
+    expect(scope.loginError).toBe('Please enter your username');
+  });
+
+  it('should show error when username is only whitespaces',function(){
+    scope.username = "   ";
+    scope.doLogin();
+    expect(scope.loginError).toBe('Please enter your username');
+  })
+
+  it('should show error when password is missing',function(){
+    scope.username = "someUser";
+    scope.password = undefined;
+    scope.doLogin();
+    expect(scope.loginError).toBe('Please enter your password');
+  });
 });
