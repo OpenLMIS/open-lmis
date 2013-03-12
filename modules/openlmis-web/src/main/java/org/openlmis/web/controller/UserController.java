@@ -43,7 +43,7 @@ public class UserController extends BaseController {
   }
 
   @RequestMapping(value = "/user-context", method = GET, headers = ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> user(HttpServletRequest httpServletRequest, @RequestParam(required = false) String error) {
+  public ResponseEntity<OpenLmisResponse> user(HttpServletRequest httpServletRequest) {
     String userName = (String) httpServletRequest.getSession().getAttribute(USER);
     if (userName != null) {
       OpenLmisResponse openLmisResponse = new OpenLmisResponse("name", userName);

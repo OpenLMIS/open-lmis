@@ -19,7 +19,10 @@ import org.springframework.mock.web.MockHttpSession;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -62,18 +65,16 @@ public class UserControllerTest {
   public void shouldReturnUserInfoOfLoggedInUser() {
     String username = "Foo";
     session.setAttribute(UserAuthenticationSuccessHandler.USER, username);
-    HashMap<String, Object> params = userController.user(httpServletRequest, null);
-    assertThat(params.get("name").toString(), is("Foo"));
-    assertThat((Boolean) params.get("authenticated"), is(true));
+    ResponseEntity<OpenLmisResponse> response = userController.user(httpServletRequest);
+    assertThat(response.getBody().getData().get("name").toString(), is("Foo"));
+    assertThat((Boolean) response.getBody().getData().get("authenticated"), is(true));
   }
-
 
   @Test
   public void shouldNotReturnUserInfoWhenNotLoggedIn() {
     session.setAttribute(UserAuthenticationSuccessHandler.USER, null);
-    HashMap<String, Object> params = userController.user(httpServletRequest, "true");
-    assertThat(params.get("error").toString(), is("true"));
-    assertThat((Boolean) params.get("authenticated"), is(false));
+    ResponseEntity<OpenLmisResponse> response = userController.user(httpServletRequest);
+    assertThat(response.getBody().getErrorMsg(), is("The username or password you entered is incorrect. Please try again."));
   }
 
   @Test
@@ -82,9 +83,9 @@ public class UserControllerTest {
     session.setAttribute(UserAuthenticationSuccessHandler.USER, username);
     Set<Right> rights = new HashSet<>();
     when(roleRightService.getRights(username)).thenReturn(rights);
-    HashMap<String, Object> params = userController.user(httpServletRequest, "true");
+    ResponseEntity<OpenLmisResponse> response = userController.user(httpServletRequest);
     verify(roleRightService).getRights(username);
-    assertThat((Set<Right>) params.get("rights"), is(rights));
+    assertThat((Set<Right>) response.getBody().getData().get("rights"), is(rights));
   }
 
   @Test
@@ -94,7 +95,7 @@ public class UserControllerTest {
     user.setEmail("manan@thoughtworks.com");
     httpServletRequest.addHeader("referer", "http://openlmis:9091/public/pages/admin/user/index.html");
     userController.sendPasswordTokenEmail(user, httpServletRequest);
-    verify(userService).sendForgotPasswordEmail(eq(user),eq("http://openlmis:9091/public/pages/reset-password.html#/token/"));
+    verify(userService).sendForgotPasswordEmail(eq(user), eq("http://openlmis:9091/public/pages/reset-password.html#/token/"));
   }
 
   @Test
@@ -119,7 +120,7 @@ public class UserControllerTest {
     httpServletRequest.addHeader("referer", "http://openlmis:9091/public/pages/admin/user/index.html");
     ResponseEntity<OpenLmisResponse> response = userController.create(user, httpServletRequest);
 
-    verify(userService).create(eq(user),eq("http://openlmis:9091/public/pages/reset-password.html#/token/"));
+    verify(userService).create(eq(user), eq("http://openlmis:9091/public/pages/reset-password.html#/token/"));
 
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
     assertThat(response.getBody().getSuccessMsg(), is("User '" + user.getFirstName() + " " + user.getLastName() + "' has been successfully created, password link has been sent on registered Email address"));
@@ -147,7 +148,7 @@ public class UserControllerTest {
   public void shouldReturnErrorIfSaveUserFails() throws Exception {
     User user = new User();
     doThrow(new DataException("Save user failed")).when(userService).create(eq(user), anyString());
-    httpServletRequest.addHeader("referer","http://openlmis:8080/index.html");
+    httpServletRequest.addHeader("referer", "http://openlmis:8080/index.html");
     ResponseEntity<OpenLmisResponse> response = userController.create(user, httpServletRequest);
 
     assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
