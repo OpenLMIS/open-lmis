@@ -12,6 +12,8 @@
       </class>
       <class name="org.openlmis.functional.E2EUpload">
       </class>
+      <class name="org.openlmis.functional.ViewRequisition">
+      </class>
     </classes>
   </test>
 </suite>
