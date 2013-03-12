@@ -57,7 +57,7 @@ public class RnrTemplateController extends BaseController{
       Map<String, OpenLmisMessage> validationErrors = rnrTemplateService.saveRnRTemplateForProgram(programRnrTemplate);
       ResponseEntity responseEntity;
       if (validationErrors != null && validationErrors.size() > 0) {
-        responseEntity = OpenLmisResponse.error(validationErrors, HttpStatus.BAD_REQUEST);
+        responseEntity = OpenLmisResponse.response(validationErrors, HttpStatus.BAD_REQUEST);
       } else {
         responseEntity = OpenLmisResponse.success("Saved Successfully");
       }

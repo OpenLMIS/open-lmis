@@ -50,7 +50,7 @@ public class ProcessingPeriodController extends BaseController {
       return error(e, HttpStatus.BAD_REQUEST);
     }
     ResponseEntity<OpenLmisResponse> successResponse = OpenLmisResponse.success("Period added successfully");
-    successResponse.getBody().setData("id", processingPeriod.getId());
+    successResponse.getBody().addData("id", processingPeriod.getId());
     return successResponse;
   }
 

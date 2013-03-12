@@ -61,10 +61,14 @@ describe('RequisitionNonFullSupplyController', function () {
   it('should display non full supply addition modal window', function () {
     scope.nonFullSupplyLineItems = [];
     scope.facilityApprovedProducts = [];
+    spyOn(scope,'resetNonFullSupplyModal')
+
     scope.showAddNonFullSupplyModal();
+
     expect(scope.nonFullSupplyProductsModal).toBeTruthy();
     expect(scope.newNonFullSupply).toBeUndefined();
     expect(scope.facilityApprovedProduct).toBeUndefined();
+    expect(scope.resetNonFullSupplyModal).toHaveBeenCalled();
   });
 
 //  it('should add non full supply line item to the list', function () {
@@ -110,18 +114,20 @@ describe('RequisitionNonFullSupplyController', function () {
     scope.facilityApprovedProduct = {};
     expect(scope.shouldDisableAddButton()).toEqual(false);
   });
-  it('should filter non full supply products based on selected category and previously added products', function () {
-    scope.nonFullSupplyProductCategory = {name:"cat1"};
+
+  it('should filter non full supply products based on selected category and previously added products(modal window) and products added to the non-full supply tab', function () {
     var category1 = {"id": 1, "name": "cat1", "code": "cat1Code"};
     var category2 = {"id": 2, "name": "cat2", "code": "cat2Code"};
     var category3 = {"id": 3, "name": "cat3", "code": "cat3Code"};
     categoryList = [category1, category2, category3];
 
+    scope.nonFullSupplyProductCategory = {name:"cat1"};
+
     var product1 = {"id": 1, "code": "product1", "category": category1};
-    var product2 = {"id": 2, "code": "product2", "category": category2};
-    var product3 = {"id": 3, "code": "product3", "category": category3};
+    var product2 = {"id": 2, "code": "product2", "category": category1};
+    var product3 = {"id": 3, "code": "product3", "category": category1};
     var product4 = {"id": 4, "code": "product4", "category": category1};
-    var product5 = {"id": 5, "code": "product5", "category": category2};
+    var product5 = {"id": 5, "code": "product5", "category": category1};
 
     var facilityApprovedProduct1 = {"programProduct": {"product": product1}};
     var facilityApprovedProduct2 = {"programProduct": {"product": product2}};
@@ -130,34 +136,44 @@ describe('RequisitionNonFullSupplyController', function () {
     var facilityApprovedProduct5 = {"programProduct": {"product": product5}};
 
     scope.facilityApprovedProducts = [facilityApprovedProduct1, facilityApprovedProduct2, facilityApprovedProduct3, facilityApprovedProduct4, facilityApprovedProduct5];
-    scope.addedNonFullSupplyProducts =[{"code":"product1" }];
+    scope.addedNonFullSupplyProducts =[{"productCode":"product1" }];
+    scope.rnr.nonFullSupplyLineItems = [{"id":5, "productCode":"product3"}];
 
     scope.updateNonFullSupplyProductsToDisplay();
 
-    expect(scope.nonFullSupplyProductsToDisplay[0]==facilityApprovedProduct1).toBeFalsy();
-    expect(scope.nonFullSupplyProductsToDisplay[0].programProduct==facilityApprovedProduct4.programProduct).toBeTruthy();
-  })
+    expect(scope.nonFullSupplyProductsToDisplay.length).toEqual(3);
+    expect(scope.nonFullSupplyProductsToDisplay[0].programProduct).toEqual(facilityApprovedProduct2.programProduct);
+    expect(scope.nonFullSupplyProductsToDisplay[1].programProduct).not.toEqual(facilityApprovedProduct1.programProduct);
+    expect(scope.nonFullSupplyProductsToDisplay[2].programProduct).not.toEqual(facilityApprovedProduct3.programProduct);
+  });
+
   it("Should add selected product to the list of products displayed in the addedNonFullSupplyProducts table",function(){
     var category1 = {"id": 1, "name": "cat1", "code": "cat1Code"};
-    var product1 = {"id": 1, "code": "product1", "category": category1,"primaryName":"Product 1"};
+    var product1 = {"id": 1, "code": "product1", "category": category1,"primaryName":"Product 1","form": {"code": "Tablet"},"dosageUnit": {"code": "mg"},"strength": "600", "code": "P999", "primaryName": "Antibiotics"};
     scope.facilityApprovedProduct = {"programProduct": {"product": product1}};
     scope.newNonFullSupply = {"quantityRequested": 20, "reasonForRequestedQuantity": "Bad Weather"};
     scope.addedNonFullSupplyProducts=[];
-    scope.addNonFullSupplyProductsByCategory();
-
+    spyOn(scope,'updateNonFullSupplyProductsToDisplay');
     var addedNonFullSupplyProductPrimaryName = scope.facilityApprovedProduct.programProduct.product.primaryName;
     var addedNonFullSupplyProductCode = scope.facilityApprovedProduct.programProduct.product.code;
 
-    expect(scope.addedNonFullSupplyProducts[0].code==addedNonFullSupplyProductCode).toBeTruthy();
-    expect(scope.addedNonFullSupplyProducts[0].name==addedNonFullSupplyProductPrimaryName).toBeTruthy();
-    expect(scope.addedNonFullSupplyProducts[0].quantityRequested==20).toBeTruthy();
-    expect(scope.addedNonFullSupplyProducts[0].reasonForRequestedQuantity=="Bad Weather").toBeTruthy();
-  })
+    scope.addNonFullSupplyProductsByCategory();
+
+    expect(scope.addedNonFullSupplyProducts[0].productCode).toEqual(addedNonFullSupplyProductCode);
+    expect(scope.addedNonFullSupplyProducts[0].productName).toEqual(addedNonFullSupplyProductPrimaryName);
+    expect(scope.addedNonFullSupplyProducts[0].quantityRequested).toEqual(20);
+    expect(scope.addedNonFullSupplyProducts[0].reasonForRequestedQuantity).toEqual("Bad Weather");
+    expect(scope.updateNonFullSupplyProductsToDisplay).toHaveBeenCalled();
+  });
+
   it("Should delete the current non full supply line item when delete is clicked against the addedNonFullSupplyLineItem",function(){
     scope.addedNonFullSupplyProducts =[{"code":"code1" , "name":"Product1"}];
+    spyOn(scope,'updateNonFullSupplyProductsToDisplay');
+
     scope.deleteCurrentNonFullSupplyLineItem(0);
 
     expect(scope.addedNonFullSupplyProducts.length == 0).toBeTruthy();
+    expect(scope.updateNonFullSupplyProductsToDisplay).toHaveBeenCalled();
 
     var nonFullSupplyLineItem1 = {"code":"code2" , "name":"Product2"};
     var nonFullSupplyLineItem2 = {"code":"code3" , "name":"Product3"};
@@ -168,6 +184,7 @@ describe('RequisitionNonFullSupplyController', function () {
 
     expect(scope.addedNonFullSupplyProducts.length == 1).toBeTruthy();
     expect(scope.addedNonFullSupplyProducts[0]==nonFullSupplyLineItem1).toBeTruthy();
-  })
+  });
+
 });
 

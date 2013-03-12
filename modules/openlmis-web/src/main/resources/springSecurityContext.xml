@@ -17,7 +17,7 @@
     <mvc:annotation-driven/>
 
     <global-method-security pre-post-annotations="enabled">
-   	 </global-method-security>
+    </global-method-security>
 
     <context:component-scan base-package="org.openlmis.web.controller"/>
     <context:component-scan base-package="org.openlmis.web"/>
@@ -29,29 +29,31 @@
 
     <beans:bean id="openLmisAccessDeniedHandler" class="org.openlmis.authentication.web.OpenLmisAccessDeniedHandler"/>
 
-    <http use-expressions="true" entry-point-ref="restAuthenticationEntryPoint">
+    <http use-expressions="true" auto-config="false" entry-point-ref="restAuthenticationEntryPoint">
         <intercept-url pattern="/favicon.*" access="permitAll"/>
-        <intercept-url pattern="/admin/**" access="isAuthenticated()" requires-channel="http"/>
-        <intercept-url pattern="/logistics/**" access="isAuthenticated()" requires-channel="http"/>
+        <intercept-url pattern="/public/pages/admin/**" access="isAuthenticated()" requires-channel="http"/>
+        <intercept-url pattern="/public/pages/logistics/**" access="isAuthenticated()" requires-channel="http"/>
+        <intercept-url pattern="/public/pages/login.html" access="permitAll" requires-channel="http"/>
         <intercept-url pattern="/public/**" access="permitAll" requires-channel="http"/>
-        <intercept-url pattern="/user*" access="permitAll" requires-channel="http"/>
-        <intercept-url pattern="/forgot-password*" access="permitAll" requires-channel="http"/>
-        <intercept-url pattern="/user/validatePasswordResetToken/*" access="permitAll" requires-channel="http"/>
-        <intercept-url pattern="/user/resetPassword/*" access="permitAll" requires-channel="http"/>
-        <intercept-url pattern="/public/pages/reset-password.html" access="permitAll" requires-channel="http"/>
-        <intercept-url pattern="/public/pages/reset-password-complete.html" access="permitAll" requires-channel="http"/>
         <intercept-url pattern="/**" access="isAuthenticated()" requires-channel="http"/>
 
-        <form-login authentication-success-handler-ref="authenticationSuccessHandler"
+        <form-login login-page="/public/pages/login.html"
                     login-processing-url="/j_spring_security_check"
-                    login-page="/public/pages/login.html"
-                    authentication-failure-url="/user-context.json?error=true"/>
-        <logout logout-success-url="/" invalidate-session="true" delete-cookies="true"/>
+                    authentication-success-handler-ref="authenticationSuccessHandler"
+                    authentication-failure-handler-ref="simpleUrlAuthenticationFailureHandler"/>
         <access-denied-handler ref="openLmisAccessDeniedHandler"/>
+        <logout logout-success-url="/" invalidate-session="true" delete-cookies="true"/>
     </http>
 
-    <beans:bean id="authenticationSuccessHandler" class="org.openlmis.authentication.web.UserAuthenticationSuccessHandler">
+    <beans:bean id="authenticationSuccessHandler"
+                class="org.openlmis.authentication.web.UserAuthenticationSuccessHandler">
         <beans:property name="defaultTargetUrl" value="/user-context.json"/>
+    </beans:bean>
+
+    <beans:bean id="simpleUrlAuthenticationFailureHandler"
+                class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
+        <beans:property name="useForward" value="true"/>
+        <beans:property name="defaultFailureUrl" value="/authentication-error.json"/>
     </beans:bean>
 
     <authentication-manager>

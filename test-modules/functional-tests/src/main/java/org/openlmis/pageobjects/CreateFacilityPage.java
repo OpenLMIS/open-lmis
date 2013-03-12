@@ -191,6 +191,7 @@ public class CreateFacilityPage extends Page {
     testWebDriver.sleep(500);
     goDownDateCalender.click();
 
+    testWebDriver.handleScrollByPixels(0,1000);
     testWebDriver.selectByVisibleText(programsSupported, "HIV");
     programsSupportedActiveFlag.click();
     testWebDriver.sleep(500);

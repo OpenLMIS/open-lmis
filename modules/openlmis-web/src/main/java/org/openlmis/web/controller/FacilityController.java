@@ -94,11 +94,11 @@ public class FacilityController extends BaseController {
       facility = facilityService.getById(facility.getId());
     } catch (DataException exception) {
       ResponseEntity<OpenLmisResponse> errorResponse = error(exception, HttpStatus.BAD_REQUEST);
-      errorResponse.getBody().setData("facility", facility);
+      errorResponse.getBody().addData("facility", facility);
       return errorResponse;
     }
     final ResponseEntity<OpenLmisResponse> successResponse = success("\"" + facility.getName() + "\" / \"" + facility.getCode() + "\" " + message + " successfully");
-    successResponse.getBody().setData("facility", facility);
+    successResponse.getBody().addData("facility", facility);
     return successResponse;
   }
 
@@ -122,7 +122,7 @@ public class FacilityController extends BaseController {
       return createErrorResponse(facility, exception);
     }
     response = success("Facility '" + facility.getName() + "' created successfully");
-    response.getBody().setData("facility", facility);
+    response.getBody().addData("facility", facility);
     return response;
   }
 
@@ -137,7 +137,7 @@ public class FacilityController extends BaseController {
       return createErrorResponse(facility, exception);
     }
     response = success("Facility '" + facility.getName() + "' updated successfully");
-    response.getBody().setData("facility", facility);
+    response.getBody().addData("facility", facility);
     return response;
   }
 
@@ -149,7 +149,7 @@ public class FacilityController extends BaseController {
   private ResponseEntity<OpenLmisResponse> createErrorResponse(Facility facility, DataException exception) {
     ResponseEntity<OpenLmisResponse> response;
     response = error(exception, HttpStatus.BAD_REQUEST);
-    response.getBody().setData("facility", facility);
+    response.getBody().addData("facility", facility);
     return response;
   }
 }

@@ -68,7 +68,7 @@ public class ProcessingScheduleController extends BaseController {
     try {
       ProcessingSchedule savedSchedule = processingScheduleService.save(processingSchedule);
       ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success("'" + savedSchedule.getName() + "' "+ (createOperation?"created":"updated") +" successfully");
-      response.getBody().setData(SCHEDULE, savedSchedule);
+      response.getBody().addData(SCHEDULE, savedSchedule);
       return response;
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);

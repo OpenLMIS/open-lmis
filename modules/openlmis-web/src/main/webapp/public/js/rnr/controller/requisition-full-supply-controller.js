@@ -24,9 +24,13 @@ function RequisitionFullSupplyController($scope, $routeParams, $location, Losses
     if (!isValidLossesAndAdjustments($scope.currentRnrLineItem)) return;
 
     $scope.currentRnrLineItem.reEvaluateTotalLossesAndAdjustments();
-    $scope.lossesAndAdjustmentsModal = false;
-    $scope.currentRnrLineItem = undefined;
+    $scope.clearAndCloseLossesAndAdjustmentModal();
   };
+
+  $scope.clearAndCloseLossesAndAdjustmentModal = function () {
+    $scope.lossAndAdjustment = undefined;
+    $scope.lossesAndAdjustmentsModal = false;
+  }
 
   $scope.resetModalError = function () {
     $scope.modalError = '';

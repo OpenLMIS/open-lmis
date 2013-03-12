@@ -4,9 +4,9 @@ describe("LoginController", function () {
 
   beforeEach(module('openlmis.localStorage'));
 
-  var scope, ctrl, httpBackend, messageService, window, controller, mockWindowLocation;
+  var scope, ctrl,httpBackend,messageService, window, controller, mockWindowLocation;
 
-  beforeEach(inject(function ($rootScope, $controller, _messageService_, _$httpBackend_) {
+  beforeEach(inject(function ($rootScope, $controller,_messageService_,_$httpBackend_) {
     httpBackend = _$httpBackend_;
     scope = $rootScope.$new();
     messageService = _messageService_;
@@ -15,6 +15,7 @@ describe("LoginController", function () {
     window = {"location":{"href":"someOtherUrl.html"}};
     spyOn(window, 'location');
     ctrl = controller(LoginController, {$scope:scope, messageService:messageService, $window:window});
+
   }));
 
 
@@ -26,32 +27,44 @@ describe("LoginController", function () {
     ctrl = controller(LoginController, {$scope:scope, messageService:messageService, $window:window});
 
     spyOn(messageService, 'populate');
-    httpBackend.when('POST', '/j_spring_security_check').respond({"authenticated":false, "error":"true"});
+    httpBackend.when('POST','/j_spring_security_check').respond({"authenticated":false, "error":"error msg"});
 
     scope.doLogin();
-
-    expect(scope.disableSignInButton).toBeTruthy();
-
     httpBackend.flush();
 
-    expect(scope.disableSignInButton).toBeFalsy();
-    expect(scope.loginError).toBe('The username or password you entered is incorrect. Please try again.');
+    expect(scope.loginError).toBe('error msg');
   });
 
   it('should not login and show error when server returns error', function () {
     scope.username = "john";
     scope.password = "openLmis";
 
+
     spyOn(messageService, 'populate');
-    httpBackend.when('POST', '/j_spring_security_check').respond(500, {});
+    httpBackend.when('POST','/j_spring_security_check').respond(403, {'error':'error msg'});
 
     scope.doLogin();
-
-    expect(scope.disableSignInButton).toBeTruthy();
-
     httpBackend.flush();
 
-    expect(scope.disableSignInButton).toBeFalsy();
-    expect(scope.loginError).toBe('Server Error!!');
+    expect(scope.loginError).toBe('error msg');
+  });
+
+  it('should show error when username is missing',function(){
+    scope.username = undefined;
+    scope.doLogin();
+    expect(scope.loginError).toBe('Please enter your username');
+  });
+
+  it('should show error when username is only whitespaces',function(){
+    scope.username = "   ";
+    scope.doLogin();
+    expect(scope.loginError).toBe('Please enter your username');
+  })
+
+  it('should show error when password is missing',function(){
+    scope.username = "someUser";
+    scope.password = undefined;
+    scope.doLogin();
+    expect(scope.loginError).toBe('Please enter your password');
   });
 });

@@ -1,6 +1,23 @@
 function LoginController($scope, $http, localStorageService) {
   $scope.disableSignInButton = false;
+
+  var validateLoginForm = function () {
+    if($scope.username == undefined || $scope.username.trim()==''){
+      $scope.loginError = "Please enter your username";
+      return false;
+    }
+    if($scope.password == undefined) {
+      $scope.loginError = "Please enter your password";
+      return false;
+    }
+    return true;
+  };
+
   $scope.doLogin = function () {
+    if(!validateLoginForm()){
+      return;
+    }
+
     $scope.disableSignInButton = true;
     var data = $.param({j_username:$scope.username, j_password:$scope.password});
     $http({
@@ -17,13 +34,13 @@ function LoginController($scope, $http, localStorageService) {
             } else {
               location.reload();
             }
-          } else if (data.error == "true") {
-            $scope.loginError = "The username or password you entered is incorrect. Please try again.";
+          } else if (data.error) {
+            $scope.loginError = data.error;
           }
         }).
         error(function (data) {
           $scope.disableSignInButton = false;
-          $scope.loginError = "Server Error!!";
+          $scope.loginError = data.error;
         });
   };
 
