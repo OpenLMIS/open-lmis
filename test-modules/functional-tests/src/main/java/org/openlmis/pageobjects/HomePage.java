@@ -43,6 +43,12 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Convert to Order')]")
   private static WebElement convertToOrderMenuItem;
 
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'View')]")
+  private static WebElement viewRequisitonMenuItem;
+
+  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'View Requisitions')]")
+  private static WebElement viewRequisitonHeader;
+
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Convert Requisitions to Order')]")
   private static WebElement convertToOrderHeader;
 
@@ -217,6 +223,18 @@ public class HomePage extends Page {
     proceedButton.click();
 
     return new InitiateRnRPage(testWebDriver);
+  }
+
+
+
+  public ViewRequisitionPage navigateViewRequisition() throws IOException {
+    SeleneseTestNgHelper.assertTrue(requisitionMenuItem.isDisplayed());
+    testWebDriver.waitForElementToAppear(requisitionMenuItem);
+    testWebDriver.keyPress(requisitionMenuItem);
+    testWebDriver.waitForElementToAppear(viewRequisitonMenuItem);
+    testWebDriver.keyPress(viewRequisitonMenuItem);
+    testWebDriver.waitForElementToAppear(viewRequisitonHeader);
+    return new ViewRequisitionPage(testWebDriver);
   }
 
   public DeleteFacilityPage navigateSearchFacility() throws IOException {
