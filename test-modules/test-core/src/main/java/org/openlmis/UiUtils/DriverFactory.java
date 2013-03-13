@@ -84,7 +84,8 @@ public class DriverFactory {
                 return new HtmlUnitDriver(BrowserVersion.INTERNET_EXPLORER_8);
 
             default:
-                throw new RuntimeException(String.format("Driver %sNot Supported", driverType));
+              driverType = System.getProperty("web.driver", "Firefox");
+              return createFirefoxDriver(enableJavascript);
         }
     }
 
