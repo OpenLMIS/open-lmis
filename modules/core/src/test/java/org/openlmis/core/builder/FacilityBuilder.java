@@ -4,10 +4,7 @@ import com.natpryce.makeiteasy.Instantiator;
 import com.natpryce.makeiteasy.Property;
 import com.natpryce.makeiteasy.PropertyLookup;
 import org.joda.time.LocalDate;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.FacilityOperator;
-import org.openlmis.core.domain.FacilityType;
-import org.openlmis.core.domain.GeographicZone;
+import org.openlmis.core.domain.*;
 
 import java.util.Date;
 
@@ -27,7 +24,7 @@ public class FacilityBuilder {
   public static final Property<Facility, GeographicZone> geographicZone = newProperty();
   public static Property<Facility, Integer> typeId = newProperty();
   private static Property<Facility, Integer> operatedById = newProperty();
-  public static final Property<Facility,Boolean> dataReportable= newProperty();
+  public static final Property<Facility, Boolean> dataReportable = newProperty();
 
   public static final String FACILITY_CODE = "F10010";
   public static final String FACILITY_TYPE_CODE = "warehouse";
@@ -44,18 +41,31 @@ public class FacilityBuilder {
       FacilityType facilityType = new FacilityType();
       facilityType.setCode(lookup.valueOf(type, FACILITY_TYPE_CODE));
       facilityType.setId(lookup.valueOf(typeId, FACILITY_TYPE_ID));
+      facilityType.setNominalMaxMonth(100);
+      facilityType.setNominalEop(50.5);
       facility.setFacilityType(facilityType);
       facility.setName(lookup.valueOf(name, "Apollo Hospital"));
-      GeographicZone geographicZoneValue = new GeographicZone();
-      geographicZoneValue.setId(lookup.valueOf(geographicZoneId, GEOGRAPHIC_ZONE_ID));
-      geographicZoneValue.setCode(lookup.valueOf(geographicZoneCode, GEOGRAPHIC_ZONE_CODE));
-      facility.setGeographicZone(lookup.valueOf(geographicZone, geographicZoneValue));
+
+      GeographicZone geographicZone = new GeographicZone();
+      geographicZone.setLevel(new GeographicLevel(1, "levelCode", "levelName"));
+      geographicZone.setId(lookup.valueOf(geographicZoneId, GEOGRAPHIC_ZONE_ID));
+      geographicZone.setCode(lookup.valueOf(geographicZoneCode, GEOGRAPHIC_ZONE_CODE));
+      geographicZone.setName("Lusaka");
+      GeographicZone parentGeographicZone = new GeographicZone();
+      parentGeographicZone.setLevel(new GeographicLevel(2, "parentLevelCode", "parentLevelName"));
+      parentGeographicZone.setId(lookup.valueOf(geographicZoneId, GEOGRAPHIC_ZONE_ID));
+      parentGeographicZone.setCode(lookup.valueOf(geographicZoneCode, GEOGRAPHIC_ZONE_CODE));
+      parentGeographicZone.setName("Zambia");
+      geographicZone.setParent(parentGeographicZone);
+      facility.setGeographicZone(lookup.valueOf(FacilityBuilder.geographicZone, geographicZone));
+
       facility.setSdp(lookup.valueOf(sdp, true));
       facility.setActive(lookup.valueOf(active, true));
       facility.setDataReportable(lookup.valueOf(dataReportable, true));
       FacilityOperator operatedBy = new FacilityOperator();
       operatedBy.setCode(lookup.valueOf(operatedByCode, "MoH"));
       operatedBy.setId(lookup.valueOf(operatedById, 1));
+      operatedBy.setText("MOH");
       facility.setOperatedBy(operatedBy);
       facility.setGoLiveDate(lookup.valueOf(goLiveDate, new LocalDate(2013, 10, 10).toDate()));
       facility.setModifiedBy(1);

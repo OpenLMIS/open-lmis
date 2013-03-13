@@ -8,18 +8,28 @@ dependencies {
             'org.drools:drools-core:5.4.0.Final',
             'org.drools:drools-spring:5.4.0.Final',
             'org.codehaus.jackson:jackson-mapper-asl:1.9.11',
-    //            'org.drools:drools-spring:5.4.0.Final',
-    //            'org.drools:drools-compiler:5.4.0.Final',
-    //            'org.drools:drools-api:5.4.0.Final',
-    //        'org.drools:drools-spring:5.2.1.Final',
-    //        'org.drools:drools-compiler:5.2.1.Final',
-    //        'org.drools:drools-api:5.1.1',
             project(':modules:db'),
             project(':modules:core')
 
     testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
             project(':modules:db'),
             project(path : ':modules:core', configuration: 'testFixtures')
+
+    configurations {
+        testFixtures {
+            extendsFrom testRuntime
+        }
+    }
+
+    task testJar(type: Jar) {
+        from sourceSets.test.output
+        classifier = 'test'
+    }
+
+    artifacts {
+        testFixtures testJar
+    }
+
 }
 
 buildscript {

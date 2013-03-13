@@ -6,6 +6,7 @@ import com.natpryce.makeiteasy.PropertyLookup;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.domain.RnrStatus;
@@ -22,6 +23,7 @@ public class RequisitionBuilder {
   public static final Property<Rnr, Date> submittedDate = newProperty();
   public static final Property<Rnr, Integer> periodId = newProperty();
   public static final Property<Rnr, Integer> modifiedBy = newProperty();
+  public static final Property<Rnr, Facility> facility = newProperty();
 
   public static final Instantiator<Rnr> defaultRnr = new Instantiator<Rnr>() {
 
@@ -29,7 +31,7 @@ public class RequisitionBuilder {
     public Rnr instantiate(PropertyLookup<Rnr> lookup) {
       Rnr rnr = new Rnr();
       rnr.setId(1);
-      rnr.setFacility(make(a(FacilityBuilder.defaultFacility)));
+      rnr.setFacility(lookup.valueOf(facility, make(a(FacilityBuilder.defaultFacility))));
       rnr.setProgram(make(a(ProgramBuilder.defaultProgram)));
       rnr.setPeriod(make(a(ProcessingPeriodBuilder.defaultProcessingPeriod)));
       rnr.getProgram().setId(3);

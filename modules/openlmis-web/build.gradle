@@ -33,10 +33,11 @@ dependencies {
             'org.testng:testng:6.1.1',
             'org.seleniumhq.selenium:selenium-java:2.25.0',
             'org.seleniumhq.selenium:selenium-firefox-driver:2.25.0 ',
-            'com.lowagie:itext:4.2.0',
+            'com.itextpdf:itextpdf:5.4.0',
             project(':modules:authentication'),
             project(':modules:requisition'),
             project(':modules:core')
+
 
     testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
             'org.springframework:spring-test-mvc:1.0.0.M1',
@@ -46,8 +47,8 @@ dependencies {
             'org.powermock:powermock-module-junit4:1.4.12',
             'org.codehaus.jackson:jackson-mapper-asl:1.9.9',
             'cglib:cglib:2.2.2',
-            project(':modules:requisition')
-
+            project(path : ':modules:core', configuration: 'testFixtures'),
+            project(path : ':modules:requisition', configuration: 'testFixtures')
 }
 
 [jettyRun]*.configure {
