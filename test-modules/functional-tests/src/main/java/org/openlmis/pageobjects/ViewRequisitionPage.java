@@ -89,7 +89,7 @@ public class ViewRequisitionPage extends Page {
   {
     testWebDriver.waitForElementToAppear(searchButton);
     searchButton.click();
-    testWebDriver.waitForElementsToAppear(noRequisitionFoundDiv, viewRnRList);
+    testWebDriver.sleep(1500);
   }
 
   public void clickRnRList()
