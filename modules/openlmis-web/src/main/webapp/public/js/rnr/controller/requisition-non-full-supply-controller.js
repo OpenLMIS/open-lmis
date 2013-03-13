@@ -20,9 +20,9 @@ function RequisitionNonFullSupplyController($scope, $rootScope, FacilityApproved
     var checkRnrLineItem
     $($scope.addedNonFullSupplyProducts).each(function (i, nonFullSupplyProduct) {
       checkRnrLineItem = validateRnrLineItem(nonFullSupplyProduct);
-      if(!checkRnrLineItem) return;
+      if (!checkRnrLineItem) return;
     });
-    if(!checkRnrLineItem) return;
+    if (!checkRnrLineItem) return;
     $($scope.addedNonFullSupplyProducts).each(function (i, nonFullSupplyProduct) {
       var lineItem = new RnrLineItem(nonFullSupplyProduct, $scope.rnr.period.numberOfMonths, $scope.programRnrColumnList, $scope.rnr.status);
       $scope.rnr.nonFullSupplyLineItems.push(lineItem);
@@ -51,6 +51,7 @@ function RequisitionNonFullSupplyController($scope, $rootScope, FacilityApproved
     $scope.nonFullSupplyProductCategory = undefined;
     $scope.facilityApprovedProduct = undefined;
     $scope.newNonFullSupply = undefined;
+    $scope.nonFullSupplyProductsToDisplay = undefined;
   };
 
   $scope.showAddNonFullSupplyModal = function () {
@@ -114,7 +115,6 @@ function RequisitionNonFullSupplyController($scope, $rootScope, FacilityApproved
   }
 
   $scope.updateNonFullSupplyProductsToDisplay = function () {
-    $scope.nonFullSupplyProductsToDisplay = undefined;
     var usedNonFullSupplyProducts = _.pluck($scope.addedNonFullSupplyProducts, 'productCode');
     var usedNonFullSupplyProductsOnRnr = _.pluck($scope.rnr.nonFullSupplyLineItems, 'productCode');
     var addedNonFullSupplyProductList = usedNonFullSupplyProducts.concat(usedNonFullSupplyProductsOnRnr);
@@ -130,8 +130,19 @@ function RequisitionNonFullSupplyController($scope, $rootScope, FacilityApproved
     $scope.facilityApprovedProduct = undefined;
   }
   function validateRnrLineItem(nonFullSupplyProduct) {
-    if (nonFullSupplyProduct.quantityRequested && nonFullSupplyProduct.reasonForRequestedQuantity) return true;
+    if (nonFullSupplyProduct.quantityRequested && nonFullSupplyProduct.reasonForRequestedQuantity && !nonFullSupplyProduct.isNonNumeric) return true;
     else return false;
+  }
+
+  $scope.checkRequestedQuantity = function (index) {
+
+    var INTEGER_REGEXP = /^\d*$/;
+    var valid = ($scope.addedNonFullSupplyProducts[index].quantityRequested == undefined) ? true : INTEGER_REGEXP.test($scope.addedNonFullSupplyProducts[index].quantityRequested);
+    if (valid) {
+      $scope.addedNonFullSupplyProducts[index].isNonNumeric = false;
+    } else {
+      $scope.addedNonFullSupplyProducts[index].isNonNumeric = true;
+    }
   }
 }
 
