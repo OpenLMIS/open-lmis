@@ -125,7 +125,7 @@ public class ManageSchedulePage extends Page {
     descriptionEditTextField.clear();
     descriptionEditTextField.sendKeys(desc);
     saveButton.click();
-    testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
+    //testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
 
   }
 
