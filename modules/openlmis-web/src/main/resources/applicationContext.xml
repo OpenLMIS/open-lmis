@@ -173,7 +173,7 @@
                 </entry>
                 <entry key="programProductPrice">
                     <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="Program Product Price"/>
+                        <property name="displayName" value="Product Prices per Program"/>
                         <property name="importableClass">
                             <value type="java.lang.Class">org.openlmis.core.domain.ProgramProductPrice</value>
                         </property>

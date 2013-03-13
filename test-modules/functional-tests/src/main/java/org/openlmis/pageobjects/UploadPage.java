@@ -121,7 +121,7 @@ public class UploadPage extends Page {
   }
 
   public void uploadProgramProductPrice() throws FileNotFoundException {
-    selectUploadType("Program Product Price");
+    selectUploadType("Product Prices per Program");
     uploadFile("Product_Cost.csv");
     testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
     SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
