@@ -11,6 +11,8 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   $scope.pageLineItems = [];
   $scope.columnDefinitions = [];
   $scope.showPositiveIntegerError = [];
+  $scope.errorPages = {};
+  $scope.shownErrorPages = [];
 
   $scope.isDirty = false;
 
@@ -47,9 +49,14 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     }
   }
 
+  function updateShownErrorPages() {
+    $scope.shownErrorPages = $scope.showNonFullSupply ? $scope.errorPages.nonFullSupply : $scope.errorPages.fullSupply;
+  }
+
   function fillPagedGridData() {
+    updateShownErrorPages();
     var gridLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.fullSupplyLineItems;
-    $scope.numberOfPages = Math.ceil(gridLineItems.length / $scope.pageSize)? Math.ceil(gridLineItems.length / $scope.pageSize):1;
+    $scope.numberOfPages = Math.ceil(gridLineItems.length / $scope.pageSize) ? Math.ceil(gridLineItems.length / $scope.pageSize) : 1;
     $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
     $scope.pageLineItems = gridLineItems.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);
   }
@@ -59,7 +66,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   prepareColumnDefinitions();
 
   $scope.$watch("currentPage", function () {
-    if(!$routeParams.supplyType) $location.search('supplyType', 'full-supply');
+    if (!$routeParams.supplyType) $location.search('supplyType', 'full-supply');
     $location.search("page", $scope.currentPage);
   });
 
@@ -77,7 +84,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
       $location.search('page', 1);
       return;
     }
-    if($scope.isDirty)
+    if ($scope.isDirty)
       $scope.saveRnr();
     updateSupplyTypeForGrid();
     fillPagedGridData();
@@ -187,7 +194,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id:$scope.rnr.id, operation:"save"},
       rnr, function (data) {
-        if(preventMessage == true) return;
+        if (preventMessage == true) return;
         $scope.message = data.success;
         $scope.error = "";
         setTimeout(fadeSaveMessage, 3000);
@@ -207,10 +214,25 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     return fullSupplyError || nonFullSupplyError;
   }
 
+  function setErrorPages() {
+    $scope.errorPages = $scope.rnr.getErrorPages($scope.pageSize);
+    updateShownErrorPages();
+  }
+
+  function resetErrorPages() {
+    $scope.errorPages = {fullSupply:[], nonFullSupply:[]};
+  }
+
+  $scope.checkErrorOnPage = function (page) {
+    return $scope.showNonFullSupply ? _.contains($scope.errorPages.nonFullSupply, page) : _.contains($scope.errorPages.fullSupply, page);
+  };
+
   $scope.approveRnr = function () {
     $scope.approvedQuantityRequiredFlag = true;
+    resetErrorPages();
     var error = validateAndSetErrorClass();
     if (error) {
+      setErrorPages();
       $scope.saveRnr(true);
       $scope.error = error;
       $scope.message = '';

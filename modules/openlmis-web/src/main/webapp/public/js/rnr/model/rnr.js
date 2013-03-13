@@ -34,6 +34,31 @@ var Rnr = function (rnr, programRnrColumns) {
     return getInvalidLineItemIndexes(this.nonFullSupplyLineItems);
   };
 
+  Rnr.prototype.getErrorPages = function (pageSize) {
+      function getErrorPages(lineItems) {
+        var pagesWithErrors = [];
+        $(lineItems).each(function (i, lineItem) {
+          pagesWithErrors.push(Math.ceil((lineItem + 1) / pageSize));
+        });
+        return _.uniq(pagesWithErrors, true);
+      }
+
+      function getFullSupplyPagesWithError() {
+        var fullSupplyErrorLIneItems = thisRnr.getFullSupplyErrorLineItemIndexes();
+        return getErrorPages(fullSupplyErrorLIneItems);
+      }
+
+      function getNonFullSupplyPagesWithError() {
+        var nonFullSupplyErrorLIneItems = thisRnr.getNonFullSupplyErrorLineItemIndexes();
+        return getErrorPages(nonFullSupplyErrorLIneItems)
+      }
+
+      var errorPages = {};
+      errorPages.fullSupply = getFullSupplyPagesWithError();
+      errorPages.nonFullSupply = getNonFullSupplyPagesWithError();
+      return errorPages;
+  };
+
   Rnr.prototype.validateFullSupply = function () {
     var errorMessage = "";
 

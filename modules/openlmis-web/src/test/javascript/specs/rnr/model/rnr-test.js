@@ -327,5 +327,22 @@ describe('R&R test', function () {
     var nonFullSupplyErrorLineItemIndexes = rnr.getNonFullSupplyErrorLineItemIndexes();
     expect(nonFullSupplyErrorLineItemIndexes).toEqual([0, 2]);
   });
+
+  it('should calculate pages which have errors on approve', function () {
+    var rnr = new Rnr({"id":"1", "fullSupplyLineItems":[
+      {id:1},
+      {id:2},
+      {id:3}
+    ], period:{numberOfMonths:7}}, null);
+
+    spyOn(rnr, 'getNonFullSupplyErrorLineItemIndexes').andReturn([0, 5]);
+    spyOn(rnr, 'getFullSupplyErrorLineItemIndexes').andReturn([7, 16]);
+
+    var errorPages = rnr.getErrorPages(5);
+
+    expect(errorPages).toEqual({nonFullSupply:[1, 2], fullSupply:[2, 4]});
+    expect(rnr.getNonFullSupplyErrorLineItemIndexes).toHaveBeenCalled();
+    expect(rnr.getFullSupplyErrorLineItemIndexes).toHaveBeenCalled();
+  });
 });
 

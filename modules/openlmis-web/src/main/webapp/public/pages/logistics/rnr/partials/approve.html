@@ -1,33 +1,51 @@
 <ng-include src="'/public/pages/logistics/rnr/partials/header.html'"></ng-include>
 <div class="rnr-tabs">
-    <ul class="clearfix">
-        <li ng-class="{'selected': !showNonFullSupply, 'has-error': fullSupplyTabError}">
-            <a ng-click="switchSupplyType('full-supply')" id="fullSupplyTab">Full Supply Product(s)</a></li>
-        <li ng-class="{'selected': showNonFullSupply, 'has-error': nonFullSupplyTabError}">
-            <a ng-click="switchSupplyType('non-full-supply')" id="nonFullSupplyTab">Non Full Supply Product(s)</a></li>
-    </ul>
+  <ul class="clearfix">
+    <li ng-class="{'selected': !showNonFullSupply, 'has-error': fullSupplyTabError}">
+      <a ng-click="switchSupplyType('full-supply')" id="fullSupplyTab">Full Supply Product(s)</a></li>
+    <li ng-class="{'selected': showNonFullSupply, 'has-error': nonFullSupplyTabError}">
+      <a ng-click="switchSupplyType('non-full-supply')" id="nonFullSupplyTab">Non Full Supply Product(s)</a></li>
+  </ul>
 </div>
+
+<div id="pageErrors" class="dropdown rnr-page-errors" ng-show="shownErrorPages">
+  <a class="dropdown-toggle">
+    Errors found on
+    <ng-pluralize count="shownErrorPages.length"
+                  when="{ 1: '{} page',
+                                  other: '{} pages'}">
+
+    </ng-pluralize>
+    |
+  </a>
+  <ul class="dropdown-menu">
+    <li ng-repeat="page in shownErrorPages">
+      <a ng-click="goToPage(page, $event)">{{page}}</a>
+    </li>
+  </ul>
+</div>
+
 <form name="approvalForm" novalidate>
-    <div style='width: 100%'>
-        <div class="approveGrid grid-approval" ng-grid="rnrGrid" ng-hide="!pageLineItems.length"></div>
-    </div>
-    <div class="alert alert-success" id="noProductMessage" ng-show="!pageLineItems.length">
-        No products.
-    </div>
+  <div style='width: 100%'>
+    <div class="approveGrid grid-approval" ng-grid="rnrGrid" ng-hide="!pageLineItems.length"></div>
+  </div>
+  <div class="alert alert-success" id="noProductMessage" ng-show="!pageLineItems.length">
+    No products.
+  </div>
 
-    <br><br>
+  <br><br>
 
-    <div form-toolbar id="action_buttons" class="action-buttons">
-        <ng-include src="'/public/pages/logistics/rnr/partials/total-cost.html'"></ng-include>
+  <div form-toolbar id="action_buttons" class="action-buttons">
+    <ng-include src="'/public/pages/logistics/rnr/partials/total-cost.html'"></ng-include>
 
-        <div class="form-cell button-row">
-            <input type="button" value="Save" ng-click="saveRnr()" class="btn btn-primary save-button"/>
-            <input type="button" ng-click="approveRnr()" class="btn btn-success submit-button" value="Approve"/>
-        </div>
-        <div class="toolbar-error" id="saveFailMessage" openlmis-message="error"></div>
-        <div class="toolbar-success" id="saveSuccessMsgDiv" ng-show="message" ng-bind="message"></div>
+    <div class="form-cell button-row">
+      <input type="button" value="Save" ng-click="saveRnr()" class="btn btn-primary save-button"/>
+      <input type="button" ng-click="approveRnr()" class="btn btn-success submit-button" value="Approve"/>
     </div>
+    <div class="toolbar-error" id="saveFailMessage" openlmis-message="error"></div>
+    <div class="toolbar-success" id="saveSuccessMsgDiv" ng-show="message" ng-bind="message"></div>
+  </div>
 </form>
 <div>
-  <openlmis-pagination num-pages="numberOfPages" current-page="currentPage" max-size="10"></openlmis-pagination>
+  <openlmis-pagination num-pages="numberOfPages" current-page="currentPage" max-size="10" check-error-on-page="checkErrorOnPage(page)"></openlmis-pagination>
 </div>

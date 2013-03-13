@@ -249,13 +249,18 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
 
     return "";
   };
-  
-  RnrLineItem.prototype.valid = function () {
-      if (this.fullSupply) return this.validateRequiredFieldsForFullSupply() && this.formulaValid();
-      return this.validateRequiredFieldsForNonFullSupply();
+
+  RnrLineItem.prototype.validateForApproval = function () {
+    return this.quantityApproved ? true : false;
   };
-  
-  RnrLineItem.prototype.validateLossesAndAdjustments = function() {
+
+  RnrLineItem.prototype.valid = function () {
+    if (rnrStatus == 'IN_APPROVAL') return this.validateForApproval();
+    if (this.fullSupply) return this.validateRequiredFieldsForFullSupply() && this.formulaValid();
+    return this.validateRequiredFieldsForNonFullSupply();
+  };
+
+  RnrLineItem.prototype.validateLossesAndAdjustments = function () {
     if (isUndefined(this.lossesAndAdjustments)) return true;
 
     for (var index in this.lossesAndAdjustments) {

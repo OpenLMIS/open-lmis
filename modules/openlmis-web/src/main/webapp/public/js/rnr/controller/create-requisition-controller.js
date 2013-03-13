@@ -15,12 +15,16 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   $scope.facilityApprovedProducts = facilityApprovedProducts;
   $scope.visibleColumns = _.where(rnrColumns, {'visible': true});
   $scope.programRnrColumnList = rnrColumns;
-  $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name': 'quantityRequested'});
+  $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name':'quantityRequested'});
+  $scope.errorPages = {fullSupply:[], nonFullSupply:[]};
 
   prepareRnr();
 
   $scope.currency = currency;
 
+  $scope.checkErrorOnPage = function (page) {
+    return $scope.showNonFullSupply ? _.contains($scope.errorPages.nonFullSupply, page) : _.contains($scope.errorPages.fullSupply, page);
+  };
 
   if ($scope.programRnrColumnList && $scope.programRnrColumnList.length > 0) {
   } else {
@@ -34,6 +38,11 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
     $scope.showNonFullSupply = supplyType == 'non-full-supply';
     $location.search('page', 1);
     $location.search('supplyType', supplyType);
+  };
+
+  $scope.goToPage = function (page, event) {
+    angular.element(event.target).parents(".dropdown").click();
+    $location.search('page', page);
   };
 
   $scope.$on('$routeUpdate', function () {
@@ -84,10 +93,16 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
     return fullSupplyError || nonFullSupplyError;
   }
 
+  function setErrorPages() {
+    $scope.errorPages = $scope.rnr.getErrorPages($scope.pageSize);
+  }
+
   $scope.submitRnr = function () {
     resetFlags();
+    resetErrorPages();
     var errorMessage = validateAndSetErrorClass();
     if (errorMessage) {
+      setErrorPages();
       $scope.saveRnr(true);
       $scope.submitError = errorMessage;
       return;
@@ -106,8 +121,10 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
 
   $scope.authorizeRnr = function () {
     resetFlags();
+    resetErrorPages();
     var errorMessage = validateAndSetErrorClass();
     if (errorMessage) {
+      setErrorPages();
       $scope.saveRnr(true);
       $scope.submitError = errorMessage;
       return;
@@ -191,6 +208,10 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
     })();
   }
 
+  function resetErrorPages() {
+    $scope.errorPages = {fullSupply:[], nonFullSupply:[]};
+  }
+
   function resetFlags() {
     $scope.submitError = "";
     $rootScope.submitMessage = "";
@@ -199,7 +220,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   }
 
   function removeExtraDataForPostFromRnr() {
-    var rnr = {"id": $scope.rnr.id, "fullSupplyLineItems": [], "nonFullSupplyLineItems": []};
+    var rnr = {"id":$scope.rnr.id, "fullSupplyLineItems":[], "nonFullSupplyLineItems":[]};
 
     _.each($scope.rnr.fullSupplyLineItems, function (lineItem) {
       rnr.fullSupplyLineItems.push(_.omit(lineItem, ['rnr', 'programRnrColumnList']));

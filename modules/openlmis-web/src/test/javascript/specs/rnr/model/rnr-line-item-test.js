@@ -991,6 +991,33 @@ describe('RnrLineItem', function () {
       expect(isValid).toBeTruthy();
     });
 
+    it('should validate non full supply line item in approved rnr and and return true if valid', function() {
+      var rnrLineItem = {fullSupply: false};
+      rnrLineItem = new RnrLineItem(rnrLineItem, null, programRnrColumnList, 'IN_APPROVAL');
+
+      spyOn(rnrLineItem, 'validateForApproval').andReturn(true);
+
+      var isValid = rnrLineItem.valid();
+
+      expect(isValid).toBeTruthy();
+    });
+
+    it('should return true if quantity approved filled', function(){
+      var rnrLineItem = {fullSupply: false, quantityApproved: 56};
+      rnrLineItem = new RnrLineItem(rnrLineItem, 5, [], 'IN_APPROVAL');
+      var valid = rnrLineItem.validateForApproval();
+
+      expect(valid).toBeTruthy();
+    });
+
+    it('should return false if quantity approved filled', function(){
+      var rnrLineItem = {fullSupply: false, quantityApproved: ''};
+      rnrLineItem = new RnrLineItem(rnrLineItem, 5, [], 'IN_APPROVAL');
+      var valid = rnrLineItem.validateForApproval();
+
+      expect(valid).toBeFalsy();
+    });
+
   });
 });
 

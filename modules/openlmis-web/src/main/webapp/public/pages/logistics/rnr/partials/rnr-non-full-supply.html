@@ -1,4 +1,19 @@
 <div ng-controller="RequisitionNonFullSupplyController" xmlns="http://www.w3.org/1999/html">
+  <div id="pageErrors" class="dropdown rnr-page-errors" ng-show="errorPages.nonFullSupply">
+      <a class="dropdown-toggle">
+        Errors found on
+        <ng-pluralize count="errorPages.nonFullSupply.length"
+                            when="{ 1: '{} page',
+                                    other: '{} pages'}">
+
+        </ng-pluralize> |
+      </a>
+      <ul class="dropdown-menu">
+        <li ng-repeat="page in errorPages.nonFullSupply">
+          <a ng-click="goToPage(page, $event)">{{page}}</a>
+        </li>
+      </ul>
+    </div>
   <div class="clearfix">
     <br />
     <input type="button" ng-click="showAddNonFullSupplyModal()"  class = "pull-right btn btn-primary" ng-disabled="formDisabled || !(addNonFullSupplyLineItemButtonShown.visible)" value="Add"/>

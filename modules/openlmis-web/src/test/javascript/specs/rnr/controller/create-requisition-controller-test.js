@@ -269,5 +269,68 @@ describe('CreateRequisitionController', function () {
     expect(scope.message).toEqual('');
   });
 
+  it('should calculate pages which have errors on submit', function () {
+    scope.rnr = new Rnr({"id":"1", "fullSupplyLineItems":[
+      {id:1},
+      {id:2},
+      {id:3}
+    ], period:{numberOfMonths:7}}, null);
+
+    scope.pageSize = 5;
+    spyOn(scope.rnr, 'getErrorPages').andReturn({nonFullSupply:[1, 2], fullSupply:[2, 4]});
+    spyOn(scope.rnr, 'validateFullSupply').andReturn("");
+    spyOn(scope.rnr, 'validateNonFullSupply').andReturn("some error");
+    httpBackend.expect('PUT', '/requisitions/1/save.json').respond(200, {'success':"success message"});
+    scope.submitRnr();
+
+    expect(scope.errorPages).toEqual({nonFullSupply:[1, 2], fullSupply:[2, 4]});
+  });
+
+  it('should calculate pages which have errors on approve', function () {
+    scope.rnr = new Rnr({"id":"1", "fullSupplyLineItems":[
+      {id:1},
+      {id:2},
+      {id:3}
+    ], period:{numberOfMonths:7}}, null);
+
+    scope.pageSize = 5;
+    spyOn(scope.rnr, 'getErrorPages').andReturn({nonFullSupply:[1, 2], fullSupply:[2, 4]});
+    spyOn(scope.rnr, 'validateFullSupply').andReturn("");
+    spyOn(scope.rnr, 'validateNonFullSupply').andReturn("some error");
+    httpBackend.expect('PUT', '/requisitions/1/save.json').respond(200, {'success':"success message"});
+    scope.authorizeRnr();
+
+    expect(scope.errorPages).toEqual({nonFullSupply:[1, 2], fullSupply:[2, 4]});
+    expect(scope.rnr.getErrorPages).toHaveBeenCalledWith(5);
+  });
+
+  it('should return true if error on full supply page', function () {
+    scope.errorPages = {fullSupply:[1]};
+    scope.showNonFullSupply = false;
+    var result = scope.checkErrorOnPage(1);
+    expect(result).toBeTruthy();
+  });
+
+  it('should return false if no error on full supply page', function () {
+    scope.errorPages = {fullSupply:[]};
+    scope.showNonFullSupply = false;
+    var result = scope.checkErrorOnPage(1);
+    expect(result).toBeFalsy();
+  });
+
+  it('should return true if error on non full supply page', function () {
+    scope.errorPages = {nonFullSupply:[1]};
+    scope.showNonFullSupply = true;
+    var result = scope.checkErrorOnPage(1);
+    expect(result).toBeTruthy();
+  });
+
+  it('should return false if no error on non full supply page', function () {
+    scope.errorPages = {nonFullSupply:[]};
+    scope.showNonFullSupply = true;
+    var result = scope.checkErrorOnPage(1);
+    expect(result).toBeFalsy();
+  });
+
 });
 
