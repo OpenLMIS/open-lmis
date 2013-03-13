@@ -40,21 +40,19 @@ describe('RequisitionNonFullSupplyController', function () {
 
     productList = [product1, product2, product3, product4, product5];
 
-    httpBackend.expect('GET', '/facilityApprovedProducts/facility/1/program/1/nonFullSupply.json').respond(200, {"nonFullSupplyProducts": facilityApprovedProducts});
     $rootScope.fixToolBar = function () {
     };
-
+    scope.facilityApprovedProducts = facilityApprovedProducts;
     ctrl = controller(RequisitionNonFullSupplyController, {$scope: scope, $location: location, $routeParams: routeParams, localStorageService: localStorageService});
 
     scope.allTypes = [
       {"name": "some name"},
       {"name": "some other name"}
     ];
+
   }));
 
-  it('should load non full supply products and create category list during page load', function () {
-    httpBackend.flush();
-    expect(scope.facilityApprovedProducts).toEqual(facilityApprovedProducts);
+  it('should create category list during page load', function () {
     expect(scope.nonFullSupplyProductsCategories).toEqual(categoryList);
   });
 

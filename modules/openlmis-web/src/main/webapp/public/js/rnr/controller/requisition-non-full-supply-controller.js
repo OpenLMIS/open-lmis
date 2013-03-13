@@ -1,57 +1,44 @@
-function RequisitionNonFullSupplyController($scope, $rootScope, FacilityApprovedProducts, $routeParams, $location) {
-  FacilityApprovedProducts.get({facilityId: $routeParams.facility, programId: $routeParams.program}, function (data) {
-    $scope.facilityApprovedProducts = data.nonFullSupplyProducts;
+function RequisitionNonFullSupplyController($scope, $rootScope) {
+  var map = _.map($scope.facilityApprovedProducts, function (facilitySupportedProduct) {
+    return facilitySupportedProduct.programProduct.product.category;
+  });
 
-    var map = _.map($scope.facilityApprovedProducts, function (facilitySupportedProduct) {
-      return facilitySupportedProduct.programProduct.product.category;
-    });
-
-    $scope.nonFullSupplyProductsCategories = _.uniq(map, false, function (category) {
-      return category.id;
-    });
+  $scope.nonFullSupplyProductsCategories = _.uniq(map, false, function (category) {
+    return category.id;
   });
 
   $scope.getId = function (prefix, parent) {
     return prefix + "_" + parent.$parent.$index;
   };
 
-  $scope.addNonFullSupplyLineItemToRnr = function () {
+
+  $scope.addNonFullSupplyLineItemsToRnr = function () {
+    var rnrLineItemValid = true;
     $rootScope.message = "";
-    var checkRnrLineItem
+
     $($scope.addedNonFullSupplyProducts).each(function (i, nonFullSupplyProduct) {
-      checkRnrLineItem = validateRnrLineItem(nonFullSupplyProduct);
-      if (!checkRnrLineItem) return;
+      rnrLineItemValid = validateRnrLineItem(nonFullSupplyProduct);
+      if (!rnrLineItemValid) return;
     });
-    if (!checkRnrLineItem) return;
+
+    if (!rnrLineItemValid) return;
+
     $($scope.addedNonFullSupplyProducts).each(function (i, nonFullSupplyProduct) {
       var lineItem = new RnrLineItem(nonFullSupplyProduct, $scope.rnr.period.numberOfMonths, $scope.programRnrColumnList, $scope.rnr.status);
       $scope.rnr.nonFullSupplyLineItems.push(lineItem);
       $scope.rnr.fillPacksToShip(lineItem);
-    })
+    });
 
-    $scope.facilityApprovedProduct = undefined;
-    $scope.newNonFullSupply = undefined;
-    $scope.updateNonFullSupplyProductsToDisplay();
     $scope.fillPagedGridData();
-    if ($scope.addedNonFullSupplyProducts.length > 0) {
-      $rootScope.message = "Products added successfully";
-      setTimeout(function () {
-        $scope.$apply(function () {
-          angular.element("#saveSuccessMsgDiv").fadeOut('slow', function () {
-            $rootScope.message = '';
-          });
-        });
-      }, 3000);
-    }
+    displayProductsAddedMessage();
     $scope.nonFullSupplyProductsModal = false;
   };
 
   $scope.resetNonFullSupplyModal = function () {
     $scope.addedNonFullSupplyProducts = [];
     $scope.nonFullSupplyProductCategory = undefined;
-    $scope.facilityApprovedProduct = undefined;
-    $scope.newNonFullSupply = undefined;
     $scope.nonFullSupplyProductsToDisplay = undefined;
+    $scope.clearNonFullSupplyProductModalData();
   };
 
   $scope.showAddNonFullSupplyModal = function () {
@@ -74,75 +61,76 @@ function RequisitionNonFullSupplyController($scope, $rootScope, FacilityApproved
   };
 
   $scope.addNonFullSupplyProductsByCategory = function () {
-    var addedNonFullSupplyProduct = {};
-    addedNonFullSupplyProduct.quantityRequested = $scope.newNonFullSupply.quantityRequested;
-    addedNonFullSupplyProduct.reasonForRequestedQuantity = $scope.newNonFullSupply.reasonForRequestedQuantity;
-    prepareNFSLineItemFields($scope.facilityApprovedProduct, addedNonFullSupplyProduct);
-
-    $scope.addedNonFullSupplyProducts.push(addedNonFullSupplyProduct);
+    prepareNFSLineItemFields();
+    $scope.addedNonFullSupplyProducts.push($scope.newNonFullSupply);
     $scope.updateNonFullSupplyProductsToDisplay();
-    $scope.facilityApprovedProduct = undefined;
-    $scope.newNonFullSupply = undefined;
-  }
-
-  function populateProductInformation(nonFullSupplyProduct, newNonFullSupply) {
-    var product = {};
-    if (nonFullSupplyProduct != undefined) {
-      angular.copy(nonFullSupplyProduct.programProduct.product, product);
-      newNonFullSupply.productCode = product.code;
-      newNonFullSupply.product = (product.primaryName == null ? "" : (product.primaryName + " ")) +
-        (product.form.code == null ? "" : (product.form.code + " ")) +
-        (product.strength == null ? "" : (product.strength + " ")) +
-        (product.dosageUnit.code == null ? "" : product.dosageUnit.code);
-      $(['dosesPerDispensingUnit', 'packSize', 'roundToZero', 'packRoundingThreshold', 'dispensingUnit', 'fullSupply']).each(function (index, field) {
-        newNonFullSupply[field] = product[field];
-      });
-      newNonFullSupply.maxMonthsOfStock = nonFullSupplyProduct.maxMonthsOfStock;
-      newNonFullSupply.dosesPerMonth = nonFullSupplyProduct.programProduct.dosesPerMonth;
-      newNonFullSupply.price = nonFullSupplyProduct.programProduct.currentPrice;
-      newNonFullSupply.productName = product.primaryName;
-      newNonFullSupply.productCategory = nonFullSupplyProduct.programProduct.product.category.code;
-    }
-  }
-
-  function prepareNFSLineItemFields(nonFullSupplyProduct, newNonFullSupply) {
-    populateProductInformation(nonFullSupplyProduct, newNonFullSupply);
-    $(['quantityReceived', 'quantityDispensed', 'beginningBalance', 'stockInHand', 'totalLossesAndAdjustments', 'calculatedOrderQuantity', 'newPatientCount',
-      'stockOutDays', 'normalizedConsumption', 'amc', 'maxStockQuantity']).each(function (index, field) {
-        newNonFullSupply[field] = 0;
-      });
-    newNonFullSupply.rnrId = $scope.$parent.rnr.id;
+    $scope.clearNonFullSupplyProductModalData();
   }
 
   $scope.updateNonFullSupplyProductsToDisplay = function () {
-    var usedNonFullSupplyProducts = _.pluck($scope.addedNonFullSupplyProducts, 'productCode');
-    var usedNonFullSupplyProductsOnRnr = _.pluck($scope.rnr.nonFullSupplyLineItems, 'productCode');
-    var addedNonFullSupplyProductList = usedNonFullSupplyProducts.concat(usedNonFullSupplyProductsOnRnr);
+    var addedNonFullSupplyProductList = _.pluck($scope.addedNonFullSupplyProducts, 'productCode').concat(_.pluck($scope.rnr.nonFullSupplyLineItems, 'productCode'));
     if ($scope.nonFullSupplyProductCategory != undefined) {
       $scope.nonFullSupplyProductsToDisplay = $.grep($scope.facilityApprovedProducts, function (facilityApprovedProduct) {
         return $.inArray(facilityApprovedProduct.programProduct.product.code, addedNonFullSupplyProductList) == -1 && $.inArray(facilityApprovedProduct.programProduct.product.category.name, [$scope.nonFullSupplyProductCategory.name]) == 0;
       });
     }
   }
+
   $scope.deleteCurrentNonFullSupplyLineItem = function (index) {
     $scope.addedNonFullSupplyProducts.splice(index, 1);
     $scope.updateNonFullSupplyProductsToDisplay();
-    $scope.facilityApprovedProduct = undefined;
-  }
-  function validateRnrLineItem(nonFullSupplyProduct) {
-    if (nonFullSupplyProduct.quantityRequested && nonFullSupplyProduct.reasonForRequestedQuantity && !nonFullSupplyProduct.isNonNumeric) return true;
-    else return false;
   }
 
   $scope.checkRequestedQuantity = function (index) {
-
     var INTEGER_REGEXP = /^\d*$/;
-    var valid = ($scope.addedNonFullSupplyProducts[index].quantityRequested == undefined) ? true : INTEGER_REGEXP.test($scope.addedNonFullSupplyProducts[index].quantityRequested);
-    if (valid) {
-      $scope.addedNonFullSupplyProducts[index].isNonNumeric = false;
-    } else {
-      $scope.addedNonFullSupplyProducts[index].isNonNumeric = true;
+    $scope.addedNonFullSupplyProducts[index].isNonNumeric = ($scope.addedNonFullSupplyProducts[index].quantityRequested == undefined) ? false : !INTEGER_REGEXP.test($scope.addedNonFullSupplyProducts[index].quantityRequested);
+  }
+
+  function displayProductsAddedMessage() {
+    if ($scope.addedNonFullSupplyProducts.length > 0) {
+      $rootScope.message = "Products added successfully";
+      setTimeout(function () {
+        $scope.$apply(function () {
+          angular.element("#saveSuccessMsgDiv").fadeOut('slow', function () {
+            $rootScope.message = '';
+          });
+        });
+      }, 3000);
     }
   }
+
+  function populateProductInformation() {
+    var product = {};
+    if ($scope.facilityApprovedProduct != undefined) {
+      angular.copy($scope.facilityApprovedProduct.programProduct.product, product);
+      $scope.newNonFullSupply.productCode = product.code;
+      $scope.newNonFullSupply.productName = product.primaryName;
+      $scope.newNonFullSupply.product = (product.primaryName == null ? "" : (product.primaryName + " ")) +
+        (product.form.code == null ? "" : (product.form.code + " ")) +
+        (product.strength == null ? "" : (product.strength + " ")) +
+        (product.dosageUnit.code == null ? "" : product.dosageUnit.code);
+      $(['dosesPerDispensingUnit', 'packSize', 'roundToZero', 'packRoundingThreshold', 'dispensingUnit', 'fullSupply']).each(function (index, field) {
+        $scope.newNonFullSupply[field] = product[field];
+      });
+      $scope.newNonFullSupply.maxMonthsOfStock = $scope.facilityApprovedProduct.maxMonthsOfStock;
+      $scope.newNonFullSupply.dosesPerMonth = $scope.facilityApprovedProduct.programProduct.dosesPerMonth;
+      $scope.newNonFullSupply.price = $scope.facilityApprovedProduct.programProduct.currentPrice;
+      $scope.newNonFullSupply.productCategory = $scope.facilityApprovedProduct.programProduct.product.category.code;
+    }
+  }
+
+  function prepareNFSLineItemFields() {
+    populateProductInformation();
+    $(['quantityReceived', 'quantityDispensed', 'beginningBalance', 'stockInHand', 'totalLossesAndAdjustments', 'calculatedOrderQuantity', 'newPatientCount',
+      'stockOutDays', 'normalizedConsumption', 'amc', 'maxStockQuantity']).each(function (index, field) {
+        $scope.newNonFullSupply[field] = 0;
+      });
+    $scope.newNonFullSupply.rnrId = $scope.$parent.rnr.id;
+  }
+
+  function validateRnrLineItem(nonFullSupplyProduct) {
+    return (nonFullSupplyProduct.quantityRequested && nonFullSupplyProduct.reasonForRequestedQuantity && !nonFullSupplyProduct.isNonNumeric)
+  }
+
 }
 

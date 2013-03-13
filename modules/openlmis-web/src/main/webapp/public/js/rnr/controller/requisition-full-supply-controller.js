@@ -5,11 +5,6 @@ function RequisitionFullSupplyController($scope, $routeParams, $location, Losses
     return !((index > 0 ) && ($scope.pageLineItems[index].productCategory == $scope.pageLineItems[index-1].productCategory));
   };
 
-  LossesAndAdjustmentsReferenceData.get({}, function (data) {
-    $scope.allTypes = data.lossAdjustmentTypes;
-  }, function () {
-  });
-
   $scope.showCategory = function (index) {
     return !((index > 0 ) && ($scope.pageLineItems[index].productCategory == $scope.pageLineItems[index-1].productCategory));
   };

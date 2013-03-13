@@ -1,4 +1,4 @@
-function CreateRequisitionController($scope, requisition, currency, rnrColumns, $location, Requisitions, $routeParams, $rootScope) {
+function CreateRequisitionController($scope, requisition, currency, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, $location, Requisitions, $routeParams, $rootScope) {
 
   $scope.showNonFullSupply = $routeParams.supplyType == 'non-full-supply';
   $scope.baseUrl = "/create-rnr/" + $routeParams.facility + '/' + $routeParams.program + '/' + $routeParams.period;
@@ -11,9 +11,11 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
     $scope.pageLineItems = gridLineItems.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);
   };
   $scope.rnr = requisition;
-  $scope.visibleColumns = _.where(rnrColumns, {'visible':true});
+  $scope.allTypes = lossesAndAdjustmentsTypes;
+  $scope.facilityApprovedProducts = facilityApprovedProducts;
+  $scope.visibleColumns = _.where(rnrColumns, {'visible': true});
   $scope.programRnrColumnList = rnrColumns;
-  $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name':'quantityRequested'});
+  $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name': 'quantityRequested'});
 
   prepareRnr();
 
@@ -56,8 +58,8 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   $scope.saveRnr = function (preventMessage) {
     resetFlags();
     var rnr = removeExtraDataForPostFromRnr();
-    Requisitions.update({id:$scope.rnr.id, operation:"save"}, rnr, function (data) {
-      if(preventMessage) return;
+    Requisitions.update({id: $scope.rnr.id, operation: "save"}, rnr, function (data) {
+      if (preventMessage) return;
       $scope.message = data.success;
       setTimeout(function () {
         $scope.$apply(function () {
@@ -91,7 +93,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
       return;
     }
     var rnr = removeExtraDataForPostFromRnr();
-    Requisitions.update({id:$scope.rnr.id, operation:"submit"},
+    Requisitions.update({id: $scope.rnr.id, operation: "submit"},
       rnr, function (data) {
         $scope.rnr.status = "SUBMITTED";
         $scope.formDisabled = !$rootScope.hasPermission('AUTHORIZE_REQUISITION');
@@ -111,7 +113,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
       return;
     }
     var rnr = removeExtraDataForPostFromRnr();
-    Requisitions.update({id:$scope.rnr.id, operation:"authorize"}, rnr, function (data) {
+    Requisitions.update({id: $scope.rnr.id, operation: "authorize"}, rnr, function (data) {
       resetFlags();
       $scope.rnr.status = "AUTHORIZED";
       $scope.formDisabled = true;
@@ -197,7 +199,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   }
 
   function removeExtraDataForPostFromRnr() {
-    var rnr = {"id":$scope.rnr.id, "fullSupplyLineItems":[], "nonFullSupplyLineItems":[]};
+    var rnr = {"id": $scope.rnr.id, "fullSupplyLineItems": [], "nonFullSupplyLineItems": []};
 
     _.each($scope.rnr.fullSupplyLineItems, function (lineItem) {
       rnr.fullSupplyLineItems.push(_.omit(lineItem, ['rnr', 'programRnrColumnList']));
@@ -211,7 +213,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
 
 CreateRequisitionController.resolve = {
 
-  requisition:function ($q, $timeout, Requisition, $route, $rootScope) {
+  requisition: function ($q, $timeout, Requisition, $route, $rootScope) {
     var deferred = $q.defer();
     $timeout(function () {
       var rnr = $rootScope.rnr;
@@ -220,28 +222,48 @@ CreateRequisitionController.resolve = {
         $rootScope.rnr = undefined;
         return;
       }
-      Requisition.get({facilityId:$route.current.params.facility, programId:$route.current.params.program, periodId:$route.current.params.period}, function (data) {
+      Requisition.get({facilityId: $route.current.params.facility, programId: $route.current.params.program, periodId: $route.current.params.period}, function (data) {
         deferred.resolve(data.rnr);
       }, {});
     }, 100);
     return deferred.promise;
   },
 
-  rnrColumns:function ($q, $timeout, ProgramRnRColumnList, $route) {
+  rnrColumns: function ($q, $timeout, ProgramRnRColumnList, $route) {
     var deferred = $q.defer();
     $timeout(function () {
-      ProgramRnRColumnList.get({programId:$route.current.params.program}, function (data) {
+      ProgramRnRColumnList.get({programId: $route.current.params.program}, function (data) {
         deferred.resolve(data.rnrColumnList);
       }, {});
     }, 100);
     return deferred.promise;
   },
 
-  currency:function ($q, $timeout, ReferenceData) {
+  currency: function ($q, $timeout, ReferenceData) {
     var deferred = $q.defer();
     $timeout(function () {
       ReferenceData.get({}, function (data) {
         deferred.resolve(data.currency);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  },
+
+  lossesAndAdjustmentsTypes: function ($q, $timeout, LossesAndAdjustmentsReferenceData) {
+    var deferred = $q.defer();
+    $timeout(function () {
+      LossesAndAdjustmentsReferenceData.get({}, function (data) {
+        deferred.resolve(data.lossAdjustmentTypes);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  },
+
+  facilityApprovedProducts: function ($q, $timeout, $route, FacilityApprovedProducts) {
+    var deferred = $q.defer();
+    $timeout(function () {
+      FacilityApprovedProducts.get({facilityId: $route.current.params.facility, programId: $route.current.params.program}, function (data) {
+        deferred.resolve(data.nonFullSupplyProducts);
       }, {});
     }, 100);
     return deferred.promise;
