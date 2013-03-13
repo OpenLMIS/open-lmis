@@ -932,6 +932,65 @@ describe('RnrLineItem', function () {
 
       expect(isValid).toBeTruthy();
     });
+
+    it('should validate line item and and return true if valid', function() {
+      var rnrLineItem = {fullSupply: true};
+      rnrLineItem = new RnrLineItem(rnrLineItem, null, programRnrColumnList);
+
+      spyOn(rnrLineItem, 'formulaValid').andReturn(true);
+      spyOn(rnrLineItem, 'validateRequiredFieldsForFullSupply').andReturn(true);
+
+      var isValid = rnrLineItem.valid();
+
+      expect(isValid).toBeTruthy();
+    });
+
+    it('should validate line item and and return false if invalid', function() {
+      var rnrLineItem = {fullSupply: true};
+      rnrLineItem = new RnrLineItem(rnrLineItem, null, programRnrColumnList);
+
+      spyOn(rnrLineItem, 'formulaValid').andReturn(false);
+      spyOn(rnrLineItem, 'validateRequiredFieldsForFullSupply').andReturn(true);
+
+      var isValid = rnrLineItem.valid();
+
+      expect(isValid).toBeFalsy();
+    });
+
+    it('should validate line item and and return false if arithmetically invalid', function() {
+      var rnrLineItem = {fullSupply: true};
+      rnrLineItem = new RnrLineItem(rnrLineItem, null, programRnrColumnList);
+
+      spyOn(rnrLineItem, 'formulaValid').andReturn(true);
+      spyOn(rnrLineItem, 'validateRequiredFieldsForFullSupply').andReturn(false);
+
+      var isValid = rnrLineItem.valid();
+
+      expect(isValid).toBeFalsy();
+    });
+
+    it('should validate line item and and return false if invalid', function() {
+      var rnrLineItem = {fullSupply: false};
+      rnrLineItem = new RnrLineItem(rnrLineItem, null, programRnrColumnList);
+
+      spyOn(rnrLineItem, 'validateRequiredFieldsForNonFullSupply').andReturn(false);
+
+      var isValid = rnrLineItem.valid();
+
+      expect(isValid).toBeFalsy();
+    });
+
+    it('should validate non full supply line item and and return true if valid', function() {
+      var rnrLineItem = {fullSupply: false};
+      rnrLineItem = new RnrLineItem(rnrLineItem, null, programRnrColumnList);
+
+      spyOn(rnrLineItem, 'validateRequiredFieldsForNonFullSupply').andReturn(true);
+
+      var isValid = rnrLineItem.valid();
+
+      expect(isValid).toBeTruthy();
+    });
+
   });
 });
 

@@ -1,4 +1,19 @@
 <div ng-controller = "RequisitionFullSupplyController" >
+  <div id="pageErrors" class="dropdown rnr-page-errors" ng-show="errorPages.fullSupply">
+    <a class="dropdown-toggle">
+      Errors found on
+      <ng-pluralize count="errorPages.fullSupply.length"
+                          when="{ 1: '{} page',
+                                  other: '{} pages'}">
+
+      </ng-pluralize> |
+    </a>
+    <ul class="dropdown-menu">
+      <li ng-repeat="page in errorPages.fullSupply">
+        <a ng-click="goToPage(page, $event)">{{page}}</a>
+      </li>
+    </ul>
+  </div>
   <div class = "rnr-table" >
     <table id = "fullSupplyTable" class = "table table-striped table-bordered" >
       <thead >

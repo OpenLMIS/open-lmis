@@ -223,25 +223,23 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
   };
 
   RnrLineItem.prototype.validateRequiredFieldsForFullSupply = function () {
-    var isValid = true;
+    var valid = true;
     var rnrLineItem = this;
     var visibleColumns = _.where(programRnrColumnList, {"visible":true});
+
     $(visibleColumns).each(function (i, column) {
-      if (column.source.name != 'USER_INPUT') return;
-      switch (column.name) {
-        case 'reasonForRequestedQuantity' :
-        case 'remarks' :
-        case 'lossesAndAdjustments' :
-        case 'quantityApproved' :
-        case 'quantityRequested' :
-          isValid = isUndefined(rnrLineItem.quantityRequested) || !isUndefined(rnrLineItem.reasonForRequestedQuantity);
-          break;
-        default:
-          isValid = !isUndefined(rnrLineItem[column.name]);
+        var nonMandatoryColumns = ["reasonForRequestedQuantity", "remarks", "lossesAndAdjustments", "quantityApproved"];
+        if (column.source.name != 'USER_INPUT' || _.contains(nonMandatoryColumns, column.name)) return;
+        if (column.name == 'quantityRequested') {
+          valid = isUndefined(rnrLineItem.quantityRequested) || !isUndefined(rnrLineItem.reasonForRequestedQuantity);
+        } else {
+          valid = !isUndefined(rnrLineItem[column.name]);
+        }
+        return valid;
       }
-      if (!isValid) return false;
-    });
-    return isValid;
+    );
+
+    return valid;
   };
 
   RnrLineItem.prototype.getErrorMessage = function () {
@@ -251,7 +249,12 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
 
     return "";
   };
-
+  
+  RnrLineItem.prototype.valid = function () {
+      if (this.fullSupply) return this.validateRequiredFieldsForFullSupply() && this.formulaValid();
+      return this.validateRequiredFieldsForNonFullSupply();
+  };
+  
   RnrLineItem.prototype.validateLossesAndAdjustments = function() {
     if (isUndefined(this.lossesAndAdjustments)) return true;
 
@@ -267,8 +270,6 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     this.previousNormalizedConsumptions = [];
 
   if (this.lossesAndAdjustments == undefined) this.lossesAndAdjustments = [];
-
-//  if (this.rnrStatus == 'IN_APPROVAL') return;
 
   this.reEvaluateTotalLossesAndAdjustments();
   this.fillConsumptionOrStockInHand();

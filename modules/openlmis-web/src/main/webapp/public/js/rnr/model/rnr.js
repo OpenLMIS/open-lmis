@@ -18,6 +18,22 @@ var Rnr = function (rnr, programRnrColumns) {
     this.programRnrColumnList = programRnrColumns;
   };
 
+  var getInvalidLineItemIndexes = function (lineItems) {
+    var errorLineItems = [];
+    $(lineItems).each(function (i, lineItem) {
+      if (!lineItem.valid()) errorLineItems.push(i);
+    });
+    return errorLineItems;
+  };
+
+  Rnr.prototype.getFullSupplyErrorLineItemIndexes = function () {
+    return getInvalidLineItemIndexes(this.fullSupplyLineItems);
+  };
+
+  Rnr.prototype.getNonFullSupplyErrorLineItemIndexes = function () {
+    return getInvalidLineItemIndexes(this.nonFullSupplyLineItems);
+  };
+
   Rnr.prototype.validateFullSupply = function () {
     var errorMessage = "";
 

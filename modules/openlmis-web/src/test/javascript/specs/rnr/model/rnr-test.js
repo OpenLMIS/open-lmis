@@ -166,7 +166,7 @@ describe('R&R test', function () {
     expect(errorMessage).toEqual('rnr.validation.error');
   });
 
-  it('should fill normalized consumption and update cost', function() {
+  it('should fill normalized consumption and update cost', function () {
     var rnrLineItem = new RnrLineItem({}, 1, null, 'INITIATED');
     var rnr = new Rnr();
     spyOn(rnrLineItem, 'fillNormalizedConsumption');
@@ -178,7 +178,7 @@ describe('R&R test', function () {
     expect(rnr.fillCost).toHaveBeenCalled();
   });
 
-  it('should fill Consumption Or StockInHand and update cost', function() {
+  it('should fill Consumption Or StockInHand and update cost', function () {
     var rnrLineItem = new RnrLineItem({}, 1, null, 'INITIATED');
     var rnr = new Rnr();
     spyOn(rnrLineItem, 'fillConsumptionOrStockInHand');
@@ -190,7 +190,7 @@ describe('R&R test', function () {
     expect(rnr.fillCost).toHaveBeenCalled();
   });
 
-  it('should fill packs to ship based on quantity requested or calculated quantity and update cost', function() {
+  it('should fill packs to ship based on quantity requested or calculated quantity and update cost', function () {
     var rnrLineItem = new RnrLineItem({}, 1, null, 'INITIATED');
     var rnr = new Rnr();
     spyOn(rnrLineItem, 'fillPacksToShip');
@@ -256,40 +256,76 @@ describe('R&R test', function () {
     });
   });
 
-  it('should validate rnr full supply line items for approval', function() {
+  it('should validate rnr full supply line items for approval', function () {
     var rnr = new Rnr();
-    rnr.fullSupplyLineItems = [{'quantityApproved' : '', 'reasonForRequestedQuantity' : ''}];
+    rnr.fullSupplyLineItems = [
+      {'quantityApproved':'', 'reasonForRequestedQuantity':''}
+    ];
 
     var error = rnr.validateFullSupplyForApproval();
 
     expect(error).toEqual('rnr.validation.error');
   });
 
-  it('should validate rnr full supply line items for approval and return true if required fields not missing', function() {
+  it('should validate rnr full supply line items for approval and return true if required fields not missing', function () {
     var rnr = new Rnr();
-    rnr.fullSupplyLineItems = [{'quantityApproved' : '23', 'reasonForRequestedQuantity' : 'some message'}];
+    rnr.fullSupplyLineItems = [
+      {'quantityApproved':'23', 'reasonForRequestedQuantity':'some message'}
+    ];
 
     var error = rnr.validateFullSupplyForApproval();
 
     expect(error).toEqual('');
   });
 
-  it('should validate rnr full supply line items for approval', function() {
+  it('should validate rnr full supply line items for approval', function () {
     var rnr = new Rnr();
-    rnr.nonFullSupplyLineItems = [{'quantityApproved' : '', 'reasonForRequestedQuantity' : ''}];
+    rnr.nonFullSupplyLineItems = [
+      {'quantityApproved':'', 'reasonForRequestedQuantity':''}
+    ];
 
     var error = rnr.validateNonFullSupplyForApproval();
 
     expect(error).toEqual('rnr.validation.error');
   });
 
-  it('should validate rnr full supply line items for approval and return true if required fields not missing', function() {
+  it('should validate rnr full supply line items for approval and return true if required fields not missing', function () {
     var rnr = new Rnr();
-    rnr.nonFullSupplyLineItems = [{'quantityApproved' : '23', 'reasonForRequestedQuantity' : 'some message'}];
+    rnr.nonFullSupplyLineItems = [
+      {'quantityApproved':'23', 'reasonForRequestedQuantity':'some message'}
+    ];
 
     var error = rnr.validateNonFullSupplyForApproval();
 
     expect(error).toEqual('');
+  });
+
+  it('should find indexes of invalid full supply line items', function () {
+    var rnr = new Rnr();
+    var rnrLineItem1 = new RnrLineItem();
+    var rnrLineItem2 = new RnrLineItem();
+    var rnrLineItem3 = new RnrLineItem();
+    spyOn(rnrLineItem1, "valid").andReturn(false);
+    spyOn(rnrLineItem2, "valid").andReturn(true);
+    spyOn(rnrLineItem3, "valid").andReturn(false);
+    rnr.fullSupplyLineItems = [rnrLineItem1, rnrLineItem2, rnrLineItem3];
+
+    var fullSupplyErrorLineItemIndexes = rnr.getFullSupplyErrorLineItemIndexes();
+    expect(fullSupplyErrorLineItemIndexes).toEqual([0, 2]);
+  });
+
+  it('should find indexes of invalid non full supply line items', function () {
+    var rnr = new Rnr();
+    var rnrLineItem1 = new RnrLineItem();
+    var rnrLineItem2 = new RnrLineItem();
+    var rnrLineItem3 = new RnrLineItem();
+    spyOn(rnrLineItem1, "valid").andReturn(false);
+    spyOn(rnrLineItem2, "valid").andReturn(true);
+    spyOn(rnrLineItem3, "valid").andReturn(false);
+    rnr.nonFullSupplyLineItems = [rnrLineItem1, rnrLineItem2, rnrLineItem3];
+
+    var nonFullSupplyErrorLineItemIndexes = rnr.getNonFullSupplyErrorLineItemIndexes();
+    expect(nonFullSupplyErrorLineItemIndexes).toEqual([0, 2]);
   });
 });
 
