@@ -77,7 +77,7 @@ public class OrderPage extends Page {
     SeleneseTestNgHelper.assertTrue("Message 'Please select atleast one Requisition for Converting to Order.' is not displayed", successMessageDiv.isDisplayed());
     checkboxOnOrderScreen.click();
     convertToOrderButton.click();
-    testWebDriver.sleep(250);
+    testWebDriver.sleep(100);
     SeleneseTestNgHelper.assertTrue("Message 'No R&Rs are pending to be Converted as Orders' is not displayed", noRequisitionPendingMessage.isDisplayed());
   }
 

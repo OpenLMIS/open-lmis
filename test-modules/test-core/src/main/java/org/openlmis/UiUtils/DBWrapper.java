@@ -397,8 +397,18 @@ public class DBWrapper {
 
   }
 
+  public void updateRequisition(String facilityCode) throws IOException, SQLException {
+    update("update requisitions set supplyingfacilityid=(select id from facilities where code='"+facilityCode+"');");
+
+  }
+
   public void insertValuesInRequisition() throws IOException, SQLException {
-    update("update requisition_line_items set beginningbalance=1,  quantityreceived=1, quantitydispensed=1;");
+    update("update requisition_line_items set beginningbalance=1,  quantityreceived=1, quantitydispensed=1, newpatientcount=1, stockoutdays=1, quantityrequested=10, reasonforrequestedquantity='bad climate';");
+
+  }
+
+  public void insertApprovedQuantity() throws IOException, SQLException {
+    update("update requisition_line_items set quantityapproved='20';");
 
   }
 

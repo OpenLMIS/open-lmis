@@ -35,8 +35,17 @@ public class ViewRequisitionPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[contains(text(),'No Requisitions found')]")
   private static WebElement noRequisitionFoundDiv;
 
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText colt7']/span")
+  private static WebElement status;
+
   @FindBy(how = How.XPATH, using = "//select[@data-handler='selectYear']")
   private static WebElement yearChanger;
+
+  @FindBy(how = How.XPATH, using = "//span[contains(text(),'Prev')]")
+  private static WebElement prevCalender;
+
+  @FindBy(how = How.XPATH, using = "//span[contains(text(),'Next')]")
+  private static WebElement nextCalender;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'25')]")
   private static WebElement startDateCalender;
@@ -46,6 +55,19 @@ public class ViewRequisitionPage extends Page {
 
   @FindBy(how = How.XPATH, using = "//div[@class='ngViewport ng-scope']/div/div/div[1]")
   private static WebElement viewRnRList;
+
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCell col18 ']/span[3]")
+  private static WebElement totalCostPreApproval;
+
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCell col19 ']/span[3]")
+  private static WebElement totalCostPostApproval;
+
+
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCell col8 ']/div/span")
+  private static WebElement newPatient;
+
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCell col16 ']/div/span")
+  private static WebElement approveQuantity;
 
   public ViewRequisitionPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -63,26 +85,36 @@ public class ViewRequisitionPage extends Page {
      SeleneseTestNgHelper.assertTrue("Search button is not displayed", searchButton.isDisplayed());
   }
 
-  public void verifyNoRequisitionFound() throws IOException
+  public void enterSearchCriteria() throws IOException
   {
     testWebDriver.waitForElementToAppear(selectFacilityDropDown);
     testWebDriver.selectByIndex(selectFacilityDropDown,1);
-    testWebDriver.sleep(500);
+    testWebDriver.sleep(250);
     startDate.click();
-    testWebDriver.sleep(500);
+    testWebDriver.sleep(250);
     testWebDriver.selectByValue(yearChanger,"2004");
-    testWebDriver.sleep(500);
+    testWebDriver.sleep(250);
     startDateCalender.click();
-    testWebDriver.sleep(500);
+    testWebDriver.sleep(250);
     endDate.click();
-    testWebDriver.sleep(500);
+    testWebDriver.sleep(250);
     testWebDriver.selectByValue(yearChanger,"2013");
-    testWebDriver.sleep(500);
+    testWebDriver.sleep(250);
+    testWebDriver.click(nextCalender);
+    testWebDriver.sleep(250);
     endDateCalender.click();
-    searchButton.click();
-    testWebDriver.sleep(500);
+  }
+  public void verifyNoRequisitionFound() throws IOException
+  {
+
     SeleneseTestNgHelper.assertTrue("noRequisitionFoundDiv is not showing up",noRequisitionFoundDiv.isDisplayed());
 
+  }
+
+  public void verifyStatus(String statusToBeVerified) throws IOException
+  {
+    testWebDriver.waitForElementToAppear(status);
+    SeleneseTestNgHelper.assertEquals(status.getText().trim(), statusToBeVerified.trim());
   }
 
   public void clickSearch()
@@ -98,7 +130,24 @@ public class ViewRequisitionPage extends Page {
     viewRnRList.click();
   }
 
+  public HomePage verifyFieldsPreApproval(String cost, String newPatientValue) throws IOException
+  {
+    testWebDriver.waitForElementToAppear(totalCostPreApproval);
+    SeleneseTestNgHelper.assertEquals(totalCostPreApproval.getText().trim(), cost);
+//    SeleneseTestNgHelper.assertEquals(newPatient.getText().trim(), newPatientValue);
 
+    return new HomePage(testWebDriver);
+  }
+
+
+  public HomePage verifyFieldsPostApproval(String cost, String newPatientValue) throws IOException
+  {
+    testWebDriver.waitForElementToAppear(totalCostPostApproval);
+    SeleneseTestNgHelper.assertEquals(totalCostPostApproval.getText().trim(), cost);
+//    SeleneseTestNgHelper.assertEquals(newPatient.getText().trim(), newPatientValue);
+
+    return new HomePage(testWebDriver);
+  }
 
 
 }

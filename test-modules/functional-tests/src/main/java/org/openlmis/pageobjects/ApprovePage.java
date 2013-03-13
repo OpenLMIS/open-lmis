@@ -203,5 +203,27 @@ public class ApprovePage extends Page {
 
   }
 
+  public void editApproveQuantityAndVerifyTotalCostViewRequisition(String approvedQuantity) {
+    testWebDriver.waitForElementToAppear(fullSupplyTab);
+    fullSupplyTab.click();
+    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(quantityApproved);
+    quantityApproved.clear();
+    quantityApproved.sendKeys(approvedQuantity);
+    remarks.click();
+    SeleneseTestNgHelper.assertEquals(packsToShip.getText().trim(), Integer.parseInt(approvedQuantity) / 10);
+
+    BigDecimal cost = new BigDecimal((Float.parseFloat(packsToShip.getText().trim()) * Float.parseFloat(pricePerPack.getText().trim()))).setScale(2, ROUND_HALF_UP);
+    SeleneseTestNgHelper.assertEquals(String.valueOf(cost), totalCost.getText().trim());
+    String totalCostFullSupplyLineItem = totalCost.getText().trim();
+    testWebDriver.sleep(1000);
+
+
+    BigDecimal totalOverAllCost = new BigDecimal(Float.parseFloat(totalCostFullSupplyLineItem)).setScale(2, ROUND_HALF_UP);
+    SeleneseTestNgHelper.assertEquals(overalltotalCost.getText().trim(), String.valueOf(totalOverAllCost));
+
+
+  }
+
 
 }

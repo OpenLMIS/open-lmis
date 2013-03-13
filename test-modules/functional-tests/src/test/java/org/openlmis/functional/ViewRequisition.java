@@ -61,18 +61,52 @@ public class ViewRequisition extends TestCaseHelper {
 
     ViewRequisitionPage viewRequisitionPage=homePage1.navigateViewRequisition();
     viewRequisitionPage.verifyElementsOnViewRequisitionScreen();
-    viewRequisitionPage.verifyNoRequisitionFound();
     dbWrapper.insertValuesInRequisition();
+    dbWrapper.updateRequisitionStatus("SUBMITTED");
+    viewRequisitionPage.enterSearchCriteria();
+    viewRequisitionPage.clickSearch();
+    viewRequisitionPage.verifyNoRequisitionFound();
     dbWrapper.updateRequisitionStatus("AUTHORIZED");
     viewRequisitionPage.clickSearch();
     viewRequisitionPage.clickRnRList();
 
+    HomePage homePage2=viewRequisitionPage.verifyFieldsPreApproval("12.50", "1");
+    ViewRequisitionPage viewRequisitionPage2=homePage2.navigateViewRequisition();
+    viewRequisitionPage2.enterSearchCriteria();
+    viewRequisitionPage2.clickSearch();
+    viewRequisitionPage2.verifyStatus("AUTHORIZED");
+    viewRequisitionPage2.clickRnRList();
+
+    HomePage homePage3=viewRequisitionPage2.verifyFieldsPreApproval("12.50", "1");
+    dbWrapper.updateRequisitionStatus("IN_APPROVAL");
+    ViewRequisitionPage viewRequisitionPage3=homePage3.navigateViewRequisition();
+    viewRequisitionPage3.enterSearchCriteria();
+    viewRequisitionPage3.clickSearch();
+    viewRequisitionPage3.verifyStatus("IN_APPROVAL");
 
 
+    ApprovePage approvePageTopSNUser = homePage3.navigateToApprove();
+    approvePageTopSNUser.verifyandclickRequisitionPresentForApproval();
+    approvePageTopSNUser.editApproveQuantityAndVerifyTotalCostViewRequisition("20");
+    approvePageTopSNUser.approveRequisition();
+    approvePageTopSNUser.verifyNoRequisitionPendingMessage();
+    ViewRequisitionPage viewRequisitionPage4=homePage3.navigateViewRequisition();
+    viewRequisitionPage4.enterSearchCriteria();
+    viewRequisitionPage4.clickSearch();
+    viewRequisitionPage4.verifyStatus("APPROVED");
+    viewRequisitionPage4.clickRnRList();
+//    HomePage homePage4=viewRequisitionPage4.verifyFieldsPostApproval("25.00", "1");
+    HomePage homePage4=viewRequisitionPage4.verifyFieldsPostApproval("12.50", "1");
 
-
-
-
+    dbWrapper.updateRequisition("F10");
+    OrderPage orderPage=homePage4.navigateConvertToOrder();
+    orderPage.convertToOrder();
+    ViewRequisitionPage viewRequisitionPage5=homePage4.navigateViewRequisition();
+    viewRequisitionPage5.enterSearchCriteria();
+    viewRequisitionPage5.clickSearch();
+    viewRequisitionPage5.verifyStatus("ORDERED");
+    viewRequisitionPage5.clickRnRList();
+    //viewRequisitionPage5.verifyFieldsPostApproval("25.00", "1");
 
   }
 
