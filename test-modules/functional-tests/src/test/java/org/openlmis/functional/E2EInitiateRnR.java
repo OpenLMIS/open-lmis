@@ -16,7 +16,7 @@ import java.util.List;
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
 
-@Listeners(CaptureScreenshotOnFailureListener.class)
+//@Listeners(CaptureScreenshotOnFailureListener.class)
 
 public class E2EInitiateRnR extends TestCaseHelper {
 
@@ -163,13 +163,13 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   }
 
-  @AfterMethod(groups = {"smoke"})
-  public void tearDown() throws Exception {
-    HomePage homePage = new HomePage(testWebDriver);
-    homePage.logout();
-    dbWrapper.deleteData();
-    dbWrapper.closeConnection();
-  }
+//  @AfterMethod(groups = {"smoke"})
+//  public void tearDown() throws Exception {
+//    HomePage homePage = new HomePage(testWebDriver);
+//    homePage.logout();
+//    dbWrapper.deleteData();
+//    dbWrapper.closeConnection();
+//  }
 
 
   @DataProvider(name = "Data-Provider-Function-Positive")

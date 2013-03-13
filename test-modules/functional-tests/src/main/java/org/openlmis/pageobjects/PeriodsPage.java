@@ -196,14 +196,11 @@ public class PeriodsPage extends Page {
       datePeriods = sdf.parse(dateToCompare);
 
       if (datePeriods.compareTo(todayDate) > 0) {
-        System.out.println("DatePeriods is after TodayDate");
         flag = 1;
       } else if (datePeriods.compareTo(todayDate) < 0) {
-        System.out.println("DatePeriods is before TodayDate");
         flag = 2;
 
       } else if (datePeriods.compareTo(todayDate) == 0) {
-        System.out.println("DatePeriods is equal to TodayDate");
 
       }
 

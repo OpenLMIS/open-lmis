@@ -18,7 +18,6 @@ public class Unzip
     {
       fileToBeDeleted.delete();
       flag=true;
-      System.out.println("file deleted : "+ fileToBeDeleted.getAbsoluteFile());
     }
     return flag;
   }
@@ -45,8 +44,6 @@ public class Unzip
 
         String fileName = ze.getName();
         File newFile = new File(outputFolder + File.separator + fileName);
-
-        System.out.println("file unzip : "+ newFile.getAbsoluteFile());
 
         new File(newFile.getParent()).mkdirs();
 

@@ -32,8 +32,8 @@ public class DBWrapper {
     try {
       Class.forName("org.postgresql.Driver");
     } catch (ClassNotFoundException cnfe) {
-      System.out.println("Could not find the JDBC driver!");
       System.exit(1);
+
     }
   }
 

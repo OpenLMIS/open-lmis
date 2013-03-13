@@ -25,7 +25,7 @@ public class LoginPage extends Page {
   private String baseUrl;
 
   public LoginPage(TestWebDriver driver) throws IOException {
-    super(driver);
+      super(driver);
 
     baseUrl = "http://localhost:9091/";
     BASE_URL = baseUrl;

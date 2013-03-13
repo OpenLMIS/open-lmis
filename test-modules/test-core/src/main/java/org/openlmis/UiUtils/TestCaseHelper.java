@@ -12,52 +12,45 @@ public class TestCaseHelper {
     protected static DriverFactory driverFactory = new DriverFactory();
 
 
-
-    public  void setupSuite(String browser) throws ClassNotFoundException {
+    public void setupSuite(String browser) throws ClassNotFoundException {
         try {
-            if (!isSeleniumStarted) {
-                loadDriver(browser);
-                addTearDownShutDownHook();
-                isSeleniumStarted = true;
-            }
+            loadDriver(browser);
+            addTearDownShutDownHook();
+            isSeleniumStarted = true;
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void tearDownSuite()
-    {
-      try{
-        deleteExe();
-      }catch(Exception e)
-      {
-        e.printStackTrace();
-      }
+    public void tearDownSuite() {
+        try {
+            deleteExe();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
-    protected  void addTearDownShutDownHook() {
+    protected void addTearDownShutDownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
                 if (testWebDriver != null) {
 //                  testWebDriver.close();
-                  //testWebDriver.quitDriver();
-                  tearDownSuite();
+                    //testWebDriver.quitDriver();
+                    tearDownSuite();
                 }
             }
         });
     }
 
 
-    protected  void loadDriver(String browser) throws InterruptedException {
+    protected void loadDriver(String browser) throws InterruptedException {
         testWebDriver = new TestWebDriver(driverFactory.loadDriver(browser));
     }
 
-    protected  void deleteExe() throws InterruptedException, IOException {
+    protected void deleteExe() throws InterruptedException, IOException {
         driverFactory.deleteExeDF();
     }
-
-
 
 
 }

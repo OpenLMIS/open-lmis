@@ -218,7 +218,6 @@ public class ServiceUtils {
         obj.put("SCC", "Lock");
         obj.put("Dummy", lhmObj);
         obj.put("Requisition", llObj);
-        System.out.println(obj);
     }
 
 
@@ -272,14 +271,7 @@ public class ServiceUtils {
                 System.out.print(iterator.next());
                 System.out.print(" ");
             }
-            System.out.println("");
-            System.out.println("FOO : " + foo);
-            System.out.println("Coolness: " + coolness);
-            System.out.println("Altitude: " + altitude);
-            System.out.println("Pilot: firstName : " + firstName);
-            System.out.println("Pilot: lastName : " + lastName);
-            System.out.println("DAR : " + dar);
-            System.out.println("SCC : " + scc);
+
 
 
         } catch (IOException e) {
