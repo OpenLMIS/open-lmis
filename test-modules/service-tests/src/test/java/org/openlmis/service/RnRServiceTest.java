@@ -39,8 +39,9 @@ public class RnRServiceTest extends TestCaseHelper {
       dbWrapper.insertRequisitionGroups("RG1", "RG2", "N1", "N2");
       dbWrapper.insertRequisitionGroupMembers("F11", "F10");
 
-      dbWrapper.configureTemplate();
-      dbWrapper.insertRoles();
+      dbWrapper.configureTemplate("HIV");
+      dbWrapper.insertRole("store in-charge","");
+      dbWrapper.insertRole("district pharmacist","");
       dbWrapper.insertRoleRights();
 
 
