@@ -75,10 +75,10 @@
         <div class="row-fluid">
           <div class="span6">
            <label for="nonFullSupplyProductsCategory">Category:</label>
-           <select ui-select2 class="span12" id="nonFullSupplyProductsCategory" ng-model="nonFullSupplyProductCategory" name="productName" data-placeholder="-- Select category --"
+           <select class="span12" id="nonFullSupplyProductsCategory" ng-model="nonFullSupplyProductCategory" name="productName"
                    ng-options="nonFullSupplyProductCategory.name for nonFullSupplyProductCategory in nonFullSupplyProductsCategories"
                    ng-change="updateNonFullSupplyProductsToDisplay()">
-             <option></option>
+             <option value="">-- Select category --</option>
            </select>
           </div>
         </div>

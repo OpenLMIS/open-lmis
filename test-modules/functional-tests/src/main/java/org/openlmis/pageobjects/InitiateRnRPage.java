@@ -177,7 +177,7 @@ public class InitiateRnRPage extends Page {
   private static WebElement productDropDown;
 
 
-  @FindBy(how = How.XPATH, using = "//a[@class='select2-choice']")
+  @FindBy(how = How.XPATH, using = "//a[@class='select2-choice select2-default']")
   private static WebElement productDropDownLink;
 
 
