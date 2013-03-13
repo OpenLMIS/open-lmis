@@ -399,10 +399,8 @@ public class InitiateRnRPage extends Page {
     testWebDriver.sleep(1000);
     addButton.click();
     testWebDriver.sleep(1000);
-//    testWebDriver.waitForElementToAppear(productDropDown);
     SeleneseTestNgHelper.assertFalse("Add button not enabled", addButtonNonFullSupply.isEnabled());
     SeleneseTestNgHelper.assertTrue("Close button not displayed", cancelButton.isDisplayed());
-//    testWebDriver.waitForElementToAppear(productDropDown);
     testWebDriver.waitForElementToAppear(categoryDropDown);
     testWebDriver.selectByIndex(categoryDropDown,1);
     productDropDownLink.click();
@@ -410,7 +408,6 @@ public class InitiateRnRPage extends Page {
     productDropDownTextField.sendKeys(productCode);
     testWebDriver.waitForElementToAppear(productDropDownValue);
     productDropDownValue.click();
-//    testWebDriver.selectByVisibleText(productDropDown, productCode+" | "+productPrimaryName);
     requestedQuantityField.clear();
     requestedQuantityField.sendKeys(requestedQuantityValue);
     requestedQuantityExplanationField.clear();
@@ -425,7 +422,6 @@ public class InitiateRnRPage extends Page {
     SeleneseTestNgHelper.assertEquals(requestedQuantityField.getAttribute("value").trim(),"");
     SeleneseTestNgHelper.assertEquals(requestedQuantityExplanationField.getAttribute("value").trim(),"");
 
-//    testWebDriver.waitForElementToAppear(productDropDown);
     testWebDriver.waitForElementToAppear(categoryDropDown);
     testWebDriver.selectByIndex(categoryDropDown,1);
     productDropDownLink.click();
@@ -433,7 +429,6 @@ public class InitiateRnRPage extends Page {
     productDropDownTextField.sendKeys(productCode);
     testWebDriver.waitForElementToAppear(productDropDownValue);
     productDropDownValue.click();
-//    testWebDriver.selectByVisibleText(productDropDown, productCode+" | "+productPrimaryName);
     requestedQuantityField.clear();
     requestedQuantityField.sendKeys(requestedQuantityValue);
     requestedQuantityExplanationField.clear();
@@ -448,7 +443,6 @@ public class InitiateRnRPage extends Page {
     SeleneseTestNgHelper.assertEquals(nonFullSupplyProductReasonForRequestedQuantity.getAttribute("value").trim(), requestedQuantityExplanationValue);
     doneButtonNonFullSupply.click();
     testWebDriver.sleep(500);
-//    cancelButton.click();
 
     SeleneseTestNgHelper.assertEquals(productDescriptionNonFullSupply.getText().trim(), nonFullSupplyItems);
     SeleneseTestNgHelper.assertEquals(productCodeNonFullSupply.getText().trim(), productCode);
