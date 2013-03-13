@@ -1,6 +1,8 @@
 describe('RequisitionNonFullSupplyController', function () {
 
   var scope, ctrl, httpBackend, location, routeParams, controller, localStorageService, productList, categoryList, facilityApprovedProducts;
+  var facilityApprovedProduct1, facilityApprovedProduct2, facilityApprovedProduct3, facilityApprovedProduct4, facilityApprovedProduct5;
+  var category1, category2, category3;
 
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
@@ -17,24 +19,24 @@ describe('RequisitionNonFullSupplyController', function () {
     scope.saveRnrForm = {$error: { rnrError: false }};
     localStorageService = _localStorageService_;
     routeParams = {"facility": "1", "program": "1", "period": 2};
-    scope.$parent.rnr = {"id": "rnrId", "lineItems": []};
+    scope.$parent.rnr = {"id": "rnrId", "fullSupplyLineItems": [], "nonFullSupplyLineItems": []};
 
-    var category1 = {"id": 1, "name": "cat1", "code": "cat1Code"};
-    var category2 = {"id": 2, "name": "cat2", "code": "cat2Code"};
-    var category3 = {"id": 3, "name": "cat3", "code": "cat3Code"};
+    category1 = {"id": 1, "name": "cat1", "code": "cat1Code"};
+    category2 = {"id": 2, "name": "cat2", "code": "cat2Code"};
+    category3 = {"id": 3, "name": "cat3", "code": "cat3Code"};
     categoryList = [category1, category2, category3];
 
-    var product1 = {"id": 1, "code": "product1", "category": category1};
+    var product1 = {"id": 1, "code": "product1", "category": category1, "primaryName":"Product 1","form": {"code": "Tablet"},"dosageUnit": {"code": "mg"},"strength": "600"};
     var product2 = {"id": 2, "code": "product2", "category": category2};
     var product3 = {"id": 3, "code": "product3", "category": category3};
     var product4 = {"id": 4, "code": "product4", "category": category1};
     var product5 = {"id": 5, "code": "product5", "category": category2};
 
-    var facilityApprovedProduct1 = {"programProduct": {"product": product1}};
-    var facilityApprovedProduct2 = {"programProduct": {"product": product2}};
-    var facilityApprovedProduct3 = {"programProduct": {"product": product3}};
-    var facilityApprovedProduct4 = {"programProduct": {"product": product4}};
-    var facilityApprovedProduct5 = {"programProduct": {"product": product5}};
+    facilityApprovedProduct1 = {"programProduct": {"product": product1,"dosesPerMonth":3,"currentPrice":4},"maxMonthsOfStock":3};
+    facilityApprovedProduct2 = {"programProduct": {"product": product2}};
+    facilityApprovedProduct3 = {"programProduct": {"product": product3}};
+    facilityApprovedProduct4 = {"programProduct": {"product": product4}};
+    facilityApprovedProduct5 = {"programProduct": {"product": product5}};
 
     facilityApprovedProducts = [facilityApprovedProduct1, facilityApprovedProduct2, facilityApprovedProduct3, facilityApprovedProduct4, facilityApprovedProduct5];
 
@@ -42,13 +44,9 @@ describe('RequisitionNonFullSupplyController', function () {
 
     $rootScope.fixToolBar = function () {
     };
+
     scope.facilityApprovedProducts = facilityApprovedProducts;
     ctrl = controller(RequisitionNonFullSupplyController, {$scope: scope, $location: location, $routeParams: routeParams, localStorageService: localStorageService});
-
-    scope.allTypes = [
-      {"name": "some name"},
-      {"name": "some other name"}
-    ];
 
   }));
 
@@ -57,9 +55,8 @@ describe('RequisitionNonFullSupplyController', function () {
   });
 
   it('should display non full supply addition modal window', function () {
-    scope.nonFullSupplyLineItems = [];
     scope.facilityApprovedProducts = [];
-    spyOn(scope,'resetNonFullSupplyModal')
+    spyOn(scope, 'resetNonFullSupplyModal');
 
     scope.showAddNonFullSupplyModal();
 
@@ -69,32 +66,41 @@ describe('RequisitionNonFullSupplyController', function () {
     expect(scope.resetNonFullSupplyModal).toHaveBeenCalled();
   });
 
-//  it('should add non full supply line item to the list', function () {
-//    scope.$parent.rnr = {"id": 1, "period": {}, "nonFullSupplyLineItems": []};
-//    scope.facilityApprovedProducts = [];
-//    scope.fillPagedGridData = function () {
-//    };
-//    var product = {
-//      "form": {"code": "Tablet"},
-//      "dosageUnit": {"code": "mg"},
-//      "strength": "600", "code": "P999", "primaryName": "Antibiotics",
-//      "dosesPerDispensingUnit": 3, "packSize": 10, "roundToZero": "false",
-//      "packRoundingThreshold": "true", "dispensingUnit": "Strip", "fullSupply": false};
-//
-//    var programProduct = {"dosesPerMonth": 5, "currentPrice": 8, "product": product};
-//
-//    scope.facilityApprovedProduct = {"programProduct": programProduct, "maxMonthsOfStock": 3};
-//    scope.newNonFullSupply = {"quantityRequested": 20, "reasonForRequestedQuantity": "Bad Weather"};
-//    spyOn(scope, 'fillPagedGridData');
-//    scope.addNonFullSupplyLineItemToRnr();
-//
-//    expect(scope.$parent.rnr.nonFullSupplyLineItems[0].quantityRequested).toEqual(20);
-//    expect(scope.$parent.rnr.nonFullSupplyLineItems[0].reasonForRequestedQuantity).toEqual("Bad Weather");
-//    expect(scope.$parent.rnr.nonFullSupplyLineItems[0].cost).toEqual(16.00.toFixed(2));
-//    expect(scope.nonFullSupplyProductsToDisplay).toEqual(undefined);
-//    expect(scope.$parent.rnr.nonFullSupplyItemsSubmittedCost).toEqual(16.00.toFixed(2));
-//    expect(scope.fillPagedGridData).toHaveBeenCalled();
-//  });
+  it('should add non full supply products to the rnr non full supply line items when Done is clicked', function () {
+    var fillPacksToShip = function() {};
+    scope.fillPagedGridData = function() {};
+    scope.$parent.rnr = {"id": 1, "period": {}, "nonFullSupplyLineItems": [], "fillPacksToShip":fillPacksToShip};
+
+    scope.addedNonFullSupplyProducts = [{"code": "code2", "name": "Product2", "quantityRequested":20, "reasonForRequestedQuantity":"rain", "isNonNumeric":false}];
+    scope.addNonFullSupplyLineItemsToRnr();
+
+    expect(scope.$parent.rnr.nonFullSupplyLineItems.length).toEqual(1);
+    expect(scope.$parent.rnr.nonFullSupplyLineItems[0].quantityRequested).toEqual(20);
+    expect(scope.$parent.rnr.nonFullSupplyLineItems[0].reasonForRequestedQuantity).toEqual("rain");
+    expect(scope.message).toEqual("Products added successfully");
+    expect(scope.nonFullSupplyProductsModal).toBeFalsy();
+  });
+
+  it('should not add non full supply products to the rnr non full supply line items if any product is not valid', function () {
+    var fillPacksToShip = function() {};
+    scope.fillPagedGridData = function() {};
+    scope.nonFullSupplyProductsModal = true;
+    scope.$parent.rnr = {"id": 1, "period": {}, "nonFullSupplyLineItems": [], "fillPacksToShip":fillPacksToShip};
+
+    scope.addedNonFullSupplyProducts = [{"code": "code2", "name": "Product2", "quantityRequested":"", "reasonForRequestedQuantity":"rain", "isNonNumeric":false}];
+
+    scope.addNonFullSupplyLineItemsToRnr();
+
+    expect(scope.$parent.rnr.nonFullSupplyLineItems.length).toEqual(0);
+    expect(scope.nonFullSupplyProductsModal).toBeTruthy();
+
+    scope.addedNonFullSupplyProducts = [{"code": "code2", "name": "Product2", "quantityRequested":"3", "reasonForRequestedQuantity":"", "isNonNumeric":false}];
+
+    scope.addNonFullSupplyLineItemsToRnr();
+
+    expect(scope.$parent.rnr.nonFullSupplyLineItems.length).toEqual(0);
+    expect(scope.nonFullSupplyProductsModal).toBeTruthy();
+  });
 
   it('should disable add button if any of the required fields have not been set or have errors', function () {
     expect(scope.shouldDisableAddButton()).toEqual(true);
@@ -114,74 +120,59 @@ describe('RequisitionNonFullSupplyController', function () {
   });
 
   it('should filter non full supply products based on selected category and previously added products(modal window) and products added to the non-full supply tab', function () {
-    var category1 = {"id": 1, "name": "cat1", "code": "cat1Code"};
-    var category2 = {"id": 2, "name": "cat2", "code": "cat2Code"};
-    var category3 = {"id": 3, "name": "cat3", "code": "cat3Code"};
-    categoryList = [category1, category2, category3];
+    scope.nonFullSupplyProductCategory = {name: "cat1"};
 
-    scope.nonFullSupplyProductCategory = {name:"cat1"};
-
-    var product1 = {"id": 1, "code": "product1", "category": category1};
-    var product2 = {"id": 2, "code": "product2", "category": category1};
-    var product3 = {"id": 3, "code": "product3", "category": category1};
-    var product4 = {"id": 4, "code": "product4", "category": category1};
-    var product5 = {"id": 5, "code": "product5", "category": category1};
-
-    var facilityApprovedProduct1 = {"programProduct": {"product": product1}};
-    var facilityApprovedProduct2 = {"programProduct": {"product": product2}};
-    var facilityApprovedProduct3 = {"programProduct": {"product": product3}};
-    var facilityApprovedProduct4 = {"programProduct": {"product": product4}};
-    var facilityApprovedProduct5 = {"programProduct": {"product": product5}};
-
-    scope.facilityApprovedProducts = [facilityApprovedProduct1, facilityApprovedProduct2, facilityApprovedProduct3, facilityApprovedProduct4, facilityApprovedProduct5];
-    scope.addedNonFullSupplyProducts =[{"productCode":"product1" }];
-    scope.rnr.nonFullSupplyLineItems = [{"id":5, "productCode":"product3"}];
+    scope.addedNonFullSupplyProducts = [
+      {"productCode": "product1" }
+    ];
+    scope.rnr.nonFullSupplyLineItems = [
+      {"id": 5, "productCode": "product3"}
+    ];
 
     scope.updateNonFullSupplyProductsToDisplay();
 
-    expect(scope.nonFullSupplyProductsToDisplay.length).toEqual(3);
-    expect(scope.nonFullSupplyProductsToDisplay[0].programProduct).toEqual(facilityApprovedProduct2.programProduct);
-    expect(scope.nonFullSupplyProductsToDisplay[1].programProduct).not.toEqual(facilityApprovedProduct1.programProduct);
-    expect(scope.nonFullSupplyProductsToDisplay[2].programProduct).not.toEqual(facilityApprovedProduct3.programProduct);
+    expect(scope.nonFullSupplyProductsToDisplay.length).toEqual(1);
+    expect(scope.nonFullSupplyProductsToDisplay[0].programProduct).toEqual(facilityApprovedProduct4.programProduct);
   });
 
-  it("Should add selected product to the list of products displayed in the addedNonFullSupplyProducts table",function(){
-    var category1 = {"id": 1, "name": "cat1", "code": "cat1Code"};
-    var product1 = {"id": 1, "code": "product1", "category": category1,"primaryName":"Product 1","form": {"code": "Tablet"},"dosageUnit": {"code": "mg"},"strength": "600", "code": "P999", "primaryName": "Antibiotics"};
-    scope.facilityApprovedProduct = {"programProduct": {"product": product1}};
+  it("Should add selected product to the list of non full supply products displayed on the modal", function () {
+    scope.facilityApprovedProduct = facilityApprovedProduct1;
     scope.newNonFullSupply = {"quantityRequested": 20, "reasonForRequestedQuantity": "Bad Weather"};
-    scope.addedNonFullSupplyProducts=[];
-    spyOn(scope,'updateNonFullSupplyProductsToDisplay');
-    var addedNonFullSupplyProductPrimaryName = scope.facilityApprovedProduct.programProduct.product.primaryName;
-    var addedNonFullSupplyProductCode = scope.facilityApprovedProduct.programProduct.product.code;
+    scope.addedNonFullSupplyProducts = [];
+    spyOn(scope, 'updateNonFullSupplyProductsToDisplay');
 
     scope.addNonFullSupplyProductsByCategory();
 
-    expect(scope.addedNonFullSupplyProducts[0].productCode).toEqual(addedNonFullSupplyProductCode);
-    expect(scope.addedNonFullSupplyProducts[0].productName).toEqual(addedNonFullSupplyProductPrimaryName);
+    expect(scope.addedNonFullSupplyProducts[0].productCode).toEqual("product1");
+    expect(scope.addedNonFullSupplyProducts[0].productName).toEqual("Product 1");
     expect(scope.addedNonFullSupplyProducts[0].quantityRequested).toEqual(20);
     expect(scope.addedNonFullSupplyProducts[0].reasonForRequestedQuantity).toEqual("Bad Weather");
+    expect(scope.addedNonFullSupplyProducts[0].maxMonthsOfStock).toEqual(3);
+    expect(scope.addedNonFullSupplyProducts[0].dosesPerMonth).toEqual(3);
+    expect(scope.addedNonFullSupplyProducts[0].price).toEqual(4);
+    expect(scope.addedNonFullSupplyProducts[0].productCategory).toEqual("cat1Code");
+    expect(scope.addedNonFullSupplyProducts[0].totalLossesAndAdjustments).toEqual(0);
+    expect(scope.addedNonFullSupplyProducts[0].rnrId).toEqual("rnrId");
     expect(scope.updateNonFullSupplyProductsToDisplay).toHaveBeenCalled();
   });
 
-  it("Should delete the current non full supply line item when delete is clicked against the addedNonFullSupplyLineItem",function(){
-    scope.addedNonFullSupplyProducts =[{"code":"code1" , "name":"Product1"}];
-    spyOn(scope,'updateNonFullSupplyProductsToDisplay');
+  it("Should delete non full supply product when delete is clicked against that added non full supply product", function () {
+    scope.addedNonFullSupplyProducts = [
+      {"code": "code1", "name": "Product1"}
+    ];
+    spyOn(scope, 'updateNonFullSupplyProductsToDisplay');
 
     scope.deleteCurrentNonFullSupplyLineItem(0);
 
-    expect(scope.addedNonFullSupplyProducts.length == 0).toBeTruthy();
+    expect(scope.addedNonFullSupplyProducts.length).toEqual(0);
     expect(scope.updateNonFullSupplyProductsToDisplay).toHaveBeenCalled();
 
-    var nonFullSupplyLineItem1 = {"code":"code2" , "name":"Product2"};
-    var nonFullSupplyLineItem2 = {"code":"code3" , "name":"Product3"};
-    scope.addedNonFullSupplyProducts.push(nonFullSupplyLineItem1);
-    scope.addedNonFullSupplyProducts.push(nonFullSupplyLineItem2);
+    scope.addedNonFullSupplyProducts = [{"code": "code2", "name": "Product2"}, {"code": "code3", "name": "Product3"}];
 
     scope.deleteCurrentNonFullSupplyLineItem(1);
 
-    expect(scope.addedNonFullSupplyProducts.length == 1).toBeTruthy();
-    expect(scope.addedNonFullSupplyProducts[0]==nonFullSupplyLineItem1).toBeTruthy();
+    expect(scope.addedNonFullSupplyProducts.length).toEqual(1);
+    expect(scope.addedNonFullSupplyProducts[0].code).toEqual("code2");
   });
 
 });
