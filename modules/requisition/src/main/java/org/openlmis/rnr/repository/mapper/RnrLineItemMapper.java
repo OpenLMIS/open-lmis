@@ -1,6 +1,7 @@
 package org.openlmis.rnr.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.springframework.stereotype.Repository;
 
@@ -74,4 +75,7 @@ public interface RnrLineItemMapper {
 
   @Delete("DELETE FROM requisition_line_items WHERE rnrId = #{rnrId} AND fullSupply = false")
   void deleteAllNonFullSupplyForRequisition(Integer rnrId);
+
+  @Select("SELECT COUNT(DISTINCT productCategory) FROM requisition_line_items WHERE rnrId=#{rnr.id} AND fullSupply = #{isFullSupply}")
+  public Integer getCategoryCount(@Param(value = "rnr")Rnr rnr, @Param(value = "isFullSupply")Boolean isFullSupply);
 }

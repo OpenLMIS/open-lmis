@@ -325,6 +325,8 @@ public class RequisitionControllerTest {
     rnr.setProgram(program);
     ArrayList<RnrColumn> rnrTemplate = new ArrayList<>();
     when(requisitionService.getFullRequisitionById(rnrId)).thenReturn(rnr);
+    when(requisitionService.getCategoryCount(rnr, true)).thenReturn(10);
+    when(requisitionService.getCategoryCount(rnr, false)).thenReturn(5);
     when(rnrTemplateService.fetchColumnsForRequisition(programId)).thenReturn(rnrTemplate);
 
     ModelAndView modelAndView = controller.printRequisition(rnrId);

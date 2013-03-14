@@ -37,7 +37,7 @@ public class PrintRnrLineItem {
   private void calculatePacksToShip() {
     try {
       rnrLineItem.calculatePacksToShip();
-    } catch (Exception e) {
+    } catch (NullPointerException e) {
       rnrLineItem.setPacksToShip(null);
     }
   }
@@ -45,7 +45,7 @@ public class PrintRnrLineItem {
   private void calculateOrderQuantity() {
     try {
       rnrLineItem.calculateOrderQuantity();
-    } catch (Exception e) {
+    } catch (NullPointerException e) {
       rnrLineItem.setCalculatedOrderQuantity(null);
     }
   }
@@ -53,7 +53,7 @@ public class PrintRnrLineItem {
   private void calculateQuantityDispensed() {
     try {
       rnrLineItem.calculateQuantityDispensed();
-    } catch (Exception e) {
+    } catch (NullPointerException e) {
       rnrLineItem.setQuantityDispensed(null);
     }
   }
@@ -61,7 +61,7 @@ public class PrintRnrLineItem {
   private void calculateStockInHand() {
     try {
       rnrLineItem.calculateStockInHand();
-    } catch (Exception e) {
+    } catch (NullPointerException e) {
       rnrLineItem.setStockInHand(null);
     }
   }
@@ -69,7 +69,7 @@ public class PrintRnrLineItem {
   private void calculateMaxStockQuantity() {
     try {
       rnrLineItem.calculateMaxStockQuantity();
-    } catch (Exception e) {
+    } catch (NullPointerException e) {
       rnrLineItem.setMaxStockQuantity(null);
     }
   }
@@ -77,7 +77,7 @@ public class PrintRnrLineItem {
   private void calculateAmc(ProcessingPeriod period) {
     try {
       rnrLineItem.calculateAmc(period);
-    } catch (Exception e) {
+    } catch (NullPointerException e) {
       rnrLineItem.setAmc(null);
     }
   }
@@ -85,7 +85,7 @@ public class PrintRnrLineItem {
   private void calculateNormalizedConsumption() {
     try {
       rnrLineItem.calculateNormalizedConsumption();
-    } catch (Exception e) {
+    } catch (NullPointerException e) {
       rnrLineItem.setNormalizedConsumption(null);
     }
   }
@@ -93,7 +93,7 @@ public class PrintRnrLineItem {
   private void calculateLossesAndAdjustments() {
     try {
       rnrLineItem.calculateTotalLossesAndAdjustments();
-    } catch (Exception e) {
+    } catch (NullPointerException e) {
       rnrLineItem.setTotalLossesAndAdjustments(null);
     }
   }

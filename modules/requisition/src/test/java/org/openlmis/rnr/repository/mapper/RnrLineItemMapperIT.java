@@ -59,17 +59,20 @@ public class RnrLineItemMapperIT {
   private ProcessingPeriodMapper processingPeriodMapper;
   @Autowired
   private ProcessingScheduleMapper processingScheduleMapper;
+  @Autowired
+  private ProductCategoryMapper categoryMapper;
 
   private FacilityApprovedProduct facilityApprovedProduct;
   private Facility facility;
   private Rnr rnr;
+  Program program;
 
   @Before
   public void setUp() {
     Product product = make(a(ProductBuilder.defaultProduct));
     productMapper.insert(product);
 
-    Program program = make(a(ProgramBuilder.defaultProgram));
+    program = make(a(ProgramBuilder.defaultProgram));
     programMapper.insert(program);
 
     ProgramProduct programProduct = new ProgramProduct(program, product, 30, true, new Money("12.5000"));
@@ -215,5 +218,33 @@ public class RnrLineItemMapperIT {
     assertThat(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()).size(), is(1));
     assertThat(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()).get(0).getProductCode(), is(lineItem2.getProductCode()));
     assertThat(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()).get(0).getProductCategory(), is(lineItem2.getProductCategory()));
+  }
+
+
+  @Test
+  public void shouldReturnCategoryCountForFullSupplyLineItems() {
+    requisitionMapper.insert(rnr);
+    boolean fullSupplyFlag = true;
+    for (int index = 1; index <= 10; index++) {
+      String productCode = "P" + index;
+      ProductCategory category = new ProductCategory();
+      category.setCode("C" + index);
+      category.setName("Category " + index);
+      category.setDisplayOrder(1);
+      categoryMapper.insert(category);
+      Product product = make(a(ProductBuilder.defaultProduct, with(ProductBuilder.code, productCode), with(ProductBuilder.fullSupply, fullSupplyFlag)));
+      product.setCategory(category);
+      productMapper.insert(product);
+
+      ProgramProduct programProduct = new ProgramProduct(program, product, 30, true, new Money("12.5000"));
+      programProductMapper.insert(programProduct);
+
+      FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct("warehouse", programProduct, 3);
+      facilityApprovedProductMapper.insert(facilityApprovedProduct);
+
+      RnrLineItem item = new RnrLineItem(rnr.getId(), facilityApprovedProduct, 1);
+      rnrLineItemMapper.insert(item);
+    }
+    assertThat(rnrLineItemMapper.getCategoryCount(rnr, fullSupplyFlag), is(10));
   }
 }

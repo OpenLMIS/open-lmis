@@ -351,10 +351,16 @@ public class RequisitionService {
   }
 
 
+
+
   private OrderBatch createOrderBatch(Rnr requisition, Integer userId) {
     OrderBatch orderBatch = new OrderBatch(requisition.getSupplyingFacility(), userId);
     requisitionRepository.createOrderBatch(orderBatch);
     return orderBatch;
+  }
+
+  public Integer getCategoryCount(Rnr requisition, boolean fullSupply) {
+    return requisitionRepository.getCategoryCount(requisition, fullSupply);
   }
 }
 

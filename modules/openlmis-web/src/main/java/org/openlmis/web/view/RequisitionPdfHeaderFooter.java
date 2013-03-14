@@ -6,55 +6,96 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.rnr.domain.Rnr;
 
+import java.util.Date;
+
+import static org.openlmis.web.view.RequisitionPDFView.H1_FONT;
+import static org.openlmis.web.view.RequisitionPDFView.TEXT_FONT;
+
 public class RequisitionPdfHeaderFooter extends PdfPageEventHelper {
-  public static final Font HEADING_FONT = FontFactory.getFont(FontFactory.TIMES, 30, Font.BOLD, BaseColor.BLACK);
-  public static final Font TEXT_FONT = FontFactory.getFont(FontFactory.TIMES, 20, Font.NORMAL, BaseColor.BLACK);
+
   public static final String NEWLINE = "\n\n";
   public static final String TAB = "  ";
+  public static final int PAGE_TEXT_WIDTH = 100;
+  public static final int PAGE_TEXT_HEIGHT = 100;
+  protected BaseFont baseFont;
   private Rnr requisition;
-  private PdfTemplate total;
+  private PdfTemplate totalPages;
+  private float footerTextSize = 10f;
+  private Date currentDate;
 
   public RequisitionPdfHeaderFooter(Rnr rnr) {
+    super();
     this.requisition = rnr;
+    this.currentDate = new Date();
+    try {
+      baseFont = BaseFont.createFont();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Override
   public void onOpenDocument(PdfWriter writer, Document document) {
     try {
       document.add(getRequisitionHeader());
-      total = writer.getDirectContent().createTemplate(30, 16);
+      totalPages = writer.getDirectContent().createTemplate(PAGE_TEXT_WIDTH, PAGE_TEXT_HEIGHT);
     } catch (DocumentException e) {
       throw new RuntimeException(e);
     }
   }
 
   @Override
-  public void onStartPage(PdfWriter writer, Document document) {
+  public void onEndPage(PdfWriter writer, Document document) {
+    addPageNumbers(writer, document);
+    addDate(writer, document);
   }
 
-  @Override
-  public void onEndPage(PdfWriter writer, Document document) {
-    PdfPTable table = new PdfPTable(3);
-    try {
-      table.setWidths(new int[]{24, 24, 2});
-      table.setTotalWidth(527);
-      table.setLockedWidth(true);
-      table.getDefaultCell().setFixedHeight(20);
-      table.getDefaultCell().setBorder(Rectangle.BOTTOM);
-      table.addCell("HEADER");
-      table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-      PdfPCell cell = new PdfPCell(Image.getInstance(total));
-      cell.setBorder(Rectangle.BOTTOM);
-      table.addCell(cell);
-      table.writeSelectedRows(0, -1, 34, 803, writer.getDirectContent());
-    } catch (DocumentException de) {
-      throw new ExceptionConverter(de);
-    }
+  private void addDate(PdfWriter writer, Document document) {
+    PdfContentByte contentByte = writer.getDirectContent();
+    contentByte.saveState();
+    String text = currentDate.toString();
+
+    float textBase = document.bottom();
+    float textSize = baseFont.getWidthPoint(text, footerTextSize);
+
+    contentByte.beginText();
+    contentByte.setFontAndSize(baseFont, footerTextSize);
+
+    float adjust = baseFont.getWidthPoint("0", footerTextSize);
+    contentByte.setTextMatrix(document.left() + textSize + adjust, textBase);
+    contentByte.showText(text);
+    contentByte.endText();
+
+    contentByte.restoreState();
+  }
+
+  private void addPageNumbers(PdfWriter writer, Document document) {
+    PdfContentByte contentByte = writer.getDirectContent();
+    contentByte.saveState();
+    String text = String.format("Page %s of ", writer.getPageNumber());
+
+    float textBase = document.bottom();
+    float textSize = baseFont.getWidthPoint(text, footerTextSize);
+
+    contentByte.beginText();
+    contentByte.setFontAndSize(baseFont, footerTextSize);
+
+    float adjust = baseFont.getWidthPoint("0", footerTextSize);
+    contentByte.setTextMatrix(document.right() - textSize - adjust, textBase);
+    contentByte.showText(text);
+    contentByte.endText();
+    contentByte.addTemplate(totalPages, document.right() - adjust, textBase);
+
+    contentByte.restoreState();
   }
 
   @Override
   public void onCloseDocument(PdfWriter writer, Document document) {
-    ColumnText.showTextAligned(total, Element.ALIGN_LEFT, new Phrase(String.valueOf(writer.getPageNumber()-1)), 2, 2, 0);
+    totalPages.beginText();
+    totalPages.setFontAndSize(baseFont, footerTextSize);
+    totalPages.setTextMatrix(0, 0);
+    totalPages.showText(String.valueOf(writer.getPageNumber() - 1));
+    totalPages.endText();
   }
 
   private Paragraph getRequisitionHeader() {
@@ -69,7 +110,7 @@ public class RequisitionPdfHeaderFooter extends PdfPageEventHelper {
   }
 
   private void addHeading(Paragraph paragraph) {
-    Chunk chunk = new Chunk("Report and Requisition for:", HEADING_FONT);
+    Chunk chunk = new Chunk("Report and Requisition for:", H1_FONT);
     paragraph.add(chunk);
   }
 

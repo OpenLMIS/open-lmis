@@ -910,6 +910,17 @@ public class RequisitionServiceTest {
     verify(requisitionRepository).getByStatus(ORDERED);
   }
 
+  @Test
+  public void shouldGetCategoryCount(){
+    Rnr requisition = new Rnr();
+    boolean fullSupply = true;
+    when(requisitionRepository.getCategoryCount(requisition , fullSupply)).thenReturn(10);
+    Integer categoryCount = requisitionService.getCategoryCount(requisition, fullSupply);
+    assertThat(categoryCount, is(10));
+    verify(requisitionRepository).getCategoryCount(requisition, fullSupply);
+
+  }
+
   private Rnr getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(Rnr rnr, Right right) {
     Rnr savedRnr = spy(rnr);
     when(requisitionPermissionService.hasPermission(USER_ID, savedRnr, right)).thenReturn(true);

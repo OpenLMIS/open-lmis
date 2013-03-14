@@ -121,5 +121,9 @@ public class RequisitionRepository {
   public List<Rnr> getByStatus(RnrStatus status) {
     return requisitionMapper.getByStatus(status);
   }
+
+  public Integer getCategoryCount(Rnr requisition, boolean fullSupply) {
+    return rnrLineItemMapper.getCategoryCount(requisition, fullSupply);
+  }
 }
 

@@ -196,7 +196,7 @@ public class RequisitionRepositoryTest {
     when(requisitionMapper.getOrderBatchById(1)).thenReturn(orderBatch);
     OrderBatch orderBatchReturned = requisitionRepository.getOrderBatchById(1);
     verify(requisitionMapper).getOrderBatchById(1);
-    assertThat(orderBatchReturned,is(orderBatch));
+    assertThat(orderBatchReturned, is(orderBatch));
   }
 
   @Test
@@ -208,5 +208,18 @@ public class RequisitionRepositoryTest {
 
     assertThat(rnrs, is(expectedRequisitions));
     verify(requisitionMapper).getByStatus(ORDERED);
+  }
+
+  @Test
+  public void shouldGetCategoryCount(){
+
+    boolean fullSupply = true;
+    when(rnrLineItemMapper.getCategoryCount(rnr, fullSupply)).thenReturn(10);
+
+    Integer categoryCount = requisitionRepository.getCategoryCount(rnr, fullSupply);
+
+    assertThat(categoryCount, is(10));
+    verify(rnrLineItemMapper).getCategoryCount(rnr, fullSupply);
+
   }
 }
