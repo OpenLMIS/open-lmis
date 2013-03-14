@@ -4,6 +4,25 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
   this.rnrStatus = rnrStatus;
   this.programRnrColumnList = programRnrColumnList;
 
+  RnrLineItem.prototype.initLossesAndAdjustments = function() {
+    var tempLossesAndAdjustments = [];
+
+    _.each(this.lossesAndAdjustments, function (lossAndAdjustmentJson) {
+      tempLossesAndAdjustments.push(new LossAndAdjustment(lossAndAdjustmentJson));
+    });
+
+    this.lossesAndAdjustments = tempLossesAndAdjustments;
+  }
+
+  RnrLineItem.prototype.init = function(){
+    this.initLossesAndAdjustments();
+    if (this.previousNormalizedConsumptions == undefined || this.previousNormalizedConsumptions == null)
+      this.previousNormalizedConsumptions = [];
+
+    this.reEvaluateTotalLossesAndAdjustments();
+    this.fillConsumptionOrStockInHand();
+  }
+
   RnrLineItem.prototype.fillConsumptionOrStockInHand = function () {
     this.beginningBalance = utils.getValueFor(this.beginningBalance);
     this.quantityReceived = utils.getValueFor(this.quantityReceived);
@@ -19,7 +38,7 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
   RnrLineItem.prototype.fillPacksToShip = function () {
     this.quantityApproved = utils.getValueFor(this.quantityApproved);
     var orderQuantity = (rnrStatus != 'IN_APPROVAL') ? (isUndefined(this.quantityRequested) ?
-      this.calculatedOrderQuantity : this.quantityRequested) : this.quantityApproved;
+        this.calculatedOrderQuantity : this.quantityRequested) : this.quantityApproved;
     this.calculatePacksToShip(orderQuantity);
     this.calculateCost();
   };
@@ -52,8 +71,8 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
       var totalLossesAndAdjustments = utils.parseIntWithBaseTen(this.totalLossesAndAdjustments);
       var stockInHand = utils.parseIntWithBaseTen(this.stockInHand);
       return (utils.isNumber(quantityDispensed) && utils.isNumber(beginningBalance) && utils.isNumber(quantityReceived) &&
-        utils.isNumber(totalLossesAndAdjustments) && utils.isNumber(stockInHand)) ?
-        quantityDispensed != (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand) : null;
+          utils.isNumber(totalLossesAndAdjustments) && utils.isNumber(stockInHand)) ?
+          quantityDispensed != (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand) : null;
     }
     return false;
   };
@@ -68,13 +87,13 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
 
   RnrLineItem.prototype.removeLossAndAdjustment = function (lossAndAdjustmentToDelete) {
     this.lossesAndAdjustments = $.grep(this.lossesAndAdjustments, function (lossAndAdjustmentObj) {
-      return lossAndAdjustmentObj != lossAndAdjustmentToDelete;
+      return !(lossAndAdjustmentToDelete.equals(lossAndAdjustmentObj));
     });
     this.updateTotalLossesAndAdjustment(lossAndAdjustmentToDelete.quantity, !lossAndAdjustmentToDelete.type.additive);
   };
 
   RnrLineItem.prototype.addLossAndAdjustment = function (newLossAndAdjustment) {
-    var lossAndAdjustment = {"type":newLossAndAdjustment.type, "quantity":newLossAndAdjustment.quantity};
+    var lossAndAdjustment = new LossAndAdjustment(newLossAndAdjustment);
 
     newLossAndAdjustment.type = undefined;
     newLossAndAdjustment.quantity = undefined;
@@ -145,8 +164,8 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     this.dosesPerMonth = utils.parseIntWithBaseTen(this.dosesPerMonth);
     var g = utils.parseIntWithBaseTen(this.dosesPerDispensingUnit);
     var consumptionAdjustedWithStockOutDays = ((numberOfMonthsInPeriod * 30) - this.stockOutDays) == 0 ?
-      this.quantityDispensed :
-      (this.quantityDispensed * ((numberOfMonthsInPeriod * 30) / ((numberOfMonthsInPeriod * 30) - this.stockOutDays)));
+        this.quantityDispensed :
+        (this.quantityDispensed * ((numberOfMonthsInPeriod * 30) / ((numberOfMonthsInPeriod * 30) - this.stockOutDays)));
     var adjustmentForNewPatients = (this.newPatientCount * Math.ceil(this.dosesPerMonth / g) ) * numberOfMonthsInPeriod;
     this.normalizedConsumption = Math.round(consumptionAdjustedWithStockOutDays + adjustmentForNewPatients);
   };
@@ -163,9 +182,9 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     var total = 0;
     this.previousNormalizedConsumptions.forEach(function (normalizedConsumption) {
       total += normalizedConsumption;
-    })
+    });
     return total;
-  }
+  };
 
   RnrLineItem.prototype.calculateMaxStockQuantity = function () {
     if (!utils.isNumber(this.amc)) {
@@ -263,19 +282,10 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
   RnrLineItem.prototype.validateLossesAndAdjustments = function () {
     if (isUndefined(this.lossesAndAdjustments)) return true;
 
-    for (var index in this.lossesAndAdjustments) {
-      if (isUndefined(this.lossesAndAdjustments[index].quantity)) {
-        return false;
-      }
-    }
-    return true;
+    return !(_.some(this.lossesAndAdjustments, function (lossAndAdjustment) {
+      return !lossAndAdjustment.isQuantityValid();
+    }));
   };
 
-  if (this.previousNormalizedConsumptions == undefined || this.previousNormalizedConsumptions == null)
-    this.previousNormalizedConsumptions = [];
-
-  if (this.lossesAndAdjustments == undefined) this.lossesAndAdjustments = [];
-
-  this.reEvaluateTotalLossesAndAdjustments();
-  this.fillConsumptionOrStockInHand();
+  this.init();
 };

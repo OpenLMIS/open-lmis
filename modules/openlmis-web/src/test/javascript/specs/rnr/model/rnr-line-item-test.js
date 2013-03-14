@@ -32,7 +32,6 @@ describe('RnrLineItem', function () {
     });
 
     it('should calculate consumption', function () {
-
       var lineItem = {"beginningBalance":5, "quantityReceived":20, "quantityDispensed":null, "stockInHand":10};
       var rnrLineItem = new RnrLineItem(lineItem, rnr, programRnrColumnList);
       rnrLineItem.totalLossesAndAdjustments = 5;
@@ -442,6 +441,19 @@ describe('RnrLineItem', function () {
   });
 
   describe('Losses and adjustment for line item', function () {
+    it('should create losses and adjustment object out of losses and adjustment json data when RnrLineItem Is Created', function(){
+      var lossAndAdjustment1 = {"type":{"name":"Loss1", "additive":true}, "quantity":45};
+      var lossAndAdjustment2 = {"type":{"name":"Adjust1", "additive":false}, "quantity":55};
+      var lineItem = {"id":1, "lossesAndAdjustments":[lossAndAdjustment1, lossAndAdjustment2]};
+
+      var rnrLineItem = new RnrLineItem(lineItem);
+
+      expect(rnrLineItem.lossesAndAdjustments.length).toEqual(2);
+
+      expect("isQuantityValid" in rnrLineItem.lossesAndAdjustments[0]).toBeTruthy();
+      expect("isQuantityValid" in rnrLineItem.lossesAndAdjustments[1]).toBeTruthy();
+    });
+
     it("should re evaluate total losses and adjustments for line item", function () {
       var rnr = new Object();
       var programRnrColumnList = new Object();
@@ -462,7 +474,7 @@ describe('RnrLineItem', function () {
       var rnr = new Object();
       var programRnrColumnList = new Object();
       var lossAndAdjustment = {"type":{"name":"CLINIC_RETURN", "additive":true}, "quantity":45};
-      var lineItem = {"id":"1", "totalLossesAndAdjustments":45, lossesAndAdjustments:[lossAndAdjustment]};
+      var lineItem = {"id":"1", "totalLossesAndAdjustments":45, lossesAndAdjustments:[new LossAndAdjustment(lossAndAdjustment)]};
       var rnrLineItem = new RnrLineItem({}, rnr, programRnrColumnList);
       jQuery.extend(rnrLineItem, lineItem);
 
@@ -478,7 +490,7 @@ describe('RnrLineItem', function () {
       var rnr = new Object();
       var programRnrColumnList = new Object();
       var lossAndAdjustment = {"type":{"name":"CLINIC_RETURN", "additive":true}, "quantity":45};
-      var expectedLossAndAdjustment = {"type":{"name":"CLINIC_RETURN", "additive":true}, "quantity":45};
+      var expectedLossAndAdjustment = new LossAndAdjustment({"type":{"name":"CLINIC_RETURN", "additive":true}, "quantity":45});
       var lineItem = {"id":"1", "totalLossesAndAdjustments":0, lossesAndAdjustments:[]};
       var rnrLineItem = new RnrLineItem({}, rnr, programRnrColumnList);
       jQuery.extend(rnrLineItem, lineItem);
@@ -488,6 +500,7 @@ describe('RnrLineItem', function () {
 
       expect(rnrLineItem.updateTotalLossesAndAdjustment).toHaveBeenCalledWith(45, true);
       expect(rnrLineItem.lossesAndAdjustments).toEqual([expectedLossAndAdjustment]);
+      expect("isQuantityValid" in rnrLineItem.lossesAndAdjustments[0]).toBeTruthy();
     });
 
     it('should update total losses and adjustments and add additive lossAndAdjustment', function () {
@@ -526,27 +539,33 @@ describe('RnrLineItem', function () {
       expect(rnrLineItem.validateLossesAndAdjustments()).toBeTruthy();
     });
 
-    it('should return false if any loss and adjustment does not have quantity specified',function(){
+    it('should return false if any loss and adjustment is not valid',function(){
       var rnr = new Object();
       var programRnrColumnList = new Object();
       var lossAndAdjustment1 = {"type":{"name":"LOSS1", "additive":true}, "quantity":45};
-      var lossAndAdjustment2 = {"type":{"name":"LOSS2", "additive":true}, "quantity":' '};
-      var lossAndAdjustment3 = {"type":{"name":"LOSS3", "additive":true}, "quantity":45};
+      var lossAndAdjustment2 = {"type":{"name":"LOSS2", "additive":true}, "quantity":89};
 
-      var lineItem = {"id":"1", lossesAndAdjustments:[lossAndAdjustment1, lossAndAdjustment2, lossAndAdjustment3]};
+      var lineItem = {"id":"1", lossesAndAdjustments:[lossAndAdjustment1, lossAndAdjustment2]};
       var rnrLineItem = new RnrLineItem(lineItem, rnr, programRnrColumnList);
+
+      spyOn(rnrLineItem.lossesAndAdjustments[0], "isQuantityValid").andReturn(true);
+      spyOn(rnrLineItem.lossesAndAdjustments[1], "isQuantityValid").andReturn(false);
+
       expect(rnrLineItem.validateLossesAndAdjustments()).toBeFalsy();
     });
 
-    it('should return true if all losses and adjustments have quantity specified',function(){
+    it('should return true if all losses and adjustments are valid',function(){
       var rnr = new Object();
       var programRnrColumnList = new Object();
       var lossAndAdjustment1 = {"type":{"name":"LOSS1", "additive":true}, "quantity":45};
-      var lossAndAdjustment2 = {"type":{"name":"LOSS2", "additive":true}, "quantity":200};
-      var lossAndAdjustment3 = {"type":{"name":"LOSS3", "additive":true}, "quantity":45};
+      var lossAndAdjustment2 = {"type":{"name":"LOSS2", "additive":true}, "quantity":89};
 
-      var lineItem = {"id":"1", lossesAndAdjustments:[lossAndAdjustment1, lossAndAdjustment2, lossAndAdjustment3]};
+      var lineItem = {"id":"1", lossesAndAdjustments:[lossAndAdjustment1, lossAndAdjustment2]};
       var rnrLineItem = new RnrLineItem(lineItem, rnr, programRnrColumnList);
+
+      spyOn(rnrLineItem.lossesAndAdjustments[0], "isQuantityValid").andReturn(true);
+      spyOn(rnrLineItem.lossesAndAdjustments[1], "isQuantityValid").andReturn(true);
+
       expect(rnrLineItem.validateLossesAndAdjustments()).toBeTruthy();
     });
 

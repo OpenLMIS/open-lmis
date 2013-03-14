@@ -1,22 +1,7 @@
 var Rnr = function (rnr, programRnrColumns) {
   $.extend(true, this, rnr);
+  this.programRnrColumns = programRnrColumns;
   var thisRnr = this;
-
-  Rnr.prototype.init = function () {
-    function prepareLineItems(lineItems) {
-      var lineItemsJson = lineItems;
-      lineItems = [];
-      $(lineItemsJson).each(function (i, lineItem) {
-        lineItems.push(new RnrLineItem(lineItem, thisRnr.period.numberOfMonths, programRnrColumns, thisRnr.status))
-      });
-
-      return lineItems;
-    }
-
-    this.fullSupplyLineItems = prepareLineItems(this.fullSupplyLineItems);
-    this.nonFullSupplyLineItems = prepareLineItems(this.nonFullSupplyLineItems);
-    this.programRnrColumnList = programRnrColumns;
-  };
 
   var getInvalidLineItemIndexes = function (lineItems) {
     var errorLineItems = [];
@@ -164,7 +149,24 @@ var Rnr = function (rnr, programRnrColumns) {
     this.fillCost(rnrLineItem.fullSupply);
   };
 
+  Rnr.prototype.init = function () {
+    function prepareLineItems(lineItems) {
+      var lineItemsJson = lineItems;
+      lineItems = [];
+      $(lineItemsJson).each(function (i, lineItem) {
+        lineItems.push(new RnrLineItem(lineItem, thisRnr.period.numberOfMonths, programRnrColumns, thisRnr.status))
+      });
+
+      return lineItems;
+    }
+
+    this.fullSupplyLineItems = prepareLineItems(this.fullSupplyLineItems);
+    this.nonFullSupplyLineItems = prepareLineItems(this.nonFullSupplyLineItems);
+    this.programRnrColumnList = programRnrColumns;
+
+    this.calculateFullSupplyItemsSubmittedCost();
+    this.calculateNonFullSupplyItemsSubmittedCost();
+  };
+
   this.init();
-  this.calculateFullSupplyItemsSubmittedCost();
-  this.calculateNonFullSupplyItemsSubmittedCost();
 };
