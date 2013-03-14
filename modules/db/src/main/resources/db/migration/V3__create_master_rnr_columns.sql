@@ -1,6 +1,6 @@
 Drop TABLE IF EXISTS master_rnr_columns;
 CREATE TABLE master_rnr_columns (
-    id serial PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name varchar(200) NOT NULL UNIQUE,
     position integer  NOT NULL,
     source VARCHAR(1) NOT NULL,

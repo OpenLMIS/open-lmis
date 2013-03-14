@@ -1,20 +1,20 @@
 delete from product_forms;
-INSERT INTO product_forms(id, code, displayOrder) VALUES
-(1,'Tablet',1),
-(2,'Capsule',2),
-(3,'Bottle',3),
-(4,'Vial',4),
-(5,'Ampule',5),
-(6,'Drops',6),
-(7,'Powder',7),
-(8,'Each',8),
-(9,'Injectable',9),
-(10,'Tube',10),
-(11,'Solution',11),
-(12,'Inhaler',12),
-(13,'Patch',13),
-(14,'Implant',14),
-(15,'Sachet',15),
-(16,'Device',16),
-(17,'Other',17);
+INSERT INTO product_forms(code, displayOrder) VALUES
+('Tablet',1),
+('Capsule',2),
+('Bottle',3),
+('Vial',4),
+('Ampule',5),
+('Drops',6),
+('Powder',7),
+('Each',8),
+('Injectable',9),
+('Tube',10),
+('Solution',11),
+('Inhaler',12),
+('Patch',13),
+('Implant',14),
+('Sachet',15),
+('Device',16),
+('Other',17);
 

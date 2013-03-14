@@ -1,6 +1,7 @@
 delete from geographic_levels;
 INSERT INTO geographic_levels
-(id, code, name) VALUES
-(1, 'state', 'State'),
-(2, 'city', 'City'),
-(3, 'district', 'District');
+(code, name, level) VALUES
+('country', 'Country', 1),
+('state', 'State', 2),
+('district', 'District', 3),
+('city', 'City', 4);
