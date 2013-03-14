@@ -38,7 +38,7 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
   RnrLineItem.prototype.fillPacksToShip = function () {
     this.quantityApproved = utils.getValueFor(this.quantityApproved);
     var orderQuantity = (rnrStatus != 'IN_APPROVAL') ? (isUndefined(this.quantityRequested) ?
-        this.calculatedOrderQuantity : this.quantityRequested) : this.quantityApproved;
+      this.calculatedOrderQuantity : this.quantityRequested) : this.quantityApproved;
     this.calculatePacksToShip(orderQuantity);
     this.calculateCost();
   };
@@ -71,8 +71,8 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
       var totalLossesAndAdjustments = utils.parseIntWithBaseTen(this.totalLossesAndAdjustments);
       var stockInHand = utils.parseIntWithBaseTen(this.stockInHand);
       return (utils.isNumber(quantityDispensed) && utils.isNumber(beginningBalance) && utils.isNumber(quantityReceived) &&
-          utils.isNumber(totalLossesAndAdjustments) && utils.isNumber(stockInHand)) ?
-          quantityDispensed != (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand) : null;
+        utils.isNumber(totalLossesAndAdjustments) && utils.isNumber(stockInHand)) ?
+        quantityDispensed != (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand) : null;
     }
     return false;
   };
@@ -164,8 +164,8 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     this.dosesPerMonth = utils.parseIntWithBaseTen(this.dosesPerMonth);
     var g = utils.parseIntWithBaseTen(this.dosesPerDispensingUnit);
     var consumptionAdjustedWithStockOutDays = ((numberOfMonthsInPeriod * 30) - this.stockOutDays) == 0 ?
-        this.quantityDispensed :
-        (this.quantityDispensed * ((numberOfMonthsInPeriod * 30) / ((numberOfMonthsInPeriod * 30) - this.stockOutDays)));
+      this.quantityDispensed :
+      (this.quantityDispensed * ((numberOfMonthsInPeriod * 30) / ((numberOfMonthsInPeriod * 30) - this.stockOutDays)));
     var adjustmentForNewPatients = (this.newPatientCount * Math.ceil(this.dosesPerMonth / g) ) * numberOfMonthsInPeriod;
     this.normalizedConsumption = Math.round(consumptionAdjustedWithStockOutDays + adjustmentForNewPatients);
   };
@@ -288,4 +288,15 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
   };
 
   this.init();
+  RnrLineItem.prototype.validateQuantityRequestedAndReason = function() {
+    return (isUndefined(this.quantityRequested) || isUndefined(this.reasonForRequestedQuantity));
+  };
+
+  if (this.previousNormalizedConsumptions == undefined || this.previousNormalizedConsumptions == null)
+    this.previousNormalizedConsumptions = [];
+
+  if (this.lossesAndAdjustments == undefined) this.lossesAndAdjustments = [];
+
+  this.reEvaluateTotalLossesAndAdjustments();
+  this.fillConsumptionOrStockInHand();
 };

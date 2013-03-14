@@ -13,20 +13,26 @@ function RequisitionNonFullSupplyController($scope, $rootScope) {
 
 
   $scope.addNonFullSupplyLineItemsToRnr = function () {
-    var rnrLineItemValid = true;
-    $rootScope.message = "";
+    var validNonFullSupplyLineItems = [];
+    var lineItem;
 
     $($scope.addedNonFullSupplyProducts).each(function (i, nonFullSupplyProduct) {
-      rnrLineItemValid = validateRnrLineItem(nonFullSupplyProduct);
-      if (!rnrLineItemValid) return;
+      lineItem = new RnrLineItem(nonFullSupplyProduct, $scope.rnr.period.numberOfMonths, $scope.programRnrColumnList, $scope.rnr.status);
+      if (lineItem.validateQuantityRequestedAndReason()) {
+        return false;
+      }
+      validNonFullSupplyLineItems.push(lineItem);
     });
 
-    if (!rnrLineItemValid) return;
+    if (lineItem.validateQuantityRequestedAndReason()) {
+      $scope.modalError = 'Please correct the highlighted fields before submitting';
+      return;
+    }
+    $scope.modalError = undefined;
 
-    $($scope.addedNonFullSupplyProducts).each(function (i, nonFullSupplyProduct) {
-      var lineItem = new RnrLineItem(nonFullSupplyProduct, $scope.rnr.period.numberOfMonths, $scope.programRnrColumnList, $scope.rnr.status);
-      $scope.rnr.nonFullSupplyLineItems.push(lineItem);
-      $scope.rnr.fillPacksToShip(lineItem);
+    $(validNonFullSupplyLineItems).each(function (i, rnrLineItem) {
+      $scope.rnr.nonFullSupplyLineItems.push(rnrLineItem);
+      $scope.rnr.fillPacksToShip(rnrLineItem);
     });
 
     $scope.fillPagedGridData();
@@ -128,9 +134,10 @@ function RequisitionNonFullSupplyController($scope, $rootScope) {
     $scope.newNonFullSupply.rnrId = $scope.$parent.rnr.id;
   }
 
-  function validateRnrLineItem(nonFullSupplyProduct) {
-    return (nonFullSupplyProduct.quantityRequested && nonFullSupplyProduct.reasonForRequestedQuantity && !nonFullSupplyProduct.isNonNumeric)
-  }
 
+  $scope.highlightRequiredFieldInModal = function (value) {
+    if (isUndefined(value)) return "required-error";
+    return null;
+  };
 }
 
