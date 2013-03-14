@@ -270,7 +270,7 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
   };
 
   RnrLineItem.prototype.validateForApproval = function () {
-    return this.quantityApproved ? true : false;
+    return isUndefined(this.quantityApproved) ? false : true;
   };
 
   RnrLineItem.prototype.valid = function () {
