@@ -4,14 +4,11 @@ package org.openlmis.functional;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.UiUtils.Unzip;
 import org.openlmis.pageobjects.*;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
