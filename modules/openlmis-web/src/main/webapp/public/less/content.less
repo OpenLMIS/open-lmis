@@ -969,6 +969,7 @@ table td.delete-button {
     width: 100%;
     max-height:1320px;
     min-height: 330px;
+    margin-top: 10px;
 }
 
 .roleGrid {
@@ -1303,11 +1304,18 @@ input[placeholder].placeholder{
       box-shadow: inset 0 0 2px white;
       padding: 3px 9px;
     }
+    &.errorpage  a {
+      background-color: red;
+      color: #ffffff;
+      border-color: rgb(221, 42, 42);
+    }
+
     &.active a {
       background-color: #60ACAF;
       color: #E1EDED;
       border-color: #419EA2;
     }
+
     &.disabled {
       a {
         color: #CCC;
@@ -1342,6 +1350,57 @@ input[placeholder].placeholder{
     input[type='text'] {
       margin-bottom: 0;
       width: 100%;
+    }
+  }
+}
+
+.rnr-page-errors {
+  background: #FFEBEB
+              url(../images/tab-error.png) no-repeat 8px center;
+  border: 1px solid #ff5656;
+  padding: 7px 30px;
+  margin-top: 10px;
+
+  .dropdown {
+    display: inline-block;
+  }
+
+  .dropdown-toggle {
+    color: #CA0000;
+    font-size: 0.8em;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    background: url(../images/errordownarrow.png) no-repeat right 8px;
+    padding-right: 18px;
+  }
+.open .dropdown-toggle {
+  background: url(../images/errordownarrow.png) no-repeat right -8px;
+}
+  .dropdown-menu {
+    border: 1px solid #ff5656;
+    box-shadow: none;
+    border-radius: 0;
+    width: 60px;
+    min-width: auto;
+    text-align: right;
+    left: auto;
+    right: 0;
+    padding: 0;
+    font-size: 0.8em;
+    background: rgba(255, 255, 255, 0.9);
+    li {
+      line-height: normal;
+
+      a {
+        padding: 3px 10px;
+        color: #CA0000;
+        font-weight: bold;
+        &:hover {
+          background: rgb(231, 66, 66);
+          color: #FFF;
+        }
+      }
     }
   }
 }

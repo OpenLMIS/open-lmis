@@ -8,8 +8,8 @@
   </ul>
 </div>
 
-<div id="pageErrors" class="dropdown rnr-page-errors" ng-show="shownErrorPages">
-  <a class="dropdown-toggle">
+<div id="pageErrors" class="rnr-page-errors" ng-show="shownErrorPages">
+  <div class="dropdown"><a class="dropdown-toggle">
     Errors found on
     <ng-pluralize count="shownErrorPages.length"
                   when="{ 1: '{} page',
@@ -18,11 +18,12 @@
     </ng-pluralize>
     |
   </a>
-  <ul class="dropdown-menu">
-    <li ng-repeat="page in shownErrorPages">
-      <a ng-click="goToPage(page, $event)">{{page}}</a>
-    </li>
-  </ul>
+    <ul class="dropdown-menu">
+      <li ng-repeat="page in shownErrorPages">
+        <a ng-click="goToPage(page, $event)">{{page}}</a>
+      </li>
+    </ul>
+  </div>
 </div>
 
 <form name="approvalForm" novalidate>

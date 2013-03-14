@@ -16,6 +16,11 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
 
   $scope.isDirty = false;
 
+  $scope.goToPage = function (page, event) {
+      angular.element(event.target).parents(".dropdown").click();
+      $location.search('page', page);
+    };
+
   function updateSupplyTypeForGrid() {
     $scope.showNonFullSupply = !!($routeParams.supplyType == 'non-full-supply');
   }

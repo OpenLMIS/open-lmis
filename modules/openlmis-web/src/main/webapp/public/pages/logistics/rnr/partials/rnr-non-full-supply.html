@@ -1,12 +1,14 @@
 <div ng-controller="RequisitionNonFullSupplyController" xmlns="http://www.w3.org/1999/html">
-  <div id="pageErrors" class="dropdown rnr-page-errors" ng-show="errorPages.nonFullSupply">
+  <div id="pageErrors" class="rnr-page-errors" ng-show="errorPages.nonFullSupply">
+    <div class="dropdown">
       <a class="dropdown-toggle">
         Errors found on
         <ng-pluralize count="errorPages.nonFullSupply.length"
-                            when="{ 1: '{} page',
+                      when="{ 1: '{} page',
                                     other: '{} pages'}">
 
-        </ng-pluralize> |
+        </ng-pluralize>
+        |
       </a>
       <ul class="dropdown-menu">
         <li ng-repeat="page in errorPages.nonFullSupply">
@@ -14,9 +16,10 @@
         </li>
       </ul>
     </div>
+  </div>
   <div class="clearfix">
-    <br />
-    <input type="button" ng-click="showAddNonFullSupplyModal()"  class = "pull-right btn btn-primary" ng-disabled="formDisabled || !(addNonFullSupplyLineItemButtonShown.visible)" value="Add"/>
+    <br/>
+    <input type="button" ng-click="showAddNonFullSupplyModal()" class="pull-right btn btn-primary" ng-disabled="formDisabled || !(addNonFullSupplyLineItemButtonShown.visible)" value="Add"/>
   </div>
 
   <div class="rnr-table">
@@ -89,29 +92,29 @@
 
         <div class="row-fluid">
           <div class="span6">
-           <label for="nonFullSupplyProductsCategory">Category:</label>
-           <select class="span12" id="nonFullSupplyProductsCategory" ng-model="nonFullSupplyProductCategory" name="productName"
-                   ng-options="nonFullSupplyProductCategory.name for nonFullSupplyProductCategory in nonFullSupplyProductsCategories"
-                   ng-change="updateNonFullSupplyProductsToDisplay()">
-             <option value="">-- Select category --</option>
-           </select>
+            <label for="nonFullSupplyProductsCategory">Category:</label>
+            <select class="span12" id="nonFullSupplyProductsCategory" ng-model="nonFullSupplyProductCategory" name="productName"
+                    ng-options="nonFullSupplyProductCategory.name for nonFullSupplyProductCategory in nonFullSupplyProductsCategories"
+                    ng-change="updateNonFullSupplyProductsToDisplay()">
+              <option value="">-- Select category --</option>
+            </select>
           </div>
         </div>
 
         <div class="row-fluid">
-        <div class="span6">
-          <label for="nonFullSupplyProductsCodeAndName">Product Code/Name:</label>
-          <select ui-select2 class="span12 bottom-spacer" id="nonFullSupplyProductsCodeAndName" ng-model="facilityApprovedProduct" name="productCode" data-placeholder="-- Select product --"
-                  ng-options="facilityApprovedProduct.programProduct.product.code+' | '+facilityApprovedProduct.programProduct.product.primaryName for facilityApprovedProduct in nonFullSupplyProductsToDisplay">
-            <option></option>
-          </select>
+          <div class="span6">
+            <label for="nonFullSupplyProductsCodeAndName">Product Code/Name:</label>
+            <select ui-select2 class="span12 bottom-spacer" id="nonFullSupplyProductsCodeAndName" ng-model="facilityApprovedProduct" name="productCode" data-placeholder="-- Select product --"
+                    ng-options="facilityApprovedProduct.programProduct.product.code+' | '+facilityApprovedProduct.programProduct.product.primaryName for facilityApprovedProduct in nonFullSupplyProductsToDisplay">
+              <option></option>
+            </select>
+          </div>
         </div>
-      </div>
 
         <div class="row-fluid">
           <div class="span3">
             <label for="quantityRequested"><span
-                ng-bind="labelForRnrColumn('quantityRequested')"></span></label>
+              ng-bind="labelForRnrColumn('quantityRequested')"></span></label>
             <input type="text" class="span12" name="newNonFullSupply.quantityRequested" ng-model="newNonFullSupply.quantityRequested"
                    id="quantityRequested"
                    rnr-validator="positiveInteger" maxlength="8"/><br>
@@ -121,7 +124,7 @@
           </div>
           <div class="span6">
             <label for="reasonForRequestedQuantity"><span
-                ng-bind="labelForRnrColumn('reasonForRequestedQuantity')"></span></label>
+              ng-bind="labelForRnrColumn('reasonForRequestedQuantity')"></span></label>
             <input type="text" class="span12" ng-model="newNonFullSupply.reasonForRequestedQuantity"
                    id="reasonForRequestedQuantity" maxlength="250"/><br>
             <span class="alert alert-warning reason-request"
@@ -137,29 +140,29 @@
           </div>
         </div>
 
-        <hr />
+        <hr/>
 
         <div class="non-full-supply-product-list" ng-show="addedNonFullSupplyProducts.length">
           <div class="row-fluid" ng-repeat="nonFullSupplyProduct in addedNonFullSupplyProducts">
 
             <div class="span4">
-              <div class="fluid-grid-cell" id= "nonFullSupplyProductCodeAndName">
+              <div class="fluid-grid-cell" id="nonFullSupplyProductCodeAndName">
                 <label ng-bind="nonFullSupplyProduct.productCode+' | '+nonFullSupplyProduct.productName"></label>
               </div>
             </div>
 
             <div class="span2">
-              <div class="fluid-grid-cell" id= "nonFullSupplyProductQuantityRequested">
-                <input type="text" maxlength="8" ng-change="checkRequestedQuantity($index)" ng-model="nonFullSupplyProduct.quantityRequested" placeholder="Quantity" />
+              <div class="fluid-grid-cell" id="nonFullSupplyProductQuantityRequested">
+                <input type="text" maxlength="8" ng-change="checkRequestedQuantity($index)" ng-model="nonFullSupplyProduct.quantityRequested" placeholder="Quantity"/>
                  <span class="rnr-form-error" ng-show="nonFullSupplyProduct.isNonNumeric">
                 Enter numeric data
               </span>
-              <span class="rnr-form-error" ng-show="!nonFullSupplyProduct.quantityRequested && !nonFullSupplyProduct.isNonNumeric">Please fill this value</span>
+                <span class="rnr-form-error" ng-show="!nonFullSupplyProduct.quantityRequested && !nonFullSupplyProduct.isNonNumeric">Please fill this value</span>
               </div>
             </div>
 
             <div class="span5">
-              <div class="fluid-grid-cell" id= "nonFullSupplyProductReasonForRequestedQuantity">
+              <div class="fluid-grid-cell" id="nonFullSupplyProductReasonForRequestedQuantity">
                 <input type="text" maxlength="250" ng-model="nonFullSupplyProduct.reasonForRequestedQuantity" placeholder="Explanation"/>
                 <span class="rnr-form-error" ng-show="!nonFullSupplyProduct.reasonForRequestedQuantity">Please fill this value</span>
               </div>
@@ -175,7 +178,6 @@
         </div>
 
       </div>
-
 
 
       <div class="modal-footer">

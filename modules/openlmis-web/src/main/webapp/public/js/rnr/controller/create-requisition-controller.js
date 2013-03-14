@@ -1,5 +1,4 @@
 function CreateRequisitionController($scope, requisition, currency, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, $location, Requisitions, $routeParams, $rootScope) {
-
   $scope.showNonFullSupply = $routeParams.supplyType == 'non-full-supply';
   $scope.baseUrl = "/create-rnr/" + $routeParams.facility + '/' + $routeParams.program + '/' + $routeParams.period;
   $scope.fullSupplyLink = $scope.baseUrl + "?supplyType=full-supply&page=1";
