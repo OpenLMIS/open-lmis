@@ -208,7 +208,7 @@ public class DeleteFacilityPage extends Page {
     altitude.clear();
     altitude.sendKeys(altitudeValue);
 
-    testWebDriver.selectByVisibleText(programsSupported, "SMALL POX");
+    testWebDriver.selectByVisibleText(programsSupported, "ESSENTIAL MEDICINES");
     programsSupportedActiveFlag.click();
     testWebDriver.sleep(500);
     programsSupportedStartDate.click();
