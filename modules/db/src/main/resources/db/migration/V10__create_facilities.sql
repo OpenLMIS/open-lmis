@@ -31,7 +31,8 @@ CREATE TABLE facilities (
     comment  TEXT,
     dataReportable BOOLEAN,
     modifiedBy INTEGER,
-    modifiedDate TIMESTAMP DEFAULT  CURRENT_TIMESTAMP
+    modifiedDate TIMESTAMP DEFAULT  CURRENT_TIMESTAMP,
+    createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );
 
 CREATE UNIQUE INDEX uc_facility_code ON facilities(LOWER(code));

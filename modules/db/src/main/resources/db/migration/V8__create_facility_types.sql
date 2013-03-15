@@ -8,5 +8,6 @@ CREATE TABLE facility_types (
   nominalEop NUMERIC(4,2) NOT NULL,
   displayOrder INTEGER,
   active BOOLEAN,
-  lastModifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  lastModifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );

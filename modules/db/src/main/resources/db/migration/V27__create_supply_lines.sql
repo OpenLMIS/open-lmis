@@ -6,6 +6,7 @@ CREATE TABLE supply_lines (
   supplyingFacilityId   INTEGER REFERENCES facilities(id) NOT NULL,
   modifiedBy            INTEGER,
   modifiedDate          TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  createdDate           TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
 
   CONSTRAINT unique_supply_line UNIQUE ( supervisoryNodeId , programId , supplyingFacilityId)
 );

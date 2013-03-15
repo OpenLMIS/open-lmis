@@ -5,5 +5,6 @@ CREATE TABLE product_categories (
   name VARCHAR(100) NOT NULL UNIQUE,
   displayOrder INTEGER NOT NULL,
   modifiedDate TIMESTAMP DEFAULT  CURRENT_TIMESTAMP,
+  createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
   modifiedBy INTEGER
 );

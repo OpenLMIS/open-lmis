@@ -6,5 +6,6 @@ CREATE TABLE facility_approved_products (
     maxMonthsOfStock INTEGER NOT NULL,
     modifiedBy INTEGER,
     modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
     UNIQUE (facilityTypeId, programProductId)
 );

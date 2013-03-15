@@ -7,5 +7,6 @@ CREATE TABLE programs (
     usesDar BOOLEAN,
     active BOOLEAN,
     lastModifiedDate DATE,
-    lastModifiedBy INTEGER
+    lastModifiedBy INTEGER,
+    createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );

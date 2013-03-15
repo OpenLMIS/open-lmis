@@ -14,7 +14,8 @@ CREATE TABLE users (
   facilityId INT REFERENCES facilities(id),
   active BOOLEAN DEFAULT FALSE,
   modifiedBy INTEGER,
-  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );
 
 CREATE UNIQUE INDEX uc_users_userName ON users(LOWER(userName));

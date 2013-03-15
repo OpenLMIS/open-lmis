@@ -5,7 +5,8 @@ CREATE TABLE requisition_groups (
   description VARCHAR(250),
   supervisoryNodeId INTEGER,
   modifiedBy INTEGER,
-  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );
 
 CREATE UNIQUE INDEX ucRequisitionGroupCode ON requisition_groups(LOWER(code));

@@ -6,7 +6,8 @@ CREATE TABLE supervisory_nodes (
   code VARCHAR(50) UNIQUE NOT NULL,
   description VARCHAR(250),
   modifiedBy INTEGER,
-  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );
 
 CREATE UNIQUE INDEX ucSupervisoryNodeCode ON supervisory_nodes(LOWER(code));

@@ -6,5 +6,6 @@ CREATE TABLE requisition_group_program_schedules (
   dropOffFacilityId INTEGER REFERENCES facilities(id),
   modifiedBy INTEGER,
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
   PRIMARY KEY (requisitionGroupId, programId)
 );
