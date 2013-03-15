@@ -177,8 +177,8 @@ public class InitiateRnRPage extends Page {
   private static WebElement productDropDown;
 
 
-  @FindBy(how = How.XPATH, using = "//a[@class='select2-choice select2-default']")
-  private static WebElement productDropDownLink;
+  @FindBy(how = How.XPATH, using = "//div[@id='s2id_nonFullSupplyProductsCategory']/a/span")
+  private static WebElement categoryDropDownLink;
 
 
   @FindBy(how = How.XPATH, using = "//input[@class='select2-input select2-focused']")
@@ -187,10 +187,20 @@ public class InitiateRnRPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@class='select2-result-label']")
   private static WebElement productDropDownValue;
 
+  @FindBy(how = How.XPATH, using = "//div[@id='s2id_nonFullSupplyProductsCodeAndName']/a/span")
+  private static WebElement productDropDownLink;
+
+
+  @FindBy(how = How.XPATH, using = "//input[@class='select2-input select2-focused']")
+  private static WebElement categoryDropDownTextField;
+
+  @FindBy(how = How.XPATH, using = "//div[@class='select2-result-label']")
+  private static WebElement categoryDropDownValue;
+
   @FindBy(how = How.XPATH, using = "//select[@id='nonFullSupplyProductsCode']")
   private static WebElement productCodeDropDown;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='nonFullSupplyProductQuantityRequested']/input")
+  @FindBy(how = How.XPATH, using = "//input[@name='nonFullSupplyProductQuantityRequested0']")
   private static WebElement nonFullSupplyProductQuantityRequested;
 
   @FindBy(how = How.XPATH, using = "//div[@id='nonFullSupplyProductCodeAndName']/label")
@@ -390,7 +400,7 @@ public class InitiateRnRPage extends Page {
     testWebDriver.sleep(500);
   }
 
-  public void addNonFullSupplyLineItems(String requestedQuantityValue, String requestedQuantityExplanationValue, String productPrimaryName, String productCode) throws IOException, SQLException {
+  public void addNonFullSupplyLineItems(String requestedQuantityValue, String requestedQuantityExplanationValue, String productPrimaryName, String productCode, String category) throws IOException, SQLException {
     testWebDriver.waitForElementToAppear(nonFullSupplyTab);
     nonFullSupplyTab.click();
     DBWrapper dbWrapper = new DBWrapper();
@@ -401,13 +411,20 @@ public class InitiateRnRPage extends Page {
     testWebDriver.sleep(1000);
     SeleneseTestNgHelper.assertFalse("Add button not enabled", addButtonNonFullSupply.isEnabled());
     SeleneseTestNgHelper.assertTrue("Close button not displayed", cancelButton.isDisplayed());
-    testWebDriver.waitForElementToAppear(categoryDropDown);
-    testWebDriver.selectByIndex(categoryDropDown,1);
+    testWebDriver.waitForElementToAppear(categoryDropDownLink);
+
+    categoryDropDownLink.click();
+    testWebDriver.waitForElementToAppear(categoryDropDownTextField);
+    categoryDropDownTextField.sendKeys(category);
+    testWebDriver.waitForElementToAppear(categoryDropDownValue);
+    categoryDropDownValue.click();
+
     productDropDownLink.click();
     testWebDriver.waitForElementToAppear(productDropDownTextField);
     productDropDownTextField.sendKeys(productCode);
     testWebDriver.waitForElementToAppear(productDropDownValue);
     productDropDownValue.click();
+
     requestedQuantityField.clear();
     requestedQuantityField.sendKeys(requestedQuantityValue);
     requestedQuantityExplanationField.clear();
@@ -416,19 +433,27 @@ public class InitiateRnRPage extends Page {
     cancelButton.click();
     testWebDriver.waitForElementToAppear(addNonFullSupplyButtonScreen);
     addNonFullSupplyButtonScreen.click();
-    testWebDriver.waitForElementToAppear(categoryDropDown);
+
+    testWebDriver.waitForElementToAppear(categoryDropDownLink);
     SeleneseTestNgHelper.assertEquals(testWebDriver.getSelectedOptionDefault(categoryDropDown).trim(), "");
     SeleneseTestNgHelper.assertEquals(testWebDriver.getSelectedOptionDefault(productDropDown).trim(), "");
     SeleneseTestNgHelper.assertEquals(requestedQuantityField.getAttribute("value").trim(),"");
     SeleneseTestNgHelper.assertEquals(requestedQuantityExplanationField.getAttribute("value").trim(),"");
 
-    testWebDriver.waitForElementToAppear(categoryDropDown);
-    testWebDriver.selectByIndex(categoryDropDown,1);
+    testWebDriver.waitForElementToAppear(categoryDropDownLink);
+
+    categoryDropDownLink.click();
+    testWebDriver.waitForElementToAppear(categoryDropDownTextField);
+    categoryDropDownTextField.sendKeys(category);
+    testWebDriver.waitForElementToAppear(categoryDropDownValue);
+    categoryDropDownValue.click();
+
     productDropDownLink.click();
     testWebDriver.waitForElementToAppear(productDropDownTextField);
     productDropDownTextField.sendKeys(productCode);
     testWebDriver.waitForElementToAppear(productDropDownValue);
     productDropDownValue.click();
+
     requestedQuantityField.clear();
     requestedQuantityField.sendKeys(requestedQuantityValue);
     requestedQuantityExplanationField.clear();

@@ -121,7 +121,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     initiateRnRPage.calculateAndVerifyTotalCost();
     initiateRnRPage.saveRnR();
 
-    initiateRnRPage.addNonFullSupplyLineItems("99", "Due to unforeseen event", "antibiotic", "P11");
+    initiateRnRPage.addNonFullSupplyLineItems("99", "Due to unforeseen event", "antibiotic", "P11","Antibiotics");
     initiateRnRPage.calculateAndVerifyTotalCostNonFullSupply();
     initiateRnRPage.verifyCostOnFooter();
 
