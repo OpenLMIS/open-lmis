@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import static java.lang.Boolean.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -42,7 +43,7 @@ public class RoleRightsRepositoryTest {
 
   @Before
   public void setUp() throws Exception {
-    role = new Role("role name", "role description");
+    role = new Role("role name", FALSE, "role description");
     roleRightsRepository = new RoleRightsRepository(roleRightsMapper, commaSeparator);
   }
 
@@ -81,7 +82,7 @@ public class RoleRightsRepositoryTest {
 
   @Test
   public void shouldNotUpdateToDuplicateRoleName() {
-    Role role = new Role("Name", "Desc");
+    Role role = new Role("Name", FALSE, "Desc");
     role.setId(123);
     doThrow(DuplicateKeyException.class).when(roleRightsMapper).updateRole(role);
 

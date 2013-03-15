@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.lang.Boolean.*;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasItem;
@@ -125,14 +126,14 @@ public class ProgramMapperIT extends SpringIntegrationTest {
 
     User user = insertUser(facility);
 
-    Role createRnrRole = new Role("R1", "Create Requisition");
+    Role createRnrRole = new Role("R1", FALSE, "Create Requisition");
     roleRightsMapper.insertRole(createRnrRole);
     roleRightsMapper.createRoleRight(createRnrRole.getId(), Right.CREATE_REQUISITION);
     insertRoleAssignments(activeProgramWithCreateRight, user, createRnrRole, supervisoryNode);
     insertRoleAssignments(inactiveProgram, user, createRnrRole, supervisoryNode);
     insertRoleAssignments(activeProgramForHomeFacility, user, createRnrRole, null);
 
-    Role configureRnrRole = new Role("R2", "View Rnr Role");
+    Role configureRnrRole = new Role("R2", FALSE, "View Rnr Role");
     roleRightsMapper.insertRole(configureRnrRole);
     roleRightsMapper.createRoleRight(configureRnrRole.getId(), Right.CONFIGURE_RNR);
     insertRoleAssignments(activeProgramWithConfigureRight, user, configureRnrRole, supervisoryNode);
@@ -153,11 +154,11 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     Facility facility = insertFacility(make(a(defaultFacility)));
     User user = insertUser(facility);
 
-    Role r1 = new Role("r1", "random description");
+    Role r1 = new Role("r1", FALSE, "random description");
     roleRightsMapper.insertRole(r1);
     roleRightsMapper.createRoleRight(r1.getId(), Right.CREATE_REQUISITION);
 
-    Role r2 = new Role("r2", "authorize role");
+    Role r2 = new Role("r2", FALSE, "authorize role");
     roleRightsMapper.insertRole(r2);
     roleRightsMapper.createRoleRight(r2.getId(), Right.AUTHORIZE_REQUISITION);
 
@@ -187,7 +188,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     Facility facility = insertFacility(make(a(defaultFacility)));
     User user = insertUser(facility);
 
-    Role r1 = new Role("r1", "random description");
+    Role r1 = new Role("r1", FALSE, "random description");
     roleRightsMapper.insertRole(r1);
     roleRightsMapper.createRoleRight(r1.getId(), Right.APPROVE_REQUISITION);
 

@@ -29,8 +29,8 @@ public interface RoleRightsMapper {
   Set<Right> getAllRightsForRole(Integer roleId);
 
   @Insert({"INSERT INTO roles",
-      "(name, description, modifiedBy) VALUES",
-      "(#{name}, #{description}, #{modifiedBy})"})
+      "(name, adminRole, description, modifiedBy) VALUES",
+      "(#{name}, #{adminRole}, #{description}, #{modifiedBy})"})
   @Options(useGeneratedKeys = true)
   int insertRole(Role role);
 

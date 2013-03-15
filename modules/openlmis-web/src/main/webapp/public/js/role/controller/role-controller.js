@@ -1,4 +1,4 @@
-function SaveRoleController($scope, $routeParams, $location, Roles, Role, Rights) {
+function RoleController($scope, $routeParams, $location, Roles, Role, Rights) {
   $scope.$parent.error = "";
   $scope.$parent.message = "";
   $scope.role = {rights:[]};
@@ -12,6 +12,8 @@ function SaveRoleController($scope, $routeParams, $location, Roles, Role, Rights
 
   Rights.get({}, function (data) {
     $scope.rights = data.rights;
+    $scope.adminRights= _.where($scope.rights,{"adminRight": "t"});
+    $scope.nonAdminRights= _.where($scope.rights,{"adminRight": "f"});
   }, {});
 
 
@@ -76,11 +78,13 @@ function SaveRoleController($scope, $routeParams, $location, Roles, Role, Rights
       if (id) {
         Role.update({id:id}, $scope.role, successHandler, errorHandler);
       } else {
+        $scope.role.adminRole="true";
         Roles.save({}, $scope.role, successHandler, errorHandler);
       }
     }
 
   }
+
   var validRole = function () {
     var valid = true;
     $scope.showError = false;

@@ -1,5 +1,6 @@
 CREATE TABLE roles (
   id SERIAL PRIMARY KEY,
+  adminRole BOOLEAN NOT NULL,
   name VARCHAR(50) NOT NULL UNIQUE,
   description VARCHAR(250),
   modifiedBy INTEGER,

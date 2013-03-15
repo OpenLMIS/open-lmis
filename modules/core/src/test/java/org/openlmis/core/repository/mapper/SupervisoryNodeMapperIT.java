@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.lang.Boolean.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -92,10 +93,10 @@ public class SupervisoryNodeMapperIT {
 
     User user = insertUser();
 
-    Role createRole = new Role("create role", "random description");
+    Role createRole = new Role("create role", FALSE, "random description");
     roleRightsMapper.insertRole(createRole);
 
-    Role configureRnrRole = new Role("configure rnr", "random description");
+    Role configureRnrRole = new Role("configure rnr", FALSE, "random description");
     roleRightsMapper.insertRole(configureRnrRole);
 
     roleRightsMapper.createRoleRight(createRole.getId(), CREATE_REQUISITION);
@@ -131,10 +132,10 @@ public class SupervisoryNodeMapperIT {
 
     User user = insertUser();
 
-    Role createRole = new Role("create role", "random description");
+    Role createRole = new Role("create role", FALSE, "random description");
     roleRightsMapper.insertRole(createRole);
 
-    Role configureRnrRole = new Role("configure rnr", "random description");
+    Role configureRnrRole = new Role("configure rnr", FALSE, "random description");
     roleRightsMapper.insertRole(configureRnrRole);
 
     roleRightsMapper.createRoleRight(createRole.getId(), CREATE_REQUISITION);

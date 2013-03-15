@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static java.lang.Boolean.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -43,10 +44,9 @@ public class RoleRightsServiceTest {
   @Mock
   private FacilityService facilityService;
 
-
   @Before
   public void setUp() throws Exception {
-    role = new Role("role name", "role description");
+    role = new Role("role name", FALSE, "role description");
     roleRightsService = new RoleRightsService(roleRightsRepository, supervisoryNodeService, facilityService);
   }
 
@@ -55,7 +55,10 @@ public class RoleRightsServiceTest {
   public void shouldGetAllRightsInAlphabeticalOrder() throws Exception {
     List<Right> allRights = new ArrayList<>(new RoleRightsService().getAllRights());
     assertThat(allRights.get(0), is(CONFIGURE_RNR));
+    assertThat(allRights.get(0).getAdminRight(),is(true));
+
   }
+
 
   @Test
   public void shouldSaveRole() throws Exception {

@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.lang.Boolean.*;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
@@ -276,7 +277,7 @@ public class FacilityMapperIT {
     Facility homeFacility = make(a(defaultFacility));
     mapper.insert(homeFacility);
 
-    Role r1 = new Role("r1", "random description");
+    Role r1 = new Role("r1", FALSE, "random description");
     roleRightsMapper.insertRole(r1);
 
     roleRightsMapper.createRoleRight(r1.getId(), CREATE_REQUISITION);

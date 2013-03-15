@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static java.lang.Boolean.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -54,7 +55,7 @@ public class RoleRightsControllerTest {
     MockHttpSession mockHttpSession = new MockHttpSession();
     httpServletRequest.setSession(mockHttpSession);
     mockHttpSession.setAttribute(USER_ID, LOGGED_IN_USERID);
-    role = new Role("test role", "test role description");
+    role = new Role("test role", FALSE, "test role description");
   }
 
   @Test
@@ -109,7 +110,7 @@ public class RoleRightsControllerTest {
 
   @Test
   public void shouldUpdateRoleAndRights() throws Exception {
-    Role role = new Role(123, "Role Name", "Desc", null, null, new HashSet<>(asList(CONFIGURE_RNR)));
+    Role role = new Role(123, "Role Name",null, "Desc", null, null, new HashSet<>(asList(CONFIGURE_RNR)));
 
     OpenLmisResponse response = controller.updateRole(role.getId(), role, httpServletRequest).getBody();
 
@@ -120,7 +121,7 @@ public class RoleRightsControllerTest {
   @Test
   public void shouldReturnErrorMsgIfUpdateFails() throws Exception {
 
-    Role role = new Role(123, "Role Name", "Desc");
+    Role role = new Role(123, "Role Name", FALSE, "Desc");
 
     doThrow(new DataException("Duplicate Role found")).when(roleRightsService).updateRole(role);
 

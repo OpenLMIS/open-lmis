@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.lang.Boolean.*;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -60,10 +61,10 @@ public class RoleAssignmentMapperIT {
     Program program1 = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
     Program program2 = insertProgram(make(a(defaultProgram, with(programCode, "p2"))));
 
-    Role r1 = new Role("r1", "random description");
+    Role r1 = new Role("r1", FALSE, "random description");
     roleRightsMapper.insertRole(r1);
 
-    Role r2 = new Role("r2", "random description");
+    Role r2 = new Role("r2", FALSE, "random description");
     roleRightsMapper.insertRole(r2);
 
     roleRightsMapper.createRoleRight(r1.getId(), CREATE_REQUISITION);
@@ -88,10 +89,10 @@ public class RoleAssignmentMapperIT {
 
   @Test
   public void shouldGetSupervisorRolesForAUser() throws Exception {
-    Role r1 = new Role("r1", "random description");
+    Role r1 = new Role("r1", FALSE, "random description");
     roleRightsMapper.insertRole(r1);
 
-    Role r2 = new Role("r2", "random description");
+    Role r2 = new Role("r2", FALSE, "random description");
     roleRightsMapper.insertRole(r2);
 
     SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
@@ -112,10 +113,10 @@ public class RoleAssignmentMapperIT {
 
   @Test
   public void shouldGetHomeFacilityRolesForAUser() throws Exception {
-    Role r1 = new Role("r1", "random description");
+    Role r1 = new Role("r1", FALSE, "random description");
     roleRightsMapper.insertRole(r1);
 
-    Role r2 = new Role("r2", "random description");
+    Role r2 = new Role("r2", FALSE, "random description");
     roleRightsMapper.insertRole(r2);
 
     SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
@@ -136,9 +137,9 @@ public class RoleAssignmentMapperIT {
   @Test
   public void shouldGetHomeFacilityRolesForAUserOnAGivenProgramWithRights() throws Exception {
     int programId = 1;
-    Role r1 = new Role("r1", "random description");
+    Role r1 = new Role("r1", FALSE, "random description");
     roleRightsMapper.insertRole(r1);
-    Role r2 = new Role("r2", "random description");
+    Role r2 = new Role("r2", FALSE, "random description");
     roleRightsMapper.insertRole(r2);
     roleRightsMapper.createRoleRight(r2.getId(), Right.CREATE_REQUISITION);
 

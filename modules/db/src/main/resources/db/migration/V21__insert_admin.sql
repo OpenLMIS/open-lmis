@@ -1,6 +1,6 @@
 INSERT INTO roles
- (name, description) VALUES
- ('Admin', 'Admin');
+ (name, adminRole, description) VALUES
+ ('Admin',TRUE,'Admin');
 
  INSERT INTO role_rights
   (roleId, rightName) VALUES
