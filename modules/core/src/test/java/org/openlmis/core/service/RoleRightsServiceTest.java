@@ -108,13 +108,15 @@ public class RoleRightsServiceTest {
     Program program = new Program(3);
     List<Right> expected = asList(CREATE_REQUISITION);
     SupervisoryNode supervisoryNode = new SupervisoryNode(4);
+    List<SupervisoryNode> supervisoryNodes = asList(supervisoryNode);
 
     when(supervisoryNodeService.getFor(facility, program)).thenReturn(supervisoryNode);
-    when(roleRightsRepository.getRightsForUserOnSupervisoryNodeAndProgram(userId, supervisoryNode, program)).thenReturn(expected);
+    when(supervisoryNodeService.getAllParentSupervisoryNodesInHierarchy(supervisoryNode)).thenReturn(supervisoryNodes);
+    when(roleRightsRepository.getRightsForUserOnSupervisoryNodeAndProgram(userId, supervisoryNodes, program)).thenReturn(expected);
 
     List<Right> result = roleRightsService.getRightsForUserAndFacilityProgram(userId, facility, program);
 
-    verify(roleRightsRepository).getRightsForUserOnSupervisoryNodeAndProgram(userId, supervisoryNode, program);
+    verify(roleRightsRepository).getRightsForUserOnSupervisoryNodeAndProgram(userId, supervisoryNodes, program);
     assertThat(result, is(expected));
   }
 

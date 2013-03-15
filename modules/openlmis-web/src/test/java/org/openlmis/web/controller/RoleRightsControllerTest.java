@@ -138,7 +138,7 @@ public class RoleRightsControllerTest {
     ResponseEntity<OpenLmisResponse> response = controller.getRightsForUserAndFacilityProgram(facilityId, programId, httpServletRequest);
 
     assertThat((List<Right>) response.getBody().getData().get("rights"), is(rights));
-    verify(roleRightsService).getRightsForUserAndFacilityProgram(LOGGED_IN_USERID, argThat(facilityMatcher(facilityId)), argThat(programMatcher(programId)));
+    verify(roleRightsService).getRightsForUserAndFacilityProgram(eq(LOGGED_IN_USERID), argThat(facilityMatcher(facilityId)), argThat(programMatcher(programId)));
   }
 
   private Matcher<Program> programMatcher(final int id) {

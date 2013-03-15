@@ -184,4 +184,16 @@ public class SupervisoryNodeServiceTest {
     verify(supervisoryNodeRepository).getAll();
     assertThat(actual, is(expected));
   }
+
+  @Test
+  public void shouldGetAllParentSupervisoryNodesInHierarchy() throws Exception {
+    List<SupervisoryNode> expected = new ArrayList<>();
+    SupervisoryNode supervisoryNode = new SupervisoryNode(1);
+    when(supervisoryNodeRepository.getAllParentSupervisoryNodesInHierarchy(supervisoryNode)).thenReturn(expected);
+
+    List<SupervisoryNode> actual = supervisoryNodeService.getAllParentSupervisoryNodesInHierarchy(supervisoryNode);
+
+    verify(supervisoryNodeRepository).getAllParentSupervisoryNodesInHierarchy(supervisoryNode);
+    assertThat(actual, is(expected));
+  }
 }

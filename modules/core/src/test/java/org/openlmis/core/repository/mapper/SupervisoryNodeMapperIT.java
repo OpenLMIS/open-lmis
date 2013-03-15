@@ -200,6 +200,29 @@ public class SupervisoryNodeMapperIT {
     assertThat(fetchedSupervisoryNodes.get(0).getCode(), is("N1"));
   }
 
+  @Test
+  public void shouldGetAllSupervisoryNodesInHierarchy() throws Exception {
+    SupervisoryNode supervisoryNode1 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN1")));
+    supervisoryNode1.setFacility(facility);
+    insertSupervisoryNode(supervisoryNode1);
+
+    SupervisoryNode supervisoryNode2 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "CN1")));
+    supervisoryNode2.setFacility(facility);
+    supervisoryNode2.setParent(supervisoryNode1);
+    insertSupervisoryNode(supervisoryNode2);
+
+    SupervisoryNode supervisoryNode3 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "CN2")));
+    supervisoryNode3.setFacility(facility);
+    supervisoryNode3.setParent(supervisoryNode2);
+    insertSupervisoryNode(supervisoryNode3);
+
+    List<SupervisoryNode> result = supervisoryNodeMapper.getAllParentSupervisoryNodesInHierarchy(supervisoryNode3);
+    assertThat(result.size(), is(3));
+    assertThat(result.get(0).getId(), is(supervisoryNode3.getId()));
+    assertThat(result.get(1).getId(), is(supervisoryNode2.getId()));
+    assertThat(result.get(2).getId(), is(supervisoryNode1.getId()));
+  }
+
   private SupervisoryNode insertSupervisoryNode(SupervisoryNode supervisoryNode) {
     supervisoryNodeMapper.insert(supervisoryNode);
     return supervisoryNode;

@@ -211,4 +211,16 @@ public class SupervisoryNodeRepositoryTest {
     assertThat(actual, is(expected));
     verify(supervisoryNodeMapper).getAllSupervisoryNodesInHierarchyByUserAndRights(1, "{CREATE_REQUISITION, AUTHORIZE_REQUISITION}");
   }
+
+  @Test
+  public void shouldGetAllParentSupervisoryNodesInHierarchy() throws Exception {
+    List<SupervisoryNode> expected = new ArrayList<>();
+    SupervisoryNode supervisoryNode = new SupervisoryNode(1);
+    when(supervisoryNodeMapper.getAllParentSupervisoryNodesInHierarchy(supervisoryNode)).thenReturn(expected);
+
+    List<SupervisoryNode> actual = repository.getAllParentSupervisoryNodesInHierarchy(supervisoryNode);
+
+    verify(supervisoryNodeMapper).getAllParentSupervisoryNodesInHierarchy(supervisoryNode);
+    assertThat(actual, is(expected));
+  }
 }

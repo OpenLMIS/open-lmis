@@ -82,4 +82,8 @@ public class SupervisoryNodeRepository {
   public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Integer userId, Right... rights) {
     return supervisoryNodeMapper.getAllSupervisoryNodesInHierarchyByUserAndRights(userId, commaSeparateRightNames(rights));
   }
+
+  public List<SupervisoryNode> getAllParentSupervisoryNodesInHierarchy(SupervisoryNode node) {
+    return supervisoryNodeMapper.getAllParentSupervisoryNodesInHierarchy(node);
+  }
 }

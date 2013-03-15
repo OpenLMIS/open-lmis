@@ -12,6 +12,7 @@ import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.Role;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.repository.mapper.RoleRightsMapper;
 import org.springframework.dao.DuplicateKeyException;
 
@@ -31,15 +32,18 @@ public class RoleRightsRepositoryTest {
   private Role role;
   @Mock
   RoleRightsMapper roleRightsMapper;
+  @Mock
+  private CommaSeparator commaSeparator;
 
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();
   private RoleRightsRepository roleRightsRepository;
 
+
   @Before
   public void setUp() throws Exception {
     role = new Role("role name", "role description");
-    roleRightsRepository = new RoleRightsRepository(roleRightsMapper);
+    roleRightsRepository = new RoleRightsRepository(roleRightsMapper, commaSeparator);
   }
 
   @Test
@@ -134,12 +138,13 @@ public class RoleRightsRepositoryTest {
   @Test
   public void shouldGetRightsForAUserOnSupervisoryNodeAndProgram() throws Exception {
     Integer userId = 1;
-    SupervisoryNode supervisoryNode = new SupervisoryNode(2);
+    List<SupervisoryNode> supervisoryNodes = asList(new SupervisoryNode(2), new SupervisoryNode(3));
     Program program = new Program(3);
     List<Right> expected = null;
-    when(roleRightsMapper.getRightsForUserOnSupervisoryNodeAndProgram(userId, supervisoryNode, program)).thenReturn(expected);
-    List<Right> result = roleRightsRepository.getRightsForUserOnSupervisoryNodeAndProgram(userId, supervisoryNode, program);
-    verify(roleRightsMapper).getRightsForUserOnSupervisoryNodeAndProgram(userId, supervisoryNode, program);
+    when(commaSeparator.commaSeparateIds(supervisoryNodes)).thenReturn("{2, 3}");
+    when(roleRightsMapper.getRightsForUserOnSupervisoryNodeAndProgram(userId, "{2, 3}", program)).thenReturn(expected);
+    List<Right> result = roleRightsRepository.getRightsForUserOnSupervisoryNodeAndProgram(userId, supervisoryNodes, program);
+    verify(roleRightsMapper).getRightsForUserOnSupervisoryNodeAndProgram(userId, "{2, 3}", program);
     assertThat(result, is(expected));
   }
 

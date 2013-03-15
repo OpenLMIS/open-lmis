@@ -82,4 +82,18 @@ public interface SupervisoryNodeMapper {
     "   )",
     "SELECT * FROM supervisoryNodesRec"})
   List<SupervisoryNode> getAllSupervisoryNodesInHierarchyByUserAndRights(@Param("userId") Integer userId, @Param("commaSeparatedRights") String commaSeparatedRights);
+
+  @Select({"WITH  recursive  supervisoryNodesRec AS ",
+      "   (",
+      "   SELECT *",
+      "   FROM supervisory_nodes ",
+      "   WHERE id = #{id}",
+      "   UNION ",
+      "   SELECT sn.* ",
+      "   FROM supervisory_nodes sn ",
+      "   JOIN supervisoryNodesRec ",
+      "   ON sn.id = supervisoryNodesRec.parentId ",
+      "   )",
+      "SELECT * FROM supervisoryNodesRec"})
+  List<SupervisoryNode> getAllParentSupervisoryNodesInHierarchy(SupervisoryNode supervisoryNode);
 }

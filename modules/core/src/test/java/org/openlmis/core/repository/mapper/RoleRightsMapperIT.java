@@ -178,9 +178,13 @@ public class RoleRightsMapperIT {
     Facility facility = insertFacility();
     User user = insertUser(facility);
     Program program = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
-    SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN1")));
-    supervisoryNode.setFacility(facility);
-    supervisoryNodeMapper.insert(supervisoryNode);
+    SupervisoryNode supervisoryNode1 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN1")));
+    supervisoryNode1.setFacility(facility);
+    supervisoryNodeMapper.insert(supervisoryNode1);
+
+    SupervisoryNode supervisoryNode2 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN2")));
+    supervisoryNode2.setFacility(facility);
+    supervisoryNodeMapper.insert(supervisoryNode2);
 
 
     Role role1 = insertRole("r1", "random description");
@@ -189,10 +193,10 @@ public class RoleRightsMapperIT {
     roleRightsMapper.createRoleRight(role2.getId(), CREATE_REQUISITION);
     roleRightsMapper.createRoleRight(role2.getId(), AUTHORIZE_REQUISITION);
 
-    roleAssignmentMapper.insertRoleAssignment(user.getId(), program.getId(), supervisoryNode.getId(), role1.getId());
-    roleAssignmentMapper.insertRoleAssignment(user.getId(), program.getId(), supervisoryNode.getId(), role2.getId());
+    roleAssignmentMapper.insertRoleAssignment(user.getId(), program.getId(), supervisoryNode1.getId(), role1.getId());
+    roleAssignmentMapper.insertRoleAssignment(user.getId(), program.getId(), supervisoryNode2.getId(), role2.getId());
 
-    List<Right> result = roleRightsMapper.getRightsForUserOnSupervisoryNodeAndProgram(user.getId(), supervisoryNode, program);
+    List<Right> result = roleRightsMapper.getRightsForUserOnSupervisoryNodeAndProgram(user.getId(), "{" + supervisoryNode1.getId()+", "+ supervisoryNode2.getId()+"}", program);
     assertThat(result.size(), is(2));
     assertThat(result, is(asList(CREATE_REQUISITION, AUTHORIZE_REQUISITION)));
   }

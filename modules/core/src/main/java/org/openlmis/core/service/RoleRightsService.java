@@ -64,8 +64,10 @@ public class RoleRightsService {
       result.addAll(roleRightsRepository.getRightsForUserOnHomeFacilityAndProgram(userId, program));
 
     SupervisoryNode supervisoryNode = supervisoryNodeService.getFor(facility, program);
+    List<SupervisoryNode> supervisoryNodes = supervisoryNodeService.getAllParentSupervisoryNodesInHierarchy(supervisoryNode);
+
     if (supervisoryNode != null)
-      result.addAll(roleRightsRepository.getRightsForUserOnSupervisoryNodeAndProgram(userId, supervisoryNode, program));
+      result.addAll(roleRightsRepository.getRightsForUserOnSupervisoryNodeAndProgram(userId, supervisoryNodes, program));
     return result;
   }
 }

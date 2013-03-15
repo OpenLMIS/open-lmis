@@ -55,7 +55,6 @@ public class SupervisoryNodeService {
     return users.get(0);
   }
 
-
   public SupervisoryNode getParent(Integer id) {
     return supervisoryNodeRepository.getParent(id);
   }
@@ -68,5 +67,9 @@ public class SupervisoryNodeService {
 
   public List<SupervisoryNode> getAll() {
     return supervisoryNodeRepository.getAll();
+  }
+
+  public List<SupervisoryNode> getAllParentSupervisoryNodesInHierarchy(SupervisoryNode supervisoryNode) {
+    return supervisoryNodeRepository.getAllParentSupervisoryNodesInHierarchy(supervisoryNode);
   }
 }

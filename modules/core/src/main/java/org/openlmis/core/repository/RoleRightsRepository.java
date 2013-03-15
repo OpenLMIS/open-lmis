@@ -6,6 +6,7 @@ import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.Role;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.repository.mapper.RoleRightsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -20,10 +21,12 @@ import java.util.Set;
 public class RoleRightsRepository {
 
   private RoleRightsMapper roleRightsMapper;
+  private CommaSeparator commaSeparator;
 
   @Autowired
-  public RoleRightsRepository(RoleRightsMapper roleRightsMapper) {
+  public RoleRightsRepository(RoleRightsMapper roleRightsMapper, CommaSeparator commaSeparator) {
     this.roleRightsMapper = roleRightsMapper;
+    this.commaSeparator = commaSeparator;
   }
 
   public Set<Right> getAllRightsForUser(String username) {
@@ -78,8 +81,8 @@ public class RoleRightsRepository {
     return roleRightsMapper.getAllRightsForUserById(userId);
   }
 
-  public List<Right> getRightsForUserOnSupervisoryNodeAndProgram(Integer userId, SupervisoryNode supervisoryNode, Program program) {
-    return roleRightsMapper.getRightsForUserOnSupervisoryNodeAndProgram(userId, supervisoryNode, program);
+  public List<Right> getRightsForUserOnSupervisoryNodeAndProgram(Integer userId, List<SupervisoryNode> supervisoryNodes, Program program) {
+    return roleRightsMapper.getRightsForUserOnSupervisoryNodeAndProgram(userId, commaSeparator.commaSeparateIds(supervisoryNodes), program);
   }
 
   public List<Right> getRightsForUserOnHomeFacilityAndProgram(Integer userId, Program program) {

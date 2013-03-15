@@ -4,7 +4,6 @@ import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.Role;
-import org.openlmis.core.domain.SupervisoryNode;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -66,8 +65,8 @@ public interface RoleRightsMapper {
 
   @Select({"SELECT DISTINCT RR.rightName " +
       "FROM role_rights RR INNER JOIN role_assignments RA ON RR.roleId = RA.roleId " +
-      "WHERE RA.userId = #{userId} AND RA.supervisoryNodeId = #{supervisoryNode.id} AND RA.programId = #{program.id}"})
-  List<Right> getRightsForUserOnSupervisoryNodeAndProgram(@Param("userId") Integer userId, @Param("supervisoryNode") SupervisoryNode supervisoryNode, @Param("program") Program program);
+      "WHERE RA.userId = #{userId} AND RA.supervisoryNodeId = ANY(#{commaSeparatedSupervisoryNodeIds}::INTEGER[]) AND RA.programId = #{program.id}"})
+  List<Right> getRightsForUserOnSupervisoryNodeAndProgram(@Param("userId") Integer userId, @Param("commaSeparatedSupervisoryNodeIds") String commaSeparatedSupervisoryNodeIds, @Param("program") Program program);
 
   @Select({"SELECT DISTINCT RR.rightName " +
       "FROM role_rights RR INNER JOIN role_assignments RA ON RR.roleId = RA.roleId " +
