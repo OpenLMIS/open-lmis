@@ -183,12 +183,14 @@
 
 
       <div class="modal-footer">
-        <input type="button" href="" id="doneNonFullSupply" class="btn btn-primary"
+        <div class="pull-right">
+        <input type="button" href="" id="cancelNonFullSupply" class="btn" ng-click="nonFullSupplyProductsModal=false;modalError=''"
+               value="Cancel"/>
+
+        <input type="button" href="" id="doneNonFullSupply" class="btn btn-success save-button"
                ng-click="addNonFullSupplyLineItemsToRnr()"
                value="Done"/>
-
-        <input type="button" href="" id="cancelNonFullSupply" class="btn" ng-click="nonFullSupplyProductsModal=false"
-               value="Cancel"/>
+        </div>
       </div>
     </div>
   </form>
