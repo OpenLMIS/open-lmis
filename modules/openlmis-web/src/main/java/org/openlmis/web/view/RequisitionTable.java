@@ -5,7 +5,6 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.apache.commons.lang.ArrayUtils;
-import org.openlmis.core.domain.Money;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrColumn;
@@ -18,31 +17,30 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Field;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class RequisitionPDFView extends AbstractView {
+public class RequisitionTable extends AbstractView {
 
-  private static final BaseColor headerBackground = new BaseColor(210, 210, 210);
-  private static final BaseColor rowGreyBackground = new BaseColor(235, 235, 235);
+  public static final BaseColor HEADER_BACKGROUND = new BaseColor(210, 210, 210);
+  public static final BaseColor ROW_GREY_BACKGROUND = new BaseColor(235, 235, 235);
   public static final Font H1_FONT = FontFactory.getFont(FontFactory.TIMES, 30, Font.BOLD, BaseColor.BLACK);
   public static final Font H2_FONT = FontFactory.getFont(FontFactory.TIMES, 20f, Font.BOLD, BaseColor.BLACK);
-  public static final Font TEXT_FONT = FontFactory.getFont(FontFactory.TIMES, 20, Font.NORMAL, BaseColor.BLACK);
-  private static final Rectangle PAGE_SIZE = new Rectangle(1500, 1059);
-  private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
-  private static final int LEFT_MARGIN = 20;
-  private static final int RIGHT_MARGIN = 10;
-  private static final int TOP_MARGIN = 10;
-  private static final int BOTTOM_MARGIN = 30;
-  private static final int CELL_PADDING = 10;
-  private static final int WIDTH_PERCENTAGE = 100;
-  private static final int PARAGRAPH_SPACING = 50;
-  private static final int TABLE_SPACING = 25;
+  public static final Font H3_FONT = FontFactory.getFont(FontFactory.TIMES, 17f, Font.NORMAL, BaseColor.BLACK);
+  public static final Rectangle PAGE_SIZE = new Rectangle(1500, 1059);
+  public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
+  public static final int LEFT_MARGIN = 20;
+  public static final int RIGHT_MARGIN = 10;
+  public static final int TOP_MARGIN = 10;
+  public static final int BOTTOM_MARGIN = 30;
+  public static final int CELL_PADDING = 5;
+  public static final int WIDTH_PERCENTAGE = 100;
+  public static final int PARAGRAPH_SPACING = 30;
+  public static final int TABLE_SPACING = 25;
 
-  public RequisitionPDFView() {
+  public RequisitionTable() {
     setContentType("application/pdf");
   }
 
@@ -57,7 +55,7 @@ public class RequisitionPDFView extends AbstractView {
 
       prepareWriter(writer, model);
       document.open();
-      buildPdfDocument(model, document, writer);
+      buildPdfDocument(model, document);
       document.close();
 
       writeToResponse(response, stream);
@@ -68,15 +66,16 @@ public class RequisitionPDFView extends AbstractView {
       throws DocumentException {
     Rnr requisition = (Rnr) model.get(RequisitionController.RNR);
 
-    writer.setPageEvent(new RequisitionPdfHeaderFooter(requisition));
     writer.setViewerPreferences(getViewerPreferences());
+    writer.setPageEvent(new RequisitionHeader(requisition));
+    writer.setPageEvent(new RequisitionFooter());
   }
 
   protected int getViewerPreferences() {
     return PdfWriter.ALLOW_PRINTING | PdfWriter.PageLayoutSinglePage;
   }
 
-  protected void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter writer) throws Exception {
+  protected void buildPdfDocument(Map<String, Object> model, Document document) throws Exception {
 
     Rnr requisition = (Rnr) model.get(RequisitionController.RNR);
 
@@ -103,23 +102,24 @@ public class RequisitionPDFView extends AbstractView {
 
     requisition.setFullSupplyItemsSubmittedCost(requisition.calculateCost(requisition.getFullSupplyLineItems()));
     requisition.setNonFullSupplyItemsSubmittedCost(requisition.calculateCost(requisition.getNonFullSupplyLineItems()));
-    addRequisitionSummary(requisition, document);
+    RequisitionSummary requisitionSummary = new RequisitionSummary();
+    requisitionSummary.addRequisitionSummary(requisition, document);
   }
 
   private void setTableHeader(List<RnrColumn> rnrColumnList, PdfPTable table) {
     for (RnrColumn rnrColumn : rnrColumnList) {
       table.addCell(rnrColumn.getLabel());
     }
-    table.setHeaderRows(1);
   }
 
   private PdfPTable prepareTable(int[] widths) throws DocumentException {
     PdfPTable table = new PdfPTable(widths.length);
     table.setWidths(widths);
-    table.getDefaultCell().setBackgroundColor(headerBackground);
+    table.getDefaultCell().setBackgroundColor(HEADER_BACKGROUND);
     table.getDefaultCell().setPadding(CELL_PADDING);
     table.setWidthPercentage(WIDTH_PERCENTAGE);
     table.setSpacingBefore(TABLE_SPACING);
+    table.setHeaderRows(1);
     return table;
   }
 
@@ -134,7 +134,7 @@ public class RequisitionPDFView extends AbstractView {
         Chunk chunk = new Chunk(lineItem.getProductCategory(), FontFactory.getFont(FontFactory.HELVETICA_BOLD));
         PdfPCell cell = new PdfPCell(new Phrase(chunk));
         cell.setColspan(rnrColumnList.size());
-        cell.setBackgroundColor(headerBackground);
+        cell.setBackgroundColor(HEADER_BACKGROUND);
         cell.setPadding(CELL_PADDING);
         table.addCell(cell);
         previousLineItem = lineItem;
@@ -166,47 +166,12 @@ public class RequisitionPDFView extends AbstractView {
       table.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
       odd = false;
     } else {
-      table.getDefaultCell().setBackgroundColor(rowGreyBackground);
+      table.getDefaultCell().setBackgroundColor(ROW_GREY_BACKGROUND);
       odd = true;
     }
     return odd;
   }
 
-
-  private void addRequisitionSummary(Rnr requisition, Document document) throws DocumentException {
-    Paragraph paragraph = new Paragraph();
-    Chunk chunk = new Chunk("Summary: ", H2_FONT);
-    paragraph.add(chunk);
-    document.add(paragraph);
-
-    PdfPTable summaryTable = new PdfPTable(2);
-    summaryTable.addCell("Total Cost For Full Supply Items");
-    summaryTable.addCell(requisition.getFullSupplyItemsSubmittedCost().toString());
-    summaryTable.addCell("Total Cost For Non Full Supply Items");
-    summaryTable.addCell(requisition.getNonFullSupplyItemsSubmittedCost().toString());
-    summaryTable.setSpacingBefore(TABLE_SPACING);
-    document.add(summaryTable);
-
-    String submittedDate = requisition.getSubmittedDate() != null ? DATE_FORMAT.format(requisition.getSubmittedDate()) : "";
-    summaryTable = new PdfPTable(5);
-    summaryTable.addCell("Submitted");
-    summaryTable.addCell("By");
-    summaryTable.addCell("");
-    summaryTable.addCell("Date");
-    summaryTable.addCell(submittedDate);
-    summaryTable.addCell("Authorized");
-    summaryTable.addCell("By");
-    summaryTable.addCell("");
-    summaryTable.addCell("Date");
-    summaryTable.addCell("");
-    summaryTable.setSpacingBefore(TABLE_SPACING);
-    document.add(summaryTable);
-
-  }
-
-  private Money getTotalCost(Rnr requisition) {
-    return new Money(new BigDecimal(requisition.getFullSupplyItemsSubmittedCost().getValue().floatValue() + requisition.getNonFullSupplyItemsSubmittedCost().getValue().floatValue()));
-  }
 
   private int[] getColumnWidths(List<RnrColumn> rnrColumnList) {
 
@@ -220,7 +185,7 @@ public class RequisitionPDFView extends AbstractView {
       if (rnrColumn.getName().equals("remarks")) {
         widths.add(100);
       }
-      if (rnrColumn.getName().equals("quantityRequestedExplanation")) {
+      if (rnrColumn.getName().equals("reasonForRequestedQuantity")) {
         widths.add(100);
       }
       widths.add(40);
@@ -233,7 +198,7 @@ public class RequisitionPDFView extends AbstractView {
     List<RnrColumn> visibleRnrColumns = new ArrayList<>();
     if (fullSupply) {
       for (RnrColumn rnrColumn : rnrColumnList) {
-        if (rnrColumn.getName().equals("remarks") || rnrColumn.getName().equals("quantityRequestedExplanation"))
+        if (rnrColumn.getName().equals("remarks") || rnrColumn.getName().equals("reasonForRequestedQuantity"))
           continue;
         if (rnrColumn.isVisible()) {
           visibleRnrColumns.add(rnrColumn);
