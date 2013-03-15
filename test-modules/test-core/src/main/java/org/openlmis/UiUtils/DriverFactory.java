@@ -33,26 +33,18 @@ public class DriverFactory {
         return loadDriver(true, browser);
     }
 
+    public String driverType() throws InterruptedException {
+        return driverType.trim();
+    }
+
     public WebDriver loadDriverWithJavascriptDisabledIfPossible(String browser) throws InterruptedException {
         return loadDriver(false, browser);
     }
 
-    public void deleteExeDF() throws InterruptedException, IOException {
-        if (System.getProperty("os.name").startsWith("Windows") && driverType.trim().startsWith("Firefox")) {
-            Runtime.getRuntime().exec("taskkill /F /IM firefox.exe");
-        } else if (System.getProperty("os.name").startsWith("Windows") && driverType.trim().contains("IEDriverServer")) {
-            Runtime.getRuntime().exec("taskkill /F /IM IEDriverServer.exe");
-            Runtime.getRuntime().exec("taskkill /F /IM iexplore.exe");
+    public void deleteExe() throws InterruptedException, IOException {
             unZip = new Unzip();
             unZip.deleteFile(OUTPUT_FOLDER + "IEDriverServer.exe");
-        } else if (System.getProperty("os.name").startsWith("Windows") && driverType.trim().contains("chromedriver")) {
-            Runtime.getRuntime().exec("taskkill /F /IM chromedriver.exe");
-            Runtime.getRuntime().exec("taskkill /F /IM chrome.exe");
-            unZip = new Unzip();
             unZip.deleteFile(OUTPUT_FOLDER + "chromedriver.exe");
-        } else {
-            Runtime.getRuntime().exec("killall -9 firefox-bin");
-        }
     }
 
 

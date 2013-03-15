@@ -24,7 +24,13 @@ public class TestCaseHelper {
 
     public void tearDownSuite() {
         try {
-            deleteExe();
+           if (System.getProperty("os.name").startsWith("Windows") && driverFactory.driverType().contains("IEDriverServer")) {
+                Runtime.getRuntime().exec("taskkill /F /IM IEDriverServer.exe");
+                Runtime.getRuntime().exec("taskkill /F /IM iexplore.exe");
+            } else {
+                testWebDriver.quitDriver();
+            }
+            driverFactory.deleteExe();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -35,8 +41,6 @@ public class TestCaseHelper {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
                 if (testWebDriver != null) {
-//                  testWebDriver.close();
-                    //testWebDriver.quitDriver();
                     tearDownSuite();
                 }
             }
@@ -47,10 +51,5 @@ public class TestCaseHelper {
     protected void loadDriver(String browser) throws InterruptedException {
         testWebDriver = new TestWebDriver(driverFactory.loadDriver(browser));
     }
-
-    protected void deleteExe() throws InterruptedException, IOException {
-        driverFactory.deleteExeDF();
-    }
-
 
 }
