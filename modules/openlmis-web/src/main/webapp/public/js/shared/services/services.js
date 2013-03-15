@@ -182,6 +182,9 @@ services.factory('RequisitionOrder', function ($resource) {
   return $resource('/requisitionOrder.json', {}, {});
 });
 
+services.factory('FacilityProgramRights', function($resource){
+  return $resource('/facility/:facilityId/program/:programId/rights.json');
+})
 
 
 

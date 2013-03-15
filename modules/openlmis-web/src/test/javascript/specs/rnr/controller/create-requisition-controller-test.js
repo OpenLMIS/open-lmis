@@ -1,5 +1,5 @@
 describe('CreateRequisitionController', function () {
-  var scope, rootScope, ctrl, httpBackend, location, routeParams, controller, localStorageService, mockedRequisition, rnrColumns, lossesAndAdjustmentTypes, facilityApprovedProducts;
+  var scope, rootScope, ctrl, httpBackend, location, routeParams, controller, localStorageService, mockedRequisition, rnrColumns, lossesAndAdjustmentTypes, facilityApprovedProducts, requisitionRights ;
 
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
@@ -62,8 +62,10 @@ describe('CreateRequisitionController', function () {
     $rootScope.fixToolBar = function () {
     };
 
+   requisitionRights = [{right:'CREATE_REQUISITION'},{right:'AUTHORIZE_REQUISITION'}];
+
     ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: mockedRequisition, rnrColumns: rnrColumns,
-      currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
+      currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts, requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
 
   }));
 
@@ -211,7 +213,7 @@ describe('CreateRequisitionController', function () {
     spyOn(rootScope, 'hasPermission').andReturn(true);
 
     ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [],
-      currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
+      currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts, requisitionRights : requisitionRights,$routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
 
     expect(rootScope.hasPermission).toHaveBeenCalledWith('CREATE_REQUISITION');
     expect(scope.formDisabled).toEqual(false);
@@ -222,7 +224,7 @@ describe('CreateRequisitionController', function () {
     spyOn(rootScope, 'hasPermission').andReturn(true);
 
     ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [],
-      currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts,$routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
+      currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts, requisitionRights : requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
 
     expect(rootScope.hasPermission).toHaveBeenCalledWith('AUTHORIZE_REQUISITION');
     expect(scope.formDisabled).toEqual(false);
@@ -232,7 +234,7 @@ describe('CreateRequisitionController', function () {
     var rnr = {id: "rnrId", fullSupplyLineItems: [], status: "some random status"};
     spyOn(rootScope, 'hasPermission');
     ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [],
-      currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts,$routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
+      currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts, requisitionRights : requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
     expect(rootScope.hasPermission).not.toHaveBeenCalled();
     expect(scope.formDisabled).toEqual(true);
   });
@@ -240,7 +242,7 @@ describe('CreateRequisitionController', function () {
   it('should make rnr in scope as Rnr Instance', function () {
     var spyRnr = spyOn(window, 'Rnr').andCallThrough();
     ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: mockedRequisition, rnrColumns: rnrColumns,
-      currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts,$routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
+      currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts,requisitionRights : requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
 
     expect(scope.rnr instanceof Rnr).toBeTruthy();
     expect(spyRnr).toHaveBeenCalledWith(mockedRequisition, rnrColumns);
@@ -331,6 +333,14 @@ describe('CreateRequisitionController', function () {
     var result = scope.checkErrorOnPage(1);
     expect(result).toBeFalsy();
   });
+
+  it('should set requisition rights in scope', function(){
+    expect(scope.requisitionRights).toEqual([{right:'CREATE_REQUISITION'},{right:'AUTHORIZE_REQUISITION'}])
+  });
+
+  it('should check permission using requisition rights', function(){
+    expect(scope.hasPermission('CREATE_REQUISITION')).toBeTruthy()
+  })
 
 });
 
