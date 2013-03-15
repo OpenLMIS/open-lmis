@@ -214,12 +214,6 @@ public class FacilityMapperIT {
   }
 
   @Test
-  public void shouldDetermineIfGeographicZoneIdExists() throws Exception {
-    assertThat(mapper.isGeographicZonePresent(1), is(true));
-    assertThat(mapper.isGeographicZonePresent(9999), is(false));
-  }
-
-  @Test
   public void shouldGetAllFacilitiesForRequisitionGroupsWhichSupportGivenProgram() {
     RequisitionGroup rg1 = make(a(RequisitionGroupBuilder.defaultRequisitionGroup, with(RequisitionGroupBuilder.code, "RG1")));
     RequisitionGroup rg2 = make(a(RequisitionGroupBuilder.defaultRequisitionGroup, with(RequisitionGroupBuilder.code, "RG2")));
@@ -274,17 +268,6 @@ public class FacilityMapperIT {
     for (Facility facility : returnedFacilityList) {
       assertThat(facility.getCode().equals(facility1.getCode()) || facility.getCode().equals(facility2.getCode()) || facility.getCode().equals(facility3.getCode()), is(true));
     }
-  }
-
-  @Test
-  public void shouldGetGeographicZoneWithParent() throws Exception {
-    GeographicZone parent = new GeographicZone(null, "Dodoma", "Dodoma", new GeographicLevel(null, "district", "District",null), null, null);
-    GeographicZone expectedZone = new GeographicZone(4, "Ngorongoro", "Ngorongoro", new GeographicLevel(null, "city", "City", null), parent, null);
-
-    GeographicZone zone = mapper.getGeographicZoneById(4);
-
-    assertThat(zone, is(expectedZone));
-
   }
 
   @Test
