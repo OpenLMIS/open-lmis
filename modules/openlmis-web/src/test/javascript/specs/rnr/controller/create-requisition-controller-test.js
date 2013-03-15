@@ -210,32 +210,26 @@ describe('CreateRequisitionController', function () {
   it('should not set disable flag if rnr is initiated and user has create right', function () {
 
     var rnr = {id: "rnrId", fullSupplyLineItems: [], status: "INITIATED"};
-    spyOn(rootScope, 'hasPermission').andReturn(true);
 
     ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [],
       currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts, requisitionRights : requisitionRights,$routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
 
-    expect(rootScope.hasPermission).toHaveBeenCalledWith('CREATE_REQUISITION');
     expect(scope.formDisabled).toEqual(false);
   });
 
   it('should not set disable flag if rnr is submitted and user have authorize right', function () {
     var rnr = {id: "rnrId", fullSupplyLineItems: [], status: "SUBMITTED"};
-    spyOn(rootScope, 'hasPermission').andReturn(true);
 
     ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [],
       currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts, requisitionRights : requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
 
-    expect(rootScope.hasPermission).toHaveBeenCalledWith('AUTHORIZE_REQUISITION');
     expect(scope.formDisabled).toEqual(false);
   });
 
   it('should set disable flag if rnr is not initiated/submitted', function () {
     var rnr = {id: "rnrId", fullSupplyLineItems: [], status: "some random status"};
-    spyOn(rootScope, 'hasPermission');
     ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [],
       currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts, requisitionRights : requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
-    expect(rootScope.hasPermission).not.toHaveBeenCalled();
     expect(scope.formDisabled).toEqual(true);
   });
 
