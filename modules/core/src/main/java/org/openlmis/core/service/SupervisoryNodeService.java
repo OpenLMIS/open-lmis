@@ -41,6 +41,7 @@ public class SupervisoryNodeService {
   }
 
   public User getApproverFor(Facility facility, Program program) {
+
     SupervisoryNode supervisoryNode = supervisoryNodeRepository.getFor(facility, program);
     if (supervisoryNode == null) return null;
 

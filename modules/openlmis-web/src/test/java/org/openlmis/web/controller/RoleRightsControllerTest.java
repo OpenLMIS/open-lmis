@@ -1,14 +1,14 @@
 package org.openlmis.web.controller;
 
 
+import org.hamcrest.Matcher;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.Right;
-import org.openlmis.core.domain.Role;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -28,6 +28,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 import static org.openlmis.core.domain.Right.CONFIGURE_RNR;
+import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 import static org.openlmis.web.controller.RoleRightsController.*;
 import static org.openlmis.web.response.OpenLmisResponse.SUCCESS;
 
@@ -126,11 +127,38 @@ public class RoleRightsControllerTest {
     assertThat(responseEntity.getBody().getErrorMsg(), is("Duplicate Role found"));
   }
 
-  @Test @Ignore
+  @Test
   public void shouldGetRightsForUserAndFacilityProgram() throws Exception {
-    ResponseEntity<OpenLmisResponse> response = controller.getRightsForUserAndFacilityProgram();
+    List<Right> rights = new ArrayList<Right>() {{
+      add(CREATE_REQUISITION);
+    }};
+    Integer facilityId = 1;
+    Integer programId = 1;
+    when(roleRightsService.getRightsForUserAndFacilityProgram(eq(LOGGED_IN_USERID), any(Facility.class), any(Program.class))).thenReturn(rights);
+    ResponseEntity<OpenLmisResponse> response = controller.getRightsForUserAndFacilityProgram(facilityId, programId, httpServletRequest);
 
-    List<Right> rights = new ArrayList<>();
-    assertThat((List<Right>)response.getBody().getData().get("rights"), is(rights));
+    assertThat((List<Right>) response.getBody().getData().get("rights"), is(rights));
+    verify(roleRightsService).getRightsForUserAndFacilityProgram(LOGGED_IN_USERID, argThat(facilityMatcher(facilityId)), argThat(programMatcher(programId)));
   }
+
+  private Matcher<Program> programMatcher(final int id) {
+    return new ArgumentMatcher<Program>() {
+      @Override
+      public boolean matches(Object argument) {
+        Program program = (Program) argument;
+        return program.getId().equals(id);
+      }
+    };
+  }
+
+  private Matcher<Facility> facilityMatcher(final int id) {
+    return new ArgumentMatcher<Facility>() {
+      @Override
+      public boolean matches(Object argument) {
+        Facility facility = (Facility) argument;
+        return facility.getId().equals(id);
+      }
+    };
+  }
+
 }

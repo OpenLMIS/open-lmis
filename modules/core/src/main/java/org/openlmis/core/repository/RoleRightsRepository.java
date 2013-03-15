@@ -1,8 +1,10 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.Role;
+import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.RoleRightsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,5 +76,13 @@ public class RoleRightsRepository {
 
   public Set<Right> getAllRightsForUser(Integer userId) {
     return roleRightsMapper.getAllRightsForUserById(userId);
+  }
+
+  public List<Right> getRightsForUserOnSupervisoryNodeAndProgram(Integer userId, SupervisoryNode supervisoryNode, Program program) {
+    return roleRightsMapper.getRightsForUserOnSupervisoryNodeAndProgram(userId, supervisoryNode, program);
+  }
+
+  public List<Right> getRightsForUserOnHomeFacilityAndProgram(Integer userId, Program program) {
+    return roleRightsMapper.getRightsForUserOnHomeFacilityAndProgram(userId, program);
   }
 }

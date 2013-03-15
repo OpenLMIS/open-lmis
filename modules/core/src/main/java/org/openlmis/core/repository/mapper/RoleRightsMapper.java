@@ -1,8 +1,10 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.Role;
+import org.openlmis.core.domain.SupervisoryNode;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,14 +14,14 @@ import java.util.Set;
 public interface RoleRightsMapper {
 
   @Insert("INSERT INTO role_rights(roleId, rightName) VALUES " +
-    "(#{roleId}, #{right})")
+      "(#{roleId}, #{right})")
   int createRoleRight(@Param(value = "roleId") Integer roleId, @Param(value = "right") Right right);
 
   @Select({"SELECT RR.rightName",
-    "FROM users U, role_assignments RA, role_rights RR WHERE",
-    "lower(U.userName) = lower(#{userName}) ",
-    "AND U.id = RA.userId",
-    "AND RA.roleId = RR.roleId"})
+      "FROM users U, role_assignments RA, role_rights RR WHERE",
+      "lower(U.userName) = lower(#{userName}) ",
+      "AND U.id = RA.userId",
+      "AND RA.roleId = RR.roleId"})
   Set<Right> getAllRightsForUserByUserName(String username);
 
   //used below
@@ -28,24 +30,24 @@ public interface RoleRightsMapper {
   Set<Right> getAllRightsForRole(Integer roleId);
 
   @Insert({"INSERT INTO roles",
-    "(name, description, modifiedBy) VALUES",
-    "(#{name}, #{description}, #{modifiedBy})"})
+      "(name, description, modifiedBy) VALUES",
+      "(#{name}, #{description}, #{modifiedBy})"})
   @Options(useGeneratedKeys = true)
   int insertRole(Role role);
 
   @Select("SELECT * FROM roles WHERE id = #{id}")
   @Results(value = {
-    @Result(property = "id", column = "id"),
-    @Result(property = "rights", javaType = Set.class, column = "id",
-      many = @Many(select = "getAllRightsForRole"))
+      @Result(property = "id", column = "id"),
+      @Result(property = "rights", javaType = Set.class, column = "id",
+          many = @Many(select = "getAllRightsForRole"))
   })
   Role getRole(Integer id);
 
   @Select("SELECT * FROM roles ORDER BY id")
   @Results(value = {
-    @Result(property = "id", column = "id"),
-    @Result(property = "rights", javaType = Set.class, column = "id",
-      many = @Many(select = "getAllRightsForRole"))
+      @Result(property = "id", column = "id"),
+      @Result(property = "rights", javaType = Set.class, column = "id",
+          many = @Many(select = "getAllRightsForRole"))
   })
   List<Role> getAllRoles();
 
@@ -56,9 +58,19 @@ public interface RoleRightsMapper {
   int deleteAllRightsForRole(int roleId);
 
   @Select({"SELECT RR.rightName",
-    "FROM users U, role_assignments RA, role_rights RR WHERE",
-    "U.id = #{userId}",
-    "AND U.id = RA.userId",
-    "AND RA.roleId = RR.roleId"})
+      "FROM users U, role_assignments RA, role_rights RR WHERE",
+      "U.id = #{userId}",
+      "AND U.id = RA.userId",
+      "AND RA.roleId = RR.roleId"})
   Set<Right> getAllRightsForUserById(@Param("userId") Integer userId);
+
+  @Select({"SELECT DISTINCT RR.rightName " +
+      "FROM role_rights RR INNER JOIN role_assignments RA ON RR.roleId = RA.roleId " +
+      "WHERE RA.userId = #{userId} AND RA.supervisoryNodeId = #{supervisoryNode.id} AND RA.programId = #{program.id}"})
+  List<Right> getRightsForUserOnSupervisoryNodeAndProgram(@Param("userId") Integer userId, @Param("supervisoryNode") SupervisoryNode supervisoryNode, @Param("program") Program program);
+
+  @Select({"SELECT DISTINCT RR.rightName " +
+      "FROM role_rights RR INNER JOIN role_assignments RA ON RR.roleId = RA.roleId " +
+      "WHERE RA.userId = #{userId} AND RA.supervisoryNodeId IS NULL AND RA.programId = #{program.id}"})
+  List<Right> getRightsForUserOnHomeFacilityAndProgram(@Param("userId") Integer userId, @Param("program") Program program);
 }

@@ -1,12 +1,12 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.Right;
-import org.openlmis.core.domain.Role;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.RoleRightsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -18,10 +18,14 @@ import static java.util.Arrays.asList;
 public class RoleRightsService {
 
   private RoleRightsRepository roleRightsRepository;
+  private SupervisoryNodeService supervisoryNodeService;
+  private FacilityService facilityService;
 
   @Autowired
-  public RoleRightsService(RoleRightsRepository roleRightsRepository) {
+  public RoleRightsService(RoleRightsRepository roleRightsRepository, SupervisoryNodeService supervisoryNodeService, FacilityService facilityService) {
     this.roleRightsRepository = roleRightsRepository;
+    this.supervisoryNodeService = supervisoryNodeService;
+    this.facilityService = facilityService;
   }
 
   public Set<Right> getRights(String username) {
@@ -51,5 +55,17 @@ public class RoleRightsService {
 
   public Set<Right> getRights(Integer userId) {
     return roleRightsRepository.getAllRightsForUser(userId);
+  }
+
+  public List<Right> getRightsForUserAndFacilityProgram(Integer userId, Facility facility, Program program) {
+    List<Right> result = new ArrayList<>();
+    Facility homeFacility = facilityService.getHomeFacility(userId);
+    if (homeFacility!=null && homeFacility.getId().equals(facility.getId()))
+      result.addAll(roleRightsRepository.getRightsForUserOnHomeFacilityAndProgram(userId, program));
+
+    SupervisoryNode supervisoryNode = supervisoryNodeService.getFor(facility, program);
+    if (supervisoryNode != null)
+      result.addAll(roleRightsRepository.getRightsForUserOnSupervisoryNodeAndProgram(userId, supervisoryNode, program));
+    return result;
   }
 }
