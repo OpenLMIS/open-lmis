@@ -195,7 +195,11 @@ public class RnrLineItem {
 
   public void calculatePacksToShip() {
     Integer orderQuantity = getOrderQuantity();
-    packsToShip = orderQuantity == 0 ? 0 : round(floor(orderQuantity / packSize), orderQuantity);
+    if(orderQuantity == null || packSize == null) {
+      packsToShip = null;
+    } else {
+      packsToShip = orderQuantity == 0 ? 0 : round(floor(orderQuantity / packSize), orderQuantity);
+    }
   }
 
   private Integer getOrderQuantity() {
@@ -217,7 +221,11 @@ public class RnrLineItem {
   }
 
   public void calculateOrderQuantity() {
-    calculatedOrderQuantity = (maxStockQuantity - stockInHand < 0) ? 0 : maxStockQuantity - stockInHand;
+    if (isAnyNull(maxStockQuantity, stockInHand)) {
+      calculatedOrderQuantity = null;
+    } else {
+      calculatedOrderQuantity = (maxStockQuantity - stockInHand < 0) ? 0 : maxStockQuantity - stockInHand;
+    }
   }
 
   public void calculateMaxStockQuantity() {
@@ -304,7 +312,11 @@ public class RnrLineItem {
   }
 
   public void calculateQuantityDispensed() {
-    this.quantityDispensed = this.beginningBalance + this.quantityReceived + this.totalLossesAndAdjustments - this.stockInHand;
+    if (isAnyNull(beginningBalance, quantityReceived, totalLossesAndAdjustments, stockInHand)) {
+      quantityDispensed = null;
+    } else {
+      this.quantityDispensed = this.beginningBalance + this.quantityReceived + this.totalLossesAndAdjustments - this.stockInHand;
+    }
   }
 
   public Money calculateCost() {
@@ -312,6 +324,13 @@ public class RnrLineItem {
       return price.multiply(BigDecimal.valueOf(packsToShip));
     }
     return new Money("0");
+  }
+
+  private boolean isAnyNull(Integer... fields) {
+    for (Integer field : fields) {
+      if (field == null) return true;
+    }
+    return false;
   }
 
 }

@@ -27,35 +27,23 @@ public class PrintRnrLineItem {
     calculateAmc(period);
     calculateMaxStockQuantity();
     calculateLossesAndAdjustments();
-   if (template.columnsCalculated(STOCK_IN_HAND)) calculateStockInHand();
-   if (template.columnsCalculated(QUANTITY_DISPENSED)) calculateQuantityDispensed();
+    if (template.columnsCalculated(STOCK_IN_HAND)) calculateStockInHand();
+    if (template.columnsCalculated(QUANTITY_DISPENSED)) calculateQuantityDispensed();
     calculateOrderQuantity();
 
     calculatePacksToShip();
   }
 
   private void calculatePacksToShip() {
-    try {
-      rnrLineItem.calculatePacksToShip();
-    } catch (NullPointerException e) {
-      rnrLineItem.setPacksToShip(null);
-    }
+    rnrLineItem.calculatePacksToShip();
   }
 
   private void calculateOrderQuantity() {
-    try {
-      rnrLineItem.calculateOrderQuantity();
-    } catch (NullPointerException e) {
-      rnrLineItem.setCalculatedOrderQuantity(null);
-    }
+    rnrLineItem.calculateOrderQuantity();
   }
 
   private void calculateQuantityDispensed() {
-    try {
-      rnrLineItem.calculateQuantityDispensed();
-    } catch (NullPointerException e) {
-      rnrLineItem.setQuantityDispensed(null);
-    }
+    rnrLineItem.calculateQuantityDispensed();
   }
 
   private void calculateStockInHand() {
