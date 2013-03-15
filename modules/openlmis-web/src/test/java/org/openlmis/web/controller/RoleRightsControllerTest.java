@@ -2,6 +2,7 @@ package org.openlmis.web.controller;
 
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -123,5 +124,13 @@ public class RoleRightsControllerTest {
 
     assertThat(responseEntity.getStatusCode(), is(HttpStatus.CONFLICT));
     assertThat(responseEntity.getBody().getErrorMsg(), is("Duplicate Role found"));
+  }
+
+  @Test @Ignore
+  public void shouldGetRightsForUserAndFacilityProgram() throws Exception {
+    ResponseEntity<OpenLmisResponse> response = controller.getRightsForUserAndFacilityProgram();
+
+    List<Right> rights = new ArrayList<>();
+    assertThat((List<Right>)response.getBody().getData().get("rights"), is(rights));
   }
 }

@@ -3,8 +3,6 @@ package org.openlmis.core.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.Role;
-import org.openlmis.core.domain.RoleAssignment;
-import org.openlmis.core.repository.RoleAssignmentRepository;
 import org.openlmis.core.repository.RoleRightsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,16 +18,10 @@ import static java.util.Arrays.asList;
 public class RoleRightsService {
 
   private RoleRightsRepository roleRightsRepository;
-  private RoleAssignmentRepository roleAssignmentRepository;
 
   @Autowired
-  public RoleRightsService(RoleRightsRepository roleRightsRepository, RoleAssignmentRepository roleAssignmentRepository) {
+  public RoleRightsService(RoleRightsRepository roleRightsRepository) {
     this.roleRightsRepository = roleRightsRepository;
-    this.roleAssignmentRepository = roleAssignmentRepository;
-  }
-
-  public List<RoleAssignment> getRoleAssignments(Right right, int userId) {
-    return roleAssignmentRepository.getRoleAssignmentsForUserWithRight(right, userId);
   }
 
   public Set<Right> getRights(String username) {

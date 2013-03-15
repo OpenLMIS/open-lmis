@@ -42,25 +42,25 @@ public class RequisitionService {
   private RnrTemplateRepository rnrTemplateRepository;
   private FacilityApprovedProductService facilityApprovedProductService;
   private SupervisoryNodeService supervisoryNodeService;
-  private RoleRightsService roleRightsService;
   private ProgramService programService;
   private ProcessingScheduleService processingScheduleService;
   private FacilityService facilityService;
   private SupplyLineService supplyLineService;
   private RequisitionFactory requisitionFactory;
   private RequisitionPermissionService requisitionPermissionService;
+  private RoleAssignmentService roleAssignmentService;
 
   @Autowired
   public RequisitionService(RequisitionRepository requisitionRepository, RnrTemplateRepository rnrTemplateRepository,
                             FacilityApprovedProductService facilityApprovedProductService, SupervisoryNodeService supervisoryNodeRepository,
-                            RoleRightsService roleRightsService, ProgramService programService,
+                            RoleAssignmentService roleAssignmentService, ProgramService programService,
                             ProcessingScheduleService processingScheduleService, FacilityService facilityService, SupplyLineService supplyLineService,
                             RequisitionFactory requisitionFactory, RequisitionPermissionService requisitionPermissionService) {
     this.requisitionRepository = requisitionRepository;
     this.rnrTemplateRepository = rnrTemplateRepository;
     this.facilityApprovedProductService = facilityApprovedProductService;
     this.supervisoryNodeService = supervisoryNodeRepository;
-    this.roleRightsService = roleRightsService;
+    this.roleAssignmentService = roleAssignmentService;
     this.programService = programService;
     this.processingScheduleService = processingScheduleService;
     this.facilityService = facilityService;
@@ -308,7 +308,7 @@ public class RequisitionService {
   }
 
   public List<Rnr> listForApproval(Integer userId) {
-    List<RoleAssignment> assignments = roleRightsService.getRoleAssignments(APPROVE_REQUISITION, userId);
+    List<RoleAssignment> assignments = roleAssignmentService.getRoleAssignments(APPROVE_REQUISITION, userId);
     List<Rnr> requisitionsForApproval = new ArrayList<>();
     for (RoleAssignment assignment : assignments) {
       final List<Rnr> requisitions = requisitionRepository.getAuthorizedRequisitions(assignment);

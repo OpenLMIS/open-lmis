@@ -74,7 +74,7 @@ public class RequisitionServiceTest {
   @Mock
   private SupervisoryNodeService supervisoryNodeService;
   @Mock
-  private RoleRightsService roleRightService;
+  private RoleAssignmentService roleAssignmentService ;
   @Mock
   private ProgramService programService;
   @Mock
@@ -96,7 +96,7 @@ public class RequisitionServiceTest {
   @Before
   public void setup() {
     requisitionService = new RequisitionService(requisitionRepository, rnrTemplateRepository, facilityApprovedProductService,
-        supervisoryNodeService, roleRightService, programService, processingScheduleService, facilityService, supplyLineService,
+        supervisoryNodeService, roleAssignmentService, programService, processingScheduleService, facilityService, supplyLineService,
         requisitionFactory, requisitionPermissionService);
     submittedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, SUBMITTED), with(modifiedBy, USER_ID)));
     initiatedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, INITIATED), with(modifiedBy, USER_ID)));
@@ -515,7 +515,7 @@ public class RequisitionServiceTest {
       add(firstAssignment);
       add(secondAssignment);
     }};
-    when(roleRightService.getRoleAssignments(APPROVE_REQUISITION, USER_ID)).thenReturn(roleAssignments);
+    when(roleAssignmentService.getRoleAssignments(APPROVE_REQUISITION, USER_ID)).thenReturn(roleAssignments);
     when(requisitionRepository.getAuthorizedRequisitions(firstAssignment)).thenReturn(requisitionsForFirstAssignment);
     when(requisitionRepository.getAuthorizedRequisitions(secondAssignment)).thenReturn(requisitionsForSecondAssignment);
     Program expectedProgram = new Program();
@@ -648,7 +648,7 @@ public class RequisitionServiceTest {
     }};
 
     final int userId = 1;
-    when(roleRightService.getRoleAssignments(APPROVE_REQUISITION, userId)).thenReturn(roleAssignments);
+    when(roleAssignmentService.getRoleAssignments(APPROVE_REQUISITION, userId)).thenReturn(roleAssignments);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage(RNR_OPERATION_UNAUTHORIZED);

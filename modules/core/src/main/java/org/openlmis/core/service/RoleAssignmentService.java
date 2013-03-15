@@ -5,9 +5,7 @@ import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
-import org.openlmis.core.repository.ProgramRepository;
 import org.openlmis.core.repository.RoleAssignmentRepository;
-import org.openlmis.core.repository.RoleRightsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,18 +15,12 @@ import java.util.List;
 @NoArgsConstructor
 public class RoleAssignmentService {
 
-  RoleAssignmentRepository roleAssignmentRepository;
-
-  ProgramRepository programRepository;
-
-  RoleRightsRepository roleRightsRepository;
+  private RoleAssignmentRepository roleAssignmentRepository;
 
 
   @Autowired
-  public RoleAssignmentService(RoleAssignmentRepository roleAssignmentRepository, ProgramRepository programRepository, RoleRightsRepository roleRightsRepository) {
+  public RoleAssignmentService(RoleAssignmentRepository roleAssignmentRepository) {
     this.roleAssignmentRepository = roleAssignmentRepository;
-    this.roleRightsRepository = roleRightsRepository;
-    this.programRepository = programRepository;
   }
 
   public void saveHomeFacilityRoles(User user) {
@@ -67,5 +59,9 @@ public class RoleAssignmentService {
 
   public List<RoleAssignment> getHomeFacilityRolesForUserOnGivenProgramWithRights(Integer userId, Integer programId, Right... rights) {
     return roleAssignmentRepository.getHomeFacilityRolesForUserOnGivenProgramWithRights(userId, programId, rights);
+  }
+
+  public List<RoleAssignment> getRoleAssignments(Right right, int userId) {
+    return roleAssignmentRepository.getRoleAssignmentsForUserWithRight(right, userId);
   }
 }

@@ -13,14 +13,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 
 import static org.openlmis.web.response.OpenLmisResponse.*;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @Controller
 @NoArgsConstructor
@@ -84,4 +81,8 @@ public class RoleRightsController extends BaseController {
 
         return new ResponseEntity<>(new OpenLmisResponse(SUCCESS, role.getName()+" updated successfully"), HttpStatus.OK);
     }
+
+  public ResponseEntity<OpenLmisResponse> getRightsForUserAndFacilityProgram() {
+    return null;
+  }
 }

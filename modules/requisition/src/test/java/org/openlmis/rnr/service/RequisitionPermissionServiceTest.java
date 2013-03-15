@@ -11,7 +11,6 @@ import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.RoleAssignmentService;
-import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.Rnr;
 
@@ -36,8 +35,6 @@ public class RequisitionPermissionServiceTest {
   FacilityService facilityService;
   @Mock
   private RoleAssignmentService roleAssignmentService;
-  @Mock
-  private RoleRightsService roleRightsService;
   private RequisitionPermissionService requisitionPermissionService;
   private Integer userId;
   private Integer programId;
@@ -48,7 +45,7 @@ public class RequisitionPermissionServiceTest {
     userId = 1;
     programId = 1;
     facilityId = 1;
-    requisitionPermissionService = new RequisitionPermissionService(facilityService, roleAssignmentService, roleRightsService);
+    requisitionPermissionService = new RequisitionPermissionService(facilityService, roleAssignmentService);
   }
 
   @Test
@@ -132,7 +129,7 @@ public class RequisitionPermissionServiceTest {
       add(assignment);
     }};
 
-    when(roleRightsService.getRoleAssignments(APPROVE_REQUISITION, userId)).thenReturn(roleAssignments);
+    when(roleAssignmentService.getRoleAssignments(APPROVE_REQUISITION, userId)).thenReturn(roleAssignments);
 
     assertThat(requisitionPermissionService.hasPermissionToApprove(userId, rnr), is(true));
   }

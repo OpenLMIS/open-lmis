@@ -31,7 +31,7 @@ public class RoleAssignmentServiceTest {
 
   @Before
   public void setUp() throws Exception {
-    service = new RoleAssignmentService(roleAssignmentRepository, null, null);
+    service = new RoleAssignmentService(roleAssignmentRepository);
   }
 
   @Test

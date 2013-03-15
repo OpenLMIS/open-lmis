@@ -42,7 +42,7 @@ public class RoleRightsServiceTest {
     @Before
     public void setUp() throws Exception {
         role = new Role("role name", "role description");
-        roleRightsService = new RoleRightsService(roleRightsRepository, roleAssignmentRepository);
+        roleRightsService = new RoleRightsService(roleRightsRepository);
     }
 
 
