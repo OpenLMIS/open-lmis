@@ -60,14 +60,15 @@ public class RoleRightsService {
   public List<Right> getRightsForUserAndFacilityProgram(Integer userId, Facility facility, Program program) {
     List<Right> result = new ArrayList<>();
     Facility homeFacility = facilityService.getHomeFacility(userId);
-    if (homeFacility!=null && homeFacility.getId().equals(facility.getId()))
+    if (homeFacility != null && homeFacility.getId().equals(facility.getId()))
       result.addAll(roleRightsRepository.getRightsForUserOnHomeFacilityAndProgram(userId, program));
 
     SupervisoryNode supervisoryNode = supervisoryNodeService.getFor(facility, program);
-    List<SupervisoryNode> supervisoryNodes = supervisoryNodeService.getAllParentSupervisoryNodesInHierarchy(supervisoryNode);
 
-    if (supervisoryNode != null)
+    if (supervisoryNode != null) {
+      List<SupervisoryNode> supervisoryNodes = supervisoryNodeService.getAllParentSupervisoryNodesInHierarchy(supervisoryNode);
       result.addAll(roleRightsRepository.getRightsForUserOnSupervisoryNodeAndProgram(userId, supervisoryNodes, program));
+    }
     return result;
   }
 }
