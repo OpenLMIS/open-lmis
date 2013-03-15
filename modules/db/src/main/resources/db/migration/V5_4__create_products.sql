@@ -49,8 +49,9 @@ CREATE TABLE products (
   roundToZero BOOLEAN NOT NULL,
   archived BOOLEAN,
   packRoundingThreshold SMALLINT NOT NULL,
+  modifiedBy INTEGER,
   modifiedDate TIMESTAMP DEFAULT  CURRENT_TIMESTAMP,
-  createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
-  modifiedBy INTEGER
+  createdBy INTEGER,
+  createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );
 CREATE UNIQUE INDEX uc_product_code ON products(LOWER(code));

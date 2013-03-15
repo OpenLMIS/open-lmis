@@ -8,6 +8,7 @@ CREATE TABLE processing_periods (
   numberOfMonths INTEGER,
   modifiedBy INTEGER,
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  createdBy INTEGER,
   createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );
 

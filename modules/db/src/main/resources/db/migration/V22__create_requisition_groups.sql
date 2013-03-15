@@ -6,6 +6,7 @@ CREATE TABLE requisition_groups (
   supervisoryNodeId INTEGER,
   modifiedBy INTEGER,
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  createdBy INTEGER,
   createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );
 

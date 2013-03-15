@@ -5,6 +5,7 @@ CREATE TABLE programs_supported (
   active       BOOLEAN NOT NULL,
   modifiedBy   INTEGER,
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  createdBy INTEGER,
   createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
   PRIMARY KEY (facilityId, programId)
 );

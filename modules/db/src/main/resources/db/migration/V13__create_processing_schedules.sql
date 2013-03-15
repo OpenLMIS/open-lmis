@@ -5,6 +5,7 @@ CREATE TABLE processing_schedules (
   description VARCHAR(250),
   modifiedBy INTEGER,
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  createdBy INTEGER,
   createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );
 

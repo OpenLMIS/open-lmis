@@ -6,7 +6,8 @@ CREATE TABLE programs (
     budgetingApplies BOOLEAN,
     usesDar BOOLEAN,
     active BOOLEAN,
-    lastModifiedDate DATE,
     lastModifiedBy INTEGER,
+    lastModifiedDate DATE,
+    createdBy INTEGER,
     createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );

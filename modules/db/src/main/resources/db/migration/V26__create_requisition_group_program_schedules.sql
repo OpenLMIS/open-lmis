@@ -7,5 +7,6 @@ CREATE TABLE requisition_group_program_schedules (
   modifiedBy INTEGER,
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
+  createdBy INTEGER,
   PRIMARY KEY (requisitionGroupId, programId)
 );

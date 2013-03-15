@@ -8,6 +8,7 @@ CREATE TABLE program_products (
     currentPrice NUMERIC(20,2) DEFAULT 0,
     modifiedBy INTEGER,
     modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    createdBy INTEGER,
     createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
     UNIQUE (productId, programId)
 );

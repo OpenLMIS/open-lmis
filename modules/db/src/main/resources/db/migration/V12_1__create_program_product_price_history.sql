@@ -9,5 +9,6 @@ CREATE TABLE program_product_price_history (
     endDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     modifiedBy INTEGER,
     modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    createdBy INTEGER,
     createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );

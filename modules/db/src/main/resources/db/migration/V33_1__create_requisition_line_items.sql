@@ -33,6 +33,7 @@ fullSupply                            BOOLEAN NOT NULL,
 previousStockInHandAvailable          BOOLEAN NOT NULL DEFAULT FALSE,
 modifiedBy                            INTEGER,
 modifiedDate                          TIMESTAMP  DEFAULT  CURRENT_TIMESTAMP,
+createdBy                             INTEGER,
 createdDate                           TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 
 );
