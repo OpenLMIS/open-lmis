@@ -15,6 +15,7 @@ import org.openlmis.core.repository.RoleRightsRepository;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
@@ -114,10 +115,10 @@ public class RoleRightsServiceTest {
     when(supervisoryNodeService.getAllParentSupervisoryNodesInHierarchy(supervisoryNode)).thenReturn(supervisoryNodes);
     when(roleRightsRepository.getRightsForUserOnSupervisoryNodeAndProgram(userId, supervisoryNodes, program)).thenReturn(expected);
 
-    List<Right> result = roleRightsService.getRightsForUserAndFacilityProgram(userId, facility, program);
+    Set<Right> result = roleRightsService.getRightsForUserAndFacilityProgram(userId, facility, program);
 
     verify(roleRightsRepository).getRightsForUserOnSupervisoryNodeAndProgram(userId, supervisoryNodes, program);
-    assertThat(result, is(expected));
+    assertThat(result.containsAll(expected), is(true));
   }
 
   @Test
@@ -130,9 +131,9 @@ public class RoleRightsServiceTest {
     when(facilityService.getHomeFacility(userId)).thenReturn(facility);
     when(roleRightsRepository.getRightsForUserOnHomeFacilityAndProgram(userId, program)).thenReturn(expected);
 
-    List<Right> result = roleRightsService.getRightsForUserAndFacilityProgram(userId, facility, program);
+    Set<Right> result = roleRightsService.getRightsForUserAndFacilityProgram(userId, facility, program);
 
-    assertThat(result, is(expected));
+    assertThat(result.containsAll(expected), is(true));
     verify(roleRightsRepository).getRightsForUserOnHomeFacilityAndProgram(userId, program);
   }
 }

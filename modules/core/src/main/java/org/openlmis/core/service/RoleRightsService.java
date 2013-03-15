@@ -6,10 +6,7 @@ import org.openlmis.core.repository.RoleRightsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 
@@ -57,8 +54,8 @@ public class RoleRightsService {
     return roleRightsRepository.getAllRightsForUser(userId);
   }
 
-  public List<Right> getRightsForUserAndFacilityProgram(Integer userId, Facility facility, Program program) {
-    List<Right> result = new ArrayList<>();
+  public Set<Right> getRightsForUserAndFacilityProgram(Integer userId, Facility facility, Program program) {
+    Set<Right> result = new HashSet<>();
     Facility homeFacility = facilityService.getHomeFacility(userId);
     if (homeFacility != null && homeFacility.getId().equals(facility.getId()))
       result.addAll(roleRightsRepository.getRightsForUserOnHomeFacilityAndProgram(userId, program));
