@@ -94,6 +94,15 @@ public class ApprovePage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@class='info-box']/div[2]/div[3]")
   private static WebElement reportingPeriodInitRnRScreen;
 
+  @FindBy(how = How.XPATH, using = "//span[@ng-bind='rnr.facility.geographicZone.name']")
+  private static WebElement geoZoneInitRnRScreen;
+
+  @FindBy(how = How.XPATH, using = "//span[@ng-bind='rnr.facility.geographicZone.parent.name']")
+  private static WebElement parentGeoZoneInitRnRScreen;
+
+  @FindBy(how = How.XPATH, using = "//span[@ng-bind='rnr.facility.operatedBy.text']")
+  private static WebElement operatedByInitRnRScreen;
+
   @FindBy(how = How.XPATH, using = "//div[contains(text(),'R&R approved successfully!')]")
   private static WebElement approvedSuccessMessage;
 
@@ -121,19 +130,32 @@ public class ApprovePage extends Page {
     return period;
   }
 
-  public void verifyRnRHeader(String FCode, String FName, String FCstring, String program, String periodDetails) {
-    testWebDriver.sleep(1000);
+  public void verifyRnRHeader(String FCode, String FName, String FCstring, String program, String periodDetails, String geoZone,String parentgeoZone, String operatedBy, String facilityType) {
+//    testWebDriver.sleep(1000);
+//    testWebDriver.waitForElementToAppear(requisitionHeader);
+//    testWebDriver.waitForElementToAppear(facilityLabel);
+//    testWebDriver.waitForElementToAppear(reportingPeriodInitRnRScreen);
+//    String headerText = testWebDriver.getText(requisitionHeader);
+//    SeleneseTestNgHelper.assertTrue(headerText.contains("Report and Requisition for " + program));
+//    String facilityText = testWebDriver.getText(facilityLabel);
+//    SeleneseTestNgHelper.assertTrue(facilityText.contains(FCode + FCstring + " - " + FName + FCstring));
+//
+//    SeleneseTestNgHelper.assertEquals(reportingPeriodInitRnRScreen.getText().trim().substring("Reporting Period: ".length()), periodDetails.trim());
+
+    testWebDriver.sleep(1500);
     testWebDriver.waitForElementToAppear(requisitionHeader);
-    testWebDriver.waitForElementToAppear(facilityLabel);
-    testWebDriver.waitForElementToAppear(reportingPeriodInitRnRScreen);
     String headerText = testWebDriver.getText(requisitionHeader);
-    SeleneseTestNgHelper.assertTrue(headerText.contains("Report and Requisition for " + program));
+    SeleneseTestNgHelper.assertTrue(headerText.contains("Report and Requisition for " + program + " (" + facilityType + ")"));
     String facilityText = testWebDriver.getText(facilityLabel);
     SeleneseTestNgHelper.assertTrue(facilityText.contains(FCode + FCstring + " - " + FName + FCstring));
 
     SeleneseTestNgHelper.assertEquals(reportingPeriodInitRnRScreen.getText().trim().substring("Reporting Period: ".length()), periodDetails.trim());
-
+    SeleneseTestNgHelper.assertEquals(geoZone, geoZoneInitRnRScreen.getText().trim());
+    SeleneseTestNgHelper.assertEquals(parentgeoZone, parentGeoZoneInitRnRScreen.getText().trim());
+    SeleneseTestNgHelper.assertEquals(operatedBy, operatedByInitRnRScreen.getText().trim());
   }
+
+
 
   public void verifyApprovedQuantity() {
     testWebDriver.waitForElementToAppear(fullSupplyTab);

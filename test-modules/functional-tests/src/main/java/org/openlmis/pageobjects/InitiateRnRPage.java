@@ -149,6 +149,9 @@ public class InitiateRnRPage extends Page {
   @FindBy(how = How.XPATH, using = "//span[@ng-bind='rnr.facility.geographicZone.name']")
   private static WebElement geoZoneInitRnRScreen;
 
+  @FindBy(how = How.XPATH, using = "//span[@ng-bind='rnr.facility.geographicZone.parent.name']")
+  private static WebElement parentGeoZoneInitRnRScreen;
+
   @FindBy(how = How.XPATH, using = "//span[@ng-bind='rnr.facility.operatedBy.text']")
   private static WebElement operatedByInitRnRScreen;
 
@@ -240,7 +243,7 @@ public class InitiateRnRPage extends Page {
     testWebDriver.setImplicitWait(10);
   }
 
-  public void verifyRnRHeader(String FCode, String FName, String FCstring, String program, String periodDetails, String geoZone, String operatedBy, String facilityType) {
+  public void verifyRnRHeader(String FCode, String FName, String FCstring, String program, String periodDetails, String geoZone,String parentgeoZone, String operatedBy, String facilityType) {
 
     testWebDriver.sleep(1500);
     testWebDriver.waitForElementToAppear(requisitionHeader);
@@ -251,6 +254,7 @@ public class InitiateRnRPage extends Page {
 
     SeleneseTestNgHelper.assertEquals(reportingPeriodInitRnRScreen.getText().trim().substring("Reporting Period: ".length()), periodDetails.trim());
     SeleneseTestNgHelper.assertEquals(geoZone, geoZoneInitRnRScreen.getText().trim());
+    SeleneseTestNgHelper.assertEquals(parentgeoZone, parentGeoZoneInitRnRScreen.getText().trim());
     SeleneseTestNgHelper.assertEquals(operatedBy, operatedByInitRnRScreen.getText().trim());
 
 

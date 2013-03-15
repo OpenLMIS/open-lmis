@@ -23,37 +23,37 @@ public class DriverFactory {
 
   public WebDriver loadDriver(String browser) throws InterruptedException {
     Separator = System.getProperty("file.separator");
-        File parentDir = new File(System.getProperty("user.dir"));
-        OUTPUT_FOLDER = parentDir.getParent()  + Separator + "test-core" + Separator + "src" + Separator + "main" + Separator + "java" + Separator + "org" + Separator + "openlmis" + Separator + "UiUtils" + Separator;
+    File parentDir = new File(System.getProperty("user.dir"));
+    OUTPUT_FOLDER = parentDir.getParent() + Separator + "test-core" + Separator + "src" + Separator + "main" + Separator + "java" + Separator + "org" + Separator + "openlmis" + Separator + "UiUtils" + Separator;
 
-        INPUT_ZIP_FILE_IEDRIVER = OUTPUT_FOLDER + "IEDriverServer_x64_2.31.0.zip";
-        INPUT_ZIP_FILE_CHROMEDRIVER = OUTPUT_FOLDER + "chromedriver.zip";
-
-
-        return loadDriver(true, browser);
-    }
-
-    public String driverType() throws InterruptedException {
-        return driverType.trim();
-    }
-
-    public WebDriver loadDriverWithJavascriptDisabledIfPossible(String browser) throws InterruptedException {
-        return loadDriver(false, browser);
-    }
-
-    public void deleteExe() throws InterruptedException, IOException {
-            unZip = new Unzip();
-            unZip.deleteFile(OUTPUT_FOLDER + "IEDriverServer.exe");
-            unZip.deleteFile(OUTPUT_FOLDER + "chromedriver.exe");
-    }
+    INPUT_ZIP_FILE_IEDRIVER = OUTPUT_FOLDER + "IEDriverServer_x64_2.31.0.zip";
+    INPUT_ZIP_FILE_CHROMEDRIVER = OUTPUT_FOLDER + "chromedriver.zip";
 
 
-    private WebDriver loadDriver(boolean enableJavascript, String browser) throws InterruptedException {
+    return loadDriver(true, browser);
+  }
 
-        switch (browser) {
-            case "firefox":
-                driverType = System.getProperty("web.driver", "Firefox");
-                return createFirefoxDriver(enableJavascript);
+  public String driverType() throws InterruptedException {
+    return driverType.trim();
+  }
+
+  public WebDriver loadDriverWithJavascriptDisabledIfPossible(String browser) throws InterruptedException {
+    return loadDriver(false, browser);
+  }
+
+  public void deleteExe() throws InterruptedException, IOException {
+    unZip = new Unzip();
+    unZip.deleteFile(OUTPUT_FOLDER + "IEDriverServer.exe");
+    unZip.deleteFile(OUTPUT_FOLDER + "chromedriver.exe");
+  }
+
+
+  private WebDriver loadDriver(boolean enableJavascript, String browser) throws InterruptedException {
+
+    switch (browser) {
+      case "firefox":
+        driverType = System.getProperty("web.driver", "Firefox");
+        return createFirefoxDriver(enableJavascript);
 
       case "ie":
         unZip = new Unzip();
@@ -64,27 +64,27 @@ public class DriverFactory {
         return new InternetExplorerDriver();
 
 
-            case "chrome":
-                unZip = new Unzip();
-                unZip.unZipIt(INPUT_ZIP_FILE_CHROMEDRIVER, OUTPUT_FOLDER);
-                Thread.sleep(1500);
-                driverType = System.setProperty("webdriver.chrome.driver", OUTPUT_FOLDER + "chromedriver.exe");
-                driverType = System.getProperty("webdriver.chrome.driver");
-                return new ChromeDriver();
+      case "chrome":
+        unZip = new Unzip();
+        unZip.unZipIt(INPUT_ZIP_FILE_CHROMEDRIVER, OUTPUT_FOLDER);
+        Thread.sleep(1500);
+        driverType = System.setProperty("webdriver.chrome.driver", OUTPUT_FOLDER + "chromedriver.exe");
+        driverType = System.getProperty("webdriver.chrome.driver");
+        return new ChromeDriver();
 
-            case "HTMLUnit":
-                return new HtmlUnitDriver(BrowserVersion.INTERNET_EXPLORER_8);
+      case "HTMLUnit":
+        return new HtmlUnitDriver(BrowserVersion.INTERNET_EXPLORER_8);
 
-            default:
-              driverType = System.getProperty("web.driver", "Firefox");
-              return createFirefoxDriver(enableJavascript);
-        }
+      default:
+        driverType = System.getProperty("web.driver", "Firefox");
+        return createFirefoxDriver(enableJavascript);
     }
+  }
 
-    private WebDriver createFirefoxDriver(boolean enableJavascript) {
-        FirefoxProfile profile = new FirefoxProfile();
-        profile.setPreference("signed.applets.codebase_principal_support", true);
-        profile.setPreference("javascript.enabled", enableJavascript);
-        return new FirefoxDriver(profile);
-    }
+  private WebDriver createFirefoxDriver(boolean enableJavascript) {
+    FirefoxProfile profile = new FirefoxProfile();
+    profile.setPreference("signed.applets.codebase_principal_support", true);
+    profile.setPreference("javascript.enabled", enableJavascript);
+    return new FirefoxDriver(profile);
+  }
 }
