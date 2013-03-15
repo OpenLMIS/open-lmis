@@ -4,6 +4,7 @@ package org.openlmis.core.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.FacilityRepository;
+import org.openlmis.core.repository.GeographicZoneRepository;
 import org.openlmis.core.repository.ProgramRepository;
 import org.openlmis.core.repository.ProgramSupportedRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,17 +22,21 @@ public class FacilityService {
 
   private ProgramRepository programRepository;
   private RequisitionGroupService requisitionGroupService;
+  private GeographicZoneRepository geographicZoneRepository;
   private SupervisoryNodeService supervisoryNodeService;
 
   public static final String SUPPORTED_PROGRAMS_INVALID = "supported.programs.invalid";
 
   @Autowired
-  public FacilityService(FacilityRepository facilityRepository, ProgramSupportedRepository programSupportedRepository, ProgramRepository programRepository, SupervisoryNodeService supervisoryNodeService, RequisitionGroupService requisitionGroupService) {
+  public FacilityService(FacilityRepository facilityRepository, ProgramSupportedRepository programSupportedRepository,
+                         ProgramRepository programRepository, SupervisoryNodeService supervisoryNodeService,
+                         RequisitionGroupService requisitionGroupService, GeographicZoneRepository geographicZoneRepository) {
     this.facilityRepository = facilityRepository;
     this.programSupportedRepository = programSupportedRepository;
     this.programRepository = programRepository;
     this.supervisoryNodeService = supervisoryNodeService;
     this.requisitionGroupService = requisitionGroupService;
+    this.geographicZoneRepository = geographicZoneRepository;
   }
 
   @Transactional
@@ -67,7 +72,7 @@ public class FacilityService {
   }
 
   public List<GeographicZone> getAllZones() {
-    return facilityRepository.getAllGeographicZones();
+    return geographicZoneRepository.getAllGeographicZones();
   }
 
   public Facility getHomeFacility(Integer userId) {

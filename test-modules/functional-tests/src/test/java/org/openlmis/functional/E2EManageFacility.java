@@ -39,7 +39,7 @@ public class E2EManageFacility extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
     CreateFacilityPage createFacilityPage = homePage.navigateCreateFacility();
-    String geoZone = "Arusha";
+    String geoZone = "Ngorongoro";
     String facilityType = "Lvl3 Hospital";
     String operatedBy = "MoH";
     String date_time = createFacilityPage.enterAndVerifyFacility(geoZone, facilityType, operatedBy);

@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
+import org.openlmis.core.repository.GeographicZoneRepository;
 import org.openlmis.core.repository.ProgramRepository;
 import org.openlmis.core.repository.ProgramSupportedRepository;
 import org.powermock.api.mockito.PowerMockito;
@@ -45,18 +46,22 @@ public class FacilityServiceTest {
   @Mock
   private RequisitionGroupService requisitionGroupService;
 
+  @Mock
+  private GeographicZoneRepository geographicZoneRepository;
+
   private FacilityService facilityService;
 
   @Before
   public void setUp() throws Exception {
     initMocks(this);
-    facilityService = new FacilityService(facilityRepository, programSupportedRepository, programRepository, supervisoryNodeService, requisitionGroupService);
+    facilityService = new FacilityService(facilityRepository, programSupportedRepository, programRepository, supervisoryNodeService,
+      requisitionGroupService, geographicZoneRepository);
   }
 
   @Test
   public void shouldReturnNullIfUserIsNotAssignedAFacility() {
     when(facilityRepository.getHomeFacility(1)).thenReturn(null);
-    assertThat(facilityService.getHomeFacility(1), is(nullValue()) );
+    assertThat(facilityService.getHomeFacility(1), is(nullValue()));
   }
 
   @Test
@@ -187,7 +192,7 @@ public class FacilityServiceTest {
     final Date nullDate = null;
     List<ProgramSupported> programs = new ArrayList<ProgramSupported>() {{
       add(make(a(defaultProgramSupported)));
-      add(make(a(defaultProgramSupported, with(supportedProgram, new Program(1,"HIV")), with(isActive, true), with(startDate, nullDate))));
+      add(make(a(defaultProgramSupported, with(supportedProgram, new Program(1, "HIV")), with(isActive, true), with(startDate, nullDate))));
     }};
 
     facility.setSupportedPrograms(programs);
@@ -204,7 +209,7 @@ public class FacilityServiceTest {
     final Date nullDate = null;
     List<ProgramSupported> programs = new ArrayList<ProgramSupported>() {{
       add(make(a(defaultProgramSupported)));
-      add(make(a(defaultProgramSupported, with(supportedProgram,new Program(1,"HIV")), with(isActive, true), with(startDate, nullDate))));
+      add(make(a(defaultProgramSupported, with(supportedProgram, new Program(1, "HIV")), with(isActive, true), with(startDate, nullDate))));
     }};
 
     facility.setSupportedPrograms(programs);
@@ -220,7 +225,7 @@ public class FacilityServiceTest {
     Facility facility = new Facility();
     List<ProgramSupported> programsForFacility = new ArrayList<ProgramSupported>() {{
       add(make(a(defaultProgramSupported)));
-      add(make(a(defaultProgramSupported, with(supportedProgram,new Program(2,"ARV")))));
+      add(make(a(defaultProgramSupported, with(supportedProgram, new Program(2, "ARV")))));
     }};
     when(programSupportedRepository.getAllByFacilityId(facility.getId())).thenReturn(programsForFacility);
 

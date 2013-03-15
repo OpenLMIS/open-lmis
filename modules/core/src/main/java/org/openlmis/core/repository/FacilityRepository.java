@@ -22,6 +22,7 @@ public class FacilityRepository {
   private FacilityMapper mapper;
   private CommaSeparator commaSeparator;
   private GeographicZoneRepository geographicZoneRepository;
+  private static Integer LOWEST_GEO_LEVEL ;
 
   @Autowired
   public FacilityRepository(FacilityMapper facilityMapper, CommaSeparator commaSeparator, GeographicZoneRepository geographicZoneRepository) {
@@ -57,11 +58,18 @@ public class FacilityRepository {
   }
 
   private void validateGeographicZone(Facility facility) {
+    if(LOWEST_GEO_LEVEL == null) {
+      LOWEST_GEO_LEVEL = geographicZoneRepository.getLowestGeographicLevel();
+    }
     GeographicZone geographicZone = geographicZoneRepository.getByCode(facility.getGeographicZone().getCode());
     facility.setGeographicZone(geographicZone);
 
     if(facility.getGeographicZone() == null){
       throw new DataException("Invalid reference data 'Geographic Zone Code'");
+    }
+
+    if(facility.getGeographicZone().getLevel().getLevelNumber() != LOWEST_GEO_LEVEL){
+      throw new DataException("Geographic Zone Code must be at the lowest administrative level in your hierarchy");
     }
   }
 
@@ -98,10 +106,6 @@ public class FacilityRepository {
 
   public List<FacilityOperator> getAllOperators() {
     return mapper.getAllOperators();
-  }
-
-  public List<GeographicZone> getAllGeographicZones() {
-    return mapper.getAllGeographicZones();
   }
 
   public Facility getHomeFacility(Integer userId) {

@@ -150,6 +150,7 @@ var Rnr = function (rnr, programRnrColumns) {
   };
 
   Rnr.prototype.init = function () {
+    var thisRnr = this;
     function prepareLineItems(lineItems) {
       var lineItemsJson = lineItems;
       lineItems = [];

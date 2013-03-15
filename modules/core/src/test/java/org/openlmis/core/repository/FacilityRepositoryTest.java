@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.exception.DataException;
@@ -30,6 +31,7 @@ import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.FacilityBuilder.GEOGRAPHIC_ZONE_CODE;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({DateTime.class})
@@ -45,13 +47,18 @@ public class FacilityRepositoryTest {
 
   private FacilityRepository repository;
   private DateTime now;
+  private GeographicLevel defaultGeographicLevel = new GeographicLevel(1, "levelCode", "levelName", 4);
 
   @Before
   public void setUp() {
     mockStatic(DateTime.class);
     now = new DateTime(2012, 10, 10, 8, 0);
     when(DateTime.now()).thenReturn(now);
-    when(geographicZoneRepository.getByCode(GEOGRAPHIC_ZONE_CODE)).thenReturn(new GeographicZone());
+
+    GeographicZone geographicZone = new GeographicZone();
+    geographicZone.setLevel(defaultGeographicLevel);
+    when(geographicZoneRepository.getByCode(GEOGRAPHIC_ZONE_CODE)).thenReturn(geographicZone);
+    when(geographicZoneRepository.getLowestGeographicLevel()).thenReturn(4);
     repository = new FacilityRepository(mapper, null, geographicZoneRepository);
   }
 
@@ -60,7 +67,9 @@ public class FacilityRepositoryTest {
     Facility facility = make(a(defaultFacility));
 
     when(mapper.insert(facility)).thenReturn(1);
+
     repository.save(facility);
+
     assertThat(facility.getModifiedDate(), is(now.toDate()));
     verify(mapper).insert(facility);
   }
@@ -222,6 +231,7 @@ public class FacilityRepositoryTest {
     GeographicZone existingZone = new GeographicZone();
     int existingId = 1;
     existingZone.setId(existingId);
+    existingZone.setLevel(defaultGeographicLevel);
     when(geographicZoneRepository.getByCode(facility.getGeographicZone().getCode())).thenReturn(existingZone);
 
     repository.save(facility);
@@ -237,6 +247,24 @@ public class FacilityRepositoryTest {
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Invalid reference data 'Geographic Zone Code'");
+
+    repository.save(facility);
+  }
+
+  @Test
+  public void shouldGiveErrorIfGeographicZoneIsNotAtLowestLevel() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    GeographicLevel geographicLevel = new GeographicLevel();
+    geographicLevel.setLevelNumber(2);
+
+    GeographicZone geographicZone = new GeographicZone();
+    geographicZone.setLevel(geographicLevel);
+
+    Mockito.when(geographicZoneRepository.getByCode(facility.getGeographicZone().getCode())).thenReturn(geographicZone);
+    Mockito.when(geographicZoneRepository.getLowestGeographicLevel()).thenReturn(3);
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("Geographic Zone Code must be at the lowest administrative level in your hierarchy");
 
     repository.save(facility);
   }

@@ -1,7 +1,10 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.FacilityOperator;
+import org.openlmis.core.domain.FacilityType;
+import org.openlmis.core.domain.GeographicZone;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -52,12 +55,6 @@ public interface FacilityMapper {
   @Select("SELECT id FROM facility_operators where LOWER(code) = LOWER(#{code})")
   Integer getOperatedByIdForCode(String code);
 
-
-  @Select("SELECT GZ.id as id, GZ.code as code, GZ.name as name, GL.name as level FROM geographic_zones GZ, geographic_levels GL where GZ.level = GL.id AND LOWER(GZ.code) <> 'root'")
-  @Results(value = {
-    @Result(property = "level.name", column = "level")
-  })
-  List<GeographicZone> getAllGeographicZones();
 
   @Select("SELECT * FROM facilities WHERE id = #{id}")
   @Results(value = {
@@ -114,8 +111,8 @@ public interface FacilityMapper {
 
   @Select({"SELECT GZ.id AS id, GZ.code AS code, GZ.name AS name, GL.code AS levelCode, GL.name AS level, GZP.code AS parentCode, GZP.name AS parentZone, GLP.code AS parentLevelCode, GLP.name AS parentLevel",
     "FROM geographic_zones GZ INNER JOIN geographic_zones GZP ON GZ.parent = GZP.id",
-    "INNER JOIN geographic_levels GL ON GZ.level = GL.id",
-    "INNER JOIN geographic_levels GLP ON GZP.level = GLP.id",
+    "INNER JOIN geographic_levels GL ON GZ.levelId = GL.id",
+    "INNER JOIN geographic_levels GLP ON GZP.levelId = GLP.id",
     "WHERE GZ.id = #{geographicZoneId}"})
   @Results(value = {
     @Result(property = "level.code", column = "levelCode"),
@@ -129,7 +126,7 @@ public interface FacilityMapper {
 
   @Select({"SELECT DISTINCT F.* FROM facilities F INNER JOIN users U ON U.facilityId = F.id",
     "INNER JOIN role_assignments RA ON RA.userId = U.id INNER JOIN role_rights RR ON RR.roleId = RA.roleId",
-      "WHERE U.id = #{userId} AND RR.rightName = ANY(#{commaSeparatedRights}::VARCHAR[]) AND RA.supervisoryNodeId IS NULL"})
+    "WHERE U.id = #{userId} AND RR.rightName = ANY(#{commaSeparatedRights}::VARCHAR[]) AND RA.supervisoryNodeId IS NULL"})
   @Results(value = {
     @Result(property = "geographicZone.id", column = "geographicZoneId"),
     @Result(property = "facilityType", column = "typeId", javaType = Integer.class, one = @One(select = "getFacilityTypeById")),

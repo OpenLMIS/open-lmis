@@ -3,21 +3,26 @@ package org.openlmis.core.repository;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.mapper.GeographicLevelMapper;
 import org.openlmis.core.repository.mapper.GeographicZoneMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @NoArgsConstructor
 public class GeographicZoneRepository {
 
   private GeographicZoneMapper mapper;
+  private GeographicLevelMapper geographicLevelMapper;
 
   @Autowired
-  public GeographicZoneRepository(GeographicZoneMapper mapper) {
+  public GeographicZoneRepository(GeographicZoneMapper mapper, GeographicLevelMapper geographicLevelMapper) {
     this.mapper = mapper;
+    this.geographicLevelMapper = geographicLevelMapper;
   }
 
   public void save(GeographicZone geographicZone) {
@@ -47,4 +52,13 @@ public class GeographicZoneRepository {
   public GeographicZone getByCode(String code) {
     return mapper.getGeographicZoneByCode(code);
   }
+
+  public Integer getLowestGeographicLevel() {
+    return geographicLevelMapper.getLowestGeographicLevel();
+  }
+
+  public List<GeographicZone> getAllGeographicZones() {
+    return mapper.getAllGeographicZones();
+  }
+
 }

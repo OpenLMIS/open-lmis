@@ -112,7 +112,7 @@ public class DBWrapper {
     update("delete from programs_supported;");
     update("delete from requisition_group_members;");
     update("delete from facilities;");
-    update("delete from geographic_zones where id not in (1,2,3);");
+    update("delete from geographic_zones where code not in ('Root','Arusha','Dodoma', 'Ngorongoro');");
     update("delete from programs_supported;");
     update("delete from program_rnr_columns;");
     update("delete from requisition_group_program_schedules ;");

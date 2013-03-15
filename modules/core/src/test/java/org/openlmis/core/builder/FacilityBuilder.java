@@ -48,12 +48,12 @@ public class FacilityBuilder {
       facility.setName(lookup.valueOf(name, "Apollo Hospital"));
 
       GeographicZone geographicZone = new GeographicZone();
-      geographicZone.setLevel(new GeographicLevel(1, "levelCode", "levelName"));
+      geographicZone.setLevel(new GeographicLevel(1, "levelCode", "levelName", 4));
       geographicZone.setId(lookup.valueOf(geographicZoneId, GEOGRAPHIC_ZONE_ID));
       geographicZone.setCode(lookup.valueOf(geographicZoneCode, GEOGRAPHIC_ZONE_CODE));
       geographicZone.setName("Lusaka");
       GeographicZone parentGeographicZone = new GeographicZone();
-      parentGeographicZone.setLevel(new GeographicLevel(2, "parentLevelCode", "parentLevelName"));
+      parentGeographicZone.setLevel(new GeographicLevel(2, "parentLevelCode", "parentLevelName", 3));
       parentGeographicZone.setId(lookup.valueOf(geographicZoneId, GEOGRAPHIC_ZONE_ID));
       parentGeographicZone.setCode(lookup.valueOf(geographicZoneCode, GEOGRAPHIC_ZONE_CODE));
       parentGeographicZone.setName("Zambia");

@@ -11,5 +11,6 @@ public class GeographicLevel {
   Integer id;
   String code;
   String name;
+  Integer levelNumber;
 }
 
