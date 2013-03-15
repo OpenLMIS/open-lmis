@@ -40,6 +40,7 @@ public class FacilityBuilder {
       facility.setCode(lookup.valueOf(code, FACILITY_CODE));
       FacilityType facilityType = new FacilityType();
       facilityType.setCode(lookup.valueOf(type, FACILITY_TYPE_CODE));
+      facilityType.setName("Central Warehouse");
       facilityType.setId(lookup.valueOf(typeId, FACILITY_TYPE_ID));
       facilityType.setNominalMaxMonth(100);
       facilityType.setNominalEop(50.5);

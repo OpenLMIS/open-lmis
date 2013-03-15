@@ -1,6 +1,9 @@
 package org.openlmis.web.view;
 
-import com.itextpdf.text.*;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.*;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.GeographicZone;
@@ -110,7 +113,9 @@ public class RequisitionPdfHeaderFooter extends PdfPageEventHelper {
   }
 
   private void addHeading(Paragraph paragraph) {
-    Chunk chunk = new Chunk("Report and Requisition for:", H1_FONT);
+    Chunk chunk = new Chunk(String.format("Report and Requisition for: %s (%s)",
+        this.requisition.getProgram().getName(),
+        this.requisition.getFacility().getFacilityType().getName()), H1_FONT);
     paragraph.add(chunk);
   }
 

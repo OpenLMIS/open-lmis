@@ -123,7 +123,8 @@ public class RequisitionPDFView extends AbstractView {
     return table;
   }
 
-  private void addLineItems(Document document, List<RnrLineItem> lineItems, ProcessingPeriod period, List<RnrColumn> rnrColumnList, int[] widths) throws NoSuchFieldException, IllegalAccessException, DocumentException {
+  private void addLineItems(Document document, List<RnrLineItem> lineItems, ProcessingPeriod period, List<RnrColumn> rnrColumnList, int[] widths)
+      throws NoSuchFieldException, IllegalAccessException, DocumentException {
     PdfPTable table = prepareTable(widths);
     setTableHeader(rnrColumnList, table);
     boolean odd = true;

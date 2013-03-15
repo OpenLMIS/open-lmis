@@ -15,19 +15,21 @@ import org.openlmis.rnr.domain.Rnr;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.openlmis.core.builder.FacilityBuilder.*;
-import static org.openlmis.rnr.builder.RequisitionBuilder.*;
+import static org.mockito.Mockito.*;
+import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
+import static org.openlmis.core.builder.FacilityBuilder.name;
+import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
+import static org.openlmis.rnr.builder.RequisitionBuilder.facility;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RequisitionPdfHeaderFooterTest {
 
   @Mock
+  @SuppressWarnings("unused")
   private PdfWriter mockedWriter;
 
   @Mock
+  @SuppressWarnings("unused")
   private Document mockedDocument;
 
   @Test
@@ -48,7 +50,7 @@ public class RequisitionPdfHeaderFooterTest {
       @Override
       public boolean matches(Object argument) {
         Paragraph paragraph = (Paragraph) argument;
-        return (paragraph.getChunks().get(0).toString().equals("Report and Requisition for:") &&
+        return (paragraph.getChunks().get(0).toString().equals("Report and Requisition for: Yellow Fever (Central Warehouse)") &&
             paragraph.getChunks().get(1).toString().equals("\n\nFacility: F1  Operated By: MOH  Maximum Stock level: 100  Emergency Order Point: 50.5" +
                 "\n\nlevelName: Lusaka  parentLevelName: Zambia  Reporting Period: Sun Jan 01 00:01:00 IST 2012 - Wed Feb 01 00:01:00 IST 2012"));
       }

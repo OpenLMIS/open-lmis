@@ -51,10 +51,6 @@ dependencies {
             project(path : ':modules:requisition', configuration: 'testFixtures')
 }
 
-[jettyRun]*.configure {
-    contextPath = ''
-}
-
 task jettyRunWarDaemon(dependsOn: war)
 
 jettyRunWarDaemon.doFirst {
@@ -76,6 +72,7 @@ jettyRunWarLocal.doFirst {
 jettyRun {
     jettyRun.httpPort = 9091
     contextPath = ''
+    jettyRun.scanIntervalSeconds=1
     System.properties.get('env', 'dev')
 }
 
