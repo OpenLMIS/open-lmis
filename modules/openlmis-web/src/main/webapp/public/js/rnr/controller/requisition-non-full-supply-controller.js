@@ -87,11 +87,6 @@ function RequisitionNonFullSupplyController($scope, $rootScope) {
     $scope.updateNonFullSupplyProductsToDisplay();
   }
 
-  $scope.checkRequestedQuantity = function (index) {
-    var INTEGER_REGEXP = /^\d*$/;
-    $scope.addedNonFullSupplyProducts[index].isNonNumeric = ($scope.addedNonFullSupplyProducts[index].quantityRequested == undefined) ? false : !INTEGER_REGEXP.test($scope.addedNonFullSupplyProducts[index].quantityRequested);
-  }
-
   function displayProductsAddedMessage() {
     if ($scope.addedNonFullSupplyProducts.length > 0) {
       $rootScope.message = "Products added successfully";

@@ -58,7 +58,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
   @Test
   public void shouldGetAllActiveProgram() {
     List<Program> programs = programMapper.getAllActive();
-    assertEquals(6, programs.size());
+    assertEquals(4, programs.size());
     assertThat(programs, hasItem(new Program(PROGRAM_ID, PROGRAM_CODE, PROGRAM_CODE, PROGRAM_CODE, true)));
   }
 
@@ -80,7 +80,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
   @Test
   public void shouldGetAllPrograms() throws Exception {
     List<Program> programs = programMapper.getAll();
-    assertEquals(7, programs.size());
+    assertEquals(4, programs.size());
   }
 
   @Test
