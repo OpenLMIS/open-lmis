@@ -131,16 +131,6 @@ public class ApprovePage extends Page {
   }
 
   public void verifyRnRHeader(String FCode, String FName, String FCstring, String program, String periodDetails, String geoZone,String parentgeoZone, String operatedBy, String facilityType) {
-//    testWebDriver.sleep(1000);
-//    testWebDriver.waitForElementToAppear(requisitionHeader);
-//    testWebDriver.waitForElementToAppear(facilityLabel);
-//    testWebDriver.waitForElementToAppear(reportingPeriodInitRnRScreen);
-//    String headerText = testWebDriver.getText(requisitionHeader);
-//    SeleneseTestNgHelper.assertTrue(headerText.contains("Report and Requisition for " + program));
-//    String facilityText = testWebDriver.getText(facilityLabel);
-//    SeleneseTestNgHelper.assertTrue(facilityText.contains(FCode + FCstring + " - " + FName + FCstring));
-//
-//    SeleneseTestNgHelper.assertEquals(reportingPeriodInitRnRScreen.getText().trim().substring("Reporting Period: ".length()), periodDetails.trim());
 
     testWebDriver.sleep(1500);
     testWebDriver.waitForElementToAppear(requisitionHeader);
