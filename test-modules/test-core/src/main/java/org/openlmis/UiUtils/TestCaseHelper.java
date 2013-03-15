@@ -14,9 +14,11 @@ public class TestCaseHelper {
 
     public void setupSuite(String browser) throws ClassNotFoundException {
         try {
+          if(!isSeleniumStarted) {
             loadDriver(browser);
             addTearDownShutDownHook();
             isSeleniumStarted = true;
+          }
         } catch (Exception e) {
             e.printStackTrace();
         }
