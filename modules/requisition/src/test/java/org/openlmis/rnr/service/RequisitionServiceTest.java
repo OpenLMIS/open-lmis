@@ -309,7 +309,7 @@ public class RequisitionServiceTest {
 
   @Test
   public void shouldNotInitRequisitionIfTemplateNotDefined() {
-    when(requisitionPermissionService.hasPermission(USER_ID, FACILITY.getId(), PROGRAM.getId(), CREATE_REQUISITION)).thenReturn(true);
+    when(requisitionPermissionService.hasPermission(USER_ID, FACILITY, PROGRAM, CREATE_REQUISITION)).thenReturn(true);
 
     when(rnrTemplateRepository.fetchColumnsForRequisition(PROGRAM.getId())).thenReturn(new ArrayList<RnrColumn>());
     expectedException.expect(DataException.class);
@@ -339,7 +339,7 @@ public class RequisitionServiceTest {
   }
 
   private void setupForInitRnr(Date date, Rnr requisition, ProcessingPeriod validPeriod) {
-    when(requisitionPermissionService.hasPermission(USER_ID, FACILITY.getId(), PROGRAM.getId(), CREATE_REQUISITION)).thenReturn(true);
+    when(requisitionPermissionService.hasPermission(USER_ID, FACILITY, PROGRAM, CREATE_REQUISITION)).thenReturn(true);
     when(rnrTemplateRepository.fetchColumnsForRequisition(PROGRAM.getId())).thenReturn(getRnrColumns());
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date);
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(requisition);
@@ -847,7 +847,7 @@ public class RequisitionServiceTest {
 
   @Test
   public void shouldCheckForPermissionBeforeInitiatingRnr() throws Exception {
-    when(requisitionPermissionService.hasPermission(USER_ID, FACILITY.getId(), PROGRAM.getId(), CREATE_REQUISITION)).thenReturn(false);
+    when(requisitionPermissionService.hasPermission(USER_ID, FACILITY, PROGRAM, CREATE_REQUISITION)).thenReturn(false);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage(RNR_OPERATION_UNAUTHORIZED);
@@ -930,6 +930,4 @@ public class RequisitionServiceTest {
     when(requisitionRepository.getById(rnr.getId())).thenReturn(savedRnr);
     return savedRnr;
   }
-
-
 }

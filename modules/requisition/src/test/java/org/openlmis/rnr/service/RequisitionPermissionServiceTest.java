@@ -5,22 +5,22 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.RoleAssignment;
-import org.openlmis.core.domain.SupervisoryNode;
-import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.service.RoleAssignmentService;
+import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.Rnr;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.openlmis.core.domain.Right.*;
@@ -32,7 +32,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 public class RequisitionPermissionServiceTest {
 
   @Mock
-  FacilityService facilityService;
+  private RoleRightsService roleRightsService;
   @Mock
   private RoleAssignmentService roleAssignmentService;
   private RequisitionPermissionService requisitionPermissionService;
@@ -43,45 +43,28 @@ public class RequisitionPermissionServiceTest {
   @Before
   public void setUp() throws Exception {
     userId = 1;
-    programId = 1;
-    facilityId = 1;
-    requisitionPermissionService = new RequisitionPermissionService(facilityService, roleAssignmentService);
+    programId = 2;
+    facilityId = 3;
+    requisitionPermissionService = new RequisitionPermissionService(roleRightsService, roleAssignmentService);
   }
 
   @Test
-  public void shouldReturnFalseIfUserDoesNotHaveRequiredPermissionOnProgramForHomeFacility() throws Exception {
-    when(facilityService.getHomeFacility(userId)).thenReturn(new Facility(1));
-    List<RoleAssignment> roleAssignments = new ArrayList<>();
+  public void shouldReturnFalseIfUserDoesNotHaveRequiredPermissionOnProgramAndFacility() throws Exception {
+    Facility facility = new Facility(facilityId);
+    Program program = new Program(programId);
 
-    when(roleAssignmentService.getHomeFacilityRolesForUserOnGivenProgramWithRights(userId, programId, CREATE_REQUISITION, AUTHORIZE_REQUISITION)).thenReturn(roleAssignments);
+    Set<Right> rights = new HashSet<Right>(){{add(APPROVE_REQUISITION);}};
+    when(roleRightsService.getRightsForUserAndFacilityProgram(userId, facility, program)).thenReturn(rights);
 
-    assertThat(requisitionPermissionService.hasPermission(userId, facilityId, programId, CREATE_REQUISITION, AUTHORIZE_REQUISITION), is(false));
+    assertThat(requisitionPermissionService.hasPermission(userId, facility, program, CREATE_REQUISITION, AUTHORIZE_REQUISITION), is(false));
   }
 
   @Test
-  public void shouldReturnTrueIfUserHasRequiredPermissionOnProgramForHomeFacility() throws Exception {
-    when(facilityService.getHomeFacility(userId)).thenReturn(new Facility(1));
-    List<RoleAssignment> roleAssignments = asList(new RoleAssignment());
+  public void shouldReturnTrueIfUserHasRequiredPermissionOnProgramAndFacility() throws Exception {
+    Set<Right> rights = new HashSet<Right>(){{add(CREATE_REQUISITION);}};
+    when(roleRightsService.getRightsForUserAndFacilityProgram(eq(userId), any(Facility.class), any(Program.class))).thenReturn(rights);
 
-    when(roleAssignmentService.getHomeFacilityRolesForUserOnGivenProgramWithRights(userId, programId, CREATE_REQUISITION, AUTHORIZE_REQUISITION)).thenReturn(roleAssignments);
-
-    assertThat(requisitionPermissionService.hasPermission(userId, facilityId, programId, CREATE_REQUISITION, AUTHORIZE_REQUISITION), is(true));
-  }
-
-  @Test
-  public void shouldReturnTrueIfUserHasRequiredPermissionOnProgramForSupervisedFacility() throws Exception {
-    List<Facility> facilities = asList(new Facility(1));
-    when(facilityService.getUserSupervisedFacilities(userId, programId, CREATE_REQUISITION, AUTHORIZE_REQUISITION)).thenReturn(facilities);
-
-    assertThat(requisitionPermissionService.hasPermission(userId, facilityId, programId, CREATE_REQUISITION, AUTHORIZE_REQUISITION), is(true));
-  }
-
-  @Test
-  public void shouldReturnFalseIfUserDoesNotHaveRequiredPermissionOnProgramForSupervisedFacility() throws Exception {
-    List<Facility> facilities = new ArrayList<>();
-    when(facilityService.getUserSupervisedFacilities(userId, programId, CREATE_REQUISITION, AUTHORIZE_REQUISITION)).thenReturn(facilities);
-
-    assertThat(requisitionPermissionService.hasPermission(userId, facilityId, programId, CREATE_REQUISITION, AUTHORIZE_REQUISITION), is(false));
+    assertThat(requisitionPermissionService.hasPermission(userId, new Facility(facilityId), new Program(programId), CREATE_REQUISITION, AUTHORIZE_REQUISITION), is(true));
   }
 
   @Test

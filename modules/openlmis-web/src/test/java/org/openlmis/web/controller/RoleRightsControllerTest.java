@@ -1,14 +1,15 @@
 package org.openlmis.web.controller;
 
 
-import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.Right;
+import org.openlmis.core.domain.Role;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -29,6 +30,8 @@ import static org.mockito.Mockito.*;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 import static org.openlmis.core.domain.Right.CONFIGURE_RNR;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.matchers.Matchers.facilityMatcher;
+import static org.openlmis.core.matchers.Matchers.programMatcher;
 import static org.openlmis.web.controller.RoleRightsController.*;
 import static org.openlmis.web.response.OpenLmisResponse.SUCCESS;
 
@@ -129,7 +132,7 @@ public class RoleRightsControllerTest {
 
   @Test
   public void shouldGetRightsForUserAndFacilityProgram() throws Exception {
-    List<Right> rights = new ArrayList<Right>() {{
+    Set<Right> rights = new HashSet<Right>() {{
       add(CREATE_REQUISITION);
     }};
     Integer facilityId = 1;
@@ -137,28 +140,7 @@ public class RoleRightsControllerTest {
     when(roleRightsService.getRightsForUserAndFacilityProgram(eq(LOGGED_IN_USERID), any(Facility.class), any(Program.class))).thenReturn(rights);
     ResponseEntity<OpenLmisResponse> response = controller.getRightsForUserAndFacilityProgram(facilityId, programId, httpServletRequest);
 
-    assertThat((List<Right>) response.getBody().getData().get("rights"), is(rights));
+    assertThat((Set<Right>) response.getBody().getData().get("rights"), is(rights));
     verify(roleRightsService).getRightsForUserAndFacilityProgram(eq(LOGGED_IN_USERID), argThat(facilityMatcher(facilityId)), argThat(programMatcher(programId)));
   }
-
-  private Matcher<Program> programMatcher(final int id) {
-    return new ArgumentMatcher<Program>() {
-      @Override
-      public boolean matches(Object argument) {
-        Program program = (Program) argument;
-        return program.getId().equals(id);
-      }
-    };
-  }
-
-  private Matcher<Facility> facilityMatcher(final int id) {
-    return new ArgumentMatcher<Facility>() {
-      @Override
-      public boolean matches(Object argument) {
-        Facility facility = (Facility) argument;
-        return facility.getId().equals(id);
-      }
-    };
-  }
-
 }

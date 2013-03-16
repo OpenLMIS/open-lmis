@@ -71,7 +71,7 @@ public class RequisitionService {
 
   @Transactional
   public Rnr initiate(Integer facilityId, Integer programId, Integer periodId, Integer modifiedBy) {
-    if (!requisitionPermissionService.hasPermission(modifiedBy, facilityId, programId, CREATE_REQUISITION))
+    if (!requisitionPermissionService.hasPermission(modifiedBy, new Facility(facilityId), new Program(programId), CREATE_REQUISITION))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
     ProgramRnrTemplate rnrTemplate = new ProgramRnrTemplate(programId, rnrTemplateRepository.fetchColumnsForRequisition(programId));
@@ -349,9 +349,6 @@ public class RequisitionService {
 
     return requisitions;
   }
-
-
-
 
   private OrderBatch createOrderBatch(Rnr requisition, Integer userId) {
     OrderBatch orderBatch = new OrderBatch(requisition.getSupplyingFacility(), userId);

@@ -1,11 +1,9 @@
 package org.openlmis.web.controller;
 
 import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Facility;
@@ -41,6 +39,7 @@ import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
+import static org.openlmis.core.matchers.Matchers.*;
 import static org.openlmis.web.controller.RequisitionController.*;
 import static org.powermock.api.mockito.PowerMockito.doThrow;
 import static org.powermock.api.mockito.PowerMockito.*;
@@ -365,36 +364,5 @@ public class RequisitionControllerTest {
     requisition.setPeriod(period);
     return requisition;
   }
-
-  private Matcher<Program> programMatcher(final int id) {
-    return new ArgumentMatcher<Program>() {
-      @Override
-      public boolean matches(Object argument) {
-        Program program = (Program) argument;
-        return program.getId().equals(id);
-      }
-    };
-  }
-
-  private Matcher<ProcessingPeriod> periodMatcher(final int id) {
-    return new ArgumentMatcher<ProcessingPeriod>() {
-      @Override
-      public boolean matches(Object argument) {
-        ProcessingPeriod period = (ProcessingPeriod) argument;
-        return period.getId().equals(id);
-      }
-    };
-  }
-
-  private Matcher<Facility> facilityMatcher(final int id) {
-    return new ArgumentMatcher<Facility>() {
-      @Override
-      public boolean matches(Object argument) {
-        Facility facility = (Facility) argument;
-        return facility.getId().equals(id);
-      }
-    };
-  }
-
 }
 
