@@ -56,16 +56,24 @@ public class RoleRightsService {
 
   public Set<Right> getRightsForUserAndFacilityProgram(Integer userId, Facility facility, Program program) {
     Set<Right> result = new HashSet<>();
-    Facility homeFacility = facilityService.getHomeFacility(userId);
-    if (homeFacility != null && homeFacility.getId().equals(facility.getId()))
-      result.addAll(roleRightsRepository.getRightsForUserOnHomeFacilityAndProgram(userId, program));
+    result.addAll(getHomeFacilityRights(userId, facility, program));
+    result.addAll(getSupervisoryRights(userId, facility, program));
+    return result;
+  }
 
+  private List<Right> getSupervisoryRights(Integer userId, Facility facility, Program program) {
     SupervisoryNode supervisoryNode = supervisoryNodeService.getFor(facility, program);
-
     if (supervisoryNode != null) {
       List<SupervisoryNode> supervisoryNodes = supervisoryNodeService.getAllParentSupervisoryNodesInHierarchy(supervisoryNode);
-      result.addAll(roleRightsRepository.getRightsForUserOnSupervisoryNodeAndProgram(userId, supervisoryNodes, program));
+      return roleRightsRepository.getRightsForUserOnSupervisoryNodeAndProgram(userId, supervisoryNodes, program);
     }
-    return result;
+    return Collections.emptyList();
+  }
+
+  private List<Right> getHomeFacilityRights(Integer userId, Facility facility, Program program) {
+    Facility homeFacility = facilityService.getHomeFacility(userId);
+    if (homeFacility != null && homeFacility.getId().equals(facility.getId()))
+      return roleRightsRepository.getRightsForUserOnHomeFacilityAndProgram(userId, program);
+    return Collections.emptyList();
   }
 }
