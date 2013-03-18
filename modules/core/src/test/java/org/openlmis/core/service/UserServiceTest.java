@@ -1,33 +1,42 @@
 package org.openlmis.core.service;
 
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.hash.Encoder;
 import org.openlmis.core.repository.UserRepository;
 import org.openlmis.email.domain.EmailMessage;
 import org.openlmis.email.exception.EmailException;
 import org.openlmis.email.service.EmailService;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.context.MessageSource;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.rules.ExpectedException.none;
+import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.service.UserService.PASSWORD_RESET_TOKEN_INVALID;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(Encoder.class)
 public class UserServiceTest {
 
   public static final String FORGET_PASSWORD_LINK = "http://openLMIS.org";
@@ -46,12 +55,27 @@ public class UserServiceTest {
   @SuppressWarnings("unused")
   private RoleAssignmentService roleAssignmentService;
 
-  private UserService userService;
+  @Mock
+  private MessageSource messageSource;
 
 
   @Before
   public void setUp() throws Exception {
-    userService = new UserService(userRepository, roleAssignmentService, emailService);
+    userService = new UserService(userRepository, roleAssignmentService, emailService, messageSource);
+    when(messageSource.getMessage("accountcreated.email.subject", null, Locale.getDefault())).thenReturn("Account created message");
+    when(messageSource.getMessage("forgotpassword.email.subject", null, Locale.getDefault())).thenReturn("Forgot password email subject");
+  }
+
+  private UserService userService;
+
+  private Matcher<EmailMessage> emailMessageMatcher(final EmailMessage that) {
+    return new ArgumentMatcher<EmailMessage>() {
+      @Override
+      public boolean matches(Object argument) {
+        EmailMessage emailMessage = (EmailMessage) argument;
+        return emailMessage.equals(that);
+      }
+    };
   }
 
   @Test
@@ -81,19 +105,24 @@ public class UserServiceTest {
   @Test
   public void shouldSendForgotPasswordEmailIfUserEmailExists() throws Exception {
     User user = new User();
-    user.setEmail("shibhama@thoughtworks.com");
+    user.setUserName("Admin");
+    user.setEmail("random@random.com");
+    user.setId(1111);
 
-    User userToBeReturned = new User();
-    userToBeReturned.setUserName("Admin");
-    userToBeReturned.setEmail("shibhama@thoughtworks.com");
-    userToBeReturned.setId(1111);
-    when(userRepository.getByEmail(user.getEmail())).thenReturn(userToBeReturned);
+    EmailMessage emailMessage = new EmailMessage("random@random.com", "Forgot password email subject", "email body");
+    when(userRepository.getByEmail(user.getEmail())).thenReturn(user);
+
+    mockStatic(Encoder.class);
+    when(Encoder.hash(anyString())).thenReturn("token");
+
+    when(messageSource.getMessage("passwordreset.email.body", new String[]{FORGET_PASSWORD_LINK + "token"}, Locale.getDefault()))
+      .thenReturn("email body");
 
     userService.sendForgotPasswordEmail(user, FORGET_PASSWORD_LINK);
 
-    verify(emailService).send(any(EmailMessage.class));
+    verify(emailService).send(argThat(emailMessageMatcher(emailMessage)));
     verify(userRepository).getByEmail(user.getEmail());
-    verify(userRepository).insertPasswordResetToken(eq(userToBeReturned), anyString());
+    verify(userRepository).insertPasswordResetToken(eq(user), anyString());
   }
 
   @Test
@@ -208,6 +237,7 @@ public class UserServiceTest {
     String validToken = "validToken";
     Integer expectedUserId = 1;
     when(userRepository.getUserIdForPasswordResetToken(validToken)).thenReturn(expectedUserId);
+
     Integer userId = userService.getUserIdByPasswordResetToken(validToken);
 
     verify(userRepository).getUserIdForPasswordResetToken(validToken);

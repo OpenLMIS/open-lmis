@@ -21,7 +21,6 @@ public class EmailMessageBuilder {
     public EmailMessage instantiate(PropertyLookup<EmailMessage> lookup) {
 
       EmailMessage message = new EmailMessage();
-      message.setFrom(lookup.valueOf(from, "from@openlmis.org"));
       message.setTo(lookup.valueOf(to, "to@openlmis.org"));
       message.setSubject(lookup.valueOf(subject, "Test Email"));
       message.setText(lookup.valueOf(text, "Test Email Text"));

@@ -27,7 +27,6 @@
             <list>
                 <value>classpath:/postgresql.properties</value>
                 <value>classpath:/default.properties</value>
-                <value>classpath:/messages.properties</value>
                 <value>classpath:${env}/app.properties</value>
             </list>
         </property>
@@ -38,11 +37,35 @@
         </property>
     </bean>
 
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basename">
+            <value>messages</value>
+        </property>
+
+    </bean>
+
+    <bean id="localeChangeInterceptor"
+          class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+        <property name="paramName" value="lang"/>
+    </bean>
+
+    <bean id="localeResolver"
+          class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+        <property name="defaultLocale" value="en"/>
+    </bean>
+
+    <bean id="handlerMapping"
+          class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+        <property name="interceptors">
+            <ref bean="localeChangeInterceptor"/>
+        </property>
+    </bean>
+
+
     <import resource="classpath:/springSecurityContext.xml"/>
     <import resource="classpath:/applicationContext-authentication.xml"/>
     <import resource="classpath:/applicationContext-requisition.xml"/>
     <import resource="classpath:/applicationContext-core.xml"/>
-    <import resource="classpath:/applicationContext-upload.xml"/>
 
 
     <bean id="userAuthenticationProvider" class="org.openlmis.authentication.web.UserAuthenticationProvider"/>

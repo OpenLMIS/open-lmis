@@ -29,4 +29,16 @@
         <prop key="mail.smtp.quitwait">${mail.smtp.quitwait}</prop>
     </util:properties>
 
+    <bean id="emailProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+
+        <property name="locations">
+            <list>
+                <value>classpath:default.properties</value>
+            </list>
+        </property>
+
+        <property name="systemPropertiesModeName">
+            <value>SYSTEM_PROPERTIES_MODE_OVERRIDE</value>
+        </property>
+    </bean>
 </beans>

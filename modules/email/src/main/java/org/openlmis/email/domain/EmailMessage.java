@@ -1,20 +1,15 @@
 package org.openlmis.email.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.util.Date;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class EmailMessage {
 
   private String to;
-  private String from;
   private String subject;
   private String text;
-  private String replyTo;
-  private String cc;
-  private String bcc;
-  private Date sentDate;
-
-
 }
