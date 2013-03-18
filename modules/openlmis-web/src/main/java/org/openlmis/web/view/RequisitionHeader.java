@@ -12,7 +12,7 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.rnr.domain.Rnr;
 
-import static org.openlmis.web.view.RequisitionTable.*;
+import static org.openlmis.web.view.RequisitionPdfView.*;
 
 public class RequisitionHeader extends PdfPageEventHelper {
 

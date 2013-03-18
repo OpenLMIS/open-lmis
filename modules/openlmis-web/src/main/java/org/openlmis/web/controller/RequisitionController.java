@@ -11,6 +11,7 @@ import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.rnr.service.RnrTemplateService;
+import org.openlmis.web.configurationReader.StaticReferenceDataReader;
 import org.openlmis.web.form.RnrList;
 import org.openlmis.web.model.RnrReferenceData;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -44,13 +45,17 @@ public class RequisitionController extends BaseController {
 
   public static final String PERIODS = "periods";
   public static final String ORDERS = "orders";
+  public static final String CURRENCY = "currency";
+
   private RequisitionService requisitionService;
   private RnrTemplateService rnrTemplateService;
+  private StaticReferenceDataReader staticReferenceDataReader;
 
   @Autowired
-  public RequisitionController(RequisitionService requisitionService, RnrTemplateService rnrTemplateService) {
+  public RequisitionController(RequisitionService requisitionService, RnrTemplateService rnrTemplateService, StaticReferenceDataReader staticReferenceDataReader) {
     this.requisitionService = requisitionService;
     this.rnrTemplateService = rnrTemplateService;
+    this.staticReferenceDataReader = staticReferenceDataReader;
   }
 
   @RequestMapping(value = "/requisitions", method = POST, headers = ACCEPT_JSON)
@@ -207,13 +212,14 @@ public class RequisitionController extends BaseController {
     }
   }
 
-  @RequestMapping(value = "/requisitions/{id}/print", method = GET)
+  @RequestMapping(value = "/requisitions/{id}/print", method = GET, headers = ACCEPT_PDF)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REQUISITION')")
   public ModelAndView printRequisition(@PathVariable Integer id) {
     ModelAndView modelAndView = new ModelAndView("requisitionPDF");
     Rnr requisition = requisitionService.getFullRequisitionById(id);
     modelAndView.addObject(RNR, requisition);
     modelAndView.addObject(RNR_TEMPLATE, rnrTemplateService.fetchColumnsForRequisition(requisition.getProgram().getId()));
+    modelAndView.addObject(CURRENCY, staticReferenceDataReader.getCurrency());
     return  modelAndView;
   }
 

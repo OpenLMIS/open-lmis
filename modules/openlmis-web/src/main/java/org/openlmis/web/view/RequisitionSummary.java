@@ -1,7 +1,6 @@
 package org.openlmis.web.view;
 
 import com.itextpdf.text.Chunk;
-import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
@@ -13,14 +12,22 @@ import java.math.BigDecimal;
 
 import static com.itextpdf.text.Element.ALIGN_LEFT;
 import static com.itextpdf.text.Element.ALIGN_RIGHT;
-import static org.openlmis.web.view.RequisitionTable.H3_FONT;
+import static org.openlmis.web.view.RequisitionPdfView.H3_FONT;
 
 public class RequisitionSummary {
 
-  void addRequisitionSummary(Rnr requisition, Document document) throws DocumentException {
+  private Rnr requisition;
+
+  public RequisitionSummary(Rnr requisition) {
+    this.requisition = requisition;
+    this.requisition.fillFullSupplyCost();
+    this.requisition.fillNonFullSupplyCost();
+  }
+
+  PdfPTable get() throws DocumentException {
     PdfPTable summaryTable = new PdfPTable(2);
     summaryTable.setWidths(new int[]{30,20});
-    summaryTable.setSpacingBefore(RequisitionTable.TABLE_SPACING);
+    summaryTable.setSpacingBefore(RequisitionPdfView.TABLE_SPACING);
     summaryTable.setWidthPercentage(40);
     summaryTable.setHorizontalAlignment(0);
 
@@ -28,7 +35,7 @@ public class RequisitionSummary {
 //    defaultCell.setPadding(15);
 //    defaultCell.setBorder(0);
 
-    Chunk chunk = new Chunk("Summary ", RequisitionTable.H2_FONT);
+    Chunk chunk = new Chunk("Summary ", RequisitionPdfView.H2_FONT);
     PdfPCell summaryHeaderCell = new PdfPCell(new Phrase(chunk));
     summaryHeaderCell.setColspan(2);
     summaryHeaderCell.setPadding(10);
@@ -46,15 +53,14 @@ public class RequisitionSummary {
     summaryTable.addCell(cell(" "));
     summaryTable.addCell(cell(" "));
 
-    String submittedDate = requisition.getSubmittedDate() != null ? RequisitionTable.DATE_FORMAT.format(requisition.getSubmittedDate()) : "";
+    String submittedDate = requisition.getSubmittedDate() != null ? RequisitionPdfView.DATE_FORMAT.format(requisition.getSubmittedDate()) : "";
 
     summaryTable.addCell(cell("Submitted By: "));
     summaryTable.addCell(cell("Date: " + submittedDate));
     summaryTable.addCell(cell("Authorized By: "));
     summaryTable.addCell(cell("Date: "));
 
-    document.add(summaryTable);
-
+    return summaryTable;
   }
 
   private PdfPCell cell(Object value, int... alignment) {

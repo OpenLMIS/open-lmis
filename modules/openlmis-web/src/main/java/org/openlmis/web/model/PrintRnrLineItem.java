@@ -28,22 +28,10 @@ public class PrintRnrLineItem {
     calculateMaxStockQuantity();
     calculateLossesAndAdjustments();
     if (template.columnsCalculated(STOCK_IN_HAND)) calculateStockInHand();
-    if (template.columnsCalculated(QUANTITY_DISPENSED)) calculateQuantityDispensed();
-    calculateOrderQuantity();
-
-    calculatePacksToShip();
-  }
-
-  private void calculatePacksToShip() {
-    rnrLineItem.calculatePacksToShip();
-  }
-
-  private void calculateOrderQuantity() {
+    if (template.columnsCalculated(QUANTITY_DISPENSED)) rnrLineItem.calculateQuantityDispensed();
     rnrLineItem.calculateOrderQuantity();
-  }
 
-  private void calculateQuantityDispensed() {
-    rnrLineItem.calculateQuantityDispensed();
+    rnrLineItem.calculatePacksToShip();
   }
 
   private void calculateStockInHand() {

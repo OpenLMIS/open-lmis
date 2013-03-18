@@ -3,6 +3,7 @@ package org.openlmis.rnr.domain;
 import lombok.Getter;
 import org.openlmis.core.message.OpenLmisMessage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +73,7 @@ public class ProgramRnrTemplate {
 
   private boolean validateDependentsVisible(String columnToEvaluate, List<String> dependents) {
     return !(columnsVisible(columnToEvaluate) && columnsCalculated(columnToEvaluate)) ||
-        columnsVisible(dependents.toArray(new String[dependents.size()]));
+      columnsVisible(dependents.toArray(new String[dependents.size()]));
   }
 
   private boolean areSelectedTogether(String column1, String column2) {
@@ -122,9 +123,35 @@ public class ProgramRnrTemplate {
 
     if (!areSelectedTogether(QUANTITY_REQUESTED, REASON_FOR_REQUESTED_QUANTITY)) {
 
-      if (columnsVisible(QUANTITY_REQUESTED)) errorMap.put(QUANTITY_REQUESTED, new OpenLmisMessage(USER_NEED_TO_ENTER_REQUESTED_QUANTITY_REASON,getRnrColumnLabelFor(QUANTITY_REQUESTED), getRnrColumnLabelFor(REASON_FOR_REQUESTED_QUANTITY) ));
-      else errorMap.put(REASON_FOR_REQUESTED_QUANTITY, new OpenLmisMessage(USER_NEED_TO_ENTER_REQUESTED_QUANTITY_REASON, getRnrColumnLabelFor(REASON_FOR_REQUESTED_QUANTITY), getRnrColumnLabelFor(QUANTITY_REQUESTED)));
+      if (columnsVisible(QUANTITY_REQUESTED))
+        errorMap.put(QUANTITY_REQUESTED, new OpenLmisMessage(USER_NEED_TO_ENTER_REQUESTED_QUANTITY_REASON, getRnrColumnLabelFor(QUANTITY_REQUESTED), getRnrColumnLabelFor(REASON_FOR_REQUESTED_QUANTITY)));
+      else
+        errorMap.put(REASON_FOR_REQUESTED_QUANTITY, new OpenLmisMessage(USER_NEED_TO_ENTER_REQUESTED_QUANTITY_REASON, getRnrColumnLabelFor(REASON_FOR_REQUESTED_QUANTITY), getRnrColumnLabelFor(QUANTITY_REQUESTED)));
     }
   }
 
+  public List<RnrColumn> getVisibleColumns(boolean fullSupply) {
+    List<RnrColumn> visibleRnrColumns = new ArrayList<>();
+    if (fullSupply) {
+      for (RnrColumn rnrColumn : rnrColumns) {
+        if (rnrColumn.getName().equals("remarks") || rnrColumn.getName().equals("reasonForRequestedQuantity"))
+          continue;
+        if (rnrColumn.isVisible()) {
+          visibleRnrColumns.add(rnrColumn);
+        }
+      }
+    } else {
+      for (RnrColumn rnrColumn : rnrColumns) {
+        if (rnrColumn.getName().equals("product") || rnrColumn.getName().equals("productCode") ||
+          rnrColumn.getName().equals("dispensingUnit") || rnrColumn.getName().equals("quantityRequested") ||
+          rnrColumn.getName().equals("packsToShip") || rnrColumn.getName().equals("price") ||
+          rnrColumn.getName().equals("cost")) {
+          if (rnrColumn.isVisible()) {
+            visibleRnrColumns.add(rnrColumn);
+          }
+        }
+      }
+    }
+    return visibleRnrColumns;
+  }
 }

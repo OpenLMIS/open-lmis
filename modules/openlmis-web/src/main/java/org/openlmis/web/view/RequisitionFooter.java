@@ -5,7 +5,7 @@ import com.itextpdf.text.pdf.*;
 
 import java.util.Date;
 
-import static org.openlmis.web.view.RequisitionTable.DATE_FORMAT;
+import static org.openlmis.web.view.RequisitionPdfView.DATE_FORMAT;
 
 public class RequisitionFooter extends PdfPageEventHelper {
 

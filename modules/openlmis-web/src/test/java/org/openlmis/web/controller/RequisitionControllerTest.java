@@ -4,6 +4,7 @@ import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Facility;
@@ -17,6 +18,7 @@ import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.rnr.service.RnrTemplateService;
+import org.openlmis.web.configurationReader.StaticReferenceDataReader;
 import org.openlmis.web.form.RnrList;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -47,14 +49,21 @@ import static org.powermock.api.mockito.PowerMockito.*;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(RnrDTO.class)
 public class RequisitionControllerTest {
+
+
   public static final String FACILITY_CODE = "F14";
   public static final String FACILITY_NAME = "Facility";
   public static final String PROGRAM_NAME = "HIV";
   private static final String USER = "user";
   private static final Integer USER_ID = 1;
 
+  @Mock
   private RequisitionService requisitionService;
+  @Mock
   private RnrTemplateService rnrTemplateService;
+  @Mock
+  private StaticReferenceDataReader staticReferenceDataReader;
+
   private MockHttpServletRequest request;
   private RequisitionController controller;
   private Rnr rnr;
@@ -70,7 +79,7 @@ public class RequisitionControllerTest {
 
     requisitionService = mock(RequisitionService.class);
     rnrTemplateService = mock(RnrTemplateService.class);
-    controller = new RequisitionController(requisitionService, rnrTemplateService);
+    controller = new RequisitionController(requisitionService, rnrTemplateService, staticReferenceDataReader);
     rnr = new Rnr();
   }
 
@@ -327,10 +336,11 @@ public class RequisitionControllerTest {
     when(requisitionService.getCategoryCount(rnr, true)).thenReturn(10);
     when(requisitionService.getCategoryCount(rnr, false)).thenReturn(5);
     when(rnrTemplateService.fetchColumnsForRequisition(programId)).thenReturn(rnrTemplate);
-
+    when(staticReferenceDataReader.getCurrency()).thenReturn("$");
     ModelAndView modelAndView = controller.printRequisition(rnrId);
 
     assertThat((Rnr) modelAndView.getModel().get(RNR), is(rnr));
+    assertThat((String) modelAndView.getModel().get(CURRENCY), is("$"));
     assertThat((ArrayList<RnrColumn>) modelAndView.getModel().get(RNR_TEMPLATE), is(rnrTemplate));
 
   }

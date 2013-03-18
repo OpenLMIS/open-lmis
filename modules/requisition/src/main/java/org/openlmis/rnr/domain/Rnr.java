@@ -85,7 +85,7 @@ public class Rnr {
     this.nonFullSupplyItemsSubmittedCost = calculateCost(nonFullSupplyLineItems);
   }
 
-  public Money calculateCost(List<RnrLineItem> lineItems) {
+  private Money calculateCost(List<RnrLineItem> lineItems) {
     Money totalFullSupplyCost = new Money("0");
     for (RnrLineItem lineItem : lineItems) {
       Money costPerItem = lineItem.calculateCost();
@@ -220,6 +220,14 @@ public class Rnr {
 
   public void convertToOrder() {
     this.status = ORDERED;
+  }
+
+  public void fillFullSupplyCost() {
+    this.fullSupplyItemsSubmittedCost = calculateCost(this.fullSupplyLineItems);
+  }
+
+  public void fillNonFullSupplyCost() {
+    this.nonFullSupplyItemsSubmittedCost = calculateCost(this.nonFullSupplyLineItems);
   }
 }
 
