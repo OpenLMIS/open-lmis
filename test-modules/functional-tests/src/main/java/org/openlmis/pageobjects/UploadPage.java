@@ -84,6 +84,14 @@ public class UploadPage extends Page {
     testWebDriver.sleep(500);
   }
 
+  public void uploadFacilitiesNotLowestGeoCode() throws FileNotFoundException {
+    selectUploadType("Facilities");
+    uploadFile("facilities_Lowest_Code.csv");
+    testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
+    SeleneseTestNgHelper.assertTrue("Error Message Not Displayed", saveErrorMsgDiv.isDisplayed());
+    testWebDriver.sleep(500);
+  }
+
   public void uploadFacilities() throws FileNotFoundException {
     selectUploadType("Facilities");
     uploadFile("facilities.csv");

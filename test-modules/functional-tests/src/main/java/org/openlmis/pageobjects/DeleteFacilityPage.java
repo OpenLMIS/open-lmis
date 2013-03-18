@@ -174,6 +174,7 @@ public class DeleteFacilityPage extends Page {
     testWebDriver.sleep(1000);
     yesLink.click();
 
+    testWebDriver.sleep(1000);
     String dataReportableValue = dataReportable.getText();
     SeleneseTestNgHelper.assertEquals(dataReportableValue.trim(), "Yes");
     SeleneseTestNgHelper.assertTrue(isActiveRadioYesOption.isSelected());
