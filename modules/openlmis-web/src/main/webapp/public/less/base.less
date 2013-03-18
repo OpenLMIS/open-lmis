@@ -36,6 +36,32 @@ input, a {
     color: #ffffff;
     background-color: #356b6f;
   }
+
+  &.btn-cancel {
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.7);
+    color: #FFFFFF;
+    background-color: #666666;
+    background-image: -moz-linear-gradient(top, #c5c5c5, #777777);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#c5c5c5), to(#777777));
+    background-image: -webkit-linear-gradient(top, #c5c5c5, #777777);
+    background-image: -o-linear-gradient(top, #c5c5c5, #777777);
+    background-image: linear-gradient(to bottom, #c5c5c5, #777777);
+    background-repeat: repeat-x;
+    border-color: #777777 #777777 #444444;
+    border-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffc5c5c5', endColorstr='#ff777777', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  }
+
+  &.btn-cancel:hover,
+  &.btn-cancel:active,
+  &.btn-cancel.active,
+  &.btn-cancel.disabled,
+  &.btn-cancel[disabled] {
+    color: #ffffff;
+    background-color: #777777;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  }
 }
 
 textarea {
@@ -44,4 +70,18 @@ textarea {
 
 input[type='file'] {
   line-height: normal;
+}
+
+//modal
+
+.modal-header {
+  border-color: #CCC;
+  h3 {
+    color: #17888F;
+    font-weight: normal;
+    font-size: 1.4em;
+  }
+}
+.modal-footer {
+  text-align: left;
 }

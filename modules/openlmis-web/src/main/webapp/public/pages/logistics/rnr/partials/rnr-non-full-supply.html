@@ -87,13 +87,13 @@
   </div>
   <form name="nonFullSupplyForm">
     <div id="nonFullSupplyProductsModal" modal="nonFullSupplyProductsModal" options="{ backdrop: 'static', escape: false}">
-      <div class="modal-header"><h3>Add Non-Full Supply Products</h3></div>
+      <div class="modal-header"><h3>Add non full supply product(s)</h3></div>
       <div class="modal-body">
 
         <div class="row-fluid">
           <div class="span6">
            <label for="nonFullSupplyProductsCategory">Category:</label>
-           <select ui-select2 class="span12" id="nonFullSupplyProductsCategory" ng-model="nonFullSupplyProductCategory" name="productName" data-placeholder="-- Select category --"
+           <select ui-select2 class="span12 bottom-spacer" id="nonFullSupplyProductsCategory" ng-model="nonFullSupplyProductCategory" name="productName" data-placeholder="-- Select category --"
                    ng-options="nonFullSupplyProductCategory.name for nonFullSupplyProductCategory in nonFullSupplyProductsCategories"
                    ng-change="updateNonFullSupplyProductsToDisplay(); clearNonFullSupplyProductModalData()">
              <option></option>
@@ -103,7 +103,7 @@
 
         <div class="row-fluid">
         <div class="span6">
-          <label for="nonFullSupplyProductsCodeAndName">Product Code/Name:</label>
+          <label for="nonFullSupplyProductsCodeAndName">Product Code / Name:</label>
           <select ui-select2 class="span12 bottom-spacer" id="nonFullSupplyProductsCodeAndName" ng-model="facilityApprovedProduct" name="productCode" data-placeholder="-- Select product --"
                   ng-options="facilityApprovedProduct.programProduct.product.code+' | '+facilityApprovedProduct.programProduct.product.primaryName for facilityApprovedProduct in nonFullSupplyProductsToDisplay">
             <option></option>
@@ -112,7 +112,7 @@
       </div>
 
         <div class="row-fluid">
-          <div class="span3">
+          <div class="span2">
             <label for="quantityRequested"><span
                 ng-bind="labelForRnrColumn('quantityRequested')"></span></label>
             <input type="text" class="span12" name="newNonFullSupply.quantityRequested" ng-model="newNonFullSupply.quantityRequested"
@@ -145,7 +145,7 @@
         <div class="non-full-supply-product-list" ng-show="addedNonFullSupplyProducts.length">
           <div class="row-fluid" ng-repeat="nonFullSupplyProduct in addedNonFullSupplyProducts">
 
-            <div class="span4">
+            <div class="span5">
               <div class="fluid-grid-cell" id= "nonFullSupplyProductCodeAndName">
                 <label ng-bind="nonFullSupplyProduct.productCode+' | '+nonFullSupplyProduct.productName"></label>
               </div>
@@ -160,7 +160,7 @@
               </div>
             </div>
 
-            <div class="span5">
+            <div class="span4">
               <div class="fluid-grid-cell" id= "nonFullSupplyProductReasonForRequestedQuantity">
                 <input type="text" ng-class = "highlightRequiredFieldInModal(nonFullSupplyProduct.reasonForRequestedQuantity)" maxlength="250" ng-required = "true" ng-model="nonFullSupplyProduct.reasonForRequestedQuantity" placeholder="Explanation"/>
               </div>
@@ -183,14 +183,12 @@
 
 
       <div class="modal-footer">
-        <div class="pull-right">
-        <input type="button" href="" id="cancelNonFullSupply" class="btn" ng-click="nonFullSupplyProductsModal=false;modalError=''"
-               value="Cancel"/>
-
-        <input type="button" href="" id="doneNonFullSupply" class="btn btn-success save-button"
+        <input type="button" id="doneNonFullSupply" class="btn btn-primary"
                ng-click="addNonFullSupplyLineItemsToRnr()"
                value="Done"/>
-        </div>
+
+        <input type="button" id="cancelNonFullSupply" class="btn btn-cancel" ng-click="nonFullSupplyProductsModal=false;modalError=''"
+               value="Cancel"/>
       </div>
     </div>
   </form>

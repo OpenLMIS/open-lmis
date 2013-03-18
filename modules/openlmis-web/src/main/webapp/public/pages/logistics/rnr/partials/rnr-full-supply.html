@@ -303,13 +303,14 @@
            ng-show = "currentRnrLineItem.lossesAndAdjustments.length > 0 && modalError"
            ng-bind = "modalError" ></div >
     </div >
-    <div class = "modal-footer" >
-      <input type = "button"
-             ng-click = "clearAndCloseLossesAndAdjustmentModal();modalError=''"
-             class = "btn" value = "Cancel" />
-      <input type = "button" class = "btn btn-success save-button"
+    <div class = "modal-footer">
+      <input type = "button" class = "btn btn-primary save-button"
              ng-click = "saveLossesAndAdjustmentsForRnRLineItem()"
              value = "Done" />
+      <input type = "button"
+             ng-click = "clearAndCloseLossesAndAdjustmentModal();modalError=''"
+             class = "btn btn-cancel" value = "Cancel" />
+
     </div >
   </div >
 

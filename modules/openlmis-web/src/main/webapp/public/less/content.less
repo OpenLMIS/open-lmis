@@ -669,6 +669,7 @@ h3 {
           text-align: right;
           padding-right: 10px;
           border-radius: 3px;
+          margin-bottom: 0;
         }
       }
       .tpl-adjustment-delete {
@@ -1219,10 +1220,10 @@ td .close {
   margin-top: 2px;
   font-size: 2em;
   font-weight: bold;
-  color: #888;
+  color: #BBB;
   &:hover {
     text-decoration: none;
-    color: #555;
+    color: #666;
   }
 }
 .select2-results {
@@ -1233,7 +1234,7 @@ td .close {
 .row-fluid [class*="span"].select2-container {
   margin-left: 0;
   &.bottom-spacer {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
   }
 }
 .select2-container-multi.select2-container-active {
@@ -1328,8 +1329,14 @@ input[placeholder].placeholder{
 }
 
 #nonFullSupplyProductsModal {
-  width: 840px;
-  margin-left: -420px;
+  width: 980px;
+  margin-left: -490px;
+  label {
+    font-size: 1em;
+  }
+  .modal-body {
+    font-size: 0.9em;
+  }
   hr {
     margin: 3px 0 10px;
   }
@@ -1350,6 +1357,10 @@ input[placeholder].placeholder{
     input[type='text'] {
       margin-bottom: 0;
       width: 100%;
+    }
+    .delete-role {
+      font-size: 1.8em;
+      margin-top: 5px;
     }
   }
 }
