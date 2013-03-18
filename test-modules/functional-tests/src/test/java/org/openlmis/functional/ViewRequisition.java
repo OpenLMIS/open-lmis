@@ -35,8 +35,8 @@ public class ViewRequisition extends TestCaseHelper {
     dbWrapper.insertFacilityApprovedProducts("P10", "P11", program, "Lvl3 Hospital");
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
-    dbWrapper.insertRole("store in-charge","");
-    dbWrapper.insertRole("district pharmacist","");
+    dbWrapper.insertRole("store in-charge","false","");
+    dbWrapper.insertRole("district pharmacist","false","");
     dbWrapper.insertRoleRights();
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
     dbWrapper.insertUser("200",userSIC,passwordUsers,"F10","Fatima_Doe@openlmis.com");

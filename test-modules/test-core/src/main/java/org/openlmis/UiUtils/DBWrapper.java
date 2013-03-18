@@ -124,34 +124,17 @@ public class DBWrapper {
   }
 
 
-  public void insertRole(String role, String description) throws SQLException, IOException {
+  public void insertRole(String role,String adminrole, String description) throws SQLException, IOException {
     ResultSet rs = query("Select id from roles;");
 
-//    if (rs.next()) {
-//      update("delete from role_rights;");
-//      update("delete from role_assignments;");
-//      update("delete from roles;");
-//    }
-
-//    update("INSERT INTO roles\n" +
-//      " (name, description) VALUES\n" +
-//      " ('store in-charge', ''),\n" +
-//      " ('district pharmacist', '');");
     update("INSERT INTO roles\n" +
-      " (name, description) VALUES\n" +
-      " ('"+role+"', '"+description+"');");
+      " (name,adminrole, description) VALUES\n" +
+      " ('"+role+"', '"+adminrole+"', '"+description+"');");
 
   }
 
   public void insertRoleRights() throws SQLException, IOException {
-    ResultSet rs = query("Select roleId from role_rights;");
 
-//    if (rs.next()) {
-//      update("delete from role_rights;");
-//      update("delete from role_assignments;");
-//      update("delete from roles;");
-//
-//    }
 
     update("INSERT INTO role_rights\n" +
       "  (roleId, rightName) VALUES\n" +
