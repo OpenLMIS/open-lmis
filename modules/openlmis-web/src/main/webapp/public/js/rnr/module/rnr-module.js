@@ -1,12 +1,12 @@
 var rnrModule = angular.module('rnr', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle']).config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
     when('/init-rnr', {controller:InitiateRnrController, templateUrl:'partials/init.html'}).
-    when('/create-rnr/:facility/:program/:period', {controller:CreateRequisitionController, templateUrl:'partials/create.html', resolve:CreateRequisitionController.resolve, reloadOnSearch:false}).
+    when('/create-rnr/:rnr/:facility/:program', {controller:CreateRequisitionController, templateUrl:'partials/create.html', resolve:CreateRequisitionController.resolve, reloadOnSearch:false}).
     when('/rnr-for-approval', {controller:ApproveRnrListController, templateUrl:'partials/list.html', resolve:ApproveRnrListController.resolve}).
     when('/requisitions-for-convert-to-order', {controller:ConvertToOrderListController, templateUrl:'partials/convert-to-order-list.html', resolve:ConvertToOrderListController.resolve}).
     when('/view-requisitions', {controller:ViewRnrListController, templateUrl:'partials/view-rnr.html', resolve:ViewRnrListController.resolve}).
     when('/rnr-for-approval/:rnr/:program', {controller:ApproveRnrController, templateUrl:'partials/approve.html', resolve:ApproveRnrController.resolve, reloadOnSearch:false}).
-    when('/requisition/:id/program/:programId/:supplyType', {controller:ViewRnrController, templateUrl:'partials/view.html'}).
+    when('/requisition/:rnr/program/:programId/:supplyType', {controller:ViewRnrController, templateUrl:'partials/view.html'}).
     otherwise({redirectTo:'/init-rnr'});
 }]).directive('rnrValidator',function () {
     return {

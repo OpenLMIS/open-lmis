@@ -3,7 +3,7 @@ describe('ViewRnrController', function () {
 
   beforeEach(module('openlmis.services'));
   beforeEach(inject(function ($httpBackend, $rootScope, $controller) {
-    routeParams = {'programId':2, 'id':1, 'supplyType':'full-supply'};
+    routeParams = {'programId':2, 'rnr':1, 'supplyType':'full-supply'};
     scope = $rootScope.$new();
     httpBackend = $httpBackend;
     controller = $controller;

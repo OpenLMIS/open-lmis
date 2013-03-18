@@ -151,7 +151,8 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
     $scope.error = "";
     $scope.sourceUrl = $location.$$url;
 
-    var createRnrPath = '/create-rnr/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + '/' + $scope.selectedPeriod.id+"?supplyType=full-supply&page=1";
+
+    var createRnrPath;
 
     Requisition.get({facilityId:$scope.selectedFacilityId, programId:$scope.selectedProgram.id, periodId:$scope.selectedPeriod.id}, {},
         function (data) {
@@ -166,11 +167,13 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
               return;
             }
             $scope.$parent.rnr = data.rnr;
+            createRnrPath = '/create-rnr/' + $scope.$parent.rnr.id + '/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + "?supplyType=full-supply&page=1";
             $location.url(createRnrPath);
           }
           else {
             Requisition.save({facilityId:$scope.selectedFacilityId, programId:$scope.selectedProgram.id, periodId:$scope.selectedPeriod.id}, {}, function (data) {
               $scope.$parent.rnr = data.rnr;
+              createRnrPath = '/create-rnr/' + $scope.$parent.rnr.id + '/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + "?supplyType=full-supply&page=1";
               $location.url(createRnrPath);
             }, function (data) {
               $scope.error = data.data.error ? data.data.error : "Requisition does not exist. Please initiate.";

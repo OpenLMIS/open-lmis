@@ -1,6 +1,6 @@
 function CreateRequisitionController($scope, requisition, currency, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, $location, Requisitions, $routeParams, $rootScope) {
   $scope.showNonFullSupply = $routeParams.supplyType == 'non-full-supply';
-  $scope.baseUrl = "/create-rnr/" + $routeParams.facility + '/' + $routeParams.program + '/' + $routeParams.period;
+  $scope.baseUrl = "/create-rnr/" + $routeParams.rnr + '/' + $routeParams.facility + '/' + $routeParams.program;
   $scope.fullSupplyLink = $scope.baseUrl + "?supplyType=full-supply&page=1";
   $scope.nonFullSupplyLink = $scope.baseUrl + "?supplyTpe=non-full-supply&page=1";
   $scope.fillPagedGridData = function () {
@@ -52,6 +52,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   };
 
   $scope.$on('$routeUpdate', function () {
+    $scope.showNonFullSupply = $routeParams.supplyType == "non-full-supply";
     $scope.fillPagedGridData();
     if ($scope.saveRnrForm.$dirty) $scope.saveRnr();
   });
@@ -240,7 +241,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
 
 CreateRequisitionController.resolve = {
 
-  requisition:function ($q, $timeout, Requisition, $route, $rootScope) {
+  requisition:function ($q, $timeout, RequisitionById, $route, $rootScope) {
     var deferred = $q.defer();
     $timeout(function () {
       var rnr = $rootScope.rnr;
@@ -249,7 +250,7 @@ CreateRequisitionController.resolve = {
         $rootScope.rnr = undefined;
         return;
       }
-      Requisition.get({facilityId:$route.current.params.facility, programId:$route.current.params.program, periodId:$route.current.params.period}, function (data) {
+      RequisitionById.get({id:$route.current.params.rnr}, function (data) {
         deferred.resolve(data.rnr);
       }, {});
     }, 100);
