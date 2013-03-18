@@ -1,9 +1,9 @@
 INSERT INTO roles
- (name, description) VALUES
- ('Store In-Charge', ''),
- ('LMU', ''),
- ('FacilityHead', ''),
- ('Medical-Officer', '');
+ (name, adminRole, description) VALUES
+ ('Store In-Charge', 'f', ''),
+ ('LMU', 't', ''),
+ ('FacilityHead', 'f', ''),
+ ('Medical-Officer', 'f', '');
 
 INSERT INTO role_rights
   (roleId, rightName) VALUES
