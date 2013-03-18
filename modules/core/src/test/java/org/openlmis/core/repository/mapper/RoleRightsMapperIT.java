@@ -155,6 +155,7 @@ public class RoleRightsMapperIT {
     role.setRights(new HashSet<>(asList(CREATE_REQUISITION)));
     role.setDescription("Right Description Changed");
     role.setModifiedBy(222);
+    role.setAdminRole(true);
 
     roleRightsMapper.updateRole(role);
 
@@ -162,6 +163,7 @@ public class RoleRightsMapperIT {
     assertThat(updatedRole.getName(), is("Right2"));
     assertThat(updatedRole.getDescription(), is("Right Description Changed"));
     assertThat(updatedRole.getModifiedBy(), is(222));
+    assertThat(updatedRole.getAdminRole(), is(true));
   }
 
   @Test
@@ -220,6 +222,14 @@ public class RoleRightsMapperIT {
     List<Right> result = roleRightsMapper.getRightsForUserOnHomeFacilityAndProgram(user.getId(), program);
     assertThat(result.size(), is(2));
     assertThat(result, is(asList(CREATE_REQUISITION, AUTHORIZE_REQUISITION)));
+  }
+
+  @Test
+  public void shouldInsertRole() throws Exception {
+    Role r1 = new Role("rolename", FALSE, "description");
+    roleRightsMapper.insertRole(r1);
+
+    assertThat(roleRightsMapper.getRole(r1.getId()).getName(), is("rolename"));
   }
 
   private Role insertRole(String name, String description) {

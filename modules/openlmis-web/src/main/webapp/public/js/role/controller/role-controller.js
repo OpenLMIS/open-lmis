@@ -1,19 +1,20 @@
 function RoleController($scope, $routeParams, $location, Roles, Role, Rights) {
   $scope.$parent.error = "";
   $scope.$parent.message = "";
-  $scope.role = {rights:[]};
-  $scope.rightValue = [];
+  $scope.role = {rights: []};
+  $scope.role.adminRole = "true";
 
   if ($routeParams.id) {
-    Role.get({id:$routeParams.id}, function (data) {
+    Role.get({id: $routeParams.id}, function (data) {
       $scope.role = data.role;
+      $scope.role.adminRole = data.role.adminRole.toString();
     });
   }
 
   Rights.get({}, function (data) {
     $scope.rights = data.rights;
-    $scope.adminRights= _.where($scope.rights,{"adminRight": "t"});
-    $scope.nonAdminRights= _.where($scope.rights,{"adminRight": "f"});
+    $scope.adminRights = _.where($scope.rights, {"adminRight": "true"});
+    $scope.nonAdminRights = _.where($scope.rights, {"adminRight": "false"});
   }, {});
 
 
@@ -60,7 +61,6 @@ function RoleController($scope, $routeParams, $location, Roles, Role, Rights) {
   };
 
 
-
   $scope.saveRole = function () {
     var errorHandler = function (data) {
       $scope.error = data.data.error;
@@ -76,13 +76,28 @@ function RoleController($scope, $routeParams, $location, Roles, Role, Rights) {
     if (validRole()) {
       var id = $routeParams.id;
       if (id) {
-        Role.update({id:id}, $scope.role, successHandler, errorHandler);
+        Role.update({id: id}, $scope.role, successHandler, errorHandler);
       } else {
-        $scope.role.adminRole="true";
         Roles.save({}, $scope.role, successHandler, errorHandler);
       }
     }
 
+  }
+  $scope.showRoleTypeModal = function (selected) {
+    window.selected = selected;
+    $scope.roleTypeModal = true;
+  }
+
+  $scope.deSelectRights = function () {
+    $scope.role.rights = [];
+    $scope.disableSection = "disableSection";
+    $scope.role.adminRole = window.selected.toString();
+    $scope.roleTypeModal = false;
+  }
+
+  $scope.cancel = function () {
+    $scope.roleTypeModal = false;
+    $scope.role.adminRole= (!window.selected).toString();
   }
 
   var validRole = function () {
@@ -99,4 +114,5 @@ function RoleController($scope, $routeParams, $location, Roles, Role, Rights) {
     }
     return valid;
   }
+
 }

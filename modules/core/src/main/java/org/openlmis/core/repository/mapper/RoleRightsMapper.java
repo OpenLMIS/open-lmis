@@ -50,7 +50,7 @@ public interface RoleRightsMapper {
   })
   List<Role> getAllRoles();
 
-  @Update("UPDATE roles SET name=#{name} , description=#{description} , modifiedBy=#{modifiedBy},modifiedDate= DEFAULT WHERE id=#{id}")
+  @Update("UPDATE roles SET name=#{name}, adminRole=#{adminRole}, description=#{description}, modifiedBy=#{modifiedBy}, modifiedDate= DEFAULT WHERE id=#{id}")
   void updateRole(Role role);
 
   @Delete("DELETE FROM role_rights WHERE roleId=#{roleId}")
