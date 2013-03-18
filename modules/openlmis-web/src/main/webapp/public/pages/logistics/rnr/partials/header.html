@@ -1,6 +1,5 @@
 <div id="requisition-header">
   <h2>Report and Requisition for <span ng-bind="rnr.program.name + ' (' + rnr.facility.facilityType.name + ')'"></span>
-    <span class="pull-right"><a class="btn btn-primary" ng-href="/requisitions/{{rnr.id}}/print.pdf">Print</a></span>
   </h2>
 
   <div class="info-box">
@@ -21,11 +20,11 @@
     <div class="row-fluid">
       <div class="span3">
         <strong><span ng-bind="rnr.facility.geographicZone.level.name"></span>: </strong><span
-          ng-bind="rnr.facility.geographicZone.name"></span>
+        ng-bind="rnr.facility.geographicZone.name"></span>
       </div>
       <div class="span3">
         <strong><span ng-bind="rnr.facility.geographicZone.parent.level.name"></span>: </strong><span
-          ng-bind="rnr.facility.geographicZone.parent.name"></span>
+        ng-bind="rnr.facility.geographicZone.parent.name"></span>
       </div>
       <div class="span3">
         <strong>Reporting Period: </strong><span ng-bind="periodDisplayName()"></span>

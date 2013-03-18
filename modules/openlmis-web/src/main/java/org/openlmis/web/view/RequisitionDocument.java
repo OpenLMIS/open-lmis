@@ -10,6 +10,7 @@ import java.util.Map;
 public class RequisitionDocument {
   private Document document;
   public static final BaseColor HEADER_BACKGROUND = new BaseColor(210, 210, 210);
+//  public static final BaseColor ROW_GREY_BACKGROUND = new BaseColor(235, 235, 235);
   public static final Font H2_FONT = FontFactory.getFont(FontFactory.TIMES, 20f, Font.BOLD, BaseColor.BLACK);
   public static final int CELL_PADDING = 5;
   public static final int WIDTH_PERCENTAGE = 100;
@@ -36,7 +37,7 @@ public class RequisitionDocument {
 
     document.newPage();
 
-    RequisitionSummary requisitionSummary = new RequisitionSummary(requisition, (String) model.get(RequisitionController.CURRENCY));
+    RequisitionSummary requisitionSummary = new RequisitionSummary(requisition);
     document.add(requisitionSummary.get());
 
     document.close();
