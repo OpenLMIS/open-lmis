@@ -15,7 +15,7 @@
 
         <property name="locations">
             <list>
-                <value>classpath:/postgresql.properties</value>
+                <value>classpath:${env}/postgresql.properties</value>
             </list>
         </property>
 
