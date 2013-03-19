@@ -4,7 +4,7 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
   this.rnrStatus = rnrStatus;
   this.programRnrColumnList = programRnrColumnList;
 
-  RnrLineItem.prototype.initLossesAndAdjustments = function() {
+  RnrLineItem.prototype.initLossesAndAdjustments = function () {
     var tempLossesAndAdjustments = [];
 
     _.each(this.lossesAndAdjustments, function (lossAndAdjustmentJson) {
@@ -14,7 +14,7 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     this.lossesAndAdjustments = tempLossesAndAdjustments;
   }
 
-  RnrLineItem.prototype.init = function(){
+  RnrLineItem.prototype.init = function () {
     this.initLossesAndAdjustments();
     if (this.previousNormalizedConsumptions == undefined || this.previousNormalizedConsumptions == null)
       this.previousNormalizedConsumptions = [];
@@ -38,7 +38,7 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
   RnrLineItem.prototype.fillPacksToShip = function () {
     this.quantityApproved = utils.getValueFor(this.quantityApproved);
     var orderQuantity = (rnrStatus != 'IN_APPROVAL') ? (isUndefined(this.quantityRequested) ?
-      this.calculatedOrderQuantity : this.quantityRequested) : this.quantityApproved;
+        this.calculatedOrderQuantity : this.quantityRequested) : this.quantityApproved;
     this.calculatePacksToShip(orderQuantity);
     this.calculateCost();
   };
@@ -71,8 +71,8 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
       var totalLossesAndAdjustments = utils.parseIntWithBaseTen(this.totalLossesAndAdjustments);
       var stockInHand = utils.parseIntWithBaseTen(this.stockInHand);
       return (utils.isNumber(quantityDispensed) && utils.isNumber(beginningBalance) && utils.isNumber(quantityReceived) &&
-        utils.isNumber(totalLossesAndAdjustments) && utils.isNumber(stockInHand)) ?
-        quantityDispensed != (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand) : null;
+          utils.isNumber(totalLossesAndAdjustments) && utils.isNumber(stockInHand)) ?
+          quantityDispensed != (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand) : null;
     }
     return false;
   };
@@ -164,8 +164,8 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     this.dosesPerMonth = utils.parseIntWithBaseTen(this.dosesPerMonth);
     var g = utils.parseIntWithBaseTen(this.dosesPerDispensingUnit);
     var consumptionAdjustedWithStockOutDays = ((numberOfMonthsInPeriod * 30) - this.stockOutDays) == 0 ?
-      this.quantityDispensed :
-      (this.quantityDispensed * ((numberOfMonthsInPeriod * 30) / ((numberOfMonthsInPeriod * 30) - this.stockOutDays)));
+        this.quantityDispensed :
+        (this.quantityDispensed * ((numberOfMonthsInPeriod * 30) / ((numberOfMonthsInPeriod * 30) - this.stockOutDays)));
     var adjustmentForNewPatients = (this.newPatientCount * Math.ceil(this.dosesPerMonth / g) ) * numberOfMonthsInPeriod;
     this.normalizedConsumption = Math.round(consumptionAdjustedWithStockOutDays + adjustmentForNewPatients);
   };
@@ -247,15 +247,15 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     var visibleColumns = _.where(programRnrColumnList, {"visible":true});
 
     $(visibleColumns).each(function (i, column) {
-        var nonMandatoryColumns = ["reasonForRequestedQuantity", "remarks", "lossesAndAdjustments", "quantityApproved"];
-        if (column.source.name != 'USER_INPUT' || _.contains(nonMandatoryColumns, column.name)) return;
-        if (column.name == 'quantityRequested') {
-          valid = isUndefined(rnrLineItem.quantityRequested) || !isUndefined(rnrLineItem.reasonForRequestedQuantity);
-        } else {
-          valid = !isUndefined(rnrLineItem[column.name]);
+          var nonMandatoryColumns = ["reasonForRequestedQuantity", "remarks", "lossesAndAdjustments", "quantityApproved"];
+          if (column.source.name != 'USER_INPUT' || _.contains(nonMandatoryColumns, column.name)) return;
+          if (column.name == 'quantityRequested') {
+            valid = isUndefined(rnrLineItem.quantityRequested) || !isUndefined(rnrLineItem.reasonForRequestedQuantity);
+          } else {
+            valid = !isUndefined(rnrLineItem[column.name]);
+          }
+          return valid;
         }
-        return valid;
-      }
     );
 
     return valid;
@@ -287,8 +287,39 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     }));
   };
 
+  RnrLineItem.prototype.compareTo = function (rnrLineItem) {
+    function compareStrings(str1, str2) {
+      if (str1 < str2) return -1
+      if (str1 > str2) return 1;
+      return 0;
+    }
+
+    if (isUndefined(rnrLineItem)) {
+      return -1;
+    }
+
+    if (this == rnrLineItem) return 0;
+
+    if (this.productCategoryDisplayOrder == rnrLineItem.productCategoryDisplayOrder) {
+      if (this.productCategory == rnrLineItem.productCategory) {
+        if (isUndefined(this.productDisplayOrder) && isUndefined(rnrLineItem.productDisplayOrder)) {
+          return compareStrings(this.productCode, rnrLineItem.productCode);
+        }
+
+        if (isUndefined(rnrLineItem.productDisplayOrder)) return -1;
+        if (isUndefined(this.productDisplayOrder)) return 1;
+
+        return this.productDisplayOrder - rnrLineItem.productDisplayOrder;
+      }
+      return compareStrings(this.productCategory, rnrLineItem.productCategory);
+    }
+
+    return this.productCategoryDisplayOrder - rnrLineItem.productCategoryDisplayOrder;
+  }
+
   this.init();
-  RnrLineItem.prototype.validateQuantityRequestedAndReason = function() {
+
+  RnrLineItem.prototype.validateQuantityRequestedAndReason = function () {
     return (isUndefined(this.quantityRequested) || isUndefined(this.reasonForRequestedQuantity));
   };
 

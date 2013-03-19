@@ -1,14 +1,6 @@
 function RequisitionFullSupplyController($scope, $routeParams, $location, LossesAndAdjustmentsReferenceData) {
   $scope.currentRnrLineItem = undefined;
 
-  $scope.showCategory = function (index) {
-    return !((index > 0 ) && ($scope.pageLineItems[index].productCategory == $scope.pageLineItems[index-1].productCategory));
-  };
-
-  $scope.showCategory = function (index) {
-    return !((index > 0 ) && ($scope.pageLineItems[index].productCategory == $scope.pageLineItems[index-1].productCategory));
-  };
-
   $scope.getId = function (prefix, parent) {
       return prefix + "_" + parent.$parent.$parent.$index;
     };

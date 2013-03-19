@@ -3,12 +3,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   $scope.baseUrl = "/create-rnr/" + $routeParams.rnr + '/' + $routeParams.facility + '/' + $routeParams.program;
   $scope.fullSupplyLink = $scope.baseUrl + "?supplyType=full-supply&page=1";
   $scope.nonFullSupplyLink = $scope.baseUrl + "?supplyTpe=non-full-supply&page=1";
-  $scope.fillPagedGridData = function () {
-    var gridLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.fullSupplyLineItems;
-    $scope.numberOfPages = Math.ceil(gridLineItems.length / $scope.pageSize) ? Math.ceil(gridLineItems.length / $scope.pageSize) : 1;
-    $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
-    $scope.pageLineItems = gridLineItems.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);
-  };
+
   $scope.rnr = requisition;
   $scope.allTypes = lossesAndAdjustmentsTypes;
   $scope.facilityApprovedProducts = facilityApprovedProducts;
@@ -17,6 +12,14 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   $scope.requisitionRights = requisitionRights;
   $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name':'quantityRequested'});
   $scope.errorPages = {fullSupply:[], nonFullSupply:[]};
+
+  $scope.fillPagedGridData = function () {
+    var gridLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.fullSupplyLineItems;
+    $scope.numberOfPages = Math.ceil(gridLineItems.length / $scope.pageSize) ? Math.ceil(gridLineItems.length / $scope.pageSize) : 1;
+    $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
+    $scope.pageLineItems = gridLineItems.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);
+  };
+
 
   $scope.hasPermission = function (permission) {
     return _.find($scope.requisitionRights, function (right) {
@@ -175,6 +178,10 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
       return "warning-error";
     }
     return null;
+  };
+
+  $scope.showCategory = function (index) {
+    return !((index > 0 ) && ($scope.pageLineItems[index].productCategory == $scope.pageLineItems[index-1].productCategory));
   };
 
   $scope.totalCost = function () {

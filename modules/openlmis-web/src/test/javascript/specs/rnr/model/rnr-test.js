@@ -12,6 +12,24 @@ describe('R&R test', function () {
 //    expect(Rnr.prototype.calculateNonFullSupplyItemsSubmittedCost).toHaveBeenCalled();
   });
 
+  it('should sort non full supply line items during init', function() {
+    var rnrLineItem1 = {productCategoryDisplayOrder:3};
+    var rnrLineItem2 = {productCategoryDisplayOrder:1};
+    var rnrLineItem3 = {productCategoryDisplayOrder:2};
+    var rnrJson = {period:{numberOfMonths:3}, 'nonFullSupplyLineItems':[rnrLineItem1, rnrLineItem2, rnrLineItem3]}
+
+    var rnr = new Rnr();
+    jQuery.extend(rnr, rnrJson);
+    rnr.init();
+
+    expect(rnr.nonFullSupplyLineItems.length).toEqual(3);
+    expect(rnr.nonFullSupplyLineItems[0].productCategoryDisplayOrder).toEqual(1);
+    expect(rnr.nonFullSupplyLineItems[1].productCategoryDisplayOrder).toEqual(2);
+    expect(rnr.nonFullSupplyLineItems[2].productCategoryDisplayOrder).toEqual(3);
+
+
+  });
+
   it('should prepare line item objects inside rnr', function () {
     var lineItemSpy = spyOn(window, 'RnrLineItem');
     var lineItem1 = {"lineItem":"lineItem1"};

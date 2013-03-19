@@ -2,6 +2,7 @@ package org.openlmis.rnr.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang.ObjectUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -39,8 +40,10 @@ public class RnrLineItem {
 
   //todo hack to display it on UI. This is concatenated string of Product properties like name, strength, form and dosage unit
   private String product;
+  private Integer productDisplayOrder;
   private String productCode;
   private String productCategory;
+  private Integer productCategoryDisplayOrder;
   private Boolean roundToZero;
   private Integer packRoundingThreshold;
   private Integer packSize;
@@ -91,8 +94,10 @@ public class RnrLineItem {
     this.maxMonthsOfStock = facilityApprovedProduct.getMaxMonthsOfStock();
     ProgramProduct programProduct = facilityApprovedProduct.getProgramProduct();
     this.price = programProduct.getCurrentPrice();
-    this.productCategory = programProduct.getProduct().getCategory().getName();
-    populateFromProduct(programProduct.getProduct());
+    ProductCategory category = programProduct.getProduct().getCategory();
+    this.productCategory = category.getName();
+    this.productCategoryDisplayOrder = category.getDisplayOrder();
+    this.populateFromProduct(programProduct.getProduct());
     this.dosesPerMonth = programProduct.getDosesPerMonth();
     this.modifiedBy = modifiedBy;
   }
@@ -106,6 +111,7 @@ public class RnrLineItem {
     this.packRoundingThreshold = product.getPackRoundingThreshold();
     this.product = productName(product);
     this.fullSupply = product.getFullSupply();
+    this.productDisplayOrder = product.getDisplayOrder();
   }
 
   private String productName(Product product) {
@@ -195,7 +201,7 @@ public class RnrLineItem {
 
   public void calculatePacksToShip() {
     Integer orderQuantity = getOrderQuantity();
-    if(orderQuantity == null || packSize == null) {
+    if (orderQuantity == null || packSize == null) {
       packsToShip = null;
     } else {
       packsToShip = orderQuantity == 0 ? 0 : round(floor(orderQuantity / packSize), orderQuantity);
@@ -235,7 +241,8 @@ public class RnrLineItem {
   public void calculateNormalizedConsumption() {
     Float consumptionAdjustedWithStockOutDays = ((MULTIPLIER * NUMBER_OF_DAYS) - stockOutDays) == 0 ? quantityDispensed :
       (quantityDispensed * ((MULTIPLIER * NUMBER_OF_DAYS) / ((MULTIPLIER * NUMBER_OF_DAYS) - stockOutDays)));
-    Float adjustmentForNewPatients = (newPatientCount * ((Double) Math.ceil(dosesPerMonth.doubleValue() / dosesPerDispensingUnit)).floatValue()) * MULTIPLIER;
+    Float adjustmentForNewPatients = (newPatientCount * ((Double) Math.ceil(
+      dosesPerMonth.doubleValue() / dosesPerDispensingUnit)).floatValue()) * MULTIPLIER;
 
     normalizedConsumption = Math.round(consumptionAdjustedWithStockOutDays + adjustmentForNewPatients);
   }

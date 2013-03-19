@@ -17,8 +17,15 @@ public class ProductBuilder {
   public static final Property<Product, String> code = newProperty();
   public static final Property<Product, Boolean> fullSupply = newProperty();
   public static final Property<Product, Integer> displayOrder = newProperty();
+  public static final Property<Product, Integer> productCategoryDisplayOrder = newProperty();
+  public static final Property<Product, String> productCategoryCode = newProperty();
+  public static final Property<Product, String> productCategoryName = newProperty();
 
   private static final Integer nullInteger = null;
+  public static final String CATEGORY_CODE = "C1";
+  public static final String CATEGORY_NAME = "Category 1";
+  public static final Integer CATEGORY_DISPLAY_ORDER = 1;
+
   public static final Instantiator<Product> defaultProduct = new Instantiator<Product>() {
     @Override
     public Product instantiate(PropertyLookup<Product> lookup) {
@@ -55,11 +62,13 @@ public class ProductBuilder {
       form.setCode("Tablet");
       form.setId(1L);
       product.setForm(form);
+
       ProductCategory category = new ProductCategory();
-      category.setCode("C1");
-      category.setName("Category 1");
-      category.setDisplayOrder(1);
+      category.setCode(lookup.valueOf(productCategoryCode, CATEGORY_CODE));
+      category.setName(lookup.valueOf(productCategoryName, CATEGORY_NAME));
+      category.setDisplayOrder(lookup.valueOf(productCategoryDisplayOrder, CATEGORY_DISPLAY_ORDER));
       product.setCategory(category);
+
       return product;
     }
   };
