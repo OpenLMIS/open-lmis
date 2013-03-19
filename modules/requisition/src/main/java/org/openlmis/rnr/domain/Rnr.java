@@ -28,9 +28,6 @@ public class Rnr {
   private Money fullSupplyItemsSubmittedCost = new Money("0");
   private Money nonFullSupplyItemsSubmittedCost = new Money("0");
 
-  /**
-   * TODO: rename lineItems to fullSupplyLineItems
-   */
   private List<RnrLineItem> fullSupplyLineItems = new ArrayList<>();
   private List<RnrLineItem> nonFullSupplyLineItems = new ArrayList<>();
 

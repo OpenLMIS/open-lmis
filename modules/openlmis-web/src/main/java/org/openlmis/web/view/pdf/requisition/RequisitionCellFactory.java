@@ -1,4 +1,4 @@
-package org.openlmis.web.view;
+package org.openlmis.web.view.pdf.requisition;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
@@ -9,8 +9,8 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.openlmis.web.view.RequisitionDocument.CELL_PADDING;
-import static org.openlmis.web.view.RequisitionDocument.HEADER_BACKGROUND;
+import static org.openlmis.web.view.pdf.requisition.RequisitionDocument.CELL_PADDING;
+import static org.openlmis.web.view.pdf.requisition.RequisitionDocument.HEADER_BACKGROUND;
 
 public class RequisitionCellFactory {
 

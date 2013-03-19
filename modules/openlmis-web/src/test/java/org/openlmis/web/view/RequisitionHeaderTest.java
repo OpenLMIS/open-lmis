@@ -2,25 +2,13 @@ package org.openlmis.web.view;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.hamcrest.Matcher;
 import org.junit.Ignore;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.rnr.domain.Rnr;
-
-import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.*;
-import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
-import static org.openlmis.core.builder.FacilityBuilder.name;
-import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
-import static org.openlmis.rnr.builder.RequisitionBuilder.facility;
 
 @Ignore
 @RunWith(MockitoJUnitRunner.class)
@@ -34,18 +22,6 @@ public class RequisitionHeaderTest {
   @SuppressWarnings("unused")
   private Document mockedDocument;
 
-  @Test
-  public void itShouldAddHeaderParagraphOnOpenDocument() throws Exception {
-    Facility f1 = make(a(defaultFacility, with(name, "F1")));
-    Rnr requisition = make(a(defaultRnr, with(facility, f1)));
-    RequisitionHeader headerFooter = new RequisitionHeader(requisition);
-    PdfContentByte pdfContentByte = mock(PdfContentByte.class);
-    when(mockedWriter.getDirectContent()).thenReturn(pdfContentByte);
-
-    headerFooter.onOpenDocument(mockedWriter, mockedDocument);
-
-    verify(mockedDocument).add(argThat(paragraphMatcher()));
-  }
 
   private Matcher<Paragraph> paragraphMatcher() {
     return new ArgumentMatcher<Paragraph>() {
