@@ -77,6 +77,9 @@ public class TemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//li[@id='C']/span[@class='tpl-source']/span/select/option[@selected='selected']")
   private static WebElement totalConsumedQuantitySource;
 
+  @FindBy(how = How.XPATH, using = "//li[@id='C']/span/input")
+  private static WebElement totalConsumedQuantityCheckBox;
+
   @FindBy(how = How.XPATH, using = "//li[@id='D']/span[@class='tpl-label']/input")
   private static WebElement lossesAndAdj;
 
@@ -223,9 +226,23 @@ public class TemplateConfigPage extends Page {
 
     //if "C" is derived then "E" is must and Vice versa
     testWebDriver.selectByVisibleText(dropDownTotalConsumedQuantity, "Calculated");
+    testWebDriver.selectByVisibleText(stockInHandDropDown,"User Input");
     stockOnHandCheckBox.click();
-    if (!stockOnHandCheckBox.isSelected())
+    if (stockOnHandCheckBox.isSelected())
       testWebDriver.click(stockOnHandCheckBox);
+    SaveButton.click();
+    testWebDriver.sleep(250);
+    SeleneseTestNgHelper.assertTrue("Error message not displaying", errorMessageDiv.isDisplayed());
+    SeleneseTestNgHelper.assertTrue("Error message not displaying", totalConsumedQtyErrorMessage.isDisplayed());
+    SeleneseTestNgHelper.assertTrue("Error message not displaying", stockOnHandQtyErrorMessage.isDisplayed());
+
+    testWebDriver.selectByVisibleText(dropDownTotalConsumedQuantity, "User Input");
+    testWebDriver.selectByVisibleText(stockInHandDropDown,"Calculated");
+    SaveButton.click();
+    SeleneseTestNgHelper.assertTrue("Success message should display",saveSuccessMsg.isDisplayed());
+    totalConsumedQuantityCheckBox.click();
+    if (totalConsumedQuantityCheckBox.isSelected())
+      testWebDriver.click(totalConsumedQuantityCheckBox);
     SaveButton.click();
     testWebDriver.sleep(250);
     SeleneseTestNgHelper.assertTrue("Error message not displaying", errorMessageDiv.isDisplayed());

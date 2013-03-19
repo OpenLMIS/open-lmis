@@ -223,6 +223,7 @@ public class DBWrapper {
   }
 
   public void alterUserID(String userId) throws SQLException, IOException {
+    update("delete from user_password_reset_tokens;");
     update("delete from users where id=200;");
     update(" update users set id=" + userId + " where username='User123'");
   }
