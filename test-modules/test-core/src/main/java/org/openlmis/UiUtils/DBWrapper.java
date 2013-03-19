@@ -63,7 +63,6 @@ public class DBWrapper {
   }
 
 
-
   public void deleteFacilities() throws IOException, SQLException {
     update("DELETE FROM requisition_line_item_losses_adjustments;");
     update("DELETE FROM requisition_line_items;");
@@ -124,12 +123,12 @@ public class DBWrapper {
   }
 
 
-  public void insertRole(String role,String adminrole, String description) throws SQLException, IOException {
+  public void insertRole(String role, String adminrole, String description) throws SQLException, IOException {
     ResultSet rs = query("Select id from roles;");
 
     update("INSERT INTO roles\n" +
       " (name,adminrole, description) VALUES\n" +
-      " ('"+role+"', '"+adminrole+"', '"+description+"');");
+      " ('" + role + "', '" + adminrole + "', '" + description + "');");
 
   }
 
@@ -148,7 +147,7 @@ public class DBWrapper {
       "  ((select id from roles where name='district pharmacist'), 'CONFIGURE_RNR');");
   }
 
-  public void insertSupervisoryNode(String facilityCode, String supervisoryNodeCode,String supervisoryNodeName, String supervisoryNodeParentCode) throws SQLException, IOException {
+  public void insertSupervisoryNode(String facilityCode, String supervisoryNodeCode, String supervisoryNodeName, String supervisoryNodeParentCode) throws SQLException, IOException {
     ResultSet rs = query("Select facilityId from supervisory_nodes;");
 
     if (rs.next()) {
@@ -156,13 +155,13 @@ public class DBWrapper {
     }
     update("INSERT INTO supervisory_nodes\n" +
       "  (parentId, facilityId, name, code) VALUES\n" +
-      "  (" + supervisoryNodeParentCode + ", (SELECT id FROM facilities WHERE code = '" + facilityCode + "'), '"+supervisoryNodeName+"', '" + supervisoryNodeCode + "');");
+      "  (" + supervisoryNodeParentCode + ", (SELECT id FROM facilities WHERE code = '" + facilityCode + "'), '" + supervisoryNodeName + "', '" + supervisoryNodeCode + "');");
   }
 
-  public void insertSupervisoryNodeSecond(String facilityCode, String supervisoryNodeCode,String supervisoryNodeName, String supervisoryNodeParentCode) throws SQLException, IOException {
+  public void insertSupervisoryNodeSecond(String facilityCode, String supervisoryNodeCode, String supervisoryNodeName, String supervisoryNodeParentCode) throws SQLException, IOException {
     update("INSERT INTO supervisory_nodes\n" +
       "  (parentId, facilityId, name, code) VALUES\n" +
-      "  ((select id from  supervisory_nodes where code ='" + supervisoryNodeParentCode + "'), (SELECT id FROM facilities WHERE code = '" + facilityCode + "'), '"+supervisoryNodeName+"', '" + supervisoryNodeCode + "');");
+      "  ((select id from  supervisory_nodes where code ='" + supervisoryNodeParentCode + "'), (SELECT id FROM facilities WHERE code = '" + facilityCode + "'), '" + supervisoryNodeName + "', '" + supervisoryNodeCode + "');");
   }
 
   public void insertRequisitionGroups(String code1, String code2, String supervisoryNodeCode1, String supervisoryNodeCode2) throws SQLException, IOException {
@@ -214,7 +213,7 @@ public class DBWrapper {
 
   public void updateRoleAssignment(String userID, String supervisoryNode) throws SQLException, IOException {
     //update("delete from role_assignments where userid='" + userID + "' and supervisorynodeid is null;");
-    update("update role_assignments set supervisorynodeid=(select id from supervisory_nodes where code='"+supervisoryNode+"') where userid='" + userID + "';");
+    update("update role_assignments set supervisorynodeid=(select id from supervisory_nodes where code='" + supervisoryNode + "') where userid='" + userID + "';");
   }
 
   public void updateRoleGroupMember(String facilityCode) throws SQLException, IOException {
@@ -231,10 +230,10 @@ public class DBWrapper {
 
   public void insertProducts(String product1, String product2) throws SQLException, IOException {
 
-      update("delete from facility_approved_products;");
-      update("delete from program_products;");
-      update("delete from products;");
-      update("delete from product_categories;");
+    update("delete from facility_approved_products;");
+    update("delete from program_products;");
+    update("delete from products;");
+    update("delete from product_categories;");
 
 
     update("INSERT INTO product_categories (code, name, displayOrder) values ('C1', 'Antibiotics', 1);");
@@ -301,27 +300,27 @@ public class DBWrapper {
   public void configureTemplate(String program) throws SQLException, IOException {
     update("INSERT INTO program_rnr_columns\n" +
       "(masterColumnId, programId, visible, source, position, label) VALUES\n" +
-      "(1, (select id from programs where code = '"+program+"'),  true, 'R', 1,  'Product Code'),\n" +
-      "(2, (select id from programs where code = '"+program+"'),  true, 'R', 2,  'Product'),\n" +
-      "(3, (select id from programs where code = '"+program+"'),  true, 'R', 3,  'Unit/Unit of Issue'),\n" +
-      "(4, (select id from programs where code = '"+program+"'),  true, 'U', 4,  'Beginning Balance'),\n" +
-      "(5, (select id from programs where code = '"+program+"'),  true, 'U', 5,  'Total Received Quantity'),\n" +
-      "(6, (select id from programs where code = '"+program+"'),  true, 'U', 6,  'Total Consumed Quantity'),\n" +
-      "(7, (select id from programs where code = '"+program+"'),  true, 'U', 7,  'Total Losses / Adjustments'),\n" +
-      "(8, (select id from programs where code = '"+program+"'),  true, 'C', 8,  'Stock on Hand'),\n" +
-      "(9, (select id from programs where code = '"+program+"'),  true, 'U', 9, 'New Patients'),\n" +
-      "(10, (select id from programs where code = '"+program+"'), true, 'U', 10, 'Total Stockout days'),\n" +
-      "(11, (select id from programs where code = '"+program+"'), true, 'C', 11, 'Adjusted Total Consumption'),\n" +
-      "(12, (select id from programs where code = '"+program+"'), true, 'C', 12, 'Average Monthly Consumption(AMC)'),\n" +
-      "(13, (select id from programs where code = '"+program+"'), true, 'C', 13, 'Maximum Stock Quantity'),\n" +
-      "(14, (select id from programs where code = '"+program+"'), true, 'C', 14, 'Calculated Order Quantity'),\n" +
-      "(15, (select id from programs where code = '"+program+"'), true, 'U', 15, 'Requested Quantity'),\n" +
-      "(16, (select id from programs where code = '"+program+"'), true, 'U', 16, 'Requested Quantity Explanation'),\n" +
-      "(17, (select id from programs where code = '"+program+"'), true, 'U', 17, 'Approved Quantity'),\n" +
-      "(18, (select id from programs where code = '"+program+"'), true, 'C', 18, 'Packs to Ship'),\n" +
-      "(19, (select id from programs where code = '"+program+"'), true, 'R', 19, 'Price per pack'),\n" +
-      "(20, (select id from programs where code = '"+program+"'), true, 'C', 20, 'Total cost'),\n" +
-      "(21, (select id from programs where code = '"+program+"'), true, 'U', 21, 'Remarks');");
+      "(1, (select id from programs where code = '" + program + "'),  true, 'R', 1,  'Product Code'),\n" +
+      "(2, (select id from programs where code = '" + program + "'),  true, 'R', 2,  'Product'),\n" +
+      "(3, (select id from programs where code = '" + program + "'),  true, 'R', 3,  'Unit/Unit of Issue'),\n" +
+      "(4, (select id from programs where code = '" + program + "'),  true, 'U', 4,  'Beginning Balance'),\n" +
+      "(5, (select id from programs where code = '" + program + "'),  true, 'U', 5,  'Total Received Quantity'),\n" +
+      "(6, (select id from programs where code = '" + program + "'),  true, 'U', 6,  'Total Consumed Quantity'),\n" +
+      "(7, (select id from programs where code = '" + program + "'),  true, 'U', 7,  'Total Losses / Adjustments'),\n" +
+      "(8, (select id from programs where code = '" + program + "'),  true, 'C', 8,  'Stock on Hand'),\n" +
+      "(9, (select id from programs where code = '" + program + "'),  true, 'U', 9, 'New Patients'),\n" +
+      "(10, (select id from programs where code = '" + program + "'), true, 'U', 10, 'Total Stockout days'),\n" +
+      "(11, (select id from programs where code = '" + program + "'), true, 'C', 11, 'Adjusted Total Consumption'),\n" +
+      "(12, (select id from programs where code = '" + program + "'), true, 'C', 12, 'Average Monthly Consumption(AMC)'),\n" +
+      "(13, (select id from programs where code = '" + program + "'), true, 'C', 13, 'Maximum Stock Quantity'),\n" +
+      "(14, (select id from programs where code = '" + program + "'), true, 'C', 14, 'Calculated Order Quantity'),\n" +
+      "(15, (select id from programs where code = '" + program + "'), true, 'U', 15, 'Requested Quantity'),\n" +
+      "(16, (select id from programs where code = '" + program + "'), true, 'U', 16, 'Requested Quantity Explanation'),\n" +
+      "(17, (select id from programs where code = '" + program + "'), true, 'U', 17, 'Approved Quantity'),\n" +
+      "(18, (select id from programs where code = '" + program + "'), true, 'C', 18, 'Packs to Ship'),\n" +
+      "(19, (select id from programs where code = '" + program + "'), true, 'R', 19, 'Price per pack'),\n" +
+      "(20, (select id from programs where code = '" + program + "'), true, 'C', 20, 'Total cost'),\n" +
+      "(21, (select id from programs where code = '" + program + "'), true, 'U', 21, 'Remarks');");
   }
 
   public String getFacilityIDDB() throws IOException, SQLException {
@@ -382,7 +381,7 @@ public class DBWrapper {
   }
 
   public void updateRequisition(String facilityCode) throws IOException, SQLException {
-    update("update requisitions set supplyingfacilityid=(select id from facilities where code='"+facilityCode+"');");
+    update("update requisitions set supplyingfacilityid=(select id from facilities where code='" + facilityCode + "');");
 
   }
 
@@ -397,7 +396,7 @@ public class DBWrapper {
   }
 
   public void updateRequisitionStatus(String status) throws IOException, SQLException {
-    update("update requisitions set status='"+status+"';");
+    update("update requisitions set status='" + status + "';");
     update("update requisitions set supervisorynodeid=(select id from supervisory_nodes where code='N1');");
 
   }
