@@ -50,6 +50,7 @@ public class UserControllerTest {
   @Mock
   @SuppressWarnings("unused")
   private UserService userService;
+  private String baseUrl = "http://localhost:9091/";
 
   @Before
   public void setUp() {
@@ -58,7 +59,7 @@ public class UserControllerTest {
     session = new MockHttpSession();
     httpServletRequest.setSession(session);
 
-    userController = new UserController(roleRightService, userService);
+    userController = new UserController(roleRightService, userService, baseUrl);
   }
 
   @Test
@@ -93,16 +94,14 @@ public class UserControllerTest {
     User user = new User();
     user.setUserName("Manan");
     user.setEmail("manan@thoughtworks.com");
-    httpServletRequest.addHeader("referer", "http://openlmis:9091/public/pages/admin/user/index.html");
     userController.sendPasswordTokenEmail(user, httpServletRequest);
-    verify(userService).sendForgotPasswordEmail(eq(user), eq("http://openlmis:9091/public/pages/reset-password.html#/token/"));
+    verify(userService).sendForgotPasswordEmail(eq(user), eq("http://localhost:9091/public/pages/reset-password.html#/token/"));
   }
 
   @Test
   public void shouldReturnErrorIfSendingForgotPasswordEmailFails() throws Exception {
     User user = new User();
     HttpServletRequest request = mock(HttpServletRequest.class);
-    when(request.getHeader("referer")).thenReturn("http://referrer/");
     doThrow(new DataException("some error")).when(userService).sendForgotPasswordEmail(eq(user), anyString());
 
     ResponseEntity<OpenLmisResponse> response = userController.sendPasswordTokenEmail(user, request);
@@ -117,10 +116,9 @@ public class UserControllerTest {
 
     httpServletRequest.getSession().setAttribute(USER_ID, userId);
     httpServletRequest.getSession().setAttribute(USER, USER);
-    httpServletRequest.addHeader("referer", "http://openlmis:9091/public/pages/admin/user/index.html");
     ResponseEntity<OpenLmisResponse> response = userController.create(user, httpServletRequest);
 
-    verify(userService).create(eq(user), eq("http://openlmis:9091/public/pages/reset-password.html#/token/"));
+    verify(userService).create(eq(user), eq("http://localhost:9091/public/pages/reset-password.html#/token/"));
 
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
     assertThat(response.getBody().getSuccessMsg(), is("User '" + user.getFirstName() + " " + user.getLastName() + "' has been successfully created, password link has been sent on registered Email address"));
@@ -148,7 +146,6 @@ public class UserControllerTest {
   public void shouldReturnErrorIfSaveUserFails() throws Exception {
     User user = new User();
     doThrow(new DataException("Save user failed")).when(userService).create(eq(user), anyString());
-    httpServletRequest.addHeader("referer", "http://openlmis:8080/index.html");
     ResponseEntity<OpenLmisResponse> response = userController.create(user, httpServletRequest);
 
     assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));

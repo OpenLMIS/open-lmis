@@ -7,6 +7,7 @@ import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,13 +34,20 @@ public class UserController extends BaseController {
 
   private RoleRightsService roleRightService;
   private UserService userService;
+
   public static final String USER_ID = "userId";
   public static final String TOKEN_VALID = "TOKEN_VALID";
+  private static final String RESET_PASSWORD_PATH = "/public/pages/reset-password.html#/token/";
+
+
+  private String baseUrl;
+
 
   @Autowired
-  public UserController(RoleRightsService roleRightService, UserService userService) {
+  public UserController(RoleRightsService roleRightService, UserService userService, @Value("${mail.base.url}") String baseUrl) {
     this.roleRightService = roleRightService;
     this.userService = userService;
+    this.baseUrl = baseUrl;
   }
 
   @RequestMapping(value = "/user-context", method = GET, headers = ACCEPT_JSON)
@@ -60,18 +68,10 @@ public class UserController extends BaseController {
     return error("user.login.error", HttpStatus.UNAUTHORIZED);
   }
 
-  private static int nthOccurrence(String str, char c, int n) {
-    int pos = str.indexOf(c, 0);
-    while (n-- > 1 && pos != -1)
-      pos = str.indexOf(c, pos + 1);
-    return pos;
-  }
-
   @RequestMapping(value = "/forgot-password", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> sendPasswordTokenEmail(@RequestBody User user, HttpServletRequest request) {
     try {
-      String referrer = request.getHeader("referer");
-      String resetPasswordLink = referrer.substring(0, nthOccurrence(referrer, '/', 3)) + "/public/pages/reset-password.html#/token/";
+      String resetPasswordLink = baseUrl + RESET_PASSWORD_PATH;
       userService.sendForgotPasswordEmail(user, resetPasswordLink);
       return success("Email sent");
     } catch (DataException e) {
@@ -85,13 +85,13 @@ public class UserController extends BaseController {
     ResponseEntity<OpenLmisResponse> successResponse;
     user.setModifiedBy(loggedInUserId(request));
     try {
-      String referrer = request.getHeader("referer");
-      String resetPasswordBaseLink = referrer.substring(0, nthOccurrence(referrer, '/', 3)) + "/public/pages/reset-password.html#/token/";
+      String resetPasswordBaseLink = baseUrl + RESET_PASSWORD_PATH;
       userService.create(user, resetPasswordBaseLink);
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);
     }
-    successResponse = success("User '" + user.getFirstName() + " " + user.getLastName() + "' has been successfully created, password link has been sent on registered Email address");
+    successResponse = success(String.format("User '%s %s' has been successfully created, password link has been sent on registered Email address",
+      user.getFirstName(), user.getLastName()));
     successResponse.getBody().addData("user", user);
     return successResponse;
   }
