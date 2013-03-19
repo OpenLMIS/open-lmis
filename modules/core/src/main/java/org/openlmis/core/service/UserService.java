@@ -50,10 +50,6 @@ public class UserService {
     sendEmail(emailMessage);
   }
 
-  public void create(User user) {
-    validateAndSave(user);
-  }
-
   private void validateAndSave(User user) {
     user.validate();
     userRepository.create(user);

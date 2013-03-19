@@ -10,6 +10,7 @@ import org.openlmis.core.service.UserService;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
+import static org.openlmis.core.upload.UserPersistenceHandler.RESET_PASSWORD_PATH;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserPersistenceHandlerTest {
@@ -21,10 +22,11 @@ public class UserPersistenceHandlerTest {
 
   @Test
   public void shouldSaveAUser() throws Exception {
-    userPersistenceHandler = new UserPersistenceHandler(userService);
+    String baseUrl = "http://localhost:9091/";
+    userPersistenceHandler = new UserPersistenceHandler(userService, baseUrl);
     User user = new User();
     userPersistenceHandler.save(user, 1);
-    verify(userService).create(user);
+    verify(userService).create(user, baseUrl + RESET_PASSWORD_PATH);
     assertThat(user.getModifiedBy(), is(1));
   }
 }
