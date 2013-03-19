@@ -27,31 +27,31 @@ public class RolesPage extends Page {
   @FindBy(how = How.ID, using = "description")
   private static WebElement roleDescription;
 
-  @FindBy(how = How.ID, using = "CONFIGURE_RNR")
+  @FindBy(how = How.XPATH, using = "//div[@id='rights-CONFIGURE_RNR")
   private static WebElement rightConfigureTemplate;
 
-  @FindBy(how = How.ID, using = "MANAGE_FACILITY")
+  @FindBy(how = How.XPATH, using = "//div[@id='rights-MANAGE_FACILITY']/input")
   private static WebElement rightManageFacilities;
 
-  @FindBy(how = How.ID, using = "MANAGE_ROLE")
+  @FindBy(how = How.XPATH, using = "//div[@id='rights-MANAGE_ROLE']/input")
   private static WebElement rightManageRoles;
 
-  @FindBy(how = How.ID, using = "MANAGE_SCHEDULE")
+  @FindBy(how = How.XPATH, using = "//div[@id='rights-MANAGE_SCHEDULE']/input")
   private static WebElement rightManageSchedules;
 
-  @FindBy(how = How.ID, using = "UPLOADS")
+  @FindBy(how = How.XPATH, using = "//div[@id='rights-UPLOADS']/input")
   private static WebElement rightUploads;
 
-  @FindBy(how = How.ID, using = "CREATE_REQUISITION")
+  @FindBy(how = How.XPATH, using = "//div[@id='nonAdminRights-CREATE_REQUISITION']/input")
   private static WebElement rightCreateRequisition;
 
-  @FindBy(how = How.ID, using = "AUTHORIZE_REQUISITION")
+  @FindBy(how = How.XPATH, using = "//div[@id='nonAdminRights-AUTHORIZE_REQUISITION']/input")
   private static WebElement rightAuthorizeRequisition;
 
-  @FindBy(how = How.ID, using = "APPROVE_REQUISITION")
+  @FindBy(how = How.XPATH, using = "//div[@id='nonAdminRights-APPROVE_REQUISITION']/input")
   private static WebElement rightApproveRequisition;
 
-  @FindBy(how = How.ID, using = "CONVERT_TO_ORDER")
+  @FindBy(how = How.XPATH, using = "//div[@id='rights-CONVERT_TO_ORDER']/input")
   private static WebElement rightConvertToOrderRequisition;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Save']")
@@ -62,6 +62,15 @@ public class RolesPage extends Page {
 
   @FindBy(how = How.ID, using = "saveFailMessage")
   private static WebElement saveErrorMsgDiv;
+
+  @FindBy(how = How.ID, using = "programRoleType")
+  private static WebElement programRoleType;
+
+  @FindBy(how = How.ID, using = "adminRoleType")
+  private static WebElement adminRoleType;
+
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Continue')]")
+  private static WebElement continueButton;
 
   public RolesPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -87,6 +96,9 @@ public class RolesPage extends Page {
     testWebDriver.waitForElementToAppear(createNewRoleButton);
     createNewRoleButton.click();
     testWebDriver.handleScrollByPixels(0,2000);
+    testWebDriver.click(programRoleType);
+    testWebDriver.waitForElementToAppear(continueButton);
+    testWebDriver.click(continueButton);
     for (String right : rights) {
           testWebDriver.sleep(1500);
           webElementMap.get(right).click();
