@@ -95,10 +95,10 @@ public class RolesPage extends Page {
 
     testWebDriver.waitForElementToAppear(createNewRoleButton);
     createNewRoleButton.click();
-    testWebDriver.handleScrollByPixels(0,2000);
     testWebDriver.click(programRoleType);
     testWebDriver.waitForElementToAppear(continueButton);
     testWebDriver.click(continueButton);
+    testWebDriver.handleScrollByPixels(0,3000);
     for (String right : rights) {
           testWebDriver.sleep(1500);
           webElementMap.get(right).click();
