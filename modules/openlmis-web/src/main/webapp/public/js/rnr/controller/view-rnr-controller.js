@@ -1,9 +1,9 @@
 function ViewRnrController($scope, $routeParams, ProgramRnRColumnList, RequisitionById, ReferenceData) {
 
   $scope.lossesAndAdjustmentsModal = [];
-  $scope.fullSupplyLink = "#/requisition/" + $routeParams.id + '/program/' + $routeParams.programId + '/full-supply';
+  $scope.fullSupplyLink = "#/requisition/" + $routeParams.rnr + '/program/' + $routeParams.programId + '/full-supply';
 
-  $scope.nonFullSupplyLink = "#/requisition/" + $routeParams.id + '/program/' + $routeParams.programId + '/non-full-supply';
+  $scope.nonFullSupplyLink = "#/requisition/" + $routeParams.rnr + '/program/' + $routeParams.programId + '/non-full-supply';
 
   $scope.showNonFullSupply = !($routeParams.supplyType == 'full-supply');
 
@@ -11,8 +11,8 @@ function ViewRnrController($scope, $routeParams, ProgramRnRColumnList, Requisiti
   $scope.columnDefs = [];
 
 
-  if (!$scope.rnr || $scope.rnr.id != $routeParams.id || $scope.rnr.status != $scope.rnrStatus) {
-    RequisitionById.get({id:$routeParams.id}, function (data) {
+  if (!$scope.rnr || $scope.rnr.id != $routeParams.rnr || $scope.rnr.status != $scope.rnrStatus) {
+    RequisitionById.get({id:$routeParams.rnr}, function (data) {
       $scope.$parent.rnr = data.rnr;
       populateRnrLineItems();
       fillGrid();

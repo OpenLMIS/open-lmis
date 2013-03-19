@@ -123,12 +123,12 @@ public class RnrLineItem {
 
   public void calculate(ProcessingPeriod period, List<RnrColumn> rnrColumns) {
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
-    calculateNormalizedConsumption();
-    calculateAmc(period);
     calculateTotalLossesAndAdjustments();
-    calculateMaxStockQuantity();
     if (template.columnsCalculated(STOCK_IN_HAND)) calculateStockInHand();
     if (template.columnsCalculated(QUANTITY_DISPENSED)) calculateQuantityDispensed();
+    calculateNormalizedConsumption();
+    calculateAmc(period);
+    calculateMaxStockQuantity();
     calculateOrderQuantity();
 
     calculatePacksToShip();

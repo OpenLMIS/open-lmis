@@ -17,9 +17,11 @@ import static org.openlmis.web.view.RequisitionPdfView.H3_FONT;
 public class RequisitionSummary {
 
   private Rnr requisition;
+  private String currency;
 
-  public RequisitionSummary(Rnr requisition) {
+  public RequisitionSummary(Rnr requisition, String currency) {
     this.requisition = requisition;
+    this.currency = currency;
     this.requisition.fillFullSupplyCost();
     this.requisition.fillNonFullSupplyCost();
   }
@@ -31,10 +33,6 @@ public class RequisitionSummary {
     summaryTable.setWidthPercentage(40);
     summaryTable.setHorizontalAlignment(0);
 
-//    PdfPCell defaultCell = summaryTable.getDefaultCell();
-//    defaultCell.setPadding(15);
-//    defaultCell.setBorder(0);
-
     Chunk chunk = new Chunk("Summary ", RequisitionPdfView.H2_FONT);
     PdfPCell summaryHeaderCell = new PdfPCell(new Phrase(chunk));
     summaryHeaderCell.setColspan(2);
@@ -43,11 +41,11 @@ public class RequisitionSummary {
     summaryTable.addCell(summaryHeaderCell);
 
     summaryTable.addCell(cell("Total Cost For Full Supply Items"));
-    summaryTable.addCell(cell(requisition.getFullSupplyItemsSubmittedCost(), ALIGN_RIGHT));
+    summaryTable.addCell(cell(currency + requisition.getFullSupplyItemsSubmittedCost(), ALIGN_RIGHT));
     summaryTable.addCell(cell("Total Cost For Non Full Supply Items"));
-    summaryTable.addCell(cell(requisition.getNonFullSupplyItemsSubmittedCost(), ALIGN_RIGHT));
+    summaryTable.addCell(cell(currency + requisition.getNonFullSupplyItemsSubmittedCost(), ALIGN_RIGHT));
     summaryTable.addCell(cell("Total Cost"));
-    summaryTable.addCell(cell(this.getTotalCost(requisition).toString(), ALIGN_RIGHT));
+    summaryTable.addCell(cell(currency + this.getTotalCost(requisition).toString(), ALIGN_RIGHT));
     summaryTable.addCell(cell(" "));
     summaryTable.addCell(cell(" "));
     summaryTable.addCell(cell(" "));

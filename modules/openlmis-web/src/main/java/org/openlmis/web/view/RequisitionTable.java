@@ -3,6 +3,7 @@ package org.openlmis.web.view;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import lombok.Data;
@@ -70,7 +71,7 @@ public class RequisitionTable {
       }
 
       PrintRnrLineItem printRnrLineItem = new PrintRnrLineItem(lineItem);
-      printRnrLineItem.calculate(requisition.getPeriod(), visibleColumns);
+      printRnrLineItem.calculate(requisition.getPeriod(), rnrColumnList);
 
       List<PdfPCell> cells = getCells(visibleColumns, lineItem, currency);
       odd = !odd;
@@ -92,15 +93,25 @@ public class RequisitionTable {
   private PdfPTable prepareTable(List<RnrColumn> visibleColumns) throws DocumentException {
     int[] widths = getColumnWidths(visibleColumns);
     PdfPTable table = new PdfPTable(widths.length);
+
     table.setWidths(widths);
     table.getDefaultCell().setBackgroundColor(HEADER_BACKGROUND);
     table.getDefaultCell().setPadding(CELL_PADDING);
     table.setWidthPercentage(WIDTH_PERCENTAGE);
     table.setSpacingBefore(TABLE_SPACING);
-    table.setHeaderRows(1);
-
+    table.setHeaderRows(2);
+    table.setFooterRows(1);
     setTableHeader(table, visibleColumns);
+    setBlankFooter(table, visibleColumns);
     return table;
+  }
+
+  private void setBlankFooter(PdfPTable table, List<RnrColumn> visibleColumns) {
+    PdfPCell cell = new PdfPCell(new Phrase(" "));
+    cell.setBorder(0);
+    cell.setColspan(visibleColumns.size());
+    cell.setBackgroundColor(BaseColor.WHITE);
+    table.addCell(cell);
   }
 
   private int[] getColumnWidths(List<RnrColumn> rnrColumns) {
