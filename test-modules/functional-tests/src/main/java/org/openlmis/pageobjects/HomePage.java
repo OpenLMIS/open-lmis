@@ -178,7 +178,10 @@ public class HomePage extends Page {
     SeleneseTestNgHelper.assertTrue(schedulesTab.isDisplayed());
     SeleneseTestNgHelper.assertTrue(usersTab.isDisplayed());
     testWebDriver.waitForElementToAppear(createFacility);
-    createFacility.click();
+    testWebDriver.sleep(1000);
+    testWebDriver.click(createFacility);
+    //createFacility.click();
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(facilityHeader);
     SeleneseTestNgHelper.assertEquals(facilityHeader.getText().trim(), "Add new facility");
     return new CreateFacilityPage(testWebDriver);
