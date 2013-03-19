@@ -19,7 +19,6 @@ import org.openlmis.email.exception.EmailException;
 import org.openlmis.email.service.EmailService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.springframework.context.MessageSource;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,14 +55,14 @@ public class UserServiceTest {
   private RoleAssignmentService roleAssignmentService;
 
   @Mock
-  private MessageSource messageSource;
+  private MessageService messageService;
 
 
   @Before
   public void setUp() throws Exception {
-    userService = new UserService(userRepository, roleAssignmentService, emailService, messageSource);
-    when(messageSource.getMessage("accountcreated.email.subject", null, Locale.getDefault())).thenReturn("Account created message");
-    when(messageSource.getMessage("forgotpassword.email.subject", null, Locale.getDefault())).thenReturn("Forgot password email subject");
+    userService = new UserService(userRepository, roleAssignmentService, emailService, messageService);
+    when(messageService.message("accountcreated.email.subject")).thenReturn("Account created message");
+    when(messageService.message("forgotpassword.email.subject")).thenReturn("Forgot password email subject");
   }
 
   private UserService userService;
@@ -115,7 +114,7 @@ public class UserServiceTest {
     mockStatic(Encoder.class);
     when(Encoder.hash(anyString())).thenReturn("token");
 
-    when(messageSource.getMessage("passwordreset.email.body", new String[]{FORGET_PASSWORD_LINK + "token"}, Locale.getDefault()))
+    when(messageService.message("passwordreset.email.body", new String[]{FORGET_PASSWORD_LINK + "token"}))
       .thenReturn("email body");
 
     userService.sendForgotPasswordEmail(user, FORGET_PASSWORD_LINK);

@@ -41,7 +41,6 @@
         <property name="basename">
             <value>messages</value>
         </property>
-
     </bean>
 
     <bean id="localeChangeInterceptor"

@@ -9,11 +9,9 @@ import org.openlmis.email.domain.EmailMessage;
 import org.openlmis.email.exception.EmailException;
 import org.openlmis.email.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
 
 @Service
@@ -24,23 +22,19 @@ public class UserService {
   public static final String PASSWORD_RESET_TOKEN_INVALID = "user.password.reset.token.invalid";
   private static final String USER_USERNAME_INCORRECT = "user.username.incorrect";
 
-
-  private Object[] noArgs = null;
-
   private UserRepository userRepository;
 
   private EmailService emailService;
 
   private RoleAssignmentService roleAssignmentService;
-  private MessageSource messageSource;
+  private MessageService messageService;
 
   @Autowired
-  public UserService(UserRepository userRepository, RoleAssignmentService roleAssignmentService, EmailService emailService, MessageSource messageSource) {
+  public UserService(UserRepository userRepository, RoleAssignmentService roleAssignmentService, EmailService emailService, MessageService messageService) {
     this.userRepository = userRepository;
     this.emailService = emailService;
     this.roleAssignmentService = roleAssignmentService;
-    this.messageSource = messageSource;
-
+    this.messageService = messageService;
   }
 
 
@@ -96,7 +90,7 @@ public class UserService {
     emailMessage.setTo(user.getEmail());
     String passwordResetToken = generateUUID();
     String[] passwordResetLink = new String[]{resetPasswordLink + passwordResetToken};
-    String mailBody = messageSource.getMessage("passwordreset.email.body", passwordResetLink, Locale.getDefault());
+    String mailBody = messageService.message("passwordreset.email.body", passwordResetLink);
     emailMessage.setText(mailBody);
 
     userRepository.insertPasswordResetToken(user, passwordResetToken);
@@ -106,13 +100,13 @@ public class UserService {
 
   private EmailMessage accountCreatedEmailMessage(User user, String resetPasswordLink) {
     EmailMessage emailMessage = createEmailMessage(user, resetPasswordLink);
-    emailMessage.setSubject(messageSource.getMessage("accountcreated.email.subject", noArgs, Locale.getDefault()));
+    emailMessage.setSubject(messageService.message("accountcreated.email.subject"));
     return emailMessage;
   }
 
   private EmailMessage forgotPasswordEmailMessage(User user, String resetPasswordLink) {
     EmailMessage emailMessage = createEmailMessage(user, resetPasswordLink);
-    emailMessage.setSubject(messageSource.getMessage("forgotpassword.email.subject", noArgs, Locale.getDefault()));
+    emailMessage.setSubject(messageService.message("forgotpassword.email.subject"));
     return emailMessage;
   }
 
