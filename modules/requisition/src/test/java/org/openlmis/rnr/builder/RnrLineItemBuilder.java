@@ -59,6 +59,7 @@ public class RnrLineItemBuilder {
   public static final int PRODUCT_CATEGORY_DISPLAY_ORDER = 1;
   public static final String PRODUCT_CODE = "P999";
   public static final Integer PRODUCT_DISPLAY_ORDER = null;
+  public static final String PRODUCT_CATEGORY = "C1";
 
   public static final Instantiator<RnrLineItem> defaultRnrLineItem = new Instantiator<RnrLineItem>() {
 
@@ -67,6 +68,7 @@ public class RnrLineItemBuilder {
     public RnrLineItem instantiate(PropertyLookup<RnrLineItem> lookup) {
       RnrLineItem rnrLineItem = new RnrLineItem();
       rnrLineItem.setProductCode(lookup.valueOf(productCode, PRODUCT_CODE));
+      rnrLineItem.setProductCategory(lookup.valueOf(productCategory, PRODUCT_CATEGORY));
       rnrLineItem.setBeginningBalance(lookup.valueOf(beginningBalance, BEGINNING_BALANCE));
       rnrLineItem.setQuantityReceived(lookup.valueOf(quantityReceived, QUANTITY_RECEIVED));
 
