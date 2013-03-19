@@ -4,6 +4,7 @@ package org.openlmis.pageobjects;
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -441,8 +442,8 @@ public class InitiateRnRPage extends Page {
     testWebDriver.waitForElementToAppear(categoryDropDownLink);
     SeleneseTestNgHelper.assertEquals(testWebDriver.getSelectedOptionDefault(categoryDropDown).trim(), "");
     SeleneseTestNgHelper.assertEquals(testWebDriver.getSelectedOptionDefault(productDropDown).trim(), "");
-    SeleneseTestNgHelper.assertEquals(requestedQuantityField.getAttribute("value").trim(),"");
-    SeleneseTestNgHelper.assertEquals(requestedQuantityExplanationField.getAttribute("value").trim(),"");
+    SeleneseTestNgHelper.assertEquals(requestedQuantityField.getAttribute("value").trim(), "");
+    SeleneseTestNgHelper.assertEquals(requestedQuantityExplanationField.getAttribute("value").trim(), "");
 
     testWebDriver.waitForElementToAppear(categoryDropDownLink);
 
@@ -522,4 +523,15 @@ public class InitiateRnRPage extends Page {
     testWebDriver.waitForElementToAppear(beginningBalance);
     SeleneseTestNgHelper.assertFalse("BB Not disabled", beginningBalance.isEnabled());
   }
+
+    public void verifyAuthorizeButtonNotPresent(){
+        boolean authorizeButtonPresent;
+        try {
+            authorizeButton.click();
+            authorizeButtonPresent = true;
+        } catch (ElementNotVisibleException e) {
+            authorizeButtonPresent = false;
+        }
+        SeleneseTestNgHelper.assertFalse(authorizeButtonPresent);
+    }
 }

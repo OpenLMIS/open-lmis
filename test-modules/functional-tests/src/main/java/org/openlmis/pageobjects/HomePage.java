@@ -9,8 +9,6 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import java.util.*;
-
 import java.io.IOException;
 
 
@@ -75,6 +73,9 @@ public class HomePage extends Page {
 
   @FindBy(how = How.LINK_TEXT, using = "Requisitions")
   private static WebElement requisitionsLink;
+
+  @FindBy(how = How.XPATH, using = "//div[@class='submenu']")
+  private static WebElement SubMenuItem;
 
   @FindBy(how = How.LINK_TEXT, using = "Create / Authorize")
   private static WebElement createLink;
@@ -144,6 +145,9 @@ public class HomePage extends Page {
 
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText colt2']/span")
   private static WebElement endDate;
+
+    @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
+    private static WebElement errorMsg;
 
 
   public HomePage(TestWebDriver driver) throws IOException {
@@ -218,6 +222,13 @@ public class HomePage extends Page {
 
     return periodDetails;
 
+  }
+
+  public void verifySubMenuItems(String[] expectedSubMenuItem) throws IOException {
+      testWebDriver.waitForElementToAppear(requisitionsLink);
+      testWebDriver.keyPress(requisitionsLink);
+      String[] subMenuItem = SubMenuItem.getText().split("\n");
+      SeleneseTestNgHelper.assertEquals(subMenuItem, expectedSubMenuItem);
   }
 
 
@@ -315,4 +326,8 @@ public class HomePage extends Page {
     return new OrderPage(testWebDriver);
   }
 
+    public void verifyErrorMessage() {
+        testWebDriver.waitForElementToAppear(errorMsg);
+        SeleneseTestNgHelper.assertEquals(errorMsg.getText().trim(), "An R&R has not been initiated yet");
+    }
 }

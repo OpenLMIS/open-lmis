@@ -8,12 +8,14 @@
 
     </groups>
     <classes preserver-order="true">
-      <class name="org.openlmis.functional.E2EManageFacility">
-      </class>
-      <class name="org.openlmis.functional.E2EUpload">
-      </class>
-      <class name="org.openlmis.functional.ViewRequisition">
-      </class>
+      <!--<class name="org.openlmis.functional.E2EManageFacility">-->
+      <!--</class>-->
+      <!--<class name="org.openlmis.functional.E2EUpload">-->
+      <!--</class>-->
+      <!--<class name="org.openlmis.functional.ViewRequisition">-->
+      <!--</class>-->
+        <class name="org.openlmis.functional.ManageRights">
+        </class>
     </classes>
   </test>
 </suite>

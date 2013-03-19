@@ -426,5 +426,10 @@ public class DBWrapper {
   }
 
 
+    public void assignRight(String roleName, String roleRight) throws SQLException, IOException {
+        update("INSERT INTO role_rights\n" +
+                "  (roleId, rightName) VALUES\n" +
+                "  ((select id from roles where name='"+roleName+"'), '"+roleRight+"');");
+    }
 }
 
