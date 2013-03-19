@@ -43,6 +43,7 @@
     <import resource="classpath:/applicationContext-requisition.xml"/>
     <import resource="classpath:/applicationContext-core.xml"/>
     <import resource="classpath:/applicationContext-upload.xml"/>
+    <import resource="classpath:/applicationContext-report.xml"/>
 
 
     <bean id="userAuthenticationProvider" class="org.openlmis.authentication.web.UserAuthenticationProvider"/>
