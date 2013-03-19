@@ -31,11 +31,12 @@
 
     <http use-expressions="true" auto-config="false" entry-point-ref="restAuthenticationEntryPoint">
         <intercept-url pattern="/favicon.*" access="permitAll"/>
-        <intercept-url pattern="/public/pages/admin/**" access="isAuthenticated()" requires-channel="http"/>
-        <intercept-url pattern="/public/pages/logistics/**" access="isAuthenticated()" requires-channel="http"/>
-        <intercept-url pattern="/public/pages/login.html" access="permitAll" requires-channel="http"/>
         <intercept-url pattern="/public/**" access="permitAll" requires-channel="http"/>
+        <intercept-url pattern="/forgot-password*" access="permitAll" requires-channel="http"/>
+        <intercept-url pattern="/user/validatePasswordResetToken/*" access="permitAll" requires-channel="http"/>
+        <intercept-url pattern="/user/resetPassword/*" access="permitAll" requires-channel="http"/>
         <intercept-url pattern="/**" access="isAuthenticated()" requires-channel="http"/>
+
 
         <form-login login-page="/public/pages/login.html"
                     login-processing-url="/j_spring_security_check"

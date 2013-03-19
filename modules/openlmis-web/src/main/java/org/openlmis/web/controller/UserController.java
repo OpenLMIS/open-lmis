@@ -37,7 +37,7 @@ public class UserController extends BaseController {
 
   public static final String USER_ID = "userId";
   public static final String TOKEN_VALID = "TOKEN_VALID";
-  private static final String RESET_PASSWORD_PATH = "/public/pages/reset-password.html#/token/";
+  private static final String RESET_PASSWORD_PATH = "public/pages/reset-password.html#/token/";
 
 
   private String baseUrl;
