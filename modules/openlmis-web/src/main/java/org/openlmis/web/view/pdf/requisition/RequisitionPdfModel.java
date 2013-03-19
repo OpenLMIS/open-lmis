@@ -15,9 +15,9 @@ import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.web.controller.RequisitionController;
 import org.openlmis.web.model.PrintRnrLineItem;
-import org.openlmis.web.view.pdf.requisition.RequisitionPdfView;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,8 +27,6 @@ import static com.itextpdf.text.Element.ALIGN_RIGHT;
 import static org.openlmis.web.view.pdf.requisition.RequisitionCellFactory.categoryRow;
 import static org.openlmis.web.view.pdf.requisition.RequisitionCellFactory.getCells;
 import static org.openlmis.web.view.pdf.requisition.RequisitionDocument.*;
-import static org.openlmis.web.view.pdf.requisition.RequisitionPdfView.*;
-import static org.openlmis.web.view.pdf.requisition.RequisitionPdfView.TABLE_SPACING;
 
 @Data
 @NoArgsConstructor
@@ -36,6 +34,11 @@ public class RequisitionPdfModel {
   private Map<String, Object> model;
   public static final int PARAGRAPH_SPACING = 30;
   public static final BaseColor ROW_GREY_BACKGROUND = new BaseColor(235, 235, 235);
+  public static final Font H1_FONT = FontFactory.getFont(FontFactory.TIMES, 30, Font.BOLD, BaseColor.BLACK);
+  public static final Font H3_FONT = FontFactory.getFont(FontFactory.TIMES, 17f, Font.NORMAL, BaseColor.BLACK);
+  public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
+  public static final int TABLE_SPACING = 25;
+
   private List<RnrColumn> rnrColumnList;
   private Rnr requisition;
   private String currency;
@@ -223,7 +226,7 @@ public class RequisitionPdfModel {
 
     PdfPTable summaryTable = new PdfPTable(2);
     summaryTable.setWidths(new int[]{30, 20});
-    summaryTable.setSpacingBefore(RequisitionPdfView.TABLE_SPACING);
+    summaryTable.setSpacingBefore(TABLE_SPACING);
     summaryTable.setWidthPercentage(40);
     summaryTable.setHorizontalAlignment(0);
 
@@ -245,7 +248,7 @@ public class RequisitionPdfModel {
     summaryTable.addCell(cell(" "));
     summaryTable.addCell(cell(" "));
 
-    String submittedDate = requisition.getSubmittedDate() != null ? RequisitionPdfView.DATE_FORMAT.format(requisition.getSubmittedDate()) : "";
+    String submittedDate = requisition.getSubmittedDate() != null ? DATE_FORMAT.format(requisition.getSubmittedDate()) : "";
 
     summaryTable.addCell(cell("Submitted By: "));
     summaryTable.addCell(cell("Date: " + submittedDate));

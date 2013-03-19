@@ -3,9 +3,10 @@ package org.openlmis.web.view.pdf;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.pdf.*;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.openlmis.web.view.pdf.requisition.RequisitionPdfView.DATE_FORMAT;
 
 public class PdfPageEventHandler extends PdfPageEventHelper {
 
@@ -16,6 +17,7 @@ public class PdfPageEventHandler extends PdfPageEventHelper {
   protected BaseFont baseFont;
   private PdfTemplate pageNumberTemplate;
   private Date currentDate;
+  private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
 
   public PdfPageEventHandler() {
     super();

@@ -6,7 +6,7 @@
        http://www.springframework.org/schema/beans/spring-beans.xsd">
 
   <bean id="requisitionPDF"
-        class="org.openlmis.web.view.pdf.requisition.RequisitionPdfView">
+        class="org.openlmis.web.view.pdf.OpenLmisPdfView">
   </bean>
 
 </beans>

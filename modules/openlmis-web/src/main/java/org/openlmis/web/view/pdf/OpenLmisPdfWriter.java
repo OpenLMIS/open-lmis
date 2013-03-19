@@ -1,12 +1,11 @@
-package org.openlmis.web.view.pdf.requisition;
+package org.openlmis.web.view.pdf;
 
 import com.itextpdf.text.pdf.PdfWriter;
-import org.openlmis.web.view.pdf.PdfPageEventHandler;
 
-public class RequisitionPdfWriter {
+public class OpenLmisPdfWriter {
   private PdfWriter writer;
 
-  public RequisitionPdfWriter(PdfWriter writer) {
+  public OpenLmisPdfWriter(PdfWriter writer) {
     this.writer = writer;
   }
 
