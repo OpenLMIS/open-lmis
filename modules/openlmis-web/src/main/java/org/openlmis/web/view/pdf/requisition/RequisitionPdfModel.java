@@ -22,20 +22,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.itextpdf.text.Element.ALIGN_LEFT;
-import static com.itextpdf.text.Element.ALIGN_RIGHT;
-import static org.openlmis.web.view.pdf.requisition.RequisitionCellFactory.categoryRow;
-import static org.openlmis.web.view.pdf.requisition.RequisitionCellFactory.getCells;
+import static org.openlmis.web.view.pdf.requisition.RequisitionCellFactory.*;
+import static org.openlmis.web.view.pdf.requisition.RequisitionCellFactory.textCell;
 import static org.openlmis.web.view.pdf.requisition.RequisitionDocument.*;
 
 @Data
 @NoArgsConstructor
 public class RequisitionPdfModel {
   private Map<String, Object> model;
-  public static final int PARAGRAPH_SPACING = 30;
+  public static final float PARAGRAPH_SPACING = 30.0f;
   public static final BaseColor ROW_GREY_BACKGROUND = new BaseColor(235, 235, 235);
   public static final Font H1_FONT = FontFactory.getFont(FontFactory.TIMES, 30, Font.BOLD, BaseColor.BLACK);
-  public static final Font H3_FONT = FontFactory.getFont(FontFactory.TIMES, 17f, Font.NORMAL, BaseColor.BLACK);
   public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
   public static final int TABLE_SPACING = 25;
 
@@ -51,9 +48,7 @@ public class RequisitionPdfModel {
   }
 
   public Paragraph getFullSupplyHeader() {
-    Paragraph fullSupplyHeader = new Paragraph("Full supply products", H2_FONT);
-    fullSupplyHeader.setSpacingBefore(PARAGRAPH_SPACING);
-    return fullSupplyHeader;
+    return new Paragraph("Full supply products", H2_FONT);
   }
 
   public Paragraph getNonFullSupplyHeader() {
@@ -68,7 +63,7 @@ public class RequisitionPdfModel {
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumnList);
     List<RnrColumn> visibleColumns = template.getVisibleColumns(fullSupply);
 
-    PdfPTable table = prepareTable(visibleColumns);
+    PdfPTable table = prepareRnrLineItemsTable(visibleColumns);
 
     boolean odd = true;
 
@@ -99,7 +94,7 @@ public class RequisitionPdfModel {
     }
   }
 
-  private PdfPTable prepareTable(List<RnrColumn> visibleColumns) throws DocumentException {
+  private PdfPTable prepareRnrLineItemsTable(List<RnrColumn> visibleColumns) throws DocumentException {
     int[] widths = getColumnWidths(visibleColumns);
     PdfPTable table = new PdfPTable(widths.length);
 
@@ -150,12 +145,13 @@ public class RequisitionPdfModel {
   }
 
   public PdfPTable getRequisitionHeader() throws DocumentException {
-    PdfPTable table = prepareTable();
+    PdfPTable table = prepareRequisitionHeaderTable();
     addHeading(table);
 
     Facility facility = requisition.getFacility();
     addFirstLine(facility, table);
     addSecondLine(facility, table);
+    table.setSpacingAfter(PARAGRAPH_SPACING);
     return table;
   }
 
@@ -207,7 +203,7 @@ public class RequisitionPdfModel {
     insertCell(table, builder.toString(), 2);
   }
 
-  private PdfPTable prepareTable() throws DocumentException {
+  private PdfPTable prepareRequisitionHeaderTable() throws DocumentException {
     int[] columnWidths = {200, 200, 200, 200};
     PdfPTable table = new PdfPTable(columnWidths.length);
     table.setWidths(columnWidths);
@@ -230,46 +226,37 @@ public class RequisitionPdfModel {
     summaryTable.setWidthPercentage(40);
     summaryTable.setHorizontalAlignment(0);
 
-    Chunk chunk = new Chunk("Summary ", H2_FONT);
-    PdfPCell summaryHeaderCell = new PdfPCell(new Phrase(chunk));
+    PdfPCell summaryHeaderCell = headingCell("Summary");
     summaryHeaderCell.setColspan(2);
     summaryHeaderCell.setPadding(10);
     summaryHeaderCell.setBorder(0);
     summaryTable.addCell(summaryHeaderCell);
 
-    summaryTable.addCell(cell("Total Cost For Full Supply Items"));
-    summaryTable.addCell(cell(currency + requisition.getFullSupplyItemsSubmittedCost(), ALIGN_RIGHT));
-    summaryTable.addCell(cell("Total Cost For Non Full Supply Items"));
-    summaryTable.addCell(cell(currency + requisition.getNonFullSupplyItemsSubmittedCost(), ALIGN_RIGHT));
-    summaryTable.addCell(cell("Total Cost"));
-    summaryTable.addCell(cell(currency + this.getTotalCost(requisition).toString(), ALIGN_RIGHT));
-    summaryTable.addCell(cell(" "));
-    summaryTable.addCell(cell(" "));
-    summaryTable.addCell(cell(" "));
-    summaryTable.addCell(cell(" "));
+    summaryTable.addCell(summaryCell(textCell("Total Cost For Full Supply Items")));
+    summaryTable.addCell(summaryCell(numberCell(currency + requisition.getFullSupplyItemsSubmittedCost())));
+    summaryTable.addCell(summaryCell(textCell("Total Cost For Non Full Supply Items")));
+    summaryTable.addCell(summaryCell(numberCell(currency + requisition.getNonFullSupplyItemsSubmittedCost())));
+    summaryTable.addCell(summaryCell(textCell("Total Cost")));
+    summaryTable.addCell(summaryCell(numberCell(currency + this.getTotalCost(requisition).toString())));
+    summaryTable.addCell(summaryCell(textCell(" ")));
+    summaryTable.addCell(summaryCell(textCell(" ")));
+    summaryTable.addCell(summaryCell(textCell(" ")));
+    summaryTable.addCell(summaryCell(textCell(" ")));
 
     String submittedDate = requisition.getSubmittedDate() != null ? DATE_FORMAT.format(requisition.getSubmittedDate()) : "";
 
-    summaryTable.addCell(cell("Submitted By: "));
-    summaryTable.addCell(cell("Date: " + submittedDate));
-    summaryTable.addCell(cell("Authorized By: "));
-    summaryTable.addCell(cell("Date: "));
-
+    summaryTable.addCell(summaryCell(textCell("Submitted By: ")));
+    summaryTable.addCell(summaryCell(textCell("Date: " + submittedDate)));
+    summaryTable.addCell(summaryCell(textCell("Authorized By: ")));
+    summaryTable.addCell(summaryCell(textCell("Date: ")));
     return summaryTable;
   }
 
-  private PdfPCell cell(Object value, int... alignment) {
-    Chunk chunk = new Chunk(value.toString());
-    chunk.setFont(H3_FONT);
-    Phrase phrase = new Phrase(chunk);
-    PdfPCell cell = new PdfPCell(phrase);
-
-    cell.setHorizontalAlignment((alignment.length > 0) ? alignment[0] : ALIGN_LEFT);
-    cell.setBorder(0);
+  private PdfPCell summaryCell(PdfPCell cell) {
     cell.setPadding(15);
+    cell.setBorder(0);
     return cell;
   }
-
   public Money getTotalCost(Rnr requisition) {
     return new Money(new BigDecimal(requisition.getFullSupplyItemsSubmittedCost().getValue().floatValue() + requisition.getNonFullSupplyItemsSubmittedCost().getValue().floatValue()));
   }

@@ -32,6 +32,7 @@ public class RnrLineItemBuilder {
   public static final Property<RnrLineItem, Integer> packsToShip = newProperty();
 
   public static final Property<RnrLineItem, Integer> quantityRequested = newProperty();
+  private static Property<RnrLineItem, String> productCategory = newProperty();
   public static final LossesAndAdjustments ONE_LOSS = new LossesAndAdjustments() {{
     setQuantity(1);
     LossesAndAdjustmentsType type = new LossesAndAdjustmentsType();
@@ -60,6 +61,7 @@ public class RnrLineItemBuilder {
     public RnrLineItem instantiate(PropertyLookup<RnrLineItem> lookup) {
       RnrLineItem rnrLineItem = new RnrLineItem();
       rnrLineItem.setProductCode(lookup.valueOf(productCode, "P999"));
+      rnrLineItem.setProductCategory(lookup.valueOf(productCategory, "C1"));
       rnrLineItem.setBeginningBalance(lookup.valueOf(beginningBalance, BEGINNING_BALANCE));
       rnrLineItem.setQuantityReceived(lookup.valueOf(quantityReceived, QUANTITY_RECEIVED));
 

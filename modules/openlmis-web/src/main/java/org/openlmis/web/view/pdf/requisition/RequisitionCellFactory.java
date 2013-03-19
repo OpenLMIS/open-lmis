@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.openlmis.web.view.pdf.requisition.RequisitionDocument.CELL_PADDING;
+import static org.openlmis.web.view.pdf.requisition.RequisitionDocument.H2_FONT;
 import static org.openlmis.web.view.pdf.requisition.RequisitionDocument.HEADER_BACKGROUND;
 
 public class RequisitionCellFactory {
@@ -26,6 +27,15 @@ public class RequisitionCellFactory {
     cell.setPadding(CELL_PADDING);
     cell.setHorizontalAlignment(Element.ALIGN_LEFT);
     return cell;
+  }
+
+  public static PdfPCell headingCell(String value) {
+    Chunk chunk = new Chunk(value, H2_FONT);
+    PdfPCell cell = new PdfPCell(new Phrase(chunk));
+    cell.setPadding(CELL_PADDING);
+    cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+    return cell;
+
   }
 
   public static List<PdfPCell> getCells(List<RnrColumn> visibleColumns, RnrLineItem lineItem, String currency) throws NoSuchFieldException, IllegalAccessException {

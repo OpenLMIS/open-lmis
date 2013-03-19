@@ -26,7 +26,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 @RunWith(MockitoJUnitRunner.class)
 @Ignore
 @PrepareForTest({PdfPageEventHandler.class, BaseFont.class})
-public class RequisitionFooterTest {
+public class PdfPageEventHandlerTest {
 
   @Mock
   PdfWriter writer;
