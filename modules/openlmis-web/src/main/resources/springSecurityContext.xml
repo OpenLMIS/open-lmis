@@ -30,7 +30,7 @@
     <beans:bean id="openLmisAccessDeniedHandler" class="org.openlmis.authentication.web.OpenLmisAccessDeniedHandler"/>
 
     <http use-expressions="true" auto-config="false" entry-point-ref="restAuthenticationEntryPoint">
-        <intercept-url pattern="/favicon.*" access="permitAll"/>
+        <intercept-url pattern="/favicon.ico" access="permitAll" />
         <intercept-url pattern="/public/**" access="permitAll" requires-channel="http"/>
         <intercept-url pattern="/forgot-password*" access="permitAll" requires-channel="http"/>
         <intercept-url pattern="/user/validatePasswordResetToken/*" access="permitAll" requires-channel="http"/>
