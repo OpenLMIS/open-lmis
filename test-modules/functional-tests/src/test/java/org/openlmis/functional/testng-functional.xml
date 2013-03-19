@@ -16,6 +16,8 @@
       </class>
         <class name="org.openlmis.functional.ManageRights">
         </class>
+      <class name="org.openlmis.functional.ConfigureProgramTemplate">
+      </class>
     </classes>
   </test>
 </suite>
