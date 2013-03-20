@@ -1,4 +1,4 @@
-package org.openlmis.web.view;
+package org.openlmis.web.view.pdf.requisition;
 
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPCell;
