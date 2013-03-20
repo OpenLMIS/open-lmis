@@ -2,7 +2,6 @@ package org.openlmis.functional;
 
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
-import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -19,17 +18,9 @@ import java.util.List;
 
 public class E2EUpload extends TestCaseHelper {
 
-  DBWrapper dbWrapper;
-  String baseUrlGlobal, dburlGlobal;
-
   @BeforeMethod(groups = {"functional"})
-  @Parameters({"browser","baseurl","dburl"})
-  public void setUp(String browser, String baseurl, String dburl) throws Exception {
-    super.setupSuite(browser);
-    baseUrlGlobal=baseurl;
-    dburlGlobal=dburl;
-    dbWrapper = new DBWrapper(baseurl, dburl);
-    dbWrapper.deleteData();
+  public void setUp() throws Exception {
+    super.setup();
   }
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
@@ -121,7 +112,7 @@ public class E2EUpload extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-      {new String[]{"Admin123", "Admin123"}}
+        {new String[]{"Admin123", "Admin123"}}
     };
   }
 }

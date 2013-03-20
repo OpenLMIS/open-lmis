@@ -37,6 +37,10 @@ task buildOpenLmis(type: GradleBuild) {
 
 task smokeTest(type: Test) {
     useTestNG() {
+        systemProperties['browser'] = 'firefox'
+        systemProperties['dburl'] = "$dburl"
+        systemProperties['baseurl'] = "$baseurl"
+
         suites 'src/test/java/org/openlmis/functional/testng-smoke.xml'
     }
     options {
@@ -52,6 +56,10 @@ smokeTest.doFirst() {
 
 task functionalTest(type: Test) {
     useTestNG() {
+        systemProperties['browser'] = 'firefox'
+        systemProperties['dburl'] = "$dburl"
+        systemProperties['baseurl'] = "$baseurl"
+
         suites 'src/test/java/org/openlmis/functional/testng-functional.xml'
     }
 }
@@ -62,6 +70,10 @@ functionalTest.doFirst() {
 
 task smokeTestIE(type: Test) {
     useTestNG() {
+        systemProperties['browser'] = 'ie'
+        systemProperties['dburl'] = "$dburl"
+        systemProperties['baseurl'] = "$baseurl"
+
         suites 'src/test/java/org/openlmis/functional/testng-smoke-ie.xml'
     }
 }
@@ -72,6 +84,10 @@ smokeTestIE.doFirst() {
 
 task smokeTestChrome(type: Test) {
     useTestNG() {
+        systemProperties['browser'] = 'chrome'
+        systemProperties['dburl'] = "$dburl"
+        systemProperties['baseurl'] = "$baseurl"
+
         suites 'src/test/java/org/openlmis/functional/testng-smoke-chrome.xml'
     }
 }

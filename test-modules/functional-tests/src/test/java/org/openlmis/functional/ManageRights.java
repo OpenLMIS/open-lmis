@@ -2,7 +2,6 @@ package org.openlmis.functional;
 
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
-import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.InitiateRnRPage;
@@ -19,41 +18,34 @@ import org.testng.annotations.*;
 
 public class ManageRights extends TestCaseHelper {
 
-  DBWrapper dbWrapper;
-  String baseUrlGlobal, dburlGlobal;
-
   @BeforeMethod(groups = {"functional"})
-  @Parameters({"browser","baseurl","dburl"})
-  public void setUp(String browser, String baseurl, String dburl) throws Exception {
-    super.setupSuite(browser);
-    baseUrlGlobal=baseurl;
-    dburlGlobal=dburl;
-    dbWrapper = new DBWrapper(baseurl, dburl);
-    dbWrapper.deleteData();
+  public void setUp() throws Exception {
+    super.setup();
   }
 
+
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testOnlyCreateRight(String program, String userSIC,  String password) throws Exception {
+  public void testOnlyCreateRight(String program, String userSIC, String password) throws Exception {
 
     dbWrapper.insertProducts("P10", "P11");
     dbWrapper.insertProgramProducts("P10", "P11", program);
     dbWrapper.insertFacilityApprovedProducts("P10", "P11", program, "Lvl3 Hospital");
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
-    dbWrapper.insertRole("store in-charge","false","");
-    dbWrapper.insertRole("district pharmacist","false","");
+    dbWrapper.insertRole("store in-charge", "false", "");
+    dbWrapper.insertRole("district pharmacist", "false", "");
     dbWrapper.assignRight("store in-charge", "CREATE_REQUISITION");
     dbWrapper.assignRight("store in-charge", "VIEW_REQUISITION");
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-    dbWrapper.insertUser("200",userSIC,passwordUsers,"F10","Fatima_Doe@openlmis.com");
-    dbWrapper.insertSupervisoryNode("F10","N1","Node 1","null");
-    dbWrapper.insertRoleAssignment("200","store in-charge");
+    dbWrapper.insertUser("200", userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com");
+    dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
+    dbWrapper.insertRoleAssignment("200", "store in-charge");
     dbWrapper.insertSchedules();
     dbWrapper.insertProcessingPeriods();
     dbWrapper.insertRequisitionGroups("RG1", "RG2", "N1", "N2");
     dbWrapper.insertRequisitionGroupMembers("F10", "F11");
     dbWrapper.insertRequisitionGroupProgramSchedule();
-    dbWrapper.insertSupplyLines("N1",program,"F10");
+    dbWrapper.insertSupplyLines("N1", program, "F10");
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -62,54 +54,53 @@ public class ManageRights extends TestCaseHelper {
     String periodDetails = homePage.navigateAndInitiateRnr(program);
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
-      initiateRnRPage.enterBeginningBalance("10");
-      initiateRnRPage.enterQuantityDispensed("10");
-      initiateRnRPage.enterQuantityReceived("10");
-      initiateRnRPage.submitRnR();
-      initiateRnRPage.verifyAuthorizeButtonNotPresent();
+    initiateRnRPage.enterBeginningBalance("10");
+    initiateRnRPage.enterQuantityDispensed("10");
+    initiateRnRPage.enterQuantityReceived("10");
+    initiateRnRPage.submitRnR();
+    initiateRnRPage.verifyAuthorizeButtonNotPresent();
 
   }
 
-    @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
-    public void testUserTryToAuthorizeUnSubmittedRnR(String program, String userSIC,  String password) throws Exception {
+  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+  public void testUserTryToAuthorizeUnSubmittedRnR(String program, String userSIC, String password) throws Exception {
 
-        dbWrapper.insertProducts("P10", "P11");
-        dbWrapper.insertProgramProducts("P10", "P11", program);
-        dbWrapper.insertFacilityApprovedProducts("P10", "P11", program, "Lvl3 Hospital");
-        dbWrapper.insertFacilities("F10", "F11");
-        dbWrapper.configureTemplate(program);
-        dbWrapper.insertRole("store in-charge","false","");
-        dbWrapper.insertRole("district pharmacist","false","");
-        dbWrapper.assignRight("store in-charge", "AUTHORIZE_REQUISITION");
-        dbWrapper.assignRight("store in-charge", "VIEW_REQUISITION");
-        String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-        dbWrapper.insertUser("200",userSIC,passwordUsers,"F10","Fatima_Doe@openlmis.com");
-        dbWrapper.insertSupervisoryNode("F10","N1","Node 1","null");
-        dbWrapper.insertRoleAssignment("200","store in-charge");
-        dbWrapper.insertSchedules();
-        dbWrapper.insertProcessingPeriods();
-        dbWrapper.insertRequisitionGroups("RG1", "RG2", "N1", "N2");
-        dbWrapper.insertRequisitionGroupMembers("F10", "F11");
-        dbWrapper.insertRequisitionGroupProgramSchedule();
-        dbWrapper.insertSupplyLines("N1",program,"F10");
+    dbWrapper.insertProducts("P10", "P11");
+    dbWrapper.insertProgramProducts("P10", "P11", program);
+    dbWrapper.insertFacilityApprovedProducts("P10", "P11", program, "Lvl3 Hospital");
+    dbWrapper.insertFacilities("F10", "F11");
+    dbWrapper.configureTemplate(program);
+    dbWrapper.insertRole("store in-charge", "false", "");
+    dbWrapper.insertRole("district pharmacist", "false", "");
+    dbWrapper.assignRight("store in-charge", "AUTHORIZE_REQUISITION");
+    dbWrapper.assignRight("store in-charge", "VIEW_REQUISITION");
+    String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
+    dbWrapper.insertUser("200", userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com");
+    dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
+    dbWrapper.insertRoleAssignment("200", "store in-charge");
+    dbWrapper.insertSchedules();
+    dbWrapper.insertProcessingPeriods();
+    dbWrapper.insertRequisitionGroups("RG1", "RG2", "N1", "N2");
+    dbWrapper.insertRequisitionGroupMembers("F10", "F11");
+    dbWrapper.insertRequisitionGroupProgramSchedule();
+    dbWrapper.insertSupplyLines("N1", program, "F10");
 
-        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-        HomePage homePage = loginPage.loginAs(userSIC, password);
-        String[] expectedMenuItem = {"Create / Authorize", "View"};
-        homePage.verifySubMenuItems(expectedMenuItem);
-        homePage.navigateAndInitiateRnr(program);
-        homePage.clickProceed();
-        homePage.verifyErrorMessage();
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    String[] expectedMenuItem = {"Create / Authorize", "View"};
+    homePage.verifySubMenuItems(expectedMenuItem);
+    homePage.navigateAndInitiateRnr(program);
+    homePage.clickProceed();
+    homePage.verifyErrorMessage();
 
-        dbWrapper.insertValuesInRequisition();
-        dbWrapper.updateRequisitionStatus("INITIATED");
+    dbWrapper.insertValuesInRequisition();
+    dbWrapper.updateRequisitionStatus("INITIATED");
 
-        homePage.navigateAndInitiateRnr(program);
-        homePage.clickProceed();
-        homePage.verifyErrorMessage();
+    homePage.navigateAndInitiateRnr(program);
+    homePage.clickProceed();
+    homePage.verifyErrorMessage();
 
-    }
-
+  }
 
 
   @AfterMethod(groups = {"functional"})
@@ -124,7 +115,7 @@ public class ManageRights extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-      {"HIV", "storeincharge", "Admin123"}
+        {"HIV", "storeincharge", "Admin123"}
     };
 
   }

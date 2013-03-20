@@ -2,7 +2,6 @@ package org.openlmis.functional;
 
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
-import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -19,17 +18,17 @@ import java.util.List;
 
 public class E2EInitiateRnR extends TestCaseHelper {
 
-  DBWrapper dbWrapper;
-  String baseUrlGlobal, dburlGlobal;
 
   @BeforeMethod(groups = {"smoke"})
-  @Parameters({"browser","baseurl","dburl"})
-  public void setUp(String browser, String baseurl, String dburl) throws Exception {
-    super.setupSuite(browser);
-    baseUrlGlobal=baseurl;
-    dburlGlobal=dburl;
-    dbWrapper = new DBWrapper(baseurl, dburl);
-    dbWrapper.deleteData();
+  public void setUp() throws Exception {
+
+    super.setup();
+  }
+
+  @DataProvider(name = "envData")
+  public Object[][] getEnvData() {
+
+    return new Object[][]{};
   }
 
   @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function-Positive")
@@ -126,7 +125,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
     String periodDetails = homePageUser.navigateAndInitiateRnr(program);
     InitiateRnRPage initiateRnRPage = homePageUser.clickProceed();
-    initiateRnRPage.verifyRnRHeader("FCcode", "FCname", date_time, program, periodDetails, geoZone,parentgeoZone, operatedBy, facilityType);
+    initiateRnRPage.verifyRnRHeader("FCcode", "FCname", date_time, program, periodDetails, geoZone, parentgeoZone, operatedBy, facilityType);
     initiateRnRPage.submitRnR();
     initiateRnRPage.verifySubmitRnrErrorMsg();
     initiateRnRPage.calculateAndVerifyStockOnHand(10, 10, 10, 1);
@@ -141,7 +140,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     initiateRnRPage.calculateAndVerifyTotalCost();
     initiateRnRPage.saveRnR();
 
-    initiateRnRPage.addNonFullSupplyLineItems("99", "Due to unforeseen event", "antibiotic", "P11","Antibiotics", baseUrlGlobal, dburlGlobal);
+    initiateRnRPage.addNonFullSupplyLineItems("99", "Due to unforeseen event", "antibiotic", "P11", "Antibiotics", baseUrlGlobal, dburlGlobal);
     initiateRnRPage.calculateAndVerifyTotalCostNonFullSupply();
     initiateRnRPage.verifyCostOnFooter();
 
@@ -156,7 +155,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     HomePage homePageLowerSNUser = loginPagethird.loginAs(userMO, password);
     ApprovePage approvePageLowerSNUser = homePageLowerSNUser.navigateToApprove();
     String periodLowerSNUser = approvePageLowerSNUser.verifyandclickRequisitionPresentForApproval();
-    approvePageLowerSNUser.verifyRnRHeader("FCcode", "FCname", date_time, program, periodDetails, geoZone,parentgeoZone, operatedBy, facilityType);
+    approvePageLowerSNUser.verifyRnRHeader("FCcode", "FCname", date_time, program, periodDetails, geoZone, parentgeoZone, operatedBy, facilityType);
     approvePageLowerSNUser.verifyApprovedQuantity();
     approvePageLowerSNUser.editApproveQuantityAndVerifyTotalCost("290");
     approvePageLowerSNUser.approveRequisition();
@@ -167,7 +166,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
     ApprovePage approvePageTopSNUser = homePageTopSNUser.navigateToApprove();
     String periodTopSNUser = approvePageTopSNUser.verifyandclickRequisitionPresentForApproval();
-    approvePageTopSNUser.verifyRnRHeader("FCcode", "FCname", date_time, program, periodDetails, geoZone,parentgeoZone, operatedBy, facilityType);
+    approvePageTopSNUser.verifyRnRHeader("FCcode", "FCname", date_time, program, periodDetails, geoZone, parentgeoZone, operatedBy, facilityType);
     approvePageTopSNUser.verifyApprovedQuantityApprovedFromLowerHierarchy("290");
     approvePageTopSNUser.editApproveQuantityAndVerifyTotalCost("2900");
     approvePageTopSNUser.approveRequisition();

@@ -2,15 +2,13 @@ package org.openlmis.functional;
 
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
-import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.*;
+import org.openlmis.pageobjects.HomePage;
+import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pageobjects.TemplateConfigPage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
@@ -19,17 +17,9 @@ import java.util.List;
 
 public class ConfigureProgramTemplate extends TestCaseHelper {
 
-  DBWrapper dbWrapper;
-  String baseUrlGlobal, dburlGlobal;
-
   @BeforeMethod(groups = {"functional"})
-  @Parameters({"browser","baseurl","dburl"})
-  public void setUp(String browser, String baseurl, String dburl) throws Exception {
-    super.setupSuite(browser);
-    baseUrlGlobal=baseurl;
-    dburlGlobal=dburl;
-    dbWrapper = new DBWrapper(baseurl, dburl);
-    dbWrapper.deleteData();
+  public void setUp() throws Exception {
+    super.setup();
   }
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Column-Label-Source")
@@ -66,7 +56,7 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Column-Label-Source")
   public Object[][] parameterColumnLabelSource() {
     return new Object[][]{
-      {"HIV", new String[]{"Admin123", "Admin123"}}
+        {"HIV", new String[]{"Admin123", "Admin123"}}
     };
 
   }
