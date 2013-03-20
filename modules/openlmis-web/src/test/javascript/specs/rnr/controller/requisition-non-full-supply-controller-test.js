@@ -189,7 +189,7 @@ describe('RequisitionNonFullSupplyController', function () {
     expect(scope.addedNonFullSupplyProducts[0].maxMonthsOfStock).toEqual(3);
     expect(scope.addedNonFullSupplyProducts[0].dosesPerMonth).toEqual(3);
     expect(scope.addedNonFullSupplyProducts[0].price).toEqual(4);
-    expect(scope.addedNonFullSupplyProducts[0].productCategory).toEqual("cat1Code");
+    expect(scope.addedNonFullSupplyProducts[0].productCategory).toEqual("cat1");
     expect(scope.addedNonFullSupplyProducts[0].totalLossesAndAdjustments).toEqual(0);
     expect(scope.addedNonFullSupplyProducts[0].rnrId).toEqual("rnrId");
     expect(scope.updateNonFullSupplyProductsToDisplay).toHaveBeenCalled();

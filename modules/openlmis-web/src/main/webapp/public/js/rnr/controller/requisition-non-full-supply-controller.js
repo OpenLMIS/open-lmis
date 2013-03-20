@@ -124,7 +124,7 @@ function RequisitionNonFullSupplyController($scope, $rootScope) {
       $scope.newNonFullSupply.maxMonthsOfStock = $scope.facilityApprovedProduct.maxMonthsOfStock;
       $scope.newNonFullSupply.dosesPerMonth = $scope.facilityApprovedProduct.programProduct.dosesPerMonth;
       $scope.newNonFullSupply.price = $scope.facilityApprovedProduct.programProduct.currentPrice;
-      $scope.newNonFullSupply.productCategory = $scope.facilityApprovedProduct.programProduct.product.category.code;
+      $scope.newNonFullSupply.productCategory = $scope.facilityApprovedProduct.programProduct.product.category.name;
       $scope.newNonFullSupply.productDisplayOrder = $scope.facilityApprovedProduct.programProduct.product.displayOrder;
       $scope.newNonFullSupply.productCategoryDisplayOrder = $scope.nonFullSupplyProductCategory.displayOrder;
     }
