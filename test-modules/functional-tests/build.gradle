@@ -35,6 +35,11 @@ task buildOpenLmis(type: GradleBuild) {
     tasks = ['jettyRunWarDaemon']
 }
 
+task buildOpenLmisForFT(type: GradleBuild) {
+    buildFile = '../../modules/openlmis-web/build.gradle'
+    tasks = ['jettyRunWarDaemonForFT']
+}
+
 task smokeTest(type: Test) {
     useTestNG() {
         systemProperties['browser'] = 'firefox'
@@ -65,7 +70,7 @@ task functionalTest(type: Test) {
 }
 
 functionalTest.doFirst() {
-    buildOpenLmis.execute()
+    buildOpenLmisForFT.execute()
 }
 
 task smokeTestIE(type: Test) {
