@@ -109,6 +109,7 @@
                             <value type="java.lang.Class">org.openlmis.core.domain.Facility</value>
                         </property>
                         <property name="recordHandler" ref="facilityPersistenceHandler"/>
+                        <property name="tableName" value="facilities"/>
                     </bean>
                 </entry>
                 <entry key="programSupported">
@@ -118,6 +119,7 @@
                             <value type="java.lang.Class">org.openlmis.core.domain.ProgramSupported</value>
                         </property>
                         <property name="recordHandler" ref="programSupportedPersistenceHandler"/>
+                        <property name="tableName" value="programs_supported"/>
                     </bean>
                 </entry>
                 <entry key="supervisoryNode">
@@ -127,6 +129,7 @@
                             <value type="java.lang.Class">org.openlmis.core.domain.SupervisoryNode</value>
                         </property>
                         <property name="recordHandler" ref="supervisoryNodeHandler"/>
+                        <property name="tableName" value="supervisoryNodes"/>
                     </bean>
                 </entry>
                 <entry key="requisitionGroup">
@@ -136,6 +139,7 @@
                             <value type="java.lang.Class">org.openlmis.core.domain.RequisitionGroup</value>
                         </property>
                         <property name="recordHandler" ref="requisitionGroupHandler"/>
+                        <property name="tableName" value="requisition_groups"/>
                     </bean>
                 </entry>
                 <entry key="requisitionGroupProgramSchedule">
@@ -146,6 +150,7 @@
                             </value>
                         </property>
                         <property name="recordHandler" ref="requisitionGroupProgramScheduleHandler"/>
+                        <property name="tableName" value="requisition_group_program_schedules"/>
                     </bean>
                 </entry>
                 <entry key="requisitionGroupMember">
@@ -155,6 +160,7 @@
                             <value type="java.lang.Class">org.openlmis.core.domain.RequisitionGroupMember</value>
                         </property>
                         <property name="recordHandler" ref="requisitionGroupMemberHandler"/>
+                        <property name="tableName" value="requisition_group_members"/>
                     </bean>
                 </entry>
                 <entry key="programProduct">
@@ -164,6 +170,7 @@
                             <value type="java.lang.Class">org.openlmis.core.domain.ProgramProduct</value>
                         </property>
                         <property name="recordHandler" ref="programProductPersistenceHandler"/>
+                        <property name="tableName" value="program_products"/>
                     </bean>
                 </entry>
                 <entry key="supplyLine">
@@ -173,6 +180,7 @@
                             <value type="java.lang.Class">org.openlmis.core.domain.SupplyLine</value>
                         </property>
                         <property name="recordHandler" ref="supplyLineHandler"/>
+                        <property name="tableName" value="supply_lines"/>
                     </bean>
                 </entry>
                 <entry key="user">
@@ -182,6 +190,7 @@
                             <value type="java.lang.Class">org.openlmis.core.domain.User</value>
                         </property>
                         <property name="recordHandler" ref="userPersistenceHandler"/>
+                        <property name="tableName" value="users"/>
                     </bean>
                 </entry>
                 <entry key="facilityApprovedProduct">
@@ -191,6 +200,7 @@
                             <value type="java.lang.Class">org.openlmis.core.domain.FacilityApprovedProduct</value>
                         </property>
                         <property name="recordHandler" ref="facilityApprovedProductPersistenceHandler"/>
+                        <property name="tableName" value="facility_approved_products"/>
                     </bean>
                 </entry>
                 <entry key="programProductPrice">
@@ -200,6 +210,7 @@
                             <value type="java.lang.Class">org.openlmis.core.domain.ProgramProductPrice</value>
                         </property>
                         <property name="recordHandler" ref="programProductPricePersistenceHandler"/>
+                        <property name="tableName" value="program_product_price_history"/>
                     </bean>
                 </entry>
                 <entry key="productCategory">
@@ -209,6 +220,7 @@
                             <value type="java.lang.Class">org.openlmis.core.domain.ProductCategory</value>
                         </property>
                         <property name="recordHandler" ref="productCategoryPersistenceHandler"/>
+                        <property name="tableName" value="product_categories"/>
                     </bean>
                 </entry>
                 <entry key="GeographicZone">
@@ -218,6 +230,7 @@
                             <value type="java.lang.Class">org.openlmis.core.domain.GeographicZone</value>
                         </property>
                         <property name="recordHandler" ref="geographicZonePersistenceHandler"/>
+                        <property name="tableName" value="geographic_zones"/>
                     </bean>
                 </entry>
             </map>
