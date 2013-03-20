@@ -18,7 +18,7 @@ public interface GeographicZoneMapper {
   @Select("SELECT * FROM geographic_levels WHERE LOWER(code) = LOWER(#{code})")
   GeographicLevel getGeographicLevelByCode(String code);
 
-  @Select({"SELECT GZ.id, GZ.code, GZ.name, GL.id as levelId, GL.code as levelCode, GL.name as levelName,",
+  @Select({"SELECT GZ.id, GZ.code, GZ.name, GZ.modifiedDate, GL.id as levelId, GL.code as levelCode, GL.name as levelName,",
     "GL.levelNumber as levelNumber FROM",
     "geographic_zones GZ, geographic_levels GL WHERE LOWER(GZ.code) = LOWER(#{code}) AND GZ.levelId = GL.id"})
   @Results({
@@ -56,4 +56,8 @@ public interface GeographicZoneMapper {
     @Result(property = "parent.level.name", column = "parentLevel")
   })
   GeographicZone getGeographicZoneById(Integer geographicZoneId);
+
+  @Update({"UPDATE geographic_zones set code = #{code}, name = #{name}, levelId = #{level.id}, parent = #{parent.id}, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT",
+    "WHERE id = #{id}"})
+  void update(GeographicZone geographicZone);
 }

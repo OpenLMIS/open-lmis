@@ -12,9 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -28,12 +26,14 @@ public class GeographicZoneMapperIT {
 
   @Test
   public void shouldSaveGeographicZone() throws Exception {
-    GeographicZone geographicZone = new GeographicZone(null, "code", "name", new GeographicLevel(2,"state", "State", 2), null, null);
+    GeographicZone geographicZone = new GeographicZone(null, "code", "name", new GeographicLevel(2,"state", "State", 2), null, null, null);
 
     mapper.insert(geographicZone);
 
     GeographicZone returnedZone = mapper.getGeographicZoneByCode("code");
 
+    assertThat(returnedZone.getModifiedDate(), is(notNullValue()));
+    returnedZone.setModifiedDate(null);
     assertThat(returnedZone, is(geographicZone));
   }
 
@@ -58,6 +58,7 @@ public class GeographicZoneMapperIT {
 
     assertThat(stateZone.getName(), is("Dodoma"));
     assertThat(stateZone.getLevel().getLevelNumber(), is(3));
+    assertThat(stateZone.getModifiedDate(), is(notNullValue()));
   }
 
   @Test
@@ -74,12 +75,28 @@ public class GeographicZoneMapperIT {
 
   @Test
   public void shouldGetGeographicZoneWithParent() throws Exception {
-    GeographicZone parent = new GeographicZone(null, "Dodoma", "Dodoma", new GeographicLevel(null, "district", "District",null), null, null);
-    GeographicZone expectedZone = new GeographicZone(4, "Ngorongoro", "Ngorongoro", new GeographicLevel(null, "city", "City", null), parent, null);
+    GeographicZone parent = new GeographicZone(null, "Dodoma", "Dodoma", new GeographicLevel(null, "district", "District",null), null, null, null);
+    GeographicZone expectedZone = new GeographicZone(4, "Ngorongoro", "Ngorongoro", new GeographicLevel(null, "city", "City", null), parent, null, null);
 
     GeographicZone zone = mapper.getGeographicZoneById(4);
 
     assertThat(zone, is(expectedZone));
   }
 
+  @Test
+  public void shouldUpdateGeographicZone() throws Exception {
+    GeographicZone geographicZone = new GeographicZone(null, "code", "name", new GeographicLevel(2,"state", "State", 2), null, null, null);
+
+    mapper.insert(geographicZone);
+
+    geographicZone.setName("new name");
+    geographicZone.setLevel(new GeographicLevel(1,"country", "Country", 1));
+
+    mapper.update(geographicZone);
+
+    GeographicZone returnedZone = mapper.getGeographicZoneByCode("code");
+    returnedZone.setModifiedDate(null);
+
+    assertThat(returnedZone, is(geographicZone));
+  }
 }

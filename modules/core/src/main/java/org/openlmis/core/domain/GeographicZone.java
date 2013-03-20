@@ -35,4 +35,7 @@ public class GeographicZone implements Importable {
 
   private Integer modifiedBy;
 
+  private Date modifiedDate;
+
+
 }
