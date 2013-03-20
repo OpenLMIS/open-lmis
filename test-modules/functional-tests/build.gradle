@@ -2,8 +2,7 @@ apply plugin: 'jetty'
 
 
 dependencies {
-    compile 'org.testng:testng:6.1.1',
-            'org.seleniumhq.selenium:selenium-java:2.25.0',
+    compile 'org.seleniumhq.selenium:selenium-java:2.25.0',
             'org.seleniumhq.selenium:selenium-firefox-driver:2.25.0',
             'org.seleniumhq.selenium:selenium-ie-driver:2.25.0',
             'org.seleniumhq.selenium:selenium-chrome-driver:2.25.0',
@@ -12,15 +11,19 @@ dependencies {
             project(':test-modules:test-core')
 
 
-    testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
-            'org.testng:testng:6.1.1',
-            'org.seleniumhq.selenium:selenium-java:2.25.0',
-            'org.seleniumhq.selenium:selenium-ie-driver:2.25.0',
-            'org.seleniumhq.selenium:selenium-firefox-driver:2.25.0',
-            'org.seleniumhq.selenium:selenium-chrome-driver:2.25.0',
-            'net.sf.json-lib:json-lib:0.9',
-            'postgresql:postgresql:9.0-801.jdbc4',
-            project(':test-modules:test-core')
+    testCompile 'org.springframework:spring-test:3.1.1.RELEASE'
+    testCompile 'org.seleniumhq.selenium:selenium-java:2.25.0'
+    testCompile 'org.seleniumhq.selenium:selenium-ie-driver:2.25.0'
+    testCompile 'org.seleniumhq.selenium:selenium-firefox-driver:2.25.0'
+    testCompile 'org.seleniumhq.selenium:selenium-chrome-driver:2.25.0'
+    testCompile 'org.testng:testng:6.1.1'
+    testCompile group: 'com.google.inject', name: 'guice', version: '3.0'
+    testCompile("org.uncommons:reportng:1.1.2") {
+        exclude group: "org.testng", module: "testng"
+    }
+    testCompile 'net.sf.json-lib:json-lib:0.9'
+    testCompile 'postgresql:postgresql:9.0-801.jdbc4'
+    testCompile project(':test-modules:test-core')
 }
 
 test {
@@ -36,6 +39,11 @@ task smokeTest(type: Test) {
     useTestNG() {
         suites 'src/test/java/org/openlmis/functional/testng-smoke.xml'
     }
+    options {
+        listeners << 'org.uncommons.reportng.HTMLReporter'
+        listeners << 'org.uncommons.reportng.JUnitXMLReporter'
+    }
+    workingDir = 'build/'
 }
 
 smokeTest.doFirst() {
