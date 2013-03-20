@@ -33,8 +33,9 @@ public class DbMapperIT {
 
   @Test
   public void shouldGetCountOfRecordsByTableName() throws Exception {
-    int userCount = dbMapper.getCount("users");
+    int userCount = dbMapper.getCount("geographic_levels");
 
-    assertThat(userCount, is(1));
+    assertThat(userCount, is(4));
   }
 }
+
