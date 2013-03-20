@@ -1,5 +1,6 @@
 package org.openlmis.UiUtils;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -163,6 +164,14 @@ public class TestWebDriver {
 
     public WebElement getFirstSelectedOption(WebElement element) {
         return  new Select(element).getFirstSelectedOption();
+    }
+
+    public WebElement getElementById(String Id) {
+        return  driver.findElement(By.id(Id));
+    }
+
+    public WebElement getElementByXpath(String Xpath) {
+        return  driver.findElement(By.xpath(Xpath) );
     }
 
     public String getSelectedOptionDefault(WebElement element) {

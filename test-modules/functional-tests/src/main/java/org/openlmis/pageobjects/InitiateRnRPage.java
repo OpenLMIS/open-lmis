@@ -331,6 +331,30 @@ public class InitiateRnRPage extends Page {
     SeleneseTestNgHelper.assertEquals(stockOnHandValue, StockOnHandValue);
   }
 
+    public void PopulateMandatoryFullSupplyDetails(int numberOfLineItems, int numberOfLineItemsPerPage) {
+        int numberOfPages= numberOfLineItems/numberOfLineItemsPerPage;
+        if (numberOfLineItems%numberOfLineItemsPerPage != 0)
+        {
+            numberOfPages=numberOfPages+1;
+        }
+
+        for(int j=1;j<=numberOfPages;j++)
+        {
+            testWebDriver.getElementByXpath("//a[contains(text(), '" + j + "') and @class='ng-binding']").click();
+            if (j==numberOfPages && (numberOfLineItems%numberOfLineItemsPerPage)!=0)
+            {
+                numberOfLineItemsPerPage= numberOfLineItems%numberOfLineItemsPerPage;
+            }
+            for (int i=0; i<numberOfLineItemsPerPage;i++)
+            {
+                testWebDriver.getElementById("A_" +i).sendKeys("10");
+                testWebDriver.getElementById("B_" +i).sendKeys("10");
+                testWebDriver.getElementById("C_" +i).sendKeys("10");
+            }
+
+        }
+    }
+
   public void enterAndVerifyRequestedQuantityExplanation(Integer A) {
     String expectedWarningMessage = "Please enter a reason";
     testWebDriver.waitForElementToAppear(requestedQuantity);
@@ -480,6 +504,44 @@ public class InitiateRnRPage extends Page {
     SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(requestedQuantityExplanationNonFullSupply, "value").trim(), requestedQuantityExplanationValue);
 
   }
+
+    public void addMultipleNonFullSupplyLineItems(int numberOfLineItems,int numberOfLineItemsPerPage) throws IOException, SQLException {
+        testWebDriver.waitForElementToAppear(nonFullSupplyTab);
+        nonFullSupplyTab.click();
+
+        testWebDriver.waitForElementToAppear(addNonFullSupplyButtonScreen);
+        testWebDriver.sleep(1000);
+        addButton.click();
+        testWebDriver.sleep(1000);
+        testWebDriver.waitForElementToAppear(categoryDropDownLink);
+
+        for(int i=0; i<numberOfLineItems; i++)
+        {
+        categoryDropDownLink.click();
+        testWebDriver.waitForElementToAppear(categoryDropDownTextField);
+        categoryDropDownTextField.sendKeys("Antibiotics");
+        testWebDriver.waitForElementToAppear(categoryDropDownValue);
+        categoryDropDownValue.click();
+
+        productDropDownLink.click();
+        testWebDriver.waitForElementToAppear(productDropDownTextField);
+        productDropDownTextField.sendKeys("NF" + i);
+        testWebDriver.waitForElementToAppear(productDropDownValue);
+        productDropDownValue.click();
+
+        requestedQuantityField.clear();
+        requestedQuantityField.sendKeys("10");
+        requestedQuantityExplanationField.clear();
+        requestedQuantityExplanationField.sendKeys("Due to certain reasons: " + i);
+        testWebDriver.waitForElementToAppear(addNonFullSupplyButton);
+        testWebDriver.sleep(1000);
+        addNonFullSupplyButton.click();
+        testWebDriver.sleep(500);
+        testWebDriver.waitForElementToAppear(nonFullSupplyProductCodeAndName);
+        }
+        doneButtonNonFullSupply.click();
+        testWebDriver.sleep(500);
+    }
 
   public void saveRnR() {
     saveButton.click();
