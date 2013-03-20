@@ -7,7 +7,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
 public class PdfPageEventHandler extends PdfPageEventHelper {
 
   public static final int PAGE_TEXT_WIDTH = 100;
@@ -16,68 +15,27 @@ public class PdfPageEventHandler extends PdfPageEventHelper {
 
   protected BaseFont baseFont;
   private PdfTemplate pageNumberTemplate;
-  private Date currentDate;
   private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
+  private float textAdjustment;
 
   public PdfPageEventHandler() {
     super();
-    this.currentDate = new Date();
-
     try {
       baseFont = BaseFont.createFont();
+      textAdjustment = baseFont.getWidthPoint("0", FOOTER_TEXT_SIZE);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
   }
 
-
   @Override
   public void onEndPage(PdfWriter writer, Document document) {
-    addPageNumbers(writer, document);
-    addDate(writer, document);
+    addPageFooterInfo(writer, document);
   }
 
   @Override
   public void onOpenDocument(PdfWriter writer, Document document) {
     pageNumberTemplate = writer.getDirectContent().createTemplate(PAGE_TEXT_WIDTH, PAGE_TEXT_HEIGHT);
-  }
-
-  private void addDate(PdfWriter writer, Document document) {
-    PdfContentByte contentByte = writer.getDirectContent();
-    contentByte.saveState();
-    String text = DATE_FORMAT.format(currentDate);
-
-    float textBase = document.bottom();
-
-    contentByte.beginText();
-    contentByte.setFontAndSize(baseFont, FOOTER_TEXT_SIZE);
-
-    float adjust = baseFont.getWidthPoint("0", FOOTER_TEXT_SIZE);
-    contentByte.setTextMatrix(document.left() + adjust, textBase);
-    contentByte.showText(text);
-    contentByte.endText();
-
-    contentByte.restoreState();
-  }
-
-  private void addPageNumbers(PdfWriter writer, Document document) {
-    String text = String.format("Page %s of ", writer.getPageNumber());
-    PdfContentByte contentByte = writer.getDirectContent();
-    contentByte.saveState();
-
-    float textBase = document.bottom();
-    float textSize = baseFont.getWidthPoint(text, FOOTER_TEXT_SIZE);
-
-    contentByte.beginText();
-    contentByte.setFontAndSize(baseFont, FOOTER_TEXT_SIZE);
-
-    float adjust = baseFont.getWidthPoint("0", FOOTER_TEXT_SIZE);
-    contentByte.setTextMatrix(document.right() - textSize - adjust, textBase);
-    contentByte.showText(text);
-    contentByte.endText();
-    contentByte.addTemplate(pageNumberTemplate, document.right() - adjust, textBase);
-
-    contentByte.restoreState();
   }
 
   @Override
@@ -87,5 +45,33 @@ public class PdfPageEventHandler extends PdfPageEventHelper {
     pageNumberTemplate.setTextMatrix(0, 0);
     pageNumberTemplate.showText(String.valueOf(writer.getPageNumber() - 1));
     pageNumberTemplate.endText();
+  }
+
+  private void addPageFooterInfo(PdfWriter writer, Document document) {
+    PdfContentByte contentByte = writer.getDirectContent();
+    contentByte.saveState();
+
+    contentByte.setFontAndSize(baseFont, FOOTER_TEXT_SIZE);
+
+    contentByte.beginText();
+    writeCurrentDate(document, contentByte);
+    writePageNumber(writer, document, contentByte);
+    contentByte.endText();
+
+    contentByte.restoreState();
+  }
+
+  private void writeCurrentDate(Document document, PdfContentByte contentByte) {
+    contentByte.setTextMatrix(document.left() + textAdjustment, document.bottom());
+    String dateText = DATE_FORMAT.format(new Date());
+    contentByte.showText(dateText);
+  }
+
+  private void writePageNumber(PdfWriter writer, Document document, PdfContentByte contentByte) {
+    String pageNumberText = String.format("Page %s of ", writer.getPageNumber());
+    float pageNumberTextSize = baseFont.getWidthPoint(pageNumberText, FOOTER_TEXT_SIZE);
+    contentByte.setTextMatrix(document.right() - pageNumberTextSize - textAdjustment, document.bottom());
+    contentByte.showText(pageNumberText);
+    contentByte.addTemplate(pageNumberTemplate, document.right() - textAdjustment, document.bottom());
   }
 }

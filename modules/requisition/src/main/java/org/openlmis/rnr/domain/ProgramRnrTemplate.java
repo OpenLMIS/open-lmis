@@ -21,6 +21,9 @@ public class ProgramRnrTemplate {
   public static final String QUANTITY_REQUESTED = "quantityRequested";
   public static final String REASON_FOR_REQUESTED_QUANTITY = "reasonForRequestedQuantity";
   public static final String NEW_PATIENT_COUNT = "newPatientCount";
+  public static final String COST = "cost";
+  public static final String PRICE = "price";
+  public static final String PRODUCT = "product";
 
   @Getter
   private Map<String, RnrColumn> rnrColumnsMap = new HashMap<>();
@@ -69,11 +72,6 @@ public class ProgramRnrTemplate {
 
   public String getRnrColumnLabelFor(String columnName) {
     return rnrColumnsMap.get(columnName).getLabel();
-  }
-
-  private boolean validateDependentsVisible(String columnToEvaluate, List<String> dependents) {
-    return !(columnsVisible(columnToEvaluate) && columnsCalculated(columnToEvaluate)) ||
-      columnsVisible(dependents.toArray(new String[dependents.size()]));
   }
 
   private boolean areSelectedTogether(String column1, String column2) {

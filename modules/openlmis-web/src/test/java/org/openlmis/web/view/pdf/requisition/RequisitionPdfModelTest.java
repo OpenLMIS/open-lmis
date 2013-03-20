@@ -11,28 +11,23 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
-import org.openlmis.rnr.domain.RnRColumnSource;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.web.controller.RequisitionController;
-import org.openlmis.web.view.pdf.requisition.RequisitionPdfModel;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
 import static org.openlmis.rnr.builder.RequisitionBuilder.facility;
-import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
-import static org.openlmis.rnr.domain.RnRColumnSource.CALCULATED;
-import static org.openlmis.rnr.domain.RnRColumnSource.USER_INPUT;
+import static org.openlmis.rnr.builder.RnrTemplateBuilder.defaultRnrTemplate;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RequisitionPdfModelTest {
@@ -48,17 +43,7 @@ public class RequisitionPdfModelTest {
     model = new HashMap<>();
     model.put(RequisitionController.CURRENCY, "$");
     model.put(RequisitionController.RNR, requisition);
-    List<RnrColumn> rnrTemplate = asList(
-        rnrColumn(QUANTITY_REQUESTED, true, null, "Requested Quantity"),
-        rnrColumn(REASON_FOR_REQUESTED_QUANTITY, true, null, "Requested Quantity Reason"),
-        rnrColumn(STOCK_OUT_DAYS, true, CALCULATED, "stockOutDays"),
-        rnrColumn(NORMALIZED_CONSUMPTION, false, USER_INPUT, "normalizedConsumption"),
-        rnrColumn(STOCK_IN_HAND, true, USER_INPUT, "stock in hand"),
-        rnrColumn(QUANTITY_DISPENSED, false, CALCULATED, "quantity dispensed"),
-        rnrColumn(QUANTITY_RECEIVED, true, USER_INPUT, "quantity received"),
-        rnrColumn(BEGINNING_BALANCE, true, USER_INPUT, "beginning balance"),
-        rnrColumn(LOSSES_AND_ADJUSTMENTS, true, USER_INPUT, "losses and adjustment")
-    );
+    List<RnrColumn> rnrTemplate = make(a(defaultRnrTemplate)).getRnrColumns();
     model.put(RequisitionController.RNR_TEMPLATE, rnrTemplate);
     requisitionPdfModel = new RequisitionPdfModel(model);
   }
@@ -137,15 +122,6 @@ public class RequisitionPdfModelTest {
     }
   }
 
-  private RnrColumn rnrColumn(String columnName, boolean visible, RnRColumnSource selectedColumnSource, String label) {
-    RnrColumn rnrColumn = new RnrColumn();
-    rnrColumn.setSource(selectedColumnSource);
-    rnrColumn.setVisible(visible);
-    rnrColumn.setName(columnName);
-    rnrColumn.setLabel(label);
-    rnrColumn.setFormulaValidationRequired(true);
-    return rnrColumn;
-  }
 }
 
 

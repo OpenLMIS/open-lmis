@@ -9,11 +9,13 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.openlmis.web.view.pdf.requisition.RequisitionDocument.CELL_PADDING;
-import static org.openlmis.web.view.pdf.requisition.RequisitionDocument.H2_FONT;
-import static org.openlmis.web.view.pdf.requisition.RequisitionDocument.HEADER_BACKGROUND;
+
 
 public class RequisitionCellFactory {
+  public static final float CELL_PADDING = 5f;
+  public static final BaseColor HEADER_BACKGROUND = new BaseColor(210, 210, 210);
+  public static final Font H2_FONT = FontFactory.getFont(FontFactory.TIMES, 20f, Font.BOLD, BaseColor.BLACK);
+  public static final int WIDTH_PERCENTAGE = 100;
 
   public static PdfPCell numberCell(String value) {
     PdfPCell cell = new PdfPCell(new Phrase(value));
@@ -35,7 +37,6 @@ public class RequisitionCellFactory {
     cell.setPadding(CELL_PADDING);
     cell.setHorizontalAlignment(Element.ALIGN_LEFT);
     return cell;
-
   }
 
   public static List<PdfPCell> getCells(List<RnrColumn> visibleColumns, RnrLineItem lineItem, String currency) throws NoSuchFieldException, IllegalAccessException {

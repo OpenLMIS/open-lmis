@@ -6,10 +6,9 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfTemplate;
 import com.itextpdf.text.pdf.PdfWriter;
-import org.junit.Ignore;
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.web.view.pdf.PdfPageEventHandler;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -18,62 +17,85 @@ import java.io.ByteArrayOutputStream;
 import java.util.Date;
 
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.openlmis.web.view.pdf.PdfPageEventHandler.PAGE_TEXT_HEIGHT;
 import static org.openlmis.web.view.pdf.PdfPageEventHandler.PAGE_TEXT_WIDTH;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.powermock.api.mockito.PowerMockito.doReturn;
+import static org.powermock.api.mockito.PowerMockito.when;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-@Ignore
+
 @PrepareForTest({PdfPageEventHandler.class, BaseFont.class})
 public class PdfPageEventHandlerTest {
 
-  @Mock
   PdfWriter writer;
 
-  @Mock
   Document document;
 
   @Test
-  public void testPrintPageNumberOnEveryPage() throws Exception {
-    PdfPageEventHandler requisitionFooter = new PdfPageEventHandler();
-    Document document = new Document(PageSize.A4.rotate());
+  public void shouldPrintPageFooterInformation() throws Exception {
     ByteArrayOutputStream stream = new ByteArrayOutputStream();
-    PdfWriter writer = PdfWriter.getInstance(document, stream);
-
-
+    document = spy(new Document(PageSize.A4.rotate()));
     document.open();
+    writer = spy(PdfWriter.getInstance(document, stream));
 
+    PdfPageEventHandler pdfPageEventHandler = new PdfPageEventHandler();
 
-    requisitionFooter.onOpenDocument(writer, document);
-    requisitionFooter.onEndPage(writer,document);
-    document.close();
-    System.out.println(stream.toByteArray().toString());
+    PdfContentByte mockContentByte = mock(PdfContentByte.class);
+    DateTime dateTime = new DateTime().withDate(2013, 3, 20);
+    whenNew(Date.class).withNoArguments().thenReturn(dateTime.toDate());
+
+    doReturn(3).when(writer).getPageNumber();
+    doReturn(600f).when(document).bottom();
+    doReturn(600f).when(document).right();
+    doReturn(mockContentByte).when(writer).getDirectContent();
+
+    pdfPageEventHandler.onEndPage(writer, document);
+
+    verify(mockContentByte).saveState();
+    verify(mockContentByte).beginText();
+    verify(mockContentByte).showText("20/03/2013");
+    verify(mockContentByte).showText("Page 3 of ");
+    verify(mockContentByte).addTemplate(any(PdfTemplate.class), anyFloat(), anyFloat());
+    verify(mockContentByte).endText();
+    verify(mockContentByte).restoreState();
   }
 
   @Test
-  public void shouldPrintPageNumberOnEndOfPage() throws Exception {
-    Date date = new Date();
-    PdfPageEventHandler requisitionFooter = new PdfPageEventHandler();
-    requisitionFooter.onOpenDocument(writer, document);
-    PdfTemplate mockedTemplate = mock(PdfTemplate.class);
+  public void shouldCreatePageNumberTemplateOnOpenDocument() throws Exception {
+    document = mock(Document.class);
+    writer = mock(PdfWriter.class);
     PdfContentByte mockContentByte = mock(PdfContentByte.class);
-    when(mockContentByte.createTemplate(PAGE_TEXT_WIDTH, PAGE_TEXT_HEIGHT)).thenReturn(mockedTemplate);
-    whenNew(Date.class).withNoArguments().thenReturn(date);
-    mockStatic(BaseFont.class);
-    BaseFont mockBaseFont = mock(BaseFont.class);
-    when(BaseFont.createFont()).thenReturn(mockBaseFont);
-//    when(mockBaseFont.getWidthPoint());
-
-    when(writer.getPageNumber()).thenReturn(3);
-    when(document.bottom()).thenReturn(600f);
-
 
     when(writer.getDirectContent()).thenReturn(mockContentByte);
-    requisitionFooter.onEndPage(writer, document);
 
+    PdfPageEventHandler pdfPageEventHandler = new PdfPageEventHandler();
+    pdfPageEventHandler.onOpenDocument(writer, document);
+    verify(writer).getDirectContent();
+    verify(mockContentByte).createTemplate(PAGE_TEXT_WIDTH, PAGE_TEXT_HEIGHT);
+  }
 
-    verify(mockContentByte).saveState();
+  @Test
+  public void shouldSetPageNumberTemplateOnCloseDocument() throws Exception {
+    document = mock(Document.class);
+    writer = mock(PdfWriter.class);
+    PdfTemplate template = mock(PdfTemplate.class);
+    PdfContentByte mockContentByte = mock(PdfContentByte.class);
 
+    when(writer.getDirectContent()).thenReturn(mockContentByte);
+    when(writer.getPageNumber()).thenReturn(5);
+    when(mockContentByte.createTemplate(PAGE_TEXT_WIDTH, PAGE_TEXT_HEIGHT)).thenReturn(template);
+
+    PdfPageEventHandler pdfPageEventHandler = new PdfPageEventHandler();
+    pdfPageEventHandler.onOpenDocument(writer, document);
+    pdfPageEventHandler.onCloseDocument(writer, document);
+
+    verify(template).beginText();
+    verify(template).setFontAndSize(any(BaseFont.class), anyFloat());
+    verify(template).setTextMatrix(0,0);
+    verify(template).showText("4");
+    verify(template).endText();
   }
 }
