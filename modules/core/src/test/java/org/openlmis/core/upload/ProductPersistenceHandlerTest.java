@@ -6,6 +6,7 @@ import org.junit.rules.ExpectedException;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.repository.ProductRepository;
 import org.openlmis.core.service.ProductService;
+import org.openlmis.upload.model.AuditFields;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -24,7 +25,7 @@ public class ProductPersistenceHandlerTest {
         ProductService productService = mock(ProductService.class);
         Product product = new Product();
 
-        new ProductPersistenceHandler(productService).execute(product, 0, 1);
+        new ProductPersistenceHandler(productService).execute(product, 0, new AuditFields(1,null));
         assertThat(product.getModifiedBy(), is(1));
         assertThat(product.getModifiedDate(), is(notNullValue()));
         verify(productService).save(product);

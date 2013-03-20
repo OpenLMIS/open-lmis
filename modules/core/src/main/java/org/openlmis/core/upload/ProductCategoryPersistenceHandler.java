@@ -3,6 +3,7 @@ package org.openlmis.core.upload;
 import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.core.repository.ProductCategoryRepository;
 import org.openlmis.upload.Importable;
+import org.openlmis.upload.model.AuditFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,9 +21,9 @@ public class ProductCategoryPersistenceHandler  extends AbstractModelPersistence
   }
 
   @Override
-  protected void save(Importable importable, Integer modifiedBy) {
+  protected void save(Importable importable, AuditFields auditFields) {
     ProductCategory productCategory = (ProductCategory) importable;
-    productCategory.setModifiedBy(modifiedBy);
+    productCategory.setModifiedBy(auditFields.getUser());
     productCategory.setModifiedDate(new Date());
     productCategoryRepository.save(productCategory);
 

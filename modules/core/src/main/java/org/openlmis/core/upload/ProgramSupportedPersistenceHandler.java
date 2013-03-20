@@ -3,6 +3,7 @@ package org.openlmis.core.upload;
 import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.upload.Importable;
+import org.openlmis.upload.model.AuditFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,9 +18,9 @@ public class ProgramSupportedPersistenceHandler extends AbstractModelPersistence
   }
 
   @Override
-  protected void save(Importable importable, Integer modifiedBy) {
+  protected void save(Importable importable, AuditFields auditFields) {
     ProgramSupported programSupported = (ProgramSupported) importable;
-    programSupported.setModifiedBy(modifiedBy);
+    programSupported.setModifiedBy(auditFields.getUser());
     facilityService.uploadSupportedProgram(programSupported);
   }
 }

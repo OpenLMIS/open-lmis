@@ -3,6 +3,7 @@ package org.openlmis.core.upload;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.repository.ProgramProductRepository;
 import org.openlmis.upload.Importable;
+import org.openlmis.upload.model.AuditFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,9 +20,9 @@ public class ProgramProductPersistenceHandler extends AbstractModelPersistenceHa
     }
 
     @Override
-    protected void save(Importable importable, Integer modifiedBy) {
+    protected void save(Importable importable, AuditFields auditFields) {
         ProgramProduct programProduct = (ProgramProduct) importable;
-        programProduct.setModifiedBy(modifiedBy);
+        programProduct.setModifiedBy(auditFields.getUser());
         programProduct.setModifiedDate(new Date());
         programProductRepository.insert(programProduct);
     }

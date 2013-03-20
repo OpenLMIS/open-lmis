@@ -6,6 +6,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.UserService;
+import org.openlmis.upload.model.AuditFields;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -25,7 +26,7 @@ public class UserPersistenceHandlerTest {
     String baseUrl = "http://localhost:9091/";
     userPersistenceHandler = new UserPersistenceHandler(userService, baseUrl);
     User user = new User();
-    userPersistenceHandler.save(user, 1);
+    userPersistenceHandler.save(user, new AuditFields(1,null));
     verify(userService).create(user, baseUrl + RESET_PASSWORD_PATH);
     assertThat(user.getModifiedBy(), is(1));
   }

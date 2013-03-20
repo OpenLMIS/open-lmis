@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.service.RequisitionGroupService;
+import org.openlmis.upload.model.AuditFields;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -32,7 +33,7 @@ public class RequisitionGroupHandlerTest {
         RequisitionGroup requisitionGroup = new RequisitionGroup();
         requisitionGroup.setModifiedBy(USER);
 
-        requisitionGroupHandler.save(requisitionGroup, 1);
+        requisitionGroupHandler.save(requisitionGroup, new AuditFields(USER, null));
 
         assertThat(requisitionGroup.getModifiedBy(), is(USER));
         assertThat(requisitionGroup.getModifiedDate(), is(notNullValue()));

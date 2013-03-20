@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
+import org.openlmis.upload.model.AuditFields;
 
 import static org.mockito.Mockito.mock;
 
@@ -16,7 +17,7 @@ public class AbstractModelPersistenceHandlerTest {
   public void shouldAppendRowNumberToExceptionMessage() throws Exception {
     AbstractModelPersistenceHandler handler = new AbstractModelPersistenceHandler() {
       @Override
-      protected void save(Importable modelClass, Integer modifiedBy) {
+      protected void save(Importable modelClass, AuditFields auditFields) {
         throw new DataException("error");
       }
     };
@@ -25,6 +26,6 @@ public class AbstractModelPersistenceHandlerTest {
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("code: upload.record.error, params: { error; 1 }");
 
-    handler.execute(importable, 2, 1);
+    handler.execute(importable, 2, new AuditFields(1,null));
   }
 }

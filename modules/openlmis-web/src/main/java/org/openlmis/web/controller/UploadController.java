@@ -2,7 +2,9 @@ package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.db.service.DbService;
 import org.openlmis.upload.exception.UploadException;
+import org.openlmis.upload.model.AuditFields;
 import org.openlmis.upload.model.ModelClass;
 import org.openlmis.upload.parser.CSVParser;
 import org.openlmis.web.model.UploadBean;
@@ -19,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -28,6 +31,8 @@ public class UploadController extends BaseController {
 
   @Autowired
   private CSVParser csvParser;
+  @Autowired
+  DbService dbService;
   @Resource
   private Map<String, UploadBean> uploadBeansMap;
 
@@ -37,9 +42,10 @@ public class UploadController extends BaseController {
   String uploadPage = "redirect:/public/pages/admin/upload/index.html#/upload?";
 
 
-  public UploadController(CSVParser csvParser, Map<String, UploadBean> uploadBeansMap) {
+  public UploadController(CSVParser csvParser, Map<String, UploadBean> uploadBeansMap, DbService dbService) {
     this.csvParser = csvParser;
     this.uploadBeansMap = uploadBeansMap;
+    this.dbService = dbService;
   }
 
   @RequestMapping(value = "/upload", method = RequestMethod.POST)
@@ -53,16 +59,26 @@ public class UploadController extends BaseController {
         return errorPage(error, model);
       }
 
-      Integer modifiedBy = loggedInUserId(request);
-      int recordsUploaded = csvParser.process(csvFile.getInputStream(),
-          new ModelClass(uploadBeansMap.get(model).getImportableClass()),
-          uploadBeansMap.get(model).getRecordHandler(), modifiedBy);
-      return successPage(recordsUploaded, model);
+      int initialRecordCount = dbService.getCount(uploadBeansMap.get(model).getTableName());
+      Date currentTimestamp= dbService.getCurrentTimestamp();
+
+      int recordsToBeUploaded = csvParser.process(csvFile.getInputStream(), new ModelClass(uploadBeansMap.get(model).getImportableClass()),
+        uploadBeansMap.get(model).getRecordHandler(), new AuditFields(loggedInUserId(request), currentTimestamp));
+
+      return redirectToSuccessRoute(model, initialRecordCount, recordsToBeUploaded);
+
     } catch (DataException dataException) {
       return errorPage(dataException.getOpenLmisMessage().resolve(resourceBundle), model);
     } catch (UploadException | IOException e) {
       return errorPage(e.getMessage(), model);
     }
+  }
+
+  private String redirectToSuccessRoute(String model, int initialRecordCount, int recordsToBeUploaded) {
+    int finalRecordCount = dbService.getCount(uploadBeansMap.get(model).getTableName());
+    int recordsCreated = finalRecordCount - initialRecordCount;
+
+    return successPage(model, recordsCreated, recordsToBeUploaded - recordsCreated);
   }
 
   @RequestMapping(value = "/supported-uploads", method = RequestMethod.GET, headers = "Accept=application/json")
@@ -73,7 +89,7 @@ public class UploadController extends BaseController {
 
   private String validateFile(String model, MultipartFile csvFile) {
     String error = null;
-    if(model.isEmpty()) {
+    if (model.isEmpty()) {
       error = "Please select the Upload type";
     } else if (!uploadBeansMap.containsKey(model)) {
       error = "Incorrect file";
@@ -85,8 +101,9 @@ public class UploadController extends BaseController {
     return error;
   }
 
-  private String successPage(int recordsUploaded, String model) {
-    return uploadPage + "model=" + model + "&success=" + "File uploaded successfully. Total records uploaded: " + recordsUploaded;
+  private String successPage(String model, int recordsCreated, int recordsUpdated) {
+    return uploadPage + "model=" + model + "&success=" + "File uploaded successfully. " +
+      "‘Number of records created: " + recordsCreated + "’, ‘Number of records updated : " + recordsUpdated + "’";
   }
 
   private String errorPage(String error, String model) {

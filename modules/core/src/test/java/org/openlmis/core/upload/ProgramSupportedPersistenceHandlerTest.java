@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.upload.model.AuditFields;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -27,7 +28,7 @@ public class ProgramSupportedPersistenceHandlerTest {
   @Test
   public void shouldSaveProgramSupported() {
     ProgramSupported programSupported = new ProgramSupported();
-    programSupportedPersistenceHandler.save(programSupported, 1);
+    programSupportedPersistenceHandler.save(programSupported, new AuditFields(1, null));
     verify(facilityService).uploadSupportedProgram(programSupported);
     assertThat(programSupported.getModifiedBy(), is(1));
   }

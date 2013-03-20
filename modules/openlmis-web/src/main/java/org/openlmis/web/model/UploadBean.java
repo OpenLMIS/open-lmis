@@ -23,6 +23,15 @@ public class UploadBean {
   @Setter @Getter
   private Class<? extends Importable> importableClass;
 
+  @Setter @Getter
+  private String tableName;
+
+  public UploadBean(String displayName, RecordHandler handler, Class<? extends Importable> importableClass) {
+    this.displayName = displayName;
+    this.recordHandler = handler;
+    this.importableClass = importableClass;
+  }
+
 
   @JsonProperty
   @SuppressWarnings("unused")

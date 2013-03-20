@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.exception.UploadException;
+import org.openlmis.upload.model.AuditFields;
 import org.openlmis.upload.model.DummyImportable;
 import org.openlmis.upload.model.DummyRecordHandler;
 import org.openlmis.upload.model.ModelClass;
@@ -14,6 +15,7 @@ import org.openlmis.upload.model.ModelClass;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
@@ -22,6 +24,7 @@ import static org.junit.Assert.assertThat;
 
 public class CSVParserTest {
 
+  public static final int MODIFIED_BY = 1;
   private CSVParser csvParser;
   private DummyRecordHandler recordHandler;
 
@@ -29,12 +32,16 @@ public class CSVParserTest {
   public ExpectedException expectedEx = ExpectedException.none();
 
   ModelClass dummyImportableClass;
+  Date currentTimestamp;
+  AuditFields auditFields;
 
   @Before
   public void setUp() throws Exception {
     dummyImportableClass = new ModelClass(DummyImportable.class);
     csvParser = new CSVParser();
     recordHandler = new DummyRecordHandler();
+    currentTimestamp = new Date();
+    auditFields= new AuditFields(MODIFIED_BY, currentTimestamp);
   }
 
   @Test
@@ -47,13 +54,13 @@ public class CSVParserTest {
     InputStream inputStream = new ByteArrayInputStream(csvInput.getBytes("UTF-8"));
 
 
-    csvParser.process(inputStream, dummyImportableClass, recordHandler, 1);
+    csvParser.process(inputStream, dummyImportableClass, recordHandler, auditFields);
 
     List<Importable> importedObjects = recordHandler.getImportedObjects();
     assertEquals(23, ((DummyImportable) importedObjects.get(0)).getMandatoryIntField());
     assertEquals("Random1", ((DummyImportable) importedObjects.get(0)).getMandatoryStringField());
-    assertEquals(25, ((DummyImportable) importedObjects.get(1)).getMandatoryIntField());
-    assertEquals("Random2", ((DummyImportable) importedObjects.get(1)).getMandatoryStringField());
+    assertEquals(25, ((DummyImportable) importedObjects.get(MODIFIED_BY)).getMandatoryIntField());
+    assertEquals("Random2", ((DummyImportable) importedObjects.get(MODIFIED_BY)).getMandatoryStringField());
   }
 
 
@@ -70,7 +77,7 @@ public class CSVParserTest {
     expectedEx.expect(UploadException.class);
     expectedEx.expectMessage("Missing Mandatory data in field : 'Mandatory String Field' of Record No. 2");
 
-    csvParser.process(inputStream, dummyImportableClass, recordHandler, 1);
+    csvParser.process(inputStream, dummyImportableClass, recordHandler, auditFields);
   }
 
   @Test
@@ -85,7 +92,7 @@ public class CSVParserTest {
     expectedEx.expect(UploadException.class);
     expectedEx.expectMessage("Incorrect Data type in field : 'OPTIONAL INT FIELD' of Record No. 2");
 
-    csvParser.process(inputStream, dummyImportableClass, recordHandler, 1);
+    csvParser.process(inputStream, dummyImportableClass, recordHandler, auditFields);
   }
 
   @Test
@@ -100,7 +107,7 @@ public class CSVParserTest {
     expectedEx.expect(UploadException.class);
     expectedEx.expectMessage("Header for column 2 is missing.");
 
-    csvParser.process(inputStream, dummyImportableClass, recordHandler, 1);
+    csvParser.process(inputStream, dummyImportableClass, recordHandler, auditFields);
   }
 
   @Test
@@ -114,7 +121,7 @@ public class CSVParserTest {
     expectedEx.expect(UploadException.class);
     expectedEx.expectMessage("Incorrect file format, Column name missing");
 
-    csvParser.process(inputStream, dummyImportableClass, recordHandler, 1);
+    csvParser.process(inputStream, dummyImportableClass, recordHandler, auditFields);
   }
 
   @Test
@@ -128,7 +135,7 @@ public class CSVParserTest {
     expectedEx.expect(UploadException.class);
     expectedEx.expectMessage("Incorrect date format in field : 'OPTIONAL DATE FIELD' of Record No. 1");
 
-    csvParser.process(inputStream, dummyImportableClass, recordHandler, 1);
+    csvParser.process(inputStream, dummyImportableClass, recordHandler, auditFields);
   }
 
   @Test
@@ -140,7 +147,7 @@ public class CSVParserTest {
     InputStream inputStream = new ByteArrayInputStream(csvInput.getBytes("UTF-8"));
 
 
-    csvParser.process(inputStream, dummyImportableClass, recordHandler, 1);
+    csvParser.process(inputStream, dummyImportableClass, recordHandler, auditFields);
     DummyImportable dummyImportable = (DummyImportable) recordHandler.getImportedObjects().get(0);
     assertThat(dummyImportable.getDummyNestedField().getCode(), is("code1"));
   }
@@ -154,7 +161,7 @@ public class CSVParserTest {
     InputStream inputStream = new ByteArrayInputStream(csvInput.getBytes("UTF-8"));
 
 
-    csvParser.process(inputStream, dummyImportableClass, recordHandler, 1);
+    csvParser.process(inputStream, dummyImportableClass, recordHandler, auditFields);
     DummyImportable dummyImportable = (DummyImportable) recordHandler.getImportedObjects().get(0);
     assertThat(dummyImportable.getMultipleNestedFields().getEntityCode1(), is("code1-1"));
     assertThat(dummyImportable.getMultipleNestedFields().getEntityCode2(), is("code1-2"));

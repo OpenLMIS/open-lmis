@@ -3,6 +3,7 @@ package org.openlmis.core.upload;
 import org.junit.Test;
 import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.repository.GeographicZoneRepository;
+import org.openlmis.upload.model.AuditFields;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -19,7 +20,7 @@ public class GeographicZonePersistenceHandlerTest {
     GeographicZonePersistenceHandler geographicZonePersistenceHandler = new GeographicZonePersistenceHandler(repository);
     GeographicZone geographicZone = new GeographicZone();
 
-    geographicZonePersistenceHandler.save(geographicZone, 1);
+    geographicZonePersistenceHandler.save(geographicZone, new AuditFields(1, null));
     assertThat(geographicZone.getModifiedBy(), is(1));
     verify(repository).save(geographicZone);
 

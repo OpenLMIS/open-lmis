@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.RecordHandler;
 import org.openlmis.upload.exception.UploadException;
+import org.openlmis.upload.model.AuditFields;
 import org.openlmis.upload.model.ModelClass;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Date;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -28,7 +30,7 @@ import static java.util.Arrays.asList;
 public class CSVParser {
 
   @Transactional
-  public int process(InputStream inputStream, ModelClass modelClass, RecordHandler recordHandler, Integer modifiedBy)
+  public int process(InputStream inputStream, ModelClass modelClass, RecordHandler recordHandler, AuditFields auditFields)
     throws UploadException {
     CsvPreference csvPreference = new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE)
       .surroundingSpacesNeedQuotes(true).build();
@@ -43,7 +45,8 @@ public class CSVParser {
     List<CellProcessor> cellProcessors = CsvCellProcessors.getProcessors(modelClass, headersSet);
 
     CellProcessor[] processors = cellProcessors.toArray(new CellProcessor[cellProcessors.size()]);
-    parse(modelClass, recordHandler, csvBeanReader, headers, processors, modifiedBy);
+
+    parse(modelClass, recordHandler, csvBeanReader, headers, processors, auditFields);
     return csvBeanReader.getRowNumber() - 1;
   }
 
@@ -65,13 +68,13 @@ public class CSVParser {
 
   private void parse(ModelClass modelClass, RecordHandler recordHandler,
                      CsvDozerBeanReader csvBeanReader, String[] userFriendlyHeaders,
-                     CellProcessor[] processors, Integer modifiedBy) throws UploadException {
+                     CellProcessor[] processors, AuditFields auditFields) throws UploadException {
     String[] fieldMappings = modelClass.getFieldNameMappings(userFriendlyHeaders);
     Importable importedModel;
     try {
       csvBeanReader.configureBeanMapping(modelClass.getClazz(), fieldMappings);
       while ((importedModel = csvBeanReader.read(modelClass.getClazz(), processors)) != null) {
-        recordHandler.execute(importedModel, csvBeanReader.getRowNumber(), modifiedBy);
+        recordHandler.execute(importedModel, csvBeanReader.getRowNumber(), auditFields);
       }
     } catch (SuperCsvConstraintViolationException constraintException) {
       if(constraintException.getMessage().contains("^\\d{1,2}/\\d{1,2}/\\d{4}$")){

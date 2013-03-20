@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.service.SupervisoryNodeService;
 import org.openlmis.upload.Importable;
+import org.openlmis.upload.model.AuditFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,9 +22,9 @@ public class SupervisoryNodeHandler extends AbstractModelPersistenceHandler {
     }
 
     @Override
-    protected void save(Importable modelClass, Integer modifiedBy) {
+    protected void save(Importable modelClass, AuditFields auditFields) {
         SupervisoryNode supervisoryNode = (SupervisoryNode) modelClass;
-        supervisoryNode.setModifiedBy(modifiedBy);
+        supervisoryNode.setModifiedBy(auditFields.getUser());
         supervisoryNode.setModifiedDate(new Date());
         supervisoryNodeService.save(supervisoryNode);
     }

@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.RequisitionGroupMember;
 import org.openlmis.core.service.RequisitionGroupMemberService;
 import org.openlmis.upload.Importable;
+import org.openlmis.upload.model.AuditFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,9 +23,9 @@ public class RequisitionGroupMemberHandler extends AbstractModelPersistenceHandl
     }
 
     @Override
-    protected void save(Importable modelClass, Integer modifiedBy) {
+    protected void save(Importable modelClass, AuditFields auditFields) {
         RequisitionGroupMember requisitionGroupMember = (RequisitionGroupMember) modelClass;
-        requisitionGroupMember.setModifiedBy(modifiedBy);
+        requisitionGroupMember.setModifiedBy(auditFields.getUser());
         requisitionGroupMember.setModifiedDate(new Date());
 
         requisitionGroupMemberService.save(requisitionGroupMember);

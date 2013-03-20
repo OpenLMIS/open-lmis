@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.core.repository.SupplyLineRepository;
 import org.openlmis.upload.Importable;
+import org.openlmis.upload.model.AuditFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,9 +22,9 @@ public class SupplyLineHandler extends AbstractModelPersistenceHandler {
     }
 
     @Override
-    protected void save(Importable modelClass, Integer modifiedBy) {
+    protected void save(Importable modelClass, AuditFields auditFields) {
         SupplyLine supplyLine = (SupplyLine) modelClass;
-        supplyLine.setModifiedBy(modifiedBy);
+        supplyLine.setModifiedBy(auditFields.getUser());
         supplyLine.setModifiedDate(new Date());
         supplyLineRepository.insert(supplyLine);
     }

@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.upload.Importable;
+import org.openlmis.upload.model.AuditFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,9 +20,10 @@ public class FacilityPersistenceHandler extends AbstractModelPersistenceHandler 
     }
 
     @Override
-    protected void save(Importable importable, Integer modifiedBy) {
+    protected void save(Importable importable, AuditFields auditFields) {
         Facility facility = (Facility) importable;
-        facility.setModifiedBy(modifiedBy);
+        facility.setModifiedBy(auditFields.getUser());
+        facility.setModifiedDate(auditFields.getCurrentTimestamp());
         facilityRepository.save(facility);
     }
 }

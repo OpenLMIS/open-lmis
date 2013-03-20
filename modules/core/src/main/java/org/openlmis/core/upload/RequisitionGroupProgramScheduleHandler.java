@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.RequisitionGroupProgramSchedule;
 import org.openlmis.core.service.RequisitionGroupProgramScheduleService;
 import org.openlmis.upload.Importable;
+import org.openlmis.upload.model.AuditFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,9 +24,9 @@ public class RequisitionGroupProgramScheduleHandler extends AbstractModelPersist
     }
 
     @Override
-    protected void save(Importable modelClass, Integer modifiedBy) {
+    protected void save(Importable modelClass, AuditFields auditFields) {
         RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = (RequisitionGroupProgramSchedule) modelClass;
-        requisitionGroupProgramSchedule.setModifiedBy(modifiedBy);
+        requisitionGroupProgramSchedule.setModifiedBy(auditFields.getUser());
         requisitionGroupProgramSchedule.setModifiedDate(new Date());
         requisitionGroupProgramScheduleService.save(requisitionGroupProgramSchedule);
     }

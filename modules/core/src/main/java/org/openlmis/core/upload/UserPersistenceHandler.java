@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.UserService;
 import org.openlmis.upload.Importable;
+import org.openlmis.upload.model.AuditFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -25,9 +26,9 @@ public class UserPersistenceHandler extends AbstractModelPersistenceHandler {
   }
 
   @Override
-  protected void save(Importable modelClass, Integer modifiedBy) {
+  protected void save(Importable modelClass, AuditFields auditFields) {
     final User user = (User) modelClass;
-    user.setModifiedBy(modifiedBy);
+    user.setModifiedBy(auditFields.getUser());
     userService.create(user, baseUrl + RESET_PASSWORD_PATH);
   }
 }

@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.FacilityApprovedProduct;
 import org.openlmis.core.service.FacilityApprovedProductService;
 import org.openlmis.upload.Importable;
+import org.openlmis.upload.model.AuditFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,9 +20,9 @@ public class FacilityApprovedProductPersistenceHandler extends AbstractModelPers
   }
 
   @Override
-  protected void save(Importable modelClass, Integer modifiedBy) {
+  protected void save(Importable modelClass, AuditFields auditFields) {
     FacilityApprovedProduct facilityApprovedProduct = (FacilityApprovedProduct) modelClass;
-    facilityApprovedProduct.setModifiedBy(modifiedBy);
+    facilityApprovedProduct.setModifiedBy(auditFields.getUser());
     facilityApprovedProductService.save(facilityApprovedProduct);
   }
 }

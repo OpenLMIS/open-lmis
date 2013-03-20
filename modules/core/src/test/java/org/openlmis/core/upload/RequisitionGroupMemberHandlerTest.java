@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.openlmis.core.domain.RequisitionGroupMember;
 import org.openlmis.core.service.RequisitionGroupMemberService;
+import org.openlmis.upload.model.AuditFields;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -14,25 +15,25 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class RequisitionGroupMemberHandlerTest {
 
-    public static final Integer USER = 1;
+  public static final Integer USER = 1;
 
   @Mock
-    RequisitionGroupMemberService requisitionGroupMemberService;
+  RequisitionGroupMemberService requisitionGroupMemberService;
 
-    @Before
-    public void setUp() throws Exception {
-        initMocks(this);
-    }
+  @Before
+  public void setUp() throws Exception {
+    initMocks(this);
+  }
 
-    @Test
-    public void shouldSaveRGMembersTaggedWithModifiedBy() throws Exception {
-        RequisitionGroupMember requisitionGroupMember = new RequisitionGroupMember();
+  @Test
+  public void shouldSaveRGMembersTaggedWithModifiedBy() throws Exception {
+    RequisitionGroupMember requisitionGroupMember = new RequisitionGroupMember();
 
-        new RequisitionGroupMemberHandler(requisitionGroupMemberService).save(requisitionGroupMember, USER);
+    new RequisitionGroupMemberHandler(requisitionGroupMemberService).save(requisitionGroupMember, new AuditFields(USER, null));
 
-        assertThat(requisitionGroupMember.getModifiedBy(), is(USER));
-        assertThat(requisitionGroupMember.getModifiedDate(), is(notNullValue()));
+    assertThat(requisitionGroupMember.getModifiedBy(), is(USER));
+    assertThat(requisitionGroupMember.getModifiedDate(), is(notNullValue()));
 
-        verify(requisitionGroupMemberService).save(requisitionGroupMember);
-    }
+    verify(requisitionGroupMemberService).save(requisitionGroupMember);
+  }
 }
