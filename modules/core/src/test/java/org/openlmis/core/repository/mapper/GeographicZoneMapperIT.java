@@ -10,6 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -27,13 +28,13 @@ public class GeographicZoneMapperIT {
   @Test
   public void shouldSaveGeographicZone() throws Exception {
     GeographicZone geographicZone = new GeographicZone(null, "code", "name", new GeographicLevel(2,"state", "State", 2), null, null, null);
+    Date date = new Date();
+    geographicZone.setModifiedDate(date);
 
     mapper.insert(geographicZone);
 
     GeographicZone returnedZone = mapper.getGeographicZoneByCode("code");
 
-    assertThat(returnedZone.getModifiedDate(), is(notNullValue()));
-    returnedZone.setModifiedDate(null);
     assertThat(returnedZone, is(geographicZone));
   }
 
@@ -50,15 +51,6 @@ public class GeographicZoneMapperIT {
     GeographicZone nullZone = mapper.getGeographicZoneByCode("some random code");
 
     assertThat(nullZone, is(nullValue()));
-  }
-
-  @Test
-  public void shouldGetGeographicZoneByCode() throws Exception {
-    GeographicZone stateZone = mapper.getGeographicZoneByCode("Dodoma");
-
-    assertThat(stateZone.getName(), is("Dodoma"));
-    assertThat(stateZone.getLevel().getLevelNumber(), is(3));
-    assertThat(stateZone.getModifiedDate(), is(notNullValue()));
   }
 
   @Test

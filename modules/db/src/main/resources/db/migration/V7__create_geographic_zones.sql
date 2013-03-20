@@ -5,7 +5,7 @@ CREATE TABLE geographic_zones (
   levelId INTEGER NOT NULL REFERENCES geographic_levels(id),
   parent INTEGER REFERENCES geographic_zones(id),
   modifiedBy INTEGER,
-  modifiedDate TIMESTAMP DEFAULT  CURRENT_TIMESTAMP,
+  modifiedDate TIMESTAMP,
   createdBy INTEGER,
   createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );
