@@ -205,9 +205,32 @@ public class TemplateConfigPage extends Page {
     SeleneseTestNgHelper.assertEquals(select.getFirstSelectedOption().getText(), "User Input");
   }
 
-  public void verifyArithmeticValidations() {
-    //verifying If C and E both are user Input then Admin can choose to switch Arithmetic Validation ON/OFF
+  private void verifyCAndEUserInputsAndShouldBeDisplayed()
+  {
     testWebDriver.waitForElementToAppear(SaveButton);
+    if (totalConsumedQuantityCheckBox.isSelected())
+      totalConsumedQuantityCheckBox.click();
+    if (stockOnHandCheckBox.isSelected())
+      stockOnHandCheckBox.click();
+    testWebDriver.sleep(500);
+    if(totalConsumedQuantitySource.getText().trim().equalsIgnoreCase("Calculated"))
+      testWebDriver.selectByVisibleText(dropDownTotalConsumedQuantity,"User Input");
+    testWebDriver.sleep(500);
+    if(stockOnHandSource.getText().trim().equalsIgnoreCase("Calculated"))
+      testWebDriver.selectByVisibleText(stockInHandDropDown,"User Input");
+    SaveButton.click();
+    SeleneseTestNgHelper.assertTrue("Error message not displaying", errorMessageDiv.isDisplayed());
+    SeleneseTestNgHelper.assertTrue("Error message not displaying", totalConsumedQtyErrorMessage.isDisplayed());
+    SeleneseTestNgHelper.assertTrue("Error message not displaying", stockOnHandQtyErrorMessage.isDisplayed());
+
+  }
+
+  private void verifyArithmeticValidationOnOff()
+  {
+    if (!totalConsumedQuantityCheckBox.isSelected())
+      totalConsumedQuantityCheckBox.click();
+    if (!stockOnHandCheckBox.isSelected())
+      stockOnHandCheckBox.click();
     testWebDriver.selectByVisibleText(dropDownTotalConsumedQuantity, "Calculated");
     testWebDriver.sleep(250);
     testWebDriver.selectByVisibleText(dropDownTotalConsumedQuantity, "User Input");
@@ -224,30 +247,39 @@ public class TemplateConfigPage extends Page {
     testWebDriver.selectByVisibleText(stockInHandDropDown, "Calculated");
     SeleneseTestNgHelper.assertFalse("Option to choose to switch Airthmetic Validation ON/OFF should not be visible", turnOffButton.isDisplayed());
 
-    //if "C" is derived then "E" is must and Vice versa
-    testWebDriver.selectByVisibleText(dropDownTotalConsumedQuantity, "Calculated");
-    testWebDriver.selectByVisibleText(stockInHandDropDown,"User Input");
-    stockOnHandCheckBox.click();
-    if (stockOnHandCheckBox.isSelected())
-      testWebDriver.click(stockOnHandCheckBox);
-    SaveButton.click();
-    testWebDriver.sleep(250);
-    SeleneseTestNgHelper.assertTrue("Error message not displaying", errorMessageDiv.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("Error message not displaying", totalConsumedQtyErrorMessage.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("Error message not displaying", stockOnHandQtyErrorMessage.isDisplayed());
+  }
+   private void verifyCDerivedEMustViceVersa()
+   {
+     testWebDriver.selectByVisibleText(dropDownTotalConsumedQuantity, "Calculated");
+     testWebDriver.selectByVisibleText(stockInHandDropDown,"User Input");
+     stockOnHandCheckBox.click();
+     if (stockOnHandCheckBox.isSelected())
+       testWebDriver.click(stockOnHandCheckBox);
+     SaveButton.click();
+     testWebDriver.sleep(250);
+     SeleneseTestNgHelper.assertTrue("Error message not displaying", errorMessageDiv.isDisplayed());
+     SeleneseTestNgHelper.assertTrue("Error message not displaying", totalConsumedQtyErrorMessage.isDisplayed());
+     SeleneseTestNgHelper.assertTrue("Error message not displaying", stockOnHandQtyErrorMessage.isDisplayed());
 
-    testWebDriver.selectByVisibleText(dropDownTotalConsumedQuantity, "User Input");
-    testWebDriver.selectByVisibleText(stockInHandDropDown,"Calculated");
-    SaveButton.click();
-    SeleneseTestNgHelper.assertTrue("Success message should display",saveSuccessMsg.isDisplayed());
-    totalConsumedQuantityCheckBox.click();
-    if (totalConsumedQuantityCheckBox.isSelected())
-      testWebDriver.click(totalConsumedQuantityCheckBox);
-    SaveButton.click();
-    testWebDriver.sleep(250);
-    SeleneseTestNgHelper.assertTrue("Error message not displaying", errorMessageDiv.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("Error message not displaying", totalConsumedQtyErrorMessage.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("Error message not displaying", stockOnHandQtyErrorMessage.isDisplayed());
+     testWebDriver.selectByVisibleText(dropDownTotalConsumedQuantity, "User Input");
+     testWebDriver.selectByVisibleText(stockInHandDropDown,"Calculated");
+     SaveButton.click();
+     SeleneseTestNgHelper.assertTrue("Success message should display",saveSuccessMsg.isDisplayed());
+     totalConsumedQuantityCheckBox.click();
+     if (totalConsumedQuantityCheckBox.isSelected())
+       testWebDriver.click(totalConsumedQuantityCheckBox);
+     SaveButton.click();
+     testWebDriver.sleep(250);
+     SeleneseTestNgHelper.assertTrue("Error message not displaying", errorMessageDiv.isDisplayed());
+     SeleneseTestNgHelper.assertTrue("Error message not displaying", totalConsumedQtyErrorMessage.isDisplayed());
+     SeleneseTestNgHelper.assertTrue("Error message not displaying", stockOnHandQtyErrorMessage.isDisplayed());
+   }
+
+  public void verifyArithmeticValidations() {
+    verifyCAndEUserInputsAndShouldBeDisplayed();
+    verifyArithmeticValidationOnOff();
+    verifyCDerivedEMustViceVersa();
+
   }
 
   public void verifyColumnLabels() {
