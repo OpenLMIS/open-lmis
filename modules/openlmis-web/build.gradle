@@ -73,7 +73,7 @@ jettyRun {
     jettyRun.httpPort = 9091
     contextPath = ''
     jettyRun.scanIntervalSeconds=1
-    System.properties.get('env', 'dev')
+    System.properties.get('environmentName', 'local')
 }
 
 task run(dependsOn: jettyRun)
