@@ -48,7 +48,8 @@ describe("Role", function () {
       expect(scope.role.rights.length).toEqual(0);
       expect(scope.roleTypeModal).toBeFalsy();
       expect(scope.role.adminRole).toBeTruthy();
-      expect(scope.disableSection).toEqual("disableSection");
+      expect(scope.showRightError).toBeFalsy();
+      expect(scope.showError).toBeFalsy();
     });
 
     it('should retain selection if cancel is clicked', function () {
@@ -123,6 +124,7 @@ describe("Role", function () {
       scope.updateRights(true, rightList[3]);
 
       expect(scope.role.rights.length).toEqual(3);
+      expect(scope.showRightError).toBeFalsy();
       expect(scope.role.rights[0]).toEqual(rightList[0]);
       expect(scope.role.rights[1]).toEqual(rightList[1]);
       expect(scope.role.rights[2]).toEqual(rightList[3]);

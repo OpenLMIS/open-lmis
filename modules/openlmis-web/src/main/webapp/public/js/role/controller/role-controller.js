@@ -19,13 +19,15 @@ function RoleController($scope, $routeParams, $location, Roles, Role, Rights) {
 
 
   $scope.updateRights = function (checked, right) {
+    $scope.showRightError = false;
+
     if (checked) {
       if ($scope.contains(right.right))
         return;
 
       $scope.role.rights.push(right);
       if (right.right == 'CREATE_REQUISITION' || right.right == 'AUTHORIZE_REQUISITION' ||
-        right.right == 'APPROVE_REQUISITION' || right.right == 'CONVERT_TO_ORDER') {
+        right.right == 'APPROVE_REQUISITION' ) {
         $scope.updateRights(true, $scope.getRightFromRightList("VIEW_REQUISITION"));
       }
     } else {
@@ -45,8 +47,7 @@ function RoleController($scope, $routeParams, $location, Roles, Role, Rights) {
     if (right.right != 'VIEW_REQUISITION') return false;
     return ($scope.contains('CREATE_REQUISITION') ||
       $scope.contains('AUTHORIZE_REQUISITION') ||
-      $scope.contains('APPROVE_REQUISITION') ||
-      $scope.contains('CONVERT_TO_ORDER'));
+      $scope.contains('APPROVE_REQUISITION'));
   }
 
   $scope.contains = function (right) {
@@ -90,7 +91,8 @@ function RoleController($scope, $routeParams, $location, Roles, Role, Rights) {
 
   $scope.deSelectRights = function () {
     $scope.role.rights = [];
-    $scope.disableSection = "disableSection";
+    $scope.showRightError = false;
+    $scope.showError = false;
     $scope.role.adminRole = window.selected.toString();
     $scope.roleTypeModal = false;
   }

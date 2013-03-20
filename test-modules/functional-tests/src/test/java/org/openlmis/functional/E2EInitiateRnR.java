@@ -33,7 +33,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   }
 
   @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testE2EInitiateRnR(String program, String userSIC, String userMO, String password, String[] credentials) throws Exception {
+  public void testE2EInitiateRnR(String program, String userSIC, String userMO,String userlmu, String password, String[] credentials) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
@@ -51,12 +51,17 @@ public class E2EInitiateRnR extends TestCaseHelper {
     userRoleListStoreincharge.add("Create Requisition");
     userRoleListStoreincharge.add("Authorize Requisition");
     userRoleListStoreincharge.add("Approve Requisition");
-    userRoleListStoreincharge.add("Convert To Order Requisition");
-    rolesPage.createRole("Store-in-charge", "Store-in-charge", userRoleListStoreincharge);
+    rolesPage.createRole("Store-in-charge", "Store-in-charge", userRoleListStoreincharge, true);
+
+      RolesPage rolesPagelmu = homePage.navigateRoleAssignments();
+      List<String> userRoleListlmu = new ArrayList<String>();
+
+      userRoleListlmu.add("Convert To Order Requisition");
+      rolesPagelmu.createRole("lmu", "lmu", userRoleListlmu, false);
 
     List<String> userRoleListMedicalofficer = new ArrayList<String>();
     userRoleListMedicalofficer.add("Approve Requisition");
-    rolesPage.createRole("Medical-officer", "Medical-officer", userRoleListMedicalofficer);
+    rolesPage.createRole("Medical-officer", "Medical-officer", userRoleListMedicalofficer, true);
 
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
     dbWrapper.insertSupervisoryNodeSecond("F11", "N2", "Node 2", "N1");
@@ -71,7 +76,18 @@ public class E2EInitiateRnR extends TestCaseHelper {
     dbWrapper.updateUser(passwordUsers, userSICEmail);
     userPageSIC.enterMyFacilityAndMySupervisedFacilityData(userSICFirstName, userSICLastName, "F10", "HIV", "Node 1", "Store-in-charge");
 
-    UserPage userPageMO = homePage.navigateToUser();
+      String passwordUserslmu = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
+      UserPage userPagelmu = homePage.navigateToUser();
+      String userlmuEmail = "Lmu_Doe@openlmis.com";
+      String userlmuFirstName = "Lmu";
+      String userlmuLastName = "Doe";
+      String userlmuUserName = "lmu";
+      String userIDlmu = userPagelmu.enterAndverifyUserDetails(userlmuUserName, userlmuEmail, userlmuFirstName, userlmuLastName, baseUrlGlobal, dburlGlobal);
+      dbWrapper.updateUser(passwordUserslmu, userlmuEmail);
+      userPagelmu.enterMyFacilityAndMySupervisedFacilityData(userlmuFirstName, userlmuLastName, "F10", "HIV", "Node 1", "lmu");
+
+
+      UserPage userPageMO = homePage.navigateToUser();
     String userMOEmail = "Jane_Doe@openlmis.com";
     String userMOFirstName = "Jane";
     String userMOLastName = "Doe";
@@ -156,8 +172,10 @@ public class E2EInitiateRnR extends TestCaseHelper {
     approvePageTopSNUser.editApproveQuantityAndVerifyTotalCost("2900");
     approvePageTopSNUser.approveRequisition();
     approvePageTopSNUser.verifyNoRequisitionPendingMessage();
+    LoginPage loginPagelmu=homePageTopSNUser.logout(baseUrlGlobal);
+      HomePage homePagelmu = loginPagelmu.loginAs(userlmu, password);
 
-    OrderPage orderPageOrdersPending = homePageTopSNUser.navigateConvertToOrder();
+    OrderPage orderPageOrdersPending = homePagelmu.navigateConvertToOrder();
     String[] periods = periodTopSNUser.split("-");
     String supplyFacilityName = dbWrapper.getSupplyFacilityName("N1", "HIV");
     orderPageOrdersPending.verifyOrderListElements(program, "FCcode" + date_time, "FCname" + date_time, periods[0].trim(), periods[1].trim(), supplyFacilityName);
@@ -178,7 +196,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-      {"HIV", "storeincharge", "medicalofficer", "Admin123", new String[]{"Admin123", "Admin123"}}
+      {"HIV", "storeincharge", "medicalofficer","lmu", "Admin123", new String[]{"Admin123", "Admin123"}}
     };
 
   }

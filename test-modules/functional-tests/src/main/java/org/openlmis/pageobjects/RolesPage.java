@@ -82,7 +82,7 @@ public class RolesPage extends Page {
   }
 
 
-  public void createRole(String roleName, String roleDesc, List<String> rights) {
+  public void createRole(String roleName, String roleDesc, List<String> rights, boolean programDependant) {
     webElementMap.put("Configure Template", rightConfigureTemplate);
     webElementMap.put("Manage Facilities", rightManageFacilities);
     webElementMap.put("Manage Roles", rightManageRoles);
@@ -95,9 +95,11 @@ public class RolesPage extends Page {
 
     testWebDriver.waitForElementToAppear(createNewRoleButton);
     createNewRoleButton.click();
+      if(programDependant){
     testWebDriver.click(programRoleType);
     testWebDriver.waitForElementToAppear(continueButton);
     testWebDriver.click(continueButton);
+      }
     testWebDriver.handleScrollByPixels(0,3000);
     for (String right : rights) {
           testWebDriver.sleep(1500);

@@ -1415,3 +1415,63 @@ input[placeholder].placeholder{
     }
   }
 }
+
+.roles-form {
+  .row-fluid {
+    padding-bottom: 20px;
+    input[type='text'] {
+      width: 96%;
+      margin: 0;
+    }
+    .field-error {
+      font-size: 0.8em;
+    }
+    .radio-group {
+      padding: 4px 0 0 10px;
+      font-size: 0.9em;
+      .form-inline {
+        margin-bottom: 8px;
+      }
+      * {
+        vertical-align: middle;
+        margin: 0;
+       }
+
+      label {
+        font-size: 1em;
+        padding-left: 5px;
+        cursor: pointer;
+      }
+    }
+  }
+  .roles-note {
+    font-size: 0.9em;
+    font-style: italic;
+    color: #666;
+  }
+}
+.assigned-rights {
+  background: #FFF;
+  float: left;
+  font-size: 0.9em;
+  width: 360px;
+  margin-right: 40px;
+  border: 1px solid #CCC;
+  border-radius: 5px;
+  padding: 6px 25px;
+  margin-top: 10px;
+  &.is-disabled {
+    background: #EEE;
+    color: #999;
+    h4 {
+      color: #999;
+    }
+  }
+  h4 {
+    font-size: 1.2em;
+    color: #444;
+  }
+  label {
+    font-size: 1em;
+  }
+}

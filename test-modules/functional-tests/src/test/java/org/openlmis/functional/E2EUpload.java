@@ -45,7 +45,7 @@ public class E2EUpload extends TestCaseHelper {
     List<String> userRoleList = new ArrayList<String>();
     userRoleList.add("Create Requisition");
 
-    rolesPage.createRole("User", "User", userRoleList);
+    rolesPage.createRole("User", "User", userRoleList, true);
 
     UploadPage uploadPage = homePage.navigateUploads();
     uploadPage.uploadUsers();
