@@ -79,7 +79,7 @@ public class UploadControllerIT {
 
     assertThat(uploadPage, is("redirect:/public/pages/admin/upload/index.html#/upload?" +
       "model=mandatoryFields" +
-      "&success=File uploaded successfully. ‘Number of records created: 2’, ‘Number of records updated : 0’"));
+      "&success=File uploaded successfully. 'Number of records created: 2', 'Number of records updated : 0'"));
 
     ArgumentCaptor<MandatoryFields> validUploadTypeArgumentCaptor = ArgumentCaptor.forClass(MandatoryFields.class);
     verify(handler).execute(validUploadTypeArgumentCaptor.capture(), eq(2), eq(new AuditFields(1, null)));
@@ -101,7 +101,7 @@ public class UploadControllerIT {
 
     assertThat(uploadPage, is("redirect:/public/pages/admin/upload/index.html#/upload?" +
       "model=nonMandatoryFields" +
-      "&success=File uploaded successfully. ‘Number of records created: 2’, ‘Number of records updated : 1’"));
+      "&success=File uploaded successfully. 'Number of records created: 2', 'Number of records updated : 1'"));
 
     ArgumentCaptor<NonMandatoryFields> nonMandatoryFieldsArgumentCaptor = ArgumentCaptor.forClass(NonMandatoryFields.class);
     verify(handler).execute(nonMandatoryFieldsArgumentCaptor.capture(), eq(4), eq(new AuditFields(1, null)));

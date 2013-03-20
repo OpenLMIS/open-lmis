@@ -103,7 +103,7 @@ public class UploadController extends BaseController {
 
   private String successPage(String model, int recordsCreated, int recordsUpdated) {
     return uploadPage + "model=" + model + "&success=" + "File uploaded successfully. " +
-      "‘Number of records created: " + recordsCreated + "’, ‘Number of records updated : " + recordsUpdated + "’";
+      "'Number of records created: " + recordsCreated + "', 'Number of records updated : " + recordsUpdated + "'";
   }
 
   private String errorPage(String error, String model) {

@@ -98,7 +98,7 @@ public class UploadControllerTest {
 
     String uploadPage = controller.upload(multiPartMock, "product", request);
     assertThat(uploadPage, is("redirect:/public/pages/admin/upload/index.html#/upload?model=product&" +
-      "success=File uploaded successfully. ‘Number of records created: 0’, ‘Number of records updated : 0’"));
+      "success=File uploaded successfully. 'Number of records created: 0', 'Number of records updated : 0'"));
   }
 
   @Test
@@ -112,7 +112,7 @@ public class UploadControllerTest {
     String uploadPage = controller.upload(mockMultiPart, "product", request);
 
     assertThat(uploadPage, is("redirect:/public/pages/admin/upload/index.html#/upload?model=product&" +
-      "success=File uploaded successfully. ‘Number of records created: 0’, ‘Number of records updated : 0’"));
+      "success=File uploaded successfully. 'Number of records created: 0', 'Number of records updated : 0'"));
 
     verify(csvParser).process(eq(mockMultiPart.getInputStream()), argThat(modelMatcher(Product.class)), eq(handler), eq(auditFields));
   }
@@ -158,7 +158,7 @@ public class UploadControllerTest {
 
     verify(dbService, times(2)).getCount(productUploadBean.getTableName());
     assertThat(message, is(String.format("redirect:/public/pages/admin/upload/index.html#/upload?model=product&success=File uploaded successfully. " +
-      "‘Number of records created: %d’, ‘Number of records updated : %d’", 15, 5)));
+      "'Number of records created: %d', 'Number of records updated : %d'", 15, 5)));
   }
 
   @Test
