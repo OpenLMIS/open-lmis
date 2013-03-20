@@ -11,7 +11,7 @@ import java.util.List;
 public interface GeographicZoneMapper {
 
   @Insert("INSERT INTO geographic_zones (code, name, levelId, parent, modifiedBy, modifiedDate) " +
-    "VALUES (#{code}, #{name}, #{level.id}, #{parent.id}, #{modifiedBy}, #{modifiedDate})")
+    "VALUES (#{code}, #{name}, #{level.id}, #{parent.id}, #{modifiedBy}, DEFAULT)")
   @Options(useGeneratedKeys = true)
   Integer insert(GeographicZone geographicZone);
 
@@ -57,7 +57,7 @@ public interface GeographicZoneMapper {
   })
   GeographicZone getGeographicZoneById(Integer geographicZoneId);
 
-  @Update({"UPDATE geographic_zones set code = #{code}, name = #{name}, levelId = #{level.id}, parent = #{parent.id}, modifiedBy = #{modifiedBy}, modifiedDate = #{modifiedDate}",
+  @Update({"UPDATE geographic_zones set code = #{code}, name = #{name}, levelId = #{level.id}, parent = #{parent.id}, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT",
     "WHERE id = #{id}"})
   void update(GeographicZone geographicZone);
 }

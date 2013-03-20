@@ -60,7 +60,7 @@ public class UploadController extends BaseController {
       }
 
       int initialRecordCount = dbService.getCount(uploadBeansMap.get(model).getTableName());
-      Date currentTimestamp = dbService.getCurrentTimestamp();
+      Date currentTimestamp= dbService.getCurrentTimestamp();
 
       int recordsToBeUploaded = csvParser.process(csvFile.getInputStream(), new ModelClass(uploadBeansMap.get(model).getImportableClass()),
         uploadBeansMap.get(model).getRecordHandler(), new AuditFields(loggedInUserId(request), currentTimestamp));

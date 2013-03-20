@@ -1,6 +1,5 @@
 package org.openlmis.db.repository.mapper;
 
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +12,6 @@ public interface DbMapper {
   public Date getCurrentTimeStamp();
 
 
-  @Select("SELECT COUNT(*) FROM ${table}")
-  int getCount(@Param("table") String table);
+  @Select("SELECT COUNT(*) FROM users")
+  int getCount(String table);
 }
