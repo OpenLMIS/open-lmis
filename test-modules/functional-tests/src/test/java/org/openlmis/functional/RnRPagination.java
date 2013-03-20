@@ -24,7 +24,7 @@ public class RnRPagination extends TestCaseHelper {
         super.setup();
     }
 
-  @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
   public void testRnRPagination(String program, String userSIC, String userMO, String password, String[] credentials) throws Exception {
       dbWrapper.setupProducts_Pagination(program,"Lvl3 Hospital",21);
       dbWrapper.insertFacilities("F10", "F11");
@@ -50,6 +50,7 @@ public class RnRPagination extends TestCaseHelper {
 
 
     verifyNumberOfPageLinks(21,20);
+    verifyNextAndLastLinksEnabled();
     verifyPreviousAndFirstLinksDisabled();
 
 
@@ -57,43 +58,49 @@ public class RnRPagination extends TestCaseHelper {
 
     testWebDriver.getElementByXpath("//a[contains(text(), '2') and @class='ng-binding']").click();
     verifyNextAndLastLinksDisabled();
+    verifyPreviousAndFirstLinksEnabled();
 
     testWebDriver.getElementByXpath("//a[contains(text(), '«')]").click();
+    verifyNextAndLastLinksEnabled();
     verifyPreviousAndFirstLinksDisabled();
 
     testWebDriver.getElementByXpath("//a[contains(text(), '>')]").click();
     verifyNextAndLastLinksDisabled();
+    verifyPreviousAndFirstLinksEnabled();
 
     testWebDriver.getElementByXpath("//a[contains(text(), '<')]").click();
+    verifyNextAndLastLinksEnabled();
     verifyPreviousAndFirstLinksDisabled();
 
     testWebDriver.getElementByXpath("//a[contains(text(), '»')]").click();
     verifyNextAndLastLinksDisabled();
+    verifyPreviousAndFirstLinksEnabled();
 
     initiateRnRPage.addMultipleNonFullSupplyLineItems(21,20);
     verifyNumberOfPageLinks(21,20);
     verifyPreviousAndFirstLinksDisabled();
+    verifyNextAndLastLinksEnabled();
 
     testWebDriver.getElementByXpath("//a[contains(text(), '2') and @class='ng-binding']").click();
     verifyNextAndLastLinksDisabled();
+    verifyPreviousAndFirstLinksEnabled();
 
     testWebDriver.getElementByXpath("//a[contains(text(), '«')]").click();
     verifyPreviousAndFirstLinksDisabled();
+    verifyNextAndLastLinksEnabled();
 
     testWebDriver.getElementByXpath("//a[contains(text(), '>')]").click();
     verifyNextAndLastLinksDisabled();
+    verifyPreviousAndFirstLinksEnabled();
 
     testWebDriver.getElementByXpath("//a[contains(text(), '<')]").click();
     verifyPreviousAndFirstLinksDisabled();
+    verifyNextAndLastLinksEnabled();
 
     testWebDriver.getElementByXpath("//a[contains(text(), '»')]").click();
     verifyNextAndLastLinksDisabled();
 
     initiateRnRPage.submitRnR();
-
-    initiateRnRPage.authorizeRnR();
-    initiateRnRPage.verifyAuthorizeRnrSuccessMsg();
-    initiateRnRPage.verifyBeginningBalanceDisabled();
 
   }
 
@@ -110,46 +117,23 @@ public class RnRPagination extends TestCaseHelper {
     }
 
     public void verifyNextAndLastLinksEnabled() throws Exception {
-        SeleneseTestNgHelper.assertTrue(testWebDriver.getElementByXpath("//a[contains(text(), '>')]").isEnabled());
-        SeleneseTestNgHelper.assertTrue(testWebDriver.getElementByXpath("//a[contains(text(), '»')]").isEnabled());
+        SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '>')]").getCssValue("color"),"rgba(119, 119, 119, 1)") ;
+        SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '»')]").getCssValue("color"),"rgba(119, 119, 119, 1)") ;
     }
 
     public void verifyPreviousAndFirstLinksEnabled() throws Exception {
-            SeleneseTestNgHelper.assertTrue(testWebDriver.getElementByXpath("//a[contains(text(), '<')]").isEnabled());
-            SeleneseTestNgHelper.assertTrue(testWebDriver.getElementByXpath("//a[contains(text(), '«')]").isEnabled());
+            SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '<')]").getCssValue("color"),"rgba(119, 119, 119, 1)") ;
+        SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '«')]").getCssValue("color"),"rgba(119, 119, 119, 1)") ;
     }
 
     public void verifyNextAndLastLinksDisabled() throws Exception {
-        //try{
-            testWebDriver.getElementByXpath("//a[contains(text(), '>')]").click();
-        //    }
-        //catch(Exception e){
-        //    e.printStackTrace();
-        //}
-
-        //try{
-            testWebDriver.getElementByXpath("//a[contains(text(), '»')]").click();
-        //}
-        //catch(Exception e){
-        //    e.printStackTrace();
-        //}
-
+        SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '>')]").getCssValue("color"),"rgba(204, 204, 204, 1)") ;
+        SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '»')]").getCssValue("color"),"rgba(204, 204, 204, 1)") ;
     }
 
     public void verifyPreviousAndFirstLinksDisabled() throws Exception {
-        //try{
-            testWebDriver.getElementByXpath("//a[contains(text(), '<')]").click();
-        //}
-        //catch(Exception e){
-        //    e.printStackTrace();
-        //}
-
-        //try{
-            testWebDriver.getElementByXpath("//a[contains(text(), '«')]");
-        //}
-        //catch(Exception e){
-        //    e.printStackTrace();
-        //}
+        SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '«')]").getCssValue("color"),"rgba(204, 204, 204, 1)") ;
+        SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '<')]").getCssValue("color"),"rgba(204, 204, 204, 1)") ;
     }
 
     @AfterMethod(groups = {"smoke"})
