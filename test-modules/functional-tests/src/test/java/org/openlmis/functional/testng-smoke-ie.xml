@@ -1,5 +1,7 @@
 <suite name="Openlmis Smoke" verbose="10" allow-return-values="true">
   <parameter name="browser" value="ie"/>
+  <parameter name="baseurl" value="http://localhost:9091/"/>
+  <parameter name="dburl" value="jdbc:postgresql://localhost:5432/open_lmis"/>
   <test name="Openlmis test">
     <groups>
       <run>

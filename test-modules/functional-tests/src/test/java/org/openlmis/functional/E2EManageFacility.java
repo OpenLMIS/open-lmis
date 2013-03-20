@@ -20,19 +20,22 @@ import org.testng.annotations.*;
 public class E2EManageFacility extends TestCaseHelper {
 
   DBWrapper dbWrapper;
+  String baseUrlGlobal, dburlGlobal;
 
   @BeforeMethod(groups = {"functional"})
-  @Parameters({"browser"})
-  public void setUp(String browser) throws Exception {
+  @Parameters({"browser","baseurl","dburl"})
+  public void setUp(String browser, String baseurl, String dburl) throws Exception {
     super.setupSuite(browser);
-    dbWrapper = new DBWrapper();
+    baseUrlGlobal=baseurl;
+    dburlGlobal=dburl;
+    dbWrapper = new DBWrapper(baseurl, dburl);
     dbWrapper.deleteData();
   }
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
   public void testE2EManageFacility(String user, String[] credentials) throws Exception {
 
-    LoginPage loginPage = new LoginPage(testWebDriver);
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
     dbWrapper.insertUser("200", user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==", "F10", "Jane_Doe@openlmis.com");
 
@@ -63,7 +66,7 @@ public class E2EManageFacility extends TestCaseHelper {
   @AfterMethod(groups = {"functional"})
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
-    homePage.logout();
+    homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }

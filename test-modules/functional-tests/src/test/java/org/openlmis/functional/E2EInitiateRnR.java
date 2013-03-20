@@ -20,18 +20,21 @@ import java.util.List;
 public class E2EInitiateRnR extends TestCaseHelper {
 
   DBWrapper dbWrapper;
+  String baseUrlGlobal, dburlGlobal;
 
   @BeforeMethod(groups = {"smoke"})
-  @Parameters({"browser"})
-  public void setUp(String browser) throws Exception {
+  @Parameters({"browser","baseurl","dburl"})
+  public void setUp(String browser, String baseurl, String dburl) throws Exception {
     super.setupSuite(browser);
-    dbWrapper = new DBWrapper();
+    baseUrlGlobal=baseurl;
+    dburlGlobal=dburl;
+    dbWrapper = new DBWrapper(baseurl, dburl);
     dbWrapper.deleteData();
   }
 
   @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function-Positive")
   public void testE2EInitiateRnR(String program, String userSIC, String userMO, String password, String[] credentials) throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver);
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
     CreateFacilityPage createFacilityPage = homePage.navigateCreateFacility();
@@ -64,7 +67,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     String userSICFirstName = "Fatima";
     String userSICLastName = "Doe";
     String userSICUserName = "storeincharge";
-    String userIDSIC = userPageSIC.enterAndverifyUserDetails(userSICUserName, userSICEmail, userSICFirstName, userSICLastName);
+    String userIDSIC = userPageSIC.enterAndverifyUserDetails(userSICUserName, userSICEmail, userSICFirstName, userSICLastName, baseUrlGlobal, dburlGlobal);
     dbWrapper.updateUser(passwordUsers, userSICEmail);
     userPageSIC.enterMyFacilityAndMySupervisedFacilityData(userSICFirstName, userSICLastName, "F10", "HIV", "Node 1", "Store-in-charge");
 
@@ -73,7 +76,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     String userMOFirstName = "Jane";
     String userMOLastName = "Doe";
     String userMOUserName = "medicalofficer";
-    String userIDMO = userPageMO.enterAndverifyUserDetails(userMOUserName, userMOEmail, userMOFirstName, userMOLastName);
+    String userIDMO = userPageMO.enterAndverifyUserDetails(userMOUserName, userMOEmail, userMOFirstName, userMOLastName, baseUrlGlobal, dburlGlobal);
     dbWrapper.updateUser(passwordUsers, userMOEmail);
     userPageMO.enterMyFacilityAndMySupervisedFacilityData(userMOFirstName, userMOLastName, "F11", "HIV", "Node 2", "Medical-Officer");
 
@@ -102,7 +105,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
     dbWrapper.insertSupplyLines("N1", "HIV", "FCcode" + date_time);
 
-    LoginPage loginPageSecond = homePage.logout();
+    LoginPage loginPageSecond = homePage.logout(baseUrlGlobal);
     HomePage homePageUser = loginPageSecond.loginAs(userSIC, password);
 
     String periodDetails = homePageUser.navigateAndInitiateRnr(program);
@@ -122,7 +125,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     initiateRnRPage.calculateAndVerifyTotalCost();
     initiateRnRPage.saveRnR();
 
-    initiateRnRPage.addNonFullSupplyLineItems("99", "Due to unforeseen event", "antibiotic", "P11","Antibiotics");
+    initiateRnRPage.addNonFullSupplyLineItems("99", "Due to unforeseen event", "antibiotic", "P11","Antibiotics", baseUrlGlobal, dburlGlobal);
     initiateRnRPage.calculateAndVerifyTotalCostNonFullSupply();
     initiateRnRPage.verifyCostOnFooter();
 
@@ -132,7 +135,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
     ApprovePage approvePage = homePageUser.navigateToApprove();
     approvePage.verifyNoRequisitionPendingMessage();
-    LoginPage loginPagethird = homePageUser.logout();
+    LoginPage loginPagethird = homePageUser.logout(baseUrlGlobal);
 
     HomePage homePageLowerSNUser = loginPagethird.loginAs(userMO, password);
     ApprovePage approvePageLowerSNUser = homePageLowerSNUser.navigateToApprove();
@@ -142,7 +145,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     approvePageLowerSNUser.editApproveQuantityAndVerifyTotalCost("290");
     approvePageLowerSNUser.approveRequisition();
     approvePageLowerSNUser.verifyNoRequisitionPendingMessage();
-    LoginPage loginPageTopSNUser = homePageLowerSNUser.logout();
+    LoginPage loginPageTopSNUser = homePageLowerSNUser.logout(baseUrlGlobal);
 
     HomePage homePageTopSNUser = loginPageTopSNUser.loginAs(userSIC, password);
 
@@ -166,7 +169,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @AfterMethod(groups = {"smoke"})
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
-    homePage.logout();
+    homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }

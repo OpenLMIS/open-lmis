@@ -24,10 +24,10 @@ public class LoginPage extends Page {
 
   private String baseUrl;
 
-  public LoginPage(TestWebDriver driver) throws IOException {
+  public LoginPage(TestWebDriver driver, String baseUrl) throws IOException {
       super(driver);
 
-    baseUrl = "http://localhost:9091/";
+//    baseUrl = "http://localhost:9091/";
     BASE_URL = baseUrl;
     testWebDriver.setBaseURL(BASE_URL);
     PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);

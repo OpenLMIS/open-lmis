@@ -405,10 +405,10 @@ public class InitiateRnRPage extends Page {
     testWebDriver.sleep(500);
   }
 
-  public void addNonFullSupplyLineItems(String requestedQuantityValue, String requestedQuantityExplanationValue, String productPrimaryName, String productCode, String category) throws IOException, SQLException {
+  public void addNonFullSupplyLineItems(String requestedQuantityValue, String requestedQuantityExplanationValue, String productPrimaryName, String productCode, String category, String baseurl, String dburl) throws IOException, SQLException {
     testWebDriver.waitForElementToAppear(nonFullSupplyTab);
     nonFullSupplyTab.click();
-    DBWrapper dbWrapper = new DBWrapper();
+    DBWrapper dbWrapper = new DBWrapper(baseurl, dburl);
     String nonFullSupplyItems = dbWrapper.fetchNonFullSupplyData(productCode, "2", "1");
     testWebDriver.waitForElementToAppear(addNonFullSupplyButtonScreen);
     testWebDriver.sleep(1000);

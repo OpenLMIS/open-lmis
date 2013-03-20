@@ -1,5 +1,7 @@
 <suite name="Openlmis Funtional Test" verbose="10" allow-return-values="true">
   <parameter name="browser" value="firefox"/>
+  <parameter name="baseurl" value="http://localhost:9092/"/>
+  <parameter name="dburl" value="jdbc:postgresql://localhost:5432/open_lmis_ft"/>
   <test name="Openlmis functional test">
     <groups>
       <run>

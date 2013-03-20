@@ -157,11 +157,11 @@ public class HomePage extends Page {
     //SeleneseTestNgHelper.assertTrue(usernameDisplay.isDisplayed());
   }
 
-  public LoginPage logout() throws IOException {
+  public LoginPage logout(String baseurl) throws IOException {
 
     testWebDriver.waitForElementToAppear(logoutLink);
     logoutLink.click();
-    return new LoginPage(testWebDriver);
+    return new LoginPage(testWebDriver, baseurl);
   }
 
   public boolean verifyWelcomeMessage(String user) {

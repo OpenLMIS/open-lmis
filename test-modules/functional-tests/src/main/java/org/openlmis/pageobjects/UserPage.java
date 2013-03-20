@@ -96,7 +96,7 @@ public class UserPage extends Page {
 
   }
 
-  public String enterAndverifyUserDetails(String userName, String email, String firstName, String lastName) throws IOException, SQLException {
+  public String enterAndverifyUserDetails(String userName, String email, String firstName, String lastName, String baseurl, String dburl) throws IOException, SQLException {
     testWebDriver.waitForElementToAppear(addNewButton);
     addNewButton.click();
     testWebDriver.waitForElementToAppear(userNameField);
@@ -115,7 +115,7 @@ public class UserPage extends Page {
     SeleneseTestNgHelper.assertTrue("User '" + firstName + " " + lastName + "' has been successfully created, password link sent on registered Email address message is not getting displayed", successMessage.isDisplayed());
     viewHereLink.click();
 
-    DBWrapper dbWrapper = new DBWrapper();
+    DBWrapper dbWrapper = new DBWrapper(baseurl, dburl);
     String userID = dbWrapper.getUserID(userName);
 
     return userID;

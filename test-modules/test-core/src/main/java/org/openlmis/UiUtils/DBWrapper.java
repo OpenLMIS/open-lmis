@@ -11,9 +11,9 @@ public class DBWrapper {
   String baseUrl, dbUrl, dbUser, dbPassword;
   Connection connection;
 
-  public DBWrapper() throws IOException, SQLException {
-    baseUrl = "http://localhost:9091/";
-    dbUrl = "jdbc:postgresql://localhost:5432/open_lmis";
+  public DBWrapper(String baseUrl, String dbUrl) throws IOException, SQLException {
+    this.baseUrl = baseUrl;
+    this.dbUrl = dbUrl;
     dbUser = "postgres";
     dbPassword = "p@ssw0rd";
     connection = getConnection();

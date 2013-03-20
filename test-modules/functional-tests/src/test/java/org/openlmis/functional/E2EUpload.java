@@ -20,20 +20,22 @@ import java.util.List;
 public class E2EUpload extends TestCaseHelper {
 
   DBWrapper dbWrapper;
+  String baseUrlGlobal, dburlGlobal;
 
   @BeforeMethod(groups = {"functional"})
-  @Parameters({"browser"})
-  public void setUp(String browser) throws Exception {
+  @Parameters({"browser","baseurl","dburl"})
+  public void setUp(String browser, String baseurl, String dburl) throws Exception {
     super.setupSuite(browser);
-    dbWrapper = new DBWrapper();
+    baseUrlGlobal=baseurl;
+    dburlGlobal=dburl;
+    dbWrapper = new DBWrapper(baseurl, dburl);
     dbWrapper.deleteData();
-    dbWrapper.deleteFacilities();
   }
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
   public void uploadCSVFiles(String[] credentials) throws Exception {
 
-    LoginPage loginPage = new LoginPage(testWebDriver);
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate("HIV");
@@ -111,7 +113,7 @@ public class E2EUpload extends TestCaseHelper {
   @AfterMethod(groups = {"functional"})
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
-    homePage.logout();
+    homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }
