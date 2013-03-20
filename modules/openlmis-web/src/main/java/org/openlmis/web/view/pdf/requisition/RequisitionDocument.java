@@ -12,10 +12,10 @@ public class RequisitionDocument {
 
   public RequisitionDocument(Document document) {
     this.document = document;
-    document.open();
   }
 
   public void build(RequisitionPdfModel requisitionPdfModel) throws DocumentException, NoSuchFieldException, IllegalAccessException {
+    document.open();
     document.add(requisitionPdfModel.getRequisitionHeader());
 
     document.add(requisitionPdfModel.getFullSupplyHeader());
