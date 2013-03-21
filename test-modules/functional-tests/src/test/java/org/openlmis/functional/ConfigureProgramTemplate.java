@@ -71,6 +71,7 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
 
     TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
     templateConfigPage.verifyArithmeticValidations();
+    templateConfigPage.verifyBusinessRules();
 
 
   }

@@ -215,7 +215,7 @@ public class TemplateConfigPage extends Page {
   {
     testWebDriver.waitForElementToAppear(totalConsumedQuantityCheckBox);
     if(!totalConsumedQuantityCheckBox.isSelected())
-      testWebDriver.click(totalConsumedQuantityCheckBox);
+      totalConsumedQuantityCheckBox.click();
     testWebDriver.sleep(100);
   }
 
@@ -223,7 +223,7 @@ public class TemplateConfigPage extends Page {
   {
     testWebDriver.waitForElementToAppear(totalConsumedQuantityCheckBox);
     if(totalConsumedQuantityCheckBox.isSelected())
-      testWebDriver.click(totalConsumedQuantityCheckBox);
+      totalConsumedQuantityCheckBox.click();
     testWebDriver.sleep(100);
   }
 
@@ -231,7 +231,7 @@ public class TemplateConfigPage extends Page {
   {
     testWebDriver.waitForElementToAppear(stockOnHandCheckBox);
     if(!stockOnHandCheckBox.isSelected())
-      testWebDriver.click(stockOnHandCheckBox);
+      stockOnHandCheckBox.click();
     testWebDriver.sleep(100);
   }
 
@@ -239,7 +239,7 @@ public class TemplateConfigPage extends Page {
   {
     testWebDriver.waitForElementToAppear(stockOnHandCheckBox);
     if(stockOnHandCheckBox.isSelected())
-      testWebDriver.click(stockOnHandCheckBox);
+      stockOnHandCheckBox.click();
     testWebDriver.sleep(100);
   }
 
@@ -382,6 +382,30 @@ public class TemplateConfigPage extends Page {
     verifyArithmeticValidationOnOff();
     verifyCDerivedEMustViceVersa();
 
+  }
+
+  private void prepareDataForBusinessRule()
+  {
+    clickTotalConsumedQuantity();
+    clickStockOnHand();
+    selectFromTotalConsumedQuantityDropDown("Calculated");
+    selectFromStockOnHandDropDown("Calculated");
+    clickSaveButton();
+
+  }
+
+  private void verifyBusinessRule()
+  {
+    verifyErrorMessageDivStockOnHand();
+    verifyErrorMessageDivTotalConsumedQuantity();
+    verifyErrorMessageDivFooter();
+  }
+
+
+
+  public void verifyBusinessRules() {
+    prepareDataForBusinessRule();
+    verifyBusinessRule();
   }
 
   public void verifyColumnLabels() {
