@@ -61,7 +61,7 @@ function ViewRnrController($scope, $routeParams, ProgramRnRColumnList, Requisiti
         $scope.columnDefs.push({field:column.name, displayName:column.label, cellTemplate:currencyTemplate('COL_FIELD')});
         return;
       }
-      if ($scope.rnr.status != 'APPROVED' && column.name == 'quantityApproved') return;
+      if ($scope.rnr.status != 'APPROVED' && $scope.rnr.status != 'ORDERED' && column.name == 'quantityApproved') return;
 
       $scope.columnDefs.push({field:column.name, displayName:column.label});
     });
