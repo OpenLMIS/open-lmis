@@ -203,4 +203,19 @@
         </constructor-arg>
     </bean>
 
+    <!-- Integrates with report module -->
+    <bean id="reportManager" class="org.openlmis.report.ReportManager">
+        <constructor-arg index="0">
+            <ref bean="reportAccessAuthorizer"/>
+        </constructor-arg>
+        <constructor-arg index="1">
+            <list><!-- list of open-lmis reports -->
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="facilities"/>
+                    <property name="reportDataProvider" ref="facilityReportDataProvider"/>
+                 </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+
 </beans>
