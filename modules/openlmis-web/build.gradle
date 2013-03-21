@@ -79,7 +79,7 @@ jettyRunWarLocal.doFirst {
 }
 
 jettyRun {
-    jettyRun.httpPort = Integer.valueOf("${httpport}")
+    jettyRun.httpPort = 9091
     contextPath = ''
     jettyRun.scanIntervalSeconds=1
     System.properties.get('environmentName', 'local')
