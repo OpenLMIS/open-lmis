@@ -26,7 +26,7 @@ public class RnRPagination extends TestCaseHelper {
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
   public void testRnRPagination(String program, String userSIC, String userMO, String password, String[] credentials) throws Exception {
-      dbWrapper.setupProducts_Pagination(program,"Lvl3 Hospital",21);
+      dbWrapper.setupProducts_Pagination(program,"Lvl3 Hospital",21,false);
       dbWrapper.insertFacilities("F10", "F11");
       dbWrapper.configureTemplate(program);
       dbWrapper.insertRole("store in-charge","false","");
@@ -48,13 +48,13 @@ public class RnRPagination extends TestCaseHelper {
       String periodDetails = homePage.navigateAndInitiateRnr(program);
       InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
-
+    testWebDriver.sleep(2000);
     verifyNumberOfPageLinks(21,20);
     verifyNextAndLastLinksEnabled();
     verifyPreviousAndFirstLinksDisabled();
+    verifyDisplayOrderFullSupply(20);
 
-
-    initiateRnRPage.PopulateMandatoryFullSupplyDetails(21,20);
+    //initiateRnRPage.PopulateMandatoryFullSupplyDetails(21,20);
 
     testWebDriver.getElementByXpath("//a[contains(text(), '2') and @class='ng-binding']").click();
     verifyNextAndLastLinksDisabled();
@@ -77,6 +77,7 @@ public class RnRPagination extends TestCaseHelper {
     verifyPreviousAndFirstLinksEnabled();
 
     initiateRnRPage.addMultipleNonFullSupplyLineItems(21,20);
+    verifyDisplayOrderNonFullSupply(20);
     verifyNumberOfPageLinks(21,20);
     verifyPreviousAndFirstLinksDisabled();
     verifyNextAndLastLinksEnabled();
@@ -100,7 +101,7 @@ public class RnRPagination extends TestCaseHelper {
     testWebDriver.getElementByXpath("//a[contains(text(), '»')]").click();
     verifyNextAndLastLinksDisabled();
 
-    initiateRnRPage.submitRnR();
+    //initiateRnRPage.submitRnR();
 
   }
 
@@ -122,7 +123,7 @@ public class RnRPagination extends TestCaseHelper {
     }
 
     public void verifyPreviousAndFirstLinksEnabled() throws Exception {
-            SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '<')]").getCssValue("color"),"rgba(119, 119, 119, 1)") ;
+        SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '<')]").getCssValue("color"),"rgba(119, 119, 119, 1)") ;
         SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '«')]").getCssValue("color"),"rgba(119, 119, 119, 1)") ;
     }
 
@@ -134,6 +135,20 @@ public class RnRPagination extends TestCaseHelper {
     public void verifyPreviousAndFirstLinksDisabled() throws Exception {
         SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '«')]").getCssValue("color"),"rgba(204, 204, 204, 1)") ;
         SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '<')]").getCssValue("color"),"rgba(204, 204, 204, 1)") ;
+    }
+
+    public void verifyDisplayOrderFullSupply(int numberOfLineItemsPerPage) throws Exception {
+        for (int i=0; i<numberOfLineItemsPerPage;i++)
+        {
+            SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//table[@id='fullSupplyTable']/tbody["+ (i+1) +"]/tr[2]/td[1]/ng-switch/span/ng-switch/span").getText(),"F"+i);
+        }
+    }
+
+    public void verifyDisplayOrderNonFullSupply(int numberOfLineItemsPerPage) throws Exception {
+        for (int i=0; i<numberOfLineItemsPerPage;i++)
+        {
+            SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//table[@id='nonFullSupplyTable']/tbody["+ (i+1) +"]/tr[2]/td[1]/ng-switch/span").getText(),"NF"+i);
+        }
     }
 
     @AfterMethod(groups = {"smoke"})
