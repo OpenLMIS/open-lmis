@@ -1,6 +1,9 @@
 package org.openlmis.UiUtils;
 
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 import static java.lang.System.getProperty;
 
 public class TestCaseHelper {
@@ -61,5 +64,28 @@ public class TestCaseHelper {
   protected void loadDriver(String browser) throws InterruptedException {
     testWebDriver = new TestWebDriver(driverFactory.loadDriver(browser));
   }
+
+    public void setupTestDataToInitiateRnR(String program, String userSIC) throws IOException, SQLException{
+        dbWrapper.insertProducts("P10", "P11");
+        dbWrapper.insertProgramProducts("P10", "P11", program);
+        dbWrapper.insertFacilityApprovedProducts("P10", "P11", program, "Lvl3 Hospital");
+        dbWrapper.insertFacilities("F10", "F11");
+        dbWrapper.configureTemplate(program);
+        dbWrapper.insertRole("store in-charge", "false", "");
+        dbWrapper.insertRole("district pharmacist", "false", "");
+       dbWrapper.assignRight("store in-charge", "CREATE_REQUISITION");
+       dbWrapper.assignRight("store in-charge", "VIEW_REQUISITION");
+        String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
+        dbWrapper.insertUser("200", userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com");
+        dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
+        dbWrapper.insertRoleAssignment("200", "store in-charge");
+        dbWrapper.insertSchedules();
+        dbWrapper.insertProcessingPeriods();
+        dbWrapper.insertRequisitionGroups("RG1", "RG2", "N1", "N2");
+        dbWrapper.insertRequisitionGroupMembers("F10", "F11");
+        dbWrapper.insertRequisitionGroupProgramSchedule();
+        dbWrapper.insertSupplyLines("N1", program, "F10");
+    }
+
 
 }

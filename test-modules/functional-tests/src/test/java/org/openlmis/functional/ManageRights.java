@@ -25,27 +25,8 @@ public class ManageRights extends TestCaseHelper {
 
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testOnlyCreateRight(String program, String userSIC, String password) throws Exception {
-
-    dbWrapper.insertProducts("P10", "P11");
-    dbWrapper.insertProgramProducts("P10", "P11", program);
-    dbWrapper.insertFacilityApprovedProducts("P10", "P11", program, "Lvl3 Hospital");
-    dbWrapper.insertFacilities("F10", "F11");
-    dbWrapper.configureTemplate(program);
-    dbWrapper.insertRole("store in-charge", "false", "");
-    dbWrapper.insertRole("district pharmacist", "false", "");
-    dbWrapper.assignRight("store in-charge", "CREATE_REQUISITION");
-    dbWrapper.assignRight("store in-charge", "VIEW_REQUISITION");
-    String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-    dbWrapper.insertUser("200", userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com");
-    dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
-    dbWrapper.insertRoleAssignment("200", "store in-charge");
-    dbWrapper.insertSchedules();
-    dbWrapper.insertProcessingPeriods();
-    dbWrapper.insertRequisitionGroups("RG1", "RG2", "N1", "N2");
-    dbWrapper.insertRequisitionGroupMembers("F10", "F11");
-    dbWrapper.insertRequisitionGroupProgramSchedule();
-    dbWrapper.insertSupplyLines("N1", program, "F10");
+  public void testOnlyCreateRight(String program, String userSIC,  String password) throws Exception {
+    setupTestDataToInitiateRnR(program, userSIC);
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -59,32 +40,13 @@ public class ManageRights extends TestCaseHelper {
     initiateRnRPage.enterQuantityReceived("10");
     initiateRnRPage.submitRnR();
     initiateRnRPage.verifyAuthorizeButtonNotPresent();
-
   }
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testUserTryToAuthorizeUnSubmittedRnR(String program, String userSIC, String password) throws Exception {
+  public void testUserTryToAuthorizeUnSubmittedRnR(String program, String userSIC,  String password) throws Exception {
+    setupTestDataToInitiateRnR(program, userSIC);
 
-    dbWrapper.insertProducts("P10", "P11");
-    dbWrapper.insertProgramProducts("P10", "P11", program);
-    dbWrapper.insertFacilityApprovedProducts("P10", "P11", program, "Lvl3 Hospital");
-    dbWrapper.insertFacilities("F10", "F11");
-    dbWrapper.configureTemplate(program);
-    dbWrapper.insertRole("store in-charge", "false", "");
-    dbWrapper.insertRole("district pharmacist", "false", "");
-    dbWrapper.assignRight("store in-charge", "AUTHORIZE_REQUISITION");
-    dbWrapper.assignRight("store in-charge", "VIEW_REQUISITION");
-    String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-    dbWrapper.insertUser("200", userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com");
-    dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
-    dbWrapper.insertRoleAssignment("200", "store in-charge");
-    dbWrapper.insertSchedules();
-    dbWrapper.insertProcessingPeriods();
-    dbWrapper.insertRequisitionGroups("RG1", "RG2", "N1", "N2");
-    dbWrapper.insertRequisitionGroupMembers("F10", "F11");
-    dbWrapper.insertRequisitionGroupProgramSchedule();
-    dbWrapper.insertSupplyLines("N1", program, "F10");
-
+    dbWrapper.updateRoleRight("CREATE_REQUISITION", "AUTHORIZE_REQUISITION");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     String[] expectedMenuItem = {"Create / Authorize", "View"};
@@ -99,8 +61,7 @@ public class ManageRights extends TestCaseHelper {
     homePage.navigateAndInitiateRnr(program);
     homePage.clickProceed();
     homePage.verifyErrorMessage();
-
-  }
+    }
 
 
   @AfterMethod(groups = {"functional"})
@@ -115,7 +76,7 @@ public class ManageRights extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-        {"HIV", "storeincharge", "Admin123"}
+      {"HIV", "storeincharge", "Admin123"}
     };
 
   }

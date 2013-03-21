@@ -565,5 +565,9 @@ public class DBWrapper {
                 "  (roleId, rightName) VALUES\n" +
                 "  ((select id from roles where name='"+roleName+"'), '"+roleRight+"');");
     }
+
+    public void updateRoleRight(String previousRight, String newRight) throws SQLException {
+        update("update role_rights set rightName='"+newRight+"' where rightName='"+previousRight+"';");
+    }
 }
 

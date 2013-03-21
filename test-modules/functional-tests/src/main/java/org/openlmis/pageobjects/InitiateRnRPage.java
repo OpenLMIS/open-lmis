@@ -33,6 +33,8 @@ public class InitiateRnRPage extends Page {
   @FindBy(how = How.XPATH, using = "//input[@value='Authorize']")
   private static WebElement authorizeButton;
 
+  @FindBy(how = How.XPATH, using = "//input[@value='Approve']")
+  private static WebElement approveButton;
 
   @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv' and @openlmis-message='message']")
   private static WebElement successMessage;
@@ -611,5 +613,16 @@ public class InitiateRnRPage extends Page {
             authorizeButtonPresent = false;
         }
         SeleneseTestNgHelper.assertFalse(authorizeButtonPresent);
+    }
+
+    public void verifyApproveButtonNotPresent() {
+        boolean approveButtonPresent;
+        try {
+            approveButton.click();
+            approveButtonPresent = true;
+        } catch (ElementNotVisibleException e) {
+            approveButtonPresent = false;
+        }
+        SeleneseTestNgHelper.assertFalse(approveButtonPresent);
     }
 }

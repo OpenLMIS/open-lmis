@@ -2,6 +2,7 @@ package org.openlmis.functional;
 
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
+import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -18,6 +19,8 @@ import java.util.List;
 
 public class E2EInitiateRnR extends TestCaseHelper {
 
+  DBWrapper dbWrapper;
+  String baseUrlGlobal, dburlGlobal;
 
   @BeforeMethod(groups = {"smoke"})
   public void setUp() throws Exception {
@@ -147,6 +150,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     initiateRnRPage.authorizeRnR();
     initiateRnRPage.verifyAuthorizeRnrSuccessMsg();
     initiateRnRPage.verifyBeginningBalanceDisabled();
+    initiateRnRPage.verifyApproveButtonNotPresent();
 
     ApprovePage approvePage = homePageUser.navigateToApprove();
     approvePage.verifyNoRequisitionPendingMessage();
