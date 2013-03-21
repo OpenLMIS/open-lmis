@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.openlmis.web.view.pdf.requisition.RequisitionCellFactory.*;
-import static org.openlmis.web.view.pdf.requisition.RequisitionCellFactory.textCell;
-import static org.openlmis.web.view.pdf.requisition.RequisitionDocument.*;
 
 @Data
 @NoArgsConstructor

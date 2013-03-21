@@ -27,7 +27,7 @@ import static org.powermock.api.mockito.PowerMockito.*;
 
 @RunWith(PowerMockRunner.class)
 
-@PrepareForTest({PdfPageEventHandler.class, BaseFont.class, Date.class})
+@PrepareForTest({PdfPageEventHandler.class, BaseFont.class})
 public class PdfPageEventHandlerTest {
 
   PdfWriter writer;
@@ -94,7 +94,7 @@ public class PdfPageEventHandlerTest {
 
     verify(template).beginText();
     verify(template).setFontAndSize(any(BaseFont.class), anyFloat());
-    verify(template).setTextMatrix(0,0);
+    verify(template).setTextMatrix(0, 0);
     verify(template).showText("4");
     verify(template).endText();
   }

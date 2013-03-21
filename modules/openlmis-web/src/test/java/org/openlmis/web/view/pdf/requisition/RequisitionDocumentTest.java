@@ -4,15 +4,27 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPTable;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
-import static org.mockito.Mockito.*;
+import java.util.HashMap;
+import java.util.Map;
 
+import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.*;
+
+
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({RequisitionDocument.class})
 public class RequisitionDocumentTest {
 
   @Test
   public void shouldBuildDocumentUsingRequisitionPdfModel() throws Exception {
+    Map model = new HashMap<>();
+    RequisitionPdfModel requisitionPdfModel =mock(RequisitionPdfModel.class);
+
     Document document = mock(Document.class);
-    RequisitionPdfModel requisitionPdfModel = mock(RequisitionPdfModel.class);
     PdfPTable requisitionHeader = new PdfPTable(1);
     Paragraph fullSupplyHeader = new Paragraph("Full Supply");
     PdfPTable fullSupplyTable = new PdfPTable(2);
@@ -26,8 +38,11 @@ public class RequisitionDocumentTest {
     when(requisitionPdfModel.getNonFullSupplyTable()).thenReturn(nonFullSupplyTable);
     when(requisitionPdfModel.getNonFullSupplyHeader()).thenReturn(nonFullSupplyHeader);
     when(requisitionPdfModel.getSummary()).thenReturn(summary);
+    whenNew(RequisitionPdfModel.class).withArguments(model).thenReturn(requisitionPdfModel);
 
-    new RequisitionDocument(document).build(requisitionPdfModel);
+    RequisitionDocument requisitionDocument = new RequisitionDocument(document);
+
+    requisitionDocument.buildWith(model);
 
     verify(document).open();
     verify(document).add(requisitionHeader);

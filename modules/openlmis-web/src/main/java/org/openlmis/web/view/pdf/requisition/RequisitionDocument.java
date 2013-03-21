@@ -3,6 +3,8 @@ package org.openlmis.web.view.pdf.requisition;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPTable;
 
+import java.util.Map;
+
 public class RequisitionDocument {
   private Document document;
 
@@ -10,7 +12,8 @@ public class RequisitionDocument {
     this.document = document;
   }
 
-  public void build(RequisitionPdfModel requisitionPdfModel) throws DocumentException, NoSuchFieldException, IllegalAccessException {
+  public void buildWith(Map<String, Object> model) throws DocumentException, NoSuchFieldException, IllegalAccessException {
+    RequisitionPdfModel requisitionPdfModel = new RequisitionPdfModel(model);
     document.open();
     document.add(requisitionPdfModel.getRequisitionHeader());
 
