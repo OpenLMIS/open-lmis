@@ -60,14 +60,6 @@ jettyRunWarDaemon.doFirst {
     jettyRunWar.execute()
 }
 
-task jettyRunWarDaemonForFt(dependsOn: war)
-
-jettyRunWarDaemonForFt.doFirst {
-    jettyRunWar.daemon = true
-    jettyRunWar.httpPort = 9092
-    jettyRunWar.contextPath = ''
-    jettyRunWar.execute()
-}
 
 task jettyRunWarLocal(dependsOn: war)
 
