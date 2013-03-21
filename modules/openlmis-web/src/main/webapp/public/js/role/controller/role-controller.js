@@ -87,6 +87,11 @@ function RoleController($scope, $routeParams, $location, Roles, Role, Rights) {
   $scope.showRoleTypeModal = function (selected) {
     window.selected = selected;
     $scope.roleTypeModal = true;
+
+    var body = angular.element(document.getElementsByTagName('body')[0]);
+    body.bind('keyup', function(e) {
+      if (e.which === 27) { $scope.cancel(); }
+    });
   }
 
   $scope.deSelectRights = function () {
@@ -98,6 +103,9 @@ function RoleController($scope, $routeParams, $location, Roles, Role, Rights) {
   }
 
   $scope.cancel = function () {
+    var body = angular.element(document.getElementsByTagName('body')[0]);
+    body.unbind('keyup');
+
     $scope.roleTypeModal = false;
     $scope.role.adminRole= (!window.selected).toString();
   }

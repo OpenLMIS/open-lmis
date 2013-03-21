@@ -31,7 +31,7 @@
       </div>
       <div class="row-fluid clearfix">
         <div>
-          <label>Type of role: <span class="label-required">*</span></label>
+          <label>Type of role <span class="label-required">*</span> <span class="roles-note">(individual roles cannot be a mix of the two types)</span></label>
 
           <div class="radio-group">
             <div class="form-inline">
@@ -43,7 +43,7 @@
               <label for="programRoleType">Program and facility-based role</label>
             </div>
           </div>
-          <span class="roles-note">(individual roles cannot be a mix of the two types)</span>
+
         </div>
       </div>
 
@@ -85,13 +85,13 @@
       <div form-toolbar id="action_buttons" class="action-buttons">
         <div class="form-cell button-row pull-left">
           <input type="submit" class="btn btn-primary save-button" value="Save"/>
-          <a type="button" ng-href="#/list" class="btn submit-button">Cancel</a>
+          <a type="button" ng-href="#/list" class="btn btn-cancel submit-button">Cancel</a>
         </div>
       </div>
       <div class="toolbar-error" id="saveFailMessage" ng-bind="error" ng-show="error"></div>
 
       <div id="roleTypeModal" modal="roleTypeModal">
-        <div class="modal-header"><h3>Change Role Type</h3></div>
+        <div class="modal-header"><h3>Change role type</h3></div>
         <div class="modal-body">
           <p>If you change the type, all selections in current type will be removed?</p>
         </div>

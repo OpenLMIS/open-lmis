@@ -53,7 +53,7 @@ public enum Right {
   }
 
   public List<Right> getDependentRights() {
-    if (this == CREATE_REQUISITION || this == AUTHORIZE_REQUISITION || this == APPROVE_REQUISITION || this == CONVERT_TO_ORDER) {
+    if (this == CREATE_REQUISITION || this == AUTHORIZE_REQUISITION || this == APPROVE_REQUISITION) {
       return Arrays.asList(VIEW_REQUISITION);
     }
     return new ArrayList<>();
