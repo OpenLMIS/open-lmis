@@ -80,6 +80,12 @@ public class TemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//li[@id='C']/span/input")
   private static WebElement totalConsumedQuantityCheckBox;
 
+  @FindBy(how = How.XPATH, using = "//li[@id='O']/span/input")
+  private static WebElement productCodeCheckBox;
+
+  @FindBy(how = How.XPATH, using = "//li[@id='R']/span/input")
+  private static WebElement productNameCheckBox;
+
   @FindBy(how = How.XPATH, using = "//li[@id='D']/span[@class='tpl-label']/input")
   private static WebElement lossesAndAdj;
 
@@ -425,6 +431,18 @@ public class TemplateConfigPage extends Page {
     SeleneseTestNgHelper.assertEquals(remarksSource.getText().trim(), "User Input");
     SeleneseTestNgHelper.assertEquals(approvedQuantitySource.getText().trim(), "User Input");
   }
+
+  private void verifyMandatoryColumnsEditable(WebElement mandatoryElement)
+  {
+    testWebDriver.waitForElementToAppear(mandatoryElement);
+     SeleneseTestNgHelper.assertTrue("Mandatory columns should be non-editable",mandatoryElement.getAttribute("disabled").trim().equalsIgnoreCase("true"));
+  }
+
+ public void verifyMandatoryColumns()
+ {
+   verifyMandatoryColumnsEditable(productCodeCheckBox);
+   verifyMandatoryColumnsEditable(productNameCheckBox);
+ }
 
   public void configureTemplate() {
     String message = null;

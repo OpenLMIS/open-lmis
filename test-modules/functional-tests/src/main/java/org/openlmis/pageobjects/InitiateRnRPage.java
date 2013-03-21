@@ -234,6 +234,9 @@ public class InitiateRnRPage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Home')]")
   private static WebElement homeMenuItem;
 
+  @FindBy(how = How.XPATH, using = "//div[@openlmis-message='error']")
+  private static WebElement configureTemplateErrorDiv;
+
   String successText = "R&R saved successfully!";
   Float actualTotalCostFullSupply, actualTotalCostNonFullSupply;
 
@@ -275,6 +278,12 @@ public class InitiateRnRPage extends Page {
     beginningBalance.sendKeys(A);
     String beginningBalanceValue = testWebDriver.getAttribute(beginningBalance, "value");
     SeleneseTestNgHelper.assertEquals(beginningBalanceValue, A);
+  }
+
+  public void verifyTemplateNotConfiguredMessage() {
+    testWebDriver.waitForElementToAppear(configureTemplateErrorDiv);
+    SeleneseTestNgHelper.assertTrue("Please contact admin to define R&R template for this program should show up",configureTemplateErrorDiv.isDisplayed());
+
   }
 
   public void enterQuantityReceived(String B) {
