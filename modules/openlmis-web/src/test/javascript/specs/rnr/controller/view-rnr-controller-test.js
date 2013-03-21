@@ -43,6 +43,23 @@ describe('ViewRnrController', function () {
     expect(scope.columnDefs).toEqual(expectedDefinitions);
   });
 
+  it('should include approved quantity column if status  ordered', function () {
+    httpBackend.expect('GET', "/requisitions/1.json").respond(200, {'rnr':{lineItems:[], nonFullSupplyLineItems:[], status:'ORDERED'}});
+    httpBackend.expect('GET', "/reference-data/currency.json").respond(200, {'currency':{}});
+    httpBackend.expect('GET', "/rnr/2/columns.json").respond(200, {'rnrColumnList':columns});
+    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams});
+    httpBackend.flush();
+    var expectedDefinitions = [
+      {field:'productCode', displayName:'Product Code'},
+      {field:'product', displayName:'Product'},
+      {field:'dispensingUnit', displayName:'Unit/Unit of Issue'},
+      {field:'lossesAndAdjustments', displayName:'Total Losses / Adjustments', cellTemplate:lossesAndAdjustmentsTemplate},
+      {field:'quantityApproved', displayName:'Approved Quantity'}
+    ];
+
+    expect(scope.columnDefs).toEqual(expectedDefinitions);
+  });
+
   it('should not include approved quantity column if status not approved', function () {
     columns.push({'name':'quantityApproved', 'label':'Approved Quantity', id:'99', visible:true});
     httpBackend.expect('GET', "/requisitions/1.json").respond(200, {'rnr':{lineItems:[], nonFullSupplyLineItems:[], status:'INITIATED'}});
