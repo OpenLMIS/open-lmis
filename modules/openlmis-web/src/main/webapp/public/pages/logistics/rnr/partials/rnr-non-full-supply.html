@@ -111,7 +111,7 @@
 
         <div class = "row-fluid" >
           <div class = "span6" >
-            <label for = "nonFullSupplyProductsCodeAndName" >Product Code / Name:</label >
+            <label for = "nonFullSupplyProductsCodeAndName" >Product code / name:</label >
             <select ui-select2 class = "span12 bottom-spacer" id = "nonFullSupplyProductsCodeAndName"
                     ng-model = "facilityApprovedProduct" name = "productCode" data-placeholder = "-- Select product --"
                     ng-options = "facilityApprovedProduct.programProduct.product.code+' | '+facilityApprovedProduct.programProduct.product.primaryName for facilityApprovedProduct in nonFullSupplyProductsToDisplay" >

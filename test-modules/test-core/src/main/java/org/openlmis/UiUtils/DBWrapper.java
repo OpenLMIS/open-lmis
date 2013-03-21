@@ -314,8 +314,8 @@ public class DBWrapper {
       "(12, (select id from programs where code = '" + program + "'), true, 'C', 12, 'Average Monthly Consumption(AMC)'),\n" +
       "(13, (select id from programs where code = '" + program + "'), true, 'C', 13, 'Maximum Stock Quantity'),\n" +
       "(14, (select id from programs where code = '" + program + "'), true, 'C', 14, 'Calculated Order Quantity'),\n" +
-      "(15, (select id from programs where code = '" + program + "'), true, 'U', 15, 'Requested Quantity'),\n" +
-      "(16, (select id from programs where code = '" + program + "'), true, 'U', 16, 'Requested Quantity Explanation'),\n" +
+      "(15, (select id from programs where code = '" + program + "'), true, 'U', 15, 'Requested quantity'),\n" +
+      "(16, (select id from programs where code = '" + program + "'), true, 'U', 16, 'Requested quantity explanation'),\n" +
       "(17, (select id from programs where code = '" + program + "'), true, 'U', 17, 'Approved Quantity'),\n" +
       "(18, (select id from programs where code = '" + program + "'), true, 'C', 18, 'Packs to Ship'),\n" +
       "(19, (select id from programs where code = '" + program + "'), true, 'R', 19, 'Price per pack'),\n" +
