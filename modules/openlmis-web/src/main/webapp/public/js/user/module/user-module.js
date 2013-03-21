@@ -12,8 +12,9 @@ angular.module('user', ['openlmis', 'ngGrid', 'ui.bootstrap.modal']).
           scope.$apply(attrs.onKeyup);
         });
       };
-    }).run(function($rootScope) {
+    }).run(function($rootScope, AuthorizationService) {
     $rootScope.userSelected = "selected";
+    AuthorizationService.hasPermission('MANAGE_USERS');
   });
 
 

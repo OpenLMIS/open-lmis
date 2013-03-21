@@ -1,12 +1,13 @@
 'use strict';
-angular.module('facility', ['openlmis','ui.bootstrap.modal']).
+angular.module('facility', ['openlmis', 'ui.bootstrap.modal']).
   config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
     when('/search', {controller:FacilitySearchController, templateUrl:'partials/search.html'}).
-    when('/create-facility', {controller:FacilityController, templateUrl:'partials/create.html', resolve: FacilityController.resolve}).
-    when('/edit/:facilityId', {controller:FacilityController, templateUrl:'partials/create.html', resolve: FacilityController.resolve}).
+    when('/create-facility', {controller:FacilityController, templateUrl:'partials/create.html', resolve:FacilityController.resolve}).
+    when('/edit/:facilityId', {controller:FacilityController, templateUrl:'partials/create.html', resolve:FacilityController.resolve}).
     otherwise({redirectTo:'/search'});
-}]).run(function($rootScope) {
-  $rootScope.facilitySelected = "selected";
-});
+}]).run(function ($rootScope, AuthorizationService) {
+    $rootScope.facilitySelected = "selected";
+    AuthorizationService.hasPermission('MANAGE_FACILITY');
+  });
 
