@@ -9,6 +9,7 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -49,15 +50,13 @@ public class UploadPage extends Page {
 
   public void uploadFile(String fileName) {
     String Separator = System.getProperty("file.separator");
-    uploadFilePath = System.getProperty("user.dir") + Separator + "src" + Separator + "main" + Separator + "resources" + Separator + fileName;
-    if (uploadFilePath.contains("functional-tests"))
-      setCsvPath.sendKeys(uploadFilePath);
-    else {
-      uploadFilePath = System.getProperty("user.dir") + Separator + "test-modules" + Separator + "functional-tests" + Separator + "src" + Separator + "main" + Separator + "resources" + Separator + fileName;
-      setCsvPath.sendKeys(uploadFilePath);
-    }
+    File parentDir = new File(System.getProperty("user.dir"));
+    uploadFilePath = parentDir.getParent() + Separator + "src" + Separator + "main" + Separator + "resources" + Separator + fileName;
+
+    setCsvPath.sendKeys(uploadFilePath);
     uploadButton.click();
   }
+
 
   public void uploadGeographicZone() throws FileNotFoundException {
     selectUploadType("Geographic Zones");
