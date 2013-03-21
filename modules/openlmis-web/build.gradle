@@ -60,9 +60,9 @@ jettyRunWarDaemon.doFirst {
     jettyRunWar.execute()
 }
 
-task jettyRunWarDaemonForFT(dependsOn: war)
+task jettyRunWarDaemonForFt(dependsOn: war)
 
-jettyRunWarDaemonForFT.doFirst {
+jettyRunWarDaemonForFt.doFirst {
     jettyRunWar.daemon = true
     jettyRunWar.httpPort = 9092
     jettyRunWar.contextPath = ''
@@ -79,7 +79,7 @@ jettyRunWarLocal.doFirst {
 }
 
 jettyRun {
-    jettyRun.httpPort = 9091
+    jettyRun.httpPort = Integer.valueOf("${httpport}")
     contextPath = ''
     jettyRun.scanIntervalSeconds=1
     System.properties.get('environmentName', 'local')

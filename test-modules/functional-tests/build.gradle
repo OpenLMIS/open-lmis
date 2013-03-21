@@ -35,9 +35,9 @@ task buildOpenLmis(type: GradleBuild) {
     tasks = ['jettyRunWarDaemon']
 }
 
-task buildOpenLmisForFT(type: GradleBuild) {
+task buildOpenLmisForFt(type: GradleBuild) {
     buildFile = '../../modules/openlmis-web/build.gradle'
-    tasks = ['jettyRunWarDaemonForFT']
+    tasks = ['jettyRunWarDaemonForFt']
 }
 
 task smokeTest(type: Test) {
@@ -70,7 +70,7 @@ task functionalTest(type: Test) {
 }
 
 functionalTest.doFirst() {
-    buildOpenLmisForFT.execute()
+    buildOpenLmisForFt.execute()
 }
 
 task smokeTestIE(type: Test) {
