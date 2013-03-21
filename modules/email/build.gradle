@@ -1,3 +1,13 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "net.saliman:gradle-cobertura-plugin:1.1.2"
+    }
+}
+apply plugin: 'cobertura'
+
 dependencies {
 
     compile 'org.springframework:spring-aspects:3.1.1.RELEASE',
@@ -22,8 +32,4 @@ dependencies {
     artifacts {
         testFixtures testJar
     }
-}
-
-buildscript {
-    apply from: 'https://github.com/valkolovos/gradle_cobertura/raw/master/repo/gradle_cobertura/gradle_cobertura/1.2/coberturainit.gradle'
 }

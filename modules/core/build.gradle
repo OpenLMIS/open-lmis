@@ -1,3 +1,13 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "net.saliman:gradle-cobertura-plugin:1.1.2"
+    }
+}
+apply plugin: 'cobertura'
+
 dependencies {
 
     compile "postgresql:postgresql:9.1-901.jdbc4",
@@ -35,6 +45,3 @@ dependencies {
     }
 }
 
-buildscript {
-    apply from: 'https://github.com/valkolovos/gradle_cobertura/raw/master/repo/gradle_cobertura/gradle_cobertura/1.2/coberturainit.gradle'
-}

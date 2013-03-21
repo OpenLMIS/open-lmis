@@ -1,11 +1,19 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "net.saliman:gradle-cobertura-plugin:1.1.2"
+    }
+}
+apply plugin: 'cobertura'
+
 apply plugin: 'idea'
 apply plugin: 'java'
-
 
 repositories {
     mavenCentral()
 }
-
 
 dependencies {
     compile 'org.projectlombok:lombok:0.11.0',
@@ -23,8 +31,4 @@ dependencies {
 
 
     testCompile 'org.springframework:spring-test:3.1.2.RELEASE'
-}
-
-buildscript {
-    apply from: 'https://github.com/valkolovos/gradle_cobertura/raw/master/repo/gradle_cobertura/gradle_cobertura/1.2/coberturainit.gradle'
 }
