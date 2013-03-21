@@ -1,0 +1,69 @@
+<div ng-hide="facilitylist">Loading...</div>
+<div ng-show="facilitylist">
+  <h2>Facility Lists</h2>
+  <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
+  <table class="table table-striped table-bordered">
+    <thead>
+    <tr class="gradient-header">
+      <th class="col-code">
+          Facility Code
+      </th>
+      <th class="col-name">
+          Facility Name
+      </th>
+      <th class="col-type">
+          Facility Type
+      </th>
+      <th class="col-region">
+          Region
+      </th>
+      <th class="col-ownership">
+            Ownership
+      </th>
+      <th class="col-right">
+          GPS Coordinates
+      </th>
+      <th class="col-right">
+          Email
+      </th>
+      <th class="col-right">
+          Phone Number
+      </th>
+      <th class="col-right">
+          MSL/MSD Code
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="facility in facilitylist">
+      <td class="col-facilitylist-code">
+          <div>{{facility.facilitycode}}</div>
+      </td>
+      <td class="col-facilitylist-name">
+          <div>{{facility.facilityname}}</div>
+      </td>
+      <td class="col-facilitylist-description">
+        <div>{{facility.facilitytype}}</div>
+      </td>
+      <td class="col-facilitylist-active">
+        <div>{{facility.region}}</div>
+      </td>
+        <td class="col-facilitylist-active">
+            <div>{{facility.ownership}}</div>
+        </td>
+        <td class="col-facilitylist-active">
+            <div>{{facility.GPSCoordinates}}</div>
+        </td>
+        <td class="col-facilitylist-active">
+            <div>{{facility.Email}}</div>
+        </td>
+        <td class="col-facilitylist-active">
+            <div>{{facility.phonenumber}}</div>
+        </td>
+        <td class="col-facilitylist-active">
+            <div>{{facility.MSLMSDCode}}</div>
+        </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
