@@ -67,6 +67,11 @@ task functionalTest(type: Test) {
 
         suites 'src/test/java/org/openlmis/functional/testng-functional.xml'
     }
+    options {
+        listeners << 'org.uncommons.reportng.HTMLReporter'
+        listeners << 'org.uncommons.reportng.JUnitXMLReporter'
+    }
+    workingDir = 'build/'
 }
 
 functionalTest.doFirst() {
@@ -81,6 +86,11 @@ task smokeTestIE(type: Test) {
 
         suites 'src/test/java/org/openlmis/functional/testng-smoke-ie.xml'
     }
+    options {
+        listeners << 'org.uncommons.reportng.HTMLReporter'
+        listeners << 'org.uncommons.reportng.JUnitXMLReporter'
+    }
+    workingDir = 'build/'
 }
 
 smokeTestIE.doFirst() {
@@ -95,6 +105,11 @@ task smokeTestChrome(type: Test) {
 
         suites 'src/test/java/org/openlmis/functional/testng-smoke-chrome.xml'
     }
+    options {
+        listeners << 'org.uncommons.reportng.HTMLReporter'
+        listeners << 'org.uncommons.reportng.JUnitXMLReporter'
+    }
+    workingDir = 'build/'
 }
 
 smokeTestChrome.doFirst() {
