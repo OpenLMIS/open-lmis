@@ -195,84 +195,180 @@ public class TemplateConfigPage extends Page {
   }
 
 
-  public void verifySourceForTotalConsumedQuantity() {
+  public void verifySourceForTotalConsumedQuantity(String optionToBeVerified) {
     Select select = new Select(dropDownTotalConsumedQuantity);
-    SeleneseTestNgHelper.assertEquals(select.getFirstSelectedOption().getText(), "User Input");
+    SeleneseTestNgHelper.assertEquals(select.getFirstSelectedOption().getText(), optionToBeVerified);
   }
 
-  public void verifySourceForStockOnHand() {
+  public void verifySourceForStockOnHand(String optionToBeVerified) {
     Select select = new Select(stockInHandDropDown);
-    SeleneseTestNgHelper.assertEquals(select.getFirstSelectedOption().getText(), "User Input");
+    SeleneseTestNgHelper.assertEquals(select.getFirstSelectedOption().getText(), optionToBeVerified);
+  }
+
+  public void clickTotalConsumedQuantity()
+  {
+    testWebDriver.waitForElementToAppear(totalConsumedQuantityCheckBox);
+    if(!totalConsumedQuantityCheckBox.isSelected())
+      testWebDriver.click(totalConsumedQuantityCheckBox);
+    testWebDriver.sleep(100);
+  }
+
+  public void unClickTotalConsumedQuantity()
+  {
+    testWebDriver.waitForElementToAppear(totalConsumedQuantityCheckBox);
+    if(totalConsumedQuantityCheckBox.isSelected())
+      testWebDriver.click(totalConsumedQuantityCheckBox);
+    testWebDriver.sleep(100);
+  }
+
+  public void clickStockOnHand()
+  {
+    testWebDriver.waitForElementToAppear(stockOnHandCheckBox);
+    if(!stockOnHandCheckBox.isSelected())
+      testWebDriver.click(stockOnHandCheckBox);
+    testWebDriver.sleep(100);
+  }
+
+  public void unClickStockOnHand()
+  {
+    testWebDriver.waitForElementToAppear(stockOnHandCheckBox);
+    if(stockOnHandCheckBox.isSelected())
+      testWebDriver.click(stockOnHandCheckBox);
+    testWebDriver.sleep(100);
+  }
+
+  public void selectFromTotalConsumedQuantityDropDown(String optionToBeSelected)
+  {
+    testWebDriver.waitForElementToAppear(dropDownTotalConsumedQuantity);
+    testWebDriver.selectByVisibleText(dropDownTotalConsumedQuantity,optionToBeSelected);
+    testWebDriver.sleep(100);
+  }
+
+  public void selectFromStockOnHandDropDown(String optionToBeSelected)
+  {
+    testWebDriver.waitForElementToAppear(stockInHandDropDown);
+    testWebDriver.selectByVisibleText(stockInHandDropDown,optionToBeSelected);
+    testWebDriver.sleep(100);
+  }
+
+  public void clickSaveButton()
+  {
+    testWebDriver.waitForElementToAppear(SaveButton);
+    SaveButton.click();
+    testWebDriver.sleep(100);
+  }
+
+  public void verifyErrorMessageDivTotalConsumedQuantity()
+  {
+    testWebDriver.waitForElementToAppear(totalConsumedQtyErrorMessage);
+    SeleneseTestNgHelper.assertTrue("Error message not displaying", totalConsumedQtyErrorMessage.isDisplayed());
+  }
+
+  public void verifyErrorMessageDivStockOnHand()
+  {
+    testWebDriver.waitForElementToAppear(stockOnHandQtyErrorMessage);
+    SeleneseTestNgHelper.assertTrue("Error message not displaying", stockOnHandQtyErrorMessage.isDisplayed());
+  }
+
+  public void verifyErrorMessageDivFooter()
+  {
+    testWebDriver.waitForElementToAppear(errorMessageDiv);
+    SeleneseTestNgHelper.assertTrue("Error message not displaying", errorMessageDiv.isDisplayed());
+  }
+
+  public void verifyTurnOffOnButtonAvailable(String messageToShow)
+  {
+    testWebDriver.waitForElementToAppear(turnOffButton);
+    SeleneseTestNgHelper.assertTrue(messageToShow, turnOffButton.isDisplayed());
+
+  }
+
+  public void verifyTurnOffOnButtonNotAvailable(String messageToShow)
+  {
+    testWebDriver.sleep(100);
+    SeleneseTestNgHelper.assertFalse(messageToShow, turnOffButton.isDisplayed());
+
+  }
+
+  public void clickTurnOffOnButton(WebElement button)
+  {
+    testWebDriver.waitForElementToAppear(button);
+    button.click();
+    testWebDriver.sleep(100);
+  }
+
+  public void verifyTextOffOnButton(WebElement button,String textToVerify, String messageToShow)
+  {
+    testWebDriver.waitForElementToAppear(button);
+    SeleneseTestNgHelper.assertTrue(messageToShow, button.getText().equalsIgnoreCase(textToVerify));
+  }
+
+  public void verifyONOffIndicatorOnScreen(WebElement indicator,String textToVerify)
+  {
+     testWebDriver.waitForElementToAppear(indicator);
+    SeleneseTestNgHelper.assertEquals(textToVerify, indicator.getText().trim());
+
+
+  }
+
+  public void verifySaveSuccessDiv()
+  {
+    testWebDriver.waitForElementToAppear(saveSuccessMsg);
+    SeleneseTestNgHelper.assertTrue("Success message should display",saveSuccessMsg.isDisplayed());
   }
 
   private void verifyCAndEUserInputsAndShouldBeDisplayed()
   {
     testWebDriver.waitForElementToAppear(SaveButton);
-    if (totalConsumedQuantityCheckBox.isSelected())
-      totalConsumedQuantityCheckBox.click();
-    if (stockOnHandCheckBox.isSelected())
-      stockOnHandCheckBox.click();
-    testWebDriver.sleep(500);
-    if(totalConsumedQuantitySource.getText().trim().equalsIgnoreCase("Calculated"))
-      testWebDriver.selectByVisibleText(dropDownTotalConsumedQuantity,"User Input");
-    testWebDriver.sleep(500);
-    if(stockOnHandSource.getText().trim().equalsIgnoreCase("Calculated"))
-      testWebDriver.selectByVisibleText(stockInHandDropDown,"User Input");
-    SaveButton.click();
-    SeleneseTestNgHelper.assertTrue("Error message not displaying", errorMessageDiv.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("Error message not displaying", totalConsumedQtyErrorMessage.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("Error message not displaying", stockOnHandQtyErrorMessage.isDisplayed());
-
+    unClickTotalConsumedQuantity();
+    unClickStockOnHand();
+    selectFromTotalConsumedQuantityDropDown("User Input");
+    selectFromStockOnHandDropDown("User Input");
+    clickSaveButton();
+    verifyErrorMessageDivFooter();
+    verifyErrorMessageDivTotalConsumedQuantity();
+    verifyErrorMessageDivStockOnHand();
   }
 
   private void verifyArithmeticValidationOnOff()
   {
-    if (!totalConsumedQuantityCheckBox.isSelected())
-      totalConsumedQuantityCheckBox.click();
-    if (!stockOnHandCheckBox.isSelected())
-      stockOnHandCheckBox.click();
-    testWebDriver.selectByVisibleText(dropDownTotalConsumedQuantity, "Calculated");
-    testWebDriver.sleep(250);
-    testWebDriver.selectByVisibleText(dropDownTotalConsumedQuantity, "User Input");
-    SeleneseTestNgHelper.assertTrue("Option to choose to switch Airthmetic Validation ON/OFF is not available", turnOffButton.isDisplayed());
-    turnOffButton.click();
-    testWebDriver.sleep(250);
-    SeleneseTestNgHelper.assertTrue("Should show 'Turn ON' on button", turnOnButton.getText().equalsIgnoreCase("Turn ON"));
-    SeleneseTestNgHelper.assertEquals("OFF", OffOnIndicator.getText().trim());
-    testWebDriver.sleep(250);
-    turnOnButton.click();
-    testWebDriver.sleep(250);
-    SeleneseTestNgHelper.assertTrue("Should show 'Turn OFF' on button", turnOffButton.getText().equalsIgnoreCase("Turn OFF"));
-    SeleneseTestNgHelper.assertEquals("ON", OffOnIndicator.getText().trim());
-    testWebDriver.selectByVisibleText(stockInHandDropDown, "Calculated");
-    SeleneseTestNgHelper.assertFalse("Option to choose to switch Airthmetic Validation ON/OFF should not be visible", turnOffButton.isDisplayed());
+    clickTotalConsumedQuantity();
+    clickStockOnHand();
+    selectFromTotalConsumedQuantityDropDown("User Input");
+    verifyTurnOffOnButtonAvailable("Option to choose to switch Arithmetic Validation ON/OFF is not available");
+    clickTurnOffOnButton(turnOffButton);
+
+    verifyTextOffOnButton(turnOnButton,"Turn On","Should show 'Turn ON' on button");
+    verifyONOffIndicatorOnScreen(OffOnIndicator, "OFF");
+    clickTurnOffOnButton(turnOnButton);
+
+    verifyTextOffOnButton(turnOffButton,"Turn OFF","Should show 'Turn OFF' on button");
+    verifyONOffIndicatorOnScreen(OffOnIndicator, "ON");
+    selectFromStockOnHandDropDown("Calculated");
+    verifyTurnOffOnButtonNotAvailable("Option to choose to switch Arithmetic Validation ON/OFF should not be visible");
 
   }
    private void verifyCDerivedEMustViceVersa()
    {
-     testWebDriver.selectByVisibleText(dropDownTotalConsumedQuantity, "Calculated");
-     testWebDriver.selectByVisibleText(stockInHandDropDown,"User Input");
-     stockOnHandCheckBox.click();
-     if (stockOnHandCheckBox.isSelected())
-       testWebDriver.click(stockOnHandCheckBox);
-     SaveButton.click();
-     testWebDriver.sleep(250);
-     SeleneseTestNgHelper.assertTrue("Error message not displaying", errorMessageDiv.isDisplayed());
-     SeleneseTestNgHelper.assertTrue("Error message not displaying", totalConsumedQtyErrorMessage.isDisplayed());
-     SeleneseTestNgHelper.assertTrue("Error message not displaying", stockOnHandQtyErrorMessage.isDisplayed());
+     selectFromTotalConsumedQuantityDropDown("Calculated");
+     selectFromStockOnHandDropDown("User Input");
+     unClickStockOnHand();
+     clickSaveButton();
+     verifyErrorMessageDivFooter();
+     verifyErrorMessageDivTotalConsumedQuantity();
+     verifyErrorMessageDivStockOnHand();
 
-     testWebDriver.selectByVisibleText(dropDownTotalConsumedQuantity, "User Input");
-     testWebDriver.selectByVisibleText(stockInHandDropDown,"Calculated");
-     SaveButton.click();
-     SeleneseTestNgHelper.assertTrue("Success message should display",saveSuccessMsg.isDisplayed());
-     totalConsumedQuantityCheckBox.click();
-     if (totalConsumedQuantityCheckBox.isSelected())
-       testWebDriver.click(totalConsumedQuantityCheckBox);
-     SaveButton.click();
-     testWebDriver.sleep(250);
-     SeleneseTestNgHelper.assertTrue("Error message not displaying", errorMessageDiv.isDisplayed());
-     SeleneseTestNgHelper.assertTrue("Error message not displaying", totalConsumedQtyErrorMessage.isDisplayed());
-     SeleneseTestNgHelper.assertTrue("Error message not displaying", stockOnHandQtyErrorMessage.isDisplayed());
+     clickStockOnHand();
+     selectFromTotalConsumedQuantityDropDown("User Input");
+     selectFromStockOnHandDropDown("Calculated");
+     clickSaveButton();
+     verifySaveSuccessDiv();
+
+     unClickTotalConsumedQuantity();
+     clickSaveButton();
+     verifyErrorMessageDivFooter();
+     verifyErrorMessageDivTotalConsumedQuantity();
+     verifyErrorMessageDivStockOnHand();
    }
 
   public void verifyArithmeticValidations() {
@@ -334,8 +430,8 @@ public class TemplateConfigPage extends Page {
     String message = null;
 
     testWebDriver.waitForElementToAppear(SaveButton);
-    verifySourceForTotalConsumedQuantity();
-    verifySourceForStockOnHand();
+    verifySourceForTotalConsumedQuantity("User Input");
+    verifySourceForStockOnHand("User Input");
     testWebDriver.selectByVisibleText(stockInHandDropDown, "Calculated");
     testWebDriver.sleep(1500);
     SaveButton.click();
