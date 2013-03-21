@@ -1,20 +1,30 @@
 apply plugin: 'idea'
 
 idea {
-   project {
-       languageLevel = '1.7'
-       jdkName = '1.7'
-   }
+    project {
+        languageLevel = '1.7'
+        jdkName = '1.7'
+    }
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "net.saliman:gradle-cobertura-plugin:1.1.2"
+    }
 }
 subprojects {
     apply plugin: 'idea'
     idea {
-       project {
-           languageLevel = '1.7'
-           jdkName = '1.7'
-       }
+        project {
+            languageLevel = '1.7'
+            jdkName = '1.7'
+        }
     }
     apply plugin: 'java'
+
     repositories {
         mavenCentral()
         maven {
@@ -40,6 +50,7 @@ subprojects {
     }
 
 }
+
 
 buildscript {
     repositories {
