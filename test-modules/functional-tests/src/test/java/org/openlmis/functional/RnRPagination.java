@@ -162,11 +162,11 @@ public class RnRPagination extends TestCaseHelper {
         InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
         testWebDriver.sleep(2000);
-        //verifyDefaultDisplayOrderFullSupply();
+        verifyCategoryDisplayOrderFullSupply(11);
 
 
         initiateRnRPage.addMultipleNonFullSupplyLineItems(11,20,true);
-        //verifyDefaultDisplayOrderNonFullSupply() ;
+        verifyCategoryDisplayOrderNonFullSupply(11);
     }
 
     @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
@@ -194,11 +194,11 @@ public class RnRPagination extends TestCaseHelper {
         InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
         testWebDriver.sleep(2000);
-        //verifyDefaultDisplayOrderFullSupply();
+        verifyCategoryDefaultDisplayOrderFullSupply();
 
 
         initiateRnRPage.addMultipleNonFullSupplyLineItems(11,20,true);
-        //verifyDefaultDisplayOrderNonFullSupply() ;
+        verifyCategoryDefaultDisplayOrderNonFullSupply();
     }
 
     public void verifyNumberOfPageLinks(int numberOfProducts, int numberOfLineItemsPerPage) throws Exception {
@@ -257,6 +257,33 @@ public class RnRPagination extends TestCaseHelper {
         SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//table[@id='nonFullSupplyTable']/tbody[1]/tr[2]/td[1]/ng-switch/span").getText(),"NF0");
         SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//table[@id='nonFullSupplyTable']/tbody[2]/tr[2]/td[1]/ng-switch/span").getText(),"NF1");
         SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//table[@id='nonFullSupplyTable']/tbody[3]/tr[2]/td[1]/ng-switch/span").getText(),"NF10");
+
+    }
+
+    public void verifyCategoryDisplayOrderFullSupply(int numberOfLineItems) throws Exception {
+        for (int i=0; i<numberOfLineItems;i++)
+        {
+            SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//table[@id='fullSupplyTable']/tbody["+ (i+1) +"]/tr[1]/td").getText(),"Antibiotics"+i);
+        }
+    }
+
+    public void verifyCategoryDisplayOrderNonFullSupply(int numberOfLineItems) throws Exception {
+        for (int i=0; i<numberOfLineItems;i++)
+        {
+            SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//table[@id='nonFullSupplyTable']/tbody["+ (i+1) +"]/tr[1]/td").getText(),"Antibiotics"+i);
+        }
+    }
+
+    public void verifyCategoryDefaultDisplayOrderFullSupply() throws Exception {
+        SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//table[@id='fullSupplyTable']/tbody[1]/tr[1]/td").getText(),"Antibiotics0");
+        SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//table[@id='fullSupplyTable']/tbody[2]/tr[1]/td").getText(),"Antibiotics1");
+        SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//table[@id='fullSupplyTable']/tbody[3]/tr[1]/td").getText(),"Antibiotics10");
+    }
+
+    public void verifyCategoryDefaultDisplayOrderNonFullSupply() throws Exception {
+        SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//table[@id='nonFullSupplyTable']/tbody[1]/tr[1]/td").getText(),"Antibiotics0");
+        SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//table[@id='nonFullSupplyTable']/tbody[2]/tr[1]/td").getText(),"Antibiotics1");
+        SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//table[@id='nonFullSupplyTable']/tbody[3]/tr[1]/td").getText(),"Antibiotics10");
 
     }
 
