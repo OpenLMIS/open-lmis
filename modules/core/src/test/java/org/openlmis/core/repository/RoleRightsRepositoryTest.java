@@ -125,14 +125,14 @@ public class RoleRightsRepositoryTest {
 
   @Test
   public void shouldUpdateRoleAlongWithDependentRights() {
-    role.setRights(new HashSet<>(asList(CONVERT_TO_ORDER)));
+    role.setRights(new HashSet<>(asList(CREATE_REQUISITION)));
     role.setId(100);
 
     roleRightsRepository.updateRole(role);
 
     verify(roleRightsMapper).updateRole(role);
     verify(roleRightsMapper).deleteAllRightsForRole(100);
-    verify(roleRightsMapper).createRoleRight(100, CONVERT_TO_ORDER);
+    verify(roleRightsMapper).createRoleRight(100, CREATE_REQUISITION);
     verify(roleRightsMapper).createRoleRight(100, VIEW_REQUISITION);
   }
 

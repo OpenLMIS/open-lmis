@@ -13,7 +13,7 @@ public class RightTest {
   @Test
   public void shouldReturnViewRequisitionAsDependentRight() throws Exception {
 
-    Right[] rights = {CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION, CONVERT_TO_ORDER};
+    Right[] rights = {CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION};
 
     for (Right right : rights) {
       List<Right> dependentRights = right.getDependentRights();
