@@ -2,7 +2,7 @@
 
 /* App Module */
 angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.directives'],function ($routeProvider, $locationProvider, $httpProvider) {
-  var interceptor = ['$rootScope', '$q', function (scope, $q) {
+  var interceptor = ['$rootScope', '$q', '$window', function (scope, $q, $window) {
     function success(response) {
       angular.element('#loader').hide();
       return response;
@@ -12,7 +12,7 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
       angular.element('#loader').hide();
       switch (response.status) {
         case 403:
-          window.location = "/public/pages/access-denied.html";
+          $window.location = "/public/pages/access-denied.html";
           break;
         case 401:
           scope.modalShown = true;
