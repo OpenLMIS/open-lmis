@@ -514,7 +514,7 @@ public class InitiateRnRPage extends Page {
 
   }
 
-    public void addMultipleNonFullSupplyLineItems(int numberOfLineItems,int numberOfLineItemsPerPage) throws IOException, SQLException {
+    public void addMultipleNonFullSupplyLineItems(int numberOfLineItems,int numberOfLineItemsPerPage, boolean isMultipleCategories) throws IOException, SQLException {
         testWebDriver.waitForElementToAppear(nonFullSupplyTab);
         nonFullSupplyTab.click();
 
@@ -528,7 +528,14 @@ public class InitiateRnRPage extends Page {
         {
         categoryDropDownLink.click();
         testWebDriver.waitForElementToAppear(categoryDropDownTextField);
-        categoryDropDownTextField.sendKeys("Antibiotics");
+            if (isMultipleCategories)
+            {
+                categoryDropDownTextField.sendKeys("Antibiotics" + i);
+            }
+                else
+            {
+                categoryDropDownTextField.sendKeys("Antibiotics");
+            }
         testWebDriver.waitForElementToAppear(categoryDropDownValue);
         categoryDropDownValue.click();
 
