@@ -29,13 +29,13 @@ public class ApprovePage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@class='form-group']/h3")
   private static WebElement requisitionListHeader;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText colt0']")
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col0 colt0']")
   private static WebElement firstRow;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText colt3']/span")
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col3 colt3']/span")
   private static WebElement periodStartDate;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText colt4']/span")
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col4 colt4']/span")
   private static WebElement periodEndDate;
 
   @FindBy(how = How.XPATH, using = "//div[@id='requisition-header']/h2")
@@ -44,7 +44,7 @@ public class ApprovePage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@id='requisition-header']/div[@class='info-box']/div[@class='row-fluid'][1]/div[1]")
   private static WebElement facilityLabel;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText colt13']/span")
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col13 colt13']/span")
   private static WebElement calculateOrderQuantity;
 
   @FindBy(how = How.XPATH, using = "//div[@ng-grid='rnrGrid']/div[@class='ngViewport ng-scope']/div/div/div[15]/div/span")
@@ -62,7 +62,7 @@ public class ApprovePage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@ng-grid='rnrGrid']/div[@class='ngViewport ng-scope']/div/div/div[17]/div/ng-form/input")
   private static WebElement approvedQuantityNonFullSupply;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText colt17']/span")
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col17 colt17']/span")
   private static WebElement packsToShip;
 
   @FindBy(how = How.XPATH, using = "//span[@ng-bind='row.entity.price']")

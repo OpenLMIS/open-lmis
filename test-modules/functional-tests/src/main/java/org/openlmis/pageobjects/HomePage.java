@@ -146,10 +146,10 @@ public class HomePage extends Page {
   private static WebElement usersTab;
 
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText colt1']/span")
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col1 colt1']/span")
   private static WebElement startDate;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText colt2']/span")
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col2 colt2']/span")
   private static WebElement endDate;
 
     @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")

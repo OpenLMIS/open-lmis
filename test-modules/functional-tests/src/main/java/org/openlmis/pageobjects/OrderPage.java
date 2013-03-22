@@ -26,22 +26,22 @@ public class OrderPage extends Page {
   @FindBy(how = How.ID, using = "NoRequisitionsPendingMessage")
   private static WebElement NoRequisitionsPendingMessage;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngViewport ng-scope']/div/div/div[@class='ngCell col1 ']/div/span")
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col1 colt1']/span")
   private static WebElement programOnOrderScreen;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngViewport ng-scope']/div/div/div[@class='ngCell col2 ']/div/span")
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col2 colt2']/span")
   private static WebElement facilityCodeOnOrderScreen;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngViewport ng-scope']/div/div/div[@class='ngCell col3 ']/div/span")
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col3 colt3']/span")
   private static WebElement facilityNameOnOrderScreen;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngViewport ng-scope']/div/div/div[@class='ngCell col4 ']/div/span")
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col4 colt4']/span")
   private static WebElement periodStartDateOnOrderScreen;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngViewport ng-scope']/div/div/div[@class='ngCell col5 ']/div/span")
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col5 colt5']/span")
   private static WebElement periodEndDateOnOrderScreen;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngViewport ng-scope']/div/div/div[@class='ngCell col8 ']/div/span")
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col8 colt8']/span")
   private static WebElement supplyDepotOnOrderScreen;
 
   @FindBy(how = How.XPATH, using = "//input[@class='ngSelectionCheckbox']")

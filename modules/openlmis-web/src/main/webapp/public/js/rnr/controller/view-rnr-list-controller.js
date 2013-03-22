@@ -21,6 +21,7 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, UserS
     selectedItems:$scope.selectedItems,
     afterSelectionChange:selectionFunc,
     displaySelectionCheckbox:false,
+    enableColumnResize: true,
     showColumnMenu:false,
     showFilter:false,
     rowHeight:44,

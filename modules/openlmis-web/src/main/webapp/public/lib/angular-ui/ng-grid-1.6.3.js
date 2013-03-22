@@ -27,7 +27,7 @@ itemType=typeof(item);switch(itemType){case"number":sortFn=sortService.sortNumbe
 if(sortFn){return sortFn;}
 if(Object.prototype.toString.call(item)==='[object Date]'){return sortService.sortDate;}
 if(itemType!=="string"){return sortService.basicSort;}
-if(item.match(/^-?[£$¤]?[\d,.]+%?$/)){return sortService.sortNumberStr;}
+if(item.match(/^-?[ï¿½$ï¿½]?[\d,.]+%?$/)){return sortService.sortNumberStr;}
 dateParts=item.match(sortService.dateRE);if(dateParts){month=parseInt(dateParts[1],10);day=parseInt(dateParts[2],10);if(month>12){return sortService.sortDDMMStr;}else if(day>12){return sortService.sortMMDDStr;}else{return sortService.sortMMDDStr;}}
 return sortService.sortAlpha;};sortService.basicSort=function(a,b){if(a==b){return 0;}
 if(a<b){return-1;}

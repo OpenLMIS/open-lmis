@@ -151,9 +151,9 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
 
   $scope.rnrGrid = {
     data:'pageLineItems',
-    canSelectRows:false,
-    displayFooter:false,
-    displaySelectionCheckbox:false,
+    enableRowSelection:false,
+    showFooter:false,
+    showSelectionCheckbox:false,
     showColumnMenu:false,
     showFilter:false,
     rowHeight:44,
