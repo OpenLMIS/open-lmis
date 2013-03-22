@@ -23,7 +23,7 @@ public class DriverFactory {
 
   public WebDriver loadDriver(String browser) throws InterruptedException {
     Separator = System.getProperty("file.separator");
-    File parentDir = new File(System.getProperty("user.dir"));
+    File parentDir = new File(System.getProperty("user.dir")).getParentFile();
     OUTPUT_FOLDER = parentDir.getParent() + Separator + "test-core" + Separator + "src" + Separator + "main" + Separator + "java" + Separator + "org" + Separator + "openlmis" + Separator + "UiUtils" + Separator;
     if(OUTPUT_FOLDER.contains("test-modules"+Separator+"functional-tests"))
       OUTPUT_FOLDER=OUTPUT_FOLDER.replace("test-modules"+Separator+"functional-tests","test-modules");
