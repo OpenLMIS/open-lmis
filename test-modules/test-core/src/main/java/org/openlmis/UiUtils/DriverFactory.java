@@ -25,7 +25,8 @@ public class DriverFactory {
     Separator = System.getProperty("file.separator");
     File parentDir = new File(System.getProperty("user.dir"));
     OUTPUT_FOLDER = parentDir.getParent() + Separator + "test-core" + Separator + "src" + Separator + "main" + Separator + "java" + Separator + "org" + Separator + "openlmis" + Separator + "UiUtils" + Separator;
-
+    if(OUTPUT_FOLDER.contains("test-modules"+Separator+"functional-tests"))
+      OUTPUT_FOLDER=OUTPUT_FOLDER.replace("test-modules"+Separator+"functional-tests","test-modules");
     INPUT_ZIP_FILE_IEDRIVER = OUTPUT_FOLDER + "IEDriverServer_x64_2.31.0.zip";
     INPUT_ZIP_FILE_CHROMEDRIVER = OUTPUT_FOLDER + "chromedriver.zip";
 
