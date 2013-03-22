@@ -4,7 +4,7 @@ package org.openlmis.pageobjects;
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestWebDriver;
-import org.openqa.selenium.ElementNotVisibleException;
+import org.openqa.selenium.*;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -616,13 +616,19 @@ public class InitiateRnRPage extends Page {
     }
 
     public void verifyApproveButtonNotPresent() {
-        boolean approveButtonPresent;
+        boolean approveButtonPresent=false;
         try {
             approveButton.click();
             approveButtonPresent = true;
         } catch (ElementNotVisibleException e) {
             approveButtonPresent = false;
         }
+      catch (NoSuchElementException e)
+      {
+        approveButtonPresent = false;
+      }
+      finally{
         SeleneseTestNgHelper.assertFalse(approveButtonPresent);
+        }
     }
 }
