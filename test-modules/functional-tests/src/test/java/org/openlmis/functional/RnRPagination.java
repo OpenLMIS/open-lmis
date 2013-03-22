@@ -57,6 +57,7 @@ public class RnRPagination extends TestCaseHelper {
       //initiateRnRPage.PopulateMandatoryFullSupplyDetails(21,20);
 
       testWebDriver.getElementByXpath("//a[contains(text(), '2') and @class='ng-binding']").click();
+      SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//table[@id='fullSupplyTable']/tbody[1]/tr[1]/td").getText(),"Antibiotics");
       verifyNextAndLastLinksDisabled();
       verifyPreviousAndFirstLinksEnabled();
 
@@ -83,6 +84,7 @@ public class RnRPagination extends TestCaseHelper {
       verifyNextAndLastLinksEnabled();
 
       testWebDriver.getElementByXpath("//a[contains(text(), '2') and @class='ng-binding']").click();
+      SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//table[@id='nonFullSupplyTable']/tbody[1]/tr[1]/td").getText(),"Antibiotics");
       verifyNextAndLastLinksDisabled();
       verifyPreviousAndFirstLinksEnabled();
 
@@ -287,7 +289,7 @@ public class RnRPagination extends TestCaseHelper {
 
     }
 
-    @AfterMethod(groups = {"smoke"})
+    @AfterMethod(groups = {"functional"})
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
