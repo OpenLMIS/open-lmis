@@ -190,7 +190,6 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(createFacility);
     testWebDriver.sleep(1000);
     testWebDriver.click(createFacility);
-    //createFacility.click();
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(facilityHeader);
     SeleneseTestNgHelper.assertEquals(facilityHeader.getText().trim(), "Add new facility");

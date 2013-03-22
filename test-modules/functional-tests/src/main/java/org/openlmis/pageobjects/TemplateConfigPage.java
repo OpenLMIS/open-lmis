@@ -41,6 +41,12 @@ public class TemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//li[@id='C']/span[@class='tpl-source']/span/select")
   private static WebElement dropDownTotalConsumedQuantity;
 
+  @FindBy(how = How.XPATH, using = "//li[@id='W']/span[@class='tpl-error']/div")
+  private static WebElement requestedQtyExplanationErrorMessage;
+
+  @FindBy(how = How.XPATH, using = "//li[@id='J']/span[@class='tpl-error']/div")
+  private static WebElement requestedQtyErrorMessage;
+
   @FindBy(how = How.XPATH, using = "//li[@id='C']/span[@class='tpl-error']/div")
   private static WebElement totalConsumedQtyErrorMessage;
 
@@ -86,11 +92,20 @@ public class TemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//li[@id='C']/span/input")
   private static WebElement totalConsumedQuantityCheckBox;
 
+  @FindBy(how = How.XPATH, using = "//li[@id='W']/span/input")
+  private static WebElement requestedQuantityCheckBox;
+
+  @FindBy(how = How.XPATH, using = "//li[@id='J']/span/input")
+  private static WebElement requestedQuantityExplanationCheckBox;
+
   @FindBy(how = How.XPATH, using = "//li[@id='O']/span/input")
   private static WebElement productCodeCheckBox;
 
   @FindBy(how = How.XPATH, using = "//li[@id='R']/span/input")
   private static WebElement productNameCheckBox;
+
+  @FindBy(how = How.XPATH, using = "//li[@id='L']/span/input")
+  private static WebElement remarksCheckBox;
 
   @FindBy(how = How.XPATH, using = "//li[@id='D']/span[@class='tpl-label']/input")
   private static WebElement lossesAndAdj;
@@ -217,120 +232,141 @@ public class TemplateConfigPage extends Page {
     SeleneseTestNgHelper.assertEquals(select.getFirstSelectedOption().getText(), optionToBeVerified);
   }
 
-  public void clickTotalConsumedQuantity()
-  {
+  public void clickTotalConsumedQuantity() {
     testWebDriver.waitForElementToAppear(totalConsumedQuantityCheckBox);
-    if(!totalConsumedQuantityCheckBox.isSelected())
+    if (!totalConsumedQuantityCheckBox.isSelected())
       totalConsumedQuantityCheckBox.click();
     testWebDriver.sleep(100);
   }
 
-  public void unClickTotalConsumedQuantity()
-  {
+  public void unClickTotalConsumedQuantity() {
     testWebDriver.waitForElementToAppear(totalConsumedQuantityCheckBox);
-    if(totalConsumedQuantityCheckBox.isSelected())
+    if (totalConsumedQuantityCheckBox.isSelected())
       totalConsumedQuantityCheckBox.click();
     testWebDriver.sleep(100);
   }
 
-  public void clickStockOnHand()
-  {
+  public void clickRequestedQuantity() {
+    testWebDriver.waitForElementToAppear(requestedQuantityCheckBox);
+    if (!requestedQuantityCheckBox.isSelected())
+      requestedQuantityCheckBox.click();
+    testWebDriver.sleep(100);
+  }
+
+  public void unClickRequestedQuantity() {
+    testWebDriver.waitForElementToAppear(requestedQuantityCheckBox);
+    if (requestedQuantityCheckBox.isSelected())
+      requestedQuantityCheckBox.click();
+    testWebDriver.sleep(100);
+  }
+
+  public void clickRequestedQuantityExplanation() {
+    testWebDriver.waitForElementToAppear(requestedQuantityExplanationCheckBox);
+    if (!requestedQuantityExplanationCheckBox.isSelected())
+      requestedQuantityExplanationCheckBox.click();
+    testWebDriver.sleep(100);
+  }
+
+  public void unClickRequestedQuantityExplanation() {
+    testWebDriver.waitForElementToAppear(requestedQuantityExplanationCheckBox);
+    if (requestedQuantityExplanationCheckBox.isSelected())
+      requestedQuantityExplanationCheckBox.click();
+    testWebDriver.sleep(100);
+  }
+
+  public void clickStockOnHand() {
     testWebDriver.waitForElementToAppear(stockOnHandCheckBox);
-    if(!stockOnHandCheckBox.isSelected())
+    if (!stockOnHandCheckBox.isSelected())
       stockOnHandCheckBox.click();
     testWebDriver.sleep(100);
   }
 
-  public void unClickStockOnHand()
-  {
+  public void unClickStockOnHand() {
     testWebDriver.waitForElementToAppear(stockOnHandCheckBox);
-    if(stockOnHandCheckBox.isSelected())
+    if (stockOnHandCheckBox.isSelected())
       stockOnHandCheckBox.click();
     testWebDriver.sleep(100);
   }
 
-  public void selectFromTotalConsumedQuantityDropDown(String optionToBeSelected)
-  {
+  public void selectFromTotalConsumedQuantityDropDown(String optionToBeSelected) {
     testWebDriver.waitForElementToAppear(dropDownTotalConsumedQuantity);
-    testWebDriver.selectByVisibleText(dropDownTotalConsumedQuantity,optionToBeSelected);
+    testWebDriver.selectByVisibleText(dropDownTotalConsumedQuantity, optionToBeSelected);
     testWebDriver.sleep(100);
   }
 
-  public void selectFromStockOnHandDropDown(String optionToBeSelected)
-  {
+  public void selectFromStockOnHandDropDown(String optionToBeSelected) {
     testWebDriver.waitForElementToAppear(stockInHandDropDown);
-    testWebDriver.selectByVisibleText(stockInHandDropDown,optionToBeSelected);
+    testWebDriver.selectByVisibleText(stockInHandDropDown, optionToBeSelected);
     testWebDriver.sleep(100);
   }
 
-  public void clickSaveButton()
-  {
+  public void clickSaveButton() {
     testWebDriver.waitForElementToAppear(SaveButton);
     SaveButton.click();
     testWebDriver.sleep(100);
   }
 
-  public void verifyErrorMessageDivTotalConsumedQuantity()
-  {
+  public void verifyErrorMessageDivTotalConsumedQuantity() {
     testWebDriver.waitForElementToAppear(totalConsumedQtyErrorMessage);
     SeleneseTestNgHelper.assertTrue("Error message not displaying", totalConsumedQtyErrorMessage.isDisplayed());
   }
 
-  public void verifyErrorMessageDivStockOnHand()
-  {
+  public void verifyErrorMessageDivStockOnHand() {
     testWebDriver.waitForElementToAppear(stockOnHandQtyErrorMessage);
     SeleneseTestNgHelper.assertTrue("Error message not displaying", stockOnHandQtyErrorMessage.isDisplayed());
   }
 
-  public void verifyErrorMessageDivFooter()
-  {
+  public void verifyErrorMessageDivRequestedQuantity() {
+    testWebDriver.waitForElementToAppear(requestedQtyErrorMessage);
+    SeleneseTestNgHelper.assertTrue("Error message not displaying", requestedQtyErrorMessage.isDisplayed());
+  }
+
+  public void verifyErrorMessageRequestedQuantityExplanation() {
+    testWebDriver.waitForElementToAppear(requestedQtyExplanationErrorMessage);
+    SeleneseTestNgHelper.assertTrue("Error message not displaying", requestedQtyExplanationErrorMessage.isDisplayed());
+  }
+
+  public void verifyErrorMessageDivFooter() {
     testWebDriver.waitForElementToAppear(errorMessageDiv);
     SeleneseTestNgHelper.assertTrue("Error message not displaying", errorMessageDiv.isDisplayed());
   }
 
-  public void verifyTurnOffOnButtonAvailable(String messageToShow)
-  {
+  public void verifyTurnOffOnButtonAvailable(String messageToShow) {
     testWebDriver.waitForElementToAppear(turnOffButton);
     SeleneseTestNgHelper.assertTrue(messageToShow, turnOffButton.isDisplayed());
 
   }
 
-  public void verifyTurnOffOnButtonNotAvailable(String messageToShow)
-  {
+  public void verifyTurnOffOnButtonNotAvailable(String messageToShow) {
     testWebDriver.sleep(100);
     SeleneseTestNgHelper.assertFalse(messageToShow, turnOffButton.isDisplayed());
 
   }
 
-  public void clickTurnOffOnButton(WebElement button)
-  {
+  public void clickTurnOffOnButton(WebElement button) {
     testWebDriver.waitForElementToAppear(button);
     button.click();
     testWebDriver.sleep(100);
   }
 
-  public void verifyTextOffOnButton(WebElement button,String textToVerify, String messageToShow)
-  {
+  public void verifyTextOffOnButton(WebElement button, String textToVerify, String messageToShow) {
     testWebDriver.waitForElementToAppear(button);
     SeleneseTestNgHelper.assertTrue(messageToShow, button.getText().equalsIgnoreCase(textToVerify));
   }
 
-  public void verifyONOffIndicatorOnScreen(WebElement indicator,String textToVerify)
-  {
-     testWebDriver.waitForElementToAppear(indicator);
+  public void verifyONOffIndicatorOnScreen(WebElement indicator, String textToVerify) {
+    testWebDriver.waitForElementToAppear(indicator);
     SeleneseTestNgHelper.assertEquals(textToVerify, indicator.getText().trim());
 
 
   }
 
-  public void verifySaveSuccessDiv()
-  {
+  public void verifySaveSuccessDiv() {
     testWebDriver.waitForElementToAppear(saveSuccessMsg);
-    SeleneseTestNgHelper.assertTrue("Success message should display",saveSuccessMsg.isDisplayed());
+    SeleneseTestNgHelper.assertTrue("Success message should display", saveSuccessMsg.isDisplayed());
   }
 
-  private void verifyCAndEUserInputsAndShouldBeDisplayed()
-  {
+  private void verifyCAndEUserInputsAndShouldBeDisplayed() {
     testWebDriver.waitForElementToAppear(SaveButton);
     unClickTotalConsumedQuantity();
     unClickStockOnHand();
@@ -342,46 +378,45 @@ public class TemplateConfigPage extends Page {
     verifyErrorMessageDivStockOnHand();
   }
 
-  private void verifyArithmeticValidationOnOff()
-  {
+  private void verifyArithmeticValidationOnOff() {
     clickTotalConsumedQuantity();
     clickStockOnHand();
     selectFromTotalConsumedQuantityDropDown("User Input");
     verifyTurnOffOnButtonAvailable("Option to choose to switch Arithmetic Validation ON/OFF is not available");
     clickTurnOffOnButton(turnOffButton);
 
-    verifyTextOffOnButton(turnOnButton,"Turn On","Should show 'Turn ON' on button");
+    verifyTextOffOnButton(turnOnButton, "Turn On", "Should show 'Turn ON' on button");
     verifyONOffIndicatorOnScreen(OffOnIndicator, "OFF");
     clickTurnOffOnButton(turnOnButton);
 
-    verifyTextOffOnButton(turnOffButton,"Turn OFF","Should show 'Turn OFF' on button");
+    verifyTextOffOnButton(turnOffButton, "Turn OFF", "Should show 'Turn OFF' on button");
     verifyONOffIndicatorOnScreen(OffOnIndicator, "ON");
     selectFromStockOnHandDropDown("Calculated");
     verifyTurnOffOnButtonNotAvailable("Option to choose to switch Arithmetic Validation ON/OFF should not be visible");
 
   }
-   private void verifyCDerivedEMustViceVersa()
-   {
-     selectFromTotalConsumedQuantityDropDown("Calculated");
-     selectFromStockOnHandDropDown("User Input");
-     unClickStockOnHand();
-     clickSaveButton();
-     verifyErrorMessageDivFooter();
-     verifyErrorMessageDivTotalConsumedQuantity();
-     verifyErrorMessageDivStockOnHand();
 
-     clickStockOnHand();
-     selectFromTotalConsumedQuantityDropDown("User Input");
-     selectFromStockOnHandDropDown("Calculated");
-     clickSaveButton();
-     verifySaveSuccessDiv();
+  private void verifyCDerivedEMustViceVersa() {
+    selectFromTotalConsumedQuantityDropDown("Calculated");
+    selectFromStockOnHandDropDown("User Input");
+    unClickStockOnHand();
+    clickSaveButton();
+    verifyErrorMessageDivFooter();
+    verifyErrorMessageDivTotalConsumedQuantity();
+    verifyErrorMessageDivStockOnHand();
 
-     unClickTotalConsumedQuantity();
-     clickSaveButton();
-     verifyErrorMessageDivFooter();
-     verifyErrorMessageDivTotalConsumedQuantity();
-     verifyErrorMessageDivStockOnHand();
-   }
+    clickStockOnHand();
+    selectFromTotalConsumedQuantityDropDown("User Input");
+    selectFromStockOnHandDropDown("Calculated");
+    clickSaveButton();
+    verifySaveSuccessDiv();
+
+    unClickTotalConsumedQuantity();
+    clickSaveButton();
+    verifyErrorMessageDivFooter();
+    verifyErrorMessageDivTotalConsumedQuantity();
+    verifyErrorMessageDivStockOnHand();
+  }
 
   public void verifyArithmeticValidations() {
     verifyCAndEUserInputsAndShouldBeDisplayed();
@@ -390,8 +425,7 @@ public class TemplateConfigPage extends Page {
 
   }
 
-  private void prepareDataForBusinessRule()
-  {
+  private void prepareDataForBusinessRuleCE() {
     clickTotalConsumedQuantity();
     clickStockOnHand();
     selectFromTotalConsumedQuantityDropDown("Calculated");
@@ -400,18 +434,44 @@ public class TemplateConfigPage extends Page {
 
   }
 
-  private void verifyBusinessRule()
-  {
+  private void verifyBusinessRuleCE() {
     verifyErrorMessageDivStockOnHand();
     verifyErrorMessageDivTotalConsumedQuantity();
     verifyErrorMessageDivFooter();
   }
 
+  private void prepareDataForBusinessRuleWJ() {
+    clickRequestedQuantity();
+    unClickRequestedQuantityExplanation();
+    clickSaveButton();
+
+  }
+
+  private void prepareDataForBusinessRuleJW() {
+    unClickRequestedQuantity();
+    clickRequestedQuantityExplanation();
+    clickSaveButton();
+
+  }
+
+  private void verifyBusinessRuleJW() {
+    verifyErrorMessageDivRequestedQuantity();
+    verifyErrorMessageDivFooter();
+  }
+
+  private void verifyBusinessRuleWJ() {
+    verifyErrorMessageRequestedQuantityExplanation();
+    verifyErrorMessageDivFooter();
+  }
 
 
   public void verifyBusinessRules() {
-    prepareDataForBusinessRule();
-    verifyBusinessRule();
+    prepareDataForBusinessRuleCE();
+    verifyBusinessRuleCE();
+    prepareDataForBusinessRuleWJ();
+    verifyBusinessRuleWJ();
+    prepareDataForBusinessRuleJW();
+    verifyBusinessRuleJW();
   }
 
   public void verifyColumnLabels() {
@@ -462,17 +522,15 @@ public class TemplateConfigPage extends Page {
     SeleneseTestNgHelper.assertEquals(approvedQuantitySource.getText().trim(), "User Input");
   }
 
-  private void verifyMandatoryColumnsEditable(WebElement mandatoryElement)
-  {
+  private void verifyMandatoryColumnsEditable(WebElement mandatoryElement) {
     testWebDriver.waitForElementToAppear(mandatoryElement);
-     SeleneseTestNgHelper.assertTrue("Mandatory columns should be non-editable",mandatoryElement.getAttribute("disabled").trim().equalsIgnoreCase("true"));
+    SeleneseTestNgHelper.assertTrue("Mandatory columns should be non-editable", mandatoryElement.getAttribute("disabled").trim().equalsIgnoreCase("true"));
   }
 
- public void verifyMandatoryColumns()
- {
-   verifyMandatoryColumnsEditable(productCodeCheckBox);
-   verifyMandatoryColumnsEditable(productNameCheckBox);
- }
+  public void verifyMandatoryColumns() {
+    verifyMandatoryColumnsEditable(productCodeCheckBox);
+    verifyMandatoryColumnsEditable(productNameCheckBox);
+  }
 
   public void configureTemplate() {
     String message = null;
@@ -485,13 +543,25 @@ public class TemplateConfigPage extends Page {
     SaveButton.click();
 
     testWebDriver.sleep(2000);
-    if (saveSuccessMsg.isDisplayed()) {
-      message = testWebDriver.getText(saveSuccessMsg);
-    } else {
-      message = testWebDriver.getText(saveErrorMsgDiv);
-    }
 
-    SeleneseTestNgHelper.assertEquals(message, TEMPLATE_SUCCESS_MESSAGE);
+    verifySuccessDiv();
 
   }
+
+  public void alterTemplateLabelAndVisibility(String columnHeadingToBeAltered) {
+    testWebDriver.waitForElementToAppear(SaveButton);
+    beginningBalance.clear();
+    beginningBalance.sendKeys(columnHeadingToBeAltered);
+    remarksCheckBox.click();
+    clickSaveButton();
+    verifySuccessDiv();
+
+
+  }
+
+
+  private void verifySuccessDiv() {
+    SeleneseTestNgHelper.assertTrue("Save success message not showing up", saveSuccessMsg.isDisplayed());
+  }
+
 }

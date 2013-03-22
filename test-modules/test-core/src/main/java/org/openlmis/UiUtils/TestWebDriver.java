@@ -180,6 +180,10 @@ public class TestWebDriver {
         return  driver.findElement(By.xpath(Xpath) );
     }
 
+  public int getElementsSizeByXpath(String Xpath) {
+    return  driver.findElements(By.xpath(Xpath)).size();
+  }
+
     public String getSelectedOptionDefault(WebElement element) {
         return  element.getAttribute("value");
     }
@@ -242,6 +246,12 @@ public class TestWebDriver {
             e.printStackTrace();
         }
     }
+
+  public void getSize(String xPath)
+  {
+    WebElement element=getElementByXpath(xPath);
+
+  }
 
     public void click(final WebElement element)
     {

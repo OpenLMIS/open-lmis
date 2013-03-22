@@ -104,7 +104,7 @@ public class ViewRequisition extends TestCaseHelper {
     viewRequisitionPageOrdered.clickSearch();
     viewRequisitionPageOrdered.verifyStatus("ORDERED");
     viewRequisitionPageOrdered.clickRnRList();
-    //viewRequisitionPageOrdered.verifyFieldsPostApproval("25.00", "1");
+    viewRequisitionPageOrdered.verifyFieldsPostApproval("12.50", "1");
 
   }
 
@@ -120,7 +120,7 @@ public class ViewRequisition extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-        {"HIV", "storeincharge", "Admin123"}
+      {"HIV", "storeincharge", "Admin123"}
     };
 
   }

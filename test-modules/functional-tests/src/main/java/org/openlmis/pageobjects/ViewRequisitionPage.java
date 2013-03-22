@@ -140,7 +140,7 @@ public class ViewRequisitionPage extends Page {
   {
     testWebDriver.waitForElementToAppear(totalCostPreApproval);
     SeleneseTestNgHelper.assertEquals(totalCostPreApproval.getText().trim(), cost);
-//    SeleneseTestNgHelper.assertEquals(newPatient.getText().trim(), newPatientValue);
+   // SeleneseTestNgHelper.assertEquals(newPatient.getText().trim(), newPatientValue);
 
     return new HomePage(testWebDriver);
   }
@@ -150,7 +150,7 @@ public class ViewRequisitionPage extends Page {
   {
     testWebDriver.waitForElementToAppear(totalCostPostApproval);
     SeleneseTestNgHelper.assertEquals(totalCostPostApproval.getText().trim(), cost);
-//    SeleneseTestNgHelper.assertEquals(newPatient.getText().trim(), newPatientValue);
+   // SeleneseTestNgHelper.assertEquals(newPatient.getText().trim(), newPatientValue);
 
     return new HomePage(testWebDriver);
   }

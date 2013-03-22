@@ -255,7 +255,7 @@ public class InitiateRnRPage extends Page {
     testWebDriver.setImplicitWait(10);
   }
 
-  public void verifyRnRHeader(String FCode, String FName, String FCstring, String program, String periodDetails, String geoZone,String parentgeoZone, String operatedBy, String facilityType) {
+  public void verifyRnRHeader(String FCode, String FName, String FCstring, String program, String periodDetails, String geoZone, String parentgeoZone, String operatedBy, String facilityType) {
 
     testWebDriver.sleep(1500);
     testWebDriver.waitForElementToAppear(requisitionHeader);
@@ -290,7 +290,7 @@ public class InitiateRnRPage extends Page {
 
   public void verifyTemplateNotConfiguredMessage() {
     testWebDriver.waitForElementToAppear(configureTemplateErrorDiv);
-    SeleneseTestNgHelper.assertTrue("Please contact admin to define R&R template for this program should show up",configureTemplateErrorDiv.isDisplayed());
+    SeleneseTestNgHelper.assertTrue("Please contact admin to define R&R template for this program should show up", configureTemplateErrorDiv.isDisplayed());
 
   }
 
@@ -348,29 +348,25 @@ public class InitiateRnRPage extends Page {
     SeleneseTestNgHelper.assertEquals(stockOnHandValue, StockOnHandValue);
   }
 
-    public void PopulateMandatoryFullSupplyDetails(int numberOfLineItems, int numberOfLineItemsPerPage) {
-        int numberOfPages= numberOfLineItems/numberOfLineItemsPerPage;
-        if (numberOfLineItems%numberOfLineItemsPerPage != 0)
-        {
-            numberOfPages=numberOfPages+1;
-        }
-
-        for(int j=1;j<=numberOfPages;j++)
-        {
-            testWebDriver.getElementByXpath("//a[contains(text(), '" + j + "') and @class='ng-binding']").click();
-            if (j==numberOfPages && (numberOfLineItems%numberOfLineItemsPerPage)!=0)
-            {
-                numberOfLineItemsPerPage= numberOfLineItems%numberOfLineItemsPerPage;
-            }
-            for (int i=0; i<numberOfLineItemsPerPage;i++)
-            {
-                testWebDriver.getElementById("A_" +i).sendKeys("10");
-                testWebDriver.getElementById("B_" +i).sendKeys("10");
-                testWebDriver.getElementById("C_" +i).sendKeys("10");
-            }
-
-        }
+  public void PopulateMandatoryFullSupplyDetails(int numberOfLineItems, int numberOfLineItemsPerPage) {
+    int numberOfPages = numberOfLineItems / numberOfLineItemsPerPage;
+    if (numberOfLineItems % numberOfLineItemsPerPage != 0) {
+      numberOfPages = numberOfPages + 1;
     }
+
+    for (int j = 1; j <= numberOfPages; j++) {
+      testWebDriver.getElementByXpath("//a[contains(text(), '" + j + "') and @class='ng-binding']").click();
+      if (j == numberOfPages && (numberOfLineItems % numberOfLineItemsPerPage) != 0) {
+        numberOfLineItemsPerPage = numberOfLineItems % numberOfLineItemsPerPage;
+      }
+      for (int i = 0; i < numberOfLineItemsPerPage; i++) {
+        testWebDriver.getElementById("A_" + i).sendKeys("10");
+        testWebDriver.getElementById("B_" + i).sendKeys("10");
+        testWebDriver.getElementById("C_" + i).sendKeys("10");
+      }
+
+    }
+  }
 
   public void enterAndVerifyRequestedQuantityExplanation(Integer A) {
     String expectedWarningMessage = "Please enter a reason";
@@ -442,7 +438,7 @@ public class InitiateRnRPage extends Page {
     String totalCostNonFullSupplyFooterValue = testWebDriver.getText(totalCostNonFullSupplyFooter);
     Float actualTotalCost = Float.parseFloat(totalCostFullSupplyFooterValue.trim()) + Float.parseFloat(totalCostNonFullSupplyFooterValue.trim());
     SeleneseTestNgHelper.assertEquals(actualTotalCost.toString() + "0", totalCostFooter.getText().trim());
-    SeleneseTestNgHelper.assertEquals(totalCostFooter.getText().trim(), (actualTotalCostFullSupply+actualTotalCostNonFullSupply)+"0");
+    SeleneseTestNgHelper.assertEquals(totalCostFooter.getText().trim(), (actualTotalCostFullSupply + actualTotalCostNonFullSupply) + "0");
     testWebDriver.sleep(500);
   }
 
@@ -509,7 +505,7 @@ public class InitiateRnRPage extends Page {
     addNonFullSupplyButton.click();
     testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(nonFullSupplyProductCodeAndName);
-    SeleneseTestNgHelper.assertEquals(nonFullSupplyProductCodeAndName.getText().trim(), productCode+" | "+productPrimaryName);
+    SeleneseTestNgHelper.assertEquals(nonFullSupplyProductCodeAndName.getText().trim(), productCode + " | " + productPrimaryName);
     SeleneseTestNgHelper.assertEquals(nonFullSupplyProductQuantityRequested.getAttribute("value").trim(), requestedQuantityValue);
     SeleneseTestNgHelper.assertEquals(nonFullSupplyProductReasonForRequestedQuantity.getAttribute("value").trim(), requestedQuantityExplanationValue);
     doneButtonNonFullSupply.click();
@@ -522,50 +518,72 @@ public class InitiateRnRPage extends Page {
 
   }
 
-    public void addMultipleNonFullSupplyLineItems(int numberOfLineItems,int numberOfLineItemsPerPage, boolean isMultipleCategories) throws IOException, SQLException {
-        testWebDriver.waitForElementToAppear(nonFullSupplyTab);
-        nonFullSupplyTab.click();
+  public int getSizeOfElements(String xpath) {
+    return testWebDriver.getElementsSizeByXpath(xpath);
+  }
 
-        testWebDriver.waitForElementToAppear(addNonFullSupplyButtonScreen);
-        testWebDriver.sleep(1000);
-        addButton.click();
-        testWebDriver.sleep(1000);
-        testWebDriver.waitForElementToAppear(categoryDropDownLink);
-
-        for(int i=0; i<numberOfLineItems; i++)
-        {
-        categoryDropDownLink.click();
-        testWebDriver.waitForElementToAppear(categoryDropDownTextField);
-            if (isMultipleCategories)
-            {
-                categoryDropDownTextField.sendKeys("Antibiotics" + i);
-            }
-                else
-            {
-                categoryDropDownTextField.sendKeys("Antibiotics");
-            }
-        testWebDriver.waitForElementToAppear(categoryDropDownValue);
-        categoryDropDownValue.click();
-
-        productDropDownLink.click();
-        testWebDriver.waitForElementToAppear(productDropDownTextField);
-        productDropDownTextField.sendKeys("NF" + i);
-        testWebDriver.waitForElementToAppear(productDropDownValue);
-        productDropDownValue.click();
-
-        requestedQuantityField.clear();
-        requestedQuantityField.sendKeys("10");
-        requestedQuantityExplanationField.clear();
-        requestedQuantityExplanationField.sendKeys("Due to certain reasons: " + i);
-        testWebDriver.waitForElementToAppear(addNonFullSupplyButton);
-        testWebDriver.sleep(1000);
-        addNonFullSupplyButton.click();
-        testWebDriver.sleep(500);
-        testWebDriver.waitForElementToAppear(nonFullSupplyProductCodeAndName);
-        }
-        doneButtonNonFullSupply.click();
-        testWebDriver.sleep(500);
+  public void verifyColumnsHeadingPresent(String xpathTillTrTag, String heading, int noOfColumns) {
+    boolean flag = false;
+    String actualColumnHeading = null;
+    for (int i = 0; i < noOfColumns; i++) {
+      actualColumnHeading = testWebDriver.getElementByXpath(xpathTillTrTag + "/th[" + (i + 1) + "]").getText();
+      if (actualColumnHeading.trim().contains(heading))
+        flag = true;
     }
+    SeleneseTestNgHelper.assertEquals(flag, true);
+  }
+
+  public void verifyColumnHeadingNotPresent(String xpathTillTrTag, String heading, int noOfColumns) {
+    boolean flag = false;
+    String actualColumnHeading = null;
+    for (int i = 0; i < noOfColumns; i++) {
+      actualColumnHeading = testWebDriver.getElementByXpath(xpathTillTrTag + "/th[" + (i + 1) + "]").getText();
+      if (actualColumnHeading.trim().contains(heading))
+        flag = true;
+    }
+    SeleneseTestNgHelper.assertEquals(flag, false);
+  }
+
+  public void addMultipleNonFullSupplyLineItems(int numberOfLineItems, int numberOfLineItemsPerPage, boolean isMultipleCategories) throws IOException, SQLException {
+    testWebDriver.waitForElementToAppear(nonFullSupplyTab);
+    nonFullSupplyTab.click();
+
+    testWebDriver.waitForElementToAppear(addNonFullSupplyButtonScreen);
+    testWebDriver.sleep(1000);
+    addButton.click();
+    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(categoryDropDownLink);
+
+    for (int i = 0; i < numberOfLineItems; i++) {
+      categoryDropDownLink.click();
+      testWebDriver.waitForElementToAppear(categoryDropDownTextField);
+      if (isMultipleCategories) {
+        categoryDropDownTextField.sendKeys("Antibiotics" + i);
+      } else {
+        categoryDropDownTextField.sendKeys("Antibiotics");
+      }
+      testWebDriver.waitForElementToAppear(categoryDropDownValue);
+      categoryDropDownValue.click();
+
+      productDropDownLink.click();
+      testWebDriver.waitForElementToAppear(productDropDownTextField);
+      productDropDownTextField.sendKeys("NF" + i);
+      testWebDriver.waitForElementToAppear(productDropDownValue);
+      productDropDownValue.click();
+
+      requestedQuantityField.clear();
+      requestedQuantityField.sendKeys("10");
+      requestedQuantityExplanationField.clear();
+      requestedQuantityExplanationField.sendKeys("Due to certain reasons: " + i);
+      testWebDriver.waitForElementToAppear(addNonFullSupplyButton);
+      testWebDriver.sleep(1000);
+      addNonFullSupplyButton.click();
+      testWebDriver.sleep(500);
+      testWebDriver.waitForElementToAppear(nonFullSupplyProductCodeAndName);
+    }
+    doneButtonNonFullSupply.click();
+    testWebDriver.sleep(500);
+  }
 
   public void saveRnR() {
     saveButton.click();
@@ -610,31 +628,28 @@ public class InitiateRnRPage extends Page {
     SeleneseTestNgHelper.assertFalse("BB Not disabled", beginningBalance.isEnabled());
   }
 
-    public void verifyAuthorizeButtonNotPresent(){
-        boolean authorizeButtonPresent;
-        try {
-            authorizeButton.click();
-            authorizeButtonPresent = true;
-        } catch (ElementNotVisibleException e) {
-            authorizeButtonPresent = false;
-        }
-        SeleneseTestNgHelper.assertFalse(authorizeButtonPresent);
+  public void verifyAuthorizeButtonNotPresent() {
+    boolean authorizeButtonPresent;
+    try {
+      authorizeButton.click();
+      authorizeButtonPresent = true;
+    } catch (ElementNotVisibleException e) {
+      authorizeButtonPresent = false;
     }
+    SeleneseTestNgHelper.assertFalse(authorizeButtonPresent);
+  }
 
-    public void verifyApproveButtonNotPresent() {
-        boolean approveButtonPresent=false;
-        try {
-            approveButton.click();
-            approveButtonPresent = true;
-        } catch (ElementNotVisibleException e) {
-            approveButtonPresent = false;
-        }
-      catch (NoSuchElementException e)
-      {
-        approveButtonPresent = false;
-      }
-      finally{
-        SeleneseTestNgHelper.assertFalse(approveButtonPresent);
-        }
+  public void verifyApproveButtonNotPresent() {
+    boolean approveButtonPresent = false;
+    try {
+      approveButton.click();
+      approveButtonPresent = true;
+    } catch (ElementNotVisibleException e) {
+      approveButtonPresent = false;
+    } catch (NoSuchElementException e) {
+      approveButtonPresent = false;
+    } finally {
+      SeleneseTestNgHelper.assertFalse(approveButtonPresent);
     }
+  }
 }
