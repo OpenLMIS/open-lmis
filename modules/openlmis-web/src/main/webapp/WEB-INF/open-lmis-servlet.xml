@@ -23,6 +23,13 @@
     <bean class="org.springframework.web.servlet.view.XmlViewResolver">
         <property name="order" value="1"/>
         <property name="location">
+            <value>/WEB-INF/jasper-views.xml</value>
+        </property>
+    </bean>
+
+    <bean class="org.springframework.web.servlet.view.XmlViewResolver">
+        <property name="order" value="2"/>
+        <property name="location">
             <value>/WEB-INF/spring-pdf-views.xml</value>
         </property>
     </bean>
