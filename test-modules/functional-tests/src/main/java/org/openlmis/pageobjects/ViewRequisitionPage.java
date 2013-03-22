@@ -41,7 +41,7 @@ public class ViewRequisitionPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[contains(text(),'No Requisitions found')]")
   private static WebElement noRequisitionFoundDiv;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText colt7']/span")
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col7 colt7']/span")
   private static WebElement status;
 
   @FindBy(how = How.XPATH, using = "//select[@data-handler='selectYear']")
@@ -62,17 +62,17 @@ public class ViewRequisitionPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@class='ngViewport ng-scope']/div/div/div[1]")
   private static WebElement viewRnRList;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCell col18 ']/span[3]")
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCell  col18 colt18']/span[3]")
   private static WebElement totalCostPreApproval;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCell col19 ']/span[3]")
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCell  col19 colt19']/span[3]")
   private static WebElement totalCostPostApproval;
 
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCell col8 ']/div/span")
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCell  col8 colt8']/div/span")
   private static WebElement newPatient;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCell col16 ']/div/span")
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCell  col16 colt16']/div/span")
   private static WebElement approveQuantity;
 
   public ViewRequisitionPage(TestWebDriver driver) throws IOException {
