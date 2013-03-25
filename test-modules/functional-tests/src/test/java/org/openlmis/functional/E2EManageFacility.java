@@ -17,6 +17,8 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
 
+import java.util.ArrayList;
+
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
 
@@ -46,7 +48,7 @@ public class E2EManageFacility extends TestCaseHelper {
     String facilityCodePrefix="FCcode";
     String facilityNamePrefix="FCname";
 
-    String date_time = createFacilityPage.enterValuesInFacility(facilityCodePrefix,facilityNamePrefix, program ,geoZone, facilityType, operatedBy);
+    String date_time = createFacilityPage.enterValuesInFacility(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityType, operatedBy);
     createFacilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix+date_time,"created");
 
     DeleteFacilityPage deleteFacilityPage = homePage.navigateSearchFacility();
@@ -63,7 +65,11 @@ public class E2EManageFacility extends TestCaseHelper {
 
     DeleteFacilityPage deleteFacilityPageEdit = homePageEdit.navigateSearchFacility();
     deleteFacilityPageEdit.searchFacility(date_time);
-    deleteFacilityPageEdit.verifyProgramSupported();
+
+    ArrayList<String> programsSupported=new ArrayList<String>();
+    programsSupported.add("HIV");
+    programsSupported.add("ESSENTIAL MEDICINES");
+    deleteFacilityPageEdit.verifyProgramSupported(programsSupported);
 
 
   }

@@ -276,13 +276,20 @@ public class DeleteFacilityPage extends Page {
     SeleneseTestNgHelper.assertTrue(removeSupportedProgram.isDisplayed());
   }
 
-  public HomePage verifyProgramSupported() throws IOException {
-
+  public HomePage verifyProgramSupported(java.util.ArrayList<String> programsSupported) throws IOException {
+    int i = 1;
     clickFacilityList();
     verifyHeader("Edit facility");
     testWebDriver.waitForElementToAppear(deleteButton);
     testWebDriver.sleep(1500);
+    for (String program : programsSupported) {
+      WebElement programsSupportedElement = testWebDriver.getElementByXpath("//table[@class='table table-striped table-bordered']/tbody/tr[" + i + "]/td[1]");
+      WebElement programsActiveElement = testWebDriver.getElementByXpath("//table[@class='table table-striped table-bordered']/tbody/tr[" + i + "]/td[2]/input");
+      SeleneseTestNgHelper.assertEquals(programsSupportedElement.getText().trim(), program);
+      SeleneseTestNgHelper.assertTrue("Program " + i + " should be active", programsActiveElement.isSelected());
 
+      i++;
+    }
     SeleneseTestNgHelper.assertTrue(removeSupportedProgram.isDisplayed());
 
     return new HomePage(testWebDriver);
