@@ -181,20 +181,36 @@ public class HomePage extends Page {
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageFacilityMenuItem);
     manageFacilityMenuItem.click();
+    verifyTabs();
+    clickCreateFacilityButton();
+    verifyHeader("Add new facility");
+    return new CreateFacilityPage(testWebDriver);
+  }
 
+  private void clickCreateFacilityButton()
+  {
+    testWebDriver.waitForElementToAppear(createFacility);
+    testWebDriver.sleep(1000);
+    testWebDriver.click(createFacility);
+  }
+
+  private void verifyHeader(String headingToVerify)
+  {
+    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(facilityHeader);
+    SeleneseTestNgHelper.assertEquals(facilityHeader.getText().trim(), headingToVerify);
+  }
+
+
+  private void verifyTabs()
+  {
     testWebDriver.waitForElementToAppear(facilitiesTab);
     SeleneseTestNgHelper.assertTrue(facilitiesTab.isDisplayed());
     SeleneseTestNgHelper.assertTrue(rolesTab.isDisplayed());
     SeleneseTestNgHelper.assertTrue(schedulesTab.isDisplayed());
     SeleneseTestNgHelper.assertTrue(usersTab.isDisplayed());
-    testWebDriver.waitForElementToAppear(createFacility);
-    testWebDriver.sleep(1000);
-    testWebDriver.click(createFacility);
-    testWebDriver.sleep(1000);
-    testWebDriver.waitForElementToAppear(facilityHeader);
-    SeleneseTestNgHelper.assertEquals(facilityHeader.getText().trim(), "Add new facility");
-    return new CreateFacilityPage(testWebDriver);
   }
+
 
   public TemplateConfigPage selectProgramToConfigTemplate(String programme) {
     SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());

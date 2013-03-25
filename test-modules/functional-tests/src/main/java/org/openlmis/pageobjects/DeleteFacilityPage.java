@@ -129,25 +129,51 @@ public class DeleteFacilityPage extends Page {
     testWebDriver.sleep(2000);
   }
 
-  public void deleteAndVerifyFacility(String facilityCodeValue, String facilityNameValue) {
-
-    String expectedMessageOnAlert = "\"" + facilityNameValue + " / \"" + facilityCodeValue + "\" will be soft-deleted from the system";
-    String expectedMessageOnFacilityScreenAfterDelete = "\"" + facilityNameValue + "\" / \"" + facilityCodeValue + "\" deleted successfully";
+  public void clickFacilityList() {
     testWebDriver.waitForElementToAppear(facilityList);
     facilityList.click();
-
     testWebDriver.waitForElementToAppear(facilityHeader);
-    SeleneseTestNgHelper.assertEquals(facilityHeader.getText().trim(), "Edit facility");
+  }
 
+
+  public void deleteFacility(String facilityCodeValue, String facilityNameValue) {
+
+    String expectedMessageOnAlert = "\"" + facilityNameValue + " / \"" + facilityCodeValue + "\" will be soft-deleted from the system";
+    verifyHeader("Edit facility");
+    clickDeleteButtonOnFacilityScreen();
+    verifyDeleteAlert(expectedMessageOnAlert);
+    clickDeleteButtonOnAlert();
+
+
+  }
+
+  private void clickDeleteButtonOnFacilityScreen() {
     testWebDriver.waitForElementToAppear(deleteButton);
     deleteButton.click();
+  }
+
+  private void clickDeleteButtonOnAlert() {
+    testWebDriver.sleep(1000);
+    deteteButtonOnAlert.click();
+  }
+
+  private void verifyDeleteAlert(String expectedMessageOnAlert) {
     testWebDriver.waitForElementToAppear(deleteMessageOnAlert);
 
     String deleteMessageOnAlertValue = deleteMessageOnAlert.getText();
     SeleneseTestNgHelper.assertEquals(deleteMessageOnAlertValue, expectedMessageOnAlert);
+  }
 
-    testWebDriver.sleep(1000);
-    deteteButtonOnAlert.click();
+
+  private void verifyHeader(String headerToBeVerified) {
+    testWebDriver.waitForElementToAppear(facilityHeader);
+    SeleneseTestNgHelper.assertEquals(facilityHeader.getText().trim(), headerToBeVerified);
+  }
+
+
+  public void verifyDeletedFacility(String facilityCodeValue, String facilityNameValue) {
+    String expectedMessageOnFacilityScreenAfterDelete = "\"" + facilityNameValue + "\" / \"" + facilityCodeValue + "\" deleted successfully";
+
     testWebDriver.waitForElementToAppear(successMessageDiv);
 
     testWebDriver.sleep(1000);
@@ -158,10 +184,18 @@ public class DeleteFacilityPage extends Page {
     SeleneseTestNgHelper.assertEquals(dataReportableValue.trim(), "No");
 
     SeleneseTestNgHelper.assertTrue(isActiveRadioNoOption.isSelected());
-
   }
 
-  public HomePage restoreAndVerifyFacility(String facilityCodeValue, String facilityNameValue) throws IOException {
+  public void verifyRestoredFacility() {
+
+    testWebDriver.sleep(1000);
+    String dataReportableValue = dataReportable.getText();
+    SeleneseTestNgHelper.assertEquals(dataReportableValue.trim(), "Yes");
+    SeleneseTestNgHelper.assertTrue(isActiveRadioYesOption.isSelected());
+    verifyHeader("Edit facility");
+  }
+
+  public HomePage restoreFacility() throws IOException {
     String expectedIsActiveMessageOnAlert = "Do you want to set facility as active?";
 
     testWebDriver.waitForElementToAppear(restoreButton);
@@ -180,28 +214,18 @@ public class DeleteFacilityPage extends Page {
     testWebDriver.sleep(1000);
     yesLink.click();
 
-    testWebDriver.sleep(1000);
-    String dataReportableValue = dataReportable.getText();
-    SeleneseTestNgHelper.assertEquals(dataReportableValue.trim(), "Yes");
-    SeleneseTestNgHelper.assertTrue(isActiveRadioYesOption.isSelected());
-
-    testWebDriver.waitForElementToAppear(facilityHeader);
-    SeleneseTestNgHelper.assertEquals(facilityHeader.getText().trim(), "Edit facility");
+    verifyRestoredFacility();
 
     return new HomePage(testWebDriver);
   }
 
-  public HomePage editAndVerifyFacility(String facilityNameValue) throws IOException {
+  public HomePage editAndVerifyFacility(String program, String facilityNameValue) throws IOException {
     String catchmentPopulationValue = "600000";
     String latitudeValue = "955.5555";
     String longitudeValue = "644.4444";
     String altitudeValue = "6545.4545";
 
-    testWebDriver.waitForElementToAppear(facilityList);
-    facilityList.click();
-
-    testWebDriver.waitForElementToAppear(facilityHeader);
-    SeleneseTestNgHelper.assertEquals(facilityHeader.getText().trim(), "Edit facility");
+    verifyHeader("Edit facility");
 
     testWebDriver.waitForElementToAppear(deleteButton);
     testWebDriver.sleep(1500);
@@ -215,7 +239,7 @@ public class DeleteFacilityPage extends Page {
     altitude.clear();
     altitude.sendKeys(altitudeValue);
 
-    testWebDriver.selectByVisibleText(programsSupported, "ESSENTIAL MEDICINES");
+    testWebDriver.selectByVisibleText(programsSupported, program);
     programsSupportedActiveFlag.click();
     testWebDriver.sleep(500);
     programsSupportedStartDate.click();
@@ -225,32 +249,37 @@ public class DeleteFacilityPage extends Page {
     testWebDriver.sleep(500);
     addSupportedProgram.click();
 
+    verifyEditedFacility(catchmentPopulationValue, latitudeValue, longitudeValue, altitudeValue);
 
+    SaveButton.click();
+    verifyMessageOnFacilityScreen(facilityNameValue, "updated");
+
+    return new HomePage(testWebDriver);
+  }
+
+  public void verifyMessageOnFacilityScreen(String facilityName, String status) {
+
+    String message = null;
+    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementsToAppear(messageDiv, saveErrorMsgDiv);
+    String updateMessage = getMessage();
+    SeleneseTestNgHelper.assertEquals(updateMessage, "Facility '" + facilityName + "' " + status + " successfully");
+    testWebDriver.sleep(500);
+  }
+
+  private void verifyEditedFacility(String catchmentPopulationValue, String latitudeValue, String longitudeValue, String altitudeValue) {
     SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(catchmentPopulation, "value"), catchmentPopulationValue);
     SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(latitude, "value"), latitudeValue);
     SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(longitude, "value"), longitudeValue);
     SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(altitude, "value"), altitudeValue);
 
     SeleneseTestNgHelper.assertTrue(removeSupportedProgram.isDisplayed());
-
-    SaveButton.click();
-    testWebDriver.sleep(1000);
-    testWebDriver.waitForElementsToAppear(messageDiv, saveErrorMsgDiv);
-    String updateMessage = getMessage();
-    SeleneseTestNgHelper.assertEquals(updateMessage, "Facility '" + facilityNameValue + "' updated successfully");
-
-    return new HomePage(testWebDriver);
   }
 
   public HomePage verifyProgramSupported() throws IOException {
 
-
-    testWebDriver.waitForElementToAppear(facilityList);
-    facilityList.click();
-
-    testWebDriver.waitForElementToAppear(facilityHeader);
-    SeleneseTestNgHelper.assertEquals(facilityHeader.getText().trim(), "Edit facility");
-
+    clickFacilityList();
+    verifyHeader("Edit facility");
     testWebDriver.waitForElementToAppear(deleteButton);
     testWebDriver.sleep(1500);
 
@@ -258,6 +287,7 @@ public class DeleteFacilityPage extends Page {
 
     return new HomePage(testWebDriver);
   }
+
 
   public String getMessage() {
     String updateMessage;

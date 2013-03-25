@@ -153,21 +153,24 @@ public class CreateFacilityPage extends Page {
 
   }
 
+  private void verifyHeader(String headingToVerify)
+  {
+    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(facilityHeader);
+    SeleneseTestNgHelper.assertEquals(facilityHeader.getText().trim(), headingToVerify);
+  }
 
-  public String enterAndVerifyFacility(String geoZone, String facilityTypeValue, String operatedByValue) {
+  public String enterValuesInFacility(String facilityCodePrefix, String facilityNamePrefix,
+                                       String program,String geoZone, String facilityTypeValue, String operatedByValue) {
     String message = null;
     Date dObj = new Date();
     SimpleDateFormat formatter_date_time = new SimpleDateFormat(
       "yyyyMMdd-hhmmss");
     String date_time = formatter_date_time.format(dObj);
 
-    String facilityCodeText = "FCcode" + date_time;
-    String facilityNameText = "FCname" + date_time;
-
-    testWebDriver.sleep(1500);
-    testWebDriver.waitForElementToAppear(facilityHeader);
-    SeleneseTestNgHelper.assertEquals(facilityHeader.getText().trim(), "Add new facility");
-
+    String facilityCodeText = facilityCodePrefix + date_time;
+    String facilityNameText = facilityNamePrefix + date_time;
+    verifyHeader("Add new facility");
     testWebDriver.waitForElementToAppear(facilityCode);
     facilityCode.clear();
     facilityCode.sendKeys(facilityCodeText);
@@ -198,7 +201,7 @@ public class CreateFacilityPage extends Page {
     goDownDateCalender.click();
 
     testWebDriver.handleScrollByPixels(0,1000);
-    testWebDriver.selectByVisibleText(programsSupported, "HIV");
+    testWebDriver.selectByVisibleText(programsSupported, program);
     programsSupportedActiveFlag.click();
     testWebDriver.sleep(500);
     programsSupportedStartDate.click();
@@ -227,17 +230,23 @@ public class CreateFacilityPage extends Page {
     comments.sendKeys("Comments");
 
     SaveButton.click();
+
+    return date_time;
+  }
+
+  public void verifyMessageOnFacilityScreen(String facilityName, String status)
+  {
+    String message=null;
     testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
     if (saveSuccessMsgDiv.isDisplayed()) {
       message = testWebDriver.getText(saveSuccessMsgDiv);
     } else {
       message = testWebDriver.getText(saveErrorMsgDiv);
     }
-    SeleneseTestNgHelper.assertEquals(message, "Facility '" + facilityNameText + "' created successfully");
+    SeleneseTestNgHelper.assertEquals(message, "Facility '" + facilityName + "' "+status+" successfully");
     testWebDriver.sleep(500);
-
-    return date_time;
   }
+
 
 
 }

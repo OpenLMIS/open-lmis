@@ -40,7 +40,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   }
 
   @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testE2EInitiateRnR(String program, String userSIC, String userMO,String userlmu, String password, String[] credentials) throws Exception {
+  public void testE2EInitiateRnR(String program, String userSIC, String userMO, String userlmu, String password, String[] credentials) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
@@ -49,7 +49,11 @@ public class E2EInitiateRnR extends TestCaseHelper {
     String parentgeoZone = "Dodoma";
     String facilityType = "Lvl3 Hospital";
     String operatedBy = "MoH";
-    String date_time = createFacilityPage.enterAndVerifyFacility(geoZone, facilityType, operatedBy);
+    String facilityCodePrefix = "FCcode";
+    String facilityNamePrefix = "FCname";
+
+    String date_time = createFacilityPage.enterValuesInFacility(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityType, operatedBy);
+    createFacilityPage.verifyMessageOnFacilityScreen(facilityCodePrefix + date_time, "created");
     String facility_code = "FCcode" + date_time;
     dbWrapper.insertFacilities("F10", "F11");
 
@@ -60,11 +64,11 @@ public class E2EInitiateRnR extends TestCaseHelper {
     userRoleListStoreincharge.add("Approve Requisition");
     rolesPage.createRole("Store-in-charge", "Store-in-charge", userRoleListStoreincharge, true);
 
-      RolesPage rolesPagelmu = homePage.navigateRoleAssignments();
-      List<String> userRoleListlmu = new ArrayList<String>();
+    RolesPage rolesPagelmu = homePage.navigateRoleAssignments();
+    List<String> userRoleListlmu = new ArrayList<String>();
 
-      userRoleListlmu.add("Convert To Order Requisition");
-      rolesPagelmu.createRole("lmu", "lmu", userRoleListlmu, false);
+    userRoleListlmu.add("Convert To Order Requisition");
+    rolesPagelmu.createRole("lmu", "lmu", userRoleListlmu, false);
 
     List<String> userRoleListMedicalofficer = new ArrayList<String>();
     userRoleListMedicalofficer.add("Approve Requisition");
@@ -83,18 +87,18 @@ public class E2EInitiateRnR extends TestCaseHelper {
     dbWrapper.updateUser(passwordUsers, userSICEmail);
     userPageSIC.enterMyFacilityAndMySupervisedFacilityData(userSICFirstName, userSICLastName, "F10", "HIV", "Node 1", "Store-in-charge");
 
-      String passwordUserslmu = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-      UserPage userPagelmu = homePage.navigateToUser();
-      String userlmuEmail = "Lmu_Doe@openlmis.com";
-      String userlmuFirstName = "Lmu";
-      String userlmuLastName = "Doe";
-      String userlmuUserName = "lmu";
-      String userIDlmu = userPagelmu.enterAndverifyUserDetails(userlmuUserName, userlmuEmail, userlmuFirstName, userlmuLastName, baseUrlGlobal, dburlGlobal);
-      dbWrapper.updateUser(passwordUserslmu, userlmuEmail);
-      userPagelmu.enterMyFacilityAndMySupervisedFacilityData(userlmuFirstName, userlmuLastName, "F10", "HIV", "Node 1", "lmu");
+    String passwordUserslmu = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
+    UserPage userPagelmu = homePage.navigateToUser();
+    String userlmuEmail = "Lmu_Doe@openlmis.com";
+    String userlmuFirstName = "Lmu";
+    String userlmuLastName = "Doe";
+    String userlmuUserName = "lmu";
+    String userIDlmu = userPagelmu.enterAndverifyUserDetails(userlmuUserName, userlmuEmail, userlmuFirstName, userlmuLastName, baseUrlGlobal, dburlGlobal);
+    dbWrapper.updateUser(passwordUserslmu, userlmuEmail);
+    userPagelmu.enterMyFacilityAndMySupervisedFacilityData(userlmuFirstName, userlmuLastName, "F10", "HIV", "Node 1", "lmu");
 
 
-      UserPage userPageMO = homePage.navigateToUser();
+    UserPage userPageMO = homePage.navigateToUser();
     String userMOEmail = "Jane_Doe@openlmis.com";
     String userMOFirstName = "Jane";
     String userMOLastName = "Doe";
@@ -177,8 +181,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
     approvePageTopSNUser.editApproveQuantityAndVerifyTotalCost("2900");
     approvePageTopSNUser.approveRequisition();
     approvePageTopSNUser.verifyNoRequisitionPendingMessage();
-    LoginPage loginPagelmu=homePageTopSNUser.logout(baseUrlGlobal);
-      HomePage homePagelmu = loginPagelmu.loginAs(userlmu, password);
+    LoginPage loginPagelmu = homePageTopSNUser.logout(baseUrlGlobal);
+    HomePage homePagelmu = loginPagelmu.loginAs(userlmu, password);
 
     OrderPage orderPageOrdersPending = homePagelmu.navigateConvertToOrder();
     String[] periods = periodTopSNUser.split("-");
@@ -201,7 +205,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-      {"HIV", "storeincharge", "medicalofficer","lmu", "Admin123", new String[]{"Admin123", "Admin123"}}
+      {"HIV", "storeincharge", "medicalofficer", "lmu", "Admin123", new String[]{"Admin123", "Admin123"}}
     };
 
   }
