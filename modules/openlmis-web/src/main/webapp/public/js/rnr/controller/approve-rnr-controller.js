@@ -31,23 +31,19 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     $scope.showNonFullSupply = !!($routeParams.supplyType == 'non-full-supply');
   }
 
-  function openAggregates() {
-    $timeout(function () {
-      $(angular.element('.ngAggregate')).each(function (i, aggregate) {
-        aggregate.click();
-      });
-    });
-  }
-
   $scope.rowToggle = function (row) {
     if (row.collapsed) {
       row.toggleExpand();
     }
   };
 
-  $scope.$on('ngGridEventRows', function () {
-    openAggregates();
-  });
+    $scope.$on('ngGridEventRows', function () {
+      $timeout(function () {
+        $(angular.element('.ngAggregate')).each(function (i, aggregate) {
+          aggregate.click();
+        });
+      });
+    });
 
   function prepareColumnDefinitions() {
     var columnDefinitions = [

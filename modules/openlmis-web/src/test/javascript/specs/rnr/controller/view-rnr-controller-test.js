@@ -5,7 +5,7 @@
  */
 
 describe('ViewRnrController', function () {
-  var scope, httpBackend, controller, routeParams;
+  var scope, httpBackend, controller, routeParams, requisition;
 
   beforeEach(module('openlmis.services'));
   beforeEach(inject(function ($httpBackend, $rootScope, $controller) {
@@ -13,32 +13,28 @@ describe('ViewRnrController', function () {
     scope = $rootScope.$new();
     httpBackend = $httpBackend;
     controller = $controller;
+    requisition = {lineItems:[], nonFullSupplyLineItems:[]};
   }));
 
   it('should setup the grid columns according to visibility', function () {
-    httpBackend.expect('GET', "/requisitions/1.json").respond(200, {'rnr':{lineItems:[], nonFullSupplyLineItems:[]}});
-    httpBackend.expect('GET', "/reference-data/currency.json").respond(200, {'currency':{}});
-    httpBackend.expect('GET', "/rnr/2/columns.json").respond(200, {'rnrColumnList':columns});
-    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams});
-    httpBackend.flush();
     var columnDefs = [
+      { field : 'productCategory', displayName : 'Product Category', width : 0 },
       {field:'productCode', displayName:'Product Code'},
       {field:'product', displayName:'Product'},
       {field:'dispensingUnit', displayName:'Unit/Unit of Issue'},
       {field:'lossesAndAdjustments', displayName:'Total Losses / Adjustments', cellTemplate:lossesAndAdjustmentsTemplate}
     ];
+    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams, requisition: requisition, currency: {}, rnrColumns: columns});
     expect(columnDefs).toEqual(scope.columnDefs);
     expect('columnDefs').toEqual(scope.rnrGrid.columnDefs);
   });
 
-  it('should include approved quantity column if status  approved', function () {
+  it('should include approved quantity column if status approved', function () {
     columns.push({'name':'quantityApproved', 'label':'Approved Quantity', id:'99', visible:true});
-    httpBackend.expect('GET', "/requisitions/1.json").respond(200, {'rnr':{lineItems:[], nonFullSupplyLineItems:[], status:'APPROVED'}});
-    httpBackend.expect('GET', "/reference-data/currency.json").respond(200, {'currency':{}});
-    httpBackend.expect('GET', "/rnr/2/columns.json").respond(200, {'rnrColumnList':columns});
-    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams});
-    httpBackend.flush();
+    requisition = {lineItems:[], nonFullSupplyLineItems:[], status:'APPROVED'};
+    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams, requisition: requisition, currency: {}, rnrColumns: columns});
     var expectedDefinitions = [
+      { field : 'productCategory', displayName : 'Product Category', width : 0 },
       {field:'productCode', displayName:'Product Code'},
       {field:'product', displayName:'Product'},
       {field:'dispensingUnit', displayName:'Unit/Unit of Issue'},
@@ -50,12 +46,10 @@ describe('ViewRnrController', function () {
   });
 
   it('should include approved quantity column if status  ordered', function () {
-    httpBackend.expect('GET', "/requisitions/1.json").respond(200, {'rnr':{lineItems:[], nonFullSupplyLineItems:[], status:'ORDERED'}});
-    httpBackend.expect('GET', "/reference-data/currency.json").respond(200, {'currency':{}});
-    httpBackend.expect('GET', "/rnr/2/columns.json").respond(200, {'rnrColumnList':columns});
-    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams});
-    httpBackend.flush();
+    requisition = {lineItems:[], nonFullSupplyLineItems:[], status:'ORDERED'};
+    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams, requisition: requisition, currency: {}, rnrColumns: columns});
     var expectedDefinitions = [
+      { field : 'productCategory', displayName : 'Product Category', width : 0 },
       {field:'productCode', displayName:'Product Code'},
       {field:'product', displayName:'Product'},
       {field:'dispensingUnit', displayName:'Unit/Unit of Issue'},
@@ -68,12 +62,10 @@ describe('ViewRnrController', function () {
 
   it('should not include approved quantity column if status not approved', function () {
     columns.push({'name':'quantityApproved', 'label':'Approved Quantity', id:'99', visible:true});
-    httpBackend.expect('GET', "/requisitions/1.json").respond(200, {'rnr':{lineItems:[], nonFullSupplyLineItems:[], status:'INITIATED'}});
-    httpBackend.expect('GET', "/reference-data/currency.json").respond(200, {'currency':{}});
-    httpBackend.expect('GET', "/rnr/2/columns.json").respond(200, {'rnrColumnList':columns});
-    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams});
-    httpBackend.flush();
+    requisition = {lineItems:[], nonFullSupplyLineItems:[], status:'INITIATED'};
+    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams, requisition: requisition, currency: {}, rnrColumns: columns});
     var expectedDefinitions = [
+      { field : 'productCategory', displayName : 'Product Category', width : 0 },
       {field:'productCode', displayName:'Product Code'},
       {field:'product', displayName:'Product'},
       {field:'dispensingUnit', displayName:'Unit/Unit of Issue'},
@@ -85,41 +77,27 @@ describe('ViewRnrController', function () {
 
   it('should assign  line items based on supply type', function () {
     routeParams.supplyType = 'full-supply';
-    var rnr = {'rnr':{fullSupplyLineItems:[
+    var rnr = {fullSupplyLineItems:[
       {'id':1}
-    ], nonFullSupplyLineItems:[], period:{numberOfMonths:5}, status:'INITIATED'}};
-    httpBackend.expect('GET', "/requisitions/1.json").respond(200, rnr);
-    httpBackend.expect('GET', "/reference-data/currency.json").respond(200, {'currency':{}});
-    httpBackend.expect('GET', "/rnr/2/columns.json").respond(200, {'rnrColumnList':columns});
-    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams});
-    httpBackend.flush();
-
-    expect(rnr.rnr.fullSupplyLineItems.length).toEqual(scope.gridLineItems.length);
-    expect(rnr.rnr.fullSupplyLineItems.length).toEqual(scope.gridLineItems.length);
+    ], nonFullSupplyLineItems:[], period:{numberOfMonths:5}, status:'INITIATED'};
+    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams, requisition: rnr, currency: {}, rnrColumns: columns});
+    expect(rnr.fullSupplyLineItems.length).toEqual(scope.gridLineItems.length);
+    expect(rnr.fullSupplyLineItems.length).toEqual(scope.gridLineItems.length);
   });
 
   it('should assign non full supply line items based on supply type', function () {
     routeParams.supplyType = 'non-full-supply';
-    var rnr = {'rnr':{fullSupplyLineItems:[], nonFullSupplyLineItems:[
-      {'id':1}
-    ], period:{numberOfMonths:5}, status:'INITIATED'}};
-    httpBackend.expect('GET', "/requisitions/1.json").respond(200, rnr);
-    httpBackend.expect('GET', "/reference-data/currency.json").respond(200, {'currency':{}});
-    httpBackend.expect('GET', "/rnr/2/columns.json").respond(200, {'rnrColumnList':columns});
-    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams});
-    httpBackend.flush();
-
-    expect(rnr.rnr.nonFullSupplyLineItems.length).toEqual(scope.gridLineItems.length);
+    var rnr = {fullSupplyLineItems:[], nonFullSupplyLineItems:[
+        {'id':1}
+    ], period:{numberOfMonths:5}, status:'INITIATED'};
+    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams, requisition: rnr, currency: {}, rnrColumns: columns});
+    expect(rnr.nonFullSupplyLineItems.length).toEqual(scope.gridLineItems.length);
   });
 
   it('should set grid line items as data to the grid', function () {
     routeParams.supplyType = 'non-full-supply';
-    var rnr = {'rnr':{lineItems:[], nonFullSupplyLineItems:[], status:'INITIATED'}};
-    httpBackend.expect('GET', "/requisitions/1.json").respond(200, rnr);
-    httpBackend.expect('GET', "/reference-data/currency.json").respond(200, {'currency':{}});
-    httpBackend.expect('GET', "/rnr/2/columns.json").respond(200, {'rnrColumnList':columns});
-    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams});
-
+    var rnr = {lineItems:[], nonFullSupplyLineItems:[], status:'INITIATED'};
+    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams, requisition: rnr, currency: {}, rnrColumns: columns});
     expect('gridLineItems').toEqual(scope.rnrGrid.data);
   })
 

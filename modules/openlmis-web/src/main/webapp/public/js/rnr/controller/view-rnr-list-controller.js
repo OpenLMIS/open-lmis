@@ -41,8 +41,8 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, UserS
 
   $scope.openRequisition = function () {
     var url = "requisition/";
-    url += $scope.selectedItems[0].id + "/program/" + $scope.selectedItems[0].programId+"/full-supply";
-    $location.path(url);
+    url += $scope.selectedItems[0].id + "/" + $scope.selectedItems[0].programId+"?supplyType=full-supply";
+    $location.url(url);
   };
 
   function setProgramsLabel() {

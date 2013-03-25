@@ -4,54 +4,31 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ViewRnrController($scope, $routeParams, ProgramRnRColumnList, RequisitionById, ReferenceData) {
+function ViewRnrController($scope, $routeParams, requisition, rnrColumns, currency, $timeout) {
 
   $scope.lossesAndAdjustmentsModal = [];
-  $scope.fullSupplyLink = "#/requisition/" + $routeParams.rnr + '/program/' + $routeParams.programId + '/full-supply';
+  $scope.fullSupplyLink = "#/requisition/" + $routeParams.rnr + '/' + $routeParams.program + '?supplyType=full-supply';
 
-  $scope.nonFullSupplyLink = "#/requisition/" + $routeParams.rnr + '/program/' + $routeParams.programId + '/non-full-supply';
-
-  $scope.showNonFullSupply = !($routeParams.supplyType == 'full-supply');
+  $scope.nonFullSupplyLink = "#/requisition/" + $routeParams.rnr + '/' + $routeParams.program + '?supplyType=non-full-supply';
 
   $scope.gridLineItems = [];
   $scope.columnDefs = [];
+  $scope.rnr = new Rnr(requisition, rnrColumns);
+  $scope.currency = currency;
+  $scope.rnrColumns = rnrColumns;
 
-
-  if (!$scope.rnr || $scope.rnr.id != $routeParams.rnr || $scope.rnr.status != $scope.rnrStatus) {
-    RequisitionById.get({id:$routeParams.rnr}, function (data) {
-      $scope.$parent.rnr = data.rnr;
-      populateRnrLineItems();
-      fillGrid();
-      getTemplate();
-    });
-  } else {
-    populateRnrLineItems();
+  $scope.$on('$routeUpdate', function() {
+    $scope.showNonFullSupply = !($routeParams.supplyType == 'full-supply');
     fillGrid();
-    getTemplate();
-  }
+    prepareColumnDefs();
+  });
 
-  if (!$scope.currency) {
-    ReferenceData.get({}, function (data) {
-      $scope.$parent.currency = data.currency;
-    });
-  }
-
-  function getTemplate() {
-    if (!$scope.rnrColumns) {
-      $scope.$parent.rnrColumns = [];
-      ProgramRnRColumnList.get({programId:$routeParams.programId}, function (data) {
-        $scope.$parent.rnrColumns = data.rnrColumnList;
-        prepareColumnDefs();
-      });
-    } else {
-      prepareColumnDefs();
-    }
-  }
-
-
+  $scope.$emit('$routeUpdate');
 
   function prepareColumnDefs() {
-    $scope.columnDefs = [];
+    $scope.columnDefs = [
+      {field:'productCategory', displayName:'Product Category', width:0}
+    ];
     $($scope.rnrColumns).each(function (index, column) {
       if (!column.visible) return;
 
@@ -77,22 +54,49 @@ function ViewRnrController($scope, $routeParams, ProgramRnRColumnList, Requisiti
     $scope.gridLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.fullSupplyLineItems;
   }
 
+  $scope.rowToggle = function (row) {
+    if (row.collapsed) {
+      row.toggleExpand();
+    }
+  };
+
+  $scope.$on('ngGridEventRows', function () {
+    $timeout(function () {
+      $(angular.element('.ngAggregate')).each(function (i, aggregate) {
+        aggregate.click();
+      });
+    });
+  });
+
+  function aggregateTemplate() {
+    return "<div ng-click=\"rowToggle(row)\" ng-style=\"{'left': row.offsetleft}\" class=\"ngAggregate\">" +
+      "    <span class=\"ngAggregateText\">{{row.label CUSTOM_FILTERS}}</span>" +
+      "    <div style='display: none;' class=\"{{row.aggClass()}}\"></div>" +
+      "</div>" +
+      "";
+  }
+
   $scope.rnrGrid = {
     data:'gridLineItems',
-    canSelectRows:false,
+    enableRowSelection: false,
     showFooter:false,
     showSelectionCheckbox:false,
+    aggregateTemplate:aggregateTemplate(),
     showColumnMenu:false,
     showFilter:false,
     rowHeight:44,
+    enableColumnResize:true,
+    enableColumnReordering:false,
     enableSorting:false,
-    columnDefs:'columnDefs'
+    columnDefs:'columnDefs',
+    groups:['productCategory']
   };
 
 
   function currencyTemplate(value) {
     return '<span  class = "cell-text" ng-show = "showCurrencySymbol(' + value + ')"  ng-bind="currency"></span >&nbsp; &nbsp;<span ng-bind = "' + value + '" class = "cell-text" ></span >'
   }
+
   function lossesAndAdjustmentsTemplate() {
     return '<div id="lossesAndAdjustments" modal="lossesAndAdjustmentsModal[row.entity.id]">' +
       '<div class="modal-header"><h3>Losses And Adjustments</h3></div>' +
@@ -120,10 +124,6 @@ function ViewRnrController($scope, $routeParams, ProgramRnRColumnList, Requisiti
       '<span class="adjustment-value" ng-bind="row.entity.totalLossesAndAdjustments"></span>' +
       '</a>' +
       '</div>';
-  }
-
-  function populateRnrLineItems() {
-    $scope.rnr = new Rnr($scope.rnr);
   }
 
   $scope.totalCost = function () {
@@ -156,3 +156,36 @@ function ViewRnrController($scope, $routeParams, ProgramRnRColumnList, Requisiti
     $scope.lossesAndAdjustmentsModal[lineItem.id] = true;
   };
 }
+
+ViewRnrController.resolve = {
+
+  requisition:function ($q, $timeout, RequisitionById, $route) {
+    var deferred = $q.defer();
+    $timeout(function () {
+      RequisitionById.get({id:$route.current.params.rnr}, function (data) {
+        deferred.resolve(data.rnr);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  },
+
+  rnrColumns:function ($q, $timeout, ProgramRnRColumnList, $route) {
+    var deferred = $q.defer();
+    $timeout(function () {
+      ProgramRnRColumnList.get({programId:$route.current.params.program}, function (data) {
+        deferred.resolve(data.rnrColumnList);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  },
+
+  currency:function ($q, $timeout, ReferenceData) {
+    var deferred = $q.defer();
+    $timeout(function () {
+      ReferenceData.get({}, function (data) {
+        deferred.resolve(data.currency);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  }
+};

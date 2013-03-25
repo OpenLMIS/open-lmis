@@ -140,7 +140,7 @@ describe('ViewRnrListController', function () {
       {'id':1, 'programId':2}
     ];
     scope.openRequisition();
-    expect(location.path()).toEqual("/requisition/1/program/2/full-supply");
+    expect(location.url()).toEqual("/requisition/1/2?supplyType=full-supply");
   });
 
   function loadRequisitions(expectedUrl, respondWith) {

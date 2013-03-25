@@ -59,17 +59,17 @@ public class ViewRequisitionPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@class='ngViewport ng-scope']/div/div/div[1]")
   private static WebElement viewRnRList;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCell  col18 colt18']/span[3]")
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCell  col20 colt20']/span[3]")
   private static WebElement totalCostPreApproval;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCell  col19 colt19']/span[3]")
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCell  col21 colt21']/span[3]")
   private static WebElement totalCostPostApproval;
 
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCell  col8 colt8']/div/span")
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCell  col10 colt10']/div/span")
   private static WebElement newPatient;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCell  col16 colt16']/div/span")
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCell  col18 colt18']/div/span")
   private static WebElement approveQuantity;
 
   public ViewRequisitionPage(TestWebDriver driver) throws IOException {

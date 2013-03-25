@@ -12,7 +12,7 @@ var rnrModule = angular.module('rnr', ['openlmis', 'ngGrid', 'ui.bootstrap.modal
     when('/requisitions-for-convert-to-order', {controller:ConvertToOrderListController, templateUrl:'partials/convert-to-order-list.html', resolve:ConvertToOrderListController.resolve}).
     when('/view-requisitions', {controller:ViewRnrListController, templateUrl:'partials/view-rnr.html', resolve:ViewRnrListController.resolve}).
     when('/rnr-for-approval/:rnr/:program', {controller:ApproveRnrController, templateUrl:'partials/approve.html', resolve:ApproveRnrController.resolve, reloadOnSearch:false}).
-    when('/requisition/:rnr/program/:programId/:supplyType', {controller:ViewRnrController, templateUrl:'partials/view.html'}).
+    when('/requisition/:rnr/:program', {controller:ViewRnrController, templateUrl:'partials/view.html', resolve: ViewRnrController.resolve, reloadOnSearch:false}).
     otherwise({redirectTo:'/init-rnr'});
 }]).directive('rnrValidator',function () {
     return {
