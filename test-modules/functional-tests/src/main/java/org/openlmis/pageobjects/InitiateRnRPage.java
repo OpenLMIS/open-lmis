@@ -293,7 +293,7 @@ public class InitiateRnRPage extends Page {
         }
 
     public void verifyFieldValue(String Expected, String Actual) {
-        SeleneseTestNgHelper.assertEquals(Expected, Actual);
+        SeleneseTestNgHelper.assertEquals(Actual , Expected) ;
     }
 
     public void verifyTemplateNotConfiguredMessage() {
@@ -351,18 +351,22 @@ public class InitiateRnRPage extends Page {
 
 
   public void calculateAndVerifyStockOnHand(Integer A, Integer B, Integer C, Integer D) {
-    enterBeginningBalance(A.toString());
-    enterQuantityReceived(B.toString());
-    enterQuantityDispensed(C.toString());
-    enterLossesAndAdjustments(D.toString());
-    beginningBalance.click();
-    testWebDriver.waitForElementToAppear(stockOnHand);
     Integer StockOnHand = A + B - C + D;
-    testWebDriver.sleep(2000);
-    String stockOnHandValue = stockOnHand.getText();
-    String StockOnHandValue = StockOnHand.toString();
-    SeleneseTestNgHelper.assertEquals(stockOnHandValue, StockOnHandValue);
+    String stockOnHandActualValue = StockOnHand.toString();
+    String stockOnHandExpectedValue =  calculateStockOnHand(A, B, C,D);
+    verifyFieldValue(stockOnHandExpectedValue, stockOnHandActualValue) ;
   }
+
+    public String calculateStockOnHand(Integer A, Integer B, Integer C, Integer D) {
+        enterBeginningBalance(A.toString());
+        enterQuantityReceived(B.toString());
+        enterQuantityDispensed(C.toString());
+        enterLossesAndAdjustments(D.toString());
+        beginningBalance.click();
+        testWebDriver.waitForElementToAppear(stockOnHand);
+        testWebDriver.sleep(2000);
+        return stockOnHand.getText();
+    }
 
   public void PopulateMandatoryFullSupplyDetails(int numberOfLineItems, int numberOfLineItemsPerPage) {
     int numberOfPages = numberOfLineItems / numberOfLineItemsPerPage;
@@ -385,67 +389,88 @@ public class InitiateRnRPage extends Page {
   }
 
   public void enterAndVerifyRequestedQuantityExplanation(Integer A) {
+    String warningMessage =  enterRequestedQuantity(A);
     String expectedWarningMessage = "Please enter a reason";
+    verifyFieldValue(warningMessage.trim(), expectedWarningMessage) ;
+    enterExplanation();
+  }
+
+  public String enterRequestedQuantity(Integer A) {
     testWebDriver.waitForElementToAppear(requestedQuantity);
     requestedQuantity.sendKeys(A.toString());
     testWebDriver.waitForElementToAppear(requestedQtyWarningMessage);
-    String warningMessage = testWebDriver.getText(requestedQtyWarningMessage);
-    SeleneseTestNgHelper.assertEquals(warningMessage.trim(), expectedWarningMessage);
-    requestedQuantityExplanation.sendKeys("Due to bad climate");
-    testWebDriver.sleep(1000);
-  }
+    return  testWebDriver.getText(requestedQtyWarningMessage);
+    }
+
+    public void enterExplanation() {
+        requestedQuantityExplanation.sendKeys("Due to bad climate");
+        testWebDriver.sleep(1000);
+    }
 
   public void enterValuesAndVerifyCalculatedOrderQuantity(Integer F, Integer X, Integer N, Integer P, Integer H, Integer I) {
-    testWebDriver.waitForElementToAppear(newPatient);
-    newPatient.sendKeys(Keys.DELETE);
-    newPatient.sendKeys(F.toString());
-    testWebDriver.waitForElementToAppear(totalStockOutDays);
-    totalStockOutDays.sendKeys(Keys.DELETE);
-    totalStockOutDays.sendKeys(X.toString());
-    testWebDriver.waitForElementToAppear(adjustedTotalConsumption);
-    testWebDriver.sleep(1500);
-    adjustedTotalConsumption.click();
-    String actualAdjustedTotalConsumption = testWebDriver.getText(adjustedTotalConsumption);
-    SeleneseTestNgHelper.assertEquals(actualAdjustedTotalConsumption, N.toString());
-    String actualAmc = testWebDriver.getText(amc);
-    SeleneseTestNgHelper.assertEquals(actualAmc.trim(), P.toString());
-    String actualMaximumStockQuantity = testWebDriver.getText(maximumStockQuantity);
-    SeleneseTestNgHelper.assertEquals(actualMaximumStockQuantity.trim(), H.toString());
-    String actualCalculatedOrderQuantity = testWebDriver.getText(caculatedOrderQuantity);
-    SeleneseTestNgHelper.assertEquals(actualCalculatedOrderQuantity.trim(), I.toString());
+    enterValuesCalculatedOrderQuantity(F,X);
+    VerifyCalculatedOrderQuantity(N,P,H,I);
     testWebDriver.sleep(1000);
-
-
   }
 
-  public void verifyPacksToShip(Integer V) {
+    public void enterValuesCalculatedOrderQuantity(Integer numberOfNewPatients, Integer StockOutDays) {
+        testWebDriver.waitForElementToAppear(newPatient);
+        newPatient.sendKeys(Keys.DELETE);
+        newPatient.sendKeys(numberOfNewPatients.toString());
+        testWebDriver.waitForElementToAppear(totalStockOutDays);
+        totalStockOutDays.sendKeys(Keys.DELETE);
+        totalStockOutDays.sendKeys(StockOutDays.toString());
+        testWebDriver.waitForElementToAppear(adjustedTotalConsumption);
+        testWebDriver.sleep(1500);
+        adjustedTotalConsumption.click();
+    }
+
+    public void VerifyCalculatedOrderQuantity(Integer expectedAdjustedTotalConsumption, Integer expectedAMC, Integer expectedMaximumStockQuantity, Integer expectedCalculatedOrderQuantity) {
+        String actualAdjustedTotalConsumption = testWebDriver.getText(adjustedTotalConsumption);
+        verifyFieldValue(expectedAdjustedTotalConsumption.toString() ,actualAdjustedTotalConsumption) ;
+        String actualAmc = testWebDriver.getText(amc);
+        verifyFieldValue(expectedAMC.toString() , actualAmc.trim()) ;
+        String actualMaximumStockQuantity = testWebDriver.getText(maximumStockQuantity);
+        verifyFieldValue(expectedMaximumStockQuantity.toString() , actualMaximumStockQuantity.trim()) ;
+        String actualCalculatedOrderQuantity = testWebDriver.getText(caculatedOrderQuantity);
+        verifyFieldValue(expectedCalculatedOrderQuantity.toString() , actualCalculatedOrderQuantity.trim()) ;
+    }
+
+    public void verifyPacksToShip(Integer V) {
     testWebDriver.waitForElementToAppear(packsToShip);
     String actualPacksToShip = testWebDriver.getText(packsToShip);
-    SeleneseTestNgHelper.assertEquals(actualPacksToShip.trim(), V.toString());
+    verifyFieldValue(V.toString(), actualPacksToShip.trim()) ;
     testWebDriver.sleep(500);
 
   }
 
   public void calculateAndVerifyTotalCost() {
-    testWebDriver.waitForElementToAppear(packsToShip);
-    String actualPacksToShip = testWebDriver.getText(packsToShip);
-    testWebDriver.waitForElementToAppear(pricePerPack);
-    String actualPricePerPack = testWebDriver.getText(pricePerPack).substring(1);
-    actualTotalCostFullSupply = Float.parseFloat(actualPacksToShip) * Float.parseFloat(actualPricePerPack);
+    actualTotalCostFullSupply=calculateTotalCost();
     SeleneseTestNgHelper.assertEquals(actualTotalCostFullSupply.toString() + "0", totalCost.getText().substring(1));
     testWebDriver.sleep(500);
   }
 
+    public float calculateTotalCost() {
+        testWebDriver.waitForElementToAppear(packsToShip);
+        String actualPacksToShip = testWebDriver.getText(packsToShip);
+        testWebDriver.waitForElementToAppear(pricePerPack);
+        String actualPricePerPack = testWebDriver.getText(pricePerPack).substring(1);
+        return Float.parseFloat(actualPacksToShip) * Float.parseFloat(actualPricePerPack);
+    }
+
   public void calculateAndVerifyTotalCostNonFullSupply() {
-    testWebDriver.waitForElementToAppear(packsToShipNonFullSupply);
-    String actualPacksToShip = testWebDriver.getText(packsToShipNonFullSupply);
-    testWebDriver.waitForElementToAppear(pricePerPackNonFullSupply);
-    String actualPricePerPack = testWebDriver.getText(pricePerPackNonFullSupply).substring(1);
-    actualTotalCostNonFullSupply = Float.parseFloat(actualPacksToShip.trim()) * Float.parseFloat(actualPricePerPack.trim());
+    actualTotalCostNonFullSupply=calculateTotalCostNonFullSupply();
     SeleneseTestNgHelper.assertEquals(actualTotalCostNonFullSupply.toString() + "0", totalCostNonFullSupply.getText().trim().substring(1));
     testWebDriver.sleep(500);
   }
 
+    public float calculateTotalCostNonFullSupply() {
+        testWebDriver.waitForElementToAppear(packsToShipNonFullSupply);
+        String actualPacksToShip = testWebDriver.getText(packsToShipNonFullSupply);
+        testWebDriver.waitForElementToAppear(pricePerPackNonFullSupply);
+        String actualPricePerPack = testWebDriver.getText(pricePerPackNonFullSupply).substring(1);
+        return Float.parseFloat(actualPacksToShip.trim()) * Float.parseFloat(actualPricePerPack.trim());
+    }
 
   public void verifyCostOnFooter() {
     testWebDriver.waitForElementToAppear(totalCostFullSupplyFooter);
