@@ -72,26 +72,37 @@ public class TestCaseHelper {
   }
 
     public void setupTestDataToInitiateRnR(String program, String userSIC) throws IOException, SQLException{
-        dbWrapper.insertProducts("P10", "P11");
-        dbWrapper.insertProgramProducts("P10", "P11", program);
-        dbWrapper.insertFacilityApprovedProducts("P10", "P11", program, "Lvl3 Hospital");
+        setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
         dbWrapper.insertFacilities("F10", "F11");
         dbWrapper.configureTemplate(program);
-        dbWrapper.insertRole("store in-charge", "false", "");
-        dbWrapper.insertRole("district pharmacist", "false", "");
-       dbWrapper.assignRight("store in-charge", "CREATE_REQUISITION");
-       dbWrapper.assignRight("store in-charge", "VIEW_REQUISITION");
-        String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-        dbWrapper.insertUser("200", userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com");
+        setupTestUserRoleRightsData(userSIC);
         dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
         dbWrapper.insertRoleAssignment("200", "store in-charge");
         dbWrapper.insertSchedules();
         dbWrapper.insertProcessingPeriods();
-        dbWrapper.insertRequisitionGroups("RG1", "RG2", "N1", "N2");
-        dbWrapper.insertRequisitionGroupMembers("F10", "F11");
-        dbWrapper.insertRequisitionGroupProgramSchedule();
+        setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
         dbWrapper.insertSupplyLines("N1", program, "F10");
     }
 
+    public void setupProductTestData(String product1, String product2, String program, String facilityType) throws IOException, SQLException {
+        dbWrapper.insertProducts(product1, product2);
+        dbWrapper.insertProgramProducts(product1, product2, program);
+        dbWrapper.insertFacilityApprovedProducts(product1, product2, program, facilityType);
+    }
+
+    public void setupRequisitionGroupData(String RGCode1, String RGCode2, String SupervisoryNodeCode1, String SupervisoryNodeCode2, String Facility1, String Facility2) throws IOException, SQLException {
+        dbWrapper.insertRequisitionGroups(RGCode1, RGCode2, SupervisoryNodeCode1, SupervisoryNodeCode2);
+        dbWrapper.insertRequisitionGroupMembers(Facility1, Facility2);
+        dbWrapper.insertRequisitionGroupProgramSchedule();
+    }
+
+    public void setupTestUserRoleRightsData(String userSIC) throws IOException, SQLException {
+        dbWrapper.insertRole("store in-charge", "false", "");
+        dbWrapper.insertRole("district pharmacist", "false", "");
+        dbWrapper.assignRight("store in-charge", "CREATE_REQUISITION");
+        dbWrapper.assignRight("store in-charge", "VIEW_REQUISITION");
+        String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
+        dbWrapper.insertUser("200", userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com");
+    }
 
 }

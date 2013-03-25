@@ -31,27 +31,20 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Program-Not-Configured")
   public void testVerifyProgramNotConfigured(String program, String userSIC, String password) throws Exception {
-    dbWrapper.insertProducts("P10", "P11");
-    dbWrapper.insertProgramProducts("P10", "P11", program);
-    dbWrapper.insertFacilityApprovedProducts("P10", "P11", program, "Lvl3 Hospital");
+
+    setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
     dbWrapper.insertFacilities("F10", "F11");
-    dbWrapper.insertRole("store in-charge", "false", "");
-    dbWrapper.insertRole("district pharmacist", "false", "");
-    dbWrapper.insertRoleRights();
-    String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-    dbWrapper.insertUser("200", userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com");
+    setupTestUserRoleRightsData(userSIC);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
     dbWrapper.insertRoleAssignment("200", "store in-charge");
     dbWrapper.insertSchedules();
     dbWrapper.insertProcessingPeriods();
-    dbWrapper.insertRequisitionGroups("RG1", "RG2", "N1", "N2");
-    dbWrapper.insertRequisitionGroupMembers("F10", "F11");
-    dbWrapper.insertRequisitionGroupProgramSchedule();
+    setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
     dbWrapper.insertSupplyLines("N1", program, "F10");
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
-    String periodDetails = homePage.navigateAndInitiateRnr(program);
+    homePage.navigateAndInitiateRnr(program);
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
     initiateRnRPage.verifyTemplateNotConfiguredMessage();
 
@@ -60,33 +53,25 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Verify-On-Rnr-Screen")
   public void testVerifyImpactOfChangesInConfigScreenOnRnRScreen(String program, String userSIC, String password, String[] credentials) throws Exception {
-    dbWrapper.insertProducts("P10", "P11");
-    dbWrapper.insertProgramProducts("P10", "P11", program);
-    dbWrapper.insertFacilityApprovedProducts("P10", "P11", program, "Lvl3 Hospital");
+    setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
     dbWrapper.insertFacilities("F10", "F11");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
     String newColumnHeading = "Altered";
     templateConfigPage.alterTemplateLabelAndVisibility(newColumnHeading);
-    dbWrapper.insertRole("store in-charge", "false", "");
-    dbWrapper.insertRole("district pharmacist", "false", "");
-    dbWrapper.insertRoleRights();
-    String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-    dbWrapper.insertUser("200", userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com");
+    setupTestUserRoleRightsData(userSIC);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
     dbWrapper.insertRoleAssignment("200", "store in-charge");
     dbWrapper.insertSchedules();
     dbWrapper.insertProcessingPeriods();
-    dbWrapper.insertRequisitionGroups("RG1", "RG2", "N1", "N2");
-    dbWrapper.insertRequisitionGroupMembers("F10", "F11");
-    dbWrapper.insertRequisitionGroupProgramSchedule();
+    setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
     dbWrapper.insertSupplyLines("N1", program, "F10");
 
     homePage.logout(baseUrlGlobal);
     LoginPage loginPageSic = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePageSic = loginPageSic.loginAs(userSIC, password);
-    String periodDetails = homePageSic.navigateAndInitiateRnr(program);
+    homePageSic.navigateAndInitiateRnr(program);
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
     String tableXpathTillTr = "//table[@id='fullSupplyTable']/thead/tr";
     int columns = initiateRnRPage.getSizeOfElements(tableXpathTillTr + "/th");
