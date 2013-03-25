@@ -13,6 +13,7 @@ idea {
     }
 }
 
+
 buildscript {
     repositories {
         mavenCentral()
@@ -30,6 +31,8 @@ subprojects {
         }
     }
     apply plugin: 'java'
+
+    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
     repositories {
         mavenCentral()
