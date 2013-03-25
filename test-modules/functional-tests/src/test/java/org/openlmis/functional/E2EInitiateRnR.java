@@ -8,7 +8,6 @@ package org.openlmis.functional;
 
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
-import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -105,11 +104,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
     userPageMO.enterMyFacilityAndMySupervisedFacilityData(userMOFirstName, userMOLastName, "F11", "HIV", "Node 2", "Medical-Officer");
 
     dbWrapper.updateRoleGroupMember(facility_code);
-    dbWrapper.insertProducts("P10", "P11");
-    dbWrapper.insertProgramProducts("P10", "P11", program);
-    dbWrapper.insertFacilityApprovedProducts("P10", "P11", program, "Lvl3 Hospital");
+    setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
     dbWrapper.insertRequisitionGroups("RG1", "RG2", "N1", "N2");
-
     dbWrapper.insertRequisitionGroupMembers("F10", facility_code);
 
     ManageSchedulePage manageSchedulePage = homePage.navigateToSchedule();

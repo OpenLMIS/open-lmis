@@ -9,15 +9,13 @@ package org.openlmis.functional;
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
-import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.*;
+import org.openlmis.pageobjects.HomePage;
+import org.openlmis.pageobjects.InitiateRnRPage;
+import org.openlmis.pageobjects.LoginPage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
@@ -35,23 +33,17 @@ public class RnRPagination extends TestCaseHelper {
       dbWrapper.setupMultipleProducts(program,"Lvl3 Hospital",21,false);
       dbWrapper.insertFacilities("F10", "F11");
       dbWrapper.configureTemplate(program);
-      dbWrapper.insertRole("store in-charge","false","");
-      dbWrapper.insertRole("district pharmacist","false","");
-      dbWrapper.insertRoleRights();
-      String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-      dbWrapper.insertUser("200",userSIC,passwordUsers,"F10","Fatima_Doe@openlmis.com");
+      setupTestUserRoleRightsData(userSIC);
       dbWrapper.insertSupervisoryNode("F10","N1","Node 1","null");
       dbWrapper.insertRoleAssignment("200","store in-charge");
       dbWrapper.insertSchedules();
       dbWrapper.insertProcessingPeriods();
-      dbWrapper.insertRequisitionGroups("RG1", "RG2", "N1", "N2");
-      dbWrapper.insertRequisitionGroupMembers("F10", "F11");
-      dbWrapper.insertRequisitionGroupProgramSchedule();
+      setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
       dbWrapper.insertSupplyLines("N1",program,"F10");
 
       LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
       HomePage homePage = loginPage.loginAs(userSIC, password);
-      String periodDetails = homePage.navigateAndInitiateRnr(program);
+      homePage.navigateAndInitiateRnr(program);
       InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
       testWebDriver.sleep(2000);
@@ -118,18 +110,12 @@ public class RnRPagination extends TestCaseHelper {
         dbWrapper.setupMultipleProducts(program,"Lvl3 Hospital",11,true);
         dbWrapper.insertFacilities("F10", "F11");
         dbWrapper.configureTemplate(program);
-        dbWrapper.insertRole("store in-charge","false","");
-        dbWrapper.insertRole("district pharmacist","false","");
-        dbWrapper.insertRoleRights();
-        String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-        dbWrapper.insertUser("200",userSIC,passwordUsers,"F10","Fatima_Doe@openlmis.com");
+        setupTestUserRoleRightsData(userSIC);
         dbWrapper.insertSupervisoryNode("F10","N1","Node 1","null");
         dbWrapper.insertRoleAssignment("200","store in-charge");
         dbWrapper.insertSchedules();
         dbWrapper.insertProcessingPeriods();
-        dbWrapper.insertRequisitionGroups("RG1", "RG2", "N1", "N2");
-        dbWrapper.insertRequisitionGroupMembers("F10", "F11");
-        dbWrapper.insertRequisitionGroupProgramSchedule();
+        setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
         dbWrapper.insertSupplyLines("N1",program,"F10");
 
         LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -150,18 +136,12 @@ public class RnRPagination extends TestCaseHelper {
         dbWrapper.setupMultipleCategoryProducts(program,"Lvl3 Hospital",11,false) ;
         dbWrapper.insertFacilities("F10", "F11");
         dbWrapper.configureTemplate(program);
-        dbWrapper.insertRole("store in-charge","false","");
-        dbWrapper.insertRole("district pharmacist","false","");
-        dbWrapper.insertRoleRights();
-        String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-        dbWrapper.insertUser("200",userSIC,passwordUsers,"F10","Fatima_Doe@openlmis.com");
+        setupTestUserRoleRightsData(userSIC);
         dbWrapper.insertSupervisoryNode("F10","N1","Node 1","null");
         dbWrapper.insertRoleAssignment("200","store in-charge");
         dbWrapper.insertSchedules();
         dbWrapper.insertProcessingPeriods();
-        dbWrapper.insertRequisitionGroups("RG1", "RG2", "N1", "N2");
-        dbWrapper.insertRequisitionGroupMembers("F10", "F11");
-        dbWrapper.insertRequisitionGroupProgramSchedule();
+        setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
         dbWrapper.insertSupplyLines("N1",program,"F10");
 
         LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -182,18 +162,12 @@ public class RnRPagination extends TestCaseHelper {
         dbWrapper.setupMultipleCategoryProducts(program,"Lvl3 Hospital",11,true) ;
         dbWrapper.insertFacilities("F10", "F11");
         dbWrapper.configureTemplate(program);
-        dbWrapper.insertRole("store in-charge","false","");
-        dbWrapper.insertRole("district pharmacist","false","");
-        dbWrapper.insertRoleRights();
-        String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-        dbWrapper.insertUser("200",userSIC,passwordUsers,"F10","Fatima_Doe@openlmis.com");
+        setupTestUserRoleRightsData(userSIC);
         dbWrapper.insertSupervisoryNode("F10","N1","Node 1","null");
         dbWrapper.insertRoleAssignment("200","store in-charge");
         dbWrapper.insertSchedules();
         dbWrapper.insertProcessingPeriods();
-        dbWrapper.insertRequisitionGroups("RG1", "RG2", "N1", "N2");
-        dbWrapper.insertRequisitionGroupMembers("F10", "F11");
-        dbWrapper.insertRequisitionGroupProgramSchedule();
+        setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
         dbWrapper.insertSupplyLines("N1",program,"F10");
 
         LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
