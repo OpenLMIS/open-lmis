@@ -75,7 +75,7 @@ public class RnRPagination extends TestCaseHelper {
       verifyNextAndLastLinksDisabled();
       verifyPreviousAndFirstLinksEnabled();
 
-      initiateRnRPage.addMultipleNonFullSupplyLineItems(21,20,false);
+      initiateRnRPage.addMultipleNonFullSupplyLineItems(21,false);
       verifyDisplayOrderNonFullSupply(20);
       verifyNumberOfPageLinks(21,20);
       verifyPreviousAndFirstLinksDisabled();
@@ -127,7 +127,7 @@ public class RnRPagination extends TestCaseHelper {
         verifyDefaultDisplayOrderFullSupply();
 
 
-        initiateRnRPage.addMultipleNonFullSupplyLineItems(11,20,false);
+        initiateRnRPage.addMultipleNonFullSupplyLineItems(11,false);
         //verifyDefaultDisplayOrderNonFullSupply() //Seems defect;
     }
 
@@ -153,7 +153,7 @@ public class RnRPagination extends TestCaseHelper {
         verifyCategoryDisplayOrderFullSupply(11);
 
 
-        initiateRnRPage.addMultipleNonFullSupplyLineItems(11,20,true);
+        initiateRnRPage.addMultipleNonFullSupplyLineItems(11,true);
         verifyCategoryDisplayOrderNonFullSupply(11);
     }
 
@@ -179,7 +179,7 @@ public class RnRPagination extends TestCaseHelper {
         verifyCategoryDefaultDisplayOrderFullSupply();
 
 
-        initiateRnRPage.addMultipleNonFullSupplyLineItems(11,20,true);
+        initiateRnRPage.addMultipleNonFullSupplyLineItems(11,true);
         verifyCategoryDefaultDisplayOrderNonFullSupply();
     }
 

@@ -585,7 +585,7 @@ public class InitiateRnRPage extends Page {
     SeleneseTestNgHelper.assertEquals(flag, false);
   }
 
-  public void addMultipleNonFullSupplyLineItems(int numberOfLineItems, int numberOfLineItemsPerPage, boolean isMultipleCategories) throws IOException, SQLException {
+  public void addMultipleNonFullSupplyLineItems(int numberOfLineItems, boolean isMultipleCategories) throws IOException, SQLException {
     testWebDriver.waitForElementToAppear(nonFullSupplyTab);
     nonFullSupplyTab.click();
 
