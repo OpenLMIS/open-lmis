@@ -31,7 +31,6 @@
 
         <property name="locations">
             <list>
-                <value>classpath:${environmentName}/postgresql.properties</value>
                 <value>classpath:/default.properties</value>
                 <value>classpath:${environmentName}/app.properties</value>
             </list>
