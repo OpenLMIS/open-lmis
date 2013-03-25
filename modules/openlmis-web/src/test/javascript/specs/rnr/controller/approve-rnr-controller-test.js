@@ -283,4 +283,18 @@ describe('Approve Requisition controller', function () {
     expect(result).toBeFalsy();
   });
 
+  it('should call toggle expand in a grid if collapsed', function () {
+    var row = {collapsed:true, toggleExpand: function(){} };
+    spyOn(row, 'toggleExpand');
+    scope.rowToggle(row);
+    expect(row.toggleExpand).toHaveBeenCalled();
+  });
+
+  it('should not call toggle expand in a grid if collapsed', function () {
+    var row = {collapsed:false, toggleExpand: function(){} };
+    spyOn(row, 'toggleExpand');
+    scope.rowToggle(row);
+    expect(row.toggleExpand.calls.length).toEqual(0);
+  });
+
 });

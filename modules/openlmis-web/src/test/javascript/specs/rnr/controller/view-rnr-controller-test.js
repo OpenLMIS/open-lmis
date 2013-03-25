@@ -99,7 +99,23 @@ describe('ViewRnrController', function () {
     var rnr = {lineItems:[], nonFullSupplyLineItems:[], status:'INITIATED'};
     controller(ViewRnrController, {$scope:scope, $routeParams:routeParams, requisition: rnr, currency: {}, rnrColumns: columns});
     expect('gridLineItems').toEqual(scope.rnrGrid.data);
-  })
+  });
+
+  it('should call toggle expand in a grid if collapsed', function () {
+    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams, requisition: requisition, currency: {}, rnrColumns: columns});
+    var row = {collapsed:true, toggleExpand: function(){} };
+    spyOn(row, 'toggleExpand');
+    scope.rowToggle(row);
+    expect(row.toggleExpand).toHaveBeenCalled();
+  });
+
+  it('should not call toggle expand in a grid if collapsed', function () {
+    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams, requisition: requisition, currency: {}, rnrColumns: columns});
+    var row = {collapsed:false, toggleExpand: function(){} };
+    spyOn(row, 'toggleExpand');
+    scope.rowToggle(row);
+    expect(row.toggleExpand.calls.length).toEqual(0);
+  });
 
 });
 

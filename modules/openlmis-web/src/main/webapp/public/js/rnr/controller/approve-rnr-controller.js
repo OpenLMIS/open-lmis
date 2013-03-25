@@ -37,13 +37,13 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     }
   };
 
-    $scope.$on('ngGridEventRows', function () {
-      $timeout(function () {
-        $(angular.element('.ngAggregate')).each(function (i, aggregate) {
-          aggregate.click();
-        });
+  $scope.$on('ngGridEventRows', function () {
+    $timeout(function () {
+      $(angular.element('.ngAggregate')).each(function (i, aggregate) {
+        aggregate.click();
       });
     });
+  });
 
   function prepareColumnDefinitions() {
     var columnDefinitions = [
@@ -184,8 +184,8 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     showFilter:false,
     rowHeight:44,
     enableSorting:false,
-    enableColumnResize: true,
-    enableColumnReordering: false,
+    enableColumnResize:true,
+    enableColumnReordering:false,
     columnDefs:'columnDefinitions',
     groups:['productCategory']
   };
