@@ -37,7 +37,7 @@ public class ViewRequisition extends TestCaseHelper {
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
-    String periodDetails = homePage.navigateAndInitiateRnr(program);
+    homePage.navigateAndInitiateRnr(program);
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
     HomePage homePage1 = initiateRnRPage.clickHome();
 
@@ -45,7 +45,7 @@ public class ViewRequisition extends TestCaseHelper {
     viewRequisitionPage.verifyElementsOnViewRequisitionScreen();
     dbWrapper.insertValuesInRequisition();
     dbWrapper.updateRequisitionStatus("SUBMITTED");
-    viewRequisitionPage.enterSearchCriteria();
+    viewRequisitionPage.enterViewSearchCriteria();
     viewRequisitionPage.clickSearch();
     viewRequisitionPage.verifyNoRequisitionFound();
     dbWrapper.updateRequisitionStatus("AUTHORIZED");
@@ -54,7 +54,7 @@ public class ViewRequisition extends TestCaseHelper {
 
     HomePage homePageAuthorized = viewRequisitionPage.verifyFieldsPreApproval("12.50", "1");
     ViewRequisitionPage viewRequisitionPageAuthorized = homePageAuthorized.navigateViewRequisition();
-    viewRequisitionPageAuthorized.enterSearchCriteria();
+    viewRequisitionPageAuthorized.enterViewSearchCriteria();
     viewRequisitionPageAuthorized.clickSearch();
     viewRequisitionPageAuthorized.verifyStatus("AUTHORIZED");
     viewRequisitionPageAuthorized.clickRnRList();
@@ -62,7 +62,7 @@ public class ViewRequisition extends TestCaseHelper {
     HomePage homePageInApproval = viewRequisitionPageAuthorized.verifyFieldsPreApproval("12.50", "1");
     dbWrapper.updateRequisitionStatus("IN_APPROVAL");
     ViewRequisitionPage viewRequisitionPageInApproval = homePageInApproval.navigateViewRequisition();
-    viewRequisitionPageInApproval.enterSearchCriteria();
+    viewRequisitionPageInApproval.enterViewSearchCriteria();
     viewRequisitionPageInApproval.clickSearch();
     viewRequisitionPageInApproval.verifyStatus("IN_APPROVAL");
 
@@ -72,7 +72,7 @@ public class ViewRequisition extends TestCaseHelper {
     approvePageTopSNUser.approveRequisition();
     approvePageTopSNUser.verifyNoRequisitionPendingMessage();
     ViewRequisitionPage viewRequisitionPageApproved = homePageInApproval.navigateViewRequisition();
-    viewRequisitionPageApproved.enterSearchCriteria();
+    viewRequisitionPageApproved.enterViewSearchCriteria();
     viewRequisitionPageApproved.clickSearch();
     viewRequisitionPageApproved.verifyStatus("APPROVED");
     viewRequisitionPageApproved.clickRnRList();
@@ -82,7 +82,7 @@ public class ViewRequisition extends TestCaseHelper {
     OrderPage orderPage = homePageApproved.navigateConvertToOrder();
     orderPage.convertToOrder();
     ViewRequisitionPage viewRequisitionPageOrdered = homePageApproved.navigateViewRequisition();
-    viewRequisitionPageOrdered.enterSearchCriteria();
+    viewRequisitionPageOrdered.enterViewSearchCriteria();
     viewRequisitionPageOrdered.clickSearch();
     viewRequisitionPageOrdered.verifyStatus("ORDERED");
     viewRequisitionPageOrdered.clickRnRList();

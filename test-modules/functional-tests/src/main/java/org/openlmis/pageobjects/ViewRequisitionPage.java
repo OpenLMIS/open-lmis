@@ -16,9 +16,6 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-
-import static java.math.BigDecimal.ROUND_HALF_UP;
 
 
 public class ViewRequisitionPage extends Page {
@@ -91,25 +88,30 @@ public class ViewRequisitionPage extends Page {
      SeleneseTestNgHelper.assertTrue("Search button is not displayed", searchButton.isDisplayed());
   }
 
-  public void enterSearchCriteria() throws IOException
+  public void enterViewSearchCriteria() throws IOException
   {
     testWebDriver.waitForElementToAppear(selectFacilityDropDown);
     testWebDriver.selectByIndex(selectFacilityDropDown,1);
     testWebDriver.sleep(250);
-    startDate.click();
-    testWebDriver.sleep(250);
-    testWebDriver.selectByValue(yearChanger,"2004");
-    testWebDriver.sleep(250);
-    startDateCalender.click();
-    testWebDriver.sleep(250);
-    endDate.click();
-    testWebDriver.sleep(250);
-    testWebDriver.selectByValue(yearChanger,"2013");
-    testWebDriver.sleep(250);
-    testWebDriver.click(nextCalender);
-    testWebDriver.sleep(250);
-    endDateCalender.click();
+    enterStartEndDateInCalender("2004", "2013");
   }
+
+  public void enterStartEndDateInCalender(String startDateYear, String endDateYear){
+      startDate.click();
+      testWebDriver.sleep(250);
+      testWebDriver.selectByValue(yearChanger,startDateYear);
+      testWebDriver.sleep(250);
+      startDateCalender.click();
+      testWebDriver.sleep(250);
+      endDate.click();
+      testWebDriver.sleep(250);
+      testWebDriver.selectByValue(yearChanger,endDateYear);
+      testWebDriver.sleep(250);
+      testWebDriver.click(nextCalender);
+      testWebDriver.sleep(250);
+      endDateCalender.click();
+  }
+
   public void verifyNoRequisitionFound() throws IOException
   {
 
