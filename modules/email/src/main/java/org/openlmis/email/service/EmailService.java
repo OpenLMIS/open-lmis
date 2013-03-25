@@ -7,7 +7,6 @@
 package org.openlmis.email.service;
 
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.openlmis.email.domain.EmailMessage;
 import org.openlmis.email.exception.EmailException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +25,6 @@ public class EmailService {
 
   private MailSender mailSender;
 
-  @Setter
-  private SimpleMailMessage simpleMailMessage;
 
   @Autowired
   public EmailService(MailSender mailSender) {
@@ -44,9 +41,7 @@ public class EmailService {
   private SimpleMailMessage copyToSimpleMailMessage(EmailMessage message) {
     if (message.getTo() == null || message.getTo().equals("")) throw new EmailException("Message 'To' not set");
 
-    if (simpleMailMessage == null) {
-      simpleMailMessage = new SimpleMailMessage();
-    }
+    SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
     simpleMailMessage.setSubject(message.getSubject());
     simpleMailMessage.setText(message.getText());
     simpleMailMessage.setTo(message.getTo());

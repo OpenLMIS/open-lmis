@@ -35,15 +35,11 @@ public class EmailServiceTest {
     JavaMailSender mailSender = mock(JavaMailSender.class);
     SimpleMailMessage mailMessage = mock(SimpleMailMessage.class);
     EmailService service = new EmailService(mailSender);
-    service.setSimpleMailMessage(mailMessage);
     EmailMessage message = make(a(EmailMessageBuilder.defaultEmailMessage,
       with(EmailMessageBuilder.to, "alert.open.lmis@gmail.com")));
     boolean status = service.send(message).get();
     assertTrue(status);
     verify(mailSender).send(any(SimpleMailMessage.class));
-    verify(mailMessage).setTo(message.getTo());
-    verify(mailMessage).setSubject(message.getSubject());
-    verify(mailMessage).setText(message.getText());
   }
 
   @Test
@@ -51,7 +47,6 @@ public class EmailServiceTest {
     JavaMailSender mailSender = mock(JavaMailSender.class);
     SimpleMailMessage mailMessage = mock(SimpleMailMessage.class);
     EmailService service = new EmailService(mailSender);
-    service.setSimpleMailMessage(mailMessage);
     EmailMessage message = make(a(EmailMessageBuilder.defaultEmailMessage,
       with(EmailMessageBuilder.to, "")));
     expectedException.expect(EmailException.class);
