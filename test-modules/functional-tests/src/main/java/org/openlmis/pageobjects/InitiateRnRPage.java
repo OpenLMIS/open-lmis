@@ -281,32 +281,48 @@ public class InitiateRnRPage extends Page {
   }
 
   public void enterBeginningBalance(String A) {
-    testWebDriver.sleep(1000);
-    testWebDriver.waitForElementToAppear(beginningBalance);
-    beginningBalance.sendKeys(A);
-    String beginningBalanceValue = testWebDriver.getAttribute(beginningBalance, "value");
-    SeleneseTestNgHelper.assertEquals(beginningBalanceValue, A);
-  }
+    String beginningBalanceValue = submitBeginningBalance(A);
+    verifyFieldValue(A, beginningBalanceValue);
+    }
 
-  public void verifyTemplateNotConfiguredMessage() {
+    public String submitBeginningBalance(String A) {
+        testWebDriver.sleep(1000);
+        testWebDriver.waitForElementToAppear(beginningBalance);
+        beginningBalance.sendKeys(A);
+        return testWebDriver.getAttribute(beginningBalance, "value");
+        }
+
+    public void verifyFieldValue(String Expected, String Actual) {
+        SeleneseTestNgHelper.assertEquals(Expected, Actual);
+    }
+
+    public void verifyTemplateNotConfiguredMessage() {
     testWebDriver.waitForElementToAppear(configureTemplateErrorDiv);
     SeleneseTestNgHelper.assertTrue("Please contact admin to define R&R template for this program should show up", configureTemplateErrorDiv.isDisplayed());
 
   }
 
   public void enterQuantityReceived(String B) {
-    testWebDriver.waitForElementToAppear(quantityReceived);
-    quantityReceived.sendKeys(B);
-    String quantityReceivedValue = testWebDriver.getAttribute(quantityReceived, "value");
-    SeleneseTestNgHelper.assertEquals(quantityReceivedValue, B);
+    String quantityReceivedValue = submitQuantityReceived(B);
+    verifyFieldValue(B,quantityReceivedValue);
   }
 
+    public String submitQuantityReceived(String B) {
+        testWebDriver.waitForElementToAppear(quantityReceived);
+        quantityReceived.sendKeys(B);
+        return testWebDriver.getAttribute(quantityReceived, "value");
+    }
+
   public void enterQuantityDispensed(String C) {
-    testWebDriver.waitForElementToAppear(quantityDispensed);
-    quantityDispensed.sendKeys(C);
-    String quantityDispensedValue = testWebDriver.getAttribute(quantityDispensed, "value");
-    SeleneseTestNgHelper.assertEquals(quantityDispensedValue, C);
+    String quantityDispensedValue = submitQuantityDispensed(C);
+    verifyFieldValue(C,quantityDispensedValue);
   }
+
+    public String submitQuantityDispensed(String C) {
+        testWebDriver.waitForElementToAppear(quantityDispensed);
+        quantityDispensed.sendKeys(C);
+        return testWebDriver.getAttribute(quantityDispensed, "value");
+    }
 
   public void enterLossesAndAdjustments(String adj) {
     testWebDriver.waitForElementToAppear(addDescription);
