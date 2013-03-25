@@ -17,7 +17,7 @@ function ViewRnrController($scope, $routeParams, requisition, rnrColumns, curren
   $scope.currency = currency;
   $scope.rnrColumns = rnrColumns;
 
-  $scope.$on('$routeUpdate', function() {
+  $scope.$on('$routeUpdate', function () {
     $scope.showNonFullSupply = !($routeParams.supplyType == 'full-supply');
     fillGrid();
     prepareColumnDefs();
@@ -62,6 +62,7 @@ function ViewRnrController($scope, $routeParams, requisition, rnrColumns, curren
 
   $scope.$on('ngGridEventRows', function () {
     $timeout(function () {
+      angular.element('div.ngRow:has(div.ngAggregate)').css('height', '30px');
       $(angular.element('.ngAggregate')).each(function (i, aggregate) {
         aggregate.click();
       });
@@ -69,7 +70,7 @@ function ViewRnrController($scope, $routeParams, requisition, rnrColumns, curren
   });
 
   function aggregateTemplate() {
-    return "<div ng-click=\"rowToggle(row)\" ng-style=\"{'left': row.offsetleft}\" class=\"ngAggregate\">" +
+    return "<div ng-click=\"rowToggle(row)\" ng-style=\"{'left': row.offsetleft}\" class=\"ngAggregate productCategory\">" +
       "    <span class=\"ngAggregateText\">{{row.label CUSTOM_FILTERS}}</span>" +
       "    <div style='display: none;' class=\"{{row.aggClass()}}\"></div>" +
       "</div>" +
@@ -78,7 +79,7 @@ function ViewRnrController($scope, $routeParams, requisition, rnrColumns, curren
 
   $scope.rnrGrid = {
     data:'gridLineItems',
-    enableRowSelection: false,
+    enableRowSelection:false,
     showFooter:false,
     showSelectionCheckbox:false,
     aggregateTemplate:aggregateTemplate(),
