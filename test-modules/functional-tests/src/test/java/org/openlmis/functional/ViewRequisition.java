@@ -31,31 +31,15 @@ public class ViewRequisition extends TestCaseHelper {
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
   public void testViewRequisition(String program, String userSIC, String password) throws Exception {
 
-    dbWrapper.insertProducts("P10", "P11");
-    dbWrapper.insertProgramProducts("P10", "P11", program);
-    dbWrapper.insertFacilityApprovedProducts("P10", "P11", program, "Lvl3 Hospital");
-    dbWrapper.insertFacilities("F10", "F11");
-    dbWrapper.configureTemplate(program);
-    dbWrapper.insertRole("store in-charge", "false", "");
-    dbWrapper.insertRole("district pharmacist", "false", "");
-    dbWrapper.insertRoleRights();
-    String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-    dbWrapper.insertUser("200", userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com");
-    dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
-    dbWrapper.insertRoleAssignment("200", "store in-charge");
-    dbWrapper.insertSchedules();
-    dbWrapper.insertProcessingPeriods();
-    dbWrapper.insertRequisitionGroups("RG1", "RG2", "N1", "N2");
-    dbWrapper.insertRequisitionGroupMembers("F10", "F11");
-    dbWrapper.insertRequisitionGroupProgramSchedule();
-    dbWrapper.insertSupplyLines("N1", program, "F10");
+    setupTestDataToInitiateRnR(program, userSIC);
+    dbWrapper.assignRight("store in-charge", "APPROVE_REQUISITION");
+    dbWrapper.assignRight("store in-charge", "CONVERT_TO_ORDER");
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     String periodDetails = homePage.navigateAndInitiateRnr(program);
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
     HomePage homePage1 = initiateRnRPage.clickHome();
-
 
     ViewRequisitionPage viewRequisitionPage = homePage1.navigateViewRequisition();
     viewRequisitionPage.verifyElementsOnViewRequisitionScreen();
@@ -82,7 +66,6 @@ public class ViewRequisition extends TestCaseHelper {
     viewRequisitionPageInApproval.clickSearch();
     viewRequisitionPageInApproval.verifyStatus("IN_APPROVAL");
 
-
     ApprovePage approvePageTopSNUser = homePageInApproval.navigateToApprove();
     approvePageTopSNUser.verifyandclickRequisitionPresentForApproval();
     approvePageTopSNUser.editApproveQuantityAndVerifyTotalCostViewRequisition("20");
@@ -93,7 +76,6 @@ public class ViewRequisition extends TestCaseHelper {
     viewRequisitionPageApproved.clickSearch();
     viewRequisitionPageApproved.verifyStatus("APPROVED");
     viewRequisitionPageApproved.clickRnRList();
-//    HomePage homePageApproved=viewRequisitionPageApproved.verifyFieldsPostApproval("25.00", "1");
     HomePage homePageApproved = viewRequisitionPageApproved.verifyFieldsPostApproval("12.50", "1");
 
     dbWrapper.updateRequisition("F10");
@@ -105,7 +87,6 @@ public class ViewRequisition extends TestCaseHelper {
     viewRequisitionPageOrdered.verifyStatus("ORDERED");
     viewRequisitionPageOrdered.clickRnRList();
     viewRequisitionPageOrdered.verifyFieldsPostApproval("12.50", "1");
-
   }
 
   @AfterMethod(groups = {"functional"})
