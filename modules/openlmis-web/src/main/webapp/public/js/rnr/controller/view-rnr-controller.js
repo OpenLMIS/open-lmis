@@ -80,8 +80,8 @@ function ViewRnrController($scope, $routeParams, ProgramRnRColumnList, Requisiti
   $scope.rnrGrid = {
     data:'gridLineItems',
     canSelectRows:false,
-    displayFooter:false,
-    displaySelectionCheckbox:false,
+    showFooter:false,
+    showSelectionCheckbox:false,
     showColumnMenu:false,
     showFilter:false,
     rowHeight:44,
