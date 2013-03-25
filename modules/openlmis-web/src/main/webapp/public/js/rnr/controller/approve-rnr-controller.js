@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $location, currency, $routeParams) {
+function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $location, currency, $routeParams, $timeout, $rootScope) {
 
   $scope.rnr = new Rnr(requisition, rnrColumns);
   $scope.rnrColumns = rnrColumns;
@@ -23,16 +23,36 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   $scope.isDirty = false;
 
   $scope.goToPage = function (page, event) {
-      angular.element(event.target).parents(".dropdown").click();
-      $location.search('page', page);
-    };
+    angular.element(event.target).parents(".dropdown").click();
+    $location.search('page', page);
+  };
 
   function updateSupplyTypeForGrid() {
     $scope.showNonFullSupply = !!($routeParams.supplyType == 'non-full-supply');
   }
 
+  function openAggregates() {
+    $timeout(function () {
+      $(angular.element('.ngAggregate')).each(function (i, aggregate) {
+        aggregate.click();
+      });
+    });
+  }
+
+  $scope.rowToggle = function (row) {
+    if (row.collapsed) {
+      row.toggleExpand();
+    }
+  };
+
+  $scope.$on('ngGridEventRows', function () {
+    openAggregates();
+  });
+
   function prepareColumnDefinitions() {
-    var columnDefinitions = [];
+    var columnDefinitions = [
+      {field:'productCategory', displayName:'Product Category', width:0}
+    ];
     var visibleColumns = _.where($scope.rnrColumns, {'visible':true});
     if (visibleColumns.length > 0) {
       $(visibleColumns).each(function (i, column) {
@@ -75,6 +95,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   updateSupplyTypeForGrid();
   fillPagedGridData();
   prepareColumnDefinitions();
+
 
   $scope.$watch("currentPage", function () {
     if (!$routeParams.supplyType) $location.search('supplyType', 'full-supply');
@@ -149,16 +170,28 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
       '<span class="rnr-form-error" id=' + field + ' ng-show="showPositiveIntegerError[row.entity.id]" >Please Enter Numeric value</span></ng-form></div>';
   }
 
+  function aggregateTemplate() {
+    return "<div ng-click=\"rowToggle(row)\" ng-style=\"{'left': row.offsetleft}\" class=\"ngAggregate\">" +
+      "    <span class=\"ngAggregateText\">{{row.label CUSTOM_FILTERS}}</span>" +
+      "    <div style='display: none;' class=\"{{row.aggClass()}}\"></div>" +
+      "</div>" +
+      "";
+  }
+
   $scope.rnrGrid = {
     data:'pageLineItems',
     enableRowSelection:false,
     showFooter:false,
     showSelectionCheckbox:false,
     showColumnMenu:false,
+    aggregateTemplate:aggregateTemplate(),
     showFilter:false,
     rowHeight:44,
     enableSorting:false,
-    columnDefs:'columnDefinitions'
+    enableColumnResize: true,
+    enableColumnReordering: false,
+    columnDefs:'columnDefinitions',
+    groups:['productCategory']
   };
 
   $scope.setDirty = function () {

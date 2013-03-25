@@ -44,25 +44,25 @@ public class ApprovePage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@id='requisition-header']/div[@class='info-box']/div[@class='row-fluid'][1]/div[1]")
   private static WebElement facilityLabel;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col13 colt13']/span")
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col15 colt15']/span")
   private static WebElement calculateOrderQuantity;
 
-  @FindBy(how = How.XPATH, using = "//div[@ng-grid='rnrGrid']/div[@class='ngViewport ng-scope']/div/div/div[15]/div/span")
+  @FindBy(how = How.XPATH, using = "//div[@ng-grid='rnrGrid']/div[@class='ngViewport ng-scope']/div/div/div[17]/div/span")
   private static WebElement requestedOrderQuantityNonFullSupply;
 
-  @FindBy(how = How.XPATH, using = "//div[@ng-grid='rnrGrid']/div[@class='ngViewport ng-scope']/div/div/div[18]/div/span")
+  @FindBy(how = How.XPATH, using = "//div[@ng-grid='rnrGrid']/div[@class='ngViewport ng-scope']/div/div/div[20]/div/span")
   private static WebElement packsToShipNonFullSupply;
 
-  @FindBy(how = How.XPATH, using = "//div[@ng-grid='rnrGrid']/div[@class='ngViewport ng-scope']/div/div/div[20]/div/span[@ng-bind='row.entity.cost']")
+  @FindBy(how = How.XPATH, using = "//div[@ng-grid='rnrGrid']/div[@class='ngViewport ng-scope']/div/div/div[22]/div/span[@ng-bind='row.entity.cost']")
   private static WebElement totalCostNonFullSupply;
 
-  @FindBy(how = How.XPATH, using = "//div[@ng-grid='rnrGrid']/div[@class='ngViewport ng-scope']/div/div/div[19]/div/span[@ng-bind='row.entity.price']")
+  @FindBy(how = How.XPATH, using = "//div[@ng-grid='rnrGrid']/div[@class='ngViewport ng-scope']/div/div/div[21]/div/span[@ng-bind='row.entity.price']")
   private static WebElement pricePerPackNonFullSupply;
 
-  @FindBy(how = How.XPATH, using = "//div[@ng-grid='rnrGrid']/div[@class='ngViewport ng-scope']/div/div/div[17]/div/ng-form/input")
+  @FindBy(how = How.XPATH, using = "//div[@ng-grid='rnrGrid']/div[@class='ngViewport ng-scope']/div/div/div[19]/div/ng-form/input")
   private static WebElement approvedQuantityNonFullSupply;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col17 colt17']/span")
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col19 colt19']/span")
   private static WebElement packsToShip;
 
   @FindBy(how = How.XPATH, using = "//span[@ng-bind='row.entity.price']")
