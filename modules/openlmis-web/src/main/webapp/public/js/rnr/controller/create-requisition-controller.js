@@ -254,10 +254,6 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
 
 CreateRequisitionController.resolve = {
 
-  hasPermission: function(AuthorizationService) {
-    AuthorizationService.hasPermission('INITIATE_REQUISITION', 'AUTHORIZE_REQUISITION');
-  },
-
   requisition:function ($q, $timeout, RequisitionById, $route, $rootScope) {
     var deferred = $q.defer();
     $timeout(function () {

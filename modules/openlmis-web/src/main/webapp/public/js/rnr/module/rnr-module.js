@@ -6,7 +6,7 @@
 
 var rnrModule = angular.module('rnr', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle']).config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
-    when('/init-rnr', {controller:InitiateRnrController, templateUrl:'partials/init.html', resolve: InitiateRnrController.resolve}).
+    when('/init-rnr', {controller:InitiateRnrController, templateUrl:'partials/init.html'}).
     when('/create-rnr/:rnr/:facility/:program', {controller:CreateRequisitionController, templateUrl:'partials/create.html', resolve:CreateRequisitionController.resolve, reloadOnSearch:false}).
     when('/rnr-for-approval', {controller:ApproveRnrListController, templateUrl:'partials/list.html', resolve:ApproveRnrListController.resolve}).
     when('/requisitions-for-convert-to-order', {controller:ConvertToOrderListController, templateUrl:'partials/convert-to-order-list.html', resolve:ConvertToOrderListController.resolve}).
