@@ -14,6 +14,6 @@ angular.module('facility', ['openlmis', 'ui.bootstrap.modal']).
     otherwise({redirectTo:'/search'});
 }]).run(function ($rootScope, AuthorizationService) {
     $rootScope.facilitySelected = "selected";
-    AuthorizationService.hasPermission('MANAGE_FACILITY');
+    AuthorizationService.preAuthorize('MANAGE_FACILITY');
   });
 

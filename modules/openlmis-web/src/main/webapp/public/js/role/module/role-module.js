@@ -13,5 +13,5 @@ angular.module('role', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']
     otherwise({redirectTo:'/list'});
 }]).run(function($rootScope, AuthorizationService) {
     $rootScope.roleSelected = "selected";
-    AuthorizationService.hasPermission('MANAGE_ROLE');
+    AuthorizationService.preAuthorize('MANAGE_ROLE');
   });

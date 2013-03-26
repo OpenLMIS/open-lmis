@@ -12,5 +12,5 @@ angular.module('schedule', ['openlmis']).config(['$routeProvider', function ($ro
     otherwise({redirectTo:'/list'});
 }]).run(function($rootScope, AuthorizationService) {
     $rootScope.schedulesSelected = "selected";
-    AuthorizationService.hasPermission('MANAGE_SCHEDULE');
+    AuthorizationService.preAuthorize('MANAGE_SCHEDULE');
   });

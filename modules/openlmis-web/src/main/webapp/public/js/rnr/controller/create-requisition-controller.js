@@ -253,7 +253,6 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
 }
 
 CreateRequisitionController.resolve = {
-
   requisition:function ($q, $timeout, RequisitionById, $route, $rootScope) {
     var deferred = $q.defer();
     $timeout(function () {

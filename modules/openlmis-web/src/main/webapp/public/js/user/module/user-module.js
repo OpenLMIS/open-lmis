@@ -20,7 +20,7 @@ angular.module('user', ['openlmis', 'ngGrid', 'ui.bootstrap.modal']).
       };
     }).run(function($rootScope, AuthorizationService) {
     $rootScope.userSelected = "selected";
-    AuthorizationService.hasPermission('MANAGE_USERS');
+    AuthorizationService.preAuthorize('MANAGE_USERS');
   });
 
 
