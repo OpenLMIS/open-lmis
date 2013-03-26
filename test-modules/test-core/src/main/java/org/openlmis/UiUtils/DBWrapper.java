@@ -218,7 +218,6 @@ public class DBWrapper {
   }
 
   public void updateRoleAssignment(String userID, String supervisoryNode) throws SQLException, IOException {
-    //update("delete from role_assignments where userid='" + userID + "' and supervisorynodeid is null;");
     update("update role_assignments set supervisorynodeid=(select id from supervisory_nodes where code='" + supervisoryNode + "') where userid='" + userID + "';");
   }
 
@@ -227,10 +226,10 @@ public class DBWrapper {
     update("update requisition_group_members set facilityid=(select id from facilities where code ='F11') where requisitiongroupid=(select id from requisition_groups where code='RG1');");
   }
 
-  public void alterUserID(String userId) throws SQLException, IOException {
+  public void alterUserID(String userName, String userId) throws SQLException, IOException {
     update("delete from user_password_reset_tokens;");
-    update("delete from users where id=200;");
-    update(" update users set id=" + userId + " where username='User123'");
+    update("delete from users where id='"+userId+"' ;");
+    update(" update users set id='" + userId + "' where username='"+userName+"'");
   }
 
 

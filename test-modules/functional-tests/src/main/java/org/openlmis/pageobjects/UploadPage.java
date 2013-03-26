@@ -39,6 +39,8 @@ public class UploadPage extends Page {
   private static WebElement saveErrorMsgDiv;
 
 
+  private int implicitWait = 2000;
+
   public UploadPage(TestWebDriver driver) throws IOException {
     super(driver);
 
@@ -63,131 +65,130 @@ public class UploadPage extends Page {
     uploadButton.click();
   }
 
+  private void verifySuccessMessageOnUploadScreen() {
 
-  public void uploadGeographicZone() throws FileNotFoundException {
-    selectUploadType("Geographic Zones");
-    uploadFile("Geographic_Data.csv");
+    String successMessage = "File uploaded successfully. 'Number of records created: *', 'Number of records updated : *'";
     testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
     SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
+    SeleneseTestNgHelper.assertEquals(saveSuccessMsgDiv.getText().trim(), successMessage);
+    testWebDriver.setImplicitWait(implicitWait);
+  }
+
+  private void verifyErrorMessageOnUploadScreen() {
+    testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
+    SeleneseTestNgHelper.assertTrue("Error Message Not Displayed", saveErrorMsgDiv.isDisplayed());
+    testWebDriver.setImplicitWait(implicitWait);
+  }
+
+  public void uploadGeographicZone(int noOfRuns) throws FileNotFoundException {
+    for (int i = 1; i <= noOfRuns; i++) {
+      selectUploadType("Geographic Zones");
+      uploadFile("Geographic_Data.csv");
+    }
+
   }
 
   public void uploadGeographicZoneInvalid() throws FileNotFoundException {
     selectUploadType("Geographic Zones");
     uploadFile("Geographic_Data_Invalid.csv");
-    testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
-    SeleneseTestNgHelper.assertTrue("Error Message Not Displayed", saveErrorMsgDiv.isDisplayed());
+    verifyErrorMessageOnUploadScreen();
     testWebDriver.sleep(500);
     selectUploadType("Geographic Zones");
     uploadFile("Geographic_Data_Invalid.csv");
-    testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
-    SeleneseTestNgHelper.assertTrue("Error Message Not Displayed", saveErrorMsgDiv.isDisplayed());
+    verifyErrorMessageOnUploadScreen();
     testWebDriver.sleep(500);
     selectUploadType("Geographic Zones");
     uploadFile("Geographic_Data_Invalid_Code.csv");
-    testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
-    SeleneseTestNgHelper.assertTrue("Error Message Not Displayed", saveErrorMsgDiv.isDisplayed());
+    verifyErrorMessageOnUploadScreen();
     testWebDriver.sleep(500);
   }
 
   public void uploadFacilitiesNotLowestGeoCode() throws FileNotFoundException {
     selectUploadType("Facilities");
     uploadFile("facilities_Lowest_Code.csv");
-    testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
-    SeleneseTestNgHelper.assertTrue("Error Message Not Displayed", saveErrorMsgDiv.isDisplayed());
+    verifyErrorMessageOnUploadScreen();
     testWebDriver.sleep(500);
   }
 
   public void uploadFacilities() throws FileNotFoundException {
     selectUploadType("Facilities");
     uploadFile("facilities.csv");
-    testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
-    SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
+    verifySuccessMessageOnUploadScreen();
   }
 
 
   public void uploadProducts() throws FileNotFoundException {
     selectUploadType("Products");
     uploadFile("products.csv");
-    testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
-    SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
+    verifySuccessMessageOnUploadScreen();
   }
 
   public void uploadProductCategory() throws FileNotFoundException {
     selectUploadType("Product Category");
     uploadFile("Productcategoryupload.csv");
-    testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
-    SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
+    verifySuccessMessageOnUploadScreen();
+
   }
 
   public void uploadUsers() throws FileNotFoundException {
     selectUploadType("Users");
     uploadFile("Users.csv");
-    testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
-    SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
+    verifySuccessMessageOnUploadScreen();
   }
 
   public void uploadProgramProductMapping() throws FileNotFoundException {
     selectUploadType("Program Product");
     uploadFile("program_product.csv");
-    testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
-    SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
+    verifySuccessMessageOnUploadScreen();
   }
 
   public void uploadProgramProductPrice() throws FileNotFoundException {
     selectUploadType("Product Prices per Program");
     uploadFile("Product_Cost.csv");
-    testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
-    SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
+    verifySuccessMessageOnUploadScreen();
   }
 
   public void uploadProgramSupportedByFacilities() throws FileNotFoundException {
     selectUploadType("Programs supported by facilities");
     uploadFile("program_supported.csv");
-    testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
-    SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
+    verifySuccessMessageOnUploadScreen();
   }
 
   public void uploadFacilityTypeToProductMapping() throws FileNotFoundException {
     selectUploadType("Facility Approved Products");
     uploadFile("Facility_Type_To_Product_Mapping.csv");
-    testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
-    SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
+    verifySuccessMessageOnUploadScreen();
   }
 
 
   public void uploadSupervisoryNodes() throws FileNotFoundException {
     selectUploadType("Supervisory Nodes");
     uploadFile("Supervisory_Nodes.csv");
-    testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
-    SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
+    verifySuccessMessageOnUploadScreen();
   }
 
   public void uploadRequisitionGroup() throws FileNotFoundException {
     selectUploadType("Requisition Groups");
     uploadFile("Requisition_Groups.csv");
-    testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
-    SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
+    verifySuccessMessageOnUploadScreen();
   }
 
   public void uploadRequisitionGroupMembers() throws FileNotFoundException {
     selectUploadType("Requisition Group Members");
     uploadFile("Requisition_Group_Members.csv");
-    testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
-    SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
+    verifySuccessMessageOnUploadScreen();
   }
 
   public void uploadRequisitionGroupProgramSchedule() throws FileNotFoundException {
     selectUploadType("Map Requisition Groups to Programs + Schedule");
     uploadFile("Requisition_Group_Program_Schedule.csv");
-    testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
-    SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
+    verifySuccessMessageOnUploadScreen();
   }
 
   public void uploadSupplyLines() throws FileNotFoundException {
     selectUploadType("Supply Lines");
     uploadFile("Supply_Lines.csv");
-    testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
-    SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
+    verifySuccessMessageOnUploadScreen();
   }
 
 

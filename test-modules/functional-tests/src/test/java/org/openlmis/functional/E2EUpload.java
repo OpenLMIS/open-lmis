@@ -35,9 +35,6 @@ public class E2EUpload extends TestCaseHelper {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
-    TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate("HIV");
-    templateConfigPage.configureTemplate();
-
     RolesPage rolesPage = homePage.navigateRoleAssignments();
     List<String> userRoleList = new ArrayList<String>();
     userRoleList.add("Create Requisition");
@@ -46,65 +43,42 @@ public class E2EUpload extends TestCaseHelper {
 
     UploadPage uploadPage = homePage.navigateUploads();
     uploadPage.uploadUsers();
-    dbWrapper.alterUserID("200");
-
+    dbWrapper.alterUserID("User123", "200");
     dbWrapper.insertRoleAssignment("200", "User");
 
     uploadPage.uploadProductCategory();
-    testWebDriver.setImplicitWait(2500);
 
     uploadPage.uploadProducts();
-    testWebDriver.setImplicitWait(2500);
 
     uploadPage.uploadProgramProductMapping();
-    testWebDriver.setImplicitWait(2500);
 
     uploadPage.uploadProgramProductPrice();
-    testWebDriver.setImplicitWait(2500);
 
     uploadPage.uploadGeographicZoneInvalid();
-    testWebDriver.setImplicitWait(2500);
 
-    uploadPage.uploadGeographicZone();
-    testWebDriver.setImplicitWait(2500);
+    uploadPage.uploadGeographicZone(2);
 
     uploadPage.uploadFacilitiesNotLowestGeoCode();
-    testWebDriver.setImplicitWait(2500);
 
     uploadPage.uploadFacilities();
-    testWebDriver.setImplicitWait(2500);
 
     uploadPage.uploadFacilityTypeToProductMapping();
     dbWrapper.allocateFacilityToUser("200", "F10");
 
     uploadPage.uploadProgramSupportedByFacilities();
-    testWebDriver.setImplicitWait(2500);
 
     uploadPage.uploadSupervisoryNodes();
-    testWebDriver.setImplicitWait(2500);
 
     uploadPage.uploadRequisitionGroup();
-    testWebDriver.setImplicitWait(2500);
 
     dbWrapper.insertSchedules();
     dbWrapper.insertProcessingPeriods();
 
     uploadPage.uploadRequisitionGroupProgramSchedule();
-    testWebDriver.setImplicitWait(2500);
 
     uploadPage.uploadRequisitionGroupMembers();
-    testWebDriver.setImplicitWait(2500);
 
     uploadPage.uploadSupplyLines();
-    testWebDriver.setImplicitWait(2500);
-
-
-//        LoginPage loginPageSecond=homePage.logout();
-//        HomePage homePageUser = loginPageSecond.loginAs("User123", "User123");
-//
-//        InitiateRnRPage initiateRnRPage = homePageUser.navigateAndInitiateRnr("F11","F11 Village Dispensary", "", "HIV", "Period2");
-//        initiateRnRPage.verifyRnRHeader("F11","F11 Village Dispensary", "", "HIV");
-
   }
 
   @AfterMethod(groups = {"functional"})
@@ -118,7 +92,7 @@ public class E2EUpload extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-        {new String[]{"Admin123", "Admin123"}}
+      {new String[]{"Admin123", "Admin123"}}
     };
   }
 }
