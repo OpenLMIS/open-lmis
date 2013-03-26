@@ -43,8 +43,10 @@ public class E2EUpload extends TestCaseHelper {
 
     UploadPage uploadPage = homePage.navigateUploads();
     uploadPage.uploadUsers();
-    dbWrapper.alterUserID("User123", "200");
-    dbWrapper.insertRoleAssignment("200", "User");
+    String userName="User123";
+    String userId="200";
+    dbWrapper.alterUserID(userName, userId);
+    dbWrapper.insertRoleAssignment(userId, "User");
 
     uploadPage.uploadProductCategory();
 
@@ -63,7 +65,7 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadFacilities();
 
     uploadPage.uploadFacilityTypeToProductMapping();
-    dbWrapper.allocateFacilityToUser("200", "F10");
+    dbWrapper.allocateFacilityToUser(userName, "F10");
 
     uploadPage.uploadProgramSupportedByFacilities();
 

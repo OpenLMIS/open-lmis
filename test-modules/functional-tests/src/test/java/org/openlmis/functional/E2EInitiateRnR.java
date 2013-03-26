@@ -24,9 +24,6 @@ import java.util.List;
 
 public class E2EInitiateRnR extends TestCaseHelper {
 
-//  DBWrapper dbWrapper;
-//  String baseUrlGlobal, dburlGlobal;
-
   @BeforeMethod(groups = {"smoke"})
   public void setUp() throws Exception {
 

@@ -91,8 +91,8 @@ public class DBWrapper {
 
   }
 
-  public void allocateFacilityToUser(String userID, String facilityCode) throws IOException, SQLException {
-    update("update users set facilityId = (Select id from facilities where code='" + facilityCode + "') where id='" + userID + "';");
+  public void allocateFacilityToUser(String userName, String facilityCode) throws IOException, SQLException {
+    update("update users set facilityId = (Select id from facilities where code='" + facilityCode + "') where username='" + userName + "';");
 
   }
 
