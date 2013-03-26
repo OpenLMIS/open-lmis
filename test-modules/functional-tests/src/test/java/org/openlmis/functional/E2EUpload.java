@@ -43,8 +43,8 @@ public class E2EUpload extends TestCaseHelper {
 
     UploadPage uploadPage = homePage.navigateUploads();
     uploadPage.uploadUsers();
-    String userName="User123";
-    String userId="200";
+    String userName = "User123";
+    String userId = "200";
     dbWrapper.alterUserID(userName, userId);
     dbWrapper.insertRoleAssignment(userId, "User");
 

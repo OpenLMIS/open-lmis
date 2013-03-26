@@ -84,6 +84,7 @@ public class UploadPage extends Page {
     for (int i = 1; i <= noOfRuns; i++) {
       selectUploadType("Geographic Zones");
       uploadFile("Geographic_Data.csv");
+      verifySuccessMessageOnUploadScreen();
     }
 
   }
