@@ -4,14 +4,15 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function InitiateRnrController($scope, $location, $rootScope, Requisition, PeriodsForFacilityAndProgram, UserFacilityList, UserSupportedProgramInFacilityForAnOperation, UserSupervisedProgramList, UserSupervisedFacilitiesForProgram) {
+function InitiateRnrController($scope, $location, $rootScope, Requisition, PeriodsForFacilityAndProgram, UserFacilityList, hasPermission,
+                               UserSupportedProgramInFacilityForAnOperation, UserSupervisedProgramList, UserSupervisedFacilitiesForProgram) {
 
   var DEFAULT_FACILITY_MESSAGE = '--choose facility--';
   var DEFAULT_PROGRAM_MESSAGE = '--choose program--';
   var PREVIOUS_RNR_PENDING_STATUS = "Previous R&R pending";
   var RNR_NOT_YET_STARTED_STATUS = "Not yet started";
 
-  var resetRnrData = function() {
+  var resetRnrData = function () {
     $scope.periodGridData = [];
     $scope.selectedProgram = null;
     $scope.selectedFacilityId = null;
@@ -22,19 +23,19 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
     $scope.error = null;
   };
 
-  $scope.loadFacilityData = function(selectedType) {
+  $scope.loadFacilityData = function (selectedType) {
     resetRnrData();
 
     if (selectedType == 0) { //My facility
       UserFacilityList.get({}, function (data) {
         $scope.facilities = data.facilityList;
         $scope.myFacility = data.facilityList[0];
-          $scope.facilityDisplayName = $scope.myFacility.code + '-' + $scope.myFacility.name;
+        $scope.facilityDisplayName = $scope.myFacility.code + '-' + $scope.myFacility.name;
 
-        if($scope.myFacility) {
+        if ($scope.myFacility) {
           $scope.selectedFacilityId = $scope.myFacility.id;
 
-          UserSupportedProgramInFacilityForAnOperation.get({facilityId: $scope.selectedFacilityId, rights:['CREATE_REQUISITION', 'AUTHORIZE_REQUISITION']}, function (data) {
+          UserSupportedProgramInFacilityForAnOperation.get({facilityId:$scope.selectedFacilityId, rights:['CREATE_REQUISITION', 'AUTHORIZE_REQUISITION']}, function (data) {
             $scope.programs = data.programList;
           }, {});
         } else {
@@ -51,7 +52,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
 
   $scope.loadFacilitiesForProgram = function () {
     if ($scope.selectedProgram) {
-      UserSupervisedFacilitiesForProgram.get({programId: $scope.selectedProgram.id}, function (data) {
+      UserSupervisedFacilitiesForProgram.get({programId:$scope.selectedProgram.id}, function (data) {
         $scope.facilities = data.facilities;
         $scope.selectedFacilityId = null;
         $scope.error = null;
@@ -111,7 +112,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
     displaySelectionCheckbox:false,
     enableColumnResize:true,
     enableColumnReordering:true,
-    enableSorting: false,
+    enableSorting:false,
     showColumnMenu:false,
     showFilter:false,
     columnDefs:[
@@ -119,7 +120,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
       {field:'startDate', displayName:'Start Date', cellFilter:"date:'dd/MM/yyyy'" },
       {field:'endDate', displayName:'End Date', cellFilter:"date:'dd/MM/yyyy'" },
       {field:'rnrStatus', displayName:'R&R Status' },
-      {field :'', displayName : '', cellTemplate:getPeriodSpecificButton('row.entity.activeForRnr')}
+      {field:'', displayName:'', cellTemplate:getPeriodSpecificButton('row.entity.activeForRnr')}
     ]
   };
 
@@ -136,13 +137,13 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
     $scope.periodGridData = [];
     if ($scope.selectedProgram && $scope.selectedFacilityId) {
       PeriodsForFacilityAndProgram.get({facilityId:$scope.selectedFacilityId, programId:$scope.selectedProgram.id},
-          function (data) {
-            $scope.error = "";
-            createPeriodWithRnrStatus(data.periods, data.rnr);
-          },
-          function (data) {
-            $scope.error = data.data.error;
-          });
+        function (data) {
+          $scope.error = "";
+          createPeriodWithRnrStatus(data.periods, data.rnr);
+        },
+        function (data) {
+          $scope.error = data.data.error;
+        });
     } else {
       $scope.error = "";
     }
@@ -161,30 +162,36 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
     var createRnrPath;
 
     Requisition.get({facilityId:$scope.selectedFacilityId, programId:$scope.selectedProgram.id, periodId:$scope.selectedPeriod.id}, {},
-        function (data) {
-          if((data.rnr == null || data.rnr == undefined) && !$rootScope.hasPermission('CREATE_REQUISITION')){
-            $scope.error = "An R&R has not been initiated yet";
+      function (data) {
+        if ((data.rnr == null || data.rnr == undefined) && !$rootScope.hasPermission('CREATE_REQUISITION')) {
+          $scope.error = "An R&R has not been initiated yet";
+          return;
+        }
+
+        if (data.rnr) {
+          if (data.rnr.status != 'SUBMITTED' && !$rootScope.hasPermission('CREATE_REQUISITION')) {
+            $scope.error = "An R&R has not been submitted yet";
             return;
           }
-
-          if (data.rnr) {
-            if (data.rnr.status != 'SUBMITTED' && !$rootScope.hasPermission('CREATE_REQUISITION')) {
-              $scope.error = "An R&R has not been submitted yet";
-              return;
-            }
+          $scope.$parent.rnr = data.rnr;
+          createRnrPath = '/create-rnr/' + $scope.$parent.rnr.id + '/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + "?supplyType=full-supply&page=1";
+          $location.url(createRnrPath);
+        }
+        else {
+          Requisition.save({facilityId:$scope.selectedFacilityId, programId:$scope.selectedProgram.id, periodId:$scope.selectedPeriod.id}, {}, function (data) {
             $scope.$parent.rnr = data.rnr;
             createRnrPath = '/create-rnr/' + $scope.$parent.rnr.id + '/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + "?supplyType=full-supply&page=1";
             $location.url(createRnrPath);
-          }
-          else {
-            Requisition.save({facilityId:$scope.selectedFacilityId, programId:$scope.selectedProgram.id, periodId:$scope.selectedPeriod.id}, {}, function (data) {
-              $scope.$parent.rnr = data.rnr;
-              createRnrPath = '/create-rnr/' + $scope.$parent.rnr.id + '/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + "?supplyType=full-supply&page=1";
-              $location.url(createRnrPath);
-            }, function (data) {
-              $scope.error = data.data.error ? data.data.error : "Requisition does not exist. Please initiate.";
-            })
-          }
-        }, {});
+          }, function (data) {
+            $scope.error = data.data.error ? data.data.error : "Requisition does not exist. Please initiate.";
+          })
+        }
+      }, {});
   };
 }
+
+InitiateRnrController.resolve = {
+  hasPermission:function (AuthorizationService) {
+    AuthorizationService.hasPermission('CREATE_REQUISITION', 'AUTHORIZE_REQUISITION');
+  }
+};

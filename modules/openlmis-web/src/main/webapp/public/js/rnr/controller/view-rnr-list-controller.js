@@ -108,6 +108,11 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, UserS
 var oneDay = 1000 * 60 * 60 * 24;
 
 ViewRnrListController.resolve = {
+
+  hasPermission: function(AuthorizationService) {
+    AuthorizationService.hasPermission('VIEW_REQUISITION');
+  },
+
   facilities:function ($q, $timeout, UserFacilityWithViewRequisition) {
     var deferred = $q.defer();
     $timeout(function () {
