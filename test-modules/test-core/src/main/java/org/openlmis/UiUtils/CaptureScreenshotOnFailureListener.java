@@ -27,13 +27,11 @@ public class CaptureScreenshotOnFailureListener extends TestListenerAdapter {
 
   private void createDirectory() {
     String Separator = System.getProperty("file.separator");
-    screenShotsFolder = System.getProperty("user.dir") + Separator+"src"+Separator+"main"+Separator+"resources"+Separator + dateFolder + Separator;
-    if (!screenShotsFolder.contains("functional-tests"))
-      screenShotsFolder = System.getProperty("user.dir") + Separator+"test-modules"+Separator+"functional-tests"+Separator+"src"+Separator+"main"+Separator+"resources"+Separator + dateFolder + Separator;
+    File parentDir = new File(System.getProperty("user.dir"));
+    screenShotsFolder = parentDir.getParent() + Separator+"src"+Separator+"main"+Separator+"resources"+Separator + dateFolder + Separator;
     if (!new File(screenShotsFolder).exists()) {
       (new File(screenShotsFolder)).mkdir();
     }
-
   }
 
   @Override

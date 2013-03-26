@@ -65,7 +65,7 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadFacilities();
 
     uploadPage.uploadFacilityTypeToProductMapping();
-    dbWrapper.allocateFacilityToUser(userName, "F10");
+    dbWrapper.allocateFacilityToUser(userId, "F10");
 
     uploadPage.uploadProgramSupportedByFacilities();
 
