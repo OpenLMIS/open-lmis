@@ -1,0 +1,11 @@
+{"facilitylist":
+    [
+    {"facilitycode":"f1","facilityname":"HIV","facilitytype":"HIV","region":"HIV","ownership":true,"GPSCoordinates":"9,38","Email":"test@openlmis.com","phonenumber":"+1234567890","MSLMSDCode":"code1234" },
+    {"facilitycode":"f2","facilityname":"ESS_MEDS","facilitytype":"ESSENTIAL MEDICINES","region":"ESSENTIAL MEDICINES","ownership":true,"GPSCoordinates":"9,38","Email":"test@openlmis.com","phonenumber":"+1234567890","MSLMSDCode":"code1234"},
+    {"facilitycode":"f3","facilityname":"TB","facilitytype":"TB","region":"TB","ownership":true,"GPSCoordinates":"9,38","Email":"test@openlmis.com","phonenumber":"+1234567890","MSLMSDCode":"code1234"},
+    {"facilitycode":"f4","facilityname":"MALARIA","facilitytype":"MALARIA","region":"MALARIA","ownership":true,"GPSCoordinates":"9,38","Email":"test@openlmis.com","phonenumber":"+1234567890","MSLMSDCode":"code1234"},
+    {"facilitycode":"f5","facilityname":"HIV","facilitytype":"HIV","region":"HIV","ownership":true,"GPSCoordinates":"9,38","Email":"test@openlmis.com","phonenumber":"+1234567890","MSLMSDCode":"code1234"},
+    {"facilitycode":"f6","facilityname":"ESS_MEDS","facilitytype":"ESSENTIAL MEDICINES","region":"ESSENTIAL MEDICINES","ownership":true,"GPSCoordinates":"9,38","Email":"test@openlmis.com","phonenumber":"+1234567890","MSLMSDCode":"code1234"},
+    {"facilitycode":"f7","facilityname":"TB","facilitytype":"TB","region":"TB","ownership":true,"GPSCoordinates":"9,38","Email":"test@openlmis.com","phonenumber":"+1234567890","MSLMSDCode":"code1234"}
+]
+}

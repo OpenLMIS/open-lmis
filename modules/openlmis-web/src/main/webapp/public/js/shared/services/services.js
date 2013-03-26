@@ -8,6 +8,10 @@ services.factory('Programs', function ($resource) {
     return $resource('/programs.json', {}, {});
 });
 
+services.factory('FacilityList', function ($resource) {
+    return $resource('/reports/reportdata/facilities.json', {}, {});
+});
+
 services.factory('RnRColumnList', function ($resource) {
     return $resource('/program/:programId/rnr-template.json', {}, {});
 });
@@ -184,7 +188,5 @@ services.factory('RequisitionOrder', function ($resource) {
 
 services.factory('FacilityProgramRights', function($resource){
   return $resource('/facility/:facilityId/program/:programId/rights.json');
-})
-
-
+});
 
