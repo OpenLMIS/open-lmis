@@ -2,6 +2,7 @@ package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.openlmis.report.DataSourceType;
 import org.openlmis.report.Report;
 import org.openlmis.report.ReportManager;
 import org.openlmis.report.ReportOutputOption;
@@ -38,7 +39,8 @@ public class ReportController {
     public String showReport(@PathVariable(value = "reportKey") String reportKey, @PathVariable(value = "outputOption") String outputOption,ModelMap modelMap){
         Map<String,Object> parameterMap = new HashMap<String,Object>();
         Report report = reportManager.getReportByKey(reportKey);
-       List<ReportData> facilityReportList = report.getReportDataProvider().getReportDataByFilterCriteria(null);
+        FacilityReport filter = null;
+        List<FacilityReport> facilityReportList = (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteria(filter, DataSourceType.RESULT_SET_DATA_SOURCE);
         modelMap.addAttribute("datasource", new JRBeanCollectionDataSource(facilityReportList));
         modelMap.addAttribute("format",outputOption);
 
