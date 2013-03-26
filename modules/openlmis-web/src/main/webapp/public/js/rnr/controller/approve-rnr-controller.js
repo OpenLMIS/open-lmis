@@ -39,7 +39,6 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
 
   $scope.$on('ngGridEventRows', function () {
     $timeout(function () {
-      angular.element('div.ngRow:has(div.ngAggregate)').css('height', '30px');
       $(angular.element('.ngAggregate')).each(function (i, aggregate) {
         aggregate.click();
       });
@@ -168,7 +167,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   }
 
   function aggregateTemplate() {
-    return "<div ng-click=\"rowToggle(row)\" ng-style=\"{'left': row.offsetleft}\" class=\"ngAggregate\">" +
+    return "<div ng-click=\"rowToggle(row)\" ng-style=\"{'left': row.offsetleft}\" class=\"ngAggregate productCategory\">" +
       "    <span class=\"ngAggregateText\">{{row.label CUSTOM_FILTERS}}</span>" +
       "    <div style='display: none;' class=\"{{row.aggClass()}}\"></div>" +
       "</div>" +

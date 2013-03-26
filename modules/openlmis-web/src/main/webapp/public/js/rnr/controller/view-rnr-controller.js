@@ -62,7 +62,6 @@ function ViewRnrController($scope, $routeParams, requisition, rnrColumns, curren
 
   $scope.$on('ngGridEventRows', function () {
     $timeout(function () {
-      angular.element('div.ngRow:has(div.ngAggregate)').css('height', '30px');
       $(angular.element('.ngAggregate')).each(function (i, aggregate) {
         aggregate.click();
       });
