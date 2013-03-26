@@ -47,6 +47,11 @@ public class UploadPage extends Page {
     PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(30);
     testWebDriver.waitForElementToAppear(uploadButton);
+    verifyUploadPage();
+  }
+
+
+  private void verifyUploadPage() {
     SeleneseTestNgHelper.assertTrue(uploadButton.isDisplayed());
     SeleneseTestNgHelper.assertTrue(uploadDropDown.isDisplayed());
   }
