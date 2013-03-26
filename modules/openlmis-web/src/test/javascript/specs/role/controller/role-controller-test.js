@@ -7,11 +7,13 @@
 describe("Role", function () {
 
   beforeEach(module('openlmis.services'));
+  beforeEach(module('ui.bootstrap.dialog'));
 
   describe("Create Role", function () {
-    var ctrl, scope, $httpBackend, rights;
-    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller) {
+    var ctrl, scope, $httpBackend, rights, dialog;
+    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, _$dialog_) {
       scope = $rootScope.$new();
+      dialog = _$dialog_;
       $httpBackend = _$httpBackend_;
       rights = [
         {"right": "CONFIGURE_RNR", "name": "configure rnr", "adminRight": "true"},
@@ -20,7 +22,7 @@ describe("Role", function () {
         {"right": "VIEW_REQUISITION", "name": "view requisition", "adminRight": "false"}
       ];
       $httpBackend.when('GET', '/rights.json').respond(200, {"rights": rights});
-      ctrl = $controller(RoleController, {$scope: scope});
+      ctrl = $controller(RoleController, {$scope: scope, $dialog: dialog});
     }));
 
     it('should get all rights and separate them into admin and non-admin rights', function () {
@@ -49,7 +51,7 @@ describe("Role", function () {
       scope.role.rights.push(rights[2]);
       scope.role.adminRole = "false";
       window.selected = true;
-      scope.deSelectRights();
+      scope.dialogCloseCallback(true);
 
       expect(scope.role.rights.length).toEqual(0);
       expect(scope.roleTypeModal).toBeFalsy();
@@ -62,7 +64,7 @@ describe("Role", function () {
       scope.role.rights.push(rights[2]);
       scope.role.adminRole = "true";
       window.selected = true;
-      scope.cancel();
+      scope.dialogCloseCallback(false);
 
       expect(scope.role.rights.length).toEqual(1);
       expect(scope.roleTypeModal).toBeFalsy();
@@ -71,9 +73,8 @@ describe("Role", function () {
 
     it("should display role type modal when radio button is clicked", function () {
       scope.roleTypeModal = false;
+      $httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
       scope.showRoleTypeModal('true');
-
-      expect(scope.roleTypeModal).toBeTruthy();
       expect(window.selected).toBeTruthy();
     });
   });
@@ -82,13 +83,13 @@ describe("Role", function () {
 
     var ctrl, scope, httpBackend, location;
     it('should update a role', function () {
-      inject(function ($rootScope, _$httpBackend_, $controller, $location) {
+      inject(function ($rootScope, _$httpBackend_, $controller, $location, _$dialog_) {
         scope = $rootScope.$new();
         httpBackend = _$httpBackend_;
         location = $location;
         httpBackend.expectGET('/roles/123.json').respond({"role": {"name": "test role", "adminRole": false}});
         httpBackend.expectGET('/rights.json').respond({"rights": "test Rights"});
-        ctrl = $controller(RoleController, {$scope: scope, $routeParams: {id: 123}, $location: location});
+        ctrl = $controller(RoleController, {$scope: scope, $routeParams: {id: 123}, $location: location, $dialog: _$dialog_});
       });
 
       httpBackend.expectPUT('/roles/123.json').respond(

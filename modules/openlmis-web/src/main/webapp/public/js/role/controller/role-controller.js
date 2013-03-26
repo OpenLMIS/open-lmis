@@ -4,14 +4,14 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function RoleController($scope, $routeParams, $location, Roles, Role, Rights) {
+function RoleController($scope, $routeParams, $location, Roles, Role, Rights, $dialog) {
   $scope.$parent.error = "";
   $scope.$parent.message = "";
-  $scope.role = {rights: []};
+  $scope.role = {rights:[]};
   $scope.role.adminRole = "true";
 
   if ($routeParams.id) {
-    Role.get({id: $routeParams.id}, function (data) {
+    Role.get({id:$routeParams.id}, function (data) {
       $scope.role = data.role;
       $scope.role.adminRole = data.role.adminRole.toString();
     });
@@ -19,8 +19,8 @@ function RoleController($scope, $routeParams, $location, Roles, Role, Rights) {
 
   Rights.get({}, function (data) {
     $scope.rights = data.rights;
-    $scope.adminRights = _.where($scope.rights, {"adminRight": "true"});
-    $scope.nonAdminRights = _.where($scope.rights, {"adminRight": "false"});
+    $scope.adminRights = _.where($scope.rights, {"adminRight":"true"});
+    $scope.nonAdminRights = _.where($scope.rights, {"adminRight":"false"});
   }, {});
 
 
@@ -28,12 +28,11 @@ function RoleController($scope, $routeParams, $location, Roles, Role, Rights) {
     $scope.showRightError = false;
 
     if (checked) {
-      if ($scope.contains(right.right))
-        return;
+      if ($scope.contains(right.right)) return;
 
       $scope.role.rights.push(right);
       if (right.right == 'CREATE_REQUISITION' || right.right == 'AUTHORIZE_REQUISITION' ||
-        right.right == 'APPROVE_REQUISITION' ) {
+        right.right == 'APPROVE_REQUISITION') {
         $scope.updateRights(true, $scope.getRightFromRightList("VIEW_REQUISITION"));
       }
     } else {
@@ -41,20 +40,20 @@ function RoleController($scope, $routeParams, $location, Roles, Role, Rights) {
         return (rightObj.right != right.right);
       });
     }
-  }
+  };
 
   $scope.getRightFromRightList = function (rightName) {
     return _.find($scope.rights, function (right) {
       return right.right == rightName;
     });
-  }
+  };
 
   $scope.areRelatedFieldsSelected = function (right) {
     if (right.right != 'VIEW_REQUISITION') return false;
     return ($scope.contains('CREATE_REQUISITION') ||
       $scope.contains('AUTHORIZE_REQUISITION') ||
       $scope.contains('APPROVE_REQUISITION'));
-  }
+  };
 
   $scope.contains = function (right) {
     var containFlag = false;
@@ -83,38 +82,31 @@ function RoleController($scope, $routeParams, $location, Roles, Role, Rights) {
     if (validRole()) {
       var id = $routeParams.id;
       if (id) {
-        Role.update({id: id}, $scope.role, successHandler, errorHandler);
+        Role.update({id:id}, $scope.role, successHandler, errorHandler);
       } else {
         Roles.save({}, $scope.role, successHandler, errorHandler);
       }
     }
 
-  }
+  };
+
+  $scope.dialogCloseCallback = function (result) {
+    if (result) {
+      $scope.role.rights = [];
+      $scope.showRightError = false;
+      $scope.showError = false;
+      $scope.role.adminRole = window.selected.toString();
+    } else {
+      $scope.role.adminRole = (!window.selected).toString();
+    }
+  };
+
+
   $scope.showRoleTypeModal = function (selected) {
     window.selected = selected;
-    $scope.roleTypeModal = true;
+    OpenLmisDialog.new({id:"roleTypeDialog"}, $scope.dialogCloseCallback, $dialog);
+  };
 
-    var body = angular.element(document.getElementsByTagName('body')[0]);
-    body.bind('keyup', function(e) {
-      if (e.which === 27) { $scope.cancel(); }
-    });
-  }
-
-  $scope.deSelectRights = function () {
-    $scope.role.rights = [];
-    $scope.showRightError = false;
-    $scope.showError = false;
-    $scope.role.adminRole = window.selected.toString();
-    $scope.roleTypeModal = false;
-  }
-
-  $scope.cancel = function () {
-    var body = angular.element(document.getElementsByTagName('body')[0]);
-    body.unbind('keyup');
-
-    $scope.roleTypeModal = false;
-    $scope.role.adminRole= (!window.selected).toString();
-  }
 
   var validRole = function () {
     var valid = true;

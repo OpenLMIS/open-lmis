@@ -223,7 +223,9 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
   }).run(function ($rootScope) {
     $rootScope.$on('$routeChangeStart', function () {
       angular.element('#ui-datepicker-div').hide();
+      //TODO delete modal window
       angular.element('body > .modal-backdrop').hide();
+      angular.element('.dialog').parent('.modal').remove();
     });
   });
 
