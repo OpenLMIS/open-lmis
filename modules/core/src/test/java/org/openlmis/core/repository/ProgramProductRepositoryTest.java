@@ -21,13 +21,15 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProductMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
 import org.openlmis.core.repository.mapper.ProgramProductPriceMapper;
-import org.springframework.dao.DuplicateKeyException;
+
+import java.util.Calendar;
+import java.util.Date;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.verify;
 import static org.openlmis.core.builder.ProductBuilder.defaultProduct;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
@@ -54,30 +56,29 @@ public class ProgramProductRepositoryTest {
   @Mock
   private ProgramProductPriceMapper programProductPriceMapper;
 
+  private ProgramProduct programProduct;
+
   @Before
   public void setUp() throws Exception {
     programProductRepository = new ProgramProductRepository(programRepository, programProductMapper, productRepository, programProductPriceMapper);
-  }
+    programProduct = make(a(ProgramProductBuilder.defaultProgramProduct));
+    programProduct.setModifiedDate(new Date());
 
-  @Test
-  public void shouldThrowErrorIfInsertingDuplicateProductForAProgram() throws Exception {
-    Product product = make(a(defaultProduct));
-    Program program = make(a(defaultProgram));
-    ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Duplicate entry for Product Code and Program Code combination found");
-    doThrow(new DuplicateKeyException("Duplicate entry for Product Code and Program Code combination found")).when(programProductMapper).insert(programProduct);
-    programProductRepository.insert(programProduct);
+    when(productRepository.getIdByCode("productCode")).thenReturn(1);
 
+    when(programProductMapper.getByProgramAndProductId(anyInt(), anyInt())).thenReturn(programProduct);
   }
 
   @Test
   public void shouldInsertProgramForAProduct() {
     Program program = new Program();
-    program.setCode("DummyProgram");
+    program.setCode("P1");
     Product product = new Product();
-    product.setCode("DummyProduct");
+    product.setCode("P2");
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
+    programProduct.setModifiedDate(new Date());
+
+    when(programProductMapper.getByProgramAndProductId(anyInt(), anyInt())).thenReturn(null);
 
     programProductRepository.insert(programProduct);
     verify(programProductMapper).insert(programProduct);
@@ -177,5 +178,37 @@ public class ProgramProductRepositoryTest {
 
     verify(programProductPriceMapper).closeLastActivePrice(programProductPrice);
     verify(programProductPriceMapper).insertNewCurrentPrice(programProductPrice);
+  }
+
+  @Test
+  public void shouldThrowErrorIfProgramProductWithSameTimeStampExist() throws Exception {
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("Duplicate entry for Product Code and Program Code combination found");
+
+    programProductRepository.insert(programProduct);
+  }
+
+  @Test
+  public void shouldUpdateProgramProductIfExist() throws Exception {
+
+    ProgramProduct savedProgramProduct = new ProgramProduct();
+
+    Calendar todayTime = Calendar.getInstance();
+    todayTime.add(Calendar.DATE, -1);
+    savedProgramProduct.setModifiedDate(todayTime.getTime());
+
+    when(programProductMapper.getByProgramAndProductId(anyInt(), anyInt())).thenReturn(savedProgramProduct);
+
+    programProductRepository.insert(programProduct);
+
+    verify(programProductMapper).updateProgramProduct(programProduct);
+  }
+
+  @Test
+  public void shouldUpdateProgramProduct() throws Exception {
+    programProductRepository.updateProgramProduct(programProduct);
+
+    verify(programProductMapper).updateProgramProduct(programProduct);
   }
 }

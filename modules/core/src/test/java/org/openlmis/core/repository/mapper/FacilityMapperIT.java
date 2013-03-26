@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static java.lang.Boolean.*;
+import static java.lang.Boolean.FALSE;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
@@ -244,7 +244,7 @@ public class FacilityMapperIT {
 
     programSupportedMapper.addSupportedProgram(make(a(defaultProgramSupported,
       with(supportedFacilityId, facilitySupportingProgramInRG1.getId()),
-      with(supportedProgram,make(a(defaultProgram, with(programCode, "Random")))))));
+      with(supportedProgram, make(a(defaultProgram, with(programCode, "Random")))))));
 
     programSupportedMapper.addSupportedProgram(make(a(defaultProgramSupported,
       with(supportedFacilityId, facilitySupportingProgramNotInAnyRG.getId()),
@@ -339,5 +339,18 @@ public class FacilityMapperIT {
         return facility.getCode().equals(facilityInRG2.getCode());
       }
     }));
+  }
+
+  @Test
+  public void shouldGetFacilityByCode() throws Exception {
+    Facility facility = make(a(defaultFacility));
+
+    mapper.insert(facility);
+
+    Facility facilityFromDatabase = mapper.getByCode(facility.getCode());
+
+    assert (facilityFromDatabase.getId()).equals(facility.getId());
+    assert (facilityFromDatabase.getCode()).equals(facility.getCode());
+    assert (facilityFromDatabase.getName()).equals(facility.getName());
   }
 }

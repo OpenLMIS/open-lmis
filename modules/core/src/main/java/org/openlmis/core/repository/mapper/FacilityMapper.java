@@ -10,7 +10,6 @@ import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityOperator;
 import org.openlmis.core.domain.FacilityType;
-import org.openlmis.core.domain.GeographicZone;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -134,4 +133,7 @@ public interface FacilityMapper {
     @Result(property = "operatedBy", column = "operatedById", javaType = Integer.class, one = @One(select = "getFacilityOperatorById"))
   })
   List<Facility> getAllInRequisitionGroups(@Param("requisitionGroupIds") String requisitionGroupIds);
+
+  @Select("SELECT * from facilities WHERE code=#{code}")
+  Facility getByCode(String code);
 }

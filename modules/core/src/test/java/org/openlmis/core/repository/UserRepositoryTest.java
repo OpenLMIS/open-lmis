@@ -22,6 +22,8 @@ import org.openlmis.core.repository.mapper.UserMapper;
 import org.springframework.dao.DuplicateKeyException;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -191,4 +193,45 @@ public class UserRepositoryTest {
     assertThat(userRepository.getUserIdForPasswordResetToken(passwordResetToken), is(1));
   }
 
+  @Test
+  public void shouldThrowErrorIfUserWithSameTimeStampExist() throws Exception {
+    User user = make(a(defaultUser));
+    user.setUserName("userBeingUploaded");
+    Date todayDate = new Date();
+    user.setModifiedDate(todayDate);
+
+    User savedUser = new User();
+    savedUser.setModifiedDate(todayDate);
+
+    User supervisorUser = new User();
+
+    when(userMapper.get("userBeingUploaded")).thenReturn(savedUser);
+    when(userMapper.get("supervisorUserName")).thenReturn(supervisorUser);
+
+    exException.expect(DataException.class);
+    exException.expectMessage("duplicate.user.name.found");
+
+    userRepository.create(user);
+  }
+
+  @Test
+  public void shouldUpdateUserIfUserWithUserNameAlreadyExist() throws Exception {
+    User user = make(a(defaultUser));
+    user.setUserName("userBeingUploaded");
+    Calendar today = Calendar.getInstance();
+    user.setModifiedDate(today.getTime());
+
+    User savedUser = new User();
+    today.add(Calendar.DATE,-1);
+    savedUser.setModifiedDate(today.getTime());
+
+    User supervisorUser = new User();
+
+    when(userMapper.get("userBeingUploaded")).thenReturn(savedUser);
+    when(userMapper.get("supervisorUserName")).thenReturn(supervisorUser);
+
+    userRepository.create(user);
+
+    verify(userMapper).update(user);
+  }
 }

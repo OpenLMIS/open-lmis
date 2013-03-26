@@ -28,15 +28,20 @@ public class ProgramProductService {
     return programProductRepository.getIdByProgramIdAndProductId(programId, productId);
   }
 
-  public void save(ProgramProductPrice programProductPrice) {
+  public void updateProgramProductPrice(ProgramProductPrice programProductPrice) {
     programProductPrice.validate();
 
     ProgramProduct programProduct = programProductPrice.getProgramProduct();
     ProgramProduct programProductWithId = programProductRepository.getProgramProductByProgramAndProductCode(programProduct);
     programProduct.setId(programProductWithId.getId());
     programProduct.setModifiedBy(programProductPrice.getModifiedBy());
+    programProduct.setModifiedDate(programProductPrice.getModifiedDate());
 
     programProductRepository.updateCurrentPrice(programProduct);
     programProductRepository.updatePriceHistory(programProductPrice);
+  }
+
+  public void insert(ProgramProduct programProduct) {
+    programProductRepository.insert(programProduct);
   }
 }

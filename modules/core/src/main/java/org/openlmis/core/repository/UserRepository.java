@@ -44,13 +44,26 @@ public class UserRepository {
   }
 
   public void create(User user) {
+    User savedUser = userMapper.get(user.getUserName());
+    if (savedUser != null && user.getModifiedDate().equals(savedUser.getModifiedDate())) {
+      throw new DataException(new OpenLmisMessage(DUPLICATE_USER_NAME_FOUND));
+    }
     validateAndSetSupervisor(user);
     try {
-      userMapper.insert(user);
-    } catch (DuplicateKeyException e) {
+      if(savedUser == null)
+        userMapper.insert(user);
+      else{
+        user.setId(savedUser.getId());
+        userMapper.update(user);
+      }
+    }
+    catch (DuplicateKeyException e) {
       handleException(e);
     } catch (DataIntegrityViolationException e) {
       throw new DataException(USER_DATA_LENGTH_INCORRECT);
+    }
+    catch(Exception e ){
+
     }
   }
 
@@ -79,7 +92,7 @@ public class UserRepository {
     User supervisor = null;
 
     if (user.getSupervisor() != null && user.getSupervisor().getUserName() != null
-        && !user.getSupervisor().getUserName().isEmpty()) {
+      && !user.getSupervisor().getUserName().isEmpty()) {
 
       supervisor = userMapper.get(user.getSupervisor().getUserName());
       if (supervisor == null) throw new DataException(new OpenLmisMessage(SUPERVISOR_USER_NOT_FOUND));
@@ -116,7 +129,7 @@ public class UserRepository {
     userMapper.deletePasswordResetTokenForUser(userId);
   }
 
-public void updateUserPassword(Integer userId, String password) {
+  public void updateUserPassword(Integer userId, String password) {
     userMapper.updateUserPassword(userId, password);
   }
 

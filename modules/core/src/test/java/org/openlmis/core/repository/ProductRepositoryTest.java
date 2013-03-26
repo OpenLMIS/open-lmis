@@ -145,4 +145,20 @@ public class ProductRepositoryTest {
     repository.getIdByCode("code");
   }
 
+  @Test
+  public void shouldReturnProductByCode() {
+    Product product = new Product();
+    String productCode = "P1";
+    when(mockedMapper.getByCode(productCode)).thenReturn(product);
+    Product returnedProduct = repository.getByCode(productCode);
+    assertThat(returnedProduct, is(product));
+  }
+
+
+  @Test
+  public void shouldUpdateProduct() {
+    Product product = new Product();
+    repository.update(product);
+    verify(mockedMapper).update(product);
+  }
 }

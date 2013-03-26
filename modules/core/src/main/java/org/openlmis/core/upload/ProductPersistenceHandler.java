@@ -29,7 +29,7 @@ public class ProductPersistenceHandler extends AbstractModelPersistenceHandler {
     protected void save(Importable importable, AuditFields auditFields) {
         Product product = (Product) importable;
         product.setModifiedBy(auditFields.getUser());
-        product.setModifiedDate(new Date());
+        product.setModifiedDate(auditFields.getCurrentTimestamp());
         productService.save(product);
     }
 }

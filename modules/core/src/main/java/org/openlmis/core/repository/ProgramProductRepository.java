@@ -38,12 +38,28 @@ public class ProgramProductRepository {
 
 
   public void insert(ProgramProduct programProduct) {
-    programProduct.getProgram().setId(programRepository.getIdByCode(programProduct.getProgram().getCode()));
+    String programCode = programProduct.getProgram().getCode();
+    Integer programId = programRepository.getIdByCode(programCode);
+    programProduct.getProgram().setId(programId);
 
-    validateProductCode(programProduct.getProduct().getCode());
+    String productCode = programProduct.getProduct().getCode();
+    validateProductCode(productCode);
+
+    Integer productId = productRepository.getIdByCode(productCode);
+
+    ProgramProduct savedProgramProduct = mapper.getByProgramAndProductId(programId, productId);
+
+    if (savedProgramProduct != null && savedProgramProduct.getModifiedDate().equals(programProduct.getModifiedDate())) {
+      throw new DataException("Duplicate entry for Product Code and Program Code combination found");
+    }
 
     try {
-      mapper.insert(programProduct);
+      if (savedProgramProduct == null) {
+        mapper.insert(programProduct);
+      } else {
+        programProduct.setId(savedProgramProduct.getId());
+        mapper.updateProgramProduct(programProduct);
+      }
     } catch (DuplicateKeyException duplicateKeyException) {
       throw new DataException("Duplicate entry for Product Code and Program Code combination found");
     }
@@ -70,10 +86,10 @@ public class ProgramProductRepository {
 
   public ProgramProduct getProgramProductByProgramAndProductCode(ProgramProduct programProduct) {
     return getByProgramIdAndProductId(programRepository.getIdByCode(programProduct.getProgram().getCode()),
-        productRepository.getIdByCode(programProduct.getProduct().getCode()));
+      productRepository.getIdByCode(programProduct.getProduct().getCode()));
   }
 
-  private ProgramProduct getByProgramIdAndProductId(Integer programId, Integer productId) {
+  public ProgramProduct getByProgramIdAndProductId(Integer programId, Integer productId) {
     final ProgramProduct programProduct = mapper.getByProgramAndProductId(programId, productId);
     if (programProduct == null)
       throw new DataException(PROGRAM_PRODUCT_INVALID);
@@ -84,5 +100,9 @@ public class ProgramProductRepository {
   public void updatePriceHistory(ProgramProductPrice programProductPrice) {
     programProductPriceMapper.closeLastActivePrice(programProductPrice);
     programProductPriceMapper.insertNewCurrentPrice(programProductPrice);
+  }
+
+  public void updateProgramProduct(ProgramProduct programProduct) {
+    mapper.updateProgramProduct(programProduct);
   }
 }

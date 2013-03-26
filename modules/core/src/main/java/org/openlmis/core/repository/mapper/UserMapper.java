@@ -22,11 +22,11 @@ public interface UserMapper {
     "(userName, facilityId, firstName, lastName, employeeId, jobTitle, " +
       "primaryNotificationMethod, officePhone, cellPhone, email, supervisorId, modifiedBy, modifiedDate) VALUES",
     "(#{userName}, #{facilityId}, #{firstName}, #{lastName}, #{employeeId}, #{jobTitle}," +
-      "#{primaryNotificationMethod}, #{officePhone}, #{cellPhone}, #{email}, #{supervisor.id}, #{modifiedBy}, DEFAULT)"})
+      "#{primaryNotificationMethod}, #{officePhone}, #{cellPhone}, #{email}, #{supervisor.id}, #{modifiedBy}, #{modifiedDate})"})
   @Options(useGeneratedKeys = true)
   Integer insert(User user);
 
-  @Select(value = "SELECT id, userName, facilityId, firstName, lastName, employeeId, jobTitle, primaryNotificationMethod, officePhone, cellPhone, email, supervisorId" +
+  @Select(value = "SELECT id, userName, facilityId, firstName, lastName, employeeId, jobTitle, primaryNotificationMethod, officePhone, cellPhone, email, supervisorId, modifiedDate" +
     " FROM users where LOWER(userName) = LOWER(#{userName})")
   @Results(@Result(property = "supervisor.id", column = "supervisorId"))
   User get(String userName);
@@ -45,7 +45,7 @@ public interface UserMapper {
   List<User> getUserWithSearchedName(String userSearchParam);
 
   @Update("UPDATE users SET userName = #{userName}, firstName = #{firstName}, lastName = #{lastName}, employeeId = #{employeeId},facilityId=#{facilityId}, jobTitle = #{jobTitle}, " +
-    "primaryNotificationMethod = #{primaryNotificationMethod}, officePhone = #{officePhone}, cellPhone = #{cellPhone}, email = #{email}, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT where id=#{id}")
+    "primaryNotificationMethod = #{primaryNotificationMethod}, officePhone = #{officePhone}, cellPhone = #{cellPhone}, email = #{email}, modifiedBy = #{modifiedBy}, modifiedDate = #{modifiedDate} where id=#{id}")
   void update(User user);
 
   @Select("SELECT id, userName, firstName, lastName, employeeId, facilityId, jobTitle, officePhone, primaryNotificationMethod, cellPhone, email FROM users WHERE id=#{id}")

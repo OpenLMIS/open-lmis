@@ -83,4 +83,8 @@ public class ProgramSupportedRepository {
   public List<ProgramSupported> getAllByFacilityId(Integer facilityId) {
     return programSupportedMapper.getAllByFacilityId(facilityId);
   }
+
+  public ProgramSupported geyByFacilityIdAndProgramId(Integer facilityId, Integer programId) {
+    return programSupportedMapper.getBy(facilityId,programId);
+  }
 }

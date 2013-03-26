@@ -20,10 +20,7 @@ import org.openlmis.core.repository.ProgramRepository;
 import org.openlmis.core.repository.ProgramSupportedRepository;
 import org.powermock.api.mockito.PowerMockito;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -291,6 +288,66 @@ public class FacilityServiceTest {
     verify(supervisoryNodeService).getAllSupervisoryNodesInHierarchyBy(1, rights);
     verify(requisitionGroupService).getRequisitionGroupsBy(supervisoryNodes);
     verify(facilityRepository).getAllInRequisitionGroups(requisitionGroups);
+  }
+
+  @Test
+  public void shouldThrowErrorIfDuplicateFacilityAndProgramCodeFoundWithSameTimeStamp() {
+    ProgramSupported programSupported = new ProgramSupported();
+    programSupported.setFacilityCode("F1");
+    Program program = new Program();
+    program.setCode("P1");
+    programSupported.setProgram(program);
+    programSupported.setModifiedDate(new Date());
+    when(facilityRepository.getIdForCode("F1")).thenReturn(1);
+    when(programRepository.getIdByCode("P1")).thenReturn(1);
+    when(programSupportedRepository.geyByFacilityIdAndProgramId(1, 1)).thenReturn(programSupported);
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("Facility has already been mapped to the program ");
+
+    facilityService.uploadSupportedProgram(programSupported);
+  }
+
+  @Test
+  public void shouldInsertProgramSupportedIfDoesNotExist() {
+    ProgramSupported programSupported = new ProgramSupported();
+    programSupported.setFacilityCode("F1");
+    Program program = new Program();
+    program.setCode("P1");
+    programSupported.setProgram(program);
+    programSupported.setModifiedDate(new Date());
+    when(facilityRepository.getIdForCode("F1")).thenReturn(1);
+    when(programRepository.getIdByCode("P1")).thenReturn(1);
+    when(programSupportedRepository.geyByFacilityIdAndProgramId(1, 1)).thenReturn(null);
+
+    facilityService.uploadSupportedProgram(programSupported);
+
+    verify(programSupportedRepository).addSupportedProgram(programSupported);
+  }
+
+  @Test
+  public void shouldUpdateProgramSupportedIfItExists() throws Exception {
+    Calendar today = Calendar.getInstance();
+    ProgramSupported programSupported = new ProgramSupported();
+    programSupported.setFacilityCode("F1");
+    Program program = new Program();
+    program.setCode("P1");
+    programSupported.setProgram(program);
+    programSupported.setModifiedDate(today.getTime());
+
+    ProgramSupported savedProgramSupported = new ProgramSupported();
+    savedProgramSupported.setFacilityCode("F1");
+    savedProgramSupported.setProgram(program);
+    today.add(Calendar.DATE,-1);
+    savedProgramSupported.setModifiedDate(today.getTime());
+
+    when(facilityRepository.getIdForCode("F1")).thenReturn(1);
+    when(programRepository.getIdByCode("P1")).thenReturn(2);
+    when(programSupportedRepository.geyByFacilityIdAndProgramId(1, 2)).thenReturn(savedProgramSupported);
+
+    facilityService.uploadSupportedProgram(programSupported);
+
+    verify(programSupportedRepository).deleteSupportedPrograms(1,2);
+    verify(programSupportedRepository).addSupportedProgram(programSupported);
   }
 
   private ProgramSupported createSupportedProgram(String facilityCode, String programCode, boolean active, Date startDate) {

@@ -28,7 +28,7 @@ public class FacilityRepository {
   private FacilityMapper mapper;
   private CommaSeparator commaSeparator;
   private GeographicZoneRepository geographicZoneRepository;
-  private static Integer LOWEST_GEO_LEVEL ;
+  private static Integer LOWEST_GEO_LEVEL;
 
   @Autowired
   public FacilityRepository(FacilityMapper facilityMapper, CommaSeparator commaSeparator, GeographicZoneRepository geographicZoneRepository) {
@@ -42,7 +42,14 @@ public class FacilityRepository {
   }
 
   public void save(Facility facility) {
-    facility.setModifiedDate(DateTime.now().toDate());
+    Facility savedFacility = mapper.getByCode(facility.getCode());
+    if (savedFacility != null && savedFacility.getModifiedDate().equals(facility.getModifiedDate())) {
+      throw new DataException("Duplicate Facility Code");
+    }
+    if (facility.getModifiedDate() == null) {
+      facility.setModifiedDate(DateTime.now().toDate());
+    }
+    setFacilityId(savedFacility, facility);
     try {
       validateAndSetFacilityOperator(facility);
       validateAndSetFacilityType(facility);
@@ -63,18 +70,24 @@ public class FacilityRepository {
     }
   }
 
+  private void setFacilityId(Facility savedFacility, Facility facility) {
+    if (savedFacility != null) {
+      facility.setId(savedFacility.getId());
+    }
+  }
+
   private void validateGeographicZone(Facility facility) {
-    if(LOWEST_GEO_LEVEL == null) {
+    if (LOWEST_GEO_LEVEL == null) {
       LOWEST_GEO_LEVEL = geographicZoneRepository.getLowestGeographicLevel();
     }
     GeographicZone geographicZone = geographicZoneRepository.getByCode(facility.getGeographicZone().getCode());
     facility.setGeographicZone(geographicZone);
 
-    if(facility.getGeographicZone() == null){
+    if (facility.getGeographicZone() == null) {
       throw new DataException("Invalid reference data 'Geographic Zone Code'");
     }
 
-    if(facility.getGeographicZone().getLevel().getLevelNumber() != LOWEST_GEO_LEVEL){
+    if (facility.getGeographicZone().getLevel().getLevelNumber() != LOWEST_GEO_LEVEL) {
       throw new DataException("Geographic Zone Code must be at the lowest administrative level in your hierarchy");
     }
   }

@@ -9,6 +9,7 @@ package org.openlmis.core.upload;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.domain.ProgramProductPrice;
 import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.upload.model.AuditFields;
@@ -22,11 +23,13 @@ public class ProgramProductPricePersistenceHandlerTest {
   private ProgramProductPricePersistenceHandler programProductCostPersistenceHandler;
   @Mock
   private ProgramProductService programProductService;
+  private ProgramProductPersistenceHandler programProductPersistanceHandler;
 
   @Before
   public void setUp() throws Exception {
     initMocks(this);
     programProductCostPersistenceHandler = new ProgramProductPricePersistenceHandler(programProductService);
+    programProductPersistanceHandler = new ProgramProductPersistenceHandler(programProductService);
   }
 
 
@@ -34,7 +37,17 @@ public class ProgramProductPricePersistenceHandlerTest {
   public void shouldSaveProgramProductPrice() {
     ProgramProductPrice programProductPrice = new ProgramProductPrice();
     programProductCostPersistenceHandler.save(programProductPrice, new AuditFields(1, null));
-    verify(programProductService).save(programProductPrice);
+    verify(programProductService).updateProgramProductPrice(programProductPrice);
     assertThat(programProductPrice.getModifiedBy(), is(1));
+  }
+
+  @Test
+  public void shouldInsertProgramProduct() throws Exception {
+    ProgramProduct programProduct = new ProgramProduct();
+
+    programProductPersistanceHandler.save(programProduct, new AuditFields(1, null));
+
+    verify(programProductService).insert(programProduct);
+
   }
 }

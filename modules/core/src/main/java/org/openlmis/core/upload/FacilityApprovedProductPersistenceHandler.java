@@ -29,6 +29,7 @@ public class FacilityApprovedProductPersistenceHandler extends AbstractModelPers
   protected void save(Importable modelClass, AuditFields auditFields) {
     FacilityApprovedProduct facilityApprovedProduct = (FacilityApprovedProduct) modelClass;
     facilityApprovedProduct.setModifiedBy(auditFields.getUser());
+    facilityApprovedProduct.setModifiedDate(auditFields.getCurrentTimestamp());
     facilityApprovedProductService.save(facilityApprovedProduct);
   }
 }

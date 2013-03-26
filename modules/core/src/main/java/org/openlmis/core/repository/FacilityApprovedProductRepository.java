@@ -10,9 +10,10 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.FacilityApprovedProduct;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.FacilityApprovedProductMapper;
+import org.openlmis.core.repository.mapper.FacilityMapper;
+import org.openlmis.core.repository.mapper.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -28,26 +29,42 @@ public class FacilityApprovedProductRepository {
 
   private FacilityApprovedProductMapper facilityApprovedProductMapper;
 
+  private FacilityMapper facilityMapper;
+
+  private ProductMapper productMapper;
+
   @Autowired
-  public FacilityApprovedProductRepository(FacilityApprovedProductMapper facilityApprovedProductMapper) {
+  public FacilityApprovedProductRepository(FacilityApprovedProductMapper facilityApprovedProductMapper, FacilityMapper facilityMapper, ProductMapper productMapper) {
     this.facilityApprovedProductMapper = facilityApprovedProductMapper;
+    this.facilityMapper=facilityMapper;
+    this.productMapper=productMapper;
   }
 
   public List<FacilityApprovedProduct> getFullSupplyProductsByFacilityAndProgram(Integer facilityId, Integer programId) {
-    return facilityApprovedProductMapper.getProductsByFacilityAndProgram(facilityId, programId, TRUE);
+    return facilityApprovedProductMapper.getProductsByFacilityProgramAndFullSupply(facilityId, programId, TRUE);
   }
 
   public List<FacilityApprovedProduct> getNonFullSupplyProductsByFacilityAndProgram(Integer facilityId, Integer programId) {
-    return facilityApprovedProductMapper.getProductsByFacilityAndProgram(facilityId, programId, FALSE);
+    return facilityApprovedProductMapper.getProductsByFacilityProgramAndFullSupply(facilityId, programId, FALSE);
   }
 
   public void insert(FacilityApprovedProduct facilityApprovedProduct) {
-    try {
-      facilityApprovedProductMapper.insert(facilityApprovedProduct);
-    } catch (DuplicateKeyException e) {
+    FacilityApprovedProduct savedFacilityApprovedProduct = facilityApprovedProductMapper.getProductsByFacilityAndProgram(facilityApprovedProduct.getProgramProduct().getId());
+
+    if (savedFacilityApprovedProduct != null && facilityApprovedProduct.getModifiedDate().equals(savedFacilityApprovedProduct.getModifiedDate())) {
       throw new DataException(FACILITY_APPROVED_PRODUCT_DUPLICATE);
+    }
+    try {
+      if (savedFacilityApprovedProduct == null) {
+        facilityApprovedProductMapper.insert(facilityApprovedProduct);
+      } else {
+        facilityApprovedProduct.setId(savedFacilityApprovedProduct.getId());
+        facilityApprovedProduct.getFacilityType().setId(facilityMapper.getFacilityTypeIdForCode(facilityApprovedProduct.getFacilityType().getCode()));
+        facilityApprovedProductMapper.updateFacilityApprovedProduct(facilityApprovedProduct);
+      }
     } catch (DataIntegrityViolationException e) {
-        throw new DataException(FACILITY_TYPE_DOES_NOT_EXIST);
+      throw new DataException(FACILITY_TYPE_DOES_NOT_EXIST);
     }
   }
+
 }

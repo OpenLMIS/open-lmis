@@ -7,6 +7,7 @@
 package org.openlmis.core.repository.mapper;
 
 import org.hamcrest.core.Is;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
@@ -115,7 +116,7 @@ public class FacilityApprovedProductMapperIT {
     addToFacilityType("warehouse", programProduct7);
 
     // Get full supply products
-    List<FacilityApprovedProduct> facilityApprovedProducts = facilityApprovedProductMapper.getProductsByFacilityAndProgram(
+    List<FacilityApprovedProduct> facilityApprovedProducts = facilityApprovedProductMapper.getProductsByFacilityProgramAndFullSupply(
       facility.getId(), yellowFeverProgram.getId(), Boolean.TRUE);
     assertEquals(3, facilityApprovedProducts.size());
 
@@ -141,7 +142,7 @@ public class FacilityApprovedProductMapperIT {
     assertEquals("PRO01", facilityApprovedProducts.get(2).getProgramProduct().getProduct().getCode());
 
     // Non-full supply products
-    List<FacilityApprovedProduct> nonFullSupplyfacilityApprovedProducts = facilityApprovedProductMapper.getProductsByFacilityAndProgram(
+    List<FacilityApprovedProduct> nonFullSupplyfacilityApprovedProducts = facilityApprovedProductMapper.getProductsByFacilityProgramAndFullSupply(
       facility.getId(), yellowFeverProgram.getId(), Boolean.FALSE);
 
     assertThat(nonFullSupplyfacilityApprovedProducts.size(), is(1));
@@ -176,5 +177,19 @@ public class FacilityApprovedProductMapperIT {
     ProgramProduct programProduct = new ProgramProduct(program, product, 30, isActive);
     programProductMapper.insert(programProduct);
     return programProduct;
+  }
+
+  @Test
+  public void shouldGetFacilityApprovedProduct(){
+    Facility facility = make(a(FacilityBuilder.defaultFacility));
+    facilityMapper.insert(facility);
+    Program program = make(a(defaultProgram));
+    programMapper.insert(program);
+    addToFacilityType("warehouse", addToProgramProduct(program, product("PRO01", true, 6, category("C1", "Category 1", 2)), true));
+
+    FacilityApprovedProduct facilityApprovedProductsFromDB = facilityApprovedProductMapper.getProductsByFacilityAndProgram(program.getId());
+
+    assertNotNull(facilityApprovedProductsFromDB);
+    assertEquals(facilityApprovedProductsFromDB.getMaxMonthsOfStock(),MAX_MONTHS_OF_STOCK );
   }
 }

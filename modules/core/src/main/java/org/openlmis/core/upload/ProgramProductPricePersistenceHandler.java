@@ -27,6 +27,7 @@ public class ProgramProductPricePersistenceHandler extends AbstractModelPersiste
   protected void save(Importable modelClass, AuditFields auditFields) {
     ProgramProductPrice programProductPrice = (ProgramProductPrice) modelClass;
     programProductPrice.setModifiedBy(auditFields.getUser());
-    programProductService.save(programProductPrice);
+    programProductPrice.setModifiedDate(auditFields.getCurrentTimestamp());
+    programProductService.updateProgramProductPrice(programProductPrice);
   }
 }

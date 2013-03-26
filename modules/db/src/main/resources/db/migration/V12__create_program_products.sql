@@ -7,7 +7,7 @@ CREATE TABLE program_products (
     active BOOLEAN NOT NULL,
     currentPrice NUMERIC(20,2) DEFAULT 0,
     modifiedBy INTEGER,
-    modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modifiedDate TIMESTAMP,
     createdBy INTEGER,
     createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
     UNIQUE (productId, programId)

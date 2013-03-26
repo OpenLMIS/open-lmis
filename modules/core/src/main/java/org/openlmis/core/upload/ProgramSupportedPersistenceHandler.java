@@ -27,6 +27,7 @@ public class ProgramSupportedPersistenceHandler extends AbstractModelPersistence
   protected void save(Importable importable, AuditFields auditFields) {
     ProgramSupported programSupported = (ProgramSupported) importable;
     programSupported.setModifiedBy(auditFields.getUser());
+    programSupported.setModifiedDate(auditFields.getCurrentTimestamp());
     facilityService.uploadSupportedProgram(programSupported);
   }
 }

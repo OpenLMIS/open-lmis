@@ -13,8 +13,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProgramProductPriceMapper {
   @Insert({"INSERT INTO program_product_price_history",
-      "(programProductId, price, pricePerDosage, source, endDate, modifiedBy) VALUES",
-      "(#{programProduct.id}, #{programProduct.currentPrice}, #{pricePerDosage}, #{source}, #{endDate}, #{modifiedBy})"})
+      "(programProductId, price, pricePerDosage, source, endDate, modifiedBy,modifiedDate) VALUES",
+      "(#{programProduct.id}, #{programProduct.currentPrice}, #{pricePerDosage}, #{source}, #{endDate}, #{modifiedBy},#{modifiedDate})"})
   @Options(useGeneratedKeys = true)
   void insertNewCurrentPrice(ProgramProductPrice programProductPrice);
 

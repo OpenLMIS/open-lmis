@@ -5,7 +5,7 @@ CREATE TABLE facility_approved_products (
     programProductId INTEGER REFERENCES program_products(id) NOT NULL,
     maxMonthsOfStock INTEGER NOT NULL,
     modifiedBy INTEGER,
-    modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modifiedDate TIMESTAMP,
     createdBy INTEGER,
     createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
     UNIQUE (facilityTypeId, programProductId)

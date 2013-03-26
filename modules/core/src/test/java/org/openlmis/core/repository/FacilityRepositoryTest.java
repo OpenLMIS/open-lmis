@@ -14,7 +14,6 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.domain.GeographicZone;
@@ -27,6 +26,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
@@ -283,5 +284,37 @@ public class FacilityRepositoryTest {
 
     assertThat(userHomeFacility, is(expectedFacility));
     verify(mapper).getHomeFacilityWithRights(1, "{APPROVE_REQUISITION, CREATE_REQUISITION}");
+  }
+
+
+  @Test
+  public void shouldThrowErrorIfDuplicateCodeFoundWithSameTimeStamp() {
+    Facility facility = new Facility();
+    facility.setCode("F1");
+    facility.setModifiedDate(new Date());
+    when(mapper.getByCode("F1")).thenReturn(facility);
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("Duplicate Facility Code");
+
+    repository.save(facility);
+  }
+
+  @Test
+  public void shouldSetFacilityIdForUploadIfFacilityExists() throws Exception {
+    Facility facility = make(a(defaultFacility));
+
+    Calendar today = Calendar.getInstance();
+    facility.setModifiedDate(today.getTime());
+
+    Facility savedFacility = new Facility();
+    savedFacility.setId(1);
+    today.add(Calendar.DATE, -1);
+    savedFacility.setModifiedDate(today.getTime());
+    when(mapper.getByCode(facility.getCode())).thenReturn(savedFacility);
+
+    repository.save(facility);
+
+    assertThat(facility.getId(), is(savedFacility.getId()));
   }
 }

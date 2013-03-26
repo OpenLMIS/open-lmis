@@ -14,6 +14,8 @@ import org.openlmis.core.repository.ProductRepository;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.upload.model.AuditFields;
 
+import java.util.Date;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -31,7 +33,7 @@ public class ProductPersistenceHandlerTest {
         ProductService productService = mock(ProductService.class);
         Product product = new Product();
 
-        new ProductPersistenceHandler(productService).execute(product, 0, new AuditFields(1,null));
+        new ProductPersistenceHandler(productService).execute(product, 0, new AuditFields(1, new Date()));
         assertThat(product.getModifiedBy(), is(1));
         assertThat(product.getModifiedDate(), is(notNullValue()));
         verify(productService).save(product);

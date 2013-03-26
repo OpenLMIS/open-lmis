@@ -19,6 +19,8 @@ import org.openlmis.core.domain.ProgramProductPrice;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProgramProductRepository;
 
+import java.util.Date;
+
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
@@ -51,7 +53,7 @@ public class ProgramProductServiceTest {
     returnedProgramProduct.setId(123);
     when(programProductRepository.getProgramProductByProgramAndProductCode(programProduct)).thenReturn(returnedProgramProduct);
 
-    programProductService.save(programProductPrice);
+    programProductService.updateProgramProductPrice(programProductPrice);
 
     assertThat(programProductPrice.getProgramProduct().getId(), is(123));
     assertThat(programProductPrice.getProgramProduct().getModifiedBy(), is(1));
@@ -68,6 +70,29 @@ public class ProgramProductServiceTest {
     ProgramProductPrice programProductPrice = mock(ProgramProductPrice.class);
     doThrow(new DataException("error-code")).when(programProductPrice).validate();
 
-    programProductService.save(programProductPrice);
+    programProductService.updateProgramProductPrice(programProductPrice);
+  }
+
+  @Test
+  public void shouldInsertProgramProduct() throws Exception {
+    ProgramProduct programProduct = new ProgramProduct();
+
+    programProductService.insert(programProduct);
+
+    verify(programProductRepository).insert(programProduct);
+
+  }
+
+  @Test
+  public void shouldThrowErrorIfProgramProductExistsWithSameTimeStamp() throws Exception {
+    ProgramProduct programProduct = new ProgramProduct();
+    Date date = new Date();
+    programProduct.setModifiedDate(date);
+    expectException.expect(DataException.class);
+    expectException.expectMessage("Duplicate Program Product found");
+
+    doThrow(new DataException("Duplicate Program Product found")).when(programProductRepository).insert(programProduct);
+
+    programProductService.insert(programProduct);
   }
 }

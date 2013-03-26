@@ -35,6 +35,7 @@ public class UserPersistenceHandler extends AbstractModelPersistenceHandler {
   protected void save(Importable modelClass, AuditFields auditFields) {
     final User user = (User) modelClass;
     user.setModifiedBy(auditFields.getUser());
+    user.setModifiedDate(auditFields.getCurrentTimestamp());
     userService.create(user, baseUrl + RESET_PASSWORD_PATH);
   }
 }

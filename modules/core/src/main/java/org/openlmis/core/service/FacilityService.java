@@ -9,6 +9,7 @@ package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.openlmis.core.repository.ProgramRepository;
@@ -17,7 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @NoArgsConstructor
@@ -64,9 +68,22 @@ public class FacilityService {
   public void uploadSupportedProgram(ProgramSupported programSupported) {
     programSupported.isValid();
 
-    programSupported.setFacilityId(facilityRepository.getIdForCode(programSupported.getFacilityCode()));
-    programSupported.setProgram(new Program(programRepository.getIdByCode(programSupported.getProgram().getCode())));
-    programSupportedRepository.addSupportedProgram(programSupported);
+    Integer facilityId = facilityRepository.getIdForCode(programSupported.getFacilityCode());
+    programSupported.setFacilityId(facilityId);
+    Integer programId = programRepository.getIdByCode(programSupported.getProgram().getCode());
+    programSupported.setProgram(new Program(programId));
+
+    ProgramSupported savedProgramSupported = programSupportedRepository.geyByFacilityIdAndProgramId(facilityId, programId);
+    if (savedProgramSupported != null && savedProgramSupported.getModifiedDate().equals(programSupported.getModifiedDate())) {
+      throw new DataException("Facility has already been mapped to the program ");
+    }
+    if (savedProgramSupported == null) {
+      programSupportedRepository.addSupportedProgram(programSupported);
+    }
+    else{
+      programSupportedRepository.deleteSupportedPrograms(facilityId,programId);
+      programSupportedRepository.addSupportedProgram(programSupported);
+    }
   }
 
   public List<FacilityType> getAllTypes() {

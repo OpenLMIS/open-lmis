@@ -31,7 +31,7 @@ CREATE TABLE facilities (
     comment  TEXT,
     dataReportable BOOLEAN,
     modifiedBy INTEGER,
-    modifiedDate TIMESTAMP DEFAULT  CURRENT_TIMESTAMP,
+    modifiedDate TIMESTAMP,
     createdBy INTEGER,
     createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );

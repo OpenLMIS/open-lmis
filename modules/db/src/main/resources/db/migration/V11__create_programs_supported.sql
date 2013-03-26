@@ -4,7 +4,7 @@ CREATE TABLE programs_supported (
   startDate    TIMESTAMP,
   active       BOOLEAN NOT NULL,
   modifiedBy   INTEGER,
-  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedDate TIMESTAMP,
   createdBy INTEGER,
   createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
   PRIMARY KEY (facilityId, programId)

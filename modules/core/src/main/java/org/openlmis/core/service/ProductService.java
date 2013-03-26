@@ -30,8 +30,30 @@ public class ProductService {
   }
 
   public void save(Product product) {
+    Product savedProduct = repository.getByCode(product.getCode());
+
+    if (savedProduct != null && product.getModifiedDate().equals(savedProduct.getModifiedDate())) {
+      throw new DataException("Duplicate Product Code");
+    }
     validateAndSetProductCategory(product);
-    repository.insert(product);
+    if (savedProduct == null) {
+      repository.insert(product);
+      return;
+    }
+
+    product.setId(savedProduct.getId());
+    setProductFormIdAndDosageUnitId(product);
+
+    repository.update(product);
+  }
+
+  private void setProductFormIdAndDosageUnitId(Product product) {
+    if(product.getForm()!=null )  {
+      product.getForm().setId(repository.getProductFormIdForCode(product.getForm().getCode()));
+    }
+    if(product.getDosageUnit()!=null) {
+      product.getDosageUnit().setId(repository.getDosageUnitIdForCode(product.getDosageUnit().getCode()));
+    }
   }
 
 

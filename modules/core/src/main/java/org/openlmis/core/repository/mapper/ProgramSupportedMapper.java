@@ -16,8 +16,8 @@ import java.util.List;
 @Repository
 public interface ProgramSupportedMapper {
   @Insert("INSERT INTO programs_supported" +
-    "(facilityId, programId, active, startDate, modifiedBy) VALUES (" +
-    "#{facilityId}, #{program.id}, #{active}, #{startDate}, #{modifiedBy})")
+    "(facilityId, programId, active, startDate, modifiedBy,modifiedDate) VALUES (" +
+    "#{facilityId}, #{program.id}, #{active}, #{startDate}, #{modifiedBy},#{modifiedDate})")
   @Options(flushCache = true)
   void addSupportedProgram(ProgramSupported programSupported);
 

@@ -9,7 +9,6 @@ package org.openlmis.core.repository;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.DosageUnit;
 import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.core.domain.ProductForm;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProductMapper;
@@ -80,6 +79,20 @@ public class ProductRepository {
       throw new DataException("Invalid reference data 'Dosage Unit'");
 
     dosageUnit.setId(dosageUnitId);
+  }
+
+  public Product getByCode(String code) {
+    return mapper.getByCode(code);
+  }
+
+  public void update(Product product) {
+    mapper.update(product);
+  }
+  public Integer getDosageUnitIdForCode(String code){
+    return mapper.getDosageUnitIdForCode(code);
+  }
+  public Integer getProductFormIdForCode(String code){
+    return mapper.getProductFormIdForCode(code);
   }
 
 }
