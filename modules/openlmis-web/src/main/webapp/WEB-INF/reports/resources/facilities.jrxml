@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="facilities" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7d4c5844-f3d4-40a5-8465-ee164eaec9c7">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<template><![CDATA["C:\\Users\\Issa\\JSI_Projects\\bitbucket\\open-lmis\\modules\\openlmis-web\\src\\main\\webapp\\WEB-INF\\reports\\resources\\openlmis-report-title-style.jrtx"]]></template>
+	<parameter name="CustomerName" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+  facilities.code,
+  facilities.name as facilityName,
+  facility_types.name as facilityType
+FROM
+  facilities,
+  facility_types
+WHERE
+  facilities.typeid = facility_types.id
+  order by facilities.Id;]]>
+	</queryString>
+	<field name="code" class="java.lang.String"/>
+	<field name="facilityName" class="java.lang.String"/>
+	<field name="facilityType" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="21" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="0c1e22d2-03d5-4321-9f42-b2fbeec7f577" style="openlmis-report-title" x="0" y="0" width="555" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[List of all facilities]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="23" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="7dc560f5-19c7-45e8-bab5-e3545064ae76" x="0" y="2" width="555" height="20" forecolor="#FFFFFF" backcolor="#0099CC"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="6db22fcb-3337-4a86-b7c5-5a987536c9e4" x="140" y="0" width="100" height="20" forecolor="#FFFFFF"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="04c74f59-5657-48a9-a301-125801571266" x="240" y="0" width="100" height="20" forecolor="#FFFFFF"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Facility Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9cf51c62-0c2d-4d36-afa3-f0150f9261b0" x="371" y="0" width="100" height="20" forecolor="#FFFFFF"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Facility Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2cd9d219-f423-4da8-965e-a12a7814c3f0" x="82" y="0" width="58" height="20" forecolor="#FFFFFF"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Line#]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<line>
+				<reportElement uuid="d3ea6f9f-95ae-4538-b5e1-01af2f9212b1" x="0" y="20" width="555" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement uuid="4fa45ebf-f6c8-4e11-a3db-a2700c16b212" x="140" y="1" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{code}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b14af5f4-3d93-4065-9c86-ebb406db9c14" x="240" y="1" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{facilityName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="514f035e-3c84-44f6-be8e-e0b77d122bc2" x="371" y="1" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{facilityType}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="fec94899-39ae-4d5d-a73a-a6c7e5a98422" x="81" y="1" width="59" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch">
+			<textField>
+				<reportElement uuid="c06215b8-d117-4cd1-b5e9-8076ced5d5b2" x="224" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{CustomerName}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
