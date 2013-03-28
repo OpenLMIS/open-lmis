@@ -222,10 +222,11 @@
           <td><input ng-model="supportedProgram.active" id="" type="checkbox" value="true"
                      ng-disabled="facility.dataReportable == 'false'"/></td>
           <td ng-init="supportedProgram.editedStartDate = supportedProgram.startDate">
-            <input type="text" value= "{{supportedProgram.startDate | date: 'dd/MM/yy'}}" ng-model="supportedProgram.editedStartDate"
-                     readonly ng-disabled="facility.dataReportable == 'false'"
-                     ui-date="{dateFormat:'dd/mm/yy', changeYear: true}" ng-required="supportedProgram.active == true"
-                     ng-change="editStartDate(supportedProgram)" />
+            <input type="text" value="{{supportedProgram.startDate | date: 'dd/MM/yy'}}"
+                   ng-model="supportedProgram.editedStartDate"
+                   readonly ng-disabled="facility.dataReportable == 'false'"
+                   ui-date="{dateFormat:'dd/mm/yy', changeYear: true}" ng-required="supportedProgram.active == true"
+                   ng-change="showConfirmDateChangeWindow(supportedProgram)"/>
           <span class="field-error" ng-show="supportedProgram.active && !supportedProgram.startDate && showError">
                   Start date is mandatory
                 </span>
@@ -240,15 +241,20 @@
               <option value="" ng-bind="programSupportedMessage"></option>
             </select>
           </td>
-          <td><input type="checkbox" ng-model="supportedProgram.active" id="supported-program-active" ng-disabled="!supportedProgram.program.id"/></td>
-          <td><input type="text" id="supported-program-start-date" name="supportedProgram" ng-model="supportedProgram.editedStartDate" ng-change="editStartDate(supportedProgram)"
-                     value= "{{supportedProgram.startDate | date: 'dd/MM/yy'}}" ui-date="{dateFormat:'dd/mm/yy', changeYear: true}"
-                     ng-disabled="!supportedProgram.program.id" />
+          <td><input type="checkbox" ng-model="supportedProgram.active" id="supported-program-active"
+                     ng-disabled="!supportedProgram.program.id"/></td>
+          <td><input type="text" id="supported-program-start-date" name="supportedProgram"
+                     ng-model="supportedProgram.editedStartDate"
+                     ng-change="showConfirmDateChangeWindow(supportedProgram)"
+                     value="{{supportedProgram.startDate | date: 'dd/MM/yy'}}"
+                     ui-date="{dateFormat:'dd/mm/yy', changeYear: true}"
+                     ng-disabled="!supportedProgram.program.id"/>
           <span class="field-error" ng-show="showDateNotEnteredError">
                   Start date is mandatory
                 </span>
           </td>
-          <td><input type="button" class="btn btn-primary" id="supported-program-add" value="Add" ng-disabled="!supportedProgram.program.id" ng-click="addSupportedProgram(supportedProgram)"></td>
+          <td><input type="button" class="btn btn-primary" id="supported-program-add" value="Add"
+                     ng-disabled="!supportedProgram.program.id" ng-click="addSupportedProgram(supportedProgram)"></td>
         </tr>
         </tbody>
       </table>
@@ -306,7 +312,8 @@
       <label for="longitude">Longitude</label>
 
       <div class="form-field">
-        <input ng-model="facility.longitude" ng-pattern="/^[+-]?0*\d{0,3}(\.\d{1,5}0*)?$/" name="longitude" id="longitude"
+        <input ng-model="facility.longitude" ng-pattern="/^[+-]?0*\d{0,3}(\.\d{1,5}0*)?$/" name="longitude"
+               id="longitude"
                type="text" ng-disabled="facility.dataReportable == 'false'"/>
               <span class="field-error" ng-show="facilityForm.longitude.$error.pattern">
                 Value should be numeric and within range -999.99999 to 999.99999(5 decimal points)
@@ -456,7 +463,8 @@
 <div form-toolbar id="action_buttons" class="action-buttons">
   <div class="form-cell button-row" ng-show="facility.dataReportable == 'true'">
     <input type="submit" class="btn btn-primary save-button" value="Save"/>
-    <a href="" class="btn btn-danger delete-button" ng-show="facility.id!=null" ng-click="confirmFacilityDelete()">Delete</a>
+    <a href="" class="btn btn-danger delete-button" ng-show="facility.id!=null"
+       ng-click="showConfirmFacilityDeleteWindow()">Delete</a>
   </div>
   <div class="form-cell button-row" ng-show="facility.dataReportable == 'false'">
     <a href="" class="btn btn-primary save-button" ng-show="facility.id!=null" ng-click="restoreConfirmModal=true">Restore</a>
@@ -473,7 +481,8 @@
     <p>"{{originalFacilityName}}" / "{{originalFacilityCode}}" will be restored in the system</p>
   </div>
   <div class="modal-footer">
-    <a href="" class="btn btn-primary" ng-click="restoreConfirmModal=false; activeConfirmModal=true;" data-dismiss="modal">OK</a>
+    <a href="" class="btn btn-primary" ng-click="restoreConfirmModal=false; activeConfirmModal=true;"
+       data-dismiss="modal">OK</a>
     <a href="" class="btn" ng-click="restoreConfirmModal=false">Cancel</a>
   </div>
 </div>
@@ -488,19 +497,6 @@
     <a href="" class="btn" ng-click="restoreFacility(false)" data-dismiss="modal">No</a>
   </div>
 </div>
-
-<div id="dateChangeConfirmModal" modal="dateChangeConfirmModal" close="resetOldStartDate()" >
-  <div class="modal-header"><h3>Set Program Start Date</h3></div>
-  <div class="modal-body">
-    <p>Facility Staff will submit back-due R&Rs for this program, starting from this date.</p>
-  </div>
-  <div class="modal-footer">
-    <a href="" class="btn btn-primary" ng-click="setNewStartDate()">Ok</a>
-    <a href="" class="btn" ng-click="resetOldStartDate()">Cancel</a>
-  </div>
-</div>
-
-
 
 </div>
 

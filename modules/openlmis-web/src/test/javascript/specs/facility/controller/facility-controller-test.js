@@ -121,14 +121,14 @@ describe("Facility Controller", function () {
 
     it('should edit start date', function () {
       window.program = {'startDate':2, 'editedStartDate':7};
-      scope.setNewStartDate();
-      expect(window.program.startDate).toEqual(window.program.editedStartDate);
+      scope.dateChangeCallback(true);
+      expect(window.program.startDate).toEqual(7);
     });
 
     it('should reset old start date', function () {
       window.program = {'startDate':2, 'editedStartDate':7};
-      scope.resetOldStartDate();
-      expect(window.program.editedStartDate).toEqual(window.program.startDate);
+      scope.dateChangeCallback(false);
+      expect(window.program.editedStartDate).toEqual(2);
     });
   });
 
@@ -179,7 +179,7 @@ describe("Facility Controller", function () {
     it('should delete a facility', function () {
       httpBackend.expectPUT('/facility/update/delete.json', scope.facility).respond(200, {"success":"Deleted successfully", "facility":scope.facility});
 
-      scope.deleteFacility(true);
+      scope.deleteFacilityCallBack(true);
       httpBackend.flush();
 
       expect(scope.message).toEqual("Deleted successfully");
@@ -192,7 +192,7 @@ describe("Facility Controller", function () {
     it('should not delete a facility if error occurs', function () {
       httpBackend.expectPUT('/facility/update/delete.json', scope.facility).respond(400, {"error":"something went wrong", "facility":scope.facility});
 
-      scope.deleteFacility(true);
+      scope.deleteFacilityCallBack(true);
       httpBackend.flush();
 
       expect(scope.error).toEqual("something went wrong");

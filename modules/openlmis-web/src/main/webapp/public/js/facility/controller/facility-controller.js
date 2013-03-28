@@ -110,19 +110,22 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
     updateProgramsToDisplay();
   };
 
-  $scope.editStartDate = function (program) {
+  $scope.showConfirmDateChangeWindow = function (program) {
     window.program = program;
-    $scope.dateChangeConfirmModal = true;
+    var dialogOpts = {
+      id:"dateChangeConfirmModal",
+      header:"Set Program Start Date",
+      body:"Facility Staff will submit back-due R&Rs for this program, starting from this date."
+    };
+    OpenLmisDialog.new(dialogOpts, $scope.dateChangeCallback, $dialog);
   };
 
-  $scope.setNewStartDate = function () {
-    window.program.startDate = window.program.editedStartDate;
-    $scope.dateChangeConfirmModal = false;
-  };
-
-  $scope.resetOldStartDate = function () {
-    window.program.editedStartDate = window.program.startDate;
-    $scope.dateChangeConfirmModal = false;
+  $scope.dateChangeCallback = function (result) {
+    if (result) {
+      window.program.startDate = window.program.editedStartDate;
+    } else {
+      window.program.editedStartDate = window.program.startDate;
+    }
   };
 
   $scope.removeSupportedProgram = function (supportedProgram) {
@@ -135,18 +138,18 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
     return (_.findWhere($scope.programs, {'id':programId})).name;
   };
 
-  $scope.deleteFacility = function (result) {
+  $scope.deleteFacilityCallBack = function (result) {
     if (!result) return;
     putFacilityRequest('/facility/update/delete.json');
   };
 
-  $scope.confirmFacilityDelete = function () {
+  $scope.showConfirmFacilityDeleteWindow = function () {
     var dialogOpts = {
       id:"deleteFacilityDialog",
       header:"Delete facility",
       body:"'{0}' / '{1}' will be deleted from the system.".format($scope.originalFacilityName, $scope.originalFacilityCode)
     };
-    OpenLmisDialog.new(dialogOpts, $scope.deleteFacility, $dialog);
+    OpenLmisDialog.new(dialogOpts, $scope.deleteFacilityCallBack, $dialog);
   };
 
   function updateProgramsToDisplay() {
