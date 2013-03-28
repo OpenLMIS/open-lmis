@@ -12,6 +12,7 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
+import org.openlmis.db.service.DbService;
 import org.openlmis.web.model.FacilityReferenceData;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.HttpStatus;
@@ -20,10 +21,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.ui.ModelMap;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -43,12 +41,14 @@ public class FacilityControllerTest {
   private FacilityService facilityService;
   private FacilityController facilityController;
   private MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
+  private DbService dbService;
 
   @Before
   public void setUp() throws Exception {
     programService = mock(ProgramService.class);
     facilityService = mock(FacilityService.class);
-    facilityController = new FacilityController(facilityService, programService);
+    dbService = mock(DbService.class);
+    facilityController = new FacilityController(facilityService, programService, dbService);
     MockHttpSession mockHttpSession = new MockHttpSession();
     httpServletRequest.setSession(mockHttpSession);
     mockHttpSession.setAttribute(USER, USER);
@@ -84,23 +84,31 @@ public class FacilityControllerTest {
   public void shouldInsertFacilityAndTagWithModifiedBy() throws Exception {
     Facility facility = new Facility();
     facility.setName("test facility");
+    Date currentDate = new Date();
+    when(dbService.getCurrentTimestamp()).thenReturn(currentDate);
     ResponseEntity responseEntity = facilityController.insert(facility, httpServletRequest);
     assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
     OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
     assertThat(response.getSuccessMsg(), is("Facility 'test facility' created successfully"));
     verify(facilityService).insert(facility);
+    verify(dbService).getCurrentTimestamp();
+    assertThat(facility.getModifiedDate(),is(currentDate));
     assertThat(facility.getModifiedBy(), is(userId));
   }
 
   @Test
-  public void shouldUpdateFacilityAndTagWithModifiedBy() throws Exception {
+  public void shouldUpdateFacilityAndTagWithModifiedByAndModifiedDate() throws Exception {
     Facility facility = new Facility();
     facility.setName("test facility");
+    Date currentDate = new Date();
+    when(dbService.getCurrentTimestamp()).thenReturn(currentDate);
     ResponseEntity responseEntity = facilityController.update(facility, httpServletRequest);
     assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
     OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
     assertThat(response.getSuccessMsg(), is("Facility 'test facility' updated successfully"));
     verify(facilityService).update(facility);
+    verify(dbService).getCurrentTimestamp();
+    assertThat(facility.getModifiedDate(),is(currentDate));
     assertThat(facility.getModifiedBy(), is(userId));
   }
 
@@ -153,13 +161,16 @@ public class FacilityControllerTest {
     facility.setName("Test Facility");
     facility.setCode("Test Code");
     when(facilityService.getById(123)).thenReturn(facility);
-
+    Date currentDate = new Date();
+    when(dbService.getCurrentTimestamp()).thenReturn(currentDate);
     ResponseEntity responseEntity = facilityController.updateDataReportableAndActive(facility, "delete", httpServletRequest);
     OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
 
     assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
     assertThat(response.getSuccessMsg(), is("\"Test Facility\" / \"Test Code\" deleted successfully"));
     verify(facilityService).updateDataReportableAndActiveFor(facility);
+    verify(dbService).getCurrentTimestamp();
+    assertThat(facility.getModifiedDate(),is(currentDate));
     assertThat(facility.getModifiedBy(), is(userId));
     assertThat(facility.getDataReportable(), is(false));
     assertThat(facility.getActive(), is(false));
@@ -173,12 +184,15 @@ public class FacilityControllerTest {
     facility.setName("Test Facility");
     facility.setCode("Test Code");
     when(facilityService.getById(123)).thenReturn(facility);
+    Date currentDate = new Date();
+    when(dbService.getCurrentTimestamp()).thenReturn(currentDate);
 
     ResponseEntity responseEntity = facilityController.updateDataReportableAndActive(facility, "restore", httpServletRequest);
     OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
-
+    verify(dbService).getCurrentTimestamp();
     assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
     assertThat(response.getSuccessMsg(), is("\"Test Facility\" / \"Test Code\" restored successfully"));
+    assertThat(facility.getModifiedDate(),is(currentDate));
     verify(facilityService).updateDataReportableAndActiveFor(facility);
     assertThat(facility.getDataReportable(), is(true));
   }
@@ -202,7 +216,7 @@ public class FacilityControllerTest {
 
     List<Facility> returnedFacilities = facilityController.get("searchParam");
 
-    assertThat(returnedFacilities,is(facilities));
+    assertThat(returnedFacilities, is(facilities));
   }
 
   @Test

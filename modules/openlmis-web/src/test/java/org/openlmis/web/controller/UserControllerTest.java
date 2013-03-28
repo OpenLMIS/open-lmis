@@ -16,6 +16,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.hash.Encoder;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.core.service.UserService;
+import org.openlmis.db.service.DbService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,10 +26,7 @@ import org.springframework.mock.web.MockHttpSession;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -57,6 +55,8 @@ public class UserControllerTest {
   @SuppressWarnings("unused")
   private UserService userService;
   private String baseUrl = "http://localhost:9091/";
+  @Mock
+  private DbService dbService;
 
   @Before
   public void setUp() {
@@ -65,7 +65,7 @@ public class UserControllerTest {
     session = new MockHttpSession();
     httpServletRequest.setSession(session);
 
-    userController = new UserController(roleRightService, userService, baseUrl);
+    userController = new UserController(roleRightService, userService, baseUrl, dbService);
   }
 
   @Test
@@ -119,7 +119,8 @@ public class UserControllerTest {
   @Test
   public void shouldSaveUser() throws Exception {
     User user = new User();
-
+    Date currentDate = new Date();
+    when(dbService.getCurrentTimestamp()).thenReturn(currentDate);
     httpServletRequest.getSession().setAttribute(USER_ID, userId);
     httpServletRequest.getSession().setAttribute(USER, USER);
     ResponseEntity<OpenLmisResponse> response = userController.create(user, httpServletRequest);
@@ -129,6 +130,8 @@ public class UserControllerTest {
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
     assertThat(response.getBody().getSuccessMsg(), is("User '" + user.getFirstName() + " " + user.getLastName() + "' has been successfully created, password link has been sent on registered Email address"));
     assertThat(user.getModifiedBy(), is(userId));
+    verify(dbService).getCurrentTimestamp();
+    assertThat(user.getModifiedDate(),is(currentDate));
   }
 
   @Test
@@ -136,6 +139,8 @@ public class UserControllerTest {
     User user = new User();
     user.setId(1);
     user.setPassword("password");
+    Date currentDate = new Date();
+    when(dbService.getCurrentTimestamp()).thenReturn(currentDate);
     httpServletRequest.getSession().setAttribute(USER_ID, userId);
     httpServletRequest.getSession().setAttribute(USER, USER);
 
@@ -146,6 +151,8 @@ public class UserControllerTest {
     assertThat(response.getBody().getSuccessMsg(), is("User '" + user.getFirstName() + " " + user.getLastName() + "' has been successfully updated"));
     assertThat(user.getPassword(), is(Encoder.hash("password")));
     assertThat(user.getModifiedBy(), is(userId));
+    verify(dbService).getCurrentTimestamp();
+    assertThat(user.getModifiedDate(),is(currentDate));
   }
 
   @Test

@@ -86,7 +86,7 @@ public interface FacilityMapper {
   @Select("SELECT id FROM facility_types where LOWER(code) = LOWER(#{code})")
   Integer getFacilityTypeIdForCode(String facilityTypeCode);
 
-  @Update("UPDATE facilities SET dataReportable = #{dataReportable}, active=#{active}, modifiedBy=#{modifiedBy}, modifiedDate= DEFAULT " +
+  @Update("UPDATE facilities SET dataReportable = #{dataReportable}, active=#{active}, modifiedBy=#{modifiedBy}, modifiedDate= #{modifiedDate} " +
     "WHERE id =#{id}")
   void updateDataReportableAndActiveFor(Facility facility);
 

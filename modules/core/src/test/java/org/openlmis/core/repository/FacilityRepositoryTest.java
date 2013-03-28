@@ -77,7 +77,6 @@ public class FacilityRepositoryTest {
 
     repository.save(facility);
 
-    assertThat(facility.getModifiedDate(), is(now.toDate()));
     verify(mapper).insert(facility);
   }
 

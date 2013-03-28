@@ -11,6 +11,7 @@ import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.core.service.UserService;
+import org.openlmis.db.service.DbService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,13 +48,14 @@ public class UserController extends BaseController {
 
 
   private String baseUrl;
-
+  private DbService dbService;
 
   @Autowired
-  public UserController(RoleRightsService roleRightService, UserService userService, @Value("${mail.base.url}") String baseUrl) {
+  public UserController(RoleRightsService roleRightService, UserService userService, @Value("${mail.base.url}") String baseUrl, DbService dbService) {
     this.roleRightService = roleRightService;
     this.userService = userService;
     this.baseUrl = baseUrl;
+    this.dbService = dbService;
   }
 
   @RequestMapping(value = "/user-context", method = GET, headers = ACCEPT_JSON)
@@ -90,6 +92,7 @@ public class UserController extends BaseController {
   public ResponseEntity<OpenLmisResponse> create(@RequestBody User user, HttpServletRequest request) {
     ResponseEntity<OpenLmisResponse> successResponse;
     user.setModifiedBy(loggedInUserId(request));
+    user.setModifiedDate(dbService.getCurrentTimestamp());
     try {
       String resetPasswordBaseLink = baseUrl + RESET_PASSWORD_PATH;
       userService.create(user, resetPasswordBaseLink);
@@ -109,6 +112,7 @@ public class UserController extends BaseController {
                                                  HttpServletRequest request) {
     ResponseEntity<OpenLmisResponse> successResponse;
     user.setModifiedBy(loggedInUserId(request));
+    user.setModifiedDate(dbService.getCurrentTimestamp());
     user.setId(id);
     try {
       userService.update(user);

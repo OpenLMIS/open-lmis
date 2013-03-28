@@ -46,9 +46,6 @@ public class FacilityRepository {
     if (savedFacility != null && savedFacility.getModifiedDate().equals(facility.getModifiedDate())) {
       throw new DataException("Duplicate Facility Code");
     }
-    if (facility.getModifiedDate() == null) {
-      facility.setModifiedDate(DateTime.now().toDate());
-    }
     setFacilityId(savedFacility, facility);
     try {
       validateAndSetFacilityOperator(facility);
