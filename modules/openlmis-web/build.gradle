@@ -53,6 +53,17 @@ dependencies {
             project(path : ':modules:requisition', configuration: 'testFixtures')
 }
 
+task compileJasperReport(type: JavaExec, dependsOn: classes) {
+    main = 'org.openlmis.web.util.JasperReportCompiler'
+    //  args = "".split().toList()
+    classpath sourceSets.main.output.classesDir
+    classpath configurations.runtime
+}
+
+war.doFirst {
+    tasks.compileJasperReport.execute()
+}
+
 task jettyRunWarDaemon(dependsOn: war)
 
 jettyRunWarDaemon.doFirst {

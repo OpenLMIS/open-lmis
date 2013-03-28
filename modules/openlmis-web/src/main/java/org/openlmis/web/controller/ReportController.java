@@ -42,7 +42,7 @@ public class ReportController  extends BaseController {
     public String showReport(@PathVariable(value = "reportKey") String reportKey, @PathVariable(value = "outputOption") String outputOption,ModelMap modelMap){
         Map<String,Object> parameterMap = new HashMap<String,Object>();
         Report report = reportManager.getReportByKey(reportKey);
-       List<ReportData> facilityReportList = report.getReportDataProvider().getReportDataByFilterCriteria(null);
+       List<FacilityReport> facilityReportList = (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteria(null);
         modelMap.addAttribute("datasource", new JRBeanCollectionDataSource(facilityReportList));
         modelMap.addAttribute("format",outputOption);
 
@@ -57,7 +57,7 @@ public class ReportController  extends BaseController {
 
         //Pageable pageRequest = new PageRequest(page-1, max);
         Report report = reportManager.getReportByKey(reportKey);
-        List<ReportData> facilityReportList = report.getReportDataProvider().getReportDataByFilterCriteria(null);
+        List<FacilityReport> facilityReportList = (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteria(null);
         final int startIdx = (page - 1) * max;
         final int endIdx = Math.min(startIdx + max, facilityReportList.size());
         //List<FacilityReport> facilityReportListJson =  (FacilityReport)facilityReportList;

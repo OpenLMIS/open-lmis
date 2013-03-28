@@ -1,12 +1,15 @@
 package org.openlmis.report;
 
 import lombok.*;
+import net.sf.jasperreports.engine.JasperReport;
+import org.openlmis.report.exception.ReportException;
 import org.openlmis.report.model.FacilityReport;
 import org.openlmis.report.model.ReportData;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +31,25 @@ public class ReportManager {
     private List<String> reportKeys;
 
     private Report report;
+
+    /*
+
+     */
+    public void showReport(Report report, ReportData parameter, ReportOutputOption outputOption, HttpServletResponse response){
+
+        if (report == null){
+            throw new ReportException("invalid report");
+        }
+
+        report.getReportDataProvider().getReportDataByFilterCriteria(parameter,DataSourceType.BEAN_COLLECTION_DATA_SOURCE);
+
+    }
+
+    public void showReport(String reportKey, ReportData parameter, ReportOutputOption outputOption, HttpServletResponse response){
+
+        showReport(getReportByKey(reportKey), parameter, outputOption, response);
+    }
+
 
     public ReportManager(ReportAccessAuthorizer reportAccessAuthorizer, List<Report> reports) {
 

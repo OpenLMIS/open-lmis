@@ -13,9 +13,9 @@ import java.util.List;
 public class Report {
 
     public String reportKey;
+    public String template;
     public ReportDataProvider reportDataProvider;
     public ReportData filterOption;
-    public List<ReportOutputOption> outputOptions;
 
 
 }

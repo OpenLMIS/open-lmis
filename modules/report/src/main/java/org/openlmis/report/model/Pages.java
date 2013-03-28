@@ -26,12 +26,12 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Pages {
 
-    public List<ReportData> rows;
+    public List<? extends ReportData> rows;
     public int page;
     public int max;
     public int total;
 
-    public Pages(int page,int total,int max,List<ReportData> rows) {
+    public Pages(int page,int total,int max,List<? extends ReportData> rows) {
         this.rows = rows;
         this.page = page;
         this.max = max;
