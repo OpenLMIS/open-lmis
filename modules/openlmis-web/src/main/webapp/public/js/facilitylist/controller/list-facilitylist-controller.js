@@ -1,96 +1,199 @@
-function ListFacilitiesController($scope, FacilityList, $http) {
-   // FacilityList.get({"page":30,"max":20}, function(data) {
-       // data = data.pages.rows;
+function ListFacilitiesController($scope, FacilityList, $http, $routeParams,$location) {
+
+        //to minimize and maximize the filter section
+        var section = 1;
+
+        $scope.section = function (id) {
+            section = id;
+        };
+
+        $scope.show = function (id) {
+            return section == id;
+        };
+
+        $scope.filterGrid = function (){
+            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+        };
+
+        //filter form data section
         $scope.filterOptions = {
             filterText: "",
-            useExternalFilter: true
+            useExternalFilter: false
         };
+
         $scope.pagingOptions = {
             pageSizes: [ 20, 40, 50, 100],
             pageSize: 20,
             totalServerItems: 0,
             currentPage: 1
         };
-   // sortInfo:{
-   //     field: 'columnField'
-   //     column: ng.Column instance.
-   //         direction: 'ASC' || 'DESC'
-   // }
-        $scope.sortInfo = {field: "code", direction : "ASC", column :  "code",  useExternalSorting: true };
-       // $scope.sortInfo = [{ fields:[ 'code'], directions: ['ASC']}];
+
+        //filter form data section
+        $scope.filterObject =  {
+             facilityType : $scope.facilityType,
+             zone : $scope.zone,
+             status : $scope.status
+        };
+
+        $scope.facilityTypes = [
+            {'name': '- Please Selct One -'},
+            {'name': 'DHMT', 'value': 33 },
+            {'name' : "Satellite Facility" ,  'value': 31 },
+            {'name': 'Lvl1 Hospital', 'value': 30 },
+            {'name' : "Health Post" , 'value': 29 }
+
+        ];
+
+        $scope.zones = [
+            {'name': '- Please Selct One -'},
+            {'name': 'District Health Office', 'value': 3},
+            {'name': 'District', 'value': 2},
+            {'name': 'Province', 'value': 1}
+
+        ];
+
+        $scope.statuses = [
+            {'name': '- Please Selct One -'},
+            {'name': 'Active', 'value': 1},
+            {'name': 'Inavtive', 'value': 0}
+        ];
+
+        $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
+
+        $scope.$watch('zone.value', function(selection){
+            if(selection != undefined || selection == ""){
+               $scope.filterObject.zoneId =  selection;
+               //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+            }
+        });
+        $scope.$watch('status.value', function(selection){
+            if(selection != undefined || selection == ""){
+                $scope.filterObject.statusId =  selection;
+                //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+            }
+        });
+        $scope.$watch('facilityType.value', function(selection){
+            if(selection != undefined || selection == ""){
+                $scope.filterObject.facilityTypeId =  selection;
+                //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+            }
+        });
+
+
+        $scope.goToPage = function (page, event) {
+            angular.element(event.target).parents(".dropdown").click();
+            $location.search('page', page);
+        };
+
+        $scope.$watch("currentPage", function () {  //good watch no problem
+
+            if($scope.currentPage != undefined){
+              //when clicked using the links they have done updated the paging info no problem here
+               //or using the url page param
+              //$scope.pagingOptions.currentPage = $scope.currentPage;
+                $location.search("page", $scope.currentPage);
+            }
+        });
+
+        $scope.$on('$routeUpdate', function () {
+            if (!utils.isValidPage($routeParams.page, $scope.numberOfPages)) {
+                $location.search('page', 1);
+                return;
+            }
+        });
+
+        $scope.sortInfo = { fields:["code","facilityType"], directions: ["ASC"]};
 
         $scope.setPagingData = function(data, page, pageSize, total){
-            var pagedData = data.slice((page - 1) * pageSize, page * pageSize);     //
-            $scope.myData = pagedData;//data;
-            $scope.pagingOptions.totalServerItems = data.length;//total;
+            //var pagedData = data.slice((page - 1) * pageSize, page * pageSize);
+            $scope.myData = data; //pagedData;//
+            $scope.pagingOptions.totalServerItems = total;//data.length;
+            $scope.numberOfPages = ( Math.ceil( total / pageSize))  ? Math.ceil( total / pageSize) : 1 ;
+           // $scope.currentPage = page;
             if (!$scope.$$phase) {
                 $scope.$apply();
             }
+          //  $scope.pageLineItems = gridLineItems.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);
         };
-        $scope.getPagedDataAsync = function (pageSize, page, searchText) {
-            setTimeout(function () {
-                var data;
-                if (searchText) {
-                    var ft = searchText.toLowerCase();
-                    $http.get('http://localhost:9091/reports/reportdata/facilities.json').success(function (largeLoad) {
-                        largeLoad = largeLoad.pages.rows;
-                        data = largeLoad.filter(function(item) {
-                            return JSON.stringify(item).toLowerCase().indexOf(ft) != -1;
+
+        $scope.getPagedDataAsync = function (pageSize, page) {
+          //  setTimeout(function () {
+          //      var data;
+                        var params  = {};
+                        if(pageSize != undefined && page != undefined ){
+                                var params =  {
+                                                "max" : pageSize,//$scope.pagingOptions.pageSize,
+                                                "page" : page//$scope.pagingOptions.currentPage
+                                               };
+                        }
+                        $.each($scope.filterObject, function(index, value) {
+                            if(value != undefined)
+                                params[index] = value;
                         });
-                        $scope.setPagingData(data,page,pageSize);
-                    });
-                } else {
-                 //   FacilityList.get({"max" : $scope.pagingOptions.pageSize, "page" : $scope.pagingOptions.currentPage}, function(data) {
-                 //       $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
-                 //   });
-                    $http.get('http://localhost:9091/reports/reportdata/facilities.json').success(function (largeLoad) {
-                        largeLoad = largeLoad.pages.rows;
-                        $scope.setPagingData(largeLoad,page,pageSize);
-                    });
-                }
-            }, 100);
+                        FacilityList.get(params, function(data) {
+                            $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
+                        });
+
+       //     }, 100);
         };
 
-        $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+       // $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
 
-        $scope.$watch('pagingOptions', function () {
+        $scope.$watch('pagingOptions.currentPage', function () {
+//            alert('Paging Info: ' + $scope.filterOptions.toString() );
+            $scope.currentPage = $scope.pagingOptions.currentPage;
+            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+        }, true);
+
+        $scope.$watch('pagingOptions.pageSize', function () {
+//            alert('Paging Info: ' + $scope.filterOptions.toString() );
+            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+        }, true);
+   //     $scope.$watch('filterOptions', function () {
+   //         alert('filter Info: ' + $scope.filterOptions );
+   //         $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
+   //     }, true);
+        $scope.$watch('sortInfo', function () {
+            //alert('Sorted Info: ' + $scope.sortInfo );
+            //add sorting infro to the filter object
+            $.each($scope.sortInfo.fields, function(index, value) {
+                if(value != undefined)
+                    $scope.filterObject[$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
+            });
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
         }, true);
-        $scope.$watch('filterOptions', function () {
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
-        }, true);
 
-    ///
-  //  $scope.$watch('sortInfo', function () {
-  //      alert('Sorted Info: ' + $scope.sortInfo );
-   //     $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
-   // }, true);
- //   $scope.$watch('sortInfo.field', function () {
-  //      alert('Sorted field: ' + $scope.sortInfo.field );
-  //      $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
-  //  }, true);
-  //  $scope.$watch('sortInfo.column', function () {
-  //      alert('Sorted column: ' + $scope.sortInfo.column );
-   //     $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
-   // }, true);
-  //  $scope.$watch('sortInfo.direction', function () {
-   //     alert('Sorted direction: ' + $scope.sortInfo.direction );
-   //     $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
-   // }, true);
-      ///
+    $scope.gridOptions = {
+        data: 'myData',
+        enablePaging: true,
+        enableSorting :true,
+        showFooter: true,
+        selectWithCheckboxOnly :false,
+        pagingOptions: $scope.pagingOptions,
+        filterOptions: $scope.filterOptions,
+        useExternalSorting: true,
+        sortInfo: $scope.sortInfo,
+        showColumnMenu: true,
+        enableRowReordering: true,
+        showFilter: true
+        // plugins: [new ngGridCsvExportPlugin()]
+    };
 
-
-        $scope.gridOptions = {
-            data: 'myData',
-            enablePaging: true,
-            enableSorting :true,
-            showFooter: true,
-            selectWithCheckboxOnly :false,
-            pagingOptions: $scope.pagingOptions,
-            filterOptions: $scope.filterOptions,
-            //useExternalSorting: true,
-            //sortInfo: $scope.sortInfo,
-            showColumnMenu: true,
-            enableRowReordering: true
-        };
 }
+
+//  $scope.$on('ngGridEventSorted', function (sortInfo) {
+//      alert('Sorted Info: ' +sortInfo);
+//  });
+//  $scope.$watch('sortInfo.field', function () {
+//    alert('Sorted field: ' + $scope.sortInfo.field );
+//    $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
+//}, true);
+//$scope.$watch('sortInfo.column', function () {
+//    alert('Sorted column: ' + $scope.sortInfo.column );
+//   $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
+//}, true);
+//$scope.$watch('sortInfo.direction', function () {
+//    alert('Sorted direction: ' + $scope.sortInfo.direction );
+//    $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
+//}, true);
+//
