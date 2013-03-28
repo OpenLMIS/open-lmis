@@ -251,8 +251,8 @@ public class InitiateRnRPage extends Page {
 
   public InitiateRnRPage(TestWebDriver driver) throws IOException {
     super(driver);
-    PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
-    testWebDriver.setImplicitWait(10);
+    PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 1), this);
+    testWebDriver.setImplicitWait(1);
   }
 
   public void verifyRnRHeader(String FCode, String FName, String FCstring, String program, String periodDetails, String geoZone, String parentgeoZone, String operatedBy, String facilityType) {
@@ -639,7 +639,7 @@ public class InitiateRnRPage extends Page {
 
   public void authorizeRnR() {
     authorizeButton.click();
-    testWebDriver.sleep(1500);
+    testWebDriver.sleep(250);
   }
 
 
