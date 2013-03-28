@@ -70,8 +70,7 @@ public class UploadPage extends Page {
     uploadButton.click();
   }
 
-  private void verifySuccessMessageOnUploadScreen() {
-
+  public void verifySuccessMessageOnUploadScreen() {
     String successMessage = "File uploaded successfully. 'Number of records created: *', 'Number of records updated : *'";
     testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
     SeleneseTestNgHelper.assertTrue("File uploaded successfully Message Not Displayed", saveSuccessMsgDiv.isDisplayed());
@@ -89,7 +88,6 @@ public class UploadPage extends Page {
     for (int i = 1; i <= noOfRuns; i++) {
       selectUploadType("Geographic Zones");
       uploadFile("Geographic_Data.csv");
-      verifySuccessMessageOnUploadScreen();
     }
 
   }
@@ -119,82 +117,68 @@ public class UploadPage extends Page {
   public void uploadFacilities() throws FileNotFoundException {
     selectUploadType("Facilities");
     uploadFile("facilities.csv");
-    verifySuccessMessageOnUploadScreen();
   }
 
 
   public void uploadProducts() throws FileNotFoundException {
     selectUploadType("Products");
     uploadFile("products.csv");
-    verifySuccessMessageOnUploadScreen();
   }
 
   public void uploadProductCategory() throws FileNotFoundException {
     selectUploadType("Product Category");
     uploadFile("Productcategoryupload.csv");
-    verifySuccessMessageOnUploadScreen();
-
   }
 
   public void uploadUsers() throws FileNotFoundException {
     selectUploadType("Users");
     uploadFile("Users.csv");
-    verifySuccessMessageOnUploadScreen();
   }
 
   public void uploadProgramProductMapping() throws FileNotFoundException {
     selectUploadType("Program Product");
     uploadFile("program_product.csv");
-    verifySuccessMessageOnUploadScreen();
   }
 
   public void uploadProgramProductPrice() throws FileNotFoundException {
     selectUploadType("Product Prices per Program");
     uploadFile("Product_Cost.csv");
-    verifySuccessMessageOnUploadScreen();
   }
 
   public void uploadProgramSupportedByFacilities() throws FileNotFoundException {
     selectUploadType("Programs supported by facilities");
     uploadFile("program_supported.csv");
-    verifySuccessMessageOnUploadScreen();
   }
 
   public void uploadFacilityTypeToProductMapping() throws FileNotFoundException {
     selectUploadType("Facility Approved Products");
     uploadFile("Facility_Type_To_Product_Mapping.csv");
-    verifySuccessMessageOnUploadScreen();
   }
 
 
   public void uploadSupervisoryNodes() throws FileNotFoundException {
     selectUploadType("Supervisory Nodes");
     uploadFile("Supervisory_Nodes.csv");
-    verifySuccessMessageOnUploadScreen();
   }
 
   public void uploadRequisitionGroup() throws FileNotFoundException {
     selectUploadType("Requisition Groups");
     uploadFile("Requisition_Groups.csv");
-    verifySuccessMessageOnUploadScreen();
   }
 
   public void uploadRequisitionGroupMembers() throws FileNotFoundException {
     selectUploadType("Requisition Group Members");
     uploadFile("Requisition_Group_Members.csv");
-    verifySuccessMessageOnUploadScreen();
   }
 
   public void uploadRequisitionGroupProgramSchedule() throws FileNotFoundException {
     selectUploadType("Map Requisition Groups to Programs + Schedule");
     uploadFile("Requisition_Group_Program_Schedule.csv");
-    verifySuccessMessageOnUploadScreen();
   }
 
   public void uploadSupplyLines() throws FileNotFoundException {
     selectUploadType("Supply Lines");
     uploadFile("Supply_Lines.csv");
-    verifySuccessMessageOnUploadScreen();
   }
 
 

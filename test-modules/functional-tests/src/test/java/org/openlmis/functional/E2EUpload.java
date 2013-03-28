@@ -49,38 +49,51 @@ public class E2EUpload extends TestCaseHelper {
     dbWrapper.insertRoleAssignment(userId, "User");
 
     uploadPage.uploadProductCategory();
+    uploadPage.verifySuccessMessageOnUploadScreen();
 
     uploadPage.uploadProducts();
+    uploadPage.verifySuccessMessageOnUploadScreen();
 
     uploadPage.uploadProgramProductMapping();
+    uploadPage.verifySuccessMessageOnUploadScreen();
 
     uploadPage.uploadProgramProductPrice();
+    uploadPage.verifySuccessMessageOnUploadScreen();
 
     uploadPage.uploadGeographicZoneInvalid();
 
     uploadPage.uploadGeographicZone(2);
+    uploadPage.verifySuccessMessageOnUploadScreen();
 
     uploadPage.uploadFacilitiesNotLowestGeoCode();
 
     uploadPage.uploadFacilities();
+    uploadPage.verifySuccessMessageOnUploadScreen();
 
     uploadPage.uploadFacilityTypeToProductMapping();
+    uploadPage.verifySuccessMessageOnUploadScreen();
     dbWrapper.allocateFacilityToUser(userId, "F10");
 
     uploadPage.uploadProgramSupportedByFacilities();
+    uploadPage.verifySuccessMessageOnUploadScreen();
 
     uploadPage.uploadSupervisoryNodes();
+    uploadPage.verifySuccessMessageOnUploadScreen();
 
     uploadPage.uploadRequisitionGroup();
+    uploadPage.verifySuccessMessageOnUploadScreen();
 
     dbWrapper.insertSchedules();
     dbWrapper.insertProcessingPeriods();
 
     uploadPage.uploadRequisitionGroupProgramSchedule();
+    uploadPage.verifySuccessMessageOnUploadScreen();
 
     uploadPage.uploadRequisitionGroupMembers();
+    uploadPage.verifySuccessMessageOnUploadScreen();
 
     uploadPage.uploadSupplyLines();
+    uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
   @AfterMethod(groups = {"functional"})

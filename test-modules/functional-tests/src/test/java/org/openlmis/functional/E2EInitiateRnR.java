@@ -90,17 +90,16 @@ public class E2EInitiateRnR extends TestCaseHelper {
     String userlmuFirstName = "Lmu";
     String userlmuLastName = "Doe";
     String userlmuUserName = "lmu";
-    String userIDlmu = userPagelmu.enterAndverifyUserDetails(userlmuUserName, userlmuEmail, userlmuFirstName, userlmuLastName, baseUrlGlobal, dburlGlobal);
+    userPagelmu.enterAndverifyUserDetails(userlmuUserName, userlmuEmail, userlmuFirstName, userlmuLastName, baseUrlGlobal, dburlGlobal);
     dbWrapper.updateUser(passwordUserslmu, userlmuEmail);
     userPagelmu.enterMyFacilityAndMySupervisedFacilityData(userlmuFirstName, userlmuLastName, "F10", "HIV", "Node 1", "lmu");
-
 
     UserPage userPageMO = homePage.navigateToUser();
     String userMOEmail = "Jane_Doe@openlmis.com";
     String userMOFirstName = "Jane";
     String userMOLastName = "Doe";
     String userMOUserName = "medicalofficer";
-    String userIDMO = userPageMO.enterAndverifyUserDetails(userMOUserName, userMOEmail, userMOFirstName, userMOLastName, baseUrlGlobal, dburlGlobal);
+    userPageMO.enterAndverifyUserDetails(userMOUserName, userMOEmail, userMOFirstName, userMOLastName, baseUrlGlobal, dburlGlobal);
     dbWrapper.updateUser(passwordUsers, userMOEmail);
     userPageMO.enterMyFacilityAndMySupervisedFacilityData(userMOFirstName, userMOLastName, "F11", "HIV", "Node 2", "Medical-Officer");
 
@@ -117,12 +116,10 @@ public class E2EInitiateRnR extends TestCaseHelper {
     periodsPage.deleteAndVerifyPeriods();
 
     dbWrapper.insertRequisitionGroupProgramSchedule();
-
     dbWrapper.allocateFacilityToUser(userIDSIC, facility_code);
 
     TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
     templateConfigPage.configureTemplate();
-
 
     dbWrapper.insertSupplyLines("N1", "HIV", "FCcode" + date_time);
 
@@ -161,7 +158,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
     HomePage homePageLowerSNUser = loginPagethird.loginAs(userMO, password);
     ApprovePage approvePageLowerSNUser = homePageLowerSNUser.navigateToApprove();
-    String periodLowerSNUser = approvePageLowerSNUser.verifyandclickRequisitionPresentForApproval();
+    approvePageLowerSNUser.verifyandclickRequisitionPresentForApproval();
     approvePageLowerSNUser.verifyRnRHeader("FCcode", "FCname", date_time, program, periodDetails, geoZone, parentgeoZone, operatedBy, facilityType);
     approvePageLowerSNUser.verifyApprovedQuantity();
     approvePageLowerSNUser.editApproveQuantityAndVerifyTotalCost("290");
@@ -186,8 +183,6 @@ public class E2EInitiateRnR extends TestCaseHelper {
     String supplyFacilityName = dbWrapper.getSupplyFacilityName("N1", "HIV");
     orderPageOrdersPending.verifyOrderListElements(program, "FCcode" + date_time, "FCname" + date_time, periods[0].trim(), periods[1].trim(), supplyFacilityName);
     orderPageOrdersPending.convertToOrder();
-
-
   }
 
   @AfterMethod(groups = {"smoke"})
