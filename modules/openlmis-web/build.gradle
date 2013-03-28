@@ -61,7 +61,7 @@ task compileJasperReport(type: JavaExec, dependsOn: classes) {
 }
 
 war.doFirst {
-    compileJasperReport.execute()
+    tasks.compileJasperReport.execute()
 }
 
 task jettyRunWarDaemon(dependsOn: war)

@@ -30,7 +30,7 @@ WHERE
 	<title>
 		<band height="79" splitType="Stretch">
 			<rectangle>
-				<reportElement uuid="5e1f14b1-7e63-40ee-b951-e5cef877b672" mode="Opaque" x="0" y="0" width="555" height="79" forecolor="#FFFFFF" backcolor="#0099CC"/>
+				<reportElement uuid="5e1f14b1-7e63-40ee-b951-e5cef877b672" mode="Opaque" x="0" y="0" width="555" height="79" forecolor="#FFFFFF" backcolor="#3D9297"/>
 			</rectangle>
 			<textField>
 				<reportElement uuid="cd631ed0-5953-4cf6-abc5-c21ca94ed6fd" x="174" y="0" width="380" height="79" forecolor="#FFFFFF"/>
@@ -75,7 +75,7 @@ WHERE
 	<columnHeader>
 		<band height="22" splitType="Stretch">
 			<rectangle>
-				<reportElement uuid="d0b25362-9ba5-441f-b098-42bd490bcce7" x="1" y="0" width="555" height="20" forecolor="#FFFFFF" backcolor="#0099CC"/>
+				<reportElement uuid="d0b25362-9ba5-441f-b098-42bd490bcce7" x="1" y="0" width="555" height="20" forecolor="#FFFFFF" backcolor="#3D9297"/>
 			</rectangle>
 			<staticText>
 				<reportElement uuid="1f78d274-e9f4-4d62-b6d4-d9db3212a9c3" x="150" y="0" width="100" height="20" forecolor="#FFFFFF"/>
