@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function UserController($scope, $routeParams, $location, Users, User, AllFacilities, Roles, Facility, Programs, SupervisoryNodes) {
+function UserController($scope, $routeParams, $location, $dialog, Users, User, AllFacilities, Roles, Facility, Programs, SupervisoryNodes) {
   $scope.userNameInvalid = false;
   $scope.showHomeFacilityRoleMappingError = false;
   $scope.showSupervisorRoleMappingError = false;
@@ -131,7 +131,9 @@ function UserController($scope, $routeParams, $location, Users, User, AllFacilit
     $scope.query = null;
   };
 
-  $scope.clearSelectedFacility = function () {
+  $scope.clearSelectedFacility = function (result) {
+    if (!result) return;
+
     $scope.facilitySelected = null;
     $scope.allSupportedPrograms = null;
     $scope.user.homeFacilityRoles = null;
@@ -140,9 +142,16 @@ function UserController($scope, $routeParams, $location, Users, User, AllFacilit
     setTimeout(function () {
       angular.element("#searchFacility").focus();
     });
-    $scope.deleteFacilityModal = false;
   };
 
+  $scope.confirmFacilityDelete = function () {
+    var dialogOpts = {
+      id:"deleteFacilityModal",
+      header:"Delete facility",
+      body:"All programs and roles association for this facility will be deleted."
+    };
+    OpenLmisDialog.new(dialogOpts, $scope.clearSelectedFacility, $dialog);
+  };
 
   var loadUserFacility = function () {
     if (!utils.isNullOrUndefined($scope.user.facilityId)) {

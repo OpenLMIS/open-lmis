@@ -145,7 +145,7 @@
                 </div>
                 <div ng-show="facilitySelected">
                   <span ng-bind="facilitySelected.name"></span>
-                  <a class="clear-search" ng-click="deleteFacilityModal=true">clear</a>
+                  <a class="clear-search" ng-click="confirmFacilityDelete()">clear</a>
                 </div>
               </div>
               <div class="form-tip">Minimum 3 characters</div>
@@ -174,17 +174,6 @@
           <input type="submit" class="btn btn-primary save-button" value="Save"/>
         </div>
         <div class="toolbar-error" id="saveErrorMsgDiv" ng-bind="error" ng-show="error"/>
-      </div>
-
-      <div tabindex="-1" id="deleteFacilityModal" modal="deleteFacilityModal" close="deleteFacilityModal=false">
-        <div class="modal-header"><h2>Delete facility</h2></div>
-        <div class="modal-body">
-          <p>All programs and roles association for this facility will be deleted.</p>
-        </div>
-        <div class="modal-footer">
-          <a href="" class="btn btn-primary" ng-click="clearSelectedFacility()">Ok</a>
-          <a href="" class="btn" ng-click="deleteFacilityModal=false">Cancel</a>
-        </div>
       </div>
 
     </div>

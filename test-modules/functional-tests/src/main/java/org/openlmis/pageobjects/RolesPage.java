@@ -75,7 +75,7 @@ public class RolesPage extends Page {
   @FindBy(how = How.ID, using = "adminRoleType")
   private static WebElement adminRoleType;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Continue')]")
+  @FindBy(how = How.ID, using = "button_OK")
   private static WebElement continueButton;
 
   public RolesPage(TestWebDriver driver) throws IOException {

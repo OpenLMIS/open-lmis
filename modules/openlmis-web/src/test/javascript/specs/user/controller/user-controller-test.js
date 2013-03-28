@@ -7,10 +7,11 @@
 describe("User", function () {
 
   beforeEach(module('openlmis.services'));
+  beforeEach(module('ui.bootstrap.dialog'));
 
   describe("User Controller", function () {
 
-    var scope, $httpBackend, ctrl, routeParams, user, location;
+    var scope, $httpBackend, ctrl, user, location;
 
     beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location) {
       scope = $rootScope.$new();

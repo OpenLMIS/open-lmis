@@ -5,7 +5,7 @@
  */
 
 'use strict';
-angular.module('user', ['openlmis', 'ngGrid', 'ui.bootstrap.modal']).
+angular.module('user', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).
     config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
       when('/search', {controller:UserSearchController, templateUrl:'partials/search.html'}).

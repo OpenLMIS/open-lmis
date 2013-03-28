@@ -10,7 +10,7 @@ var OpenLmisDialog = {
       id:"",
       header:"Change role type",
       body:"If you change the type, all selections in current type will be removed?",
-      ok:{label:"Continue", value:true},
+      ok:{label:"OK", value:true},
       cancel:{label:"Cancel", value:false}
     };
 
