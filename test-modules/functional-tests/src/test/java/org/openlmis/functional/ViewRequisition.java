@@ -87,6 +87,7 @@ public class ViewRequisition extends TestCaseHelper {
     viewRequisitionPageOrdered.verifyStatus("ORDERED");
     viewRequisitionPageOrdered.clickRnRList();
     viewRequisitionPageOrdered.verifyFieldsPostApproval("25.00", "1");
+    viewRequisitionPageOrdered.verifyApprovedQuantityFieldPresent();
   }
 
   @AfterMethod(groups = {"functional"})

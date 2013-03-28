@@ -72,6 +72,7 @@ public class ViewRequisitionPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@class='ngCell  col18 colt18']/div/span")
   private static WebElement approveQuantity;
 
+
   public ViewRequisitionPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
@@ -136,6 +137,12 @@ public class ViewRequisitionPage extends Page {
   {
     testWebDriver.waitForElementToAppear(viewRnRList);
     viewRnRList.click();
+  }
+
+  public void verifyApprovedQuantityFieldPresent()
+  {
+    testWebDriver.waitForElementToAppear(approveQuantity);
+    SeleneseTestNgHelper.assertTrue("Quantity Approved field should be displayed",approveQuantity.isDisplayed());
   }
 
   public HomePage verifyFieldsPreApproval(String cost, String newPatientValue) throws IOException
