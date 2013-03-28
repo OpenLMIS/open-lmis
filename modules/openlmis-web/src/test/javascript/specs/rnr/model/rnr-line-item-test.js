@@ -360,7 +360,7 @@ describe('RnrLineItem', function () {
     });
 
     it('should calculate packsToShip when calculated quantity is available and requested quantity is null', function () {
-      var rnrLineItem = new RnrLineItem();
+      var rnrLineItem = new RnrLineItem(null, null, null, 'INITIATED');
       rnrLineItem.calculatedOrderQuantity = 8;
 
       spyOn(rnrLineItem, 'calculatePacksToShip');
@@ -807,6 +807,18 @@ describe('RnrLineItem', function () {
 
     it('should consider approved quantity to calculate packs to ship status is in approval', function () {
       rnrLineItem = new RnrLineItem({}, 5, [], 'IN_APPROVAL');
+      rnrLineItem.quantityApproved = 7;
+      rnrLineItem.quantityRequested = 78;
+      rnrLineItem.calculatedOrderQuantity = 90;
+      spyOn(rnrLineItem, 'calculatePacksToShip');
+
+      rnrLineItem.fillPacksToShip();
+
+      expect(rnrLineItem.calculatePacksToShip).toHaveBeenCalledWith(7);
+    });
+
+    it('should consider approved quantity to calculate packs to ship status is in approval', function () {
+      rnrLineItem = new RnrLineItem({}, 5, [], 'APPROVED');
       rnrLineItem.quantityApproved = 7;
       rnrLineItem.quantityRequested = 78;
       rnrLineItem.calculatedOrderQuantity = 90;

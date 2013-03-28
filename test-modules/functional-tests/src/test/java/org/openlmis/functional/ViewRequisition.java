@@ -76,7 +76,7 @@ public class ViewRequisition extends TestCaseHelper {
     viewRequisitionPageApproved.clickSearch();
     viewRequisitionPageApproved.verifyStatus("APPROVED");
     viewRequisitionPageApproved.clickRnRList();
-    HomePage homePageApproved = viewRequisitionPageApproved.verifyFieldsPostApproval("12.50", "1");
+    HomePage homePageApproved = viewRequisitionPageApproved.verifyFieldsPostApproval("25.00", "1");
 
     dbWrapper.updateRequisition("F10");
     OrderPage orderPage = homePageApproved.navigateConvertToOrder();
@@ -86,7 +86,7 @@ public class ViewRequisition extends TestCaseHelper {
     viewRequisitionPageOrdered.clickSearch();
     viewRequisitionPageOrdered.verifyStatus("ORDERED");
     viewRequisitionPageOrdered.clickRnRList();
-    viewRequisitionPageOrdered.verifyFieldsPostApproval("12.50", "1");
+    viewRequisitionPageOrdered.verifyFieldsPostApproval("25.00", "1");
   }
 
   @AfterMethod(groups = {"functional"})

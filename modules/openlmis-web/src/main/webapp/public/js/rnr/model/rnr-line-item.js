@@ -41,10 +41,17 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     this.fillNormalizedConsumption();
   };
 
+  function statusBeforeApproval() {
+    return rnrStatus == 'INITIATED' || rnrStatus == 'SUBMITTED' || rnrStatus == 'AUTHORIZED';
+  }
+
   RnrLineItem.prototype.fillPacksToShip = function () {
     this.quantityApproved = utils.getValueFor(this.quantityApproved);
-    var orderQuantity = (rnrStatus != 'IN_APPROVAL') ? (isUndefined(this.quantityRequested) ?
-        this.calculatedOrderQuantity : this.quantityRequested) : this.quantityApproved;
+    var orderQuantity;
+
+    if (statusBeforeApproval()) orderQuantity = isUndefined(this.quantityRequested) ? this.calculatedOrderQuantity : this.quantityRequested;
+    else orderQuantity = this.quantityApproved;
+
     this.calculatePacksToShip(orderQuantity);
     this.calculateCost();
   };
@@ -77,8 +84,8 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
       var totalLossesAndAdjustments = utils.parseIntWithBaseTen(this.totalLossesAndAdjustments);
       var stockInHand = utils.parseIntWithBaseTen(this.stockInHand);
       return (utils.isNumber(quantityDispensed) && utils.isNumber(beginningBalance) && utils.isNumber(quantityReceived) &&
-          utils.isNumber(totalLossesAndAdjustments) && utils.isNumber(stockInHand)) ?
-          quantityDispensed != (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand) : null;
+        utils.isNumber(totalLossesAndAdjustments) && utils.isNumber(stockInHand)) ?
+        quantityDispensed != (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand) : null;
     }
     return false;
   };
@@ -170,8 +177,8 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     this.dosesPerMonth = utils.parseIntWithBaseTen(this.dosesPerMonth);
     var g = utils.parseIntWithBaseTen(this.dosesPerDispensingUnit);
     var consumptionAdjustedWithStockOutDays = ((numberOfMonthsInPeriod * 30) - this.stockOutDays) == 0 ?
-        this.quantityDispensed :
-        (this.quantityDispensed * ((numberOfMonthsInPeriod * 30) / ((numberOfMonthsInPeriod * 30) - this.stockOutDays)));
+      this.quantityDispensed :
+      (this.quantityDispensed * ((numberOfMonthsInPeriod * 30) / ((numberOfMonthsInPeriod * 30) - this.stockOutDays)));
     var adjustmentForNewPatients = (this.newPatientCount * Math.ceil(this.dosesPerMonth / g) ) * numberOfMonthsInPeriod;
     this.normalizedConsumption = Math.round(consumptionAdjustedWithStockOutDays + adjustmentForNewPatients);
   };
@@ -253,15 +260,15 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     var visibleColumns = _.where(programRnrColumnList, {"visible":true});
 
     $(visibleColumns).each(function (i, column) {
-          var nonMandatoryColumns = ["reasonForRequestedQuantity", "remarks", "lossesAndAdjustments", "quantityApproved"];
-          if (column.source.name != 'USER_INPUT' || _.contains(nonMandatoryColumns, column.name)) return;
-          if (column.name == 'quantityRequested') {
-            valid = isUndefined(rnrLineItem.quantityRequested) || !isUndefined(rnrLineItem.reasonForRequestedQuantity);
-          } else {
-            valid = !isUndefined(rnrLineItem[column.name]);
-          }
-          return valid;
+        var nonMandatoryColumns = ["reasonForRequestedQuantity", "remarks", "lossesAndAdjustments", "quantityApproved"];
+        if (column.source.name != 'USER_INPUT' || _.contains(nonMandatoryColumns, column.name)) return;
+        if (column.name == 'quantityRequested') {
+          valid = isUndefined(rnrLineItem.quantityRequested) || !isUndefined(rnrLineItem.reasonForRequestedQuantity);
+        } else {
+          valid = !isUndefined(rnrLineItem[column.name]);
         }
+        return valid;
+      }
     );
 
     return valid;
