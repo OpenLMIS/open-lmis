@@ -104,7 +104,12 @@ function RoleController($scope, $routeParams, $location, Roles, Role, Rights, $d
 
   $scope.showRoleTypeModal = function (selected) {
     window.selected = selected;
-    OpenLmisDialog.new({id:"roleTypeDialog"}, $scope.dialogCloseCallback, $dialog);
+    var options = {
+      id:"roleTypeDialog",
+      header:"Change role type",
+      body:"If you change the type, all selections in current type will be removed?"
+    };
+    OpenLmisDialog.new(options, $scope.dialogCloseCallback, $dialog);
   };
 
 

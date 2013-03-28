@@ -456,7 +456,7 @@
 <div form-toolbar id="action_buttons" class="action-buttons">
   <div class="form-cell button-row" ng-show="facility.dataReportable == 'true'">
     <input type="submit" class="btn btn-primary save-button" value="Save"/>
-    <a href="" class="btn btn-danger delete-button" ng-show="facility.id!=null" ng-click="deleteConfirmModal=true">Delete</a>
+    <a href="" class="btn btn-danger delete-button" ng-show="facility.id!=null" ng-click="confirmFacilityDelete()">Delete</a>
   </div>
   <div class="form-cell button-row" ng-show="facility.dataReportable == 'false'">
     <a href="" class="btn btn-primary save-button" ng-show="facility.id!=null" ng-click="restoreConfirmModal=true">Restore</a>
@@ -465,17 +465,6 @@
   <div class="toolbar-error" id="saveErrorMsgDiv" ng-bind="error" ng-show="error"></div>
   <div class="toolbar-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"></div>
 
-</div>
-
-<div id="deleteModal" modal="deleteConfirmModal">
-  <div class="modal-header"><h3>Delete Facility</h3></div>
-  <div class="modal-body">
-    <p>"{{originalFacilityName}} / "{{originalFacilityCode}}" will be soft-deleted from the system</p>
-  </div>
-  <div class="modal-footer">
-    <a href="" class="btn btn-danger" ng-click="deleteFacility()">Delete</a>
-    <a href="" class="btn" ng-click="deleteConfirmModal=false">Cancel</a>
-  </div>
 </div>
 
 <div id="restoreConfirmModal" modal="restoreConfirmModal">

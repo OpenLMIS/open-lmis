@@ -30,7 +30,7 @@ public class DeleteFacilityPage extends Page {
   @FindBy(how = How.LINK_TEXT, using = "Delete")
   private static WebElement deleteButton;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='deleteModal']/div[@class='modal-body']/p")
+  @FindBy(how = How.XPATH, using = "//div[@id='deleteFacilityDialog']/div[@class='modal-body']/p")
   private static WebElement deleteMessageOnAlert;
 
   @FindBy(how = How.XPATH, using = "//a[@ng-click='deleteFacility()']")

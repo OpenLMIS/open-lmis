@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function FacilityController($scope, facilityReferenceData, $routeParams, $http, facility, Facility, $location) {
+function FacilityController($scope, facilityReferenceData, $routeParams, $http, facility, Facility, $location, $dialog) {
 
   function getFacilityWithDateObjects(facility) {
     facility.goLiveDate = new Date(facility.goLiveDate);
@@ -63,35 +63,30 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
     if (!$scope.isEdit) {
       Facility.save({}, $scope.facility, successFn, errorFn);
     } else {
-      Facility.update({id: $scope.facility.id}, $scope.facility, successFn, errorFn);
+      Facility.update({id:$scope.facility.id}, $scope.facility, successFn, errorFn);
     }
   };
 
 
   var putFacilityRequest = function (requestUrl) {
     $http.put(requestUrl, $scope.facility)
-        .success(function (data) {
-          $scope.showError = "true";
-          $scope.error = "";
-          $scope.message = data.success;
-          $scope.facility = getFacilityWithDateObjects(data.facility);
-          $scope.originalFacilityCode = data.facility.code;
-          $scope.originalFacilityName = data.facility.name;
-          populateFlags($scope);
-        }).error(function (data) {
-          $scope.showError = "true";
-          $scope.message = "";
-          $scope.error = data.error;
-          $scope.facility = facility;
-          $scope.originalFacilityCode = data.facility.code;
-          $scope.originalFacilityName = data.facility.name;
-          populateFlags($scope);
-        });
-  };
-
-  $scope.deleteFacility = function () {
-    $scope.deleteConfirmModal = false;
-    putFacilityRequest('/facility/update/delete.json');
+      .success(function (data) {
+        $scope.showError = "true";
+        $scope.error = "";
+        $scope.message = data.success;
+        $scope.facility = getFacilityWithDateObjects(data.facility);
+        $scope.originalFacilityCode = data.facility.code;
+        $scope.originalFacilityName = data.facility.name;
+        populateFlags($scope);
+      }).error(function (data) {
+        $scope.showError = "true";
+        $scope.message = "";
+        $scope.error = data.error;
+        $scope.facility = facility;
+        $scope.originalFacilityCode = data.facility.code;
+        $scope.originalFacilityName = data.facility.name;
+        populateFlags($scope);
+      });
   };
 
   $scope.restoreFacility = function (active) {
@@ -137,7 +132,21 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
   };
 
   $scope.getProgramNameById = function (programId) {
-    return (_.findWhere($scope.programs, {'id': programId})).name;
+    return (_.findWhere($scope.programs, {'id':programId})).name;
+  };
+
+  $scope.deleteFacility = function (result) {
+    if (!result) return;
+    putFacilityRequest('/facility/update/delete.json');
+  };
+
+  $scope.confirmFacilityDelete = function () {
+    var dialogOpts = {
+      id:"deleteFacilityDialog",
+      header:"Delete facility",
+      body:"'{0}' / '{1}' will be deleted from the system.".format($scope.originalFacilityName, $scope.originalFacilityCode)
+    };
+    OpenLmisDialog.new(dialogOpts, $scope.deleteFacility, $dialog);
   };
 
   function updateProgramsToDisplay() {
@@ -161,7 +170,7 @@ var populateFlags = function ($scope) {
 
 FacilityController.resolve = {
 
-  facilityReferenceData: function ($q, $timeout, FacilityReferenceData) {
+  facilityReferenceData:function ($q, $timeout, FacilityReferenceData) {
     var deferred = $q.defer();
     $timeout(function () {
       FacilityReferenceData.get({}, function (data) {
@@ -171,14 +180,14 @@ FacilityController.resolve = {
     return deferred.promise;
   },
 
-  facility: function ($q, $timeout, Facility, $route) {
+  facility:function ($q, $timeout, Facility, $route) {
     if ($route.current.params.facilityId == undefined) return undefined;
 
     var deferred = $q.defer();
     var facilityId = $route.current.params.facilityId;
 
     $timeout(function () {
-      Facility.get({id: facilityId}, function (data) {
+      Facility.get({id:facilityId}, function (data) {
         deferred.resolve(data.facility);
       }, {});
     }, 100);

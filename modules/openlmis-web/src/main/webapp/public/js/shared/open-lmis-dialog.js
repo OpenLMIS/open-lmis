@@ -8,8 +8,8 @@ var OpenLmisDialog = {
   new:function (overrideOpts, callback, $dialog) {
     var defaults = {
       id:"",
-      header:"Change role type",
-      body:"If you change the type, all selections in current type will be removed?",
+      header:"Header",
+      body:"Body",
       ok:{label:"OK", value:true},
       cancel:{label:"Cancel", value:false}
     };

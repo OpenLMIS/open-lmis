@@ -5,7 +5,7 @@
  */
 
 'use strict';
-angular.module('facility', ['openlmis', 'ui.bootstrap.modal']).
+angular.module('facility', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).
   config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
     when('/search', {controller:FacilitySearchController, templateUrl:'partials/search.html'}).
