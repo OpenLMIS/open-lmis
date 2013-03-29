@@ -138,6 +138,7 @@ public class UserPage extends Page {
       }
       searchFacility.sendKeys(facilityCode);
     testWebDriver.sleep(1000);
+    testWebDriver.handleScrollByPixels(0,2500);
     selectFacility.click();
 
     testWebDriver.selectByVisibleText(programsMyFacility, program1);
