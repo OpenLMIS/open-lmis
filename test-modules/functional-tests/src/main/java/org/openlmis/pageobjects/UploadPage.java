@@ -98,7 +98,7 @@ public class UploadPage extends Page {
     verifyErrorMessageOnUploadScreen();
     testWebDriver.sleep(500);
     selectUploadType("Geographic Zones");
-    uploadFile("Geographic_Data_Invalid.csv");
+    uploadFile("Geographic_Data_Duplicate.csv");
     verifyErrorMessageOnUploadScreen();
     testWebDriver.sleep(500);
     selectUploadType("Geographic Zones");
