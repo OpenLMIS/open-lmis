@@ -18,11 +18,12 @@ public interface UserMapper {
   @Select(value = "SELECT userName, id FROM users WHERE LOWER(userName)=LOWER(#{userName}) AND password=#{password} AND active = TRUE")
   User selectUserByUserNameAndPassword(@Param("userName") String userName, @Param("password") String password);
 
-  @Insert(value = {"INSERT INTO users",
-    "(userName, facilityId, firstName, lastName, employeeId, jobTitle, " +
-      "primaryNotificationMethod, officePhone, cellPhone, email, supervisorId, modifiedBy, modifiedDate) VALUES",
-    "(#{userName}, #{facilityId}, #{firstName}, #{lastName}, #{employeeId}, #{jobTitle}," +
-      "#{primaryNotificationMethod}, #{officePhone}, #{cellPhone}, #{email}, #{supervisor.id}, #{modifiedBy}, #{modifiedDate})"})
+  @Insert({"INSERT INTO users",
+    "(userName, facilityId, firstName, lastName, employeeId, jobTitle,",
+    "primaryNotificationMethod, officePhone, cellPhone, email, supervisorId, modifiedBy, modifiedDate)",
+    "VALUES",
+    "(#{userName}, #{facilityId}, #{firstName}, #{lastName}, #{employeeId}, #{jobTitle},",
+    "#{primaryNotificationMethod}, #{officePhone}, #{cellPhone}, #{email}, #{supervisor.id}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()))"})
   @Options(useGeneratedKeys = true)
   Integer insert(User user);
 
@@ -41,7 +42,8 @@ public interface UserMapper {
   @Results(@Result(property = "supervisor.id", column = "supervisorId"))
   List<User> getUsersWithRightInNodeForProgram(@Param("program") Program program, @Param("supervisoryNode") SupervisoryNode supervisoryNode, @Param("right") Right right);
 
-  @Select(value = "SELECT id,firstName,lastName,email FROM users where LOWER(firstName) like '%'|| LOWER(#{userSearchParam}) ||'%' OR LOWER(lastName) like '%'|| LOWER(#{userSearchParam}) ||'%' OR LOWER(email) like '%'|| LOWER(#{userSearchParam}) ||'%'")
+  @Select(value = "SELECT id,firstName,lastName,email FROM users where LOWER(firstName) like '%'|| LOWER(#{userSearchParam}) ||'%' OR LOWER(lastName) like '%'|| " +
+    "LOWER(#{userSearchParam}) ||'%' OR LOWER(email) like '%'|| LOWER(#{userSearchParam}) ||'%'")
   List<User> getUserWithSearchedName(String userSearchParam);
 
   @Update("UPDATE users SET userName = #{userName}, firstName = #{firstName}, lastName = #{lastName}, employeeId = #{employeeId},facilityId=#{facilityId}, jobTitle = #{jobTitle}, " +
@@ -52,7 +54,7 @@ public interface UserMapper {
   User getById(Integer id);
 
   @Insert("INSERT INTO user_password_reset_tokens (userId, token) VALUES (#{user.id}, #{token})")
-  void insertPasswordResetToken(@Param(value = "user")User user, @Param(value = "token")String token);
+  void insertPasswordResetToken(@Param(value = "user") User user, @Param(value = "token") String token);
 
   @Select("SELECT userId FROM user_password_reset_tokens WHERE token = #{token}")
   Integer getUserIdForPasswordResetToken(String token);
@@ -61,6 +63,6 @@ public interface UserMapper {
   void deletePasswordResetTokenForUser(Integer userId);
 
   @Update("UPDATE users SET password = #{password}, active = TRUE WHERE id = #{userId}")
-  void updateUserPassword(@Param(value = "userId")Integer userId, @Param(value = "password") String password);
+  void updateUserPassword(@Param(value = "userId") Integer userId, @Param(value = "password") String password);
 
 }

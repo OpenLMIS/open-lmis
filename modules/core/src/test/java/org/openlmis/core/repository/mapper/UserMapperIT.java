@@ -18,6 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Calendar;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -69,7 +70,7 @@ public class UserMapperIT {
   public void shouldGetUserByUserNameAndPassword() throws Exception {
     User someUser = make(a(defaultUser, with(facilityId, facility.getId())));
     userMapper.insert(someUser);
-    userMapper.updateUserPassword(someUser.getId(),"random");
+    userMapper.updateUserPassword(someUser.getId(), "random");
 
     User user = userMapper.selectUserByUserNameAndPassword(defaultUserName, "random");
     assertThat(user, is(notNullValue()));
@@ -79,6 +80,34 @@ public class UserMapperIT {
     assertThat(user1, is(nullValue()));
     User user2 = userMapper.selectUserByUserNameAndPassword("wrongUserName", defaultPassword);
     assertThat(user2, is(nullValue()));
+  }
+
+  @Test
+  public void shouldInsertUserWithDbDefaultDateWhenSuppliedModifiedDateNull() throws Exception {
+    User someUser = make(a(defaultUser, with(facilityId, facility.getId())));
+    someUser.setModifiedDate(null);
+
+    userMapper.insert(someUser);
+    User fetchedUser = userMapper.get(someUser.getUserName());
+
+    assertThat(fetchedUser, is(notNullValue()));
+    assertThat(fetchedUser.getId(), is(someUser.getId()));
+    assertThat(fetchedUser.getModifiedDate(), is(notNullValue()));
+  }
+
+  @Test
+  public void shouldInsertUserWithSuppliedModifiedDate() throws Exception {
+    User someUser = make(a(defaultUser, with(facilityId, facility.getId())));
+    Calendar calendar = Calendar.getInstance();
+    calendar.set(Calendar.MONTH, Calendar.JANUARY);
+    someUser.setModifiedDate(calendar.getTime());
+
+    userMapper.insert(someUser);
+    User fetchedUser = userMapper.get(someUser.getUserName());
+
+    assertThat(fetchedUser, is(notNullValue()));
+    assertThat(fetchedUser.getId(), is(someUser.getId()));
+    assertThat(fetchedUser.getModifiedDate(), is(calendar.getTime()));
   }
 
   @Test
@@ -96,6 +125,8 @@ public class UserMapperIT {
 
     final List<User> users = userMapper.getUsersWithRightInNodeForProgram(program, supervisoryNode, Right.APPROVE_REQUISITION);
     someUser.setPassword(null);
+    someUser.getSupervisor().setModifiedDate(null);
+    someUser.setModifiedDate(null);
     assertThat(users, hasItem(someUser));
   }
 
@@ -111,6 +142,7 @@ public class UserMapperIT {
   public void shouldGetUserWithUserName() throws Exception {
     String nullString = null;
     User user = make(a(defaultUser, with(facilityId, facility.getId()), with(supervisorUserName, nullString)));
+    user.setModifiedDate(Calendar.getInstance().getTime());
     userMapper.insert(user);
     User result = userMapper.get(user.getUserName());
     user.setPassword(null);
@@ -236,7 +268,7 @@ public class UserMapperIT {
     String newPassword = "newPassword";
     userMapper.updateUserPassword(user.getId(), newPassword);
     User returnedUser = userMapper.selectUserByUserNameAndPassword(user.getUserName(), newPassword);
-    assertThat(returnedUser, is(notNullValue()) );
+    assertThat(returnedUser, is(notNullValue()));
   }
 
   private Program insertProgram(Program program) {

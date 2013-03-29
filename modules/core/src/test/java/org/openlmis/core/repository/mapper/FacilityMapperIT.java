@@ -19,6 +19,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -148,16 +150,62 @@ public class FacilityMapperIT {
     assertThat(resultFacility.getLongitude(), is(-321.87654));
   }
 
+@Test
+  public void shouldInsertFacilityWithSuppliedModifiedDateIfNotNull() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    facility.setLatitude(123.45678);
+    facility.setLongitude(-321.87654);
+
+    Calendar calendar = Calendar.getInstance();
+    calendar.set(Calendar.MONTH, Calendar.JANUARY);
+    facility.setModifiedDate(calendar.getTime());
+    mapper.insert(facility);
+    Facility resultFacility = mapper.getById(facility.getId());
+    assertThat(resultFacility.getCode(), is("F10010"));
+    assertThat(resultFacility.getModifiedDate(), is(calendar.getTime()));
+  }
+
+@Test
+  public void shouldInsertFacilityWithDbDefalutDateIfSuppliedDateIsNull() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    facility.setLatitude(123.45678);
+    facility.setLongitude(-321.87654);
+
+    facility.setModifiedDate(null);
+    mapper.insert(facility);
+    Facility resultFacility = mapper.getById(facility.getId());
+    assertThat(resultFacility.getCode(), is("F10010"));
+    assertThat(resultFacility.getModifiedDate(), is(notNullValue()));
+  }
+
   @Test
-  public void shouldUpdateFacility() throws Exception {
+  public void shouldUpdateFacilityWithDefaultDbTimeWhenModifiedDateIsNull() throws Exception {
     Facility facility = make(a(defaultFacility));
     mapper.insert(facility);
     facility.setCode("NewTestCode");
+    facility.setModifiedDate(null);
 
     mapper.update(facility);
 
     Facility updatedFacility = mapper.getById(facility.getId());
     assertThat(updatedFacility.getCode(), is(facility.getCode()));
+    assertThat(updatedFacility.getModifiedDate(), is(notNullValue()));
+  }
+
+  @Test
+  public void shouldUpdateFacilityWithSuppliedModifiedTime() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    mapper.insert(facility);
+    facility.setCode("NewTestCode");
+    Calendar calendar = Calendar.getInstance();
+    calendar.set(Calendar.MONTH, Calendar.JANUARY);
+    facility.setModifiedDate(calendar.getTime());
+
+    mapper.update(facility);
+
+    Facility updatedFacility = mapper.getById(facility.getId());
+    assertThat(updatedFacility.getCode(), is(facility.getCode()));
+    assertThat(updatedFacility.getModifiedDate(), is(calendar.getTime()));
   }
 
   @Test

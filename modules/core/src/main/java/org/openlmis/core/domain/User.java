@@ -9,6 +9,7 @@ package org.openlmis.core.domain;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.hash.Encoder;
@@ -59,13 +60,27 @@ public class User implements Importable {
 
   private Integer facilityId;
   private Integer modifiedBy;
+
+  @JsonIgnore
   private Date modifiedDate;
+
   private List<RoleAssignment> supervisorRoles;
   private List<RoleAssignment> homeFacilityRoles;
 
   private static final String INVALID_EMAIL_ERROR_CODE = "user.email.invalid";
 
   private static final String INVALID_USER_NAME_ERROR_CODE = "user.userName.invalid";
+
+
+  @JsonProperty("modifiedDate")
+  public Date getModifiedDate() {
+    return modifiedDate;
+  }
+
+  @JsonIgnore
+  public void setModifiedDate(Date modifiedDate) {
+    this.modifiedDate = modifiedDate;
+  }
 
   public void validate() {
     validateEmail();

@@ -11,6 +11,8 @@ import com.natpryce.makeiteasy.Property;
 import com.natpryce.makeiteasy.PropertyLookup;
 import org.openlmis.core.domain.User;
 
+import java.util.Date;
+
 import static com.natpryce.makeiteasy.Property.newProperty;
 
 public class UserBuilder {
@@ -59,7 +61,12 @@ public class UserBuilder {
       User supervisor = new User();
       supervisor.setId(lookup.valueOf(supervisorId, defaultSupervisorId));
       supervisor.setUserName(lookup.valueOf(supervisorUserName, defaultSupervisorUserName));
+
+      if (null != supervisor.getUserName())
+        supervisor.setModifiedDate(new Date());
+
       user.setSupervisor(supervisor);
+      user.setModifiedDate(new Date());
 
       return user;
     }

@@ -42,13 +42,11 @@ public class FacilityController extends BaseController {
 
   private FacilityService facilityService;
   private ProgramService programService;
-  private DbService dbService;
 
   @Autowired
-  public FacilityController(FacilityService facilityService, ProgramService programService, DbService dbService) {
+  public FacilityController(FacilityService facilityService, ProgramService programService) {
     this.facilityService = facilityService;
     this.programService = programService;
-    this.dbService = dbService;
   }
 
   @RequestMapping(value = "/facilities", method = GET, headers = ACCEPT_JSON)
@@ -89,7 +87,6 @@ public class FacilityController extends BaseController {
   public ResponseEntity<OpenLmisResponse> updateDataReportableAndActive(@RequestBody Facility facility, @PathVariable(value = "operation") String operation,
                                                                         HttpServletRequest request) {
     facility.setModifiedBy(loggedInUserId(request));
-    facility.setModifiedDate(dbService.getCurrentTimestamp());
     String message;
     if ("delete".equalsIgnoreCase(operation)) {
       facility.setDataReportable(false);
@@ -125,7 +122,6 @@ public class FacilityController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
   public ResponseEntity insert(@RequestBody Facility facility, HttpServletRequest request) {
     facility.setModifiedBy(loggedInUserId(request));
-    facility.setModifiedDate(dbService.getCurrentTimestamp());
     ResponseEntity<OpenLmisResponse> response;
     try {
       facilityService.insert(facility);
@@ -141,7 +137,6 @@ public class FacilityController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
   public ResponseEntity update(@RequestBody Facility facility, HttpServletRequest request) {
     facility.setModifiedBy(loggedInUserId(request));
-    facility.setModifiedDate(dbService.getCurrentTimestamp());
     ResponseEntity<OpenLmisResponse> response;
     try {
       facilityService.update(facility);

@@ -43,7 +43,7 @@ public class FacilityRepository {
 
   public void save(Facility facility) {
     Facility savedFacility = mapper.getByCode(facility.getCode());
-    if (savedFacility != null && savedFacility.getModifiedDate().equals(facility.getModifiedDate())) {
+    if (savedFacility != null && savedFacility.getModifiedDate()!=null && savedFacility.getModifiedDate().equals(facility.getModifiedDate())) {
       throw new DataException("Duplicate Facility Code");
     }
     setFacilityId(savedFacility, facility);

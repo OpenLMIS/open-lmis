@@ -9,7 +9,9 @@ package org.openlmis.core.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
@@ -123,7 +125,18 @@ public class Facility implements Importable, BaseModel {
 
   private Integer modifiedBy;
 
+  @JsonIgnore
   private Date modifiedDate;
+
+  @JsonProperty("modifiedDate")
+  public Date getModifiedDate(){
+    return modifiedDate;
+  }
+
+  @JsonIgnore
+  public void setModifiedDate(Date modifiedDate){
+    this.modifiedDate = modifiedDate;
+  }
 
   public Facility(Integer id) {
     this.id = id;
