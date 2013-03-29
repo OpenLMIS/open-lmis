@@ -5,6 +5,7 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.report.Report;
 import org.openlmis.report.ReportManager;
+import org.openlmis.report.ReportOutputOption;
 import org.openlmis.report.model.FacilityReport;
 import org.openlmis.report.model.Pages;
 import org.openlmis.report.model.ReportData;
@@ -15,6 +16,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 //import org.springframework.data.domain.Page;
 //import org.springframework.data.domain.PageRequest;
@@ -32,6 +37,8 @@ import java.util.Map;
 @RequestMapping(value = "/reports")
 public class ReportController  extends BaseController {
 
+    public static final String USER_ID = "USER_ID";
+
     private ReportManager reportManager;
     @Autowired
     public ReportController(ReportManager reportManager) {
@@ -39,14 +46,18 @@ public class ReportController  extends BaseController {
     }
 
     @RequestMapping(value = "/download/{reportKey}/{outputOption}")
-    public String showReport(@PathVariable(value = "reportKey") String reportKey, @PathVariable(value = "outputOption") String outputOption,ModelMap modelMap){
-        Map<String,Object> parameterMap = new HashMap<String,Object>();
-        Report report = reportManager.getReportByKey(reportKey);
-       List<FacilityReport> facilityReportList = (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteria(null);
-        modelMap.addAttribute("datasource", new JRBeanCollectionDataSource(facilityReportList));
-        modelMap.addAttribute("format",outputOption);
+    public void showReport(@PathVariable(value = "reportKey") String reportKey, @PathVariable(value = "outputOption") String outputOption,ModelMap modelMap, HttpServletRequest request, HttpServletResponse response){
 
-        return "facilities";
+       Integer userId = (Integer) request.getSession().getAttribute(USER_ID);
+
+        switch (outputOption.toUpperCase()){
+            case "PDF":
+                reportManager.showReport(userId, reportKey, null, ReportOutputOption.PDF, response);
+                break;
+            case "XLS":
+                reportManager.showReport(userId, reportKey, null, ReportOutputOption.XLS, response);
+        }
+
     }
 
     @RequestMapping(value = "/reportdata/{reportKey}", method = GET, headers = ACCEPT_JSON)
