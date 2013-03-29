@@ -30,6 +30,9 @@ public class DeleteFacilityPage extends Page {
   @FindBy(how = How.LINK_TEXT, using = "Delete")
   private static WebElement deleteButton;
 
+  @FindBy(how = How.LINK_TEXT, using = "OK")
+  private static WebElement okButton;
+
   @FindBy(how = How.XPATH, using = "//div[@id='deleteFacilityDialog']/div[@class='modal-body']/p")
   private static WebElement deleteMessageOnAlert;
 
@@ -104,7 +107,7 @@ public class DeleteFacilityPage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'25')]")
   private static WebElement startDateCalender;
 
-  @FindBy(how = How.XPATH, using = "//a[@ng-click='setNewStartDate()']")
+  @FindBy(how = How.ID, using = "button_OK")
   private static WebElement startDateAlert;
 
   @FindBy(how = How.ID, using = "supported-program-add")
@@ -138,7 +141,7 @@ public class DeleteFacilityPage extends Page {
 
   public void deleteFacility(String facilityCodeValue, String facilityNameValue) {
 
-    String expectedMessageOnAlert = "\"" + facilityNameValue + " / \"" + facilityCodeValue + "\" will be soft-deleted from the system";
+    String expectedMessageOnAlert = "'" + facilityNameValue + "' / '" + facilityCodeValue + "' will be deleted from the system.";
     verifyHeader("Edit facility");
     clickDeleteButtonOnFacilityScreen();
     verifyDeleteAlert(expectedMessageOnAlert);
@@ -154,7 +157,7 @@ public class DeleteFacilityPage extends Page {
 
   private void clickDeleteButtonOnAlert() {
     testWebDriver.sleep(1000);
-    deteteButtonOnAlert.click();
+    okButton.click();
   }
 
   private void verifyDeleteAlert(String expectedMessageOnAlert) {
