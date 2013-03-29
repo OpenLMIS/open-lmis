@@ -71,9 +71,8 @@ public class ReportController  extends BaseController {
         List<FacilityReport> facilityReportList = (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteria(null);
         final int startIdx = (page - 1) * max;
         final int endIdx = Math.min(startIdx + max, facilityReportList.size());
-        //List<FacilityReport> facilityReportListJson =  (FacilityReport)facilityReportList; .subList(startIdx,endIdx)
-        return new Pages(page,max,facilityReportList.size(),facilityReportList);
-
+        //List<FacilityReport> facilityReportListJson =  (FacilityReport)facilityReportList;
+        return new Pages(page,facilityReportList.size(),max,facilityReportList.subList(startIdx,endIdx));
     }
 
 }
