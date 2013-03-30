@@ -5,15 +5,17 @@
  */
 
 describe('ViewRnrController', function () {
-  var scope, httpBackend, controller, routeParams, requisition;
+  var scope, httpBackend, controller, routeParams, requisition, location;
 
   beforeEach(module('openlmis.services'));
-  beforeEach(inject(function ($httpBackend, $rootScope, $controller) {
+  beforeEach(inject(function ($httpBackend, $rootScope, $controller, $location) {
     routeParams = {'programId':2, 'rnr':1, 'supplyType':'full-supply'};
     scope = $rootScope.$new();
     httpBackend = $httpBackend;
     controller = $controller;
-    requisition = {lineItems:[], nonFullSupplyLineItems:[]};
+    location = $location;
+    requisition = {lineItems:[], nonFullSupplyLineItems:[], period: {numberOfMonths: 3}};
+    scope.pageSize = 2;
   }));
 
   it('should setup the grid columns according to visibility', function () {
@@ -75,14 +77,13 @@ describe('ViewRnrController', function () {
     expect(scope.columnDefs).toEqual(expectedDefinitions);
   });
 
-  it('should assign  line items based on supply type', function () {
+  it('should assign line items based on supply type', function () {
     routeParams.supplyType = 'full-supply';
     var rnr = {fullSupplyLineItems:[
       {'id':1}
     ], nonFullSupplyLineItems:[], period:{numberOfMonths:5}, status:'INITIATED'};
     controller(ViewRnrController, {$scope:scope, $routeParams:routeParams, requisition: rnr, currency: {}, rnrColumns: columns});
-    expect(rnr.fullSupplyLineItems.length).toEqual(scope.gridLineItems.length);
-    expect(rnr.fullSupplyLineItems.length).toEqual(scope.gridLineItems.length);
+    expect(rnr.fullSupplyLineItems.length).toEqual(scope.pageLineItems.length);
   });
 
   it('should assign non full supply line items based on supply type', function () {
@@ -91,14 +92,14 @@ describe('ViewRnrController', function () {
         {'id':1}
     ], period:{numberOfMonths:5}, status:'INITIATED'};
     controller(ViewRnrController, {$scope:scope, $routeParams:routeParams, requisition: rnr, currency: {}, rnrColumns: columns});
-    expect(rnr.nonFullSupplyLineItems.length).toEqual(scope.gridLineItems.length);
+    expect(rnr.nonFullSupplyLineItems.length).toEqual(scope.pageLineItems.length);
   });
 
-  it('should set grid line items as data to the grid', function () {
+  it('should set page line items as data to the grid', function () {
     routeParams.supplyType = 'non-full-supply';
     var rnr = {lineItems:[], nonFullSupplyLineItems:[], status:'INITIATED'};
     controller(ViewRnrController, {$scope:scope, $routeParams:routeParams, requisition: rnr, currency: {}, rnrColumns: columns});
-    expect('gridLineItems').toEqual(scope.rnrGrid.data);
+    expect('pageLineItems').toEqual(scope.rnrGrid.data);
   });
 
   it('should call toggle expand in a grid if collapsed', function () {
@@ -116,6 +117,95 @@ describe('ViewRnrController', function () {
     scope.rowToggle(row);
     expect(row.toggleExpand.calls.length).toEqual(0);
   });
+
+  it('should calculate number of pages for a pageSize of 2 and 4 lineItems', function () {
+    requisition.fullSupplyLineItems = [
+      {'id':1},
+      {'id':2},
+      {'id':3},
+      {'id':4}
+    ];
+    controller(ViewRnrController, {$scope:scope, requisition:requisition, rnrColumns:columns, currency:'$', $location:location, $routeParams:routeParams});
+
+    expect(2).toEqual(scope.numberOfPages);
+  });
+
+  it('should calculate number of pages for a pageSize of 2 and 4 nonFullSupplyLineItems', function () {
+    routeParams.supplyType = 'non-full-supply';
+    requisition.nonFullSupplyLineItems = [
+      {'id':1},
+      {'id':2},
+      {'id':3},
+      {'id':4}
+    ];
+    controller(ViewRnrController, {$scope:scope, requisition:requisition, rnrColumns:columns, currency:'$', $location:location, $routeParams:routeParams});
+
+    expect(2).toEqual(scope.numberOfPages);
+  });
+
+  it('should determine lineItems to be displayed on page 1 for page size 2', function () {
+    requisition.fullSupplyLineItems = [
+      {'id':1},
+      {'id':2},
+      {'id':3},
+      {'id':4}
+    ];
+    controller(ViewRnrController, {$scope:scope, requisition:requisition, rnrColumns:columns, currency:'$', $location:location, $routeParams:routeParams});
+
+    expect(scope.pageLineItems[0].id).toEqual(1);
+    expect(scope.pageLineItems[1].id).toEqual(2);
+    expect(scope.pageLineItems.length).toEqual(2);
+  });
+
+  it('should determine lineItems to be displayed on page 2 for page size 2', function () {
+    routeParams.page = 2;
+    requisition.fullSupplyLineItems = [
+      {'id':1},
+      {'id':2},
+      {'id':3},
+      {'id':4}
+    ];
+    controller(ViewRnrController, {$scope:scope, requisition:requisition, rnrColumns:columns, currency:'$', $location:location, $routeParams:routeParams});
+
+    expect(scope.pageLineItems[0].id).toEqual(3);
+    expect(scope.pageLineItems[1].id).toEqual(4);
+    expect(scope.pageLineItems.length).toEqual(2);
+  });
+
+  it('should determine lineItems to be displayed on page 2 after page changes to 2', function () {
+    routeParams.page = 1;
+    requisition.fullSupplyLineItems = [
+      {'id':1},
+      {'id':2},
+      {'id':3},
+      {'id':4}
+    ];
+    controller(ViewRnrController, {$scope:scope, requisition:requisition, rnrColumns:columns, currency:'$', $location:location, $routeParams:routeParams});
+
+    routeParams.page = 2;
+    scope.$broadcast('$routeUpdate');
+
+    expect(scope.pageLineItems[0].id).toEqual(3);
+    expect(scope.pageLineItems[1].id).toEqual(4);
+    expect(scope.pageLineItems.length).toEqual(2);
+  });
+
+  it('should change page in url if current page changes', function() {
+    routeParams.page = 1;
+    requisition.fullSupplyLineItems = [
+      {'id':1},
+      {'id':2},
+      {'id':3},
+      {'id':4}
+    ];
+    controller(ViewRnrController, {$scope:scope, requisition:requisition, rnrColumns:columns, currency:'$', $location:location, $routeParams:routeParams});
+    spyOn(location, 'search').andCallThrough();
+    scope.currentPage = 2;
+    scope.$digest();
+
+    expect(location.search).toHaveBeenCalledWith('page', 2);
+  });
+
 
 });
 

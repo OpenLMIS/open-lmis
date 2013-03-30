@@ -4,23 +4,32 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ViewRnrController($scope, $routeParams, requisition, rnrColumns, currency, $timeout) {
+function ViewRnrController($scope, $routeParams, requisition, rnrColumns, currency, $timeout, $location) {
 
   $scope.lossesAndAdjustmentsModal = [];
-  $scope.fullSupplyLink = "#/requisition/" + $routeParams.rnr + '/' + $routeParams.program + '?supplyType=full-supply';
+  $scope.fullSupplyLink = "#/requisition/" + $routeParams.rnr + '/' + $routeParams.program + '?supplyType=full-supply&page=1';
 
-  $scope.nonFullSupplyLink = "#/requisition/" + $routeParams.rnr + '/' + $routeParams.program + '?supplyType=non-full-supply';
+  $scope.nonFullSupplyLink = "#/requisition/" + $routeParams.rnr + '/' + $routeParams.program + '?supplyType=non-full-supply&page=1';
 
-  $scope.gridLineItems = [];
+  $scope.pageLineItems = [];
   $scope.columnDefs = [];
   $scope.rnr = new Rnr(requisition, rnrColumns);
   $scope.currency = currency;
   $scope.rnrColumns = rnrColumns;
+  prepareColumnDefs();
+
+  $scope.$watch('currentPage', function () {
+    $location.search('page', $scope.currentPage);
+  });
+
+  function updateSupplyType() {
+    $scope.showNonFullSupply = !!($routeParams.supplyType == 'non-full-supply');
+
+  }
 
   $scope.$on('$routeUpdate', function () {
-    $scope.showNonFullSupply = !($routeParams.supplyType == 'full-supply');
-    fillGrid();
-    prepareColumnDefs();
+    updateSupplyType();
+    fillPagedGridData();
   });
 
   $scope.$emit('$routeUpdate');
@@ -50,8 +59,11 @@ function ViewRnrController($scope, $routeParams, requisition, rnrColumns, curren
     });
   }
 
-  function fillGrid() {
-    $scope.gridLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.fullSupplyLineItems;
+  function fillPagedGridData() {
+    var gridLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.fullSupplyLineItems;
+    $scope.numberOfPages = Math.ceil(gridLineItems.length / $scope.pageSize) ? Math.ceil(gridLineItems.length / $scope.pageSize) : 1;
+    $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
+    $scope.pageLineItems = gridLineItems.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);
   }
 
   $scope.rowToggle = function (row) {
@@ -77,7 +89,7 @@ function ViewRnrController($scope, $routeParams, requisition, rnrColumns, curren
   }
 
   $scope.rnrGrid = {
-    data:'gridLineItems',
+    data:'pageLineItems',
     enableRowSelection:false,
     showFooter:false,
     showSelectionCheckbox:false,

@@ -14,13 +14,17 @@
   </ul>
 </div>
 <div style="width: 100%">
-  <div class="approveGrid grid-approval" ng-grid="rnrGrid" ng-show="gridLineItems.length"></div>
+  <div class="approveGrid grid-approval" ng-grid="rnrGrid" ng-show="pageLineItems.length"></div>
 </div>
-<div class="alert alert-success" id="noProductMessage" ng-hide="gridLineItems.length">
+<div class="alert alert-success" id="noProductMessage" ng-hide="pageLineItems.length">
   No products.
 </div>
 
 
 <div form-toolbar id="action_buttons" class="action-buttons">
   <ng-include src="'/public/pages/logistics/rnr/partials/total-cost.html'"></ng-include>
+</div>
+
+<div>
+  <openlmis-pagination num-pages="numberOfPages" current-page="currentPage" max-size="10"></openlmis-pagination>
 </div>
