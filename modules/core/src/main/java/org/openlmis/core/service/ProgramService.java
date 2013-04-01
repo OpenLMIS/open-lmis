@@ -60,4 +60,8 @@ public class ProgramService {
   public Program getById(Integer id) {
     return programRepository.getById(id);
   }
+
+  public void setTemplateConfigured(int id) {
+    programRepository.setTemplateConfigured(id);
+  }
 }

@@ -53,5 +53,12 @@ public class ProgramServiceTest {
     verify(programRepository).getById(1);
     assertThat(actualProgram, is(expectedProgram));
   }
+
+  @Test
+  public void shouldSetTemplateConfiguredFlag() {
+    service.setTemplateConfigured(1);
+    verify(programRepository).setTemplateConfigured(1);
+
+  }
 }
 

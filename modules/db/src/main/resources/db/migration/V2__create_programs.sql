@@ -6,6 +6,7 @@ CREATE TABLE programs (
     budgetingApplies BOOLEAN,
     usesDar BOOLEAN,
     active BOOLEAN,
+    templateConfigured BOOLEAN,
     lastModifiedBy INTEGER,
     lastModifiedDate DATE,
     createdBy INTEGER,

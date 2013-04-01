@@ -105,4 +105,11 @@ public class ProgramRepositoryTest {
     assertThat(programs, is(expectedPrograms));
     verify(programMapper, times(1)).getByFacilityId(1);
   }
+
+  @Test
+  public void shouldSetTemplateConfiguredFlag() throws Exception {
+    programRepository.setTemplateConfigured(1);
+
+    verify(programMapper).setTemplateConfigured(1);
+  }
 }

@@ -20,6 +20,7 @@ public class Program implements BaseModel {
   private String name;
   private String description;
   private Boolean active;
+  private boolean templateConfigured;
 
   public Program(Integer id) {
     this.id = id;

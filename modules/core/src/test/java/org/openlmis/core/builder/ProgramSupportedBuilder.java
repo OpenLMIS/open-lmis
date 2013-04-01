@@ -38,7 +38,7 @@ public class ProgramSupportedBuilder {
       ProgramSupported programSupported = new ProgramSupported();
       programSupported.setFacilityCode(lookup.valueOf(supportedFacilityCode, FACILITY_CODE));
       programSupported.setFacilityId(lookup.valueOf(supportedFacilityId, FACILITY_ID));
-      programSupported.setProgram(lookup.valueOf(supportedProgram, new Program(PROGRAM_ID, PROGRAM_CODE, PROGRAM_NAME, null, null)));
+      programSupported.setProgram(lookup.valueOf(supportedProgram, new Program(PROGRAM_ID, PROGRAM_CODE, PROGRAM_NAME, null, null, false)));
       programSupported.setStartDate(lookup.valueOf(startDate, START_DATE));
       programSupported.setActive(lookup.valueOf(isActive, IS_ACTIVE));
       programSupported.setModifiedBy(1);

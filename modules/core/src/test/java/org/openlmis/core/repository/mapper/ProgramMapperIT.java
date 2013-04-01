@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static java.lang.Boolean.*;
+import static java.lang.Boolean.FALSE;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasItem;
@@ -66,14 +66,14 @@ public class ProgramMapperIT extends SpringIntegrationTest {
   public void shouldGetAllActiveProgram() {
     List<Program> programs = programMapper.getAllActive();
     assertEquals(4, programs.size());
-    assertThat(programs, hasItem(new Program(PROGRAM_ID, PROGRAM_CODE, PROGRAM_CODE, PROGRAM_CODE, true)));
+    assertThat(programs, hasItem(new Program(PROGRAM_ID, PROGRAM_CODE, PROGRAM_CODE, PROGRAM_CODE, true, false)));
   }
 
   @Test
   public void shouldGetProgramsWhichAreActiveByFacilityCode() {
     Facility facility = make(a(FacilityBuilder.defaultFacility));
     facilityMapper.insert(facility);
-    Program program = make(a(defaultProgram,with(programId,1)));
+    Program program = make(a(defaultProgram, with(programId, 1)));
     programMapper.insert(program);
     ProgramSupported programSupported = make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()), with(supportedProgram, program)));
     programSupportedMapper.addSupportedProgram(programSupported);
@@ -94,7 +94,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
   public void shouldGetProgramsSupportedByFacility() throws Exception {
     Facility facility = make(a(defaultFacility));
     facilityMapper.insert(facility);
-    Program program = make(a(defaultProgram,with(programId,1)));
+    Program program = make(a(defaultProgram, with(programId, 1)));
     programMapper.insert(program);
     ProgramSupported programSupported = make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()),
       with(supportedProgram, program)));
@@ -209,6 +209,16 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     assertTrue(programs.contains(activeProgram));
   }
 
+  @Test
+  public void shouldSetTemplateConfiguredFlag() {
+    Program program = insertProgram(make(a(defaultProgram, with(programCode, "p1"), with(templateStatus, false))));
+    programMapper.setTemplateConfigured(program.getId());
+
+    Program returnedProgram = programMapper.getById(program.getId());
+
+    assertThat(returnedProgram.isTemplateConfigured(), is(true));
+  }
+
   private SupervisoryNode insertSupervisoryNode(SupervisoryNode supervisoryNode) {
     supervisoryNodeMapper.insert(supervisoryNode);
     return supervisoryNode;
@@ -221,9 +231,9 @@ public class ProgramMapperIT extends SpringIntegrationTest {
 
   private void insertProgramSupportedForFacility(Program program, Facility facility, boolean isActive) {
     ProgramSupported defaultProgram = make(a(defaultProgramSupported,
-        with(supportedFacilityId, facility.getId()),
-        with(supportedProgram, program),
-        with(ProgramSupportedBuilder.isActive, isActive)));
+      with(supportedFacilityId, facility.getId()),
+      with(supportedProgram, program),
+      with(ProgramSupportedBuilder.isActive, isActive)));
     programSupportedMapper.addSupportedProgram(defaultProgram);
   }
 

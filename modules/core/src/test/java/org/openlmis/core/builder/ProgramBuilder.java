@@ -15,24 +15,26 @@ import static com.natpryce.makeiteasy.Property.newProperty;
 
 public class ProgramBuilder {
 
-    public static final String PROGRAM_CODE = "YELL_FVR";
-    public static final Integer PROGRAM_ID = 1;
+  public static final String PROGRAM_CODE = "YELL_FVR";
+  public static final Integer PROGRAM_ID = 1;
 
-    public static final Property<Program, String> programCode = newProperty();
-    public static final Property<Program, Boolean> programStatus = newProperty();
-    public static Property<Program, Integer> programId = newProperty();
+  public static final Property<Program, String> programCode = newProperty();
+  public static final Property<Program, Boolean> programStatus = newProperty();
+  public static final Property<Program, Boolean> templateStatus = newProperty();
+  public static Property<Program, Integer> programId = newProperty();
 
-    public static final Instantiator<Program> defaultProgram = new Instantiator<Program>() {
-        @Override
-        public Program instantiate(PropertyLookup<Program> lookup) {
-            Program program = new Program();
-            program.setId(lookup.valueOf(programId, 1));
-            program.setCode(lookup.valueOf(programCode, PROGRAM_CODE));
-            program.setName("Yellow Fever");
-            program.setDescription("Yellow Fever program");
-            program.setActive(lookup.valueOf(programStatus, true));
-            return program;
-        }
-    };
+  public static final Instantiator<Program> defaultProgram = new Instantiator<Program>() {
+    @Override
+    public Program instantiate(PropertyLookup<Program> lookup) {
+      Program program = new Program();
+      program.setId(lookup.valueOf(programId, 1));
+      program.setCode(lookup.valueOf(programCode, PROGRAM_CODE));
+      program.setName("Yellow Fever");
+      program.setDescription("Yellow Fever program");
+      program.setActive(lookup.valueOf(programStatus, true));
+      program.setTemplateConfigured(lookup.valueOf(templateStatus, false));
+      return program;
+    }
+  };
 
 }

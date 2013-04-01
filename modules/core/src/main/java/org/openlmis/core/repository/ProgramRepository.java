@@ -69,4 +69,8 @@ public class ProgramRepository {
   public Program getById(Integer id) {
     return mapper.getById(id);
   }
+
+  public void setTemplateConfigured(int id) {
+    mapper.setTemplateConfigured(id);
+  }
 }
