@@ -194,3 +194,6 @@ services.factory('GeographicZones', function($resource){
     return $resource('/geographicZones.json');
 });
 
+services.factory('FacilityTypes', function($resource){
+    return $resource('/facilityTypes.json');
+});

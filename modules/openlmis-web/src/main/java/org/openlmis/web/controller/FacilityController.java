@@ -153,8 +153,13 @@ public class FacilityController extends BaseController {
     return response;
   }
 
-    @RequestMapping(value = "/geographicZones", method = GET, headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> getAllGeographicZones(HttpServletRequest request) {
-        return OpenLmisResponse.response("zones", facilityService.getAllGeographicZones());
-    }
+  @RequestMapping(value = "/geographicZones", method = GET, headers = ACCEPT_JSON)
+     public ResponseEntity<OpenLmisResponse> getAllGeographicZones(HttpServletRequest request) {
+     return OpenLmisResponse.response("zones", facilityService.getAllGeographicZones());
+  }
+
+  @RequestMapping(value = "/facilityTypes", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getAllFacilityTypes(HttpServletRequest request) {
+     return OpenLmisResponse.response("facilityTypes", facilityService.getAllTypes());
+  }
 }

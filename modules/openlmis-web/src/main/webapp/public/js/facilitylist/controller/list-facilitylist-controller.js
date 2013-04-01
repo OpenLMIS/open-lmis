@@ -1,4 +1,4 @@
-function ListFacilitiesController($scope, FacilityList, GeographicZones, $http, $routeParams,$location) {
+function ListFacilitiesController($scope, FacilityList, FacilityTypes, GeographicZones, $http, $routeParams,$location) {
 
         //to minimize and maximize the filter section
         var section = 1;
@@ -35,14 +35,10 @@ function ListFacilitiesController($scope, FacilityList, GeographicZones, $http, 
              status : $scope.status
         };
 
-        $scope.facilityTypes = [
-            {'name': '- Please Selct One -'},
-            {'name': 'DHMT', 'value': 33 },
-            {'name' : "Satellite Facility" ,  'value': 31 },
-            {'name': 'Lvl1 Hospital', 'value': 30 },
-            {'name' : "Health Post" , 'value': 29 }
-
-        ];
+        FacilityTypes.get(function(data) {
+            $scope.facilityTypes = data.facilityTypes;
+            $scope.facilityTypes.push({'name': '- Please Selct One -'});
+        });
 
         GeographicZones.get(function(data) {
             $scope.zones = data.zones;
