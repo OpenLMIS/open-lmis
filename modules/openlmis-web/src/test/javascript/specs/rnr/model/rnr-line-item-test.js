@@ -257,9 +257,9 @@ describe('RnrLineItem', function () {
       expect(rnrLineItem.amc).toEqual(12);
     });
 
-    it('should not calculate AMC when normalized consumption is not present', function () {
+    it('should reset AMC to null when normalized consumption is not present', function () {
       var lineItem = {"normalizedConsumption":null};
-      var rnrLineItem = new RnrLineItem({}, null, null);
+      var rnrLineItem = new RnrLineItem({amc:5}, null, null);
       jQuery.extend(rnrLineItem, lineItem);
 
       rnrLineItem.calculateAMC();

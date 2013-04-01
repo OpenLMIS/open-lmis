@@ -184,7 +184,10 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
   };
 
   RnrLineItem.prototype.calculateAMC = function () {
-    if (!utils.isNumber(this.normalizedConsumption)) return;
+    if (!utils.isNumber(this.normalizedConsumption)) {
+      this.amc = null;
+      return;
+    }
     var numberOfMonthsInPeriod = numberOfMonths;
     var divider = numberOfMonthsInPeriod * (1 + this.previousNormalizedConsumptions.length);
 
