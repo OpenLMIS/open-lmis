@@ -5,6 +5,11 @@
  */
 
 function RequisitionNonFullSupplyController($scope, $rootScope) {
+
+  $scope.visibleNonFullSupplyColumns = _.filter($scope.visibleColumns, function (column) {
+    return _.contains(RnrLineItem.visibleForNonFullSupplyColumns, column.name);
+  });
+
   var map = _.map($scope.facilityApprovedProducts, function (facilitySupportedProduct) {
     return facilitySupportedProduct.programProduct.product.category;
   });
@@ -75,7 +80,7 @@ function RequisitionNonFullSupplyController($scope, $rootScope) {
 
   $scope.shouldDisableAddButton = function () {
     return !($scope.newNonFullSupply && $scope.newNonFullSupply.quantityRequested && $scope.newNonFullSupply.reasonForRequestedQuantity
-        && $scope.facilityApprovedProduct);
+      && $scope.facilityApprovedProduct);
   };
 
   $scope.addNonFullSupplyProductsByCategory = function () {
@@ -91,7 +96,7 @@ function RequisitionNonFullSupplyController($scope, $rootScope) {
     if ($scope.nonFullSupplyProductCategory != undefined) {
       $scope.nonFullSupplyProductsToDisplay = $.grep($scope.facilityApprovedProducts, function (facilityApprovedProduct) {
         return $.inArray(facilityApprovedProduct.programProduct.product.code, addedNonFullSupplyProductList) == -1
-            && $.inArray(facilityApprovedProduct.programProduct.product.category.name, [$scope.nonFullSupplyProductCategory.name]) == 0;
+          && $.inArray(facilityApprovedProduct.programProduct.product.category.name, [$scope.nonFullSupplyProductCategory.name]) == 0;
       });
     }
   }
@@ -121,9 +126,9 @@ function RequisitionNonFullSupplyController($scope, $rootScope) {
       $scope.newNonFullSupply.productCode = product.code;
       $scope.newNonFullSupply.productName = product.primaryName;
       $scope.newNonFullSupply.product = (product.primaryName == null ? "" : (product.primaryName + " ")) +
-          (product.form.code == null ? "" : (product.form.code + " ")) +
-          (product.strength == null ? "" : (product.strength + " ")) +
-          (product.dosageUnit.code == null ? "" : product.dosageUnit.code);
+        (product.form.code == null ? "" : (product.form.code + " ")) +
+        (product.strength == null ? "" : (product.strength + " ")) +
+        (product.dosageUnit.code == null ? "" : product.dosageUnit.code);
       $(['dosesPerDispensingUnit', 'packSize', 'roundToZero', 'packRoundingThreshold', 'dispensingUnit', 'fullSupply']).each(function (index, field) {
         $scope.newNonFullSupply[field] = product[field];
       });
@@ -140,8 +145,8 @@ function RequisitionNonFullSupplyController($scope, $rootScope) {
     populateProductInformation();
     $(['quantityReceived', 'quantityDispensed', 'beginningBalance', 'stockInHand', 'totalLossesAndAdjustments', 'calculatedOrderQuantity', 'newPatientCount',
       'stockOutDays', 'normalizedConsumption', 'amc', 'maxStockQuantity']).each(function (index, field) {
-          $scope.newNonFullSupply[field] = 0;
-        });
+        $scope.newNonFullSupply[field] = 0;
+      });
     $scope.newNonFullSupply.rnrId = $scope.$parent.rnr.id;
   }
 

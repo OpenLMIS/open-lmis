@@ -18,7 +18,7 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     });
 
     this.lossesAndAdjustments = tempLossesAndAdjustments;
-  }
+  };
 
   RnrLineItem.prototype.init = function () {
     this.initLossesAndAdjustments();
@@ -27,7 +27,7 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
 
     this.reEvaluateTotalLossesAndAdjustments();
     this.fillConsumptionOrStockInHand();
-  }
+  };
 
   RnrLineItem.prototype.fillConsumptionOrStockInHand = function () {
     this.beginningBalance = utils.getValueFor(this.beginningBalance);
@@ -335,7 +335,7 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     }
 
     return this.productCategoryDisplayOrder - rnrLineItem.productCategoryDisplayOrder;
-  }
+  };
 
   this.init();
 
@@ -351,3 +351,6 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
   this.reEvaluateTotalLossesAndAdjustments();
   this.fillConsumptionOrStockInHand();
 };
+
+RnrLineItem.visibleForNonFullSupplyColumns = ['product', 'productCode', 'dispensingUnit', 'quantityRequested', 'reasonForRequestedQuantity', 'packsToShip', 'price', 'cost', 'remarks'];
+
