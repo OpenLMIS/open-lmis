@@ -30,11 +30,13 @@ import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.openlmis.core.builder.ProductBuilder.defaultProduct;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramProductBuilder.PRODUCT_CODE;
 import static org.openlmis.core.builder.ProgramProductBuilder.PROGRAM_CODE;
+import static org.openlmis.core.builder.ProgramProductBuilder.defaultProgramProduct;
 import static org.openlmis.core.repository.ProgramProductRepository.PROGRAM_PRODUCT_INVALID;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -46,7 +48,7 @@ public class ProgramProductRepositoryTest {
   private ProgramProductRepository programProductRepository;
 
   @Mock
-  ProgramProductMapper programProductMapper;
+  private ProgramProductMapper programProductMapper;
   @Mock
   private ProgramRepository programRepository;
   @Mock
@@ -191,17 +193,24 @@ public class ProgramProductRepositoryTest {
 
   @Test
   public void shouldUpdateProgramProductIfExist() throws Exception {
+    int programId = 88;
+    int productId = 99;
 
-    ProgramProduct savedProgramProduct = new ProgramProduct();
+    ProgramProduct existingProgramProduct = make(a(defaultProgramProduct));
+    existingProgramProduct.getProgram().setId(programId);
 
+    when(programRepository.getIdByCode(anyString())).thenReturn(programId);
+    when(productRepository.getIdByCode(anyString())).thenReturn(productId);
     Calendar todayTime = Calendar.getInstance();
     todayTime.add(Calendar.DATE, -1);
-    savedProgramProduct.setModifiedDate(todayTime.getTime());
+    existingProgramProduct.setModifiedDate(todayTime.getTime());
 
-    when(programProductMapper.getByProgramAndProductId(anyInt(), anyInt())).thenReturn(savedProgramProduct);
+    when(programProductMapper.getByProgramAndProductId(programId, productId)).thenReturn(existingProgramProduct);
 
     programProductRepository.insert(programProduct);
 
+    assertThat(programProduct.getProgram().getId(), is(88));
+    assertThat(programProduct.getProduct().getId(), is(99));
     verify(programProductMapper).updateProgramProduct(programProduct);
   }
 

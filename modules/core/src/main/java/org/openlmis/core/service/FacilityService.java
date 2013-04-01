@@ -74,7 +74,7 @@ public class FacilityService {
     programSupported.setProgram(new Program(programId));
 
     ProgramSupported savedProgramSupported = programSupportedRepository.geyByFacilityIdAndProgramId(facilityId, programId);
-    if (savedProgramSupported != null && savedProgramSupported.getModifiedDate().equals(programSupported.getModifiedDate())) {
+    if (savedProgramSupported != null && programSupported.getModifiedDate().equals(savedProgramSupported.getModifiedDate())) {
       throw new DataException("Facility has already been mapped to the program ");
     }
     if (savedProgramSupported == null) {

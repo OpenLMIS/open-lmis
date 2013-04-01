@@ -38,18 +38,17 @@ public class ProgramProductRepository {
 
 
   public void insert(ProgramProduct programProduct) {
-    String programCode = programProduct.getProgram().getCode();
-    Integer programId = programRepository.getIdByCode(programCode);
+    Integer programId = programRepository.getIdByCode(programProduct.getProgram().getCode());
     programProduct.getProgram().setId(programId);
 
-    String productCode = programProduct.getProduct().getCode();
-    validateProductCode(productCode);
+    validateProductCode(programProduct.getProduct().getCode());
 
-    Integer productId = productRepository.getIdByCode(productCode);
+    Integer productId = productRepository.getIdByCode(programProduct.getProduct().getCode());
+    programProduct.getProduct().setId(productId);
 
     ProgramProduct savedProgramProduct = mapper.getByProgramAndProductId(programId, productId);
 
-    if (savedProgramProduct != null && savedProgramProduct.getModifiedDate().equals(programProduct.getModifiedDate())) {
+    if (savedProgramProduct != null && programProduct.getModifiedDate().equals(savedProgramProduct.getModifiedDate())) {
       throw new DataException("Duplicate entry for Product Code and Program Code combination found");
     }
 

@@ -36,8 +36,8 @@ public class FacilityApprovedProductRepository {
   @Autowired
   public FacilityApprovedProductRepository(FacilityApprovedProductMapper facilityApprovedProductMapper, FacilityMapper facilityMapper, ProductMapper productMapper) {
     this.facilityApprovedProductMapper = facilityApprovedProductMapper;
-    this.facilityMapper=facilityMapper;
-    this.productMapper=productMapper;
+    this.facilityMapper = facilityMapper;
+    this.productMapper = productMapper;
   }
 
   public List<FacilityApprovedProduct> getFullSupplyProductsByFacilityAndProgram(Integer facilityId, Integer programId) {
@@ -49,7 +49,8 @@ public class FacilityApprovedProductRepository {
   }
 
   public void insert(FacilityApprovedProduct facilityApprovedProduct) {
-    FacilityApprovedProduct savedFacilityApprovedProduct = facilityApprovedProductMapper.getProductsByFacilityAndProgram(facilityApprovedProduct.getProgramProduct().getId());
+    FacilityApprovedProduct savedFacilityApprovedProduct = facilityApprovedProductMapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(
+      facilityApprovedProduct.getProgramProduct().getId(), facilityApprovedProduct.getFacilityType().getCode());
 
     if (savedFacilityApprovedProduct != null && facilityApprovedProduct.getModifiedDate().equals(savedFacilityApprovedProduct.getModifiedDate())) {
       throw new DataException(FACILITY_APPROVED_PRODUCT_DUPLICATE);

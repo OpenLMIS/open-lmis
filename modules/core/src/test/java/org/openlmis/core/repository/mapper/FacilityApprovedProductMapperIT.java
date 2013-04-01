@@ -7,7 +7,6 @@
 package org.openlmis.core.repository.mapper;
 
 import org.hamcrest.core.Is;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
@@ -108,12 +107,12 @@ public class FacilityApprovedProductMapperIT {
     ProgramProduct programProduct6 = addToProgramProduct(yellowFeverProgram, pro06, true);
     ProgramProduct programProduct7 = addToProgramProduct(bpProgram, pro07, true);
 
-    addToFacilityType("warehouse", programProduct1);
-    addToFacilityType("warehouse", programProduct3);
-    addToFacilityType("warehouse", programProduct4);
-    addToFacilityType("warehouse", programProduct5);
-    addToFacilityType("warehouse", programProduct6);
-    addToFacilityType("warehouse", programProduct7);
+    insertFacilityApprovedProduct("warehouse", programProduct1);
+    insertFacilityApprovedProduct("warehouse", programProduct3);
+    insertFacilityApprovedProduct("warehouse", programProduct4);
+    insertFacilityApprovedProduct("warehouse", programProduct5);
+    insertFacilityApprovedProduct("warehouse", programProduct6);
+    insertFacilityApprovedProduct("warehouse", programProduct7);
 
     // Get full supply products
     List<FacilityApprovedProduct> facilityApprovedProducts = facilityApprovedProductMapper.getProductsByFacilityProgramAndFullSupply(
@@ -159,11 +158,13 @@ public class FacilityApprovedProductMapperIT {
   }
 
 
-  private void addToFacilityType(String facilityTypeCode, ProgramProduct programProduct) {
+  private FacilityApprovedProduct insertFacilityApprovedProduct(String facilityTypeCode, ProgramProduct programProduct) {
     FacilityType facilityType = new FacilityType();
     facilityType.setCode(facilityTypeCode);
 
-    facilityApprovedProductMapper.insert(new FacilityApprovedProduct(facilityType, programProduct, MAX_MONTHS_OF_STOCK));
+    FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct(facilityType, programProduct, MAX_MONTHS_OF_STOCK);
+    facilityApprovedProductMapper.insert(facilityApprovedProduct);
+    return facilityApprovedProduct;
   }
 
   private Product product(String productCode, boolean isFullSupply, Integer order, ProductCategory productCategory) {
@@ -180,14 +181,18 @@ public class FacilityApprovedProductMapperIT {
   }
 
   @Test
-  public void shouldGetFacilityApprovedProduct(){
-    Facility facility = make(a(FacilityBuilder.defaultFacility));
-    facilityMapper.insert(facility);
+  public void shouldGetFacilityApprovedProductId(){
     Program program = make(a(defaultProgram));
-    programMapper.insert(program);
-    addToFacilityType("warehouse", addToProgramProduct(program, product("PRO01", true, 6, category("C1", "Category 1", 2)), true));
 
-    FacilityApprovedProduct facilityApprovedProductsFromDB = facilityApprovedProductMapper.getProductsByFacilityAndProgram(program.getId());
+    Product product = make(a(defaultProduct));
+    productMapper.insert(product);
+
+    ProgramProduct programProduct = addToProgramProduct(program, product, true);
+
+
+    insertFacilityApprovedProduct("warehouse", programProduct);
+
+    FacilityApprovedProduct facilityApprovedProductsFromDB = facilityApprovedProductMapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(programProduct.getId(), "warehouse");
 
     assertNotNull(facilityApprovedProductsFromDB);
     assertEquals(facilityApprovedProductsFromDB.getMaxMonthsOfStock(),MAX_MONTHS_OF_STOCK );
