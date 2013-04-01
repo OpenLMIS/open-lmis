@@ -42,7 +42,8 @@ public class E2EUpload extends TestCaseHelper {
     rolesPage.createRole("User", "User", userRoleList, true);
 
     UploadPage uploadPage = homePage.navigateUploads();
-    uploadPage.uploadUsers();
+    uploadPage.uploadAndVerifyInvalidUserScenarios();
+    uploadPage.uploadAndVerifyUsers(2);
     String userName = "User123";
     String userId = "200";
     dbWrapper.alterUserID(userName, userId);
@@ -51,30 +52,25 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadProductCategory();
     uploadPage.verifySuccessMessageOnUploadScreen();
 
-    uploadPage.uploadProducts();
-    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.uploadAndVerifyProducts(2);
 
-    uploadPage.uploadProgramProductMapping();
-    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.uploadAndVerifyProgramProductMapping(2);
 
     uploadPage.uploadProgramProductPrice();
     uploadPage.verifySuccessMessageOnUploadScreen();
 
     uploadPage.uploadGeographicZoneInvalid();
 
-    uploadPage.uploadGeographicZone(2);
+    uploadPage.uploadAndVerifyGeographicZone(2);
 
     uploadPage.uploadFacilitiesNotLowestGeoCode();
 
-    uploadPage.uploadFacilities();
-    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.uploadAndVerifyFacilities(2);
 
-    uploadPage.uploadFacilityTypeToProductMapping();
-    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.uploadAndVerifyFacilityTypeToProductMapping(2);
     dbWrapper.allocateFacilityToUser(userId, "F10");
 
-    uploadPage.uploadProgramSupportedByFacilities();
-    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.uploadProgramSupportedByFacilities(2);
 
     uploadPage.uploadSupervisoryNodes();
     uploadPage.verifySuccessMessageOnUploadScreen();

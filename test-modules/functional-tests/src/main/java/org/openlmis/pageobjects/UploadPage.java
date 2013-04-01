@@ -65,7 +65,6 @@ public class UploadPage extends Page {
     String Separator = System.getProperty("file.separator");
     File parentDir = new File(System.getProperty("user.dir"));
     uploadFilePath = parentDir.getParent() + Separator + "src" + Separator + "main" + Separator + "resources" + Separator + fileName;
-
     setCsvPath.sendKeys(uploadFilePath);
     uploadButton.click();
   }
@@ -84,7 +83,7 @@ public class UploadPage extends Page {
     testWebDriver.setImplicitWait(implicitWait);
   }
 
-  public void uploadGeographicZone(int noOfRuns) throws FileNotFoundException {
+  public void uploadAndVerifyGeographicZone(int noOfRuns) throws FileNotFoundException {
     for (int i = 1; i <= noOfRuns; i++) {
       selectUploadType("Geographic Zones");
       uploadFile("Geographic_Data.csv");
@@ -115,15 +114,21 @@ public class UploadPage extends Page {
     testWebDriver.sleep(500);
   }
 
-  public void uploadFacilities() throws FileNotFoundException {
-    selectUploadType("Facilities");
-    uploadFile("facilities.csv");
+  public void uploadAndVerifyFacilities(int noOfRuns) throws FileNotFoundException {
+    for (int i = 1; i <= noOfRuns; i++) {
+      selectUploadType("Facilities");
+      uploadFile("facilities.csv");
+      verifySuccessMessageOnUploadScreen();
+    }
   }
 
 
-  public void uploadProducts() throws FileNotFoundException {
-    selectUploadType("Products");
-    uploadFile("products.csv");
+  public void uploadAndVerifyProducts(int noOfRuns) throws FileNotFoundException {
+    for (int i = 1; i <= noOfRuns; i++) {
+      selectUploadType("Products");
+      uploadFile("products.csv");
+      verifySuccessMessageOnUploadScreen();
+    }
   }
 
   public void uploadProductCategory() throws FileNotFoundException {
@@ -131,14 +136,35 @@ public class UploadPage extends Page {
     uploadFile("Productcategoryupload.csv");
   }
 
-  public void uploadUsers() throws FileNotFoundException {
-    selectUploadType("Users");
-    uploadFile("Users.csv");
+  public void uploadAndVerifyUsers(int noOfRuns) throws FileNotFoundException {
+    for (int i = 1; i <= noOfRuns; i++) {
+      selectUploadType("Users");
+      uploadFile("Users.csv");
+      verifySuccessMessageOnUploadScreen();
+    }
   }
 
-  public void uploadProgramProductMapping() throws FileNotFoundException {
-    selectUploadType("Program Product");
-    uploadFile("program_product.csv");
+  public void uploadAndVerifyInvalidUserScenarios() throws FileNotFoundException {
+    selectUploadType("Users");
+    uploadFile("Users_Duplicate_Email.csv");
+    verifyErrorMessageOnUploadScreen();
+    testWebDriver.sleep(250);
+    selectUploadType("Users");
+    uploadFile("Users_Duplicate_EmployeeId.csv");
+    verifyErrorMessageOnUploadScreen();
+    testWebDriver.sleep(250);
+    selectUploadType("Users");
+    uploadFile("Users_Duplicate_UserName.csv");
+    verifyErrorMessageOnUploadScreen();
+    testWebDriver.sleep(250);
+  }
+
+  public void uploadAndVerifyProgramProductMapping(int noOfRuns) throws FileNotFoundException {
+    for (int i = 1; i <= noOfRuns; i++) {
+      selectUploadType("Program Product");
+      uploadFile("program_product.csv");
+      verifySuccessMessageOnUploadScreen();
+    }
   }
 
   public void uploadProgramProductPrice() throws FileNotFoundException {
@@ -146,14 +172,20 @@ public class UploadPage extends Page {
     uploadFile("Product_Cost.csv");
   }
 
-  public void uploadProgramSupportedByFacilities() throws FileNotFoundException {
-    selectUploadType("Programs supported by facilities");
-    uploadFile("program_supported.csv");
+  public void uploadProgramSupportedByFacilities(int noOfRuns) throws FileNotFoundException {
+    for (int i = 1; i <= noOfRuns; i++) {
+      selectUploadType("Programs supported by facilities");
+      uploadFile("program_supported.csv");
+      verifySuccessMessageOnUploadScreen();
+    }
   }
 
-  public void uploadFacilityTypeToProductMapping() throws FileNotFoundException {
-    selectUploadType("Facility Approved Products");
-    uploadFile("Facility_Type_To_Product_Mapping.csv");
+  public void uploadAndVerifyFacilityTypeToProductMapping(int noOfRuns) throws FileNotFoundException {
+    for (int i = 1; i <= noOfRuns; i++) {
+      selectUploadType("Facility Approved Products");
+      uploadFile("Facility_Type_To_Product_Mapping.csv");
+      verifySuccessMessageOnUploadScreen();
+    }
   }
 
 
