@@ -14,19 +14,20 @@ describe('ViewRnrController', function () {
     httpBackend = $httpBackend;
     controller = $controller;
     location = $location;
-    requisition = {lineItems:[], nonFullSupplyLineItems:[], period: {numberOfMonths: 3}};
+    requisition = {lineItems:[], nonFullSupplyLineItems:[], period:{numberOfMonths:3}};
     scope.pageSize = 2;
+    routeParams.page = 1;
   }));
 
   it('should setup the grid columns according to visibility', function () {
     var columnDefs = [
-      { field : 'productCategory', displayName : 'Product Category', width : 0 },
+      { field:'productCategory', displayName:'Product Category', width:0 },
       {field:'productCode', displayName:'Product Code'},
       {field:'product', displayName:'Product'},
       {field:'dispensingUnit', displayName:'Unit/Unit of Issue'},
       {field:'lossesAndAdjustments', displayName:'Total Losses / Adjustments', cellTemplate:lossesAndAdjustmentsTemplate}
     ];
-    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams, requisition: requisition, currency: {}, rnrColumns: columns});
+    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams, requisition:requisition, currency:{}, rnrColumns:columns});
     expect(columnDefs).toEqual(scope.columnDefs);
     expect('columnDefs').toEqual(scope.rnrGrid.columnDefs);
   });
@@ -34,9 +35,9 @@ describe('ViewRnrController', function () {
   it('should include approved quantity column if status approved', function () {
     columns.push({'name':'quantityApproved', 'label':'Approved Quantity', id:'99', visible:true});
     requisition = {lineItems:[], nonFullSupplyLineItems:[], status:'APPROVED'};
-    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams, requisition: requisition, currency: {}, rnrColumns: columns});
+    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams, requisition:requisition, currency:{}, rnrColumns:columns});
     var expectedDefinitions = [
-      { field : 'productCategory', displayName : 'Product Category', width : 0 },
+      { field:'productCategory', displayName:'Product Category', width:0 },
       {field:'productCode', displayName:'Product Code'},
       {field:'product', displayName:'Product'},
       {field:'dispensingUnit', displayName:'Unit/Unit of Issue'},
@@ -49,9 +50,9 @@ describe('ViewRnrController', function () {
 
   it('should include approved quantity column if status  ordered', function () {
     requisition = {lineItems:[], nonFullSupplyLineItems:[], status:'ORDERED'};
-    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams, requisition: requisition, currency: {}, rnrColumns: columns});
+    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams, requisition:requisition, currency:{}, rnrColumns:columns});
     var expectedDefinitions = [
-      { field : 'productCategory', displayName : 'Product Category', width : 0 },
+      { field:'productCategory', displayName:'Product Category', width:0 },
       {field:'productCode', displayName:'Product Code'},
       {field:'product', displayName:'Product'},
       {field:'dispensingUnit', displayName:'Unit/Unit of Issue'},
@@ -65,9 +66,9 @@ describe('ViewRnrController', function () {
   it('should not include approved quantity column if status not approved', function () {
     columns.push({'name':'quantityApproved', 'label':'Approved Quantity', id:'99', visible:true});
     requisition = {lineItems:[], nonFullSupplyLineItems:[], status:'INITIATED'};
-    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams, requisition: requisition, currency: {}, rnrColumns: columns});
+    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams, requisition:requisition, currency:{}, rnrColumns:columns});
     var expectedDefinitions = [
-      { field : 'productCategory', displayName : 'Product Category', width : 0 },
+      { field:'productCategory', displayName:'Product Category', width:0 },
       {field:'productCode', displayName:'Product Code'},
       {field:'product', displayName:'Product'},
       {field:'dispensingUnit', displayName:'Unit/Unit of Issue'},
@@ -82,37 +83,39 @@ describe('ViewRnrController', function () {
     var rnr = {fullSupplyLineItems:[
       {'id':1}
     ], nonFullSupplyLineItems:[], period:{numberOfMonths:5}, status:'INITIATED'};
-    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams, requisition: rnr, currency: {}, rnrColumns: columns});
+    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams, requisition:rnr, currency:{}, rnrColumns:columns});
     expect(rnr.fullSupplyLineItems.length).toEqual(scope.pageLineItems.length);
   });
 
   it('should assign non full supply line items based on supply type', function () {
     routeParams.supplyType = 'non-full-supply';
     var rnr = {fullSupplyLineItems:[], nonFullSupplyLineItems:[
-        {'id':1}
+      {'id':1}
     ], period:{numberOfMonths:5}, status:'INITIATED'};
-    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams, requisition: rnr, currency: {}, rnrColumns: columns});
+    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams, requisition:rnr, currency:{}, rnrColumns:columns});
     expect(rnr.nonFullSupplyLineItems.length).toEqual(scope.pageLineItems.length);
   });
 
   it('should set page line items as data to the grid', function () {
     routeParams.supplyType = 'non-full-supply';
     var rnr = {lineItems:[], nonFullSupplyLineItems:[], status:'INITIATED'};
-    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams, requisition: rnr, currency: {}, rnrColumns: columns});
+    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams, requisition:rnr, currency:{}, rnrColumns:columns});
     expect('pageLineItems').toEqual(scope.rnrGrid.data);
   });
 
   it('should call toggle expand in a grid if collapsed', function () {
-    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams, requisition: requisition, currency: {}, rnrColumns: columns});
-    var row = {collapsed:true, toggleExpand: function(){} };
+    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams, requisition:requisition, currency:{}, rnrColumns:columns});
+    var row = {collapsed:true, toggleExpand:function () {
+    } };
     spyOn(row, 'toggleExpand');
     scope.rowToggle(row);
     expect(row.toggleExpand).toHaveBeenCalled();
   });
 
   it('should not call toggle expand in a grid if collapsed', function () {
-    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams, requisition: requisition, currency: {}, rnrColumns: columns});
-    var row = {collapsed:false, toggleExpand: function(){} };
+    controller(ViewRnrController, {$scope:scope, $routeParams:routeParams, requisition:requisition, currency:{}, rnrColumns:columns});
+    var row = {collapsed:false, toggleExpand:function () {
+    } };
     spyOn(row, 'toggleExpand');
     scope.rowToggle(row);
     expect(row.toggleExpand.calls.length).toEqual(0);
@@ -190,7 +193,7 @@ describe('ViewRnrController', function () {
     expect(scope.pageLineItems.length).toEqual(2);
   });
 
-  it('should change page in url if current page changes', function() {
+  it('should change page in url if current page changes', function () {
     routeParams.page = 1;
     requisition.fullSupplyLineItems = [
       {'id':1},
@@ -204,6 +207,36 @@ describe('ViewRnrController', function () {
     scope.$digest();
 
     expect(location.search).toHaveBeenCalledWith('page', 2);
+  });
+
+  it('should validate page and navigate to page 1 if invalid', function () {
+    routeParams.page = "blah";
+    requisition.fullSupplyLineItems = [
+      {'id':1},
+      {'id':2},
+      {'id':3},
+      {'id':4}
+    ];
+    spyOn(location, 'search').andCallThrough();
+
+    controller(ViewRnrController, {$scope:scope, requisition:requisition, rnrColumns:columns, currency:'$', $location:location, $routeParams:routeParams});
+
+    expect(location.search).toHaveBeenCalledWith('page', 1);
+  });
+
+  it('should validate tab and navigate to full supply tab page 1 if invalid', function () {
+    routeParams.supplyType = "blah";
+    requisition.fullSupplyLineItems = [
+      {'id':1},
+      {'id':2},
+      {'id':3},
+      {'id':4}
+    ];
+    spyOn(location, 'url').andCallThrough();
+
+    controller(ViewRnrController, {$scope:scope, requisition:requisition, rnrColumns:columns, currency:'$', $location:location, $routeParams:routeParams});
+
+    expect(location.url).toHaveBeenCalledWith('requisition/1/undefined?supplyType=full-supply&page=1');
   });
 
 

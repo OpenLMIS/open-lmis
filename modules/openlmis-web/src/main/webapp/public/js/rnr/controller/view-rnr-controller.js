@@ -32,7 +32,7 @@ function ViewRnrController($scope, $routeParams, requisition, rnrColumns, curren
     fillPagedGridData();
   });
 
-  $scope.$emit('$routeUpdate');
+  $scope.$broadcast('$routeUpdate');
 
   function prepareColumnDefs() {
     $scope.columnDefs = [
@@ -59,10 +59,21 @@ function ViewRnrController($scope, $routeParams, requisition, rnrColumns, curren
     });
   }
 
+  function validateRouteParams() {
+    if ($routeParams.supplyType != 'full-supply' && $routeParams.supplyType != 'non-full-supply') {
+      $location.url("requisition/" + $routeParams.rnr + '/' + $routeParams.program + '?supplyType=full-supply&page=1');
+    }
+    if (utils.isValidPage($routeParams.page, $scope.numberOfPages)) {
+      $scope.currentPage = parseInt($routeParams.page, 10);
+    } else {
+      $location.search('page', 1);
+    }
+  }
+
   function fillPagedGridData() {
     var gridLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.fullSupplyLineItems;
     $scope.numberOfPages = Math.ceil(gridLineItems.length / $scope.pageSize) ? Math.ceil(gridLineItems.length / $scope.pageSize) : 1;
-    $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
+    validateRouteParams();
     $scope.pageLineItems = gridLineItems.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);
   }
 
