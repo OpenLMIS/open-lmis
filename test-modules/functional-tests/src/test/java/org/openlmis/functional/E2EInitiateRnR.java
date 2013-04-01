@@ -14,6 +14,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,22 +55,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     String facility_code = "FCcode" + date_time;
     dbWrapper.insertFacilities("F10", "F11");
 
-    RolesPage rolesPage = homePage.navigateRoleAssignments();
-    List<String> userRoleListStoreincharge = new ArrayList<String>();
-    userRoleListStoreincharge.add("Create Requisition");
-    userRoleListStoreincharge.add("Authorize Requisition");
-    userRoleListStoreincharge.add("Approve Requisition");
-    rolesPage.createRole("Store-in-charge", "Store-in-charge", userRoleListStoreincharge, true);
-
-    RolesPage rolesPagelmu = homePage.navigateRoleAssignments();
-    List<String> userRoleListlmu = new ArrayList<String>();
-
-    userRoleListlmu.add("Convert To Order Requisition");
-    rolesPagelmu.createRole("lmu", "lmu", userRoleListlmu, false);
-
-    List<String> userRoleListMedicalofficer = new ArrayList<String>();
-    userRoleListMedicalofficer.add("Approve Requisition");
-    rolesPage.createRole("Medical-officer", "Medical-officer", userRoleListMedicalofficer, true);
+    createRole(homePage);
 
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
     dbWrapper.insertSupervisoryNodeSecond("F11", "N2", "Node 2", "N1");
@@ -149,7 +135,6 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
     initiateRnRPage.authorizeRnR();
     initiateRnRPage.verifyAuthorizeRnrSuccessMsg();
-    initiateRnRPage.verifyBeginningBalanceDisabled();
     initiateRnRPage.verifyApproveButtonNotPresent();
 
     ApprovePage approvePage = homePageUser.navigateToApprove();
@@ -175,6 +160,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     approvePageTopSNUser.editApproveQuantityAndVerifyTotalCost("2900");
     approvePageTopSNUser.approveRequisition();
     approvePageTopSNUser.verifyNoRequisitionPendingMessage();
+
     LoginPage loginPagelmu = homePageTopSNUser.logout(baseUrlGlobal);
     HomePage homePagelmu = loginPagelmu.loginAs(userlmu, password);
 
@@ -183,6 +169,25 @@ public class E2EInitiateRnR extends TestCaseHelper {
     String supplyFacilityName = dbWrapper.getSupplyFacilityName("N1", "HIV");
     orderPageOrdersPending.verifyOrderListElements(program, "FCcode" + date_time, "FCname" + date_time, periods[0].trim(), periods[1].trim(), supplyFacilityName);
     orderPageOrdersPending.convertToOrder();
+  }
+
+  private void createRole(HomePage homePage) throws IOException {
+    RolesPage rolesPage = homePage.navigateRoleAssignments();
+    List<String> userRoleListStoreincharge = new ArrayList<String>();
+    userRoleListStoreincharge.add("Create Requisition");
+    userRoleListStoreincharge.add("Authorize Requisition");
+    userRoleListStoreincharge.add("Approve Requisition");
+    rolesPage.createRole("Store-in-charge", "Store-in-charge", userRoleListStoreincharge, true);
+
+    RolesPage rolesPagelmu = homePage.navigateRoleAssignments();
+    List<String> userRoleListlmu = new ArrayList<String>();
+
+    userRoleListlmu.add("Convert To Order Requisition");
+    rolesPagelmu.createRole("lmu", "lmu", userRoleListlmu, false);
+
+    List<String> userRoleListMedicalofficer = new ArrayList<String>();
+    userRoleListMedicalofficer.add("Approve Requisition");
+    rolesPage.createRole("Medical-officer", "Medical-officer", userRoleListMedicalofficer, true);
   }
 
   @AfterMethod(groups = {"smoke"})
@@ -197,7 +202,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-      {"HIV", "storeincharge", "medicalofficer", "lmu", "Admin123", new String[]{"Admin123", "Admin123"}}
+        {"HIV", "storeincharge", "medicalofficer", "lmu", "Admin123", new String[]{"Admin123", "Admin123"}}
     };
 
   }

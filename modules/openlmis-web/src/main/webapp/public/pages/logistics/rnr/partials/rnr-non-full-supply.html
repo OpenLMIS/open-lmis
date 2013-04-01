@@ -78,15 +78,18 @@
                 </span>
               </span>
               <span ng-switch-when="price">
-                <span ng-bind="rnrLineItem[column.name] | currency:currency" class="cell-text"></span>
+                <span ng-bind="rnrLineItem[column.name] | currency:currency" id="{{getId(column.name, $parent)}}"
+                      class="cell-text"></span>
               </span>
               <span ng-switch-when="cost">
-                <span ng-bind="rnrLineItem[column.name] | currency:currency" class="cell-text"></span>
+                <span ng-bind="rnrLineItem[column.name] | currency:currency" id="{{getId(column.name, $parent)}}"
+                      class="cell-text"></span>
               </span>
               <span ng-switch-when="lossesAndAdjustments">
                 <span ng-bind="rnrLineItem['totalLossesAndAdjustments']" class="cell-text"></span>
               </span>
-          <span ng-switch-default ng-bind="rnrLineItem[column.name]" class="cell-text"></span>
+          <span ng-switch-default ng-bind="rnrLineItem[column.name]" id="{{getId(column.name, $parent)}}"
+                class="cell-text"></span>
 
         </ng-switch>
       </td>
