@@ -128,7 +128,7 @@ public class RnRPagination extends TestCaseHelper {
 
 
         initiateRnRPage.addMultipleNonFullSupplyLineItems(11,false);
-        //verifyDefaultDisplayOrderNonFullSupply() //Seems defect;
+        verifyDefaultDisplayOrderNonFullSupply();
     }
 
     @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")

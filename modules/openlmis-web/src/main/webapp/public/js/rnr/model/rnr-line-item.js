@@ -315,7 +315,11 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
 
     if (this.productCategoryDisplayOrder == rnrLineItem.productCategoryDisplayOrder) {
       if (this.productCategory == rnrLineItem.productCategory) {
-        if (isUndefined(this.productDisplayOrder) && isUndefined(rnrLineItem.productDisplayOrder)) {
+        if(isUndefined(this.productDisplayOrder) && isUndefined(rnrLineItem.productDisplayOrder)) {
+          return compareStrings(this.productCode, rnrLineItem.productCode);
+        }
+
+        if(this.productDisplayOrder== rnrLineItem.productDisplayOrder) {
           return compareStrings(this.productCode, rnrLineItem.productCode);
         }
 

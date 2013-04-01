@@ -1058,16 +1058,17 @@ describe('RnrLineItem', function () {
   });
 
   describe('Compare RnrLineItems', function () {
-    it('Should compare rnr line items', function () {
-      function createRnrLineItem(productCategoryDisplayOrder, productCategory, productCode, productDisplayOrder) {
-        var rnrLineItem = new RnrLineItem();
-        rnrLineItem.productCategoryDisplayOrder = productCategoryDisplayOrder;
-        rnrLineItem.productCategory = productCategory;
-        rnrLineItem.productCode = productCode;
-        rnrLineItem.productDisplayOrder = productDisplayOrder;
-        return rnrLineItem;
-      }
 
+    function createRnrLineItem(productCategoryDisplayOrder, productCategory, productCode, productDisplayOrder) {
+      var rnrLineItem = new RnrLineItem();
+      rnrLineItem.productCategoryDisplayOrder = productCategoryDisplayOrder;
+      rnrLineItem.productCategory = productCategory;
+      rnrLineItem.productCode = productCode;
+      rnrLineItem.productDisplayOrder = productDisplayOrder;
+      return rnrLineItem;
+    }
+
+    it('Should compare rnr line items', function () {
       var rnrLineItem1 = createRnrLineItem(1, "C1", "P990", null);
       var rnrLineItem2 = createRnrLineItem(10, "C3", "P990", null);
       var rnrLineItem3 = createRnrLineItem(1, "C1", "P990", 1);
@@ -1087,6 +1088,14 @@ describe('RnrLineItem', function () {
       expect(rnrLineItem6.compareTo(undefined)).toBeLessThan(0);
       expect(rnrLineItem7.compareTo(rnrLineItem8)).toBeGreaterThan(0);
     });
+
+    it('Should compare rnr line items on product code when display order is same', function () {
+      var rnrLineItem1 = createRnrLineItem(1, "C1", "P2", 1);
+      var rnrLineItem2 = createRnrLineItem(1, "C1", "P10", 1);
+
+      expect(rnrLineItem1.compareTo(rnrLineItem2)).toBeGreaterThan(0);
+    });
+
   });
 });
 
