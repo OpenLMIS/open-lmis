@@ -152,4 +152,9 @@ public class FacilityController extends BaseController {
     response.getBody().addData("facility", facility);
     return response;
   }
+
+    @RequestMapping(value = "/geographicZones", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getAllGeographicZones(HttpServletRequest request) {
+        return OpenLmisResponse.response("zones", facilityService.getAllGeographicZones());
+    }
 }

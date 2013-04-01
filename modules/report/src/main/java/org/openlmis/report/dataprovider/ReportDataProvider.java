@@ -1,6 +1,7 @@
 package org.openlmis.report.dataprovider;
 
 import org.openlmis.report.DataSourceType;
+import org.openlmis.report.model.FacilityReportFilter;
 import org.openlmis.report.model.ReportData;
 
 import java.util.List;
@@ -26,4 +27,7 @@ public abstract class ReportDataProvider {
     protected abstract List<? extends ReportData> getBeanCollectionReportData(ReportData filterCriteria);
     protected abstract List<? extends ReportData> getResultSetReportData(ReportData filterCriteria);
 
+
+    public abstract List<? extends ReportData> getReportDataByFilterCriteriaAndPagingAndSorting(ReportData filterCriteria,ReportData SortCriteria ,int page,int pageSize);
+    public abstract int getReportDataCountByFilterCriteria(ReportData facilityReportFilter);
 }

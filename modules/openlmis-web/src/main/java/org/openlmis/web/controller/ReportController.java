@@ -5,9 +5,7 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.report.Report;
 import org.openlmis.report.ReportManager;
-import org.openlmis.report.model.FacilityReport;
-import org.openlmis.report.model.Pages;
-import org.openlmis.report.model.ReportData;
+import org.openlmis.report.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -53,15 +51,33 @@ public class ReportController  extends BaseController {
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
     public Pages get(@PathVariable(value = "reportKey") String reportKey,
                                     @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                    @RequestParam(value = "max", required = false, defaultValue = "20") int max) {
+                                    @RequestParam(value = "max", required = false, defaultValue = "20") int max,
+                                    @RequestParam(value = "zoneId", required = false, defaultValue = "0") int zoneId,
+                                    @RequestParam(value = "facilityTypeId", required = false, defaultValue = "0") int facilityTypeId,
+                                    @RequestParam(value = "statusId", required = false, defaultValue = "" ) Boolean statusId,
+                                    @RequestParam(value = "code", required = false, defaultValue = "ASC") String code,
+                                    @RequestParam(value = "facilityName", required = false, defaultValue = "") String facilityName,
+                                    @RequestParam(value = "facilityType", required = false, defaultValue = "ASC") String facilityType
+                                    ) {
 
-        //Pageable pageRequest = new PageRequest(page-1, max);
+        FacilityReportSorter facilityReportSorter = new FacilityReportSorter();
+            facilityReportSorter.setFacilityName(facilityName);
+            facilityReportSorter.setCode(code);
+            facilityReportSorter.setFacilityType(facilityType);
+
+        FacilityReportFilter facilityReportFilter = new FacilityReportFilter();
+            facilityReportFilter.setZoneId(zoneId);
+            facilityReportFilter.setFacilityTypeId(facilityTypeId);
+            facilityReportFilter.setStatusId(statusId);
+
         Report report = reportManager.getReportByKey(reportKey);
-        List<FacilityReport> facilityReportList = (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteria(null);
-        final int startIdx = (page - 1) * max;
-        final int endIdx = Math.min(startIdx + max, facilityReportList.size());
+        List<FacilityReport> facilityReportList =  // (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteria(null);
+        (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(facilityReportFilter,facilityReportSorter,page,max);
+        int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(facilityReportFilter);
+        //final int startIdx = (page - 1) * max;
+        //final int endIdx = Math.min(startIdx + max, facilityReportList.size());
         //List<FacilityReport> facilityReportListJson =  (FacilityReport)facilityReportList;
-        return new Pages(page,facilityReportList.size(),max,facilityReportList.subList(startIdx,endIdx));
+        return new Pages(page,totalRecCount,max,facilityReportList);
     }
 
 }

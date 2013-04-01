@@ -61,4 +61,7 @@ public class GeographicZoneRepository {
     return mapper.getAllGeographicZones();
   }
 
+  public List<GeographicZone> getAllZones() {
+    return mapper.getAllZones();
+  }
 }

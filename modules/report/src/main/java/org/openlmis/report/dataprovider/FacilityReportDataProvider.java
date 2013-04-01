@@ -7,11 +7,14 @@ import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.mapping.StatementType;
+import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.report.mapper.FacilityReportMapper;
 import org.openlmis.report.mapper.ResultSetMapper;
 import org.openlmis.report.model.FacilityReport;
+import org.openlmis.report.model.FacilityReportFilter;
+import org.openlmis.report.model.FacilityReportSorter;
 import org.openlmis.report.model.ReportData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -39,7 +42,8 @@ public class FacilityReportDataProvider extends ReportDataProvider {
 
     private ReportData getFacilityReport(Facility facility){
         if(facility == null) return null;
-        return new FacilityReport(facility.getCode(),facility.getName(),"facilityType");
+        return null;
+        //return new FacilityReport(facility.getCode(),facility.getName(),"facilityType");
     }
 
     private List<ReportData> getListFacilityReport(List<Facility> facilityList){
@@ -73,6 +77,24 @@ public class FacilityReportDataProvider extends ReportDataProvider {
     @Override
     protected List<? extends ReportData> getResultSetReportData(ReportData filterCriteria) {
         return facilityReportMapper.getAllFacilitiesReportData();
+    }
+
+    @Override
+    public List<? extends ReportData> getReportDataByFilterCriteriaAndPagingAndSorting(ReportData filterCriteria, ReportData SortCriteria, int page, int pageSize) {
+        RowBounds rowBounds = new RowBounds((page-1)*pageSize,pageSize);
+        return facilityReportMapper.SelectFilteredSortedPagedFacilities(filterCriteria,SortCriteria,rowBounds);
+    }
+
+  //  @Override
+  //   public List<? extends ReportData> getReportDataByFilterCriteriaAndPaging(ReportData filterCriteria, int page, int pageSize) {
+  //       //return facilityReportMapper.SelectFilteredPagedFacilities(filterCriteria,page,pageSize);
+  //      return null;  //To change body of implemented methods use File | Settings | File Templates.
+  //  }
+
+    @Override
+    public int getReportDataCountByFilterCriteria(ReportData filterCriteria) {
+        return (int)facilityReportMapper.SelectFilteredFacilitiesCount(filterCriteria);
+        //return 100;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
 }

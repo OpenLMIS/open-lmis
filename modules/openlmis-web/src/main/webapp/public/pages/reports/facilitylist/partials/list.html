@@ -19,7 +19,7 @@
                                     <label>Zone</label>
 
                                     <div class="form-field">
-                                        <select name="zone" ng-model="zone.value" ng-options="option.value as option.name for option in zones">
+                                        <select ng-required="true" name="zone" ng-model="zone.value" ng-options="option.id as option.name for option in zones">
 
                                         </select>
                                     </div>

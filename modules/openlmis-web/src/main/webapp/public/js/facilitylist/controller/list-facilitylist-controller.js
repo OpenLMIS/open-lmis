@@ -1,4 +1,4 @@
-function ListFacilitiesController($scope, FacilityList, $http, $routeParams,$location) {
+function ListFacilitiesController($scope, FacilityList, GeographicZones, $http, $routeParams,$location) {
 
         //to minimize and maximize the filter section
         var section = 1;
@@ -44,18 +44,21 @@ function ListFacilitiesController($scope, FacilityList, $http, $routeParams,$loc
 
         ];
 
-        $scope.zones = [
-            {'name': '- Please Selct One -'},
-            {'name': 'District Health Office', 'value': 3},
-            {'name': 'District', 'value': 2},
-            {'name': 'Province', 'value': 1}
-
-        ];
+        GeographicZones.get(function(data) {
+            $scope.zones = data.zones;
+            $scope.zones.push({'name': '- Please Selct One -'});
+        });
+           // [
+           // ,
+           // {'name': 'District Health Office', 'value': 3},
+           // {'name': 'District', 'value': 2},
+           // {'name': 'Province', 'value': 1}
+        //];
 
         $scope.statuses = [
             {'name': '- Please Selct One -'},
-            {'name': 'Active', 'value': 1},
-            {'name': 'Inavtive', 'value': 0}
+            {'name': 'Active', 'value': "TRUE"},
+            {'name': 'Inavtive', 'value': "FALSE"}
         ];
 
         $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
@@ -87,7 +90,7 @@ function ListFacilitiesController($scope, FacilityList, $http, $routeParams,$loc
 
         $scope.$watch("currentPage", function () {  //good watch no problem
 
-            if($scope.currentPage != undefined){
+            if($scope.currentPage != undefined && $scope.currentPage != 1){
               //when clicked using the links they have done updated the paging info no problem here
                //or using the url page param
               //$scope.pagingOptions.currentPage = $scope.currentPage;

@@ -75,6 +75,11 @@ public class FacilityService {
     return geographicZoneRepository.getAllGeographicZones();
   }
 
+  public List<GeographicZone> getAllGeographicZones() {
+    return geographicZoneRepository.getAllZones();
+  }
+
+
   public Facility getHomeFacility(Integer userId) {
     return facilityRepository.getHomeFacility(userId);
   }

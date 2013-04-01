@@ -41,6 +41,16 @@ public interface GeographicZoneMapper {
   })
   List<GeographicZone> getAllGeographicZones();
 
+  @Select({"SELECT GZ.id, GZ.code, GZ.name, GL.id as levelId, GL.code as levelCode, GL.name as levelName, GL.levelNumber as levelNumber ",
+            "FROM geographic_zones GZ, geographic_levels GL",
+            "where GZ.levelId = GL.id "})
+  @Results({
+            @Result(column = "levelId", property = "level.id"),
+            @Result(column = "levelCode", property = "level.code"),
+            @Result(column = "levelName", property = "level.name"),
+            @Result(column = "levelNumber", property = "level.levelNumber")
+  })
+  List<GeographicZone> getAllZones();
 
   @Select({"SELECT GZ.id AS id, GZ.code AS code, GZ.name AS name, GL.code AS levelCode, GL.name AS level, GZP.code AS parentCode, GZP.name AS parentZone, GLP.code AS parentLevelCode, GLP.name AS parentLevel",
     "FROM geographic_zones GZ INNER JOIN geographic_zones GZP ON GZ.parent = GZP.id",

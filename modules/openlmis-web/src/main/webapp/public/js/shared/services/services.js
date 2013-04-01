@@ -190,3 +190,7 @@ services.factory('FacilityProgramRights', function($resource){
   return $resource('/facility/:facilityId/program/:programId/rights.json');
 });
 
+services.factory('GeographicZones', function($resource){
+    return $resource('/geographicZones.json');
+});
+
