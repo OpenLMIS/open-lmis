@@ -178,9 +178,8 @@ public class CreateFacilityPage extends Page {
     facilityName.sendKeys(facilityNameText);
     testWebDriver.selectByVisibleText(operatedBy, operatedByValue);
 
-
-    serviceDeliveryPoint.click();
-    isActive.click();
+    testWebDriver.click(serviceDeliveryPoint);
+    testWebDriver.click(isActive);
 
     facilityDescription.sendKeys("Testing description");
     gln.sendKeys("Testing Gln");
