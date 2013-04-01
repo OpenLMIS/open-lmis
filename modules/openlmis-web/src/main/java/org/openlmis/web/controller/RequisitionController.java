@@ -12,6 +12,7 @@ import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
+import org.openlmis.rnr.domain.Comment;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
@@ -158,7 +159,8 @@ public class RequisitionController extends BaseController {
   }
 
   @RequestMapping(value = "/requisitions-for-convert-to-order", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CONVERT_TO_ORDER')")//todo is it possible for a single user to convert requisitions to order for all facilities
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CONVERT_TO_ORDER')")
+//todo is it possible for a single user to convert requisitions to order for all facilities
   public ResponseEntity<OpenLmisResponse> listForConvertToOrder() {
     List<Rnr> approvedRequisitions = requisitionService.getApprovedRequisitions();
     return response(RNR_LIST, RnrDTO.prepareForListApproval(approvedRequisitions));
@@ -226,12 +228,25 @@ public class RequisitionController extends BaseController {
     modelAndView.addObject(RNR, requisition);
     modelAndView.addObject(RNR_TEMPLATE, rnrTemplateService.fetchColumnsForRequisition(requisition.getProgram().getId()));
     modelAndView.addObject(CURRENCY, staticReferenceDataReader.getCurrency());
-    return  modelAndView;
+    return modelAndView;
   }
 
   @RequestMapping(value = "/orders", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_ORDER, CONVERT_TO_ORDER')")
   public ResponseEntity<OpenLmisResponse> getOrders() {
     return OpenLmisResponse.response(ORDERS, RnrDTO.prepareForOrderView(requisitionService.getOrders()));
+  }
+
+  @RequestMapping(value = "/requisition/{id}/comment", method = POST, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION')")
+  public void insertComment(@RequestBody Comment comment, @PathVariable("id") Integer id, HttpServletRequest request) {
+    comment.setRnrId(id);
+    comment.setAuthorId(loggedInUserId(request));
+    requisitionService.insertComment(comment);
+  }
+
+  @RequestMapping(value = "/requisition/{id}/comments", method = GET)
+  public void getCommentsForARnr(@PathVariable Integer id) {
+    requisitionService.getCommentsByRnrId(id);
   }
 }

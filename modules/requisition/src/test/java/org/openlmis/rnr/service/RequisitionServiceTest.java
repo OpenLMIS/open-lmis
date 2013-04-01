@@ -924,7 +924,19 @@ public class RequisitionServiceTest {
     Integer categoryCount = requisitionService.getCategoryCount(requisition, fullSupply);
     assertThat(categoryCount, is(10));
     verify(requisitionRepository).getCategoryCount(requisition, fullSupply);
+  }
 
+  @Test
+  public void shouldInsertComment() throws Exception {
+    Comment comment = new Comment();
+    requisitionService.insertComment(comment);
+    verify(requisitionRepository).insertComment(comment);
+  }
+
+  @Test
+  public void shouldGetAllCommentsForARnr() throws Exception {
+    requisitionService.getCommentsByRnrId(1);
+    verify(requisitionRepository).getCommentsByRnrID(1);
   }
 
   private Rnr getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(Rnr rnr, Right right) {

@@ -43,6 +43,7 @@ public class Rnr {
   private Date modifiedDate;
   private Date submittedDate;
   private OrderBatch orderBatch;
+  private List<Comment> comments = new ArrayList<>();
 
   public Rnr(Integer facilityId, Integer programId, Integer periodId, Integer modifiedBy) {
     facility = new Facility();

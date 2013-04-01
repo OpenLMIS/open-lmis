@@ -18,6 +18,7 @@ import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
+import org.openlmis.rnr.domain.Comment;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.dto.RnrDTO;
@@ -363,6 +364,23 @@ public class RequisitionControllerTest {
 
     verify(requisitionService).getOrders();
     assertThat((List<RnrDTO>) fetchedOrders.getBody().getData().get(ORDERS), is(expectedRequisitionList));
+  }
+
+  @Test
+  public void shouldInsertComment() throws Exception {
+    Comment comment = new Comment();
+    controller.insertComment(comment, rnr.getId(), request);
+
+    verify(requisitionService).insertComment(comment);
+
+    assertThat(comment.getRnrId(), is(rnr.getId()));
+    assertThat(comment.getAuthorId(), is(USER_ID));
+  }
+
+  @Test
+  public void shouldGetCommentsForARnR() throws Exception {
+    controller.getCommentsForARnr(rnr.getId());
+    verify(requisitionService).getCommentsByRnrId(rnr.getId());
   }
 
   private Rnr createRequisition() {

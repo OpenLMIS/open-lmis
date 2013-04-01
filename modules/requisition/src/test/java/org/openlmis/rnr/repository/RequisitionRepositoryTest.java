@@ -21,6 +21,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.rnr.domain.*;
+import org.openlmis.rnr.repository.mapper.CommentMapper;
 import org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper;
 import org.openlmis.rnr.repository.mapper.RequisitionMapper;
 import org.openlmis.rnr.repository.mapper.RnrLineItemMapper;
@@ -54,6 +55,8 @@ public class RequisitionRepositoryTest {
   @Mock
   private LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
   @Mock
+  private CommentMapper commentMapper;
+  @Mock
   private SupervisoryNodeRepository supervisoryNodeRepository;
   @Mock
   private CommaSeparator separator;
@@ -66,7 +69,7 @@ public class RequisitionRepositoryTest {
 
   @Before
   public void setUp() throws Exception {
-    requisitionRepository = new RequisitionRepository(requisitionMapper, rnrLineItemMapper, lossesAndAdjustmentsMapper, separator);
+    requisitionRepository = new RequisitionRepository(requisitionMapper, rnrLineItemMapper, lossesAndAdjustmentsMapper, separator, commentMapper);
     rnr = new Rnr();
     rnrLineItem1 = new RnrLineItem();
     rnrLineItem1.setId(1);
@@ -227,5 +230,19 @@ public class RequisitionRepositoryTest {
     assertThat(categoryCount, is(10));
     verify(rnrLineItemMapper).getCategoryCount(rnr, fullSupply);
 
+  }
+
+  @Test
+  public void shouldGetCommentsForARnR() throws Exception {
+     requisitionRepository.getCommentsByRnrID(1);
+     verify(commentMapper).getAllCommentsByRnrId(1);
+  }
+
+  @Test
+  public void shouldInsertAComment() throws Exception {
+    Comment comment = new Comment();
+    requisitionRepository.insertComment(comment);
+
+    verify(commentMapper).insert(comment);
   }
 }

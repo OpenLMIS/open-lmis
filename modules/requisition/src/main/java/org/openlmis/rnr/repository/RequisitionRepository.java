@@ -14,12 +14,14 @@ import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.rnr.domain.*;
+import org.openlmis.rnr.repository.mapper.CommentMapper;
 import org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper;
 import org.openlmis.rnr.repository.mapper.RequisitionMapper;
 import org.openlmis.rnr.repository.mapper.RnrLineItemMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
@@ -31,14 +33,16 @@ public class RequisitionRepository {
   private RequisitionMapper requisitionMapper;
   private RnrLineItemMapper rnrLineItemMapper;
   private LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
+  private CommentMapper commentMapper;
   private CommaSeparator commaSeparator;
 
 
   @Autowired
-  public RequisitionRepository(RequisitionMapper requisitionMapper, RnrLineItemMapper rnrLineItemMapper, LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper, CommaSeparator separator) {
+  public RequisitionRepository(RequisitionMapper requisitionMapper, RnrLineItemMapper rnrLineItemMapper, LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper, CommaSeparator separator, CommentMapper commentMapper) {
     this.requisitionMapper = requisitionMapper;
     this.rnrLineItemMapper = rnrLineItemMapper;
     this.lossesAndAdjustmentsMapper = lossesAndAdjustmentsMapper;
+    this.commentMapper = commentMapper;
     commaSeparator = separator;
   }
 
@@ -130,6 +134,14 @@ public class RequisitionRepository {
 
   public Integer getCategoryCount(Rnr requisition, boolean fullSupply) {
     return rnrLineItemMapper.getCategoryCount(requisition, fullSupply);
+  }
+
+  public ArrayList<Comment> getCommentsByRnrID(Integer rnrId) {
+    return commentMapper.getAllCommentsByRnrId(rnrId);
+  }
+
+  public void insertComment(Comment comment) {
+    commentMapper.insert(comment);
   }
 }
 

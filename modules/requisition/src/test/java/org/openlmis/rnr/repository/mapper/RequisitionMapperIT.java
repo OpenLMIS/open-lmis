@@ -14,10 +14,7 @@ import org.openlmis.core.builder.*;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.mapper.*;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
-import org.openlmis.rnr.domain.OrderBatch;
-import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrLineItem;
-import org.openlmis.rnr.domain.RnrStatus;
+import org.openlmis.rnr.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -75,7 +72,8 @@ public class RequisitionMapperIT {
   private FacilityApprovedProductMapper facilityApprovedProductMapper;
   @Autowired
   private ProgramMapper programMapper;
-
+  @Autowired
+  private CommentMapper commentMapper;
 
   private SupervisoryNode supervisoryNode;
 
@@ -100,7 +98,7 @@ public class RequisitionMapperIT {
   }
 
   @Test
-  public void shouldReturnRequisitionById() {
+  public void shouldGetRequisitionById() {
     Rnr requisition = insertRequisition(processingPeriod1, INITIATED);
     Product product = insertProduct(true, "P1");
     RnrLineItem fullSupplyLineItem = make(a(defaultRnrLineItem, with(fullSupply, true), with(productCode, product.getCode())));
@@ -109,6 +107,9 @@ public class RequisitionMapperIT {
     nonFullSupplyLineItem.setRnrId(requisition.getId());
     lineItemMapper.insert(fullSupplyLineItem);
     lineItemMapper.insert(nonFullSupplyLineItem);
+
+    Comment comment = new Comment(null, requisition.getId(), 1, "A comment");
+    commentMapper.insert(comment);
 
     Rnr fetchedRequisition = mapper.getById(requisition.getId());
 
@@ -120,6 +121,7 @@ public class RequisitionMapperIT {
     assertThat(fetchedRequisition.getStatus(), is(equalTo(INITIATED)));
     assertThat(fetchedRequisition.getFullSupplyLineItems().size(), is(1));
     assertThat(fetchedRequisition.getNonFullSupplyLineItems().size(), is(1));
+    assertThat(fetchedRequisition.getComments().size(), is(1));
   }
 
   @Test

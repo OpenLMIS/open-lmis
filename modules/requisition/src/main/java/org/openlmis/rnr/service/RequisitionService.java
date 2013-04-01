@@ -365,5 +365,13 @@ public class RequisitionService {
   public Integer getCategoryCount(Rnr requisition, boolean fullSupply) {
     return requisitionRepository.getCategoryCount(requisition, fullSupply);
   }
+
+  public void insertComment(Comment comment) {
+    requisitionRepository.insertComment(comment);
+  }
+
+  public List getCommentsByRnrId(Integer rnrId) {
+    return requisitionRepository.getCommentsByRnrID(rnrId);
+  }
 }
 

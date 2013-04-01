@@ -51,7 +51,9 @@ public interface RequisitionMapper {
     @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
       many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsByRnrId")),
     @Result(property = "nonFullSupplyLineItems", javaType = List.class, column = "id",
-      many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getNonFullSupplyRnrLineItemsByRnrId"))
+      many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getNonFullSupplyRnrLineItemsByRnrId")),
+    @Result(property = "comments", javaType = List.class, column = "id",
+      many = @Many(select = "org.openlmis.rnr.repository.mapper.CommentMapper.getAllCommentsByRnrId"))
   })
   Rnr getById(Integer rnrId);
 
