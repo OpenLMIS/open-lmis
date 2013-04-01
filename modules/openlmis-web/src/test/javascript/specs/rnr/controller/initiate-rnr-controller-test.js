@@ -42,6 +42,7 @@ describe('InitiateRnrController', function () {
     scope.selectedProgram = {"code":"hiv", "id":2};
     scope.selectedFacilityId = 1;
     scope.selectedPeriod = {"id":3};
+    $httpBackend.expectGET('/facility/1/program/2/rights.json').respond({rights:[{right:'CREATE_REQUISITION'}]});
     $httpBackend.expectGET('/requisitions.json?facilityId=1&periodId=3&programId=2').respond({"rnr":{"id":1, status:"INITIATED"}});
 
     scope.initRnr();
@@ -57,6 +58,7 @@ describe('InitiateRnrController', function () {
     scope.selectedFacilityId = 1;
     scope.selectedPeriod = {"id":3};
     spyOn(rootScope, 'hasPermission').andReturn(false);
+    $httpBackend.expectGET('/facility/1/program/2/rights.json').respond({rights:[{right:'AUTHORIZE_REQUISITION'}]});
     $httpBackend.expectGET('/requisitions.json?facilityId=1&periodId=3&programId=2').respond({"rnr":{"id":1, status:"INITIATED"}});
 
     scope.initRnr();
@@ -70,6 +72,8 @@ describe('InitiateRnrController', function () {
     scope.selectedFacilityId = 1;
     scope.selectedPeriod = {"id":3};
     spyOn(rootScope, 'hasPermission').andReturn(true);
+    $httpBackend.expectGET('/facility/1/program/2/rights.json').respond({rights:[{right:'CREATE_REQUISITION'}]});
+
     $httpBackend.expectGET('/requisitions.json?facilityId=1&periodId=3&programId=2').respond(null);
     $httpBackend.expectPOST('/requisitions.json?facilityId=1&periodId=3&programId=2').respond(400, {"error":"errorMessage"});
 
@@ -83,6 +87,8 @@ describe('InitiateRnrController', function () {
     scope.selectedProgram = {"code":"hiv", "id":2};
     scope.selectedFacilityId = 1;
     scope.selectedPeriod = {"id":3};
+    $httpBackend.expectGET('/facility/1/program/2/rights.json').respond({rights:[{right:'CREATE_REQUISITION'}]});
+
     $httpBackend.expectGET('/requisitions.json?facilityId=1&periodId=3&programId=2').respond(null);
     $httpBackend.expectPOST('/requisitions.json?facilityId=1&periodId=3&programId=2').respond({"rnr":{"id":1, status:"INITIATED"}});
 
@@ -98,6 +104,8 @@ describe('InitiateRnrController', function () {
     scope.selectedProgram = {"code":"hiv", "id":2};
     scope.selectedFacilityId = 1;
     scope.selectedPeriod = {"id":3};
+    $httpBackend.expectGET('/facility/1/program/2/rights.json').respond({rights:[{right:'AUTHORIZE_REQUISITION'}]});
+
     $httpBackend.expectGET('/requisitions.json?facilityId=1&periodId=3&programId=2').respond(null);
     spyOn(rootScope, 'hasPermission').andReturn(false);
 

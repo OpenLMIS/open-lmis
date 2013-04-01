@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function InitiateRnrController($scope, $location, $rootScope, Requisition, PeriodsForFacilityAndProgram, UserFacilityList, UserSupportedProgramInFacilityForAnOperation, UserSupervisedProgramList, UserSupervisedFacilitiesForProgram) {
+function InitiateRnrController($scope, $location, $rootScope, Requisition, PeriodsForFacilityAndProgram, UserFacilityList, UserSupportedProgramInFacilityForAnOperation, UserSupervisedProgramList, UserSupervisedFacilitiesForProgram, FacilityProgramRights) {
 
   var DEFAULT_FACILITY_MESSAGE = '--choose facility--';
   var DEFAULT_PROGRAM_MESSAGE = '--choose program--';
@@ -156,36 +156,47 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
 
     $scope.error = "";
     $scope.sourceUrl = $location.$$url;
+    var rights = [];
 
 
+    var hasPermission = function (permission) {
+      return _.find(rights, function (right) {
+        return right.right == permission
+      });
+    };
     var createRnrPath;
 
-    Requisition.get({facilityId:$scope.selectedFacilityId, programId:$scope.selectedProgram.id, periodId:$scope.selectedPeriod.id}, {},
-      function (data) {
-        if ((data.rnr == null || data.rnr == undefined) && !$rootScope.hasPermission('CREATE_REQUISITION')) {
-          $scope.error = "An R&R has not been initiated yet";
-          return;
-        }
+    FacilityProgramRights.get({facilityId:$scope.selectedFacilityId, programId:$scope.selectedProgram.id}, function (data) {
+      rights = data.rights;
 
-        if (data.rnr) {
-          if (data.rnr.status != 'SUBMITTED' && !$rootScope.hasPermission('CREATE_REQUISITION')) {
-            $scope.error = "An R&R has not been submitted yet";
+      Requisition.get({facilityId:$scope.selectedFacilityId, programId:$scope.selectedProgram.id, periodId:$scope.selectedPeriod.id}, {},
+        function (data) {
+          if ((data.rnr == null || data.rnr == undefined) && !hasPermission('CREATE_REQUISITION')) {
+            $scope.error = "An R&R has not been initiated yet";
             return;
           }
-          $scope.$parent.rnr = data.rnr;
-          createRnrPath = '/create-rnr/' + $scope.$parent.rnr.id + '/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + "?supplyType=full-supply&page=1";
-          $location.url(createRnrPath);
-        }
-        else {
-          Requisition.save({facilityId:$scope.selectedFacilityId, programId:$scope.selectedProgram.id, periodId:$scope.selectedPeriod.id}, {}, function (data) {
+
+          if (data.rnr) {
+            if (data.rnr.status != 'SUBMITTED' && !hasPermission('CREATE_REQUISITION')) {
+              $scope.error = "An R&R has not been submitted yet";
+              return;
+            }
             $scope.$parent.rnr = data.rnr;
             createRnrPath = '/create-rnr/' + $scope.$parent.rnr.id + '/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + "?supplyType=full-supply&page=1";
             $location.url(createRnrPath);
-          }, function (data) {
-            $scope.error = data.data.error ? data.data.error : "Requisition does not exist. Please initiate.";
-          })
-        }
-      }, {});
+          }
+          else {
+            Requisition.save({facilityId:$scope.selectedFacilityId, programId:$scope.selectedProgram.id, periodId:$scope.selectedPeriod.id}, {}, function (data) {
+              $scope.$parent.rnr = data.rnr;
+              createRnrPath = '/create-rnr/' + $scope.$parent.rnr.id + '/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + "?supplyType=full-supply&page=1";
+              $location.url(createRnrPath);
+            }, function (data) {
+              $scope.error = data.data.error ? data.data.error : "Requisition does not exist. Please initiate.";
+            })
+          }
+        }, {});
+
+    }, {});
   };
 }
 
