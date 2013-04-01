@@ -32,32 +32,30 @@ public class FacilityReportQueryBuilder {
         if (filter.getZoneId() != 0) {
              WHERE("geographiczoneid = #{filterCriteria.zoneId}");
         }
-       //  if (filterCriteria.getFacilityTypeId() != 0) {
-       //     WHERE("F.FIRST_NAME like ${firstName}");
-       // }
-
-        //ORDER_BY("F.LAST_NAME");
-        //LIMIT 10 OFFSET 10  // LIMIT pageSize OFFSET pageSize * (page-1)
-       // BEGIN(); // Clears ThreadLocal variable
-       // SELECT("P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME");
-       //SELECT("P.LAST_NAME, P.CREATED_ON, P.UPDATED_ON");
-       // FROM("PERSON P");
-       // FROM("ACCOUNT A");
-       // INNER_JOIN("DEPARTMENT D on D.ID = P.DEPARTMENT_ID");
-       // INNER_JOIN("COMPANY C on D.COMPANY_ID = C.ID");
-       // WHERE("P.ID = A.ID");
-       // WHERE("P.FIRST_NAME like ?");
-       // OR();
-       // WHERE("P.LAST_NAME like ?");
-       // GROUP_BY("P.ID");
-       // HAVING("P.LAST_NAME like ?");
-       // OR();
-       // HAVING("P.FIRST_NAME like ?");
-        if(sorter.getFacilityName().equalsIgnoreCase("asc") || sorter.getFacilityName().equalsIgnoreCase("desc")){
-            ORDER_BY("name");
+        if (filter.getFacilityTypeId() != 0) {
+            WHERE("typeid = #{filterCriteria.facilityTypeId}");
         }
-        //GROUP_BY("id");
-       // return SQL();
+
+        if(sorter.getFacilityName().equalsIgnoreCase("asc")){
+            ORDER_BY("name asc");
+        }
+        if(sorter.getFacilityName().equalsIgnoreCase("desc")){
+            ORDER_BY("name desc");
+        }
+
+        if(sorter.getCode().equalsIgnoreCase("asc")){
+            ORDER_BY("code asc");
+        }
+        if(sorter.getCode().equalsIgnoreCase("desc")){
+            ORDER_BY("code desc");
+        }
+
+        if(sorter.getFacilityType().equalsIgnoreCase("asc")){
+            ORDER_BY("typeid asc");
+        }
+        if(sorter.getFacilityType().equalsIgnoreCase("desc")){
+            ORDER_BY("typeid desc");
+        }
 
         return SQL();
     }
@@ -75,9 +73,9 @@ public class FacilityReportQueryBuilder {
         if (filter.getZoneId() != 0) {
             WHERE("geographiczoneid = #{filterCriteria.zoneId}");
         }
-
-        //GROUP_BY("id");
-
+        if (filter.getFacilityTypeId() != 0) {
+            WHERE("typeid = #{filterCriteria.facilityTypeId}");
+        }
         return SQL();
     }
 }
