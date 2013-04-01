@@ -16,6 +16,8 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import org.openqa.selenium.support.ui.Select;
 
+import java.io.IOException;
+
 
 public class TemplateConfigPage extends Page {
 
@@ -300,10 +302,11 @@ public class TemplateConfigPage extends Page {
     testWebDriver.sleep(100);
   }
 
-  public void clickSaveButton() {
+  public HomePage clickSaveButton() throws IOException{
     testWebDriver.waitForElementToAppear(SaveButton);
     SaveButton.click();
     testWebDriver.sleep(100);
+    return new HomePage(testWebDriver);
   }
 
   public void verifyErrorMessageDivTotalConsumedQuantity() {
@@ -366,7 +369,7 @@ public class TemplateConfigPage extends Page {
     SeleneseTestNgHelper.assertTrue("Success message should display", saveSuccessMsg.isDisplayed());
   }
 
-  private void verifyCAndEUserInputsAndShouldBeDisplayed() {
+  private void verifyCAndEUserInputsAndShouldBeDisplayed(String program) throws IOException {
     testWebDriver.waitForElementToAppear(SaveButton);
     unClickTotalConsumedQuantity();
     unClickStockOnHand();
@@ -396,7 +399,7 @@ public class TemplateConfigPage extends Page {
 
   }
 
-  private void verifyCDerivedEMustViceVersa() {
+  private void verifyCDerivedEMustViceVersa(String program) throws IOException {
     selectFromTotalConsumedQuantityDropDown("Calculated");
     selectFromStockOnHandDropDown("User Input");
     unClickStockOnHand();
@@ -408,24 +411,25 @@ public class TemplateConfigPage extends Page {
     clickStockOnHand();
     selectFromTotalConsumedQuantityDropDown("User Input");
     selectFromStockOnHandDropDown("Calculated");
-    clickSaveButton();
+    HomePage homePage = clickSaveButton();
     verifySaveSuccessDiv();
-
+    homePage.selectProgramToConfigTemplate(program);
     unClickTotalConsumedQuantity();
     clickSaveButton();
+
     verifyErrorMessageDivFooter();
     verifyErrorMessageDivTotalConsumedQuantity();
     verifyErrorMessageDivStockOnHand();
   }
 
-  public void verifyArithmeticValidations() {
-    verifyCAndEUserInputsAndShouldBeDisplayed();
+  public void verifyArithmeticValidations(String program) throws IOException {
+    verifyCAndEUserInputsAndShouldBeDisplayed(program);
     verifyArithmeticValidationOnOff();
-    verifyCDerivedEMustViceVersa();
+    verifyCDerivedEMustViceVersa(program);
 
   }
 
-  private void prepareDataForBusinessRuleCE() {
+  private void prepareDataForBusinessRuleCE()throws IOException {
     clickTotalConsumedQuantity();
     clickStockOnHand();
     selectFromTotalConsumedQuantityDropDown("Calculated");
@@ -440,18 +444,16 @@ public class TemplateConfigPage extends Page {
     verifyErrorMessageDivFooter();
   }
 
-  private void prepareDataForBusinessRuleWJ() {
+  private void prepareDataForBusinessRuleWJ() throws IOException{
     clickRequestedQuantity();
     unClickRequestedQuantityExplanation();
     clickSaveButton();
-
   }
 
-  private void prepareDataForBusinessRuleJW() {
+  private void prepareDataForBusinessRuleJW() throws IOException {
     unClickRequestedQuantity();
     clickRequestedQuantityExplanation();
     clickSaveButton();
-
   }
 
   private void verifyBusinessRuleJW() {
@@ -465,7 +467,7 @@ public class TemplateConfigPage extends Page {
   }
 
 
-  public void verifyBusinessRules() {
+  public void verifyBusinessRules() throws IOException {
     prepareDataForBusinessRuleCE();
     verifyBusinessRuleCE();
     prepareDataForBusinessRuleWJ();
@@ -548,15 +550,13 @@ public class TemplateConfigPage extends Page {
 
   }
 
-  public void alterTemplateLabelAndVisibility(String columnHeadingToBeAltered) {
+  public void alterTemplateLabelAndVisibility(String columnHeadingToBeAltered, String program) throws IOException {
     testWebDriver.waitForElementToAppear(SaveButton);
     beginningBalance.clear();
     beginningBalance.sendKeys(columnHeadingToBeAltered);
     remarksCheckBox.click();
     clickSaveButton();
     verifySuccessDiv();
-
-
   }
 
 

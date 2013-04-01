@@ -12,7 +12,6 @@ function ConfigureRnRTemplateController($scope, programs, $location) {
     $location.path('/create-rnr-template/' + id);
   };
 }
-;
 
 ConfigureRnRTemplateController.resolve = {
   programs:function ($q, Programs, $location, $route, $timeout) {

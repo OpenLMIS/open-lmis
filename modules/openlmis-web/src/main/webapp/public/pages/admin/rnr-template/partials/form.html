@@ -8,7 +8,7 @@
   <h2>Configure Report and Requisition Template</h2>
 
   <div class="info-box">
-    <p><strong>Program:</strong> {{ program.name }} <a href="/public/pages/admin/rnr-template/create.html">(Change)</a>
+    <p><strong>Program:</strong> {{ program.name }} <a ng-href="{{selectProgramUrl}}">(Change)</a>
     </p>
   </div>
 
@@ -18,7 +18,7 @@
     <span class="tpl-label">Label</span>
     <span class="tpl-source">Source</span>
   </div>
-  <form name="configureRnRTemplateForm" ng-submit="createProgramRnrTemplate()">
+  <form name="configureRnRTemplateForm" ng-submit="save()">
     <div class="rnr-template-columns">
       <ul ui-sortable
           ui-options="{update: update, handle: '.drag-handle', placeholder: 'sortable-placeholder', containment: '.content'}"
@@ -73,9 +73,9 @@
     <div form-toolbar class="action-buttons">
       <div class="form-cell button-row">
         <input type="submit" class="btn btn-primary save-button" value="Save"/>
+        <a ng-href="{{selectProgramUrl}}" class="btn btn-cancel cancel-button">Cancel</a>
       </div>
       <div class="toolbar-error" id="saveErrorMsgDiv" ng-bind="error" ng-show="error"></div>
-      <div class="toolbar-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"></div>
     </div>
   </form>
 </div>

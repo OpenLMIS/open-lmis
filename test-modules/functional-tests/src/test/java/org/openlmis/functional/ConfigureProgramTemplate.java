@@ -59,7 +59,7 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
     String newColumnHeading = "Altered";
-    templateConfigPage.alterTemplateLabelAndVisibility(newColumnHeading);
+    templateConfigPage.alterTemplateLabelAndVisibility(newColumnHeading , program);
     setupTestUserRoleRightsData(userSIC);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
     dbWrapper.insertRoleAssignment("200", "store in-charge");
@@ -100,7 +100,7 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
     TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
-    templateConfigPage.verifyArithmeticValidations();
+    templateConfigPage.verifyArithmeticValidations(program);
     templateConfigPage.verifyBusinessRules();
 
 

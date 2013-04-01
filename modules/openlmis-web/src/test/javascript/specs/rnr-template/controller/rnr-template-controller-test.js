@@ -8,15 +8,16 @@ describe('Rnr Template controllers', function () {
 
   describe('SaveRnrTemplateController', function () {
 
-    var scope, ctrl, $httpBackend, location, rnrColumnList, sources, rnrTemplateForm, program;
+    var scope, ctrl, $httpBackend, location, rnrColumnList, sources, rnrTemplateForm, program, routeParams;
 
     beforeEach(module('openlmis.services'));
     beforeEach(module('openlmis.localStorage'));
 
-    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location) {
+    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location, $routeParams) {
       scope = $rootScope.$new();
       $httpBackend = _$httpBackend_;
       location = $location;
+      routeParams = $routeParams;
 
       rnrColumnList = [
         {"id":1, "name":"product_code", "sourceConfigurable":true, "source":{'code':"U"}, "formulaValidationRequired":true, "visible":true},
@@ -30,12 +31,29 @@ describe('Rnr Template controllers', function () {
 
       rnrTemplateForm = { 'rnrColumns':rnrColumnList, 'sources':sources};
       program = {id:1, name:'HIV'};
-      ctrl = $controller(SaveRnrTemplateController, {$scope:scope, rnrTemplateForm:rnrTemplateForm, program:program});
+      ctrl = $controller(SaveRnrTemplateController, {$scope:scope, $location: location, rnrTemplateForm:rnrTemplateForm, program:program});
 
     }));
 
     it('should set program in scope', function () {
       expect(program).toEqual(scope.program);
+    })
+
+    it('should save R&R template', function() {
+      routeParams.programId = 1;
+      $httpBackend.expect('POST', '/program/1/rnr-template.json').respond(200);
+      scope.save();
+      $httpBackend.flush();
+    });
+
+    it('should save R&R template and redirect to select program page', function() {
+      spyOn(location, 'path').andCallThrough();
+      routeParams.programId = 1;
+      $httpBackend.expect('POST', '/program/1/rnr-template.json').respond(200);
+      scope.save();
+      $httpBackend.flush();
+      expect(location.path).toHaveBeenCalledWith('select-program');
+      expect('Template saved successfully!').toEqual(scope.$parent.message);
     })
 
     it('should get list of rnr columns for configuring', function () {

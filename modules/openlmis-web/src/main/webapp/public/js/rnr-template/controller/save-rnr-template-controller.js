@@ -4,11 +4,13 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageService, $routeParams, $http) {
+function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageService, $routeParams, RnRColumnList, $location) {
   $scope.rnrColumns = rnrTemplateForm.rnrColumns;
   $scope.sources = rnrTemplateForm.sources;
   $scope.validateFormula = $scope.rnrColumns[0].formulaValidationRequired;
   $scope.program = program;
+  $scope.$parent.message = "";
+  $scope.selectProgramUrl = "/public/pages/admin/rnr-template/create.html#/select-program";
 
   var setRnRTemplateValidateFlag = function () {
     $.each($scope.rnrColumns, function (index, column) {
@@ -16,18 +18,19 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
     });
   };
 
-  $scope.createProgramRnrTemplate = function () {
+  $scope.save = function () {
     setRnRTemplateValidateFlag();
-    $http.post('/program/' + $routeParams.programId + '/rnr-template.json', $scope.rnrColumns).success(function (data) {
-      $scope.message = "Template saved successfully!";
+    RnRColumnList.post({programId: $routeParams.programId}, $scope.rnrColumns, function () {
+      $scope.$parent.message = "Template saved successfully!";
       $scope.error = "";
       $scope.errorMap = undefined;
-    }).error(function (data) {
-        if (data != null) {
-          $scope.errorMap = data;
-        }
-        updateErrorMessage("Save Failed!");
-      });
+      $location.path('select-program');
+    }, function (data) {
+      if (data != null) {
+        $scope.errorMap = data.data;
+      }
+      updateErrorMessage("Save Failed!");
+    });
   };
 
   $scope.update = function () {
