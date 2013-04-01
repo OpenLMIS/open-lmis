@@ -1,4 +1,4 @@
-package org.openlmis.web.util;
+package org.openlmis.report.util;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,11 +16,11 @@ public class JasperReportCompiler {
 
     @Getter
     @Setter
-    private String reportPath = "src/main/webapp/WEB-INF/reports/resources";
+    private String reportPath = "src/main/template";
 
     @Getter
     @Setter
-    private String destinationPath = "src/main/webapp/WEB-INF/reports/";
+    private String destinationPath = "src/main/resources/";
 
     public static void main(String[] args) {
 
