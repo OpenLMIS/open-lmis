@@ -63,7 +63,6 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadGeographicZoneInvalid();
 
     uploadPage.uploadGeographicZone(2);
-    uploadPage.verifySuccessMessageOnUploadScreen();
 
     uploadPage.uploadFacilitiesNotLowestGeoCode();
 
