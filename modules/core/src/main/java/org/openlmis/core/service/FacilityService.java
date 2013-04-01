@@ -81,8 +81,7 @@ public class FacilityService {
       programSupportedRepository.addSupportedProgram(programSupported);
     }
     else{
-      programSupportedRepository.deleteSupportedPrograms(facilityId,programId);
-      programSupportedRepository.addSupportedProgram(programSupported);
+      programSupportedRepository.updateSupportedProgram(programSupported);
     }
   }
 

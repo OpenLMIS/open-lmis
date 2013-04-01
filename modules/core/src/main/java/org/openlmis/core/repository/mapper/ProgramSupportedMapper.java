@@ -37,4 +37,8 @@ public interface ProgramSupportedMapper {
     @Result(property = "program", javaType = Program.class, column = "programId", one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
   })
   List<ProgramSupported> getAllByFacilityId(Integer facilityId);
+
+  @Update("UPDATE programs_supported set active=#{active}, startDate=#{startDate}, modifiedDate=#{modifiedDate}, modifiedBy=#{modifiedBy}" +
+    "where facilityId=#{facilityId} AND programId=#{program.id}")
+  void updateSupportedProgram(ProgramSupported programSupported);
 }

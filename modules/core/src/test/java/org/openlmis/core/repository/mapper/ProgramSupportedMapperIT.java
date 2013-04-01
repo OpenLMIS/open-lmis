@@ -106,4 +106,26 @@ public class ProgramSupportedMapperIT {
     assertThat(programsSupported.get(0).getProgram().getCode(),is(programSupported.getProgram().getCode()));
     assertThat(programsSupported.get(0).getProgram().getName(),is(programSupported.getProgram().getName()));
   }
+
+  @Test
+  public void shouldUpdateSupportedProgram() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    facilityMapper.insert(facility);
+
+    Program program = make(a(defaultProgram, with(programCode, YELLOW_FEVER)));
+    programMapper.insert(program);
+
+    ProgramSupported programSupported = make(a(defaultProgramSupported,
+      with(supportedFacilityId, facility.getId()),
+      with(supportedProgram, program)));
+    programSupportedMapper.addSupportedProgram(programSupported);
+
+    programSupported.setActive(Boolean.FALSE);
+
+    programSupportedMapper.updateSupportedProgram(programSupported);
+
+    ProgramSupported programSupportedFromDb = programSupportedMapper.getBy(programSupported.getFacilityId(),programSupported.getProgram().getId());
+
+    assertThat(programSupportedFromDb.getActive(),is(Boolean.FALSE));
+  }
 }

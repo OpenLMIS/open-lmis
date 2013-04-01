@@ -346,8 +346,9 @@ public class FacilityServiceTest {
 
     facilityService.uploadSupportedProgram(programSupported);
 
-    verify(programSupportedRepository).deleteSupportedPrograms(1,2);
-    verify(programSupportedRepository).addSupportedProgram(programSupported);
+    assertThat(programSupported.getFacilityId(),is(1));
+    assertThat(programSupported.getProgram().getId(),is(2));
+    verify(programSupportedRepository).updateSupportedProgram(programSupported);
   }
 
   private ProgramSupported createSupportedProgram(String facilityCode, String programCode, boolean active, Date startDate) {

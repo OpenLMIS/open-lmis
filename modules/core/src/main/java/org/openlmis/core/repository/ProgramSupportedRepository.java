@@ -87,4 +87,8 @@ public class ProgramSupportedRepository {
   public ProgramSupported geyByFacilityIdAndProgramId(Integer facilityId, Integer programId) {
     return programSupportedMapper.getBy(facilityId,programId);
   }
+
+  public void updateSupportedProgram(ProgramSupported programSupported) {
+    programSupportedMapper.updateSupportedProgram(programSupported);
+  }
 }

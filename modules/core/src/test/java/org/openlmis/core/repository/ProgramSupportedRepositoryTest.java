@@ -160,4 +160,13 @@ public class ProgramSupportedRepositoryTest {
     when(programSupportedMapper.getBy(anyInt(),anyInt())).thenReturn(new ProgramSupported());
     verify(programSupportedMapper).getBy(1,1);
   }
+
+  @Test
+  public void shouldUpdateProgramSupported() throws Exception{
+    ProgramSupported programSupported = new ProgramSupported();
+    doNothing().when(programSupportedMapper).updateSupportedProgram(programSupported);
+    programSupportedRepository.updateSupportedProgram(programSupported);
+
+    verify(programSupportedMapper).updateSupportedProgram(programSupported);
+  }
 }
