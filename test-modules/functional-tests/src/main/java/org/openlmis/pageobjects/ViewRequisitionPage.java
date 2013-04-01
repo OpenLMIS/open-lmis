@@ -72,6 +72,11 @@ public class ViewRequisitionPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@class='ngCell  col18 colt18']/div/span")
   private static WebElement approveQuantity;
 
+  @FindBy(how = How.ID, using = "nonFullSupplyTab")
+  private static WebElement nonFullSupplyTab;
+
+  @FindBy(how = How.ID, using = "fullSupplyTab")
+  private static WebElement fullSupplyTab;
 
   public ViewRequisitionPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -138,6 +143,18 @@ public class ViewRequisitionPage extends Page {
     testWebDriver.waitForElementToAppear(viewRnRList);
     viewRnRList.click();
   }
+
+    public void clickFullSupplyTab()
+    {
+        testWebDriver.waitForElementToAppear(fullSupplyTab);
+        fullSupplyTab.click();
+    }
+
+    public void clickNonFullSupplyTab()
+    {
+        testWebDriver.waitForElementToAppear(nonFullSupplyTab);
+        nonFullSupplyTab.click();
+    }
 
   public void verifyApprovedQuantityFieldPresent()
   {

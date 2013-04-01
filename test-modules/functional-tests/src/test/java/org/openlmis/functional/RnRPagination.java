@@ -13,6 +13,7 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.InitiateRnRPage;
 import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pageobjects.ViewRequisitionPage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
@@ -52,28 +53,11 @@ public class RnRPagination extends TestCaseHelper {
       verifyPreviousAndFirstLinksDisabled();
       verifyDisplayOrderFullSupply(20);
 
-      //initiateRnRPage.PopulateMandatoryFullSupplyDetails(21,20);
+      initiateRnRPage.PopulateMandatoryFullSupplyDetails(21,20);
 
       testWebDriver.getElementByXpath("//a[contains(text(), '2') and @class='ng-binding']").click();
       SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//table[@id='fullSupplyTable']/tbody[1]/tr[1]/td").getText(),"Antibiotics");
-      verifyNextAndLastLinksDisabled();
-      verifyPreviousAndFirstLinksEnabled();
-
-      testWebDriver.getElementByXpath("//a[contains(text(), '«')]").click();
-      verifyNextAndLastLinksEnabled();
-      verifyPreviousAndFirstLinksDisabled();
-
-      testWebDriver.getElementByXpath("//a[contains(text(), '>')]").click();
-      verifyNextAndLastLinksDisabled();
-      verifyPreviousAndFirstLinksEnabled();
-
-      testWebDriver.getElementByXpath("//a[contains(text(), '<')]").click();
-      verifyNextAndLastLinksEnabled();
-      verifyPreviousAndFirstLinksDisabled();
-
-      testWebDriver.getElementByXpath("//a[contains(text(), '»')]").click();
-      verifyNextAndLastLinksDisabled();
-      verifyPreviousAndFirstLinksEnabled();
+      verifyPageLinksFromLastPage();
 
       initiateRnRPage.addMultipleNonFullSupplyLineItems(21,false);
       verifyDisplayOrderNonFullSupply(20);
@@ -83,25 +67,35 @@ public class RnRPagination extends TestCaseHelper {
 
       testWebDriver.getElementByXpath("//a[contains(text(), '2') and @class='ng-binding']").click();
       SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//table[@id='nonFullSupplyTable']/tbody[1]/tr[1]/td").getText(),"Antibiotics");
-      verifyNextAndLastLinksDisabled();
-      verifyPreviousAndFirstLinksEnabled();
+      verifyPageLinksFromLastPage();
 
-      testWebDriver.getElementByXpath("//a[contains(text(), '«')]").click();
-      verifyPreviousAndFirstLinksDisabled();
+      initiateRnRPage.submitRnR();
+
+      dbWrapper.updateRequisitionStatus("AUTHORIZED");
+      ViewRequisitionPage viewRequisitionPage = homePage.navigateViewRequisition();
+      viewRequisitionPage.enterViewSearchCriteria();
+      viewRequisitionPage.clickSearch();
+      viewRequisitionPage.clickRnRList();
+
+      verifyNumberOfPageLinks(21,20);
       verifyNextAndLastLinksEnabled();
-
-      testWebDriver.getElementByXpath("//a[contains(text(), '>')]").click();
-      verifyNextAndLastLinksDisabled();
-      verifyPreviousAndFirstLinksEnabled();
-
-      testWebDriver.getElementByXpath("//a[contains(text(), '<')]").click();
       verifyPreviousAndFirstLinksDisabled();
-      verifyNextAndLastLinksEnabled();
+      //verifyDisplayOrderFullSupply(20);
 
-      testWebDriver.getElementByXpath("//a[contains(text(), '»')]").click();
-      verifyNextAndLastLinksDisabled();
+     testWebDriver.getElementByXpath("//a[contains(text(), '2') and @class='ng-binding']").click();
+     //SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//table[@id='fullSupplyTable']/tbody[1]/tr[1]/td").getText(),"Antibiotics");
+     verifyPageLinksFromLastPage();
 
-      //initiateRnRPage.submitRnR();
+     viewRequisitionPage.clickNonFullSupplyTab();
+
+     //verifyDisplayOrderNonFullSupply(20);
+     verifyNumberOfPageLinks(21,20);
+     verifyPreviousAndFirstLinksDisabled();
+     verifyNextAndLastLinksEnabled();
+
+     testWebDriver.getElementByXpath("//a[contains(text(), '2') and @class='ng-binding']").click();
+     //SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//table[@id='nonFullSupplyTable']/tbody[1]/tr[1]/td").getText(),"Antibiotics");
+     verifyPageLinksFromLastPage();
 
   }
 
@@ -182,6 +176,27 @@ public class RnRPagination extends TestCaseHelper {
         initiateRnRPage.addMultipleNonFullSupplyLineItems(11,true);
         verifyCategoryDefaultDisplayOrderNonFullSupply();
     }
+
+    public void verifyPageLinksFromLastPage() throws Exception {
+        verifyNextAndLastLinksDisabled();
+        verifyPreviousAndFirstLinksEnabled();
+
+        testWebDriver.getElementByXpath("//a[contains(text(), '«')]").click();
+        verifyNextAndLastLinksEnabled();
+        verifyPreviousAndFirstLinksDisabled();
+
+        testWebDriver.getElementByXpath("//a[contains(text(), '>')]").click();
+        verifyNextAndLastLinksDisabled();
+        verifyPreviousAndFirstLinksEnabled();
+
+        testWebDriver.getElementByXpath("//a[contains(text(), '<')]").click();
+        verifyNextAndLastLinksEnabled();
+        verifyPreviousAndFirstLinksDisabled();
+
+        testWebDriver.getElementByXpath("//a[contains(text(), '»')]").click();
+        verifyNextAndLastLinksDisabled();
+        verifyPreviousAndFirstLinksEnabled();
+  }
 
     public void verifyNumberOfPageLinks(int numberOfProducts, int numberOfLineItemsPerPage) throws Exception {
       int numberOfPages= numberOfProducts/numberOfLineItemsPerPage;
