@@ -20,9 +20,6 @@ public interface ProgramMapper {
   @Options(useGeneratedKeys = true)
   Integer insert(Program program);
 
-  @Select("SELECT * FROM programs WHERE active=true")
-  List<Program> getAllActive();
-
   @Select("SELECT P.* " +
     "FROM programs P, programs_supported PS " +
     "WHERE P.id = PS.programId AND " +
@@ -31,7 +28,7 @@ public interface ProgramMapper {
     "P.active = true")
   List<Program> getActiveByFacility(Integer facilityId);
 
-  @Select("SELECT * FROM programs")
+  @Select("SELECT * FROM programs ORDER BY templateConfigured DESC, name")
   List<Program> getAll();
 
   @Select("SELECT " +

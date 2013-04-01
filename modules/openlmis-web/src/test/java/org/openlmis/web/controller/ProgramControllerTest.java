@@ -28,7 +28,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
-import static org.openlmis.core.domain.Right.*;
+import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
+import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.web.controller.ProgramController.PROGRAM;
 import static org.openlmis.web.controller.ProgramController.PROGRAMS;
 
 public class ProgramControllerTest {
@@ -54,25 +56,16 @@ public class ProgramControllerTest {
   }
 
   @Test
-  public void shouldGetListOfPrograms() throws Exception {
-    List<Program> expectedPrograms = new ArrayList<Program>();
-
-    when(programService.getAllActive()).thenReturn(expectedPrograms);
-
-    List<Program> result = controller.getAllActivePrograms();
-
-    verify(programService).getAllActive();
-    assertThat(result, is(equalTo(expectedPrograms)));
-  }
-
-  @Test
   public void shouldGetListOfUserSupportedProgramsForAFacilityForGivenRights() {
     Program program = new Program();
     List<Program> programs = new ArrayList<>(Arrays.asList(program));
 
     Integer facilityId = 12345;
 
-    Set<Right> rights = new LinkedHashSet<Right>() {{ add(Right.CREATE_REQUISITION); add(Right.AUTHORIZE_REQUISITION);}};
+    Set<Right> rights = new LinkedHashSet<Right>() {{
+      add(Right.CREATE_REQUISITION);
+      add(Right.AUTHORIZE_REQUISITION);
+    }};
 
     when(programService.getProgramsSupportedByFacilityForUserWithRights(facilityId, USER_ID, Right.CREATE_REQUISITION, Right.AUTHORIZE_REQUISITION)).thenReturn(programs);
 
@@ -106,4 +99,13 @@ public class ProgramControllerTest {
     assertThat(actual, is(equalTo(expectedPrograms)));
   }
 
+  @Test
+  public void shouldGetProgramById() throws Exception {
+    Program expectedProgram = new Program();
+    when(programService.getById(1)).thenReturn(expectedProgram);
+    ResponseEntity<OpenLmisResponse> response = controller.get(1);
+
+    assertThat((Program) response.getBody().getData().get(PROGRAM), is(expectedProgram));
+    verify(programService).getById(1);
+  }
 }

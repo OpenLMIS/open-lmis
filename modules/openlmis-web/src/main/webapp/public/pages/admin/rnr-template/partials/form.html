@@ -6,8 +6,10 @@
 
 <div>
   <h2>Configure Report and Requisition Template</h2>
+
   <div class="info-box">
-    <p><strong>Program:</strong> {{ $parent.program.name }} <a href="/public/pages/admin/rnr-template/create.html">(Change)</a></p>
+    <p><strong>Program:</strong> {{ program.name }} <a href="/public/pages/admin/rnr-template/create.html">(Change)</a>
+    </p>
   </div>
 
   <div class="rnr-template-head">
@@ -18,33 +20,37 @@
   </div>
   <form name="configureRnRTemplateForm" ng-submit="createProgramRnrTemplate()">
     <div class="rnr-template-columns">
-      <ul ui-sortable ui-options="{update: update, handle: '.drag-handle', placeholder: 'sortable-placeholder', containment: '.content'}" ng-model="rnrColumns" id="sortable">
+      <ul ui-sortable
+          ui-options="{update: update, handle: '.drag-handle', placeholder: 'sortable-placeholder', containment: '.content'}"
+          ng-model="rnrColumns" id="sortable">
         <li id="{{rnrColumn.indicator}}" ng-repeat="rnrColumn in rnrColumns">
-         <div class="drag-handle"></div>
-        <span class="tpl-visible">
+          <div class="drag-handle"></div>
+          <span class="tpl-visible">
             <input type="checkbox" ng-model="rnrColumn.visible" ng-click="update()" ng-disabled="rnrColumn.mandatory"/>
-        </span>
-        <span class="tpl-indicator">
-          <div class="indicator" ng-bind="rnrColumn.indicator"></div>
-        </span>
+          </span>
+          <span class="tpl-indicator">
+            <div class="indicator" ng-bind="rnrColumn.indicator"></div>
+          </span>
           <input type="hidden" ng-model="rnrColumn.id" value="{{ rnrColumn.id }}"/>
-        <span class="tpl-label">
-          <input name="label" type="text" ng-model="rnrColumn.label" required/>
-          <span class="col-desc" ng-bind="rnrColumn.description"></span>
-        </span>
-        <input type="hidden" class="rnr-column-position" ng-model="rnrColumn.position" value="{{ rnrColumn.position }}"/>
-        <span class="tpl-source">
+          <span class="tpl-label">
+            <input name="label" type="text" ng-model="rnrColumn.label" required/>
+            <span class="col-desc" ng-bind="rnrColumn.description"></span>
+          </span>
+          <input type="hidden" class="rnr-column-position" ng-model="rnrColumn.position"
+                 value="{{ rnrColumn.position }}"/>
+          <span class="tpl-source">
             <span ng-show="rnrColumn.sourceConfigurable">
-                <select ng-model="rnrColumn.source.code" ng-options="c.code as c.description for c in sources" ng-change= "setArithmeticValidationMessageShown()">
-                </select>
+              <select ng-model="rnrColumn.source.code" ng-options="c.code as c.description for c in sources"
+                      ng-change="setArithmeticValidationMessageShown()">
+              </select>
             </span>
             <span ng-hide="rnrColumn.sourceConfigurable" ng-bind="rnrColumn.source.description"></span>
             <br/>
-            <a class="rnr-column-formula" href="javascript:void(0);" ng-bind="rnrColumn.formula" ></a>
-        </span>
-        <span class="tpl-error" ng-show="errorMap[rnrColumn.name]">
+            <a class="rnr-column-formula" href="javascript:void(0);" ng-bind="rnrColumn.formula"></a>
+          </span>
+          <span class="tpl-error" ng-show="errorMap[rnrColumn.name]">
             <div class="alert alert-error" ng-bind="errorMap[rnrColumn.name]"></div>
-        </span>
+          </span>
         </li>
       </ul>
     </div>
@@ -52,11 +58,13 @@
     <div class="alert alert-info arithmetic-valid-msg" ng-show="arithmeticValidationMessageShown">
       <div class="row-fluid">
         <div class="span9">
-          Total Quantity Consumed (C) and Stock On Hand (E) are configured as user inputs. Validation of inputs (C = A + B +/- D -E) is <strong>{{arithmeticValidationStatusLabel}}</strong>.
+          Total Quantity Consumed (C) and Stock On Hand (E) are configured as user inputs. Validation of inputs (C = A +
+          B +/- D -E) is <strong>{{arithmeticValidationStatusLabel}}</strong>.
           {{arithmeticValidationMessage}}
         </div>
         <div class="span3">
-          <a href="javascript:void(0);" class="btn btn-primary btn-mini pull-right" ng-click= "toggleValidateFormulaFlag()">Turn {{arithmeticValidationToggleLabel}}</a>
+          <a href="javascript:void(0);" class="btn btn-primary btn-mini pull-right"
+             ng-click="toggleValidateFormulaFlag()">Turn {{arithmeticValidationToggleLabel}}</a>
         </div>
       </div>
     </div>
@@ -64,7 +72,7 @@
 
     <div form-toolbar class="action-buttons">
       <div class="form-cell button-row">
-        <input type="submit" class="btn btn-primary save-button" value="Save" />
+        <input type="submit" class="btn btn-primary save-button" value="Save"/>
       </div>
       <div class="toolbar-error" id="saveErrorMsgDiv" ng-bind="error" ng-show="error"></div>
       <div class="toolbar-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"></div>

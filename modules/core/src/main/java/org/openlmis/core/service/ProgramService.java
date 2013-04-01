@@ -29,10 +29,6 @@ public class ProgramService {
     this.programSupportedRepository = programSupportedRepository;
   }
 
-  public List<Program> getAllActive() {
-    return programRepository.getAllActive();
-  }
-
   public List<Program> getByFacility(Integer facilityId) {
     return programRepository.getByFacility(facilityId);
   }

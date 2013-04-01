@@ -8,7 +8,7 @@ describe('Rnr Template controllers', function () {
 
   describe('SaveRnrTemplateController', function () {
 
-    var scope, ctrl, $httpBackend, location, rnrColumnList, sources, rnrTemplateForm;
+    var scope, ctrl, $httpBackend, location, rnrColumnList, sources, rnrTemplateForm, program;
 
     beforeEach(module('openlmis.services'));
     beforeEach(module('openlmis.localStorage'));
@@ -19,8 +19,8 @@ describe('Rnr Template controllers', function () {
       location = $location;
 
       rnrColumnList = [
-        {"id":1, "name":"product_code", "sourceConfigurable":true, "source": {'code' : "U"}, "formulaValidationRequired": true, "visible" : true},
-        {"id":2, "name":"product", "sourceConfigurable":true, "source": {'code' : "U"}, "formulaValidationRequired": true, "visible" : true}
+        {"id":1, "name":"product_code", "sourceConfigurable":true, "source":{'code':"U"}, "formulaValidationRequired":true, "visible":true},
+        {"id":2, "name":"product", "sourceConfigurable":true, "source":{'code':"U"}, "formulaValidationRequired":true, "visible":true}
       ];
 
       sources = [
@@ -28,10 +28,15 @@ describe('Rnr Template controllers', function () {
         {"code":"C", "description":"Calculated"}
       ];
 
-      rnrTemplateForm = { 'rnrColumns': rnrColumnList, 'sources': sources};
-      ctrl = $controller(SaveRnrTemplateController, {$scope:scope,rnrTemplateForm: rnrTemplateForm});
+      rnrTemplateForm = { 'rnrColumns':rnrColumnList, 'sources':sources};
+      program = {id:1, name:'HIV'};
+      ctrl = $controller(SaveRnrTemplateController, {$scope:scope, rnrTemplateForm:rnrTemplateForm, program:program});
 
     }));
+
+    it('should set program in scope', function () {
+      expect(program).toEqual(scope.program);
+    })
 
     it('should get list of rnr columns for configuring', function () {
       expect(scope.rnrColumns).toEqual(rnrColumnList);
@@ -42,7 +47,7 @@ describe('Rnr Template controllers', function () {
       expect(scope.validateFormula).toBeTruthy();
     });
 
-    it('should toggle arithmetic validation flag', function() {
+    it('should toggle arithmetic validation flag', function () {
       scope.validateFormula = true;
       scope.toggleValidateFormulaFlag();
       expect(scope.validateFormula).toBeFalsy();
@@ -54,13 +59,13 @@ describe('Rnr Template controllers', function () {
       expect(scope.arithmeticValidationToggleLabel).toEqual("OFF");
     });
 
-    it('should set arithmetic validation message shown flag to True', function() {
+    it('should set arithmetic validation message shown flag to True', function () {
       scope.rnrColumns = rnrColumnList;
       scope.setArithmeticValidationMessageShown();
       expect(scope.arithmeticValidationMessageShown).toBeTruthy();
     });
 
-    it('should set arithmetic validation message shown flag to False', function() {
+    it('should set arithmetic validation message shown flag to False', function () {
       scope.rnrColumns = rnrColumnList;
       scope.rnrColumns[0].source.code = 'C';
       scope.setArithmeticValidationMessageShown();

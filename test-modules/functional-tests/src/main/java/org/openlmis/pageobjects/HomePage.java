@@ -74,9 +74,6 @@ public class HomePage extends Page {
   @FindBy(how = How.ID, using = "selectProgram")
   private static WebElement ProgramDropDown;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Next')]")
-  private static WebElement NextButton;
-
   @FindBy(how = How.LINK_TEXT, using = "Requisitions")
   private static WebElement requisitionsLink;
 
@@ -152,8 +149,8 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col2 colt2']/span")
   private static WebElement endDate;
 
-    @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
-    private static WebElement errorMsg;
+  @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
+  private static WebElement errorMsg;
 
 
   public HomePage(TestWebDriver driver) throws IOException {
@@ -187,23 +184,20 @@ public class HomePage extends Page {
     return new CreateFacilityPage(testWebDriver);
   }
 
-  private void clickCreateFacilityButton()
-  {
+  private void clickCreateFacilityButton() {
     testWebDriver.waitForElementToAppear(createFacility);
     testWebDriver.sleep(1000);
     testWebDriver.click(createFacility);
   }
 
-  private void verifyHeader(String headingToVerify)
-  {
+  private void verifyHeader(String headingToVerify) {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(facilityHeader);
     SeleneseTestNgHelper.assertEquals(facilityHeader.getText().trim(), headingToVerify);
   }
 
 
-  private void verifyTabs()
-  {
+  private void verifyTabs() {
     testWebDriver.waitForElementToAppear(facilitiesTab);
     SeleneseTestNgHelper.assertTrue(facilitiesTab.isDisplayed());
     SeleneseTestNgHelper.assertTrue(rolesTab.isDisplayed());
@@ -222,8 +216,10 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(RnRTemplateConfigTab);
     testWebDriver.keyPress(RnRTemplateConfigTab);
     //RnRTemplateConfigTab.click();
-    testWebDriver.selectByVisibleText(ProgramDropDown, programme);
-    NextButton.click();
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementById(programme));
+    //testWebDriver.selectByVisibleText(ProgramDropDown, programme);
+    testWebDriver.getElementById(programme).click();
+
     return new TemplateConfigPage(testWebDriver);
   }
 
@@ -246,10 +242,10 @@ public class HomePage extends Page {
   }
 
   public void verifySubMenuItems(String[] expectedSubMenuItem) throws IOException {
-      testWebDriver.waitForElementToAppear(requisitionsLink);
-      testWebDriver.keyPress(requisitionsLink);
-      String[] subMenuItem = SubMenuItem.getText().split("\n");
-      SeleneseTestNgHelper.assertEquals(subMenuItem, expectedSubMenuItem);
+    testWebDriver.waitForElementToAppear(requisitionsLink);
+    testWebDriver.keyPress(requisitionsLink);
+    String[] subMenuItem = SubMenuItem.getText().split("\n");
+    SeleneseTestNgHelper.assertEquals(subMenuItem, expectedSubMenuItem);
   }
 
 
@@ -259,7 +255,6 @@ public class HomePage extends Page {
 
     return new InitiateRnRPage(testWebDriver);
   }
-
 
 
   public ViewRequisitionPage navigateViewRequisition() throws IOException {
@@ -347,8 +342,8 @@ public class HomePage extends Page {
     return new OrderPage(testWebDriver);
   }
 
-    public void verifyErrorMessage() {
-        testWebDriver.waitForElementToAppear(errorMsg);
-        SeleneseTestNgHelper.assertEquals(errorMsg.getText().trim(), "An R&R has not been initiated yet");
-    }
+  public void verifyErrorMessage() {
+    testWebDriver.waitForElementToAppear(errorMsg);
+    SeleneseTestNgHelper.assertEquals(errorMsg.getText().trim(), "An R&R has not been initiated yet");
+  }
 }

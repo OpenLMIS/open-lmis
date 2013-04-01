@@ -9,7 +9,7 @@ angular.module('createRnRTemplate', ['openlmis']).config(['$routeProvider', func
   $routeProvider.
     when('/select-program', {
       controller:ConfigureRnRTemplateController,
-      templateUrl:'../select-program.html',
+      templateUrl:'partials/select-program.html',
       resolve:ConfigureRnRTemplateController.resolve }).
 
     when('/create-rnr-template/:programId', {

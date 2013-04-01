@@ -32,10 +32,6 @@ public class ProgramRepository {
     this.mapper = programMapper;
   }
 
-  public List<Program> getAllActive() {
-    return mapper.getAllActive();
-  }
-
   public List<Program> getByFacility(Integer facilityId) {
     return mapper.getByFacilityId(facilityId);
   }

@@ -24,7 +24,6 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.lang.Boolean.FALSE;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
@@ -63,13 +62,6 @@ public class ProgramMapperIT extends SpringIntegrationTest {
   SupervisoryNodeMapper supervisoryNodeMapper;
 
   @Test
-  public void shouldGetAllActiveProgram() {
-    List<Program> programs = programMapper.getAllActive();
-    assertEquals(4, programs.size());
-    assertThat(programs, hasItem(new Program(PROGRAM_ID, PROGRAM_CODE, PROGRAM_CODE, PROGRAM_CODE, true, false)));
-  }
-
-  @Test
   public void shouldGetProgramsWhichAreActiveByFacilityCode() {
     Facility facility = make(a(FacilityBuilder.defaultFacility));
     facilityMapper.insert(facility);
@@ -88,6 +80,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
   public void shouldGetAllPrograms() throws Exception {
     List<Program> programs = programMapper.getAll();
     assertEquals(4, programs.size());
+    assertThat(programs.get(0).getCode(), is("ESS_MEDS"));
   }
 
   @Test
