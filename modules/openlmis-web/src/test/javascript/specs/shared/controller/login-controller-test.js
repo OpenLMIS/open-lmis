@@ -10,9 +10,9 @@ describe("LoginController", function () {
 
   beforeEach(module('openlmis.localStorage'));
 
-  var scope, ctrl,httpBackend,messageService, window, controller, mockWindowLocation;
+  var scope, ctrl, httpBackend, messageService, window, controller;
 
-  beforeEach(inject(function ($rootScope, $controller,_messageService_,_$httpBackend_) {
+  beforeEach(inject(function ($rootScope, $controller, _messageService_, _$httpBackend_) {
     httpBackend = _$httpBackend_;
     scope = $rootScope.$new();
     messageService = _messageService_;
@@ -33,7 +33,7 @@ describe("LoginController", function () {
     ctrl = controller(LoginController, {$scope:scope, messageService:messageService, $window:window});
 
     spyOn(messageService, 'populate');
-    httpBackend.when('POST','/j_spring_security_check').respond({"authenticated":false, "error":"error msg"});
+    httpBackend.when('POST', '/j_spring_security_check').respond({"authenticated":false, "error":"error msg"});
 
     scope.doLogin();
     httpBackend.flush();
@@ -47,7 +47,7 @@ describe("LoginController", function () {
 
 
     spyOn(messageService, 'populate');
-    httpBackend.when('POST','/j_spring_security_check').respond(403, {'error':'error msg'});
+    httpBackend.when('POST', '/j_spring_security_check').respond(403, {'error':'error msg'});
 
     scope.doLogin();
     httpBackend.flush();
@@ -55,19 +55,19 @@ describe("LoginController", function () {
     expect(scope.loginError).toBe('error msg');
   });
 
-  it('should show error when username is missing',function(){
+  it('should show error when username is missing', function () {
     scope.username = undefined;
     scope.doLogin();
     expect(scope.loginError).toBe('Please enter your username');
   });
 
-  it('should show error when username is only whitespaces',function(){
+  it('should show error when username is only whitespaces', function () {
     scope.username = "   ";
     scope.doLogin();
     expect(scope.loginError).toBe('Please enter your username');
   })
 
-  it('should show error when password is missing',function(){
+  it('should show error when password is missing', function () {
     scope.username = "someUser";
     scope.password = undefined;
     scope.doLogin();

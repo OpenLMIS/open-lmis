@@ -85,11 +85,9 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
       restrict:'A',
       link:function (scope, element, attrs) {
         scope.$watch(attrs.openlmisMessage, function () {
-          var displayMessage = messageService.get(scope[attrs.openlmisMessage]);
-          if (displayMessage)
-            element.html(displayMessage);
-          else
-            element.html(scope[attrs.openlmisMessage]);
+          var key = scope[attrs.openlmisMessage] || attrs.openlmisMessage;
+          var displayMessage = messageService.get(key);
+          element.html(displayMessage || key);
         });
       }
     }
@@ -107,8 +105,8 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
         fixToolbarWidth();
         $(window).on('resize', fixToolbarWidth);
 
-        $("input, select, textarea").on('focus', function() {
-          if(($(window).height() - ($(this).offset().top - $(window).scrollTop())) < 100) {
+        $("input, select, textarea").on('focus', function () {
+          if (($(window).height() - ($(this).offset().top - $(window).scrollTop())) < 100) {
             $(window).scrollTop($(window).scrollTop() + 100);
           }
         });
@@ -221,7 +219,7 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
         };
 
         scope.hasErrorOnPage = function (page) {
-         return scope.checkErrorOnPage({page: page});
+          return scope.checkErrorOnPage({page:page});
         };
 
       }

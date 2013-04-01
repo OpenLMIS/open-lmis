@@ -61,8 +61,7 @@
                        rnr-validator="positiveInteger" maxlength="8"
                        ng-change="rnr.fillPacksToShip(rnrLineItem)"/>
                 <span class="rnr-form-error" id="quantityRequested{{rnrLineItem['productCode']}}"
-                      style="display:none;">
-                  Enter numeric data
+                      style="display:none;" openlmis-message="rnr.number.error">
                 </span>
               </span>
 
@@ -133,8 +132,8 @@
                  ng-model="newNonFullSupply.quantityRequested"
                  id="quantityRequested"
                  rnr-validator="positiveInteger" maxlength="8"/><br>
-            <span class="rnr-form-error" style="display:none;" id="newNonFullSupply.quantityRequested">
-              Enter numeric data
+            <span class="rnr-form-error" style="display:none;" id="newNonFullSupply.quantityRequested"
+                  openlmis-message="rnr.number.error">
             </span>
         </div>
         <div class="span6">
@@ -173,8 +172,7 @@
                      ng-required="true" maxlength="8" ng-model="nonFullSupplyProduct.quantityRequested"
                      placeholder="Quantity"/>
                 <span class="rnr-form-error" style="display:none;"
-                      id="nonFullSupplyProductQuantityRequested{{$index}}">
-                  Enter numeric data
+                      id="nonFullSupplyProductQuantityRequested{{$index}}" openlmis-message="rnr.number.error">
                 </span>
             </div>
           </div>

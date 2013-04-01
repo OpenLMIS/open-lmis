@@ -16,11 +16,11 @@ services.factory('messageService', function (Messages, localStorageService) {
         }
       }, {});
     }
-  }
+  };
 
   var get = function (key) {
     return localStorageService.get('message.' + key);
-  }
+  };
 
   return{
     populate:populate,
