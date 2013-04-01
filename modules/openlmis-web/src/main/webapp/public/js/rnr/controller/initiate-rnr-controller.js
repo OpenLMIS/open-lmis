@@ -156,18 +156,17 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
 
     $scope.error = "";
     $scope.sourceUrl = $location.$$url;
-    var rights = [];
-
-
-    var hasPermission = function (permission) {
-      return _.find(rights, function (right) {
-        return right.right == permission
-      });
-    };
     var createRnrPath;
 
     FacilityProgramRights.get({facilityId:$scope.selectedFacilityId, programId:$scope.selectedProgram.id}, function (data) {
-      rights = data.rights;
+
+      var rights = data.rights;
+
+      var hasPermission = function (permission) {
+        return _.find(rights, function (right) {
+          return right.right == permission
+        });
+      };
 
       Requisition.get({facilityId:$scope.selectedFacilityId, programId:$scope.selectedProgram.id, periodId:$scope.selectedPeriod.id}, {},
         function (data) {
