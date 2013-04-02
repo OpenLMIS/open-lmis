@@ -6,6 +6,7 @@
 
 package org.openlmis.core.repository.mapper;
 
+import org.apache.commons.collections.Predicate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,10 +21,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static java.lang.Boolean.*;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static junit.framework.Assert.assertEquals;
+import static org.apache.commons.collections.CollectionUtils.exists;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
@@ -86,7 +90,7 @@ public class RoleAssignmentMapperIT {
     mapper.insertRoleAssignment(user.getId(), program2.getId(), null, r2.getId());
 
     List<RoleAssignment> roleAssignments =
-        mapper.getRoleAssignmentsWithGivenRightForAUser(CREATE_REQUISITION, user.getId());
+      mapper.getRoleAssignmentsWithGivenRightForAUser(CREATE_REQUISITION, user.getId());
 
     assertEquals(1, roleAssignments.size());
     RoleAssignment expectedRoleAssignment = new RoleAssignment(user.getId(), r1.getId(), program1.getId(), supervisoryNode);
@@ -173,6 +177,31 @@ public class RoleAssignmentMapperIT {
 
     assertThat(mapper.getHomeFacilityRoles(userId).size(), is(0));
     assertThat(mapper.getSupervisorRoles(userId).size(), is(0));
+  }
+
+  @Test
+  public void shouldGetAdminRolesForUser() throws Exception {
+    Integer userId = user.getId();
+
+    final Role adminRole = new Role("r1", TRUE, "admin role");
+    roleRightsMapper.insertRole(adminRole);
+    Role nonAdminRole = new Role("r2", FALSE, "non admin role");
+    roleRightsMapper.insertRole(nonAdminRole);
+
+    mapper.insertRoleAssignment(userId, null, null, adminRole.getId());
+    mapper.insertRoleAssignment(userId, 2, null, nonAdminRole.getId());
+
+    RoleAssignment adminRoles = mapper.getAdminRoles(userId);
+
+    assertThat(adminRoles.getRoleIds().size(), is(1));
+
+    assertTrue(exists(adminRoles.getRoleIds(), new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        Integer roleId = (Integer) o;
+        return roleId.equals(adminRole.getId());
+      }
+    }));
   }
 
   private Program insertProgram(Program program) {

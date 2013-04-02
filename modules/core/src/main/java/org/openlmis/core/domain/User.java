@@ -66,6 +66,7 @@ public class User implements Importable {
 
   private List<RoleAssignment> supervisorRoles;
   private List<RoleAssignment> homeFacilityRoles;
+  private List<RoleAssignment> adminRoles;
 
   private static final String INVALID_EMAIL_ERROR_CODE = "user.email.invalid";
 

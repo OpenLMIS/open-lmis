@@ -44,6 +44,7 @@ public interface RoleAssignmentMapper {
   @Results(value = {@Result(property = "supervisoryNode.id", column = "supervisoryNodeId")})
   List<RoleAssignment> getSupervisorRoles(Integer userId);
 
+
   @Select("SELECT userId, programId, array_agg(roleId) as roleIdsAsString " +
       "FROM role_assignments " +
       "WHERE userId=#{userId} AND programId IS NOT NULL AND supervisoryNodeId IS NULL " +
@@ -56,4 +57,9 @@ public interface RoleAssignmentMapper {
         "GROUP BY userId, programId")
 
   List<RoleAssignment> getHomeFacilityRolesForUserOnGivenProgramWithRights(@Param("userId") Integer userId, @Param("programId") Integer programId,@Param("commaSeparatedRights") String commaSeparatedRights);
+
+
+  @Select({"SELECT RA.userId, array_agg(RA.roleId) as roleIdsAsString FROM role_assignments RA INNER JOIN roles R ON RA.roleId = R.id",
+    "WHERE userId = #{userId} AND R.adminRole = true GROUP BY userId, supervisoryNodeId, programId"})
+  RoleAssignment getAdminRoles(Integer userId);
 }
