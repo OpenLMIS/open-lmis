@@ -41,7 +41,11 @@ public class ProgramProductService {
     programProductRepository.updatePriceHistory(programProductPrice);
   }
 
-  public void insert(ProgramProduct programProduct) {
-    programProductRepository.insert(programProduct);
+  public void save(ProgramProduct programProduct) {
+    programProductRepository.save(programProduct);
+  }
+
+  public ProgramProduct getProgramProductByProgramAndProductCode(ProgramProduct programProduct) {
+    return programProductRepository.getProgramProductByProgramAndProductCode(programProduct);
   }
 }

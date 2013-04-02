@@ -22,10 +22,22 @@ public class AbstractModelPersistenceHandlerTest {
   @Test
   public void shouldAppendRowNumberToExceptionMessage() throws Exception {
     AbstractModelPersistenceHandler handler = new AbstractModelPersistenceHandler() {
+
       @Override
-      protected void save(Importable modelClass, AuditFields auditFields) {
+      protected Importable getExisting(Importable importable) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+      }
+
+      @Override
+      protected void save(Importable existingRecord, Importable currentRecord, AuditFields auditFields) {
         throw new DataException("error");
       }
+
+      @Override
+      protected void throwExceptionIfAlreadyProcessedInCurrentUpload(Importable importable, AuditFields auditFields) {
+      }
+
+
     };
 
     Importable importable = mock(Importable.class);

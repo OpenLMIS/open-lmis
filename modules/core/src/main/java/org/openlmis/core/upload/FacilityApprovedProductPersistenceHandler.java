@@ -8,6 +8,7 @@ package org.openlmis.core.upload;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.FacilityApprovedProduct;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityApprovedProductService;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.model.AuditFields;
@@ -26,10 +27,28 @@ public class FacilityApprovedProductPersistenceHandler extends AbstractModelPers
   }
 
   @Override
-  protected void save(Importable modelClass, AuditFields auditFields) {
-    FacilityApprovedProduct facilityApprovedProduct = (FacilityApprovedProduct) modelClass;
+  protected Importable getExisting(Importable importable) {
+    FacilityApprovedProduct facilityApprovedProduct = (FacilityApprovedProduct)importable;
+    return facilityApprovedProductService.getFacilityApprovedProductByProgramProductAndFacilityTypeCode(facilityApprovedProduct);
+  }
+
+  @Override
+  protected void save(Importable existingRecord, Importable currentRecord, AuditFields auditFields) {
+    FacilityApprovedProduct facilityApprovedProduct = (FacilityApprovedProduct) currentRecord;
+    FacilityApprovedProduct existingFacilityApprovedProduct = (FacilityApprovedProduct) existingRecord;
+    if(existingFacilityApprovedProduct != null)
+      facilityApprovedProduct.setId(existingFacilityApprovedProduct.getId());
     facilityApprovedProduct.setModifiedBy(auditFields.getUser());
     facilityApprovedProduct.setModifiedDate(auditFields.getCurrentTimestamp());
     facilityApprovedProductService.save(facilityApprovedProduct);
   }
+
+  @Override
+  protected void throwExceptionIfAlreadyProcessedInCurrentUpload(Importable importable, AuditFields auditFields) {
+    FacilityApprovedProduct facilityApprovedProduct = (FacilityApprovedProduct)importable;
+    if (facilityApprovedProduct.getModifiedDate().equals(auditFields.getCurrentTimestamp())) {
+      throw new DataException("Duplicate facility approved product.");
+    }
+  }
+
 }

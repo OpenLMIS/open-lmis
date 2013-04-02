@@ -290,22 +290,6 @@ public class FacilityServiceTest {
     verify(facilityRepository).getAllInRequisitionGroups(requisitionGroups);
   }
 
-  @Test
-  public void shouldThrowErrorIfDuplicateFacilityAndProgramCodeFoundWithSameTimeStamp() {
-    ProgramSupported programSupported = new ProgramSupported();
-    programSupported.setFacilityCode("F1");
-    Program program = new Program();
-    program.setCode("P1");
-    programSupported.setProgram(program);
-    programSupported.setModifiedDate(new Date());
-    when(facilityRepository.getIdForCode("F1")).thenReturn(1);
-    when(programRepository.getIdByCode("P1")).thenReturn(1);
-    when(programSupportedRepository.geyByFacilityIdAndProgramId(1, 1)).thenReturn(programSupported);
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Facility has already been mapped to the program ");
-
-    facilityService.uploadSupportedProgram(programSupported);
-  }
 
   @Test
   public void shouldInsertProgramSupportedIfDoesNotExist() {
@@ -317,7 +301,7 @@ public class FacilityServiceTest {
     programSupported.setModifiedDate(new Date());
     when(facilityRepository.getIdForCode("F1")).thenReturn(1);
     when(programRepository.getIdByCode("P1")).thenReturn(1);
-    when(programSupportedRepository.geyByFacilityIdAndProgramId(1, 1)).thenReturn(null);
+    when(programSupportedRepository.getByFacilityIdAndProgramId(1, 1)).thenReturn(null);
 
     facilityService.uploadSupportedProgram(programSupported);
 
@@ -326,23 +310,14 @@ public class FacilityServiceTest {
 
   @Test
   public void shouldUpdateProgramSupportedIfItExists() throws Exception {
-    Calendar today = Calendar.getInstance();
     ProgramSupported programSupported = new ProgramSupported();
     programSupported.setFacilityCode("F1");
     Program program = new Program();
     program.setCode("P1");
     programSupported.setProgram(program);
-    programSupported.setModifiedDate(today.getTime());
-
-    ProgramSupported savedProgramSupported = new ProgramSupported();
-    savedProgramSupported.setFacilityCode("F1");
-    savedProgramSupported.setProgram(program);
-    today.add(Calendar.DATE,-1);
-    savedProgramSupported.setModifiedDate(today.getTime());
-
+    programSupported.setId(1);
     when(facilityRepository.getIdForCode("F1")).thenReturn(1);
     when(programRepository.getIdByCode("P1")).thenReturn(2);
-    when(programSupportedRepository.geyByFacilityIdAndProgramId(1, 2)).thenReturn(savedProgramSupported);
 
     facilityService.uploadSupportedProgram(programSupported);
 

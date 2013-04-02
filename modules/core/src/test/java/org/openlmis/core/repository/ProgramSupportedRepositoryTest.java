@@ -156,7 +156,7 @@ public class ProgramSupportedRepositoryTest {
 
   @Test
   public void shouldReturnProgramSupportedByProgramAndFacilityId() throws Exception {
-    programSupportedRepository.geyByFacilityIdAndProgramId(1, 1);
+    programSupportedRepository.getByFacilityIdAndProgramId(1, 1);
     when(programSupportedMapper.getBy(anyInt(),anyInt())).thenReturn(new ProgramSupported());
     verify(programSupportedMapper).getBy(1,1);
   }

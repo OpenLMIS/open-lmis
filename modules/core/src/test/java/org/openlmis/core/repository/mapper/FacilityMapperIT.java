@@ -20,7 +20,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -218,21 +217,21 @@ public class FacilityMapperIT {
   }
 
   @Test
-  public void shouldReturnFacilityTypeIdForCode() {
-    Integer id = mapper.getFacilityTypeIdForCode(FACILITY_TYPE_CODE);
-    assertThat(id, is(1));
+  public void shouldReturnFacilityTypeForCode() {
+    FacilityType facilityType = mapper.getFacilityTypeForCode(FACILITY_TYPE_CODE);
+    assertThat(facilityType.getId(), is(1));
 
-    id = mapper.getFacilityTypeIdForCode("InValid");
-    assertThat(id, is(nullValue()));
+    facilityType = mapper.getFacilityTypeForCode("InValid");
+    assertThat(facilityType, is(nullValue()));
   }
 
   @Test
   public void shouldReturnFacilityTypeById() {
-    Integer id = mapper.getFacilityTypeIdForCode(FACILITY_TYPE_CODE);
+    FacilityType facilityTypeWithId = mapper.getFacilityTypeForCode(FACILITY_TYPE_CODE);
 
-    FacilityType facilityType = mapper.getFacilityTypeById(id);
+    FacilityType facilityType = mapper.getFacilityTypeById(facilityTypeWithId.getId());
     assertThat(facilityType, is(notNullValue()));
-    assertThat(facilityType.getId(), is(id));
+    assertThat(facilityType.getId(), is(facilityTypeWithId.getId()));
     assertThat(facilityType.getCode(), is(FACILITY_TYPE_CODE));
   }
 

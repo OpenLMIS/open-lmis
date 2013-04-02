@@ -78,4 +78,8 @@ public class SupervisoryNodeService {
   public List<SupervisoryNode> getAllParentSupervisoryNodesInHierarchy(SupervisoryNode supervisoryNode) {
     return supervisoryNodeRepository.getAllParentSupervisoryNodesInHierarchy(supervisoryNode);
   }
+
+  public SupervisoryNode getByCode(SupervisoryNode supervisoryNode) {
+    return supervisoryNodeRepository.getByCode(supervisoryNode);
+  }
 }

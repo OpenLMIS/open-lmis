@@ -82,7 +82,7 @@ public class ProgramProductRepositoryTest {
 
     when(programProductMapper.getByProgramAndProductId(anyInt(), anyInt())).thenReturn(null);
 
-    programProductRepository.insert(programProduct);
+    programProductRepository.save(programProduct);
     verify(programProductMapper).insert(programProduct);
   }
 
@@ -95,7 +95,7 @@ public class ProgramProductRepositoryTest {
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("exception");
-    programProductRepository.insert(programProduct);
+    programProductRepository.save(programProduct);
   }
 
   @Test
@@ -107,7 +107,7 @@ public class ProgramProductRepositoryTest {
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Invalid Product Code");
 
-    programProductRepository.insert(programProduct);
+    programProductRepository.save(programProduct);
   }
 
   @Test
@@ -182,42 +182,27 @@ public class ProgramProductRepositoryTest {
     verify(programProductPriceMapper).insertNewCurrentPrice(programProductPrice);
   }
 
-  @Test
-  public void shouldThrowErrorIfProgramProductWithSameTimeStampExist() throws Exception {
-
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Duplicate entry for Product Code and Program Code combination found");
-
-    programProductRepository.insert(programProduct);
-  }
 
   @Test
   public void shouldUpdateProgramProductIfExist() throws Exception {
     int programId = 88;
     int productId = 99;
 
-    ProgramProduct existingProgramProduct = make(a(defaultProgramProduct));
-    existingProgramProduct.getProgram().setId(programId);
-
+    programProduct.setId(1);
     when(programRepository.getIdByCode(anyString())).thenReturn(programId);
     when(productRepository.getIdByCode(anyString())).thenReturn(productId);
-    Calendar todayTime = Calendar.getInstance();
-    todayTime.add(Calendar.DATE, -1);
-    existingProgramProduct.setModifiedDate(todayTime.getTime());
 
-    when(programProductMapper.getByProgramAndProductId(programId, productId)).thenReturn(existingProgramProduct);
-
-    programProductRepository.insert(programProduct);
+    programProductRepository.save(programProduct);
 
     assertThat(programProduct.getProgram().getId(), is(88));
     assertThat(programProduct.getProduct().getId(), is(99));
-    verify(programProductMapper).updateProgramProduct(programProduct);
+    verify(programProductMapper).update(programProduct);
   }
 
   @Test
   public void shouldUpdateProgramProduct() throws Exception {
     programProductRepository.updateProgramProduct(programProduct);
 
-    verify(programProductMapper).updateProgramProduct(programProduct);
+    verify(programProductMapper).update(programProduct);
   }
 }

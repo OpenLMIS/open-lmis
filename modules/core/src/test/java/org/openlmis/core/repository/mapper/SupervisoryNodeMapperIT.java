@@ -93,6 +93,15 @@ public class SupervisoryNodeMapperIT {
   }
 
   @Test
+  public void shouldGetSupervisoryNodeByCode() throws Exception {
+    supervisoryNodeMapper.insert(supervisoryNode);
+
+    SupervisoryNode result = supervisoryNodeMapper.getByCode(supervisoryNode);
+
+    assertThat(result, is(supervisoryNode));
+  }
+
+  @Test
   public void shouldGetAllSupervisoryNodesInTheHierarchyForAUserAndProgramWithAppropriateRight() {
     Program program1 = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
     Program program2 = insertProgram(make(a(defaultProgram, with(programCode, "p2"))));

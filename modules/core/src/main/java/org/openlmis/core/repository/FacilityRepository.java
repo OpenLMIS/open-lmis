@@ -7,11 +7,11 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
-import org.joda.time.DateTime;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.repository.mapper.FacilityMapper;
+import org.openlmis.upload.Importable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
@@ -42,11 +42,6 @@ public class FacilityRepository {
   }
 
   public void save(Facility facility) {
-    Facility savedFacility = mapper.getByCode(facility.getCode());
-    if (savedFacility != null && savedFacility.getModifiedDate()!=null && savedFacility.getModifiedDate().equals(facility.getModifiedDate())) {
-      throw new DataException("Duplicate Facility Code");
-    }
-    setFacilityId(savedFacility, facility);
     try {
       validateAndSetFacilityOperator(facility);
       validateAndSetFacilityType(facility);
@@ -95,12 +90,12 @@ public class FacilityRepository {
       throw new DataException("Missing mandatory reference data 'Facility Type'");
 
     String facilityTypeCode = facilityType.getCode();
-    Integer facilityTypeId = mapper.getFacilityTypeIdForCode(facilityTypeCode);
+    FacilityType existingFacilityType = mapper.getFacilityTypeForCode(facilityTypeCode);
 
-    if (facilityTypeId == null)
+    if (existingFacilityType == null)
       throw new DataException("Invalid reference data 'Facility Type'");
 
-    facilityType.setId(facilityTypeId);
+    facilityType.setId(existingFacilityType.getId());
 
   }
 
@@ -161,4 +156,13 @@ public class FacilityRepository {
   public Facility getHomeFacilityForRights(Integer userId, Right... rights) {
     return mapper.getHomeFacilityWithRights(userId, commaSeparateRightNames(rights));
   }
+
+  public FacilityType getFacilityTypeByCode(FacilityType facilityType) {
+    return mapper.getFacilityTypeForCode(facilityType.getCode());
+  }
+
+  public Facility getByCode(Facility facility) {
+    return mapper.getByCode(facility.getCode());
+  }
+
 }

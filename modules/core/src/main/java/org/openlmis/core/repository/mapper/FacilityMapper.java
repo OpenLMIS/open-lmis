@@ -84,8 +84,8 @@ public interface FacilityMapper {
     "comment = #{comment}, dataReportable = #{dataReportable}, modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id=#{id}")
   void update(Facility facility);
 
-  @Select("SELECT id FROM facility_types where LOWER(code) = LOWER(#{code})")
-  Integer getFacilityTypeIdForCode(String facilityTypeCode);
+  @Select("SELECT * FROM facility_types where LOWER(code) = LOWER(#{code})")
+  FacilityType getFacilityTypeForCode(String facilityTypeCode);
 
   @Update({"UPDATE facilities SET dataReportable = #{dataReportable}, active=#{active}, modifiedBy=#{modifiedBy}, modifiedDate = NOW() WHERE id =#{id}"})
   void updateDataReportableAndActiveFor(Facility facility);

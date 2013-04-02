@@ -77,9 +77,9 @@ public class ProgramProductServiceTest {
   public void shouldInsertProgramProduct() throws Exception {
     ProgramProduct programProduct = new ProgramProduct();
 
-    programProductService.insert(programProduct);
+    programProductService.save(programProduct);
 
-    verify(programProductRepository).insert(programProduct);
+    verify(programProductRepository).save(programProduct);
 
   }
 
@@ -91,8 +91,8 @@ public class ProgramProductServiceTest {
     expectException.expect(DataException.class);
     expectException.expectMessage("Duplicate Program Product found");
 
-    doThrow(new DataException("Duplicate Program Product found")).when(programProductRepository).insert(programProduct);
+    doThrow(new DataException("Duplicate Program Product found")).when(programProductRepository).save(programProduct);
 
-    programProductService.insert(programProduct);
+    programProductService.save(programProduct);
   }
 }

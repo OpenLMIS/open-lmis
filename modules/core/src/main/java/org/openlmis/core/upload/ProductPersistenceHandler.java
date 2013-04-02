@@ -7,29 +7,43 @@
 package org.openlmis.core.upload;
 
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.User;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.model.AuditFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-
 @Component("productPersistenceHandler")
 public class ProductPersistenceHandler extends AbstractModelPersistenceHandler {
 
-    private ProductService productService;
+  private ProductService productService;
 
-    @Autowired
-    public ProductPersistenceHandler (ProductService productService) {
-        this.productService = productService;
-    }
+  @Autowired
+  public ProductPersistenceHandler(ProductService productService) {
+    this.productService = productService;
+  }
 
-    @Override
-    protected void save(Importable importable, AuditFields auditFields) {
-        Product product = (Product) importable;
-        product.setModifiedBy(auditFields.getUser());
-        product.setModifiedDate(auditFields.getCurrentTimestamp());
-        productService.save(product);
+  @Override
+  protected Importable getExisting(Importable importable) {
+    return productService.getByCode(((Product)importable).getCode());
+  }
+
+  @Override
+  protected void save(Importable existingRecord, Importable currentRecord, AuditFields auditFields) {
+    Product product = (Product) currentRecord;
+    product.setModifiedBy(auditFields.getUser());
+    product.setModifiedDate(auditFields.getCurrentTimestamp());
+    if (existingRecord != null) product.setId(((Product)existingRecord).getId());
+    productService.save(product);
+  }
+
+  @Override
+  protected void throwExceptionIfAlreadyProcessedInCurrentUpload(Importable importable, AuditFields auditFields) {
+    Product savedProduct = (Product) importable;
+    if (savedProduct != null && savedProduct.getModifiedDate().equals(auditFields.getCurrentTimestamp())) {
+      throw new DataException("Duplicate Product Code");
     }
+  }
 }

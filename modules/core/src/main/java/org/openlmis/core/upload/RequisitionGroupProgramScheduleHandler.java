@@ -22,18 +22,28 @@ import java.util.Date;
 public class RequisitionGroupProgramScheduleHandler extends AbstractModelPersistenceHandler {
 
 
-    private RequisitionGroupProgramScheduleService requisitionGroupProgramScheduleService;
+  private RequisitionGroupProgramScheduleService requisitionGroupProgramScheduleService;
 
-    @Autowired
-    public RequisitionGroupProgramScheduleHandler(RequisitionGroupProgramScheduleService requisitionGroupProgramScheduleService) {
-        this.requisitionGroupProgramScheduleService = requisitionGroupProgramScheduleService;
-    }
+  @Autowired
+  public RequisitionGroupProgramScheduleHandler(RequisitionGroupProgramScheduleService requisitionGroupProgramScheduleService) {
+    this.requisitionGroupProgramScheduleService = requisitionGroupProgramScheduleService;
+  }
 
-    @Override
-    protected void save(Importable modelClass, AuditFields auditFields) {
-        RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = (RequisitionGroupProgramSchedule) modelClass;
-        requisitionGroupProgramSchedule.setModifiedBy(auditFields.getUser());
-        requisitionGroupProgramSchedule.setModifiedDate(new Date());
-        requisitionGroupProgramScheduleService.save(requisitionGroupProgramSchedule);
-    }
+  @Override
+  protected Importable getExisting(Importable importable) {
+    return null;  //To change body of implemented methods use File | Settings | File Templates.
+  }
+
+  @Override
+  protected void save(Importable existingRecord, Importable currentRecord, AuditFields auditFields) {
+    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = (RequisitionGroupProgramSchedule) currentRecord;
+    requisitionGroupProgramSchedule.setModifiedBy(auditFields.getUser());
+    requisitionGroupProgramSchedule.setModifiedDate(new Date());
+    requisitionGroupProgramScheduleService.save(requisitionGroupProgramSchedule);
+  }
+
+  @Override
+  protected void throwExceptionIfAlreadyProcessedInCurrentUpload(Importable importable, AuditFields auditFields) {
+  }
+
 }

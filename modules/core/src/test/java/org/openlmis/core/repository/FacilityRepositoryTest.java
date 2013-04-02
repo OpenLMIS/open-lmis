@@ -14,10 +14,8 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.GeographicLevel;
-import org.openlmis.core.domain.GeographicZone;
-import org.openlmis.core.domain.Right;
+import org.openlmis.core.builder.FacilityBuilder;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -35,6 +33,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
+import static org.openlmis.core.builder.FacilityBuilder.FACILITY_TYPE_ID;
 import static org.openlmis.core.builder.FacilityBuilder.GEOGRAPHIC_ZONE_CODE;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -66,6 +65,7 @@ public class FacilityRepositoryTest {
     geographicZone.setLevel(defaultGeographicLevel);
     when(geographicZoneRepository.getByCode(GEOGRAPHIC_ZONE_CODE)).thenReturn(geographicZone);
     when(geographicZoneRepository.getLowestGeographicLevel()).thenReturn(4);
+    when(mapper.getFacilityTypeForCode(FacilityBuilder.FACILITY_TYPE_CODE)).thenReturn(new FacilityType(FACILITY_TYPE_ID));
     repository = new FacilityRepository(mapper, null, geographicZoneRepository);
   }
 
@@ -141,7 +141,7 @@ public class FacilityRepositoryTest {
   public void shouldRaiseInvalidReferenceDataFacilityTypeError() throws Exception {
     Facility facility = make(a(defaultFacility));
     facility.getFacilityType().setCode("invalid code");
-    when(mapper.getFacilityTypeIdForCode("invalid code")).thenReturn(null);
+    when(mapper.getFacilityTypeForCode("invalid code")).thenReturn(null);
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Invalid reference data 'Facility Type'");
@@ -162,7 +162,9 @@ public class FacilityRepositoryTest {
   public void shouldSetFacilityTypeIdWhenCodeIsValid() throws Exception {
     Facility facility = make(a(defaultFacility));
     facility.getFacilityType().setCode("valid code");
-    when(mapper.getFacilityTypeIdForCode("valid code")).thenReturn(1);
+    FacilityType facilityType = new FacilityType("code");
+    facilityType.setId(1);
+    when(mapper.getFacilityTypeForCode("valid code")).thenReturn(facilityType);
 
     repository.save(facility);
     assertThat(facility.getFacilityType().getId(), is(1));
@@ -285,35 +287,4 @@ public class FacilityRepositoryTest {
     verify(mapper).getHomeFacilityWithRights(1, "{APPROVE_REQUISITION, CREATE_REQUISITION}");
   }
 
-
-  @Test
-  public void shouldThrowErrorIfDuplicateCodeFoundWithSameTimeStamp() {
-    Facility facility = new Facility();
-    facility.setCode("F1");
-    facility.setModifiedDate(new Date());
-    when(mapper.getByCode("F1")).thenReturn(facility);
-
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Duplicate Facility Code");
-
-    repository.save(facility);
-  }
-
-  @Test
-  public void shouldSetFacilityIdForUploadIfFacilityExists() throws Exception {
-    Facility facility = make(a(defaultFacility));
-
-    Calendar today = Calendar.getInstance();
-    facility.setModifiedDate(today.getTime());
-
-    Facility savedFacility = new Facility();
-    savedFacility.setId(1);
-    today.add(Calendar.DATE, -1);
-    savedFacility.setModifiedDate(today.getTime());
-    when(mapper.getByCode(facility.getCode())).thenReturn(savedFacility);
-
-    repository.save(facility);
-
-    assertThat(facility.getId(), is(savedFacility.getId()));
-  }
 }

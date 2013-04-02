@@ -23,11 +23,22 @@ public class ProgramProductPricePersistenceHandler extends AbstractModelPersiste
     this.programProductService = service;
   }
 
+
   @Override
-  protected void save(Importable modelClass, AuditFields auditFields) {
-    ProgramProductPrice programProductPrice = (ProgramProductPrice) modelClass;
+  protected Importable getExisting(Importable importable) {
+    return null;
+  }
+
+  @Override
+  protected void save(Importable existingRecord, Importable currentRecord, AuditFields auditFields) {
+    ProgramProductPrice programProductPrice = (ProgramProductPrice) currentRecord;
     programProductPrice.setModifiedBy(auditFields.getUser());
     programProductPrice.setModifiedDate(auditFields.getCurrentTimestamp());
     programProductService.updateProgramProductPrice(programProductPrice);
   }
+
+  @Override
+  protected void throwExceptionIfAlreadyProcessedInCurrentUpload(Importable importable, AuditFields auditFields) {
+  }
+
 }

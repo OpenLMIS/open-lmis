@@ -21,18 +21,13 @@ public class GeographicZoneService {
   GeographicZoneRepository repository;
 
   public void save(GeographicZone geographicZone) {
-    GeographicZone savedZone = repository.getByCode(geographicZone.getCode());
-    if (savedZone != null && savedZone.getModifiedDate().equals(geographicZone.getModifiedDate()))
-      throw new DataException("Duplicate Geographic Zone Code");
 
     validateAndSetParent(geographicZone);
 
-    if (savedZone == null) {
+    if (geographicZone.getId() == null) {
       repository.insert(geographicZone);
       return;
     }
-
-    geographicZone.setId(savedZone.getId());
     repository.update(geographicZone);
   }
 
@@ -47,5 +42,9 @@ public class GeographicZoneService {
     geographicZone.setParent(repository.getByCode(geographicZone.getParent().getCode()));
     if (geographicZone.getParent() == null)
       throw new DataException("Invalid Geographic Zone Parent Code");
+  }
+
+  public GeographicZone getByCode(GeographicZone geographicZone) {
+    return repository.getByCode(geographicZone.getCode());
   }
 }

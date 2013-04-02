@@ -8,12 +8,17 @@ package org.openlmis.core.upload;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.User;
+import org.openlmis.core.exception.DataException;
+import org.openlmis.core.message.OpenLmisMessage;
+import org.openlmis.core.repository.UserRepository;
 import org.openlmis.core.service.UserService;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.model.AuditFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import static org.openlmis.core.repository.UserRepository.DUPLICATE_USER_NAME_FOUND;
 
 @Component
 @NoArgsConstructor
@@ -32,10 +37,25 @@ public class UserPersistenceHandler extends AbstractModelPersistenceHandler {
   }
 
   @Override
-  protected void save(Importable modelClass, AuditFields auditFields) {
-    final User user = (User) modelClass;
+  protected Importable getExisting(Importable importable) {
+    return userService.getByUserName((User) importable);
+  }
+
+  @Override
+  protected void save(Importable existingRecord, Importable currentRecord, AuditFields auditFields) {
+    final User user = (User) currentRecord;
     user.setModifiedBy(auditFields.getUser());
     user.setModifiedDate(auditFields.getCurrentTimestamp());
+    if(existingRecord != null) user.setId(((User)existingRecord).getId());
     userService.create(user, baseUrl + RESET_PASSWORD_PATH);
   }
+
+  @Override
+  protected void throwExceptionIfAlreadyProcessedInCurrentUpload(Importable importable, AuditFields auditFields) {
+    User user = (User) importable;
+    if (user != null && user.getModifiedDate().equals(auditFields.getCurrentTimestamp())) {
+      throw new DataException(new OpenLmisMessage(DUPLICATE_USER_NAME_FOUND));
+    }
+  }
+
 }

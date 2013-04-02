@@ -20,8 +20,13 @@ public abstract class AbstractModelPersistenceHandler implements RecordHandler<I
   @Override
   public void execute(Importable importable, int rowNumber, AuditFields auditFields) {
     final String rowNumberAsString = Integer.toString(rowNumber- 1);
+
+    Importable existing = getExisting(importable);
+    if (existing != null)
+      throwExceptionIfAlreadyProcessedInCurrentUpload(existing, auditFields);
+
     try {
-      save(importable, auditFields);
+      save(existing, importable, auditFields);
     } catch (DataIntegrityViolationException dataIntegrityViolationException) {
       throw new DataException(new OpenLmisMessage("upload.record.error", "Incorrect data length", rowNumberAsString));
     } catch (DataException exception) {
@@ -31,5 +36,8 @@ public abstract class AbstractModelPersistenceHandler implements RecordHandler<I
     }
   }
 
-  protected abstract void save(Importable modelClass, AuditFields auditFields);
+  protected abstract Importable getExisting(Importable importable);
+
+  protected abstract void save(Importable existingRecord, Importable currentRecord, AuditFields auditFields);
+  protected abstract void throwExceptionIfAlreadyProcessedInCurrentUpload(Importable importable, AuditFields auditFields);
 }

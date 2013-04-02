@@ -14,6 +14,7 @@ import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.openlmis.core.repository.ProgramRepository;
 import org.openlmis.core.repository.ProgramSupportedRepository;
+import org.openlmis.upload.Importable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,11 +74,7 @@ public class FacilityService {
     Integer programId = programRepository.getIdByCode(programSupported.getProgram().getCode());
     programSupported.setProgram(new Program(programId));
 
-    ProgramSupported savedProgramSupported = programSupportedRepository.geyByFacilityIdAndProgramId(facilityId, programId);
-    if (savedProgramSupported != null && programSupported.getModifiedDate().equals(savedProgramSupported.getModifiedDate())) {
-      throw new DataException("Facility has already been mapped to the program ");
-    }
-    if (savedProgramSupported == null) {
+    if (programSupported.getId() == null) {
       programSupportedRepository.addSupportedProgram(programSupported);
     }
     else{
@@ -121,7 +118,7 @@ public class FacilityService {
     return facilityRepository.searchFacilitiesByCodeOrName(searchParam);
   }
 
-  private void save(Facility facility) {
+  public void save(Facility facility) {
     for (ProgramSupported programSupported : facility.getSupportedPrograms()) {
       programSupported.isValid();
     }
@@ -138,5 +135,20 @@ public class FacilityService {
 
     return new ArrayList<>(userFacilities);
 
+  }
+
+  public FacilityType getFacilityTypeByCode(FacilityType facilityType) {
+    return facilityRepository.getFacilityTypeByCode(facilityType);
+  }
+
+  public Facility getByCode(Facility facility) {
+    return facilityRepository.getByCode(facility);
+  }
+
+  public ProgramSupported getProgramSupported(ProgramSupported programSupported) {
+    Integer facilityId = facilityRepository.getIdForCode(programSupported.getFacilityCode());
+    Integer programId = programRepository.getIdByCode(programSupported.getProgram().getCode());
+
+    return programSupportedRepository.getByFacilityIdAndProgramId(facilityId, programId);
   }
 }

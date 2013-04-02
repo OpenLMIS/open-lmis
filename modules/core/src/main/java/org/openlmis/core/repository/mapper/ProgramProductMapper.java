@@ -16,11 +16,9 @@ public interface ProgramProductMapper {
 
   @Insert({"INSERT INTO program_products(programId, productId, dosesPerMonth, active, modifiedBy, modifiedDate)",
     "VALUES (#{program.id},",
-    "(SELECT id FROM products WHERE LOWER(code) = LOWER(#{product.code})),",
-    "#{dosesPerMonth}, #{active}, #{modifiedBy}, #{modifiedDate})"})
+    "#{product.id}, #{dosesPerMonth}, #{active}, #{modifiedBy}, #{modifiedDate})"})
   @Options(useGeneratedKeys = true)
   Integer insert(ProgramProduct programProduct);
-  // TODO : use programId
 
   // Used by FacilityApprovedProductMapper
   @SuppressWarnings("unused")
@@ -42,5 +40,5 @@ public interface ProgramProductMapper {
   ProgramProduct getByProgramAndProductId(@Param("programId") Integer programId, @Param("productId") Integer productId);
 
   @Update("UPDATE program_products SET  dosesPerMonth=#{dosesPerMonth}, active=#{active}, modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} WHERE programId=#{program.id} AND productId=#{product.id}")
-  void updateProgramProduct(ProgramProduct programProduct);
+  void update(ProgramProduct programProduct);
 }

@@ -11,7 +11,10 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.service.SupervisoryNodeService;
+import org.openlmis.upload.Importable;
 import org.openlmis.upload.model.AuditFields;
+
+import java.util.Date;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -34,7 +37,8 @@ public class SupervisoryNodeHandlerTest {
   public void shouldSaveSupervisoryNode() throws Exception {
     SupervisoryNode supervisoryNode = new SupervisoryNode();
 
-    new SupervisoryNodeHandler(supervisoryNodeService).save(supervisoryNode, new AuditFields(USER, null));
+    SupervisoryNode existing = new SupervisoryNode();
+    new SupervisoryNodeHandler(supervisoryNodeService).save(existing, supervisoryNode, new AuditFields(USER, new Date()));
     assertThat(supervisoryNode.getModifiedBy(), is(USER));
     assertThat(supervisoryNode.getModifiedDate(), is(notNullValue()));
 

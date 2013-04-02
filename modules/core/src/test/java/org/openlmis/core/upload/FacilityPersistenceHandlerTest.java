@@ -6,10 +6,19 @@
 
 package org.openlmis.core.upload;
 
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
-import org.openlmis.core.repository.FacilityRepository;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.ProgramSupported;
+import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.FacilityService;
 import org.openlmis.upload.model.AuditFields;
 
 import java.util.Date;
@@ -18,21 +27,33 @@ import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class FacilityPersistenceHandlerTest {
+  FacilityPersistenceHandler facilityPersistenceHandler;
+  @Mock
+  private FacilityService facilityService;
+
+  @Rule
+  public ExpectedException expectedEx = ExpectedException.none();
+
+  @Before
+  public void setUp() throws Exception {
+    facilityPersistenceHandler = new FacilityPersistenceHandler(facilityService);
+
+  }
 
   @Test
   public void shouldSaveFacility() {
-    FacilityRepository facilityRepository = mock(FacilityRepository.class);
-    FacilityPersistenceHandler facilityPersistenceHandler = new FacilityPersistenceHandler(facilityRepository);
     Facility facility = make(a(FacilityBuilder.defaultFacility));
     Date currentTimestamp = new Date();
-    facilityPersistenceHandler.save(facility, new AuditFields(1, currentTimestamp));
+    Facility existing = new Facility();
+    facilityPersistenceHandler.save(existing, facility, new AuditFields(1, currentTimestamp));
     assertThat(facility.getModifiedBy(), is(1));
     assertThat(facility.getModifiedDate(), is(currentTimestamp));
-    verify(facilityRepository).save(facility);
+    verify(facilityService).save(facility);
   }
+
 
 }

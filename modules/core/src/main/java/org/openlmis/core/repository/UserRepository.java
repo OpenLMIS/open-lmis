@@ -44,16 +44,11 @@ public class UserRepository {
   }
 
   public void create(User user) {
-    User savedUser = userMapper.get(user.getUserName());
-    if (savedUser != null && user.getModifiedDate().equals(savedUser.getModifiedDate())) {
-      throw new DataException(new OpenLmisMessage(DUPLICATE_USER_NAME_FOUND));
-    }
     validateAndSetSupervisor(user);
     try {
-      if(savedUser == null)
+      if(user.getId() == null)
         userMapper.insert(user);
       else{
-        user.setId(savedUser.getId());
         userMapper.update(user);
       }
     }

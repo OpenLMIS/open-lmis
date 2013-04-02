@@ -70,21 +70,6 @@ public class ProductServiceTest {
   }
 
   @Test
-  public void shouldThrowErrorIfDuplicateCodeFoundWithSameTimeStamp() {
-    Product product = new Product();
-    product.setCode("P1");
-    Date modifiedDate = new Date();
-    product.setModifiedDate(modifiedDate);
-    when(productRepository.getByCode("P1")).thenReturn(product);
-
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("Duplicate Product Code");
-
-    productService.save(product);
-
-  }
-
-  @Test
   public void shouldInsertProductIfNotPresent() throws Exception {
     Product product = new Product();
     product.setCode("P1");
@@ -98,20 +83,11 @@ public class ProductServiceTest {
 
   @Test
   public void shouldUpdateProductIfPresent() {
-
-    Calendar today = Calendar.getInstance();
     Product product = new Product();
-    product.setCode("P1");
-    product.setModifiedDate(today.getTime());
-    Product savedProduct = new Product();
-    savedProduct.setCode("P1");
-    today.add(Calendar.DATE, -1);
-    savedProduct.setModifiedDate(today.getTime());
-    when(productRepository.getByCode("P1")).thenReturn(savedProduct);
+    product.setId(2);
 
     productService.save(product);
 
     verify(productRepository).update(product);
-
   }
 }

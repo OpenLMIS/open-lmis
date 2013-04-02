@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.openlmis.core.domain.RequisitionGroupProgramSchedule;
 import org.openlmis.core.service.RequisitionGroupProgramScheduleService;
+import org.openlmis.upload.Importable;
 import org.openlmis.upload.model.AuditFields;
 import org.openlmis.upload.model.Field;
 import org.openlmis.upload.model.ModelClass;
@@ -37,7 +38,8 @@ public class RequisitionGroupProgramScheduleHandlerTest {
 
         RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
 
-        new RequisitionGroupProgramScheduleHandler(requisitionGroupProgramScheduleService).save(requisitionGroupProgramSchedule, new AuditFields(USER,null));
+      RequisitionGroupProgramSchedule existing = new RequisitionGroupProgramSchedule();
+      new RequisitionGroupProgramScheduleHandler(requisitionGroupProgramScheduleService).save(existing, requisitionGroupProgramSchedule, new AuditFields(USER, null));
 
         assertThat(requisitionGroupProgramSchedule.getModifiedBy(), is(USER));
         assertThat(requisitionGroupProgramSchedule.getModifiedDate(), is(notNullValue()));

@@ -11,6 +11,7 @@ import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProductRepository;
+import org.openlmis.upload.Importable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,18 +31,13 @@ public class ProductService {
   }
 
   public void save(Product product) {
-    Product savedProduct = repository.getByCode(product.getCode());
-
-    if (savedProduct != null && product.getModifiedDate().equals(savedProduct.getModifiedDate())) {
-      throw new DataException("Duplicate Product Code");
-    }
     validateAndSetProductCategory(product);
-    if (savedProduct == null) {
+
+    if (product.getId() == null) {
       repository.insert(product);
       return;
     }
 
-    product.setId(savedProduct.getId());
     setProductFormIdAndDosageUnitId(product);
 
     repository.update(product);
@@ -71,5 +67,9 @@ public class ProductService {
 
   public Integer getIdForCode(String code) {
     return repository.getIdByCode(code);
+  }
+
+  public Product getByCode(String code) {
+    return repository.getByCode(code);
   }
 }

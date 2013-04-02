@@ -37,7 +37,7 @@ public class ProgramProductRepository {
   }
 
 
-  public void insert(ProgramProduct programProduct) {
+  public void save(ProgramProduct programProduct) {
     Integer programId = programRepository.getIdByCode(programProduct.getProgram().getCode());
     programProduct.getProgram().setId(programId);
 
@@ -46,18 +46,11 @@ public class ProgramProductRepository {
     Integer productId = productRepository.getIdByCode(programProduct.getProduct().getCode());
     programProduct.getProduct().setId(productId);
 
-    ProgramProduct savedProgramProduct = mapper.getByProgramAndProductId(programId, productId);
-
-    if (savedProgramProduct != null && programProduct.getModifiedDate().equals(savedProgramProduct.getModifiedDate())) {
-      throw new DataException("Duplicate entry for Product Code and Program Code combination found");
-    }
-
     try {
-      if (savedProgramProduct == null) {
+      if (programProduct.getId() == null) {
         mapper.insert(programProduct);
       } else {
-        programProduct.setId(savedProgramProduct.getId());
-        mapper.updateProgramProduct(programProduct);
+        mapper.update(programProduct);
       }
     } catch (DuplicateKeyException duplicateKeyException) {
       throw new DataException("Duplicate entry for Product Code and Program Code combination found");
@@ -84,11 +77,11 @@ public class ProgramProductRepository {
   }
 
   public ProgramProduct getProgramProductByProgramAndProductCode(ProgramProduct programProduct) {
-    return getByProgramIdAndProductId(programRepository.getIdByCode(programProduct.getProgram().getCode()),
+    return getProgramProductByProgramAndProductCode(programRepository.getIdByCode(programProduct.getProgram().getCode()),
       productRepository.getIdByCode(programProduct.getProduct().getCode()));
   }
 
-  public ProgramProduct getByProgramIdAndProductId(Integer programId, Integer productId) {
+  public ProgramProduct getProgramProductByProgramAndProductCode(Integer programId, Integer productId) {
     final ProgramProduct programProduct = mapper.getByProgramAndProductId(programId, productId);
     if (programProduct == null)
       throw new DataException(PROGRAM_PRODUCT_INVALID);
@@ -102,6 +95,6 @@ public class ProgramProductRepository {
   }
 
   public void updateProgramProduct(ProgramProduct programProduct) {
-    mapper.updateProgramProduct(programProduct);
+    mapper.update(programProduct);
   }
 }

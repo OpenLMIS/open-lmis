@@ -8,6 +8,7 @@ package org.openlmis.core.upload;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.SupervisoryNodeService;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.model.AuditFields;
@@ -20,18 +21,34 @@ import java.util.Date;
 @NoArgsConstructor
 public class SupervisoryNodeHandler extends AbstractModelPersistenceHandler {
 
-    private SupervisoryNodeService supervisoryNodeService;
+  private SupervisoryNodeService supervisoryNodeService;
 
-    @Autowired
-    public SupervisoryNodeHandler(SupervisoryNodeService supervisoryNodeService) {
-        this.supervisoryNodeService = supervisoryNodeService;
-    }
+  @Autowired
+  public SupervisoryNodeHandler(SupervisoryNodeService supervisoryNodeService) {
+    this.supervisoryNodeService = supervisoryNodeService;
+  }
 
-    @Override
-    protected void save(Importable modelClass, AuditFields auditFields) {
-        SupervisoryNode supervisoryNode = (SupervisoryNode) modelClass;
-        supervisoryNode.setModifiedBy(auditFields.getUser());
-        supervisoryNode.setModifiedDate(new Date());
-        supervisoryNodeService.save(supervisoryNode);
+  @Override
+  protected Importable getExisting(Importable importable) {
+    SupervisoryNode supervisoryNode = (SupervisoryNode) importable;
+    return supervisoryNodeService.getByCode(supervisoryNode);
+  }
+
+  @Override
+  protected void save(Importable existingRecord, Importable currentRecord, AuditFields auditFields) {
+    SupervisoryNode current = (SupervisoryNode) currentRecord;
+    SupervisoryNode existing = (SupervisoryNode) existingRecord;
+    if(existing != null) current.setId(existing.getId());
+    current.setModifiedBy(auditFields.getUser());
+    current.setModifiedDate(auditFields.getCurrentTimestamp());
+    supervisoryNodeService.save(current);
+  }
+
+  @Override
+  protected void throwExceptionIfAlreadyProcessedInCurrentUpload(Importable importable, AuditFields auditFields) {
+    SupervisoryNode existing = (SupervisoryNode) importable;
+    if (existing.getModifiedDate().equals(auditFields.getCurrentTimestamp())) {
+      throw new DataException("Duplicate supervisory node");
     }
+  }
 }

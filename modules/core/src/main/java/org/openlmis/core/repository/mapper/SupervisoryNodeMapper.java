@@ -102,4 +102,7 @@ public interface SupervisoryNodeMapper {
       "   )",
       "SELECT * FROM supervisoryNodesRec"})
   List<SupervisoryNode> getAllParentSupervisoryNodesInHierarchy(SupervisoryNode supervisoryNode);
+
+  @Select("SELECT * FROM supervisory_nodes WHERE LOWER(code) = LOWER(#{code})")
+  SupervisoryNode getByCode(SupervisoryNode supervisoryNode);
 }

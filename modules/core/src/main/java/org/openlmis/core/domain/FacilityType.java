@@ -29,4 +29,8 @@ public class FacilityType {
   public FacilityType(String code) {
     this.code = code;
   }
+
+  public FacilityType(Integer id) {
+    this.id = id;
+  }
 }

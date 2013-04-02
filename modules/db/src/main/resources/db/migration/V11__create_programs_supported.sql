@@ -1,4 +1,5 @@
 CREATE TABLE programs_supported (
+  id           SERIAL PRIMARY KEY,
   facilityId   INTEGER REFERENCES facilities (id),
   programId    INTEGER REFERENCES programs (id),
   startDate    TIMESTAMP,
@@ -7,5 +8,5 @@ CREATE TABLE programs_supported (
   modifiedDate TIMESTAMP,
   createdBy INTEGER,
   createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
-  PRIMARY KEY (facilityId, programId)
+  UNIQUE (facilityId, programId)
 );

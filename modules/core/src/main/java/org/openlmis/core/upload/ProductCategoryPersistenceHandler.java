@@ -7,7 +7,8 @@
 package org.openlmis.core.upload;
 
 import org.openlmis.core.domain.ProductCategory;
-import org.openlmis.core.repository.ProductCategoryRepository;
+import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.ProductCategoryService;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.model.AuditFields;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,20 +19,32 @@ import java.util.Date;
 @Component("productCategoryPersistenceHandler")
 public class ProductCategoryPersistenceHandler  extends AbstractModelPersistenceHandler {
 
-
-  ProductCategoryRepository productCategoryRepository;
+  ProductCategoryService productCategoryService;
 
   @Autowired
-  public ProductCategoryPersistenceHandler(ProductCategoryRepository productCategoryRepository) {
-    this.productCategoryRepository = productCategoryRepository;
+  public ProductCategoryPersistenceHandler(ProductCategoryService productCategoryService) {
+    this.productCategoryService = productCategoryService;
   }
 
   @Override
-  protected void save(Importable importable, AuditFields auditFields) {
-    ProductCategory productCategory = (ProductCategory) importable;
+  protected Importable getExisting(Importable importable) {
+    return productCategoryService.getByCode(((ProductCategory) importable).getCode());
+  }
+
+  @Override
+  protected void save(Importable existingRecord, Importable modelClass, AuditFields auditFields) {
+    ProductCategory productCategory = (ProductCategory) modelClass;
     productCategory.setModifiedBy(auditFields.getUser());
     productCategory.setModifiedDate(new Date());
-    productCategoryRepository.save(productCategory);
+    if (existingRecord != null) productCategory.setId(((ProductCategory) existingRecord).getId());
+    productCategoryService.save(productCategory);
+  }
 
+  @Override
+  protected void throwExceptionIfAlreadyProcessedInCurrentUpload(Importable importable, AuditFields auditFields) {
+    ProductCategory productCategory = (ProductCategory) importable;
+    if (productCategory.getModifiedDate().equals(auditFields.getCurrentTimestamp())) {
+      throw new DataException("Duplicate Product Category");
+    }
   }
 }

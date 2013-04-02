@@ -28,10 +28,19 @@ public class RequisitionGroupHandler extends AbstractModelPersistenceHandler {
   }
 
   @Override
-  protected void save(Importable importable, AuditFields userName) {
-    RequisitionGroup requisitionGroup = (RequisitionGroup) importable;
-    requisitionGroup.setModifiedBy(userName.getUser());
-    requisitionGroup.setModifiedDate(new Date());
-    requisitionGroupService.save(requisitionGroup);
+  protected Importable getExisting(Importable importable) {
+    return null;
   }
+
+  @Override
+  protected void save(Importable existingRecord, Importable currentRecord, AuditFields auditFields) {
+    RequisitionGroup requisitionGroup = (RequisitionGroup) currentRecord;
+    requisitionGroup.setModifiedBy(auditFields.getUser());
+    requisitionGroup.setModifiedDate(new Date());
+    requisitionGroupService.save(requisitionGroup);}
+
+  @Override
+  protected void throwExceptionIfAlreadyProcessedInCurrentUpload(Importable importable, AuditFields auditFields) {
+  }
+
 }

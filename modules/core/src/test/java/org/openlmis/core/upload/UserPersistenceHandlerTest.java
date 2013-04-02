@@ -6,13 +6,19 @@
 
 package org.openlmis.core.upload;
 
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.User;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.UserService;
 import org.openlmis.upload.model.AuditFields;
+
+import java.util.Date;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -27,13 +33,39 @@ public class UserPersistenceHandlerTest {
   @Mock
   private UserService userService;
 
+  @Rule
+  public ExpectedException exException = ExpectedException.none();
+
+  String baseUrl;
+
+  @Before
+  public void setUp() throws Exception {
+    baseUrl = "http://localhost:9091/";
+    userPersistenceHandler = new UserPersistenceHandler(userService, baseUrl);
+  }
+
   @Test
   public void shouldSaveAUser() throws Exception {
-    String baseUrl = "http://localhost:9091/";
-    userPersistenceHandler = new UserPersistenceHandler(userService, baseUrl);
     User user = new User();
-    userPersistenceHandler.save(user, new AuditFields(1,null));
+    User existing = new User();
+    userPersistenceHandler.save(existing, user, new AuditFields(1, null));
     verify(userService).create(user, baseUrl + RESET_PASSWORD_PATH);
     assertThat(user.getModifiedBy(), is(1));
   }
+
+  @Test
+  public void shouldThrowErrorIfUserWithSameTimeStampExist() throws Exception {
+    User savedUser = new User();
+    Date todayDate = new Date();
+    savedUser.setModifiedDate(todayDate);
+
+    AuditFields auditFields = new AuditFields();
+    auditFields.setCurrentTimestamp(todayDate);
+
+    exException.expect(DataException.class);
+    exException.expectMessage("duplicate.user.name.found");
+
+    userPersistenceHandler.throwExceptionIfAlreadyProcessedInCurrentUpload(savedUser, auditFields);
+  }
+
 }

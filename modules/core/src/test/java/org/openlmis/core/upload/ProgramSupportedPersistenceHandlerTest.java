@@ -7,11 +7,17 @@
 package org.openlmis.core.upload;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.openlmis.core.domain.ProgramSupported;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.upload.Importable;
 import org.openlmis.upload.model.AuditFields;
+
+import java.util.Date;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -24,6 +30,8 @@ public class ProgramSupportedPersistenceHandlerTest {
   FacilityService facilityService;
 
   private ProgramSupportedPersistenceHandler programSupportedPersistenceHandler;
+  @Rule
+  public ExpectedException expectedEx = ExpectedException.none();
 
   @Before
   public void setUp() throws Exception {
@@ -34,9 +42,25 @@ public class ProgramSupportedPersistenceHandlerTest {
   @Test
   public void shouldSaveProgramSupported() {
     ProgramSupported programSupported = new ProgramSupported();
-    programSupportedPersistenceHandler.save(programSupported, new AuditFields(1, null));
+    ProgramSupported existing = new ProgramSupported();
+    programSupportedPersistenceHandler.save(existing, programSupported, new AuditFields(1, null));
     verify(facilityService).uploadSupportedProgram(programSupported);
     assertThat(programSupported.getModifiedBy(), is(1));
+  }
+
+  @Test
+  public void shouldThrowErrorIfDuplicateFacilityAndProgramCodeFoundWithSameTimeStamp() {
+    ProgramSupported programSupported = new ProgramSupported();
+    Date currentTimestamp = new Date();
+    programSupported.setModifiedDate(currentTimestamp);
+
+    AuditFields auditFields = new AuditFields();
+    auditFields.setCurrentTimestamp(currentTimestamp);
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("Facility has already been mapped to the program ");
+
+    programSupportedPersistenceHandler.throwExceptionIfAlreadyProcessedInCurrentUpload(programSupported, auditFields);
   }
 
 }

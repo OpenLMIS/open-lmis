@@ -106,7 +106,7 @@ public class ProgramProductMapperIT {
     programProduct.setDosesPerMonth(10);
     programProduct.setActive(false);
 
-    programProductMapper.updateProgramProduct(programProduct);
+    programProductMapper.update(programProduct);
 
     ProgramProduct dbProgramProduct = programProductMapper.getByProgramAndProductId(program.getId(),product.getId());
 

@@ -9,6 +9,7 @@ package org.openlmis.core.upload;
 import org.junit.Test;
 import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.core.repository.ProductCategoryRepository;
+import org.openlmis.core.service.ProductCategoryService;
 import org.openlmis.upload.model.AuditFields;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -23,13 +24,13 @@ public class ProductCategoryPersistenceHandlerTest {
 
   @Test
   public void shouldSaveImportedProductCategory() throws Exception {
-    ProductCategoryRepository productCategoryRepository = mock(ProductCategoryRepository.class);
+    ProductCategoryService productCategoryService = mock(ProductCategoryService.class);
     ProductCategory productCategory = new ProductCategory();
 
-    new ProductCategoryPersistenceHandler(productCategoryRepository).execute(productCategory, 0, new AuditFields(1, null));
+    new ProductCategoryPersistenceHandler(productCategoryService).execute(productCategory, 0, new AuditFields(1, null));
     assertThat(productCategory.getModifiedBy(), is(1));
     assertThat(productCategory.getModifiedDate(), is(notNullValue()));
-    verify(productCategoryRepository).save(productCategory);
+    verify(productCategoryService).save(productCategory);
   }
 }
 

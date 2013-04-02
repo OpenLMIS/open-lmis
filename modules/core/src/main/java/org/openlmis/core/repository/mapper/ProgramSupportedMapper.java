@@ -18,7 +18,7 @@ public interface ProgramSupportedMapper {
   @Insert("INSERT INTO programs_supported" +
     "(facilityId, programId, active, startDate, modifiedBy,modifiedDate) VALUES (" +
     "#{facilityId}, #{program.id}, #{active}, #{startDate}, #{modifiedBy},#{modifiedDate})")
-  @Options(flushCache = true)
+  @Options(flushCache = true, useGeneratedKeys = true)
   void addSupportedProgram(ProgramSupported programSupported);
 
   @Select("SELECT * FROM programs_supported " +

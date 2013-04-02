@@ -49,23 +49,23 @@ public class FacilityApprovedProductRepository {
   }
 
   public void insert(FacilityApprovedProduct facilityApprovedProduct) {
-    FacilityApprovedProduct savedFacilityApprovedProduct = facilityApprovedProductMapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(
-      facilityApprovedProduct.getProgramProduct().getId(), facilityApprovedProduct.getFacilityType().getCode());
-
-    if (savedFacilityApprovedProduct != null && facilityApprovedProduct.getModifiedDate().equals(savedFacilityApprovedProduct.getModifiedDate())) {
-      throw new DataException(FACILITY_APPROVED_PRODUCT_DUPLICATE);
-    }
     try {
-      if (savedFacilityApprovedProduct == null) {
-        facilityApprovedProductMapper.insert(facilityApprovedProduct);
-      } else {
-        facilityApprovedProduct.setId(savedFacilityApprovedProduct.getId());
-        facilityApprovedProduct.getFacilityType().setId(facilityMapper.getFacilityTypeIdForCode(facilityApprovedProduct.getFacilityType().getCode()));
-        facilityApprovedProductMapper.updateFacilityApprovedProduct(facilityApprovedProduct);
-      }
+    facilityApprovedProductMapper.insert(facilityApprovedProduct);
     } catch (DataIntegrityViolationException e) {
       throw new DataException(FACILITY_TYPE_DOES_NOT_EXIST);
     }
   }
 
+  public void update(FacilityApprovedProduct facilityApprovedProduct) {
+    try {
+      facilityApprovedProductMapper.updateFacilityApprovedProduct(facilityApprovedProduct);
+    } catch (DataIntegrityViolationException e) {
+      throw new DataException(FACILITY_TYPE_DOES_NOT_EXIST);
+    }
+  }
+
+  public FacilityApprovedProduct getFacilityApprovedProductByProgramProductAndFacilityTypeCode(FacilityApprovedProduct facilityApprovedProduct) {
+    return facilityApprovedProductMapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(
+      facilityApprovedProduct.getProgramProduct().getId(), facilityApprovedProduct.getFacilityType().getCode());
+  }
 }

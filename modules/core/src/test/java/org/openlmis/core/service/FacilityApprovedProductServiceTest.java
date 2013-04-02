@@ -6,6 +6,7 @@
 
 package org.openlmis.core.service;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -13,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.FacilityApprovedProduct;
+import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityApprovedProductRepository;
 
@@ -40,13 +42,23 @@ public class FacilityApprovedProductServiceTest {
   @Mock
   private ProgramProductService programProductService;
 
+  @Mock
+  private FacilityService facilityService;
+
   @Rule
   public ExpectedException expectedException = none();
+
+  FacilityApprovedProductService facilityApprovedProductService;
+
+  @Before
+  public void setup() {
+    facilityApprovedProductService = new FacilityApprovedProductService(facilityApprovedProductRepository, programService, productService, programProductService, facilityService);
+  }
+
 
   @Test
   public void shouldSaveFacilityApprovedProduct() throws Exception {
 
-    FacilityApprovedProductService facilityApprovedProductService = new FacilityApprovedProductService(facilityApprovedProductRepository, programService, productService, programProductService);
     FacilityApprovedProduct facilityApprovedProduct = make(a(defaultFacilityApprovedProduct));
 
     Integer programId = 45;
@@ -56,6 +68,7 @@ public class FacilityApprovedProductServiceTest {
     when(programService.getIdForCode(defaultProgramCode)).thenReturn(programId);
     when(productService.getIdForCode(defaultProductCode)).thenReturn(productId);
     when(programProductService.getIdByProgramIdAndProductId(programId, productId)).thenReturn(100);
+    when(facilityService.getFacilityTypeByCode(facilityApprovedProduct.getFacilityType())).thenReturn(new FacilityType());
 
     facilityApprovedProductService.save(facilityApprovedProduct);
 
@@ -71,7 +84,6 @@ public class FacilityApprovedProductServiceTest {
 
   @Test
   public void shouldNotSaveFacilityApprovedProductAndThrowAnExceptionWhenProgramDoesNotExist() throws Exception {
-    FacilityApprovedProductService facilityApprovedProductService = new FacilityApprovedProductService(facilityApprovedProductRepository, programService, productService, programProductService);
     FacilityApprovedProduct facilityApprovedProduct = make(a(defaultFacilityApprovedProduct));
 
     doThrow(new DataException("abc")).when(programService).getIdForCode(defaultProgramCode);
@@ -87,7 +99,6 @@ public class FacilityApprovedProductServiceTest {
 
   @Test
   public void shouldNotSaveFacilityApprovedProductAndThrowAnExceptionWhenProductDoesNotExist() throws Exception {
-    FacilityApprovedProductService facilityApprovedProductService = new FacilityApprovedProductService(facilityApprovedProductRepository, programService, productService, programProductService);
     FacilityApprovedProduct facilityApprovedProduct = make(a(defaultFacilityApprovedProduct));
 
     doThrow(new DataException("abc")).when(productService).getIdForCode(defaultProductCode);
@@ -103,7 +114,6 @@ public class FacilityApprovedProductServiceTest {
 
   @Test
   public void shouldNotSaveFacilityApprovedProductAndThrowAnExceptionWhenProgramProductDoesNotExist() throws Exception {
-    FacilityApprovedProductService facilityApprovedProductService = new FacilityApprovedProductService(facilityApprovedProductRepository, programService, productService, programProductService);
     FacilityApprovedProduct facilityApprovedProduct = make(a(defaultFacilityApprovedProduct));
 
     Integer programId = 1;

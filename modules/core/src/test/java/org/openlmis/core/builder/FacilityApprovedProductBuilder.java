@@ -9,21 +9,20 @@ package org.openlmis.core.builder;
 import com.natpryce.makeiteasy.Instantiator;
 import com.natpryce.makeiteasy.Property;
 import com.natpryce.makeiteasy.PropertyLookup;
-import org.openlmis.core.domain.FacilityApprovedProduct;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.*;
 
 import static com.natpryce.makeiteasy.Property.newProperty;
 
 public class FacilityApprovedProductBuilder {
 
   public static final Property<FacilityApprovedProduct, String> facilityTypeCode = newProperty();
+  public static final Property<FacilityApprovedProduct, Integer> facilityTypeId = newProperty();
   public static final Property<FacilityApprovedProduct, String> programCode = newProperty();
   public static final Property<FacilityApprovedProduct, String> productCode = newProperty();
   public static final Property<FacilityApprovedProduct, Integer> maxMonthsOfStock = newProperty();
 
   public static final String defaultFacilityTypeCode = "code";
+  public static final Integer defaultFacilityTypeId = 1;
   public static final String defaultProgramCode = "YELL_FVR";
   public static final String defaultProductCode = "P999";
   public static final Integer defaultMaxMonthsOfStock = 3;
@@ -41,8 +40,10 @@ public class FacilityApprovedProductBuilder {
 
       ProgramProduct programProduct = new ProgramProduct(program, product, 1, true);
 
+      FacilityType facilityType = new FacilityType(lookup.valueOf(facilityTypeCode, defaultFacilityTypeCode));
+      facilityType.setId(lookup.valueOf(facilityTypeId, defaultFacilityTypeId));
       return new FacilityApprovedProduct(
-        lookup.valueOf(facilityTypeCode, defaultFacilityTypeCode),
+        facilityType,
         programProduct,
         lookup.valueOf(maxMonthsOfStock, defaultMaxMonthsOfStock));
 

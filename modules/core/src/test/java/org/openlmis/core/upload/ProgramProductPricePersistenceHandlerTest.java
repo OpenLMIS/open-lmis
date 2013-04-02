@@ -36,7 +36,8 @@ public class ProgramProductPricePersistenceHandlerTest {
   @Test
   public void shouldSaveProgramProductPrice() {
     ProgramProductPrice programProductPrice = new ProgramProductPrice();
-    programProductCostPersistenceHandler.save(programProductPrice, new AuditFields(1, null));
+    ProgramProductPrice existing = new ProgramProductPrice();
+    programProductCostPersistenceHandler.save(existing, programProductPrice, new AuditFields(1, null));
     verify(programProductService).updateProgramProductPrice(programProductPrice);
     assertThat(programProductPrice.getModifiedBy(), is(1));
   }
@@ -45,9 +46,10 @@ public class ProgramProductPricePersistenceHandlerTest {
   public void shouldInsertProgramProduct() throws Exception {
     ProgramProduct programProduct = new ProgramProduct();
 
-    programProductPersistanceHandler.save(programProduct, new AuditFields(1, null));
+    ProgramProduct existing = new ProgramProduct();
+    programProductPersistanceHandler.save(existing, programProduct, new AuditFields(1, null));
 
-    verify(programProductService).insert(programProduct);
+    verify(programProductService).save(programProduct);
 
   }
 }

@@ -27,11 +27,21 @@ public class SupplyLineHandler extends AbstractModelPersistenceHandler {
         this.supplyLineRepository = supplyLineRepository;
     }
 
-    @Override
-    protected void save(Importable modelClass, AuditFields auditFields) {
-        SupplyLine supplyLine = (SupplyLine) modelClass;
-        supplyLine.setModifiedBy(auditFields.getUser());
-        supplyLine.setModifiedDate(new Date());
-        supplyLineRepository.insert(supplyLine);
-    }
+  @Override
+  protected Importable getExisting(Importable importable) {
+    return null;  //To change body of implemented methods use File | Settings | File Templates.
+  }
+
+  @Override
+  protected void save(Importable existingRecord, Importable currentRecord, AuditFields auditFields) {
+    SupplyLine supplyLine = (SupplyLine) currentRecord;
+    supplyLine.setModifiedBy(auditFields.getUser());
+    supplyLine.setModifiedDate(new Date());
+    supplyLineRepository.insert(supplyLine);
+  }
+
+  @Override
+  protected void throwExceptionIfAlreadyProcessedInCurrentUpload(Importable importable, AuditFields auditFields) {
+  }
+
 }

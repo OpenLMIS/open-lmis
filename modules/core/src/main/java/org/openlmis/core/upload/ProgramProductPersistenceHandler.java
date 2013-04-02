@@ -7,32 +7,45 @@
 package org.openlmis.core.upload;
 
 import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.repository.ProgramProductRepository;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.model.AuditFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-
 @Component("programProductPersistenceHandler")
 public class ProgramProductPersistenceHandler extends AbstractModelPersistenceHandler {
 
-    private ProgramProductService programProductService;
+  private ProgramProductService programProductService;
 
-    @Autowired
-    public ProgramProductPersistenceHandler(ProgramProductService programProductService) {
-        this.programProductService = programProductService;
-    }
+  @Autowired
+  public ProgramProductPersistenceHandler(ProgramProductService programProductService) {
+    this.programProductService = programProductService;
+  }
 
-    @Override
-    protected void save(Importable importable, AuditFields auditFields) {
-        ProgramProduct programProduct = (ProgramProduct) importable;
-        programProduct.setModifiedBy(auditFields.getUser());
-        programProduct.setModifiedDate(auditFields.getCurrentTimestamp());
-        programProductService.insert(programProduct);
+  @Override
+  protected Importable getExisting(Importable importable) {
+    return programProductService.getProgramProductByProgramAndProductCode((ProgramProduct) importable);
+  }
+
+  @Override
+  protected void save(Importable existingRecord, Importable currentRecord, AuditFields auditFields) {
+    ProgramProduct programProduct = (ProgramProduct) currentRecord;
+    programProduct.setModifiedBy(auditFields.getUser());
+    programProduct.setModifiedDate(auditFields.getCurrentTimestamp());
+    if(existingRecord != null) programProduct.setId(((ProgramProduct) existingRecord).getId());
+    programProductService.save(programProduct);
+  }
+
+  @Override
+  protected void throwExceptionIfAlreadyProcessedInCurrentUpload(Importable importable, AuditFields auditFields) {
+    ProgramProduct programProduct = (ProgramProduct) importable;
+    if (programProduct != null && programProduct.getModifiedDate().equals(auditFields.getCurrentTimestamp())) {
+      throw new DataException("Duplicate entry for Product Code and Program Code combination found");
     }
-}
+  }
+
+ }
 
 

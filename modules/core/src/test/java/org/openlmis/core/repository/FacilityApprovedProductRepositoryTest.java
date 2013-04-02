@@ -95,53 +95,9 @@ public class FacilityApprovedProductRepositoryTest {
   }
 
   @Test
-  public void shouldThrowErrorIfFacilityProductExistsWithSameTimeStamp() throws Exception {
-    FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct();
-    ProgramProduct programProduct = new ProgramProduct();
-    facilityApprovedProduct.setProgramProduct(programProduct);
-    programProduct.setId(1);
-
-    Date modifiedDate = new Date();
-    facilityApprovedProduct.setModifiedDate(modifiedDate);
-
-    FacilityApprovedProduct savedFacilityApprovedProduct = new FacilityApprovedProduct();
-    savedFacilityApprovedProduct.setModifiedDate(modifiedDate);
-
-    facilityApprovedProduct.setFacilityType(new FacilityType("warehouse"));
-
-    when(facilityApprovedProductMapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(1, "warehouse")).thenReturn(savedFacilityApprovedProduct);
-
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("facilityApprovedProduct.duplicate.found");
-
-    facilityApprovedProductRepository.insert(facilityApprovedProduct);
-  }
-
-  @Test
   public void shouldUpdateFacilityApprovedProductIfExists() throws Exception {
-    ProgramProduct programProduct = new ProgramProduct();
-    programProduct.setId(1);
-
     FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct();
-    facilityApprovedProduct.setProgramProduct(programProduct);
-
-    FacilityType facilityType = new FacilityType();
-    facilityApprovedProduct.setFacilityType(facilityType);
-
-    Calendar today = Calendar.getInstance();
-    facilityApprovedProduct.setModifiedDate(today.getTime());
-
-    FacilityApprovedProduct savedFacilityApprovedProduct = new FacilityApprovedProduct();
-    today.add(Calendar.DATE, -1);
-    savedFacilityApprovedProduct.setModifiedDate(today.getTime());
-    facilityApprovedProduct.setFacilityType(new FacilityType("warehouse"));
-
-    when(facilityApprovedProductMapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(1, "warehouse")).thenReturn(savedFacilityApprovedProduct);
-    when(facilityMapper.getFacilityTypeIdForCode(null)).thenReturn(1);
-    doNothing().when(facilityApprovedProductMapper).updateFacilityApprovedProduct(facilityApprovedProduct);
-
-    facilityApprovedProductRepository.insert(facilityApprovedProduct);
-
+    facilityApprovedProductRepository.update(facilityApprovedProduct);
     verify(facilityApprovedProductMapper).updateFacilityApprovedProduct(facilityApprovedProduct);
   }
 }

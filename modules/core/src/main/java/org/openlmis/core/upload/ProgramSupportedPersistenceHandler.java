@@ -7,6 +7,8 @@
 package org.openlmis.core.upload;
 
 import org.openlmis.core.domain.ProgramSupported;
+import org.openlmis.core.domain.User;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.model.AuditFields;
@@ -24,10 +26,24 @@ public class ProgramSupportedPersistenceHandler extends AbstractModelPersistence
   }
 
   @Override
-  protected void save(Importable importable, AuditFields auditFields) {
-    ProgramSupported programSupported = (ProgramSupported) importable;
+  protected Importable getExisting(Importable importable) {
+    return facilityService.getProgramSupported((ProgramSupported) importable);
+  }
+
+  @Override
+  protected void save(Importable existingRecord, Importable currentRecord, AuditFields auditFields) {
+    ProgramSupported programSupported = (ProgramSupported) currentRecord;
     programSupported.setModifiedBy(auditFields.getUser());
     programSupported.setModifiedDate(auditFields.getCurrentTimestamp());
+    if(existingRecord != null) programSupported.setId(((ProgramSupported) existingRecord).getId());
     facilityService.uploadSupportedProgram(programSupported);
+  }
+
+  @Override
+  protected void throwExceptionIfAlreadyProcessedInCurrentUpload(Importable importable, AuditFields auditFields) {
+    ProgramSupported programSupported = (ProgramSupported) importable;
+    if (programSupported != null && programSupported.getModifiedDate().equals(auditFields.getCurrentTimestamp())) {
+      throw new DataException("Facility has already been mapped to the program ");
+    }
   }
 }

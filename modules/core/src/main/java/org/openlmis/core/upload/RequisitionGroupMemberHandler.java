@@ -20,20 +20,31 @@ import java.util.Date;
 @Component("requisitionGroupMemberHandler")
 public class RequisitionGroupMemberHandler extends AbstractModelPersistenceHandler {
 
-    private RequisitionGroupMemberService requisitionGroupMemberService;
+  private RequisitionGroupMemberService requisitionGroupMemberService;
 
-    @Autowired
-    public RequisitionGroupMemberHandler(RequisitionGroupMemberService requisitionGroupMemberService) {
+  @Autowired
+  public RequisitionGroupMemberHandler(RequisitionGroupMemberService requisitionGroupMemberService) {
 
-        this.requisitionGroupMemberService = requisitionGroupMemberService;
-    }
+    this.requisitionGroupMemberService = requisitionGroupMemberService;
+  }
 
-    @Override
-    protected void save(Importable modelClass, AuditFields auditFields) {
-        RequisitionGroupMember requisitionGroupMember = (RequisitionGroupMember) modelClass;
-        requisitionGroupMember.setModifiedBy(auditFields.getUser());
-        requisitionGroupMember.setModifiedDate(new Date());
 
-        requisitionGroupMemberService.save(requisitionGroupMember);
-    }
+  @Override
+  protected Importable getExisting(Importable importable) {
+    return null;  //To change body of implemented methods use File | Settings | File Templates.
+  }
+
+  @Override
+  protected void save(Importable existingRecord, Importable currentRecord, AuditFields auditFields) {
+    RequisitionGroupMember requisitionGroupMember = (RequisitionGroupMember) currentRecord;
+    requisitionGroupMember.setModifiedBy(auditFields.getUser());
+    requisitionGroupMember.setModifiedDate(new Date());
+
+    requisitionGroupMemberService.save(requisitionGroupMember);
+  }
+
+  @Override
+  protected void throwExceptionIfAlreadyProcessedInCurrentUpload(Importable importable, AuditFields auditFields) {
+  }
+
 }

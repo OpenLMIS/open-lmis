@@ -58,4 +58,8 @@ public class ProductCategoryRepository {
   public Integer getProductCategoryIdByCode(String categoryCode){
     return categoryMapper.getProductCategoryIdByCode(categoryCode);
   }
+
+  public ProductCategory getByCode(String code) {
+    return categoryMapper.getProductCategoryByCode(code);
+  }
 }

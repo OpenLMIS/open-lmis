@@ -370,7 +370,8 @@ public class RequisitionMapperIT {
   }
 
   private FacilityApprovedProduct insertFacilityApprovedProduct(ProgramProduct programProduct) {
-    FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct("warehouse", programProduct, 3);
+    FacilityApprovedProduct facilityApprovedProduct = make(a(FacilityApprovedProductBuilder.defaultFacilityApprovedProduct));
+    facilityApprovedProduct.setProgramProduct(programProduct);
     facilityApprovedProductMapper.insert(facilityApprovedProduct);
     return facilityApprovedProduct;
   }
