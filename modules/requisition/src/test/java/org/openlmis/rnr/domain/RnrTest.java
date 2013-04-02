@@ -241,8 +241,12 @@ public class RnrTest {
 
   @Test
   public void shouldReleaseARequisitionAsAnOrder() throws Exception {
-    rnr.convertToOrder();
+    OrderBatch orderBatch = new OrderBatch();
+    Integer userId = 1;
+    rnr.convertToOrder(orderBatch, userId);
     assertThat(rnr.getStatus(), is(ORDERED));
+    assertThat(rnr.getOrderBatch(), is(orderBatch));
+    assertThat(rnr.getModifiedBy(), is(userId));
   }
 
   private ArrayList<RnrColumn> setupProgramTemplate() {

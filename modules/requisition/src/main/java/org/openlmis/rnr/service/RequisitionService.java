@@ -92,6 +92,7 @@ public class RequisitionService {
     fillFieldsForInitiatedRequisitionAccordingToTemplate(requisition, rnrTemplate);
 
     requisitionRepository.insert(requisition);
+    requisitionRepository.logStatusChange(requisition);
     return get(new Facility(facilityId), new Program(programId), new ProcessingPeriod(periodId));
   }
 
@@ -145,8 +146,7 @@ public class RequisitionService {
 
     savedRnr.prepareFor(SUBMITTED, rnrColumns);
 
-    requisitionRepository.update(savedRnr);
-
+    update(savedRnr);
     SupervisoryNode supervisoryNode = supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram());
     String msg = (supervisoryNode == null) ? NO_SUPERVISORY_NODE_CONTACT_ADMIN : RNR_SUBMITTED_SUCCESSFULLY;
 
@@ -168,7 +168,7 @@ public class RequisitionService {
 
     savedRnr.setSupervisoryNodeId(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram()).getId());
 
-    requisitionRepository.update(savedRnr);
+    update(savedRnr);
 
     User approver = supervisoryNodeService.getApproverFor(savedRnr.getFacility(), savedRnr.getProgram());
     String msg = (approver == null) ? RNR_AUTHORIZED_SUCCESSFULLY_WITHOUT_SUPERVISOR : RNR_AUTHORIZED_SUCCESSFULLY;
@@ -293,7 +293,7 @@ public class RequisitionService {
     final User nextApprover = supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(parent, requisition.getProgram());
     requisition.setStatus(IN_APPROVAL);
     requisition.setSupervisoryNodeId(parent.getId());
-    requisitionRepository.update(requisition);
+    update(requisition);
     if (nextApprover == null) {
       return new OpenLmisMessage(RNR_APPROVED_SUCCESSFULLY_WITHOUT_SUPERVISOR);
     }
@@ -309,7 +309,7 @@ public class RequisitionService {
       rnr.setSupplyingFacility(supplyLine.getSupplyingFacility());
     }
     rnr.setSupervisoryNodeId(null);
-    requisitionRepository.update(rnr);
+    update(rnr);
     return new OpenLmisMessage(RNR_APPROVED_SUCCESSFULLY);
   }
 
@@ -335,10 +335,14 @@ public class RequisitionService {
         orderBatchBySupplyingFacility.put(loadedRequisition.getSupplyingFacility().getId(), orderBatch);
       }
 
-      loadedRequisition.convertToOrder();
-      loadedRequisition.setOrderBatch(orderBatch);
-      requisitionRepository.update(loadedRequisition);
+      loadedRequisition.convertToOrder(orderBatch, userId);
+      update(loadedRequisition);
     }
+  }
+
+  private void update(Rnr requisition) {
+    requisitionRepository.update(requisition);
+    requisitionRepository.logStatusChange(requisition);
   }
 
   public List<Rnr> get(RequisitionSearchCriteria criteria) {

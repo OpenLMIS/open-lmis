@@ -222,8 +222,10 @@ public class Rnr {
       copyUserEditableFields(otherRnr, programRnrColumns);
   }
 
-  public void convertToOrder() {
+  public void convertToOrder(OrderBatch orderBatch, Integer userId) {
     this.status = ORDERED;
+    this.modifiedBy = userId;
+    this.orderBatch = orderBatch;
   }
 
   public void fillFullSupplyCost() {

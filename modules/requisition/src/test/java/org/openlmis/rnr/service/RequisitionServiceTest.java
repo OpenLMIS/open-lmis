@@ -133,6 +133,7 @@ public class RequisitionServiceTest {
 
     verify(facilityApprovedProductService).getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(), PROGRAM.getId());
     verify(requisitionRepository).insert(any(Rnr.class));
+    verify(requisitionRepository).logStatusChange(any(Rnr.class));
 
     assertThat(rnr, is(requisition));
     assertThat(requisition.getFullSupplyLineItems().get(0).getQuantityReceived(), is(0));
@@ -399,6 +400,7 @@ public class RequisitionServiceTest {
     OpenLmisMessage message = requisitionService.submit(initiatedRnr);
 
     verify(requisitionRepository).update(savedRnr);
+    verify(requisitionRepository).logStatusChange(savedRnr);
     assertThat(savedRnr.getSubmittedDate(), is(notNullValue()));
     assertThat(savedRnr.getStatus(), is(SUBMITTED));
     assertThat(message.getCode(), is("rnr.submitted.success"));
@@ -418,6 +420,7 @@ public class RequisitionServiceTest {
 
     verify(rnrTemplateRepository).fetchRnrTemplateColumnsOrMasterColumns(PROGRAM.getId());
     verify(requisitionRepository).update(savedRnr);
+    verify(requisitionRepository).logStatusChange(savedRnr);
     assertThat(savedRnr.getStatus(), is(AUTHORIZED));
     assertThat(savedRnr.getSupervisoryNodeId(), is(approverNode.getId()));
     assertThat(authorize.getCode(), is(RNR_AUTHORIZED_SUCCESSFULLY));
@@ -583,6 +586,7 @@ public class RequisitionServiceTest {
     OpenLmisMessage message = requisitionService.approve(authorizedRnr);
 
     verify(requisitionRepository).update(savedRnr);
+    verify(requisitionRepository).logStatusChange(savedRnr);
     assertThat(savedRnr.getStatus(), is(APPROVED));
     assertThat(savedRnr.getSupervisoryNodeId(), is(nullValue()));
     assertThat(message.getCode(), is(RNR_APPROVED_SUCCESSFULLY));
@@ -602,6 +606,7 @@ public class RequisitionServiceTest {
     OpenLmisMessage message = requisitionService.approve(authorizedRnr);
 
     verify(requisitionRepository).update(savedRnr);
+    verify(requisitionRepository).logStatusChange(savedRnr);
     assertThat(savedRnr.getStatus(), is(IN_APPROVAL));
     assertThat(savedRnr.getSupervisoryNodeId(), is(2));
     assertThat(message.getCode(), is(RNR_APPROVED_SUCCESSFULLY));
@@ -820,6 +825,7 @@ public class RequisitionServiceTest {
 
     ArgumentCaptor<Rnr> requisitionArgumentCaptor = ArgumentCaptor.forClass(Rnr.class);
     verify(requisitionRepository, times(3)).update(requisitionArgumentCaptor.capture());
+    verify(requisitionRepository, times(3)).logStatusChange(requisitionArgumentCaptor.capture());
 
     List<Rnr> orderList = requisitionArgumentCaptor.getAllValues();
     assertThat(orderList.get(0), is(rnr1));

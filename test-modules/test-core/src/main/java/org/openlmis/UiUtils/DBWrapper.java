@@ -104,6 +104,7 @@ public class DBWrapper {
     update("delete from facility_approved_products;");
     update("delete from program_product_price_history;");
     update("delete from program_products;");
+    update("DELETE FROM requisition_status_changes;");
     update("DELETE FROM requisition_line_item_losses_adjustments;");
     update("DELETE FROM requisition_line_items;");
     update("delete from products;");

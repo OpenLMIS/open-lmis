@@ -14,10 +14,7 @@ import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.rnr.domain.*;
-import org.openlmis.rnr.repository.mapper.CommentMapper;
-import org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper;
-import org.openlmis.rnr.repository.mapper.RequisitionMapper;
-import org.openlmis.rnr.repository.mapper.RnrLineItemMapper;
+import org.openlmis.rnr.repository.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -35,15 +32,19 @@ public class RequisitionRepository {
   private LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
   private CommentMapper commentMapper;
   private CommaSeparator commaSeparator;
+  private RequisitionStatusChangeMapper requisitionStatusChangeMapper;
 
 
   @Autowired
-  public RequisitionRepository(RequisitionMapper requisitionMapper, RnrLineItemMapper rnrLineItemMapper, LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper, CommaSeparator separator, CommentMapper commentMapper) {
+  public RequisitionRepository(RequisitionMapper requisitionMapper, RnrLineItemMapper rnrLineItemMapper,
+                               LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper, CommaSeparator separator,
+                               CommentMapper commentMapper, RequisitionStatusChangeMapper requisitionStatusChangeMapper) {
     this.requisitionMapper = requisitionMapper;
     this.rnrLineItemMapper = rnrLineItemMapper;
     this.lossesAndAdjustmentsMapper = lossesAndAdjustmentsMapper;
     this.commentMapper = commentMapper;
     commaSeparator = separator;
+    this.requisitionStatusChangeMapper = requisitionStatusChangeMapper;
   }
 
   public void insert(Rnr requisition) {
@@ -142,6 +143,11 @@ public class RequisitionRepository {
 
   public void insertComment(Comment comment) {
     commentMapper.insert(comment);
+  }
+
+  public void logStatusChange(Rnr requisition) {
+    RequisitionStatusChange statusChange = new RequisitionStatusChange(requisition);
+    requisitionStatusChangeMapper.insert(statusChange);
   }
 }
 

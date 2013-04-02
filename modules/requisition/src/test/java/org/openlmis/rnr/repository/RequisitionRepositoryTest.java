@@ -11,6 +11,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Facility;
@@ -21,10 +22,8 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.rnr.domain.*;
-import org.openlmis.rnr.repository.mapper.CommentMapper;
-import org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper;
-import org.openlmis.rnr.repository.mapper.RequisitionMapper;
-import org.openlmis.rnr.repository.mapper.RnrLineItemMapper;
+import org.openlmis.rnr.repository.mapper.*;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +35,10 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 import static org.openlmis.rnr.domain.RnrStatus.ORDERED;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(MockitoJUnitRunner.class)
+@PrepareForTest(RequisitionStatusChange.class)
 public class RequisitionRepositoryTest {
 
   public static final Integer FACILITY_ID = 1;
@@ -61,7 +62,12 @@ public class RequisitionRepositoryTest {
   @Mock
   private CommaSeparator separator;
 
+  @Mock
+  private RequisitionStatusChangeMapper requisitionStatusChangeMapper;
+
+  @InjectMocks
   private RequisitionRepository requisitionRepository;
+
   private LossesAndAdjustments lossAndAdjustmentForLineItem = new LossesAndAdjustments();
   private RnrLineItem rnrLineItem1;
   private RnrLineItem rnrLineItem2;
@@ -69,7 +75,6 @@ public class RequisitionRepositoryTest {
 
   @Before
   public void setUp() throws Exception {
-    requisitionRepository = new RequisitionRepository(requisitionMapper, rnrLineItemMapper, lossesAndAdjustmentsMapper, separator, commentMapper);
     rnr = new Rnr();
     rnrLineItem1 = new RnrLineItem();
     rnrLineItem1.setId(1);
@@ -244,5 +249,14 @@ public class RequisitionRepositoryTest {
     requisitionRepository.insertComment(comment);
 
     verify(commentMapper).insert(comment);
+  }
+
+  @Test
+  public void shouldLogRequisitionStatusChanges() throws Exception {
+    RequisitionStatusChange requisitionStatusChange = new RequisitionStatusChange();
+    Rnr requisition = new Rnr();
+    whenNew(RequisitionStatusChange.class).withArguments(requisition).thenReturn(requisitionStatusChange);
+    requisitionRepository.logStatusChange(requisition);
+    verify(requisitionStatusChangeMapper).insert(requisitionStatusChange);
   }
 }
