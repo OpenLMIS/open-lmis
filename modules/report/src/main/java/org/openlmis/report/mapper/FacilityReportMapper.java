@@ -39,7 +39,7 @@ public interface FacilityReportMapper {
     @Results(value = {
             @Result(column="code", property="code"),
             @Result(column="name", property="facilityName"),
-            @Result(column="name", property="facilityType")
+            @Result(column="facilityType", property="facilityType")
     })
     public  List<FacilityReport> SelectFilteredSortedPagedFacilities(
             @Param("filterCriteria") ReportData filterCriteria,

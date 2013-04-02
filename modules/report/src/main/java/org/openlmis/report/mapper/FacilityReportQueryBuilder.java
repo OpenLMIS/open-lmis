@@ -23,38 +23,40 @@ public class FacilityReportQueryBuilder {
         FacilityReportFilter filter  = (FacilityReportFilter)params.get("filterCriteria");
         FacilityReportSorter sorter = (FacilityReportSorter)params.get("SortCriteria");
         BEGIN();
-        SELECT("id, code, name");
-        FROM("facilities ");
+        SELECT("F.id, F.code, F.name, FT.name as facilityType");
+        //FROM("facility_types FT");
+        FROM("facilities F");
+        JOIN("facility_types FT on FT.id = F.typeid");
 
         if (filter.getStatusId() != null) {
-           WHERE("active = #{filterCriteria.statusId}");
+           WHERE("F.active = #{filterCriteria.statusId}");
         }
         if (filter.getZoneId() != 0) {
-             WHERE("geographiczoneid = #{filterCriteria.zoneId}");
+             WHERE("F.geographiczoneid = #{filterCriteria.zoneId}");
         }
         if (filter.getFacilityTypeId() != 0) {
-            WHERE("typeid = #{filterCriteria.facilityTypeId}");
+            WHERE("F.typeid = #{filterCriteria.facilityTypeId}");
         }
 
         if(sorter.getFacilityName().equalsIgnoreCase("asc")){
-            ORDER_BY("name asc");
+            ORDER_BY("F.name asc");
         }
         if(sorter.getFacilityName().equalsIgnoreCase("desc")){
-            ORDER_BY("name desc");
+            ORDER_BY("F.name desc");
         }
 
         if(sorter.getCode().equalsIgnoreCase("asc")){
-            ORDER_BY("code asc");
+            ORDER_BY("F.code asc");
         }
         if(sorter.getCode().equalsIgnoreCase("desc")){
-            ORDER_BY("code desc");
+            ORDER_BY("F.code desc");
         }
 
         if(sorter.getFacilityType().equalsIgnoreCase("asc")){
-            ORDER_BY("typeid asc");
+            ORDER_BY("F.typeid asc");
         }
         if(sorter.getFacilityType().equalsIgnoreCase("desc")){
-            ORDER_BY("typeid desc");
+            ORDER_BY("F.typeid desc");
         }
 
         return SQL();
