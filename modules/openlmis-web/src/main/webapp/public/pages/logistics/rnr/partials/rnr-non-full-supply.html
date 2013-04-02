@@ -72,9 +72,8 @@
                        ng-required="true"
                        ng-class="highlightWarning(rnrLineItem.reasonForRequestedQuantity)"
                        maxlength="250"/>
-                <span class="alert alert-warning reason-request"
+                <span class="alert alert-warning reason-request" openlmis-message="rnr.requested.quantity.reason.warning"
                       ng-show="rnrLineItem.quantityRequested && !rnrLineItem.reasonForRequestedQuantity">
-                  Please enter a reason
                 </span>
               </span>
               <span ng-switch-when="price">
@@ -100,12 +99,12 @@
 <form name="nonFullSupplyForm">
   <div id="nonFullSupplyProductsModal" modal="nonFullSupplyProductsModal"
        options="{ backdrop: 'static', escape: false}">
-    <div class="modal-header"><h3>Add non full supply product(s)</h3></div>
+    <div class="modal-header"><h3 openlmis-message="rnr.label.add.non.full.supply"></h3></div>
     <div class="modal-body">
 
       <div class="row-fluid">
         <div class="span6">
-          <label for="nonFullSupplyProductsCategory">Category:</label>
+          <label for="nonFullSupplyProductsCategory" openlmis-message="rnr.label.category"></label>
           <select ui-select2 class="span12 bottom-spacer" id="nonFullSupplyProductsCategory"
                   ng-model="nonFullSupplyProductCategory" name="productName"
                   data-placeholder="-- Select category --"
@@ -118,7 +117,7 @@
 
       <div class="row-fluid">
         <div class="span6">
-          <label for="nonFullSupplyProductsCodeAndName">Product code / name:</label>
+          <label for="nonFullSupplyProductsCodeAndName" openlmis-message="rnr.label.product.code"></label>
           <select ui-select2 class="span12 bottom-spacer" id="nonFullSupplyProductsCodeAndName"
                   ng-model="facilityApprovedProduct" name="productCode" data-placeholder="-- Select product --"
                   ng-options="facilityApprovedProduct.programProduct.product.code+' | '+facilityApprovedProduct.programProduct.product.primaryName for facilityApprovedProduct in nonFullSupplyProductsToDisplay">
@@ -145,15 +144,15 @@
           <input type="text" class="span12" ng-model="newNonFullSupply.reasonForRequestedQuantity"
                  id="reasonForRequestedQuantity" maxlength="250"/><br>
             <span class="alert alert-warning reason-request"
-                  ng-show="newNonFullSupply.quantityRequested && !newNonFullSupply.reasonForRequestedQuantity">
-              Please enter a reason
+                  ng-show="newNonFullSupply.quantityRequested && !newNonFullSupply.reasonForRequestedQuantity"
+                  openlmis-message="rnr.requested.quantity.reason.warning">
             </span>
         </div>
         <div class="span3">
           <label>&nbsp;</label>
           <input type="button" href="" id="addNonFullSupply" class="btn btn-primary"
                  ng-click="addNonFullSupplyProductsByCategory()"
-                 ng-disabled="shouldDisableAddButton()" value="Add"/>
+                 ng-disabled="shouldDisableAddButton()" openlmis-message="button.add"/>
         </div>
       </div>
 
@@ -200,19 +199,16 @@
       </div>
 
     </div>
-    <div class="alert alert-danger" id="modalErrorMessage"
-         ng-show="modalError"
-         ng-bind="modalError"></div>
-
+    <div class="alert alert-danger" id="modalErrorMessage" ng-show="modalError" ng-bind="modalError"></div>
 
     <div class="modal-footer">
       <input type="button" id="doneNonFullSupply" class="btn btn-primary"
              ng-click="addNonFullSupplyLineItemsToRnr()"
-             value="Done"/>
+             openlmis-message="button.done"/>
 
       <input type="button" id="cancelNonFullSupply" class="btn btn-cancel"
              ng-click="nonFullSupplyProductsModal=false;modalError=''"
-             value="Cancel"/>
+             openlmis-message="button.cancel"/>
     </div>
   </div>
 </form>

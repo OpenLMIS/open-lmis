@@ -13,44 +13,67 @@ describe("Message Directive", function () {
   var messageKey = "rnr.number.error";
   var compile;
 
-  beforeEach(inject(function ($compile, $rootScope, _messageService_) {
-    messageService = _messageService_;
-    elm = angular.element('<div openlmis-message="error"></div>');
+  describe("Non Input", function () {
+    beforeEach(inject(function ($compile, $rootScope, _messageService_) {
+      messageService = _messageService_;
+      elm = angular.element('<div openlmis-message="error" value="Original Text"> </div>');
 
-    scope = $rootScope.$new();
-    compile = $compile;
-  }));
+      scope = $rootScope.$new();
+      compile = $compile;
+    }));
 
-  it('should get message from message service if found in scope and message service', function () {
-    spyOn(messageService, 'get').andReturn("actual message");
-    scope.error = messageKey;
+    it('should get message from message service if found in scope and message service', function () {
+      spyOn(messageService, 'get').andReturn("actual message");
+      scope.error = messageKey;
 
-    compile(elm)(scope);
-    scope.$digest();
+      compile(elm)(scope);
+      scope.$digest();
 
-    expect(elm.text()).toEqual("actual message");
+      expect(elm.text()).toEqual("actual message");
+      expect(elm.attr("value")).toEqual("Original Text");
+    });
+
+    it('should use scope value as message if not found in message service', function () {
+      spyOn(messageService, 'get').andReturn(null);
+      scope.error = messageKey;
+
+      compile(elm)(scope);
+      scope.$digest();
+
+      expect(elm.text()).toEqual("rnr.number.error");
+    });
+
+    it('should use message service if key is not in scope', function () {
+      spyOn(messageService, 'get').andReturn("actual message");
+      scope.error = null;
+
+      compile(elm)(scope);
+      scope.$digest();
+
+      expect(elm.text()).toEqual("actual message");
+      expect(messageService.get).toHaveBeenCalledWith('error');
+
+    });
   });
 
-  it('should use scope value as message if not found in message service', function () {
-    spyOn(messageService, 'get').andReturn(null);
-    scope.error = messageKey;
+  describe("Input", function () {
+    beforeEach(inject(function ($compile, $rootScope, _messageService_) {
+      messageService = _messageService_;
+      elm = angular.element('<input openlmis-message="error"></div>');
 
-    compile(elm)(scope);
-    scope.$digest();
+      scope = $rootScope.$new();
+      compile = $compile;
+    }));
 
-    expect(elm.text()).toEqual("rnr.number.error");
-  });
+    it('should populate value attribute for input elements', function () {
+      spyOn(messageService, 'get').andReturn("actual message");
+      scope.error = messageKey;
 
-  it('should use message service if key is not in scope', function () {
-    spyOn(messageService, 'get').andReturn("actual message");
-    scope.error = null;
+      compile(elm)(scope);
+      scope.$digest();
 
-    compile(elm)(scope);
-    scope.$digest();
-
-    expect(elm.text()).toEqual("actual message");
-    expect(messageService.get).toHaveBeenCalledWith('error');
-
+      expect(elm.attr("value")).toEqual("actual message");
+    });
   });
 
 });

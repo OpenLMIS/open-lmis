@@ -86,8 +86,8 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
       link:function (scope, element, attrs) {
         scope.$watch(attrs.openlmisMessage, function () {
           var key = scope[attrs.openlmisMessage] || attrs.openlmisMessage;
-          var displayMessage = messageService.get(key);
-          element.html(displayMessage || key);
+          var displayMessage = messageService.get(key) || key;
+          element[0].localName == "input" ? element.attr("value", displayMessage) : element.html(displayMessage);
         });
       }
     }

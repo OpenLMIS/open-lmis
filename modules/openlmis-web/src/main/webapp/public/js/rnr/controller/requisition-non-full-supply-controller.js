@@ -89,7 +89,7 @@ function RequisitionNonFullSupplyController($scope, $rootScope) {
     $scope.addedNonFullSupplyProducts.push(rnrLineItem);
     $scope.updateNonFullSupplyProductsToDisplay();
     $scope.clearNonFullSupplyProductModalData();
-  }
+  };
 
   $scope.updateNonFullSupplyProductsToDisplay = function () {
     var addedNonFullSupplyProductList = _.pluck($scope.addedNonFullSupplyProducts, 'productCode').concat(_.pluck($scope.rnr.nonFullSupplyLineItems, 'productCode'));

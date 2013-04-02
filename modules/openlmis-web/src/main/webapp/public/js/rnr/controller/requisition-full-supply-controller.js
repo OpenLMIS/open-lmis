@@ -26,7 +26,7 @@ function RequisitionFullSupplyController($scope, $routeParams, $location, Losses
   $scope.clearAndCloseLossesAndAdjustmentModal = function () {
     $scope.lossAndAdjustment = undefined;
     $scope.lossesAndAdjustmentsModal = false;
-  }
+  };
 
   $scope.resetModalError = function () {
     $scope.modalError = '';
