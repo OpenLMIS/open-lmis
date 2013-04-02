@@ -80,7 +80,7 @@ public class FacilityService {
   }
 
   public List<GeographicZone> getAllGeographicZones() {
-    return geographicZoneRepository.getAllZones();
+        return geographicZoneRepository.getAllZones();
   }
 
 

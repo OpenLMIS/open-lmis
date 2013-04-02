@@ -63,7 +63,7 @@ public class FacilityReportDataProvider extends ReportDataProvider {
 
         if(filterCriteria == null) {
 
-            List<Facility> facilities = facilityService.getAllFacilitiesDetail();
+            List<Facility> facilities = facilityService.getAll();
             return getListFacilityReport(facilities);
         }
         if (!(filterCriteria instanceof FacilityReport)) return null;

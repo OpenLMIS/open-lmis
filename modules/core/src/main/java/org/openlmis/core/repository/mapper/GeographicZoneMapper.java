@@ -41,6 +41,7 @@ public interface GeographicZoneMapper {
   })
   List<GeographicZone> getAllGeographicZones();
 
+
   @Select({"SELECT GZ.id, GZ.code, GZ.name, GL.id as levelId, GL.code as levelCode, GL.name as levelName, GL.levelNumber as levelNumber ",
             "FROM geographic_zones GZ, geographic_levels GL",
             "where GZ.levelId = GL.id "})
