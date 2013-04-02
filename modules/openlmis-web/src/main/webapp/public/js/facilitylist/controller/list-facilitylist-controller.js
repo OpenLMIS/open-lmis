@@ -63,18 +63,24 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
             if(selection != undefined || selection == ""){
                $scope.filterObject.zoneId =  selection;
                //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+            }else{
+                $scope.filterObject.zoneId = 0;
             }
         });
         $scope.$watch('status.value', function(selection){
             if(selection != undefined || selection == ""){
                 $scope.filterObject.statusId =  selection;
                 //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+            }else{
+                $scope.filterObject.statusId ='';
             }
         });
         $scope.$watch('facilityType.value', function(selection){
             if(selection != undefined || selection == ""){
                 $scope.filterObject.facilityTypeId =  selection;
                 //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+            }else{
+                $scope.filterObject.facilityTypeId =  0;
             }
         });
 

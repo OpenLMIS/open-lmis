@@ -42,8 +42,7 @@ public class FacilityReportDataProvider extends ReportDataProvider {
 
     private ReportData getFacilityReport(Facility facility){
         if(facility == null) return null;
-        return null;
-        //return new FacilityReport(facility.getCode(),facility.getName(),"facilityType");
+        return new FacilityReport(facility.getCode(),facility.getName(),"facilityType");
     }
 
     private List<ReportData> getListFacilityReport(List<Facility> facilityList){
@@ -94,7 +93,6 @@ public class FacilityReportDataProvider extends ReportDataProvider {
     @Override
     public int getReportDataCountByFilterCriteria(ReportData filterCriteria) {
         return (int)facilityReportMapper.SelectFilteredFacilitiesCount(filterCriteria);
-        //return 100;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
 }
