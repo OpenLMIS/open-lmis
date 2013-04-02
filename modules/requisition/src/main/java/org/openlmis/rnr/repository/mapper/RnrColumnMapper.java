@@ -47,7 +47,7 @@ public interface RnrColumnMapper {
             "FROM program_rnr_columns p INNER JOIN master_rnr_columns m",
             "ON p.masterColumnId = m.id",
             "WHERE p.programId = #{programId} AND p.visible = 'true'",
-            "ORDER BY visible desc, position"})
+            "ORDER BY visible DESC, position"})
     List<RnrColumn> getVisibleProgramRnrColumns(Integer programId);
 
 

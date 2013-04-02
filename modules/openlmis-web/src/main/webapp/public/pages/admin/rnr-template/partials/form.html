@@ -20,24 +20,19 @@
   </div>
   <form name="configureRnRTemplateForm" ng-submit="save()">
     <div class="rnr-template-columns">
-      <ul ui-sortable
-          ui-options="{update: update, handle: '.drag-handle', placeholder: 'sortable-placeholder', containment: '.content'}"
-          ng-model="rnrColumns" id="sortable">
+      <ul ui-sortable ng-model="rnrColumns" id="sortable">
         <li id="{{rnrColumn.indicator}}" ng-repeat="rnrColumn in rnrColumns">
           <div class="drag-handle"></div>
           <span class="tpl-visible">
-            <input type="checkbox" ng-model="rnrColumn.visible" ng-click="update()" ng-disabled="rnrColumn.mandatory"/>
+            <input type="checkbox" ng-model="rnrColumn.visible" ng-click="setArithmeticValidationMessageShown()" ng-disabled="rnrColumn.mandatory"/>
           </span>
           <span class="tpl-indicator">
             <div class="indicator" ng-bind="rnrColumn.indicator"></div>
           </span>
-          <input type="hidden" ng-model="rnrColumn.id" value="{{ rnrColumn.id }}"/>
           <span class="tpl-label">
             <input name="label" type="text" ng-model="rnrColumn.label" required/>
             <span class="col-desc" ng-bind="rnrColumn.description"></span>
           </span>
-          <input type="hidden" class="rnr-column-position" ng-model="rnrColumn.position"
-                 value="{{ rnrColumn.position }}"/>
           <span class="tpl-source">
             <span ng-show="rnrColumn.sourceConfigurable">
               <select ng-model="rnrColumn.source.code" ng-options="c.code as c.description for c in sources"

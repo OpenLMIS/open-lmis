@@ -37,7 +37,7 @@ describe('Rnr Template controllers', function () {
 
     it('should set program in scope', function () {
       expect(program).toEqual(scope.program);
-    })
+    });
 
     it('should save R&R template', function() {
       routeParams.programId = 1;

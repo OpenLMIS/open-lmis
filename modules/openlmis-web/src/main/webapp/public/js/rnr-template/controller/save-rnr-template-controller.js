@@ -11,6 +11,7 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
   $scope.program = program;
   $scope.$parent.message = "";
   $scope.selectProgramUrl = "/public/pages/admin/rnr-template/create.html#/select-program";
+  $scope.arithmeticValidationLabel = false;
 
   var setRnRTemplateValidateFlag = function () {
     $.each($scope.rnrColumns, function (index, column) {
@@ -19,6 +20,7 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
   };
 
   $scope.save = function () {
+    updatePosition();
     setRnRTemplateValidateFlag();
     RnRColumnList.post({programId: $routeParams.programId}, $scope.rnrColumns, function () {
       $scope.$parent.message = "Template saved successfully!";
@@ -33,11 +35,6 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
     });
   };
 
-  $scope.update = function () {
-    updatePosition();
-    $scope.setArithmeticValidationMessageShown();
-  };
-
   function updatePosition() {
     $scope.rnrColumns.forEach(function (rnrColumn, index) {
       rnrColumn.position = index + 1;
@@ -49,7 +46,6 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
     $scope.message = "";
   }
 
-  $scope.arithmeticValidationLabel = false;
 
   $scope.setArithmeticValidationMessageShown = function () {
     $.each($scope.rnrColumns, function (index, column) {
