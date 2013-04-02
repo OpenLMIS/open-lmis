@@ -15,7 +15,7 @@
                         <h4>Facility List Filters</h4>
                         <form ng-submit="filterGrid()" name="filterForm" novalidate>
                             <div class="form-row clearfix">
-                                <div class="form-cell">
+                                <div class="form-cell horizontalFilters">
                                     <label>Zone</label>
 
                                     <div class="form-field">
@@ -24,7 +24,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-cell">
+                                <div class="form-cell horizontalFilters" >
                                     <label>Facility Type</label>
 
                                     <div class="form-field">
@@ -33,7 +33,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-cell">
+                                <div class="form-cell horizontalFilters">
                                     <label>Status</label>
 
                                     <div class="form-field">
@@ -43,12 +43,12 @@
                                     </div>
                                  </div>
                             </div>
-                            <div id="action_buttons">
-                                <div class="form-cell button-row">
-                                    <input type="submit" class="btn btn-primary save-button" value="Filter"/>
+
+                                <div class="form-cell button-row horizontalFilter">
+                                    <input type="submit" class="btn btn-primary save-button pull-right" value="Filter"/>
                                 </div>
-                                <div class="toolbar-error" id="saveErrorMsgDiv" ng-bind="error" ng-show="error"/>
-                            </div>
+
+
                          </form>
                 </div>
             </div>
