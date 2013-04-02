@@ -42,8 +42,7 @@ public class FacilityReportDataProvider extends ReportDataProvider {
 
     private ReportData getFacilityReport(Facility facility){
         if(facility == null) return null;
-        return null;
-        //return new FacilityReport(facility.getCode(),facility.getName(),"facilityType");
+        return new FacilityReport(facility.getCode(),facility.getName(),facility.getFacilityType() != null ? facility.getFacilityType().getName() : null);
     }
 
     private List<ReportData> getListFacilityReport(List<Facility> facilityList){
@@ -64,7 +63,7 @@ public class FacilityReportDataProvider extends ReportDataProvider {
 
         if(filterCriteria == null) {
 
-            List<Facility> facilities = facilityService.getAll();
+            List<Facility> facilities = facilityService.getAllFacilitiesDetail();
             return getListFacilityReport(facilities);
         }
         if (!(filterCriteria instanceof FacilityReport)) return null;

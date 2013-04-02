@@ -35,6 +35,10 @@ public class FacilityRepository {
     return mapper.getAll();
   }
 
+  public List<Facility> getAllFacilitiesDetail(){
+      return mapper.getAllFacilitiesDetail();
+  }
+
   public void save(Facility facility) {
     facility.setModifiedDate(DateTime.now().toDate());
     try {

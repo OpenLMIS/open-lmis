@@ -31,6 +31,15 @@ public interface FacilityMapper {
   @Select("SELECT id, code, name FROM facilities")
   List<Facility> getAll();
 
+   @Select("SELECT * FROM facilities ")
+   @Results(value = {
+           @Result(property = "geographicZone", column = "geographicZoneId", javaType = Integer.class,
+                   one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getGeographicZoneById")),
+           @Result(property = "facilityType", column = "typeId", javaType = Integer.class, one = @One(select = "getFacilityTypeById")),
+           @Result(property = "operatedBy", column = "operatedById", javaType = Integer.class, one = @One(select = "getFacilityOperatorById"))
+    })
+   List<Facility> getAllFacilitiesDetail();
+
   @Select("SELECT * FROM users U, facilities F " +
     "WHERE U.facilityId = F.id AND U.id = #{userId} AND f.active = true")
   @Results(value = {@Result(property = "id", column = "facilityId")})
