@@ -56,56 +56,47 @@ public class InitiateRnRPage extends Page {
   @FindBy(how = XPATH, using = "//div[@id='submitFailMessage' and @openlmis-message='submitError']")
   private static WebElement submitErrorMessage;
 
-  @FindBy(how = How.ID, using = "A_0")
+  @FindBy(how = ID, using = "beginningBalance_0")
   private static WebElement beginningBalance;
 
-  @FindBy(how = How.ID, using = "B_0")
+  @FindBy(how = ID, using = "quantityReceived_0")
   private static WebElement quantityReceived;
 
-  @FindBy(how = How.ID, using = "C_0")
+  @FindBy(how = ID, using = "quantityDispensed_0")
   private static WebElement quantityDispensed;
 
-  @FindBy(how = How.ID, using = "D_0")
-  private static WebElement lossesAndAdjustments;
+  @FindBy(how = ID, using = "stockInHand_0")
+  private static WebElement stockInHand;
 
-  @FindBy(how = How.ID, using = "E_7")
-  private static WebElement stockOnHand;
-
-  @FindBy(how = How.ID, using = "F_0")
+  @FindBy(how = ID, using = "newPatientCount_0")
   private static WebElement newPatient;
 
-  @FindBy(how = XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[2]/td[13]/ng-switch/span/ng-switch/span")
+  @FindBy(how = ID, using = "maxStockQuantity_0")
   private static WebElement maximumStockQuantity;
 
-  @FindBy(how = XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[2]/td[14]/ng-switch/span/ng-switch/span")
+  @FindBy(how = ID, using = "calculatedOrderQuantity_0")
   private static WebElement caculatedOrderQuantity;
 
-  @FindBy(how = How.ID, using = "J_0")
+  @FindBy(how = ID, using = "quantityRequested_0")
   private static WebElement requestedQuantity;
 
-  @FindBy(how = XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[2]/td[11]/ng-switch/span/ng-switch/span")
+  @FindBy(how = ID, using = "normalizedConsumption_0")
   private static WebElement adjustedTotalConsumption;
 
-  @FindBy(how = XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[2]/td[12]/ng-switch/span/ng-switch/span")
+  @FindBy(how = ID, using = "amc_0")
   private static WebElement amc;
 
-  @FindBy(how = XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[2]/td[20]/ng-switch/span/ng-switch/span")
+  @FindBy(how = ID, using = "cost_0")
   private static WebElement totalCost;
 
-  @FindBy(how = XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[2]/td[19]/ng-switch/span/ng-switch/span")
+  @FindBy(how = ID, using = "price_0")
   private static WebElement pricePerPack;
 
-  @FindBy(how = XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[2]/td[18]/ng-switch/span/ng-switch/span")
-  private static WebElement packsToShip;
-
   @FindBy(how = ID, using = "packsToShip_0")
-  private static WebElement packsToShipNonFullSupply;
+  private static WebElement packsToShip;
 
   @FindBy(how = ID, using = "price_0")
   private static WebElement pricePerPackNonFullSupply;
-
-  @FindBy(how = ID, using = "cost_0")
-  private static WebElement totalCostNonFullSupply;
 
   @FindBy(how = XPATH, using = "//span[@id='fullSupplyItemsCost']")
   private static WebElement totalCostFullSupplyFooter;
@@ -116,12 +107,11 @@ public class InitiateRnRPage extends Page {
   @FindBy(how = XPATH, using = "//span[@id='totalCost']")
   private static WebElement totalCostFooter;
 
-  @FindBy(how = How.ID, using = "W_0")
+  @FindBy(how = ID, using = "reasonForRequestedQuantity_0")
   private static WebElement requestedQuantityExplanation;
 
-  @FindBy(how = How.ID, using = "X_0")
+  @FindBy(how = ID, using = "stockOutDays_0")
   private static WebElement totalStockOutDays;
-
 
   @FindBy(how = XPATH, using = "//a[@class='rnr-adjustment']")
   private static WebElement addDescription;
@@ -144,12 +134,6 @@ public class InitiateRnRPage extends Page {
 
   @FindBy(how = XPATH, using = "//div[@class='adjustment-list']/ul/li/span[@class='tpl-adjustment-type ng-binding']")
   private static WebElement adjList;
-
-  @FindBy(how = XPATH, using = "//input[@id='D_6_0']")
-  private static WebElement adjListValue;
-
-  @FindBy(how = XPATH, using = "//div[@class='adjustment-total clearfix alert alert-warning']")
-  private static WebElement totalAdj;
 
   @FindBy(how = XPATH, using = "//input[@value='Done']")
   private static WebElement doneButton;
@@ -175,17 +159,11 @@ public class InitiateRnRPage extends Page {
   @FindBy(how = XPATH, using = "//input[@value='Add']")
   private static WebElement addNonFullSupplyButtonScreen;
 
-  @FindBy(how = How.ID, using = "nonFullSupplyTab")
+  @FindBy(how = ID, using = "nonFullSupplyTab")
   private static WebElement nonFullSupplyTab;
 
-  @FindBy(how = How.ID, using = "fullSupplyTab")
+  @FindBy(how = ID, using = "fullSupplyTab")
   private static WebElement fullSupplyTab;
-
-  @FindBy(how = XPATH, using = "//input[@id='J_0']")
-  private static WebElement requestedQuantityNonFullSupply;
-
-  @FindBy(how = XPATH, using = "//input[@id='W_0']")
-  private static WebElement requestedQuantityExplanationNonFullSupply;
 
   @FindBy(how = XPATH, using = "//select[@id='nonFullSupplyProductsCategory']")
   private static WebElement categoryDropDown;
@@ -193,10 +171,8 @@ public class InitiateRnRPage extends Page {
   @FindBy(how = XPATH, using = "//select[@id='nonFullSupplyProductsCodeAndName']")
   private static WebElement productDropDown;
 
-
   @FindBy(how = XPATH, using = "//div[@id='s2id_nonFullSupplyProductsCategory']/a/span")
   private static WebElement categoryDropDownLink;
-
 
   @FindBy(how = XPATH, using = "//input[@class='select2-input select2-focused']")
   private static WebElement productDropDownTextField;
@@ -368,9 +344,9 @@ public class InitiateRnRPage extends Page {
     enterQuantityDispensed(C.toString());
     enterLossesAndAdjustments(D.toString());
     beginningBalance.click();
-    testWebDriver.waitForElementToAppear(stockOnHand);
+    testWebDriver.waitForElementToAppear(stockInHand);
     testWebDriver.sleep(2000);
-    return stockOnHand.getText();
+    return stockInHand.getText();
   }
 
   public void PopulateMandatoryFullSupplyDetails(int numberOfLineItems, int numberOfLineItemsPerPage) {
@@ -385,9 +361,9 @@ public class InitiateRnRPage extends Page {
         numberOfLineItemsPerPage = numberOfLineItems % numberOfLineItemsPerPage;
       }
       for (int i = 0; i < numberOfLineItemsPerPage; i++) {
-        testWebDriver.getElementById("A_" + i).sendKeys("10");
-        testWebDriver.getElementById("B_" + i).sendKeys("10");
-        testWebDriver.getElementById("C_" + i).sendKeys("10");
+        testWebDriver.getElementById("beginningBalance_" + i).sendKeys("10");
+        testWebDriver.getElementById("quantityReceived_" + i).sendKeys("10");
+        testWebDriver.getElementById("quantityDispensed_" + i).sendKeys("10");
       }
 
     }
@@ -465,13 +441,13 @@ public class InitiateRnRPage extends Page {
 
   public void calculateAndVerifyTotalCostNonFullSupply() {
     actualTotalCostNonFullSupply = calculateTotalCostNonFullSupply();
-    SeleneseTestNgHelper.assertEquals(actualTotalCostNonFullSupply.toString() + "0", totalCostNonFullSupply.getText().trim().substring(1));
+    SeleneseTestNgHelper.assertEquals(actualTotalCostNonFullSupply.toString() + "0", totalCost.getText().trim().substring(1));
     testWebDriver.sleep(500);
   }
 
   public float calculateTotalCostNonFullSupply() {
-    testWebDriver.waitForElementToAppear(packsToShipNonFullSupply);
-    String actualPacksToShip = testWebDriver.getText(packsToShipNonFullSupply);
+    testWebDriver.waitForElementToAppear(packsToShip);
+    String actualPacksToShip = testWebDriver.getText(packsToShip);
     testWebDriver.waitForElementToAppear(pricePerPackNonFullSupply);
     String actualPricePerPack = testWebDriver.getText(pricePerPackNonFullSupply).substring(1);
     return Float.parseFloat(actualPacksToShip.trim()) * Float.parseFloat(actualPricePerPack.trim());
@@ -559,8 +535,8 @@ public class InitiateRnRPage extends Page {
 
     SeleneseTestNgHelper.assertEquals(productDescriptionNonFullSupply.getText().trim(), nonFullSupplyItems);
     SeleneseTestNgHelper.assertEquals(productCodeNonFullSupply.getText().trim(), productCode);
-    SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(requestedQuantityNonFullSupply, "value").trim(), requestedQuantityValue);
-    SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(requestedQuantityExplanationNonFullSupply, "value").trim(), requestedQuantityExplanationValue);
+    SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(requestedQuantity, "value").trim(), requestedQuantityValue);
+    SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(requestedQuantityExplanation, "value").trim(), requestedQuantityExplanationValue);
 
   }
 
