@@ -14,6 +14,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,7 +55,6 @@ public class DriverFactory {
 
 
   private WebDriver loadDriver(boolean enableJavascript, String browser) throws InterruptedException {
-
     switch (browser) {
       case "firefox":
         driverType = System.getProperty("web.driver", "Firefox");
@@ -66,7 +66,7 @@ public class DriverFactory {
         Thread.sleep(1500);
         driverType = System.setProperty("webdriver.ie.driver", OUTPUT_FOLDER + "IEDriverServer.exe");
         driverType = System.getProperty("webdriver.ie.driver");
-        return new InternetExplorerDriver();
+        return createInternetExplorerDriver();
 
 
       case "chrome":
@@ -92,4 +92,10 @@ public class DriverFactory {
     profile.setPreference("javascript.enabled", enableJavascript);
     return new FirefoxDriver(profile);
   }
+
+    private WebDriver createInternetExplorerDriver() {
+        DesiredCapabilities ieCapabilities = DesiredCapabilities.internetExplorer();
+        ieCapabilities.setCapability("ignoreZoomSetting",true);
+        return new InternetExplorerDriver(ieCapabilities);
+    }
 }

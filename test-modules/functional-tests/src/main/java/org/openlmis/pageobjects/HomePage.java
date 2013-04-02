@@ -177,7 +177,8 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageFacilityMenuItem);
-    manageFacilityMenuItem.click();
+    testWebDriver.keyPress(manageFacilityMenuItem);
+    //manageFacilityMenuItem.click();
     verifyTabs();
     clickCreateFacilityButton();
     verifyHeader("Add new facility");
@@ -187,7 +188,7 @@ public class HomePage extends Page {
   private void clickCreateFacilityButton() {
     testWebDriver.waitForElementToAppear(createFacility);
     testWebDriver.sleep(1000);
-    testWebDriver.click(createFacility);
+    testWebDriver.keyPress(createFacility) ;
   }
 
   private void verifyHeader(String headingToVerify) {
