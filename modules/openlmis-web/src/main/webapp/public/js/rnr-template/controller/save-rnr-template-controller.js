@@ -29,7 +29,7 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
       if (data != null) {
         $scope.errorMap = data.data;
       }
-      updateErrorMessage("Save Failed!");
+      updateErrorMessage("form.error");
     });
   };
 
