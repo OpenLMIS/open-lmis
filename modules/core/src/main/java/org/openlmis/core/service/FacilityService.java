@@ -55,6 +55,10 @@ public class FacilityService {
     return facilityRepository.getAll();
   }
 
+  public List<Facility> getAllFacilitiesDetail(){
+    return facilityRepository.getAllFacilitiesDetail();
+  }
+
   public void uploadSupportedProgram(ProgramSupported programSupported) {
     programSupported.isValid();
 
