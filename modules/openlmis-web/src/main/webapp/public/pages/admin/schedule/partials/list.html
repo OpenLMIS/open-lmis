@@ -50,7 +50,7 @@
         <div class="row-fluid schedule-button-row">
           <div class="span1"></div>
           <div class="span2">
-            <input type="submit" class="btn btn-success btn-small" value="Create"/>
+            <input type="submit" class="btn btn-primary btn-small" value="Create"/>
             <input type="button" class="btn btn-cancel btn-small" value="Cancel" ng-click="cancelAddNewSchedule()"/>
           </div>
           <div ng-show="creationError" class="span9 form-error" ng-bind="creationError"></div>
@@ -110,7 +110,7 @@
         <div ng-show="schedulesBackupMap[schedule.id].edit" class="row-fluid schedule-button-row">
           <div class="span1"></div>
           <div class="span2">
-            <input type="submit" class="btn btn-success btn-small" value="Save"/>
+            <input type="submit" class="btn btn-primary btn-small" value="Save"/>
             <input type="button" class="btn btn-cancel btn-small" value="Cancel"
                    ng-click="cancelScheduleEdit(schedule, backupScheduleRow); schedulesBackupMap[schedule.id].edit=false"/>
           </div>
