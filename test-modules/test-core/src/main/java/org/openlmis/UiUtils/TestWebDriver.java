@@ -259,6 +259,16 @@ public class TestWebDriver {
         action.click(element).perform();
     }
 
+  public void clickForRadio(final WebElement element)
+  {
+    element.click();
+    if(!element.isSelected()) {
+    Actions action = new Actions(driver);
+    action.click(element).perform();
+    }
+
+  }
+
 
 
     public boolean mouseOver(final WebElement element) {
