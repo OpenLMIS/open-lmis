@@ -24,8 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
-import static java.lang.Boolean.*;
+import static java.lang.Boolean.FALSE;
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -109,7 +108,7 @@ public class RoleRightsMapperIT {
 
   @Test
   public void shouldGetRoleAndRights() throws Exception {
-    Role role = new Role(111, "role name", Boolean.FALSE, "description", 123, null, null);
+    Role role = new Role(111, "role name", Boolean.FALSE, "description");
     roleRightsMapper.insertRole(role);
 
     roleRightsMapper.createRoleRight(role.getId(), CREATE_REQUISITION);
@@ -154,7 +153,7 @@ public class RoleRightsMapperIT {
 
   @Test
   public void shouldUpdateRole() {
-    Role role = new Role(11, "Right Name", Boolean.FALSE, "Right Desc", 1111, null, null);
+    Role role = new Role(11, "Right Name", Boolean.FALSE, "Right Desc", null);
     roleRightsMapper.insertRole(role);
 
     role.setName("Right2");
@@ -174,7 +173,7 @@ public class RoleRightsMapperIT {
 
   @Test
   public void shouldDeleteRights() throws Exception {
-    Role role = new Role(11, "Right Name", Boolean.FALSE, "Right Desc", 1111, null, null);
+    Role role = new Role(11, "Right Name", Boolean.FALSE, "Right Desc", null);
     roleRightsMapper.insertRole(role);
     roleRightsMapper.createRoleRight(role.getId(), CREATE_REQUISITION);
     roleRightsMapper.createRoleRight(role.getId(), UPLOADS);

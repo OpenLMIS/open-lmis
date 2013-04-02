@@ -8,10 +8,9 @@ package org.openlmis.core.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
@@ -25,9 +24,10 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @JsonSerialize(include = NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Facility implements Importable, BaseModel {
+public class Facility extends BaseModel implements Importable {
 
   private Integer id;
 
@@ -122,21 +122,6 @@ public class Facility implements Importable, BaseModel {
   private Boolean dataReportable;
 
   List<ProgramSupported> supportedPrograms = new ArrayList<>();
-
-  private Integer modifiedBy;
-
-  @JsonIgnore
-  private Date modifiedDate;
-
-  @JsonProperty("modifiedDate")
-  public Date getModifiedDate(){
-    return modifiedDate;
-  }
-
-  @JsonIgnore
-  public void setModifiedDate(Date modifiedDate){
-    this.modifiedDate = modifiedDate;
-  }
 
   public Facility(Integer id) {
     this.id = id;

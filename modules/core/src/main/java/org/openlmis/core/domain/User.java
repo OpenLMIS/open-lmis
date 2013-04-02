@@ -7,16 +7,15 @@
 package org.openlmis.core.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.hash.Encoder;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -24,8 +23,9 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @JsonSerialize(include = NON_EMPTY)
-public class User implements Importable {
+public class User extends BaseModel implements Importable {
   private Integer id;
   @ImportField(mandatory = true, name = "User Name")
   private String userName;
@@ -61,9 +61,6 @@ public class User implements Importable {
   private Integer facilityId;
   private Integer modifiedBy;
 
-  @JsonIgnore
-  private Date modifiedDate;
-
   private List<RoleAssignment> supervisorRoles;
   private List<RoleAssignment> homeFacilityRoles;
   private List<RoleAssignment> adminRoles;
@@ -72,16 +69,6 @@ public class User implements Importable {
 
   private static final String INVALID_USER_NAME_ERROR_CODE = "user.userName.invalid";
 
-
-  @JsonProperty("modifiedDate")
-  public Date getModifiedDate() {
-    return modifiedDate;
-  }
-
-  @JsonIgnore
-  public void setModifiedDate(Date modifiedDate) {
-    this.modifiedDate = modifiedDate;
-  }
 
   public void validate() {
     validateEmail();

@@ -7,15 +7,15 @@
 package org.openlmis.core.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
-import java.util.Date;
-
 @Data
 @NoArgsConstructor
-public class SupplyLine implements Importable {
+@EqualsAndHashCode(callSuper = true)
+public class SupplyLine extends BaseModel implements Importable {
 
   Integer id;
 
@@ -30,8 +30,5 @@ public class SupplyLine implements Importable {
 
   @ImportField(mandatory = true, name = "Facility", nested = "code")
   Facility supplyingFacility;
-
-  private Date modifiedDate;
-  private Integer modifiedBy;
 
 }

@@ -7,6 +7,7 @@
 package org.openlmis.core.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
@@ -17,7 +18,8 @@ import java.util.Date;
 
 @Data
 @NoArgsConstructor
-public class ProgramProductPrice implements Importable {
+@EqualsAndHashCode(callSuper = true)
+public class ProgramProductPrice extends BaseModel implements Importable {
   public static final String PROGRAM_PRODUCT_PRICE_INVALID_PRICE_PER_DOSAGE = "programProductPrice.invalid.price.per.dosage";
 
   private Integer id;
@@ -37,8 +39,6 @@ public class ProgramProductPrice implements Importable {
 
   private Date startDate;
   private Date endDate;
-  private Integer modifiedBy;
-  private Date modifiedDate;
 
   public ProgramProductPrice(ProgramProduct programProduct, Money pricePerDosage, String source) {
     this.programProduct = programProduct;

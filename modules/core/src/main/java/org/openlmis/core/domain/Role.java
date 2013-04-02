@@ -8,24 +8,21 @@ package org.openlmis.core.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
 
-import java.util.Date;
 import java.util.Set;
-
-import static java.lang.Boolean.*;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Role {
+@EqualsAndHashCode(callSuper = true)
+public class Role extends BaseModel {
   private Integer id;
   private String name;
   private Boolean adminRole;
   private String description;
-  private Integer modifiedBy;
-  private Date modifiedDate;
   private Set<Right> rights;
 
   public Role(String name, Boolean adminRole, String description) {
@@ -33,7 +30,7 @@ public class Role {
   }
 
   public Role(Integer id, String name, Boolean adminRole, String description) {
-    this(id, name, adminRole, description, null, null, null);
+    this(id, name, adminRole, description, null);
   }
 
   public void validate() {

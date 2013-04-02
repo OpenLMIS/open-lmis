@@ -7,16 +7,15 @@
 package org.openlmis.core.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
-import java.util.Date;
-
 @Data
 @NoArgsConstructor
-public class RequisitionGroup implements Importable, BaseModel {
+@EqualsAndHashCode(callSuper = true)
+public class RequisitionGroup extends BaseModel implements Importable {
 
 
   Integer id;
@@ -28,8 +27,5 @@ public class RequisitionGroup implements Importable, BaseModel {
   String description;
   @ImportField(mandatory = true, nested = "code", name = "Supervisory Node")
   SupervisoryNode supervisoryNode;
-
-  Integer modifiedBy;
-  Date modifiedDate;
 
 }

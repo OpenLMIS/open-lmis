@@ -8,7 +8,9 @@ package org.openlmis.core.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
@@ -21,8 +23,9 @@ import static org.openlmis.core.service.FacilityService.SUPPORTED_PROGRAMS_INVAL
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ProgramSupported implements Importable {
+public class ProgramSupported extends BaseModel implements Importable {
 
   private Integer facilityId;
 
@@ -38,20 +41,14 @@ public class ProgramSupported implements Importable {
   @ImportField(name = "Program Start Date", type = "Date")
   private Date startDate;
 
-  private Integer modifiedBy;
-  private Date modifiedDate;
-
-  public ProgramSupported(Integer facilityId, Program program, Boolean active, Date startDate, Date modifiedDate, Integer modifiedBy) {
-    this.facilityId = facilityId;
-    this.program = program;
-    this.active = active;
-    this.startDate = startDate;
-    this.modifiedBy = modifiedBy;
-    this.modifiedDate = modifiedDate;
-  }
-
   public void isValid() {
     if (this.active && this.startDate == null)
       throw new DataException(SUPPORTED_PROGRAMS_INVALID);
+  }
+
+  @Override
+  @JsonIgnore
+  public Integer getId() {
+    throw new RuntimeException("Id field not supported");
   }
 }

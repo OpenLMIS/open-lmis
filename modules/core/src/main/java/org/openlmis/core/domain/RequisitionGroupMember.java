@@ -7,15 +7,16 @@
 package org.openlmis.core.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
-import java.util.Date;
-
 @Data
 @NoArgsConstructor
-public class   RequisitionGroupMember implements Importable {
+@EqualsAndHashCode(callSuper = true)
+public class RequisitionGroupMember extends BaseModel implements Importable {
 
     @ImportField(mandatory = true, name = "RG Code", nested = "code")
     private RequisitionGroup requisitionGroup;
@@ -23,11 +24,14 @@ public class   RequisitionGroupMember implements Importable {
     @ImportField(mandatory = true, name = "Member Facility", nested = "code")
     private Facility facility;
 
-    private Integer modifiedBy;
-    private Date modifiedDate;
-
     public RequisitionGroupMember(RequisitionGroup requisitionGroup, Facility facility) {
         this.requisitionGroup = requisitionGroup;
         this.facility = facility;
     }
+
+  @Override
+  @JsonIgnore
+  public Integer getId() {
+    throw new RuntimeException("Id field not supported");
+  }
 }

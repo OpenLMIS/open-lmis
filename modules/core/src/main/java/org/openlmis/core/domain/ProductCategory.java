@@ -7,17 +7,15 @@
 package org.openlmis.core.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
-import java.util.Date;
-
 @Data
 @NoArgsConstructor
-public class ProductCategory implements Importable {
-
-
+@EqualsAndHashCode(callSuper = true)
+public class ProductCategory extends BaseModel implements Importable {
   private Integer id;
 
   @ImportField(mandatory = true, name = "Category Code")
@@ -28,11 +26,4 @@ public class ProductCategory implements Importable {
 
   @ImportField(mandatory = true, type = "int", name = "Display Order")
   private Integer displayOrder;
-
-  private Integer modifiedBy;
-
-
-
-  private Date modifiedDate;
-
 }

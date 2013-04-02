@@ -7,21 +7,21 @@
 package org.openlmis.core.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 import org.openlmis.upload.annotation.ImportFields;
 
-import java.util.Date;
-
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
 @NoArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
+@EqualsAndHashCode(callSuper = true)
 // TODO : rename to FacilityTypeApprovedProduct
-public class FacilityApprovedProduct implements Importable {
+public class FacilityApprovedProduct extends BaseModel implements Importable {
 
   private Integer id;
 
@@ -36,10 +36,6 @@ public class FacilityApprovedProduct implements Importable {
 
   @ImportField(name = "Max months of stock", mandatory = true, type = "int")
   private Integer maxMonthsOfStock = 0;
-
-  private Integer modifiedBy;
-
-  private Date modifiedDate;
 
   public FacilityApprovedProduct(FacilityType facilityType, ProgramProduct programProduct, Integer maxMonthsOfStock) {
     this.facilityType = facilityType;

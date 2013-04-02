@@ -7,16 +7,16 @@
 package org.openlmis.core.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
-import java.util.Date;
-
 @Data
 @NoArgsConstructor
-public class ProgramProduct implements Importable {
+@EqualsAndHashCode(callSuper = true)
+public class ProgramProduct extends BaseModel implements Importable {
 
   @ImportField(name = "Program Code", type = "String", nested = "code", mandatory = true)
   private Program program;
@@ -29,8 +29,6 @@ public class ProgramProduct implements Importable {
 
   private Integer id;
   private Money currentPrice;
-  private Integer modifiedBy;
-  private Date modifiedDate;
   public static final String PROGRAM_PRODUCT_INVALID_CURRENT_PRICE = "programProduct.invalid.current.price";
 
   public ProgramProduct(Program program, Product product, Integer dosesPerMonth, Boolean active) {

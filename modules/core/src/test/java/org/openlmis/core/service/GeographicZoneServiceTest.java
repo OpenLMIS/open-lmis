@@ -49,13 +49,15 @@ public class GeographicZoneServiceTest {
     geographicZone.setCode("some code");
     geographicZone.setModifiedDate(new Date());
     geographicZone.setLevel(new GeographicLevel(null, "abc", null, null));
-    geographicZone.setParent(new GeographicZone(null, "xyz", null, null, null, null, null));
+    geographicZone.setParent(new GeographicZone(null, "xyz", null, null, null));
   }
 
   @Test
   public void shouldSaveGeographicZone() throws Exception {
-    when(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(new GeographicLevel(1, "abc", "abc", 1));
-    when(repository.getByCode(geographicZone.getParent().getCode())).thenReturn(new GeographicZone(1, "xyz", "xyz", null, null, null, null));
+    when(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(
+      new GeographicLevel(1, "abc", "abc", 1));
+    when(repository.getByCode(geographicZone.getParent().getCode())).thenReturn(
+      new GeographicZone(1, "xyz", "xyz", null, null));
 
     service.save(geographicZone);
 
@@ -68,7 +70,8 @@ public class GeographicZoneServiceTest {
 
   @Test
   public void shouldThrowAnExceptionIfParentCodeIsInvalid() throws Exception {
-    when(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(new GeographicLevel(1, "abc", "abc", 1));
+    when(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(
+      new GeographicLevel(1, "abc", "abc", 1));
     when(repository.getByCode(geographicZone.getParent().getCode())).thenReturn(null);
 
     expectedEx.expect(DataException.class);
@@ -89,8 +92,10 @@ public class GeographicZoneServiceTest {
 
   @Test
   public void shouldThrowErrorIfDuplicateCodeFoundWithSameTimeStamp() throws Exception {
-    when(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(new GeographicLevel(1, "abc", "abc", 1));
-    when(repository.getByCode(geographicZone.getParent().getCode())).thenReturn(new GeographicZone(1, "xyz", "xyz", null, null, null, null));
+    when(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(
+      new GeographicLevel(1, "abc", "abc", 1));
+    when(repository.getByCode(geographicZone.getParent().getCode())).thenReturn(
+      new GeographicZone(1, "xyz", "xyz", null, null));
     when(repository.getByCode(geographicZone.getCode())).thenReturn(geographicZone);
 
     expectedEx.expect(DataException.class);
@@ -101,8 +106,9 @@ public class GeographicZoneServiceTest {
 
   @Test
   public void shouldSetRootAsParentIfParentIsNull() throws Exception {
-    GeographicZone expected = new GeographicZone(1, "Root", "Root", null, null, null, null);
-    when(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(new GeographicLevel(1, "abc", "abc", 1));
+    GeographicZone expected = new GeographicZone(1, "Root", "Root", null, null);
+    when(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(
+      new GeographicLevel(1, "abc", "abc", 1));
     when(repository.getByCode(ROOT_GEOGRAPHIC_ZONE_CODE)).thenReturn(expected);
     geographicZone.setParent(null);
 
@@ -115,10 +121,13 @@ public class GeographicZoneServiceTest {
   @Test
   public void shouldUpdateZoneIfZonePreviouslyPresentInTheSystemWithPreviousTimestamp() throws Exception {
     GeographicLevel level = new GeographicLevel(1, "abc", "abc", 1);
-    GeographicZone parent = new GeographicZone(1, "xyz", "xyz", null, null, null, null);
+    GeographicZone parent = new GeographicZone(1, "xyz", "xyz", null, null);
+
+    GeographicZone zoneWithOldTimeStamp = new GeographicZone(1, geographicZone.getCode(), "saved name", null, null);
+    zoneWithOldTimeStamp.setModifiedDate(new Date(1111111111));
+
     when(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(level);
     when(repository.getByCode(geographicZone.getParent().getCode())).thenReturn(parent);
-    GeographicZone zoneWithOldTimeStamp = new GeographicZone(1, geographicZone.getCode(), "saved name", null, null, 1, new Date(1111111111));
     when(repository.getByCode(geographicZone.getCode())).
       thenReturn(zoneWithOldTimeStamp);
 

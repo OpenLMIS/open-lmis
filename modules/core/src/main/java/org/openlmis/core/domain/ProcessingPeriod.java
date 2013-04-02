@@ -7,6 +7,7 @@
 package org.openlmis.core.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
 
@@ -14,18 +15,17 @@ import java.util.Date;
 
 @Data
 @NoArgsConstructor
-public class ProcessingPeriod implements BaseModel{
+@EqualsAndHashCode(callSuper = true)
+public class ProcessingPeriod extends BaseModel {
 
   private Integer id;
   private Integer scheduleId;
 
   private String name;
   private String description;
-  private Integer modifiedBy;
   private Date startDate;
   private Date endDate;
   private Integer numberOfMonths;
-  private Date modifiedDate;
 
   public ProcessingPeriod(Integer id) {
     this.id = id;

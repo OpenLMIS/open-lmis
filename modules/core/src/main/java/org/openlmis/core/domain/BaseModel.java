@@ -6,6 +6,45 @@
 
 package org.openlmis.core.domain;
 
-public interface BaseModel {
-   Integer getId();
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+import java.util.Date;
+
+@Data
+@JsonSerialize()
+@EqualsAndHashCode(callSuper = false)
+public abstract class BaseModel {
+
+  public abstract Integer getId();
+
+  @JsonIgnore
+  protected Integer modifiedBy;
+
+  @JsonIgnore
+  protected Date modifiedDate;
+
+  @JsonProperty("modifiedDate")
+  public Date getModifiedDate() {
+    return modifiedDate;
+  }
+
+  @JsonIgnore
+  public void setModifiedDate(Date modifiedDate) {
+    this.modifiedDate = modifiedDate;
+  }
+
+  @JsonProperty("modifiedBy")
+  public Integer getModifiedBy() {
+    return modifiedBy;
+  }
+
+  @JsonIgnore
+  public void setModifiedBy(Integer modifiedBy) {
+    this.modifiedBy = modifiedBy;
+  }
+
 }
