@@ -107,7 +107,7 @@ public class UploadPage extends Page {
     testWebDriver.sleep(500);
   }
 
-  public void uploadFacilitiesNotLowestGeoCode() throws FileNotFoundException {
+  public void uploadFacilitiesNotAssignedToLowestGeoCode() throws FileNotFoundException {
     selectUploadType("Facilities");
     uploadFile("facilities_Lowest_Code.csv");
     verifyErrorMessageOnUploadScreen();
@@ -122,6 +122,12 @@ public class UploadPage extends Page {
     }
   }
 
+  public void uploadAndVerifyFacilitiesInvalidScenarios() throws FileNotFoundException {
+    selectUploadType("Facilities");
+    uploadFile("facilities_Duplicate_Code.csv");
+    verifyErrorMessageOnUploadScreen();
+  }
+
 
   public void uploadAndVerifyProducts(int noOfRuns) throws FileNotFoundException {
     for (int i = 1; i <= noOfRuns; i++) {
@@ -129,6 +135,12 @@ public class UploadPage extends Page {
       uploadFile("products.csv");
       verifySuccessMessageOnUploadScreen();
     }
+  }
+
+  public void uploadAndVerifyProductsInvalidScenarios() throws FileNotFoundException {
+    selectUploadType("Products");
+    uploadFile("products_Duplicate_Code.csv");
+    verifyErrorMessageOnUploadScreen();
   }
 
   public void uploadProductCategory() throws FileNotFoundException {
@@ -157,6 +169,10 @@ public class UploadPage extends Page {
     uploadFile("Users_Duplicate_UserName.csv");
     verifyErrorMessageOnUploadScreen();
     testWebDriver.sleep(250);
+    selectUploadType("Users");
+    uploadFile("Users_Invalid_Supervisor.csv");
+    verifyErrorMessageOnUploadScreen();
+    testWebDriver.sleep(250);
   }
 
   public void uploadAndVerifyProgramProductMapping(int noOfRuns) throws FileNotFoundException {
@@ -165,6 +181,17 @@ public class UploadPage extends Page {
       uploadFile("program_product.csv");
       verifySuccessMessageOnUploadScreen();
     }
+  }
+
+  public void uploadAndVerifyProgramProductMappingInvalidScenarios() throws FileNotFoundException {
+    selectUploadType("Program Product");
+    uploadFile("program_product_Invalid_ProductCode.csv");
+    verifyErrorMessageOnUploadScreen();
+    testWebDriver.sleep(250);
+    selectUploadType("Program Product");
+    uploadFile("program_product_Invalid_ProgramCode.csv");
+    verifyErrorMessageOnUploadScreen();
+    testWebDriver.sleep(250);
   }
 
   public void uploadProgramProductPrice() throws FileNotFoundException {
@@ -180,6 +207,17 @@ public class UploadPage extends Page {
     }
   }
 
+  public void uploadProgramSupportedByFacilitiesInvalidScenarios() throws FileNotFoundException {
+    selectUploadType("Programs supported by facilities");
+    uploadFile("program_supported_Invalid_FacilityCode.csv");
+    verifyErrorMessageOnUploadScreen();
+    testWebDriver.sleep(250);
+    selectUploadType("Programs supported by facilities");
+    uploadFile("program_supported_Invalid_ProgramCode.csv");
+    verifyErrorMessageOnUploadScreen();
+    testWebDriver.sleep(250);
+  }
+
   public void uploadAndVerifyFacilityTypeToProductMapping(int noOfRuns) throws FileNotFoundException {
     for (int i = 1; i <= noOfRuns; i++) {
       selectUploadType("Facility Approved Products");
@@ -188,6 +226,24 @@ public class UploadPage extends Page {
     }
   }
 
+  public void uploadAndVerifyFacilityTypeToProductMappingInvalidScenarios() throws FileNotFoundException {
+    selectUploadType("Facility Approved Products");
+    uploadFile("Facility_Type_To_Product_Mapping_Invalid_Combination.csv");
+    verifyErrorMessageOnUploadScreen();
+    testWebDriver.sleep(250);
+    selectUploadType("Facility Approved Products");
+    uploadFile("Facility_Type_To_Product_Mapping_Invalid_FacilityType.csv");
+    verifyErrorMessageOnUploadScreen();
+    testWebDriver.sleep(250);
+    selectUploadType("Facility Approved Products");
+    uploadFile("Facility_Type_To_Product_Mapping_Invalid_ProductCode.csv");
+    verifyErrorMessageOnUploadScreen();
+    testWebDriver.sleep(250);
+    selectUploadType("Facility Approved Products");
+    uploadFile("Facility_Type_To_Product_Mapping_Invalid_ProgramCode.csv");
+    verifyErrorMessageOnUploadScreen();
+    testWebDriver.sleep(250);
+  }
 
   public void uploadSupervisoryNodes() throws FileNotFoundException {
     selectUploadType("Supervisory Nodes");

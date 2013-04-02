@@ -52,8 +52,10 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadProductCategory();
     uploadPage.verifySuccessMessageOnUploadScreen();
 
+    uploadPage.uploadAndVerifyProductsInvalidScenarios();
     uploadPage.uploadAndVerifyProducts(2);
 
+    uploadPage.uploadAndVerifyProgramProductMappingInvalidScenarios();
     uploadPage.uploadAndVerifyProgramProductMapping(2);
 
     uploadPage.uploadProgramProductPrice();
@@ -63,13 +65,15 @@ public class E2EUpload extends TestCaseHelper {
 
     uploadPage.uploadAndVerifyGeographicZone(2);
 
-    uploadPage.uploadFacilitiesNotLowestGeoCode();
-
+    uploadPage.uploadFacilitiesNotAssignedToLowestGeoCode();
+    uploadPage.uploadAndVerifyFacilitiesInvalidScenarios();
     uploadPage.uploadAndVerifyFacilities(2);
 
+    uploadPage.uploadAndVerifyFacilityTypeToProductMappingInvalidScenarios();
     uploadPage.uploadAndVerifyFacilityTypeToProductMapping(2);
     dbWrapper.allocateFacilityToUser(userId, "F10");
 
+    uploadPage.uploadProgramSupportedByFacilitiesInvalidScenarios();
     uploadPage.uploadProgramSupportedByFacilities(2);
 
     uploadPage.uploadSupervisoryNodes();
