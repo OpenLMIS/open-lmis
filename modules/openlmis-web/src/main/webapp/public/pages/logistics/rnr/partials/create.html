@@ -41,11 +41,9 @@
                class="btn btn-success submit-button"
                openlmis-message="button.authorize"/>
       </div>
-      <div class="toolbar-error" id="saveFailMessage" openlmis-message="error"
-           ng-show="error"></div>
+      <div class="toolbar-error" id="saveFailMessage" openlmis-message="error" ng-show="error"></div>
       <div class="toolbar-error" id="submitFailMessage" openlmis-message="submitError" ng-show="submitError"></div>
-      <div class="toolbar-success {{(message) && 'fade5000' || ''}}" id="saveSuccessMsgDiv" openlmis-message="message"
-           ng-show="message"></div>
+      <div class="toolbar-success {{(message) && 'fade5000' || ''}}" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
       <div class="toolbar-success" id="submitSuccessMsgDiv" openlmis-message="submitMessage" ng-show="submitMessage"></div>
     </div>
   </form>
