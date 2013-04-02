@@ -95,7 +95,7 @@ public class RnRPagination extends TestCaseHelper {
      verifyNextAndLastLinksEnabled();
 
      testWebDriver.getElementByXpath("//a[contains(text(), '2') and @class='ng-binding']").click();
-     //SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//table[@id='nonFullSupplyTable']/tbody[1]/tr[1]/td").getText(),"Antibiotics");
+     SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//div[@class='ngCanvas']/div[contains(@class,'ngRow ng-scope')][1]/div[@class='ngAggregate productCategory ng-scope']").getText(),"Antibiotics");
      verifyPageLinksFromLastPage();
 
   }
