@@ -44,3 +44,7 @@ values
 (19, (select id from programs where code = 'ESS_MEDS'), true, 'R', 19, 'Price per pack'),
 (20, (select id from programs where code = 'ESS_MEDS'), true, 'C', 20, 'Total cost'),
 (21, (select id from programs where code = 'ESS_MEDS'), true, 'U', 21, 'Remarks');
+
+
+update programs set templateConfigured = true where id in ((select id from programs where code = 'ESS_MEDS'),
+(select id from programs where code = 'TB'));
