@@ -80,15 +80,16 @@ public class RnRPagination extends TestCaseHelper {
       verifyNumberOfPageLinks(21,20);
       verifyNextAndLastLinksEnabled();
       verifyPreviousAndFirstLinksDisabled();
-      //verifyDisplayOrderFullSupply(20);
+     verifyDisplayOrderFullSupplyOnViewRequisition(11);
 
      testWebDriver.getElementByXpath("//a[contains(text(), '2') and @class='ng-binding']").click();
-     //SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//table[@id='fullSupplyTable']/tbody[1]/tr[1]/td").getText(),"Antibiotics");
+     SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//div[@class='ngCanvas']/div[contains(@class,'ngRow ng-scope')][1]/div[@class='ngAggregate productCategory ng-scope']").getText(),"Antibiotics");
      verifyPageLinksFromLastPage();
 
      viewRequisitionPage.clickNonFullSupplyTab();
 
-     //verifyDisplayOrderNonFullSupply(20);
+     verifyDisplayOrderNonFullSupplyOnViewRequisition(11);
+
      verifyNumberOfPageLinks(21,20);
      verifyPreviousAndFirstLinksDisabled();
      verifyNextAndLastLinksEnabled();
@@ -237,10 +238,24 @@ public class RnRPagination extends TestCaseHelper {
         }
     }
 
+    public void verifyDisplayOrderFullSupplyOnViewRequisition(int numberOfLineItemsPerPage) throws Exception {
+        for (int i=0; i<numberOfLineItemsPerPage;i++)
+        {
+            SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//div[@class='ngCanvas']/div[contains(@class,'ngRow ng-scope ')]["+ (i+1) +"]/div[@class='ngCell  col2 colt2']").getText(),"F"+i);
+        }
+    }
+
     public void verifyDisplayOrderNonFullSupply(int numberOfLineItemsPerPage) throws Exception {
         for (int i=0; i<numberOfLineItemsPerPage;i++)
         {
             SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//table[@id='nonFullSupplyTable']/tbody["+ (i+1) +"]/tr[2]/td[1]/ng-switch/span").getText(),"NF"+i);
+        }
+    }
+
+    public void verifyDisplayOrderNonFullSupplyOnViewRequisition(int numberOfLineItemsPerPage) throws Exception {
+        for (int i=0; i<numberOfLineItemsPerPage;i++)
+        {
+            SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//div[@class='ngCanvas']/div[contains(@class,'ngRow ng-scope ')]["+ (i+1) +"]/div[@class='ngCell  col2 colt2']").getText(),"NF"+i);
         }
     }
 
