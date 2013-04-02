@@ -18,10 +18,10 @@
   <form name="saveRnrForm" action="#" id="rnr-form" novalidate>
     <ng-switch on="showNonFullSupply">
       <span ng-switch-when="true">
-        <ng-include src="'/public/pages/logistics/rnr/partials/rnr-non-full-supply.html'"></ng-include>
+        <ng-include src="'/public/pages/logistics/rnr/partials/create/rnr-non-full-supply.html'"></ng-include>
       </span>
       <span ng-switch-default>
-        <ng-include src="'/public/pages/logistics/rnr/partials/rnr-full-supply.html'"></ng-include>
+        <ng-include src="'/public/pages/logistics/rnr/partials/create/rnr-full-supply.html'"></ng-include>
       </span>
     </ng-switch>
     <div>

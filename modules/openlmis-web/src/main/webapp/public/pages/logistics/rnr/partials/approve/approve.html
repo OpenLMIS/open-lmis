@@ -34,9 +34,9 @@
 
 <form name="approvalForm" novalidate>
   <div style='width: 100%'>
-    <div class="approveGrid grid-approval" ng-grid="rnrGrid" ng-hide="!pageLineItems.length"></div>
+    <div class="approveGrid grid-approval" ng-grid="rnrGrid" ng-show="pageLineItems.length>0"></div>
   </div>
-  <div class="alert alert-success" id="noProductMessage" ng-show="!pageLineItems.length">
+  <div class="alert alert-success" id="noProductMessage" ng-hide="pageLineItems.length>0">
     No products.
   </div>
 
@@ -54,5 +54,6 @@
   </div>
 </form>
 <div>
-  <openlmis-pagination num-pages="numberOfPages" current-page="currentPage" max-size="10" check-error-on-page="checkErrorOnPage(page)"></openlmis-pagination>
+  <openlmis-pagination num-pages="numberOfPages" current-page="currentPage" max-size="10"
+                       check-error-on-page="checkErrorOnPage(page)"></openlmis-pagination>
 </div>
