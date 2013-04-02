@@ -11,7 +11,7 @@
                     </div>
                 </div>
             <div class="box-content" ng-show="show(1)">
-                <div class="hero-unit">
+                <div class="hero-unit" style="padding: 10px;">
                         <h4>Facility List Filters</h4>
                         <form ng-submit="filterGrid()" name="filterForm" novalidate>
                             <div class="form-row clearfix">
@@ -53,14 +53,15 @@
                 </div>
             </div>
 
-        <div class="box-header">
+        <div class="box-header" style="text-align: right">
           <!--   <h2><i class="icon-user"></i><span class="break"></span>Facility Lists</h2>-->
              <div class="box-icon">
                   <a href="/reports/download/facilities/pdf" class='btn-small btn-info'>pdf</a>
                   <a href="/reports/download/facilities/xls" class='btn-small btn-info'>xls</a>
              </div>
          </div>
-        <div class="gridStyle" ng-grid="gridOptions"></div>
+
+                <div class="gridStyle" ng-grid="gridOptions"></div>
 
    </div>
   </div>
