@@ -18,8 +18,10 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
+import static org.openlmis.core.builder.UserBuilder.userName;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -62,5 +64,15 @@ public class UserTest {
     expectedException.expectMessage("user.userName.invalid");
 
     user.validate();
+  }
+
+  @Test
+  public void shouldSetBasicInformation() throws Exception {
+    User user = make(a(defaultUser));
+    User expectedUser = new User(user.getId(), user.getUserName());
+
+    User userReturned = user.basicInformation();
+
+    assertThat(userReturned, is(expectedUser));
   }
 }

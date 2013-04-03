@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
+import org.openlmis.core.builder.UserBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
@@ -93,6 +94,8 @@ public class RequisitionServiceTest {
   private RequisitionFactory requisitionFactory;
   @Mock
   private RequisitionPermissionService requisitionPermissionService;
+  @Mock
+  private UserService userService;
 
   private Rnr submittedRnr;
   private Rnr initiatedRnr;
@@ -103,7 +106,7 @@ public class RequisitionServiceTest {
   public void setup() {
     requisitionService = new RequisitionService(requisitionRepository, rnrTemplateRepository, facilityApprovedProductService,
         supervisoryNodeService, roleAssignmentService, programService, processingScheduleService, facilityService, supplyLineService,
-        requisitionFactory, requisitionPermissionService);
+        requisitionFactory, requisitionPermissionService, userService);
     submittedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, SUBMITTED), with(modifiedBy, USER_ID)));
     initiatedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, INITIATED), with(modifiedBy, USER_ID)));
     authorizedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, AUTHORIZED), with(modifiedBy, USER_ID)));
@@ -940,9 +943,29 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  public void shouldGetAllCommentsForARnr() throws Exception {
-    requisitionService.getCommentsByRnrId(1);
+  public void shouldGetAllCommentsForARnrWithUsername() throws Exception {
+    User user = make(a(UserBuilder.defaultUser));
+    ArrayList<Comment> comments = new ArrayList<>();
+    Comment comment = new Comment();
+    User author = new User();
+    author.setId(USER_ID);
+    comment.setAuthor(author);
+    comments.add(comment);
+    when(requisitionRepository.getCommentsByRnrID(1)).thenReturn(comments);
+    User spyUser = spy(user);
+    User userReturned = new User();
+    userReturned.setId(1);
+    userReturned.setUserName(user.getUserName());
+    when(spyUser.basicInformation()).thenReturn(userReturned);
+    when(userService.getById(USER_ID)).thenReturn(spyUser);
+
+    List<Comment> returnedComments = requisitionService.getCommentsByRnrId(1);
+
     verify(requisitionRepository).getCommentsByRnrID(1);
+    User commentUser = comments.get(0).getAuthor();
+    verify(spyUser).basicInformation();
+    assertThat(commentUser.getUserName(), is(user.getUserName()));
+    assertThat(comments, is(returnedComments));
   }
 
   private Rnr getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(Rnr rnr, Right right) {

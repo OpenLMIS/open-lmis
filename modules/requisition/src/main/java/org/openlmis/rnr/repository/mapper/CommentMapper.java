@@ -7,6 +7,7 @@ import org.openlmis.rnr.domain.Comment;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public interface CommentMapper {
@@ -17,5 +18,5 @@ public interface CommentMapper {
 
   @Select("SELECT * FROM comments WHERE rnrId = #{rnrId} ORDER BY createdDate")
     @Result(column = "authorId", property = "author.id")
-  ArrayList<Comment> getAllCommentsByRnrId(Integer rnrId);
+  List<Comment> getByRnrId(Integer rnrId);
 }

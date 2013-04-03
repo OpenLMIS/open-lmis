@@ -225,7 +225,7 @@ public class RequisitionRepositoryTest {
   }
 
   @Test
-  public void shouldGetCategoryCount(){
+  public void shouldGetCategoryCount() {
 
     boolean fullSupply = true;
     when(rnrLineItemMapper.getCategoryCount(rnr, fullSupply)).thenReturn(10);
@@ -239,8 +239,11 @@ public class RequisitionRepositoryTest {
 
   @Test
   public void shouldGetCommentsForARnR() throws Exception {
-     requisitionRepository.getCommentsByRnrID(1);
-     verify(commentMapper).getAllCommentsByRnrId(1);
+    List<Comment> comments = new ArrayList<>();
+    when(commentMapper.getByRnrId(1)).thenReturn(comments);
+    List<Comment> returnedComments = requisitionRepository.getCommentsByRnrID(1);
+    verify(commentMapper).getByRnrId(1);
+    assertThat(returnedComments, is(comments));
   }
 
   @Test
@@ -259,4 +262,5 @@ public class RequisitionRepositoryTest {
     requisitionRepository.logStatusChange(requisition);
     verify(requisitionStatusChangeMapper).insert(requisitionStatusChange);
   }
+
 }

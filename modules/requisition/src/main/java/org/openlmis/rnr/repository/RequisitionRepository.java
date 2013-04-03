@@ -137,8 +137,8 @@ public class RequisitionRepository {
     return rnrLineItemMapper.getCategoryCount(requisition, fullSupply);
   }
 
-  public ArrayList<Comment> getCommentsByRnrID(Integer rnrId) {
-    return commentMapper.getAllCommentsByRnrId(rnrId);
+  public List<Comment> getCommentsByRnrID(Integer rnrId) {
+    return commentMapper.getByRnrId(rnrId);
   }
 
   public void insertComment(Comment comment) {

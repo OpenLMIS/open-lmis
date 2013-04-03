@@ -9,17 +9,16 @@ import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.mapper.*;
-import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.Comment;
 import org.openlmis.rnr.domain.Rnr;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.NotTransactional;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -29,8 +28,6 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
-import static org.openlmis.rnr.builder.RequisitionBuilder.*;
-import static org.openlmis.rnr.builder.RequisitionBuilder.facility;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -109,7 +106,7 @@ public class CommentMapperIT {
   public void shouldGetAllCommentsForARnR() throws Exception {
     mapper.insert(new Comment(null, requisition.getId(), user, "A new Comment1"));
 
-    ArrayList<Comment> listOfComments = mapper.getAllCommentsByRnrId(requisition.getId());
+    List<Comment> listOfComments = mapper.getByRnrId(requisition.getId());
 
     assertThat(listOfComments.size(),is(1));
     assertThat(listOfComments.get(0).getCommentText(), is("A new Comment1"));

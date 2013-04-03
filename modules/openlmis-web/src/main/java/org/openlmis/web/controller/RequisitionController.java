@@ -250,7 +250,7 @@ public class RequisitionController extends BaseController {
     requisitionService.insertComment(comment);
   }
 
-  @RequestMapping(value = "/requisition/{id}/comments", method = GET)
+  @RequestMapping(value = "/requisition/{id}/comments", method = GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getCommentsForARnr(@PathVariable Integer id) {
     return response(COMMENTS, requisitionService.getCommentsByRnrId(id));
   }

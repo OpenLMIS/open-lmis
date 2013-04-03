@@ -379,8 +379,13 @@ public class RequisitionControllerTest {
 
   @Test
   public void shouldGetCommentsForARnR() throws Exception {
-    controller.getCommentsForARnr(rnr.getId());
+    List<Comment> comments = new ArrayList<>();
+    when(requisitionService.getCommentsByRnrId(1)).thenReturn(comments);
+
+    ResponseEntity<OpenLmisResponse> response = controller.getCommentsForARnr(rnr.getId());
+
     verify(requisitionService).getCommentsByRnrId(rnr.getId());
+    assertThat(comments,is(response.getBody().getData().get(COMMENTS)));
   }
 
   private Rnr createRequisition() {

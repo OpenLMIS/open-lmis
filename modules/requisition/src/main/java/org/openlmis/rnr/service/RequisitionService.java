@@ -54,6 +54,7 @@ public class RequisitionService {
   private SupplyLineService supplyLineService;
   private RequisitionFactory requisitionFactory;
   private RequisitionPermissionService requisitionPermissionService;
+  private UserService userService;
   private RoleAssignmentService roleAssignmentService;
 
   @Autowired
@@ -61,7 +62,7 @@ public class RequisitionService {
                             FacilityApprovedProductService facilityApprovedProductService, SupervisoryNodeService supervisoryNodeRepository,
                             RoleAssignmentService roleAssignmentService, ProgramService programService,
                             ProcessingScheduleService processingScheduleService, FacilityService facilityService, SupplyLineService supplyLineService,
-                            RequisitionFactory requisitionFactory, RequisitionPermissionService requisitionPermissionService) {
+                            RequisitionFactory requisitionFactory, RequisitionPermissionService requisitionPermissionService, UserService userService) {
     this.requisitionRepository = requisitionRepository;
     this.rnrTemplateRepository = rnrTemplateRepository;
     this.facilityApprovedProductService = facilityApprovedProductService;
@@ -73,6 +74,7 @@ public class RequisitionService {
     this.supplyLineService = supplyLineService;
     this.requisitionFactory = requisitionFactory;
     this.requisitionPermissionService = requisitionPermissionService;
+    this.userService = userService;
   }
 
   @Transactional
@@ -375,7 +377,12 @@ public class RequisitionService {
   }
 
   public List getCommentsByRnrId(Integer rnrId) {
-    return requisitionRepository.getCommentsByRnrID(rnrId);
+    List<Comment> comments = requisitionRepository.getCommentsByRnrID(rnrId);
+    for (Comment comment : comments) {
+      User user = userService.getById(comment.getAuthor().getId());
+      comment.setAuthor(user.basicInformation());
+    }
+    return comments;
   }
 }
 

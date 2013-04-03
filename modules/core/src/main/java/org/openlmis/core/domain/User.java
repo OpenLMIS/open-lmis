@@ -69,6 +69,11 @@ public class User extends BaseModel implements Importable {
 
   private static final String INVALID_USER_NAME_ERROR_CODE = "user.userName.invalid";
 
+  public User(Integer id, String userName) {
+    this.id = id;
+    this.userName = userName;
+  }
+
 
   public void validate() {
     validateEmail();
@@ -91,4 +96,7 @@ public class User extends BaseModel implements Importable {
       throw new DataException(INVALID_USER_NAME_ERROR_CODE);
   }
 
+  public User basicInformation() {
+    return new User(id, userName);
+  }
 }
