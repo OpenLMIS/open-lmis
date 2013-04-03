@@ -14,6 +14,7 @@ import org.openlmis.core.serializer.RightSerializer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import static java.lang.Boolean.FALSE;
@@ -64,5 +65,19 @@ public enum Right{
       return Arrays.asList(VIEW_REQUISITION);
     }
     return new ArrayList<>();
+  }
+
+  public static class RightComparator implements Comparator<Right> {
+    @Override
+    public int compare(Right right1, Right right2) {
+      if(right1 == right2) return 0;
+      if(right1 == null ){
+        return 1;
+      }
+      if(right2 == null){
+        return -1;
+      }
+      return right1.getRightName().compareTo(right2.getRightName());
+    }
   }
 }

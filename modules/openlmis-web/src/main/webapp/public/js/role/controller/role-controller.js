@@ -112,7 +112,6 @@ function RoleController($scope, $routeParams, $location, Roles, Role, Rights, $d
     OpenLmisDialog.new(options, $scope.dialogCloseCallback, $dialog);
   };
 
-
   var validRole = function () {
     var valid = true;
     $scope.showError = false;

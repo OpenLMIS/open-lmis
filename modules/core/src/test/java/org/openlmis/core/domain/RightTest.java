@@ -11,6 +11,8 @@ import org.junit.Test;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.domain.Right.*;
 
@@ -36,5 +38,23 @@ public class RightTest {
     for (Right right : rights) {
       assertThat(right.getDependentRights().size(), is(0));
     }
+  }
+
+  @Test
+  public void shouldCompareTwoRights(){
+    Right nullRight = null;
+    Right nonNullRight = Right.CONFIGURE_RNR;
+    Right approveRight = Right.APPROVE_REQUISITION;
+    Right createRight = Right.CREATE_REQUISITION;
+    RightComparator rightComparator = new RightComparator();
+    assertThat(rightComparator.compare(nullRight, nonNullRight),is(greaterThan(0)));
+    assertThat(rightComparator.compare(nonNullRight, nullRight),is(lessThan(0)));
+    assertThat(rightComparator.compare(nonNullRight, nonNullRight), is(0));
+    assertThat(rightComparator.compare(nullRight, nullRight), is(0));
+    assertThat(rightComparator.compare(nullRight, nullRight), is(0));
+    assertThat(rightComparator.compare(createRight, approveRight), is(greaterThan(0)));
+    assertThat(rightComparator.compare(approveRight, createRight), is(lessThan(0)));
+
+
   }
 }

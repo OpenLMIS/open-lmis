@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static java.lang.Boolean.*;
+import static java.lang.Boolean.FALSE;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -61,8 +61,18 @@ public class RoleRightsServiceTest {
   public void shouldGetAllRightsInAlphabeticalOrder() throws Exception {
     List<Right> allRights = new ArrayList<>(new RoleRightsService().getAllRights());
     assertThat(allRights.get(0), is(CONFIGURE_RNR));
-    assertThat(allRights.get(0).getAdminRight(),is(true));
-
+    assertThat(allRights.get(1), is(Right.MANAGE_FACILITY));
+    assertThat(allRights.get(2), is(Right.MANAGE_ROLE));
+    assertThat(allRights.get(3), is(Right.MANAGE_SCHEDULE));
+    assertThat(allRights.get(4), is(Right.MANAGE_USERS));
+    assertThat(allRights.get(5), is(Right.UPLOADS));
+    assertThat(allRights.get(6), is(Right.APPROVE_REQUISITION));
+    assertThat(allRights.get(7), is(Right.AUTHORIZE_REQUISITION));
+    assertThat(allRights.get(8), is(Right.CONVERT_TO_ORDER));
+    assertThat(allRights.get(9), is(Right.CREATE_REQUISITION));
+    assertThat(allRights.get(10), is(Right.VIEW_REQUISITION));
+    assertThat(allRights.get(11), is(Right.VIEW_ORDER));
+    assertThat(allRights.get(0).getAdminRight(), is(true));
   }
 
 
@@ -122,7 +132,9 @@ public class RoleRightsServiceTest {
 
     when(supervisoryNodeService.getFor(facility, program)).thenReturn(supervisoryNode);
     when(supervisoryNodeService.getAllParentSupervisoryNodesInHierarchy(supervisoryNode)).thenReturn(supervisoryNodes);
-    when(roleRightsRepository.getRightsForUserOnSupervisoryNodeAndProgram(userId, supervisoryNodes, program)).thenReturn(expected);
+    when(
+      roleRightsRepository.getRightsForUserOnSupervisoryNodeAndProgram(userId, supervisoryNodes, program)).thenReturn(
+      expected);
 
     Set<Right> result = roleRightsService.getRightsForUserAndFacilityProgram(userId, facility, program);
 

@@ -36,7 +36,10 @@ public class RoleRightsService {
   }
 
   public Set<Right> getAllRights() {
-    return new LinkedHashSet<>(asList(Right.values()));
+    TreeSet<Right> rights = new TreeSet<>(new Right.RightComparator());
+    rights.addAll(asList(Right.values()));
+    return rights;
+
   }
 
   public void saveRole(Role role) {
@@ -78,8 +81,9 @@ public class RoleRightsService {
 
   private List<Right> getHomeFacilityRights(Integer userId, Facility facility, Program program) {
     Facility homeFacility = facilityService.getHomeFacility(userId);
-    if (homeFacility != null && homeFacility.getId().equals(facility.getId()))
+    if (homeFacility != null && homeFacility.getId().equals(facility.getId())) {
       return roleRightsRepository.getRightsForUserOnHomeFacilityAndProgram(userId, program);
+    }
     return Collections.emptyList();
   }
 }
