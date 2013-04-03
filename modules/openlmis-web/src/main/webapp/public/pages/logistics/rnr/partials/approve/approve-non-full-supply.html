@@ -23,17 +23,17 @@
     <table id="nonFullSupplyTable" class="table table-bordered">
       <thead>
       <tr>
-        <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in visibleColumns"
+        <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in visibleNonFullSupplyColumns"
             ng-bind="programRnrColumn.label"></th>
       </tr>
       </thead>
-      <tbody ng-show="visibleColumns" ng-repeat="rnrLineItem in pageLineItems">
+      <tbody ng-show="visibleNonFullSupplyColumns" ng-repeat="rnrLineItem in pageLineItems">
       <tr>
-        <td class="productCategory" colspan="{{visibleColumns.length}}" ng-show="showCategory($index)"
+        <td class="productCategory" colspan="{{visibleNonFullSupplyColumns.length}}" ng-show="showCategory($index)"
             ng-bind="rnrLineItem.productCategory"></td>
       </tr>
       <tr ng-class="getRowErrorClass(rnrLineItem)">
-        <td class="cell-input" ng-repeat="column in visibleColumns">
+        <td class="cell-input" ng-repeat="column in visibleNonFullSupplyColumns">
             <span ng-switch on="column.name">
 
                <span ng-switch-when="quantityApproved">

@@ -210,17 +210,6 @@ describe('Approve Requisition controller', function () {
     expect(lineItem.fillPacksToShip).toHaveBeenCalled();
   });
 
-  it('should remove non numeric characters from quantity approved before calculations', function () {
-    var lineItem = new RnrLineItem();
-    lineItem.quantityApproved = '67hj';
-    scope.rnr = new Rnr();
-    scope.rnr.fullSupplyLineItems = [lineItem];
-
-    scope.fillPacksToShip(lineItem);
-
-    expect(lineItem.quantityApproved).toEqual(67);
-  });
-
   it('should set message while saving if set message flag true', function () {
     scope.rnr = {"id":"rnrId"};
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {'success':"success message"});
