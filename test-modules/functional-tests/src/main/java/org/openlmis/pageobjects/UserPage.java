@@ -73,12 +73,15 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@id='supervisoryRole']/div/ul/li[1]/div")
   private static WebElement rolesListFieldMySupervisedFacility;
 
-    @FindBy(how = How.XPATH, using = "(//input[@type='text'])[12]")
-    private static WebElement rolesInputFieldMyFacility;
+  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[12]")
+  private static WebElement rolesInputFieldMyFacility;
 
 
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[14]")
   private static WebElement rolesInputField;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='s2id_adminRoles']/ul/li/input")
+  private static WebElement adminRolesInputField;
 
 
   @FindBy(how = How.XPATH, using = "//div[contains(text(),'Store In-Charge')]")
@@ -128,50 +131,61 @@ public class UserPage extends Page {
 
   }
 
-  public void enterMyFacilityAndMySupervisedFacilityData(String firstName, String lastName, String facilityCode, String program1, String node, String role) {
+  public void enterMyFacilityAndMySupervisedFacilityData(String firstName, String lastName, String facilityCode, String program1, String node, String role, boolean adminRole) {
     testWebDriver.waitForElementToAppear(searchFacility);
-    searchFacility.clear();
-    testWebDriver.handleScrollByPixels(0,4000);
-    searchFacility.sendKeys(facilityCode);
-      for (int i=0;i<facilityCode.length();i++){
-       searchFacility.sendKeys(Keys.ARROW_LEFT);
-          searchFacility.sendKeys(Keys.DELETE);
+    if (!adminRole) {
+      searchFacility.clear();
+      testWebDriver.handleScrollByPixels(0, 4000);
+      searchFacility.sendKeys(facilityCode);
+      for (int i = 0; i < facilityCode.length(); i++) {
+        searchFacility.sendKeys(Keys.ARROW_LEFT);
+        searchFacility.sendKeys(Keys.DELETE);
       }
       searchFacility.sendKeys(facilityCode);
-    testWebDriver.sleep(1000);
-    selectFacility.click();
+      testWebDriver.sleep(1000);
+      selectFacility.click();
 
-    testWebDriver.selectByVisibleText(programsMyFacility, program1);
-    rolesInputFieldMyFacility.click();
-    rolesInputFieldMyFacility.clear();
-    rolesInputFieldMyFacility.sendKeys(role);
-    testWebDriver.waitForElementToAppear(rolesSelectFieldMyFacility);
-    rolesSelectFieldMyFacility.click();
-    addButtonMyFacility.click();
-    testWebDriver.sleep(1000);
-    testWebDriver.selectByVisibleText(programsToSupervise, program1);
-    testWebDriver.sleep(1000);
-    testWebDriver.selectByVisibleText(supervisoryNodeToSupervise, node);
-    testWebDriver.sleep(1000);
 
-    testWebDriver.handleScroll();
-    testWebDriver.sleep(500);
-    rolesInputField.click();
-    rolesInputField.clear();
-    rolesInputField.sendKeys(role);
-    testWebDriver.waitForElementToAppear(rolesSelectField);
-    rolesSelectField.click();
+      testWebDriver.selectByVisibleText(programsMyFacility, program1);
+      rolesInputFieldMyFacility.click();
+      rolesInputFieldMyFacility.clear();
+      rolesInputFieldMyFacility.sendKeys(role);
+      testWebDriver.waitForElementToAppear(rolesSelectFieldMyFacility);
+      rolesSelectFieldMyFacility.click();
+      addButtonMyFacility.click();
+      testWebDriver.sleep(1000);
+      testWebDriver.selectByVisibleText(programsToSupervise, program1);
+      testWebDriver.sleep(1000);
+      testWebDriver.selectByVisibleText(supervisoryNodeToSupervise, node);
+      testWebDriver.sleep(1000);
 
-     SeleneseTestNgHelper.assertEquals(testWebDriver.getFirstSelectedOption(supervisoryNodeToSupervise).getText(),node);
-     SeleneseTestNgHelper.assertEquals(testWebDriver.getFirstSelectedOption(programsToSupervise).getText(),program1);
-     SeleneseTestNgHelper.assertEquals(rolesListFieldMySupervisedFacility.getText().trim().toLowerCase(),role.toLowerCase());
+      testWebDriver.handleScroll();
+      testWebDriver.sleep(500);
+      rolesInputField.click();
+      rolesInputField.clear();
+      rolesInputField.sendKeys(role);
+      testWebDriver.waitForElementToAppear(rolesSelectField);
+      rolesSelectField.click();
+
+      SeleneseTestNgHelper.assertEquals(testWebDriver.getFirstSelectedOption(supervisoryNodeToSupervise).getText(), node);
+      SeleneseTestNgHelper.assertEquals(testWebDriver.getFirstSelectedOption(programsToSupervise).getText(), program1);
+      SeleneseTestNgHelper.assertEquals(rolesListFieldMySupervisedFacility.getText().trim().toLowerCase(), role.toLowerCase());
 
       addButton.click();
       testWebDriver.sleep(1000);
+    } else {
+      testWebDriver.handleScroll();
+      testWebDriver.sleep(500);
+      adminRolesInputField.click();
+      adminRolesInputField.clear();
+      adminRolesInputField.sendKeys(role);
+      testWebDriver.waitForElementToAppear(rolesSelectField);
+      rolesSelectField.click();
+    }
 
-      saveButton.click();
-      testWebDriver.sleep(1000);
-      SeleneseTestNgHelper.assertTrue("User '" + firstName + " " + lastName + "' has been successfully updated message is not getting displayed", successMessage.isDisplayed());
+    saveButton.click();
+    testWebDriver.sleep(1000);
+    SeleneseTestNgHelper.assertTrue("User '" + firstName + " " + lastName + "' has been successfully updated message is not getting displayed", successMessage.isDisplayed());
 
   }
 

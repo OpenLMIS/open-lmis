@@ -5,38 +5,35 @@
   -->
 
 <div xmlns="http://www.w3.org/1999/html">
-  <div ng-hide="user.id"><h2>Add User</h2></div>
+  <div ng-hide="user.id"><h2 openlmis-message="create.user.label"></h2></div>
 
   <form ng-submit="saveUser()" id="create-user" name="userForm" novalidate>
     <div class="app-form">
 
       <div class="form-group">
-        <h3>Basic information</h3>
+        <h3 openlmis-message="create.user.basicInformation"></h3>
 
         <div class="form-row clearfix">
           <div class="form-cell">
-            <label for="userName">User Name <span class="label-required">*</span></label>
+            <label for="userName" openlmis-message="create.user.userName"> </label>
 
             <div class="form-field">
               <input ng-model="user.userName" name="userName" id="userName" type="text" maxlength="50"
                      ng-required="true" ng-change="validateUserName()"/>
-              <span class="field-error" ng-show="userForm.userName.$error.required && showError">
-                Please fill this value
+              <span class="field-error" ng-show="userForm.userName.$error.required && showError" openlmis-message="create.user.missingValue">
               </span>
 
-              <span class="field-error" ng-show="userNameInvalid">
-                Invalid format, spaces not allowed in username
+              <span class="field-error" ng-show="userNameInvalid" openlmis-message="create.user.invalid.userName">
               </span>
             </div>
           </div>
 
           <div class="form-cell">
-            <label for="email">Email <span class="label-required">*</span></label>
+            <label for="email" openlmis-message="create.user.email"></label>
 
             <div class="form-field">
               <input ng-model="user.email" name="email" id="email" type="text" maxlength="50" ng-required="true"/>
-              <span class="field-error" ng-show="userForm.email.$error.required && showError">
-                Please fill this value
+              <span class="field-error" ng-show="userForm.email.$error.required && showError" openlmis-message="create.user.missingValue">
               </span>
             </div>
           </div>
@@ -44,26 +41,24 @@
 
         <div class="form-row clearfix">
           <div class="form-cell">
-            <label for="firstName">First Name <span class="label-required">*</span></label>
+            <label for="firstName" openlmis-message="create.user.firstName"></label>
 
             <div class="form-field">
               <input ng-model="user.firstName" name="firstName" id="firstName" type="text" maxlength="50"
                      ng-required="true"/>
-              <span class="field-error" ng-show="userForm.firstName.$error.required && showError">
-                Please fill this value
+              <span class="field-error" ng-show="userForm.firstName.$error.required && showError" openlmis-message="create.user.missingValue">
               </span>
             </div>
           </div>
 
 
           <div class="form-cell">
-            <label for="lastName">Last Name <span class="label-required">*</span></label>
+            <label for="lastName" openlmis-message="create.user.lastName"></label>
 
             <div class="form-field">
               <input ng-model="user.lastName" name="lastName" id="lastName" type="text" maxlength="50"
                      ng-required="true"/>
-              <span class="field-error" ng-show="userForm.lastName.$error.required && showError">
-                Please fill this value
+              <span class="field-error" ng-show="userForm.lastName.$error.required && showError" openlmis-message="create.user.missingValue">
               </span>
             </div>
           </div>
@@ -71,7 +66,7 @@
 
         <div class="form-row clearfix">
           <div class="form-cell">
-            <label for="employeeId">Employee ID</label>
+            <label for="employeeId" openlmis-message="create.user.employeeId"></label>
 
             <div class="form-field">
               <input ng-model="user.employeeId" id="employeeId" type="text" maxlength="50"/>
@@ -80,7 +75,7 @@
 
 
           <div class="form-cell">
-            <label for="jobTitle">Job Title </label>
+            <label for="jobTitle" openlmis-message="create.user.jobTitle"> </label>
 
             <div class="form-field">
               <input ng-model="user.jobTitle" id="jobTitle" type="text" maxlength="50"/>
@@ -91,7 +86,7 @@
 
         <div class="form-row clearfix">
           <div class="form-cell">
-            <label for="officePhone">Office Phone </label>
+            <label for="officePhone" openlmis-message="create.user.officePhone"> </label>
 
             <div class="form-field">
               <input ng-model="user.officePhone" id="officePhone" type="text" maxlength="30"/>
@@ -100,7 +95,7 @@
 
 
           <div class="form-cell">
-            <label for="cellPhone">Cell Phone </label>
+            <label for="cellPhone" openlmis-message="create.user.cellPhone"> </label>
 
             <div class="form-field">
               <input ng-model="user.cellPhone" id="cellPhone" type="text" maxlength="30"/>
@@ -110,7 +105,7 @@
 
         <div class="form-row clearfix">
           <div class="form-cell">
-            <label for="primaryNotificationMethod">Primary Notification Method </label>
+            <label for="primaryNotificationMethod" openlmis-message="create.user.primaryNotificationMethod"> </label>
 
             <div class="form-field">
               <input ng-model="user.primaryNotificationMethod" id="primaryNotificationMethod" type="text"
@@ -119,14 +114,9 @@
           </div>
         </div>
 
-      </div><!-- /form-group -->
-
-      <div class="form-group">
-        <h3>User facility</h3>
-
         <div class="form-row clearfix">
           <div class="form-cell">
-            <label for="searchFacility">My facility</label>
+            <label for="searchFacility" openlmis-message="create.user.homeFacility"> </label>
 
             <div class="form-field autosuggest-input">
               <div class="suggest-field">
@@ -145,29 +135,35 @@
                 </div>
                 <div ng-show="facilitySelected">
                   <span ng-bind="facilitySelected.name"></span>
-                  <a class="clear-search" ng-click="confirmFacilityDelete()">clear</a>
+                  <a class="clear-search" ng-click="confirmFacilityDelete()" openlmis-message="create.user.clear">clear</a>
                 </div>
               </div>
-              <div class="form-tip">Minimum 3 characters</div>
+              <div class="form-tip" openlmis-message="create.user.threeCharacters"></div>
             </div>
+
           </div>
         </div>
 
-        <div class="prog-role-grid" ng-show="facilitySelected">
-          <ng-include src="'/public/pages/admin/user/partials/user-role-assignment.html'"></ng-include>
-        </div>
+      </div>
+      <!-- /form-group -->
 
-      </div><!-- /form-group -->
+
+      <div class="prog-role-grid" ng-show="facilitySelected">
+        <ng-include src="'/public/pages/admin/user/partials/user-role-assignment.html'"></ng-include>
+      </div>
+
+      <!-- /form-group -->
 
       <div class="form-group">
-        <h3>Supervisory roles</h3>
+        <h3 openlmis-message="create.user.superVisoryRoles"></h3>
 
-        <div class="prog-role-grid" >
+        <div class="prog-role-grid">
           <ng-include src="'/public/pages/admin/user/partials/user-supervisory-role-assignment.html'"></ng-include>
         </div>
-      </div><!-- /form-group -->
+      </div>
+      <!-- /form-group -->
       <div class="form-group">
-        <h3>Admin and General Operations Roles</h3>
+        <h3 openlmis-message="create.user.adminRoles"></h3>
 
         <div class="prog-role-grid">
           <ng-include src="'/public/pages/admin/user/partials/user-admin-role-assignment.html'"></ng-include>
@@ -178,7 +174,7 @@
 
       <div form-toolbar id="action_buttons" class="action-buttons">
         <div class="form-cell button-row">
-          <input type="submit" class="btn btn-primary save-button" value="Save" />
+          <input type="submit" class="btn btn-primary save-button" value="Save"/>
           <a ng-href="#/search" class="btn btn-cancel cancel-button">Cancel</a>
         </div>
         <div class="toolbar-error" id="saveErrorMsgDiv" ng-bind="error" ng-show="error"/>

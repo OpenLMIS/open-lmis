@@ -9,12 +9,11 @@
     <div class="row-fluid">
       <div class="span6">
         <div class="fluid-grid-cell">
-          <select ui-select2 ng-model="user.adminRole.roleIds" placeholder="+ Add Role"
+          <select id="adminRoles" ui-select2 ng-model="user.adminRole.roleIds" placeholder="+ Add Role"
                   multiple="multiple" name="roles" id="roles">
             <option ng-repeat="role in adminRoles" value="{{role.id}}" ng-bind="role.name"></option>
           </select>
-          <span ng-show="roleAssignment.roleIds.length == 0" class="field-error">
-            Please fill in this value
+          <span ng-show="roleAssignment.roleIds.length == 0" class="field-error" openlmis-message="create.user.missingValue">
           </span>
         </div>
       </div>

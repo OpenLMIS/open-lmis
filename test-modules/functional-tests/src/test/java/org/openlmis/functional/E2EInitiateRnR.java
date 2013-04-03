@@ -68,7 +68,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     String userSICUserName = "storeincharge";
     String userIDSIC = userPageSIC.enterAndverifyUserDetails(userSICUserName, userSICEmail, userSICFirstName, userSICLastName, baseUrlGlobal, dburlGlobal);
     dbWrapper.updateUser(passwordUsers, userSICEmail);
-    userPageSIC.enterMyFacilityAndMySupervisedFacilityData(userSICFirstName, userSICLastName, "F10", "HIV", "Node 1", "Store-in-charge");
+    userPageSIC.enterMyFacilityAndMySupervisedFacilityData(userSICFirstName, userSICLastName, "F10", "HIV", "Node 1", "Store-in-charge", false);
 
     String passwordUserslmu = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
     UserPage userPagelmu = homePage.navigateToUser();
@@ -78,7 +78,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     String userlmuUserName = "lmu";
     userPagelmu.enterAndverifyUserDetails(userlmuUserName, userlmuEmail, userlmuFirstName, userlmuLastName, baseUrlGlobal, dburlGlobal);
     dbWrapper.updateUser(passwordUserslmu, userlmuEmail);
-    userPagelmu.enterMyFacilityAndMySupervisedFacilityData(userlmuFirstName, userlmuLastName, "F10", "HIV", "Node 1", "lmu");
+    userPagelmu.enterMyFacilityAndMySupervisedFacilityData(userlmuFirstName, userlmuLastName, "F10", "HIV", "Node 1", "lmu", true);
 
     UserPage userPageMO = homePage.navigateToUser();
     String userMOEmail = "Jane_Doe@openlmis.com";
@@ -87,7 +87,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     String userMOUserName = "medicalofficer";
     userPageMO.enterAndverifyUserDetails(userMOUserName, userMOEmail, userMOFirstName, userMOLastName, baseUrlGlobal, dburlGlobal);
     dbWrapper.updateUser(passwordUsers, userMOEmail);
-    userPageMO.enterMyFacilityAndMySupervisedFacilityData(userMOFirstName, userMOLastName, "F11", "HIV", "Node 2", "Medical-Officer");
+    userPageMO.enterMyFacilityAndMySupervisedFacilityData(userMOFirstName, userMOLastName, "F11", "HIV", "Node 2", "Medical-Officer", false);
 
     dbWrapper.updateRoleGroupMember(facility_code);
     setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
