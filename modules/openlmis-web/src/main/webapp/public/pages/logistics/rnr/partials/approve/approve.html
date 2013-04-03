@@ -17,10 +17,10 @@
 <form name="approvalForm" novalidate>
   <ng-switch on="showNonFullSupply">
         <span ng-switch-when="true">
-          <ng-include src="'/public/pages/logistics/rnr/partials/approve/rnr-non-full-supply.html'"></ng-include>
+          <ng-include src="'/public/pages/logistics/rnr/partials/approve/approve-non-full-supply.html'"></ng-include>
         </span>
         <span ng-switch-default>
-          <ng-include src="'/public/pages/logistics/rnr/partials/approve/rnr-full-supply.html'"></ng-include>
+          <ng-include src="'/public/pages/logistics/rnr/partials/approve/approve-full-supply.html'"></ng-include>
         </span>
   </ng-switch>
   <br><br>
