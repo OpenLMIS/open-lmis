@@ -39,7 +39,7 @@ public class RequisitionGroupServiceTest {
   }
 
   @Test
-  public void shouldSaveARequisitionGroup() {
+  public void shouldSaveANewRequisitionGroup() {
     SupervisoryNode supervisoryNode = make(a(defaultSupervisoryNode));
     RequisitionGroup requisitionGroup = make(a(defaultRequisitionGroup));
     requisitionGroup.setSupervisoryNode(supervisoryNode);
@@ -48,5 +48,18 @@ public class RequisitionGroupServiceTest {
 
     verify(supervisoryNodeRepository).getIdForCode(supervisoryNode.getCode());
     verify(requisitionGroupRepository).insert(requisitionGroup);
+  }
+
+  @Test
+  public void shouldUpdateExistingRequisitionGroup() {
+    SupervisoryNode supervisoryNode = make(a(defaultSupervisoryNode));
+    RequisitionGroup requisitionGroup = make(a(defaultRequisitionGroup));
+    requisitionGroup.setId(1);
+    requisitionGroup.setSupervisoryNode(supervisoryNode);
+
+    requisitionGroupService.save(requisitionGroup);
+
+    verify(supervisoryNodeRepository).getIdForCode(supervisoryNode.getCode());
+    verify(requisitionGroupRepository).update(requisitionGroup);
   }
 }

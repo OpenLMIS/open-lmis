@@ -82,6 +82,26 @@ public class RequisitionGroupMapperIT {
   }
 
   @Test
+  public void shouldUpdateRequisitionGroup() throws Exception {
+    requisitionGroup.setSupervisoryNode(supervisoryNode);
+    requisitionGroupMapper.insert(requisitionGroup);
+
+    requisitionGroup.setName("updated name");
+    requisitionGroup.setDescription("updated description");
+    supervisoryNode.setId(2);
+
+    requisitionGroupMapper.update(requisitionGroup);
+
+    RequisitionGroup resultRequisitionGroup = requisitionGroupMapper.getRequisitionGroupById(requisitionGroup.getId());
+
+    assertThat(resultRequisitionGroup.getCode(), is(REQUISITION_GROUP_CODE));
+    assertThat(resultRequisitionGroup.getModifiedDate(), is(requisitionGroup.getModifiedDate()));
+    assertThat(resultRequisitionGroup.getName(), is("updated name"));
+    assertThat(resultRequisitionGroup.getDescription(), is("updated description"));
+    assertThat(resultRequisitionGroup.getSupervisoryNode().getId(), is(2));
+  }
+
+  @Test
   public void shouldGetRequisitionGroupsForSupervisoryNodes() {
     requisitionGroup.setSupervisoryNode(supervisoryNode);
     requisitionGroupMapper.insert(requisitionGroup);
@@ -112,7 +132,7 @@ public class RequisitionGroupMapperIT {
     requisitionGroupMemberMapper.insert(requisitionGroupMember);
 
     assertThat(requisitionGroupMapper.getRequisitionGroupForProgramAndFacility(requisitionGroupProgramSchedule.getProgram(),
-        requisitionGroupMember.getFacility()), is(requisitionGroup));
+      requisitionGroupMember.getFacility()), is(requisitionGroup));
   }
 
   @Test

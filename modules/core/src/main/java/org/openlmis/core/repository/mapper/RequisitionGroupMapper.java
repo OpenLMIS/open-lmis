@@ -49,4 +49,9 @@ public interface RequisitionGroupMapper {
     @Result(property = "supervisoryNode.id", column = "supervisoryNodeId")
   })
   RequisitionGroup getByCode(String code);
+
+  @Update("UPDATE requisition_groups " +
+    "SET name = #{name}, description =  #{description}, supervisoryNodeId = #{supervisoryNode.id}, modifiedBy = #{modifiedBy}, modifiedDate = #{modifiedDate} " +
+    "WHERE id = #{id}")
+  void update(RequisitionGroup requisitionGroup);
 }

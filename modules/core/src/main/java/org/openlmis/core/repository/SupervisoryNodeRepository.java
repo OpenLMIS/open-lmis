@@ -11,7 +11,6 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -33,15 +32,8 @@ public class SupervisoryNodeRepository {
     this.requisitionGroupRepository = requisitionGroupRepository;
   }
 
-  public void save(SupervisoryNode supervisoryNode) {
-    supervisoryNode.getFacility().setId(facilityRepository.getIdForCode(supervisoryNode.getFacility().getCode()));
-    validateParentNode(supervisoryNode);
-
-    try {
-      supervisoryNodeMapper.insert(supervisoryNode);
-    } catch (DuplicateKeyException e) {
-      throw new DataException("Duplicate SupervisoryNode Code");
-    }
+  public void insert(SupervisoryNode supervisoryNode) {
+    supervisoryNodeMapper.insert(supervisoryNode);
   }
 
   public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Integer userId, Integer programId, Right... rights) {
@@ -59,17 +51,6 @@ public class SupervisoryNodeRepository {
   public Integer getSupervisoryNodeParentId(Integer supervisoryNodeId) {
     SupervisoryNode parent = supervisoryNodeMapper.getSupervisoryNode(supervisoryNodeId).getParent();
     return parent == null ? null : parent.getId();
-  }
-
-  private void validateParentNode(SupervisoryNode supervisoryNode) {
-    SupervisoryNode parentNode = supervisoryNode.getParent();
-    if (parentNode != null) {
-      try {
-        parentNode.setId(getIdForCode(parentNode.getCode()));
-      } catch (DataException e) {
-        throw new DataException("Supervisory Node Parent does not exist");
-      }
-    }
   }
 
   public SupervisoryNode getFor(Facility facility, Program program) {
@@ -95,5 +76,9 @@ public class SupervisoryNodeRepository {
 
   public SupervisoryNode getByCode(SupervisoryNode supervisoryNode) {
     return supervisoryNodeMapper.getByCode(supervisoryNode);
+  }
+
+  public void update(SupervisoryNode supervisoryNode) {
+    supervisoryNodeMapper.update(supervisoryNode);
   }
 }

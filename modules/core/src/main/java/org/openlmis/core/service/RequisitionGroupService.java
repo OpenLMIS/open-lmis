@@ -11,7 +11,6 @@ import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.repository.RequisitionGroupRepository;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
-import org.openlmis.upload.Importable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +33,10 @@ public class RequisitionGroupService {
     Integer supervisoryNodeId = supervisoryNodeRepository.getIdForCode(requisitionGroup.getSupervisoryNode().getCode());
     requisitionGroup.getSupervisoryNode().setId(supervisoryNodeId);
 
-    requisitionGroupRepository.insert(requisitionGroup);
+    if (requisitionGroup.getId() == null)
+      requisitionGroupRepository.insert(requisitionGroup);
+    else
+      requisitionGroupRepository.update(requisitionGroup);
   }
 
   public List<RequisitionGroup> getRequisitionGroupsBy(List<SupervisoryNode> supervisoryNodes) {

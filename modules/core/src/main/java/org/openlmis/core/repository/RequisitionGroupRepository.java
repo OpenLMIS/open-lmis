@@ -49,4 +49,8 @@ public class RequisitionGroupRepository {
   public RequisitionGroup getByCode(RequisitionGroup requisitionGroup) {
     return mapper.getByCode(requisitionGroup.getCode());
   }
+
+  public void update(RequisitionGroup requisitionGroup) {
+     mapper.update(requisitionGroup);
+  }
 }

@@ -7,12 +7,17 @@
 package org.openlmis.core.service;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
+import org.openlmis.core.builder.SupervisoryNodeBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
+import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.core.repository.UserRepository;
 
@@ -20,6 +25,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.natpryce.makeiteasy.MakeItEasy.a;
+import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -33,24 +41,29 @@ public class SupervisoryNodeServiceTest {
 
   @Mock
   SupervisoryNodeRepository supervisoryNodeRepository;
-  SupervisoryNodeService supervisoryNodeService;
+  @Mock
+  private FacilityRepository facilityRepository;
 
+  SupervisoryNodeService supervisoryNodeService;
   @Mock
   private UserRepository userRepository;
+  @Rule
+  public ExpectedException expectedEx = ExpectedException.none();
+  SupervisoryNode supervisoryNodeWithParent;
 
 
   @Before
   public void setUp() throws Exception {
     initMocks(this);
-    supervisoryNodeService = new SupervisoryNodeService(supervisoryNodeRepository, userRepository);
-  }
+    supervisoryNodeWithParent = new SupervisoryNode();
+    supervisoryNodeWithParent.setId(10);
+    supervisoryNodeWithParent.setFacility(new Facility());
+    SupervisoryNode parent = new SupervisoryNode();
+    parent.setCode("PSN");
+    parent.setId(20);
+    supervisoryNodeWithParent.setParent(parent);
 
-  @Test
-  public void shouldSaveSupervisoryNode() throws Exception {
-    SupervisoryNode supervisoryNode = new SupervisoryNode();
-    supervisoryNodeService.save(supervisoryNode);
-
-    verify(supervisoryNodeRepository).save(supervisoryNode);
+    supervisoryNodeService = new SupervisoryNodeService(supervisoryNodeRepository, userRepository, facilityRepository);
   }
 
   @Test
@@ -202,4 +215,51 @@ public class SupervisoryNodeServiceTest {
     verify(supervisoryNodeRepository).getAllParentSupervisoryNodesInHierarchy(supervisoryNode);
     assertThat(actual, is(expected));
   }
+
+  @Test
+  public void shouldSaveSupervisoryNode() throws Exception {
+    SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
+
+    supervisoryNodeService.save(supervisoryNode);
+
+    verify(supervisoryNodeRepository).insert(supervisoryNode);
+  }
+
+  @Test
+  public void shouldUpdateExistingSupervisoryNode() throws Exception {
+    SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
+    supervisoryNode.setId(1);
+
+    supervisoryNodeService.save(supervisoryNode);
+
+    verify(supervisoryNodeRepository).update(supervisoryNode);
+  }
+
+  @Test
+  public void shouldGiveErrorIfParentNodeCodeDoesNotExist() throws Exception {
+    when(supervisoryNodeRepository.getIdForCode(supervisoryNodeWithParent.getParent().getCode())).thenThrow(new DataException("Invalid SupervisoryNode Code"));
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("Supervisory Node Parent does not exist");
+
+    supervisoryNodeService.save(supervisoryNodeWithParent);
+
+    verify(supervisoryNodeRepository).getIdForCode(supervisoryNodeWithParent.getParent().getCode());
+  }
+
+  @Test
+  public void shouldGiveErrorIfFacilityCodeDoesNotExist() throws Exception {
+    when(supervisoryNodeRepository.getIdForCode(supervisoryNodeWithParent.getParent().getCode())).thenReturn(1);
+    when(facilityRepository.getIdForCode(supervisoryNodeWithParent.getFacility().getCode())).thenThrow(new DataException("Invalid Facility Code"));
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("Invalid Facility Code");
+
+    supervisoryNodeService.save(supervisoryNodeWithParent);
+
+    verify(facilityRepository).getIdForCode(supervisoryNodeWithParent.getFacility().getCode());
+    verify(supervisoryNodeRepository).getIdForCode(supervisoryNodeWithParent.getParent().getCode());
+  }
+
+
 }
