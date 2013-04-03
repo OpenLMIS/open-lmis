@@ -18,7 +18,6 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
 
 public class UploadPage extends Page {
 
@@ -62,13 +61,13 @@ public class UploadPage extends Page {
     testWebDriver.selectByVisibleText(uploadDropDown, uploadType);
   }
 
+
   public void uploadFile(String fileName) {
-    String Separator = System.getProperty("file.separator");
-    File parentDir = new File(System.getProperty("user.dir"));
-    uploadFilePath = parentDir.getParent() + Separator + "src" + Separator + "main" + Separator + "resources" + Separator + fileName;
+    uploadFilePath = this.getClass().getClassLoader().getResource(fileName).getFile();
     setCsvPath.sendKeys(uploadFilePath);
     uploadButton.click();
   }
+
 
   public void verifySuccessMessageOnUploadScreen() {
     String successMessage = "File uploaded successfully. 'Number of records created: *', 'Number of records updated : *'";
@@ -87,7 +86,7 @@ public class UploadPage extends Page {
   public void uploadAndVerifyGeographicZone(int noOfRuns) throws FileNotFoundException {
     for (int i = 1; i <= noOfRuns; i++) {
       selectUploadType("Geographic Zones");
-      uploadFile("Geographic_Data.csv");
+      uploadFile("QA_Geographic_Data.csv");
       verifySuccessMessageOnUploadScreen();
     }
 
@@ -95,22 +94,22 @@ public class UploadPage extends Page {
 
   public void uploadGeographicZoneInvalid() throws FileNotFoundException {
     selectUploadType("Geographic Zones");
-    uploadFile("Geographic_Data_Invalid.csv");
+    uploadFile("QA_Geographic_Data_Invalid.csv");
     verifyErrorMessageOnUploadScreen();
     testWebDriver.sleep(500);
     selectUploadType("Geographic Zones");
-    uploadFile("Geographic_Data_Duplicate.csv");
+    uploadFile("QA_Geographic_Data_Duplicate.csv");
     verifyErrorMessageOnUploadScreen();
     testWebDriver.sleep(500);
     selectUploadType("Geographic Zones");
-    uploadFile("Geographic_Data_Invalid_Code.csv");
+    uploadFile("QA_Geographic_Data_Invalid_Code.csv");
     verifyErrorMessageOnUploadScreen();
     testWebDriver.sleep(500);
   }
 
   public void uploadFacilitiesNotAssignedToLowestGeoCode() throws FileNotFoundException {
     selectUploadType("Facilities");
-    uploadFile("facilities_Lowest_Code.csv");
+    uploadFile("QA_facilities_Lowest_Code.csv");
     verifyErrorMessageOnUploadScreen();
     testWebDriver.sleep(500);
   }
@@ -118,14 +117,14 @@ public class UploadPage extends Page {
   public void uploadAndVerifyFacilities(int noOfRuns) throws FileNotFoundException {
     for (int i = 1; i <= noOfRuns; i++) {
       selectUploadType("Facilities");
-      uploadFile("facilities.csv");
+      uploadFile("QA_facilities.csv");
       verifySuccessMessageOnUploadScreen();
     }
   }
 
   public void uploadAndVerifyFacilitiesInvalidScenarios() throws FileNotFoundException {
     selectUploadType("Facilities");
-    uploadFile("facilities_Duplicate_Code.csv");
+    uploadFile("QA_facilities_Duplicate_Code.csv");
     verifyErrorMessageOnUploadScreen();
   }
 
@@ -133,45 +132,45 @@ public class UploadPage extends Page {
   public void uploadAndVerifyProducts(int noOfRuns) throws FileNotFoundException {
     for (int i = 1; i <= noOfRuns; i++) {
       selectUploadType("Products");
-      uploadFile("products.csv");
+      uploadFile("QA_products.csv");
       verifySuccessMessageOnUploadScreen();
     }
   }
 
   public void uploadAndVerifyProductsInvalidScenarios() throws FileNotFoundException {
     selectUploadType("Products");
-    uploadFile("products_Duplicate_Code.csv");
+    uploadFile("QA_products_Duplicate_Code.csv");
     verifyErrorMessageOnUploadScreen();
   }
 
   public void uploadProductCategory() throws FileNotFoundException {
     selectUploadType("Product Category");
-    uploadFile("Productcategoryupload.csv");
+    uploadFile("QA_Productcategoryupload.csv");
   }
 
   public void uploadAndVerifyUsers(int noOfRuns) throws FileNotFoundException {
     for (int i = 1; i <= noOfRuns; i++) {
       selectUploadType("Users");
-      uploadFile("Users.csv");
+      uploadFile("QA_Users.csv");
       verifySuccessMessageOnUploadScreen();
     }
   }
 
   public void uploadAndVerifyInvalidUserScenarios() throws FileNotFoundException {
     selectUploadType("Users");
-    uploadFile("Users_Duplicate_Email.csv");
+    uploadFile("QA_Users_Duplicate_Email.csv");
     verifyErrorMessageOnUploadScreen();
     testWebDriver.sleep(250);
     selectUploadType("Users");
-    uploadFile("Users_Duplicate_EmployeeId.csv");
+    uploadFile("QA_Users_Duplicate_EmployeeId.csv");
     verifyErrorMessageOnUploadScreen();
     testWebDriver.sleep(250);
     selectUploadType("Users");
-    uploadFile("Users_Duplicate_UserName.csv");
+    uploadFile("QA_Users_Duplicate_UserName.csv");
     verifyErrorMessageOnUploadScreen();
     testWebDriver.sleep(250);
     selectUploadType("Users");
-    uploadFile("Users_Invalid_Supervisor.csv");
+    uploadFile("QA_Users_Invalid_Supervisor.csv");
     verifyErrorMessageOnUploadScreen();
     testWebDriver.sleep(250);
   }
@@ -179,42 +178,42 @@ public class UploadPage extends Page {
   public void uploadAndVerifyProgramProductMapping(int noOfRuns) throws FileNotFoundException {
     for (int i = 1; i <= noOfRuns; i++) {
       selectUploadType("Program Product");
-      uploadFile("program_product.csv");
+      uploadFile("QA_program_product.csv");
       verifySuccessMessageOnUploadScreen();
     }
   }
 
   public void uploadAndVerifyProgramProductMappingInvalidScenarios() throws FileNotFoundException {
     selectUploadType("Program Product");
-    uploadFile("program_product_Invalid_ProductCode.csv");
+    uploadFile("QA_program_product_Invalid_ProductCode.csv");
     verifyErrorMessageOnUploadScreen();
     testWebDriver.sleep(250);
     selectUploadType("Program Product");
-    uploadFile("program_product_Invalid_ProgramCode.csv");
+    uploadFile("QA_program_product_Invalid_ProgramCode.csv");
     verifyErrorMessageOnUploadScreen();
     testWebDriver.sleep(250);
   }
 
   public void uploadProgramProductPrice() throws FileNotFoundException {
     selectUploadType("Product Prices per Program");
-    uploadFile("Product_Cost.csv");
+    uploadFile("QA_Product_Cost.csv");
   }
 
   public void uploadProgramSupportedByFacilities(int noOfRuns) throws FileNotFoundException {
     for (int i = 1; i <= noOfRuns; i++) {
       selectUploadType("Programs supported by facilities");
-      uploadFile("program_supported.csv");
+      uploadFile("QA_program_supported.csv");
       verifySuccessMessageOnUploadScreen();
     }
   }
 
   public void uploadProgramSupportedByFacilitiesInvalidScenarios() throws FileNotFoundException {
     selectUploadType("Programs supported by facilities");
-    uploadFile("program_supported_Invalid_FacilityCode.csv");
+    uploadFile("QA_program_supported_Invalid_FacilityCode.csv");
     verifyErrorMessageOnUploadScreen();
     testWebDriver.sleep(250);
     selectUploadType("Programs supported by facilities");
-    uploadFile("program_supported_Invalid_ProgramCode.csv");
+    uploadFile("QA_program_supported_Invalid_ProgramCode.csv");
     verifyErrorMessageOnUploadScreen();
     testWebDriver.sleep(250);
   }
@@ -222,53 +221,53 @@ public class UploadPage extends Page {
   public void uploadAndVerifyFacilityTypeToProductMapping(int noOfRuns) throws FileNotFoundException {
     for (int i = 1; i <= noOfRuns; i++) {
       selectUploadType("Facility Approved Products");
-      uploadFile("Facility_Type_To_Product_Mapping.csv");
+      uploadFile("QA_Facility_Type_To_Product_Mapping.csv");
       verifySuccessMessageOnUploadScreen();
     }
   }
 
   public void uploadAndVerifyFacilityTypeToProductMappingInvalidScenarios() throws FileNotFoundException {
     selectUploadType("Facility Approved Products");
-    uploadFile("Facility_Type_To_Product_Mapping_Invalid_Combination.csv");
+    uploadFile("QA_Facility_Type_To_Product_Mapping_Invalid_Combination.csv");
     verifyErrorMessageOnUploadScreen();
     testWebDriver.sleep(250);
     selectUploadType("Facility Approved Products");
-    uploadFile("Facility_Type_To_Product_Mapping_Invalid_FacilityType.csv");
+    uploadFile("QA_Facility_Type_To_Product_Mapping_Invalid_FacilityType.csv");
     verifyErrorMessageOnUploadScreen();
     testWebDriver.sleep(250);
     selectUploadType("Facility Approved Products");
-    uploadFile("Facility_Type_To_Product_Mapping_Invalid_ProductCode.csv");
+    uploadFile("QA_Facility_Type_To_Product_Mapping_Invalid_ProductCode.csv");
     verifyErrorMessageOnUploadScreen();
     testWebDriver.sleep(250);
     selectUploadType("Facility Approved Products");
-    uploadFile("Facility_Type_To_Product_Mapping_Invalid_ProgramCode.csv");
+    uploadFile("QA_Facility_Type_To_Product_Mapping_Invalid_ProgramCode.csv");
     verifyErrorMessageOnUploadScreen();
     testWebDriver.sleep(250);
   }
 
   public void uploadSupervisoryNodes() throws FileNotFoundException {
     selectUploadType("Supervisory Nodes");
-    uploadFile("Supervisory_Nodes.csv");
+    uploadFile("QA_Supervisory_Nodes.csv");
   }
 
   public void uploadRequisitionGroup() throws FileNotFoundException {
     selectUploadType("Requisition Groups");
-    uploadFile("Requisition_Groups.csv");
+    uploadFile("QA_Requisition_Groups.csv");
   }
 
   public void uploadRequisitionGroupMembers() throws FileNotFoundException {
     selectUploadType("Requisition Group Members");
-    uploadFile("Requisition_Group_Members.csv");
+    uploadFile("QA_Requisition_Group_Members.csv");
   }
 
   public void uploadRequisitionGroupProgramSchedule() throws FileNotFoundException {
     selectUploadType("Map Requisition Groups to Programs + Schedule");
-    uploadFile("Requisition_Group_Program_Schedule.csv");
+    uploadFile("QA_Requisition_Group_Program_Schedule.csv");
   }
 
   public void uploadSupplyLines() throws FileNotFoundException {
     selectUploadType("Supply Lines");
-    uploadFile("Supply_Lines.csv");
+    uploadFile("QA_Supply_Lines.csv");
   }
 
 
