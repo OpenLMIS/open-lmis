@@ -51,4 +51,8 @@ public class RoleAssignmentRepository {
   public List<RoleAssignment> getHomeFacilityRolesForUserOnGivenProgramWithRights(Integer userId, Integer programId, Right... rights) {
     return mapper.getHomeFacilityRolesForUserOnGivenProgramWithRights(userId, programId, commaSeparateRightNames(rights));
   }
+
+  public RoleAssignment getAdminRole(int userId) {
+    return mapper.getAdminRole(userId);
+  }
 }

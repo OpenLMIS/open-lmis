@@ -11,13 +11,25 @@ describe("User", function () {
 
   describe("User Controller", function () {
 
-    var scope, $httpBackend, ctrl, user, location;
+    var scope, $httpBackend, ctrl, user, location, roles;
 
     beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location) {
       scope = $rootScope.$new();
       $httpBackend = _$httpBackend_;
       location = $location;
-      $httpBackend.expectGET("/roles.json").respond(200, {"roles":[]});
+      roles=  [
+        {
+          "id": 1,
+          "name": "Admin",
+          "adminRole": true
+        },
+        {
+          "id": 2,
+          "name": "Store In-Charge",
+          "adminRole": false
+        }
+      ];
+      $httpBackend.expectGET("/roles.json").respond(200, {"roles":roles});
       $httpBackend.expectGET("/programs.json").respond(200, {"programs":[
         {"id":1, active:false},
         {id:2, active:true}
@@ -29,7 +41,22 @@ describe("User", function () {
 
     it('should set roles in scope', function () {
       $httpBackend.flush();
-      expect(scope.allRoles).toEqual([]);
+      expect(scope.allRoles).toEqual(roles);
+      var adminRoles =  [
+        {
+          "id": 1,
+          "name": "Admin",
+          "adminRole": true
+        }];
+      var nonAdminRoles = [{
+        "id": 2,
+        "name": "Store In-Charge",
+        "adminRole": false
+      }];
+      expect(scope.adminRoles.length).toBe(1);
+      expect(scope.adminRoles[0].name).toBe("Admin");
+      expect(scope.nonAdminRoles.length).toBe(1);
+      expect(scope.nonAdminRoles[0].name).toBe("Store In-Charge");
     });
 
     it('should set programs in scope with added status', function () {

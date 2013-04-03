@@ -63,7 +63,7 @@ public class User extends BaseModel implements Importable {
 
   private List<RoleAssignment> supervisorRoles;
   private List<RoleAssignment> homeFacilityRoles;
-  private List<RoleAssignment> adminRoles;
+  private RoleAssignment adminRole;
 
   private static final String INVALID_EMAIL_ERROR_CODE = "user.email.invalid";
 

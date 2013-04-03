@@ -52,6 +52,18 @@ public class RoleAssignmentServiceTest {
   }
 
   @Test
+  public void shouldSaveAdminRoleAssignment() throws Exception {
+    RoleAssignment adminRoleAssignment = new RoleAssignment();
+    adminRoleAssignment.setRoleId(1);
+    User user = new User();
+    user.setId(1);
+    user.setAdminRole(adminRoleAssignment);
+    service.saveAdminRole(user);
+
+    verify(roleAssignmentRepository).insertRoleAssignment(1, null, null, 1);
+  }
+
+  @Test
   public void shouldDeleteRoleAssignmentsOfAUser() throws Exception {
     service.deleteAllRoleAssignmentsForUser(1);
     verify(roleAssignmentRepository).deleteAllRoleAssignmentsForUser(1);
@@ -73,6 +85,15 @@ public class RoleAssignmentServiceTest {
     List<RoleAssignment> expected = new ArrayList<>();
     when(roleAssignmentRepository.getHomeFacilityRoles(1)).thenReturn(expected);
     List<RoleAssignment> actual = service.getHomeFacilityRoles(1);
+
+    assertThat(actual, is(expected));
+  }
+  @Test
+  public void shouldGetAdminRoleAssignments() throws Exception {
+
+    RoleAssignment expected = new RoleAssignment();
+    when(roleAssignmentRepository.getAdminRole(1)).thenReturn(expected);
+    RoleAssignment actual = service.getAdminRole(1);
 
     assertThat(actual, is(expected));
   }

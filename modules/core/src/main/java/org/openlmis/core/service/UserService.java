@@ -56,6 +56,7 @@ public class UserService {
     userRepository.create(user);
     roleAssignmentService.saveHomeFacilityRoles(user);
     roleAssignmentService.saveSupervisoryRoles(user);
+    roleAssignmentService.saveAdminRole(user);
   }
 
   public void update(User user) {
@@ -64,6 +65,7 @@ public class UserService {
     roleAssignmentService.deleteAllRoleAssignmentsForUser(user.getId());
     roleAssignmentService.saveHomeFacilityRoles(user);
     roleAssignmentService.saveSupervisoryRoles(user);
+    roleAssignmentService.saveAdminRole(user);
   }
 
   private void sendEmail(EmailMessage emailMessage) {
@@ -129,6 +131,7 @@ public class UserService {
     User user = userRepository.getById(id);
     user.setHomeFacilityRoles(roleAssignmentService.getHomeFacilityRoles(id));
     user.setSupervisorRoles(roleAssignmentService.getSupervisorRoles(id));
+    user.setAdminRole(roleAssignmentService.getAdminRole(id));
     return user;
   }
 

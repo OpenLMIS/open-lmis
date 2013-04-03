@@ -191,7 +191,7 @@ public class RoleAssignmentMapperIT {
     mapper.insertRoleAssignment(userId, null, null, adminRole.getId());
     mapper.insertRoleAssignment(userId, 2, null, nonAdminRole.getId());
 
-    RoleAssignment adminRoles = mapper.getAdminRoles(userId);
+    RoleAssignment adminRoles = mapper.getAdminRole(userId);
 
     assertThat(adminRoles.getRoleIds().size(), is(1));
 

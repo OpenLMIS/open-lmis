@@ -67,6 +67,14 @@ public class RoleAssignmentRepositoryTest {
   }
 
   @Test
+  public void shouldGetAdminRoles() throws Exception {
+    RoleAssignment expected = new RoleAssignment();
+    when(mapper.getAdminRole(1)).thenReturn(expected);
+    RoleAssignment actual = repository.getAdminRole(1);
+    assertThat(actual, is(expected));
+  }
+
+  @Test
   public void shouldGetRoleAssignmentsForAGivenUserOnAGivenProgramWithRights() throws Exception {
     Integer userId = 1;
     Integer programId = 2;

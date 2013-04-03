@@ -20,6 +20,7 @@ function UserController($scope, $routeParams, $location, $dialog, Users, User, A
   if (utils.isNullOrUndefined($scope.allRoles)) {
     Roles.get({}, function (data) {
       $scope.allRoles = data.roles;
+      filterRoles();
     });
   }
 
@@ -33,6 +34,15 @@ function UserController($scope, $routeParams, $location, $dialog, Users, User, A
   SupervisoryNodes.get({}, function (data) {
     $scope.supervisoryNodes = data.supervisoryNodes;
   });
+
+  function filterRoles() {
+    $scope.adminRoles = _.filter($scope.allRoles, function (role) {
+      return role.adminRole;
+    });
+    $scope.nonAdminRoles = _.filter($scope.allRoles, function (role) {
+      return !role.adminRole;
+    });
+  }
 
   function validateHomeFacilityRoles(user) {
     if (!user.homeFacilityRoles) {

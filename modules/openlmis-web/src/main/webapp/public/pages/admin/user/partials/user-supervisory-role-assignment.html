@@ -8,10 +8,10 @@
   <div class="fluid-grid">
     <div class="row-fluid fluid-grid-header">
       <div class="span3">
-        <div class="fluid-grid-cell">Program(s)</div>
+        <div class="fluid-grid-cell">Program</div>
       </div>
       <div class="span3">
-        <div class="fluid-grid-cell">Supervisory node(s)</div>
+        <div class="fluid-grid-cell">Supervisory node</div>
       </div>
       <div class="span3">
         <div class="fluid-grid-cell">Roles</div>
@@ -36,7 +36,7 @@
         <div class="fluid-grid-cell">
           <select ui-select2 ng-model="roleAssignment.roleIds" placeholder="+ Add Role"
                   multiple="multiple" style="width:400px" name="roles" id="roles">
-            <option ng-repeat="role in allRoles" value="{{role.id}}" ng-bind="role.name"></option>
+            <option ng-repeat="role in nonAdminRoles" value="{{role.id}}" ng-bind="role.name"></option>
           </select>
         <span ng-show="roleAssignment.roleIds.length == 0" class="field-error">
          Please fill in this value
@@ -82,7 +82,7 @@
       <div class="span3 select2-roles">
         <div id="supervisoryRole" class="fluid-grid-cell">
           <select ui-select2  ng-model="selectedRoleIdsToSupervise" placeholder="+ Add Role" multiple="multiple" style="width:400px">
-            <option ng-repeat="role in $parent.allRoles" value="{{role.id}}">{{role.name}}</option>
+            <option ng-repeat="role in nonAdminRoles" value="{{role.id}}">{{role.name}}</option>
           </select>
           <span ng-show='hasMappingError(showSupervisorRoleMappingError,selectedRoleIdsToSupervise)' class="field-error">
             Please select role(s)

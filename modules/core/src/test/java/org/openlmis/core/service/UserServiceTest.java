@@ -29,7 +29,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
@@ -166,12 +165,15 @@ public class UserServiceTest {
     when(userRepository.getById(1)).thenReturn(user);
     when(roleAssignmentService.getHomeFacilityRoles(1)).thenReturn(homeFacilityRoles);
     when(roleAssignmentService.getSupervisorRoles(1)).thenReturn(supervisorRoles);
+    RoleAssignment adminRole = new RoleAssignment();
+    when(roleAssignmentService.getAdminRole(1)).thenReturn(adminRole);
 
     User returnedUser = userService.getById(1);
 
     assertThat(returnedUser, is(user));
     assertThat(returnedUser.getHomeFacilityRoles(), is(homeFacilityRoles));
     assertThat(returnedUser.getSupervisorRoles(), is(supervisorRoles));
+    assertThat(returnedUser.getAdminRole(), is(adminRole));
   }
 
   @Test
@@ -212,6 +214,24 @@ public class UserServiceTest {
   }
 
   @Test
+  public void shouldSaveUsersWithAllRoles() throws Exception {
+    User user = new User();
+    final RoleAssignment roleAssignment = new RoleAssignment(1, 1, 1, new SupervisoryNode(1));
+    List<RoleAssignment> supervisorRoles = Arrays.asList(roleAssignment);
+    RoleAssignment adminRoleAssignment = new RoleAssignment();
+    adminRoleAssignment.setRoleId(1);
+    user.setAdminRole(adminRoleAssignment);
+    user.setSupervisorRoles(supervisorRoles);
+
+    userService.create(user, FORGET_PASSWORD_LINK);
+
+    verify(userRepository).create(user);
+    verify(roleAssignmentService).saveHomeFacilityRoles(user);
+    verify(roleAssignmentService).saveSupervisoryRoles(user);
+    verify(roleAssignmentService).saveAdminRole(user);
+  }
+
+  @Test
   public void shouldUpdateUser() throws Exception {
     User user = new User();
     final RoleAssignment roleAssignment = new RoleAssignment(1, 1, 1, new SupervisoryNode(1));
@@ -224,6 +244,7 @@ public class UserServiceTest {
     verify(roleAssignmentService).deleteAllRoleAssignmentsForUser(user.getId());
     verify(roleAssignmentService).saveHomeFacilityRoles(user);
     verify(roleAssignmentService).saveSupervisoryRoles(user);
+    verify(roleAssignmentService).saveAdminRole(user);
   }
 
   @Test

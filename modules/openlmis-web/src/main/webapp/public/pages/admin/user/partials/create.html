@@ -166,12 +166,20 @@
           <ng-include src="'/public/pages/admin/user/partials/user-supervisory-role-assignment.html'"></ng-include>
         </div>
       </div><!-- /form-group -->
+      <div class="form-group">
+        <h3>Admin and General Operations Roles</h3>
 
+        <div class="prog-role-grid">
+          <ng-include src="'/public/pages/admin/user/partials/user-admin-role-assignment.html'"></ng-include>
+        </div>
+      </div>
+      <!-- /form-group -->
 
 
       <div form-toolbar id="action_buttons" class="action-buttons">
         <div class="form-cell button-row">
-          <input type="submit" class="btn btn-primary save-button" value="Save"/>
+          <input type="submit" class="btn btn-primary save-button" value="Save" />
+          <a ng-href="#/search" class="btn btn-cancel cancel-button">Cancel</a>
         </div>
         <div class="toolbar-error" id="saveErrorMsgDiv" ng-bind="error" ng-show="error"/>
       </div>
