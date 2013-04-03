@@ -64,7 +64,6 @@ public class UploadPage extends Page {
 
   public void uploadFile(String fileName) {
     uploadFilePath = this.getClass().getClassLoader().getResource(fileName).getFile();
-    System.out.println("Upload Path : "+uploadFilePath);
     setCsvPath.sendKeys(uploadFilePath);
     uploadButton.click();
   }
