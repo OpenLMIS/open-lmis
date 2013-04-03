@@ -44,6 +44,13 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     });
   });
 
+  $scope.highlightRequired = function (value) {
+    if ($scope.approvedQuantityRequiredFlag && (isUndefined(value))) {
+      return "required-error";
+    }
+    return null;
+  };
+
   $scope.showCategory = function (index) {
     return !((index > 0 ) && ($scope.pageLineItems[index].productCategory == $scope.pageLineItems[index - 1].productCategory));
   };
@@ -56,7 +63,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     return $scope.getCellErrorClass(rnrLineItem) ? 'row-error-highlight' : '';
   };
 
-  $scope.showLossesAndAdjustmentModalForLineItem = function (lineItem) {
+  $scope.showLossesAndAdjustments = function (lineItem) {
     $scope.currentRnrLineItem = lineItem;
     $scope.lossesAndAdjustmentsModal = true;
   };
@@ -76,9 +83,6 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
           case 'price':
           case 'cost' :
             columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:currencyTemplate('row.entity.' + column.name)});
-            break;
-          case 'lossesAndAdjustments' :
-            columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:lossesAndAdjustmentsTemplate()});
             break;
           case 'quantityApproved' :
             columnDefinitions.push({field:column.name, displayName:column.label, width:140, cellTemplate:positiveIntegerCellTemplate(column.name, 'row.entity.quantityApproved')});
@@ -134,33 +138,6 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     fillPagedGridData();
   });
 
-  function lossesAndAdjustmentsTemplate() {
-    return '<div class="ngCellText" ng-hide="row.entity.fullSupply"><span ng-bind="row.entity.totalLossesAndAdjustments" ></span></div>' +
-      '<div id="lossesAndAdjustments" modal="lossesAndAdjustmentsModal[row.entity.id]">' +
-      '<div class="modal-header"><h3>Losses And Adjustments</h3></div>' +
-      '<div class="modal-body">' +
-      '<hr ng-show="row.entity.lossesAndAdjustments.length > 0"/>' +
-      '<div class="adjustment-list" ng-show="row.entity.lossesAndAdjustments.length > 0">' +
-      '<ul>' +
-      '<li ng-repeat="oneLossAndAdjustment in row.entity.lossesAndAdjustments" class="clearfix">' +
-      '<span class="tpl-adjustment-type" ng-bind="oneLossAndAdjustment.type.description"></span>' +
-      '<span class="tpl-adjustment-qty" ng-bind="oneLossAndAdjustment.quantity"></span>' +
-      '</li>' +
-      '</ul>' +
-      '</div>' +
-      '<div class="adjustment-total clearfix alert alert-warning" ng-show="row.entity.lossesAndAdjustments.length > 0">' +
-      '<span class="pull-left">Total</span> ' +
-      '<span ng-bind="row.entity.totalLossesAndAdjustments"></span>' +
-      '</div>' +
-      '</div>' +
-      '<div class="modal-footer">' +
-      '<input type="button" class="btn btn-success save-button" style="width: 75px" ng-click="closeLossesAndAdjustmentsForRnRLineItem(row.entity)" value="Close"/>' +
-      '</div>' +
-      '</div>' +
-      '<a ng-click="showLossesAndAdjustmentModalForLineItem(row.entity)" class="rnr-adjustment" ng-show="row.entity.fullSupply">' +
-      '<span class="adjustment-value" ng-bind="row.entity.totalLossesAndAdjustments"></span>' +
-      '</a>';
-  }
 
   function currencyTemplate(value) {
     return '<div class="ngCellText"><span  class = "cell-text" ng-show = "showCurrencySymbol(' + value + ')"  ng-bind="currency"></span >&nbsp; &nbsp;<span ng-bind = "' + value + '" class = "cell-text" ></span ></div>'
@@ -207,12 +184,6 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   };
 
   $scope.fillPacksToShip = function (lineItem) {
-    $scope.setDirty();
-    if (!isUndefined(lineItem.quantityApproved)) {
-      $scope.showPositiveIntegerError[lineItem.id] = !utils.isPositiveNumber(lineItem.quantityApproved);
-      lineItem.quantityApproved = utils.parseIntWithBaseTen(lineItem.quantityApproved);
-    }
-
     $scope.rnr.fillPacksToShip(lineItem);
   };
 

@@ -32,7 +32,7 @@ function CreateFullSupplyController($scope) {
     $scope.modalError = '';
   };
 
-  $scope.showLossesAndAdjustmentModalForLineItem = function (lineItem) {
+  $scope.showLossesAndAdjustments = function (lineItem) {
     $scope.currentRnrLineItem = lineItem;
     updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem);
     $scope.lossesAndAdjustmentsModal = true;

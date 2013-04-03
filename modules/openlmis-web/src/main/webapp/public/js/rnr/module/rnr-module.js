@@ -40,19 +40,14 @@ var rnrModule = angular.module('rnr', ['openlmis', 'ngGrid', 'ui.bootstrap.modal
     $rootScope.pageSize = 20;
   });
 
+//TODO: remove name to id mapping
 rnrModule.positiveInteger = function (value, errorHolder) {
-  var toggleErrorMessageDisplay = function (valid, errorHolder) {
-    if (valid) {
-      document.getElementById(errorHolder).style.display = 'none';
-    } else {
-      document.getElementById(errorHolder).style.display = 'block';
-    }
-  };
-
   var INTEGER_REGEXP = /^\d*$/;
   var valid = (value == undefined) ? true : INTEGER_REGEXP.test(value);
 
-  if (errorHolder != undefined) toggleErrorMessageDisplay(valid, errorHolder);
+  if (errorHolder != undefined) {
+    document.getElementById(errorHolder).style.display = (valid) ? 'none' : 'block';
+  }
 
   return valid;
 };

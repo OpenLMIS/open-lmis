@@ -272,7 +272,7 @@ var lossesAndAdjustmentsTemplate = '<div id="lossesAndAdjustments" modal="losses
   '</div>' +
   '</div>' +
   '<div>' +
-  '<a ng-click="showLossesAndAdjustmentModalForLineItem(row.entity)" class="rnr-adjustment">' +
+  '<a ng-click="showLossesAndAdjustments(row.entity)" class="rnr-adjustment">' +
   '<span class="adjustment-value" ng-bind="row.entity.totalLossesAndAdjustments"></span>' +
   '</a>' +
   '</div>';

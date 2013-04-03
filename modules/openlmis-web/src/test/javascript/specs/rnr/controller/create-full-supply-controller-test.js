@@ -44,7 +44,7 @@ describe('CreateFullSupplyController', function () {
     var lineItem = { "id":"1", lossesAndAdjustments:[
       {"type":{"name":"some name"}, "quantity":"4"}
     ]};
-    scope.showLossesAndAdjustmentModalForLineItem(lineItem);
+    scope.showLossesAndAdjustments(lineItem);
     expect(scope.lossesAndAdjustmentsModal).toBeTruthy();
     expect(scope.lossesAndAdjustmentTypesToDisplay).toEqual([
       {"name":"some other name"}

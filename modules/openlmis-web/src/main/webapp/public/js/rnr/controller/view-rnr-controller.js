@@ -143,7 +143,7 @@ function ViewRnrController($scope, $routeParams, requisition, rnrColumns, curren
       '</div>' +
       '</div>' +
       '<div>' +
-      '<a ng-click="showLossesAndAdjustmentModalForLineItem(row.entity)" class="rnr-adjustment">' +
+      '<a ng-click="showLossesAndAdjustments(row.entity)" class="rnr-adjustment">' +
       '<span class="adjustment-value" ng-bind="row.entity.totalLossesAndAdjustments"></span>' +
       '</a>' +
       '</div>';
@@ -175,7 +175,7 @@ function ViewRnrController($scope, $routeParams, requisition, rnrColumns, curren
     $scope.lossesAndAdjustmentsModal[rnrLineItem.id] = false;
   };
 
-  $scope.showLossesAndAdjustmentModalForLineItem = function (lineItem) {
+  $scope.showLossesAndAdjustments = function (lineItem) {
     $scope.lossesAndAdjustmentsModal[lineItem.id] = true;
   };
 }
