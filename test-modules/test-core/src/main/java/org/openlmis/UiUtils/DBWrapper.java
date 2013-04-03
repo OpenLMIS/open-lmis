@@ -285,22 +285,15 @@ public class DBWrapper {
     return nonFullSupplyValues;
   }
 
-  public void insertSchedules() throws SQLException, IOException {
-    update("delete from processing_periods;");
-    update("delete from processing_schedules;");
+    public void insertSchedule(String scheduleCode, String scheduleName, String scheduleDesc) throws SQLException, IOException {
+        update("INSERT INTO processing_schedules(code, name, description) values('"+scheduleCode+"', '"+scheduleName+"', '"+scheduleDesc+"');");
+    }
 
-    update("INSERT INTO processing_schedules(code, name, description) values('Q1stM', 'QuarterMonthly', 'QuarterMonth');");
-    update("INSERT INTO processing_schedules(code, name, description) values('M', 'Monthly', 'Month');");
-  }
-
-  public void insertProcessingPeriods() throws SQLException, IOException {
-    update("delete from processing_periods;");
-
-    update("INSERT INTO processing_periods\n" +
-      "(name, description, startDate, endDate, numberofmonths, scheduleId, modifiedBy) VALUES\n" +
-      "('Period1', 'first period',  '2012-12-01', '2013-01-15',1, (SELECT id FROM processing_schedules WHERE code = 'Q1stM'), (SELECT id FROM users LIMIT 1)),\n" +
-      "('Period2', 'second period', '2013-01-16', '2013-01-30', 1, (SELECT id FROM processing_schedules WHERE code = 'M'), (SELECT id FROM users LIMIT 1));");
-  }
+    public void insertProcessingPeriod(String periodName, String periodDesc, String periodStartDate, String periodEndDate, Integer numberOfMonths, String scheduleId) throws SQLException, IOException {
+        update("INSERT INTO processing_periods\n" +
+                "(name, description, startDate, endDate, numberofmonths, scheduleId, modifiedBy) VALUES\n" +
+                "('"+periodName+"', '"+periodDesc+"', '"+periodStartDate+"', '"+periodEndDate+"', "+numberOfMonths+", (SELECT id FROM processing_schedules WHERE code = '"+scheduleId+"'), (SELECT id FROM users LIMIT 1));");
+    }
 
 
   public void configureTemplate(String program) throws SQLException, IOException {

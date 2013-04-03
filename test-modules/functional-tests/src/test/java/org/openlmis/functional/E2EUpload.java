@@ -82,8 +82,10 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadRequisitionGroup();
     uploadPage.verifySuccessMessageOnUploadScreen();
 
-    dbWrapper.insertSchedules();
-    dbWrapper.insertProcessingPeriods();
+    dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
+    dbWrapper.insertSchedule("M", "Monthly", "Month");
+      dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
+      dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
 
     uploadPage.uploadRequisitionGroupProgramSchedule();
     uploadPage.verifySuccessMessageOnUploadScreen();
