@@ -5,58 +5,53 @@
   -->
 
 <div ng-controller="ApproveFullSupplyController">
-    <div id="pageErrors" class="rnr-page-errors" ng-show="errorPages.fullSupply">
-        <div class="dropdown">
-            <a class="dropdown-toggle">
-                Errors found on
-                <ng-pluralize count="errorPages.fullSupply.length"
-                              when="{ 1: '{} page',
-                                        other: '{} pages'}">
-
-                </ng-pluralize>
-                |
-            </a>
-            <ul class="dropdown-menu">
-                <li ng-repeat="page in errorPages.fullSupply">
-                    <a ng-click="goToPage(page, $event)">{{page}}</a>
-                </li>
-            </ul>
-        </div>
-
+  <div id="pageErrors" class="rnr-page-errors" ng-show="errorPages.fullSupply">
+    <div ng-switch on="errorPages.fullSupply.length" class="dropdown">
+      <a ng-switch-when="1" class="dropdown-toggle"> Errors found on 1 page </a>
+      <a ng-switch-default class="dropdown-toggle">
+        Errors found on {{errorPages.fullSupply.length}} pages
+      </a>
+      <ul class="dropdown-menu">
+        <li ng-repeat="page in errorPages.fullSupply">
+          <a ng-click="goToPage(page, $event)">{{page}}</a>
+        </li>
+      </ul>
     </div>
-    <div class="rnr-table">
-        <table id="fullSupplyTable" class="table table-bordered">
-            <thead>
-            <tr>
-                <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in visibleColumns"
-                    ng-bind="programRnrColumn.label"></th>
-            </tr>
-            </thead>
-            <tbody ng-show="visibleColumns" ng-repeat="rnrLineItem in pageLineItems">
-            <tr>
-                <td class="productCategory" colspan="{{visibleColumns.length}}" ng-show="showCategory($index)"
-                    ng-bind="rnrLineItem.productCategory"></td>
-            </tr>
-            <tr ng-class="getRowErrorClass(rnrLineItem)">
-                <td class="cell-input" ng-repeat="column in visibleColumns">
+
+  </div>
+  <div class="rnr-table">
+    <table id="fullSupplyTable" class="table table-bordered">
+      <thead>
+      <tr>
+        <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in visibleColumns"
+            ng-bind="programRnrColumn.label"></th>
+      </tr>
+      </thead>
+      <tbody ng-show="visibleColumns" ng-repeat="rnrLineItem in pageLineItems">
+      <tr>
+        <td class="productCategory" colspan="{{visibleColumns.length}}" ng-show="showCategory($index)"
+            ng-bind="rnrLineItem.productCategory"></td>
+      </tr>
+      <tr ng-class="getRowErrorClass(rnrLineItem)">
+        <td class="cell-input" ng-repeat="column in visibleColumns">
             <span>
               <ng-switch on="column.name">
 
               <span ng-switch-when="lossesAndAdjustments">
                 <div>
-                    <a ng-click="showLossesAndAdjustmentModalForLineItem(rnrLineItem)"
-                       class="rnr-adjustment">
-                        <span class="adjustment-value" ng-bind="rnrLineItem.totalLossesAndAdjustments"></span>
-                    </a>
+                  <a ng-click="showLossesAndAdjustmentModalForLineItem(rnrLineItem)"
+                     class="rnr-adjustment">
+                    <span class="adjustment-value" ng-bind="rnrLineItem.totalLossesAndAdjustments"></span>
+                  </a>
                 </div>
               </span>
 
                 <span ng-switch-when="quantityApproved">
                   <div>
-                      <input ng-change='fillPacksToShip(rnrLineItem)' ng-required="true" maxlength="8"
-                             ng-model="rnrLineItem[column.name]"
-                             class="cell-text"
-                              />
+                    <input ng-change='fillPacksToShip(rnrLineItem)' ng-required="true" maxlength="8"
+                           ng-model="rnrLineItem[column.name]"
+                           class="cell-text"
+                        />
                   </div>
                 </span>
 
@@ -82,11 +77,11 @@
                       class="cell-text"></span>
               </ng-switch>
             </span>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 
-    <ng-include src="'/public/pages/logistics/rnr/partials/approve/losses-and-adjustments.html'"></ng-include>
+  <ng-include src="'/public/pages/logistics/rnr/partials/approve/losses-and-adjustments.html'"></ng-include>
 </div>

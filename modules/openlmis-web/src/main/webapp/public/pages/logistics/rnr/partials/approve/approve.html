@@ -14,24 +14,6 @@
   </ul>
 </div>
 
-<div id="pageErrors" class="rnr-page-errors" ng-show="shownErrorPages">
-  <div class="dropdown"><a class="dropdown-toggle">
-    Errors found on
-    <ng-pluralize count="shownErrorPages.length"
-                  when="{ 1: '{} page',
-                                  other: '{} pages'}">
-
-    </ng-pluralize>
-    |
-  </a>
-    <ul class="dropdown-menu">
-      <li ng-repeat="page in shownErrorPages">
-        <a ng-click="goToPage(page, $event)">{{page}}</a>
-      </li>
-    </ul>
-  </div>
-</div>
-
 <form name="approvalForm" novalidate>
   <ng-switch on="showNonFullSupply">
         <span ng-switch-when="true">
