@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function RequisitionNonFullSupplyController($scope, $rootScope) {
+function CreateNonFullSupplyController($scope, $rootScope) {
 
   $scope.visibleNonFullSupplyColumns = _.filter($scope.visibleColumns, function (column) {
     return _.contains(RnrLineItem.visibleForNonFullSupplyColumns, column.name);

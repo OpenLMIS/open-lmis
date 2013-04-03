@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-describe('RequisitionFullSupplyController', function () {
+describe('CreateFullSupplyController', function () {
   var scope, ctrl, httpBackend, location, routeParams, controller, localStorageService;
 
   beforeEach(module('openlmis.services'));
@@ -32,7 +32,7 @@ describe('RequisitionFullSupplyController', function () {
     httpBackend.expect('GET', '/requisitions/lossAndAdjustments/reference-data.json').respond({"lossAdjustmentTypes":{}});
     $rootScope.fixToolBar = function () {
     };
-    ctrl = controller(RequisitionFullSupplyController, {$scope:scope, $location:location, $routeParams:routeParams, localStorageService:localStorageService});
+    ctrl = controller(CreateFullSupplyController, {$scope:scope, $location:location, $routeParams:routeParams, localStorageService:localStorageService});
 
     scope.allTypes = [
       {"name":"some name"},

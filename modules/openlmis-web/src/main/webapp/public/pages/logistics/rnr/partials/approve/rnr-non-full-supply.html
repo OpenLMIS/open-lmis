@@ -1,0 +1,71 @@
+<!--
+  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
+<div ng-controller="ApproveNonFullSupplyController">
+    <div class="rnr-table">
+        <table id="fullSupplyTable" class="table table-bordered">
+            <thead>
+            <tr>
+                <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in visibleColumns"
+                    ng-bind="programRnrColumn.label"></th>
+            </tr>
+            </thead>
+            <tbody ng-show="visibleColumns" ng-repeat="rnrLineItem in pageLineItems">
+            <tr>
+                <td class="productCategory" colspan="{{visibleColumns.length}}" ng-show="showCategory($index)"
+                    ng-bind="rnrLineItem.productCategory"></td>
+            </tr>
+            <tr ng-class="getRowErrorClass(rnrLineItem)">
+                <td class="cell-input" ng-repeat="column in visibleColumns">
+            <span>
+              <ng-switch on="column.name">
+
+              <span ng-switch-when="lossesAndAdjustments">
+                <div>
+                    <a ng-click="showLossesAndAdjustmentModalForLineItem(rnrLineItem)"
+                       class="rnr-adjustment">
+                        <span class="adjustment-value" ng-bind="rnrLineItem.totalLossesAndAdjustments"></span>
+                    </a>
+                </div>
+              </span>
+
+                <span ng-switch-when="quantityApproved">
+                  <div>
+                      <input ng-change='fillPacksToShip(rnrLineItem)' ng-required="true" maxlength="8"
+                             ng-model="rnrLineItem[column.name]"
+                             class="cell-text"
+                              />
+                  </div>
+                </span>
+
+                <span ng-switch-when="remarks">
+                  <input id="{{getId(column.name, $parent)}}" type="text"
+                         name="remarks{{rnrLineItem['id']}}"
+                         ng-model="rnrLineItem[column.name]"
+                         class="cell-text"
+                         maxlength="250"/>
+                </span>
+
+                <span ng-switch-when="price">
+                  <span ng-bind='rnrLineItem[column.name] | currency:currency' id="{{getId(column.name, $parent)}}"
+                        class="cell-text"></span>
+                </span>
+
+                <span ng-switch-when="cost">
+                  <span ng-bind='rnrLineItem[column.name] | currency:currency' id="{{getId(column.name, $parent)}}"
+                        class="cell-text"></span>
+                </span>
+
+                <span ng-switch-default ng-bind="rnrLineItem[column.name]" id="{{getId(column.name, $parent)}}"
+                      class="cell-text"></span>
+              </ng-switch>
+            </span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

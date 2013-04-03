@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-describe('RequisitionNonFullSupplyController', function () {
+describe('CreateNonFullSupplyController', function () {
 
   var scope, ctrl, httpBackend, location, routeParams, controller, localStorageService, productList, categoryList, facilityApprovedProducts;
   var facilityApprovedProduct1, facilityApprovedProduct2, facilityApprovedProduct3, facilityApprovedProduct4, facilityApprovedProduct5;
@@ -54,7 +54,7 @@ describe('RequisitionNonFullSupplyController', function () {
     };
 
     scope.facilityApprovedProducts = facilityApprovedProducts;
-    ctrl = controller(RequisitionNonFullSupplyController, {$scope:scope, $location:location, $routeParams:routeParams,
+    ctrl = controller(CreateNonFullSupplyController, {$scope:scope, $location:location, $routeParams:routeParams,
       localStorageService:localStorageService});
 
   }));

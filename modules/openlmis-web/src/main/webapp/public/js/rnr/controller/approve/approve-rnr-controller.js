@@ -8,7 +8,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   $scope.rnr = new Rnr(requisition, rnrColumns);
   $scope.rnrColumns = rnrColumns;
   $scope.currency = currency;
-
+  $scope.visibleColumns = _.where(rnrColumns, {'visible':true});
   $scope.error = "";
   $scope.message = "";
 
@@ -18,7 +18,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   $scope.showPositiveIntegerError = [];
   $scope.errorPages = {};
   $scope.shownErrorPages = [];
-
+  $scope.lossesAndAdjustmentsModal = false;
   $scope.isDirty = false;
 
   $scope.goToPage = function (page, event) {
@@ -43,6 +43,27 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
       });
     });
   });
+
+  $scope.showCategory = function (index) {
+    return !((index > 0 ) && ($scope.pageLineItems[index].productCategory == $scope.pageLineItems[index - 1].productCategory));
+  };
+
+  $scope.getCellErrorClass = function (rnrLineItem) {
+    return (typeof(rnrLineItem.getErrorMessage) != "undefined" && rnrLineItem.getErrorMessage()) ? 'cell-error-highlight' : '';
+  };
+
+  $scope.getRowErrorClass = function (rnrLineItem) {
+    return $scope.getCellErrorClass(rnrLineItem) ? 'row-error-highlight' : '';
+  };
+
+  $scope.showLossesAndAdjustmentModalForLineItem = function (lineItem) {
+    $scope.currentRnrLineItem = lineItem;
+    $scope.lossesAndAdjustmentsModal = true;
+  };
+
+  $scope.closeLossesAndAdjustmentModal = function () {
+    $scope.lossesAndAdjustmentsModal = false;
+  };
 
   function prepareColumnDefinitions() {
     var columnDefinitions = [
@@ -97,10 +118,6 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     $location.search("page", $scope.currentPage);
   });
 
-  $scope.closeLossesAndAdjustmentsForRnRLineItem = function (rnrLineItem) {
-    $scope.lossesAndAdjustmentsModal[rnrLineItem.id] = false;
-  };
-
   $scope.switchSupplyType = function (supplyType) {
     $location.search('page', 1);
     $location.search('supplyType', supplyType);
@@ -116,10 +133,6 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     updateSupplyTypeForGrid();
     fillPagedGridData();
   });
-
-  $scope.showLossesAndAdjustmentModalForLineItem = function (lineItem) {
-    $scope.lossesAndAdjustmentsModal[lineItem.id] = true;
-  };
 
   function lossesAndAdjustmentsTemplate() {
     return '<div class="ngCellText" ng-hide="row.entity.fullSupply"><span ng-bind="row.entity.totalLossesAndAdjustments" ></span></div>' +
