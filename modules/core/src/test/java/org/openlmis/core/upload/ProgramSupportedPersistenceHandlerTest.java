@@ -48,19 +48,4 @@ public class ProgramSupportedPersistenceHandlerTest {
     assertThat(programSupported.getModifiedBy(), is(1));
   }
 
-  @Test
-  public void shouldThrowErrorIfDuplicateFacilityAndProgramCodeFoundWithSameTimeStamp() {
-    ProgramSupported programSupported = new ProgramSupported();
-    Date currentTimestamp = new Date();
-    programSupported.setModifiedDate(currentTimestamp);
-
-    AuditFields auditFields = new AuditFields();
-    auditFields.setCurrentTimestamp(currentTimestamp);
-
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Facility has already been mapped to the program ");
-
-    programSupportedPersistenceHandler.throwExceptionIfAlreadyProcessedInCurrentUpload(programSupported, auditFields);
-  }
-
-}
+ }

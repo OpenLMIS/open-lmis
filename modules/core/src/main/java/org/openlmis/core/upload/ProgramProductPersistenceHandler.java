@@ -17,10 +17,12 @@ import org.springframework.stereotype.Component;
 @Component("programProductPersistenceHandler")
 public class ProgramProductPersistenceHandler extends AbstractModelPersistenceHandler {
 
+  public static final String DUPLICATE_PRODUCT_PROGRAM_CODE_COMBINATION = "Duplicate entry for Product Code and Program Code combination found";
   private ProgramProductService programProductService;
 
   @Autowired
   public ProgramProductPersistenceHandler(ProgramProductService programProductService) {
+    super(DUPLICATE_PRODUCT_PROGRAM_CODE_COMBINATION);
     this.programProductService = programProductService;
   }
 
@@ -36,14 +38,6 @@ public class ProgramProductPersistenceHandler extends AbstractModelPersistenceHa
     programProduct.setModifiedDate(auditFields.getCurrentTimestamp());
     if(existingRecord != null) programProduct.setId(((ProgramProduct) existingRecord).getId());
     programProductService.save(programProduct);
-  }
-
-  @Override
-  protected void throwExceptionIfAlreadyProcessedInCurrentUpload(Importable importable, AuditFields auditFields) {
-    ProgramProduct programProduct = (ProgramProduct) importable;
-    if (programProduct != null && programProduct.getModifiedDate().equals(auditFields.getCurrentTimestamp())) {
-      throw new DataException("Duplicate entry for Product Code and Program Code combination found");
-    }
   }
 
  }

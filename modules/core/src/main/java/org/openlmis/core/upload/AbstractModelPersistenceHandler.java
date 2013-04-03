@@ -6,6 +6,8 @@
 
 package org.openlmis.core.upload;
 
+import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.upload.Importable;
@@ -15,15 +17,26 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
 @Component("AbstractModelPersistenceHandler")
+@NoArgsConstructor
 public abstract class AbstractModelPersistenceHandler implements RecordHandler<Importable> {
+
+  private String duplicateMessageKey;
+
+  public AbstractModelPersistenceHandler(String duplicateMessageKey) {
+    this.duplicateMessageKey = duplicateMessageKey;
+  }
 
   @Override
   public void execute(Importable importable, int rowNumber, AuditFields auditFields) {
     final String rowNumberAsString = Integer.toString(rowNumber- 1);
 
     Importable existing = getExisting(importable);
-    if (existing != null)
-      throwExceptionIfAlreadyProcessedInCurrentUpload(existing, auditFields);
+    if (existing != null){
+      BaseModel model = (BaseModel) existing;
+      if (model.getModifiedDate().equals(auditFields.getCurrentTimestamp())) {
+        throw new DataException(duplicateMessageKey);
+      }
+    }
 
     try {
       save(existing, importable, auditFields);
@@ -39,5 +52,4 @@ public abstract class AbstractModelPersistenceHandler implements RecordHandler<I
   protected abstract Importable getExisting(Importable importable);
 
   protected abstract void save(Importable existingRecord, Importable currentRecord, AuditFields auditFields);
-  protected abstract void throwExceptionIfAlreadyProcessedInCurrentUpload(Importable importable, AuditFields auditFields);
 }

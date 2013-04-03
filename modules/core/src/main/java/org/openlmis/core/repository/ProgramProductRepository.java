@@ -19,8 +19,8 @@ import org.springframework.stereotype.Component;
 @Component
 @NoArgsConstructor
 public class ProgramProductRepository {
-
   public static final String PROGRAM_PRODUCT_INVALID = "programProduct.product.program.invalid";
+
   private ProgramProductMapper mapper;
   private ProgramRepository programRepository;
   private ProductRepository productRepository;
@@ -82,11 +82,7 @@ public class ProgramProductRepository {
   }
 
   public ProgramProduct getProgramProductByProgramAndProductCode(Integer programId, Integer productId) {
-    final ProgramProduct programProduct = mapper.getByProgramAndProductId(programId, productId);
-    if (programProduct == null)
-      throw new DataException(PROGRAM_PRODUCT_INVALID);
-
-    return programProduct;
+    return  mapper.getByProgramAndProductId(programId, productId);
   }
 
   public void updatePriceHistory(ProgramProductPrice programProductPrice) {

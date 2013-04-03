@@ -24,6 +24,7 @@ public class RequisitionGroupHandler extends AbstractModelPersistenceHandler {
 
   @Autowired
   public RequisitionGroupHandler(RequisitionGroupService requisitionGroupService) {
+    super(null);
     this.requisitionGroupService = requisitionGroupService;
   }
 
@@ -37,10 +38,6 @@ public class RequisitionGroupHandler extends AbstractModelPersistenceHandler {
     RequisitionGroup requisitionGroup = (RequisitionGroup) currentRecord;
     requisitionGroup.setModifiedBy(auditFields.getUser());
     requisitionGroup.setModifiedDate(new Date());
-    requisitionGroupService.save(requisitionGroup);}
-
-  @Override
-  protected void throwExceptionIfAlreadyProcessedInCurrentUpload(Importable importable, AuditFields auditFields) {
+    requisitionGroupService.save(requisitionGroup);
   }
-
 }

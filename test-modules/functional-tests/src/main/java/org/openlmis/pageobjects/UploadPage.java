@@ -18,6 +18,7 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 
 public class UploadPage extends Page {
 
@@ -62,9 +63,7 @@ public class UploadPage extends Page {
   }
 
   public void uploadFile(String fileName) {
-    String Separator = System.getProperty("file.separator");
-    File parentDir = new File(System.getProperty("user.dir"));
-    uploadFilePath = parentDir.getParent() + Separator + "src" + Separator + "main" + Separator + "resources" + Separator + fileName;
+    uploadFilePath = this.getClass().getClassLoader().getResource(fileName).getFile();
     setCsvPath.sendKeys(uploadFilePath);
     uploadButton.click();
   }

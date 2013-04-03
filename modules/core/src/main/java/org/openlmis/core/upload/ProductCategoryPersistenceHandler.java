@@ -19,10 +19,12 @@ import java.util.Date;
 @Component("productCategoryPersistenceHandler")
 public class ProductCategoryPersistenceHandler  extends AbstractModelPersistenceHandler {
 
+  public static final String DUPLICATE_PRODUCT_CATEGORY = "Duplicate Product Category";
   ProductCategoryService productCategoryService;
 
   @Autowired
   public ProductCategoryPersistenceHandler(ProductCategoryService productCategoryService) {
+    super(DUPLICATE_PRODUCT_CATEGORY);
     this.productCategoryService = productCategoryService;
   }
 
@@ -38,13 +40,5 @@ public class ProductCategoryPersistenceHandler  extends AbstractModelPersistence
     productCategory.setModifiedDate(new Date());
     if (existingRecord != null) productCategory.setId(((ProductCategory) existingRecord).getId());
     productCategoryService.save(productCategory);
-  }
-
-  @Override
-  protected void throwExceptionIfAlreadyProcessedInCurrentUpload(Importable importable, AuditFields auditFields) {
-    ProductCategory productCategory = (ProductCategory) importable;
-    if (productCategory.getModifiedDate().equals(auditFields.getCurrentTimestamp())) {
-      throw new DataException("Duplicate Product Category");
-    }
   }
 }

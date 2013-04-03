@@ -26,7 +26,6 @@ import java.util.Date;
 
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.*;
-import static org.openlmis.core.repository.FacilityApprovedProductRepository.FACILITY_TYPE_DOES_NOT_EXIST;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FacilityApprovedProductRepositoryTest {
@@ -58,28 +57,7 @@ public class FacilityApprovedProductRepositoryTest {
     when(facilityApprovedProductMapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(1, "warehouse")).thenReturn(null);
 
     facilityApprovedProductRepository.insert(facilityApprovedProduct);
-
-
     verify(facilityApprovedProductMapper).insert(facilityApprovedProduct);
-  }
-
-
-  @Test
-  public void shouldThrowExceptionsWhenFacilityCodeDoesNotExist() throws Exception {
-    FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct();
-    ProgramProduct programProduct = new ProgramProduct();
-    programProduct.setId(1);
-    facilityApprovedProduct.setProgramProduct(programProduct);
-    facilityApprovedProduct.setFacilityType(new FacilityType("warehouse"));
-
-    when(facilityApprovedProductMapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(1, "warehouse")).thenReturn(null);
-
-    doThrow(DataIntegrityViolationException.class).when(facilityApprovedProductMapper).insert(facilityApprovedProduct);
-
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage(FACILITY_TYPE_DOES_NOT_EXIST);
-
-    facilityApprovedProductRepository.insert(facilityApprovedProduct);
   }
 
   @Test

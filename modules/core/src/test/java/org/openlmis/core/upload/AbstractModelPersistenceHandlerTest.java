@@ -21,7 +21,7 @@ public class AbstractModelPersistenceHandlerTest {
 
   @Test
   public void shouldAppendRowNumberToExceptionMessage() throws Exception {
-    AbstractModelPersistenceHandler handler = new AbstractModelPersistenceHandler() {
+    AbstractModelPersistenceHandler handler = new AbstractModelPersistenceHandler("Duplicate Record") {
 
       @Override
       protected Importable getExisting(Importable importable) {
@@ -32,11 +32,6 @@ public class AbstractModelPersistenceHandlerTest {
       protected void save(Importable existingRecord, Importable currentRecord, AuditFields auditFields) {
         throw new DataException("error");
       }
-
-      @Override
-      protected void throwExceptionIfAlreadyProcessedInCurrentUpload(Importable importable, AuditFields auditFields) {
-      }
-
 
     };
 

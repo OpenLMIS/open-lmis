@@ -53,19 +53,4 @@ public class UserPersistenceHandlerTest {
     assertThat(user.getModifiedBy(), is(1));
   }
 
-  @Test
-  public void shouldThrowErrorIfUserWithSameTimeStampExist() throws Exception {
-    User savedUser = new User();
-    Date todayDate = new Date();
-    savedUser.setModifiedDate(todayDate);
-
-    AuditFields auditFields = new AuditFields();
-    auditFields.setCurrentTimestamp(todayDate);
-
-    exException.expect(DataException.class);
-    exException.expectMessage("duplicate.user.name.found");
-
-    userPersistenceHandler.throwExceptionIfAlreadyProcessedInCurrentUpload(savedUser, auditFields);
-  }
-
 }

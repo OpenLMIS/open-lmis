@@ -31,7 +31,7 @@ public class UserPersistenceHandler extends AbstractModelPersistenceHandler {
 
   @Autowired
   public UserPersistenceHandler(UserService userService, @Value("${mail.base.url}") String baseUrl) {
-
+    super(DUPLICATE_USER_NAME_FOUND);
     this.userService = userService;
     this.baseUrl = baseUrl;
   }
@@ -48,14 +48,6 @@ public class UserPersistenceHandler extends AbstractModelPersistenceHandler {
     user.setModifiedDate(auditFields.getCurrentTimestamp());
     if(existingRecord != null) user.setId(((User)existingRecord).getId());
     userService.create(user, baseUrl + RESET_PASSWORD_PATH);
-  }
-
-  @Override
-  protected void throwExceptionIfAlreadyProcessedInCurrentUpload(Importable importable, AuditFields auditFields) {
-    User user = (User) importable;
-    if (user != null && user.getModifiedDate().equals(auditFields.getCurrentTimestamp())) {
-      throw new DataException(new OpenLmisMessage(DUPLICATE_USER_NAME_FOUND));
-    }
   }
 
 }

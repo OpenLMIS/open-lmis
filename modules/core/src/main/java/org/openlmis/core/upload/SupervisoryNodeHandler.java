@@ -21,10 +21,12 @@ import java.util.Date;
 @NoArgsConstructor
 public class SupervisoryNodeHandler extends AbstractModelPersistenceHandler {
 
+  public static final String DUPLICATE_SUPERVISORY_NODE = "Duplicate supervisory node";
   private SupervisoryNodeService supervisoryNodeService;
 
   @Autowired
   public SupervisoryNodeHandler(SupervisoryNodeService supervisoryNodeService) {
+    super(DUPLICATE_SUPERVISORY_NODE);
     this.supervisoryNodeService = supervisoryNodeService;
   }
 
@@ -44,11 +46,4 @@ public class SupervisoryNodeHandler extends AbstractModelPersistenceHandler {
     supervisoryNodeService.save(current);
   }
 
-  @Override
-  protected void throwExceptionIfAlreadyProcessedInCurrentUpload(Importable importable, AuditFields auditFields) {
-    SupervisoryNode existing = (SupervisoryNode) importable;
-    if (existing.getModifiedDate().equals(auditFields.getCurrentTimestamp())) {
-      throw new DataException("Duplicate supervisory node");
-    }
-  }
 }

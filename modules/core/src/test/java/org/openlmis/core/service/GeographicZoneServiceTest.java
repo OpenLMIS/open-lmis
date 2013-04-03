@@ -90,19 +90,6 @@ public class GeographicZoneServiceTest {
     service.save(geographicZone);
   }
 
-  @Test
-  public void shouldThrowErrorIfDuplicateCodeFoundWithSameTimeStamp() throws Exception {
-    when(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(
-      new GeographicLevel(1, "abc", "abc", 1));
-    when(repository.getByCode(geographicZone.getParent().getCode())).thenReturn(
-      new GeographicZone(1, "xyz", "xyz", null, null));
-    when(repository.getByCode(geographicZone.getCode())).thenReturn(geographicZone);
-
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Duplicate Geographic Zone Code");
-
-    service.save(geographicZone);
-  }
 
   @Test
   public void shouldSetRootAsParentIfParentIsNull() throws Exception {
@@ -119,18 +106,15 @@ public class GeographicZoneServiceTest {
   }
 
   @Test
-  public void shouldUpdateZoneIfZonePreviouslyPresentInTheSystemWithPreviousTimestamp() throws Exception {
+  public void shouldUpdateZoneIfZonePreviouslyPresent() throws Exception {
     GeographicLevel level = new GeographicLevel(1, "abc", "abc", 1);
     GeographicZone parent = new GeographicZone(1, "xyz", "xyz", null, null);
 
-    GeographicZone zoneWithOldTimeStamp = new GeographicZone(1, geographicZone.getCode(), "saved name", null, null);
-    zoneWithOldTimeStamp.setModifiedDate(new Date(1111111111));
 
     when(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(level);
     when(repository.getByCode(geographicZone.getParent().getCode())).thenReturn(parent);
-    when(repository.getByCode(geographicZone.getCode())).
-      thenReturn(zoneWithOldTimeStamp);
 
+    geographicZone.setId(1);
     service.save(geographicZone);
 
     verify(repository).update(geographicZone);

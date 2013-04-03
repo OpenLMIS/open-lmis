@@ -18,10 +18,12 @@ import org.springframework.stereotype.Component;
 @Component("productPersistenceHandler")
 public class ProductPersistenceHandler extends AbstractModelPersistenceHandler {
 
+  public static final String DUPLICATE_PRODUCT_CODE = "Duplicate Product Code";
   private ProductService productService;
 
   @Autowired
   public ProductPersistenceHandler(ProductService productService) {
+    super(DUPLICATE_PRODUCT_CODE);
     this.productService = productService;
   }
 
@@ -39,11 +41,4 @@ public class ProductPersistenceHandler extends AbstractModelPersistenceHandler {
     productService.save(product);
   }
 
-  @Override
-  protected void throwExceptionIfAlreadyProcessedInCurrentUpload(Importable importable, AuditFields auditFields) {
-    Product savedProduct = (Product) importable;
-    if (savedProduct != null && savedProduct.getModifiedDate().equals(auditFields.getCurrentTimestamp())) {
-      throw new DataException("Duplicate Product Code");
-    }
-  }
 }

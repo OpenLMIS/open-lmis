@@ -26,6 +26,7 @@ public class RequisitionGroupProgramScheduleHandler extends AbstractModelPersist
 
   @Autowired
   public RequisitionGroupProgramScheduleHandler(RequisitionGroupProgramScheduleService requisitionGroupProgramScheduleService) {
+    super(null);
     this.requisitionGroupProgramScheduleService = requisitionGroupProgramScheduleService;
   }
 
@@ -40,10 +41,6 @@ public class RequisitionGroupProgramScheduleHandler extends AbstractModelPersist
     requisitionGroupProgramSchedule.setModifiedBy(auditFields.getUser());
     requisitionGroupProgramSchedule.setModifiedDate(new Date());
     requisitionGroupProgramScheduleService.save(requisitionGroupProgramSchedule);
-  }
-
-  @Override
-  protected void throwExceptionIfAlreadyProcessedInCurrentUpload(Importable importable, AuditFields auditFields) {
   }
 
 }

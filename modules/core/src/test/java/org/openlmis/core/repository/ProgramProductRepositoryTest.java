@@ -147,25 +147,6 @@ public class ProgramProductRepositoryTest {
   }
 
   @Test
-  public void shouldThrowExceptionIfProgramProductByProgramAndProductCodesNotFound() throws Exception {
-    ProgramProduct programProduct = make(a(ProgramProductBuilder.defaultProgramProduct));
-
-    final int programId = 123;
-    when(programRepository.getIdByCode(PROGRAM_CODE)).thenReturn(programId);
-    final int productId = 12;
-    when(productRepository.getIdByCode(PRODUCT_CODE)).thenReturn(productId);
-    when(programProductMapper.getByProgramAndProductId(programId, productId)).thenReturn(null);
-
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage(PROGRAM_PRODUCT_INVALID);
-    programProductRepository.getProgramProductByProgramAndProductCode(programProduct);
-    verify(programRepository).getIdByCode(PROGRAM_CODE);
-    verify(productRepository).getIdByCode(PRODUCT_CODE);
-    verify(programProductMapper).getByProgramAndProductId(programId, productId);
-
-  }
-
-  @Test
   public void shouldUpdateCurrentPriceOfProgramProduct() throws Exception {
     ProgramProduct programProduct = make(a(ProgramProductBuilder.defaultProgramProduct));
     programProductRepository.updateCurrentPrice(programProduct);

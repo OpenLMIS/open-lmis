@@ -20,10 +20,12 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 public class FacilityPersistenceHandler extends AbstractModelPersistenceHandler {
 
+  public static final String DUPLICATE_FACILITY_CODE = "Duplicate Facility Code";
   private FacilityService facilityService;
 
   @Autowired
   public FacilityPersistenceHandler(FacilityService facilityService) {
+    super(DUPLICATE_FACILITY_CODE);
     this.facilityService = facilityService;
   }
 
@@ -40,14 +42,6 @@ public class FacilityPersistenceHandler extends AbstractModelPersistenceHandler 
     facility.setModifiedDate(auditFields.getCurrentTimestamp());
     if (existingRecord != null) facility.setId(((Facility)existingRecord).getId());
     facilityService.save(facility);
-  }
-
-  @Override
-  protected void throwExceptionIfAlreadyProcessedInCurrentUpload(Importable importable, AuditFields auditFields) {
-    Facility facility = (Facility) importable;
-    if (facility.getModifiedDate().equals(auditFields.getCurrentTimestamp())) {
-      throw new DataException("Duplicate Facility Code");
-    }
   }
 
 }

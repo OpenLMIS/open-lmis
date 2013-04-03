@@ -19,7 +19,7 @@ public class ProgramProductPricePersistenceHandler extends AbstractModelPersiste
   private ProgramProductService programProductService;
   @Autowired
   public ProgramProductPricePersistenceHandler(ProgramProductService service) {
-
+    super(null);
     this.programProductService = service;
   }
 
@@ -35,10 +35,6 @@ public class ProgramProductPricePersistenceHandler extends AbstractModelPersiste
     programProductPrice.setModifiedBy(auditFields.getUser());
     programProductPrice.setModifiedDate(auditFields.getCurrentTimestamp());
     programProductService.updateProgramProductPrice(programProductPrice);
-  }
-
-  @Override
-  protected void throwExceptionIfAlreadyProcessedInCurrentUpload(Importable importable, AuditFields auditFields) {
   }
 
 }

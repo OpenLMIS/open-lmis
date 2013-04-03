@@ -19,10 +19,12 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 public class FacilityApprovedProductPersistenceHandler extends AbstractModelPersistenceHandler {
 
+  public static final String DUPLICATE_FACILITY_APPROVED_PRODUCT = "Duplicate facility approved product.";
   private FacilityApprovedProductService facilityApprovedProductService;
 
   @Autowired
   public FacilityApprovedProductPersistenceHandler(FacilityApprovedProductService facilityApprovedProductService) {
+    super(DUPLICATE_FACILITY_APPROVED_PRODUCT);
     this.facilityApprovedProductService = facilityApprovedProductService;
   }
 
@@ -42,13 +44,4 @@ public class FacilityApprovedProductPersistenceHandler extends AbstractModelPers
     facilityApprovedProduct.setModifiedDate(auditFields.getCurrentTimestamp());
     facilityApprovedProductService.save(facilityApprovedProduct);
   }
-
-  @Override
-  protected void throwExceptionIfAlreadyProcessedInCurrentUpload(Importable importable, AuditFields auditFields) {
-    FacilityApprovedProduct facilityApprovedProduct = (FacilityApprovedProduct)importable;
-    if (facilityApprovedProduct.getModifiedDate().equals(auditFields.getCurrentTimestamp())) {
-      throw new DataException("Duplicate facility approved product.");
-    }
-  }
-
 }

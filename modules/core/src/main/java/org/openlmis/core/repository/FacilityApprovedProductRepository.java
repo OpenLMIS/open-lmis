@@ -25,7 +25,6 @@ import static java.lang.Boolean.*;
 public class FacilityApprovedProductRepository {
 
   public static final String FACILITY_APPROVED_PRODUCT_DUPLICATE = "facilityApprovedProduct.duplicate.found";
-  public static final String FACILITY_TYPE_DOES_NOT_EXIST = "facilityType.invalid";
 
   private FacilityApprovedProductMapper facilityApprovedProductMapper;
 
@@ -49,19 +48,11 @@ public class FacilityApprovedProductRepository {
   }
 
   public void insert(FacilityApprovedProduct facilityApprovedProduct) {
-    try {
     facilityApprovedProductMapper.insert(facilityApprovedProduct);
-    } catch (DataIntegrityViolationException e) {
-      throw new DataException(FACILITY_TYPE_DOES_NOT_EXIST);
-    }
   }
 
   public void update(FacilityApprovedProduct facilityApprovedProduct) {
-    try {
       facilityApprovedProductMapper.updateFacilityApprovedProduct(facilityApprovedProduct);
-    } catch (DataIntegrityViolationException e) {
-      throw new DataException(FACILITY_TYPE_DOES_NOT_EXIST);
-    }
   }
 
   public FacilityApprovedProduct getFacilityApprovedProductByProgramProductAndFacilityTypeCode(FacilityApprovedProduct facilityApprovedProduct) {

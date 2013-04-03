@@ -50,23 +50,6 @@ public class ProductPersistenceHandlerTest {
     assertThat(product.getModifiedDate(), is(notNullValue()));
     verify(productService).save(product);
   }
-
-  @Test
-  public void shouldThrowErrorIfDuplicateCodeFoundWithSameTimeStamp() {
-    Product product = new Product();
-    product.setCode("P1");
-    Date currentTime = new Date();
-    product.setModifiedDate(currentTime);
-
-    AuditFields auditFields  = new AuditFields();
-    auditFields.setCurrentTimestamp(currentTime);
-
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Duplicate Product Code");
-
-    productPersistenceHandler.throwExceptionIfAlreadyProcessedInCurrentUpload(product, auditFields);
-  }
-
 }
 
 

@@ -20,12 +20,13 @@ import java.util.Date;
 @NoArgsConstructor
 public class SupplyLineHandler extends AbstractModelPersistenceHandler {
 
-    SupplyLineRepository supplyLineRepository;
+  SupplyLineRepository supplyLineRepository;
 
-    @Autowired
-    public SupplyLineHandler(SupplyLineRepository supplyLineRepository){
-        this.supplyLineRepository = supplyLineRepository;
-    }
+  @Autowired
+  public SupplyLineHandler(SupplyLineRepository supplyLineRepository) {
+    super(null);
+    this.supplyLineRepository = supplyLineRepository;
+  }
 
   @Override
   protected Importable getExisting(Importable importable) {
@@ -38,10 +39,6 @@ public class SupplyLineHandler extends AbstractModelPersistenceHandler {
     supplyLine.setModifiedBy(auditFields.getUser());
     supplyLine.setModifiedDate(new Date());
     supplyLineRepository.insert(supplyLine);
-  }
-
-  @Override
-  protected void throwExceptionIfAlreadyProcessedInCurrentUpload(Importable importable, AuditFields auditFields) {
   }
 
 }

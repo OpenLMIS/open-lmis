@@ -18,10 +18,12 @@ import org.springframework.stereotype.Component;
 @Component("programSupportedPersistenceHandler")
 public class ProgramSupportedPersistenceHandler extends AbstractModelPersistenceHandler {
 
+  public static final String FACILITY_ALREADY_MAPPED_TO_PROGRAM = "Facility has already been mapped to the program ";
   private FacilityService facilityService;
 
   @Autowired
   public ProgramSupportedPersistenceHandler(FacilityService facilityService) {
+    super(FACILITY_ALREADY_MAPPED_TO_PROGRAM);
     this.facilityService = facilityService;
   }
 
@@ -39,11 +41,4 @@ public class ProgramSupportedPersistenceHandler extends AbstractModelPersistence
     facilityService.uploadSupportedProgram(programSupported);
   }
 
-  @Override
-  protected void throwExceptionIfAlreadyProcessedInCurrentUpload(Importable importable, AuditFields auditFields) {
-    ProgramSupported programSupported = (ProgramSupported) importable;
-    if (programSupported != null && programSupported.getModifiedDate().equals(auditFields.getCurrentTimestamp())) {
-      throw new DataException("Facility has already been mapped to the program ");
-    }
-  }
 }

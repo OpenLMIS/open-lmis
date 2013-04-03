@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
@@ -31,7 +30,7 @@ public class ProgramSupported extends BaseModel implements Importable {
 
   private Integer facilityId;
 
-  @ImportField(mandatory = true, name = "Program Code", nested="code")
+  @ImportField(mandatory = true, name = "Program Code", nested = "code")
   private Program program;
 
   @ImportField(mandatory = true, name = "Facility Code")
@@ -46,11 +45,5 @@ public class ProgramSupported extends BaseModel implements Importable {
   public void isValid() {
     if (this.active && this.startDate == null)
       throw new DataException(SUPPORTED_PROGRAMS_INVALID);
-  }
-
-  @Override
-  @JsonIgnore
-  public Integer getId() {
-    throw new RuntimeException("Id field not supported");
   }
 }

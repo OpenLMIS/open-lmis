@@ -13,6 +13,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.builder.ProgramProductBuilder;
 import org.openlmis.core.domain.Money;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.domain.ProgramProductPrice;
@@ -26,7 +27,11 @@ import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
+import static org.openlmis.core.builder.ProgramProductBuilder.PRODUCT_CODE;
+import static org.openlmis.core.builder.ProgramProductBuilder.PROGRAM_CODE;
 import static org.openlmis.core.builder.ProgramProductBuilder.defaultProgramProduct;
+import static org.openlmis.core.repository.ProgramProductRepository.PROGRAM_PRODUCT_INVALID;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProgramProductServiceTest {
@@ -69,6 +74,20 @@ public class ProgramProductServiceTest {
 
     ProgramProductPrice programProductPrice = mock(ProgramProductPrice.class);
     doThrow(new DataException("error-code")).when(programProductPrice).validate();
+
+    programProductService.updateProgramProductPrice(programProductPrice);
+  }
+
+  @Test
+  public void shouldThrowExceptionIfProgramProductByProgramAndProductCodesNotFound() throws Exception {
+    ProgramProduct programProduct = make(a(defaultProgramProduct));
+    ProgramProductPrice programProductPrice = new ProgramProductPrice(programProduct, new Money("1"), "source");
+    programProductPrice.setModifiedBy(1);
+
+    when(programProductRepository.getProgramProductByProgramAndProductCode(programProduct)).thenReturn(null);
+
+    expectException.expect(DataException.class);
+    expectException.expectMessage(PROGRAM_PRODUCT_INVALID);
 
     programProductService.updateProgramProductPrice(programProductPrice);
   }

@@ -9,8 +9,8 @@ package org.openlmis.core.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.FacilityApprovedProduct;
 import org.openlmis.core.domain.FacilityType;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityApprovedProductRepository;
-import org.openlmis.upload.Importable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +20,8 @@ import java.util.List;
 @Service
 @NoArgsConstructor
 public class FacilityApprovedProductService {
+
+  public static final String FACILITY_TYPE_DOES_NOT_EXIST = "facilityType.invalid";
 
   private FacilityApprovedProductRepository repository;
   private ProgramService programService;
@@ -47,14 +49,10 @@ public class FacilityApprovedProductService {
   }
 
   public void save(FacilityApprovedProduct facilityApprovedProduct) {
-    Integer programId = programService.getIdForCode(facilityApprovedProduct.getProgramProduct().getProgram().getCode());
-    Integer productId = productService.getIdForCode(facilityApprovedProduct.getProgramProduct().getProduct().getCode());
-    Integer programProductId = programProductService.getIdByProgramIdAndProductId(programId, productId);
+    fillProgramProductIds(facilityApprovedProduct);
     FacilityType facilityType = facilityService.getFacilityTypeByCode(facilityApprovedProduct.getFacilityType());
+    if(facilityType == null) throw new DataException(FACILITY_TYPE_DOES_NOT_EXIST);
 
-    facilityApprovedProduct.getProgramProduct().getProgram().setId(programId);
-    facilityApprovedProduct.getProgramProduct().getProduct().setId(productId);
-    facilityApprovedProduct.getProgramProduct().setId(programProductId);
     facilityApprovedProduct.getFacilityType().setId(facilityType.getId());
 
     if (facilityApprovedProduct.getId() != null) {
@@ -65,6 +63,16 @@ public class FacilityApprovedProductService {
   }
 
   public FacilityApprovedProduct getFacilityApprovedProductByProgramProductAndFacilityTypeCode(FacilityApprovedProduct facilityApprovedProduct) {
+    fillProgramProductIds(facilityApprovedProduct);
     return repository.getFacilityApprovedProductByProgramProductAndFacilityTypeCode(facilityApprovedProduct);
+  }
+
+  private void fillProgramProductIds(FacilityApprovedProduct facilityApprovedProduct) {
+    Integer programId = programService.getIdForCode(facilityApprovedProduct.getProgramProduct().getProgram().getCode());
+    Integer productId = productService.getIdForCode(facilityApprovedProduct.getProgramProduct().getProduct().getCode());
+    Integer programProductId = programProductService.getIdByProgramIdAndProductId(programId, productId);
+    facilityApprovedProduct.getProgramProduct().getProgram().setId(programId);
+    facilityApprovedProduct.getProgramProduct().getProduct().setId(productId);
+    facilityApprovedProduct.getProgramProduct().setId(programProductId);
   }
 }

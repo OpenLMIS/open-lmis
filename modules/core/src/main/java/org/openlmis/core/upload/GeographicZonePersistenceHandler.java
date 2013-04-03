@@ -16,10 +16,12 @@ import org.springframework.stereotype.Component;
 
 @Component("geographicZonePersistenceHandler")
 public class GeographicZonePersistenceHandler extends AbstractModelPersistenceHandler {
+  public static final String DUPLICATE_GEOGRAPHIC_ZONE_CODE = "Duplicate Geographic Zone Code";
   GeographicZoneService geographicZoneService;
 
   @Autowired
   public GeographicZonePersistenceHandler(GeographicZoneService geographicZoneService) {
+    super(DUPLICATE_GEOGRAPHIC_ZONE_CODE);
     this.geographicZoneService = geographicZoneService;
   }
 
@@ -38,11 +40,5 @@ public class GeographicZonePersistenceHandler extends AbstractModelPersistenceHa
     geographicZoneService.save(geographicZone);
   }
 
-  @Override
-  protected void throwExceptionIfAlreadyProcessedInCurrentUpload(Importable importable, AuditFields auditFields) {
-    GeographicZone savedZone = (GeographicZone) importable;
-    if (savedZone != null && savedZone.getModifiedDate().equals(auditFields.getCurrentTimestamp()))
-      throw new DataException("Duplicate Geographic Zone Code");
-  }
 
 }
