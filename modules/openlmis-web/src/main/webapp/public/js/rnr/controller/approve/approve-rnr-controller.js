@@ -187,6 +187,10 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     $scope.rnr.fillPacksToShip(lineItem);
   };
 
+  $scope.getId = function (prefix, parent) {
+    return prefix + "_" + parent.$parent.$index;
+  };
+
 
   $scope.totalCost = function () {
     if (!$scope.rnr) return;

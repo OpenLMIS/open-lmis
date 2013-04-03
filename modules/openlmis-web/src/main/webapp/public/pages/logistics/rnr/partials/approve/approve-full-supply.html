@@ -49,6 +49,7 @@
                     <input ng-change='fillPacksToShip(rnrLineItem)' ng-required="true" type="text"
                            ng-model="rnrLineItem[column.name]" rnr-validator = "positiveInteger" maxlength = "8"
                            name="quantityApproved{{$parent.$parent.$index}}"
+                           id="{{getId(column.name, $parent)}}"
                            ng-class = "highlightRequired(rnrLineItem[column.name])"  />
                     <span class = "rnr-form-error" style = "display:none;" id="quantityApproved{{$parent.$parent.$index}}">
                       Enter Numeric Data
