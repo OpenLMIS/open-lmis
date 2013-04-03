@@ -143,7 +143,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
     HomePage homePageLowerSNUser = loginPagethird.loginAs(userMO, password);
     ApprovePage approvePageLowerSNUser = homePageLowerSNUser.navigateToApprove();
-    approvePageLowerSNUser.verifyandclickRequisitionPresentForApproval();
+    approvePageLowerSNUser.verifyAndClickRequisitionPresentForApproval();
     approvePageLowerSNUser.verifyRnRHeader("FCcode", "FCname", date_time, program, periodDetails, geoZone, parentgeoZone, operatedBy, facilityType);
     approvePageLowerSNUser.verifyApprovedQuantity();
     approvePageLowerSNUser.editApproveQuantityAndVerifyTotalCost("290");
@@ -154,10 +154,10 @@ public class E2EInitiateRnR extends TestCaseHelper {
     HomePage homePageTopSNUser = loginPageTopSNUser.loginAs(userSIC, password);
 
     ApprovePage approvePageTopSNUser = homePageTopSNUser.navigateToApprove();
-    String periodTopSNUser = approvePageTopSNUser.verifyandclickRequisitionPresentForApproval();
+    String periodTopSNUser = approvePageTopSNUser.verifyAndClickRequisitionPresentForApproval();
     approvePageTopSNUser.verifyRnRHeader("FCcode", "FCname", date_time, program, periodDetails, geoZone, parentgeoZone, operatedBy, facilityType);
     approvePageTopSNUser.verifyApprovedQuantityApprovedFromLowerHierarchy("290");
-    approvePageTopSNUser.editApproveQuantityAndVerifyTotalCost("2900");
+    approvePageTopSNUser.editApproveQuantityAndVerifyTotalCost("100");
     approvePageTopSNUser.approveRequisition();
     approvePageTopSNUser.verifyNoRequisitionPendingMessage();
 

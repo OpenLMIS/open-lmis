@@ -67,7 +67,7 @@ public class ViewRequisition extends TestCaseHelper {
     viewRequisitionPageInApproval.verifyStatus("IN_APPROVAL");
 
     ApprovePage approvePageTopSNUser = homePageInApproval.navigateToApprove();
-    approvePageTopSNUser.verifyandclickRequisitionPresentForApproval();
+    approvePageTopSNUser.verifyAndClickRequisitionPresentForApproval();
     approvePageTopSNUser.editApproveQuantityAndVerifyTotalCostViewRequisition("20");
     approvePageTopSNUser.approveRequisition();
     approvePageTopSNUser.verifyNoRequisitionPendingMessage();
