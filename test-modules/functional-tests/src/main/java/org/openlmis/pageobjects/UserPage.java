@@ -131,6 +131,7 @@ public class UserPage extends Page {
   public void enterMyFacilityAndMySupervisedFacilityData(String firstName, String lastName, String facilityCode, String program1, String node, String role) {
     testWebDriver.waitForElementToAppear(searchFacility);
     searchFacility.clear();
+    testWebDriver.handleScrollByPixels(0,4000);
     searchFacility.sendKeys(facilityCode);
       for (int i=0;i<facilityCode.length();i++){
        searchFacility.sendKeys(Keys.ARROW_LEFT);
@@ -138,7 +139,6 @@ public class UserPage extends Page {
       }
       searchFacility.sendKeys(facilityCode);
     testWebDriver.sleep(1000);
-    testWebDriver.handleScrollByPixels(0,2500);
     selectFacility.click();
 
     testWebDriver.selectByVisibleText(programsMyFacility, program1);
