@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.rnr.domain.Comment;
@@ -53,6 +54,8 @@ public class RequisitionController extends BaseController {
   public static final String PERIODS = "periods";
   public static final String ORDERS = "orders";
   public static final String CURRENCY = "currency";
+
+  public static final String COMMENTS = "comments";
 
   private RequisitionService requisitionService;
   private RnrTemplateService rnrTemplateService;
@@ -241,12 +244,14 @@ public class RequisitionController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION')")
   public void insertComment(@RequestBody Comment comment, @PathVariable("id") Integer id, HttpServletRequest request) {
     comment.setRnrId(id);
-    comment.setAuthorId(loggedInUserId(request));
+    User author = new User();
+    author.setId(loggedInUserId(request));
+    comment.setAuthor(author);
     requisitionService.insertComment(comment);
   }
 
   @RequestMapping(value = "/requisition/{id}/comments", method = GET)
-  public void getCommentsForARnr(@PathVariable Integer id) {
-    requisitionService.getCommentsByRnrId(id);
+  public ResponseEntity<OpenLmisResponse> getCommentsForARnr(@PathVariable Integer id) {
+    return response(COMMENTS, requisitionService.getCommentsByRnrId(id));
   }
 }

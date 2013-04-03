@@ -108,7 +108,9 @@ public class RequisitionMapperIT {
     lineItemMapper.insert(fullSupplyLineItem);
     lineItemMapper.insert(nonFullSupplyLineItem);
 
-    Comment comment = new Comment(null, requisition.getId(), 1, "A comment");
+    User author = new User();
+    author.setId(1);
+    Comment comment = new Comment(null, requisition.getId(), author, "A comment");
     commentMapper.insert(comment);
 
     Rnr fetchedRequisition = mapper.getById(requisition.getId());

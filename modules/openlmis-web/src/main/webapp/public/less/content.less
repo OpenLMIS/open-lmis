@@ -4,6 +4,8 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+@heading-green: #17888F;
+
 @import url("calendar.less");
 .home-background {
   background: url(../images/home-glow.png) no-repeat center -70px, #d6d6d6 url(../images/home-bg.png) no-repeat right 530px;
@@ -63,7 +65,7 @@
     font-size: 1.4em;
     font-weight: normal;
     margin-top: 0;
-    color: #17888F;
+    color: @heading-green;
     border-bottom: 1px solid #d6d6d6;
   }
 }
@@ -219,62 +221,6 @@ span.field-error {
   }
 }
 
-.action-buttons {
-  border: 1px solid #CCC;
-  border-top: 0;
-  background: rgba(0, 0, 0, 0.7);
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  left: 12px;
-  min-height: 50px;
-  z-index: 10;
-  .save-button {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-  }
-  .submit-button {
-    position: absolute;
-    top: 10px;
-    left: 75px;
-  }
-  .delete-button {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-  }
-  .total-cost-container {
-    position: absolute;
-    width: 100%;
-    top: -38px;
-    .cost-values {
-      background: #d3f2f4;
-      text-align: right;
-      font-size: 1.1em;
-      border: 1px solid #bfe1e3;
-      color: #005c61;
-      text-shadow: 0 1px 0 white;
-      height: 20px;
-      padding: 6px 8px;
-      margin: 0 14px;
-    }
-  }
-}
-
-.toolbar-success,
-.toolbar-error {
-  font-weight: bold;
-  left: 170px;
-  position: absolute;
-  top: 14px;
-}
-.toolbar-success {
-  color: #86D186;
-}
-.toolbar-error {
-  color: #EB7272;
-}
 #notifications {
   position: fixed;
   left: 265px;
@@ -1251,7 +1197,7 @@ td .close {
 }
 .select2-container-multi.select2-container-active {
   .select2-choices {
-    border-color: #17888f;
+    border-color: @heading-green;
   }
 }
 .add-supported-program-row {

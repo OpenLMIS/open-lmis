@@ -374,7 +374,7 @@ public class RequisitionControllerTest {
     verify(requisitionService).insertComment(comment);
 
     assertThat(comment.getRnrId(), is(rnr.getId()));
-    assertThat(comment.getAuthorId(), is(USER_ID));
+    assertThat(comment.getAuthor().getId(), is(USER_ID));
   }
 
   @Test

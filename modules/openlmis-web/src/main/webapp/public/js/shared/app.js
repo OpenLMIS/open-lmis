@@ -44,9 +44,9 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
   })
   .directive('uiNav',function () {
     return {
-      restrict:'A',
+      restrict: 'A',
 
-      link:function (scope, element, attrs) {
+      link: function (scope, element, attrs) {
         //Identify all the menu lists
         var lists = $(".navigation ul");
 
@@ -82,8 +82,8 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
     };
   }).directive('openlmisMessage', function (messageService) {
     return {
-      restrict:'A',
-      link:function (scope, element, attrs) {
+      restrict: 'A',
+      link: function (scope, element, attrs) {
         scope.$watch(attrs.openlmisMessage, function () {
           var key = scope[attrs.openlmisMessage] || attrs.openlmisMessage;
           var displayMessage = messageService.get(key) || key;
@@ -94,8 +94,8 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
   })
   .directive('formToolbar',function () {
     return {
-      restrict:'A',
-      link:function (scope, element, attrs) {
+      restrict: 'A',
+      link: function (scope, element, attrs) {
 
         function fixToolbarWidth() {
           var toolbarWidth = $(document).width() - 26;
@@ -114,9 +114,9 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
     };
   }).directive('placeholder',function () {
     return {
-      restrict:'A',
-      require:'ngModel',
-      link:function (scope, element, attr, ctrl) {
+      restrict: 'A',
+      require: 'ngModel',
+      link: function (scope, element, attr, ctrl) {
         var value;
 
         if (!jQuery.support.placeholder) {
@@ -160,19 +160,19 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
     };
   }).directive('openlmisPagination',function () {
     return {
-      restrict:'EA',
-      scope:{
-        numPages:'=',
-        currentPage:'=',
-        maxSize:'=',
-        onSelectPage:'&',
-        nextText:'@',
-        previousText:'@',
-        checkErrorOnPage:'&'
+      restrict: 'EA',
+      scope: {
+        numPages: '=',
+        currentPage: '=',
+        maxSize: '=',
+        onSelectPage: '&',
+        nextText: '@',
+        previousText: '@',
+        checkErrorOnPage: '&'
       },
-      templateUrl:'/public/pages/template/pagination/pagination.html',
-      replace:true,
-      link:function (scope) {
+      templateUrl: '/public/pages/template/pagination/pagination.html',
+      replace: true,
+      link: function (scope) {
         scope.$watch('numPages + currentPage + maxSize', function () {
           scope.pages = [];
           var maxSize = ( scope.maxSize && scope.maxSize < scope.numPages ) ? scope.maxSize : scope.numPages;
@@ -203,7 +203,7 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
         scope.selectPage = function (page) {
           if (!scope.isActive(page)) {
             scope.currentPage = page;
-            scope.onSelectPage({ page:page });
+            scope.onSelectPage({ page: page });
           }
         };
 
@@ -219,10 +219,41 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
         };
 
         scope.hasErrorOnPage = function (page) {
-          return scope.checkErrorOnPage({page:page});
+          return scope.checkErrorOnPage({page: page});
         };
 
       }
+    };
+  }).directive('commentBox',function (RequisitionComment, RequisitionComments) {
+    return {
+      restrict: 'E',
+      scope: {
+        rnrComments: '=',
+        rnrId: '=',
+        show: '='
+      },
+      link: function (scope) {
+        scope.addComments = function () {
+          if(isUndefined(scope.comment)) return;
+          var comment = {"commentText": scope.comment };
+
+          var successHandler = function () {
+            RequisitionComments.get({id:scope.rnrId}, function(data) {
+              scope.comment="";
+              scope.rnrComments = data.comments;
+            })
+          }
+
+          var errorHandler = function () {
+
+          }
+
+          RequisitionComment.save({id: scope.rnrId}, comment, successHandler, errorHandler);
+
+        };
+      },
+      templateUrl: '/public/pages/template/comment-box.html',
+      replace: true
     };
   }).run(function ($rootScope) {
     $rootScope.$on('$routeChangeStart', function () {

@@ -66,6 +66,8 @@ public class CommentMapperIT {
   @Autowired
   private ProcessingPeriodMapper processingPeriodMapper;
 
+  private User user;
+
 
   @Before
   public void setUp() throws Exception {
@@ -90,11 +92,14 @@ public class CommentMapperIT {
     requisition = new Rnr(facility.getId(), HIV, processingPeriod.getId(), MODIFIED_BY);
     requisition.setStatus(INITIATED);
     requisitionMapper.insert(requisition);
+
+    user = new User();
+    user.setId(MODIFIED_BY);
   }
 
   @Test
   public void shouldInsertAComment() throws Exception {
-    Comment comment = new Comment(null, requisition.getId(), MODIFIED_BY, "A new Comment");
+    Comment comment = new Comment(null, requisition.getId(), user, "A new Comment");
     int commentId = mapper.insert(comment);
 
     assertThat(commentId, is(notNullValue()));
@@ -102,7 +107,7 @@ public class CommentMapperIT {
 
   @Test
   public void shouldGetAllCommentsForARnR() throws Exception {
-    mapper.insert(new Comment(null, requisition.getId(), MODIFIED_BY, "A new Comment1"));
+    mapper.insert(new Comment(null, requisition.getId(), user, "A new Comment1"));
 
     ArrayList<Comment> listOfComments = mapper.getAllCommentsByRnrId(requisition.getId());
 

@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function CreateRequisitionController($scope, requisition, currency, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, $location, Requisitions, $routeParams, $rootScope) {
+function CreateRequisitionController($scope, requisition, currency, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, RequisitionComment, $location, Requisitions, $routeParams, $rootScope) {
   $scope.showNonFullSupply = $routeParams.supplyType == 'non-full-supply';
   $scope.baseUrl = "/create-rnr/" + $routeParams.rnr + '/' + $routeParams.facility + '/' + $routeParams.program;
   $scope.fullSupplyLink = $scope.baseUrl + "?supplyType=full-supply&page=1";
