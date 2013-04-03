@@ -58,7 +58,7 @@
       </div >
 
       <div class = "form-group clearfix" >
-        <h3 >Assigned rights<span class = "label-required" >*</span ></h3 >
+        <h3 >Assigned rights <span class = "label-required" >*</span ></h3 >
 
         <div class = "assigned-rights" ng-class = "{'is-disabled': role.adminRole == 'false'}" >
           <h4 >Admin and general operations rights</h4 >
@@ -100,7 +100,7 @@
         <input type = "submit" class = "btn btn-primary save-button" value = "Save" />
         <a type = "button" ng-href = "#/list" class = "btn btn-cancel submit-button" >Cancel</a >
       </div >
-      <div class = "toolbar-error" id = "saveFailMessage" ng-bind = "error" ></div >
+      <div class = "toolbar-error" id = "saveFailMessage" openlmis-message= "error" ng-show="error" ></div >
     </div >
   </form >
 </div >
