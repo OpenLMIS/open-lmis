@@ -19,6 +19,10 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name':'quantityRequested'});
   $scope.errorPages = {fullSupply:[], nonFullSupply:[]};
 
+  RequisitionComment.get({id: $scope.rnr.id},function(data) {
+    $scope.rnr.comments = data.comments;
+  }, {});
+
   $scope.fillPagedGridData = function () {
     var gridLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.fullSupplyLineItems;
     $scope.numberOfPages = Math.ceil(gridLineItems.length / $scope.pageSize) ? Math.ceil(gridLineItems.length / $scope.pageSize) : 1;
@@ -32,6 +36,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
       return right.right == permission
     });
   };
+
 
   prepareRnr();
 

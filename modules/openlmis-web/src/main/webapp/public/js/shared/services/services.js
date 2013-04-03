@@ -197,10 +197,8 @@ services.factory('FacilityProgramRights', function ($resource) {
 })
 
 services.factory('RequisitionComment', function ($resource) {
-  return $resource('/requisition/:id/comment.json', {}, {});
+  return $resource('/requisitions/:id/comments.json', {}, {});
 })
-services.factory('RequisitionComments', function ($resource) {
-  return $resource('/requisition/:id/comments.json');
-})
+
 
 

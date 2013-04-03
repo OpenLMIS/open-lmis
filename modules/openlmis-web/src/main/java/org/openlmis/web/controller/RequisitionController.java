@@ -240,7 +240,7 @@ public class RequisitionController extends BaseController {
     return OpenLmisResponse.response(ORDERS, RnrDTO.prepareForOrderView(requisitionService.getOrders()));
   }
 
-  @RequestMapping(value = "/requisition/{id}/comment", method = POST, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/requisitions/{id}/comments", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION')")
   public void insertComment(@RequestBody Comment comment, @PathVariable("id") Integer id, HttpServletRequest request) {
     comment.setRnrId(id);
@@ -250,7 +250,7 @@ public class RequisitionController extends BaseController {
     requisitionService.insertComment(comment);
   }
 
-  @RequestMapping(value = "/requisition/{id}/comments", method = GET, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/requisitions/{id}/comments", method = GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getCommentsForARnr(@PathVariable Integer id) {
     return response(COMMENTS, requisitionService.getCommentsByRnrId(id));
   }

@@ -96,19 +96,22 @@ public class CommentMapperIT {
 
   @Test
   public void shouldInsertAComment() throws Exception {
-    Comment comment = new Comment(null, requisition.getId(), user, "A new Comment");
-    int commentId = mapper.insert(comment);
+    Comment comment = new Comment(null, requisition.getId(), user, "A new Comment", null);
+    int numberOfRows = mapper.insert(comment);
 
-    assertThat(commentId, is(notNullValue()));
+    assertThat(numberOfRows, is(notNullValue()));
   }
 
   @Test
   public void shouldGetAllCommentsForARnR() throws Exception {
-    mapper.insert(new Comment(null, requisition.getId(), user, "A new Comment1"));
+    mapper.insert(new Comment(null, requisition.getId(), user, "A new Comment1",null));
 
     List<Comment> listOfComments = mapper.getByRnrId(requisition.getId());
 
+    Comment comment = listOfComments.get(0);
     assertThat(listOfComments.size(),is(1));
-    assertThat(listOfComments.get(0).getCommentText(), is("A new Comment1"));
+    assertThat(comment.getCommentText(), is("A new Comment1"));
+    assertThat(comment.getAuthor().getId(), is(user.getId()));
+    assertThat(comment.getCreatedDate(),is(notNullValue()));
   }
 }

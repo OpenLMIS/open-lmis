@@ -110,7 +110,7 @@ public class RequisitionMapperIT {
 
     User author = new User();
     author.setId(1);
-    Comment comment = new Comment(null, requisition.getId(), author, "A comment");
+    Comment comment = new Comment(null, requisition.getId(), author, "A comment",null);
     commentMapper.insert(comment);
 
     Rnr fetchedRequisition = mapper.getById(requisition.getId());
@@ -123,7 +123,6 @@ public class RequisitionMapperIT {
     assertThat(fetchedRequisition.getStatus(), is(equalTo(INITIATED)));
     assertThat(fetchedRequisition.getFullSupplyLineItems().size(), is(1));
     assertThat(fetchedRequisition.getNonFullSupplyLineItems().size(), is(1));
-    assertThat(fetchedRequisition.getComments().size(), is(1));
   }
 
   @Test

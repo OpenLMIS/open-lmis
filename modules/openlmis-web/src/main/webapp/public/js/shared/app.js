@@ -80,7 +80,7 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
         });
       }
     };
-  }).directive('openlmisMessage', function (messageService) {
+  }).directive('openlmisMessage',function (messageService) {
     return {
       restrict: 'A',
       link: function (scope, element, attrs) {
@@ -91,8 +91,7 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
         });
       }
     }
-  })
-  .directive('formToolbar',function () {
+  }).directive('formToolbar',function () {
     return {
       restrict: 'A',
       link: function (scope, element, attrs) {
@@ -224,7 +223,7 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
 
       }
     };
-  }).directive('commentBox',function (RequisitionComment, RequisitionComments) {
+  }).directive('commentBox',function (RequisitionComment) {
     return {
       restrict: 'E',
       scope: {
@@ -233,13 +232,27 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
         show: '='
       },
       link: function (scope) {
+
+        angular.element(document).keyup(function (e) {
+          if (e.which == 27) {
+            scope.show = false;
+          }
+          scope.$apply();
+        });
+
+        scope.$watch("comment", function (newValue, previous) {
+          if (scope.comment == undefined) {
+            scope.comment = previous;
+          }
+        });
+
         scope.addComments = function () {
-          if(isUndefined(scope.comment)) return;
+          if (isUndefined(scope.comment)) return;
           var comment = {"commentText": scope.comment };
 
           var successHandler = function () {
-            RequisitionComments.get({id:scope.rnrId}, function(data) {
-              scope.comment="";
+            RequisitionComment.get({id: scope.rnrId}, function (data) {
+              scope.comment = "";
               scope.rnrComments = data.comments;
             })
           }
