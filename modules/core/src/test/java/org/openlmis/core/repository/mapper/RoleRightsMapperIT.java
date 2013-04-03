@@ -108,7 +108,7 @@ public class RoleRightsMapperIT {
 
   @Test
   public void shouldGetRoleAndRights() throws Exception {
-    Role role = new Role(111, "role name", Boolean.FALSE, "description");
+    Role role = new Role(111, "role name", Boolean.FALSE, "description", null);
     roleRightsMapper.insertRole(role);
 
     roleRightsMapper.createRoleRight(role.getId(), CREATE_REQUISITION);

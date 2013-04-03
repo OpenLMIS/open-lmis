@@ -28,8 +28,6 @@ public class ProductCategoryPersistenceHandlerTest {
     ProductCategory productCategory = new ProductCategory();
 
     new ProductCategoryPersistenceHandler(productCategoryService).execute(productCategory, 0, new AuditFields(1, null));
-    assertThat(productCategory.getModifiedBy(), is(1));
-    assertThat(productCategory.getModifiedDate(), is(notNullValue()));
     verify(productCategoryService).save(productCategory);
   }
 }

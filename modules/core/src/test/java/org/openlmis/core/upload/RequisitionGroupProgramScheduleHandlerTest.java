@@ -11,8 +11,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.openlmis.core.domain.RequisitionGroupProgramSchedule;
 import org.openlmis.core.service.RequisitionGroupProgramScheduleService;
-import org.openlmis.upload.Importable;
-import org.openlmis.upload.model.AuditFields;
 import org.openlmis.upload.model.Field;
 import org.openlmis.upload.model.ModelClass;
 
@@ -24,66 +22,63 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class RequisitionGroupProgramScheduleHandlerTest {
 
-    public static final Integer USER = 1;
-    @Mock
-    RequisitionGroupProgramScheduleService requisitionGroupProgramScheduleService;
+  public static final Integer USER = 1;
+  @Mock
+  RequisitionGroupProgramScheduleService requisitionGroupProgramScheduleService;
 
-    @Before
-    public void setUp() throws Exception {
-        initMocks(this);
-    }
+  @Before
+  public void setUp() throws Exception {
+    initMocks(this);
+  }
 
-    @Test
-    public void shouldSaveRGToProgramAndScheduleMappingWithModifiedBy() {
+  @Test
+  public void shouldSaveRGToProgramAndScheduleMappingWithModifiedBy() {
 
-        RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
+    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
 
-      RequisitionGroupProgramSchedule existing = new RequisitionGroupProgramSchedule();
-      new RequisitionGroupProgramScheduleHandler(requisitionGroupProgramScheduleService).save(existing, requisitionGroupProgramSchedule, new AuditFields(USER, null));
+    new RequisitionGroupProgramScheduleHandler(requisitionGroupProgramScheduleService).save(requisitionGroupProgramSchedule);
 
-        assertThat(requisitionGroupProgramSchedule.getModifiedBy(), is(USER));
-        assertThat(requisitionGroupProgramSchedule.getModifiedDate(), is(notNullValue()));
-        verify(requisitionGroupProgramScheduleService).save(requisitionGroupProgramSchedule);
-    }
+    verify(requisitionGroupProgramScheduleService).save(requisitionGroupProgramSchedule);
+  }
 
-    @Test
-    public void shouldMarkRequisitionGroupFieldAsImportable() {
-        Field requisitionGroupField = new ModelClass(RequisitionGroupProgramSchedule.class).findImportFieldWithName("RG Code");
-        assertNotNull(requisitionGroupField);
-        assertTrue(requisitionGroupField.isMandatory());
-        assertEquals("code", requisitionGroupField.getNested());
-    }
+  @Test
+  public void shouldMarkRequisitionGroupFieldAsImportable() {
+    Field requisitionGroupField = new ModelClass(RequisitionGroupProgramSchedule.class).findImportFieldWithName("RG Code");
+    assertNotNull(requisitionGroupField);
+    assertTrue(requisitionGroupField.isMandatory());
+    assertEquals("code", requisitionGroupField.getNested());
+  }
 
-    @Test
-    public void shouldMarkProgramFieldAsImportable() {
-        Field programField = new ModelClass(RequisitionGroupProgramSchedule.class).findImportFieldWithName("Program");
-        assertNotNull(programField);
-        assertTrue(programField.isMandatory());
-        assertEquals("code", programField.getNested());
-    }
+  @Test
+  public void shouldMarkProgramFieldAsImportable() {
+    Field programField = new ModelClass(RequisitionGroupProgramSchedule.class).findImportFieldWithName("Program");
+    assertNotNull(programField);
+    assertTrue(programField.isMandatory());
+    assertEquals("code", programField.getNested());
+  }
 
-    @Test
-    public void shouldMarkScheduleFieldAsImportable() {
-        Field scheduleField = new ModelClass(RequisitionGroupProgramSchedule.class).findImportFieldWithName("Schedule");
-        assertNotNull(scheduleField);
-        assertTrue(scheduleField.isMandatory());
-        assertEquals("code", scheduleField.getNested());
-    }
+  @Test
+  public void shouldMarkScheduleFieldAsImportable() {
+    Field scheduleField = new ModelClass(RequisitionGroupProgramSchedule.class).findImportFieldWithName("Schedule");
+    assertNotNull(scheduleField);
+    assertTrue(scheduleField.isMandatory());
+    assertEquals("code", scheduleField.getNested());
+  }
 
-    @Test
-    public void shouldMarkDirectDeliveryFieldAsImportable() {
-        Field directDeliveryField = new ModelClass(RequisitionGroupProgramSchedule.class).findImportFieldWithName("Direct Delivery");
-        assertNotNull(directDeliveryField);
-        assertTrue(directDeliveryField.isMandatory());
-        assertEquals("", directDeliveryField.getNested());
-    }
+  @Test
+  public void shouldMarkDirectDeliveryFieldAsImportable() {
+    Field directDeliveryField = new ModelClass(RequisitionGroupProgramSchedule.class).findImportFieldWithName("Direct Delivery");
+    assertNotNull(directDeliveryField);
+    assertTrue(directDeliveryField.isMandatory());
+    assertEquals("", directDeliveryField.getNested());
+  }
 
-    @Test
-    public void shouldMarkDropOffFacilityFieldAsImportable() {
-        Field dropOffFacilityField = new ModelClass(RequisitionGroupProgramSchedule.class).findImportFieldWithName("Drop off Facility");
-        assertNotNull(dropOffFacilityField);
-        assertFalse(dropOffFacilityField.isMandatory());
-        assertEquals("code", dropOffFacilityField.getNested());
-    }
+  @Test
+  public void shouldMarkDropOffFacilityFieldAsImportable() {
+    Field dropOffFacilityField = new ModelClass(RequisitionGroupProgramSchedule.class).findImportFieldWithName("Drop off Facility");
+    assertNotNull(dropOffFacilityField);
+    assertFalse(dropOffFacilityField.isMandatory());
+    assertEquals("code", dropOffFacilityField.getNested());
+  }
 
 }

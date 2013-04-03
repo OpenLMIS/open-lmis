@@ -17,8 +17,6 @@ import org.openlmis.upload.annotation.ImportField;
 @EqualsAndHashCode(callSuper = true)
 public class SupplyLine extends BaseModel implements Importable {
 
-  Integer id;
-
   @ImportField(mandatory = true, name = "Supervising Node", nested = "code")
   SupervisoryNode supervisoryNode;
 

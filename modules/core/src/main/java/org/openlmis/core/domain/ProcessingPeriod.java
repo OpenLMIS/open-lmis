@@ -18,7 +18,6 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 public class ProcessingPeriod extends BaseModel {
 
-  private Integer id;
   private Integer scheduleId;
 
   private String name;

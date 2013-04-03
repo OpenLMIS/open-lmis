@@ -27,7 +27,6 @@ public class ProgramProduct extends BaseModel implements Importable {
   @ImportField(name = "Is Active", type = "boolean", mandatory = true)
   private boolean active;
 
-  private Integer id;
   private Money currentPrice;
   public static final String PROGRAM_PRODUCT_INVALID_CURRENT_PRICE = "programProduct.invalid.current.price";
 

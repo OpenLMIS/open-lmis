@@ -21,8 +21,6 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @EqualsAndHashCode(callSuper = true)
 public class Product extends BaseModel implements Importable {
 
-  private Integer id;
-
   @ImportField(mandatory = true, name = "Product Code")
   private String code;
 

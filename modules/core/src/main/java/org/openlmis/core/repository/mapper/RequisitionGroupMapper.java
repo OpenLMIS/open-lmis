@@ -43,4 +43,10 @@ public interface RequisitionGroupMapper {
       "WHERE rgps.programId = #{program.id} " +
       "AND RGM.facilityId = #{facility.id}")
   RequisitionGroup getRequisitionGroupForProgramAndFacility(@Param(value = "program") Program program, @Param(value = "facility") Facility facility);
+
+  @Select("SELECT * FROM requisition_groups where LOWER(code) = LOWER(#{code})")
+  @Results(value = {
+    @Result(property = "supervisoryNode.id", column = "supervisoryNodeId")
+  })
+  RequisitionGroup getByCode(String code);
 }

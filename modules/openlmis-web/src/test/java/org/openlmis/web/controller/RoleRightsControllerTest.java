@@ -127,7 +127,7 @@ public class RoleRightsControllerTest {
   @Test
   public void shouldReturnErrorMsgIfUpdateFails() throws Exception {
 
-    Role role = new Role(123, "Role Name", FALSE, "Desc");
+    Role role = new Role(123, "Role Name", FALSE, "Desc", null);
 
     doThrow(new DataException("Duplicate Role found")).when(roleRightsService).updateRole(role);
 

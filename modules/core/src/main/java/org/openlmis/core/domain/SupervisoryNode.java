@@ -15,8 +15,6 @@ import org.openlmis.upload.annotation.ImportField;
 @NoArgsConstructor
 public class SupervisoryNode extends BaseModel implements Importable {
 
-  Integer id;
-
   @ImportField(name = "Supervisory Node Code", mandatory = true)
   private String code;
 

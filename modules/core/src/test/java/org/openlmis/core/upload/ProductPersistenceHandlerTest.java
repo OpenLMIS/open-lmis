@@ -14,12 +14,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Product;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProductService;
-import org.openlmis.upload.Importable;
-import org.openlmis.upload.model.AuditFields;
-
-import java.util.Date;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -44,10 +39,7 @@ public class ProductPersistenceHandlerTest {
   @Test
   public void shouldSaveImportedProduct() throws Exception {
     Product product = new Product();
-    Product existingRecord = null;
-    productPersistenceHandler.save(existingRecord, product, new AuditFields(1, new Date()));
-    assertThat(product.getModifiedBy(), is(1));
-    assertThat(product.getModifiedDate(), is(notNullValue()));
+    productPersistenceHandler.save(product);
     verify(productService).save(product);
   }
 }

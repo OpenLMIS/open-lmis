@@ -6,10 +6,9 @@
 
 package org.openlmis.core.upload;
 
+import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.ProgramProductPrice;
 import org.openlmis.core.service.ProgramProductService;
-import org.openlmis.upload.Importable;
-import org.openlmis.upload.model.AuditFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,16 +24,13 @@ public class ProgramProductPricePersistenceHandler extends AbstractModelPersiste
 
 
   @Override
-  protected Importable getExisting(Importable importable) {
+  protected BaseModel getExisting(BaseModel record) {
     return null;
   }
 
   @Override
-  protected void save(Importable existingRecord, Importable currentRecord, AuditFields auditFields) {
-    ProgramProductPrice programProductPrice = (ProgramProductPrice) currentRecord;
-    programProductPrice.setModifiedBy(auditFields.getUser());
-    programProductPrice.setModifiedDate(auditFields.getCurrentTimestamp());
-    programProductService.updateProgramProductPrice(programProductPrice);
+  protected void save(BaseModel record) {
+    programProductService.updateProgramProductPrice((ProgramProductPrice) record);
   }
 
 }

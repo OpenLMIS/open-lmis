@@ -7,10 +7,9 @@
 package org.openlmis.core.upload;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.core.repository.SupplyLineRepository;
-import org.openlmis.upload.Importable;
-import org.openlmis.upload.model.AuditFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,16 +28,13 @@ public class SupplyLineHandler extends AbstractModelPersistenceHandler {
   }
 
   @Override
-  protected Importable getExisting(Importable importable) {
+  protected BaseModel getExisting(BaseModel record) {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
   @Override
-  protected void save(Importable existingRecord, Importable currentRecord, AuditFields auditFields) {
-    SupplyLine supplyLine = (SupplyLine) currentRecord;
-    supplyLine.setModifiedBy(auditFields.getUser());
-    supplyLine.setModifiedDate(new Date());
-    supplyLineRepository.insert(supplyLine);
+  protected void save(BaseModel record) {
+    supplyLineRepository.insert((SupplyLine) record);
   }
 
 }

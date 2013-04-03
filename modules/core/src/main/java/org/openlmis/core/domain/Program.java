@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 public class Program extends BaseModel {
 
-  private Integer id;
   private String code;
   private String name;
   private String description;
@@ -31,6 +30,15 @@ public class Program extends BaseModel {
   public Program(Integer id, String name) {
     this.id = id;
     this.name = name;
+  }
+
+  public Program(Integer id, String code, String name, String description, Boolean active, boolean templateConfigured) {
+    this.code = code;
+    this.name = name;
+    this.description = description;
+    this.active = active;
+    this.templateConfigured = templateConfigured;
+    this.id = id;
   }
 
   public Program basicInformation() {

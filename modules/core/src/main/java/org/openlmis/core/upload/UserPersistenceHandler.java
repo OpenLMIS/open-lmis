@@ -7,13 +7,9 @@
 package org.openlmis.core.upload;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.User;
-import org.openlmis.core.exception.DataException;
-import org.openlmis.core.message.OpenLmisMessage;
-import org.openlmis.core.repository.UserRepository;
 import org.openlmis.core.service.UserService;
-import org.openlmis.upload.Importable;
-import org.openlmis.upload.model.AuditFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -37,17 +33,13 @@ public class UserPersistenceHandler extends AbstractModelPersistenceHandler {
   }
 
   @Override
-  protected Importable getExisting(Importable importable) {
-    return userService.getByUserName((User) importable);
+  protected BaseModel getExisting(BaseModel record) {
+    return userService.getByUserName((User) record);
   }
 
   @Override
-  protected void save(Importable existingRecord, Importable currentRecord, AuditFields auditFields) {
-    final User user = (User) currentRecord;
-    user.setModifiedBy(auditFields.getUser());
-    user.setModifiedDate(auditFields.getCurrentTimestamp());
-    if(existingRecord != null) user.setId(((User)existingRecord).getId());
-    userService.create(user, baseUrl + RESET_PASSWORD_PATH);
+  protected void save(BaseModel record) {
+    userService.create((User) record, baseUrl + RESET_PASSWORD_PATH);
   }
 
 }

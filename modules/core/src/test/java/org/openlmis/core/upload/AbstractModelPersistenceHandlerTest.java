@@ -9,6 +9,7 @@ package org.openlmis.core.upload;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.model.AuditFields;
@@ -24,21 +25,25 @@ public class AbstractModelPersistenceHandlerTest {
     AbstractModelPersistenceHandler handler = new AbstractModelPersistenceHandler("Duplicate Record") {
 
       @Override
-      protected Importable getExisting(Importable importable) {
+      protected BaseModel getExisting(BaseModel record) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
       }
 
       @Override
-      protected void save(Importable existingRecord, Importable currentRecord, AuditFields auditFields) {
+      protected void save(BaseModel record) {
         throw new DataException("error");
       }
 
     };
 
-    Importable importable = mock(Importable.class);
+    Importable importable = new TestImportable();
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("code: upload.record.error, params: { error; 1 }");
 
     handler.execute(importable, 2, new AuditFields(1,null));
+  }
+
+  class TestImportable extends BaseModel implements Importable{
+
   }
 }

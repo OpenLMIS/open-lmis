@@ -7,12 +7,9 @@
 package org.openlmis.core.upload;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Facility;
-import org.openlmis.core.exception.DataException;
-import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.service.FacilityService;
-import org.openlmis.upload.Importable;
-import org.openlmis.upload.model.AuditFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,18 +27,13 @@ public class FacilityPersistenceHandler extends AbstractModelPersistenceHandler 
   }
 
   @Override
-  protected Importable getExisting(Importable importable) {
-    Facility facility = (Facility) importable;
-    return facilityService.getByCode(facility);
+  protected BaseModel getExisting(BaseModel record) {
+    return facilityService.getByCode((Facility) record);
   }
 
   @Override
-  protected void save(Importable existingRecord, Importable currentRecord, AuditFields auditFields) {
-    Facility facility = (Facility) currentRecord;
-    facility.setModifiedBy(auditFields.getUser());
-    facility.setModifiedDate(auditFields.getCurrentTimestamp());
-    if (existingRecord != null) facility.setId(((Facility)existingRecord).getId());
-    facilityService.save(facility);
+  protected void save(BaseModel record) {
+    facilityService.save((Facility) record);
   }
 
 }

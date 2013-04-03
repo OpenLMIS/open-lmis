@@ -7,10 +7,9 @@
 package org.openlmis.core.upload;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.RequisitionGroupProgramSchedule;
 import org.openlmis.core.service.RequisitionGroupProgramScheduleService;
-import org.openlmis.upload.Importable;
-import org.openlmis.upload.model.AuditFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,16 +30,13 @@ public class RequisitionGroupProgramScheduleHandler extends AbstractModelPersist
   }
 
   @Override
-  protected Importable getExisting(Importable importable) {
+  protected BaseModel getExisting(BaseModel record) {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
   @Override
-  protected void save(Importable existingRecord, Importable currentRecord, AuditFields auditFields) {
-    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = (RequisitionGroupProgramSchedule) currentRecord;
-    requisitionGroupProgramSchedule.setModifiedBy(auditFields.getUser());
-    requisitionGroupProgramSchedule.setModifiedDate(new Date());
-    requisitionGroupProgramScheduleService.save(requisitionGroupProgramSchedule);
+  protected void save(BaseModel record) {
+    requisitionGroupProgramScheduleService.save((RequisitionGroupProgramSchedule) record);
   }
 
 }

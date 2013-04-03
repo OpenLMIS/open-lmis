@@ -6,11 +6,9 @@
 
 package org.openlmis.core.upload;
 
+import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.GeographicZone;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.GeographicZoneService;
-import org.openlmis.upload.Importable;
-import org.openlmis.upload.model.AuditFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,17 +25,13 @@ public class GeographicZonePersistenceHandler extends AbstractModelPersistenceHa
 
 
   @Override
-  protected Importable getExisting(Importable importable) {
-    return geographicZoneService.getByCode((GeographicZone)importable);
+  protected BaseModel getExisting(BaseModel record) {
+    return geographicZoneService.getByCode((GeographicZone) record);
   }
 
   @Override
-  protected void save(Importable existingRecord, Importable currentRecord, AuditFields auditFields) {
-    GeographicZone geographicZone = (GeographicZone) currentRecord;
-    geographicZone.setModifiedBy(auditFields.getUser());
-    geographicZone.setModifiedDate(auditFields.getCurrentTimestamp());
-    if(existingRecord != null) geographicZone.setId(((GeographicZone)existingRecord).getId());
-    geographicZoneService.save(geographicZone);
+  protected void save(BaseModel record) {
+    geographicZoneService.save((GeographicZone) record);
   }
 
 

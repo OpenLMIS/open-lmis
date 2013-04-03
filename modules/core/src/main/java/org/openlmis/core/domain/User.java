@@ -26,7 +26,6 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @EqualsAndHashCode(callSuper = true)
 @JsonSerialize(include = NON_EMPTY)
 public class User extends BaseModel implements Importable {
-  private Integer id;
   @ImportField(mandatory = true, name = "User Name")
   private String userName;
 

@@ -28,9 +28,6 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonSerialize(include = NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Facility extends BaseModel implements Importable {
-
-  private Integer id;
-
   @ImportField(mandatory = true, name = "Facility Code")
   private String code;
 

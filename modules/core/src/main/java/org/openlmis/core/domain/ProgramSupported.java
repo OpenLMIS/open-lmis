@@ -26,8 +26,6 @@ import static org.openlmis.core.service.FacilityService.SUPPORTED_PROGRAMS_INVAL
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProgramSupported extends BaseModel implements Importable {
 
-  private Integer id;
-
   private Integer facilityId;
 
   @ImportField(mandatory = true, name = "Program Code", nested = "code")

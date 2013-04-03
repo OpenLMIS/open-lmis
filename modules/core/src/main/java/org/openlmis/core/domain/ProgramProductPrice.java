@@ -22,8 +22,6 @@ import java.util.Date;
 public class ProgramProductPrice extends BaseModel implements Importable {
   public static final String PROGRAM_PRODUCT_PRICE_INVALID_PRICE_PER_DOSAGE = "programProductPrice.invalid.price.per.dosage";
 
-  private Integer id;
-
   @ImportFields(importFields = {
       @ImportField(name = "Program Code", type = "String", nested = "program.code", mandatory = true),
       @ImportField(name = "Product Code", type = "String", nested = "product.code", mandatory = true),

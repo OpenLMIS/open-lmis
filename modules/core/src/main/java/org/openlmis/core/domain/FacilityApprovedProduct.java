@@ -23,8 +23,6 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 // TODO : rename to FacilityTypeApprovedProduct
 public class FacilityApprovedProduct extends BaseModel implements Importable {
 
-  private Integer id;
-
   @ImportField(mandatory = true, name = "Facility Type Code", nested = "code")
   private FacilityType facilityType;
 

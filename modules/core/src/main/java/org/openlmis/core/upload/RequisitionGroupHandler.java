@@ -7,37 +7,33 @@
 package org.openlmis.core.upload;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.service.RequisitionGroupService;
-import org.openlmis.upload.Importable;
-import org.openlmis.upload.model.AuditFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
 
 @Component("requisitionGroupHandler")
 @NoArgsConstructor
 public class RequisitionGroupHandler extends AbstractModelPersistenceHandler {
 
+  public static final String DUPLICATE_REQUISITION_GROUP_CODE = "Duplicate Requisition Group Code found";
+
   private RequisitionGroupService requisitionGroupService;
 
   @Autowired
   public RequisitionGroupHandler(RequisitionGroupService requisitionGroupService) {
-    super(null);
+    super(DUPLICATE_REQUISITION_GROUP_CODE);
     this.requisitionGroupService = requisitionGroupService;
   }
 
   @Override
-  protected Importable getExisting(Importable importable) {
-    return null;
+  protected BaseModel getExisting(BaseModel record) {
+    return this.requisitionGroupService.getByCode((RequisitionGroup) record);
   }
 
   @Override
-  protected void save(Importable existingRecord, Importable currentRecord, AuditFields auditFields) {
-    RequisitionGroup requisitionGroup = (RequisitionGroup) currentRecord;
-    requisitionGroup.setModifiedBy(auditFields.getUser());
-    requisitionGroup.setModifiedDate(new Date());
-    requisitionGroupService.save(requisitionGroup);
+  protected void save(BaseModel record) {
+    requisitionGroupService.save((RequisitionGroup) record);
   }
 }

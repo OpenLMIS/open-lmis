@@ -6,12 +6,9 @@
 
 package org.openlmis.core.upload;
 
+import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.ProgramSupported;
-import org.openlmis.core.domain.User;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
-import org.openlmis.upload.Importable;
-import org.openlmis.upload.model.AuditFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,17 +25,13 @@ public class ProgramSupportedPersistenceHandler extends AbstractModelPersistence
   }
 
   @Override
-  protected Importable getExisting(Importable importable) {
-    return facilityService.getProgramSupported((ProgramSupported) importable);
+  protected BaseModel getExisting(BaseModel record) {
+    return facilityService.getProgramSupported((ProgramSupported) record);
   }
 
   @Override
-  protected void save(Importable existingRecord, Importable currentRecord, AuditFields auditFields) {
-    ProgramSupported programSupported = (ProgramSupported) currentRecord;
-    programSupported.setModifiedBy(auditFields.getUser());
-    programSupported.setModifiedDate(auditFields.getCurrentTimestamp());
-    if(existingRecord != null) programSupported.setId(((ProgramSupported) existingRecord).getId());
-    facilityService.uploadSupportedProgram(programSupported);
+  protected void save(BaseModel record) {
+    facilityService.uploadSupportedProgram((ProgramSupported) record);
   }
 
 }

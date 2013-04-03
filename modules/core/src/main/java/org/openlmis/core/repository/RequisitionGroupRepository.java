@@ -27,7 +27,6 @@ public class RequisitionGroupRepository {
   private RequisitionGroupMapper mapper;
   private CommaSeparator commaSeparator;
 
-
   @Autowired
   public RequisitionGroupRepository(RequisitionGroupMapper requisitionGroupMapper, CommaSeparator commaSeparator) {
     this.mapper = requisitionGroupMapper;
@@ -35,11 +34,7 @@ public class RequisitionGroupRepository {
   }
 
   public void insert(RequisitionGroup requisitionGroup) {
-    try {
-      mapper.insert(requisitionGroup);
-    } catch (DuplicateKeyException e) {
-      throw new DataException("Duplicate Requisition Group Code found");
-    }
+    mapper.insert(requisitionGroup);
   }
 
   public List<RequisitionGroup> getRequisitionGroups(List<SupervisoryNode> supervisoryNodes) {
@@ -49,5 +44,9 @@ public class RequisitionGroupRepository {
 
   public RequisitionGroup getRequisitionGroupForProgramAndFacility(Program program, Facility facility) {
     return mapper.getRequisitionGroupForProgramAndFacility(program, facility);
+  }
+
+  public RequisitionGroup getByCode(RequisitionGroup requisitionGroup) {
+    return mapper.getByCode(requisitionGroup.getCode());
   }
 }

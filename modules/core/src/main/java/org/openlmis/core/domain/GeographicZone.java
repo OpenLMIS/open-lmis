@@ -25,8 +25,6 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GeographicZone extends BaseModel implements Importable {
 
-  private Integer id;
-
   @ImportField(mandatory = true, name = "Geographic Zone Code")
   private String code;
 
@@ -39,4 +37,12 @@ public class GeographicZone extends BaseModel implements Importable {
   @ImportField(name = "Geographic Zone Parent Code", nested = "code")
   private GeographicZone parent;
 
+
+  public GeographicZone(Integer id, String code, String name, GeographicLevel level, GeographicZone parent) {
+    this.code = code;
+    this.name = name;
+    this.level = level;
+    this.parent = parent;
+    this.id = id;
+  }
 }

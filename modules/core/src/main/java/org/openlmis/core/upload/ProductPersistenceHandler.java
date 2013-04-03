@@ -6,12 +6,9 @@
 
 package org.openlmis.core.upload;
 
+import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.User;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProductService;
-import org.openlmis.upload.Importable;
-import org.openlmis.upload.model.AuditFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,17 +25,13 @@ public class ProductPersistenceHandler extends AbstractModelPersistenceHandler {
   }
 
   @Override
-  protected Importable getExisting(Importable importable) {
-    return productService.getByCode(((Product)importable).getCode());
+  protected BaseModel getExisting(BaseModel record) {
+    return productService.getByCode(((Product) record).getCode());
   }
 
   @Override
-  protected void save(Importable existingRecord, Importable currentRecord, AuditFields auditFields) {
-    Product product = (Product) currentRecord;
-    product.setModifiedBy(auditFields.getUser());
-    product.setModifiedDate(auditFields.getCurrentTimestamp());
-    if (existingRecord != null) product.setId(((Product)existingRecord).getId());
-    productService.save(product);
+  protected void save(BaseModel record) {
+    productService.save((Product) record);
   }
 
 }

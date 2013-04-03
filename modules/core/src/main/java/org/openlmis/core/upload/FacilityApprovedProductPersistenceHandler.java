@@ -7,11 +7,9 @@
 package org.openlmis.core.upload;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.FacilityApprovedProduct;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityApprovedProductService;
-import org.openlmis.upload.Importable;
-import org.openlmis.upload.model.AuditFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,19 +27,12 @@ public class FacilityApprovedProductPersistenceHandler extends AbstractModelPers
   }
 
   @Override
-  protected Importable getExisting(Importable importable) {
-    FacilityApprovedProduct facilityApprovedProduct = (FacilityApprovedProduct)importable;
-    return facilityApprovedProductService.getFacilityApprovedProductByProgramProductAndFacilityTypeCode(facilityApprovedProduct);
+  protected BaseModel getExisting(BaseModel record) {
+    return facilityApprovedProductService.getFacilityApprovedProductByProgramProductAndFacilityTypeCode((FacilityApprovedProduct) record);
   }
 
   @Override
-  protected void save(Importable existingRecord, Importable currentRecord, AuditFields auditFields) {
-    FacilityApprovedProduct facilityApprovedProduct = (FacilityApprovedProduct) currentRecord;
-    FacilityApprovedProduct existingFacilityApprovedProduct = (FacilityApprovedProduct) existingRecord;
-    if(existingFacilityApprovedProduct != null)
-      facilityApprovedProduct.setId(existingFacilityApprovedProduct.getId());
-    facilityApprovedProduct.setModifiedBy(auditFields.getUser());
-    facilityApprovedProduct.setModifiedDate(auditFields.getCurrentTimestamp());
-    facilityApprovedProductService.save(facilityApprovedProduct);
+  protected void save(BaseModel record) {
+    facilityApprovedProductService.save((FacilityApprovedProduct) record);
   }
 }

@@ -12,7 +12,6 @@ import org.mockito.Mock;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.domain.ProgramProductPrice;
 import org.openlmis.core.service.ProgramProductService;
-import org.openlmis.upload.model.AuditFields;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -36,18 +35,15 @@ public class ProgramProductPricePersistenceHandlerTest {
   @Test
   public void shouldSaveProgramProductPrice() {
     ProgramProductPrice programProductPrice = new ProgramProductPrice();
-    ProgramProductPrice existing = new ProgramProductPrice();
-    programProductCostPersistenceHandler.save(existing, programProductPrice, new AuditFields(1, null));
+    programProductCostPersistenceHandler.save(programProductPrice);
     verify(programProductService).updateProgramProductPrice(programProductPrice);
-    assertThat(programProductPrice.getModifiedBy(), is(1));
   }
 
   @Test
   public void shouldInsertProgramProduct() throws Exception {
     ProgramProduct programProduct = new ProgramProduct();
 
-    ProgramProduct existing = new ProgramProduct();
-    programProductPersistanceHandler.save(existing, programProduct, new AuditFields(1, null));
+    programProductPersistanceHandler.save(programProduct);
 
     verify(programProductService).save(programProduct);
 

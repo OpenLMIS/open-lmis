@@ -28,28 +28,35 @@ public abstract class AbstractModelPersistenceHandler implements RecordHandler<I
 
   @Override
   public void execute(Importable importable, int rowNumber, AuditFields auditFields) {
-    final String rowNumberAsString = Integer.toString(rowNumber- 1);
-
-    Importable existing = getExisting(importable);
-    if (existing != null){
-      BaseModel model = (BaseModel) existing;
-      if (model.getModifiedDate().equals(auditFields.getCurrentTimestamp())) {
-        throw new DataException(duplicateMessageKey);
-      }
-    }
+    BaseModel currentRecord = (BaseModel) importable;
+    final String rowNumberAsString = Integer.toString(rowNumber - 1);
+    BaseModel existing = getExisting(currentRecord);
+    throwExceptionIfProcessedInCurrentUpload(auditFields, existing);
 
     try {
-      save(existing, importable, auditFields);
+      currentRecord.setModifiedBy(auditFields.getUser());
+      currentRecord.setModifiedDate(auditFields.getCurrentTimestamp());
+      if(existing != null) currentRecord.setId(existing.getId());
+      save(currentRecord);
+
     } catch (DataIntegrityViolationException dataIntegrityViolationException) {
       throw new DataException(new OpenLmisMessage("upload.record.error", "Incorrect data length", rowNumberAsString));
     } catch (DataException exception) {
-      if(exception.getOpenLmisMessage()!= null){
+      if (exception.getOpenLmisMessage() != null) {
         throw new DataException(new OpenLmisMessage("upload.record.error", exception.getOpenLmisMessage().getCode(), rowNumberAsString));
       }
     }
   }
 
-  protected abstract Importable getExisting(Importable importable);
+  private void throwExceptionIfProcessedInCurrentUpload(AuditFields auditFields, BaseModel existing) {
+    if (existing != null) {
+      if (existing.getModifiedDate().equals(auditFields.getCurrentTimestamp())) {
+        throw new DataException(duplicateMessageKey);
+      }
+    }
+  }
 
-  protected abstract void save(Importable existingRecord, Importable currentRecord, AuditFields auditFields);
+  protected abstract BaseModel getExisting(BaseModel record);
+
+  protected abstract void save(BaseModel record);
 }

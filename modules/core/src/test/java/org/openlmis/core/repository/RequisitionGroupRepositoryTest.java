@@ -36,9 +36,6 @@ public class RequisitionGroupRepositoryTest {
   RequisitionGroupRepository repository;
   RequisitionGroup requisitionGroup;
 
-  @Rule
-  public ExpectedException expectedEx = ExpectedException.none();
-
   @Mock
   private RequisitionGroupMapper mapper;
   @Mock
@@ -50,16 +47,6 @@ public class RequisitionGroupRepositoryTest {
     repository = new RequisitionGroupRepository(mapper, commaSeparator);
     requisitionGroup = make(a(RequisitionGroupBuilder.defaultRequisitionGroup));
     requisitionGroup.setSupervisoryNode(new SupervisoryNode());
-  }
-
-  @Test
-  public void shouldGiveDuplicateRGCodeErrorIfDuplicateRGCodeFound() throws Exception {
-    doThrow(new DuplicateKeyException("")).when(mapper).insert(requisitionGroup);
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Duplicate Requisition Group Code found");
-
-    repository.insert(requisitionGroup);
-    verify(mapper).insert(requisitionGroup);
   }
 
   @Test

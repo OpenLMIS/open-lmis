@@ -19,7 +19,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = false)
 public abstract class BaseModel {
 
-  public abstract Integer getId();
+  protected Integer id;
 
   @JsonIgnore
   protected Integer modifiedBy;
@@ -46,5 +46,4 @@ public abstract class BaseModel {
   public void setModifiedBy(Integer modifiedBy) {
     this.modifiedBy = modifiedBy;
   }
-
 }

@@ -19,18 +19,18 @@ import java.util.Set;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class Role extends BaseModel {
-  private Integer id;
   private String name;
   private Boolean adminRole;
   private String description;
   private Set<Right> rights;
 
   public Role(String name, Boolean adminRole, String description) {
-    this(null, name, adminRole, description);
+    this(name, adminRole, description, null);
   }
 
-  public Role(Integer id, String name, Boolean adminRole, String description) {
-    this(id, name, adminRole, description, null);
+  public Role(Integer id, String name, Boolean adminRole, String description, Set<Right> rights) {
+    this(name, adminRole, description, rights);
+    this.id = id;
   }
 
   public void validate() {

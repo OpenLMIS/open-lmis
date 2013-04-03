@@ -14,11 +14,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.User;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.UserService;
-import org.openlmis.upload.model.AuditFields;
-
-import java.util.Date;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -47,10 +43,8 @@ public class UserPersistenceHandlerTest {
   @Test
   public void shouldSaveAUser() throws Exception {
     User user = new User();
-    User existing = new User();
-    userPersistenceHandler.save(existing, user, new AuditFields(1, null));
+    userPersistenceHandler.save(user);
     verify(userService).create(user, baseUrl + RESET_PASSWORD_PATH);
-    assertThat(user.getModifiedBy(), is(1));
   }
 
 }

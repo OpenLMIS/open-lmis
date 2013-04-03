@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.openlmis.core.builder.SupplyLineBuilder;
 import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.core.repository.SupplyLineRepository;
-import org.openlmis.upload.model.AuditFields;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -35,10 +34,7 @@ public class SupplyLineHandlerTest {
   @Test
   public void shouldSaveSupplyLine() {
     SupplyLine supplyLine = make(a(SupplyLineBuilder.defaultSupplyLine));
-    SupplyLine existing = new SupplyLine();
-    supplyLineHandler.save(existing, supplyLine, new AuditFields(1, null));
-    assertThat(supplyLine.getModifiedBy(), is(1));
-    assertThat(supplyLine.getModifiedDate(), is(notNullValue()));
+    supplyLineHandler.save(supplyLine);
     verify(supplyLineRepository).insert(supplyLine);
 
   }

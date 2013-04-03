@@ -15,11 +15,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramSupported;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
-import org.openlmis.upload.model.AuditFields;
 
 import java.util.Date;
 
@@ -47,11 +43,7 @@ public class FacilityPersistenceHandlerTest {
   @Test
   public void shouldSaveFacility() {
     Facility facility = make(a(FacilityBuilder.defaultFacility));
-    Date currentTimestamp = new Date();
-    Facility existing = new Facility();
-    facilityPersistenceHandler.save(existing, facility, new AuditFields(1, currentTimestamp));
-    assertThat(facility.getModifiedBy(), is(1));
-    assertThat(facility.getModifiedDate(), is(currentTimestamp));
+    facilityPersistenceHandler.save(facility);
     verify(facilityService).save(facility);
   }
 

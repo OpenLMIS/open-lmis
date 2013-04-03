@@ -7,15 +7,11 @@
 package org.openlmis.core.upload;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.SupervisoryNode;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.SupervisoryNodeService;
-import org.openlmis.upload.Importable;
-import org.openlmis.upload.model.AuditFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
 
 @Component("supervisoryNodeHandler")
 @NoArgsConstructor
@@ -31,19 +27,13 @@ public class SupervisoryNodeHandler extends AbstractModelPersistenceHandler {
   }
 
   @Override
-  protected Importable getExisting(Importable importable) {
-    SupervisoryNode supervisoryNode = (SupervisoryNode) importable;
-    return supervisoryNodeService.getByCode(supervisoryNode);
+  protected BaseModel getExisting(BaseModel record) {
+    return supervisoryNodeService.getByCode((SupervisoryNode) record);
   }
 
   @Override
-  protected void save(Importable existingRecord, Importable currentRecord, AuditFields auditFields) {
-    SupervisoryNode current = (SupervisoryNode) currentRecord;
-    SupervisoryNode existing = (SupervisoryNode) existingRecord;
-    if(existing != null) current.setId(existing.getId());
-    current.setModifiedBy(auditFields.getUser());
-    current.setModifiedDate(auditFields.getCurrentTimestamp());
-    supervisoryNodeService.save(current);
+  protected void save(BaseModel record) {
+    supervisoryNodeService.save((SupervisoryNode) record);
   }
 
 }

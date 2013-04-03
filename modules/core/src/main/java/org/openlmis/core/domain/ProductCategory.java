@@ -16,8 +16,6 @@ import org.openlmis.upload.annotation.ImportField;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class ProductCategory extends BaseModel implements Importable {
-  private Integer id;
-
   @ImportField(mandatory = true, name = "Category Code")
   private String code;
 

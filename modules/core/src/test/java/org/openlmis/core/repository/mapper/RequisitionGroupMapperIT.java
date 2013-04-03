@@ -114,4 +114,12 @@ public class RequisitionGroupMapperIT {
     assertThat(requisitionGroupMapper.getRequisitionGroupForProgramAndFacility(requisitionGroupProgramSchedule.getProgram(),
         requisitionGroupMember.getFacility()), is(requisitionGroup));
   }
+
+  @Test
+  public void shouldGetRequisitionByCode() {
+    requisitionGroup.setSupervisoryNode(supervisoryNode);
+    requisitionGroupMapper.insert(requisitionGroup);
+    assertThat(requisitionGroupMapper.getByCode(requisitionGroup.getCode()), is(requisitionGroup));
+  }
+
 }

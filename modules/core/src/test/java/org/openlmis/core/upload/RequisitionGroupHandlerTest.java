@@ -7,44 +7,47 @@
 package org.openlmis.core.upload;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.service.RequisitionGroupService;
-import org.openlmis.upload.Importable;
-import org.openlmis.upload.model.AuditFields;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 
 public class RequisitionGroupHandlerTest {
 
-    public static final Integer USER = 1;
-    RequisitionGroupHandler requisitionGroupHandler;
+  public static final Integer USER = 1;
+  RequisitionGroupHandler requisitionGroupHandler;
 
-    @Mock
-    RequisitionGroupService requisitionGroupService;
+  @Mock
+  RequisitionGroupService requisitionGroupService;
 
-    @Before
-    public void setUp() throws Exception {
-        initMocks(this);
-        requisitionGroupHandler = new RequisitionGroupHandler(requisitionGroupService);
-    }
+  @Rule
+  public ExpectedException expectedEx = ExpectedException.none();
 
-    @Test
-    public void shouldSaveRequisitionGroupWithModifiedByAndModifiedDateSet() throws Exception {
-        RequisitionGroup requisitionGroup = new RequisitionGroup();
-        requisitionGroup.setModifiedBy(USER);
+  @Before
+  public void setUp() throws Exception {
+    initMocks(this);
+    requisitionGroupHandler = new RequisitionGroupHandler(requisitionGroupService);
+  }
 
-      RequisitionGroup existing = new RequisitionGroup();
-      requisitionGroupHandler.save(existing, requisitionGroup, new AuditFields(USER, null));
+  @Test
+  public void shouldSaveRequisitionGroupWithModifiedByAndModifiedDateSet() throws Exception {
+    RequisitionGroup requisitionGroup = new RequisitionGroup();
+    requisitionGroup.setModifiedBy(USER);
 
-        assertThat(requisitionGroup.getModifiedBy(), is(USER));
-        assertThat(requisitionGroup.getModifiedDate(), is(notNullValue()));
-        verify(requisitionGroupService).save(requisitionGroup);
-    }
+    RequisitionGroup existing = new RequisitionGroup();
+    requisitionGroupHandler.save(requisitionGroup);
+
+    verify(requisitionGroupService).save(requisitionGroup);
+  }
+
 }

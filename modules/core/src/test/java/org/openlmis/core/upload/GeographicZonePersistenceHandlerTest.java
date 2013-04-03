@@ -14,9 +14,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.GeographicZone;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.GeographicZoneService;
-import org.openlmis.upload.model.AuditFields;
 
 import java.util.Date;
 
@@ -42,13 +40,7 @@ public class GeographicZonePersistenceHandlerTest {
   @Test
   public void shouldSaveGeographicZoneTaggedWithUserIdAndModifiedDate() throws Exception {
     GeographicZone geographicZone = new GeographicZone();
-    Date date = new Date();
-
-    GeographicZone existing = new GeographicZone();
-    geographicZonePersistenceHandler.save(existing, geographicZone, new AuditFields(1, date));
-
-    assertThat(geographicZone.getModifiedBy(), is(1));
-    assertThat(geographicZone.getModifiedDate(), is(date));
+    geographicZonePersistenceHandler.save(geographicZone);
     verify(service).save(geographicZone);
   }
 
