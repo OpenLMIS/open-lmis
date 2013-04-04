@@ -272,7 +272,7 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
 
           var errorHandler = function (data) {
             scope.error = data.error;
-          }
+          };
 
           RequisitionComment.save({id:$routeParams.rnr}, comment, successHandler, errorHandler);
 
