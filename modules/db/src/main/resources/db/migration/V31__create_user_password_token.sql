@@ -4,6 +4,6 @@
 CREATE TABLE USER_PASSWORD_TOKEN(
    userId                   INTEGER REFERENCES users(id),
    passwordToken            UUID,
-   createdDate              TIMESTAMP,
+   createdDate              TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
    PRIMARY KEY (userId,passwordToken)
 );

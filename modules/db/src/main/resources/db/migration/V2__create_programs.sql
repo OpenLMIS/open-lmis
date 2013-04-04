@@ -11,7 +11,7 @@ CREATE TABLE programs (
     active BOOLEAN,
     templateConfigured BOOLEAN,
     lastModifiedBy INTEGER,
-    lastModifiedDate DATE,
+    lastModifiedDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
     createdBy INTEGER,
     createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );

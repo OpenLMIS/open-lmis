@@ -17,7 +17,7 @@ CREATE TABLE users (
   facilityId INT REFERENCES facilities(id),
   active BOOLEAN DEFAULT FALSE,
   modifiedBy INTEGER,
-  modifiedDate TIMESTAMP,
+  modifiedDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
   createdBy INTEGER,
   createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );
