@@ -87,9 +87,10 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
         var key = scope[attrs.openlmisMessage] || attrs.openlmisMessage;
         var keyWithArgs = key.split("|");
         scope.$watch("[" + keyWithArgs.toString() + "]", function () {
-          var displayMessage = messageService.get(keyWithArgs[0]) || keyWithArgs[0];
+          var key = scope[keyWithArgs[0]] ||  keyWithArgs[0];
+          var displayMessage = messageService.get(key) || key;
           if (!isUndefined(keyWithArgs) && keyWithArgs.length > 1) {
-            displayMessage = replaceArgs(scope, displayMessage, keyWithArgs, key);
+            displayMessage = replaceArgs(scope, displayMessage, keyWithArgs);
           }
           element[0].localName == "input" ? element.attr("value", displayMessage) : element.html(displayMessage);
         }, true);
@@ -291,7 +292,7 @@ function isUndefined(value) {
   return (value == null || value == undefined || value.toString().trim().length == 0);
 }
 
-function replaceArgs(scope, displayMessage, args, key) {
+function replaceArgs(scope, displayMessage, args) {
   $.each(args, function (index, arg) {
     if (index > 0) {
       var value = scope[arg] || arg;
