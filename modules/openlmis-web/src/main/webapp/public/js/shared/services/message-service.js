@@ -19,7 +19,16 @@ services.factory('messageService', function (Messages, localStorageService) {
   };
 
   var get = function (key) {
-    return localStorageService.get('message.' + key);
+    var keyWithArgs = key.split("|");
+    var displayMessage =  localStorageService.get('message.' + keyWithArgs[0]);
+    if(keyWithArgs.length > 1) {
+      $.each(keyWithArgs, function (index, arg) {
+        if (index > 0) {
+          displayMessage = displayMessage.replace("{" + (index-1) + "}", arg);
+        }
+      });
+    }
+    return displayMessage;
   };
 
   return{

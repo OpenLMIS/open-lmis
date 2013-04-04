@@ -44,9 +44,9 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
   })
   .directive('uiNav',function () {
     return {
-      restrict: 'A',
+      restrict:'A',
 
-      link: function (scope, element, attrs) {
+      link:function (scope, element, attrs) {
         //Identify all the menu lists
         var lists = $(".navigation ul");
 
@@ -82,19 +82,23 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
     };
   }).directive('openlmisMessage',function (messageService) {
     return {
-      restrict: 'A',
-      link: function (scope, element, attrs) {
-        scope.$watch(attrs.openlmisMessage, function () {
-          var key = scope[attrs.openlmisMessage] || attrs.openlmisMessage;
-          var displayMessage = messageService.get(key) || key;
+      restrict:'A',
+      link:function (scope, element, attrs) {
+        var key = scope[attrs.openlmisMessage] || attrs.openlmisMessage;
+        var keyWithArgs = key.split("|");
+        scope.$watch("[" + keyWithArgs.toString() + "]", function () {
+          var displayMessage = messageService.get(keyWithArgs[0]) || keyWithArgs[0];
+          if (!isUndefined(keyWithArgs) && keyWithArgs.length > 1) {
+            displayMessage = replaceArgs(scope, displayMessage, keyWithArgs, key);
+          }
           element[0].localName == "input" ? element.attr("value", displayMessage) : element.html(displayMessage);
-        });
+        }, true);
       }
     }
   }).directive('formToolbar',function () {
     return {
-      restrict: 'A',
-      link: function (scope, element, attrs) {
+      restrict:'A',
+      link:function (scope, element, attrs) {
 
         function fixToolbarWidth() {
           var toolbarWidth = $(document).width() - 26;
@@ -113,9 +117,9 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
     };
   }).directive('placeholder',function () {
     return {
-      restrict: 'A',
-      require: 'ngModel',
-      link: function (scope, element, attr, ctrl) {
+      restrict:'A',
+      require:'ngModel',
+      link:function (scope, element, attr, ctrl) {
         var value;
 
         if (!jQuery.support.placeholder) {
@@ -159,19 +163,19 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
     };
   }).directive('openlmisPagination',function () {
     return {
-      restrict: 'EA',
-      scope: {
-        numPages: '=',
-        currentPage: '=',
-        maxSize: '=',
-        onSelectPage: '&',
-        nextText: '@',
-        previousText: '@',
-        checkErrorOnPage: '&'
+      restrict:'EA',
+      scope:{
+        numPages:'=',
+        currentPage:'=',
+        maxSize:'=',
+        onSelectPage:'&',
+        nextText:'@',
+        previousText:'@',
+        checkErrorOnPage:'&'
       },
-      templateUrl: '/public/pages/template/pagination/pagination.html',
-      replace: true,
-      link: function (scope) {
+      templateUrl:'/public/pages/template/pagination/pagination.html',
+      replace:true,
+      link:function (scope) {
         scope.$watch('numPages + currentPage + maxSize', function () {
           scope.pages = [];
           var maxSize = ( scope.maxSize && scope.maxSize < scope.numPages ) ? scope.maxSize : scope.numPages;
@@ -202,7 +206,7 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
         scope.selectPage = function (page) {
           if (!scope.isActive(page)) {
             scope.currentPage = page;
-            scope.onSelectPage({ page: page });
+            scope.onSelectPage({ page:page });
           }
         };
 
@@ -218,23 +222,23 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
         };
 
         scope.hasErrorOnPage = function (page) {
-          return scope.checkErrorOnPage({page: page});
+          return scope.checkErrorOnPage({page:page});
         };
 
       }
     };
   }).directive('commentBox',function (RequisitionComment, $routeParams) {
     return {
-      restrict: 'E',
-      scope: {
-        show: '=',
-        updatable: '='
+      restrict:'E',
+      scope:{
+        show:'=',
+        updatable:'='
       },
-      link: function (scope) {
+      link:function (scope) {
 
         var commentContainer = document.getElementById('comments-list');
 
-        RequisitionComment.get({id: $routeParams.rnr}, function (data) {
+        RequisitionComment.get({id:$routeParams.rnr}, function (data) {
           scope.rnrComments = data.comments;
         }, {});
 
@@ -252,27 +256,27 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
 
         scope.addComments = function () {
           if (isUndefined(scope.comment)) return;
-          var comment = {"commentText": scope.comment };
+          var comment = {"commentText":scope.comment };
 
           var successHandler = function () {
-              scope.comment = "";
-              scope.rnrComments = data.comments;
+            scope.comment = "";
+            scope.rnrComments = data.comments;
 
-              setTimeout(function() {
-                  commentContainer.scrollTop = commentContainer.scrollHeight;
-              }, 0);
+            setTimeout(function () {
+              commentContainer.scrollTop = commentContainer.scrollHeight;
+            }, 0);
           };
 
           var errorHandler = function (data) {
             scope.error = data.error;
           }
 
-          RequisitionComment.save({id: $routeParams.rnr}, comment, successHandler, errorHandler);
+          RequisitionComment.save({id:$routeParams.rnr}, comment, successHandler, errorHandler);
 
         };
       },
-      templateUrl: '/public/pages/template/comment-box.html',
-      replace: true
+      templateUrl:'/public/pages/template/comment-box.html',
+      replace:true
     };
   }).run(function ($rootScope) {
     $rootScope.$on('$routeChangeStart', function () {
@@ -286,6 +290,17 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
 function isUndefined(value) {
   return (value == null || value == undefined || value.toString().trim().length == 0);
 }
+
+function replaceArgs(scope, displayMessage, args, key) {
+  $.each(args, function (index, arg) {
+    if (index > 0) {
+      var value = scope[arg] || arg;
+      displayMessage = displayMessage.replace("{" + (index - 1) + "}", value);
+    }
+  });
+  return displayMessage;
+}
+
 jQuery.support.placeholder = !!function () {
   return "placeholder" in document.createElement("input");
 }();

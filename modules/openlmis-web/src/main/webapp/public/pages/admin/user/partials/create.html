@@ -129,7 +129,7 @@
                       <a ng-click="setSelectedFacility(facility)">{{facility.code}} - {{facility.name}}</a>
                     </li>
                     <li ng-show="resultCount == 0">
-                      <a>No matches found for {{query}}</a>
+                      <a openlmis-message="create.user.noMatches|query"></a>
                     </li>
                   </ul>
                 </div>
