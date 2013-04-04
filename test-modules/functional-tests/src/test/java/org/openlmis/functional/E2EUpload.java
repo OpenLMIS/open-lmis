@@ -49,8 +49,7 @@ public class E2EUpload extends TestCaseHelper {
     dbWrapper.alterUserID(userName, userId);
     dbWrapper.insertRoleAssignment(userId, "User");
 
-    uploadPage.uploadProductCategory();
-    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.uploadProductCategory(1);
 
     uploadPage.uploadAndVerifyProductsInvalidScenarios();
     uploadPage.uploadAndVerifyProducts(2);
@@ -58,11 +57,9 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadAndVerifyProgramProductMappingInvalidScenarios();
     uploadPage.uploadAndVerifyProgramProductMapping(2);
 
-    uploadPage.uploadProgramProductPrice();
-    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.uploadProgramProductPrice(1);
 
     uploadPage.uploadGeographicZoneInvalid();
-
     uploadPage.uploadAndVerifyGeographicZone(2);
 
     uploadPage.uploadFacilitiesNotAssignedToLowestGeoCode();
@@ -76,25 +73,20 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadProgramSupportedByFacilitiesInvalidScenarios();
     uploadPage.uploadProgramSupportedByFacilities(2);
 
-    uploadPage.uploadSupervisoryNodes();
-    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.uploadAndVerifySupervisoryNodes(1);
 
-    uploadPage.uploadRequisitionGroup();
-    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.uploadAndVerifyRequisitionGroup(1);
 
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
     dbWrapper.insertSchedule("M", "Monthly", "Month");
-      dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
-      dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
+    dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
+    dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
 
-    uploadPage.uploadRequisitionGroupProgramSchedule();
-    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.uploadAndVerifyRequisitionGroupProgramSchedule(1);
 
-    uploadPage.uploadRequisitionGroupMembers();
-    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.uploadAndVerifyRequisitionGroupMembers(1);
 
-    uploadPage.uploadSupplyLines();
-    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.uploadAndVerifySupplyLines(1);
   }
 
   @AfterMethod(groups = {"functional"})
