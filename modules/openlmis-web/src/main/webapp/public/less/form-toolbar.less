@@ -85,10 +85,10 @@
   width: 280px;
   h4 {
     color: @heading-green;
-    font-size: 1.2em;
+    font-size: 1.15em;
     border-bottom: 1px solid #CCC;
     padding-bottom: 5px;
-    margin-bottom: 0;
+    margin: 5px 0 0;
   }
   .comments-list {
     max-height: 210px;
@@ -96,17 +96,17 @@
     margin: 0;
     padding: 0;
     font-size: 0.85em;
+    word-wrap: break-word;
     li {
       border-bottom: 1px solid #DDD;
       padding: 10px 0;
-      .comment-info{
+      line-height: 18px;
+      .comment-info {
         font-size: .90em;
-
         .comment-date {
           color: #a9a9a9;
         }
       }
-
     }
   }
   textarea {
@@ -118,27 +118,17 @@
     line-height: 15px;
   }
   .link-minimize {
-    background: #fafafa;
     display: inline-block;
-    padding: 0px 6px;
-    border: 1px solid rgb(233, 233, 233);
+    padding: 0 0 0 6px;
     color: #aaa;
     line-height: 18px;
     float: right;
     &:hover {
-      background: #FFF;
-      border-color: #CCC;
       text-decoration: none;
-      .icon-minus  {
-        color: #999;
+      .icon-remove  {
+        color: #666;
       }
     }
-    .icon-minus {
-      font-size: 12px;
-      position: relative;
-      bottom: -2px;
-    }
-
   }
   .beak-down {
     display: inline-block;
@@ -149,6 +139,10 @@
     position: absolute;
     right: 23px;
     bottom: -11px;
+  }
+  .comment-length {
+    color: #999;
+    font-size: 0.9em;
   }
 }
 

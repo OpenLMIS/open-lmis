@@ -6,7 +6,7 @@
     </a>
   </h4>
 
-  <ul class="comments-list">
+  <ul class="comments-list" id="comments-list">
     <li class="comment" ng-repeat="comment in rnrComments">
       <span ng-bind="comment.commentText"></span>
       <div class="comment-info"> By: <span  ng-bind="comment.author.userName"></span> | <span class="comment-date" ng-bind="comment.createdDate | date:'HH:mm:ss  dd/MM/yyyy'"></span></div>
@@ -15,7 +15,7 @@
   <textarea ng-trim="false" ng-change="validateMaxLength(comment)" rows="5" id="addComment" ng-model="comment" placeholder="Type your comment here" ng-maxlength="250"/>
 
   <div>
-    <span ng-bind="250-comment.length"></span>
+    <span ng-bind="250-comment.length" class="comment-length"></span>
     <input type="button" value="Add" ng-click="addComments()" ng-disabled="!comment.length" class="btn btn-primary pull-right"/>
   </div>
   <span class="beak-down"></span>

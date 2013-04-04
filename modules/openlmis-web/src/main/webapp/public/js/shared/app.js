@@ -233,6 +233,8 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
       },
       link: function (scope) {
 
+        var commentContainer = document.getElementById('comments-list');
+
         angular.element(document).keyup(function (e) {
           if (e.which == 27) {
             scope.show = false;
@@ -254,8 +256,12 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
             RequisitionComment.get({id: scope.rnrId}, function (data) {
               scope.comment = "";
               scope.rnrComments = data.comments;
+
+              setTimeout(function() {
+                  commentContainer.scrollTop = commentContainer.scrollHeight;
+              }, 0);
             })
-          }
+          };
 
           var errorHandler = function () {
 
