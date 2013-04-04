@@ -18,5 +18,6 @@ public class FacilityReport implements ReportData {
     private String code;
     private String facilityName;
     private String facilityType;
+    private boolean active;
 
 }
