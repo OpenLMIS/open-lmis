@@ -20,6 +20,7 @@ describe('Approve Requisition controller', function () {
     nonFullSupplyLineItems = [];
     requisition = {'status':"AUTHORIZED", 'lineItems':lineItems, 'nonFullSupplyLineItems':nonFullSupplyLineItems, period:{numberOfMonths:5}};
     $rootScope.pageSize = 2;
+    scope.approvalForm= {};
     programRnrColumnList = [
       {'name':'ProductCode', 'label':'Product Code', 'visible':true},
       {'name':'quantityApproved', 'label':'quantity approved', 'visible':true},
@@ -38,14 +39,6 @@ describe('Approve Requisition controller', function () {
 
   it('should set currency in scope', function () {
     expect(scope.currency).toEqual('$');
-  });
-
-  it('should set paged line items as data in full supply grid', function () {
-    expect(scope.rnrGrid.data).toEqual('pageLineItems');
-  });
-
-  it('should set columns as columnDefs in non full supply grid', function () {
-    expect(scope.rnrGrid.columnDefs).toEqual('columnDefinitions');
   });
 
   it('should save work in progress for rnr', function () {
@@ -87,7 +80,7 @@ describe('Approve Requisition controller', function () {
 
   it('should set Error pages according to tab', function () {
     scope.numberOfPages = 5;
-    scope.isDirty = true;
+    scope.approvalForm.$dirty = true;
     scope.errorPages = {fullSupply:[5], nonFullSupply:[7]};
     scope.rnr.id = "rnrId";
     routeParams.page = 1;
@@ -100,7 +93,7 @@ describe('Approve Requisition controller', function () {
 
   it('should set showNonFullSupply flag if supply type is non-full-supply', function () {
     scope.numberOfPages = 5;
-    scope.isDirty = true;
+    scope.approvalForm.$dirty = true;
     scope.rnr.id = "rnrId";
     routeParams.page = 1;
     routeParams.supplyType = 'non-full-supply';
@@ -189,25 +182,13 @@ describe('Approve Requisition controller', function () {
 
   it('should save rnr on page change only if dirty', function () {
     scope.numberOfPages = 5;
-    scope.isDirty = true;
+    scope.approvalForm.$dirty = true;
     routeParams.page = 2;
     scope.rnr.id = "rnrId";
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {'success':"success message"});
     scope.$broadcast('$routeUpdate');
     httpBackend.flush();
     expect(scope.message).toEqual('success message');
-  });
-
-  it('should fill packs to ship based on approved quantity', function () {
-    var lineItem = new RnrLineItem();
-    lineItem.quantityApproved = '67';
-    scope.rnr = new Rnr();
-    scope.rnr.fullSupplyLineItems = [lineItem];
-    spyOn(lineItem, 'fillPacksToShip');
-
-    scope.fillPacksToShip(lineItem);
-
-    expect(lineItem.fillPacksToShip).toHaveBeenCalled();
   });
 
   it('should set message while saving if set message flag true', function () {
@@ -271,19 +252,4 @@ describe('Approve Requisition controller', function () {
     var result = scope.checkErrorOnPage(1);
     expect(result).toBeFalsy();
   });
-
-  it('should call toggle expand in a grid if collapsed', function () {
-    var row = {collapsed:true, toggleExpand: function(){} };
-    spyOn(row, 'toggleExpand');
-    scope.rowToggle(row);
-    expect(row.toggleExpand).toHaveBeenCalled();
-  });
-
-  it('should not call toggle expand in a grid if collapsed', function () {
-    var row = {collapsed:false, toggleExpand: function(){} };
-    spyOn(row, 'toggleExpand');
-    scope.rowToggle(row);
-    expect(row.toggleExpand.calls.length).toEqual(0);
-  });
-
 });

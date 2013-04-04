@@ -70,16 +70,6 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
     $location.search("page", $scope.currentPage);
   });
 
-  $scope.periodDisplayName = function () {
-    if (!$scope.rnr) return;
-
-    var startDate = new Date($scope.rnr.period.startDate);
-
-    var endDate = new Date($scope.rnr.period.endDate);
-    return utils.getFormattedDate(startDate) + ' - ' + utils.getFormattedDate(endDate);
-  };
-
-
   $scope.saveRnr = function (preventMessage) {
     resetFlags();
     var rnr = removeExtraDataForPostFromRnr();
@@ -188,11 +178,6 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
 
   $scope.showCategory = function (index) {
     return !((index > 0 ) && ($scope.pageLineItems[index].productCategory == $scope.pageLineItems[index-1].productCategory));
-  };
-
-  $scope.totalCost = function () {
-    if (!$scope.rnr) return;
-    return parseFloat(parseFloat($scope.rnr.fullSupplyItemsSubmittedCost) + parseFloat($scope.rnr.nonFullSupplyItemsSubmittedCost)).toFixed(2);
   };
 
   $scope.getCellErrorClass = function (rnrLineItem) {

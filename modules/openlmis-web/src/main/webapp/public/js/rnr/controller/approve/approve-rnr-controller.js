@@ -8,41 +8,22 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   $scope.rnr = new Rnr(requisition, rnrColumns);
   $scope.rnrColumns = rnrColumns;
   $scope.currency = currency;
-  $scope.visibleColumns = _.where(rnrColumns, {'visible':true});
+  $scope.visibleColumns = _.where(rnrColumns, {'visible': true});
   $scope.error = "";
   $scope.message = "";
 
-  $scope.lossesAndAdjustmentsModal = [];
   $scope.pageLineItems = [];
-  $scope.columnDefinitions = [];
-  $scope.showPositiveIntegerError = [];
   $scope.errorPages = {};
   $scope.shownErrorPages = [];
-  $scope.lossesAndAdjustmentsModal = false;
-  $scope.isDirty = false;
 
   $scope.goToPage = function (page, event) {
     angular.element(event.target).parents(".dropdown").click();
     $location.search('page', page);
   };
 
-  function updateSupplyTypeForGrid() {
+  function updateSupplyType() {
     $scope.showNonFullSupply = !!($routeParams.supplyType == 'non-full-supply');
   }
-
-  $scope.rowToggle = function (row) {
-    if (row.collapsed) {
-      row.toggleExpand();
-    }
-  };
-
-  $scope.$on('ngGridEventRows', function () {
-    $timeout(function () {
-      $(angular.element('.ngAggregate')).each(function (i, aggregate) {
-        aggregate.click();
-      });
-    });
-  });
 
   $scope.highlightRequired = function (value) {
     if ($scope.approvedQuantityRequiredFlag && (isUndefined(value))) {
@@ -54,51 +35,6 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   $scope.showCategory = function (index) {
     return !((index > 0 ) && ($scope.pageLineItems[index].productCategory == $scope.pageLineItems[index - 1].productCategory));
   };
-
-  $scope.getCellErrorClass = function (rnrLineItem) {
-    return (typeof(rnrLineItem.getErrorMessage) != "undefined" && rnrLineItem.getErrorMessage()) ? 'cell-error-highlight' : '';
-  };
-
-  $scope.getRowErrorClass = function (rnrLineItem) {
-    return $scope.getCellErrorClass(rnrLineItem) ? 'row-error-highlight' : '';
-  };
-
-  $scope.showLossesAndAdjustments = function (lineItem) {
-    $scope.currentRnrLineItem = lineItem;
-    $scope.lossesAndAdjustmentsModal = true;
-  };
-
-  $scope.closeLossesAndAdjustmentModal = function () {
-    $scope.lossesAndAdjustmentsModal = false;
-  };
-
-  function prepareColumnDefinitions() {
-    var columnDefinitions = [
-      {field:'productCategory', displayName:'Product Category', width:0}
-    ];
-    var visibleColumns = _.where($scope.rnrColumns, {'visible':true});
-    if (visibleColumns.length > 0) {
-      $(visibleColumns).each(function (i, column) {
-        switch (column.name) {
-          case 'price':
-          case 'cost' :
-            columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:currencyTemplate('row.entity.' + column.name)});
-            break;
-          case 'quantityApproved' :
-            columnDefinitions.push({field:column.name, displayName:column.label, width:140, cellTemplate:positiveIntegerCellTemplate(column.name, 'row.entity.quantityApproved')});
-            break;
-          case 'remarks' :
-            columnDefinitions.push({field:column.name, displayName:column.label, cellTemplate:freeTextCellTemplate(column.name, 'row.entity.remarks')});
-            break;
-          default :
-            columnDefinitions.push({field:column.name, displayName:column.label});
-        }
-      });
-      $scope.columnDefinitions = columnDefinitions;
-    } else {
-      $scope.$parent.error = "Please contact Admin to define R&R template for this program";
-    }
-  }
 
   function updateShownErrorPages() {
     $scope.shownErrorPages = $scope.showNonFullSupply ? $scope.errorPages.nonFullSupply : $scope.errorPages.fullSupply;
@@ -112,9 +48,8 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     $scope.pageLineItems = gridLineItems.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);
   }
 
-  updateSupplyTypeForGrid();
+  updateSupplyType();
   fillPagedGridData();
-  prepareColumnDefinitions();
 
 
   $scope.$watch("currentPage", function () {
@@ -132,73 +67,18 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
       $location.search('page', 1);
       return;
     }
-    if ($scope.isDirty)
-      $scope.saveRnr();
-    updateSupplyTypeForGrid();
+    if ($scope.approvalForm.$dirty) $scope.saveRnr();
+    updateSupplyType();
     fillPagedGridData();
   });
-
-
-  function currencyTemplate(value) {
-    return '<div class="ngCellText"><span  class = "cell-text" ng-show = "showCurrencySymbol(' + value + ')"  ng-bind="currency"></span >&nbsp; &nbsp;<span ng-bind = "' + value + '" class = "cell-text" ></span ></div>'
-  }
-
-  function freeTextCellTemplate(field, value) {
-    return '<div><input maxlength="250" ng-change = \'setDirty()\' name="' + field + '" ng-model="' + value + '"/></div>';
-  }
-
-  function positiveIntegerCellTemplate(field, value) {
-    return '<div><ng-form name="positiveIntegerForm"> <input ng-change = \'fillPacksToShip(row.entity)\' ' +
-      'ui-event="{blur : \'showPositiveIntegerError[row.entity.id] = false\'}"' +
-      'ng-class="{\'required-error\': approvedQuantityRequiredFlag && positiveIntegerForm.' + field + '.$error.required}" ' +
-      '  ng-required="true" maxlength="8"  name=' + field + ' ng-model=' + value + ' />' +
-      '<span class="rnr-form-error" id=' + field + ' ng-show="showPositiveIntegerError[row.entity.id]" >Please Enter Numeric value</span></ng-form></div>';
-  }
-
-  function aggregateTemplate() {
-    return "<div ng-click=\"rowToggle(row)\" ng-style=\"{'left': row.offsetleft}\" class=\"ngAggregate productCategory\">" +
-      "    <span class=\"ngAggregateText\">{{row.label CUSTOM_FILTERS}}</span>" +
-      "    <div style='display: none;' class=\"{{row.aggClass()}}\"></div>" +
-      "</div>" +
-      "";
-  }
-
-  $scope.rnrGrid = {
-    data:'pageLineItems',
-    enableRowSelection:false,
-    showFooter:false,
-    showSelectionCheckbox:false,
-    showColumnMenu:false,
-    aggregateTemplate:aggregateTemplate(),
-    showFilter:false,
-    rowHeight:44,
-    enableSorting:false,
-    enableColumnResize:true,
-    enableColumnReordering:false,
-    columnDefs:'columnDefinitions',
-    groups:['productCategory']
-  };
-
-  $scope.setDirty = function () {
-    $scope.isDirty = true;
-  };
-
-  $scope.fillPacksToShip = function (lineItem) {
-    $scope.rnr.fillPacksToShip(lineItem);
-  };
 
   $scope.getId = function (prefix, parent) {
     return prefix + "_" + parent.$parent.$index;
   };
 
 
-  $scope.totalCost = function () {
-    if (!$scope.rnr) return;
-    return parseFloat(parseFloat($scope.rnr.fullSupplyItemsSubmittedCost) + parseFloat($scope.rnr.nonFullSupplyItemsSubmittedCost)).toFixed(2);
-  };
-
   function removeExtraDataForPostFromRnr() {
-    var rnr = {"id":$scope.rnr.id, "fullSupplyLineItems":[], "nonFullSupplyLineItems":[]};
+    var rnr = {"id": $scope.rnr.id, "fullSupplyLineItems": [], "nonFullSupplyLineItems": []};
 
     _.each($scope.rnr.fullSupplyLineItems, function (lineItem) {
       rnr.fullSupplyLineItems.push(_.omit(lineItem, ['rnr', 'programRnrColumnList']));
@@ -219,17 +99,17 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
 
   $scope.saveRnr = function (preventMessage) {
     var rnr = removeExtraDataForPostFromRnr();
-    Requisitions.update({id:$scope.rnr.id, operation:"save"},
-      rnr, function (data) {
-        if (preventMessage == true) return;
-        $scope.message = data.success;
-        $scope.error = "";
-        setTimeout(fadeSaveMessage, 3000);
-      }, function (data) {
-        $scope.error = data.error;
-        $scope.message = "";
-      });
-    $scope.isDirty = false;
+    Requisitions.update({id: $scope.rnr.id, operation: "save"},
+        rnr, function (data) {
+          if (preventMessage == true) return;
+          $scope.message = data.success;
+          $scope.error = "";
+          setTimeout(fadeSaveMessage, 3000);
+        }, function (data) {
+          $scope.error = data.error;
+          $scope.message = "";
+        });
+    $scope.approvalForm.$dirty = false;
   };
 
   function validateAndSetErrorClass() {
@@ -247,7 +127,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   }
 
   function resetErrorPages() {
-    $scope.errorPages = {fullSupply:[], nonFullSupply:[]};
+    $scope.errorPages = {fullSupply: [], nonFullSupply: []};
   }
 
   $scope.checkErrorOnPage = function (page) {
@@ -266,58 +146,42 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
       return;
     }
     var rnr = removeExtraDataForPostFromRnr();
-    Requisitions.update({id:$scope.rnr.id, operation:"approve"},
-      rnr, function (data) {
-        $scope.$parent.message = data.success;
-        $scope.error = "";
-        $location.path("rnr-for-approval");
-      }, function (data) {
-        $scope.error = data.error;
-        $scope.message = "";
-      });
+    Requisitions.update({id: $scope.rnr.id, operation: "approve"},
+        rnr, function (data) {
+          $scope.$parent.message = data.success;
+          $scope.error = "";
+          $location.path("rnr-for-approval");
+        }, function (data) {
+          $scope.error = data.error;
+          $scope.message = "";
+        });
   };
 
-
-  $scope.showCurrencySymbol = function (value) {
-    if (value != 0 && (isUndefined(value) || value.length == 0 || value == false)) {
-      return "";
-    }
-    return "defined";
-  };
-
-  $scope.periodDisplayName = function () {
-    if (!$scope.rnr) return;
-
-    var startDate = new Date($scope.rnr.period.startDate);
-    var endDate = new Date($scope.rnr.period.endDate);
-
-    return utils.getFormattedDate(startDate) + ' - ' + utils.getFormattedDate(endDate);
-  };
 }
 
 ApproveRnrController.resolve = {
 
-  requisition:function ($q, $timeout, RequisitionForApprovalById, $route) {
+  requisition: function ($q, $timeout, RequisitionForApprovalById, $route) {
     var deferred = $q.defer();
     $timeout(function () {
-      RequisitionForApprovalById.get({id:$route.current.params.rnr}, function (data) {
+      RequisitionForApprovalById.get({id: $route.current.params.rnr}, function (data) {
         deferred.resolve(data.rnr);
       }, {});
     }, 100);
     return deferred.promise;
   },
 
-  rnrColumns:function ($q, $timeout, ProgramRnRColumnList, $route) {
+  rnrColumns: function ($q, $timeout, ProgramRnRColumnList, $route) {
     var deferred = $q.defer();
     $timeout(function () {
-      ProgramRnRColumnList.get({programId:$route.current.params.program}, function (data) {
+      ProgramRnRColumnList.get({programId: $route.current.params.program}, function (data) {
         deferred.resolve(data.rnrColumnList);
       }, {});
     }, 100);
     return deferred.promise;
   },
 
-  currency:function ($q, $timeout, ReferenceData) {
+  currency: function ($q, $timeout, ReferenceData) {
     var deferred = $q.defer();
     $timeout(function () {
       ReferenceData.get({}, function (data) {

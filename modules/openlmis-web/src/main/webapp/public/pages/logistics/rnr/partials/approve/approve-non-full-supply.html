@@ -5,20 +5,6 @@
   -->
 
 <div ng-controller="ApproveNonFullSupplyController">
-  <div id="pageErrors" class="rnr-page-errors" ng-show="errorPages.nonFullSupply">
-    <div ng-switch on="errorPages.nonFullSupply.length" class="dropdown">
-      <a ng-switch-when="1" class="dropdown-toggle"> Errors found on 1 page </a>
-      <a ng-switch-default class="dropdown-toggle">
-        Errors found on {{errorPages.nonFullSupply.length}} pages
-      </a>
-      <ul class="dropdown-menu">
-        <li ng-repeat="page in errorPages.nonFullSupply">
-          <a ng-click="goToPage(page, $event)">{{page}}</a>
-        </li>
-      </ul>
-    </div>
-
-  </div>
   <div class="rnr-table">
     <table id="nonFullSupplyTable" class="table table-bordered">
       <thead>
@@ -32,13 +18,13 @@
         <td class="productCategory" colspan="{{visibleNonFullSupplyColumns.length}}" ng-show="showCategory($index)"
             ng-bind="rnrLineItem.productCategory"></td>
       </tr>
-      <tr ng-class="getRowErrorClass(rnrLineItem)">
+      <tr>
         <td class="cell-input" ng-repeat="column in visibleNonFullSupplyColumns">
             <span ng-switch on="column.name">
 
                <span ng-switch-when="quantityApproved">
                   <div>
-                    <input ng-change='fillPacksToShip(rnrLineItem)' ng-required="true" type="text"
+                    <input ng-change="rnr.fillPacksToShip(rnrLineItem)" ng-required="true" type="text"
                            ng-model="rnrLineItem[column.name]" rnr-validator="positiveInteger" maxlength="8"
                            name="quantityApproved{{$parent.$parent.$index}}"
                            id="{{getId(column.name, $parent)}}"

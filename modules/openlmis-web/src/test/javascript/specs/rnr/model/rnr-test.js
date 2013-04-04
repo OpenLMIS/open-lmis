@@ -368,5 +368,12 @@ describe('R&R test', function () {
     expect(rnr.getNonFullSupplyErrorLineItemIndexes).toHaveBeenCalled();
     expect(rnr.getFullSupplyErrorLineItemIndexes).toHaveBeenCalled();
   });
+
+  it('should prepare period display name', function () {
+    var rnr = new Rnr({"id":"1", period:{"name": "Period 1", "startDate": 1358274600000, "endDate": 1367260200000}}, null)
+    expect(rnr.periodDisplayName()).toEqual('16/01/2013 - 30/04/2013');
+  });
+
+
 });
 

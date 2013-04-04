@@ -248,13 +248,6 @@ describe('CreateRequisitionController', function () {
     expect(spyRnr).toHaveBeenCalledWith(mockedRequisition, rnrColumns);
   });
 
-  it('should prepare period display name', function () {
-    scope.rnr = {'status': "INITIATED"};
-    scope.rnr.period = {"name": "Period 1", "startDate": 1358274600000, "endDate": 1367260200000};
-
-    expect(scope.periodDisplayName()).toEqual('16/01/2013 - 30/04/2013');
-  });
-
   it('should set message while saving if set message flag true', function () {
     scope.rnr = {"id": "rnrId"};
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {'success': "success message"});
