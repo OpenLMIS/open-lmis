@@ -21,6 +21,8 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Date;
+import java.text.*;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
@@ -238,6 +240,12 @@ public class InitiateRnRPage extends Page {
   @FindBy(how = ID, using = "addButton")
   private static WebElement addCommentButton;
 
+  @FindBy(how = XPATH , using = "//ul[@id='comments-list']/li[1]/span")
+  private static WebElement lastComment;
+
+  @FindBy(how = XPATH , using = "//ul[@id='comments-list']/li[1]/div")
+  private static WebElement lastCommentAddedBy;
+
   public InitiateRnRPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 1), this);
@@ -358,7 +366,6 @@ public class InitiateRnRPage extends Page {
   }
 
   public void PopulateMandatoryFullSupplyDetails(int numberOfLineItems, int numberOfLineItemsPerPage) {
-      addComments("Dummy Comments.");
     int numberOfPages = numberOfLineItems / numberOfLineItemsPerPage;
     if (numberOfLineItems % numberOfLineItemsPerPage != 0) {
       numberOfPages = numberOfPages + 1;
@@ -666,9 +673,21 @@ public class InitiateRnRPage extends Page {
   public void addComments(String comments) {
       commentsButton.click();
       addCommentTextArea.sendKeys(comments);
-      System.out.println(addCommentButton);
       addCommentButton.click();
   }
+
+    public void verifyLastComment(String comments) {
+        boolean isUpdatedBy;
+        boolean isUpdatedOn;
+        SeleneseTestNgHelper.assertEquals(lastComment.getText(), comments);
+
+        isUpdatedBy = lastCommentAddedBy.getText().contains("By: storeincharge") ;
+        SeleneseTestNgHelper.assertTrue(isUpdatedBy);
+        Date date = new Date();
+        SimpleDateFormat ft = new SimpleDateFormat ("dd/MM/YYYY");
+        isUpdatedOn = lastCommentAddedBy.getText().contains(ft.format(date));
+        SeleneseTestNgHelper.assertTrue(isUpdatedOn);
+    }
 
   public void verifyApproveButtonNotPresent() {
     boolean approveButtonPresent = false;
