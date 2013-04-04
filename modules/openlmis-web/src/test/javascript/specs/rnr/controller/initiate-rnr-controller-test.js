@@ -64,7 +64,7 @@ describe('InitiateRnrController', function () {
     scope.initRnr();
     $httpBackend.flush();
 
-    expect(scope.error).toEqual("An R&R has not been submitted yet");
+    expect(scope.error).toEqual("Requisition not submitted yet");
   });
 
   it('should give error if rnr template has not been defined yet and user has create requisition permission', function () {
@@ -112,7 +112,7 @@ describe('InitiateRnrController', function () {
     scope.initRnr();
     $httpBackend.flush();
 
-    expect(scope.error).toEqual("An R&R has not been initiated yet");
+    expect(scope.error).toEqual("Requisition not initiated yet");
   });
 
   it('should set appropriate message for facility', function () {

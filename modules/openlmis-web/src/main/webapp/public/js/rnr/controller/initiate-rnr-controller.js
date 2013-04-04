@@ -171,13 +171,13 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
       Requisition.get({facilityId:$scope.selectedFacilityId, programId:$scope.selectedProgram.id, periodId:$scope.selectedPeriod.id}, {},
         function (data) {
           if ((data.rnr == null || data.rnr == undefined) && !hasPermission('CREATE_REQUISITION')) {
-            $scope.error = "An R&R has not been initiated yet";
+            $scope.error = "Requisition not initiated yet";
             return;
           }
 
           if (data.rnr) {
             if (data.rnr.status != 'SUBMITTED' && !hasPermission('CREATE_REQUISITION')) {
-              $scope.error = "An R&R has not been submitted yet";
+              $scope.error = "Requisition not submitted yet";
               return;
             }
             $scope.$parent.rnr = data.rnr;

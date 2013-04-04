@@ -345,6 +345,6 @@ public class HomePage extends Page {
 
   public void verifyErrorMessage() {
     testWebDriver.waitForElementToAppear(errorMsg);
-    SeleneseTestNgHelper.assertEquals(errorMsg.getText().trim(), "An R&R has not been initiated yet");
+    SeleneseTestNgHelper.assertEquals(errorMsg.getText().trim(), "Requisition not initiated yet");
   }
 }
