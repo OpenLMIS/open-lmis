@@ -3,6 +3,9 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.ignore.cell.background" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.white.page.background" value="false"/>
 	<parameter name="COUNTRY_NAME" class="java.lang.String"/>
 	<parameter name="REPORT_NAME" class="java.lang.String"/>
 	<parameter name="GENERATED_BY" class="java.lang.String"/>
@@ -11,7 +14,17 @@
 	<parameter name="REPORT_TITLE" class="java.lang.String"/>
 	<parameter name="LOGO" class="java.io.InputStream"/>
 	<queryString>
-		<![CDATA[]]>
+		<![CDATA[SELECT
+  facilities.code,
+  facilities.name as facilityName,
+  facility_types.name as facilityType,
+  facilities.active
+FROM
+  facilities,
+  facility_types
+WHERE
+  facilities.typeid = facility_types.id
+  order by facility_types.name,facilities.name;]]>
 	</queryString>
 	<field name="code" class="java.lang.String"/>
 	<field name="facilityName" class="java.lang.String"/>
@@ -44,33 +57,35 @@
 	<columnHeader>
 		<band height="20" splitType="Stretch">
 			<staticText>
-				<reportElement uuid="6f36c35a-7280-4d1d-b20b-892eaf2c89fe" mode="Opaque" x="0" y="1" width="555" height="19" forecolor="#FFFFFF" backcolor="#3D9297"/>
+				<reportElement uuid="6f36c35a-7280-4d1d-b20b-892eaf2c89fe" mode="Opaque" x="0" y="1" width="555" height="19" forecolor="#FFFFFF" backcolor="#3D9297">
+					<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
+				</reportElement>
 				<textElement/>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="1f78d274-e9f4-4d62-b6d4-d9db3212a9c3" mode="Transparent" x="72" y="0" width="102" height="20" forecolor="#FFFFFF" backcolor="#333333"/>
+				<reportElement uuid="1f78d274-e9f4-4d62-b6d4-d9db3212a9c3" mode="Transparent" x="72" y="0" width="102" height="20" forecolor="#000000" backcolor="#333333"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Code]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="0e6f48f2-b860-4f63-aa53-3d888c1eaca5" mode="Transparent" x="353" y="0" width="128" height="20" forecolor="#FFFFFF" backcolor="#333333"/>
+				<reportElement uuid="0e6f48f2-b860-4f63-aa53-3d888c1eaca5" mode="Transparent" x="353" y="0" width="128" height="20" forecolor="#000000" backcolor="#333333"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Facility Type]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="a86f9afe-5bd8-467a-aa88-22ef560410ab" mode="Transparent" x="174" y="0" width="179" height="20" forecolor="#FFFFFF" backcolor="#333333"/>
+				<reportElement uuid="a86f9afe-5bd8-467a-aa88-22ef560410ab" mode="Transparent" x="174" y="0" width="179" height="20" forecolor="#000000" backcolor="#333333"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Facility Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="5a3776c8-12a4-413e-bd87-8b3dcf05f7cc" mode="Transparent" x="0" y="0" width="72" height="20" forecolor="#FFFFFF" backcolor="#333333"/>
+				<reportElement uuid="5a3776c8-12a4-413e-bd87-8b3dcf05f7cc" mode="Transparent" x="0" y="0" width="72" height="20" forecolor="#000000" backcolor="#333333"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 					<paragraph leftIndent="2"/>
@@ -78,7 +93,7 @@
 				<text><![CDATA[Line#]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="ac75e98c-4dca-4ab8-a4e1-9228e189e1fd" mode="Transparent" x="481" y="0" width="73" height="20" forecolor="#FFFFFF" backcolor="#333333"/>
+				<reportElement uuid="ac75e98c-4dca-4ab8-a4e1-9228e189e1fd" mode="Transparent" x="481" y="0" width="73" height="20" forecolor="#000000" backcolor="#333333"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
@@ -142,14 +157,6 @@
 				</graphicElement>
 			</rectangle>
 			<textField>
-				<reportElement uuid="9eee9f50-8b32-49ed-a0a8-0d8d4eef0bcc" mode="Transparent" x="0" y="0" width="555" height="20" forecolor="#666666" backcolor="#FFFFFF"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<textFieldExpression><![CDATA['Page: '+$V{PAGE_NUMBER}+' of '+$V{PAGE_COUNT}]]></textFieldExpression>
-			</textField>
-			<textField>
 				<reportElement uuid="fb885345-3d71-4abc-b2b8-85477976830e" x="382" y="1" width="173" height="20" forecolor="#666666"/>
 				<textElement verticalAlignment="Middle">
 					<font size="10" isBold="false"/>
@@ -179,9 +186,19 @@
 				</textElement>
 				<textFieldExpression><![CDATA['Date: '+ new java.util.Date()]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement uuid="3c5793a8-b8b8-48f7-829b-0b1e0f3aa123" x="217" y="0" width="80" height="20" forecolor="#666666"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="bb584be1-3ae1-48f6-bba8-9e4bacbf4627" x="296" y="0" width="40" height="20" forecolor="#666666"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="39" splitType="Stretch"/>
+		<band height="38" splitType="Stretch"/>
 	</summary>
 </jasperReport>
