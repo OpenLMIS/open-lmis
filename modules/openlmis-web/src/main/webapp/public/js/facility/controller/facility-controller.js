@@ -6,14 +6,8 @@
 
 function FacilityController($scope, facilityReferenceData, $routeParams, $http, facility, Facility, $location, $dialog) {
 
-  function getFacilityWithDateObjects(facility) {
-    facility.goLiveDate = new Date(facility.goLiveDate);
-    facility.goDownDate = new Date(facility.goDownDate);
-    angular.forEach(facility.supportedPrograms, function (supportedProgram) {
-      supportedProgram.startDate = new Date(supportedProgram.startDate);
-    });
-    return facility;
-  }
+  $scope.message = "";
+  initialize();
 
   function initialize() {
     $scope.facilityTypes = facilityReferenceData.facilityTypes;
@@ -34,7 +28,21 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
     }
   }
 
-  $scope.message = "";
+  function getFacilityWithDateObjects(facility) {
+    angular.forEach(facility.supportedPrograms, function (supportedProgram) {
+      if (supportedProgram.startDate) {
+        supportedProgram.startDate = new Date(supportedProgram.startDate);
+      }
+    });
+
+    facility.goLiveDate = new Date(facility.goLiveDate);
+    if (facility.goDownDate) {
+      facility.goDownDate = new Date(facility.goDownDate);
+    }
+
+    return facility;
+  }
+
 
   $scope.saveFacility = function () {
     if ($scope.facilityForm.$error.pattern || $scope.facilityForm.$error.required) {
@@ -161,7 +169,6 @@ function FacilityController($scope, facilityReferenceData, $routeParams, $http, 
     $scope.programSupportedMessage = ($scope.programsToDisplay.length) ? '--Select Program Supported--' : '--No Program Left--';
   }
 
-  initialize();
 }
 
 var populateFlags = function ($scope) {

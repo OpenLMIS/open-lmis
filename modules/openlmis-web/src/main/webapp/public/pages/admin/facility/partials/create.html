@@ -222,7 +222,7 @@
           <td><input ng-model="supportedProgram.active" id="" type="checkbox" value="true"
                      ng-disabled="facility.dataReportable == 'false'"/></td>
           <td ng-init="supportedProgram.editedStartDate = supportedProgram.startDate">
-            <input type="text" value="{{supportedProgram.startDate | date: 'dd/MM/yy'}}"
+            <input type="text" value="{{supportedProgram.startDate | date: 'dd/MM/yyyy'}}"
                    ng-model="supportedProgram.editedStartDate"
                    readonly ng-disabled="facility.dataReportable == 'false'"
                    ui-date="{dateFormat:'dd/mm/yy', changeYear: true}" ng-required="supportedProgram.active == true"
