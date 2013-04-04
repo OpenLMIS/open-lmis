@@ -180,8 +180,9 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
         sortInfo: $scope.sortInfo,
         showColumnMenu: true,
         enableRowReordering: true,
-        showFilter: true
-        // plugins: [new ngGridCsvExportPlugin()]
+        showFilter: true,
+        plugins: [new ngGridFlexibleHeightPlugin()]
+        //plugins: [new ngGridCsvExportPlugin()]
     };
 
 }
