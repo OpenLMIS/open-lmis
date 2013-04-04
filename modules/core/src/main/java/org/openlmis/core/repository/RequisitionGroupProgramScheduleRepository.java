@@ -79,4 +79,9 @@ public class RequisitionGroupProgramScheduleRepository {
     List<Integer> scheduleIds = mapper.getScheduleIDsForRequisitionGroupAndProgram(requisitionGroupId, programId);
     return scheduleIds == null ? null : scheduleIds.get(0);
   }
+
+  public List<Integer> getProgramIDsForRequisitionGroup(Integer requisitionGroupId) {
+    return mapper.getProgramIDsById(requisitionGroupId);
+  }
+
 }

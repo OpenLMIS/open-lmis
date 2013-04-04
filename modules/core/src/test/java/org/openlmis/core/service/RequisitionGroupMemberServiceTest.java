@@ -7,30 +7,152 @@
 package org.openlmis.core.service;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.builder.RequisitionGroupBuilder;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.RequisitionGroupMember;
-import org.openlmis.core.repository.RequisitionGroupMemberRepository;
+import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.mockito.Mockito.verify;
-import static org.mockito.MockitoAnnotations.initMocks;
+import static org.mockito.Mockito.when;
+import static org.openlmis.core.builder.FacilityBuilder.FACILITY_CODE;
+import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
+import static org.openlmis.core.builder.ProgramBuilder.PROGRAM_CODE;
+import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
+import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
 
+@RunWith(MockitoJUnitRunner.class)
 public class RequisitionGroupMemberServiceTest {
 
-    @Mock
-    RequisitionGroupMemberRepository requisitionGroupMemberRepository;
+  RequisitionGroupMemberService service;
 
-    @Before
-    public void setUp() throws Exception {
-        initMocks(this);
-    }
+  public static final Integer RG_ID = 1;
+  public static final Integer FACILITY_ID = 100;
 
-    @Test
-    public void shouldSaveRGMember() throws Exception {
+  @Mock
+  RequisitionGroupMemberRepository requisitionGroupMemberRepository;
+  @Mock
+  FacilityRepository facilityRepository;
+  @Mock
+  RequisitionGroupRepository requisitionGroupRepository;
+  @Mock
+  RequisitionGroupProgramScheduleRepository requisitionGroupProgramScheduleRepository;
+  @Mock
+  ProgramRepository programRepository;
 
-        RequisitionGroupMember requisitionGroupMember = new RequisitionGroupMember();
-        new RequisitionGroupMemberService(requisitionGroupMemberRepository).save(requisitionGroupMember);
+  RequisitionGroup requisitionGroup;
+  RequisitionGroupMember requisitionGroupMember;
+  List<Integer> programIdList;
 
-        verify(requisitionGroupMemberRepository).insert(requisitionGroupMember);
-    }
+  @Rule
+  public ExpectedException expectedEx = ExpectedException.none();
+
+  @Before
+  public void setUp() throws Exception {
+    requisitionGroup = make(a(defaultRequisitionGroup));
+    requisitionGroup.setId(RG_ID);
+    Facility facility = make(a(defaultFacility));
+    facility.setId(FACILITY_ID);
+
+    requisitionGroupMember = new RequisitionGroupMember();
+    requisitionGroupMember.setRequisitionGroup(requisitionGroup);
+    requisitionGroupMember.setFacility(facility);
+
+    programIdList = new ArrayList<>();
+    programIdList.add(1);
+
+    service = new RequisitionGroupMemberService(requisitionGroupMemberRepository, facilityRepository,
+      requisitionGroupRepository, requisitionGroupProgramScheduleRepository, programRepository);
+  }
+
+  @Test
+  public void shouldSaveRGMember() throws Exception {
+    when(requisitionGroupRepository.getByCode(requisitionGroupMember.getRequisitionGroup())).thenReturn(requisitionGroup);
+    when(requisitionGroupProgramScheduleRepository.getProgramIDsForRequisitionGroup(requisitionGroupMember.getRequisitionGroup().getId())).thenReturn(programIdList);
+
+    service.save(requisitionGroupMember);
+
+    verify(requisitionGroupMemberRepository).insert(requisitionGroupMember);
+  }
+
+  @Test
+  public void shouldGiveErrorIfRGDoesNotExist() throws Exception {
+    RequisitionGroup requisitionGroupWithNullId = new RequisitionGroup();
+    requisitionGroupWithNullId.setId(null);
+
+    when(requisitionGroupRepository.getByCode(
+      requisitionGroupMember.getRequisitionGroup())).thenReturn(requisitionGroupWithNullId);
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("Requisition Group does not exist");
+
+    service.save(requisitionGroupMember);
+  }
+
+  @Test
+  public void shouldGiveErrorIfFacilityDoesNotExist() throws Exception {
+    when(requisitionGroupRepository.getByCode(requisitionGroupMember.getRequisitionGroup())).thenReturn(requisitionGroup);
+    when(facilityRepository.getIdForCode(requisitionGroupMember.getFacility().getCode())).thenThrow(new DataException("Invalid Facility Code"));
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("Invalid Facility Code");
+
+    service.save(requisitionGroupMember);
+  }
+
+  @Test
+  public void shouldGiveErrorIfNoProgramsMappedToRG() throws Exception {
+    when(requisitionGroupRepository.getByCode(requisitionGroupMember.getRequisitionGroup())).thenReturn(requisitionGroup);
+    when(facilityRepository.getIdForCode(requisitionGroupMember.getFacility().getCode())).thenReturn(FACILITY_ID);
+
+    when(requisitionGroupProgramScheduleRepository.getProgramIDsForRequisitionGroup(RG_ID)).thenReturn(new ArrayList<Integer>());
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("No Program(s) mapped for Requisition Group");
+
+    service.save(requisitionGroupMember);
+  }
+
+  @Test
+  public void shouldGiveErrorIfFacilityIsBeingMappedToAProgramWhichItIsAlreadyMappedTo() throws Exception {
+    when(requisitionGroupRepository.getByCode(requisitionGroupMember.getRequisitionGroup())).thenReturn(requisitionGroup);
+    when(facilityRepository.getIdForCode(requisitionGroupMember.getFacility().getCode())).thenReturn(FACILITY_ID);
+
+    ArrayList<Integer> programIdsForRequisitionGroup = new ArrayList<>();
+    Integer commonProgramId = 1;
+    programIdsForRequisitionGroup.add(commonProgramId);
+    programIdsForRequisitionGroup.add(2);
+    programIdsForRequisitionGroup.add(3);
+
+    when(requisitionGroupProgramScheduleRepository.getProgramIDsForRequisitionGroup(RG_ID)).thenReturn(programIdsForRequisitionGroup);
+
+    ArrayList<Integer> requisitionGroupProgramIdsForFacility = new ArrayList<>();
+    requisitionGroupProgramIdsForFacility.add(commonProgramId);
+    requisitionGroupProgramIdsForFacility.add(4);
+
+    when(requisitionGroupMemberRepository.getRequisitionGroupProgramIdsForId(FACILITY_ID)).thenReturn(requisitionGroupProgramIdsForFacility);
+
+    Program commonProgram = make(a(defaultProgram));
+    when(programRepository.getById(commonProgramId)).thenReturn(commonProgram);
+
+    RequisitionGroup rg = make(a(defaultRequisitionGroup, with(RequisitionGroupBuilder.code, "DCODE")));
+    when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(commonProgram, requisitionGroupMember.getFacility())).thenReturn(rg);
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("Facility " + FACILITY_CODE + " is already assigned to Requisition Group DCODE running same program " + PROGRAM_CODE);
+
+    service.save(requisitionGroupMember);
+  }
 }
