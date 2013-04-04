@@ -87,7 +87,7 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
         var key = scope[attrs.openlmisMessage] || attrs.openlmisMessage;
         var keyWithArgs = key.split("|");
         scope.$watch("[" + keyWithArgs.toString() + "]", function () {
-          var key = scope[keyWithArgs[0]] ||  keyWithArgs[0];
+          var key = scope[keyWithArgs[0]] || keyWithArgs[0];
           var displayMessage = messageService.get(key) || key;
           if (!isUndefined(keyWithArgs) && keyWithArgs.length > 1) {
             displayMessage = replaceArgs(scope, displayMessage, keyWithArgs);
@@ -125,8 +125,10 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
 
         if (!jQuery.support.placeholder) {
           var placeholder = function () {
-            ctrl.$modelValue = undefined;
-            ctrl.$viewValue = attr.placeholder;
+            if (ctrl.$modelValue != '') {
+              ctrl.$modelValue = undefined;
+              ctrl.$viewValue = attr.placeholder;
+            }
             ctrl.$render();
             element.css("color", "#a2a2a2");
           };
@@ -142,7 +144,7 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
           });
 
           element.bind('focus', function () {
-            if (value == '') unPlaceholder();
+            if (value == '' || (ctrl.$modelValue == undefined)) unPlaceholder();
           });
 
           element.bind('blur', function () {
@@ -260,19 +262,19 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
           var comment = {"commentText":scope.comment };
 
           var successHandler = function (data) {
-              scope.comment = "";
-              scope.rnrComments = data.comments;
+            scope.comment = "";
+            scope.rnrComments = data.comments;
 
-              setTimeout(function() {
-                  commentContainer.scrollTop = commentContainer.scrollHeight;
-              }, 0);
+            setTimeout(function () {
+              commentContainer.scrollTop = commentContainer.scrollHeight;
+            }, 0);
           };
 
           var errorHandler = function (data) {
             scope.error = data.error;
           }
 
-          RequisitionComment.save({id: $routeParams.rnr}, comment, successHandler, errorHandler);
+          RequisitionComment.save({id:$routeParams.rnr}, comment, successHandler, errorHandler);
 
         };
       },
