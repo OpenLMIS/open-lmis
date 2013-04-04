@@ -42,7 +42,7 @@
                openlmis-message="button.authorize"/>
         <input type="button" ng-click="showCommentBox=!showCommentBox" class="btn comments-button"
                value="Comments"/>
-        <comment-box show="showCommentBox" rnr-comments="rnr.comments" rnr-id="rnr.id"></comment-box>
+        <comment-box updatable="true" show="showCommentBox"></comment-box>
       </div>
       <div class="toolbar-error" id="saveFailMessage" openlmis-message="error" ng-show="error"></div>
       <div class="toolbar-error" id="submitFailMessage" openlmis-message="submitError" ng-show="submitError"></div>

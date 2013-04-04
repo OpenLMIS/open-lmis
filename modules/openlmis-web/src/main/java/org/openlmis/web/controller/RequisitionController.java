@@ -242,12 +242,13 @@ public class RequisitionController extends BaseController {
 
   @RequestMapping(value = "/requisitions/{id}/comments", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION')")
-  public void insertComment(@RequestBody Comment comment, @PathVariable("id") Integer id, HttpServletRequest request) {
+  public ResponseEntity<OpenLmisResponse> insertComment(@RequestBody Comment comment, @PathVariable("id") Integer id, HttpServletRequest request) {
     comment.setRnrId(id);
     User author = new User();
     author.setId(loggedInUserId(request));
     comment.setAuthor(author);
     requisitionService.insertComment(comment);
+    return OpenLmisResponse.response(COMMENTS, requisitionService.getCommentsByRnrId(id));
   }
 
   @RequestMapping(value = "/requisitions/{id}/comments", method = GET, headers = ACCEPT_JSON)

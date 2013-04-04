@@ -76,4 +76,30 @@ describe("Message Directive", function () {
     });
   });
 
+  describe("CommentBox", function () {
+
+    var routeParams, httpBackend,scope;
+    beforeEach(module('openlmis.services'));
+
+    beforeEach(inject(function ($compile, $rootScope, $routeParams, $httpBackend) {
+      scope = $rootScope.$new();
+      httpBackend = $httpBackend;
+      routeParams = $routeParams;
+      elm = angular.element('<comment-box updatable="true" show="showCommentBox"></comment-box>');
+      compile = $compile;
+    }));
+
+    it("should get comments for a Rnr", function () {
+      routeParams.rnrId = 1;
+      httpBackend.expect('GET', '/public/pages/template/comment-box.html').respond(200, "<div></div>");
+      httpBackend.expect('GET', '/requisitions/comments.json').respond(200,{"comments":[
+        {"id":1}
+      ]});
+
+      compile(elm)(scope);
+      httpBackend.flush();
+      scope.$digest();
+    })
+  })
+
 });

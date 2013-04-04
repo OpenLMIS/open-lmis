@@ -1,4 +1,4 @@
-<div ng-hide="!show" class="comments-popup">
+<div ng-hide="!show" class="comments-popup" ng-class="{'view': !updatable}">
   <h4>
     Comments
     <a ng-click="show=false" class="link-minimize">
@@ -9,14 +9,22 @@
   <ul class="comments-list" id="comments-list">
     <li class="comment" ng-repeat="comment in rnrComments">
       <span ng-bind="comment.commentText"></span>
-      <div class="comment-info"> By: <span  ng-bind="comment.author.userName"></span> | <span class="comment-date" ng-bind="comment.createdDate | date:'HH:mm:ss  dd/MM/yyyy'"></span></div>
+
+      <div class="comment-info"> By: <span ng-bind="comment.author.userName"></span> | <span class="comment-date"
+                                                                                             ng-bind="comment.createdDate | date:'HH:mm:ss  dd/MM/yyyy'"></span>
+      </div>
     </li>
   </ul>
-  <textarea ng-trim="false" ng-change="validateMaxLength(comment)" rows="5" id="addComment" ng-model="comment" placeholder="Type your comment here" ng-maxlength="250"/>
+  <div ng-show="updatable">
+    <textarea  ng-trim="false" ng-change="validateMaxLength(comment)" rows="5" id="addComment"
+              ng-model="comment" placeholder="Type your comment here"></textarea>
 
-  <div>
-    <span ng-bind="250-comment.length" class="comment-length"></span>
-    <input type="button" value="Add" ng-click="addComments()" ng-disabled="!comment.length" class="btn btn-primary pull-right"/>
+    <div>
+      <span ng-bind="250-comment.length" class="comment-length"></span>
+      <span ng-show="error" openlmis-message="error"></span>
+      <input type="button" value="Add" ng-click="addComments()" ng-disabled="!comment.length"
+             class="btn btn-primary pull-right"/>
+    </div>
   </div>
   <span class="beak-down"></span>
 </div>

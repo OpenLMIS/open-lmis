@@ -23,6 +23,12 @@
 
 <div form-toolbar id="action_buttons" class="action-buttons">
   <ng-include src="'/public/pages/logistics/rnr/partials/total-cost.html'"></ng-include>
+
+  <div class="form-cell button-row">
+    <input type="button" ng-click="showCommentBox=!showCommentBox" class="btn comments-button"
+           value="Comments"/>
+    <comment-box updatable="false" show="showCommentBox"></comment-box>
+  </div>
 </div>
 
 <div>

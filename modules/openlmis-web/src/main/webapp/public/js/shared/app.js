@@ -223,17 +223,20 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
 
       }
     };
-  }).directive('commentBox',function (RequisitionComment) {
+  }).directive('commentBox',function (RequisitionComment, $routeParams) {
     return {
       restrict: 'E',
       scope: {
-        rnrComments: '=',
-        rnrId: '=',
-        show: '='
+        show: '=',
+        updatable: '='
       },
       link: function (scope) {
 
         var commentContainer = document.getElementById('comments-list');
+
+        RequisitionComment.get({id: $routeParams.rnr}, function (data) {
+          scope.rnrComments = data.comments;
+        }, {});
 
         angular.element(document).keyup(function (e) {
           if (e.which == 27) {
@@ -242,10 +245,9 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
           scope.$apply();
         });
 
-        scope.$watch("comment", function (newValue, previous) {
-          if (scope.comment == undefined) {
-            scope.comment = previous;
-          }
+        scope.$watch("comment", function () {
+          if (scope.comment == undefined) return;
+          scope.comment = scope.comment.substring(0, 250);
         });
 
         scope.addComments = function () {
@@ -253,21 +255,19 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
           var comment = {"commentText": scope.comment };
 
           var successHandler = function () {
-            RequisitionComment.get({id: scope.rnrId}, function (data) {
               scope.comment = "";
               scope.rnrComments = data.comments;
 
               setTimeout(function() {
                   commentContainer.scrollTop = commentContainer.scrollHeight;
               }, 0);
-            })
           };
 
-          var errorHandler = function () {
-
+          var errorHandler = function (data) {
+            scope.error = data.error;
           }
 
-          RequisitionComment.save({id: scope.rnrId}, comment, successHandler, errorHandler);
+          RequisitionComment.save({id: $routeParams.rnr}, comment, successHandler, errorHandler);
 
         };
       },

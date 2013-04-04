@@ -369,10 +369,14 @@ public class RequisitionControllerTest {
   @Test
   public void shouldInsertComment() throws Exception {
     Comment comment = new Comment();
-    controller.insertComment(comment, rnr.getId(), request);
+    List comments = new ArrayList();
+    comments.add(comment);
+    when(requisitionService.getCommentsByRnrId(rnr.getId())).thenReturn(comments);
+
+    ResponseEntity<OpenLmisResponse> response = controller.insertComment(comment, rnr.getId(), request);
 
     verify(requisitionService).insertComment(comment);
-
+    assertThat((List) response.getBody().getData().get(COMMENTS), is(comments));
     assertThat(comment.getRnrId(), is(rnr.getId()));
     assertThat(comment.getAuthor().getId(), is(USER_ID));
   }

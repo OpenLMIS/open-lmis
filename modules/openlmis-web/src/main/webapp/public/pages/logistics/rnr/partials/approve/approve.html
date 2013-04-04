@@ -31,9 +31,13 @@
     <div class="form-cell button-row">
       <input type="button" value="Save" ng-click="saveRnr()" class="btn btn-primary save-button"/>
       <input type="button" ng-click="approveRnr()" class="btn btn-success submit-button" value="Approve"/>
+
+      <div class="toolbar-error" id="saveFailMessage" openlmis-message="error" ng-show="error"></div>
+      <div class="toolbar-success" id="saveSuccessMsgDiv" ng-show="message" ng-bind="message"></div>
+      <input type="button" ng-click="showCommentBox=!showCommentBox" class="btn comments-button"
+             value="Comments"/>
+      <comment-box updatable="true" show="showCommentBox"></comment-box>
     </div>
-    <div class="toolbar-error" id="saveFailMessage" openlmis-message="error" ng-show="error"></div>
-    <div class="toolbar-success" id="saveSuccessMsgDiv" ng-show="message" ng-bind="message"></div>
   </div>
 </form>
 <div>
