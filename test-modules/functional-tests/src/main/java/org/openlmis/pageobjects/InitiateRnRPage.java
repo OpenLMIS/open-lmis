@@ -226,9 +226,17 @@ public class InitiateRnRPage extends Page {
   @FindBy(how = XPATH, using = "//div[@openlmis-message='error']")
   private static WebElement configureTemplateErrorDiv;
 
+  @FindBy(how = XPATH , using = "//input[@value='Comments']")
+  private static WebElement commentsButton;
+
   String successText = "R&R saved successfully!";
   Float actualTotalCostFullSupply, actualTotalCostNonFullSupply;
 
+  @FindBy(how = ID, using = "addComment")
+  private static WebElement addCommentTextArea;
+
+  @FindBy(how = ID, using = "addButton")
+  private static WebElement addCommentButton;
 
   public InitiateRnRPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -350,6 +358,7 @@ public class InitiateRnRPage extends Page {
   }
 
   public void PopulateMandatoryFullSupplyDetails(int numberOfLineItems, int numberOfLineItemsPerPage) {
+      addComments("Dummy Comments.");
     int numberOfPages = numberOfLineItems / numberOfLineItemsPerPage;
     if (numberOfLineItems % numberOfLineItemsPerPage != 0) {
       numberOfPages = numberOfPages + 1;
@@ -652,6 +661,13 @@ public class InitiateRnRPage extends Page {
       authorizeButtonPresent = false;
     }
     assertFalse(authorizeButtonPresent);
+  }
+
+  public void addComments(String comments) {
+      commentsButton.click();
+      addCommentTextArea.sendKeys(comments);
+      System.out.println(addCommentButton);
+      addCommentButton.click();
   }
 
   public void verifyApproveButtonNotPresent() {
