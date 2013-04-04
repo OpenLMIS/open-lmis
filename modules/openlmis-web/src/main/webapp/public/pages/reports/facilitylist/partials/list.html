@@ -10,13 +10,14 @@
                         <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize pull-right"><i class="icon-chevron-up"></i></a>
                     </div>
                 </div>
-            <div class="box-content" ng-show="show(1)">
-                <div class="hero-unit" style="padding: 10px;">
-                        <h4>Facility List Filters</h4>
-                        <form ng-submit="filterGrid()" name="filterForm" novalidate>
-                            <div class="form-row clearfix">
+            <div class="box-content">
+                <div class="hero-unit app-form" style="padding: 10px;">
+                        <h5 class="filter-text">Facility List Filters</h5>
+                       <!-- <hr/>-->
+                        <form ng-submit="filterGrid()" ng-show="show(1)" name="filterForm" novalidate>
+                            <div class="form-row clearfix ">
                                 <div class="form-cell horizontalFilters">
-                                    <label>Zone</label>
+                                    <label class="labels">Zone</label>
 
                                     <div class="form-field">
                                         <select ng-required="true" name="zone" ng-model="zone.value" ng-options="option.id as option.name for option in zones">
@@ -25,7 +26,7 @@
                                     </div>
                                 </div>
                                 <div class="form-cell horizontalFilters" >
-                                    <label>Facility Type</label>
+                                    <label class="labels">Facility Type</label>
 
                                     <div class="form-field">
                                         <select name="facilityType" ng-model="facilityType.value" ng-options="option.id as option.name for option in facilityTypes">
@@ -34,7 +35,7 @@
                                     </div>
                                 </div>
                                 <div class="form-cell horizontalFilters">
-                                    <label>Status</label>
+                                    <label class="labels">Status</label>
 
                                     <div class="form-field">
                                         <select name="status" ng-model="status.value" ng-options="option.value as option.name for option in statuses">
@@ -42,13 +43,13 @@
                                         </select>
                                     </div>
                                  </div>
-                            </div>
+
 
                                 <div class="form-cell button-row horizontalFilter">
                                     <input type="submit" class="btn btn-primary save-button pull-right" value="Filter"/>
                                 </div>
 
-
+                            </div>
                          </form>
                 </div>
             </div>
@@ -60,9 +61,7 @@
                   <a href="/reports/download/facilities/xls" class='btn-small btn-info'>xls</a>
              </div>
          </div>
-
                 <div class="gridStyle" ng-grid="gridOptions"></div>
-
    </div>
   </div>
 <!-- <div>
