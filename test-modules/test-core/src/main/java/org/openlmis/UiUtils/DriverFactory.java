@@ -88,6 +88,7 @@ public class DriverFactory {
 
   private WebDriver createFirefoxDriver(boolean enableJavascript) {
     FirefoxProfile profile = new FirefoxProfile();
+    profile.setAcceptUntrustedCertificates(true);
     profile.setPreference("signed.applets.codebase_principal_support", true);
     profile.setPreference("javascript.enabled", enableJavascript);
     return new FirefoxDriver(profile);

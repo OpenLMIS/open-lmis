@@ -36,13 +36,13 @@
     <beans:bean id="openLmisAccessDeniedHandler" class="org.openlmis.authentication.web.OpenLmisAccessDeniedHandler"/>
 
     <http use-expressions="true" auto-config="false" entry-point-ref="restAuthenticationEntryPoint">
-        <intercept-url pattern="/favicon.ico" access="permitAll" />
-        <intercept-url pattern="/public/**" access="permitAll" requires-channel="http"/>
-        <intercept-url pattern="/forgot-password*" access="permitAll" requires-channel="http"/>
-        <intercept-url pattern="/user/validatePasswordResetToken/*" access="permitAll" requires-channel="http"/>
-        <intercept-url pattern="/user/resetPassword/*" access="permitAll" requires-channel="http"/>
-        <intercept-url pattern="/**" access="isAuthenticated()" requires-channel="http"/>
-
+        <intercept-url pattern="/j_spring_security_check" access="IS_AUTHENTICATED_ANONYMOUSLY" requires-channel="https"/>
+        <intercept-url pattern="/favicon.ico" access="permitAll" requires-channel="https"/>
+        <intercept-url pattern="/public/**" access="permitAll" requires-channel="https"/>
+        <intercept-url pattern="/forgot-password*" access="permitAll" requires-channel="https"/>
+        <intercept-url pattern="/user/validatePasswordResetToken/*" access="permitAll" requires-channel="https"/>
+        <intercept-url pattern="/user/resetPassword/*" access="permitAll" requires-channel="https"/>
+        <intercept-url pattern="/**" access="isAuthenticated()" requires-channel="https"/>
 
         <form-login login-page="/public/pages/login.html"
                     login-processing-url="/j_spring_security_check"
