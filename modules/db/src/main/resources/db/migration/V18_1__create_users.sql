@@ -12,16 +12,22 @@ CREATE TABLE users (
   primaryNotificationMethod VARCHAR(50),
   officePhone VARCHAR(30),
   cellPhone VARCHAR(30),
-  email VARCHAR(50) NOT NULL,
+  email VARCHAR(50),
   supervisorId INTEGER references users(id),
   facilityId INT REFERENCES facilities(id),
   active BOOLEAN DEFAULT FALSE,
+  vendorId INTEGER references vendors(id),
   modifiedBy INTEGER,
   modifiedDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
   createdBy INTEGER,
-  createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
+  createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
+
+  constraint email_not_null check
+    (
+      vendorId IS NULL AND email IS NOT NULL
+    )
 );
 
-CREATE UNIQUE INDEX uc_users_userName ON users(LOWER(userName));
+CREATE UNIQUE INDEX uc_users_userName_vendor ON users(LOWER(userName), vendorId);
 CREATE UNIQUE INDEX uc_users_email ON users(LOWER(email));
 CREATE UNIQUE INDEX uc_users_employeeId ON users(LOWER(employeeId));
