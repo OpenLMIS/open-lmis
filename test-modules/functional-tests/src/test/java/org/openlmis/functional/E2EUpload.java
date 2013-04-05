@@ -14,6 +14,9 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,51 +45,218 @@ public class E2EUpload extends TestCaseHelper {
     rolesPage.createRole("User", "User", userRoleList, true);
 
     UploadPage uploadPage = homePage.navigateUploads();
-    uploadPage.uploadAndVerifyInvalidUserScenarios();
-    uploadPage.uploadAndVerifyUsers(2);
+    verifyInValidUserUpload(uploadPage);
+    verifyValidUserUpload(uploadPage);
+
     String userName = "User123";
     String userId = "200";
     dbWrapper.alterUserID(userName, userId);
     dbWrapper.insertRoleAssignment(userId, "User");
 
-    uploadPage.uploadProductCategory(1);
+    verifyValidProductCategoryUpload(uploadPage);
 
-    uploadPage.uploadAndVerifyProductsInvalidScenarios();
-    uploadPage.uploadAndVerifyProducts(2);
+    verifyInValidProductUpload(uploadPage);
+    verifyValidProductUpload(uploadPage);
 
-    uploadPage.uploadAndVerifyProgramProductMappingInvalidScenarios();
-    uploadPage.uploadAndVerifyProgramProductMapping(2);
+    verifyInvalidProgramProductMappingUpload(uploadPage);
 
-    uploadPage.uploadProgramProductPrice(1);
+    verifyValidProgramProductMappingUpload(uploadPage);
 
-    uploadPage.uploadGeographicZoneInvalid();
-    uploadPage.uploadAndVerifyGeographicZone(2);
+    verifyValidProductPriceUpload(uploadPage);
 
-    uploadPage.uploadFacilitiesNotAssignedToLowestGeoCode();
-    uploadPage.uploadAndVerifyFacilitiesInvalidScenarios();
-    uploadPage.uploadAndVerifyFacilities(2);
+    verifyInvalidGeographicZoneUpload(uploadPage);
 
-    uploadPage.uploadAndVerifyFacilityTypeToProductMappingInvalidScenarios();
-    uploadPage.uploadAndVerifyFacilityTypeToProductMapping(2);
+    verifyValidGeographicZoneUpload(uploadPage);
+
+    verifyInvalidFacilityUpload(uploadPage);
+
+    verifyValidFacilityUpload(uploadPage);
+
+    verifyInvalidFacilityTypeToProductMappingUpload(uploadPage);
+
+    verifyValidFacilityTypeToProductMappingUpload(uploadPage);
     dbWrapper.allocateFacilityToUser(userId, "F10");
 
-    uploadPage.uploadProgramSupportedByFacilitiesInvalidScenarios();
-    uploadPage.uploadProgramSupportedByFacilities(2);
+    verifyInvalidProgramSupportedByFacilitiesUpload(uploadPage);
 
-    uploadPage.uploadAndVerifySupervisoryNodes(1);
+    verifyValidProgramSupportedByFacilitiesUpload(uploadPage);
 
-    uploadPage.uploadAndVerifyRequisitionGroup(1);
+    verifyValidSupervisoryNodesUpload(uploadPage);
+
+    verifyValidRequisitionGroupUpload(uploadPage);
 
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
     dbWrapper.insertSchedule("M", "Monthly", "Month");
     dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
     dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
 
-    uploadPage.uploadAndVerifyRequisitionGroupProgramSchedule(1);
+    verifyValidRequisitionGroupProgramScheduleUpload(uploadPage);
 
-    uploadPage.uploadAndVerifyRequisitionGroupMembers(1);
+    verifyValidRequisitionGroupMembersUpload(uploadPage);
 
-    uploadPage.uploadAndVerifySupplyLines(1);
+    verifyValidSupplyLinesUpload(uploadPage);
+  }
+
+  private void verifyValidSupplyLinesUpload(UploadPage uploadPage) throws FileNotFoundException {
+    uploadPage.uploadSupplyLines("QA_Supply_Lines.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.uploadSupplyLines("QA_Supply_Lines_Subsequent.csv");
+//    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.verifyErrorMessageOnUploadScreen();
+  }
+
+  private void verifyValidRequisitionGroupMembersUpload(UploadPage uploadPage) throws FileNotFoundException {
+    uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_Subsequent.csv");
+//    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.verifyErrorMessageOnUploadScreen();
+  }
+
+  private void verifyValidRequisitionGroupProgramScheduleUpload(UploadPage uploadPage) throws FileNotFoundException {
+    uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_Subsequent.csv");
+//    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.verifyErrorMessageOnUploadScreen();
+  }
+
+  private void verifyValidRequisitionGroupUpload(UploadPage uploadPage) throws FileNotFoundException {
+    uploadPage.uploadRequisitionGroup("QA_Requisition_Groups.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.uploadRequisitionGroup("QA_Requisition_Groups_Subsequent.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
+  }
+
+  private void verifyValidSupervisoryNodesUpload(UploadPage uploadPage) throws FileNotFoundException {
+    uploadPage.uploadSupervisoryNodes("QA_Supervisory_Nodes.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.uploadSupervisoryNodes("QA_Supervisory_Nodes_Subsequent.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
+  }
+
+  private void verifyValidProgramSupportedByFacilitiesUpload(UploadPage uploadPage) throws FileNotFoundException {
+    uploadPage.uploadProgramSupportedByFacilities("QA_program_supported.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.uploadProgramSupportedByFacilities("QA_program_supported_Subsequent.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
+  }
+
+  private void verifyInvalidProgramSupportedByFacilitiesUpload(UploadPage uploadPage) throws FileNotFoundException {
+    uploadPage.uploadProgramSupportedByFacilitiesInvalidScenarios("QA_program_supported_Invalid_FacilityCode.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadProgramSupportedByFacilitiesInvalidScenarios("QA_program_supported_Invalid_ProgramCode.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+  }
+
+  private void verifyValidFacilityTypeToProductMappingUpload(UploadPage uploadPage) throws IOException, SQLException {
+    uploadPage.uploadFacilityTypeToProductMapping("QA_Facility_Type_To_Product_Mapping.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.uploadFacilityTypeToProductMapping("QA_Facility_Type_To_Product_Mapping_Subsequent.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
+  }
+
+  private void verifyInvalidFacilityTypeToProductMappingUpload(UploadPage uploadPage) throws FileNotFoundException {
+    uploadPage.uploadFacilityTypeToProductMappingInvalidScenarios("QA_Facility_Type_To_Product_Mapping_Invalid_Combination.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadFacilityTypeToProductMappingInvalidScenarios("QA_Facility_Type_To_Product_Mapping_Invalid_FacilityType.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadFacilityTypeToProductMappingInvalidScenarios("QA_Facility_Type_To_Product_Mapping_Invalid_ProductCode.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadFacilityTypeToProductMappingInvalidScenarios("QA_Facility_Type_To_Product_Mapping_Invalid_ProgramCode.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadFacilityTypeToProductMappingInvalidScenarios("QA_Facility_Type_To_Product_Mapping_Invalid_Program_Product_Combination.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+  }
+
+  private void verifyValidFacilityUpload(UploadPage uploadPage) throws FileNotFoundException {
+    uploadPage.uploadFacilities("QA_facilities.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.uploadFacilities("QA_facilities_Subsequent.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
+  }
+
+  private void verifyInvalidFacilityUpload(UploadPage uploadPage) throws FileNotFoundException {
+    uploadPage.uploadFacilitiesInvalidScenarios("QA_facilities_Lowest_Code.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadFacilitiesInvalidScenarios("QA_facilities_Duplicate_Code.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+  }
+
+  private void verifyValidGeographicZoneUpload(UploadPage uploadPage) throws FileNotFoundException {
+    uploadPage.uploadAndVerifyGeographicZone("QA_Geographic_Data.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.uploadAndVerifyGeographicZone("QA_Geographic_Data_Subsequent.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
+  }
+
+  private void verifyInvalidGeographicZoneUpload(UploadPage uploadPage) throws FileNotFoundException {
+    uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Invalid.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Duplicate.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Invalid_Code.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+  }
+
+  private void verifyValidProductPriceUpload(UploadPage uploadPage) throws FileNotFoundException {
+    uploadPage.uploadProgramProductPrice("QA_Product_Cost.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.uploadProgramProductPrice("QA_Product_Cost_Subsequent.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
+  }
+
+  private void verifyValidProgramProductMappingUpload(UploadPage uploadPage) throws FileNotFoundException {
+    uploadPage.uploadProgramProductMapping("QA_program_product.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.uploadProgramProductMapping("QA_program_product_Subsequent.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
+  }
+
+  private void verifyInvalidProgramProductMappingUpload(UploadPage uploadPage) throws FileNotFoundException {
+    uploadPage.uploadProgramProductMappingInvalidScenarios("QA_program_product_Invalid_ProductCode.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadProgramProductMappingInvalidScenarios("QA_program_product_Invalid_ProgramCode.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+  }
+
+
+  private void verifyValidUserUpload(UploadPage uploadPage) throws FileNotFoundException {
+    uploadPage.uploadUsers("QA_Users.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.uploadUsers("QA_Users_Subsequent.csv");
+    //uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.verifyErrorMessageOnUploadScreen();
+  }
+
+  private void verifyInValidUserUpload(UploadPage uploadPage) throws FileNotFoundException {
+    uploadPage.uploadInvalidUserScenarios("QA_Users_Duplicate_Email.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadInvalidUserScenarios("QA_Users_Duplicate_EmployeeId.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadInvalidUserScenarios("QA_Users_Duplicate_UserName.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadInvalidUserScenarios("QA_Users_Invalid_Supervisor.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+  }
+
+  private void verifyValidProductCategoryUpload(UploadPage uploadPage) throws FileNotFoundException {
+    uploadPage.uploadProductCategory("QA_Productcategoryupload.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.uploadProductCategory("QA_Productcategoryupload_Subsequent.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
+  }
+
+  private void verifyInValidProductUpload(UploadPage uploadPage) throws FileNotFoundException {
+    uploadPage.uploadProductsInvalidScenarios("QA_products_Duplicate_Code.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+  }
+
+  private void verifyValidProductUpload(UploadPage uploadPage) throws FileNotFoundException {
+    uploadPage.uploadProducts("QA_products.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.uploadProducts("QA_products_Subsequent.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
   @AfterMethod(groups = {"functional"})

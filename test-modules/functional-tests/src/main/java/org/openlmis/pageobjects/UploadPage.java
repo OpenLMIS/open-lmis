@@ -77,221 +77,139 @@ public class UploadPage extends Page {
     testWebDriver.setImplicitWait(implicitWait);
   }
 
-  private void verifyErrorMessageOnUploadScreen() {
+  public void verifyErrorMessageOnUploadScreen() {
     testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
     SeleneseTestNgHelper.assertTrue("Error Message Not Displayed", saveErrorMsgDiv.isDisplayed());
     testWebDriver.setImplicitWait(implicitWait);
   }
 
-  public void uploadAndVerifyGeographicZone(int noOfRuns) throws FileNotFoundException {
-    for (int i = 1; i <= noOfRuns; i++) {
-      selectUploadType("Geographic Zones");
-      uploadFile("QA_Geographic_Data.csv");
-      verifySuccessMessageOnUploadScreen();
-    }
-
+  public void uploadAndVerifyGeographicZone(String uploadFileNameWithExtension) throws FileNotFoundException {
+    selectUploadType("Geographic Zones");
+    uploadFile(uploadFileNameWithExtension);
+    testWebDriver.sleep(250);
   }
 
-  public void uploadGeographicZoneInvalid() throws FileNotFoundException {
+  public void uploadGeographicZoneInvalidScenarios(String uploadFileNameWithExtension) throws FileNotFoundException {
     selectUploadType("Geographic Zones");
-    uploadFile("QA_Geographic_Data_Invalid.csv");
-    verifyErrorMessageOnUploadScreen();
-    testWebDriver.sleep(500);
-    selectUploadType("Geographic Zones");
-    uploadFile("QA_Geographic_Data_Duplicate.csv");
-    verifyErrorMessageOnUploadScreen();
-    testWebDriver.sleep(500);
-    selectUploadType("Geographic Zones");
-    uploadFile("QA_Geographic_Data_Invalid_Code.csv");
-    verifyErrorMessageOnUploadScreen();
-    testWebDriver.sleep(500);
+    uploadFile(uploadFileNameWithExtension);
+    testWebDriver.sleep(250);
   }
 
-  public void uploadFacilitiesNotAssignedToLowestGeoCode() throws FileNotFoundException {
+
+  public void uploadFacilities(String uploadFileNameWithExtension) throws FileNotFoundException {
     selectUploadType("Facilities");
-    uploadFile("QA_facilities_Lowest_Code.csv");
-    verifyErrorMessageOnUploadScreen();
-    testWebDriver.sleep(500);
+    uploadFile(uploadFileNameWithExtension);
+    testWebDriver.sleep(250);
   }
 
-  public void uploadAndVerifyFacilities(int noOfRuns) throws FileNotFoundException {
-    for (int i = 1; i <= noOfRuns; i++) {
-      selectUploadType("Facilities");
-      uploadFile("QA_facilities.csv");
-      verifySuccessMessageOnUploadScreen();
-    }
-  }
-
-  public void uploadAndVerifyFacilitiesInvalidScenarios() throws FileNotFoundException {
+  public void uploadFacilitiesInvalidScenarios(String uploadFileNameWithExtension) throws FileNotFoundException {
     selectUploadType("Facilities");
-    uploadFile("QA_facilities_Duplicate_Code.csv");
-    verifyErrorMessageOnUploadScreen();
+    uploadFile(uploadFileNameWithExtension);
+    testWebDriver.sleep(250);
   }
 
 
-  public void uploadAndVerifyProducts(int noOfRuns) throws FileNotFoundException {
-    for (int i = 1; i <= noOfRuns; i++) {
-      selectUploadType("Products");
-      uploadFile("QA_products.csv");
-      verifySuccessMessageOnUploadScreen();
-    }
-  }
-
-  public void uploadAndVerifyProductsInvalidScenarios() throws FileNotFoundException {
+  public void uploadProducts(String uploadFileNameWithExtension) throws FileNotFoundException {
     selectUploadType("Products");
-    uploadFile("QA_products_Duplicate_Code.csv");
-    verifyErrorMessageOnUploadScreen();
+    uploadFile(uploadFileNameWithExtension);
+    testWebDriver.sleep(250);
   }
 
-  public void uploadProductCategory(int noOfRuns) throws FileNotFoundException {
-    for (int i = 1; i <= noOfRuns; i++) {
-      selectUploadType("Product Category");
-      uploadFile("QA_Productcategoryupload.csv");
-      verifySuccessMessageOnUploadScreen();
-    }
+  public void uploadProductsInvalidScenarios(String uploadFileNameWithExtension) throws FileNotFoundException {
+    selectUploadType("Products");
+    uploadFile(uploadFileNameWithExtension);
+    testWebDriver.sleep(250);
   }
 
-  public void uploadAndVerifyUsers(int noOfRuns) throws FileNotFoundException {
-    for (int i = 1; i <= noOfRuns; i++) {
-      selectUploadType("Users");
-      uploadFile("QA_Users.csv");
-      verifySuccessMessageOnUploadScreen();
-    }
+  public void uploadProductCategory(String uploadFileNameWithExtension) throws FileNotFoundException {
+    selectUploadType("Product Category");
+    uploadFile(uploadFileNameWithExtension);
+    testWebDriver.sleep(250);
   }
 
-  public void uploadAndVerifyInvalidUserScenarios() throws FileNotFoundException {
+  public void uploadUsers(String uploadFileNameWithExtension) throws FileNotFoundException {
     selectUploadType("Users");
-    uploadFile("QA_Users_Duplicate_Email.csv");
-    verifyErrorMessageOnUploadScreen();
+    uploadFile(uploadFileNameWithExtension);
     testWebDriver.sleep(250);
+  }
+
+  public void uploadInvalidUserScenarios(String uploadFileNameWithExtension) throws FileNotFoundException {
     selectUploadType("Users");
-    uploadFile("QA_Users_Duplicate_EmployeeId.csv");
-    verifyErrorMessageOnUploadScreen();
-    testWebDriver.sleep(250);
-    selectUploadType("Users");
-    uploadFile("QA_Users_Duplicate_UserName.csv");
-    verifyErrorMessageOnUploadScreen();
-    testWebDriver.sleep(250);
-    selectUploadType("Users");
-    uploadFile("QA_Users_Invalid_Supervisor.csv");
+    uploadFile(uploadFileNameWithExtension);
     verifyErrorMessageOnUploadScreen();
     testWebDriver.sleep(250);
   }
 
-  public void uploadAndVerifyProgramProductMapping(int noOfRuns) throws FileNotFoundException {
-    for (int i = 1; i <= noOfRuns; i++) {
-      selectUploadType("Program Product");
-      uploadFile("QA_program_product.csv");
-      verifySuccessMessageOnUploadScreen();
-    }
-  }
-
-  public void uploadAndVerifyProgramProductMappingInvalidScenarios() throws FileNotFoundException {
+  public void uploadProgramProductMapping(String uploadFileNameWithExtension) throws FileNotFoundException {
     selectUploadType("Program Product");
-    uploadFile("QA_program_product_Invalid_ProductCode.csv");
-    verifyErrorMessageOnUploadScreen();
+    uploadFile(uploadFileNameWithExtension);
     testWebDriver.sleep(250);
+  }
+
+  public void uploadProgramProductMappingInvalidScenarios(String uploadFileNameWithExtension) throws FileNotFoundException {
     selectUploadType("Program Product");
-    uploadFile("QA_program_product_Invalid_ProgramCode.csv");
-    verifyErrorMessageOnUploadScreen();
+    uploadFile(uploadFileNameWithExtension);
     testWebDriver.sleep(250);
   }
 
-  public void uploadProgramProductPrice(int noOfRuns) throws FileNotFoundException {
-    for (int i = 1; i <= noOfRuns; i++) {
-      selectUploadType("Product Prices per Program");
-      uploadFile("QA_Product_Cost.csv");
-      verifySuccessMessageOnUploadScreen();
-    }
+  public void uploadProgramProductPrice(String uploadFileNameWithExtension) throws FileNotFoundException {
+    selectUploadType("Product Prices per Program");
+    uploadFile(uploadFileNameWithExtension);
+    testWebDriver.sleep(250);
   }
 
-  public void uploadProgramSupportedByFacilities(int noOfRuns) throws FileNotFoundException {
-    for (int i = 1; i <= noOfRuns; i++) {
-      selectUploadType("Programs supported by facilities");
-      uploadFile("QA_program_supported.csv");
-      verifySuccessMessageOnUploadScreen();
-    }
-  }
-
-  public void uploadProgramSupportedByFacilitiesInvalidScenarios() throws FileNotFoundException {
+  public void uploadProgramSupportedByFacilities(String uploadFileNameWithExtension) throws FileNotFoundException {
     selectUploadType("Programs supported by facilities");
-    uploadFile("QA_program_supported_Invalid_FacilityCode.csv");
-    verifyErrorMessageOnUploadScreen();
+    uploadFile(uploadFileNameWithExtension);
     testWebDriver.sleep(250);
+  }
+
+  public void uploadProgramSupportedByFacilitiesInvalidScenarios(String uploadFileNameWithExtension) throws FileNotFoundException {
     selectUploadType("Programs supported by facilities");
-    uploadFile("QA_program_supported_Invalid_ProgramCode.csv");
-    verifyErrorMessageOnUploadScreen();
+    uploadFile(uploadFileNameWithExtension);
     testWebDriver.sleep(250);
   }
 
-  public void uploadAndVerifyFacilityTypeToProductMapping(int noOfRuns) throws FileNotFoundException {
-    for (int i = 1; i <= noOfRuns; i++) {
-      selectUploadType("Facility Approved Products");
-      uploadFile("QA_Facility_Type_To_Product_Mapping.csv");
-      verifySuccessMessageOnUploadScreen();
-    }
-  }
-
-  public void uploadAndVerifyFacilityTypeToProductMappingInvalidScenarios() throws FileNotFoundException {
+  public void uploadFacilityTypeToProductMapping(String uploadFileNameWithExtension) throws FileNotFoundException {
     selectUploadType("Facility Approved Products");
-    uploadFile("QA_Facility_Type_To_Product_Mapping_Invalid_Combination.csv");
-    verifyErrorMessageOnUploadScreen();
+    uploadFile(uploadFileNameWithExtension);
     testWebDriver.sleep(250);
+  }
+
+  public void uploadFacilityTypeToProductMappingInvalidScenarios(String uploadFileNameWithExtension) throws FileNotFoundException {
     selectUploadType("Facility Approved Products");
-    uploadFile("QA_Facility_Type_To_Product_Mapping_Invalid_FacilityType.csv");
-    verifyErrorMessageOnUploadScreen();
-    testWebDriver.sleep(250);
-    selectUploadType("Facility Approved Products");
-    uploadFile("QA_Facility_Type_To_Product_Mapping_Invalid_ProductCode.csv");
-    verifyErrorMessageOnUploadScreen();
-    testWebDriver.sleep(250);
-    selectUploadType("Facility Approved Products");
-    uploadFile("QA_Facility_Type_To_Product_Mapping_Invalid_ProgramCode.csv");
-    verifyErrorMessageOnUploadScreen();
-    testWebDriver.sleep(250);
-    uploadFile("QA_Facility_Type_To_Product_Mapping_Invalid_Program_Product_Combination.csv");
-    verifyErrorMessageOnUploadScreen();
+    uploadFile(uploadFileNameWithExtension);
     testWebDriver.sleep(250);
   }
 
-  public void uploadAndVerifySupervisoryNodes(int noOfRuns) throws FileNotFoundException {
-    for (int i = 1; i <= noOfRuns; i++) {
-      selectUploadType("Supervisory Nodes");
-      uploadFile("QA_Supervisory_Nodes.csv");
-      verifySuccessMessageOnUploadScreen();
-    }
+  public void uploadSupervisoryNodes(String uploadFileNameWithExtension) throws FileNotFoundException {
+    selectUploadType("Supervisory Nodes");
+    uploadFile(uploadFileNameWithExtension);
+    testWebDriver.sleep(250);
   }
 
-  public void uploadAndVerifyRequisitionGroup(int noOfRuns) throws FileNotFoundException {
-    for (int i = 1; i <= noOfRuns; i++) {
-      selectUploadType("Requisition Groups");
-      uploadFile("QA_Requisition_Groups.csv");
-      verifySuccessMessageOnUploadScreen();
-    }
+  public void uploadRequisitionGroup(String uploadFileNameWithExtension) throws FileNotFoundException {
+    selectUploadType("Requisition Groups");
+    uploadFile(uploadFileNameWithExtension);
+    testWebDriver.sleep(250);
   }
 
-  public void uploadAndVerifyRequisitionGroupMembers(int noOfRuns) throws FileNotFoundException {
-    for (int i = 1; i <= noOfRuns; i++) {
-      selectUploadType("Requisition Group Members");
-      uploadFile("QA_Requisition_Group_Members.csv");
-      verifySuccessMessageOnUploadScreen();
-    }
+  public void uploadRequisitionGroupMembers(String uploadFileNameWithExtension) throws FileNotFoundException {
+    selectUploadType("Requisition Group Members");
+    uploadFile(uploadFileNameWithExtension);
+    testWebDriver.sleep(250);
   }
 
-  public void uploadAndVerifyRequisitionGroupProgramSchedule(int noOfRuns) throws FileNotFoundException {
-    for (int i = 1; i <= noOfRuns; i++) {
-      selectUploadType("Map Requisition Groups to Programs + Schedule");
-      uploadFile("QA_Requisition_Group_Program_Schedule.csv");
-      verifySuccessMessageOnUploadScreen();
-    }
+  public void uploadRequisitionGroupProgramSchedule(String uploadFileNameWithExtension) throws FileNotFoundException {
+    selectUploadType("Map Requisition Groups to Programs + Schedule");
+    uploadFile(uploadFileNameWithExtension);
+    testWebDriver.sleep(250);
   }
 
-  public void uploadAndVerifySupplyLines(int noOfRuns) throws FileNotFoundException {
-    for (int i = 1; i <= noOfRuns; i++) {
-      selectUploadType("Supply Lines");
-      uploadFile("QA_Supply_Lines.csv");
-      verifySuccessMessageOnUploadScreen();
-    }
+  public void uploadSupplyLines(String uploadFileNameWithExtension) throws FileNotFoundException {
+    selectUploadType("Supply Lines");
+    uploadFile(uploadFileNameWithExtension);
+    testWebDriver.sleep(250);
   }
 
 
