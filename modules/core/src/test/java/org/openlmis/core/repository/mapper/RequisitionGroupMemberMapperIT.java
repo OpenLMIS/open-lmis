@@ -85,7 +85,7 @@ public class RequisitionGroupMemberMapperIT {
     RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
     requisitionGroupProgramSchedule.setProgram(make(a(defaultProgram)));
     requisitionGroupProgramSchedule.setRequisitionGroup(requisitionGroup);
-    requisitionGroupProgramSchedule.setSchedule(processingSchedule);
+    requisitionGroupProgramSchedule.setProcessingSchedule(processingSchedule);
     programMapper.insert(requisitionGroupProgramSchedule.getProgram());
 
     requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
@@ -102,7 +102,7 @@ public class RequisitionGroupMemberMapperIT {
     RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
     requisitionGroupProgramSchedule.setProgram(make(a(defaultProgram)));
     requisitionGroupProgramSchedule.setRequisitionGroup(requisitionGroup);
-    requisitionGroupProgramSchedule.setSchedule(processingSchedule);
+    requisitionGroupProgramSchedule.setProcessingSchedule(processingSchedule);
     programMapper.insert(requisitionGroupProgramSchedule.getProgram());
 
     requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);

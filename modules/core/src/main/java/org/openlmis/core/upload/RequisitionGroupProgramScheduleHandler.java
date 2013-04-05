@@ -13,8 +13,6 @@ import org.openlmis.core.service.RequisitionGroupProgramScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-
 
 @NoArgsConstructor
 @Component("requisitionGroupProgramScheduleHandler")
@@ -31,7 +29,8 @@ public class RequisitionGroupProgramScheduleHandler extends AbstractModelPersist
 
   @Override
   protected BaseModel getExisting(BaseModel record) {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
+    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = (RequisitionGroupProgramSchedule)record;
+    return this.requisitionGroupProgramScheduleService.getScheduleForRequisitionGroupCodeAndProgramCode(requisitionGroupProgramSchedule);
   }
 
   @Override

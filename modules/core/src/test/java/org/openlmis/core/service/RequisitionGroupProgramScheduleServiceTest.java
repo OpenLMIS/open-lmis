@@ -12,26 +12,47 @@ import org.mockito.Mock;
 import org.openlmis.core.domain.RequisitionGroupProgramSchedule;
 import org.openlmis.core.repository.RequisitionGroupProgramScheduleRepository;
 
+import static com.natpryce.makeiteasy.MakeItEasy.a;
+import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.openlmis.core.builder.RequisitionGroupProgramScheduleBuilder.*;
 
 public class RequisitionGroupProgramScheduleServiceTest {
 
-    @Mock
-    RequisitionGroupProgramScheduleRepository requisitionGroupProgramScheduleRepository;
+  @Mock
+  RequisitionGroupProgramScheduleRepository requisitionGroupProgramScheduleRepository;
 
-    @Before
-    public void setUp() throws Exception {
-        initMocks(this);
-    }
+  private RequisitionGroupProgramScheduleService service;
 
-    @Test
-    public void shouldSaveRequisitionGroupProgramSchedule() throws Exception {
+  @Before
+  public void setUp() throws Exception {
+    initMocks(this);
+    service = new RequisitionGroupProgramScheduleService(requisitionGroupProgramScheduleRepository);
+  }
 
-        RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
+  @Test
+  public void shouldSaveRequisitionGroupProgramSchedule() throws Exception {
 
-        new RequisitionGroupProgramScheduleService(requisitionGroupProgramScheduleRepository).save(requisitionGroupProgramSchedule);
+    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
 
-        verify(requisitionGroupProgramScheduleRepository).insert(requisitionGroupProgramSchedule);
-    }
+    service.save(requisitionGroupProgramSchedule);
+
+    verify(requisitionGroupProgramScheduleRepository).insert(requisitionGroupProgramSchedule);
+  }
+
+  @Test
+  public void shouldGetScheduleForRequisitionGroupCodeAndProgramCodeCombination() throws Exception {
+
+    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = make(a(defaultRequisitionGroupProgramSchedule));
+    RequisitionGroupProgramSchedule fetchedRequisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
+
+    when(requisitionGroupProgramScheduleRepository.getScheduleForRequisitionGroupCodeAndProgramCode(
+      REQUISITION_GROUP_CODE, PROGRAM_CODE)).thenReturn(fetchedRequisitionGroupProgramSchedule);
+
+    assertThat(service.getScheduleForRequisitionGroupCodeAndProgramCode(requisitionGroupProgramSchedule), is(fetchedRequisitionGroupProgramSchedule));
+  }
 }

@@ -32,7 +32,8 @@ public class RequisitionGroupProgramScheduleRepository {
 
   @Autowired
   public RequisitionGroupProgramScheduleRepository(RequisitionGroupProgramScheduleMapper requisitionGroupProgramScheduleMapper,
-                                                   RequisitionGroupMapper requisitionGroupMapper, ProgramRepository programRepository, ProcessingScheduleMapper processingScheduleMapper, FacilityMapper facilityMapper) {
+                                                   RequisitionGroupMapper requisitionGroupMapper, ProgramRepository programRepository,
+                                                   ProcessingScheduleMapper processingScheduleMapper, FacilityMapper facilityMapper) {
     this.mapper = requisitionGroupProgramScheduleMapper;
     this.requisitionGroupMapper = requisitionGroupMapper;
     this.programRepository = programRepository;
@@ -41,47 +42,63 @@ public class RequisitionGroupProgramScheduleRepository {
   }
 
   public void insert(RequisitionGroupProgramSchedule requisitionGroupProgramSchedule) {
+    populateIdsForRequisitionProgramScheduleEntities(requisitionGroupProgramSchedule);
+    validateRequisitionGroupSchedule(requisitionGroupProgramSchedule);
+
     try {
-      requisitionGroupProgramSchedule.getRequisitionGroup().setId(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode()));
-      requisitionGroupProgramSchedule.getProgram().setId(programRepository.getIdByCode(requisitionGroupProgramSchedule.getProgram().getCode()));
-      requisitionGroupProgramSchedule.getSchedule().setId(processingScheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode()));
-      Facility dropOffFacility = requisitionGroupProgramSchedule.getDropOffFacility();
-      if (dropOffFacility != null)
-        requisitionGroupProgramSchedule.getDropOffFacility().setId(facilityMapper.getIdForCode(dropOffFacility.getCode()));
-
-      if (requisitionGroupProgramSchedule.getRequisitionGroup().getId() == null) {
-        throw new DataException("Requisition Group Code Does Not Exist");
-      }
-
-      if (requisitionGroupProgramSchedule.getSchedule().getId() == null) {
-        throw new DataException("Schedule Code Does Not Exist");
-      }
-
-      if (requisitionGroupProgramSchedule.isDirectDelivery() && requisitionGroupProgramSchedule.getDropOffFacility() != null) {
-        throw new DataException("Incorrect combination of Direct Delivery and Drop off Facility");
-      }
-
-      if (!requisitionGroupProgramSchedule.isDirectDelivery() && requisitionGroupProgramSchedule.getDropOffFacility() == null) {
-        throw new DataException("Drop off facility code not defined");
-      }
-
-      if (requisitionGroupProgramSchedule.getDropOffFacility() != null && requisitionGroupProgramSchedule.getDropOffFacility().getId() == null) {
-        throw new DataException("Drop off facility code is not present");
-      }
-
       mapper.insert(requisitionGroupProgramSchedule);
     } catch (DuplicateKeyException e) {
       throw new DataException("Duplicate Requisition Group Code And Program Code Combination found");
     }
   }
 
-  public Integer getScheduleIdForRequisitionGroupAndProgram(Integer requisitionGroupId, Integer programId) {
-    List<Integer> scheduleIds = mapper.getScheduleIDsForRequisitionGroupAndProgram(requisitionGroupId, programId);
-    return scheduleIds == null ? null : scheduleIds.get(0);
+  private void populateIdsForRequisitionProgramScheduleEntities(RequisitionGroupProgramSchedule requisitionGroupProgramSchedule) {
+    requisitionGroupProgramSchedule.getRequisitionGroup().setId(
+      requisitionGroupMapper.getIdForCode(
+        requisitionGroupProgramSchedule.getRequisitionGroup().getCode()));
+
+    requisitionGroupProgramSchedule.getProgram().setId(
+      programRepository.getIdByCode(
+        requisitionGroupProgramSchedule.getProgram().getCode()));
+
+    requisitionGroupProgramSchedule.getProcessingSchedule().setId(
+      processingScheduleMapper.getIdForCode(
+        requisitionGroupProgramSchedule.getProcessingSchedule().getCode()));
+
+    Facility dropOffFacility = requisitionGroupProgramSchedule.getDropOffFacility();
+
+    if (dropOffFacility != null)
+      requisitionGroupProgramSchedule.getDropOffFacility().setId(
+        facilityMapper.getIdForCode(
+          dropOffFacility.getCode()));
+  }
+
+  private void validateRequisitionGroupSchedule(RequisitionGroupProgramSchedule requisitionGroupProgramSchedule) {
+    if (requisitionGroupProgramSchedule.getRequisitionGroup().getId() == null)
+      throw new DataException("Requisition Group Code Does Not Exist");
+
+    if (requisitionGroupProgramSchedule.getProcessingSchedule().getId() == null)
+      throw new DataException("Schedule Code Does Not Exist");
+
+    if (requisitionGroupProgramSchedule.isDirectDelivery() && requisitionGroupProgramSchedule.getDropOffFacility() != null)
+      throw new DataException("Incorrect combination of Direct Delivery and Drop off Facility");
+
+    if (!requisitionGroupProgramSchedule.isDirectDelivery() && requisitionGroupProgramSchedule.getDropOffFacility() == null)
+      throw new DataException("Drop off facility code not defined");
+
+    if (requisitionGroupProgramSchedule.getDropOffFacility() != null && requisitionGroupProgramSchedule.getDropOffFacility().getId() == null)
+      throw new DataException("Drop off facility code is not present");
+  }
+
+  public RequisitionGroupProgramSchedule getScheduleForRequisitionGroupAndProgram(Integer requisitionGroupId, Integer programId) {
+    return mapper.getScheduleForRequisitionGroupIdAndProgramId(requisitionGroupId, programId);
   }
 
   public List<Integer> getProgramIDsForRequisitionGroup(Integer requisitionGroupId) {
     return mapper.getProgramIDsById(requisitionGroupId);
   }
 
+  public RequisitionGroupProgramSchedule getScheduleForRequisitionGroupCodeAndProgramCode(String requisitionGroupCode, String programCode) {
+    return mapper.getScheduleForRequisitionGroupCodeAndProgramCode(requisitionGroupCode, programCode);
+  }
 }

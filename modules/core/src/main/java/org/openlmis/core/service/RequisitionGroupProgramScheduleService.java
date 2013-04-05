@@ -7,6 +7,8 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.RequisitionGroupProgramSchedule;
 import org.openlmis.core.repository.RequisitionGroupProgramScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,4 +28,9 @@ public class RequisitionGroupProgramScheduleService {
     public void save(RequisitionGroupProgramSchedule requisitionGroupProgramSchedule) {
         requisitionGroupProgramScheduleRepository.insert(requisitionGroupProgramSchedule);
     }
+
+  public RequisitionGroupProgramSchedule getScheduleForRequisitionGroupCodeAndProgramCode(RequisitionGroupProgramSchedule requisitionGroupProgramSchedule) {
+    return requisitionGroupProgramScheduleRepository.getScheduleForRequisitionGroupCodeAndProgramCode(
+      requisitionGroupProgramSchedule.getRequisitionGroup().getCode(), requisitionGroupProgramSchedule.getProgram().getCode());
+  }
 }

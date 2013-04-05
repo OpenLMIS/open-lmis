@@ -6,9 +6,7 @@
 
 package org.openlmis.core.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.RequisitionGroupProgramSchedule;
 import org.springframework.stereotype.Repository;
 
@@ -18,13 +16,36 @@ import java.util.List;
 public interface RequisitionGroupProgramScheduleMapper {
 
   @Insert("INSERT INTO requisition_group_program_schedules" +
-      "(requisitionGroupId, programId, scheduleId, directDelivery, dropOffFacilityId, modifiedBy, modifiedDate) " +
-      "VALUES(#{requisitionGroup.id}, #{program.id}, #{schedule.id}, #{directDelivery}, #{dropOffFacility.id}, #{modifiedBy}, #{modifiedDate})")
+    "(requisitionGroupId, programId, scheduleId, directDelivery, dropOffFacilityId, modifiedBy, modifiedDate) " +
+    "VALUES(#{requisitionGroup.id}, #{program.id}, #{processingSchedule.id}, #{directDelivery}, #{dropOffFacility.id}, #{modifiedBy}, #{modifiedDate})")
   Integer insert(RequisitionGroupProgramSchedule requisitionGroupProgramSchedule);
 
   @Select("SELECT programId FROM requisition_group_program_schedules WHERE requisitionGroupId = #{requisitionGroupId}")
   List<Integer> getProgramIDsById(Integer requisitionGroupId);
 
-  @Select("SELECT scheduleId FROM requisition_group_program_schedules WHERE requisitionGroupId = #{requisitionGroupId} AND programId = #{programId}")
-  List<Integer> getScheduleIDsForRequisitionGroupAndProgram(@Param(value = "requisitionGroupId") Integer requisitionGroupId, @Param(value = "programId") Integer programId);
+  @Select("SELECT * FROM requisition_group_program_schedules WHERE requisitionGroupId = #{requisitionGroupId} AND programId = #{programId}")
+  @Results(value = {
+    @Result(property = "program.id", column = "programId"),
+    @Result(property = "processingSchedule.id", column = "scheduleId"),
+    @Result(property = "requisitionGroup.id", column = "requisitionGroupId"),
+    @Result(property = "dropOffFacility.id", column = "dropOffFacilityId")
+  })
+  RequisitionGroupProgramSchedule getScheduleForRequisitionGroupIdAndProgramId(
+    @Param(value = "requisitionGroupId") Integer requisitionGroupId,
+    @Param(value = "programId") Integer programId);
+
+  @Select({"SELECT rgps.* FROM Requisition_Group_Program_Schedules rgps, Programs p, Requisition_Groups rg",
+    "WHERE rgps.requisitionGroupId = rg.id AND",
+    "rg.code = #{requisitionGroupCode} AND",
+    "rgps.programId = p.id AND",
+    "p.code = #{programCode}"})
+  @Results(value = {
+    @Result(property = "program.id", column = "programId"),
+    @Result(property = "processingSchedule.id", column = "scheduleId"),
+    @Result(property = "requisitionGroup.id", column = "requisitionGroupId"),
+    @Result(property = "dropOffFacility.id", column = "dropOffFacilityId")
+  })
+  RequisitionGroupProgramSchedule getScheduleForRequisitionGroupCodeAndProgramCode(
+    @Param(value = "requisitionGroupCode") String requisitionGroupCode,
+    @Param(value = "programCode") String programCode);
 }

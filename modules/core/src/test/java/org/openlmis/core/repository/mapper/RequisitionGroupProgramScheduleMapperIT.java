@@ -24,6 +24,7 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.ProcessingScheduleBuilder.defaultProcessingSchedule;
@@ -54,10 +55,14 @@ public class RequisitionGroupProgramScheduleMapperIT {
   @Before
   public void setUp() throws Exception {
     requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
+
     requisitionGroupProgramSchedule.setModifiedBy(1);
     requisitionGroupProgramSchedule.setModifiedDate(new Date(0));
+
     requisitionGroupProgramSchedule.setProgram(make(a(defaultProgram)));
+
     requisitionGroupProgramSchedule.setRequisitionGroup(make(a(defaultRequisitionGroup)));
+
     requisitionGroupProgramSchedule.setDirectDelivery(true);
 
     Facility facility = make(a(FacilityBuilder.defaultFacility));
@@ -67,7 +72,7 @@ public class RequisitionGroupProgramScheduleMapperIT {
     ProcessingSchedule schedule = make(a(defaultProcessingSchedule));
     processingScheduleMapper.insert(schedule);
 
-    requisitionGroupProgramSchedule.setSchedule(schedule);
+    requisitionGroupProgramSchedule.setProcessingSchedule(schedule);
   }
 
   @Test
@@ -94,15 +99,38 @@ public class RequisitionGroupProgramScheduleMapperIT {
   }
 
   @Test
-  public void shouldGetAllSchedulesForRequisitionGroupAndProgram() throws Exception {
+  public void shouldGetRequisitionGroupProgramScheduleForRequisitionGroupIdAndProgramId() throws Exception {
     programMapper.insert(requisitionGroupProgramSchedule.getProgram());
     requisitionGroupMapper.insert(requisitionGroupProgramSchedule.getRequisitionGroup());
 
     requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
 
-    List<Integer> resultScheduleId = requisitionGroupProgramScheduleMapper.getScheduleIDsForRequisitionGroupAndProgram(requisitionGroupProgramSchedule.getRequisitionGroup().getId(), requisitionGroupProgramSchedule.getProgram().getId());
+    RequisitionGroupProgramSchedule resultRequisitionGroupProgramSchedule = requisitionGroupProgramScheduleMapper.
+      getScheduleForRequisitionGroupIdAndProgramId(
+        requisitionGroupProgramSchedule.getRequisitionGroup().getId(), requisitionGroupProgramSchedule.getProgram().getId());
 
-    assertThat(resultScheduleId.size(), is(1));
-    assertThat(resultScheduleId.get(0), is(requisitionGroupProgramSchedule.getSchedule().getId()));
+    assertThat(resultRequisitionGroupProgramSchedule.getProgram().getId(), is(requisitionGroupProgramSchedule.getProgram().getId()));
+    assertThat(resultRequisitionGroupProgramSchedule.getProcessingSchedule().getId(), is(requisitionGroupProgramSchedule.getProcessingSchedule().getId()));
+    assertThat(resultRequisitionGroupProgramSchedule.getRequisitionGroup().getId(), is(requisitionGroupProgramSchedule.getRequisitionGroup().getId()));
+    assertThat(resultRequisitionGroupProgramSchedule.isDirectDelivery(), is(requisitionGroupProgramSchedule.isDirectDelivery()));
+    assertThat(resultRequisitionGroupProgramSchedule.getDropOffFacility().getId(), is(requisitionGroupProgramSchedule.getDropOffFacility().getId()));
+  }
+
+  @Test
+  public void shouldGetRequisitionGroupProgramScheduleForRequisitionGroupCodeAndProgramCode() throws Exception {
+    programMapper.insert(requisitionGroupProgramSchedule.getProgram());
+    requisitionGroupMapper.insert(requisitionGroupProgramSchedule.getRequisitionGroup());
+
+    requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
+
+    RequisitionGroupProgramSchedule resultRequisitionGroupProgramSchedule = requisitionGroupProgramScheduleMapper.
+      getScheduleForRequisitionGroupCodeAndProgramCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode(),
+        requisitionGroupProgramSchedule.getProgram().getCode());
+
+    assertThat(resultRequisitionGroupProgramSchedule.getProgram().getId(), is(requisitionGroupProgramSchedule.getProgram().getId()));
+    assertThat(resultRequisitionGroupProgramSchedule.getProcessingSchedule().getId(), is(requisitionGroupProgramSchedule.getProcessingSchedule().getId()));
+    assertThat(resultRequisitionGroupProgramSchedule.getRequisitionGroup().getId(), is(requisitionGroupProgramSchedule.getRequisitionGroup().getId()));
+    assertThat(resultRequisitionGroupProgramSchedule.isDirectDelivery(), is(requisitionGroupProgramSchedule.isDirectDelivery()));
+    assertThat(resultRequisitionGroupProgramSchedule.getDropOffFacility().getId(), is(requisitionGroupProgramSchedule.getDropOffFacility().getId()));
   }
 }

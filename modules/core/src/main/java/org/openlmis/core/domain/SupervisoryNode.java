@@ -7,6 +7,7 @@
 package org.openlmis.core.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;

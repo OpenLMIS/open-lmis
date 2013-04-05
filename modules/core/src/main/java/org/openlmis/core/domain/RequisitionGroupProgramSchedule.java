@@ -15,7 +15,7 @@ import org.openlmis.upload.annotation.ImportField;
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class RequisitionGroupProgramSchedule extends BaseModel implements Importable {
 
   @ImportField(mandatory = true, name = "RG Code", nested = "code")
@@ -25,7 +25,7 @@ public class RequisitionGroupProgramSchedule extends BaseModel implements Import
   private Program program;
 
   @ImportField(mandatory = true, name = "Schedule", nested = "code")
-  private ProcessingSchedule schedule;
+  private ProcessingSchedule processingSchedule;
 
   @ImportField(mandatory = true, name = "Direct Delivery")
   private boolean directDelivery;
