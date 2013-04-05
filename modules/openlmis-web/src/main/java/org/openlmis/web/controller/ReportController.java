@@ -62,7 +62,7 @@ public class ReportController  extends BaseController {
     }
 
     @RequestMapping(value = "/reportdata/{reportKey}", method = GET, headers = ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_FACILITY_REPORT')")
     public Pages get(@PathVariable(value = "reportKey") String reportKey,
                                     @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                     @RequestParam(value = "max", required = false, defaultValue = "20") int max,
