@@ -268,7 +268,7 @@ var lossesAndAdjustmentsTemplate = '<div id="lossesAndAdjustments" modal="losses
   '</div>' +
   '</div>' +
   '<div class="modal-footer">' +
-  '<input type="button" class="btn btn-success save-button" style="width: 75px" ng-click="closeLossesAndAdjustmentsForRnRLineItem(row.entity)" value="Close"/>' +
+  '<input type="button" class="btn btn-cancel save-button" style="width: 75px" ng-click="closeLossesAndAdjustmentsForRnRLineItem(row.entity)" value="Close"/>' +
   '</div>' +
   '</div>' +
   '<div>' +
