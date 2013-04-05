@@ -240,6 +240,10 @@ public class InitiateRnRPage extends Page {
   @FindBy(how = ID, using = "addButton")
   private static WebElement addCommentButton;
 
+
+  @FindBy(how = ID, using = "commentClose")
+  private static WebElement commentCloseIcon;
+
   @FindBy(how = XPATH , using = "//ul[@id='comments-list']/li[1]/span")
   private static WebElement lastComment;
 
@@ -674,19 +678,22 @@ public class InitiateRnRPage extends Page {
       commentsButton.click();
       addCommentTextArea.sendKeys(comments);
       addCommentButton.click();
+      commentCloseIcon.click();
   }
 
     public void verifyLastComment(String comments,String AddedBy) {
-        boolean isUpdatedBy;
-        boolean isUpdatedOn;
+        boolean isAddedBy;
+        boolean isAddedOn;
+        commentsButton.click();
         SeleneseTestNgHelper.assertEquals(lastComment.getText(), comments);
 
-        isUpdatedBy = lastCommentAddedBy.getText().contains("By: " + AddedBy);
-        SeleneseTestNgHelper.assertTrue(isUpdatedBy);
+        isAddedBy = lastCommentAddedBy.getText().contains("By: " + AddedBy);
+        SeleneseTestNgHelper.assertTrue(isAddedBy);
         Date date = new Date();
         SimpleDateFormat ft = new SimpleDateFormat ("dd/MM/YYYY");
-        isUpdatedOn = lastCommentAddedBy.getText().contains(ft.format(date));
-        SeleneseTestNgHelper.assertTrue(isUpdatedOn);
+        isAddedOn = lastCommentAddedBy.getText().contains(ft.format(date));
+        SeleneseTestNgHelper.assertTrue(isAddedOn);
+        commentCloseIcon.click();
     }
 
   public void verifyApproveButtonNotPresent() {

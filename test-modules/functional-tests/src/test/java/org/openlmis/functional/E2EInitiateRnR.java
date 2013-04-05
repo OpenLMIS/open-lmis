@@ -121,6 +121,9 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
     initiateRnRPage.submitRnR();
 
+    initiateRnRPage.addComments("Dummy Comments.");
+    initiateRnRPage.verifyLastComment("Dummy Comments.",userSICUserName);
+
     initiateRnRPage.enterValuesAndVerifyCalculatedOrderQuantity(10, 10, 101, 51, 153, 142);
     initiateRnRPage.verifyPacksToShip(15);
 

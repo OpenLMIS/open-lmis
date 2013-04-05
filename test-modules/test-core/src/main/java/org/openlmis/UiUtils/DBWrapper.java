@@ -109,6 +109,7 @@ public class DBWrapper {
     update("DELETE FROM requisition_line_items;");
     update("delete from products;");
     update("delete from user_password_reset_tokens ;");
+    update("delete from comments;");
     update("delete from users where userName not like('Admin%');");
     update("DELETE FROM requisition_line_item_losses_adjustments;");
     update("DELETE FROM requisition_line_items;");
