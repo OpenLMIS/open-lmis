@@ -676,12 +676,12 @@ public class InitiateRnRPage extends Page {
       addCommentButton.click();
   }
 
-    public void verifyLastComment(String comments) {
+    public void verifyLastComment(String comments,String AddedBy) {
         boolean isUpdatedBy;
         boolean isUpdatedOn;
         SeleneseTestNgHelper.assertEquals(lastComment.getText(), comments);
 
-        isUpdatedBy = lastCommentAddedBy.getText().contains("By: storeincharge") ;
+        isUpdatedBy = lastCommentAddedBy.getText().contains("By: " + AddedBy);
         SeleneseTestNgHelper.assertTrue(isUpdatedBy);
         Date date = new Date();
         SimpleDateFormat ft = new SimpleDateFormat ("dd/MM/YYYY");
