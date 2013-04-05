@@ -8,6 +8,7 @@ package org.openlmis.pageobjects;
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -46,7 +47,7 @@ public class RequisitionPage extends Page {
     WebElement comment = testWebDriver.getElementByXpath("//ul[@id='comments-list']/li[" + commentNumber + "]/span");
     SeleneseTestNgHelper.assertEquals(comment.getText(), comments);
 
-    WebElement commentAddedBy =  testWebDriver.getElementByXpath("//ul[@id='comments-list']/li["+commentNumber+"]/div");
+    WebElement commentAddedBy = testWebDriver.getElementByXpath("//ul[@id='comments-list']/li[" + commentNumber + "]/div");
 
     isAddedBy = commentAddedBy.getText().contains("By: " + AddedBy);
     SeleneseTestNgHelper.assertTrue(isAddedBy);
@@ -56,4 +57,12 @@ public class RequisitionPage extends Page {
     SeleneseTestNgHelper.assertTrue(isAddedOn);
     commentCloseIcon.click();
   }
+
+  public void verifyCommentBoxNotPresent() {
+    commentsButton.click();
+    WebElement commentBox = testWebDriver.findElement(By.id("addComment"));
+    if (commentBox.isDisplayed())
+      SeleneseTestNgHelper.fail("Comment should not be updatable");
+  }
+
 }

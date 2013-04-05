@@ -47,7 +47,9 @@ public class TestWebDriver {
         get();
     }
 
-
+    public WebElement findElement(By by) {
+      return driver.findElement(by);
+    }
 
     public void setErrorMessage(String ERROR_MESSAGE_LOGIN)
     {

@@ -69,6 +69,7 @@ public class ViewRequisition extends TestCaseHelper {
     ApprovePage approvePageTopSNUser = homePageInApproval.navigateToApprove();
     approvePageTopSNUser.verifyAndClickRequisitionPresentForApproval();
     approvePageTopSNUser.editApproveQuantityAndVerifyTotalCostViewRequisition("20");
+    approvePageTopSNUser.addComments("Dummy Comments");
     approvePageTopSNUser.approveRequisition();
     approvePageTopSNUser.verifyNoRequisitionPendingMessage();
     ViewRequisitionPage viewRequisitionPageApproved = homePageInApproval.navigateViewRequisition();
@@ -76,6 +77,9 @@ public class ViewRequisition extends TestCaseHelper {
     viewRequisitionPageApproved.clickSearch();
     viewRequisitionPageApproved.verifyStatus("APPROVED");
     viewRequisitionPageApproved.clickRnRList();
+    viewRequisitionPageApproved.verifyComment("Dummy Comments", userSIC,1);
+    viewRequisitionPageApproved.verifyCommentBoxNotPresent();
+
     HomePage homePageApproved = viewRequisitionPageApproved.verifyFieldsPostApproval("25.00", "1");
 
     dbWrapper.updateRequisition("F10");

@@ -18,7 +18,7 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import java.io.IOException;
 
 
-public class ViewRequisitionPage extends Page {
+public class ViewRequisitionPage extends RequisitionPage {
 
   @FindBy(how = How.NAME, using = "selectFacility")
   private static WebElement selectFacilityDropDown;
