@@ -20,6 +20,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
+import static java.lang.System.getProperty;
+import static java.lang.System.setProperty;
+
 public class DriverFactory {
 
   private String driverType;
@@ -30,8 +33,8 @@ public class DriverFactory {
   Unzip unZip;
 
   public WebDriver loadDriver(String browser) throws InterruptedException {
-    Separator = System.getProperty("file.separator");
-    File parentDir = new File(System.getProperty("user.dir")).getParentFile();
+    Separator = getProperty("file.separator");
+    File parentDir = new File(getProperty("user.dir")).getParentFile();
     OUTPUT_FOLDER = parentDir.getParent() + Separator + "test-core" + Separator + "src" + Separator + "main" + Separator + "java" + Separator + "org" + Separator + "openlmis" + Separator + "UiUtils" + Separator;
     INPUT_ZIP_FILE_IEDRIVER = OUTPUT_FOLDER + "IEDriverServer_x64_2.31.0.zip";
     INPUT_ZIP_FILE_CHROMEDRIVER = OUTPUT_FOLDER + "chromedriver.zip";
@@ -58,15 +61,16 @@ public class DriverFactory {
   private WebDriver loadDriver(boolean enableJavascript, String browser) throws InterruptedException {
     switch (browser) {
       case "firefox":
-        driverType = System.getProperty("web.driver", "Firefox");
+        driverType = getProperty("web.driver", "Firefox");
         return createFirefoxDriver(enableJavascript);
 
       case "ie":
         unZip = new Unzip();
         unZip.unZipIt(INPUT_ZIP_FILE_IEDRIVER, OUTPUT_FOLDER);
         Thread.sleep(1500);
-        driverType = System.setProperty("webdriver.ie.driver", OUTPUT_FOLDER + "IEDriverServer.exe");
-        driverType = System.getProperty("webdriver.ie.driver");
+        driverType = setProperty("webdriver.ie.driver", OUTPUT_FOLDER + "IEDriverServer.exe");
+        driverType = getProperty("webdriver.ie.driver");
+
         return createInternetExplorerDriver();
 
 
@@ -74,15 +78,15 @@ public class DriverFactory {
         unZip = new Unzip();
         unZip.unZipIt(INPUT_ZIP_FILE_CHROMEDRIVER, OUTPUT_FOLDER);
         Thread.sleep(1500);
-        driverType = System.setProperty("webdriver.chrome.driver", OUTPUT_FOLDER + "chromedriver.exe");
-        driverType = System.getProperty("webdriver.chrome.driver");
+        driverType = setProperty("webdriver.chrome.driver", OUTPUT_FOLDER + "chromedriver.exe");
+        driverType = getProperty("webdriver.chrome.driver");
         return createChromeDriver();
 
       case "HTMLUnit":
         return new HtmlUnitDriver(BrowserVersion.INTERNET_EXPLORER_8);
 
       default:
-        driverType = System.getProperty("web.driver", "Firefox");
+        driverType = getProperty("web.driver", "Firefox");
         return createFirefoxDriver(enableJavascript);
     }
   }
@@ -98,7 +102,10 @@ public class DriverFactory {
   private WebDriver createInternetExplorerDriver() {
     DesiredCapabilities ieCapabilities = DesiredCapabilities.internetExplorer();
     ieCapabilities.setCapability("ignoreZoomSetting", true);
-    return new InternetExplorerDriver(ieCapabilities);
+    InternetExplorerDriver driver = new InternetExplorerDriver(ieCapabilities);
+    driver.get(getProperty("baseurl", TestCaseHelper.DEFAULT_BASE_URL));
+    driver.navigate().to("javascript:document.getElementById('overridelink').click()");
+    return driver;
   }
 
 
