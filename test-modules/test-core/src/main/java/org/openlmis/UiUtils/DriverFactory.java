@@ -18,6 +18,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class DriverFactory {
 
@@ -75,7 +76,7 @@ public class DriverFactory {
         Thread.sleep(1500);
         driverType = System.setProperty("webdriver.chrome.driver", OUTPUT_FOLDER + "chromedriver.exe");
         driverType = System.getProperty("webdriver.chrome.driver");
-        return new ChromeDriver();
+        return createChromeDriver();
 
       case "HTMLUnit":
         return new HtmlUnitDriver(BrowserVersion.INTERNET_EXPLORER_8);
@@ -94,9 +95,16 @@ public class DriverFactory {
     return new FirefoxDriver(profile);
   }
 
-    private WebDriver createInternetExplorerDriver() {
-        DesiredCapabilities ieCapabilities = DesiredCapabilities.internetExplorer();
-        ieCapabilities.setCapability("ignoreZoomSetting",true);
-        return new InternetExplorerDriver(ieCapabilities);
-    }
+  private WebDriver createInternetExplorerDriver() {
+    DesiredCapabilities ieCapabilities = DesiredCapabilities.internetExplorer();
+    ieCapabilities.setCapability("ignoreZoomSetting", true);
+    return new InternetExplorerDriver(ieCapabilities);
+  }
+
+
+  private WebDriver createChromeDriver() {
+    DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+    capabilities.setCapability("chrome.switches", Arrays.asList("--ignore-certificate-errors"));
+    return new ChromeDriver(capabilities);
+  }
 }
