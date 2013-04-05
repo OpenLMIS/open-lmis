@@ -114,7 +114,7 @@ public class E2EUpload extends TestCaseHelper {
   private void verifyValidRequisitionGroupProgramScheduleUpload(UploadPage uploadPage) throws FileNotFoundException {
     uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
-    uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_Subsequent.csv");
+//    uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_Subsequent.csv");
 //    uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
