@@ -20,6 +20,7 @@ function LoginController($scope, $http, localStorageService) {
   };
 
   $scope.doLogin = function () {
+    localStorageService.clearAll();
     if(!validateLoginForm()){
       return;
     }
