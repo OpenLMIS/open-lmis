@@ -21,15 +21,13 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Date;
-import java.text.*;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static org.openqa.selenium.support.How.*;
 
 
-public class InitiateRnRPage extends Page {
+public class InitiateRnRPage extends RequisitionPage {
 
   @FindBy(how = XPATH, using = "//div[@id='requisition-header']/h2")
   private static WebElement requisitionHeader;
@@ -228,27 +226,8 @@ public class InitiateRnRPage extends Page {
   @FindBy(how = XPATH, using = "//div[@openlmis-message='error']")
   private static WebElement configureTemplateErrorDiv;
 
-  @FindBy(how = XPATH , using = "//input[@value='Comments']")
-  private static WebElement commentsButton;
-
   String successText = "R&R saved successfully!";
   Float actualTotalCostFullSupply, actualTotalCostNonFullSupply;
-
-  @FindBy(how = ID, using = "addComment")
-  private static WebElement addCommentTextArea;
-
-  @FindBy(how = ID, using = "addButton")
-  private static WebElement addCommentButton;
-
-
-  @FindBy(how = ID, using = "commentClose")
-  private static WebElement commentCloseIcon;
-
-  @FindBy(how = XPATH , using = "//ul[@id='comments-list']/li[1]/span")
-  private static WebElement lastComment;
-
-  @FindBy(how = XPATH , using = "//ul[@id='comments-list']/li[1]/div")
-  private static WebElement lastCommentAddedBy;
 
   public InitiateRnRPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -673,28 +652,6 @@ public class InitiateRnRPage extends Page {
     }
     assertFalse(authorizeButtonPresent);
   }
-
-  public void addComments(String comments) {
-      commentsButton.click();
-      addCommentTextArea.sendKeys(comments);
-      addCommentButton.click();
-      commentCloseIcon.click();
-  }
-
-    public void verifyLastComment(String comments,String AddedBy) {
-        boolean isAddedBy;
-        boolean isAddedOn;
-        commentsButton.click();
-        SeleneseTestNgHelper.assertEquals(lastComment.getText(), comments);
-
-        isAddedBy = lastCommentAddedBy.getText().contains("By: " + AddedBy);
-        SeleneseTestNgHelper.assertTrue(isAddedBy);
-        Date date = new Date();
-        SimpleDateFormat ft = new SimpleDateFormat ("dd/MM/YYYY");
-        isAddedOn = lastCommentAddedBy.getText().contains(ft.format(date));
-        SeleneseTestNgHelper.assertTrue(isAddedOn);
-        commentCloseIcon.click();
-    }
 
   public void verifyApproveButtonNotPresent() {
     boolean approveButtonPresent = false;

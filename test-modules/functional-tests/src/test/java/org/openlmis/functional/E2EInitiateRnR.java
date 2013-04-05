@@ -122,7 +122,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     initiateRnRPage.submitRnR();
 
     initiateRnRPage.addComments("Dummy Comments.");
-    initiateRnRPage.verifyLastComment("Dummy Comments.",userSICUserName);
+    initiateRnRPage.verifyLastComment("Dummy Comments.", userSICUserName);
 
     initiateRnRPage.enterValuesAndVerifyCalculatedOrderQuantity(10, 10, 101, 51, 153, 142);
     initiateRnRPage.verifyPacksToShip(15);
@@ -205,7 +205,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-        {"HIV", "storeincharge", "medicalofficer", "lmu", "Admin123", new String[]{"Admin123", "Admin123"}}
+      {"HIV", "storeincharge", "medicalofficer", "lmu", "Admin123", new String[]{"Admin123", "Admin123"}}
     };
 
   }

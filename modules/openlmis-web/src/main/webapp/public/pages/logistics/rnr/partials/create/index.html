@@ -40,7 +40,7 @@
                ng-disabled="rnr.status == 'AUTHORIZED'" ng-click="authorizeRnr()"
                class="btn btn-success submit-button"
                openlmis-message="button.authorize"/>
-        <input type="button" ng-click="showCommentBox=!showCommentBox" class="btn comments-button"
+        <input id="comments" type="button" ng-click="showCommentBox=!showCommentBox" class="btn comments-button"
                value="Comments"/>
         <comment-box updatable="true" show="showCommentBox"></comment-box>
       </div>
