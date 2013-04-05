@@ -49,7 +49,7 @@
 
       <div class="toolbar-error" id="saveFailMessage" openlmis-message="error" ng-show="error"></div>
       <div class="toolbar-success" id="saveSuccessMsgDiv" ng-show="message" ng-bind="message"></div>
-      <input type="button" ng-click="showCommentBox=!showCommentBox" class="btn comments-button"
+      <input id="comments" type="button" ng-click="showCommentBox=!showCommentBox" class="btn comments-button"
              value="Comments"/>
       <comment-box updatable="true" show="showCommentBox"></comment-box>
     </div>

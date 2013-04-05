@@ -122,7 +122,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     initiateRnRPage.submitRnR();
 
     initiateRnRPage.addComments("Dummy Comments.");
-    initiateRnRPage.verifyLastComment("Dummy Comments.", userSICUserName);
+    initiateRnRPage.verifyComment("Dummy Comments.", userSICUserName, 1);
 
     initiateRnRPage.enterValuesAndVerifyCalculatedOrderQuantity(10, 10, 101, 51, 153, 142);
     initiateRnRPage.verifyPacksToShip(15);
@@ -150,6 +150,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
     approvePageLowerSNUser.verifyRnRHeader("FCcode", "FCname", date_time, program, periodDetails, geoZone, parentgeoZone, operatedBy, facilityType);
     approvePageLowerSNUser.verifyApprovedQuantity();
     approvePageLowerSNUser.editApproveQuantityAndVerifyTotalCost("290");
+    approvePage.addComments("This is urgent");
+    approvePage.verifyComment("This is urgent", userMO, 2);
     approvePageLowerSNUser.approveRequisition();
     approvePageLowerSNUser.verifyNoRequisitionPendingMessage();
     LoginPage loginPageTopSNUser = homePageLowerSNUser.logout(baseUrlGlobal);

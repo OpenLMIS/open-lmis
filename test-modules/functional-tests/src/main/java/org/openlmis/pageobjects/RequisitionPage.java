@@ -15,7 +15,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static org.openqa.selenium.support.How.ID;
-import static org.openqa.selenium.support.How.XPATH;
 
 public class RequisitionPage extends Page {
   @FindBy(how = ID, using = "comments")
@@ -26,10 +25,6 @@ public class RequisitionPage extends Page {
   private static WebElement addCommentButton;
   @FindBy(how = ID, using = "commentClose")
   private static WebElement commentCloseIcon;
-  @FindBy(how = XPATH, using = "//ul[@id='comments-list']/li[1]/span")
-  private static WebElement lastComment;
-  @FindBy(how = XPATH, using = "//ul[@id='comments-list']/li[1]/div")
-  private static WebElement lastCommentAddedBy;
 
   protected RequisitionPage(TestWebDriver driver) {
     super(driver);
@@ -43,17 +38,21 @@ public class RequisitionPage extends Page {
     commentCloseIcon.click();
   }
 
-  public void verifyLastComment(String comments, String AddedBy) {
+  public void verifyComment(String comments, String AddedBy, int commentNumber) {
     boolean isAddedBy;
     boolean isAddedOn;
-    commentsButton.click();
-    SeleneseTestNgHelper.assertEquals(lastComment.getText(), comments);
 
-    isAddedBy = lastCommentAddedBy.getText().contains("By: " + AddedBy);
+    commentsButton.click();
+    WebElement comment = testWebDriver.getElementByXpath("//ul[@id='comments-list']/li[" + commentNumber + "]/span");
+    SeleneseTestNgHelper.assertEquals(comment.getText(), comments);
+
+    WebElement commentAddedBy =  testWebDriver.getElementByXpath("//ul[@id='comments-list']/li["+commentNumber+"]/div");
+
+    isAddedBy = commentAddedBy.getText().contains("By: " + AddedBy);
     SeleneseTestNgHelper.assertTrue(isAddedBy);
     Date date = new Date();
     SimpleDateFormat ft = new SimpleDateFormat("dd/MM/YYYY");
-    isAddedOn = lastCommentAddedBy.getText().contains(ft.format(date));
+    isAddedOn = commentAddedBy.getText().contains(ft.format(date));
     SeleneseTestNgHelper.assertTrue(isAddedOn);
     commentCloseIcon.click();
   }

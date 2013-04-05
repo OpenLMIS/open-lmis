@@ -13,7 +13,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
-import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -26,7 +25,7 @@ import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
 
 
-public class ApprovePage extends Page {
+public class ApprovePage extends RequisitionPage {
 
   @FindBy(how = ID, using = "NoRequisitionsPendingMessage")
   private static WebElement NoRequisitionsPendingMessage;
