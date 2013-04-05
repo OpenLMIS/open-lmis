@@ -162,14 +162,26 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
             //alert('Sorted Info: ' + $scope.sortInfo );
             //add sorting infro to the filter object
             $.each($scope.sortInfo.fields, function(index, value) {
-                if(value != undefined)
+                if(value != undefined) {
+                    //only sort by one of the fields
+                    $scope.filterObject =  {
+                        facilityType : undefined,
+                        zone : undefined,
+                        status : undefined
+                    };
                     $scope.filterObject[$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
+                    //$scope.filterObject[$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
+                }
             });
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
         }, true);
 
     $scope.gridOptions = {
         data: 'myData',
+        columnDefs: [{ field: 'code', displayName: 'Code', width: "*", resizable: false},
+            { field: 'facilityName', displayName: 'Facility Name', width: "**" },
+            { field: 'facilityType', displayName: 'Facility Type', width: "*" },
+            { field: 'active', displayName: 'Active', width : "*"}],
         enablePaging: true,
         enableSorting :true,
         showFooter: true,
@@ -181,6 +193,7 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
         showColumnMenu: true,
         enableRowReordering: true,
         showFilter: true,
+        autoFit :true,
         plugins: [new ngGridFlexibleHeightPlugin()]
         //plugins: [new ngGridCsvExportPlugin()]
     };

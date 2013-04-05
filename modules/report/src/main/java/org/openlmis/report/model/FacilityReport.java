@@ -19,5 +19,15 @@ public class FacilityReport implements ReportData {
     private String facilityName;
     private String facilityType;
     private boolean active;
+    private String Location;
+    private String Contact;
+    private String Phone;
+    private String Fax;
 
+    public FacilityReport(String code,String facilityName,String facilityType,boolean active){
+        this.code  = code;
+        this.facilityName = facilityName;
+        this.facilityType = facilityType;
+        this.active = active;
+    }
 }
