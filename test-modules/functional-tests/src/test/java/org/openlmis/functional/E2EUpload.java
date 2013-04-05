@@ -102,7 +102,6 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.verifySuccessMessageOnUploadScreen();
     uploadPage.uploadSupplyLines("QA_Supply_Lines_Subsequent.csv");
 //    uploadPage.verifySuccessMessageOnUploadScreen();
-    uploadPage.verifyErrorMessageOnUploadScreen();
   }
 
   private void verifyValidRequisitionGroupMembersUpload(UploadPage uploadPage) throws FileNotFoundException {
@@ -110,7 +109,6 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.verifySuccessMessageOnUploadScreen();
     uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_Subsequent.csv");
 //    uploadPage.verifySuccessMessageOnUploadScreen();
-    uploadPage.verifyErrorMessageOnUploadScreen();
   }
 
   private void verifyValidRequisitionGroupProgramScheduleUpload(UploadPage uploadPage) throws FileNotFoundException {
@@ -118,7 +116,6 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.verifySuccessMessageOnUploadScreen();
     uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_Subsequent.csv");
 //    uploadPage.verifySuccessMessageOnUploadScreen();
-    uploadPage.verifyErrorMessageOnUploadScreen();
   }
 
   private void verifyValidRequisitionGroupUpload(UploadPage uploadPage) throws FileNotFoundException {
@@ -226,7 +223,6 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.verifySuccessMessageOnUploadScreen();
     uploadPage.uploadUsers("QA_Users_Subsequent.csv");
     //uploadPage.verifySuccessMessageOnUploadScreen();
-    uploadPage.verifyErrorMessageOnUploadScreen();
   }
 
   private void verifyInValidUserUpload(UploadPage uploadPage) throws FileNotFoundException {
