@@ -6,6 +6,7 @@
 
 <div xmlns="http://www.w3.org/1999/html">
   <div ng-hide="user.id"><h2 openlmis-message="create.user.label"></h2></div>
+  <div ng-show="user.id"><h2 openlmis-message="edit.user.label"></h2></div>
 
   <form ng-submit="saveUser()" id="create-user" name="userForm" novalidate select2-blur>
     <div class="app-form">
@@ -20,7 +21,7 @@
             <div class="form-field">
               <input ng-model="user.userName" name="userName" id="userName" type="text" maxlength="50"
                      ng-required="true" ng-change="validateUserName()"/>
-              <span class="field-error" ng-show="userForm.userName.$error.required && showError" openlmis-message="create.user.missingValue">
+              <span class="field-error" ng-show="userForm.userName.$error.required && showError" openlmis-message="missing.value">
               </span>
 
               <span class="field-error" ng-show="userNameInvalid" openlmis-message="create.user.invalid.userName">
@@ -33,7 +34,7 @@
 
             <div class="form-field">
               <input ng-model="user.email" name="email" id="email" type="text" maxlength="50" ng-required="true"/>
-              <span class="field-error" ng-show="userForm.email.$error.required && showError" openlmis-message="create.user.missingValue">
+              <span class="field-error" ng-show="userForm.email.$error.required && showError" openlmis-message="missing.value">
               </span>
             </div>
           </div>
@@ -46,7 +47,7 @@
             <div class="form-field">
               <input ng-model="user.firstName" name="firstName" id="firstName" type="text" maxlength="50"
                      ng-required="true"/>
-              <span class="field-error" ng-show="userForm.firstName.$error.required && showError" openlmis-message="create.user.missingValue">
+              <span class="field-error" ng-show="userForm.firstName.$error.required && showError" openlmis-message="missing.value">
               </span>
             </div>
           </div>
@@ -58,7 +59,7 @@
             <div class="form-field">
               <input ng-model="user.lastName" name="lastName" id="lastName" type="text" maxlength="50"
                      ng-required="true"/>
-              <span class="field-error" ng-show="userForm.lastName.$error.required && showError" openlmis-message="create.user.missingValue">
+              <span class="field-error" ng-show="userForm.lastName.$error.required && showError" openlmis-message="missing.value">
               </span>
             </div>
           </div>
