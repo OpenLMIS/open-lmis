@@ -8,18 +8,21 @@
 <div class="rnr-tabs">
   <ul class="clearfix">
     <li ng-class="{'selected': !showNonFullSupply}">
-      <a ng-href="{{fullSupplyLink}}" id="fullSupplyTab">Full Supply Product(s)</a></li>
+      <a ng-click="switchSupplyType('full-supply')" id="fullSupplyTab">Full Supply Product(s)</a></li>
     <li ng-class="{'selected': showNonFullSupply}">
-      <a ng-href="{{nonFullSupplyLink}}" id="nonFullSupplyTab">Non Full Supply Product(s)</a></li>
+      <a ng-click="switchSupplyType('non-full-supply')" id="nonFullSupplyTab">Non Full Supply Product(s)</a></li>
   </ul>
 </div>
-<div style="width: 100%">
-  <div class="approveGrid grid-approval" ng-grid="rnrGrid" ng-show="pageLineItems.length"></div>
-</div>
-<div class="alert alert-success" id="noProductMessage" ng-hide="pageLineItems.length">
-  No products.
-</div>
 
+<ng-switch on="showNonFullSupply">
+        <span ng-switch-when="true">
+          <ng-include src="'/public/pages/logistics/rnr/partials/view/view-non-full-supply.html'"></ng-include>
+        </span>
+        <span ng-switch-default>
+          <ng-include src="'/public/pages/logistics/rnr/partials/view/view-full-supply.html'"></ng-include>
+        </span>
+</ng-switch>
+<br><br>
 
 <div form-toolbar id="action_buttons" class="action-buttons">
   <ng-include src="'/public/pages/logistics/rnr/partials/total-cost.html'"></ng-include>
