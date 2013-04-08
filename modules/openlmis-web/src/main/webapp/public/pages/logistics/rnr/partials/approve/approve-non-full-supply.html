@@ -8,11 +8,13 @@
   <div class="rnr-table">
     <table id="nonFullSupplyTable" class="table table-bordered">
       <thead>
-      <tr>
+      <tr ng-show="pageLineItems.length">
         <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in visibleNonFullSupplyColumns"
             ng-bind="programRnrColumn.label"></th>
       </tr>
       </thead>
+      <div ng-hide="pageLineItems.length" class="alert alert-info" openlmis-message="rnr.no.products">
+      </div>
       <tbody ng-show="visibleNonFullSupplyColumns" ng-repeat="rnrLineItem in pageLineItems">
       <tr>
         <td class="productCategory" colspan="{{visibleNonFullSupplyColumns.length}}" ng-show="showCategory($index)"
