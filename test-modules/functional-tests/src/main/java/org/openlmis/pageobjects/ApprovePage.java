@@ -232,7 +232,7 @@ public class ApprovePage extends RequisitionPage {
 
 
     BigDecimal totalOverAllCost = new BigDecimal(parseFloat(totalCostFullSupplyLineItem)).setScale(2, ROUND_HALF_UP);
-    assertEquals(totalRnrCost.getText().trim(), String.valueOf(totalOverAllCost));
+    assertEquals(totalRnrCost.getText().substring(1).trim(), String.valueOf(totalOverAllCost));
 
 
   }
