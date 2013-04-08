@@ -126,6 +126,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     initiateRnRPage.closeCommentPopUp();
     initiateRnRPage.clickCommentsButton();
     initiateRnRPage.verifyValueInCommentsTextArea("");
+    initiateRnRPage.closeCommentPopUp();
     initiateRnRPage.addComments("Dummy Comments.");
     initiateRnRPage.verifyComment("Dummy Comments.", userSICUserName, 1);
 
@@ -160,6 +161,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     approvePageLowerSNUser.closeCommentPopUp();
     approvePageLowerSNUser.clickCommentsButton();
     approvePageLowerSNUser.verifyValueInCommentsTextArea("");
+    approvePageLowerSNUser.closeCommentPopUp();
     approvePageLowerSNUser.addComments("This is urgent");
     approvePageLowerSNUser.verifyComment("This is urgent", userMO, 2);
     approvePageLowerSNUser.approveRequisition();
