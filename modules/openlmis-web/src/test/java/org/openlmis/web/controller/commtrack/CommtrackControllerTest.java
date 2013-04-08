@@ -11,7 +11,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.commtrack.domain.CommtrackRequisition;
+import org.openlmis.commtrack.domain.CommtrackReport;
 import org.openlmis.commtrack.service.CommtrackService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +31,7 @@ public class CommtrackControllerTest {
 
   @Test
   public void shouldSubmitRequisitionForACommTrackUser() throws Exception {
-    CommtrackRequisition requisition = new CommtrackRequisition();
+    CommtrackReport requisition = new CommtrackReport();
 
     when(service.submitRequisition(requisition)).thenReturn(1);
 

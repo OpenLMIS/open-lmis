@@ -7,15 +7,29 @@
 package org.openlmis.commtrack.service;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.commtrack.domain.CommtrackRequisition;
+import org.openlmis.commtrack.domain.CommtrackReport;
+import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.service.RequisitionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 @NoArgsConstructor
 public class CommtrackService {
 
-  public Integer submitRequisition(CommtrackRequisition requisition) {
-    return null;
+  @Autowired
+  RequisitionService requisitionService;
+
+  public Integer submitRequisition(CommtrackReport report) {
+    Rnr requisition = requisitionService.initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), report.getUserId());
+
+    requisition.setFullSupplyLineItems(report.getProducts());
+
+    requisitionService.submit(requisition);
+
+    requisitionService.authorize(requisition);
+
+    return requisition.getId();
   }
 
 }

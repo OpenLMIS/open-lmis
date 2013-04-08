@@ -7,7 +7,7 @@
 package org.openlmis.web.controller.commtrack;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.commtrack.domain.CommtrackRequisition;
+import org.openlmis.commtrack.domain.CommtrackReport;
 import org.openlmis.commtrack.service.CommtrackService;
 import org.openlmis.web.controller.BaseController;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -26,7 +26,7 @@ public class CommtrackController extends BaseController {
   private CommtrackService commtrackService;
 
   @RequestMapping(value = "/commtrack/requisitions", method = POST, headers = ACCEPT_JSON)
-  public ResponseEntity submitRequisition(CommtrackRequisition requisition) {
-    return OpenLmisResponse.response("R&R", commtrackService.submitRequisition(requisition));
+  public ResponseEntity submitRequisition(CommtrackReport report) {
+    return OpenLmisResponse.response("R&R", commtrackService.submitRequisition(report));
   }
 }
