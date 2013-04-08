@@ -6,7 +6,7 @@
 
 apply plugin: 'jetty'
 apply plugin: 'war'
-def keystore = "$rootDir/certificate/server.jks"
+def keystore = "$rootDir/certificate/server.keystore"
 def password = 'password'
 
 buildscript {
