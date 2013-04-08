@@ -121,6 +121,11 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
     initiateRnRPage.submitRnR();
 
+    initiateRnRPage.clickCommentsButton();
+    initiateRnRPage.typeCommentsInCommentsTextArea("Test comment.");
+    initiateRnRPage.closeCommentPopUp();
+    initiateRnRPage.clickCommentsButton();
+    initiateRnRPage.verifyValueInCommentsTextArea("");
     initiateRnRPage.addComments("Dummy Comments.");
     initiateRnRPage.verifyComment("Dummy Comments.", userSICUserName, 1);
 
@@ -150,8 +155,13 @@ public class E2EInitiateRnR extends TestCaseHelper {
     approvePageLowerSNUser.verifyRnRHeader("FCcode", "FCname", date_time, program, periodDetails, geoZone, parentgeoZone, operatedBy, facilityType);
     approvePageLowerSNUser.verifyApprovedQuantity();
     approvePageLowerSNUser.editApproveQuantityAndVerifyTotalCost("290");
-    approvePage.addComments("This is urgent");
-    approvePage.verifyComment("This is urgent", userMO, 2);
+    approvePageLowerSNUser.clickCommentsButton();
+    approvePageLowerSNUser.typeCommentsInCommentsTextArea("Test comment.");
+    approvePageLowerSNUser.closeCommentPopUp();
+    approvePageLowerSNUser.clickCommentsButton();
+    approvePageLowerSNUser.verifyValueInCommentsTextArea("");
+    approvePageLowerSNUser.addComments("This is urgent");
+    approvePageLowerSNUser.verifyComment("This is urgent", userMO, 2);
     approvePageLowerSNUser.approveRequisition();
     approvePageLowerSNUser.verifyNoRequisitionPendingMessage();
     LoginPage loginPageTopSNUser = homePageLowerSNUser.logout(baseUrlGlobal);

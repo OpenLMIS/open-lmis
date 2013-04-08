@@ -32,11 +32,9 @@ public class RequisitionPage extends Page {
   }
 
   public void addComments(String comments) {
-    testWebDriver.waitForElementToAppear(commentsButton);
-    commentsButton.click();
-    addCommentTextArea.sendKeys(comments);
-    addCommentButton.click();
-    commentCloseIcon.click();
+    typeCommentsInCommentsTextArea(comments);
+    clickAddCommentsButton();
+    closeCommentPopUp();
   }
 
   public void verifyComment(String comments, String AddedBy, int commentNumber) {
@@ -56,6 +54,31 @@ public class RequisitionPage extends Page {
     isAddedOn = commentAddedBy.getText().contains(ft.format(date));
     SeleneseTestNgHelper.assertTrue(isAddedOn);
     commentCloseIcon.click();
+  }
+
+  public void closeCommentPopUp() {
+    testWebDriver.waitForElementToAppear(commentCloseIcon);
+    commentCloseIcon.click();
+  }
+
+  public void typeCommentsInCommentsTextArea(String comments) {
+    testWebDriver.waitForElementToAppear(addCommentTextArea);
+    addCommentTextArea.sendKeys(comments);
+  }
+
+  public void clickCommentsButton() {
+    testWebDriver.waitForElementToAppear(commentsButton);
+    commentsButton.click();
+  }
+
+  public void clickAddCommentsButton() {
+    testWebDriver.waitForElementToAppear(addCommentButton);
+    addCommentButton.click();
+  }
+
+  public void verifyValueInCommentsTextArea(String textToVerify) {
+    testWebDriver.waitForElementToAppear(addCommentTextArea);
+    SeleneseTestNgHelper.assertEquals(addCommentTextArea.getAttribute("value").trim(), textToVerify.trim());
   }
 
   public void verifyCommentBoxNotPresent() {
