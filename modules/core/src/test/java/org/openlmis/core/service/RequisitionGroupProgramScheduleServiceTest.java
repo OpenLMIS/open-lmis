@@ -9,6 +9,7 @@ package org.openlmis.core.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.openlmis.core.domain.RequisitionGroupProgramSchedule;
 import org.openlmis.core.repository.RequisitionGroupProgramScheduleRepository;
 
@@ -16,8 +17,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.builder.RequisitionGroupProgramScheduleBuilder.*;
 
@@ -35,13 +35,34 @@ public class RequisitionGroupProgramScheduleServiceTest {
   }
 
   @Test
-  public void shouldSaveRequisitionGroupProgramSchedule() throws Exception {
+  public void shouldInsertRequisitionGroupProgramScheduleWhenIdIsNull() throws Exception {
 
     RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
+    RequisitionGroupProgramScheduleRepository spyRequisitionGroupProgramScheduleRepository = spy(new RequisitionGroupProgramScheduleRepository());
+    service = new RequisitionGroupProgramScheduleService(spyRequisitionGroupProgramScheduleRepository);
+
+    Mockito.doNothing().when(spyRequisitionGroupProgramScheduleRepository).insert(requisitionGroupProgramSchedule);
 
     service.save(requisitionGroupProgramSchedule);
 
-    verify(requisitionGroupProgramScheduleRepository).insert(requisitionGroupProgramSchedule);
+    verify(spyRequisitionGroupProgramScheduleRepository).insert(requisitionGroupProgramSchedule);
+    verify(spyRequisitionGroupProgramScheduleRepository, never()).update(requisitionGroupProgramSchedule);
+  }
+
+  @Test
+  public void shouldUpdateRequisitionGroupProgramScheduleWhenIdIsNotNull() throws Exception {
+
+    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
+    requisitionGroupProgramSchedule.setId(1);
+    RequisitionGroupProgramScheduleRepository spyRequisitionGroupProgramScheduleRepository = spy(new RequisitionGroupProgramScheduleRepository());
+    service = new RequisitionGroupProgramScheduleService(spyRequisitionGroupProgramScheduleRepository);
+
+    Mockito.doNothing().when(spyRequisitionGroupProgramScheduleRepository).update(requisitionGroupProgramSchedule);
+
+    service.save(requisitionGroupProgramSchedule);
+
+    verify(spyRequisitionGroupProgramScheduleRepository).update(requisitionGroupProgramSchedule);
+    verify(spyRequisitionGroupProgramScheduleRepository, never()).insert(requisitionGroupProgramSchedule);
   }
 
   @Test

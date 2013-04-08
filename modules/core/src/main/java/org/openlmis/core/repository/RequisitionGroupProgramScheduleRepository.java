@@ -31,9 +31,13 @@ public class RequisitionGroupProgramScheduleRepository {
   private FacilityMapper facilityMapper;
 
   @Autowired
-  public RequisitionGroupProgramScheduleRepository(RequisitionGroupProgramScheduleMapper requisitionGroupProgramScheduleMapper,
-                                                   RequisitionGroupMapper requisitionGroupMapper, ProgramRepository programRepository,
-                                                   ProcessingScheduleMapper processingScheduleMapper, FacilityMapper facilityMapper) {
+  public RequisitionGroupProgramScheduleRepository(
+    RequisitionGroupProgramScheduleMapper requisitionGroupProgramScheduleMapper,
+    RequisitionGroupMapper requisitionGroupMapper,
+    ProgramRepository programRepository,
+    ProcessingScheduleMapper processingScheduleMapper,
+    FacilityMapper facilityMapper) {
+
     this.mapper = requisitionGroupProgramScheduleMapper;
     this.requisitionGroupMapper = requisitionGroupMapper;
     this.programRepository = programRepository;
@@ -50,6 +54,12 @@ public class RequisitionGroupProgramScheduleRepository {
     } catch (DuplicateKeyException e) {
       throw new DataException("Duplicate Requisition Group Code And Program Code Combination found");
     }
+  }
+
+  public void update(RequisitionGroupProgramSchedule requisitionGroupProgramSchedule) {
+    populateIdsForRequisitionProgramScheduleEntities(requisitionGroupProgramSchedule);
+    validateRequisitionGroupSchedule(requisitionGroupProgramSchedule);
+    mapper.update(requisitionGroupProgramSchedule);
   }
 
   private void populateIdsForRequisitionProgramScheduleEntities(RequisitionGroupProgramSchedule requisitionGroupProgramSchedule) {

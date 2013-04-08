@@ -86,6 +86,24 @@ public class RequisitionGroupProgramScheduleMapperIT {
   }
 
   @Test
+  public void shouldUpdateRGProgramSchedule() throws Exception {
+    programMapper.insert(requisitionGroupProgramSchedule.getProgram());
+    requisitionGroupMapper.insert(requisitionGroupProgramSchedule.getRequisitionGroup());
+
+    requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
+
+    requisitionGroupProgramSchedule.setDirectDelivery(false);
+    Facility dropOffFacility = new Facility();
+    requisitionGroupProgramSchedule.setDropOffFacility(dropOffFacility);
+    requisitionGroupProgramSchedule.setDirectDelivery(false);
+
+    requisitionGroupProgramScheduleMapper.update(requisitionGroupProgramSchedule);
+
+    assertThat(requisitionGroupProgramSchedule.getDropOffFacility(), is(dropOffFacility));
+    assertThat(requisitionGroupProgramSchedule.isDirectDelivery(), is(false));
+  }
+
+  @Test
   public void shouldGetProgramIdsForRGById() throws Exception {
     programMapper.insert(requisitionGroupProgramSchedule.getProgram());
     requisitionGroupMapper.insert(requisitionGroupProgramSchedule.getRequisitionGroup());

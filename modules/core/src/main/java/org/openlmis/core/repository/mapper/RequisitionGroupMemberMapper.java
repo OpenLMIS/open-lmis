@@ -7,6 +7,7 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.openlmis.core.domain.RequisitionGroupMember;
@@ -18,20 +19,22 @@ import java.util.List;
 public interface RequisitionGroupMemberMapper {
 
   @Insert("INSERT INTO requisition_group_members" +
-      "(requisitionGroupId, facilityId, modifiedBy, modifiedDate) " +
-      "VALUES (#{requisitionGroup.id}, #{facility.id}, #{modifiedBy}, #{modifiedDate})")
+    "(requisitionGroupId, facilityId, modifiedBy, modifiedDate) " +
+    "VALUES (#{requisitionGroup.id}, #{facility.id}, #{modifiedBy}, #{modifiedDate})")
+    @Options(useGeneratedKeys = true)
   Integer insert(RequisitionGroupMember requisitionGroupMember);
 
-  @Select("SELECT rgps.programId " +
-      "FROM requisition_groups rg, requisition_group_program_schedules rgps, requisition_group_members rgm " +
-      "WHERE rg.id = rgps.requisitionGroupId " +
-      "AND rg.id = rgm.requisitionGroupId " +
-      "AND rgm.facilityId = #{facilityId}")
-  List<Integer> getRequisitionGroupProgramIdsForId(Integer facilityId);
+  @Select({"SELECT rgps.programId FROM requisition_groups rg",
+    "INNER JOIN requisition_group_program_schedules rgps ON rg.id = rgps.requisitionGroupId",
+    "INNER JOIN requisition_group_members rgm ON rg.id = rgm.requisitionGroupId",
+    "WHERE rgm.facilityId = #{facilityId}"})
+  List<Integer> getRequisitionGroupProgramIdsForFacilityId(Integer facilityId);
 
-  @Select("SELECT COUNT(*) " +
-      "FROM requisition_group_members " +
-      "WHERE requisitionGroupId = #{rgId} " +
-      "AND facilityId =#{facilityId}")
-  Integer doesMappingExist(@Param(value = "rgId") Integer rgId, @Param(value = "facilityId") Integer facilityId);
+  @Select({"SELECT *",
+    "FROM requisition_group_members",
+    "WHERE requisitionGroupId = #{rgId}",
+    "AND facilityId = #{facilityId}"})
+  RequisitionGroupMember getMappingByRequisitionGroupIdAndFacilityId(
+    @Param(value = "rgId") Integer rgId,
+    @Param(value = "facilityId") Integer facilityId);
 }

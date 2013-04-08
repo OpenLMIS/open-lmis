@@ -18,6 +18,7 @@ public interface RequisitionGroupProgramScheduleMapper {
   @Insert("INSERT INTO requisition_group_program_schedules" +
     "(requisitionGroupId, programId, scheduleId, directDelivery, dropOffFacilityId, modifiedBy, modifiedDate) " +
     "VALUES(#{requisitionGroup.id}, #{program.id}, #{processingSchedule.id}, #{directDelivery}, #{dropOffFacility.id}, #{modifiedBy}, #{modifiedDate})")
+    @Options(useGeneratedKeys = true)
   Integer insert(RequisitionGroupProgramSchedule requisitionGroupProgramSchedule);
 
   @Select("SELECT programId FROM requisition_group_program_schedules WHERE requisitionGroupId = #{requisitionGroupId}")
@@ -34,11 +35,11 @@ public interface RequisitionGroupProgramScheduleMapper {
     @Param(value = "requisitionGroupId") Integer requisitionGroupId,
     @Param(value = "programId") Integer programId);
 
-  @Select({"SELECT rgps.* FROM Requisition_Group_Program_Schedules rgps, Programs p, Requisition_Groups rg",
-    "WHERE rgps.requisitionGroupId = rg.id AND",
-    "rg.code = #{requisitionGroupCode} AND",
-    "rgps.programId = p.id AND",
-    "p.code = #{programCode}"})
+  @Select({"SELECT rgps.* FROM Requisition_Group_Program_Schedules rgps",
+    "INNER JOIN Programs p ON rgps.programId = p.id",
+    "INNER JOIN Requisition_Groups rg ON rgps.requisitionGroupId = rg.id",
+    "WHERE lower(rg.code) = lower(#{requisitionGroupCode}) AND",
+    "lower(p.code) = lower(#{programCode})"})
   @Results(value = {
     @Result(property = "program.id", column = "programId"),
     @Result(property = "processingSchedule.id", column = "scheduleId"),
@@ -48,4 +49,12 @@ public interface RequisitionGroupProgramScheduleMapper {
   RequisitionGroupProgramSchedule getScheduleForRequisitionGroupCodeAndProgramCode(
     @Param(value = "requisitionGroupCode") String requisitionGroupCode,
     @Param(value = "programCode") String programCode);
+
+  @Update("UPDATE Requisition_Group_Program_Schedules SET " +
+    "programId=#{requisitionGroupProgramSchedule.program.id}, " +
+    "scheduleId=#{requisitionGroupProgramSchedule.processingSchedule.id}, " +
+    "directDelivery=#{requisitionGroupProgramSchedule.directDelivery}, " +
+    "dropOffFacilityId=#{requisitionGroupProgramSchedule.dropOffFacility.id} " +
+    "where id=#{requisitionGroupProgramSchedule.id}")
+  void update(@Param(value = "requisitionGroupProgramSchedule") RequisitionGroupProgramSchedule requisitionGroupProgramSchedule);
 }

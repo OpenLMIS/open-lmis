@@ -21,11 +21,14 @@ import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.core.repository.mapper.RequisitionGroupMapper;
 import org.openlmis.core.repository.mapper.RequisitionGroupMemberMapper;
 import org.openlmis.core.repository.mapper.RequisitionGroupProgramScheduleMapper;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.ArrayList;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
@@ -62,11 +65,12 @@ public class RequisitionGroupMemberRepositoryTest {
   private RequisitionGroupRepository requisitionGroupRepository;
 
   private RequisitionGroupMemberRepository repository;
+  private Facility facility;
 
   @Before
   public void setUp() throws Exception {
+    facility = make(a(defaultFacility));
     requisitionGroup = make(a(defaultRequisitionGroup));
-    Facility facility = make(a(defaultFacility));
 
     requisitionGroupMember = new RequisitionGroupMember();
     requisitionGroupMember.setRequisitionGroup(requisitionGroup);
@@ -81,8 +85,6 @@ public class RequisitionGroupMemberRepositoryTest {
 
   @Test
   public void shouldSaveMappingIfMappingDoesNotExist() throws Exception {
-    when(requisitionGroupMemberMapper.doesMappingExist(requisitionGroupMember.getRequisitionGroup().getId(),
-      requisitionGroupMember.getRequisitionGroup().getId())).thenReturn(0);
     repository.insert(requisitionGroupMember);
 
     verify(requisitionGroupMemberMapper).insert(requisitionGroupMember);
@@ -90,8 +92,7 @@ public class RequisitionGroupMemberRepositoryTest {
 
   @Test
   public void shouldSaveMappingIfMappingAlreadyExists() throws Exception {
-    when(requisitionGroupMemberMapper.doesMappingExist(requisitionGroupMember.getRequisitionGroup().getId(),
-      requisitionGroupMember.getFacility().getId())).thenReturn(1);
+    doThrow(DataIntegrityViolationException.class).when(requisitionGroupMemberMapper).insert(requisitionGroupMember);
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Facility to Requisition Group mapping already exists");
@@ -99,6 +100,20 @@ public class RequisitionGroupMemberRepositoryTest {
     repository.insert(requisitionGroupMember);
 
     verify(requisitionGroupMemberMapper, never()).insert(requisitionGroupMember);
+  }
+
+  @Test
+  public void shouldGetMappingForRequisitionGroupIdAndFacilityId() throws Exception {
+    requisitionGroup.setId(5);
+    facility.setId(4);
+    when(requisitionGroupMemberMapper.
+      getMappingByRequisitionGroupIdAndFacilityId(requisitionGroup.getId(), facility.getId())).
+      thenReturn(requisitionGroupMember);
+
+    RequisitionGroupMember returnedRGMember = repository.
+      getRequisitionGroupMemberForRequisitionGroupIdAndFacilityId(requisitionGroup, facility);
+
+    assertThat(returnedRGMember, is(requisitionGroupMember));
   }
 }
 

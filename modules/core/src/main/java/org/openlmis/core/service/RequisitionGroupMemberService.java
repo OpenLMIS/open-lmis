@@ -7,12 +7,12 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.RequisitionGroupMember;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.*;
-import org.openlmis.core.repository.mapper.RequisitionGroupProgramScheduleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,33 +43,58 @@ public class RequisitionGroupMemberService {
   }
 
   public void save(RequisitionGroupMember requisitionGroupMember) {
-    requisitionGroupMember.getFacility().setId(facilityRepository.getIdForCode(
-      requisitionGroupMember.getFacility().getCode()));
-    requisitionGroupMember.getRequisitionGroup().setId(
-      requisitionGroupRepository.getByCode(requisitionGroupMember.getRequisitionGroup()).getId());
+    insertIfDoesNotAlreadyExist(requisitionGroupMember);
+  }
 
-    List<Integer> requisitionGroupProgramIdsForFacility = requisitionGroupMemberRepository.
-      getRequisitionGroupProgramIdsForId(requisitionGroupMember.getFacility().getId());
+  private void insertIfDoesNotAlreadyExist(RequisitionGroupMember requisitionGroupMember) {
+    if (requisitionGroupMember.getId() == null) {
+      setIdsForRequisitionGroupMemberEntitiesAndValidate(requisitionGroupMember);
+      validateIfFacilityIsAlreadyAssignedToRequistionGroupForProgram(requisitionGroupMember);
 
-    if (requisitionGroupMember.getRequisitionGroup().getId() == null) {
-      throw new DataException("Requisition Group does not exist");
+      requisitionGroupMemberRepository.insert(requisitionGroupMember);
     }
+  }
 
-    List<Integer> programIDsForRG = requisitionGroupProgramScheduleRepository.getProgramIDsForRequisitionGroup(requisitionGroupMember.getRequisitionGroup().getId());
-    if (programIDsForRG.size() == 0) {
-      throw new DataException("No Program(s) mapped for Requisition Group");
-    }
+  private void validateIfFacilityIsAlreadyAssignedToRequistionGroupForProgram(RequisitionGroupMember requisitionGroupMember) {
+    List<Integer> commonProgramIds = getCommonProgramIdsForRequisitionGroupAndFacility(requisitionGroupMember);
 
-    List<Integer> commonProgramsId = intersection(requisitionGroupProgramIdsForFacility, programIDsForRG);
-    if (commonProgramsId.size() > 0) {
-      Program duplicateProgram = programRepository.getById(commonProgramsId.get(0));
-      duplicateProgram.setId(commonProgramsId.get(0));
+    if (commonProgramIds.size() > 0) {
+      Program duplicateProgram = programRepository.getById(commonProgramIds.get(0));
+      duplicateProgram.setId(commonProgramIds.get(0));
       RequisitionGroup requisitionGroup = requisitionGroupRepository.
         getRequisitionGroupForProgramAndFacility(duplicateProgram, requisitionGroupMember.getFacility());
       throw new DataException(String.format("Facility %s is already assigned to Requisition Group %s running same program %s",
         requisitionGroupMember.getFacility().getCode(), requisitionGroup.getCode(), duplicateProgram.getCode()));
     }
+  }
 
-    requisitionGroupMemberRepository.insert(requisitionGroupMember);
+  private List<Integer> getCommonProgramIdsForRequisitionGroupAndFacility(RequisitionGroupMember requisitionGroupMember) {
+    List<Integer> requisitionGroupProgramIdsForFacility = requisitionGroupMemberRepository.
+      getRequisitionGroupProgramIdsForFacilityId(requisitionGroupMember.getFacility().getId());
+
+    List<Integer> programIDsForRG = requisitionGroupProgramScheduleRepository.
+      getProgramIDsForRequisitionGroup(requisitionGroupMember.getRequisitionGroup().getId());
+
+    if (programIDsForRG.size() == 0)
+      throw new DataException("No Program(s) mapped for Requisition Group");
+
+    return intersection(requisitionGroupProgramIdsForFacility, programIDsForRG);
+  }
+
+  private void setIdsForRequisitionGroupMemberEntitiesAndValidate(RequisitionGroupMember requisitionGroupMember) {
+    RequisitionGroup requisitionGroup = requisitionGroupRepository.getByCode(requisitionGroupMember.getRequisitionGroup());
+
+    if (requisitionGroup == null)
+      throw new DataException("Requisition Group does not exist");
+    requisitionGroupMember.getRequisitionGroup().setId(requisitionGroup.getId());
+
+    Integer facilityId = facilityRepository.getIdForCode(requisitionGroupMember.getFacility().getCode());
+    requisitionGroupMember.getFacility().setId(facilityId);
+  }
+
+  public RequisitionGroupMember getExisting(RequisitionGroupMember record) {
+    Facility facility = facilityRepository.getByCode(record.getFacility());
+    RequisitionGroup requisitionGroup = requisitionGroupRepository.getByCode(record.getRequisitionGroup());
+    return requisitionGroupMemberRepository.getRequisitionGroupMemberForRequisitionGroupIdAndFacilityId(requisitionGroup, facility);
   }
 }

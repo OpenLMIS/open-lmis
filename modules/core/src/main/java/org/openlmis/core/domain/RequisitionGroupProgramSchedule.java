@@ -18,6 +18,8 @@ import org.openlmis.upload.annotation.ImportField;
 @EqualsAndHashCode(callSuper = false)
 public class RequisitionGroupProgramSchedule extends BaseModel implements Importable {
 
+  private Integer id;
+
   @ImportField(mandatory = true, name = "RG Code", nested = "code")
   private RequisitionGroup requisitionGroup;
 
@@ -32,10 +34,4 @@ public class RequisitionGroupProgramSchedule extends BaseModel implements Import
 
   @ImportField(name = "Drop off Facility", nested = "code")
   private Facility dropOffFacility;
-
-  @Override
-  @JsonIgnore
-  public Integer getId() {
-    throw new RuntimeException("Id field not supported");
-  }
 }

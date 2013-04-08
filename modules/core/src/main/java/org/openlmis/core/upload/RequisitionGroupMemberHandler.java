@@ -27,10 +27,9 @@ public class RequisitionGroupMemberHandler extends AbstractModelPersistenceHandl
     this.requisitionGroupMemberService = requisitionGroupMemberService;
   }
 
-
   @Override
   protected BaseModel getExisting(BaseModel record) {
-    return null;
+    return requisitionGroupMemberService.getExisting((RequisitionGroupMember)record);
   }
 
   @Override

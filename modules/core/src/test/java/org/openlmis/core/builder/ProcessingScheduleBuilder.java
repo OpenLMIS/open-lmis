@@ -15,6 +15,7 @@ import static com.natpryce.makeiteasy.Property.newProperty;
 
 public class ProcessingScheduleBuilder {
 
+    public static final Property<ProcessingSchedule, Integer> id = newProperty();
     public static final Property<ProcessingSchedule, String> code = newProperty();
     public static final Property<ProcessingSchedule, String> name = newProperty();
     public static final Property<ProcessingSchedule, String> description = newProperty();
@@ -24,6 +25,7 @@ public class ProcessingScheduleBuilder {
     public static final String SCHEDULE_NAME = "QuarterMonthly";
     public static final String SCHEDULE_DESCRIPTION = "QuarterMonth";
     public static final Integer SCHEDULE_MODIFIED_BY = 1;
+    public static final Integer SCHEDULE_ID = 1;
     public static final Instantiator<ProcessingSchedule> defaultProcessingSchedule = new Instantiator<ProcessingSchedule>() {
 
         @Override
@@ -33,6 +35,7 @@ public class ProcessingScheduleBuilder {
             processingSchedule.setName(lookup.valueOf(name, SCHEDULE_NAME));
             processingSchedule.setModifiedBy(lookup.valueOf(modifiedBy, SCHEDULE_MODIFIED_BY));
             processingSchedule.setDescription(lookup.valueOf(description, SCHEDULE_DESCRIPTION));
+            processingSchedule.setId(lookup.valueOf(id, SCHEDULE_ID));
             return processingSchedule;
         }
     };

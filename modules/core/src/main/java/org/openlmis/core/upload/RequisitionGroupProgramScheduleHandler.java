@@ -30,7 +30,7 @@ public class RequisitionGroupProgramScheduleHandler extends AbstractModelPersist
   @Override
   protected BaseModel getExisting(BaseModel record) {
     RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = (RequisitionGroupProgramSchedule)record;
-    return this.requisitionGroupProgramScheduleService.getScheduleForRequisitionGroupCodeAndProgramCode(requisitionGroupProgramSchedule);
+    return requisitionGroupProgramScheduleService.getScheduleForRequisitionGroupCodeAndProgramCode(requisitionGroupProgramSchedule);
   }
 
   @Override

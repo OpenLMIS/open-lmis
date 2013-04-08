@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.openlmis.core.builder.FacilityBuilder.FACILITY_CODE;
@@ -89,11 +90,8 @@ public class RequisitionGroupMemberServiceTest {
 
   @Test
   public void shouldGiveErrorIfRGDoesNotExist() throws Exception {
-    RequisitionGroup requisitionGroupWithNullId = new RequisitionGroup();
-    requisitionGroupWithNullId.setId(null);
-
     when(requisitionGroupRepository.getByCode(
-      requisitionGroupMember.getRequisitionGroup())).thenReturn(requisitionGroupWithNullId);
+      requisitionGroupMember.getRequisitionGroup())).thenReturn(null);
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Requisition Group does not exist");
@@ -142,7 +140,7 @@ public class RequisitionGroupMemberServiceTest {
     requisitionGroupProgramIdsForFacility.add(commonProgramId);
     requisitionGroupProgramIdsForFacility.add(4);
 
-    when(requisitionGroupMemberRepository.getRequisitionGroupProgramIdsForId(FACILITY_ID)).thenReturn(requisitionGroupProgramIdsForFacility);
+    when(requisitionGroupMemberRepository.getRequisitionGroupProgramIdsForFacilityId(FACILITY_ID)).thenReturn(requisitionGroupProgramIdsForFacility);
 
     Program commonProgram = make(a(defaultProgram));
     when(programRepository.getById(commonProgramId)).thenReturn(commonProgram);
@@ -154,5 +152,15 @@ public class RequisitionGroupMemberServiceTest {
     expectedEx.expectMessage("Facility " + FACILITY_CODE + " is already assigned to Requisition Group DCODE running same program " + PROGRAM_CODE);
 
     service.save(requisitionGroupMember);
+  }
+
+  @Test
+  public void shouldNotInsertIfRequisitionGroupMemberIdIsPresent() throws Exception {
+
+    requisitionGroupMember.setId(1);
+
+    service.save(requisitionGroupMember);
+
+    verify(requisitionGroupMemberRepository, never()).insert(requisitionGroupMember);
   }
 }

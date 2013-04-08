@@ -28,6 +28,7 @@ import java.util.Arrays;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static org.hamcrest.CoreMatchers.any;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
@@ -172,6 +173,18 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
     RequisitionGroupProgramSchedule schedule = repository.getScheduleForRequisitionGroupAndProgram(1, 2);
 
     assertThat(schedule, is(requisitionGroupProgramSchedule));
+  }
+
+  @Test
+  public void shouldUpdateRequisitionGroupProgramSchedule() throws Exception {
+    when(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode())).thenReturn(1);
+    when(programRepository.getIdByCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1);
+    when(processingScheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getProcessingSchedule().getCode())).thenReturn(1);
+    when(facilityMapper.getIdForCode(dropOffFacility.getCode())).thenReturn(1);
+    requisitionGroupProgramSchedule.setDropOffFacility(dropOffFacility);
+
+    repository.update(requisitionGroupProgramSchedule);
+    verify(requisitionGroupProgramScheduleMapper).update(requisitionGroupProgramSchedule);
   }
 
   private Facility facility(String facilityCode) {

@@ -51,9 +51,12 @@ public class RequisitionGroupMapperIT {
 
   @Autowired
   RequisitionGroupMemberMapper requisitionGroupMemberMapper;
+  @Autowired
+  private ProcessingScheduleMapper processingScheduleMapper;
 
   private RequisitionGroup requisitionGroup;
   private SupervisoryNode supervisoryNode;
+
   private Facility facility;
 
   @Before
@@ -116,6 +119,7 @@ public class RequisitionGroupMapperIT {
     requisitionGroupMapper.insert(requisitionGroup);
 
     ProcessingSchedule processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
+    processingScheduleMapper.insert(processingSchedule);
 
     RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
     requisitionGroupProgramSchedule.setProgram(make(a(defaultProgram)));

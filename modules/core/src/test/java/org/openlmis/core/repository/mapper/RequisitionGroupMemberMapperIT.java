@@ -91,24 +91,9 @@ public class RequisitionGroupMemberMapperIT {
     requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
     requisitionGroupMemberMapper.insert(requisitionGroupMember);
 
-    List<Integer> programIds = requisitionGroupMemberMapper.getRequisitionGroupProgramIdsForId(requisitionGroupMember.getFacility().getId());
+    List<Integer> programIds = requisitionGroupMemberMapper.getRequisitionGroupProgramIdsForFacilityId(requisitionGroupMember.getFacility().getId());
 
     assertThat(programIds.size(), is(1));
     assertThat(programIds.get(0), is(requisitionGroupProgramSchedule.getProgram().getId()));
-  }
-
-  @Test
-  public void shouldReturnOneIfMappingAlreadyExists() throws Exception {
-    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
-    requisitionGroupProgramSchedule.setProgram(make(a(defaultProgram)));
-    requisitionGroupProgramSchedule.setRequisitionGroup(requisitionGroup);
-    requisitionGroupProgramSchedule.setProcessingSchedule(processingSchedule);
-    programMapper.insert(requisitionGroupProgramSchedule.getProgram());
-
-    requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
-    requisitionGroupMemberMapper.insert(requisitionGroupMember);
-
-    assertThat(requisitionGroupMemberMapper.doesMappingExist(requisitionGroupMember.getRequisitionGroup().getId(), requisitionGroupMember.getFacility().getId()), is(1));
-
   }
 }
