@@ -21,7 +21,7 @@ public class TestCaseHelper {
   protected static boolean isSeleniumStarted = false;
   protected static DriverFactory driverFactory = new DriverFactory();
   public static final String DEFAULT_BROWSER = "firefox";
-  public static final String DEFAULT_BASE_URL = "http://localhost:9091/";
+  public static final String DEFAULT_BASE_URL = "https://localhost:9091/";
   public static final String DEFAULT_DB_URL = "jdbc:postgresql://localhost:5432/open_lmis";
 
 

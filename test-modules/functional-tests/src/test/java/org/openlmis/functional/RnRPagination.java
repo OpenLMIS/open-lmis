@@ -85,7 +85,7 @@ public class RnRPagination extends TestCaseHelper {
      verifyDisplayOrderFullSupplyOnViewRequisition(11);
 
      testWebDriver.getElementByXpath("//a[contains(text(), '2') and @class='ng-binding']").click();
-     SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//div[@class='ngCanvas']/div[contains(@class,'ngRow ng-scope')][1]/div[@class='ngAggregate productCategory ng-scope']").getText(),"Antibiotics");
+     SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//table[@id='fullSupplyTable']/tbody[1]/tr[1]/td").getText(),"Antibiotics");
      verifyPageLinksFromLastPage();
 
      viewRequisitionPage.clickNonFullSupplyTab();
@@ -97,7 +97,9 @@ public class RnRPagination extends TestCaseHelper {
      verifyNextAndLastLinksEnabled();
 
      testWebDriver.getElementByXpath("//a[contains(text(), '2') and @class='ng-binding']").click();
-     SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//div[@class='ngCanvas']/div[contains(@class,'ngRow ng-scope')][1]/div[@class='ngAggregate productCategory ng-scope']").getText(),"Antibiotics");
+     SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//table[@id='nonFullSupplyTable']/tbody/tr[1]/td").getText(),"Antibiotics");
+
+
      verifyPageLinksFromLastPage();
 
   }
@@ -249,7 +251,7 @@ public class RnRPagination extends TestCaseHelper {
     public void verifyDisplayOrderFullSupplyOnViewRequisition(int numberOfLineItemsPerPage) throws Exception {
         for (int i=0; i<numberOfLineItemsPerPage;i++)
         {
-            SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//div[@class='ngCanvas']/div[contains(@class,'ngRow ng-scope ')]["+ (i+1) +"]/div[@class='ngCell  col2 colt2']").getText(),"F"+i);
+            SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//span[@id='productCode_"+i+"']").getText(),"F"+i);
         }
     }
 
@@ -263,7 +265,7 @@ public class RnRPagination extends TestCaseHelper {
     public void verifyDisplayOrderNonFullSupplyOnViewRequisition(int numberOfLineItemsPerPage) throws Exception {
         for (int i=0; i<numberOfLineItemsPerPage;i++)
         {
-            SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//div[@class='ngCanvas']/div[contains(@class,'ngRow ng-scope ')]["+ (i+1) +"]/div[@class='ngCell  col2 colt2']").getText(),"NF"+i);
+            SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//span[@id='productCode_"+i+"']").getText(),"NF"+i);
         }
     }
 
