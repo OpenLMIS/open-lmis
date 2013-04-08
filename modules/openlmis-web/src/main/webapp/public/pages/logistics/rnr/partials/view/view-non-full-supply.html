@@ -6,6 +6,7 @@
 
 <div ng-controller="ViewNonFullSupplyController">
   <div class="rnr-table">
+    <div ng-hide="pageLineItems.length" class="alert alert-info" openlmis-message="rnr.no.products"></div>
     <table id="nonFullSupplyTable" class="table table-bordered">
       <thead>
       <tr ng-show="pageLineItems.length">
@@ -13,8 +14,6 @@
             ng-bind="programRnrColumn.label"></th>
       </tr>
       </thead>
-      <div ng-hide="pageLineItems.length" class="alert alert-info" openlmis-message="rnr.no.products">
-      </div>
       <tbody ng-show="visibleNonFullSupplyColumns" ng-repeat="rnrLineItem in pageLineItems">
       <tr>
         <td class="productCategory" colspan="{{visibleNonFullSupplyColumns.length}}" ng-show="showCategory($index)"

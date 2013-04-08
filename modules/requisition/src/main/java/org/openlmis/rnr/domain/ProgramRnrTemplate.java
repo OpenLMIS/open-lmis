@@ -149,7 +149,7 @@ public class ProgramRnrTemplate {
         if (rnrColumn.getName().equals("product") || rnrColumn.getName().equals("productCode") ||
           rnrColumn.getName().equals("dispensingUnit") || rnrColumn.getName().equals("quantityRequested") ||
           rnrColumn.getName().equals("packsToShip") || rnrColumn.getName().equals("price") ||
-          rnrColumn.getName().equals("cost")) {
+          rnrColumn.getName().equals("cost") || rnrColumn.getName().equals("quantityApproved")){
           if (rnrColumn.isVisible()) {
             visibleRnrColumns.add(rnrColumn);
           }
