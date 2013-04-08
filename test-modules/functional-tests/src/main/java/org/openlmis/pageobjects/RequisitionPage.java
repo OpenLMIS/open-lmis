@@ -32,6 +32,7 @@ public class RequisitionPage extends Page {
   }
 
   public void addComments(String comments) {
+    clickCommentsButton();
     typeCommentsInCommentsTextArea(comments);
     clickAddCommentsButton();
     closeCommentPopUp();
