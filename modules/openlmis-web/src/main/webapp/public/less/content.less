@@ -119,11 +119,11 @@
 .form-row input[type='text'] {
   width: 306px;
 }
-.form-row input[type='text']:focus {
-  border-color: rgba(82, 168, 236, 0.8) !important;
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6) !important;
-  color: #555 !important;
-}
+//.form-row input[type='text']:focus {
+//  border-color: rgba(82, 168, 236, 0.8) !important;
+//  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6) !important;
+//  color: #555 !important;
+//}
 .form-row select {
   width: 320px;
 }
@@ -343,8 +343,8 @@ span[class^="tpl-"] {
 }
 
 #sortable .ui-sortable-helper {
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
-  border: 1px solid rgba(82, 168, 236, 0.8);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(23, 136, 143, 0.6);
+  border: 1px solid rgba(23, 136, 143, 0.8);
 }
 #sortable .sortable-placeholder {
   border: 2px dashed #5BA5D6;
@@ -508,9 +508,15 @@ table td.cell-input .cell-text {
   border: 1px solid #BBB;
   border-radius: 0;
 }
-.cell-input input[type="text"]:focus {
-  box-shadow: inset 0 0 5px rgba(82, 168, 236, 0.9);
-  border-color: #60B2F1;
+.cell-input {
+  input:focus:required:invalid:focus.ng-pristine,
+  textarea:focus:required:invalid:focus.ng-pristine,
+  select:focus:required:invalid:focus.ng-pristine,
+  input[type='text']:focus {
+    box-shadow: inset 0 0 5px rgba(23, 136, 143, 0.9);
+    border-color: #17888f;
+  }
+
 }
 .search-query {
   margin-top: 10px;
@@ -584,7 +590,6 @@ h3 {
 .adjustment-field {
   input[type="text"] {
     width: 100px;
-    border: 1px solid #BBB;
     padding: 1px 6px;
     border-radius: 4px;
     margin-left: 7px;
@@ -810,10 +815,10 @@ input[type='text'] {
 input:focus:required:invalid:focus.ng-pristine,
 textarea:focus:required:invalid:focus.ng-pristine,
 select:focus:required:invalid:focus.ng-pristine {
-  border-color: rgba(82, 168, 236, 0.8);
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
-  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+  border-color: rgba(23, 136, 143, 0.8);
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(23, 136, 143, 0.6);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(23, 136, 143, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(23, 136, 143, 0.6);
   color: #555;
 }
 
