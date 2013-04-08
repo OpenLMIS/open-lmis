@@ -33,8 +33,8 @@ INSERT INTO users
   (600, 'lmuincharge', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie', (SELECT id FROM facilities WHERE code = 'F10'), 'Frank', 'Doe', 'Jake_Doe@openlmis.com', true);
 
 INSERT INTO USERS
-  (id, userName, password, facilityId, firstName, lastName, email, vendorId ,active) VALUES
-  (700, 'commTrack', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie', (SELECT id FROM facilities WHERE code = 'F10'), 'CommTrac', 'Doe', 'CommTrac_Doe@openlmis.com',(SELECT id from vendors where name='commTrac'), true);
+  (id, userName, password, facilityId, firstName, lastName, vendorId ,active) VALUES
+  (700, 'commTrack', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie', (SELECT id FROM facilities WHERE code = 'F10'), 'CommTrac', 'Doe',(SELECT id from vendors where name='commTrac'), true);
 
 
 INSERT INTO supervisory_nodes
