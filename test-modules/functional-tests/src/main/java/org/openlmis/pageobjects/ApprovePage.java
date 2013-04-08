@@ -225,7 +225,7 @@ public class ApprovePage extends RequisitionPage {
     remarks.click();
     assertEquals(packsToShip.getText().trim(), parseInt(approvedQuantity) / 10);
 
-    BigDecimal cost = new BigDecimal((parseFloat(packsToShip.getText().trim()) + parseFloat(pricePerPack.getText().substring(1)))).setScale(2, ROUND_HALF_UP);
+    BigDecimal cost = new BigDecimal((parseFloat(packsToShip.getText().trim()) * parseFloat(pricePerPack.getText().substring(1)))).setScale(2, ROUND_HALF_UP);
     assertEquals(String.valueOf(cost), lineItemCost.getText().substring(1));
     String totalCostFullSupplyLineItem = lineItemCost.getText().substring(1);
     testWebDriver.sleep(1000);
