@@ -19,8 +19,7 @@
           <div >
             <input ng-model = "role.name" name = "name" id = "name" type = "text" maxlength = "50"
                    ng-required = "true" />
-            <span class = "field-error" ng-show = "roleForm.name.$error.required && showError" >
-              Please fill this value
+            <span class = "field-error" ng-show = "roleForm.name.$error.required && showError" openlmis-message="missing.value">
             </span >
           </div >
         </div >

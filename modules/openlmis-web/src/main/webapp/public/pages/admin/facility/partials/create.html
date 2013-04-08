@@ -5,25 +5,28 @@
   -->
 
 <div xmlns="http://www.w3.org/1999/html">
-<div ng-hide="facility.id"><h2 openlmis-message="create.facility.label"></h2></div>
-<div ng-show="facility.id"><h2 openlmis-message="edit.facility.label"></h2></div>
+<div ng-hide="facility.id"><h2 openlmis-message="create.facility.addNew"></h2></div>
+<div ng-show="facility.id"><h2 openlmis-message="edit.facility.edit"></h2></div>
 
 <form ng-submit="saveFacility()" id="create-facility" name="facilityForm" novalidate
       ng-disabled="facility.dataReportable == 'false'">
 <div class="app-form">
 
 <div class="form-group">
-  <h3 openlmis-message="create.facility.basicInformation"></h3>
+
+  <h3 openlmis-message="label.basicInformation"></h3>
 
   <div class="form-row clearfix">
     <div class="form-cell">
       <label for="code" openlmis-message="create.facility.code"></label>
 
       <div class="form-field">
-        <input ng-model="facility.code" name="code" id="code" type="text" maxlength="50" ng:required="true"
+        <input ng-model="facility.code" name="code" id="code" type="text" maxlength="50" ng-required="true"
                ng-disabled="facility.dataReportable == 'false'"/>
-              <span class="field-error" ng-show="facilityForm.code.$error.required && showError" openlmis-message="missing.value">
-              </span>
+        <span class="field-error" ng-show="facilityForm.code.$error.required && showError"
+              openlmis-message="missing.value">
+
+        </span>
       </div>
     </div>
 
@@ -44,8 +47,10 @@
       <div class="form-field">
         <input ng-model="facility.name" name="name" id="name" type="text" maxlength="50" ng:required="true"
                ng-disabled="facility.dataReportable == 'false'"/>
-              <span class="field-error" ng-show="facilityForm.name.$error.required && showError" openlmis-message="missing.value">
-              </span>
+        <span class="field-error" ng-show="facilityForm.name.$error.required && showError"
+              openlmis-message="missing.value">
+
+        </span>
       </div>
     </div>
 
@@ -58,8 +63,9 @@
                 ng-disabled="facility.dataReportable == 'false'">
           <option value="" openlmis-message="create.facility.select.facilityType"></option>
         </select>
-              <span class="field-error" ng-show="facilityForm.facilityType.$error.required && showError" openlmis-message="select.value">
-              </span>
+        <span class="field-error" ng-show="facilityForm.facilityType.$error.required && showError"
+              openlmis-message="select.value">
+        </span>
       </div>
     </div>
   </div>
@@ -88,8 +94,9 @@
         &nbsp; &nbsp; &nbsp;
         <input ng-model="facility.sdp" type="radio" name="isSdp" value="false"
                ng-disabled="facility.dataReportable == 'false'"/><strong openlmis-message="button.no"></strong>
-              <span class="field-error" ng-show="facilityForm.isSdp.$error.required && showError" openlmis-message="select.value">
-              </span>
+        <span class="field-error" ng-show="facilityForm.isSdp.$error.required && showError"
+              openlmis-message="select.value">
+        </span>
       </div>
     </div>
 
@@ -98,12 +105,14 @@
 
       <div class="form-field radio-group">
         <input ng-model="facility.active" type="radio" name="isActive" value="true"
-               ng:required="true" ng-disabled="facility.dataReportable == 'false'"/><strong openlmis-message="button.yes"></strong> &nbsp; &nbsp;
+               ng:required="true" ng-disabled="facility.dataReportable == 'false'"/><strong
+        openlmis-message="button.yes"></strong> &nbsp; &nbsp;
         &nbsp;
         <input ng-model="facility.active" type="radio" name="isActive" value="false"
                ng-disabled="facility.dataReportable == 'false'"/><strong openlmis-message="button.no"></strong>
-                <span class="field-error" ng-show="facilityForm.isActive.$error.required && showError" openlmis-message="select.value">
-                </span>
+        <span class="field-error" ng-show="facilityForm.isActive.$error.required && showError"
+              openlmis-message="select.value">
+        </span>
       </div>
     </div>
   </div>
@@ -117,7 +126,8 @@
                value="{{facility.goLiveDate | date:'dd/MM/yyyy'}}" ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
                readonly ng-change="blurDateFields()" ng:required="true"
                ng-disabled="facility.dataReportable == 'false'"/>
-        <span class="field-error" ng-show="facilityForm.goLiveDate.$error.required && showError" openlmis-message="missing.value">
+        <span class="field-error" ng-show="facilityForm.goLiveDate.$error.required && showError"
+              openlmis-message="missing.value">
         </span>
       </div>
     </div>
@@ -221,10 +231,12 @@
                    readonly ng-disabled="facility.dataReportable == 'false'"
                    ui-date="{dateFormat:'dd/mm/yy', changeYear: true}" ng-required="supportedProgram.active == true"
                    ng-change="showConfirmDateChangeWindow(supportedProgram)"/>
-          <span class="field-error" ng-show="supportedProgram.active && !supportedProgram.startDate && showError" openlmis-message="create.facility.mandatoryStartDate">
-                </span>
+            <span class="field-error" ng-show="supportedProgram.active && !supportedProgram.startDate && showError"
+                  openlmis-message="create.facility.mandatoryStartDate">
+            </span>
           </td>
-          <td><a class="close" id="remove{{$index}}" ng-click="removeSupportedProgram(supportedProgram)" openlmis-message="create.facility.removeProgram"></a></td>
+          <td><a class="close" id="remove{{$index}}" ng-click="removeSupportedProgram(supportedProgram)"
+                 openlmis-message="create.facility.removeProgram"></a></td>
         </tr>
         <tr class="add-supported-program-row">
           <td>
@@ -242,8 +254,9 @@
                      value="{{supportedProgram.startDate | date: 'dd/MM/yy'}}"
                      ui-date="{dateFormat:'dd/mm/yy', changeYear: true}"
                      ng-disabled="!supportedProgram.program.id"/>
-          <span class="field-error" ng-show="showDateNotEnteredError" openlmis-message="create.facility.mandatoryStartDate">
-                </span>
+            <span class="field-error" ng-show="showDateNotEnteredError"
+                  openlmis-message="create.facility.mandatoryStartDate">
+            </span>
           </td>
           <td><input type="button" class="btn btn-primary" id="supported-program-add" value="Add"
                      ng-disabled="!supportedProgram.program.id" ng-click="addSupportedProgram(supportedProgram)"></td>
@@ -268,8 +281,9 @@
                 ng-disabled="facility.dataReportable == 'false'">
           <option value="" openlmis-message="create.facility.select.geographicZone"></option>
         </select>
-              <span class="field-error" ng-show="facilityForm.geographicZone.$error.required && showError" openlmis-message="select.value">
-              </span>
+        <span class="field-error" ng-show="facilityForm.geographicZone.$error.required && showError"
+              openlmis-message="select.value">
+        </span>
       </div>
     </div>
 
@@ -279,8 +293,9 @@
       <div class="form-field">
         <input ng-model="facility.catchmentPopulation" id="catchment-population" ng-pattern="/^\d{1,9}$/"
                name="catchmentPopulation" type="text" maxlength="9" ng-disabled="facility.dataReportable == 'false'"/>
-              <span class="field-error" ng-show="facilityForm.catchmentPopulation.$error.pattern" openlmis-message="integer.value">
-              </span>
+        <span class="field-error" ng-show="facilityForm.catchmentPopulation.$error.pattern"
+              openlmis-message="integer.value">
+        </span>
       </div>
     </div>
   </div>
@@ -292,8 +307,9 @@
       <div class="form-field">
         <input ng-model="facility.latitude" ng-pattern="/^[+-]?0*\d{0,3}(\.\d{1,5}0*)?$/" id="latitude" type="text"
                name="latitude" ng-disabled="facility.dataReportable == 'false'"/>
-              <span class="field-error" ng-show="facilityForm.latitude.$error.pattern" openlmis-message="create.facility.latitude.value">
-              </span>
+        <span class="field-error" ng-show="facilityForm.latitude.$error.pattern"
+              openlmis-message="create.facility.latitude.value">
+        </span>
       </div>
     </div>
 
@@ -304,8 +320,9 @@
         <input ng-model="facility.longitude" ng-pattern="/^[+-]?0*\d{0,3}(\.\d{1,5}0*)?$/" name="longitude"
                id="longitude"
                type="text" ng-disabled="facility.dataReportable == 'false'"/>
-              <span class="field-error" ng-show="facilityForm.longitude.$error.pattern" openlmis-message="create.facility.longitude.value">
-              </span>
+        <span class="field-error" ng-show="facilityForm.longitude.$error.pattern"
+              openlmis-message="create.facility.longitude.value">
+        </span>
       </div>
     </div>
   </div>
@@ -317,8 +334,9 @@
       <div class="form-field">
         <input ng-model="facility.altitude" ng-pattern="/^[+-]?0*\d{0,4}(\.\d{1,4}0*)?$/" name="altitude" id="altitude"
                type="text" maxlength="9" ng-disabled="facility.dataReportable == 'false'"/>
-              <span class="field-error" ng-show="facilityForm.altitude.$error.pattern" openlmis-message="create.facility.altitude.value">
-              </span>
+        <span class="field-error" ng-show="facilityForm.altitude.$error.pattern"
+              openlmis-message="create.facility.altitude.value">
+        </span>
       </div>
     </div>
   </div>
@@ -336,8 +354,9 @@
         <input ng-model="facility.coldStorageGrossCapacity" ng-pattern="/^\d{1,4}$|^\d{1,4}\.\d{1,4}$/"
                name="coldStorageGrossCapacity" id="cold-storage-gross-capacity" type="text" maxlength="9"
                ng-disabled="facility.dataReportable == 'false'"/>
-              <span class="field-error" ng-show="facilityForm.coldStorageGrossCapacity.$error.pattern" openlmis-message="create.facility.coldStorageCapacity.value">
-              </span>
+        <span class="field-error" ng-show="facilityForm.coldStorageGrossCapacity.$error.pattern"
+              openlmis-message="create.facility.coldStorageCapacity.value">
+        </span>
       </div>
     </div>
   </div>
@@ -350,8 +369,9 @@
         <input ng-model="facility.coldStorageNetCapacity" id="cold-storage-net-capacity"
                ng-pattern="/^\d{1,4}$|^\d{1,4}\.\d{1,4}$/" name="coldStorageNetCapacity" maxlength="9" type="text"
                ng-disabled="facility.dataReportable == 'false'"/>
-              <span class="field-error" ng-show="facilityForm.coldStorageNetCapacity.$error.pattern" openlmis-message="create.facility.coldStorageCapacity.value">
-              </span>
+        <span class="field-error" ng-show="facilityForm.coldStorageNetCapacity.$error.pattern"
+              openlmis-message="create.facility.coldStorageCapacity.value">
+        </span>
       </div>
     </div>
   </div>
@@ -374,7 +394,8 @@
 
       <div class="form-field radio-group">
         <input ng-model="facility.online" type="radio" name="is-online" value="true"
-               ng-disabled="facility.dataReportable == 'false'"/><strong openlmis-message="button.yes"></strong> &nbsp; &nbsp;
+               ng-disabled="facility.dataReportable == 'false'"/><strong openlmis-message="button.yes"></strong> &nbsp;
+        &nbsp;
         &nbsp;
         <input ng-model="facility.online" type="radio" name="is-online" value="false"
                ng-disabled="facility.dataReportable == 'false'"/><strong openlmis-message="button.no"></strong>
@@ -388,9 +409,11 @@
 
       <div class="form-field radio-group">
         <input ng-model="facility.hasElectronicScc" type="radio" name="has-electronic-scc"
-               value="true" ng-disabled="facility.dataReportable == 'false'"/><strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
+               value="true" ng-disabled="facility.dataReportable == 'false'"/><strong
+        openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
         <input ng-model="facility.hasElectronicScc" type="radio" name="has-electronic-scc"
-               value="false" ng-disabled="facility.dataReportable == 'false'"/><strong openlmis-message="button.no"></strong>
+               value="false" ng-disabled="facility.dataReportable == 'false'"/><strong
+        openlmis-message="button.no"></strong>
       </div>
     </div>
 
@@ -399,9 +422,11 @@
 
       <div class="form-field radio-group">
         <input ng-model="facility.hasElectronicDar" type="radio" name="has-electronic-dar"
-               value="true" ng-disabled="facility.dataReportable == 'false'"/><strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
+               value="true" ng-disabled="facility.dataReportable == 'false'"/><strong
+        openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
         <input ng-model="facility.hasElectronicDar" type="radio" name="has-electronic-dar"
-               value="false" ng-disabled="facility.dataReportable == 'false'"/><strong openlmis-message="button.no"></strong>
+               value="false" ng-disabled="facility.dataReportable == 'false'"/><strong
+        openlmis-message="button.no"></strong>
       </div>
     </div>
   </div>
@@ -410,8 +435,8 @@
     <div class="form-cell">
       <label openlmis-message="create.facility.dataReportable"></label>
       <ng-switch on="facility.dataReportable">
-              <span ng-switch-when="true" openlmis-message="button.yes"></span>
-              <span ng-switch-when="false" openlmis-message="button.no"></span>
+        <span ng-switch-when="true" openlmis-message="button.yes"></span>
+        <span ng-switch-when="false" openlmis-message="button.no"></span>
       </ng-switch>
     </div>
 
@@ -448,7 +473,8 @@
        ng-click="showConfirmFacilityDeleteWindow()" openlmis-message="button.delete"></a>
   </div>
   <div class="form-cell button-row" ng-show="facility.dataReportable == 'false'">
-    <a href="" class="btn btn-primary save-button" ng-show="facility.id!=null" ng-click="restoreConfirmModal=true" openlmis-message="button.restore"></a>
+    <a href="" class="btn btn-primary save-button" ng-show="facility.id!=null" ng-click="restoreConfirmModal=true"
+       openlmis-message="button.restore"></a>
   </div>
 
   <div class="toolbar-error" id="saveErrorMsgDiv" ng-bind="error" ng-show="error"></div>

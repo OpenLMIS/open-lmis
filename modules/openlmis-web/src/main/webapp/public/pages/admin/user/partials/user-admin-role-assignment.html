@@ -13,7 +13,7 @@
                   multiple="multiple" name="roles" id="roles">
             <option ng-repeat="role in adminRoles" value="{{role.id}}" ng-bind="role.name"></option>
           </select>
-          <span ng-show="roleAssignment.roleIds.length == 0" class="field-error" openlmis-message="create.user.missingValue">
+          <span ng-show="roleAssignment.roleIds.length == 0" class="field-error" openlmis-message="missing.value">
           </span>
         </div>
       </div>
