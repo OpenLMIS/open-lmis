@@ -13,6 +13,9 @@
     </a>
   </h4>
 
+   <div ng-hide="rnrComments.length" class="no-comments">
+       No comments have been added yet.
+   </div>
   <ul class="comments-list" id="comments-list">
     <li class="comment" ng-repeat="comment in rnrComments">
       <span ng-bind="comment.commentText"></span>

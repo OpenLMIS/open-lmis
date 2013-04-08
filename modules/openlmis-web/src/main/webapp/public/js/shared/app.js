@@ -248,6 +248,7 @@ angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.di
         angular.element(document).keyup(function (e) {
           if (e.which == 27) {
             scope.show = false;
+            scope.comment = "";
           }
           scope.$apply();
         });
