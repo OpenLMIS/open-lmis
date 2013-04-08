@@ -12,6 +12,8 @@ import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.model.Vendor;
+import org.openlmis.core.utils.VendorMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -22,7 +24,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static java.lang.Boolean.*;
+import static java.lang.Boolean.FALSE;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
@@ -38,7 +40,6 @@ import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
 @TransactionConfiguration(defaultRollback = true)
 public class UserMapperIT {
 
-
   @Autowired
   UserMapper userMapper;
   @Autowired
@@ -51,6 +52,8 @@ public class UserMapperIT {
   private FacilityMapper facilityMapper;
   @Autowired
   private SupervisoryNodeMapper supervisoryNodeMapper;
+  @Autowired
+  VendorMapper vendorMapper;
 
   private Facility facility;
   private SupervisoryNode supervisoryNode;
@@ -269,6 +272,20 @@ public class UserMapperIT {
     userMapper.updateUserPassword(user.getId(), newPassword);
     User returnedUser = userMapper.selectUserByUserNameAndPassword(user.getUserName(), newPassword);
     assertThat(returnedUser, is(notNullValue()));
+  }
+
+  @Test
+  public void shouldSelectOnlyUsersWithExternalSystemNullWhileAuthentication() throws Exception {
+    Vendor commTrac = new Vendor("commTrac", true);
+    vendorMapper.insert(commTrac);
+
+    User externalUser = make(a(defaultUser, with(facilityId, facility.getId()), with(vendorId, commTrac.getId())));
+
+    userMapper.insert(externalUser);
+    userMapper.updateUserPassword(externalUser.getId(), "random");
+
+    User user = userMapper.selectUserByUserNameAndPassword(defaultUserName, "random");
+    assertThat(user, is(nullValue()));
   }
 
   private Program insertProgram(Program program) {

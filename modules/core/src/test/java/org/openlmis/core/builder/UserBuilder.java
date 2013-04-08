@@ -29,6 +29,7 @@ public class UserBuilder {
   public static final Property<User, String> email = newProperty();
   public static final Property<User, Integer> supervisorId = newProperty();
   public static final Property<User, String> supervisorUserName = newProperty();
+  public static final Property<User, Integer> vendorId = newProperty();
 
   public static final String defaultUserName = "User123";
   public static final String defaultPassword = "not-in-use";
@@ -42,6 +43,8 @@ public class UserBuilder {
   public static final String defaultEmail = "mizengo_pinda@openlmis.com";
   public static final Integer defaultSupervisorId = 1;
   public static final String defaultSupervisorUserName = "supervisorUserName";
+  public static final Integer defaultVendorId = null;
+
 
   public static final Instantiator<User> defaultUser = new Instantiator<User>() {
 
@@ -58,6 +61,7 @@ public class UserBuilder {
       user.setOfficePhone(lookup.valueOf(officePhone, defaultOfficePhone));
       user.setCellPhone(lookup.valueOf(cellPhone, defaultCellPhone));
       user.setEmail(lookup.valueOf(email, defaultEmail));
+      user.setVendorId(lookup.valueOf(vendorId, defaultVendorId));
       User supervisor = new User();
       supervisor.setId(lookup.valueOf(supervisorId, defaultSupervisorId));
       supervisor.setUserName(lookup.valueOf(supervisorUserName, defaultSupervisorUserName));

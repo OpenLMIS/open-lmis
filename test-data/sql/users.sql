@@ -22,7 +22,7 @@ INSERT INTO role_rights
   ((select id from roles where name='LMU In-Charge'), 'CONVERT_TO_ORDER'),
   ((select id from roles where name='LMU In-Charge'), 'VIEW_ORDER');
 
-
+INSERT INTO VENDORS (name, active) VALUES ('commTrac', true);
 
 INSERT INTO users
   (id, userName, password, facilityId, firstName, lastName, email, active) VALUES
@@ -31,6 +31,11 @@ INSERT INTO users
   (400, 'MedicalOfficer', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie', (SELECT id FROM facilities WHERE code = 'F10'), 'John', 'Doe', 'Joh_Doe@openlmis.com', true),
   (500, 'lmu', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie', (SELECT id FROM facilities WHERE code = 'F10'), 'Frank', 'Doe', 'Frank_Doe@openlmis.com', true),
   (600, 'lmuincharge', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie', (SELECT id FROM facilities WHERE code = 'F10'), 'Frank', 'Doe', 'Jake_Doe@openlmis.com', true);
+
+INSERT INTO USERS
+  (id, userName, password, facilityId, firstName, lastName, email, vendorId ,active) VALUES
+  (700, 'commTrack', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie', (SELECT id FROM facilities WHERE code = 'F10'), 'CommTrac', 'Doe', 'CommTrac_Doe@openlmis.com',(SELECT id from vendors where name='commTrac'), true);
+
 
 INSERT INTO supervisory_nodes
   (parentId, facilityId, name, code) VALUES

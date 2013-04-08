@@ -67,6 +67,7 @@ public class User extends BaseModel implements Importable {
   private static final String INVALID_EMAIL_ERROR_CODE = "user.email.invalid";
 
   private static final String INVALID_USER_NAME_ERROR_CODE = "user.userName.invalid";
+  private Integer vendorId;
 
   public User(Integer id, String userName) {
     this.id = id;

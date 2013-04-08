@@ -24,7 +24,8 @@ CREATE TABLE users (
 
   constraint email_not_null check
     (
-      vendorId IS NULL AND email IS NOT NULL
+      vendorId IS NOT NULL
+      OR (vendorId IS NULL AND email IS NOT NULL)
     )
 );
 

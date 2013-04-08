@@ -15,15 +15,15 @@ import java.util.List;
 @Repository
 public interface UserMapper {
 
-  @Select(value = "SELECT userName, id FROM users WHERE LOWER(userName)=LOWER(#{userName}) AND password=#{password} AND active = TRUE")
+  @Select(value = "SELECT userName, id FROM users WHERE LOWER(userName)=LOWER(#{userName}) AND password=#{password} AND active = TRUE AND vendorId IS NULL")
   User selectUserByUserNameAndPassword(@Param("userName") String userName, @Param("password") String password);
 
   @Insert({"INSERT INTO users",
     "(userName, facilityId, firstName, lastName, employeeId, jobTitle,",
-    "primaryNotificationMethod, officePhone, cellPhone, email, supervisorId, modifiedBy, modifiedDate)",
+    "primaryNotificationMethod, officePhone, cellPhone, email, supervisorId, vendorId, modifiedBy, modifiedDate)",
     "VALUES",
     "(#{userName}, #{facilityId}, #{firstName}, #{lastName}, #{employeeId}, #{jobTitle},",
-    "#{primaryNotificationMethod}, #{officePhone}, #{cellPhone}, #{email}, #{supervisor.id}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()))"})
+    "#{primaryNotificationMethod}, #{officePhone}, #{cellPhone}, #{email}, #{supervisor.id}, #{vendorId}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()))"})
   @Options(useGeneratedKeys = true)
   Integer insert(User user);
 
