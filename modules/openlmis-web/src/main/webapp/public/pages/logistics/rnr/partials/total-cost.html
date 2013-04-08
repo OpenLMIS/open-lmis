@@ -5,25 +5,25 @@
   -->
 
 <div class="total-cost-container">
-  <div class="cost-values">
-    <small>
-      Total Cost For Full Supply Products:
-      <strong>
-        <span id="fullSupplyItemsCostCurrency" class="cell-text" ng-bind="currency"></span><span
-        id="fullSupplyItemsCost" class="cell-text" ng-bind="rnr.fullSupplyItemsSubmittedCost"></span>
-      </strong>
-      &nbsp;|&nbsp;
-      Total Cost For Non Full Supply Products:
-      <strong>
-        <span id="nonFullSupplyItemsCostCurrency" class="cell-text" ng-bind="currency"></span><span
-        id="nonFullSupplyItemsCost" class="cell-text"
-        ng-bind="rnr.nonFullSupplyItemsSubmittedCost"></span>
-      </strong>
-    </small>
-    &nbsp;|&nbsp;
-    <strong>
-      Total R&amp;R Cost:
-      <span id="totalCostCurrency" class="cell-text" ng-bind="currency"></span><span id="totalCost" class="cell-text" ng-bind="rnr.calculateTotalLineItemCost()"></span>
-    </strong>
-  </div>
+    <div class="cost-values">
+        <small>
+            Total Cost For Full Supply Products:
+            <strong>
+                <span id="fullSupplyItemsCost" class="cell-text"
+                      ng-bind="rnr.fullSupplyItemsSubmittedCost | currency:currency"></span>
+            </strong>
+            &nbsp;|&nbsp;
+            Total Cost For Non Full Supply Products:
+            <strong>
+                <span id="nonFullSupplyItemsCost" class="cell-text"
+                      ng-bind="rnr.nonFullSupplyItemsSubmittedCost | currency:currency"></span>
+            </strong>
+        </small>
+        &nbsp;|&nbsp;
+        <strong>
+            Total R&amp;R Cost:
+            <span id="totalCost" class="cell-text"
+                  ng-bind="rnr.calculateTotalLineItemCost() | currency:currency"></span>
+        </strong>
+    </div>
 </div>

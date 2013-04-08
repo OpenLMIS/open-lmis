@@ -7,7 +7,6 @@
 package org.openlmis.pageobjects;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.ElementNotVisibleException;
@@ -20,10 +19,13 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+import static java.lang.Float.parseFloat;
 import static org.openqa.selenium.support.How.*;
 
 
@@ -244,10 +246,10 @@ public class InitiateRnRPage extends RequisitionPage {
     String facilityText = testWebDriver.getText(facilityLabel);
     assertTrue(facilityText.contains(FCode + FCstring + " - " + FName + FCstring));
 
-    SeleneseTestNgHelper.assertEquals(reportingPeriodInitRnRScreen.getText().trim().substring("Reporting Period: ".length()), periodDetails.trim());
-    SeleneseTestNgHelper.assertEquals(geoZone, geoZoneInitRnRScreen.getText().trim());
-    SeleneseTestNgHelper.assertEquals(parentgeoZone, parentGeoZoneInitRnRScreen.getText().trim());
-    SeleneseTestNgHelper.assertEquals(operatedBy, operatedByInitRnRScreen.getText().trim());
+    assertEquals(reportingPeriodInitRnRScreen.getText().trim().substring("Reporting Period: ".length()), periodDetails.trim());
+    assertEquals(geoZone, geoZoneInitRnRScreen.getText().trim());
+    assertEquals(parentgeoZone, parentGeoZoneInitRnRScreen.getText().trim());
+    assertEquals(operatedBy, operatedByInitRnRScreen.getText().trim());
 
 
   }
@@ -273,7 +275,7 @@ public class InitiateRnRPage extends RequisitionPage {
   }
 
   public void verifyFieldValue(String Expected, String Actual) {
-    SeleneseTestNgHelper.assertEquals(Actual, Expected);
+    assertEquals(Actual, Expected);
   }
 
   public void verifyTemplateNotConfiguredMessage() {
@@ -315,7 +317,7 @@ public class InitiateRnRPage extends RequisitionPage {
     addButton.click();
     testWebDriver.waitForElementToAppear(adjList);
     String labelAdj = testWebDriver.getText(adjList);
-    SeleneseTestNgHelper.assertEquals(labelAdj.trim(), "Transfer In");
+    assertEquals(labelAdj.trim(), "Transfer In");
 //    String adjValue = testWebDriver.getAttribute(adjListValue, "value");
     // SeleneseTestNgHelper.assertEquals(adjValue, adj);
     //testWebDriver.waitForElementToAppear(totalAdj);
@@ -426,7 +428,7 @@ public class InitiateRnRPage extends RequisitionPage {
 
   public void calculateAndVerifyTotalCost() {
     actualTotalCostFullSupply = calculateTotalCost();
-    SeleneseTestNgHelper.assertEquals(actualTotalCostFullSupply.toString() + "0", totalCost.getText().substring(1));
+    assertEquals(actualTotalCostFullSupply.toString() + "0", totalCost.getText().substring(1));
     testWebDriver.sleep(500);
   }
 
@@ -435,12 +437,12 @@ public class InitiateRnRPage extends RequisitionPage {
     String actualPacksToShip = testWebDriver.getText(packsToShip);
     testWebDriver.waitForElementToAppear(pricePerPack);
     String actualPricePerPack = testWebDriver.getText(pricePerPack).substring(1);
-    return Float.parseFloat(actualPacksToShip) * Float.parseFloat(actualPricePerPack);
+    return parseFloat(actualPacksToShip) * parseFloat(actualPricePerPack);
   }
 
   public void calculateAndVerifyTotalCostNonFullSupply() {
     actualTotalCostNonFullSupply = calculateTotalCostNonFullSupply();
-    SeleneseTestNgHelper.assertEquals(actualTotalCostNonFullSupply.toString() + "0", totalCost.getText().trim().substring(1));
+    assertEquals(actualTotalCostNonFullSupply.toString() + "0", totalCost.getText().trim().substring(1));
     testWebDriver.sleep(500);
   }
 
@@ -449,7 +451,7 @@ public class InitiateRnRPage extends RequisitionPage {
     String actualPacksToShip = testWebDriver.getText(packsToShip);
     testWebDriver.waitForElementToAppear(pricePerPackNonFullSupply);
     String actualPricePerPack = testWebDriver.getText(pricePerPackNonFullSupply).substring(1);
-    return Float.parseFloat(actualPacksToShip.trim()) * Float.parseFloat(actualPricePerPack.trim());
+    return parseFloat(actualPacksToShip.trim()) * parseFloat(actualPricePerPack.trim());
   }
 
   public void verifyCostOnFooter() {
@@ -457,9 +459,9 @@ public class InitiateRnRPage extends RequisitionPage {
     String totalCostFullSupplyFooterValue = testWebDriver.getText(totalCostFullSupplyFooter);
     testWebDriver.waitForElementToAppear(totalCostNonFullSupplyFooter);
     String totalCostNonFullSupplyFooterValue = testWebDriver.getText(totalCostNonFullSupplyFooter);
-    Float actualTotalCost = Float.parseFloat(totalCostFullSupplyFooterValue.trim()) + Float.parseFloat(totalCostNonFullSupplyFooterValue.trim());
-    SeleneseTestNgHelper.assertEquals(actualTotalCost.toString() + "0", totalCostFooter.getText().trim());
-    SeleneseTestNgHelper.assertEquals(totalCostFooter.getText().trim(), (actualTotalCostFullSupply + actualTotalCostNonFullSupply) + "0");
+    BigDecimal actualTotalCost = new BigDecimal(parseFloat(totalCostFullSupplyFooterValue.trim().substring(1)) + parseFloat(totalCostNonFullSupplyFooterValue.trim().substring(1))).setScale(2,BigDecimal.ROUND_HALF_UP);
+    assertEquals(actualTotalCost.toString(), totalCostFooter.getText().trim().substring(1));
+    assertEquals(totalCostFooter.getText().trim().substring(1), new BigDecimal(actualTotalCostFullSupply + actualTotalCostNonFullSupply).setScale(2,BigDecimal.ROUND_HALF_UP).toString());
     testWebDriver.sleep(500);
   }
 
@@ -498,10 +500,10 @@ public class InitiateRnRPage extends RequisitionPage {
     addNonFullSupplyButtonScreen.click();
 
     testWebDriver.waitForElementToAppear(categoryDropDownLink);
-    SeleneseTestNgHelper.assertEquals(testWebDriver.getSelectedOptionDefault(categoryDropDown).trim(), "");
-    SeleneseTestNgHelper.assertEquals(testWebDriver.getSelectedOptionDefault(productDropDown).trim(), "");
-    SeleneseTestNgHelper.assertEquals(requestedQuantityField.getAttribute("value").trim(), "");
-    SeleneseTestNgHelper.assertEquals(requestedQuantityExplanationField.getAttribute("value").trim(), "");
+    assertEquals(testWebDriver.getSelectedOptionDefault(categoryDropDown).trim(), "");
+    assertEquals(testWebDriver.getSelectedOptionDefault(productDropDown).trim(), "");
+    assertEquals(requestedQuantityField.getAttribute("value").trim(), "");
+    assertEquals(requestedQuantityExplanationField.getAttribute("value").trim(), "");
 
     testWebDriver.waitForElementToAppear(categoryDropDownLink);
 
@@ -526,16 +528,16 @@ public class InitiateRnRPage extends RequisitionPage {
     addNonFullSupplyButton.click();
     testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(nonFullSupplyProductCodeAndName);
-    SeleneseTestNgHelper.assertEquals(nonFullSupplyProductCodeAndName.getText().trim(), productCode + " | " + productPrimaryName);
-    SeleneseTestNgHelper.assertEquals(nonFullSupplyProductQuantityRequested.getAttribute("value").trim(), requestedQuantityValue);
-    SeleneseTestNgHelper.assertEquals(nonFullSupplyProductReasonForRequestedQuantity.getAttribute("value").trim(), requestedQuantityExplanationValue);
+    assertEquals(nonFullSupplyProductCodeAndName.getText().trim(), productCode + " | " + productPrimaryName);
+    assertEquals(nonFullSupplyProductQuantityRequested.getAttribute("value").trim(), requestedQuantityValue);
+    assertEquals(nonFullSupplyProductReasonForRequestedQuantity.getAttribute("value").trim(), requestedQuantityExplanationValue);
     doneButtonNonFullSupply.click();
     testWebDriver.sleep(500);
 
-    SeleneseTestNgHelper.assertEquals(productDescriptionNonFullSupply.getText().trim(), nonFullSupplyItems);
-    SeleneseTestNgHelper.assertEquals(productCodeNonFullSupply.getText().trim(), productCode);
-    SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(requestedQuantity, "value").trim(), requestedQuantityValue);
-    SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(requestedQuantityExplanation, "value").trim(), requestedQuantityExplanationValue);
+    assertEquals(productDescriptionNonFullSupply.getText().trim(), nonFullSupplyItems);
+    assertEquals(productCodeNonFullSupply.getText().trim(), productCode);
+    assertEquals(testWebDriver.getAttribute(requestedQuantity, "value").trim(), requestedQuantityValue);
+    assertEquals(testWebDriver.getAttribute(requestedQuantityExplanation, "value").trim(), requestedQuantityExplanationValue);
 
   }
 
@@ -551,7 +553,7 @@ public class InitiateRnRPage extends RequisitionPage {
       if (actualColumnHeading.trim().contains(heading))
         flag = true;
     }
-    SeleneseTestNgHelper.assertEquals(flag, true);
+    assertEquals(flag, true);
   }
 
   public void verifyColumnHeadingNotPresent(String xpathTillTrTag, String heading, int noOfColumns) {
@@ -562,7 +564,7 @@ public class InitiateRnRPage extends RequisitionPage {
       if (actualColumnHeading.trim().contains(heading))
         flag = true;
     }
-    SeleneseTestNgHelper.assertEquals(flag, false);
+    assertEquals(flag, false);
   }
 
   public void addMultipleNonFullSupplyLineItems(int numberOfLineItems, boolean isMultipleCategories) throws IOException, SQLException {

@@ -202,7 +202,7 @@ public class ApprovePage extends RequisitionPage {
     assertEquals(costNonFullSupply, new BigDecimal(lineItemCost).setScale(2, ROUND_HALF_UP));
 
     BigDecimal totalOverAllCost = new BigDecimal((totalCostFullSupplyLineItem + lineItemCost)).setScale(2, ROUND_HALF_UP);
-    assertEquals(new BigDecimal(totalRnrCost.getText().trim()).setScale(2, ROUND_HALF_UP), totalOverAllCost);
+    assertEquals(new BigDecimal(totalRnrCost.getText().trim().substring(1)).setScale(2, ROUND_HALF_UP), totalOverAllCost);
   }
 
   public void approveRequisition() {
@@ -210,10 +210,8 @@ public class ApprovePage extends RequisitionPage {
     testWebDriver.waitForElementToAppear(saveButton);
     saveButton.click();
     testWebDriver.sleep(250);
-//    SeleneseTestNgHelper.assertTrue("R&R saved successfully message not displayed", saveSuccessMsgDiv.isDisplayed());
     approveButton.click();
     testWebDriver.waitForElementToAppear(approvedSuccessMessage);
-//    SeleneseTestNgHelper.assertTrue("R&R approved successfully! message not displayed", approvedSuccessMessage.isDisplayed());
 
   }
 
@@ -227,7 +225,7 @@ public class ApprovePage extends RequisitionPage {
     remarks.click();
     assertEquals(packsToShip.getText().trim(), parseInt(approvedQuantity) / 10);
 
-    BigDecimal cost = new BigDecimal((parseFloat(packsToShip.getText().trim()) * parseFloat(pricePerPack.getText().substring(1)))).setScale(2, ROUND_HALF_UP);
+    BigDecimal cost = new BigDecimal((parseFloat(packsToShip.getText().trim()) + parseFloat(pricePerPack.getText().substring(1)))).setScale(2, ROUND_HALF_UP);
     assertEquals(String.valueOf(cost), lineItemCost.getText().substring(1));
     String totalCostFullSupplyLineItem = lineItemCost.getText().substring(1);
     testWebDriver.sleep(1000);
