@@ -16,12 +16,9 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-
-import static java.math.BigDecimal.ROUND_HALF_UP;
 
 
-public class OrderPage extends Page {
+public class OrderPage extends RequisitionPage {
 
   @FindBy(how = How.ID, using = "NoRequisitionsPendingMessage")
   private static WebElement NoRequisitionsPendingMessage;
@@ -60,9 +57,7 @@ public class OrderPage extends Page {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
-
   }
-
 
   public void verifyOrderListElements(String program, String facilityCode, String facilityName, String periodStartDate, String periodEndDate, String supplyFacilityName) throws IOException {
     testWebDriver.waitForElementToAppear(programOnOrderScreen);
@@ -72,20 +67,32 @@ public class OrderPage extends Page {
     SeleneseTestNgHelper.assertEquals(periodStartDateOnOrderScreen.getText().trim(), periodStartDate);
     SeleneseTestNgHelper.assertEquals(periodEndDateOnOrderScreen.getText().trim(), periodEndDate);
     SeleneseTestNgHelper.assertEquals(supplyDepotOnOrderScreen.getText().trim(), supplyFacilityName);
+  }
 
+  public void clickConvertToOrderButton(){
+    testWebDriver.waitForElementToAppear(convertToOrderButton);
+    convertToOrderButton.click();
+  }
+
+  public void clickCheckBoxConvertToOrder()
+  {
+    testWebDriver.waitForElementToAppear(checkboxOnOrderScreen);
+    checkboxOnOrderScreen.click();
+  }
+
+  public void verifyMessageOnOrderScreen(String message)
+  {
+    testWebDriver.sleep(500);
+    SeleneseTestNgHelper.assertTrue(message, successMessageDiv.isDisplayed());
   }
 
   public void convertToOrder() throws IOException {
-    testWebDriver.waitForElementToAppear(checkboxOnOrderScreen);
-    testWebDriver.waitForElementToAppear(convertToOrderButton);
-    convertToOrderButton.click();
-    testWebDriver.sleep(500);
-    SeleneseTestNgHelper.assertTrue("Message 'Please select atleast one Requisition for Converting to Order.' is not displayed", successMessageDiv.isDisplayed());
-    checkboxOnOrderScreen.click();
-    convertToOrderButton.click();
-    testWebDriver.sleep(100);
-    //SeleneseTestNgHelper.assertTrue("Message 'No R&Rs are pending to be Converted as Orders' is not displayed", noRequisitionPendingMessage.isDisplayed());
+    clickConvertToOrderButton();
+    clickOk();
+    verifyMessageOnOrderScreen("Message 'Please select atleast one Requisition for Converting to Order.' is not displayed");
+    clickCheckBoxConvertToOrder();
+    clickConvertToOrderButton();
+    clickOk();
   }
-
 
 }

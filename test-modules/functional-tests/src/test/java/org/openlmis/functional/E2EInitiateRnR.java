@@ -27,13 +27,11 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @BeforeMethod(groups = {"smoke"})
   public void setUp() throws Exception {
-
     super.setup();
   }
 
   @DataProvider(name = "envData")
   public Object[][] getEnvData() {
-
     return new Object[][]{};
   }
 
@@ -116,10 +114,15 @@ public class E2EInitiateRnR extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage = homePageUser.clickProceed();
     initiateRnRPage.verifyRnRHeader("FCcode", "FCname", date_time, program, periodDetails, geoZone, parentgeoZone, operatedBy, facilityType);
     initiateRnRPage.submitRnR();
+    initiateRnRPage.clickOk();
+    initiateRnRPage.verifySubmitRnrErrorMsg();
+    initiateRnRPage.submitRnR();
+    initiateRnRPage.clickCancel();
     initiateRnRPage.verifySubmitRnrErrorMsg();
     initiateRnRPage.calculateAndVerifyStockOnHand(10, 10, 10, 1);
 
     initiateRnRPage.submitRnR();
+    initiateRnRPage.clickOk();
 
     initiateRnRPage.clickCommentsButton();
     initiateRnRPage.typeCommentsInCommentsTextArea("Test comment.");
@@ -143,6 +146,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     initiateRnRPage.verifyCostOnFooter();
 
     initiateRnRPage.authorizeRnR();
+    initiateRnRPage.clickOk();
     initiateRnRPage.verifyAuthorizeRnrSuccessMsg();
     initiateRnRPage.verifyApproveButtonNotPresent();
 

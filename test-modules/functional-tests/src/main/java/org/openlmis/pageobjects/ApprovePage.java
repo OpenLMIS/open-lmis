@@ -212,8 +212,9 @@ public class ApprovePage extends RequisitionPage {
     saveButton.click();
     testWebDriver.sleep(250);
     approveButton.click();
+    testWebDriver.sleep(250);
+    clickOk();
     testWebDriver.waitForElementToAppear(approvedSuccessMessage);
-
   }
 
   public void editApproveQuantityAndVerifyTotalCostViewRequisition(String approvedQuantity) {

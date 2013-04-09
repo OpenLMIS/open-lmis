@@ -8,7 +8,6 @@ package org.openlmis.pageobjects;
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
-import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -18,7 +17,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
-import static com.thoughtworks.selenium.SeleneseTestBase.fail;
 import static org.openqa.selenium.support.How.ID;
 
 public class RequisitionPage extends Page {
@@ -30,6 +28,10 @@ public class RequisitionPage extends Page {
   private static WebElement addCommentButton;
   @FindBy(how = ID, using = "commentClose")
   private static WebElement commentCloseIcon;
+  @FindBy(how = ID, using = "button_OK")
+  private static WebElement okButton;
+  @FindBy(how = ID, using = "button_Cancel")
+  private static WebElement cancelButton;
 
   protected RequisitionPage(TestWebDriver driver) {
     super(driver);
@@ -101,6 +103,16 @@ public class RequisitionPage extends Page {
     } finally {
       assertFalse(commentBoxPresent);
     }
+  }
+
+  public void clickOk() {
+    okButton.click();
+    testWebDriver.sleep(250);
+  }
+
+  public void clickCancel() {
+    testWebDriver.waitForElementToAppear(cancelButton);
+    cancelButton.click();
   }
 
 }

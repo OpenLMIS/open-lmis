@@ -637,14 +637,13 @@ public class InitiateRnRPage extends RequisitionPage {
 
   public void submitRnR() {
     submitButton.click();
-    testWebDriver.sleep(1500);
+    testWebDriver.sleep(250);
   }
 
   public void authorizeRnR() {
     authorizeButton.click();
     testWebDriver.sleep(250);
   }
-
 
   public void verifySubmitRnrSuccessMsg() {
     assertTrue("RnR Submit Success message not displayed", submitSuccessMessage.isDisplayed());
