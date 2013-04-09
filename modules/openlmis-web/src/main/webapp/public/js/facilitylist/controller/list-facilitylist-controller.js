@@ -12,7 +12,9 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
         };
 
         $scope.filterGrid = function (){
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+            //forget the current page and go to the first page while filtering
+            $scope.pagingOptions.currentPage = 1;
+            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, 1);//
         };
 
         //filter form data section
@@ -178,10 +180,18 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
 
     $scope.gridOptions = {
         data: 'myData',
-        columnDefs: [{ field: 'code', displayName: 'Code', width: "*", resizable: false},
+        // { field: 'fax', displayName: 'Fax', width : "*"},
+        columnDefs:
+            [
+            { field: 'code', displayName: 'Facility Code', width: "*", resizable: false},
             { field: 'facilityName', displayName: 'Facility Name', width: "**" },
             { field: 'facilityType', displayName: 'Facility Type', width: "*" },
-            { field: 'active', displayName: 'Active', width : "*"}],
+            { field: 'region', displayName: 'Region', width : "*"},
+            { field: 'owner', displayName: 'Operator', width : "*"},
+            { field: 'phoneNumber', displayName: 'Phone Number', width : "*"},
+            { field: 'active', displayName: 'Active', width : "*"}
+
+            ],
         enablePaging: true,
         enableSorting :true,
         showFooter: true,

@@ -152,7 +152,7 @@
 /******** Viewport ********/
 .ngViewport {
   overflow: auto;
-  min-height: 20px;
+  min-height: 50px;
 }
 .ngCanvas {
   position: relative;
