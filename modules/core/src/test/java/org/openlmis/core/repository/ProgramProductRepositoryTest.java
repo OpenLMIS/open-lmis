@@ -22,7 +22,6 @@ import org.openlmis.core.repository.mapper.ProductMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
 import org.openlmis.core.repository.mapper.ProgramProductPriceMapper;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
@@ -36,7 +35,6 @@ import static org.openlmis.core.builder.ProductBuilder.defaultProduct;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramProductBuilder.PRODUCT_CODE;
 import static org.openlmis.core.builder.ProgramProductBuilder.PROGRAM_CODE;
-import static org.openlmis.core.builder.ProgramProductBuilder.defaultProgramProduct;
 import static org.openlmis.core.repository.ProgramProductRepository.PROGRAM_PRODUCT_INVALID;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -138,7 +136,7 @@ public class ProgramProductRepositoryTest {
     ProgramProduct expectedProgramProduct = new ProgramProduct();
     when(programProductMapper.getByProgramAndProductId(programId, productId)).thenReturn(expectedProgramProduct);
 
-    ProgramProduct result = programProductRepository.getProgramProductByProgramAndProductCode(programProduct);
+    ProgramProduct result = programProductRepository.getByProgramAndProductCode(programProduct);
     verify(programRepository).getIdByCode(PROGRAM_CODE);
     verify(productRepository).getIdByCode(PRODUCT_CODE);
     verify(programProductMapper).getByProgramAndProductId(programId, productId);

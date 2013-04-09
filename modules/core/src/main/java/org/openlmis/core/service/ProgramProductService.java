@@ -26,7 +26,7 @@ public class ProgramProductService {
     this.programProductRepository = programProductRepository;
   }
 
-  public Integer getIdByProgramIdAndProductId(Integer programId, Integer productId){
+  public Integer getIdByProgramIdAndProductId(Integer programId, Integer productId) {
     return programProductRepository.getIdByProgramIdAndProductId(programId, productId);
   }
 
@@ -34,7 +34,7 @@ public class ProgramProductService {
     programProductPrice.validate();
 
     ProgramProduct programProduct = programProductPrice.getProgramProduct();
-    ProgramProduct programProductWithId = programProductRepository.getProgramProductByProgramAndProductCode(programProduct);
+    ProgramProduct programProductWithId = programProductRepository.getByProgramAndProductCode(programProduct);
     if (programProductWithId == null)
       throw new DataException(PROGRAM_PRODUCT_INVALID);
 
@@ -50,12 +50,12 @@ public class ProgramProductService {
     programProductRepository.save(programProduct);
   }
 
-  public ProgramProduct getProgramProductByProgramAndProductCode(ProgramProduct programProduct) {
-    return programProductRepository.getProgramProductByProgramAndProductCode(programProduct);
+  public ProgramProduct getByProgramAndProductCode(ProgramProduct programProduct) {
+    return programProductRepository.getByProgramAndProductCode(programProduct);
   }
 
-  public ProgramProductPrice getProgramProductPriceByProgramProduct(ProgramProductPrice programProductPrice) {
-    return programProductRepository.getProgramProductPriceByProgramProduct(programProductPrice);
+  public ProgramProductPrice getProgramProductPricePrice(ProgramProduct programProduct) {
+    return programProductRepository.getProgramProductPrice(programProduct);
   }
 
 }

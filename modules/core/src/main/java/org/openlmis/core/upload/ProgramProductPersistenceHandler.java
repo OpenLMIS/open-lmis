@@ -25,7 +25,7 @@ public class ProgramProductPersistenceHandler extends AbstractModelPersistenceHa
 
   @Override
   protected BaseModel getExisting(BaseModel record) {
-    return programProductService.getProgramProductByProgramAndProductCode((ProgramProduct) record);
+    return programProductService.getByProgramAndProductCode((ProgramProduct) record);
   }
 
   @Override

@@ -7,6 +7,7 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.domain.ProgramProductPrice;
 import org.springframework.stereotype.Repository;
 
@@ -26,9 +27,9 @@ public interface ProgramProductPriceMapper {
       @Result(property = "programProduct.currentPrice", column = "price")})
   ProgramProductPrice getById(Integer id);
 
-  @Select({"SELECT * FROM program_product_price_history where programProductId = #{programProduct.id} "})
+  @Select({"SELECT * FROM program_product_price_history WHERE programProductId = #{id}"})
   @Results({@Result(property = "programProduct.id", column = "programProductId"),
-    @Result(property = "programProduct.currentPrice", column = "price")})
-  ProgramProductPrice getProgramProductPriceByProgramProduct(ProgramProductPrice programProductPrice);
+      @Result(property = "programProduct.currentPrice", column = "price")})
+  ProgramProductPrice get(ProgramProduct programProduct);
 
 }

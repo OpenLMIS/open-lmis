@@ -92,8 +92,8 @@ public class ProgramProductPriceMapperIT {
 
     programProductPriceMapper.insertNewCurrentPrice(programProductPrice);
 
-    ProgramProductPrice programProductPriceReturned = programProductPriceMapper.getProgramProductPriceByProgramProduct(programProductPrice);
+    ProgramProductPrice programProductPriceReturned = programProductPriceMapper.get(programProduct);
 
-    assertThat(programProductPriceReturned.getProgramProduct().getCurrentPrice(),is(programProductPrice.getProgramProduct().getCurrentPrice()));
+    assertThat(programProductPriceReturned.getProgramProduct().getCurrentPrice(), is(programProduct.getCurrentPrice()));
   }
 }

@@ -76,13 +76,13 @@ public class ProgramProductRepository {
     mapper.updateCurrentPrice(programProduct);
   }
 
-  public ProgramProduct getProgramProductByProgramAndProductCode(ProgramProduct programProduct) {
-    return getProgramProductByProgramAndProductCode(programRepository.getIdByCode(programProduct.getProgram().getCode()),
-      productRepository.getIdByCode(programProduct.getProduct().getCode()));
+  public ProgramProduct getByProgramAndProductCode(ProgramProduct programProduct) {
+    return getByProgramAndProductCode(programRepository.getIdByCode(programProduct.getProgram().getCode()),
+        productRepository.getIdByCode(programProduct.getProduct().getCode()));
   }
 
-  public ProgramProduct getProgramProductByProgramAndProductCode(Integer programId, Integer productId) {
-    return  mapper.getByProgramAndProductId(programId, productId);
+  public ProgramProduct getByProgramAndProductCode(Integer programId, Integer productId) {
+    return mapper.getByProgramAndProductId(programId, productId);
   }
 
   public void updatePriceHistory(ProgramProductPrice programProductPrice) {
@@ -94,7 +94,7 @@ public class ProgramProductRepository {
     mapper.update(programProduct);
   }
 
-  public ProgramProductPrice getProgramProductPriceByProgramProduct(ProgramProductPrice programProductPrice){
-    return programProductPriceMapper.getProgramProductPriceByProgramProduct(programProductPrice);
+  public ProgramProductPrice getProgramProductPrice(ProgramProduct programProduct) {
+    return programProductPriceMapper.get(programProduct);
   }
 }

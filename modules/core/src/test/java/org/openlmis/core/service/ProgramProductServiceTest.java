@@ -13,7 +13,6 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.builder.ProgramProductBuilder;
 import org.openlmis.core.domain.Money;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.domain.ProgramProductPrice;
@@ -27,8 +26,6 @@ import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
-import static org.openlmis.core.builder.ProgramProductBuilder.PRODUCT_CODE;
-import static org.openlmis.core.builder.ProgramProductBuilder.PROGRAM_CODE;
 import static org.openlmis.core.builder.ProgramProductBuilder.defaultProgramProduct;
 import static org.openlmis.core.repository.ProgramProductRepository.PROGRAM_PRODUCT_INVALID;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -56,13 +53,13 @@ public class ProgramProductServiceTest {
 
     ProgramProduct returnedProgramProduct = new ProgramProduct();
     returnedProgramProduct.setId(123);
-    when(programProductRepository.getProgramProductByProgramAndProductCode(programProduct)).thenReturn(returnedProgramProduct);
+    when(programProductRepository.getByProgramAndProductCode(programProduct)).thenReturn(returnedProgramProduct);
 
     programProductService.updateProgramProductPrice(programProductPrice);
 
     assertThat(programProductPrice.getProgramProduct().getId(), is(123));
     assertThat(programProductPrice.getProgramProduct().getModifiedBy(), is(1));
-    verify(programProductRepository).getProgramProductByProgramAndProductCode(programProduct);
+    verify(programProductRepository).getByProgramAndProductCode(programProduct);
     verify(programProductRepository).updateCurrentPrice(programProduct);
     verify(programProductRepository).updatePriceHistory(programProductPrice);
   }
@@ -84,7 +81,7 @@ public class ProgramProductServiceTest {
     ProgramProductPrice programProductPrice = new ProgramProductPrice(programProduct, new Money("1"), "source");
     programProductPrice.setModifiedBy(1);
 
-    when(programProductRepository.getProgramProductByProgramAndProductCode(programProduct)).thenReturn(null);
+    when(programProductRepository.getByProgramAndProductCode(programProduct)).thenReturn(null);
 
     expectException.expect(DataException.class);
     expectException.expectMessage(PROGRAM_PRODUCT_INVALID);

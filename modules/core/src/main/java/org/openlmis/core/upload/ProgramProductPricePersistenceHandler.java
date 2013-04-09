@@ -7,6 +7,7 @@
 package org.openlmis.core.upload;
 
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.domain.ProgramProductPrice;
 import org.openlmis.core.service.ProgramProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,8 @@ public class ProgramProductPricePersistenceHandler extends AbstractModelPersiste
 
   @Override
   protected BaseModel getExisting(BaseModel record) {
-    return programProductService.getProgramProductPriceByProgramProduct(((ProgramProductPrice)record));
+    ProgramProduct programProduct = ((ProgramProductPrice) record).getProgramProduct();
+    return programProductService.getProgramProductPricePrice(programProduct);
   }
 
   @Override
