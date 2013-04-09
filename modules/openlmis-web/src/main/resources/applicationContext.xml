@@ -185,7 +185,7 @@
                         <property name="importableClass">
                             <value type="java.lang.Class">org.openlmis.core.domain.SupplyLine</value>
                         </property>
-                        <property name="recordHandler" ref="supplyLineHandler"/>
+                        <property name="recordHandler" ref="supplyLinePersistenceHandler"/>
                         <property name="tableName" value="supply_lines"/>
                     </bean>
                 </entry>

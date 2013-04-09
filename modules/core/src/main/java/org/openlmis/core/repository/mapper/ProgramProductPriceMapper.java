@@ -25,4 +25,10 @@ public interface ProgramProductPriceMapper {
   @Results({@Result(property = "programProduct.id", column = "programProductId"),
       @Result(property = "programProduct.currentPrice", column = "price")})
   ProgramProductPrice getById(Integer id);
+
+  @Select({"SELECT * FROM program_product_price_history where programProductId = #{programProduct.id} "})
+  @Results({@Result(property = "programProduct.id", column = "programProductId"),
+    @Result(property = "programProduct.currentPrice", column = "price")})
+  ProgramProductPrice getProgramProductPriceByProgramProduct(ProgramProductPrice programProductPrice);
+
 }

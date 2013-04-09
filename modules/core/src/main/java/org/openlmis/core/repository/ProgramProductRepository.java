@@ -93,4 +93,8 @@ public class ProgramProductRepository {
   public void updateProgramProduct(ProgramProduct programProduct) {
     mapper.update(programProduct);
   }
+
+  public ProgramProductPrice getProgramProductPriceByProgramProduct(ProgramProductPrice programProductPrice){
+    return programProductPriceMapper.getProgramProductPriceByProgramProduct(programProductPrice);
+  }
 }

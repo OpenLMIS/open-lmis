@@ -53,4 +53,9 @@ public class ProgramProductService {
   public ProgramProduct getProgramProductByProgramAndProductCode(ProgramProduct programProduct) {
     return programProductRepository.getProgramProductByProgramAndProductCode(programProduct);
   }
+
+  public ProgramProductPrice getProgramProductPriceByProgramProduct(ProgramProductPrice programProductPrice) {
+    return programProductRepository.getProgramProductPriceByProgramProduct(programProductPrice);
+  }
+
 }

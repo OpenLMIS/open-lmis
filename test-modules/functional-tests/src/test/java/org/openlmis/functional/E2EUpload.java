@@ -101,7 +101,7 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadSupplyLines("QA_Supply_Lines.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
     uploadPage.uploadSupplyLines("QA_Supply_Lines_Subsequent.csv");
-//    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
   private void verifyValidRequisitionGroupMembersUpload(UploadPage uploadPage) throws FileNotFoundException {

@@ -151,4 +151,19 @@ public class SupplyLineServiceTest {
     verify(supplyLineRepository).update(supplyLine);
 
   }
+
+  @Test
+  public void shouldGetExistingSupplyLine() throws Exception {
+    when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1);
+    when(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenReturn(1);
+    when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(1);
+    supplyLine.getSupervisoryNode().setId(1);
+    when(supervisoryNodeRepository.getSupervisoryNodeParentId(1)).thenReturn(null);
+    when(supplyLineRepository.getSupplyLineBySupervisoryNodeProgramAndFacility(supplyLine)).thenReturn(supplyLine);
+    supplyLineService.save(supplyLine);
+
+    SupplyLine result = supplyLineService.getExisting(supplyLine);
+
+    assertThat(result, is(supplyLine));
+  }
 }

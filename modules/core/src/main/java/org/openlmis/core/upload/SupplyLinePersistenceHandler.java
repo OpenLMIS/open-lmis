@@ -18,14 +18,14 @@ import java.util.Date;
 
 @Component
 @NoArgsConstructor
-public class SupplyLineHandler extends AbstractModelPersistenceHandler {
+public class SupplyLinePersistenceHandler extends AbstractModelPersistenceHandler {
 
   public static final String DUPLICATE_ENTRY_FOR_SUPPLY_LINE_FOUND = "Duplicate entry for Supply Line found";
 
   SupplyLineService supplyLineService;
 
   @Autowired
-  public SupplyLineHandler(SupplyLineService supplyLineService) {
+  public SupplyLinePersistenceHandler(SupplyLineService supplyLineService) {
     this.supplyLineService = supplyLineService;
   }
 

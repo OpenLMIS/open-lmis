@@ -82,4 +82,18 @@ public class ProgramProductPriceMapperIT {
     assertThat(result.getPricePerDosage(), is(pricePerDosage));
     assertThat(result.getProgramProduct().getCurrentPrice(), is(programProduct.getCurrentPrice()));
   }
+
+  @Test
+  public void shouldGetProgramProductPriceForAProgramProduct() throws Exception {
+    String source = "MoH";
+    Money pricePerDosage = new Money("1.50");
+    ProgramProductPrice programProductPrice = new ProgramProductPrice(programProduct, pricePerDosage, source);
+    programProductPrice.setModifiedBy(1);
+
+    programProductPriceMapper.insertNewCurrentPrice(programProductPrice);
+
+    ProgramProductPrice programProductPriceReturned = programProductPriceMapper.getProgramProductPriceByProgramProduct(programProductPrice);
+
+    assertThat(programProductPriceReturned.getProgramProduct().getCurrentPrice(),is(programProductPrice.getProgramProduct().getCurrentPrice()));
+  }
 }

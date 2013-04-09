@@ -42,7 +42,6 @@ public class SupplyLineService {
   }
 
   public void save(SupplyLine supplyLine) {
-    populateIdsForSupplyLine(supplyLine);
     validateIfSupervisoryNodeIsTopmostNode(supplyLine);
 
     if (supplyLine.getId() == null) {
@@ -66,6 +65,7 @@ public class SupplyLineService {
   }
 
   public SupplyLine getExisting(SupplyLine supplyLine) {
+    populateIdsForSupplyLine(supplyLine);
     return supplyLineRepository.getSupplyLineBySupervisoryNodeProgramAndFacility(supplyLine);
   }
 
