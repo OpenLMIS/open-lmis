@@ -80,90 +80,80 @@ public class ViewRequisitionPage extends RequisitionPage {
 
   public ViewRequisitionPage(TestWebDriver driver) throws IOException {
     super(driver);
-    PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
-    testWebDriver.setImplicitWait(10);
+    PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 1), this);
+    testWebDriver.setImplicitWait(1);
 
   }
 
-  public void verifyElementsOnViewRequisitionScreen() throws IOException
-  {
-     SeleneseTestNgHelper.assertTrue("Facility name drop down is not displayed", selectFacilityDropDown.isDisplayed());
-     SeleneseTestNgHelper.assertTrue("Program name drop down is not displayed", selectProgramDropDown.isDisplayed());
-     SeleneseTestNgHelper.assertTrue("Start date is not displayed", startDate.isDisplayed());
-     SeleneseTestNgHelper.assertTrue("End date is not displayed", endDate.isDisplayed());
-     SeleneseTestNgHelper.assertTrue("Search button is not displayed", searchButton.isDisplayed());
+  public void verifyElementsOnViewRequisitionScreen() throws IOException {
+    SeleneseTestNgHelper.assertTrue("Facility name drop down is not displayed", selectFacilityDropDown.isDisplayed());
+    SeleneseTestNgHelper.assertTrue("Program name drop down is not displayed", selectProgramDropDown.isDisplayed());
+    SeleneseTestNgHelper.assertTrue("Start date is not displayed", startDate.isDisplayed());
+    SeleneseTestNgHelper.assertTrue("End date is not displayed", endDate.isDisplayed());
+    SeleneseTestNgHelper.assertTrue("Search button is not displayed", searchButton.isDisplayed());
   }
 
-  public void enterViewSearchCriteria() throws IOException
-  {
+  public void enterViewSearchCriteria() throws IOException {
     testWebDriver.waitForElementToAppear(selectFacilityDropDown);
-    testWebDriver.selectByIndex(selectFacilityDropDown,1);
+    testWebDriver.selectByIndex(selectFacilityDropDown, 1);
     testWebDriver.sleep(250);
     enterStartEndDateInCalender("2004", "2013");
   }
 
-  public void enterStartEndDateInCalender(String startDateYear, String endDateYear){
-      startDate.click();
-      testWebDriver.sleep(250);
-      testWebDriver.selectByValue(yearChanger,startDateYear);
-      testWebDriver.sleep(250);
-      startDateCalender.click();
-      testWebDriver.sleep(250);
-      endDate.click();
-      testWebDriver.sleep(250);
-      testWebDriver.selectByValue(yearChanger,endDateYear);
-      testWebDriver.sleep(250);
-      testWebDriver.click(nextCalender);
-      testWebDriver.sleep(250);
-      endDateCalender.click();
+  public void enterStartEndDateInCalender(String startDateYear, String endDateYear) {
+    startDate.click();
+    testWebDriver.sleep(250);
+    testWebDriver.selectByValue(yearChanger, startDateYear);
+    testWebDriver.sleep(250);
+    startDateCalender.click();
+    testWebDriver.sleep(250);
+    endDate.click();
+    testWebDriver.sleep(250);
+    testWebDriver.selectByValue(yearChanger, endDateYear);
+    testWebDriver.sleep(250);
+    testWebDriver.click(nextCalender);
+    testWebDriver.sleep(250);
+    endDateCalender.click();
   }
 
-  public void verifyNoRequisitionFound() throws IOException
-  {
+  public void verifyNoRequisitionFound() throws IOException {
 
-    SeleneseTestNgHelper.assertTrue("noRequisitionFoundDiv is not showing up",noRequisitionFoundDiv.isDisplayed());
+    SeleneseTestNgHelper.assertTrue("noRequisitionFoundDiv is not showing up", noRequisitionFoundDiv.isDisplayed());
 
   }
 
-  public void verifyStatus(String statusToBeVerified) throws IOException
-  {
+  public void verifyStatus(String statusToBeVerified) throws IOException {
     testWebDriver.waitForElementToAppear(status);
     SeleneseTestNgHelper.assertEquals(status.getText().trim(), statusToBeVerified.trim());
   }
 
-  public void clickSearch()
-  {
+  public void clickSearch() {
     testWebDriver.waitForElementToAppear(searchButton);
     searchButton.click();
     testWebDriver.sleep(1500);
   }
 
-  public void clickRnRList()
-  {
+  public void clickRnRList() {
     testWebDriver.waitForElementToAppear(viewRnRList);
     viewRnRList.click();
   }
 
-    public void clickFullSupplyTab()
-    {
-        testWebDriver.waitForElementToAppear(fullSupplyTab);
-        fullSupplyTab.click();
-    }
-
-    public void clickNonFullSupplyTab()
-    {
-        testWebDriver.waitForElementToAppear(nonFullSupplyTab);
-        nonFullSupplyTab.click();
-    }
-
-  public void verifyApprovedQuantityFieldPresent()
-  {
-    testWebDriver.waitForElementToAppear(approveQuantity);
-    SeleneseTestNgHelper.assertTrue("Quantity Approved field should be displayed",approveQuantity.isDisplayed());
+  public void clickFullSupplyTab() {
+    testWebDriver.waitForElementToAppear(fullSupplyTab);
+    fullSupplyTab.click();
   }
 
-  public HomePage verifyFieldsPreApproval(String cost, String newPatientValue) throws IOException
-  {
+  public void clickNonFullSupplyTab() {
+    testWebDriver.waitForElementToAppear(nonFullSupplyTab);
+    nonFullSupplyTab.click();
+  }
+
+  public void verifyApprovedQuantityFieldPresent() {
+    testWebDriver.waitForElementToAppear(approveQuantity);
+    SeleneseTestNgHelper.assertTrue("Quantity Approved field should be displayed", approveQuantity.isDisplayed());
+  }
+
+  public HomePage verifyFieldsPreApproval(String cost, String newPatientValue) throws IOException {
     testWebDriver.waitForElementToAppear(totalCostPreApproval);
     SeleneseTestNgHelper.assertEquals(totalCostPreApproval.getText().substring(1), cost);
     SeleneseTestNgHelper.assertEquals(newPatient.getText().trim(), newPatientValue);
@@ -172,8 +162,7 @@ public class ViewRequisitionPage extends RequisitionPage {
   }
 
 
-  public HomePage verifyFieldsPostApproval(String cost, String newPatientValue) throws IOException
-  {
+  public HomePage verifyFieldsPostApproval(String cost, String newPatientValue) throws IOException {
     testWebDriver.waitForElementToAppear(totalCostPostApproval);
     SeleneseTestNgHelper.assertEquals(totalCostPostApproval.getText().substring(1), cost);
     SeleneseTestNgHelper.assertEquals(newPatient.getText().trim(), newPatientValue);

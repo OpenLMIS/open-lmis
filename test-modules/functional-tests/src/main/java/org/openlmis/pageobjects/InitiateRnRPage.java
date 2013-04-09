@@ -459,9 +459,9 @@ public class InitiateRnRPage extends RequisitionPage {
     String totalCostFullSupplyFooterValue = testWebDriver.getText(totalCostFullSupplyFooter);
     testWebDriver.waitForElementToAppear(totalCostNonFullSupplyFooter);
     String totalCostNonFullSupplyFooterValue = testWebDriver.getText(totalCostNonFullSupplyFooter);
-    BigDecimal actualTotalCost = new BigDecimal(parseFloat(totalCostFullSupplyFooterValue.trim().substring(1)) + parseFloat(totalCostNonFullSupplyFooterValue.trim().substring(1))).setScale(2,BigDecimal.ROUND_HALF_UP);
+    BigDecimal actualTotalCost = new BigDecimal(parseFloat(totalCostFullSupplyFooterValue.trim().substring(1)) + parseFloat(totalCostNonFullSupplyFooterValue.trim().substring(1))).setScale(2, BigDecimal.ROUND_HALF_UP);
     assertEquals(actualTotalCost.toString(), totalCostFooter.getText().trim().substring(1));
-    assertEquals(totalCostFooter.getText().trim().substring(1), new BigDecimal(actualTotalCostFullSupply + actualTotalCostNonFullSupply).setScale(2,BigDecimal.ROUND_HALF_UP).toString());
+    assertEquals(totalCostFooter.getText().trim().substring(1), new BigDecimal(actualTotalCostFullSupply + actualTotalCostNonFullSupply).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
     testWebDriver.sleep(500);
   }
 
@@ -549,9 +549,19 @@ public class InitiateRnRPage extends RequisitionPage {
     boolean flag = false;
     String actualColumnHeading = null;
     for (int i = 0; i < noOfColumns; i++) {
-      actualColumnHeading = testWebDriver.getElementByXpath(xpathTillTrTag + "/th[" + (i + 1) + "]").getText();
-      if (actualColumnHeading.trim().contains(heading))
+      try {
+        WebElement columnElement = testWebDriver.getElementByXpath(xpathTillTrTag + "/th[" + (i + 1) + "]");
+        columnElement.click();
+        actualColumnHeading = columnElement.getText();
+      } catch (ElementNotVisibleException e) {
+        continue;
+      } catch (NoSuchElementException e) {
+        continue;
+      }
+      if (actualColumnHeading.trim().contains(heading)) {
         flag = true;
+        break;
+      }
     }
     assertEquals(flag, true);
   }
@@ -560,12 +570,23 @@ public class InitiateRnRPage extends RequisitionPage {
     boolean flag = false;
     String actualColumnHeading = null;
     for (int i = 0; i < noOfColumns; i++) {
-      actualColumnHeading = testWebDriver.getElementByXpath(xpathTillTrTag + "/th[" + (i + 1) + "]").getText();
-      if (actualColumnHeading.trim().contains(heading))
+      try {
+        WebElement columnElement = testWebDriver.getElementByXpath(xpathTillTrTag + "/th[" + (i + 1) + "]");
+        columnElement.click();
+        actualColumnHeading = columnElement.getText();
+      } catch (ElementNotVisibleException e) {
+        continue;
+      } catch (NoSuchElementException e) {
+        continue;
+      }
+      if (actualColumnHeading.trim().contains(heading)) {
         flag = true;
+        break;
+      }
     }
     assertEquals(flag, false);
   }
+
 
   public void addMultipleNonFullSupplyLineItems(int numberOfLineItems, boolean isMultipleCategories) throws IOException, SQLException {
     testWebDriver.waitForElementToAppear(nonFullSupplyTab);

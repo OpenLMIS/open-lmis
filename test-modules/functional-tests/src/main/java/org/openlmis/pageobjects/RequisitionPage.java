@@ -9,12 +9,16 @@ package org.openlmis.pageobjects;
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementNotVisibleException;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
+import static com.thoughtworks.selenium.SeleneseTestBase.fail;
 import static org.openqa.selenium.support.How.ID;
 
 public class RequisitionPage extends Page {
@@ -84,10 +88,19 @@ public class RequisitionPage extends Page {
   }
 
   public void verifyCommentBoxNotPresent() {
+    boolean commentBoxPresent = false;
+    testWebDriver.waitForElementToAppear(commentsButton);
     commentsButton.click();
-    WebElement commentBox = testWebDriver.findElement(By.id("addComment"));
-    if (commentBox.isDisplayed())
-      SeleneseTestNgHelper.fail("Comment should not be updatable");
+    try {
+      addCommentTextArea.click();
+      commentBoxPresent = true;
+    } catch (ElementNotVisibleException e) {
+      commentBoxPresent = false;
+    } catch (NoSuchElementException e) {
+      commentBoxPresent = false;
+    } finally {
+      assertFalse(commentBoxPresent);
+    }
   }
 
 }

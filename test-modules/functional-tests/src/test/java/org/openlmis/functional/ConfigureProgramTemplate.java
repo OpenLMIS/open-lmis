@@ -39,8 +39,8 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
     dbWrapper.insertRoleAssignment("200", "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
     dbWrapper.insertSchedule("M", "Monthly", "Month");
-      dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
-      dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
+    dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
+    dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
     setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
     dbWrapper.insertSupplyLines("N1", program, "F10");
 
@@ -61,7 +61,7 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
     String newColumnHeading = "Altered";
-    templateConfigPage.alterTemplateLabelAndVisibility(newColumnHeading , program);
+    templateConfigPage.alterTemplateLabelAndVisibility(newColumnHeading, program);
     setupTestUserRoleRightsData(userSIC);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
     dbWrapper.insertRoleAssignment("200", "store in-charge");
@@ -81,6 +81,7 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
     int columns = initiateRnRPage.getSizeOfElements(tableXpathTillTr + "/th");
     initiateRnRPage.verifyColumnsHeadingPresent(tableXpathTillTr, newColumnHeading, columns);
     String columnHeadingNotPresent = "Remarks";
+    columns = initiateRnRPage.getSizeOfElements(tableXpathTillTr + "/th");
     initiateRnRPage.verifyColumnHeadingNotPresent(tableXpathTillTr, columnHeadingNotPresent, columns);
 
 
