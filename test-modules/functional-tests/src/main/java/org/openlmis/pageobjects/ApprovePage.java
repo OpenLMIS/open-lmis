@@ -187,6 +187,7 @@ public class ApprovePage extends RequisitionPage {
 
     nonFullSupplyTab.click();
 
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(quantityApproved);
     quantityApproved.clear();
     quantityApproved.sendKeys(approvedQuantity);
