@@ -45,7 +45,7 @@ dependencies {
             project(':modules:authentication'),
             project(':modules:requisition'),
             project(':modules:core'),
-            project(':modules:commtrack')
+            project(':modules:restapi')
 
 
     testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
@@ -57,7 +57,7 @@ dependencies {
             'org.codehaus.jackson:jackson-mapper-asl:1.9.9',
             'cglib:cglib:2.2.2',
             project(path: ':modules:core', configuration: 'testFixtures'),
-            project(path: ':modules:commtrack', configuration: 'testFixtures'),
+            project(path: ':modules:restapi', configuration: 'testFixtures'),
             project(path: ':modules:requisition', configuration: 'testFixtures')
 }
 

@@ -4,10 +4,10 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.openlmis.commtrack.service;
+package org.openlmis.restapi.service;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.commtrack.domain.CommtrackReport;
+import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +15,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 @NoArgsConstructor
-public class CommtrackService {
+public class RestService {
 
   @Autowired
   RequisitionService requisitionService;
 
-  public Integer submitRequisition(CommtrackReport report) {
+  public Rnr submitReport(Report report) {
+    report.validate();
+
     Rnr requisition = requisitionService.initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), report.getUserId());
 
     requisition.setFullSupplyLineItems(report.getProducts());
@@ -29,7 +31,7 @@ public class CommtrackService {
 
     requisitionService.authorize(requisition);
 
-    return requisition.getId();
+    return requisition;
   }
 
 }

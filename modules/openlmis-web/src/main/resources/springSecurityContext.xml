@@ -39,6 +39,7 @@
         <intercept-url pattern="/j_spring_security_check" access="IS_AUTHENTICATED_ANONYMOUSLY" requires-channel="any"/>
         <intercept-url pattern="/favicon.ico" access="permitAll" requires-channel="any"/>
         <intercept-url pattern="/public/**" access="permitAll" requires-channel="any"/>
+        <intercept-url pattern="/commtrack/**" access="permitAll" requires-channel="any"/>
         <intercept-url pattern="/forgot-password*" access="permitAll" requires-channel="any"/>
         <intercept-url pattern="/user/validatePasswordResetToken/*" access="permitAll" requires-channel="any"/>
         <intercept-url pattern="/user/resetPassword/*" access="permitAll" requires-channel="any"/>

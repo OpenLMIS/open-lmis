@@ -4,18 +4,20 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.openlmis.commtrack.domain;
+package org.openlmis.restapi.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.RnrLineItem;
 
 import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class CommtrackReport {
+public class Report {
 
+  public static final String ERROR_COMMTRACK_MANDATORY_MISSING = "error.restapi.mandatory.missing";
 
   private Integer facilityId;
   private Integer programId;
@@ -24,4 +26,8 @@ public class CommtrackReport {
 
   private List<RnrLineItem> products;
 
+  public void validate() {
+    if (facilityId == null || programId == null || periodId == null || userId == null)
+      throw new DataException(ERROR_COMMTRACK_MANDATORY_MISSING);
   }
+}
