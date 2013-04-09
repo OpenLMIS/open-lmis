@@ -79,6 +79,7 @@ public class RequisitionPage extends Page {
 
   public void verifyValueInCommentsTextArea(String textToVerify) {
     testWebDriver.waitForElementToAppear(addCommentTextArea);
+    addCommentTextArea.click();
     SeleneseTestNgHelper.assertEquals(addCommentTextArea.getAttribute("value").trim(), textToVerify.trim());
   }
 
