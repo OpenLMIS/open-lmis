@@ -20,12 +20,6 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 public abstract class AbstractModelPersistenceHandler implements RecordHandler<Importable> {
 
-  private String duplicateMessageKey;
-
-  public AbstractModelPersistenceHandler(String duplicateMessageKey) {
-    this.duplicateMessageKey = duplicateMessageKey;
-  }
-
   @Override
   public void execute(Importable importable, int rowNumber, AuditFields auditFields) {
     BaseModel currentRecord = (BaseModel) importable;
@@ -51,7 +45,7 @@ public abstract class AbstractModelPersistenceHandler implements RecordHandler<I
   private void throwExceptionIfProcessedInCurrentUpload(AuditFields auditFields, BaseModel existing) {
     if (existing != null) {
       if (existing.getModifiedDate().equals(auditFields.getCurrentTimestamp())) {
-        throw new DataException(duplicateMessageKey);
+        throw new DataException(getDuplicateMessageKey());
       }
     }
   }
@@ -59,4 +53,6 @@ public abstract class AbstractModelPersistenceHandler implements RecordHandler<I
   protected abstract BaseModel getExisting(BaseModel record);
 
   protected abstract void save(BaseModel record);
+
+  protected abstract String getDuplicateMessageKey();
 }

@@ -22,7 +22,6 @@ public class FacilityApprovedProductPersistenceHandler extends AbstractModelPers
 
   @Autowired
   public FacilityApprovedProductPersistenceHandler(FacilityApprovedProductService facilityApprovedProductService) {
-    super(DUPLICATE_FACILITY_APPROVED_PRODUCT);
     this.facilityApprovedProductService = facilityApprovedProductService;
   }
 
@@ -34,5 +33,10 @@ public class FacilityApprovedProductPersistenceHandler extends AbstractModelPers
   @Override
   protected void save(BaseModel record) {
     facilityApprovedProductService.save((FacilityApprovedProduct) record);
+  }
+
+  @Override
+  protected String getDuplicateMessageKey() {
+    return DUPLICATE_FACILITY_APPROVED_PRODUCT;
   }
 }

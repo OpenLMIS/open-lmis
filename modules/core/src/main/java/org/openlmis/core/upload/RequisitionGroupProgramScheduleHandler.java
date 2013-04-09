@@ -23,7 +23,6 @@ public class RequisitionGroupProgramScheduleHandler extends AbstractModelPersist
 
   @Autowired
   public RequisitionGroupProgramScheduleHandler(RequisitionGroupProgramScheduleService requisitionGroupProgramScheduleService) {
-    super(null);
     this.requisitionGroupProgramScheduleService = requisitionGroupProgramScheduleService;
   }
 
@@ -36,6 +35,11 @@ public class RequisitionGroupProgramScheduleHandler extends AbstractModelPersist
   @Override
   protected void save(BaseModel record) {
     requisitionGroupProgramScheduleService.save((RequisitionGroupProgramSchedule) record);
+  }
+
+  @Override
+  protected String getDuplicateMessageKey() {
+    return null;
   }
 
 }

@@ -20,7 +20,6 @@ public class ProgramProductPersistenceHandler extends AbstractModelPersistenceHa
 
   @Autowired
   public ProgramProductPersistenceHandler(ProgramProductService programProductService) {
-    super(DUPLICATE_PRODUCT_PROGRAM_CODE_COMBINATION);
     this.programProductService = programProductService;
   }
 
@@ -34,6 +33,11 @@ public class ProgramProductPersistenceHandler extends AbstractModelPersistenceHa
     programProductService.save((ProgramProduct) record);
   }
 
- }
+  @Override
+  protected String getDuplicateMessageKey() {
+    return DUPLICATE_PRODUCT_PROGRAM_CODE_COMBINATION;
+  }
+
+}
 
 

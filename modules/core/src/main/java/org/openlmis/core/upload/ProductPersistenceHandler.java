@@ -20,7 +20,6 @@ public class ProductPersistenceHandler extends AbstractModelPersistenceHandler {
 
   @Autowired
   public ProductPersistenceHandler(ProductService productService) {
-    super(DUPLICATE_PRODUCT_CODE);
     this.productService = productService;
   }
 
@@ -32,6 +31,11 @@ public class ProductPersistenceHandler extends AbstractModelPersistenceHandler {
   @Override
   protected void save(BaseModel record) {
     productService.save((Product) record);
+  }
+
+  @Override
+  protected String getDuplicateMessageKey() {
+    return DUPLICATE_PRODUCT_CODE;
   }
 
 }

@@ -27,7 +27,6 @@ public class UserPersistenceHandler extends AbstractModelPersistenceHandler {
 
   @Autowired
   public UserPersistenceHandler(UserService userService, @Value("${mail.base.url}") String baseUrl) {
-    super(DUPLICATE_USER_NAME_FOUND);
     this.userService = userService;
     this.baseUrl = baseUrl;
   }
@@ -40,6 +39,11 @@ public class UserPersistenceHandler extends AbstractModelPersistenceHandler {
   @Override
   protected void save(BaseModel record) {
     userService.create((User) record, baseUrl + RESET_PASSWORD_PATH);
+  }
+
+  @Override
+  protected String getDuplicateMessageKey() {
+    return DUPLICATE_USER_NAME_FOUND;
   }
 
 }

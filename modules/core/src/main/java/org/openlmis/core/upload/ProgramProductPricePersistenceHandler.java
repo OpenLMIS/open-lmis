@@ -18,7 +18,6 @@ public class ProgramProductPricePersistenceHandler extends AbstractModelPersiste
   private ProgramProductService programProductService;
   @Autowired
   public ProgramProductPricePersistenceHandler(ProgramProductService service) {
-    super(null);
     this.programProductService = service;
   }
 
@@ -31,6 +30,11 @@ public class ProgramProductPricePersistenceHandler extends AbstractModelPersiste
   @Override
   protected void save(BaseModel record) {
     programProductService.updateProgramProductPrice((ProgramProductPrice) record);
+  }
+
+  @Override
+  protected String getDuplicateMessageKey() {
+    return null;
   }
 
 }

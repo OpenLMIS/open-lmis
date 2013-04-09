@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.core.repository.SupplyLineRepository;
+import org.openlmis.core.service.SupplyLineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,22 +20,28 @@ import java.util.Date;
 @NoArgsConstructor
 public class SupplyLineHandler extends AbstractModelPersistenceHandler {
 
-  SupplyLineRepository supplyLineRepository;
+  public static final String DUPLICATE_ENTRY_FOR_SUPPLY_LINE_FOUND = "Duplicate entry for Supply Line found";
+
+  SupplyLineService supplyLineService;
 
   @Autowired
-  public SupplyLineHandler(SupplyLineRepository supplyLineRepository) {
-    super(null);
-    this.supplyLineRepository = supplyLineRepository;
+  public SupplyLineHandler(SupplyLineService supplyLineService) {
+    this.supplyLineService = supplyLineService;
   }
 
   @Override
   protected BaseModel getExisting(BaseModel record) {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
+    return supplyLineService.getExisting(((SupplyLine)record));
   }
 
   @Override
   protected void save(BaseModel record) {
-    supplyLineRepository.insert((SupplyLine) record);
+    supplyLineService.save((SupplyLine) record);
+  }
+
+  @Override
+  protected String getDuplicateMessageKey() {
+    return DUPLICATE_ENTRY_FOR_SUPPLY_LINE_FOUND;
   }
 
 }

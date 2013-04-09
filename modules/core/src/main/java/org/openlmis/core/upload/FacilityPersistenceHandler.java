@@ -22,7 +22,6 @@ public class FacilityPersistenceHandler extends AbstractModelPersistenceHandler 
 
   @Autowired
   public FacilityPersistenceHandler(FacilityService facilityService) {
-    super(DUPLICATE_FACILITY_CODE);
     this.facilityService = facilityService;
   }
 
@@ -35,5 +34,11 @@ public class FacilityPersistenceHandler extends AbstractModelPersistenceHandler 
   protected void save(BaseModel record) {
     facilityService.save((Facility) record);
   }
+
+  @Override
+  protected String getDuplicateMessageKey() {
+    return DUPLICATE_FACILITY_CODE;
+  }
+
 
 }

@@ -20,7 +20,6 @@ public class ProgramSupportedPersistenceHandler extends AbstractModelPersistence
 
   @Autowired
   public ProgramSupportedPersistenceHandler(FacilityService facilityService) {
-    super(FACILITY_ALREADY_MAPPED_TO_PROGRAM);
     this.facilityService = facilityService;
   }
 
@@ -32,6 +31,11 @@ public class ProgramSupportedPersistenceHandler extends AbstractModelPersistence
   @Override
   protected void save(BaseModel record) {
     facilityService.uploadSupportedProgram((ProgramSupported) record);
+  }
+
+  @Override
+  protected String getDuplicateMessageKey() {
+    return FACILITY_ALREADY_MAPPED_TO_PROGRAM;
   }
 
 }

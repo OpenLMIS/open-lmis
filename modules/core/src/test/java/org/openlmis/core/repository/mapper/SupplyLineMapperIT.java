@@ -34,7 +34,7 @@ import static org.junit.Assert.assertThat;
 public class SupplyLineMapperIT {
 
     @Autowired
-    SupplyLineMapper supplyLineMapper;
+    SupplyLineMapper mapper;
 
     @Autowired
     ProgramMapper programMapper;
@@ -62,7 +62,7 @@ public class SupplyLineMapperIT {
         supplyLine.setProgram(program);
         supplyLine.setSupervisoryNode(supervisoryNode);
 
-        Integer id = supplyLineMapper.insert(supplyLine);
+        Integer id = mapper.insert(supplyLine);
         assertNotNull(id);
     }
 
@@ -81,12 +81,61 @@ public class SupplyLineMapperIT {
       supplyLine.setProgram(program);
       supplyLine.setSupervisoryNode(supervisoryNode);
 
-      supplyLineMapper.insert(supplyLine);
+      mapper.insert(supplyLine);
 
-      SupplyLine returnedSupplyLine = supplyLineMapper.getSupplyLineBy(supervisoryNode, program);
+      SupplyLine returnedSupplyLine = mapper.getSupplyLineBy(supervisoryNode, program);
 
       assertThat(returnedSupplyLine.getId(), is(supplyLine.getId()));
 
     }
 
+  @Test
+  public void shouldUpdateSupplyLine() throws Exception {
+    Facility facility = make(a(FacilityBuilder.defaultFacility));
+    facilityMapper.insert(facility);
+    Program program = make(a(ProgramBuilder.defaultProgram));
+    programMapper.insert(program);
+    SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
+    supervisoryNode.setFacility(facility);
+    supervisoryNodeMapper.insert(supervisoryNode);
+
+    SupplyLine supplyLine = new SupplyLine();
+    supplyLine.setSupplyingFacility(facility);
+    supplyLine.setProgram(program);
+    supplyLine.setSupervisoryNode(supervisoryNode);
+
+    mapper.insert(supplyLine);
+
+    supplyLine.setDescription("New Description");
+    supplyLine.setModifiedBy(2);
+
+    mapper.update(supplyLine);
+
+    assertThat(supplyLine.getDescription(), is("New Description"));
+    assertThat(supplyLine.getModifiedBy(), is(2));
+  }
+
+  @Test
+  public void shouldReturnSupplyLineBySupervisoryNodeProgramAndFacility() throws Exception {
+    Facility facility = make(a(FacilityBuilder.defaultFacility));
+    facilityMapper.insert(facility);
+    Program program = make(a(ProgramBuilder.defaultProgram));
+    programMapper.insert(program);
+    SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
+    supervisoryNode.setFacility(facility);
+    supervisoryNodeMapper.insert(supervisoryNode);
+
+    SupplyLine supplyLine = new SupplyLine();
+    supplyLine.setSupplyingFacility(facility);
+    supplyLine.setProgram(program);
+    supplyLine.setSupervisoryNode(supervisoryNode);
+
+    mapper.insert(supplyLine);
+
+    SupplyLine supplyLineReturned = mapper.getSupplyLineBySupervisoryNodeProgramAndFacility(supplyLine);
+
+    assertThat(supplyLineReturned.getProgram().getId(), is(program.getId()));
+    assertThat(supplyLineReturned.getSupplyingFacility().getId(), is(facility.getId()));
+    assertThat(supplyLineReturned.getSupervisoryNode().getId(), is(supervisoryNode.getId()));
+  }
 }

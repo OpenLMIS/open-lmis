@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.openlmis.core.builder.SupplyLineBuilder;
 import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.core.repository.SupplyLineRepository;
+import org.openlmis.core.service.SupplyLineService;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -22,20 +23,20 @@ import static org.mockito.Mockito.verify;
 
 public class SupplyLineHandlerTest {
 
-  SupplyLineRepository supplyLineRepository;
+  SupplyLineService supplyLineService;
   SupplyLineHandler supplyLineHandler;
 
   @Before
   public void setUp() {
-    supplyLineRepository = mock(SupplyLineRepository.class);
-    supplyLineHandler = new SupplyLineHandler(supplyLineRepository);
+    supplyLineService = mock(SupplyLineService.class);
+    supplyLineHandler = new SupplyLineHandler(supplyLineService);
   }
 
   @Test
   public void shouldSaveSupplyLine() {
     SupplyLine supplyLine = make(a(SupplyLineBuilder.defaultSupplyLine));
     supplyLineHandler.save(supplyLine);
-    verify(supplyLineRepository).insert(supplyLine);
+    verify(supplyLineService).save(supplyLine);
 
   }
 }

@@ -19,7 +19,6 @@ public class GeographicZonePersistenceHandler extends AbstractModelPersistenceHa
 
   @Autowired
   public GeographicZonePersistenceHandler(GeographicZoneService geographicZoneService) {
-    super(DUPLICATE_GEOGRAPHIC_ZONE_CODE);
     this.geographicZoneService = geographicZoneService;
   }
 
@@ -32,6 +31,11 @@ public class GeographicZonePersistenceHandler extends AbstractModelPersistenceHa
   @Override
   protected void save(BaseModel record) {
     geographicZoneService.save((GeographicZone) record);
+  }
+
+  @Override
+  protected String getDuplicateMessageKey() {
+    return DUPLICATE_GEOGRAPHIC_ZONE_CODE;
   }
 
 

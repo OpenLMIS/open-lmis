@@ -23,7 +23,6 @@ public class RequisitionGroupMemberHandler extends AbstractModelPersistenceHandl
 
   @Autowired
   public RequisitionGroupMemberHandler(RequisitionGroupMemberService requisitionGroupMemberService) {
-    super(null);
     this.requisitionGroupMemberService = requisitionGroupMemberService;
   }
 
@@ -35,6 +34,11 @@ public class RequisitionGroupMemberHandler extends AbstractModelPersistenceHandl
   @Override
   protected void save(BaseModel record) {
     requisitionGroupMemberService.save((RequisitionGroupMember) record);
+  }
+
+  @Override
+  protected String getDuplicateMessageKey() {
+    return null;
   }
 
 }

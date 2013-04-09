@@ -10,6 +10,10 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.SupplyLine;
+import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.FacilityRepository;
+import org.openlmis.core.repository.ProgramRepository;
+import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.core.repository.SupplyLineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,13 +24,49 @@ public class SupplyLineService {
 
 
   private SupplyLineRepository supplyLineRepository;
+  private ProgramRepository programRepository;
+  private FacilityRepository facilityRepository;
+  private SupervisoryNodeRepository supervisoryNodeRepository;
+
 
   @Autowired
-  public SupplyLineService(SupplyLineRepository supplyLineRepository) {
+  public SupplyLineService(SupplyLineRepository supplyLineRepository, ProgramRepository programRepository, FacilityRepository facilityRepository, SupervisoryNodeRepository supervisoryNodeRepository) {
     this.supplyLineRepository = supplyLineRepository;
+    this.programRepository = programRepository;
+    this.facilityRepository = facilityRepository;
+    this.supervisoryNodeRepository = supervisoryNodeRepository;
   }
 
   public SupplyLine getSupplyLineBy(SupervisoryNode supervisoryNode, Program program) {
     return supplyLineRepository.getSupplyLineBy(supervisoryNode, program);
   }
+
+  public void save(SupplyLine supplyLine) {
+    populateIdsForSupplyLine(supplyLine);
+    validateIfSupervisoryNodeIsTopmostNode(supplyLine);
+
+    if (supplyLine.getId() == null) {
+      this.supplyLineRepository.insert(supplyLine);
+      return;
+    }
+
+    this.supplyLineRepository.update(supplyLine);
+  }
+
+  private void populateIdsForSupplyLine(SupplyLine supplyLine) {
+    supplyLine.getProgram().setId(programRepository.getIdByCode(supplyLine.getProgram().getCode()));
+    supplyLine.getSupplyingFacility().setId(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode()));
+    supplyLine.getSupervisoryNode().setId(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode()));
+  }
+
+  private void validateIfSupervisoryNodeIsTopmostNode(SupplyLine supplyLine) {
+    Integer supervisoryNodeParentId = supervisoryNodeRepository.getSupervisoryNodeParentId(supplyLine.getSupervisoryNode().getId());
+    if (supervisoryNodeParentId != null)
+      throw new DataException("Supervising Node is not the Top node");
+  }
+
+  public SupplyLine getExisting(SupplyLine supplyLine) {
+    return supplyLineRepository.getSupplyLineBySupervisoryNodeProgramAndFacility(supplyLine);
+  }
+
 }

@@ -22,7 +22,6 @@ public class SupervisoryNodeHandler extends AbstractModelPersistenceHandler {
 
   @Autowired
   public SupervisoryNodeHandler(SupervisoryNodeService supervisoryNodeService) {
-    super(DUPLICATE_SUPERVISORY_NODE);
     this.supervisoryNodeService = supervisoryNodeService;
   }
 
@@ -34,6 +33,11 @@ public class SupervisoryNodeHandler extends AbstractModelPersistenceHandler {
   @Override
   protected void save(BaseModel record) {
     supervisoryNodeService.save((SupervisoryNode) record);
+  }
+
+  @Override
+  protected String getDuplicateMessageKey() {
+    return DUPLICATE_SUPERVISORY_NODE;
   }
 
 }

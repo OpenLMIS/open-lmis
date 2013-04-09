@@ -93,7 +93,7 @@ public class AbstractModelPersistenceHandlerTest {
   }
 
   private AbstractModelPersistenceHandler instantiateHandlerThrowingExceptionOnSave() {
-    return new AbstractModelPersistenceHandler("Duplicate Record") {
+    return new AbstractModelPersistenceHandler() {
       @Override
       protected BaseModel getExisting(BaseModel record) {
         return null;
@@ -104,11 +104,16 @@ public class AbstractModelPersistenceHandlerTest {
         throw new DataException("error");
       }
 
+      @Override
+      protected String getDuplicateMessageKey() {
+        return "Duplicate Record";
+      }
+
     };
   }
 
   private AbstractModelPersistenceHandler instantiateHandler(final BaseModel existing) {
-    return new AbstractModelPersistenceHandler("Duplicate Record") {
+    return new AbstractModelPersistenceHandler() {
       @Override
       protected BaseModel getExisting(BaseModel record) {
         return existing;
@@ -117,6 +122,12 @@ public class AbstractModelPersistenceHandlerTest {
       @Override
       protected void save(BaseModel record) {
       }
+
+      @Override
+      protected String getDuplicateMessageKey() {
+        return "Duplicate Record";
+      }
+
     };
   }
 

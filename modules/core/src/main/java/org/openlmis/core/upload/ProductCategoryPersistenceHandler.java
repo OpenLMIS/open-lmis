@@ -22,7 +22,6 @@ public class ProductCategoryPersistenceHandler  extends AbstractModelPersistence
 
   @Autowired
   public ProductCategoryPersistenceHandler(ProductCategoryService productCategoryService) {
-    super(DUPLICATE_PRODUCT_CATEGORY);
     this.productCategoryService = productCategoryService;
   }
 
@@ -34,5 +33,10 @@ public class ProductCategoryPersistenceHandler  extends AbstractModelPersistence
   @Override
   protected void save(BaseModel modelClass) {
     productCategoryService.save((ProductCategory) modelClass);
+  }
+
+  @Override
+  protected String getDuplicateMessageKey() {
+    return DUPLICATE_PRODUCT_CATEGORY;
   }
 }
