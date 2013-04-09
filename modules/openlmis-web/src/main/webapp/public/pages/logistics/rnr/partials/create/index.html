@@ -35,10 +35,10 @@
         <input ng-disabled="formDisabled" type="button" ng-click="saveRnr(null)" class="btn btn-primary save-button"
                openlmis-message="button.save"/>
         <input ng-show="rnr.status == 'INITIATED' && hasPermission('CREATE_REQUISITION')" ng-disabled="formDisabled"
-               type="button" ng-click="submitRnr()" class="btn btn-primary submit-button" openlmis-message="button.submit"/>
+               type="button" ng-click="showConfirmModal()" class="btn btn-primary submit-button" openlmis-message="button.submit"/>
         <input type="button"
                ng-show="(rnr.status == 'SUBMITTED' || rnr.status == 'AUTHORIZED') && hasPermission('AUTHORIZE_REQUISITION')"
-               ng-disabled="rnr.status == 'AUTHORIZED'" ng-click="authorizeRnr()"
+               ng-disabled="rnr.status == 'AUTHORIZED'" ng-click="showConfirmModal()"
                class="btn btn-primary submit-button"
                openlmis-message="button.authorize"/>
         <input id="comments" type="button" ng-click="showCommentBox=!showCommentBox" class="btn comments-button"

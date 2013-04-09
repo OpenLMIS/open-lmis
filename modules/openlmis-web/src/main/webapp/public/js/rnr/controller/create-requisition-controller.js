@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function CreateRequisitionController($scope, requisition, currency, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, RequisitionComment, $location, Requisitions, $routeParams, $rootScope) {
+function CreateRequisitionController($scope, requisition, currency, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, RequisitionComment, $location, Requisitions, $routeParams, $rootScope, $dialog) {
   $scope.showNonFullSupply = $routeParams.supplyType == 'non-full-supply';
   $scope.baseUrl = "/create-rnr/" + $routeParams.rnr + '/' + $routeParams.facility + '/' + $routeParams.program;
   $scope.fullSupplyLink = $scope.baseUrl + "?supplyType=full-supply&page=1";
@@ -126,8 +126,25 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
         $scope.processing = false;
         $scope.submitError = data.data.error;
       });
-  }
-  ;
+  };
+
+  $scope.dialogCloseCallback = function (result) {
+    if (result && $scope.rnr.status == 'INITIATED') {
+      $scope.submitRnr();
+    }
+    if (result && $scope.rnr.status == 'SUBMITTED') {
+      $scope.authorizeRnr();
+    }
+  };
+
+  $scope.showConfirmModal = function () {
+    var options = {
+      id:"confirmDialog",
+      header:"Confirm Action",
+      body:"Are you sure? Please confirm."
+    };
+    OpenLmisDialog.new(options, $scope.dialogCloseCallback, $dialog);
+  };
 
   $scope.authorizeRnr = function () {
     resetFlags();

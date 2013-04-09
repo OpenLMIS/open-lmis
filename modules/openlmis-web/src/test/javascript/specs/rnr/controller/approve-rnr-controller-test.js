@@ -7,14 +7,16 @@
 describe('Approve Requisition controller', function () {
 
   var scope, ctrl, httpBackend, location, routeParams, controller, requisition,
-    programRnrColumnList, nonFullSupplyLineItems, lineItems, columnDefinitions;
+    programRnrColumnList, nonFullSupplyLineItems, lineItems, dialog;
   beforeEach(module('openlmis.services'));
+  beforeEach(module('ui.bootstrap.dialog'));
 
   beforeEach(inject(function ($httpBackend, $rootScope, $location, $controller) {
     scope = $rootScope.$new();
     location = $location;
     controller = $controller;
     httpBackend = $httpBackend;
+//    dialog = $dialog;
     routeParams = {"rnr":"1", "program":"1"};
     lineItems = [];
     nonFullSupplyLineItems = [];
@@ -112,6 +114,24 @@ describe('Approve Requisition controller', function () {
     scope.approveRnr();
     httpBackend.flush();
 
+    expect(scope.$parent.message).toEqual("R&R approved successfully!");
+  });
+
+  it('should display confirm modal if approve button is clicked', function () {
+    spyOn(OpenLmisDialog, 'new');
+    scope.showConfirmModal();
+    httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
+    expect(OpenLmisDialog.new).toHaveBeenCalled();
+  });
+
+  it('should approve Rnr if ok is clicked on the confirm modal', function () {
+    scope.rnr = new Rnr({"id":"rnrId"}, []);
+    spyOn(scope.rnr, 'validateFullSupplyForApproval').andReturn('');
+    spyOn(scope.rnr, 'validateNonFullSupplyForApproval').andReturn('');
+
+    httpBackend.expect('PUT', '/requisitions/rnrId/approve.json').respond({'success':"R&R approved successfully!"});
+    scope.dialogCloseCallback(true);
+    httpBackend.flush();
     expect(scope.$parent.message).toEqual("R&R approved successfully!");
   });
 

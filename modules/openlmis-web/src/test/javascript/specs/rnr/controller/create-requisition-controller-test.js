@@ -9,6 +9,8 @@ describe('CreateRequisitionController', function () {
 
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
+  beforeEach(module('ui.bootstrap.dialog'));
+
   beforeEach(inject(function ($httpBackend, $rootScope, $location, $controller, $routeParams, _localStorageService_) {
     scope = $rootScope.$new();
     rootScope = $rootScope;
@@ -164,6 +166,24 @@ describe('CreateRequisitionController', function () {
 
     expect(scope.submitMessage).toEqual("R&R submitted successfully!");
     expect(scope.rnr.status).toEqual("SUBMITTED");
+  });
+
+  it('should display confirm modal if approve button is clicked', function () {
+    spyOn(OpenLmisDialog, 'new');
+    scope.showConfirmModal();
+    httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
+    expect(OpenLmisDialog.new).toHaveBeenCalled();
+  });
+
+  it('should submit Rnr if ok is clicked on the confirm modal', function () {
+    scope.rnr = new Rnr({"id": "rnrId", "status":"INITIATED", "fullSupplyLineItems": []});
+    spyOn(scope.rnr, 'validateFullSupply').andReturn('');
+    spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
+
+    httpBackend.expect('PUT', '/requisitions/rnrId/submit.json').respond({'success':"R&R submitted successfully!"});
+    scope.dialogCloseCallback(true);
+    httpBackend.flush();
+    expect(scope.submitMessage).toEqual("R&R submitted successfully!");
   });
 
   it('should return cell error class', function () {

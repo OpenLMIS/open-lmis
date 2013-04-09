@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ConvertToOrderListController($scope, requisitionList, RequisitionOrder, RequisitionForConvertToOrder) {
+function ConvertToOrderListController($scope, requisitionList, RequisitionOrder, RequisitionForConvertToOrder, $dialog) {
   $scope.requisitions = requisitionList;
   $scope.filteredRequisitions = $scope.requisitions;
   $scope.selectedItems = [];
@@ -41,6 +41,22 @@ function ConvertToOrderListController($scope, requisitionList, RequisitionOrder,
 
     $scope.resultCount = $scope.filteredRequisitions.length;
   };
+
+  $scope.dialogCloseCallback = function (result) {
+    if (result) {
+      $scope.convertToOrder();
+    }
+  };
+
+  $scope.showConfirmModal = function () {
+    var options = {
+      id:"confirmDialog",
+      header:"Confirm Action",
+      body:"Are you sure? Please confirm."
+    };
+    OpenLmisDialog.new(options, $scope.dialogCloseCallback, $dialog);
+  };
+
 
   $scope.convertToOrder = function () {
     var successHandler = function () {

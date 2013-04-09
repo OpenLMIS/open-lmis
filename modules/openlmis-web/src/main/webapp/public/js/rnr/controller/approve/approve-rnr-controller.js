@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $location, currency, $routeParams, $timeout) {
+function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $location, currency, $routeParams, $dialog) {
   $scope.rnr = new Rnr(requisition, rnrColumns);
   $scope.rnrColumns = rnrColumns;
   $scope.currency = currency;
@@ -132,6 +132,21 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
 
   $scope.checkErrorOnPage = function (page) {
     return $scope.showNonFullSupply ? _.contains($scope.errorPages.nonFullSupply, page) : _.contains($scope.errorPages.fullSupply, page);
+  };
+
+  $scope.dialogCloseCallback = function (result) {
+    if (result) {
+      $scope.approveRnr();
+    }
+  };
+
+  $scope.showConfirmModal = function () {
+    var options = {
+      id:"confirmDialog",
+      header:"Confirm Action",
+      body:"Are you sure? Please confirm."
+    };
+    OpenLmisDialog.new(options, $scope.dialogCloseCallback, $dialog);
   };
 
   $scope.approveRnr = function () {

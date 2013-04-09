@@ -10,6 +10,7 @@ describe('ConvertToOrderListController', function () {
   var requisitionList;
 
   beforeEach(module('openlmis.services'));
+  beforeEach(module('ui.bootstrap.dialog'));
 
   beforeEach(inject(function ($httpBackend, $rootScope, $controller) {
     scope = $rootScope.$new();
@@ -98,6 +99,23 @@ describe('ConvertToOrderListController', function () {
     expect(scope.message).toEqual("The requisition(s) have been successfully converted to Orders");
     expect(scope.error).toEqual("");
     expect(scope.requisitions).toEqual([requisitionList[1]]);
+  });
+
+  it('should display confirm modal if approve button is clicked', function () {
+    spyOn(OpenLmisDialog, 'new');
+    scope.showConfirmModal();
+    httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
+    expect(OpenLmisDialog.new).toHaveBeenCalled();
+  });
+
+  it('should convert to order if ok is clicked on the confirm modal', function () {
+    scope.gridOptions.selectedItems = [requisitionList[0]];
+    httpBackend.expectPOST('/requisitionOrder.json', {"rnrList":scope.gridOptions.selectedItems}).respond(200);
+    httpBackend.expectGET('/requisitions-for-convert-to-order.json').respond({"rnr_list":[requisitionList[1]]});
+
+    scope.dialogCloseCallback(true);
+    httpBackend.flush();
+    expect(scope.message).toEqual("The requisition(s) have been successfully converted to Orders");
   });
 
   it('should give message if no requisition selected', function() {
