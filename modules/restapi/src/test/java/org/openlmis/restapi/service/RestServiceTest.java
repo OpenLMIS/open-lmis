@@ -13,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.restapi.domain.Report;
-import org.openlmis.restapi.service.RestService;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.service.RequisitionService;
@@ -23,7 +22,6 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
@@ -52,7 +50,7 @@ public class RestServiceTest {
 
   @Test
   public void shouldCreateAndSubmitARequisition() throws Exception {
-    List<RnrLineItem> products = new ArrayList<RnrLineItem>() ;
+    List<RnrLineItem> products = new ArrayList<RnrLineItem>();
     products.add(new RnrLineItem());
     report.setProducts(products);
 
