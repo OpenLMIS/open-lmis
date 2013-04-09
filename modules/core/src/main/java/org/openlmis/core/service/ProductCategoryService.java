@@ -9,7 +9,6 @@ package org.openlmis.core.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.core.repository.ProductCategoryRepository;
-import org.openlmis.upload.Importable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +33,15 @@ public class ProductCategoryService {
   }
 
   public void save(ProductCategory productCategory) {
-    productCategoryRepository.save(productCategory);
+    if (productCategory.getId() != null) {
+      productCategoryRepository.update(productCategory);
+      return;
+    }
+    productCategoryRepository.insert(productCategory);
   }
+
+  public ProductCategory getExisting(ProductCategory productCategory) {
+    return productCategoryRepository.getExisting(productCategory);
+  }
+
 }

@@ -29,8 +29,8 @@ public class ProductCategoryRepository {
     this.categoryMapper = categoryMapper;
   }
 
-  public void save(ProductCategory productCategory) {
-    if (updateCategoryIfExists(productCategory)) return;
+  public void insert(ProductCategory productCategory) {
+
     try {
       categoryMapper.insert(productCategory);
     } catch (DuplicateKeyException duplicateKeyException) {
@@ -45,17 +45,15 @@ public class ProductCategoryRepository {
     }
   }
 
-  private boolean updateCategoryIfExists(ProductCategory productCategory) {
-    ProductCategory category = categoryMapper.getProductCategoryByCode(productCategory.getCode());
-    if (category != null) {
-      category.setName(productCategory.getName());
-      categoryMapper.update(category);
-      return true;
-    }
-    return false;
+  public void update(ProductCategory productCategory) {
+    categoryMapper.update(productCategory);
   }
 
-  public Integer getProductCategoryIdByCode(String categoryCode){
+  public ProductCategory getExisting(ProductCategory productCategory) {
+    return categoryMapper.getProductCategoryByCode(productCategory.getCode());
+  }
+
+  public Integer getProductCategoryIdByCode(String categoryCode) {
     return categoryMapper.getProductCategoryIdByCode(categoryCode);
   }
 

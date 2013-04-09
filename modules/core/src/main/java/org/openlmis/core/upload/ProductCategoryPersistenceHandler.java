@@ -27,7 +27,7 @@ public class ProductCategoryPersistenceHandler  extends AbstractModelPersistence
 
   @Override
   protected BaseModel getExisting(BaseModel record) {
-    return productCategoryService.getByCode(((ProductCategory) record).getCode());
+    return productCategoryService.getExisting((ProductCategory)record);
   }
 
   @Override
