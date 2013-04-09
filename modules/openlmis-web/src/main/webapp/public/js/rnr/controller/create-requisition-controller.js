@@ -18,6 +18,7 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
   $scope.requisitionRights = requisitionRights;
   $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name':'quantityRequested'});
   $scope.errorPages = {fullSupply:[], nonFullSupply:[]};
+  $scope.processing = false;
 
   $scope.fillPagedGridData = function () {
     var gridLineItems = $scope.showNonFullSupply ? $scope.rnr.nonFullSupplyLineItems : $scope.rnr.fullSupplyLineItems;
@@ -114,12 +115,15 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
       return;
     }
     var rnr = removeExtraDataForPostFromRnr();
+    $scope.processing = true;
     Requisitions.update({id:$scope.rnr.id, operation:"submit"},
       rnr, function (data) {
         $scope.rnr.status = "SUBMITTED";
         $scope.formDisabled = !$scope.hasPermission('AUTHORIZE_REQUISITION');
         $scope.submitMessage = data.success;
+        $scope.processing = false;
       }, function (data) {
+        $scope.processing = false;
         $scope.submitError = data.data.error;
       });
   }
@@ -136,13 +140,16 @@ function CreateRequisitionController($scope, requisition, currency, rnrColumns, 
       return;
     }
     var rnr = removeExtraDataForPostFromRnr();
+    $scope.processing = true;
     Requisitions.update({id:$scope.rnr.id, operation:"authorize"}, rnr, function (data) {
       resetFlags();
       $scope.rnr.status = "AUTHORIZED";
       $scope.formDisabled = true;
       $scope.submitMessage = data.success;
+      $scope.processing = true;
     }, function (data) {
       $scope.submitError = data.data.error;
+      $scope.processing = true;
     });
   };
 

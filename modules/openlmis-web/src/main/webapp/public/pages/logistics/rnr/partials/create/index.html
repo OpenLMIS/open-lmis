@@ -29,6 +29,7 @@
     </div>
 
     <div form-toolbar id="action_buttons" class="action-buttons">
+      <div class="toolbar-loader" ng-show="processing">Processing...</div>
       <ng-include src="'/public/pages/logistics/rnr/partials/total-cost.html'"></ng-include>
       <div class="form-cell button-row">
         <input ng-disabled="formDisabled" type="button" ng-click="saveRnr(null)" class="btn btn-primary save-button"
