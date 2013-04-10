@@ -29,15 +29,15 @@ function InitiateRnrController($scope, $location, $rootScope, Requisition, Perio
       UserFacilityList.get({}, function (data) {
         $scope.facilities = data.facilityList;
         $scope.myFacility = data.facilityList[0];
-        $scope.facilityDisplayName = $scope.myFacility.code + '-' + $scope.myFacility.name;
-
         if ($scope.myFacility) {
+          $scope.facilityDisplayName = $scope.myFacility.code + '-' + $scope.myFacility.name;
           $scope.selectedFacilityId = $scope.myFacility.id;
 
           UserSupportedProgramInFacilityForAnOperation.get({facilityId:$scope.selectedFacilityId, rights:['CREATE_REQUISITION', 'AUTHORIZE_REQUISITION']}, function (data) {
             $scope.programs = data.programList;
           }, {});
         } else {
+          $scope.facilityDisplayName = "--none assigned--";
           $scope.programs = null;
           $scope.selectedProgram = null;
         }
