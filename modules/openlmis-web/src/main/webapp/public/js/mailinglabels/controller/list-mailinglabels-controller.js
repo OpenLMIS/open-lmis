@@ -1,4 +1,4 @@
-function ListFacilitiesController($scope, FacilityList, FacilityTypes, GeographicZones, $http, $routeParams,$location) {
+function ListMailinglabelsController($scope, MailingLabels, FacilityTypes, $http, $routeParams,$location) {
 
         //to minimize and maximize the filter section
         var section = 1;
@@ -12,12 +12,10 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
         };
 
         $scope.filterGrid = function (){
-            //forget the current page and go to the first page while filtering
-            $scope.pagingOptions.currentPage = 1;
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, 1);//
+            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
         };
 
-        //filter form data section
+        //filter form data section    facilityName
         $scope.filterOptions = {
             filterText: "",
             useExternalFilter: false
@@ -33,8 +31,8 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
         //filter form data section
         $scope.filterObject =  {
              facilityType : $scope.facilityType,
-             zone : $scope.zone,
-             status : $scope.status
+             facilityNameFilter : $scope.facilityNameFilter,
+             facilityCodeFilter : $scope.facilityCodeFilter
         };
 
         FacilityTypes.get(function(data) {
@@ -42,41 +40,25 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
             $scope.facilityTypes.push({'name': '- Please Selct One -'});
         });
 
-        GeographicZones.get(function(data) {
-            $scope.zones = data.zones;
-            $scope.zones.push({'name': '- Please Selct One -'});
-        });
-           // [
-           // ,
-           // {'name': 'District Health Office', 'value': 3},
-           // {'name': 'District', 'value': 2},
-           // {'name': 'Province', 'value': 1}
-        //];
-
-        $scope.statuses = [
-            {'name': '- Please Selct One -'},
-            {'name': 'Active', 'value': "TRUE"},
-            {'name': 'Inavtive', 'value': "FALSE"}
-        ];
-
         $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
 
-        $scope.$watch('zone.value', function(selection){
+        $scope.$watch('facilityNameFilter', function(selection){
             if(selection != undefined || selection == ""){
-               $scope.filterObject.zoneId =  selection;
+               $scope.filterObject.facilityNameFilter =  selection;
                //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
             }else{
-                $scope.filterObject.zoneId = 0;
+                $scope.filterObject.facilityNameFilter = "";
             }
         });
-        $scope.$watch('status.value', function(selection){
+        $scope.$watch('facilityCodeFilter', function(selection){
             if(selection != undefined || selection == ""){
-                $scope.filterObject.statusId =  selection;
+                $scope.filterObject.facilityCodeFilter =  selection;
                 //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
             }else{
-                $scope.filterObject.statusId ='';
+                $scope.filterObject.facilityCodeFilter = "";
             }
         });
+
         $scope.$watch('facilityType.value', function(selection){
             if(selection != undefined || selection == ""){
                 $scope.filterObject.facilityTypeId =  selection;
@@ -137,7 +119,7 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
                             if(value != undefined)
                                 params[index] = value;
                         });
-                        FacilityList.get(params, function(data) {
+                        MailingLabels.get(params, function(data) {
                             $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
                         });
 
@@ -166,11 +148,6 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
             $.each($scope.sortInfo.fields, function(index, value) {
                 if(value != undefined) {
                     //only sort by one of the fields
-                   // $scope.filterObject =  {
-                   //     facilityType : undefined,
-                   //     zone : undefined,
-                   //     status : undefined
-                   // };
                     $scope.filterObject["facilityType"] = undefined;
                     $scope.filterObject["active"] = undefined;
                     $scope.filterObject["facilityName"] = undefined;
@@ -184,16 +161,15 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
 
     $scope.gridOptions = {
         data: 'myData',
-        // { field: 'fax', displayName: 'Fax', width : "*"},
         columnDefs:
             [
-            { field: 'code', displayName: 'Facility Code', width: "*", resizable: false},
-            { field: 'facilityName', displayName: 'Facility Name', width: "**" },
-            { field: 'facilityType', displayName: 'Facility Type', width: "*" },
-            { field: 'region', displayName: 'Region', width : "*"},
-            { field: 'owner', displayName: 'Operator', width : "*"},
-            { field: 'phoneNumber', displayName: 'Phone Number', width : "*"},
-            { field: 'active', displayName: 'Active', width : "*"}
+                { field: 'code', displayName: 'Facility Code', width: "*", resizable: false},
+                { field: 'facilityName', displayName: 'Facility Name', width: "**" },
+                { field: 'facilityType', displayName: 'Facility Type', width: "*" },
+                { field: 'region', displayName: 'Region', width : "*"},
+                { field: 'owner', displayName: 'Operator', width : "*"},
+                { field: 'phoneNumber', displayName: 'Phone Number', width : "*"},
+                { field: 'active', displayName: 'Active', width : "*"}
 
             ],
         enablePaging: true,
