@@ -88,7 +88,6 @@ public class OrderPage extends RequisitionPage {
 
   public void convertToOrder() throws IOException {
     clickConvertToOrderButton();
-    clickOk();
     verifyMessageOnOrderScreen("Message 'Please select atleast one Requisition for Converting to Order.' is not displayed");
     clickCheckBoxConvertToOrder();
     clickConvertToOrderButton();

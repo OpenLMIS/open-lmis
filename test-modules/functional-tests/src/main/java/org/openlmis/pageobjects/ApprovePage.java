@@ -17,6 +17,7 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import java.io.IOException;
 import java.math.BigDecimal;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static java.lang.Float.parseFloat;
 import static java.lang.Integer.parseInt;
@@ -112,14 +113,14 @@ public class ApprovePage extends RequisitionPage {
 
   public void verifyNoRequisitionPendingMessage() {
     testWebDriver.waitForElementToAppear(requisitionListHeader);
-    SeleneseTestNgHelper.assertTrue("NoRequisitionsPendingMessage is not displayed", NoRequisitionsPendingMessage.isDisplayed());
+    assertTrue("NoRequisitionsPendingMessage is not displayed", NoRequisitionsPendingMessage.isDisplayed());
   }
 
 
   public String verifyAndClickRequisitionPresentForApproval() {
 
     testWebDriver.waitForElementToAppear(requisitionListHeader);
-    SeleneseTestNgHelper.assertTrue("No row of requisition is there for approval", firstRow.isDisplayed());
+    assertTrue("No row of requisition is there for approval", firstRow.isDisplayed());
     String period = periodStartDate.getText().trim() + " - " + periodEndDate.getText().trim();
     firstRow.click();
     return period;
@@ -130,9 +131,9 @@ public class ApprovePage extends RequisitionPage {
     testWebDriver.sleep(1500);
     testWebDriver.waitForElementToAppear(requisitionHeader);
     String headerText = testWebDriver.getText(requisitionHeader);
-    SeleneseTestNgHelper.assertTrue(headerText.contains("Report and Requisition for " + program + " (" + facilityType + ")"));
+    assertTrue(headerText.contains("Report and Requisition for " + program + " (" + facilityType + ")"));
     String facilityText = testWebDriver.getText(facilityLabel);
-    SeleneseTestNgHelper.assertTrue(facilityText.contains(FCode + FCstring + " - " + FName + FCstring));
+    assertTrue(facilityText.contains(FCode + FCstring + " - " + FName + FCstring));
 
     assertEquals(reportingPeriodInitRnRScreen.getText().trim().substring("Reporting Period: ".length()), periodDetails.trim());
     assertEquals(geoZone, geoZoneInitRnRScreen.getText().trim());
@@ -207,14 +208,20 @@ public class ApprovePage extends RequisitionPage {
   }
 
   public void approveRequisition() {
-    testWebDriver.waitForElementToAppear(approveButton);
+    clickSaveButton();
+    clickApproveButton();
+  }
+
+  public void clickSaveButton() {
     testWebDriver.waitForElementToAppear(saveButton);
     saveButton.click();
     testWebDriver.sleep(250);
+  }
+
+  public void clickApproveButton() {
+    testWebDriver.waitForElementToAppear(approveButton);
     approveButton.click();
     testWebDriver.sleep(250);
-    clickOk();
-    testWebDriver.waitForElementToAppear(approvedSuccessMessage);
   }
 
   public void editApproveQuantityAndVerifyTotalCostViewRequisition(String approvedQuantity) {

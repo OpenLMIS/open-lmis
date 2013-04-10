@@ -114,10 +114,6 @@ public class E2EInitiateRnR extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage = homePageUser.clickProceed();
     initiateRnRPage.verifyRnRHeader("FCcode", "FCname", date_time, program, periodDetails, geoZone, parentgeoZone, operatedBy, facilityType);
     initiateRnRPage.submitRnR();
-    initiateRnRPage.clickOk();
-    initiateRnRPage.verifySubmitRnrErrorMsg();
-    initiateRnRPage.submitRnR();
-    initiateRnRPage.clickCancel();
     initiateRnRPage.verifySubmitRnrErrorMsg();
     initiateRnRPage.calculateAndVerifyStockOnHand(10, 10, 10, 1);
 
@@ -168,7 +164,9 @@ public class E2EInitiateRnR extends TestCaseHelper {
     approvePageLowerSNUser.closeCommentPopUp();
     approvePageLowerSNUser.addComments("This is urgent");
     approvePageLowerSNUser.verifyComment("This is urgent", userMO, 2);
-    approvePageLowerSNUser.approveRequisition();
+    approvePageLowerSNUser.clickSaveButton();
+    approvePageLowerSNUser.clickApproveButton();
+    approvePageLowerSNUser.clickOk();
     approvePageLowerSNUser.verifyNoRequisitionPendingMessage();
     LoginPage loginPageTopSNUser = homePageLowerSNUser.logout(baseUrlGlobal);
 
@@ -180,6 +178,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     approvePageTopSNUser.verifyApprovedQuantityApprovedFromLowerHierarchy("290");
     approvePageTopSNUser.editApproveQuantityAndVerifyTotalCost("100");
     approvePageTopSNUser.approveRequisition();
+    approvePageTopSNUser.clickOk();
     approvePageTopSNUser.verifyNoRequisitionPendingMessage();
 
     LoginPage loginPagelmu = homePageTopSNUser.logout(baseUrlGlobal);
@@ -189,7 +188,16 @@ public class E2EInitiateRnR extends TestCaseHelper {
     String[] periods = periodTopSNUser.split("-");
     String supplyFacilityName = dbWrapper.getSupplyFacilityName("N1", "HIV");
     orderPageOrdersPending.verifyOrderListElements(program, "FCcode" + date_time, "FCname" + date_time, periods[0].trim(), periods[1].trim(), supplyFacilityName);
+    verifyConvertToOrder(orderPageOrdersPending);
     orderPageOrdersPending.convertToOrder();
+  }
+
+  private void verifyConvertToOrder(OrderPage orderPageOrdersPending) {
+    orderPageOrdersPending.clickConvertToOrderButton();
+    orderPageOrdersPending.verifyMessageOnOrderScreen("Message 'Please select atleast one Requisition for Converting to Order.' is not displayed");
+    orderPageOrdersPending.clickCheckBoxConvertToOrder();
+    orderPageOrdersPending.clickConvertToOrderButton();
+    orderPageOrdersPending.clickOk();
   }
 
   private void createRole(HomePage homePage) throws IOException {
