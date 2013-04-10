@@ -59,9 +59,9 @@
                         <span class = "cell-text" ng-bind = "rnrLineItem[column.name]" ></span ></span >
                     </ng-switch >
                     <span class = "rnr-form-error" id = "beginningBalance{{rnrLineItem['id']}}"
-                          style = "display:none;" >
-                      Enter Numeric Data
+                          style = "display:none;" openlmis-message="rnr.number.error">
                     </span >
+
                     <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage()" >
                       <span ng-bind = "rnrLineItem.getErrorMessage()" ></span >
                       <span class = "beak-down" ></span >
@@ -78,8 +78,7 @@
                            ng-change = "rnr.fillConsumptionOrStockInHand(rnrLineItem)"
                            ng-class = "highlightRequired(rnrLineItem[column.name])" />
                     <span class = "rnr-form-error" id = "quantityReceived{{rnrLineItem['id']}}"
-                          style = "display:none;" >
-                      Enter Numeric Data
+                          style = "display:none;" openlmis-message="rnr.number.error">
                     </span >
                     <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage()" >
                       <span ng-bind = "rnrLineItem.getErrorMessage()" ></span >
@@ -98,8 +97,7 @@
                            maxlength = "8"
                            ng-class = "highlightRequired(rnrLineItem[column.name])" />
                     <span class = "rnr-form-error" id = "quantityDispensed{{rnrLineItem['id']}}"
-                          style = "display:none;" >
-                      Enter Numeric Data
+                          style = "display:none;" openlmis-message="rnr.number.error">
                     </span >
                     <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage()"
                           style = "background: red;" >
@@ -130,8 +128,7 @@
                            maxlength = "8"
                            ng-class = "highlightRequired(rnrLineItem[column.name])" />
                     <span class = "rnr-form-error" id = "stockInHand{{rnrLineItem['id']}}"
-                          style = "display:none;" >
-                      Enter Numeric Data
+                          style = "display:none;" openlmis-message="rnr.number.error">
                     </span >
                     <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage()" >
                       <span ng-bind = "rnrLineItem.getErrorMessage()" ></span >
@@ -148,8 +145,7 @@
                            ng-change = "rnr.fillNormalizedConsumption(rnrLineItem)"
                            ng-class = "highlightRequired(rnrLineItem[column.name])" />
                     <span class = "rnr-form-error" id = "newPatientCount{{rnrLineItem['id']}}"
-                          style = "display:none;" >
-                      Enter Numeric Data
+                          style = "display:none;" openlmis-message="rnr.number.error" >
                     </span >
                   </span >
 
@@ -160,8 +156,7 @@
                            rnr-validator = "positiveInteger" maxlength = "8"
                            ng-change = "rnr.fillPacksToShip(rnrLineItem)" />
                     <span class = "rnr-form-error" id = "quantityRequested{{rnrLineItem['id']}}"
-                          style = "display:none;" >
-                      Enter Numeric Data
+                          style = "display:none;" openlmis-message="rnr.number.error">
                     </span >
                   </span >
 
@@ -193,8 +188,7 @@
                            ng-change = "rnr.fillNormalizedConsumption(rnrLineItem)"
                            ng-class = "highlightRequired(rnrLineItem[column.name])" />
                     <span class = "rnr-form-error" id = "stockOutDays{{rnrLineItem['id']}}"
-                          style = "display:none;" >
-                      Enter Numeric Data
+                          style = "display:none;" openlmis-message="rnr.number.error">
                     </span >
                   </span >
                 </ng-switch >
@@ -249,8 +243,7 @@
 
             <div class = "rnr-form-error"
                  id = "quantity{{currentRnrLineItem.id}}"
-                 style = "display:none;" >
-              Enter Numeric Data
+                 style = "display:none;" openlmis-message="rnr.number.error">
             </div >
           </div >
           <div class = "span4" >
@@ -290,8 +283,7 @@
 
               <div class = "rnr-form-error"
                    id = "{{adjustment.type.displayOrder}}"
-                   style = "display:none;" >
-                Enter Numeric Data
+                   style = "display:none;" openlmis-message="rnr.number.error">
               </div >
             </span >
           </li >

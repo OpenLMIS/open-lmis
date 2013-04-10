@@ -34,13 +34,13 @@
                 <span ng-switch-when="quantityApproved">
                   <div>
                     <input ng-change='rnr.fillPacksToShip(rnrLineItem)' ng-required="true" type="text"
-                           ng-model="rnrLineItem[column.name]" rnr-validator = "positiveInteger" maxlength = "8"
+                           ng-model="rnrLineItem[column.name]" rnr-validator="positiveInteger" maxlength="8"
                            name="quantityApproved{{$parent.$parent.$index}}"
                            id="{{getId(column.name, $parent)}}"
-                           ng-class = "highlightRequired(rnrLineItem[column.name])"  />
-                    <span class = "rnr-form-error" style = "display:none;" id="quantityApproved{{$parent.$parent.$index}}">
-                      Enter Numeric Data
-                    </span >
+                           ng-class="highlightRequired(rnrLineItem[column.name])"/>
+                    <span class="rnr-form-error" id="quantityApproved{{$parent.$parent.$index}}"
+                          style="display:none;" openlmis-message="rnr.number.error">
+                    </span>
                   </div>
                 </span>
 

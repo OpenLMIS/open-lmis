@@ -30,8 +30,8 @@
                            name="quantityApproved{{$parent.$parent.$index}}"
                            id="{{getId(column.name, $parent)}}"
                            ng-class="highlightRequired(rnrLineItem[column.name])"/>
-                    <span class="rnr-form-error" style="display:none;" id="quantityApproved{{$parent.$parent.$index}}">
-                      Enter Numeric Data
+                    <span class="rnr-form-error" id="quantityApproved{{$parent.$parent.$index}}"
+                          style="display:none;" openlmis-message="rnr.number.error">
                     </span>
                   </div>
                 </span>
