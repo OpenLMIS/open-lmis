@@ -65,7 +65,7 @@ public class RestServiceTest {
     user = new User();
     user.setId(1);
     whenNew(User.class).withNoArguments().thenReturn(user);
-    when(userService.getByUserName(user)).thenReturn(user);
+    when(userService.getByUsernameAndVendorId(user)).thenReturn(user);
     when(requisitionService.initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId()))
       .thenReturn(requisition);
   }
@@ -99,7 +99,7 @@ public class RestServiceTest {
     List<RnrLineItem> products = new ArrayList<>();
     products.add(new RnrLineItem());
     report.setProducts(products);
-    when(userService.getByUserName(user)).thenReturn(null);
+    when(userService.getByUsernameAndVendorId(user)).thenReturn(null);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage(USER_USERNAME_INCORRECT);

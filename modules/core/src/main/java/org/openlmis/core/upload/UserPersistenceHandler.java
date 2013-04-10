@@ -33,7 +33,7 @@ public class UserPersistenceHandler extends AbstractModelPersistenceHandler {
 
   @Override
   protected BaseModel getExisting(BaseModel record) {
-    return userService.getByUserName((User) record);
+    return userService.getByUsernameAndVendorId((User) record);
   }
 
   @Override

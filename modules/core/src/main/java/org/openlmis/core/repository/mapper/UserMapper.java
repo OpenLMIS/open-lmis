@@ -11,6 +11,9 @@ import org.openlmis.core.domain.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
+
+import static org.apache.ibatis.jdbc.SelectBuilder.*;
 
 @Repository
 public interface UserMapper {
@@ -27,10 +30,11 @@ public interface UserMapper {
   @Options(useGeneratedKeys = true)
   Integer insert(User user);
 
-  @Select(value = "SELECT id, userName, facilityId, firstName, lastName, employeeId, jobTitle, primaryNotificationMethod, officePhone, cellPhone, email, supervisorId, modifiedDate" +
-    " FROM users where LOWER(userName) = LOWER(#{userName})")
-  @Results(@Result(property = "supervisor.id", column = "supervisorId"))
-  User get(String userName);
+  @SelectProvider(type = UserSelectionProvider.class, method = "selectUsers")
+  @Results(
+    @Result(property = "supervisor.id", column = "supervisorId")
+  )
+  User getByUsernameAndVendorId(User user);
 
   @Select(value = "SELECT * FROM users where LOWER(email) = LOWER(#{email})")
   @Results(@Result(property = "supervisor.id", column = "supervisorId"))
@@ -64,5 +68,26 @@ public interface UserMapper {
 
   @Update("UPDATE users SET password = #{password}, active = TRUE WHERE id = #{userId}")
   void updateUserPassword(@Param(value = "userId") Integer userId, @Param(value = "password") String password);
+
+  public class UserSelectionProvider {
+
+    public static String selectUsers(User user) {
+      BEGIN();
+
+      SELECT("id, userName, vendorId, facilityId, firstName, lastName, employeeId, jobTitle, " +
+        "primaryNotificationMethod, officePhone, cellPhone, email, supervisorId, modifiedDate");
+      FROM("users");
+      WHERE("LOWER(userName) = LOWER(#{userName})");
+
+      if (user.getVendorId() != null) {
+        WHERE("vendorId = #{vendorId}");
+      } else {
+        WHERE("vendorId IS NULL");
+      }
+
+      return SQL();
+    }
+
+  }
 
 }

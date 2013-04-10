@@ -32,7 +32,8 @@ public class RestService {
 
     User reportUser = new User();
     reportUser.setUserName(report.getUserId());
-    User user = userService.getByUserName(reportUser);
+    reportUser.setVendorId(report.getVendor());
+    User user = userService.getByUsernameAndVendorId(reportUser);
     if(user == null)  {
       throw new DataException(USER_USERNAME_INCORRECT);
     }

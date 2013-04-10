@@ -19,6 +19,8 @@ import org.springframework.stereotype.Component;
 public class RequisitionGroupProgramScheduleHandler extends AbstractModelPersistenceHandler {
 
 
+  private static final String DUPLICATE_REQUISITION_GROUP_AND_PROGRAM_FOUND = "Duplicate Requisition Group Code And Program Code Combination found";
+
   private RequisitionGroupProgramScheduleService requisitionGroupProgramScheduleService;
 
   @Autowired
@@ -39,7 +41,7 @@ public class RequisitionGroupProgramScheduleHandler extends AbstractModelPersist
 
   @Override
   protected String getDuplicateMessageKey() {
-    return null;
+    return DUPLICATE_REQUISITION_GROUP_AND_PROGRAM_FOUND;
   }
 
 }

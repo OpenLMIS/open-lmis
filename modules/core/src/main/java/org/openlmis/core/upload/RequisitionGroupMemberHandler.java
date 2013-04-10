@@ -19,6 +19,8 @@ import java.util.Date;
 @Component("requisitionGroupMemberHandler")
 public class RequisitionGroupMemberHandler extends AbstractModelPersistenceHandler {
 
+  public static final String DUPLICATE_REQUISITION_GROUP_MEMBER = "Duplicate Requisition Group Member found";
+
   private RequisitionGroupMemberService requisitionGroupMemberService;
 
   @Autowired
@@ -38,7 +40,7 @@ public class RequisitionGroupMemberHandler extends AbstractModelPersistenceHandl
 
   @Override
   protected String getDuplicateMessageKey() {
-    return null;
+    return DUPLICATE_REQUISITION_GROUP_MEMBER;
   }
 
 }

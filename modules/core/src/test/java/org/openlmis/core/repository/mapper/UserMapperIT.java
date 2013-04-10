@@ -91,7 +91,8 @@ public class UserMapperIT {
     someUser.setModifiedDate(null);
 
     userMapper.insert(someUser);
-    User fetchedUser = userMapper.get(someUser.getUserName());
+
+    User fetchedUser = userMapper.getByUsernameAndVendorId(someUser);
 
     assertThat(fetchedUser, is(notNullValue()));
     assertThat(fetchedUser.getId(), is(someUser.getId()));
@@ -106,7 +107,7 @@ public class UserMapperIT {
     someUser.setModifiedDate(calendar.getTime());
 
     userMapper.insert(someUser);
-    User fetchedUser = userMapper.get(someUser.getUserName());
+    User fetchedUser = userMapper.getByUsernameAndVendorId(someUser);
 
     assertThat(fetchedUser, is(notNullValue()));
     assertThat(fetchedUser.getId(), is(someUser.getId()));
@@ -142,12 +143,30 @@ public class UserMapperIT {
   }
 
   @Test
-  public void shouldGetUserWithUserName() throws Exception {
+  public void shouldGetUserWithUserNameAndVendorIdWhenVendorIdIsNotNull() throws Exception {
     String nullString = null;
+    Vendor vendor = new Vendor();
+    vendor.setName("newVendor");
+    vendorMapper.insert(vendor);
+
+    User user = make(a(defaultUser, with(facilityId, facility.getId()), with(supervisorUserName, nullString), with(vendorId,  vendor.getId())));
+    user.setModifiedDate(Calendar.getInstance().getTime());
+    userMapper.insert(user);
+
+    User result = userMapper.getByUsernameAndVendorId(user);
+    user.setPassword(null);
+    assertThat(result, is(user));
+  }
+
+  @Test
+  public void shouldGetUserWithUserNameAndVendorIdWhenVendorIdIsNull() throws Exception {
+    String nullString = null;
+
     User user = make(a(defaultUser, with(facilityId, facility.getId()), with(supervisorUserName, nullString)));
     user.setModifiedDate(Calendar.getInstance().getTime());
     userMapper.insert(user);
-    User result = userMapper.get(user.getUserName());
+
+    User result = userMapper.getByUsernameAndVendorId(user);
     user.setPassword(null);
     assertThat(result, is(user));
   }
@@ -215,7 +234,7 @@ public class UserMapperIT {
 
     userMapper.update(user);
 
-    User fetchedUser = userMapper.get("New Name");
+    User fetchedUser = userMapper.getByUsernameAndVendorId(user);
 
     assertThat(fetchedUser.getFirstName(), is(user.getFirstName()));
     assertThat(fetchedUser.getLastName(), is(user.getLastName()));
