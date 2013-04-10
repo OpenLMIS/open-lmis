@@ -128,4 +128,7 @@ public class UserRepository {
     userMapper.updateUserPassword(userId, password);
   }
 
+  public User selectUserByUserNameAndPassword(String userName, String password) {
+    return userMapper.selectUserByUserNameAndPassword(userName, password);
+  }
 }

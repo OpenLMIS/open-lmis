@@ -14,7 +14,6 @@ import org.openlmis.core.repository.UserRepository;
 import org.openlmis.email.domain.EmailMessage;
 import org.openlmis.email.exception.EmailException;
 import org.openlmis.email.service.EmailService;
-import org.openlmis.upload.Importable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -151,5 +150,9 @@ public class UserService {
 
   public User getByUserName(User user) {
     return userRepository.getByUsername(user.getUserName());
+  }
+
+  public User selectUserByUserNameAndPassword(String userName, String password) {
+    return userRepository.selectUserByUserNameAndPassword(userName, password);
   }
 }
