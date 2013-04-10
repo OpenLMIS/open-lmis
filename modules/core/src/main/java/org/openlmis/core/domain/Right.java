@@ -26,7 +26,8 @@ public enum Right {
   CONVERT_TO_ORDER("Requisition - Convert to Order", "requisition", "Permission to convert requisitions to order"),
   VIEW_ORDER("Requisition - View Orders", "requisition", "Permission to view orders"),
   VIEW_REQUISITION("Requisition - View", "requisition", "Permission to view requisitions"),
-  VIEW_FACILITY_REPORT("FacilityReport - View", "report", "Permission to view FacilityReport");
+  VIEW_FACILITY_REPORT("FacilityReport - View", "report", "Permission to view FacilityReport"),
+  VIEW_MAILING_LABEL_REPORT("MailingLabelReport - View", "report", "Permission to view Mailing labels for Facilities");
 
   @Getter
   private final String rightName;

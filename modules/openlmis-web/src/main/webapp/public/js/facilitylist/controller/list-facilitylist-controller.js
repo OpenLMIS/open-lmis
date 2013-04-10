@@ -166,11 +166,15 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
             $.each($scope.sortInfo.fields, function(index, value) {
                 if(value != undefined) {
                     //only sort by one of the fields
-                    $scope.filterObject =  {
-                        facilityType : undefined,
-                        zone : undefined,
-                        status : undefined
-                    };
+                   // $scope.filterObject =  {
+                   //     facilityType : undefined,
+                   //     zone : undefined,
+                   //     status : undefined
+                   // };
+                    $scope.filterObject["facilityType"] = undefined;
+                    $scope.filterObject["active"] = undefined;
+                    $scope.filterObject["facilityName"] = undefined;
+                    $scope.filterObject["code"] = undefined;
                     $scope.filterObject[$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
                     //$scope.filterObject[$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
                 }

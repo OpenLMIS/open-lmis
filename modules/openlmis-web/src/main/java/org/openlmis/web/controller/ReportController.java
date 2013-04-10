@@ -61,9 +61,9 @@ public class ReportController  extends BaseController {
 
     }
 
-    @RequestMapping(value = "/reportdata/{reportKey}", method = GET, headers = ACCEPT_JSON)
+    @RequestMapping(value = "/reportdata/facilitylist", method = GET, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_FACILITY_REPORT')")
-    public Pages get(@PathVariable(value = "reportKey") String reportKey,
+    public Pages getFacilityLists( //@PathVariable(value = "reportKey") String reportKey,
                                     @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                     @RequestParam(value = "max", required = false, defaultValue = "20") int max,
                                     @RequestParam(value = "zoneId", required = false, defaultValue = "0") int zoneId,
@@ -84,10 +84,43 @@ public class ReportController  extends BaseController {
             facilityReportFilter.setFacilityTypeId(facilityTypeId);
             facilityReportFilter.setStatusId(statusId);
 
-        Report report = reportManager.getReportByKey(reportKey);
+        Report report = reportManager.getReportByKey("facilities");//reportKey);
         List<FacilityReport> facilityReportList =  // (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteria(null);
         (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(facilityReportFilter,facilityReportSorter,page,max);
         int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(facilityReportFilter);
+        //final int startIdx = (page - 1) * max;
+        //final int endIdx = Math.min(startIdx + max, facilityReportList.size());
+        //List<FacilityReport> facilityReportListJson =  (FacilityReport)facilityReportList;
+        return new Pages(page,totalRecCount,max,facilityReportList);
+    }
+
+    @RequestMapping(value = "/reportdata/mailingLabels", method = GET, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_MAILING_LABEL_REPORT')")
+    public Pages getFacilityListsWtihLables( //@PathVariable(value = "reportKey") String reportKey,
+                      @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                      @RequestParam(value = "max", required = false, defaultValue = "20") int max,
+                      @RequestParam(value = "facilityCodeFilter", required = false, defaultValue = "0") String facilityCodeFilter,
+                      @RequestParam(value = "facilityTypeId", required = false, defaultValue = "0") int facilityTypeId,
+                      @RequestParam(value = "facilityNameFilter", required = false, defaultValue = "" ) String facilityNameFilter,
+                      @RequestParam(value = "code", required = false, defaultValue = "ASC") String code,
+                      @RequestParam(value = "facilityName", required = false, defaultValue = "") String facilityName,
+                      @RequestParam(value = "facilityType", required = false, defaultValue = "ASC") String facilityType
+    ) {
+
+        MailingLabelReportSorter mailingLabelReportSorter = new MailingLabelReportSorter();
+        mailingLabelReportSorter.setFacilityName(facilityName);
+        mailingLabelReportSorter.setCode(code);
+        mailingLabelReportSorter.setFacilityType(facilityType);
+
+        MailingLabelReportFilter mailingLabelReportFilter = new MailingLabelReportFilter();
+        mailingLabelReportFilter.setFacilityCode(facilityCodeFilter);
+        mailingLabelReportFilter.setFacilityTypeId(facilityTypeId);
+        mailingLabelReportFilter.setFacilityName(facilityNameFilter);
+
+        Report report = reportManager.getReportByKey("mailinglabels");//reportKey);
+        List<FacilityReport> facilityReportList =  // (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteria(null);
+                (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(mailingLabelReportFilter,mailingLabelReportSorter,page,max);
+        int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(mailingLabelReportFilter);
         //final int startIdx = (page - 1) * max;
         //final int endIdx = Math.min(startIdx + max, facilityReportList.size());
         //List<FacilityReport> facilityReportListJson =  (FacilityReport)facilityReportList;

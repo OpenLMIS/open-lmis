@@ -1,4 +1,4 @@
-function ListMailinglabelsController($scope, FacilityList, FacilityTypes, GeographicZones, $http, $routeParams,$location) {
+function ListMailinglabelsController($scope, MailingLabels, FacilityTypes, $http, $routeParams,$location) {
 
         //to minimize and maximize the filter section
         var section = 1;
@@ -15,7 +15,7 @@ function ListMailinglabelsController($scope, FacilityList, FacilityTypes, Geogra
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
         };
 
-        //filter form data section
+        //filter form data section    facilityName
         $scope.filterOptions = {
             filterText: "",
             useExternalFilter: false
@@ -31,8 +31,8 @@ function ListMailinglabelsController($scope, FacilityList, FacilityTypes, Geogra
         //filter form data section
         $scope.filterObject =  {
              facilityType : $scope.facilityType,
-             zone : $scope.zone,
-             status : $scope.status
+             facilityNameFilter : $scope.facilityNameFilter,
+             facilityCodeFilter : $scope.facilityCodeFilter
         };
 
         FacilityTypes.get(function(data) {
@@ -40,35 +40,25 @@ function ListMailinglabelsController($scope, FacilityList, FacilityTypes, Geogra
             $scope.facilityTypes.push({'name': '- Please Selct One -'});
         });
 
-        GeographicZones.get(function(data) {
-            $scope.zones = data.zones;
-            $scope.zones.push({'name': '- Please Selct One -'});
-        });
-
-        $scope.statuses = [
-            {'name': '- Please Selct One -'},
-            {'name': 'Active', 'value': "TRUE"},
-            {'name': 'Inavtive', 'value': "FALSE"}
-        ];
-
         $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
 
-        $scope.$watch('zone.value', function(selection){
+        $scope.$watch('facilityNameFilter', function(selection){
             if(selection != undefined || selection == ""){
-               $scope.filterObject.zoneId =  selection;
+               $scope.filterObject.facilityNameFilter =  selection;
                //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
             }else{
-                $scope.filterObject.zoneId = 0;
+                $scope.filterObject.facilityNameFilter = "";
             }
         });
-        $scope.$watch('status.value', function(selection){
+        $scope.$watch('facilityCodeFilter', function(selection){
             if(selection != undefined || selection == ""){
-                $scope.filterObject.statusId =  selection;
+                $scope.filterObject.facilityCodeFilter =  selection;
                 //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
             }else{
-                $scope.filterObject.statusId ='';
+                $scope.filterObject.facilityCodeFilter = "";
             }
         });
+
         $scope.$watch('facilityType.value', function(selection){
             if(selection != undefined || selection == ""){
                 $scope.filterObject.facilityTypeId =  selection;
@@ -129,7 +119,7 @@ function ListMailinglabelsController($scope, FacilityList, FacilityTypes, Geogra
                             if(value != undefined)
                                 params[index] = value;
                         });
-                        FacilityList.get(params, function(data) {
+                        MailingLabels.get(params, function(data) {
                             $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
                         });
 
@@ -158,11 +148,10 @@ function ListMailinglabelsController($scope, FacilityList, FacilityTypes, Geogra
             $.each($scope.sortInfo.fields, function(index, value) {
                 if(value != undefined) {
                     //only sort by one of the fields
-                    $scope.filterObject =  {
-                        facilityType : undefined,
-                        zone : undefined,
-                        status : undefined
-                    };
+                    $scope.filterObject["facilityType"] = undefined;
+                    $scope.filterObject["active"] = undefined;
+                    $scope.filterObject["facilityName"] = undefined;
+                    $scope.filterObject["code"] = undefined;
                     $scope.filterObject[$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
                     //$scope.filterObject[$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
                 }
@@ -172,10 +161,17 @@ function ListMailinglabelsController($scope, FacilityList, FacilityTypes, Geogra
 
     $scope.gridOptions = {
         data: 'myData',
-        columnDefs: [{ field: 'code', displayName: 'Code', width: "*", resizable: false},
-            { field: 'facilityName', displayName: 'Facility Name', width: "**" },
-            { field: 'facilityType', displayName: 'Facility Type', width: "*" },
-            { field: 'active', displayName: 'Active', width : "*"}],
+        columnDefs:
+            [
+                { field: 'code', displayName: 'Facility Code', width: "*", resizable: false},
+                { field: 'facilityName', displayName: 'Facility Name', width: "**" },
+                { field: 'facilityType', displayName: 'Facility Type', width: "*" },
+                { field: 'region', displayName: 'Region', width : "*"},
+                { field: 'owner', displayName: 'Operator', width : "*"},
+                { field: 'phoneNumber', displayName: 'Phone Number', width : "*"},
+                { field: 'active', displayName: 'Active', width : "*"}
+
+            ],
         enablePaging: true,
         enableSorting :true,
         showFooter: true,
