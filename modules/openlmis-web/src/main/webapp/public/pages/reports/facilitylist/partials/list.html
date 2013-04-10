@@ -4,16 +4,11 @@
     <div class="row-fluid sortable ui-sortable">
             <div class="box span12">
                 <div class="box-header">
-                    <h2></i><span class="break" style="padding-left: 10px;"></span>Facility Lists</h2>
-                    <div class="box-icon">
-                        <a ng-click="section(1)"  ng-show="show(0)" class="btn-minimize pull-right"><i class="icon-chevron-down"></i></a>
-                        <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize pull-right"><i class="icon-chevron-up"></i></a>
-                    </div>
+                    <h2><span class="break"></span>Facility List</h2>
                 </div>
             <div class="box-content">
-                <div class="hero-unit app-form" ng-click="section(1)" style="padding: 10px;">
-                        <h5 class="filter-text">Facility List Filters</h5>
-                        <form ng-submit="filterGrid()" ng-show="show(1)" name="filterForm" novalidate>
+                <div class="app-form"  style="padding: 5px;">
+                        <form ng-submit="filterGrid()" name="filterForm" novalidate>
                             <div class="form-row clearfix ">
                                 <div class="form-cell horizontalFilters">
                                     <label class="labels">Zone</label>
