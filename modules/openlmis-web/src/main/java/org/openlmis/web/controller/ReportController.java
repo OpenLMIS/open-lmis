@@ -3,7 +3,9 @@ package org.openlmis.web.controller;
 import lombok.NoArgsConstructor;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Product;
 import org.openlmis.report.Report;
+import org.openlmis.core.service.ProductService;
 import org.openlmis.report.ReportManager;
 import org.openlmis.report.model.*;
 import org.openlmis.report.ReportOutputOption;
@@ -41,10 +43,20 @@ public class ReportController  extends BaseController {
     public static final String USER_ID = "USER_ID";
 
     private ReportManager reportManager;
+    private ProductService productService;
+
     @Autowired
-    public ReportController(ReportManager reportManager) {
-        this.reportManager = reportManager;
+    public ReportController(ReportManager reportManager, ProductService productService) {
+        this.reportManager  = reportManager;
+        this.productService = productService;
     }
+
+    //TODO: take this out to an appropriate class
+    @RequestMapping(value="/products", method = GET, headers = ACCEPT_JSON)
+    public List<Product> getProducts(){
+          return this.productService.getAllProducts();
+    }
+
 
     @RequestMapping(value = "/download/{reportKey}/{outputOption}")
     public void showReport(
