@@ -31,6 +31,15 @@
                     <property name="title" value="List of All facilities"/>
                     <property name="version" value="1.0"/>
                 </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="mailing-labels"/>
+                    <property name="template" value="mailing-labels.jasper"/>
+                    <property name="reportDataProvider" ref="mailingLabelsDataProvider"/>
+                    <property name="id" value="RP-MAL-LAB"/>
+                    <property name="name" value="Mailing Labels"/>
+                    <property name="title" value=" Mailing Labels"/>
+                    <property name="version" value="1.0"/>
+                </bean>
             </list>
         </constructor-arg>
     </bean>
