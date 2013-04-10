@@ -26,10 +26,13 @@ public enum Right {
   CONVERT_TO_ORDER("Requisition - Convert to Order", "requisition", "Permission to convert requisitions to order"),
   VIEW_ORDER("Requisition - View Orders", "requisition", "Permission to view orders"),
   VIEW_REQUISITION("Requisition - View", "requisition", "Permission to view requisitions"),
-  VIEW_FACILITY_REPORT("FacilityReport - View", "report", "Permission to view FacilityReport"),
-  VIEW_MAILING_LABEL_REPORT("MailingLabelReport - View", "report", "Permission to view Mailing labels for Facilities");
+  VIEW_FACILITY_REPORT("Report - Facility List", "report", "Permission to view Facility List Report"),
+  VIEW_MAILING_LABEL_REPORT("Report Facility Mailing Label", "report", "Permission to view Mailing labels for Facilities"),
+  VIEW_CONSUMPTION_REPORT("Report - Consumption Report", "report", "Permission to view Consumption Report"),
+  VIEW_REPORTING_RATE_REPORT("Report - Reporting Rate Report", "report", "Permission to view Reporting Rate Report");
 
-  @Getter
+
+    @Getter
   private final String rightName;
 
   @Getter

@@ -4,14 +4,14 @@
     <div class="row-fluid sortable ui-sortable">
             <div class="box span12">
                 <div class="box-header">
-                    <h2></i><span class="break" style="padding-left: 10px;"></span>Facility Lists</h2>
+                    <h2><i class="icon-user"></i><span class="break"></span>Facility Lists</h2>
                     <div class="box-icon">
                         <a ng-click="section(1)"  ng-show="show(0)" class="btn-minimize pull-right"><i class="icon-chevron-down"></i></a>
                         <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize pull-right"><i class="icon-chevron-up"></i></a>
                     </div>
                 </div>
             <div class="box-content">
-                <div class="hero-unit app-form" ng-click="section(1)" style="padding: 10px;">
+                <div class="hero-unit app-form" style="padding: 10px;">
                         <h5 class="filter-text">Facility List Filters</h5>
                         <form ng-submit="filterGrid()" ng-show="show(1)" name="filterForm" novalidate>
                             <div class="form-row clearfix ">
@@ -19,7 +19,7 @@
                                     <label class="labels">Zone</label>
 
                                     <div class="form-field">
-                                        <select ng-required="true" ng-change="filterGrid()" name="zone" ng-model="zone.value" ng-options="option.id as option.name for option in zones">
+                                        <select ng-required="true" name="zone" ng-model="zone.value" ng-options="option.id as option.name for option in zones">
 
                                         </select>
                                     </div>
@@ -28,7 +28,7 @@
                                     <label class="labels">Facility Type</label>
 
                                     <div class="form-field">
-                                        <select name="facilityType" ng-change="filterGrid()" ng-model="facilityType.value" ng-options="option.id as option.name for option in facilityTypes">
+                                        <select name="facilityType" ng-model="facilityType.value" ng-options="option.id as option.name for option in facilityTypes">
 
                                         </select>
                                     </div>
@@ -37,7 +37,7 @@
                                     <label class="labels">Status</label>
 
                                     <div class="form-field">
-                                        <select name="status" ng-model="status.value" ng-change="filterGrid()" ng-options="option.value as option.name for option in statuses">
+                                        <select name="status" ng-model="status.value" ng-options="option.value as option.name for option in statuses">
 
                                         </select>
                                     </div>
