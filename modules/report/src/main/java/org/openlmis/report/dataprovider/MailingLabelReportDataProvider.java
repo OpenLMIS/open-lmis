@@ -25,7 +25,7 @@ public class MailingLabelReportDataProvider extends ReportDataProvider {
     private MailingLabelReportMapper mailingLabelReportMapper;
 
     @Autowired
-    public MailingLabelReportDataProvider(FacilityService facilityService, MailingLabelReportMapper mailingLabelReportMapper;) {
+    public MailingLabelReportDataProvider(FacilityService facilityService, MailingLabelReportMapper mailingLabelReportMapper) {
         this.facilityService = facilityService;
         this.mailingLabelReportMapper = mailingLabelReportMapper;
     }

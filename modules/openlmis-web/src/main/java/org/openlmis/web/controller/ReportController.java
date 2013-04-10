@@ -129,7 +129,7 @@ public class ReportController  extends BaseController {
         mailingLabelReportFilter.setFacilityTypeId(facilityTypeId);
         mailingLabelReportFilter.setFacilityName(facilityNameFilter);
 
-        Report report = reportManager.getReportByKey("mailinglabels");//reportKey);
+        Report report = reportManager.getReportByKey("mailing-labels");//reportKey);
         List<MailingLabelReport> mailingLabelReports =  // (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteria(null);
                 (List<MailingLabelReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(mailingLabelReportFilter,mailingLabelReportSorter,page,max);
         int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(mailingLabelReportFilter);
