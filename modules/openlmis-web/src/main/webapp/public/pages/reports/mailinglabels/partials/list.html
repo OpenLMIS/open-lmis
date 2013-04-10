@@ -13,7 +13,7 @@
                                     <label class="labels">Facility Name</label>
 
                                     <div class="form-field">
-                                        <input type="text" ng-model="facilityNameFilter" placeholder="facility Name" class="input_text" />
+                                        <input type="text" ng-change="filterGrid()" ng-model="facilityNameFilter" placeholder="facility Name" class="input_text" />
                                     </div>
                                 </div>
 
@@ -22,26 +22,17 @@
                                     <label class="labels">Facility Code</label>
 
                                     <div class="form-field">
-                                        <input type="text" ng-model="facilityCodeFilter" placeholder="facility code" class="input_text" />
-                                       <!-- <select ng-required="true" name="zone" ng-model="zone.value" ng-options="option.id as option.name for option in zones">
-
-                                        </select>-->
+                                        <input ng-change="filterGrid()" type="text" ng-model="facilityCodeFilter" placeholder="facility code" class="input_text" />
                                     </div>
                                 </div>
                                 <div class="form-cell horizontalFilters" >
                                     <label class="labels">Facility Type</label>
 
                                     <div class="form-field">
-                                        <select name="facilityType" ng-model="facilityType.value" ng-options="option.id as option.name for option in facilityTypes">
+                                        <select ng-change="filterGrid()" name="facilityType" ng-model="facilityType.value" ng-options="option.id as option.name for option in facilityTypes">
 
                                         </select>
                                     </div>
-                                </div>
-
-
-
-                                <div class="form-cell button-row horizontalFilter">
-                                    <input type="submit" class="btn btn-primary save-button pull-right" value="Filter"/>
                                 </div>
 
                             </div>
@@ -59,7 +50,4 @@
                 <div class="gridStyleReport" ng-grid="gridOptions"></div>
    </div>
   </div>
-<!-- <div>
-    <openlmis-pagination num-pages="numberOfPages" current-page="currentPage" max-size="10" check-error-on-page="checkErrorOnPage(page)"></openlmis-pagination>
-</div> -->
 </div>
