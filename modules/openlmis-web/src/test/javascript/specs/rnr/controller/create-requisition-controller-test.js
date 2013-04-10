@@ -156,21 +156,23 @@ describe('CreateRequisitionController', function () {
   });
 
   it('should submit valid rnr', function () {
-    scope.rnr = new Rnr({"id": "rnrId", "fullSupplyLineItems": []});
+    scope.rnr = new Rnr({"id": "rnrId", "status":'INITIATED', "fullSupplyLineItems": []});
     spyOn(scope.rnr, 'validateFullSupply').andReturn('');
     spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
     httpBackend.expect('PUT', '/requisitions/rnrId/submit.json').respond(200, {success: "R&R submitted successfully!"});
 
-    scope.submitRnr();
+    scope.dialogCloseCallback(true);
     httpBackend.flush();
 
     expect(scope.submitMessage).toEqual("R&R submitted successfully!");
     expect(scope.rnr.status).toEqual("SUBMITTED");
   });
 
-  it('should display confirm modal if approve button is clicked', function () {
+  it('should display confirm modal if submit button is clicked and rnr valid', function () {
+    spyOn(scope.rnr, 'validateFullSupply').andReturn('');
+    spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
     spyOn(OpenLmisDialog, 'new');
-    scope.showConfirmModal();
+    scope.submitRnr();
     httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
     expect(OpenLmisDialog.new).toHaveBeenCalled();
   });
@@ -317,6 +319,39 @@ describe('CreateRequisitionController', function () {
 
     expect(scope.errorPages).toEqual({nonFullSupply:[1, 2], fullSupply:[2, 4]});
     expect(scope.rnr.getErrorPages).toHaveBeenCalledWith(5);
+  });
+
+  it('should authorize valid rnr', function () {
+    scope.rnr = new Rnr({"id": "rnrId", "status":'SUBMITTED', "fullSupplyLineItems": []});
+    spyOn(scope.rnr, 'validateFullSupply').andReturn('');
+    spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
+    httpBackend.expect('PUT', '/requisitions/rnrId/authorize.json').respond(200, {success: "R&R authorized successfully!"});
+
+    scope.dialogCloseCallback(true);
+    httpBackend.flush();
+
+    expect(scope.submitMessage).toEqual("R&R authorized successfully!");
+    expect(scope.rnr.status).toEqual("AUTHORIZED");
+  });
+
+  it('should display confirm modal if authorize button is clicked and rnr valid', function () {
+    spyOn(scope.rnr, 'validateFullSupply').andReturn('');
+    spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
+    spyOn(OpenLmisDialog, 'new');
+    scope.authorizeRnr();
+    httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
+    expect(OpenLmisDialog.new).toHaveBeenCalled();
+  });
+
+  it('should authorized Rnr if ok is clicked on the confirm modal', function () {
+    scope.rnr = new Rnr({"id": "rnrId", "status":"SUBMITTED", "fullSupplyLineItems": []});
+    spyOn(scope.rnr, 'validateFullSupply').andReturn('');
+    spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
+
+    httpBackend.expect('PUT', '/requisitions/rnrId/authorize.json').respond({'success':"R&R authorized successfully!"});
+    scope.dialogCloseCallback(true);
+    httpBackend.flush();
+    expect(scope.submitMessage).toEqual("R&R authorized successfully!");
   });
 
   it('should return true if error on full supply page', function () {

@@ -189,7 +189,6 @@ public class E2EInitiateRnR extends TestCaseHelper {
     String supplyFacilityName = dbWrapper.getSupplyFacilityName("N1", "HIV");
     orderPageOrdersPending.verifyOrderListElements(program, "FCcode" + date_time, "FCname" + date_time, periods[0].trim(), periods[1].trim(), supplyFacilityName);
     verifyConvertToOrder(orderPageOrdersPending);
-    orderPageOrdersPending.convertToOrder();
   }
 
   private void verifyConvertToOrder(OrderPage orderPageOrdersPending) {

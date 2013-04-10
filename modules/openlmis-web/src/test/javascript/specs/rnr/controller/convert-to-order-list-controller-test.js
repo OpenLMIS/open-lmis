@@ -89,11 +89,10 @@ describe('ConvertToOrderListController', function () {
   });
 
   it("should convert the selected requisitions to order", function () {
-    scope.gridOptions.selectedItems = [requisitionList[0]];
     httpBackend.expectPOST('/requisitionOrder.json', {"rnrList":scope.gridOptions.selectedItems}).respond(200);
     httpBackend.expectGET('/requisitions-for-convert-to-order.json').respond({"rnr_list":[requisitionList[1]]});
 
-    scope.convertToOrder();
+    scope.dialogCloseCallback(true);
 
     httpBackend.flush();
     expect(scope.message).toEqual("The requisition(s) have been successfully converted to Orders");
@@ -101,9 +100,10 @@ describe('ConvertToOrderListController', function () {
     expect(scope.requisitions).toEqual([requisitionList[1]]);
   });
 
-  it('should display confirm modal if approve button is clicked', function () {
+  it('should display confirm modal if convert to order button is clicked with some Rnrs selected', function () {
+    scope.gridOptions.selectedItems = [requisitionList[0]];
     spyOn(OpenLmisDialog, 'new');
-    scope.showConfirmModal();
+    scope.convertToOrder();
     httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
     expect(OpenLmisDialog.new).toHaveBeenCalled();
   });

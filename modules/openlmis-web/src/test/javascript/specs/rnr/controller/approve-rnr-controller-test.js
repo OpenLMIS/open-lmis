@@ -105,21 +105,12 @@ describe('Approve Requisition controller', function () {
     expect(scope.showNonFullSupply).toBeTruthy();
   });
 
-  it('should approve a valid rnr', function () {
+  it('should display confirm modal if approve button is clicked on valid Rnr', function () {
     scope.rnr = new Rnr({"id":"rnrId"}, []);
     spyOn(scope.rnr, 'validateFullSupplyForApproval').andReturn('');
     spyOn(scope.rnr, 'validateNonFullSupplyForApproval').andReturn('');
-    httpBackend.expect('PUT', '/requisitions/rnrId/approve.json').respond({'success':"R&R approved successfully!"});
-
-    scope.approveRnr();
-    httpBackend.flush();
-
-    expect(scope.$parent.message).toEqual("R&R approved successfully!");
-  });
-
-  it('should display confirm modal if approve button is clicked', function () {
     spyOn(OpenLmisDialog, 'new');
-    scope.showConfirmModal();
+    scope.approveRnr();
     httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
     expect(OpenLmisDialog.new).toHaveBeenCalled();
   });

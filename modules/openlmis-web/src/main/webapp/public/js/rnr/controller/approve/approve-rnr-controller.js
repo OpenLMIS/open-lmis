@@ -15,6 +15,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   $scope.pageLineItems = [];
   $scope.errorPages = {};
   $scope.shownErrorPages = [];
+  var isConfirmed = false;
 
   $scope.goToPage = function (page, event) {
     angular.element(event.target).parents(".dropdown").click();
@@ -100,15 +101,15 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   $scope.saveRnr = function (preventMessage) {
     var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id: $scope.rnr.id, operation: "save"},
-        rnr, function (data) {
-          if (preventMessage == true) return;
-          $scope.message = data.success;
-          $scope.error = "";
-          setTimeout(fadeSaveMessage, 3000);
-        }, function (data) {
-          $scope.error = data.error;
-          $scope.message = "";
-        });
+      rnr, function (data) {
+        if (preventMessage == true) return;
+        $scope.message = data.success;
+        $scope.error = "";
+        setTimeout(fadeSaveMessage, 3000);
+      }, function (data) {
+        $scope.error = data.error;
+        $scope.message = "";
+      });
     $scope.approvalForm.$dirty = false;
   };
 
@@ -135,16 +136,16 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
   };
 
   $scope.dialogCloseCallback = function (result) {
-    if (result) {
-      $scope.approveRnr();
+    if(result) {
+      approveValidatedRnr();
     }
   };
 
-  $scope.showConfirmModal = function () {
+  showConfirmModal = function () {
     var options = {
-      id:"confirmDialog",
-      header:"Confirm Action",
-      body:"Are you sure? Please confirm."
+      id: "confirmDialog",
+      header: "Confirm Action",
+      body: "Are you sure? Please confirm."
     };
     OpenLmisDialog.new(options, $scope.dialogCloseCallback, $dialog);
   };
@@ -160,16 +161,20 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
       $scope.message = '';
       return;
     }
+    showConfirmModal();
+  };
+
+  approveValidatedRnr = function () {
     var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id: $scope.rnr.id, operation: "approve"},
-        rnr, function (data) {
-          $scope.$parent.message = data.success;
-          $scope.error = "";
-          $location.path("rnr-for-approval");
-        }, function (data) {
-          $scope.error = data.error;
-          $scope.message = "";
-        });
+      rnr, function (data) {
+        $scope.$parent.message = data.success;
+        $scope.error = "";
+        $location.path("rnr-for-approval");
+      }, function (data) {
+        $scope.error = data.error;
+        $scope.message = "";
+      });
   };
 
 }

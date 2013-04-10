@@ -43,22 +43,29 @@ function ConvertToOrderListController($scope, requisitionList, RequisitionOrder,
   };
 
   $scope.dialogCloseCallback = function (result) {
-    if (result) {
-      $scope.convertToOrder();
+    if(result) {
+      convert();
     }
   };
 
-  $scope.showConfirmModal = function () {
+  showConfirmModal = function () {
     var options = {
-      id:"confirmDialog",
-      header:"Confirm Action",
-      body:"Are you sure? Please confirm."
+      id: "confirmDialog",
+      header: "Confirm Action",
+      body: "Are you sure? Please confirm."
     };
     OpenLmisDialog.new(options, $scope.dialogCloseCallback, $dialog);
   };
 
-
   $scope.convertToOrder = function () {
+    if ($scope.gridOptions.selectedItems.length == 0) {
+      $scope.message = "Please select atleast one Requisition for Converting to Order.";
+      return;
+    }
+    showConfirmModal();
+  };
+
+  var convert = function () {
     var successHandler = function () {
       RequisitionForConvertToOrder.get({}, function (data) {
         $scope.requisitions = data.rnr_list;
@@ -73,13 +80,9 @@ function ConvertToOrderListController($scope, requisitionList, RequisitionOrder,
       $scope.error = "Error Occurred";
     };
 
-    if ($scope.gridOptions.selectedItems.length == 0) {
-      $scope.message = "Please select atleast one Requisition for Converting to Order.";
-      return;
-    }
     var rnrList = {"rnrList": $scope.gridOptions.selectedItems};
     RequisitionOrder.save({}, rnrList, successHandler, errorHandler);
-  };
+  }
 
   function contains(string, query) {
     return string.toLowerCase().indexOf(query.toLowerCase()) != -1;
