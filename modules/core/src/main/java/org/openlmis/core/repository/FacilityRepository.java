@@ -39,6 +39,10 @@ public class FacilityRepository {
       return mapper.getAllFacilitiesDetail();
   }
 
+  public List<Facility> getMailingLabels(){
+      return mapper.getMailingLabels();
+  }
+
   public void save(Facility facility) {
     facility.setModifiedDate(DateTime.now().toDate());
     try {
