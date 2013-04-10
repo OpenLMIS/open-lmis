@@ -1,4 +1,4 @@
-function ListFacilitiesController($scope, FacilityList, FacilityTypes, GeographicZones, $http, $routeParams,$location) {
+function ConsumptionReportController($scope, FacilityList, FacilityTypes, GeographicZones, $http, $routeParams,$location) {
 
         //to minimize and maximize the filter section
         var section = 1;
@@ -12,9 +12,7 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
         };
 
         $scope.filterGrid = function (){
-            //forget the current page and go to the first page while filtering
-            $scope.pagingOptions.currentPage = 1;
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, 1);//
+            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
         };
 
         //filter form data section
@@ -86,10 +84,6 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
             }
         });
 
-        $scope.export   = function (type){
-            var url = '/reports/download/facilities/' + type +'?zoneId=' +  $scope.filterObject.zoneId + '&facilityTypeId=' +  $scope.filterObject.facilityTypeId + '&status=' +  $scope.filterObject.statusId;
-            window.location.href = url;
-        }
 
         $scope.goToPage = function (page, event) {
             angular.element(event.target).parents(".dropdown").click();
@@ -168,38 +162,14 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
             //alert('Sorted Info: ' + $scope.sortInfo );
             //add sorting infro to the filter object
             $.each($scope.sortInfo.fields, function(index, value) {
-                if(value != undefined) {
-                    //only sort by one of the fields
-                   // $scope.filterObject =  {
-                   //     facilityType : undefined,
-                   //     zone : undefined,
-                   //     status : undefined
-                   // };
-                    $scope.filterObject["facilityType"] = undefined;
-                    $scope.filterObject["active"] = undefined;
-                    $scope.filterObject["facilityName"] = undefined;
-                    $scope.filterObject["code"] = undefined;
+                if(value != undefined)
                     $scope.filterObject[$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
-                    //$scope.filterObject[$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
-                }
             });
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
         }, true);
 
     $scope.gridOptions = {
         data: 'myData',
-        // { field: 'fax', displayName: 'Fax', width : "*"},
-        columnDefs:
-            [
-            { field: 'code', displayName: 'Facility Code', width: "*", resizable: false},
-            { field: 'facilityName', displayName: 'Facility Name', width: "**" },
-            { field: 'facilityType', displayName: 'Facility Type', width: "*" },
-            { field: 'region', displayName: 'Region', width : "*"},
-            { field: 'owner', displayName: 'Operator', width : "*"},
-            { field: 'phoneNumber', displayName: 'Phone Number', width : "*"},
-            { field: 'active', displayName: 'Active', width : "*"}
-
-            ],
         enablePaging: true,
         enableSorting :true,
         showFooter: true,
@@ -211,7 +181,6 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
         showColumnMenu: true,
         enableRowReordering: true,
         showFilter: true,
-        autoFit :true,
         plugins: [new ngGridFlexibleHeightPlugin()]
         //plugins: [new ngGridCsvExportPlugin()]
     };

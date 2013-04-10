@@ -59,6 +59,10 @@ public class FacilityService {
     return facilityRepository.getAllFacilitiesDetail();
   }
 
+  public List<Facility> getMailingLabels(){
+      return facilityRepository.getMailingLabels();
+  }
+
   public void uploadSupportedProgram(ProgramSupported programSupported) {
     programSupported.isValid();
 

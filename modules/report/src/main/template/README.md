@@ -10,6 +10,6 @@ Configuring template on iReport
 -------------------------------
 1. Open iReport
 2. Navigate to Tools -> Options -> iReport -> Wizard Templates
-3. Add jrxml from "openlmis-web/WEB-INF/reports/resources/openlmis-report-template.jrxml"
+3. Add jrxml from "/src/main/resources/openlmis-report-template.jasper"
 
 

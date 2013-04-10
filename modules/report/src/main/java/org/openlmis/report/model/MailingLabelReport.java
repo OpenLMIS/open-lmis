@@ -5,12 +5,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Created with IntelliJ IDEA.
- * User: user
- * Date: 4/11/13
- * Time: 12:29 AM
- * To change this template use File | Settings | File Templates.
+ * A report data used to fill mailing labels report.
+ * Mailing Labels Report is used to generates mailing labels displaying the contact person and address for each facility in the distribution system.
+ * Logistics managers may use these labels when sending reports or correspon­dence to facilities in the distribution system
  */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,5 +26,4 @@ public class MailingLabelReport implements ReportData  {
     private String phoneNumber;
     private String MSLMSDCode;
     private String fax;
-
 }
