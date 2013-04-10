@@ -99,7 +99,7 @@ public class ReportController  extends BaseController {
     public Pages getFacilityListsWtihLables( //@PathVariable(value = "reportKey") String reportKey,
                       @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                       @RequestParam(value = "max", required = false, defaultValue = "20") int max,
-                      @RequestParam(value = "facilityCodeFilter", required = false, defaultValue = "0") String facilityCodeFilter,
+                      @RequestParam(value = "facilityCodeFilter", required = false, defaultValue = "") String facilityCodeFilter,
                       @RequestParam(value = "facilityTypeId", required = false, defaultValue = "0") int facilityTypeId,
                       @RequestParam(value = "facilityNameFilter", required = false, defaultValue = "" ) String facilityNameFilter,
                       @RequestParam(value = "code", required = false, defaultValue = "ASC") String code,
@@ -118,13 +118,13 @@ public class ReportController  extends BaseController {
         mailingLabelReportFilter.setFacilityName(facilityNameFilter);
 
         Report report = reportManager.getReportByKey("mailinglabels");//reportKey);
-        List<FacilityReport> facilityReportList =  // (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteria(null);
-                (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(mailingLabelReportFilter,mailingLabelReportSorter,page,max);
+        List<MailingLabelReport> mailingLabelReports =  // (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteria(null);
+                (List<MailingLabelReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(mailingLabelReportFilter,mailingLabelReportSorter,page,max);
         int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(mailingLabelReportFilter);
         //final int startIdx = (page - 1) * max;
         //final int endIdx = Math.min(startIdx + max, facilityReportList.size());
         //List<FacilityReport> facilityReportListJson =  (FacilityReport)facilityReportList;
-        return new Pages(page,totalRecCount,max,facilityReportList);
+        return new Pages(page,totalRecCount,max,mailingLabelReports);
     }
 
 }
