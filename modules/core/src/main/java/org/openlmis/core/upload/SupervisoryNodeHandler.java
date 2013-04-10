@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 public class SupervisoryNodeHandler extends AbstractModelPersistenceHandler {
 
-  public static final String DUPLICATE_SUPERVISORY_NODE = "Duplicate supervisory node";
+  public static final String DUPLICATE_SUPERVISORY_NODE = "Duplicate Supervisory Node found";
   private SupervisoryNodeService supervisoryNodeService;
 
   @Autowired

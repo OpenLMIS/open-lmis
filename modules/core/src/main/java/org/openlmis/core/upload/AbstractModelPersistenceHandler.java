@@ -25,9 +25,9 @@ public abstract class AbstractModelPersistenceHandler implements RecordHandler<I
     BaseModel currentRecord = (BaseModel) importable;
     final String rowNumberAsString = Integer.toString(rowNumber - 1);
     BaseModel existing = getExisting(currentRecord);
-    throwExceptionIfProcessedInCurrentUpload(auditFields, existing);
 
     try {
+      throwExceptionIfProcessedInCurrentUpload(auditFields, existing);
       currentRecord.setModifiedBy(auditFields.getUser());
       currentRecord.setModifiedDate(auditFields.getCurrentTimestamp());
       if(existing != null) currentRecord.setId(existing.getId());
