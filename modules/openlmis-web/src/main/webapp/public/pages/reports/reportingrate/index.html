@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en" ng-app="consumption">
+
+<head>
+    <meta charset="utf-8">
+    <title>Open-LMIS</title>
+    <script src="/public/lib/jquery/jquery-1.8.2.min.js"></script>
+    <script src="/public/lib/jquery/jquery-ui-1.9.2.custom.min.js"></script>
+    <script src="/public/lib/underscore/underscore-min.js"></script>
+    <script src="/public/lib/angular/angular.js"></script>
+    <script src="/public/lib/angular/angular-resource.js"></script>
+    <script src="/public/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/public/lib/angular-ui/bootstrap/ui-bootstrap-0.1.0.min.js"></script>
+    <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/public/lib/select2-release-3.2/select2.css">
+    <script src="/public/lib/angular-ui/angular-ui.min.js"></script>
+    <script src="/public/lib/angular-ui/ng-grid-2.0.2.js"></script>
+    <script src="/public/lib/angular-ui/ng-grid-flexible-height.js"></script>
+    <!--   <script src="/public/lib/angular-ui/ng-grid-1.6.3.js"></script>  -->
+    <link rel="stylesheet" href="/public/lib/angular-ui/angular-ui.min.css">
+
+    <script src="/public/js/shared/util.js"></script>
+    <script src="/public/js/shared/services/services.js"></script>
+    <script type="text/javascript" src="/public/js/shared/services/message-service.js"></script>
+    <script src="/public/js/shared/controller/header-controller.js"></script>
+    <script src="/public/js/shared/controller/login-controller.js"></script>
+    <script src="/public/js/shared/app.js"></script>
+    <script src="/public/js/reports/consumption/module/consumption-module.js"></script>
+    <script src="/public/js/reports/consumption/controller/consumption-controller.js"></script>
+    <script src="/public/js/shared/controller/navigation-controller.js"></script>
+    <script src="/public/lib/localstorage/localStorage.js"></script>
+    <script src="/public/lib/select2-release-3.2/select2.js"></script>
+    <script src="/public/js/shared/localStorageKeys.js"></script>
+    <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/ng-grid.css">
+    <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/app.css">
+
+    <!--[if IE 9]>
+    <link rel="stylesheet" href="/public/css/ie9.css"/>
+    <![endif]-->
+</head>
+<body onunload="">
+<div id="wrap">
+  <ng-include src="'/public/pages/header.html'"></ng-include>
+  <ng-include src="'/public/pages/navigation.html'"></ng-include>
+  <div class="content">
+    <div ng-view></div>
+  </div>
+</div>
+
+</body>
+</html>

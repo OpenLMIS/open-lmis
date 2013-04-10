@@ -202,3 +202,10 @@ services.factory('MailingLabels', function ($resource) {
     return $resource('/reports/reportdata/mailingLabels.json', {}, {});
 });
 
+services.factory('ConsumptionReport', function ($resource) {
+    return $resource('/reports/reportdata/consumption.json', {}, {});
+});
+
+services.factory('Products', function($resource){
+    return $resource('/reports/products.json', {}, {});
+}) ;

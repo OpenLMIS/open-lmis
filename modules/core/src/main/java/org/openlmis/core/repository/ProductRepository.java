@@ -12,6 +12,11 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
 @Component
 @NoArgsConstructor
 public class ProductRepository {
@@ -75,5 +80,9 @@ public class ProductRepository {
 
     dosageUnit.setId(dosageUnitId);
   }
+
+   public List<Product> getAll(){
+       return mapper.getAll();
+   }
 
 }
