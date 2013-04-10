@@ -47,8 +47,20 @@ public class ReportController  extends BaseController {
     }
 
     @RequestMapping(value = "/download/{reportKey}/{outputOption}")
-    public void showReport(@PathVariable(value = "reportKey") String reportKey, @PathVariable(value = "outputOption") String outputOption,ModelMap modelMap, HttpServletRequest request, HttpServletResponse response){
+    public void showReport(
+                                @PathVariable(value = "reportKey") String reportKey
+                                , @PathVariable(value = "outputOption") String outputOption
 
+
+                                , @RequestParam(value = "zoneId", required = false, defaultValue = "0") int zoneId
+                                , @RequestParam(value = "facilityTypeId", required = false, defaultValue = "0") int facilityTypeId
+                                , @RequestParam(value = "statusId", required = false, defaultValue = "" ) Boolean statusId
+
+                                , ModelMap modelMap
+                                , HttpServletRequest request
+                                , HttpServletResponse response
+                            )
+    {
        Integer userId = (Integer) request.getSession().getAttribute(USER_ID);
 
         switch (outputOption.toUpperCase()){
@@ -105,6 +117,39 @@ public class ReportController  extends BaseController {
                       @RequestParam(value = "code", required = false, defaultValue = "ASC") String code,
                       @RequestParam(value = "facilityName", required = false, defaultValue = "") String facilityName,
                       @RequestParam(value = "facilityType", required = false, defaultValue = "ASC") String facilityType
+    ) {
+
+        MailingLabelReportSorter mailingLabelReportSorter = new MailingLabelReportSorter();
+        mailingLabelReportSorter.setFacilityName(facilityName);
+        mailingLabelReportSorter.setCode(code);
+        mailingLabelReportSorter.setFacilityType(facilityType);
+
+        MailingLabelReportFilter mailingLabelReportFilter = new MailingLabelReportFilter();
+        mailingLabelReportFilter.setFacilityCode(facilityCodeFilter);
+        mailingLabelReportFilter.setFacilityTypeId(facilityTypeId);
+        mailingLabelReportFilter.setFacilityName(facilityNameFilter);
+
+        Report report = reportManager.getReportByKey("mailinglabels");//reportKey);
+        List<FacilityReport> facilityReportList =  // (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteria(null);
+                (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(mailingLabelReportFilter,mailingLabelReportSorter,page,max);
+        int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(mailingLabelReportFilter);
+        //final int startIdx = (page - 1) * max;
+        //final int endIdx = Math.min(startIdx + max, facilityReportList.size());
+        //List<FacilityReport> facilityReportListJson =  (FacilityReport)facilityReportList;
+        return new Pages(page,totalRecCount,max,facilityReportList);
+    }
+
+    @RequestMapping(value = "/reportdata/consumption", method = GET, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_CONSUMPTION_REPORT')")
+    public Pages getConsumptionData( //@PathVariable(value = "reportKey") String reportKey,
+                                             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                             @RequestParam(value = "max", required = false, defaultValue = "20") int max,
+                                             @RequestParam(value = "facilityCodeFilter", required = false, defaultValue = "0") String facilityCodeFilter,
+                                             @RequestParam(value = "facilityTypeId", required = false, defaultValue = "0") int facilityTypeId,
+                                             @RequestParam(value = "facilityNameFilter", required = false, defaultValue = "" ) String facilityNameFilter,
+                                             @RequestParam(value = "code", required = false, defaultValue = "ASC") String code,
+                                             @RequestParam(value = "facilityName", required = false, defaultValue = "") String facilityName,
+                                             @RequestParam(value = "facilityType", required = false, defaultValue = "ASC") String facilityType
     ) {
 
         MailingLabelReportSorter mailingLabelReportSorter = new MailingLabelReportSorter();
