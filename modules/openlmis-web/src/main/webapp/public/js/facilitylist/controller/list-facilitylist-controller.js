@@ -12,7 +12,9 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
         };
 
         $scope.filterGrid = function (){
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+            //forget the current page and go to the first page while filtering
+            $scope.pagingOptions.currentPage = 1;
+            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, 1);//
         };
 
         //filter form data section
@@ -162,14 +164,38 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
             //alert('Sorted Info: ' + $scope.sortInfo );
             //add sorting infro to the filter object
             $.each($scope.sortInfo.fields, function(index, value) {
-                if(value != undefined)
+                if(value != undefined) {
+                    //only sort by one of the fields
+                   // $scope.filterObject =  {
+                   //     facilityType : undefined,
+                   //     zone : undefined,
+                   //     status : undefined
+                   // };
+                    $scope.filterObject["facilityType"] = undefined;
+                    $scope.filterObject["active"] = undefined;
+                    $scope.filterObject["facilityName"] = undefined;
+                    $scope.filterObject["code"] = undefined;
                     $scope.filterObject[$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
+                    //$scope.filterObject[$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
+                }
             });
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
         }, true);
 
     $scope.gridOptions = {
         data: 'myData',
+        // { field: 'fax', displayName: 'Fax', width : "*"},
+        columnDefs:
+            [
+            { field: 'code', displayName: 'Facility Code', width: "*", resizable: false},
+            { field: 'facilityName', displayName: 'Facility Name', width: "**" },
+            { field: 'facilityType', displayName: 'Facility Type', width: "*" },
+            { field: 'region', displayName: 'Region', width : "*"},
+            { field: 'owner', displayName: 'Operator', width : "*"},
+            { field: 'phoneNumber', displayName: 'Phone Number', width : "*"},
+            { field: 'active', displayName: 'Active', width : "*"}
+
+            ],
         enablePaging: true,
         enableSorting :true,
         showFooter: true,
@@ -181,6 +207,7 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
         showColumnMenu: true,
         enableRowReordering: true,
         showFilter: true,
+        autoFit :true,
         plugins: [new ngGridFlexibleHeightPlugin()]
         //plugins: [new ngGridCsvExportPlugin()]
     };

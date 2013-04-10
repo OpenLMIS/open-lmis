@@ -9,9 +9,21 @@ import lombok.NoArgsConstructor;
  * Mailing Labels Report is used to generates mailing labels displaying the contact person and address for each facility in the distribution system.
  * Logistics managers may use these labels when sending reports or correspon­dence to facilities in the distribution system
  */
-public class MailingLabelReport extends FacilityReport {
 
-    public MailingLabelReport(String code, String facilityName, String facilityType, boolean active, String ownership, Double latitude, Double longitude, Double altitude, String email, String phoneNumber, String mslCode, String msdCode) {
-        super(code, facilityName, facilityType, active, ownership, latitude, longitude, altitude, email, phoneNumber, mslCode, msdCode);
-    }
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class MailingLabelReport implements ReportData  {
+
+    private String code;
+    private String facilityName;
+    private String facilityType;
+    private boolean active;
+    private String region;
+    private String owner;
+    private String GPSCoordinates;
+    private String Email;
+    private String phoneNumber;
+    private String MSLMSDCode;
+    private String fax;
 }

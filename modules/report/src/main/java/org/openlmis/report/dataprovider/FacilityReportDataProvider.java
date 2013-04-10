@@ -42,6 +42,7 @@ public class FacilityReportDataProvider extends ReportDataProvider {
 
     private ReportData getFacilityReport(Facility facility){
         if(facility == null) return null;
+        return new FacilityReport()
         return new FacilityReport(facility.getCode(),facility.getName(),facility.getFacilityType() != null ? facility.getFacilityType().getName() : null,facility.getActive(),facility.getOperatedBy().getText(),facility.getLatitude(),facility.getLongitude(),facility.getAltitude(),null,facility.getMainPhone(),null, null);
     }
 

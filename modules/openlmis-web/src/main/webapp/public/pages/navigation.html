@@ -74,8 +74,11 @@
             <a href="javascript: void(0);">Reports</a>
             <div class="submenu">
                 <ul>
-                    <li>
+                    <li ng-show="hasPermission('VIEW_FACILITY_REPORT')">
                         <a href="/public/pages/reports/facilitylist/index.html">Facility List</a>
+                    </li>
+                    <li ng-show="hasPermission('VIEW_MAILING_LABEL_REPORT')">
+                        <a href="/public/pages/reports/mailinglabels/index.html">Mailing Label</a>
                     </li>
                 </ul>
             </div>

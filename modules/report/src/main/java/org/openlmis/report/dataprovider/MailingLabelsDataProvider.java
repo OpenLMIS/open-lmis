@@ -28,7 +28,10 @@ public class MailingLabelsDataProvider extends ReportDataProvider {
 
     private ReportData getMailingLabelReport(Facility facility){
         if(facility == null) return null;
-        return new MailingLabelReport(facility.getCode(),facility.getName(),facility.getFacilityType() != null ? facility.getFacilityType().getName() : null,facility.getActive(),facility.getOperatedBy() != null ? facility.getOperatedBy().getText() : null,facility.getLatitude(),facility.getLongitude(),facility.getAltitude(),null,facility.getMainPhone(),null, null);
+        return new MailingLabelReport();
+       //return new MailingLabelReport(facility.getCode(),facility.getName(),facility.getFacilityType().getName(),facility.getActive(),facility.getAddress1(),facility.getOperatedBy().getText(),facility.getLongitude(), null,);
+
+       // return new MailingLabelReport(facility.getCode(),facility.getName(),facility.getFacilityType() != null ? facility.getFacilityType().getName() : null,facility.getActive(),facility.getOperatedBy() != null ? facility.getOperatedBy().getText() : null,facility.getLatitude(),facility.getLongitude(),facility.getAltitude(),null,facility.getMainPhone(),null, null);
     }
 
     @Override

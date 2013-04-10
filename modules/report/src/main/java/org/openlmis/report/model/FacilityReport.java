@@ -19,18 +19,18 @@ public class FacilityReport implements ReportData {
     private String facilityName;
     private String facilityType;
     private boolean active;
-    private String ownership;
-    //GPS coordinates
-    private Double latitude;
-    private Double longitude;
-    private Double altitude;
-    //address
-    private String email;
-    private String phonenumber;
-    //
-    private String mslCode;
-    private String msdCode;
+    private String region;
+    private String owner;
+    private String GPSCoordinates;
+    private String Email;
+    private String phoneNumber;
+    private String MSLMSDCode;
+    private String fax;
 
-
-
+    public FacilityReport(String code,String facilityName,String facilityType,boolean active){
+        this.code  = code;
+        this.facilityName = facilityName;
+        this.facilityType = facilityType;
+        this.active = active;
+    }
 }
