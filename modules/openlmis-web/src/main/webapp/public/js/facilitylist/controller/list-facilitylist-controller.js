@@ -86,6 +86,10 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
             }
         });
 
+        $scope.export   = function (type){
+            var url = '/reports/download/facilities/' + type +'?zoneId=' +  $scope.filterObject.zoneId + '&facilityTypeId=' +  $scope.filterObject.facilityTypeId + '&status=' +  $scope.filterObject.statusId;
+            window.location.href = url;
+        }
 
         $scope.goToPage = function (page, event) {
             angular.element(event.target).parents(".dropdown").click();
