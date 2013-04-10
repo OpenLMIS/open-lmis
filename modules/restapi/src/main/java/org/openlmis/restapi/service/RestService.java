@@ -7,6 +7,9 @@
 package org.openlmis.restapi.service;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.User;
+import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.UserService;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.service.RequisitionService;
@@ -17,13 +20,23 @@ import org.springframework.stereotype.Service;
 @NoArgsConstructor
 public class RestService {
 
+  public static final String USER_USERNAME_INCORRECT = "user.username.incorrect";
+  @Autowired
+  UserService userService;
+
   @Autowired
   RequisitionService requisitionService;
 
   public Rnr submitReport(Report report) {
     report.validate();
 
-    Rnr requisition = requisitionService.initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), report.getUserId());
+    User reportUser = new User();
+    reportUser.setUserName(report.getUserId());
+    User user = userService.getByUserName(reportUser);
+    if(user == null)  {
+      throw new DataException(USER_USERNAME_INCORRECT);
+    }
+    Rnr requisition = requisitionService.initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId());
 
     requisition.setFullSupplyLineItems(report.getProducts());
 

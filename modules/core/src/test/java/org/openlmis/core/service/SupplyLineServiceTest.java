@@ -23,16 +23,13 @@ import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.ProgramRepository;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.core.repository.SupplyLineRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SupplyLineServiceTest {
@@ -60,7 +57,7 @@ public class SupplyLineServiceTest {
   @Before
   public void setUp() throws Exception {
     supplyLine = make(a(SupplyLineBuilder.defaultSupplyLine));
-    supplyLineService = new SupplyLineService(supplyLineRepository,programRepository,facilityRepository,supervisoryNodeRepository);
+    supplyLineService = new SupplyLineService(supplyLineRepository, programRepository, facilityRepository, supervisoryNodeRepository);
   }
 
   @Test
@@ -77,47 +74,10 @@ public class SupplyLineServiceTest {
   }
 
   @Test
-  public void shouldThrowErrorIfProgramDoesNotExist() {
-    when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenThrow(new DataException("Invalid program code"));
-
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Invalid program code");
-    supplyLineService.save(supplyLine);
-  }
-
-  @Test
-  public void shouldThrowErrorIfFacilityDoesNotExist() {
-    when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1);
-    when(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenThrow(new DataException("Invalid Facility Code"));
-
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Invalid Facility Code");
-
-    supplyLineService.save(supplyLine);
-  }
-
-  @Test
-  public void shouldThrowErrorIfSupervisoryNodeDoesNotExist() {
-    when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1);
-    when(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenReturn(1);
-    when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenThrow(new DataException("Invalid SupervisoryNode Code"));
-
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Invalid SupervisoryNode Code");
-
-    supplyLineService.save(supplyLine);
-  }
-
-  @Test
   public void shouldThrowErrorIfSupervisoryNodeIsNotTheParentNode() {
-    when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1);
-    when(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenReturn(1);
-    when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(1);
-    when(supervisoryNodeRepository.getSupervisoryNodeParentId(supplyLine.getSupervisoryNode().getId())).thenReturn(2);
-
+    when(supervisoryNodeRepository.getSupervisoryNodeParentId(supplyLine.getSupervisoryNode().getId())).thenThrow(new DataException("Supervising Node is not the Top node"));
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Supervising Node is not the Top node");
-
     supplyLineService.save(supplyLine);
   }
 

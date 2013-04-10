@@ -1,5 +1,5 @@
 /*
- * CCommtrackRequisitionageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
@@ -17,17 +17,18 @@ import java.util.List;
 @NoArgsConstructor
 public class Report {
 
-  public static final String ERROR_COMMTRACK_MANDATORY_MISSING = "error.restapi.mandatory.missing";
+  public static final String ERROR_MANDATORY_FIELD_MISSING = "error.restapi.mandatory.missing";
 
   private Integer facilityId;
   private Integer programId;
   private Integer periodId;
-  private Integer userId;
+  private String userId;
+  private Integer vendor;
 
   private List<RnrLineItem> products;
 
   public void validate() {
     if (facilityId == null || programId == null || periodId == null || userId == null)
-      throw new DataException(ERROR_COMMTRACK_MANDATORY_MISSING);
+      throw new DataException(ERROR_MANDATORY_FIELD_MISSING);
   }
 }
