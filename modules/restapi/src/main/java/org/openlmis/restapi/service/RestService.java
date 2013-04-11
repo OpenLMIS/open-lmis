@@ -8,35 +8,40 @@ package org.openlmis.restapi.service;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.User;
+import org.openlmis.core.domain.Vendor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.UserService;
+import org.openlmis.core.service.VendorService;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @NoArgsConstructor
 public class RestService {
 
   public static final String USER_USERNAME_INCORRECT = "user.username.incorrect";
+  public static final String ERROR_VENDOR_INVALID = "error.vendor.invalid";
   @Autowired
   UserService userService;
 
   @Autowired
   RequisitionService requisitionService;
 
-  public Rnr submitReport(Report report) {
+  @Autowired
+  VendorService vendorService;
+
+  @Transactional
+  public Rnr submitReport(Report report, String credentials) {
     report.validate();
 
-    User reportUser = new User();
-    reportUser.setUserName(report.getUserId());
-    reportUser.setVendorId(report.getVendor());
-    User user = userService.getByUsernameAndVendorId(reportUser);
-    if(user == null)  {
-      throw new DataException(USER_USERNAME_INCORRECT);
-    }
+    User user = getValidatedUser(report);
+
+    validateVendor(report);
+
     Rnr requisition = requisitionService.initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId());
 
     requisition.setFullSupplyLineItems(report.getProducts());
@@ -46,6 +51,25 @@ public class RestService {
     requisitionService.authorize(requisition);
 
     return requisition;
+  }
+
+  private void validateVendor(Report report) {
+    Vendor savedVendor = vendorService.getByName(report.getVendor().getName());
+
+    if(!savedVendor.getAuthToken().equals(report.getVendor().getAuthToken())) {
+      throw new DataException(ERROR_VENDOR_INVALID);
+    }
+  }
+
+  private User getValidatedUser(Report report) {
+    User reportUser = new User();
+    reportUser.setUserName(report.getUserId());
+    reportUser.setVendorId(report.getVendor().getId());
+    User user = userService.getByUsernameAndVendorId(reportUser);
+    if(user == null)  {
+      throw new DataException(USER_USERNAME_INCORRECT);
+    }
+    return user;
   }
 
 }

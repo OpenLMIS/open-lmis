@@ -6,18 +6,19 @@
 
 package org.openlmis.restapi.service;
 
+import org.apache.commons.codec.binary.Base64;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.domain.Vendor;
 import org.openlmis.core.service.UserService;
+import org.openlmis.core.service.VendorService;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
@@ -33,12 +34,14 @@ import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
-import static org.openlmis.restapi.builder.CommtrackReportBuilder.defaultCommtrackReport;
+import static org.openlmis.restapi.builder.ReportBuilder.defaultReport;
 import static org.openlmis.restapi.service.RestService.USER_USERNAME_INCORRECT;
+import static org.powermock.api.mockito.PowerMockito.doNothing;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(RestService.class)
+@PrepareForTest({RestService.class, Base64.class})
 public class RestServiceTest {
 
   @Rule
@@ -50,16 +53,23 @@ public class RestServiceTest {
   @Mock
   UserService userService;
 
+  @Mock
+  VendorService vendorService;
+
   @InjectMocks
   RestService service;
 
   Rnr requisition;
   Report report;
   User user;
+  private String credentials;
+  byte[] encodedCredentialsBytes;
 
   @Before
   public void setUp() throws Exception {
-    report = make(a(defaultCommtrackReport));
+    credentials = "1:correct token";
+    report = make(a(defaultReport));
+    String encodedCredentials = "1:correct token";
     requisition = new Rnr();
     requisition.setId(2);
     user = new User();
@@ -68,15 +78,18 @@ public class RestServiceTest {
     when(userService.getByUsernameAndVendorId(user)).thenReturn(user);
     when(requisitionService.initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId()))
       .thenReturn(requisition);
+    mockStatic(Base64.class);
+    encodedCredentialsBytes = encodedCredentials.getBytes();
+    when(Base64.encodeBase64(credentials.getBytes())).thenReturn(encodedCredentialsBytes);
   }
 
   @Test
   public void shouldCreateAndSubmitARequisition() throws Exception {
-    List<RnrLineItem> products = new ArrayList<RnrLineItem>();
+    List<RnrLineItem> products = new ArrayList<>();
     products.add(new RnrLineItem());
     report.setProducts(products);
-
-    Rnr expectedRequisition = service.submitReport(report);
+    when(vendorService.getByName(report.getVendor().getName())).thenReturn(report.getVendor());
+    Rnr expectedRequisition = service.submitReport(report, credentials);
 
     verify(requisitionService).initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId());
     verify(requisitionService).submit(expectedRequisition);
@@ -88,8 +101,9 @@ public class RestServiceTest {
   @Test
   public void shouldValidateThatTheReportContainsAllMandatoryFields() throws Exception {
     Report spyReport = spy(report);
+    when(vendorService.getByName(report.getVendor().getName())).thenReturn(report.getVendor());
 
-    service.submitReport(spyReport);
+    service.submitReport(spyReport, credentials);
 
     verify(spyReport).validate();
   }
@@ -104,19 +118,39 @@ public class RestServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage(USER_USERNAME_INCORRECT);
 
-    service.submitReport(report);
+    service.submitReport(report, credentials);
   }
 
-  @Ignore
+  @Test
+  public void shouldValidateVendorWithAuthTokenAndThrowErrorIfInvalid() throws Exception {
+    Vendor incorrectVendor = new Vendor();
+    incorrectVendor.setName("incorrect vendor");
+    incorrectVendor.setAuthToken("incorrect token");
+    report.setVendor(incorrectVendor);
+    Report spyReport = spy(report);
+    Vendor vendor = new Vendor();
+    vendor.setId(1);
+    vendor.setAuthToken("correct token");
+    when(vendorService.getByName(spyReport.getVendor().getName())).thenReturn(vendor);
+    doNothing().when(spyReport).validate();
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.vendor.invalid");
+
+    service.submitReport(spyReport, credentials);
+  }
+
   @Test
   public void shouldValidateUserWithVendorIdAndThrowErrorIfUsernameDoesNotMatchVendor() throws Exception {
     List<RnrLineItem> products = new ArrayList<>();
     products.add(new RnrLineItem());
     report.setProducts(products);
+    whenNew(User.class).withNoArguments().thenReturn(user);
+    when(userService.getByUsernameAndVendorId(user)).thenReturn(null);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage(USER_USERNAME_INCORRECT);
 
-    service.submitReport(report);
+    service.submitReport(report, credentials);
   }
 }

@@ -8,6 +8,7 @@ package org.openlmis.restapi.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Vendor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.RnrLineItem;
 
@@ -23,12 +24,12 @@ public class Report {
   private Integer programId;
   private Integer periodId;
   private String userId;
-  private Integer vendor;
+  private Vendor vendor;
 
   private List<RnrLineItem> products;
 
   public void validate() {
-    if (facilityId == null || programId == null || periodId == null || userId == null)
+    if (facilityId == null || programId == null || periodId == null || userId == null || vendor == null || !vendor.isValid())
       throw new DataException(ERROR_MANDATORY_FIELD_MISSING);
   }
 }

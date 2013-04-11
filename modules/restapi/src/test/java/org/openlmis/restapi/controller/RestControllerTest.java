@@ -32,6 +32,7 @@ public class RestControllerTest {
 
   @InjectMocks
   RestController controller;
+  private String credentials;
 
   @Test
   public void shouldSubmitRequisitionForACommTrackUser() throws Exception {
@@ -39,9 +40,9 @@ public class RestControllerTest {
 
     Rnr requisition = new Rnr();
     requisition.setId(1);
-    when(service.submitReport(report)).thenReturn(requisition);
+    when(service.submitReport(report, credentials)).thenReturn(requisition);
 
-    ResponseEntity<RestResponse> response = controller.submitRequisition(report);
+    ResponseEntity<RestResponse> response = controller.submitRequisition(credentials, report);
 
     assertThat((Integer) response.getBody().getData().get("R&R"), is(1));
   }
@@ -53,9 +54,9 @@ public class RestControllerTest {
 
     Rnr requisition = new Rnr();
     requisition.setId(1);
-    doThrow(new DataException(errorMessage)).when(service).submitReport(report);
+    doThrow(new DataException(errorMessage)).when(service).submitReport(report, credentials);
 
-    ResponseEntity<RestResponse> response = controller.submitRequisition(report);
+    ResponseEntity<RestResponse> response = controller.submitRequisition(credentials, report);
 
     assertThat((String) response.getBody().getData().get(ERROR), is(errorMessage));
   }

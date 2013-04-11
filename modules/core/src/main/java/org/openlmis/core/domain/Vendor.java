@@ -4,15 +4,18 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.openlmis.core.model;
+package org.openlmis.core.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Vendor {
 
   private Integer id;
@@ -25,4 +28,7 @@ public class Vendor {
     this.active = active;
   }
 
+  public boolean isValid() {
+    return name != null && authToken != null;
+  }
 }

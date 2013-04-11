@@ -4,11 +4,12 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.openlmis.core.utils;
+package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
-import org.openlmis.core.model.Vendor;
+import org.apache.ibatis.annotations.Select;
+import org.openlmis.core.domain.Vendor;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -18,4 +19,6 @@ public interface VendorMapper {
   @Options(useGeneratedKeys = true)
   void insert(Vendor vendor);
 
+  @Select("SELECT * FROM vendors WHERE name = #{name}")
+  Vendor getByName(String name);
 }
