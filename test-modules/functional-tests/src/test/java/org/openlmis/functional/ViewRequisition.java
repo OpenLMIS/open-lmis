@@ -22,6 +22,15 @@ import org.testng.annotations.*;
 
 public class ViewRequisition extends TestCaseHelper {
 
+  public static final String STORE_IN_CHARGE = "store in-charge";
+  public static final String APPROVE_REQUISITION = "APPROVE_REQUISITION";
+  public static final String CONVERT_TO_ORDER = "CONVERT_TO_ORDER";
+  public static final String SUBMITTED = "SUBMITTED";
+  public static final String AUTHORIZED = "AUTHORIZED";
+  public static final String IN_APPROVAL = "IN_APPROVAL";
+  public static final String APPROVED = "APPROVED";
+  public static final String RELEASED = "RELEASED";
+
   @BeforeMethod(groups = {"functional"})
   public void setUp() throws Exception {
     super.setup();
@@ -32,8 +41,8 @@ public class ViewRequisition extends TestCaseHelper {
   public void testViewRequisition(String program, String userSIC, String password) throws Exception {
 
     setupTestDataToInitiateRnR(program, userSIC);
-    dbWrapper.assignRight("store in-charge", "APPROVE_REQUISITION");
-    dbWrapper.assignRight("store in-charge", "CONVERT_TO_ORDER");
+    dbWrapper.assignRight(STORE_IN_CHARGE, APPROVE_REQUISITION);
+    dbWrapper.assignRight(STORE_IN_CHARGE, CONVERT_TO_ORDER);
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -44,11 +53,11 @@ public class ViewRequisition extends TestCaseHelper {
     ViewRequisitionPage viewRequisitionPage = homePage1.navigateViewRequisition();
     viewRequisitionPage.verifyElementsOnViewRequisitionScreen();
     dbWrapper.insertValuesInRequisition();
-    dbWrapper.updateRequisitionStatus("SUBMITTED");
+    dbWrapper.updateRequisitionStatus(SUBMITTED);
     viewRequisitionPage.enterViewSearchCriteria();
     viewRequisitionPage.clickSearch();
     viewRequisitionPage.verifyNoRequisitionFound();
-    dbWrapper.updateRequisitionStatus("AUTHORIZED");
+    dbWrapper.updateRequisitionStatus(AUTHORIZED);
     viewRequisitionPage.clickSearch();
     viewRequisitionPage.clickRnRList();
 
@@ -56,15 +65,15 @@ public class ViewRequisition extends TestCaseHelper {
     ViewRequisitionPage viewRequisitionPageAuthorized = homePageAuthorized.navigateViewRequisition();
     viewRequisitionPageAuthorized.enterViewSearchCriteria();
     viewRequisitionPageAuthorized.clickSearch();
-    viewRequisitionPageAuthorized.verifyStatus("AUTHORIZED");
+    viewRequisitionPageAuthorized.verifyStatus(AUTHORIZED);
     viewRequisitionPageAuthorized.clickRnRList();
 
     HomePage homePageInApproval = viewRequisitionPageAuthorized.verifyFieldsPreApproval("12.50", "1");
-    dbWrapper.updateRequisitionStatus("IN_APPROVAL");
+    dbWrapper.updateRequisitionStatus(IN_APPROVAL);
     ViewRequisitionPage viewRequisitionPageInApproval = homePageInApproval.navigateViewRequisition();
     viewRequisitionPageInApproval.enterViewSearchCriteria();
     viewRequisitionPageInApproval.clickSearch();
-    viewRequisitionPageInApproval.verifyStatus("IN_APPROVAL");
+    viewRequisitionPageInApproval.verifyStatus(IN_APPROVAL);
 
     ApprovePage approvePageTopSNUser = homePageInApproval.navigateToApprove();
     approvePageTopSNUser.verifyAndClickRequisitionPresentForApproval();
@@ -76,7 +85,7 @@ public class ViewRequisition extends TestCaseHelper {
     ViewRequisitionPage viewRequisitionPageApproved = homePageInApproval.navigateViewRequisition();
     viewRequisitionPageApproved.enterViewSearchCriteria();
     viewRequisitionPageApproved.clickSearch();
-    viewRequisitionPageApproved.verifyStatus("APPROVED");
+    viewRequisitionPageApproved.verifyStatus(APPROVED);
     viewRequisitionPageApproved.clickRnRList();
     viewRequisitionPageApproved.verifyComment("Dummy Comments", userSIC,1);
     viewRequisitionPageApproved.verifyCommentBoxNotPresent();
@@ -89,7 +98,7 @@ public class ViewRequisition extends TestCaseHelper {
     ViewRequisitionPage viewRequisitionPageOrdered = homePageApproved.navigateViewRequisition();
     viewRequisitionPageOrdered.enterViewSearchCriteria();
     viewRequisitionPageOrdered.clickSearch();
-    viewRequisitionPageOrdered.verifyStatus("ORDERED");
+    viewRequisitionPageOrdered.verifyStatus(RELEASED);
     viewRequisitionPageOrdered.clickRnRList();
     viewRequisitionPageOrdered.verifyFieldsPostApproval("25.00", "1");
     viewRequisitionPageOrdered.verifyApprovedQuantityFieldPresent();
