@@ -188,17 +188,22 @@ services.factory('Messages', function ($resource) {
 services.factory('SupervisoryNodes', function ($resource) {
   return $resource('/supervisory-nodes.json', {}, {});
 });
+
 services.factory('RequisitionOrder', function ($resource) {
   return $resource('/requisitionOrder.json', {}, {});
 });
 
 services.factory('FacilityProgramRights', function ($resource) {
   return $resource('/facility/:facilityId/program/:programId/rights.json');
-})
+});
 
 services.factory('RequisitionComment', function ($resource) {
   return $resource('/requisitions/:id/comments.json', {}, {});
-})
+});
+
+services.factory('Orders', function ($resource) {
+  return $resource('/orders.json', {}, {});
+});
 
 
 

@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
+import static org.openlmis.rnr.dto.RnrDTO.prepareForOrderView;
 import static org.openlmis.web.response.OpenLmisResponse.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CONFLICT;
@@ -237,7 +238,7 @@ public class RequisitionController extends BaseController {
   @RequestMapping(value = "/orders", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_ORDER, CONVERT_TO_ORDER')")
   public ResponseEntity<OpenLmisResponse> getOrders() {
-    return OpenLmisResponse.response(ORDERS, RnrDTO.prepareForOrderView(requisitionService.getOrders()));
+    return OpenLmisResponse.response(ORDERS, prepareForOrderView(requisitionService.getOrders()));
   }
 
   @RequestMapping(value = "/requisitions/{id}/comments", method = POST, headers = ACCEPT_JSON)

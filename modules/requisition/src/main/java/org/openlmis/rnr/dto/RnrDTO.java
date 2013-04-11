@@ -93,7 +93,7 @@ public class RnrDTO {
     rnrDTO.setOrderBatchId(requisition.getOrderBatch().getId());
     rnrDTO.setOrderDate(requisition.getOrderBatch().getCreateTimeStamp());
     rnrDTO.setPeriodName(requisition.getPeriod().getName());
-
+    rnrDTO.setStatus(requisition.getStatus().name());
     return rnrDTO;
   }
 }
