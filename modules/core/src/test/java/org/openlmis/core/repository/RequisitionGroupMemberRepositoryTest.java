@@ -107,7 +107,7 @@ public class RequisitionGroupMemberRepositoryTest {
     requisitionGroup.setId(5);
     facility.setId(4);
     when(requisitionGroupMemberMapper.
-      getMappingByRequisitionGroupIdAndFacilityId(requisitionGroup.getId(), facility.getId())).
+      getMappingByRequisitionGroupIdAndFacilityId(requisitionGroup, facility)).
       thenReturn(requisitionGroupMember);
 
     RequisitionGroupMember returnedRGMember = repository.

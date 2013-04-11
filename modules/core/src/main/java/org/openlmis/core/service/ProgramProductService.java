@@ -7,10 +7,11 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.domain.ProgramProductPrice;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.ProductRepository;
 import org.openlmis.core.repository.ProgramProductRepository;
+import org.openlmis.core.repository.ProgramRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,10 +21,14 @@ public class ProgramProductService {
 
   public static final String PROGRAM_PRODUCT_INVALID = "programProduct.product.program.invalid";
   private ProgramProductRepository programProductRepository;
+  private ProgramRepository programRepository;
+  private ProductRepository productRepository;
 
   @Autowired
-  public ProgramProductService(ProgramProductRepository programProductRepository) {
+  public ProgramProductService(ProgramProductRepository programProductRepository, ProgramRepository programRepository, ProductRepository productRepository) {
     this.programProductRepository = programProductRepository;
+    this.programRepository = programRepository;
+    this.productRepository = productRepository;
   }
 
   public Integer getIdByProgramIdAndProductId(Integer programId, Integer productId) {
@@ -54,8 +59,15 @@ public class ProgramProductService {
     return programProductRepository.getByProgramAndProductCode(programProduct);
   }
 
-  public ProgramProductPrice getProgramProductPricePrice(ProgramProduct programProduct) {
+  public ProgramProductPrice getProgramProductPrice(ProgramProduct programProduct) {
+    populateProgramProductIds(programProduct);
     return programProductRepository.getProgramProductPrice(programProduct);
+  }
+
+  private void populateProgramProductIds(ProgramProduct programProduct) {
+    Integer programId = programRepository.getIdByCode(programProduct.getProgram().getCode());
+    Integer productId = productRepository.getIdByCode(programProduct.getProduct().getCode());
+    programProduct.setId(programProductRepository.getIdByProgramIdAndProductId(programId, productId));
   }
 
 }

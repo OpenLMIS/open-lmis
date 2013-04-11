@@ -216,7 +216,7 @@
                             <value type="java.lang.Class">org.openlmis.core.domain.ProgramProductPrice</value>
                         </property>
                         <property name="recordHandler" ref="programProductPricePersistenceHandler"/>
-                        <property name="tableName" value="program_product_price_history"/>
+                        <property name="tableName" value="program_products"/>
                     </bean>
                 </entry>
                 <entry key="productCategory">

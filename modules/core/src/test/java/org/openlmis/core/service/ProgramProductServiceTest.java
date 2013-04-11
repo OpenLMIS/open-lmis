@@ -42,7 +42,7 @@ public class ProgramProductServiceTest {
 
   @Before
   public void setUp() throws Exception {
-    programProductService = new ProgramProductService(programProductRepository);
+    programProductService = new ProgramProductService(programProductRepository, null, null);
   }
 
   @Test

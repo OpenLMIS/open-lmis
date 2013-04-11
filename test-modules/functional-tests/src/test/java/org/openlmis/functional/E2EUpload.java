@@ -53,7 +53,7 @@ public class E2EUpload extends TestCaseHelper {
     dbWrapper.alterUserID(userName, userId);
     dbWrapper.insertRoleAssignment(userId, "User");
 
-//    verifyInvalidProductCategoryUpload(uploadPage);
+    verifyInvalidProductCategoryUpload(uploadPage);
     verifyValidProductCategoryUpload(uploadPage);
 
     verifyInValidProductUpload(uploadPage);
@@ -127,10 +127,10 @@ public class E2EUpload extends TestCaseHelper {
   private void verifyInvalidRequisitionGroupMembersUpload(UploadPage uploadPage) throws FileNotFoundException {
     uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_InvalidCombination_RG_FacilityCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
-//    uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_InvalidFacilityCode.csv");
-//    uploadPage.verifyErrorMessageOnUploadScreen();
-//    uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_InvalidRG.csv");
-//    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_InvalidFacilityCode.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_InvalidRG.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_FacilityCodeAssignedToRGWithOneProgramInCommon.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
 
@@ -258,12 +258,12 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadProgramProductPrice("QA_Product_Price.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
     uploadPage.uploadProgramProductPrice("QA_Product_Price_Subsequent.csv");
-    uploadPage.verifySuccessMessageOnUploadScreen();
+      uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
   private void verifyInvalidProductPriceUpload(UploadPage uploadPage) throws FileNotFoundException {
-//    uploadPage.uploadProgramProductPrice("QA_Product_Price_DuplicateCombination_ProductCode_ProgramCode.csv");
-//    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadProgramProductPrice("QA_Product_Price_DuplicateCombination_ProductCode_ProgramCode.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.uploadProgramProductPrice("QA_Product_Price_Invalid_Program_Product_Combination.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.uploadProgramProductPrice("QA_Product_Price_InvalidPrice.csv");

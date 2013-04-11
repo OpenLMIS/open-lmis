@@ -10,6 +10,8 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.RequisitionGroupMember;
 import org.springframework.stereotype.Repository;
 
@@ -32,9 +34,9 @@ public interface RequisitionGroupMemberMapper {
 
   @Select({"SELECT *",
     "FROM requisition_group_members",
-    "WHERE requisitionGroupId = #{rgId}",
-    "AND facilityId = #{facilityId}"})
+    "WHERE requisitionGroupId = #{requisitionGroup.id}",
+    "AND facilityId = #{facility.id}"})
   RequisitionGroupMember getMappingByRequisitionGroupIdAndFacilityId(
-    @Param(value = "rgId") Integer rgId,
-    @Param(value = "facilityId") Integer facilityId);
+    @Param(value = "requisitionGroup") RequisitionGroup requisitionGroup,
+    @Param(value = "facility") Facility facility);
 }

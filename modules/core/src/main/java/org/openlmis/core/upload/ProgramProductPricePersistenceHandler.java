@@ -28,7 +28,7 @@ public class ProgramProductPricePersistenceHandler extends AbstractModelPersiste
   @Override
   protected BaseModel getExisting(BaseModel record) {
     ProgramProduct programProduct = ((ProgramProductPrice) record).getProgramProduct();
-    return programProductService.getProgramProductPricePrice(programProduct);
+    return programProductService.getProgramProductPrice(programProduct);
   }
 
   @Override

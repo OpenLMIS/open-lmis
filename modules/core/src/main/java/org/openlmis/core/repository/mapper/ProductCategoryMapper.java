@@ -18,20 +18,21 @@ import org.springframework.stereotype.Repository;
 public interface ProductCategoryMapper {
 
 
-  @Insert("INSERT INTO product_categories (code, name, displayOrder, modifiedBy) VALUES (#{code}, #{name}, #{displayOrder}, #{modifiedBy})")
+  @Insert("INSERT INTO product_categories (code, name, displayOrder, modifiedBy, modifiedDate) VALUES (#{code}, #{name}," +
+    " #{displayOrder}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()))")
   @Options(useGeneratedKeys = true)
   public void insert(ProductCategory productCategory);
 
   @Select("SELECT * FROM product_categories WHERE id = #{id}")
   public ProductCategory getProductCategoryById(Integer id);
 
-  @Select("SELECT * FROM product_categories WHERE code = #{code}")
+  @Select("SELECT * FROM product_categories WHERE LOWER(code) = LOWER(#{code})")
   public ProductCategory getProductCategoryByCode(String code);
 
   @Update("UPDATE product_categories SET name = #{name}, modifiedBy = #{modifiedBy}, displayOrder = #{displayOrder}, modifiedDate = DEFAULT where id = #{id}")
   public void update(ProductCategory category);
 
 
-  @Select("SELECT id FROM product_categories WHERE code = #{code}")
+  @Select("SELECT id FROM product_categories WHERE LOWER(code) = LOWER(#{code})")
   public Integer getProductCategoryIdByCode(String categoryCode);
 }

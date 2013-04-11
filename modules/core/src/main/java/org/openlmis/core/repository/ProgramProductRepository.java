@@ -77,11 +77,11 @@ public class ProgramProductRepository {
   }
 
   public ProgramProduct getByProgramAndProductCode(ProgramProduct programProduct) {
-    return getByProgramAndProductCode(programRepository.getIdByCode(programProduct.getProgram().getCode()),
-        productRepository.getIdByCode(programProduct.getProduct().getCode()));
+    return getByProgramAndProductId(programRepository.getIdByCode(programProduct.getProgram().getCode()),
+      productRepository.getIdByCode(programProduct.getProduct().getCode()));
   }
 
-  public ProgramProduct getByProgramAndProductCode(Integer programId, Integer productId) {
+  public ProgramProduct getByProgramAndProductId(Integer programId, Integer productId) {
     return mapper.getByProgramAndProductId(programId, productId);
   }
 
