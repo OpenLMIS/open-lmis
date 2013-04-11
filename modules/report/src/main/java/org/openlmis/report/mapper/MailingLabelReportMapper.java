@@ -31,7 +31,10 @@ public interface MailingLabelReportMapper {
             @Result(column="facilityType", property="facilityType"),
             @Result(column="region", property="region"),
             @Result(column="owner", property="owner"),
-            @Result(column ="latitude", property = "gpsCoordinates"),
+/*            @Result(column ="longitude", property = "longitude"),
+            @Result(column ="latitude", property = "latitude"),
+            @Result(column ="altitude", property = "altitude"),*/
+            @Result(column = "gpsCoordinates", property = "gpsCoordinates"),
             @Result(column="phoneNumber", property="phoneNumber"),
             @Result(column="fax", property="fax")
     })
