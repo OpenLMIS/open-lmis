@@ -129,6 +129,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
 
   function resetErrorPages() {
     $scope.errorPages = {fullSupply: [], nonFullSupply: []};
+    updateShownErrorPages();
   }
 
   $scope.checkErrorOnPage = function (page) {
@@ -152,6 +153,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
 
   $scope.approveRnr = function () {
     $scope.approvedQuantityRequiredFlag = true;
+    resetFlags();
     resetErrorPages();
     var error = validateAndSetErrorClass();
     if (error) {
@@ -164,7 +166,12 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, $lo
     showConfirmModal();
   };
 
-  approveValidatedRnr = function () {
+  function resetFlags() {
+    $scope.error = "";
+    $scope.message = "";
+  }
+
+   var approveValidatedRnr = function () {
     var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id: $scope.rnr.id, operation: "approve"},
       rnr, function (data) {

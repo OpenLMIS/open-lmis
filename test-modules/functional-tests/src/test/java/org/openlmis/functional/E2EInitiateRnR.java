@@ -193,7 +193,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   private void verifyConvertToOrder(OrderPage orderPageOrdersPending) {
     orderPageOrdersPending.clickConvertToOrderButton();
-    orderPageOrdersPending.verifyMessageOnOrderScreen("Message 'Please select atleast one Requisition for Converting to Order.' is not displayed");
+    orderPageOrdersPending.verifyMessageOnOrderScreen("Message 'Please select at least one Requisition for Converting to Order.' is not displayed");
     orderPageOrdersPending.clickCheckBoxConvertToOrder();
     orderPageOrdersPending.clickConvertToOrderButton();
     orderPageOrdersPending.clickOk();

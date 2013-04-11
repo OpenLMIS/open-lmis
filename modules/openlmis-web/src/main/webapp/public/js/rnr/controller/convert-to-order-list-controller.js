@@ -9,6 +9,7 @@ function ConvertToOrderListController($scope, requisitionList, RequisitionOrder,
   $scope.filteredRequisitions = $scope.requisitions;
   $scope.selectedItems = [];
   $scope.message = "";
+  $scope.noRequisitionSelectedMessage = "";
 
   $scope.gridOptions = { data: 'filteredRequisitions',
     multiSelect: true,
@@ -58,8 +59,10 @@ function ConvertToOrderListController($scope, requisitionList, RequisitionOrder,
   };
 
   $scope.convertToOrder = function () {
+    $scope.message = "";
+    $scope.noRequisitionSelectedMessage = "";
     if ($scope.gridOptions.selectedItems.length == 0) {
-      $scope.message = "Please select atleast one Requisition for Converting to Order.";
+      $scope.noRequisitionSelectedMessage = "Please select at least one Requisition for Converting to Order.";
       return;
     }
     showConfirmModal();

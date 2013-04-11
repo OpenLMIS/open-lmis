@@ -50,6 +50,9 @@ public class OrderPage extends RequisitionPage {
   @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
   private static WebElement successMessageDiv;
 
+  @FindBy(how = How.XPATH, using = "//div[@id='noRequisitionSelectedMsgDiv']")
+  private static WebElement noRequisitonSelectedDiv;
+
   @FindBy(how = How.XPATH, using = "//div[@id='NoRequisitionsPendingMessage']")
   private static WebElement noRequisitionPendingMessage;
 
@@ -83,12 +86,12 @@ public class OrderPage extends RequisitionPage {
   public void verifyMessageOnOrderScreen(String message)
   {
     testWebDriver.sleep(500);
-    SeleneseTestNgHelper.assertTrue(message, successMessageDiv.isDisplayed());
+    SeleneseTestNgHelper.assertTrue(message, noRequisitonSelectedDiv.isDisplayed());
   }
 
   public void convertToOrder() throws IOException {
     clickConvertToOrderButton();
-    verifyMessageOnOrderScreen("Message 'Please select atleast one Requisition for Converting to Order.' is not displayed");
+    verifyMessageOnOrderScreen("Message 'Please select at least one Requisition for Converting to Order.' is not displayed");
     clickCheckBoxConvertToOrder();
     clickConvertToOrderButton();
     clickOk();

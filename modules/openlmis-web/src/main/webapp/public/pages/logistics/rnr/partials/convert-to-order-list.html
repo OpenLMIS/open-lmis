@@ -6,37 +6,40 @@
 
 <h2>Convert Requisitions to Order</h2>
 
-<div class="alert alert-info" id="saveSuccessMsgDiv" ng-show="message" ng-bind="message"></div>
+<div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="message" ng-bind="message"></div>
+<div class="alert alert-info" id="noRequisitionSelectedMsgDiv" ng-show="noRequisitionSelectedMessage"
+     ng-bind="noRequisitionSelectedMessage"></div>
 
 <div class="app-form">
-  <div class="form-group">
-    <h3>Requisition List</h3>
+    <div class="form-group">
+        <h3>Requisition List</h3>
 
-    <div class="alert alert-info" id="NoRequisitionsPendingMessage" ng-hide="requisitions.length">
-      No R&Rs are pending to be Converted as Orders
-    </div>
-    <div ng-show="requisitions.length">
-      <div class="row-fluid">
-        <div class="span4 offset8 grid-filters">
-          <input id="searchRequisition" class="search-query" ng-change="filterRequisitions()" type="text"
-                 ng-model="query" placeholder="Search..."/>
-          in
-          <select ng-model="searchField" ng-change="filterRequisitions()">
-            <option value="">All</option>
-            <option value="programName">Program</option>
-            <option value="facilityCode">Facility Code</option>
-            <option value="facilityName">Facility Name</option>
-            <option value="supplyingDepot">Supplying Depot</option>
-          </select>
+        <div class="alert alert-info" id="NoRequisitionsPendingMessage" ng-hide="requisitions.length">
+            No R&Rs are pending to be Converted as Orders
         </div>
-      </div>
-      <div class="gridStyle" ng-grid="gridOptions" ng-show="requisitions.length"></div>
-        <div form-toolbar id="action_buttons" class="action-buttons">
-            <div class="form-cell button-row">
-                <input type="submit" ng-click="convertToOrder()" class="btn btn-primary save-button" value="Convert To Order"/>
+        <div ng-show="requisitions.length">
+            <div class="row-fluid">
+                <div class="span4 offset8 grid-filters">
+                    <input id="searchRequisition" class="search-query" ng-change="filterRequisitions()" type="text"
+                           ng-model="query" placeholder="Search..."/>
+                    in
+                    <select ng-model="searchField" ng-change="filterRequisitions()">
+                        <option value="">All</option>
+                        <option value="programName">Program</option>
+                        <option value="facilityCode">Facility Code</option>
+                        <option value="facilityName">Facility Name</option>
+                        <option value="supplyingDepot">Supplying Depot</option>
+                    </select>
+                </div>
+            </div>
+            <div class="gridStyle" ng-grid="gridOptions" ng-show="requisitions.length"></div>
+            <div form-toolbar id="action_buttons" class="action-buttons">
+                <div class="form-cell button-row">
+                    <input type="submit" ng-click="convertToOrder()" class="btn btn-primary save-button"
+                           value="Convert To Order"/>
+                </div>
             </div>
         </div>
     </div>
-  </div>
 </div>
 

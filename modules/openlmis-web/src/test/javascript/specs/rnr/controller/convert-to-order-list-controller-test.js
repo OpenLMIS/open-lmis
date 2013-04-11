@@ -97,6 +97,7 @@ describe('ConvertToOrderListController', function () {
     httpBackend.flush();
     expect(scope.message).toEqual("The requisition(s) have been successfully converted to Orders");
     expect(scope.error).toEqual("");
+    expect(scope.noRequisitionSelectedMessage).toEqual("");
     expect(scope.requisitions).toEqual([requisitionList[1]]);
   });
 
@@ -123,7 +124,7 @@ describe('ConvertToOrderListController', function () {
 
     scope.convertToOrder();
 
-    expect(scope.message).toEqual("Please select atleast one Requisition for Converting to Order.");
+    expect(scope.noRequisitionSelectedMessage).toEqual("Please select at least one Requisition for Converting to Order.");
   });
 });
 
