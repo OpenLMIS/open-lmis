@@ -26,7 +26,7 @@
 				<imageExpression><![CDATA[$P{LOGO}]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement uuid="012ee410-99fc-4213-baf2-fc35d381af58" x="10" y="53" width="291" height="20" isPrintInFirstWholeBand="true"/>
+				<reportElement uuid="012ee410-99fc-4213-baf2-fc35d381af58" x="10" y="53" width="420" height="20" isPrintInFirstWholeBand="true"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$P{REPORT_NAME}]]></textFieldExpression>
 			</textField>

@@ -24,10 +24,10 @@
             <list><!-- list of open-lmis reports -->
                 <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="facilities"/>
-                    <property name="template" value="facilities.jasper"/>
+                    <property name="template" value="facility-report.jasper"/>
                     <property name="reportDataProvider" ref="facilityReportDataProvider"/>
                     <property name="id" value="RP-FAL-ALL"/>
-                    <property name="name" value="All facilities"/>
+                    <property name="name" value="Facility list report"/>
                     <property name="title" value="List of facilities"/>
                     <property name="version" value="1.0"/>
                 </bean>
@@ -36,7 +36,7 @@
                     <property name="template" value="mailing-labels.jasper"/>
                     <property name="reportDataProvider" ref="mailingLabelReportDataProvider"/>
                     <property name="id" value="RP-MAL-LAB"/>
-                    <property name="name" value="Mailing Labels"/>
+                    <property name="name" value="Mailing Labels: Lists facilities with contact addresses"/>
                     <property name="title" value=" Mailing Labels"/>
                     <property name="version" value="1.0"/>
                 </bean>
