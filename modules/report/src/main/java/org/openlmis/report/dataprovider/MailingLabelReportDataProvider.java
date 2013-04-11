@@ -14,9 +14,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- */
-
 @Component
 @NoArgsConstructor
 public class MailingLabelReportDataProvider extends ReportDataProvider {
@@ -40,16 +37,9 @@ public class MailingLabelReportDataProvider extends ReportDataProvider {
 
     @Override
     protected List<? extends ReportData> getBeanCollectionReportData(ReportData filterCriteria) {
-        if(filterCriteria == null) {
 
-            List<Facility> facilities = facilityService.getAllFacilitiesDetail();
-            return getListMailingLabelsReport(facilities);
-        }
-        if (!(filterCriteria instanceof FacilityReport)) return null;
+       return getReportDataByFilterCriteriaAndPagingAndSorting(filterCriteria,null,RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
 
-        FacilityReport filter = (FacilityReport) filterCriteria;
-        List<Facility> facilities = facilityService.searchFacilitiesByCodeOrName(filter.getFacilityName());
-        return getListMailingLabelsReport(facilities);
     }
 
     private List<ReportData> getListMailingLabelsReport(List<Facility> facilityList){
@@ -64,8 +54,6 @@ public class MailingLabelReportDataProvider extends ReportDataProvider {
 
         return facilityReportList;
     }
-
-
 
     @Override
     protected List<? extends ReportData> getResultSetReportData(ReportData filterCriteria) {
@@ -82,4 +70,5 @@ public class MailingLabelReportDataProvider extends ReportDataProvider {
     public int getReportDataCountByFilterCriteria(ReportData mailingLabelReportFilter) {
         return (int)mailingLabelReportMapper.SelectFilteredFacilitiesCount(mailingLabelReportFilter);
     }
+
 }

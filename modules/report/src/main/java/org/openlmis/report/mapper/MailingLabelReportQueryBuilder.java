@@ -25,8 +25,7 @@ public class MailingLabelReportQueryBuilder {
         MailingLabelReportFilter filter  =(MailingLabelReportFilter)params.get("filterCriteria");
         MailingLabelReportSorter sorter = (MailingLabelReportSorter)params.get("SortCriteria");
         BEGIN();
-        SELECT("F.id, F.code, F.name, F.active as active, FT.name as facilityType, GZ.name as region, FO.code as owner,F.mainphone as phoneNumber, F.fax as fax");
-        //FROM("facility_types FT");
+        SELECT("F.id, F.code, F.name, F.active as active, FT.name as facilityType, GZ.name as region, FO.code as owner, F.latitude, F.longitude, F.altitude,F.mainphone as phoneNumber, F.fax as fax");
         FROM("facilities F");
         JOIN("facility_types FT on FT.id = F.typeid");
         LEFT_OUTER_JOIN("geographic_zones GZ on GZ.id = F.geographiczoneid");
@@ -43,26 +42,29 @@ public class MailingLabelReportQueryBuilder {
             WHERE("F.typeid = #{filterCriteria.facilityTypeId} ");
         }
 
-        if(sorter.getFacilityName().equalsIgnoreCase("asc")){
-            ORDER_BY("F.name asc");
-        }
-        if(sorter.getFacilityName().equalsIgnoreCase("desc")){
-            ORDER_BY("F.name desc");
+        if(sorter != null){
+            if(sorter.getFacilityName().equalsIgnoreCase("asc")){
+                ORDER_BY("F.name asc");
+            }
+            if(sorter.getFacilityName().equalsIgnoreCase("desc")){
+                ORDER_BY("F.name desc");
+            }
+
+            if(sorter.getCode().equalsIgnoreCase("asc")){
+                ORDER_BY("F.code asc");
+            }
+            if(sorter.getCode().equalsIgnoreCase("desc")){
+                ORDER_BY("F.code desc");
+            }
+
+            if(sorter.getFacilityType().equalsIgnoreCase("asc")){
+                ORDER_BY("F.typeid asc");
+            }
+            if(sorter.getFacilityType().equalsIgnoreCase("desc")){
+                ORDER_BY("F.typeid desc");
+            }
         }
 
-        if(sorter.getCode().equalsIgnoreCase("asc")){
-            ORDER_BY("F.code asc");
-        }
-        if(sorter.getCode().equalsIgnoreCase("desc")){
-            ORDER_BY("F.code desc");
-        }
-
-        if(sorter.getFacilityType().equalsIgnoreCase("asc")){
-            ORDER_BY("F.typeid asc");
-        }
-        if(sorter.getFacilityType().equalsIgnoreCase("desc")){
-            ORDER_BY("F.typeid desc");
-        }
 
         return SQL();
     }

@@ -21,9 +21,9 @@ public class MailingLabelReport implements ReportData  {
     private boolean active;
     private String region;
     private String owner;
-    private String GPSCoordinates;
-    private String Email;
+    private String gpsCoordinates;
+    private String email;
     private String phoneNumber;
-    private String MSLMSDCode;
+    private String mslOrmsdCode;
     private String fax;
 }

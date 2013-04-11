@@ -32,7 +32,7 @@
                     <property name="version" value="1.0"/>
                 </bean>
                 <bean class="org.openlmis.report.Report">
-                    <property name="reportKey" value="mailing-labels"/>
+                    <property name="reportKey" value="mailinglabels"/>
                     <property name="template" value="mailing-labels.jasper"/>
                     <property name="reportDataProvider" ref="mailingLabelReportDataProvider"/>
                     <property name="id" value="RP-MAL-LAB"/>

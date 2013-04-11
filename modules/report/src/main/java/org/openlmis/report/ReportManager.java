@@ -83,7 +83,6 @@ public class ReportManager {
        }
 
        User currentUser = userService.getById(userId);
-
        List<? extends ReportData> dataSource = report.getReportDataProvider().getReportDataByFilterCriteria(parameter, DataSourceType.BEAN_COLLECTION_DATA_SOURCE);
 
        reportExporter.exportReport(this.getClass().getClassLoader().getResourceAsStream(report.getTemplate()),getReportExtraParams(report, currentUser.getUserName()), dataSource, outputOption, response );
