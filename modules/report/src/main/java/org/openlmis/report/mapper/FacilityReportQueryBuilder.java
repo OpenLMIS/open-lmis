@@ -23,7 +23,7 @@ public class FacilityReportQueryBuilder {
         FacilityReportFilter filter  = (FacilityReportFilter)params.get("filterCriteria");
         FacilityReportSorter sorter = (FacilityReportSorter)params.get("SortCriteria");
         BEGIN();
-        SELECT("F.id, F.code, F.name, F.active as active, FT.name as facilityType, GZ.name as region, FO.code as owner, F.longitude, F.latitude, F.altitude,F.mainphone as phoneNumber, F.fax as fax");
+        SELECT("F.id, F.code, F.name, F.active as active, FT.name as facilityType, GZ.name as region, FO.code as owner,F.latitude::text ||',' ||  F.longitude::text  ||', ' || F.altitude::text gpsCoordinates,F.mainphone as phoneNumber, F.fax as fax");
         //FROM("facility_types FT");
         FROM("facilities F");
         JOIN("facility_types FT on FT.id = F.typeid");

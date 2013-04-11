@@ -21,9 +21,7 @@ public class FacilityReport implements ReportData {
     private boolean active;
     private String region;
     private String owner;
-    private String longitude;
-    private String latitude;
-    private String altitude;
+    private String gpsCoordinates;
     private String Email;
     private String phoneNumber;
     private String MSLMSDCode;
