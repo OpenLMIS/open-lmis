@@ -30,6 +30,10 @@ public class FacilityReportQueryBuilder {
         LEFT_OUTER_JOIN("geographic_zones GZ on GZ.id = F.geographiczoneid");
         LEFT_OUTER_JOIN("facility_operators FO on FO.id = F.operatedbyid");
 
+
+        if (filter.getStatusId() != null) {
+            WHERE("F.active = #{filterCriteria.statusId}");
+        }
         if (filter.getZoneId() != 0) {
              WHERE("F.geographiczoneid = #{filterCriteria.zoneId}");
         }
@@ -66,8 +70,11 @@ public class FacilityReportQueryBuilder {
          // filterCriteria
         BEGIN();
         SELECT("COUNT(*)");
-        FROM("facilities ");
+        FROM("facilities F");
 
+        if (filter.getStatusId() != null) {
+            WHERE("F.active = #{filterCriteria.statusId}");
+        }
         if (filter.getZoneId() != 0) {
             WHERE("geographiczoneid = #{filterCriteria.zoneId}");
         }

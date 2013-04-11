@@ -159,6 +159,7 @@ public class ReportController  extends BaseController {
         FacilityReportFilter facilityReportFilter = new FacilityReportFilter();
             facilityReportFilter.setZoneId(zoneId);
             facilityReportFilter.setFacilityTypeId(facilityTypeId);
+            facilityReportFilter.setStatusId(statusId);
 
         Report report = reportManager.getReportByKey("facilities");//reportKey);
         List<FacilityReport> facilityReportList =  // (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteria(null);
