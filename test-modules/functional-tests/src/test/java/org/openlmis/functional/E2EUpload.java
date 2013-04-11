@@ -221,8 +221,6 @@ public class E2EUpload extends TestCaseHelper {
   private void verifyValidUserUpload(UploadPage uploadPage) throws FileNotFoundException {
     uploadPage.uploadUsers("QA_Users.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
-    //uploadPage.uploadUsers("QA_Users_Subsequent.csv");
-    //uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
   private void verifyInValidUserUpload(UploadPage uploadPage) throws FileNotFoundException {
