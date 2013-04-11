@@ -17,9 +17,10 @@ import lombok.NoArgsConstructor;
 public class FacilityReportFilter implements ReportData {
 
     //top filters
-    private int zoneId;
-    private Boolean statusId;
+    private String facilityCode;
+    private String facilityName;
     private int facilityTypeId;
+    private int zoneId;
 
 
 }

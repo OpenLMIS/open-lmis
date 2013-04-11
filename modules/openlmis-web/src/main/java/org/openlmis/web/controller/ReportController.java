@@ -29,6 +29,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 //import org.springframework.data.domain.PageRequest;
 //import org.springframework.data.domain.Pageable;
 
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,31 +60,80 @@ public class ReportController  extends BaseController {
     }
 
 
-    @RequestMapping(value = "/download/{reportKey}/{outputOption}")
-    public void showReport(
-                                @PathVariable(value = "reportKey") String reportKey
-                                ,@PathVariable(value = "outputOption") String outputOption
-                                ,@RequestParam(value = "zoneId", required = false, defaultValue = "0") int zoneId
-                                ,@RequestParam(value = "facilityTypeId", required = false, defaultValue = "0") int facilityTypeId
-                                ,@RequestParam(value = "statusId", required = false, defaultValue = "" ) Boolean statusId
-                                ,@RequestParam(value = "facilityCodeFilter", required = false, defaultValue = "0") String facilityCodeFilter
-                                ,@RequestParam(value = "facilityNameFilter", required = false, defaultValue = "" ) String facilityNameFilter
-                                ,HttpServletRequest request
-                                ,HttpServletResponse response
-                            )
+    @RequestMapping(value = "/download/mailinglabels/{outputOption}")
+     public void showMailingReport(
+             @PathVariable(value = "outputOption") String outputOption
+            ,@RequestParam(value = "zoneId", required = false, defaultValue = "0") int zoneId
+            ,@RequestParam(value = "facilityTypeId", required = false, defaultValue = "0") int facilityTypeId
+            ,@RequestParam(value = "statusId", required = false, defaultValue = "" ) Boolean statusId
+            ,@RequestParam(value = "facilityCodeFilter", required = false, defaultValue = "0") String facilityCodeFilter
+            ,@RequestParam(value = "facilityNameFilter", required = false, defaultValue = "" ) String facilityNameFilter
+            ,HttpServletRequest request
+            ,HttpServletResponse response
+    )
     {
         MailingLabelReportFilter mailingLabelReportFilter = new MailingLabelReportFilter();
         mailingLabelReportFilter.setFacilityCode(facilityCodeFilter);
+        mailingLabelReportFilter.setFacilityTypeId(facilityTypeId);
         mailingLabelReportFilter.setFacilityName(facilityNameFilter);
 
-       Integer userId = (Integer) request.getSession().getAttribute(USER_ID);
+        Integer userId = (Integer) request.getSession().getAttribute(USER_ID);
 
         switch (outputOption.toUpperCase()){
             case "PDF":
-                reportManager.showReport(userId, reportKey, mailingLabelReportFilter, ReportOutputOption.PDF, response);
+                reportManager.showReport(userId, "mailinglabels", mailingLabelReportFilter, ReportOutputOption.PDF, response);
                 break;
             case "XLS":
-                reportManager.showReport(userId, reportKey, mailingLabelReportFilter, ReportOutputOption.XLS, response);
+                reportManager.showReport(userId, "mailinglabels", mailingLabelReportFilter, ReportOutputOption.XLS, response);
+        }
+
+    }
+
+    @RequestMapping(value = "/download/facilities/{outputOption}")
+    public void showFacilityListReport(
+             @PathVariable(value = "outputOption") String outputOption
+             ,@RequestParam(value = "zoneId", required = false, defaultValue = "0") int zoneId
+             ,@RequestParam(value = "facilityTypeId", required = false, defaultValue = "0") int facilityTypeId
+             ,@RequestParam(value = "code", required = false, defaultValue = "ASC") String code
+             ,@RequestParam(value = "facilityName", required = false, defaultValue = "") String facilityName
+
+    ,HttpServletRequest request
+            ,HttpServletResponse response
+    )
+    {
+        FacilityReportFilter facilityReportFilter = new FacilityReportFilter();
+        facilityReportFilter.setZoneId(zoneId);
+        facilityReportFilter.setFacilityTypeId(facilityTypeId);
+        facilityReportFilter.setFacilityName(facilityName);
+
+
+        Integer userId = (Integer) request.getSession().getAttribute(USER_ID);
+
+        switch (outputOption.toUpperCase()){
+            case "PDF":
+                reportManager.showReport(userId, "facilities", facilityReportFilter, ReportOutputOption.PDF, response);
+                break;
+            case "XLS":
+                reportManager.showReport(userId, "facilities", facilityReportFilter, ReportOutputOption.XLS, response);
+        }
+
+    }
+    @RequestMapping(value = "/download/consumption/{outputOption}")
+    public void showConsumptionDataReport(
+                                            @PathVariable(value = "reportKey") String reportKey
+                                            ,@PathVariable(value = "outputOption") String outputOption
+                                            ,HttpServletRequest request
+                                            ,HttpServletResponse response
+                                            )
+    {
+        Integer userId = (Integer) request.getSession().getAttribute(USER_ID);
+
+        switch (outputOption.toUpperCase()){
+            case "PDF":
+                reportManager.showReport(userId, reportKey, null, ReportOutputOption.PDF, response);
+                break;
+            case "XLS":
+                reportManager.showReport(userId, reportKey, null, ReportOutputOption.XLS, response);
         }
 
     }
@@ -109,7 +159,6 @@ public class ReportController  extends BaseController {
         FacilityReportFilter facilityReportFilter = new FacilityReportFilter();
             facilityReportFilter.setZoneId(zoneId);
             facilityReportFilter.setFacilityTypeId(facilityTypeId);
-            facilityReportFilter.setStatusId(statusId);
 
         Report report = reportManager.getReportByKey("facilities");//reportKey);
         List<FacilityReport> facilityReportList =  // (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteria(null);

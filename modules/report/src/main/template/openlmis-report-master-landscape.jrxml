@@ -119,7 +119,7 @@
 	<pageFooter>
 		<band height="54" splitType="Stretch">
 			<subreport>
-				<reportElement uuid="4333eb33-1f53-47fb-8e3d-d52a31257b37" x="0" y="0" width="802" height="16"/>
+				<reportElement uuid="4333eb33-1f53-47fb-8e3d-d52a31257b37" x="0" y="0" width="802" height="54"/>
 				<subreportParameter name="PAGE_NO">
 					<subreportParameterExpression><![CDATA[$V{PAGE_NUMBER}]]></subreportParameterExpression>
 				</subreportParameter>

@@ -28,4 +28,6 @@ public class MailingLabelReport implements ReportData  {
     private String phoneNumber;
     private String mslOrmsdCode;
     private String fax;
+    private String gpsCoordinates;
+
 }

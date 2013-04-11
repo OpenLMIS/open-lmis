@@ -20,7 +20,7 @@
   ft.name as facilityType,
   fo.text as owner,
   gz.name as region,
-  f.latitude::text ||' ' ||  f.longitude::text || ' ' || f.altitude::text gpsCoordinates,
+  f.latitude::text ||',' ||  f.longitude::text  ||', ' || f.altitude::text gpsCoordinates,
   f.mainphone phoneNumber,
   f.fax
 FROM  facilities f
@@ -72,28 +72,28 @@ LEFT OUTER JOIN geographic_zones gz on gz.id = f.geographiczoneid
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="a41380d3-14bd-4d3e-9c5f-143f77375523" mode="Transparent" x="72" y="0" width="56" height="20" forecolor="#000000" backcolor="#333333"/>
+				<reportElement uuid="a41380d3-14bd-4d3e-9c5f-143f77375523" mode="Transparent" x="38" y="0" width="57" height="20" forecolor="#000000" backcolor="#333333"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Code]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="6f22b5e8-59ea-4512-b209-ce093fe70dbe" mode="Transparent" x="289" y="0" width="99" height="20" forecolor="#000000" backcolor="#333333"/>
+				<reportElement uuid="6f22b5e8-59ea-4512-b209-ce093fe70dbe" mode="Transparent" x="255" y="0" width="99" height="20" forecolor="#000000" backcolor="#333333"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Facility Type]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="1138c634-4150-46c6-a83e-b93243223977" mode="Transparent" x="128" y="0" width="161" height="20" forecolor="#000000" backcolor="#333333"/>
+				<reportElement uuid="1138c634-4150-46c6-a83e-b93243223977" mode="Transparent" x="95" y="0" width="161" height="20" forecolor="#000000" backcolor="#333333"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Facility Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="57f0b09b-7281-4a6e-bc88-36c28580be8b" mode="Transparent" x="0" y="0" width="72" height="20" forecolor="#000000" backcolor="#333333"/>
+				<reportElement uuid="57f0b09b-7281-4a6e-bc88-36c28580be8b" mode="Transparent" x="0" y="0" width="39" height="20" forecolor="#000000" backcolor="#333333"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 					<paragraph leftIndent="2"/>
@@ -101,7 +101,7 @@ LEFT OUTER JOIN geographic_zones gz on gz.id = f.geographiczoneid
 				<text><![CDATA[Line#]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="41788e7d-4689-46e2-a21c-80eb3813d273" mode="Transparent" x="447" y="0" width="69" height="20" forecolor="#000000" backcolor="#333333"/>
+				<reportElement uuid="41788e7d-4689-46e2-a21c-80eb3813d273" mode="Transparent" x="413" y="0" width="80" height="20" forecolor="#000000" backcolor="#333333"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -109,7 +109,7 @@ LEFT OUTER JOIN geographic_zones gz on gz.id = f.geographiczoneid
 				<text><![CDATA[Ownership]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="b11ec1c7-ab15-44a6-987b-b949c3660b2d" mode="Transparent" x="516" y="1" width="100" height="20" forecolor="#000000" backcolor="#333333"/>
+				<reportElement uuid="b11ec1c7-ab15-44a6-987b-b949c3660b2d" mode="Transparent" x="493" y="1" width="142" height="20" forecolor="#000000" backcolor="#333333"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -117,7 +117,7 @@ LEFT OUTER JOIN geographic_zones gz on gz.id = f.geographiczoneid
 				<text><![CDATA[GPS]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="598e05cc-a6dd-4e63-907d-c5843cd2e88d" mode="Transparent" x="616" y="0" width="90" height="20" forecolor="#000000" backcolor="#333333"/>
+				<reportElement uuid="598e05cc-a6dd-4e63-907d-c5843cd2e88d" mode="Transparent" x="635" y="0" width="96" height="20" forecolor="#000000" backcolor="#333333"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -125,14 +125,14 @@ LEFT OUTER JOIN geographic_zones gz on gz.id = f.geographiczoneid
 				<text><![CDATA[Phone Number]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="2f7e127e-7884-416e-8c31-b52ef2c9ca40" mode="Transparent" x="388" y="0" width="59" height="20" forecolor="#000000" backcolor="#333333"/>
+				<reportElement uuid="2f7e127e-7884-416e-8c31-b52ef2c9ca40" mode="Transparent" x="354" y="0" width="59" height="20" forecolor="#000000" backcolor="#333333"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Region]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="ce0b6684-1b56-4d42-9e71-f519aa99b78e" mode="Transparent" x="706" y="0" width="95" height="20" forecolor="#000000" backcolor="#333333"/>
+				<reportElement uuid="ce0b6684-1b56-4d42-9e71-f519aa99b78e" mode="Transparent" x="731" y="0" width="70" height="20" forecolor="#000000" backcolor="#333333"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -151,7 +151,7 @@ LEFT OUTER JOIN geographic_zones gz on gz.id = f.geographiczoneid
 				<text><![CDATA[]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="29ff9399-7f59-451b-b8df-f1f6240f4a60" x="0" y="0" width="71" height="20"/>
+				<reportElement uuid="29ff9399-7f59-451b-b8df-f1f6240f4a60" x="0" y="0" width="39" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<paragraph leftIndent="5"/>
 				</textElement>
@@ -163,46 +163,46 @@ LEFT OUTER JOIN geographic_zones gz on gz.id = f.geographiczoneid
 					<pen lineWidth="0.5"/>
 				</graphicElement>
 			</line>
-			<textField>
-				<reportElement uuid="a3ad8ac2-5737-42d8-8787-d45c4555b135" x="71" y="0" width="57" height="20"/>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="a3ad8ac2-5737-42d8-8787-d45c4555b135" x="38" y="0" width="57" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{code}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement uuid="0e377173-71d5-46f7-88d7-a2b6a958fd8b" x="128" y="0" width="161" height="20"/>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="0e377173-71d5-46f7-88d7-a2b6a958fd8b" x="95" y="0" width="161" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{facilityName}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement uuid="65d6d8a3-6d33-41b2-8991-8cd4b5f4621a" x="288" y="0" width="100" height="20"/>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="65d6d8a3-6d33-41b2-8991-8cd4b5f4621a" x="255" y="0" width="100" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{facilityType}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement uuid="67c025da-835c-4796-9802-daffdff95172" x="516" y="0" width="100" height="20"/>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="67c025da-835c-4796-9802-daffdff95172" x="493" y="0" width="142" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{gpsCoordinates}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement uuid="722124a8-e21f-490c-a641-d047f6d2c867" x="447" y="0" width="69" height="20"/>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="722124a8-e21f-490c-a641-d047f6d2c867" x="414" y="0" width="79" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{owner}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement uuid="a985ef8d-9a20-42cc-8ce6-923e2c21286e" x="616" y="0" width="90" height="20"/>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="a985ef8d-9a20-42cc-8ce6-923e2c21286e" x="635" y="0" width="96" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{phoneNumber}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="false">
-				<reportElement uuid="4010add3-b1d0-4263-9231-e180b0630895" mode="Transparent" x="388" y="0" width="59" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement uuid="4010add3-b1d0-4263-9231-e180b0630895" mode="Transparent" x="355" y="0" width="59" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{region}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement uuid="9368f837-0f29-41a6-8cad-8b296c4878c1" x="707" y="0" width="94" height="20"/>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="9368f837-0f29-41a6-8cad-8b296c4878c1" x="731" y="0" width="71" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{fax}]]></textFieldExpression>
 			</textField>
