@@ -113,6 +113,7 @@ public class RestServiceTest {
     List<RnrLineItem> products = new ArrayList<>();
     products.add(new RnrLineItem());
     report.setProducts(products);
+    when(vendorService.getByName(report.getVendor().getName())).thenReturn(report.getVendor());
     when(userService.getByUsernameAndVendorId(user)).thenReturn(null);
 
     expectedException.expect(DataException.class);
@@ -146,6 +147,7 @@ public class RestServiceTest {
     products.add(new RnrLineItem());
     report.setProducts(products);
     whenNew(User.class).withNoArguments().thenReturn(user);
+    when(vendorService.getByName(report.getVendor().getName())).thenReturn(report.getVendor());
     when(userService.getByUsernameAndVendorId(user)).thenReturn(null);
 
     expectedException.expect(DataException.class);
