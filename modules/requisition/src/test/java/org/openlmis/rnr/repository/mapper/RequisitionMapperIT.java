@@ -153,7 +153,7 @@ public class RequisitionMapperIT {
     orderBatch.setCreatedByUserId(1);
     mapper.createOrderBatch(orderBatch);
 
-    Rnr rnr = insertRequisition(processingPeriod1, ORDERED);
+    Rnr rnr = insertRequisition(processingPeriod1, RELEASED);
     rnr.setOrderBatch(orderBatch);
 
     mapper.update(rnr);
@@ -320,8 +320,8 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldGetOrders() throws Exception {
-    Rnr orderedRequisition1 = insertRequisition(processingPeriod1, ORDERED);
-    Rnr orderedRequisition2 = insertRequisition(processingPeriod2, ORDERED);
+    Rnr orderedRequisition1 = insertRequisition(processingPeriod1, RELEASED);
+    Rnr orderedRequisition2 = insertRequisition(processingPeriod2, RELEASED);
 
     OrderBatch batch1 = new OrderBatch();
     batch1.setCreatedByUserId(1);
@@ -337,7 +337,7 @@ public class RequisitionMapperIT {
     orderedRequisition2.setOrderBatch(batch2);
     mapper.update(orderedRequisition2);
 
-    List<Rnr> orders = mapper.getByStatus(ORDERED);
+    List<Rnr> orders = mapper.getByStatus(RELEASED);
 
     assertThat(orders.size(), is(2));
     assertThat(orders.get(0).getId(), is(orderedRequisition1.getId()));

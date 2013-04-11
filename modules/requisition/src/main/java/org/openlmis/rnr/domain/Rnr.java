@@ -223,7 +223,7 @@ public class Rnr {
   }
 
   public void convertToOrder(OrderBatch orderBatch, Integer userId) {
-    this.status = ORDERED;
+    this.status = RELEASED;
     this.modifiedBy = userId;
     this.orderBatch = orderBatch;
   }

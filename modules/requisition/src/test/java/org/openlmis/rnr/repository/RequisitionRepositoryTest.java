@@ -34,7 +34,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
-import static org.openlmis.rnr.domain.RnrStatus.ORDERED;
+import static org.openlmis.rnr.domain.RnrStatus.RELEASED;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -216,12 +216,12 @@ public class RequisitionRepositoryTest {
   @Test
   public void shouldGetOrderBatches() throws Exception {
     List<Rnr> expectedRequisitions = new ArrayList<>();
-    when(requisitionMapper.getByStatus(ORDERED)).thenReturn(expectedRequisitions);
+    when(requisitionMapper.getByStatus(RELEASED)).thenReturn(expectedRequisitions);
 
-    List<Rnr> rnrs = requisitionRepository.getByStatus(ORDERED);
+    List<Rnr> rnrs = requisitionRepository.getByStatus(RELEASED);
 
     assertThat(rnrs, is(expectedRequisitions));
-    verify(requisitionMapper).getByStatus(ORDERED);
+    verify(requisitionMapper).getByStatus(RELEASED);
   }
 
   @Test

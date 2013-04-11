@@ -241,11 +241,11 @@ public class RequisitionServiceTest {
     ProcessingPeriod secondLastPeriod = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod, with(id, secondLastPeriodsId)));
     when(processingScheduleService.getImmediatePreviousPeriod(lastPeriod)).thenReturn(secondLastPeriod);
 
-    Rnr lastPeriodsRrn = new Rnr(FACILITY, PROGRAM, lastPeriod);
-    when(requisitionRepository.getRequisition(FACILITY, PROGRAM, lastPeriod)).thenReturn(lastPeriodsRrn);
+    Rnr lastPeriodsRnr = new Rnr(FACILITY, PROGRAM, lastPeriod);
+    when(requisitionRepository.getRequisition(FACILITY, PROGRAM, lastPeriod)).thenReturn(lastPeriodsRnr);
 
-    Rnr secondLastPeriodsRrn = new Rnr(FACILITY, PROGRAM, secondLastPeriod);
-    when(requisitionRepository.getRequisition(FACILITY, PROGRAM, secondLastPeriod)).thenReturn(secondLastPeriodsRrn);
+    Rnr secondLastPeriodsRnr = new Rnr(FACILITY, PROGRAM, secondLastPeriod);
+    when(requisitionRepository.getRequisition(FACILITY, PROGRAM, secondLastPeriod)).thenReturn(secondLastPeriodsRnr);
 
     when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
     when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
@@ -253,7 +253,7 @@ public class RequisitionServiceTest {
 
     final Rnr actual = requisitionService.get(FACILITY, PROGRAM, PERIOD);
     assertThat(actual, is(spyRnr));
-    verify(spyRnr).fillLastTwoPeriodsNormalizedConsumptions(lastPeriodsRrn, secondLastPeriodsRrn);
+    verify(spyRnr).fillLastTwoPeriodsNormalizedConsumptions(lastPeriodsRnr, secondLastPeriodsRnr);
   }
 
   @Test
@@ -799,6 +799,7 @@ public class RequisitionServiceTest {
   public void shouldCreateOrderBatchesBasedOnSupplyingFacilitiesOfRequisitions() throws Exception {
     Facility facility1 = new Facility(1);
     Facility facility2 = new Facility(2);
+    Facility facility3 = new Facility(3);
 
     Rnr rnr1 = new Rnr();
     rnr1.setId(10);
@@ -810,12 +811,13 @@ public class RequisitionServiceTest {
 
     Rnr rnr3 = new Rnr();
     rnr3.setId(30);
-    rnr3.setSupplyingFacility(facility1);
+    rnr3.setSupplyingFacility(facility3);
 
     List<Rnr> rnrList = Arrays.asList(rnr1, rnr2, rnr3);
 
     OrderBatch orderBatch1 = new OrderBatch(facility1, 1);
     OrderBatch orderBatch2 = new OrderBatch(facility2, 1);
+    OrderBatch orderBatch3 = new OrderBatch(facility3, 1);
 
     when(requisitionRepository.getById(rnr1.getId())).thenReturn(rnr1);
     when(requisitionRepository.getById(rnr2.getId())).thenReturn(rnr2);
@@ -825,6 +827,7 @@ public class RequisitionServiceTest {
 
     verify(requisitionRepository).createOrderBatch(orderBatch1);
     verify(requisitionRepository).createOrderBatch(orderBatch2);
+    verify(requisitionRepository).createOrderBatch(orderBatch3);
 
     ArgumentCaptor<Rnr> requisitionArgumentCaptor = ArgumentCaptor.forClass(Rnr.class);
     verify(requisitionRepository, times(3)).update(requisitionArgumentCaptor.capture());
@@ -836,7 +839,7 @@ public class RequisitionServiceTest {
     assertThat(orderList.get(1), is(rnr2));
     assertThat(orderList.get(1).getOrderBatch(), is(orderBatch2));
     assertThat(orderList.get(2), is(rnr3));
-    assertThat(orderList.get(2).getOrderBatch(), is(orderBatch1));
+    assertThat(orderList.get(2).getOrderBatch(), is(orderBatch3));
   }
 
   @Test
@@ -910,7 +913,7 @@ public class RequisitionServiceTest {
   public void shouldGetAllFilledOrders() throws Exception {
     List<Rnr> rnrs = new ArrayList<>();
     rnrs.add(getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr, AUTHORIZE_REQUISITION));
-    when(requisitionRepository.getByStatus(ORDERED)).thenReturn(rnrs);
+    when(requisitionRepository.getByStatus(RELEASED)).thenReturn(rnrs);
     when(facilityService.getById(submittedRnr.getSupplyingFacility().getId())).thenReturn(FACILITY);
 
     List<Rnr> actualRnrs = requisitionService.getOrders();
@@ -922,7 +925,7 @@ public class RequisitionServiceTest {
     assertThat(actualRnrs.get(0).getPeriod().getStartDate(), is(PERIOD.getStartDate()));
     assertThat(actualRnrs.get(0).getPeriod().getEndDate(), is(PERIOD.getEndDate()));
     assertThat(actualRnrs.get(0).getSupplyingFacility(), is(FACILITY));
-    verify(requisitionRepository).getByStatus(ORDERED);
+    verify(requisitionRepository).getByStatus(RELEASED);
   }
 
   @Test

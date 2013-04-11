@@ -28,7 +28,21 @@
                 <li class="beak"></li>
               </ul>
             </div>
-            
+
+        </li>
+
+        <li ng-show="hasPermission('VIEW_ORDER')">
+            <a href="javascript: void(0)">Orders</a>
+
+            <div class="submenu">
+                <ul>
+                    <li ng-show="hasPermission('VIEW_ORDER')">
+                        <a href="/public/pages/logistics/order/index.html#/">View Orders</a>
+                    </li>
+                    <li class="beak"></li>
+                </ul>
+            </div>
+
         </li>
 
         <li>

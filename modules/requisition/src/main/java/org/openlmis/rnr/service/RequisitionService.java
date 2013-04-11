@@ -328,15 +328,9 @@ public class RequisitionService {
 
   @Transactional
   public void releaseRequisitionsAsOrder(List<Rnr> requisitions, Integer userId) {
-    Map<Integer, OrderBatch> orderBatchBySupplyingFacility = new HashMap<>();
     for (Rnr requisition : requisitions) {
       Rnr loadedRequisition = requisitionRepository.getById(requisition.getId());
-      OrderBatch orderBatch = orderBatchBySupplyingFacility.get(loadedRequisition.getSupplyingFacility().getId());
-      if (orderBatch == null) {
-        orderBatch = createOrderBatch(loadedRequisition, userId);
-        orderBatchBySupplyingFacility.put(loadedRequisition.getSupplyingFacility().getId(), orderBatch);
-      }
-
+      OrderBatch orderBatch = createOrderBatch(loadedRequisition, userId);
       loadedRequisition.convertToOrder(orderBatch, userId);
       update(loadedRequisition);
     }
@@ -355,7 +349,7 @@ public class RequisitionService {
   }
 
   public List<Rnr> getOrders() {
-    List<Rnr> requisitions = requisitionRepository.getByStatus(ORDERED);
+    List<Rnr> requisitions = requisitionRepository.getByStatus(RELEASED);
     fillFacilityPeriodProgram(requisitions.toArray(new Rnr[requisitions.size()]));
     fillSupplyingFacility(requisitions.toArray(new Rnr[requisitions.size()]));
 
