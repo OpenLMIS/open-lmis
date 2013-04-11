@@ -62,16 +62,8 @@ public class FacilityReportDataProvider extends ReportDataProvider {
     @Override
     protected List<? extends ReportData> getBeanCollectionReportData(ReportData filterCriteria) {
 
-        if(filterCriteria == null) {
+        return getReportDataByFilterCriteriaAndPagingAndSorting(filterCriteria,null,RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
 
-            List<Facility> facilities = facilityService.getAllFacilitiesDetail();
-            return getListFacilityReport(facilities);
-        }
-        if (!(filterCriteria instanceof FacilityReport)) return null;
-
-        FacilityReport filter = (FacilityReport) filterCriteria;
-        List<Facility> facilities = facilityService.searchFacilitiesByCodeOrName(filter.getFacilityName());
-        return getListFacilityReport(facilities);
     }
 
     @Override
@@ -84,12 +76,6 @@ public class FacilityReportDataProvider extends ReportDataProvider {
         RowBounds rowBounds = new RowBounds((page-1)*pageSize,pageSize);
         return facilityReportMapper.SelectFilteredSortedPagedFacilities(filterCriteria,SortCriteria,rowBounds);
     }
-
-  //  @Override
-  //   public List<? extends ReportData> getReportDataByFilterCriteriaAndPaging(ReportData filterCriteria, int page, int pageSize) {
-  //       //return facilityReportMapper.SelectFilteredPagedFacilities(filterCriteria,page,pageSize);
-  //      return null;  //To change body of implemented methods use File | Settings | File Templates.
-  //  }
 
     @Override
     public int getReportDataCountByFilterCriteria(ReportData filterCriteria) {
