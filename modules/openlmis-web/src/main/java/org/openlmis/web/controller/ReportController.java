@@ -12,6 +12,7 @@ import org.openlmis.report.ReportOutputOption;
 import org.openlmis.report.model.FacilityReport;
 import org.openlmis.report.model.Pages;
 import org.openlmis.report.model.ReportData;
+import org.openlmis.report.model.report.ConsumptionReport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -164,23 +165,13 @@ public class ReportController  extends BaseController {
                                              @RequestParam(value = "facilityType", required = false, defaultValue = "ASC") String facilityType
     ) {
 
-        MailingLabelReportSorter mailingLabelReportSorter = new MailingLabelReportSorter();
-        mailingLabelReportSorter.setFacilityName(facilityName);
-        mailingLabelReportSorter.setCode(code);
-        mailingLabelReportSorter.setFacilityType(facilityType);
 
-        MailingLabelReportFilter mailingLabelReportFilter = new MailingLabelReportFilter();
-        mailingLabelReportFilter.setFacilityCode(facilityCodeFilter);
-        mailingLabelReportFilter.setFacilityTypeId(facilityTypeId);
-        mailingLabelReportFilter.setFacilityName(facilityNameFilter);
 
-        Report report = reportManager.getReportByKey("mailinglabels");//reportKey);
-        List<FacilityReport> facilityReportList =  // (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteria(null);
-                (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(mailingLabelReportFilter,mailingLabelReportSorter,page,max);
-        int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(mailingLabelReportFilter);
-        //final int startIdx = (page - 1) * max;
-        //final int endIdx = Math.min(startIdx + max, facilityReportList.size());
-        //List<FacilityReport> facilityReportListJson =  (FacilityReport)facilityReportList;
+        Report report = reportManager.getReportByKey("consumption");
+        List<ConsumptionReport> facilityReportList =
+                (List<ConsumptionReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(null,null,page,max);
+        int totalRecCount = 0;
+
         return new Pages(page,totalRecCount,max,facilityReportList);
     }
 

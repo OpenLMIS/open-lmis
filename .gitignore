@@ -11,3 +11,11 @@ classes
 *.class
 modules/openlmis-web/src/main/webapp/public/css/
 test-modules/functional-tests/src/main/resources/**/*.png
+modules/report/src/main/resources/facilities.jasper
+modules/report/src/main/resources/mailing-labels.jasper
+modules/report/src/main/resources/openlmis-report-footer-landscape.jasper
+modules/report/src/main/resources/openlmis-report-footer.jasper
+modules/report/src/main/resources/openlmis-report-header-landscape.jasper
+modules/report/src/main/resources/openlmis-report-header.jasper
+modules/report/src/main/resources/openlmis-report-master-landscape.jasper
+modules/report/src/main/resources/openlmis-report-master.jasper
