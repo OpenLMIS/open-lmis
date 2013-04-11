@@ -304,9 +304,9 @@ public class E2EUpload extends TestCaseHelper {
   }
 
   private void verifyValidProductCategoryUpload(UploadPage uploadPage) throws FileNotFoundException {
-    uploadPage.uploadProductCategory("QA_ProductCategoryUpload.csv");
+    uploadPage.uploadProductCategory("QA_Productcategoryupload.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
-    uploadPage.uploadProductCategory("QA_ProductCategoryUpload_Subsequent.csv");
+    uploadPage.uploadProductCategory("QA_Productcategoryupload_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
