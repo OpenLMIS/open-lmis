@@ -43,6 +43,7 @@ public interface FacilityReportMapper {
             @Result(column="facilityType", property="facilityType"),
             @Result(column="region", property="region"),
             @Result(column="owner", property="owner"),
+            @Result(column = "gpsCoordinates", property = "gpsCoordinates"),
             @Result(column="phoneNumber", property="phoneNumber"),
             @Result(column="fax", property="fax")
     })

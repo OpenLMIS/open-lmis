@@ -21,6 +21,6 @@ public class FacilityReportFilter implements ReportData {
     private String facilityName;
     private int facilityTypeId;
     private int zoneId;
-
+    private Boolean statusId;
 
 }

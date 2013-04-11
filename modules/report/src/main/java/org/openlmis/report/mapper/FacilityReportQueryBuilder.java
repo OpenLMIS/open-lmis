@@ -23,26 +23,22 @@ public class FacilityReportQueryBuilder {
         FacilityReportFilter filter  = (FacilityReportFilter)params.get("filterCriteria");
         FacilityReportSorter sorter = (FacilityReportSorter)params.get("SortCriteria");
         BEGIN();
-        SELECT("F.id, F.code, F.name, F.active as active, FT.name as facilityType, GZ.name as region, FO.code as owner,F.mainphone as phoneNumber, F.fax as fax");
+        SELECT("F.id, F.code, F.name, F.active as active, FT.name as facilityType, GZ.name as region, FO.code as owner,F.latitude::text ||',' ||  F.longitude::text  ||', ' || F.altitude::text gpsCoordinates,F.mainphone as phoneNumber, F.fax as fax");
         //FROM("facility_types FT");
         FROM("facilities F");
         JOIN("facility_types FT on FT.id = F.typeid");
         LEFT_OUTER_JOIN("geographic_zones GZ on GZ.id = F.geographiczoneid");
         LEFT_OUTER_JOIN("facility_operators FO on FO.id = F.operatedbyid");
 
-        if (filter.getFacilityCode() != "") {
-            // WHERE("F.code like '%101%' ");
-            WHERE("F.code like '%'|| #{filterCriteria.facilityCode} || '%' ");
+
+        if (filter.getStatusId() != null) {
+            WHERE("F.active = #{filterCriteria.statusId}");
         }
-        if (filter.getFacilityName() != "") {
-            WHERE("F.name like '%'|| #{filterCriteria.facilityName} || '%' ");
+        if (filter.getZoneId() != 0) {
+             WHERE("F.geographiczoneid = #{filterCriteria.zoneId}");
         }
         if (filter.getFacilityTypeId() != 0) {
-            WHERE("F.typeid = #{filterCriteria.facilityTypeId} ");
-        }
-
-        if (filter.getZoneId() != 0) {
-            WHERE("F.geographiczoneid = #{filterCriteria.zoneId}");
+            WHERE("F.typeid = #{filterCriteria.facilityTypeId}");
         }
 
         if(sorter.getFacilityName().equalsIgnoreCase("asc")){
@@ -74,8 +70,11 @@ public class FacilityReportQueryBuilder {
          // filterCriteria
         BEGIN();
         SELECT("COUNT(*)");
-        FROM("facilities ");
+        FROM("facilities F");
 
+        if (filter.getStatusId() != null) {
+            WHERE("F.active = #{filterCriteria.statusId}");
+        }
         if (filter.getZoneId() != 0) {
             WHERE("geographiczoneid = #{filterCriteria.zoneId}");
         }

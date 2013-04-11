@@ -183,8 +183,9 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
             { field: 'facilityName', displayName: 'Facility Name', width: "**" },
             { field: 'facilityType', displayName: 'Facility Type', width: "*" },
             { field: 'region', displayName: 'Zone', width : "*"},
+            { field: 'gpsCoordinates;', displayName: 'GIS (LAT,LON,ALT)', width : "**"},
+            { field: 'phoneNumber', displayName: 'Phone', width : "*"},
             { field: 'owner', displayName: 'Operator', width : "*"},
-            { field: 'phoneNumber', displayName: 'Phone Number', width : "*"},
             { field: 'active', displayName: 'Active', width : "*"}
 
             ],
