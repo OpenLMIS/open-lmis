@@ -14,6 +14,7 @@ public class ConsumptionReport implements ReportData {
     private String periodString;
 
     private String facilityType;
+    private String facility;
     private String category;
     private String product;
     private String supplier;
