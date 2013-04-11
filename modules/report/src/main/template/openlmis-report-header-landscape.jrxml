@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version last-->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="openlmis-report-header-landscape" language="groovy" pageWidth="802" pageHeight="150" orientation="Landscape" columnWidth="802" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="b1774485-8c52-493d-8b62-63c6cd58f66d">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
@@ -10,24 +11,29 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="115" splitType="Stretch">
+		<band height="103" splitType="Stretch">
 			<textField>
-				<reportElement uuid="634f1106-b626-4011-a08a-20e98624b85a" x="0" y="45" width="791" height="42" isPrintInFirstWholeBand="true" forecolor="#3D9297"/>
+				<reportElement uuid="634f1106-b626-4011-a08a-20e98624b85a" x="0" y="20" width="791" height="42" isPrintInFirstWholeBand="true" forecolor="#3D9297"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="20" isBold="true"/>
 					<paragraph leftIndent="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{REPORT_TITLE}]]></textFieldExpression>
 			</textField>
-			<image>
-				<reportElement uuid="341f3a19-b8e5-4955-adb0-5a062be8921a" x="737" y="3" width="54" height="42" isPrintInFirstWholeBand="true"/>
+			<image hAlign="Right">
+				<reportElement uuid="341f3a19-b8e5-4955-adb0-5a062be8921a" x="660" y="20" width="131" height="33" isPrintInFirstWholeBand="true"/>
 				<imageExpression><![CDATA[$P{LOGO}]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement uuid="012ee410-99fc-4213-baf2-fc35d381af58" x="667" y="87" width="124" height="20" isPrintInFirstWholeBand="true"/>
-				<textElement/>
+				<reportElement uuid="012ee410-99fc-4213-baf2-fc35d381af58" x="500" y="70" width="291" height="20" isPrintInFirstWholeBand="true"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA['Report Name: '+$P{REPORT_NAME}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement uuid="1019aab3-455c-4861-bbe7-6969819c86a2" x="499" y="53" width="292" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[Generated from e-LMIS]]></text>
+			</staticText>
 		</band>
 	</title>
 </jasperReport>
