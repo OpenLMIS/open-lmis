@@ -44,9 +44,9 @@ LEFT OUTER JOIN geographic_zones gz on gz.id = f.geographiczoneid
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="63" splitType="Stretch">
+		<band height="54" splitType="Stretch">
 			<subreport>
-				<reportElement uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e" x="0" y="0" width="802" height="60"/>
+				<reportElement uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e" x="0" y="-10" width="802" height="60"/>
 				<subreportParameter name="REPORT_TITLE">
 					<subreportParameterExpression><![CDATA[$P{REPORT_TITLE}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -169,7 +169,7 @@ LEFT OUTER JOIN geographic_zones gz on gz.id = f.geographiczoneid
 			<line>
 				<reportElement uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7" x="0" y="19" width="801" height="1" forecolor="#3D9297"/>
 				<graphicElement>
-					<pen lineWidth="0.5"/>
+					<pen lineWidth="0.5" lineColor="#CACACA"/>
 				</graphicElement>
 			</line>
 			<textField isBlankWhenNull="true">
@@ -232,7 +232,7 @@ LEFT OUTER JOIN geographic_zones gz on gz.id = f.geographiczoneid
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="7" splitType="Stretch"/>
+		<band height="3" splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
 		<band height="54" splitType="Stretch">
@@ -259,6 +259,6 @@ LEFT OUTER JOIN geographic_zones gz on gz.id = f.geographiczoneid
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="12" splitType="Stretch"/>
+		<band height="7" splitType="Stretch"/>
 	</summary>
 </jasperReport>
