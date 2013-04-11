@@ -20,6 +20,8 @@ public class MailingLabelReportFilter implements ReportData {
     private String facilityCode;
     private String facilityName;
     private int facilityTypeId;
+    private Boolean statusId;
+    private int zoneId;
 
 
 }

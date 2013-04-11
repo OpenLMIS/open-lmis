@@ -2,22 +2,19 @@ package org.openlmis.report.dataprovider;
 
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.report.mapper.FacilityReportMapper;
 import org.openlmis.report.mapper.MailingLabelReportMapper;
+import org.openlmis.report.model.FacilityReport;
+import org.openlmis.report.model.MailingLabelReport;
 import org.openlmis.report.model.ReportData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- * User: user
- * Date: 4/10/13
- * Time: 6:02 AM
- * To change this template use File | Settings | File Templates.
- */
 @Component
 @NoArgsConstructor
 public class MailingLabelReportDataProvider extends ReportDataProvider {
@@ -34,12 +31,22 @@ public class MailingLabelReportDataProvider extends ReportDataProvider {
 
     @Override
     protected List<? extends ReportData> getBeanCollectionReportData(ReportData filterCriteria) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        /*if(filterCriteria == null) {
+
+            List<Facility> facilities = facilityService.getAllFacilitiesDetail();
+            return getListMailingLabelsReport(facilities);
+        }
+        if (!(filterCriteria instanceof FacilityReport)) return null;
+
+        FacilityReport filter = (FacilityReport) filterCriteria;
+        List<Facility> facilities = facilityService.searchFacilitiesByCodeOrName(filter.getFacilityName());
+        return getListMailingLabelsReport(facilities);*/
+       return getReportDataByFilterCriteriaAndPagingAndSorting(filterCriteria,null,RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
     }
 
     @Override
     protected List<? extends ReportData> getResultSetReportData(ReportData filterCriteria) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
@@ -51,5 +58,21 @@ public class MailingLabelReportDataProvider extends ReportDataProvider {
     @Override
     public int getReportDataCountByFilterCriteria(ReportData mailingLabelReportFilter) {
         return (int)mailingLabelReportMapper.SelectFilteredFacilitiesCount(mailingLabelReportFilter);
+    }
+
+    private List<ReportData> getListMailingLabelsReport(List<Facility> facilityList){
+
+        if (facilityList == null) return null;
+
+        List<ReportData> facilityReportList = new ArrayList<>(facilityList.size());
+
+        for(Facility facility: facilityList){
+            facilityReportList.add(getMailingLabelReport(facility));
+        }
+
+        return facilityReportList;
+    }
+    private ReportData getMailingLabelReport(Facility facility){
+       return null;
     }
 }

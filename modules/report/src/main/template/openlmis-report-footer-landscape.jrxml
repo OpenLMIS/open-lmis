@@ -7,6 +7,7 @@
 	<parameter name="REPORT_VERSION" class="java.lang.String"/>
 	<parameter name="GENERATED_BY" class="java.lang.String"/>
 	<parameter name="PAGE_NO" class="java.lang.String"/>
+	<parameter name="TOTAL_PAGES" class="java.lang.Integer"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>

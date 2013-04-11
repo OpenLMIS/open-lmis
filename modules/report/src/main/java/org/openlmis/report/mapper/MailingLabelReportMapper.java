@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.model.FacilityReport;
+import org.openlmis.report.model.MailingLabelReport;
 import org.openlmis.report.model.ReportData;
 import org.springframework.stereotype.Repository;
 
@@ -30,10 +31,11 @@ public interface MailingLabelReportMapper {
             @Result(column="facilityType", property="facilityType"),
             @Result(column="region", property="region"),
             @Result(column="owner", property="owner"),
+            @Result(column ="latitude", property = "gpsCoordinates"),
             @Result(column="phoneNumber", property="phoneNumber"),
             @Result(column="fax", property="fax")
     })
-    public List<FacilityReport> SelectFilteredSortedPagedFacilities(
+    public List<MailingLabelReport> SelectFilteredSortedPagedFacilities(
             @Param("filterCriteria") ReportData filterCriteria,
             @Param("SortCriteria") ReportData SortCriteria,
             @Param("RowBounds") RowBounds rowBounds

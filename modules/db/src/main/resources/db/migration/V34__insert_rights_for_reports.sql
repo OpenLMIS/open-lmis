@@ -4,3 +4,6 @@ INSERT INTO rights(name,description) VALUES
  ('VIEW_CONSUMPTION_REPORT','Permission to view Consumption Report'),
  ('VIEW_REPORTING_RATE_REPORT','Permission to view Reporting Rate Report');
 
+
+
+

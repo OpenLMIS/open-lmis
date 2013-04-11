@@ -13,6 +13,11 @@
 	<parameter name="REPORT_VERSION" class="java.lang.String"/>
 	<parameter name="REPORT_ID" class="java.lang.String"/>
 	<parameter name="LOGO" class="java.io.InputStream"/>
+	<field name="PageNumber" class="java.lang.Integer"/>
+	<field name="TotalPages" class="java.lang.Integer"/>
+	<variable name="TOTAL_PAGES" class="java.lang.Integer">
+		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -30,7 +35,7 @@
 					<subreportParameterExpression><![CDATA[$P{LOGO}]]></subreportParameterExpression>
 				</subreportParameter>
 				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.JREmptyDataSource()]]></dataSourceExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "openlmis-report-header-landscape.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA["openlmis-report-header-landscape.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</title>
@@ -114,21 +119,24 @@
 	<pageFooter>
 		<band height="54" splitType="Stretch">
 			<subreport>
-				<reportElement uuid="4333eb33-1f53-47fb-8e3d-d52a31257b37" x="0" y="0" width="802" height="54"/>
+				<reportElement uuid="4333eb33-1f53-47fb-8e3d-d52a31257b37" x="0" y="0" width="802" height="16"/>
 				<subreportParameter name="PAGE_NO">
-					<subreportParameterExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of" + " " + $V{PAGE_NUMBER}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$V{PAGE_NUMBER}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="REPORT_VERSION">
 					<subreportParameterExpression><![CDATA[$P{REPORT_VERSION}]]></subreportParameterExpression>
 				</subreportParameter>
-				<subreportParameter name="GENERATED_BY">
-					<subreportParameterExpression><![CDATA[$P{GENERATED_BY}]]></subreportParameterExpression>
+				<subreportParameter name="TOTAL_PAGES">
+					<subreportParameterExpression><![CDATA[$V{TOTAL_PAGES}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="REPORT_ID">
 					<subreportParameterExpression><![CDATA[$P{REPORT_ID}]]></subreportParameterExpression>
 				</subreportParameter>
+				<subreportParameter name="GENERATED_BY">
+					<subreportParameterExpression><![CDATA[$P{GENERATED_BY}]]></subreportParameterExpression>
+				</subreportParameter>
 				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.JREmptyDataSource()]]></dataSourceExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "openlmis-report-footer-landscape.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA["openlmis-report-footer-landscape.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</pageFooter>
