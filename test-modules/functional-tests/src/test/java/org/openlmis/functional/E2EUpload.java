@@ -53,36 +53,35 @@ public class E2EUpload extends TestCaseHelper {
     dbWrapper.alterUserID(userName, userId);
     dbWrapper.insertRoleAssignment(userId, "User");
 
+//    verifyInvalidProductCategoryUpload(uploadPage);
     verifyValidProductCategoryUpload(uploadPage);
 
     verifyInValidProductUpload(uploadPage);
     verifyValidProductUpload(uploadPage);
 
     verifyInvalidProgramProductMappingUpload(uploadPage);
-
     verifyValidProgramProductMappingUpload(uploadPage);
 
+    verifyInvalidProductPriceUpload(uploadPage);
     verifyValidProductPriceUpload(uploadPage);
 
     verifyInvalidGeographicZoneUpload(uploadPage);
-
     verifyValidGeographicZoneUpload(uploadPage);
 
     verifyInvalidFacilityUpload(uploadPage);
-
     verifyValidFacilityUpload(uploadPage);
 
     verifyInvalidFacilityTypeToProductMappingUpload(uploadPage);
-
     verifyValidFacilityTypeToProductMappingUpload(uploadPage);
     dbWrapper.allocateFacilityToUser(userId, "F10");
 
     verifyInvalidProgramSupportedByFacilitiesUpload(uploadPage);
-
     verifyValidProgramSupportedByFacilitiesUpload(uploadPage);
 
+    verifyInValidSupervisoryNodesUpload(uploadPage);
     verifyValidSupervisoryNodesUpload(uploadPage);
 
+    verifyInValidRequisitionGroupUpload(uploadPage);
     verifyValidRequisitionGroupUpload(uploadPage);
 
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
@@ -90,10 +89,13 @@ public class E2EUpload extends TestCaseHelper {
     dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
     dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
 
+    verifyInvalidRequisitionGroupProgramScheduleUpload(uploadPage);
     verifyValidRequisitionGroupProgramScheduleUpload(uploadPage);
 
+    verifyInvalidRequisitionGroupMembersUpload(uploadPage);
     verifyValidRequisitionGroupMembersUpload(uploadPage);
 
+    verifyInvalidSupplyLinesUpload(uploadPage);
     verifyValidSupplyLinesUpload(uploadPage);
   }
 
@@ -104,11 +106,34 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
+  private void verifyInvalidSupplyLinesUpload(UploadPage uploadPage) throws FileNotFoundException {
+    uploadPage.uploadSupplyLines("QA_Supply_Lines_InvalidFacilityCode.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadSupplyLines("QA_Supply_Lines_InvalidProgramCode.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadSupplyLines("QA_Supply_Lines_DuplicateCombination_SN_Product_Program.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadSupplyLines("QA_Supply_Lines_ParentNodeNotNull.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+  }
+
   private void verifyValidRequisitionGroupMembersUpload(UploadPage uploadPage) throws FileNotFoundException {
     uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
     uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
+  }
+
+  private void verifyInvalidRequisitionGroupMembersUpload(UploadPage uploadPage) throws FileNotFoundException {
+    uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_InvalidCombination_RG_FacilityCode.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+//    uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_InvalidFacilityCode.csv");
+//    uploadPage.verifyErrorMessageOnUploadScreen();
+//    uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_InvalidRG.csv");
+//    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_FacilityCodeAssignedToRGWithOneProgramInCommon.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+
   }
 
   private void verifyValidRequisitionGroupProgramScheduleUpload(UploadPage uploadPage) throws FileNotFoundException {
@@ -118,6 +143,23 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
+  private void verifyInvalidRequisitionGroupProgramScheduleUpload(UploadPage uploadPage) throws FileNotFoundException {
+    uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_InvalidCombination_RG_ProgramCode.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_InvalidProgramCode.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_InvalidScheduleCode.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_DDTrue_DropoffFacilityNotNull.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_DDFalse_DropoffFacilityNull.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_DropoffFacilityCodeNotPresent.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+
+
+  }
+
   private void verifyValidRequisitionGroupUpload(UploadPage uploadPage) throws FileNotFoundException {
     uploadPage.uploadRequisitionGroup("QA_Requisition_Groups.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
@@ -125,11 +167,27 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
+  private void verifyInValidRequisitionGroupUpload(UploadPage uploadPage) throws FileNotFoundException {
+    uploadPage.uploadRequisitionGroup("QA_Requisition_Groups_DuplicateRequisitionGroup.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadRequisitionGroup("QA_Requisition_Groups_InvalidSupervisoryNode.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+  }
+
   private void verifyValidSupervisoryNodesUpload(UploadPage uploadPage) throws FileNotFoundException {
     uploadPage.uploadSupervisoryNodes("QA_Supervisory_Nodes.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
     uploadPage.uploadSupervisoryNodes("QA_Supervisory_Nodes_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
+  }
+
+  private void verifyInValidSupervisoryNodesUpload(UploadPage uploadPage) throws FileNotFoundException {
+    uploadPage.uploadSupervisoryNodes("QA_Supervisory_Nodes_InvalidFacilityCode.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadSupervisoryNodes("QA_Supervisory_Nodes_InvalidParentNode.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadSupervisoryNodes("QA_Supervisory_Nodes_DuplicateSupervisoryNode.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
   }
 
   private void verifyValidProgramSupportedByFacilitiesUpload(UploadPage uploadPage) throws FileNotFoundException {
@@ -197,11 +255,22 @@ public class E2EUpload extends TestCaseHelper {
   }
 
   private void verifyValidProductPriceUpload(UploadPage uploadPage) throws FileNotFoundException {
-    uploadPage.uploadProgramProductPrice("QA_Product_Cost.csv");
+    uploadPage.uploadProgramProductPrice("QA_Product_Price.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
-    uploadPage.uploadProgramProductPrice("QA_Product_Cost_Subsequent.csv");
+    uploadPage.uploadProgramProductPrice("QA_Product_Price_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
+
+  private void verifyInvalidProductPriceUpload(UploadPage uploadPage) throws FileNotFoundException {
+//    uploadPage.uploadProgramProductPrice("QA_Product_Price_DuplicateCombination_ProductCode_ProgramCode.csv");
+//    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadProgramProductPrice("QA_Product_Price_Invalid_Program_Product_Combination.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadProgramProductPrice("QA_Product_Price_InvalidPrice.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+  }
+
+
 
   private void verifyValidProgramProductMappingUpload(UploadPage uploadPage) throws FileNotFoundException {
     uploadPage.uploadProgramProductMapping("QA_program_product.csv");
@@ -235,10 +304,15 @@ public class E2EUpload extends TestCaseHelper {
   }
 
   private void verifyValidProductCategoryUpload(UploadPage uploadPage) throws FileNotFoundException {
-    uploadPage.uploadProductCategory("QA_Productcategoryupload.csv");
+    uploadPage.uploadProductCategory("QA_ProductCategoryUpload.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
-    uploadPage.uploadProductCategory("QA_Productcategoryupload_Subsequent.csv");
+    uploadPage.uploadProductCategory("QA_ProductCategoryUpload_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
+  }
+
+  private void verifyInvalidProductCategoryUpload(UploadPage uploadPage) throws FileNotFoundException {
+    uploadPage.uploadProductCategory("QA_ProductCategoryUpload_DuplicateCategoryCode.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
   }
 
   private void verifyInValidProductUpload(UploadPage uploadPage) throws FileNotFoundException {
