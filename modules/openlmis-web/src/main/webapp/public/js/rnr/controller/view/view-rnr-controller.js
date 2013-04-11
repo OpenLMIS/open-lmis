@@ -10,7 +10,12 @@ function ViewRnrController($scope, requisition, rnrColumns, $location, currency,
   $scope.currency = currency;
   $scope.visibleColumns = _.where(rnrColumns, {'visible': true});
 
-  if (!($scope.rnr.status == "APPROVED" || $scope.rnr.status == "ORDERED"))
+  var APPROVED = "APPROVED";
+  var RELEASED = "RELEASED";
+  var NON_FULL_SUPPLY = 'non-full-supply';
+  var FULL_SUPPLY = 'full-supply';
+
+  if (!($scope.rnr.status == APPROVED || $scope.rnr.status == RELEASED))
     $scope.visibleColumns = _.filter($scope.visibleColumns, function (column) {
       return column.name != "quantityApproved";
     });
@@ -18,7 +23,7 @@ function ViewRnrController($scope, requisition, rnrColumns, $location, currency,
   $scope.pageLineItems = [];
 
   function updateSupplyType() {
-    $scope.showNonFullSupply = !!($routeParams.supplyType == 'non-full-supply');
+    $scope.showNonFullSupply = !!($routeParams.supplyType == NON_FULL_SUPPLY);
   }
 
   $scope.showCategory = function (index) {
@@ -39,7 +44,9 @@ function ViewRnrController($scope, requisition, rnrColumns, $location, currency,
 
 
   $scope.$watch("currentPage", function () {
-    if (!$routeParams.supplyType) $location.search('supplyType', 'full-supply');
+    if (!$routeParams.supplyType) {
+      $location.search('supplyType', FULL_SUPPLY);
+    }
     $location.search("page", $scope.currentPage);
   });
 

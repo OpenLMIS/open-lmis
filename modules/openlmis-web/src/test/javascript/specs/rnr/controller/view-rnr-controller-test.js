@@ -37,7 +37,7 @@ describe('ViewRnrController', function () {
   });
 
   it('should include approved quantity column if status  ordered', function () {
-    requisition = {lineItems: [], nonFullSupplyLineItems: [], status: 'ORDERED'};
+    requisition = {lineItems: [], nonFullSupplyLineItems: [], status: 'RELEASED'};
     controller(ViewRnrController, {$scope: scope, $routeParams: routeParams, requisition: requisition, currency: {}, rnrColumns: columns});
 
     expect(scope.visibleColumns.length).toEqual(5);
