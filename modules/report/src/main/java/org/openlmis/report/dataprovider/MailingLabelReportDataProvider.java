@@ -4,7 +4,6 @@ import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.service.FacilityService;
-import org.openlmis.report.mapper.FacilityReportMapper;
 import org.openlmis.report.mapper.MailingLabelReportMapper;
 import org.openlmis.report.model.FacilityReport;
 import org.openlmis.report.model.MailingLabelReport;
@@ -19,7 +18,6 @@ import java.util.List;
 @NoArgsConstructor
 public class MailingLabelReportDataProvider extends ReportDataProvider {
 
-
     private FacilityService facilityService;
     private MailingLabelReportMapper mailingLabelReportMapper;
 
@@ -29,19 +27,32 @@ public class MailingLabelReportDataProvider extends ReportDataProvider {
         this.mailingLabelReportMapper = mailingLabelReportMapper;
     }
 
+    private ReportData getMailingLabelReport(Facility facility){
+        if(facility == null) return null;
+        return new MailingLabelReport();
+       //return new MailingLabelReport(facility.getCode(),facility.getName(),facility.getFacilityType().getName(),facility.getActive(),facility.getAddress1(),facility.getOperatedBy().getText(),facility.getLongitude(), null,);
+
+       // return new MailingLabelReport(facility.getCode(),facility.getName(),facility.getFacilityType() != null ? facility.getFacilityType().getName() : null,facility.getActive(),facility.getOperatedBy() != null ? facility.getOperatedBy().getText() : null,facility.getLatitude(),facility.getLongitude(),facility.getAltitude(),null,facility.getMainPhone(),null, null);
+    }
+
     @Override
     protected List<? extends ReportData> getBeanCollectionReportData(ReportData filterCriteria) {
-        /*if(filterCriteria == null) {
 
-            List<Facility> facilities = facilityService.getAllFacilitiesDetail();
-            return getListMailingLabelsReport(facilities);
-        }
-        if (!(filterCriteria instanceof FacilityReport)) return null;
-
-        FacilityReport filter = (FacilityReport) filterCriteria;
-        List<Facility> facilities = facilityService.searchFacilitiesByCodeOrName(filter.getFacilityName());
-        return getListMailingLabelsReport(facilities);*/
        return getReportDataByFilterCriteriaAndPagingAndSorting(filterCriteria,null,RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
+
+    }
+
+    private List<ReportData> getListMailingLabelsReport(List<Facility> facilityList){
+
+        if (facilityList == null) return null;
+
+        List<ReportData> facilityReportList = new ArrayList<>(facilityList.size());
+
+        for(Facility facility: facilityList){
+            facilityReportList.add(getMailingLabelReport(facility));
+        }
+
+        return facilityReportList;
     }
 
     @Override
@@ -60,19 +71,4 @@ public class MailingLabelReportDataProvider extends ReportDataProvider {
         return (int)mailingLabelReportMapper.SelectFilteredFacilitiesCount(mailingLabelReportFilter);
     }
 
-    private List<ReportData> getListMailingLabelsReport(List<Facility> facilityList){
-
-        if (facilityList == null) return null;
-
-        List<ReportData> facilityReportList = new ArrayList<>(facilityList.size());
-
-        for(Facility facility: facilityList){
-            facilityReportList.add(getMailingLabelReport(facility));
-        }
-
-        return facilityReportList;
-    }
-    private ReportData getMailingLabelReport(Facility facility){
-       return null;
-    }
 }

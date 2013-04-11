@@ -8,6 +8,10 @@ import org.openlmis.core.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @NoArgsConstructor
@@ -44,4 +48,8 @@ public class ProductService {
   public Integer getIdForCode(String code) {
     return repository.getIdByCode(code);
   }
+
+    public List<Product> getAllProducts() {
+        return repository.getAll();
+    }
 }

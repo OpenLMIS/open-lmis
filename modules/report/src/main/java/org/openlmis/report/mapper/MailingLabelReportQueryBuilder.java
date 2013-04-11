@@ -31,23 +31,15 @@ public class MailingLabelReportQueryBuilder {
         LEFT_OUTER_JOIN("geographic_zones GZ on GZ.id = F.geographiczoneid");
         LEFT_OUTER_JOIN("facility_operators FO on FO.id = F.operatedbyid");
 
-        if(filter != null){
-            if(filter.getFacilityCode() != null && !filter.getFacilityCode().isEmpty()){
-                WHERE("F.code = #{filterCriteria.facilityCode}");
-            }
-            if(filter.getFacilityName() != null && !filter.getFacilityName().isEmpty()){
-                WHERE("F.name = #{filterCriteria.facilityName}");
-            }
-            if (filter.getStatusId() != null) {
-                WHERE("F.active = #{filterCriteria.statusId}");
-            }
-            if (filter.getZoneId() != 0) {
-                WHERE("F.geographiczoneid = #{filterCriteria.zoneId}");
-            }
-            if (filter.getFacilityTypeId() != 0) {
-                WHERE("F.typeid = #{filterCriteria.facilityTypeId}");
-            }
-
+        if (filter.getFacilityCode() != "") {
+           // WHERE("F.code like '%101%' ");
+            WHERE("F.code like '%'|| #{filterCriteria.facilityCode} || '%' ");
+        }
+        if (filter.getFacilityName() != "") {
+            WHERE("F.name like '%'|| #{filterCriteria.facilityName} || '%' ");
+        }
+        if (filter.getFacilityTypeId() != 0) {
+            WHERE("F.typeid = #{filterCriteria.facilityTypeId} ");
         }
 
         if(sorter != null){
@@ -83,17 +75,19 @@ public class MailingLabelReportQueryBuilder {
         // filterCriteria
         BEGIN();
         SELECT("COUNT(*)");
-        FROM("facilities ");
+        FROM("facilities as F");
 
-     /* if (filter.getStatusId() != null) {
-            WHERE("active = #{filterCriteria.statusId}");
+        if (filter.getFacilityCode() != "") {
+           // WHERE("F.code like '%101%' ");
+            WHERE("F.code like '%' || #{filterCriteria.facilityCode} || '%' ");
         }
-        if (filter.getZoneId() != 0) {
-            WHERE("geographiczoneid = #{filterCriteria.zoneId}");
+        if (filter.getFacilityName() != "") {
+            WHERE("F.name like '%'|| #{filterCriteria.facilityName} || '%' ");
         }
         if (filter.getFacilityTypeId() != 0) {
-            WHERE("typeid = #{filterCriteria.facilityTypeId}");
-        }         */
+            WHERE("F.typeid = #{filterCriteria.facilityTypeId} ");
+        }
+
         return SQL();
     }
 }

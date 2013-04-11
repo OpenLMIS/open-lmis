@@ -1,33 +1,24 @@
-package org.openlmis.report.dataprovider;
+package org.openlmis.report.dataprovider.impl;
 
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.report.dataprovider.ReportDataProvider;
 import org.openlmis.report.mapper.FacilityReportMapper;
-import org.openlmis.report.mapper.ResultSetMapper;
 import org.openlmis.report.model.FacilityReport;
-import org.openlmis.report.model.FacilityReportFilter;
-import org.openlmis.report.model.FacilityReportSorter;
 import org.openlmis.report.model.ReportData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  */
 @Component
 @NoArgsConstructor
-public class FacilityReportDataProvider extends ReportDataProvider {
+public class ConsumptionReportDataProvider extends ReportDataProvider {
 
 
     private FacilityService facilityService;
@@ -35,15 +26,14 @@ public class FacilityReportDataProvider extends ReportDataProvider {
 
 
     @Autowired
-    public FacilityReportDataProvider(FacilityService facilityService, FacilityReportMapper facilityReportMapper) {
+    public ConsumptionReportDataProvider(FacilityService facilityService, FacilityReportMapper facilityReportMapper) {
         this.facilityService = facilityService;
         this.facilityReportMapper = facilityReportMapper;
     }
 
     private ReportData getFacilityReport(Facility facility){
         if(facility == null) return null;
-
-        return new FacilityReport(facility.getCode(),facility.getName(),facility.getFacilityType() != null ? facility.getFacilityType().getName() : null,facility.getActive(),facility.getAddress1(),facility.getOperatedBy() != null ? facility.getOperatedBy().getText() : null ,null,null,facility.getMainPhone(),null,null);
+        return new FacilityReport(facility.getCode(),facility.getName(),facility.getFacilityType() != null ? facility.getFacilityType().getName() : null,facility.getActive());
     }
 
     private List<ReportData> getListFacilityReport(List<Facility> facilityList){

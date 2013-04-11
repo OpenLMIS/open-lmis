@@ -1,5 +1,5 @@
 'use strict';
-angular.module('facilitylist', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+angular.module('consumption', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
 .config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
     when('/list', {controller:ConsumptionReportController, templateUrl:'partials/list.html',reloadOnSearch:false}).

@@ -1,10 +1,13 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.core.domain.ProductForm;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface ProductMapper {
@@ -74,4 +77,7 @@ public interface ProductMapper {
 
     @Select("SELECT id from products where code = #{code}")
     Integer getIdByCode(String code);
+
+    @Select("SELECT id, code, name FROM products")
+    List<Product> getAll();
 }

@@ -1,17 +1,8 @@
 function ListFacilitiesController($scope, FacilityList, FacilityTypes, GeographicZones, $http, $routeParams,$location) {
 
-        //to minimize and maximize the filter section
-        var section = 1;
-
-        $scope.section = function (id) {
-            section = id;
-        };
-
-        $scope.show = function (id) {
-            return section == id;
-        };
 
         $scope.filterGrid = function (){
+            $scope.$apply();
             //forget the current page and go to the first page while filtering
             $scope.pagingOptions.currentPage = 1;
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, 1);//
@@ -39,12 +30,12 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
 
         FacilityTypes.get(function(data) {
             $scope.facilityTypes = data.facilityTypes;
-            $scope.facilityTypes.push({'name': '- Please Selct One -'});
+            $scope.facilityTypes.push({'name': '- All Facility Types -'});
         });
 
         GeographicZones.get(function(data) {
             $scope.zones = data.zones;
-            $scope.zones.push({'name': '- Please Selct One -'});
+            $scope.zones.push({'name': '- All Zones -'});
         });
            // [
            // ,
@@ -54,7 +45,7 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
         //];
 
         $scope.statuses = [
-            {'name': '- Please Selct One -'},
+            {'name': '- All Statuses -'},
             {'name': 'Active', 'value': "TRUE"},
             {'name': 'Inavtive', 'value': "FALSE"}
         ];
@@ -64,7 +55,6 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
         $scope.$watch('zone.value', function(selection){
             if(selection != undefined || selection == ""){
                $scope.filterObject.zoneId =  selection;
-               //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
             }else{
                 $scope.filterObject.zoneId = 0;
             }
@@ -72,7 +62,6 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
         $scope.$watch('status.value', function(selection){
             if(selection != undefined || selection == ""){
                 $scope.filterObject.statusId =  selection;
-                //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
             }else{
                 $scope.filterObject.statusId ='';
             }
@@ -80,7 +69,6 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
         $scope.$watch('facilityType.value', function(selection){
             if(selection != undefined || selection == ""){
                 $scope.filterObject.facilityTypeId =  selection;
-                //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
             }else{
                 $scope.filterObject.facilityTypeId =  0;
             }
@@ -194,23 +182,23 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
             { field: 'code', displayName: 'Facility Code', width: "*", resizable: false},
             { field: 'facilityName', displayName: 'Facility Name', width: "**" },
             { field: 'facilityType', displayName: 'Facility Type', width: "*" },
-            { field: 'region', displayName: 'Region', width : "*"},
+            { field: 'region', displayName: 'Zone', width : "*"},
             { field: 'owner', displayName: 'Operator', width : "*"},
             { field: 'phoneNumber', displayName: 'Phone Number', width : "*"},
             { field: 'active', displayName: 'Active', width : "*"}
 
             ],
         enablePaging: true,
-        enableSorting :true,
+        //enableSorting :true,
         showFooter: true,
         selectWithCheckboxOnly :false,
         pagingOptions: $scope.pagingOptions,
         filterOptions: $scope.filterOptions,
         useExternalSorting: true,
         sortInfo: $scope.sortInfo,
-        showColumnMenu: true,
-        enableRowReordering: true,
-        showFilter: true,
+        //showColumnMenu: true,
+        //enableRowReordering: true,
+        //showFilter: true,
         autoFit :true,
         plugins: [new ngGridFlexibleHeightPlugin()]
         //plugins: [new ngGridCsvExportPlugin()]

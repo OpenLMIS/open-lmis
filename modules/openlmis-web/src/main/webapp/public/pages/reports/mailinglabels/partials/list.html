@@ -1,26 +1,19 @@
-<h2 xmlns="http://www.w3.org/1999/html"></h2>
-  <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
+<div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
 
     <div class="row-fluid sortable ui-sortable">
             <div class="box span12">
                 <div class="box-header">
                     <h2><span class="break"></span>Mailing Labels</h2>
-                    <div class="box-icon">
-                        <a ng-click="section(1)"  ng-show="show(0)" class="btn-minimize pull-right"><i class="icon-chevron-down"></i></a>
-                        <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize pull-right"><i class="icon-chevron-up"></i></a>
-                    </div>
                 </div>
             <div class="box-content">
                 <div class="hero-unit app-form" style="padding: 10px;">
-                        <h5 class="filter-text">Mailing Labels Filters</h5>
-                        <form ng-submit="filterGrid()" ng-show="show(1)" name="filterForm" novalidate>
+                        <form ng-submit="filterGrid()" name="filterForm" novalidate>
                             <div class="form-row clearfix ">
-
                                 <div class="form-cell horizontalFilters">
                                     <label class="labels">Facility Name</label>
 
                                     <div class="form-field">
-                                        <input type="text" ng-model="facilityNameFilter" placeholder="facility Name" class="input_text" />
+                                        <input type="text" ng-change="filterGrid()" ng-model="facilityNameFilter" placeholder="facility Name" class="input_text" />
                                     </div>
                                 </div>
 
@@ -29,26 +22,17 @@
                                     <label class="labels">Facility Code</label>
 
                                     <div class="form-field">
-                                        <input type="text" ng-model="facilityCodeFilter" placeholder="facility code" class="input_text" />
-                                       <!-- <select ng-required="true" name="zone" ng-model="zone.value" ng-options="option.id as option.name for option in zones">
-
-                                        </select>-->
+                                        <input ng-change="filterGrid()" type="text" ng-model="facilityCodeFilter" placeholder="facility code" class="input_text" />
                                     </div>
                                 </div>
                                 <div class="form-cell horizontalFilters" >
                                     <label class="labels">Facility Type</label>
 
                                     <div class="form-field">
-                                        <select name="facilityType" ng-model="facilityType.value" ng-options="option.id as option.name for option in facilityTypes">
+                                        <select ng-change="filterGrid()" name="facilityType" ng-model="facilityType.value" ng-options="option.id as option.name for option in facilityTypes">
 
                                         </select>
                                     </div>
-                                </div>
-
-
-
-                                <div class="form-cell button-row horizontalFilter">
-                                    <input type="submit" class="btn btn-primary save-button pull-right" value="Filter"/>
                                 </div>
 
                             </div>
@@ -66,7 +50,4 @@
                 <div class="gridStyleReport" ng-grid="gridOptions"></div>
    </div>
   </div>
-<!-- <div>
-    <openlmis-pagination num-pages="numberOfPages" current-page="currentPage" max-size="10" check-error-on-page="checkErrorOnPage(page)"></openlmis-pagination>
-</div> -->
 </div>

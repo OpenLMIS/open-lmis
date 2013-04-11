@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" ng-app="facilitylist">
+<html lang="en" ng-app="consumption">
 
 <head>
     <meta charset="utf-8">
@@ -25,8 +25,8 @@
     <script src="/public/js/shared/controller/header-controller.js"></script>
     <script src="/public/js/shared/controller/login-controller.js"></script>
     <script src="/public/js/shared/app.js"></script>
-    <script src="/public/js/facilitylist/module/facilitylist-module.js"></script>
-    <script src="/public/js/facilitylist/controller/list-facilitylist-controller.js"></script>
+    <script src="/public/js/reports/consumption/module/consumption-module.js"></script>
+    <script src="/public/js/reports/consumption/controller/consumption-controller.js"></script>
     <script src="/public/js/shared/controller/navigation-controller.js"></script>
     <script src="/public/lib/localstorage/localStorage.js"></script>
     <script src="/public/lib/select2-release-3.2/select2.js"></script>
@@ -43,11 +43,7 @@
   <ng-include src="'/public/pages/header.html'"></ng-include>
   <ng-include src="'/public/pages/navigation.html'"></ng-include>
   <div class="content">
-    <div ng-view >
-
-    </div>
-
-
+    <div ng-view></div>
   </div>
 </div>
 
