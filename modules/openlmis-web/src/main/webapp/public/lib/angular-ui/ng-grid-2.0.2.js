@@ -1634,7 +1634,7 @@ ng.Grid = function ($scope, options, sortService, domUtilityService, $filter, $t
     };
 
     $scope.viewportDimHeight = function() {
-        return Math.max(0, self.rootDim.outerHeight - $scope.topPanelHeight() - $scope.footerRowHeight - 2);
+        return Math.max(0, self.rootDim.outerHeight - $scope.topPanelHeight() - $scope.footerRowHeight - 2, self.calcMaxCanvasHeight());
     };
     $scope.groupBy = function (col) {
         if (!col.sortDirection) col.sort({shiftKey: false});
@@ -2308,7 +2308,7 @@ ng.StyleProvider = function($scope, grid, domUtilityService) {
         return { "width": grid.rootDim.outerWidth + "px", "height": $scope.viewportDimHeight() + "px" };
     };
     $scope.footerStyle = function() {
-        return { "width": grid.rootDim.outerWidth + "px", "height": $scope.footerRowHeight + "px" };
+        return { "width": "100%", "height": $scope.footerRowHeight + "px" }; //grid.rootDim.outerWidth + "px"
     };
 };
 ngGridDirectives.directive('ngCellHasFocus', ['$domUtilityService',

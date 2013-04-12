@@ -10,13 +10,18 @@ import org.openlmis.report.model.ReportData;
 @AllArgsConstructor
 public class SummaryReport implements ReportData {
 
+    private String code;
     private String category;
     private String product;
 
     private String unit;
-    private String facility;
-    private String supplier;
-    private String reportingGroup;
-    private Integer consumption;
+    private int openingBalance;
+    private int quantityReceived;
+    private int actualDispensedQuantity;
+    private int adjustedDispensedQuantity;
+    private int adjustedDistributedQuantity;
+    private int balanceOnHand;
+    private int productReportingRate;
+    private int stockOutRate;
 
 }

@@ -146,6 +146,7 @@ public class ReportController  extends BaseController {
         }
 
     }
+
     @RequestMapping(value = "/download/consumption/{outputOption}")
     public void showConsumptionDataReport(
                                             @PathVariable(value = "reportKey") String reportKey
@@ -162,6 +163,25 @@ public class ReportController  extends BaseController {
                 break;
             case "XLS":
                 reportManager.showReport(userId, reportKey, null, ReportOutputOption.XLS, response);
+        }
+
+    }
+
+    @RequestMapping(value = "/download/summary/{outputOption}")
+    public void showSummaryDataReport(
+            @PathVariable(value = "outputOption") String outputOption
+            ,HttpServletRequest request
+            ,HttpServletResponse response
+    )
+    {
+        Integer userId = (Integer) request.getSession().getAttribute(USER_ID);
+
+        switch (outputOption.toUpperCase()){
+            case "PDF":
+                reportManager.showReport(userId, "summary", null, ReportOutputOption.PDF, response);
+                break;
+            case "XLS":
+                reportManager.showReport(userId, "summary", null, ReportOutputOption.XLS, response);
         }
 
     }
