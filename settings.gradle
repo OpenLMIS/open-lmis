@@ -6,6 +6,6 @@
 
 include "modules:core", "modules:authentication",
         "modules:openlmis-web", "modules:db","modules:upload",
-        "modules:requisition","modules:email","modules:restapi",
+        "modules:requisition","modules:email","modules:rest-api",
         "modules:shipment","test-modules:functional-tests","test-modules:test-core"
 
