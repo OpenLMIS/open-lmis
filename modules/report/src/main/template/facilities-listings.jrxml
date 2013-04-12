@@ -204,7 +204,7 @@ LEFT OUTER JOIN geographic_zones gz on gz.id = f.geographiczoneid
 			<textField isBlankWhenNull="true">
 				<reportElement uuid="9368f837-0f29-41a6-8cad-8b296c4878c1" x="731" y="0" width="71" height="20"/>
 				<textElement/>
-				<textFieldExpression><![CDATA[$F{fax}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fax} == "NULL"?"-":$F{fax}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

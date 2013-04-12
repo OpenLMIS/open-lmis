@@ -30,37 +30,43 @@ public class FacilityReportQueryBuilder {
         LEFT_OUTER_JOIN("geographic_zones GZ on GZ.id = F.geographiczoneid");
         LEFT_OUTER_JOIN("facility_operators FO on FO.id = F.operatedbyid");
 
-
-        if (filter.getStatusId() != null) {
-            WHERE("F.active = #{filterCriteria.statusId}");
-        }
-        if (filter.getZoneId() != 0) {
-             WHERE("F.geographiczoneid = #{filterCriteria.zoneId}");
-        }
-        if (filter.getFacilityTypeId() != 0) {
-            WHERE("F.typeid = #{filterCriteria.facilityTypeId}");
-        }
-
-        if(sorter.getFacilityName().equalsIgnoreCase("asc")){
-            ORDER_BY("F.name asc");
-        }
-        if(sorter.getFacilityName().equalsIgnoreCase("desc")){
-            ORDER_BY("F.name desc");
+        if(filter != null){
+            if (filter.getStatusId() != null) {
+                WHERE("F.active = #{filterCriteria.statusId}");
+            }
+            if (filter.getZoneId() != 0) {
+                WHERE("F.geographiczoneid = #{filterCriteria.zoneId}");
+            }
+            if (filter.getFacilityTypeId() != 0) {
+                WHERE("F.typeid = #{filterCriteria.facilityTypeId}");
+            }
         }
 
-        if(sorter.getCode().equalsIgnoreCase("asc")){
-            ORDER_BY("F.code asc");
-        }
-        if(sorter.getCode().equalsIgnoreCase("desc")){
-            ORDER_BY("F.code desc");
+
+        if(sorter != null){
+
+            if(sorter.getFacilityName().equalsIgnoreCase("asc")){
+                ORDER_BY("F.name asc");
+            }
+            if(sorter.getFacilityName().equalsIgnoreCase("desc")){
+                ORDER_BY("F.name desc");
+            }
+
+            if(sorter.getCode().equalsIgnoreCase("asc")){
+                ORDER_BY("F.code asc");
+            }
+            if(sorter.getCode().equalsIgnoreCase("desc")){
+                ORDER_BY("F.code desc");
+            }
+
+            if(sorter.getFacilityType().equalsIgnoreCase("asc")){
+                ORDER_BY("F.typeid asc");
+            }
+            if(sorter.getFacilityType().equalsIgnoreCase("desc")){
+                ORDER_BY("F.typeid desc");
+            }
         }
 
-        if(sorter.getFacilityType().equalsIgnoreCase("asc")){
-            ORDER_BY("F.typeid asc");
-        }
-        if(sorter.getFacilityType().equalsIgnoreCase("desc")){
-            ORDER_BY("F.typeid desc");
-        }
 
         return SQL();
     }

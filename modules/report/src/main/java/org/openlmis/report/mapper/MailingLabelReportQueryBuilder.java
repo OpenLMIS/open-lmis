@@ -31,16 +31,19 @@ public class MailingLabelReportQueryBuilder {
         LEFT_OUTER_JOIN("geographic_zones GZ on GZ.id = F.geographiczoneid");
         LEFT_OUTER_JOIN("facility_operators FO on FO.id = F.operatedbyid");
 
-        if (filter.getFacilityCode() != "") {
-           // WHERE("F.code like '%101%' ");
-            WHERE("F.code like '%'|| #{filterCriteria.facilityCode} || '%' ");
+        if(filter != null){
+            if (filter.getFacilityCode() != "") {
+                // WHERE("F.code like '%101%' ");
+                WHERE("F.code like '%'|| #{filterCriteria.facilityCode} || '%' ");
+            }
+            if (filter.getFacilityName() != "") {
+                WHERE("F.name like '%'|| #{filterCriteria.facilityName} || '%' ");
+            }
+            if (filter.getFacilityTypeId() != 0) {
+                WHERE("F.typeid = #{filterCriteria.facilityTypeId} ");
+            }
         }
-        if (filter.getFacilityName() != "") {
-            WHERE("F.name like '%'|| #{filterCriteria.facilityName} || '%' ");
-        }
-        if (filter.getFacilityTypeId() != 0) {
-            WHERE("F.typeid = #{filterCriteria.facilityTypeId} ");
-        }
+
 
         if (filter.getZoneId() != 0) {
             WHERE("F.geographiczoneid = #{filterCriteria.zoneId}");

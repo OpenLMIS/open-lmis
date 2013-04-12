@@ -94,18 +94,24 @@ public class ReportController  extends BaseController {
              @PathVariable(value = "outputOption") String outputOption
              ,@RequestParam(value = "zoneId", required = false, defaultValue = "0") int zoneId
              ,@RequestParam(value = "facilityTypeId", required = false, defaultValue = "0") int facilityTypeId
+             ,@RequestParam(value = "statusId", required = false, defaultValue = "" ) Boolean statusId
              ,@RequestParam(value = "code", required = false, defaultValue = "ASC") String code
+             ,@RequestParam(value = "facilityType", required = false, defaultValue = "ASC") String facilityType
              ,@RequestParam(value = "facilityName", required = false, defaultValue = "") String facilityName
 
     ,HttpServletRequest request
             ,HttpServletResponse response
     )
     {
+        FacilityReportSorter facilityReportSorter = new FacilityReportSorter();
+        facilityReportSorter.setFacilityName(facilityName);
+        facilityReportSorter.setCode(code);
+        facilityReportSorter.setFacilityType(facilityType);
+
         FacilityReportFilter facilityReportFilter = new FacilityReportFilter();
         facilityReportFilter.setZoneId(zoneId);
         facilityReportFilter.setFacilityTypeId(facilityTypeId);
-        facilityReportFilter.setFacilityName(facilityName);
-
+        facilityReportFilter.setStatusId(statusId);
 
         Integer userId = (Integer) request.getSession().getAttribute(USER_ID);
 
