@@ -21,7 +21,7 @@ ngGridFlexibleHeightPlugin = function() {
                 // self.grid.$footerPanel.css('width', '100%');
             self.grid.$footerPanel.css('z-index', '10');
             scope.$apply();
-            self.grid.$viewport.css('height', (self.grid.$canvas.height() + 2) + 'px');
+            self.grid.$viewport.css('height', (self.grid.$canvas.height()) + 'px');
             self.services.DomUtilityService.RebuildGrid(self.scope, self.grid);
             scope.$apply();
         };
