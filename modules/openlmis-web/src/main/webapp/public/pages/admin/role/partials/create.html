@@ -43,12 +43,12 @@
           <div class = "radio-group" >
             <div class = "form-inline" >
               <input id = "adminRoleType" type = "radio" name = "adminRoleType" value = "true"
-                     ng-model = "role.adminRole" ng-change = "showRoleTypeModal(true)" />
+                     ng-model = "role.adminRole" ng-change = "showRoleTypeModal(true)" ng-disabled="role.id && role.adminRole=='false'" />
               <label for = "adminRoleType" openlmis-message="create.role.adminRole"></label >
             </div >
             <div class = "form-inline" >
               <input id = "programRoleType" type = "radio" name = "programRoleType" value = "false"
-                     ng-model = "role.adminRole" ng-change = "showRoleTypeModal(false)" />
+                     ng-model = "role.adminRole" ng-change = "showRoleTypeModal(false)" ng-disabled="role.id && role.adminRole=='true'" />
               <label for = "programRoleType" openlmis-message="create.role.programBasedRole"></label >
             </div >
           </div >

@@ -9,6 +9,20 @@ function UserRoleAssignmentController($scope) {
   $scope.selectSuperviseProgramMessage = '--Select Program--';
   $scope.selectSupervisoryNodeMessage = '--Select Node--';
 
+  $("#adminRoles").on("change", function (e) {
+    if (e.removed) {
+      $scope.deleteAdminRolesModal = true;
+      window.lastAdminRoleRemoved = e.removed;
+    }
+  });
+
+  $scope.restoreAdminRole = function () {
+    if (window.lastAdminRoleRemoved) {
+      $scope.user.adminRole.roleIds.push(window.lastAdminRoleRemoved.id);
+    }
+    $scope.deleteAdminRolesModal = false;
+  };
+
   $scope.deleteCurrentRow = function (rowNum) {
     $scope.deleteRolesModal = true;
     $scope.rowNum = rowNum;

@@ -43,9 +43,7 @@
         </div>
       </div>
       <div class="span3">
-        <div class="fluid-grid-cell">
-          <a class="delete-role" value="delete" ng-click="deleteCurrentRow($index)">&times;</a>
-        </div>
+        <a class="btn delete-role" value="delete" ng-click="deleteCurrentRow($index)" openlmis-message="button.remove"></a>
       </div>
     </div>
   </div>
@@ -99,7 +97,7 @@
   </div>
 
   <div tabindex="-1" id="deleteRolesModal" modal="deleteRolesModal" close="deleteRolesModal=false">
-    <div class="modal-header"><h2 openlmis-message="create.user.deleteRoles"></h2></div>
+    <div class="modal-header"><h3 openlmis-message="create.user.deleteRoles"></h3></div>
     <div class="modal-body">
       <p openlmis-message="create.user.delete.warning"></p>
     </div>
