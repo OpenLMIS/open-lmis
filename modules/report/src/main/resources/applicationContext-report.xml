@@ -24,7 +24,7 @@
             <list><!-- list of open-lmis reports -->
                 <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="facilities"/>
-                    <property name="template" value="facilities-listings.jasper"/>
+                    <property name="template" value="facility-report.jasper"/>
                     <property name="reportDataProvider" ref="facilityReportDataProvider"/>
                     <property name="id" value="RP-FAL-ALL"/>
                     <property name="name" value="Facility list report"/>
