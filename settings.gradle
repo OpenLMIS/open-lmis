@@ -7,5 +7,5 @@
 include "modules:core", "modules:authentication",
         "modules:openlmis-web", "modules:db","modules:upload",
         "modules:requisition","modules:email","modules:restapi",
-        "test-modules:functional-tests","test-modules:test-core"
+        "modules:shipment","test-modules:functional-tests","test-modules:test-core"
 

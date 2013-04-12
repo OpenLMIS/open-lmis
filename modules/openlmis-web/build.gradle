@@ -45,6 +45,7 @@ dependencies {
             project(':modules:authentication'),
             project(':modules:requisition'),
             project(':modules:core'),
+            project(':modules:shipment'),
             project(':modules:restapi')
 
 

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:int-ftp="http://www.springframework.org/schema/integration/ftp"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/ftp
+       	                   http://www.springframework.org/schema/integration/ftp/spring-integration-ftp.xsd"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <context:annotation-config/>
+    <context:spring-configured/>
+
+
+    <context:component-scan base-package="org.openlmis.shipment"/>
+
+    <bean id="ftpSessionFactory"
+          class="org.springframework.integration.ftp.session.DefaultFtpSessionFactory">
+        <property name="host" value="${ftp.server.host}"/>
+        <property name="port" value="${ftp.server.port}"/>
+        <property name="username" value="${ftp.server.username}"/>
+        <property name="password" value="${ftp.server.password}"/>
+        <property name="clientMode" value="0"/>
+        <property name="fileType" value="2"/>
+        <property name="bufferSize" value="100000"/>
+    </bean>
+
+    <int-ftp:inbound-channel-adapter id="ftpInboundAdapter" cache-sessions="false"
+                                     channel="ftpInputChannel"
+                                     session-factory="ftpSessionFactory"
+                                     filename-pattern="*.csv"
+                                     auto-create-local-directory="true"
+                                     delete-remote-files="true"
+                                     remote-directory="/"
+                                     local-directory="${ftp.local.directory}" >
+        <int:poller fixed-rate="30000" max-messages-per-poll="-1"/>
+    </int-ftp:inbound-channel-adapter>
+
+    <int:outbound-channel-adapter channel="ftpInputChannel" ref="shipmentFileProcessor" method="process"/>
+
+    <bean id="messageDispatcher" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="5"/>
+        <property name="maxPoolSize" value="10"/>
+        <property name="queueCapacity" value="27"/>
+    </bean>
+
+    <int:channel id="ftpInputChannel">
+        <int:dispatcher task-executor="messageDispatcher"></int:dispatcher>
+    </int:channel>
+
+</beans>
