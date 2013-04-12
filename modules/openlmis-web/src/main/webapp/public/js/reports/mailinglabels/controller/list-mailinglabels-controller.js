@@ -71,6 +71,9 @@ function ListMailinglabelsController($scope, MailingLabels, FacilityTypes, $http
 
     $scope.export   = function (type){
         var url = '/reports/download/mailinglabels/' + type +'?facilityCodeFilter=' +  $scope.filterObject.facilityCodeFilter + '&facilityNameFilter=' +  $scope.filterObject.facilityNameFilter ;
+        if(type == "mailing-list"){
+            url = '/reports/download/mailinglabels/list/' + "pdf" +'?facilityCodeFilter=' +  $scope.filterObject.facilityCodeFilter + '&facilityNameFilter=' +  $scope.filterObject.facilityNameFilter ;
+        }
         window.location.href = url;
     }
         $scope.goToPage = function (page, event) {

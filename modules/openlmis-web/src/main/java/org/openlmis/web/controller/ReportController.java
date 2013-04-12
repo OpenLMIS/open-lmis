@@ -82,6 +82,35 @@ public class ReportController  extends BaseController {
 
     }
 
+    @RequestMapping(value = "/download/mailinglabels/list/{outputOption}")
+    public void showMailingListReport(
+            @PathVariable(value = "outputOption") String outputOption
+            ,@RequestParam(value = "zoneId", required = false, defaultValue = "0") int zoneId
+            ,@RequestParam(value = "facilityTypeId", required = false, defaultValue = "0") int facilityTypeId
+            ,@RequestParam(value = "statusId", required = false, defaultValue = "" ) Boolean statusId
+            ,@RequestParam(value = "facilityCodeFilter", required = false, defaultValue = "0") String facilityCodeFilter
+            ,@RequestParam(value = "facilityNameFilter", required = false, defaultValue = "" ) String facilityNameFilter
+            ,HttpServletRequest request
+            ,HttpServletResponse response
+    )
+    {
+        MailingLabelReportFilter mailingLabelReportFilter = new MailingLabelReportFilter();
+        mailingLabelReportFilter.setFacilityCode(facilityCodeFilter);
+        mailingLabelReportFilter.setFacilityTypeId(facilityTypeId);
+        mailingLabelReportFilter.setFacilityName(facilityNameFilter);
+
+        Integer userId = (Integer) request.getSession().getAttribute(USER_ID);
+
+        switch (outputOption.toUpperCase()){
+            case "PDF":
+                reportManager.showReport(userId, "facility_mailing_list", mailingLabelReportFilter, ReportOutputOption.PDF, response);
+                break;
+            case "XLS":
+                reportManager.showReport(userId, "facility_mailing_list", mailingLabelReportFilter, ReportOutputOption.XLS, response);
+        }
+
+    }
+
     @RequestMapping(value = "/download/facilities/{outputOption}")
     public void showFacilityListReport(
              @PathVariable(value = "outputOption") String outputOption
