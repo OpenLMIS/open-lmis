@@ -1,7 +1,6 @@
-package org.openlmis.report.dataprovider;
+package org.openlmis.report.service;
 
 import org.openlmis.report.DataSourceType;
-import org.openlmis.report.model.FacilityReportFilter;
 import org.openlmis.report.model.ReportData;
 
 import java.util.List;

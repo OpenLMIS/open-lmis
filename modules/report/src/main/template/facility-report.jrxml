@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="mailing-labels" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
+<!-- Created with Jaspersoft Studio version last-->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="facility-report" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="eLMIS"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sample DB"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["C:\\Users\\Issa\\JSI_Projects\\bitbucket\\open-lmis\\modules\\report\\src\\main\\template\\"]]></defaultValueExpression>
 	</parameter>
@@ -37,34 +38,33 @@ LEFT OUTER JOIN geographic_zones gz on gz.id = f.geographiczoneid
 	<field name="facilityType" class="java.lang.String"/>
 	<field name="owner" class="java.lang.String"/>
 	<field name="region" class="java.lang.String"/>
-	<field name="address1" class="java.lang.String"/>
+	<field name="gpsCoordinates" class="java.lang.String"/>
 	<field name="phoneNumber" class="java.lang.String"/>
 	<field name="fax" class="java.lang.String"/>
+	<field name="active" class="java.lang.Boolean"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
-	<pageHeader>
-		<band height="60" splitType="Stretch">
-			<property name="local_mesure_unitheight" value="pixel"/>
-			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+	<title>
+		<band height="54" splitType="Stretch">
 			<subreport>
-				<reportElement uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e" x="0" y="0" width="802" height="60"/>
-				<subreportParameter name="PAGE_NO">
-					<subreportParameterExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of" + " " + $V{PAGE_COUNT}]]></subreportParameterExpression>
-				</subreportParameter>
+				<reportElement uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e" x="0" y="-10" width="802" height="60"/>
 				<subreportParameter name="REPORT_TITLE">
 					<subreportParameterExpression><![CDATA[$P{REPORT_TITLE}]]></subreportParameterExpression>
 				</subreportParameter>
-				<subreportParameter name="LOGO">
-					<subreportParameterExpression><![CDATA[$P{LOGO}]]></subreportParameterExpression>
-				</subreportParameter>
 				<subreportParameter name="REPORT_NAME">
 					<subreportParameterExpression><![CDATA[$P{REPORT_NAME}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="LOGO">
+					<subreportParameterExpression><![CDATA[$P{LOGO}]]></subreportParameterExpression>
 				</subreportParameter>
 				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.JREmptyDataSource()]]></dataSourceExpression>
 				<subreportExpression><![CDATA["openlmis-report-header-landscape.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
+	</title>
+	<pageHeader>
+		<band height="7" splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
 		<band height="28" splitType="Stretch">
@@ -124,15 +124,7 @@ LEFT OUTER JOIN geographic_zones gz on gz.id = f.geographiczoneid
 					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single" leftIndent="3"/>
 				</textElement>
-				<text><![CDATA[Address]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="598e05cc-a6dd-4e63-907d-c5843cd2e88d" mode="Transparent" x="635" y="0" width="96" height="27" forecolor="#000000" backcolor="#333333"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single" leftIndent="3"/>
-				</textElement>
-				<text><![CDATA[Phone Number]]></text>
+				<text><![CDATA[Status]]></text>
 			</staticText>
 			<staticText>
 				<reportElement uuid="2f7e127e-7884-416e-8c31-b52ef2c9ca40" mode="Transparent" x="354" y="0" width="59" height="27" forecolor="#000000" backcolor="#333333"/>
@@ -142,18 +134,10 @@ LEFT OUTER JOIN geographic_zones gz on gz.id = f.geographiczoneid
 				</textElement>
 				<text><![CDATA[Region]]></text>
 			</staticText>
-			<staticText>
-				<reportElement uuid="ce0b6684-1b56-4d42-9e71-f519aa99b78e" mode="Transparent" x="731" y="0" width="70" height="27" forecolor="#000000" backcolor="#333333"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single" leftIndent="3"/>
-				</textElement>
-				<text><![CDATA[Fax]]></text>
-			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="20" splitType="Stretch">
+		<band height="21" splitType="Stretch">
 			<staticText>
 				<reportElement uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b" mode="Opaque" x="0" y="0" width="801" height="20" backcolor="#F3F3F3">
 					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></printWhenExpression>
@@ -196,25 +180,11 @@ LEFT OUTER JOIN geographic_zones gz on gz.id = f.geographiczoneid
 				<textFieldExpression><![CDATA[$F{facilityType}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="67c025da-835c-4796-9802-daffdff95172" x="493" y="0" width="142" height="20"/>
-				<textElement verticalAlignment="Middle">
-					<paragraph leftIndent="5"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{address1}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
 				<reportElement uuid="722124a8-e21f-490c-a641-d047f6d2c867" x="414" y="0" width="79" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<paragraph leftIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{owner}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement uuid="a985ef8d-9a20-42cc-8ce6-923e2c21286e" x="635" y="0" width="96" height="20"/>
-				<textElement verticalAlignment="Middle">
-					<paragraph leftIndent="5"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{phoneNumber}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
 				<reportElement uuid="4010add3-b1d0-4263-9231-e180b0630895" mode="Transparent" x="355" y="0" width="59" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
@@ -225,11 +195,11 @@ LEFT OUTER JOIN geographic_zones gz on gz.id = f.geographiczoneid
 				<textFieldExpression><![CDATA[$F{region}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="9368f837-0f29-41a6-8cad-8b296c4878c1" x="731" y="0" width="71" height="20"/>
+				<reportElement uuid="cb1defd6-bab1-4f1e-9b05-11a22d087de2" x="493" y="0" width="142" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<paragraph leftIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{fax} == "NULL"?"-":$F{fax}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{active}==true? "Active":"InActive"]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

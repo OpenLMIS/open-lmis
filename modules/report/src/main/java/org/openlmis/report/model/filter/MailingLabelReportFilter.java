@@ -1,8 +1,9 @@
-package org.openlmis.report.model;
+package org.openlmis.report.model.filter;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.report.model.ReportData;
 
 /**
  * Created with IntelliJ IDEA.

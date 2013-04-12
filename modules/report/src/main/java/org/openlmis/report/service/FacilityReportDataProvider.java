@@ -1,27 +1,17 @@
-package org.openlmis.report.dataprovider;
+package org.openlmis.report.service;
 
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.report.mapper.FacilityReportMapper;
-import org.openlmis.report.mapper.ResultSetMapper;
-import org.openlmis.report.model.FacilityReport;
-import org.openlmis.report.model.FacilityReportFilter;
-import org.openlmis.report.model.FacilityReportSorter;
+import org.openlmis.report.model.report.FacilityReport;
 import org.openlmis.report.model.ReportData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  */

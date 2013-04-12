@@ -1,9 +1,10 @@
-package org.openlmis.report.model;
+package org.openlmis.report.model.report;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.report.model.ReportData;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -16,7 +16,7 @@
 	<pageFooter>
 		<band height="44" splitType="Stretch">
 			<rectangle>
-				<reportElement uuid="8a806baf-7998-4b8a-987b-5223ffc6d47b" x="0" y="4" width="802" height="36" forecolor="#3D9297"/>
+				<reportElement uuid="8a806baf-7998-4b8a-987b-5223ffc6d47b" x="0" y="4" width="802" height="36" forecolor="#DDDDDD"/>
 				<graphicElement>
 					<pen lineWidth="0.5"/>
 				</graphicElement>
