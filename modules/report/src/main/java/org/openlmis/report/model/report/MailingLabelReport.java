@@ -1,8 +1,9 @@
-package org.openlmis.report.model;
+package org.openlmis.report.model.report;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.report.model.ReportData;
 
 /**
  * A report data used to fill mailing labels report.
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MailingLabelReport implements ReportData  {
+public class MailingLabelReport implements ReportData {
 
     private String code;
     private String facilityName;

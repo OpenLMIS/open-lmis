@@ -1,9 +1,7 @@
-package org.openlmis.report.mapper;
+package org.openlmis.report.builder;
 
-import org.openlmis.report.model.FacilityReportFilter;
-import org.openlmis.report.model.FacilityReportSorter;
-import org.openlmis.report.model.MailingLabelReportFilter;
-import org.openlmis.report.model.MailingLabelReportSorter;
+import org.openlmis.report.model.filter.MailingLabelReportFilter;
+import org.openlmis.report.model.sorter.MailingLabelReportSorter;
 
 import java.util.Map;
 
