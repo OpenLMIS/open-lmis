@@ -78,6 +78,6 @@ public interface ProductMapper {
     @Select("SELECT id from products where code = #{code}")
     Integer getIdByCode(String code);
 
-    @Select("SELECT id, code, name FROM products")
+    @Select("SELECT * FROM products")
     List<Product> getAll();
 }

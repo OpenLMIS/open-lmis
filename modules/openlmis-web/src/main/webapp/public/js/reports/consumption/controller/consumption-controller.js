@@ -32,11 +32,17 @@ function ConsumptionReportController($scope, ConsumptionReport, Products , Facil
 
         $scope.endYears ;
 
-        $scope.startMonth;
+        $scope.startMonth = 1;
+
+        // TODO: clear this hardcoded start year.
+        $scope.startYear = 2012
 
         $scope.startMonths  = [];
 
-        $scope.endMonth;
+        // TODO: clear this hardcoded end year
+        $scope.endYear = 2013;
+
+        $scope.endMonth = 4;
 
         $scope.endMonths;
 
@@ -260,13 +266,13 @@ function ConsumptionReportController($scope, ConsumptionReport, Products , Facil
         data: 'myData',
         columnDefs:
             [
-                { field: 'period', displayName: 'Period', width: "*", resizable: false},
+                //{ field: 'period', displayName: 'Period', width: "*", resizable: false},
                 { field: 'category', displayName: 'Category', width: "*" },
                 { field: 'product', displayName: 'Product', width: "*" },
                 { field: 'facilityType', displayName: 'Facility Type', width : "*"},
                 { field: 'facility', displayName: 'Facility', width : "*"},
-                { field: 'supplier', displayName: 'Supplying Facility', width : "*"},
-                { field: 'reportingGroup', displayName: 'Reporting Group', width : "*"},
+                //{ field: 'supplier', displayName: 'Supplying Facility', width : "*"},
+                //{ field: 'reportingGroup', displayName: 'Reporting Group', width : "*"},
                 { field: 'consumption', displayName: 'Consumption', width : "*"}
             ],
         enablePaging: true,

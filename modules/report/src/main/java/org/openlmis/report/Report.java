@@ -1,11 +1,8 @@
 package org.openlmis.report;
 
 import lombok.Data;
-import org.openlmis.report.dataprovider.ReportDataProvider;
+import org.openlmis.report.service.ReportDataProvider;
 import org.openlmis.report.model.ReportData;
-import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  */

@@ -1,5 +1,7 @@
-package org.openlmis.report.model;
+package org.openlmis.report.model.sorter;
 
+
+import org.openlmis.report.model.report.FacilityReport;
 
 /**
  * Created with IntelliJ IDEA.

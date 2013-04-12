@@ -1,9 +1,7 @@
-package org.openlmis.report.mapper;
+package org.openlmis.report.builder;
 
-import org.apache.ibatis.session.RowBounds;
-import org.openlmis.report.model.FacilityReportFilter;
-import org.openlmis.report.model.FacilityReportSorter;
-import org.openlmis.report.model.ReportData;
+import org.openlmis.report.model.filter.FacilityReportFilter;
+import org.openlmis.report.model.sorter.FacilityReportSorter;
 
 import java.util.Map;
 

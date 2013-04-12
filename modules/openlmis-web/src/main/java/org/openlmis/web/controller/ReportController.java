@@ -1,21 +1,21 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.Product;
 import org.openlmis.report.Report;
-import org.openlmis.core.service.ProductService;
 import org.openlmis.report.ReportManager;
-import org.openlmis.report.model.*;
 import org.openlmis.report.ReportOutputOption;
-import org.openlmis.report.model.FacilityReport;
+import org.openlmis.report.model.dto.Product;
+import org.openlmis.report.model.filter.FacilityReportFilter;
+import org.openlmis.report.model.filter.MailingLabelReportFilter;
+import org.openlmis.report.model.report.FacilityReport;
 import org.openlmis.report.model.Pages;
-import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.report.ConsumptionReport;
+import org.openlmis.report.model.report.MailingLabelReport;
+import org.openlmis.report.model.sorter.FacilityReportSorter;
+import org.openlmis.report.model.sorter.MailingLabelReportSorter;
+import org.openlmis.report.service.ProductReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,14 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import static org.springframework.web.bind.annotation.RequestMethod.*;
-//import org.springframework.data.domain.Page;
-//import org.springframework.data.domain.PageRequest;
-//import org.springframework.data.domain.Pageable;
-
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
 
@@ -45,18 +38,18 @@ public class ReportController  extends BaseController {
     public static final String USER_ID = "USER_ID";
 
     private ReportManager reportManager;
-    private ProductService productService;
+    private ProductReportService productReportService;
 
     @Autowired
-    public ReportController(ReportManager reportManager, ProductService productService) {
+    public ReportController(ReportManager reportManager, ProductReportService productReportService) {
         this.reportManager  = reportManager;
-        this.productService = productService;
+        this.productReportService = productReportService;
     }
 
     //TODO: take this out to an appropriate class
     @RequestMapping(value="/products", method = GET, headers = ACCEPT_JSON)
     public List<Product> getProducts(){
-          return this.productService.getAllProducts();
+          return this.productReportService.getAllProducts();
     }
 
 

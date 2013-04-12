@@ -2,15 +2,11 @@ package org.openlmis.report.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.ResultSetType;
-import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.session.RowBounds;
-import org.openlmis.report.model.FacilityReport;
-import org.openlmis.report.model.FacilityReportFilter;
-import org.openlmis.report.model.FacilityReportSorter;
+import org.openlmis.report.builder.FacilityReportQueryBuilder;
+import org.openlmis.report.model.report.FacilityReport;
 import org.openlmis.report.model.ReportData;
 import org.springframework.stereotype.Repository;
-import static org.apache.ibatis.jdbc.SelectBuilder.*;
-import org.apache.ibatis.mapping.SqlSource.*;
 
 import java.util.List;
 

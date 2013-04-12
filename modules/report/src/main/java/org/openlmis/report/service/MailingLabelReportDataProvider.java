@@ -1,12 +1,11 @@
-package org.openlmis.report.dataprovider;
+package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.report.mapper.MailingLabelReportMapper;
-import org.openlmis.report.model.FacilityReport;
-import org.openlmis.report.model.MailingLabelReport;
+import org.openlmis.report.model.report.MailingLabelReport;
 import org.openlmis.report.model.ReportData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

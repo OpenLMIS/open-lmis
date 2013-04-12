@@ -1,9 +1,7 @@
-package org.openlmis.report.mapper;
+package org.openlmis.report.builder;
 
-import org.openlmis.report.model.FacilityReportFilter;
-import org.openlmis.report.model.FacilityReportSorter;
-import org.openlmis.report.model.MailingLabelReportFilter;
-import org.openlmis.report.model.MailingLabelReportSorter;
+import org.openlmis.report.model.filter.MailingLabelReportFilter;
+import org.openlmis.report.model.sorter.MailingLabelReportSorter;
 
 import java.util.Map;
 
@@ -25,7 +23,7 @@ public class MailingLabelReportQueryBuilder {
         MailingLabelReportFilter filter  =(MailingLabelReportFilter)params.get("filterCriteria");
         MailingLabelReportSorter sorter = (MailingLabelReportSorter)params.get("SortCriteria");
         BEGIN();
-        SELECT("F.id, F.code, F.name, F.active as active, FT.name as facilityType, GZ.name as region, FO.code as owner, F.latitude::text ||',' ||  F.longitude::text  ||', ' || F.altitude::text gpsCoordinates, F.mainphone as phoneNumber, F.fax as fax");
+        SELECT("F.id, F.code, F.name, F.active as active, F.address1, F.address2 , FT.name as facilityType, GZ.name as region, FO.code as owner, F.latitude::text ||',' ||  F.longitude::text  ||', ' || F.altitude::text gpsCoordinates, F.mainphone as phoneNumber, F.fax as fax");
         FROM("facilities F");
         JOIN("facility_types FT on FT.id = F.typeid");
         LEFT_OUTER_JOIN("geographic_zones GZ on GZ.id = F.geographiczoneid");
