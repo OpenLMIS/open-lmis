@@ -69,17 +69,6 @@
         <beans:property name="defaultFailureUrl" value="/authentication-error.json"/>
     </beans:bean>
 
-    <beans:bean id="restAuthenticationManager" class="org.springframework.security.authentication.ProviderManager">
-        <beans:constructor-arg>
-            <beans:list>
-                <beans:ref bean="restApiAuthenticationProvider"/>
-            </beans:list>
-        </beans:constructor-arg>
-    </beans:bean>
-
-    <beans:bean id="restApiAuthenticationProvider"
-                class="org.openlmis.restapi.authentication.RestApiAuthenticationProvider"/>
-
     <authentication-manager>
         <authentication-provider ref="userAuthenticationProvider"/>
     </authentication-manager>

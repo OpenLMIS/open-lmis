@@ -13,6 +13,9 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+
+import java.util.Collection;
 
 
 public class RestApiAuthenticationProvider implements AuthenticationProvider {
@@ -32,9 +35,13 @@ public class RestApiAuthenticationProvider implements AuthenticationProvider {
     vendor.setName((String) authentication.getPrincipal());
     vendor.setAuthToken((String) authentication.getCredentials());
 
+    Collection<? extends GrantedAuthority> authorities = null;
+
     if (!vendor.isValid()) return null;
 
-    if (vendorService.authenticate(vendor)) return authentication;
+    if (vendorService.authenticate(vendor)) {
+      return new UsernamePasswordAuthenticationToken(authentication.getPrincipal(), authentication.getCredentials(), authorities);
+    }
 
     return null;
   }

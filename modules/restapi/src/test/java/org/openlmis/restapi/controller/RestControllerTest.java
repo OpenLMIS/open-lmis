@@ -6,6 +6,7 @@
 
 package org.openlmis.restapi.controller;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -18,10 +19,11 @@ import org.openlmis.restapi.service.RestService;
 import org.openlmis.rnr.domain.Rnr;
 import org.springframework.http.ResponseEntity;
 
+import java.security.Principal;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.openlmis.restapi.response.RestResponse.ERROR;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -33,6 +35,13 @@ public class RestControllerTest {
   @InjectMocks
   RestController controller;
   private String credentials;
+  Principal principal;
+
+  @Before
+  public void setUp() throws Exception {
+    principal = mock(Principal.class);
+    when(principal.getName()).thenReturn("vendor name");
+  }
 
   @Test
   public void shouldSubmitRequisitionForACommTrackUser() throws Exception {
@@ -40,9 +49,9 @@ public class RestControllerTest {
 
     Rnr requisition = new Rnr();
     requisition.setId(1);
-    when(service.submitReport(report, credentials)).thenReturn(requisition);
+    when(service.submitReport(report)).thenReturn(requisition);
 
-    ResponseEntity<RestResponse> response = controller.submitRequisition(credentials, report, null);
+    ResponseEntity<RestResponse> response = controller.submitRequisition(report, principal);
 
     assertThat((Integer) response.getBody().getData().get("R&R"), is(1));
   }
@@ -54,10 +63,24 @@ public class RestControllerTest {
 
     Rnr requisition = new Rnr();
     requisition.setId(1);
-    doThrow(new DataException(errorMessage)).when(service).submitReport(report, credentials);
+    doThrow(new DataException(errorMessage)).when(service).submitReport(report);
 
-    ResponseEntity<RestResponse> response = controller.submitRequisition(credentials, report, null);
+    ResponseEntity<RestResponse> response = controller.submitRequisition(report, principal);
 
     assertThat((String) response.getBody().getData().get(ERROR), is(errorMessage));
+  }
+
+  @Test
+  public void shouldSetVendorNameInReport() throws Exception {
+    String errorMessage = "some error";
+    Report report = new Report();
+
+    Rnr requisition = new Rnr();
+    requisition.setId(1);
+    doThrow(new DataException(errorMessage)).when(service).submitReport(report);
+
+    controller.submitRequisition(report, principal);
+
+    assertThat(report.getVendor().getName(), is("vendor name"));
   }
 }

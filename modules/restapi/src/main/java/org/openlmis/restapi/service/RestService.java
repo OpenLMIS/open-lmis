@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class RestService {
 
   public static final String USER_USERNAME_INCORRECT = "user.username.incorrect";
-  public static final String ERROR_VENDOR_INVALID = "error.vendor.invalid";
   @Autowired
   UserService userService;
 
@@ -35,7 +34,7 @@ public class RestService {
   VendorService vendorService;
 
   @Transactional
-  public Rnr submitReport(Report report, String credentials) {
+  public Rnr submitReport(Report report) {
     fillVendor(report);
     report.validate();
 

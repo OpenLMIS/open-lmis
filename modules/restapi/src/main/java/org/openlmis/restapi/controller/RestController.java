@@ -7,6 +7,7 @@
 package org.openlmis.restapi.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Vendor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.restapi.response.RestResponse;
@@ -15,13 +16,15 @@ import org.openlmis.rnr.domain.Rnr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
 
+import static org.openlmis.restapi.response.RestResponse.error;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
@@ -29,19 +32,32 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class RestController {
 
   public static final String ACCEPT_JSON = "Accept=application/json";
+  public static final String UNEXPECTED_EXCEPTION = "unexpected.exception";
+  public static final String FORBIDDEN_EXCEPTION = "forbidden.exception";
 
   @Autowired
   private RestService restService;
 
   @RequestMapping(value = "/rest-api/requisitions", method = POST, headers = ACCEPT_JSON)
-  public ResponseEntity submitRequisition(@RequestHeader(value = "Authorization", required = false) String credentials,
-                                          @RequestBody Report report, Principal principal) {
+  public ResponseEntity submitRequisition(@RequestBody Report report, Principal principal) {
+    Vendor vendor = new Vendor();
+    vendor.setName(principal.getName());
+    report.setVendor(vendor);
     Rnr requisition;
     try {
-      requisition = restService.submitReport(report, credentials);
+      requisition = restService.submitReport(report);
     } catch (DataException e) {
       return RestResponse.error(e, HttpStatus.BAD_REQUEST);
     }
     return RestResponse.response("R&R", requisition.getId());
+  }
+
+
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<RestResponse> handleException(Exception ex) {
+    if (ex instanceof AccessDeniedException) {
+      return error(FORBIDDEN_EXCEPTION, HttpStatus.FORBIDDEN);
+    }
+    return error(UNEXPECTED_EXCEPTION, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }

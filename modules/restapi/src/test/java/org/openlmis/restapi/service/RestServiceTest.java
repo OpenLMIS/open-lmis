@@ -87,7 +87,7 @@ public class RestServiceTest {
     products.add(new RnrLineItem());
     report.setProducts(products);
     when(vendorService.getByName(report.getVendor().getName())).thenReturn(report.getVendor());
-    Rnr expectedRequisition = service.submitReport(report, credentials);
+    Rnr expectedRequisition = service.submitReport(report);
 
     verify(requisitionService).initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId());
     verify(requisitionService).submit(expectedRequisition);
@@ -101,7 +101,7 @@ public class RestServiceTest {
     Report spyReport = spy(report);
     when(vendorService.getByName(report.getVendor().getName())).thenReturn(report.getVendor());
 
-    service.submitReport(spyReport, credentials);
+    service.submitReport(spyReport);
 
     verify(spyReport).validate();
   }
@@ -117,7 +117,7 @@ public class RestServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage(USER_USERNAME_INCORRECT);
 
-    service.submitReport(report, credentials);
+    service.submitReport(report);
   }
 
   @Test
@@ -132,6 +132,6 @@ public class RestServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage(USER_USERNAME_INCORRECT);
 
-    service.submitReport(report, credentials);
+    service.submitReport(report);
   }
 }

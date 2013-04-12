@@ -85,7 +85,7 @@ public class RestApiAuthenticationProviderTest {
 
     Authentication authenticated = restApiAuthenticationProvider.authenticate(authentication);
 
-    assertThat(authenticated, is(authentication));
+    assertThat(authenticated.getPrincipal(), is(authentication.getPrincipal()));
     verify(vendorService).authenticate(vendor);
   }
 }

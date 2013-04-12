@@ -31,7 +31,7 @@ public class Report {
   private List<RnrLineItem> products;
 
   public void validate() {
-    if (facilityId == null || programId == null || periodId == null || userId == null || vendor == null || !vendor.isValid())
+    if (facilityId == null || programId == null || periodId == null || userId == null || vendor == null)
       throw new DataException(ERROR_MANDATORY_FIELD_MISSING);
   }
 }
