@@ -11,10 +11,10 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestService;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.Rnr;
 import org.springframework.http.ResponseEntity;
 
@@ -42,7 +42,7 @@ public class RestControllerTest {
     requisition.setId(1);
     when(service.submitReport(report, credentials)).thenReturn(requisition);
 
-    ResponseEntity<RestResponse> response = controller.submitRequisition(credentials, report);
+    ResponseEntity<RestResponse> response = controller.submitRequisition(credentials, report, null);
 
     assertThat((Integer) response.getBody().getData().get("R&R"), is(1));
   }
@@ -56,7 +56,7 @@ public class RestControllerTest {
     requisition.setId(1);
     doThrow(new DataException(errorMessage)).when(service).submitReport(report, credentials);
 
-    ResponseEntity<RestResponse> response = controller.submitRequisition(credentials, report);
+    ResponseEntity<RestResponse> response = controller.submitRequisition(credentials, report, null);
 
     assertThat((String) response.getBody().getData().get(ERROR), is(errorMessage));
   }

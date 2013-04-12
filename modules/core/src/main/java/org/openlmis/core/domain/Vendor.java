@@ -21,6 +21,8 @@ public class Vendor {
   private Integer id;
   private String name;
   private Boolean active;
+
+  @JsonIgnore
   private String authToken;
 
   public Vendor(String name, Boolean active) {

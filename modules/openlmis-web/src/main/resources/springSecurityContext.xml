@@ -35,11 +35,16 @@
 
     <beans:bean id="openLmisAccessDeniedHandler" class="org.openlmis.authentication.web.OpenLmisAccessDeniedHandler"/>
 
+    <http pattern="/rest-api/**" use-expressions="true" authentication-manager-ref="restAuthenticationManager">
+        <intercept-url pattern="/rest-api/**" access="permitAll" requires-channel="any"/>
+        <http-basic/>
+    </http>
+
     <http use-expressions="true" auto-config="false" entry-point-ref="restAuthenticationEntryPoint">
         <intercept-url pattern="/j_spring_security_check" access="IS_AUTHENTICATED_ANONYMOUSLY" requires-channel="any"/>
         <intercept-url pattern="/favicon.ico" access="permitAll" requires-channel="any"/>
         <intercept-url pattern="/public/**" access="permitAll" requires-channel="any"/>
-        <intercept-url pattern="/rest-api/**" access="permitAll" requires-channel="any"/>
+
         <intercept-url pattern="/forgot-password*" access="permitAll" requires-channel="any"/>
         <intercept-url pattern="/user/validatePasswordResetToken/*" access="permitAll" requires-channel="any"/>
         <intercept-url pattern="/user/resetPassword/*" access="permitAll" requires-channel="any"/>
@@ -63,6 +68,17 @@
         <beans:property name="useForward" value="true"/>
         <beans:property name="defaultFailureUrl" value="/authentication-error.json"/>
     </beans:bean>
+
+    <beans:bean id="restAuthenticationManager" class="org.springframework.security.authentication.ProviderManager">
+        <beans:constructor-arg>
+            <beans:list>
+                <beans:ref bean="restApiAuthenticationProvider"/>
+            </beans:list>
+        </beans:constructor-arg>
+    </beans:bean>
+
+    <beans:bean id="restApiAuthenticationProvider"
+                class="org.openlmis.restapi.authentication.RestApiAuthenticationProvider"/>
 
     <authentication-manager>
         <authentication-provider ref="userAuthenticationProvider"/>

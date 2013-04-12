@@ -25,7 +25,7 @@ public class VendorRepositoryTest {
   VendorRepository vendorRepository;
 
   @Test
-  public void shouldGetVendor(){
+  public void shouldGetVendor() {
 
     Vendor expectedVendor = new Vendor();
     when(vendorMapper.getByName("vendor")).thenReturn(expectedVendor);
@@ -35,5 +35,15 @@ public class VendorRepositoryTest {
     assertThat(vendor, is(expectedVendor));
     verify(vendorMapper).getByName("vendor");
 
+  }
+
+  @Test
+  public void shouldGetAuthTokenForVendor() throws Exception {
+    String vendor = "some vendor";
+    when(vendorMapper.getToken(vendor)).thenReturn("some token");
+    String token = vendorRepository.getToken(vendor);
+
+    assertThat(token, is("some token"));
+    verify(vendorMapper).getToken(vendor);
   }
 }

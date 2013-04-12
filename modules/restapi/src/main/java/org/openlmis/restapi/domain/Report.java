@@ -8,6 +8,7 @@ package org.openlmis.restapi.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.openlmis.core.domain.Vendor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.RnrLineItem;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Report {
 
   public static final String ERROR_MANDATORY_FIELD_MISSING = "error.restapi.mandatory.missing";

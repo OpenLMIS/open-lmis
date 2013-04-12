@@ -12,8 +12,7 @@ import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
 import org.openlmis.core.domain.*;
-import org.openlmis.core.domain.Vendor;
-import org.openlmis.core.repository.mapper.VendorMapper;
+import org.openlmis.core.utils.mapper.TestVendorMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -53,7 +52,7 @@ public class UserMapperIT {
   @Autowired
   private SupervisoryNodeMapper supervisoryNodeMapper;
   @Autowired
-  VendorMapper vendorMapper;
+  TestVendorMapper vendorMapper;
 
   private Facility facility;
   private SupervisoryNode supervisoryNode;
@@ -149,7 +148,7 @@ public class UserMapperIT {
     vendor.setName("newVendor");
     vendorMapper.insert(vendor);
 
-    User user = make(a(defaultUser, with(facilityId, facility.getId()), with(supervisorUserName, nullString), with(vendorId,  vendor.getId())));
+    User user = make(a(defaultUser, with(facilityId, facility.getId()), with(supervisorUserName, nullString), with(vendorId, vendor.getId())));
     user.setModifiedDate(Calendar.getInstance().getTime());
     userMapper.insert(user);
 

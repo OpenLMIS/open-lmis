@@ -7,10 +7,10 @@
 package org.openlmis.restapi.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestService;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.Rnr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +19,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.security.Principal;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -32,8 +34,8 @@ public class RestController {
   private RestService restService;
 
   @RequestMapping(value = "/rest-api/requisitions", method = POST, headers = ACCEPT_JSON)
-  public ResponseEntity submitRequisition(@RequestHeader(value = "Authorization", required=false) String credentials,
-                                          @RequestBody Report report) {
+  public ResponseEntity submitRequisition(@RequestHeader(value = "Authorization", required = false) String credentials,
+                                          @RequestBody Report report, Principal principal) {
     Rnr requisition;
     try {
       requisition = restService.submitReport(report, credentials);

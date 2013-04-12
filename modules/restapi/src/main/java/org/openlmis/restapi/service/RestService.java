@@ -36,7 +36,7 @@ public class RestService {
 
   @Transactional
   public Rnr submitReport(Report report, String credentials) {
-    validateVendor(report);
+    fillVendor(report);
     report.validate();
 
     User user = getValidatedUser(report);
@@ -53,14 +53,9 @@ public class RestService {
     return requisition;
   }
 
-  private void validateVendor(Report report) {
-    Vendor savedVendor = vendorService.getByName(report.getVendor().getName());
-
-    if(!savedVendor.getAuthToken().equals(report.getVendor().getAuthToken())) {
-      throw new DataException(ERROR_VENDOR_INVALID);
-    }
-
-    report.setVendor(savedVendor);
+  private void fillVendor(Report report) {
+    Vendor vendor = vendorService.getByName(report.getVendor().getName());
+    report.setVendor(vendor);
   }
 
   private User getValidatedUser(Report report) {
@@ -68,7 +63,7 @@ public class RestService {
     reportUser.setUserName(report.getUserId());
     reportUser.setVendorId(report.getVendor().getId());
     User user = userService.getByUsernameAndVendorId(reportUser);
-    if(user == null)  {
+    if (user == null) {
       throw new DataException(USER_USERNAME_INCORRECT);
     }
     return user;

@@ -16,7 +16,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.domain.Vendor;
 import org.openlmis.core.service.UserService;
 import org.openlmis.core.service.VendorService;
 import org.openlmis.restapi.domain.Report;
@@ -36,7 +35,6 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.restapi.builder.ReportBuilder.defaultReport;
 import static org.openlmis.restapi.service.RestService.USER_USERNAME_INCORRECT;
-import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
@@ -120,25 +118,6 @@ public class RestServiceTest {
     expectedException.expectMessage(USER_USERNAME_INCORRECT);
 
     service.submitReport(report, credentials);
-  }
-
-  @Test
-  public void shouldValidateVendorWithAuthTokenAndThrowErrorIfInvalid() throws Exception {
-    Vendor incorrectVendor = new Vendor();
-    incorrectVendor.setName("incorrect vendor");
-    incorrectVendor.setAuthToken("incorrect token");
-    report.setVendor(incorrectVendor);
-    Report spyReport = spy(report);
-    Vendor vendor = new Vendor();
-    vendor.setId(1);
-    vendor.setAuthToken("correct token");
-    when(vendorService.getByName(spyReport.getVendor().getName())).thenReturn(vendor);
-    doNothing().when(spyReport).validate();
-
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.vendor.invalid");
-
-    service.submitReport(spyReport, credentials);
   }
 
   @Test

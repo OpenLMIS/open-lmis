@@ -16,4 +16,8 @@ public class VendorRepository {
   public Vendor getByName(String name) {
     return mapper.getByName(name);
   }
+
+  public String getToken(String vendorName) {
+    return mapper.getToken(vendorName);
+  }
 }

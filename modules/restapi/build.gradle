@@ -13,10 +13,11 @@ dependencies {
             'org.aspectj:aspectjrt:1.7.0',
             'commons-lang:commons-lang:2.6',
             'commons-collections:commons-collections:20040616',
+            'org.springframework.security:spring-security-core:3.1.2.RELEASE',
             project(':modules:requisition')
 
     testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
-            project(path : ':modules:requisition', configuration: 'testFixtures')
+            project(path: ':modules:requisition', configuration: 'testFixtures')
 
     configurations {
         testFixtures {

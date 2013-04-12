@@ -16,4 +16,9 @@ public class VendorService {
   public Vendor getByName(String name) {
     return repository.getByName(name);
   }
+
+
+  public boolean authenticate(Vendor vendor) {
+    return vendor.getAuthToken().equals(repository.getToken(vendor.getName()));
+  }
 }
