@@ -203,34 +203,4 @@ LEFT OUTER JOIN geographic_zones gz on gz.id = f.geographiczoneid
 			</textField>
 		</band>
 	</detail>
-	<columnFooter>
-		<band splitType="Stretch"/>
-	</columnFooter>
-	<pageFooter>
-		<band height="54" splitType="Stretch">
-			<subreport>
-				<reportElement uuid="4333eb33-1f53-47fb-8e3d-d52a31257b37" x="1" y="0" width="801" height="54">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<subreportParameter name="PAGE_NO">
-					<subreportParameterExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of" + " " + $V{PAGE_COUNT}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="REPORT_VERSION">
-					<subreportParameterExpression><![CDATA[$P{REPORT_VERSION}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="GENERATED_BY">
-					<subreportParameterExpression><![CDATA[$P{GENERATED_BY}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="REPORT_ID">
-					<subreportParameterExpression><![CDATA[$P{REPORT_ID}]]></subreportParameterExpression>
-				</subreportParameter>
-				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.JREmptyDataSource()]]></dataSourceExpression>
-				<subreportExpression><![CDATA["openlmis-report-footer-landscape.jasper"]]></subreportExpression>
-			</subreport>
-		</band>
-	</pageFooter>
-	<summary>
-		<band height="7" splitType="Stretch"/>
-	</summary>
 </jasperReport>

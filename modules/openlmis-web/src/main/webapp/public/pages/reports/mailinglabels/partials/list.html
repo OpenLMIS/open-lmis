@@ -3,7 +3,7 @@
     <div class="row-fluid sortable ui-sortable">
             <div class="box span12">
                 <div class="box-header">
-                    <h2><span class="break"></span>Mailing Labels</h2>
+                    <h2><span class="break"></span>Facility List</h2>
                 </div>
             <div class="box-content">
                 <div class="app-form" style="padding: 10px;">
@@ -42,8 +42,9 @@
 
         <div class="box-header" style="text-align: right">
              <div class="box-icon">
-                 <a href="#" ng-click="export('pdf')" class='btn-small btn-info'>pdf</a>
-                 <a href="#" ng-click="export('xls')" class='btn-small btn-info'>xls</a>
+                 <a href="#" ng-click="export('pdf')" class='btn-small btn-info'>PDF</a>
+                 <a href="#" ng-click="export('xls')" class='btn-small btn-info'>Excel</a>
+                 <a href="#" ng-click="export('mailing-list')" class='btn-small btn-info'>Mailing List</a>
              </div>
          </div>
          <div class="gridStyleReport" ng-grid="gridOptions"></div>

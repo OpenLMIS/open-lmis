@@ -161,7 +161,7 @@ function ListMailinglabelsController($scope, MailingLabels, FacilityTypes, $http
                 { field: 'facilityName', displayName: 'Facility Name', width: "**" },
                 { field: 'facilityType', displayName: 'Facility Type', width: "*" },
                 { field: 'region', displayName: 'Region', width : "*"},
-                { field: 'gpsCoordinates;', displayName: 'GIS (LAT,LON,ALT)', width : "**"},
+                { field: 'address1;', displayName: 'Address 1', width : "**"},
                 { field: 'owner', displayName: 'Operator', width : "*"},
                 { field: 'phoneNumber', displayName: 'Phone', width : "*"},
                 { field: 'active', displayName: 'Active', width : "*"}

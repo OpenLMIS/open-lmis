@@ -1,26 +1,15 @@
 package org.openlmis.report;
 
 import lombok.*;
-import net.sf.jasperreports.engine.*;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import net.sf.jasperreports.engine.export.JRPdfExporter;
-import net.sf.jasperreports.engine.util.JRLoader;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.UserService;
 import org.openlmis.report.exception.ReportException;
 import org.openlmis.report.exporter.ReportExporter;
-import org.openlmis.report.model.FacilityReport;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.util.Constants;
-import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
