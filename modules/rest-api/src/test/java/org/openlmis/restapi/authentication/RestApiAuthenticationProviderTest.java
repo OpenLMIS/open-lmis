@@ -13,11 +13,12 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Vendor;
 import org.openlmis.core.service.VendorService;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -87,5 +88,17 @@ public class RestApiAuthenticationProviderTest {
 
     assertThat(authenticated.getPrincipal(), is(authentication.getPrincipal()));
     verify(vendorService).authenticate(vendor);
+  }
+
+  @Test
+  public void shouldReturnFalseIfAuthenticationNotOfTypeUsernamePasswordAuthenticationToken() throws Exception {
+    boolean supported = restApiAuthenticationProvider.supports(Authentication.class);
+    assertFalse(supported);
+  }
+
+  @Test
+  public void shouldReturnTrueIfAuthenticationOfTypeUsernamePasswordAuthenticationToken() throws Exception {
+    boolean supported = restApiAuthenticationProvider.supports(UsernamePasswordAuthenticationToken.class);
+    assertTrue(supported);
   }
 }

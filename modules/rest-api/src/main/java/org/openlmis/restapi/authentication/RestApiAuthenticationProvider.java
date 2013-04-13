@@ -35,15 +35,15 @@ public class RestApiAuthenticationProvider implements AuthenticationProvider {
     vendor.setName((String) authentication.getPrincipal());
     vendor.setAuthToken((String) authentication.getCredentials());
 
-    Collection<? extends GrantedAuthority> authorities = null;
-
     if (!vendor.isValid()) return null;
 
-    if (vendorService.authenticate(vendor)) {
-      return new UsernamePasswordAuthenticationToken(authentication.getPrincipal(), authentication.getCredentials(), authorities);
+    Collection<? extends GrantedAuthority> authorities = null;
+
+    if (!vendorService.authenticate(vendor)) {
+      return null;
     }
 
-    return null;
+    return new UsernamePasswordAuthenticationToken(authentication.getPrincipal(), authentication.getCredentials(), authorities);
   }
 
   @Override

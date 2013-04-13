@@ -34,7 +34,7 @@ public class RestControllerTest {
 
   @InjectMocks
   RestController controller;
-  private String credentials;
+
   Principal principal;
 
   @Before
@@ -82,5 +82,12 @@ public class RestControllerTest {
     controller.submitRequisition(report, principal);
 
     assertThat(report.getVendor().getName(), is("vendor name"));
+  }
+
+  @Test
+  public void shouldResolveUnhandledException() throws Exception {
+    final ResponseEntity<RestResponse> response = controller.handleException(new Exception());
+    final RestResponse body = response.getBody();
+    assertThat((String) body.getData().get(ERROR), is("Oops, something has gone wrong. Please try again later"));
   }
 }

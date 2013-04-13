@@ -39,7 +39,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({RestService.class, Base64.class})
+@PrepareForTest(RestService.class)
 public class RestServiceTest {
 
   @Rule
@@ -78,7 +78,6 @@ public class RestServiceTest {
       .thenReturn(requisition);
     mockStatic(Base64.class);
     encodedCredentialsBytes = encodedCredentials.getBytes();
-    when(Base64.encodeBase64(credentials.getBytes())).thenReturn(encodedCredentialsBytes);
   }
 
   @Test
