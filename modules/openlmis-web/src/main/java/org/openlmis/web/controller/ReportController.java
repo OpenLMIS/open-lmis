@@ -191,7 +191,7 @@ public class ReportController  extends BaseController {
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_FACILITY_REPORT')")
     public Pages getFacilityLists( //@PathVariable(value = "reportKey") String reportKey,
                                     @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                    @RequestParam(value = "max", required = false, defaultValue = "20") int max,
+                                    @RequestParam(value = "max", required = false, defaultValue = "5") int max,
                                     @RequestParam(value = "zoneId", required = false, defaultValue = "0") int zoneId,
                                     @RequestParam(value = "facilityTypeId", required = false, defaultValue = "0") int facilityTypeId,
                                     @RequestParam(value = "statusId", required = false, defaultValue = "" ) Boolean statusId,
@@ -224,7 +224,7 @@ public class ReportController  extends BaseController {
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_MAILING_LABEL_REPORT')")
     public Pages getFacilityListsWtihLables( //@PathVariable(value = "reportKey") String reportKey,
                       @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                      @RequestParam(value = "max", required = false, defaultValue = "20") int max,
+                      @RequestParam(value = "max", required = false, defaultValue = "5") int max,
                       @RequestParam(value = "facilityCodeFilter", required = false, defaultValue = "") String facilityCodeFilter,
                       @RequestParam(value = "facilityTypeId", required = false, defaultValue = "0") int facilityTypeId,
                       @RequestParam(value = "facilityNameFilter", required = false, defaultValue = "" ) String facilityNameFilter,
@@ -257,7 +257,7 @@ public class ReportController  extends BaseController {
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_CONSUMPTION_REPORT')")
     public Pages getConsumptionData( //@PathVariable(value = "reportKey") String reportKey,
                                              @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                             @RequestParam(value = "max", required = false, defaultValue = "20") int max,
+                                             @RequestParam(value = "max", required = false, defaultValue = "5") int max,
                                              @RequestParam(value = "facilityCodeFilter", required = false, defaultValue = "0") String facilityCodeFilter,
                                              @RequestParam(value = "facilityTypeId", required = false, defaultValue = "0") int facilityTypeId,
                                              @RequestParam(value = "facilityNameFilter", required = false, defaultValue = "" ) String facilityNameFilter,

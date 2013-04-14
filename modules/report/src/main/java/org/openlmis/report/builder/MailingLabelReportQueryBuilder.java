@@ -23,11 +23,14 @@ public class MailingLabelReportQueryBuilder {
         MailingLabelReportFilter filter  =(MailingLabelReportFilter)params.get("filterCriteria");
         MailingLabelReportSorter sorter = (MailingLabelReportSorter)params.get("SortCriteria");
         BEGIN();
-        SELECT("F.id, F.code, F.name, F.active as active, F.address1, F.address2 , FT.name as facilityType, GZ.name as region, FO.code as owner, F.latitude::text ||',' ||  F.longitude::text  ||', ' || F.altitude::text gpsCoordinates, F.mainphone as phoneNumber, F.fax as fax");
+        SELECT("F.id, F.code, F.name, F.active as active, F.address1, F.address2 , FT.name as facilityType, GZ.name as region, FO.code as owner, F.latitude::text ||',' ||  F.longitude::text  ||', ' || F.altitude::text gpsCoordinates, F.mainphone as phoneNumber, F.fax as faxfax, U.firstName || ' ' || U.lastName contact ");
         FROM("facilities F");
         JOIN("facility_types FT on FT.id = F.typeid");
         LEFT_OUTER_JOIN("geographic_zones GZ on GZ.id = F.geographiczoneid");
         LEFT_OUTER_JOIN("facility_operators FO on FO.id = F.operatedbyid");
+        LEFT_OUTER_JOIN("Users U on U.facilityId = F.id ");
+
+        ORDER_BY("F.name asc");
 
         if(filter != null){
             if (filter.getFacilityCode() != "") {
