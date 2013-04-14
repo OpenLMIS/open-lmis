@@ -62,7 +62,7 @@
                     <property name="reportKey" value="summary"/>
                     <property name="template" value="summary-report.jasper"/>
                     <property name="reportDataProvider" ref="summaryReportDataProvider"/>
-                    <property name="id" value="RP-CON"/>
+                    <property name="id" value="RP-Summary"/>
                     <property name="name" value="Summary Report"/>
                     <property name="title" value="Summary Report"/>
                     <property name="version" value="1.0"/>
