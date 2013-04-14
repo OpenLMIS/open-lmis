@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="facility-mailing-list" language="groovy" columnCount="3" printOrder="Horizontal" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="218" columnSpacing="74" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
+<!-- Created with Jaspersoft Studio version last-->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="facility-mailing-list" language="groovy" columnCount="4" printOrder="Horizontal" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="173" columnSpacing="30" leftMargin="40" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["C:\\Users\\Issa\\JSI_Projects\\bitbucket\\open-lmis\\modules\\report\\src\\main\\template\\"]]></defaultValueExpression>
 	</parameter>
@@ -41,27 +44,6 @@ ORDER BY F.code asc, F.typeid asc]]>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
-	<title>
-		<band height="79" splitType="Stretch">
-			<subreport>
-				<reportElement uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e" x="0" y="0" width="802" height="79"/>
-				<subreportParameter name="REPORT_TITLE">
-					<subreportParameterExpression><![CDATA[$P{REPORT_TITLE}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="REPORT_NAME">
-					<subreportParameterExpression><![CDATA[$P{REPORT_NAME}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="LOGO">
-					<subreportParameterExpression><![CDATA[$P{LOGO}]]></subreportParameterExpression>
-				</subreportParameter>
-				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.JREmptyDataSource()]]></dataSourceExpression>
-				<subreportExpression><![CDATA["openlmis-report-header-landscape.jasper"]]></subreportExpression>
-			</subreport>
-		</band>
-	</title>
-	<pageHeader>
-		<band height="35" splitType="Stretch"/>
-	</pageHeader>
 	<columnHeader>
 		<band height="21" splitType="Stretch"/>
 	</columnHeader>
@@ -93,53 +75,23 @@ ORDER BY F.code asc, F.typeid asc]]>
 			<textField isBlankWhenNull="true">
 				<reportElement uuid="3a2b7683-021a-4077-bf7a-e6b58dc2fc74" x="31" y="30" width="186" height="20"/>
 				<textElement/>
-				<textFieldExpression><![CDATA[$F{contact} == "NULL" ? " " :$F{contact}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{contact} == "NULL" ? " -" :$F{contact}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
 				<reportElement uuid="9495406b-e628-4926-9144-3eb9f378721d" x="0" y="50" width="217" height="20"/>
 				<textElement/>
-				<textFieldExpression><![CDATA[$F{address1}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{address1} == "NULL"? "No Address":$F{address1}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="426481ca-2938-4b7d-8b6d-1ae62cab25e6" x="0" y="70" width="217" height="20"/>
 				<textElement/>
-				<textFieldExpression><![CDATA[$F{phoneNumber}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{phoneNumber}=="NULL"?"-":$F{phoneNumber}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="a9ba7617-81ae-4d93-aa37-fad2af1e9ff9" x="0" y="90" width="217" height="20"/>
 				<textElement/>
-				<textFieldExpression><![CDATA[$F{fax}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fax}=="NULL"?"-":$F{fax}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
-	<columnFooter>
-		<band height="45" splitType="Stretch"/>
-	</columnFooter>
-	<pageFooter>
-		<band height="54" splitType="Stretch">
-			<subreport>
-				<reportElement uuid="4333eb33-1f53-47fb-8e3d-d52a31257b37" x="0" y="0" width="802" height="54"/>
-				<subreportParameter name="PAGE_NO">
-					<subreportParameterExpression><![CDATA[$V{PAGE_NUMBER}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="REPORT_VERSION">
-					<subreportParameterExpression><![CDATA[$P{REPORT_VERSION}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="TOTAL_PAGES">
-					<subreportParameterExpression><![CDATA[$V{TOTAL_PAGES}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="REPORT_ID">
-					<subreportParameterExpression><![CDATA[$P{REPORT_ID}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="GENERATED_BY">
-					<subreportParameterExpression><![CDATA[$P{GENERATED_BY}]]></subreportParameterExpression>
-				</subreportParameter>
-				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.JREmptyDataSource()]]></dataSourceExpression>
-				<subreportExpression><![CDATA["openlmis-report-footer-landscape.jasper"]]></subreportExpression>
-			</subreport>
-		</band>
-	</pageFooter>
-	<summary>
-		<band height="42" splitType="Stretch"/>
-	</summary>
 </jasperReport>
