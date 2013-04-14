@@ -20,13 +20,8 @@ import java.util.Collection;
 
 public class RestApiAuthenticationProvider implements AuthenticationProvider {
 
-  private VendorService vendorService;
-
-
   @Autowired
-  public RestApiAuthenticationProvider(VendorService vendorService) {
-    this.vendorService = vendorService;
-  }
+  private VendorService vendorService;
 
   @Override
   public Authentication authenticate(Authentication authentication) throws AuthenticationException {

@@ -8,8 +8,8 @@ apply plugin: 'idea'
 
 idea {
     project {
-        languageLevel = '1.7'
-        jdkName = '1.7'
+        ext.languageLevel = '1.7'
+        ext.jdkName = '1.7'
     }
 }
 
@@ -26,8 +26,8 @@ subprojects {
     apply plugin: 'idea'
     idea {
         project {
-            languageLevel = '1.7'
-            jdkName = '1.7'
+            ext.languageLevel = '1.7'
+            ext.jdkName = '1.7'
         }
     }
     apply plugin: 'java'

@@ -7,7 +7,6 @@
 package org.openlmis.core.domain;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
@@ -42,9 +41,7 @@ public class SupervisoryNode extends BaseModel implements Importable {
 
     SupervisoryNode that = (SupervisoryNode) o;
 
-    if (!id.equals(that.id)) return false;
-
-    return true;
+    return id.equals(that.id);
   }
 
   @Override

@@ -86,6 +86,16 @@ jettyRun {
     System.properties.get('environmentName', 'local')
 }
 
+def configureHttps(keystore, password) {
+    ext.connectors = [jettyRun.class.classLoader.loadClass('org.mortbay.jetty.security.SslSocketConnector').newInstance()]
+    ext.connectors[0].port = 9091
+    ext.connectors[0].keystore = connectors[0].truststore = keystore
+    ext.connectors[0].keyPassword = connectors[0].trustPassword = password
+    ext.connectors[0].wantClientAuth = true
+    ext.connectors[0].needClientAuth = false
+    return ext.connectors;
+}
+
 task run(dependsOn: jettyRun)
 
 task explodedWar(type: Copy) {
