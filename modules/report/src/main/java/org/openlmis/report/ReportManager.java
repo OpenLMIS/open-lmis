@@ -10,6 +10,7 @@ import org.openlmis.report.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,7 +75,10 @@ public class ReportManager {
        User currentUser = userService.getById(userId);
        List<? extends ReportData> dataSource = report.getReportDataProvider().getReportDataByFilterCriteria(parameter, DataSourceType.BEAN_COLLECTION_DATA_SOURCE);
 
-       reportExporter.exportReport(this.getClass().getClassLoader().getResourceAsStream(report.getTemplate()),getReportExtraParams(report, currentUser.getUserName()), dataSource, outputOption, response );
+       // Read the report template from file.
+       InputStream reportInputStream =  this.getClass().getClassLoader().getResourceAsStream(report.getTemplate()) ;
+       HashMap<String, Object> extraParams = getReportExtraParams(report, currentUser.getUserName()) ;
+       reportExporter.exportReport(reportInputStream,extraParams, dataSource, outputOption, response);
 
     }
 

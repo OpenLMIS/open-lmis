@@ -25,8 +25,6 @@ public abstract class ReportDataProvider {
 
     protected abstract List<? extends ReportData> getBeanCollectionReportData(ReportData filterCriteria);
     protected abstract List<? extends ReportData> getResultSetReportData(ReportData filterCriteria);
-
-
     public abstract List<? extends ReportData> getReportDataByFilterCriteriaAndPagingAndSorting(ReportData filterCriteria,ReportData SortCriteria ,int page,int pageSize);
     public abstract int getReportDataCountByFilterCriteria(ReportData facilityReportFilter);
 }
