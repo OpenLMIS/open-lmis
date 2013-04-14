@@ -23,8 +23,8 @@ function ListMailinglabelsController($scope, MailingLabels, FacilityTypes, $http
         };
 
         $scope.pagingOptions = {
-            pageSizes: [ 20, 40, 50, 100],
-            pageSize: 20,
+            pageSizes: [5, 10, 20, 40, 50, 100],
+            pageSize: 10,
             totalServerItems: 0,
             currentPage: 1
         };
@@ -165,6 +165,7 @@ function ListMailinglabelsController($scope, MailingLabels, FacilityTypes, $http
                 { field: 'facilityType', displayName: 'Facility Type', width: "*" },
                 { field: 'region', displayName: 'Region', width : "*"},
                 { field: 'address1;', displayName: 'Address 1', width : "**"},
+                { field: 'contact', displayName: 'Contact', width : "*"},
                 { field: 'owner', displayName: 'Operator', width : "*"},
                 { field: 'phoneNumber', displayName: 'Phone', width : "*"},
                 { field: 'active', displayName: 'Active', width : "*"}

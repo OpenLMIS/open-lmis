@@ -15,8 +15,8 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
         };
 
         $scope.pagingOptions = {
-            pageSizes: [ 20, 40, 50, 100],
-            pageSize: 20,
+            pageSizes: [5, 10, 20, 40, 50, 100],
+            pageSize: 10,
             totalServerItems: 0,
             currentPage: 1
         };
@@ -183,6 +183,7 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
             { field: 'facilityName', displayName: 'Facility Name', width: "**" },
             { field: 'facilityType', displayName: 'Facility Type', width: "*" },
             { field: 'region', displayName: 'Zone', width : "*"},
+            //{ field: 'contact', displayName: 'Contact', width : "*"},
             { field: 'gpsCoordinates;', displayName: 'GIS (LAT,LON,ALT)', width : "**"},
             { field: 'phoneNumber', displayName: 'Phone', width : "*"},
             { field: 'owner', displayName: 'Operator', width : "*"},
