@@ -72,6 +72,7 @@ function ConvertToOrderListController($scope, requisitionList, RequisitionOrder,
     var successHandler = function () {
       RequisitionForConvertToOrder.get({}, function (data) {
         $scope.requisitions = data.rnr_list;
+        $scope.selectedItems.length = 0;
         $scope.filterRequisitions();
       });
 
