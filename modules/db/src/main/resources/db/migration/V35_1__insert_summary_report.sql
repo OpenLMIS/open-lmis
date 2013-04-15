@@ -1,2 +1,2 @@
-INSERT INTO rights(name,adminright,description) VALUES
- ('VIEW_SUMMARY_REPORT',false,'Permission to view Summary Report')
+INSERT INTO rights(name,description) VALUES
+ ('VIEW_SUMMARY_REPORT','Permission to view Summary Report')
