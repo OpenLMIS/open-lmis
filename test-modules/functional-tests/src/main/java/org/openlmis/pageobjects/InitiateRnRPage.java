@@ -550,6 +550,7 @@ public class InitiateRnRPage extends RequisitionPage {
     String actualColumnHeading = null;
     for (int i = 0; i < noOfColumns; i++) {
       try {
+        testWebDriver.sleep(100);
         WebElement columnElement = testWebDriver.getElementByXpath(xpathTillTrTag + "/th[" + (i + 1) + "]");
         columnElement.click();
         actualColumnHeading = columnElement.getText();
@@ -571,6 +572,7 @@ public class InitiateRnRPage extends RequisitionPage {
     String actualColumnHeading = null;
     for (int i = 0; i < noOfColumns; i++) {
       try {
+        testWebDriver.sleep(100);
         WebElement columnElement = testWebDriver.getElementByXpath(xpathTillTrTag + "/th[" + (i + 1) + "]");
         columnElement.click();
         actualColumnHeading = columnElement.getText();
