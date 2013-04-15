@@ -77,7 +77,8 @@ ORDER BY F.code asc, F.typeid asc]]>
 		<band height="132" splitType="Stretch">
 			<staticText>
 				<reportElement uuid="da74e82c-f1fc-4e86-8267-4c37eb6527a6" mode="Opaque" x="0" y="0" width="801" height="132" backcolor="#F3F3F3">
-					<printWhenExpression><![CDATA[true == false]]></printWhenExpression>
+					<printWhenExpression><![CDATA[true == false
+]]></printWhenExpression>
 				</reportElement>
 				<textElement/>
 				<text><![CDATA[]]></text>
