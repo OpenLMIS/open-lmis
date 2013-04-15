@@ -1,6 +1,10 @@
-{\"foo\":\"bar\",
-\"coolness\":2.0,
-\"altitude\":39000,
-\"pilot\":{\"firstName\":\"Manjyot\",\"lastName\":\"Singh\"},
-\"mission\":\"apollo 11\",
-\"Dummy\":{\"DAR\":\"Lock\",\"SCC\":\"Locked\",\"New Req\":[\"Accept\",\"Reject\"]}}
+{"supportedPrograms":
+[{"program":{"id":1},"active":true,
+"editedStartDate":"2013-02-07T18:30:00.000Z",
+"startDate":"2013-02-07T18:30:00.000Z"}],
+"dataReportable":"true","code":"facilitycode",
+"gln":"fac","name":"facilityname",
+"facilityType":{"code":"lvl3_hospital"},
+"sdp":"true","active":"true",
+"goLiveDate":"2013-02-07T18:30:00.000Z",
+"geographicZone":{"id":1}}

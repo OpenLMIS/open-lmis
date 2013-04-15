@@ -5,6 +5,13 @@ import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 import org.apache.commons.io.IOUtils;
 
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.Scanner;
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -22,6 +29,14 @@ public class httpClient {
         String output, outputFinal = "";
 
         try {
+
+            // configure the SSLContext with a TrustManager
+            SSLContext ctx = SSLContext.getInstance("TLS");
+            ctx.init(new KeyManager[0], new TrustManager[] {new DefaultTrustManager()}, new SecureRandom());
+            SSLContext.setDefault(ctx);
+
+
+
             String json = "";
             URL url = new URL(destinationUrl);
             conn = (HttpURLConnection) url.openConnection();
@@ -97,6 +112,7 @@ public class httpClient {
             while ((output = br.readLine()) != null) {
                 outputFinal = outputFinal + output;
             }
+
             br.close();
             conn.disconnect();
         } catch (MalformedURLException e) {
@@ -160,13 +176,43 @@ public class httpClient {
         }
     }
 
-  //  public static void main(String args[]) {
-  //     new httpClient().SendJSON("DummyJSON.txt","","POST");
+    static {
+        //for localhost testing only
+        javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(
+                new javax.net.ssl.HostnameVerifier(){
+
+                    public boolean verify(String hostname,
+                                          javax.net.ssl.SSLSession sslSession) {
+                        if (hostname.equals("localhost:9091")) {
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+    }
+
+    public static void main(String args[]) {
+       httpClient client = new httpClient();
+        client.SendJSON("/Users/Raman/open-lmis/test-modules/test-core/src/main/java/org/openlmis/UiUtils/DummyJSON.txt", "https://localhost:9091/facilities.json", "POST");
 
 
-//        new ServiceUtils().createJson();
+ //       new ServiceUtils().createJson();
 
 
- //   }
+    }
+
+    private static class DefaultTrustManager implements X509TrustManager {
+
+        @Override
+        public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {}
+
+        @Override
+        public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {}
+
+        @Override
+        public X509Certificate[] getAcceptedIssuers() {
+            return null;
+        }
+    }
 
 }
