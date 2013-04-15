@@ -18,8 +18,8 @@ import org.openlmis.report.model.ReportData;
 public class FacilityReportFilter implements ReportData {
 
     //top filters
-    private String facilityCode;
-    private String facilityName;
+    private String facilityCodeId;
+    private String facilityNameId;
     private int facilityTypeId;
     private int zoneId;
     private Boolean statusId;

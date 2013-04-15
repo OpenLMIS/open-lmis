@@ -1,5 +1,15 @@
 function ListFacilitiesController($scope, FacilityList, FacilityTypes, GeographicZones, $http, $routeParams,$location) {
 
+        //to minimize and maximize the filter section
+        var section = 1;
+
+        $scope.section = function (id) {
+            section = id;
+        };
+
+        $scope.show = function (id) {
+            return section == id;
+        };
 
         $scope.filterGrid = function (){
             $scope.$apply();
@@ -183,8 +193,8 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
             { field: 'facilityName', displayName: 'Facility Name', width: "**" },
             { field: 'facilityType', displayName: 'Facility Type', width: "*" },
             { field: 'region', displayName: 'Zone', width : "*"},
-            //{ field: 'contact', displayName: 'Contact', width : "*"},
-            { field: 'gpsCoordinates;', displayName: 'GIS (LAT,LON,ALT)', width : "**"},
+            { field: 'contact', displayName: 'Contact', width : "*"},
+            //{ field: 'gpsCoordinates;', displayName: 'GIS (LAT,LON,ALT)', width : "**"},
             { field: 'phoneNumber', displayName: 'Phone', width : "*"},
             { field: 'owner', displayName: 'Operator', width : "*"},
             { field: 'active', displayName: 'Active', width : "*"}

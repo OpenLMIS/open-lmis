@@ -40,8 +40,6 @@ public class FacilityReportQueryBuilder {
             }
         }
 
-        ORDER_BY("F.name asc");
-
         if(sorter != null){
 
             if(sorter.getFacilityName().equalsIgnoreCase("asc")){
