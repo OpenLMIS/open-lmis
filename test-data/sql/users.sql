@@ -22,7 +22,7 @@ INSERT INTO role_rights
   ((select id from roles where name='LMU In-Charge'), 'CONVERT_TO_ORDER'),
   ((select id from roles where name='LMU In-Charge'), 'VIEW_ORDER');
 
-INSERT INTO VENDORS (name, active) VALUES ('commTrac', true);
+INSERT INTO VENDORS (name, active) VALUES ('commTrack', true);
 
 INSERT INTO users
   (id, userName, password, facilityId, firstName, lastName, email, active) VALUES
@@ -34,7 +34,7 @@ INSERT INTO users
 
 INSERT INTO USERS
   (id, userName, password, facilityId, firstName, lastName, vendorId ,active) VALUES
-  (700, 'commTrack', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie', (SELECT id FROM facilities WHERE code = 'F10'), 'CommTrac', 'Doe',(SELECT id from vendors where name='commTrac'), true);
+  (700, 'commTrack', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie', (SELECT id FROM facilities WHERE code = 'F10'), 'CommTrack', 'Doe',(SELECT id from vendors where name='commTrack'), true);
 
 
 INSERT INTO supervisory_nodes

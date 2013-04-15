@@ -12,6 +12,7 @@ import org.apache.commons.collections.Predicate;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.exception.DataException;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,6 +20,7 @@ import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
+import static org.openlmis.rnr.domain.RnrLineItem.RNR_VALIDATION_ERROR;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
 @Data
@@ -186,6 +188,8 @@ public class Rnr {
     this.modifiedBy = otherRequisition.modifiedBy;
     for (RnrLineItem thisLineItem : fullSupplyLineItems) {
       RnrLineItem otherLineItem = otherRequisition.findCorrespondingLineItem(thisLineItem);
+      if(otherLineItem == null)
+        throw new DataException(RNR_VALIDATION_ERROR);
       thisLineItem.copyUserEditableFields(otherLineItem, programRnrColumns);
       thisLineItem.setModifiedBy(otherRequisition.getModifiedBy());
     }

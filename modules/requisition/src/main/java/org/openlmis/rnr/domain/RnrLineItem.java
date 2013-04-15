@@ -8,13 +8,11 @@ package org.openlmis.rnr.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang.ObjectUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.message.OpenLmisMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -183,7 +181,7 @@ public class RnrLineItem {
       || isPresent(reasonForRequestedQuantity));
 
     if (!valid)
-      throw new DataException(new OpenLmisMessage(RNR_VALIDATION_ERROR));
+      throw new DataException(RNR_VALIDATION_ERROR);
 
   }
 

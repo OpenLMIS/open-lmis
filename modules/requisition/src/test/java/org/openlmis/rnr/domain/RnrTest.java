@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openlmis.core.domain.Money;
 import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.builder.RnrColumnBuilder;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
@@ -125,6 +126,17 @@ public class RnrTest {
     assertThat(savedRnr.getModifiedBy(), is(1));
     assertThat(savedRnr.getNonFullSupplyLineItems(), is(nonFullSupplyLineItems));
     assertThat(savedRnr.getNonFullSupplyLineItems().get(0).getModifiedBy(), is(rnr.getModifiedBy()));
+  }
+
+  @Test
+  public void shouldGiveErrorIfCorrespondingLineItemNotFound() throws Exception {
+    Rnr otherRequisition = new Rnr();
+    List<RnrColumn> programRnrColumns = new ArrayList<>();
+
+    exception.expect(DataException.class);
+    exception.expectMessage("rnr.validation.error");
+
+    rnr.copyUserEditableFields(otherRequisition, programRnrColumns);
   }
 
   @Test

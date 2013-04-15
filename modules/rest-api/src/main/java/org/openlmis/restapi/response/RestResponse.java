@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
 public class RestResponse {
   public static final String ERROR = "error";
   public static final String SUCCESS = "success";
-  private static ResourceBundle resourceBundle = ResourceBundle.getBundle("messages");
+  private static ResourceBundle resourceBundle = ResourceBundle.getBundle("restapi_messages");
 
   private Map<String, Object> data = new HashMap<>();
 
