@@ -113,16 +113,14 @@ ORDER BY F.code asc, F.typeid asc]]>
 				<textElement>
 					<paragraph leftIndent="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[($F{phoneNumber}.isEmpty()  || $F{phoneNumber} == null ||$F{phoneNumber} == "NULL"   )? null :$F{phoneNumber}
-]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{phoneNumber}.isEmpty()  || $F{phoneNumber} == null ||$F{phoneNumber} == "NULL"   )? null :$F{phoneNumber}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement uuid="a9ba7617-81ae-4d93-aa37-fad2af1e9ff9" x="0" y="90" width="244" height="20" isRemoveLineWhenBlank="true"/>
 				<textElement>
 					<paragraph leftIndent="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[($F{fax}.isEmpty()  || $F{fax} == null || $F{fax} == "NULL"   )? null :$F{fax}
-]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{fax}.isEmpty()  || $F{fax} == null || $F{fax} == "NULL"   )? null :$F{fax}]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement uuid="f46bea78-ee10-4469-857b-4b5dc657ea98" x="1" y="131" width="801" height="1" forecolor="#3D9297">
@@ -138,8 +136,7 @@ ORDER BY F.code asc, F.typeid asc]]>
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single" leftIndent="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[($F{email}.isEmpty()  || $F{email} == null || $F{email} == "NULL"   )? null :$F{email}
-]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{email}.isEmpty()  || $F{email} == null || $F{email} == "NULL"   )? null :$F{email}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
