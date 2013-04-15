@@ -74,7 +74,7 @@ public class FacilityReportDataProvider extends ReportDataProvider {
             facilityReportFilter = new FacilityReportFilter();
             facilityReportFilter.setZoneId(filterCriteria.get("zoneId") == null ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0]));  //defaults to 0
             facilityReportFilter.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
-            facilityReportFilter.setStatusId(filterCriteria.get("statusId") == null || filterCriteria.get("statusId")[0].isEmpty() ? true : Boolean.valueOf(filterCriteria.get("statusId")[0]));
+            facilityReportFilter.setStatusId(filterCriteria.get("statusId") == null || filterCriteria.get("statusId")[0].isEmpty() ? null : Boolean.valueOf(filterCriteria.get("statusId")[0]));
         }
 
         FacilityReportSorter facilityReportSorter = null;
@@ -99,7 +99,7 @@ public class FacilityReportDataProvider extends ReportDataProvider {
             facilityReportFilter =  new FacilityReportFilter();
             facilityReportFilter.setZoneId(filterCriteria.get("zoneId") == null ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0]));  //defaults to 0
             facilityReportFilter.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
-            facilityReportFilter.setStatusId(Boolean.valueOf((filterCriteria.get("statusId") == null ? "" : filterCriteria.get("statusId")[0])));
+            facilityReportFilter.setStatusId(filterCriteria.get("statusId") == null || filterCriteria.get("statusId")[0].isEmpty() ? null : Boolean.valueOf(filterCriteria.get("statusId")[0]));
         }
         return (int)facilityReportMapper.SelectFilteredFacilitiesCount(facilityReportFilter);
     }
