@@ -117,6 +117,7 @@ describe('ConvertToOrderListController', function () {
     scope.dialogCloseCallback(true);
     httpBackend.flush();
     expect(scope.message).toEqual("The requisition(s) have been successfully converted to Orders");
+    expect(scope.selectedItems.length).toEqual(0);
   });
 
   it('should give message if no requisition selected', function() {
