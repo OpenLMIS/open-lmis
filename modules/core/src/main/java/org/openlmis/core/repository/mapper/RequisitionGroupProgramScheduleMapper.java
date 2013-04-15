@@ -18,7 +18,7 @@ public interface RequisitionGroupProgramScheduleMapper {
   @Insert("INSERT INTO requisition_group_program_schedules" +
     "(requisitionGroupId, programId, scheduleId, directDelivery, dropOffFacilityId, modifiedBy, modifiedDate) " +
     "VALUES(#{requisitionGroup.id}, #{program.id}, #{processingSchedule.id}, #{directDelivery}, #{dropOffFacility.id}, #{modifiedBy}, #{modifiedDate})")
-    @Options(useGeneratedKeys = true)
+  @Options(useGeneratedKeys = true)
   Integer insert(RequisitionGroupProgramSchedule requisitionGroupProgramSchedule);
 
   @Select("SELECT programId FROM requisition_group_program_schedules WHERE requisitionGroupId = #{requisitionGroupId}")
@@ -54,7 +54,8 @@ public interface RequisitionGroupProgramScheduleMapper {
     "programId=#{requisitionGroupProgramSchedule.program.id}, " +
     "scheduleId=#{requisitionGroupProgramSchedule.processingSchedule.id}, " +
     "directDelivery=#{requisitionGroupProgramSchedule.directDelivery}, " +
-    "dropOffFacilityId=#{requisitionGroupProgramSchedule.dropOffFacility.id} " +
+    "dropOffFacilityId=#{requisitionGroupProgramSchedule.dropOffFacility.id}, " +
+    "modifiedBy=#{requisitionGroupProgramSchedule.modifiedBy} , modifiedDate=#{requisitionGroupProgramSchedule.modifiedDate} " +
     "where id=#{requisitionGroupProgramSchedule.id}")
   void update(@Param(value = "requisitionGroupProgramSchedule") RequisitionGroupProgramSchedule requisitionGroupProgramSchedule);
 }

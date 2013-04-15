@@ -29,7 +29,7 @@ public interface ProductCategoryMapper {
   @Select("SELECT * FROM product_categories WHERE LOWER(code) = LOWER(#{code})")
   public ProductCategory getProductCategoryByCode(String code);
 
-  @Update("UPDATE product_categories SET name = #{name}, modifiedBy = #{modifiedBy}, displayOrder = #{displayOrder}, modifiedDate = DEFAULT where id = #{id}")
+  @Update("UPDATE product_categories SET name = #{name}, modifiedBy = #{modifiedBy}, displayOrder = #{displayOrder}, modifiedDate =#{modifiedDate} where id = #{id}")
   public void update(ProductCategory category);
 
 

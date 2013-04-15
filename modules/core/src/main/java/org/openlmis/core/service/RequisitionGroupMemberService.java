@@ -47,11 +47,13 @@ public class RequisitionGroupMemberService {
   }
 
   private void insertIfDoesNotAlreadyExist(RequisitionGroupMember requisitionGroupMember) {
-    if (requisitionGroupMember.getId() == null) {
-      setIdsForRequisitionGroupMemberEntitiesAndValidate(requisitionGroupMember);
-      validateIfFacilityIsAlreadyAssignedToRequistionGroupForProgram(requisitionGroupMember);
+    setIdsForRequisitionGroupMemberEntitiesAndValidate(requisitionGroupMember);
 
+    if (requisitionGroupMember.getId() == null) {
+      validateIfFacilityIsAlreadyAssignedToRequistionGroupForProgram(requisitionGroupMember);
       requisitionGroupMemberRepository.insert(requisitionGroupMember);
+    } else {
+      requisitionGroupMemberRepository.update(requisitionGroupMember);
     }
   }
 

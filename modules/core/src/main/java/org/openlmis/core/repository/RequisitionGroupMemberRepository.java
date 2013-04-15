@@ -59,4 +59,8 @@ public class RequisitionGroupMemberRepository {
     RequisitionGroup requisitionGroup, Facility facility) {
     return mapper.getMappingByRequisitionGroupIdAndFacilityId(requisitionGroup, facility);
   }
+
+  public void update(RequisitionGroupMember requisitionGroupMember) {
+    mapper.update(requisitionGroupMember);
+  }
 }

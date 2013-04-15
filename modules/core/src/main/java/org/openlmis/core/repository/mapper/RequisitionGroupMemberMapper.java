@@ -6,10 +6,7 @@
 
 package org.openlmis.core.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.RequisitionGroupMember;
@@ -23,7 +20,7 @@ public interface RequisitionGroupMemberMapper {
   @Insert("INSERT INTO requisition_group_members" +
     "(requisitionGroupId, facilityId, modifiedBy, modifiedDate) " +
     "VALUES (#{requisitionGroup.id}, #{facility.id}, #{modifiedBy}, #{modifiedDate})")
-    @Options(useGeneratedKeys = true)
+  @Options(useGeneratedKeys = true)
   Integer insert(RequisitionGroupMember requisitionGroupMember);
 
   @Select({"SELECT rgps.programId FROM requisition_groups rg",
@@ -39,4 +36,9 @@ public interface RequisitionGroupMemberMapper {
   RequisitionGroupMember getMappingByRequisitionGroupIdAndFacilityId(
     @Param(value = "requisitionGroup") RequisitionGroup requisitionGroup,
     @Param(value = "facility") Facility facility);
+
+  @Update("UPDATE requisition_group_members " +
+    "SET modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} WHERE " +
+    "requisitionGroupId = #{requisitionGroup.id} AND facilityId = #{facility.id}")
+  void update(RequisitionGroupMember requisitionGroupMember);
 }
