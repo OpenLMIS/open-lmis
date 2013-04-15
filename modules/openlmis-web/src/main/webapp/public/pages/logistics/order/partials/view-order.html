@@ -8,12 +8,13 @@
 
 <div class="app-form">
     <div class="form-group">
+        <h3>Order List</h3>
 
         <div class="alert alert-info" id="noOrdersPresent" ng-hide="orders.length">
             No R&Rs have been released as Orders yet
         </div>
         <div>
-            <div class="gridStyle" ng-grid="gridOptions"></div>
+            <div class="gridStyle" ng-grid="gridOptions" ng-show="orders.length"></div>
         </div>
     </div>
 </div>

@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.*;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.repository.mapper.*;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.openlmis.rnr.domain.*;
@@ -21,6 +22,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -74,8 +77,11 @@ public class RequisitionMapperIT {
   private ProgramMapper programMapper;
   @Autowired
   private CommentMapper commentMapper;
+  @Autowired
+  private QueryExecutor queryExecutor;
 
   private SupervisoryNode supervisoryNode;
+
 
   @Before
   public void setUp() {
@@ -110,7 +116,7 @@ public class RequisitionMapperIT {
 
     User author = new User();
     author.setId(1);
-    Comment comment = new Comment(null, requisition.getId(), author, "A comment",null);
+    Comment comment = new Comment(null, requisition.getId(), author, "A comment", null);
     commentMapper.insert(comment);
 
     Rnr fetchedRequisition = mapper.getById(requisition.getId());
@@ -320,8 +326,11 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldGetOrders() throws Exception {
+
     Rnr orderedRequisition1 = insertRequisition(processingPeriod1, RELEASED);
     Rnr orderedRequisition2 = insertRequisition(processingPeriod2, RELEASED);
+    Date today = DateTime.now().toDate();
+    Date oneYearBack = DateTime.now().minusYears(1).toDate();
 
     OrderBatch batch1 = new OrderBatch();
     batch1.setCreatedByUserId(1);
@@ -337,22 +346,32 @@ public class RequisitionMapperIT {
     orderedRequisition2.setOrderBatch(batch2);
     mapper.update(orderedRequisition2);
 
+    assertThat(updateOrderBatchCreatedTime(batch1, oneYearBack), is(not(0)));
+    assertThat(updateOrderBatchCreatedTime(batch2, today), is(not(0)));
+
     List<Rnr> orders = mapper.getByStatus(RELEASED);
 
     assertThat(orders.size(), is(2));
-    assertThat(orders.get(0).getId(), is(orderedRequisition1.getId()));
-    assertThat(orders.get(0).getFacility().getId(), is(orderedRequisition1.getFacility().getId()));
-    assertThat(orders.get(0).getProgram().getId(), is(orderedRequisition1.getProgram().getId()));
-    assertThat(orders.get(0).getPeriod().getId(), is(orderedRequisition1.getPeriod().getId()));
-    assertThat(orders.get(0).getOrderBatch().getId(), is(orderedRequisition1.getOrderBatch().getId()));
-    assertThat(orders.get(0).getOrderBatch().getCreatedByUserId(), is(orderedRequisition1.getOrderBatch().getCreatedByUserId()));
+    assertThat(orders.get(0).getId(), is(orderedRequisition2.getId()));
+    assertThat(orders.get(0).getFacility().getId(), is(orderedRequisition2.getFacility().getId()));
+    assertThat(orders.get(0).getProgram().getId(), is(orderedRequisition2.getProgram().getId()));
+    assertThat(orders.get(0).getPeriod().getId(), is(orderedRequisition2.getPeriod().getId()));
+    assertThat(orders.get(0).getOrderBatch().getId(), is(orderedRequisition2.getOrderBatch().getId()));
+    assertThat(orders.get(0).getOrderBatch().getCreatedByUserId(), is(orderedRequisition2.getOrderBatch().getCreatedByUserId()));
 
-    assertThat(orders.get(1).getId(), is(orderedRequisition2.getId()));
-    assertThat(orders.get(1).getFacility().getId(), is(orderedRequisition2.getFacility().getId()));
-    assertThat(orders.get(1).getProgram().getId(), is(orderedRequisition2.getProgram().getId()));
-    assertThat(orders.get(1).getPeriod().getId(), is(orderedRequisition2.getPeriod().getId()));
-    assertThat(orders.get(1).getOrderBatch().getId(), is(orderedRequisition2.getOrderBatch().getId()));
-    assertThat(orders.get(1).getOrderBatch().getCreatedByUserId(), is(orderedRequisition2.getOrderBatch().getCreatedByUserId()));
+    assertThat(orders.get(1).getId(), is(orderedRequisition1.getId()));
+    assertThat(orders.get(1).getFacility().getId(), is(orderedRequisition1.getFacility().getId()));
+    assertThat(orders.get(1).getProgram().getId(), is(orderedRequisition1.getProgram().getId()));
+    assertThat(orders.get(1).getPeriod().getId(), is(orderedRequisition1.getPeriod().getId()));
+    assertThat(orders.get(1).getOrderBatch().getId(), is(orderedRequisition1.getOrderBatch().getId()));
+    assertThat(orders.get(1).getOrderBatch().getCreatedByUserId(), is(orderedRequisition1.getOrderBatch().getCreatedByUserId()));
+  }
+
+  private int updateOrderBatchCreatedTime(OrderBatch batch1, Date date) throws SQLException {
+    List paramList = new ArrayList();
+    paramList.add(new java.sql.Date(date.getTime()));
+    paramList.add(batch1.getId());
+    return queryExecutor.insertOrUpdate("Update Order_Batches set createTimeStamp = ? where id = ?", paramList);
   }
 
   private Rnr insertRequisition(ProcessingPeriod period, RnrStatus status) {
@@ -397,8 +416,8 @@ public class RequisitionMapperIT {
 
   private ProcessingPeriod insertPeriod(String name) {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod,
-      with(scheduleId, processingSchedule.getId()),
-      with(ProcessingPeriodBuilder.name, name)));
+        with(scheduleId, processingSchedule.getId()),
+        with(ProcessingPeriodBuilder.name, name)));
 
     processingPeriodMapper.insert(processingPeriod);
 
