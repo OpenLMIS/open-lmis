@@ -5,7 +5,7 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="eLMIS"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["C:\\Users\\Issa\\JSI_Projects\\bitbucket\\open-lmis\\modules\\report\\src\\main\\template\\"]]></defaultValueExpression>
 	</parameter>
@@ -80,21 +80,26 @@ ORDER BY F.code asc, F.typeid asc]]>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{contact} == "NULL" ? " -" :$F{contact}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
-				<reportElement uuid="9495406b-e628-4926-9144-3eb9f378721d" x="0" y="50" width="217" height="20"/>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="9495406b-e628-4926-9144-3eb9f378721d" x="31" y="50" width="186" height="20"/>
 				<textElement/>
-				<textFieldExpression><![CDATA["Add:" + $F{address1} == "NULL"? "No Address":$F{address1}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[ ($F{address1}.toUpperCase() == "NULL"? "-":$F{address1})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="426481ca-2938-4b7d-8b6d-1ae62cab25e6" x="0" y="70" width="217" height="20"/>
 				<textElement/>
-				<textFieldExpression><![CDATA["Phone No:" + $F{phoneNumber}=="NULL"?"-":$F{phoneNumber}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Phone No: " + ($F{phoneNumber}=="NULL"?"-":$F{phoneNumber})]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement uuid="a9ba7617-81ae-4d93-aa37-fad2af1e9ff9" x="0" y="90" width="217" height="20"/>
 				<textElement/>
-				<textFieldExpression><![CDATA["Fax: " + $F{fax}=="NULL"?"-":$F{fax}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Fax: " + ($F{fax}.toUpperCase()=="NULL"?"-":$F{fax})]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement uuid="0ee48ba8-0abc-4547-98de-42c556c646ed" x="0" y="50" width="31" height="20"/>
+				<textElement/>
+				<text><![CDATA[Add:]]></text>
+			</staticText>
 		</band>
 	</detail>
 </jasperReport>
