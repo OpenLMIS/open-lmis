@@ -80,7 +80,7 @@ public class Rnr {
   public void calculate(List<RnrColumn> programRnrColumns) {
     for (RnrLineItem lineItem : fullSupplyLineItems) {
       lineItem.validateMandatoryFields(programRnrColumns);
-      lineItem.calculate(period, programRnrColumns);
+      lineItem.calculate(period, programRnrColumns, this.getStatus());
       lineItem.validateCalculatedFields(programRnrColumns);
     }
 

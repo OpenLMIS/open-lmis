@@ -182,7 +182,7 @@ public class RnrTest {
     when(secondLineItem.calculateCost()).thenReturn(nonFullSupplyItemSubmittedCost);
     rnr.calculate(programRequisitionColumns);
 
-    verify(firstLineItem).calculate(period, programRequisitionColumns);
+    verify(firstLineItem).calculate(period, programRequisitionColumns, SUBMITTED);
     assertThat(rnr.getFullSupplyItemsSubmittedCost(), is(fullSupplyItemSubmittedCost));
     assertThat(rnr.getNonFullSupplyItemsSubmittedCost(), is(nonFullSupplyItemSubmittedCost));
   }
@@ -205,19 +205,6 @@ public class RnrTest {
 
     assertThat(rnr.getFullSupplyLineItems().get(0).getStockInHand(), is(2));
     assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(BEGINNING_BALANCE));
-  }
-
-  @Test
-  public void shouldPrepareRequisitionAndCalculate() throws Exception {
-    rnr.setStatus(INITIATED);
-    Rnr rnrSpy = spy(rnr);
-    ArrayList<RnrColumn> programRnrColumns = new ArrayList<>();
-    doNothing().when(rnrSpy).calculate(programRnrColumns);
-
-    rnrSpy.calculate(programRnrColumns);
-
-    verify(rnrSpy).calculate(programRnrColumns);
-    assertThat(rnrSpy.getStatus(), is(SUBMITTED));
   }
 
   @Test
