@@ -21,7 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.BEGINNING_BALANCE;
@@ -83,7 +85,8 @@ public class RequisitionService {
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
     ProgramRnrTemplate rnrTemplate = new ProgramRnrTemplate(programId, rnrTemplateRepository.fetchColumnsForRequisition(programId));
-    if (rnrTemplate.getRnrColumns().size() == 0) throw new DataException(RNR_TEMPLATE_NOT_INITIATED_ERROR);
+    if (rnrTemplate.getRnrColumns().size() == 0)
+      throw new DataException(RNR_TEMPLATE_NOT_INITIATED_ERROR);
 
     validateIfRnrCanBeInitiatedFor(facilityId, programId, periodId);
 
@@ -96,11 +99,6 @@ public class RequisitionService {
     requisitionRepository.insert(requisition);
     requisitionRepository.logStatusChange(requisition);
     return get(new Facility(facilityId), new Program(programId), new ProcessingPeriod(periodId));
-  }
-
-  private void fillFieldsForInitiatedRequisitionAccordingToTemplate(Rnr requisition, ProgramRnrTemplate template) {
-    requisition.setBeginningBalances(getPreviousRequisition(requisition), template.columnsVisible(BEGINNING_BALANCE));
-    requisition.setFieldsAccordingToTemplate(template);
   }
 
   public void save(Rnr rnr) {
@@ -119,15 +117,6 @@ public class RequisitionService {
     return fillSupportingInfo(requisition);
   }
 
-
-  private Rnr fillSupportingInfo(Rnr requisition) {
-    if (requisition == null) return null;
-
-    fillFacilityPeriodProgram(requisition);
-    fillPreviousRequisitionsForAmc(requisition);
-    return requisition;
-  }
-
   public List<LossesAndAdjustmentsType> getLossesAndAdjustmentsTypes() {
     return requisitionRepository.getLossesAndAdjustmentsTypes();
   }
@@ -135,20 +124,16 @@ public class RequisitionService {
   public OpenLmisMessage submit(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
 
-    if (!requisitionPermissionService.hasPermission(rnr.getModifiedBy(), savedRnr, CREATE_REQUISITION))
-      throw new DataException(RNR_OPERATION_UNAUTHORIZED);
+    checkPermission(rnr, savedRnr, CREATE_REQUISITION);
+    savedRnr.setStatus(SUBMITTED);
+    savedRnr.setSubmittedDate(new Date());
+
 
     List<RnrColumn> rnrColumns = rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(savedRnr.getProgram().getId());
-
-    if (savedRnr.getStatus() != INITIATED) {
-      throw new DataException(new OpenLmisMessage(RNR_SUBMISSION_ERROR));
-    }
-
     savedRnr.copyUserEditableFields(rnr, rnrColumns);
-
-    savedRnr.prepareFor(SUBMITTED, rnrColumns);
-
+    savedRnr.calculate(rnrColumns);
     update(savedRnr);
+
     SupervisoryNode supervisoryNode = supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram());
     String msg = (supervisoryNode == null) ? NO_SUPERVISORY_NODE_CONTACT_ADMIN : RNR_SUBMITTED_SUCCESSFULLY;
 
@@ -157,19 +142,13 @@ public class RequisitionService {
 
   public OpenLmisMessage authorize(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
-    if (!requisitionPermissionService.hasPermission(rnr.getModifiedBy(), savedRnr, AUTHORIZE_REQUISITION))
-      throw new DataException(RNR_OPERATION_UNAUTHORIZED);
-
-    List<RnrColumn> rnrColumns = rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(savedRnr.getProgram().getId());
-
-    if (savedRnr.getStatus() != SUBMITTED) throw new DataException(RNR_AUTHORIZATION_ERROR);
-
-    savedRnr.copyUserEditableFields(rnr, rnrColumns);
-
-    savedRnr.prepareFor(AUTHORIZED, rnrColumns);
-
+    checkPermission(rnr, savedRnr, AUTHORIZE_REQUISITION);
+    savedRnr.setStatus(AUTHORIZED);
     savedRnr.setSupervisoryNodeId(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram()).getId());
 
+    List<RnrColumn> rnrColumns = rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(savedRnr.getProgram().getId());
+    savedRnr.copyUserEditableFields(rnr, rnrColumns);
+    savedRnr.calculate(rnrColumns);
     update(savedRnr);
 
     User approver = supervisoryNodeService.getApproverFor(savedRnr.getFacility(), savedRnr.getProgram());
@@ -180,12 +159,7 @@ public class RequisitionService {
   public OpenLmisMessage approve(Rnr requisition) {
     Rnr savedRnr = getFullRequisitionById(requisition.getId());
 
-    if (!requisitionPermissionService.hasPermission(requisition.getModifiedBy(), savedRnr, APPROVE_REQUISITION))
-      throw new DataException(RNR_OPERATION_UNAUTHORIZED);
-
-    if (!(savedRnr.getStatus() == AUTHORIZED || savedRnr.getStatus() == IN_APPROVAL)) {
-      throw new DataException(RNR_OPERATION_UNAUTHORIZED);
-    }
+    checkPermission(requisition, savedRnr, APPROVE_REQUISITION);
 
     savedRnr.copyApproverEditableFields(requisition);
 
@@ -209,6 +183,44 @@ public class RequisitionService {
     fillFacilityPeriodProgram(requisitions.toArray(new Rnr[requisitions.size()]));
     fillSupplyingFacility(requisitions.toArray(new Rnr[requisitions.size()]));
     return requisitions;
+  }
+
+  private void fillFieldsForInitiatedRequisitionAccordingToTemplate(Rnr requisition, ProgramRnrTemplate template) {
+    requisition.setBeginningBalances(getPreviousRequisition(requisition), template.columnsVisible(BEGINNING_BALANCE));
+    requisition.setFieldsAccordingToTemplate(template);
+  }
+
+
+  private Rnr fillSupportingInfo(Rnr requisition) {
+    if (requisition == null) return null;
+
+    fillFacilityPeriodProgram(requisition);
+    fillPreviousRequisitionsForAmc(requisition);
+    return requisition;
+  }
+
+  private void checkPermission(Rnr rnr, Rnr savedRnr, Right right) {
+
+    if (!requisitionPermissionService.hasPermission(rnr.getModifiedBy(), savedRnr, right))
+      throw new DataException(RNR_OPERATION_UNAUTHORIZED);
+
+    switch (right) {
+      case CREATE_REQUISITION:
+        if (savedRnr.getStatus() != INITIATED) {
+          throw new DataException(new OpenLmisMessage(RNR_SUBMISSION_ERROR));
+        }
+        break;
+      case AUTHORIZE_REQUISITION:
+        if (savedRnr.getStatus() != SUBMITTED) {
+          throw new DataException(RNR_AUTHORIZATION_ERROR);
+        }
+        break;
+      case APPROVE_REQUISITION:
+        if (savedRnr.getStatus() != AUTHORIZED && savedRnr.getStatus() != IN_APPROVAL) {
+          throw new DataException(RNR_OPERATION_UNAUTHORIZED);
+        }
+        break;
+    }
   }
 
   private void fillSupplyingFacility(Rnr... requisitions) {

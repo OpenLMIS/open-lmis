@@ -14,7 +14,6 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
 import org.openlmis.core.builder.UserBuilder;
@@ -32,7 +31,10 @@ import org.openlmis.rnr.strategy.RequisitionSearchStrategy;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -43,9 +45,8 @@ import static org.openlmis.core.builder.ProcessingPeriodBuilder.*;
 import static org.openlmis.core.builder.ProductBuilder.code;
 import static org.openlmis.core.builder.ProductBuilder.defaultProduct;
 import static org.openlmis.core.domain.Right.*;
-import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
+import static org.openlmis.rnr.builder.RequisitionBuilder.*;
 import static org.openlmis.rnr.builder.RequisitionBuilder.modifiedBy;
-import static org.openlmis.rnr.builder.RequisitionBuilder.status;
 import static org.openlmis.rnr.builder.RnrColumnBuilder.*;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
@@ -81,7 +82,7 @@ public class RequisitionServiceTest {
   @Mock
   private SupervisoryNodeService supervisoryNodeService;
   @Mock
-  private RoleAssignmentService roleAssignmentService ;
+  private RoleAssignmentService roleAssignmentService;
   @Mock
   private ProgramService programService;
   @Mock
@@ -105,8 +106,8 @@ public class RequisitionServiceTest {
   @Before
   public void setup() {
     requisitionService = new RequisitionService(requisitionRepository, rnrTemplateRepository, facilityApprovedProductService,
-        supervisoryNodeService, roleAssignmentService, programService, processingScheduleService, facilityService, supplyLineService,
-        requisitionFactory, requisitionPermissionService, userService);
+      supervisoryNodeService, roleAssignmentService, programService, processingScheduleService, facilityService, supplyLineService,
+      requisitionFactory, requisitionPermissionService, userService);
     submittedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, SUBMITTED), with(modifiedBy, USER_ID)));
     initiatedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, INITIATED), with(modifiedBy, USER_ID)));
     authorizedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, AUTHORIZED), with(modifiedBy, USER_ID)));
@@ -275,7 +276,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date1.toDate());
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(rnr2);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date1.toDate(), processingPeriod2.getId())).
-        thenReturn(Arrays.asList(processingPeriod3, processingPeriod4));
+      thenReturn(Arrays.asList(processingPeriod3, processingPeriod4));
 
     List<ProcessingPeriod> periods = requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
 
@@ -295,7 +296,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date1.toDate());
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(null);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date1.toDate(), null)).
-        thenReturn(Arrays.asList(processingPeriod1, processingPeriod2));
+      thenReturn(Arrays.asList(processingPeriod1, processingPeriod2));
 
     List<ProcessingPeriod> periods = requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
 
@@ -306,13 +307,13 @@ public class RequisitionServiceTest {
 
   private Rnr createRequisition(int periodId, RnrStatus status) {
     return make(a(RequisitionBuilder.defaultRnr,
-        with(RequisitionBuilder.periodId, periodId),
-        with(RequisitionBuilder.status, status)));
+      with(RequisitionBuilder.periodId, periodId),
+      with(RequisitionBuilder.status, status)));
   }
 
   private ProcessingPeriod createProcessingPeriod(int id, DateTime startDate) {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod,
-        with(ProcessingPeriodBuilder.startDate, startDate.toDate())));
+      with(ProcessingPeriodBuilder.startDate, startDate.toDate())));
     processingPeriod.setId(id);
     return processingPeriod;
   }
@@ -354,7 +355,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date);
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(requisition);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date, PERIOD.getId())).
-        thenReturn(Arrays.asList(validPeriod));
+      thenReturn(Arrays.asList(validPeriod));
   }
 
   @Test
@@ -365,13 +366,13 @@ public class RequisitionServiceTest {
     }};
 
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
-    Mockito.when(rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(PROGRAM.getId())).thenReturn(rnrColumns);
+    when(rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(PROGRAM.getId())).thenReturn(rnrColumns);
     doNothing().when(savedRnr).copyApproverEditableFields(initiatedRnr);
-    doNothing().when(savedRnr).prepareFor(SUBMITTED, rnrColumns);
+    doNothing().when(savedRnr).calculate(rnrColumns);
 
     requisitionService.submit(initiatedRnr);
 
-    verify(savedRnr).prepareFor(SUBMITTED, rnrColumns);
+    verify(savedRnr).calculate(rnrColumns);
     verify(requisitionRepository).update(savedRnr);
     verify(savedRnr).copyUserEditableFields(initiatedRnr, rnrColumns);
   }
@@ -379,13 +380,13 @@ public class RequisitionServiceTest {
   @Test
   public void shouldReturnMessageWhileSubmittingRnrIfSupervisingNodeNotPresent() throws Exception {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
-    Mockito.when(rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(PROGRAM.getId())).thenReturn(rnrColumns);
+    when(rnrTemplateRepository.fetchRnrTemplateColumnsOrMasterColumns(PROGRAM.getId())).thenReturn(rnrColumns);
     doNothing().when(savedRnr).copyUserEditableFields(initiatedRnr, rnrColumns);
     doNothing().when(savedRnr).calculate(rnrColumns);
 
     OpenLmisMessage message = requisitionService.submit(initiatedRnr);
 
-    verify(savedRnr).prepareFor(SUBMITTED, rnrColumns);
+    verify(savedRnr).calculate(rnrColumns);
     verify(requisitionRepository).update(savedRnr);
     verify(savedRnr).copyUserEditableFields(initiatedRnr, rnrColumns);
     verify(requisitionRepository).update(savedRnr);
@@ -929,10 +930,10 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  public void shouldGetCategoryCount(){
+  public void shouldGetCategoryCount() {
     Rnr requisition = new Rnr();
     boolean fullSupply = true;
-    when(requisitionRepository.getCategoryCount(requisition , fullSupply)).thenReturn(10);
+    when(requisitionRepository.getCategoryCount(requisition, fullSupply)).thenReturn(10);
     Integer categoryCount = requisitionService.getCategoryCount(requisition, fullSupply);
     assertThat(categoryCount, is(10));
     verify(requisitionRepository).getCategoryCount(requisition, fullSupply);

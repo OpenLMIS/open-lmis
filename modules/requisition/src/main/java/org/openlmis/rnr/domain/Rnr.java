@@ -21,7 +21,8 @@ import java.util.List;
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
 import static org.openlmis.rnr.domain.RnrLineItem.RNR_VALIDATION_ERROR;
-import static org.openlmis.rnr.domain.RnrStatus.*;
+import static org.openlmis.rnr.domain.RnrStatus.IN_APPROVAL;
+import static org.openlmis.rnr.domain.RnrStatus.RELEASED;
 
 @Data
 @NoArgsConstructor
@@ -77,13 +78,13 @@ public class Rnr {
   }
 
   public void calculate(List<RnrColumn> programRnrColumns) {
-    for(RnrLineItem lineItem : fullSupplyLineItems){
+    for (RnrLineItem lineItem : fullSupplyLineItems) {
       lineItem.validateMandatoryFields(programRnrColumns);
       lineItem.calculate(period, programRnrColumns);
       lineItem.validateCalculatedFields(programRnrColumns);
     }
 
-    for(RnrLineItem lineItem : nonFullSupplyLineItems){
+    for (RnrLineItem lineItem : nonFullSupplyLineItems) {
       lineItem.validateNonFullSupply();
     }
 
@@ -188,7 +189,7 @@ public class Rnr {
     this.modifiedBy = otherRequisition.modifiedBy;
     for (RnrLineItem thisLineItem : fullSupplyLineItems) {
       RnrLineItem otherLineItem = otherRequisition.findCorrespondingLineItem(thisLineItem);
-      if(otherLineItem == null)
+      if (otherLineItem == null)
         throw new DataException(RNR_VALIDATION_ERROR);
       thisLineItem.copyUserEditableFields(otherLineItem, programRnrColumns);
       thisLineItem.setModifiedBy(otherRequisition.getModifiedBy());
@@ -199,20 +200,14 @@ public class Rnr {
     }
   }
 
-  public void prepareFor(RnrStatus status, List<RnrColumn> programRnrColumns) {
-    calculate(programRnrColumns);
-    this.status = status;
-    if(status.equals(SUBMITTED)) submittedDate = new Date();
-  }
-
   public void setFieldsAccordingToTemplate(ProgramRnrTemplate template) {
-    for(RnrLineItem lineItem : fullSupplyLineItems){
+    for (RnrLineItem lineItem : fullSupplyLineItems) {
       lineItem.setLineItemFieldsAccordingToTemplate(template);
     }
   }
 
   public void calculateForApproval() {
-    for(RnrLineItem lineItem: fullSupplyLineItems) {
+    for (RnrLineItem lineItem : fullSupplyLineItems) {
       lineItem.calculatePacksToShip();
     }
     this.fullSupplyItemsSubmittedCost = calculateCost(fullSupplyLineItems);
@@ -220,7 +215,7 @@ public class Rnr {
   }
 
   public void copyEditableFields(Rnr otherRnr, List<RnrColumn> programRnrColumns) {
-    if(status == IN_APPROVAL)
+    if (status == IN_APPROVAL)
       copyApproverEditableFields(otherRnr);
     else
       copyUserEditableFields(otherRnr, programRnrColumns);

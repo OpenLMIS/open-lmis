@@ -214,7 +214,7 @@ public class RnrTest {
     ArrayList<RnrColumn> programRnrColumns = new ArrayList<>();
     doNothing().when(rnrSpy).calculate(programRnrColumns);
 
-    rnrSpy.prepareFor(SUBMITTED, programRnrColumns);
+    rnrSpy.calculate(programRnrColumns);
 
     verify(rnrSpy).calculate(programRnrColumns);
     assertThat(rnrSpy.getStatus(), is(SUBMITTED));
