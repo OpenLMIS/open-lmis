@@ -61,36 +61,35 @@ public class ReportManager {
     /**
      *
      * @param report
-     * @param parameter
+     * @param params
      * @param outputOption
      * @param response
      */
-    public void showReport(Integer userId, Report report, ReportData parameter, ReportOutputOption outputOption, HttpServletResponse response){
+    public void showReport(Integer userId, Report report, Map<String, String[]> params, ReportOutputOption outputOption, HttpServletResponse response){
 
        if (report == null){
            throw new ReportException("invalid report");
        }
 
        User currentUser = userService.getById(userId);
-       List<? extends ReportData> dataSource = report.getReportDataProvider().getReportDataByFilterCriteria(parameter, DataSourceType.BEAN_COLLECTION_DATA_SOURCE);
+       List<? extends ReportData> dataSource = report.getReportDataProvider().getReportDataByFilterCriteria(params, DataSourceType.BEAN_COLLECTION_DATA_SOURCE);
 
        reportExporter.exportReport(this.getClass().getClassLoader().getResourceAsStream(report.getTemplate()),getReportExtraParams(report, currentUser.getUserName()), dataSource, outputOption, response );
 
     }
-
     /**
      *
      * @param reportKey
-     * @param parameter
+     * @param params
      * @param outputOption
      * @param response
      */
-    public void showReport(Integer userId, String reportKey, ReportData parameter, ReportOutputOption outputOption, HttpServletResponse response){
+    public void showReport(Integer userId, String reportKey, Map<String, String[]> params, ReportOutputOption outputOption, HttpServletResponse response){
 
-        showReport(userId, getReportByKey(reportKey), parameter, outputOption, response);
+        showReport(userId, getReportByKey(reportKey), params, outputOption, response);
     }
 
-    /**
+     /**
      * Used to extract extra parameters that are used by report header and footer.
      * @param report
      * @return

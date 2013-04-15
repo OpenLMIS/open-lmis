@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version last-->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="openlmis-report-header-landscape" language="groovy" pageWidth="802" pageHeight="150" orientation="Landscape" columnWidth="802" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="b1774485-8c52-493d-8b62-63c6cd58f66d">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
@@ -59,7 +58,7 @@
 				<text><![CDATA[Run Time:]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="0d748f18-5f36-47ce-8d57-28b7441c8324" x="724" y="46" width="70" height="20" forecolor="#000000"/>
+				<reportElement uuid="0d748f18-5f36-47ce-8d57-28b7441c8324" x="730" y="46" width="64" height="20" forecolor="#000000"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="9" isBold="false"/>
 				</textElement>

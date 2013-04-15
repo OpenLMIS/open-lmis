@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  */
@@ -24,23 +25,23 @@ public class SummaryReportDataProvider extends ReportDataProvider {
     }
 
     @Override
-    protected List<? extends ReportData> getBeanCollectionReportData(ReportData criteria) {
+    protected List<? extends ReportData> getBeanCollectionReportData(Map<String, String[]> filterCriteria) {
 
         return reportMapper.getReport(null);
     }
 
     @Override
-    protected List<? extends ReportData> getResultSetReportData(ReportData filterCriteria) {
+    protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.0
     }
 
     @Override
-    public List<? extends ReportData> getReportDataByFilterCriteriaAndPagingAndSorting(ReportData filterCriteria, ReportData SortCriteria, int page, int pageSize) {
+    public List<? extends ReportData> getReportDataByFilterCriteriaAndPagingAndSorting(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
         return reportMapper.getReport(null);
     }
 
     @Override
-    public int getReportDataCountByFilterCriteria(ReportData facilityReportFilter) {
+    public int getReportDataCountByFilterCriteria(Map<String, String[]> filterCriteria) {
         return 0;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
