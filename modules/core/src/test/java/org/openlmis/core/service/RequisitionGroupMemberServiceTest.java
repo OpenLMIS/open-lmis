@@ -25,9 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.FacilityBuilder.FACILITY_CODE;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramBuilder.PROGRAM_CODE;
@@ -156,6 +154,8 @@ public class RequisitionGroupMemberServiceTest {
 
   @Test
   public void shouldNotInsertIfRequisitionGroupMemberIdIsPresent() throws Exception {
+
+    when(requisitionGroupRepository.getByCode(requisitionGroupMember.getRequisitionGroup())).thenReturn(requisitionGroup);
 
     requisitionGroupMember.setId(1);
 

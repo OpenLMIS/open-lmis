@@ -9,7 +9,10 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.*;
+import org.openlmis.pageobjects.HomePage;
+import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pageobjects.RolesPage;
+import org.openlmis.pageobjects.UploadPage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
@@ -126,7 +129,7 @@ public class E2EUpload extends TestCaseHelper {
 
   private void verifyInvalidRequisitionGroupMembersUpload(UploadPage uploadPage) throws FileNotFoundException {
     uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_InvalidCombination_RG_FacilityCode.csv");
-//    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_InvalidFacilityCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_InvalidRG.csv");
@@ -134,7 +137,7 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_FacilityCodeAssignedToRGWithOneProgramInCommon.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_Subsequent_Duplicate.csv");
-//    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.verifyErrorMessageOnUploadScreen();
 
   }
 
@@ -147,7 +150,7 @@ public class E2EUpload extends TestCaseHelper {
 
   private void verifyInvalidRequisitionGroupProgramScheduleUpload(UploadPage uploadPage) throws FileNotFoundException {
     uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_InvalidCombination_RG_ProgramCode.csv");
-//    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_InvalidProgramCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_InvalidScheduleCode.csv");
@@ -159,7 +162,7 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_DropoffFacilityCodeNotPresent.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_Subsequent_Duplicate.csv");
-//    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.verifyErrorMessageOnUploadScreen();
 
   }
 
@@ -261,7 +264,7 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadProgramProductPrice("QA_Product_Price.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
     uploadPage.uploadProgramProductPrice("QA_Product_Price_Subsequent.csv");
-      uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
   private void verifyInvalidProductPriceUpload(UploadPage uploadPage) throws FileNotFoundException {
@@ -272,7 +275,6 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadProgramProductPrice("QA_Product_Price_InvalidPrice.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
   }
-
 
 
   private void verifyValidProgramProductMappingUpload(UploadPage uploadPage) throws FileNotFoundException {
@@ -310,14 +312,14 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadProductCategory("QA_Productcategoryupload.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
     uploadPage.uploadProductCategory("QA_Productcategoryupload_Subsequent.csv");
-    //uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
   private void verifyInvalidProductCategoryUpload(UploadPage uploadPage) throws FileNotFoundException {
     uploadPage.uploadProductCategory("QA_ProductCategoryUpload_DuplicateCategoryCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.uploadProductCategory("QA_Productcategoryupload_Subsequent_Duplicate.csv");
-    //uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.verifyErrorMessageOnUploadScreen();
   }
 
   private void verifyInValidProductUpload(UploadPage uploadPage) throws FileNotFoundException {
