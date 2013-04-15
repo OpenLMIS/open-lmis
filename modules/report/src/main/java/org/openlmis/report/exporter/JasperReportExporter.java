@@ -27,13 +27,13 @@ import java.util.List;
 public class JasperReportExporter implements ReportExporter {
 
     @Override
-    public void exportReport(InputStream reportInputStream, HashMap<String, Object> reportExtraParams, List<? extends ReportData> reportData, ReportOutputOption outputOption,HttpServletResponse response) {
+    public void exportReport(InputStream reportInputStream, HashMap<String, Object> reportExtraParams, List<? extends ReportData> reportData, ReportOutputOption outputOption, HttpServletResponse response) {
 
         try{
 
             JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reportInputStream);
 
-            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, reportExtraParams , new JRBeanCollectionDataSource(reportData));
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, reportExtraParams , new JRBeanCollectionDataSource(reportData,false));
 
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 

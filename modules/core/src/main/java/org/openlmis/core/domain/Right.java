@@ -29,7 +29,8 @@ public enum Right {
   VIEW_FACILITY_REPORT("Report - Facility List", "report", "Permission to view Facility List Report"),
   VIEW_MAILING_LABEL_REPORT("Report Facility Mailing Label", "report", "Permission to view Mailing labels for Facilities"),
   VIEW_CONSUMPTION_REPORT("Report - Consumption Report", "report", "Permission to view Consumption Report"),
-  VIEW_REPORTING_RATE_REPORT("Report - Reporting Rate Report", "report", "Permission to view Reporting Rate Report");
+  VIEW_REPORTING_RATE_REPORT("Report - Reporting Rate Report", "report", "Permission to view Reporting Rate Report"),
+  VIEW_SUMMARY_REPORT("Report - Summary Report", "report", "Permission to view Sumamry Report");
 
 
     @Getter

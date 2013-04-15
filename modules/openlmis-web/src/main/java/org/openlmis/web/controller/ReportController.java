@@ -9,6 +9,7 @@ import org.openlmis.report.model.report.FacilityReport;
 import org.openlmis.report.model.Pages;
 import org.openlmis.report.model.report.ConsumptionReport;
 import org.openlmis.report.model.report.MailingLabelReport;
+import org.openlmis.report.model.report.SummaryReport;
 import org.openlmis.report.service.ProductReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -300,6 +301,25 @@ public class ReportController  extends BaseController {
         int totalRecCount = 0;
 
         return new Pages(page,totalRecCount,max,facilityReportList);
+    }
+
+
+    @RequestMapping(value = "/summary", method = GET, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_SUMMARY_REPORT')")
+    public Pages getConsumptionData( //@PathVariable(value = "reportKey") String reportKey,
+                                     @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                     @RequestParam(value = "max", required = false, defaultValue = "20") int max,
+                                     @RequestParam(value = "period", required = false, defaultValue = "0") int period
+    ) {
+
+
+
+        Report report = reportManager.getReportByKey("summary");
+        List<SummaryReport> reportList =
+                (List<SummaryReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(null,null,page,max);
+        int totalRecCount = 0;
+
+        return new Pages(page,totalRecCount,max,reportList);
     }
 
 }

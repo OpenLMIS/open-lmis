@@ -24,6 +24,7 @@ public class SummaryQueryBuilder {
                     ", sum(0) as stockOutRate " +
                     ", sum(1) as productReportingRate " +
                 " from requisition_line_items li " +
-                " group by li.productcode, li.productcategory, li.product, li.dispensingunit;";
+                " group by li.productcode, li.productcategory, li.product, li.dispensingunit" +
+                " order by productcategory asc, product asc;";
     }
 }

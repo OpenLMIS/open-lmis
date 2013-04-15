@@ -209,3 +209,8 @@ services.factory('ConsumptionReport', function ($resource) {
 services.factory('Products', function($resource){
     return $resource('/reports/products.json', {}, {});
 }) ;
+
+services.factory('SummaryReport', function($resource){
+    return $resource('/reports/summary.json', {}, {});
+}) ;
+
