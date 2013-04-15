@@ -251,32 +251,15 @@ public class ReportController  extends BaseController {
     public Pages getFacilityListsWtihLables( //@PathVariable(value = "reportKey") String reportKey,
                       @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                       @RequestParam(value = "max", required = false, defaultValue = "5") int max,
-                    //  @RequestParam(value = "facilityCodeFilter", required = false, defaultValue = "") String facilityCodeFilter,
-                    //  @RequestParam(value = "facilityTypeId", required = false, defaultValue = "0") int facilityTypeId,
-                     // @RequestParam(value = "facilityNameFilter", required = false, defaultValue = "" ) String facilityNameFilter,
-                    //  @RequestParam(value = "code", required = false, defaultValue = "ASC") String code,
-                    //  @RequestParam(value = "facilityName", required = false, defaultValue = "") String facilityName,
-                    //  @RequestParam(value = "facilityType", required = false, defaultValue = "ASC") String facilityType
+
                     HttpServletRequest request
     ) {
 
-       /* MailingLabelReportSorter mailingLabelReportSorter = new MailingLabelReportSorter();
-        mailingLabelReportSorter.setFacilityName(facilityName);
-        mailingLabelReportSorter.setCode(code);
-        mailingLabelReportSorter.setFacilityType(facilityType);
-
-        MailingLabelReportFilter mailingLabelReportFilter = new MailingLabelReportFilter();
-        mailingLabelReportFilter.setFacilityCode(facilityCodeFilter);
-        mailingLabelReportFilter.setFacilityTypeId(facilityTypeId);
-        mailingLabelReportFilter.setFacilityName(facilityNameFilter);
-*/
-        Report report = reportManager.getReportByKey("mailinglabels");//reportKey);
-        List<MailingLabelReport> mailingLabelReports =  // (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteria(null);
+        Report report = reportManager.getReportByKey("mailinglabels");
+        List<MailingLabelReport> mailingLabelReports =
         (List<MailingLabelReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
         int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());
-        //final int startIdx = (page - 1) * max;
-        //final int endIdx = Math.min(startIdx + max, facilityReportList.size());
-        //List<FacilityReport> facilityReportListJson =  (FacilityReport)facilityReportList;
+
         return new Pages(page,totalRecCount,max,mailingLabelReports);
     }
 
