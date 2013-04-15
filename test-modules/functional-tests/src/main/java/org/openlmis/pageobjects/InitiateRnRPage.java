@@ -558,7 +558,7 @@ public class InitiateRnRPage extends RequisitionPage {
       } catch (NoSuchElementException e) {
         continue;
       }
-      if (actualColumnHeading.trim().contains(heading)) {
+      if (actualColumnHeading.trim().toUpperCase().contains(heading.toUpperCase())) {
         flag = true;
         break;
       }
@@ -579,7 +579,7 @@ public class InitiateRnRPage extends RequisitionPage {
       } catch (NoSuchElementException e) {
         continue;
       }
-      if (actualColumnHeading.trim().contains(heading)) {
+      if (actualColumnHeading.trim().toUpperCase().contains(heading.toUpperCase())) {
         flag = true;
         break;
       }
