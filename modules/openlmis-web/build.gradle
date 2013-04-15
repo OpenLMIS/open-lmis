@@ -6,8 +6,6 @@
 
 apply plugin: 'jetty'
 apply plugin: 'war'
-def keystore = "$rootDir/certificate/server.jks"
-def password = 'password'
 
 buildscript {
     repositories {
@@ -66,41 +64,26 @@ task jettyRunWarDaemon(dependsOn: war)
 
 jettyRunWarDaemon.doFirst {
     jettyRunWar.daemon = true
+    jettyRunWar.httpPort = 9091
+    jettyRunWar.contextPath = ''
     jettyRunWar.execute()
 }
 
-jettyRunWar {
-    connectors = configureHttps(keystore, password)
-    doFirst() {
-        System.setProperty('javax.net.ssl.trustStore', keystore)
-        System.setProperty('javax.net.ssl.trustStorePassword', password)
-    }
-    contextPath = ''
+
+task jettyRunWarLocal(dependsOn: war)
+
+jettyRunWarLocal.doFirst {
+    jettyRunWar.daemon = false
     jettyRunWar.httpPort = 9091
+    jettyRunWar.execute()
+    jettyRunWar.contextPath = ''
 }
 
 jettyRun {
-    connectors = configureHttps(keystore, password)
-
-    doFirst() {
-        System.setProperty('javax.net.ssl.trustStore', keystore)
-        System.setProperty('javax.net.ssl.trustStorePassword', password)
-    }
-
-    contextPath = ''
     jettyRun.httpPort = 9091
+    contextPath = ''
     jettyRun.scanIntervalSeconds = 1
     System.properties.get('environmentName', 'local')
-}
-
-def configureHttps(keystore, password) {
-    connectors = [jettyRun.class.classLoader.loadClass('org.mortbay.jetty.security.SslSocketConnector').newInstance()]
-    connectors[0].port = 9091
-    connectors[0].keystore = connectors[0].truststore = keystore
-    connectors[0].keyPassword = connectors[0].trustPassword = password
-    connectors[0].wantClientAuth = true
-    connectors[0].needClientAuth = false
-    return connectors;
 }
 
 task run(dependsOn: jettyRun)
