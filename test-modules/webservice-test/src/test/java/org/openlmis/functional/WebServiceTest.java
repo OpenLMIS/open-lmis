@@ -14,7 +14,7 @@ import org.testng.annotations.*;
 
 public class WebServiceTest  {
 
-  @BeforeMethod(groups = {"smoke"})
+  @BeforeMethod(groups = {"webservice"})
   public void setUp() throws Exception {
   }
 
@@ -23,7 +23,7 @@ public class WebServiceTest  {
     return new Object[][]{};
   }
 
-  @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"webservice"})
   public void testWebServiceTest() throws Exception {
 
   }

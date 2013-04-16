@@ -4,25 +4,15 @@
   ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
   -->
 
-<suite name="Openlmis Funtional Test" verbose="10" allow-return-values="true">
-  <test name="Openlmis functional test">
+<suite name="Openlmis WebService test" verbose="10" allow-return-values="true">
+  <test name="Openlmis WebService test">
     <groups>
       <run>
-        <include name="functional"/>
+        <include name="webservice"/>
       </run>
     </groups>
     <classes preserver-order="true">
-      <class name="org.openlmis.functional.E2EManageFacility">
-      </class>
-      <class name="org.openlmis.functional.E2EUpload">
-      </class>
-      <class name="org.openlmis.functional.ViewRequisition">
-      </class>
-      <class name="org.openlmis.functional.ManageRights">
-      </class>
-      <class name="org.openlmis.functional.ConfigureProgramTemplate">
-      </class>
-      <class name="org.openlmis.functional.RnRPagination">
+      <class name="org.openlmis.functional.WebServiceTest">
       </class>
     </classes>
   </test>
