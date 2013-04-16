@@ -27,16 +27,15 @@ dependencies {
     }
 
 
-    task compileJasperReport(type: JavaExec, dependsOn: classes) {
+    task compileJasperReport(type: JavaExec) {
         main = 'org.openlmis.report.util.JasperReportCompiler'
         //  args = "".split().toList()
         classpath sourceSets.main.output.classesDir
         classpath configurations.runtime
     }
-    classes.doLast{
 
-        tasks.compileJasperReport.execute()
-    }
+    classes.dependsOn(compileJasperReport)
+
     task testJar(type: Jar) {
         from sourceSets.test.output
         classifier = 'test'
