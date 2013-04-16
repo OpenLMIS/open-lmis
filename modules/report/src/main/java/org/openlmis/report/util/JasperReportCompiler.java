@@ -35,18 +35,18 @@ public class JasperReportCompiler {
 
         if(dir == null) return;
 
-        for(File f: dir.listFiles()){
+        for(File file : dir.listFiles()){
 
-            if ((f != null && f.isFile())){
-                try {
+            if ((file != null && file.isFile())){
+             try {
 
-                    String compiledJRName = f.getName();
+                    String compiledJRName = file.getName();
                     if(compiledJRName.lastIndexOf(".") > 0 && compiledJRName.substring(compiledJRName.lastIndexOf(".")).equalsIgnoreCase(".jrxml")){
 
                         compiledJRName = compiledJRName.substring(0,compiledJRName.lastIndexOf("."));
                         File compiledJRFile = new File(jasperReportCompiler.getDestinationPath()+compiledJRName+".jasper");
-
-                        JasperCompileManager.compileReportToFile(f.getAbsolutePath(), compiledJRFile.getAbsolutePath());
+                        compiledJRFile.delete();
+                        JasperCompileManager.compileReportToFile(file.getAbsolutePath(), compiledJRFile.getAbsolutePath());
                     }
                 } catch (JRException e) {
                     e.printStackTrace();
