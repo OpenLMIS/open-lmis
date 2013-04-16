@@ -103,8 +103,8 @@ public class DriverFactory {
     DesiredCapabilities ieCapabilities = DesiredCapabilities.internetExplorer();
     ieCapabilities.setCapability("ignoreZoomSetting", true);
     InternetExplorerDriver driver = new InternetExplorerDriver(ieCapabilities);
-    driver.get(getProperty("baseurl", TestCaseHelper.DEFAULT_BASE_URL));
-    driver.navigate().to("javascript:document.getElementById('overridelink').click()");
+//    driver.get(getProperty("baseurl", TestCaseHelper.DEFAULT_BASE_URL));
+//    driver.navigate().to("javascript:document.getElementById('overridelink').click()");
     return driver;
   }
 
