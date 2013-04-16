@@ -51,7 +51,7 @@ LEFT OUTER JOIN geographic_zones gz on gz.id = f.geographiczoneid
 			<subreport>
 				<reportElement uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e" x="0" y="0" width="802" height="60"/>
 				<subreportParameter name="PAGE_NO">
-					<subreportParameterExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of" + " " + $V{PAGE_COUNT}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$V{PAGE_NUMBER} ]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="REPORT_TITLE">
 					<subreportParameterExpression><![CDATA[$P{REPORT_TITLE}]]></subreportParameterExpression>
