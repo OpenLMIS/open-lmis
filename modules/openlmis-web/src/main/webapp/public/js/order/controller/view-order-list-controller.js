@@ -1,11 +1,15 @@
-function ViewOrdersController($scope, orders, Orders) {
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+function ViewOrderListController($scope, orders) {
   $scope.orders = orders;
 
   $scope.gridOptions = { data: 'orders',
-    selectedItems: $scope.selectedItems,
     showFooter: false,
     showColumnMenu: false,
-    sortInfo: { field: 'submittedDate', direction: 'ASC'},
     showFilter: false,
 
     columnDefs: [
@@ -20,7 +24,7 @@ function ViewOrdersController($scope, orders, Orders) {
   };
 }
 
-ViewOrdersController.resolve = {
+ViewOrderListController.resolve = {
   orders: function ($q, $timeout, Orders) {
     var deferred = $q.defer();
     $timeout(function () {

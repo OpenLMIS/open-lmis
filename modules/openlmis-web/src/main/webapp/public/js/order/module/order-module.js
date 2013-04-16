@@ -6,6 +6,6 @@
 
 var orderModule = angular.module('order', ['openlmis', 'ngGrid']).config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
-    when('/view-orders', {controller:ViewOrdersController, templateUrl:'partials/view-order.html', resolve:ViewOrdersController.resolve}).
+    when('/view-orders', {controller:ViewOrderListController, templateUrl:'partials/view-order.html', resolve:ViewOrderListController.resolve}).
     otherwise({redirectTo:'/view-orders'});
 }]);

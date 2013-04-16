@@ -346,12 +346,13 @@ public class RequisitionMapperIT {
     orderedRequisition2.setOrderBatch(batch2);
     mapper.update(orderedRequisition2);
 
-    assertThat(updateOrderBatchCreatedTime(batch1, oneYearBack), is(not(0)));
-    assertThat(updateOrderBatchCreatedTime(batch2, today), is(not(0)));
+    updateOrderBatchCreatedTime(batch1, oneYearBack);
+    updateOrderBatchCreatedTime(batch2, today);
 
     List<Rnr> orders = mapper.getByStatus(RELEASED);
 
     assertThat(orders.size(), is(2));
+
     assertThat(orders.get(0).getId(), is(orderedRequisition2.getId()));
     assertThat(orders.get(0).getFacility().getId(), is(orderedRequisition2.getFacility().getId()));
     assertThat(orders.get(0).getProgram().getId(), is(orderedRequisition2.getProgram().getId()));
