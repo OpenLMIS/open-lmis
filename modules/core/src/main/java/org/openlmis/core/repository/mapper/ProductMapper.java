@@ -78,10 +78,10 @@ public interface ProductMapper {
   })
   Product getById(Integer id);
 
-  @Select("SELECT id FROM products WHERE code = #{code}")
+  @Select("SELECT id FROM products WHERE LOWER(code) = LOWER(#{code})")
   Integer getIdByCode(String code);
 
-  @Select("SELECT * FROM products WHERE code=#{code}")
+  @Select("SELECT * FROM products WHERE LOWER(code)=LOWER(#{code})")
   Product getByCode(String code);
 
   @Update({"UPDATE products SET  alternateItemCode=#{alternateItemCode}, ",

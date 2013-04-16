@@ -30,7 +30,8 @@ public interface UserMapper {
   @Options(useGeneratedKeys = true)
   Integer insert(User user);
 
-  @SelectProvider(type = UserSelectionProvider.class, method = "selectUsers")
+  @Select(value = "SELECT id, userName, vendorId,facilityId, firstName, lastName, employeeId, jobTitle, primaryNotificationMethod, officePhone, cellPhone, email, supervisorId, modifiedDate" +
+    " FROM users where LOWER(userName) = LOWER(#{userName}) AND vendorId=COALESCE(#{vendorId},(SELECT id FROM vendors WHERE name = 'openLmis'))")
   @Results(
     @Result(property = "supervisor.id", column = "supervisorId")
   )
@@ -68,26 +69,5 @@ public interface UserMapper {
 
   @Update("UPDATE users SET password = #{password}, active = TRUE WHERE id = #{userId}")
   void updateUserPassword(@Param(value = "userId") Integer userId, @Param(value = "password") String password);
-
-  public class UserSelectionProvider {
-
-    public static String selectUsers(User user) {
-      BEGIN();
-
-      SELECT("id, userName, vendorId, facilityId, firstName, lastName, employeeId, jobTitle, " +
-        "primaryNotificationMethod, officePhone, cellPhone, email, supervisorId, modifiedDate");
-      FROM("users");
-      WHERE("LOWER(userName) = LOWER(#{userName})");
-
-      if (user.getVendorId() != null) {
-        WHERE("vendorId = #{vendorId}");
-      } else {
-        WHERE("vendorId IS NULL");
-      }
-
-      return SQL();
-    }
-
-  }
 
 }
