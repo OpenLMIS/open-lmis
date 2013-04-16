@@ -86,15 +86,12 @@ public class ReportController  extends BaseController {
                                     HttpServletRequest request
                                     ) {
 
-
         Report report = reportManager.getReportByKey("facilities");//reportKey);
         List<FacilityReport> facilityReportList =  // (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteria(null);
         (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
         int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());
 
-        //final int startIdx = (page - 1) * max;
-        //final int endIdx = Math.min(startIdx + max, facilityReportList.size());
-        //List<FacilityReport> facilityReportListJson =  (FacilityReport)facilityReportList;
+
         return new Pages(page,totalRecCount,max,facilityReportList);
     }
 
@@ -108,11 +105,10 @@ public class ReportController  extends BaseController {
 
         Report report = reportManager.getReportByKey("mailinglabels");//reportKey);
         List<MailingLabelReport> mailingLabelReports =  // (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteria(null);
+
         (List<MailingLabelReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
         int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());
-        //final int startIdx = (page - 1) * max;
-        //final int endIdx = Math.min(startIdx + max, facilityReportList.size());
-        //List<FacilityReport> facilityReportListJson =  (FacilityReport)facilityReportList;
+
         return new Pages(page,totalRecCount,max,mailingLabelReports);
     }
 
@@ -145,14 +141,15 @@ public class ReportController  extends BaseController {
     public Pages getConsumptionData( //@PathVariable(value = "reportKey") String reportKey,
                                      @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                      @RequestParam(value = "max", required = false, defaultValue = "20") int max,
-                                     @RequestParam(value = "period", required = false, defaultValue = "0") int period
+                                     @RequestParam(value = "period", required = false, defaultValue = "0") int period ,
+                                    HttpServletRequest request
     ) {
 
 
 
         Report report = reportManager.getReportByKey("summary");
         List<SummaryReport> reportList =
-                (List<SummaryReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(null,null,page,max);
+                (List<SummaryReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),null,page,max);
         int totalRecCount = 0;
 
         return new Pages(page,totalRecCount,max,reportList);

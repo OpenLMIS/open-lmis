@@ -10,7 +10,9 @@ import java.util.Map;
 public class SummaryQueryBuilder {
 
     public static String getQuery(Map params){
-        return "select " +
+
+        String period =    ((String[])params.get("period"))[0];
+        String query = "select " +
                     " li.productcode as code" +
                     ", li.product" +
                     ", li.productcategory as category" +
@@ -23,8 +25,10 @@ public class SummaryQueryBuilder {
                     ", sum(li.stockInHand) as balanceOnHand " +
                     ", sum(0) as stockOutRate " +
                     ", sum(1) as productReportingRate " +
-                " from requisition_line_items li " +
+                " from requisition_line_items li join requisitions r on r.id =li.rnrid" +
+                " where r.periodid = " + period +
                 " group by li.productcode, li.productcategory, li.product, li.dispensingunit" +
                 " order by productcategory asc, product asc;";
+            return query;
     }
 }

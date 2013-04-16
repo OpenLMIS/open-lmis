@@ -28,7 +28,6 @@
                 <value>classpath:/postgresql.properties</value>
                 <value>classpath:/default.properties</value>
                 <value>classpath:/messages.properties</value>
-                <value>classpath:${env}/app.properties</value>
             </list>
         </property>
 
