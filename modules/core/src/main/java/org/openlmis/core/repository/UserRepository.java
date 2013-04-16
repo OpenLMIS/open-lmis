@@ -34,6 +34,7 @@ public class UserRepository {
   public static final String DUPLICATE_USER_NAME_FOUND = "duplicate.user.name.found";
 
 
+
   @Autowired
   public UserRepository(UserMapper userMapper) {
     this.userMapper = userMapper;
@@ -72,6 +73,8 @@ public class UserRepository {
     if (message.contains("duplicate key value violates unique constraint \"uc_users_email\"".toLowerCase()))
       throw new DataException(new OpenLmisMessage(DUPLICATE_EMAIL_FOUND));
     if (message.contains("duplicate key value violates unique constraint \"uc_users_userName\"".toLowerCase()))
+      throw new DataException(new OpenLmisMessage(DUPLICATE_USER_NAME_FOUND));
+    if (message.contains(" duplicate key value violates unique constraint \"uc_users_username_vendor\"".toLowerCase())) //TODO:Change the message key after vendor is added on upload
       throw new DataException(new OpenLmisMessage(DUPLICATE_USER_NAME_FOUND));
   }
 

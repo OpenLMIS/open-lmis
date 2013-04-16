@@ -43,7 +43,7 @@ public class UserBuilder {
   public static final String defaultEmail = "mizengo_pinda@openlmis.com";
   public static final Integer defaultSupervisorId = 1;
   public static final String defaultSupervisorUserName = "supervisorUserName";
-  public static final Integer defaultVendorId = null;
+  public static final Integer defaultVendorId = 1;
 
 
   public static final Instantiator<User> defaultUser = new Instantiator<User>() {

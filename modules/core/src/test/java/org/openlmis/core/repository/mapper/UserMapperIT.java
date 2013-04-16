@@ -130,6 +130,7 @@ public class UserMapperIT {
     someUser.setPassword(null);
     someUser.getSupervisor().setModifiedDate(null);
     someUser.setModifiedDate(null);
+    someUser.setVendorId(null);
     assertThat(users, hasItem(someUser));
   }
 

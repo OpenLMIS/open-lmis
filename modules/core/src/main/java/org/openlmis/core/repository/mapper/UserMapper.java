@@ -18,7 +18,7 @@ import static org.apache.ibatis.jdbc.SelectBuilder.*;
 @Repository
 public interface UserMapper {
 
-  @Select(value = "SELECT userName, id FROM users WHERE LOWER(userName)=LOWER(#{userName}) AND password=#{password} AND active = TRUE AND vendorId IS NULL")
+  @Select(value = "SELECT userName, id FROM users WHERE LOWER(userName)=LOWER(#{userName}) AND password=#{password} AND active = TRUE AND vendorId=(SELECT id FROM vendors WHERE name = 'openLmis')")
   User selectUserByUserNameAndPassword(@Param("userName") String userName, @Param("password") String password);
 
   @Insert({"INSERT INTO users",
@@ -26,7 +26,7 @@ public interface UserMapper {
     "primaryNotificationMethod, officePhone, cellPhone, email, supervisorId, vendorId, modifiedBy, modifiedDate)",
     "VALUES",
     "(#{userName}, #{facilityId}, #{firstName}, #{lastName}, #{employeeId}, #{jobTitle},",
-    "#{primaryNotificationMethod}, #{officePhone}, #{cellPhone}, #{email}, #{supervisor.id}, #{vendorId}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()))"})
+    "#{primaryNotificationMethod}, #{officePhone}, #{cellPhone}, #{email}, #{supervisor.id}, COALESCE(#{vendorId},(SELECT id FROM vendors WHERE name = 'openLmis')), #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()))"})
   @Options(useGeneratedKeys = true)
   Integer insert(User user);
 
