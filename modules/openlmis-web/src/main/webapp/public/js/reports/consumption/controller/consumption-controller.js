@@ -3,6 +3,14 @@ function ConsumptionReportController($scope, ConsumptionReport, Products , Facil
         //to minimize and maximize the filter section
         var section = 1;
 
+        $scope.section = function (id) {
+            section = id;
+        };
+
+        $scope.show = function (id) {
+            return section == id;
+        };
+
         // lookups and references
 
         $scope.pagingOptions = {
