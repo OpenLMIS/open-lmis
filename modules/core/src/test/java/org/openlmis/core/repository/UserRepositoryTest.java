@@ -31,7 +31,8 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.*;
-import static org.openlmis.core.builder.UserBuilder.*;
+import static org.openlmis.core.builder.UserBuilder.defaultUser;
+import static org.openlmis.core.builder.UserBuilder.email;
 import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
 import static org.openlmis.core.repository.UserRepository.*;
 
@@ -204,7 +205,7 @@ public class UserRepositoryTest {
     when(userMapper.getByUsernameAndVendorId(user)).thenReturn(user);
     when(userMapper.getByUsernameAndVendorId(user.getSupervisor())).thenReturn(supervisorUser);
 
-    userRepository.create(user);
+    userRepository.update(user);
 
     verify(userMapper).update(user);
   }

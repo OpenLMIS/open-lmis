@@ -46,19 +46,11 @@ public class UserRepository {
   public void create(User user) {
     validateAndSetSupervisor(user);
     try {
-      if(user.getId() == null)
-        userMapper.insert(user);
-      else{
-        userMapper.update(user);
-      }
-    }
-    catch (DuplicateKeyException e) {
+      userMapper.insert(user);
+    } catch (DuplicateKeyException e) {
       handleException(e);
     } catch (DataIntegrityViolationException e) {
       throw new DataException(USER_DATA_LENGTH_INCORRECT);
-    }
-    catch(Exception e ){
-
     }
   }
 
@@ -90,7 +82,8 @@ public class UserRepository {
       && !user.getSupervisor().getUserName().isEmpty()) {
 
       supervisor = userMapper.getByUsernameAndVendorId(user.getSupervisor());
-      if (supervisor == null) throw new DataException(new OpenLmisMessage(SUPERVISOR_USER_NOT_FOUND));
+      if (supervisor == null)
+        throw new DataException(new OpenLmisMessage(SUPERVISOR_USER_NOT_FOUND));
     }
 
     user.setSupervisor(supervisor);
