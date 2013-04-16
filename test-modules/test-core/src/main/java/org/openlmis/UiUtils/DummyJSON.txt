@@ -7,4 +7,6 @@
 "facilityType":{"code":"lvl3_hospital"},
 "sdp":"true","active":"true",
 "goLiveDate":"2013-02-07T18:30:00.000Z",
-"geographicZone":{"id":1}}
+"geographicZone":{"code":"Ngorongoro"}
+}
+
