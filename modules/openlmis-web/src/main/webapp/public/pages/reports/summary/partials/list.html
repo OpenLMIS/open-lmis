@@ -1,9 +1,16 @@
     <div class="row-fluid sortable ui-sortable">
             <div class="box span12">
-                <div class="box-header">
-                    <h2>Summary Report</h2>
-                </div>
-            <div class="box-content">
+                    <div class="box-header">
+                        <h2><i class="icon-edit"></i><span class="break"></span>Summary Report</h2>
+                        <div class="box-icon">
+                            <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>
+                            <a ng-click="section(1)"  ng-show="show(0)" class="btn-minimize"><i class="icon-chevron-down"></i></a>
+                            <a href="#" ng-click="export('PDF')" class='btn-small btn-info'>PDF</a>
+                            <a href="/reports/download/consumption/xls" class='btn-small btn-info'>Excel</a>
+                        </div>
+                    </div>
+
+            <div class="box-content"  ng-show="show(1)">
                 <div class="app-form" style="padding: 5px;">
                         <form ng-submit="filterGrid()"  name="filterForm" novalidate>
                             <div class="clearfix ">
@@ -23,13 +30,6 @@
                 </div>
             </div>
 
-        <div class="box-header" style="text-align: right">
-
-             <div class="box-icon">
-                  <a href="#" ng-click="export('PDF')" class='btn-small btn-info'>PDF</a>
-                  <a href="/reports/download/consumption/xls" class='btn-small btn-info'>Excel</a>
-             </div>
-         </div>
           <div class="gridStyleReport" ng-grid="gridOptions"></div>
    </div>
   </div>
