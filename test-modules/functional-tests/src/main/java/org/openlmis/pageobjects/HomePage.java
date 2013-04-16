@@ -29,6 +29,9 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Requisitions')]")
   private static WebElement requisitionMenuItem;
 
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Orders')]")
+  private static WebElement ordersMenuItem;
+
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Approve')]")
   private static WebElement approveLink;
 
@@ -47,6 +50,9 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Convert to Order')]")
   private static WebElement convertToOrderMenuItem;
 
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'View Orders')]")
+  private static WebElement viewOrdersMenuItem;
+
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'View')]")
   private static WebElement viewRequisitonMenuItem;
 
@@ -55,6 +61,9 @@ public class HomePage extends Page {
 
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Convert Requisitions to Order')]")
   private static WebElement convertToOrderHeader;
+
+  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'View Orders')]")
+  private static WebElement viewOrdersHeader;
 
   @FindBy(how = How.LINK_TEXT, using = "Add new")
   private static WebElement createFacility;
@@ -333,15 +342,25 @@ public class HomePage extends Page {
 
   }
 
-  public OrderPage navigateConvertToOrder() throws IOException {
+  public ConvertOrderPage navigateConvertToOrder() throws IOException {
     SeleneseTestNgHelper.assertTrue(requisitionMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(requisitionMenuItem);
     testWebDriver.keyPress(requisitionMenuItem);
     testWebDriver.waitForElementToAppear(convertToOrderMenuItem);
     testWebDriver.keyPress(convertToOrderMenuItem);
     testWebDriver.waitForElementToAppear(convertToOrderHeader);
-    return new OrderPage(testWebDriver);
+    return new ConvertOrderPage(testWebDriver);
   }
+
+    public ViewOrdersPage navigateViewOrders() throws IOException {
+        SeleneseTestNgHelper.assertTrue(ordersMenuItem.isDisplayed());
+        testWebDriver.waitForElementToAppear(ordersMenuItem);
+        testWebDriver.keyPress(ordersMenuItem);
+        testWebDriver.waitForElementToAppear(viewOrdersMenuItem);
+        testWebDriver.keyPress(viewOrdersMenuItem);
+        testWebDriver.waitForElementToAppear(viewOrdersHeader);
+        return new ViewOrdersPage(testWebDriver);
+    }
 
   public void verifyErrorMessage() {
     testWebDriver.waitForElementToAppear(errorMsg);

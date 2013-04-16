@@ -18,7 +18,7 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import java.io.IOException;
 
 
-public class OrderPage extends RequisitionPage {
+public class ConvertOrderPage extends RequisitionPage {
 
   @FindBy(how = How.ID, using = "NoRequisitionsPendingMessage")
   private static WebElement NoRequisitionsPendingMessage;
@@ -56,7 +56,7 @@ public class OrderPage extends RequisitionPage {
   @FindBy(how = How.XPATH, using = "//div[@id='NoRequisitionsPendingMessage']")
   private static WebElement noRequisitionPendingMessage;
 
-  public OrderPage(TestWebDriver driver) throws IOException {
+  public ConvertOrderPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(testWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);

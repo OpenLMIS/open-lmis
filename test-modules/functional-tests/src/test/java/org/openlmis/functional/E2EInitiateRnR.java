@@ -184,19 +184,22 @@ public class E2EInitiateRnR extends TestCaseHelper {
     LoginPage loginPagelmu = homePageTopSNUser.logout(baseUrlGlobal);
     HomePage homePagelmu = loginPagelmu.loginAs(userlmu, password);
 
-    OrderPage orderPageOrdersPending = homePagelmu.navigateConvertToOrder();
+    ConvertOrderPage convertOrderPageOrdersPending = homePagelmu.navigateConvertToOrder();
     String[] periods = periodTopSNUser.split("-");
     String supplyFacilityName = dbWrapper.getSupplyFacilityName("N1", "HIV");
-    orderPageOrdersPending.verifyOrderListElements(program, "FCcode" + date_time, "FCname" + date_time, periods[0].trim(), periods[1].trim(), supplyFacilityName);
-    verifyConvertToOrder(orderPageOrdersPending);
+    convertOrderPageOrdersPending.verifyOrderListElements(program, "FCcode" + date_time, "FCname" + date_time, periods[0].trim(), periods[1].trim(), supplyFacilityName);
+    verifyConvertToOrder(convertOrderPageOrdersPending);
+
+    ViewOrdersPage viewOrdersPage = homePagelmu.navigateViewOrders();
+      viewOrdersPage.verifyOrderListElements(program, "ORD1", "FCcode" + date_time + " - " + "FCname" + date_time, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim()+ ")", supplyFacilityName, "RELEASED");
   }
 
-  private void verifyConvertToOrder(OrderPage orderPageOrdersPending) {
-    orderPageOrdersPending.clickConvertToOrderButton();
-    orderPageOrdersPending.verifyMessageOnOrderScreen("Message 'Please select at least one Requisition for Converting to Order.' is not displayed");
-    orderPageOrdersPending.clickCheckBoxConvertToOrder();
-    orderPageOrdersPending.clickConvertToOrderButton();
-    orderPageOrdersPending.clickOk();
+  private void verifyConvertToOrder(ConvertOrderPage convertOrderPageOrdersPending) {
+    convertOrderPageOrdersPending.clickConvertToOrderButton();
+    convertOrderPageOrdersPending.verifyMessageOnOrderScreen("Message 'Please select at least one Requisition for Converting to Order.' is not displayed");
+    convertOrderPageOrdersPending.clickCheckBoxConvertToOrder();
+    convertOrderPageOrdersPending.clickConvertToOrderButton();
+    convertOrderPageOrdersPending.clickOk();
   }
 
   private void createRole(HomePage homePage) throws IOException {
@@ -211,6 +214,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     List<String> userRoleListlmu = new ArrayList<String>();
 
     userRoleListlmu.add("Convert To Order Requisition");
+    userRoleListlmu.add("View Orders Requisition");
     rolesPagelmu.createRole("lmu", "lmu", userRoleListlmu, false);
 
     List<String> userRoleListMedicalofficer = new ArrayList<String>();
