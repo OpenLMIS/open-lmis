@@ -7,6 +7,10 @@
                     <div class="box-icon">
                         <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>
                         <a ng-click="section(1)"  ng-show="show(0)" class="btn-minimize"><i class="icon-chevron-down"></i></a>
+                        <a href="#" ng-click="export('pdf')" class='btn-small btn-info'>PDF</a>
+                        <a href="#" ng-click="export('xls')" class='btn-small btn-info'>Excel</a>
+                        <a href="#" ng-click="export('mailing-list')" class='btn-small btn-info'>Mailing Label</a>
+
                     </div>
                 </div>
             <div class="box-content" ng-show="show(1)">
@@ -44,13 +48,6 @@
                 </div>
             </div>
 
-      <!--  <div class="box-header" style="text-align: right">
-             <div class="box-icon">
-                 <a href="#" ng-click="export('pdf')" class='btn-small btn-info'>PDF</a>
-                 <a href="#" ng-click="export('xls')" class='btn-small btn-info'>Excel</a>
-                 <a href="#" ng-click="export('mailing-list')" class='btn-small btn-info'>Mailing Label</a>
-             </div>
-         </div>-->
          <div class="gridStyleReport" ng-grid="gridOptions"></div>
    </div>
   </div>
