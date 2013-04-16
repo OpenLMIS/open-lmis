@@ -27,7 +27,7 @@ public class SummaryReportDataProvider extends ReportDataProvider {
     @Override
     protected List<? extends ReportData> getBeanCollectionReportData(Map<String, String[]> filterCriteria) {
 
-        return reportMapper.getReport(null);
+        return reportMapper.getReport(filterCriteria);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class SummaryReportDataProvider extends ReportDataProvider {
 
     @Override
     public List<? extends ReportData> getReportDataByFilterCriteriaAndPagingAndSorting(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
-        return reportMapper.getReport(null);
+        return reportMapper.getReport(filterCriteria);
     }
 
     @Override

@@ -21,6 +21,7 @@ function SummaryReportController($scope, SummaryReport , Periods , $http, $route
 
         //filter form data section
         $scope.filterOptions = {
+            period:$scope.period,
             filterText: "",
             useExternalFilter: false
         };
@@ -89,13 +90,9 @@ function SummaryReportController($scope, SummaryReport , Periods , $http, $route
                                                 "page" : page
                                                };
                         }
-                        $.each($scope.filterObject, function(index, value) {
-                            if(value != undefined)
-                                params[index] = value;
-                        });
-
-                            SummaryReport.get(params, function(data) {
-                            $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
+                        params.period = $scope.period;
+                        SummaryReport.get(params, function(data) {
+                        $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
                         });
 
         };
