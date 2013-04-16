@@ -19,6 +19,7 @@
     <context:spring-configured/>
 
 
+    <import resource="classpath:/applicationContext-upload.xml"/>
     <context:component-scan base-package="org.openlmis.shipment"/>
 
     <bean id="ftpSessionFactory"
@@ -39,10 +40,16 @@
                                      auto-create-local-directory="true"
                                      delete-remote-files="true"
                                      remote-directory="/"
-                                     local-directory="${ftp.local.directory}" >
-        <int:poller fixed-rate="30000" max-messages-per-poll="-1"/>
+                                     local-directory="${ftp.local.directory}">
+        <int:poller fixed-rate="30000" max-messages-per-poll="-1" task-executor=""/>
     </int-ftp:inbound-channel-adapter>
 
+    <int:channel id="ftpOutputChannel"/>
+
+    <int-ftp:outbound-channel-adapter id="ftpOutbound" cache-sessions="false"
+                                      channel="ftpOutputChannel"
+                                      remote-directory="/"
+                                      session-factory="ftpSessionFactory"/>
     <int:outbound-channel-adapter channel="ftpInputChannel" ref="shipmentFileProcessor" method="process"/>
 
     <bean id="messageDispatcher" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">

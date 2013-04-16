@@ -14,8 +14,13 @@ dependencies {
             'org.slf4j:slf4j-api:1.7.5',
             'org.springframework.integration:spring-integration-core:2.2.3.RELEASE',
             'org.springframework.integration:spring-integration-stream:2.2.3.RELEASE',
-            'org.springframework.integration:spring-integration-ftp:2.2.3.RELEASE'
+            'org.springframework.integration:spring-integration-ftp:2.2.3.RELEASE',
+            project(':modules:upload'),
+            project(':modules:core')
 
+    compile('net.sf.supercsv:super-csv-dozer:2.0.1') {
+        exclude module: 'commons-beanutils'
+    }
     testCompile 'org.springframework:spring-test:3.1.1.RELEASE'
 
     configurations {

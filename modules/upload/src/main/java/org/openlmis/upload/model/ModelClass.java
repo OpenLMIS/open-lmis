@@ -24,17 +24,22 @@ public class ModelClass {
   private Class<? extends Importable> clazz;
 
   private List<Field> importFields;
+  private boolean acceptExtraHeaders = false;
 
   public ModelClass(Class<? extends Importable> clazz) {
     this.clazz = clazz;
     importFields = fieldsWithImportFieldAnnotation();
   }
 
+  public ModelClass(Class<? extends Importable> clazz, boolean acceptExtraHeaders) {
+    this(clazz);
+    this.acceptExtraHeaders = acceptExtraHeaders;
+  }
+
   public void validateHeaders(List<String> headers) {
     List<String> lowerCaseHeaders = lowerCase(headers);
-    validateInvalidHeaders(lowerCaseHeaders);
+    if (!acceptExtraHeaders) validateInvalidHeaders(lowerCaseHeaders);
     validateMandatoryFields(lowerCaseHeaders);
-
   }
 
   public String[] getFieldNameMappings(String[] headers) {
@@ -48,7 +53,10 @@ public class ModelClass {
         } else {
           fieldMappings.add(importField.getField().getName() + "." + nestedProperty);
         }
+      }else{
+        fieldMappings.add(null);
       }
+
     }
     return fieldMappings.toArray(new String[fieldMappings.size()]);
   }
@@ -58,7 +66,8 @@ public class ModelClass {
       @Override
       public boolean evaluate(Object object) {
         Field field = (Field) object;
-        return field.hasName(name);      }
+        return field.hasName(name);
+      }
     });
     return (Field) result;
   }

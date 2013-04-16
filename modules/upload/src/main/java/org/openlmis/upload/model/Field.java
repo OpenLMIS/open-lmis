@@ -26,7 +26,7 @@ public class Field {
   }
 
   public boolean hasName(String name) {
-    return name.equalsIgnoreCase(this.name);
+    return this.name.equalsIgnoreCase(name);
   }
 
 }

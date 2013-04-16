@@ -32,7 +32,7 @@ public class CsvCellProcessors {
         typeMappings.put("BigDecimal", new ParseBigDecimal());
     }
 
-    protected static List<CellProcessor> getProcessors(ModelClass modelClass, List<String> headers) {
+    public static List<CellProcessor> getProcessors(ModelClass modelClass, List<String> headers) {
         List<CellProcessor> processors = new ArrayList<>();
         for (String header : headers) {
             org.openlmis.upload.model.Field field =  modelClass.findImportFieldWithName(header);
