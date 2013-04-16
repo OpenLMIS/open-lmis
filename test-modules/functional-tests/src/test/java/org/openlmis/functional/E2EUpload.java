@@ -48,8 +48,9 @@ public class E2EUpload extends TestCaseHelper {
     rolesPage.createRole("User", "User", userRoleList, true);
 
     UploadPage uploadPage = homePage.navigateUploads();
-    verifyInValidUserUpload(uploadPage);
     verifyValidUserUpload(uploadPage);
+    verifyInValidUserUpload(uploadPage);
+
 
     String userName = "User123";
     String userId = "200";
@@ -306,13 +307,17 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.uploadInvalidUserScenarios("QA_Users_Invalid_Supervisor.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadInvalidUserScenarios("QA_Users_Subsequent_Duplicate_Username.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.uploadInvalidUserScenarios("QA_Users_Subsequent_InvalidCombination.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
   }
 
   private void verifyValidProductCategoryUpload(UploadPage uploadPage) throws FileNotFoundException {
     uploadPage.uploadProductCategory("QA_Productcategoryupload.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
     uploadPage.uploadProductCategory("QA_Productcategoryupload_Subsequent.csv");
-    uploadPage.verifySuccessMessageOnUploadScreen();
+//    uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
   private void verifyInvalidProductCategoryUpload(UploadPage uploadPage) throws FileNotFoundException {

@@ -136,7 +136,6 @@ public class UploadPage extends Page {
   public void uploadInvalidUserScenarios(String uploadFileNameWithExtension) throws FileNotFoundException {
     selectUploadType("Users");
     uploadFile(uploadFileNameWithExtension);
-    verifyErrorMessageOnUploadScreen();
     testWebDriver.sleep(250);
   }
 
