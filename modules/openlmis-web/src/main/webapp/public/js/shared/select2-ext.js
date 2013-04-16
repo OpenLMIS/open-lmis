@@ -6,10 +6,8 @@
 
 window.Select2.class.multi.prototype.clearSearch = function() {
   var placeholder = this.getPlaceholder();
-  console.log(this.countSelectableResults());
 
   if (placeholder !== undefined && this.search.hasClass("select2-focused") === false && !this.opened()) {
-    console.log(this.search.val());
     this.search.val(placeholder).addClass("select2-default");
     // stretch the search box to full width of the container so as much of the placeholder is visible as possible
     this.resizeSearch();
