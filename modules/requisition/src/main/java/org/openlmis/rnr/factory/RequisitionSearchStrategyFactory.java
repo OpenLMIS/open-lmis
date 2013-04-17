@@ -19,21 +19,21 @@ import org.springframework.stereotype.Component;
 
 @NoArgsConstructor
 @Component
-public class RequisitionFactory {
+public class RequisitionSearchStrategyFactory {
 
   private ProcessingScheduleService processingScheduleService;
   private RequisitionRepository requisitionRepository;
   private ProgramService programService;
 
   @Autowired
-  public RequisitionFactory(ProcessingScheduleService processingScheduleService, RequisitionRepository requisitionRepository, ProgramService programService) {
+  public RequisitionSearchStrategyFactory(ProcessingScheduleService processingScheduleService, RequisitionRepository requisitionRepository, ProgramService programService) {
     this.processingScheduleService = processingScheduleService;
     this.requisitionRepository = requisitionRepository;
     this.programService = programService;
   }
 
   public RequisitionSearchStrategy getSearchStrategy(RequisitionSearchCriteria criteria) {
-    if (criteria.getProgramId() == null){
+    if (criteria.getProgramId() == null) {
       return new FacilityDateRangeSearch(processingScheduleService, requisitionRepository, programService);
     }
     return new FacilityProgramDateRangeSearch(processingScheduleService, requisitionRepository);

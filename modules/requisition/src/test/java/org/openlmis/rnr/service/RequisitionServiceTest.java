@@ -23,7 +23,7 @@ import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.*;
-import org.openlmis.rnr.factory.RequisitionFactory;
+import org.openlmis.rnr.factory.RequisitionSearchStrategyFactory;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
 import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
@@ -92,7 +92,7 @@ public class RequisitionServiceTest {
   @Mock
   private SupplyLineService supplyLineService;
   @Mock
-  private RequisitionFactory requisitionFactory;
+  private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
   @Mock
   private RequisitionPermissionService requisitionPermissionService;
   @Mock
@@ -107,8 +107,8 @@ public class RequisitionServiceTest {
   @Before
   public void setup() {
     requisitionService = new RequisitionService(requisitionRepository, rnrTemplateRepository, facilityApprovedProductService,
-      supervisoryNodeService, roleAssignmentService, programService, processingScheduleService, facilityService, supplyLineService,
-      requisitionFactory, requisitionPermissionService, userService);
+        supervisoryNodeService, roleAssignmentService, programService, processingScheduleService, facilityService, supplyLineService,
+        requisitionSearchStrategyFactory, requisitionPermissionService, userService);
     submittedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, SUBMITTED), with(modifiedBy, USER_ID)));
     initiatedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, INITIATED), with(modifiedBy, USER_ID)));
     authorizedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, AUTHORIZED), with(modifiedBy, USER_ID)));
@@ -277,7 +277,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date1.toDate());
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(rnr2);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date1.toDate(), processingPeriod2.getId())).
-      thenReturn(Arrays.asList(processingPeriod3, processingPeriod4));
+        thenReturn(Arrays.asList(processingPeriod3, processingPeriod4));
 
     List<ProcessingPeriod> periods = requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
 
@@ -297,7 +297,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date1.toDate());
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(null);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date1.toDate(), null)).
-      thenReturn(Arrays.asList(processingPeriod1, processingPeriod2));
+        thenReturn(Arrays.asList(processingPeriod1, processingPeriod2));
 
     List<ProcessingPeriod> periods = requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
 
@@ -308,13 +308,13 @@ public class RequisitionServiceTest {
 
   private Rnr createRequisition(int periodId, RnrStatus status) {
     return make(a(RequisitionBuilder.defaultRnr,
-      with(RequisitionBuilder.periodId, periodId),
-      with(RequisitionBuilder.status, status)));
+        with(RequisitionBuilder.periodId, periodId),
+        with(RequisitionBuilder.status, status)));
   }
 
   private ProcessingPeriod createProcessingPeriod(int id, DateTime startDate) {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod,
-      with(ProcessingPeriodBuilder.startDate, startDate.toDate())));
+        with(ProcessingPeriodBuilder.startDate, startDate.toDate())));
     processingPeriod.setId(id);
     return processingPeriod;
   }
@@ -356,7 +356,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date);
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(requisition);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date, PERIOD.getId())).
-      thenReturn(Arrays.asList(validPeriod));
+        thenReturn(Arrays.asList(validPeriod));
   }
 
   @Test
@@ -785,13 +785,13 @@ public class RequisitionServiceTest {
     Date dateRangeEnd = DateTime.parse("2013-02-14").toDate();
     RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facility.getId(), program.getId(), dateRangeStart, dateRangeEnd);
     RequisitionSearchStrategy searchStrategy = mock(RequisitionSearchStrategy.class);
-    when(requisitionFactory.getSearchStrategy(criteria)).thenReturn(searchStrategy);
+    when(requisitionSearchStrategyFactory.getSearchStrategy(criteria)).thenReturn(searchStrategy);
     when(searchStrategy.search(criteria)).thenReturn(expected);
 
     List<Rnr> actual = requisitionService.get(criteria);
 
     assertThat(actual, is(expected));
-    verify(requisitionFactory).getSearchStrategy(criteria);
+    verify(requisitionSearchStrategyFactory).getSearchStrategy(criteria);
     verify(programService).getById(3);
     verify(facilityService).getById(3);
     verify(processingScheduleService).getPeriodById(3);

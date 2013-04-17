@@ -12,7 +12,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
 import org.openlmis.rnr.domain.*;
-import org.openlmis.rnr.factory.RequisitionFactory;
+import org.openlmis.rnr.factory.RequisitionSearchStrategyFactory;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
 import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
@@ -54,7 +54,7 @@ public class RequisitionService {
   private ProcessingScheduleService processingScheduleService;
   private FacilityService facilityService;
   private SupplyLineService supplyLineService;
-  private RequisitionFactory requisitionFactory;
+  private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
   private RequisitionPermissionService requisitionPermissionService;
   private UserService userService;
   private RoleAssignmentService roleAssignmentService;
@@ -64,7 +64,7 @@ public class RequisitionService {
                             FacilityApprovedProductService facilityApprovedProductService, SupervisoryNodeService supervisoryNodeRepository,
                             RoleAssignmentService roleAssignmentService, ProgramService programService,
                             ProcessingScheduleService processingScheduleService, FacilityService facilityService, SupplyLineService supplyLineService,
-                            RequisitionFactory requisitionFactory, RequisitionPermissionService requisitionPermissionService, UserService userService) {
+                            RequisitionSearchStrategyFactory requisitionSearchStrategyFactory, RequisitionPermissionService requisitionPermissionService, UserService userService) {
     this.requisitionRepository = requisitionRepository;
     this.rnrTemplateRepository = rnrTemplateRepository;
     this.facilityApprovedProductService = facilityApprovedProductService;
@@ -74,7 +74,7 @@ public class RequisitionService {
     this.processingScheduleService = processingScheduleService;
     this.facilityService = facilityService;
     this.supplyLineService = supplyLineService;
-    this.requisitionFactory = requisitionFactory;
+    this.requisitionSearchStrategyFactory = requisitionSearchStrategyFactory;
     this.requisitionPermissionService = requisitionPermissionService;
     this.userService = userService;
   }
@@ -354,7 +354,7 @@ public class RequisitionService {
   }
 
   public List<Rnr> get(RequisitionSearchCriteria criteria) {
-    RequisitionSearchStrategy strategy = requisitionFactory.getSearchStrategy(criteria);
+    RequisitionSearchStrategy strategy = requisitionSearchStrategyFactory.getSearchStrategy(criteria);
     List<Rnr> requisitions = strategy.search(criteria);
     fillFacilityPeriodProgram(requisitions.toArray(new Rnr[requisitions.size()]));
     return requisitions;
