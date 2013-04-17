@@ -43,7 +43,6 @@ task buildOpenLmis(type: GradleBuild) {
 
 task webservicetest(type: Test) {
     useTestNG() {
-        systemProperties['browser'] = 'firefox'
         systemProperties['dburl'] = "$dburl"
         systemProperties['baseurl'] = "$baseurl"
 

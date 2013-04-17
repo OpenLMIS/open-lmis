@@ -9,6 +9,8 @@ package org.openlmis.UiUtils;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.lang.System.getProperty;
 
@@ -71,13 +73,14 @@ public class TestCaseHelper {
     testWebDriver = new TestWebDriver(driverFactory.loadDriver(browser));
   }
 
-    public void setupTestDataToInitiateRnR(String program, String userSIC) throws IOException, SQLException{
+    public void setupTestDataToInitiateRnR(String program, String userSIC, String userId, String vendorName, List<String> rightsList) throws IOException, SQLException{
         setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
         dbWrapper.insertFacilities("F10", "F11");
         dbWrapper.configureTemplate(program);
-        setupTestUserRoleRightsData(userSIC);
+
+        setupTestUserRoleRightsData(userId, userSIC, vendorName, rightsList);
         dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
-        dbWrapper.insertRoleAssignment("200", "store in-charge");
+        dbWrapper.insertRoleAssignment(userId, "store in-charge");
         dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
         dbWrapper.insertSchedule("M", "Monthly", "Month");
         dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
@@ -98,13 +101,13 @@ public class TestCaseHelper {
         dbWrapper.insertRequisitionGroupProgramSchedule();
     }
 
-    public void setupTestUserRoleRightsData(String userSIC) throws IOException, SQLException {
+    public void setupTestUserRoleRightsData(String userId, String userSIC, String vendorName, List<String> rightsList) throws IOException, SQLException {
         dbWrapper.insertRole("store in-charge", "false", "");
         dbWrapper.insertRole("district pharmacist", "false", "");
-        dbWrapper.assignRight("store in-charge", "CREATE_REQUISITION");
-        dbWrapper.assignRight("store in-charge", "VIEW_REQUISITION");
+        for(String rights : rightsList)
+        dbWrapper.assignRight("store in-charge", rights);
         String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-        dbWrapper.insertUser("200", userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com");
+        dbWrapper.insertUser(userId, userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com",vendorName );
     }
 
 }

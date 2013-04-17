@@ -53,15 +53,16 @@ public class DBWrapper {
     }
   }
 
-  public void insertUser(String userId, String userName, String password, String facilityCode, String email) throws SQLException, IOException {
-    update("delete from users where userName like('" + userName + "');");
 
-    update("INSERT INTO users\n" +
-      "  (id, userName, password,vendorId, facilityId, firstName, lastName, email, active) VALUES\n" +
-      "  ('" + userId + "', '" + userName + "', '" + password + "',(SELECT id FROM vendors WHERE name = 'openLmis'), (SELECT id FROM facilities WHERE code = '" + facilityCode + "'), 'Fatima', 'Doe', '" + email + "','true');\n");
+    public void insertUser(String userId, String userName, String password, String facilityCode, String email, String vendorName) throws SQLException, IOException {
+        update("delete from users where userName like('" + userName + "');");
+
+        update("INSERT INTO users\n" +
+                "  (id, userName, password,vendorId, facilityId, firstName, lastName, email, active) VALUES\n" +
+                "  ('" + userId + "', '" + userName + "', '" + password + "',(SELECT id FROM vendors WHERE name = '" + vendorName  + "'), (SELECT id FROM facilities WHERE code = '" + facilityCode + "'), 'Fatima', 'Doe', '" + email + "','true');\n");
 
 
-  }
+    }
 
   public void updateUser(String password, String email) throws SQLException, IOException {
     update("DELETE FROM user_password_reset_tokens;");
@@ -427,6 +428,7 @@ public class DBWrapper {
 
   public void setupMultipleProducts(String program, String facilityType, int numberOfProductsOfEachType, boolean defaultDisplayOrder) throws SQLException, IOException {
 
+
     update("delete from facility_approved_products;");
     update("delete from program_products;");
     update("delete from products;");
@@ -555,5 +557,20 @@ public class DBWrapper {
   public void updateRoleRight(String previousRight, String newRight) throws SQLException {
     update("update role_rights set rightName='" + newRight + "' where rightName='" + previousRight + "';");
   }
+
+    public String getAuthToken(String vendorName) throws IOException, SQLException {
+        ResultSet rs = query("select authtoken from vendors where name='" + vendorName + "'");
+
+        if (rs.next()) {
+            return rs.getString("authtoken");
+        }
+        return "";
+
+    }
+
+    public void insertVendor(String vendorName) throws SQLException{
+        update("delete from vendors where name='" + vendorName + "';");
+        update("INSERT INTO VENDORS (name, active) VALUES ('" + vendorName + "', true);");
+    }
 }
 

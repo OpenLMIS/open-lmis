@@ -17,6 +17,9 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
 
@@ -34,7 +37,10 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
 
     setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
     dbWrapper.insertFacilities("F10", "F11");
-    setupTestUserRoleRightsData(userSIC);
+      List<String> rightsList = new ArrayList<String>();
+      rightsList.add("CREATE_REQUISITION");
+      rightsList.add("VIEW_REQUISITION");
+      setupTestDataToInitiateRnR(program, userSIC,"200","openLmis", rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
     dbWrapper.insertRoleAssignment("200", "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
@@ -62,7 +68,10 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
     TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
     String newColumnHeading = "Altered";
     templateConfigPage.alterTemplateLabelAndVisibility(newColumnHeading, program);
-    setupTestUserRoleRightsData(userSIC);
+      List<String> rightsList = new ArrayList<String>();
+      rightsList.add("CREATE_REQUISITION");
+      rightsList.add("VIEW_REQUISITION");
+      setupTestDataToInitiateRnR(program, userSIC,"200","openLmis", rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
     dbWrapper.insertRoleAssignment("200", "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");

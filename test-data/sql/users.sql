@@ -56,5 +56,7 @@ INSERT INTO role_assignments
   (500, (SELECT id FROM roles WHERE name = 'LMU'), 3, (SELECT id from supervisory_nodes WHERE code = 'N1')),
   (500, (SELECT id FROM roles WHERE name = 'LMU'), 2, (SELECT id from supervisory_nodes WHERE code = 'N1')),
   (600, (SELECT id FROM roles WHERE name = 'LMU In-Charge'), 3, (SELECT id from supervisory_nodes WHERE code = 'N1')),
-  (600, (SELECT id FROM roles WHERE name = 'LMU In-Charge'), 2, (SELECT id from supervisory_nodes WHERE code = 'N1'));
+  (600, (SELECT id FROM roles WHERE name = 'LMU In-Charge'), 2, (SELECT id from supervisory_nodes WHERE code = 'N1')),
+  (700, (SELECT id FROM roles WHERE name = 'Store In-Charge'), 2, null),
+  (700, (SELECT id FROM roles WHERE name = 'FacilityHead'), 2, null);
 

@@ -14,6 +14,9 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
@@ -39,8 +42,10 @@ public class ViewRequisition extends TestCaseHelper {
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
   public void testViewRequisition(String program, String userSIC, String password) throws Exception {
-
-    setupTestDataToInitiateRnR(program, userSIC);
+      List<String> rightsList = new ArrayList<String>();
+      rightsList.add("CREATE_REQUISITION");
+      rightsList.add("VIEW_REQUISITION");
+    setupTestDataToInitiateRnR(program, userSIC,"200","openLmis", rightsList);
     dbWrapper.assignRight(STORE_IN_CHARGE, APPROVE_REQUISITION);
     dbWrapper.assignRight(STORE_IN_CHARGE, CONVERT_TO_ORDER);
 

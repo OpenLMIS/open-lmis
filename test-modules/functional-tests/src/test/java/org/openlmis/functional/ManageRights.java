@@ -16,6 +16,9 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
@@ -32,7 +35,10 @@ public class ManageRights extends TestCaseHelper {
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
   public void testOnlyCreateRight(String program, String userSIC,  String password) throws Exception {
-    setupTestDataToInitiateRnR(program, userSIC);
+      List<String> rightsList = new ArrayList<String>();
+      rightsList.add("CREATE_REQUISITION");
+      rightsList.add("VIEW_REQUISITION");
+    setupTestDataToInitiateRnR(program, userSIC,"200","openLmis", rightsList);
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -50,7 +56,10 @@ public class ManageRights extends TestCaseHelper {
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
   public void testUserTryToAuthorizeUnSubmittedRnR(String program, String userSIC,  String password) throws Exception {
-    setupTestDataToInitiateRnR(program, userSIC);
+      List<String> rightsList = new ArrayList<String>();
+      rightsList.add("CREATE_REQUISITION");
+      rightsList.add("VIEW_REQUISITION");
+    setupTestDataToInitiateRnR(program, userSIC,"200","openLmis", rightsList);
 
     dbWrapper.updateRoleRight("CREATE_REQUISITION", "AUTHORIZE_REQUISITION");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
