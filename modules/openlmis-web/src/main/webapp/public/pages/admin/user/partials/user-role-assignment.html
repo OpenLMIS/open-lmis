@@ -27,7 +27,7 @@
             <label ng-bind="getProgramName(roleAssignment.programId)"></label>
           </div>
         </div>
-        <div class="span6">
+        <div class="span7">
           <div class="fluid-grid-cell">
             <select ui-select2 ng-model="roleAssignment.roleIds" placeholder="+ Add Role"
                     multiple="multiple" name="roles" id="roles">
@@ -37,7 +37,7 @@
             </span>
           </div>
         </div>
-        <div class="span3">
+        <div class="span2">
           <a class="btn delete-role" value="delete" ng-click="deleteCurrentRow($index)">Remove</a>
         </div>
       </div>
@@ -58,7 +58,7 @@
           </div>
         </div>
 
-        <div class="span6 select2-roles">
+        <div class="span7 select2-roles">
           <div class="fluid-grid-cell">
             <select ui-select2 ng-model="selectedRoleIds" placeholder="+ Add Role" multiple="multiple"
                     style="width:400px">
@@ -69,7 +69,7 @@
           </div>
         </div>
 
-        <div class="span3">
+        <div class="span2">
           <div class="fluid-grid-cell">
             <a ng-click="addHomeFacilityRole()" class="btn btn-primary" openlmis-message="button.add"></a>
           </div>

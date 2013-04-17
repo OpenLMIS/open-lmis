@@ -32,7 +32,7 @@
           <label ng-bind="getSupervisoryNodeName(roleAssignment.supervisoryNode.id)"></label>
         </div>
       </div>
-      <div class="span3">
+      <div class="span4">
         <div class="fluid-grid-cell">
           <select ui-select2 ng-model="roleAssignment.roleIds" placeholder="+ Add Role"
                   multiple="multiple" style="width:400px" name="roles" id="roles">
@@ -42,7 +42,7 @@
         </span>
         </div>
       </div>
-      <div class="span3">
+      <div class="span2">
         <a class="btn delete-role" value="delete" ng-click="deleteCurrentRow($index)" openlmis-message="button.remove"></a>
       </div>
     </div>
@@ -76,7 +76,7 @@
         </div>
       </div>
 
-      <div class="span3 select2-roles">
+      <div class="span4 select2-roles">
         <div id="supervisoryRole" class="fluid-grid-cell">
           <select ui-select2  ng-model="selectedRoleIdsToSupervise" placeholder="+ Add Role" multiple="multiple" style="width:400px">
             <option ng-repeat="role in nonAdminRoles" value="{{role.id}}">{{role.name}}</option>
@@ -87,7 +87,7 @@
         </div>
       </div>
 
-      <div class="span3">
+      <div class="span2">
         <div class="fluid-grid-cell">
           <a ng-click="addSupervisoryRole()" class="btn btn-primary" openlmis-message= "button.add"></a>
         </div>
