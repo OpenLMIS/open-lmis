@@ -26,6 +26,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.verify;
 import static org.openlmis.core.builder.ProductBuilder.*;
 import static org.openlmis.core.builder.ProductBuilder.productCategoryDisplayOrder;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
@@ -299,6 +300,18 @@ public class RnrLineItemTest {
     spyLineItem.calculate(period, getRnrColumns(), AUTHORIZED);
 
     assertThat(spyLineItem.getAmc(), is(15));
+  }
+
+  @Test
+  public void shouldCalculateAMCAndMaxStockQuantityAndOrderedQuantityOnlyWhenAuthorized() throws Exception {
+    RnrLineItem spyLineItem = spy(lineItem);
+    doNothing().when(spyLineItem, "calculateNormalizedConsumption");
+
+    spyLineItem.calculate(period, getRnrColumns(), AUTHORIZED);
+
+    verify(spyLineItem).calculateAmc(period);
+    verify(spyLineItem).calculateMaxStockQuantity();
+    verify(spyLineItem).calculateOrderQuantity();
   }
 
   @Test
