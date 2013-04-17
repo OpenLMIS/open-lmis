@@ -15,3 +15,5 @@ CREATE TABLE program_products (
     createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
     UNIQUE (productId, programId)
 );
+
+CREATE INDEX uc_program_product_programId_productId ON program_products(programId, productId);

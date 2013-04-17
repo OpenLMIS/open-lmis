@@ -15,4 +15,5 @@ CREATE TABLE processing_periods (
   createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );
 
-CREATE UNIQUE INDEX uc_period_name ON processing_periods(LOWER(name), scheduleId);
+CREATE INDEX uc_processing_period_name_scheduleId ON processing_periods(LOWER(name), scheduleId);
+CREATE INDEX uc_processing_period_startDate_endDate ON processing_periods(startDate, endDate);

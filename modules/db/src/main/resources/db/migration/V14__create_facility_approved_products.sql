@@ -13,3 +13,5 @@ CREATE TABLE facility_approved_products (
     createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
     UNIQUE (facilityTypeId, programProductId)
 );
+
+CREATE INDEX uc_facility_approved_product_programProductId_facilityTypeId ON facility_approved_products(programProductId, facilityTypeId);

@@ -57,4 +57,3 @@ CREATE TABLE products (
   createdBy INTEGER,
   createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );
-CREATE UNIQUE INDEX uc_product_code ON products(LOWER(code));

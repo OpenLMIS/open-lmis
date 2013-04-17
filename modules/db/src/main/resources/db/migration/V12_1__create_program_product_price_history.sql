@@ -15,3 +15,5 @@ CREATE TABLE program_product_price_history (
     createdBy INTEGER,
     createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );
+
+CREATE INDEX uc_program_product_price_history_programProductId ON program_product_price_history(programProductId);

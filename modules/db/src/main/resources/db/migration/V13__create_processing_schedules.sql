@@ -11,5 +11,3 @@ CREATE TABLE processing_schedules (
   createdBy INTEGER,
   createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );
-
-CREATE UNIQUE INDEX ucScheduleCode ON processing_schedules(LOWER(code));

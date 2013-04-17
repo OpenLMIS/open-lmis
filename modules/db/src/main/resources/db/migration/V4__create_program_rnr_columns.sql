@@ -13,3 +13,5 @@ CREATE TABLE program_rnr_columns(
     formulaValidationRequired BOOLEAN,
     UNIQUE (programId, masterColumnId)
 );
+
+CREATE INDEX program_id_index ON program_rnr_columns(programId);

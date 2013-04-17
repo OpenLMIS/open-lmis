@@ -11,5 +11,3 @@ CREATE TABLE roles (
   createdBy INTEGER,
   createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );
-
-CREATE UNIQUE INDEX unique_role_name ON roles(LOWER(name));

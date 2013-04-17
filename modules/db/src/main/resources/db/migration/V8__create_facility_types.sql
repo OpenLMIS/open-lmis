@@ -16,3 +16,5 @@ CREATE TABLE facility_types (
   createdBy INTEGER,
   createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );
+
+

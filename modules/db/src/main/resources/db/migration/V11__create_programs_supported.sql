@@ -13,3 +13,6 @@ CREATE TABLE programs_supported (
   createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
   UNIQUE (facilityId, programId)
 );
+
+CREATE INDEX uc_program_supported_facilityId ON programs_supported(facilityId);
+CREATE INDEX uc_program_supported_facilityId_programId ON programs_supported(facilityId, programId);
