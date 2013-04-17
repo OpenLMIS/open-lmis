@@ -24,7 +24,7 @@ public class SummaryQueryBuilder {
                     ", sum(li.quantitydispensed) as adjustedDistributedQuantity" +
                     ", sum(li.stockInHand) as balanceOnHand " +
                     ", sum(0) as stockOutRate " +
-                    ", sum(1) as productReportingRate " +
+                    ", sum(1.0) / (select count(*) from facilities) as productReportingRate " +
                 " from requisition_line_items li join requisitions r on r.id =li.rnrid" +
                 " where r.periodid = " + period +
                 " group by li.productcode, li.productcategory, li.product, li.dispensingunit" +
