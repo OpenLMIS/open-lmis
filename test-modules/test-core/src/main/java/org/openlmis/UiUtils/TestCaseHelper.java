@@ -73,41 +73,41 @@ public class TestCaseHelper {
     testWebDriver = new TestWebDriver(driverFactory.loadDriver(browser));
   }
 
-    public void setupTestDataToInitiateRnR(String program, String userSIC, String userId, String vendorName, List<String> rightsList) throws IOException, SQLException{
-        setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
-        dbWrapper.insertFacilities("F10", "F11");
-        dbWrapper.configureTemplate(program);
+  public void setupTestDataToInitiateRnR(String program, String userSIC, String userId, String vendorName, List<String> rightsList) throws IOException, SQLException {
+    setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
+    dbWrapper.insertFacilities("F10", "F11");
+    dbWrapper.configureTemplate(program);
 
-        setupTestUserRoleRightsData(userId, userSIC, vendorName, rightsList);
-        dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
-        dbWrapper.insertRoleAssignment(userId, "store in-charge");
-        dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
-        dbWrapper.insertSchedule("M", "Monthly", "Month");
-        dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
-        dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
-        setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
-        dbWrapper.insertSupplyLines("N1", program, "F10");
-    }
+    setupTestUserRoleRightsData(userId, userSIC, vendorName, rightsList);
+    dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
+    dbWrapper.insertRoleAssignment(userId, "store in-charge");
+    dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
+    dbWrapper.insertSchedule("M", "Monthly", "Month");
+    dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
+    dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
+    setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
+    dbWrapper.insertSupplyLines("N1", program, "F10");
+  }
 
-    public void setupProductTestData(String product1, String product2, String program, String facilityType) throws IOException, SQLException {
-        dbWrapper.insertProducts(product1, product2);
-        dbWrapper.insertProgramProducts(product1, product2, program);
-        dbWrapper.insertFacilityApprovedProducts(product1, product2, program, facilityType);
-    }
+  public void setupProductTestData(String product1, String product2, String program, String facilityType) throws IOException, SQLException {
+    dbWrapper.insertProducts(product1, product2);
+    dbWrapper.insertProgramProducts(product1, product2, program);
+    dbWrapper.insertFacilityApprovedProducts(product1, product2, program, facilityType);
+  }
 
-    public void setupRequisitionGroupData(String RGCode1, String RGCode2, String SupervisoryNodeCode1, String SupervisoryNodeCode2, String Facility1, String Facility2) throws IOException, SQLException {
-        dbWrapper.insertRequisitionGroups(RGCode1, RGCode2, SupervisoryNodeCode1, SupervisoryNodeCode2);
-        dbWrapper.insertRequisitionGroupMembers(Facility1, Facility2);
-        dbWrapper.insertRequisitionGroupProgramSchedule();
-    }
+  public void setupRequisitionGroupData(String RGCode1, String RGCode2, String SupervisoryNodeCode1, String SupervisoryNodeCode2, String Facility1, String Facility2) throws IOException, SQLException {
+    dbWrapper.insertRequisitionGroups(RGCode1, RGCode2, SupervisoryNodeCode1, SupervisoryNodeCode2);
+    dbWrapper.insertRequisitionGroupMembers(Facility1, Facility2);
+    dbWrapper.insertRequisitionGroupProgramSchedule();
+  }
 
-    public void setupTestUserRoleRightsData(String userId, String userSIC, String vendorName, List<String> rightsList) throws IOException, SQLException {
-        dbWrapper.insertRole("store in-charge", "false", "");
-        dbWrapper.insertRole("district pharmacist", "false", "");
-        for(String rights : rightsList)
-        dbWrapper.assignRight("store in-charge", rights);
-        String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-        dbWrapper.insertUser(userId, userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com",vendorName );
-    }
+  public void setupTestUserRoleRightsData(String userId, String userSIC, String vendorName, List<String> rightsList) throws IOException, SQLException {
+    dbWrapper.insertRole("store in-charge", "false", "");
+    dbWrapper.insertRole("district pharmacist", "false", "");
+    for (String rights : rightsList)
+      dbWrapper.assignRight("store in-charge", rights);
+    String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
+    dbWrapper.insertUser(userId, userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com", vendorName);
+  }
 
 }

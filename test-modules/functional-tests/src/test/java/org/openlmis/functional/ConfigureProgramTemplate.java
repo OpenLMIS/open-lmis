@@ -37,10 +37,10 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
 
     setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
     dbWrapper.insertFacilities("F10", "F11");
-      List<String> rightsList = new ArrayList<String>();
-      rightsList.add("CREATE_REQUISITION");
-      rightsList.add("VIEW_REQUISITION");
-      setupTestDataToInitiateRnR(program, userSIC,"200","openLmis", rightsList);
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add("CREATE_REQUISITION");
+    rightsList.add("VIEW_REQUISITION");
+    setupTestDataToInitiateRnR(program, userSIC, "200", "openLmis", rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
     dbWrapper.insertRoleAssignment("200", "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
@@ -68,10 +68,10 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
     TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
     String newColumnHeading = "Altered";
     templateConfigPage.alterTemplateLabelAndVisibility(newColumnHeading, program);
-      List<String> rightsList = new ArrayList<String>();
-      rightsList.add("CREATE_REQUISITION");
-      rightsList.add("VIEW_REQUISITION");
-      setupTestDataToInitiateRnR(program, userSIC,"200","openLmis", rightsList);
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add("CREATE_REQUISITION");
+    rightsList.add("VIEW_REQUISITION");
+    setupTestDataToInitiateRnR(program, userSIC, "200", "openLmis", rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
     dbWrapper.insertRoleAssignment("200", "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
