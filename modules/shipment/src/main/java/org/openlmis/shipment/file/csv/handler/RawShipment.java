@@ -10,13 +10,6 @@ import lombok.Data;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
-/**
-* Created with IntelliJ IDEA.
-* User: sandeeb
-* Date: 4/15/13
-* Time: 5:06 PM
-* To change this template use File | Settings | File Templates.
-*/
 @Data
 public class RawShipment implements Importable {
   @ImportField(name = "Order Number")

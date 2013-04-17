@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.Message;
 import org.springframework.integration.MessageChannel;
 import org.springframework.integration.annotation.MessageEndpoint;
+import org.springframework.integration.support.MessageBuilder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
@@ -40,10 +41,10 @@ public class ShipmentFileProcessor {
   @Autowired
   private MessageChannel ftpOutputChannel;
 
+
   @Transactional
   public void process(Message message) throws IOException {
     File shipmentFile = (File) message.getPayload();
-
     try (FileInputStream inputStream = new FileInputStream(shipmentFile)) {
       ModelClass modelClass = new ModelClass(Shipment.class, true);
       csvParser.process(inputStream, modelClass, shipmentRecordHandler);
@@ -56,5 +57,7 @@ public class ShipmentFileProcessor {
 
   private void processErrorFile(File file) throws IOException {
     shipmentFileCsvErrorHandler.process(file);
+    Message<?> message = MessageBuilder.withPayload(file).build();
+    ftpOutputChannel.send(message);
   }
 }

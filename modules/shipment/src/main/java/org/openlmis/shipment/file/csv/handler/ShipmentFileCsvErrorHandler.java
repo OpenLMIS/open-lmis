@@ -21,20 +21,17 @@ import java.util.List;
 public class ShipmentFileCsvErrorHandler {
 
   public void process(File file) throws IOException {
-
     List<String> orderIds = new ArrayList<>();
     RawShipment rawShipment;
     ModelClass modelClass = new ModelClass(RawShipment.class);
-    InputStream inputStream = new FileInputStream(file);
-    CsvBeanReader csvBeanReader = new CsvBeanReader(modelClass, inputStream);
-
-    while ((rawShipment = (RawShipment) csvBeanReader.read()) != null) {
-      if (rawShipment.getOrderNumber() != null) {
-        orderIds.add(rawShipment.getOrderNumber());
+    try (InputStream inputStream = new FileInputStream(file)) {
+      CsvBeanReader csvBeanReader = new CsvBeanReader(modelClass, inputStream);
+      while ((rawShipment = (RawShipment) csvBeanReader.read()) != null) {
+        if (rawShipment.getOrderNumber() != null) {
+          orderIds.add(rawShipment.getOrderNumber());
+        }
       }
     }
-    System.out.println(orderIds);
-    //call service
   }
 
 }
