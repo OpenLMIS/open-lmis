@@ -57,8 +57,8 @@ public class DBWrapper {
     update("delete from users where userName like('" + userName + "');");
 
     update("INSERT INTO users\n" +
-      "  (id, userName, password, facilityId, firstName, lastName, email, active) VALUES\n" +
-      "  ('" + userId + "', '" + userName + "', '" + password + "', (SELECT id FROM facilities WHERE code = '" + facilityCode + "'), 'Fatima', 'Doe', '" + email + "','true');\n");
+      "  (id, userName, password,vendorId, facilityId, firstName, lastName, email, active) VALUES\n" +
+      "  ('" + userId + "', '" + userName + "', '" + password + "',(SELECT id FROM vendors WHERE name = 'openLmis'), (SELECT id FROM facilities WHERE code = '" + facilityCode + "'), 'Fatima', 'Doe', '" + email + "','true');\n");
 
 
   }
