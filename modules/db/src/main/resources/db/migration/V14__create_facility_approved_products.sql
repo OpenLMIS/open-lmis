@@ -14,4 +14,4 @@ CREATE TABLE facility_approved_products (
     UNIQUE (facilityTypeId, programProductId)
 );
 
-CREATE INDEX uc_facility_approved_product_programProductId_facilityTypeId ON facility_approved_products(programProductId, facilityTypeId);
+CREATE INDEX i_facility_approved_product_programProductId_facilityTypeId ON facility_approved_products(programProductId, facilityTypeId);

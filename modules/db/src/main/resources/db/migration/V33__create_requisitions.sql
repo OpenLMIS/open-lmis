@@ -20,3 +20,6 @@ CREATE TABLE requisitions (
   createdDate                     TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
   UNIQUE (facilityId, programId, periodId)
 );
+
+CREATE INDEX i_requisitions_status ON requisitions(LOWER(status));
+CREATE INDEX i_requisitions_programId_supervisoryNodeId ON requisitions(programId, supervisoryNodeId);

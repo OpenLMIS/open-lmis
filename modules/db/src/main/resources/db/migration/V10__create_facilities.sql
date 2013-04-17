@@ -39,4 +39,4 @@ CREATE TABLE facilities (
     createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );
 
-CREATE INDEX uc_facility_name ON facilities(name);
+CREATE INDEX i_facility_name ON facilities(name);

@@ -14,3 +14,5 @@ CREATE TABLE requisition_group_program_schedules (
   createdBy INTEGER,
   UNIQUE (requisitionGroupId, programId)
 );
+
+CREATE INDEX i_requisition_group_program_schedules_requisitionGroupId ON requisition_group_program_schedules(requisitionGroupId);

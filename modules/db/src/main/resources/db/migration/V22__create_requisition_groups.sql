@@ -13,4 +13,4 @@ CREATE TABLE requisition_groups (
   createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );
 
-CREATE UNIQUE INDEX ucRequisitionGroupCode ON requisition_groups(LOWER(code));
+CREATE INDEX i_requisition_group_supervisoryNodeId ON requisition_groups(supervisoryNodeId);

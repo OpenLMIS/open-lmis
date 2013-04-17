@@ -14,5 +14,5 @@ CREATE TABLE programs_supported (
   UNIQUE (facilityId, programId)
 );
 
-CREATE INDEX uc_program_supported_facilityId ON programs_supported(facilityId);
-CREATE INDEX uc_program_supported_facilityId_programId ON programs_supported(facilityId, programId);
+CREATE INDEX i_program_supported_facilityId ON programs_supported(facilityId);
+CREATE INDEX i_program_supported_facilityId_programId ON programs_supported(facilityId, programId);

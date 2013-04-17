@@ -11,3 +11,5 @@ CREATE TABLE requisition_group_members (
   createdBy INTEGER,
   UNIQUE (requisitionGroupId, facilityId)
 );
+
+CREATE INDEX i_requisition_group_member_facilityId ON requisition_group_members(facilityId);

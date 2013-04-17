@@ -30,5 +30,6 @@ CREATE TABLE users (
 );
 
 CREATE UNIQUE INDEX uc_users_userName_vendor ON users(LOWER(userName), vendorId);
+CREATE INDEX i_users_firstName_lastName_email ON users(LOWER(firstName), LOWER(lastName), LOWER(email));
 CREATE UNIQUE INDEX uc_users_email ON users(LOWER(email));
 CREATE UNIQUE INDEX uc_users_employeeId ON users(LOWER(employeeId));

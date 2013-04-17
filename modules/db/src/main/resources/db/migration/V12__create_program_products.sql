@@ -16,4 +16,4 @@ CREATE TABLE program_products (
     UNIQUE (productId, programId)
 );
 
-CREATE INDEX uc_program_product_programId_productId ON program_products(programId, productId);
+CREATE INDEX i_program_product_programId_productId ON program_products(programId, productId);

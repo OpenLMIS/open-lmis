@@ -40,5 +40,6 @@ modifiedBy                            INTEGER,
 modifiedDate                          TIMESTAMP  DEFAULT  CURRENT_TIMESTAMP,
 createdBy                             INTEGER,
 createdDate                           TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
-
 );
+
+CREATE INDEX i_requisition_line_items_rnrId ON requisition_line_items(rnrId);

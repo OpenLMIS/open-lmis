@@ -14,5 +14,4 @@ CREATE TABLE supervisory_nodes (
   createdDate TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
 );
 
-CREATE UNIQUE INDEX ucSupervisoryNodeCode ON supervisory_nodes(LOWER(code));
-CREATE INDEX iSupervisoryNodeParentId ON supervisory_nodes(parentId);
+CREATE INDEX i_supervisory_node_parentId ON supervisory_nodes(parentId);

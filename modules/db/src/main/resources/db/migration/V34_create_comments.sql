@@ -7,4 +7,6 @@ CREATE TABLE comments (
   authorId INTEGER NOT NULL REFERENCES users(id),
   createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   commentText VARCHAR(250) NOT NULL
-)
+);
+
+CREATE INDEX i_comments_rnrId ON comments(rnrId);
