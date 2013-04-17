@@ -191,7 +191,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
     verifyConvertToOrder(convertOrderPageOrdersPending);
 
     ViewOrdersPage viewOrdersPage = homePagelmu.navigateViewOrders();
-      viewOrdersPage.verifyOrderListElements(program, "ORD1", "FCcode" + date_time + " - " + "FCname" + date_time, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim()+ ")", supplyFacilityName, "RELEASED");
+    String requisitionId = dbWrapper.getLatestRequisitionId();
+    viewOrdersPage.verifyOrderListElements(program, "ORD" + requisitionId, "FCcode" + date_time + " - " + "FCname" + date_time, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "RELEASED");
   }
 
   private void verifyConvertToOrder(ConvertOrderPage convertOrderPageOrdersPending) {
