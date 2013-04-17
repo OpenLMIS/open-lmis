@@ -21,7 +21,7 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, UserS
     selectedItems:$scope.selectedItems,
     afterSelectionChange:selectionFunc,
     displaySelectionCheckbox:false,
-    enableColumnResize: true,
+    enableColumnResize:true,
     showColumnMenu:false,
     showFilter:false,
     rowHeight:44,
@@ -41,7 +41,7 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, UserS
 
   $scope.openRequisition = function () {
     var url = "requisition/";
-    url += $scope.selectedItems[0].id + "/" + $scope.selectedItems[0].programId+"?supplyType=full-supply&page=1";
+    url += $scope.selectedItems[0].id + "/" + $scope.selectedItems[0].programId + "?supplyType=full-supply&page=1";
     $location.url(url);
   };
 
@@ -84,8 +84,11 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, UserS
       $scope.errorShown = true;
       return;
     }
-    var requisitionQueryParameters = {facilityId:$scope.selectedFacilityId,
-      dateRangeStart:$scope.startDate, dateRangeEnd:$scope.endDate};
+    var requisitionQueryParameters = {
+      facilityId:$scope.selectedFacilityId,
+      dateRangeStart:$scope.startDate,
+      dateRangeEnd:$scope.endDate
+    };
 
     if ($scope.selectedProgramId) requisitionQueryParameters.programId = $scope.selectedProgramId;
 
@@ -109,7 +112,7 @@ var oneDay = 1000 * 60 * 60 * 24;
 
 ViewRnrListController.resolve = {
 
-  preAuthorize: function(AuthorizationService) {
+  preAuthorize:function (AuthorizationService) {
     AuthorizationService.preAuthorize('VIEW_REQUISITION');
   },
 

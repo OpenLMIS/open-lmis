@@ -83,11 +83,22 @@ public class RequisitionController extends BaseController {
   }
 
   @RequestMapping(value = "/requisitions", method = GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> get(@RequestParam("facilityId") Integer facilityId,
-                                              @RequestParam("programId") Integer programId,
-                                              @RequestParam("periodId") Integer periodId) {
-    return response(RNR, requisitionService.get(new Facility(facilityId), new Program(programId), new ProcessingPeriod(periodId)));
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_REQUISITION')")
+  public ResponseEntity<OpenLmisResponse> get(RequisitionSearchCriteria criteria, HttpServletRequest request) {
+    criteria.setUserId(loggedInUserId(request));
+
+    Facility facility = new Facility(criteria.getFacilityId());
+    Program program = new Program(criteria.getProgramId());
+    ProcessingPeriod period = new ProcessingPeriod(criteria.getPeriodId());
+
+    return response(RNR, requisitionService.get(facility, program, period));
+  }
+
+  @RequestMapping(value = "/requisitions-list", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REQUISITION')")
+  public ResponseEntity<OpenLmisResponse> getRequisitionsForView(RequisitionSearchCriteria criteria, HttpServletRequest request) {
+    criteria.setUserId(loggedInUserId(request));
+    return response(RNR_LIST, RnrDTO.prepareForView(requisitionService.get(criteria)));
   }
 
 
@@ -173,8 +184,8 @@ public class RequisitionController extends BaseController {
   @RequestMapping(value = "/logistics/facility/{facilityId}/program/{programId}/periods", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(
-    @PathVariable("facilityId") Integer facilityId,
-    @PathVariable("programId") Integer programId) {
+      @PathVariable("facilityId") Integer facilityId,
+      @PathVariable("programId") Integer programId) {
     try {
       List<ProcessingPeriod> periodList = requisitionService.getAllPeriodsForInitiatingRequisition(facilityId, programId);
       Rnr currentRequisition = getRequisitionForCurrentPeriod(facilityId, programId, periodList);
@@ -201,12 +212,6 @@ public class RequisitionController extends BaseController {
     }
   }
 
-  @RequestMapping(value = "/requisitions-list", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> getRequisitionsForView(RequisitionSearchCriteria criteria, HttpServletRequest request) {
-    criteria.setUserId(loggedInUserId(request));
-    return response(RNR_LIST, RnrDTO.prepareForView(requisitionService.get(criteria)));
-  }
 
   @RequestMapping(value = "/requisitionOrder", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONVERT_TO_ORDER')")

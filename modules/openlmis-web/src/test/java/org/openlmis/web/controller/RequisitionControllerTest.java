@@ -100,7 +100,11 @@ public class RequisitionControllerTest {
 
   @Test
   public void shouldGetRnrByFacilityProgramAndPeriodIfExists() throws Exception {
-    ResponseEntity<OpenLmisResponse> response = controller.get(1, 2, 3);
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria();
+    criteria.setFacilityId(1);
+    criteria.setProgramId(2);
+    criteria.setPeriodId(3);
+    ResponseEntity<OpenLmisResponse> response = controller.get(criteria, request);
 
     verify(requisitionService).get(argThat(facilityMatcher(1)), argThat(programMatcher(2)), argThat(periodMatcher(3)));
     assertThat(response.getStatusCode(), is(equalTo(HttpStatus.OK)));
@@ -113,7 +117,7 @@ public class RequisitionControllerTest {
     Mockito.when(requisitionService.getFullRequisitionById(1)).thenReturn(expectedRequisition);
     ResponseEntity<OpenLmisResponse> response = controller.getById(1);
 
-    assertThat((Rnr)response.getBody().getData().get(RequisitionController.RNR), is(expectedRequisition));
+    assertThat((Rnr) response.getBody().getData().get(RequisitionController.RNR), is(expectedRequisition));
     verify(requisitionService).getFullRequisitionById(1);
   }
 
@@ -155,10 +159,17 @@ public class RequisitionControllerTest {
     Facility facility = new Facility(1);
     whenNew(Facility.class).withArguments(1).thenReturn(facility);
     Program program = new Program(2);
-    whenNew(Program.class).withArguments(2).thenReturn(program);
 
+    whenNew(Program.class).withArguments(2).thenReturn(program);
     when(requisitionService.get(facility, program, null)).thenReturn(expectedRnr);
-    ResponseEntity<OpenLmisResponse> response = controller.get(1, 2, null);
+
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria();
+    criteria.setFacilityId(1);
+    criteria.setProgramId(2);
+    criteria.setPeriodId(null);
+
+    ResponseEntity<OpenLmisResponse> response = controller.get(criteria, request);
+
     assertThat((Rnr) response.getBody().getData().get(RNR), is(expectedRnr));
   }
 
@@ -289,13 +300,13 @@ public class RequisitionControllerTest {
   }
 
   @Test
-  public void shouldReturnListOfApprovedRequisitionsForConvertingToOrder(){
+  public void shouldReturnListOfApprovedRequisitionsForConvertingToOrder() {
     ArrayList<Rnr> expectedRequisitions = new ArrayList<>();
     mockStatic(RnrDTO.class);
     when(requisitionService.getApprovedRequisitions()).thenReturn(expectedRequisitions);
     List<RnrDTO> expectedRnrList = new ArrayList<>();
     when(RnrDTO.prepareForListApproval(expectedRequisitions)).thenReturn(expectedRnrList);
-  
+
     ResponseEntity<OpenLmisResponse> responseEntity = controller.listForConvertToOrder();
 
     verify(requisitionService).getApprovedRequisitions();
@@ -332,7 +343,7 @@ public class RequisitionControllerTest {
   }
 
   @Test
-  public void shouldReturnModelAndViewForPrintingRequisitionAsPdf(){
+  public void shouldReturnModelAndViewForPrintingRequisitionAsPdf() {
     int rnrId = 1;
     int programId = 2;
     Program program = new Program();
@@ -389,7 +400,7 @@ public class RequisitionControllerTest {
     ResponseEntity<OpenLmisResponse> response = controller.getCommentsForARnr(rnr.getId());
 
     verify(requisitionService).getCommentsByRnrId(rnr.getId());
-    assertThat(comments,is(response.getBody().getData().get(COMMENTS)));
+    assertThat(comments, is(response.getBody().getData().get(COMMENTS)));
   }
 
   private Rnr createRequisition() {

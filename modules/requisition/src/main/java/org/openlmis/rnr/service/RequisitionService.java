@@ -117,6 +117,14 @@ public class RequisitionService {
     return fillSupportingInfo(requisition);
   }
 
+  public List<Rnr> get(RequisitionSearchCriteria criteria) {
+    RequisitionSearchStrategy strategy = requisitionSearchStrategyFactory.getSearchStrategy(criteria);
+    List<Rnr> requisitions = strategy.search(criteria);
+    fillFacilityPeriodProgram(requisitions.toArray(new Rnr[requisitions.size()]));
+    return requisitions;
+  }
+
+
   public List<LossesAndAdjustmentsType> getLossesAndAdjustmentsTypes() {
     return requisitionRepository.getLossesAndAdjustmentsTypes();
   }
@@ -351,13 +359,6 @@ public class RequisitionService {
   private void update(Rnr requisition) {
     requisitionRepository.update(requisition);
     requisitionRepository.logStatusChange(requisition);
-  }
-
-  public List<Rnr> get(RequisitionSearchCriteria criteria) {
-    RequisitionSearchStrategy strategy = requisitionSearchStrategyFactory.getSearchStrategy(criteria);
-    List<Rnr> requisitions = strategy.search(criteria);
-    fillFacilityPeriodProgram(requisitions.toArray(new Rnr[requisitions.size()]));
-    return requisitions;
   }
 
   public List<Rnr> getOrders() {
