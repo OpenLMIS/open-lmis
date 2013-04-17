@@ -36,77 +36,72 @@ import static org.apache.http.client.protocol.ClientContext.AUTH_CACHE;
 import static org.apache.http.protocol.HTTP.UTF_8;
 
 public class HttpClient {
-  private DefaultHttpClient httpClient;
-  private BasicHttpContext httpContext;
+
+    private DefaultHttpClient httpClient;
+    private BasicHttpContext httpContext;
 
 
-  public String SendJSON(String fileName, String url, String commMethod, String username, String password) {
-    if (username != "" && password != "") {
-      HttpHost targetHost = new HttpHost("localhost", 9091, "http");
+    public String SendJSON(String json, String url, String commMethod, String username, String password) {
+        if (username != "" && password != "") {
+            HttpHost targetHost = new HttpHost("localhost", 9091, "http");
 
-      httpClient.getCredentialsProvider().setCredentials(
-        new AuthScope("localhost", 9091),
-        new UsernamePasswordCredentials(username, password)
-      );
+            httpClient.getCredentialsProvider().setCredentials(
+                    new AuthScope("localhost", 9091),
+                    new UsernamePasswordCredentials(username, password)
+            );
 
-      AuthCache authCache = new BasicAuthCache();
-      BasicScheme basicAuth = new BasicScheme();
-      authCache.put(targetHost, basicAuth);
-      httpContext.setAttribute(AUTH_CACHE, authCache);
+            AuthCache authCache = new BasicAuthCache();
+            BasicScheme basicAuth = new BasicScheme();
+            authCache.put(targetHost, basicAuth);
+            httpContext.setAttribute(AUTH_CACHE, authCache);
 
+        }
+        HttpPost httppost = new HttpPost(url);
+        httppost.setHeader(new BasicHeader("Content-Type", "application/json;charset=UTF-8"));
+        HttpResponse response;
+        HttpEntity entity;
+        String responseBody = null;
+        try {
+
+
+            switch (commMethod) {
+                case "GET":
+                    HttpGet httpget = new HttpGet(url);
+                    response = httpClient.execute(httpget, httpContext);
+                    int statusCode = response.getStatusLine().getStatusCode();
+                    entity = response.getEntity();
+                    BufferedReader rd1 = new BufferedReader(new InputStreamReader(entity.getContent()));
+                    responseBody = rd1.readLine();
+                    entity.getContent().close();
+                    break;
+                case "POST":
+                    httppost.setEntity(new StringEntity(json, UTF_8));
+
+                    response = httpClient.execute(httppost, httpContext);
+
+                    entity = response.getEntity();
+                    BufferedReader rd = new BufferedReader(new InputStreamReader(entity.getContent()));
+                    responseBody = rd.readLine();
+                    break;
+
+            }
+            return responseBody;
+
+            // Create a response handler
+
+        } catch (ClientProtocolException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+
+        }
+        return "";
     }
-    HttpPost httppost = new HttpPost(url);
-    httppost.setHeader(new BasicHeader("Content-Type", "application/json;charset=UTF-8"));
-    HttpResponse response;
-    HttpEntity entity;
-    String responseBody = null;
-    try {
 
-
-      switch (commMethod) {
-        case "GET":
-          HttpGet httpget = new HttpGet(url);
-          response = httpClient.execute(httpget, httpContext);
-          int statusCode = response.getStatusLine().getStatusCode();
-          entity = response.getEntity();
-          BufferedReader rd1 = new BufferedReader(new InputStreamReader(entity.getContent()));
-          responseBody = rd1.readLine();
-          entity.getContent().close();
-          break;
-        case "POST":
-          String json = "";
-          File file = new File(fileName);
-          Scanner scanner = new Scanner(file);
-          while (scanner.hasNextLine()) {
-            json = json + scanner.nextLine();
-          }
-          scanner.close();
-          httppost.setEntity(new StringEntity(json, UTF_8));
-
-          response = httpClient.execute(httppost, httpContext);
-
-          entity = response.getEntity();
-          BufferedReader rd = new BufferedReader(new InputStreamReader(entity.getContent()));
-          responseBody = rd.readLine();
-          break;
-
-      }
-      return responseBody;
-
-      // Create a response handler
-
-    } catch (ClientProtocolException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    } catch (Exception ex) {
-      ex.printStackTrace();
-
-    }
-    return "";
-  }
 
   public void createContext() {
     this.httpClient = new DefaultHttpClient();

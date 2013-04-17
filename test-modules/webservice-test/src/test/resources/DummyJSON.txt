@@ -1,7 +1,7 @@
 {
-"facilityId" : "110",
+"facilityId" : "",
 "programId" : "1",
-"periodId": "12",
+"periodId" : "",
 "userId" : "commTrack",
 "products" :[
   {
