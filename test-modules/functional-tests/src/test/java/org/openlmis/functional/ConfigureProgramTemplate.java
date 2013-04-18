@@ -27,107 +27,107 @@ import java.util.List;
 
 public class ConfigureProgramTemplate extends TestCaseHelper {
 
-  @BeforeMethod(groups = {"functional"})
-  public void setUp() throws Exception {
-    super.setup();
-  }
+    @BeforeMethod(groups = {"functional"})
+    public void setUp() throws Exception {
+        super.setup();
+    }
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Program-Not-Configured")
-  public void testVerifyProgramNotConfigured(String program, String userSIC, String password) throws Exception {
-    List<String> rightsList = new ArrayList<String>();
-    rightsList.add("CREATE_REQUISITION");
-    rightsList.add("VIEW_REQUISITION");
-    setupTestDataToInitiateRnR(false, program, userSIC, "200", "openLmis", rightsList);
+    @Test(groups = {"functional"}, dataProvider = "Data-Provider-Program-Not-Configured")
+    public void testVerifyProgramNotConfigured(String program, String userSIC, String password) throws Exception {
+        List<String> rightsList = new ArrayList<String>();
+        rightsList.add("CREATE_REQUISITION");
+        rightsList.add("VIEW_REQUISITION");
+        setupTestDataToInitiateRnR(false, program, userSIC, "200", "openLmis", rightsList);
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
-    homePage.navigateAndInitiateRnr(program);
-    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-    initiateRnRPage.verifyTemplateNotConfiguredMessage();
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(userSIC, password);
+        homePage.navigateAndInitiateRnr(program);
+        InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+        initiateRnRPage.verifyTemplateNotConfiguredMessage();
 
-  }
+    }
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Verify-On-Rnr-Screen")
-  public void testVerifyImpactOfChangesInConfigScreenOnRnRScreen(String program, String userSIC, String password, String[] credentials) throws Exception {
-    List<String> rightsList = new ArrayList<String>();
-    rightsList.add("CREATE_REQUISITION");
-    rightsList.add("VIEW_REQUISITION");
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    @Test(groups = {"functional"}, dataProvider = "Data-Provider-Verify-On-Rnr-Screen")
+    public void testVerifyImpactOfChangesInConfigScreenOnRnRScreen(String program, String userSIC, String password, String[] credentials) throws Exception {
+        List<String> rightsList = new ArrayList<String>();
+        rightsList.add("CREATE_REQUISITION");
+        rightsList.add("VIEW_REQUISITION");
+        setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
-    TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
-    String newColumnHeading = "Altered";
-    templateConfigPage.alterTemplateLabelAndVisibility(newColumnHeading, program);
-    homePage.logout(baseUrlGlobal);
-    LoginPage loginPageSic = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePageSic = loginPageSic.loginAs(userSIC, password);
-    homePageSic.navigateAndInitiateRnr(program);
-    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-    String tableXpathTillTr = "//table[@id='fullSupplyTable']/thead/tr";
-    int columns = initiateRnRPage.getSizeOfElements(tableXpathTillTr + "/th");
-    initiateRnRPage.verifyColumnsHeadingPresent(tableXpathTillTr, newColumnHeading, columns);
-    String columnHeadingNotPresent = "Remarks";
-    columns = initiateRnRPage.getSizeOfElements(tableXpathTillTr + "/th");
-    initiateRnRPage.verifyColumnHeadingNotPresent(tableXpathTillTr, columnHeadingNotPresent, columns);
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+        TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
+        String newColumnHeading = "Altered";
+        templateConfigPage.alterTemplateLabelAndVisibility(newColumnHeading, program);
+        homePage.logout(baseUrlGlobal);
+        LoginPage loginPageSic = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePageSic = loginPageSic.loginAs(userSIC, password);
+        homePageSic.navigateAndInitiateRnr(program);
+        InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+        String tableXpathTillTr = "//table[@id='fullSupplyTable']/thead/tr";
+        int columns = initiateRnRPage.getSizeOfElements(tableXpathTillTr + "/th");
+        initiateRnRPage.verifyColumnsHeadingPresent(tableXpathTillTr, newColumnHeading, columns);
+        String columnHeadingNotPresent = "Remarks";
+        columns = initiateRnRPage.getSizeOfElements(tableXpathTillTr + "/th");
+        initiateRnRPage.verifyColumnHeadingNotPresent(tableXpathTillTr, columnHeadingNotPresent, columns);
 
-  }
+    }
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Column-Label-Source")
-  public void testVerifyColumnLabelsSourceAndMandatoryColumns(String program, String[] credentials) throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    @Test(groups = {"functional"}, dataProvider = "Data-Provider-Column-Label-Source")
+    public void testVerifyColumnLabelsSourceAndMandatoryColumns(String program, String[] credentials) throws Exception {
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
-    TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
-    templateConfigPage.verifyMandatoryColumns();
-    templateConfigPage.verifyColumnLabels();
-    templateConfigPage.verifyColumnSource();
+        TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
+        templateConfigPage.verifyMandatoryColumns();
+        templateConfigPage.verifyColumnLabels();
+        templateConfigPage.verifyColumnSource();
 
-  }
+    }
 
-  @Test(groups = {"functional"}, dataProvider = "Data-Provider-Column-Label-Source")
-  public void testVerifyArithmeticValidationAndBusinessRules(String program, String[] credentials) throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    @Test(groups = {"functional"}, dataProvider = "Data-Provider-Column-Label-Source")
+    public void testVerifyArithmeticValidationAndBusinessRules(String program, String[] credentials) throws Exception {
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
-    TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
-    templateConfigPage.verifyArithmeticValidations(program);
-    templateConfigPage.verifyBusinessRules();
-
-
-  }
-
-  @AfterMethod(groups = {"functional"})
-  public void tearDown() throws Exception {
-    HomePage homePage = new HomePage(testWebDriver);
-    homePage.logout(baseUrlGlobal);
-    dbWrapper.deleteData();
-    dbWrapper.closeConnection();
-  }
+        TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
+        templateConfigPage.verifyArithmeticValidations(program);
+        templateConfigPage.verifyBusinessRules();
 
 
-  @DataProvider(name = "Data-Provider-Column-Label-Source")
-  public Object[][] parameterColumnLabelSource() {
-    return new Object[][]{
-      {"HIV", new String[]{"Admin123", "Admin123"}}
-    };
+    }
 
-  }
+    @AfterMethod(groups = {"functional"})
+    public void tearDown() throws Exception {
+        HomePage homePage = new HomePage(testWebDriver);
+        homePage.logout(baseUrlGlobal);
+        dbWrapper.deleteData();
+        dbWrapper.closeConnection();
+    }
 
-  @DataProvider(name = "Data-Provider-Program-Not-Configured")
-  public Object[][] parameterProgramNotConfigured() {
-    return new Object[][]{
-      {"HIV", "storeincharge", "Admin123"}
-    };
 
-  }
+    @DataProvider(name = "Data-Provider-Column-Label-Source")
+    public Object[][] parameterColumnLabelSource() {
+        return new Object[][]{
+                {"HIV", new String[]{"Admin123", "Admin123"}}
+        };
 
-  @DataProvider(name = "Data-Provider-Verify-On-Rnr-Screen")
-  public Object[][] parameterVerifyRnRScreen() {
-    return new Object[][]{
-      {"HIV", "storeincharge", "Admin123", new String[]{"Admin123", "Admin123"}}
-    };
+    }
 
-  }
+    @DataProvider(name = "Data-Provider-Program-Not-Configured")
+    public Object[][] parameterProgramNotConfigured() {
+        return new Object[][]{
+                {"HIV", "storeincharge", "Admin123"}
+        };
+
+    }
+
+    @DataProvider(name = "Data-Provider-Verify-On-Rnr-Screen")
+    public Object[][] parameterVerifyRnRScreen() {
+        return new Object[][]{
+                {"HIV", "storeincharge", "Admin123", new String[]{"Admin123", "Admin123"}}
+        };
+
+    }
 }
 
