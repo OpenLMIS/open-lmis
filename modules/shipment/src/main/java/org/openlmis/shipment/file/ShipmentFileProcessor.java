@@ -9,7 +9,7 @@ package org.openlmis.shipment.file;
 import lombok.NoArgsConstructor;
 import org.apache.commons.io.FileUtils;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.shipment.domain.Shipment;
+import org.openlmis.shipment.domain.ShippedLineItem;
 import org.openlmis.shipment.file.csv.handler.ShipmentFilePostProcessHandler;
 import org.openlmis.upload.RecordHandler;
 import org.openlmis.upload.exception.UploadException;
@@ -44,7 +44,7 @@ public class ShipmentFileProcessor {
   public void process(Message message) throws IOException {
     File shipmentFile = (File) message.getPayload();
     boolean processingError = false;
-    ModelClass modelClass = new ModelClass(Shipment.class, true);
+    ModelClass modelClass = new ModelClass(ShippedLineItem.class, true);
 
     try (FileInputStream inputStream = new FileInputStream(shipmentFile)) {
       csvParser.process(inputStream, modelClass, shipmentRecordHandler);

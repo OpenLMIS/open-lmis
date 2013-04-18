@@ -8,16 +8,19 @@ package org.openlmis.shipment.repository.mapper;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
-import org.openlmis.shipment.domain.Shipment;
+import org.openlmis.shipment.domain.ShippedLineItem;
+import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.springframework.stereotype.Repository;
 
 
 @Repository
 public interface ShipmentMapper {
 
-  @Insert({"INSERT INTO shipments (orderNumber, productCode, quantityShipped) " +
+  @Insert({"INSERT INTO shipped_line_items (orderId, productCode, shippedQuantity) " +
      "VALUES" +
      "(#{orderNumber}, #{productCode}, #{quantityShipped})"})
    @Options(useGeneratedKeys = true)
-   public Integer insert(Shipment shipment);
+   public void insertShippedLineItem(ShippedLineItem shippedLineItem);
+
+  void insertShipmentFileInfo(ShipmentFileInfo shipmentFileInfo);
 }

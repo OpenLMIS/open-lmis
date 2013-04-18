@@ -7,12 +7,14 @@
 package org.openlmis.shipment.file;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.shipment.domain.Shipment;
+import org.openlmis.shipment.domain.ShippedLineItem;
+import org.openlmis.shipment.service.ShipmentService;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.RecordHandler;
 import org.openlmis.upload.model.AuditFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component("shipmentRecordHandler")
@@ -20,10 +22,12 @@ import org.springframework.stereotype.Component;
 public class ShipmentRecordHandler implements RecordHandler{
   private static Logger logger = LoggerFactory.getLogger(ShipmentRecordHandler.class);
 
+  @Autowired
+  private ShipmentService shipmentService;
+
   @Override
   public void execute(Importable importable, int rowNumber, AuditFields auditFields) {
-    Shipment shipment = (Shipment) importable;
-    logger.info(shipment.getOrderNumber());
-    logger.info(""+rowNumber);
+    ShippedLineItem shippedLineItem = (ShippedLineItem) importable;
+    shipmentService.insertShippedLineItem(shippedLineItem);
   }
 }

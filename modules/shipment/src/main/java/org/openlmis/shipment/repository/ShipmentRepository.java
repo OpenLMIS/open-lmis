@@ -7,7 +7,8 @@
 package org.openlmis.shipment.repository;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.shipment.domain.Shipment;
+import org.openlmis.shipment.domain.ShippedLineItem;
+import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.repository.mapper.ShipmentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -23,7 +24,11 @@ public class ShipmentRepository {
     this.shipmentMapper = shipmentMapper;
   }
 
-  public Integer insert(Shipment shipment) {
-    return shipmentMapper.insert(shipment);
+  public void insertShippedLineItem(ShippedLineItem shippedLineItem) {
+    shipmentMapper.insertShippedLineItem(shippedLineItem);
+  }
+
+  public void insertShipmentFileInfo(ShipmentFileInfo shipmentFileInfo) {
+   shipmentMapper.insertShipmentFileInfo(shipmentFileInfo);
   }
 }

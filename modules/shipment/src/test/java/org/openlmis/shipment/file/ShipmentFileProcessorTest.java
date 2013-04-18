@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.shipment.domain.Shipment;
+import org.openlmis.shipment.domain.ShippedLineItem;
 import org.openlmis.shipment.file.csv.handler.ShipmentFilePostProcessHandler;
 import org.openlmis.upload.RecordHandler;
 import org.openlmis.upload.exception.UploadException;
@@ -43,11 +43,11 @@ public class ShipmentFileProcessorTest {
     Message message = mock(Message.class);
     File shipmentFile = mock(File.class);
     FileInputStream shipmentInputStream = mock(FileInputStream.class);
-    ModelClass shipmentModelClass = new ModelClass(Shipment.class, true);
+    ModelClass shipmentModelClass = new ModelClass(ShippedLineItem.class, true);
 
     when(message.getPayload()).thenReturn(shipmentFile);
     whenNew(FileInputStream.class).withArguments(shipmentFile).thenReturn(shipmentInputStream);
-    whenNew(ModelClass.class).withArguments(Shipment.class, true).thenReturn(shipmentModelClass);
+    whenNew(ModelClass.class).withArguments(ShippedLineItem.class, true).thenReturn(shipmentModelClass);
 
     shipmentFileProcessor.process(message);
 
@@ -60,11 +60,11 @@ public class ShipmentFileProcessorTest {
     Message message = mock(Message.class);
     File shipmentFile = mock(File.class);
     FileInputStream shipmentInputStream = mock(FileInputStream.class);
-    ModelClass shipmentModelClass = new ModelClass(Shipment.class, true);
+    ModelClass shipmentModelClass = new ModelClass(ShippedLineItem.class, true);
 
     when(message.getPayload()).thenReturn(shipmentFile);
     whenNew(FileInputStream.class).withArguments(shipmentFile).thenReturn(shipmentInputStream);
-    whenNew(ModelClass.class).withArguments(Shipment.class, true).thenReturn(shipmentModelClass);
+    whenNew(ModelClass.class).withArguments(ShippedLineItem.class, true).thenReturn(shipmentModelClass);
     doThrow(new UploadException("message")).when(csvParser).
         process(shipmentInputStream, shipmentModelClass, shipmentRecordHandler);
 
@@ -78,11 +78,11 @@ public class ShipmentFileProcessorTest {
     Message message = mock(Message.class);
     File shipmentFile = mock(File.class);
     FileInputStream shipmentInputStream = mock(FileInputStream.class);
-    ModelClass shipmentModelClass = new ModelClass(Shipment.class, true);
+    ModelClass shipmentModelClass = new ModelClass(ShippedLineItem.class, true);
 
     when(message.getPayload()).thenReturn(shipmentFile);
     whenNew(FileInputStream.class).withArguments(shipmentFile).thenReturn(shipmentInputStream);
-    whenNew(ModelClass.class).withArguments(Shipment.class, true).thenReturn(shipmentModelClass);
+    whenNew(ModelClass.class).withArguments(ShippedLineItem.class, true).thenReturn(shipmentModelClass);
     doThrow(new DataException("message")).when(csvParser).
         process(shipmentInputStream, shipmentModelClass, shipmentRecordHandler);
 

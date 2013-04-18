@@ -8,12 +8,35 @@ package org.openlmis.shipment.service;
 
 
 import org.junit.Test;
-import org.openlmis.shipment.domain.Shipment;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.shipment.domain.ShippedLineItem;
+import org.openlmis.shipment.domain.ShipmentFileInfo;
+import org.openlmis.shipment.repository.ShipmentRepository;
 
+import static org.mockito.Mockito.verify;
+
+@RunWith(MockitoJUnitRunner.class)
 public class ShipmentServiceTest {
 
+  @Mock
+  private ShipmentRepository shipmentRepository;
+  @InjectMocks
+  private ShipmentService shipmentService;
+
   @Test
-  public void shouldUpdateShipmentDetails() throws Exception {
-    Shipment shipment = new Shipment();
+  public void shouldInsertShipment() throws Exception {
+    ShippedLineItem shippedLineItem = new ShippedLineItem();
+    shipmentService.insertShippedLineItem(shippedLineItem);
+    verify(shipmentRepository).insertShippedLineItem(shippedLineItem);
+  }
+
+  @Test
+  public void shouldInsertShipmentInfo() throws Exception {
+    ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
+    shipmentService.insertShipmentFileInfo(shipmentFileInfo);
+    verify(shipmentRepository).insertShipmentFileInfo(shipmentFileInfo);
   }
 }
