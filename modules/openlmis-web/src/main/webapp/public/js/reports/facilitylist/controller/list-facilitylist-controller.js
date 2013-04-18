@@ -201,16 +201,16 @@ function ListFacilitiesController($scope, FacilityList, FacilityTypes, Geographi
 
             ],
         enablePaging: true,
-        //enableSorting :true,
+        enableSorting :true,
         showFooter: true,
         selectWithCheckboxOnly :false,
         pagingOptions: $scope.pagingOptions,
         filterOptions: $scope.filterOptions,
         useExternalSorting: true,
         sortInfo: $scope.sortInfo,
-        //showColumnMenu: true,
+        showColumnMenu: true,
         //enableRowReordering: true,
-        //showFilter: true,
+        showFilter: true,
         autoFit :true,
         plugins: [new ngGridFlexibleHeightPlugin()]
         //plugins: [new ngGridCsvExportPlugin()]
