@@ -21,6 +21,8 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
+import org.openlmis.order.domain.Order;
+import org.openlmis.order.service.OrderService;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.factory.RequisitionFactory;
@@ -98,6 +100,9 @@ public class RequisitionServiceTest {
   @Mock
   private UserService userService;
 
+  @Mock
+  private OrderService orderService;
+
   private Rnr submittedRnr;
   private Rnr initiatedRnr;
   private Rnr authorizedRnr;
@@ -107,7 +112,7 @@ public class RequisitionServiceTest {
   public void setup() {
     requisitionService = new RequisitionService(requisitionRepository, rnrTemplateRepository, facilityApprovedProductService,
       supervisoryNodeService, roleAssignmentService, programService, processingScheduleService, facilityService, supplyLineService,
-      requisitionFactory, requisitionPermissionService, userService);
+      requisitionFactory, requisitionPermissionService, userService, orderService);
     submittedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, SUBMITTED), with(modifiedBy, USER_ID)));
     initiatedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, INITIATED), with(modifiedBy, USER_ID)));
     authorizedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, AUTHORIZED), with(modifiedBy, USER_ID)));
@@ -833,6 +838,8 @@ public class RequisitionServiceTest {
     ArgumentCaptor<Rnr> requisitionArgumentCaptor = ArgumentCaptor.forClass(Rnr.class);
     verify(requisitionRepository, times(3)).update(requisitionArgumentCaptor.capture());
     verify(requisitionRepository, times(3)).logStatusChange(requisitionArgumentCaptor.capture());
+    ArgumentCaptor<Order> orderArgumentCaptor = ArgumentCaptor.forClass(Order.class);
+    verify(orderService, times(3)).save(orderArgumentCaptor.capture());
 
     List<Rnr> orderList = requisitionArgumentCaptor.getAllValues();
     assertThat(orderList.get(0), is(rnr1));

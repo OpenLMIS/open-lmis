@@ -372,7 +372,7 @@ public class RequisitionMapperIT {
     List paramList = new ArrayList();
     paramList.add(new java.sql.Date(date.getTime()));
     paramList.add(batch1.getId());
-    return queryExecutor.insertOrUpdate("Update Order_Batches set createTimeStamp = ? where id = ?", paramList);
+    return queryExecutor.executeUpdate("Update Order_Batches set createTimeStamp = ? where id = ?", paramList);
   }
 
   private Rnr insertRequisition(ProcessingPeriod period, RnrStatus status) {

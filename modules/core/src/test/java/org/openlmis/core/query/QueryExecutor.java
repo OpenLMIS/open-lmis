@@ -22,25 +22,34 @@ import java.util.List;
 @NoArgsConstructor
 public class QueryExecutor {
 
-    DataSource dataSource;
+  DataSource dataSource;
 
-    @Autowired
-    public QueryExecutor(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
+  @Autowired
+  public QueryExecutor(DataSource dataSource) {
+    this.dataSource = dataSource;
+  }
 
-    public ResultSet query(String query) throws SQLException {
-        Connection connection = DataSourceUtils.getConnection(dataSource);
-        PreparedStatement preparedStatement = connection.prepareStatement(query);
-        return preparedStatement.executeQuery();
-    }
+  public ResultSet execute(String query) throws SQLException {
+    Connection connection = DataSourceUtils.getConnection(dataSource);
+    PreparedStatement preparedStatement = connection.prepareStatement(query);
+    return preparedStatement.executeQuery();
+  }
 
-    public int insertOrUpdate(String insertQuery, List params) throws SQLException {
-        Connection connection = DataSourceUtils.getConnection(dataSource);
-        PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
-        for (int index = 0; index < params.size(); index++){
-            preparedStatement.setObject(index+1, params.get(index));
-        }
-        return preparedStatement.executeUpdate();
+  public ResultSet execute(String query, List params) throws SQLException {
+    Connection connection = DataSourceUtils.getConnection(dataSource);
+    PreparedStatement preparedStatement = connection.prepareStatement(query);
+    for (int index = 0; index < params.size(); index++) {
+      preparedStatement.setObject(index + 1, params.get(index));
     }
+    return preparedStatement.executeQuery();
+  }
+
+  public int executeUpdate(String query, List params) throws SQLException {
+    Connection connection = DataSourceUtils.getConnection(dataSource);
+    PreparedStatement preparedStatement = connection.prepareStatement(query);
+    for (int index = 0; index < params.size(); index++) {
+      preparedStatement.setObject(index + 1, params.get(index));
+    }
+    return preparedStatement.executeUpdate();
+  }
 }

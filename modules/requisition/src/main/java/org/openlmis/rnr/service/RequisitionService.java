@@ -11,6 +11,8 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
+import org.openlmis.order.domain.Order;
+import org.openlmis.order.service.OrderService;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.factory.RequisitionFactory;
 import org.openlmis.rnr.repository.RequisitionRepository;
@@ -58,13 +60,14 @@ public class RequisitionService {
   private RequisitionPermissionService requisitionPermissionService;
   private UserService userService;
   private RoleAssignmentService roleAssignmentService;
+  private OrderService orderService;
 
   @Autowired
   public RequisitionService(RequisitionRepository requisitionRepository, RnrTemplateRepository rnrTemplateRepository,
                             FacilityApprovedProductService facilityApprovedProductService, SupervisoryNodeService supervisoryNodeRepository,
                             RoleAssignmentService roleAssignmentService, ProgramService programService,
                             ProcessingScheduleService processingScheduleService, FacilityService facilityService, SupplyLineService supplyLineService,
-                            RequisitionFactory requisitionFactory, RequisitionPermissionService requisitionPermissionService, UserService userService) {
+                            RequisitionFactory requisitionFactory, RequisitionPermissionService requisitionPermissionService, UserService userService, OrderService orderService) {
     this.requisitionRepository = requisitionRepository;
     this.rnrTemplateRepository = rnrTemplateRepository;
     this.facilityApprovedProductService = facilityApprovedProductService;
@@ -77,6 +80,7 @@ public class RequisitionService {
     this.requisitionFactory = requisitionFactory;
     this.requisitionPermissionService = requisitionPermissionService;
     this.userService = userService;
+    this.orderService = orderService;
   }
 
   @Transactional
@@ -345,6 +349,8 @@ public class RequisitionService {
       OrderBatch orderBatch = createOrderBatch(loadedRequisition, userId);
       loadedRequisition.convertToOrder(orderBatch, userId);
       update(loadedRequisition);
+        Order order = new Order(loadedRequisition);
+      orderService.save(order);
     }
   }
 
