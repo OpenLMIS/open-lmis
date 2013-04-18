@@ -16,6 +16,7 @@ public class Constants {
     public static String REPORT_TITLE = "REPORT_TITLE";
     public static String REPORT_NAME = "REPORT_NAME";
     public static String REPORT_VERSION = "REPORT_VERSION";
+    public static String REPORT_OUTPUT_OPTION = "REPORT_OUTPUT_OPTION";
     public static String REPORT_ID = "REPORT_ID";
     public static String GENERATED_BY = "GENERATED_BY";
     public static String LOGO = "LOGO";

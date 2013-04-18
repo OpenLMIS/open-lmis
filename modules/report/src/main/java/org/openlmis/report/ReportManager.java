@@ -77,7 +77,7 @@ public class ReportManager {
 
        // Read the report template from file.
        InputStream reportInputStream =  this.getClass().getClassLoader().getResourceAsStream(report.getTemplate()) ;
-       HashMap<String, Object> extraParams = getReportExtraParams(report, currentUser.getUserName()) ;
+       HashMap<String, Object> extraParams = getReportExtraParams(report, currentUser.getUserName(), outputOption.name()) ;
        reportExporter.exportReport(reportInputStream,extraParams, dataSource, outputOption, response);
 
     }
@@ -95,10 +95,12 @@ public class ReportManager {
 
      /**
      * Used to extract extra parameters that are used by report header and footer.
-     * @param report
-     * @return
+     *
+      * @param report
+      * @param outputOption
+      * @return
      */
-    private HashMap<String, Object> getReportExtraParams(Report report, String generatedBy){
+    private HashMap<String, Object> getReportExtraParams(Report report, String generatedBy, String outputOption){
 
         if (report == null) return null;
 
@@ -107,6 +109,7 @@ public class ReportManager {
         params.put(Constants.REPORT_ID, report.getId());
         params.put(Constants.REPORT_TITLE, report.getTitle());
         params.put(Constants.REPORT_VERSION, report.getVersion());
+        params.put(Constants.REPORT_OUTPUT_OPTION, outputOption.toString());
         params.put(Constants.LOGO,this.getClass().getClassLoader().getResourceAsStream("logo.png"));
         params.put(Constants.GENERATED_BY, generatedBy);
 

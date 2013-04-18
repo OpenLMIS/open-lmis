@@ -13,6 +13,7 @@
 	<parameter name="REPORT_VERSION" class="java.lang.String"/>
 	<parameter name="REPORT_ID" class="java.lang.String"/>
 	<parameter name="LOGO" class="java.io.InputStream"/>
+	<parameter name="REPORT_OUTPUT_OPTION" class="java.lang.String"/>
 	<field name="PageNumber" class="java.lang.Integer"/>
 	<field name="TotalPages" class="java.lang.Integer"/>
 	<variable name="TOTAL_PAGES" class="java.lang.Integer">
@@ -24,7 +25,9 @@
 	<title>
 		<band height="79" splitType="Stretch">
 			<subreport>
-				<reportElement uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e" x="0" y="0" width="802" height="79"/>
+				<reportElement uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e" x="0" y="0" width="802" height="79" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
+				</reportElement>
 				<subreportParameter name="PAGE_NO">
 					<subreportParameterExpression><![CDATA[$V{PAGE_NUMBER}]]></subreportParameterExpression>
 				</subreportParameter>

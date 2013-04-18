@@ -2,8 +2,10 @@ package org.openlmis.report.exporter;
 
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.export.*;
 import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import org.openlmis.report.ReportManager;
 import org.openlmis.report.ReportOutputOption;
 import org.openlmis.report.model.ReportData;
@@ -32,6 +34,7 @@ public class JasperReportExporter implements ReportExporter {
 
             JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reportInputStream);
 
+            //removes pagination in exel output. It allows to remove repeating column header
             if(reportExtraParams != null && (outputOption != null && outputOption.equals(ReportOutputOption.XLS))){
                 reportExtraParams.put(JRParameter.IS_IGNORE_PAGINATION, Boolean.TRUE);
             }
