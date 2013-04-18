@@ -121,8 +121,8 @@ public class RequisitionRepositoryTest {
     Rnr expectedRnr = null;
     Facility facility = new Facility(FACILITY_ID);
     Program program = new Program(HIV);
-    when(requisitionMapper.getRequisition(facility, program, null)).thenReturn(expectedRnr);
-    Rnr rnr = requisitionRepository.getRequisition(facility, program, null);
+    when(requisitionMapper.getRequisitionWithLineItems(facility, program, null)).thenReturn(expectedRnr);
+    Rnr rnr = requisitionRepository.getRequisitionWithLineItems(facility, program, null);
     assertThat(rnr, is(expectedRnr));
   }
 

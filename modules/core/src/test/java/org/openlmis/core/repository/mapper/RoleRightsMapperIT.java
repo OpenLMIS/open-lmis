@@ -204,9 +204,10 @@ public class RoleRightsMapperIT {
     roleAssignmentMapper.insertRoleAssignment(user.getId(), program.getId(), supervisoryNode1.getId(), role1.getId());
     roleAssignmentMapper.insertRoleAssignment(user.getId(), program.getId(), supervisoryNode2.getId(), role2.getId());
 
-    List<Right> result = roleRightsMapper.getRightsForUserOnSupervisoryNodeAndProgram(user.getId(), "{" + supervisoryNode1.getId()+", "+ supervisoryNode2.getId()+"}", program);
+    List<Right> result = roleRightsMapper.getRightsForUserOnSupervisoryNodeAndProgram(user.getId(), "{" + supervisoryNode1.getId() + ", " + supervisoryNode2.getId() + "}", program);
     assertThat(result.size(), is(2));
-    assertThat(result, is(asList(CREATE_REQUISITION, AUTHORIZE_REQUISITION)));
+    assertTrue(result.contains(CREATE_REQUISITION));
+    assertTrue(result.contains(AUTHORIZE_REQUISITION));
   }
 
   @Test
@@ -226,7 +227,8 @@ public class RoleRightsMapperIT {
 
     List<Right> result = roleRightsMapper.getRightsForUserOnHomeFacilityAndProgram(user.getId(), program);
     assertThat(result.size(), is(2));
-    assertThat(result, is(asList(CREATE_REQUISITION, AUTHORIZE_REQUISITION)));
+    assertTrue(result.contains(CREATE_REQUISITION));
+    assertTrue(result.contains(AUTHORIZE_REQUISITION));
   }
 
   @Test

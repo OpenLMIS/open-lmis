@@ -18,7 +18,6 @@ import org.openlmis.rnr.repository.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
@@ -90,8 +89,8 @@ public class RequisitionRepository {
     }
   }
 
-  public Rnr getRequisition(Facility facility, Program program, ProcessingPeriod period) {
-    return requisitionMapper.getRequisition(facility, program, period);
+  public Rnr getRequisitionWithLineItems(Facility facility, Program program, ProcessingPeriod period) {
+    return requisitionMapper.getRequisitionWithLineItems(facility, program, period);
   }
 
 
@@ -125,7 +124,7 @@ public class RequisitionRepository {
     requisitionMapper.createOrderBatch(orderBatch);
   }
 
-  public OrderBatch getOrderBatchById(Integer id){
+  public OrderBatch getOrderBatchById(Integer id) {
     return requisitionMapper.getOrderBatchById(id);
   }
 

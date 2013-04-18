@@ -38,4 +38,10 @@ public class RequisitionSearchCriteria {
     this.dateRangeStart = dateRangeStart;
     this.dateRangeEnd = dateRangeEnd;
   }
+
+  public RequisitionSearchCriteria(Integer facilityId, Integer programId, Integer periodId) {
+    this.facilityId = facilityId;
+    this.programId = programId;
+    this.periodId = periodId;
+  }
 }

@@ -7,9 +7,11 @@
 package org.openlmis.web.controller;
 
 import org.hamcrest.CoreMatchers;
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
@@ -37,10 +39,10 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -48,7 +50,6 @@ import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
-import static org.openlmis.core.matchers.Matchers.*;
 import static org.openlmis.web.controller.RequisitionController.*;
 import static org.powermock.api.mockito.PowerMockito.doThrow;
 import static org.powermock.api.mockito.PowerMockito.*;
@@ -104,9 +105,11 @@ public class RequisitionControllerTest {
     criteria.setFacilityId(1);
     criteria.setProgramId(2);
     criteria.setPeriodId(3);
+    when(requisitionService.get(criteria)).thenReturn(asList(rnr));
+
     ResponseEntity<OpenLmisResponse> response = controller.get(criteria, request);
 
-    verify(requisitionService).get(argThat(facilityMatcher(1)), argThat(programMatcher(2)), argThat(periodMatcher(3)));
+    verify(requisitionService).get(argThat(criteriaMatcher(1, 2, 3)));
     assertThat(response.getStatusCode(), is(equalTo(HttpStatus.OK)));
   }
 
@@ -161,12 +164,8 @@ public class RequisitionControllerTest {
     Program program = new Program(2);
 
     whenNew(Program.class).withArguments(2).thenReturn(program);
-    when(requisitionService.get(facility, program, null)).thenReturn(expectedRnr);
-
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria();
-    criteria.setFacilityId(1);
-    criteria.setProgramId(2);
-    criteria.setPeriodId(null);
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facility.getId(), program.getId(), null);
+    when(requisitionService.get(criteria)).thenReturn(asList(expectedRnr));
 
     ResponseEntity<OpenLmisResponse> response = controller.get(criteria, request);
 
@@ -271,14 +270,15 @@ public class RequisitionControllerTest {
   @Test
   public void shouldReturnAllPeriodsForInitiatingRequisition() throws Exception {
     ProcessingPeriod processingPeriod = new ProcessingPeriod(6);
-    List<ProcessingPeriod> periodList = Arrays.asList(processingPeriod);
+    List<ProcessingPeriod> periodList = asList(processingPeriod);
     Rnr rnr = new Rnr();
 
     Facility facility = new Facility(1);
     whenNew(Facility.class).withArguments(1).thenReturn(facility);
     Program program = new Program(2);
     whenNew(Program.class).withArguments(2).thenReturn(program);
-    when(requisitionService.get(facility, program, processingPeriod)).thenReturn(rnr);
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facility.getId(), program.getId(), processingPeriod.getId());
+    when(requisitionService.get(criteria)).thenReturn(asList(rnr));
 
     when(requisitionService.getAllPeriodsForInitiatingRequisition(1, 2)).thenReturn(periodList);
 
@@ -335,7 +335,7 @@ public class RequisitionControllerTest {
   @Test
   public void shouldReleaseRequisitionsAsOrder() throws Exception {
     RnrList rnrList = new RnrList();
-    rnrList.setRnrList(Arrays.asList(new Rnr()));
+    rnrList.setRnrList(asList(new Rnr()));
 
     controller.releaseAsOrder(rnrList, request);
 
@@ -417,6 +417,16 @@ public class RequisitionControllerTest {
     requisition.setProgram(program);
     requisition.setPeriod(period);
     return requisition;
+  }
+
+  public static Matcher<RequisitionSearchCriteria> criteriaMatcher(final int facilityId, final int programId, final int periodId) {
+    return new ArgumentMatcher<RequisitionSearchCriteria>() {
+      @Override
+      public boolean matches(Object argument) {
+        RequisitionSearchCriteria searchCriteria = (RequisitionSearchCriteria) argument;
+        return searchCriteria.getFacilityId() == facilityId && searchCriteria.getProgramId() == programId && searchCriteria.getPeriodId() == periodId;
+      }
+    };
   }
 }
 

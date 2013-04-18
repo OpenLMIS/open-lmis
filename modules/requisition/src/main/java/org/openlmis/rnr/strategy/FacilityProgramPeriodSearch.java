@@ -11,24 +11,24 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
-import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 @Data
 @NoArgsConstructor
-public class FacilityProgramDateRangeSearch implements RequisitionSearchStrategy {
+public class FacilityProgramPeriodSearch implements RequisitionSearchStrategy {
 
   private RequisitionSearchCriteria criteria;
-  private ProcessingScheduleService processingScheduleService;
   private RequisitionRepository requisitionRepository;
 
-  public FacilityProgramDateRangeSearch(RequisitionSearchCriteria criteria, ProcessingScheduleService processingScheduleService, RequisitionRepository requisitionRepository) {
+  public FacilityProgramPeriodSearch(RequisitionSearchCriteria criteria, RequisitionRepository requisitionRepository) {
     this.criteria = criteria;
-    this.processingScheduleService = processingScheduleService;
     this.requisitionRepository = requisitionRepository;
   }
 
@@ -36,9 +36,12 @@ public class FacilityProgramDateRangeSearch implements RequisitionSearchStrategy
   public List<Rnr> search() {
     Facility facility = new Facility(criteria.getFacilityId());
     Program program = new Program(criteria.getProgramId());
-    List<ProcessingPeriod> periods = processingScheduleService.getAllPeriodsForDateRange(facility, program,
-        criteria.getDateRangeStart(), criteria.getDateRangeEnd());
-
-    return requisitionRepository.get(facility, program, periods);
+    ProcessingPeriod period = new ProcessingPeriod(criteria.getPeriodId());
+    Rnr requisitionWithLineItems = requisitionRepository.getRequisitionWithLineItems(facility, program, period);
+    if (requisitionWithLineItems != null) {
+      return asList(requisitionWithLineItems);
+    } else {
+      return new ArrayList<>();
+    }
   }
 }

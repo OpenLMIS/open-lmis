@@ -7,15 +7,12 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.rnr.domain.Comment;
 import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.rnr.service.RnrTemplateService;
@@ -38,7 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
-import static org.openlmis.rnr.dto.RnrDTO.prepareForOrderView;
+import static org.openlmis.rnr.dto.RnrDTO.*;
 import static org.openlmis.web.response.OpenLmisResponse.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CONFLICT;
@@ -87,18 +84,16 @@ public class RequisitionController extends BaseController {
   public ResponseEntity<OpenLmisResponse> get(RequisitionSearchCriteria criteria, HttpServletRequest request) {
     criteria.setUserId(loggedInUserId(request));
 
-    Facility facility = new Facility(criteria.getFacilityId());
-    Program program = new Program(criteria.getProgramId());
-    ProcessingPeriod period = new ProcessingPeriod(criteria.getPeriodId());
-
-    return response(RNR, requisitionService.get(facility, program, period));
+    List<Rnr> rnrs = requisitionService.get(criteria);
+    Rnr requisition = (rnrs == null || rnrs.isEmpty()) ? null : rnrs.get(0);
+    return response(RNR, requisition);
   }
 
   @RequestMapping(value = "/requisitions-list", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getRequisitionsForView(RequisitionSearchCriteria criteria, HttpServletRequest request) {
     criteria.setUserId(loggedInUserId(request));
-    return response(RNR_LIST, RnrDTO.prepareForView(requisitionService.get(criteria)));
+    return response(RNR_LIST, prepareForView(requisitionService.get(criteria)));
   }
 
 
@@ -170,15 +165,14 @@ public class RequisitionController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'APPROVE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> listForApproval(HttpServletRequest request) {
     List<Rnr> requisitions = requisitionService.listForApproval(loggedInUserId(request));
-    return response(RNR_LIST, RnrDTO.prepareForListApproval(requisitions));
+    return response(RNR_LIST, prepareForListApproval(requisitions));
   }
 
   @RequestMapping(value = "/requisitions-for-convert-to-order", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CONVERT_TO_ORDER')")
-//todo is it possible for a single user to convert requisitions to order for all facilities
   public ResponseEntity<OpenLmisResponse> listForConvertToOrder() {
     List<Rnr> approvedRequisitions = requisitionService.getApprovedRequisitions();
-    return response(RNR_LIST, RnrDTO.prepareForListApproval(approvedRequisitions));
+    return response(RNR_LIST, prepareForListApproval(approvedRequisitions));
   }
 
   @RequestMapping(value = "/logistics/facility/{facilityId}/program/{programId}/periods", method = GET, headers = ACCEPT_JSON)
@@ -199,7 +193,9 @@ public class RequisitionController extends BaseController {
 
   private Rnr getRequisitionForCurrentPeriod(Integer facilityId, Integer programId, List<ProcessingPeriod> periodList) {
     if (periodList == null || periodList.isEmpty()) return null;
-    return requisitionService.get(new Facility(facilityId), new Program(programId), periodList.get(0));
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, periodList.get(0).getId());
+    List<Rnr> rnrList = requisitionService.get(criteria);
+    return (rnrList == null || rnrList.isEmpty()) ? null : rnrList.get(0);
   }
 
   @RequestMapping(value = "/requisitions-for-approval/{id}", method = GET, headers = ACCEPT_JSON)

@@ -16,15 +16,13 @@ import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.strategy.FacilityDateRangeSearch;
 import org.openlmis.rnr.strategy.FacilityProgramDateRangeSearch;
 import org.openlmis.rnr.strategy.RequisitionSearchStrategy;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Date;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.junit.Assert.assertTrue;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 @PrepareForTest({RequisitionSearchStrategyFactory.class})
 @RunWith(PowerMockRunner.class)
@@ -41,25 +39,29 @@ public class RequisitionSearchStrategyFactoryTest {
 
   @Test
   public void shouldGetSearchStrategyForFacilityProgramAndDateRange() throws Exception {
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(1, 1, new Date(), new Date());
+    Integer facilityId = 1, programId = 1;
+    Date periodStartDate = new Date(), periodEndDate = new Date();
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, periodStartDate, periodEndDate);
 
     RequisitionSearchStrategyFactory requisitionSearchStrategyFactory = new RequisitionSearchStrategyFactory(processingScheduleService, requisitionRepository, null);
 
     RequisitionSearchStrategy facilityProgramDateRangeStrategy = requisitionSearchStrategyFactory.getSearchStrategy(criteria);
 
-    assertThat(facilityProgramDateRangeStrategy instanceof FacilityProgramDateRangeSearch, is(true));
+    assertTrue(facilityProgramDateRangeStrategy instanceof FacilityProgramDateRangeSearch);
   }
 
   @Test
   public void shouldGetSearchStrategyForFacilityAndDateRange() throws Exception {
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(1, null, new Date(), new Date());
-    PowerMockito.whenNew(FacilityDateRangeSearch.class).withArguments(processingScheduleService, requisitionRepository, programService)
+    Integer facilityId = 1, programId = null;
+    Date periodStartDate = new Date(), periodEndDate = new Date();
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, periodStartDate, periodEndDate);
+    whenNew(FacilityDateRangeSearch.class).withArguments(criteria, processingScheduleService, requisitionRepository, programService)
         .thenReturn(mock(FacilityDateRangeSearch.class));
     RequisitionSearchStrategyFactory requisitionSearchStrategyFactory = new RequisitionSearchStrategyFactory(processingScheduleService, requisitionRepository, programService);
 
     RequisitionSearchStrategy facilityDateRangeStrategy = requisitionSearchStrategyFactory.getSearchStrategy(criteria);
 
-    assertThat(facilityDateRangeStrategy instanceof FacilityDateRangeSearch, is(true));
-    PowerMockito.verifyNew(FacilityDateRangeSearch.class).withArguments(processingScheduleService, requisitionRepository, programService);
+    assertTrue(facilityDateRangeStrategy instanceof FacilityDateRangeSearch);
+    verifyNew(FacilityDateRangeSearch.class).withArguments(criteria, processingScheduleService, requisitionRepository, programService);
   }
 }

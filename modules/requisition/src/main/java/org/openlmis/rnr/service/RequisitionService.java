@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.BEGINNING_BALANCE;
 import static org.openlmis.rnr.domain.RnrStatus.*;
@@ -98,7 +99,11 @@ public class RequisitionService {
 
     requisitionRepository.insert(requisition);
     requisitionRepository.logStatusChange(requisition);
-    return get(new Facility(facilityId), new Program(programId), new ProcessingPeriod(periodId));
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, periodId);
+
+    List<Rnr> rnrList = get(criteria);
+    return (rnrList == null || rnrList.isEmpty()) ? null : rnrList.get(0);
+
   }
 
   public void save(Rnr rnr) {
@@ -112,15 +117,11 @@ public class RequisitionService {
     requisitionRepository.update(savedRnr);
   }
 
-  public Rnr get(Facility facility, Program program, ProcessingPeriod period) {
-    Rnr requisition = requisitionRepository.getRequisition(facility, program, period);
-    return fillSupportingInfo(requisition);
-  }
 
   public List<Rnr> get(RequisitionSearchCriteria criteria) {
     RequisitionSearchStrategy strategy = requisitionSearchStrategyFactory.getSearchStrategy(criteria);
-    List<Rnr> requisitions = strategy.search(criteria);
-    fillFacilityPeriodProgram(requisitions.toArray(new Rnr[requisitions.size()]));
+    List<Rnr> requisitions = strategy.search();
+    fillFacilityPeriodProgram(requisitions);
     return requisitions;
   }
 
@@ -188,7 +189,7 @@ public class RequisitionService {
 
   public List<Rnr> getApprovedRequisitions() {
     List<Rnr> requisitions = requisitionRepository.getApprovedRequisitions();
-    fillFacilityPeriodProgram(requisitions.toArray(new Rnr[requisitions.size()]));
+    fillFacilityPeriodProgram(requisitions);
     fillSupplyingFacility(requisitions.toArray(new Rnr[requisitions.size()]));
     return requisitions;
   }
@@ -202,7 +203,7 @@ public class RequisitionService {
   private Rnr fillSupportingInfo(Rnr requisition) {
     if (requisition == null) return null;
 
-    fillFacilityPeriodProgram(requisition);
+    fillFacilityPeriodProgram(asList(requisition));
     fillPreviousRequisitionsForAmc(requisition);
     return requisition;
   }
@@ -267,7 +268,8 @@ public class RequisitionService {
     ProcessingPeriod immediatePreviousPeriod = processingScheduleService.getImmediatePreviousPeriod(requisition.getPeriod());
     Rnr previousRequisition = null;
     if (immediatePreviousPeriod != null)
-      previousRequisition = requisitionRepository.getRequisition(requisition.getFacility(), requisition.getProgram(), immediatePreviousPeriod);
+      previousRequisition = requisitionRepository.getRequisitionWithLineItems(requisition.getFacility(),
+          requisition.getProgram(), immediatePreviousPeriod);
     return previousRequisition;
   }
 
@@ -291,7 +293,7 @@ public class RequisitionService {
     requisition.fillLastTwoPeriodsNormalizedConsumptions(lastPeriodsRnr, secondLastPeriodsRnr);
   }
 
-  private void fillFacilityPeriodProgram(Rnr... requisitions) {
+  private void fillFacilityPeriodProgram(List<Rnr> requisitions) {
     for (Rnr requisition : requisitions) {
       Facility facility = facilityService.getById(requisition.getFacility().getId());
       ProcessingPeriod period = processingScheduleService.getPeriodById(requisition.getPeriod().getId());
@@ -307,7 +309,7 @@ public class RequisitionService {
     ProcessingPeriod lastPeriod = processingScheduleService.getImmediatePreviousPeriod(requisition.getPeriod());
     if (lastPeriod == null) return null;
 
-    return requisitionRepository.getRequisition(requisition.getFacility(), requisition.getProgram(), lastPeriod);
+    return requisitionRepository.getRequisitionWithLineItems(requisition.getFacility(), requisition.getProgram(), lastPeriod);
   }
 
 
@@ -342,7 +344,7 @@ public class RequisitionService {
       final List<Rnr> requisitions = requisitionRepository.getAuthorizedRequisitions(assignment);
       requisitionsForApproval.addAll(requisitions);
     }
-    fillFacilityPeriodProgram(requisitionsForApproval.toArray(new Rnr[requisitionsForApproval.size()]));
+    fillFacilityPeriodProgram(requisitionsForApproval);
     return requisitionsForApproval;
   }
 
@@ -363,7 +365,7 @@ public class RequisitionService {
 
   public List<Rnr> getOrders() {
     List<Rnr> requisitions = requisitionRepository.getByStatus(RELEASED);
-    fillFacilityPeriodProgram(requisitions.toArray(new Rnr[requisitions.size()]));
+    fillFacilityPeriodProgram(requisitions);
     fillSupplyingFacility(requisitions.toArray(new Rnr[requisitions.size()]));
 
     return requisitions;

@@ -189,7 +189,7 @@ public class RequisitionMapperIT {
     insertRnrLineItem(requisition, fullSupplyFacilityApprovedProduct);
     insertRnrLineItem(requisition, nonFullSupplyFacilityApprovedProduct);
 
-    Rnr returnedRequisition = mapper.getRequisition(facility, new Program(PROGRAM_ID), processingPeriod1);
+    Rnr returnedRequisition = mapper.getRequisitionWithLineItems(facility, new Program(PROGRAM_ID), processingPeriod1);
 
     assertThat(returnedRequisition.getId(), is(requisition.getId()));
     assertThat(returnedRequisition.getFacility().getId(), is(facility.getId()));
