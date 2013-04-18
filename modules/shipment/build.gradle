@@ -16,13 +16,17 @@ dependencies {
             'org.springframework.integration:spring-integration-stream:2.2.3.RELEASE',
             'org.springframework.integration:spring-integration-ftp:2.2.3.RELEASE',
             project(':modules:core'),
-            project(':modules:upload')
+            project(':modules:upload'),
+            project(':modules:requisition')
 
 
     compile('net.sf.supercsv:super-csv-dozer:2.0.1') {
         exclude module: 'commons-beanutils'
     }
-    testCompile 'org.springframework:spring-test:3.1.1.RELEASE'
+    testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
+            project(path : ':modules:core', configuration: 'testFixtures'),
+            project(path : ':modules:requisition', configuration: 'testFixtures')
+
 
     configurations {
         testFixtures {

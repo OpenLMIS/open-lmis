@@ -40,7 +40,7 @@ import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessin
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:test-applicationContext-requisition.xml")
+@ContextConfiguration(locations = "classpath:test-applicationContext-shipment.xml")
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
 public class OrderMapperIT {

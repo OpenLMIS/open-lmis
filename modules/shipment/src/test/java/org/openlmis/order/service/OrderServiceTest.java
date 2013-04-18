@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.repository.OrderRepository;
+import org.openlmis.order.service.OrderService;
 
 import static org.mockito.Mockito.verify;
 
