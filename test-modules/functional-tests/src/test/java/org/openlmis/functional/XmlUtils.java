@@ -1,35 +1,30 @@
-package org.openlmis.UiUtils;
+package org.openlmis.functional;
 
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
+import com.sun.jna.platform.win32.NTSecApi;
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.fail;
+
 
 public class XmlUtils {
-
-  private static InputStream responseStream = null;
-  private static String responseString = "";
-  private static String strURLProperty = null;
-
 
   /*
     * This function will return root element of xml file
@@ -55,8 +50,7 @@ public class XmlUtils {
   * Reusable function to get the attribute value of a node in xml file
   * <StatusCode class="0"/>
   */
-  public static List<String> getAttributeValuesOfNode(String tagName,
-                                                      String attributeName, Element element) {
+  public static List<String> getAttributeValuesOfNode(String tagName, String attributeName, Element element) {
     String arr = null;
     List<String> list = new ArrayList<String>();
 
@@ -77,8 +71,7 @@ public class XmlUtils {
     * Reusable function to get a single attribute value based on index
     * <StatusCode class="0"/>
     */
-  public static String getAttributeValueOfNode(String tagName,
-                                               String attributeName, Element element, int pos) {
+  public static String getAttributeValueOfNode(String tagName, String attributeName, Element element, int pos) {
     String arr = null;
 
     NodeList nl = element.getElementsByTagName(tagName);
@@ -120,8 +113,8 @@ public class XmlUtils {
   public static String readFile(String filePath) {
     String strLine, strLineFinal = "";
     try {
-      FileInputStream fstream = new FileInputStream(filePath);
-      DataInputStream in = new DataInputStream(fstream);
+      FileInputStream fStream = new FileInputStream(filePath);
+      DataInputStream in = new DataInputStream(fStream);
       BufferedReader br = new BufferedReader(new InputStreamReader(in));
 
       while ((strLine = br.readLine()) != null) {
@@ -176,13 +169,12 @@ public class XmlUtils {
 
       if (requestXML.exists()) {
         flag = true;
-
       } else {
-        SeleneseTestNgHelper.fail("Failed due to : " + xmlFile + " file not found.");
+        fail("Failed due to : " + xmlFile + " file not found.");
         flag = false;
       }
     } catch (Exception e) {
-      SeleneseTestNgHelper.fail("Failed due to exception :" + e);
+      fail("Failed due to exception :" + e);
       e.printStackTrace();
     } finally {
       return flag;
@@ -200,7 +192,7 @@ public class XmlUtils {
       fw.write(stringToRight);
       fw.close();
     } catch (IOException e) {
-      SeleneseTestNgHelper.fail("Failed in writing into xml file");
+      fail("Failed in writing into xml file");
     }
   }
 
@@ -217,7 +209,6 @@ public class XmlUtils {
     if (list != null && list.getLength() > 0) {
       for (int k = 0; k < list.getLength(); k++) {
         subList = list.item(k).getChildNodes();
-
         if (subList != null && subList.getLength() > 0) {
           arrayList.add(subList.item(0).getNodeValue());
         }
@@ -228,43 +219,48 @@ public class XmlUtils {
   }
 
   /*
-  * Dummy code
-  */
+  Dummy Test code
+   */
 
-//  @SuppressWarnings("finally")
-//  public static int verifyTagValue(String xmlFile,
-//                                   Element rootElement, String Tag, String tagAttribute, String expectedTagValue) {
-//    String flag = "";
-//    int flagFinal = 0;
-//    try {
+//  WebDriver webDriver;
 //
-//      rootElement = getRootElement(xmlFile);
-//
-//      List<String> attributeList = getAttributeValuesOfNode(
-//        Tag, tagAttribute, rootElement);
-//
-//      for (String attribute : attributeList) {
-//        flag = attribute;
-//        if (flag.trim().equals(expectedTagValue))
-//          break;
-//      }
-//      flagFinal = Integer.parseInt(flag.trim());
-//    }  catch (ParserConfigurationException e) {
-//      flagFinal = 1;
-//      SeleneseTestNgHelper.fail("Failed in verifying tag due to exception :" + e);
-//      e.printStackTrace();
-//    } catch (SAXException e) {
-//      flagFinal = 1;
-//      SeleneseTestNgHelper.fail("Failed in verifying tag due to exception :" + e);
-//      e.printStackTrace();
-//    }  catch (Exception e) {
-//      flagFinal = 1;
-//      SeleneseTestNgHelper.fail("Failed in verifying tag due to exception :" + e);
-//      e.printStackTrace();
-//    } finally {
-//      return flagFinal;
-//    }
+//  @BeforeMethod
+//  public void setUp() {
+//    webDriver = new FirefoxDriver();
+//    webDriver.get("http://localhost:9091");
 //  }
+//
+//  @Test
+//  private void testXmlUtils() throws IOException, SAXException, ParserConfigurationException, InterruptedException {
+//    String filePath = this.getClass().getClassLoader().getResource("DummyXml.xml").getFile();
+//    Element rootElement = getRootElement(filePath);
+//    List<String> attributeValues=getNodeValues("to", rootElement);
+//    Thread.sleep(1000);
+//
+//    String[] array=new String[2];
+//    array[0]="Dummy";
+//    array[1]="Data";
+//    int i=0;
+//    for(String attributeValue : attributeValues) {
+//      assertEquals(attributeValue, array[i]);
+//      i++;
+//    }
+//
+//    List<String> attributeValuesNew=getAttributeValuesOfNode("from","class",rootElement);
+//    for(String attributeValueNew : attributeValuesNew) {
+//      assertEquals(attributeValueNew, "0");
+//    }
+//
+//    assertEquals(getTagCount("to", rootElement), "2");
+//  }
+//
+//
+//  @AfterMethod
+//  public void tearDown() {
+//    webDriver.quit();
+//  }
+
+
 
 }
 
