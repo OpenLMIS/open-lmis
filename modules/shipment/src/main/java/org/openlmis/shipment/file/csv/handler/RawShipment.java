@@ -6,12 +6,16 @@
 
 package org.openlmis.shipment.file.csv.handler;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class RawShipment implements Importable {
-  @ImportField(name = "Order Number")
-  private String orderNumber;
+  @ImportField(type = "int",name = "Order Number")
+  private Integer orderNumber;
 }

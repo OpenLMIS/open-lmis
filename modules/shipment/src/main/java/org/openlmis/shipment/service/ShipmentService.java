@@ -6,12 +6,33 @@
 
 package org.openlmis.shipment.service;
 
+import lombok.NoArgsConstructor;
 import org.openlmis.shipment.domain.Shipment;
+import org.openlmis.shipment.domain.ShipmentFileInfo;
+import org.openlmis.shipment.repository.ShipmentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+
 @Service
+@NoArgsConstructor
 public class ShipmentService {
-  public void updateShipmentDetails(Shipment shipment) {
-    //To change body of created methods use File | Settings | File Templates.
+  private ShipmentRepository shipmentRepository;
+
+  @Autowired
+  public ShipmentService(ShipmentRepository repository) {
+    shipmentRepository = repository;
+  }
+
+  public Integer insert(Shipment shipment) {
+    return shipmentRepository.insert(shipment);
+  }
+
+  public void insertShipmentFileInfo(ShipmentFileInfo shipmentFileInfo) {
+  }
+
+  public void updateOrders(Set<Integer> orderIds, ShipmentFileInfo shipmentFileInfo) {
+
   }
 }

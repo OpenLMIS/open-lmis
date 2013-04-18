@@ -15,8 +15,9 @@ dependencies {
             'org.springframework.integration:spring-integration-core:2.2.3.RELEASE',
             'org.springframework.integration:spring-integration-stream:2.2.3.RELEASE',
             'org.springframework.integration:spring-integration-ftp:2.2.3.RELEASE',
-            project(':modules:upload'),
-            project(':modules:core')
+            project(':modules:core'),
+            project(':modules:upload')
+
 
     compile('net.sf.supercsv:super-csv-dozer:2.0.1') {
         exclude module: 'commons-beanutils'

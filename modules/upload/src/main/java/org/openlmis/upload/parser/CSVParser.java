@@ -30,30 +30,31 @@ public class CSVParser {
 
   @Transactional
   public int process(InputStream inputStream, ModelClass modelClass, RecordHandler recordHandler, AuditFields auditFields)
-      throws UploadException, IOException {
+      throws UploadException {
 
-    CsvBeanReader csvBeanReader = new CsvBeanReader(modelClass, inputStream);
-
-    String[] headers = csvBeanReader.getHeaders();
-    csvBeanReader.validateHeaders();
-    csvBeanReader.configureProcessors();
+    CsvBeanReader csvBeanReader = null;
+    String[] headers = null;
 
     try {
+      csvBeanReader = new CsvBeanReader(modelClass, inputStream);
+      headers = csvBeanReader.getHeaders();
+      csvBeanReader.validateHeaders();
       Importable importedModel;
+
       while ((importedModel = csvBeanReader.readWithCellProcessors()) != null) {
         recordHandler.execute(importedModel, csvBeanReader.getRowNumber(), auditFields);
       }
     } catch (SuperCsvConstraintViolationException constraintException) {
-      if (constraintException.getMessage().contains("^\\d{1,2}/\\d{1,2}/\\d{4}$")) {
+      if (constraintException.getMessage().contains("^\\d{1,2}/\\d{1,2}/\\d{4}$"))
         createHeaderException("Incorrect date format in field :", headers, constraintException);
-      }
+
       createHeaderException("Missing Mandatory data in field :", headers, constraintException);
     } catch (SuperCsvCellProcessorException processorException) {
       createHeaderException("Incorrect Data type in field :", headers, processorException);
     } catch (SuperCsvException superCsvException) {
-      if (csvBeanReader.length() > headers.length) {
+      if (csvBeanReader.length() > headers.length)
         throw new UploadException("Incorrect file format, Column name missing");
-      }
+
       createDataException("Columns does not match the headers:", headers, superCsvException);
     } catch (IOException e) {
       throw new UploadException(e.getStackTrace().toString());

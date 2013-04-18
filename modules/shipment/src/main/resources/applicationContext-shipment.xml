@@ -19,7 +19,9 @@
     <context:spring-configured/>
 
 
-    <import resource="classpath:/applicationContext-upload.xml"/>
+    <import resource="classpath*:applicationContext-upload.xml"/>
+    <import resource="classpath*:applicationContext-core.xml"/>
+
     <context:component-scan base-package="org.openlmis.shipment"/>
 
     <bean id="ftpSessionFactory"
