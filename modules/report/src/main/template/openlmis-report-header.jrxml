@@ -5,7 +5,7 @@
 	<property name="ireport.y" value="0"/>
 	<parameter name="REPORT_TITLE" class="java.lang.String"/>
 	<parameter name="REPORT_NAME" class="java.lang.String"/>
-	<parameter name="LOGO" class="java.lang.String"/>
+	<parameter name="LOGO" class="java.io.InputStream"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
