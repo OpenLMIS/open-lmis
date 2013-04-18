@@ -9,15 +9,6 @@ function NavigationController( $scope, UserContext, localStorageService, $rootSc
     $scope.loadRights = function () {
         var rights = localStorageService.get(localStorageKeys.RIGHT);
 
-        if(rights == undefined){
-            UserContext.get({}, function (data) {
-              if(data.authenticated) {
-                  rights = getRights(data.rights);
-                  localStorageService.add(localStorageKeys.RIGHT, rights);
-              }
-            }, {});
-        }
-
         $rootScope.rights = rights;
 
         $(".navigation > ul").show();

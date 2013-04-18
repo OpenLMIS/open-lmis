@@ -6,13 +6,7 @@
 
 function HeaderController($scope, UserContext, $rootScope, localStorageService, messageService) {
 
-  UserContext.get({}, function (data) {
-    if (!data.authenticated) {
-      $rootScope.modalShown = true;
-    }
-    $scope.user = data.name;
-
-  }, {});
+ $scope.user = localStorageService.get(localStorageKeys.USERNAME);
 
   messageService.populate();
 

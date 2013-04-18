@@ -36,6 +36,7 @@ function LoginController($scope, $http, localStorageService) {
           $scope.disableSignInButton = false;
           if (data.authenticated) {
             localStorageService.add(localStorageKeys.RIGHT, getRights(data.rights));
+            localStorageService.add(localStorageKeys.USERNAME, data.name);
             if (window.location.href.indexOf("login.html") != -1) {
               window.location = "/";
             } else {
