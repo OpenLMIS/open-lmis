@@ -348,7 +348,7 @@ order by productcategory asc, product asc
 				</textElement>
 				<textFieldExpression><![CDATA[$F{balanceOnHand}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0%" isBlankWhenNull="true">
+			<textField pattern="#,##0.##%" isBlankWhenNull="true">
 				<reportElement uuid="be94130b-c834-47e7-9f0d-77f5148abb85" x="631" y="0" width="68" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<paragraph leftIndent="5" rightIndent="5"/>
