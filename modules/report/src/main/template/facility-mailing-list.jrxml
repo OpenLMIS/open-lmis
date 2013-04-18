@@ -47,7 +47,7 @@ ORDER BY F.code asc, F.typeid asc]]>
 		<band height="21" splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="126" splitType="Stretch">
+		<band height="141" splitType="Stretch">
 			<staticText>
 				<reportElement uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b" mode="Opaque" x="1" y="0" width="761" height="124" backcolor="#F4F4F4">
 					<printWhenExpression><![CDATA[false == true]]></printWhenExpression>
@@ -56,7 +56,7 @@ ORDER BY F.code asc, F.typeid asc]]>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<line>
-				<reportElement uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7" x="0" y="124" width="780" height="1" forecolor="#3D9297">
+				<reportElement uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7" x="0" y="140" width="780" height="1" forecolor="#3D9297">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -80,25 +80,30 @@ ORDER BY F.code asc, F.typeid asc]]>
 				<textFieldExpression><![CDATA[$F{contact} == "NULL" ? " -" :$F{contact}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="9495406b-e628-4926-9144-3eb9f378721d" x="31" y="50" width="186" height="20"/>
+				<reportElement uuid="9495406b-e628-4926-9144-3eb9f378721d" x="31" y="49" width="186" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[($F{address1}.toUpperCase() == "NULL"? "-":$F{address1})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="426481ca-2938-4b7d-8b6d-1ae62cab25e6" x="0" y="70" width="217" height="20"/>
+				<reportElement uuid="426481ca-2938-4b7d-8b6d-1ae62cab25e6" x="0" y="88" width="217" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA["Phone No: " + ($F{phoneNumber}=="NULL"?"-":$F{phoneNumber})]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="a9ba7617-81ae-4d93-aa37-fad2af1e9ff9" x="0" y="90" width="217" height="20"/>
+				<reportElement uuid="a9ba7617-81ae-4d93-aa37-fad2af1e9ff9" x="0" y="108" width="217" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA["Fax: " + ($F{fax}.toUpperCase()=="NULL"?"-":$F{fax})]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="0ee48ba8-0abc-4547-98de-42c556c646ed" x="0" y="50" width="31" height="20"/>
+				<reportElement uuid="0ee48ba8-0abc-4547-98de-42c556c646ed" x="0" y="49" width="31" height="20"/>
 				<textElement/>
 				<text><![CDATA[Add:]]></text>
 			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="f37710d1-f218-4c4b-83da-ecfc493e4afb" x="31" y="68" width="186" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[($F{address2}.toUpperCase() == "NULL"? "-":$F{address2})]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 </jasperReport>
