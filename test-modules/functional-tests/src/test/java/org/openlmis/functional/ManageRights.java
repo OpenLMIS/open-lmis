@@ -38,7 +38,7 @@ public class ManageRights extends TestCaseHelper {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
-    setupTestDataToInitiateRnR(program, userSIC, "200", "openLmis", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -59,7 +59,7 @@ public class ManageRights extends TestCaseHelper {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
-    setupTestDataToInitiateRnR(program, userSIC, "200", "openLmis", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
 
     dbWrapper.updateRoleRight("CREATE_REQUISITION", "AUTHORIZE_REQUISITION");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);

@@ -73,10 +73,11 @@ public class TestCaseHelper {
     testWebDriver = new TestWebDriver(driverFactory.loadDriver(browser));
   }
 
-  public void setupTestDataToInitiateRnR(String program, String userSIC, String userId, String vendorName, List<String> rightsList) throws IOException, SQLException {
+  public void setupTestDataToInitiateRnR(boolean configureTemplate, String program, String userSIC, String userId, String vendorName, List<String> rightsList) throws IOException, SQLException {
     setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
     dbWrapper.insertFacilities("F10", "F11");
-    dbWrapper.configureTemplate(program);
+    if (configureTemplate)
+      dbWrapper.configureTemplate(program);
 
     setupTestUserRoleRightsData(userId, userSIC, vendorName, rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");

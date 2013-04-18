@@ -40,7 +40,7 @@ public class RnRPagination extends TestCaseHelper {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
-    setupTestDataToInitiateRnR(program, userSIC, "200", "openLmis", rightsList);
+    setupTestUserRoleRightsData("200", userSIC, "openLmis", rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
     dbWrapper.insertRoleAssignment("200", "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
@@ -118,7 +118,7 @@ public class RnRPagination extends TestCaseHelper {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
-    setupTestDataToInitiateRnR(program, userSIC, "200", "openLmis", rightsList);
+    setupTestUserRoleRightsData("200", userSIC, "openLmis", rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
     dbWrapper.insertRoleAssignment("200", "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
@@ -149,7 +149,7 @@ public class RnRPagination extends TestCaseHelper {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
-    setupTestDataToInitiateRnR(program, userSIC, "200", "openLmis", rightsList);
+    setupTestUserRoleRightsData("200", userSIC, "openLmis", rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
     dbWrapper.insertRoleAssignment("200", "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
@@ -180,7 +180,7 @@ public class RnRPagination extends TestCaseHelper {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
-    setupTestDataToInitiateRnR(program, userSIC, "200", "openLmis", rightsList);
+    setupTestUserRoleRightsData("200", userSIC, "openLmis", rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
     dbWrapper.insertRoleAssignment("200", "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");

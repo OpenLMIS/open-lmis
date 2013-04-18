@@ -45,7 +45,7 @@ public class ViewRequisition extends TestCaseHelper {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
-    setupTestDataToInitiateRnR(program, userSIC, "200", "openLmis", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
     dbWrapper.assignRight(STORE_IN_CHARGE, APPROVE_REQUISITION);
     dbWrapper.assignRight(STORE_IN_CHARGE, CONVERT_TO_ORDER);
 

@@ -34,21 +34,10 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Program-Not-Configured")
   public void testVerifyProgramNotConfigured(String program, String userSIC, String password) throws Exception {
-
-    setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
-    dbWrapper.insertFacilities("F10", "F11");
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
-    setupTestDataToInitiateRnR(program, userSIC, "200", "openLmis", rightsList);
-    dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
-    dbWrapper.insertRoleAssignment("200", "store in-charge");
-    dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
-    dbWrapper.insertSchedule("M", "Monthly", "Month");
-    dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
-    dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
-    setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
-    dbWrapper.insertSupplyLines("N1", program, "F10");
+    setupTestDataToInitiateRnR(false, program, userSIC, "200", "openLmis", rightsList);
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -56,31 +45,20 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
     initiateRnRPage.verifyTemplateNotConfiguredMessage();
 
-
   }
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Verify-On-Rnr-Screen")
   public void testVerifyImpactOfChangesInConfigScreenOnRnRScreen(String program, String userSIC, String password, String[] credentials) throws Exception {
-    setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
-    dbWrapper.insertFacilities("F10", "F11");
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add("CREATE_REQUISITION");
+    rightsList.add("VIEW_REQUISITION");
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
     String newColumnHeading = "Altered";
     templateConfigPage.alterTemplateLabelAndVisibility(newColumnHeading, program);
-    List<String> rightsList = new ArrayList<String>();
-    rightsList.add("CREATE_REQUISITION");
-    rightsList.add("VIEW_REQUISITION");
-    setupTestDataToInitiateRnR(program, userSIC, "200", "openLmis", rightsList);
-    dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
-    dbWrapper.insertRoleAssignment("200", "store in-charge");
-    dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
-    dbWrapper.insertSchedule("M", "Monthly", "Month");
-    dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
-    dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
-    setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
-    dbWrapper.insertSupplyLines("N1", program, "F10");
-
     homePage.logout(baseUrlGlobal);
     LoginPage loginPageSic = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePageSic = loginPageSic.loginAs(userSIC, password);
@@ -92,7 +70,6 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
     String columnHeadingNotPresent = "Remarks";
     columns = initiateRnRPage.getSizeOfElements(tableXpathTillTr + "/th");
     initiateRnRPage.verifyColumnHeadingNotPresent(tableXpathTillTr, columnHeadingNotPresent, columns);
-
 
   }
 

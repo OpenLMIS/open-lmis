@@ -27,7 +27,6 @@ import static java.lang.System.getProperty;
 
 public class WebServiceTest extends TestCaseHelper {
 
-
     @BeforeMethod(groups = {"webservice"})
     public void setUp() throws Exception {
         WebDriver driver = new FirefoxDriver();
@@ -72,7 +71,7 @@ public class WebServiceTest extends TestCaseHelper {
         rightsList.add("CREATE_REQUISITION");
         rightsList.add("VIEW_REQUISITION");
         rightsList.add("AUTHORIZE_REQUISITION");
-        setupTestDataToInitiateRnR("HIV", "commTrack", "700", "commTrack", rightsList);
+        setupTestDataToInitiateRnR(true,"HIV", "commTrack", "700", "commTrack", rightsList);
 
     }
 
@@ -96,5 +95,6 @@ public class WebServiceTest extends TestCaseHelper {
 
         return json;
     }
+
 }
 

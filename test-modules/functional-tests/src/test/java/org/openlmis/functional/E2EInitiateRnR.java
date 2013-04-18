@@ -7,6 +7,7 @@
 package org.openlmis.functional;
 
 
+import org.jaxen.function.StringFunction;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,33 +61,10 @@ public class E2EInitiateRnR extends TestCaseHelper {
     dbWrapper.insertSupervisoryNodeSecond("F11", "N2", "Node 2", "N1");
 
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-    UserPage userPageSIC = homePage.navigateToUser();
-    String userSICEmail = "Fatima_Doe@openlmis.com";
-    String userSICFirstName = "Fatima";
-    String userSICLastName = "Doe";
     String userSICUserName = "storeincharge";
-    String userIDSIC = userPageSIC.enterAndverifyUserDetails(userSICUserName, userSICEmail, userSICFirstName, userSICLastName, baseUrlGlobal, dburlGlobal);
-    dbWrapper.updateUser(passwordUsers, userSICEmail);
-    userPageSIC.enterMyFacilityAndMySupervisedFacilityData(userSICFirstName, userSICLastName, "F10", "HIV", "Node 1", "Store-in-charge", false);
-
-    String passwordUserslmu = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-    UserPage userPagelmu = homePage.navigateToUser();
-    String userlmuEmail = "Lmu_Doe@openlmis.com";
-    String userlmuFirstName = "Lmu";
-    String userlmuLastName = "Doe";
-    String userlmuUserName = "lmu";
-    userPagelmu.enterAndverifyUserDetails(userlmuUserName, userlmuEmail, userlmuFirstName, userlmuLastName, baseUrlGlobal, dburlGlobal);
-    dbWrapper.updateUser(passwordUserslmu, userlmuEmail);
-    userPagelmu.enterMyFacilityAndMySupervisedFacilityData(userlmuFirstName, userlmuLastName, "F10", "HIV", "Node 1", "lmu", true);
-
-    UserPage userPageMO = homePage.navigateToUser();
-    String userMOEmail = "Jane_Doe@openlmis.com";
-    String userMOFirstName = "Jane";
-    String userMOLastName = "Doe";
-    String userMOUserName = "medicalofficer";
-    userPageMO.enterAndverifyUserDetails(userMOUserName, userMOEmail, userMOFirstName, userMOLastName, baseUrlGlobal, dburlGlobal);
-    dbWrapper.updateUser(passwordUsers, userMOEmail);
-    userPageMO.enterMyFacilityAndMySupervisedFacilityData(userMOFirstName, userMOLastName, "F11", "HIV", "Node 2", "Medical-Officer", false);
+    String userIDSIC = createUserAndEnterFacilityData(homePage, passwordUsers, "Fatima_Doe@openlmis.com", "Fatima", "Doe", "storeincharge", "F10", program, "Node 1", "Store-in-charge", false);
+    String userIDLMU = createUserAndEnterFacilityData(homePage, passwordUsers, "Jake_Doe@openlmis.com", "Jake", "Doe", "lmu", "F10", program, "Node 1", "lmu", true);
+    String userIDMO = createUserAndEnterFacilityData(homePage, passwordUsers, "Jane_Doe@openlmis.com", "Jane", "Doe", "medicalofficer", "F11", program, "Node 2", "Medical-Officer", false);
 
     dbWrapper.updateRoleGroupMember(facility_code);
     setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
@@ -193,6 +172,14 @@ public class E2EInitiateRnR extends TestCaseHelper {
     ViewOrdersPage viewOrdersPage = homePagelmu.navigateViewOrders();
     String requisitionId = dbWrapper.getLatestRequisitionId();
     viewOrdersPage.verifyOrderListElements(program, "ORD" + requisitionId, "FCcode" + date_time + " - " + "FCname" + date_time, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "RELEASED");
+  }
+
+  private String createUserAndEnterFacilityData(HomePage homePage, String passwordUsers, String userEmail, String userFirstName, String userLastName, String userUserName, String facility, String program, String supervisoryNode, String role, boolean adminRole) throws IOException, SQLException {
+    UserPage userPage = homePage.navigateToUser();
+    String userID = userPage.enterAndverifyUserDetails(userUserName, userEmail, userFirstName, userLastName, baseUrlGlobal, dburlGlobal);
+    dbWrapper.updateUser(passwordUsers, userEmail);
+    userPage.enterMyFacilityAndMySupervisedFacilityData(userFirstName, userLastName, facility, program, supervisoryNode, role, adminRole);
+    return userID;
   }
 
   private void verifyConvertToOrder(ConvertOrderPage convertOrderPageOrdersPending) {
