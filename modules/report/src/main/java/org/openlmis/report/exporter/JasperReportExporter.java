@@ -2,10 +2,7 @@ package org.openlmis.report.exporter;
 
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import net.sf.jasperreports.engine.export.JRPdfExporter;
-import net.sf.jasperreports.engine.export.JRXlsAbstractExporterParameter;
-import net.sf.jasperreports.engine.export.JRXlsExporter;
-import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
+import net.sf.jasperreports.engine.export.*;
 import net.sf.jasperreports.engine.util.JRLoader;
 import org.openlmis.report.ReportManager;
 import org.openlmis.report.ReportOutputOption;
@@ -16,7 +13,9 @@ import org.springframework.stereotype.Component;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 
@@ -32,6 +31,10 @@ public class JasperReportExporter implements ReportExporter {
         try{
 
             JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reportInputStream);
+
+            if(reportExtraParams != null && (outputOption != null && outputOption.equals(ReportOutputOption.XLS))){
+                reportExtraParams.put(JRParameter.IS_IGNORE_PAGINATION, Boolean.TRUE);
+            }
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, reportExtraParams , new JRBeanCollectionDataSource(reportData,false));
 
@@ -67,6 +70,8 @@ public class JasperReportExporter implements ReportExporter {
                 return exportPdf(jasperPrint, outputFileName, response, byteArrayOutputStream);
             case XLS:
                 return exportXls(jasperPrint, outputFileName, response, byteArrayOutputStream);
+            case HTML:
+                return exportHtml(jasperPrint, outputFileName, response, byteArrayOutputStream);
         }
 
         return response;
@@ -102,13 +107,35 @@ public class JasperReportExporter implements ReportExporter {
         return response;
     }
 
-    /**
-     *
-     * @param jasperPrint
-     * @param response
-     * @param byteArrayOutputStream
-     * @return
-     */
+    private HttpServletResponse exportHtml(JasperPrint jasperPrint, String outputFileName, HttpServletResponse response, ByteArrayOutputStream byteArrayOutputStream){
+
+        JRHtmlExporter exporter = new JRHtmlExporter();
+        exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+        exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, byteArrayOutputStream);
+        exporter.setParameter(JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN, Boolean.FALSE);
+        exporter.setParameter(JRHtmlExporterParameter.ZOOM_RATIO, 1.5F);
+
+        try {
+            exporter.exportReport();
+
+        } catch (JRException e) {
+            throw new RuntimeException(e);
+        }
+
+        response.setContentType(Constants.MEDIA_TYPE_HTML);
+        response.setContentLength(byteArrayOutputStream.size());
+
+        return response;
+    }
+
+
+        /**
+         *
+         * @param jasperPrint
+         * @param response
+         * @param byteArrayOutputStream
+         * @return
+         */
     public HttpServletResponse exportXls(JasperPrint jasperPrint, String outputFileName, HttpServletResponse response, ByteArrayOutputStream byteArrayOutputStream){
 
         JRXlsExporter exporter = new JRXlsExporter();

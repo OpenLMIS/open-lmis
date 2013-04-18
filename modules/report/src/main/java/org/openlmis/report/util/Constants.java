@@ -7,6 +7,7 @@ public class Constants {
      */
     public static final String MEDIA_TYPE_PDF = "application/pdf";
     public static final String MEDIA_TYPE_EXCEL = "application/vnd.ms-excel";
+    public static final String MEDIA_TYPE_HTML = "text/html";
 
     /*
         Master Report Parameter Names
