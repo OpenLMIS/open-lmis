@@ -1,4 +1,4 @@
-package org.openlmis.functional;
+package org.openlmis.UiUtils;
 
 
 import com.sun.jna.platform.win32.NTSecApi;
@@ -244,6 +244,17 @@ public class XmlUtils {
 //    for(String attributeValue : attributeValues) {
 //      assertEquals(attributeValue, array[i]);
 //      i++;
+//    }
+//
+//    List<String> attributeValuesTest=getNodeValues("from", rootElement);
+//    Thread.sleep(1000);
+//    String[] arrayTest=new String[2];
+//    arrayTest[0]="Testing";
+//    arrayTest[1]="Data";
+//    int j=0;
+//    for(String attributeValueTest : attributeValuesTest) {
+//      assertEquals(attributeValueTest, arrayTest[j]);
+//      j++;
 //    }
 //
 //    List<String> attributeValuesNew=getAttributeValuesOfNode("from","class",rootElement);

@@ -1,7 +1,8 @@
 <note>
   <to>Dummy</to>
   <to>Data</to>
-  <from class="0"></from>
+  <from class="0">Testing</from>
+  <from class="0">Data</from>
   <heading>Reminder</heading>
   <body>Don't forget me this weekend!</body>
 </note>
