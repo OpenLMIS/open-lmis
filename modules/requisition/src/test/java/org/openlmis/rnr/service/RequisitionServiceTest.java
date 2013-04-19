@@ -94,7 +94,7 @@ public class RequisitionServiceTest {
   @Mock
   private SupplyLineService supplyLineService;
 
-  private final RequisitionSearchStrategyFactory requisitionSearchStrategyFactory = new RequisitionSearchStrategyFactory(processingScheduleService, requisitionRepository, programService);
+  private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory ;
 
   @Mock
   private RequisitionPermissionService requisitionPermissionService;
@@ -109,6 +109,7 @@ public class RequisitionServiceTest {
 
   @Before
   public void setup() {
+    requisitionSearchStrategyFactory = new RequisitionSearchStrategyFactory(processingScheduleService, requisitionRepository, programService);
     requisitionService = new RequisitionService(requisitionRepository, rnrTemplateRepository, facilityApprovedProductService,
         supervisoryNodeService, roleAssignmentService, programService, processingScheduleService, facilityService, supplyLineService,
         requisitionSearchStrategyFactory, requisitionPermissionService, userService);
@@ -153,7 +154,6 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  @Ignore
   public void shouldInitRequisitionAndSetBeginningBalanceToZeroIfNotVisibleAndPreviousStockInHandNotAvailable() throws Exception {
     Date date = new Date();
     Rnr requisition = createRequisition(PERIOD.getId(), null);
@@ -176,7 +176,6 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  @Ignore
   public void shouldInitRequisitionAndNotSetBeginningBalanceToZeroIfVisibleAndPreviousStockInHandNotAvailable() throws Exception {
     Date date = new Date();
     Rnr requisition = createRequisition(PERIOD.getId(), null);
@@ -212,14 +211,13 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  @Ignore
   public void shouldGetRequisition() throws Exception {
     Rnr requisition = spy(new Rnr());
     requisition.setFacility(FACILITY);
     requisition.setProgram(PROGRAM);
     requisition.setPeriod(PERIOD);
 
-    when(requisitionRepository.getRequisitionWithLineItems(FACILITY, PROGRAM, PERIOD)).thenReturn(requisition);
+    when(requisitionRepository.getRequisitionWithLineItems(FACILITY, PROGRAM, new ProcessingPeriod(PERIOD.getId()))).thenReturn(requisition);
     when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
     when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
     when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
@@ -229,7 +227,6 @@ public class RequisitionServiceTest {
 
     assertThat(actualRequisition, is(requisition));
     verify(requisition).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
-    verify(requisition).fillLastTwoPeriodsNormalizedConsumptions(null, null);
   }
 
 
@@ -681,7 +678,6 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  @Ignore
   public void shouldFillBeginningBalanceOfLineItemsFromPreviousRequisitionIfAvailableDuringInitialize() throws Exception {
     Date date = new Date();
     ProcessingPeriod period = new ProcessingPeriod(10);
@@ -710,7 +706,6 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  @Ignore
   public void shouldNotFillBeginningBalanceIfPreviousRnrNotDefinedDuringInitiate() throws Exception {
     Date date = new Date();
     Rnr someRequisition = createRequisition(PERIOD.getId(), null);
@@ -737,7 +732,6 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  @Ignore
   public void shouldFillBeginningBalanceFromPreviousRequisitionEvenIfStockInHandIsNotDisplayed() throws Exception {
     Date date = new Date();
     ProcessingPeriod period = new ProcessingPeriod(10);
