@@ -8,23 +8,24 @@ package org.openlmis.order.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.dto.RnrDTO;
+
 import java.util.Date;
 import static java.lang.Boolean.*;
 
 @Data
 @NoArgsConstructor
 public class Order {
-  public Order(Rnr requisition) {
-    this.rnrId = requisition.getId();
-    this.createdBy = requisition.getModifiedBy();
+  public Order(RnrDTO rnrDTO) {
+    this.rnrDTO = rnrDTO;
+    this.createdBy = rnrDTO.getModifiedBy();
     this.fulfilled = FALSE;
   }
 
   private Integer id;
-  private Integer rnrId;
   private Boolean fulfilled;
   private Integer shipmentId;
   private Date createdDate;
   private Integer createdBy;
+  private RnrDTO rnrDTO;
 }

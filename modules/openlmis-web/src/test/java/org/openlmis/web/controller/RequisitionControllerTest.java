@@ -333,16 +333,6 @@ public class RequisitionControllerTest {
   }
 
   @Test
-  public void shouldReleaseRequisitionsAsOrder() throws Exception {
-    RnrList rnrList = new RnrList();
-    rnrList.setRnrList(asList(new Rnr()));
-
-    controller.releaseAsOrder(rnrList, request);
-
-    verify(requisitionService).releaseRequisitionsAsOrder(rnrList.getRnrList(), USER_ID);
-  }
-
-  @Test
   public void shouldReturnModelAndViewForPrintingRequisitionAsPdf() {
     int rnrId = 1;
     int programId = 2;

@@ -38,6 +38,7 @@ public class RnrDTO {
   private String status;
   private Integer orderBatchId;
   private Date orderDate;
+  private Integer modifiedBy;
 
   public static List<RnrDTO> prepareForListApproval(List<Rnr> requisitions) {
     List<RnrDTO> result = new ArrayList<>();
@@ -65,7 +66,7 @@ public class RnrDTO {
     return rnrDTO;
   }
 
-  private static RnrDTO populateDTOWithRequisition(Rnr requisition) {
+  public static RnrDTO populateDTOWithRequisition(Rnr requisition) {
     RnrDTO rnrDTO = new RnrDTO();
     rnrDTO.id = requisition.getId();
     rnrDTO.programId = requisition.getProgram().getId();

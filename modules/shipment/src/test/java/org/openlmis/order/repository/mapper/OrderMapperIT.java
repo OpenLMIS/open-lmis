@@ -19,6 +19,7 @@ import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
 import org.openlmis.order.domain.Order;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.repository.mapper.RequisitionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -69,12 +70,13 @@ public class OrderMapperIT {
     processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
     processingScheduleMapper.insert(processingSchedule);
 
-    ProcessingPeriod processingPeriod = insertPeriod("Period 1");
+    ProcessingPeriod processingPeriod = insertPeriod();
     Order order = new Order();
     Rnr rnr = make(a(RequisitionBuilder.defaultRnr, with(RequisitionBuilder.facility, facility),
         with(RequisitionBuilder.periodId, processingPeriod.getId())));
     requisitionMapper.insert(rnr);
-    order.setRnrId(rnr.getId());
+    RnrDTO rnrDTO = RnrDTO.populateDTOWithRequisition(rnr);
+    order.setRnrDTO(rnrDTO);
     order.setCreatedBy(1);
     mapper.insert(order);
 
@@ -85,7 +87,7 @@ public class OrderMapperIT {
     assertThat(resultSet.getInt("id"), is(order.getId()));
   }
 
-  private ProcessingPeriod insertPeriod(String periodName) {
+  private ProcessingPeriod insertPeriod() {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod, with(scheduleId, processingSchedule.getId())));
 
     processingPeriodMapper.insert(processingPeriod);

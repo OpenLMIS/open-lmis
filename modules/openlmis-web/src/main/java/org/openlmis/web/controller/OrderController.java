@@ -8,6 +8,8 @@ package org.openlmis.web.controller;
 
 import org.openlmis.order.service.OrderService;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.dto.RnrDTO;
+import org.openlmis.web.form.RnrList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -26,9 +28,9 @@ public class OrderController extends BaseController {
   private OrderService orderService;
 
 
-  @RequestMapping(value = "/requisitionOrder111", method = POST, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/requisitionOrder", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONVERT_TO_ORDER')")
-  public void convertToOrder(@RequestBody List<Rnr> rnrList, HttpServletRequest request) {
-    orderService.convertToOrder(rnrList, loggedInUserId(request));
+  public void convertToOrder(@RequestBody RnrList rnrList, HttpServletRequest request) {
+    orderService.convertToOrder(rnrList.getRnrList(), loggedInUserId(request));
   }
 }

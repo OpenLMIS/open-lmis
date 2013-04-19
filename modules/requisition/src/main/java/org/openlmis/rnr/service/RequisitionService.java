@@ -12,6 +12,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
 import org.openlmis.rnr.domain.*;
+import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.factory.RequisitionSearchStrategyFactory;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
@@ -348,9 +349,8 @@ public class RequisitionService {
     return requisitionsForApproval;
   }
 
-  @Transactional
-  public void releaseRequisitionsAsOrder(List<Rnr> requisitions, Integer userId) {
-    for (Rnr requisition : requisitions) {
+  public void releaseRequisitionsAsOrder(List<RnrDTO> requisitions, Integer userId) {
+    for (RnrDTO requisition : requisitions) {
       Rnr loadedRequisition = requisitionRepository.getById(requisition.getId());
       OrderBatch orderBatch = createOrderBatch(loadedRequisition, userId);
       loadedRequisition.convertToOrder(orderBatch, userId);

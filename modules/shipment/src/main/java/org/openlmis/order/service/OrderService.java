@@ -10,9 +10,11 @@ import lombok.NoArgsConstructor;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.repository.OrderRepository;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,17 +24,20 @@ public class OrderService {
 
   @Autowired
   private OrderRepository orderRepository;
+  @Autowired
   private RequisitionService requisitionService;
 
   public void save(Order order) {
     orderRepository.save(order);
   }
 
-  public void convertToOrder(List<Rnr> rnrList, Integer userId) {
+  @Transactional
+  public void convertToOrder(List<RnrDTO> rnrList, Integer userId) {
     requisitionService.releaseRequisitionsAsOrder(rnrList, userId);
     Order order;
-    for(Rnr rnr : rnrList) {
-      order = new Order(rnr);
+    for(RnrDTO rnrDTO : rnrList) {
+      rnrDTO.setModifiedBy(userId);
+      order = new Order(rnrDTO);
       orderRepository.save(order);
     }
   }

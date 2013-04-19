@@ -209,12 +209,6 @@ public class RequisitionController extends BaseController {
   }
 
 
-  @RequestMapping(value = "/requisitionOrder", method = POST, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONVERT_TO_ORDER')")
-  public void releaseAsOrder(@RequestBody RnrList rnrList, HttpServletRequest request) {
-    requisitionService.releaseRequisitionsAsOrder(rnrList.getRnrList(), loggedInUserId(request));
-  }
-
   @RequestMapping(value = "/requisitions/{id}", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getById(@PathVariable Integer id) {

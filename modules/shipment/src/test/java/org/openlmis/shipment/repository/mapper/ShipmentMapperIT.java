@@ -15,6 +15,7 @@ import org.openlmis.order.domain.Order;
 import org.openlmis.order.repository.mapper.OrderMapper;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.repository.mapper.RequisitionMapper;
 import org.openlmis.shipment.domain.ShippedLineItem;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +60,7 @@ public class ShipmentMapperIT {
   @Test
   public void shouldInsert() throws Exception {
 
+    Integer userId = 1;
     Product product = make(a(defaultProduct));
     Facility facility = make(a(defaultFacility));
     facilityMapper.insert(facility);
@@ -71,8 +73,9 @@ public class ShipmentMapperIT {
     progamMapper.insert(program);
     Rnr requisition = make(a(defaultRnr, with(RequisitionBuilder.facility, facility), with(RequisitionBuilder.periodId, period.getId())));
     requisitionMapper.insert(requisition);
-
-    Order order = new Order(requisition);
+    RnrDTO rnrDTO = RnrDTO.populateDTOWithRequisition(requisition);
+    rnrDTO.setModifiedBy(userId);
+    Order order = new Order(rnrDTO);
     
     orderMapper.insert(order);
 

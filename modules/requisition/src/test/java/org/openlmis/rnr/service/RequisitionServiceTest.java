@@ -24,6 +24,7 @@ import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.*;
+import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.factory.RequisitionSearchStrategyFactory;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
@@ -811,26 +812,32 @@ public class RequisitionServiceTest {
     Facility facility3 = new Facility(3);
 
     Rnr rnr1 = new Rnr();
+    RnrDTO rnrDTO1 = new RnrDTO();
+    rnrDTO1.setId(10);
     rnr1.setId(10);
     rnr1.setSupplyingFacility(facility1);
 
     Rnr rnr2 = new Rnr();
+    RnrDTO rnrDTO2 = new RnrDTO();
+    rnrDTO2.setId(20);
     rnr2.setId(20);
     rnr2.setSupplyingFacility(facility2);
 
     Rnr rnr3 = new Rnr();
+    RnrDTO rnrDTO3 = new RnrDTO();
+    rnrDTO3.setId(30);
     rnr3.setId(30);
     rnr3.setSupplyingFacility(facility3);
 
-    List<Rnr> rnrList = Arrays.asList(rnr1, rnr2, rnr3);
+    List<RnrDTO> rnrList = Arrays.asList(rnrDTO1, rnrDTO2, rnrDTO3);
 
     OrderBatch orderBatch1 = new OrderBatch(facility1, 1);
     OrderBatch orderBatch2 = new OrderBatch(facility2, 1);
     OrderBatch orderBatch3 = new OrderBatch(facility3, 1);
 
-    when(requisitionRepository.getById(rnr1.getId())).thenReturn(rnr1);
-    when(requisitionRepository.getById(rnr2.getId())).thenReturn(rnr2);
-    when(requisitionRepository.getById(rnr3.getId())).thenReturn(rnr3);
+    when(requisitionRepository.getById(rnrDTO1.getId())).thenReturn(rnr1);
+    when(requisitionRepository.getById(rnrDTO2.getId())).thenReturn(rnr2);
+    when(requisitionRepository.getById(rnrDTO3.getId())).thenReturn(rnr3);
 
     requisitionService.releaseRequisitionsAsOrder(rnrList, 1);
 

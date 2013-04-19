@@ -16,6 +16,7 @@ import org.openlmis.order.domain.Order;
 import org.openlmis.order.repository.OrderRepository;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.service.RequisitionService;
 
 import java.util.ArrayList;
@@ -45,13 +46,13 @@ public class OrderServiceTest {
 
   @Test
   public void shouldConvertRequisitionsToOrder() throws Exception {
-    List<Rnr> rnrList = new ArrayList<>();
-    Rnr requisition = new Rnr();
-    rnrList.add(requisition);
+    List<RnrDTO> rnrList = new ArrayList<>();
+    RnrDTO rnrDTO = new RnrDTO();
+    rnrList.add(rnrDTO);
     Integer userId = 1;
     orderService.convertToOrder(rnrList, userId);
-    Order order = new Order(requisition);
-    whenNew(Order.class).withArguments(requisition).thenReturn(order);
+    Order order = new Order(rnrDTO);
+    whenNew(Order.class).withArguments(rnrDTO).thenReturn(order);
     verify(requisitionService).releaseRequisitionsAsOrder(rnrList, userId);
     verify(orderRepository).save(order);
   }
