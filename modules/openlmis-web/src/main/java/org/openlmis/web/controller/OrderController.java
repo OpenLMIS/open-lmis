@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.openlmis.order.controller;
+package org.openlmis.web.controller;
 
 import org.openlmis.order.service.OrderService;
 import org.openlmis.rnr.domain.Rnr;
@@ -20,21 +20,15 @@ import java.util.List;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
-public class OrderController {
+public class OrderController extends BaseController {
 
   @Autowired
   private OrderService orderService;
 
-  public static final String ACCEPT_JSON = "Accept=application/json";
-  public static final String USER_ID = "USER_ID";
 
   @RequestMapping(value = "/requisitionOrder111", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONVERT_TO_ORDER')")
   public void convertToOrder(@RequestBody List<Rnr> rnrList, HttpServletRequest request) {
     orderService.convertToOrder(rnrList, loggedInUserId(request));
-  }
-
-  private Integer loggedInUserId(HttpServletRequest request) {
-    return (Integer) request.getSession().getAttribute(USER_ID);
   }
 }
