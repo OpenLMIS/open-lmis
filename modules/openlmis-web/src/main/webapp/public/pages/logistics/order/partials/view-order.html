@@ -1,0 +1,21 @@
+<!--
+  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
+<h2>View Orders</h2>
+
+<div class="app-form">
+    <div class="form-group">
+        <h3>Order List</h3>
+
+        <div class="alert alert-info" id="noOrdersPresent" ng-hide="orders.length">
+            No R&Rs have been released as Orders yet
+        </div>
+        <div>
+            <div class="gridStyle" ng-grid="gridOptions" ng-show="orders.length"></div>
+        </div>
+    </div>
+</div>
+

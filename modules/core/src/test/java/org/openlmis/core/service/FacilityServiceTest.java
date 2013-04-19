@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.service;
 
 
@@ -14,10 +20,7 @@ import org.openlmis.core.repository.ProgramRepository;
 import org.openlmis.core.repository.ProgramSupportedRepository;
 import org.powermock.api.mockito.PowerMockito;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -285,6 +288,42 @@ public class FacilityServiceTest {
     verify(supervisoryNodeService).getAllSupervisoryNodesInHierarchyBy(1, rights);
     verify(requisitionGroupService).getRequisitionGroupsBy(supervisoryNodes);
     verify(facilityRepository).getAllInRequisitionGroups(requisitionGroups);
+  }
+
+
+  @Test
+  public void shouldInsertProgramSupportedIfDoesNotExist() {
+    ProgramSupported programSupported = new ProgramSupported();
+    programSupported.setFacilityCode("F1");
+    Program program = new Program();
+    program.setCode("P1");
+    programSupported.setProgram(program);
+    programSupported.setModifiedDate(new Date());
+    when(facilityRepository.getIdForCode("F1")).thenReturn(1);
+    when(programRepository.getIdByCode("P1")).thenReturn(1);
+    when(programSupportedRepository.getByFacilityIdAndProgramId(1, 1)).thenReturn(null);
+
+    facilityService.uploadSupportedProgram(programSupported);
+
+    verify(programSupportedRepository).addSupportedProgram(programSupported);
+  }
+
+  @Test
+  public void shouldUpdateProgramSupportedIfItExists() throws Exception {
+    ProgramSupported programSupported = new ProgramSupported();
+    programSupported.setFacilityCode("F1");
+    Program program = new Program();
+    program.setCode("P1");
+    programSupported.setProgram(program);
+    programSupported.setId(1);
+    when(facilityRepository.getIdForCode("F1")).thenReturn(1);
+    when(programRepository.getIdByCode("P1")).thenReturn(2);
+
+    facilityService.uploadSupportedProgram(programSupported);
+
+    assertThat(programSupported.getFacilityId(),is(1));
+    assertThat(programSupported.getProgram().getId(),is(2));
+    verify(programSupportedRepository).updateSupportedProgram(programSupported);
   }
 
   private ProgramSupported createSupportedProgram(String facilityCode, String programCode, boolean active, Date startDate) {

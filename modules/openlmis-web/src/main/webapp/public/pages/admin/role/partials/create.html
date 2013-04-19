@@ -1,60 +1,103 @@
-<div ng-hide = "rights && role" >Loading...</div >
+<!--
+  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
+<div ng-hide = "rights && role" openlmis-message="message.loading"></div >
+
 <div ng-show = "rights && role" >
-  <div ng-hide = "role.id" ><h2 >Add new role</h2 ></div >
-  <div ng-show = "role.id" ><h2 >Edit role</h2 ></div >
+  <div ng-hide = "role.id" ><h2 openlmis-message="create.role.addNew"></h2 ></div >
+  <div ng-show = "role.id" ><h2 openlmis-message="edit.role.edit"></h2 ></div >
   <form ng-submit = "saveRole()" id = "create-role" name = "roleForm" novalidate >
-    <div class = "app-form" >
+    <div class = "app-form roles-form" >
 
-      <div class = "form-row clearfix" >
-        <div class = "form-cell" >
-          <label for = "name" >Role Name <span class = "label-required" >*</span ></label >
+      <div class = "row-fluid clearfix" >
+        <div class = "span5" >
+          <label for = "name" openlmis-message="create.role.roleName"></label >
 
-          <div class = "form-field" >
+          <div >
             <input ng-model = "role.name" name = "name" id = "name" type = "text" maxlength = "50"
                    ng-required = "true" />
-            <span class = "field-error" ng-show = "roleForm.name.$error.required && showError" >
-              Please fill this value
+            <span class = "field-error" ng-show = "roleForm.name.$error.required && showError" openlmis-message="missing.value">
             </span >
           </div >
         </div >
       </div >
 
-      <div class = "form-row clearfix" >
-        <div class = "form-cell" >
-          <label for = "description" >Role Description</label >
+      <div class = "row-fluid clearfix" >
+        <div class = "span5" >
+          <label for = "description" openlmis-message="create.role.description"></label >
 
-          <div class = "form-field" >
+          <div >
             <input ng-model = "role.description" name = "description" id = "description" type = "text"
                    maxlength = "250" />
           </div >
         </div >
       </div >
+      <div class = "row-fluid clearfix" >
+        <div >
+          <label openlmis-message="create.role.roleType"> <span
+            class = "roles-note" openlmis-message="create.role.mixedWarning"></span ></label >
 
-      <div class = "form-row clearfix" >
-        <div class = "form-cell" >
-          <label >Rights: <span class = "label-required" >*</span ></label >
-          <div class = "form-field" >
-            <div id = "rights-{{right.right}}" class = "checkbox-list clearfix" ng-repeat = "right in rights" >
-              <input id="{{right.right}}" type="checkbox" ng-checked="contains(right.right)" ng-click="updateRights(checked,right)" ng-model="checked"
-                     ng-disabled = "areRelatedFieldsSelected(right)"/>
-              <label for = "{{right.right}}">{{right.rightName}}</label >
+          <div class = "radio-group" >
+            <div class = "form-inline" >
+              <input id = "adminRoleType" type = "radio" name = "adminRoleType" value = "true"
+                     ng-model = "role.adminRole" ng-change = "showRoleTypeModal(true)" ng-disabled="role.id && role.adminRole=='false'" />
+              <label for = "adminRoleType" openlmis-message="create.role.adminRole"></label >
             </div >
-            <span class = "field-error" ng-show = "showRightError" >
-              Please select at least one right for the role
-            </span >
+            <div class = "form-inline" >
+              <input id = "programRoleType" type = "radio" name = "programRoleType" value = "false"
+                     ng-model = "role.adminRole" ng-change = "showRoleTypeModal(false)" ng-disabled="role.id && role.adminRole=='true'" />
+              <label for = "programRoleType" openlmis-message="create.role.programBasedRole"></label >
+            </div >
           </div >
+
         </div >
       </div >
 
-      <div form-toolbar id="action_buttons" class="action-buttons">
-        <div class="form-cell button-row">
-          <input type="submit" class="btn btn-primary save-button" value="Save" />
-        </div>
-        <div class="toolbar-error" id="saveFailMessage" ng-bind="error" ng-show="error"></div>
-      </div>
+      <div class = "form-group clearfix" >
+        <h3 openlmis-message="create.role.assignRights"></h3 >
 
+        <div class = "assigned-rights" ng-class = "{'is-disabled': role.adminRole == 'false'}" >
+          <h4 openlmis-message="create.role.adminRights"></h4 >
+
+          <div class = "rights-list" >
+            <div id = "rights-{{right.right}}" class = "checkbox-list clearfix" ng-repeat = "right in adminRights" >
+              <input id = "{{right.right}}" type = "checkbox" ng-checked = "contains(right.right)"
+                     ng-click = "updateRights(checked,right)" ng-model = "checked"
+                     ng-disabled = "areRelatedFieldsSelected(right) || role.adminRole == 'false'" />
+              <label for = "{{right.right}}" >{{right.rightName}}</label >
+            </div >
+          </div >
+          <span class = "field-error" ng-show = "showRightError && role.adminRole=='true'" openlmis-message="create.role.selectRightWarning">
+          </span >
+        </div >
+
+        <div class = "assigned-rights" ng-class = "{'is-disabled': role.adminRole == 'true'}" >
+          <h4 openlmis-message="">Program and facility-based rights</h4 >
+
+          <div id = "nonAdminRights-{{nonAdminRight.right}}" class = "checkbox-list clearfix"
+               ng-repeat = "nonAdminRight in nonAdminRights" >
+            <input id = "{{nonAdminRight.right}}" type = "checkbox" ng-checked = "contains(nonAdminRight.right)"
+                   ng-click = "updateRights(checked,nonAdminRight)" ng-model = "checked"
+                   ng-disabled = "areRelatedFieldsSelected(nonAdminRight) || role.adminRole == 'true'" />
+            <label for = "{{nonAdminRight.right}}" >{{nonAdminRight.rightName}}</label >
+          </div >
+          <span class = "field-error" ng-show = "showRightError && role.adminRole=='false'" openlmis-message="create.role.selectRightWarning">
+          </span >
+        </div >
+
+      </div >
+
+    </div >
+
+    <div form-toolbar id = "action_buttons" class = "action-buttons" >
+      <div class = "form-cell button-row pull-left" >
+        <input type = "submit" class = "btn btn-primary save-button" value = "Save" />
+        <a type = "button" ng-href = "#/list" class = "btn btn-cancel submit-button" openlmis-message="button.cancel"></a >
+      </div >
+      <div class = "toolbar-error" id = "saveFailMessage" openlmis-message= "error" ng-show="error" ></div >
     </div >
   </form >
 </div >
-
-

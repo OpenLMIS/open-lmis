@@ -1,19 +1,28 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 describe('Approve Requisition controller', function () {
 
   var scope, ctrl, httpBackend, location, routeParams, controller, requisition,
-    programRnrColumnList, nonFullSupplyLineItems, lineItems, columnDefinitions;
+    programRnrColumnList, nonFullSupplyLineItems, lineItems, dialog;
   beforeEach(module('openlmis.services'));
+  beforeEach(module('ui.bootstrap.dialog'));
 
   beforeEach(inject(function ($httpBackend, $rootScope, $location, $controller) {
     scope = $rootScope.$new();
     location = $location;
     controller = $controller;
     httpBackend = $httpBackend;
+//    dialog = $dialog;
     routeParams = {"rnr":"1", "program":"1"};
     lineItems = [];
     nonFullSupplyLineItems = [];
     requisition = {'status':"AUTHORIZED", 'lineItems':lineItems, 'nonFullSupplyLineItems':nonFullSupplyLineItems, period:{numberOfMonths:5}};
     $rootScope.pageSize = 2;
+    scope.approvalForm= {};
     programRnrColumnList = [
       {'name':'ProductCode', 'label':'Product Code', 'visible':true},
       {'name':'quantityApproved', 'label':'quantity approved', 'visible':true},
@@ -32,14 +41,6 @@ describe('Approve Requisition controller', function () {
 
   it('should set currency in scope', function () {
     expect(scope.currency).toEqual('$');
-  });
-
-  it('should set paged line items as data in full supply grid', function () {
-    expect(scope.rnrGrid.data).toEqual('pageLineItems');
-  });
-
-  it('should set columns as columnDefs in non full supply grid', function () {
-    expect(scope.rnrGrid.columnDefs).toEqual('columnDefinitions');
   });
 
   it('should save work in progress for rnr', function () {
@@ -81,7 +82,7 @@ describe('Approve Requisition controller', function () {
 
   it('should set Error pages according to tab', function () {
     scope.numberOfPages = 5;
-    scope.isDirty = true;
+    scope.approvalForm.$dirty = true;
     scope.errorPages = {fullSupply:[5], nonFullSupply:[7]};
     scope.rnr.id = "rnrId";
     routeParams.page = 1;
@@ -94,7 +95,7 @@ describe('Approve Requisition controller', function () {
 
   it('should set showNonFullSupply flag if supply type is non-full-supply', function () {
     scope.numberOfPages = 5;
-    scope.isDirty = true;
+    scope.approvalForm.$dirty = true;
     scope.rnr.id = "rnrId";
     routeParams.page = 1;
     routeParams.supplyType = 'non-full-supply';
@@ -104,15 +105,24 @@ describe('Approve Requisition controller', function () {
     expect(scope.showNonFullSupply).toBeTruthy();
   });
 
-  it('should approve a valid rnr', function () {
+  it('should display confirm modal if approve button is clicked on valid Rnr', function () {
     scope.rnr = new Rnr({"id":"rnrId"}, []);
     spyOn(scope.rnr, 'validateFullSupplyForApproval').andReturn('');
     spyOn(scope.rnr, 'validateNonFullSupplyForApproval').andReturn('');
-    httpBackend.expect('PUT', '/requisitions/rnrId/approve.json').respond({'success':"R&R approved successfully!"});
-
+    spyOn(OpenLmisDialog, 'new');
     scope.approveRnr();
-    httpBackend.flush();
+    httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
+    expect(OpenLmisDialog.new).toHaveBeenCalled();
+  });
 
+  it('should approve Rnr if ok is clicked on the confirm modal', function () {
+    scope.rnr = new Rnr({"id":"rnrId"}, []);
+    spyOn(scope.rnr, 'validateFullSupplyForApproval').andReturn('');
+    spyOn(scope.rnr, 'validateNonFullSupplyForApproval').andReturn('');
+
+    httpBackend.expect('PUT', '/requisitions/rnrId/approve.json').respond({'success':"R&R approved successfully!"});
+    scope.dialogCloseCallback(true);
+    httpBackend.flush();
     expect(scope.$parent.message).toEqual("R&R approved successfully!");
   });
 
@@ -183,36 +193,13 @@ describe('Approve Requisition controller', function () {
 
   it('should save rnr on page change only if dirty', function () {
     scope.numberOfPages = 5;
-    scope.isDirty = true;
+    scope.approvalForm.$dirty = true;
     routeParams.page = 2;
     scope.rnr.id = "rnrId";
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {'success':"success message"});
     scope.$broadcast('$routeUpdate');
     httpBackend.flush();
     expect(scope.message).toEqual('success message');
-  });
-
-  it('should fill packs to ship based on approved quantity', function () {
-    var lineItem = new RnrLineItem();
-    lineItem.quantityApproved = '67';
-    scope.rnr = new Rnr();
-    scope.rnr.fullSupplyLineItems = [lineItem];
-    spyOn(lineItem, 'fillPacksToShip');
-
-    scope.fillPacksToShip(lineItem);
-
-    expect(lineItem.fillPacksToShip).toHaveBeenCalled();
-  });
-
-  it('should remove non numeric characters from quantity approved before calculations', function () {
-    var lineItem = new RnrLineItem();
-    lineItem.quantityApproved = '67hj';
-    scope.rnr = new Rnr();
-    scope.rnr.fullSupplyLineItems = [lineItem];
-
-    scope.fillPacksToShip(lineItem);
-
-    expect(lineItem.quantityApproved).toEqual(67);
   });
 
   it('should set message while saving if set message flag true', function () {
@@ -276,5 +263,4 @@ describe('Approve Requisition controller', function () {
     var result = scope.checkErrorOnPage(1);
     expect(result).toBeFalsy();
   });
-
 });

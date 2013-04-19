@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 describe('ViewRnrListController', function () {
   var scope, httpBackend, controller, facilities, rnrList, location;
 
@@ -134,7 +140,7 @@ describe('ViewRnrListController', function () {
       {'id':1, 'programId':2}
     ];
     scope.openRequisition();
-    expect(location.path()).toEqual("/requisition/1/program/2/full-supply");
+    expect(location.url()).toEqual("/requisition/1/2?supplyType=full-supply&page=1");
   });
 
   function loadRequisitions(expectedUrl, respondWith) {

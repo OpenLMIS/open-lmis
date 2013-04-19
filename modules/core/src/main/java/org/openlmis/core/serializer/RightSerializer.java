@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.serializer;
 
 import org.codehaus.jackson.JsonGenerator;
@@ -19,8 +25,8 @@ public class RightSerializer extends JsonSerializer<Right> {
     generator.writeString(right.name());
     generator.writeFieldName("rightName");
     generator.writeString(right.getRightName());
-    generator.writeFieldName("category");
-    generator.writeString(right.getCategory());
+    generator.writeFieldName("adminRight");
+    generator.writeString(right.getAdminRight().toString());
     generator.writeEndObject();
   }
 }

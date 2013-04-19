@@ -1,90 +1,93 @@
+<!--
+  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
 <div ng-controller="UserRoleAssignmentController">
+  <div class="form-group">
+    <h3 openlmis-message="create.user.homeFacility.roles"></h3>
 
-  <div class="fluid-grid" ng-show="showHomeFacilityRoleAssignmentOptions()">
-    <div class="row-fluid fluid-grid-header">
-      <div class="span3">
-        <div class="fluid-grid-cell">Program(s)</div>
+    <div class="fluid-grid" ng-show="showHomeFacilityRoleAssignmentOptions()">
+      <div class="row-fluid fluid-grid-header">
+        <div class="span3">
+          <div class="fluid-grid-cell" openlmis-message="create.user.program"></div>
+        </div>
+        <div class="span6">
+          <div class="fluid-grid-cell" openlmis-message="create.user.role"></div>
+        </div>
+        <div class="span3">
+          <div class="fluid-grid-cell">&nbsp;</div>
+        </div>
       </div>
-      <div class="span6">
-        <div class="fluid-grid-cell">Roles</div>
-      </div>
-      <div class="span3">
-        <div class="fluid-grid-cell">&nbsp;</div>
+
+      <div class="row-fluid" ng-repeat="roleAssignment in user.homeFacilityRoles">
+        <div class="span3">
+          <div class="fluid-grid-cell">
+            <label ng-bind="getProgramName(roleAssignment.programId)"></label>
+          </div>
+        </div>
+        <div class="span7">
+          <div class="fluid-grid-cell">
+            <select ui-select2 ng-model="roleAssignment.roleIds" placeholder="+ Add Role"
+                    multiple="multiple" name="roles" id="roles">
+              <option ng-repeat="role in nonAdminRoles" value="{{role.id}}" ng-bind="role.name"></option>
+            </select>
+            <span ng-show="roleAssignment.roleIds.length == 0" class="field-error" openlmis-message="missing.value">
+            </span>
+          </div>
+        </div>
+        <div class="span2">
+          <a class="btn delete-role" value="delete" ng-click="deleteCurrentRow($index)">Remove</a>
+        </div>
       </div>
     </div>
 
-    <div class="row-fluid" ng-repeat="roleAssignment in user.homeFacilityRoles">
-      <div class="span3">
-        <div class="fluid-grid-cell">
-          <label ng-bind="getProgramName(roleAssignment.programId)"></label>
-        </div>
-      </div>
-      <div class="span6">
-        <div class="fluid-grid-cell">
-          <select ui-select2 ng-model="roleAssignment.roleIds" placeholder="+ Add Role"
-                  multiple="multiple" name="roles" id="roles">
-            <option ng-repeat="role in allRoles" value="{{role.id}}" ng-bind="role.name"></option>
-          </select>
-          <span ng-show="roleAssignment.roleIds.length == 0" class="field-error">
-            Please fill in this value
-          </span>
-        </div>
-      </div>
-      <div class="span3">
-        <div class="fluid-grid-cell">
-          <a class="delete-role" value="delete" ng-click="deleteCurrentRow($index)">&times;</a>
-        </div>
-      </div>
-    </div>
-  </div>
+    <div class="add-role-row">
+      <div class="row-fluid">
 
-  <div class="add-role-row">
-    <div class="row-fluid">
-
-      <div class="span3">
-        <div class="fluid-grid-cell">
-          <select
+        <div class="span3">
+          <div class="fluid-grid-cell">
+            <select
               ng-options="programSupported.program.id as programSupported.program.name group by programSupported.program.status for programSupported in availableSupportedProgramsWithStatus()"
               ng-model="programSelected">
-            <option value="" ng-bind="selectedProgramMessage"></option>
-          </select>
-          <span ng-show='hasMappingError(showHomeFacilityRoleMappingError, programSelected)' class="field-error">
-            Please select a program
-          </span>
+              <option value="" ng-bind="selectedProgramMessage"></option>
+            </select>
+            <span ng-show='hasMappingError(showHomeFacilityRoleMappingError, programSelected)' class="field-error" openlmis-message="create.user.selectProgram">
+            </span>
+          </div>
         </div>
-      </div>
 
-      <div class="span6 select2-roles">
-        <div class="fluid-grid-cell">
-          <select ui-select2 ng-model="selectedRoleIds" placeholder="+ Add Role" multiple="multiple" style="width:400px">
-            <option ng-repeat="role in $parent.allRoles" value="{{role.id}}">{{role.name}}</option>
-          </select>
-          <span ng-show='hasMappingError(showHomeFacilityRoleMappingError,selectedRoleIds)' class="field-error">
-            Please select role(s)
-          </span>
+        <div class="span7 select2-roles">
+          <div class="fluid-grid-cell">
+            <select ui-select2 ng-model="selectedRoleIds" placeholder="+ Add Role" multiple="multiple"
+                    style="width:400px">
+              <option ng-repeat="role in nonAdminRoles" value="{{role.id}}">{{role.name}}</option>
+            </select>
+            <span ng-show='hasMappingError(showHomeFacilityRoleMappingError,selectedRoleIds)' class="field-error" openlmis-message="create.user.selectRoles">
+            </span>
+          </div>
         </div>
-      </div>
 
-      <div class="span3">
-        <div class="fluid-grid-cell">
-          <a ng-click="addHomeFacilityRole()" class="btn btn-primary">Add</a>
+        <div class="span2">
+          <div class="fluid-grid-cell">
+            <a ng-click="addHomeFacilityRole()" class="btn btn-primary" openlmis-message="button.add"></a>
+          </div>
         </div>
-      </div>
 
+      </div>
+    </div>
+
+
+    <div tabindex="-1" id="deleteRolesModal" modal="deleteRolesModal" close="deleteRolesModal=false">
+      <div class="modal-header"><h2 openlmis-message="create.user.deleteRoles"></h2></div>
+      <div class="modal-body">
+        <p openlmis-message="create.user.homeRoles.delete.warning"></p>
+      </div>
+      <div class="modal-footer">
+        <a href="" class="btn btn-primary" ng-click="deleteHomeFacilityRole()" openlmis-message="button.ok"></a>
+        <a href="" class="btn" ng-click="deleteRolesModal=false" openlmis-message="button.cancel"></a>
+      </div>
     </div>
   </div>
-
-
-
-  <div tabindex="-1" id="deleteRolesModal" modal="deleteRolesModal" close="deleteRolesModal=false">
-    <div class="modal-header"><h2>Delete Roles</h2></div>
-    <div class="modal-body">
-      <p>All Roles assigned to this Program for the user will be deleted</p>
-    </div>
-    <div class="modal-footer">
-      <a href="" class="btn btn-primary" ng-click="deleteHomeFacilityRole()">Ok</a>
-      <a href="" class="btn" ng-click="deleteRolesModal=false">Cancel</a>
-    </div>
-  </div>
-
 </div>

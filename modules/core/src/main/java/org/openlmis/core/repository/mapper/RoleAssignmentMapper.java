@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
@@ -38,6 +44,7 @@ public interface RoleAssignmentMapper {
   @Results(value = {@Result(property = "supervisoryNode.id", column = "supervisoryNodeId")})
   List<RoleAssignment> getSupervisorRoles(Integer userId);
 
+
   @Select("SELECT userId, programId, array_agg(roleId) as roleIdsAsString " +
       "FROM role_assignments " +
       "WHERE userId=#{userId} AND programId IS NOT NULL AND supervisoryNodeId IS NULL " +
@@ -50,4 +57,9 @@ public interface RoleAssignmentMapper {
         "GROUP BY userId, programId")
 
   List<RoleAssignment> getHomeFacilityRolesForUserOnGivenProgramWithRights(@Param("userId") Integer userId, @Param("programId") Integer programId,@Param("commaSeparatedRights") String commaSeparatedRights);
+
+
+  @Select({"SELECT RA.userId, array_agg(RA.roleId) as roleIdsAsString FROM role_assignments RA INNER JOIN roles R ON RA.roleId = R.id",
+    "WHERE userId = #{userId} AND R.adminRole = true GROUP BY userId, supervisoryNodeId, programId"})
+  RoleAssignment getAdminRole(Integer userId);
 }

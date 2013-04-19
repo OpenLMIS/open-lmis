@@ -1,11 +1,17 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
-import org.joda.time.DateTime;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.repository.mapper.FacilityMapper;
+import org.openlmis.upload.Importable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
@@ -22,7 +28,7 @@ public class FacilityRepository {
   private FacilityMapper mapper;
   private CommaSeparator commaSeparator;
   private GeographicZoneRepository geographicZoneRepository;
-  private static Integer LOWEST_GEO_LEVEL ;
+  private static Integer LOWEST_GEO_LEVEL;
 
   @Autowired
   public FacilityRepository(FacilityMapper facilityMapper, CommaSeparator commaSeparator, GeographicZoneRepository geographicZoneRepository) {
@@ -44,7 +50,6 @@ public class FacilityRepository {
   }
 
   public void save(Facility facility) {
-    facility.setModifiedDate(DateTime.now().toDate());
     try {
       validateAndSetFacilityOperator(facility);
       validateAndSetFacilityType(facility);
@@ -65,18 +70,24 @@ public class FacilityRepository {
     }
   }
 
+  private void setFacilityId(Facility savedFacility, Facility facility) {
+    if (savedFacility != null) {
+      facility.setId(savedFacility.getId());
+    }
+  }
+
   private void validateGeographicZone(Facility facility) {
-    if(LOWEST_GEO_LEVEL == null) {
+    if (LOWEST_GEO_LEVEL == null) {
       LOWEST_GEO_LEVEL = geographicZoneRepository.getLowestGeographicLevel();
     }
     GeographicZone geographicZone = geographicZoneRepository.getByCode(facility.getGeographicZone().getCode());
     facility.setGeographicZone(geographicZone);
 
-    if(facility.getGeographicZone() == null){
+    if (facility.getGeographicZone() == null) {
       throw new DataException("Invalid reference data 'Geographic Zone Code'");
     }
 
-    if(facility.getGeographicZone().getLevel().getLevelNumber() != LOWEST_GEO_LEVEL){
+    if (facility.getGeographicZone().getLevel().getLevelNumber() != LOWEST_GEO_LEVEL) {
       throw new DataException("Geographic Zone Code must be at the lowest administrative level in your hierarchy");
     }
   }
@@ -87,12 +98,12 @@ public class FacilityRepository {
       throw new DataException("Missing mandatory reference data 'Facility Type'");
 
     String facilityTypeCode = facilityType.getCode();
-    Integer facilityTypeId = mapper.getFacilityTypeIdForCode(facilityTypeCode);
+    FacilityType existingFacilityType = mapper.getFacilityTypeForCode(facilityTypeCode);
 
-    if (facilityTypeId == null)
+    if (existingFacilityType == null)
       throw new DataException("Invalid reference data 'Facility Type'");
 
-    facilityType.setId(facilityTypeId);
+    facilityType.setId(existingFacilityType.getId());
 
   }
 
@@ -153,4 +164,13 @@ public class FacilityRepository {
   public Facility getHomeFacilityForRights(Integer userId, Right... rights) {
     return mapper.getHomeFacilityWithRights(userId, commaSeparateRightNames(rights));
   }
+
+  public FacilityType getFacilityTypeByCode(FacilityType facilityType) {
+    return mapper.getFacilityTypeForCode(facilityType.getCode());
+  }
+
+  public Facility getByCode(Facility facility) {
+    return mapper.getByCode(facility.getCode());
+  }
+
 }

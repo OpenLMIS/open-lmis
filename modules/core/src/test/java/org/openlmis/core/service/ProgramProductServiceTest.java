@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.service;
 
 import org.junit.Before;
@@ -13,12 +19,16 @@ import org.openlmis.core.domain.ProgramProductPrice;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProgramProductRepository;
 
+import java.util.Date;
+
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.ProgramProductBuilder.defaultProgramProduct;
+import static org.openlmis.core.repository.ProgramProductRepository.PROGRAM_PRODUCT_INVALID;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProgramProductServiceTest {
@@ -32,7 +42,7 @@ public class ProgramProductServiceTest {
 
   @Before
   public void setUp() throws Exception {
-    programProductService = new ProgramProductService(programProductRepository);
+    programProductService = new ProgramProductService(programProductRepository, null, null);
   }
 
   @Test
@@ -43,13 +53,13 @@ public class ProgramProductServiceTest {
 
     ProgramProduct returnedProgramProduct = new ProgramProduct();
     returnedProgramProduct.setId(123);
-    when(programProductRepository.getProgramProductByProgramAndProductCode(programProduct)).thenReturn(returnedProgramProduct);
+    when(programProductRepository.getByProgramAndProductCode(programProduct)).thenReturn(returnedProgramProduct);
 
-    programProductService.save(programProductPrice);
+    programProductService.updateProgramProductPrice(programProductPrice);
 
     assertThat(programProductPrice.getProgramProduct().getId(), is(123));
     assertThat(programProductPrice.getProgramProduct().getModifiedBy(), is(1));
-    verify(programProductRepository).getProgramProductByProgramAndProductCode(programProduct);
+    verify(programProductRepository).getByProgramAndProductCode(programProduct);
     verify(programProductRepository).updateCurrentPrice(programProduct);
     verify(programProductRepository).updatePriceHistory(programProductPrice);
   }
@@ -62,6 +72,43 @@ public class ProgramProductServiceTest {
     ProgramProductPrice programProductPrice = mock(ProgramProductPrice.class);
     doThrow(new DataException("error-code")).when(programProductPrice).validate();
 
-    programProductService.save(programProductPrice);
+    programProductService.updateProgramProductPrice(programProductPrice);
+  }
+
+  @Test
+  public void shouldThrowExceptionIfProgramProductByProgramAndProductCodesNotFound() throws Exception {
+    ProgramProduct programProduct = make(a(defaultProgramProduct));
+    ProgramProductPrice programProductPrice = new ProgramProductPrice(programProduct, new Money("1"), "source");
+    programProductPrice.setModifiedBy(1);
+
+    when(programProductRepository.getByProgramAndProductCode(programProduct)).thenReturn(null);
+
+    expectException.expect(DataException.class);
+    expectException.expectMessage(PROGRAM_PRODUCT_INVALID);
+
+    programProductService.updateProgramProductPrice(programProductPrice);
+  }
+
+  @Test
+  public void shouldInsertProgramProduct() throws Exception {
+    ProgramProduct programProduct = new ProgramProduct();
+
+    programProductService.save(programProduct);
+
+    verify(programProductRepository).save(programProduct);
+
+  }
+
+  @Test
+  public void shouldThrowErrorIfProgramProductExistsWithSameTimeStamp() throws Exception {
+    ProgramProduct programProduct = new ProgramProduct();
+    Date date = new Date();
+    programProduct.setModifiedDate(date);
+    expectException.expect(DataException.class);
+    expectException.expectMessage("Duplicate Program Product found");
+
+    doThrow(new DataException("Duplicate Program Product found")).when(programProductRepository).save(programProduct);
+
+    programProductService.save(programProduct);
   }
 }

@@ -1,10 +1,15 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityOperator;
 import org.openlmis.core.domain.FacilityType;
-import org.openlmis.core.domain.GeographicZone;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -24,7 +29,8 @@ public interface FacilityMapper {
     "#{operatedBy.id}," +
     "#{coldStorageGrossCapacity}, #{coldStorageNetCapacity}, #{suppliesOthers}, #{sdp},#{online}," +
     "#{satellite}, #{satelliteParentCode}, #{hasElectricity}, #{hasElectronicScc}, #{hasElectronicDar}, #{active}," +
-    "#{goLiveDate}, #{goDownDate}, #{comment}, #{dataReportable}, #{modifiedBy}, #{modifiedDate})")
+    "#{goLiveDate}, #{goDownDate}, #{comment}, #{dataReportable}, #{modifiedBy}, " +
+    "COALESCE(#{modifiedDate}, NOW()))")
   @Options(useGeneratedKeys = true)
   Integer insert(Facility facility);
 
@@ -100,14 +106,14 @@ public interface FacilityMapper {
     "suppliesOthers = #{suppliesOthers}, sdp = #{sdp}, online = #{online}, satellite = #{satellite}, satelliteParentCode = #{satelliteParentCode}," +
     "hasElectricity = #{hasElectricity}, hasElectronicScc = #{hasElectronicScc}, hasElectronicDar = #{hasElectronicDar}, active = #{active}," +
     "goLiveDate = #{goLiveDate}, goDownDate = #{goDownDate}," +
-    "comment = #{comment}, dataReportable = #{dataReportable}, modifiedBy = #{modifiedBy}, modifiedDate = #{modifiedDate} WHERE id=#{id}")
+    "comment = #{comment}, dataReportable = #{dataReportable}, modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id=#{id}")
   void update(Facility facility);
 
-  @Select("SELECT id FROM facility_types where LOWER(code) = LOWER(#{code})")
-  Integer getFacilityTypeIdForCode(String facilityTypeCode);
+  @Select("SELECT * FROM facility_types where LOWER(code) = LOWER(#{code})")
+  FacilityType getFacilityTypeForCode(String facilityTypeCode);
 
-  @Update("UPDATE facilities SET dataReportable = #{dataReportable}, active=#{active}, modifiedBy=#{modifiedBy}, modifiedDate= DEFAULT " +
-    "WHERE id =#{id}")
+  @Update({"UPDATE facilities SET dataReportable = #{dataReportable}, active=#{active}, " +
+      "modifiedBy=#{modifiedBy}, modifiedDate = NOW() WHERE id =#{id}"})
   void updateDataReportableAndActiveFor(Facility facility);
 
   @Select("SELECT id FROM facilities WHERE LOWER(code) = LOWER(#{code})")
@@ -153,4 +159,7 @@ public interface FacilityMapper {
     @Result(property = "operatedBy", column = "operatedById", javaType = Integer.class, one = @One(select = "getFacilityOperatorById"))
   })
   List<Facility> getAllInRequisitionGroups(@Param("requisitionGroupIds") String requisitionGroupIds);
+
+  @Select("SELECT * from facilities WHERE code=#{code}")
+  Facility getByCode(String code);
 }

@@ -1,14 +1,21 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.web.controller;
 
 
-import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.Right;
+import org.openlmis.core.domain.Role;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -22,6 +29,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static java.lang.Boolean.FALSE;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -29,6 +37,8 @@ import static org.mockito.Mockito.*;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 import static org.openlmis.core.domain.Right.CONFIGURE_RNR;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.matchers.Matchers.facilityMatcher;
+import static org.openlmis.core.matchers.Matchers.programMatcher;
 import static org.openlmis.web.controller.RoleRightsController.*;
 import static org.openlmis.web.response.OpenLmisResponse.SUCCESS;
 
@@ -51,7 +61,7 @@ public class RoleRightsControllerTest {
     MockHttpSession mockHttpSession = new MockHttpSession();
     httpServletRequest.setSession(mockHttpSession);
     mockHttpSession.setAttribute(USER_ID, LOGGED_IN_USERID);
-    role = new Role("test role", "test role description");
+    role = new Role("test role", FALSE, "test role description");
   }
 
   @Test
@@ -106,7 +116,7 @@ public class RoleRightsControllerTest {
 
   @Test
   public void shouldUpdateRoleAndRights() throws Exception {
-    Role role = new Role(123, "Role Name", "Desc", null, null, new HashSet<>(asList(CONFIGURE_RNR)));
+    Role role = new Role(123, "Role Name",null, "Desc", new HashSet<>(asList(CONFIGURE_RNR)));
 
     OpenLmisResponse response = controller.updateRole(role.getId(), role, httpServletRequest).getBody();
 
@@ -117,7 +127,7 @@ public class RoleRightsControllerTest {
   @Test
   public void shouldReturnErrorMsgIfUpdateFails() throws Exception {
 
-    Role role = new Role(123, "Role Name", "Desc");
+    Role role = new Role(123, "Role Name", FALSE, "Desc", null);
 
     doThrow(new DataException("Duplicate Role found")).when(roleRightsService).updateRole(role);
 
@@ -129,7 +139,7 @@ public class RoleRightsControllerTest {
 
   @Test
   public void shouldGetRightsForUserAndFacilityProgram() throws Exception {
-    List<Right> rights = new ArrayList<Right>() {{
+    Set<Right> rights = new HashSet<Right>() {{
       add(CREATE_REQUISITION);
     }};
     Integer facilityId = 1;
@@ -137,28 +147,7 @@ public class RoleRightsControllerTest {
     when(roleRightsService.getRightsForUserAndFacilityProgram(eq(LOGGED_IN_USERID), any(Facility.class), any(Program.class))).thenReturn(rights);
     ResponseEntity<OpenLmisResponse> response = controller.getRightsForUserAndFacilityProgram(facilityId, programId, httpServletRequest);
 
-    assertThat((List<Right>) response.getBody().getData().get("rights"), is(rights));
+    assertThat((Set<Right>) response.getBody().getData().get("rights"), is(rights));
     verify(roleRightsService).getRightsForUserAndFacilityProgram(eq(LOGGED_IN_USERID), argThat(facilityMatcher(facilityId)), argThat(programMatcher(programId)));
   }
-
-  private Matcher<Program> programMatcher(final int id) {
-    return new ArgumentMatcher<Program>() {
-      @Override
-      public boolean matches(Object argument) {
-        Program program = (Program) argument;
-        return program.getId().equals(id);
-      }
-    };
-  }
-
-  private Matcher<Facility> facilityMatcher(final int id) {
-    return new ArgumentMatcher<Facility>() {
-      @Override
-      public boolean matches(Object argument) {
-        Facility facility = (Facility) argument;
-        return facility.getId().equals(id);
-      }
-    };
-  }
-
 }

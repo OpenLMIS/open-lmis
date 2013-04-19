@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.UiUtils;
 
 import java.io.IOException;
@@ -11,9 +17,9 @@ public class DBWrapper {
   String baseUrl, dbUrl, dbUser, dbPassword;
   Connection connection;
 
-  public DBWrapper() throws IOException, SQLException {
-    baseUrl = "http://localhost:9091/";
-    dbUrl = "jdbc:postgresql://localhost:5432/open_lmis";
+  public DBWrapper(String baseUrl, String dbUrl) throws IOException, SQLException {
+    this.baseUrl = baseUrl;
+    this.dbUrl = dbUrl;
     dbUser = "postgres";
     dbPassword = "p@ssw0rd";
     connection = getConnection();
@@ -47,12 +53,13 @@ public class DBWrapper {
     }
   }
 
-  public void insertUser(String userId, String userName, String password, String facilityCode, String email) throws SQLException, IOException {
+
+  public void insertUser(String userId, String userName, String password, String facilityCode, String email, String vendorName) throws SQLException, IOException {
     update("delete from users where userName like('" + userName + "');");
 
     update("INSERT INTO users\n" +
-      "  (id, userName, password, facilityId, firstName, lastName, email, active) VALUES\n" +
-      "  ('" + userId + "', '" + userName + "', '" + password + "', (SELECT id FROM facilities WHERE code = '" + facilityCode + "'), 'Fatima', 'Doe', '" + email + "','true');\n");
+      "  (id, userName, password,vendorId, facilityId, firstName, lastName, email, active) VALUES\n" +
+      "  ('" + userId + "', '" + userName + "', '" + password + "',(SELECT id FROM vendors WHERE name = '" + vendorName + "'), (SELECT id FROM facilities WHERE code = '" + facilityCode + "'), 'Fatima', 'Doe', '" + email + "','true');\n");
 
 
   }
@@ -61,7 +68,6 @@ public class DBWrapper {
     update("DELETE FROM user_password_reset_tokens;");
     update("update users set password='" + password + "', active=TRUE  where email='" + email + "';");
   }
-
 
 
   public void deleteFacilities() throws IOException, SQLException {
@@ -86,8 +92,8 @@ public class DBWrapper {
 
   }
 
-  public void allocateFacilityToUser(String userID, String facilityCode) throws IOException, SQLException {
-    update("update users set facilityId = (Select id from facilities where code='" + facilityCode + "') where id='" + userID + "';");
+  public void allocateFacilityToUser(String userId, String facilityCode) throws IOException, SQLException {
+    update("update users set facilityId = (Select id from facilities where code='" + facilityCode + "') where id='" + userId + "';");
 
   }
 
@@ -99,10 +105,13 @@ public class DBWrapper {
     update("delete from facility_approved_products;");
     update("delete from program_product_price_history;");
     update("delete from program_products;");
+    update("delete from orders;");
+    update("DELETE FROM requisition_status_changes;");
     update("DELETE FROM requisition_line_item_losses_adjustments;");
     update("DELETE FROM requisition_line_items;");
     update("delete from products;");
     update("delete from user_password_reset_tokens ;");
+    update("delete from comments;");
     update("delete from users where userName not like('Admin%');");
     update("DELETE FROM requisition_line_item_losses_adjustments;");
     update("DELETE FROM requisition_line_items;");
@@ -124,34 +133,17 @@ public class DBWrapper {
   }
 
 
-  public void insertRole(String role, String description) throws SQLException, IOException {
+  public void insertRole(String role, String adminrole, String description) throws SQLException, IOException {
     ResultSet rs = query("Select id from roles;");
 
-//    if (rs.next()) {
-//      update("delete from role_rights;");
-//      update("delete from role_assignments;");
-//      update("delete from roles;");
-//    }
-
-//    update("INSERT INTO roles\n" +
-//      " (name, description) VALUES\n" +
-//      " ('store in-charge', ''),\n" +
-//      " ('district pharmacist', '');");
     update("INSERT INTO roles\n" +
-      " (name, description) VALUES\n" +
-      " ('"+role+"', '"+description+"');");
+      " (name,adminrole, description) VALUES\n" +
+      " ('" + role + "', '" + adminrole + "', '" + description + "');");
 
   }
 
   public void insertRoleRights() throws SQLException, IOException {
-    ResultSet rs = query("Select roleId from role_rights;");
 
-//    if (rs.next()) {
-//      update("delete from role_rights;");
-//      update("delete from role_assignments;");
-//      update("delete from roles;");
-//
-//    }
 
     update("INSERT INTO role_rights\n" +
       "  (roleId, rightName) VALUES\n" +
@@ -165,7 +157,7 @@ public class DBWrapper {
       "  ((select id from roles where name='district pharmacist'), 'CONFIGURE_RNR');");
   }
 
-  public void insertSupervisoryNode(String facilityCode, String supervisoryNodeCode,String supervisoryNodeName, String supervisoryNodeParentCode) throws SQLException, IOException {
+  public void insertSupervisoryNode(String facilityCode, String supervisoryNodeCode, String supervisoryNodeName, String supervisoryNodeParentCode) throws SQLException, IOException {
     ResultSet rs = query("Select facilityId from supervisory_nodes;");
 
     if (rs.next()) {
@@ -173,13 +165,13 @@ public class DBWrapper {
     }
     update("INSERT INTO supervisory_nodes\n" +
       "  (parentId, facilityId, name, code) VALUES\n" +
-      "  (" + supervisoryNodeParentCode + ", (SELECT id FROM facilities WHERE code = '" + facilityCode + "'), '"+supervisoryNodeName+"', '" + supervisoryNodeCode + "');");
+      "  (" + supervisoryNodeParentCode + ", (SELECT id FROM facilities WHERE code = '" + facilityCode + "'), '" + supervisoryNodeName + "', '" + supervisoryNodeCode + "');");
   }
 
-  public void insertSupervisoryNodeSecond(String facilityCode, String supervisoryNodeCode,String supervisoryNodeName, String supervisoryNodeParentCode) throws SQLException, IOException {
+  public void insertSupervisoryNodeSecond(String facilityCode, String supervisoryNodeCode, String supervisoryNodeName, String supervisoryNodeParentCode) throws SQLException, IOException {
     update("INSERT INTO supervisory_nodes\n" +
       "  (parentId, facilityId, name, code) VALUES\n" +
-      "  ((select id from  supervisory_nodes where code ='" + supervisoryNodeParentCode + "'), (SELECT id FROM facilities WHERE code = '" + facilityCode + "'), '"+supervisoryNodeName+"', '" + supervisoryNodeCode + "');");
+      "  ((select id from  supervisory_nodes where code ='" + supervisoryNodeParentCode + "'), (SELECT id FROM facilities WHERE code = '" + facilityCode + "'), '" + supervisoryNodeName + "', '" + supervisoryNodeCode + "');");
   }
 
   public void insertRequisitionGroups(String code1, String code2, String supervisoryNodeCode1, String supervisoryNodeCode2) throws SQLException, IOException {
@@ -230,8 +222,7 @@ public class DBWrapper {
   }
 
   public void updateRoleAssignment(String userID, String supervisoryNode) throws SQLException, IOException {
-    //update("delete from role_assignments where userid='" + userID + "' and supervisorynodeid is null;");
-    update("update role_assignments set supervisorynodeid=(select id from supervisory_nodes where code='"+supervisoryNode+"') where userid='" + userID + "';");
+    update("update role_assignments set supervisorynodeid=(select id from supervisory_nodes where code='" + supervisoryNode + "') where userid='" + userID + "';");
   }
 
   public void updateRoleGroupMember(String facilityCode) throws SQLException, IOException {
@@ -239,18 +230,19 @@ public class DBWrapper {
     update("update requisition_group_members set facilityid=(select id from facilities where code ='F11') where requisitiongroupid=(select id from requisition_groups where code='RG1');");
   }
 
-  public void alterUserID(String userId) throws SQLException, IOException {
-    update("delete from users where id=200;");
-    update(" update users set id=" + userId + " where username='User123'");
+  public void alterUserID(String userName, String userId) throws SQLException, IOException {
+    update("delete from user_password_reset_tokens;");
+    update("delete from users where id='" + userId + "' ;");
+    update(" update users set id='" + userId + "' where username='" + userName + "'");
   }
 
 
   public void insertProducts(String product1, String product2) throws SQLException, IOException {
 
-      update("delete from facility_approved_products;");
-      update("delete from program_products;");
-      update("delete from products;");
-      update("delete from product_categories;");
+    update("delete from facility_approved_products;");
+    update("delete from program_products;");
+    update("delete from products;");
+    update("delete from product_categories;");
 
 
     update("INSERT INTO product_categories (code, name, displayOrder) values ('C1', 'Antibiotics', 1);");
@@ -296,48 +288,41 @@ public class DBWrapper {
     return nonFullSupplyValues;
   }
 
-  public void insertSchedules() throws SQLException, IOException {
-    update("delete from processing_periods;");
-    update("delete from processing_schedules;");
-
-    update("INSERT INTO processing_schedules(code, name, description) values('Q1stM', 'QuarterMonthly', 'QuarterMonth');");
-    update("INSERT INTO processing_schedules(code, name, description) values('M', 'Monthly', 'Month');");
+  public void insertSchedule(String scheduleCode, String scheduleName, String scheduleDesc) throws SQLException, IOException {
+    update("INSERT INTO processing_schedules(code, name, description) values('" + scheduleCode + "', '" + scheduleName + "', '" + scheduleDesc + "');");
   }
 
-  public void insertProcessingPeriods() throws SQLException, IOException {
-    update("delete from processing_periods;");
-
+  public void insertProcessingPeriod(String periodName, String periodDesc, String periodStartDate, String periodEndDate, Integer numberOfMonths, String scheduleId) throws SQLException, IOException {
     update("INSERT INTO processing_periods\n" +
       "(name, description, startDate, endDate, numberofmonths, scheduleId, modifiedBy) VALUES\n" +
-      "('Period1', 'first period',  '2012-12-01', '2013-01-15',1, (SELECT id FROM processing_schedules WHERE code = 'Q1stM'), (SELECT id FROM users LIMIT 1)),\n" +
-      "('Period2', 'second period', '2013-01-16', '2013-01-30', 1, (SELECT id FROM processing_schedules WHERE code = 'M'), (SELECT id FROM users LIMIT 1));");
+      "('" + periodName + "', '" + periodDesc + "', '" + periodStartDate + "', '" + periodEndDate + "', " + numberOfMonths + ", (SELECT id FROM processing_schedules WHERE code = '" + scheduleId + "'), (SELECT id FROM users LIMIT 1));");
   }
 
 
   public void configureTemplate(String program) throws SQLException, IOException {
     update("INSERT INTO program_rnr_columns\n" +
       "(masterColumnId, programId, visible, source, position, label) VALUES\n" +
-      "(1, (select id from programs where code = '"+program+"'),  true, 'R', 1,  'Product Code'),\n" +
-      "(2, (select id from programs where code = '"+program+"'),  true, 'R', 2,  'Product'),\n" +
-      "(3, (select id from programs where code = '"+program+"'),  true, 'R', 3,  'Unit/Unit of Issue'),\n" +
-      "(4, (select id from programs where code = '"+program+"'),  true, 'U', 4,  'Beginning Balance'),\n" +
-      "(5, (select id from programs where code = '"+program+"'),  true, 'U', 5,  'Total Received Quantity'),\n" +
-      "(6, (select id from programs where code = '"+program+"'),  true, 'U', 6,  'Total Consumed Quantity'),\n" +
-      "(7, (select id from programs where code = '"+program+"'),  true, 'U', 7,  'Total Losses / Adjustments'),\n" +
-      "(8, (select id from programs where code = '"+program+"'),  true, 'C', 8,  'Stock on Hand'),\n" +
-      "(9, (select id from programs where code = '"+program+"'),  true, 'U', 9, 'New Patients'),\n" +
-      "(10, (select id from programs where code = '"+program+"'), true, 'U', 10, 'Total Stockout days'),\n" +
-      "(11, (select id from programs where code = '"+program+"'), true, 'C', 11, 'Adjusted Total Consumption'),\n" +
-      "(12, (select id from programs where code = '"+program+"'), true, 'C', 12, 'Average Monthly Consumption(AMC)'),\n" +
-      "(13, (select id from programs where code = '"+program+"'), true, 'C', 13, 'Maximum Stock Quantity'),\n" +
-      "(14, (select id from programs where code = '"+program+"'), true, 'C', 14, 'Calculated Order Quantity'),\n" +
-      "(15, (select id from programs where code = '"+program+"'), true, 'U', 15, 'Requested Quantity'),\n" +
-      "(16, (select id from programs where code = '"+program+"'), true, 'U', 16, 'Requested Quantity Explanation'),\n" +
-      "(17, (select id from programs where code = '"+program+"'), true, 'U', 17, 'Approved Quantity'),\n" +
-      "(18, (select id from programs where code = '"+program+"'), true, 'C', 18, 'Packs to Ship'),\n" +
-      "(19, (select id from programs where code = '"+program+"'), true, 'R', 19, 'Price per pack'),\n" +
-      "(20, (select id from programs where code = '"+program+"'), true, 'C', 20, 'Total cost'),\n" +
-      "(21, (select id from programs where code = '"+program+"'), true, 'U', 21, 'Remarks');");
+      "(1, (select id from programs where code = '" + program + "'),  true, 'R', 1,  'Product Code'),\n" +
+      "(2, (select id from programs where code = '" + program + "'),  true, 'R', 2,  'Product'),\n" +
+      "(3, (select id from programs where code = '" + program + "'),  true, 'R', 3,  'Unit/Unit of Issue'),\n" +
+      "(4, (select id from programs where code = '" + program + "'),  true, 'U', 4,  'Beginning Balance'),\n" +
+      "(5, (select id from programs where code = '" + program + "'),  true, 'U', 5,  'Total Received Quantity'),\n" +
+      "(6, (select id from programs where code = '" + program + "'),  true, 'U', 6,  'Total Consumed Quantity'),\n" +
+      "(7, (select id from programs where code = '" + program + "'),  true, 'U', 7,  'Total Losses / Adjustments'),\n" +
+      "(8, (select id from programs where code = '" + program + "'),  true, 'C', 8,  'Stock on Hand'),\n" +
+      "(9, (select id from programs where code = '" + program + "'),  true, 'U', 9, 'New Patients'),\n" +
+      "(10, (select id from programs where code = '" + program + "'), true, 'U', 10, 'Total Stockout days'),\n" +
+      "(11, (select id from programs where code = '" + program + "'), true, 'C', 11, 'Adjusted Total Consumption'),\n" +
+      "(12, (select id from programs where code = '" + program + "'), true, 'C', 12, 'Average Monthly Consumption(AMC)'),\n" +
+      "(13, (select id from programs where code = '" + program + "'), true, 'C', 13, 'Maximum Stock Quantity'),\n" +
+      "(14, (select id from programs where code = '" + program + "'), true, 'C', 14, 'Calculated Order Quantity'),\n" +
+      "(15, (select id from programs where code = '" + program + "'), true, 'U', 15, 'Requested quantity'),\n" +
+      "(16, (select id from programs where code = '" + program + "'), true, 'U', 16, 'Requested quantity explanation'),\n" +
+      "(17, (select id from programs where code = '" + program + "'), true, 'U', 17, 'Approved Quantity'),\n" +
+      "(18, (select id from programs where code = '" + program + "'), true, 'C', 18, 'Packs to Ship'),\n" +
+      "(19, (select id from programs where code = '" + program + "'), true, 'R', 19, 'Price per pack'),\n" +
+      "(20, (select id from programs where code = '" + program + "'), true, 'C', 20, 'Total cost'),\n" +
+      "(21, (select id from programs where code = '" + program + "'), true, 'U', 21, 'Remarks');");
   }
 
   public String getFacilityIDDB() throws IOException, SQLException {
@@ -371,9 +356,9 @@ public class DBWrapper {
     return id;
   }
 
-  public String getRequisitionId() throws IOException, SQLException {
+  public String getLatestRequisitionId() throws IOException, SQLException {
     String id = null;
-    ResultSet rs = query("select id from requisitions;");
+    ResultSet rs = query("select id from requisitions order by createddate desc limit 1;");
 
     if (rs.next()) {
       id = rs.getString("id");
@@ -398,7 +383,7 @@ public class DBWrapper {
   }
 
   public void updateRequisition(String facilityCode) throws IOException, SQLException {
-    update("update requisitions set supplyingfacilityid=(select id from facilities where code='"+facilityCode+"');");
+    update("update requisitions set supplyingfacilityid=(select id from facilities where code='" + facilityCode + "');");
 
   }
 
@@ -413,7 +398,7 @@ public class DBWrapper {
   }
 
   public void updateRequisitionStatus(String status) throws IOException, SQLException {
-    update("update requisitions set status='"+status+"';");
+    update("update requisitions set status='" + status + "';");
     update("update requisitions set supervisorynodeid=(select id from supervisory_nodes where code='N1');");
 
   }
@@ -442,6 +427,151 @@ public class DBWrapper {
 
   }
 
+  public void setupMultipleProducts(String program, String facilityType, int numberOfProductsOfEachType, boolean defaultDisplayOrder) throws SQLException, IOException {
 
+
+    update("delete from facility_approved_products;");
+    update("delete from program_products;");
+    update("delete from products;");
+    update("delete from product_categories;");
+
+    String iniProductCodeNonFullSupply = "NF";
+
+    String iniProductCodeFullSupply = "F";
+
+    update("INSERT INTO product_categories (code, name, displayOrder) values ('C1', 'Antibiotics', 1);");
+    ResultSet rs = query("Select id from product_categories where code='C1';");
+
+    int categoryId = 0;
+    if (rs.next()) {
+      categoryId = rs.getInt("id");
+    }
+
+    String insertSql;
+
+    insertSql = "INSERT INTO products (code,    alternateItemCode,  manufacturer,       manufacturerCode,  manufacturerBarcode,   mohBarcode,   gtin,   type,         primaryName,    fullName,       genericName,    alternateName,    description,      strength,    formId,  dosageUnitId, dispensingUnit,  dosesPerDispensingUnit,  packSize,  alternatePackSize,  storeRefrigerated,   storeRoomTemperature,   hazardous,  flammable,   controlledSubstance,  lightSensitive,  approvedByWho,  contraceptiveCyp,  packLength,  packWidth, packHeight,  packWeight,  packsPerCarton, cartonLength,  cartonWidth,   cartonHeight, cartonsPerPallet,  expectedShelfLife,  specialStorageInstructions, specialTransportInstructions, active,  fullSupply, tracer,   packRoundingThreshold,  roundToZero,  archived, displayOrder, categoryId) values\n";
+
+    for (int i = 0; i < numberOfProductsOfEachType; i++) {
+      if (defaultDisplayOrder) {
+        insertSql = insertSql + "('" + iniProductCodeFullSupply + i + "',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     TRUE,       TRUE,         1,                    FALSE,      TRUE,    1, " + categoryId + "),\n";
+        insertSql = insertSql + "('" + iniProductCodeNonFullSupply + i + "',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,       TRUE,         1,                FALSE,      TRUE,    1, " + categoryId + "),\n";
+      } else {
+        insertSql = insertSql + "('" + iniProductCodeFullSupply + i + "',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     TRUE,       TRUE,         1,                    FALSE,      TRUE,    " + i + ", " + categoryId + "),\n";
+        insertSql = insertSql + "('" + iniProductCodeNonFullSupply + i + "',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,       TRUE,         1,                FALSE,      TRUE,    " + i + ", " + categoryId + "),\n";
+      }
+    }
+
+    insertSql = insertSql.substring(0, insertSql.length() - 2) + ";\n";
+
+    update(insertSql);
+
+    insertSql = "INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active) VALUES\n";
+
+    for (int i = 0; i < numberOfProductsOfEachType; i++) {
+      insertSql = insertSql + "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + iniProductCodeFullSupply + i + "'), 30, 12.5, true),\n";
+      insertSql = insertSql + "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + iniProductCodeNonFullSupply + i + "'), 30, 12.5, true),\n";
+    }
+
+    insertSql = insertSql.substring(0, insertSql.length() - 2) + ";";
+
+
+    update(insertSql);
+
+
+    insertSql = "INSERT INTO facility_approved_products(facilityTypeId, programProductId, maxMonthsOfStock) VALUES\n";
+
+    for (int i = 0; i < numberOfProductsOfEachType; i++) {
+      insertSql = insertSql + "((select id from facility_types where name='" + facilityType + "'), (SELECT id FROM program_products WHERE programId=(SELECT ID from programs where code='" + program + "') AND productId=(SELECT id FROM products WHERE  code='" + iniProductCodeFullSupply + i + "')), 3),\n";
+      insertSql = insertSql + "((select id from facility_types where name='" + facilityType + "'), (SELECT id FROM program_products WHERE programId=(SELECT ID from programs where code='" + program + "') AND productId=(SELECT id FROM products WHERE  code='" + iniProductCodeNonFullSupply + i + "')), 3),\n";
+    }
+
+    insertSql = insertSql.substring(0, insertSql.length() - 2) + ";";
+
+    update(insertSql);
+
+  }
+
+  public void setupMultipleCategoryProducts(String program, String facilityType, int numberOfCategories, boolean defaultDisplayOrder) throws SQLException, IOException {
+
+    update("delete from facility_approved_products;");
+    update("delete from program_products;");
+    update("delete from products;");
+    update("delete from product_categories;");
+
+    String insertSql = "";
+    String iniProductCodeNonFullSupply = "NF";
+    String iniProductCodeFullSupply = "F";
+
+    insertSql = "INSERT INTO product_categories (code, name, displayOrder) values\n";
+    for (int i = 0; i < numberOfCategories; i++) {
+      if (defaultDisplayOrder) {
+        insertSql = insertSql + "('C" + i + "',  'Antibiotics" + i + "',1),\n";
+      } else {
+        insertSql = insertSql + "('C" + i + "',  'Antibiotics" + i + "'," + i + "),\n";
+      }
+    }
+
+    insertSql = insertSql.substring(0, insertSql.length() - 2) + ";";
+    update(insertSql);
+
+
+    insertSql = "INSERT INTO products (code,    alternateItemCode,  manufacturer,       manufacturerCode,  manufacturerBarcode,   mohBarcode,   gtin,   type,         primaryName,    fullName,       genericName,    alternateName,    description,      strength,    formId,  dosageUnitId, dispensingUnit,  dosesPerDispensingUnit,  packSize,  alternatePackSize,  storeRefrigerated,   storeRoomTemperature,   hazardous,  flammable,   controlledSubstance,  lightSensitive,  approvedByWho,  contraceptiveCyp,  packLength,  packWidth, packHeight,  packWeight,  packsPerCarton, cartonLength,  cartonWidth,   cartonHeight, cartonsPerPallet,  expectedShelfLife,  specialStorageInstructions, specialTransportInstructions, active,  fullSupply, tracer,   packRoundingThreshold,  roundToZero,  archived, displayOrder, categoryId) values\n";
+
+    for (int i = 0; i < 11; i++) {
+      insertSql = insertSql + "('" + iniProductCodeFullSupply + i + "',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     TRUE,       TRUE,         1,                 FALSE,      TRUE,    1, (select id from product_categories where code='C" + i + "')),\n";
+      insertSql = insertSql + "('" + iniProductCodeNonFullSupply + i + "',  'a',             'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,      TRUE,         1,                 FALSE,      TRUE,    1, (select id from product_categories where code='C" + i + "')),\n";
+    }
+
+    insertSql = insertSql.substring(0, insertSql.length() - 2) + ";\n";
+
+    update(insertSql);
+
+    insertSql = "INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active) VALUES\n";
+
+    for (int i = 0; i < 11; i++) {
+      insertSql = insertSql + "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + iniProductCodeFullSupply + i + "'), 30, 12.5, true),\n";
+      insertSql = insertSql + "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + iniProductCodeNonFullSupply + i + "'), 30, 12.5, true),\n";
+    }
+
+    insertSql = insertSql.substring(0, insertSql.length() - 2) + ";";
+    update(insertSql);
+
+    insertSql = "INSERT INTO facility_approved_products(facilityTypeId, programProductId, maxMonthsOfStock) VALUES\n";
+
+    for (int i = 0; i < 11; i++) {
+      insertSql = insertSql + "((select id from facility_types where name='" + facilityType + "'), (SELECT id FROM program_products WHERE programId=(SELECT ID from programs where code='" + program + "') AND productId=(SELECT id FROM products WHERE  code='" + iniProductCodeFullSupply + i + "')), 3),\n";
+      insertSql = insertSql + "((select id from facility_types where name='" + facilityType + "'), (SELECT id FROM program_products WHERE programId=(SELECT ID from programs where code='" + program + "') AND productId=(SELECT id FROM products WHERE  code='" + iniProductCodeNonFullSupply + i + "')), 3),\n";
+    }
+
+    insertSql = insertSql.substring(0, insertSql.length() - 2) + ";";
+
+    update(insertSql);
+
+  }
+
+  public void assignRight(String roleName, String roleRight) throws SQLException, IOException {
+    update("INSERT INTO role_rights\n" +
+      "  (roleId, rightName) VALUES\n" +
+      "  ((select id from roles where name='" + roleName + "'), '" + roleRight + "');");
+  }
+
+  public void updateRoleRight(String previousRight, String newRight) throws SQLException {
+    update("update role_rights set rightName='" + newRight + "' where rightName='" + previousRight + "';");
+  }
+
+  public String getAuthToken(String vendorName) throws IOException, SQLException {
+    ResultSet rs = query("select authtoken from vendors where name='" + vendorName + "'");
+
+    if (rs.next()) {
+      return rs.getString("authtoken");
+    }
+    return "";
+
+  }
+
+  public void insertVendor(String vendorName) throws SQLException {
+    update("delete from vendors where name='" + vendorName + "';");
+    update("INSERT INTO VENDORS (name, active) VALUES ('" + vendorName + "', true);");
+  }
 }
 

@@ -1,6 +1,13 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -9,7 +16,6 @@ import org.openlmis.core.hash.Encoder;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -17,9 +23,9 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @JsonSerialize(include = NON_EMPTY)
-public class User implements Importable {
-  private Integer id;
+public class User extends BaseModel implements Importable {
   @ImportField(mandatory = true, name = "User Name")
   private String userName;
 
@@ -53,13 +59,21 @@ public class User implements Importable {
 
   private Integer facilityId;
   private Integer modifiedBy;
-  private Date modifiedDate;
+
   private List<RoleAssignment> supervisorRoles;
   private List<RoleAssignment> homeFacilityRoles;
+  private RoleAssignment adminRole;
 
   private static final String INVALID_EMAIL_ERROR_CODE = "user.email.invalid";
 
   private static final String INVALID_USER_NAME_ERROR_CODE = "user.userName.invalid";
+  private Integer vendorId;
+
+  public User(Integer id, String userName) {
+    this.id = id;
+    this.userName = userName;
+  }
+
 
   public void validate() {
     validateEmail();
@@ -82,4 +96,7 @@ public class User implements Importable {
       throw new DataException(INVALID_USER_NAME_ERROR_CODE);
   }
 
+  public User basicInformation() {
+    return new User(id, userName);
+  }
 }

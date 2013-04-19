@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.rnr.repository;
 
 import org.junit.Before;
@@ -5,6 +11,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Facility;
@@ -15,9 +22,8 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.rnr.domain.*;
-import org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper;
-import org.openlmis.rnr.repository.mapper.RequisitionMapper;
-import org.openlmis.rnr.repository.mapper.RnrLineItemMapper;
+import org.openlmis.rnr.repository.mapper.*;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +34,11 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
-import static org.openlmis.rnr.domain.RnrStatus.ORDERED;
+import static org.openlmis.rnr.domain.RnrStatus.RELEASED;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(MockitoJUnitRunner.class)
+@PrepareForTest(RequisitionStatusChange.class)
 public class RequisitionRepositoryTest {
 
   public static final Integer FACILITY_ID = 1;
@@ -48,11 +56,18 @@ public class RequisitionRepositoryTest {
   @Mock
   private LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
   @Mock
+  private CommentMapper commentMapper;
+  @Mock
   private SupervisoryNodeRepository supervisoryNodeRepository;
   @Mock
   private CommaSeparator separator;
 
+  @Mock
+  private RequisitionStatusChangeMapper requisitionStatusChangeMapper;
+
+  @InjectMocks
   private RequisitionRepository requisitionRepository;
+
   private LossesAndAdjustments lossAndAdjustmentForLineItem = new LossesAndAdjustments();
   private RnrLineItem rnrLineItem1;
   private RnrLineItem rnrLineItem2;
@@ -60,7 +75,6 @@ public class RequisitionRepositoryTest {
 
   @Before
   public void setUp() throws Exception {
-    requisitionRepository = new RequisitionRepository(requisitionMapper, rnrLineItemMapper, lossesAndAdjustmentsMapper, separator);
     rnr = new Rnr();
     rnrLineItem1 = new RnrLineItem();
     rnrLineItem1.setId(1);
@@ -107,8 +121,8 @@ public class RequisitionRepositoryTest {
     Rnr expectedRnr = null;
     Facility facility = new Facility(FACILITY_ID);
     Program program = new Program(HIV);
-    when(requisitionMapper.getRequisition(facility, program, null)).thenReturn(expectedRnr);
-    Rnr rnr = requisitionRepository.getRequisition(facility, program, null);
+    when(requisitionMapper.getRequisitionWithLineItems(facility, program, null)).thenReturn(expectedRnr);
+    Rnr rnr = requisitionRepository.getRequisitionWithLineItems(facility, program, null);
     assertThat(rnr, is(expectedRnr));
   }
 
@@ -202,16 +216,16 @@ public class RequisitionRepositoryTest {
   @Test
   public void shouldGetOrderBatches() throws Exception {
     List<Rnr> expectedRequisitions = new ArrayList<>();
-    when(requisitionMapper.getByStatus(ORDERED)).thenReturn(expectedRequisitions);
+    when(requisitionMapper.getByStatus(RELEASED)).thenReturn(expectedRequisitions);
 
-    List<Rnr> rnrs = requisitionRepository.getByStatus(ORDERED);
+    List<Rnr> rnrs = requisitionRepository.getByStatus(RELEASED);
 
     assertThat(rnrs, is(expectedRequisitions));
-    verify(requisitionMapper).getByStatus(ORDERED);
+    verify(requisitionMapper).getByStatus(RELEASED);
   }
 
   @Test
-  public void shouldGetCategoryCount(){
+  public void shouldGetCategoryCount() {
 
     boolean fullSupply = true;
     when(rnrLineItemMapper.getCategoryCount(rnr, fullSupply)).thenReturn(10);
@@ -222,4 +236,31 @@ public class RequisitionRepositoryTest {
     verify(rnrLineItemMapper).getCategoryCount(rnr, fullSupply);
 
   }
+
+  @Test
+  public void shouldGetCommentsForARnR() throws Exception {
+    List<Comment> comments = new ArrayList<>();
+    when(commentMapper.getByRnrId(1)).thenReturn(comments);
+    List<Comment> returnedComments = requisitionRepository.getCommentsByRnrID(1);
+    verify(commentMapper).getByRnrId(1);
+    assertThat(returnedComments, is(comments));
+  }
+
+  @Test
+  public void shouldInsertAComment() throws Exception {
+    Comment comment = new Comment();
+    requisitionRepository.insertComment(comment);
+
+    verify(commentMapper).insert(comment);
+  }
+
+  @Test
+  public void shouldLogRequisitionStatusChanges() throws Exception {
+    RequisitionStatusChange requisitionStatusChange = new RequisitionStatusChange();
+    Rnr requisition = new Rnr();
+    whenNew(RequisitionStatusChange.class).withArguments(requisition).thenReturn(requisitionStatusChange);
+    requisitionRepository.logStatusChange(requisition);
+    verify(requisitionStatusChangeMapper).insert(requisitionStatusChange);
+  }
+
 }

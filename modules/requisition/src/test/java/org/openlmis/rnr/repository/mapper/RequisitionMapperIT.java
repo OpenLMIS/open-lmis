@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.rnr.repository.mapper;
 
 import org.joda.time.DateTime;
@@ -6,18 +12,18 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.*;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.repository.mapper.*;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
-import org.openlmis.rnr.domain.OrderBatch;
-import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrLineItem;
-import org.openlmis.rnr.domain.RnrStatus;
+import org.openlmis.rnr.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -69,9 +75,13 @@ public class RequisitionMapperIT {
   private FacilityApprovedProductMapper facilityApprovedProductMapper;
   @Autowired
   private ProgramMapper programMapper;
-
+  @Autowired
+  private CommentMapper commentMapper;
+  @Autowired
+  private QueryExecutor queryExecutor;
 
   private SupervisoryNode supervisoryNode;
+
 
   @Before
   public void setUp() {
@@ -94,7 +104,7 @@ public class RequisitionMapperIT {
   }
 
   @Test
-  public void shouldReturnRequisitionById() {
+  public void shouldGetRequisitionById() {
     Rnr requisition = insertRequisition(processingPeriod1, INITIATED);
     Product product = insertProduct(true, "P1");
     RnrLineItem fullSupplyLineItem = make(a(defaultRnrLineItem, with(fullSupply, true), with(productCode, product.getCode())));
@@ -103,6 +113,11 @@ public class RequisitionMapperIT {
     nonFullSupplyLineItem.setRnrId(requisition.getId());
     lineItemMapper.insert(fullSupplyLineItem);
     lineItemMapper.insert(nonFullSupplyLineItem);
+
+    User author = new User();
+    author.setId(1);
+    Comment comment = new Comment(null, requisition.getId(), author, "A comment", null);
+    commentMapper.insert(comment);
 
     Rnr fetchedRequisition = mapper.getById(requisition.getId());
 
@@ -144,7 +159,7 @@ public class RequisitionMapperIT {
     orderBatch.setCreatedByUserId(1);
     mapper.createOrderBatch(orderBatch);
 
-    Rnr rnr = insertRequisition(processingPeriod1, ORDERED);
+    Rnr rnr = insertRequisition(processingPeriod1, RELEASED);
     rnr.setOrderBatch(orderBatch);
 
     mapper.update(rnr);
@@ -174,7 +189,7 @@ public class RequisitionMapperIT {
     insertRnrLineItem(requisition, fullSupplyFacilityApprovedProduct);
     insertRnrLineItem(requisition, nonFullSupplyFacilityApprovedProduct);
 
-    Rnr returnedRequisition = mapper.getRequisition(facility, new Program(PROGRAM_ID), processingPeriod1);
+    Rnr returnedRequisition = mapper.getRequisitionWithLineItems(facility, new Program(PROGRAM_ID), processingPeriod1);
 
     assertThat(returnedRequisition.getId(), is(requisition.getId()));
     assertThat(returnedRequisition.getFacility().getId(), is(facility.getId()));
@@ -311,8 +326,11 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldGetOrders() throws Exception {
-    Rnr orderedRequisition1 = insertRequisition(processingPeriod1, ORDERED);
-    Rnr orderedRequisition2 = insertRequisition(processingPeriod2, ORDERED);
+
+    Rnr orderedRequisition1 = insertRequisition(processingPeriod1, RELEASED);
+    Rnr orderedRequisition2 = insertRequisition(processingPeriod2, RELEASED);
+    Date today = DateTime.now().toDate();
+    Date oneYearBack = DateTime.now().minusYears(1).toDate();
 
     OrderBatch batch1 = new OrderBatch();
     batch1.setCreatedByUserId(1);
@@ -328,22 +346,33 @@ public class RequisitionMapperIT {
     orderedRequisition2.setOrderBatch(batch2);
     mapper.update(orderedRequisition2);
 
-    List<Rnr> orders = mapper.getByStatus(ORDERED);
+    updateOrderBatchCreatedTime(batch1, oneYearBack);
+    updateOrderBatchCreatedTime(batch2, today);
+
+    List<Rnr> orders = mapper.getByStatus(RELEASED);
 
     assertThat(orders.size(), is(2));
-    assertThat(orders.get(0).getId(), is(orderedRequisition1.getId()));
-    assertThat(orders.get(0).getFacility().getId(), is(orderedRequisition1.getFacility().getId()));
-    assertThat(orders.get(0).getProgram().getId(), is(orderedRequisition1.getProgram().getId()));
-    assertThat(orders.get(0).getPeriod().getId(), is(orderedRequisition1.getPeriod().getId()));
-    assertThat(orders.get(0).getOrderBatch().getId(), is(orderedRequisition1.getOrderBatch().getId()));
-    assertThat(orders.get(0).getOrderBatch().getCreatedByUserId(), is(orderedRequisition1.getOrderBatch().getCreatedByUserId()));
 
-    assertThat(orders.get(1).getId(), is(orderedRequisition2.getId()));
-    assertThat(orders.get(1).getFacility().getId(), is(orderedRequisition2.getFacility().getId()));
-    assertThat(orders.get(1).getProgram().getId(), is(orderedRequisition2.getProgram().getId()));
-    assertThat(orders.get(1).getPeriod().getId(), is(orderedRequisition2.getPeriod().getId()));
-    assertThat(orders.get(1).getOrderBatch().getId(), is(orderedRequisition2.getOrderBatch().getId()));
-    assertThat(orders.get(1).getOrderBatch().getCreatedByUserId(), is(orderedRequisition2.getOrderBatch().getCreatedByUserId()));
+    assertThat(orders.get(0).getId(), is(orderedRequisition2.getId()));
+    assertThat(orders.get(0).getFacility().getId(), is(orderedRequisition2.getFacility().getId()));
+    assertThat(orders.get(0).getProgram().getId(), is(orderedRequisition2.getProgram().getId()));
+    assertThat(orders.get(0).getPeriod().getId(), is(orderedRequisition2.getPeriod().getId()));
+    assertThat(orders.get(0).getOrderBatch().getId(), is(orderedRequisition2.getOrderBatch().getId()));
+    assertThat(orders.get(0).getOrderBatch().getCreatedByUserId(), is(orderedRequisition2.getOrderBatch().getCreatedByUserId()));
+
+    assertThat(orders.get(1).getId(), is(orderedRequisition1.getId()));
+    assertThat(orders.get(1).getFacility().getId(), is(orderedRequisition1.getFacility().getId()));
+    assertThat(orders.get(1).getProgram().getId(), is(orderedRequisition1.getProgram().getId()));
+    assertThat(orders.get(1).getPeriod().getId(), is(orderedRequisition1.getPeriod().getId()));
+    assertThat(orders.get(1).getOrderBatch().getId(), is(orderedRequisition1.getOrderBatch().getId()));
+    assertThat(orders.get(1).getOrderBatch().getCreatedByUserId(), is(orderedRequisition1.getOrderBatch().getCreatedByUserId()));
+  }
+
+  private int updateOrderBatchCreatedTime(OrderBatch batch1, Date date) throws SQLException {
+    List paramList = new ArrayList();
+    paramList.add(new java.sql.Date(date.getTime()));
+    paramList.add(batch1.getId());
+    return queryExecutor.executeUpdate("Update Order_Batches set createTimeStamp = ? where id = ?", paramList);
   }
 
   private Rnr insertRequisition(ProcessingPeriod period, RnrStatus status) {
@@ -362,7 +391,8 @@ public class RequisitionMapperIT {
   }
 
   private FacilityApprovedProduct insertFacilityApprovedProduct(ProgramProduct programProduct) {
-    FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct("warehouse", programProduct, 3);
+    FacilityApprovedProduct facilityApprovedProduct = make(a(FacilityApprovedProductBuilder.defaultFacilityApprovedProduct));
+    facilityApprovedProduct.setProgramProduct(programProduct);
     facilityApprovedProductMapper.insert(facilityApprovedProduct);
     return facilityApprovedProduct;
   }
@@ -387,8 +417,8 @@ public class RequisitionMapperIT {
 
   private ProcessingPeriod insertPeriod(String name) {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod,
-      with(scheduleId, processingSchedule.getId()),
-      with(ProcessingPeriodBuilder.name, name)));
+        with(scheduleId, processingSchedule.getId()),
+        with(ProcessingPeriodBuilder.name, name)));
 
     processingPeriodMapper.insert(processingPeriod);
 

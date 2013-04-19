@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.email.service;
 
 import org.junit.Rule;
@@ -18,8 +24,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-//@RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration(locations = "classpath*:applicationContext-email.xml")
 public class EmailServiceTest {
 
   @Rule
@@ -27,23 +31,15 @@ public class EmailServiceTest {
 
 
   @Test
-  public void shouldSendEmailMessage() throws Exception{
+  public void shouldSendEmailMessage() throws Exception {
     JavaMailSender mailSender = mock(JavaMailSender.class);
     SimpleMailMessage mailMessage = mock(SimpleMailMessage.class);
     EmailService service = new EmailService(mailSender);
-    service.setSimpleMailMessage(mailMessage);
     EmailMessage message = make(a(EmailMessageBuilder.defaultEmailMessage,
       with(EmailMessageBuilder.to, "alert.open.lmis@gmail.com")));
-    boolean status = false;
-      status = service.send(message).get();
+    boolean status = service.send(message).get();
     assertTrue(status);
     verify(mailSender).send(any(SimpleMailMessage.class));
-    verify(mailMessage).setTo(message.getTo());
-    verify(mailMessage).setFrom(message.getFrom());
-    verify(mailMessage).setSubject(message.getSubject());
-    verify(mailMessage).setText(message.getText());
-    verify(mailMessage).setSentDate(message.getSentDate());
-    verify(mailMessage).setReplyTo(message.getReplyTo());
   }
 
   @Test
@@ -51,7 +47,6 @@ public class EmailServiceTest {
     JavaMailSender mailSender = mock(JavaMailSender.class);
     SimpleMailMessage mailMessage = mock(SimpleMailMessage.class);
     EmailService service = new EmailService(mailSender);
-    service.setSimpleMailMessage(mailMessage);
     EmailMessage message = make(a(EmailMessageBuilder.defaultEmailMessage,
       with(EmailMessageBuilder.to, "")));
     expectedException.expect(EmailException.class);

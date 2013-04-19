@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.rnr.builder;
 
 import com.natpryce.makeiteasy.Instantiator;
@@ -28,10 +34,14 @@ public class RnrLineItemBuilder {
   public static final Property<RnrLineItem, Integer> packRoundingThreshold = newProperty();
   public static final Property<RnrLineItem, Integer> packSize = newProperty();
   public static final Property<RnrLineItem, Integer> quantityApproved = newProperty();
-  public static final Property<RnrLineItem,String> reasonForRequestedQuantity = newProperty();
+  public static final Property<RnrLineItem, String> reasonForRequestedQuantity = newProperty();
   public static final Property<RnrLineItem, Integer> packsToShip = newProperty();
+  public static final Property<RnrLineItem, Integer> productCategoryDisplayOrder = newProperty();
+  public static final Property<RnrLineItem, Integer> productDisplayOrder = newProperty();
 
   public static final Property<RnrLineItem, Integer> quantityRequested = newProperty();
+  private static Property<RnrLineItem, String> productCategory = newProperty();
+
   public static final LossesAndAdjustments ONE_LOSS = new LossesAndAdjustments() {{
     setQuantity(1);
     LossesAndAdjustmentsType type = new LossesAndAdjustmentsType();
@@ -52,6 +62,10 @@ public class RnrLineItemBuilder {
   public static final boolean ROUND_To_ZERO = true;
   public static final int QUANTITY_APPROVED = 2;
   public static final int PACKS_TO_SHIP = 2;
+  public static final int PRODUCT_CATEGORY_DISPLAY_ORDER = 1;
+  public static final String PRODUCT_CODE = "P999";
+  public static final Integer PRODUCT_DISPLAY_ORDER = null;
+  public static final String PRODUCT_CATEGORY = "C1";
 
   public static final Instantiator<RnrLineItem> defaultRnrLineItem = new Instantiator<RnrLineItem>() {
 
@@ -59,7 +73,8 @@ public class RnrLineItemBuilder {
     @Override
     public RnrLineItem instantiate(PropertyLookup<RnrLineItem> lookup) {
       RnrLineItem rnrLineItem = new RnrLineItem();
-      rnrLineItem.setProductCode(lookup.valueOf(productCode, "P999"));
+      rnrLineItem.setProductCode(lookup.valueOf(productCode, PRODUCT_CODE));
+      rnrLineItem.setProductCategory(lookup.valueOf(productCategory, PRODUCT_CATEGORY));
       rnrLineItem.setBeginningBalance(lookup.valueOf(beginningBalance, BEGINNING_BALANCE));
       rnrLineItem.setQuantityReceived(lookup.valueOf(quantityReceived, QUANTITY_RECEIVED));
 
@@ -92,6 +107,8 @@ public class RnrLineItemBuilder {
       rnrLineItem.setReasonForRequestedQuantity(lookup.valueOf(reasonForRequestedQuantity, REASON_FOR_REQUESTED_QUANTITY));
       rnrLineItem.setPacksToShip(lookup.valueOf(packsToShip, PACKS_TO_SHIP));
       rnrLineItem.setRemarks(REMARKS);
+      rnrLineItem.setProductCategoryDisplayOrder(lookup.valueOf(productCategoryDisplayOrder, PRODUCT_CATEGORY_DISPLAY_ORDER));
+      rnrLineItem.setProductDisplayOrder(lookup.valueOf(productDisplayOrder, PRODUCT_DISPLAY_ORDER));
       return rnrLineItem;
     }
   };

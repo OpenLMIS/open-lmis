@@ -1,0 +1,49 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+apply plugin: 'cobertura'
+
+dependencies {
+
+    compile 'org.springframework:spring-core:3.1.1.RELEASE',
+            'org.springframework:spring-aspects:3.1.1.RELEASE',
+            'org.aspectj:aspectjrt:1.7.0',
+            'javax.servlet:servlet-api:2.5',
+            'commons-lang:commons-lang:2.6',
+            'org.slf4j:slf4j-api:1.7.5',
+            'org.springframework.integration:spring-integration-core:2.2.3.RELEASE',
+            'org.springframework.integration:spring-integration-stream:2.2.3.RELEASE',
+            'org.springframework.integration:spring-integration-ftp:2.2.3.RELEASE',
+            'org.springframework.security:spring-security-core:3.1.2.RELEASE',
+            project(':modules:core'),
+            project(':modules:upload'),
+            project(':modules:requisition')
+
+
+    compile('net.sf.supercsv:super-csv-dozer:2.0.1') {
+        exclude module: 'commons-beanutils'
+    }
+    testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
+            project(path : ':modules:core', configuration: 'testFixtures'),
+            project(path : ':modules:requisition', configuration: 'testFixtures')
+
+
+    configurations {
+        testFixtures {
+            extendsFrom testRuntime
+        }
+    }
+
+    task testJar(type: Jar) {
+        from sourceSets.test.output
+        classifier = 'test'
+    }
+
+    artifacts {
+        testFixtures testJar
+    }
+
+}

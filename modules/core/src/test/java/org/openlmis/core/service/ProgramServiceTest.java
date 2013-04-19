@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.service;
 
 import org.junit.Before;
@@ -46,6 +52,13 @@ public class ProgramServiceTest {
 
     verify(programRepository).getById(1);
     assertThat(actualProgram, is(expectedProgram));
+  }
+
+  @Test
+  public void shouldSetTemplateConfiguredFlag() {
+    service.setTemplateConfigured(1);
+    verify(programRepository).setTemplateConfigured(1);
+
   }
 }
 

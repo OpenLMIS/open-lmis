@@ -1,14 +1,21 @@
-function ConvertToOrderListController($scope, requisitionList, RequisitionOrder, RequisitionForConvertToOrder) {
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+function ConvertToOrderListController($scope, requisitionList, RequisitionOrder, RequisitionForConvertToOrder, $dialog) {
   $scope.requisitions = requisitionList;
   $scope.filteredRequisitions = $scope.requisitions;
   $scope.selectedItems = [];
   $scope.message = "";
+  $scope.noRequisitionSelectedMessage = "";
 
   $scope.gridOptions = { data: 'filteredRequisitions',
     multiSelect: true,
     selectedItems: $scope.selectedItems,
-    displayFooter: false,
-    displaySelectionCheckbox: true,
+    showFooter: false,
+    showSelectionCheckbox: true,
     showColumnMenu: false,
     sortInfo: { field: 'submittedDate', direction: 'ASC'},
     showFilter: false,
@@ -36,10 +43,36 @@ function ConvertToOrderListController($scope, requisitionList, RequisitionOrder,
     $scope.resultCount = $scope.filteredRequisitions.length;
   };
 
+  $scope.dialogCloseCallback = function (result) {
+    if(result) {
+      convert();
+    }
+  };
+
+  showConfirmModal = function () {
+    var options = {
+      id: "confirmDialog",
+      header: "Confirm Action",
+      body: "Are you sure? Please confirm."
+    };
+    OpenLmisDialog.new(options, $scope.dialogCloseCallback, $dialog);
+  };
+
   $scope.convertToOrder = function () {
+    $scope.message = "";
+    $scope.noRequisitionSelectedMessage = "";
+    if ($scope.gridOptions.selectedItems.length == 0) {
+      $scope.noRequisitionSelectedMessage = "Please select at least one Requisition for Converting to Order.";
+      return;
+    }
+    showConfirmModal();
+  };
+
+  var convert = function () {
     var successHandler = function () {
       RequisitionForConvertToOrder.get({}, function (data) {
         $scope.requisitions = data.rnr_list;
+        $scope.selectedItems.length = 0;
         $scope.filterRequisitions();
       });
 
@@ -51,13 +84,9 @@ function ConvertToOrderListController($scope, requisitionList, RequisitionOrder,
       $scope.error = "Error Occurred";
     };
 
-    if ($scope.gridOptions.selectedItems.length == 0) {
-      $scope.message = "Please select atleast one Requisition for Converting to Order.";
-      return;
-    }
     var rnrList = {"rnrList": $scope.gridOptions.selectedItems};
     RequisitionOrder.save({}, rnrList, successHandler, errorHandler);
-  };
+  }
 
   function contains(string, query) {
     return string.toLowerCase().indexOf(query.toLowerCase()) != -1;

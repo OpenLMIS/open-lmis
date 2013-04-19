@@ -1,3 +1,6 @@
+-- Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+-- If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
 Drop TABLE IF EXISTS program_rnr_columns;
 CREATE TABLE program_rnr_columns(
     id SERIAL PRIMARY KEY ,
@@ -10,3 +13,5 @@ CREATE TABLE program_rnr_columns(
     formulaValidationRequired BOOLEAN,
     UNIQUE (programId, masterColumnId)
 );
+
+CREATE INDEX program_id_index ON program_rnr_columns(programId);

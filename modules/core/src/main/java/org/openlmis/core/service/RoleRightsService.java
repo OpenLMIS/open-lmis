@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
@@ -6,10 +12,7 @@ import org.openlmis.core.repository.RoleRightsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 
@@ -33,7 +36,10 @@ public class RoleRightsService {
   }
 
   public Set<Right> getAllRights() {
-    return new LinkedHashSet<>(asList(Right.values()));
+    TreeSet<Right> rights = new TreeSet<>(new Right.RightComparator());
+    rights.addAll(asList(Right.values()));
+    return rights;
+
   }
 
   public void saveRole(Role role) {
@@ -57,17 +63,27 @@ public class RoleRightsService {
     return roleRightsRepository.getAllRightsForUser(userId);
   }
 
-  public List<Right> getRightsForUserAndFacilityProgram(Integer userId, Facility facility, Program program) {
-    List<Right> result = new ArrayList<>();
-    Facility homeFacility = facilityService.getHomeFacility(userId);
-    if (homeFacility!=null && homeFacility.getId().equals(facility.getId()))
-      result.addAll(roleRightsRepository.getRightsForUserOnHomeFacilityAndProgram(userId, program));
-
-    SupervisoryNode supervisoryNode = supervisoryNodeService.getFor(facility, program);
-    List<SupervisoryNode> supervisoryNodes = supervisoryNodeService.getAllParentSupervisoryNodesInHierarchy(supervisoryNode);
-
-    if (supervisoryNode != null)
-      result.addAll(roleRightsRepository.getRightsForUserOnSupervisoryNodeAndProgram(userId, supervisoryNodes, program));
+  public Set<Right> getRightsForUserAndFacilityProgram(Integer userId, Facility facility, Program program) {
+    Set<Right> result = new HashSet<>();
+    result.addAll(getHomeFacilityRights(userId, facility, program));
+    result.addAll(getSupervisoryRights(userId, facility, program));
     return result;
+  }
+
+  private List<Right> getSupervisoryRights(Integer userId, Facility facility, Program program) {
+    SupervisoryNode supervisoryNode = supervisoryNodeService.getFor(facility, program);
+    if (supervisoryNode != null) {
+      List<SupervisoryNode> supervisoryNodes = supervisoryNodeService.getAllParentSupervisoryNodesInHierarchy(supervisoryNode);
+      return roleRightsRepository.getRightsForUserOnSupervisoryNodeAndProgram(userId, supervisoryNodes, program);
+    }
+    return Collections.emptyList();
+  }
+
+  private List<Right> getHomeFacilityRights(Integer userId, Facility facility, Program program) {
+    Facility homeFacility = facilityService.getHomeFacility(userId);
+    if (homeFacility != null && homeFacility.getId().equals(facility.getId())) {
+      return roleRightsRepository.getRightsForUserOnHomeFacilityAndProgram(userId, program);
+    }
+    return Collections.emptyList();
   }
 }

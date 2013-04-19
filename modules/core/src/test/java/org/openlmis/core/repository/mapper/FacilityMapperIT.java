@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository.mapper;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -13,9 +19,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Calendar;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.lang.Boolean.FALSE;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
@@ -141,16 +149,62 @@ public class FacilityMapperIT {
     assertThat(resultFacility.getLongitude(), is(-321.87654));
   }
 
+@Test
+  public void shouldInsertFacilityWithSuppliedModifiedDateIfNotNull() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    facility.setLatitude(123.45678);
+    facility.setLongitude(-321.87654);
+
+    Calendar calendar = Calendar.getInstance();
+    calendar.set(Calendar.MONTH, Calendar.JANUARY);
+    facility.setModifiedDate(calendar.getTime());
+    mapper.insert(facility);
+    Facility resultFacility = mapper.getById(facility.getId());
+    assertThat(resultFacility.getCode(), is("F10010"));
+    assertThat(resultFacility.getModifiedDate(), is(calendar.getTime()));
+  }
+
+@Test
+  public void shouldInsertFacilityWithDbDefalutDateIfSuppliedDateIsNull() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    facility.setLatitude(123.45678);
+    facility.setLongitude(-321.87654);
+
+    facility.setModifiedDate(null);
+    mapper.insert(facility);
+    Facility resultFacility = mapper.getById(facility.getId());
+    assertThat(resultFacility.getCode(), is("F10010"));
+    assertThat(resultFacility.getModifiedDate(), is(notNullValue()));
+  }
+
   @Test
-  public void shouldUpdateFacility() throws Exception {
+  public void shouldUpdateFacilityWithDefaultDbTimeWhenModifiedDateIsNull() throws Exception {
     Facility facility = make(a(defaultFacility));
     mapper.insert(facility);
     facility.setCode("NewTestCode");
+    facility.setModifiedDate(null);
 
     mapper.update(facility);
 
     Facility updatedFacility = mapper.getById(facility.getId());
     assertThat(updatedFacility.getCode(), is(facility.getCode()));
+    assertThat(updatedFacility.getModifiedDate(), is(notNullValue()));
+  }
+
+  @Test
+  public void shouldUpdateFacilityWithSuppliedModifiedTime() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    mapper.insert(facility);
+    facility.setCode("NewTestCode");
+    Calendar calendar = Calendar.getInstance();
+    calendar.set(Calendar.MONTH, Calendar.JANUARY);
+    facility.setModifiedDate(calendar.getTime());
+
+    mapper.update(facility);
+
+    Facility updatedFacility = mapper.getById(facility.getId());
+    assertThat(updatedFacility.getCode(), is(facility.getCode()));
+    assertThat(updatedFacility.getModifiedDate(), is(calendar.getTime()));
   }
 
   @Test
@@ -163,21 +217,21 @@ public class FacilityMapperIT {
   }
 
   @Test
-  public void shouldReturnFacilityTypeIdForCode() {
-    Integer id = mapper.getFacilityTypeIdForCode(FACILITY_TYPE_CODE);
-    assertThat(id, is(1));
+  public void shouldReturnFacilityTypeForCode() {
+    FacilityType facilityType = mapper.getFacilityTypeForCode(FACILITY_TYPE_CODE);
+    assertThat(facilityType.getId(), is(1));
 
-    id = mapper.getFacilityTypeIdForCode("InValid");
-    assertThat(id, is(nullValue()));
+    facilityType = mapper.getFacilityTypeForCode("InValid");
+    assertThat(facilityType, is(nullValue()));
   }
 
   @Test
   public void shouldReturnFacilityTypeById() {
-    Integer id = mapper.getFacilityTypeIdForCode(FACILITY_TYPE_CODE);
+    FacilityType facilityTypeWithId = mapper.getFacilityTypeForCode(FACILITY_TYPE_CODE);
 
-    FacilityType facilityType = mapper.getFacilityTypeById(id);
+    FacilityType facilityType = mapper.getFacilityTypeById(facilityTypeWithId.getId());
     assertThat(facilityType, is(notNullValue()));
-    assertThat(facilityType.getId(), is(id));
+    assertThat(facilityType.getId(), is(facilityTypeWithId.getId()));
     assertThat(facilityType.getCode(), is(FACILITY_TYPE_CODE));
   }
 
@@ -237,7 +291,7 @@ public class FacilityMapperIT {
 
     programSupportedMapper.addSupportedProgram(make(a(defaultProgramSupported,
       with(supportedFacilityId, facilitySupportingProgramInRG1.getId()),
-      with(supportedProgram,make(a(defaultProgram, with(programCode, "Random")))))));
+      with(supportedProgram, make(a(defaultProgram, with(programCode, "Random")))))));
 
     programSupportedMapper.addSupportedProgram(make(a(defaultProgramSupported,
       with(supportedFacilityId, facilitySupportingProgramNotInAnyRG.getId()),
@@ -276,7 +330,7 @@ public class FacilityMapperIT {
     Facility homeFacility = make(a(defaultFacility));
     mapper.insert(homeFacility);
 
-    Role r1 = new Role("r1", "random description");
+    Role r1 = new Role("r1", FALSE, "random description");
     roleRightsMapper.insertRole(r1);
 
     roleRightsMapper.createRoleRight(r1.getId(), CREATE_REQUISITION);
@@ -332,5 +386,18 @@ public class FacilityMapperIT {
         return facility.getCode().equals(facilityInRG2.getCode());
       }
     }));
+  }
+
+  @Test
+  public void shouldGetFacilityByCode() throws Exception {
+    Facility facility = make(a(defaultFacility));
+
+    mapper.insert(facility);
+
+    Facility facilityFromDatabase = mapper.getByCode(facility.getCode());
+
+    assert (facilityFromDatabase.getId()).equals(facility.getId());
+    assert (facilityFromDatabase.getCode()).equals(facility.getCode());
+    assert (facilityFromDatabase.getName()).equals(facility.getName());
   }
 }

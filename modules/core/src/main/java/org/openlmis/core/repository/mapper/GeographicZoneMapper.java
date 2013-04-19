@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
@@ -11,14 +17,14 @@ import java.util.List;
 public interface GeographicZoneMapper {
 
   @Insert("INSERT INTO geographic_zones (code, name, levelId, parent, modifiedBy, modifiedDate) " +
-    "VALUES (#{code}, #{name}, #{level.id}, #{parent.id}, #{modifiedBy}, DEFAULT)")
+    "VALUES (#{code}, #{name}, #{level.id}, #{parent.id}, #{modifiedBy}, #{modifiedDate})")
   @Options(useGeneratedKeys = true)
   Integer insert(GeographicZone geographicZone);
 
   @Select("SELECT * FROM geographic_levels WHERE LOWER(code) = LOWER(#{code})")
   GeographicLevel getGeographicLevelByCode(String code);
 
-  @Select({"SELECT GZ.id, GZ.code, GZ.name, GL.id as levelId, GL.code as levelCode, GL.name as levelName,",
+  @Select({"SELECT GZ.id, GZ.code, GZ.name, GZ.modifiedDate, GL.id as levelId, GL.code as levelCode, GL.name as levelName,",
     "GL.levelNumber as levelNumber FROM",
     "geographic_zones GZ, geographic_levels GL WHERE LOWER(GZ.code) = LOWER(#{code}) AND GZ.levelId = GL.id"})
   @Results({
@@ -67,4 +73,8 @@ public interface GeographicZoneMapper {
     @Result(property = "parent.level.name", column = "parentLevel")
   })
   GeographicZone getGeographicZoneById(Integer geographicZoneId);
+
+  @Update({"UPDATE geographic_zones set code = #{code}, name = #{name}, levelId = #{level.id}, parent = #{parent.id}, modifiedBy = #{modifiedBy}, modifiedDate = #{modifiedDate}",
+    "WHERE id = #{id}"})
+  void update(GeographicZone geographicZone);
 }

@@ -1,8 +1,13 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.functional;
 
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
-import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.CreateFacilityPage;
 import org.openlmis.pageobjects.DeleteFacilityPage;
@@ -12,6 +17,8 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
 
+import java.util.ArrayList;
+
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
 
@@ -19,22 +26,18 @@ import org.testng.annotations.*;
 
 public class E2EManageFacility extends TestCaseHelper {
 
-  DBWrapper dbWrapper;
 
   @BeforeMethod(groups = {"functional"})
-  @Parameters({"browser"})
-  public void setUp(String browser) throws Exception {
-    super.setupSuite(browser);
-    dbWrapper = new DBWrapper();
-    dbWrapper.deleteData();
+  public void setUp() throws Exception {
+    super.setup();
   }
 
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testE2EManageFacility(String user, String[] credentials) throws Exception {
+  public void testE2EManageFacility(String user, String program, String[] credentials) throws Exception {
 
-    LoginPage loginPage = new LoginPage(testWebDriver);
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
-    dbWrapper.insertUser("200", user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==", "F10", "Jane_Doe@openlmis.com");
+    dbWrapper.insertUser("200", user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==", "F10", "Jane_Doe@openlmis.com", "openLmis");
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
@@ -42,20 +45,31 @@ public class E2EManageFacility extends TestCaseHelper {
     String geoZone = "Ngorongoro";
     String facilityType = "Lvl3 Hospital";
     String operatedBy = "MoH";
-    String date_time = createFacilityPage.enterAndVerifyFacility(geoZone, facilityType, operatedBy);
+    String facilityCodePrefix = "FCcode";
+    String facilityNamePrefix = "FCname";
+
+    String date_time = createFacilityPage.enterValuesInFacility(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityType, operatedBy);
+    createFacilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
 
     DeleteFacilityPage deleteFacilityPage = homePage.navigateSearchFacility();
     deleteFacilityPage.searchFacility(date_time);
-    deleteFacilityPage.deleteAndVerifyFacility("FCcode" + date_time, "FCname" + date_time);
-    HomePage homePage1 = deleteFacilityPage.restoreAndVerifyFacility("FCcode" + date_time, "FCname" + date_time);
+    deleteFacilityPage.clickFacilityList();
+    deleteFacilityPage.deleteFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
+    deleteFacilityPage.verifyDeletedFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
+    HomePage homePageRestore = deleteFacilityPage.restoreFacility();
 
-    DeleteFacilityPage deleteFacilityPage1 = homePage1.navigateSearchFacility();
-    deleteFacilityPage1.searchFacility(date_time);
-    HomePage homePage2 = deleteFacilityPage1.editAndVerifyFacility("FCname" + date_time);
+    DeleteFacilityPage deleteFacilityPageRestore = homePageRestore.navigateSearchFacility();
+    deleteFacilityPageRestore.searchFacility(date_time);
+    deleteFacilityPageRestore.clickFacilityList();
+    HomePage homePageEdit = deleteFacilityPageRestore.editAndVerifyFacility("ESSENTIAL MEDICINES", facilityNamePrefix + date_time);
 
-    DeleteFacilityPage deleteFacilityPage2 = homePage2.navigateSearchFacility();
-    deleteFacilityPage2.searchFacility(date_time);
-    deleteFacilityPage2.verifyProgramSupported();
+    DeleteFacilityPage deleteFacilityPageEdit = homePageEdit.navigateSearchFacility();
+    deleteFacilityPageEdit.searchFacility(date_time);
+
+    ArrayList<String> programsSupported = new ArrayList<String>();
+    programsSupported.add("HIV");
+    programsSupported.add("ESSENTIAL MEDICINES");
+    deleteFacilityPageEdit.verifyProgramSupported(programsSupported);
 
 
   }
@@ -63,7 +77,7 @@ public class E2EManageFacility extends TestCaseHelper {
   @AfterMethod(groups = {"functional"})
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
-    homePage.logout();
+    homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }
@@ -71,7 +85,7 @@ public class E2EManageFacility extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-      {"User123", new String[]{"Admin123", "Admin123"}}
+      {"User123", "HIV", new String[]{"Admin123", "Admin123"}}
     };
   }
 }

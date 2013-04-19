@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.rnr.strategy;
 
 import lombok.Data;
@@ -16,20 +22,22 @@ import java.util.List;
 @NoArgsConstructor
 public class FacilityProgramDateRangeSearch implements RequisitionSearchStrategy {
 
+  private RequisitionSearchCriteria criteria;
   private ProcessingScheduleService processingScheduleService;
   private RequisitionRepository requisitionRepository;
 
-  public FacilityProgramDateRangeSearch(ProcessingScheduleService processingScheduleService, RequisitionRepository requisitionRepository) {
+  public FacilityProgramDateRangeSearch(RequisitionSearchCriteria criteria, ProcessingScheduleService processingScheduleService, RequisitionRepository requisitionRepository) {
+    this.criteria = criteria;
     this.processingScheduleService = processingScheduleService;
     this.requisitionRepository = requisitionRepository;
   }
 
   @Override
-  public List<Rnr> search(RequisitionSearchCriteria criteria) {
+  public List<Rnr> search() {
     Facility facility = new Facility(criteria.getFacilityId());
     Program program = new Program(criteria.getProgramId());
     List<ProcessingPeriod> periods = processingScheduleService.getAllPeriodsForDateRange(facility, program,
-      criteria.getDateRangeStart(), criteria.getDateRangeEnd());
+        criteria.getDateRangeStart(), criteria.getDateRangeEnd());
 
     return requisitionRepository.get(facility, program, periods);
   }

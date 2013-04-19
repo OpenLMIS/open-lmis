@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.pageobjects;
 
 
@@ -8,8 +14,6 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
-
-import java.util.*;
 
 import java.io.IOException;
 
@@ -24,6 +28,9 @@ public class HomePage extends Page {
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Requisitions')]")
   private static WebElement requisitionMenuItem;
+
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Orders')]")
+  private static WebElement ordersMenuItem;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Approve')]")
   private static WebElement approveLink;
@@ -43,6 +50,9 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Convert to Order')]")
   private static WebElement convertToOrderMenuItem;
 
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'View Orders')]")
+  private static WebElement viewOrdersMenuItem;
+
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'View')]")
   private static WebElement viewRequisitonMenuItem;
 
@@ -51,6 +61,9 @@ public class HomePage extends Page {
 
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Convert Requisitions to Order')]")
   private static WebElement convertToOrderHeader;
+
+  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'View Orders')]")
+  private static WebElement viewOrdersHeader;
 
   @FindBy(how = How.LINK_TEXT, using = "Add new")
   private static WebElement createFacility;
@@ -70,11 +83,11 @@ public class HomePage extends Page {
   @FindBy(how = How.ID, using = "selectProgram")
   private static WebElement ProgramDropDown;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Next')]")
-  private static WebElement NextButton;
-
   @FindBy(how = How.LINK_TEXT, using = "Requisitions")
   private static WebElement requisitionsLink;
+
+  @FindBy(how = How.XPATH, using = "//div[@class='submenu']")
+  private static WebElement SubMenuItem;
 
   @FindBy(how = How.LINK_TEXT, using = "Create / Authorize")
   private static WebElement createLink;
@@ -139,11 +152,14 @@ public class HomePage extends Page {
   private static WebElement usersTab;
 
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText colt1']/span")
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col1 colt1']/span")
   private static WebElement startDate;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText colt2']/span")
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col2 colt2']/span")
   private static WebElement endDate;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
+  private static WebElement errorMsg;
 
 
   public HomePage(TestWebDriver driver) throws IOException {
@@ -153,11 +169,11 @@ public class HomePage extends Page {
     //SeleneseTestNgHelper.assertTrue(usernameDisplay.isDisplayed());
   }
 
-  public LoginPage logout() throws IOException {
+  public LoginPage logout(String baseurl) throws IOException {
 
     testWebDriver.waitForElementToAppear(logoutLink);
     logoutLink.click();
-    return new LoginPage(testWebDriver);
+    return new LoginPage(testWebDriver, baseurl);
   }
 
   public boolean verifyWelcomeMessage(String user) {
@@ -170,19 +186,35 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageFacilityMenuItem);
-    manageFacilityMenuItem.click();
+    testWebDriver.keyPress(manageFacilityMenuItem);
+    //manageFacilityMenuItem.click();
+    verifyTabs();
+    clickCreateFacilityButton();
+    verifyHeader("Add new facility");
+    return new CreateFacilityPage(testWebDriver);
+  }
 
+  private void clickCreateFacilityButton() {
+    testWebDriver.waitForElementToAppear(createFacility);
+    testWebDriver.sleep(1000);
+    testWebDriver.keyPress(createFacility) ;
+  }
+
+  private void verifyHeader(String headingToVerify) {
+    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(facilityHeader);
+    SeleneseTestNgHelper.assertEquals(facilityHeader.getText().trim(), headingToVerify);
+  }
+
+
+  private void verifyTabs() {
     testWebDriver.waitForElementToAppear(facilitiesTab);
     SeleneseTestNgHelper.assertTrue(facilitiesTab.isDisplayed());
     SeleneseTestNgHelper.assertTrue(rolesTab.isDisplayed());
     SeleneseTestNgHelper.assertTrue(schedulesTab.isDisplayed());
     SeleneseTestNgHelper.assertTrue(usersTab.isDisplayed());
-    testWebDriver.waitForElementToAppear(createFacility);
-    createFacility.click();
-    testWebDriver.waitForElementToAppear(facilityHeader);
-    SeleneseTestNgHelper.assertEquals(facilityHeader.getText().trim(), "Add new facility");
-    return new CreateFacilityPage(testWebDriver);
   }
+
 
   public TemplateConfigPage selectProgramToConfigTemplate(String programme) {
     SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
@@ -194,8 +226,10 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(RnRTemplateConfigTab);
     testWebDriver.keyPress(RnRTemplateConfigTab);
     //RnRTemplateConfigTab.click();
-    testWebDriver.selectByVisibleText(ProgramDropDown, programme);
-    NextButton.click();
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementById(programme));
+    //testWebDriver.selectByVisibleText(ProgramDropDown, programme);
+    testWebDriver.getElementById(programme).click();
+
     return new TemplateConfigPage(testWebDriver);
   }
 
@@ -217,6 +251,13 @@ public class HomePage extends Page {
 
   }
 
+  public void verifySubMenuItems(String[] expectedSubMenuItem) throws IOException {
+    testWebDriver.waitForElementToAppear(requisitionsLink);
+    testWebDriver.keyPress(requisitionsLink);
+    String[] subMenuItem = SubMenuItem.getText().split("\n");
+    SeleneseTestNgHelper.assertEquals(subMenuItem, expectedSubMenuItem);
+  }
+
 
   public InitiateRnRPage clickProceed() throws IOException {
     testWebDriver.waitForElementToAppear(proceedButton);
@@ -224,7 +265,6 @@ public class HomePage extends Page {
 
     return new InitiateRnRPage(testWebDriver);
   }
-
 
 
   public ViewRequisitionPage navigateViewRequisition() throws IOException {
@@ -302,14 +342,28 @@ public class HomePage extends Page {
 
   }
 
-  public OrderPage navigateConvertToOrder() throws IOException {
+  public ConvertOrderPage navigateConvertToOrder() throws IOException {
     SeleneseTestNgHelper.assertTrue(requisitionMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(requisitionMenuItem);
     testWebDriver.keyPress(requisitionMenuItem);
     testWebDriver.waitForElementToAppear(convertToOrderMenuItem);
     testWebDriver.keyPress(convertToOrderMenuItem);
     testWebDriver.waitForElementToAppear(convertToOrderHeader);
-    return new OrderPage(testWebDriver);
+    return new ConvertOrderPage(testWebDriver);
   }
 
+    public ViewOrdersPage navigateViewOrders() throws IOException {
+        SeleneseTestNgHelper.assertTrue(ordersMenuItem.isDisplayed());
+        testWebDriver.waitForElementToAppear(ordersMenuItem);
+        testWebDriver.keyPress(ordersMenuItem);
+        testWebDriver.waitForElementToAppear(viewOrdersMenuItem);
+        testWebDriver.keyPress(viewOrdersMenuItem);
+        testWebDriver.waitForElementToAppear(viewOrdersHeader);
+        return new ViewOrdersPage(testWebDriver);
+    }
+
+  public void verifyErrorMessage() {
+    testWebDriver.waitForElementToAppear(errorMsg);
+    SeleneseTestNgHelper.assertEquals(errorMsg.getText().trim(), "Requisition not initiated yet");
+  }
 }

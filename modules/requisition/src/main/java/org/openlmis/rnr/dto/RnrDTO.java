@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.rnr.dto;
 
 
@@ -32,6 +38,7 @@ public class RnrDTO {
   private String status;
   private Integer orderBatchId;
   private Date orderDate;
+  private Integer modifiedBy;
 
   public static List<RnrDTO> prepareForListApproval(List<Rnr> requisitions) {
     List<RnrDTO> result = new ArrayList<>();
@@ -59,7 +66,7 @@ public class RnrDTO {
     return rnrDTO;
   }
 
-  private static RnrDTO populateDTOWithRequisition(Rnr requisition) {
+  public static RnrDTO populateDTOWithRequisition(Rnr requisition) {
     RnrDTO rnrDTO = new RnrDTO();
     rnrDTO.id = requisition.getId();
     rnrDTO.programId = requisition.getProgram().getId();
@@ -87,7 +94,7 @@ public class RnrDTO {
     rnrDTO.setOrderBatchId(requisition.getOrderBatch().getId());
     rnrDTO.setOrderDate(requisition.getOrderBatch().getCreateTimeStamp());
     rnrDTO.setPeriodName(requisition.getPeriod().getName());
-
+    rnrDTO.setStatus(requisition.getStatus().name());
     return rnrDTO;
   }
 }

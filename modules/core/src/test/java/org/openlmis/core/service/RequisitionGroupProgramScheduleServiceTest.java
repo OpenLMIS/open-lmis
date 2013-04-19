@@ -1,31 +1,79 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.service;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.openlmis.core.domain.RequisitionGroupProgramSchedule;
 import org.openlmis.core.repository.RequisitionGroupProgramScheduleRepository;
 
-import static org.mockito.Mockito.verify;
+import static com.natpryce.makeiteasy.MakeItEasy.a;
+import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.openlmis.core.builder.RequisitionGroupProgramScheduleBuilder.*;
 
 public class RequisitionGroupProgramScheduleServiceTest {
 
-    @Mock
-    RequisitionGroupProgramScheduleRepository requisitionGroupProgramScheduleRepository;
+  @Mock
+  RequisitionGroupProgramScheduleRepository requisitionGroupProgramScheduleRepository;
 
-    @Before
-    public void setUp() throws Exception {
-        initMocks(this);
-    }
+  private RequisitionGroupProgramScheduleService service;
 
-    @Test
-    public void shouldSaveRequisitionGroupProgramSchedule() throws Exception {
+  @Before
+  public void setUp() throws Exception {
+    initMocks(this);
+    service = new RequisitionGroupProgramScheduleService(requisitionGroupProgramScheduleRepository);
+  }
 
-        RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
+  @Test
+  public void shouldInsertRequisitionGroupProgramScheduleWhenIdIsNull() throws Exception {
 
-        new RequisitionGroupProgramScheduleService(requisitionGroupProgramScheduleRepository).save(requisitionGroupProgramSchedule);
+    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
+    RequisitionGroupProgramScheduleRepository spyRequisitionGroupProgramScheduleRepository = spy(new RequisitionGroupProgramScheduleRepository());
+    service = new RequisitionGroupProgramScheduleService(spyRequisitionGroupProgramScheduleRepository);
 
-        verify(requisitionGroupProgramScheduleRepository).insert(requisitionGroupProgramSchedule);
-    }
+    Mockito.doNothing().when(spyRequisitionGroupProgramScheduleRepository).insert(requisitionGroupProgramSchedule);
+
+    service.save(requisitionGroupProgramSchedule);
+
+    verify(spyRequisitionGroupProgramScheduleRepository).insert(requisitionGroupProgramSchedule);
+    verify(spyRequisitionGroupProgramScheduleRepository, never()).update(requisitionGroupProgramSchedule);
+  }
+
+  @Test
+  public void shouldUpdateRequisitionGroupProgramScheduleWhenIdIsNotNull() throws Exception {
+
+    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
+    requisitionGroupProgramSchedule.setId(1);
+    RequisitionGroupProgramScheduleRepository spyRequisitionGroupProgramScheduleRepository = spy(new RequisitionGroupProgramScheduleRepository());
+    service = new RequisitionGroupProgramScheduleService(spyRequisitionGroupProgramScheduleRepository);
+
+    Mockito.doNothing().when(spyRequisitionGroupProgramScheduleRepository).update(requisitionGroupProgramSchedule);
+
+    service.save(requisitionGroupProgramSchedule);
+
+    verify(spyRequisitionGroupProgramScheduleRepository).update(requisitionGroupProgramSchedule);
+    verify(spyRequisitionGroupProgramScheduleRepository, never()).insert(requisitionGroupProgramSchedule);
+  }
+
+  @Test
+  public void shouldGetScheduleForRequisitionGroupCodeAndProgramCodeCombination() throws Exception {
+
+    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = make(a(defaultRequisitionGroupProgramSchedule));
+    RequisitionGroupProgramSchedule fetchedRequisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
+
+    when(requisitionGroupProgramScheduleRepository.getScheduleForRequisitionGroupCodeAndProgramCode(
+      REQUISITION_GROUP_CODE, PROGRAM_CODE)).thenReturn(fetchedRequisitionGroupProgramSchedule);
+
+    assertThat(service.getScheduleForRequisitionGroupCodeAndProgramCode(requisitionGroupProgramSchedule), is(fetchedRequisitionGroupProgramSchedule));
+  }
 }

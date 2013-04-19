@@ -1,14 +1,17 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.rnr.domain;
 
-import com.natpryce.makeiteasy.Donor;
 import org.hamcrest.core.Is;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.openlmis.core.builder.ProductBuilder;
-import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
@@ -20,20 +23,21 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
-import static org.openlmis.core.builder.ProductBuilder.code;
+import static org.mockito.Mockito.verify;
+import static org.openlmis.core.builder.ProductBuilder.*;
+import static org.openlmis.core.builder.ProductBuilder.productCategoryDisplayOrder;
+import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.rnr.builder.RnrColumnBuilder.*;
-import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
-import static org.openlmis.rnr.builder.RnrLineItemBuilder.lossesAndAdjustments;
-import static org.openlmis.rnr.builder.RnrLineItemBuilder.quantityApproved;
+import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
+import static org.openlmis.rnr.domain.ProgramRnrTemplate.LOSSES_AND_ADJUSTMENTS;
 import static org.openlmis.rnr.domain.RnRColumnSource.CALCULATED;
 import static org.openlmis.rnr.domain.RnRColumnSource.USER_INPUT;
 import static org.openlmis.rnr.domain.RnrLineItem.RNR_VALIDATION_ERROR;
+import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
+import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.spy;
 
@@ -98,8 +102,8 @@ public class RnrLineItemTest {
   @Test
   public void shouldConstructRnrLineItem() {
 
-    Program program = make(a(ProgramBuilder.defaultProgram));
-    Product product = make(a(ProductBuilder.defaultProduct, with(code, "ASPIRIN")));
+    Program program = make(a(defaultProgram));
+    Product product = make(a(defaultProduct, with(code, "ASPIRIN"), with(productCategoryDisplayOrder, 3), with(displayOrder, 9)));
     product.setDispensingUnit("Strip");
 
     ProgramProduct programProduct = new ProgramProduct(program, product, 30, true);
@@ -113,6 +117,8 @@ public class RnrLineItemTest {
     assertThat(rnrLineItem.getDosesPerMonth(), is(30));
     assertThat(rnrLineItem.getModifiedBy(), is(1));
     assertThat(rnrLineItem.getDosesPerDispensingUnit(), is(10));
+    assertThat(rnrLineItem.getProductCategoryDisplayOrder(), is(3));
+    assertThat(rnrLineItem.getProductDisplayOrder(), is(9));
   }
 
   @Test
@@ -156,16 +162,38 @@ public class RnrLineItemTest {
   }
 
   @Test
-  public void shouldThrowErrorIfExplanationForRequestedQuantityNotPresent() throws Exception {
-    lineItem.setQuantityRequested(70);
+  public void shouldNotThrowErrorIfRequestedQuantityAndItsExplanationAreNull() throws Exception {
+    lineItem.setQuantityRequested(null);
     lineItem.setReasonForRequestedQuantity(null);
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage(RNR_VALIDATION_ERROR);
+
+    lineItem.validateMandatoryFields(templateColumns);
+  }
+
+
+  @Test
+  public void shouldNotThrowErrorIfRequestedQuantityAndItsExplanationArePresent() {
+    lineItem.setQuantityRequested(123);
+    lineItem.setReasonForRequestedQuantity("something");
+
     lineItem.validateMandatoryFields(templateColumns);
   }
 
   @Test
-  public void shouldNotThrowErrorForExplanationNotPresentIfRequestedQuantityNotSet() throws Exception {
+  public void shouldThrowErrorIfRequestedQuantityIsPresentAndExplanationIsNotPresent() throws Exception {
+    lineItem.setQuantityRequested(70);
+    lineItem.setReasonForRequestedQuantity(null);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage(RNR_VALIDATION_ERROR);
+
+    lineItem.validateMandatoryFields(templateColumns);
+  }
+
+  @Test
+  public void shouldNotThrowErrorIfRequestedQuantityIsNullAndExplanationIsPresent() {
+    lineItem.setQuantityRequested(null);
+    lineItem.setReasonForRequestedQuantity("something");
+
     lineItem.validateMandatoryFields(templateColumns);
   }
 
@@ -236,14 +264,14 @@ public class RnrLineItemTest {
     LossesAndAdjustments add10 = new LossesAndAdjustments(1, additive, 10);
     LossesAndAdjustments sub5 = new LossesAndAdjustments(1, subtractive, 5);
     LossesAndAdjustments add20 = new LossesAndAdjustments(1, additive, 20);
-    RnrLineItem lineItem = make(a(defaultRnrLineItem, with(lossesAndAdjustments, add10)));
+    RnrLineItem lineItem = make(a(defaultRnrLineItem, with(RnrLineItemBuilder.lossesAndAdjustments, add10)));
     lineItem.addLossesAndAdjustments(sub5);
     lineItem.addLossesAndAdjustments(add20);
     lineItem.setTotalLossesAndAdjustments(20);
     lineItem.setQuantityDispensed(29);
 
 
-    lineItem.calculate(period, getRnrColumns());
+    lineItem.calculate(period, getRnrColumns(), SUBMITTED);
 
     assertThat(lineItem.getTotalLossesAndAdjustments(), is(25));
   }
@@ -256,7 +284,7 @@ public class RnrLineItemTest {
     lineItem.setDosesPerDispensingUnit(10);
     lineItem.setNormalizedConsumption(37345);
 
-    lineItem.calculate(period, getRnrColumns());
+    lineItem.calculate(period, getRnrColumns(), SUBMITTED);
 
     assertThat(lineItem.getNormalizedConsumption(), is(37));
   }
@@ -269,9 +297,21 @@ public class RnrLineItemTest {
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
     period.setNumberOfMonths(3);
 
-    spyLineItem.calculate(period, getRnrColumns());
+    spyLineItem.calculate(period, getRnrColumns(), AUTHORIZED);
 
     assertThat(spyLineItem.getAmc(), is(15));
+  }
+
+  @Test
+  public void shouldCalculateAMCAndMaxStockQuantityAndOrderedQuantityOnlyWhenAuthorized() throws Exception {
+    RnrLineItem spyLineItem = spy(lineItem);
+    doNothing().when(spyLineItem, "calculateNormalizedConsumption");
+
+    spyLineItem.calculate(period, getRnrColumns(), AUTHORIZED);
+
+    verify(spyLineItem).calculateAmc(period);
+    verify(spyLineItem).calculateMaxStockQuantity();
+    verify(spyLineItem).calculateOrderQuantity();
   }
 
   @Test
@@ -282,7 +322,7 @@ public class RnrLineItemTest {
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
     period.setNumberOfMonths(2);
 
-    spyLineItem.calculate(period, getRnrColumns());
+    spyLineItem.calculate(period, getRnrColumns(), AUTHORIZED);
 
     assertThat(spyLineItem.getAmc(), is(14));
   }
@@ -295,7 +335,7 @@ public class RnrLineItemTest {
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
     period.setNumberOfMonths(1);
 
-    spyLineItem.calculate(period, getRnrColumns());
+    spyLineItem.calculate(period, getRnrColumns(), AUTHORIZED);
 
     assertThat(spyLineItem.getAmc(), is(23));
   }
@@ -308,7 +348,7 @@ public class RnrLineItemTest {
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
     period.setNumberOfMonths(1);
 
-    spyLineItem.calculate(period, getRnrColumns());
+    spyLineItem.calculate(period, getRnrColumns(), AUTHORIZED);
 
     assertThat(spyLineItem.getAmc(), is(29));
   }
@@ -320,7 +360,7 @@ public class RnrLineItemTest {
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
     period.setNumberOfMonths(1);
 
-    spyLineItem.calculate(period, getRnrColumns());
+    spyLineItem.calculate(period, getRnrColumns(), AUTHORIZED);
 
     assertThat(spyLineItem.getAmc(), is(45));
   }
@@ -333,7 +373,7 @@ public class RnrLineItemTest {
     doNothing().when(spyLineItem, "calculateNormalizedConsumption");
     period.setNumberOfMonths(2);
 
-    spyLineItem.calculate(period, getRnrColumns());
+    spyLineItem.calculate(period, getRnrColumns(), AUTHORIZED);
 
     assertThat(spyLineItem.getAmc(), is(23));
   }
@@ -347,7 +387,7 @@ public class RnrLineItemTest {
     lineItem.setNormalizedConsumption(37345);
     lineItem.setMaxMonthsOfStock(10);
 
-    lineItem.calculate(period, getRnrColumns());
+    lineItem.calculate(period, getRnrColumns(), AUTHORIZED);
 
     assertThat(lineItem.getMaxStockQuantity(), is(370));
   }
@@ -363,7 +403,7 @@ public class RnrLineItemTest {
     lineItem.setMaxStockQuantity(370);
     lineItem.setStockInHand(300);
 
-    lineItem.calculate(period, getRnrColumns());
+    lineItem.calculate(period, getRnrColumns(), AUTHORIZED);
 
     assertThat(lineItem.getCalculatedOrderQuantity(), is(366));
   }
@@ -411,13 +451,16 @@ public class RnrLineItemTest {
   private ArrayList<RnrColumn> getRnrColumns() {
     return new ArrayList<RnrColumn>() {{
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.QUANTITY_RECEIVED), with(visible, false))));
-      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.QUANTITY_DISPENSED), with(visible, false), with(source, CALCULATED))));
-      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.LOSSES_AND_ADJUSTMENTS), with(visible, false))));
+      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.QUANTITY_DISPENSED), with(visible, false),
+        with(source, CALCULATED))));
+      add(make(a(defaultRnrColumn, with(columnName, LOSSES_AND_ADJUSTMENTS), with(visible, false))));
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.NEW_PATIENT_COUNT), with(visible, false))));
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.STOCK_OUT_DAYS), with(visible, false))));
-      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.STOCK_IN_HAND), with(visible, false), with(source, CALCULATED))));
+      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.STOCK_IN_HAND), with(visible, false),
+        with(source, CALCULATED))));
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.BEGINNING_BALANCE), with(visible, false))));
-      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.QUANTITY_APPROVED), with(visible, true), with(source, USER_INPUT))));
+      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.QUANTITY_APPROVED), with(visible, true),
+        with(source, USER_INPUT))));
     }};
   }
 
@@ -449,7 +492,7 @@ public class RnrLineItemTest {
       add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, ProgramRnrTemplate.QUANTITY_DISPENSED))));
     }};
     lineItem.setStockInHand(99);
-    lineItem.calculate(period, columns);
+    lineItem.calculate(period, columns, SUBMITTED);
 
     assertThat(lineItem.getStockInHand(), is(4));
   }
@@ -461,7 +504,7 @@ public class RnrLineItemTest {
       add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, ProgramRnrTemplate.QUANTITY_DISPENSED))));
     }};
     lineItem.setStockInHand(66);
-    lineItem.calculate(period, columns);
+    lineItem.calculate(period, columns, SUBMITTED);
 
     assertThat(lineItem.getStockInHand(), is(66));
   }
@@ -474,7 +517,7 @@ public class RnrLineItemTest {
     }};
 
     lineItem.setQuantityDispensed(4);
-    lineItem.calculate(period, columns);
+    lineItem.calculate(period, columns, SUBMITTED);
 
     assertThat(lineItem.getQuantityDispensed(), is(10));
   }
@@ -487,7 +530,7 @@ public class RnrLineItemTest {
     }};
 
     lineItem.setQuantityDispensed(0);
-    lineItem.calculate(period, columns);
+    lineItem.calculate(period, columns, SUBMITTED);
 
     assertThat(lineItem.getQuantityDispensed(), is(0));
   }
@@ -511,27 +554,28 @@ public class RnrLineItemTest {
     assertThat(lineItem.getQuantityApproved(), is(RnrLineItemBuilder.QUANTITY_APPROVED));
   }
 
-   @Test
-   public void shouldThrowExceptionIfNonFullSupplyLineItemHasRequestedQuantityAsNull(){
-     Integer nullInteger = null;
-     RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(RnrLineItemBuilder.quantityRequested, nullInteger)));
-     expectedException.expect(DataException.class);
-     expectedException.expectMessage(RNR_VALIDATION_ERROR);
-     rnrLineItem.validateNonFullSupply();
-   }
-
   @Test
-  public void shouldThrowExceptionIfNonFullSupplyLineItemHasRequestedQuantityIsNegative(){
-    RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(RnrLineItemBuilder.quantityRequested, -10)));
+  public void shouldThrowExceptionIfNonFullSupplyLineItemHasRequestedQuantityAsNull() {
+    Integer nullInteger = null;
+    RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(quantityRequested, nullInteger)));
     expectedException.expect(DataException.class);
     expectedException.expectMessage(RNR_VALIDATION_ERROR);
     rnrLineItem.validateNonFullSupply();
   }
 
   @Test
-  public void shouldThrowExceptionIfNonFullSupplyLineItemHasReasonForRequestedQuantityNull(){
-    String nullString  = null;
-    RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(RnrLineItemBuilder.reasonForRequestedQuantity, nullString)));
+  public void shouldThrowExceptionIfNonFullSupplyLineItemHasRequestedQuantityIsNegative() {
+    RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(quantityRequested, -10)));
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage(RNR_VALIDATION_ERROR);
+    rnrLineItem.validateNonFullSupply();
+  }
+
+  @Test
+  public void shouldThrowExceptionIfNonFullSupplyLineItemHasReasonForRequestedQuantityNull() {
+    String nullString = null;
+    RnrLineItem rnrLineItem = make(
+      a(defaultRnrLineItem, with(RnrLineItemBuilder.reasonForRequestedQuantity, nullString)));
     expectedException.expect(DataException.class);
     expectedException.expectMessage(RNR_VALIDATION_ERROR);
     rnrLineItem.validateNonFullSupply();
@@ -541,17 +585,15 @@ public class RnrLineItemTest {
   @Test
   public void shouldCalculateCostAsZeroIfPacksToShipIsNull() {
     Integer nullInteger = null;
-    RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(RnrLineItemBuilder.packsToShip, nullInteger)));
+    RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(packsToShip, nullInteger)));
     Money money = rnrLineItem.calculateCost();
     assertThat(money.getValue().intValue(), Is.is(0));
   }
 
   @Test
   public void shouldCalculateCostIfPacksToShipIsNotNull() {
-    Integer nullInteger = null;
-    RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(RnrLineItemBuilder.packsToShip, 5)));
+    RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(packsToShip, 5)));
     Money money = rnrLineItem.calculateCost();
     assertThat(money.getValue().intValue(), Is.is(20));
   }
-
 }

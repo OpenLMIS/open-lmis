@@ -36,9 +36,10 @@ dependencies {
             'com.itextpdf:itextpdf:5.4.0',
             project(':modules:authentication'),
             project(':modules:requisition'),
-            project(':modules:report'),
-            project(':modules:core')
-
+            project(':modules:core'),
+            project(':modules:shipment'),
+            project(':modules:rest-api'),
+            project(':modules:report')
 
     testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
             'org.springframework:spring-test-mvc:1.0.0.M1',
@@ -48,9 +49,11 @@ dependencies {
             'org.powermock:powermock-module-junit4:1.4.12',
             'org.codehaus.jackson:jackson-mapper-asl:1.9.9',
             'cglib:cglib:2.2.2',
-            project(path : ':modules:core', configuration: 'testFixtures'),
-            project(path :':modules:report',configuration: 'testFixtures'),
-            project(path : ':modules:requisition', configuration: 'testFixtures')
+            project(path: ':modules:core', configuration: 'testFixtures'),
+            project(path: ':modules:rest-api', configuration: 'testFixtures'),
+            project(path: ':modules:requisition', configuration: 'testFixtures'),
+            project(path :':modules:report',configuration: 'testFixtures')
+            
 }
 
 task jettyRunWarDaemon(dependsOn: war)
@@ -61,6 +64,7 @@ jettyRunWarDaemon.doFirst {
     jettyRunWar.contextPath = ''
     jettyRunWar.execute()
 }
+
 
 task jettyRunWarLocal(dependsOn: war)
 
@@ -74,8 +78,18 @@ jettyRunWarLocal.doFirst {
 jettyRun {
     jettyRun.httpPort = 9091
     contextPath = ''
-    jettyRun.scanIntervalSeconds=1
-    System.properties.get('env', 'dev')
+    jettyRun.scanIntervalSeconds = 1
+    System.properties.get('environmentName', 'local')
+}
+
+def configureHttps(keystore, password) {
+    ext.connectors = [jettyRun.class.classLoader.loadClass('org.mortbay.jetty.security.SslSocketConnector').newInstance()]
+    ext.connectors[0].port = 9091
+    ext.connectors[0].keystore = connectors[0].truststore = keystore
+    ext.connectors[0].keyPassword = connectors[0].trustPassword = password
+    ext.connectors[0].wantClientAuth = true
+    ext.connectors[0].needClientAuth = false
+    return ext.connectors;
 }
 
 task run(dependsOn: jettyRun)

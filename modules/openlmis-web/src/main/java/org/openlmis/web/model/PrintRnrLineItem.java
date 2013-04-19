@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.web.model;
 
 import lombok.Data;
@@ -23,27 +29,15 @@ public class PrintRnrLineItem {
 
   public void calculate(ProcessingPeriod period, List<RnrColumn> rnrColumns) {
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
+    if (template.columnsCalculated(STOCK_IN_HAND)) calculateStockInHand();
+    if (template.columnsCalculated(QUANTITY_DISPENSED)) rnrLineItem.calculateQuantityDispensed();
     calculateNormalizedConsumption();
     calculateAmc(period);
     calculateMaxStockQuantity();
     calculateLossesAndAdjustments();
-    if (template.columnsCalculated(STOCK_IN_HAND)) calculateStockInHand();
-    if (template.columnsCalculated(QUANTITY_DISPENSED)) calculateQuantityDispensed();
-    calculateOrderQuantity();
-
-    calculatePacksToShip();
-  }
-
-  private void calculatePacksToShip() {
-    rnrLineItem.calculatePacksToShip();
-  }
-
-  private void calculateOrderQuantity() {
     rnrLineItem.calculateOrderQuantity();
-  }
 
-  private void calculateQuantityDispensed() {
-    rnrLineItem.calculateQuantityDispensed();
+    rnrLineItem.calculatePacksToShip();
   }
 
   private void calculateStockInHand() {

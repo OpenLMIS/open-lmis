@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
 <beans:beans xmlns="http://www.springframework.org/schema/security"
              xmlns:beans="http://www.springframework.org/schema/beans"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -29,13 +35,20 @@
 
     <beans:bean id="openLmisAccessDeniedHandler" class="org.openlmis.authentication.web.OpenLmisAccessDeniedHandler"/>
 
+    <http pattern="/rest-api/**" use-expressions="true" authentication-manager-ref="restAuthenticationManager">
+        <intercept-url pattern="/rest-api/**" access="permitAll" requires-channel="any"/>
+        <http-basic/>
+    </http>
+
     <http use-expressions="true" auto-config="false" entry-point-ref="restAuthenticationEntryPoint">
-        <intercept-url pattern="/favicon.*" access="permitAll"/>
-        <intercept-url pattern="/public/pages/admin/**" access="isAuthenticated()" requires-channel="http"/>
-        <intercept-url pattern="/public/pages/logistics/**" access="isAuthenticated()" requires-channel="http"/>
-        <intercept-url pattern="/public/pages/login.html" access="permitAll" requires-channel="http"/>
-        <intercept-url pattern="/public/**" access="permitAll" requires-channel="http"/>
-        <intercept-url pattern="/**" access="isAuthenticated()" requires-channel="http"/>
+        <intercept-url pattern="/j_spring_security_check" access="IS_AUTHENTICATED_ANONYMOUSLY" requires-channel="any"/>
+        <intercept-url pattern="/favicon.ico" access="permitAll" requires-channel="any"/>
+        <intercept-url pattern="/public/**" access="permitAll" requires-channel="any"/>
+
+        <intercept-url pattern="/forgot-password*" access="permitAll" requires-channel="any"/>
+        <intercept-url pattern="/user/validatePasswordResetToken/*" access="permitAll" requires-channel="any"/>
+        <intercept-url pattern="/user/resetPassword/*" access="permitAll" requires-channel="any"/>
+        <intercept-url pattern="/**" access="isAuthenticated()" requires-channel="any"/>
 
         <form-login login-page="/public/pages/login.html"
                     login-processing-url="/j_spring_security_check"

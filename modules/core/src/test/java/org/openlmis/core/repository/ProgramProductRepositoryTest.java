@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository;
 
 import org.junit.Before;
@@ -15,13 +21,15 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProductMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
 import org.openlmis.core.repository.mapper.ProgramProductPriceMapper;
-import org.springframework.dao.DuplicateKeyException;
+
+import java.util.Date;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.openlmis.core.builder.ProductBuilder.defaultProduct;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
@@ -38,7 +46,7 @@ public class ProgramProductRepositoryTest {
   private ProgramProductRepository programProductRepository;
 
   @Mock
-  ProgramProductMapper programProductMapper;
+  private ProgramProductMapper programProductMapper;
   @Mock
   private ProgramRepository programRepository;
   @Mock
@@ -48,32 +56,31 @@ public class ProgramProductRepositoryTest {
   @Mock
   private ProgramProductPriceMapper programProductPriceMapper;
 
+  private ProgramProduct programProduct;
+
   @Before
   public void setUp() throws Exception {
     programProductRepository = new ProgramProductRepository(programRepository, programProductMapper, productRepository, programProductPriceMapper);
-  }
+    programProduct = make(a(ProgramProductBuilder.defaultProgramProduct));
+    programProduct.setModifiedDate(new Date());
 
-  @Test
-  public void shouldThrowErrorIfInsertingDuplicateProductForAProgram() throws Exception {
-    Product product = make(a(defaultProduct));
-    Program program = make(a(defaultProgram));
-    ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Duplicate entry for Product Code and Program Code combination found");
-    doThrow(new DuplicateKeyException("Duplicate entry for Product Code and Program Code combination found")).when(programProductMapper).insert(programProduct);
-    programProductRepository.insert(programProduct);
+    when(productRepository.getIdByCode("productCode")).thenReturn(1);
 
+    when(programProductMapper.getByProgramAndProductId(anyInt(), anyInt())).thenReturn(programProduct);
   }
 
   @Test
   public void shouldInsertProgramForAProduct() {
     Program program = new Program();
-    program.setCode("DummyProgram");
+    program.setCode("P1");
     Product product = new Product();
-    product.setCode("DummyProduct");
+    product.setCode("P2");
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
+    programProduct.setModifiedDate(new Date());
 
-    programProductRepository.insert(programProduct);
+    when(programProductMapper.getByProgramAndProductId(anyInt(), anyInt())).thenReturn(null);
+
+    programProductRepository.save(programProduct);
     verify(programProductMapper).insert(programProduct);
   }
 
@@ -86,7 +93,7 @@ public class ProgramProductRepositoryTest {
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("exception");
-    programProductRepository.insert(programProduct);
+    programProductRepository.save(programProduct);
   }
 
   @Test
@@ -98,7 +105,7 @@ public class ProgramProductRepositoryTest {
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Invalid Product Code");
 
-    programProductRepository.insert(programProduct);
+    programProductRepository.save(programProduct);
   }
 
   @Test
@@ -129,31 +136,12 @@ public class ProgramProductRepositoryTest {
     ProgramProduct expectedProgramProduct = new ProgramProduct();
     when(programProductMapper.getByProgramAndProductId(programId, productId)).thenReturn(expectedProgramProduct);
 
-    ProgramProduct result = programProductRepository.getProgramProductByProgramAndProductCode(programProduct);
+    ProgramProduct result = programProductRepository.getByProgramAndProductCode(programProduct);
     verify(programRepository).getIdByCode(PROGRAM_CODE);
     verify(productRepository).getIdByCode(PRODUCT_CODE);
     verify(programProductMapper).getByProgramAndProductId(programId, productId);
 
     assertThat(result, is(expectedProgramProduct));
-  }
-
-  @Test
-  public void shouldThrowExceptionIfProgramProductByProgramAndProductCodesNotFound() throws Exception {
-    ProgramProduct programProduct = make(a(ProgramProductBuilder.defaultProgramProduct));
-
-    final int programId = 123;
-    when(programRepository.getIdByCode(PROGRAM_CODE)).thenReturn(programId);
-    final int productId = 12;
-    when(productRepository.getIdByCode(PRODUCT_CODE)).thenReturn(productId);
-    when(programProductMapper.getByProgramAndProductId(programId, productId)).thenReturn(null);
-
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage(PROGRAM_PRODUCT_INVALID);
-    programProductRepository.getProgramProductByProgramAndProductCode(programProduct);
-    verify(programRepository).getIdByCode(PROGRAM_CODE);
-    verify(productRepository).getIdByCode(PRODUCT_CODE);
-    verify(programProductMapper).getByProgramAndProductId(programId, productId);
-
   }
 
   @Test
@@ -171,5 +159,29 @@ public class ProgramProductRepositoryTest {
 
     verify(programProductPriceMapper).closeLastActivePrice(programProductPrice);
     verify(programProductPriceMapper).insertNewCurrentPrice(programProductPrice);
+  }
+
+
+  @Test
+  public void shouldUpdateProgramProductIfExist() throws Exception {
+    int programId = 88;
+    int productId = 99;
+
+    programProduct.setId(1);
+    when(programRepository.getIdByCode(anyString())).thenReturn(programId);
+    when(productRepository.getIdByCode(anyString())).thenReturn(productId);
+
+    programProductRepository.save(programProduct);
+
+    assertThat(programProduct.getProgram().getId(), is(88));
+    assertThat(programProduct.getProduct().getId(), is(99));
+    verify(programProductMapper).update(programProduct);
+  }
+
+  @Test
+  public void shouldUpdateProgramProduct() throws Exception {
+    programProductRepository.updateProgramProduct(programProduct);
+
+    verify(programProductMapper).update(programProduct);
   }
 }

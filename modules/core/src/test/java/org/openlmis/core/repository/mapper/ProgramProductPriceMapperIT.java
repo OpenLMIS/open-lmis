@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository.mapper;
 
 import org.junit.Before;
@@ -75,5 +81,19 @@ public class ProgramProductPriceMapperIT {
     assertThat(result.getModifiedBy(), is(1));
     assertThat(result.getPricePerDosage(), is(pricePerDosage));
     assertThat(result.getProgramProduct().getCurrentPrice(), is(programProduct.getCurrentPrice()));
+  }
+
+  @Test
+  public void shouldGetProgramProductPriceForAProgramProduct() throws Exception {
+    String source = "MoH";
+    Money pricePerDosage = new Money("1.50");
+    ProgramProductPrice programProductPrice = new ProgramProductPrice(programProduct, pricePerDosage, source);
+    programProductPrice.setModifiedBy(1);
+
+    programProductPriceMapper.insertNewCurrentPrice(programProductPrice);
+
+    ProgramProductPrice programProductPriceReturned = programProductPriceMapper.get(programProduct);
+
+    assertThat(programProductPriceReturned.getProgramProduct().getCurrentPrice(), is(programProduct.getCurrentPrice()));
   }
 }

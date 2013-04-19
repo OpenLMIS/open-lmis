@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
@@ -37,4 +43,15 @@ public interface RequisitionGroupMapper {
       "WHERE rgps.programId = #{program.id} " +
       "AND RGM.facilityId = #{facility.id}")
   RequisitionGroup getRequisitionGroupForProgramAndFacility(@Param(value = "program") Program program, @Param(value = "facility") Facility facility);
+
+  @Select("SELECT * FROM requisition_groups where LOWER(code) = LOWER(#{code})")
+  @Results(value = {
+    @Result(property = "supervisoryNode.id", column = "supervisoryNodeId")
+  })
+  RequisitionGroup getByCode(String code);
+
+  @Update("UPDATE requisition_groups " +
+    "SET name = #{name}, description =  #{description}, supervisoryNodeId = #{supervisoryNode.id}, modifiedBy = #{modifiedBy}, modifiedDate = #{modifiedDate} " +
+    "WHERE id = #{id}")
+  void update(RequisitionGroup requisitionGroup);
 }

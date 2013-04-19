@@ -1,5 +1,12 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository.mapper;
 
+import org.apache.commons.collections.Predicate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,9 +21,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static junit.framework.Assert.assertEquals;
+import static org.apache.commons.collections.CollectionUtils.exists;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
@@ -60,10 +71,10 @@ public class RoleAssignmentMapperIT {
     Program program1 = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
     Program program2 = insertProgram(make(a(defaultProgram, with(programCode, "p2"))));
 
-    Role r1 = new Role("r1", "random description");
+    Role r1 = new Role("r1", FALSE, "random description");
     roleRightsMapper.insertRole(r1);
 
-    Role r2 = new Role("r2", "random description");
+    Role r2 = new Role("r2", FALSE, "random description");
     roleRightsMapper.insertRole(r2);
 
     roleRightsMapper.createRoleRight(r1.getId(), CREATE_REQUISITION);
@@ -79,7 +90,7 @@ public class RoleAssignmentMapperIT {
     mapper.insertRoleAssignment(user.getId(), program2.getId(), null, r2.getId());
 
     List<RoleAssignment> roleAssignments =
-        mapper.getRoleAssignmentsWithGivenRightForAUser(CREATE_REQUISITION, user.getId());
+      mapper.getRoleAssignmentsWithGivenRightForAUser(CREATE_REQUISITION, user.getId());
 
     assertEquals(1, roleAssignments.size());
     RoleAssignment expectedRoleAssignment = new RoleAssignment(user.getId(), r1.getId(), program1.getId(), supervisoryNode);
@@ -88,10 +99,10 @@ public class RoleAssignmentMapperIT {
 
   @Test
   public void shouldGetSupervisorRolesForAUser() throws Exception {
-    Role r1 = new Role("r1", "random description");
+    Role r1 = new Role("r1", FALSE, "random description");
     roleRightsMapper.insertRole(r1);
 
-    Role r2 = new Role("r2", "random description");
+    Role r2 = new Role("r2", FALSE, "random description");
     roleRightsMapper.insertRole(r2);
 
     SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
@@ -112,10 +123,10 @@ public class RoleAssignmentMapperIT {
 
   @Test
   public void shouldGetHomeFacilityRolesForAUser() throws Exception {
-    Role r1 = new Role("r1", "random description");
+    Role r1 = new Role("r1", FALSE, "random description");
     roleRightsMapper.insertRole(r1);
 
-    Role r2 = new Role("r2", "random description");
+    Role r2 = new Role("r2", FALSE, "random description");
     roleRightsMapper.insertRole(r2);
 
     SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
@@ -136,9 +147,9 @@ public class RoleAssignmentMapperIT {
   @Test
   public void shouldGetHomeFacilityRolesForAUserOnAGivenProgramWithRights() throws Exception {
     int programId = 1;
-    Role r1 = new Role("r1", "random description");
+    Role r1 = new Role("r1", FALSE, "random description");
     roleRightsMapper.insertRole(r1);
-    Role r2 = new Role("r2", "random description");
+    Role r2 = new Role("r2", FALSE, "random description");
     roleRightsMapper.insertRole(r2);
     roleRightsMapper.createRoleRight(r2.getId(), Right.CREATE_REQUISITION);
 
@@ -166,6 +177,31 @@ public class RoleAssignmentMapperIT {
 
     assertThat(mapper.getHomeFacilityRoles(userId).size(), is(0));
     assertThat(mapper.getSupervisorRoles(userId).size(), is(0));
+  }
+
+  @Test
+  public void shouldGetAdminRolesForUser() throws Exception {
+    Integer userId = user.getId();
+
+    final Role adminRole = new Role("r1", TRUE, "admin role");
+    roleRightsMapper.insertRole(adminRole);
+    Role nonAdminRole = new Role("r2", FALSE, "non admin role");
+    roleRightsMapper.insertRole(nonAdminRole);
+
+    mapper.insertRoleAssignment(userId, null, null, adminRole.getId());
+    mapper.insertRoleAssignment(userId, 2, null, nonAdminRole.getId());
+
+    RoleAssignment adminRoles = mapper.getAdminRole(userId);
+
+    assertThat(adminRoles.getRoleIds().size(), is(1));
+
+    assertTrue(exists(adminRoles.getRoleIds(), new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        Integer roleId = (Integer) o;
+        return roleId.equals(adminRole.getId());
+      }
+    }));
   }
 
   private Program insertProgram(Program program) {

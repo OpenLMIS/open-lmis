@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
@@ -27,10 +33,17 @@ public class RequisitionGroupService {
     Integer supervisoryNodeId = supervisoryNodeRepository.getIdForCode(requisitionGroup.getSupervisoryNode().getCode());
     requisitionGroup.getSupervisoryNode().setId(supervisoryNodeId);
 
-    requisitionGroupRepository.insert(requisitionGroup);
+    if (requisitionGroup.getId() == null)
+      requisitionGroupRepository.insert(requisitionGroup);
+    else
+      requisitionGroupRepository.update(requisitionGroup);
   }
 
   public List<RequisitionGroup> getRequisitionGroupsBy(List<SupervisoryNode> supervisoryNodes) {
     return requisitionGroupRepository.getRequisitionGroups(supervisoryNodes);
+  }
+
+  public RequisitionGroup getByCode(RequisitionGroup requisitionGroup) {
+    return requisitionGroupRepository.getByCode(requisitionGroup);
   }
 }

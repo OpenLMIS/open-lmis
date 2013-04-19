@@ -1,3 +1,9 @@
+<!--
+  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
 <div>
   <h2>Schedules<a href="#" class="pull-right btn btn-primary" ng-click="startAddNewSchedule()">Add new</a></h2>
 
@@ -24,14 +30,14 @@
                    placeholder="Code"/>
             <span class="label-required">*</span>
             <span class="form-error"
-                  ng-show="createScheduleForm.code.$error.required && showErrorForCreate">Please fill this value</span>
+                  ng-show="createScheduleForm.code.$error.required && showErrorForCreate" openlmis-message="missing.value"></span>
           </div>
           <div class="span2">
             <input name="name" id="name" type="text" ng-model="newSchedule.name" maxlength="50" ng-required="true"
                    placeholder="Name"/>
             <span class="label-required">*</span>
             <span class="form-error"
-                  ng-show="createScheduleForm.name.$error.required && showErrorForCreate">Please fill this value</span>
+                  ng-show="createScheduleForm.name.$error.required && showErrorForCreate" openlmis-message="missing.value"></span>
           </div>
           <div class="span4">
             <input name="description" id="description" type="text" ng-model="newSchedule.description"
@@ -44,7 +50,7 @@
         <div class="row-fluid schedule-button-row">
           <div class="span1"></div>
           <div class="span2">
-            <input type="submit" class="btn btn-success btn-small" value="Create"/>
+            <input type="submit" class="btn btn-primary btn-small" value="Create"/>
             <input type="button" class="btn btn-cancel btn-small" value="Cancel" ng-click="cancelAddNewSchedule()"/>
           </div>
           <div ng-show="creationError" class="span9 form-error" ng-bind="creationError"></div>
@@ -72,7 +78,7 @@
                    ng-model="schedule.code" maxlength="50"
                    ng-required="true" placeholder="Code"/>
             <span ng-show="schedulesBackupMap[schedule.id].edit" class="label-required">*</span>
-            <span class="form-error" ng-show="editScheduleForm.code.$error.required && showErrorForEdit">Please fill this value</span>
+            <span class="form-error" ng-show="editScheduleForm.code.$error.required && showErrorForEdit" openlmis-message="missing.value"></span>
           </div>
 
           <div class="span2">
@@ -81,7 +87,7 @@
                    ng-model="schedule.name" maxlength="50"
                    ng-required="true" placeholder="Name"/>
             <span ng-show="schedulesBackupMap[schedule.id].edit" class="label-required">*</span>
-            <span class="form-error" ng-show="editScheduleForm.name.$error.required && showErrorForEdit">Please fill this value</span>
+            <span class="form-error" ng-show="editScheduleForm.name.$error.required && showErrorForEdit" openlmis-message="missing.value"></span>
           </div>
 
           <div class="span4">
@@ -104,7 +110,7 @@
         <div ng-show="schedulesBackupMap[schedule.id].edit" class="row-fluid schedule-button-row">
           <div class="span1"></div>
           <div class="span2">
-            <input type="submit" class="btn btn-success btn-small" value="Save"/>
+            <input type="submit" class="btn btn-primary btn-small" value="Save"/>
             <input type="button" class="btn btn-cancel btn-small" value="Cancel"
                    ng-click="cancelScheduleEdit(schedule, backupScheduleRow); schedulesBackupMap[schedule.id].edit=false"/>
           </div>

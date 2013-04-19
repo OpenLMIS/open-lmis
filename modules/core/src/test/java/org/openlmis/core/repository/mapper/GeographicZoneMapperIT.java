@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository.mapper;
 
 import org.junit.Test;
@@ -10,10 +16,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
@@ -28,7 +34,9 @@ public class GeographicZoneMapperIT {
 
   @Test
   public void shouldSaveGeographicZone() throws Exception {
-    GeographicZone geographicZone = new GeographicZone(null, "code", "name", new GeographicLevel(2,"state", "State", 2), null, null);
+    GeographicZone geographicZone = new GeographicZone(null, "code", "name", new GeographicLevel(2,"state", "State", 2), null);
+    Date date = new Date();
+    geographicZone.setModifiedDate(date);
 
     mapper.insert(geographicZone);
 
@@ -53,14 +61,6 @@ public class GeographicZoneMapperIT {
   }
 
   @Test
-  public void shouldGetGeographicZoneByCode() throws Exception {
-    GeographicZone stateZone = mapper.getGeographicZoneByCode("Dodoma");
-
-    assertThat(stateZone.getName(), is("Dodoma"));
-    assertThat(stateZone.getLevel().getLevelNumber(), is(3));
-  }
-
-  @Test
   public void shouldGetAllGeographicZonesOfLowestLevelExceptRootGeographicZone() throws Exception {
     List<GeographicZone> allGeographicZones = mapper.getAllGeographicZones();
     assertThat(allGeographicZones.size(), is(1));
@@ -74,12 +74,28 @@ public class GeographicZoneMapperIT {
 
   @Test
   public void shouldGetGeographicZoneWithParent() throws Exception {
-    GeographicZone parent = new GeographicZone(null, "Dodoma", "Dodoma", new GeographicLevel(null, "district", "District",null), null, null);
-    GeographicZone expectedZone = new GeographicZone(4, "Ngorongoro", "Ngorongoro", new GeographicLevel(null, "city", "City", null), parent, null);
+    GeographicZone parent = new GeographicZone(null, "Dodoma", "Dodoma", new GeographicLevel(null, "district", "District",null), null);
+    GeographicZone expectedZone = new GeographicZone(4, "Ngorongoro", "Ngorongoro", new GeographicLevel(null, "city", "City", null), parent);
 
     GeographicZone zone = mapper.getGeographicZoneById(4);
 
     assertThat(zone, is(expectedZone));
   }
 
+  @Test
+  public void shouldUpdateGeographicZone() throws Exception {
+    GeographicZone geographicZone = new GeographicZone(null, "code", "name", new GeographicLevel(2,"state", "State", 2), null);
+
+    mapper.insert(geographicZone);
+
+    geographicZone.setName("new name");
+    geographicZone.setLevel(new GeographicLevel(1,"country", "Country", 1));
+
+    mapper.update(geographicZone);
+
+    GeographicZone returnedZone = mapper.getGeographicZoneByCode("code");
+    returnedZone.setModifiedDate(null);
+
+    assertThat(returnedZone, is(geographicZone));
+  }
 }

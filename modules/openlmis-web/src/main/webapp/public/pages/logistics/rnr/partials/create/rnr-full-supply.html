@@ -1,0 +1,313 @@
+<!--
+  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
+<div ng-controller = "CreateFullSupplyController" >
+  <div id="pageErrors" class="rnr-page-errors" ng-show="errorPages.fullSupply">
+    <div class="dropdown">
+      <a class="dropdown-toggle">
+            Errors found on
+            <ng-pluralize count="errorPages.fullSupply.length"
+                                when="{ 1: '{} page',
+                                        other: '{} pages'}">
+
+            </ng-pluralize> |
+          </a>
+          <ul class="dropdown-menu">
+            <li ng-repeat="page in errorPages.fullSupply">
+              <a ng-click="goToPage(page, $event)">{{page}}</a>
+            </li>
+          </ul>
+    </div>
+
+  </div>
+  <div class = "rnr-table" >
+    <div ng-hide="pageLineItems.length" class="alert alert-info" openlmis-message="rnr.no.products"></div>
+    <table id = "fullSupplyTable" class = "table table-bordered" >
+      <thead >
+        <tr ng-show="pageLineItems.length">
+          <th class = "col-{{programRnrColumn.name}}" ng-repeat = "programRnrColumn in visibleColumns"
+              ng-hide = "programRnrColumn.name == 'quantityApproved'" ng-bind = "programRnrColumn.label" ></th >
+        </tr >
+      </thead >
+      <tbody ng-show = "visibleColumns && (rnr.fullSupplyLineItems.length > 0)"
+             ng-repeat = "rnrLineItem in pageLineItems" >
+        <tr >
+          <td class = "productCategory" colspan = "{{visibleColumns.length}}" ng-show = "showCategory($index)"
+              ng-bind = "rnrLineItem.productCategory" ></td >
+        </tr >
+        <tr ng-class = "getRowErrorClass(rnrLineItem)" >
+          <td class = "cell-input" ng-repeat = "column in visibleColumns"
+              ng-hide = "column.name == 'quantityApproved'" >
+            <ng-switch on = "column.source.name" >
+              <span ng-switch-when = "USER_INPUT" >
+                <ng-switch on = "column.name" >
+                  <span ng-switch-when = "beginningBalance"
+                        ng-class = "getCellErrorClass(rnrLineItem)" >
+                    <ng-switch on = "rnrLineItem.previousStockInHandAvailable" >
+                      <span ng-switch-when = 'false' >
+                        <input id = "{{getId(column.name, $parent.$parent)}}" type = "text"
+                               ng-required = "true" ng-disabled = "formDisabled"
+                               name = "beginningBalance{{rnrLineItem['id']}}"
+                               ng-model = "rnrLineItem[column.name]"
+                               rnr-validator = "positiveInteger" maxlength = "8"
+                               ng-change = "rnr.fillConsumptionOrStockInHand(rnrLineItem)"
+                               ng-class = "highlightRequired(rnrLineItem[column.name])" /></span >
+                      <span ng-switch-default >
+                        <span class = "cell-text" ng-bind = "rnrLineItem[column.name]" ></span ></span >
+                    </ng-switch >
+                    <span class = "rnr-form-error" id = "beginningBalance{{rnrLineItem['id']}}"
+                          style = "display:none;" openlmis-message="rnr.number.error">
+                    </span >
+
+                    <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage()" >
+                      <span ng-bind = "rnrLineItem.getErrorMessage()" ></span >
+                      <span class = "beak-down" ></span >
+                    </span >
+                  </span >
+
+                  <span ng-switch-when = "quantityReceived"
+                        ng-class = "getCellErrorClass(rnrLineItem)" >
+                    <input ng-required = "true" ng-disabled = "formDisabled"
+                           id = "{{getId(column.name, $parent)}}" type = "text"
+                           name = "quantityReceived{{rnrLineItem['id']}}"
+                           ng-model = "rnrLineItem[column.name]"
+                           rnr-validator = "positiveInteger" maxlength = "8"
+                           ng-change = "rnr.fillConsumptionOrStockInHand(rnrLineItem)"
+                           ng-class = "highlightRequired(rnrLineItem[column.name])" />
+                    <span class = "rnr-form-error" id = "quantityReceived{{rnrLineItem['id']}}"
+                          style = "display:none;" openlmis-message="rnr.number.error">
+                    </span >
+                    <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage()" >
+                      <span ng-bind = "rnrLineItem.getErrorMessage()" ></span >
+                      <span class = "beak-down" ></span >
+                    </span >
+                  </span >
+
+                  <span ng-switch-when = "quantityDispensed"
+                        ng-class = "getCellErrorClass(rnrLineItem, programRnrColumnList)" >
+                    <input ng-required = "true" ng-disabled = "formDisabled"
+                           id = "{{getId(column.name, $parent)}}" type = "text"
+                           name = "quantityDispensed{{rnrLineItem['id']}}"
+                           ng-model = "rnrLineItem[column.name]"
+                           rnr-validator = "positiveInteger"
+                           ng-change = "rnr.fillConsumptionOrStockInHand(rnrLineItem)"
+                           maxlength = "8"
+                           ng-class = "highlightRequired(rnrLineItem[column.name])" />
+                    <span class = "rnr-form-error" id = "quantityDispensed{{rnrLineItem['id']}}"
+                          style = "display:none;" openlmis-message="rnr.number.error">
+                    </span >
+                    <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage()"
+                          style = "background: red;" >
+                      <span ng-bind = "rnrLineItem.getErrorMessage()" ></span >
+                      <span class = "beak-down" ></span >
+                    </span >
+                  </span >
+
+                  <span ng-switch-when = "lossesAndAdjustments" >
+                    <div
+                      ng-class = "highlightNestedFieldsWithError(rnrLineItem[column.name], 'quantity')" >
+                      <a ng-click = "showLossesAndAdjustments(rnrLineItem)"
+                         class = "rnr-adjustment" >
+                        <span class = "adjustment-value" ng-bind = "rnrLineItem.totalLossesAndAdjustments" ></span >
+                      </a >
+                    </div >
+                  </span >
+
+
+                  <span ng-switch-when = "stockInHand"
+                        ng-class = "getCellErrorClass(rnrLineItem)" >
+                    <input ng-required = "true" ng-disabled = "formDisabled"
+                           id = "{{getId(column.name, $parent)}}" type = "text"
+                           name = "stockInHand{{rnrLineItem['id']}}"
+                           ng-model = "rnrLineItem[column.name]"
+                           rnr-validator = "positiveInteger"
+                           ng-change = "rnr.fillConsumptionOrStockInHand(rnrLineItem)"
+                           maxlength = "8"
+                           ng-class = "highlightRequired(rnrLineItem[column.name])" />
+                    <span class = "rnr-form-error" id = "stockInHand{{rnrLineItem['id']}}"
+                          style = "display:none;" openlmis-message="rnr.number.error">
+                    </span >
+                    <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage()" >
+                      <span ng-bind = "rnrLineItem.getErrorMessage()" ></span >
+                      <span class = "beak-down" ></span >
+                    </span >
+                  </span >
+
+                  <span ng-switch-when = "newPatientCount" >
+                    <input ng-required = "true" ng-disabled = "formDisabled" id = "{{getId(column.name, $parent)}}"
+                           type = "text"
+                           name = "newPatientCount{{rnrLineItem['id']}}"
+                           ng-model = "rnrLineItem[column.name]"
+                           rnr-validator = "positiveInteger" maxlength = "8"
+                           ng-change = "rnr.fillNormalizedConsumption(rnrLineItem)"
+                           ng-class = "highlightRequired(rnrLineItem[column.name])" />
+                    <span class = "rnr-form-error" id = "newPatientCount{{rnrLineItem['id']}}"
+                          style = "display:none;" openlmis-message="rnr.number.error" >
+                    </span >
+                  </span >
+
+                  <span ng-switch-when = "quantityRequested" >
+                    <input ng-disabled = "formDisabled" id = "{{getId(column.name, $parent)}}" type = "text"
+                           name = "quantityRequested{{rnrLineItem['id']}}"
+                           ng-model = "rnrLineItem[column.name]"
+                           rnr-validator = "positiveInteger" maxlength = "8"
+                           ng-change = "rnr.fillPacksToShip(rnrLineItem)" />
+                    <span class = "rnr-form-error" id = "quantityRequested{{rnrLineItem['id']}}"
+                          style = "display:none;" openlmis-message="rnr.number.error">
+                    </span >
+                  </span >
+
+                  <span ng-switch-when = "remarks" >
+                    <input ng-disabled = "formDisabled" id = "{{getId(column.name, $parent)}}" type = "text"
+                           name = "remarks{{rnrLineItem['id']}}"
+                           ng-model = "rnrLineItem[column.name]"
+                           maxlength = "250" />
+                  </span >
+
+                  <span ng-switch-when = "reasonForRequestedQuantity" >
+                    <input ng-disabled = "formDisabled" id = "{{getId(column.name, $parent)}}" type = "text"
+                           name = "reasonForRequestedQuantity{{rnrLineItem['id']}}"
+                           ng-model = "rnrLineItem[column.name]"
+                           ng-required = "rnrLineItem.quantityRequested"
+                           ng-class = "highlightWarningBasedOnField(rnrLineItem[column.name],rnrLineItem.quantityRequested)"
+                           maxlength = "250" />
+                    <span class = "alert alert-warning reason-request"
+                          ng-show = "rnrLineItem.quantityRequested && !rnrLineItem.reasonForRequestedQuantity" >
+                      Please enter a reason
+                    </span >
+                  </span >
+
+                  <span ng-switch-when = "stockOutDays" >
+                    <input ng-required = "true" ng-disabled = "formDisabled" id = "{{getId(column.name, $parent)}}"
+                           type = "text" name = "stockOutDays{{rnrLineItem['id']}}"
+                           ng-model = "rnrLineItem[column.name]"
+                           rnr-validator = "positiveInteger" maxlength = "8"
+                           ng-change = "rnr.fillNormalizedConsumption(rnrLineItem)"
+                           ng-class = "highlightRequired(rnrLineItem[column.name])" />
+                    <span class = "rnr-form-error" id = "stockOutDays{{rnrLineItem['id']}}"
+                          style = "display:none;" openlmis-message="rnr.number.error">
+                    </span >
+                  </span >
+                </ng-switch >
+              </span >
+              <span ng-switch-default >
+                <ng-switch on = "column.name" >
+                  <span ng-switch-when = "stockInHand"
+                        ng-class = "getCellErrorClass(rnrLineItem)" >
+                    <span id = "{{getId(column.name, $parent)}}" ng-bind = "rnrLineItem[column.name]" class = "cell-text" > </span >
+                    <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage()" >
+                      <span ng-bind = "rnrLineItem.getErrorMessage()" ></span >
+                      <span class = "beak-down" ></span >
+                    </span >
+                  </span >
+                  <span ng-switch-when = "price" >
+                    <span ng-bind = 'rnrLineItem[column.name] | currency:currency' id="{{getId(column.name, $parent)}}" class = "cell-text" ></span >
+                  </span >
+                  <span ng-switch-when = "cost" >
+                    <span ng-bind = 'rnrLineItem[column.name] | currency:currency' id="{{getId(column.name, $parent)}}" class = "cell-text" ></span >
+                  </span >
+                  <span ng-switch-default ng-bind = "rnrLineItem[column.name]" id="{{getId(column.name, $parent)}}"  class = "cell-text" ></span >
+                </ng-switch >
+              </span >
+            </ng-switch >
+          </td >
+        </tr >
+      </tbody >
+    </table >
+  </div >
+
+  <div id = "lossesAndAdjustments" modal = "lossesAndAdjustmentsModal"
+       options = "{'backdrop':'static', 'escape':false}" >
+    <div class = "modal-header" ><h3 >Losses And Adjustments </h3 ></div >
+    <div class = "modal-body" >
+      <div class = "adjustment-field" >
+        <h5 >Add new Loss/Adjustment</h5 >
+
+        <div class = "row-fluid" >
+          <div class = "span5" >
+            <select ng-disabled = "formDisabled"
+                    ng-model = "lossAndAdjustment.type"
+                    ng-options = "i as i.description for i in lossesAndAdjustmentTypesToDisplay" >
+              <option value = "" >--Select Type--</option >
+            </select >
+          </div >
+          <div class = "span3" >
+            <input ng-disabled = "formDisabled" type = "text"
+                   name = "quantity{{currentRnrLineItem.id}}"
+                   ng-model = "lossAndAdjustment.quantity"
+                   rnr-validator = "positiveInteger" prevent-rnr-error = "true" maxlength = "8"
+                   placeholder = "Quantity" />
+
+            <div class = "rnr-form-error"
+                 id = "quantity{{currentRnrLineItem.id}}"
+                 style = "display:none;" openlmis-message="rnr.number.error">
+            </div >
+          </div >
+          <div class = "span4" >
+            <input type = "button"
+                   ng-click = "addLossAndAdjustment(lossAndAdjustment)"
+                   ng-disabled = "!(lossAndAdjustment.type && lossAndAdjustment.quantity)"
+                   class = "btn btn-primary" value = "Add" />
+          </div >
+        </div >
+
+
+      </div >
+      <hr ng-show = "currentRnrLineItem.lossesAndAdjustments.length > 0" />
+      <div class = "adjustment-list"
+           ng-show = "currentRnrLineItem.lossesAndAdjustments.length > 0" >
+        <ul >
+          <li ng-repeat = "adjustment in currentRnrLineItem.lossesAndAdjustments"
+              class = "clearfix" >
+            <span class = "tpl-adjustment-type"
+                  ng-bind = "adjustment.type.description" ></span >
+            <span class = "tpl-adjustment-delete" >
+              <a class = "close" ng-show = "!formDisabled"
+                 ng-click = "removeLossAndAdjustment(adjustment)" >&times;</a >
+            </span >
+            <span class = "tpl-adjustment-qty" >
+              <input ng-required = "true"
+                     ng-disabled = "formDisabled"
+                     name = "{{adjustment.type.displayOrder}}"
+                     type = "text"
+                     ng-model = "adjustment.quantity"
+                     ng-change = "currentRnrLineItem.reEvaluateTotalLossesAndAdjustments(rnr, programRnrColumnList); resetModalError()"
+                     rnr-validator = "positiveInteger"
+                     maxlength = "8"
+                     ng-class = "highlightRequiredFieldInModal(adjustment.quantity)"
+                     data-keyboard = "false"
+                />
+
+              <div class = "rnr-form-error"
+                   id = "{{adjustment.type.displayOrder}}"
+                   style = "display:none;" openlmis-message="rnr.number.error">
+              </div >
+            </span >
+          </li >
+        </ul >
+      </div >
+
+      <div class = "adjustment-total clearfix alert alert-warning"
+           ng-show = "currentRnrLineItem.lossesAndAdjustments.length > 0" >
+        <span class = "pull-left" >Total</span ><span
+        ng-bind = "currentRnrLineItem.totalLossesAndAdjustments" ></span >
+      </div >
+      <div class = "alert alert-danger" id = "modalErrorMessage"
+           ng-show = "currentRnrLineItem.lossesAndAdjustments.length > 0 && modalError"
+           ng-bind = "modalError" ></div >
+    </div >
+    <div class = "modal-footer">
+      <input type = "button" class = "btn btn-primary save-button"
+             ng-click = "saveLossesAndAdjustmentsForRnRLineItem()"
+             value = "Done" />
+      <input type = "button"
+             ng-click = "clearAndCloseLossesAndAdjustmentModal();modalError=''"
+             class = "btn btn-cancel" value = "Cancel" />
+
+    </div >
+  </div >
+
+</div >

@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository;
 
 import org.junit.Before;
@@ -139,4 +145,20 @@ public class ProductRepositoryTest {
     repository.getIdByCode("code");
   }
 
+  @Test
+  public void shouldReturnProductByCode() {
+    Product product = new Product();
+    String productCode = "P1";
+    when(mockedMapper.getByCode(productCode)).thenReturn(product);
+    Product returnedProduct = repository.getByCode(productCode);
+    assertThat(returnedProduct, is(product));
+  }
+
+
+  @Test
+  public void shouldUpdateProduct() {
+    Product product = new Product();
+    repository.update(product);
+    verify(mockedMapper).update(product);
+  }
 }

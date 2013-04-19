@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository.mapper;
 
 import org.junit.Assert;
@@ -18,7 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
+import static java.lang.Boolean.FALSE;
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -102,7 +108,7 @@ public class RoleRightsMapperIT {
 
   @Test
   public void shouldGetRoleAndRights() throws Exception {
-    Role role = new Role(111, "role name", "description", 123, null, null);
+    Role role = new Role(111, "role name", Boolean.FALSE, "description", null);
     roleRightsMapper.insertRole(role);
 
     roleRightsMapper.createRoleRight(role.getId(), CREATE_REQUISITION);
@@ -122,15 +128,15 @@ public class RoleRightsMapperIT {
   @Test(expected = DuplicateKeyException.class)
   public void shouldThrowDuplicateKeyExceptionIfDuplicateRoleName() throws Exception {
     String duplicateRoleName = "role name";
-    Role role = new Role(duplicateRoleName, "");
-    Role role2 = new Role(duplicateRoleName, "any other description");
+    Role role = new Role(duplicateRoleName, FALSE, "");
+    Role role2 = new Role(duplicateRoleName, FALSE, "any other description");
     roleRightsMapper.insertRole(role);
     roleRightsMapper.insertRole(role2);
   }
 
   @Test
   public void shouldReturnAllRolesInSystem() throws Exception {
-    Role role = new Role("role name", "");
+    Role role = new Role("role name", FALSE, "");
     roleRightsMapper.insertRole(role);
     roleRightsMapper.createRoleRight(role.getId(), CONFIGURE_RNR);
     roleRightsMapper.createRoleRight(role.getId(), CREATE_REQUISITION);
@@ -147,13 +153,14 @@ public class RoleRightsMapperIT {
 
   @Test
   public void shouldUpdateRole() {
-    Role role = new Role(11, "Right Name", "Right Desc", 1111, null, null);
+    Role role = new Role(11, "Right Name", Boolean.FALSE, "Right Desc", null);
     roleRightsMapper.insertRole(role);
 
     role.setName("Right2");
     role.setRights(new HashSet<>(asList(CREATE_REQUISITION)));
     role.setDescription("Right Description Changed");
     role.setModifiedBy(222);
+    role.setAdminRole(true);
 
     roleRightsMapper.updateRole(role);
 
@@ -161,11 +168,12 @@ public class RoleRightsMapperIT {
     assertThat(updatedRole.getName(), is("Right2"));
     assertThat(updatedRole.getDescription(), is("Right Description Changed"));
     assertThat(updatedRole.getModifiedBy(), is(222));
+    assertThat(updatedRole.getAdminRole(), is(true));
   }
 
   @Test
   public void shouldDeleteRights() throws Exception {
-    Role role = new Role(11, "Right Name", "Right Desc", 1111, null, null);
+    Role role = new Role(11, "Right Name", Boolean.FALSE, "Right Desc", null);
     roleRightsMapper.insertRole(role);
     roleRightsMapper.createRoleRight(role.getId(), CREATE_REQUISITION);
     roleRightsMapper.createRoleRight(role.getId(), UPLOADS);
@@ -196,9 +204,10 @@ public class RoleRightsMapperIT {
     roleAssignmentMapper.insertRoleAssignment(user.getId(), program.getId(), supervisoryNode1.getId(), role1.getId());
     roleAssignmentMapper.insertRoleAssignment(user.getId(), program.getId(), supervisoryNode2.getId(), role2.getId());
 
-    List<Right> result = roleRightsMapper.getRightsForUserOnSupervisoryNodeAndProgram(user.getId(), "{" + supervisoryNode1.getId()+", "+ supervisoryNode2.getId()+"}", program);
+    List<Right> result = roleRightsMapper.getRightsForUserOnSupervisoryNodeAndProgram(user.getId(), "{" + supervisoryNode1.getId() + ", " + supervisoryNode2.getId() + "}", program);
     assertThat(result.size(), is(2));
-    assertThat(result, is(asList(CREATE_REQUISITION, AUTHORIZE_REQUISITION)));
+    assertTrue(result.contains(CREATE_REQUISITION));
+    assertTrue(result.contains(AUTHORIZE_REQUISITION));
   }
 
   @Test
@@ -218,11 +227,20 @@ public class RoleRightsMapperIT {
 
     List<Right> result = roleRightsMapper.getRightsForUserOnHomeFacilityAndProgram(user.getId(), program);
     assertThat(result.size(), is(2));
-    assertThat(result, is(asList(CREATE_REQUISITION, AUTHORIZE_REQUISITION)));
+    assertTrue(result.contains(CREATE_REQUISITION));
+    assertTrue(result.contains(AUTHORIZE_REQUISITION));
+  }
+
+  @Test
+  public void shouldInsertRole() throws Exception {
+    Role r1 = new Role("rolename", FALSE, "description");
+    roleRightsMapper.insertRole(r1);
+
+    assertThat(roleRightsMapper.getRole(r1.getId()).getName(), is("rolename"));
   }
 
   private Role insertRole(String name, String description) {
-    Role r1 = new Role(name, description);
+    Role r1 = new Role(name, FALSE, description);
     roleRightsMapper.insertRole(r1);
     return r1;
   }

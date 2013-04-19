@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository.mapper;
 
 import org.hamcrest.CoreMatchers;
@@ -16,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.lang.Boolean.FALSE;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -57,7 +64,6 @@ public class SupervisoryNodeMapperIT {
   @Before
   public void setUp() throws Exception {
     supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
-
     facility = make(a(FacilityBuilder.defaultFacility));
     facilityMapper.insert(facility);
     supervisoryNode.setFacility(facility);
@@ -77,6 +83,28 @@ public class SupervisoryNodeMapperIT {
   }
 
   @Test
+  public void shouldUpdateSupervisoryNode() throws Exception {
+    supervisoryNodeMapper.insert(supervisoryNode);
+
+    SupervisoryNode supervisoryNodeParent = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(SupervisoryNodeBuilder.code, "PN")));
+    supervisoryNodeParent.setFacility(facility);
+    supervisoryNodeMapper.insert(supervisoryNodeParent);
+
+    supervisoryNode.setName("updated name");
+    supervisoryNode.setDescription("updated description");
+
+    supervisoryNode.setParent(supervisoryNodeParent);
+    supervisoryNodeMapper.update(supervisoryNode);
+
+    SupervisoryNode resultSupervisoryNode = supervisoryNodeMapper.getSupervisoryNode(supervisoryNode.getId());
+
+    assertThat(resultSupervisoryNode, is(notNullValue()));
+    assertThat(resultSupervisoryNode.getName(), is("updated name"));
+    assertThat(resultSupervisoryNode.getDescription(), is("updated description"));
+    assertThat(resultSupervisoryNode.getParent().getId(), is(supervisoryNodeParent.getId()));
+  }
+
+  @Test
   public void shouldGetSupervisoryNodeIdByCode() throws Exception {
     supervisoryNodeMapper.insert(supervisoryNode);
 
@@ -86,16 +114,25 @@ public class SupervisoryNodeMapperIT {
   }
 
   @Test
+  public void shouldGetSupervisoryNodeByCode() throws Exception {
+    supervisoryNodeMapper.insert(supervisoryNode);
+
+    SupervisoryNode result = supervisoryNodeMapper.getByCode(supervisoryNode);
+
+    assertThat(result, is(supervisoryNode));
+  }
+
+  @Test
   public void shouldGetAllSupervisoryNodesInTheHierarchyForAUserAndProgramWithAppropriateRight() {
     Program program1 = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
     Program program2 = insertProgram(make(a(defaultProgram, with(programCode, "p2"))));
 
     User user = insertUser();
 
-    Role createRole = new Role("create role", "random description");
+    Role createRole = new Role("create role", FALSE, "random description");
     roleRightsMapper.insertRole(createRole);
 
-    Role configureRnrRole = new Role("configure rnr", "random description");
+    Role configureRnrRole = new Role("configure rnr", FALSE, "random description");
     roleRightsMapper.insertRole(configureRnrRole);
 
     roleRightsMapper.createRoleRight(createRole.getId(), CREATE_REQUISITION);
@@ -131,10 +168,10 @@ public class SupervisoryNodeMapperIT {
 
     User user = insertUser();
 
-    Role createRole = new Role("create role", "random description");
+    Role createRole = new Role("create role", FALSE, "random description");
     roleRightsMapper.insertRole(createRole);
 
-    Role configureRnrRole = new Role("configure rnr", "random description");
+    Role configureRnrRole = new Role("configure rnr", FALSE, "random description");
     roleRightsMapper.insertRole(configureRnrRole);
 
     roleRightsMapper.createRoleRight(createRole.getId(), CREATE_REQUISITION);

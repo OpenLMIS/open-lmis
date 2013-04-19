@@ -1,9 +1,15 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.upload;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Facility;
-import org.openlmis.core.repository.FacilityRepository;
-import org.openlmis.upload.Importable;
+import org.openlmis.core.service.FacilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,17 +17,28 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 public class FacilityPersistenceHandler extends AbstractModelPersistenceHandler {
 
-    private FacilityRepository facilityRepository;
+  public static final String DUPLICATE_FACILITY_CODE = "Duplicate Facility Code";
+  private FacilityService facilityService;
 
-    @Autowired
-    public FacilityPersistenceHandler(FacilityRepository facilityRepository) {
-        this.facilityRepository = facilityRepository;
-    }
+  @Autowired
+  public FacilityPersistenceHandler(FacilityService facilityService) {
+    this.facilityService = facilityService;
+  }
 
-    @Override
-    protected void save(Importable importable, Integer modifiedBy) {
-        Facility facility = (Facility) importable;
-        facility.setModifiedBy(modifiedBy);
-        facilityRepository.save(facility);
-    }
+  @Override
+  protected BaseModel getExisting(BaseModel record) {
+    return facilityService.getByCode((Facility) record);
+  }
+
+  @Override
+  protected void save(BaseModel record) {
+    facilityService.save((Facility) record);
+  }
+
+  @Override
+  protected String getDuplicateMessageKey() {
+    return DUPLICATE_FACILITY_CODE;
+  }
+
+
 }

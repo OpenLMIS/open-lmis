@@ -1,5 +1,14 @@
+<!--
+  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
 <div id="requisition-header">
   <h2>Report and Requisition for <span ng-bind="rnr.program.name + ' (' + rnr.facility.facilityType.name + ')'"></span>
+    <span class="pull-right">
+      <a class="btn btn-primary" ng-href="/requisitions/{{rnr.id}}/print.pdf" openlmis-message="button.print"></a>
+    </span>
   </h2>
 
   <div class="info-box">
@@ -8,10 +17,10 @@
         <strong>Facility: </strong><span ng-bind="rnr.facility.code + ' - ' + rnr.facility.name"></span>
       </div>
       <div class="span3">
-        <strong>Operated By: </strong><span ng-bind="rnr.facility.operatedBy.text"></span>
+        <strong>Operated by: </strong><span ng-bind="rnr.facility.operatedBy.text"></span>
       </div>
       <div class="span3">
-        <strong>Maximum Stock level: </strong><span ng-bind="rnr.facility.facilityType.nominalMaxMonth"></span>
+        <strong>Maximum Stock Level: </strong><span ng-bind="rnr.facility.facilityType.nominalMaxMonth"></span>
       </div>
       <div class="span3">
         <strong>Emergency Order Point: </strong><span ng-bind="rnr.facility.facilityType.nominalEop"></span>
@@ -20,14 +29,14 @@
     <div class="row-fluid">
       <div class="span3">
         <strong><span ng-bind="rnr.facility.geographicZone.level.name"></span>: </strong><span
-        ng-bind="rnr.facility.geographicZone.name"></span>
+          ng-bind="rnr.facility.geographicZone.name"></span>
       </div>
       <div class="span3">
         <strong><span ng-bind="rnr.facility.geographicZone.parent.level.name"></span>: </strong><span
-        ng-bind="rnr.facility.geographicZone.parent.name"></span>
+          ng-bind="rnr.facility.geographicZone.parent.name"></span>
       </div>
       <div class="span3">
-        <strong>Reporting Period: </strong><span ng-bind="periodDisplayName()"></span>
+        <strong>Reporting Period: </strong><span ng-bind="rnr.periodDisplayName()"></span>
       </div>
       <div class="span3"></div>
     </div>

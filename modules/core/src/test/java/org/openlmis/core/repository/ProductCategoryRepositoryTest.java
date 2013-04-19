@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository;
 
 import org.junit.Before;
@@ -41,7 +47,7 @@ public class ProductCategoryRepositoryTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage(DUPLICATE_CATEGORY_NAME);
 
-    productCategoryRepository.save(productCategory);
+    productCategoryRepository.insert(productCategory);
 
   }
 
@@ -53,7 +59,7 @@ public class ProductCategoryRepositoryTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("Incorrect data length");
 
-    productCategoryRepository.save(productCategory);
+    productCategoryRepository.insert(productCategory);
   }
 
   @Test
@@ -63,28 +69,15 @@ public class ProductCategoryRepositoryTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("Missing/Invalid Reference data");
 
-    productCategoryRepository.save(productCategory);
+    productCategoryRepository.insert(productCategory);
   }
 
   @Test
   public void shouldInsertProductCategoryIfDoesNotExist() {
     ProductCategory productCategory = new ProductCategory();
     when(productCategoryMapper.getProductCategoryByCode(productCategory.getCode())).thenReturn(null);
-    productCategoryRepository.save(productCategory);
+    productCategoryRepository.insert(productCategory);
     verify(productCategoryMapper).insert(productCategory);
-  }
-
-  @Test
-  public void shouldUpdateProductCategoryIfAlreadyExists() {
-    ProductCategory productCategory = new ProductCategory();
-    productCategory.setCode("catgeory code");
-    productCategory.setName("category name");
-    ProductCategory categoryByCode = new ProductCategory();
-    when(productCategoryMapper.getProductCategoryByCode(productCategory.getCode())).thenReturn(categoryByCode);
-    productCategoryRepository.save(productCategory);
-    verify(productCategoryMapper).update(categoryByCode);
-    assertThat(categoryByCode.getName(), is(productCategory.getName()));
-    verify(productCategoryMapper, times(0)).insert(productCategory);
   }
 
   @Test

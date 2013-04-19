@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
@@ -32,6 +38,9 @@ public class RoleAssignmentService {
     List<RoleAssignment> supervisorRoles = user.getSupervisorRoles();
     saveRoles(user, supervisorRoles);
   }
+  public void saveAdminRole(User user) {
+    saveRoles(user, user.getAdminRole());
+  }
 
   public void deleteAllRoleAssignmentsForUser(Integer id) {
     roleAssignmentRepository.deleteAllRoleAssignmentsForUser(id);
@@ -51,9 +60,16 @@ public class RoleAssignmentService {
       for (Integer role : roleAssignment.getRoleIds()) {
         SupervisoryNode node = roleAssignment.getSupervisoryNode();
         Integer supervisoryNodeId = null;
-        if(node != null) supervisoryNodeId = node.getId();
+        if (node != null) supervisoryNodeId = node.getId();
         roleAssignmentRepository.insertRoleAssignment(user.getId(), roleAssignment.getProgramId(), supervisoryNodeId, role);
       }
+    }
+  }
+
+  private void saveRoles(User user, RoleAssignment adminRole) {
+    if (adminRole == null) return;
+    for (Integer role : adminRole.getRoleIds()) {
+      roleAssignmentRepository.insertRoleAssignment(user.getId(), null, null, role);
     }
   }
 
@@ -61,7 +77,13 @@ public class RoleAssignmentService {
     return roleAssignmentRepository.getHomeFacilityRolesForUserOnGivenProgramWithRights(userId, programId, rights);
   }
 
-  public List<RoleAssignment> getRoleAssignments(Right right, int userId) {
+  public List<RoleAssignment> getRoleAssignments(Right right, Integer userId) {
     return roleAssignmentRepository.getRoleAssignmentsForUserWithRight(right, userId);
   }
+
+  public RoleAssignment getAdminRole(Integer userId) {
+    return roleAssignmentRepository.getAdminRole(userId);
+  }
+
+
 }

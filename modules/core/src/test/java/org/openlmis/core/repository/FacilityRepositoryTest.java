@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository;
 
 import org.joda.time.DateTime;
@@ -9,10 +15,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.openlmis.core.builder.FacilityBuilder;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.GeographicLevel;
-import org.openlmis.core.domain.GeographicZone;
-import org.openlmis.core.domain.Right;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -21,6 +24,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
@@ -28,6 +33,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
+import static org.openlmis.core.builder.FacilityBuilder.FACILITY_TYPE_ID;
 import static org.openlmis.core.builder.FacilityBuilder.GEOGRAPHIC_ZONE_CODE;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -59,6 +65,7 @@ public class FacilityRepositoryTest {
     geographicZone.setLevel(defaultGeographicLevel);
     when(geographicZoneRepository.getByCode(GEOGRAPHIC_ZONE_CODE)).thenReturn(geographicZone);
     when(geographicZoneRepository.getLowestGeographicLevel()).thenReturn(4);
+    when(mapper.getFacilityTypeForCode(FacilityBuilder.FACILITY_TYPE_CODE)).thenReturn(new FacilityType(FACILITY_TYPE_ID));
     repository = new FacilityRepository(mapper, null, geographicZoneRepository);
   }
 
@@ -70,7 +77,6 @@ public class FacilityRepositoryTest {
 
     repository.save(facility);
 
-    assertThat(facility.getModifiedDate(), is(now.toDate()));
     verify(mapper).insert(facility);
   }
 
@@ -135,7 +141,7 @@ public class FacilityRepositoryTest {
   public void shouldRaiseInvalidReferenceDataFacilityTypeError() throws Exception {
     Facility facility = make(a(defaultFacility));
     facility.getFacilityType().setCode("invalid code");
-    when(mapper.getFacilityTypeIdForCode("invalid code")).thenReturn(null);
+    when(mapper.getFacilityTypeForCode("invalid code")).thenReturn(null);
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Invalid reference data 'Facility Type'");
@@ -156,7 +162,9 @@ public class FacilityRepositoryTest {
   public void shouldSetFacilityTypeIdWhenCodeIsValid() throws Exception {
     Facility facility = make(a(defaultFacility));
     facility.getFacilityType().setCode("valid code");
-    when(mapper.getFacilityTypeIdForCode("valid code")).thenReturn(1);
+    FacilityType facilityType = new FacilityType("code");
+    facilityType.setId(1);
+    when(mapper.getFacilityTypeForCode("valid code")).thenReturn(facilityType);
 
     repository.save(facility);
     assertThat(facility.getFacilityType().getId(), is(1));
@@ -278,4 +286,5 @@ public class FacilityRepositoryTest {
     assertThat(userHomeFacility, is(expectedFacility));
     verify(mapper).getHomeFacilityWithRights(1, "{APPROVE_REQUISITION, CREATE_REQUISITION}");
   }
+
 }

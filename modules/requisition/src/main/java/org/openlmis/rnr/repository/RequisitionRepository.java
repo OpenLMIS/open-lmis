@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.rnr.repository;
 
 import lombok.NoArgsConstructor;
@@ -8,9 +14,7 @@ import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.rnr.domain.*;
-import org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper;
-import org.openlmis.rnr.repository.mapper.RequisitionMapper;
-import org.openlmis.rnr.repository.mapper.RnrLineItemMapper;
+import org.openlmis.rnr.repository.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -25,15 +29,21 @@ public class RequisitionRepository {
   private RequisitionMapper requisitionMapper;
   private RnrLineItemMapper rnrLineItemMapper;
   private LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
+  private CommentMapper commentMapper;
   private CommaSeparator commaSeparator;
+  private RequisitionStatusChangeMapper requisitionStatusChangeMapper;
 
 
   @Autowired
-  public RequisitionRepository(RequisitionMapper requisitionMapper, RnrLineItemMapper rnrLineItemMapper, LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper, CommaSeparator separator) {
+  public RequisitionRepository(RequisitionMapper requisitionMapper, RnrLineItemMapper rnrLineItemMapper,
+                               LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper, CommaSeparator separator,
+                               CommentMapper commentMapper, RequisitionStatusChangeMapper requisitionStatusChangeMapper) {
     this.requisitionMapper = requisitionMapper;
     this.rnrLineItemMapper = rnrLineItemMapper;
     this.lossesAndAdjustmentsMapper = lossesAndAdjustmentsMapper;
+    this.commentMapper = commentMapper;
     commaSeparator = separator;
+    this.requisitionStatusChangeMapper = requisitionStatusChangeMapper;
   }
 
   public void insert(Rnr requisition) {
@@ -79,8 +89,8 @@ public class RequisitionRepository {
     }
   }
 
-  public Rnr getRequisition(Facility facility, Program program, ProcessingPeriod period) {
-    return requisitionMapper.getRequisition(facility, program, period);
+  public Rnr getRequisitionWithLineItems(Facility facility, Program program, ProcessingPeriod period) {
+    return requisitionMapper.getRequisitionWithLineItems(facility, program, period);
   }
 
 
@@ -114,7 +124,7 @@ public class RequisitionRepository {
     requisitionMapper.createOrderBatch(orderBatch);
   }
 
-  public OrderBatch getOrderBatchById(Integer id){
+  public OrderBatch getOrderBatchById(Integer id) {
     return requisitionMapper.getOrderBatchById(id);
   }
 
@@ -124,6 +134,19 @@ public class RequisitionRepository {
 
   public Integer getCategoryCount(Rnr requisition, boolean fullSupply) {
     return rnrLineItemMapper.getCategoryCount(requisition, fullSupply);
+  }
+
+  public List<Comment> getCommentsByRnrID(Integer rnrId) {
+    return commentMapper.getByRnrId(rnrId);
+  }
+
+  public void insertComment(Comment comment) {
+    commentMapper.insert(comment);
+  }
+
+  public void logStatusChange(Rnr requisition) {
+    RequisitionStatusChange statusChange = new RequisitionStatusChange(requisition);
+    requisitionStatusChangeMapper.insert(statusChange);
   }
 }
 

@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.rnr.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
@@ -11,22 +17,25 @@ import java.util.List;
 public interface RnrLineItemMapper {
 
   @Insert({"INSERT INTO requisition_line_items",
-    "(rnrId, productCode, product, productCategory, beginningBalance, quantityReceived, quantityDispensed, dispensingUnit, dosesPerMonth, ",
-    "dosesPerDispensingUnit, maxMonthsOfStock, totalLossesAndAdjustments, packsToShip, ",
-    "packSize, price, roundToZero, packRoundingThreshold,",
-    "fullSupply, previousStockInHandAvailable, newPatientCount, stockOutDays, modifiedBy, modifiedDate)",
-    "VALUES (" +
-      "#{rnrId}, #{productCode}, #{product}, #{productCategory}, #{beginningBalance}, #{quantityReceived}, #{quantityDispensed}, #{dispensingUnit}, #{dosesPerMonth},",
-    "#{dosesPerDispensingUnit}, #{maxMonthsOfStock},#{totalLossesAndAdjustments}, #{packsToShip},",
-    "#{packSize}, #{price}, #{roundToZero}, #{packRoundingThreshold},",
-    "#{fullSupply}, #{previousStockInHandAvailable}, #{newPatientCount}, #{stockOutDays}, #{modifiedBy}, #{modifiedDate})"})
+    "(rnrId, productCode, product, productDisplayOrder, productCategory, productCategoryDisplayOrder, beginningBalance,",
+    "quantityReceived, quantityDispensed, dispensingUnit,dosesPerMonth, dosesPerDispensingUnit, maxMonthsOfStock,",
+    "totalLossesAndAdjustments, packsToShip, packSize, price, roundToZero, packRoundingThreshold, fullSupply,",
+    "previousStockInHandAvailable, newPatientCount, stockOutDays,",
+    "modifiedBy, modifiedDate)",
+    "VALUES (",
+    "#{rnrId}, #{productCode}, #{product}, #{productDisplayOrder}, #{productCategory}, #{productCategoryDisplayOrder}, #{beginningBalance},",
+    "#{quantityReceived}, #{quantityDispensed}, #{dispensingUnit},#{dosesPerMonth}, #{dosesPerDispensingUnit}, #{maxMonthsOfStock},",
+    "#{totalLossesAndAdjustments}, #{packsToShip}, #{packSize}, #{price},#{roundToZero}, #{packRoundingThreshold}, #{fullSupply},",
+    "#{previousStockInHandAvailable}, #{newPatientCount}, #{stockOutDays},",
+    "#{modifiedBy}, #{modifiedDate})"})
   @Options(useGeneratedKeys = true)
   public Integer insert(RnrLineItem rnrLineItem);
 
   @Select("SELECT * FROM requisition_line_items WHERE rnrId = #{rnrId} and fullSupply = true order by id")
   @Results(value = {
     @Result(property = "id", column = "id"),
-    @Result(property = "lossesAndAdjustments", javaType = List.class, column = "id", many = @Many(select = "org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper.getByRnrLineItem"))
+    @Result(property = "lossesAndAdjustments", javaType = List.class, column = "id",
+      many = @Many(select = "org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper.getByRnrLineItem"))
   })
   public List<RnrLineItem> getRnrLineItemsByRnrId(Integer rnrId);
 
@@ -54,15 +63,16 @@ public interface RnrLineItemMapper {
   int update(RnrLineItem rnrLineItem);
 
   @Insert({"INSERT INTO requisition_line_items",
-    "(rnrId, productCode, product, productCategory, dispensingUnit, dosesPerMonth, dosesPerDispensingUnit,",
-    "maxMonthsOfStock, packsToShip, packSize, price, roundToZero, packRoundingThreshold,",
-    "fullSupply, modifiedBy, quantityReceived, quantityDispensed, beginningBalance,",
+    "(rnrId, productCode, product, productDisplayOrder, productCategory, productCategoryDisplayOrder, dispensingUnit,",
+    "dosesPerMonth, dosesPerDispensingUnit, maxMonthsOfStock, packsToShip, packSize, price, roundToZero,",
+    "packRoundingThreshold, fullSupply, modifiedBy, quantityReceived, quantityDispensed, beginningBalance,",
     "stockInHand, totalLossesAndAdjustments, calculatedOrderQuantity, quantityApproved,",
-    "newPatientCount, stockOutDays, normalizedConsumption, amc, maxStockQuantity, remarks, quantityRequested, reasonForRequestedQuantity)",
-    "VALUES ( #{rnrId}, #{productCode}, #{product}, #{productCategory}, #{dispensingUnit}, #{dosesPerMonth},",
-    "#{dosesPerDispensingUnit}, #{maxMonthsOfStock}, #{packsToShip},",
-    "#{packSize}, #{price}, #{roundToZero}, #{packRoundingThreshold},",
-    "#{fullSupply}, #{modifiedBy}, 0, 0, 0,",
+    "newPatientCount, stockOutDays, normalizedConsumption, amc, maxStockQuantity,",
+    "remarks, quantityRequested, reasonForRequestedQuantity)",
+    "VALUES ( ",
+    "#{rnrId}, #{productCode}, #{product}, #{productDisplayOrder}, #{productCategory}, #{productCategoryDisplayOrder}, #{dispensingUnit},",
+    "#{dosesPerMonth}, #{dosesPerDispensingUnit}, #{maxMonthsOfStock}, #{packsToShip},#{packSize}, #{price}, #{roundToZero},",
+    "#{packRoundingThreshold}, #{fullSupply}, #{modifiedBy}, 0, 0, 0,",
     "0, 0, 0, #{quantityApproved},",
     "0, 0, 0, 0, 0,",
     " #{remarks}, #{quantityRequested}, #{reasonForRequestedQuantity})"})
@@ -76,6 +86,7 @@ public interface RnrLineItemMapper {
   @Delete("DELETE FROM requisition_line_items WHERE rnrId = #{rnrId} AND fullSupply = false")
   void deleteAllNonFullSupplyForRequisition(Integer rnrId);
 
-  @Select("SELECT COUNT(DISTINCT productCategory) FROM requisition_line_items WHERE rnrId=#{rnr.id} AND fullSupply = #{isFullSupply}")
-  public Integer getCategoryCount(@Param(value = "rnr")Rnr rnr, @Param(value = "isFullSupply")Boolean isFullSupply);
+  @Select(
+    "SELECT COUNT(DISTINCT productCategory) FROM requisition_line_items WHERE rnrId=#{rnr.id} AND fullSupply = #{isFullSupply}")
+  public Integer getCategoryCount(@Param(value = "rnr") Rnr rnr, @Param(value = "isFullSupply") Boolean isFullSupply);
 }

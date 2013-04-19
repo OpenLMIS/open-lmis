@@ -1,10 +1,16 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrStatus) {
   $.extend(true, this, lineItem);
   this.numberOfMonths = numberOfMonths;
   this.rnrStatus = rnrStatus;
   this.programRnrColumnList = programRnrColumnList;
 
-  RnrLineItem.prototype.initLossesAndAdjustments = function() {
+  RnrLineItem.prototype.initLossesAndAdjustments = function () {
     var tempLossesAndAdjustments = [];
 
     _.each(this.lossesAndAdjustments, function (lossAndAdjustmentJson) {
@@ -12,16 +18,16 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     });
 
     this.lossesAndAdjustments = tempLossesAndAdjustments;
-  }
+  };
 
-  RnrLineItem.prototype.init = function(){
+  RnrLineItem.prototype.init = function () {
     this.initLossesAndAdjustments();
     if (this.previousNormalizedConsumptions == undefined || this.previousNormalizedConsumptions == null)
       this.previousNormalizedConsumptions = [];
 
     this.reEvaluateTotalLossesAndAdjustments();
     this.fillConsumptionOrStockInHand();
-  }
+  };
 
   RnrLineItem.prototype.fillConsumptionOrStockInHand = function () {
     this.beginningBalance = utils.getValueFor(this.beginningBalance);
@@ -35,10 +41,17 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     this.fillNormalizedConsumption();
   };
 
+  function statusBeforeApproval() {
+    return rnrStatus == 'INITIATED' || rnrStatus == 'SUBMITTED' || rnrStatus == 'AUTHORIZED';
+  }
+
   RnrLineItem.prototype.fillPacksToShip = function () {
     this.quantityApproved = utils.getValueFor(this.quantityApproved);
-    var orderQuantity = (rnrStatus != 'IN_APPROVAL') ? (isUndefined(this.quantityRequested) ?
-      this.calculatedOrderQuantity : this.quantityRequested) : this.quantityApproved;
+    var orderQuantity;
+
+    if (statusBeforeApproval()) orderQuantity = isUndefined(this.quantityRequested) ? this.calculatedOrderQuantity : this.quantityRequested;
+    else orderQuantity = this.quantityApproved;
+
     this.calculatePacksToShip(orderQuantity);
     this.calculateCost();
   };
@@ -171,7 +184,10 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
   };
 
   RnrLineItem.prototype.calculateAMC = function () {
-    if (!utils.isNumber(this.normalizedConsumption)) return;
+    if (!utils.isNumber(this.normalizedConsumption)) {
+      this.amc = null;
+      return;
+    }
     var numberOfMonthsInPeriod = numberOfMonths;
     var divider = numberOfMonthsInPeriod * (1 + this.previousNormalizedConsumptions.length);
 
@@ -287,8 +303,43 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     }));
   };
 
+  RnrLineItem.prototype.compareTo = function (rnrLineItem) {
+    function compareStrings(str1, str2) {
+      if (str1 < str2) return -1
+      if (str1 > str2) return 1;
+      return 0;
+    }
+
+    if (isUndefined(rnrLineItem)) {
+      return -1;
+    }
+
+    if (this == rnrLineItem) return 0;
+
+    if (this.productCategoryDisplayOrder == rnrLineItem.productCategoryDisplayOrder) {
+      if (this.productCategory == rnrLineItem.productCategory) {
+        if(isUndefined(this.productDisplayOrder) && isUndefined(rnrLineItem.productDisplayOrder)) {
+          return compareStrings(this.productCode, rnrLineItem.productCode);
+        }
+
+        if(this.productDisplayOrder== rnrLineItem.productDisplayOrder) {
+          return compareStrings(this.productCode, rnrLineItem.productCode);
+        }
+
+        if (isUndefined(rnrLineItem.productDisplayOrder)) return -1;
+        if (isUndefined(this.productDisplayOrder)) return 1;
+
+        return this.productDisplayOrder - rnrLineItem.productDisplayOrder;
+      }
+      return compareStrings(this.productCategory, rnrLineItem.productCategory);
+    }
+
+    return this.productCategoryDisplayOrder - rnrLineItem.productCategoryDisplayOrder;
+  };
+
   this.init();
-  RnrLineItem.prototype.validateQuantityRequestedAndReason = function() {
+
+  RnrLineItem.prototype.validateQuantityRequestedAndReason = function () {
     return (isUndefined(this.quantityRequested) || isUndefined(this.reasonForRequestedQuantity));
   };
 
@@ -300,3 +351,6 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
   this.reEvaluateTotalLossesAndAdjustments();
   this.fillConsumptionOrStockInHand();
 };
+
+RnrLineItem.visibleForNonFullSupplyColumns = ['product', 'productCode', 'dispensingUnit', 'quantityRequested', 'reasonForRequestedQuantity', 'packsToShip', 'price', 'cost', 'remarks'];
+

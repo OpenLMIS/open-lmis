@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.pageobjects;
 
 
@@ -5,105 +11,96 @@ import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+import static java.lang.Float.parseFloat;
+import static java.lang.Integer.parseInt;
 import static java.math.BigDecimal.ROUND_HALF_UP;
+import static org.openqa.selenium.support.How.ID;
+import static org.openqa.selenium.support.How.XPATH;
 
 
-public class ApprovePage extends Page {
+public class ApprovePage extends RequisitionPage {
 
-  @FindBy(how = How.ID, using = "NoRequisitionsPendingMessage")
+  @FindBy(how = ID, using = "NoRequisitionsPendingMessage")
   private static WebElement NoRequisitionsPendingMessage;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='form-group']/h3")
+  @FindBy(how = XPATH, using = "//div[@class='form-group']/h3")
   private static WebElement requisitionListHeader;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText colt0']")
+  @FindBy(how = XPATH, using = "//div[@class='ngCellText ng-scope col0 colt0']")
   private static WebElement firstRow;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText colt3']/span")
+  @FindBy(how = XPATH, using = "//div[@class='ngCellText ng-scope col3 colt3']/span")
   private static WebElement periodStartDate;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText colt4']/span")
+  @FindBy(how = XPATH, using = "//div[@class='ngCellText ng-scope col4 colt4']/span")
   private static WebElement periodEndDate;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='requisition-header']/h2")
+  @FindBy(how = XPATH, using = "//div[@id='requisition-header']/h2")
   private static WebElement requisitionHeader;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='requisition-header']/div[@class='info-box']/div[@class='row-fluid'][1]/div[1]")
+  @FindBy(how = XPATH, using = "//div[@id='requisition-header']/div[@class='info-box']/div[@class='row-fluid'][1]/div[1]")
   private static WebElement facilityLabel;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText colt13']/span")
+  @FindBy(how = ID, using = "calculatedOrderQuantity_0")
   private static WebElement calculateOrderQuantity;
 
-  @FindBy(how = How.XPATH, using = "//div[@ng-grid='rnrGrid']/div[@class='ngViewport ng-scope']/div/div/div[15]/div/span")
-  private static WebElement requestedOrderQuantityNonFullSupply;
+  @FindBy(how = ID, using = "quantityRequested_0")
+  private static WebElement requestedOrderQuantity;
 
-  @FindBy(how = How.XPATH, using = "//div[@ng-grid='rnrGrid']/div[@class='ngViewport ng-scope']/div/div/div[18]/div/span")
-  private static WebElement packsToShipNonFullSupply;
-
-  @FindBy(how = How.XPATH, using = "//div[@ng-grid='rnrGrid']/div[@class='ngViewport ng-scope']/div/div/div[20]/div/span[@ng-bind='row.entity.cost']")
-  private static WebElement totalCostNonFullSupply;
-
-  @FindBy(how = How.XPATH, using = "//div[@ng-grid='rnrGrid']/div[@class='ngViewport ng-scope']/div/div/div[19]/div/span[@ng-bind='row.entity.price']")
-  private static WebElement pricePerPackNonFullSupply;
-
-  @FindBy(how = How.XPATH, using = "//div[@ng-grid='rnrGrid']/div[@class='ngViewport ng-scope']/div/div/div[17]/div/ng-form/input")
-  private static WebElement approvedQuantityNonFullSupply;
-
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText colt17']/span")
+  @FindBy(how = ID, using = "packsToShip_0")
   private static WebElement packsToShip;
 
-  @FindBy(how = How.XPATH, using = "//span[@ng-bind='row.entity.price']")
+  @FindBy(how = ID, using = "price_0")
   private static WebElement pricePerPack;
 
-  @FindBy(how = How.XPATH, using = "//span[@ng-bind='row.entity.cost']")
-  private static WebElement totalCost;
+  @FindBy(how = ID, using = "cost_0")
+  private static WebElement lineItemCost;
 
-  @FindBy(how = How.XPATH, using = "//span[@id='totalCost']")
-  private static WebElement overalltotalCost;
+  @FindBy(how = ID, using = "totalCost")
+  private static WebElement totalRnrCost;
 
-  @FindBy(how = How.NAME, using = "quantityApproved")
+  @FindBy(how = ID, using = "quantityApproved_0")
   private static WebElement quantityApproved;
 
-
-  @FindBy(how = How.ID, using = "nonFullSupplyTab")
+  @FindBy(how = ID, using = "nonFullSupplyTab")
   private static WebElement nonFullSupplyTab;
 
-
-  @FindBy(how = How.ID, using = "fullSupplyTab")
+  @FindBy(how = ID, using = "fullSupplyTab")
   private static WebElement fullSupplyTab;
 
-  @FindBy(how = How.NAME, using = "remarks")
+  @FindBy(how = ID, using = "remarks_0")
   private static WebElement remarks;
 
-  @FindBy(how = How.XPATH, using = "//input[@value='Approve']")
+  @FindBy(how = XPATH, using = "//input[@value='Approve']")
   private static WebElement approveButton;
 
-  @FindBy(how = How.XPATH, using = "//input[@value='Save']")
+  @FindBy(how = XPATH, using = "//input[@value='Save']")
   private static WebElement saveButton;
 
-  @FindBy(how = How.ID, using = "saveSuccessMsgDiv")
+  @FindBy(how = ID, using = "saveSuccessMsgDiv")
   private static WebElement saveSuccessMsgDiv;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='info-box']/div[2]/div[3]")
+  @FindBy(how = XPATH, using = "//div[@class='info-box']/div[2]/div[3]")
   private static WebElement reportingPeriodInitRnRScreen;
 
-  @FindBy(how = How.XPATH, using = "//span[@ng-bind='rnr.facility.geographicZone.name']")
+  @FindBy(how = XPATH, using = "//span[@ng-bind='rnr.facility.geographicZone.name']")
   private static WebElement geoZoneInitRnRScreen;
 
-  @FindBy(how = How.XPATH, using = "//span[@ng-bind='rnr.facility.geographicZone.parent.name']")
+  @FindBy(how = XPATH, using = "//span[@ng-bind='rnr.facility.geographicZone.parent.name']")
   private static WebElement parentGeoZoneInitRnRScreen;
 
-  @FindBy(how = How.XPATH, using = "//span[@ng-bind='rnr.facility.operatedBy.text']")
+  @FindBy(how = XPATH, using = "//span[@ng-bind='rnr.facility.operatedBy.text']")
   private static WebElement operatedByInitRnRScreen;
 
-  @FindBy(how = How.XPATH, using = "//div[contains(text(),'R&R approved successfully!')]")
+  @FindBy(how = XPATH, using = "//div[contains(text(),'R&R approved successfully!')]")
   private static WebElement approvedSuccessMessage;
 
 
@@ -116,35 +113,33 @@ public class ApprovePage extends Page {
 
   public void verifyNoRequisitionPendingMessage() {
     testWebDriver.waitForElementToAppear(requisitionListHeader);
-    SeleneseTestNgHelper.assertTrue("NoRequisitionsPendingMessage is not displayed", NoRequisitionsPendingMessage.isDisplayed());
+    assertTrue("NoRequisitionsPendingMessage is not displayed", NoRequisitionsPendingMessage.isDisplayed());
   }
 
 
-  public String verifyandclickRequisitionPresentForApproval() {
+  public String verifyAndClickRequisitionPresentForApproval() {
 
-    String period = null;
     testWebDriver.waitForElementToAppear(requisitionListHeader);
-    SeleneseTestNgHelper.assertTrue("No row of requisition is there for approval", firstRow.isDisplayed());
-    period = periodStartDate.getText().trim() + " - " + periodEndDate.getText().trim();
+    assertTrue("No row of requisition is there for approval", firstRow.isDisplayed());
+    String period = periodStartDate.getText().trim() + " - " + periodEndDate.getText().trim();
     firstRow.click();
     return period;
   }
 
-  public void verifyRnRHeader(String FCode, String FName, String FCstring, String program, String periodDetails, String geoZone,String parentgeoZone, String operatedBy, String facilityType) {
+  public void verifyRnRHeader(String FCode, String FName, String FCstring, String program, String periodDetails, String geoZone, String parentgeoZone, String operatedBy, String facilityType) {
 
     testWebDriver.sleep(1500);
     testWebDriver.waitForElementToAppear(requisitionHeader);
     String headerText = testWebDriver.getText(requisitionHeader);
-    SeleneseTestNgHelper.assertTrue(headerText.contains("Report and Requisition for " + program + " (" + facilityType + ")"));
+    assertTrue(headerText.contains("Report and Requisition for " + program + " (" + facilityType + ")"));
     String facilityText = testWebDriver.getText(facilityLabel);
-    SeleneseTestNgHelper.assertTrue(facilityText.contains(FCode + FCstring + " - " + FName + FCstring));
+    assertTrue(facilityText.contains(FCode + FCstring + " - " + FName + FCstring));
 
-    SeleneseTestNgHelper.assertEquals(reportingPeriodInitRnRScreen.getText().trim().substring("Reporting Period: ".length()), periodDetails.trim());
-    SeleneseTestNgHelper.assertEquals(geoZone, geoZoneInitRnRScreen.getText().trim());
-    SeleneseTestNgHelper.assertEquals(parentgeoZone, parentGeoZoneInitRnRScreen.getText().trim());
-    SeleneseTestNgHelper.assertEquals(operatedBy, operatedByInitRnRScreen.getText().trim());
+    assertEquals(reportingPeriodInitRnRScreen.getText().trim().substring("Reporting Period: ".length()), periodDetails.trim());
+    assertEquals(geoZone, geoZoneInitRnRScreen.getText().trim());
+    assertEquals(parentgeoZone, parentGeoZoneInitRnRScreen.getText().trim());
+    assertEquals(operatedBy, operatedByInitRnRScreen.getText().trim());
   }
-
 
 
   public void verifyApprovedQuantity() {
@@ -155,20 +150,20 @@ public class ApprovePage extends Page {
     testWebDriver.waitForElementToAppear(calculateOrderQuantity);
     String actualCalculatedOrderQuantity = calculateOrderQuantity.getText();
     String actualApproveQuantity = testWebDriver.getAttribute(quantityApproved, "value");
-    SeleneseTestNgHelper.assertEquals(actualApproveQuantity, actualCalculatedOrderQuantity);
-    nonFullSupplyTab.click();
+    assertEquals(actualApproveQuantity, actualCalculatedOrderQuantity);
 
-    testWebDriver.waitForElementToAppear(approvedQuantityNonFullSupply);
-    String actualRequestedOrderQuantity = requestedOrderQuantityNonFullSupply.getText();
-    String actualApproveQuantityNonFullSupply = testWebDriver.getAttribute(approvedQuantityNonFullSupply, "value");
-    SeleneseTestNgHelper.assertEquals(actualApproveQuantityNonFullSupply, actualRequestedOrderQuantity);
+    nonFullSupplyTab.click();
+    testWebDriver.waitForElementToAppear(quantityApproved);
+    String actualRequestedOrderQuantity = requestedOrderQuantity.getText();
+    String actualApproveQuantityNonFullSupply = testWebDriver.getAttribute(quantityApproved, "value");
+    assertEquals(actualApproveQuantityNonFullSupply, actualRequestedOrderQuantity);
 
   }
 
   public void verifyApprovedQuantityApprovedFromLowerHierarchy(String approvedQuantity) {
     testWebDriver.waitForElementToAppear(quantityApproved);
     String actualApproveQuantity = testWebDriver.getAttribute(quantityApproved, "value");
-    SeleneseTestNgHelper.assertEquals(actualApproveQuantity, approvedQuantity);
+    assertEquals(actualApproveQuantity, approvedQuantity);
   }
 
   public void editApproveQuantityAndVerifyTotalCost(String approvedQuantity) {
@@ -179,40 +174,54 @@ public class ApprovePage extends Page {
     quantityApproved.clear();
     quantityApproved.sendKeys(approvedQuantity);
     remarks.click();
-    SeleneseTestNgHelper.assertEquals(packsToShip.getText().trim(), Integer.parseInt(approvedQuantity) / 10);
+    assertEquals(packsToShip.getText().trim(), parseInt(approvedQuantity) / 10);
 
-    BigDecimal cost = new BigDecimal((Float.parseFloat(packsToShip.getText().trim()) * Float.parseFloat(pricePerPack.getText().trim()))).setScale(2, ROUND_HALF_UP);
-    SeleneseTestNgHelper.assertEquals(String.valueOf(cost), totalCost.getText().trim());
-    String totalCostFullSupplyLineItem = totalCost.getText().trim();
+    int packsToShip = parseInt(ApprovePage.packsToShip.getText().trim());
+    float pricePerPack = parseFloat(ApprovePage.pricePerPack.getText().substring(1));
+
+    BigDecimal cost = new BigDecimal((packsToShip * pricePerPack)).setScale(2, ROUND_HALF_UP);
+    float lineItemCost = parseFloat(ApprovePage.lineItemCost.getText().substring(1));
+
+    assertEquals(String.valueOf(cost), new BigDecimal(lineItemCost).setScale(2, ROUND_HALF_UP));
+    float totalCostFullSupplyLineItem = lineItemCost;
     testWebDriver.sleep(1000);
+
     nonFullSupplyTab.click();
 
-    testWebDriver.waitForElementToAppear(approvedQuantityNonFullSupply);
-    approvedQuantityNonFullSupply.clear();
-    approvedQuantityNonFullSupply.sendKeys(approvedQuantity);
+    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(quantityApproved);
+    quantityApproved.clear();
+    quantityApproved.sendKeys(approvedQuantity);
     remarks.click();
-    SeleneseTestNgHelper.assertEquals(packsToShipNonFullSupply.getText().trim(), Integer.parseInt(approvedQuantity) / 10);
 
-    BigDecimal costNonFullSupply = new BigDecimal((Float.parseFloat(packsToShipNonFullSupply.getText().trim()) * Float.parseFloat(pricePerPackNonFullSupply.getText().trim()))).setScale(2, ROUND_HALF_UP);
-    SeleneseTestNgHelper.assertEquals(String.valueOf(costNonFullSupply), totalCostNonFullSupply.getText().trim());
+    packsToShip = parseInt(ApprovePage.packsToShip.getText().trim());
+    pricePerPack = parseFloat(ApprovePage.pricePerPack.getText().substring(1));
 
+    lineItemCost = parseFloat(ApprovePage.lineItemCost.getText().substring(1));
+    assertEquals(packsToShip, parseInt(approvedQuantity) / 10);
 
-    BigDecimal totalOverAllCost = new BigDecimal((Float.parseFloat(totalCostFullSupplyLineItem) + Float.parseFloat(totalCostNonFullSupply.getText().trim()))).setScale(2, ROUND_HALF_UP);
-    SeleneseTestNgHelper.assertEquals(overalltotalCost.getText().trim(), String.valueOf(totalOverAllCost));
+    BigDecimal costNonFullSupply = new BigDecimal((packsToShip * pricePerPack)).setScale(2, ROUND_HALF_UP);
+    assertEquals(costNonFullSupply, new BigDecimal(lineItemCost).setScale(2, ROUND_HALF_UP));
 
-
+    BigDecimal totalOverAllCost = new BigDecimal((totalCostFullSupplyLineItem + lineItemCost)).setScale(2, ROUND_HALF_UP);
+    assertEquals(new BigDecimal(totalRnrCost.getText().trim().substring(1)).setScale(2, ROUND_HALF_UP), totalOverAllCost);
   }
 
   public void approveRequisition() {
-    testWebDriver.waitForElementToAppear(approveButton);
+    clickSaveButton();
+    clickApproveButton();
+  }
+
+  public void clickSaveButton() {
     testWebDriver.waitForElementToAppear(saveButton);
     saveButton.click();
     testWebDriver.sleep(250);
-//    SeleneseTestNgHelper.assertTrue("R&R saved successfully message not displayed", saveSuccessMsgDiv.isDisplayed());
-    approveButton.click();
-    testWebDriver.waitForElementToAppear(approvedSuccessMessage);
-    SeleneseTestNgHelper.assertTrue("R&R approved successfully! message not displayed", approvedSuccessMessage.isDisplayed());
+  }
 
+  public void clickApproveButton() {
+    testWebDriver.waitForElementToAppear(approveButton);
+    approveButton.click();
+    testWebDriver.sleep(250);
   }
 
   public void editApproveQuantityAndVerifyTotalCostViewRequisition(String approvedQuantity) {
@@ -223,16 +232,16 @@ public class ApprovePage extends Page {
     quantityApproved.clear();
     quantityApproved.sendKeys(approvedQuantity);
     remarks.click();
-    SeleneseTestNgHelper.assertEquals(packsToShip.getText().trim(), Integer.parseInt(approvedQuantity) / 10);
+    assertEquals(packsToShip.getText().trim(), parseInt(approvedQuantity) / 10);
 
-    BigDecimal cost = new BigDecimal((Float.parseFloat(packsToShip.getText().trim()) * Float.parseFloat(pricePerPack.getText().trim()))).setScale(2, ROUND_HALF_UP);
-    SeleneseTestNgHelper.assertEquals(String.valueOf(cost), totalCost.getText().trim());
-    String totalCostFullSupplyLineItem = totalCost.getText().trim();
+    BigDecimal cost = new BigDecimal((parseFloat(packsToShip.getText().trim()) * parseFloat(pricePerPack.getText().substring(1)))).setScale(2, ROUND_HALF_UP);
+    assertEquals(String.valueOf(cost), lineItemCost.getText().substring(1));
+    String totalCostFullSupplyLineItem = lineItemCost.getText().substring(1);
     testWebDriver.sleep(1000);
 
 
-    BigDecimal totalOverAllCost = new BigDecimal(Float.parseFloat(totalCostFullSupplyLineItem)).setScale(2, ROUND_HALF_UP);
-    SeleneseTestNgHelper.assertEquals(overalltotalCost.getText().trim(), String.valueOf(totalOverAllCost));
+    BigDecimal totalOverAllCost = new BigDecimal(parseFloat(totalCostFullSupplyLineItem)).setScale(2, ROUND_HALF_UP);
+    assertEquals(totalRnrCost.getText().substring(1).trim(), String.valueOf(totalOverAllCost));
 
 
   }

@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository.mapper;
 
 
@@ -79,30 +85,15 @@ public class RequisitionGroupMemberMapperIT {
     RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
     requisitionGroupProgramSchedule.setProgram(make(a(defaultProgram)));
     requisitionGroupProgramSchedule.setRequisitionGroup(requisitionGroup);
-    requisitionGroupProgramSchedule.setSchedule(processingSchedule);
+    requisitionGroupProgramSchedule.setProcessingSchedule(processingSchedule);
     programMapper.insert(requisitionGroupProgramSchedule.getProgram());
 
     requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
     requisitionGroupMemberMapper.insert(requisitionGroupMember);
 
-    List<Integer> programIds = requisitionGroupMemberMapper.getRequisitionGroupProgramIdsForId(requisitionGroupMember.getFacility().getId());
+    List<Integer> programIds = requisitionGroupMemberMapper.getRequisitionGroupProgramIdsForFacilityId(requisitionGroupMember.getFacility().getId());
 
     assertThat(programIds.size(), is(1));
     assertThat(programIds.get(0), is(requisitionGroupProgramSchedule.getProgram().getId()));
-  }
-
-  @Test
-  public void shouldReturnOneIfMappingAlreadyExists() throws Exception {
-    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
-    requisitionGroupProgramSchedule.setProgram(make(a(defaultProgram)));
-    requisitionGroupProgramSchedule.setRequisitionGroup(requisitionGroup);
-    requisitionGroupProgramSchedule.setSchedule(processingSchedule);
-    programMapper.insert(requisitionGroupProgramSchedule.getProgram());
-
-    requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
-    requisitionGroupMemberMapper.insert(requisitionGroupMember);
-
-    assertThat(requisitionGroupMemberMapper.doesMappingExist(requisitionGroupMember.getRequisitionGroup().getId(), requisitionGroupMember.getFacility().getId()), is(1));
-
   }
 }

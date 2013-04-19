@@ -1,7 +1,14 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -17,12 +24,10 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @JsonSerialize(include = NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Facility implements Importable, BaseModel {
-
-  private Integer id;
-
+public class Facility extends BaseModel implements Importable {
   @ImportField(mandatory = true, name = "Facility Code")
   private String code;
 
@@ -114,10 +119,6 @@ public class Facility implements Importable, BaseModel {
   private Boolean dataReportable;
 
   List<ProgramSupported> supportedPrograms = new ArrayList<>();
-
-  private Integer modifiedBy;
-
-  private Date modifiedDate;
 
   public Facility(Integer id) {
     this.id = id;

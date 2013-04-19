@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 var Rnr = function (rnr, programRnrColumns) {
   $.extend(true, this, rnr);
   this.programRnrColumns = programRnrColumns;
@@ -20,28 +26,28 @@ var Rnr = function (rnr, programRnrColumns) {
   };
 
   Rnr.prototype.getErrorPages = function (pageSize) {
-      function getErrorPages(lineItems) {
-        var pagesWithErrors = [];
-        $(lineItems).each(function (i, lineItem) {
-          pagesWithErrors.push(Math.ceil((lineItem + 1) / pageSize));
-        });
-        return _.uniq(pagesWithErrors, true);
-      }
+    function getErrorPages(lineItems) {
+      var pagesWithErrors = [];
+      $(lineItems).each(function (i, lineItem) {
+        pagesWithErrors.push(Math.ceil((lineItem + 1) / pageSize));
+      });
+      return _.uniq(pagesWithErrors, true);
+    }
 
-      function getFullSupplyPagesWithError() {
-        var fullSupplyErrorLIneItems = thisRnr.getFullSupplyErrorLineItemIndexes();
-        return getErrorPages(fullSupplyErrorLIneItems);
-      }
+    function getFullSupplyPagesWithError() {
+      var fullSupplyErrorLIneItems = thisRnr.getFullSupplyErrorLineItemIndexes();
+      return getErrorPages(fullSupplyErrorLIneItems);
+    }
 
-      function getNonFullSupplyPagesWithError() {
-        var nonFullSupplyErrorLIneItems = thisRnr.getNonFullSupplyErrorLineItemIndexes();
-        return getErrorPages(nonFullSupplyErrorLIneItems)
-      }
+    function getNonFullSupplyPagesWithError() {
+      var nonFullSupplyErrorLIneItems = thisRnr.getNonFullSupplyErrorLineItemIndexes();
+      return getErrorPages(nonFullSupplyErrorLIneItems)
+    }
 
-      var errorPages = {};
-      errorPages.fullSupply = getFullSupplyPagesWithError();
-      errorPages.nonFullSupply = getNonFullSupplyPagesWithError();
-      return errorPages;
+    var errorPages = {};
+    errorPages.fullSupply = getFullSupplyPagesWithError();
+    errorPages.nonFullSupply = getNonFullSupplyPagesWithError();
+    return errorPages;
   };
 
   Rnr.prototype.validateFullSupply = function () {
@@ -106,26 +112,32 @@ var Rnr = function (rnr, programRnrColumns) {
     return error;
   };
 
-  Rnr.prototype.calculateFullSupplyItemsSubmittedCost = function () {
-    this.fullSupplyItemsSubmittedCost = this.getTotalLineItemsCost(this.fullSupplyLineItems);
-  };
-
-  Rnr.prototype.calculateNonFullSupplyItemsSubmittedCost = function () {
-    this.nonFullSupplyItemsSubmittedCost = this.getTotalLineItemsCost(this.nonFullSupplyLineItems);
-  };
-
-  Rnr.prototype.getTotalLineItemsCost = function (rnrLineItems) {
+  var calculateTotalCost = function (rnrLineItems) {
     if (rnrLineItems == null) return;
 
     var cost = 0;
     for (var lineItemIndex in rnrLineItems) {
       var lineItem = rnrLineItems[lineItemIndex];
-      if (lineItem.productCode == this.productCode) continue;
       if (!lineItem || lineItem.cost == null || !utils.isNumber(lineItem.cost)) continue;
       cost += parseFloat(lineItem.cost);
     }
     return cost.toFixed(2);
   };
+
+
+  Rnr.prototype.calculateFullSupplyItemsSubmittedCost = function () {
+    this.fullSupplyItemsSubmittedCost = calculateTotalCost(this.fullSupplyLineItems);
+  };
+
+  Rnr.prototype.calculateNonFullSupplyItemsSubmittedCost = function () {
+    this.nonFullSupplyItemsSubmittedCost = calculateTotalCost(this.nonFullSupplyLineItems);
+  };
+
+
+  Rnr.prototype.calculateTotalLineItemCost = function () {
+   return  parseFloat(parseFloat(this.fullSupplyItemsSubmittedCost) + parseFloat(this.nonFullSupplyItemsSubmittedCost)).toFixed(2);
+  };
+
 
   Rnr.prototype.fillCost = function (isFullSupply) {
     if (isFullSupply)
@@ -149,8 +161,16 @@ var Rnr = function (rnr, programRnrColumns) {
     this.fillCost(rnrLineItem.fullSupply);
   };
 
+
+  Rnr.prototype.periodDisplayName = function () {
+    var startDate = new Date(this.period.startDate);
+    var endDate = new Date(this.period.endDate);
+    return utils.getFormattedDate(startDate) + ' - ' + utils.getFormattedDate(endDate);
+  };
+
   Rnr.prototype.init = function () {
     var thisRnr = this;
+
     function prepareLineItems(lineItems) {
       var lineItemsJson = lineItems;
       lineItems = [];
@@ -163,6 +183,10 @@ var Rnr = function (rnr, programRnrColumns) {
 
     this.fullSupplyLineItems = prepareLineItems(this.fullSupplyLineItems);
     this.nonFullSupplyLineItems = prepareLineItems(this.nonFullSupplyLineItems);
+    this.nonFullSupplyLineItems.sort(function (lineItem1, lineItem2) {
+      if (isUndefined(lineItem1)) return 1;
+      return lineItem1.compareTo(lineItem2);
+    });
     this.programRnrColumnList = programRnrColumns;
 
     this.calculateFullSupplyItemsSubmittedCost();

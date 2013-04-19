@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
@@ -29,8 +35,8 @@ public interface RoleRightsMapper {
   Set<Right> getAllRightsForRole(Integer roleId);
 
   @Insert({"INSERT INTO roles",
-      "(name, description, modifiedBy) VALUES",
-      "(#{name}, #{description}, #{modifiedBy})"})
+      "(name, adminRole, description, modifiedBy) VALUES",
+      "(#{name}, #{adminRole}, #{description}, #{modifiedBy})"})
   @Options(useGeneratedKeys = true)
   int insertRole(Role role);
 
@@ -50,7 +56,7 @@ public interface RoleRightsMapper {
   })
   List<Role> getAllRoles();
 
-  @Update("UPDATE roles SET name=#{name} , description=#{description} , modifiedBy=#{modifiedBy},modifiedDate= DEFAULT WHERE id=#{id}")
+  @Update("UPDATE roles SET name=#{name}, adminRole=#{adminRole}, description=#{description}, modifiedBy=#{modifiedBy}, modifiedDate= DEFAULT WHERE id=#{id}")
   void updateRole(Role role);
 
   @Delete("DELETE FROM role_rights WHERE roleId=#{roleId}")

@@ -1,13 +1,21 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.functional;
 
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
-import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @TransactionConfiguration(defaultRollback = true)
@@ -17,100 +25,94 @@ import org.testng.annotations.*;
 
 public class ViewRequisition extends TestCaseHelper {
 
-  DBWrapper dbWrapper;
+  public static final String STORE_IN_CHARGE = "store in-charge";
+  public static final String APPROVE_REQUISITION = "APPROVE_REQUISITION";
+  public static final String CONVERT_TO_ORDER = "CONVERT_TO_ORDER";
+  public static final String SUBMITTED = "SUBMITTED";
+  public static final String AUTHORIZED = "AUTHORIZED";
+  public static final String IN_APPROVAL = "IN_APPROVAL";
+  public static final String APPROVED = "APPROVED";
+  public static final String RELEASED = "RELEASED";
 
   @BeforeMethod(groups = {"functional"})
-  @Parameters({"browser"})
-  public void setUp(String browser) throws Exception {
-    super.setupSuite(browser);
-    dbWrapper = new DBWrapper();
-    dbWrapper.deleteData();
+  public void setUp() throws Exception {
+    super.setup();
   }
 
+
   @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testViewRequisition(String program, String userSIC,  String password) throws Exception {
+  public void testViewRequisition(String program, String userSIC, String password) throws Exception {
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add("CREATE_REQUISITION");
+    rightsList.add("VIEW_REQUISITION");
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    dbWrapper.assignRight(STORE_IN_CHARGE, APPROVE_REQUISITION);
+    dbWrapper.assignRight(STORE_IN_CHARGE, CONVERT_TO_ORDER);
 
-    dbWrapper.insertProducts("P10", "P11");
-    dbWrapper.insertProgramProducts("P10", "P11", program);
-    dbWrapper.insertFacilityApprovedProducts("P10", "P11", program, "Lvl3 Hospital");
-    dbWrapper.insertFacilities("F10", "F11");
-    dbWrapper.configureTemplate(program);
-    dbWrapper.insertRole("store in-charge","");
-    dbWrapper.insertRole("district pharmacist","");
-    dbWrapper.insertRoleRights();
-    String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-    dbWrapper.insertUser("200",userSIC,passwordUsers,"F10","Fatima_Doe@openlmis.com");
-    dbWrapper.insertSupervisoryNode("F10","N1","Node 1","null");
-    dbWrapper.insertRoleAssignment("200","store in-charge");
-    dbWrapper.insertSchedules();
-    dbWrapper.insertProcessingPeriods();
-    dbWrapper.insertRequisitionGroups("RG1", "RG2", "N1", "N2");
-    dbWrapper.insertRequisitionGroupMembers("F10", "F11");
-    dbWrapper.insertRequisitionGroupProgramSchedule();
-    dbWrapper.insertSupplyLines("N1",program,"F10");
-
-    LoginPage loginPage = new LoginPage(testWebDriver);
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
-    String periodDetails = homePage.navigateAndInitiateRnr(program);
+    homePage.navigateAndInitiateRnr(program);
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-    HomePage homePage1=initiateRnRPage.clickHome();
+    HomePage homePage1 = initiateRnRPage.clickHome();
 
-
-    ViewRequisitionPage viewRequisitionPage=homePage1.navigateViewRequisition();
+    ViewRequisitionPage viewRequisitionPage = homePage1.navigateViewRequisition();
     viewRequisitionPage.verifyElementsOnViewRequisitionScreen();
     dbWrapper.insertValuesInRequisition();
-    dbWrapper.updateRequisitionStatus("SUBMITTED");
-    viewRequisitionPage.enterSearchCriteria();
+    dbWrapper.updateRequisitionStatus(SUBMITTED);
+    viewRequisitionPage.enterViewSearchCriteria();
     viewRequisitionPage.clickSearch();
     viewRequisitionPage.verifyNoRequisitionFound();
-    dbWrapper.updateRequisitionStatus("AUTHORIZED");
+    dbWrapper.updateRequisitionStatus(AUTHORIZED);
     viewRequisitionPage.clickSearch();
     viewRequisitionPage.clickRnRList();
 
-    HomePage homePageAuthorized=viewRequisitionPage.verifyFieldsPreApproval("12.50", "1");
-    ViewRequisitionPage viewRequisitionPageAuthorized=homePageAuthorized.navigateViewRequisition();
-    viewRequisitionPageAuthorized.enterSearchCriteria();
+    HomePage homePageAuthorized = viewRequisitionPage.verifyFieldsPreApproval("12.50", "1");
+    ViewRequisitionPage viewRequisitionPageAuthorized = homePageAuthorized.navigateViewRequisition();
+    viewRequisitionPageAuthorized.enterViewSearchCriteria();
     viewRequisitionPageAuthorized.clickSearch();
-    viewRequisitionPageAuthorized.verifyStatus("AUTHORIZED");
+    viewRequisitionPageAuthorized.verifyStatus(AUTHORIZED);
     viewRequisitionPageAuthorized.clickRnRList();
 
-    HomePage homePageInApproval=viewRequisitionPageAuthorized.verifyFieldsPreApproval("12.50", "1");
-    dbWrapper.updateRequisitionStatus("IN_APPROVAL");
-    ViewRequisitionPage viewRequisitionPageInApproval=homePageInApproval.navigateViewRequisition();
-    viewRequisitionPageInApproval.enterSearchCriteria();
+    HomePage homePageInApproval = viewRequisitionPageAuthorized.verifyFieldsPreApproval("12.50", "1");
+    dbWrapper.updateRequisitionStatus(IN_APPROVAL);
+    ViewRequisitionPage viewRequisitionPageInApproval = homePageInApproval.navigateViewRequisition();
+    viewRequisitionPageInApproval.enterViewSearchCriteria();
     viewRequisitionPageInApproval.clickSearch();
-    viewRequisitionPageInApproval.verifyStatus("IN_APPROVAL");
-
+    viewRequisitionPageInApproval.verifyStatus(IN_APPROVAL);
 
     ApprovePage approvePageTopSNUser = homePageInApproval.navigateToApprove();
-    approvePageTopSNUser.verifyandclickRequisitionPresentForApproval();
+    approvePageTopSNUser.verifyAndClickRequisitionPresentForApproval();
     approvePageTopSNUser.editApproveQuantityAndVerifyTotalCostViewRequisition("20");
+    approvePageTopSNUser.addComments("Dummy Comments");
     approvePageTopSNUser.approveRequisition();
+    approvePageTopSNUser.clickOk();
     approvePageTopSNUser.verifyNoRequisitionPendingMessage();
-    ViewRequisitionPage viewRequisitionPageApproved=homePageInApproval.navigateViewRequisition();
-    viewRequisitionPageApproved.enterSearchCriteria();
+    ViewRequisitionPage viewRequisitionPageApproved = homePageInApproval.navigateViewRequisition();
+    viewRequisitionPageApproved.enterViewSearchCriteria();
     viewRequisitionPageApproved.clickSearch();
-    viewRequisitionPageApproved.verifyStatus("APPROVED");
+    viewRequisitionPageApproved.verifyStatus(APPROVED);
     viewRequisitionPageApproved.clickRnRList();
-//    HomePage homePageApproved=viewRequisitionPageApproved.verifyFieldsPostApproval("25.00", "1");
-    HomePage homePageApproved=viewRequisitionPageApproved.verifyFieldsPostApproval("12.50", "1");
+    viewRequisitionPageApproved.verifyComment("Dummy Comments", userSIC, 1);
+    viewRequisitionPageApproved.verifyCommentBoxNotPresent();
+
+    HomePage homePageApproved = viewRequisitionPageApproved.verifyFieldsPostApproval("25.00", "1");
 
     dbWrapper.updateRequisition("F10");
-    OrderPage orderPage=homePageApproved.navigateConvertToOrder();
-    orderPage.convertToOrder();
-    ViewRequisitionPage viewRequisitionPageOrdered=homePageApproved.navigateViewRequisition();
-    viewRequisitionPageOrdered.enterSearchCriteria();
+    ConvertOrderPage convertOrderPage = homePageApproved.navigateConvertToOrder();
+    convertOrderPage.convertToOrder();
+    ViewRequisitionPage viewRequisitionPageOrdered = homePageApproved.navigateViewRequisition();
+    viewRequisitionPageOrdered.enterViewSearchCriteria();
     viewRequisitionPageOrdered.clickSearch();
-    viewRequisitionPageOrdered.verifyStatus("ORDERED");
+    viewRequisitionPageOrdered.verifyStatus(RELEASED);
     viewRequisitionPageOrdered.clickRnRList();
-    //viewRequisitionPageOrdered.verifyFieldsPostApproval("25.00", "1");
-
+    viewRequisitionPageOrdered.verifyFieldsPostApproval("25.00", "1");
+    viewRequisitionPageOrdered.verifyApprovedQuantityFieldPresent();
   }
 
   @AfterMethod(groups = {"functional"})
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
-    homePage.logout();
+    homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }

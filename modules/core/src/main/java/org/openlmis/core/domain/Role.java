@@ -1,31 +1,36 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
 
-import java.util.Date;
 import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class
-    Role {
-  private Integer id;
+@EqualsAndHashCode(callSuper = true)
+public class Role extends BaseModel {
   private String name;
+  private Boolean adminRole;
   private String description;
-  private Integer modifiedBy;
-  private Date modifiedDate;
   private Set<Right> rights;
 
-  public Role(String name, String description) {
-    this(null, name, description);
+  public Role(String name, Boolean adminRole, String description) {
+    this(name, adminRole, description, null);
   }
 
-  public Role(Integer id, String name, String description) {
-    this(id, name, description, null, null, null);
+  public Role(Integer id, String name, Boolean adminRole, String description, Set<Right> rights) {
+    this(name, adminRole, description, rights);
+    this.id = id;
   }
 
   public void validate() {

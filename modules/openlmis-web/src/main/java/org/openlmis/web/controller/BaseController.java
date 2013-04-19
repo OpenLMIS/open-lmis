@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.web.controller;
 
 import org.openlmis.web.logger.ApplicationLogger;
@@ -19,6 +25,7 @@ public class BaseController {
   public static final String UNEXPECTED_EXCEPTION = "unexpected.exception";
   public static final String FORBIDDEN_EXCEPTION = "forbidden.exception";
   public static final String ACCEPT_JSON = "Accept=application/json";
+  public static final String ACCEPT_PDF = "Accept=application/pdf";
 
   protected Integer loggedInUserId(HttpServletRequest request) {
     return (Integer) request.getSession().getAttribute(USER_ID);

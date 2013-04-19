@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.upload.parser;
 
 import org.openlmis.upload.model.Field;
@@ -26,7 +32,7 @@ public class CsvCellProcessors {
         typeMappings.put("BigDecimal", new ParseBigDecimal());
     }
 
-    protected static List<CellProcessor> getProcessors(ModelClass modelClass, List<String> headers) {
+    public static List<CellProcessor> getProcessors(ModelClass modelClass, List<String> headers) {
         List<CellProcessor> processors = new ArrayList<>();
         for (String header : headers) {
             org.openlmis.upload.model.Field field =  modelClass.findImportFieldWithName(header);

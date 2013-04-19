@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.email.builder;
 
 import com.natpryce.makeiteasy.Instantiator;
@@ -21,7 +27,6 @@ public class EmailMessageBuilder {
     public EmailMessage instantiate(PropertyLookup<EmailMessage> lookup) {
 
       EmailMessage message = new EmailMessage();
-      message.setFrom(lookup.valueOf(from, "from@openlmis.org"));
       message.setTo(lookup.valueOf(to, "to@openlmis.org"));
       message.setSubject(lookup.valueOf(subject, "Test Email"));
       message.setText(lookup.valueOf(text, "Test Email Text"));

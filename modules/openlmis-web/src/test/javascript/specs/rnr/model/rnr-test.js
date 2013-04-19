@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 describe('R&R test', function () {
   xit('should calculate total cost on initialization', function () {
     spyOn(Rnr.prototype, 'init');
@@ -10,6 +16,24 @@ describe('R&R test', function () {
     expect(Rnr.prototype.init).toHaveBeenCalled();
 //    expect(Rnr.prototype.calculateFullSupplyItemsSubmittedCost).toHaveBeenCalled();
 //    expect(Rnr.prototype.calculateNonFullSupplyItemsSubmittedCost).toHaveBeenCalled();
+  });
+
+  it('should sort non full supply line items during init', function() {
+    var rnrLineItem1 = {productCategoryDisplayOrder:3};
+    var rnrLineItem2 = {productCategoryDisplayOrder:1};
+    var rnrLineItem3 = {productCategoryDisplayOrder:2};
+    var rnrJson = {period:{numberOfMonths:3}, 'nonFullSupplyLineItems':[rnrLineItem1, rnrLineItem2, rnrLineItem3]}
+
+    var rnr = new Rnr();
+    jQuery.extend(rnr, rnrJson);
+    rnr.init();
+
+    expect(rnr.nonFullSupplyLineItems.length).toEqual(3);
+    expect(rnr.nonFullSupplyLineItems[0].productCategoryDisplayOrder).toEqual(1);
+    expect(rnr.nonFullSupplyLineItems[1].productCategoryDisplayOrder).toEqual(2);
+    expect(rnr.nonFullSupplyLineItems[2].productCategoryDisplayOrder).toEqual(3);
+
+
   });
 
   it('should prepare line item objects inside rnr', function () {
@@ -344,5 +368,12 @@ describe('R&R test', function () {
     expect(rnr.getNonFullSupplyErrorLineItemIndexes).toHaveBeenCalled();
     expect(rnr.getFullSupplyErrorLineItemIndexes).toHaveBeenCalled();
   });
+
+  it('should prepare period display name', function () {
+    var rnr = new Rnr({"id":"1", period:{"name": "Period 1", "startDate": 1358274600000, "endDate": 1367260200000}}, null)
+    expect(rnr.periodDisplayName()).toEqual('16/01/2013 - 30/04/2013');
+  });
+
+
 });
 

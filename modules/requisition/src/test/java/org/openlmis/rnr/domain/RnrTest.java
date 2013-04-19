@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.rnr.domain;
 
 import org.junit.Before;
@@ -6,6 +12,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openlmis.core.domain.Money;
 import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.builder.RnrColumnBuilder;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
@@ -122,6 +129,17 @@ public class RnrTest {
   }
 
   @Test
+  public void shouldGiveErrorIfCorrespondingLineItemNotFound() throws Exception {
+    Rnr otherRequisition = new Rnr();
+    List<RnrColumn> programRnrColumns = new ArrayList<>();
+
+    exception.expect(DataException.class);
+    exception.expectMessage("rnr.validation.error");
+
+    rnr.copyUserEditableFields(otherRequisition, programRnrColumns);
+  }
+
+  @Test
   public void shouldFindLineItemInPreviousRequisitionAndSetBeginningBalance() throws Exception {
     Rnr rnr = make(a(defaultRnr));
     Rnr previousRequisition = new Rnr();
@@ -164,7 +182,7 @@ public class RnrTest {
     when(secondLineItem.calculateCost()).thenReturn(nonFullSupplyItemSubmittedCost);
     rnr.calculate(programRequisitionColumns);
 
-    verify(firstLineItem).calculate(period, programRequisitionColumns);
+    verify(firstLineItem).calculate(period, programRequisitionColumns, SUBMITTED);
     assertThat(rnr.getFullSupplyItemsSubmittedCost(), is(fullSupplyItemSubmittedCost));
     assertThat(rnr.getNonFullSupplyItemsSubmittedCost(), is(nonFullSupplyItemSubmittedCost));
   }
@@ -187,19 +205,6 @@ public class RnrTest {
 
     assertThat(rnr.getFullSupplyLineItems().get(0).getStockInHand(), is(2));
     assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(BEGINNING_BALANCE));
-  }
-
-  @Test
-  public void shouldPrepareRequisitionAndCalculate() throws Exception {
-    rnr.setStatus(INITIATED);
-    Rnr rnrSpy = spy(rnr);
-    ArrayList<RnrColumn> programRnrColumns = new ArrayList<>();
-    doNothing().when(rnrSpy).calculate(programRnrColumns);
-
-    rnrSpy.prepareFor(SUBMITTED, programRnrColumns);
-
-    verify(rnrSpy).calculate(programRnrColumns);
-    assertThat(rnrSpy.getStatus(), is(SUBMITTED));
   }
 
   @Test
@@ -235,8 +240,12 @@ public class RnrTest {
 
   @Test
   public void shouldReleaseARequisitionAsAnOrder() throws Exception {
-    rnr.convertToOrder();
-    assertThat(rnr.getStatus(), is(ORDERED));
+    OrderBatch orderBatch = new OrderBatch();
+    Integer userId = 1;
+    rnr.convertToOrder(orderBatch, userId);
+    assertThat(rnr.getStatus(), is(RELEASED));
+    assertThat(rnr.getOrderBatch(), is(orderBatch));
+    assertThat(rnr.getModifiedBy(), is(userId));
   }
 
   private ArrayList<RnrColumn> setupProgramTemplate() {

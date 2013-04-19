@@ -1,6 +1,7 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.GeographicLevelMapper;
@@ -25,31 +26,31 @@ public class GeographicZoneRepository {
     this.geographicLevelMapper = geographicLevelMapper;
   }
 
-  public void save(GeographicZone geographicZone) {
-    try {
-      validateAndSetGeographicZone(geographicZone);
-      mapper.insert(geographicZone);
-    } catch (DuplicateKeyException exception) {
-      throw new DataException("Duplicate Geographic Zone Code");
-    } catch (DataIntegrityViolationException exception) {
-      throw new DataException("Incorrect Data Length");
+    public void save(GeographicZone geographicZone) {
+        try {
+            validateAndSetGeographicZone(geographicZone);
+            mapper.insert(geographicZone);
+        } catch (DuplicateKeyException exception) {
+            throw new DataException("Duplicate Geographic Zone Code");
+        } catch (DataIntegrityViolationException exception) {
+            throw new DataException("Incorrect Data Length");
+        }
     }
-  }
 
-  private void validateAndSetGeographicZone(GeographicZone geographicZone) {
-    geographicZone.setLevel(mapper.getGeographicLevelByCode(geographicZone.getLevel().getCode()));
-    if (geographicZone.getLevel() == null)
-      throw new DataException("Invalid Geographic Level Code");
-    if (geographicZone.getParent() == null) {
-      geographicZone.setParent(mapper.getGeographicZoneByCode("Root"));
-      return;
+    private void validateAndSetGeographicZone(GeographicZone geographicZone) {
+        geographicZone.setLevel(mapper.getGeographicLevelByCode(geographicZone.getLevel().getCode()));
+        if (geographicZone.getLevel() == null)
+            throw new DataException("Invalid Geographic Level Code");
+        if (geographicZone.getParent() == null) {
+            geographicZone.setParent(mapper.getGeographicZoneByCode("Root"));
+            return;
+        }
+        geographicZone.setParent(mapper.getGeographicZoneByCode(geographicZone.getParent().getCode()));
+        if (geographicZone.getParent() == null)
+            throw new DataException("Invalid Geographic Zone Parent Code");
     }
-    geographicZone.setParent(mapper.getGeographicZoneByCode(geographicZone.getParent().getCode()));
-    if (geographicZone.getParent() == null)
-      throw new DataException("Invalid Geographic Zone Parent Code");
-  }
 
-  public GeographicZone getByCode(String code) {
+    public GeographicZone getByCode(String code) {
     return mapper.getGeographicZoneByCode(code);
   }
 
@@ -63,5 +64,24 @@ public class GeographicZoneRepository {
 
   public List<GeographicZone> getAllZones() {
         return mapper.getAllZones();
+  }
+  public void insert(GeographicZone zone) {
+    try {
+      mapper.insert(zone);
+    } catch (DataIntegrityViolationException e) {
+      throw new DataException("Incorrect Data Length");
+    }
+  }
+
+  public void update(GeographicZone zone) {
+    try {
+      mapper.update(zone);
+    } catch (DataIntegrityViolationException e) {
+      throw new DataException("Incorrect Data Length");
+    }
+  }
+
+  public GeographicLevel getGeographicLevelByCode(String code) {
+    return mapper.getGeographicLevelByCode(code);
   }
 }

@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.rnr.domain;
 
 import lombok.Data;
@@ -7,7 +13,6 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.message.OpenLmisMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +27,7 @@ import static java.lang.Math.floor;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
 import static org.openlmis.rnr.domain.RnRColumnSource.USER_INPUT;
+import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
 
 @Data
 @NoArgsConstructor
@@ -39,8 +45,10 @@ public class RnrLineItem {
 
   //todo hack to display it on UI. This is concatenated string of Product properties like name, strength, form and dosage unit
   private String product;
+  private Integer productDisplayOrder;
   private String productCode;
   private String productCategory;
+  private Integer productCategoryDisplayOrder;
   private Boolean roundToZero;
   private Integer packRoundingThreshold;
   private Integer packSize;
@@ -91,8 +99,10 @@ public class RnrLineItem {
     this.maxMonthsOfStock = facilityApprovedProduct.getMaxMonthsOfStock();
     ProgramProduct programProduct = facilityApprovedProduct.getProgramProduct();
     this.price = programProduct.getCurrentPrice();
-    this.productCategory = programProduct.getProduct().getCategory().getName();
-    populateFromProduct(programProduct.getProduct());
+    ProductCategory category = programProduct.getProduct().getCategory();
+    this.productCategory = category.getName();
+    this.productCategoryDisplayOrder = category.getDisplayOrder();
+    this.populateFromProduct(programProduct.getProduct());
     this.dosesPerMonth = programProduct.getDosesPerMonth();
     this.modifiedBy = modifiedBy;
   }
@@ -106,6 +116,7 @@ public class RnrLineItem {
     this.packRoundingThreshold = product.getPackRoundingThreshold();
     this.product = productName(product);
     this.fullSupply = product.getFullSupply();
+    this.productDisplayOrder = product.getDisplayOrder();
   }
 
   private String productName(Product product) {
@@ -121,15 +132,18 @@ public class RnrLineItem {
   }
 
 
-  public void calculate(ProcessingPeriod period, List<RnrColumn> rnrColumns) {
+  public void calculate(ProcessingPeriod period, List<RnrColumn> rnrColumns, RnrStatus rnrStatus) {
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
-    calculateNormalizedConsumption();
-    calculateAmc(period);
     calculateTotalLossesAndAdjustments();
-    calculateMaxStockQuantity();
     if (template.columnsCalculated(STOCK_IN_HAND)) calculateStockInHand();
-    if (template.columnsCalculated(QUANTITY_DISPENSED)) calculateQuantityDispensed();
-    calculateOrderQuantity();
+    if (template.columnsCalculated(QUANTITY_DISPENSED))
+      calculateQuantityDispensed();
+    calculateNormalizedConsumption();
+    if (rnrStatus == AUTHORIZED) {
+      calculateAmc(period);
+      calculateMaxStockQuantity();
+      calculateOrderQuantity();
+    }
 
     calculatePacksToShip();
   }
@@ -151,28 +165,34 @@ public class RnrLineItem {
     ProgramRnrTemplate template = new ProgramRnrTemplate(templateColumns);
 
     String[] nonNullableFields = {BEGINNING_BALANCE, QUANTITY_RECEIVED, QUANTITY_DISPENSED, NEW_PATIENT_COUNT, STOCK_OUT_DAYS};
-    boolean valid = true;
     for (String fieldName : nonNullableFields) {
       if (template.columnsVisible(fieldName) && !template.columnsCalculated(fieldName)) {
-        try {
-          Field field = this.getClass().getDeclaredField(fieldName);
-          if (field.get(this) == null) {
-            valid = false;
-            break;
-          }
-        } catch (Exception e) {
-          logger.error("Error in reading RnrLineItem's field", e);
+        if (getValueFor(fieldName) == null) {
+          throw new DataException(RNR_VALIDATION_ERROR);
         }
       }
     }
 
-    valid = valid && (!template.columnsVisible(QUANTITY_REQUESTED, REASON_FOR_REQUESTED_QUANTITY)
-      || quantityRequested == null
-      || isPresent(reasonForRequestedQuantity));
+    requestedQuantityConditionalValidation(template);
+  }
 
-    if (!valid)
-      throw new DataException(new OpenLmisMessage(RNR_VALIDATION_ERROR));
+  private void requestedQuantityConditionalValidation(ProgramRnrTemplate template) {
+    if (template.columnsVisible(QUANTITY_REQUESTED)
+      && quantityRequested != null
+      && reasonForRequestedQuantity == null) {
+      throw new DataException(RNR_VALIDATION_ERROR);
+    }
+  }
 
+  private Object getValueFor(String fieldName) {
+    Object value = null;
+    try {
+      Field field = this.getClass().getDeclaredField(fieldName);
+      value = field.get(this);
+    } catch (Exception e) {
+      logger.error("Error in reading RnrLineItem's field", e);
+    }
+    return value;
   }
 
   public void validateNonFullSupply() {
@@ -195,7 +215,7 @@ public class RnrLineItem {
 
   public void calculatePacksToShip() {
     Integer orderQuantity = getOrderQuantity();
-    if(orderQuantity == null || packSize == null) {
+    if (orderQuantity == null || packSize == null) {
       packsToShip = null;
     } else {
       packsToShip = orderQuantity == 0 ? 0 : round(floor(orderQuantity / packSize), orderQuantity);
@@ -235,7 +255,8 @@ public class RnrLineItem {
   public void calculateNormalizedConsumption() {
     Float consumptionAdjustedWithStockOutDays = ((MULTIPLIER * NUMBER_OF_DAYS) - stockOutDays) == 0 ? quantityDispensed :
       (quantityDispensed * ((MULTIPLIER * NUMBER_OF_DAYS) / ((MULTIPLIER * NUMBER_OF_DAYS) - stockOutDays)));
-    Float adjustmentForNewPatients = (newPatientCount * ((Double) Math.ceil(dosesPerMonth.doubleValue() / dosesPerDispensingUnit)).floatValue()) * MULTIPLIER;
+    Float adjustmentForNewPatients = (newPatientCount * ((Double) Math.ceil(
+      dosesPerMonth.doubleValue() / dosesPerDispensingUnit)).floatValue()) * MULTIPLIER;
 
     normalizedConsumption = Math.round(consumptionAdjustedWithStockOutDays + adjustmentForNewPatients);
   }
@@ -252,7 +273,8 @@ public class RnrLineItem {
   }
 
   public void addPreviousNormalizedConsumptionFrom(RnrLineItem rnrLineItem) {
-    if (rnrLineItem != null) this.previousNormalizedConsumptions.add(rnrLineItem.normalizedConsumption);
+    if (rnrLineItem != null)
+      this.previousNormalizedConsumptions.add(rnrLineItem.normalizedConsumption);
   }
 
   public void setDefaultApprovedQuantity() {
@@ -302,7 +324,8 @@ public class RnrLineItem {
   void setLineItemFieldsAccordingToTemplate(ProgramRnrTemplate template) {
     if (!template.columnsVisible(QUANTITY_RECEIVED)) quantityReceived = 0;
     if (!template.columnsVisible(QUANTITY_DISPENSED)) quantityDispensed = 0;
-    if (!template.columnsVisible(LOSSES_AND_ADJUSTMENTS)) totalLossesAndAdjustments = 0;
+    if (!template.columnsVisible(LOSSES_AND_ADJUSTMENTS))
+      totalLossesAndAdjustments = 0;
     newPatientCount = 0;
     stockOutDays = 0;
   }

@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 import groovy.sql.Sql
 
 configurations {
@@ -12,12 +18,17 @@ dependencies {
             'c3p0:c3p0:0.9.0.4',
             'org.springframework:spring-tx:3.1.1.RELEASE',
             'org.springframework:spring-jdbc:3.1.1.RELEASE',
+            'org.springframework:spring-aspects:3.1.1.RELEASE',
+            'org.aspectj:aspectjrt:1.7.0',
             'org.mybatis:mybatis-spring:1.1.1'
+
+    testCompile 'org.springframework:spring-test:3.1.1.RELEASE'
 
     flyway 'com.googlecode.flyway:flyway-ant:1.7',
             'postgresql:postgresql:9.1-901.jdbc4'
 
     classpath 'postgresql:postgresql:9.1-901.jdbc4'
+
 }
 
 task setupDB(dependsOn: ["createDB", clean]) << {

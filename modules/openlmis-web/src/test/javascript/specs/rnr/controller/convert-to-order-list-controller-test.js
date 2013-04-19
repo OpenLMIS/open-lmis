@@ -1,9 +1,16 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 describe('ConvertToOrderListController', function () {
 
   var scope, ctrl, httpBackend, controller;
   var requisitionList;
 
   beforeEach(module('openlmis.services'));
+  beforeEach(module('ui.bootstrap.dialog'));
 
   beforeEach(inject(function ($httpBackend, $rootScope, $controller) {
     scope = $rootScope.$new();
@@ -82,16 +89,35 @@ describe('ConvertToOrderListController', function () {
   });
 
   it("should convert the selected requisitions to order", function () {
-    scope.gridOptions.selectedItems = [requisitionList[0]];
     httpBackend.expectPOST('/requisitionOrder.json', {"rnrList":scope.gridOptions.selectedItems}).respond(200);
     httpBackend.expectGET('/requisitions-for-convert-to-order.json').respond({"rnr_list":[requisitionList[1]]});
 
-    scope.convertToOrder();
+    scope.dialogCloseCallback(true);
 
     httpBackend.flush();
     expect(scope.message).toEqual("The requisition(s) have been successfully converted to Orders");
     expect(scope.error).toEqual("");
+    expect(scope.noRequisitionSelectedMessage).toEqual("");
     expect(scope.requisitions).toEqual([requisitionList[1]]);
+  });
+
+  it('should display confirm modal if convert to order button is clicked with some Rnrs selected', function () {
+    scope.gridOptions.selectedItems = [requisitionList[0]];
+    spyOn(OpenLmisDialog, 'new');
+    scope.convertToOrder();
+    httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
+    expect(OpenLmisDialog.new).toHaveBeenCalled();
+  });
+
+  it('should convert to order if ok is clicked on the confirm modal', function () {
+    scope.gridOptions.selectedItems = [requisitionList[0]];
+    httpBackend.expectPOST('/requisitionOrder.json', {"rnrList":scope.gridOptions.selectedItems}).respond(200);
+    httpBackend.expectGET('/requisitions-for-convert-to-order.json').respond({"rnr_list":[requisitionList[1]]});
+
+    scope.dialogCloseCallback(true);
+    httpBackend.flush();
+    expect(scope.message).toEqual("The requisition(s) have been successfully converted to Orders");
+    expect(scope.selectedItems.length).toEqual(0);
   });
 
   it('should give message if no requisition selected', function() {
@@ -99,7 +125,7 @@ describe('ConvertToOrderListController', function () {
 
     scope.convertToOrder();
 
-    expect(scope.message).toEqual("Please select atleast one Requisition for Converting to Order.");
+    expect(scope.noRequisitionSelectedMessage).toEqual("Please select at least one Requisition for Converting to Order.");
   });
 });
 

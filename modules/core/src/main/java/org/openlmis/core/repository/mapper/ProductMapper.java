@@ -75,8 +75,31 @@ public interface ProductMapper {
     })
     Product getById(Integer id);
 
-    @Select("SELECT id from products where code = #{code}")
-    Integer getIdByCode(String code);
+  @Select("SELECT id FROM products WHERE LOWER(code) = LOWER(#{code})")
+  Integer getIdByCode(String code);
+
+  @Select("SELECT * FROM products WHERE LOWER(code)=LOWER(#{code})")
+  Product getByCode(String code);
+
+  @Update({"UPDATE products SET  alternateItemCode=#{alternateItemCode}, ",
+    "manufacturer =#{manufacturer},manufacturerCode=#{manufacturerCode},manufacturerBarcode=#{manufacturerBarCode}, mohBarcode=#{mohBarCode}, ",
+    "gtin=#{gtin},type=#{type}, ",
+    "displayOrder=#{displayOrder}, ",
+    "primaryName=#{primaryName},fullName=#{fullName}, genericName=#{genericName},alternateName=#{alternateName},description=#{description}, ",
+    "strength=#{strength}, formId=#{form.id}, ",
+    "dosageUnitId=#{dosageUnit.id}, dispensingUnit=#{dispensingUnit}, dosesPerDispensingUnit=#{dosesPerDispensingUnit}, ",
+    "packSize=#{packSize},alternatePackSize=#{alternatePackSize}, ",
+    "storeRefrigerated=#{storeRefrigerated},storeRoomTemperature=#{storeRoomTemperature}, ",
+    "hazardous=#{hazardous},flammable=#{flammable},controlledSubstance=#{controlledSubstance},lightSensitive=#{lightSensitive},approvedByWHO=#{approvedByWHO}, ",
+    "contraceptiveCYP=#{contraceptiveCYP},",
+    "packLength=#{packLength},packWidth=#{packWidth},packHeight=#{packHeight},packWeight=#{packWeight},packsPerCarton=#{packsPerCarton},",
+    "cartonLength=#{cartonLength},cartonWidth=#{cartonWidth},cartonHeight=#{cartonHeight},cartonsPerPallet=#{cartonsPerPallet},",
+    "expectedShelfLife=#{expectedShelfLife},",
+    "specialStorageInstructions=#{specialStorageInstructions},specialTransportInstructions=#{specialTransportInstructions},",
+    "active=#{active},fullSupply=#{fullSupply},tracer=#{tracer},roundToZero=#{roundToZero},archived=#{archived},",
+    "packRoundingThreshold=#{packRoundingThreshold}, categoryId=#{category.id},",
+    "modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} WHERE id=#{id}"})
+  void update(Product product);
 
     @Select("SELECT * FROM products")
     List<Product> getAll();

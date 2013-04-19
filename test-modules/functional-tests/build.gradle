@@ -1,9 +1,14 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 apply plugin: 'jetty'
 
 
 dependencies {
-    compile 'org.testng:testng:6.1.1',
-            'org.seleniumhq.selenium:selenium-java:2.25.0',
+    compile 'org.seleniumhq.selenium:selenium-java:2.25.0',
             'org.seleniumhq.selenium:selenium-firefox-driver:2.25.0',
             'org.seleniumhq.selenium:selenium-ie-driver:2.25.0',
             'org.seleniumhq.selenium:selenium-chrome-driver:2.25.0',
@@ -12,15 +17,19 @@ dependencies {
             project(':test-modules:test-core')
 
 
-    testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
-            'org.testng:testng:6.1.1',
-            'org.seleniumhq.selenium:selenium-java:2.25.0',
-            'org.seleniumhq.selenium:selenium-ie-driver:2.25.0',
-            'org.seleniumhq.selenium:selenium-firefox-driver:2.25.0',
-            'org.seleniumhq.selenium:selenium-chrome-driver:2.25.0',
-            'net.sf.json-lib:json-lib:0.9',
-            'postgresql:postgresql:9.0-801.jdbc4',
-            project(':test-modules:test-core')
+    testCompile 'org.springframework:spring-test:3.1.1.RELEASE'
+    testCompile 'org.seleniumhq.selenium:selenium-java:2.25.0'
+    testCompile 'org.seleniumhq.selenium:selenium-ie-driver:2.25.0'
+    testCompile 'org.seleniumhq.selenium:selenium-firefox-driver:2.25.0'
+    testCompile 'org.seleniumhq.selenium:selenium-chrome-driver:2.25.0'
+    testCompile 'org.testng:testng:6.1.1'
+    testCompile group: 'com.google.inject', name: 'guice', version: '3.0'
+    testCompile("org.uncommons:reportng:1.1.2") {
+        exclude group: "org.testng", module: "testng"
+    }
+    testCompile 'net.sf.json-lib:json-lib:0.9'
+    testCompile 'postgresql:postgresql:9.0-801.jdbc4'
+    testCompile project(':test-modules:test-core')
 }
 
 test {
@@ -34,8 +43,17 @@ task buildOpenLmis(type: GradleBuild) {
 
 task smokeTest(type: Test) {
     useTestNG() {
+        systemProperties['browser'] = 'firefox'
+        systemProperties['dburl'] = "$dburl"
+        systemProperties['baseurl'] = "$baseurl"
+
         suites 'src/test/java/org/openlmis/functional/testng-smoke.xml'
     }
+    options {
+        listeners << 'org.uncommons.reportng.HTMLReporter'
+        listeners << 'org.uncommons.reportng.JUnitXMLReporter'
+    }
+    workingDir = 'build/'
 }
 
 smokeTest.doFirst() {
@@ -44,8 +62,17 @@ smokeTest.doFirst() {
 
 task functionalTest(type: Test) {
     useTestNG() {
+        systemProperties['browser'] = 'firefox'
+        systemProperties['dburl'] = "$dburl"
+        systemProperties['baseurl'] = "$baseurl"
+
         suites 'src/test/java/org/openlmis/functional/testng-functional.xml'
     }
+    options {
+        listeners << 'org.uncommons.reportng.HTMLReporter'
+        listeners << 'org.uncommons.reportng.JUnitXMLReporter'
+    }
+    workingDir = 'build/'
 }
 
 functionalTest.doFirst() {
@@ -54,8 +81,17 @@ functionalTest.doFirst() {
 
 task smokeTestIE(type: Test) {
     useTestNG() {
+        systemProperties['browser'] = 'ie'
+        systemProperties['dburl'] = "$dburl"
+        systemProperties['baseurl'] = "$baseurl"
+
         suites 'src/test/java/org/openlmis/functional/testng-smoke-ie.xml'
     }
+    options {
+        listeners << 'org.uncommons.reportng.HTMLReporter'
+        listeners << 'org.uncommons.reportng.JUnitXMLReporter'
+    }
+    workingDir = 'build/'
 }
 
 smokeTestIE.doFirst() {
@@ -64,8 +100,17 @@ smokeTestIE.doFirst() {
 
 task smokeTestChrome(type: Test) {
     useTestNG() {
+        systemProperties['browser'] = 'chrome'
+        systemProperties['dburl'] = "$dburl"
+        systemProperties['baseurl'] = "$baseurl"
+
         suites 'src/test/java/org/openlmis/functional/testng-smoke-chrome.xml'
     }
+    options {
+        listeners << 'org.uncommons.reportng.HTMLReporter'
+        listeners << 'org.uncommons.reportng.JUnitXMLReporter'
+    }
+    workingDir = 'build/'
 }
 
 smokeTestChrome.doFirst() {

@@ -1,0 +1,33 @@
+<!--
+  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
+<div id="lossesAndAdjustments" modal="lossesAndAdjustmentsModal" options="{'backdrop':'static', 'escape':true}">
+    <div class="modal-header"><h3>Losses And Adjustments </h3></div>
+    <div class="modal-body">
+
+        <hr ng-show="currentRnrLineItem.lossesAndAdjustments.length > 0"/>
+        <div class="adjustment-list" ng-show="currentRnrLineItem.lossesAndAdjustments.length > 0">
+            <ul>
+                <li ng-repeat="adjustment in currentRnrLineItem.lossesAndAdjustments" class="clearfix">
+                    <span class="tpl-adjustment-type" ng-bind="adjustment.type.description"></span>
+                    <span class="tpl-adjustment-qty" ng-bind="adjustment.quantity"></span>
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="adjustment-total clearfix alert alert-warning"
+             ng-show="currentRnrLineItem.lossesAndAdjustments.length > 0">
+            <span class="pull-left">Total</span><span
+                ng-bind="currentRnrLineItem.totalLossesAndAdjustments"></span>
+        </div>
+
+        <div class="modal-footer">
+            <input type="button" ng-click="closeLossesAndAdjustmentModal()"
+                   class="btn btn-primary" openlmis-message="button.close"/>
+        </div>
+    </div>
+</div>

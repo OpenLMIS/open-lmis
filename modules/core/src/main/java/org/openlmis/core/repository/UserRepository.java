@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
@@ -26,6 +32,7 @@ public class UserRepository {
   public static final String DUPLICATE_EMPLOYEE_ID_FOUND = "duplicate.employee.id.found";
   public static final String DUPLICATE_EMAIL_FOUND = "duplicate.email.found";
   public static final String DUPLICATE_USER_NAME_FOUND = "duplicate.user.name.found";
+
 
 
   @Autowired
@@ -67,16 +74,19 @@ public class UserRepository {
       throw new DataException(new OpenLmisMessage(DUPLICATE_EMAIL_FOUND));
     if (message.contains("duplicate key value violates unique constraint \"uc_users_userName\"".toLowerCase()))
       throw new DataException(new OpenLmisMessage(DUPLICATE_USER_NAME_FOUND));
+    if (message.contains(" duplicate key value violates unique constraint \"uc_users_username_vendor\"".toLowerCase())) //TODO:Change the message key after vendor is added on upload
+      throw new DataException(new OpenLmisMessage(DUPLICATE_USER_NAME_FOUND));
   }
 
   private void validateAndSetSupervisor(User user) {
     User supervisor = null;
 
     if (user.getSupervisor() != null && user.getSupervisor().getUserName() != null
-        && !user.getSupervisor().getUserName().isEmpty()) {
+      && !user.getSupervisor().getUserName().isEmpty()) {
 
-      supervisor = userMapper.get(user.getSupervisor().getUserName());
-      if (supervisor == null) throw new DataException(new OpenLmisMessage(SUPERVISOR_USER_NOT_FOUND));
+      supervisor = userMapper.getByUsernameAndVendorId(user.getSupervisor());
+      if (supervisor == null)
+        throw new DataException(new OpenLmisMessage(SUPERVISOR_USER_NOT_FOUND));
     }
 
     user.setSupervisor(supervisor);
@@ -86,8 +96,8 @@ public class UserRepository {
     return userMapper.getByEmail(email);
   }
 
-  public User getByUsername(String username) {
-    return userMapper.get(username);
+  public User getByUsernameAndVendorId(User user) {
+    return userMapper.getByUsernameAndVendorId(user);
   }
 
   public List<User> searchUser(String userSearchParam) {
@@ -110,8 +120,11 @@ public class UserRepository {
     userMapper.deletePasswordResetTokenForUser(userId);
   }
 
-public void updateUserPassword(Integer userId, String password) {
+  public void updateUserPassword(Integer userId, String password) {
     userMapper.updateUserPassword(userId, password);
   }
 
+  public User selectUserByUserNameAndPassword(String userName, String password) {
+    return userMapper.selectUserByUserNameAndPassword(userName, password);
+  }
 }

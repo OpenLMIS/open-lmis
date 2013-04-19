@@ -1,10 +1,19 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.upload;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Product;
-import org.openlmis.core.repository.ProductRepository;
 import org.openlmis.core.service.ProductService;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -13,23 +22,27 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-
+@RunWith(MockitoJUnitRunner.class)
 public class ProductPersistenceHandlerTest {
 
-    @Rule
-    public ExpectedException expectedEx = ExpectedException.none();
+  @Rule
+  public ExpectedException expectedEx = ExpectedException.none();
+  private ProductPersistenceHandler productPersistenceHandler;
+  @Mock
+  private ProductService productService;
 
-    @Test
-    public void shouldSaveImportedProduct() throws Exception {
-        ProductService productService = mock(ProductService.class);
-        Product product = new Product();
+  @Before
+  public void setUp() throws Exception {
+    productPersistenceHandler = new ProductPersistenceHandler(productService);
+  }
 
-        new ProductPersistenceHandler(productService).execute(product, 0, 1);
-        assertThat(product.getModifiedBy(), is(1));
-        assertThat(product.getModifiedDate(), is(notNullValue()));
-        verify(productService).save(product);
-    }
- }
+  @Test
+  public void shouldSaveImportedProduct() throws Exception {
+    Product product = new Product();
+    productPersistenceHandler.save(product);
+    verify(productService).save(product);
+  }
+}
 
 
 

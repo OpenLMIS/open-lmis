@@ -1,3 +1,6 @@
+-- Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+-- If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
 DROP TABLE IF EXISTS requisitions;
 CREATE TABLE requisitions (
   id                              SERIAL PRIMARY KEY,
@@ -17,3 +20,6 @@ CREATE TABLE requisitions (
   createdDate                     TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
   UNIQUE (facilityId, programId, periodId)
 );
+
+CREATE INDEX i_requisitions_status ON requisitions(LOWER(status));
+CREATE INDEX i_requisitions_programId_supervisoryNodeId ON requisitions(programId, supervisoryNodeId);

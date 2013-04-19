@@ -1,0 +1,215 @@
+<!--
+  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
+<div ng-controller="CreateNonFullSupplyController" xmlns="http://www.w3.org/1999/html">
+<div id="pageErrors" class="rnr-page-errors" ng-show="errorPages.nonFullSupply">
+  <div class="dropdown">
+    <a class="dropdown-toggle">
+      Errors found on
+      <ng-pluralize count="errorPages.nonFullSupply.length"
+                    when="{ 1: '{} page',
+                                    other: '{} pages'}">
+
+      </ng-pluralize>
+      |
+    </a>
+    <ul class="dropdown-menu">
+      <li ng-repeat="page in errorPages.nonFullSupply">
+        <a ng-click="goToPage(page, $event)">{{page}}</a>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="clearfix">
+  <br/>
+  <input type="button" ng-click="showAddNonFullSupplyModal()" class="pull-right btn btn-primary"
+         ng-disabled="formDisabled || !(addNonFullSupplyLineItemButtonShown.visible)" value="Add"/>
+</div>
+
+<div class="rnr-table">
+  <table id="nonFullSupplyTable" class="table table-bordered" ng-show="pageLineItems.length > 0">
+    <thead>
+    <tr>
+      <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in visibleNonFullSupplyColumns"
+          ng-bind="programRnrColumn.label"></th>
+    </tr>
+    </thead>
+    <tbody ng-repeat="rnrLineItem in pageLineItems">
+    <tr>
+      <td class="productCategory" colspan="{{visibleNonFullSupplyColumns.length}}" ng-show="showCategory($index)"
+          ng-bind="rnrLineItem.productCategory"></td>
+    </tr>
+    <tr>
+      <td class="cell-input" ng-repeat="column in visibleNonFullSupplyColumns">
+        <ng-switch on="column.name">
+              <span ng-switch-when="remarks">
+                <input ng-disabled="formDisabled" id="{{getId(column.name, $parent)}}" type="text"
+                       name="remarks{{rnrLineItem['id']}}"
+                       ng-model="rnrLineItem[column.name]"
+                       maxlength="250"/>
+              </span>
+
+              <span ng-switch-when="quantityRequested">
+                <input ng-disabled="formDisabled" id="{{getId(column.name, $parent)}}" type="text"
+                       name="quantityRequested{{rnrLineItem['productCode']}}"
+                       ng-model="rnrLineItem.quantityRequested"
+                       ng-required="true"
+                       ng-class="highlightRequired(rnrLineItem[column.name])"
+                       rnr-validator="positiveInteger" maxlength="8"
+                       ng-change="rnr.fillPacksToShip(rnrLineItem)"/>
+                <span class="rnr-form-error" id="quantityRequested{{rnrLineItem['productCode']}}"
+                      style="display:none;" openlmis-message="rnr.number.error">
+                </span>
+              </span>
+
+              <span ng-switch-when="reasonForRequestedQuantity">
+                <input ng-disabled="formDisabled" id="{{getId(column.name, $parent)}}" type="text"
+                       name="reasonForRequestedQuantity{{rnrLineItem['id']}}"
+                       ng-model="rnrLineItem[column.name]"
+                       ng-required="true"
+                       ng-class="highlightWarning(rnrLineItem.reasonForRequestedQuantity)"
+                       maxlength="250"/>
+                <span class="alert alert-warning reason-request" openlmis-message="rnr.requested.quantity.reason.warning"
+                      ng-show="rnrLineItem.quantityRequested && !rnrLineItem.reasonForRequestedQuantity">
+                </span>
+              </span>
+              <span ng-switch-when="price">
+                <span ng-bind="rnrLineItem[column.name] | currency:currency" id="{{getId(column.name, $parent)}}"
+                      class="cell-text"></span>
+              </span>
+              <span ng-switch-when="cost">
+                <span ng-bind="rnrLineItem[column.name] | currency:currency" id="{{getId(column.name, $parent)}}"
+                      class="cell-text"></span>
+              </span>
+              <span ng-switch-when="lossesAndAdjustments">
+                <span ng-bind="rnrLineItem['totalLossesAndAdjustments']" class="cell-text"></span>
+              </span>
+          <span ng-switch-default ng-bind="rnrLineItem[column.name]" id="{{getId(column.name, $parent)}}"
+                class="cell-text"></span>
+
+        </ng-switch>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<form name="nonFullSupplyForm">
+  <div id="nonFullSupplyProductsModal" modal="nonFullSupplyProductsModal"
+       options="{ backdrop: 'static', escape: false}">
+    <div class="modal-header"><h3 openlmis-message="rnr.label.add.non.full.supply"></h3></div>
+    <div class="modal-body">
+
+      <div class="row-fluid">
+        <div class="span6">
+          <label for="nonFullSupplyProductsCategory" openlmis-message="rnr.label.category"></label>
+          <select ui-select2 class="span12 bottom-spacer" id="nonFullSupplyProductsCategory"
+                  ng-model="nonFullSupplyProductCategory" name="productName"
+                  data-placeholder="-- Select category --"
+                  ng-options="nonFullSupplyProductCategory.name for nonFullSupplyProductCategory in nonFullSupplyProductsCategories"
+                  ng-change="updateNonFullSupplyProductsToDisplay(); clearNonFullSupplyProductModalData()">
+            <option></option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div class="span6">
+          <label for="nonFullSupplyProductsCodeAndName" openlmis-message="rnr.label.product.code"></label>
+          <select ui-select2 class="span12 bottom-spacer" id="nonFullSupplyProductsCodeAndName"
+                  ng-model="facilityApprovedProduct" name="productCode" data-placeholder="-- Select product --"
+                  ng-options="facilityApprovedProduct.programProduct.product.code+' | '+facilityApprovedProduct.programProduct.product.primaryName for facilityApprovedProduct in nonFullSupplyProductsToDisplay">
+            <option></option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div class="span2">
+          <label for="quantityRequested"><span
+              ng-bind="labelForRnrColumn('quantityRequested')"></span></label>
+          <input type="text" class="span12" name="newNonFullSupply.quantityRequested"
+                 ng-model="newNonFullSupply.quantityRequested"
+                 id="quantityRequested"
+                 rnr-validator="positiveInteger" maxlength="8"/><br>
+            <span class="rnr-form-error" style="display:none;" id="newNonFullSupply.quantityRequested"
+                  openlmis-message="rnr.number.error">
+            </span>
+        </div>
+        <div class="span6">
+          <label for="reasonForRequestedQuantity"><span
+              ng-bind="labelForRnrColumn('reasonForRequestedQuantity')"></span></label>
+          <input type="text" class="span12" ng-model="newNonFullSupply.reasonForRequestedQuantity"
+                 id="reasonForRequestedQuantity" maxlength="250"/><br>
+            <span class="alert alert-warning reason-request"
+                  ng-show="newNonFullSupply.quantityRequested && !newNonFullSupply.reasonForRequestedQuantity"
+                  openlmis-message="rnr.requested.quantity.reason.warning">
+            </span>
+        </div>
+        <div class="span3">
+          <label>&nbsp;</label>
+          <input type="button" href="" id="addNonFullSupply" class="btn btn-primary"
+                 ng-click="addNonFullSupplyProductsByCategory()"
+                 ng-disabled="shouldDisableAddButton()" openlmis-message="button.add"/>
+        </div>
+      </div>
+
+      <hr/>
+
+      <div class="non-full-supply-product-list" ng-show="addedNonFullSupplyProducts.length">
+        <div class="row-fluid" ng-repeat="nonFullSupplyProduct in addedNonFullSupplyProducts">
+
+          <div class="span5">
+            <div class="fluid-grid-cell" id="nonFullSupplyProductCodeAndName">
+              <label ng-bind="nonFullSupplyProduct.productCode+' | '+nonFullSupplyProduct.productName"></label>
+            </div>
+          </div>
+
+          <div class="span2">
+            <div class="fluid-grid-cell">
+              <input type="text" ng-class="highlightRequiredFieldInModal(nonFullSupplyProduct.quantityRequested)"
+                     name="nonFullSupplyProductQuantityRequested{{$index}}" rnr-validator="positiveInteger"
+                     ng-required="true" maxlength="8" ng-model="nonFullSupplyProduct.quantityRequested"
+                     placeholder="Quantity"/>
+                <span class="rnr-form-error" style="display:none;"
+                      id="nonFullSupplyProductQuantityRequested{{$index}}" openlmis-message="rnr.number.error">
+                </span>
+            </div>
+          </div>
+
+          <div class="span4">
+            <div class="fluid-grid-cell" id="nonFullSupplyProductReasonForRequestedQuantity">
+              <input type="text"
+                     ng-class="highlightRequiredFieldInModal(nonFullSupplyProduct.reasonForRequestedQuantity)"
+                     maxlength="250" ng-required="true"
+                     ng-model="nonFullSupplyProduct.reasonForRequestedQuantity" placeholder="Explanation"/>
+            </div>
+          </div>
+
+          <div class="span1">
+            <div class="fluid-grid-cell">
+              <a class="delete-role" value="delete"
+                 ng-click="deleteCurrentNonFullSupplyLineItem($index)">&times;</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+    <div class="alert alert-danger" id="modalErrorMessage" ng-show="modalError" ng-bind="modalError"></div>
+
+    <div class="modal-footer">
+      <input type="button" id="doneNonFullSupply" class="btn btn-primary"
+             ng-click="addNonFullSupplyLineItemsToRnr()"
+             openlmis-message="button.done"/>
+
+      <input type="button" id="cancelNonFullSupply" class="btn btn-cancel"
+             ng-click="nonFullSupplyProductsModal=false;modalError=''"
+             openlmis-message="button.cancel"/>
+    </div>
+  </div>
+</form>
+</div>

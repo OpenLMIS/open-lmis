@@ -3,10 +3,7 @@ dependencies {
             'org.springframework:spring-aspects:3.1.1.RELEASE',
             'org.aspectj:aspectjrt:1.7.0',
             'commons-lang:commons-lang:2.6',
-            'org.drools:knowledge-api:5.4.0.Final',
-            'org.drools:drools-compiler:5.4.0.Final',
-            'org.drools:drools-core:5.4.0.Final',
-            'org.drools:drools-spring:5.4.0.Final',
+            'commons-collections:commons-collections:20040616',
             'org.codehaus.jackson:jackson-mapper-asl:1.9.11',
             project(':modules:db'),
             project(':modules:core')
@@ -31,4 +28,3 @@ dependencies {
     }
 
 }
-

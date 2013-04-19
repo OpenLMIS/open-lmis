@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.web.controller;
 
 import org.hamcrest.CoreMatchers;
@@ -6,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Facility;
@@ -13,12 +20,14 @@ import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
+import org.openlmis.rnr.domain.Comment;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.searchCriteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.rnr.service.RnrTemplateService;
+import org.openlmis.web.configurationReader.StaticReferenceDataReader;
 import org.openlmis.web.form.RnrList;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -30,10 +39,10 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -48,14 +57,21 @@ import static org.powermock.api.mockito.PowerMockito.*;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(RnrDTO.class)
 public class RequisitionControllerTest {
+
+
   public static final String FACILITY_CODE = "F14";
   public static final String FACILITY_NAME = "Facility";
   public static final String PROGRAM_NAME = "HIV";
   private static final String USER = "user";
   private static final Integer USER_ID = 1;
 
+  @Mock
   private RequisitionService requisitionService;
+  @Mock
   private RnrTemplateService rnrTemplateService;
+  @Mock
+  private StaticReferenceDataReader staticReferenceDataReader;
+
   private MockHttpServletRequest request;
   private RequisitionController controller;
   private Rnr rnr;
@@ -71,7 +87,7 @@ public class RequisitionControllerTest {
 
     requisitionService = mock(RequisitionService.class);
     rnrTemplateService = mock(RnrTemplateService.class);
-    controller = new RequisitionController(requisitionService, rnrTemplateService);
+    controller = new RequisitionController(requisitionService, rnrTemplateService, staticReferenceDataReader);
     rnr = new Rnr();
   }
 
@@ -85,9 +101,15 @@ public class RequisitionControllerTest {
 
   @Test
   public void shouldGetRnrByFacilityProgramAndPeriodIfExists() throws Exception {
-    ResponseEntity<OpenLmisResponse> response = controller.get(1, 2, 3);
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria();
+    criteria.setFacilityId(1);
+    criteria.setProgramId(2);
+    criteria.setPeriodId(3);
+    when(requisitionService.get(criteria)).thenReturn(asList(rnr));
 
-    verify(requisitionService).get(argThat(facilityMatcher(1)), argThat(programMatcher(2)), argThat(periodMatcher(3)));
+    ResponseEntity<OpenLmisResponse> response = controller.get(criteria, request);
+
+    verify(requisitionService).get(argThat(criteriaMatcher(1, 2, 3)));
     assertThat(response.getStatusCode(), is(equalTo(HttpStatus.OK)));
   }
 
@@ -98,7 +120,7 @@ public class RequisitionControllerTest {
     Mockito.when(requisitionService.getFullRequisitionById(1)).thenReturn(expectedRequisition);
     ResponseEntity<OpenLmisResponse> response = controller.getById(1);
 
-    assertThat((Rnr)response.getBody().getData().get(RequisitionController.RNR), is(expectedRequisition));
+    assertThat((Rnr) response.getBody().getData().get(RequisitionController.RNR), is(expectedRequisition));
     verify(requisitionService).getFullRequisitionById(1);
   }
 
@@ -140,10 +162,13 @@ public class RequisitionControllerTest {
     Facility facility = new Facility(1);
     whenNew(Facility.class).withArguments(1).thenReturn(facility);
     Program program = new Program(2);
-    whenNew(Program.class).withArguments(2).thenReturn(program);
 
-    when(requisitionService.get(facility, program, null)).thenReturn(expectedRnr);
-    ResponseEntity<OpenLmisResponse> response = controller.get(1, 2, null);
+    whenNew(Program.class).withArguments(2).thenReturn(program);
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facility.getId(), program.getId(), null);
+    when(requisitionService.get(criteria)).thenReturn(asList(expectedRnr));
+
+    ResponseEntity<OpenLmisResponse> response = controller.get(criteria, request);
+
     assertThat((Rnr) response.getBody().getData().get(RNR), is(expectedRnr));
   }
 
@@ -245,14 +270,15 @@ public class RequisitionControllerTest {
   @Test
   public void shouldReturnAllPeriodsForInitiatingRequisition() throws Exception {
     ProcessingPeriod processingPeriod = new ProcessingPeriod(6);
-    List<ProcessingPeriod> periodList = Arrays.asList(processingPeriod);
+    List<ProcessingPeriod> periodList = asList(processingPeriod);
     Rnr rnr = new Rnr();
 
     Facility facility = new Facility(1);
     whenNew(Facility.class).withArguments(1).thenReturn(facility);
     Program program = new Program(2);
     whenNew(Program.class).withArguments(2).thenReturn(program);
-    when(requisitionService.get(facility, program, processingPeriod)).thenReturn(rnr);
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facility.getId(), program.getId(), processingPeriod.getId());
+    when(requisitionService.get(criteria)).thenReturn(asList(rnr));
 
     when(requisitionService.getAllPeriodsForInitiatingRequisition(1, 2)).thenReturn(periodList);
 
@@ -274,13 +300,13 @@ public class RequisitionControllerTest {
   }
 
   @Test
-  public void shouldReturnListOfApprovedRequisitionsForConvertingToOrder(){
+  public void shouldReturnListOfApprovedRequisitionsForConvertingToOrder() {
     ArrayList<Rnr> expectedRequisitions = new ArrayList<>();
     mockStatic(RnrDTO.class);
     when(requisitionService.getApprovedRequisitions()).thenReturn(expectedRequisitions);
     List<RnrDTO> expectedRnrList = new ArrayList<>();
     when(RnrDTO.prepareForListApproval(expectedRequisitions)).thenReturn(expectedRnrList);
-  
+
     ResponseEntity<OpenLmisResponse> responseEntity = controller.listForConvertToOrder();
 
     verify(requisitionService).getApprovedRequisitions();
@@ -307,17 +333,7 @@ public class RequisitionControllerTest {
   }
 
   @Test
-  public void shouldReleaseRequisitionsAsOrder() throws Exception {
-    RnrList rnrList = new RnrList();
-    rnrList.setRnrList(Arrays.asList(new Rnr()));
-
-    controller.releaseAsOrder(rnrList, request);
-
-    verify(requisitionService).releaseRequisitionsAsOrder(rnrList.getRnrList(), USER_ID);
-  }
-
-  @Test
-  public void shouldReturnModelAndViewForPrintingRequisitionAsPdf(){
+  public void shouldReturnModelAndViewForPrintingRequisitionAsPdf() {
     int rnrId = 1;
     int programId = 2;
     Program program = new Program();
@@ -328,10 +344,11 @@ public class RequisitionControllerTest {
     when(requisitionService.getCategoryCount(rnr, true)).thenReturn(10);
     when(requisitionService.getCategoryCount(rnr, false)).thenReturn(5);
     when(rnrTemplateService.fetchColumnsForRequisition(programId)).thenReturn(rnrTemplate);
-
+    when(staticReferenceDataReader.getCurrency()).thenReturn("$");
     ModelAndView modelAndView = controller.printRequisition(rnrId);
 
     assertThat((Rnr) modelAndView.getModel().get(RNR), is(rnr));
+    assertThat((String) modelAndView.getModel().get(CURRENCY), is("$"));
     assertThat((ArrayList<RnrColumn>) modelAndView.getModel().get(RNR_TEMPLATE), is(rnrTemplate));
 
   }
@@ -350,6 +367,32 @@ public class RequisitionControllerTest {
     assertThat((List<RnrDTO>) fetchedOrders.getBody().getData().get(ORDERS), is(expectedRequisitionList));
   }
 
+  @Test
+  public void shouldInsertComment() throws Exception {
+    Comment comment = new Comment();
+    List comments = new ArrayList();
+    comments.add(comment);
+    when(requisitionService.getCommentsByRnrId(rnr.getId())).thenReturn(comments);
+
+    ResponseEntity<OpenLmisResponse> response = controller.insertComment(comment, rnr.getId(), request);
+
+    verify(requisitionService).insertComment(comment);
+    assertThat((List) response.getBody().getData().get(COMMENTS), is(comments));
+    assertThat(comment.getRnrId(), is(rnr.getId()));
+    assertThat(comment.getAuthor().getId(), is(USER_ID));
+  }
+
+  @Test
+  public void shouldGetCommentsForARnR() throws Exception {
+    List<Comment> comments = new ArrayList<>();
+    when(requisitionService.getCommentsByRnrId(1)).thenReturn(comments);
+
+    ResponseEntity<OpenLmisResponse> response = controller.getCommentsForARnr(rnr.getId());
+
+    verify(requisitionService).getCommentsByRnrId(rnr.getId());
+    assertThat(comments, is(response.getBody().getData().get(COMMENTS)));
+  }
+
   private Rnr createRequisition() {
     Rnr requisition = new Rnr();
     final Facility facility = new Facility();
@@ -366,35 +409,14 @@ public class RequisitionControllerTest {
     return requisition;
   }
 
-  private Matcher<Program> programMatcher(final int id) {
-    return new ArgumentMatcher<Program>() {
+  public static Matcher<RequisitionSearchCriteria> criteriaMatcher(final int facilityId, final int programId, final int periodId) {
+    return new ArgumentMatcher<RequisitionSearchCriteria>() {
       @Override
       public boolean matches(Object argument) {
-        Program program = (Program) argument;
-        return program.getId().equals(id);
+        RequisitionSearchCriteria searchCriteria = (RequisitionSearchCriteria) argument;
+        return searchCriteria.getFacilityId() == facilityId && searchCriteria.getProgramId() == programId && searchCriteria.getPeriodId() == periodId;
       }
     };
   }
-
-  private Matcher<ProcessingPeriod> periodMatcher(final int id) {
-    return new ArgumentMatcher<ProcessingPeriod>() {
-      @Override
-      public boolean matches(Object argument) {
-        ProcessingPeriod period = (ProcessingPeriod) argument;
-        return period.getId().equals(id);
-      }
-    };
-  }
-
-  private Matcher<Facility> facilityMatcher(final int id) {
-    return new ArgumentMatcher<Facility>() {
-      @Override
-      public boolean matches(Object argument) {
-        Facility facility = (Facility) argument;
-        return facility.getId().equals(id);
-      }
-    };
-  }
-
 }
 

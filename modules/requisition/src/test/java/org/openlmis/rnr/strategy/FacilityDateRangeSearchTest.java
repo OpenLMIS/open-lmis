@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.rnr.strategy;
 
 import org.junit.Test;
@@ -18,9 +24,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
@@ -43,10 +47,12 @@ public class FacilityDateRangeSearchTest {
   @Test
   public void shouldSearchRequisitionsWithFacilityAndDateRange() throws Exception {
     //Arrange
-    FacilityDateRangeSearch strategy = new FacilityDateRangeSearch(processingScheduleService, requisitionRepository, programService);
-    Date dateRangeStart = new Date();
-    Date dateRangeEnd = new Date();
-    Facility facility = new Facility(1);
+    Date dateRangeStart = new Date(), dateRangeEnd = new Date();
+    Integer facilityId = 1, programId = null, userId = 1;
+    Facility facility = new Facility(facilityId);
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, userId, dateRangeStart, dateRangeEnd);
+    FacilityDateRangeSearch strategy = new FacilityDateRangeSearch(criteria, processingScheduleService, requisitionRepository, programService);
+
     final Program program1 = make(a(ProgramBuilder.defaultProgram));
     final Program program2 = make(a(ProgramBuilder.defaultProgram, with(ProgramBuilder.programCode, "My Program")));
     List<Program> programs = new ArrayList<Program>() {{
@@ -55,7 +61,6 @@ public class FacilityDateRangeSearchTest {
     }};
     List<Rnr> requisitions = new ArrayList<>();
     List<ProcessingPeriod> periodsForProgram1 = new ArrayList<>();
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(1, null, 1, dateRangeStart, dateRangeEnd);
     List<ProcessingPeriod> periodsForProgram2 = new ArrayList<>();
     ArrayList<Rnr> requisitionsForProgram2 = new ArrayList<>();
     when(programService.getProgramsSupportedByFacilityForUserWithRights(1, 1, VIEW_REQUISITION)).thenReturn(programs);
@@ -65,7 +70,7 @@ public class FacilityDateRangeSearchTest {
     when(requisitionRepository.get(facility, program2, periodsForProgram2)).thenReturn(requisitionsForProgram2);
 
     //Act
-    List<Rnr> actualRequisitions = strategy.search(criteria);
+    List<Rnr> actualRequisitions = strategy.search();
 
     //Assert
     requisitions.addAll(requisitionsForProgram2);

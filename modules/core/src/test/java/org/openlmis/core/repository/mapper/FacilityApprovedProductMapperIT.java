@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository.mapper;
 
 import org.hamcrest.core.Is;
@@ -21,7 +27,7 @@ import static junit.framework.Assert.assertNotNull;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.openlmis.core.builder.FacilityBuilder.FACILITY_TYPE_CODE;
+import static org.openlmis.core.builder.FacilityBuilder.FACILITY_TYPE_ID;
 import static org.openlmis.core.builder.ProductBuilder.*;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
@@ -59,7 +65,7 @@ public class FacilityApprovedProductMapperIT {
     programProductMapper.insert(programProduct);
 
     FacilityType facilityType = new FacilityType();
-    facilityType.setCode(FACILITY_TYPE_CODE);
+    facilityType.setId(FACILITY_TYPE_ID);
     FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct(facilityType, programProduct, MAX_MONTHS_OF_STOCK);
     int insertionCount = facilityApprovedProductMapper.insert(facilityApprovedProduct);
 
@@ -101,15 +107,15 @@ public class FacilityApprovedProductMapperIT {
     ProgramProduct programProduct6 = addToProgramProduct(yellowFeverProgram, pro06, true);
     ProgramProduct programProduct7 = addToProgramProduct(bpProgram, pro07, true);
 
-    addToFacilityType("warehouse", programProduct1);
-    addToFacilityType("warehouse", programProduct3);
-    addToFacilityType("warehouse", programProduct4);
-    addToFacilityType("warehouse", programProduct5);
-    addToFacilityType("warehouse", programProduct6);
-    addToFacilityType("warehouse", programProduct7);
+    insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct1);
+    insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct3);
+    insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct4);
+    insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct5);
+    insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct6);
+    insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct7);
 
     // Get full supply products
-    List<FacilityApprovedProduct> facilityApprovedProducts = facilityApprovedProductMapper.getProductsByFacilityAndProgram(
+    List<FacilityApprovedProduct> facilityApprovedProducts = facilityApprovedProductMapper.getProductsByFacilityProgramAndFullSupply(
       facility.getId(), yellowFeverProgram.getId(), Boolean.TRUE);
     assertEquals(3, facilityApprovedProducts.size());
 
@@ -135,7 +141,7 @@ public class FacilityApprovedProductMapperIT {
     assertEquals("PRO01", facilityApprovedProducts.get(2).getProgramProduct().getProduct().getCode());
 
     // Non-full supply products
-    List<FacilityApprovedProduct> nonFullSupplyfacilityApprovedProducts = facilityApprovedProductMapper.getProductsByFacilityAndProgram(
+    List<FacilityApprovedProduct> nonFullSupplyfacilityApprovedProducts = facilityApprovedProductMapper.getProductsByFacilityProgramAndFullSupply(
       facility.getId(), yellowFeverProgram.getId(), Boolean.FALSE);
 
     assertThat(nonFullSupplyfacilityApprovedProducts.size(), is(1));
@@ -152,11 +158,13 @@ public class FacilityApprovedProductMapperIT {
   }
 
 
-  private void addToFacilityType(String facilityTypeCode, ProgramProduct programProduct) {
+  private FacilityApprovedProduct insertFacilityApprovedProduct(Integer facilityTypeId, ProgramProduct programProduct) {
     FacilityType facilityType = new FacilityType();
-    facilityType.setCode(facilityTypeCode);
+    facilityType.setId(facilityTypeId);
 
-    facilityApprovedProductMapper.insert(new FacilityApprovedProduct(facilityType, programProduct, MAX_MONTHS_OF_STOCK));
+    FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct(facilityType, programProduct, MAX_MONTHS_OF_STOCK);
+    facilityApprovedProductMapper.insert(facilityApprovedProduct);
+    return facilityApprovedProduct;
   }
 
   private Product product(String productCode, boolean isFullSupply, Integer order, ProductCategory productCategory) {
@@ -170,5 +178,23 @@ public class FacilityApprovedProductMapperIT {
     ProgramProduct programProduct = new ProgramProduct(program, product, 30, isActive);
     programProductMapper.insert(programProduct);
     return programProduct;
+  }
+
+  @Test
+  public void shouldGetFacilityApprovedProductId(){
+    Program program = make(a(defaultProgram));
+
+    Product product = make(a(defaultProduct));
+    productMapper.insert(product);
+
+    ProgramProduct programProduct = addToProgramProduct(program, product, true);
+
+
+    insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct);
+
+    FacilityApprovedProduct facilityApprovedProductsFromDB = facilityApprovedProductMapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(programProduct.getId(), "warehouse");
+
+    assertNotNull(facilityApprovedProductsFromDB);
+    assertEquals(facilityApprovedProductsFromDB.getMaxMonthsOfStock(),MAX_MONTHS_OF_STOCK );
   }
 }

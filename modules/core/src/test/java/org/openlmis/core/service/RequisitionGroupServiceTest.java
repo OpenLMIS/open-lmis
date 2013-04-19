@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.service;
 
 import org.junit.Before;
@@ -33,7 +39,7 @@ public class RequisitionGroupServiceTest {
   }
 
   @Test
-  public void shouldSaveARequisitionGroup() {
+  public void shouldSaveANewRequisitionGroup() {
     SupervisoryNode supervisoryNode = make(a(defaultSupervisoryNode));
     RequisitionGroup requisitionGroup = make(a(defaultRequisitionGroup));
     requisitionGroup.setSupervisoryNode(supervisoryNode);
@@ -42,5 +48,18 @@ public class RequisitionGroupServiceTest {
 
     verify(supervisoryNodeRepository).getIdForCode(supervisoryNode.getCode());
     verify(requisitionGroupRepository).insert(requisitionGroup);
+  }
+
+  @Test
+  public void shouldUpdateExistingRequisitionGroup() {
+    SupervisoryNode supervisoryNode = make(a(defaultSupervisoryNode));
+    RequisitionGroup requisitionGroup = make(a(defaultRequisitionGroup));
+    requisitionGroup.setId(1);
+    requisitionGroup.setSupervisoryNode(supervisoryNode);
+
+    requisitionGroupService.save(requisitionGroup);
+
+    verify(supervisoryNodeRepository).getIdForCode(supervisoryNode.getCode());
+    verify(requisitionGroupRepository).update(requisitionGroup);
   }
 }

@@ -1,9 +1,17 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.builder;
 
 import com.natpryce.makeiteasy.Instantiator;
 import com.natpryce.makeiteasy.Property;
 import com.natpryce.makeiteasy.PropertyLookup;
 import org.openlmis.core.domain.User;
+
+import java.util.Date;
 
 import static com.natpryce.makeiteasy.Property.newProperty;
 
@@ -21,6 +29,7 @@ public class UserBuilder {
   public static final Property<User, String> email = newProperty();
   public static final Property<User, Integer> supervisorId = newProperty();
   public static final Property<User, String> supervisorUserName = newProperty();
+  public static final Property<User, Integer> vendorId = newProperty();
 
   public static final String defaultUserName = "User123";
   public static final String defaultPassword = "not-in-use";
@@ -34,6 +43,8 @@ public class UserBuilder {
   public static final String defaultEmail = "mizengo_pinda@openlmis.com";
   public static final Integer defaultSupervisorId = 1;
   public static final String defaultSupervisorUserName = "supervisorUserName";
+  public static final Integer defaultVendorId = 1;
+
 
   public static final Instantiator<User> defaultUser = new Instantiator<User>() {
 
@@ -50,10 +61,16 @@ public class UserBuilder {
       user.setOfficePhone(lookup.valueOf(officePhone, defaultOfficePhone));
       user.setCellPhone(lookup.valueOf(cellPhone, defaultCellPhone));
       user.setEmail(lookup.valueOf(email, defaultEmail));
+      user.setVendorId(lookup.valueOf(vendorId, defaultVendorId));
       User supervisor = new User();
       supervisor.setId(lookup.valueOf(supervisorId, defaultSupervisorId));
       supervisor.setUserName(lookup.valueOf(supervisorUserName, defaultSupervisorUserName));
+
+      if (null != supervisor.getUserName())
+        supervisor.setModifiedDate(new Date());
+
       user.setSupervisor(supervisor);
+      user.setModifiedDate(new Date());
 
       return user;
     }

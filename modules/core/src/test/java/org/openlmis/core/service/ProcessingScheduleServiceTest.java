@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.service;
 
 import org.joda.time.DateTime;
@@ -26,6 +32,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
+import static org.openlmis.core.builder.RequisitionGroupProgramScheduleBuilder.defaultRequisitionGroupProgramSchedule;
 
 public class ProcessingScheduleServiceTest {
   @Rule
@@ -179,7 +186,11 @@ public class ProcessingScheduleServiceTest {
     requisitionGroup.setId(requisitionGroupId);
 
     when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(new Program(programId), new Facility(facilityId))).thenReturn(requisitionGroup);
-    when(requisitionGroupProgramScheduleRepository.getScheduleIdForRequisitionGroupAndProgram(requisitionGroupId, programId)).thenReturn(scheduleId);
+    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = make(a(defaultRequisitionGroupProgramSchedule));
+    ProcessingSchedule processingSchedule = new ProcessingSchedule();
+    processingSchedule.setId(scheduleId);
+    requisitionGroupProgramSchedule.setProcessingSchedule(processingSchedule);
+    when(requisitionGroupProgramScheduleRepository.getScheduleForRequisitionGroupAndProgram(requisitionGroupId, programId)).thenReturn(requisitionGroupProgramSchedule);
     when(periodRepository.getAllPeriodsAfterDateAndPeriod(any(Integer.class), any(Integer.class), any(Date.class), any(Date.class))).thenReturn(periodList);
 
     List<ProcessingPeriod> periods = service.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate, startingPeriodId);
@@ -221,18 +232,26 @@ public class ProcessingScheduleServiceTest {
 
   @Test
   public void shouldGetAllPeriodsInDateRange() throws Exception {
+    Integer scheduleId = 1;
     Date startDate = DateTime.now().toDate();
     Date endDate = DateTime.now().toDate();
     List<ProcessingPeriod> expected = new ArrayList<>();
 
-    Integer scheduleId = 1;
-    Facility facility  = new Facility(1);
-    Program program  = new Program(2);
+    Facility facility = new Facility(1);
+    Program program = new Program(2);
+
     RequisitionGroup requisitionGroup = new RequisitionGroup();
     requisitionGroup.setId(1);
 
+    ProcessingSchedule processingSchedule = new ProcessingSchedule();
+    processingSchedule.setId(scheduleId);
+
+    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = make(a(defaultRequisitionGroupProgramSchedule));
+    requisitionGroupProgramSchedule.setProcessingSchedule(processingSchedule);
+
     when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(program, facility)).thenReturn(requisitionGroup);
-    when(requisitionGroupProgramScheduleRepository.getScheduleIdForRequisitionGroupAndProgram(requisitionGroup.getId(), program.getId())).thenReturn(scheduleId);
+    when(requisitionGroupProgramScheduleRepository.getScheduleForRequisitionGroupAndProgram(
+      requisitionGroup.getId(), program.getId())).thenReturn(requisitionGroupProgramSchedule);
     when(periodRepository.getAllPeriodsForDateRange(scheduleId, startDate, endDate)).thenReturn(expected);
 
     List<ProcessingPeriod> actual = service.getAllPeriodsForDateRange(facility, program, startDate, endDate);

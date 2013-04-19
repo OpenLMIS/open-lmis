@@ -36,6 +36,39 @@ input, a {
     color: #ffffff;
     background-color: #356b6f;
   }
+
+  &.btn-cancel {
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.7);
+    color: #FFFFFF;
+    background-color: #666666;
+    background-image: -moz-linear-gradient(top, #c5c5c5, #777777);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#c5c5c5), to(#777777));
+    background-image: -webkit-linear-gradient(top, #c5c5c5, #777777);
+    background-image: -o-linear-gradient(top, #c5c5c5, #777777);
+    background-image: linear-gradient(to bottom, #c5c5c5, #777777);
+    background-repeat: repeat-x;
+    border-color: #777777 #777777 #444444;
+    border-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffc5c5c5', endColorstr='#ff777777', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  }
+
+  &.btn-cancel:hover,
+  &.btn-cancel:active,
+  &.btn-cancel.active,
+  &.btn-cancel.disabled,
+  &.btn-cancel[disabled] {
+    color: #ffffff;
+    background-color: #777777;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  }
+}
+
+a {
+  color: #078f97;
+  &:hover {
+    color: #055e74;
+  }
 }
 
 textarea {
@@ -62,4 +95,46 @@ element.style {
   width: 1293px;
   width: 1317px;
   height: 55px;
+}
+
+textarea:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="datetime"]:focus,
+input[type="datetime-local"]:focus,
+input[type="date"]:focus,
+input[type="month"]:focus,
+input[type="time"]:focus,
+input[type="week"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="color"]:focus,
+.uneditable-input:focus {
+  border-color: #17888f;
+  outline: 0;
+  outline: thin dotted \9;
+  /* IE6-9 */
+
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(23,136,143, 0.6);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(23,136,143, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(23,136,143, 0.6);
+}
+
+
+
+//modal
+
+.modal-header {
+  border-color: #CCC;
+  h3 {
+    color: #17888F;
+    font-weight: normal;
+    font-size: 1.4em;
+  }
+}
+.modal-footer {
+  text-align: left;
 }

@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository;
 
 import org.junit.Before;
@@ -57,6 +63,14 @@ public class RoleAssignmentRepositoryTest {
     List<RoleAssignment> expected = new ArrayList<>();
     when(mapper.getHomeFacilityRoles(1)).thenReturn(expected);
     List<RoleAssignment> actual = repository.getHomeFacilityRoles(1);
+    assertThat(actual, is(expected));
+  }
+
+  @Test
+  public void shouldGetAdminRoles() throws Exception {
+    RoleAssignment expected = new RoleAssignment();
+    when(mapper.getAdminRole(1)).thenReturn(expected);
+    RoleAssignment actual = repository.getAdminRole(1);
     assertThat(actual, is(expected));
   }
 

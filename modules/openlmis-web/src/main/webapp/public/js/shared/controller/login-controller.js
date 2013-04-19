@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 function LoginController($scope, $http, localStorageService) {
   $scope.disableSignInButton = false;
 
@@ -14,6 +20,7 @@ function LoginController($scope, $http, localStorageService) {
   };
 
   $scope.doLogin = function () {
+    localStorageService.clearAll();
     if(!validateLoginForm()){
       return;
     }
@@ -29,6 +36,7 @@ function LoginController($scope, $http, localStorageService) {
           $scope.disableSignInButton = false;
           if (data.authenticated) {
             localStorageService.add(localStorageKeys.RIGHT, getRights(data.rights));
+            localStorageService.add(localStorageKeys.USERNAME, data.name);
             if (window.location.href.indexOf("login.html") != -1) {
               window.location = "/";
             } else {

@@ -1,0 +1,74 @@
+<!--
+  ~ Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
+<div ng-controller="ApproveFullSupplyController">
+  <div class="rnr-table rnr-approval">
+    <div ng-hide="pageLineItems.length" class="alert alert-info" openlmis-message="rnr.no.products"></div>
+    <table id="fullSupplyTable" class="table table-bordered">
+      <thead>
+      <tr ng-show="pageLineItems.length">
+        <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in visibleColumns"
+            ng-bind="programRnrColumn.label"></th>
+      </tr>
+      </thead>
+      <tbody ng-show="visibleColumns && pageLineItems" ng-repeat="rnrLineItem in pageLineItems">
+      <tr>
+        <td class="productCategory" colspan="{{visibleColumns.length}}" ng-show="showCategory($index)"
+            ng-bind="rnrLineItem.productCategory"></td>
+      </tr>
+      <tr>
+        <td class="cell-input" ng-repeat="column in visibleColumns">
+            <span ng-switch on="column.name">
+
+              <span ng-switch-when="lossesAndAdjustments">
+                <div>
+                  <a ng-click="showLossesAndAdjustments(rnrLineItem)" class="rnr-adjustment">
+                    <span ng-bind="rnrLineItem.totalLossesAndAdjustments" class="adjustment-value"></span>
+                  </a>
+                </div>
+              </span>
+
+                <span ng-switch-when="quantityApproved">
+                  <div>
+                    <input ng-change='rnr.fillPacksToShip(rnrLineItem)' ng-required="true" type="text"
+                           ng-model="rnrLineItem[column.name]" rnr-validator="positiveInteger" maxlength="8"
+                           name="quantityApproved{{$parent.$parent.$index}}"
+                           id="{{getId(column.name, $parent)}}"
+                           ng-class="highlightRequired(rnrLineItem[column.name])"/>
+                    <span class="rnr-form-error" id="quantityApproved{{$parent.$parent.$index}}"
+                          style="display:none;" openlmis-message="rnr.number.error">
+                    </span>
+                  </div>
+                </span>
+
+                <span ng-switch-when="remarks">
+                  <input id="{{getId(column.name, $parent)}}" type="text"
+                         name="remarks{{rnrLineItem['id']}}"
+                         ng-model="rnrLineItem[column.name]"
+                         maxlength="250"/>
+                </span>
+
+                <span ng-switch-when="price">
+                  <span ng-bind='rnrLineItem[column.name] | currency:currency' id="{{getId(column.name, $parent)}}"
+                        class="cell-text"></span>
+                </span>
+
+                <span ng-switch-when="cost">
+                  <span ng-bind='rnrLineItem[column.name] | currency:currency' id="{{getId(column.name, $parent)}}"
+                        class="cell-text"></span>
+                </span>
+
+                <span ng-switch-default ng-bind="rnrLineItem[column.name]" id="{{getId(column.name, $parent)}}"
+                      class="cell-text"></span>
+            </span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-include src="'/public/pages/logistics/rnr/partials/approve/losses-and-adjustments.html'"></ng-include>
+</div>

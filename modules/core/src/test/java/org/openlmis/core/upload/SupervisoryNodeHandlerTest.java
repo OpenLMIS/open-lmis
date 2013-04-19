@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.upload;
 
 import org.junit.Before;
@@ -14,25 +20,23 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class SupervisoryNodeHandlerTest {
 
-    public static final Integer USER = 1;
-    @Mock
-    SupervisoryNodeService supervisoryNodeService;
+  public static final Integer USER = 1;
+  @Mock
+  SupervisoryNodeService supervisoryNodeService;
 
-    @Before
-    public void setUp() throws Exception {
-        initMocks(this);
-    }
+  @Before
+  public void setUp() throws Exception {
+    initMocks(this);
+  }
 
-    @Test
-    public void shouldSaveSupervisoryNode() throws Exception {
-        SupervisoryNode supervisoryNode = new SupervisoryNode();
+  @Test
+  public void shouldSaveSupervisoryNode() throws Exception {
+    SupervisoryNode supervisoryNode = new SupervisoryNode();
 
-        new SupervisoryNodeHandler(supervisoryNodeService).save(supervisoryNode, USER);
-        assertThat(supervisoryNode.getModifiedBy(), is(USER));
-        assertThat(supervisoryNode.getModifiedDate(), is(notNullValue()));
+    new SupervisoryNodeHandler(supervisoryNodeService).save(supervisoryNode);
 
-        verify(supervisoryNodeService).save(supervisoryNode);
-    }
+    verify(supervisoryNodeService).save(supervisoryNode);
+  }
 
 
 }

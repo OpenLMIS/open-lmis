@@ -1,13 +1,19 @@
+<!--
+  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
 <div xmlns="http://www.w3.org/1999/html">
   <h2>Search facility
     <a href="#/create-facility" class="pull-right btn btn-primary">Add new</a>
   </h2>
   <div class="alert alert-success" id="saveSuccessMsgDiv"  ng-show="facilityId">
-    <span ng-bind="message"></span>.&nbsp;&nbsp;<a ng-href="#/edit/{{facilityId}}">View Here</a>
+    <span ng-bind="message"></span>.&nbsp;&nbsp;<a ng-href="#/edit/{{facilityId}}" openlmis-message="search.viewHere"></a>
   </div>
 
   <input id="searchFacility" class="search-query" type="text" ng-model="query" ng-change="updateFilteredQueryList()" placeholder="Enter facility code or name" />
-  <div class="form-tip">Minimum 3 characters</div>
+  <div class="form-tip" openlmis-message="search.threeCharacters"></div>
 
   <div class="facility-list" ng-show="query.length > 2">
     <h3>
@@ -18,7 +24,7 @@
 
       </ng-pluralize>
     </h3>
-    <a class="close-btn" href="javascript:void(0);" ng-click="clearSearch()">Close</a>
+    <a class="close-btn" href="javascript:void(0);" ng-click="clearSearch()"></a>
     <ul>
       <li ng-repeat="facility in facilityList">
         <a ng-click="editFacility(facility.id)">{{facility.code}} - {{facility.name}}</a>

@@ -1,3 +1,9 @@
+<!--
+  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
 <div ng-controller="SchedulePeriodController" ng-show="schedule">
   <h2>
     Schedule: {{schedule.name}}
@@ -15,7 +21,7 @@
             </label>
             <div class="form-field">
               <input name="name" id="name" type="text" ng-model="newPeriod.name" maxlength="50" ng-required="true"/>
-              <span class="field-error" ng-show="createPeriodForm.name.$error.required && showErrorForCreate">Please fill this value</span>
+              <span class="field-error" ng-show="createPeriodForm.name.$error.required && showErrorForCreate" openlmis-message="label.missingValue"></span>
             </div>
           </div>
           <div class="form-cell">
@@ -35,7 +41,7 @@
               <input name="startDate" id="startDate" type="text" ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}" readonly ng-model="newPeriod.startDate"
                      value="{{newPeriod.startDate | date:'dd/MM/yyyy'}}" ng-required="true" ng-change="blurDateFields();refreshEndDateOffset(newPeriod.startDate.getTime())" ng-disabled="periodList.length>0" />
 
-              <span class="field-error" ng-show="createPeriodForm.startDate.$error.required && showErrorForCreate">Please fill this value</span>
+              <span class="field-error" ng-show="createPeriodForm.startDate.$error.required && showErrorForCreate" openlmis-message="label.missingValue"></span>
             </div>
           </div>
           <div class="form-cell">
@@ -45,7 +51,7 @@
               <input name="endDate" id="endDate" type="text" ui-date="{minDate:endDateOffset, dateFormat: 'dd/mm/yy', changeYear: true}" readonly ng-model="newPeriod.endDate"
                      value="{{newPeriod.endDate | date:'dd/MM/yyyy'}}" ng-required="true" ng-change="blurDateFields()" ng-disabled="!newPeriod.startDate"/>
 
-              <span class="field-error" ng-show="createPeriodForm.endDate.$error.required && showErrorForCreate">Please fill this value</span>
+              <span class="field-error" ng-show="createPeriodForm.endDate.$error.required && showErrorForCreate" openlmis-message="label.missingValue"></span>
             </div>
           </div>
         </div>

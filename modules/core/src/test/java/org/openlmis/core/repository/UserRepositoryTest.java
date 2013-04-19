@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository;
 
 
@@ -25,7 +31,8 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.*;
-import static org.openlmis.core.builder.UserBuilder.*;
+import static org.openlmis.core.builder.UserBuilder.defaultUser;
+import static org.openlmis.core.builder.UserBuilder.email;
 import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
 import static org.openlmis.core.repository.UserRepository.*;
 
@@ -68,7 +75,7 @@ public class UserRepositoryTest {
   @Test
   public void shouldThrowExceptionAndNotInsertUserIfSupervisorIdDoesNotExist() throws Exception {
     User user = make(a(defaultUser));
-    when(userMapper.get(defaultSupervisorUserName)).thenReturn(null);
+    when(userMapper.getByUsernameAndVendorId(user)).thenReturn(null);
     exException.expect(DataException.class);
     exException.expectMessage(SUPERVISOR_USER_NOT_FOUND);
     userRepository.create(user);
@@ -77,36 +84,36 @@ public class UserRepositoryTest {
   @Test
   public void shouldThrowExceptionAndNotInsertUserOnDuplicateEmployeeId() throws Exception {
     User user = make(a(defaultUser));
-    when(userMapper.get(user.getSupervisor().getUserName())).thenReturn(mock(User.class));
+    when(userMapper.getByUsernameAndVendorId(user.getSupervisor())).thenReturn(mock(User.class));
     doThrow(new DuplicateKeyException("duplicate key value violates unique constraint \"uc_users_employeeId\"")).when(userMapper).insert(user);
 
     exException.expect(DataException.class);
     exException.expectMessage(DUPLICATE_EMPLOYEE_ID_FOUND);
-    userMapper.get(user.getSupervisor().getUserName());
+    userMapper.getByUsernameAndVendorId(user.getSupervisor());
     userRepository.create(user);
   }
 
   @Test
   public void shouldThrowExceptionAndNotInsertUserOnDuplicateEmail() throws Exception {
     User user = make(a(defaultUser));
-    when(userMapper.get(user.getSupervisor().getUserName())).thenReturn(mock(User.class));
+    when(userMapper.getByUsernameAndVendorId(user.getSupervisor())).thenReturn(mock(User.class));
     doThrow(new DuplicateKeyException("duplicate key value violates unique constraint \"uc_users_email\"")).when(userMapper).insert(user);
 
     exException.expect(DataException.class);
     exException.expectMessage(DUPLICATE_EMAIL_FOUND);
-    userMapper.get(user.getSupervisor().getUserName());
+    userMapper.getByUsernameAndVendorId(user.getSupervisor());
     userRepository.create(user);
   }
 
   @Test
   public void shouldThrowExceptionAndNotInsertUserOnDuplicateUserName() throws Exception {
     User user = make(a(defaultUser));
-    when(userMapper.get(user.getSupervisor().getUserName())).thenReturn(mock(User.class));
+    when(userMapper.getByUsernameAndVendorId(user.getSupervisor())).thenReturn(mock(User.class));
     doThrow(new DuplicateKeyException("duplicate key value violates unique constraint \"uc_users_userName\"")).when(userMapper).insert(user);
 
     exException.expect(DataException.class);
     exException.expectMessage(DUPLICATE_USER_NAME_FOUND);
-    userMapper.get(user.getSupervisor().getUserName());
+    userMapper.getByUsernameAndVendorId(user.getSupervisor());
     userRepository.create(user);
   }
 
@@ -114,9 +121,10 @@ public class UserRepositoryTest {
   public void shouldReturnUserWithValidUsername() {
     String username = "Admin";
     User user = make(a(defaultUser, with(email, "John_Doe@openlmis.com")));
-    when(userMapper.get(username)).thenReturn(user);
+    user.setUserName(username);
+    when(userMapper.getByUsernameAndVendorId(user)).thenReturn(user);
 
-    User returnedUser = userRepository.getByUsername(username);
+    User returnedUser = userRepository.getByUsernameAndVendorId(user);
 
     assertThat(returnedUser, is(user));
   }
@@ -185,4 +193,20 @@ public class UserRepositoryTest {
     assertThat(userRepository.getUserIdForPasswordResetToken(passwordResetToken), is(1));
   }
 
+
+  @Test
+  public void shouldUpdateUserIfUserWithUserNameAlreadyExist() throws Exception {
+    User user = make(a(defaultUser));
+    user.setUserName("userBeingUploaded");
+    user.setId(1);
+
+    User supervisorUser = new User();
+
+    when(userMapper.getByUsernameAndVendorId(user)).thenReturn(user);
+    when(userMapper.getByUsernameAndVendorId(user.getSupervisor())).thenReturn(supervisorUser);
+
+    userRepository.update(user);
+
+    verify(userMapper).update(user);
+  }
 }

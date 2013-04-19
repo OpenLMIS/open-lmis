@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository.mapper;
 
 
@@ -14,6 +20,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertEquals;
@@ -77,6 +85,7 @@ public class ProgramProductMapperIT {
   public void shouldUpdateCurrentPriceForProgramProduct() throws Exception {
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true, new Money("100.0"));
     programProduct.setModifiedBy(1);
+    programProduct.setModifiedDate(new Date());
     programProductMapper.insert(programProduct);
      Money price = new Money("200.01");
     programProduct.setCurrentPrice(price);
@@ -89,5 +98,19 @@ public class ProgramProductMapperIT {
     assertThat(returnedProgramProduct.getModifiedDate(), is(notNullValue()));
   }
 
+  @Test
+  public void shouldUpdateProgramProduct() throws Exception {
+    ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
 
+    programProductMapper.insert(programProduct);
+    programProduct.setDosesPerMonth(10);
+    programProduct.setActive(false);
+
+    programProductMapper.update(programProduct);
+
+    ProgramProduct dbProgramProduct = programProductMapper.getByProgramAndProductId(program.getId(),product.getId());
+
+    assertThat(dbProgramProduct.getDosesPerMonth(),is(10));
+    assertThat(dbProgramProduct.isActive(),is(false));
+  }
 }

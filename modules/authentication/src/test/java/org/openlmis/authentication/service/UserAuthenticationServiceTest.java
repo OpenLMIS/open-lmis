@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.authentication.service;
 
 import org.junit.Before;
@@ -7,7 +13,7 @@ import org.mockito.Mock;
 import org.openlmis.authentication.UserToken;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.hash.Encoder;
-import org.openlmis.core.repository.mapper.UserMapper;
+import org.openlmis.core.service.UserService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -25,12 +31,12 @@ public class UserAuthenticationServiceTest {
 
   @Mock
   @SuppressWarnings("unused")
-  private UserMapper mockUserMapper;
+  private UserService userService;
 
   @Before
   public void setup() {
     initMocks(this);
-    userAuthenticationService = new UserAuthenticationService(mockUserMapper);
+    userAuthenticationService = new UserAuthenticationService(userService);
   }
 
   @Test
@@ -42,10 +48,10 @@ public class UserAuthenticationServiceTest {
     user.setUserName("defaultUserName");
     user.setPassword("defaultPassword");
 
-    when(mockUserMapper.selectUserByUserNameAndPassword("defaultUserName", "hashedPassword")).thenReturn(user);
+    when(userService.selectUserByUserNameAndPassword("defaultUserName", "hashedPassword")).thenReturn(user);
 
     UserToken userToken = userAuthenticationService.authorizeUser(user);
-    verify(mockUserMapper).selectUserByUserNameAndPassword("defaultUserName", "hashedPassword");
+    verify(userService).selectUserByUserNameAndPassword("defaultUserName", "hashedPassword");
 
     assertThat(userToken.isAuthenticated(), is(true));
   }
@@ -58,11 +64,11 @@ public class UserAuthenticationServiceTest {
     user.setUserName("defaultUserName");
     user.setPassword("defaultPassword");
 
-    when(mockUserMapper.selectUserByUserNameAndPassword("defaultUserName", "hashedPassword")).thenReturn(null);
+    when(userService.selectUserByUserNameAndPassword("defaultUserName", "hashedPassword")).thenReturn(null);
 
     UserToken userToken = userAuthenticationService.authorizeUser(user);
 
-    verify(mockUserMapper).selectUserByUserNameAndPassword("defaultUserName", "hashedPassword");
+    verify(userService).selectUserByUserNameAndPassword("defaultUserName", "hashedPassword");
     assertThat(userToken.isAuthenticated(), is(false));
   }
 }

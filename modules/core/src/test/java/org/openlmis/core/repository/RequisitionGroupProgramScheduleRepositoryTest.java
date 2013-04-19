@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository;
 
 import org.junit.Before;
@@ -22,6 +28,7 @@ import java.util.Arrays;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static org.hamcrest.CoreMatchers.any;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
@@ -57,7 +64,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
     requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
     requisitionGroupProgramSchedule.setRequisitionGroup(make(a(RequisitionGroupBuilder.defaultRequisitionGroup)));
     requisitionGroupProgramSchedule.setProgram(make(a(ProgramBuilder.defaultProgram)));
-    requisitionGroupProgramSchedule.setSchedule(new ProcessingSchedule());
+    requisitionGroupProgramSchedule.setProcessingSchedule(new ProcessingSchedule());
   }
 
   @Test
@@ -85,7 +92,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
   public void shouldGiveErrorIfScheduleCodeDoesNotExist() throws Exception {
     when(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode())).thenReturn(1);
     when(programRepository.getIdByCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1);
-    when(processingScheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode())).thenReturn(null);
+    when(processingScheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getProcessingSchedule().getCode())).thenReturn(null);
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Schedule Code Does Not Exist");
 
@@ -108,7 +115,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
     requisitionGroupProgramSchedule.setDropOffFacility(facility(dropOffFacility.getCode()));
     when(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode())).thenReturn(1);
     when(programRepository.getIdByCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1);
-    when(processingScheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode())).thenReturn(1);
+    when(processingScheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getProcessingSchedule().getCode())).thenReturn(1);
     when(facilityMapper.getIdForCode(dropOffFacility.getCode())).thenReturn(facilityId);
 
     repository.insert(requisitionGroupProgramSchedule);
@@ -116,10 +123,10 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
     verify(requisitionGroupProgramScheduleMapper).insert(requisitionGroupProgramSchedule);
     verify(requisitionGroupMapper).getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode());
     verify(programRepository).getIdByCode(requisitionGroupProgramSchedule.getProgram().getCode());
-    verify(processingScheduleMapper).getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode());
+    verify(processingScheduleMapper).getIdForCode(requisitionGroupProgramSchedule.getProcessingSchedule().getCode());
     verify(facilityMapper).getIdForCode(dropOffFacility.getCode());
 
-    assertThat(requisitionGroupProgramSchedule.getSchedule().getId(), is(1));
+    assertThat(requisitionGroupProgramSchedule.getProcessingSchedule().getId(), is(1));
     assertThat(requisitionGroupProgramSchedule.getProgram().getId(), is(1));
     assertThat(requisitionGroupProgramSchedule.getRequisitionGroup().getId(), is(1));
     assertThat(requisitionGroupProgramSchedule.isDirectDelivery(), is(false));
@@ -149,7 +156,7 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
   public void shouldGiveErrorIfFacilityCodeDoesNotExist() {
     when(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode())).thenReturn(1);
     when(programRepository.getIdByCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1);
-    when(processingScheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getSchedule().getCode())).thenReturn(1);
+    when(processingScheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getProcessingSchedule().getCode())).thenReturn(1);
     requisitionGroupProgramSchedule.setDropOffFacility(dropOffFacility);
     when(facilityMapper.getIdForCode(requisitionGroupProgramSchedule.getDropOffFacility().getCode())).thenReturn(null);
 
@@ -162,10 +169,22 @@ public class RequisitionGroupProgramScheduleRepositoryTest {
 
   @Test
   public void shouldGetScheduleIdForRequisitionGroupAndProgram() throws Exception {
-    when(requisitionGroupProgramScheduleMapper.getScheduleIDsForRequisitionGroupAndProgram(1, 2)).thenReturn(Arrays.asList(123));
-    Integer scheduleId = repository.getScheduleIdForRequisitionGroupAndProgram(1, 2);
+    when(requisitionGroupProgramScheduleMapper.getScheduleForRequisitionGroupIdAndProgramId(1, 2)).thenReturn(requisitionGroupProgramSchedule);
+    RequisitionGroupProgramSchedule schedule = repository.getScheduleForRequisitionGroupAndProgram(1, 2);
 
-    assertThat(scheduleId, is(123));
+    assertThat(schedule, is(requisitionGroupProgramSchedule));
+  }
+
+  @Test
+  public void shouldUpdateRequisitionGroupProgramSchedule() throws Exception {
+    when(requisitionGroupMapper.getIdForCode(requisitionGroupProgramSchedule.getRequisitionGroup().getCode())).thenReturn(1);
+    when(programRepository.getIdByCode(requisitionGroupProgramSchedule.getProgram().getCode())).thenReturn(1);
+    when(processingScheduleMapper.getIdForCode(requisitionGroupProgramSchedule.getProcessingSchedule().getCode())).thenReturn(1);
+    when(facilityMapper.getIdForCode(dropOffFacility.getCode())).thenReturn(1);
+    requisitionGroupProgramSchedule.setDropOffFacility(dropOffFacility);
+
+    repository.update(requisitionGroupProgramSchedule);
+    verify(requisitionGroupProgramScheduleMapper).update(requisitionGroupProgramSchedule);
   }
 
   private Facility facility(String facilityCode) {

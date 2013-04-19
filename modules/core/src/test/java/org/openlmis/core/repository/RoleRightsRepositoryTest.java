@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository;
 
 import org.junit.Before;
@@ -20,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import static java.lang.Boolean.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -42,7 +49,7 @@ public class RoleRightsRepositoryTest {
 
   @Before
   public void setUp() throws Exception {
-    role = new Role("role name", "role description");
+    role = new Role("role name", FALSE, "role description");
     roleRightsRepository = new RoleRightsRepository(roleRightsMapper, commaSeparator);
   }
 
@@ -81,7 +88,7 @@ public class RoleRightsRepositoryTest {
 
   @Test
   public void shouldNotUpdateToDuplicateRoleName() {
-    Role role = new Role("Name", "Desc");
+    Role role = new Role("Name", FALSE, "Desc");
     role.setId(123);
     doThrow(DuplicateKeyException.class).when(roleRightsMapper).updateRole(role);
 
@@ -124,14 +131,14 @@ public class RoleRightsRepositoryTest {
 
   @Test
   public void shouldUpdateRoleAlongWithDependentRights() {
-    role.setRights(new HashSet<>(asList(CONVERT_TO_ORDER)));
+    role.setRights(new HashSet<>(asList(CREATE_REQUISITION)));
     role.setId(100);
 
     roleRightsRepository.updateRole(role);
 
     verify(roleRightsMapper).updateRole(role);
     verify(roleRightsMapper).deleteAllRightsForRole(100);
-    verify(roleRightsMapper).createRoleRight(100, CONVERT_TO_ORDER);
+    verify(roleRightsMapper).createRoleRight(100, CREATE_REQUISITION);
     verify(roleRightsMapper).createRoleRight(100, VIEW_REQUISITION);
   }
 

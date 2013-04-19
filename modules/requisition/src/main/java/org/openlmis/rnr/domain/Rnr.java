@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.rnr.domain;
 
 import lombok.Data;
@@ -6,6 +12,7 @@ import org.apache.commons.collections.Predicate;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.exception.DataException;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,7 +20,9 @@ import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
-import static org.openlmis.rnr.domain.RnrStatus.*;
+import static org.openlmis.rnr.domain.RnrLineItem.RNR_VALIDATION_ERROR;
+import static org.openlmis.rnr.domain.RnrStatus.IN_APPROVAL;
+import static org.openlmis.rnr.domain.RnrStatus.RELEASED;
 
 @Data
 @NoArgsConstructor
@@ -28,9 +37,6 @@ public class Rnr {
   private Money fullSupplyItemsSubmittedCost = new Money("0");
   private Money nonFullSupplyItemsSubmittedCost = new Money("0");
 
-  /**
-   * TODO: rename lineItems to fullSupplyLineItems
-   */
   private List<RnrLineItem> fullSupplyLineItems = new ArrayList<>();
   private List<RnrLineItem> nonFullSupplyLineItems = new ArrayList<>();
 
@@ -40,6 +46,7 @@ public class Rnr {
   private Date modifiedDate;
   private Date submittedDate;
   private OrderBatch orderBatch;
+  private List<Comment> comments = new ArrayList<>();
 
   public Rnr(Integer facilityId, Integer programId, Integer periodId, Integer modifiedBy) {
     facility = new Facility();
@@ -71,13 +78,13 @@ public class Rnr {
   }
 
   public void calculate(List<RnrColumn> programRnrColumns) {
-    for(RnrLineItem lineItem : fullSupplyLineItems){
+    for (RnrLineItem lineItem : fullSupplyLineItems) {
       lineItem.validateMandatoryFields(programRnrColumns);
-      lineItem.calculate(period, programRnrColumns);
+      lineItem.calculate(period, programRnrColumns, this.getStatus());
       lineItem.validateCalculatedFields(programRnrColumns);
     }
 
-    for(RnrLineItem lineItem : nonFullSupplyLineItems){
+    for (RnrLineItem lineItem : nonFullSupplyLineItems) {
       lineItem.validateNonFullSupply();
     }
 
@@ -85,7 +92,7 @@ public class Rnr {
     this.nonFullSupplyItemsSubmittedCost = calculateCost(nonFullSupplyLineItems);
   }
 
-  public Money calculateCost(List<RnrLineItem> lineItems) {
+  private Money calculateCost(List<RnrLineItem> lineItems) {
     Money totalFullSupplyCost = new Money("0");
     for (RnrLineItem lineItem : lineItems) {
       Money costPerItem = lineItem.calculateCost();
@@ -182,6 +189,8 @@ public class Rnr {
     this.modifiedBy = otherRequisition.modifiedBy;
     for (RnrLineItem thisLineItem : fullSupplyLineItems) {
       RnrLineItem otherLineItem = otherRequisition.findCorrespondingLineItem(thisLineItem);
+      if (otherLineItem == null)
+        throw new DataException(RNR_VALIDATION_ERROR);
       thisLineItem.copyUserEditableFields(otherLineItem, programRnrColumns);
       thisLineItem.setModifiedBy(otherRequisition.getModifiedBy());
     }
@@ -191,20 +200,14 @@ public class Rnr {
     }
   }
 
-  public void prepareFor(RnrStatus status, List<RnrColumn> programRnrColumns) {
-    calculate(programRnrColumns);
-    this.status = status;
-    if(status.equals(SUBMITTED)) submittedDate = new Date();
-  }
-
   public void setFieldsAccordingToTemplate(ProgramRnrTemplate template) {
-    for(RnrLineItem lineItem : fullSupplyLineItems){
+    for (RnrLineItem lineItem : fullSupplyLineItems) {
       lineItem.setLineItemFieldsAccordingToTemplate(template);
     }
   }
 
   public void calculateForApproval() {
-    for(RnrLineItem lineItem: fullSupplyLineItems) {
+    for (RnrLineItem lineItem : fullSupplyLineItems) {
       lineItem.calculatePacksToShip();
     }
     this.fullSupplyItemsSubmittedCost = calculateCost(fullSupplyLineItems);
@@ -212,14 +215,24 @@ public class Rnr {
   }
 
   public void copyEditableFields(Rnr otherRnr, List<RnrColumn> programRnrColumns) {
-    if(status == IN_APPROVAL)
+    if (status == IN_APPROVAL)
       copyApproverEditableFields(otherRnr);
     else
       copyUserEditableFields(otherRnr, programRnrColumns);
   }
 
-  public void convertToOrder() {
-    this.status = ORDERED;
+  public void convertToOrder(OrderBatch orderBatch, Integer userId) {
+    this.status = RELEASED;
+    this.modifiedBy = userId;
+    this.orderBatch = orderBatch;
+  }
+
+  public void fillFullSupplyCost() {
+    this.fullSupplyItemsSubmittedCost = calculateCost(this.fullSupplyLineItems);
+  }
+
+  public void fillNonFullSupplyCost() {
+    this.nonFullSupplyItemsSubmittedCost = calculateCost(this.nonFullSupplyLineItems);
   }
 }
 

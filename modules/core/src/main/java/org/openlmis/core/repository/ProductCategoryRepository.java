@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository;
 
 
@@ -23,8 +29,8 @@ public class ProductCategoryRepository {
     this.categoryMapper = categoryMapper;
   }
 
-  public void save(ProductCategory productCategory) {
-    if (updateCategoryIfExists(productCategory)) return;
+  public void insert(ProductCategory productCategory) {
+
     try {
       categoryMapper.insert(productCategory);
     } catch (DuplicateKeyException duplicateKeyException) {
@@ -39,17 +45,19 @@ public class ProductCategoryRepository {
     }
   }
 
-  private boolean updateCategoryIfExists(ProductCategory productCategory) {
-    ProductCategory category = categoryMapper.getProductCategoryByCode(productCategory.getCode());
-    if (category != null) {
-      category.setName(productCategory.getName());
-      categoryMapper.update(category);
-      return true;
-    }
-    return false;
+  public void update(ProductCategory productCategory) {
+    categoryMapper.update(productCategory);
   }
 
-  public Integer getProductCategoryIdByCode(String categoryCode){
+  public ProductCategory getExisting(ProductCategory productCategory) {
+    return categoryMapper.getProductCategoryByCode(productCategory.getCode());
+  }
+
+  public Integer getProductCategoryIdByCode(String categoryCode) {
     return categoryMapper.getProductCategoryIdByCode(categoryCode);
+  }
+
+  public ProductCategory getByCode(String code) {
+    return categoryMapper.getProductCategoryByCode(code);
   }
 }

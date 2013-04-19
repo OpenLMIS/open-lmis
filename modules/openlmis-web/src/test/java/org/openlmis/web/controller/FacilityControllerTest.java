@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.web.controller;
 
 import org.junit.Before;
@@ -14,10 +20,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.ui.ModelMap;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -87,7 +90,7 @@ public class FacilityControllerTest {
   }
 
   @Test
-  public void shouldUpdateFacilityAndTagWithModifiedBy() throws Exception {
+  public void shouldUpdateFacilityAndTagWithModifiedByAndModifiedDate() throws Exception {
     Facility facility = new Facility();
     facility.setName("test facility");
     ResponseEntity responseEntity = facilityController.update(facility, httpServletRequest);
@@ -147,7 +150,6 @@ public class FacilityControllerTest {
     facility.setName("Test Facility");
     facility.setCode("Test Code");
     when(facilityService.getById(123)).thenReturn(facility);
-
     ResponseEntity responseEntity = facilityController.updateDataReportableAndActive(facility, "delete", httpServletRequest);
     OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
 
@@ -170,7 +172,6 @@ public class FacilityControllerTest {
 
     ResponseEntity responseEntity = facilityController.updateDataReportableAndActive(facility, "restore", httpServletRequest);
     OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
-
     assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
     assertThat(response.getSuccessMsg(), is("\"Test Facility\" / \"Test Code\" restored successfully"));
     verify(facilityService).updateDataReportableAndActiveFor(facility);
@@ -196,7 +197,7 @@ public class FacilityControllerTest {
 
     List<Facility> returnedFacilities = facilityController.get("searchParam");
 
-    assertThat(returnedFacilities,is(facilities));
+    assertThat(returnedFacilities, is(facilities));
   }
 
   @Test

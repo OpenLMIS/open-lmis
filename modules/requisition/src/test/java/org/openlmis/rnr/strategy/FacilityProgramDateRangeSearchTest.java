@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.rnr.strategy;
 
 import org.junit.Test;
@@ -33,9 +39,10 @@ public class FacilityProgramDateRangeSearchTest {
   @Test
   public void testSearch() throws Exception {
     //Arrange
-    FacilityProgramDateRangeSearch facilityProgramDateRangeSearch = new FacilityProgramDateRangeSearch(processingScheduleService, requisitionRepository);
-    Date dateRangeStart = new Date();
-    Date dateRangeEnd = new Date();
+    Date dateRangeStart = new Date(), dateRangeEnd = new Date();
+    Integer facilityId = 1, programId = 1;
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, dateRangeStart, dateRangeEnd);
+    FacilityProgramDateRangeSearch facilityProgramDateRangeSearch = new FacilityProgramDateRangeSearch(criteria, processingScheduleService, requisitionRepository);
     List<ProcessingPeriod> periods = new ArrayList<>();
     Facility facility = new Facility(1);
     Program program = new Program(1);
@@ -43,10 +50,9 @@ public class FacilityProgramDateRangeSearchTest {
     when(processingScheduleService.getAllPeriodsForDateRange(facility, program, dateRangeStart, dateRangeEnd)).thenReturn(periods);
     when(requisitionRepository.get(facility, program, periods)).thenReturn(requisitions);
 
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(1, 1, dateRangeStart, dateRangeEnd);
 
     //Act
-    List<Rnr> actualRequisitions = facilityProgramDateRangeSearch.search(criteria);
+    List<Rnr> actualRequisitions = facilityProgramDateRangeSearch.search();
 
     //Assert
     assertThat(actualRequisitions, is(requisitions));

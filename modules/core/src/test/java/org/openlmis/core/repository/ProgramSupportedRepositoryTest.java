@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository;
 
 import org.joda.time.DateTime;
@@ -109,7 +115,7 @@ public class ProgramSupportedRepositoryTest {
     final Facility facility = make(a(defaultFacility));
     facility.setId(1);
 
-    final ProgramSupported hivProgram = make(a(defaultProgramSupported, with(supportedProgram, new Program(1,"HIV")), with(supportedFacilityId, facility.getId())));
+    final ProgramSupported hivProgram = make(a(defaultProgramSupported, with(supportedProgram, new Program(1, "HIV")), with(supportedFacilityId, facility.getId())));
 
     List<ProgramSupported> programs = new ArrayList<ProgramSupported>() {{
       add(make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()))));
@@ -117,7 +123,7 @@ public class ProgramSupportedRepositoryTest {
     }};
 
     facility.setSupportedPrograms(programs);
-    final ProgramSupported arvProgram = make(a(defaultProgramSupported, with(supportedProgram, new Program(2,"ARV")), with(supportedFacilityId, facility.getId())));
+    final ProgramSupported arvProgram = make(a(defaultProgramSupported, with(supportedProgram, new Program(2, "ARV")), with(supportedFacilityId, facility.getId())));
 
     List<ProgramSupported> previouslySupportedProgramsForFacility = new ArrayList<ProgramSupported>() {{
       add(make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()))));
@@ -135,7 +141,7 @@ public class ProgramSupportedRepositoryTest {
     final Facility facility = make(a(defaultFacility));
     facility.setId(1);
 
-    final ProgramSupported hivProgram = make(a(defaultProgramSupported, with(supportedProgram, new Program(1,"HIV")), with(supportedFacilityId, facility.getId())));
+    final ProgramSupported hivProgram = make(a(defaultProgramSupported, with(supportedProgram, new Program(1, "HIV")), with(supportedFacilityId, facility.getId())));
     List<ProgramSupported> programs = new ArrayList<ProgramSupported>() {{
       add(make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()))));
       add(hivProgram);
@@ -146,5 +152,21 @@ public class ProgramSupportedRepositoryTest {
 
     assertThat(programSupportedRepository.getAllByFacilityId(facility.getId()), is(programs));
     verify(programSupportedMapper).getAllByFacilityId(facility.getId());
+  }
+
+  @Test
+  public void shouldReturnProgramSupportedByProgramAndFacilityId() throws Exception {
+    programSupportedRepository.getByFacilityIdAndProgramId(1, 1);
+    when(programSupportedMapper.getBy(anyInt(),anyInt())).thenReturn(new ProgramSupported());
+    verify(programSupportedMapper).getBy(1,1);
+  }
+
+  @Test
+  public void shouldUpdateProgramSupported() throws Exception{
+    ProgramSupported programSupported = new ProgramSupported();
+    doNothing().when(programSupportedMapper).updateSupportedProgram(programSupported);
+    programSupportedRepository.updateSupportedProgram(programSupported);
+
+    verify(programSupportedMapper).updateSupportedProgram(programSupported);
   }
 }

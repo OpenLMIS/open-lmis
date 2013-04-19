@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
@@ -13,8 +19,8 @@ import org.springframework.stereotype.Component;
 @Component
 @NoArgsConstructor
 public class ProgramProductRepository {
-
   public static final String PROGRAM_PRODUCT_INVALID = "programProduct.product.program.invalid";
+
   private ProgramProductMapper mapper;
   private ProgramRepository programRepository;
   private ProductRepository productRepository;
@@ -31,13 +37,21 @@ public class ProgramProductRepository {
   }
 
 
-  public void insert(ProgramProduct programProduct) {
-    programProduct.getProgram().setId(programRepository.getIdByCode(programProduct.getProgram().getCode()));
+  public void save(ProgramProduct programProduct) {
+    Integer programId = programRepository.getIdByCode(programProduct.getProgram().getCode());
+    programProduct.getProgram().setId(programId);
 
     validateProductCode(programProduct.getProduct().getCode());
 
+    Integer productId = productRepository.getIdByCode(programProduct.getProduct().getCode());
+    programProduct.getProduct().setId(productId);
+
     try {
-      mapper.insert(programProduct);
+      if (programProduct.getId() == null) {
+        mapper.insert(programProduct);
+      } else {
+        mapper.update(programProduct);
+      }
     } catch (DuplicateKeyException duplicateKeyException) {
       throw new DataException("Duplicate entry for Product Code and Program Code combination found");
     }
@@ -62,21 +76,25 @@ public class ProgramProductRepository {
     mapper.updateCurrentPrice(programProduct);
   }
 
-  public ProgramProduct getProgramProductByProgramAndProductCode(ProgramProduct programProduct) {
-    return getByProgramIdAndProductId(programRepository.getIdByCode(programProduct.getProgram().getCode()),
-        productRepository.getIdByCode(programProduct.getProduct().getCode()));
+  public ProgramProduct getByProgramAndProductCode(ProgramProduct programProduct) {
+    return getByProgramAndProductId(programRepository.getIdByCode(programProduct.getProgram().getCode()),
+      productRepository.getIdByCode(programProduct.getProduct().getCode()));
   }
 
-  private ProgramProduct getByProgramIdAndProductId(Integer programId, Integer productId) {
-    final ProgramProduct programProduct = mapper.getByProgramAndProductId(programId, productId);
-    if (programProduct == null)
-      throw new DataException(PROGRAM_PRODUCT_INVALID);
-
-    return programProduct;
+  public ProgramProduct getByProgramAndProductId(Integer programId, Integer productId) {
+    return mapper.getByProgramAndProductId(programId, productId);
   }
 
   public void updatePriceHistory(ProgramProductPrice programProductPrice) {
     programProductPriceMapper.closeLastActivePrice(programProductPrice);
     programProductPriceMapper.insertNewCurrentPrice(programProductPrice);
+  }
+
+  public void updateProgramProduct(ProgramProduct programProduct) {
+    mapper.update(programProduct);
+  }
+
+  public ProgramProductPrice getProgramProductPrice(ProgramProduct programProduct) {
+    return programProductPriceMapper.get(programProduct);
   }
 }

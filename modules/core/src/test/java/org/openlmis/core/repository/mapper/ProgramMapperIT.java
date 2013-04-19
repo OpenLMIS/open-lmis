@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository.mapper;
 
 import org.junit.Test;
@@ -15,9 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.lang.Boolean.FALSE;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
@@ -56,17 +62,10 @@ public class ProgramMapperIT extends SpringIntegrationTest {
   SupervisoryNodeMapper supervisoryNodeMapper;
 
   @Test
-  public void shouldGetAllActiveProgram() {
-    List<Program> programs = programMapper.getAllActive();
-    assertEquals(4, programs.size());
-    assertThat(programs, hasItem(new Program(PROGRAM_ID, PROGRAM_CODE, PROGRAM_CODE, PROGRAM_CODE, true)));
-  }
-
-  @Test
   public void shouldGetProgramsWhichAreActiveByFacilityCode() {
     Facility facility = make(a(FacilityBuilder.defaultFacility));
     facilityMapper.insert(facility);
-    Program program = make(a(defaultProgram,with(programId,1)));
+    Program program = make(a(defaultProgram, with(programId, 1)));
     programMapper.insert(program);
     ProgramSupported programSupported = make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()), with(supportedProgram, program)));
     programSupportedMapper.addSupportedProgram(programSupported);
@@ -81,13 +80,14 @@ public class ProgramMapperIT extends SpringIntegrationTest {
   public void shouldGetAllPrograms() throws Exception {
     List<Program> programs = programMapper.getAll();
     assertEquals(4, programs.size());
+    assertThat(programs.get(0).getCode(), is("ESS_MEDS"));
   }
 
   @Test
   public void shouldGetProgramsSupportedByFacility() throws Exception {
     Facility facility = make(a(defaultFacility));
     facilityMapper.insert(facility);
-    Program program = make(a(defaultProgram,with(programId,1)));
+    Program program = make(a(defaultProgram, with(programId, 1)));
     programMapper.insert(program);
     ProgramSupported programSupported = make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()),
       with(supportedProgram, program)));
@@ -125,14 +125,14 @@ public class ProgramMapperIT extends SpringIntegrationTest {
 
     User user = insertUser(facility);
 
-    Role createRnrRole = new Role("R1", "Create Requisition");
+    Role createRnrRole = new Role("R1", FALSE, "Create Requisition");
     roleRightsMapper.insertRole(createRnrRole);
     roleRightsMapper.createRoleRight(createRnrRole.getId(), Right.CREATE_REQUISITION);
     insertRoleAssignments(activeProgramWithCreateRight, user, createRnrRole, supervisoryNode);
     insertRoleAssignments(inactiveProgram, user, createRnrRole, supervisoryNode);
     insertRoleAssignments(activeProgramForHomeFacility, user, createRnrRole, null);
 
-    Role configureRnrRole = new Role("R2", "View Rnr Role");
+    Role configureRnrRole = new Role("R2", FALSE, "View Rnr Role");
     roleRightsMapper.insertRole(configureRnrRole);
     roleRightsMapper.createRoleRight(configureRnrRole.getId(), Right.CONFIGURE_RNR);
     insertRoleAssignments(activeProgramWithConfigureRight, user, configureRnrRole, supervisoryNode);
@@ -153,11 +153,11 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     Facility facility = insertFacility(make(a(defaultFacility)));
     User user = insertUser(facility);
 
-    Role r1 = new Role("r1", "random description");
+    Role r1 = new Role("r1", FALSE, "random description");
     roleRightsMapper.insertRole(r1);
     roleRightsMapper.createRoleRight(r1.getId(), Right.CREATE_REQUISITION);
 
-    Role r2 = new Role("r2", "authorize role");
+    Role r2 = new Role("r2", FALSE, "authorize role");
     roleRightsMapper.insertRole(r2);
     roleRightsMapper.createRoleRight(r2.getId(), Right.AUTHORIZE_REQUISITION);
 
@@ -187,7 +187,7 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     Facility facility = insertFacility(make(a(defaultFacility)));
     User user = insertUser(facility);
 
-    Role r1 = new Role("r1", "random description");
+    Role r1 = new Role("r1", FALSE, "random description");
     roleRightsMapper.insertRole(r1);
     roleRightsMapper.createRoleRight(r1.getId(), Right.APPROVE_REQUISITION);
 
@@ -202,6 +202,16 @@ public class ProgramMapperIT extends SpringIntegrationTest {
     assertTrue(programs.contains(activeProgram));
   }
 
+  @Test
+  public void shouldSetTemplateConfiguredFlag() {
+    Program program = insertProgram(make(a(defaultProgram, with(programCode, "p1"), with(templateStatus, false))));
+    programMapper.setTemplateConfigured(program.getId());
+
+    Program returnedProgram = programMapper.getById(program.getId());
+
+    assertThat(returnedProgram.isTemplateConfigured(), is(true));
+  }
+
   private SupervisoryNode insertSupervisoryNode(SupervisoryNode supervisoryNode) {
     supervisoryNodeMapper.insert(supervisoryNode);
     return supervisoryNode;
@@ -214,9 +224,9 @@ public class ProgramMapperIT extends SpringIntegrationTest {
 
   private void insertProgramSupportedForFacility(Program program, Facility facility, boolean isActive) {
     ProgramSupported defaultProgram = make(a(defaultProgramSupported,
-        with(supportedFacilityId, facility.getId()),
-        with(supportedProgram, program),
-        with(ProgramSupportedBuilder.isActive, isActive)));
+      with(supportedFacilityId, facility.getId()),
+      with(supportedProgram, program),
+      with(ProgramSupportedBuilder.isActive, isActive)));
     programSupportedMapper.addSupportedProgram(defaultProgram);
   }
 

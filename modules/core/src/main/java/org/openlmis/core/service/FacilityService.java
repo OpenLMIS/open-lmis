@@ -1,17 +1,28 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.service;
 
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.openlmis.core.repository.ProgramRepository;
 import org.openlmis.core.repository.ProgramSupportedRepository;
+import org.openlmis.upload.Importable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @NoArgsConstructor
@@ -66,9 +77,17 @@ public class FacilityService {
   public void uploadSupportedProgram(ProgramSupported programSupported) {
     programSupported.isValid();
 
-    programSupported.setFacilityId(facilityRepository.getIdForCode(programSupported.getFacilityCode()));
-    programSupported.setProgram(new Program(programRepository.getIdByCode(programSupported.getProgram().getCode())));
-    programSupportedRepository.addSupportedProgram(programSupported);
+    Integer facilityId = facilityRepository.getIdForCode(programSupported.getFacilityCode());
+    programSupported.setFacilityId(facilityId);
+    Integer programId = programRepository.getIdByCode(programSupported.getProgram().getCode());
+    programSupported.setProgram(new Program(programId));
+
+    if (programSupported.getId() == null) {
+      programSupportedRepository.addSupportedProgram(programSupported);
+    }
+    else{
+      programSupportedRepository.updateSupportedProgram(programSupported);
+    }
   }
 
   public List<FacilityType> getAllTypes() {
@@ -112,7 +131,7 @@ public class FacilityService {
     return facilityRepository.searchFacilitiesByCodeOrName(searchParam);
   }
 
-  private void save(Facility facility) {
+  public void save(Facility facility) {
     for (ProgramSupported programSupported : facility.getSupportedPrograms()) {
       programSupported.isValid();
     }
@@ -129,5 +148,20 @@ public class FacilityService {
 
     return new ArrayList<>(userFacilities);
 
+  }
+
+  public FacilityType getFacilityTypeByCode(FacilityType facilityType) {
+    return facilityRepository.getFacilityTypeByCode(facilityType);
+  }
+
+  public Facility getByCode(Facility facility) {
+    return facilityRepository.getByCode(facility);
+  }
+
+  public ProgramSupported getProgramSupported(ProgramSupported programSupported) {
+    Integer facilityId = facilityRepository.getIdForCode(programSupported.getFacilityCode());
+    Integer programId = programRepository.getIdByCode(programSupported.getProgram().getCode());
+
+    return programSupportedRepository.getByFacilityIdAndProgramId(facilityId, programId);
   }
 }

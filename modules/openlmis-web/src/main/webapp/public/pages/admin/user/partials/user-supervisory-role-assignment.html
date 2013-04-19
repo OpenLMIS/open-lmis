@@ -1,14 +1,20 @@
+<!--
+  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
 <div ng-controller="UserRoleAssignmentController">
   <div class="fluid-grid">
     <div class="row-fluid fluid-grid-header">
       <div class="span3">
-        <div class="fluid-grid-cell">Program(s)</div>
+        <div class="fluid-grid-cell" openlmis-message="create.user.program"></div>
       </div>
       <div class="span3">
-        <div class="fluid-grid-cell">Supervisory node(s)</div>
+        <div class="fluid-grid-cell" openlmis-message="create.user.supervisoryNode"></div>
       </div>
       <div class="span3">
-        <div class="fluid-grid-cell">Roles</div>
+        <div class="fluid-grid-cell" openlmis-message="create.user.role"></div>
       </div>
       <div class="span3">
         <div class="fluid-grid-cell">&nbsp;</div>
@@ -26,21 +32,18 @@
           <label ng-bind="getSupervisoryNodeName(roleAssignment.supervisoryNode.id)"></label>
         </div>
       </div>
-      <div class="span3">
+      <div class="span4">
         <div class="fluid-grid-cell">
           <select ui-select2 ng-model="roleAssignment.roleIds" placeholder="+ Add Role"
                   multiple="multiple" style="width:400px" name="roles" id="roles">
-            <option ng-repeat="role in allRoles" value="{{role.id}}" ng-bind="role.name"></option>
+            <option ng-repeat="role in nonAdminRoles" value="{{role.id}}" ng-bind="role.name"></option>
           </select>
-        <span ng-show="roleAssignment.roleIds.length == 0" class="field-error">
-         Please fill in this value
+        <span ng-show="roleAssignment.roleIds.length == 0" class="field-error" openlmis-message="missing.value">
         </span>
         </div>
       </div>
-      <div class="span3">
-        <div class="fluid-grid-cell">
-          <a class="delete-role" value="delete" ng-click="deleteCurrentRow($index)">&times;</a>
-        </div>
+      <div class="span2">
+        <a class="btn delete-role" value="delete" ng-click="deleteCurrentRow($index)" openlmis-message="button.remove"></a>
       </div>
     </div>
   </div>
@@ -54,8 +57,8 @@
               ng-model="selectedProgramIdToSupervise">
             <option value="" ng-bind="selectSuperviseProgramMessage"></option>
           </select>
-          <span ng-show='hasMappingError(showSupervisorRoleMappingError,selectedProgramIdToSupervise)' class="field-error">
-            Please select a program
+          <span ng-show='hasMappingError(showSupervisorRoleMappingError,selectedProgramIdToSupervise)' class="field-error"
+                openlmis-message="create.user.selectProgram">
           </span>
           <span ng-show='duplicateSupervisorRoleError' ng-bind="duplicateSupervisorRoleError" class="field-error"></span>
         </div>
@@ -67,26 +70,26 @@
               ng-model="selectedSupervisoryNodeIdToSupervise">
             <option value="" ng-bind="selectSupervisoryNodeMessage"></option>
           </select>
-          <span ng-show='hasMappingError(showSupervisorRoleMappingError,selectedSupervisoryNodeIdToSupervise)' class="field-error">
-            Please select a supervisory node
+          <span ng-show='hasMappingError(showSupervisorRoleMappingError,selectedSupervisoryNodeIdToSupervise)' class="field-error"
+                openlmis-message="create.user.selectSupervisoryNode">
           </span>
         </div>
       </div>
 
-      <div class="span3 select2-roles">
+      <div class="span4 select2-roles">
         <div id="supervisoryRole" class="fluid-grid-cell">
           <select ui-select2  ng-model="selectedRoleIdsToSupervise" placeholder="+ Add Role" multiple="multiple" style="width:400px">
-            <option ng-repeat="role in $parent.allRoles" value="{{role.id}}">{{role.name}}</option>
+            <option ng-repeat="role in nonAdminRoles" value="{{role.id}}">{{role.name}}</option>
           </select>
-          <span ng-show='hasMappingError(showSupervisorRoleMappingError,selectedRoleIdsToSupervise)' class="field-error">
-            Please select role(s)
+          <span ng-show='hasMappingError(showSupervisorRoleMappingError,selectedRoleIdsToSupervise)' class="field-error"
+                openlmis-message="create.user.selectRoles">
           </span>
         </div>
       </div>
 
-      <div class="span3">
+      <div class="span2">
         <div class="fluid-grid-cell">
-          <a ng-click="addSupervisoryRole()" class="btn btn-primary">Add</a>
+          <a ng-click="addSupervisoryRole()" class="btn btn-primary" openlmis-message= "button.add"></a>
         </div>
       </div>
 
@@ -94,13 +97,13 @@
   </div>
 
   <div tabindex="-1" id="deleteRolesModal" modal="deleteRolesModal" close="deleteRolesModal=false">
-    <div class="modal-header"><h2>Delete roles</h2></div>
+    <div class="modal-header"><h3 openlmis-message="create.user.deleteRoles"></h3></div>
     <div class="modal-body">
-      <p>All roles assigned to this program and node for the user will be deleted</p>
+      <p openlmis-message="create.user.delete.warning"></p>
     </div>
     <div class="modal-footer">
-      <a href="" class="btn btn-primary" ng-click="deleteSupervisorRole()">Ok</a>
-      <a href="" class="btn" ng-click="deleteRolesModal=false">Cancel</a>
+      <a href="" class="btn btn-primary" ng-click="deleteSupervisorRole()" openlmis-message="button.ok"></a>
+      <a href="" class="btn" ng-click="deleteRolesModal=false" openlmis-message="button.cancel"></a>
     </div>
   </div>
 </div>

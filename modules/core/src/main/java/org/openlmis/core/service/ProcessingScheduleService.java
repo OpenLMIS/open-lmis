@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
@@ -64,16 +70,17 @@ public class ProcessingScheduleService {
   }
 
   public List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriod(Integer facilityId, Integer programId, Date programStartDate, Integer startingPeriod) {
-    Integer scheduleId = getScheduleId(new Facility(facilityId), new Program(programId));
-    return periodRepository.getAllPeriodsAfterDateAndPeriod(scheduleId, startingPeriod, programStartDate, new Date());
+    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = getSchedule(new Facility(facilityId), new Program(programId));
+    return periodRepository.getAllPeriodsAfterDateAndPeriod(requisitionGroupProgramSchedule.getProcessingSchedule().getId(),
+      startingPeriod, programStartDate, new Date());
   }
 
-  private Integer getScheduleId(Facility facility, Program program) {
+  private RequisitionGroupProgramSchedule getSchedule(Facility facility, Program program) {
     RequisitionGroup requisitionGroup = requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(program, facility);
     if (requisitionGroup == null)
       throw new DataException(NO_REQUISITION_GROUP_ERROR);
 
-    return requisitionGroupProgramScheduleRepository.getScheduleIdForRequisitionGroupAndProgram(requisitionGroup.getId(), program.getId());
+    return requisitionGroupProgramScheduleRepository.getScheduleForRequisitionGroupAndProgram(requisitionGroup.getId(), program.getId());
   }
 
   public ProcessingPeriod getPeriodById(Integer periodId) {
@@ -85,7 +92,7 @@ public class ProcessingScheduleService {
   }
 
   public List<ProcessingPeriod> getAllPeriodsForDateRange(Facility facility, Program program, Date startDate, Date endDate) {
-    Integer scheduleId = getScheduleId(facility, program);
-    return periodRepository.getAllPeriodsForDateRange(scheduleId, startDate, endDate);
+    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = getSchedule(facility, program);
+    return periodRepository.getAllPeriodsForDateRange(requisitionGroupProgramSchedule.getProcessingSchedule().getId(), startDate, endDate);
   }
 }

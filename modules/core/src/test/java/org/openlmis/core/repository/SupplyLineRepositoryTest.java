@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository;
 
 import org.junit.Before;
@@ -39,7 +45,7 @@ public class SupplyLineRepositoryTest {
 
   @Before
   public void setUp() {
-    supplyLineRepository = new SupplyLineRepository(supplyLineMapper, supervisoryNodeRepository, programRepository, facilityRepository);
+    supplyLineRepository = new SupplyLineRepository(supplyLineMapper);
     supplyLine = make(a(SupplyLineBuilder.defaultSupplyLine));
   }
 
@@ -60,53 +66,11 @@ public class SupplyLineRepositoryTest {
     when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1);
     when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(1);
     when(supervisoryNodeRepository.getSupervisoryNodeParentId(1)).thenReturn(null);
-    doThrow(new DuplicateKeyException("Duplicate entry for Supply Line found")).when(supplyLineMapper).insert(supplyLine);
+    doThrow(new DataException("Duplicate entry for Supply Line found")).when(supplyLineMapper).insert(supplyLine);
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("Duplicate entry for Supply Line found");
 
-    supplyLineRepository.insert(supplyLine);
-  }
-
-  @Test
-  public void shouldThrowErrorIfProgramDoesNotExist() {
-    when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenThrow(new DataException("Invalid program code"));
-
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Invalid program code");
-    supplyLineRepository.insert(supplyLine);
-  }
-
-  @Test
-  public void shouldThrowErrorIfFacilityDoesNotExist() {
-    when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1);
-    when(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenThrow(new DataException("Invalid Facility Code"));
-
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Invalid Facility Code");
-    supplyLineRepository.insert(supplyLine);
-  }
-
-  @Test
-  public void shouldThrowErrorIfSupervisoryNodeDoesNotExist() {
-    when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1);
-    when(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenReturn(1);
-    when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenThrow(new DataException("Invalid SupervisoryNode Code"));
-
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Invalid SupervisoryNode Code");
-    supplyLineRepository.insert(supplyLine);
-  }
-
-  @Test
-  public void shouldThrowErrorIfSupervisoryNodeIsNotTheParentNode() {
-    when(programRepository.getIdByCode(supplyLine.getProgram().getCode())).thenReturn(1);
-    when(facilityRepository.getIdForCode(supplyLine.getSupplyingFacility().getCode())).thenReturn(1);
-    when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(1);
-    when(supervisoryNodeRepository.getSupervisoryNodeParentId(supplyLine.getSupervisoryNode().getId())).thenReturn(2);
-
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Supervising Node is not the Top node");
     supplyLineRepository.insert(supplyLine);
   }
 
@@ -121,4 +85,5 @@ public class SupplyLineRepositoryTest {
     verify(supplyLineMapper).getSupplyLineBy(supervisoryNode, program);
     assertThat(returnedSupplyLine, is(supplyLine));
   }
+
 }

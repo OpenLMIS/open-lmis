@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.builder;
 
 import com.natpryce.makeiteasy.Instantiator;
@@ -32,7 +38,7 @@ public class ProgramSupportedBuilder {
       ProgramSupported programSupported = new ProgramSupported();
       programSupported.setFacilityCode(lookup.valueOf(supportedFacilityCode, FACILITY_CODE));
       programSupported.setFacilityId(lookup.valueOf(supportedFacilityId, FACILITY_ID));
-      programSupported.setProgram(lookup.valueOf(supportedProgram, new Program(PROGRAM_ID, PROGRAM_CODE, PROGRAM_NAME, null, null)));
+      programSupported.setProgram(lookup.valueOf(supportedProgram, new Program(PROGRAM_ID, PROGRAM_CODE, PROGRAM_NAME, null, null, false)));
       programSupported.setStartDate(lookup.valueOf(startDate, START_DATE));
       programSupported.setActive(lookup.valueOf(isActive, IS_ACTIVE));
       programSupported.setModifiedBy(1);

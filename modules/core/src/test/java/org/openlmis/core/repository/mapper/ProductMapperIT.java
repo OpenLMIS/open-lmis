@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository.mapper;
 
 
@@ -84,5 +90,32 @@ public class ProductMapperIT {
     productMapper.insert(product);
     Integer id = productMapper.getIdByCode(product.getCode());
     assertThat(id, is(product.getId()));
+  }
+
+  @Test
+  public void shouldReturnProductByCode() {
+    Product product = make(a(ProductBuilder.defaultProduct));
+    productMapper.insert(product);
+    Product expectedProduct = productMapper.getByCode(product.getCode());
+    assertThat(expectedProduct.getId(), is(product.getId()));
+    assertThat(expectedProduct.getCode(), is(product.getCode()));
+    assertThat(expectedProduct.getPrimaryName(), is(product.getPrimaryName()));
+  }
+
+  @Test
+  public void shouldUpdateProduct() {
+    Product product = make(a(ProductBuilder.defaultProduct));
+    productMapper.insert(product);
+
+    product.setPrimaryName("Updated Name");
+    product.setAlternateItemCode("Alternate Code");
+
+    productMapper.update(product);
+
+    Product returnedProduct = productMapper.getById(product.getId());
+
+    assertThat(returnedProduct.getPrimaryName(), is("Updated Name"));
+    assertThat(returnedProduct.getAlternateItemCode(), is("Alternate Code"));
+
   }
 }

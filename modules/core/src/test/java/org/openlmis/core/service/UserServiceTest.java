@@ -1,20 +1,30 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.service;
 
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.hash.Encoder;
 import org.openlmis.core.repository.UserRepository;
 import org.openlmis.email.domain.EmailMessage;
 import org.openlmis.email.exception.EmailException;
 import org.openlmis.email.service.EmailService;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,10 +34,13 @@ import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.rules.ExpectedException.none;
+import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.service.UserService.PASSWORD_RESET_TOKEN_INVALID;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(Encoder.class)
 public class UserServiceTest {
 
   public static final String FORGET_PASSWORD_LINK = "http://openLMIS.org";
@@ -46,12 +59,27 @@ public class UserServiceTest {
   @SuppressWarnings("unused")
   private RoleAssignmentService roleAssignmentService;
 
-  private UserService userService;
+  @Mock
+  private MessageService messageService;
 
 
   @Before
   public void setUp() throws Exception {
-    userService = new UserService(userRepository, roleAssignmentService, emailService);
+    userService = new UserService(userRepository, roleAssignmentService, emailService, messageService);
+    when(messageService.message("accountcreated.email.subject")).thenReturn("Account created message");
+    when(messageService.message("forgotpassword.email.subject")).thenReturn("Forgot password email subject");
+  }
+
+  private UserService userService;
+
+  private Matcher<EmailMessage> emailMessageMatcher(final EmailMessage that) {
+    return new ArgumentMatcher<EmailMessage>() {
+      @Override
+      public boolean matches(Object argument) {
+        EmailMessage emailMessage = (EmailMessage) argument;
+        return emailMessage.equals(that);
+      }
+    };
   }
 
   @Test
@@ -81,19 +109,24 @@ public class UserServiceTest {
   @Test
   public void shouldSendForgotPasswordEmailIfUserEmailExists() throws Exception {
     User user = new User();
-    user.setEmail("shibhama@thoughtworks.com");
+    user.setUserName("Admin");
+    user.setEmail("random@random.com");
+    user.setId(1111);
 
-    User userToBeReturned = new User();
-    userToBeReturned.setUserName("Admin");
-    userToBeReturned.setEmail("shibhama@thoughtworks.com");
-    userToBeReturned.setId(1111);
-    when(userRepository.getByEmail(user.getEmail())).thenReturn(userToBeReturned);
+    EmailMessage emailMessage = new EmailMessage("random@random.com", "Forgot password email subject", "email body");
+    when(userRepository.getByEmail(user.getEmail())).thenReturn(user);
+
+    mockStatic(Encoder.class);
+    when(Encoder.hash(anyString())).thenReturn("token");
+
+    when(messageService.message("passwordreset.email.body", new String[]{FORGET_PASSWORD_LINK + "token"}))
+      .thenReturn("email body");
 
     userService.sendForgotPasswordEmail(user, FORGET_PASSWORD_LINK);
 
-    verify(emailService).send(any(EmailMessage.class));
+    verify(emailService).send(argThat(emailMessageMatcher(emailMessage)));
     verify(userRepository).getByEmail(user.getEmail());
-    verify(userRepository).insertPasswordResetToken(eq(userToBeReturned), anyString());
+    verify(userRepository).insertPasswordResetToken(eq(user), anyString());
   }
 
   @Test
@@ -132,12 +165,15 @@ public class UserServiceTest {
     when(userRepository.getById(1)).thenReturn(user);
     when(roleAssignmentService.getHomeFacilityRoles(1)).thenReturn(homeFacilityRoles);
     when(roleAssignmentService.getSupervisorRoles(1)).thenReturn(supervisorRoles);
+    RoleAssignment adminRole = new RoleAssignment();
+    when(roleAssignmentService.getAdminRole(1)).thenReturn(adminRole);
 
     User returnedUser = userService.getById(1);
 
     assertThat(returnedUser, is(user));
     assertThat(returnedUser.getHomeFacilityRoles(), is(homeFacilityRoles));
     assertThat(returnedUser.getSupervisorRoles(), is(supervisorRoles));
+    assertThat(returnedUser.getAdminRole(), is(adminRole));
   }
 
   @Test
@@ -178,6 +214,24 @@ public class UserServiceTest {
   }
 
   @Test
+  public void shouldSaveUsersWithAllRoles() throws Exception {
+    User user = new User();
+    final RoleAssignment roleAssignment = new RoleAssignment(1, 1, 1, new SupervisoryNode(1));
+    List<RoleAssignment> supervisorRoles = Arrays.asList(roleAssignment);
+    RoleAssignment adminRoleAssignment = new RoleAssignment();
+    adminRoleAssignment.setRoleId(1);
+    user.setAdminRole(adminRoleAssignment);
+    user.setSupervisorRoles(supervisorRoles);
+
+    userService.create(user, FORGET_PASSWORD_LINK);
+
+    verify(userRepository).create(user);
+    verify(roleAssignmentService).saveHomeFacilityRoles(user);
+    verify(roleAssignmentService).saveSupervisoryRoles(user);
+    verify(roleAssignmentService).saveAdminRole(user);
+  }
+
+  @Test
   public void shouldUpdateUser() throws Exception {
     User user = new User();
     final RoleAssignment roleAssignment = new RoleAssignment(1, 1, 1, new SupervisoryNode(1));
@@ -190,6 +244,7 @@ public class UserServiceTest {
     verify(roleAssignmentService).deleteAllRoleAssignmentsForUser(user.getId());
     verify(roleAssignmentService).saveHomeFacilityRoles(user);
     verify(roleAssignmentService).saveSupervisoryRoles(user);
+    verify(roleAssignmentService).saveAdminRole(user);
   }
 
   @Test
@@ -208,6 +263,7 @@ public class UserServiceTest {
     String validToken = "validToken";
     Integer expectedUserId = 1;
     when(userRepository.getUserIdForPasswordResetToken(validToken)).thenReturn(expectedUserId);
+
     Integer userId = userService.getUserIdByPasswordResetToken(validToken);
 
     verify(userRepository).getUserIdForPasswordResetToken(validToken);

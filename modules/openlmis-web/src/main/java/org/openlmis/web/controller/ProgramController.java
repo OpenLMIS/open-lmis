@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
@@ -17,13 +23,15 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Set;
 
-import static org.openlmis.core.domain.Right.*;
+import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
+import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
 @NoArgsConstructor
 public class ProgramController extends BaseController {
 
+  public static final String PROGRAM = "program";
   private ProgramService programService;
   public static final String PROGRAMS = "programs";
 
@@ -31,12 +39,6 @@ public class ProgramController extends BaseController {
   @Autowired
   public ProgramController(ProgramService programService) {
     this.programService = programService;
-  }
-
-    @RequestMapping(value = "/active/programs", method = GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_RNR')")
-  public List<Program> getAllActivePrograms() {
-    return programService.getAllActive();
   }
 
   @RequestMapping(value = "/facilities/{facilityId}/programs", method = GET, headers = ACCEPT_JSON)
@@ -57,9 +59,14 @@ public class ProgramController extends BaseController {
   }
 
   @RequestMapping(value = "/programs", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USERS')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USERS, CONFIGURE_RNR')")
   public ResponseEntity<OpenLmisResponse> getAllPrograms() {
     return OpenLmisResponse.response(PROGRAMS, programService.getAll());
   }
 
+  @RequestMapping(value = "programs/{id}", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_RNR')")
+  public ResponseEntity<OpenLmisResponse> get(@PathVariable int id) {
+    return OpenLmisResponse.response(PROGRAM, programService.getById(id));
+  }
 }

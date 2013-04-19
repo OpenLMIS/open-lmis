@@ -5,6 +5,7 @@ import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProductRepository;
+import org.openlmis.upload.Importable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,24 @@ public class ProductService {
 
   public void save(Product product) {
     validateAndSetProductCategory(product);
-    repository.insert(product);
+
+    if (product.getId() == null) {
+      repository.insert(product);
+      return;
+    }
+
+    setProductFormIdAndDosageUnitId(product);
+
+    repository.update(product);
+  }
+
+  private void setProductFormIdAndDosageUnitId(Product product) {
+    if(product.getForm()!=null )  {
+      product.getForm().setId(repository.getProductFormIdForCode(product.getForm().getCode()));
+    }
+    if(product.getDosageUnit()!=null) {
+      product.getDosageUnit().setId(repository.getDosageUnitIdForCode(product.getDosageUnit().getCode()));
+    }
   }
 
 
@@ -47,6 +65,10 @@ public class ProductService {
 
   public Integer getIdForCode(String code) {
     return repository.getIdByCode(code);
+  }
+
+  public Product getByCode(String code) {
+    return repository.getByCode(code);
   }
 
     public List<Product> getAllProducts() {

@@ -1,8 +1,15 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.rnr.repository.mapper;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openlmis.core.builder.FacilityApprovedProductBuilder;
 import org.openlmis.core.builder.ProcessingScheduleBuilder;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
@@ -24,6 +31,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.openlmis.core.builder.FacilityApprovedProductBuilder.defaultFacilityApprovedProduct;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
@@ -81,7 +89,8 @@ public class RnrLineItemMapperIT {
     facility = make(a(defaultFacility));
     facilityMapper.insert(facility);
 
-    facilityApprovedProduct = new FacilityApprovedProduct("warehouse", programProduct, 3);
+    facilityApprovedProduct = make(a(defaultFacilityApprovedProduct));
+    facilityApprovedProduct.setProgramProduct(programProduct);
     facilityApprovedProductMapper.insert(facilityApprovedProduct);
 
     ProcessingSchedule processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
@@ -239,7 +248,8 @@ public class RnrLineItemMapperIT {
       ProgramProduct programProduct = new ProgramProduct(program, product, 30, true, new Money("12.5000"));
       programProductMapper.insert(programProduct);
 
-      FacilityApprovedProduct facilityApprovedProduct = new FacilityApprovedProduct("warehouse", programProduct, 3);
+      FacilityApprovedProduct facilityApprovedProduct = make(a(defaultFacilityApprovedProduct));
+      facilityApprovedProduct.setProgramProduct(programProduct);
       facilityApprovedProductMapper.insert(facilityApprovedProduct);
 
       RnrLineItem item = new RnrLineItem(rnr.getId(), facilityApprovedProduct, 1);

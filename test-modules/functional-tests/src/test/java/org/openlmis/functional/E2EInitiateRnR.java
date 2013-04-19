@@ -1,14 +1,21 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.functional;
 
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
-import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,70 +26,64 @@ import java.util.List;
 
 public class E2EInitiateRnR extends TestCaseHelper {
 
-  DBWrapper dbWrapper;
-
   @BeforeMethod(groups = {"smoke"})
-  @Parameters({"browser"})
-  public void setUp(String browser) throws Exception {
-    super.setupSuite(browser);
-    dbWrapper = new DBWrapper();
-    dbWrapper.deleteData();
+  public void setUp() throws Exception {
+    super.setup();
+  }
+
+  @DataProvider(name = "envData")
+  public Object[][] getEnvData() {
+    return new Object[][]{};
   }
 
   @Test(groups = {"smoke"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testE2EInitiateRnR(String program, String userSIC, String userMO, String password, String[] credentials) throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver);
+  public void testE2EInitiateRnR(String program, String userSIC, String userMO, String userlmu, String password, String[] credentials) throws Exception {
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
     CreateFacilityPage createFacilityPage = homePage.navigateCreateFacility();
     String geoZone = "Ngorongoro";
-    String parentgeoZone = "Dodoma";
+    String parentGeoZone = "Dodoma";
     String facilityType = "Lvl3 Hospital";
     String operatedBy = "MoH";
-    String date_time = createFacilityPage.enterAndVerifyFacility(geoZone, facilityType, operatedBy);
-    String facility_code = "FCcode" + date_time;
+    String facilityCodePrefix = "FCcode";
+    String facilityNamePrefix = "FCname";
+
+    String date_time = createFacilityPage.enterValuesInFacility(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityType, operatedBy);
+    createFacilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
+    String facility_code = facilityCodePrefix + date_time;
+    String facility_name = facilityNamePrefix + date_time;
     dbWrapper.insertFacilities("F10", "F11");
 
-    RolesPage rolesPage = homePage.navigateRoleAssignments();
-    List<String> userRoleListStoreincharge = new ArrayList<String>();
-    userRoleListStoreincharge.add("Create Requisition");
-    userRoleListStoreincharge.add("Authorize Requisition");
-    userRoleListStoreincharge.add("Approve Requisition");
-    userRoleListStoreincharge.add("Convert To Order Requisition");
-    rolesPage.createRole("Store-in-charge", "Store-in-charge", userRoleListStoreincharge);
 
-    List<String> userRoleListMedicalofficer = new ArrayList<String>();
-    userRoleListMedicalofficer.add("Approve Requisition");
-    rolesPage.createRole("Medical-officer", "Medical-officer", userRoleListMedicalofficer);
+    List<String> userRoleListStoreInCharge = new ArrayList<String>();
+    userRoleListStoreInCharge.add("Create Requisition");
+    userRoleListStoreInCharge.add("Authorize Requisition");
+    userRoleListStoreInCharge.add("Approve Requisition");
+    createRoleAndAssignRights(homePage, userRoleListStoreInCharge, "Store-in-charge", "Store-in-charge", true);
+
+    List<String> userRoleListLmu = new ArrayList<String>();
+    userRoleListLmu.add("Convert To Order Requisition");
+    userRoleListLmu.add("View Orders Requisition");
+    createRoleAndAssignRights(homePage, userRoleListLmu, "lmu", "lmu", false);
+
+    List<String> userRoleListMedicalOfficer = new ArrayList<String>();
+    userRoleListMedicalOfficer.add("Approve Requisition");
+    createRoleAndAssignRights(homePage, userRoleListMedicalOfficer, "Medical-officer", "Medical-officer", true);
+
 
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
     dbWrapper.insertSupervisoryNodeSecond("F11", "N2", "Node 2", "N1");
 
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-    UserPage userPageSIC = homePage.navigateToUser();
-    String userSICEmail = "Fatima_Doe@openlmis.com";
-    String userSICFirstName = "Fatima";
-    String userSICLastName = "Doe";
     String userSICUserName = "storeincharge";
-    String userIDSIC = userPageSIC.enterAndverifyUserDetails(userSICUserName, userSICEmail, userSICFirstName, userSICLastName);
-    dbWrapper.updateUser(passwordUsers, userSICEmail);
-    userPageSIC.enterMyFacilityAndMySupervisedFacilityData(userSICFirstName, userSICLastName, "F10", "HIV", "Node 1", "Store-in-charge");
-
-    UserPage userPageMO = homePage.navigateToUser();
-    String userMOEmail = "Jane_Doe@openlmis.com";
-    String userMOFirstName = "Jane";
-    String userMOLastName = "Doe";
-    String userMOUserName = "medicalofficer";
-    String userIDMO = userPageMO.enterAndverifyUserDetails(userMOUserName, userMOEmail, userMOFirstName, userMOLastName);
-    dbWrapper.updateUser(passwordUsers, userMOEmail);
-    userPageMO.enterMyFacilityAndMySupervisedFacilityData(userMOFirstName, userMOLastName, "F11", "HIV", "Node 2", "Medical-Officer");
+    String userIDSIC = createUserAndAssignRoles(homePage, passwordUsers, "Fatima_Doe@openlmis.com", "Fatima", "Doe", userSICUserName, "F10", program, "Node 1", "Store-in-charge", false);
+    createUserAndAssignRoles(homePage, passwordUsers, "Jake_Doe@openlmis.com", "Jake", "Doe", "lmu", "F10", program, "Node 1", "lmu", true);
+    createUserAndAssignRoles(homePage, passwordUsers, "Jane_Doe@openlmis.com", "Jane", "Doe", "medicalofficer", "F11", program, "Node 2", "Medical-Officer", false);
 
     dbWrapper.updateRoleGroupMember(facility_code);
-    dbWrapper.insertProducts("P10", "P11");
-    dbWrapper.insertProgramProducts("P10", "P11", program);
-    dbWrapper.insertFacilityApprovedProducts("P10", "P11", program, "Lvl3 Hospital");
+    setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
     dbWrapper.insertRequisitionGroups("RG1", "RG2", "N1", "N2");
-
     dbWrapper.insertRequisitionGroupMembers("F10", facility_code);
 
     ManageSchedulePage manageSchedulePage = homePage.navigateToSchedule();
@@ -93,26 +94,34 @@ public class E2EInitiateRnR extends TestCaseHelper {
     periodsPage.deleteAndVerifyPeriods();
 
     dbWrapper.insertRequisitionGroupProgramSchedule();
-
     dbWrapper.allocateFacilityToUser(userIDSIC, facility_code);
 
     TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
     templateConfigPage.configureTemplate();
 
+    dbWrapper.insertSupplyLines("N1", program, facilityCodePrefix + date_time);
 
-    dbWrapper.insertSupplyLines("N1", "HIV", "FCcode" + date_time);
-
-    LoginPage loginPageSecond = homePage.logout();
+    LoginPage loginPageSecond = homePage.logout(baseUrlGlobal);
     HomePage homePageUser = loginPageSecond.loginAs(userSIC, password);
 
     String periodDetails = homePageUser.navigateAndInitiateRnr(program);
     InitiateRnRPage initiateRnRPage = homePageUser.clickProceed();
-    initiateRnRPage.verifyRnRHeader("FCcode", "FCname", date_time, program, periodDetails, geoZone,parentgeoZone, operatedBy, facilityType);
+    initiateRnRPage.verifyRnRHeader(facilityCodePrefix, facilityNamePrefix, date_time, program, periodDetails, geoZone, parentGeoZone, operatedBy, facilityType);
     initiateRnRPage.submitRnR();
     initiateRnRPage.verifySubmitRnrErrorMsg();
     initiateRnRPage.calculateAndVerifyStockOnHand(10, 10, 10, 1);
 
     initiateRnRPage.submitRnR();
+    initiateRnRPage.clickOk();
+
+    initiateRnRPage.clickCommentsButton();
+    initiateRnRPage.typeCommentsInCommentsTextArea("Test comment.");
+    initiateRnRPage.closeCommentPopUp();
+    initiateRnRPage.clickCommentsButton();
+    initiateRnRPage.verifyValueInCommentsTextArea("");
+    initiateRnRPage.closeCommentPopUp();
+    initiateRnRPage.addComments("Dummy Comments.");
+    initiateRnRPage.verifyComment("Dummy Comments.", userSICUserName, 1);
 
     initiateRnRPage.enterValuesAndVerifyCalculatedOrderQuantity(10, 10, 101, 51, 153, 142);
     initiateRnRPage.verifyPacksToShip(15);
@@ -122,51 +131,89 @@ public class E2EInitiateRnR extends TestCaseHelper {
     initiateRnRPage.calculateAndVerifyTotalCost();
     initiateRnRPage.saveRnR();
 
-    initiateRnRPage.addNonFullSupplyLineItems("99", "Due to unforeseen event", "antibiotic", "P11","Antibiotics");
+    initiateRnRPage.addNonFullSupplyLineItems("99", "Due to unforeseen event", "antibiotic", "P11", "Antibiotics", baseUrlGlobal, dburlGlobal);
     initiateRnRPage.calculateAndVerifyTotalCostNonFullSupply();
     initiateRnRPage.verifyCostOnFooter();
 
     initiateRnRPage.authorizeRnR();
+    initiateRnRPage.clickOk();
     initiateRnRPage.verifyAuthorizeRnrSuccessMsg();
-    initiateRnRPage.verifyBeginningBalanceDisabled();
+    initiateRnRPage.verifyApproveButtonNotPresent();
 
     ApprovePage approvePage = homePageUser.navigateToApprove();
     approvePage.verifyNoRequisitionPendingMessage();
-    LoginPage loginPagethird = homePageUser.logout();
+    LoginPage loginPagethird = homePageUser.logout(baseUrlGlobal);
 
     HomePage homePageLowerSNUser = loginPagethird.loginAs(userMO, password);
     ApprovePage approvePageLowerSNUser = homePageLowerSNUser.navigateToApprove();
-    String periodLowerSNUser = approvePageLowerSNUser.verifyandclickRequisitionPresentForApproval();
-    approvePageLowerSNUser.verifyRnRHeader("FCcode", "FCname", date_time, program, periodDetails, geoZone,parentgeoZone, operatedBy, facilityType);
+    approvePageLowerSNUser.verifyAndClickRequisitionPresentForApproval();
+    approvePageLowerSNUser.verifyRnRHeader(facilityCodePrefix, facilityNamePrefix, date_time, program, periodDetails, geoZone, parentGeoZone, operatedBy, facilityType);
     approvePageLowerSNUser.verifyApprovedQuantity();
     approvePageLowerSNUser.editApproveQuantityAndVerifyTotalCost("290");
-    approvePageLowerSNUser.approveRequisition();
+    approvePageLowerSNUser.clickCommentsButton();
+    approvePageLowerSNUser.typeCommentsInCommentsTextArea("Test comment.");
+    approvePageLowerSNUser.closeCommentPopUp();
+    approvePageLowerSNUser.clickCommentsButton();
+    approvePageLowerSNUser.verifyValueInCommentsTextArea("");
+    approvePageLowerSNUser.closeCommentPopUp();
+    approvePageLowerSNUser.addComments("This is urgent");
+    approvePageLowerSNUser.verifyComment("This is urgent", userMO, 2);
+    approvePageLowerSNUser.clickSaveButton();
+    approvePageLowerSNUser.clickApproveButton();
+    approvePageLowerSNUser.clickOk();
     approvePageLowerSNUser.verifyNoRequisitionPendingMessage();
-    LoginPage loginPageTopSNUser = homePageLowerSNUser.logout();
+    LoginPage loginPageTopSNUser = homePageLowerSNUser.logout(baseUrlGlobal);
 
     HomePage homePageTopSNUser = loginPageTopSNUser.loginAs(userSIC, password);
 
     ApprovePage approvePageTopSNUser = homePageTopSNUser.navigateToApprove();
-    String periodTopSNUser = approvePageTopSNUser.verifyandclickRequisitionPresentForApproval();
-    approvePageTopSNUser.verifyRnRHeader("FCcode", "FCname", date_time, program, periodDetails, geoZone,parentgeoZone, operatedBy, facilityType);
+    String periodTopSNUser = approvePageTopSNUser.verifyAndClickRequisitionPresentForApproval();
+    approvePageTopSNUser.verifyRnRHeader(facilityCodePrefix, facilityNamePrefix, date_time, program, periodDetails, geoZone, parentGeoZone, operatedBy, facilityType);
     approvePageTopSNUser.verifyApprovedQuantityApprovedFromLowerHierarchy("290");
-    approvePageTopSNUser.editApproveQuantityAndVerifyTotalCost("2900");
+    approvePageTopSNUser.editApproveQuantityAndVerifyTotalCost("100");
     approvePageTopSNUser.approveRequisition();
+    approvePageTopSNUser.clickOk();
     approvePageTopSNUser.verifyNoRequisitionPendingMessage();
 
-    OrderPage orderPageOrdersPending = homePageTopSNUser.navigateConvertToOrder();
+    LoginPage loginPagelmu = homePageTopSNUser.logout(baseUrlGlobal);
+    HomePage homePagelmu = loginPagelmu.loginAs(userlmu, password);
+
+    ConvertOrderPage convertOrderPageOrdersPending = homePagelmu.navigateConvertToOrder();
     String[] periods = periodTopSNUser.split("-");
-    String supplyFacilityName = dbWrapper.getSupplyFacilityName("N1", "HIV");
-    orderPageOrdersPending.verifyOrderListElements(program, "FCcode" + date_time, "FCname" + date_time, periods[0].trim(), periods[1].trim(), supplyFacilityName);
-    orderPageOrdersPending.convertToOrder();
+    String supplyFacilityName = dbWrapper.getSupplyFacilityName("N1", program);
+    convertOrderPageOrdersPending.verifyOrderListElements(program, facility_code, facility_name, periods[0].trim(), periods[1].trim(), supplyFacilityName);
+    verifyConvertToOrder(convertOrderPageOrdersPending);
 
+    ViewOrdersPage viewOrdersPage = homePagelmu.navigateViewOrders();
+    String requisitionId = dbWrapper.getLatestRequisitionId();
+    viewOrdersPage.verifyOrderListElements(program, "ORD" + requisitionId, facility_code + " - " + facility_name, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "RELEASED");
+  }
 
+  private String createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail, String userFirstName, String userLastName, String userUserName, String facility, String program, String supervisoryNode, String role, boolean adminRole) throws IOException, SQLException {
+    UserPage userPage = homePage.navigateToUser();
+    String userID = userPage.enterAndverifyUserDetails(userUserName, userEmail, userFirstName, userLastName, baseUrlGlobal, dburlGlobal);
+    dbWrapper.updateUser(passwordUsers, userEmail);
+    userPage.enterMyFacilityAndMySupervisedFacilityData(userFirstName, userLastName, facility, program, supervisoryNode, role, adminRole);
+    return userID;
+  }
+
+  private void verifyConvertToOrder(ConvertOrderPage convertOrderPageOrdersPending) {
+    convertOrderPageOrdersPending.clickConvertToOrderButton();
+    convertOrderPageOrdersPending.verifyMessageOnOrderScreen("Message 'Please select at least one Requisition for Converting to Order.' is not displayed");
+    convertOrderPageOrdersPending.clickCheckBoxConvertToOrder();
+    convertOrderPageOrdersPending.clickConvertToOrderButton();
+    convertOrderPageOrdersPending.clickOk();
+  }
+
+  private void createRoleAndAssignRights(HomePage homePage, List<String> userRoleList, String roleName, String roleDescription, boolean programDependent) throws IOException {
+    RolesPage rolesPage = homePage.navigateRoleAssignments();
+    rolesPage.createRole(roleName, roleDescription, userRoleList, programDependent);
   }
 
   @AfterMethod(groups = {"smoke"})
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
-    homePage.logout();
+    homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }
@@ -175,7 +222,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-      {"HIV", "storeincharge", "medicalofficer", "Admin123", new String[]{"Admin123", "Admin123"}}
+      {"HIV", "storeincharge", "medicalofficer", "lmu", "Admin123", new String[]{"Admin123", "Admin123"}}
     };
 
   }

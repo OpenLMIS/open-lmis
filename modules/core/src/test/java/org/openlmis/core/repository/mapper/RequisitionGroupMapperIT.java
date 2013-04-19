@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository.mapper;
 
 import org.junit.Before;
@@ -45,9 +51,12 @@ public class RequisitionGroupMapperIT {
 
   @Autowired
   RequisitionGroupMemberMapper requisitionGroupMemberMapper;
+  @Autowired
+  private ProcessingScheduleMapper processingScheduleMapper;
 
   private RequisitionGroup requisitionGroup;
   private SupervisoryNode supervisoryNode;
+
   private Facility facility;
 
   @Before
@@ -76,6 +85,26 @@ public class RequisitionGroupMapperIT {
   }
 
   @Test
+  public void shouldUpdateRequisitionGroup() throws Exception {
+    requisitionGroup.setSupervisoryNode(supervisoryNode);
+    requisitionGroupMapper.insert(requisitionGroup);
+
+    requisitionGroup.setName("updated name");
+    requisitionGroup.setDescription("updated description");
+    supervisoryNode.setId(2);
+
+    requisitionGroupMapper.update(requisitionGroup);
+
+    RequisitionGroup resultRequisitionGroup = requisitionGroupMapper.getRequisitionGroupById(requisitionGroup.getId());
+
+    assertThat(resultRequisitionGroup.getCode(), is(REQUISITION_GROUP_CODE));
+    assertThat(resultRequisitionGroup.getModifiedDate(), is(requisitionGroup.getModifiedDate()));
+    assertThat(resultRequisitionGroup.getName(), is("updated name"));
+    assertThat(resultRequisitionGroup.getDescription(), is("updated description"));
+    assertThat(resultRequisitionGroup.getSupervisoryNode().getId(), is(2));
+  }
+
+  @Test
   public void shouldGetRequisitionGroupsForSupervisoryNodes() {
     requisitionGroup.setSupervisoryNode(supervisoryNode);
     requisitionGroupMapper.insert(requisitionGroup);
@@ -90,11 +119,12 @@ public class RequisitionGroupMapperIT {
     requisitionGroupMapper.insert(requisitionGroup);
 
     ProcessingSchedule processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
+    processingScheduleMapper.insert(processingSchedule);
 
     RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
     requisitionGroupProgramSchedule.setProgram(make(a(defaultProgram)));
     requisitionGroupProgramSchedule.setRequisitionGroup(requisitionGroup);
-    requisitionGroupProgramSchedule.setSchedule(processingSchedule);
+    requisitionGroupProgramSchedule.setProcessingSchedule(processingSchedule);
     programMapper.insert(requisitionGroupProgramSchedule.getProgram());
 
     requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
@@ -106,6 +136,14 @@ public class RequisitionGroupMapperIT {
     requisitionGroupMemberMapper.insert(requisitionGroupMember);
 
     assertThat(requisitionGroupMapper.getRequisitionGroupForProgramAndFacility(requisitionGroupProgramSchedule.getProgram(),
-        requisitionGroupMember.getFacility()), is(requisitionGroup));
+      requisitionGroupMember.getFacility()), is(requisitionGroup));
   }
+
+  @Test
+  public void shouldGetRequisitionByCode() {
+    requisitionGroup.setSupervisoryNode(supervisoryNode);
+    requisitionGroupMapper.insert(requisitionGroup);
+    assertThat(requisitionGroupMapper.getByCode(requisitionGroup.getCode()), is(requisitionGroup));
+  }
+
 }

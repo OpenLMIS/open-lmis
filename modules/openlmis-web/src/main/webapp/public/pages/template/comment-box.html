@@ -1,0 +1,41 @@
+<div ng-hide="!show" class="comments-popup" ng-class="{'view': !updatable}">
+
+  <!--
+  ~ Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~
+  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  -->
+
+  <h4>
+    Comments
+    <a ng-click="show=false; comment=''" class="link-minimize">
+      <i id="commentClose" class="icon-remove"></i>
+    </a>
+  </h4>
+
+   <div ng-hide="rnrComments.length" class="no-comments">
+       No comments have been added yet.
+   </div>
+  <ul class="comments-list" id="comments-list">
+    <li class="comment" ng-repeat="comment in rnrComments">
+      <span ng-bind="comment.commentText"></span>
+
+      <div class="comment-info"> By: <span ng-bind="comment.author.userName"></span> | <span class="comment-date"
+                                                                                             ng-bind="comment.createdDate | date:'HH:mm:ss  dd/MM/yyyy'"></span>
+      </div>
+    </li>
+  </ul>
+  <div ng-show="updatable">
+    <textarea  ng-trim="false" ng-change="validateMaxLength(comment)" rows="5" id="addComment"
+              ng-model="comment" placeholder="Type your comment here"></textarea>
+
+    <div>
+      <span ng-bind="250-comment.length" class="comment-length"></span>
+      <span ng-show="error" openlmis-message="error"></span>
+      <input id="addButton" type="button" value="Add" ng-click="addComments()" ng-disabled="!comment.length"
+             class="btn btn-primary pull-right"/>
+    </div>
+
+  </div>
+  <span class="beak-down"></span>
+</div>

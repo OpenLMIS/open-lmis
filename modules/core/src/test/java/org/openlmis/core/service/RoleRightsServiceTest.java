@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.service;
 
 import org.junit.Before;
@@ -15,7 +21,9 @@ import org.openlmis.core.repository.RoleRightsRepository;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import static java.lang.Boolean.FALSE;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -42,10 +50,9 @@ public class RoleRightsServiceTest {
   @Mock
   private FacilityService facilityService;
 
-
   @Before
   public void setUp() throws Exception {
-    role = new Role("role name", "role description");
+    role = new Role("role name", FALSE, "role description");
     roleRightsService = new RoleRightsService(roleRightsRepository, supervisoryNodeService, facilityService);
   }
 
@@ -54,7 +61,20 @@ public class RoleRightsServiceTest {
   public void shouldGetAllRightsInAlphabeticalOrder() throws Exception {
     List<Right> allRights = new ArrayList<>(new RoleRightsService().getAllRights());
     assertThat(allRights.get(0), is(CONFIGURE_RNR));
+    assertThat(allRights.get(1), is(Right.MANAGE_FACILITY));
+    assertThat(allRights.get(2), is(Right.MANAGE_ROLE));
+    assertThat(allRights.get(3), is(Right.MANAGE_SCHEDULE));
+    assertThat(allRights.get(4), is(Right.MANAGE_USERS));
+    assertThat(allRights.get(5), is(Right.UPLOADS));
+    assertThat(allRights.get(6), is(Right.APPROVE_REQUISITION));
+    assertThat(allRights.get(7), is(Right.AUTHORIZE_REQUISITION));
+    assertThat(allRights.get(8), is(Right.CONVERT_TO_ORDER));
+    assertThat(allRights.get(9), is(Right.CREATE_REQUISITION));
+    assertThat(allRights.get(10), is(Right.VIEW_REQUISITION));
+    assertThat(allRights.get(11), is(Right.VIEW_ORDER));
+    assertThat(allRights.get(0).getAdminRight(), is(true));
   }
+
 
   @Test
   public void shouldSaveRole() throws Exception {
@@ -112,12 +132,14 @@ public class RoleRightsServiceTest {
 
     when(supervisoryNodeService.getFor(facility, program)).thenReturn(supervisoryNode);
     when(supervisoryNodeService.getAllParentSupervisoryNodesInHierarchy(supervisoryNode)).thenReturn(supervisoryNodes);
-    when(roleRightsRepository.getRightsForUserOnSupervisoryNodeAndProgram(userId, supervisoryNodes, program)).thenReturn(expected);
+    when(
+      roleRightsRepository.getRightsForUserOnSupervisoryNodeAndProgram(userId, supervisoryNodes, program)).thenReturn(
+      expected);
 
-    List<Right> result = roleRightsService.getRightsForUserAndFacilityProgram(userId, facility, program);
+    Set<Right> result = roleRightsService.getRightsForUserAndFacilityProgram(userId, facility, program);
 
     verify(roleRightsRepository).getRightsForUserOnSupervisoryNodeAndProgram(userId, supervisoryNodes, program);
-    assertThat(result, is(expected));
+    assertThat(result.containsAll(expected), is(true));
   }
 
   @Test
@@ -130,9 +152,9 @@ public class RoleRightsServiceTest {
     when(facilityService.getHomeFacility(userId)).thenReturn(facility);
     when(roleRightsRepository.getRightsForUserOnHomeFacilityAndProgram(userId, program)).thenReturn(expected);
 
-    List<Right> result = roleRightsService.getRightsForUserAndFacilityProgram(userId, facility, program);
+    Set<Right> result = roleRightsService.getRightsForUserAndFacilityProgram(userId, facility, program);
 
-    assertThat(result, is(expected));
+    assertThat(result.containsAll(expected), is(true));
     verify(roleRightsRepository).getRightsForUserOnHomeFacilityAndProgram(userId, program);
   }
 }

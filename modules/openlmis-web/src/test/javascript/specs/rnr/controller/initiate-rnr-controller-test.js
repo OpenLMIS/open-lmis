@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 describe('InitiateRnrController', function () {
 
   var scope, ctrl, $httpBackend, location, facilities, programs, rootScope;
@@ -36,12 +42,13 @@ describe('InitiateRnrController', function () {
     scope.selectedProgram = {"code":"hiv", "id":2};
     scope.selectedFacilityId = 1;
     scope.selectedPeriod = {"id":3};
+    $httpBackend.expectGET('/facility/1/program/2/rights.json').respond({rights:[{right:'CREATE_REQUISITION'}]});
     $httpBackend.expectGET('/requisitions.json?facilityId=1&periodId=3&programId=2').respond({"rnr":{"id":1, status:"INITIATED"}});
 
     scope.initRnr();
     $httpBackend.flush();
 
-    expect(location.url()).toEqual("/create-rnr/1/2/3?supplyType=full-supply&page=1");
+      expect(location.url()).toEqual("/create-rnr/1/1/2?supplyType=full-supply&page=1");
     expect(scope.error).toEqual("");
     expect(scope.$parent.rnr).toEqual({"id":1, status:'INITIATED'});
   });
@@ -51,12 +58,13 @@ describe('InitiateRnrController', function () {
     scope.selectedFacilityId = 1;
     scope.selectedPeriod = {"id":3};
     spyOn(rootScope, 'hasPermission').andReturn(false);
+    $httpBackend.expectGET('/facility/1/program/2/rights.json').respond({rights:[{right:'AUTHORIZE_REQUISITION'}]});
     $httpBackend.expectGET('/requisitions.json?facilityId=1&periodId=3&programId=2').respond({"rnr":{"id":1, status:"INITIATED"}});
 
     scope.initRnr();
     $httpBackend.flush();
 
-    expect(scope.error).toEqual("An R&R has not been submitted yet");
+    expect(scope.error).toEqual("Requisition not submitted yet");
   });
 
   it('should give error if rnr template has not been defined yet and user has create requisition permission', function () {
@@ -64,6 +72,8 @@ describe('InitiateRnrController', function () {
     scope.selectedFacilityId = 1;
     scope.selectedPeriod = {"id":3};
     spyOn(rootScope, 'hasPermission').andReturn(true);
+    $httpBackend.expectGET('/facility/1/program/2/rights.json').respond({rights:[{right:'CREATE_REQUISITION'}]});
+
     $httpBackend.expectGET('/requisitions.json?facilityId=1&periodId=3&programId=2').respond(null);
     $httpBackend.expectPOST('/requisitions.json?facilityId=1&periodId=3&programId=2').respond(400, {"error":"errorMessage"});
 
@@ -77,13 +87,15 @@ describe('InitiateRnrController', function () {
     scope.selectedProgram = {"code":"hiv", "id":2};
     scope.selectedFacilityId = 1;
     scope.selectedPeriod = {"id":3};
+    $httpBackend.expectGET('/facility/1/program/2/rights.json').respond({rights:[{right:'CREATE_REQUISITION'}]});
+
     $httpBackend.expectGET('/requisitions.json?facilityId=1&periodId=3&programId=2').respond(null);
     $httpBackend.expectPOST('/requisitions.json?facilityId=1&periodId=3&programId=2').respond({"rnr":{"id":1, status:"INITIATED"}});
 
     scope.initRnr();
     $httpBackend.flush();
 
-    expect(location.url()).toEqual("/create-rnr/1/2/3?supplyType=full-supply&page=1");
+    expect(location.url()).toEqual("/create-rnr/1/1/2?supplyType=full-supply&page=1");
     expect(scope.error).toEqual("");
     expect(scope.$parent.rnr).toEqual({"id":1, status:'INITIATED'});
   });
@@ -92,13 +104,15 @@ describe('InitiateRnrController', function () {
     scope.selectedProgram = {"code":"hiv", "id":2};
     scope.selectedFacilityId = 1;
     scope.selectedPeriod = {"id":3};
+    $httpBackend.expectGET('/facility/1/program/2/rights.json').respond({rights:[{right:'AUTHORIZE_REQUISITION'}]});
+
     $httpBackend.expectGET('/requisitions.json?facilityId=1&periodId=3&programId=2').respond(null);
     spyOn(rootScope, 'hasPermission').andReturn(false);
 
     scope.initRnr();
     $httpBackend.flush();
 
-    expect(scope.error).toEqual("An R&R has not been initiated yet");
+    expect(scope.error).toEqual("Requisition not initiated yet");
   });
 
   it('should set appropriate message for facility', function () {

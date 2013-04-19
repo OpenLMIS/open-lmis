@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
@@ -9,7 +15,6 @@ import org.openlmis.email.domain.EmailMessage;
 import org.openlmis.email.exception.EmailException;
 import org.openlmis.email.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,26 +28,19 @@ public class UserService {
   public static final String PASSWORD_RESET_TOKEN_INVALID = "user.password.reset.token.invalid";
   private static final String USER_USERNAME_INCORRECT = "user.username.incorrect";
 
-  @Value("${accountcreated.email.subject}")
-  private String ACCOUNT_CREATED_EMAIL_SUBJECT;
-
-  @Value("${passwordreset.email.body}")
-  private String PASSWORD_RESET_CREATED_EMAIL_BODY;
-
-  @Value("${forgotpassword.email.subject}")
-  private String FORGOT_PASSWORD_EMAIL_SUBJECT;
-
   private UserRepository userRepository;
 
   private EmailService emailService;
 
   private RoleAssignmentService roleAssignmentService;
+  private MessageService messageService;
 
   @Autowired
-  public UserService(UserRepository userRepository, RoleAssignmentService roleAssignmentService, EmailService emailService) {
+  public UserService(UserRepository userRepository, RoleAssignmentService roleAssignmentService, EmailService emailService, MessageService messageService) {
     this.userRepository = userRepository;
     this.emailService = emailService;
     this.roleAssignmentService = roleAssignmentService;
+    this.messageService = messageService;
   }
 
 
@@ -52,15 +50,12 @@ public class UserService {
     sendEmail(emailMessage);
   }
 
-  public void create(User user) {
-    validateAndSave(user);
-  }
-
   private void validateAndSave(User user) {
     user.validate();
     userRepository.create(user);
     roleAssignmentService.saveHomeFacilityRoles(user);
     roleAssignmentService.saveSupervisoryRoles(user);
+    roleAssignmentService.saveAdminRole(user);
   }
 
   public void update(User user) {
@@ -69,6 +64,7 @@ public class UserService {
     roleAssignmentService.deleteAllRoleAssignmentsForUser(user.getId());
     roleAssignmentService.saveHomeFacilityRoles(user);
     roleAssignmentService.saveSupervisoryRoles(user);
+    roleAssignmentService.saveAdminRole(user);
   }
 
   private void sendEmail(EmailMessage emailMessage) {
@@ -91,7 +87,7 @@ public class UserService {
       user = userRepository.getByEmail(user.getEmail());
       if (user == null) throw new DataException(USER_EMAIL_INCORRECT);
     } else {
-      user = userRepository.getByUsername(user.getUserName());
+      user = userRepository.getByUsernameAndVendorId(user);
       if (user == null) throw new DataException(USER_USERNAME_INCORRECT);
     }
     return user;
@@ -101,10 +97,8 @@ public class UserService {
     EmailMessage emailMessage = new EmailMessage();
     emailMessage.setTo(user.getEmail());
     String passwordResetToken = generateUUID();
-    String mailBody = null;
-    if (PASSWORD_RESET_CREATED_EMAIL_BODY != null && resetPasswordLink != null) {
-      mailBody = PASSWORD_RESET_CREATED_EMAIL_BODY.replace("{0}", resetPasswordLink) + passwordResetToken;
-    }
+    String[] passwordResetLink = new String[]{resetPasswordLink + passwordResetToken};
+    String mailBody = messageService.message("passwordreset.email.body", passwordResetLink);
     emailMessage.setText(mailBody);
 
     userRepository.insertPasswordResetToken(user, passwordResetToken);
@@ -114,14 +108,13 @@ public class UserService {
 
   private EmailMessage accountCreatedEmailMessage(User user, String resetPasswordLink) {
     EmailMessage emailMessage = createEmailMessage(user, resetPasswordLink);
-    emailMessage.setSubject(ACCOUNT_CREATED_EMAIL_SUBJECT);
+    emailMessage.setSubject(messageService.message("accountcreated.email.subject"));
     return emailMessage;
   }
 
   private EmailMessage forgotPasswordEmailMessage(User user, String resetPasswordLink) {
     EmailMessage emailMessage = createEmailMessage(user, resetPasswordLink);
-    emailMessage.setSubject(FORGOT_PASSWORD_EMAIL_SUBJECT);
-    emailMessage.setTo(user.getEmail());
+    emailMessage.setSubject(messageService.message("forgotpassword.email.subject"));
     return emailMessage;
   }
 
@@ -137,6 +130,7 @@ public class UserService {
     User user = userRepository.getById(id);
     user.setHomeFacilityRoles(roleAssignmentService.getHomeFacilityRoles(id));
     user.setSupervisorRoles(roleAssignmentService.getSupervisorRoles(id));
+    user.setAdminRole(roleAssignmentService.getAdminRole(id));
     return user;
   }
 
@@ -154,4 +148,11 @@ public class UserService {
     userRepository.deletePasswordResetTokenForUser(userId);
   }
 
+  public User getByUsernameAndVendorId(User user) {
+    return userRepository.getByUsernameAndVendorId(user);
+  }
+
+  public User selectUserByUserNameAndPassword(String userName, String password) {
+    return userRepository.selectUserByUserNameAndPassword(userName, password);
+  }
 }

@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
@@ -76,5 +82,13 @@ public class ProgramSupportedRepository {
 
   public List<ProgramSupported> getAllByFacilityId(Integer facilityId) {
     return programSupportedMapper.getAllByFacilityId(facilityId);
+  }
+
+  public ProgramSupported getByFacilityIdAndProgramId(Integer facilityId, Integer programId) {
+    return programSupportedMapper.getBy(facilityId,programId);
+  }
+
+  public void updateSupportedProgram(ProgramSupported programSupported) {
+    programSupportedMapper.updateSupportedProgram(programSupported);
   }
 }

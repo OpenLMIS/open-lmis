@@ -81,6 +81,20 @@ public class ProductRepository {
     dosageUnit.setId(dosageUnitId);
   }
 
+  public Product getByCode(String code) {
+    return mapper.getByCode(code);
+  }
+
+  public void update(Product product) {
+    mapper.update(product);
+  }
+  public Integer getDosageUnitIdForCode(String code){
+    return mapper.getDosageUnitIdForCode(code);
+  }
+  public Integer getProductFormIdForCode(String code){
+    return mapper.getProductFormIdForCode(code);
+  }
+
    public List<Product> getAll(){
        return mapper.getAll();
    }

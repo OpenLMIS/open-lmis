@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
@@ -96,4 +102,13 @@ public interface SupervisoryNodeMapper {
       "   )",
       "SELECT * FROM supervisoryNodesRec"})
   List<SupervisoryNode> getAllParentSupervisoryNodesInHierarchy(SupervisoryNode supervisoryNode);
+
+  @Select("SELECT * FROM supervisory_nodes WHERE LOWER(code) = LOWER(#{code})")
+  SupervisoryNode getByCode(SupervisoryNode supervisoryNode);
+
+  @Update("UPDATE supervisory_nodes " +
+    "SET name = #{name}, parentId = #{parent.id}, facilityId = #{facility.id}, " +
+    "description = #{description}, modifiedBy = #{modifiedBy}, modifiedDate = #{modifiedDate} " +
+    "WHERE id = #{id}")
+  void update(SupervisoryNode supervisoryNode);
 }
