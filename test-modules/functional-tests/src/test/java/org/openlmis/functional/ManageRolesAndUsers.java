@@ -26,6 +26,18 @@ import java.util.List;
 
 public class ManageRolesAndUsers extends TestCaseHelper {
 
+  public static final String LAB_IN_CHARGE = "Lab-in-charge";
+  public static final String AUTHORIZE_REQUISITION = "Authorize Requisition";
+  public static final String CREATE_REQUISITION = "Create Requisition";
+  public static final String APPROVE_REQUISITION = "Approve Requisition";
+  public static final String CONVERT_TO_ORDER_REQUISITION = "Convert To Order Requisition";
+  public static final String VIEW_ORDER_REQUISITION = "View Orders Requisition";
+  public static final String LMU = "lmu";
+  public static final String geoZone = "Ngorongoro";
+  public static final String facilityType = "Lvl3 Hospital";
+  public static final String operatedBy = "MoH";
+  public static final String facilityCodePrefix = "FCcode";
+  public static final String facilityNamePrefix = "FCname";
 
   @BeforeMethod(groups = {"functional"})
   public void setUp() throws Exception {
@@ -40,34 +52,29 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
     CreateFacilityPage createFacilityPage = homePage.navigateCreateFacility();
-    String geoZone = "Ngorongoro";
-    String facilityType = "Lvl3 Hospital";
-    String operatedBy = "MoH";
-    String facilityCodePrefix = "FCcode";
-    String facilityNamePrefix = "FCname";
     String date_time = createFacilityPage.enterValuesInFacility(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityType, operatedBy);
     String facility_code = facilityCodePrefix + date_time;
     String facility_name = facilityNamePrefix + date_time;
     createFacilityPage.verifyMessageOnFacilityScreen(facility_name, "created");
 
     List<String> userRoleList = new ArrayList<String>();
-    userRoleList.add("Create Requisition");
-    userRoleList.add("Authorize Requisition");
-    userRoleList.add("Approve Requisition");
-    createRoleAndAssignRights(homePage, userRoleList, "Lab-in-charge", "Lab-in-charge", true);
+    userRoleList.add(CREATE_REQUISITION);
+    userRoleList.add(AUTHORIZE_REQUISITION);
+    userRoleList.add(APPROVE_REQUISITION);
+    createRoleAndAssignRights(homePage, userRoleList, LAB_IN_CHARGE, LAB_IN_CHARGE, true);
 
     List<String> userRoleListLmu = new ArrayList<String>();
-    userRoleListLmu.add("Convert To Order Requisition");
-    userRoleListLmu.add("View Orders Requisition");
+    userRoleListLmu.add(CONVERT_TO_ORDER_REQUISITION);
+    userRoleListLmu.add(VIEW_ORDER_REQUISITION);
     createRoleAndAssignRights(homePage, userRoleListLmu, "lmu", "lmu", false);
 
-    RolesPage rolesPage=new RolesPage(testWebDriver);
-    rolesPage.clickARole("Lab-in-charge");
+    RolesPage rolesPage = new RolesPage(testWebDriver);
+    rolesPage.clickARole(LAB_IN_CHARGE);
     rolesPage.verifyAdminRoleRadioNonEditable();
     rolesPage.verifyRoleSelected(userRoleList);
     rolesPage.clickCancelButton();
 
-    rolesPage.clickARole("lmu");
+    rolesPage.clickARole(LMU);
     rolesPage.verifyProgramRoleRadioNonEditable();
     rolesPage.verifyRoleSelected(userRoleListLmu);
     rolesPage.clickCancelButton();
@@ -75,27 +82,26 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     dbWrapper.insertSupervisoryNode(facility_code, "N1", "Node 1", "null");
 
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-    String userName = "labInCharge";
-    createUserAndAssignRoles(homePage, passwordUsers, "Jake_Doe@openlmis.com", "Jake", "Doe", "lmu", facility_code, program, "Node 1", "lmu", true);
-    UserPage userPage=new UserPage(testWebDriver);
+    createUserAndAssignRoles(homePage, passwordUsers, "Jake_Doe@openlmis.com", "Jake", "Doe", LMU, facility_code, program, "Node 1", LMU, true);
+    UserPage userPage = new UserPage(testWebDriver);
     userPage.clickViewHere();
     userPage.removeRole(1, true);
-    userPage.verifyRoleNotPresent("lmu");
+    userPage.verifyRoleNotPresent(LMU);
     userPage.clickSaveButton();
     userPage.clickViewHere();
-    userPage.verifyRoleNotPresent("lmu");
+    userPage.verifyRoleNotPresent(LMU);
     userPage.clickCancelButton();
 
-    createUserAndAssignRoles(homePage, passwordUsers, "Jasmine_Doe@openlmis.com", "Jasmine", "Doe", userName, facility_code, program, "Node 1", "Lab-in-charge", false);
+    createUserAndAssignRoles(homePage, passwordUsers, "Jasmine_Doe@openlmis.com", "Jasmine", "Doe", LAB_IN_CHARGE, facility_code, program, "Node 1", LAB_IN_CHARGE, false);
     userPage.clickViewHere();
     userPage.removeRole(1, false);
-    userPage.verifyRolePresent("Lab-in-charge");
+    userPage.verifyRolePresent(LAB_IN_CHARGE);
     userPage.removeRole(1, false);
-    userPage.verifyRoleNotPresent("Lab-in-charge");
+    userPage.verifyRoleNotPresent(LAB_IN_CHARGE);
     userPage.clickAllRemoveButton();
     userPage.clickSaveButton();
     userPage.clickViewHere();
-    userPage.verifyRoleNotPresent("Lab-in-charge");
+    userPage.verifyRoleNotPresent(LAB_IN_CHARGE);
     userPage.verifyRemoveNotPresent();
 
   }
