@@ -24,6 +24,8 @@
       </class>
       <class name="org.openlmis.functional.RnRPagination">
       </class>
+      <class name="org.openlmis.functional.ManageRolesAndUsers">
+      </class>
     </classes>
   </test>
 </suite>

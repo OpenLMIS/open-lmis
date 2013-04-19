@@ -177,6 +177,9 @@ public class TestWebDriver {
     return driver.findElement(By.xpath(Xpath));
   }
 
+  public List<WebElement> getElementsByXpath(String Xpath) {
+    return driver.findElements(By.xpath(Xpath));
+  }
 
   public int getElementsSizeByXpath(String Xpath) {
     return driver.findElements(By.xpath(Xpath)).size();
