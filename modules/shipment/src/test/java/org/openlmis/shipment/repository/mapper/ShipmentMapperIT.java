@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.builder.ProcessingScheduleBuilder;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.repository.mapper.*;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.repository.mapper.OrderMapper;
@@ -23,6 +24,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.ResultSet;
+import java.util.Arrays;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -50,15 +54,17 @@ public class ShipmentMapperIT {
   @Autowired
   FacilityMapper facilityMapper;
   @Autowired
-  private ProgramMapper progamMapper;
+  private ProgramMapper programMapper;
   @Autowired
   private ProcessingPeriodMapper processingPeriodMapper;
   @Autowired
   private ProcessingScheduleMapper processingScheduleMapper;
+  @Autowired
+  private QueryExecutor queryExecutor;
 
 
   @Test
-  public void shouldInsert() throws Exception {
+  public void shouldInsertShippedLineItems() throws Exception {
 
     Integer userId = 1;
     Product product = make(a(defaultProduct));
@@ -70,7 +76,7 @@ public class ShipmentMapperIT {
     ProcessingPeriod period = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod, with(ProcessingPeriodBuilder.scheduleId, processingSchedule.getId())));
     processingPeriodMapper.insert(period);
     Program program = make(a(defaultProgram));
-    progamMapper.insert(program);
+    programMapper.insert(program);
     Rnr requisition = make(a(defaultRnr, with(RequisitionBuilder.facility, facility), with(RequisitionBuilder.periodId, period.getId())));
     requisitionMapper.insert(requisition);
     RnrDTO rnrDTO = RnrDTO.populateDTOWithRequisition(requisition);
@@ -80,10 +86,23 @@ public class ShipmentMapperIT {
     orderMapper.insert(order);
 
     productMapper.insert(product);
+
     ShippedLineItem shippedLineItem = new ShippedLineItem(order.getId(), product.getCode(), 23);
     shipmentMapper.insertShippedLineItem(shippedLineItem);
 
     assertThat(shippedLineItem.getId(), is(notNullValue()));
+
+    String fetchShipmentFileInfoQuery = "Select * from shipped_line_items where id = ?";
+    ResultSet shipmentFileInfoResultSet = queryExecutor.execute(fetchShipmentFileInfoQuery, Arrays.asList(shippedLineItem.getId()));
+    shipmentFileInfoResultSet.next();
+    assertThat(shipmentFileInfoResultSet.getInt("orderId"), is(shippedLineItem.getOrderId()));
+    assertThat(shipmentFileInfoResultSet.getString("productCode"), is(shippedLineItem.getProductCode()));
+    assertThat(shipmentFileInfoResultSet.getInt("quantityShipped"), is(shippedLineItem.getQuantityShipped()));
   }
 
+  @Test
+  public void shouldFetchRecordForOrderIdAndShipmentFileInfoId() throws Exception {
+
+
+  }
 }

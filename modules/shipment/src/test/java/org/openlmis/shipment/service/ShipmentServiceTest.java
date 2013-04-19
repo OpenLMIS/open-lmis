@@ -39,4 +39,5 @@ public class ShipmentServiceTest {
     shipmentService.insertShipmentFileInfo(shipmentFileInfo);
     verify(shipmentRepository).insertShipmentFileInfo(shipmentFileInfo);
   }
+
 }

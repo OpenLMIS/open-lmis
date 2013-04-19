@@ -77,4 +77,5 @@ public class CSVParser {
   public void process(InputStream inputStream, ModelClass modelClass, RecordHandler handler) throws IOException {
     process(inputStream, modelClass, handler, null);
   }
+
 }

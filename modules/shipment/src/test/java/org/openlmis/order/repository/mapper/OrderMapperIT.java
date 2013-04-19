@@ -70,13 +70,14 @@ public class OrderMapperIT {
     processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
     processingScheduleMapper.insert(processingSchedule);
 
-    ProcessingPeriod processingPeriod = insertPeriod();
+    ProcessingPeriod processingPeriod = insertPeriod("Period 1");
     Order order = new Order();
+    RnrDTO rnrDTO = new RnrDTO();
+    order.setRnrDTO(rnrDTO);
     Rnr rnr = make(a(RequisitionBuilder.defaultRnr, with(RequisitionBuilder.facility, facility),
         with(RequisitionBuilder.periodId, processingPeriod.getId())));
     requisitionMapper.insert(rnr);
-    RnrDTO rnrDTO = RnrDTO.populateDTOWithRequisition(rnr);
-    order.setRnrDTO(rnrDTO);
+    order.getRnrDTO().setId(rnr.getId());
     order.setCreatedBy(1);
     mapper.insert(order);
 
@@ -87,7 +88,7 @@ public class OrderMapperIT {
     assertThat(resultSet.getInt("id"), is(order.getId()));
   }
 
-  private ProcessingPeriod insertPeriod() {
+  private ProcessingPeriod insertPeriod(String periodName) {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod, with(scheduleId, processingSchedule.getId())));
 
     processingPeriodMapper.insert(processingPeriod);

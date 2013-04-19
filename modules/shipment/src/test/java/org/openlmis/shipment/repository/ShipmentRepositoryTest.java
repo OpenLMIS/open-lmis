@@ -5,19 +5,29 @@
 
 package org.openlmis.shipment.repository;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.shipment.domain.ShippedLineItem;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.repository.mapper.ShipmentMapper;
+import org.springframework.dao.DataIntegrityViolationException;
 
+import static org.junit.rules.ExpectedException.*;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ShipmentRepositoryTest {
+
+  @Rule
+  public ExpectedException expectedException = none();
 
   @Mock
   private ShipmentMapper shipmentMapper;
@@ -37,4 +47,41 @@ public class ShipmentRepositoryTest {
     shipmentRepository.insertShipmentFileInfo(shipmentFileInfo);
     verify(shipmentMapper).insertShipmentFileInfo(shipmentFileInfo);
   }
+
+  @Test
+  public void shouldThrowExceptionIfShipmentFileHasIncorrectOrderNumber() throws Exception {
+    ShippedLineItem shippedLineItem = new ShippedLineItem();
+    shippedLineItem.setOrderId(1);
+    doThrow(new DataIntegrityViolationException("violates foreign key constraint \"shipped_line_items_orderid_fkey\"")).when(shipmentMapper).insertShippedLineItem(shippedLineItem);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("Unknown order number");
+
+    shipmentRepository.insertShippedLineItem(shippedLineItem);
+  }
+
+  @Test
+  public void shouldThrowExceptionIfShipmentFileHasIncorrectProductCode() throws Exception {
+    ShippedLineItem shippedLineItem = new ShippedLineItem();
+    shippedLineItem.setProductCode("R10");
+    doThrow(new DataIntegrityViolationException("violates foreign key constraint \"shipped_line_items_productcode_fkey\"")).when(shipmentMapper).insertShippedLineItem(shippedLineItem);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("Unknown product code");
+
+    shipmentRepository.insertShippedLineItem(shippedLineItem);
+    }
+
+//  @Test
+//  public void shouldThrowExceptionWhenDuplicateOrderNumberIsEncounteredInShipmentFile() throws Exception {
+//      ShippedLineItem shippedLineItem = new ShippedLineItem();
+//      shippedLineItem.setOrderId(1);
+//
+//    expectedException.expect(DataException.class);
+//    expectedException.expectMessage("Order Number already processed");
+//
+//    shipmentRepository.insertShippedLineItem(shippedLineItem);
+//
+//
+//  }
 }

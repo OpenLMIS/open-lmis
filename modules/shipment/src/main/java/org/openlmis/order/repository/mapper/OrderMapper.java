@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OrderMapper {
 
-  @Insert("INSERT INTO orders(rnrId, fulfilled, createdBy) VALUES (#{rnrDTO.id}, #{fulfilled}, #{createdBy})")
+  @Insert("INSERT INTO orders(requisitionId, fulfilled, createdBy) VALUES (#{rnrDTO.id}, #{fulfilled}, #{createdBy})")
   @Options(useGeneratedKeys = true)
   void insert(Order order);
 }

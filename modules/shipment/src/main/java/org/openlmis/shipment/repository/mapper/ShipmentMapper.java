@@ -16,9 +16,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ShipmentMapper {
 
-  @Insert({"INSERT INTO shipped_line_items (orderId, productCode, shippedQuantity) " +
+  @Insert({"INSERT INTO shipped_line_items (orderId, productCode, quantityShipped) " +
      "VALUES" +
-     "(#{orderNumber}, #{productCode}, #{quantityShipped})"})
+     "(#{orderId}, #{productCode}, #{quantityShipped})"})
    @Options(useGeneratedKeys = true)
    public void insertShippedLineItem(ShippedLineItem shippedLineItem);
 

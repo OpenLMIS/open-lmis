@@ -8,7 +8,6 @@ package org.openlmis.core.upload;
 
 import org.junit.Test;
 import org.openlmis.core.domain.ProductCategory;
-import org.openlmis.core.repository.ProductCategoryRepository;
 import org.openlmis.core.service.ProductCategoryService;
 import org.openlmis.upload.model.AuditFields;
 

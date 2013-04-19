@@ -18,11 +18,12 @@ import org.openlmis.upload.annotation.ImportField;
 @AllArgsConstructor
 public class ShippedLineItem extends BaseModel implements Importable{
   @ImportField(mandatory = true, type = "int", name = "Order Number")
-  private Integer orderNumber;
+  private Integer orderId;
 
   @ImportField(mandatory = true, name = "Product Code")
   private String productCode;
 
   @ImportField(mandatory = true, type = "int", name = "Quantity Shipped")
   private Integer quantityShipped;
+
 }

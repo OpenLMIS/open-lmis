@@ -7,10 +7,12 @@
 package org.openlmis.shipment.repository;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.shipment.domain.ShippedLineItem;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.repository.mapper.ShipmentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -25,10 +27,19 @@ public class ShipmentRepository {
   }
 
   public void insertShippedLineItem(ShippedLineItem shippedLineItem) {
-    shipmentMapper.insertShippedLineItem(shippedLineItem);
+    try {
+      shipmentMapper.insertShippedLineItem(shippedLineItem);
+    } catch (DataIntegrityViolationException exception) {
+      if (exception.getMessage().contains("violates foreign key constraint \"shipped_line_items_orderid_fkey\""))
+        throw new DataException("Unknown order number");
+
+      if(exception.getMessage().contains("violates foreign key constraint \"shipped_line_items_productcode_fkey\""))
+        throw new DataException("Unknown product code");
+
+    }
   }
 
   public void insertShipmentFileInfo(ShipmentFileInfo shipmentFileInfo) {
-   shipmentMapper.insertShipmentFileInfo(shipmentFileInfo);
+    shipmentMapper.insertShipmentFileInfo(shipmentFileInfo);
   }
 }
