@@ -7,14 +7,17 @@
 apply plugin: 'cobertura'
 
 dependencies {
+
     compile 'org.springframework:spring-core:3.1.1.RELEASE',
             'org.springframework:spring-aspects:3.1.1.RELEASE',
             'org.aspectj:aspectjrt:1.7.0',
+            'javax.servlet:servlet-api:2.5',
             'commons-lang:commons-lang:2.6',
             'org.slf4j:slf4j-api:1.7.5',
             'org.springframework.integration:spring-integration-core:2.2.3.RELEASE',
             'org.springframework.integration:spring-integration-stream:2.2.3.RELEASE',
             'org.springframework.integration:spring-integration-ftp:2.2.3.RELEASE',
+            'org.springframework.security:spring-security-core:3.1.2.RELEASE',
             project(':modules:core'),
             project(':modules:upload'),
             project(':modules:requisition')
