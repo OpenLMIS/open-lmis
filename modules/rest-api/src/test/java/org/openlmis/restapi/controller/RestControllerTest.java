@@ -85,6 +85,21 @@ public class RestControllerTest {
   }
 
   @Test
+  public void shouldApproveReport() throws Exception {
+    Report report = new Report();
+    Integer id = 1;
+    Rnr expectedRnr = new Rnr();
+    when(service.approve(report)).thenReturn(expectedRnr);
+
+    Rnr orderedRnr = controller.approve(id, report, principal);
+
+    assertThat(orderedRnr, is(expectedRnr));
+    assertThat(report.getVendor().getName(), is("vendor name"));
+    assertThat(report.getRnrId(), is(1));
+    verify(service).approve(report);
+  }
+
+  @Test
   public void shouldResolveUnhandledException() throws Exception {
     final ResponseEntity<RestResponse> response = controller.handleException(new Exception());
     final RestResponse body = response.getBody();

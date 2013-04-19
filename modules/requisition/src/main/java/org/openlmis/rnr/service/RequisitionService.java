@@ -167,6 +167,7 @@ public class RequisitionService {
   }
 
   public OpenLmisMessage approve(Rnr requisition) {
+    requisition.validateForApproval();
     Rnr savedRnr = getFullRequisitionById(requisition.getId());
 
     checkPermission(requisition, savedRnr, APPROVE_REQUISITION);

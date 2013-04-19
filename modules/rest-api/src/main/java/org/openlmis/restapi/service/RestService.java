@@ -25,13 +25,13 @@ public class RestService {
 
   public static final String USER_USERNAME_INCORRECT = "user.username.incorrect";
   @Autowired
-  UserService userService;
+  private UserService userService;
 
   @Autowired
-  RequisitionService requisitionService;
+  private RequisitionService requisitionService;
 
   @Autowired
-  VendorService vendorService;
+  private VendorService vendorService;
 
   @Transactional
   public Rnr submitReport(Report report) {
@@ -39,7 +39,6 @@ public class RestService {
     report.validate();
 
     User user = getValidatedUser(report);
-
 
     Rnr requisition = requisitionService.initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId());
 
@@ -68,4 +67,11 @@ public class RestService {
     return user;
   }
 
+  public Rnr approve(Report report) {
+    Rnr requisition = new Rnr();
+    requisition.setId(report.getRnrId());
+    requisition.setFullSupplyLineItems(report.getProducts());
+    requisitionService.approve(requisition);
+    return requisition;
+  }
 }

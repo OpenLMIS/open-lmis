@@ -210,11 +210,11 @@ public class RnrTest {
   @Test
   public void testCalculatePacksToShip() throws Exception {
     RnrLineItem lineItem = make(a(RnrLineItemBuilder.defaultRnrLineItem,
-      with(roundToZero, true),
-      with(packRoundingThreshold, 6),
-      with(quantityApproved, 66),
-      with(packSize, 10),
-      with(roundToZero, false)));
+        with(roundToZero, true),
+        with(packRoundingThreshold, 6),
+        with(quantityApproved, 66),
+        with(packSize, 10),
+        with(roundToZero, false)));
     rnr.setFullSupplyLineItems(asList(lineItem));
 
     rnr.calculateForApproval();
@@ -246,6 +246,24 @@ public class RnrTest {
     assertThat(rnr.getStatus(), is(RELEASED));
     assertThat(rnr.getOrderBatch(), is(orderBatch));
     assertThat(rnr.getModifiedBy(), is(userId));
+  }
+
+  @Test
+  public void shouldValidateRnrForApproval() throws Exception {
+    final RnrLineItem rnrLineItem1 = mock(RnrLineItem.class);
+    final RnrLineItem rnrLineItem2 = mock(RnrLineItem.class);
+    final RnrLineItem rnrLineItem3 = mock(RnrLineItem.class);
+    final RnrLineItem rnrLineItem4 = mock(RnrLineItem.class);
+
+    rnr.setFullSupplyLineItems(asList(rnrLineItem1, rnrLineItem2));
+    rnr.setNonFullSupplyLineItems(asList(rnrLineItem3, rnrLineItem4));
+
+    rnr.validateForApproval();
+
+    verify(rnrLineItem1).validateForApproval();
+    verify(rnrLineItem2).validateForApproval();
+    verify(rnrLineItem3).validateForApproval();
+    verify(rnrLineItem4).validateForApproval();
   }
 
   private ArrayList<RnrColumn> setupProgramTemplate() {

@@ -234,5 +234,16 @@ public class Rnr {
   public void fillNonFullSupplyCost() {
     this.nonFullSupplyItemsSubmittedCost = calculateCost(this.nonFullSupplyLineItems);
   }
+
+  public void validateForApproval() {
+    validateLineItemsForApproval(fullSupplyLineItems);
+    validateLineItemsForApproval(nonFullSupplyLineItems);
+  }
+
+  private void validateLineItemsForApproval(List<RnrLineItem> lineItems) {
+    for (RnrLineItem lineItem : lineItems) {
+      lineItem.validateForApproval();
+    }
+  }
 }
 

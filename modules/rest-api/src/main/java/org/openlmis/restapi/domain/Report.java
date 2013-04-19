@@ -19,15 +19,13 @@ import java.util.List;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Report {
-
   public static final String ERROR_MANDATORY_FIELD_MISSING = "error.restapi.mandatory.missing";
-
+  private Integer rnrId;
   private Integer facilityId;
   private Integer programId;
   private Integer periodId;
   private String userId;
   private Vendor vendor;
-
   private List<RnrLineItem> products;
 
   public void validate() {

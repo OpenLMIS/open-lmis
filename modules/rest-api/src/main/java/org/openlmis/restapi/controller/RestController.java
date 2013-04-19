@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -40,9 +41,7 @@ public class RestController {
 
   @RequestMapping(value = "/rest-api/requisitions", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity submitRequisition(@RequestBody Report report, Principal principal) {
-    Vendor vendor = new Vendor();
-    vendor.setName(principal.getName());
-    report.setVendor(vendor);
+    report.setVendor(new Vendor(principal.getName()));
     Rnr requisition;
     try {
       requisition = restService.submitReport(report);
@@ -59,5 +58,12 @@ public class RestController {
       return error(FORBIDDEN_EXCEPTION, HttpStatus.FORBIDDEN);
     }
     return error(UNEXPECTED_EXCEPTION, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+
+  @RequestMapping(value = "/rest-api/requisitions/{id}/approve", method = POST, headers = ACCEPT_JSON)
+  public Rnr approve(@PathVariable Integer id,@RequestBody Report report, Principal principal) {
+    report.setRnrId(id);
+    report.setVendor(new Vendor(principal.getName()));
+    return restService.approve(report);
   }
 }

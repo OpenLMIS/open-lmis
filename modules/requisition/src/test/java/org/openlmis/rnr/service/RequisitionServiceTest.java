@@ -15,6 +15,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
 import org.openlmis.core.builder.UserBuilder;
@@ -602,6 +603,17 @@ public class RequisitionServiceTest {
     assertThat(savedRnr.getStatus(), is(APPROVED));
     assertThat(savedRnr.getSupervisoryNodeId(), is(nullValue()));
     assertThat(message.getCode(), is(RNR_APPROVED_SUCCESSFULLY));
+  }
+
+  @Test
+  public void shouldValidateRnrForApproval() throws Exception {
+    Rnr spyRnr = spy(authorizedRnr);
+    Mockito.doThrow(new DataException("some error")).when(spyRnr).validateForApproval();
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("some error");
+
+    requisitionService.approve(spyRnr);
   }
 
   @Test

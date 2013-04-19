@@ -30,6 +30,10 @@ public class Vendor {
     this.active = active;
   }
 
+  public Vendor(String name) {
+    this(name, true);
+  }
+
   public boolean isValid() {
     return name != null && authToken != null;
   }

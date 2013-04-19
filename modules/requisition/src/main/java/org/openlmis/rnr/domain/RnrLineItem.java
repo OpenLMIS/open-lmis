@@ -356,4 +356,7 @@ public class RnrLineItem {
     return false;
   }
 
+  public void validateForApproval() {
+    if(quantityApproved == null) throw new DataException(RNR_VALIDATION_ERROR);
+  }
 }

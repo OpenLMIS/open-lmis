@@ -133,4 +133,16 @@ public class RestServiceTest {
 
     service.submitReport(report);
   }
+
+  @Test
+  public void shouldApproveAndOrderRequisition() throws Exception {
+    Rnr requisitionFromReport = new Rnr();
+    whenNew(Rnr.class).withNoArguments().thenReturn(requisitionFromReport);
+
+    service.approve(report);
+
+    verify(requisitionService).approve(requisitionFromReport);
+    assertThat(requisitionFromReport.getId(), is(report.getRnrId()));
+    assertThat(requisitionFromReport.getFullSupplyLineItems(), is(report.getProducts()));
+  }
 }

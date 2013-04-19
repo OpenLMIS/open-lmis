@@ -596,4 +596,13 @@ public class RnrLineItemTest {
     Money money = rnrLineItem.calculateCost();
     assertThat(money.getValue().intValue(), Is.is(20));
   }
+
+  @Test
+  public void shouldValidateLineItemForApproval() throws Exception {
+    lineItem.setQuantityApproved(null);
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage(RNR_VALIDATION_ERROR);
+    lineItem.validateForApproval();
+
+  }
 }
