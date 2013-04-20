@@ -1,40 +1,31 @@
 package org.openlmis.web.controller;
 
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.Request;
 import org.junit.runner.RunWith;
-import org.junit.runner.Runner;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.report.Report;
 import org.openlmis.report.ReportManager;
 import org.openlmis.report.model.Pages;
-import org.openlmis.report.model.filter.FacilityReportFilter;
 import org.openlmis.report.model.report.FacilityReport;
-import org.openlmis.report.model.sorter.FacilityReportSorter;
+import org.openlmis.report.service.FacilityReportDataProvider;
 import org.openlmis.report.service.ProductReportService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.openlmis.report.service.ReportDataProvider;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.Principal;
 import java.util.*;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.anyMap;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
+import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 
 /**
  * Created with IntelliJ IDEA.
@@ -46,28 +37,38 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class ReportControllerTest {
 
-    private MockHttpServletRequest request;
+    public static final Integer userId = 1;
+   // private MockHttpServletRequest request;
     private MockHttpServletResponse response;
     AnnotationMethodHandlerAdapter adapter = new AnnotationMethodHandlerAdapter();
+    private MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
 
+    @Mock
+    private ReportManager reportManager;
 
-   /* public void setUp() throws Exception {
-        super.setUp();
+    @Mock
+    private ProductReportService productReportService;
+
+    @InjectMocks
+    private ReportController reportController;
+
+    @Before
+    public void setUp() throws Exception {
+
+        productReportService = mock(ProductReportService.class);
+        reportManager = mock(ReportManager.class);
+        reportController = new ReportController(reportManager, productReportService);
+        MockHttpSession mockHttpSession = new MockHttpSession();
+        httpServletRequest.setSession(mockHttpSession);
+        mockHttpSession.setAttribute(USER, USER);
+        mockHttpSession.setAttribute(USER_ID, userId);
 
     }
 
-    public void tearDown() throws Exception {
+   /* public void tearDown() throws Exception {
 
     }*/
 
-    //public static final String USER_ID = "USER_ID";
-    @Mock
-    ReportManager reportManager;
-
-    @Mock
-    ProductReportService productReportService;
-
-    ReportController reportController;
 
     @Test
     public void testGetProducts() throws Exception {
@@ -86,34 +87,32 @@ public class ReportControllerTest {
 
     @Test
     public void testGetFacilityLists() throws Exception {
-        String reportKey = "facilities";
-        Report report = reportManager.getReportByKey(reportKey);
         int perPageSize = 20;
         int pageNum = 1;
         int total = 40;
 
+        FacilityReport facilityreport = new FacilityReport("code","name","type",true);//mock(FacilityReport.class);
         List<FacilityReport> facilityReportList = new ArrayList<FacilityReport>();
+        facilityReportList.add(0,facilityreport);
         Pages pagesOfacilities = new Pages(pageNum,total,perPageSize,facilityReportList);
+        //Pages pagesOfacilities = mock(Pages.class);
         Map<String, String[]> filter = new HashMap<String, String[]>();
         Map<String, String[]> sorter = new HashMap<String, String[]>();
+        String reportKey = "facilities";
 
-        //when(report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(filter, sorter, pageNum, perPageSize)).thenReturn(pagesOfacilities);
+        Report report = mock(Report.class);
+        when(reportManager.getReportByKey(reportKey)).thenReturn(report);
+        //Report reportByKey = reportManager.getReportByKey(reportKey);
 
-        //reportController = new ReportController();
+        FacilityReportDataProvider facilityReportDataProvider = mock(FacilityReportDataProvider.class);
+        when(report.getReportDataProvider()).thenReturn(facilityReportDataProvider);
 
-        //request.setMethod("GET");
-        //request.setRequestURI("/reportdata/facilitylist"); //http://localhost:9091/public/pages/reports/facilitylist/index.html
-        //request.setAttribute();
+        when(facilityReportDataProvider.getReportDataByFilterCriteriaAndPagingAndSorting(null, null, pageNum, perPageSize)).thenReturn(null);//.thenReturn(facilityReportList);
 
-        //       adapter.handle(request, response, reportController);
-        //HttpServletRequest request = new MockHttpServletRequest();
-        //HttpServletResponse response = new HttpServletResponseWrapper();
+        Pages actualResult = reportController.getFacilityLists(pageNum, perPageSize, httpServletRequest);
+        verify(report.getReportDataProvider()).getReportDataByFilterCriteriaAndPagingAndSorting(filter,sorter,pageNum,perPageSize);
+       // assertTrue(actualResult.rows.contains(facilityreport));
 
-
-       //  response =
-        //        reportController.getFacilityLists(pageNum, perPageSize, request);
-        //verify(report.getReportDataProvider()).getReportDataByFilterCriteriaAndPagingAndSorting(filter,sorter,pageNum,perPageSize);
-        //assertThat((ArrayList<FacilityApprovedProduct>) openLmisResponse.getBody().getData().get(FacilityApprovedProductController.NON_FULL_SUPPLY_PRODUCTS), is(nonFullSupplyProducts));
     }
 
     @Test
