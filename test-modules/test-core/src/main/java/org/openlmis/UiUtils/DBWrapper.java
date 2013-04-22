@@ -573,5 +573,16 @@ public class DBWrapper {
     update("delete from vendors where name='" + vendorName + "';");
     update("INSERT INTO VENDORS (name, active) VALUES ('" + vendorName + "', true);");
   }
+
+    public String getProgramID(String program) throws IOException, SQLException {
+        String facilityID = null;
+        ResultSet rs = query("SELECT ID from programs where code='" + program + "'");
+
+        if (rs.next()) {
+            facilityID = rs.getString("id");
+        }
+        return facilityID;
+
+    }
 }
 

@@ -1,0 +1,16 @@
+{
+"facilityId" : "",
+"programId" : "",
+"periodId" : "",
+"userId" : "",
+"products" :[
+  {
+   "productCode" : "",
+    "beginningBalance" : "1",
+    "quantityDispensed" : "1",
+    "quantityReceived" : "0",
+    "stockInHand" : "10",
+"newPatientCount" : "0",
+"stockOutDays" : "2"
+  }]
+}
