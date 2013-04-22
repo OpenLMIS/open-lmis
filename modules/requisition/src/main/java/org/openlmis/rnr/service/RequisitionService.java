@@ -268,7 +268,7 @@ public class RequisitionService {
     Rnr previousRequisition = null;
     if (immediatePreviousPeriod != null)
       previousRequisition = requisitionRepository.getRequisitionWithLineItems(requisition.getFacility(),
-          requisition.getProgram(), immediatePreviousPeriod);
+        requisition.getProgram(), immediatePreviousPeriod);
     return previousRequisition;
   }
 
@@ -347,11 +347,10 @@ public class RequisitionService {
     return requisitionsForApproval;
   }
 
-  public void releaseRequisitionsAsOrder(List<RnrDTO> requisitions, Integer userId) {
-    for (RnrDTO requisition : requisitions) {
+  public void releaseRequisitionsAsOrder(List<Rnr> requisitions, Integer userId) {
+    for (Rnr requisition : requisitions) {
       Rnr loadedRequisition = requisitionRepository.getById(requisition.getId());
-      OrderBatch orderBatch = createOrderBatch(loadedRequisition, userId);
-      loadedRequisition.convertToOrder(orderBatch, userId);
+      loadedRequisition.convertToOrder(userId);
       update(loadedRequisition);
     }
   }
@@ -359,20 +358,6 @@ public class RequisitionService {
   private void update(Rnr requisition) {
     requisitionRepository.update(requisition);
     requisitionRepository.logStatusChange(requisition);
-  }
-
-  public List<Rnr> getOrders() {
-    List<Rnr> requisitions = requisitionRepository.getByStatus(RELEASED);
-    fillFacilityPeriodProgram(requisitions);
-    fillSupplyingFacility(requisitions.toArray(new Rnr[requisitions.size()]));
-
-    return requisitions;
-  }
-
-  private OrderBatch createOrderBatch(Rnr requisition, Integer userId) {
-    OrderBatch orderBatch = new OrderBatch(requisition.getSupplyingFacility(), userId);
-    requisitionRepository.createOrderBatch(orderBatch);
-    return orderBatch;
   }
 
   public Integer getCategoryCount(Rnr requisition, boolean fullSupply) {

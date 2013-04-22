@@ -353,19 +353,7 @@ public class RequisitionControllerTest {
 
   }
 
-  @Test
-  public void shouldReturnAllFilledOrders() throws Exception {
-    ArrayList<Rnr> orderedRequisitions = new ArrayList<>();
-    mockStatic(RnrDTO.class);
-    when(requisitionService.getOrders()).thenReturn(orderedRequisitions);
-    List<RnrDTO> expectedRequisitionList = new ArrayList<>();
-    when(RnrDTO.prepareForOrderView(orderedRequisitions)).thenReturn(expectedRequisitionList);
 
-    ResponseEntity<OpenLmisResponse> fetchedOrders = controller.getOrders();
-
-    verify(requisitionService).getOrders();
-    assertThat((List<RnrDTO>) fetchedOrders.getBody().getData().get(ORDERS), is(expectedRequisitionList));
-  }
 
   @Test
   public void shouldInsertComment() throws Exception {

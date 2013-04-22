@@ -240,11 +240,9 @@ public class RnrTest {
 
   @Test
   public void shouldReleaseARequisitionAsAnOrder() throws Exception {
-    OrderBatch orderBatch = new OrderBatch();
     Integer userId = 1;
-    rnr.convertToOrder(orderBatch, userId);
+    rnr.convertToOrder(userId);
     assertThat(rnr.getStatus(), is(RELEASED));
-    assertThat(rnr.getOrderBatch(), is(orderBatch));
     assertThat(rnr.getModifiedBy(), is(userId));
   }
 

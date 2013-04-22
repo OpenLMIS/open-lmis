@@ -32,13 +32,17 @@ public class OrderService {
   }
 
   @Transactional
-  public void convertToOrder(List<RnrDTO> rnrList, Integer userId) {
+  public void convertToOrder(List<Rnr> rnrList, Integer userId) {
     requisitionService.releaseRequisitionsAsOrder(rnrList, userId);
     Order order;
-    for(RnrDTO rnrDTO : rnrList) {
-      rnrDTO.setModifiedBy(userId);
-      order = new Order(rnrDTO);
+    for(Rnr rnr : rnrList) {
+      rnr.setModifiedBy(userId);
+      order = new Order(rnr);
       orderRepository.save(order);
     }
+  }
+
+  public List<Order> getOrders() {
+    return orderRepository.getOrders();
   }
 }

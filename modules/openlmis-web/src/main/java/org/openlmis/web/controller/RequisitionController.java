@@ -50,7 +50,6 @@ public class RequisitionController extends BaseController {
   public static final String RNR_TEMPLATE = "rnr_template";
 
   public static final String PERIODS = "periods";
-  public static final String ORDERS = "orders";
   public static final String CURRENCY = "currency";
 
   public static final String COMMENTS = "comments";
@@ -230,11 +229,6 @@ public class RequisitionController extends BaseController {
     return modelAndView;
   }
 
-  @RequestMapping(value = "/orders", method = GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_ORDER, CONVERT_TO_ORDER')")
-  public ResponseEntity<OpenLmisResponse> getOrders() {
-    return OpenLmisResponse.response(ORDERS, prepareForOrderView(requisitionService.getOrders()));
-  }
 
   @RequestMapping(value = "/requisitions/{id}/comments", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION')")

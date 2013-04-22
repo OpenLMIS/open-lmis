@@ -22,8 +22,12 @@ import org.openlmis.rnr.service.RequisitionService;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.ignoreStubs;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -37,6 +41,7 @@ public class OrderServiceTest {
   @InjectMocks
   private OrderService orderService;
 
+
   @Test
   public void shouldSaveOrder() throws Exception {
     Order order = new Order();
@@ -46,14 +51,24 @@ public class OrderServiceTest {
 
   @Test
   public void shouldConvertRequisitionsToOrder() throws Exception {
-    List<RnrDTO> rnrList = new ArrayList<>();
-    RnrDTO rnrDTO = new RnrDTO();
-    rnrList.add(rnrDTO);
+    List<Rnr> rnrList = new ArrayList<>();
+    Rnr rnr = new Rnr();
+    rnrList.add(rnr);
     Integer userId = 1;
     orderService.convertToOrder(rnrList, userId);
-    Order order = new Order(rnrDTO);
-    whenNew(Order.class).withArguments(rnrDTO).thenReturn(order);
+    Order order = new Order(rnr);
+    whenNew(Order.class).withArguments(rnr).thenReturn(order);
     verify(requisitionService).releaseRequisitionsAsOrder(rnrList, userId);
     verify(orderRepository).save(order);
+  }
+
+  @Test
+  public void shouldGetOrders() throws Exception {
+    List<Order> expectedOrders = new ArrayList<>();
+    when(orderRepository.getOrders()).thenReturn(expectedOrders);
+
+    List<Order> orders = orderService.getOrders();
+    assertThat(orders, is(expectedOrders));
+    verify(orderRepository).getOrders();
   }
 }

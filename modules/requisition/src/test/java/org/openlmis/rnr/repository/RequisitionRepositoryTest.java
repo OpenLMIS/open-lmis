@@ -34,7 +34,6 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
-import static org.openlmis.rnr.domain.RnrStatus.RELEASED;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -196,33 +195,6 @@ public class RequisitionRepositoryTest {
     verify(requisitionMapper).get(facility, program, "{1, 2}");
   }
 
-  @Test
-  public void shouldCreateOrderBatch() throws Exception {
-    OrderBatch orderBatch = new OrderBatch();
-    requisitionRepository.createOrderBatch(orderBatch);
-    verify(requisitionMapper).createOrderBatch(orderBatch);
-  }
-
-  @Test
-  public void shouldGetOrderById() throws Exception {
-    OrderBatch orderBatch = new OrderBatch();
-    orderBatch.setCreatedByUserId(1);
-    when(requisitionMapper.getOrderBatchById(1)).thenReturn(orderBatch);
-    OrderBatch orderBatchReturned = requisitionRepository.getOrderBatchById(1);
-    verify(requisitionMapper).getOrderBatchById(1);
-    assertThat(orderBatchReturned, is(orderBatch));
-  }
-
-  @Test
-  public void shouldGetOrderBatches() throws Exception {
-    List<Rnr> expectedRequisitions = new ArrayList<>();
-    when(requisitionMapper.getByStatus(RELEASED)).thenReturn(expectedRequisitions);
-
-    List<Rnr> rnrs = requisitionRepository.getByStatus(RELEASED);
-
-    assertThat(rnrs, is(expectedRequisitions));
-    verify(requisitionMapper).getByStatus(RELEASED);
-  }
 
   @Test
   public void shouldGetCategoryCount() {

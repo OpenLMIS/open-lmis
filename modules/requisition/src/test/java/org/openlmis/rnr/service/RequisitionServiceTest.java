@@ -15,6 +15,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
@@ -25,8 +26,10 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
 import org.openlmis.rnr.builder.RequisitionBuilder;
-import org.openlmis.rnr.domain.*;
-import org.openlmis.rnr.dto.RnrDTO;
+import org.openlmis.rnr.domain.Comment;
+import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.RnrColumn;
+import org.openlmis.rnr.domain.RnrStatus;
 import org.openlmis.rnr.factory.RequisitionSearchStrategyFactory;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
@@ -288,7 +291,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date1.toDate());
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(rnr2);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date1.toDate(), processingPeriod2.getId())).
-        thenReturn(Arrays.asList(processingPeriod3, processingPeriod4));
+      thenReturn(Arrays.asList(processingPeriod3, processingPeriod4));
 
     List<ProcessingPeriod> periods = requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
 
@@ -308,7 +311,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date1.toDate());
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(null);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date1.toDate(), null)).
-        thenReturn(Arrays.asList(processingPeriod1, processingPeriod2));
+      thenReturn(Arrays.asList(processingPeriod1, processingPeriod2));
 
     List<ProcessingPeriod> periods = requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
 
@@ -319,13 +322,13 @@ public class RequisitionServiceTest {
 
   private Rnr createRequisition(int periodId, RnrStatus status) {
     return make(a(RequisitionBuilder.defaultRnr,
-        with(RequisitionBuilder.periodId, periodId),
-        with(RequisitionBuilder.status, status)));
+      with(RequisitionBuilder.periodId, periodId),
+      with(RequisitionBuilder.status, status)));
   }
 
   private ProcessingPeriod createProcessingPeriod(int id, DateTime startDate) {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod,
-        with(ProcessingPeriodBuilder.startDate, startDate.toDate())));
+      with(ProcessingPeriodBuilder.startDate, startDate.toDate())));
     processingPeriod.setId(id);
     return processingPeriod;
   }
@@ -367,7 +370,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date);
     when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(requisition);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date, PERIOD.getId())).
-        thenReturn(Arrays.asList(validPeriod));
+      thenReturn(Arrays.asList(validPeriod));
   }
 
   @Test
@@ -820,58 +823,6 @@ public class RequisitionServiceTest {
     verify(processingScheduleService).getPeriodById(3);
   }
 
-  @Test
-  public void shouldCreateOrderBatchesBasedOnSupplyingFacilitiesOfRequisitions() throws Exception {
-    Facility facility1 = new Facility(1);
-    Facility facility2 = new Facility(2);
-    Facility facility3 = new Facility(3);
-
-    Rnr rnr1 = new Rnr();
-    RnrDTO rnrDTO1 = new RnrDTO();
-    rnrDTO1.setId(10);
-    rnr1.setId(10);
-    rnr1.setSupplyingFacility(facility1);
-
-    Rnr rnr2 = new Rnr();
-    RnrDTO rnrDTO2 = new RnrDTO();
-    rnrDTO2.setId(20);
-    rnr2.setId(20);
-    rnr2.setSupplyingFacility(facility2);
-
-    Rnr rnr3 = new Rnr();
-    RnrDTO rnrDTO3 = new RnrDTO();
-    rnrDTO3.setId(30);
-    rnr3.setId(30);
-    rnr3.setSupplyingFacility(facility3);
-
-    List<RnrDTO> rnrList = Arrays.asList(rnrDTO1, rnrDTO2, rnrDTO3);
-
-    OrderBatch orderBatch1 = new OrderBatch(facility1, 1);
-    OrderBatch orderBatch2 = new OrderBatch(facility2, 1);
-    OrderBatch orderBatch3 = new OrderBatch(facility3, 1);
-
-    when(requisitionRepository.getById(rnrDTO1.getId())).thenReturn(rnr1);
-    when(requisitionRepository.getById(rnrDTO2.getId())).thenReturn(rnr2);
-    when(requisitionRepository.getById(rnrDTO3.getId())).thenReturn(rnr3);
-
-    requisitionService.releaseRequisitionsAsOrder(rnrList, 1);
-
-    verify(requisitionRepository).createOrderBatch(orderBatch1);
-    verify(requisitionRepository).createOrderBatch(orderBatch2);
-    verify(requisitionRepository).createOrderBatch(orderBatch3);
-
-    ArgumentCaptor<Rnr> requisitionArgumentCaptor = ArgumentCaptor.forClass(Rnr.class);
-    verify(requisitionRepository, times(3)).update(requisitionArgumentCaptor.capture());
-    verify(requisitionRepository, times(3)).logStatusChange(requisitionArgumentCaptor.capture());
-
-    List<Rnr> orderList = requisitionArgumentCaptor.getAllValues();
-    assertThat(orderList.get(0), is(rnr1));
-    assertThat(orderList.get(0).getOrderBatch(), is(orderBatch1));
-    assertThat(orderList.get(1), is(rnr2));
-    assertThat(orderList.get(1).getOrderBatch(), is(orderBatch2));
-    assertThat(orderList.get(2), is(rnr3));
-    assertThat(orderList.get(2).getOrderBatch(), is(orderBatch3));
-  }
 
   @Test
   public void shouldGetFullRequisitionById() {
@@ -938,25 +889,6 @@ public class RequisitionServiceTest {
     expectedException.expectMessage(RNR_OPERATION_UNAUTHORIZED);
 
     requisitionService.approve(authorizedRnr);
-  }
-
-  @Test
-  public void shouldGetAllFilledOrders() throws Exception {
-    List<Rnr> rnrs = new ArrayList<>();
-    rnrs.add(getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr, AUTHORIZE_REQUISITION));
-    when(requisitionRepository.getByStatus(RELEASED)).thenReturn(rnrs);
-    when(facilityService.getById(submittedRnr.getSupplyingFacility().getId())).thenReturn(FACILITY);
-
-    List<Rnr> actualRnrs = requisitionService.getOrders();
-
-    assertThat(actualRnrs, is(rnrs));
-    assertThat(actualRnrs.get(0).getFacility(), is(FACILITY));
-    assertThat(actualRnrs.get(0).getProgram(), is(PROGRAM));
-    assertThat(actualRnrs.get(0).getPeriod().getName(), is(PERIOD.getName()));
-    assertThat(actualRnrs.get(0).getPeriod().getStartDate(), is(PERIOD.getStartDate()));
-    assertThat(actualRnrs.get(0).getPeriod().getEndDate(), is(PERIOD.getEndDate()));
-    assertThat(actualRnrs.get(0).getSupplyingFacility(), is(FACILITY));
-    verify(requisitionRepository).getByStatus(RELEASED);
   }
 
   @Test

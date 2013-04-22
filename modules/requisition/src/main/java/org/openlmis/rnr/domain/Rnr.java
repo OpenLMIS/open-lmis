@@ -45,7 +45,6 @@ public class Rnr {
   private Integer modifiedBy;
   private Date modifiedDate;
   private Date submittedDate;
-  private OrderBatch orderBatch;
   private List<Comment> comments = new ArrayList<>();
 
   public Rnr(Integer facilityId, Integer programId, Integer periodId, Integer modifiedBy) {
@@ -221,10 +220,9 @@ public class Rnr {
       copyUserEditableFields(otherRnr, programRnrColumns);
   }
 
-  public void convertToOrder(OrderBatch orderBatch, Integer userId) {
+  public void convertToOrder(Integer userId) {
     this.status = RELEASED;
     this.modifiedBy = userId;
-    this.orderBatch = orderBatch;
   }
 
   public void fillFullSupplyCost() {

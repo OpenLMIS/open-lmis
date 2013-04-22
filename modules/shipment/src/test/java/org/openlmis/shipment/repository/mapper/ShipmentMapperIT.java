@@ -79,9 +79,8 @@ public class ShipmentMapperIT {
     programMapper.insert(program);
     Rnr requisition = make(a(defaultRnr, with(RequisitionBuilder.facility, facility), with(RequisitionBuilder.periodId, period.getId())));
     requisitionMapper.insert(requisition);
-    RnrDTO rnrDTO = RnrDTO.populateDTOWithRequisition(requisition);
-    rnrDTO.setModifiedBy(userId);
-    Order order = new Order(rnrDTO);
+    requisition.setModifiedBy(userId);
+    Order order = new Order(requisition);
     
     orderMapper.insert(order);
 

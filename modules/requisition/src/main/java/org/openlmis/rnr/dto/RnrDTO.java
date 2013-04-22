@@ -36,8 +36,6 @@ public class RnrDTO {
   private Integer facilityId;
   private String supplyingDepot;
   private String status;
-  private Integer orderBatchId;
-  private Date orderDate;
   private Integer modifiedBy;
 
   public static List<RnrDTO> prepareForListApproval(List<Rnr> requisitions) {
@@ -91,8 +89,6 @@ public class RnrDTO {
 
   private static RnrDTO prepareForOrderView(Rnr requisition) {
     RnrDTO rnrDTO = prepareForListApproval(requisition);
-    rnrDTO.setOrderBatchId(requisition.getOrderBatch().getId());
-    rnrDTO.setOrderDate(requisition.getOrderBatch().getCreateTimeStamp());
     rnrDTO.setPeriodName(requisition.getPeriod().getName());
     rnrDTO.setStatus(requisition.getStatus().name());
     return rnrDTO;

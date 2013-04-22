@@ -8,13 +8,19 @@ package org.openlmis.order.repository.mapper;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Select;
 import org.openlmis.order.domain.Order;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface OrderMapper {
 
-  @Insert("INSERT INTO orders(requisitionId, fulfilled, createdBy) VALUES (#{rnrDTO.id}, #{fulfilled}, #{createdBy})")
+  @Insert("INSERT INTO orders(rnrId, fulfilled, createdBy) VALUES (#{rnr.id}, #{fulfilled}, #{createdBy})")
   @Options(useGeneratedKeys = true)
   void insert(Order order);
+
+  @Select("Select * from orders ORDER BY createdDate DESC")
+  List<Order> getAll();
 }

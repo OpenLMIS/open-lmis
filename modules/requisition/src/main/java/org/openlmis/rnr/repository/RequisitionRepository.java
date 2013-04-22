@@ -113,18 +113,6 @@ public class RequisitionRepository {
     return requisitionMapper.get(facility, program, commaSeparator.commaSeparateIds(periods));
   }
 
-  public void createOrderBatch(OrderBatch orderBatch) {
-    requisitionMapper.createOrderBatch(orderBatch);
-  }
-
-  public OrderBatch getOrderBatchById(Integer id) {
-    return requisitionMapper.getOrderBatchById(id);
-  }
-
-  public List<Rnr> getByStatus(RnrStatus status) {
-    return requisitionMapper.getByStatus(status);
-  }
-
   public Integer getCategoryCount(Rnr requisition, boolean fullSupply) {
     return rnrLineItemMapper.getCategoryCount(requisition, fullSupply);
   }

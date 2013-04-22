@@ -190,7 +190,7 @@ services.factory('SupervisoryNodes', function ($resource) {
 });
 
 services.factory('RequisitionOrder', function ($resource) {
-  return $resource('/requisitionOrder.json', {}, {});
+  return $resource('/requisitionOrder.json', {}, {post:{isArray:true, method:'POST'}});
 });
 
 services.factory('FacilityProgramRights', function ($resource) {

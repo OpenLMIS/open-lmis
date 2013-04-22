@@ -14,7 +14,13 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.repository.mapper.OrderMapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OrderRepositoryTest {
@@ -30,5 +36,16 @@ public class OrderRepositoryTest {
     Order order = new Order();
     orderRepository.save(order);
     verify(orderMapper).insert(order);
+  }
+
+  @Test
+  public void shouldGetOrders() {
+    List<Order> expectedOrders = new ArrayList<>();
+    when(orderMapper.getAll()).thenReturn(expectedOrders);
+
+    List<Order> orders = orderRepository.getOrders();
+
+    verify(orderMapper).getAll();
+    assertThat(orders, is(expectedOrders));
   }
 }
