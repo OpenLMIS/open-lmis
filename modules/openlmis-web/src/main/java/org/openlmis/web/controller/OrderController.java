@@ -29,7 +29,7 @@ public class OrderController extends BaseController {
   @Autowired
   private OrderService orderService;
 
-  @RequestMapping(value = "/requisitionOrder", method = POST, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/orders", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONVERT_TO_ORDER')")
   public void convertToOrder(@RequestBody RequisitionList rnrList, HttpServletRequest request) {
     orderService.convertToOrder(rnrList, loggedInUserId(request));

@@ -89,7 +89,7 @@ describe('ConvertToOrderListController', function () {
   });
 
   it("should convert the selected requisitions to order", function () {
-    httpBackend.expectPOST('/requisitionOrder.json', {"rnrList":scope.gridOptions.selectedItems}).respond(200);
+    httpBackend.expectPOST('/orders.json', scope.gridOptions.selectedItems).respond(200);
     httpBackend.expectGET('/requisitions-for-convert-to-order.json').respond({"rnr_list":[requisitionList[1]]});
 
     scope.dialogCloseCallback(true);
@@ -111,7 +111,7 @@ describe('ConvertToOrderListController', function () {
 
   it('should convert to order if ok is clicked on the confirm modal', function () {
     scope.gridOptions.selectedItems = [requisitionList[0]];
-    httpBackend.expectPOST('/requisitionOrder.json', {"rnrList":scope.gridOptions.selectedItems}).respond(200);
+    httpBackend.expectPOST('/orders.json', scope.gridOptions.selectedItems).respond(200);
     httpBackend.expectGET('/requisitions-for-convert-to-order.json').respond({"rnr_list":[requisitionList[1]]});
 
     scope.dialogCloseCallback(true);

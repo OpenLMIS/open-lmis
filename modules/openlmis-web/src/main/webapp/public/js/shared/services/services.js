@@ -189,10 +189,6 @@ services.factory('SupervisoryNodes', function ($resource) {
   return $resource('/supervisory-nodes.json', {}, {});
 });
 
-services.factory('RequisitionOrder', function ($resource) {
-  return $resource('/requisitionOrder.json', {}, {post:{isArray:true, method:'POST'}});
-});
-
 services.factory('FacilityProgramRights', function ($resource) {
   return $resource('/facility/:facilityId/program/:programId/rights.json');
 });
@@ -202,7 +198,7 @@ services.factory('RequisitionComment', function ($resource) {
 });
 
 services.factory('Orders', function ($resource) {
-  return $resource('/orders.json', {}, {});
+  return $resource('/orders.json', {}, {post:{isArray:true, method:'POST'}});
 });
 
 
