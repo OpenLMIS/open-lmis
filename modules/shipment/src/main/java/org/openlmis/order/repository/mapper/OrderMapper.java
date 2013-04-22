@@ -28,7 +28,7 @@ public interface OrderMapper {
   @Select("Select * from orders ORDER BY createdDate DESC")
   List<Order> getAll();
 
-  @Update("Update orders set shipmentId=#{shipmentId},fulfilled=#{fulfilled} where id=#{id}")
-  void updateFullfilledFlagAndShipmentId(Order order);
+  @Update("UPDATE orders SET shipmentId=#{shipmentId},fulfilled=#{fulfilled} where id=#{id}")
+  void updateFullfilledFlagAndShipmentId(@Param(value = "id")Integer id,@Param(value = "fulfilled") Boolean fulfilled,@Param(value = "shipmentId") Integer shipmentId);
 
 }

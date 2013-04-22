@@ -6,6 +6,7 @@
 package org.openlmis.shipment.file.csv.handler;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.order.domain.Order;
 import org.openlmis.upload.parser.CsvBeanReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

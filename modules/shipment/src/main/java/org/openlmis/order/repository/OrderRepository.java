@@ -26,4 +26,8 @@ public class OrderRepository {
   public List<Order> getOrders() {
     return orderMapper.getAll();
   }
+
+  public void updateFulfilledAndShipmentIdForOrder(Integer orderId, Boolean fulfilled, Integer shipmentId) {
+    orderMapper.updateFullfilledFlagAndShipmentId(orderId,fulfilled,shipmentId);
+  }
 }

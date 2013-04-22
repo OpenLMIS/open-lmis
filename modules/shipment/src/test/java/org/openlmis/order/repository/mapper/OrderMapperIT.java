@@ -118,10 +118,7 @@ public class OrderMapperIT {
     order.setCreatedBy(1);
     mapper.insert(order);
 
-    order.setFulfilled(Boolean.TRUE);
-    order.setShipmentId(1);
-
-    mapper.updateFullfilledFlagAndShipmentId(order);
+    mapper.updateFullfilledFlagAndShipmentId(order.getId(),true,1);
 
     ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE id=?", Arrays.asList(order.getId()));
 

@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.repository.OrderRepository;
 import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -44,5 +44,11 @@ public class OrderService {
 
   public List<Order> getOrders() {
     return orderRepository.getOrders();
+  }
+
+  public void updateFulfilledAndShipmentIdForOrders(ArrayList<Integer> orderIds, Boolean fulfilled, Integer shipmentId) {
+    for(Integer orderId : orderIds){
+      orderRepository.updateFulfilledAndShipmentIdForOrder(orderId,fulfilled,shipmentId);
+    }
   }
 }

@@ -19,6 +19,7 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -47,5 +48,15 @@ public class OrderRepositoryTest {
 
     verify(orderMapper).getAll();
     assertThat(orders, is(expectedOrders));
+  }
+
+  @Test
+  public void shouldUpdateFulfilledAndShipmentIdForOrder() throws Exception {
+    Order order = new Order();
+    doNothing().when(orderMapper).updateFullfilledFlagAndShipmentId(order.getId(),false,1);
+    orderRepository.updateFulfilledAndShipmentIdForOrder(order.getId(), false, 1);
+
+    verify(orderMapper).updateFullfilledFlagAndShipmentId(order.getId(), false, 1);
+
   }
 }
