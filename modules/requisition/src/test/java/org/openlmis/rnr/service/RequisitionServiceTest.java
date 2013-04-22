@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
@@ -75,7 +76,6 @@ public class RequisitionServiceTest {
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
 
-  private RequisitionService requisitionService;
 
   @Mock
   private FacilityApprovedProductService facilityApprovedProductService;
@@ -96,12 +96,18 @@ public class RequisitionServiceTest {
   @Mock
   private SupplyLineService supplyLineService;
 
+
+  @InjectMocks
   private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory ;
 
   @Mock
   private RequisitionPermissionService requisitionPermissionService;
   @Mock
   private UserService userService;
+
+  @InjectMocks
+  private RequisitionService requisitionService;
+
 
 
   private Rnr submittedRnr;
@@ -111,10 +117,7 @@ public class RequisitionServiceTest {
 
   @Before
   public void setup() {
-    requisitionSearchStrategyFactory = new RequisitionSearchStrategyFactory(processingScheduleService, requisitionRepository, programService);
-    requisitionService = new RequisitionService(requisitionRepository, rnrTemplateRepository, facilityApprovedProductService,
-        supervisoryNodeService, roleAssignmentService, programService, processingScheduleService, facilityService, supplyLineService,
-        requisitionSearchStrategyFactory, requisitionPermissionService, userService);
+    requisitionService.setRequisitionSearchStrategyFactory(requisitionSearchStrategyFactory);
     submittedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, SUBMITTED), with(modifiedBy, USER_ID)));
     initiatedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, INITIATED), with(modifiedBy, USER_ID)));
     authorizedRnr = make(a(RequisitionBuilder.defaultRnr, with(status, AUTHORIZED), with(modifiedBy, USER_ID)));

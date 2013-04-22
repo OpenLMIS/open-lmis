@@ -22,18 +22,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class RequisitionSearchStrategyFactory {
 
+  @Autowired
   private ProcessingScheduleService processingScheduleService;
+  @Autowired
   private RequisitionRepository requisitionRepository;
+  @Autowired
   private ProgramService programService;
 
-  @Autowired
-  public RequisitionSearchStrategyFactory(ProcessingScheduleService processingScheduleService,
-                                          RequisitionRepository requisitionRepository,
-                                          ProgramService programService) {
-    this.processingScheduleService = processingScheduleService;
-    this.requisitionRepository = requisitionRepository;
-    this.programService = programService;
-  }
 
   public RequisitionSearchStrategy getSearchStrategy(RequisitionSearchCriteria criteria) {
     if (criteria.getPeriodId() != null) {

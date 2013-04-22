@@ -21,18 +21,12 @@ import java.util.Map;
 
 
 @Service
-@NoArgsConstructor
 public class RnrTemplateService {
 
-  private RnrTemplateRepository rnrRepository;
-  private ProgramService programService;
-
-
   @Autowired
-  public RnrTemplateService(RnrTemplateRepository rnrRepository, ProgramService programService) {
-    this.rnrRepository = rnrRepository;
-    this.programService = programService;
-  }
+  private RnrTemplateRepository rnrRepository;
+  @Autowired
+  private ProgramService programService;
 
   public List<RnrColumn> fetchAllRnRColumns(Integer programId) {
     return rnrRepository.fetchRnrTemplateColumnsOrMasterColumns(programId);

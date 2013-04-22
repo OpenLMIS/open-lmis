@@ -9,6 +9,7 @@ package org.openlmis.rnr.repository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Program;
@@ -29,17 +30,16 @@ public class RnrTemplateRepositoryTest {
   public static final Integer EXISTING_PROGRAM_ID = 1;
   ProgramRnrTemplate template;
 
-  RnrTemplateRepository rnrRepository;
-
   @Mock
   RnrColumnMapper rnrColumnMapper;
+  @InjectMocks
+  RnrTemplateRepository rnrRepository;
 
   private List<RnrColumn> rnrColumns = new ArrayList<>();
 
 
   @Before
   public void setUp() throws Exception {
-    rnrRepository = new RnrTemplateRepository(rnrColumnMapper);
     template = new ProgramRnrTemplate(EXISTING_PROGRAM_ID, rnrColumns);
   }
 

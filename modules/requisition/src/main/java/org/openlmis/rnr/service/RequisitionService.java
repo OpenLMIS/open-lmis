@@ -32,7 +32,6 @@ import static org.openlmis.rnr.domain.ProgramRnrTemplate.BEGINNING_BALANCE;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
 @Service
-@NoArgsConstructor
 public class RequisitionService {
 
   public static final String RNR_AUTHORIZATION_ERROR = "rnr.authorization.error";
@@ -48,38 +47,36 @@ public class RequisitionService {
   public static final String RNR_TEMPLATE_NOT_INITIATED_ERROR = "rnr.template.not.defined.error";
 
 
+  @Autowired
   private RequisitionRepository requisitionRepository;
+  @Autowired
   private RnrTemplateRepository rnrTemplateRepository;
+  @Autowired
   private FacilityApprovedProductService facilityApprovedProductService;
+  @Autowired
   private SupervisoryNodeService supervisoryNodeService;
-  private ProgramService programService;
-  private ProcessingScheduleService processingScheduleService;
-  private FacilityService facilityService;
-  private SupplyLineService supplyLineService;
-  private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
-  private RequisitionPermissionService requisitionPermissionService;
-  private UserService userService;
+  @Autowired
   private RoleAssignmentService roleAssignmentService;
+  @Autowired
+  private ProgramService programService;
+  @Autowired
+  private ProcessingScheduleService processingScheduleService;
+  @Autowired
+  private FacilityService facilityService;
+  @Autowired
+  private SupplyLineService supplyLineService;
+
+  private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
+  @Autowired
+  private RequisitionPermissionService requisitionPermissionService;
+  @Autowired
+  private UserService userService;
 
   @Autowired
-  public RequisitionService(RequisitionRepository requisitionRepository, RnrTemplateRepository rnrTemplateRepository,
-                            FacilityApprovedProductService facilityApprovedProductService, SupervisoryNodeService supervisoryNodeRepository,
-                            RoleAssignmentService roleAssignmentService, ProgramService programService,
-                            ProcessingScheduleService processingScheduleService, FacilityService facilityService, SupplyLineService supplyLineService,
-                            RequisitionSearchStrategyFactory requisitionSearchStrategyFactory, RequisitionPermissionService requisitionPermissionService, UserService userService) {
-    this.requisitionRepository = requisitionRepository;
-    this.rnrTemplateRepository = rnrTemplateRepository;
-    this.facilityApprovedProductService = facilityApprovedProductService;
-    this.supervisoryNodeService = supervisoryNodeRepository;
-    this.roleAssignmentService = roleAssignmentService;
-    this.programService = programService;
-    this.processingScheduleService = processingScheduleService;
-    this.facilityService = facilityService;
-    this.supplyLineService = supplyLineService;
+  public void setRequisitionSearchStrategyFactory(RequisitionSearchStrategyFactory requisitionSearchStrategyFactory) {
     this.requisitionSearchStrategyFactory = requisitionSearchStrategyFactory;
-    this.requisitionPermissionService = requisitionPermissionService;
-    this.userService = userService;
   }
+
 
   @Transactional
   public Rnr initiate(Integer facilityId, Integer programId, Integer periodId, Integer modifiedBy) {
@@ -394,5 +391,6 @@ public class RequisitionService {
     }
     return comments;
   }
+
 }
 

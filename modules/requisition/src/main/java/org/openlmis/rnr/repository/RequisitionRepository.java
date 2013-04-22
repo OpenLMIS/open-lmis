@@ -23,28 +23,21 @@ import java.util.List;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 
 @Repository
-@NoArgsConstructor
 public class RequisitionRepository {
 
+  @Autowired
   private RequisitionMapper requisitionMapper;
+  @Autowired
   private RnrLineItemMapper rnrLineItemMapper;
+  @Autowired
   private LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
+  @Autowired
   private CommentMapper commentMapper;
+  @Autowired
   private CommaSeparator commaSeparator;
+  @Autowired
   private RequisitionStatusChangeMapper requisitionStatusChangeMapper;
 
-
-  @Autowired
-  public RequisitionRepository(RequisitionMapper requisitionMapper, RnrLineItemMapper rnrLineItemMapper,
-                               LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper, CommaSeparator separator,
-                               CommentMapper commentMapper, RequisitionStatusChangeMapper requisitionStatusChangeMapper) {
-    this.requisitionMapper = requisitionMapper;
-    this.rnrLineItemMapper = rnrLineItemMapper;
-    this.lossesAndAdjustmentsMapper = lossesAndAdjustmentsMapper;
-    this.commentMapper = commentMapper;
-    commaSeparator = separator;
-    this.requisitionStatusChangeMapper = requisitionStatusChangeMapper;
-  }
 
   public void insert(Rnr requisition) {
     requisition.setStatus(INITIATED);

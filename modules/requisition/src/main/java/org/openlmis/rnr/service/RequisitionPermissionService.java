@@ -27,18 +27,13 @@ import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
 @Service
-@NoArgsConstructor
 public class RequisitionPermissionService {
 
 
-  private RoleRightsService roleRightsService;
-  private RoleAssignmentService roleAssignmentService;
-
   @Autowired
-  public RequisitionPermissionService(RoleRightsService roleRightsService, RoleAssignmentService roleAssignmentService) {
-    this.roleRightsService = roleRightsService;
-    this.roleAssignmentService = roleAssignmentService;
-  }
+  private RoleRightsService roleRightsService;
+  @Autowired
+  private RoleAssignmentService roleAssignmentService;
 
   public Boolean hasPermission(Integer userId, Facility facility, Program program, Right... rights) {
     Set<Right> userRights = roleRightsService.getRightsForUserAndFacilityProgram(userId, facility, program);
@@ -52,9 +47,9 @@ public class RequisitionPermissionService {
 
   public boolean hasPermissionToSave(Integer userId, Rnr rnr) {
     return (rnr.getStatus() == INITIATED && hasPermission(userId, rnr, CREATE_REQUISITION)) ||
-        (rnr.getStatus() == SUBMITTED && hasPermission(userId, rnr, AUTHORIZE_REQUISITION)) ||
-        (rnr.getStatus() == AUTHORIZED && hasPermission(userId, rnr, APPROVE_REQUISITION)) ||
-        (rnr.getStatus() == IN_APPROVAL && hasPermission(userId, rnr, APPROVE_REQUISITION));
+      (rnr.getStatus() == SUBMITTED && hasPermission(userId, rnr, AUTHORIZE_REQUISITION)) ||
+      (rnr.getStatus() == AUTHORIZED && hasPermission(userId, rnr, APPROVE_REQUISITION)) ||
+      (rnr.getStatus() == IN_APPROVAL && hasPermission(userId, rnr, APPROVE_REQUISITION));
   }
 
   public boolean hasPermissionToApprove(Integer userId, final Rnr rnr) {

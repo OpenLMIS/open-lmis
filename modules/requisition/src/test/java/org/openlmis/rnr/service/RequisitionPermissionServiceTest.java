@@ -9,6 +9,7 @@ package org.openlmis.rnr.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.*;
@@ -41,6 +42,7 @@ public class RequisitionPermissionServiceTest {
   private RoleRightsService roleRightsService;
   @Mock
   private RoleAssignmentService roleAssignmentService;
+  @InjectMocks
   private RequisitionPermissionService requisitionPermissionService;
   private Integer userId;
   private Integer programId;
@@ -51,7 +53,6 @@ public class RequisitionPermissionServiceTest {
     userId = 1;
     programId = 2;
     facilityId = 3;
-    requisitionPermissionService = new RequisitionPermissionService(roleRightsService, roleAssignmentService);
   }
 
   @Test

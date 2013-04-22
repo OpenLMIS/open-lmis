@@ -8,6 +8,7 @@ package org.openlmis.rnr.factory;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.core.service.ProgramService;
@@ -37,13 +38,14 @@ public class RequisitionSearchStrategyFactoryTest {
   @Mock
   ProgramService programService;
 
+  @InjectMocks
+  RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
+
   @Test
   public void shouldGetSearchStrategyForFacilityProgramAndDateRange() throws Exception {
     Integer facilityId = 1, programId = 1;
     Date periodStartDate = new Date(), periodEndDate = new Date();
     RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, periodStartDate, periodEndDate);
-
-    RequisitionSearchStrategyFactory requisitionSearchStrategyFactory = new RequisitionSearchStrategyFactory(processingScheduleService, requisitionRepository, null);
 
     RequisitionSearchStrategy facilityProgramDateRangeStrategy = requisitionSearchStrategyFactory.getSearchStrategy(criteria);
 
@@ -56,8 +58,7 @@ public class RequisitionSearchStrategyFactoryTest {
     Date periodStartDate = new Date(), periodEndDate = new Date();
     RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, periodStartDate, periodEndDate);
     whenNew(FacilityDateRangeSearch.class).withArguments(criteria, processingScheduleService, requisitionRepository, programService)
-        .thenReturn(mock(FacilityDateRangeSearch.class));
-    RequisitionSearchStrategyFactory requisitionSearchStrategyFactory = new RequisitionSearchStrategyFactory(processingScheduleService, requisitionRepository, programService);
+      .thenReturn(mock(FacilityDateRangeSearch.class));
 
     RequisitionSearchStrategy facilityDateRangeStrategy = requisitionSearchStrategyFactory.getSearchStrategy(criteria);
 

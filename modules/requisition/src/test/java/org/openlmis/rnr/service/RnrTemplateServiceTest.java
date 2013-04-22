@@ -9,6 +9,7 @@ package org.openlmis.rnr.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.message.OpenLmisMessage;
@@ -31,14 +32,10 @@ public class RnrTemplateServiceTest {
   @Mock
   private ProgramService programService;
 
+  @InjectMocks
   private RnrTemplateService service;
   private final static Integer EXISTING_PROGRAM_ID = 1;
 
-
-  @Before
-  public void setUp() throws Exception {
-    service = new RnrTemplateService(repository, programService);
-  }
 
   @Test
   public void shouldFetchAllRnRColumns() throws Exception {
