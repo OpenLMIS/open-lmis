@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -106,6 +107,29 @@ public class OrderMapperIT {
     assertThat(orders.size(), is(2));
     assertThat(orders.get(1).getId(), is(order1.getId()));
     assertThat(orders.get(0).getId(), is(order2.getId()));
+  }
+
+  @Test
+  public void shouldUpdateFulfilledFlagAndShipmentIdForOrders() throws Exception {
+
+    Order order = new Order();
+    Rnr rnr = insertRequisition(1);
+    order.setRnr(rnr);
+    order.setCreatedBy(1);
+    mapper.insert(order);
+
+    order.setFulfilled(Boolean.TRUE);
+    order.setShipmentId(1);
+
+    mapper.updateFullfilledFlagAndShipmentId(order);
+
+    ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE id=?", Arrays.asList(order.getId()));
+
+    resultSet.next();
+
+    assertThat(resultSet.getBoolean("fulfilled"), is(true));
+    assertThat(resultSet.getInt("shipmentId"), is(1));
+
   }
 
   private int updateOrderCreatedTime(Order order, Date date) throws SQLException {

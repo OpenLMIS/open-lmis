@@ -22,5 +22,7 @@ public interface ShipmentMapper {
    @Options(useGeneratedKeys = true)
    public void insertShippedLineItem(ShippedLineItem shippedLineItem);
 
+  @Insert({"INSERT INTO shipment_file_info (fileName,success) VALUES (#{name},#{success})"})
+  @Options(useGeneratedKeys = true)
   void insertShipmentFileInfo(ShipmentFileInfo shipmentFileInfo);
 }

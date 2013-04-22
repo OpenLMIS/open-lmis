@@ -5,6 +5,7 @@
 
 package org.openlmis.shipment.repository.mapper;
 
+import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
@@ -18,6 +19,7 @@ import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.repository.mapper.RequisitionMapper;
+import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.domain.ShippedLineItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -31,6 +33,7 @@ import java.util.Arrays;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProductBuilder.defaultProduct;
@@ -44,7 +47,7 @@ import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
 public class ShipmentMapperIT {
 
   @Autowired
-  ShipmentMapper shipmentMapper;
+  ShipmentMapper mapper;
   @Autowired
   ProductMapper productMapper;
   @Autowired
@@ -87,7 +90,7 @@ public class ShipmentMapperIT {
     productMapper.insert(product);
 
     ShippedLineItem shippedLineItem = new ShippedLineItem(order.getId(), product.getCode(), 23);
-    shipmentMapper.insertShippedLineItem(shippedLineItem);
+    mapper.insertShippedLineItem(shippedLineItem);
 
     assertThat(shippedLineItem.getId(), is(notNullValue()));
 
@@ -102,6 +105,17 @@ public class ShipmentMapperIT {
   @Test
   public void shouldFetchRecordForOrderIdAndShipmentFileInfoId() throws Exception {
 
+
+  }
+
+  @Test
+  public void shouldInsertShipmentFileInfo() throws Exception {
+    ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
+    shipmentFileInfo.setName("abc");
+
+    mapper.insertShipmentFileInfo(shipmentFileInfo);
+
+    assertThat(shipmentFileInfo.getId(), is(notNullValue()));
 
   }
 }

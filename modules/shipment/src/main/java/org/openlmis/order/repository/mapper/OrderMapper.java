@@ -9,8 +9,12 @@ package org.openlmis.order.repository.mapper;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 import org.openlmis.order.domain.Order;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 import java.util.List;
 
@@ -23,4 +27,8 @@ public interface OrderMapper {
 
   @Select("Select * from orders ORDER BY createdDate DESC")
   List<Order> getAll();
+
+  @Update("Update orders set shipmentId=#{shipmentId},fulfilled=#{fulfilled} where id=#{id}")
+  void updateFullfilledFlagAndShipmentId(Order order);
+
 }
