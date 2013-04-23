@@ -73,9 +73,11 @@ public class RestService {
     return user;
   }
 
+  @Transactional
   public Rnr approve(Report report) {
     User user = getValidatedUser(report);
     Rnr requisition = report.getRequisition();
+    requisition.setModifiedBy(user.getModifiedBy());
     requisitionService.approve(requisition);
     orderService.convertToOrder(asList(requisition), user.getId());
     return requisition;

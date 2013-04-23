@@ -31,7 +31,6 @@ public class OrderController extends BaseController {
   private OrderService orderService;
 
   @RequestMapping(value = "/orders", method = POST, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONVERT_TO_ORDER')")
   public void convertToOrder(@RequestBody RequisitionList rnrList, HttpServletRequest request) {
     orderService.convertToOrder(rnrList, loggedInUserId(request));
   }

@@ -124,6 +124,14 @@ public class RequisitionPermissionServiceTest {
     assertThat(requisitionPermissionService.hasPermissionToApprove(userId, rnr), is(true));
   }
 
+  @Test
+  public void shouldCheckIfUserHasGivenPermission() throws Exception {
+    Set<Right> rights = new HashSet<Right>(){{add(CONVERT_TO_ORDER);}};
+    when(roleRightsService.getRights(1)).thenReturn(rights);
+   assertThat(requisitionPermissionService.hasPermission(1, CONVERT_TO_ORDER), is(true));
+   assertThat(requisitionPermissionService.hasPermission(1, CREATE_REQUISITION), is(false));
+  }
+
   private RoleAssignment roleAssignmentWithSupervisoryNodeId(int supervisoryNodeId) {
     final RoleAssignment assignment = new RoleAssignment();
     final SupervisoryNode node = new SupervisoryNode();

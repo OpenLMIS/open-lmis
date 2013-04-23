@@ -6,13 +6,11 @@
 
 package org.openlmis.rnr.service;
 
-import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
 import org.openlmis.rnr.domain.*;
-import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.factory.RequisitionSearchStrategyFactory;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.repository.RnrTemplateRepository;
@@ -273,7 +271,7 @@ public class RequisitionService {
     Rnr previousRequisition = null;
     if (immediatePreviousPeriod != null)
       previousRequisition = requisitionRepository.getRequisitionWithLineItems(requisition.getFacility(),
-        requisition.getProgram(), immediatePreviousPeriod);
+          requisition.getProgram(), immediatePreviousPeriod);
     return previousRequisition;
   }
 
@@ -353,6 +351,8 @@ public class RequisitionService {
   }
 
   public void releaseRequisitionsAsOrder(List<Rnr> requisitions, Integer userId) {
+    if (!requisitionPermissionService.hasPermission(userId, CONVERT_TO_ORDER))
+      throw new DataException(RNR_OPERATION_UNAUTHORIZED);
     for (Rnr requisition : requisitions) {
       Rnr loadedRequisition = requisitionRepository.getById(requisition.getId());
       loadedRequisition.convertToOrder(userId);

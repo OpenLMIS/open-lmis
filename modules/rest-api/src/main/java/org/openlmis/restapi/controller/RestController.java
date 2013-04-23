@@ -17,16 +17,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
 import static org.openlmis.restapi.response.RestResponse.error;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 @Controller
 @NoArgsConstructor
@@ -61,7 +60,7 @@ public class RestController {
     return error(UNEXPECTED_EXCEPTION, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
-  @RequestMapping(value = "/rest-api/requisitions/{id}/approve", method = POST, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/rest-api/requisitions/{id}/approve", method = PUT, headers = ACCEPT_JSON)
   public ResponseEntity<RestResponse> approve(@PathVariable Integer id, @RequestBody Report report, Principal principal) {
     report.setRequisitionId(id);
     report.setVendor(new Vendor(principal.getName()));

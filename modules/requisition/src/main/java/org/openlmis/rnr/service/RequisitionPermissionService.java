@@ -6,7 +6,6 @@
 
 package org.openlmis.rnr.service;
 
-import lombok.NoArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.openlmis.core.domain.Facility;
@@ -47,9 +46,9 @@ public class RequisitionPermissionService {
 
   public boolean hasPermissionToSave(Integer userId, Rnr rnr) {
     return (rnr.getStatus() == INITIATED && hasPermission(userId, rnr, CREATE_REQUISITION)) ||
-      (rnr.getStatus() == SUBMITTED && hasPermission(userId, rnr, AUTHORIZE_REQUISITION)) ||
-      (rnr.getStatus() == AUTHORIZED && hasPermission(userId, rnr, APPROVE_REQUISITION)) ||
-      (rnr.getStatus() == IN_APPROVAL && hasPermission(userId, rnr, APPROVE_REQUISITION));
+        (rnr.getStatus() == SUBMITTED && hasPermission(userId, rnr, AUTHORIZE_REQUISITION)) ||
+        (rnr.getStatus() == AUTHORIZED && hasPermission(userId, rnr, APPROVE_REQUISITION)) ||
+        (rnr.getStatus() == IN_APPROVAL && hasPermission(userId, rnr, APPROVE_REQUISITION));
   }
 
   public boolean hasPermissionToApprove(Integer userId, final Rnr rnr) {
@@ -62,5 +61,9 @@ public class RequisitionPermissionService {
         return (o1.getSupervisoryNode().getId().equals(rnr.getSupervisoryNodeId()));
       }
     });
+  }
+
+  public boolean hasPermission(Integer userId, Right right) {
+    return roleRightsService.getRights(userId).contains(right);
   }
 }
