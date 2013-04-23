@@ -70,18 +70,12 @@ public class ShipmentRepositoryTest {
     expectedException.expectMessage("Unknown product code");
 
     shipmentRepository.insertShippedLineItem(shippedLineItem);
-    }
+  }
 
-//  @Test
-//  public void shouldThrowExceptionWhenDuplicateOrderNumberIsEncounteredInShipmentFile() throws Exception {
-//      ShippedLineItem shippedLineItem = new ShippedLineItem();
-//      shippedLineItem.setOrderId(1);
-//
-//    expectedException.expect(DataException.class);
-//    expectedException.expectMessage("Order Number already processed");
-//
-//    shipmentRepository.insertShippedLineItem(shippedLineItem);
-//
-//
-//  }
+  @Test
+  public void shouldUpdateShippedLineItem() throws Exception {
+    ShippedLineItem shippedLineItem = new ShippedLineItem();
+    shipmentRepository.updateShippedLineItem(shippedLineItem);
+    verify(shipmentMapper).updateShippedLineItem(shippedLineItem);
+  }
 }

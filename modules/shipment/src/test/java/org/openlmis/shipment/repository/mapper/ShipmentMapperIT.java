@@ -69,6 +69,20 @@ public class ShipmentMapperIT {
   @Test
   public void shouldInsertShippedLineItems() throws Exception {
 
+    ShippedLineItem shippedLineItem = createShippedLineItem();
+    mapper.insertShippedLineItem(shippedLineItem);
+
+    assertThat(shippedLineItem.getId(), is(notNullValue()));
+
+    String fetchShipmentFileInfoQuery = "Select * from shipped_line_items where id = ?";
+    ResultSet shipmentFileInfoResultSet = queryExecutor.execute(fetchShipmentFileInfoQuery, Arrays.asList(shippedLineItem.getId()));
+    shipmentFileInfoResultSet.next();
+    assertThat(shipmentFileInfoResultSet.getInt("orderId"), is(shippedLineItem.getOrderId()));
+    assertThat(shipmentFileInfoResultSet.getString("productCode"), is(shippedLineItem.getProductCode()));
+    assertThat(shipmentFileInfoResultSet.getInt("quantityShipped"), is(shippedLineItem.getQuantityShipped()));
+  }
+
+  private ShippedLineItem createShippedLineItem() {
     Integer userId = 1;
     Product product = make(a(defaultProduct));
     Facility facility = make(a(defaultFacility));
@@ -84,22 +98,12 @@ public class ShipmentMapperIT {
     requisitionMapper.insert(requisition);
     requisition.setModifiedBy(userId);
     Order order = new Order(requisition);
-    
+
     orderMapper.insert(order);
 
     productMapper.insert(product);
 
-    ShippedLineItem shippedLineItem = new ShippedLineItem(order.getId(), product.getCode(), 23);
-    mapper.insertShippedLineItem(shippedLineItem);
-
-    assertThat(shippedLineItem.getId(), is(notNullValue()));
-
-    String fetchShipmentFileInfoQuery = "Select * from shipped_line_items where id = ?";
-    ResultSet shipmentFileInfoResultSet = queryExecutor.execute(fetchShipmentFileInfoQuery, Arrays.asList(shippedLineItem.getId()));
-    shipmentFileInfoResultSet.next();
-    assertThat(shipmentFileInfoResultSet.getInt("orderId"), is(shippedLineItem.getOrderId()));
-    assertThat(shipmentFileInfoResultSet.getString("productCode"), is(shippedLineItem.getProductCode()));
-    assertThat(shipmentFileInfoResultSet.getInt("quantityShipped"), is(shippedLineItem.getQuantityShipped()));
+    return new ShippedLineItem(order.getId(), product.getCode(), 23);
   }
 
   @Test
@@ -117,5 +121,31 @@ public class ShipmentMapperIT {
 
     assertThat(shipmentFileInfo.getId(), is(notNullValue()));
 
+  }
+
+  @Test
+  public void shouldSelectShippedLineItem() throws Exception {
+    ShippedLineItem shippedLineItem = createShippedLineItem();
+
+    mapper.insertShippedLineItem(shippedLineItem);
+
+    ShippedLineItem returnedShippedLineItem = mapper.getShippedLineItemByOrderId(shippedLineItem.getOrderId());
+
+    assertThat(returnedShippedLineItem, is(shippedLineItem));
+
+  }
+
+  @Test
+  public void shouldUpdateShippedLineItem() throws Exception {
+    ShippedLineItem shippedLineItem = createShippedLineItem();
+    mapper.insertShippedLineItem(shippedLineItem);
+
+    shippedLineItem.setQuantityShipped(10);
+
+    mapper.updateShippedLineItem(shippedLineItem);
+
+    ShippedLineItem shippedLineItemFromDB = mapper.getShippedLineItemByOrderId(shippedLineItem.getOrderId());
+
+    assertThat(shippedLineItemFromDB.getQuantityShipped(),is(10));
   }
 }

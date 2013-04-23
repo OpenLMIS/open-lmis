@@ -7,6 +7,7 @@
 package org.openlmis.shipment.file;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.shipment.domain.ShippedLineItem;
 import org.openlmis.shipment.service.ShipmentService;
 import org.openlmis.upload.Importable;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Component;
 
 @Component("shipmentRecordHandler")
 @NoArgsConstructor
-public class ShipmentRecordHandler implements RecordHandler{
+public class ShipmentRecordHandler implements RecordHandler {
   private static Logger logger = LoggerFactory.getLogger(ShipmentRecordHandler.class);
 
   @Autowired
@@ -28,6 +29,15 @@ public class ShipmentRecordHandler implements RecordHandler{
   @Override
   public void execute(Importable importable, int rowNumber, AuditFields auditFields) {
     ShippedLineItem shippedLineItem = (ShippedLineItem) importable;
+    ShippedLineItem shippedLineItemFromDB = shipmentService.getShippedLineItemByOrderId(shippedLineItem.getOrderId());
+    if (shippedLineItemFromDB != null) {
+      if (!shippedLineItemFromDB.getModifiedDate().equals(auditFields.getCurrentTimestamp())) {
+        throw new DataException("Order Number Already Processed");
+      } else {
+        shipmentService.updateShippedLineItem(shippedLineItem);
+      }
+      return;
+    }
     shipmentService.insertShippedLineItem(shippedLineItem);
   }
 }

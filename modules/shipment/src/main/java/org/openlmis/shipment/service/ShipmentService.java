@@ -36,4 +36,11 @@ public class ShipmentService {
   public void updateOrders(Set<Integer> orderIds, ShipmentFileInfo shipmentFileInfo) {
 
   }
+  public ShippedLineItem getShippedLineItemByOrderId(Integer orderId){
+    return shipmentRepository.getShippedLineItemByOrderId(orderId);
+  }
+
+  public void updateShippedLineItem(ShippedLineItem shippedLineItem) {
+
+  }
 }
