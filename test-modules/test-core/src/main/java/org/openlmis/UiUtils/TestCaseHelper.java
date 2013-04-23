@@ -90,6 +90,13 @@ public class TestCaseHelper {
     dbWrapper.insertSupplyLines("N1", program, "F10");
   }
 
+    public void setupTestDataToApproveRnR(String userSIC, String userId, String vendorName, List<String> rightsList) throws IOException, SQLException {
+        for (String rights : rightsList)
+            dbWrapper.assignRight("store in-charge", rights);
+        String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
+        dbWrapper.insertUser(userId, userSIC, passwordUsers, "F10", "", vendorName);
+    }
+
   public void setupProductTestData(String product1, String product2, String program, String facilityType) throws IOException, SQLException {
     dbWrapper.insertProducts(product1, product2);
     dbWrapper.insertProgramProducts(product1, product2, program);
