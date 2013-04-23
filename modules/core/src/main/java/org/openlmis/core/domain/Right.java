@@ -24,17 +24,17 @@ public enum Right {
   MANAGE_SCHEDULE("Admin - Manage Schedules", TRUE, "Permission to create and edit schedules in the system"),
   MANAGE_USERS("Admin - Manage Users", TRUE, "Permission to manage users(crud)"),
   UPLOADS("Admin - Uploads", TRUE, "Permission to upload"),
-  CREATE_REQUISITION("Requisition - Create", FALSE, "Permission to create, edit, submit and recall requisitions"),
-  AUTHORIZE_REQUISITION("Requisition - Authorize", FALSE, "Permission to edit, authorize and recall requisitions"),
   APPROVE_REQUISITION("Requisition - Approve", FALSE, "Permission to approve requisitions"),
+  AUTHORIZE_REQUISITION("Requisition - Authorize", FALSE, "Permission to edit, authorize and recall requisitions"),
   CONVERT_TO_ORDER("Requisition - Convert to Order", TRUE, "Permission to convert requisitions to order"),
-  VIEW_ORDER("Requisition - View Orders", TRUE, "Permission to view orders"),
+  CREATE_REQUISITION("Requisition - Create", FALSE, "Permission to create, edit, submit and recall requisitions"),
   VIEW_REQUISITION("Requisition - View", FALSE, "Permission to view requisitions"),
-  VIEW_FACILITY_REPORT("Report - Facility Listing (V1)", FALSE, "Permission to view Facility List Report"),
-  VIEW_MAILING_LABEL_REPORT("Report - Facility Listing (V2)", FALSE, "Permission to view Mailing labels for Facilities"),
-  VIEW_SUMMARY_REPORT("Report - Summary Report", FALSE, "Permission to view Sumamry Report"),
-  VIEW_CONSUMPTION_REPORT("Report - Consumption Report", FALSE, "Permission to view Consumption Report"),
-  VIEW_REPORTING_RATE_REPORT("Report - Reporting Rate Report", FALSE, "Permission to view Reporting Rate Report");
+  VIEW_ORDER("Requisition - View Orders", TRUE, "Permission to view orders"),
+  VIEW_FACILITY_REPORT("Report - Facility Listing (V1)", TRUE, "Permission to view Facility List Report"),
+  VIEW_MAILING_LABEL_REPORT("Report - Facility Listing (V2)", TRUE, "Permission to view Mailing labels for Facilities"),
+  VIEW_SUMMARY_REPORT("Report - Summary Report", TRUE, "Permission to view Sumamry Report"),
+  VIEW_CONSUMPTION_REPORT("Report - Consumption Report", TRUE, "Permission to view Consumption Report"),
+  VIEW_REPORTING_RATE_REPORT("Report - Reporting Rate Report", TRUE, "Permission to view Reporting Rate Report");
 
     @Getter
   private final String rightName;

@@ -26,16 +26,32 @@ dependencies {
         }
     }
 
-
-    task compileJasperReport(type: JavaExec) {
+    task compileJasperReport(type: JavaExec, dependsOn: classes) {
         main = 'org.openlmis.report.util.JasperReportCompiler'
         //  args = "".split().toList()
         classpath sourceSets.main.output.classesDir
         classpath configurations.runtime
     }
+    classes.doFirst{
+        tasks.compileJasperReport.execute()
+    }
+
+   /*
+
+
+
+   task compileJasperReport(type: JavaExec) {
+        //main = 'org.openlmis.report.util.JasperReportCompiler'
+        //  args = "".split().toList()
+        manifest {
+    attributes 'Main-Class': 'org.openlmis.report.util.JasperReportCompiler'
+    }
+        classpath sourceSets.main.output.classesDir
+        classpath configurations.runtime
+    }
 
     classes.dependsOn(compileJasperReport)
-
+       */
     task testJar(type: Jar) {
         from sourceSets.test.output
         classifier = 'test'

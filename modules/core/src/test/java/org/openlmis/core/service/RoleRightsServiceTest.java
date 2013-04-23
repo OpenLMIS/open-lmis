@@ -66,12 +66,17 @@ public class RoleRightsServiceTest {
     assertThat(allRights.get(3), is(Right.MANAGE_SCHEDULE));
     assertThat(allRights.get(4), is(Right.MANAGE_USERS));
     assertThat(allRights.get(5), is(Right.UPLOADS));
-    assertThat(allRights.get(6), is(Right.APPROVE_REQUISITION));
-    assertThat(allRights.get(7), is(Right.AUTHORIZE_REQUISITION));
-    assertThat(allRights.get(8), is(Right.CONVERT_TO_ORDER));
-    assertThat(allRights.get(9), is(Right.CREATE_REQUISITION));
-    assertThat(allRights.get(10), is(Right.VIEW_REQUISITION));
-    assertThat(allRights.get(11), is(Right.VIEW_ORDER));
+    assertThat(allRights.get(6), is(Right.VIEW_CONSUMPTION_REPORT));
+    assertThat(allRights.get(7), is(Right.VIEW_FACILITY_REPORT));
+    assertThat(allRights.get(8), is(Right.VIEW_MAILING_LABEL_REPORT));
+    assertThat(allRights.get(9), is(Right.VIEW_REPORTING_RATE_REPORT));
+    assertThat(allRights.get(10), is(Right.VIEW_SUMMARY_REPORT));
+    assertThat(allRights.get(11), is(Right.APPROVE_REQUISITION));
+    assertThat(allRights.get(12), is(Right.AUTHORIZE_REQUISITION));
+    assertThat(allRights.get(13), is(Right.CONVERT_TO_ORDER));
+    assertThat(allRights.get(14), is(Right.CREATE_REQUISITION));
+    assertThat(allRights.get(15), is(Right.VIEW_REQUISITION));
+    assertThat(allRights.get(16), is(Right.VIEW_ORDER));
     assertThat(allRights.get(0).getAdminRight(), is(true));
   }
 
