@@ -17,6 +17,7 @@ import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.ProcessingSchedule;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.query.QueryExecutor;
+import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProcessingPeriodMapper;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
@@ -117,13 +118,18 @@ public class OrderMapperIT {
   public void shouldUpdateFulfilledFlagAndShipmentIdForOrders() throws Exception {
     Order order = new Order();
     Rnr rnr = insertRequisition(1);
+    order.setFulfilled(Boolean.TRUE);
+    order.setShipmentId(1);
+
     order.setRnr(rnr);
     order.setCreatedBy(1);
     mapper.insert(order);
 
-    mapper.updateFullfilledFlagAndShipmentId(order.getId(),true,1);
+    String orders = Arrays.asList(order.getRnr().getId()).toString().replace("[", "{").replace("]", "}");
 
-    ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE id=?", Arrays.asList(order.getId()));
+    mapper.updateFullfilledFlagAndShipmentId(orders, true,1);
+
+    ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE rnrid=?",Arrays.asList(order.getRnr().getId()));
 
     resultSet.next();
 

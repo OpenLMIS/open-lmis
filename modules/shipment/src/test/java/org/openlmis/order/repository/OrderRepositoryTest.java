@@ -52,11 +52,10 @@ public class OrderRepositoryTest {
 
   @Test
   public void shouldUpdateFulfilledAndShipmentIdForOrder() throws Exception {
-    Order order = new Order();
-    doNothing().when(orderMapper).updateFullfilledFlagAndShipmentId(order.getId(),false,1);
-    orderRepository.updateFulfilledAndShipmentIdForOrder(order.getId(), false, 1);
+    doNothing().when(orderMapper).updateFullfilledFlagAndShipmentId("{1}",false,1);
+    orderRepository.updateFulfilledAndShipmentIdForOrder("{1}", false, 1);
 
-    verify(orderMapper).updateFullfilledFlagAndShipmentId(order.getId(), false, 1);
+    verify(orderMapper).updateFullfilledFlagAndShipmentId("{1}", false, 1);
 
   }
 

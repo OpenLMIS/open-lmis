@@ -17,6 +17,7 @@ import org.springframework.integration.Message;
 import org.springframework.integration.MessageChannel;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -52,7 +53,7 @@ public class ShipmentFilePostProcessHandlerTest {
     shipmentFilePostProcessHandler.process(shipmentFile, processingError);
 
     verify(shipmentService).insertShipmentFileInfo(shipmentFileInfo);
-    verify(shipmentService).updateOrders(orderIds, shipmentFileInfo);
+    verify(shipmentService).updateFulfilledFlagAndShipmentIdForOrders(new ArrayList(orderIds), shipmentFileInfo);
     verify(ftpOutputChannel, never()).send(any(Message.class));
   }
 
@@ -71,7 +72,7 @@ public class ShipmentFilePostProcessHandlerTest {
     shipmentFilePostProcessHandler.process(shipmentFile, processingError);
 
     verify(shipmentService).insertShipmentFileInfo(shipmentFileInfo);
-    verify(shipmentService).updateOrders(orderIds, shipmentFileInfo);
+    verify(shipmentService).updateFulfilledFlagAndShipmentIdForOrders(new ArrayList(orderIds), shipmentFileInfo);
     verify(ftpOutputChannel).send(any(Message.class));
   }
 }

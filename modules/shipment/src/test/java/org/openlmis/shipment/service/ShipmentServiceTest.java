@@ -12,9 +12,15 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.order.service.OrderService;
 import org.openlmis.shipment.domain.ShippedLineItem;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.repository.ShipmentRepository;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static org.mockito.Mockito.verify;
 
@@ -23,6 +29,8 @@ public class ShipmentServiceTest {
 
   @Mock
   private ShipmentRepository shipmentRepository;
+  @Mock
+  private OrderService orderService;
   @InjectMocks
   private ShipmentService shipmentService;
 
@@ -40,4 +48,16 @@ public class ShipmentServiceTest {
     verify(shipmentRepository).insertShipmentFileInfo(shipmentFileInfo);
   }
 
+  @Test
+  public void shouldUpdateOrders() throws Exception {
+    ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
+    shipmentFileInfo.setId(1);
+    shipmentFileInfo.setSuccess(Boolean.TRUE);
+    List<Integer> orderIds = new ArrayList();
+    orderIds.add(1);
+
+    shipmentService.updateFulfilledFlagAndShipmentIdForOrders(orderIds, shipmentFileInfo);
+
+    verify(orderService).updateFulfilledAndShipmentIdForOrders(orderIds, Boolean.TRUE, 1);
+  }
 }

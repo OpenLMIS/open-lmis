@@ -16,6 +16,7 @@ import org.springframework.integration.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Set;
 
 @Component
@@ -35,7 +36,7 @@ public class ShipmentFilePostProcessHandler {
     shipmentService.insertShipmentFileInfo(shipmentFileInfo);
 
     Set<Integer> orderIds = shipmentFileReader.getOrderIds(shipmentFile);
-    shipmentService.updateOrders(orderIds, shipmentFileInfo);
+    shipmentService.updateFulfilledFlagAndShipmentIdForOrders(new ArrayList(orderIds), shipmentFileInfo);
 
     if (processingError) sendErrorFileToFtp(shipmentFile);
   }

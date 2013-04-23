@@ -52,10 +52,9 @@ public class OrderService {
     return orders;
   }
 
-  public void updateFulfilledAndShipmentIdForOrders(ArrayList<Integer> orderIds, Boolean fulfilled, Integer shipmentId) {
-    for(Integer orderId : orderIds){
-      orderRepository.updateFulfilledAndShipmentIdForOrder(orderId,fulfilled,shipmentId);
-    }
+  public void updateFulfilledAndShipmentIdForOrders(List<Integer> orderIds, Boolean fulfilled, Integer shipmentId) {
+    String orders = orderIds.toString().replace("[", "{").replace("]", "}");
+    orderRepository.updateFulfilledAndShipmentIdForOrder(orders, fulfilled, shipmentId);
   }
 
   public Order getById(Integer id) {
